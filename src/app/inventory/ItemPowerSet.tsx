@@ -4,7 +4,7 @@ import React from 'react';
 import styles from './ItemPowerSet.m.scss';
 import { DimItem } from './item-types';
 
-export function ItemPowerSet(items: DimItem[], powerFloor: number) {
+export function ItemPowerSet({ items, powerFloor }: { items: DimItem[]; powerFloor: number }) {
   let lastSort: string | undefined;
   return (
     <div className={styles.itemPowerSet}>

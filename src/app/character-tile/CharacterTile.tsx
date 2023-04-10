@@ -1,10 +1,13 @@
 import type { DimStore, DimTitle } from 'app/inventory/store-types';
+import { powerLevelSelector } from 'app/inventory/store/selectors';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import VaultCapacity from 'app/store-stats/VaultCapacity';
+import { RootState } from 'app/store/types';
 import clsx from 'clsx';
 import { FontGlyphs } from 'data/d2/d2-font-glyphs';
 import { memo } from 'react';
+import { useSelector } from 'react-redux';
 import styles from './CharacterTile.m.scss';
 
 function CharacterEmblem({ store }: { store: DimStore }) {
@@ -18,7 +21,10 @@ const gildedIcon = String.fromCodePoint(FontGlyphs.gilded_title);
  * This is currently being shared between StoreHeading and CharacterTileButton
  */
 export default memo(function CharacterTile({ store }: { store: DimStore }) {
-  const maxTotalPower = Math.floor(store.stats?.maxTotalPower?.value || store.powerLevel);
+  const maxTotalPower = useSelector(
+    (state: RootState) => powerLevelSelector(state, store.id)?.maxTotalPower
+  );
+  const floorTotalPower = Math.floor(maxTotalPower || store.powerLevel);
   const isPhonePortrait = useIsPhonePortrait();
 
   return (
@@ -44,7 +50,7 @@ export default memo(function CharacterTile({ store }: { store: DimStore }) {
                 <AppIcon icon={powerActionIcon} />
                 {store.powerLevel}
               </div>
-              {isPhonePortrait && <div className={styles.maxTotalPower}>/ {maxTotalPower}</div>}
+              {isPhonePortrait && <div className={styles.maxTotalPower}>/ {floorTotalPower}</div>}
             </>
           )}
         </div>

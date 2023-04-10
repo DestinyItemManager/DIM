@@ -8,6 +8,7 @@ import { startFarming } from 'app/farming/actions';
 import { t } from 'app/i18next-t';
 import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
+import { powerLevelSelector } from 'app/inventory/store/selectors';
 import {
   gatherEngramsLoadout,
   itemLevelingLoadout,
@@ -81,6 +82,9 @@ export default function LoadoutPopup({
   const filteredItems = useSelector(filteredItemsSelector);
   const loadoutSort = useSelector(settingSelector('loadoutSort'));
   const dispatch = useThunkDispatch();
+  const hasClassifiedAffectingMaxPower = useSelector(
+    (state: RootState) => powerLevelSelector(state, dimStore.id)?.problems.hasClassified
+  );
 
   const loadouts = useSavedLoadoutsForClassType(dimStore.classType);
   const inGameLoadouts = useSelector((state: RootState) =>
@@ -305,7 +309,7 @@ export default function LoadoutPopup({
               <MaxlightButton
                 allItems={allItems}
                 dimStore={dimStore}
-                hasClassified={Boolean(dimStore.stats.maxGearPower?.statProblems?.hasClassified)}
+                hasClassified={Boolean(hasClassifiedAffectingMaxPower)}
               />
             </li>
 
