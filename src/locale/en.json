@@ -463,6 +463,14 @@
     "StackFull": "You already have a full stack of {{name}}",
     "StoreName": "{{genderRace}} {{className}}"
   },
+  "KillType": {
+    "ClassAbilities": "Class Ability",
+    "Finisher": "Finisher",
+    "Grenade": "Grenade",
+    "Melee": "Melee",
+    "Precision": "Precision",
+    "Super": "Super"
+  },
   "LB": {
     "AdvancedOptions": "Advanced Options",
     "ChooseAMod": "Choose your mods",

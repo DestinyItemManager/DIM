@@ -1,17 +1,17 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
-import { t } from 'app/i18next-t';
+import { t, tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { moveItemTo } from 'app/inventory/move-item';
 import { DimStore } from 'app/inventory/store-types';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { addIcon, AppIcon } from 'app/shell/icons';
+import { AppIcon, addIcon } from 'app/shell/icons';
 import { ThunkDispatchProp } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
-import { isIn, LookupTable } from 'app/utils/util-types';
+import { LookupTable, isIn } from 'app/utils/util-types';
 import clsx from 'clsx';
 import grenade from 'destiny-icons/weapons/grenade.svg';
 import headshot from 'destiny-icons/weapons/headshot.svg';
@@ -21,7 +21,7 @@ import { useDispatch } from 'react-redux';
 import styles from './BountyGuide.m.scss';
 import { xpItems } from './xp';
 
-enum KillType {
+const enum KillType {
   Melee,
   Super,
   Grenade,
@@ -33,6 +33,15 @@ const killTypeIcons: LookupTable<KillType, string> = {
   [KillType.Melee]: melee,
   [KillType.Grenade]: grenade,
   [KillType.Precision]: headshot,
+};
+
+const killTypeDescriptions: Record<KillType, string> = {
+  [KillType.Melee]: tl('KillType.Melee'),
+  [KillType.Super]: tl('KillType.Super'),
+  [KillType.Grenade]: tl('KillType.Grenade'),
+  [KillType.Finisher]: tl('KillType.Finisher'),
+  [KillType.Precision]: tl('KillType.Precision'),
+  [KillType.ClassAbilities]: tl('KillType.ClassAbilities'),
 };
 
 export type DefType =
@@ -239,7 +248,7 @@ function PillContent({
           {isIn(value, killTypeIcons) && (
             <img className={styles.invert} height="16" src={killTypeIcons[value]} />
           )}
-          {KillType[value]}
+          {t(killTypeDescriptions[value as KillType])}
         </>
       );
     case 'Reward':
