@@ -1,5 +1,8 @@
 ## Next
 
+* Loadout Optimizer and Loadouts now include Armor Charge-based "Font of ..." mods in stat calculations. For example, if you are using the Font of Focus armor mod, Loadout Optimizer will assume the +30 points to Discipline when holding Armor Charge are active and not waste stat points on exceeding T10 Discipline.
+
+
 ## 7.64.0 <span class="changelog-date">(2023-04-09)</span>
 
 * Updated DIM's Smart Moves logic for how to choose which items to move when a bucket is full.
