@@ -78,6 +78,7 @@ export default function App() {
               ) : (
                 <>
                   <Route path="search-history" element={<SearchHistory />} />
+                  <Route path="armory/*" element={<DefaultAccount />} />
                   <Route path=":membershipId/:destinyVersion/*" element={<Destiny />} />
                   <Route path="*" element={<DefaultAccount />} />
                 </>
