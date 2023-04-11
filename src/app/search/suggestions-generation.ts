@@ -66,10 +66,11 @@ const operators = ['<', '>', '<=', '>=']; // TODO: add "none"? remove >=, <=?
 export function generateSuggestionsForFilter(
   filterDefinition: Pick<
     FilterDefinition,
-    'keywords' | 'suggestions' | 'format' | 'overload' | 'deprecated'
-  >
+    'keywords' | 'suggestions' | 'format' | 'overload' | 'deprecated' | 'suggestionsGenerator'
+  >,
+  suggestionsContext: SuggestionsContext = {}
 ) {
-  return generateGroupedSuggestionsForFilter(filterDefinition, false).flatMap(
+  return generateGroupedSuggestionsForFilter(filterDefinition, false, suggestionsContext).flatMap(
     ({ keyword, ops }) => {
       if (ops) {
         return [keyword].concat(ops.map((op) => `${keyword}${op}`));
@@ -83,9 +84,10 @@ export function generateSuggestionsForFilter(
 export function generateGroupedSuggestionsForFilter(
   filterDefinition: Pick<
     FilterDefinition,
-    'keywords' | 'suggestions' | 'format' | 'overload' | 'deprecated'
+    'keywords' | 'suggestions' | 'format' | 'overload' | 'deprecated' | 'suggestionsGenerator'
   >,
-  forHelp?: boolean
+  forHelp?: boolean,
+  suggestionsContext: SuggestionsContext = {}
 ): { keyword: string; ops?: string[] }[] {
   if (filterDefinition.deprecated) {
     return [];
@@ -162,6 +164,14 @@ export function generateGroupedSuggestionsForFilter(
         break;
       case 'custom':
         break;
+    }
+  }
+
+  for (const suggestion of filterDefinition.suggestionsGenerator?.(suggestionsContext) ?? []) {
+    if (typeof suggestion === 'string') {
+      allSuggestions.push({ keyword: suggestion });
+    } else {
+      allSuggestions.push(suggestion);
     }
   }
 

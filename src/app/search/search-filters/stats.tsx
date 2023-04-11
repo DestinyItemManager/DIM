@@ -18,7 +18,7 @@ import {
   statHashByName,
   weaponStatNames,
 } from '../search-filter-values';
-import { generateSuggestionsForFilter } from '../suggestions-generation';
+import { generateGroupedSuggestionsForFilter } from '../suggestions-generation';
 
 const validateStat: FilterDefinition['validateStat'] = (filterContext) => {
   const customStatLabels = filterContext?.customStats?.map((c) => c.shortLabel) ?? [];
@@ -36,7 +36,7 @@ const statFilters: FilterDefinition[] = [
     description: tl('Filter.Stats'),
     format: 'stat',
     suggestionsGenerator: ({ customStats }) =>
-      generateSuggestionsForFilter({
+      generateGroupedSuggestionsForFilter({
         keywords: 'stat',
         format: 'stat',
         suggestions: [...allAtomicStats, ...(customStats?.map((c) => c.shortLabel) ?? [])],
