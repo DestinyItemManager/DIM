@@ -17,6 +17,7 @@ import {
 } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
+import { getTotalModStatChanges } from 'app/loadout/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { armorStats } from 'app/search/d2-known-values';
@@ -262,12 +263,18 @@ export default memo(function LoadoutBuilder({
     searchFilter,
   ]);
 
+  const modStatChanges = useMemo(
+    () => getTotalModStatChanges(defs, modsToAssign, subclass, classType, true),
+    [classType, defs, modsToAssign, subclass]
+  );
+
   const { result, processing, remainingTime } = useProcess({
     defs,
     selectedStore,
     filteredItems,
     lockedModMap,
     subclass,
+    modStatChanges,
     armorEnergyRules,
     statOrder,
     statFilters,
@@ -477,6 +484,7 @@ export default memo(function LoadoutBuilder({
             lbDispatch={lbDispatch}
             statOrder={statOrder}
             enabledStats={enabledStats}
+            modStatChanges={result.modStatChanges}
             loadouts={loadouts}
             params={params}
             halfTierMods={halfTierMods}

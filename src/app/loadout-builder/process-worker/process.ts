@@ -397,9 +397,15 @@ export function process(
       statFiltersInStatOrder
     )!;
 
-    const totalStats = statOrder.reduce<Partial<ArmorStats>>((statObj, statHash, i) => {
+    const armorOnlyStats: Partial<ArmorStats> = {};
+    const fullStats: Partial<ArmorStats> = {};
+
+    for (let i = 0; i < statOrder.length; i++) {
+      const statHash = statOrder[i];
       const value = stats[i] + bonusStats[i];
-      statObj[statHash] = value;
+      fullStats[statHash] = value;
+
+      armorOnlyStats[statHash] = stats[i] - modStatsInStatOrder[i];
 
       // Track the stat ranges after our auto mods picks
       const range = statRangesFilteredInStatOrder[i];
@@ -409,13 +415,12 @@ export function process(
       if (value < range.min) {
         range.min = value;
       }
-
-      return statObj;
-    }, {}) as ArmorStats;
+    }
 
     return {
       armor: armor.map((item) => item.id),
-      stats: totalStats,
+      stats: fullStats as ArmorStats,
+      armorStats: armorOnlyStats as ArmorStats,
       statMods: mods,
     };
   });

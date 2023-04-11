@@ -88,6 +88,28 @@ export interface AccountCurrency {
   readonly quantity: number;
 }
 
+export type DimCharacterStatSource = 'armorStats' | 'armorPlug' | 'subclassPlug' | 'runtimeEffect';
+export const statSourceOrder: DimCharacterStatSource[] = [
+  'armorStats',
+  'subclassPlug',
+  'armorPlug',
+  'runtimeEffect',
+];
+export interface DimCharacterStatChange {
+  /** What contributed this stat. */
+  source: DimCharacterStatSource;
+  /** The name of the thing that contributed this stat. */
+  name: string;
+  /** A unique key for merging and display */
+  hash: number;
+  /** The icon associated with the source (subclass plug icon, armor mod icon...) */
+  icon: string | undefined;
+  /** How many copies of a mod were used */
+  count: number | undefined;
+  /** How many stat points this contributes to the stat's total value. */
+  value: number;
+}
+
 /** A character-level stat. */
 export interface DimCharacterStat {
   /** The DestinyStatDefinition hash for the stat. */
@@ -106,6 +128,9 @@ export interface DimCharacterStat {
   effect?: string;
   /** Cooldown time for the associated ability. */
   cooldown?: string;
+
+  /** How this stat exactly was calculated. */
+  breakdown?: DimCharacterStatChange[];
 }
 
 export interface D1Progression extends DestinyProgression {
