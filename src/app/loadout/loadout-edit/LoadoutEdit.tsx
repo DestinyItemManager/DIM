@@ -213,29 +213,28 @@ export default function LoadoutEdit({
               : undefined
           }
         >
-          <LoadoutEditBucketDropTarget category={category} classType={loadout.classType}>
-            <LoadoutEditBucket
-              category={category}
-              storeId={store.id}
-              items={categories[category]}
-              modsByBucket={modsByBucket}
-              onClickPlaceholder={onClickPlaceholder}
-              onClickWarnItem={onClickWarnItem}
-              onRemoveItem={onRemoveItem}
-              onToggleEquipped={handleToggleEquipped}
-            >
-              {category === 'Armor' && (
-                <ArmorExtras
-                  loadout={loadout}
-                  storeId={store.id}
-                  subclass={subclass}
-                  items={categories[category]}
-                  allMods={modDefinitions}
-                  onModsByBucketUpdated={handleModsByBucketUpdated}
-                />
-              )}
-            </LoadoutEditBucket>
-          </LoadoutEditBucketDropTarget>
+          <LoadoutEditBucket
+            category={category}
+            storeId={store.id}
+            classType={loadout.classType}
+            items={categories[category]}
+            modsByBucket={modsByBucket}
+            onClickPlaceholder={onClickPlaceholder}
+            onClickWarnItem={onClickWarnItem}
+            onRemoveItem={onRemoveItem}
+            onToggleEquipped={handleToggleEquipped}
+          >
+            {category === 'Armor' && (
+              <ArmorExtras
+                loadout={loadout}
+                storeId={store.id}
+                subclass={subclass}
+                items={categories[category]}
+                allMods={modDefinitions}
+                onModsByBucketUpdated={handleModsByBucketUpdated}
+              />
+            )}
+          </LoadoutEditBucket>
         </LoadoutEditSection>
       ))}
       <LoadoutEditSection

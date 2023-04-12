@@ -70,6 +70,7 @@
 .categoryGeneral {
   // 2x2 grid
   @include items-width(2);
+
   @include phone-portrait {
     // 4 in a line
     @include items-width(4);
@@ -95,4 +96,14 @@
   color: currentColor;
   width: 100%;
   padding: 0 0 4px 0;
+}
+
+.canDrop {
+  filter: invert(20%);
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.isOver {
+  filter: invert(40%);
+  background-color: rgba(255, 255, 255, 0.4);
 }

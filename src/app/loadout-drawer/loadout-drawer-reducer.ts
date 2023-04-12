@@ -84,6 +84,8 @@ export function addItem(
       return;
     }
 
+    const typeInventory = loadoutItemsInBucket(defs, draftLoadout, item.bucket.hash);
+
     const dupeIndex = findSameLoadoutItemIndex(defs, draftLoadout.items, loadoutItem);
     if (dupeIndex !== -1) {
       const dupe = draftLoadout.items[dupeIndex];
@@ -92,11 +94,19 @@ export function addItem(
         const increment = Math.min(dupe.amount + item.amount, item.maxStackSize) - dupe.amount;
         dupe.amount += increment;
       }
-      // Otherwise just bail and don't modify the loadout
+      // Handles dnd of items already in the loadout, e.g. this allows us to drag an unequipped item
+      // into equipped.
+      if (equip !== undefined && dupe.equip !== equip) {
+        if (equip) {
+          for (const item of typeInventory) {
+            item.equip = false;
+          }
+        }
+        dupe.equip = equip;
+      }
+      // No need for further modifications so we bail out
       return;
     }
-
-    const typeInventory = loadoutItemsInBucket(defs, draftLoadout, item.bucket.hash);
 
     if (typeInventory.length >= maxSlots) {
       // We're already full
