@@ -11,7 +11,7 @@ import { artifactUnlocksSelector, sortedStoresSelector } from 'app/inventory/sel
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { InGameLoadout, Loadout, isInGameLoadout } from 'app/loadout-drawer/loadout-types';
+import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, addIcon, faCalculator, uploadIcon } from 'app/shell/icons';
@@ -24,7 +24,6 @@ import styles from './Loadouts.m.scss';
 import LoadoutRow from './LoadoutsRow';
 import EditInGameLoadout from './ingame/EditInGameLoadout';
 import { InGameLoadoutDetails } from './ingame/InGameLoadoutDetailsSheet';
-import InGameLoadoutIcon from './ingame/InGameLoadoutIcon';
 import { InGameLoadoutStrip } from './ingame/InGameLoadoutStrip';
 import LoadoutImportSheet from './loadout-share/LoadoutImportSheet';
 import LoadoutShareSheet from './loadout-share/LoadoutShareSheet';
@@ -102,7 +101,6 @@ function Loadouts({ account }: { account: DestinyAccount }) {
 
   const [filteredLoadouts, filterPills, hasSelectedFilters] = useLoadoutFilterPills(
     savedLoadouts,
-    [],
     selectedStoreId,
     {
       includeWarningPills: true,
@@ -156,7 +154,6 @@ function Loadouts({ account }: { account: DestinyAccount }) {
         {!isPhonePortrait &&
           loadouts.map((loadout) => (
             <PageWithMenu.MenuButton anchor={loadout.id} key={loadout.id}>
-              {isInGameLoadout(loadout) && <InGameLoadoutIcon loadout={loadout} />}
               <ColorDestinySymbols text={loadout.name} />
             </PageWithMenu.MenuButton>
           ))}
@@ -176,19 +173,17 @@ function Loadouts({ account }: { account: DestinyAccount }) {
         />
         <h1>{t('Loadouts.DimLoadouts')}</h1>
         {filterPills}
-        {loadouts.map((loadout) =>
-          isInGameLoadout(loadout) ? null : (
-            <LoadoutRow
-              key={loadout.id}
-              loadout={loadout}
-              store={selectedStore}
-              saved={savedLoadoutIds.has(loadout.id)}
-              equippable={loadout !== currentLoadout}
-              onShare={setSharedLoadout}
-              onSnapshotInGameLoadout={handleSnapshot}
-            />
-          )
-        )}
+        {loadouts.map((loadout) => (
+          <LoadoutRow
+            key={loadout.id}
+            loadout={loadout}
+            store={selectedStore}
+            saved={savedLoadoutIds.has(loadout.id)}
+            equippable={loadout !== currentLoadout}
+            onShare={setSharedLoadout}
+            onSnapshotInGameLoadout={handleSnapshot}
+          />
+        ))}
         {loadouts.length === 0 && <p>{t('Loadouts.NoneMatch', { query })}</p>}
       </PageWithMenu.Contents>
       {sharedLoadout && (

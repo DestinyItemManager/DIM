@@ -17,7 +17,7 @@ import {
 } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { InGameLoadout, Loadout, isInGameLoadout } from 'app/loadout-drawer/loadout-types';
+import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { isMissingItems, newLoadout } from 'app/loadout-drawer/loadout-utils';
 import { makeRoomForPostmaster, totalPostmasterItems } from 'app/loadout-drawer/postmaster';
 import { previousLoadoutSelector } from 'app/loadout-drawer/selectors';
@@ -182,7 +182,6 @@ export default function LoadoutPopup({
 
   const [pillFilteredLoadouts, filterPills, hasSelectedFilters] = useLoadoutFilterPills(
     loadouts,
-    [],
     dimStore.id,
     { className: styles.filterPills, darkBackground: true }
   );
@@ -351,35 +350,32 @@ export default function LoadoutPopup({
           </li>
         )}
 
-        {filteredLoadouts.map(
-          (loadout) =>
-            !isInGameLoadout(loadout) && (
-              <li key={loadout.id} className={styles.menuItem}>
-                <span
-                  title={loadout.notes ? loadout.notes : loadout.name}
-                  onClick={() => applySavedLoadout(loadout)}
-                >
-                  {(dimStore.isVault || loadout.classType === DestinyClass.Unknown) && (
-                    <ClassIcon className={styles.loadoutTypeIcon} classType={loadout.classType} />
-                  )}
-                  {isMissingItems(defs, allItems, dimStore.id, loadout) && (
-                    <AlertIcon
-                      className={styles.warningIcon}
-                      title={t('Loadouts.MissingItemsWarning')}
-                    />
-                  )}
-                  <ColorDestinySymbols text={loadout.name} />
-                </span>
-                <span
-                  className={styles.altButton}
-                  title={t('Loadouts.Edit')}
-                  onClick={() => editLoadout(loadout, dimStore.id, { isNew: false })}
-                >
-                  <AppIcon icon={editIcon} />
-                </span>
-              </li>
-            )
-        )}
+        {filteredLoadouts.map((loadout) => (
+          <li key={loadout.id} className={styles.menuItem}>
+            <span
+              title={loadout.notes ? loadout.notes : loadout.name}
+              onClick={() => applySavedLoadout(loadout)}
+            >
+              {(dimStore.isVault || loadout.classType === DestinyClass.Unknown) && (
+                <ClassIcon className={styles.loadoutTypeIcon} classType={loadout.classType} />
+              )}
+              {isMissingItems(defs, allItems, dimStore.id, loadout) && (
+                <AlertIcon
+                  className={styles.warningIcon}
+                  title={t('Loadouts.MissingItemsWarning')}
+                />
+              )}
+              <ColorDestinySymbols text={loadout.name} />
+            </span>
+            <span
+              className={styles.altButton}
+              title={t('Loadouts.Edit')}
+              onClick={() => editLoadout(loadout, dimStore.id, { isNew: false })}
+            >
+              <AppIcon icon={editIcon} />
+            </span>
+          </li>
+        ))}
 
         {!dimStore.isVault && !loadoutQuery && (
           <li className={styles.menuItem}>

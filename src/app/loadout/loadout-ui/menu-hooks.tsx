@@ -5,7 +5,7 @@ import FilterPills, { Option } from 'app/dim-ui/FilterPills';
 import { DimLanguage } from 'app/i18n';
 import { t } from 'app/i18next-t';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
-import { InGameLoadout, isInGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
+import { isInGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { isMissingItemsSelector } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
 import { plainString } from 'app/search/search-filters/freeform';
@@ -41,7 +41,6 @@ export function filterLoadoutsToClass(loadouts: Loadout[], classType: DestinyCla
  */
 export function useLoadoutFilterPills(
   savedLoadouts: Loadout[],
-  inGameLoadouts: InGameLoadout[] | undefined,
   selectedStoreId: string,
   {
     includeWarningPills,
@@ -54,17 +53,10 @@ export function useLoadoutFilterPills(
     darkBackground?: boolean;
     extra?: React.ReactNode;
   } = {}
-): [
-  filteredLoadouts: (Loadout | InGameLoadout)[],
-  filterPillsElement: React.ReactNode,
-  hasSelectedFilters: boolean
-] {
+): [filteredLoadouts: Loadout[], filterPillsElement: React.ReactNode, hasSelectedFilters: boolean] {
   if (!$featureFlags.loadoutFilterPills) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useMemo(
-      () => [[...(inGameLoadouts ?? []), ...savedLoadouts], null, false],
-      [inGameLoadouts, savedLoadouts]
-    );
+    return useMemo(() => [savedLoadouts, null, false], [savedLoadouts]);
   }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -74,7 +66,7 @@ export function useLoadoutFilterPills(
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const loadoutsByHashtag = useMemo(() => {
-    const loadoutsByHashtag: { [hashtag: string]: (Loadout | InGameLoadout)[] } = {};
+    const loadoutsByHashtag: { [hashtag: string]: Loadout[] } = {};
     for (const loadout of savedLoadouts) {
       const hashtags = [
         ...getHashtagsFromNote(loadout.name),
@@ -151,10 +143,9 @@ export function useLoadoutFilterPills(
               }
             })
           )
-        : [...(inGameLoadouts ?? []), ...savedLoadouts],
+        : savedLoadouts,
     [
       savedLoadouts,
-      inGameLoadouts,
       loadoutsByHashtag,
       loadoutsWithDeprecatedMods,
       loadoutsWithMissingItems,
@@ -182,7 +173,7 @@ export function useLoadoutFilterPills(
  * Apply the given query to loadouts, and sort them according to preference.
  */
 export function searchAndSortLoadoutsByQuery(
-  loadouts: (Loadout | InGameLoadout)[],
+  loadouts: Loadout[],
   query: string,
   language: DimLanguage,
   loadoutSort: LoadoutSort
