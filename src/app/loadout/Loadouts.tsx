@@ -164,14 +164,14 @@ function Loadouts({ account }: { account: DestinyAccount }) {
             <AlertIcon /> {t('Storage.DimSyncNotEnabled')}
           </p>
         )}
-        <h1>{t('Loadouts.InGameLoadouts')}</h1>
+        <h2>{t('Loadouts.InGameLoadouts')}</h2>
         <InGameLoadoutStrip
           store={selectedStore}
           onEdit={setEditingInGameLoadout}
           onShare={setSharedLoadout}
           onShowDetails={setViewingInGameLoadout}
         />
-        <h1>{t('Loadouts.DimLoadouts')}</h1>
+        <h2>{t('Loadouts.DimLoadouts')}</h2>
         {filterPills}
         {loadouts.map((loadout) => (
           <LoadoutRow
