@@ -36,7 +36,7 @@ interface Props {
   pinnedItems: PinnedItems;
   excludedItems: ExcludedItems;
   lockedMods: ResolvedLoadoutMod[];
-  subclass?: ResolvedLoadoutItem;
+  subclass: ResolvedLoadoutItem | undefined;
   lockedExoticHash?: number;
   searchFilter: ItemFilter;
   autoStatMods: boolean;

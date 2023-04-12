@@ -3,7 +3,9 @@
 interface CssExports {
   'actionButton': string;
   'itemActions': string;
+  'keyHelp': string;
   'label': string;
+  'storeName': string;
   'tip': string;
 }
 export const cssExports: CssExports;

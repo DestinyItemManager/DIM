@@ -1,5 +1,26 @@
 ## Next
 
+* Loadout Optimizer and Loadouts now include Armor Charge-based "Font of ..." mods in stat calculations. For example, if you are using the Font of Focus armor mod, Loadout Optimizer will assume the +30 points to Discipline when holding Armor Charge are active and not waste stat points on exceeding T10 Discipline.
+
+
+## 7.64.0 <span class="changelog-date">(2023-04-09)</span>
+
+* Updated DIM's Smart Moves logic for how to choose which items to move when a bucket is full.
+* The bulk note tool has gotten a major upgrade and now allows adding and removing to existing notes.
+* Undo and redo in loadout editor and loadout optimizer have the keyboard shortcuts you'd expect.
+* Added some extra information to the randomize popup to explain how to use it with searches.
+* Fixed the "L" hotkey inadvertantly working in Compare and when items should not be lockable.
+* Added new hotkeys for opening Armory (A) and Infusion Fuel Finder (I) from the item popup.
+* Added a "Compare" button to the Organizer to allow focused comparison of selected items.
+* Added hotkeys to organizer - bulk tag, note, compare, or move selected items easily.
+* Added a new "N" hotkey for editing notes on an item.
+
+
+## 7.63.3 <span class="changelog-date">(2023-04-06)</span>
+
+* Fixed equipping in game loadouts
+* DIM now tries to keep your device from sleeping while an item is moving or a loadout is applying.
+
 ## 7.63.2 <span class="changelog-date">(2023-04-03)</span>
 
 ## 7.63.1 <span class="changelog-date">(2023-04-03)</span>

@@ -1,12 +1,14 @@
 import { languageSelector, settingSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClassIcon from 'app/dim-ui/ClassIcon';
+import HelpLink from 'app/dim-ui/HelpLink';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import useConfirm from 'app/dim-ui/useConfirm';
 import { startFarming } from 'app/farming/actions';
 import { t } from 'app/i18next-t';
 import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
+import { powerLevelSelector } from 'app/inventory/store/selectors';
 import {
   gatherEngramsLoadout,
   itemLevelingLoadout,
@@ -80,6 +82,9 @@ export default function LoadoutPopup({
   const filteredItems = useSelector(filteredItemsSelector);
   const loadoutSort = useSelector(settingSelector('loadoutSort'));
   const dispatch = useThunkDispatch();
+  const hasClassifiedAffectingMaxPower = useSelector(
+    (state: RootState) => powerLevelSelector(state, dimStore.id)?.problems.hasClassified
+  );
 
   const loadouts = useSavedLoadoutsForClassType(dimStore.classType);
   const inGameLoadouts = useSelector((state: RootState) =>
@@ -127,11 +132,20 @@ export default function LoadoutPopup({
     e.stopPropagation();
     if (
       !(await confirm(
-        weaponsOnly
-          ? t('Loadouts.RandomizeWeapons')
-          : query.length > 0
-          ? t('Loadouts.RandomizeSearchPrompt', { query })
-          : t('Loadouts.RandomizePrompt')
+        weaponsOnly ? (
+          t('Loadouts.RandomizeWeapons')
+        ) : query.length > 0 ? (
+          t('Loadouts.RandomizeSearchPrompt', { query })
+        ) : (
+          <>
+            {t('Loadouts.RandomizePrompt')}
+            <p className={styles.hint}>
+              {t('Loadouts.RandomizeQueryHint')}{' '}
+              <HelpLink helpLink="https://github.com/DestinyItemManager/DIM/wiki/Randomize-Loadout" />
+            </p>
+          </>
+        ),
+        { okLabel: t('Loadouts.RandomizeButton') }
       ))
     ) {
       e.preventDefault();
@@ -293,7 +307,7 @@ export default function LoadoutPopup({
               <MaxlightButton
                 allItems={allItems}
                 dimStore={dimStore}
-                hasClassified={Boolean(dimStore.stats.maxGearPower?.statProblems?.hasClassified)}
+                hasClassified={Boolean(hasClassifiedAffectingMaxPower)}
               />
             </li>
 

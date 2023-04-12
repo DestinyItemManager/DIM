@@ -2,7 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'actionButton': string;
-  'disabled': string;
   'entry': string;
 }
 export const cssExports: CssExports;

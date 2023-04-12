@@ -15,7 +15,16 @@
 
 .label {
   padding-left: 3px;
+
   @media (max-width: 900px) {
     display: none;
   }
+}
+
+.keyHelp {
+  margin-left: auto;
+}
+
+.storeName {
+  margin-right: 8px;
 }

@@ -1,6 +1,7 @@
 import { addCompareItem } from 'app/compare/actions';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
+import { showInfuse } from 'app/infuse/infuse';
 import { DimItem } from 'app/inventory/item-types';
 import { moveItemTo } from 'app/inventory/move-item';
 import { sortedStoresSelector } from 'app/inventory/selectors';
@@ -16,8 +17,6 @@ import { useSelector } from 'react-redux';
 import styles from './DesktopItemActions.m.scss';
 import { ItemActionsModel } from './item-popup-actions';
 
-const sharedButtonProps = { role: 'button', tabIndex: -1 };
-
 export const menuClassName = styles.interaction;
 
 export default function DesktopItemActions({
@@ -32,6 +31,8 @@ export default function DesktopItemActions({
   const [sidecarCollapsed, setSidecarCollapsed] = useSetting('sidecarCollapsed');
 
   const toggleSidecar = () => setSidecarCollapsed(!sidecarCollapsed);
+
+  useHotkey('esc', t('Hotkey.ClearDialog'), () => hideItemPopup());
 
   useHotkey('k', t('MovePopup.ToggleSidecar'), toggleSidecar);
   useHotkey('p', t('Hotkey.Pull'), () => {
@@ -52,18 +53,26 @@ export default function DesktopItemActions({
       dispatch(addCompareItem(item));
     }
   });
+  useHotkey('i', t('MovePopup.InfuseTitle'), (e: KeyboardEvent) => {
+    if (item.infusable) {
+      e.preventDefault();
+      showInfuse(item);
+      hideItemPopup();
+    }
+  });
 
   return (
     <div className={clsx(styles.interaction, { [styles.collapsed]: sidecarCollapsed })}>
       {actionsModel.hasControls && (
-        <div
+        <button
+          type="button"
           className={styles.collapseButton}
           onClick={toggleSidecar}
           title={t('MovePopup.ToggleSidecar') + ' [K]'}
-          {...sharedButtonProps}
+          aria-keyshortcuts="k"
         >
           <AppIcon icon={sidecarCollapsed ? maximizeIcon : minimizeIcon} />
-        </div>
+        </button>
       )}
 
       <ItemAccessoryButtons

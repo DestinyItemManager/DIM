@@ -5,9 +5,11 @@
   flex-direction: column;
   justify-content: space-between;
   background-color: black;
+  user-select: none;
 }
 
 .collapseButton {
+  composes: resetButton from 'app/dim-ui/common.m.scss';
   display: flex;
   justify-content: flex-end;
   cursor: pointer;

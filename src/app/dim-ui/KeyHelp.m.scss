@@ -1,6 +1,7 @@
 @use '../variables.scss' as *;
 
 .keyHelp {
+  font-family: monospace;
   border-radius: 2px;
   display: inline-block;
   padding: 0 4px;
@@ -10,6 +11,7 @@
   border: 1px solid #ddd;
   white-space: nowrap;
   text-align: center;
+  text-transform: uppercase;
 
   @include phone-portrait {
     display: none;

@@ -1,18 +1,22 @@
 import KeyHelp from 'app/dim-ui/KeyHelp';
 import { t } from 'app/i18next-t';
+import { Observable } from 'app/utils/observable';
 import _ from 'lodash';
-import React, { useState } from 'react';
+import React, { memo } from 'react';
+import { useSubscription } from 'use-subscription';
 import GlobalHotkeys from './GlobalHotkeys';
-import hotkeys from './hotkeys';
 import styles from './HotkeysCheatSheet.m.scss';
+import { getAllHotkeys } from './hotkeys';
 import { useHotkey } from './useHotkey';
 
-export default function HotkeysCheatSheet() {
-  const [visible, setVisible] = useState(false);
+export const showCheatSheet$ = new Observable(false);
 
-  const toggle = () => setVisible((visible) => !visible);
+export default memo(function HotkeysCheatSheet() {
+  const visible = useSubscription(showCheatSheet$);
 
-  const hide = () => setVisible(false);
+  const toggle = () => showCheatSheet$.next(!visible);
+
+  const hide = () => showCheatSheet$.next(false);
 
   useHotkey('?', t('Hotkey.ShowHotkeys'), toggle);
 
@@ -20,7 +24,7 @@ export default function HotkeysCheatSheet() {
     return null;
   }
 
-  const appKeyMap = hotkeys.getAllHotkeys();
+  const appKeyMap = getAllHotkeys();
 
   return (
     <div className={styles.container} onClick={hide}>
@@ -51,4 +55,4 @@ export default function HotkeysCheatSheet() {
       </div>
     </div>
   );
-}
+});

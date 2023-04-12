@@ -414,14 +414,6 @@ function moveToStore(
       ) {
         await dispatch(dequipItem(item, session));
         await transferApi(item)(currentAccountSelector(getState())!, item, store, amount);
-      } else if (
-        e instanceof DimError &&
-        e.bungieErrorCode() === PlatformErrorCodes.DestinyItemNotFound
-      ) {
-        // If the item wasn't found, it's probably been moved or deleted in-game. We could try to
-        // reload the profile or load just that item, but API caching means we aren't guaranteed to
-        // get the current view. So instead, we just pretend the move succeeded.
-        warnLog('move', 'Item', item.name, 'was not found - pretending the move succeeded');
       } else {
         throw e;
       }
@@ -1097,9 +1089,15 @@ export function sortMoveAsideCandidatesForStore(
       // Try our hardest never to unequip something
       compareBy((displaced) => !displaced.equipped),
       // prefer same bucket over everything, because that makes space in the correct "pocket"
-      compareBy((displaced) => displacer && displaced.bucket.hash === displacer.bucket.hash),
+      compareBy(
+        (displaced) =>
+          !fromStore.isVault && displacer && displaced.bucket.hash === displacer.bucket.hash
+      ),
 
-      // THIS SEEMS LIKE SOMETHING FROM D1
+      // TODO: Prefer moving from vault into Inventory (consumables)
+      // TODO: Prefer moving from vault into the bucket with the most free space
+
+      // D1 HAD ENGRAMS MIXED IN WITH INVENTORY
 
       // Engrams prefer to be in the vault, so not-engram is larger than engram
       compareBy((displaced) => (fromStore.isVault ? !displaced.isEngram : displaced.isEngram)),

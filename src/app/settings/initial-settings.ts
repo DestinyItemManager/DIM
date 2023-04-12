@@ -24,6 +24,9 @@ export interface Settings extends DimApiSettings {
 
   /** Automatically sync lock status with tag */
   readonly autoLockTagged: boolean;
+
+  /** Add font mods' runtime stat boosts to build stats */
+  readonly loIncludeFontModStats: boolean;
 }
 
 export const initialSettingsState: Settings = {
@@ -35,4 +38,5 @@ export const initialSettingsState: Settings = {
   itemFeedWatermark: '0',
   autoLockTagged: false,
   customStats: [],
+  loIncludeFontModStats: false,
 };

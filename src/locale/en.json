@@ -54,6 +54,14 @@
     "Vault": "Vault",
     "Weapons": "Weapons"
   },
+  "BulkNote": {
+    "Append": "Append to notes / add #hashtags",
+    "Confirm": "Update Notes",
+    "Remove": "Remove from notes / remove #hashtags",
+    "Replace": "Replace notes",
+    "Title": "Change notes for 1 item",
+    "Title_plural": "Change notes for {{count}} items"
+  },
   "BungieAlert": {
     "Title": "A message from Bungie:"
   },
@@ -371,6 +379,7 @@
     "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space. You won't be able to log in to or use DIM."
   },
   "Hotkey": {
+    "Armory": "Show Armory for an item",
     "CheatSheetTitle": "Keyboard Shortcuts:",
     "ClearDialog": "Dismiss dialog",
     "ClearNewItems": "Clear new items",
@@ -378,6 +387,8 @@
     "LockUnlock": "Lock or unlock an item",
     "MarkItemAs": "Mark item as '{{tag}}'",
     "Menu": "Toggle menu",
+    "Note": "Enter notes",
+    "Notes": "",
     "Pull": "Pull item to active character",
     "RefreshInventory": "Refresh inventory",
     "ShowHotkeys": "Show keyboard shortcuts",
@@ -457,6 +468,14 @@
     "PreviewVendor": "Preview {{type}} contents",
     "StackFull": "You already have a full stack of {{name}}",
     "StoreName": "{{genderRace}} {{className}}"
+  },
+  "KillType": {
+    "ClassAbilities": "Class Ability",
+    "Finisher": "Finisher",
+    "Grenade": "Grenade",
+    "Melee": "Melee",
+    "Precision": "Precision",
+    "Super": "Super"
   },
   "LB": {
     "AdvancedOptions": "Advanced Options",
@@ -609,8 +628,10 @@
     "AddUnequippedItems": "Add Unequipped",
     "Any": "Any class",
     "Apply": "Apply",
+    "ApplyInGameLoadoutInGame": "Your loadout is ready to equip but since you're in an activity you need to equip it in-game.",
     "ApplyMods": "Applying mods",
     "ApplySearch": "Transfer search \"{{query}}\"",
+    "ArmorStats": "Armor Stats",
     "ArtifactUnlocks": "Artifact Unlocks",
     "ArtifactUnlocksDesc": "Due to Bungie.net limitations, DIM cannot automatically configure your artifact. You need to perform these unlocks in-game before applying the Loadout.",
     "ArtifactUnlocksWithSeason": "Artifact Unlocks – S{{seasonNumber}}",
@@ -636,6 +657,7 @@
     "DimLoadouts": "DIM Loadouts",
     "Edit": "Edit Loadout",
     "EditBrief": "Edit",
+    "EquipInGameLoadout": "Equipping in-game loadout",
     "EquipItems": "Equipping items",
     "EquippableDifferent1": "Multiple Exotic items were used to calculate your Maximum Power, so the number shown may not be achievable when equipping your items in-game.",
     "EquippableDifferent2": "Maximum Power isn't limited by the \"One Exotic\" rule when determining the Power of your drops, powerful, and pinnacle rewards.",
@@ -723,7 +745,9 @@
     "PullFromPostmasterPopupTitle": "Pull from Postmaster",
     "Random": "Random",
     "Randomize": "Randomize Loadout",
+    "RandomizeButton": "Randomize",
     "RandomizePrompt": "Randomize your equipped weapons, armor and ghost?",
+    "RandomizeQueryHint": "Tip: Search for items first to restrict what items can be randomly chosen.",
     "RandomizeSearch": "Randomize from Search",
     "RandomizeSearchPrompt": "Randomize your equipped items from search \"{{query}}\"?",
     "RandomizeWeapons": "Randomize your equipped weapons?",
@@ -801,8 +825,9 @@
   "MovePopup": {
     "Acquired": "This item is unlocked in collections.",
     "AcquiredMod": "This mod is unlocked in collections.",
-    "AddNote": "Add a note",
+    "AddNote": "Add notes",
     "AddToLoadout": "Loadout",
+    "AddToLoadoutTitle": "Add this to a loadout",
     "All": "All",
     "CannotCurrentlyRoll": "This perk cannot be rolled on the current version of this item.",
     "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
@@ -810,7 +835,8 @@
     "CommunityData": "Community Insight",
     "Consolidate": "Consolidate",
     "DistributeEvenly": "Distribute Evenly",
-    "Equip": "Equip",
+    "Equip": "Equip on:",
+    "EquipWithName": "Equip on {{character}}",
     "FavoriteUnFavorite": {
       "Favorite": "Favorite {{itemType}}",
       "Favorited": "Favorited",
@@ -818,6 +844,7 @@
       "Unfavorited": "Unfavorited"
     },
     "Infuse": "Infuse",
+    "InfuseTitle": "Open the infusion fuel finder",
     "LockUnlock": {
       "AutoLock": "Lock state is synced to this item's tag",
       "Lock": "Lock {{itemType}}",
@@ -836,8 +863,8 @@
     "ReadLoreLink": "Read lore",
     "Rewards": "Rewards:",
     "SendToVault": "Send to Vault",
-    "Store": "Store",
-    "StoreWithName": "Store on {{character}}",
+    "Store": "Pull to:",
+    "StoreWithName": "Pull to {{character}}",
     "Subtitle": {
       "QuestProgress": "Step {{questStepNum}} of {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
@@ -856,7 +883,7 @@
   },
   "Notes": {
     "Error": "Error! Max 120 characters for notes.",
-    "Help": "Add notes to this item"
+    "Help": "Add notes, #hashtags, and :symbols:"
   },
   "Notification": {
     "Cancel": "Cancel",
@@ -912,8 +939,7 @@
     "Lock": "Lock",
     "NoItems": "No items selected",
     "NoMobile": "Turn your phone sideways to use the Organizer.",
-    "Note": "Set Note",
-    "NotePrompt": "Note:",
+    "Note": "Set Notes",
     "OpenIn": "Show in Organizer",
     "Organizer": "Organizer",
     "SelectAll": "Select All",
@@ -1109,7 +1135,7 @@
     "AutoBackup": "We've backed up your data to a file in your downloads folder called dim-data.json, just in case.",
     "BackUpFirst": "You MUST back up your data first, before you delete it all. Just in case.",
     "BrowserMayClearData": "The browser may delete this information if you run out of space or don't visit DIM frequently.",
-    "DataIsLocal": "Tag and note data is local only",
+    "DataIsLocal": "Tag and notes data is local only",
     "DeleteAllData": "Delete ALL Data from DIM Sync Servers",
     "DeleteAllDataConfirm": "Are you sure you want to delete ALL your data, for all accounts, from DIM Sync? You can't undo this.",
     "DeleteAllDataLabel": "Wipe DIM Sync Data",

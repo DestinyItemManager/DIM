@@ -1,4 +1,5 @@
 import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
+import { DimCharacterStat } from 'app/inventory/store-types';
 import { armorBuckets } from 'app/search/d2-known-values';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
@@ -29,8 +30,10 @@ export interface ExcludedItems {
  * An individual "stat mix" of loadouts where each slot has a list of items with the same stat options.
  */
 export interface ArmorSet {
-  /** The overall stats for the loadout as a whole, including auto stat mods. */
+  /** The overall stats for the loadout as a whole, including subclass, mods and including auto stat mods. */
   readonly stats: Readonly<ArmorStats>;
+  /** The assumed stats from the armor items themselves only. */
+  readonly armorStats: Readonly<ArmorStats>;
   /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
   readonly armor: readonly DimItem[][];
   /** Which stat mods were added? */
@@ -83,6 +86,10 @@ export type LockableBucketHash =
   | BucketHashes.ClassArmor;
 
 export const LockableBucketHashes = Object.values(LockableBuckets);
+
+export type ModStatChanges = {
+  [statHash in ArmorStatHashes]: Pick<DimCharacterStat, 'value' | 'breakdown'>;
+};
 
 export type ArmorStatHashes =
   | StatHashes.Mobility

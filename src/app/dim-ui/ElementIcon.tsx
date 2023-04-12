@@ -19,7 +19,13 @@ export default function ElementIcon({
   if (!icon) {
     return null;
   }
-  return <div style={bungieBackgroundStyle(icon)} className={clsx(className, styles.element)} />;
+  return (
+    <div
+      style={bungieBackgroundStyle(icon)}
+      title={element.displayProperties.name}
+      className={clsx(className, styles.element)}
+    />
+  );
 }
 
 /**
