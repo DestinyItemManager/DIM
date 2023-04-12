@@ -5,18 +5,6 @@
   align-items: center;
 }
 
-.selectedPlugs {
-  composes: flexRow from '../../dim-ui/common.m.scss';
-  flex: 1;
-  align-items: center;
-  overflow: auto;
-  height: var(--item-size);
-
-  > * {
-    margin-right: 4px;
-  }
-}
-
 .submitButton {
   composes: dim-button from global;
   padding-right: 16px;
