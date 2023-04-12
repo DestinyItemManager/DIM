@@ -6,7 +6,7 @@ import { Hotkey } from 'app/hotkeys/hotkeys';
 import { useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { accountRoute } from 'app/routes';
-import { SearchFilterRef } from 'app/search/ItemSearchBar';
+import { SearchFilterRef } from 'app/search/SearchBar';
 import DimApiWarningBanner from 'app/storage/DimApiWarningBanner';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isiOSBrowser } from 'app/utils/browsers';

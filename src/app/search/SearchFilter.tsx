@@ -5,9 +5,10 @@ import React, { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { setSearchQuery } from '../shell/actions';
-import ItemSearchBar, { SearchFilterRef } from './ItemSearchBar';
+import ItemSearchBar from './ItemSearchBar';
 import MainSearchBarActions from './MainSearchBarActions';
 import MainSearchBarMenu from './MainSearchBarMenu';
+import { SearchFilterRef } from './SearchBar';
 import { SearchInput } from './SearchInput';
 
 /**

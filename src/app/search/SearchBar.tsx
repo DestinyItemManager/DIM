@@ -27,6 +27,7 @@ import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 import _ from 'lodash';
 import {
   Suspense,
+  forwardRef,
   lazy,
   memo,
   useCallback,
@@ -67,15 +68,10 @@ interface Props {
   onSearchDeleted: (query: string) => void;
   onToggleSearchResults: () => void;
   /** Special handling for enter keydown on search items. Not every event needs to be handled. */
-  onInputEnterDown: (searchItem: SearchItem) => { exitEarly: boolean };
+  onInputEnterDown: (searchItem: SearchItem) => { keepSelectedItem: boolean };
   /** Fired whenever the query has been cleared */
   onClear?: () => void;
-  autocompleter: (
-    query: string,
-    caretIndex: number,
-    recentSearches: Search[],
-    includeArmory: boolean
-  ) => SearchItem[];
+  autocompleter: (query: string, caretIndex: number, recentSearches: Search[]) => SearchItem[];
 }
 
 /** An interface for interacting with the search filter through a ref */
@@ -92,7 +88,7 @@ const searchItemIcons: { [key in SearchItemType]: string } = {
   [SearchItemType.Suggested]: unTrackedIcon, // TODO: choose a real icon
   [SearchItemType.Autocomplete]: searchIcon, // TODO: choose a real icon
   [SearchItemType.Help]: helpIcon,
-  [SearchItemType.ArmoryEntry]: helpIcon,
+  [SearchItemType.ArmoryEntry]: helpIcon, // TODO: remove armory knowledge from this as it is item item specific
 };
 
 const LazyFilterHelp = lazy(() => import(/* webpackChunkName: "filter-help" */ './FilterHelp'));
@@ -115,6 +111,7 @@ const RowContents = memo(({ item }: { item: SearchItem }) => {
     case SearchItemType.Help:
       return <>{t('Header.FilterHelpMenuItem')}</>;
     case SearchItemType.ArmoryEntry:
+      // TODO: remove armory knowledge from this as it is item item specific
       return (
         <>
           {item.armoryItem.name}
@@ -158,6 +155,7 @@ const Row = memo(
     onClick: (e: React.MouseEvent, item: SearchItem) => void;
   }) => (
     <>
+      {/* TODO: remove armory knowledge from this component as it is item specific */}
       {item.type === SearchItemType.ArmoryEntry ? (
         <BungieImage className={styles.armoryItemIcon} src={item.armoryItem.icon} />
       ) : (
@@ -184,7 +182,7 @@ const Row = memo(
   )
 );
 
-export function SearchBar(
+export const SearchBar = forwardRef(function SearchBar(
   {
     searchQueryVersion,
     searchQuery,
@@ -253,8 +251,8 @@ export function SearchBar(
 
   const caretPosition = inputElement.current?.selectionStart || liveQuery.length;
   const items = useMemo(
-    () => autocompleter(liveQuery, caretPosition, recentSearches, Boolean(mainSearchBar)),
-    [autocompleter, caretPosition, liveQuery, mainSearchBar, recentSearches]
+    () => autocompleter(liveQuery, caretPosition, recentSearches),
+    [autocompleter, caretPosition, liveQuery, recentSearches]
   );
 
   // special click handling for filter helper
@@ -275,21 +273,22 @@ export function SearchBar(
         if (!changes.selectedItem) {
           return changes;
         }
-
-        let exitEarly = !changes.selectedItem;
-        if (changes.selectedItem) {
-          ({ exitEarly } = onInputEnterDown(changes.selectedItem));
+        // Allows us to keep the previously selected item in the event a help like item was selected
+        let keepSelectedItem = false;
+        if (changes.selectedItem.type === SearchItemType.Help) {
+          setFilterHelpOpen(true);
+          keepSelectedItem = true;
+        } else if (changes.selectedItem) {
+          ({ keepSelectedItem } = onInputEnterDown(changes.selectedItem));
         }
-        if (exitEarly) {
-          // exit early if non FilterHelper item was selected
-          return changes;
+        if (keepSelectedItem) {
+          // helper click, open FilterHelper and modify state
+          return {
+            ...changes,
+            selectedItem: state.selectedItem, // keep the last selected item (i.e. the edit field stays unchanged)
+          };
         }
-
-        // helper click, open FilterHelper and modify state
-        return {
-          ...changes,
-          selectedItem: state.selectedItem, // keep the last selected item (i.e. the edit field stays unchanged)
-        };
+        return changes;
       }
       default:
         return changes; // no handling for other types
@@ -558,4 +557,4 @@ export function SearchBar(
       </div>
     </>
   );
-}
+});
