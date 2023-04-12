@@ -546,7 +546,7 @@ function SearchBar(
           <AnimatePresence>
             {children}
 
-            {liveQuery.length > 0 && (saveable || saved) && (
+            {liveQuery.length > 0 && (saveable || saved) && !isPhonePortrait && (
               <motion.button
                 layout
                 exit={{ scale: 0 }}
