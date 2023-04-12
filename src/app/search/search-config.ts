@@ -121,10 +121,7 @@ export function buildSearchConfig(
   const suggestions = new Set<string>();
   const filtersMap = buildFiltersMap(destinyVersion);
   for (const filter of filtersMap.allFilters) {
-    for (const suggestion of generateSuggestionsForFilter(filter)) {
-      suggestions.add(suggestion);
-    }
-    for (const suggestion of filter.suggestionsGenerator?.(suggestionsContext) ?? []) {
+    for (const suggestion of generateSuggestionsForFilter(filter, suggestionsContext)) {
       suggestions.add(suggestion);
     }
   }

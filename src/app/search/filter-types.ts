@@ -157,7 +157,9 @@ export interface FilterDefinition<I extends DimItem = DimItem> {
    * A custom function used to generate (additional) suggestions.
    * This should only be necessary for freeform or custom formats.
    */
-  suggestionsGenerator?: (args: SuggestionsContext) => string[] | undefined;
+  suggestionsGenerator?: (
+    args: SuggestionsContext
+  ) => string[] | { keyword: string; ops?: string[] }[] | undefined;
 
   /**
    * given an item, this generates a filter that should match that item
