@@ -146,7 +146,6 @@ function InGameLoadoutTile({
     tooltipContent.push(
       <React.Fragment key="isequipped">
         {tooltipContent.length > 1 && <hr />}
-        <span className={clsx(styles.isEquipped, styles.blankBox)} />
         <span> {t('InGameLoadout.CurrentlyEquipped')}</span>
       </React.Fragment>
     );
