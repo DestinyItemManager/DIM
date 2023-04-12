@@ -2,7 +2,7 @@ import { InfuseDirection } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { LoadoutItem } from 'app/loadout-drawer/loadout-types';
-import SearchBar from 'app/search/SearchBar';
+import SearchBar from 'app/search/ItemSearchBar';
 import { useSetting } from 'app/settings/hooks';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { DimThunkDispatch } from 'app/store/types';

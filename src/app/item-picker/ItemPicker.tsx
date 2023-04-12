@@ -1,6 +1,6 @@
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { t } from 'app/i18next-t';
-import SearchBar from 'app/search/SearchBar';
+import SearchBar from 'app/search/ItemSearchBar';
 import { uniqBy } from 'app/utils/util';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -12,8 +12,8 @@ import { DimItem } from '../inventory/item-types';
 import { allItemsSelector } from '../inventory/selectors';
 import { filterFactorySelector } from '../search/search-filter';
 import { itemSorterSelector } from '../settings/item-sort';
-import { ItemPickerState } from './item-picker';
 import './ItemPicker.scss';
+import { ItemPickerState } from './item-picker';
 
 export default function ItemPicker({
   prompt,

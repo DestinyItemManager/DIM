@@ -1,11 +1,37 @@
 import { Search } from '@destinyitemmanager/dim-api-types';
+import Armory from 'app/armory/Armory';
+import { saveSearch, searchDeleted, searchUsed } from 'app/dim-api/basic-actions';
+import { recentSearchesSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
+import ClickOutsideRoot from 'app/dim-ui/ClickOutsideRoot';
 import KeyHelp from 'app/dim-ui/KeyHelp';
 import { Loading } from 'app/dim-ui/Loading';
 import Sheet from 'app/dim-ui/Sheet';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
+import { toggleSearchResults } from 'app/shell/actions';
+import { useIsPhonePortrait } from 'app/shell/selectors';
+import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { isiOSBrowser } from 'app/utils/browsers';
+import { Portal } from 'app/utils/temp-container';
+import clsx from 'clsx';
+import { UseComboboxState, UseComboboxStateChangeOptions, useCombobox } from 'downshift';
+import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
+import _ from 'lodash';
+import React, {
+  Suspense,
+  useCallback,
+  useDeferredValue,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
 import {
+  AppIcon,
   closeIcon,
   disabledIcon,
   faClock,
@@ -16,34 +42,25 @@ import {
   starIcon,
   starOutlineIcon,
   unTrackedIcon,
-} from 'app/shell/icons';
-import AppIcon from 'app/shell/icons/AppIcon';
-import { useIsPhonePortrait } from 'app/shell/selectors';
-import { isiOSBrowser } from 'app/utils/browsers';
-import { Portal } from 'app/utils/temp-container';
-import clsx from 'clsx';
-import { UseComboboxState, UseComboboxStateChangeOptions, useCombobox } from 'downshift';
-import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
-import _ from 'lodash';
-import {
-  Suspense,
-  lazy,
-  memo,
-  useCallback,
-  useDeferredValue,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+} from '../shell/icons';
 import HighlightedText from './HighlightedText';
 import styles from './SearchBar.m.scss';
-import { SearchItem, SearchItemType } from './autocomplete';
+import createAutocompleter, { SearchItem, SearchItemType } from './autocomplete';
 import { canonicalizeQuery, parseQuery } from './query-parser';
+import { searchConfigSelector } from './search-config';
 import { validateQuerySelector } from './search-filter';
+import './search-filter.scss';
 
-interface Props {
+const searchItemIcons: { [key in SearchItemType]: string } = {
+  [SearchItemType.Recent]: faClock,
+  [SearchItemType.Saved]: starIcon,
+  [SearchItemType.Suggested]: unTrackedIcon, // TODO: choose a real icon
+  [SearchItemType.Autocomplete]: searchIcon, // TODO: choose a real icon
+  [SearchItemType.Help]: helpIcon,
+  [SearchItemType.ArmoryEntry]: helpIcon,
+};
+
+interface ProvidedProps {
   /** Placeholder text when nothing has been typed */
   placeholder: string;
   /** Is this the main search bar in the header? It behaves somewhat differently. */
@@ -58,18 +75,15 @@ interface Props {
   menu?: React.ReactNode;
   instant?: boolean;
   className?: string;
-  recentSearches: Search[];
-  validateQuery: ReturnType<typeof validateQuerySelector>;
   /** Fired whenever the query changes (already debounced) */
   onQueryChanged: (query: string) => void;
-  onSearchUsed: (liveQuery: string) => void;
-  onSetQuerySaved: (query: string, saved: boolean) => void;
-  onSearchDeleted: (query: string) => void;
-  onToggleSearchResults: () => void;
-  /** Special handling for enter keydown on search items. Not every event needs to be handled. */
-  onInputEnterDown: (searchItem: SearchItem) => { exitEarly: boolean };
   /** Fired whenever the query has been cleared */
   onClear?: () => void;
+}
+
+interface StoreProps {
+  recentSearches: Search[];
+  validateQuery: ReturnType<typeof validateQuerySelector>;
   autocompleter: (
     query: string,
     caretIndex: number,
@@ -78,26 +92,44 @@ interface Props {
   ) => SearchItem[];
 }
 
-/** An interface for interacting with the search filter through a ref */
-export interface SearchFilterRef {
-  /** Switch focus to the filter field */
-  focusFilterInput: () => void;
-  /** Clear the filter field */
-  clearFilter: () => void;
+type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
+
+const autoCompleterSelector = createSelector(searchConfigSelector, createAutocompleter);
+
+function mapStateToProps() {
+  let prevSearchQueryVersion: number | undefined;
+  let prevSearchQuery: string | undefined;
+
+  return (
+    state: RootState,
+    { searchQuery, searchQueryVersion }: ProvidedProps
+  ): StoreProps & { searchQuery?: string } => {
+    // This is a hack that prevents `searchQuery` from changing if `searchQueryVersion`
+    // doesn't change, so we don't trigger an update.
+    let manipulatedSearchQuery = prevSearchQuery;
+    if (searchQueryVersion === undefined) {
+      // OK, they didn't even provide searchQueryVersion, just pass through the original query
+      manipulatedSearchQuery = searchQuery;
+    } else if (searchQueryVersion !== prevSearchQueryVersion) {
+      manipulatedSearchQuery = searchQuery;
+      prevSearchQuery = searchQuery;
+      prevSearchQueryVersion = searchQueryVersion;
+    }
+
+    return {
+      recentSearches: recentSearchesSelector(state),
+      autocompleter: autoCompleterSelector(state),
+      validateQuery: validateQuerySelector(state),
+      searchQuery: manipulatedSearchQuery,
+    };
+  };
 }
 
-const searchItemIcons: { [key in SearchItemType]: string } = {
-  [SearchItemType.Recent]: faClock,
-  [SearchItemType.Saved]: starIcon,
-  [SearchItemType.Suggested]: unTrackedIcon, // TODO: choose a real icon
-  [SearchItemType.Autocomplete]: searchIcon, // TODO: choose a real icon
-  [SearchItemType.Help]: helpIcon,
-  [SearchItemType.ArmoryEntry]: helpIcon,
-};
+const LazyFilterHelp = React.lazy(
+  () => import(/* webpackChunkName: "filter-help" */ './FilterHelp')
+);
 
-const LazyFilterHelp = lazy(() => import(/* webpackChunkName: "filter-help" */ './FilterHelp'));
-
-const RowContents = memo(({ item }: { item: SearchItem }) => {
+const RowContents = React.memo(({ item }: { item: SearchItem }) => {
   function highlight(text: string, section: string) {
     return item.highlightRange?.section === section ? (
       <HighlightedText
@@ -143,7 +175,7 @@ const RowContents = memo(({ item }: { item: SearchItem }) => {
   }
 });
 
-const Row = memo(
+const Row = React.memo(
   ({
     highlighted,
     item,
@@ -184,7 +216,36 @@ const Row = memo(
   )
 );
 
-export function SearchBar(
+// TODO: break filter autocomplete into its own object/helpers... with tests
+
+/** An interface for interacting with the search filter through a ref */
+export interface SearchFilterRef {
+  /** Switch focus to the filter field */
+  focusFilterInput: () => void;
+  /** Clear the filter field */
+  clearFilter: () => void;
+}
+
+function ArmorySheet({ itemHash, onClose }: { itemHash: number; onClose: () => void }) {
+  return (
+    <Portal>
+      <Sheet onClose={onClose} sheetClassName={styles.armorySheet}>
+        <ClickOutsideRoot>
+          <Armory itemHash={itemHash} />
+        </ClickOutsideRoot>
+      </Sheet>
+    </Portal>
+  );
+}
+
+/**
+ * A reusable, autocompleting item search input. This is an uncontrolled input that
+ * announces its query has changed only after some delay. This is the new version of the component
+ * that offers a browser-style autocompleting search bar with history.
+ *
+ * TODO: Should this be the main search bar only, or should it also work for item picker, etc?
+ */
+function ItemSearchBar(
   {
     searchQueryVersion,
     searchQuery,
@@ -192,13 +253,9 @@ export function SearchBar(
     placeholder,
     children,
     onQueryChanged,
-    onSearchUsed,
-    onSetQuerySaved,
-    onSearchDeleted,
-    onToggleSearchResults,
-    onInputEnterDown,
     instant,
     onClear,
+    dispatch,
     validateQuery,
     autocompleter,
     recentSearches,
@@ -214,6 +271,7 @@ export function SearchBar(
 
   const [liveQueryLive, setLiveQuery] = useState(searchQuery ?? '');
   const [filterHelpOpen, setFilterHelpOpen] = useState(false);
+  const [armoryItemHash, setArmoryItemHash] = useState<number | undefined>(undefined);
   const [menuMaxHeight, setMenuMaxHeight] = useState<undefined | number>();
   const inputElement = useRef<HTMLInputElement>(null);
 
@@ -236,8 +294,7 @@ export function SearchBar(
     if (valid && liveQuery && liveQuery !== lastBlurQuery.current) {
       // save this to the recent searches only on blur
       // we use the ref to only fire if the query changed since the last blur
-      // dispatch(searchUsed(liveQuery));
-      onSearchUsed(liveQuery);
+      dispatch(searchUsed(liveQuery));
       lastBlurQuery.current = liveQuery;
     }
   };
@@ -248,7 +305,7 @@ export function SearchBar(
 
   const toggleSaved = () => {
     // TODO: keep track of the last search, if you search for something more narrow immediately after then replace?
-    onSetQuerySaved(liveQuery, !saved);
+    dispatch(saveSearch({ query: liveQuery, saved: !saved }));
   };
 
   const caretPosition = inputElement.current?.selectionStart || liveQuery.length;
@@ -256,45 +313,6 @@ export function SearchBar(
     () => autocompleter(liveQuery, caretPosition, recentSearches, Boolean(mainSearchBar)),
     [autocompleter, caretPosition, liveQuery, mainSearchBar, recentSearches]
   );
-
-  // special click handling for filter helper
-  const stateReducer = (
-    state: UseComboboxState<SearchItem>,
-    actionAndChanges: UseComboboxStateChangeOptions<SearchItem>
-  ) => {
-    const { type, changes } = actionAndChanges;
-    switch (type) {
-      // FIXME: Do not act on focus because it interacts badly with autofocus
-      // Downshift will likely switch away from using focus because too
-      // https://github.com/downshift-js/downshift/issues/1439
-      // (Also see onFocus below)
-      case useCombobox.stateChangeTypes.InputFocus:
-        return state;
-      case useCombobox.stateChangeTypes.ItemClick:
-      case useCombobox.stateChangeTypes.InputKeyDownEnter: {
-        if (!changes.selectedItem) {
-          return changes;
-        }
-
-        let exitEarly = !changes.selectedItem;
-        if (changes.selectedItem) {
-          ({ exitEarly } = onInputEnterDown(changes.selectedItem));
-        }
-        if (exitEarly) {
-          // exit early if non FilterHelper item was selected
-          return changes;
-        }
-
-        // helper click, open FilterHelper and modify state
-        return {
-          ...changes,
-          selectedItem: state.selectedItem, // keep the last selected item (i.e. the edit field stays unchanged)
-        };
-      }
-      default:
-        return changes; // no handling for other types
-    }
-  };
 
   // useCombobox from Downshift manages the state of the dropdown
   const {
@@ -323,6 +341,47 @@ export function SearchBar(
       }
     },
   });
+
+  // special click handling for filter helper
+  function stateReducer(
+    state: UseComboboxState<SearchItem>,
+    actionAndChanges: UseComboboxStateChangeOptions<SearchItem>
+  ) {
+    const { type, changes } = actionAndChanges;
+    switch (type) {
+      // FIXME: Do not act on focus because it interacts badly with autofocus
+      // Downshift will likely switch away from using focus because too
+      // https://github.com/downshift-js/downshift/issues/1439
+      // (Also see onFocus below)
+      case useCombobox.stateChangeTypes.InputFocus:
+        return state;
+      case useCombobox.stateChangeTypes.ItemClick:
+      case useCombobox.stateChangeTypes.InputKeyDownEnter:
+        if (!changes.selectedItem) {
+          return changes;
+        }
+
+        switch (changes.selectedItem.type) {
+          case SearchItemType.Help:
+            setFilterHelpOpen(true);
+            break;
+          case SearchItemType.ArmoryEntry:
+            setArmoryItemHash(changes.selectedItem.armoryItem.hash);
+            break;
+          default:
+            // exit early if non FilterHelper item was selected
+            return changes;
+        }
+        // helper click, open FilterHelper and modify state
+        return {
+          ...changes,
+          selectedItem: state.selectedItem, // keep the last selected item (i.e. the edit field stays unchanged)
+        };
+
+      default:
+        return changes; // no handling for other types
+    }
+  }
 
   // FIXME: Maybe follow suit when Downshift changes opening behavior to
   // just use clicks and not focus (see stateReducer above)
@@ -358,9 +417,9 @@ export function SearchBar(
   const deleteSearch = useCallback(
     (e: React.MouseEvent, item: SearchItem) => {
       e.stopPropagation();
-      onSearchDeleted(item.query.fullText);
+      dispatch(searchDeleted(item.query.fullText));
     },
-    [onSearchDeleted]
+    [dispatch]
   );
 
   // Add some methods for refs to use
@@ -407,10 +466,10 @@ export function SearchBar(
       items[highlightedIndex]?.type === SearchItemType.Recent
     ) {
       e.preventDefault();
-      onSearchDeleted(items[highlightedIndex].query.fullText);
+      dispatch(searchDeleted(items[highlightedIndex].query.fullText));
     } else if (e.key === 'Enter' && !isOpen && liveQuery) {
       // Show search results on "Enter" with a closed menu
-      onToggleSearchResults();
+      dispatch(toggleSearchResults());
     }
   };
 
@@ -471,7 +530,7 @@ export function SearchBar(
             onFocus,
             onKeyDown,
             ref: inputElement,
-            className: clsx({ [styles.invalid]: !valid }),
+            className: clsx('filter-input', { [styles.invalid]: !valid }),
             autoComplete: 'off',
             autoCorrect: 'off',
             autoCapitalize: 'off',
@@ -487,7 +546,7 @@ export function SearchBar(
           <AnimatePresence>
             {children}
 
-            {liveQuery.length > 0 && (saveable || saved) && !isPhonePortrait && (
+            {liveQuery.length > 0 && (saveable || saved) && (
               <motion.button
                 layout
                 exit={{ scale: 0 }}
@@ -556,6 +615,13 @@ export function SearchBar(
 
         {autocompleteMenu}
       </div>
+      {armoryItemHash !== undefined && (
+        <ArmorySheet itemHash={armoryItemHash} onClose={() => setArmoryItemHash(undefined)} />
+      )}
     </>
   );
 }
+
+export default connect(mapStateToProps, null, null, { forwardRef: true })(
+  React.forwardRef(ItemSearchBar)
+);

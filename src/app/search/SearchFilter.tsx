@@ -5,9 +5,9 @@ import React, { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { setSearchQuery } from '../shell/actions';
+import ItemSearchBar, { SearchFilterRef } from './ItemSearchBar';
 import MainSearchBarActions from './MainSearchBarActions';
 import MainSearchBarMenu from './MainSearchBarMenu';
-import SearchBar, { SearchFilterRef } from './SearchBar';
 import { SearchInput } from './SearchInput';
 
 /**
@@ -65,7 +65,7 @@ export default React.forwardRef(function SearchFilter(
   const itemSearch = !onLoadouts;
 
   return itemSearch ? (
-    <SearchBar
+    <ItemSearchBar
       ref={ref}
       onQueryChanged={onQueryChanged}
       placeholder={placeholder}
@@ -76,7 +76,7 @@ export default React.forwardRef(function SearchFilter(
       menu={menu}
     >
       {extras}
-    </SearchBar>
+    </ItemSearchBar>
   ) : (
     <SearchInput onQueryChanged={onQueryChanged} placeholder={placeholder} query={searchQuery} />
   );
