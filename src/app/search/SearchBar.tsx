@@ -44,6 +44,15 @@ import { SearchItem, SearchItemType } from './autocomplete';
 import { canonicalizeQuery, parseQuery } from './query-parser';
 import { validateQuerySelector } from './search-filter';
 
+const searchItemIcons: { [key in SearchItemType]: string } = {
+  [SearchItemType.Recent]: faClock,
+  [SearchItemType.Saved]: starIcon,
+  [SearchItemType.Suggested]: unTrackedIcon, // TODO: choose a real icon
+  [SearchItemType.Autocomplete]: searchIcon, // TODO: choose a real icon
+  [SearchItemType.Help]: helpIcon,
+  [SearchItemType.ArmoryEntry]: helpIcon, // TODO: remove armory knowledge from this as it is item item specific
+};
+
 interface Props {
   /** Placeholder text when nothing has been typed */
   placeholder: string;
@@ -73,23 +82,6 @@ interface Props {
   onClear?: () => void;
   autocompleter: (query: string, caretIndex: number, recentSearches: Search[]) => SearchItem[];
 }
-
-/** An interface for interacting with the search filter through a ref */
-export interface SearchFilterRef {
-  /** Switch focus to the filter field */
-  focusFilterInput: () => void;
-  /** Clear the filter field */
-  clearFilter: () => void;
-}
-
-const searchItemIcons: { [key in SearchItemType]: string } = {
-  [SearchItemType.Recent]: faClock,
-  [SearchItemType.Saved]: starIcon,
-  [SearchItemType.Suggested]: unTrackedIcon, // TODO: choose a real icon
-  [SearchItemType.Autocomplete]: searchIcon, // TODO: choose a real icon
-  [SearchItemType.Help]: helpIcon,
-  [SearchItemType.ArmoryEntry]: helpIcon, // TODO: remove armory knowledge from this as it is item item specific
-};
 
 const LazyFilterHelp = lazy(() => import(/* webpackChunkName: "filter-help" */ './FilterHelp'));
 
@@ -182,6 +174,14 @@ const Row = memo(
   )
 );
 
+/** An interface for interacting with the search filter through a ref */
+export interface SearchFilterRef {
+  /** Switch focus to the filter field */
+  focusFilterInput: () => void;
+  /** Clear the filter field */
+  clearFilter: () => void;
+}
+
 export const SearchBar = forwardRef(function SearchBar(
   {
     searchQueryVersion,
@@ -255,11 +255,39 @@ export const SearchBar = forwardRef(function SearchBar(
     [autocompleter, caretPosition, liveQuery, recentSearches]
   );
 
+  // useCombobox from Downshift manages the state of the dropdown
+  const {
+    isOpen,
+    getToggleButtonProps,
+    getMenuProps,
+    getInputProps,
+    getLabelProps,
+    highlightedIndex,
+    getItemProps,
+    setInputValue,
+    reset: clearFilter,
+    openMenu,
+  } = useCombobox<SearchItem>({
+    items,
+    stateReducer,
+    initialInputValue: liveQuery,
+    initialIsOpen: isPhonePortrait && mainSearchBar,
+    defaultHighlightedIndex: liveQuery ? 0 : -1,
+    itemToString: (i) => i?.query.fullText || '',
+    onInputValueChange: ({ inputValue, type }) => {
+      setLiveQuery(inputValue || '');
+      debouncedUpdateQuery(inputValue || '');
+      if (type === useCombobox.stateChangeTypes.FunctionReset) {
+        onClear?.();
+      }
+    },
+  });
+
   // special click handling for filter helper
-  const stateReducer = (
+  function stateReducer(
     state: UseComboboxState<SearchItem>,
     actionAndChanges: UseComboboxStateChangeOptions<SearchItem>
-  ) => {
+  ) {
     const { type, changes } = actionAndChanges;
     switch (type) {
       // FIXME: Do not act on focus because it interacts badly with autofocus
@@ -293,35 +321,7 @@ export const SearchBar = forwardRef(function SearchBar(
       default:
         return changes; // no handling for other types
     }
-  };
-
-  // useCombobox from Downshift manages the state of the dropdown
-  const {
-    isOpen,
-    getToggleButtonProps,
-    getMenuProps,
-    getInputProps,
-    getLabelProps,
-    highlightedIndex,
-    getItemProps,
-    setInputValue,
-    reset: clearFilter,
-    openMenu,
-  } = useCombobox<SearchItem>({
-    items,
-    stateReducer,
-    initialInputValue: liveQuery,
-    initialIsOpen: isPhonePortrait && mainSearchBar,
-    defaultHighlightedIndex: liveQuery ? 0 : -1,
-    itemToString: (i) => i?.query.fullText || '',
-    onInputValueChange: ({ inputValue, type }) => {
-      setLiveQuery(inputValue || '');
-      debouncedUpdateQuery(inputValue || '');
-      if (type === useCombobox.stateChangeTypes.FunctionReset) {
-        onClear?.();
-      }
-    },
-  });
+  }
 
   // FIXME: Maybe follow suit when Downshift changes opening behavior to
   // just use clicks and not focus (see stateReducer above)
