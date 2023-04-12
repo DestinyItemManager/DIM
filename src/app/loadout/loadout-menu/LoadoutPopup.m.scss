@@ -188,26 +188,13 @@
 }
 
 .inGameLoadouts {
+  list-style: none;
   margin: 0 8px;
   padding: 0;
 
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   place-items: flex-start;
-
-  /* stylelint-disable-next-line no-descending-specificity */
-  span,
-  img {
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-  /* stylelint-disable-next-line no-descending-specificity */
-  span {
-    &:hover,
-    &:focus-visible {
-      outline: 1px solid $orange;
-    }
-  }
 
   &.moreLoadouts {
     grid-template-columns: repeat(10, 1fr);
@@ -216,5 +203,13 @@
       height: 24px !important;
       width: 24px !important;
     }
+  }
+}
+
+.inGameLoadoutButton {
+  composes: resetButton from '../../dim-ui/common.m.scss';
+  &:hover,
+  &:focus-visible {
+    outline: 2px solid $orange;
   }
 }

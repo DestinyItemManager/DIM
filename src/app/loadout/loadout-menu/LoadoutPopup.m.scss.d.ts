@@ -6,6 +6,7 @@ interface CssExports {
   'filterInput': string;
   'filterPills': string;
   'hint': string;
+  'inGameLoadoutButton': string;
   'inGameLoadoutIcon': string;
   'inGameLoadouts': string;
   'list': string;

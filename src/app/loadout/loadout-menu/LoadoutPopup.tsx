@@ -51,7 +51,7 @@ import consumablesIcon from 'destiny-icons/general/consumables.svg';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import InGameLoadoutIcon from '../ingame/InGameLoadoutIcon';
+import { InGameLoadoutIconWithIndex } from '../ingame/InGameLoadoutIcon';
 import { applyInGameLoadout } from '../ingame/ingame-loadout-apply';
 import { inGameLoadoutsForCharacterSelector } from '../ingame/selectors';
 import {
@@ -340,10 +340,18 @@ export default function LoadoutPopup({
               })}
             >
               {inGameLoadouts.map((loadout) => (
-                <li key={loadout.id} className={styles.menuItem}>
-                  <span title={loadout.name} onClick={() => handleApplyInGameLoadout(loadout)}>
-                    <InGameLoadoutIcon className={styles.inGameLoadoutIcon} loadout={loadout} />
-                  </span>
+                <li key={loadout.id}>
+                  <button
+                    type="button"
+                    className={styles.inGameLoadoutButton}
+                    title={loadout.name}
+                    onClick={() => handleApplyInGameLoadout(loadout)}
+                  >
+                    <InGameLoadoutIconWithIndex
+                      className={styles.inGameLoadoutIcon}
+                      loadout={loadout}
+                    />
+                  </button>
                 </li>
               ))}
             </ul>
