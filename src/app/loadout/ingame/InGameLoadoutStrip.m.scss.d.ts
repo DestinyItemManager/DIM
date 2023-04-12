@@ -12,6 +12,7 @@ interface CssExports {
   'isEquipped': string;
   'kebab': string;
   'loadoutStrip': string;
+  'matchingLoadouts': string;
   'statusAppIcon': string;
 }
 export const cssExports: CssExports;

@@ -131,12 +131,14 @@ function InGameLoadoutTile({
   if (matchingLoadouts.length) {
     tooltipContent.push(
       <React.Fragment key="matchingloadouts">
-        <AppIcon icon={saveIcon} /> Matching Loadouts:
-        {matchingLoadouts.map((l) => (
-          <div key={l.loadout.id}>
-            <ColorDestinySymbols text={l.loadout.name} />
-          </div>
-        ))}
+        <AppIcon icon={saveIcon} /> {t('InGameLoadout.MatchingLoadouts')}
+        <ul className={styles.matchingLoadouts}>
+          {matchingLoadouts.map((l) => (
+            <li key={l.loadout.id}>
+              <ColorDestinySymbols text={l.loadout.name} />
+            </li>
+          ))}
+        </ul>
       </React.Fragment>
     );
   }
@@ -144,13 +146,8 @@ function InGameLoadoutTile({
     tooltipContent.push(
       <React.Fragment key="isequipped">
         {tooltipContent.length > 1 && <hr />}
-        {/* <img
-            src={helmetIcon}
-            className={clsx(styles.svgIcon, styles.statusIconSvg)}
-            alt="is currently equipped"
-          /> */}
         <span className={clsx(styles.isEquipped, styles.blankBox)} />
-        <span>Currently Equipped</span>
+        <span> {t('InGameLoadout.CurrentlyEquipped')}</span>
       </React.Fragment>
     );
   }
@@ -162,21 +159,23 @@ function InGameLoadoutTile({
         icon={isEquippable ? faCheckCircle : faExclamationCircle}
         className={clsx(styles.statusAppIcon, isEquippable ? styles.equipOk : styles.equipNok)}
       />
-      <span>{isEquippable ? 'In-Game Equip Ready' : 'In-Game Equip Not Ready'}</span>
+      <span>
+        {' '}
+        {isEquippable ? t('InGameLoadout.EquipReady') : t('InGameLoadout.EquipNotReady')}
+      </span>
     </React.Fragment>
   );
 
   return (
     <div
       key={gameLoadout.index}
-      className={clsx(styles.inGameTileWrapper, isEquipped && styles.isEquipped)}
+      className={clsx(styles.inGameTileWrapper, { [styles.isEquipped]: isEquipped })}
     >
       <PressTip tooltip={tooltipContent.length ? tooltipContent : null} placement="bottom">
         <div className={styles.inGameTile} onClick={() => onShowDetails(gameLoadout)}>
           <div className={styles.igtIconHolder}>
             <InGameLoadoutIconWithIndex loadout={gameLoadout} className={styles.igtIcon} />
           </div>
-          {/* <ColorDestinySymbols text={loadout.name} className={styles.igtName} /> */}
           <AppIcon
             icon={isEquippable ? faCheckCircle : faExclamationCircle}
             className={clsx(styles.statusAppIcon, isEquippable ? styles.equipOk : styles.equipNok)}
@@ -184,16 +183,6 @@ function InGameLoadoutTile({
           {matchingLoadouts.length > 0 && (
             <AppIcon icon={saveIcon} className={styles.statusAppIcon} />
           )}
-          {/* {isEquipped && (
-            <img
-              src={helmetIcon}
-              className={clsx(styles.svgIcon, styles.statusIconSvg)}
-              alt="is currently equipped"
-            />
-          )} */}
-          {/* <div className={styles.igtProps}>
-
-          </div> */}
         </div>
       </PressTip>
       <Dropdown kebab options={options} placement="bottom-end" className={styles.kebab} />

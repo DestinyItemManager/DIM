@@ -177,7 +177,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
         <h1>{t('Loadouts.DimLoadouts')}</h1>
         {filterPills}
         {loadouts.map((loadout) =>
-          isInGameLoadout(loadout) ? null : ( // <InGameLoadoutRow key={loadout.index} loadout={loadout} store={selectedStore} />
+          isInGameLoadout(loadout) ? null : (
             <LoadoutRow
               key={loadout.id}
               loadout={loadout}
