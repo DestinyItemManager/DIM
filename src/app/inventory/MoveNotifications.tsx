@@ -7,7 +7,7 @@ import {
   LoadoutModState,
   LoadoutSocketOverrideState,
 } from 'app/loadout-drawer/loadout-apply-state';
-import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
+import { InGameLoadout, Loadout, isInGameLoadout } from 'app/loadout-drawer/loadout-types';
 import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { NotificationError, NotifyInput } from 'app/notifications/notifications';
@@ -56,7 +56,7 @@ export function moveItemNotification(
  * Generate JSX for a loadout apply notification. This isn't a component.
  */
 export function loadoutNotification(
-  loadout: Loadout,
+  loadout: Loadout | InGameLoadout,
   stateObservable: Observable<LoadoutApplyState>,
   loadoutPromise: Promise<unknown>,
   cancel: () => void
@@ -65,10 +65,12 @@ export function loadoutNotification(
     promise: loadoutPromise.catch((e) => {
       throw new NotificationError(e.message, {
         body: <ApplyLoadoutProgressBody stateObservable={stateObservable} />,
+        type: stateObservable.getCurrentValue().inGameLoadoutInActivity ? 'warning' : 'error',
       });
     }),
     duration: 5_000,
     title: t('Loadouts.NotificationTitle', { name: loadout.name }),
+    icon: isInGameLoadout(loadout) && <InGameLoadoutIcon loadout={loadout} />,
     body: <ApplyLoadoutProgressBody stateObservable={stateObservable} />,
     onCancel: cancel,
   };
@@ -82,6 +84,7 @@ const messageByPhase: { [phase in LoadoutApplyPhase]: string } = {
   [LoadoutApplyPhase.SocketOverrides]: tl('Loadouts.SocketOverrides'),
   [LoadoutApplyPhase.ApplyMods]: tl('Loadouts.ApplyMods'),
   [LoadoutApplyPhase.ClearSpace]: tl('Loadouts.ClearingSpace'),
+  [LoadoutApplyPhase.InGameLoadout]: tl('Loadouts.EquipInGameLoadout'),
   [LoadoutApplyPhase.Succeeded]: tl('Loadouts.Succeeded'),
   [LoadoutApplyPhase.Failed]: tl('Loadouts.Failed'),
 };
@@ -92,8 +95,14 @@ function ApplyLoadoutProgressBody({
   stateObservable: Observable<LoadoutApplyState>;
 }) {
   // TODO: throttle subscription?
-  const { phase, equipNotPossible, itemStates, socketOverrideStates, modStates } =
-    useThrottledSubscription(stateObservable, 100);
+  const {
+    phase,
+    equipNotPossible,
+    itemStates,
+    socketOverrideStates,
+    modStates,
+    inGameLoadoutInActivity,
+  } = useThrottledSubscription(stateObservable, 100);
   const defs = useD2Definitions()!;
 
   const progressIcon =
@@ -131,6 +140,12 @@ function ApplyLoadoutProgressBody({
         <div className={styles.warning}>
           <AlertIcon className={styles.warningIcon} />
           {t('BungieService.DestinyCannotPerformActionAtThisLocation')}
+        </div>
+      )}
+      {inGameLoadoutInActivity && (
+        <div className={styles.warning}>
+          <AlertIcon className={styles.warningIcon} />
+          {t('Loadouts.ApplyInGameLoadoutInGame')}
         </div>
       )}
       {itemStatesList.length > 0 && (

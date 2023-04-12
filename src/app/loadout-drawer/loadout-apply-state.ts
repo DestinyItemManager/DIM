@@ -21,6 +21,8 @@ export const enum LoadoutApplyPhase {
   ApplyMods,
   /** Clear out empty space */
   ClearSpace,
+  /** Applying in game loadout */
+  InGameLoadout,
   /** Terminal state, loadout succeeded */
   Succeeded,
   /** Terminal state, loadout failed */
@@ -108,6 +110,9 @@ export interface LoadoutApplyState {
    */
   // TODO: how to get a consistent display sort?
   readonly modStates: LoadoutModResult[];
+
+  /** Whether the in game loadout could not be equipped because you're in an activity. */
+  readonly inGameLoadoutInActivity: boolean;
 }
 
 export type LoadoutStateGetter = () => LoadoutApplyState;
@@ -133,6 +138,7 @@ export function makeLoadoutApplyState(): [
     itemStates: {},
     socketOverrideStates: {},
     modStates: [],
+    inGameLoadoutInActivity: false,
   };
 
   const observable = new Observable(initialLoadoutApplyState);
@@ -193,6 +199,9 @@ export function setSocketOverrideResult(
  * Has any part of the loadout application process failed?
  */
 export function anyActionFailed(state: LoadoutApplyState) {
+  if (state.inGameLoadoutInActivity) {
+    return true;
+  }
   if (
     Object.values(state.itemStates).some(
       (s) => s.state !== LoadoutItemState.Succeeded && s.state !== LoadoutItemState.AlreadyThere
