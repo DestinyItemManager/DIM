@@ -1,4 +1,4 @@
-import { HorizontalScrollContainer } from 'app/dim-ui/Sheet';
+import { SheetHorizontalScrollContainer } from 'app/dim-ui/SheetHorizontalScrollContainer';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -36,7 +36,7 @@ export default function Footer({
           {acceptButtonText}
         </button>
       </div>
-      <HorizontalScrollContainer>
+      <SheetHorizontalScrollContainer>
         {plugSets.flatMap((plugSet) =>
           plugSet.selected.map((plug) => (
             <PlugDef
@@ -49,7 +49,7 @@ export default function Footer({
             />
           ))
         )}
-      </HorizontalScrollContainer>
+      </SheetHorizontalScrollContainer>
     </div>
   );
 }

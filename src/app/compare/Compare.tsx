@@ -1,4 +1,5 @@
 import BungieImage from 'app/dim-ui/BungieImage';
+import { SheetHorizontalScrollContainer } from 'app/dim-ui/SheetHorizontalScrollContainer';
 import { t } from 'app/i18next-t';
 import { locateItem } from 'app/inventory/locate-item';
 import { createItemContextSelector } from 'app/inventory/selectors';
@@ -23,7 +24,7 @@ import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Sheet, { HorizontalScrollContainer } from '../dim-ui/Sheet';
+import Sheet from '../dim-ui/Sheet';
 import { DimItem, DimSocket } from '../inventory/item-types';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 import styles from './Compare.m.scss';
@@ -277,7 +278,7 @@ function CompareItems({
   onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
 }) {
   return (
-    <HorizontalScrollContainer>
+    <SheetHorizontalScrollContainer>
       {items.map((item) => (
         <CompareItem
           item={item}
@@ -291,7 +292,7 @@ function CompareItems({
           isInitialItem={initialItemId === item.id}
         />
       ))}
-    </HorizontalScrollContainer>
+    </SheetHorizontalScrollContainer>
   );
 }
 

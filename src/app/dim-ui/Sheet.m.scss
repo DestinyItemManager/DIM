@@ -18,16 +18,3 @@
     opacity: 0.6;
   }
 }
-
-.horizontalScrollContainer {
-  flex: 1;
-  white-space: nowrap;
-  overflow-x: scroll;
-  overflow-y: hidden;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  -webkit-overflow-scrolling: touch;
-  contain: content;
-  touch-action: none;
-}
