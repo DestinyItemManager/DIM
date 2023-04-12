@@ -73,26 +73,6 @@ export function updateAfterInGameLoadoutApply(loadout: InGameLoadout): ThunkResu
   };
 }
 
-/**
- * move a loadout's items to their character. maybe applyInGameLoadout should incorporate this behavior
- */
-export function prepInGameLoadout(loadout: InGameLoadout): ThunkResult {
-  return async (dispatch, getState) => {
-    const stores = storesSelector(getState());
-    const targetStore = getStore(stores, loadout.characterId)!;
-    const allItems = allItemsSelector(getState());
-    const itemCreationContext = createItemContextSelector(getState());
-    const loadoutItems = getItemsFromInGameLoadout(
-      itemCreationContext,
-      loadout.items,
-      allItems
-    ).map((li) => li.item);
-
-    const moveLoadout = itemMoveLoadout(loadoutItems, targetStore);
-    dispatch(applyLoadout(targetStore, moveLoadout));
-  };
-}
-
 export function deleteInGameLoadout(loadout: InGameLoadout): ThunkResult {
   return async (dispatch, getState) => {
     const account = currentAccountSelector(getState())!;

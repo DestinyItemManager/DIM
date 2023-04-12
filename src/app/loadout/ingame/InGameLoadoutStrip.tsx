@@ -16,7 +16,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { InGameLoadoutIconWithIndex } from './InGameLoadoutIcon';
 import styles from './InGameLoadoutStrip.m.scss';
-import { applyInGameLoadout, deleteInGameLoadout, prepInGameLoadout } from './ingame-loadout-apply';
+import { applyInGameLoadout, deleteInGameLoadout } from './ingame-loadout-apply';
 import { FullyResolvedLoadout, inGameLoadoutsWithMetadataSelector } from './selectors';
 
 export function InGameLoadoutStrip({
@@ -99,11 +99,11 @@ function InGameLoadoutTile({
     !isEquippable && {
       key: 'prep',
       content: t('InGameLoadout.PrepareEquip'),
-      onSelected: () => dispatch(prepInGameLoadout(gameLoadout)),
+      onSelected: () => dispatch(applyInGameLoadout(gameLoadout, false)),
     },
     {
       key: 'edit',
-      content: t('InGameLoadout.PrepareEquip'),
+      content: t('InGameLoadout.EditTitle'),
       onSelected: () => onEdit(gameLoadout),
     },
     {
