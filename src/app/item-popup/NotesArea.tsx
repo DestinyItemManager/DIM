@@ -1,5 +1,6 @@
 import { WithSymbolsPicker } from 'app/dim-ui/destiny-symbols/SymbolsPicker';
 import { useAutocomplete } from 'app/dim-ui/text-complete/text-complete';
+import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { setNote } from 'app/inventory/actions';
 import { DimItem } from 'app/inventory/item-types';
@@ -27,6 +28,12 @@ export default function NotesArea({
 }) {
   const savedNotes = useSelector(notesSelector(item));
   const [notesOpen, setNotesOpen] = useState(false);
+  const openNotes = useCallback(() => {
+    setNotesOpen(true);
+    ga('send', 'event', 'Item Popup', 'Edit Notes');
+  }, []);
+
+  useHotkey('n', t('Hotkey.Notes'), openNotes);
 
   // nothing to do if it can't be tagged (/noted)
   if (!item.taggable) {
@@ -48,10 +55,7 @@ export default function NotesArea({
       <div
         role="button"
         className={clsx(styles.openNotesEditor, { [styles.noNotesYet]: !savedNotes })}
-        onClick={() => {
-          setNotesOpen(true);
-          ga('send', 'event', 'Item Popup', 'Edit Notes');
-        }}
+        onClick={openNotes}
         tabIndex={0}
       >
         <AppIcon className={styles.editIcon} icon={editIcon} />{' '}

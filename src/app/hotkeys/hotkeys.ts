@@ -158,7 +158,9 @@ function handleKeyEvent(e: KeyboardEvent) {
     e.isComposing ||
     e.repeat ||
     (e.target instanceof HTMLElement &&
-      (e.target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)))
+      (e.target.isContentEditable ||
+        (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName) &&
+          (e.target as HTMLInputElement).type !== 'checkbox')))
   ) {
     return;
   }
@@ -198,6 +200,7 @@ function trigger(comboStr: string, e: KeyboardEvent) {
   if (callbacks) {
     // Only call the last callback registered for this combo.
     callbacks[callbacks.length - 1].callback(e);
+    e.preventDefault();
     return true;
   }
   return false;

@@ -1,9 +1,9 @@
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { StatInfo } from 'app/compare/Compare';
 import { settingSelector } from 'app/dim-api/selectors';
+import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import useBulkNote from 'app/dim-ui/useBulkNote';
 import useConfirm from 'app/dim-ui/useConfirm';
-import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t, tl } from 'app/i18next-t';
 import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
 import { DimItem } from 'app/inventory/item-types';
@@ -45,13 +45,15 @@ import React, { ReactNode, useCallback, useEffect, useMemo, useRef, useState } f
 import ReactDOM from 'react-dom';
 import Dropzone, { DropzoneOptions } from 'react-dropzone';
 import { useSelector } from 'react-redux';
-import { getColumns, getColumnSelectionId } from './Columns';
+import { getColumnSelectionId, getColumns } from './Columns';
 import EnabledColumnsSelector from './EnabledColumnsSelector';
-import { itemIncludesCategories } from './filtering-utils';
 import ItemActions, { TagCommandInfo } from './ItemActions';
+import { itemIncludesCategories } from './filtering-utils';
+
+import { compareSelectedItems } from 'app/compare/actions';
 // eslint-disable-next-line css-modules/no-unused-class
 import styles from './ItemTable.m.scss';
-import { armorTopLevelCatHashes, ItemCategoryTreeNode } from './ItemTypeSelector';
+import { ItemCategoryTreeNode, armorTopLevelCatHashes } from './ItemTypeSelector';
 import { ColumnDefinition, ColumnSort, Row, SortDirection } from './table-types';
 
 const possibleStyles = styles as unknown as StringLookup<string>;
@@ -302,23 +304,36 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     [dispatch, selectedItemIds]
   );
 
-  const onMoveSelectedItems = (store: DimStore) => {
-    if (selectedItems.length) {
-      const loadout = newLoadout(
-        t('Organizer.BulkMoveLoadoutName'),
-        selectedItems.map((i) => convertToLoadoutItem(i, false))
-      );
+  const onMoveSelectedItems = useCallback(
+    (store: DimStore) => {
+      if (selectedItems.length) {
+        const loadout = newLoadout(
+          t('Organizer.BulkMoveLoadoutName'),
+          selectedItems.map((i) => convertToLoadoutItem(i, false))
+        );
 
-      dispatch(applyLoadout(store, loadout, { allowUndo: true }));
-    }
-  };
+        dispatch(applyLoadout(store, loadout, { allowUndo: true }));
+      }
+    },
+    [dispatch, selectedItems]
+  );
 
-  const onTagSelectedItems = (tagInfo: TagCommandInfo) => {
-    if (tagInfo.type && selectedItemIds.length) {
+  const onTagSelectedItems = useCallback(
+    (tagInfo: TagCommandInfo) => {
+      if (tagInfo.type && selectedItemIds.length) {
+        const selectedItems = items.filter((i) => selectedItemIds.includes(i.id));
+        dispatch(bulkTagItems(selectedItems, tagInfo.type, true));
+      }
+    },
+    [dispatch, items, selectedItemIds]
+  );
+
+  const onCompareSelectedItems = useCallback(() => {
+    if (selectedItemIds.length) {
       const selectedItems = items.filter((i) => selectedItemIds.includes(i.id));
-      dispatch(bulkTagItems(selectedItems, tagInfo.type, false));
+      dispatch(compareSelectedItems(selectedItems));
     }
-  };
+  }, [dispatch, items, selectedItemIds]);
 
   const gridSpec = `min-content ${filteredColumns
     .map((c) => c.gridWidth ?? 'min-content')
@@ -465,6 +480,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
             stores={stores}
             onTagSelectedItems={onTagSelectedItems}
             onMoveSelectedItems={onMoveSelectedItems}
+            onCompareSelectedItems={onCompareSelectedItems}
           />
           <UserGuideLink topic="Organizer" />
           <Dropzone onDrop={importCsv} accept={{ 'text/csv': ['.csv'] }} useFsAccessApi={false}>

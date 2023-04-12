@@ -23,3 +23,6 @@ export const compareFilteredItems = createAction(
     initialItemId?: string
   ) => ({ query, filteredItems, initialItemId })
 )();
+
+/** Compare a specific set of items. */
+export const compareSelectedItems = createAction('compare/SELECTED_ITEMS')<DimItem[]>();
