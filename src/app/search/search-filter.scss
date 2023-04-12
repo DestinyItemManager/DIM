@@ -59,21 +59,8 @@
   .search-filter {
     height: 100%;
     padding: 0 0 0 8px;
-    margin: 0;
     border-radius: 0;
     border-bottom: 1px solid #999;
     background: black;
-  }
-
-  .filter-input {
-    height: 34px;
-    margin-top: 0;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  input,
-  select:focus {
-    font-size: 16px; // so iOS doesn't zoom
   }
 }

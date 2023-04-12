@@ -530,7 +530,7 @@ function SearchBar(
             onFocus,
             onKeyDown,
             ref: inputElement,
-            className: clsx('filter-input', { [styles.invalid]: !valid }),
+            className: clsx({ [styles.invalid]: !valid }),
             autoComplete: 'off',
             autoCorrect: 'off',
             autoCapitalize: 'off',

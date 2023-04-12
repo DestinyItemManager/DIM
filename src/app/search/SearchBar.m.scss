@@ -2,6 +2,12 @@
 
 .searchBar {
   position: relative;
+
+  input[type='text'] {
+    border-radius: 0;
+    appearance: none;
+    font-size: 13px;
+  }
 }
 
 .open {
@@ -52,8 +58,7 @@
   gap: 6px;
 
   @include phone-portrait {
-    align-items: center;
-    padding: 14px 14px 14px 9px;
+    padding: 10px 10px 10px 9px;
   }
 }
 
@@ -171,7 +176,7 @@
   border: 0;
   cursor: pointer;
 
-  :focus {
+  &:focus-visible {
     outline: 1px solid $orange;
   }
 
@@ -179,11 +184,8 @@
     margin-right: 8px !important;
   }
 
-  :global(.mobile-search-link) & {
-    top: 0;
-  }
-
-  :global(.app-icon) {
+  > :global(.app-icon),
+  > button > :global(.app-icon) {
     font-size: 14px !important;
     color: #999 !important;
     // Increase touch target size
@@ -201,8 +203,8 @@
     }
   }
 
-  span,
-  a {
+  > span,
+  > a {
     margin: 0 !important;
   }
 }
