@@ -10,7 +10,6 @@
   z-index: 2;
   color: rgba(245, 245, 245, 0.6);
   overscroll-behavior: contain;
-  cursor: pointer;
   background-color: black;
 
   @include visible-scrollbars;
@@ -178,12 +177,44 @@
 }
 
 .inGameLoadoutIcon {
-  height: 16px !important;
-  width: 16px !important;
+  height: 32px !important;
+  width: 32px !important;
   vertical-align: middle;
 }
 
 .hint {
   opacity: 0.6;
   margin: 8px 0 0 0;
+}
+
+.inGameLoadouts {
+  margin: 0 8px;
+  padding: 0;
+
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  place-items: flex-start;
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  span,
+  img {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  /* stylelint-disable-next-line no-descending-specificity */
+  span {
+    &:hover,
+    &:focus-visible {
+      outline: 1px solid $orange;
+    }
+  }
+
+  &.moreLoadouts {
+    grid-template-columns: repeat(10, 1fr);
+
+    .inGameLoadoutIcon {
+      height: 24px !important;
+      width: 24px !important;
+    }
+  }
 }

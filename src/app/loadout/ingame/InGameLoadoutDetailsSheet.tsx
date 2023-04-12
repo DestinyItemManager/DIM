@@ -17,7 +17,7 @@ import Sheet from '../../dim-ui/Sheet';
 import { allItemsSelector, bucketsSelector } from '../../inventory/selectors';
 import styles from './InGameLoadoutDetailsSheet.m.scss';
 import { InGameLoadoutIconWithIndex } from './InGameLoadoutIcon';
-import { applyInGameLoadout, deleteInGameLoadout, prepInGameLoadout } from './ingame-loadout-apply';
+import { applyInGameLoadout, deleteInGameLoadout } from './ingame-loadout-apply';
 import { gameLoadoutCompatibleBuckets, useItemsFromInGameLoadout } from './ingame-loadout-utils';
 
 export function InGameLoadoutDetails({
@@ -66,7 +66,7 @@ export function InGameLoadoutDetails({
         <button
           type="button"
           className="dim-button"
-          onClick={() => dispatch(prepInGameLoadout(loadout))}
+          onClick={() => dispatch(applyInGameLoadout(loadout, false))}
         >
           {t('InGameLoadout.PrepareEquip')}
         </button>
