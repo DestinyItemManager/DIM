@@ -198,10 +198,8 @@ $header-height: 44px;
 
     @include phone-portrait {
       font-size: 18px;
-      padding: 6px 2rem;
-      &.active {
-        padding-left: calc(2rem - 4px);
-      }
+      padding-top: 6px;
+      padding-bottom: 6px;
     }
 
     &:hover,

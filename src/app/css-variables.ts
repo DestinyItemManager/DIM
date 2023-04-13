@@ -58,7 +58,8 @@ export default function updateCSSVariables() {
       );
     };
     defineVH();
-    window.visualViewport.addEventListener('resize', defineVH);
+    window.visualViewport.addEventListener('resize', () => defineVH());
+    window.visualViewport.addEventListener('scroll', () => defineVH());
   } else {
     const defineVH = () => {
       setCSSVariable('--viewport-height', `${window.innerHeight}px`);

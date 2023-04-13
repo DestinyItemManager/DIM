@@ -46,7 +46,7 @@
 
   @include phone-portrait {
     font-size: 14px;
-    padding: 6px;
+    padding: 2px 0;
   }
 
   &:last-of-type {
@@ -101,6 +101,7 @@
     background: #313233;
     border-radius: 4px;
     box-sizing: border-box;
+    font-size: inherit;
   }
 
   &:hover,
