@@ -347,10 +347,7 @@ export default function LoadoutPopup({
                     title={loadout.name}
                     onClick={() => handleApplyInGameLoadout(loadout)}
                   >
-                    <InGameLoadoutIconWithIndex
-                      className={styles.inGameLoadoutIcon}
-                      loadout={loadout}
-                    />
+                    <InGameLoadoutIconWithIndex loadout={loadout} />
                   </button>
                 </li>
               ))}
