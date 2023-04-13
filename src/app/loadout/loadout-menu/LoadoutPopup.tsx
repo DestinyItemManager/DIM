@@ -10,7 +10,6 @@ import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { powerLevelSelector } from 'app/inventory/store/selectors';
 import {
-  gatherEngramsLoadout,
   itemLevelingLoadout,
   itemMoveLoadout,
   randomLoadout,
@@ -28,7 +27,6 @@ import { filteredItemsSelector, searchFilterSelector } from 'app/search/search-f
 import {
   AppIcon,
   addIcon,
-  banIcon,
   editIcon,
   engramIcon,
   faList,
@@ -112,18 +110,6 @@ export default function LoadoutPopup({
   // A D1 dynamic loadout set up to level weapons and armor
   const makeItemLevelingLoadout = () => {
     const loadout = itemLevelingLoadout(allItems, dimStore);
-    dispatch(applyLoadout(dimStore, loadout, { allowUndo: true }));
-  };
-
-  // A D1 dynamic loadout set up to grab engrams from inventory
-  const applyGatherEngramsLoadout = (options: { exotics: boolean } = { exotics: false }) => {
-    let loadout;
-    try {
-      loadout = gatherEngramsLoadout(allItems, options);
-    } catch (e) {
-      showNotification({ type: 'warning', title: t('Loadouts.GatherEngrams'), body: e.message });
-      return;
-    }
     dispatch(applyLoadout(dimStore, loadout, { allowUndo: true }));
   };
 
@@ -250,21 +236,6 @@ export default function LoadoutPopup({
                 {t('FarmingMode.FarmingMode')}{' '}
                 <span className={styles.note}>{t('FarmingMode.FarmingModeNote')}</span>
               </span>
-            </span>
-          </li>
-        )}
-
-        {!filteringLoadouts && dimStore.destinyVersion === 1 && (
-          <li className={styles.menuItem}>
-            <span onClick={() => applyGatherEngramsLoadout({ exotics: true })}>
-              <AppIcon icon={engramIcon} />
-              <span>{t('Loadouts.GatherEngrams')}</span>
-            </span>
-            <span
-              className={styles.altButton}
-              onClick={() => applyGatherEngramsLoadout({ exotics: false })}
-            >
-              <AppIcon icon={banIcon} /> <span>{t('Loadouts.GatherEngramsExceptExotics')}</span>
             </span>
           </li>
         )}
