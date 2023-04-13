@@ -146,24 +146,25 @@ function InGameLoadoutTile({
     tooltipContent.push(
       <React.Fragment key="isequipped">
         {tooltipContent.length > 1 && <hr />}
+        <AppIcon icon={faCheckCircle} className={clsx(styles.statusAppIcon, styles.equipAlready)} />
         <span> {t('InGameLoadout.CurrentlyEquipped')}</span>
       </React.Fragment>
     );
+  } else {
+    tooltipContent.push(
+      <React.Fragment key="equippable">
+        {tooltipContent.length > 1 && <hr />}
+        <AppIcon
+          icon={isEquippable ? faCheckCircle : faExclamationCircle}
+          className={clsx(styles.statusAppIcon, isEquippable ? styles.equipOk : styles.equipNok)}
+        />
+        <span>
+          {' '}
+          {isEquippable ? t('InGameLoadout.EquipReady') : t('InGameLoadout.EquipNotReady')}
+        </span>
+      </React.Fragment>
+    );
   }
-
-  tooltipContent.push(
-    <React.Fragment key="equippable">
-      {tooltipContent.length > 1 && <hr />}
-      <AppIcon
-        icon={isEquippable ? faCheckCircle : faExclamationCircle}
-        className={clsx(styles.statusAppIcon, isEquippable ? styles.equipOk : styles.equipNok)}
-      />
-      <span>
-        {' '}
-        {isEquippable ? t('InGameLoadout.EquipReady') : t('InGameLoadout.EquipNotReady')}
-      </span>
-    </React.Fragment>
-  );
 
   return (
     <div
@@ -176,8 +177,11 @@ function InGameLoadoutTile({
             <InGameLoadoutIconWithIndex loadout={gameLoadout} className={styles.igtIcon} />
           </div>
           <AppIcon
-            icon={isEquippable ? faCheckCircle : faExclamationCircle}
-            className={clsx(styles.statusAppIcon, isEquippable ? styles.equipOk : styles.equipNok)}
+            icon={isEquipped || isEquippable ? faCheckCircle : faExclamationCircle}
+            className={clsx(
+              styles.statusAppIcon,
+              isEquipped ? styles.equipAlready : isEquippable ? styles.equipOk : styles.equipNok
+            )}
           />
           {matchingLoadouts.length > 0 && (
             <AppIcon icon={saveIcon} className={styles.statusAppIcon} />

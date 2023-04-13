@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'deleteDanger': string;
+  'equipAlready': string;
   'equipNok': string;
   'equipOk': string;
   'igtIcon': string;
