@@ -177,12 +177,6 @@
   margin: 8px;
 }
 
-.inGameLoadoutIcon {
-  height: 32px !important;
-  width: 32px !important;
-  vertical-align: middle;
-}
-
 .hint {
   opacity: 0.6;
   margin: 8px 0 0 0;
@@ -191,19 +185,14 @@
 .inGameLoadouts {
   list-style: none;
   margin: 0 8px;
-  padding: 0;
+  padding: 4px 0;
 
   display: grid;
+  gap: 4px;
   grid-template-columns: repeat(6, 1fr);
   place-items: flex-start;
-
   &.moreLoadouts {
-    grid-template-columns: repeat(10, 1fr);
-
-    .inGameLoadoutIcon {
-      height: 24px !important;
-      width: 24px !important;
-    }
+    grid-template-columns: repeat(5, 1fr);
   }
 }
 
@@ -213,4 +202,5 @@
   &:focus-visible {
     outline: 2px solid $orange;
   }
+  display: block;
 }
