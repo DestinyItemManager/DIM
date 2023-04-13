@@ -108,7 +108,7 @@ export default function LoadoutEditSection({
             <AppIcon icon={disabledIcon} />
           </button>
         )}
-        <Dropdown kebab options={options} placement="bottom-end" />
+        <Dropdown kebab options={options} />
       </div>
       {children}
     </div>

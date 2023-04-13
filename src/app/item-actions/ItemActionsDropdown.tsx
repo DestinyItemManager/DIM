@@ -1,5 +1,7 @@
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { compareFilteredItems } from 'app/compare/actions';
+import { saveSearch } from 'app/dim-api/basic-actions';
+import { recentSearchesSelector } from 'app/dim-api/selectors';
 import Dropdown, { Option } from 'app/dim-ui/Dropdown';
 import { t } from 'app/i18next-t';
 import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
@@ -8,20 +10,27 @@ import { DimStore } from 'app/inventory/store-types';
 import { itemMoveLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { TagCommandInfo } from 'app/organizer/ItemActions';
+import { canonicalizeQuery, parseQuery } from 'app/search/query-parser';
+import { validateQuerySelector } from 'app/search/search-filter';
+import { toggleSearchResults } from 'app/shell/actions';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { stripSockets } from 'app/strip-sockets/strip-sockets-actions';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router';
 import { TagCommand, itemTagSelectorList } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
 import {
   AppIcon,
   clearIcon,
   compareIcon,
+  faList,
   faWindowClose,
   lockIcon,
+  starIcon,
+  starOutlineIcon,
   stickyNoteIcon,
   unlockedIcon,
 } from '../shell/icons';
@@ -92,7 +101,46 @@ export default React.memo(function ItemActionsDropdown({
     }));
   bulkItemTags.push({ type: 'clear', label: t('Tags.ClearTag'), icon: clearIcon });
 
+  // Is the current search saved?
+  const recentSearches = useSelector(recentSearchesSelector);
+  const validateQuery = useSelector(validateQuerySelector);
+  const { valid, saveable } = validateQuery(searchQuery);
+  const canonical = searchQuery ? canonicalizeQuery(parseQuery(searchQuery)) : '';
+  const saved = canonical ? recentSearches.find((s) => s.query === canonical)?.saved : false;
+
+  const toggleSaved = () => {
+    // TODO: keep track of the last search, if you search for something more narrow immediately after then replace?
+    dispatch(saveSearch({ query: searchQuery, saved: !saved }));
+  };
+
+  const location = useLocation();
+  const onInventory = location.pathname.endsWith('inventory');
+  const showSearchResults = onInventory;
+
   const dropdownOptions: Option[] = _.compact([
+    isPhonePortrait && {
+      key: 'favoriteSearch',
+      onSelected: toggleSaved,
+      disabled: !searchQuery.length || !saveable,
+      content: (
+        <>
+          <AppIcon icon={saved ? starIcon : starOutlineIcon} /> {t('Header.SaveSearch')}
+        </>
+      ),
+    },
+    isPhonePortrait &&
+      showSearchResults && {
+        key: 'showSearchResults',
+        onSelected: () => dispatch(toggleSearchResults()),
+        disabled: !searchQuery.length || !valid || filteredItems.length === 0,
+        content: (
+          <>
+            <AppIcon icon={faList} />
+            {t('Header.SearchResults')}
+          </>
+        ),
+      },
+    isPhonePortrait && { key: 'mobile' },
     ...stores.map((store) => ({
       key: `move-${store.id}`,
       onSelected: () => applySearchLoadout(store),
