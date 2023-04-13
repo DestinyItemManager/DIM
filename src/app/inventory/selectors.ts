@@ -290,36 +290,41 @@ export const unlockedPlugSetItemsSelector = currySelector(
   createSelector(
     (_state: RootState, characterId?: string) => characterId,
     profileResponseSelector,
-    (characterId, profileResponse) => {
-      const unlockedPlugs = new Set<number>();
-      if (profileResponse?.profilePlugSets.data?.plugs) {
-        for (const plugSetHashStr in profileResponse.profilePlugSets.data.plugs) {
-          const plugSetHash = parseInt(plugSetHashStr, 10);
-          const plugs = profileResponse.profilePlugSets.data.plugs[plugSetHash];
-          for (const plugSetItem of plugs) {
-            const useCanInsert = universalOrnamentPlugSetHashes.includes(plugSetHash);
-            if (useCanInsert ? plugSetItem.canInsert : plugSetItem.enabled) {
-              unlockedPlugs.add(plugSetItem.plugItemHash);
-            }
-          }
-        }
-      }
-      if (characterId && profileResponse?.characterPlugSets.data?.[characterId]?.plugs) {
-        for (const plugSetHashStr in profileResponse.characterPlugSets.data[characterId].plugs) {
-          const plugSetHash = parseInt(plugSetHashStr, 10);
-          const plugs = profileResponse.characterPlugSets.data[characterId].plugs[plugSetHash];
-          for (const plugSetItem of plugs) {
-            const useCanInsert = universalOrnamentPlugSetHashes.includes(plugSetHash);
-            if (useCanInsert ? plugSetItem.canInsert : plugSetItem.enabled) {
-              unlockedPlugs.add(plugSetItem.plugItemHash);
-            }
-          }
-        }
-      }
-      return unlockedPlugs;
-    }
+    gatherUnlockedPlugSetItems
   )
 );
+
+export function gatherUnlockedPlugSetItems(
+  characterId: string | undefined,
+  profileResponse: DestinyProfileResponse | undefined
+) {
+  const unlockedPlugs = new Set<number>();
+  if (profileResponse?.profilePlugSets.data?.plugs) {
+    for (const plugSetHashStr in profileResponse.profilePlugSets.data.plugs) {
+      const plugSetHash = parseInt(plugSetHashStr, 10);
+      const plugs = profileResponse.profilePlugSets.data.plugs[plugSetHash];
+      for (const plugSetItem of plugs) {
+        const useCanInsert = universalOrnamentPlugSetHashes.includes(plugSetHash);
+        if (useCanInsert ? plugSetItem.canInsert : plugSetItem.enabled) {
+          unlockedPlugs.add(plugSetItem.plugItemHash);
+        }
+      }
+    }
+  }
+  if (characterId && profileResponse?.characterPlugSets.data?.[characterId]?.plugs) {
+    for (const plugSetHashStr in profileResponse.characterPlugSets.data[characterId].plugs) {
+      const plugSetHash = parseInt(plugSetHashStr, 10);
+      const plugs = profileResponse.characterPlugSets.data[characterId].plugs[plugSetHash];
+      for (const plugSetItem of plugs) {
+        const useCanInsert = universalOrnamentPlugSetHashes.includes(plugSetHash);
+        if (useCanInsert ? plugSetItem.canInsert : plugSetItem.enabled) {
+          unlockedPlugs.add(plugSetItem.plugItemHash);
+        }
+      }
+    }
+  }
+  return unlockedPlugs;
+}
 
 /** gets all the dynamic strings from a profile response */
 export const dynamicStringsSelector = (state: RootState) => {

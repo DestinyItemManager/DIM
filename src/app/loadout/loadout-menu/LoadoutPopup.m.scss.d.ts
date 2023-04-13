@@ -6,10 +6,13 @@ interface CssExports {
   'filterInput': string;
   'filterPills': string;
   'hint': string;
+  'inGameLoadoutButton': string;
   'inGameLoadoutIcon': string;
+  'inGameLoadouts': string;
   'list': string;
   'loadoutTypeIcon': string;
   'menuItem': string;
+  'moreLoadouts': string;
   'note': string;
   'warningIcon': string;
 }

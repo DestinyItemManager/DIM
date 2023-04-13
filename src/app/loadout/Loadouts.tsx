@@ -11,13 +11,11 @@ import { artifactUnlocksSelector, sortedStoresSelector } from 'app/inventory/sel
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { InGameLoadout, Loadout, isInGameLoadout } from 'app/loadout-drawer/loadout-types';
+import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
-import { inGameLoadoutsForCharacterSelector } from 'app/loadout/ingame/selectors';
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, addIcon, faCalculator, uploadIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
-import { RootState } from 'app/store/types';
 import { Portal } from 'app/utils/temp-container';
 import { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -25,8 +23,8 @@ import { Link, useLocation } from 'react-router-dom';
 import styles from './Loadouts.m.scss';
 import LoadoutRow from './LoadoutsRow';
 import EditInGameLoadout from './ingame/EditInGameLoadout';
-import InGameLoadoutIcon from './ingame/InGameLoadoutIcon';
-import InGameLoadoutRow from './ingame/InGameLoadoutRow';
+import { InGameLoadoutDetails } from './ingame/InGameLoadoutDetailsSheet';
+import { InGameLoadoutStrip } from './ingame/InGameLoadoutStrip';
 import LoadoutImportSheet from './loadout-share/LoadoutImportSheet';
 import LoadoutShareSheet from './loadout-share/LoadoutShareSheet';
 import {
@@ -84,10 +82,6 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const savedLoadouts = useSavedLoadoutsForClassType(classType);
   const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
 
-  const inGameLoadouts = useSelector((state: RootState) =>
-    inGameLoadoutsForCharacterSelector(state, selectedStoreId)
-  );
-
   const artifactUnlocks = useSelector(artifactUnlocksSelector(selectedStoreId));
 
   const currentLoadout = useMemo(
@@ -102,14 +96,16 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const [editingInGameLoadout, setEditingInGameLoadout] = useState<InGameLoadout>();
   const handleEditSheetClose = useCallback(() => setEditingInGameLoadout(undefined), []);
 
+  const [viewingInGameLoadout, setViewingInGameLoadout] = useState<InGameLoadout>();
+  const handleViewingSheetClose = useCallback(() => setViewingInGameLoadout(undefined), []);
+
   const [filteredLoadouts, filterPills, hasSelectedFilters] = useLoadoutFilterPills(
     savedLoadouts,
-    inGameLoadouts,
     selectedStoreId,
-    true,
-    undefined,
-    undefined,
-    <span className={styles.hashtagTip}>{t('Loadouts.HashtagTip')}</span>
+    {
+      includeWarningPills: true,
+      extra: <span className={styles.hashtagTip}>{t('Loadouts.HashtagTip')}</span>,
+    }
   );
 
   const loadouts = searchAndSortLoadoutsByQuery(filteredLoadouts, query, language, loadoutSort);
@@ -158,7 +154,6 @@ function Loadouts({ account }: { account: DestinyAccount }) {
         {!isPhonePortrait &&
           loadouts.map((loadout) => (
             <PageWithMenu.MenuButton anchor={loadout.id} key={loadout.id}>
-              {isInGameLoadout(loadout) && <InGameLoadoutIcon loadout={loadout} />}
               <ColorDestinySymbols text={loadout.name} />
             </PageWithMenu.MenuButton>
           ))}
@@ -169,28 +164,26 @@ function Loadouts({ account }: { account: DestinyAccount }) {
             <AlertIcon /> {t('Storage.DimSyncNotEnabled')}
           </p>
         )}
+        <h2>{t('Loadouts.InGameLoadouts')}</h2>
+        <InGameLoadoutStrip
+          store={selectedStore}
+          onEdit={setEditingInGameLoadout}
+          onShare={setSharedLoadout}
+          onShowDetails={setViewingInGameLoadout}
+        />
+        <h2>{t('Loadouts.DimLoadouts')}</h2>
         {filterPills}
-        {loadouts.map((loadout) =>
-          isInGameLoadout(loadout) ? (
-            <InGameLoadoutRow
-              key={loadout.index}
-              loadout={loadout}
-              store={selectedStore}
-              onEdit={setEditingInGameLoadout}
-              onShare={setSharedLoadout}
-            />
-          ) : (
-            <LoadoutRow
-              key={loadout.id}
-              loadout={loadout}
-              store={selectedStore}
-              saved={savedLoadoutIds.has(loadout.id)}
-              equippable={loadout !== currentLoadout}
-              onShare={setSharedLoadout}
-              onSnapshotInGameLoadout={handleSnapshot}
-            />
-          )
-        )}
+        {loadouts.map((loadout) => (
+          <LoadoutRow
+            key={loadout.id}
+            loadout={loadout}
+            store={selectedStore}
+            saved={savedLoadoutIds.has(loadout.id)}
+            equippable={loadout !== currentLoadout}
+            onShare={setSharedLoadout}
+            onSnapshotInGameLoadout={handleSnapshot}
+          />
+        ))}
         {loadouts.length === 0 && <p>{t('Loadouts.NoneMatch', { query })}</p>}
       </PageWithMenu.Contents>
       {sharedLoadout && (
@@ -207,6 +200,17 @@ function Loadouts({ account }: { account: DestinyAccount }) {
           <LoadoutImportSheet
             currentStoreId={selectedStoreId}
             onClose={() => setLoadoutImportOpen(false)}
+          />
+        </Portal>
+      )}
+      {viewingInGameLoadout && (
+        <Portal>
+          <InGameLoadoutDetails
+            store={selectedStore}
+            loadout={viewingInGameLoadout}
+            onEdit={setEditingInGameLoadout}
+            onShare={setSharedLoadout}
+            onClose={handleViewingSheetClose}
           />
         </Portal>
       )}

@@ -22,9 +22,17 @@ import { RootState } from 'app/store/types';
  *
  * // Nice:
  * const upperStoreId = useSelector(curriedUpperStoreIdSelector(storeId))
+ *
+ * // You can still use it as an input for createSelector:
+ * const otherSelector = createSelector(
+ *   curriedUpperStoreIdSelector.selector,
+ *   (upperStore) => upperStore.toLowerCase()
+ * )
  */
 export function currySelector<K, R>(
   selector: (state: RootState, props: K) => R
-): (props: K) => (state: RootState) => R {
-  return (props: K) => (state: RootState) => selector(state, props);
+): ((props: K) => (state: RootState) => R) & { selector: (state: RootState, props: K) => R } {
+  const fn = (props: K) => (state: RootState) => selector(state, props);
+  fn.selector = selector;
+  return fn;
 }

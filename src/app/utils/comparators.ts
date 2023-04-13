@@ -11,7 +11,8 @@ export function compareBy<T>(fn: (arg: T) => number | string | undefined | boole
   return (a, b) => {
     const aVal = fn(a);
     const bVal = fn(b);
-    // Undefined is neither greater than or less than anything. This considers it less than everything.
+    // Undefined is neither greater than or less than anything.
+    // This considers it less than everything (except another undefined).
 
     return aVal === bVal
       ? 0 // neither goes first

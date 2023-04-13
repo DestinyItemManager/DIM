@@ -4,6 +4,7 @@ import { customStatsSelector } from 'app/dim-api/selectors';
 import { TagValue } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { createSelector } from 'reselect';
 import {
@@ -12,7 +13,7 @@ import {
   getNotesSelector,
   getTagSelector,
 } from '../inventory/selectors';
-import { loadoutsSelector } from '../loadout-drawer/selectors';
+
 import { FilterDefinition, SuggestionsContext, canonicalFilterFormats } from './filter-types';
 
 //

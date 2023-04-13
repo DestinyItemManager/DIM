@@ -1,30 +1,19 @@
-import { currentProfileSelector } from 'app/dim-api/selectors';
 import { DimItem } from 'app/inventory/item-types';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
 import { allItemsSelector, storesSelector } from 'app/inventory/selectors';
 import { allInGameLoadoutsSelector } from 'app/loadout/ingame/selectors';
 import { manifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
-import { emptyArray } from 'app/utils/empty';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
-import { convertDimApiLoadoutToLoadout } from './loadout-type-converters';
 import { InGameLoadout, Loadout, LoadoutItem, isInGameLoadout } from './loadout-types';
 import {
   getInstancedLoadoutItem,
   getResolutionInfo,
   getUninstancedLoadoutItem,
 } from './loadout-utils';
-
-/** All loadouts relevant to the current account */
-export const loadoutsSelector = createSelector(
-  (state: RootState) => currentProfileSelector(state)?.loadouts,
-  (loadouts) =>
-    loadouts
-      ? Object.values(loadouts).map((loadout) => convertDimApiLoadoutToLoadout(loadout))
-      : emptyArray<Loadout>()
-);
+import { loadoutsSelector } from './loadouts-selector';
 
 export const loadoutsHashtagsSelector = createSelector(loadoutsSelector, (loadouts) => [
   ...new Set(

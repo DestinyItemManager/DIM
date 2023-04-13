@@ -23,7 +23,7 @@ import { inGameLoadoutDeleted, inGameLoadoutUpdated } from './actions';
 import { getItemsFromInGameLoadout } from './ingame-loadout-utils';
 
 /**
- * Ask the API to equip a loadout. You can pass false for apply if you only want to prep the loadout for ingame apply.
+ * Ask the API to equip an ingame loadout. You can pass false for apply if you only want to prep the loadout for ingame apply.
  */
 export function applyInGameLoadout(loadout: InGameLoadout, apply = true): ThunkResult {
   return async (dispatch, getState) => {
@@ -34,7 +34,10 @@ export function applyInGameLoadout(loadout: InGameLoadout, apply = true): ThunkR
       const itemCreationContext = createItemContextSelector(getState());
       const loadoutItems = getItemsFromInGameLoadout(itemCreationContext, loadout.items, allItems);
 
-      const moveLoadout = itemMoveLoadout(loadoutItems, targetStore);
+      const moveLoadout = itemMoveLoadout(
+        loadoutItems.map((i) => i.item),
+        targetStore
+      );
       return await dispatch(
         applyLoadout(targetStore, moveLoadout, apply ? { inGameLoadout: loadout } : {})
       );
@@ -54,7 +57,7 @@ export function updateAfterInGameLoadoutApply(loadout: InGameLoadout): ThunkResu
       allItemsSelector(getState())
     );
 
-    for (const item of items) {
+    for (const { item } of items) {
       // Update items to be equipped
       // TODO: we don't get updated mod states :-( https://github.com/Bungie-net/api/issues/1792
       const source = getStore(stores, item.owner)!;

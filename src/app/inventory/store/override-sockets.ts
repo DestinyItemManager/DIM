@@ -1,3 +1,4 @@
+import { UNSET_PLUG_HASH } from 'app/loadout/known-values';
 import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { errorLog } from 'app/utils/log';
 import produce from 'immer';
@@ -41,7 +42,7 @@ export function applySocketOverrides(
     // overwrite them.
     let plugOptions: DimPlug[] = s.plugOptions.map((p) => ({ ...p, stats: null }));
 
-    if (override && s.plugged?.plugDef.hash !== override) {
+    if (override && override !== UNSET_PLUG_HASH && s.plugged?.plugDef.hash !== override) {
       let newPlug, actuallyPlugged;
 
       if (s.isPerk) {

@@ -10,9 +10,9 @@ import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import { Loadout } from './loadout-types';
 import styles from './LoadoutDrawerFooter.m.scss';
-import { loadoutsSelector } from './selectors';
+import { Loadout } from './loadout-types';
+import { loadoutsSelector } from './loadouts-selector';
 
 /**
  * Find a loadout with the same name that could overlap with this one

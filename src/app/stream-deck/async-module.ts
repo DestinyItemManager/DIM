@@ -116,9 +116,9 @@ function findSubClassInGame(items: DestinyLoadoutItemComponent[], state: RootSta
   const allItems = allItemsSelector(state);
   const itemCreationContext = createItemContextSelector(state);
   const mappedItems = getItemsFromInGameLoadout(itemCreationContext, items, allItems);
-  const categories = _.groupBy(mappedItems, (item) => item.bucket.sort);
+  const categories = _.groupBy(mappedItems, (li) => li.item.bucket.sort);
   const subclassItem = categories['General']?.[0];
-  return subclassItem?.icon;
+  return subclassItem?.item.icon;
 }
 
 // on click on LoadoutView send the selected loadout and the related character identifier to the Stream Deck
