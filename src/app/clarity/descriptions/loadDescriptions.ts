@@ -4,10 +4,12 @@ import { errorLog } from 'app/utils/log';
 import { dedupePromise } from 'app/utils/util';
 import _ from 'lodash';
 import * as actions from '../actions';
+import { ClarityCharacterStats } from './character-stats';
 import { ClarityDescription, ClarityVersions } from './descriptionInterface';
 
 const urls = {
   descriptions: 'https://database-clarity.github.io/Live-Clarity-Database/descriptions/dim.json',
+  characterStats: 'https://database-clarity.github.io/Character-Stats/CharacterStatInfo-NI.json',
   version: 'https://database-clarity.github.io/Live-Clarity-Database/versions.json',
 } as const;
 
@@ -32,16 +34,19 @@ const loadClarityDescriptions = dedupePromise(async (loadFromIndexedDB) => {
     if (savedVersion !== liveVersion.descriptions) {
       const descriptions: ClarityDescription = await fetchClarity('descriptions');
       set('clarity-descriptions', descriptions);
+      const characterStats: ClarityCharacterStats = await fetchClarity('characterStats');
+      set('clarity-characterStats', characterStats);
       localStorage.setItem('clarityDescriptionVersion', liveVersion.descriptions.toString());
-      return descriptions;
+      return [descriptions, characterStats] as const;
     }
   } catch (e) {
     errorLog('clarity', 'failed to load remote descriptions', e);
   }
 
   if (loadFromIndexedDB) {
-    const savedDescriptions: ClarityDescription = await get('clarity-descriptions');
-    return savedDescriptions;
+    const savedDescriptions = await get<ClarityDescription>('clarity-descriptions');
+    const savedCharacterStats = await get<ClarityCharacterStats>('clarity-characterStats');
+    return [savedDescriptions, savedCharacterStats] as const;
   }
 
   return undefined;
@@ -56,15 +61,19 @@ let lastDescriptionUpdate = 0;
  */
 export function loadClarity(): ThunkResult {
   return async (dispatch, getState) => {
-    const { descriptions } = getState().clarity;
+    const { descriptions, characterStats } = getState().clarity;
 
     // Load if it's been long enough, or if there aren't descriptions loaded.
     // The latter helps if there was an error loading them - it forces the next
     // refresh to try again.
-    if (!descriptions || Date.now() - lastDescriptionUpdate > descriptionReloadAfter) {
-      const newDescriptions = await loadClarityDescriptions(!descriptions);
-      if (newDescriptions) {
-        dispatch(actions.loadDescriptions(newDescriptions));
+    if (
+      !descriptions ||
+      !characterStats ||
+      Date.now() - lastDescriptionUpdate > descriptionReloadAfter
+    ) {
+      const newInfo = await loadClarityDescriptions(!descriptions || !characterStats);
+      if (newInfo) {
+        dispatch(actions.loadDescriptions(newInfo));
       }
       lastDescriptionUpdate = Date.now();
     }

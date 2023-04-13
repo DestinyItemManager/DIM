@@ -13,6 +13,9 @@ interface Stat {
   breakdown?: DimCharacterStatChange[];
 }
 
+/**
+ * A rich tooltip for character-level stats like Mobility, Intellect, etc.
+ */
 function StatTooltip({ stat }: { stat: Stat }) {
   const tier = statTier(stat.value);
 
