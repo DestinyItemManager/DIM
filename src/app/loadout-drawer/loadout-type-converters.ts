@@ -261,6 +261,10 @@ export function convertInGameLoadoutToDimLoadout(
  * In game loadouts' plug item hashes are a list of plug items, one per socket index. We strip
  * out unset or empty plugs when converting to DIM's SocketOverrides, which are only set for sockets
  * that should be modified.
+ *
+ * NOTE: In game loadouts map any socket that has only a single option to UNSET_PLUG_HASH instead of
+ * the real plug hash. Not sure why they bother, and it doesn't matter for saving loadouts to DIM's
+ * format, but it does matter for displaying them.
  */
 export function convertInGameLoadoutPlugItemHashesToSocketOverrides(
   plugItemHashes: number[]

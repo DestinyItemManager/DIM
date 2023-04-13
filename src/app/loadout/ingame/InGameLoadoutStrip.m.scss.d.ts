@@ -8,6 +8,7 @@ interface CssExports {
   'igtIconHolder': string;
   'inGameTile': string;
   'inGameTileWrapper': string;
+  'isEquipped': string;
   'kebab': string;
   'loadoutStrip': string;
   'matchingLoadouts': string;

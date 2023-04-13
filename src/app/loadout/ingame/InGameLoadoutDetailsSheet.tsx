@@ -8,7 +8,8 @@ import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { convertInGameLoadoutToDimLoadout } from 'app/loadout-drawer/loadout-type-converters';
 import { InGameLoadout, Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { getSocketsByCategoryHashes, getSocketsByIndexes } from 'app/utils/socket-utils';
+import { isKillTrackerSocket } from 'app/utils/item-utils';
+import { getSocketsByCategoryHashes, socketContainsIntrinsicPlug } from 'app/utils/socket-utils';
 import { ItemCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
@@ -112,16 +113,21 @@ function InGameLoadoutItemDetail({
 }: {
   resolvedItem: ResolvedLoadoutItem;
 }) {
-  // don't display any sockets the game loadout doesn't have data for
-  const validSocketIndexes = Object.keys(loadoutItem.socketOverrides!).map((k) => parseInt(k, 10));
+  // We can't just go off the plugItemHashes because they can contain UNSET_PLUG_HASH for
+  // perks with a single option
+  const validSockets = item.sockets?.allSockets.filter(
+    (s) =>
+      loadoutItem.socketOverrides?.[s.socketIndex] ||
+      (s.isPerk &&
+        !socketContainsIntrinsicPlug(s) &&
+        !isKillTrackerSocket(s) &&
+        s.plugged?.plugDef.displayProperties.name)
+  );
 
   const cosmeticSockets = getSocketsByCategoryHashes(item.sockets, [
     SocketCategoryHashes.ArmorCosmetics,
     SocketCategoryHashes.WeaponCosmetics,
   ]);
-  const validSockets = getSocketsByIndexes(item.sockets!, validSocketIndexes).filter(
-    (socket) => socket.socketDefinition.socketTypeHash
-  );
   const [smallSockets, bigSockets] = _.partition(
     validSockets,
     (s) =>
