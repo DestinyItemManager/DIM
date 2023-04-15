@@ -66,7 +66,7 @@ export const shell: Reducer<ShellState, ShellAction> = (
               ? state.searchQueryVersion + 1
               : state.searchQueryVersion,
             searchResultsOpen:
-              state.searchResultsOpen ||
+              (query && state.searchResultsOpen) ||
               Boolean(state.isPhonePortrait && !state.searchQuery && query),
           }
         : state;

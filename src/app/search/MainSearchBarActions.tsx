@@ -70,7 +70,7 @@ export default function MainSearchBarActions() {
         </motion.div>
       )}
 
-      {showSearchResults && searchResultsOpen && (
+      {searchResultsOpen && (
         <Portal>
           <SearchResults
             items={queryValid ? filteredItems : emptyArray()}
