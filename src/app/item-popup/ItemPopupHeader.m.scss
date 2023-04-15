@@ -27,10 +27,10 @@
 
 .title {
   @include destiny-header;
-  font-size: 21px;
+  font-size: 21px !important;
   line-height: 24px;
   text-decoration: none;
-  margin: 0;
+  margin: 0 !important;
   padding: 0;
 }
 
