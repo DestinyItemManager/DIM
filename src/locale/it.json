@@ -54,6 +54,14 @@
     "Vault": "Deposito",
     "Weapons": "Armi"
   },
+  "BulkNote": {
+    "Append": "Aggiungi alle note / aggiungi #hashtags",
+    "Confirm": "Aggiorna note",
+    "Remove": "Rimuovi dalle note / rimuovi #hashtags",
+    "Replace": "Sostituisci note",
+    "Title": "Cambia note per 1 oggetto",
+    "Title_plural": "Cambia note per {{count}} oggetti"
+  },
   "BungieAlert": {
     "Title": "Un messaggio da Bungie:"
   },
@@ -371,6 +379,7 @@
     "NoStorageMessage": "DIM non può memorizzare dati nel tuo browser. Questo succede se stai navigando in modalità privacy o in incognito, oppure se hai poco spazio libero in memoria. Non potrai effettuare l'accesso ed utilizzare DIM."
   },
   "Hotkey": {
+    "Armory": "Mostra l'Armeria per un oggetto",
     "CheatSheetTitle": "Scorciatoie da tastiera:",
     "ClearDialog": "Chiudi",
     "ClearNewItems": "Pulisci nuovi oggetti",
@@ -378,6 +387,8 @@
     "LockUnlock": "Blocca o sblocca un oggetto",
     "MarkItemAs": "Contrassegna oggetto come '{{tag}}'",
     "Menu": "Attiva/Disattiva menù",
+    "Note": "Inserisci note",
+    "Notes": "",
     "Pull": "Invia l'oggetto al personaggio attivo",
     "RefreshInventory": "Aggiorna l'inventario",
     "ShowHotkeys": "Mostra scorciatoie da tastiera",
@@ -388,14 +399,21 @@
   },
   "InGameLoadout": {
     "Applying": "Equipaggiamento dotazione...",
+    "ClearSlot": "Cancella slot {{index}}",
     "Create": "Crea dotazione",
     "CreateTitle": "Crea dotazione in gioco dall'equipaggiamento attuale",
+    "CurrentlyEquipped": "Attualmente equipaggiato",
     "DeleteFailed": "Eliminazione dotazione non riuscita",
     "Deleted": "Dotazione eliminata",
     "DeletedBody": "Eliminata la dotazione in gioco allo slot {{index}}",
     "EditFailed": "Aggiornamento dotazione non riuscito",
+    "EditIdentifiers": "Modifica identificatori",
     "EditTitle": "Modifica nome e icona dotazione",
-    "LoadoutSlotNum": "Alloggiamento {{index}}",
+    "EquipNotReady": "Equipaggiamento in gioco non pronto",
+    "EquipReady": "Equipaggiamento in gioco pronto",
+    "LoadoutDetails": "Dettagli dotazione",
+    "MatchingLoadouts": "Dotazioni corrispondenti:",
+    "PrepareEquip": "Prepara equipaggiamento",
     "Replace": "Sostituisci dotazione {{index}}",
     "Save": "Aggiorna dotazione",
     "SnapshotFailed": "Salvataggio equipaggiamento in uso non riuscito"
@@ -453,6 +471,14 @@
     "PreviewVendor": "Anteprima contenuto {{type}}",
     "StackFull": "Hai già una pila piena di {{name}}",
     "StoreName": "{{className}} {{genderRace}}"
+  },
+  "KillType": {
+    "ClassAbilities": "Abilità di classe",
+    "Finisher": "Mossa finale",
+    "Grenade": "Granata",
+    "Melee": "Corpo a corpo",
+    "Precision": "Precisione",
+    "Super": "Super"
   },
   "LB": {
     "AdvancedOptions": "Opzioni Avanzate",
@@ -605,8 +631,10 @@
     "AddUnequippedItems": "Aggiungi non equipaggiati",
     "Any": "Qualsiasi classe",
     "Apply": "Applica",
+    "ApplyInGameLoadoutInGame": "La tua dotazione è pronta per essere equipaggiata ma dato che sei in una attività devi equipaggiarla in gioco.",
     "ApplyMods": "Applicazione Modifiche",
     "ApplySearch": "Trasferisci la ricerca \"{{query}}\"",
+    "ArmorStats": "Statistiche armatura",
     "ArtifactUnlocks": "Sblocchi Artefatto",
     "ArtifactUnlocksDesc": "A causa delle limitazioni di Bungie.net, DIM non può configurare automaticamente il tuo Artefatto. Devi eseguire questi sblocchi nel gioco prima di applicare la Dotazione.",
     "ArtifactUnlocksWithSeason": "Sblocchi Artefatto – S{{seasonNumber}}",
@@ -629,8 +657,10 @@
     "Deequip": "Togliendo oggetti dagli altri personaggi",
     "Delete": "Elimina",
     "DeprecatedMods": "Modifiche Obsolete",
+    "DimLoadouts": "Dotazioni DIM",
     "Edit": "Modifica dotazione",
     "EditBrief": "Modifica",
+    "EquipInGameLoadout": "Equipaggiamento dotazione in gioco",
     "EquipItems": "Equipaggiando oggetti",
     "EquippableDifferent1": "Sono stati utilizzati più esotici per calcolare il tuo Potere massimo, quindi il numero mostrato potrebbe non essere raggiungibile equipaggiando gli oggetti in gioco.",
     "EquippableDifferent2": "Il Potere massimo non è limitato alla regola del \"una sola esotica\" quando viene determinato il Potere dei tuoi drop/potenti/ricompense di punta.",
@@ -653,6 +683,7 @@
       "PasteHere": "Incolla un collegamento di una dotazione per aprirlo."
     },
     "ImportLoadout": "Importa dotazione",
+    "InGameLoadouts": "Dotazioni in gioco",
     "ItemErrorSummary": "1 errore oggetto:",
     "ItemErrorSummary_plural": "{{count}} errori oggetti:",
     "ItemLeveling": "Elementi da Livellare",
@@ -716,7 +747,9 @@
     "PullFromPostmasterPopupTitle": "Prendi dall'Amministratrice",
     "Random": "Casuale",
     "Randomize": "Dotazione casuale",
+    "RandomizeButton": "Randomizza",
     "RandomizePrompt": "Randomizzare le armi equipaggiate, armature e spettro?",
+    "RandomizeQueryHint": "Consiglio: Cerca prima gli oggetti per limitare quelli che possono essere scelti casualmente.",
     "RandomizeSearch": "Randomizza da Ricerca",
     "RandomizeSearchPrompt": "Randomizzare i tuoi oggetti equipaggiati da ricerca\"{{query}}\"?",
     "RandomizeWeapons": "Randomizzare le armi equipaggiate?",
@@ -794,8 +827,9 @@
   "MovePopup": {
     "Acquired": "Questo oggetto è sbloccato nelle collezioni.",
     "AcquiredMod": "Questa Modifica è sbloccata nelle collezioni.",
-    "AddNote": "Aggiungi una nota",
+    "AddNote": "Aggiungi note",
     "AddToLoadout": "Dotazione",
+    "AddToLoadoutTitle": "Aggiungilo a una dotazione",
     "All": "Tutto",
     "CannotCurrentlyRoll": "Questo perk non può essere ottenuto sulla versione attuale di questo oggetto.",
     "CantPullFromPostmaster": "Devi andare alla Torre per recuperare questo oggetto.",
@@ -803,7 +837,8 @@
     "CommunityData": "Spiegazione della community",
     "Consolidate": "Consolida",
     "DistributeEvenly": "Distribuisci Equamente",
-    "Equip": "Usa",
+    "Equip": "Equipaggia su:",
+    "EquipWithName": "Equipaggia su {{character}}",
     "FavoriteUnFavorite": {
       "Favorite": "Aggiungi a preferite {{itemType}}",
       "Favorited": "Preferita",
@@ -811,6 +846,7 @@
       "Unfavorited": "Non preferita"
     },
     "Infuse": "Infondi",
+    "InfuseTitle": "Apri la ricerca oggetti da infondere",
     "LockUnlock": {
       "AutoLock": "Lo stato bloccato è sincronizzato con le etichette dell'oggetto",
       "Lock": "Blocca {{itemType}}",
@@ -829,7 +865,7 @@
     "ReadLoreLink": "Leggi storia",
     "Rewards": "Ricompense:",
     "SendToVault": "Invia al Deposito",
-    "Store": "Sposta",
+    "Store": "Sposta su:",
     "StoreWithName": "Sposta su {{character}}",
     "Subtitle": {
       "QuestProgress": "Fase {{questStepNum}} di {{questStepsTotal}}",
@@ -849,7 +885,7 @@
   },
   "Notes": {
     "Error": "Errore! Massimo 120 caratteri per nota.",
-    "Help": "Aggiungere note a questo oggetto"
+    "Help": "Aggiungi note, #hashtags e :symbols:"
   },
   "Notification": {
     "Cancel": "Annulla",
@@ -905,8 +941,7 @@
     "Lock": "Blocca",
     "NoItems": "Nessun oggetto selezionato",
     "NoMobile": "Gira il telefono in orizzontale per usare Il Gestore Deposito.",
-    "Note": "Imposta Nota",
-    "NotePrompt": "Nota:",
+    "Note": "Imposta note",
     "OpenIn": "Mostra in Gestione Deposito",
     "Organizer": "Gestione Deposito",
     "SelectAll": "Seleziona Tutto",
@@ -1102,7 +1137,7 @@
     "AutoBackup": "Abbiamo salvato i tuoi dati in un file, nella tua cartella di download, chiamato dim-data.json, in caso servissero.",
     "BackUpFirst": "Devi prima effettuare un backup dei tuoi dati. Non si sa mai.",
     "BrowserMayClearData": "Il browser può cancellare queste informazioni se esaurisci la memoria o se non visiti DIM spesso.",
-    "DataIsLocal": "I dati delle note ed etichette sono solo locali",
+    "DataIsLocal": "I dati di etichette e note sono solo in locale",
     "DeleteAllData": "Cancella TUTTI i dati dai server di DIM Sync",
     "DeleteAllDataConfirm": "Sei sicuro di voler eliminare TUTTI i tuoi dati, da tutti gli account, da DIM Sync? Non è possibile annullare questa operazione.",
     "DeleteAllDataLabel": "Cancella i dati di DIM Sync",

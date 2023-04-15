@@ -54,6 +54,14 @@
     "Vault": "Tresor",
     "Weapons": "Waffen"
   },
+  "BulkNote": {
+    "Append": "An Notizen anhängen / #Hashtags hinzufügen",
+    "Confirm": "Notizen aktualisieren",
+    "Remove": "Von Notizen entfernen / #Hashtags entfernen",
+    "Replace": "Notizen ersetzen",
+    "Title": "Notizen für 1 Gegenstand ändern",
+    "Title_plural": "Notizen für {{count}} Gegenstände ändern"
+  },
   "BungieAlert": {
     "Title": "Eine Nachricht von Bungie:"
   },
@@ -371,6 +379,7 @@
     "NoStorageMessage": "DIM kann keine Daten in deinem Browser speichern. Das kann durch Surfen im Privatem- oder Inkognito-Modus, oder zu wenig freiem Speicher verursacht werden. Du wirst dich weder anmelden, noch DIM nutzen können."
   },
   "Hotkey": {
+    "Armory": "Zeige Arsenal für einen Gegenstand",
     "CheatSheetTitle": "Tastaturkürzel:",
     "ClearDialog": "Dialog schließen",
     "ClearNewItems": "Markierung von neuen Gegenständen entfernen",
@@ -378,6 +387,8 @@
     "LockUnlock": "Sperre oder entsperre einen Gegenstand",
     "MarkItemAs": "Markiere Gegenstand als '{{tag}}'",
     "Menu": "Menü umschalten",
+    "Note": "Notizen eingeben",
+    "Notes": "",
     "Pull": "Ziehe Gegenstand zum aktiven Charakter",
     "RefreshInventory": "Aktualisiere Inventar",
     "ShowHotkeys": "Tastaturkürzel anzeigen",
@@ -388,14 +399,21 @@
   },
   "InGameLoadout": {
     "Applying": "Lege Loadout an...",
+    "ClearSlot": "Slot {{index}} löschen",
     "Create": "Erstelle Loadout",
     "CreateTitle": "Erstelle In-Game-Loadout von aktueller Ausrüstung",
+    "CurrentlyEquipped": "Zurzeit ausgerüstet",
     "DeleteFailed": "Fehler beim Löschen des Loadouts",
     "Deleted": "Loadout gelöscht",
     "DeletedBody": "In-Game-Loadout in Slot {{index}} gelöscht",
     "EditFailed": "Fehler beim Aktualisieren des Loadouts",
+    "EditIdentifiers": "Kennzeichnung bearbeiten",
     "EditTitle": "Bearbeite Loadout-Namen und -Symbol",
-    "LoadoutSlotNum": "Platz {{index}}",
+    "EquipNotReady": "In-Game nicht zum Ausrüsten bereit",
+    "EquipReady": "In-Game zum Ausrüsten bereit",
+    "LoadoutDetails": "Loadout-Details",
+    "MatchingLoadouts": "Passende Loadouts:",
+    "PrepareEquip": "Ausrüsten vorbereiten",
     "Replace": "Ersetze Loadout {{index}}",
     "Save": "Aktualisiere Loadout",
     "SnapshotFailed": "Fehler beim Speichern des ausgerüsteten Loadouts"
@@ -453,6 +471,14 @@
     "PreviewVendor": "{{type}}-Inhaltsvorschau",
     "StackFull": "Du hast bereits einen kompletten Stapel von {{name}}",
     "StoreName": "{{genderRace}} {{className}}"
+  },
+  "KillType": {
+    "ClassAbilities": "Klassenfähigkeit",
+    "Finisher": "Finisher",
+    "Grenade": "Granate",
+    "Melee": "Nahkampf",
+    "Precision": "Präzision",
+    "Super": "Super"
   },
   "LB": {
     "AdvancedOptions": "Erweiterte Optionen",
@@ -605,8 +631,10 @@
     "AddUnequippedItems": "Unausgerüstet hinzufügen",
     "Any": "Jede Klasse",
     "Apply": "Anwenden",
+    "ApplyInGameLoadoutInGame": "Dein Loadout ist bereit, aber da du dich in einer Aktivität befindest, musst du es im Spiel ausrüsten.",
     "ApplyMods": "Wende Mods an",
     "ApplySearch": "Übertrage Suche \"{{query}}\"",
+    "ArmorStats": "Rüstungswerte",
     "ArtifactUnlocks": "Artefakt-Freischaltungen",
     "ArtifactUnlocksDesc": "Aufgrund von Bungie.net-Einschränkungen kann DIM dein Artefakt nicht automatisch konfigurieren. Du musst diese Freischaltungen im Spiel durchführen, bevor du das Loadout anwenden kannst.",
     "ArtifactUnlocksWithSeason": "Artefakt-Freischaltungen – S{{seasonNumber}}",
@@ -629,8 +657,10 @@
     "Deequip": "Lege Gegenstände von anderen Charakteren ab",
     "Delete": "Löschen",
     "DeprecatedMods": "Veraltete Mods",
+    "DimLoadouts": "DIM-Loadouts",
     "Edit": "Loadout bearbeiten",
     "EditBrief": "Bearbeiten",
+    "EquipInGameLoadout": "Rüste In-Game-Loadout aus",
     "EquipItems": "Rüste Gegenstände aus",
     "EquippableDifferent1": "Mehrere exotische Gegenstände wurden zur Berechnung deines maximalen Powerlevels verwendet, sodass die angezeigte Zahl beim Ausrüsten deiner Gegenstände im Spiel möglicherweise nicht erreichbar ist.",
     "EquippableDifferent2": "Das maximale Powerlevel ist nicht durch die Regel \"Ein exotischer Gegenstand\" begrenzt, wenn die Höhe deiner Drops, mächtigen und Spitzen-Belohnungen berechnet wird.",
@@ -653,6 +683,7 @@
       "PasteHere": "Füge einen Loadout-Link ein, um die Ausrüstung zu öffnen."
     },
     "ImportLoadout": "Importiere Loadout",
+    "InGameLoadouts": "In-Game-Loadouts",
     "ItemErrorSummary": "1 Gegenstands-Fehler:",
     "ItemErrorSummary_plural": "{{count}} Gegenstands-Fehler:",
     "ItemLeveling": "Gegenstand aufwerten",
@@ -716,7 +747,9 @@
     "PullFromPostmasterPopupTitle": "Abrufen von Poststelle",
     "Random": "Zufällig",
     "Randomize": "Zufällige Ausrüstung",
+    "RandomizeButton": "Zufällig generieren",
     "RandomizePrompt": "Zufällig ausgerüstete Waffen, Rüstungen und Geist auswählen?",
+    "RandomizeQueryHint": "Tipp: Benutze zuerst die Suche, um einzuschränken, zwischen welchen Gegenständen zufällig ausgewählt wird.",
     "RandomizeSearch": "Zufällig von Suche",
     "RandomizeSearchPrompt": "Zufällige Gegenstände von der Suche \"{{query}}\" ausrüsten?",
     "RandomizeWeapons": "Zufällige ausgerüstete Waffen wählen?",
@@ -794,8 +827,9 @@
   "MovePopup": {
     "Acquired": "Dieser Gegenstand ist in der Sammlung freigeschaltet.",
     "AcquiredMod": "Dieser Mod ist in der Sammlung freigeschaltet.",
-    "AddNote": "Notiz hinzufügen",
+    "AddNote": "Notizen hinzufügen",
     "AddToLoadout": "Loadout",
+    "AddToLoadoutTitle": "Dies zu einem Loadout hinzufügen",
     "All": "Alle",
     "CannotCurrentlyRoll": "Dieser Perk kann nicht auf die aktuelle Version dieses Gegenstands gerollt werden.",
     "CantPullFromPostmaster": "Du musst auf den Turm, um diesen Gegenstand abzurufen.",
@@ -803,7 +837,8 @@
     "CommunityData": "Community-Einblick",
     "Consolidate": "Zusammenführen",
     "DistributeEvenly": "Gleichmäßig verteilen",
-    "Equip": "Ausrüsten",
+    "Equip": "Ausrüsten auf:",
+    "EquipWithName": "Auf {{character}} ausrüsten",
     "FavoriteUnFavorite": {
       "Favorite": "{{itemType}} zu Favoriten hinzufügen",
       "Favorited": "Favorit",
@@ -811,6 +846,7 @@
       "Unfavorited": "Kein Favorit"
     },
     "Infuse": "Infundieren",
+    "InfuseTitle": "Infundier-Suche öffnen",
     "LockUnlock": {
       "AutoLock": "Sperrstatus ist mit der Markierung dieses Gegenstands synchronisiert",
       "Lock": "{{itemType}} sperren",
@@ -829,8 +865,8 @@
     "ReadLoreLink": "Lese Lore",
     "Rewards": "Belohnungen:",
     "SendToVault": "An Tresor senden",
-    "Store": "Lagern",
-    "StoreWithName": "Lagern auf {{character}}",
+    "Store": "Lagern auf:",
+    "StoreWithName": "Auf {{character}} lagern",
     "Subtitle": {
       "QuestProgress": "Schritt {{questStepNum}} von {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
@@ -849,7 +885,7 @@
   },
   "Notes": {
     "Error": "Fehler! Max 120 Zeichen für Notizen.",
-    "Help": "Notiz für diesen Gegenstand hinzufügen"
+    "Help": "Notizen, #Hashtags und :Symbole: hinzufügen"
   },
   "Notification": {
     "Cancel": "Abbrechen",
@@ -905,8 +941,7 @@
     "Lock": "Sperren",
     "NoItems": "Keine Gegenstände ausgewählt",
     "NoMobile": "Drehe dein Telefon seitlich, um den Organizer zu verwenden.",
-    "Note": "Notiz erstellen",
-    "NotePrompt": "Notiz:",
+    "Note": "Notizen anpassen",
     "OpenIn": "Im Organizer anzeigen",
     "Organizer": "Organizer",
     "SelectAll": "Alle auswählen",
@@ -1102,7 +1137,7 @@
     "AutoBackup": "Wir haben deine Daten in der Datei dim-data.json in deinem Download Ordner gesichert, für alle Fälle.",
     "BackUpFirst": "Du MUSST deine Daten zuerst sichern, bevor du alles löschen kannst. Für alle Fälle.",
     "BrowserMayClearData": "Der Browser könnte diese Informationen eventuell löschen, wenn du zu wenig freien Speicher hast oder DIM nicht regelmäßig besuchst.",
-    "DataIsLocal": "Markierungs- und Notizdaten sind nur lokal",
+    "DataIsLocal": "Markierungen und Notizen sind nur lokal gespeichert",
     "DeleteAllData": "ALLE Daten von DIM Sync-Servern löschen",
     "DeleteAllDataConfirm": "Bist du sicher, dass du ALLE deine Daten für alle Konten von DIM Sync löschen möchtest? Du kannst dies nicht rückgängig machen.",
     "DeleteAllDataLabel": "DIM Sync-Daten löschen",

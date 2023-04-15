@@ -54,6 +54,14 @@
     "Vault": "保險庫",
     "Weapons": "武器"
   },
+  "BulkNote": {
+    "Append": "附加到備注 / 添加 #標簽",
+    "Confirm": "更新説明",
+    "Remove": "從備注中移除 / 移除 #標簽",
+    "Replace": "替換備注",
+    "Title": "更改一個物品的備注",
+    "Title_plural": "更改 {{count}} 個物品的備注"
+  },
   "BungieAlert": {
     "Title": "一則來自Bungie的資訊:"
   },
@@ -371,6 +379,7 @@
     "NoStorageMessage": "DIM無法在您的瀏覽器中儲存資料。這可能是瀏覽器的無痕視窗造成的，或許您磁碟空間不足。DIM無法完成後續操作。"
   },
   "Hotkey": {
+    "Armory": "顯示物品詳情",
     "CheatSheetTitle": "鍵盤快速鍵",
     "ClearDialog": "關閉對話",
     "ClearNewItems": "清除新物品提示",
@@ -378,6 +387,8 @@
     "LockUnlock": "鎖定或解鎖物品",
     "MarkItemAs": "將物品標記為 “{{tag}}”",
     "Menu": "切換菜單",
+    "Note": "添加備注",
+    "Notes": "",
     "Pull": "為當前角色取回物品",
     "RefreshInventory": "刷新背包",
     "ShowHotkeys": "顯示鍵盤快速鍵",
@@ -388,14 +399,21 @@
   },
   "InGameLoadout": {
     "Applying": "正在應用配裝...",
+    "ClearSlot": "清空槽位 {{index}}",
     "Create": "創建配裝",
     "CreateTitle": "從當前已裝備創建游戲内配裝。",
+    "CurrentlyEquipped": "當前裝備",
     "DeleteFailed": "刪除配裝失敗",
     "Deleted": "配裝已刪除",
     "DeletedBody": "已清除槽位 {{index}} 的游戲内配裝",
     "EditFailed": "更新配裝失敗",
+    "EditIdentifiers": "編輯標識",
     "EditTitle": "編輯配裝名稱和圖標",
-    "LoadoutSlotNum": "插槽 {{index}}",
+    "EquipNotReady": "游戲内裝備未就緒",
+    "EquipReady": "游戲内裝備已就緒",
+    "LoadoutDetails": "配裝詳情",
+    "MatchingLoadouts": "匹配配裝：",
+    "PrepareEquip": "準備配裝",
     "Replace": "替換配裝 {{index}}",
     "Save": "更新配裝",
     "SnapshotFailed": "為已裝備的配裝創建快照時失敗"
@@ -453,6 +471,14 @@
     "PreviewVendor": "預覽 {{type}} 內容",
     "StackFull": "您已經達到 {{name}} 的堆疊上限",
     "StoreName": "{{genderRace}} {{className}} 角色"
+  },
+  "KillType": {
+    "ClassAbilities": "職業技能",
+    "Finisher": "終結技",
+    "Grenade": "手雷",
+    "Melee": "近戰",
+    "Precision": "精準",
+    "Super": "超能"
   },
   "LB": {
     "AdvancedOptions": "高級選項",
@@ -605,8 +631,10 @@
     "AddUnequippedItems": "添加未裝備的",
     "Any": "全部職業",
     "Apply": "應用",
+    "ApplyInGameLoadoutInGame": "你的配裝已就緒，但由於你正在進行活動，你需要在游戲内裝備此配裝",
     "ApplyMods": "正在應用模組",
     "ApplySearch": "轉移搜索 \"{{query}}\"",
+    "ArmorStats": "防具屬性",
     "ArtifactUnlocks": "神器解鎖",
     "ArtifactUnlocksDesc": "由於 Bungie.net 的限制，DIM無法自動配置你的神器模組。你需要在游戲中進行解鎖，然後再應用到配裝。",
     "ArtifactUnlocksWithSeason": "神器解鎖 - {{seasonNumber}} 賽季",
@@ -629,8 +657,10 @@
     "Deequip": "從其他角色取回物品",
     "Delete": "刪除",
     "DeprecatedMods": "荒廢的模組",
+    "DimLoadouts": "DIM 配裝",
     "Edit": "編輯配裝",
     "EditBrief": "編輯",
+    "EquipInGameLoadout": "正在裝備游戲内配裝",
     "EquipItems": "正在裝備物品",
     "EquippableDifferent1": "計算你的最大能量等級時使用了多件異域裝備，所以在遊戲內配裝時可能達不到這個數值。",
     "EquippableDifferent2": "在計算你的掉落、強大、巔峰裝備力量等級時，最大力量等級不受「一件異域裝備」規則的限制。",
@@ -653,6 +683,7 @@
       "PasteHere": "粘貼一個配裝連結以打開配裝。"
     },
     "ImportLoadout": "導入配裝",
+    "InGameLoadouts": "游戲内配裝",
     "ItemErrorSummary": "1 個物品出錯：",
     "ItemErrorSummary_plural": "{{count}} 個物品出錯：",
     "ItemLeveling": "物品等級",
@@ -716,7 +747,9 @@
     "PullFromPostmasterPopupTitle": "從郵政官處取回物品",
     "Random": "隨機",
     "Randomize": "隨機配装",
+    "RandomizeButton": "隨機搭配",
     "RandomizePrompt": "確定要將你的武器、護甲和機靈隨機搭配嗎？",
+    "RandomizeQueryHint": "提示：可通過搜索條件來限制隨機物品池",
     "RandomizeSearch": "從搜索結果隨機選取",
     "RandomizeSearchPrompt": "從「{{query}}」的搜索結果隨機配裝？",
     "RandomizeWeapons": "確定要將你的武器隨機搭配嗎？",
@@ -794,8 +827,9 @@
   "MovePopup": {
     "Acquired": "此物品已经在收藏物中解锁",
     "AcquiredMod": "此模組已在收藏中解鎖。",
-    "AddNote": "添加備註",
+    "AddNote": "添加備注",
     "AddToLoadout": "配裝",
+    "AddToLoadoutTitle": "添加此物品到配裝",
     "All": "全部",
     "CannotCurrentlyRoll": "此特性不會出現在此物品的當前版本上。",
     "CantPullFromPostmaster": "你必須到高塔去取回這件物品。",
@@ -803,7 +837,8 @@
     "CommunityData": "社区描述",
     "Consolidate": "合併",
     "DistributeEvenly": "均勻分配",
-    "Equip": "裝備",
+    "Equip": "裝備到：",
+    "EquipWithName": "裝備到 {{character}}",
     "FavoriteUnFavorite": {
       "Favorite": "收藏{{itemType}}",
       "Favorited": "已收藏",
@@ -811,6 +846,7 @@
       "Unfavorited": "已取消收藏"
     },
     "Infuse": "灌注",
+    "InfuseTitle": "打開灌注材料查找器",
     "LockUnlock": {
       "AutoLock": "該物品的鎖定狀態已與其標籤同步",
       "Lock": "鎖定{{itemType}}",
@@ -829,8 +865,8 @@
     "ReadLoreLink": "閱讀傳奇故事",
     "Rewards": "獎勵：",
     "SendToVault": "發送到保險庫",
-    "Store": "寄存",
-    "StoreWithName": "存儲到 {{character}}",
+    "Store": "移動到：",
+    "StoreWithName": "移動到 {{character}}",
     "Subtitle": {
       "QuestProgress": "第 {{questStepNum}} / {{questStepsTotal}} 步",
       "Type": "{{classType}} {{typeName}}"
@@ -849,7 +885,7 @@
   },
   "Notes": {
     "Error": "錯誤! 備註不能超過120個字元.",
-    "Help": "為該物品添加備註"
+    "Help": "添加備注、#標簽、和 :symbols:"
   },
   "Notification": {
     "Cancel": "取消",
@@ -905,8 +941,7 @@
     "Lock": "鎖定",
     "NoItems": "未選擇任何項目",
     "NoMobile": "將手機橫放來使用管理器。",
-    "Note": "添加備註",
-    "NotePrompt": "備註：",
+    "Note": "添加備注",
     "OpenIn": "在管理器中顯示",
     "Organizer": "管理器",
     "SelectAll": "全選",

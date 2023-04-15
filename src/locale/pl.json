@@ -54,6 +54,14 @@
     "Vault": "Schowek",
     "Weapons": "Broń"
   },
+  "BulkNote": {
+    "Append": "Append to notes / add #hashtags",
+    "Confirm": "Update Notes",
+    "Remove": "Remove from notes / remove #hashtags",
+    "Replace": "Replace notes",
+    "Title": "Change notes for 1 item",
+    "Title_plural": "Change notes for {{count}} items"
+  },
   "BungieAlert": {
     "Title": "Wiadomość od Bungie:"
   },
@@ -371,6 +379,7 @@
     "NoStorageMessage": "DIM nie może przechować danych w twojej przeglądarce. To może być spowodowane przez przeglądanie w trybie prywatnym lub incognito, albo kiedy brakuje miejsca na dysku. Nie będziesz mógł się zalogować ani używać DIM."
   },
   "Hotkey": {
+    "Armory": "Show Armory for an item",
     "CheatSheetTitle": "Skróty klawiszowe:",
     "ClearDialog": "Zamknij dialog",
     "ClearNewItems": "Wyczyść nowe przedmioty",
@@ -378,6 +387,8 @@
     "LockUnlock": "Zablokuj lub odblokuj przedmiot",
     "MarkItemAs": "Oznacz przedmiot jako '{{tag}}'",
     "Menu": "Przełącz menu",
+    "Note": "Enter notes",
+    "Notes": "",
     "Pull": "Odbierz przedmiot do aktywnej postaci",
     "RefreshInventory": "Odśwież ekwipunek",
     "ShowHotkeys": "Pokaż skróty klawiszowe",
@@ -388,14 +399,21 @@
   },
   "InGameLoadout": {
     "Applying": "Zakładnie Uzbrojenia...",
+    "ClearSlot": "Clear Slot {{index}}",
     "Create": "Create Loadout",
     "CreateTitle": "Create In-Game Loadout From Current Equipment",
+    "CurrentlyEquipped": "Currently Equipped",
     "DeleteFailed": "Failed to delete loadout",
     "Deleted": "Loadout Deleted",
     "DeletedBody": "Cleared the in-game loadout at slot {{index}}",
     "EditFailed": "Failed to update loadout",
+    "EditIdentifiers": "Edit Identifiers",
     "EditTitle": "Edit Loadout Name and Icon",
-    "LoadoutSlotNum": "Gniazdo {{index}}",
+    "EquipNotReady": "In-game Equip Not Ready",
+    "EquipReady": "In-game Equip Ready",
+    "LoadoutDetails": "Loadout Details",
+    "MatchingLoadouts": "Matching Loadouts:",
+    "PrepareEquip": "Prepare Equip",
     "Replace": "Replace Loadout {{index}}",
     "Save": "Update Loadout",
     "SnapshotFailed": "Failed to snapshot equipped loadout"
@@ -453,6 +471,14 @@
     "PreviewVendor": "Podgląd zawartości {{type}}",
     "StackFull": "Masz już pełny stos {{name}}",
     "StoreName": "{{genderRace}} {{className}}"
+  },
+  "KillType": {
+    "ClassAbilities": "Class Ability",
+    "Finisher": "Finisher",
+    "Grenade": "Grenade",
+    "Melee": "Melee",
+    "Precision": "Precision",
+    "Super": "Super"
   },
   "LB": {
     "AdvancedOptions": "Ustawienia Zaawansowane",
@@ -605,8 +631,10 @@
     "AddUnequippedItems": "Dodaj niezałożone",
     "Any": "Dowolna klasa",
     "Apply": "Zatwierdź",
+    "ApplyInGameLoadoutInGame": "Your loadout is ready to equip but since you're in an activity you need to equip it in-game.",
     "ApplyMods": "Aplikowanie modyfikacji",
     "ApplySearch": "Przenieś wyszukanie \"{{query}}\"",
+    "ArmorStats": "Armor Stats",
     "ArtifactUnlocks": "Artifact Unlocks",
     "ArtifactUnlocksDesc": "Due to Bungie.net limitations, DIM cannot automatically configure your artifact. You need to perform these unlocks in-game before applying the Loadout.",
     "ArtifactUnlocksWithSeason": "Artifact Unlocks – S{{seasonNumber}}",
@@ -629,8 +657,10 @@
     "Deequip": "Rozbrojenie postaci z przedmiotów",
     "Delete": "Usuń",
     "DeprecatedMods": "Wycofane Modyfikacje",
+    "DimLoadouts": "DIM Loadouts",
     "Edit": "Edytuj Uzbrojenie",
     "EditBrief": "Edytuj",
+    "EquipInGameLoadout": "Equipping in-game loadout",
     "EquipItems": "Wyposażanie przedmiotów",
     "EquippableDifferent1": "Wielokrotne przedmioty egzotyczne zostały użyte do obliczenia twojej maksymalnej mocy, więc pokazana liczba może nie być osiągalna podczas wyposażenia twoich przedmiotów w grze.",
     "EquippableDifferent2": "Maksymalna moc nie jest ograniczona przez regułę \"Jeden egzotyk\" podczas określania Mocy twoich upuszczonych przedmiotów, potężnych, oraz szczytowych nagród.",
@@ -653,6 +683,7 @@
       "PasteHere": "Wklej link Uzbrojenia, aby otworzyć Uzbrojenie."
     },
     "ImportLoadout": "Importuj Uzbrojenie",
+    "InGameLoadouts": "In-Game Loadouts",
     "ItemErrorSummary": "1 błąd przedmiotu:",
     "ItemErrorSummary_plural": "{{count}} błędów przedmiotu:",
     "ItemLeveling": "Levelowanie Przedmiotów",
@@ -716,7 +747,9 @@
     "PullFromPostmasterPopupTitle": "Odbierz od Kuriera",
     "Random": "Losowy",
     "Randomize": "Wylosuj uzbrojenie",
+    "RandomizeButton": "Randomize",
     "RandomizePrompt": "Losować twoją założoną broń, zbroję i ducha?",
+    "RandomizeQueryHint": "Tip: Search for items first to restrict what items can be randomly chosen.",
     "RandomizeSearch": "Losowo z Wyszukiwania",
     "RandomizeSearchPrompt": "Wylosuj wyposażone przedmioty z wyszukania \"{{query}}\"?",
     "RandomizeWeapons": "Losować twoją założoną broń?",
@@ -794,8 +827,9 @@
   "MovePopup": {
     "Acquired": "Ten przedmiot jest odblokowany w Kolekcji.",
     "AcquiredMod": "Ta modyfikacja jest odblokowana w kolekcjach.",
-    "AddNote": "Dodaj notatkę",
+    "AddNote": "Add notes",
     "AddToLoadout": "Uzbrojenie",
+    "AddToLoadoutTitle": "Add this to a loadout",
     "All": "Wszystkie",
     "CannotCurrentlyRoll": "Ten perk nie może być otrzymany na bieżącej wersji tego przedmiotu.",
     "CantPullFromPostmaster": "Musisz udać się na Wieżę zęby odebrać ten przedmiot.",
@@ -803,7 +837,8 @@
     "CommunityData": "Spostrzeżenia społeczności",
     "Consolidate": "Połącz",
     "DistributeEvenly": "Rozdziel po równo",
-    "Equip": "Załóż",
+    "Equip": "Equip on:",
+    "EquipWithName": "Equip on {{character}}",
     "FavoriteUnFavorite": {
       "Favorite": "Ulubiony {{itemType}}",
       "Favorited": "Ulubione",
@@ -811,6 +846,7 @@
       "Unfavorited": "Nieulubione"
     },
     "Infuse": "Nasyć",
+    "InfuseTitle": "Open the infusion fuel finder",
     "LockUnlock": {
       "AutoLock": "Stan blokady jest zsynchronizowany z tagiem tego przedmiotu",
       "Lock": "Zablokuj {{itemType}}",
@@ -829,8 +865,8 @@
     "ReadLoreLink": "Czytaj fabułę",
     "Rewards": "Nagrody:",
     "SendToVault": "Wyślij do schowka",
-    "Store": "Umieść",
-    "StoreWithName": "Umieść na {{character}}",
+    "Store": "Pull to:",
+    "StoreWithName": "Pull to {{character}}",
     "Subtitle": {
       "QuestProgress": "Krok {{questStepNum}} z {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
@@ -849,7 +885,7 @@
   },
   "Notes": {
     "Error": "Błąd! Max 120 znaków na notatki.",
-    "Help": "Dodaj notatki do tego przedmiotu"
+    "Help": "Add notes, #hashtags, and :symbols:"
   },
   "Notification": {
     "Cancel": "Anuluj",
@@ -905,8 +941,7 @@
     "Lock": "Zablokuj",
     "NoItems": "Nie wybrano przedmiotów",
     "NoMobile": "Obróć telefon na bok, aby użyć organizatora.",
-    "Note": "Ustaw notatkę",
-    "NotePrompt": "Notka:",
+    "Note": "Set Notes",
     "OpenIn": "Pokaż w organizatorze",
     "Organizer": "Organizator",
     "SelectAll": "Zaznacz wszystko",
@@ -1102,7 +1137,7 @@
     "AutoBackup": "Zrobiliśmy kopię zapasową Twoich danych do pliku w folderze pobrane o nazwie dim-data.json, na wszelki wypadek.",
     "BackUpFirst": "MUSISZ wykonać kopię zapasową swoich danych, zanim je usuniesz. Na wszelki wypadek.",
     "BrowserMayClearData": "Przeglądarka może usunąć te informacje, jeśli zabraknie Ci miejsca lub nie będziesz często odwiedzać DIM.",
-    "DataIsLocal": "Dane tagów i notatek są lokalne",
+    "DataIsLocal": "Tag and notes data is local only",
     "DeleteAllData": "Usuń WSZYSTKIE dane z serwerów synchronizacji DIM",
     "DeleteAllDataConfirm": "Czy na pewno chcesz usunąć WSZYSTKIE dane, z wszystkich kont, ze synchronizacji DIM? Nie możesz tego cofnąć.",
     "DeleteAllDataLabel": "Wyczyść dane synchronizacji DIM",

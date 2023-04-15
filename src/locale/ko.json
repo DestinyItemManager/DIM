@@ -54,6 +54,14 @@
     "Vault": "금고",
     "Weapons": "무기"
   },
+  "BulkNote": {
+    "Append": "메모에 추가 / #해시태그 추가",
+    "Confirm": "메모 업데이트",
+    "Remove": "메모에서 제거 / #해시태그 제거",
+    "Replace": "메모 교체",
+    "Title": "아이템 1개의 메모 변경",
+    "Title_plural": "아이템 {{count}}개의 메모 변경"
+  },
   "BungieAlert": {
     "Title": "Bungie의 메시지:"
   },
@@ -371,6 +379,7 @@
     "NoStorageMessage": "DIM이 브라우저에 데이터를 저장할 수 없습니다. 브라우저를 시크릿 모드로 사용하거나, 디스크 용량이 부족한 경우 이와 같은 문제가 발생할 수 있습니다. DIM에 로그인하거나 사용할 수 없습니다."
   },
   "Hotkey": {
+    "Armory": "아이템을 무기고에서 표시",
     "CheatSheetTitle": "키보드 단축키:",
     "ClearDialog": "대화 상자 숨기기",
     "ClearNewItems": "새 아이템 초기화",
@@ -378,6 +387,8 @@
     "LockUnlock": "아이템 잠금 또는 잠금 해제",
     "MarkItemAs": "아이템을 '{{tag}}'로 표시하기",
     "Menu": "메뉴 표시 전환",
+    "Note": "메모 입력",
+    "Notes": "",
     "Pull": "아이템을 활성화된 캐릭터로 이동",
     "RefreshInventory": "소지품 새로고침",
     "ShowHotkeys": "키보드 단축키 표시",
@@ -388,17 +399,24 @@
   },
   "InGameLoadout": {
     "Applying": "로드아웃을 장착하는 중...",
+    "ClearSlot": "슬롯 {{index}} 초기화",
     "Create": "로드아웃 생성",
     "CreateTitle": "현재 장비에서 게임 내 로드아웃 생성",
+    "CurrentlyEquipped": "현재 착용 중인 아이템",
     "DeleteFailed": "로드아웃 삭제 실패",
     "Deleted": "로드아웃 삭제됨",
     "DeletedBody": "게임 내 로드아웃 {{index}}번 슬롯 삭제됨",
     "EditFailed": "로드아웃 업데이트 실패",
-    "EditTitle": "로드아웃 이름 및 아이콘 수정",
-    "LoadoutSlotNum": "슬롯 {{index}}",
+    "EditIdentifiers": "식별자 변경",
+    "EditTitle": "로드아웃 이름 및 아이콘 변경",
+    "EquipNotReady": "게임 내 장착 준비 안 됨",
+    "EquipReady": "게임 내 장착 준비 완료",
+    "LoadoutDetails": "로드아웃 설명",
+    "MatchingLoadouts": "일치하는 로드아웃:",
+    "PrepareEquip": "장착 준비",
     "Replace": "로드아웃 {{index}} 교체",
     "Save": "로드아웃 업데이트",
-    "SnapshotFailed": "장착된 로드아웃 스냅샷 실패"
+    "SnapshotFailed": "장착된 로드아웃 스냅샷 생성 실패"
   },
   "Infusion": {
     "Filter": "아이템 필터",
@@ -453,6 +471,14 @@
     "PreviewVendor": "{{type}} 콘텐츠 미리보기",
     "StackFull": "이미 최대 개수의 {{name}}을(를) 가지고 있습니다.",
     "StoreName": "{{genderRace}} {{className}}"
+  },
+  "KillType": {
+    "ClassAbilities": "직업 능력",
+    "Finisher": "필살기",
+    "Grenade": "수류탄",
+    "Melee": "근접 공격",
+    "Precision": "정밀 처치",
+    "Super": "궁극기"
   },
   "LB": {
     "AdvancedOptions": "고급 옵션",
@@ -605,8 +631,10 @@
     "AddUnequippedItems": "장착하지 않은 아이템 추가",
     "Any": "모든 직업",
     "Apply": "적용",
+    "ApplyInGameLoadoutInGame": "로드아웃을 장착할 준비가 되었으나, 활동에 참가 중인 경우 게임 내에서 장착해야 합니다.",
     "ApplyMods": "개조 부품 적용 중",
     "ApplySearch": "\"{{query}}\"로 검색된 아이템 이동",
+    "ArmorStats": "방어구 능력치",
     "ArtifactUnlocks": "유물 잠금 해제",
     "ArtifactUnlocksDesc": "Bungie.net의 제한으로 인해 DIM이 유물을 자동으로 관리할 수 없습니다. 로드아웃을 적용하기 전에 게임 내에서 유물을 잠금 해제해야 합니다.",
     "ArtifactUnlocksWithSeason": "유물 잠금 해제 – S{{seasonNumber}}",
@@ -629,8 +657,10 @@
     "Deequip": "다른 캐릭터의 아이템 장착 해제 중",
     "Delete": "삭제",
     "DeprecatedMods": "만료된 개조 부품",
+    "DimLoadouts": "DIM 로드아웃",
     "Edit": "로드아웃 편집",
     "EditBrief": "수정",
+    "EquipInGameLoadout": "게임 내 로드아웃 장착",
     "EquipItems": "장비 장착 중",
     "EquippableDifferent1": "최대 전투력을 계산할 때 여러 개의 경이 아이템이 사용되었으므로, 게임 내 아이템을 장착할 때 표시된 숫자를 달성하지 못할 수 있습니다.",
     "EquippableDifferent2": "최대 전투력은 획득하는 아이템, 강력한 장비, 최고조 보상의 전투력을 결정할 때 \"하나의 경이\" 규칙에 의해 제한되지 않습니다.",
@@ -653,6 +683,7 @@
       "PasteHere": "로드아웃을 열려면 로드아웃 주소를 붙여넣으세요."
     },
     "ImportLoadout": "로드아웃 가져오기",
+    "InGameLoadouts": "게임 내 로드아웃",
     "ItemErrorSummary": "1개의 아이템 오류:",
     "ItemErrorSummary_plural": "{{count}}개의 아이템 오류:",
     "ItemLeveling": "아이템 레벨 올리기",
@@ -716,7 +747,9 @@
     "PullFromPostmasterPopupTitle": "우편 담당자에게서 가져오기",
     "Random": "무작위",
     "Randomize": "무작위 로드아웃",
+    "RandomizeButton": "무작위",
     "RandomizePrompt": "장착된 무기, 방어구, 고스트를 무작위로 설정하시겠습니까?",
+    "RandomizeQueryHint": "팁: 먼저 아이템을 검색하여 무작위로 선택될 수 있는 아이템을 제한하세요.",
     "RandomizeSearch": "검색 결과에서 무작위화",
     "RandomizeSearchPrompt": "\"{{query}}\"로 검색된 결과에서 무작위로 장착하시겠습니까?",
     "RandomizeWeapons": "장착된 무기를 무작위로 설정하시겠습니까?",
@@ -796,6 +829,7 @@
     "AcquiredMod": "이 개조 부품은 수집품에서 잠금 해제되었습니다.",
     "AddNote": "메모 추가",
     "AddToLoadout": "로드아웃",
+    "AddToLoadoutTitle": "로드아웃에 추가",
     "All": "전체",
     "CannotCurrentlyRoll": "이 특성은 현재 버전의 아이템에서 얻을 수 없습니다.",
     "CantPullFromPostmaster": "이 아이템을 회수하려면 탑으로 가야합니다.",
@@ -803,7 +837,8 @@
     "CommunityData": "커뮤니티 인사이트",
     "Consolidate": "모으기",
     "DistributeEvenly": "균등하게 분배",
-    "Equip": "장착",
+    "Equip": "장착:",
+    "EquipWithName": "{{character}}에게 장착",
     "FavoriteUnFavorite": {
       "Favorite": "{{itemType}} 즐겨찾기",
       "Favorited": "즐겨찾기 추가됨",
@@ -811,6 +846,7 @@
       "Unfavorited": "즐겨찾기 해제됨"
     },
     "Infuse": "주입",
+    "InfuseTitle": "주입 재료 탐색기 열기",
     "LockUnlock": {
       "AutoLock": "잠금 상태가 아이템의 태그와 동기화됨",
       "Lock": "{{itemType}} 잠금",
@@ -829,8 +865,8 @@
     "ReadLoreLink": "지식 읽기",
     "Rewards": "보상:",
     "SendToVault": "금고로 이동",
-    "Store": "보관",
-    "StoreWithName": "{{character}}에게 보관",
+    "Store": "이동:",
+    "StoreWithName": "{{character}}에게 이동",
     "Subtitle": {
       "QuestProgress": "{{questStepNum}} / {{questStepsTotal}} 단계",
       "Type": "{{classType}} {{typeName}}"
@@ -849,7 +885,7 @@
   },
   "Notes": {
     "Error": "에러! 메모는 최대 120자 까지 쓰실 수 있습니다.",
-    "Help": "이 아이템에 메모 추가하기"
+    "Help": "메모, #해시태그, :기호: 추가"
   },
   "Notification": {
     "Cancel": "취소",
@@ -906,7 +942,6 @@
     "NoItems": "선택된 아이템 없음",
     "NoMobile": "정리 도구를 사용하시려면 핸드폰을 가로로 돌려주세요.",
     "Note": "메모 설정",
-    "NotePrompt": "메모:",
     "OpenIn": "정리 도구에서 열기",
     "Organizer": "정리 도구",
     "SelectAll": "모두 선택",

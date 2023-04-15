@@ -54,6 +54,14 @@
     "Vault": "Depósito",
     "Weapons": "Armas"
   },
+  "BulkNote": {
+    "Append": "Adjuntar a notas / añadir #hashtags",
+    "Confirm": "Actualizar Notas",
+    "Remove": "Eliminar de notas / eliminar #hashtags",
+    "Replace": "Reemplazar notas",
+    "Title": "Cambiar notas para un 1 objeto",
+    "Title_plural": "Cambiar notas para {{count}} objetos"
+  },
   "BungieAlert": {
     "Title": "Mensaje de Bungie:"
   },
@@ -371,6 +379,7 @@
     "NoStorageMessage": "DIM no puede almacenar información en tu navegador. Esto puede ser causado por navegar en privado o en modo incógnito, o cuando tengas poco espacio en disco. No podrás ser capaz de iniciar sesión o usar DIM."
   },
   "Hotkey": {
+    "Armory": "Mostrar la Armería para un objeto",
     "CheatSheetTitle": "Atajos del Teclado:",
     "ClearDialog": "Descartar diálogo",
     "ClearNewItems": "Despejar objetos nuevos",
@@ -378,6 +387,8 @@
     "LockUnlock": "Bloquear o desbloquear un objeto",
     "MarkItemAs": "Marcar objeto como '{{tag}}'",
     "Menu": "Alternar menú",
+    "Note": "Introducir notas",
+    "Notes": "",
     "Pull": "Traer objeto al personaje activo",
     "RefreshInventory": "Actualizar inventario",
     "ShowHotkeys": "Mostrar atajos del teclado",
@@ -388,14 +399,21 @@
   },
   "InGameLoadout": {
     "Applying": "Equipando equipación...",
+    "ClearSlot": "Limpiar Ranura {{index}}",
     "Create": "Crear Equipación",
     "CreateTitle": "Crear Equipación En El Juego con el Equipamiento Actual",
+    "CurrentlyEquipped": "Actualmente Equipado",
     "DeleteFailed": "Fallo al borrar equipación",
     "Deleted": "Equipación Borrada",
     "DeletedBody": "Limpiar equipación en el juego en la ranura {{index}}",
     "EditFailed": "Fallo al actualizar equipación",
+    "EditIdentifiers": "Editar Identificadores",
     "EditTitle": "Editar Nombre e Icono de la Equipación",
-    "LoadoutSlotNum": "Ranura {{index}}",
+    "EquipNotReady": "Equipar En El Juego No Listo",
+    "EquipReady": "Equipar En El Juego Listo",
+    "LoadoutDetails": "Detalles de la Equipación",
+    "MatchingLoadouts": "Equipaciones Coincidentes:",
+    "PrepareEquip": "Preparar Equipación",
     "Replace": "Reemplazar Equipación {{index}}",
     "Save": "Actualizar Equipación",
     "SnapshotFailed": "Fallo al capturar equipación equipada"
@@ -453,6 +471,14 @@
     "PreviewVendor": "Previsualizar {{type}} contenidos",
     "StackFull": "Ya tienes una pila completa de {{name}}",
     "StoreName": "{{genderRace}}{{className}}"
+  },
+  "KillType": {
+    "ClassAbilities": "Habilidad de Clase",
+    "Finisher": "Remate",
+    "Grenade": "Granada",
+    "Melee": "Cuerpo a cuerpo",
+    "Precision": "Precisión",
+    "Super": "Súper"
   },
   "LB": {
     "AdvancedOptions": "Opciones avanzadas",
@@ -605,8 +631,10 @@
     "AddUnequippedItems": "Añadir Desequipados",
     "Any": "Cualquier clase",
     "Apply": "Aplicar",
+    "ApplyInGameLoadoutInGame": "Tu equipación está lista, pero ya que estás en una actividad necesitas equiparla en el juego.",
     "ApplyMods": "Aplicando modificadores",
     "ApplySearch": "Transferir búsqueda \"{{query}}\"",
+    "ArmorStats": "Estadísticas de Armadura",
     "ArtifactUnlocks": "Desbloqueos de Artefacto",
     "ArtifactUnlocksDesc": "Debido a limitaciones de Bungie.net, DIM no puede configurar automáticamente tu artefacto. Necesitas realizar estos desbloqueos en el juego antes de aplicar la Equipación.",
     "ArtifactUnlocksWithSeason": "Desbloqueos de Artefacto - T{{seasonNumber}}",
@@ -620,17 +648,19 @@
     "ClassTypeMissing": "No tienes un {{className}} para el que crear una equipación",
     "Classified": "Algunos de tus items son \"Clasificados\", y no pueden ser incluidos en el cálculo de luz máxima.",
     "ClearLoadoutParameters": "Eliminar configuración del Optimizador de Equipaciones",
-    "ClearSection": "Quitar todo",
+    "ClearSection": "Eliminar todo",
     "ClearSpace": "Mover otros objetos fuera",
-    "ClearUnsetMods": "Quitar otros modificadores",
+    "ClearUnsetMods": "Eliminar otros modificadores",
     "ClearingSpace": "Moviendo otros objetos fuera",
     "Create": "Crear equipación",
     "CurrentlyEquipped": "Actualmente Equipado",
     "Deequip": "Desequipando objetos de otros personajes",
     "Delete": "Borrar",
     "DeprecatedMods": "Modificadores Obsoletos",
+    "DimLoadouts": "Equipaciones DIM",
     "Edit": "Editar equipación",
     "EditBrief": "Editar",
+    "EquipInGameLoadout": "Equipando tu equipación en el juego",
     "EquipItems": "Equipando objetos",
     "EquippableDifferent1": "Múltiples objetos Exóticos fueron usados para calcular tu Poder Máximo, por lo que el número mostrado podría no alcanzarse cuando equipes tus objetos dentro del juego.",
     "EquippableDifferent2": "El Poder Máximo no está limitado por la regla del \"Exótico Único\" cuando se determina el Poder de tus recompensas de botines/poderosos/pináculo.",
@@ -653,6 +683,7 @@
       "PasteHere": "Pega un enlace de equipación para abrir la equipación."
     },
     "ImportLoadout": "Importar Equipación",
+    "InGameLoadouts": "Equipaciones En El Juego",
     "ItemErrorSummary": "1 error de objeto:",
     "ItemErrorSummary_plural": "{{count}} errores de objetos:",
     "ItemLeveling": "Nivel de objetos",
@@ -716,7 +747,9 @@
     "PullFromPostmasterPopupTitle": "Extraer de Administración",
     "Random": "Aleatorio",
     "Randomize": "Aleatorizar Equipación",
+    "RandomizeButton": "Aleatorizar",
     "RandomizePrompt": "¿Aleatorizar tus armas equipadas, armaduras y espectro?",
+    "RandomizeQueryHint": "Consejo: Busca objetos primero para restringir cuales pueden ser aleatoriamente elegidos.",
     "RandomizeSearch": "Aleatorizar desde la Búsqueda",
     "RandomizeSearchPrompt": "Aleatorizar tus objetos equipados desde la búsqueda \"{{query}}\"?",
     "RandomizeWeapons": "¿Aleatorizar tus armas equipadas?",
@@ -794,8 +827,9 @@
   "MovePopup": {
     "Acquired": "Este objeto está desbloqueado en colecciones.",
     "AcquiredMod": "Este modificador está desbloqueado en colecciones.",
-    "AddNote": "Añadir una nota",
+    "AddNote": "Añadir notas",
     "AddToLoadout": "Equipación",
+    "AddToLoadoutTitle": "Añadir esto a la equipación",
     "All": "Todo",
     "CannotCurrentlyRoll": "Esta ventaja no se puede obtener en la versión actual de este objeto.",
     "CantPullFromPostmaster": "Debes ir a la torre para recuperar este objeto.",
@@ -803,7 +837,8 @@
     "CommunityData": "Información de la Comunidad",
     "Consolidate": "Consolidar",
     "DistributeEvenly": "Distribuye Equitativamente",
-    "Equip": "Equipar",
+    "Equip": "Equipar en:",
+    "EquipWithName": "Equipar en {{character}}",
     "FavoriteUnFavorite": {
       "Favorite": "Marcar favorito {{itemType}}",
       "Favorited": "Favorito",
@@ -811,6 +846,7 @@
       "Unfavorited": "No favorito"
     },
     "Infuse": "Infundir",
+    "InfuseTitle": "Abrir el buscador de infusión de objetos",
     "LockUnlock": {
       "AutoLock": "El estado de bloqueo se sincronizó con la etiqueta de este objeto",
       "Lock": "Bloquear {{itemType}}",
@@ -829,8 +865,8 @@
     "ReadLoreLink": "Leer historia",
     "Rewards": "Recompensas:",
     "SendToVault": "Enviar al depósito",
-    "Store": "Almacenar",
-    "StoreWithName": "Almacenar en {{character}}",
+    "Store": "Llevar a:",
+    "StoreWithName": "Llevar a {{character}}",
     "Subtitle": {
       "QuestProgress": "Paso {{questStepNum}} de {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
@@ -849,7 +885,7 @@
   },
   "Notes": {
     "Error": "¡Error! Máximo 120 caracteres por notas.",
-    "Help": "Agregar notas a este objeto"
+    "Help": "Añadir notas, #hashtags y :symbols:"
   },
   "Notification": {
     "Cancel": "Cancelar",
@@ -905,8 +941,7 @@
     "Lock": "Bloquear",
     "NoItems": "No hay objetos seleccionados",
     "NoMobile": "Gire su teléfono en horizontal para usar el Organizador.",
-    "Note": "Establecer Nota",
-    "NotePrompt": "Nota:",
+    "Note": "Establecer Notas",
     "OpenIn": "Mostrar en el Organizador",
     "Organizer": "Organizador",
     "SelectAll": "Seleccionar Todo",
@@ -1102,7 +1137,7 @@
     "AutoBackup": "Hemos hecho una copia de seguridad de tus datos en un archivo en tu carpeta de descargas llamado dim-data.json, sólo por si acaso.",
     "BackUpFirst": "DEBES hacer una copia de tu información primero, antes de borrarlo todo. Sólo por si acaso.",
     "BrowserMayClearData": "El navegador puede borrar esta información si te quedas sin espacio o no visitas DIM frecuentemente.",
-    "DataIsLocal": "La información de las etiquetas y notas sólo es local",
+    "DataIsLocal": "La información de las notas y las etiquetas es solo local",
     "DeleteAllData": "Borrar TODA la Información de los Servidores de Sincronización DIM",
     "DeleteAllDataConfirm": "¿Estás seguro de que quieres borrar TODA tu información, para todas las cuentas, de Sincronización DIM? No puedes deshacer esto.",
     "DeleteAllDataLabel": "Limpiar Información de Sincronización DIM",

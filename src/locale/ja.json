@@ -54,6 +54,14 @@
     "Vault": "保管庫",
     "Weapons": "武器"
   },
+  "BulkNote": {
+    "Append": "メモに追加 / #hashtag を追加",
+    "Confirm": "メモを更新",
+    "Remove": "メモ削除 / #hashtag 削除",
+    "Replace": "メモを置き換える",
+    "Title": "1つのアイテムのメモを変更する",
+    "Title_plural": "{{count}} 個のアイテムのメモを変更する"
+  },
   "BungieAlert": {
     "Title": "Bungieからメッセージが届いています。"
   },
@@ -371,6 +379,7 @@
     "NoStorageMessage": "DIMは、ブラウザにデータを保存できません。この問題は、プライベートモードでブラウジングした場合、もしくは空きディスク容量が少ない場合が原因している可能性があります。DIMにログインしたり、利用することができません。"
   },
   "Hotkey": {
+    "Armory": "アイテムの武器庫を表示",
     "CheatSheetTitle": "キーボード ショートカット:",
     "ClearDialog": "ダイアログを閉じる",
     "ClearNewItems": "新しいアイテムを既読済にする",
@@ -378,6 +387,8 @@
     "LockUnlock": "アイテムをロックまたはロック解除する",
     "MarkItemAs": "アイテムを '{{tag}}' とマークする",
     "Menu": "ゲームメニューを表示",
+    "Note": "メモを入力",
+    "Notes": "",
     "Pull": "アイテムをアクティブなキャラクターに適用する",
     "RefreshInventory": "所持品を更新",
     "ShowHotkeys": "キーボードショートカットを表示",
@@ -388,14 +399,21 @@
   },
   "InGameLoadout": {
     "Applying": "ロードアウトを装備中",
+    "ClearSlot": "スロット {{index}} を削除",
     "Create": "ロードアウトを作成",
     "CreateTitle": "現在の装備からゲーム内ロードアウトを作成",
+    "CurrentlyEquipped": "現在装備中",
     "DeleteFailed": "ロードアウトの削除に失敗",
-    "Deleted": "ロードアウト削除済み",
+    "Deleted": "ロードアウトを削除しました",
     "DeletedBody": "スロット {{index}} のゲーム内ロードアウトをクリアしました。",
     "EditFailed": "ロードアウトの更新に失敗",
+    "EditIdentifiers": "アイコンとタイトル変更",
     "EditTitle": "ロードアウト名とアイコンを編集",
-    "LoadoutSlotNum": "スロット {{index}}",
+    "EquipNotReady": "ゲーム内で切替できません",
+    "EquipReady": "ゲーム内で切替可能",
+    "LoadoutDetails": "ロードアウト詳細",
+    "MatchingLoadouts": "一致するロードアウト:",
+    "PrepareEquip": "ロードアウト切替準備",
     "Replace": "ロードアウト {{index}} を置き換え",
     "Save": "ロードアウトを更新",
     "SnapshotFailed": "装備したロードアウトのスナップショットに失敗"
@@ -453,6 +471,14 @@
     "PreviewVendor": "{{type}} コンテンツのプレビュー",
     "StackFull": "既に{{name}} の完全なスタックがあります",
     "StoreName": "{{genderRace}} {{className}}"
+  },
+  "KillType": {
+    "ClassAbilities": "クラスアビリティ",
+    "Finisher": "フィニッシャー",
+    "Grenade": "グレネード",
+    "Melee": "近接攻撃",
+    "Precision": "精密",
+    "Super": "スーパースキル"
   },
   "LB": {
     "AdvancedOptions": "高度なオプション",
@@ -605,11 +631,13 @@
     "AddUnequippedItems": "所持品に加える",
     "Any": "全てのクラス",
     "Apply": "適用",
+    "ApplyInGameLoadoutInGame": "ロードアウトの準備ができていますがアクティビティ中ため、ゲーム内で装備する必要があります。",
     "ApplyMods": "Modを適用",
     "ApplySearch": "検索 {{query}} を転送",
+    "ArmorStats": "防具のステータス",
     "ArtifactUnlocks": "アーティファクトのロック解除",
-    "ArtifactUnlocksDesc": "Bungie.net の制限により、 DIM はアーティファクトを自動的に構成することができません。ロードアウトを適用する前に、ゲーム内でこれらのロック解除をする必要があります。\n",
-    "ArtifactUnlocksWithSeason": "アーティファクトのロック解除 – S{{seasonNumber}}",
+    "ArtifactUnlocksDesc": "Bungie.net の仕様で DIM はアーティファクトmodをロードアウトに合わせて解除変更できません。ロードアウトを適用する前に、ゲーム内で使用するModのロック解除をする必要があります。",
+    "ArtifactUnlocksWithSeason": "解除済のアーティファクト – シーズン{{seasonNumber}}",
     "BadLoadoutShare": "シェアしたロードアウトを読み込めません",
     "BadLoadoutShareBody": "読み込もうとしているロードアウトは無効です: {{error}}",
     "Before": "前 '{{name}}'",
@@ -629,8 +657,10 @@
     "Deequip": "他のキャラクターからアイテムを外す",
     "Delete": "削除",
     "DeprecatedMods": "非推奨 Mod",
+    "DimLoadouts": "DIMロードアウト",
     "Edit": "ロードアウトを編集",
     "EditBrief": "編集",
+    "EquipInGameLoadout": "ゲーム内ロードアウトを装備中",
     "EquipItems": "アイテムを装備",
     "EquippableDifferent1": "複数のエキゾチックアイテムを使用して最大パワーを計算しました。ゲーム内でアイテムを装備しようとしても、数値が計算通りにならない恐れがあります。",
     "EquippableDifferent2": "ドロップ/強力/最高峰の報酬で最大パワーを決定する際、最大パワーは通称「1つのエキゾチック」ルールによって制限されません。",
@@ -653,6 +683,7 @@
       "PasteHere": "ロードアウトリンクを貼り付けて、ロードアウトを開きます。"
     },
     "ImportLoadout": "ロードアウトをインポート",
+    "InGameLoadouts": "ゲーム内ロードアウト",
     "ItemErrorSummary": "1 つのアイテムエラー:",
     "ItemErrorSummary_plural": "{{count}} 個のアイテムでエラー:",
     "ItemLeveling": "アイテムのレベルアップ",
@@ -681,9 +712,9 @@
     "ModErrorSummary_plural": "{{count}} 個のmod エラー:",
     "ModPlacement": {
       "InvalidMods": "無効な mod",
-      "InvalidModsDesc": "ひとつの mod は任意のアーマーに適用できません。",
-      "InvalidModsDesc_plural": "{{count}} の mod は任意のアーマーに適用できません。",
-      "ModPlacement": "mod を入れ替え",
+      "InvalidModsDesc": "どのアーマーにも適用できないmodが1つ見つかりました。",
+      "InvalidModsDesc_plural": "どのアーマーにも適用できないmodが {{count}} 個見つかりました。",
+      "ModPlacement": "Mod を入れ替え",
       "UnassignedMods": "割り当てられていない mod",
       "UnassignedModsDesc": "エネルギー容量または mod スロットが不足しているため、1つの mod を適用できませんでした。選択している防具のエネルギーアップグレードでは、この問題は解決しません。",
       "UnassignedModsDesc_plural": "エネルギー容量またはMODスロットが不足しているため、 {{count}} つの mod がフィットしませんでした。選択した防具にエネルギーをアップグレードしても、この問題は解決されません。",
@@ -716,7 +747,9 @@
     "PullFromPostmasterPopupTitle": "ポストマスターから拾う",
     "Random": "ランダム",
     "Randomize": "ロードアウトのランダム化",
+    "RandomizeButton": "ランダム化",
     "RandomizePrompt": "装備した武器、アーマー、ゴーストをランダム化しますか?",
+    "RandomizeQueryHint": "ヒント : 最初にアイテムを検索し、ランダムに選択できるアイテムを制限する。",
     "RandomizeSearch": "ランダム検索",
     "RandomizeSearchPrompt": "検索検\"{{query}}\"から装備アイテムをランダム化しますか？",
     "RandomizeWeapons": "装備した武器をランダム化しますか?",
@@ -796,6 +829,7 @@
     "AcquiredMod": "このModはコレクションでアンロックされています。",
     "AddNote": "メモを追加",
     "AddToLoadout": "ロードアウト",
+    "AddToLoadoutTitle": "これをロードアウトに追加",
     "All": "全て",
     "CannotCurrentlyRoll": "このアイテムの現在のバージョンでは、このパークをロールできません。",
     "CantPullFromPostmaster": "このアイテムを取得するには、タワーに行く必要があります。",
@@ -803,7 +837,8 @@
     "CommunityData": "コミュニティの評価",
     "Consolidate": "統合する",
     "DistributeEvenly": "均等に割り当てる。",
-    "Equip": "装備する",
+    "Equip": "装備先:",
+    "EquipWithName": "{{character}} に装備する",
     "FavoriteUnFavorite": {
       "Favorite": "{{itemType}} をお気に入りに追加する",
       "Favorited": "お気に入りに追加する",
@@ -811,6 +846,7 @@
       "Unfavorited": "お気に入りから解除"
     },
     "Infuse": "融合する",
+    "InfuseTitle": "注入燃料ファインダーを開く",
     "LockUnlock": {
       "AutoLock": "ロック状態はこのアイテムのタグに同期されます",
       "Lock": "ロックする {{itemType}}",
@@ -829,8 +865,8 @@
     "ReadLoreLink": "伝承を読む",
     "Rewards": "報酬:",
     "SendToVault": "保管庫に送る",
-    "Store": "保存",
-    "StoreWithName": "{{character}} が装備しています",
+    "Store": "取り出す : ",
+    "StoreWithName": "{{character}} に取り出す",
     "Subtitle": {
       "QuestProgress": "{{questStepNum}} / {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
@@ -849,7 +885,7 @@
   },
   "Notes": {
     "Error": "エラー！ノートは120文字が上限です。",
-    "Help": "このアイテムにメモを追加"
+    "Help": "メモ、#hashtag、 :symbols: を追加"
   },
   "Notification": {
     "Cancel": "キャンセル",
@@ -904,9 +940,8 @@
     "EnabledColumns": "表示項目",
     "Lock": "ロックする",
     "NoItems": "アイテムが選択されていません",
-    "NoMobile": "携帯電話を横向きにしてオーガナイザーを使用する。",
-    "Note": "メモを書く",
-    "NotePrompt": "メモ：",
+    "NoMobile": "オーガナイザーを使用するには画面を横向きにしてください。",
+    "Note": "メモを設定",
     "OpenIn": "オーガナイザーに表示",
     "Organizer": "オーガナイザー",
     "SelectAll": "すべて選択",
@@ -1102,7 +1137,7 @@
     "AutoBackup": "念のため、ダウンロードフォルダにあるdim-data.jsonというファイルにデータをバックアップしました。",
     "BackUpFirst": "すべてを削除する前に、まずデータをバックアップしなければなりません。",
     "BrowserMayClearData": "スペースに空きが無くなったり、DIMを長期使用してない場合ブラウザがこの情報を削除する場合があります。",
-    "DataIsLocal": "タグとメモはローカルのみで保存されます。",
+    "DataIsLocal": "タグとメモのデータはローカルのみです",
     "DeleteAllData": "DIM Syncサーバーからすべてのデータを削除",
     "DeleteAllDataConfirm": "DIM Sync から、すべてのアカウントのすべてのデータを削除してもよろしいですか？元に戻すことはできません。",
     "DeleteAllDataLabel": "DIM Syncのデータを消去",

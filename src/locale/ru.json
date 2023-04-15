@@ -54,6 +54,14 @@
     "Vault": "Хранилище",
     "Weapons": "Оружие"
   },
+  "BulkNote": {
+    "Append": "Append to notes / add #hashtags",
+    "Confirm": "Update Notes",
+    "Remove": "Remove from notes / remove #hashtags",
+    "Replace": "Replace notes",
+    "Title": "Change notes for 1 item",
+    "Title_plural": "Change notes for {{count}} items"
+  },
   "BungieAlert": {
     "Title": "Сообщение от Bungie:"
   },
@@ -371,6 +379,7 @@
     "NoStorageMessage": "DIM не может хранить данные в вашем браузере. Это может быть вызвано частным просмотром страниц или просмотром в режиме инкогнито, или нехваткой места на диске. Вы не сможете авторизоваться или использовать DIM."
   },
   "Hotkey": {
+    "Armory": "Show Armory for an item",
     "CheatSheetTitle": "Горячие клавиши:",
     "ClearDialog": "Скрыть диалог",
     "ClearNewItems": "Удалить маркеры",
@@ -378,6 +387,8 @@
     "LockUnlock": "Заблокировать/Разблокировать",
     "MarkItemAs": "Тэг '{{tag}}'",
     "Menu": "Меню",
+    "Note": "Enter notes",
+    "Notes": "",
     "Pull": "Передать активному персонажу ",
     "RefreshInventory": "Обновить данные",
     "ShowHotkeys": "Показать сочетания клавиш",
@@ -388,14 +399,21 @@
   },
   "InGameLoadout": {
     "Applying": "Экипирование набора...",
+    "ClearSlot": "Clear Slot {{index}}",
     "Create": "Create Loadout",
     "CreateTitle": "Create In-Game Loadout From Current Equipment",
+    "CurrentlyEquipped": "Currently Equipped",
     "DeleteFailed": "Failed to delete loadout",
     "Deleted": "Loadout Deleted",
     "DeletedBody": "Cleared the in-game loadout at slot {{index}}",
     "EditFailed": "Failed to update loadout",
+    "EditIdentifiers": "Edit Identifiers",
     "EditTitle": "Edit Loadout Name and Icon",
-    "LoadoutSlotNum": "Слот {{index}}",
+    "EquipNotReady": "In-game Equip Not Ready",
+    "EquipReady": "In-game Equip Ready",
+    "LoadoutDetails": "Loadout Details",
+    "MatchingLoadouts": "Matching Loadouts:",
+    "PrepareEquip": "Prepare Equip",
     "Replace": "Replace Loadout {{index}}",
     "Save": "Update Loadout",
     "SnapshotFailed": "Failed to snapshot equipped loadout"
@@ -453,6 +471,14 @@
     "PreviewVendor": "Предпросмотр {{type}}",
     "StackFull": "У вас уже есть полная пачка {{name}}",
     "StoreName": "{{genderRace}} {{className}}"
+  },
+  "KillType": {
+    "ClassAbilities": "Class Ability",
+    "Finisher": "Finisher",
+    "Grenade": "Grenade",
+    "Melee": "Melee",
+    "Precision": "Precision",
+    "Super": "Super"
   },
   "LB": {
     "AdvancedOptions": "Расширенные настройки",
@@ -605,8 +631,10 @@
     "AddUnequippedItems": "Добавить неэкипированное",
     "Any": "Любой класс",
     "Apply": "Применить",
+    "ApplyInGameLoadoutInGame": "Your loadout is ready to equip but since you're in an activity you need to equip it in-game.",
     "ApplyMods": "Применение модов",
     "ApplySearch": "Передаю запрос \"{{query}}\"",
+    "ArmorStats": "Armor Stats",
     "ArtifactUnlocks": "Artifact Unlocks",
     "ArtifactUnlocksDesc": "Due to Bungie.net limitations, DIM cannot automatically configure your artifact. You need to perform these unlocks in-game before applying the Loadout.",
     "ArtifactUnlocksWithSeason": "Artifact Unlocks – S{{seasonNumber}}",
@@ -629,8 +657,10 @@
     "Deequip": "Снятие экипировки с предметов других персонажей",
     "Delete": "Удалить",
     "DeprecatedMods": "Устаревшие Моды",
+    "DimLoadouts": "DIM Loadouts",
     "Edit": "Изменить Набор",
     "EditBrief": "Изменить",
+    "EquipInGameLoadout": "Equipping in-game loadout",
     "EquipItems": "Экипирование предметов",
     "EquippableDifferent1": "Несколько экзотических предметов было использовано при подсчёте вашей максимальной Силы, потому отображаемое число может быть недостижимо при экипировании ваших предметов в игре.",
     "EquippableDifferent2": "Максимальная Сила не ограничена правилом \"Один Экзот\" при определении силы выпадающих вам предметов, мощных и сверхмощных наград.",
@@ -653,6 +683,7 @@
       "PasteHere": "Вставьте ссылку с набором, чтобы открыть набор."
     },
     "ImportLoadout": "Импортировать Набор",
+    "InGameLoadouts": "In-Game Loadouts",
     "ItemErrorSummary": "1 ошибка предмета:",
     "ItemErrorSummary_plural": "{{count}} ошибок предмета:",
     "ItemLeveling": "Прокачивание предмета",
@@ -716,7 +747,9 @@
     "PullFromPostmasterPopupTitle": "Вытащить из Почтмейстера",
     "Random": "Случайно",
     "Randomize": "Случайное снаряжение",
+    "RandomizeButton": "Randomize",
     "RandomizePrompt": "Экипировать случайные оружия, броню и Призрака?",
+    "RandomizeQueryHint": "Tip: Search for items first to restrict what items can be randomly chosen.",
     "RandomizeSearch": "Случайно на основе Поиска",
     "RandomizeSearchPrompt": "Надеть случайные предметы из результатов поискового запроса \"{{query}}\"?",
     "RandomizeWeapons": "Экипировать случайные оружия?",
@@ -794,8 +827,9 @@
   "MovePopup": {
     "Acquired": "Предмет доступен в Коллекции.",
     "AcquiredMod": "Этот мод разблокирован в коллекции.",
-    "AddNote": "Добавить заметку",
+    "AddNote": "Add notes",
     "AddToLoadout": "В наборе",
+    "AddToLoadoutTitle": "Add this to a loadout",
     "All": "Все",
     "CannotCurrentlyRoll": "Этот перк не доступен в текущей версии этого предмета.",
     "CantPullFromPostmaster": "Для получения этого предмета требуется отправиться на Башню.",
@@ -803,7 +837,8 @@
     "CommunityData": "Мнение Сообщества",
     "Consolidate": "Собрать все",
     "DistributeEvenly": "Распределить равномерно",
-    "Equip": "Надеть",
+    "Equip": "Equip on:",
+    "EquipWithName": "Equip on {{character}}",
     "FavoriteUnFavorite": {
       "Favorite": "Добавить {{itemType}} в избранное",
       "Favorited": "В избранном",
@@ -811,6 +846,7 @@
       "Unfavorited": "Исключено из избранных"
     },
     "Infuse": "Синтез",
+    "InfuseTitle": "Open the infusion fuel finder",
     "LockUnlock": {
       "AutoLock": "Состояние блокировки синхронизировано с тегом предмета",
       "Lock": "Заблокировать {{itemType}}",
@@ -829,8 +865,8 @@
     "ReadLoreLink": "История",
     "Rewards": "Награды:",
     "SendToVault": "В Хранилище",
-    "Store": "Передать",
-    "StoreWithName": "Передаем {{character}}",
+    "Store": "Pull to:",
+    "StoreWithName": "Pull to {{character}}",
     "Subtitle": {
       "QuestProgress": "Этап {{questStepNum}} из {{questStepsTotal}}",
       "Type": "{{typeName}} {{classType}}а"
@@ -849,7 +885,7 @@
   },
   "Notes": {
     "Error": "Ошибка! Макс 120 символов для заметок.",
-    "Help": "Добавьте заметку к этому предмету"
+    "Help": "Add notes, #hashtags, and :symbols:"
   },
   "Notification": {
     "Cancel": "Отмена",
@@ -905,8 +941,7 @@
     "Lock": "Заблокировать",
     "NoItems": "Не выбрано ни одного предмета",
     "NoMobile": "Для открытия Органайзера поверните телефон в альбомную ориентацию.",
-    "Note": "Добавить Заметку",
-    "NotePrompt": "Заметка:",
+    "Note": "Set Notes",
     "OpenIn": "Показать в Органайзере",
     "Organizer": "Органайзер",
     "SelectAll": "Выбрать всё",
@@ -1102,7 +1137,7 @@
     "AutoBackup": "Создали Резервную копию в папке Загрузок. Файл dim-data.json, на всякий случай.",
     "BackUpFirst": "Скачайте Резервную копию перед удалением Всех Данных. На всякий случай.",
     "BrowserMayClearData": "Браузер может удалить данные, если у вас кончится свободное место или если не посещать DIM часто.",
-    "DataIsLocal": "Только локальные данные тэгов и заметок",
+    "DataIsLocal": "Tag and notes data is local only",
     "DeleteAllData": "Удалить ВСЕ данные с серверов DIM Sync",
     "DeleteAllDataConfirm": "Удалить ВСЕ данные ваших аккаунтов с серверов DIM Sync? Эта операция Необратима.",
     "DeleteAllDataLabel": "Очистить DIM Sync",
