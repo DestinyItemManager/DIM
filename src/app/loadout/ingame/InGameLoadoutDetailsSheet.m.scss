@@ -1,3 +1,5 @@
+@use '../../variables.scss' as *;
+
 .sheet {
   width: fit-content;
   margin: auto;
@@ -14,17 +16,20 @@
   --sub-item-size: calc(var(--item-size) * 0.5);
   --item-icon-size: calc(var(--item-size) * 0.75);
   display: grid;
-  width: min-content;
   grid-auto-flow: row;
-  grid-template-columns: repeat(20, auto);
-  row-gap: 4px;
+  grid-template-columns: var(--item-icon-size) repeat(auto-fit, minmax(0, min-content));
+  gap: 4px;
   align-items: center;
   margin: 8px;
+  width: 100%;
+
+  :global(.item-socket) {
+    margin: 0;
+  }
 }
 
 .itemImage {
   --item-size: var(--item-icon-size);
-  margin: 0 5px;
   cursor: default;
   pointer-events: auto;
   grid-column: 1;
@@ -35,7 +40,6 @@
   display: grid;
   grid-template-rows: auto auto;
   grid-auto-flow: column;
-  grid-column: span 5;
   width: fit-content;
 }
 
