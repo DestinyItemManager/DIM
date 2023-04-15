@@ -23,6 +23,7 @@ import { safariTouchFix } from './app/safari-touch-fix';
 import { watchLanguageChanges } from './app/settings/observers';
 import './app/utils/exceptions';
 import { saveWishListToIndexedDB } from './app/wishlists/observers';
+import { Provider } from 'react-redux';
 
 infoLog(
   'app',
@@ -50,7 +51,11 @@ const i18nPromise = initi18n();
   if (!storageWorks) {
     // Make sure localization is loaded
     await i18nPromise;
-    root.render(<StorageBroken />);
+    root.render(
+      <Provider store={store}>
+        <StorageBroken />
+      </Provider>
+    );
     return;
   }
 

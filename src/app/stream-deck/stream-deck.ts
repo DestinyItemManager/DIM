@@ -22,7 +22,7 @@ export const streamDeckSelectLoadout = (loadout: LoadoutSelection, store: DimSto
 
 // reset AuthorizationNotification token and regenerate client identifier
 export const resetStreamDeckAuthorization = async () => {
-  lazyStreamDeck.core!.resetIdentifierOnStreamDeck();
+  lazyStreamDeck.core?.resetIdentifierOnStreamDeck();
   removeClientIdentifier();
   removeStreamDeckToken();
 };
