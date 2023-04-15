@@ -11,6 +11,7 @@
     "scss/comment-no-empty": null,
     "function-name-case": null,
     "function-calc-no-unspaced-operator": null,
+    "media-feature-range-notation": null,
     "declaration-empty-line-before": null,
     "custom-property-empty-line-before": null,
     "scss/no-global-function-names": null,
