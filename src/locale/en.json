@@ -672,8 +672,6 @@
     "FilteredItems": "Filtered Items",
     "FindAnother": "Find another {{name}}",
     "FromEquipped": "Equipped",
-    "GatherEngrams": "Gather Engrams",
-    "GatherEngramsExceptExotics": "Exotics",
     "Generated": "T{{tier}} Loadout",
     "HashtagTip": "Tip: Use #hashtags in your loadout names or notes and they'll show up here.",
     "Import": {
@@ -723,8 +721,6 @@
     },
     "Mods": "Mods",
     "MoveItems": "Moving items",
-    "NoEngrams": "No non-exotic engrams are available to transfer.",
-    "NoExotics": "No engrams are available to transfer.",
     "NoSpace": "You're out of space in the vault and any other characters.",
     "NoneMatch": "None of your loadouts matched the filters.",
     "NotStarted": "Waiting for other actions to complete, or an inventory refresh to finish loading",
