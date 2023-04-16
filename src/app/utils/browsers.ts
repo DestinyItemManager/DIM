@@ -50,9 +50,3 @@ export function isEventFromFirefoxScrollbar(e: React.PointerEvent | React.MouseE
   }
   return false;
 }
-
-const supportsOverscrollBehavior = CSS.supports('overscroll-behavior: none');
-/** Check whether this browser supports overscroll-behavior. Supported pretty much everywhere except iOS <16 */
-export function canSupportOverscrollBehavior() {
-  return supportsOverscrollBehavior;
-}

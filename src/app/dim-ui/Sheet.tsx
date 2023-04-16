@@ -1,6 +1,5 @@
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
-import { canSupportOverscrollBehavior } from 'app/utils/browsers';
 import clsx from 'clsx';
 import {
   PanInfo,
@@ -289,6 +288,9 @@ export default function Sheet({
   );
 }
 
+/** Check whether this browser supports overscroll-behavior. Supported pretty much everywhere except iOS <16 */
+const supportsOverscrollBehavior = CSS.supports('overscroll-behavior: none');
+
 /**
  * Locks body scroll except for touches in the sheet contents.
  */
@@ -296,13 +298,13 @@ function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivEleme
   useLayoutEffect(() => {
     const current = sheetContents.current;
     if (current) {
-      if (!canSupportOverscrollBehavior()) {
+      if (!supportsOverscrollBehavior) {
         document.body.classList.add('body-scroll-lock');
         enableBodyScroll(current);
         disableBodyScroll(current);
       }
       return () => {
-        if (!canSupportOverscrollBehavior()) {
+        if (!supportsOverscrollBehavior) {
           setTimeout(() => {
             document.body.classList.remove('body-scroll-lock');
           }, 0);
