@@ -1,52 +1,16 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
-import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { isPluggableItem } from 'app/inventory/store/sockets';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
-import {
-  aspectSocketCategoryHashes,
-  fragmentSocketCategoryHashes,
-  getDefaultAbilityChoiceHash,
-  getSocketsByIndexes,
-} from 'app/utils/socket-utils';
 import clsx from 'clsx';
 import { useMemo } from 'react';
+import { getSubclassPlugs } from '../item-utils';
 import { createGetModRenderKey } from '../mod-utils';
 import EmptySubclass from './EmptySubclass';
 import styles from './LoadoutSubclassSection.m.scss';
 import PlugDef from './PlugDef';
-
-export function getSubclassPlugs(
-  defs: D2ManifestDefinitions,
-  subclass: ResolvedLoadoutItem | undefined
-) {
-  const plugs: PluggableInventoryItemDefinition[] = [];
-
-  if (subclass?.item.sockets?.categories) {
-    for (const category of subclass.item.sockets.categories) {
-      const showInitial =
-        !aspectSocketCategoryHashes.includes(category.category.hash) &&
-        !fragmentSocketCategoryHashes.includes(category.category.hash);
-      const sockets = getSocketsByIndexes(subclass.item.sockets, category.socketIndexes);
-
-      for (const socket of sockets) {
-        const override = subclass.loadoutItem.socketOverrides?.[socket.socketIndex];
-        const initial = getDefaultAbilityChoiceHash(socket);
-        const hash = override || (showInitial && initial);
-        const plug = hash && defs.InventoryItem.get(hash);
-        if (plug && isPluggableItem(plug)) {
-          plugs.push(plug);
-        }
-      }
-    }
-  }
-
-  return plugs;
-}
 
 /** The subclass section used in the loadouts page and drawer */
 export default function LoadoutSubclassSection({

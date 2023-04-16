@@ -118,6 +118,7 @@ export const inGameLoadoutsWithMetadataSelector = createSelector(
   fullyResolvedLoadoutsSelector,
   allItemsSelector,
   storesSelector,
+  d2ManifestSelector,
   availableLoadoutSlotsSelector,
   (_state: RootState, storeId: string) => storeId,
   (
@@ -125,6 +126,7 @@ export const inGameLoadoutsWithMetadataSelector = createSelector(
     { currentLoadout, loadouts: savedLoadouts },
     allItems,
     stores,
+    defs,
     availableLoadoutSlots,
     storeId
   ) => {
@@ -141,6 +143,7 @@ export const inGameLoadoutsWithMetadataSelector = createSelector(
           });
 
           const isEquipped = implementsDimLoadout(
+            defs,
             gameLoadout,
             currentLoadout.resolvedLoadoutItems,
             currentLoadout.resolvedMods
@@ -150,6 +153,7 @@ export const inGameLoadoutsWithMetadataSelector = createSelector(
             (dimLoadout) =>
               dimLoadout.loadout.items.length > 4 &&
               implementsDimLoadout(
+                defs,
                 gameLoadout,
                 dimLoadout.resolvedLoadoutItems,
                 dimLoadout.resolvedMods
