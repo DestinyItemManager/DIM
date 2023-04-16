@@ -41,6 +41,7 @@
   grid-template-rows: auto auto;
   grid-auto-flow: column;
   width: fit-content;
+  grid-column: span 5;
 }
 
 .header {
