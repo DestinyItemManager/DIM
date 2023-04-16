@@ -116,19 +116,21 @@ export function implementsDimLoadout(
     gameLoadoutMods.splice(pos, 1);
   }
 
-  // Ensure that the dimsubclass aspects and fragments that have been saved are
+  // Ensure that the dimsubclass abilities, aspect and fragments are accounted for
+  // so that builds using the same subclass but different setups are identified.
   const dimSubclass = dimResolvedLoadoutItems.find(
     (rli) => rli.item.bucket.hash === BucketHashes.Subclass
   );
   if (dimSubclass?.loadoutItem?.socketOverrides) {
+    // This was checked as part of item matching.
     const inGameSubclass = inGameLoadout.items.find(
       (item) => item.itemInstanceId === dimSubclass.loadoutItem.id
-    );
-    if (!inGameSubclass) {
-      return false;
-    }
+    )!;
+
     const dimSubclassPlugs = defs ? getSubclassPlugs(defs, dimSubclass) : [];
     for (const plug of dimSubclassPlugs) {
+      // We only check one direction as DIM subclasses can be partially complete by
+      // design.
       if (!inGameSubclass.plugItemHashes.includes(plug.hash)) {
         return false;
       }
