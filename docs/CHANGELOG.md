@@ -1,5 +1,12 @@
 ## Next
 
+* In-Game Loadouts are now represented as save slots. Click them for details on which items and selections they contain.
+  * Change icon/name/color, save as a DIM loadout, clear the save slot, and more, from the dropdown menu or the slot's details popup.
+  * The overview In-Game Loadouts strip now shows whether each slot matches a DIM loadout, is equipped, or is equippable.
+  * Loadouts have a Prepare Equip button, to move items to a character and ensure clicking the in-game equip button succeeds.
+  * If you're in orbit or a social space, or offline, the Equip button can move items appropriately, then apply the in-game loadout.
+* Fixed issue where selected mods would not scroll on mobile in the mod sheet.
+* Items can now be dragged and dropped from within the loadout edit screen.
 * Loadout Optimizer and Loadouts now include Armor Charge-based "Font of ..." mods in stat calculations. For example, if you are using the Font of Focus armor mod, Loadout Optimizer will assume the +30 points to Discipline when holding Armor Charge are active and not waste stat points on exceeding T10 Discipline.
 
 
