@@ -1,5 +1,7 @@
 ## Next
 
+## 7.64.1 <span class="changelog-date">(2023-04-16)</span>
+
 * In-Game Loadouts are now represented as save slots. Click them for details on which items and selections they contain.
   * Change icon/name/color, save as a DIM loadout, clear the save slot, and more, from the dropdown menu or the slot's details popup.
   * The overview In-Game Loadouts strip now shows whether each slot matches a DIM loadout, is equipped, or is equippable.
