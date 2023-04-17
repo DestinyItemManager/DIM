@@ -3,35 +3,62 @@ import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
+import { storesSelector } from 'app/inventory/selectors';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import { BucketHashes } from 'data/d2/generated-enums';
 import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import { getSubclassPlugs } from '../item-utils';
 import EmptySubclass from '../loadout-ui/EmptySubclass';
 import PlugDef from '../loadout-ui/PlugDef';
 import { createGetModRenderKey } from '../mod-utils';
 import styles from './LoadoutEditSubclass.m.scss';
+import { useEquipDropTargets } from './useEquipDropTargets';
 
 /** The subclass section used in the loadouts page and drawer */
 export default function LoadoutEditSubclass({
   defs,
   subclass,
+  classType,
   power,
   onRemove,
   onPick,
 }: {
   defs: D2ManifestDefinitions;
   subclass?: ResolvedLoadoutItem;
+  classType: DestinyClass;
   power: number;
   onRemove: () => void;
   onPick: () => void;
 }) {
+  const stores = useSelector(storesSelector);
+
   const getModRenderKey = createGetModRenderKey();
   const plugs = useMemo(() => getSubclassPlugs(defs, subclass), [subclass, defs]);
 
+  const acceptTarget = useMemo(
+    () => [
+      BucketHashes.Subclass.toString(),
+      ...stores.flatMap((store) => `${store.id}-${BucketHashes.Subclass}`),
+    ],
+    [stores]
+  );
+  const { equippedRef, isOverEquipped, canDropEquipped } = useEquipDropTargets(
+    acceptTarget,
+    classType
+  );
+
   return (
-    <div className={styles.subclassContainer}>
+    <div
+      ref={equippedRef}
+      className={clsx(styles.subclassContainer, {
+        [styles.isOver]: isOverEquipped,
+        [styles.canDrop]: canDropEquipped,
+      })}
+    >
       <div className={styles.subclass}>
         {subclass ? (
           <ClosableContainer
