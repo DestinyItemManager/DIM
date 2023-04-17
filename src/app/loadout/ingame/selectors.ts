@@ -118,6 +118,7 @@ export const inGameLoadoutsWithMetadataSelector = createSelector(
   fullyResolvedLoadoutsSelector,
   allItemsSelector,
   storesSelector,
+  d2ManifestSelector,
   availableLoadoutSlotsSelector,
   (_state: RootState, storeId: string) => storeId,
   (
@@ -125,10 +126,15 @@ export const inGameLoadoutsWithMetadataSelector = createSelector(
     { currentLoadout, loadouts: savedLoadouts },
     allItems,
     stores,
+    defs,
     availableLoadoutSlots,
     storeId
   ) => {
     const selectedStore = getStore(stores, storeId)!;
+    if (!defs) {
+      return [];
+    }
+
     return (
       inGameLoadouts
         // seems unlikely the game would return valid, itemful loadouts for slot you havne't earned, but we respect this setting.
@@ -141,6 +147,7 @@ export const inGameLoadoutsWithMetadataSelector = createSelector(
           });
 
           const isEquipped = implementsDimLoadout(
+            defs,
             gameLoadout,
             currentLoadout.resolvedLoadoutItems,
             currentLoadout.resolvedMods
@@ -150,6 +157,7 @@ export const inGameLoadoutsWithMetadataSelector = createSelector(
             (dimLoadout) =>
               dimLoadout.loadout.items.length > 4 &&
               implementsDimLoadout(
+                defs,
                 gameLoadout,
                 dimLoadout.resolvedLoadoutItems,
                 dimLoadout.resolvedMods
