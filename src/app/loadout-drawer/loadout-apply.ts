@@ -588,7 +588,6 @@ function doApplyLoadout(
       if (itemsWithOverrides.length) {
         setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.SocketOverrides));
 
-        // TODO (ryan) the items with overrides here don't have the default plugs included in them
         infoLog('loadout socket overrides', 'Socket overrides to apply', itemsWithOverrides);
         await dispatch(
           applySocketOverrides(itemsWithOverrides, setLoadoutState, getLoadoutItem, cancelToken)
