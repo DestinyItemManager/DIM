@@ -124,7 +124,7 @@ export function implementsDimLoadout(
   if (dimSubclass?.loadoutItem?.socketOverrides) {
     // This was checked as part of item matching.
     const inGameSubclass = inGameLoadout.items.find(
-      (item) => item.itemInstanceId === dimSubclass.loadoutItem.id
+      (item) => item.itemInstanceId === dimSubclass.item.id
     )!;
 
     const dimSubclassPlugs = getSubclassPlugs(defs, dimSubclass);
