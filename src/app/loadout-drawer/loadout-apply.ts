@@ -60,8 +60,10 @@ import {
   fragmentSocketCategoryHashes,
   getDefaultAbilityChoiceHash,
   getSocketByIndex,
+  getSocketsByCategoryHashes,
   getSocketsByIndexes,
   plugFitsIntoSocket,
+  subclassAbilitySocketCategoryHashes,
 } from 'app/utils/socket-utils';
 import { count } from 'app/utils/util';
 import { HashLookup } from 'app/utils/util-types';
@@ -249,17 +251,37 @@ function doApplyLoadout(
 
       // Figure out which items have specific socket overrides that will need to be applied.
       // TODO: remove socket-overrides from the mods to apply list!
-      const itemsWithOverrides = loadout.items.filter((loadoutItem) => {
-        const item = getLoadoutItem(loadoutItem);
-        return (
-          loadoutItem.socketOverrides &&
-          item &&
-          // Don't apply perks/mods/subclass configs when moving items to the vault
-          !store.isVault &&
-          // Only apply perks/mods/subclass configs if the item is usable by the store we're applying to
-          (item.classType === DestinyClass.Unknown || item.classType === store.classType)
-        );
-      });
+      const itemsWithOverrides = _.compact(
+        loadout.items.map((loadoutItem) => {
+          const item = getLoadoutItem(loadoutItem);
+          if (
+            !loadoutItem.socketOverrides ||
+            !item ||
+            // Don't apply perks/mods/subclass configs when moving items to the vault
+            store.isVault ||
+            // Only apply perks/mods/subclass configs if the item is usable by the store we're applying to
+            (item.classType !== DestinyClass.Unknown && item.classType !== store.classType)
+          ) {
+            return undefined;
+          } else if (item.bucket.hash === BucketHashes.Subclass) {
+            // Subclass ability sockets can be missing from socketOverrides, but show and
+            // should thus apply the result of `getDefaultAbilityChoiceHash`, so patch those in here.
+            const abilityAndSuperSockets = getSocketsByCategoryHashes(
+              item.sockets,
+              subclassAbilitySocketCategoryHashes
+            );
+            const newOverrides = { ...loadoutItem.socketOverrides };
+            for (const socket of abilityAndSuperSockets) {
+              if (newOverrides[socket.socketIndex] === undefined) {
+                newOverrides[socket.socketIndex] = getDefaultAbilityChoiceHash(socket);
+              }
+            }
+            return { ...loadoutItem, socketOverrides: newOverrides };
+          } else {
+            return loadoutItem;
+          }
+        })
+      );
 
       // Filter out mods that no longer exist or that aren't unlocked on this character
       const unlockedPlugSetItems = _.once(() => unlockedPlugSetItemsSelector(store.id)(getState()));
@@ -1040,16 +1062,10 @@ function applySocketOverrides(
             const sockets = getSocketsByIndexes(dimItem.sockets!, category.socketIndexes);
             for (const socket of sockets) {
               const socketIndex = socket.socketIndex;
-              let modHash: number | undefined = loadoutItem.socketOverrides[socketIndex];
-
-              if (modHash === undefined && dimItem.bucket.hash === BucketHashes.Subclass) {
-                // A subclass without any overrides for abilities still shows
-                // the "default" ability plugs, so we need to plug those
-                modHash = getDefaultAbilityChoiceHash(socket);
-              }
+              const modHash: number | undefined = loadoutItem.socketOverrides[socketIndex];
               if (modHash) {
                 const mod = defs.InventoryItem.get(modHash) as PluggableInventoryItemDefinition;
-                // We explicitly set sockets that aren't in socketOverrides to the default plug for subclasses
+                // Supers and abilities simply go into their socket
                 modsForItem.push({ socketIndex, mod, requested: true });
               }
             }
