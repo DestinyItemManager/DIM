@@ -82,7 +82,7 @@ export const gameLoadoutCompatibleBuckets = [
  * and represent a full application of the DIM loadout's required mods?
  */
 export function implementsDimLoadout(
-  defs: D2ManifestDefinitions | undefined,
+  defs: D2ManifestDefinitions,
   inGameLoadout: InGameLoadout,
   dimResolvedLoadoutItems: ResolvedLoadoutItem[],
   resolvedMods: ResolvedLoadoutMod[]
@@ -127,7 +127,7 @@ export function implementsDimLoadout(
       (item) => item.itemInstanceId === dimSubclass.loadoutItem.id
     )!;
 
-    const dimSubclassPlugs = defs ? getSubclassPlugs(defs, dimSubclass) : [];
+    const dimSubclassPlugs = getSubclassPlugs(defs, dimSubclass);
     for (const plug of dimSubclassPlugs) {
       // We only check one direction as DIM subclasses can be partially complete by
       // design.

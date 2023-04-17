@@ -131,6 +131,10 @@ export const inGameLoadoutsWithMetadataSelector = createSelector(
     storeId
   ) => {
     const selectedStore = getStore(stores, storeId)!;
+    if (!defs) {
+      return [];
+    }
+
     return (
       inGameLoadouts
         // seems unlikely the game would return valid, itemful loadouts for slot you havne't earned, but we respect this setting.
