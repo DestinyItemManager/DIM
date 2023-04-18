@@ -1,7 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { profileResponseSelector } from 'app/inventory/selectors';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import PlugDrawer from 'app/loadout/plug-drawer/PlugDrawer';
@@ -16,11 +15,9 @@ import {
   subclassAbilitySocketCategoryHashes,
 } from 'app/utils/socket-utils';
 import { uniqBy } from 'app/utils/util';
-import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useCallback, useMemo } from 'react';
-import { useSelector } from 'react-redux';
 
 type PlugSetWithDefaultPlug = PlugSet & { defaultPlug: PluggableInventoryItemDefinition };
 
@@ -39,19 +36,13 @@ export default function SubclassPlugDrawer({
   onClose: () => void;
 }) {
   const defs = useD2Definitions()!;
-  const profileResponse = useSelector(profileResponseSelector);
 
   const { plugSets, aspects, fragments, sortPlugGroups } = useMemo(() => {
     const initiallySelected = Object.values(socketOverrides)
       .map((hash) => defs.InventoryItem.get(hash))
       .filter(isPluggableItem);
 
-    const { plugSets, aspects, fragments } = getPlugsForSubclass(
-      defs,
-      profileResponse,
-      subclass,
-      initiallySelected
-    );
+    const { plugSets, aspects, fragments } = getPlugsForSubclass(defs, subclass, initiallySelected);
 
     // A flat list of possible subclass plugs we use this to figure out how to sort plugs
     // and the different sections in the plug picker
@@ -67,7 +58,7 @@ export default function SubclassPlugDrawer({
       fragments,
       sortPlugGroups,
     };
-  }, [defs, profileResponse, socketOverrides, subclass]);
+  }, [defs, socketOverrides, subclass]);
 
   // The handler when when a user accepts the selection in the plug picker
   // This will create a new set of socket overrides
@@ -81,7 +72,7 @@ export default function SubclassPlugDrawer({
       const newOverrides: SocketOverrides = {};
 
       for (const socket of subclass.sockets.allSockets) {
-        if (!socket.plugSet || !profileResponse) {
+        if (!socket.plugSet) {
           continue;
         }
 
@@ -95,7 +86,7 @@ export default function SubclassPlugDrawer({
       }
       onAccept(newOverrides);
     },
-    [onAccept, profileResponse, subclass.sockets]
+    [onAccept, subclass.sockets]
   );
 
   // Determines whether an ability, aspect or fragment is currently selectable
@@ -149,7 +140,6 @@ export default function SubclassPlugDrawer({
  */
 function getPlugsForSubclass(
   defs: D2ManifestDefinitions | undefined,
-  profileResponse: DestinyProfileResponse | undefined,
   subclass: DimItem,
   initiallySelected: PluggableInventoryItemDefinition[]
 ) {
@@ -182,7 +172,7 @@ function getPlugsForSubclass(
           ? getDefaultAbilityChoiceHash(firstSocket)
           : firstSocket.emptyPlugItemHash;
         const defaultPlug = defaultPlugHash ? defs.InventoryItem.get(defaultPlugHash) : undefined;
-        if (firstSocket.plugSet && profileResponse && isPluggableItem(defaultPlug)) {
+        if (firstSocket.plugSet && isPluggableItem(defaultPlug)) {
           const plugSet: PlugSetWithDefaultPlug = {
             plugs: [],
             selected: [],
