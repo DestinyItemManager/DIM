@@ -1,8 +1,17 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { isPluggableItem } from 'app/inventory/store/sockets';
 import { showItemPicker } from 'app/item-picker/item-picker';
+import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { armorStats } from 'app/search/d2-known-values';
 import { isSunset } from 'app/utils/item-utils';
+import {
+  aspectSocketCategoryHashes,
+  fragmentSocketCategoryHashes,
+  getDefaultAbilityChoiceHash,
+  getSocketsByIndexes,
+} from 'app/utils/socket-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 
 /** Checks if the item is non-sunset Armor 2.0 and whether it has stats present for all 6 armor stats. */
@@ -32,4 +41,32 @@ export async function pickSubclass(filterItems: (item: DimItem) => boolean) {
 
     return item;
   } catch (e) {}
+}
+
+export function getSubclassPlugs(
+  defs: D2ManifestDefinitions,
+  subclass: ResolvedLoadoutItem | undefined
+) {
+  const plugs: PluggableInventoryItemDefinition[] = [];
+
+  if (subclass?.item.sockets?.categories) {
+    for (const category of subclass.item.sockets.categories) {
+      const showInitial =
+        !aspectSocketCategoryHashes.includes(category.category.hash) &&
+        !fragmentSocketCategoryHashes.includes(category.category.hash);
+      const sockets = getSocketsByIndexes(subclass.item.sockets, category.socketIndexes);
+
+      for (const socket of sockets) {
+        const override = subclass.loadoutItem.socketOverrides?.[socket.socketIndex];
+        const initial = getDefaultAbilityChoiceHash(socket);
+        const hash = override || (showInitial && initial);
+        const plug = hash && defs.InventoryItem.get(hash);
+        if (plug && isPluggableItem(plug)) {
+          plugs.push(plug);
+        }
+      }
+    }
+  }
+
+  return plugs;
 }

@@ -1,4 +1,5 @@
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
@@ -17,6 +18,7 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import { getSubclassPlugs } from '../item-utils';
 import { UNSET_PLUG_HASH } from '../known-values';
 
 /**
@@ -74,12 +76,13 @@ export const gameLoadoutCompatibleBuckets = [
 ];
 
 /**
- * does this game loadout, meet the requirements of this DIM loadout:
+ * Does this in-game loadout, meet the requirements of this DIM loadout:
  *
- * does it include the items the DIM loadout would equip,
+ * Does it include the items the DIM loadout would equip,
  * and represent a full application of the DIM loadout's required mods?
  */
 export function implementsDimLoadout(
+  defs: D2ManifestDefinitions,
   inGameLoadout: InGameLoadout,
   dimResolvedLoadoutItems: ResolvedLoadoutItem[],
   resolvedMods: ResolvedLoadoutMod[]
@@ -112,6 +115,28 @@ export function implementsDimLoadout(
     }
     gameLoadoutMods.splice(pos, 1);
   }
+
+  // Ensure that the dimsubclass abilities, aspect and fragments are accounted for
+  // so that builds using the same subclass but different setups are identified.
+  const dimSubclass = dimResolvedLoadoutItems.find(
+    (rli) => rli.item.bucket.hash === BucketHashes.Subclass
+  );
+  if (dimSubclass?.loadoutItem?.socketOverrides) {
+    // This was checked as part of item matching.
+    const inGameSubclass = inGameLoadout.items.find(
+      (item) => item.itemInstanceId === dimSubclass.item.id
+    )!;
+
+    const dimSubclassPlugs = getSubclassPlugs(defs, dimSubclass);
+    for (const plug of dimSubclassPlugs) {
+      // We only check one direction as DIM subclasses can be partially complete by
+      // design.
+      if (!inGameSubclass.plugItemHashes.includes(plug.hash)) {
+        return false;
+      }
+    }
+  }
+
   return true;
 }
 

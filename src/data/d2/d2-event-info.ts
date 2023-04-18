@@ -41,7 +41,7 @@ export const D2EventInfo = {
   6: {
     name: 'Guardian Games',
     shortname: 'games',
-    sources: [611838069, 2006303146, 2011810450, 3388021959],
+    sources: [611838069, 2006303146, 2011810450, 2473294025, 3388021959],
     engram: [],
   },
 };
@@ -80,5 +80,6 @@ export const D2SourcesToEvent = {
   611838069: D2EventEnum.GUARDIAN_GAMES,
   2006303146: D2EventEnum.GUARDIAN_GAMES,
   2011810450: D2EventEnum.GUARDIAN_GAMES,
+  2473294025: D2EventEnum.GUARDIAN_GAMES,
   3388021959: D2EventEnum.GUARDIAN_GAMES,
 };
