@@ -1,5 +1,7 @@
 ## Next
 
+* Fixed Adept Draw Time marking the draw time stat as negatively affected (red) instead of positively affected (blue).
+
 ## 7.64.1 <span class="changelog-date">(2023-04-16)</span>
 
 * In-Game Loadouts are now represented as save slots. Click them for details on which items and selections they contain.
