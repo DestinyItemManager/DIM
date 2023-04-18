@@ -80,6 +80,10 @@ const enhancedIntrinsics = new Set<number>([
   2696719570, // Adaptive Glaive
   1338909520, // Adaptive Glaive
   1447716563, // Adaptive Glaive
+  2897981193, // Pinpoint Slug Frame
+  878620401, // Pinpoint Slug Frame
+  2426674025, // Pinpoint Slug Frame
+  2410819063, // Pinpoint Slug Frame
   581875391, // Aggressive Burst
   2419864979, // Aggressive Burst
   1068043187, // Aggressive Burst
@@ -233,6 +237,10 @@ const enhancedIntrinsics = new Set<number>([
   3688301727, // Rapid-Fire Frame
   1894749743, // Rapid-Fire Frame
   1707990417, // Rapid-Fire Frame
+  1576423267, // Rapid-Fire Frame
+  3688301727, // Rapid-Fire Frame
+  1894749743, // Rapid-Fire Frame
+  1707990417, // Rapid-Fire Frame
   1472963920, // High-Impact Frame
   4231246084, // High-Impact Frame
   302702765, // High-Impact Frame
@@ -286,6 +294,15 @@ const enhancedIntrinsics = new Set<number>([
   3615521782, // Aggressive Frame
   757651572, // Aggressive Frame
   2662827496, // Aggressive Frame
+  3355499393, // Adaptive Frame
+  2490530085, // Adaptive Frame
+  141515518, // Adaptive Frame
+  3435239180, // Adaptive Frame
+  4249817697, // Adaptive Frame
+  2178772051, // Adaptive Frame
+  489506521, // Adaptive Frame
+  1900989425, // Adaptive Frame
+  3133077199, // Adaptive Frame
   621911507, // Wave Frame
   1220310607, // Wave Frame
   1713394949, // Wave Frame
@@ -352,6 +369,10 @@ const enhancedIntrinsics = new Set<number>([
   132189785, // Lightweight Frame
   885620491, // Lightweight Frame
   1665848857, // Lightweight Frame
+  1564126489, // Rapid-Fire Frame
+  2984571381, // Rapid-Fire Frame
+  762801111, // Rapid-Fire Frame
+  680193725, // Rapid-Fire Frame
   1564126489, // Rapid-Fire Frame
   2984571381, // Rapid-Fire Frame
   762801111, // Rapid-Fire Frame
@@ -461,6 +482,20 @@ const enhancedIntrinsics = new Set<number>([
   4269485650, // Aggressive Frame
   1655963600, // Aggressive Frame
   1063261332, // Aggressive Frame
+  3049431773, // Aggressive Frame
+  451371216, // Aggressive Frame
+  4269485650, // Aggressive Frame
+  1655963600, // Aggressive Frame
+  1063261332, // Aggressive Frame
+  2806361224, // Rapid-Fire Frame
+  1483339932, // Rapid-Fire Frame
+  4188742693, // Rapid-Fire Frame
+  872207875, // Rapid-Fire Frame
+  3478030936, // Rapid-Fire Frame
+  3095041770, // Rapid-Fire Frame
+  3249407402, // Rapid-Fire Frame
+  2164888232, // Rapid-Fire Frame
+  3841661468, // Rapid-Fire Frame
   762204274, // Häkke Precision Frame
   2409208302, // Häkke Precision Frame
   482158780, // Häkke Precision Frame
