@@ -310,6 +310,12 @@ export function isPlugStatActive(
     return true;
   }
 
+  // These are preview stats for the Adept enhancing plugs to indicate that enhancing
+  // implicitly upgrades the masterwork to T10
+  if (plug.plug?.plugCategoryHash === PlugCategoryHashes.CraftingPlugsWeaponsModsEnhancers) {
+    return false;
+  }
+
   const plugHash = plug.hash;
   if (
     plugHash === modsWithConditionalStats.elementalCapacitor ||
@@ -333,9 +339,16 @@ export function isPlugStatActive(
     return adeptWeaponHashes.includes(item.hash);
   }
   if (enhancedIntrinsics.has(plugHash)) {
-    // Crafted weapons get bonus stats from enhanced intrinsics at Level 20+.
-    // The number 20 isn't in the definitions, so just hardcoding it here.
-    return (item.craftedInfo?.level || 0) >= 20;
+    return (
+      // Crafted weapons get bonus stats from enhanced intrinsics at Level 20+.
+      // The number 20 isn't in the definitions, so just hardcoding it here.
+      (item.craftedInfo?.level || 0) >= 20 ||
+      // Alternatively, enhancing an adept weapon gives it an enhanced intrinsic
+      // that gives bonus stats simply because it's an adept weapon
+      // FIXME: The defs say this gives +2, but the game calculates +3. There's no
+      // plug that could actually give these +3s
+      adeptWeaponHashes.includes(item.hash)
+    );
   }
   return true;
 }
