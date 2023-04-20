@@ -15,7 +15,6 @@ import { useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
 import {
-  getDefaultAbilityChoiceHash,
   getSocketByIndex,
   getSocketsByCategoryHashes,
   subclassAbilitySocketCategoryHashes,
@@ -138,13 +137,13 @@ export default memo(function LockArmorAndPerks({
   // We need to track whether it is a default ability as those cannot be deleted.
   const socketOverridePlugs: {
     plug: PluggableInventoryItemDefinition;
-    isDefaultAbility: boolean;
+    isAbility: boolean;
   }[] = useMemo(() => {
     if (!subclass?.loadoutItem.socketOverrides || !subclass.item.sockets) {
       return emptyArray();
     }
 
-    const rtn: { plug: PluggableInventoryItemDefinition; isDefaultAbility: boolean }[] = [];
+    const rtn: { plug: PluggableInventoryItemDefinition; isAbility: boolean }[] = [];
 
     for (const socketIndexString of Object.keys(subclass?.loadoutItem.socketOverrides)) {
       const socketIndex = parseInt(socketIndexString, 10);
@@ -158,13 +157,9 @@ export default memo(function LockArmorAndPerks({
         subclass.loadoutItem.socketOverrides[socketIndex]
       ) as PluggableInventoryItemDefinition;
 
-      const isDefaultAbility = Boolean(
-        socket &&
-          getDefaultAbilityChoiceHash(socket) === overridePlug.hash &&
-          abilityAndSuperSockets.includes(socket)
-      );
+      const isAbility = Boolean(socket && abilityAndSuperSockets.includes(socket));
 
-      rtn.push({ plug: overridePlug, isDefaultAbility });
+      rtn.push({ plug: overridePlug, isAbility });
     }
 
     return rtn;
@@ -237,12 +232,12 @@ export default memo(function LockArmorAndPerks({
               lockedItem={subclass.item}
               onRemove={() => lbDispatch({ type: 'removeSubclass' })}
             />
-            {socketOverridePlugs.map(({ plug, isDefaultAbility }) => (
+            {socketOverridePlugs.map(({ plug, isAbility }) => (
               <PlugDef
                 key={getModRenderKey(plug)}
                 plug={plug}
                 onClose={
-                  isDefaultAbility
+                  isAbility
                     ? undefined
                     : () => lbDispatch({ type: 'removeSingleSubclassSocketOverride', plug })
                 }

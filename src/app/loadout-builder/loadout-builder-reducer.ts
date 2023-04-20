@@ -25,8 +25,8 @@ import { mapToNonReducedModCostVariant } from 'app/loadout/mod-utils';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { emptyObject } from 'app/utils/empty';
+import { errorLog } from 'app/utils/log';
 import {
-  getDefaultAbilityChoiceHash,
   getSocketsByCategoryHashes,
   subclassAbilitySocketCategoryHashes,
 } from 'app/utils/socket-utils';
@@ -485,17 +485,16 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
           }
         }
 
-        // If we are removing from an ability/super socket, find the socket so we can
-        // show the default plug instead
-        const abilitySocketRemovingFrom = abilityAndSuperSockets.find(
+        const isAbilitySocket = abilityAndSuperSockets.find(
           (socket) => socket.socketIndex === socketIndexToRemove
         );
 
-        if (socketIndexToRemove !== undefined && abilitySocketRemovingFrom) {
-          // If this is an ability socket, replace with the default plug hash
-          newSocketOverrides[socketIndexToRemove] =
-            getDefaultAbilityChoiceHash(abilitySocketRemovingFrom);
-        } else if (socketIndexToRemove) {
+        if (isAbilitySocket) {
+          errorLog('loadout builder', 'cannot remove ability');
+          return state;
+        }
+
+        if (socketIndexToRemove !== undefined) {
           // If its not an ability we just remove it from the overrides
           delete newSocketOverrides[socketIndexToRemove];
         }
