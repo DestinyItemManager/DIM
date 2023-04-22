@@ -672,8 +672,6 @@
     "FilteredItems": "Objetos filtrados",
     "FindAnother": "Encontrar otro {{name}}",
     "FromEquipped": "Equipado",
-    "GatherEngrams": "Juntar engramas",
-    "GatherEngramsExceptExotics": "Excepcionales",
     "Generated": "Equipamiento N{{tier}}",
     "HashtagTip": "Tip: Usa #hashtags en los nombres o notas de tu equipamiento y se mostrarán aquí.",
     "Import": {
@@ -723,8 +721,6 @@
     },
     "Mods": "Mods",
     "MoveItems": "Moviendo objetos",
-    "NoEngrams": "No hay engramas no excepcionales disponibles para transferir.",
-    "NoExotics": "No hay engramas disponibles para transferir.",
     "NoSpace": "Estas sin espacio en el depósito y en cualquier otro personaje.",
     "NoneMatch": "Ninguno de tus equipamiento coincidió con los filtros.",
     "NotStarted": "Esperando a que otras acciones se completen, o a que se actualice el inventario para terminar de cargar",

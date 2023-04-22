@@ -672,8 +672,6 @@
     "FilteredItems": "Filtrowane Przedmioty",
     "FindAnother": "Znajdź następny {{name}}",
     "FromEquipped": "Założone",
-    "GatherEngrams": "Zbieraj Engramy",
-    "GatherEngramsExceptExotics": "Egzotyki",
     "Generated": "Uzbrojenie T{{tier}}",
     "HashtagTip": "Wskazówka: Używaj #hashtagów w swoich nazwach Uzbrojenia lub notatkach, a one pojawią się tutaj.",
     "Import": {
@@ -723,8 +721,6 @@
     },
     "Mods": "Modyfikacje",
     "MoveItems": "Przenoszenie przedmiotów",
-    "NoEngrams": "Brak nie egzotycznych engramów do przeniesienia.",
-    "NoExotics": "Brak engramów do przeniesienia.",
     "NoSpace": "Nie masz miejsca w schowku ani na każdej innej postaci.",
     "NoneMatch": "Żadne z Twoich Uzbrojeń nie pasowało do filtrów.",
     "NotStarted": "Oczekiwanie na zakończenie innych działań lub odświeżenie ekwipunku, aby zakończyć ładowanie",

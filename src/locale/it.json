@@ -672,8 +672,6 @@
     "FilteredItems": "Oggetti Filtrati",
     "FindAnother": "Trova un altro {{name}}",
     "FromEquipped": "Da equipaggiato",
-    "GatherEngrams": "Raccogliere Engrammi",
-    "GatherEngramsExceptExotics": "Esotici",
     "Generated": "Dotazione T{{tier}}",
     "HashtagTip": "Consiglio: Usa gli #hashtag nel nome della tua dotazione e verranno mostrati qui.",
     "Import": {
@@ -723,8 +721,6 @@
     },
     "Mods": "Modifiche",
     "MoveItems": "Spostando oggetti",
-    "NoEngrams": "Non ci sono engrammi non-esotici da trasferire.",
-    "NoExotics": "Non ci sono engrammi da trasferire.",
     "NoSpace": "Non hai più spazio nel Deposito e nei personaggi.",
     "NoneMatch": "Nessuna delle tue dotazioni corrisponde ai filtri.",
     "NotStarted": "In attesa del completamento di altre azioni, o la fine del caricamento di un aggiornamento dell'inventario",
@@ -756,7 +752,7 @@
     "Redo": "Ripeti",
     "RestoreAllItems": "Tutti gli Elementi",
     "Save": "Salva",
-    "SaveAsDIM": "Salva come Dotazione DIM",
+    "SaveAsDIM": "Salva come dotazione DIM",
     "SaveAsNew": "Salva come Nuovo",
     "SaveAsNewTooltip": "Mantieni la dotazione originale e salva questa come nuova dotazione",
     "SaveDisabled": {
