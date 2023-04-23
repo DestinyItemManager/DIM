@@ -34,8 +34,10 @@ const choosyVoltronLocation =
 export default function WishListSettings() {
   const dispatch = useThunkDispatch();
   const wishListSource = useSelector(settingSelector('wishListSource'));
-  const voltronNotSelected = wishListSource !== voltronLocation;
-  const choosyVoltronNotSelected = wishListSource !== choosyVoltronLocation;
+  const voltronSelected = wishListSource === voltronLocation;
+  const voltronNotSelected = !voltronSelected;
+  const choosyVoltronSelected = wishListSource === choosyVoltronLocation;
+  const choosyVoltronNotSelected = !choosyVoltronSelected;
   const wishListLastUpdated = useSelector(wishListsLastFetchedSelector);
   const wishList = useSelector(wishListsSelector).wishListAndInfo;
   const numWishListRolls = wishList.wishListRolls.length;
@@ -124,8 +126,9 @@ export default function WishListSettings() {
         <div>{t('WishListRoll.PreMadeFiles')}</div>
         <>
           <div className="fineprint">
-            {!voltronNotSelected && <span>{t('WishListRoll.VoltronSelected')}</span>}
-            {!choosyVoltronNotSelected && <span>{t('WishListRoll.ChoosyVoltronSelected')}</span>}
+            {voltronSelected && <span>{t('WishListRoll.VoltronSelected')}</span>}
+            {choosyVoltronSelected && <span>{t('WishListRoll.ChoosyVoltronSelected')}</span>}
+            <p className="fineprint" />
           </div>
         </>
         {voltronNotSelected && (
