@@ -124,8 +124,8 @@ export default function WishListSettings() {
         <div>{t('WishListRoll.PreMadeFiles')}</div>
         <>
           <div className="fineprint">
-            {!voltronNotSelected && <span>Voltron Selected</span>}
-            {!choosyVoltronNotSelected && <span>Choosy Voltron Selected</span>}
+            {!voltronNotSelected && <span>{t('WishListRoll.VoltronSelected')}</span>}
+            {!choosyVoltronNotSelected && <span>{t('WishListRoll.ChoosyVoltronSelected')}</span>}
           </div>
         </>
         {voltronNotSelected && (
