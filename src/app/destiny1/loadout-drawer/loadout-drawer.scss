@@ -2,6 +2,7 @@
 
 .loadout-drawer {
   max-height: calc(var(--viewport-height) - var(--header-height) - 16px);
+
   @include phone-portrait {
     @include max-sheet-height;
   }
@@ -98,6 +99,7 @@
   flex-flow: row wrap;
   min-height: calc(var(--item-size) + 4px);
   margin-top: 4px;
+
   @include phone-portrait {
     flex-flow: column nowrap;
   }
@@ -110,6 +112,7 @@
   display: flex;
   box-sizing: border-box;
   margin-right: 16px;
+
   @include phone-portrait {
     margin-right: 0;
   }
@@ -144,6 +147,7 @@
     ); // ↑ fit at least 1 equipped + 1 unequipped item
 
     width: max-content;
+
     @include phone-portrait {
       max-width: 100%;
       width: 100%;

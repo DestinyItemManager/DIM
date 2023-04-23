@@ -2,6 +2,7 @@
 
 .trayContainer {
   position: fixed;
+
   @include below-header;
   right: 0;
   height: calc(var(--viewport-height) - var(--header-height));

@@ -3,10 +3,8 @@
   display: grid;
   gap: 4px;
   place-items: center;
-  grid-template-columns: min-content min-content min-content;
-  grid-template-rows: min-content min-content min-content;
-  grid-template-areas:
-    '  .      slot0     .  '
+  grid-template:
+    min-content min-content min-content min-content min-content min-content '  .      slot0     .  '
     'slot2 collection slot3'
     '  .      slot1     .  ';
   & > div > img {

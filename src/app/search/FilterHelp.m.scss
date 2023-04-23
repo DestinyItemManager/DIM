@@ -10,6 +10,7 @@
     border-spacing: 0;
     background-color: #222;
     width: 100%;
+
     @include phone-portrait {
       table-layout: fixed;
     }

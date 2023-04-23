@@ -54,6 +54,7 @@
     overflow: auto;
     height: 400px;
     background-color: black;
+
     @include phone-portrait {
       height: 300px;
     }

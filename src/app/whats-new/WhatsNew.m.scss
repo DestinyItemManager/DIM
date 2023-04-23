@@ -18,6 +18,7 @@
     overflow: auto;
     height: 80vh;
     background-color: black;
+
     @include phone-portrait {
       height: 50vh;
     }

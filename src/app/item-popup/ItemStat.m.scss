@@ -6,6 +6,7 @@
   text-align: right;
   margin-right: 8px;
   max-width: 130px;
+
   @include phone-portrait {
     max-width: 40vw;
   }
