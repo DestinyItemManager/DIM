@@ -1,5 +1,7 @@
 ## Next
 
+* Enhanced adept weapons from Root of Nightmares should now show with correct stats.
+
 ## 7.65.0 <span class="changelog-date">(2023-04-23)</span>
 
 * Fixed Adept Draw Time marking the draw time stat as negatively affected (red) instead of positively affected (blue).

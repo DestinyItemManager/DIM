@@ -446,7 +446,7 @@ function applyPlugsToStats(
 /**
  * Adept raid weapons that were randomly acquired can be enhanced to get an enhanced intrinsic,
  * at which point they're functionally crafted.
- * Their intrinsic says "conditionally +2 to some stat", but they get +3 because that's how
+ * Their intrinsic says "conditionally +2 to some stats", but they get +3 because that's how
  * masterworked adepts behave, and an additional +1 by reaching weapon level 20. There's no
  * basis for this behavior in the defs, so we cheat when we calculate live stats and attribute
  * these stats to the intrinsic since that's the "masterwork".
@@ -461,7 +461,7 @@ function getPlugStatValue(
     enhancedIntrinsics.has(plug.hash) &&
     adeptWeaponHashes.includes(createdItem.hash)
   ) {
-    return stat.value * ((createdItem.craftedInfo?.level ?? 0) >= 20 ? 2 : 1.5);
+    return stat.value + ((createdItem.craftedInfo?.level ?? 0) >= 20 ? 2 : 1);
   }
 
   return stat.value;
