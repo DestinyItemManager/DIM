@@ -1,5 +1,7 @@
 ## Next
 
+## 7.65.0 <span class="changelog-date">(2023-04-23)</span>
+
 * Fixed Adept Draw Time marking the draw time stat as negatively affected (red) instead of positively affected (blue).
 * Loadout Optimizer and Loadouts now consistently allow you to choose not yet unlocked Fragments and Aspects. Previously this was only working for some characters.
 * Fixed an issue where the DIM Loadout apply notification was sometimes not showing that it performed changes to subclass abilities.
