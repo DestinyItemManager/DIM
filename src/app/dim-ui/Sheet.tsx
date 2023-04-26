@@ -1,5 +1,7 @@
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
+import { isiOSBrowser } from 'app/utils/browsers';
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import clsx from 'clsx';
 import {
   PanInfo,
@@ -19,7 +21,6 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { unlock as disableBodyScroll, lock as enableBodyScroll } from 'tua-body-scroll-lock';
 import { AppIcon, disabledIcon } from '../shell/icons';
 import { PressTipRoot } from './PressTip';
 import styles from './Sheet.m.scss';
@@ -131,7 +132,7 @@ export default function Sheet({
 }: Props) {
   const sheet = useRef<HTMLDivElement>(null);
   const sheetContents = useRef<HTMLDivElement | null>(null);
-  useLockSheetContents(sheetContents);
+  const sheetContentsRefFn = useLockSheetContents(sheetContents);
   const dragHandle = useRef<HTMLDivElement>(null);
 
   const [frozenHeight, setFrozenHeight] = useState<number | undefined>(undefined);
@@ -270,7 +271,7 @@ export default function Sheet({
                 'sheet-has-footer': footer,
               })}
               style={frozenHeight ? { flexBasis: frozenHeight } : undefined}
-              ref={sheetContents}
+              ref={sheetContentsRefFn}
             >
               {_.isFunction(children) ? children({ onClose: triggerClose }) : children}
             </div>
@@ -288,31 +289,54 @@ export default function Sheet({
   );
 }
 
-/** Check whether this browser supports overscroll-behavior. Supported pretty much everywhere except iOS <16 */
-const supportsOverscrollBehavior = CSS.supports('overscroll-behavior: none');
-
 /**
- * Locks body scroll except for touches in the sheet contents.
+ * Locks body scroll except for touches in the sheet contents, and adds a block-events
+ * touch handler to sheet contents.
  */
 function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivElement | null>) {
-  useLayoutEffect(() => {
-    const current = sheetContents.current;
-    if (current) {
-      if (!supportsOverscrollBehavior) {
-        document.body.classList.add('body-scroll-lock');
-        enableBodyScroll(current);
-        disableBodyScroll(current);
+  /** Block touch/click events for the inner scrolling area if it's not at the top. */
+  const blockEvents = useCallback(
+    (e: TouchEvent | React.MouseEvent) => {
+      if (sheetContents.current!.scrollTop !== 0) {
+        e.stopPropagation();
       }
-      return () => {
-        if (!supportsOverscrollBehavior) {
+    },
+    [sheetContents]
+  );
+
+  // Use a ref callback to set up the ref immediately upon render
+  const sheetContentsRefFn = useCallback(
+    (contents: HTMLDivElement) => {
+      sheetContents.current = contents;
+      if (sheetContents.current) {
+        sheetContents.current.addEventListener('touchstart', blockEvents);
+        if (isiOSBrowser()) {
+          // as-is, body-scroll-lock does not work on on Android #5615
+          document.body.classList.add('body-scroll-lock');
+          enableBodyScroll(sheetContents.current);
+          disableBodyScroll(sheetContents.current);
+        }
+      }
+    },
+    [blockEvents, sheetContents]
+  );
+
+  useLayoutEffect(
+    () => () => {
+      if (sheetContents.current) {
+        sheetContents.current.removeEventListener('touchstart', blockEvents);
+        if (isiOSBrowser()) {
           setTimeout(() => {
             document.body.classList.remove('body-scroll-lock');
           }, 0);
-          enableBodyScroll(current);
+          enableBodyScroll(sheetContents.current);
         }
-      };
-    }
-  }, [sheetContents]);
+      }
+    },
+    [blockEvents, sheetContents]
+  );
+
+  return sheetContentsRefFn;
 }
 
 function isInside(element: HTMLElement, className: string) {
