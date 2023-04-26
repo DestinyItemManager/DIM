@@ -1,3 +1,5 @@
+@import '../variables';
+
 /* INT/DIS/STR bars */
 .stat-bars {
   width: 100%;
@@ -106,6 +108,9 @@
       flex: 0;
       font-size: 11px;
       color: #ccc;
+      &.boostedValue {
+        color: $blue;
+      }
       &.pointerCursor {
         cursor: pointer;
       }

@@ -43,7 +43,13 @@ function CharacterStats({ stats, showTier }: CharacterStatProps) {
       )}
       {stats.map(({ stat }) => (
         <PressTip key={stat.hash} tooltip={() => <StatTooltip stat={stat} />}>
-          <div className="stat" aria-label={`${stat.name} ${stat.value}`} role="group">
+          <div
+            className={clsx('stat', {
+              boostedValue: stat.breakdown?.some((change) => change.source === 'runtimeEffect'),
+            })}
+            aria-label={`${stat.name} ${stat.value}`}
+            role="group"
+          >
             <img src={stat.icon} alt={stat.name} />
             <div>{stat.value}</div>
           </div>
