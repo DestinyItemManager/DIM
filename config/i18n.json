@@ -1293,10 +1293,8 @@
       "TranslationText": "We use {{link}} for ease of translation. If you want to improve one of DIM's translations, join the team.",
       "TwitterHelp": "Be sure to follow us to stay on top of updates and real time application state information.",
       "Version": "Version {{version}} ({{flavor}}), built on {{date}}",
-      "YouTube": "YouTube",
-      "YouTubeHelp": "Learn how to use DIM on our YouTube channel.",
-      "Wiki": "DIM User Guide Wiki",
-      "WikiHelp": "Learn how to use DIM and contribute to our community-driven user guide."
+      "Wiki": "DIM User Guide",
+      "WikiHelp": "Learn how to use DIM's features."
     },
     "Login": {
       "Auth": "Authorize with Bungie.net",

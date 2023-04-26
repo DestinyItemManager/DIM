@@ -15,11 +15,9 @@ import {
   faGithub,
   faReddit,
   faTshirt,
-  faYoutube,
   heartIcon,
   helpIcon,
   mastodonIcon,
-  twitterIcon,
 } from './icons';
 
 const githubLinkDirect = 'https://github.com/DestinyItemManager/DIM/';
@@ -34,8 +32,6 @@ const crowdinLink = `<a href='${crowdinLinkDirect}' target='_blank' rel='noopene
 const bungieLink = `<a href='${bungieLinkDirect}' target='_blank' rel='noopener noreferrer'>Bungie.net</a>`;
 const openCollectiveLink = `<a href='${openCollectiveLinkDirect}' target='_blank' rel='noopener noreferrer'>OpenCollective</a>`;
 const storeLink = `<a href='${storeLinkDirect}' target='_blank' rel='noopener noreferrer'>DesignByHumans</a>`;
-const youTubeLink = 'https://www.youtube.com/channel/UCsNRmUfaeIi5Tk7U0mlZ6UQ';
-const twitterLink = 'https://twitter.com/ThisIsDIM';
 const mastodonLink = 'https://mstdn.games/@ThisIsDIM';
 const redditLink = 'https://destinyitemmanager.reddit.com';
 const discordLink = 'https://discord.gg/UK2GWC7';
@@ -140,6 +136,14 @@ export default function About() {
             />
           </div>
         )}
+        <div>
+          <h2>
+            <ExternalLink href={wikiLink}>
+              <AppIcon icon={helpIcon} /> {t('Views.About.Wiki')}
+            </ExternalLink>
+          </h2>
+          {t('Views.About.WikiHelp')} <br />
+        </div>
         {!iOSApp && (
           <div>
             <h2>
@@ -154,29 +158,6 @@ export default function About() {
             />
           </div>
         )}
-        <div>
-          <h2>
-            <ExternalLink href={twitterLink}>
-              <AppIcon icon={twitterIcon} /> Twitter
-            </ExternalLink>
-            {' / '}
-            <ExternalLink href={mastodonLink}>
-              <AppIcon icon={mastodonIcon} /> Mastodon
-            </ExternalLink>
-          </h2>
-          {t('Views.About.TwitterHelp')} <br />
-          <ExternalLink href={twitterLink}>@ThisIsDIM</ExternalLink>
-          {' / '}
-          <ExternalLink href={mastodonLink}>@ThisIsDIM@mstdn.games</ExternalLink>
-        </div>
-        <div>
-          <h2>
-            <ExternalLink href={wikiLink}>
-              <AppIcon icon={helpIcon} /> {t('Views.About.Wiki')}
-            </ExternalLink>
-          </h2>
-          {t('Views.About.WikiHelp')} <br />
-        </div>
         <div>
           <h2>
             <ExternalLink href={discordLink}>
@@ -196,12 +177,12 @@ export default function About() {
         </div>
         <div>
           <h2>
-            <ExternalLink href={youTubeLink}>
-              <AppIcon icon={faYoutube} /> {t('Views.About.YouTube')}
+            <ExternalLink href={mastodonLink}>
+              <AppIcon icon={mastodonIcon} /> Mastodon
             </ExternalLink>
           </h2>
-          {t('Views.About.YouTubeHelp')} <br />
-          <ExternalLink href={youTubeLink}>Destiny Item Manager</ExternalLink>
+          {t('Views.About.TwitterHelp')} <br />
+          <ExternalLink href={mastodonLink}>@ThisIsDIM@mstdn.games</ExternalLink>
         </div>
         <div>
           <h2>

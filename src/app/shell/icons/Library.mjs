@@ -81,7 +81,6 @@ export const pinIcon = 'fas fa-thumbtack';
 export const faXbox = 'fab fa-xbox';
 export const faPlayStation = 'fab fa-playstation';
 export const faSteam = 'fab fa-steam';
-export const faYoutube = 'fab fa-youtube';
 export const faDiscord = 'fab fa-discord';
 export const faGithub = 'fab fa-github';
 export const faReddit = 'fab fa-reddit';

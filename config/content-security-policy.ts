@@ -13,7 +13,7 @@ export default function csp(env: 'release' | 'beta' | 'dev') {
       'https://www.google-analytics.com',
       // Twitter Widget
       'https://platform.twitter.com',
-      'https://cdn.syndication.twimg.com',
+      // OpenCollective backers
       'https://opencollective.com',
     ],
     workerSrc: [SELF],
@@ -23,9 +23,6 @@ export default function csp(env: 'release' | 'beta' | 'dev') {
       "'unsafe-inline'",
       // Google Fonts
       'https://fonts.googleapis.com/',
-      // Twitter Widget
-      'https://platform.twitter.com/css/',
-      'https://*.twimg.com/',
     ],
     connectSrc: [
       SELF,
@@ -57,10 +54,6 @@ export default function csp(env: 'release' | 'beta' | 'dev') {
       'https://csi.gstatic.com',
       // OpenCollective backers
       'https://opencollective.com',
-      // Twitter Widget
-      'https://syndication.twitter.com',
-      'https://platform.twitter.com',
-      'https://*.twimg.com/',
     ],
     fontSrc: [
       SELF,
@@ -73,7 +66,10 @@ export default function csp(env: 'release' | 'beta' | 'dev') {
       // Twitter Widget
       'https://syndication.twitter.com/',
       'https://platform.twitter.com/',
+      // OpenCollective backers
       'https://opencollective.com',
+      // Mastodon feed
+      'https://www.mastofeed.com/apiv2/feed',
     ],
     prefetchSrc: [SELF],
     objectSrc: SELF,
