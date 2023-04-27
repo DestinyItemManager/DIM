@@ -113,7 +113,7 @@
 }
 
 .highlightedItem {
-  background-color: $orange;
+  background-color: var(--theme-accent-primary);
   color: black !important;
   .menuItemIcon {
     color: black;
@@ -159,7 +159,7 @@
 }
 
 .saveSearchButton > :global(.app-icon) {
-  color: $orange !important;
+  color: var(--theme-accent-primary) !important;
 }
 
 .filterHelp {
@@ -177,7 +177,7 @@
   cursor: pointer;
 
   &:focus-visible {
-    outline: 1px solid $orange;
+    outline: 1px solid var(--theme-accent-primary);
   }
 
   @include phone-portrait {

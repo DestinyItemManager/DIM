@@ -28,7 +28,7 @@
   }
   h2 {
     a {
-      color: $orange;
+      color: var(--theme-accent-primary);
       text-decoration: none;
       border-bottom: 1px solid scale-color($orange, $alpha: -50%);
     }

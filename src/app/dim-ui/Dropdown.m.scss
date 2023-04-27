@@ -43,7 +43,7 @@
 }
 
 .highlighted {
-  background-color: $orange;
+  background-color: var(--theme-accent-primary);
   color: black !important;
   :global(.app-icon) {
     color: black !important;

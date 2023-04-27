@@ -64,7 +64,7 @@ $touchPadding: 2px; // A bit of extra hit area
         // The dot
         &::after {
           left: $touchPadding + $barWidth - $barHeight;
-          background-color: $orange;
+          background-color: var(--theme-accent-primary);
         }
       }
     }

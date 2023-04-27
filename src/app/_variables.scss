@@ -2,16 +2,8 @@
 
 // Variables and mixins that can be used from any SCSS file
 
-// DIM orange and blue, accent colors
-$orange: #e8a534;
-$blue: #68a0b7;
 $red: #ff3232; // For warnings/errors
 $green: #51a351; // For success statuses or positive deltas
-$gradient: radial-gradient(
-  circle at 50% 70px,
-  hsl(240, 20%, 28%) 0%,
-  hsl(240, 27%, 12%) 100%
-); // new background gradient
 
 // Blue used to denote community-provided data
 $communityBlue: #0d7fad;
@@ -147,3 +139,29 @@ produces
 @function dim-rgb-values-to-rgba($values, $alpha: 1) {
   @return #{'rgba(' + $values + ', ' + $alpha + ')'};
 }
+
+// Theme variables
+:root {
+  --theme-font-primary: 'Open Sans';
+
+  // Base colours
+  --theme-accent-primary: #e8a534;
+  --theme-accent-secondary: #68a0b7;
+
+  --theme-background-app-gradient-start: hsl(240, 20%, 28%);
+  --theme-background-app-gradient-end: hsl(240, 27%, 12%);
+  --theme-background-app-gradient: radial-gradient(
+    circle at 50% 70px,
+    var(--theme-background-app-gradient-start) 0%,
+    var(--theme-background-app-gradient-end) 100%
+  );
+
+  // Discreet segments of header and app body
+  --theme-background-app-header-primary: var(--theme-background-app-gradient);
+  --theme-background-app-header-secondary: var(--theme-background-app-gradient);
+  --theme-background-app-body: var(--theme-background-app-gradient);
+}
+
+// TODO: fix sass functions that need colors
+$orange: #e8a534;
+$blue: #68a0b7;

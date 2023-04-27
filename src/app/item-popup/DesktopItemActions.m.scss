@@ -22,7 +22,7 @@
   }
 
   &:hover :global(.app-icon) {
-    color: $orange;
+    color: var(--theme-accent-primary);
   }
 
   .collapsed & {

@@ -2,6 +2,7 @@
 
 .trayContainer {
   position: fixed;
+
   @include below-header;
   right: 0;
   height: calc(var(--viewport-height) - var(--header-height));
@@ -48,7 +49,7 @@
 
   &:hover {
     color: black;
-    background-color: $orange;
+    background-color: var(--theme-accent-primary);
   }
 
   :global(.app-icon) {

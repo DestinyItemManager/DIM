@@ -14,7 +14,7 @@
   background-color: black;
   &.selected {
     opacity: 1;
-    border-bottom: 2px solid $orange;
+    border-bottom: 2px solid var(--theme-accent-primary);
   }
   &:hover {
     color: white;
@@ -75,7 +75,7 @@
   background: #333;
 
   span {
-    color: $orange;
+    color: var(--theme-accent-primary);
     font-weight: bold;
   }
 

@@ -37,7 +37,7 @@
   &:hover,
   &:active,
   &.selected {
-    background-color: $orange !important;
+    background-color: var(--theme-accent-primary) !important;
     color: black !important;
     img {
       filter: invert(1) drop-shadow(0 0 1px black);
@@ -67,7 +67,7 @@
   }
   // Set focus styles
   &:focus {
-    border-color: $orange;
+    border-color: var(--theme-accent-primary);
     outline: none;
   }
   // For browsers that support :focus-visible, remove focus styles when focus-visible would be unset

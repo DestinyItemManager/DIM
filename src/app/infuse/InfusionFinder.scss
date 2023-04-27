@@ -57,7 +57,7 @@
   }
 
   .infuse-selected .item {
-    outline: 2px solid $orange !important;
+    outline: 2px solid var(--theme-accent-primary) !important;
   }
 
   .infuseControls {

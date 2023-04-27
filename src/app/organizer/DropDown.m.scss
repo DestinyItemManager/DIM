@@ -31,6 +31,7 @@ $dropdown-menu: 10;
   }
 
   background: black;
+
   @include visible-scrollbars;
 }
 
@@ -56,7 +57,7 @@ $dropdown-menu: 10;
 
   &:active {
     box-shadow: none;
-    background-color: $orange;
+    background-color: var(--theme-accent-primary);
   }
 
   :global(.app-icon) {
