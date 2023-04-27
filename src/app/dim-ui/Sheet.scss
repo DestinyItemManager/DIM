@@ -12,7 +12,7 @@ $control-color: rgba(255, 255, 255, 0.5);
   bottom: 0;
   // Pin the sheet to just over the keyboard
   bottom: var(--viewport-bottom-offset);
-  background-color: black;
+  background-color: var(--theme-fill-primary);
   color: #e0e0e0;
   box-shadow: 0 -1px 24px 0 #222;
   user-select: none;

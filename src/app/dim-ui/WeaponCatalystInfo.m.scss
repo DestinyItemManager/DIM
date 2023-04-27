@@ -12,16 +12,15 @@
 .catalystProgress {
   display: flex;
   flex-direction: column;
-  background: #222;
+  background: var(--theme-fill-lighten);
   gap: 4px;
 
   :global(.objective-progress) {
-    background: #222;
+    background: var(--theme-fill-darken);
   }
 }
 
 .catalystProgressSection {
   padding: 4px 10px 4px;
-  background: #333;
   flex-grow: 1;
 }

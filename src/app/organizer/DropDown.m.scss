@@ -30,13 +30,12 @@ $dropdown-menu: 10;
     right: 0;
   }
 
-  background: black;
+  background: var(--theme-fill-primary);
 
   @include visible-scrollbars;
 }
 
 .checkButton {
-  background-color: black;
   border-radius: 0;
   border: none;
   box-sizing: border-box;

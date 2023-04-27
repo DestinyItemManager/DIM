@@ -7,7 +7,7 @@
 
 .menu {
   position: absolute;
-  background: black;
+  background: var(--theme-fill-primary);
   color: white;
   font-size: 12px;
   z-index: 100;

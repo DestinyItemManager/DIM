@@ -16,7 +16,7 @@
 }
 
 .sideTray {
-  background-color: black;
+  background-color: var(--theme-fill-primary);
   padding: 10px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -29,9 +29,10 @@
     display: none;
   }
 
-  > div {
-    background-color: black;
-  }
+  // THEME TBD
+  // > div {
+  //   background-color: black;
+  // }
 }
 
 .trayButton {

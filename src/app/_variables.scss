@@ -142,21 +142,36 @@ produces
 
 // Theme variables
 :root {
+  // Font
   --theme-font-primary: 'Open Sans';
 
   // Base colours
   --theme-accent-primary: #e8a534;
   --theme-accent-secondary: #68a0b7;
 
+  --theme-fill-primary: red; // Base popups, drawers, dropdowns
+  --theme-fill-secondary: #161616; // Certain layered dropdowns e.g. so far only search
+
+  // Panels and sub-frames e.g. masterwork/catalyst progress
+  --theme-fill-lighten: rgba(255, 255, 255, 0.15);
+  --theme-fill-darken: rgba(0, 0, 0, 0.35);
+
+  --theme-button: rgba(255, 255, 255, 0.2);
+
+  --theme-corner-radius-search: 6px;
+  --theme-corner-radius-tooltip: 6px;
+
+  // App background gradient
   --theme-background-app-gradient-start: hsl(240, 20%, 28%);
   --theme-background-app-gradient-end: hsl(240, 27%, 12%);
+
   --theme-background-app-gradient: radial-gradient(
     circle at 50% 70px,
     var(--theme-background-app-gradient-start) 0%,
     var(--theme-background-app-gradient-end) 100%
   );
 
-  // Discreet segments of header and app body
+  // Discreet sections of header and app body
   --theme-background-app-header-primary: var(--theme-background-app-gradient);
   --theme-background-app-header-secondary: var(--theme-background-app-gradient);
   --theme-background-app-body: var(--theme-background-app-gradient);
