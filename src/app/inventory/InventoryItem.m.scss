@@ -29,9 +29,12 @@
   width: var(--item-size);
   cursor: grab;
 
-  &:hover {
-    @include draggable-hover-border;
-  }
+  @include draggable-hover-border;
+}
+
+// Remove shadow on diamond subclass items on hover
+:global(.sub-bucket[aria-label='Subclass'] .item-drag-container) {
+  box-shadow: none;
 }
 
 // Subclass items

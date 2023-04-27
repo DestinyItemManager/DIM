@@ -1,7 +1,7 @@
 @use '../variables.scss' as *;
 @use 'sass:color';
 
-$arrow-size: 15px; // ensure this stays in sync with 'popperArrowSize' in 'usePopper.ts'
+$arrow-size: 16px; // ensure this stays in sync with 'popperArrowSize' in 'usePopper.ts'
 $minimal-arrow-size: 10px;
 $horizontal-padding: 11px;
 
@@ -9,6 +9,10 @@ $horizontal-padding: 11px;
   user-select: none;
   touch-action: none;
   -webkit-touch-callout: none;
+
+  &:hover {
+    fill: rgba(255, 255, 255, 0.4);
+  }
 }
 
 .tooltip {
@@ -22,8 +26,8 @@ $horizontal-padding: 11px;
   width: fit-content;
   max-width: 306px;
   border: 1px solid dim-rgb-values-to-rgba(var(--tooltip-border-color-rgb));
-  border-top-width: var(--theme-corner-radius);
-  border-radius: var(--theme-corner-radius);
+  border-top-width: var(--theme-corner-radius-tooltip);
+  border-radius: var(--theme-corner-radius-tooltip);
   box-shadow: 0 0 24px 6px #080811;
   text-align: left;
   z-index: 99999;
@@ -38,11 +42,11 @@ $horizontal-padding: 11px;
     display: block;
     position: absolute;
     background-color: var(--tooltip-ribbon-color);
-    height: var(--theme-corner-radius);
-    top: calc(-1 * var(--theme-corner-radius));
+    height: var(--theme-corner-radius-tooltip);
+    top: calc(-1 * var(--theme-corner-radius-tooltip));
     left: -1px;
     right: -1px;
-    border-radius: var(--theme-corner-radius) var(--theme-corner-radius) 0 0;
+    border-radius: var(--theme-corner-radius-tooltip) var(--theme-corner-radius-tooltip) 0 0;
   }
 
   &.wideTooltip {
@@ -87,7 +91,7 @@ $horizontal-padding: 11px;
     border-width: 0;
     border-style: solid;
     position: absolute;
-    border-color: dim-rgb-values-to-rgba(var(--tooltip-border-color-rgb));
+    border-color: var(--tooltip-ribbon-color);
   }
 
   &[data-popper-placement='top'] .arrow {
@@ -104,7 +108,7 @@ $horizontal-padding: 11px;
     height: 0;
     border-width: 0 var(--length) var(--length) var(--length);
     border-color: transparent transparent var(--tooltip-ribbon-color) transparent;
-    top: calc(calc(-1 * var(--theme-corner-radius)) - var(--length));
+    top: calc(calc(-1 * var(--theme-corner-radius-tooltip)) - var(--length));
   }
   &[data-popper-placement='right'] .arrow {
     width: 0;

@@ -19,6 +19,10 @@
   &:last-child {
     border-bottom: none;
   }
+
+  &:hover {
+    background-color: var(--theme-fill-lighten);
+  }
 }
 
 .plug {

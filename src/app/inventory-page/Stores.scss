@@ -45,6 +45,11 @@
     }
   }
 
+  // Add margin in first row to prevent clipping enlarged items on hover
+  &:first-child:not(.store-header) {
+    margin-top: 15px;
+  }
+
   @include phone-portrait {
     // Full-width, single column
     display: block;

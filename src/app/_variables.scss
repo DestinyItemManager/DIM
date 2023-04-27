@@ -86,7 +86,21 @@ $easeInOutCubic: cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
 @mixin draggable-hover-border {
-  outline: 1px solid #ddd;
+  &:hover {
+    outline: 1px solid #fff;
+    transform: scale(1.3);
+    transition: all 0.2s ease-out;
+    box-shadow: var(--theme-drop-shadow-only);
+    z-index: 1;
+  }
+
+  // Shrink item on click so an 'enlarged' tile isn't clipped whilst dragging
+  &:active {
+    transition: 0s;
+    transform: scale(1);
+    outline: 2px solid white;
+    box-shadow: 0 3px 12px 0 rgba(0, 0, 0, 1);
+  }
 
   @include phone-portrait {
     outline: none;
@@ -162,7 +176,7 @@ produces
   --theme-corner-radius-tooltip: 6px;
 
   // Shadows and layering styles
-  --theme-drop-shadow-only: 0 0 10px 0 #000;
+  --theme-drop-shadow-only: 0 0 18px 0 #000;
   --theme-inset-outline: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
   --theme-drop-shadow-framed: var(--theme-inset-outline), var(--theme-drop-shadow-only);
 
