@@ -149,7 +149,7 @@ produces
   --theme-accent-primary: #e8a534;
   --theme-accent-secondary: #68a0b7;
 
-  --theme-fill-primary: red; // Base popups, drawers, dropdowns
+  --theme-fill-primary: #000; // Base popups, drawers, dropdowns
   --theme-fill-secondary: #161616; // Certain layered dropdowns e.g. so far only search
 
   // Panels and sub-frames e.g. masterwork/catalyst progress
@@ -160,6 +160,11 @@ produces
 
   --theme-corner-radius-search: 6px;
   --theme-corner-radius-tooltip: 6px;
+
+  // Shadows and layering styles
+  --theme-drop-shadow-only: 0 0 10px 0 #000;
+  --theme-inset-outline: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+  --theme-drop-shadow-framed: var(--theme-inset-outline), var(--theme-drop-shadow-only);
 
   // App background gradient
   --theme-background-app-gradient-start: hsl(240, 20%, 28%);

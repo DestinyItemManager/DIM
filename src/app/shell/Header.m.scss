@@ -166,6 +166,7 @@ $header-height: 44px;
   padding: 0;
   min-width: 150px;
   background-color: var(--theme-fill-primary);
+  box-shadow: var(--theme-drop-shadow-framed);
   padding-left: env(safe-area-inset-left);
   padding-bottom: Max(4px, env(safe-area-inset-bottom));
   flex-direction: column;

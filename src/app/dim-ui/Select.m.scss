@@ -15,6 +15,7 @@
   position: absolute;
   &.open {
     outline: 2px solid change-color($orange, $alpha: 0.4) !important;
+    box-shadow: var(--theme-drop-shadow-only);
   }
 }
 

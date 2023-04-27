@@ -103,7 +103,7 @@
 .popupBackground {
   background-color: var(--background-color);
   contain: content;
-  box-shadow: 0 -1px 24px 4px #161626;
+  box-shadow: var(--theme-drop-shadow-framed);
 
   @include phone-portrait {
     box-shadow: none;

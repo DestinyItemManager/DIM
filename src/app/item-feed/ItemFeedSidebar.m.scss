@@ -17,6 +17,7 @@
 
 .sideTray {
   background-color: var(--theme-fill-primary);
+  box-shadow: var(--theme-drop-shadow-framed);
   padding: 10px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -28,11 +29,6 @@
   &::-webkit-scrollbar {
     display: none;
   }
-
-  // THEME TBD
-  // > div {
-  //   background-color: black;
-  // }
 }
 
 .trayButton {

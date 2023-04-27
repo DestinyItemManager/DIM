@@ -11,6 +11,7 @@
   color: rgba(245, 245, 245, 0.6);
   overscroll-behavior: contain;
   background-color: var(--theme-fill-primary);
+  box-shadow: var(--theme-drop-shadow-framed);
 
   @include visible-scrollbars;
 
