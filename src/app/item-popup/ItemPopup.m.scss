@@ -11,9 +11,9 @@
   height: var(--theme-tooltip-arrow-size);
   border-style: solid;
   position: absolute;
-  z-index: -1;
   border-width: var(--theme-tooltip-arrow-size);
   border-color: transparent;
+  filter: drop-shadow(0 0 3px #000);
 }
 
 .desktopPopupRoot {
