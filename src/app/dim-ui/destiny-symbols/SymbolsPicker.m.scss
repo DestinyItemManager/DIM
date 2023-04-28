@@ -4,11 +4,10 @@
 .symbolsWindow {
   width: 300px;
   height: 350px;
-  background-color: black;
+  background-color: var(--theme-fill-primary);
   display: flex;
   flex-flow: column;
-
-  box-shadow: 0 0 24px 6px #080811;
+  box-shadow: var(--theme-drop-shadow-framed);
 }
 
 .symbolsButton {

@@ -29,8 +29,11 @@
   h2 {
     a {
       color: var(--theme-accent-primary);
-      text-decoration: none;
-      border-bottom: 1px solid scale-color($orange, $alpha: -50%);
+      text-decoration: underline;
+      text-underline-offset: 6px;
+      :global(.app-icon) {
+        margin-right: 6px;
+      }
     }
   }
   > p {

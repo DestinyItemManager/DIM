@@ -106,8 +106,11 @@
       flex: 0;
       font-size: 11px;
       color: #ccc;
-      &.pointerCursor {
-        cursor: pointer;
+      &:hover {
+        color: #fff;
+        cursor: help;
+      }
+      &:hover.pointerCursor {
       }
       .phone-portrait & {
         font-size: 12px;

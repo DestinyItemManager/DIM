@@ -2,6 +2,8 @@
 // Please do not change this file!
 interface CssExports {
   'cannotRoll': string;
+  'none': string;
+  'notSelected': string;
   'plugged': string;
   'selected': string;
 }

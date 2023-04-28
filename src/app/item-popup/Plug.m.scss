@@ -1,10 +1,12 @@
 @use '../variables.scss' as *;
 
 .none {
+  fill: auto;
 }
 
 // Another plug was selected by the user
 .notSelected {
+  fill: auto;
 }
 
 .plugged {

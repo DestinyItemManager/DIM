@@ -1,8 +1,7 @@
 @use '../variables.scss' as *;
 @use 'sass:color';
 
-$arrow-size: 16px; // ensure this stays in sync with 'popperArrowSize' in 'usePopper.ts'
-$minimal-arrow-size: 10px;
+$minimal-arrow-size: 8px;
 $horizontal-padding: 11px;
 
 .control {
@@ -16,18 +15,18 @@ $horizontal-padding: 11px;
 }
 
 .tooltip {
-  --tooltip-ribbon-color: #8e8e9e;
-  --tooltip-background-color: #151523;
-  --tooltip-border-color-rgb: #{dim-hex-to-rgb-values(#5d5970)};
+  // --tooltip-ribbon-color: #8e8e9e;
+  // --theme-tooltip-background-color: #151523;
+  // --theme-tooltip-border-color-rgb: #{dim-hex-to-rgb-values(#5d5970)};
 
   position: absolute;
-  background-color: var(--tooltip-background-color);
+  background-color: var(--theme-tooltip-background-color);
   color: #dadaea;
   width: fit-content;
   max-width: 306px;
-  border: 1px solid dim-rgb-values-to-rgba(var(--tooltip-border-color-rgb));
-  border-top-width: var(--theme-corner-radius-tooltip);
-  border-radius: var(--theme-corner-radius-tooltip);
+  border: 1px solid var(--theme-tooltip-border-color);
+  border-top-width: var(--theme-tooltip-corner-radius);
+  border-radius: var(--theme-tooltip-corner-radius);
   box-shadow: 0 0 24px 6px #080811;
   text-align: left;
   z-index: 99999;
@@ -41,12 +40,12 @@ $horizontal-padding: 11px;
     content: '';
     display: block;
     position: absolute;
-    background-color: var(--tooltip-ribbon-color);
-    height: var(--theme-corner-radius-tooltip);
-    top: calc(-1 * var(--theme-corner-radius-tooltip));
+    background-color: var(--theme-tooltip-border-color);
+    height: var(--theme-tooltip-corner-radius);
+    top: calc(-1 * var(--theme-tooltip-corner-radius));
     left: -1px;
     right: -1px;
-    border-radius: var(--theme-corner-radius-tooltip) var(--theme-corner-radius-tooltip) 0 0;
+    border-radius: var(--theme-tooltip-corner-radius) var(--theme-tooltip-corner-radius) 0 0;
   }
 
   &.wideTooltip {
@@ -54,7 +53,7 @@ $horizontal-padding: 11px;
   }
 
   hr {
-    border-color: dim-rgb-values-to-rgba(var(--tooltip-border-color-rgb));
+    border-color: var(--theme-tooltip-border-color);
   }
 
   p {
@@ -62,7 +61,7 @@ $horizontal-padding: 11px;
   }
 
   .header {
-    background-color: #0a0a0f;
+    background-color: var(--theme-fill-secondary);
     padding: 6px $horizontal-padding;
 
     h2 {
@@ -85,56 +84,48 @@ $horizontal-padding: 11px;
   }
 
   .arrow {
-    --length: #{$arrow-size * 0.5};
-    width: calc(var(--length) * 2);
-    height: calc(var(--length) * 2);
-    border-width: 0;
+    width: var(--theme-tooltip-arrow-size);
+    height: var(--theme-tooltip-arrow-size);
     border-style: solid;
     position: absolute;
-    border-color: var(--tooltip-ribbon-color);
+    border-color: transparent;
+    border-width: var(--theme-tooltip-arrow-size);
   }
 
   &[data-popper-placement='top'] .arrow {
     width: 0;
     height: 0;
-    border-width: var(--length) var(--length) 0 var(--length);
-    border-left-color: transparent;
-    border-right-color: transparent;
-    border-bottom-color: transparent;
-    bottom: calc(var(--length) * -1);
+    border-bottom-width: 0;
+    border-top-color: var(--theme-tooltip-border-color);
+    bottom: calc(var(--theme-tooltip-arrow-size) * -1);
   }
   &[data-popper-placement='bottom'] .arrow {
     width: 0;
     height: 0;
-    border-width: 0 var(--length) var(--length) var(--length);
-    border-color: transparent transparent var(--tooltip-ribbon-color) transparent;
-    top: calc(calc(-1 * var(--theme-corner-radius-tooltip)) - var(--length));
+    border-top-width: 0;
+    border-bottom-color: var(--theme-tooltip-border-color);
+    top: calc(calc(-1 * var(--theme-tooltip-corner-radius)) - var(--theme-tooltip-arrow-size));
   }
   &[data-popper-placement='right'] .arrow {
     width: 0;
     height: 0;
-    border-width: var(--length) var(--length) var(--length) 0;
-    border-left-color: transparent;
-    border-top-color: transparent;
-    border-bottom-color: transparent;
-    left: calc(var(--length) * -1);
+    border-left-width: 0;
+    border-right-color: var(--theme-tooltip-border-color);
+    left: calc(var(--theme-tooltip-arrow-size) * -1);
   }
   &[data-popper-placement='left'] .arrow {
     width: 0;
     height: 0;
-    border-width: var(--length) 0 var(--length) var(--length);
-    border-top-color: transparent;
-    border-right-color: transparent;
-    border-bottom-color: transparent;
-    right: calc(var(--length) * -1);
+    border-right-width: 0;
+    border-left-color: var(--theme-tooltip-border-color);
+    right: calc(var(--theme-tooltip-arrow-size) * -1);
   }
 
   &.minimalTooltip {
     border-radius: 3px;
-    --tooltip-ribbon-color: #{dim-rgb-values-to-rgba(var(--tooltip-border-color-rgb))};
-    background-color: dim-rgb-values-to-rgba(var(--tooltip-border-color-rgb));
     border: none;
-    box-shadow: 0 0 10px 3px #080811;
+    box-shadow: var(--theme-drop-shadow-only);
+    background-color: var(--theme-tooltip-minimal-color);
 
     // hide ribbon
     &::after {
@@ -146,17 +137,31 @@ $horizontal-padding: 11px;
     }
 
     .arrow {
-      --length: #{$minimal-arrow-size * 0.5};
+      --theme-tooltip-arrow-size: 6px;
+    }
+
+    &[data-popper-placement='left'] .arrow {
+      border-left-color: var(--theme-tooltip-minimal-color);
+      top: calc(var(--theme-tooltip-arrow-size) / 2) !important;
+    }
+    &[data-popper-placement='right'] .arrow {
+      border-right-color: var(--theme-tooltip-minimal-color);
+      top: calc(var(--theme-tooltip-arrow-size) / 2) !important;
+    }
+    &[data-popper-placement='top'] .arrow {
+      border-top-color: var(--theme-tooltip-minimal-color);
+      bottom: calc(100% - 2px) !important;
     }
     &[data-popper-placement='bottom'] .arrow {
-      top: calc(var(--length) * -1);
+      border-bottom-color: var(--theme-tooltip-minimal-color);
+      top: calc(var(--theme-tooltip-arrow-size) * -1) !important;
     }
   }
 
   .section:not(:empty) {
     margin: 8px #{-$horizontal-padding} -8px #{-$horizontal-padding};
     padding: 5px $horizontal-padding 7px $horizontal-padding;
-    border-top: 1px solid dim-rgb-values-to-rgba(var(--tooltip-border-color-rgb), $alpha: 0.5);
+    border-top: 1px solid var(--theme-tooltip-border-color);
 
     > :first-child {
       margin-top: 0;

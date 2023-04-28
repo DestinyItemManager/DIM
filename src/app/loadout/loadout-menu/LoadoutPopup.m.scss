@@ -127,6 +127,13 @@
       margin: 4px 4px 4px 2px;
     }
   }
+
+  .note {
+    color: #888;
+  }
+  &:hover .note {
+    color: #333;
+  }
 }
 
 .altButton {
@@ -157,10 +164,6 @@
 
 .content {
   color: #e4e4e4;
-}
-
-.note {
-  color: #888;
 }
 
 .filterInput {

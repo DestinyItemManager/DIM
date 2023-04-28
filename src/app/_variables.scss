@@ -164,21 +164,27 @@ produces
   --theme-accent-secondary: #68a0b7;
 
   --theme-fill-primary: #000; // Base popups, drawers, dropdowns
-  --theme-fill-secondary: #161616; // Certain layered dropdowns e.g. so far only search
+  --theme-fill-secondary: #161616; // Layered dropdowns inc search, item actions
 
-  // Panels and sub-frames e.g. masterwork/catalyst progress
+  // Fills to tint panels and sub-frames e.g. masterwork/catalyst progress
   --theme-fill-lighten: rgba(255, 255, 255, 0.15);
   --theme-fill-darken: rgba(0, 0, 0, 0.35);
 
   --theme-button: rgba(255, 255, 255, 0.2);
-
   --theme-corner-radius-search: 6px;
-  --theme-corner-radius-tooltip: 6px;
 
-  // Shadows and layering styles
+  // Outlines + shadows for layering
   --theme-drop-shadow-only: 0 0 18px 0 #000;
-  --theme-inset-outline: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
-  --theme-drop-shadow-framed: var(--theme-inset-outline), var(--theme-drop-shadow-only);
+  --theme-outline-inset: inset 0 0 0 1px rgba(255, 255, 255, 0.2); // Outline on most popups/panels
+  --theme-outline-inset-strong: inset 0 0 0 1px rgba(255, 255, 255, 0.4); // Search box hover
+  --theme-drop-shadow-framed: var(--theme-outline-inset), var(--theme-drop-shadow-only);
+
+  // Tooltips and arrows
+  --theme-tooltip-arrow-size: 8px; // Ensure this stays in sync with 'popperArrowSize' in 'usePopper.ts'
+  --theme-tooltip-background-color: #151523;
+  --theme-tooltip-border-color: #8e8e9e;
+  --theme-tooltip-minimal-color: #5d5970;
+  --theme-tooltip-corner-radius: 6px;
 
   // App background gradient
   --theme-background-app-gradient-start: hsl(240, 20%, 28%);
@@ -190,12 +196,8 @@ produces
     var(--theme-background-app-gradient-end) 100%
   );
 
-  // Discreet sections of header and app body
+  // Discreet segments of header and app body
   --theme-background-app-header-primary: var(--theme-background-app-gradient);
   --theme-background-app-header-secondary: var(--theme-background-app-gradient);
   --theme-background-app-body: var(--theme-background-app-gradient);
 }
-
-// TODO: fix sass functions that need colors
-$orange: #e8a534;
-$blue: #68a0b7;

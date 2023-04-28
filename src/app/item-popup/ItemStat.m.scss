@@ -85,9 +85,11 @@
 .moddedStatBar {
   background-color: var(--theme-accent-secondary);
   & + .moddedStatBar {
-    background-color: color.adjust($blue, $lightness: -10%);
+    background-color: var(--theme-accent-secondary);
+    opacity: 0.8;
     & + .moddedStatBar {
-      background-color: color.adjust($blue, $lightness: -20%);
+      background-color: var(--theme-accent-secondary);
+      opacity: 0.6;
     }
   }
 }

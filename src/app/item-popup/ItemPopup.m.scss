@@ -7,19 +7,17 @@
 @use '../variables.scss' as *;
 
 .arrow {
-  width: 10px;
-  height: 10px;
+  width: var(--theme-tooltip-arrow-size);
+  height: var(--theme-tooltip-arrow-size);
   border-style: solid;
   position: absolute;
-  border-color: white;
   z-index: -1;
+  border-width: var(--theme-tooltip-arrow-size);
+  border-color: transparent;
 }
 
 .desktopPopupRoot {
   pointer-events: none;
-  .arrow {
-    border-color: white;
-  }
 }
 
 .movePopupDialog {
@@ -47,19 +45,17 @@
   &[data-popper-placement^='top'] .arrow {
     width: 0;
     height: 0;
-    border-width: 5px 5px 0 5px;
-    border-left-color: transparent;
-    border-right-color: transparent;
-    border-bottom-color: transparent;
-    bottom: -5px;
+    border-bottom-width: 0;
+    border-top-color: var(--theme-tooltip-border-color);
+    bottom: calc(-1 * var(--theme-tooltip-arrow-size));
   }
 
   &[data-popper-placement^='bottom'] .arrow {
     width: 0;
     height: 0;
-    border-width: 0 5px 5px 5px;
-    top: -5px;
-    border-color: transparent transparent white transparent;
+    border-top-width: 0;
+    border-bottom-color: var(--theme-tooltip-border-color);
+    top: calc(-1 * var(--theme-tooltip-arrow-size));
 
     &.exotic {
       border-bottom-color: $exotic;
@@ -80,20 +76,16 @@
   &[data-popper-placement^='right'] .arrow {
     width: 0;
     height: 0;
-    border-width: 8px 8px 8px 0;
-    border-left-color: transparent;
-    border-top-color: transparent;
-    border-bottom-color: transparent;
-    left: -8px;
+    border-left-width: 0;
+    border-right-color: var(--theme-tooltip-border-color);
+    left: calc(-1 * var(--theme-tooltip-arrow-size));
   }
   &[data-popper-placement^='left'] .arrow {
     width: 0;
     height: 0;
-    border-width: 8px 0 8px 8px;
-    border-top-color: transparent;
-    border-right-color: transparent;
-    border-bottom-color: transparent;
-    right: -8px;
+    border-right-width: 0;
+    border-left-color: var(--theme-tooltip-border-color);
+    right: calc(-1 * var(--theme-tooltip-arrow-size));
   }
   textarea {
     resize: vertical;

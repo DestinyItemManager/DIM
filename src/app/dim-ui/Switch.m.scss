@@ -59,7 +59,8 @@ $touchPadding: 2px; // A bit of extra hit area
     &:checked {
       & + label {
         &::before {
-          background-color: change-color($orange, $alpha: 0.5);
+          background-color: var(--theme-accent-primary);
+          opacity: 0.5;
         }
         // The dot
         &::after {

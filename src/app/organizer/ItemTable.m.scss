@@ -160,6 +160,11 @@ $content-cells: 5;
   > :global(.item) {
     --item-size: var(--icon-item-size) !important;
     height: var(--item-size);
+
+    &:hover {
+      cursor: pointer;
+      outline: 1px solid #fff;
+    }
   }
 }
 

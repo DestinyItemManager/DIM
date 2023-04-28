@@ -16,6 +16,13 @@
   border-radius: var(--theme-corner-radius-search);
   min-width: 350px;
   box-sizing: border-box;
+  box-shadow: var(--theme-outline-inset), inset 0 0 8px 0 #000;
+  background: var(--theme-fill-darken);
+
+  &:hover {
+    outline: none;
+    box-shadow: var(--theme-outline-inset-strong);
+  }
 
   ::placeholder {
     color: #999;
@@ -24,11 +31,6 @@
   @include phone-portrait {
     width: auto;
     height: 34px;
-  }
-
-  &:hover {
-    outline: none;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
   }
 
   &:focus {

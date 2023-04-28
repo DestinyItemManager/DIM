@@ -11,13 +11,16 @@
 }
 
 .open {
-  box-shadow: var(--theme-drop-shadow-framed);
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
+  background: var(--theme-fill-darken);
+  transition: all 0.2s linear;
+  box-shadow: var(--theme-outline-inset-strong), var(--theme-drop-shadow-only);
 
   // Maintain dropshadow when hovering in and out of the open dropdown
   &:hover {
-    box-shadow: var(--theme-drop-shadow-framed);
+    box-shadow: var(--theme-outline-inset-strong), var(--theme-drop-shadow-only);
+    transition: all 0.2s linear;
   }
 }
 

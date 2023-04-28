@@ -14,8 +14,7 @@
   z-index: 100;
   position: absolute;
   &.open {
-    outline: 2px solid change-color($orange, $alpha: 0.4) !important;
-    box-shadow: var(--theme-drop-shadow-only);
+    box-shadow: var(--theme-outline-inset-strong), var(--theme-drop-shadow-only);
   }
 }
 
@@ -43,7 +42,14 @@
 
 .highlighted {
   background-color: var(--theme-accent-primary);
-  color: black !important;
+  color: #000;
+
+  // Maintain legibility of keyhelp
+  & span {
+    color: #000;
+    border-color: #000;
+  }
+
   :global(.app-icon) {
     color: black !important;
   }
