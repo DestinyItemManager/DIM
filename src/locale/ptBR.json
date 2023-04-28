@@ -672,8 +672,6 @@
     "FilteredItems": "Itens filtrados",
     "FindAnother": "Encontrar outro {{name}}",
     "FromEquipped": "Equipado",
-    "GatherEngrams": "Obter engramas",
-    "GatherEngramsExceptExotics": "Exóticos",
     "Generated": "N{{tier}} Set",
     "HashtagTip": "Dica: use #hashtags nos nomes ou anotações de seus sets e elas aparecerão aqui.",
     "Import": {
@@ -723,8 +721,6 @@
     },
     "Mods": "Mods",
     "MoveItems": "Movendo itens",
-    "NoEngrams": "Nenhum engrama não-exótico disponível para transferir.",
-    "NoExotics": "Nenhum engrama disponível para transferir.",
     "NoSpace": "Você está sem espaço no cofre e em quaisquer outros personagens.",
     "NoneMatch": "Nenhum dos seus sets combinaram com os filtros.",
     "NotStarted": "Aguardando para que as outras ações terminem ou uma atualização do inventário para finalizar o carregamento",

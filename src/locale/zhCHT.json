@@ -672,8 +672,6 @@
     "FilteredItems": "已過濾的物品",
     "FindAnother": "查找另一個 {{name}}",
     "FromEquipped": "當前裝備",
-    "GatherEngrams": "收集記憶水晶",
-    "GatherEngramsExceptExotics": "異域",
     "Generated": "T{{tier}} 配裝",
     "HashtagTip": "提示：在配裝名稱或備註中使用的#標籤會顯示在這裡.",
     "Import": {
@@ -723,8 +721,6 @@
     },
     "Mods": "模組",
     "MoveItems": "正在移動物品",
-    "NoEngrams": "沒有非異域記憶水晶可以轉移.",
-    "NoExotics": "沒有記憶水晶可以轉移.",
     "NoSpace": "你的保險庫和其他角色均已滿。",
     "NoneMatch": "沒有與篩檢程式匹配的配裝.",
     "NotStarted": "正在等待其它操作完成，或物品欄刷新完畢",

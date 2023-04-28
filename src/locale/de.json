@@ -672,8 +672,6 @@
     "FilteredItems": "Gefilterte Gegenstände",
     "FindAnother": "Finde andere(s) {{name}}",
     "FromEquipped": "Ausgerüstet",
-    "GatherEngrams": "Engramme sammeln",
-    "GatherEngramsExceptExotics": "Exotische",
     "Generated": "T{{tier}} Loadout",
     "HashtagTip": "Tipp: Du kannst #Hashtags in deinen Loadout-Namen oder -Notizen verwenden, um sie hier angezeigt zu bekommen.",
     "Import": {
@@ -723,8 +721,6 @@
     },
     "Mods": "Mods",
     "MoveItems": "Verschiebe Gegenstände",
-    "NoEngrams": "Es sind keine nicht-exotischen Engramme zum Transfer verfügbar.",
-    "NoExotics": "Es sind keine Engramme zum Transfer verfügbar.",
     "NoSpace": "Du hast keinen Platz im Tresor und allen anderen Charakteren.",
     "NoneMatch": "Keiner deiner Ausrüstungen entsprach den Filtern.",
     "NotStarted": "Warte auf den Abschluss anderer Aktionen oder auf die Aktualisierung des Inventars",

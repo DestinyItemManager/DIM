@@ -29,12 +29,12 @@
   "Armory": {
     "NoNotes": "メモなし",
     "OpenInArmory": "アーマリーで見る",
-    "Season": "シーズン {{season}}, イヤー {{year}}",
+    "Season": "{{year}} 年目、シーズン {{season}}",
     "TrashlistedRolls": "トラッシュリストのロール",
-    "TrashlistedRolls_plural": "{{count, number}} ウイッシュリストのロール",
+    "TrashlistedRolls_plural": "{{count, number}} 個のウイッシュリストのロール",
     "Unknown": "不明のアイテム",
     "WishlistedRolls": "ウイッシュリストのロール",
-    "WishlistedRolls_plural": "{{count, number}} ウイッシュリストのロール",
+    "WishlistedRolls_plural": "{{count, number}} 個のウイッシュリストのロール",
     "YourItems": "あなたのアイテム"
   },
   "Browsercheck": {
@@ -59,8 +59,8 @@
     "Confirm": "メモを更新",
     "Remove": "メモ削除 / #hashtag 削除",
     "Replace": "メモを置き換える",
-    "Title": "1つのアイテムのメモを変更する",
-    "Title_plural": "{{count}} 個のアイテムのメモを変更する"
+    "Title": "アイテムのメモを変更する",
+    "Title_plural": "{{count}} 個のアイテムのメモをまとめて変更する"
   },
   "BungieAlert": {
     "Title": "Bungieからメッセージが届いています。"
@@ -389,7 +389,7 @@
     "Menu": "ゲームメニューを表示",
     "Note": "メモを入力",
     "Notes": "",
-    "Pull": "アイテムをアクティブなキャラクターに適用する",
+    "Pull": "アイテムを使用中キャラに持たせる",
     "RefreshInventory": "所持品を更新",
     "ShowHotkeys": "キーボードショートカットを表示",
     "StartSearch": "検索開始",
@@ -403,20 +403,20 @@
     "Create": "ロードアウトを作成",
     "CreateTitle": "現在の装備からゲーム内ロードアウトを作成",
     "CurrentlyEquipped": "現在装備中",
-    "DeleteFailed": "ロードアウトの削除に失敗",
+    "DeleteFailed": "ロードアウトを削除できませんでした",
     "Deleted": "ロードアウトを削除しました",
     "DeletedBody": "スロット {{index}} のゲーム内ロードアウトをクリアしました。",
     "EditFailed": "ロードアウトの更新に失敗",
     "EditIdentifiers": "アイコンとタイトル変更",
     "EditTitle": "ロードアウト名とアイコンを編集",
-    "EquipNotReady": "ゲーム内で切替できません",
+    "EquipNotReady": "所持品内にアイテムが揃っていません",
     "EquipReady": "ゲーム内で切替可能",
     "LoadoutDetails": "ロードアウト詳細",
     "MatchingLoadouts": "一致するロードアウト:",
     "PrepareEquip": "ロードアウト切替準備",
     "Replace": "ロードアウト {{index}} を置き換え",
     "Save": "ロードアウトを更新",
-    "SnapshotFailed": "装備したロードアウトのスナップショットに失敗"
+    "SnapshotFailed": "装備しているロードアウトのスナップショットに失敗しました"
   },
   "Infusion": {
     "Filter": "アイテムをフィルタする",
@@ -524,7 +524,7 @@
     "Locked": "ロックされたアイテム",
     "LockedHelp": "アイテムをドラッグ＆ドロップすることでそれを固定でセット作成できます。排除するには Shift + クリック.",
     "Missing2": "フルセットを作るためのレア、レジェンダリー、エキゾチックの部位が足りません！",
-    "ModLockButton": "Modを選んでください",
+    "ModLockButton": "Modを選択",
     "ProcessingMode": {
       "Fast": "最速",
       "Full": "すべて",
@@ -536,7 +536,7 @@
     "SearchAMod": "改造パーツ名や説明で検索する",
     "SearchAnExotic": "エキゾチックまたは説明を検索",
     "SelectExotic": "使用するエキゾチックを選ぶ",
-    "SelectMods": "Modを選んでください",
+    "SelectMods": "Mod を選択",
     "SelectSubclass": "サブクラスを選択",
     "SelectSubclassOptions": "サブクラスをカスタマイズ",
     "ShowAllConfigs": "全ての設定を表示する",
@@ -555,7 +555,7 @@
     "AddHalfTierMods": "Mod を +5 追加",
     "All": "全て",
     "AnyExotic": "任意のエキゾチック",
-    "AnyExoticDescription": "セットにエキゾチックが含まれる必要がありますが、エキゾチックがありません。",
+    "AnyExoticDescription": "指定なしで何らかのエキゾチックが必ず入るようになります。",
     "AssumeMasterwork": "マスターワーク済みと仮定",
     "AssumeMasterworkOptions": {
       "All": "全てのアーマーはマスターワーク済みのステータスを使用し、エネルギーレベルは 10 になります。",
@@ -564,14 +564,14 @@
     },
     "AutoStatMods": "自動的にステータス mod を追加する",
     "AutomaticallyPicked": "この mod はビルドのステータス値を改善するため自動的に追加されました。",
-    "ChooseAlternateTitle": "別のアイテムを選択してください。",
+    "ChooseAlternateTitle": "別アイテムを選択",
     "CompareLoadout": "ロードアウトを比較",
     "ConfirmOverwrite": "ロードアウト「{{name}}」のアーマーをこの新しいアーマーセットに置き換えてもよろしいですか？",
     "CopiedBuild": "ビルド設定の URL をクリップボードにコピーしました",
     "CreateLoadout": "ロードアウトを保存",
     "DisabledDueToMaintenance": "現在、Bungie API のメンテナンスによりロードアウト最適化が利用出来ません。",
     "EquipItems": "装備",
-    "ExcludeItem": "アイテムを除外",
+    "ExcludeItem": "組み合わせから外すアイテムを指定",
     "ExistingLoadout": "既存のロードアウト",
     "ExoticSpecialCategory": "スペシャル",
     "Filter": "フィルター",
@@ -600,7 +600,7 @@
       "UpperBoundsFailed": "多くのセットは最大のステータス要件を満たしていません"
     },
     "NoExotic": "エキゾチックなし",
-    "NoExoticDescription": "検索バーで \"not:exotic\" を検索するのと同じです - エキゾチックなアーマーはセットに含まれません。",
+    "NoExoticDescription": "検索バーで \"not:exotic\" を検索するのと同じです。エキゾチックアーマーを意図的に組み合わせから排除します。",
     "NoLoadoutsToCompare": "比較するロードアウトはありません。",
     "None": "なし",
     "OptimizerExplanationGuide": "詳細については、ユーザーガイドまたはビデオチュートリアルをご覧ください。",
@@ -643,7 +643,7 @@
     "Before": "前 '{{name}}'",
     "CancelEditing": "編集をキャンセルする",
     "CannotCustomizeSubclass": "このサブクラスは設定することができません",
-    "ChooseItem": "{{name}} を追加します。",
+    "ChooseItem": "{{name}} を追加",
     "ClassTypeMismatch": "{{className}} アイテムはこのロードアウトに追加できません",
     "ClassTypeMissing": "ロードアウトを作成する為の {{className}} がありません",
     "Classified": "一部のアイテムは分類されており、最大出力の計算に含めることはできません。",
@@ -672,8 +672,6 @@
     "FilteredItems": "フィルタ処理された項目",
     "FindAnother": "別の {{name}} を検索する",
     "FromEquipped": "装備中",
-    "GatherEngrams": "エングラム収集",
-    "GatherEngramsExceptExotics": "エキゾチック",
     "Generated": "T{{tier}} ロードアウト",
     "HashtagTip": "ヒント: ロードアウトの名前やメモに #hashtags を使用すると、ここに表示されます。",
     "Import": {
@@ -719,12 +717,10 @@
       "UnassignedModsDesc": "エネルギー容量または mod スロットが不足しているため、1つの mod を適用できませんでした。選択している防具のエネルギーアップグレードでは、この問題は解決しません。",
       "UnassignedModsDesc_plural": "エネルギー容量またはMODスロットが不足しているため、 {{count}} つの mod がフィットしませんでした。選択した防具にエネルギーをアップグレードしても、この問題は解決されません。",
       "UpgradeCosts": "アップグレードコスト",
-      "UpgradeCostsDesc": "一部の装備は要求された mod に適合するエネルギー容量アップグレードを必要とします。合計で、アップグレードに必要な合計コスト : "
+      "UpgradeCostsDesc": "一部のアーマーで適用する mod に対してエネルギーが不足しています。アップグレードに必要な合計コスト:"
     },
     "Mods": "Mod",
     "MoveItems": "アイテムを移動しています",
-    "NoEngrams": "転送出来る非エキゾチクエングラムがありません。",
-    "NoExotics": "エングラムは転送できません。",
     "NoSpace": "保管庫や他のキャラクターの空きスペースがありません。",
     "NoneMatch": "フィルタに一致するロードアウトはありませんでした。",
     "NotStarted": "他のアクションの完了、もしくは保管庫の更新による読み込みの終了を待っています。",
@@ -1044,7 +1040,7 @@
     "LoadoutSort": "ロードアウトの表示順:",
     "LogOut": "ログアウト",
     "Masterworked": "マスターワーク済み",
-    "PerkDisplay": "アイテムポップアップに Perk 表示を表示",
+    "PerkDisplay": "ポップアップ表示のアイテムパーク配置方法",
     "PerkGrid": "グリッド",
     "PerkList": "一覧",
     "ReloadDIM": "DIMをリロードして言語の切り替えを完了させる",
@@ -1057,8 +1053,8 @@
     "SingleCharacterExplanation": "所持品のページで最後にプレイしたキャラクターだけを表示するよう設定します。\n非プレイのキャラクターが持っているアイテムで現在のキャラも使用できる場合、保管庫に表示されます。 \nクラス固有のアイテムは表示されません。",
     "SizeItem": "アイテムサイズ",
     "SortByAmmoType": "弾のタイプ",
-    "SortByAmount": "スタックサイズ",
-    "SortByClassType": "必須クラス",
+    "SortByAmount": "所持数(消耗品のみ対象)",
+    "SortByClassType": "クラス専用武器",
     "SortByCrafted": "クラフト済 (D2)",
     "SortByDeepsight": "ディープサイト (D2)",
     "SortByPrimary": "パワーレベル",
@@ -1102,7 +1098,7 @@
       "Super": "スーパーをプレビュー",
       "Transmat": "トランスマット効果をプレビュー"
     },
-    "SelectWishlistPerks": "お気に入りパークのプレビュー"
+    "SelectWishlistPerks": "ウィッシュリスト推奨パークをプレビュー"
   },
   "Stats": {
     "Custom": "カスタム合計",
@@ -1222,7 +1218,7 @@
     "Junk": "ジャンク",
     "Keep": "キープ",
     "LockAll": "ロックされたアイテム",
-    "TagItem": "アイテムをタグする",
+    "TagItem": "タグを付ける",
     "UnlockAll": "アイテムのロックを解除"
   },
   "Triage": {
@@ -1323,7 +1319,7 @@
     "ChoosyVoltronDescription": "choosey_voltronは、Mercules904とpandapaxyによるPvEとPvPウィッシュリストロールの自動更新されたコレクションで、いくつかのゴミリストロールもあります。",
     "Clear": "ウィッシュリストをクリア",
     "CopiedLine": "ウィッシュリストのロールをクリップボードにコピーしました",
-    "CopyLine": "選択したパークをウィッシュリストのロールとしてコピーしました",
+    "CopyLine": "選択中のパークをウィッシュリストのロールとしてコピー",
     "ExternalSource": "必要に応じて、ウィッシュリストのURLを指定できます。(パイプ | 区切り)",
     "Header": "ウィッシュリスト",
     "Import": "ウィッシュリストにあるロールをロードする",

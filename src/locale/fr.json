@@ -672,8 +672,6 @@
     "FilteredItems": "Objets filtrés",
     "FindAnother": "Trouver un autre {{name}}",
     "FromEquipped": "Équipé",
-    "GatherEngrams": "Réunir les Engrammes",
-    "GatherEngramsExceptExotics": "Exotiques",
     "Generated": "P{{tier}} Équipement",
     "HashtagTip": "Astuce : Utilisez des #hashtags dans vos noms ou notes d'équipement et ils apparaîtront ici.",
     "Import": {
@@ -723,8 +721,6 @@
     },
     "Mods": "Mods",
     "MoveItems": "Déplacement des objets",
-    "NoEngrams": "Aucun engrammes non-exotique n'est disponible pour le transfert.",
-    "NoExotics": "Aucun engrammes n'est disponible pour le transfert.",
     "NoSpace": "Vous n'avez plus d'espace libre dans le coffre et votre autres personnages.",
     "NoneMatch": "Aucun de vos équipements ne correspond aux filtres.",
     "NotStarted": "En attente que d'autres actions soient terminées, ou que l'inventaire soit actualisé pour terminer le chargement",

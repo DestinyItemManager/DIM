@@ -14,10 +14,13 @@
     margin: 1em 0;
   }
 
-  [twdiv='yes'] {
+  > iframe {
+    border: none;
+    width: 100%;
     overflow: auto;
     height: 80vh;
     background-color: black;
+
     @include phone-portrait {
       height: 50vh;
     }

@@ -17,7 +17,7 @@ export function bungieErrorToaster(e: Error): NotifyInput {
         {e ? e.message : t('BungieService.Difficulties')}{' '}
         <div>
           {t('BungieService.Twitter')}{' '}
-          <ExternalLink href="http://twitter.com/BungieHelp">Twitter</ExternalLink>{' '}
+          <ExternalLink href="http://twitter.com/BungieHelp">@BungieHelp</ExternalLink>{' '}
           <ExternalLink href="http://twitter.com/BungieHelp">
             <span style={{ fontSize: '1.5em', verticalAlign: 'middle' }}>
               <AppIcon icon={twitterIcon} />
@@ -37,15 +37,6 @@ export function dimErrorToaster(title: string, message: string, e: Error): Notif
       <>
         <div>{message}</div>
         <div>{e.message}</div>
-        <div>
-          {t('BungieService.Twitter')}{' '}
-          <ExternalLink href="http://twitter.com/ThisIsDIM">Twitter</ExternalLink>{' '}
-          <ExternalLink href="http://twitter.com/ThisIsDIM">
-            <span style={{ fontSize: '1.5em', verticalAlign: 'middle' }}>
-              <AppIcon icon={twitterIcon} />
-            </span>
-          </ExternalLink>
-        </div>
       </>
     ),
     duration: 60_000,

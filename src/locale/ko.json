@@ -672,8 +672,6 @@
     "FilteredItems": "필터링된 아이템",
     "FindAnother": "다른 {{name}} 검색",
     "FromEquipped": "현재 장비",
-    "GatherEngrams": "엔그램 모으기",
-    "GatherEngramsExceptExotics": "경이",
     "Generated": "T{{tier}} 로드아웃",
     "HashtagTip": "팁: 로드아웃 이름이나 메모에 #해시태그를 사용하면 이곳에 표시됩니다.",
     "Import": {
@@ -723,8 +721,6 @@
     },
     "Mods": "개조 부품",
     "MoveItems": "아이템 이동 중",
-    "NoEngrams": "경의 등급이 아닌 이동 가능한 엔그램이 없습니다.",
-    "NoExotics": "이동할 수 있는 엔그램이 없습니다.",
     "NoSpace": "금고와 다른 캐릭터의 빈 공간이 없습니다.",
     "NoneMatch": "필터와 일치하는 로드아웃이 없습니다.",
     "NotStarted": "다른 작업이 완료되거나 소지품을 새로고침하여 불러오기를 기다리는 중",
