@@ -13,6 +13,10 @@
   align-items: center;
   transition: opacity 0.2s;
 
+  &:hover {
+    background-color: var(--theme-fill-lighten);
+  }
+
   .fa,
   .app-icon {
     padding: 4px;

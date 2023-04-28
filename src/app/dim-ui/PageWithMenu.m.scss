@@ -34,6 +34,7 @@
   }
   :global(.issue-banner-shown) & {
     padding-bottom: $issue-banner-height;
+
     @include phone-portrait {
       padding-bottom: 0;
     }
@@ -99,6 +100,12 @@
   align-items: center;
   margin-bottom: 4px;
   min-height: 24px;
+
+  &:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+  }
 
   img {
     height: 24px;

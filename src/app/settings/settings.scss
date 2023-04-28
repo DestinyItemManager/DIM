@@ -34,6 +34,11 @@
       padding: 0;
       margin: 0;
       background-color: transparent;
+
+      & > label:hover {
+        text-decoration: underline;
+        cursor: pointer;
+      }
     }
   }
 
@@ -92,6 +97,11 @@
       flex-direction: row;
       align-items: center;
       gap: 0.25em;
+
+      &:hover {
+        text-decoration: underline;
+        cursor: pointer;
+      }
     }
     input {
       margin: 0 4px 0 0;
