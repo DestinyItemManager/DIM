@@ -15,10 +15,6 @@ $horizontal-padding: 11px;
 }
 
 .tooltip {
-  // --tooltip-ribbon-color: #8e8e9e;
-  // --theme-tooltip-background-color: #151523;
-  // --theme-tooltip-border-color-rgb: #{dim-hex-to-rgb-values(#5d5970)};
-
   position: absolute;
   background-color: var(--theme-tooltip-background-color);
   color: #dadaea;
