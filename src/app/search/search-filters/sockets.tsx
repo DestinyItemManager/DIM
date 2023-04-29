@@ -13,6 +13,7 @@ import {
 } from 'app/utils/socket-utils';
 import { StringLookup } from 'app/utils/util-types';
 import { DestinyItemSubType, DestinyRecordState } from 'bungie-api-ts/destiny2';
+import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
 import craftingMementos from 'data/d2/crafting-mementos.json';
 import {
   ItemCategoryHashes,
@@ -290,6 +291,12 @@ const socketFilters: FilterDefinition[] = [
         (socket) => socket.plugOptions.some((p) => p.cannotCurrentlyRoll)
       );
     },
+  },
+  {
+    keywords: 'adept',
+    description: tl('Filter.IsAdept'),
+    destinyVersion: 2,
+    filter: () => (item) => adeptWeaponHashes.includes(item.hash),
   },
 ];
 

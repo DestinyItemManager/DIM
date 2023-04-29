@@ -3,6 +3,7 @@
 ## 7.65.1 <span class="changelog-date">(2023-04-28)</span>
 
 * Enhanced adept weapons from Root of Nightmares should now show with correct stats.
+* Added an `is:adept` search filter. This allows you to find weapons which can equip Adept mods.
 
 ## 7.65.0 <span class="changelog-date">(2023-04-23)</span>
 
@@ -20,7 +21,6 @@
 * Fixed issue where selected mods would not scroll on mobile in the mod sheet.
 * Items can now be dragged and dropped from within the loadout edit screen.
 * Loadout Optimizer and Loadouts now include Armor Charge-based "Font of ..." mods in stat calculations. For example, if you are using the Font of Focus armor mod, Loadout Optimizer will assume the +30 points to Discipline when holding Armor Charge are active and not waste stat points on exceeding T10 Discipline.
-
 
 ## 7.64.0 <span class="changelog-date">(2023-04-09)</span>
 
