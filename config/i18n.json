@@ -833,7 +833,7 @@
     "AddToLoadoutTitle": "Add this to a loadout",
     "AddNote": "Add notes",
     "All": "All",
-    "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
+    "CantPullFromPostmaster": "You must visit the postmaster in game to retrieve this item.",
     "CannotCurrentlyRoll": "This perk cannot be rolled on the current version of this item.",
     "UnreliablePerkOption": "This perk appears only in the collections view. It might not roll randomly on this item.",
     "Consolidate": "Consolidate",
