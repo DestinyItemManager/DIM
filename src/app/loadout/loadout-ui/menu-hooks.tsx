@@ -73,7 +73,7 @@ export function useLoadoutFilterPills(
         ...getHashtagsFromNote(loadout.notes),
       ];
       for (const hashtag of hashtags) {
-        (loadoutsByHashtag[hashtag.replace('#', '')] ??= []).push(loadout);
+        (loadoutsByHashtag[hashtag.replace('#', '').replace(/_/g, ' ')] ??= []).push(loadout);
       }
     }
     return loadoutsByHashtag;
