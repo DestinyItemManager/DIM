@@ -241,6 +241,7 @@
     "InLoadout": "is:inloadout pokazuje przedmioty, które są zawarte w dowolnym Uzbrojeniu. Wyszukiwanie z inloadout: pokazuje elementy, które są zawarte w Uzbroajeniach z pasującymi tytułami. Gdy używany jest z hashtagiem, inloadout: pokazuje elementy, których wyposażenie ma hashtag w tytule lub notatkach.",
     "Infusable": "Pokaż przedmioty, które można nasycić.",
     "InfusionFodder": "Pokazuje przedmioty, które mogą być użyte do nasycenia przedmiotu tego samego typu o niższej mocy tylko za migot.",
+    "IsAdept": "Shows weapons compatible with Adept mods.",
     "IsCrafted": "Pokazuje bronie, które zostały stworzone.",
     "IsSunset": "Pokazuje przedmioty, które zostały przedawnione i nie mogą być już nasycone do maksymalnej mocy.",
     "ItemHash": "Pokazuje przedmioty z podanym hashem elementu ekwipunku. Dla zaawansowanych użytkowników.",
@@ -828,7 +829,7 @@
     "AddToLoadoutTitle": "Add this to a loadout",
     "All": "Wszystkie",
     "CannotCurrentlyRoll": "Ten perk nie może być otrzymany na bieżącej wersji tego przedmiotu.",
-    "CantPullFromPostmaster": "Musisz udać się na Wieżę zęby odebrać ten przedmiot.",
+    "CantPullFromPostmaster": "You must visit the postmaster in game to retrieve this item.",
     "CatalystProgress": "Postęp Katalizatora",
     "CommunityData": "Spostrzeżenia społeczności",
     "Consolidate": "Połącz",
@@ -1290,10 +1291,8 @@
       "TranslationText": "Używamy {{link}} w celu ułatwienia tłumaczenia. Jeśli chcesz poprawić jedno z tłumaczeń DIM, dołącz do zespołu.",
       "TwitterHelp": "Śledź nas, aby być na bieżąco z aktualizacjami i informacjami o stanie aplikacji real-time.",
       "Version": "Wersja {{version}} ({{flavor}}), zbudowana {{date}}",
-      "Wiki": "Wiki Przewodnika użytkownika DIM",
-      "WikiHelp": "Dowiedz się, jak korzystać z DIM oraz rozwijać naszego kierowanego przez społeczność przewodnika użytkownika.",
-      "YouTube": "YouTube",
-      "YouTubeHelp": "Naucz się korzystać z DIM na naszym kanale Youtube."
+      "Wiki": "DIM User Guide",
+      "WikiHelp": "Learn how to use DIM's features."
     },
     "Login": {
       "Auth": "Autoryzuj za pomocą Bungie.net",

@@ -241,6 +241,7 @@
     "InLoadout": "\"is:inloadout\"은 로드아웃에 포함된 아이템을 표시합니다. \"inloadout:\"을 사용하여 검색하면 이름이 일치하는 로드아웃의 아이템을 표시합니다. \"inloadout:\"이 해시태그와 같이 사용되는 경우, 이름이나 메모에 해시태그가 포함된 로드아웃의 아이템을 표시합니다.",
     "Infusable": "주입할 수 있는 아이템을 표시합니다.",
     "InfusionFodder": "더 낮은 전투력의 동일한 아이템에 미광체만을 사용하여 주입할 수 있는 아이템을 표시합니다.",
+    "IsAdept": "숙련자 개조 부품과 호환되는 무기 표시",
     "IsCrafted": "제작된 무기를 표시합니다.",
     "IsSunset": "만료되어 최고 전투력으로 주입할 수 없는 아이템을 표시합니다.",
     "ItemHash": "소지품 아이템의 해시와 일치하는 아이템을 표시합니다. 고급 사용자용.",
@@ -828,7 +829,7 @@
     "AddToLoadoutTitle": "로드아웃에 추가",
     "All": "전체",
     "CannotCurrentlyRoll": "이 특성은 현재 버전의 아이템에서 얻을 수 없습니다.",
-    "CantPullFromPostmaster": "이 아이템을 회수하려면 탑으로 가야합니다.",
+    "CantPullFromPostmaster": "이 아이템을 수령하려면 게임 내에서 우편 담당자를 방문해야 합니다.",
     "CatalystProgress": "촉매제 진척도",
     "CommunityData": "커뮤니티 인사이트",
     "Consolidate": "모으기",
@@ -1290,10 +1291,8 @@
       "TranslationText": "간편한 번역을 위해 {{link}}을 사용합니다. DIM의 번역을 개선하고 싶으시다면 팀에 참여하세요.",
       "TwitterHelp": "프로그램의 업데이트와 실시간 상태 정보를 얻고 싶으시다면 저희를 팔로우 해주세요.",
       "Version": "버전 {{version}} {{flavor}}, {{date}}에 빌드됨",
-      "Wiki": "DIM 사용 설명서 위키",
-      "WikiHelp": "DIM 사용법을 배우고 커뮤니티 기반의 사용 설명서에 기여하세요.",
-      "YouTube": "YouTube",
-      "YouTubeHelp": "YouTube 채널에서 DIM 사용법을 알아보세요."
+      "Wiki": "DIM 사용 설명서",
+      "WikiHelp": "DIM의 기능을 사용하는 방법을 배워보세요."
     },
     "Login": {
       "Auth": "Bungie.net으로 인증",

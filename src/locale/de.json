@@ -241,6 +241,7 @@
     "InLoadout": "is:inloadout zeigt Gegenstände, die in einem beliebigen Loadout enthalten sind. Eine Suche mit inloadout: zeigt Gegenstände, die in Loadouts mit passenden Titeln enthalten sind. Bei Verwendung eines Hashtags zeigt inloadout: Gegenstände an, deren Loadouts den Hashtag in Titel oder Notizen haben.",
     "Infusable": "Zeigt Gegenstände, die infundiert werden können.",
     "InfusionFodder": "Zeigt Gegenstände, die für Glimmer, in einen gleichen Gegenstand, mit nicht so viel Power, infundiert werden können.",
+    "IsAdept": "Shows weapons compatible with Adept mods.",
     "IsCrafted": "Zeigt Waffen, die hergestellt wurden.",
     "IsSunset": "Zeigt Gegenstände die gesunsetted sind und nicht mehr auf das maximale Powerlevel infundiert werden können.",
     "ItemHash": "Zeigt die Items mit dem angegebenen Inventar-Item Hash. Für fortgeschrittene Benutzer.",
@@ -828,7 +829,7 @@
     "AddToLoadoutTitle": "Dies zu einem Loadout hinzufügen",
     "All": "Alle",
     "CannotCurrentlyRoll": "Dieser Perk kann nicht auf die aktuelle Version dieses Gegenstands gerollt werden.",
-    "CantPullFromPostmaster": "Du musst auf den Turm, um diesen Gegenstand abzurufen.",
+    "CantPullFromPostmaster": "You must visit the postmaster in game to retrieve this item.",
     "CatalystProgress": "Katalysator-Fortschritt",
     "CommunityData": "Community-Einblick",
     "Consolidate": "Zusammenführen",
@@ -1290,10 +1291,8 @@
       "TranslationText": "Wir benutzen {{link}} für eine unkomplizierte Übersetzung. Wenn du die DIM-Übersetzung in einer Sprache verbessern möchtest, tritt dem Team bei.",
       "TwitterHelp": "Folge uns, um immer auf dem Laufenden zu bleiben und aktuelle Informationen zum Anwendungsstatus zu erhalten.",
       "Version": "Version {{version}} ({{flavor}}), erstellt am {{date}}",
-      "Wiki": "DIM Benutzerhandbuch Wiki",
-      "WikiHelp": "Erfahre wie Du DIM nutzen kannst und um unserem Community-gesteuerten Benutzerhandbuch beizutragen.",
-      "YouTube": "YouTube",
-      "YouTubeHelp": "Lerne auf unserem YouTube-Kanal, wie man DIM verwendet."
+      "Wiki": "DIM Benutzerhandbuch",
+      "WikiHelp": "Erfahre, wie du die DIM-Funktionen verwendest."
     },
     "Login": {
       "Auth": "Autorisiere mit Bungie.net",

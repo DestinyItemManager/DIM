@@ -241,6 +241,7 @@
     "InLoadout": "is:inloadout mostra gli oggetti che sono inclusi in qualsiasi dotazione. Cercare con inloadout: mostra gli oggetti che sono inclusi in dotazioni con titoli corrispondenti. Quando usato con un hashtag, inloadout: mostra gli oggetti le quali dotazioni hanno l'hashtag nel titolo o nelle note.",
     "Infusable": "Mostra gli oggetti che possono essere infusi.",
     "InfusionFodder": "Mostra gli oggetti che potrebbero essere infusi in versioni con Potere più basso dello stesso oggetto usando solo lumen.",
+    "IsAdept": "Mostra le armi compatibili con le modifiche dell'Adepto.",
     "IsCrafted": "Mostra le armi che sono state forgiate.",
     "IsSunset": "Mostra gli oggetti che sono stati resi obsoleti e non possono essere infusi al livello massimo di Potere.",
     "ItemHash": "Mostra gli oggetti con l'hash dell'oggetti dell'inventario specificato. Per utenti avanzati.",
@@ -828,7 +829,7 @@
     "AddToLoadoutTitle": "Aggiungilo a una dotazione",
     "All": "Tutto",
     "CannotCurrentlyRoll": "Questo perk non può essere ottenuto sulla versione attuale di questo oggetto.",
-    "CantPullFromPostmaster": "Devi andare alla Torre per recuperare questo oggetto.",
+    "CantPullFromPostmaster": "Devi visitare l'Amministratrice in gioco per recuperare questo oggetto.",
     "CatalystProgress": "Progresso Catalizzatore",
     "CommunityData": "Spiegazione della community",
     "Consolidate": "Consolida",
@@ -856,7 +857,7 @@
     "Owned": "Questo oggetto è nel tuo inventario.",
     "OwnedMod": "Questa Modifica è nel tuo inventario delle Modifiche.",
     "PullItem": "Prendi da {{bucket}} per {{store}}",
-    "PullPostmaster": "Prendi dall'Amministratore",
+    "PullPostmaster": "Prendi dall'Amministratrice",
     "ReadLore": "Leggi la storia su Ishtar Collective (solo in Inglese)",
     "ReadLoreLink": "Leggi storia",
     "Rewards": "Ricompense:",
@@ -1290,10 +1291,8 @@
       "TranslationText": "Utilizziamo {{link}} per la traduzione. Se vuoi migliorare la traduzione di DIM in altre lingue, unisciti al team.",
       "TwitterHelp": "Assicurati di seguirci per essere sempre informato sugli aggiornamenti e conoscere in tempo reale lo stato dell'applicazione.",
       "Version": "Versione {{version}} ({{flavor}}), pubblicata il {{date}}",
-      "Wiki": "Guida utente DIM",
-      "WikiHelp": "Impara ad utilizzare DIM e contribuisci alla nostra guida utenti sviluppata dalla comunità.",
-      "YouTube": "YouTube",
-      "YouTubeHelp": "Impara ad usare DIM sul nostro canale YouTube."
+      "Wiki": "Guida utente di DIM",
+      "WikiHelp": "Impara a utilizzare le funzionalità di DIM."
     },
     "Login": {
       "Auth": "Richiedi autorizzazione su Bungie.net",

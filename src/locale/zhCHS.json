@@ -241,6 +241,7 @@
     "InLoadout": "is:inloadout 显示在任意配装中所包含的物品。使用 inloadout: 搜索在配装中的指定物品。当使用标签时，inloadout: 显示在名称或注释中包含指定标签物品的配装。",
     "Infusable": "显示可以灌注的物品.",
     "InfusionFodder": "显示可用于灌注同类物品且只消耗微光的物品。",
+    "IsAdept": "Shows weapons compatible with Adept mods.",
     "IsCrafted": "显示制作获取的武器。",
     "IsSunset": "显示已退环境且不能再被灌注到光等上限的物品。",
     "ItemHash": "显示具有给定物品 hash 的物品。此为高级用户选项。",
@@ -828,7 +829,7 @@
     "AddToLoadoutTitle": "添加此物品到配装",
     "All": "全部",
     "CannotCurrentlyRoll": "此特性不会出现在此物品的当前版本上。",
-    "CantPullFromPostmaster": "你必须到高塔去取回这件物品。",
+    "CantPullFromPostmaster": "You must visit the postmaster in game to retrieve this item.",
     "CatalystProgress": "催化剂进度",
     "CommunityData": "社区见解",
     "Consolidate": "合并",
@@ -1290,10 +1291,8 @@
       "TranslationText": "我们使用{{link}} 工具来使得翻译工作更加简便。 如果您希望为DIM的任意语言翻译语言出一份力，那么请加入我们的翻译小组吧( • ̀ω•́)✧！",
       "TwitterHelp": "请务必关注我们，以便了解我们的最新动向和即时状态更新资讯。",
       "Version": "当前版本Ver{{version}}({{flavor}})，编译于：{{date}}",
-      "Wiki": "DIM 用户指南百科",
-      "WikiHelp": "学习如何使用 DIM，并帮助建设我们的社区用户指南。",
-      "YouTube": "YouTube",
-      "YouTubeHelp": "在我们的 youtube 频道上了解如何使用 dim。"
+      "Wiki": "DIM User Guide",
+      "WikiHelp": "Learn how to use DIM's features."
     },
     "Login": {
       "Auth": "用Bungie.Net授权",

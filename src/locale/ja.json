@@ -241,6 +241,7 @@
     "InLoadout": "is:inloadout は、任意のロードアウトに含まれるアイテムを表示します。inloadout: で検索すると、タイトルが一致するロードアウトに含まれるアイテムが表示されます。ハッシュタグと一緒に使うと、inloadout:  はタイトルやノートにハッシュタグが含まれるロードアウトを持つアイテムを表示します。",
     "Infusable": "融合可能なアイテムを表示",
     "InfusionFodder": "高パワーの同じアイテムとグリマーだけで融合できる、低パワーのアイテムを表示します。",
+    "IsAdept": "熟練Modが利用できる武器を表示",
     "IsCrafted": "クラフトされた武器を表示",
     "IsSunset": "退役済みで、最大パワー上限に到達してしまったアイテムを表示する",
     "ItemHash": "与えられた保管庫アイテムハッシュを持つアイテムを表示。上級ユーザー向け。",
@@ -828,7 +829,7 @@
     "AddToLoadoutTitle": "これをロードアウトに追加",
     "All": "全て",
     "CannotCurrentlyRoll": "このアイテムの現在のバージョンでは、このパークをロールできません。",
-    "CantPullFromPostmaster": "このアイテムを取得するには、タワーに行く必要があります。",
+    "CantPullFromPostmaster": "このアイテムを取得するには、ゲーム内のポストマスターにアクセスする必要があります。",
     "CatalystProgress": "媒体の進行",
     "CommunityData": "コミュニティの評価",
     "Consolidate": "統合する",
@@ -1290,10 +1291,8 @@
       "TranslationText": "簡単に翻訳をするため {{link}} を使用しています。DIM の翻訳を改善したい場合は、チームに参加してください。",
       "TwitterHelp": "ツイッターで最新情報やアプリのリアルタイムステータスなどが確かめられます。フォローよろしくお願いします。",
       "Version": "バージョン {{version}} ({{flavor}}), built on {{date}}",
-      "Wiki": "DIMユーザーガイドWiki",
-      "WikiHelp": "DIMの使い方を学び、コミュニティ主導のユーザーガイドに貢献しましょう。",
-      "YouTube": "YouTube",
-      "YouTubeHelp": "YouTubeチャンネルでもDIMの使用方法をご確認いただけます。"
+      "Wiki": "DIMユーザーガイド",
+      "WikiHelp": "DIMの使い方を学びましょう。"
     },
     "Login": {
       "Auth": "Bungie.net で認証する",
