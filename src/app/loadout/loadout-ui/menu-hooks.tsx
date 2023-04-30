@@ -73,7 +73,7 @@ export function useLoadoutFilterPills(
         ...getHashtagsFromNote(loadout.notes),
       ];
       for (const hashtag of hashtags) {
-        (loadoutsByHashtag[hashtag.replace(/_/g, ' ')] ??= []).push(loadout);
+        (loadoutsByHashtag[hashtag] ??= []).push(loadout);
       }
     }
     return loadoutsByHashtag;
@@ -83,7 +83,7 @@ export function useLoadoutFilterPills(
     Object.keys(loadoutsByHashtag).map(
       (hashtag): Option => ({
         key: hashtag,
-        content: <ColorDestinySymbols text={hashtag.replace(/#(\w+\|)?/, '')} />,
+        content: <ColorDestinySymbols text={hashtag.replace(/#([^\s]+\|)?/, '').replace(/_/g, ' ')} />,
       })
     ),
     (o) => o.key
