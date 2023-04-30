@@ -18,7 +18,7 @@ export function collectNotesHashtags(itemInfos: ItemInfos) {
   return uniqBy(hashTags, (t) => t.toLowerCase());
 }
 
-const hashtagRegex = /#[^\s]+/gu;
+const hashtagRegex = /#[^\s,]+/gu;
 
 export function getHashtagsFromNote(note?: string | null) {
   return Array.from(note?.matchAll(hashtagRegex) ?? [], (m) => m[0]);
@@ -46,7 +46,7 @@ export function appendedToNote(originalNote: string | undefined, append: string)
     .trim();
 }
 
-const allHashtagsRegex = /^(\s*)((#[^\s]+)\s*)+$/u;
+const allHashtagsRegex = /^(\s*)((#[^\s,]+)\s*)+$/u;
 
 /**
  * Add notes to an existing note. This is hashtag-aware, so it will not remove
