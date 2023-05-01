@@ -1,5 +1,7 @@
 ## Next
 
+## 7.66.0 <span class="changelog-date">(2023-04-30)</span>
+
 ## 7.65.1 <span class="changelog-date">(2023-04-28)</span>
 
 * Enhanced adept weapons from Root of Nightmares should now show with correct stats.
