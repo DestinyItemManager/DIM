@@ -53,7 +53,7 @@
   &.hasMenu {
     cursor: pointer;
     &:hover {
-      outline: 1px solid $orange;
+      outline: 1px solid var(--theme-accent-primary);
     }
   }
 }

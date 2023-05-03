@@ -7,7 +7,7 @@
 
 .menu {
   position: absolute;
-  background: black;
+  background: var(--theme-fill-primary);
   color: white;
   font-size: 12px;
   z-index: 100;
@@ -43,7 +43,7 @@
 }
 
 .highlighted {
-  background-color: $orange;
+  background-color: var(--theme-accent-primary);
   color: black !important;
   :global(.app-icon) {
     color: black !important;

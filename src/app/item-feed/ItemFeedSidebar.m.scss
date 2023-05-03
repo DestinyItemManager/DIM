@@ -15,7 +15,7 @@
 }
 
 .sideTray {
-  background-color: black;
+  background-color: var(--theme-fill-primary);
   padding: 10px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -26,10 +26,6 @@
   scrollbar-width: none;
   &::-webkit-scrollbar {
     display: none;
-  }
-
-  > div {
-    background-color: black;
   }
 }
 
@@ -48,7 +44,7 @@
 
   &:hover {
     color: black;
-    background-color: $orange;
+    background-color: var(--theme-accent-primary);
   }
 
   :global(.app-icon) {

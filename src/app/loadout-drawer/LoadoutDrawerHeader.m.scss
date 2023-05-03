@@ -16,7 +16,7 @@
 .dimInput {
   padding-left: 5px;
   height: 23px;
-  background: rgb(46, 46, 46);
+  background: var(--theme-fill-darken);
   border: none;
   border-bottom: 1px solid #555;
   color: white;
@@ -34,7 +34,7 @@
   &:focus {
     background: black;
     outline: none;
-    border-bottom: 1px solid $orange;
+    border-bottom: 1px solid var(--theme-accent-primary);
   }
 
   > input {

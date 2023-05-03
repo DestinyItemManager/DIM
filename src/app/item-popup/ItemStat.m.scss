@@ -79,27 +79,29 @@
 
 // Colors for the stat bars
 .masterworkStatBar {
-  background-color: $orange;
+  background-color: var(--theme-accent-primary);
 }
 .moddedStatBar {
-  background-color: $blue;
+  background-color: var(--theme-accent-secondary);
   & + .moddedStatBar {
-    background-color: color.adjust($blue, $lightness: -10%);
+    background-color: var(--theme-accent-secondary);
+    opacity: 0.8;
     & + .moddedStatBar {
-      background-color: color.adjust($blue, $lightness: -20%);
+      background-color: var(--theme-accent-secondary);
+      opacity: 0.6;
     }
   }
 }
 
 .masterworked {
-  color: $orange;
+  color: var(--theme-accent-primary);
   .statName {
     font-weight: bold;
   }
 }
 
 .modded {
-  color: $blue;
+  color: var(--theme-accent-secondary);
   .statName {
     font-weight: bold;
   }
@@ -126,7 +128,7 @@
 }
 
 .totalStatModded {
-  color: $blue;
+  color: var(--theme-accent-secondary);
 }
 
 .totalStatNegativeModded {
@@ -134,7 +136,7 @@
 }
 
 .totalStatMasterwork {
-  color: $orange;
+  color: var(--theme-accent-primary);
 }
 
 .customTotal {

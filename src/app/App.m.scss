@@ -3,7 +3,7 @@
 .app {
   &::before {
     @include below-header;
-    background: $gradient;
+    background: var(--theme-background-app-body);
     background-position: center top;
     background-repeat: no-repeat;
     content: '';

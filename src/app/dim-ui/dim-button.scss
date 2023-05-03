@@ -6,11 +6,11 @@
   cursor: pointer;
   padding: 4px 10px;
   display: inline-block;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: var(--theme-button);
   color: white;
   font-size: 12px;
   line-height: calc(16 / 12);
-  font-family: 'Open Sans', sans-serif, 'Destiny Symbols';
+  font-family: var(--theme-font-primary), sans-serif, 'Destiny Symbols';
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
   border: 1px solid transparent;
   transition: all 150ms ease-out;
@@ -37,7 +37,7 @@
   &:hover,
   &:active,
   &.selected {
-    background-color: $orange !important;
+    background-color: var(--theme-accent-primary) !important;
     color: black !important;
     img {
       filter: invert(1) drop-shadow(0 0 1px black);
@@ -53,7 +53,7 @@
     &:hover,
     &:active,
     &.selected {
-      background-color: rgba(255, 255, 255, 0.2) !important;
+      background-color: var(--theme-button) !important;
       color: white !important;
       img {
         filter: drop-shadow(0 0 1px black);
@@ -67,7 +67,7 @@
   }
   // Set focus styles
   &:focus {
-    border-color: $orange;
+    border-color: var(--theme-accent-primary);
     outline: none;
   }
   // For browsers that support :focus-visible, remove focus styles when focus-visible would be unset

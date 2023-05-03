@@ -29,9 +29,7 @@
   width: var(--item-size);
   cursor: grab;
 
-  &:hover {
-    @include draggable-hover-border;
-  }
+  @include draggable-hover-border;
 }
 
 // Subclass items

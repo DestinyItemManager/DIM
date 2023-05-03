@@ -27,7 +27,7 @@
     height: 100%;
     padding-right: 8px;
     &:hover .collapse {
-      color: $orange;
+      color: var(--theme-accent-primary);
     }
   }
 }

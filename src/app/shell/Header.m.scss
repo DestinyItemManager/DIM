@@ -29,7 +29,7 @@ $header-height: 44px;
   display: flex;
   flex-direction: row;
   align-items: center;
-  background: $gradient;
+  background: var(--theme-background-app-header-primary);
   background-position: center top;
   background-repeat: no-repeat;
   background-size: 100vw 100vh;
@@ -47,7 +47,7 @@ $header-height: 44px;
         font-size: 24px;
       }
       &:hover {
-        color: $orange;
+        color: var(--theme-accent-primary);
         cursor: pointer;
         transition: color 0.2s linear;
       }
@@ -83,7 +83,7 @@ $header-height: 44px;
 
   &:hover,
   &.active {
-    color: $orange;
+    color: var(--theme-accent-primary);
     transition: color 0.2s linear;
   }
 }
@@ -113,7 +113,7 @@ $header-height: 44px;
     height: 24px * 1.2;
     width: 68px * 1.2;
   }
-  color: $orange !important;
+  color: var(--theme-accent-primary) !important;
   font-size: 16px !important;
   font-weight: bold;
   font-weight: 400;
@@ -149,7 +149,7 @@ $header-height: 44px;
     box-sizing: border-box;
 
     &.active {
-      border-bottom: 2px solid $orange;
+      border-bottom: 2px solid var(--theme-accent-primary);
     }
   }
 }
@@ -165,7 +165,7 @@ $header-height: 44px;
   margin: 0;
   padding: 0;
   min-width: 150px;
-  background-color: black;
+  background-color: var(--theme-fill-primary);
   padding-left: env(safe-area-inset-left);
   padding-bottom: Max(4px, env(safe-area-inset-bottom));
   flex-direction: column;
@@ -192,7 +192,7 @@ $header-height: 44px;
 
     &.active {
       color: white;
-      border-left: 4px solid $orange;
+      border-left: 4px solid var(--theme-accent-primary);
       padding-left: calc(1rem - 4px);
     }
 
@@ -204,7 +204,7 @@ $header-height: 44px;
 
     &:hover,
     &:focus {
-      background-color: $orange;
+      background-color: var(--theme-accent-primary);
       color: black;
     }
 

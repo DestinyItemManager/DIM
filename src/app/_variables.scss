@@ -2,16 +2,8 @@
 
 // Variables and mixins that can be used from any SCSS file
 
-// DIM orange and blue, accent colors
-$orange: #e8a534;
-$blue: #68a0b7;
 $red: #ff3232; // For warnings/errors
 $green: #51a351; // For success statuses or positive deltas
-$gradient: radial-gradient(
-  circle at 50% 70px,
-  hsl(240, 20%, 28%) 0%,
-  hsl(240, 27%, 12%) 100%
-); // new background gradient
 
 // Blue used to denote community-provided data
 $communityBlue: #0d7fad;
@@ -94,7 +86,9 @@ $easeInOutCubic: cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
 @mixin draggable-hover-border {
-  outline: 1px solid #ddd;
+  &:hover {
+    outline: 1px solid #ddd;
+  }
 
   @include phone-portrait {
     outline: none;
@@ -146,4 +140,52 @@ produces
 // Produces an 'rgba' function usage for the specified comma-separated RGB values and alpha.
 @function dim-rgb-values-to-rgba($values, $alpha: 1) {
   @return #{'rgba(' + $values + ', ' + $alpha + ')'};
+}
+
+// Theme variables
+:root {
+  // Font
+  --theme-font-primary: 'Open Sans';
+
+  // Base colours
+  --theme-accent-primary: #e8a534;
+  --theme-accent-secondary: #68a0b7;
+
+  --theme-fill-primary: #000; // Base popups, drawers, dropdowns
+  --theme-fill-secondary: #161616; // Layered dropdowns inc search, item actions
+
+  // Fills to tint panels and sub-frames e.g. masterwork/catalyst progress
+  --theme-fill-lighten: rgba(255, 255, 255, 0.15);
+  --theme-fill-darken: rgba(0, 0, 0, 0.35);
+
+  --theme-button: rgba(255, 255, 255, 0.2);
+  --theme-corner-radius-search: 6px;
+
+  // Outlines + shadows for layering
+  --theme-drop-shadow-only: 0 0 18px 0 #000;
+  --theme-outline-inset: inset 0 0 0 1px rgba(255, 255, 255, 0.2); // Outline on most popups/panels
+  --theme-outline-inset-strong: inset 0 0 0 1px rgba(255, 255, 255, 0.4); // Search box hover
+  --theme-drop-shadow-framed: var(--theme-outline-inset), var(--theme-drop-shadow-only);
+
+  // Tooltips and arrows
+  --theme-tooltip-arrow-size: 8px; // Ensure this stays in sync with 'popperArrowSize' in 'usePopper.ts'
+  --theme-tooltip-background-color: #151523;
+  --theme-tooltip-border-color: #8e8e9e;
+  --theme-tooltip-minimal-color: #5d5970;
+  --theme-tooltip-corner-radius: 6px;
+
+  // App background gradient
+  --theme-background-app-gradient-start: hsl(240, 20%, 28%);
+  --theme-background-app-gradient-end: hsl(240, 27%, 12%);
+
+  --theme-background-app-gradient: radial-gradient(
+    circle at 50% 70px,
+    var(--theme-background-app-gradient-start) 0%,
+    var(--theme-background-app-gradient-end) 100%
+  );
+
+  // Discreet segments of header and app body
+  --theme-background-app-header-primary: var(--theme-background-app-gradient);
+  --theme-background-app-header-secondary: var(--theme-background-app-gradient);
+  --theme-background-app-body: var(--theme-background-app-gradient);
 }

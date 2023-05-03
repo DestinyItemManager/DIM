@@ -14,7 +14,7 @@
   z-index: 100;
   position: absolute;
   &.open {
-    outline: 2px solid change-color($orange, $alpha: 0.4) !important;
+    outline: 2px solid rgba(232, 165, 52, 0.4) !important;
   }
 }
 
@@ -40,8 +40,8 @@
 }
 
 .highlighted {
-  background-color: $orange;
-  color: black !important;
+  background-color: var(--theme-accent-primary);
+  color: #000;
   :global(.app-icon) {
     color: black !important;
   }
