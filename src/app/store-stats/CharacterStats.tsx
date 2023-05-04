@@ -14,6 +14,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
 import { armorStats } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -24,14 +25,17 @@ import xpIcon from '../../images/xpIcon.svg';
 import './CharacterStats.scss';
 import StatTooltip from './StatTooltip';
 
-interface CharacterStatProps {
+function CharacterStats({
+  stats,
+  showTier,
+  classType,
+}: {
   stats: {
     stat: DimCharacterStat;
   }[];
   showTier?: boolean;
-}
-
-function CharacterStats({ stats, showTier }: CharacterStatProps) {
+  classType: DestinyClass;
+}) {
   return (
     <div className="stat-row">
       {showTier && (
@@ -42,7 +46,7 @@ function CharacterStats({ stats, showTier }: CharacterStatProps) {
         </div>
       )}
       {stats.map(({ stat }) => (
-        <PressTip key={stat.hash} tooltip={() => <StatTooltip stat={stat} />}>
+        <PressTip key={stat.hash} tooltip={() => <StatTooltip stat={stat} classType={classType} />}>
           <div className="stat" aria-label={`${stat.name} ${stat.value}`} role="group">
             <img src={stat.icon} alt={stat.name} />
             <div>{stat.value}</div>
@@ -172,16 +176,18 @@ export function PowerFormula({ storeId }: { storeId: string }) {
 export function LoadoutStats({
   stats,
   showTier,
+  classType,
 }: {
   stats: DimStore['stats'];
   showTier?: boolean;
+  classType: DestinyClass;
 }) {
   const statInfos = armorStats
     .map((h) => stats[h])
     .map((stat) => ({
       stat,
-      tooltip: <StatTooltip stat={stat} />,
+      tooltip: <StatTooltip stat={stat} classType={classType} />,
     }));
 
-  return <CharacterStats showTier={showTier} stats={statInfos} />;
+  return <CharacterStats showTier={showTier} stats={statInfos} classType={classType} />;
 }
