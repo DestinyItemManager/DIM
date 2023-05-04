@@ -69,7 +69,7 @@ import { count } from 'app/utils/util';
 import { HashLookup } from 'app/utils/util-types';
 import { DestinyClass, PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
-import produce, { Draft } from 'immer';
+import { Draft, produce } from 'immer';
 import _ from 'lodash';
 import { savePreviousLoadout } from './actions';
 import {

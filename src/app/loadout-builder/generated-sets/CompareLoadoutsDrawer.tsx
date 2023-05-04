@@ -16,7 +16,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
-import produce from 'immer';
+import { produce } from 'immer';
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ArmorSet, LockableBucketHashes } from '../types';

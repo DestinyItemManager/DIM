@@ -2,7 +2,7 @@
 
 import { DimItem } from 'app/inventory/item-types';
 import { Observable } from 'app/utils/observable';
-import produce from 'immer';
+import { produce } from 'immer';
 
 /**
  * What part of the loadout application process are we currently in?

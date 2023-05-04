@@ -214,7 +214,7 @@
     "framer-motion": "^10.0.0",
     "i18next": "^22.0.4",
     "i18next-http-backend": "^2.0.0",
-    "immer": "^9.0.2",
+    "immer": "^10.0.1",
     "lodash": "^4.17.8",
     "memoize-one": "^6.0.0",
     "papaparse": "^5.0.0",

@@ -11,15 +11,15 @@ import clsx from 'clsx';
 import chestArmorItem from 'destiny-icons/armor_types/chest.svg';
 import ghostIcon from 'destiny-icons/general/ghost.svg';
 import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
-import produce from 'immer';
+import { produce } from 'immer';
 import React, { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useSubscription } from 'use-subscription';
 import { DefItemIcon } from '../inventory/ItemIcon';
 import { allItemsSelector } from '../inventory/selectors';
-import { collectSocketsToStrip, doStripSockets, SocketKind, StripAction } from './strip-sockets';
-import { stripSocketsQuery$ } from './strip-sockets-actions';
 import styles from './StripSockets.m.scss';
+import { SocketKind, StripAction, collectSocketsToStrip, doStripSockets } from './strip-sockets';
+import { stripSocketsQuery$ } from './strip-sockets-actions';
 
 /**
  * Error, OK, or still in our worklist
