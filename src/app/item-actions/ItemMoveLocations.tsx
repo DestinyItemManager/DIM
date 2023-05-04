@@ -145,12 +145,13 @@ function MoveLocations({
       type === 'equip'
         ? t('MovePopup.EquipWithName', { character: store.name })
         : t('MovePopup.StoreWithName', { character: store.name });
+    const shortcutHelp = shortcutKey && store.current ? ` [${symbolize(shortcutKey)}]` : '';
 
     const button = (
       <button
         type="button"
         className={styles.move}
-        title={`${title}${shortcutKey && store.current ? ` [${symbolize(shortcutKey)}]` : ''}`}
+        title={`${title}${shortcutHelp}`}
         onClick={handleMove}
         aria-keyshortcuts={store.current ? shortcutKey : undefined}
         disabled={!enabled}

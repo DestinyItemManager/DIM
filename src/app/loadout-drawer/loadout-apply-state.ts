@@ -216,8 +216,5 @@ export function anyActionFailed(state: LoadoutApplyState) {
   ) {
     return true;
   }
-  if (state.modStates.some((s) => s.state !== LoadoutModState.Applied)) {
-    return true;
-  }
-  return false;
+  return state.modStates.some((s) => s.state !== LoadoutModState.Applied);
 }

@@ -4605,11 +4605,6 @@ eslint-plugin-prettier@^4.0.0:
   dependencies:
     prettier-linter-helpers "^1.0.0"
 
-eslint-plugin-radar@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-radar/-/eslint-plugin-radar-0.2.1.tgz#5b5e696f0df1c1aacf26b6cb1b708d862659bfb2"
-  integrity sha512-aOc1MK6ddL45X6mS6zEqFIKy/c/qnwjhNycDecaFMw5acUsD744ZCZf2cG7yxLhMv71mBSwr6pZdu+26+Zzk5A==
-
 eslint-plugin-react-hooks@^4.0.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/eslint-plugin-react-hooks/-/eslint-plugin-react-hooks-4.6.0.tgz#4c3e697ad95b77e93f8646aaa1630c1ba607edd3"
@@ -4643,6 +4638,11 @@ eslint-plugin-react@^7.28.0:
     resolve "^2.0.0-next.4"
     semver "^6.3.0"
     string.prototype.matchall "^4.0.8"
+
+eslint-plugin-sonarjs@^0.19.0:
+  version "0.19.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-sonarjs/-/eslint-plugin-sonarjs-0.19.0.tgz#6654bc1c6d24c2183891b8bfe1175004dbba1e3c"
+  integrity sha512-6+s5oNk5TFtVlbRxqZN7FIGmjdPCYQKaTzFPmqieCmsU1kBYDzndTeQav0xtQNwZJWu5awWfTGe8Srq9xFOGnw==
 
 eslint-rule-composer@^0.3.0:
   version "0.3.0"
