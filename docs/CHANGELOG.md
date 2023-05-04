@@ -1,5 +1,53 @@
 ## Next
 
+## 7.66.0 <span class="changelog-date">(2023-04-30)</span>
+
+## 7.65.1 <span class="changelog-date">(2023-04-28)</span>
+
+* Enhanced adept weapons from Root of Nightmares should now show with correct stats.
+* Added an `is:adept` search filter. This allows you to find weapons which can equip Adept mods.
+
+## 7.65.0 <span class="changelog-date">(2023-04-23)</span>
+
+* Fixed Adept Draw Time marking the draw time stat as negatively affected (red) instead of positively affected (blue).
+* Loadout Optimizer and Loadouts now consistently allow you to choose not yet unlocked Fragments and Aspects. Previously this was only working for some characters.
+* Fixed an issue where the DIM Loadout apply notification was sometimes not showing that it performed changes to subclass abilities.
+
+## 7.64.1 <span class="changelog-date">(2023-04-16)</span>
+
+* In-Game Loadouts are now represented as save slots. Click them for details on which items and selections they contain.
+  * Change icon/name/color, save as a DIM loadout, clear the save slot, and more, from the dropdown menu or the slot's details popup.
+  * The overview In-Game Loadouts strip now shows whether each slot matches a DIM loadout, is equipped, or is equippable.
+  * Loadouts have a Prepare Equip button, to move items to a character and ensure clicking the in-game equip button succeeds.
+  * If you're in orbit or a social space, or offline, the Equip button can move items appropriately, then apply the in-game loadout.
+* Fixed issue where selected mods would not scroll on mobile in the mod sheet.
+* Items can now be dragged and dropped from within the loadout edit screen.
+* Loadout Optimizer and Loadouts now include Armor Charge-based "Font of ..." mods in stat calculations. For example, if you are using the Font of Focus armor mod, Loadout Optimizer will assume the +30 points to Discipline when holding Armor Charge are active and not waste stat points on exceeding T10 Discipline.
+
+## 7.64.0 <span class="changelog-date">(2023-04-09)</span>
+
+* Updated DIM's Smart Moves logic for how to choose which items to move when a bucket is full.
+* The bulk note tool has gotten a major upgrade and now allows adding and removing to existing notes.
+* Undo and redo in loadout editor and loadout optimizer have the keyboard shortcuts you'd expect.
+* Added some extra information to the randomize popup to explain how to use it with searches.
+* Fixed the "L" hotkey inadvertantly working in Compare and when items should not be lockable.
+* Added new hotkeys for opening Armory (A) and Infusion Fuel Finder (I) from the item popup.
+* Added a "Compare" button to the Organizer to allow focused comparison of selected items.
+* Added hotkeys to organizer - bulk tag, note, compare, or move selected items easily.
+* Added a new "N" hotkey for editing notes on an item.
+
+
+## 7.63.3 <span class="changelog-date">(2023-04-06)</span>
+
+* Fixed equipping in game loadouts
+* DIM now tries to keep your device from sleeping while an item is moving or a loadout is applying.
+
+## 7.63.2 <span class="changelog-date">(2023-04-03)</span>
+
+## 7.63.1 <span class="changelog-date">(2023-04-03)</span>
+
+## 7.63.0 <span class="changelog-date">(2023-04-02)</span>
+
 * The "Show Mod Placement" sheet will now show the required armor energy capacity upgrades to make all mods fit (and the total upgrade costs).
 * Loadout Optimizer sets will now show energy capacity bars below armor pieces, similar to the "Show Mod Placement" sheet.
 * Loadouts created before Lightfall with deprecated stat mods now have their stat mods restored.
@@ -11,6 +59,9 @@
 * Sharing build settings directly from Loadout Optimizer will now also include subclass configuration.
 * DIM now saves Artifact configuration in Loadouts. Note that DIM cannot reconfigure your artifact automatically, but you can use this information to keep track of which artifact unlocks are important for a Loadout.
 * Search autocomplete should be smarter, with the ability to complete item and perk names even when you type multiple words.
+* In-game loadouts' icon, color, and name can now be changed through DIM.
+* You can create an in-game loadout from your currently equipped items through DIM.
+* Added quick clear buttons to each section of the loadout editor.
 
 ## 7.62.0 <span class="changelog-date">(2023-03-26)</span>
 

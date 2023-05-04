@@ -15,15 +15,15 @@ import { useLocation } from 'react-router';
 import Sheet from '../dim-ui/Sheet';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
-import { allItemsSelector, currentStoreSelector } from '../inventory/selectors';
+import { allItemsSelector, currentStoreSelector, getTagSelector } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
 import { convertToLoadoutItem, newLoadout } from '../loadout-drawer/loadout-utils';
 import { showNotification } from '../notifications/notifications';
 import { filterFactorySelector } from '../search/search-filter';
 import { AppIcon, faArrowCircleDown, faEquals, faRandom, helpIcon, plusIcon } from '../shell/icons';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
-import { showInfuse$ } from './infuse';
 import './InfusionFinder.scss';
+import { showInfuse$ } from './infuse';
 
 const itemComparator = chainComparator(
   reverseComparator(compareBy((item: DimItem) => item.power)),
@@ -126,6 +126,7 @@ export default function InfusionFinder() {
   const dispatch = useThunkDispatch();
   const allItems = useSelector(allItemsSelector);
   const currentStore = useSelector(currentStoreSelector);
+  const getTag = useSelector(getTagSelector);
   const filters = useSelector(filterFactorySelector);
   const [lastInfusionDirection, setLastInfusionDirection] = useSetting('infusionDirection');
 
@@ -194,8 +195,10 @@ export default function InfusionFinder() {
   items = items.filter((item) => item.hash !== query.hash);
   items.sort(itemComparator);
 
+  const preferredSource =
+    dupes.find((i) => getTag(i) === 'infuse') || items.find((i) => getTag(i) === 'infuse');
   const effectiveTarget = target || dupes[0] || items[0];
-  const effectiveSource = source || dupes[0] || items[0];
+  const effectiveSource = source || preferredSource || dupes[0] || items[0];
 
   let result: DimItem | undefined;
   if (effectiveSource?.power && effectiveTarget?.power) {

@@ -39,10 +39,9 @@ export default function EditInGameLoadout({
   const icons = Object.values(defs.LoadoutIcon.getAll())
     .filter((i) => !i.redacted)
     .sort(compareBy((n) => n.index));
-
-  const [nameHash, setNameHash] = useState(loadout?.nameHash ?? names[0].hash);
-  const [colorHash, setColorHash] = useState(loadout?.colorHash ?? colors[0].hash);
-  const [iconHash, setIconHash] = useState(loadout?.iconHash ?? icons[0].hash);
+  const defaultName = names[0].hash;
+  const defaultColor = colors[0].hash;
+  const defaultIcon = icons[0].hash;
 
   const loadouts = useSelector((state: RootState) =>
     inGameLoadoutsForCharacterSelector(state, characterId!)
@@ -55,12 +54,43 @@ export default function EditInGameLoadout({
       break;
     }
   }
+
   const [slot, setSlot] = useState(firstAvailableSlot);
-  const overwriting = loadouts.some((l) => l.index === slot);
+  const overwrittenLoadout = loadouts.find((l) => l.index === slot);
+  const wouldOverwrite = Boolean(overwrittenLoadout);
+
+  const [nameHash, setNameHash] = useState(
+    loadout?.nameHash ?? overwrittenLoadout?.nameHash ?? defaultName
+  );
+  const [colorHash, setColorHash] = useState(
+    loadout?.colorHash ?? overwrittenLoadout?.colorHash ?? defaultColor
+  );
+  const [iconHash, setIconHash] = useState(
+    loadout?.iconHash ?? overwrittenLoadout?.iconHash ?? defaultIcon
+  );
 
   const name = defs.LoadoutName.get(nameHash)?.name ?? 'Unknown';
   const colorIcon = defs.LoadoutColor.get(colorHash)?.colorImagePath ?? '';
   const icon = defs.LoadoutIcon.get(iconHash)?.iconImagePath ?? '';
+
+  const handleSetSlot = (newSlotNum: number) => {
+    const destSlotLoadout = loadouts.find((l) => l.index === newSlotNum);
+
+    if (
+      destSlotLoadout &&
+      ((nameHash === defaultName && colorHash === defaultColor && iconHash === defaultIcon) ||
+        (overwrittenLoadout &&
+          nameHash === overwrittenLoadout.nameHash &&
+          colorHash === overwrittenLoadout.colorHash &&
+          iconHash === overwrittenLoadout.iconHash))
+    ) {
+      setNameHash(destSlotLoadout.nameHash);
+      setColorHash(destSlotLoadout.colorHash);
+      setIconHash(destSlotLoadout.iconHash);
+    }
+
+    setSlot(newSlotNum);
+  };
 
   const creating = loadout === undefined;
 
@@ -96,8 +126,8 @@ export default function EditInGameLoadout({
     <form onSubmit={handleSave}>
       <button type="submit" className="dim-button">
         {creating
-          ? overwriting
-            ? t('InGameLoadout.Replace')
+          ? wouldOverwrite
+            ? t('InGameLoadout.Replace', { index: slot + 1 })
             : t('InGameLoadout.Create')
           : t('InGameLoadout.Save')}
       </button>
@@ -125,7 +155,7 @@ export default function EditInGameLoadout({
                   name="slot"
                   option={i}
                   value={slot}
-                  onSelected={setSlot}
+                  onSelected={handleSetSlot}
                   className={loadout ? styles.hasLoadout : undefined}
                 >
                   {loadout ? (

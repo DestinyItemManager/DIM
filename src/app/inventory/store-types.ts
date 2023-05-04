@@ -10,7 +10,6 @@ import {
   DestinyDisplayPropertiesDefinition,
   DestinyProgression,
 } from 'bungie-api-ts/destiny2';
-import React from 'react';
 import { D1Item, DimItem } from './item-types';
 
 /**
@@ -64,18 +63,12 @@ export interface DimStore<Item = DimItem> {
   level: number;
   /** Progress towards the next level (or "prestige level") */
   percentToNextLevel: number;
-  /** Power/light level. */
+  /** The Bungie.net-reported power level */
   powerLevel: number;
   /** The record corresponding to the currently equipped Title. */
   titleInfo?: DimTitle;
   /** Character stats. */
   stats: {
-    /** average of your highest simultaneously equippable gear with bonus fields for rich tooltip content and equippability warnings */
-    maxGearPower?: DimCharacterStat;
-    /** currently represents the power level bonus provided by the Seasonal Artifact */
-    powerModifier?: DimCharacterStat;
-    /** maxGearPower + powerModifier. the highest PL you can get your inventory screen to show */
-    maxTotalPower?: DimCharacterStat;
     [hash: number]: DimCharacterStat;
   };
   /** Did any of the items in the last inventory build fail? */
@@ -95,6 +88,28 @@ export interface AccountCurrency {
   readonly quantity: number;
 }
 
+export type DimCharacterStatSource = 'armorStats' | 'armorPlug' | 'subclassPlug' | 'runtimeEffect';
+export const statSourceOrder: DimCharacterStatSource[] = [
+  'armorStats',
+  'subclassPlug',
+  'armorPlug',
+  'runtimeEffect',
+];
+export interface DimCharacterStatChange {
+  /** What contributed this stat. */
+  source: DimCharacterStatSource;
+  /** The name of the thing that contributed this stat. */
+  name: string;
+  /** A unique key for merging and display */
+  hash: number;
+  /** The icon associated with the source (subclass plug icon, armor mod icon...) */
+  icon: string | undefined;
+  /** How many copies of a mod were used */
+  count: number | undefined;
+  /** How many stat points this contributes to the stat's total value. */
+  value: number;
+}
+
 /** A character-level stat. */
 export interface DimCharacterStat {
   /** The DestinyStatDefinition hash for the stat. */
@@ -109,23 +124,13 @@ export interface DimCharacterStat {
   /** The localized description of the stat. */
   description: string;
 
-  /** maxGearPower and maxTotalPower can come with various caveats */
-  statProblems?: {
-    /** this stat may be inaccurate because it relies on classified items */
-    hasClassified?: boolean;
-    /** mutually excluded exotics are included in the max possible power */
-    notEquippable?: boolean;
-    /** this character is in danger of dropping at a worse Power Level! another character is holding their best item(s) */
-    notOnStore?: boolean;
-  };
-
-  /** additional rich content available to display in a stat's tooltip */
-  richTooltip?: React.ReactChild;
-
   /** A localized description of this stat's effect. */
   effect?: string;
   /** Cooldown time for the associated ability. */
   cooldown?: string;
+
+  /** How this stat exactly was calculated. */
+  breakdown?: DimCharacterStatChange[];
 }
 
 export interface D1Progression extends DestinyProgression {

@@ -20,8 +20,9 @@
   min-width: 10em;
   padding: 6px 9px;
   white-space: nowrap;
+
   @include phone-portrait {
-    padding: 10px 16px;
+    padding: 8px 16px;
     font-size: 14px;
   }
 
@@ -63,6 +64,12 @@
   composes: resetButton from './common.m.scss';
   padding: 4px 8px;
   color: #999;
+  transition: all 150ms ease-out;
+  &:active,
+  &:hover,
+  &:focus-visible {
+    color: white;
+  }
 }
 
 .separator {

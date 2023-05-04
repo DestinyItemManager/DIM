@@ -50,10 +50,14 @@
   position: relative;
   border: 4px solid rgba(255, 255, 255, 0.3);
 
-  [twdiv='yes'] {
+  [twdiv='yes'],
+  iframe {
+    width: 100%;
     overflow: auto;
     height: 400px;
     background-color: black;
+    border: none;
+
     @include phone-portrait {
       height: 300px;
     }

@@ -65,7 +65,7 @@ export default memo(function CompareItem({
               <AppIcon icon={faArrowCircleDown} />
             </ActionButton>
           )}
-          {item.lockable ? <LockActionButton item={item} /> : <div />}
+          {item.lockable ? <LockActionButton item={item} noHotkey /> : <div />}
           {item.taggable ? <TagActionButton item={item} label={false} hideKeys={true} /> : <div />}
           <div className={styles.close} onClick={() => remove(item)} role="button" tabIndex={0} />
         </div>

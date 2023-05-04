@@ -9,17 +9,26 @@ import { weakMemoize } from 'app/utils/util';
 import {
   DestinyClass,
   DestinyInventoryItemDefinition,
+  DestinyItemInvestmentStatDefinition,
   DestinyStatAggregationType,
   DestinyStatCategory,
   DestinyStatDefinition,
   DestinyStatDisplayDefinition,
   DestinyStatGroupDefinition,
 } from 'bungie-api-ts/destiny2';
+import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
+import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
 import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { Draft } from 'immer';
 import _ from 'lodash';
 import { socketContainsIntrinsicPlug } from '../../utils/socket-utils';
-import { DimItem, DimPlug, DimSocket, DimStat } from '../item-types';
+import {
+  DimItem,
+  DimPlug,
+  DimSocket,
+  DimStat,
+  PluggableInventoryItemDefinition,
+} from '../item-types';
 import { makeCustomStat } from './stats-custom';
 
 /**
@@ -404,7 +413,11 @@ function applyPlugsToStats(
         }
 
         // we've ruled out reasons to ignore this investment stat. apply its effects to the investmentValue
-        existingStat.investmentValue += pluggedInvestmentStat.value;
+        existingStat.investmentValue += getPlugStatValue(
+          createdItem,
+          socket.plugged.plugDef,
+          pluggedInvestmentStat
+        );
 
         // finally, re-interpolate the stat value
         const statDisplay = statDisplaysByStatHash[affectedStatHash];
@@ -426,8 +439,32 @@ function applyPlugsToStats(
     compareBy((s) => s.plugOptions.length)
   );
   for (const socket of sortedSockets) {
-    attachPlugStats(socket, existingStatsByHash, statDisplaysByStatHash);
+    attachPlugStats(createdItem, socket, existingStatsByHash, statDisplaysByStatHash);
   }
+}
+
+/**
+ * Adept raid weapons that were randomly acquired can be enhanced to get an enhanced intrinsic,
+ * at which point they're functionally crafted.
+ * Their intrinsic says "conditionally +2 to some stats", but they get +3 because that's how
+ * masterworked adepts behave, and an additional +1 by reaching weapon level 20. There's no
+ * basis for this behavior in the defs, so we cheat when we calculate live stats and attribute
+ * these stats to the intrinsic since that's the "masterwork".
+ */
+function getPlugStatValue(
+  createdItem: DimItem,
+  plug: PluggableInventoryItemDefinition,
+  stat: DestinyItemInvestmentStatDefinition
+) {
+  if (
+    stat.isConditionallyActive &&
+    enhancedIntrinsics.has(plug.hash) &&
+    adeptWeaponHashes.includes(createdItem.hash)
+  ) {
+    return stat.value + ((createdItem.craftedInfo?.level ?? 0) >= 20 ? 2 : 1);
+  }
+
+  return stat.value;
 }
 
 /**
@@ -435,6 +472,7 @@ function applyPlugsToStats(
  * and attaches it to the DimPlug's stats property
  */
 function attachPlugStats(
+  createdItem: DimItem,
   socket: DimSocket,
   statsByHash: StatLookup,
   statDisplaysByStatHash: StatDisplayLookup
@@ -455,7 +493,7 @@ function attachPlugStats(
     const activePlugStats: DimPlug['stats'] = {};
 
     for (const plugInvestmentStat of activePlug.plugDef.investmentStats) {
-      let plugStatValue = plugInvestmentStat.value;
+      let plugStatValue = getPlugStatValue(createdItem, activePlug.plugDef, plugInvestmentStat);
       const itemStat = statsByHash[plugInvestmentStat.statTypeHash];
       const statDisplay = statDisplaysByStatHash[plugInvestmentStat.statTypeHash];
 
@@ -492,7 +530,7 @@ function attachPlugStats(
     const plugStats: DimPlug['stats'] = {};
 
     for (const plugInvestmentStat of plug.plugDef.investmentStats) {
-      let plugStatValue = plugInvestmentStat.value;
+      let plugStatValue = getPlugStatValue(createdItem, plug.plugDef, plugInvestmentStat);
       const itemStat = statsByHash[plugInvestmentStat.statTypeHash];
       const statDisplay = statDisplaysByStatHash[plugInvestmentStat.statTypeHash];
 

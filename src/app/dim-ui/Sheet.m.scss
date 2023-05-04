@@ -1,16 +1,16 @@
+@import '../variables';
+
 .sheetDisabled {
   transform-origin: center bottom;
   // TODO: would be better to do with Framer Motion, once we switch over to it
   transform: scale(0.98) !important;
   transition: transform 300ms linear;
 }
+
 .disabledScreen {
   background-color: black;
   position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
+  inset: 0 0 0 0;
   display: none;
   transition: opacity 300ms linear;
   .sheetDisabled & {

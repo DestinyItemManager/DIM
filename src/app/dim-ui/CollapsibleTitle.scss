@@ -20,6 +20,14 @@
     color: #ccc;
   }
 
+  @include phone-portrait {
+    &:hover,
+    &.collapsed {
+      background-color: transparent;
+      color: white;
+    }
+  }
+
   span[role='button'] {
     cursor: pointer;
     outline: none;

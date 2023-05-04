@@ -10,7 +10,6 @@
   z-index: 2;
   color: rgba(245, 245, 245, 0.6);
   overscroll-behavior: contain;
-  cursor: pointer;
   background-color: black;
 
   @include visible-scrollbars;
@@ -46,7 +45,7 @@
 
   @include phone-portrait {
     font-size: 14px;
-    padding: 6px;
+    padding: 2px 0;
   }
 
   &:last-of-type {
@@ -101,6 +100,7 @@
     background: #313233;
     border-radius: 4px;
     box-sizing: border-box;
+    font-size: inherit;
   }
 
   &:hover,
@@ -177,8 +177,30 @@
   margin: 8px;
 }
 
-.inGameLoadoutIcon {
-  height: 16px !important;
-  width: 16px !important;
-  vertical-align: middle;
+.hint {
+  opacity: 0.6;
+  margin: 8px 0 0 0;
+}
+
+.inGameLoadouts {
+  list-style: none;
+  margin: 0 8px;
+  padding: 4px 0;
+
+  display: grid;
+  gap: 4px;
+  grid-template-columns: repeat(6, 1fr);
+  place-items: flex-start;
+  &.moreLoadouts {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+.inGameLoadoutButton {
+  composes: resetButton from '../../dim-ui/common.m.scss';
+  &:hover,
+  &:focus-visible {
+    outline: 2px solid $orange;
+  }
+  display: block;
 }

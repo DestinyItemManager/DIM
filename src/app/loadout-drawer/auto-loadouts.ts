@@ -149,42 +149,6 @@ export function maxStatLoadout(statHash: number, allItems: DimItem[], store: Dim
 }
 
 /**
- * A dynamic loadout set up to level weapons and armor
- */
-export function gatherEngramsLoadout(
-  allItems: DimItem[],
-  options: { exotics: boolean } = { exotics: false }
-): Loadout {
-  const engrams = allItems.filter(
-    (i) => i.isEngram && !i.location.inPostmaster && (options.exotics ? true : !i.isExotic)
-  );
-
-  if (engrams.length === 0) {
-    let engramWarning = t('Loadouts.NoEngrams');
-    if (options.exotics) {
-      engramWarning = t('Loadouts.NoExotics');
-    }
-    throw new Error(engramWarning);
-  }
-
-  const itemsByType = _.mapValues(
-    _.groupBy(engrams, (e) => e.bucket.hash),
-    (items) => {
-      // Sort exotic engrams to the end so they don't crowd out other types
-      const sortedItems = _.sortBy(items, (i) => (i.isExotic ? 1 : 0));
-      // No more than 9 engrams of a type
-      return _.take(sortedItems, 9);
-    }
-  );
-
-  const finalItems = Object.values(itemsByType)
-    .flat()
-    .map((i) => convertToLoadoutItem(i, false));
-
-  return newLoadout(t('Loadouts.GatherEngrams'), finalItems);
-}
-
-/**
  * Move a list of items to a store
  */
 export function itemMoveLoadout(items: DimItem[], store: DimStore): Loadout {

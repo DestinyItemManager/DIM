@@ -1,3 +1,4 @@
+import { useHotkey } from 'app/hotkeys/useHotkey';
 import { useCallback, useReducer } from 'react';
 
 interface History<S> {
@@ -36,7 +37,7 @@ function historyReducer<S>(oldState: History<S>, action: Action<S>): History<S> 
     case 'undo': {
       const { undoStack, redoStack, state } = oldState;
       if (undoStack.length < 1) {
-        throw new Error("Can't undo");
+        return oldState;
       }
       const previousState = undoStack[undoStack.length - 1];
       return {
@@ -48,7 +49,7 @@ function historyReducer<S>(oldState: History<S>, action: Action<S>): History<S> 
     case 'redo': {
       const { undoStack, redoStack, state } = oldState;
       if (redoStack.length < 1) {
-        throw new Error("Can't redo");
+        return oldState;
       }
       const nextState = redoStack[redoStack.length - 1];
       return {
@@ -76,13 +77,8 @@ export function useHistory<S>(initialState: S): {
   canUndo: boolean;
   canRedo: boolean;
 } {
-  // Needed for type checking, TS otherwise seems to get lost
-  // in weaker overloads of `useReducer`?
-  // FIXME this should be `useReducer(historyReducer<S>, ...)`
-  // but VS Code throws spurious errors for that construct (see DIM#8819)
-  const reducer: typeof historyReducer<S> = historyReducer;
   const [{ state, undoStack, redoStack }, dispatch] = useReducer(
-    reducer,
+    historyReducer<S>,
     initialState,
     initializer
   );
@@ -93,6 +89,9 @@ export function useHistory<S>(initialState: S): {
   );
   const undo = useCallback(() => dispatch({ type: 'undo' }), []);
   const redo = useCallback(() => dispatch({ type: 'redo' }), []);
+
+  useHotkey('mod+z', '', undo);
+  useHotkey('mod+shift+z', '', redo);
 
   return {
     state,

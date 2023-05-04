@@ -54,6 +54,7 @@ function getBrowserVersionFromUserAgent(agent) {
 
 export function isSupported(browsersSupported, userAgent) {
   if (userAgent.includes('Steam')) {
+    // https://github.com/DestinyItemManager/DIM/wiki/Figuring-out-why-DIM-doesn't-work-in-Steam
     return false;
   }
 

@@ -8,11 +8,13 @@
   box-sizing: border-box;
   background-color: #0b0c0f;
   aspect-ratio: 16/9;
+  user-select: text;
 
   :global(.item-details) {
     margin-left: 0;
     margin-right: 0;
     max-width: 300px;
+
     @include phone-portrait {
       max-width: 100%;
     }
@@ -64,6 +66,7 @@
 
   h1 {
     grid-area: title;
+
     @include destiny-header;
     margin: 0 0 4px 0;
   }
@@ -109,6 +112,7 @@
 .section {
   width: 300px;
   margin-bottom: 10px;
+
   @include phone-portrait {
     width: 100%;
   }

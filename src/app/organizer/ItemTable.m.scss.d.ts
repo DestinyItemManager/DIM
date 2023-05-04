@@ -6,6 +6,7 @@ interface CssExports {
   'customstat': string;
   'dmg': string;
   'energy': string;
+  'enhancedArrow': string;
   'hasFilter': string;
   'header': string;
   'icon': string;

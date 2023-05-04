@@ -1,3 +1,5 @@
+import { currentAccountSelector } from 'app/accounts/selectors';
+import { equipInGameLoadout } from 'app/bungie-api/destiny2-api';
 import { D1Categories } from 'app/destiny1/d1-bucket-categories';
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { interruptFarming, resumeFarming } from 'app/farming/basic-actions';
@@ -31,6 +33,7 @@ import {
   spaceLeftForItem,
 } from 'app/inventory/stores-helpers';
 import { LockableBucketHashes, inGameArmorEnergyRules } from 'app/loadout-builder/types';
+import { updateAfterInGameLoadoutApply } from 'app/loadout/ingame/ingame-loadout-apply';
 import {
   createPluggingStrategy,
   fitMostMods,
@@ -57,8 +60,10 @@ import {
   fragmentSocketCategoryHashes,
   getDefaultAbilityChoiceHash,
   getSocketByIndex,
+  getSocketsByCategoryHashes,
   getSocketsByIndexes,
   plugFitsIntoSocket,
+  subclassAbilitySocketCategoryHashes,
 } from 'app/utils/socket-utils';
 import { count } from 'app/utils/util';
 import { HashLookup } from 'app/utils/util-types';
@@ -80,7 +85,7 @@ import {
   setModResult,
   setSocketOverrideResult,
 } from './loadout-apply-state';
-import { Assignment, Loadout, LoadoutItem } from './loadout-types';
+import { Assignment, InGameLoadout, Loadout, LoadoutItem } from './loadout-types';
 import { backupLoadout, findItemForLoadout, getModsFromLoadout } from './loadout-utils';
 
 // TODO: move this whole file to "loadouts" folder
@@ -116,10 +121,16 @@ export function applyLoadout(
   store: DimStore,
   loadout: Loadout,
   {
-    /** Add this to the stack of loadouts that you can undo */
     allowUndo = false,
-    /** Only apply items matching the class of the store we're applying to */
     onlyMatchingClass = false,
+    inGameLoadout,
+  }: {
+    /** Add this to the stack of loadouts that you can undo */
+    allowUndo?: boolean;
+    /** Only apply items matching the class of the store we're applying to */
+    onlyMatchingClass?: boolean;
+    /** Apply this ingame loadout at the end. This also replaces the name/icon of the notification. */
+    inGameLoadout?: InGameLoadout;
   } = {}
 ): ThunkResult {
   return async (dispatch) => {
@@ -146,14 +157,17 @@ export function applyLoadout(
           setLoadoutState,
           onlyMatchingClass,
           cancelToken,
-          allowUndo
+          allowUndo,
+          inGameLoadout
         )
       )
     );
     loadingTracker.addPromise(loadoutPromise);
 
     // Start a notification that will show as long as the loadout is equipping
-    showNotification(loadoutNotification(loadout, stateObservable, loadoutPromise, cancel));
+    showNotification(
+      loadoutNotification(inGameLoadout ?? loadout, stateObservable, loadoutPromise, cancel)
+    );
 
     try {
       await loadoutPromise;
@@ -177,7 +191,8 @@ function doApplyLoadout(
   setLoadoutState: LoadoutStateUpdater,
   onlyMatchingClass: boolean,
   cancelToken: CancelToken,
-  allowUndo = false
+  allowUndo = false,
+  inGameLoadout?: InGameLoadout
 ): ThunkResult {
   return async (dispatch, getState) => {
     const defs = manifestSelector(getState())!;
@@ -236,17 +251,37 @@ function doApplyLoadout(
 
       // Figure out which items have specific socket overrides that will need to be applied.
       // TODO: remove socket-overrides from the mods to apply list!
-      const itemsWithOverrides = loadout.items.filter((loadoutItem) => {
-        const item = getLoadoutItem(loadoutItem);
-        return (
-          loadoutItem.socketOverrides &&
-          item &&
-          // Don't apply perks/mods/subclass configs when moving items to the vault
-          !store.isVault &&
-          // Only apply perks/mods/subclass configs if the item is usable by the store we're applying to
-          (item.classType === DestinyClass.Unknown || item.classType === store.classType)
-        );
-      });
+      const itemsWithOverrides = _.compact(
+        loadout.items.map((loadoutItem) => {
+          const item = getLoadoutItem(loadoutItem);
+          if (
+            !loadoutItem.socketOverrides ||
+            !item ||
+            // Don't apply perks/mods/subclass configs when moving items to the vault
+            store.isVault ||
+            // Only apply perks/mods/subclass configs if the item is usable by the store we're applying to
+            (item.classType !== DestinyClass.Unknown && item.classType !== store.classType)
+          ) {
+            return undefined;
+          } else if (item.bucket.hash === BucketHashes.Subclass) {
+            // Subclass ability sockets can be missing from socketOverrides, but show and
+            // should thus apply the result of `getDefaultAbilityChoiceHash`, so patch those in here.
+            const abilityAndSuperSockets = getSocketsByCategoryHashes(
+              item.sockets,
+              subclassAbilitySocketCategoryHashes
+            );
+            const newOverrides = { ...loadoutItem.socketOverrides };
+            for (const socket of abilityAndSuperSockets) {
+              if (newOverrides[socket.socketIndex] === undefined) {
+                newOverrides[socket.socketIndex] = getDefaultAbilityChoiceHash(socket);
+              }
+            }
+            return { ...loadoutItem, socketOverrides: newOverrides };
+          } else {
+            return loadoutItem;
+          }
+        })
+      );
 
       // Filter out mods that no longer exist or that aren't unlocked on this character
       const unlockedPlugSetItems = _.once(() => unlockedPlugSetItemsSelector(store.id)(getState()));
@@ -553,7 +588,6 @@ function doApplyLoadout(
       if (itemsWithOverrides.length) {
         setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.SocketOverrides));
 
-        // TODO (ryan) the items with overrides here don't have the default plugs included in them
         infoLog('loadout socket overrides', 'Socket overrides to apply', itemsWithOverrides);
         await dispatch(
           applySocketOverrides(itemsWithOverrides, setLoadoutState, getLoadoutItem, cancelToken)
@@ -610,6 +644,27 @@ function doApplyLoadout(
             moveSession
           )
         );
+      }
+
+      if (inGameLoadout) {
+        setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.InGameLoadout));
+        try {
+          await equipInGameLoadout(currentAccountSelector(getState())!, inGameLoadout);
+          await dispatch(updateAfterInGameLoadoutApply(inGameLoadout));
+        } catch (e) {
+          if (
+            e instanceof DimError &&
+            e.bungieErrorCode() === PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation
+          ) {
+            setLoadoutState(
+              produce((state) => {
+                state.inGameLoadoutInActivity = true;
+              })
+            );
+          } else {
+            throw e;
+          }
+        }
       }
 
       if (anyActionFailed(getLoadoutState())) {
@@ -1006,16 +1061,10 @@ function applySocketOverrides(
             const sockets = getSocketsByIndexes(dimItem.sockets!, category.socketIndexes);
             for (const socket of sockets) {
               const socketIndex = socket.socketIndex;
-              let modHash: number | undefined = loadoutItem.socketOverrides[socketIndex];
-
-              if (modHash === undefined && dimItem.bucket.hash === BucketHashes.Subclass) {
-                // A subclass without any overrides for abilities still shows
-                // the "default" ability plugs, so we need to plug those
-                modHash = getDefaultAbilityChoiceHash(socket);
-              }
+              const modHash: number | undefined = loadoutItem.socketOverrides[socketIndex];
               if (modHash) {
                 const mod = defs.InventoryItem.get(modHash) as PluggableInventoryItemDefinition;
-                // We explicitly set sockets that aren't in socketOverrides to the default plug for subclasses
+                // Supers and abilities simply go into their socket
                 modsForItem.push({ socketIndex, mod, requested: true });
               }
             }

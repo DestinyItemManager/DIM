@@ -55,6 +55,14 @@
     "Vault": "Vault",
     "Weapons": "Weapons"
   },
+  "BulkNote": {
+    "Title": "Change notes for 1 item",
+    "Title_plural": "Change notes for {{count}} items",
+    "Replace": "Replace notes",
+    "Append": "Append to notes / add #hashtags",
+    "Remove": "Remove from notes / remove #hashtags",
+    "Confirm": "Update Notes"
+  },
   "BungieAlert": {
     "Title": "A message from Bungie:"
   },
@@ -230,6 +238,7 @@
     "HasOrnament": "Shows items that have an ornament applied.",
     "InLoadout": "is:inloadout shows items that are included in any loadout. Searching with inloadout: shows items that are included in loadouts with matching titles. When used with a hashtag, inloadout: shows items whose loadouts have the hashtag in the title or notes.",
     "Infusable": "Shows items that can be infused.",
+    "IsAdept": "Shows weapons compatible with Adept mods.",
     "IsCrafted": "Shows weapons that have been crafted.",
     "IsSunset": "Shows items that have been sunset and can no longer be infused to max power.",
     "ItemId": "Shows the item with the given inventory item ID. For advanced users.",
@@ -370,6 +379,7 @@
     "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space. You won't be able to log in to or use DIM."
   },
   "Hotkey": {
+    "Armory": "Show Armory for an item",
     "CheatSheetTitle": "Keyboard Shortcuts:",
     "ClearDialog": "Dismiss dialog",
     "ClearNewItems": "Clear new items",
@@ -377,6 +387,7 @@
     "LockUnlock": "Lock or unlock an item",
     "MarkItemAs": "Mark item as '{{tag}}'",
     "Menu": "Toggle menu",
+    "Note": "Enter notes",
     "Pull": "Pull item to active character",
     "RefreshInventory": "Refresh inventory",
     "ShowHotkeys": "Show keyboard shortcuts",
@@ -396,17 +407,26 @@
     "TransferItems": "Transfer"
   },
   "InGameLoadout": {
+    "ClearSlot": "Clear Slot {{index}}",
     "Create": "Create Loadout",
     "CreateTitle": "Create In-Game Loadout From Current Equipment",
+    "CurrentlyEquipped": "Currently Equipped",
+    "PrepareEquip": "Prepare Equip",
     "Applying": "Equipping loadout...",
+    "EditIdentifiers": "Edit Identifiers",
     "EditTitle": "Edit Loadout Name and Icon",
     "EditFailed": "Failed to update loadout",
+    "EquipReady": "In-game Equip Ready",
+    "EquipNotReady": "In-game Equip Not Ready",
+    "LoadoutDetails": "Loadout Details",
     "LoadoutSlotNum": "Slot {{index}}",
+    "MatchingLoadouts": "Matching Loadouts:",
     "Deleted": "Loadout Deleted",
     "DeletedBody": "Cleared the in-game loadout at slot {{index}}",
     "DeleteFailed": "Failed to delete loadout",
     "Save": "Update Loadout",
-    "Replace": "Replace Loadout",
+    "SaveToDimLoadout": "Save as DIM Loadout",
+    "Replace": "Replace Loadout {{index}}",
     "SnapshotFailed": "Failed to snapshot equipped loadout"
   },
   "Inventory": {
@@ -452,6 +472,14 @@
     "PreviewVendor": "Preview {{type}} contents",
     "StackFull": "You already have a full stack of {{name}}",
     "StoreName": "{{genderRace}} {{className}}"
+  },
+  "KillType": {
+    "Melee": "Melee",
+    "Super": "Super",
+    "Grenade": "Grenade",
+    "Finisher": "Finisher",
+    "Precision": "Precision",
+    "ClassAbilities": "Class Ability"
   },
   "PostmasterWarningBanner": {
     "PostmasterAlmostFull": "The postmaster is almost full! ({{number}}/{{postmasterSize}})",
@@ -607,6 +635,7 @@
     "AddNotes": "Add Notes",
     "AddUnequippedItems": "Add Unequipped",
     "Any": "Any class",
+    "ArmorStats": "Armor Stats",
     "ArtifactUnlocks": "Artifact Unlocks",
     "ArtifactUnlocksWithSeason": "Artifact Unlocks – S{{seasonNumber}}",
     "ArtifactUnlocksDesc": "Due to Bungie.net limitations, DIM cannot automatically configure your artifact. You need to perform these unlocks in-game before applying the Loadout.",
@@ -628,17 +657,17 @@
     "CurrentlyEquipped": "Currently Equipped",
     "Delete": "Delete",
     "DeprecatedMods": "Deprecated Mods",
+    "DimLoadouts": "DIM Loadouts",
     "Edit": "Edit Loadout",
     "EditBrief": "Edit",
     "EquippableDifferent1": "Multiple Exotic items were used to calculate your Maximum Power, so the number shown may not be achievable when equipping your items in-game.",
     "EquippableDifferent2": "Maximum Power isn't limited by the \"One Exotic\" rule when determining the Power of your drops, powerful, and pinnacle rewards.",
     "Equipped": "Equipped",
     "Fashion": "Choose fashion",
+    "Filters": "Loadout Filters",
     "FilteredItems": "Filtered Items",
     "FindAnother": "Find another {{name}}",
     "FromEquipped": "Equipped",
-    "GatherEngrams": "Gather Engrams",
-    "GatherEngramsExceptExotics": "Exotics",
     "Generated": "T{{tier}} Loadout",
     "HashtagTip": "Tip: Use #hashtags in your loadout names or notes and they'll show up here.",
     "ImportLoadout": "Import Loadout",
@@ -648,6 +677,7 @@
       "Error404": "This loadout doesn't exist.",
       "Error": "Error getting loadout:"
     },
+    "InGameLoadouts": "In-Game Loadouts",
     "ItemLeveling": "Item Leveling",
     "LoadoutName": "Loadout name",
     "Loadouts": "Loadouts",
@@ -686,8 +716,6 @@
     "ItemErrorSummary": "1 item error:",
     "ItemErrorSummary_plural": "{{count}} item errors:",
     "Mods": "Mods",
-    "NoEngrams": "No non-exotic engrams are available to transfer.",
-    "NoExotics": "No engrams are available to transfer.",
     "NoneMatch": "None of your loadouts matched the filters.",
     "NotesPlaceholder": "Write some notes about this loadout, or use #hashtags to categorize it",
     "NotificationTitle": "Loadout: {{name}}",
@@ -709,7 +737,9 @@
     "NoSpace": "You're out of space in the vault and any other characters.",
     "Random": "Random",
     "Randomize": "Randomize Loadout",
+    "RandomizeButton": "Randomize",
     "RandomizePrompt": "Randomize your equipped weapons, armor and ghost?",
+    "RandomizeQueryHint": "Tip: Search for items first to restrict what items can be randomly chosen.",
     "RandomizeSearch": "Randomize from Search",
     "RandomizeSearchPrompt": "Randomize your equipped items from search \"{{query}}\"?",
     "RandomizeWeapons": "Randomize your equipped weapons?",
@@ -717,6 +747,7 @@
     "RestoreAllItems": "All Items",
     "Save": "Save",
     "SaveLoadout": "Save Loadout",
+    "SaveAsDIM": "Save as DIM Loadout",
     "SaveAsNew": "Save as New",
     "SaveAsNewTooltip": "Keep the original loadout and save this as a new loadout",
     "SaveDisabled": {
@@ -761,6 +792,8 @@
     "Deequip": "De-equipping items from other characters",
     "MoveItems": "Moving items",
     "EquipItems": "Equipping items",
+    "EquipInGameLoadout": "Equipping in-game loadout",
+    "ApplyInGameLoadoutInGame": "Your loadout is ready to equip but since you're in an activity you need to equip it in-game.",
     "SocketOverrides": "Changing subclass options",
     "ApplyMods": "Applying mods",
     "ClearingSpace": "Moving other items away",
@@ -797,15 +830,17 @@
     "Acquired": "This item is unlocked in collections.",
     "AcquiredMod": "This mod is unlocked in collections.",
     "AddToLoadout": "Loadout",
-    "AddNote": "Add a note",
+    "AddToLoadoutTitle": "Add this to a loadout",
+    "AddNote": "Add notes",
     "All": "All",
-    "CantPullFromPostmaster": "You must go to the tower to retrieve this item.",
+    "CantPullFromPostmaster": "You must visit the postmaster in game to retrieve this item.",
     "CannotCurrentlyRoll": "This perk cannot be rolled on the current version of this item.",
     "UnreliablePerkOption": "This perk appears only in the collections view. It might not roll randomly on this item.",
     "Consolidate": "Consolidate",
     "CommunityData": "Community Insight",
     "DistributeEvenly": "Distribute Evenly",
-    "Equip": "Equip",
+    "Equip": "Equip on:",
+    "EquipWithName": "Equip on {{character}}",
     "FavoriteUnFavorite": {
       "Favorite": "Favorite {{itemType}}",
       "Unfavorite": "Unfavorite {{itemType}}",
@@ -813,6 +848,7 @@
       "Unfavorited": "Unfavorited"
     },
     "Infuse": "Infuse",
+    "InfuseTitle": "Open the infusion fuel finder",
     "LockUnlock": {
       "Lock": "Lock {{itemType}}",
       "Unlock": "Unlock {{itemType}}",
@@ -831,8 +867,8 @@
     "ReadLoreLink": "Read lore",
     "Rewards": "Rewards:",
     "SendToVault": "Send to Vault",
-    "Store": "Store",
-    "StoreWithName": "Store on {{character}}",
+    "Store": "Pull to:",
+    "StoreWithName": "Pull to {{character}}",
     "Subtitle": {
       "Type": "{{classType}} {{typeName}}",
       "QuestProgress": "Step {{questStepNum}} of {{questStepsTotal}}"
@@ -851,7 +887,7 @@
   },
   "Notes": {
     "Error": "Error! Max 120 characters for notes.",
-    "Help": "Add notes to this item"
+    "Help": "Add notes, #hashtags, and :symbols:"
   },
   "Notification": {
     "Cancel": "Cancel",
@@ -875,8 +911,7 @@
     "ShiftTip": "Tip: Hold the Shift key and click on a cell to filter items",
     "NoMobile": "Turn your phone sideways to use the Organizer.",
     "NoItems": "No items selected",
-    "Note": "Set Note",
-    "NotePrompt": "Note:",
+    "Note": "Set Notes",
     "Columns": {
       "Stats": "Stats",
       "BaseStats": "Base Stats",
@@ -1102,7 +1137,7 @@
     "AutoBackup": "We've backed up your data to a file in your downloads folder called dim-data.json, just in case.",
     "BackUpFirst": "You MUST back up your data first, before you delete it all. Just in case.",
     "BrowserMayClearData": "The browser may delete this information if you run out of space or don't visit DIM frequently.",
-    "DataIsLocal": "Tag and note data is local only",
+    "DataIsLocal": "Tag and notes data is local only",
     "DeleteAllData": "Delete ALL Data from DIM Sync Servers",
     "DeleteAllDataConfirm": "Are you sure you want to delete ALL your data, for all accounts, from DIM Sync? You can't undo this.",
     "DeleteAllDataLabel": "Wipe DIM Sync Data",
@@ -1259,10 +1294,8 @@
       "TranslationText": "We use {{link}} for ease of translation. If you want to improve one of DIM's translations, join the team.",
       "TwitterHelp": "Be sure to follow us to stay on top of updates and real time application state information.",
       "Version": "Version {{version}} ({{flavor}}), built on {{date}}",
-      "YouTube": "YouTube",
-      "YouTubeHelp": "Learn how to use DIM on our YouTube channel.",
-      "Wiki": "DIM User Guide Wiki",
-      "WikiHelp": "Learn how to use DIM and contribute to our community-driven user guide."
+      "Wiki": "DIM User Guide",
+      "WikiHelp": "Learn how to use DIM's features."
     },
     "Login": {
       "Auth": "Authorize with Bungie.net",

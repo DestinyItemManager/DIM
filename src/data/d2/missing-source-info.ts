@@ -2424,11 +2424,14 @@ const missingSources: { [key: string]: number[] } = {
   plunder: [
     912150785, // Mindbender's Ambition (Adept)
     2378101424, // The Militia's Birthright (Adept)
+    2871264750, // Skeleton Key
   ],
   presage: [],
   prestige: [],
   prophecy: [],
-  psiops: [],
+  psiops: [
+    3358687360, // Synaptic Spear
+  ],
   raid: [
     4968701, // Greaves of the Great Hunt
     11974904, // Greaves of Ascendancy
@@ -2665,7 +2668,9 @@ const missingSources: { [key: string]: number[] } = {
   ron: [],
   root: [],
   rootofnightmares: [],
-  saint14: [],
+  saint14: [
+    3360014173, // The Lantern of Osiris
+  ],
   scourge: [
     350056552, // Bladesmith's Memory Mask
     388999052, // Bulletsmith's Ire Mark
@@ -2702,8 +2707,12 @@ const missingSources: { [key: string]: number[] } = {
   ],
   seasonpass: [
     1387688628, // The Gate Lord's Eye
+    2871264750, // Skeleton Key
+    3358687360, // Synaptic Spear
   ],
-  servitor: [],
+  servitor: [
+    3380377210, // Paradrome Cube
+  ],
   shatteredthrone: [],
   shaxx: [
     85800627, // Ankaa Seeker IV

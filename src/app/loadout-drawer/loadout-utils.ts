@@ -2,13 +2,13 @@ import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
+import { t } from 'app/i18next-t';
 import { BucketSortType } from 'app/inventory/inventory-buckets';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { findItemsByBucket, getCurrentStore, getStore } from 'app/inventory/stores-helpers';
-import { isModStatActive } from 'app/loadout-builder/process/mappers';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { UNSET_PLUG_HASH } from 'app/loadout/known-values';
 import {
@@ -16,10 +16,11 @@ import {
   mapToAvailableModCostVariant,
   sortMods,
 } from 'app/loadout/mod-utils';
+import { getTotalModStatChanges } from 'app/loadout/stats';
 import { manifestSelector } from 'app/manifest/selectors';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { armorStats, deprecatedPlaceholderArmorModHash } from 'app/search/d2-known-values';
-import { isPlugStatActive, itemCanBeInLoadout } from 'app/utils/item-utils';
+import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import {
   aspectSocketCategoryHashes,
   fragmentSocketCategoryHashes,
@@ -192,6 +193,8 @@ export function newLoadoutFromEquipped(
     return item;
   });
   const loadout = newLoadout(name, loadoutItems, dimStore.classType);
+  // Choose a stable ID
+  loadout.id = 'equipped';
   const mods = items.flatMap((i) => extractArmorModHashes(i));
   if (mods.length) {
     loadout.parameters = {
@@ -300,49 +303,50 @@ export function getLoadoutStats(
   const statDefs = armorStats.map((hash) => defs.Stat.get(hash));
 
   // Construct map of stat hash to DimCharacterStat
-  const stats: { [hash: number]: DimCharacterStat } = {};
+  const stats: { [hash: number | string]: DimCharacterStat } = {};
   for (const {
     hash,
     displayProperties: { description, icon, name },
   } of statDefs) {
-    stats[hash] = { hash, description, icon: bungieNetPath(icon), name, value: 0 };
+    stats[hash] = { hash, description, icon: bungieNetPath(icon), name, value: 0, breakdown: [] };
   }
 
   // Sum the items stats into the stats
+  const armorPiecesStats = _.mapValues(stats, () => 0);
   for (const item of armor) {
     const itemStats = _.groupBy(item.stats, (stat) => stat.statHash);
     const energySocket =
       item.sockets && getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.ArmorTier);
-    for (const [hashStr, stat] of Object.entries(stats)) {
-      const hash = parseInt(hashStr, 10);
-      stat.value += itemStats[hash]?.[0].base ?? 0;
-      stat.value += energySocket?.plugged?.stats?.[hash] || 0;
+    for (const hash of armorStats) {
+      armorPiecesStats[hash] += itemStats[hash]?.[0].base ?? 0;
+      armorPiecesStats[hash] += energySocket?.plugged?.stats?.[hash] ?? 0;
     }
   }
 
-  // Add stats that come from the subclass fragments
-  // Question: Now that we apply socket overrides when we resolve items, do we need to do this calculation?
-  // Answer: Yes, because subclasses don't have armor stats
-  if (subclass?.loadoutItem.socketOverrides) {
-    for (const plugHash of Object.values(subclass.loadoutItem.socketOverrides)) {
-      const plug = defs.InventoryItem.get(plugHash);
-      for (const stat of plug.investmentStats) {
-        if (
-          stat.statTypeHash in stats &&
-          isPlugStatActive(subclass.item, plug, stat.statTypeHash, stat.isConditionallyActive)
-        ) {
-          stats[stat.statTypeHash].value += stat.value;
-        }
-      }
-    }
+  for (const hash of armorStats) {
+    stats[hash].value += armorPiecesStats[hash];
+    stats[hash].breakdown!.push({
+      hash: -1,
+      count: undefined,
+      name: t('Loadouts.ArmorStats'),
+      icon: undefined,
+      source: 'armorStats',
+      value: armorPiecesStats[hash],
+    });
   }
 
-  // Add the mod stats
-  for (const mod of mods) {
-    for (const stat of mod.investmentStats) {
-      if (stat.statTypeHash in stats && isModStatActive(classType, mod.hash, stat)) {
-        stats[stat.statTypeHash].value += stat.value;
-      }
+  const modStats = getTotalModStatChanges(
+    defs,
+    mods,
+    subclass,
+    classType,
+    /* includeRuntimeStatBenefits */ true
+  );
+
+  for (const [statHash, value] of Object.entries(modStats)) {
+    stats[statHash].value += value.value;
+    if (value.breakdown) {
+      stats[statHash].breakdown?.push(...value.breakdown);
     }
   }
 

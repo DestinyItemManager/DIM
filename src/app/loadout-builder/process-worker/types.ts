@@ -25,8 +25,10 @@ export type ProcessItemsByBucket = {
 };
 
 export interface ProcessArmorSet {
-  /** The overall stats for the loadout as a whole, including auto stat mods. */
+  /** The overall stats for the loadout as a whole, including subclass, mods and including auto stat mods. */
   readonly stats: Readonly<ArmorStats>;
+  /** The assumed stats from the armor items themselves only. */
+  readonly armorStats: Readonly<ArmorStats>;
   /** For each armor type (see LockableBuckets), this is the list of items that could interchangeably be put into this loadout. */
   readonly armor: readonly string[];
   /** Which stat mods were added? */

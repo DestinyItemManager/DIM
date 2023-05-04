@@ -54,6 +54,14 @@
     "Vault": "保险库",
     "Weapons": "武器"
   },
+  "BulkNote": {
+    "Append": "附加到备注 / 添加 #标签",
+    "Confirm": "更新备注",
+    "Remove": "从备注中删除 / 删除 #标签",
+    "Replace": "替换备注",
+    "Title": "更改一个物品的备注",
+    "Title_plural": "更改 {{count}} 个物品的备注"
+  },
   "BungieAlert": {
     "Title": "一则来自Bungie的信息:"
   },
@@ -124,6 +132,7 @@
   "EnergyMeter": {
     "Energy": "能量",
     "Unused": "未使用",
+    "UpgradeNeeded": "此物品当前的能量容量为 {{energyCapacity}}。需要 {{energyUsed}} 容量才能装下所选的模组。",
     "Used": "已使用"
   },
   "ErrorBoundary": {
@@ -229,9 +238,10 @@
     "HasOrnament": "显示已应用皮肤的物品。",
     "HasShader": "显示已应用着色器的物品",
     "HoldsMod": "显示与某种赛季模组相兼容的护甲。",
-    "InLoadout": "is:inloadout 显示在任意配装中所包含的物品。使用 inloadout: 搜索在配装中的指定物品。当使用 hashtag 时，inloadout: 显示在名称或注释中包含指定 hashtag 物品的配装。",
+    "InLoadout": "is:inloadout 显示在任意配装中所包含的物品。使用 inloadout: 搜索在配装中的指定物品。当使用标签时，inloadout: 显示在名称或注释中包含指定标签物品的配装。",
     "Infusable": "显示可以灌注的物品.",
     "InfusionFodder": "显示可用于灌注同类物品且只消耗微光的物品。",
+    "IsAdept": "Shows weapons compatible with Adept mods.",
     "IsCrafted": "显示制作获取的武器。",
     "IsSunset": "显示已退环境且不能再被灌注到光等上限的物品。",
     "ItemHash": "显示具有给定物品 hash 的物品。此为高级用户选项。",
@@ -370,6 +380,7 @@
     "NoStorageMessage": "DIM 无法在你的浏览器中存储数据。这可能是因为你在使用无痕或隐身模式，或磁盘空间不足。你将无法登录或使用 DIM。"
   },
   "Hotkey": {
+    "Armory": "显示物品详情",
     "CheatSheetTitle": "键盘快速键",
     "ClearDialog": "关闭对话",
     "ClearNewItems": "清除新物品提示",
@@ -377,6 +388,8 @@
     "LockUnlock": "锁定或解锁物品",
     "MarkItemAs": "将物品标记为 “{{tag}}”",
     "Menu": "切换菜单",
+    "Note": "添加备注",
+    "Notes": "",
     "Pull": "为当前角色取回物品",
     "RefreshInventory": "刷新背包",
     "ShowHotkeys": "显示键盘快速键",
@@ -387,7 +400,24 @@
   },
   "InGameLoadout": {
     "Applying": "正在装备配装...",
-    "LoadoutSlotNum": "插槽 {{index}}"
+    "ClearSlot": "清空槽位 {{index}}",
+    "Create": "创建配装",
+    "CreateTitle": "从当前装备创建游戏内配装",
+    "CurrentlyEquipped": "当前装备",
+    "DeleteFailed": "删除配装失败",
+    "Deleted": "配装已删除",
+    "DeletedBody": "已清除槽位 {{index}} 的游戏内配装",
+    "EditFailed": "更新配装失败",
+    "EditIdentifiers": "编辑标识",
+    "EditTitle": "编辑配装名字和图标",
+    "EquipNotReady": "游戏内装备尚未就绪",
+    "EquipReady": "游戏内装备已就绪",
+    "LoadoutDetails": "配装详情",
+    "MatchingLoadouts": "匹配配装：",
+    "PrepareEquip": "准备配装",
+    "Replace": "替换配装槽位 {{index}}",
+    "Save": "更新配装",
+    "SnapshotFailed": "为已装备的配装创建快照时失败"
   },
   "Infusion": {
     "Filter": "过滤物品",
@@ -437,11 +467,19 @@
     "NotEnoughRoomGeneral": "没有足够的空间来移动此物品。",
     "OnlyEquippedClassLevel": "该物品仅可以装备在{{class}} 上，且至少大于{{level}} 级。",
     "OnlyEquippedLevel": "该物品仅可以装备在至少{{level}} 级的角色上。",
-    "PostmasterAlmostFull": "接近全满了!({{number}}/{{postmasterSize}})",
-    "PostmasterFull": "全满了!({{number}}/{{postmasterSize}})",
+    "PostmasterAlmostFull": "快要满了！",
+    "PostmasterFull": "已经满了！",
     "PreviewVendor": "预览 {{type}} 内容",
     "StackFull": "您已经达到 {{name}} 的堆叠上限",
     "StoreName": "{{genderRace}} {{className}} 角色"
+  },
+  "KillType": {
+    "ClassAbilities": "职业技能",
+    "Finisher": "终结技",
+    "Grenade": "手雷",
+    "Melee": "近战",
+    "Precision": "精准",
+    "Super": "超能"
   },
   "LB": {
     "AdvancedOptions": "高级选项",
@@ -594,8 +632,13 @@
     "AddUnequippedItems": "添加未装备的",
     "Any": "全部职业",
     "Apply": "应用",
+    "ApplyInGameLoadoutInGame": "你的配装已准备就绪，但由于你正在进行活动，你需要在游戏内装备此配装。",
     "ApplyMods": "正在应用模组",
     "ApplySearch": "转移搜索 \"{{query}}\"",
+    "ArmorStats": "护甲属性",
+    "ArtifactUnlocks": "神器解锁",
+    "ArtifactUnlocksDesc": "由于 Bungie.net 的限制，DIM无法自动配置你的神器模组。你需要在游戏中进行解锁，然后再应用到配装。",
+    "ArtifactUnlocksWithSeason": "神器解锁 - 第 {{seasonNumber}} 赛季",
     "BadLoadoutShare": "无法载入共享配装",
     "BadLoadoutShareBody": "你试图载入的配装无效：{{error}}",
     "Before": "撤销 '{{name}}'",
@@ -615,8 +658,10 @@
     "Deequip": "正在从其他角色取回物品",
     "Delete": "删除",
     "DeprecatedMods": "已废弃的模组",
+    "DimLoadouts": "DIM 配装",
     "Edit": "编辑配装",
     "EditBrief": "编辑",
+    "EquipInGameLoadout": "正在装备游戏内配装",
     "EquipItems": "正在装备物品",
     "EquippableDifferent1": "计算你的最大能量等级时使用了多件异域装备，所以在游戏内配装时可能达不到这个数值。",
     "EquippableDifferent2": "在计算你的掉落、强力、巅峰装备能量等级时，最大能量等级不受“一件异域装备”规则的限制。",
@@ -628,8 +673,6 @@
     "FilteredItems": "已过滤的物品",
     "FindAnother": "查找另一个 {{name}}",
     "FromEquipped": "当前装备",
-    "GatherEngrams": "收集记忆水晶",
-    "GatherEngramsExceptExotics": "异域",
     "Generated": "T{{tier}} 配装",
     "HashtagTip": "提示：在配装名称或备注中使用的#标签会显示在这里。(标签不支持中文)",
     "Import": {
@@ -639,6 +682,7 @@
       "PasteHere": "粘贴链接以打开配装。"
     },
     "ImportLoadout": "导入配装",
+    "InGameLoadouts": "游戏内配装",
     "ItemErrorSummary": "1 个物品出错：",
     "ItemErrorSummary_plural": "{{count}} 个物品出错：",
     "ItemLeveling": "物品等级",
@@ -665,11 +709,19 @@
     "MissingItemsWarning": "此配装里的一些物品不在库存里了。",
     "ModErrorSummary": "1 个模组出错：",
     "ModErrorSummary_plural": "{{count}} 个模组出错：",
-    "ModPlacement": "模组位置",
+    "ModPlacement": {
+      "InvalidMods": "无效模组",
+      "InvalidModsDesc": "1 个模组不能插入任何护甲。",
+      "InvalidModsDesc_plural": "{{count}} 个模组不能插入任何护甲。",
+      "ModPlacement": "模组位置",
+      "UnassignedMods": "未分配的模组",
+      "UnassignedModsDesc": "由于能量容量或模组插槽不足，一个模组无法安装。即便为所选护甲升级能量也是如此。",
+      "UnassignedModsDesc_plural": "由于能量容量或模组插槽不足，{{count}} 个模组无法安装。即便为所选护甲升级能量也是如此。",
+      "UpgradeCosts": "升级消耗成本",
+      "UpgradeCostsDesc": "有些护甲需要能量容量升级才能装下所选的模组。升级总共会花费："
+    },
     "Mods": "模组",
     "MoveItems": "正在移动物品",
-    "NoEngrams": "没有非异域记忆水晶可以转移.",
-    "NoExotics": "没有记忆水晶可以转移.",
     "NoSpace": "你的保险库和其他角色均已满。",
     "NoneMatch": "没有与过滤器匹配的配装。",
     "NotStarted": "正在等待其他操作完成或物品栏刷新完毕",
@@ -692,13 +744,16 @@
     "PullFromPostmasterPopupTitle": "从邮政官处取回物品",
     "Random": "随机",
     "Randomize": "随机配装",
+    "RandomizeButton": "随机搭配",
     "RandomizePrompt": "确定要将你的武器、护甲和机灵随机搭配吗？",
+    "RandomizeQueryHint": "提示：可通过搜索条件来限制随机物品池。",
     "RandomizeSearch": "从搜索结果随机选取",
     "RandomizeSearchPrompt": "从“{{query}}”的搜索结果随机配装？",
     "RandomizeWeapons": "确定要将你的武器随机搭配吗？",
     "Redo": "重做",
     "RestoreAllItems": "所有物品",
     "Save": "保存",
+    "SaveAsDIM": "保存为 DIM 配装",
     "SaveAsNew": "另存为",
     "SaveAsNewTooltip": "保留原始配装并将其保存为新配装",
     "SaveDisabled": {
@@ -726,6 +781,7 @@
     },
     "ShareLoadout": "分享配装",
     "ShowModPlacement": "显示模组位置",
+    "Snapshot": "作为游戏内配装保存",
     "SocketOverrides": "正在更改子职业选项",
     "SortByEditTime": "按最后编辑时间排序",
     "SortByName": "按名称排序",
@@ -735,7 +791,6 @@
     "SyncFromEquipped": "同步已装备物品",
     "TooManyRequested": "你有{{total}} 个{{itemname}}, 但完成配装需要{{requested}} 个. 我们已经处理所有已拥有的",
     "UnassignedModError": "模组不适合你当前的护甲",
-    "UnassignedMods": "未分配的模组",
     "Undo": "撤销",
     "Unequipped": "未装备",
     "Update": "保存更改",
@@ -771,14 +826,16 @@
     "AcquiredMod": "此模组已在收藏中解锁。",
     "AddNote": "添加备注",
     "AddToLoadout": "配装",
+    "AddToLoadoutTitle": "添加此物品到配装",
     "All": "全部",
     "CannotCurrentlyRoll": "此特性不会出现在此物品的当前版本上。",
-    "CantPullFromPostmaster": "你必须到高塔去取回这件物品。",
+    "CantPullFromPostmaster": "You must visit the postmaster in game to retrieve this item.",
     "CatalystProgress": "催化剂进度",
     "CommunityData": "社区见解",
     "Consolidate": "合并",
     "DistributeEvenly": "均匀分配",
-    "Equip": "装备",
+    "Equip": "装备到：",
+    "EquipWithName": "装备到 {{character}}",
     "FavoriteUnFavorite": {
       "Favorite": "收藏{{itemType}}",
       "Favorited": "已收藏",
@@ -786,6 +843,7 @@
       "Unfavorited": "已取消收藏"
     },
     "Infuse": "灌注",
+    "InfuseTitle": "打开灌注材料查找器",
     "LockUnlock": {
       "AutoLock": "该物品的锁定状态已与其标签同步",
       "Lock": "锁定{{itemType}}",
@@ -804,8 +862,8 @@
     "ReadLoreLink": "阅读传奇故事",
     "Rewards": "奖励：",
     "SendToVault": "发送到保险库",
-    "Store": "寄存",
-    "StoreWithName": "存储到 {{character}}",
+    "Store": "移到：",
+    "StoreWithName": "移到 {{character}}",
     "Subtitle": {
       "QuestProgress": "第 {{questStepNum}} / {{questStepsTotal}} 步",
       "Type": "{{classType}} {{typeName}}"
@@ -824,7 +882,7 @@
   },
   "Notes": {
     "Error": "错误! 备注不能超过120个字符.",
-    "Help": "为该物品添加备注"
+    "Help": "添加备注、#标签、和 :符号:"
   },
   "Notification": {
     "Cancel": "取消",
@@ -881,7 +939,6 @@
     "NoItems": "未选择任何项目",
     "NoMobile": "将手机横放来使用管理器。",
     "Note": "添加备注",
-    "NotePrompt": "备注：",
     "OpenIn": "在管理器中显示",
     "Organizer": "管理器",
     "SelectAll": "全选",
@@ -1234,10 +1291,8 @@
       "TranslationText": "我们使用{{link}} 工具来使得翻译工作更加简便。 如果您希望为DIM的任意语言翻译语言出一份力，那么请加入我们的翻译小组吧( • ̀ω•́)✧！",
       "TwitterHelp": "请务必关注我们，以便了解我们的最新动向和即时状态更新资讯。",
       "Version": "当前版本Ver{{version}}({{flavor}})，编译于：{{date}}",
-      "Wiki": "DIM 用户指南百科",
-      "WikiHelp": "学习如何使用 DIM，并帮助建设我们的社区用户指南。",
-      "YouTube": "YouTube",
-      "YouTubeHelp": "在我们的 youtube 频道上了解如何使用 dim。"
+      "Wiki": "DIM User Guide",
+      "WikiHelp": "Learn how to use DIM's features."
     },
     "Login": {
       "Auth": "用Bungie.Net授权",

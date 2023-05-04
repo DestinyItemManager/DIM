@@ -161,7 +161,9 @@ export interface FilterDefinition<
    * A custom function used to generate (additional) suggestions.
    * This should only be necessary for freeform or custom formats.
    */
-  suggestionsGenerator?: (args: SuggestionsCtx) => string[] | undefined;
+  suggestionsGenerator?: (
+    args: SuggestionsCtx
+  ) => string[] | { keyword: string; ops?: string[] }[] | undefined;
 
   /**
    * given an item, this generates a filter that should match that item

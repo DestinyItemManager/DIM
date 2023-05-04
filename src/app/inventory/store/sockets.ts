@@ -292,17 +292,16 @@ function buildDefinedSocket(
       if (plugSetItems.length) {
         // Unique the plugs by hash, but also consider the perk rollable if there's a copy with currentlyCanRoll = true
         // See https://github.com/DestinyItemManager/DIM/issues/7272
-        const plugs: {
-          [plugItemHash: number]: DestinyItemSocketEntryPlugItemRandomizedDefinition;
-        } = {};
+        // We use a Map to preserve insertion order - an object would return its values sorted by hash!
+        const plugs = new Map<number, DestinyItemSocketEntryPlugItemRandomizedDefinition>();
         for (const randomPlug of plugSetItems) {
-          const existing = plugs[randomPlug.plugItemHash];
+          const existing = plugs.get(randomPlug.plugItemHash);
           if (!existing || (!existing.currentlyCanRoll && randomPlug.currentlyCanRoll)) {
-            plugs[randomPlug.plugItemHash] = randomPlug;
+            plugs.set(randomPlug.plugItemHash, randomPlug);
           }
         }
 
-        for (const randomPlug of Object.values(plugs)) {
+        for (const randomPlug of plugs.values()) {
           const built = buildDefinedPlug(
             defs,
             randomPlug.plugItemHash,

@@ -54,6 +54,7 @@ import {
   getWeaponArchetype,
   getWeaponArchetypeSocket,
   isEmptyArmorModSocket,
+  isEnhancedPerk,
   isUsedArmorModSocket,
 } from 'app/utils/socket-utils';
 import { LookupTable } from 'app/utils/util-types';
@@ -706,6 +707,7 @@ function PerksCell({
                   [styles.perkSelected]:
                     socket.isPerk && socket.plugOptions.length > 1 && p === socket.plugged,
                   [styles.perkSelectable]: socket.plugOptions.length > 1,
+                  [styles.enhancedArrow]: isEnhancedPerk(p.plugDef),
                 })}
                 data-perk-name={p.plugDef.displayProperties.name}
                 onClick={

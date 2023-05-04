@@ -14,8 +14,8 @@ import {
 import { getStore } from 'app/inventory/stores-helpers';
 import { itemMoveLoadout, maxLightLoadout, randomLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
+import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
 import { pullFromPostmaster } from 'app/loadout-drawer/postmaster';
-import { loadoutsSelector } from 'app/loadout-drawer/selectors';
 import { applyInGameLoadout } from 'app/loadout/ingame/ingame-loadout-apply';
 import { allInGameLoadoutsSelector } from 'app/loadout/ingame/selectors';
 import { showNotification } from 'app/notifications/notifications';

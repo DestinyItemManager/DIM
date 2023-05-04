@@ -83,10 +83,13 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
     stat.statHash === TOTAL_STAT_HASH &&
     breakDownTotalValue(stat.base, item, armor2MasterworkSockets || []);
 
+  const modSign =
+    (stat.value !== stat.base ? modEffectsTotal : 0) * (stat.smallerIsBetter ? -1 : 1);
+
   const optionalClasses = {
     [styles.masterworked]: isMasterworkedStat,
-    [styles.modded]: Boolean(modEffectsTotal && modEffectsTotal > 0 && stat.value !== stat.base),
-    [styles.negativeModded]: Boolean(modEffectsTotal < 0 && stat.value !== stat.base),
+    [styles.modded]: modSign > 0,
+    [styles.negativeModded]: modSign < 0,
     [styles.totalRow]: Boolean(totalDetails),
     [styles.customTotal]: customStatHashes.includes(stat.statHash),
   };

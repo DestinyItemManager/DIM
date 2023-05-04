@@ -83,6 +83,9 @@ export const compare: Reducer<CompareState, CompareAction> = (
         action.payload.initialItemId
       );
 
+    case getType(actions.compareSelectedItems):
+      return compareSelectedItems(state, action.payload);
+
     default:
       return state;
   }
@@ -182,7 +185,9 @@ function compareFilteredItems(
   /** The instance ID of the first item added to compare, so we can highlight it. */
   initialItemId?: string
 ): CompareState {
-  // TODO: what if it's already open?
+  if (state.session) {
+    return state;
+  }
 
   const itemCategoryHashes = getItemCategoryHashesFromExampleItem(filteredItems[0]);
 
@@ -192,6 +197,21 @@ function compareFilteredItems(
       query: query,
       itemCategoryHashes,
       initialItemId,
+    },
+  };
+}
+
+function compareSelectedItems(state: CompareState, items: DimItem[]) {
+  if (state.session || !items.length) {
+    return state;
+  }
+
+  const itemCategoryHashes = getItemCategoryHashesFromExampleItem(items[0]);
+  return {
+    ...state,
+    session: {
+      query: `(${items.map((i) => `id:${i.id}`).join(' or ')})`,
+      itemCategoryHashes,
     },
   };
 }

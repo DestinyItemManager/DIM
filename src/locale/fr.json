@@ -54,6 +54,14 @@
     "Vault": "Coffre",
     "Weapons": "Armes"
   },
+  "BulkNote": {
+    "Append": "Ajouter aux notes / ajouter des #hashtags",
+    "Confirm": "Modifier les notes",
+    "Remove": "Retirer des notes / retirer des #hashtags",
+    "Replace": "Remplacer les notes",
+    "Title": "Changer les notes de 1 objet",
+    "Title_plural": "Changer les notes de {{count}} objets"
+  },
   "BungieAlert": {
     "Title": "Un message de Bungie:"
   },
@@ -124,6 +132,7 @@
   "EnergyMeter": {
     "Energy": "Énergie",
     "Unused": "Libre",
+    "UpgradeNeeded": "La capacité en énergie de cet objet est de {{energyCapacity}}. Pour placer les mods sélectionnés, sa capacité en énergie doit être de {{energyUsed}}.",
     "Used": "Utilisé"
   },
   "ErrorBoundary": {
@@ -232,6 +241,7 @@
     "InLoadout": "is:inloadout affiche les objets inclus dans un équipement. Rechercher avec inloadout: affiche les objets inclus dans les équipements au titre correspondant. Lorsque utilisé avec un hashtag, inloadout: affiche les objets dont les équipements possèdent l'hashtag dans leur titre ou leurs notes.",
     "Infusable": "Affiche les objets qui peuvent être infusés.",
     "InfusionFodder": "Affiche les objets qui pourraient être infusés dans une version plus faible du même objet en utilisant uniquement des lumens.",
+    "IsAdept": "Affiche les armes compatible avec les mods Expert.",
     "IsCrafted": "Affiche les armes qui ont été façonnées.",
     "IsSunset": "Affiche les objets qui ont atteint leur puissance maximale et ne peuvent plus être infusés.",
     "ItemHash": "Affiche les objets avec le hash d'objet spécifié. Pour les utilisateurs avancés.",
@@ -370,6 +380,7 @@
     "NoStorageMessage": "DIM ne peut pas stocker de données dans votre navigateur. Cela peut être causé par la navigation privée ou en mode incognito, ou un espace disque faible. Vous ne pourrez pas vous connecter à ou utiliser DIM."
   },
   "Hotkey": {
+    "Armory": "Afficher l'armurerie pour un objet",
     "CheatSheetTitle": "Raccourcis Clavier:",
     "ClearDialog": "Fermer ce dialogue",
     "ClearNewItems": "Vider la liste de nouveaux objets",
@@ -377,6 +388,8 @@
     "LockUnlock": "Verrouiller ou déverrouiller un objet",
     "MarkItemAs": "Marquer objet comme '{{tag}}'",
     "Menu": "Activer/Désactiver le menu",
+    "Note": "Saisir des notes",
+    "Notes": "",
     "Pull": "Transférer vers le personnage actif",
     "RefreshInventory": "Actualiser l'inventaire",
     "ShowHotkeys": "Afficher les raccourcis clavier",
@@ -387,7 +400,24 @@
   },
   "InGameLoadout": {
     "Applying": "Équipement de l'équipement...",
-    "LoadoutSlotNum": "Emplacement {{index}}"
+    "ClearSlot": "Vider l'emplacement {{index}}",
+    "Create": "Créer un équipement",
+    "CreateTitle": "Créer un équipement en jeu à partir de l'équipement actuel",
+    "CurrentlyEquipped": "Actuellement équipé",
+    "DeleteFailed": "Échec de la suppression de l'équipement",
+    "Deleted": "Équipement supprimé",
+    "DeletedBody": "L'équipement en jeu à l'emplacement {{index}} a été vidé",
+    "EditFailed": "Échec de la modification de l'équipement",
+    "EditIdentifiers": "Changer l'apparence",
+    "EditTitle": "Modifier le nom et l'icône de l'équipement",
+    "EquipNotReady": "Prêt pour l'équipement en jeu",
+    "EquipReady": "Prêt pour l'équipement en jeu",
+    "LoadoutDetails": "Détails de l'équipement",
+    "MatchingLoadouts": "Équipements correspondants :",
+    "PrepareEquip": "Préparer pour équipement",
+    "Replace": "Remplacer l'équipement {{index}}",
+    "Save": "Modifier l'équipement",
+    "SnapshotFailed": "Échec de la sauvegarde de l'équipement actuel"
   },
   "Infusion": {
     "Filter": "Filtrer les objets",
@@ -437,11 +467,19 @@
     "NotEnoughRoomGeneral": "Il n'y a pas assez de place pour déplacer cet objet.",
     "OnlyEquippedClassLevel": "Cela ne peut être équipé que par un {{class}} de niveau {{level}} ou plus.",
     "OnlyEquippedLevel": "Cela ne peut être équipé que par les personnages de niveau {{level}} ou plus.",
-    "PostmasterAlmostFull": "Presque plein ! ({{number}}/{{postmasterSize}})",
-    "PostmasterFull": "Plein! ({{number}}/{{postmasterSize}})",
+    "PostmasterAlmostFull": "Presque plein !",
+    "PostmasterFull": "Plein !",
     "PreviewVendor": "Aperçu du contenu {{type}}",
     "StackFull": "Vous avez déjà une pile pleine de {{name}}",
     "StoreName": "{{className}} {{genderRace}}"
+  },
+  "KillType": {
+    "ClassAbilities": "Capacité de classe",
+    "Finisher": "Coup de grâce",
+    "Grenade": "Grenade",
+    "Melee": "Mêlée",
+    "Precision": "Précision",
+    "Super": "Super"
   },
   "LB": {
     "AdvancedOptions": "Options avancées",
@@ -594,8 +632,13 @@
     "AddUnequippedItems": "Ajouter les objets non équipés",
     "Any": "N'importe quelle classe",
     "Apply": "Appliquer",
+    "ApplyInGameLoadoutInGame": "Votre équipement est prêt à être équipé mais puisque vous êtes dans une activité, vous devez l'équiper en jeu.",
     "ApplyMods": "Ajout des mods",
     "ApplySearch": "Transférer la recherche \"{{query}}\"",
+    "ArmorStats": "Statistiques d'armure",
+    "ArtifactUnlocks": "Déverrouillages d'artefact",
+    "ArtifactUnlocksDesc": "En raison des limitations de Bungie.net, DIM ne peut pas configurer automatiquement votre artefact. Vous devez effectuer ces déverrouillages en jeu avant d'appliquer l'équipement.",
+    "ArtifactUnlocksWithSeason": "Déverrouillages d'artefact – S{{seasonNumber}}",
     "BadLoadoutShare": "Impossible de charger l'équipement partagé",
     "BadLoadoutShareBody": "L'équipement que vous essayez de charger est invalide : {{error}}",
     "Before": "Annuler '{{name}}'",
@@ -615,8 +658,10 @@
     "Deequip": "Dé-équipement des objets des autres personnages",
     "Delete": "Supprimer",
     "DeprecatedMods": "Mods obsolètes",
+    "DimLoadouts": "Équipements DIM",
     "Edit": "Modifier l'équipement",
     "EditBrief": "Éditer",
+    "EquipInGameLoadout": "Équipement de l'équipement en jeu",
     "EquipItems": "Équipement des objets",
     "EquippableDifferent1": "Plusieurs objets exotiques ont été utilisé pour calculer votre puissance maximale, le niveau affiché pourrait donc ne pas être obtenable en équipant vos objets en jeu.",
     "EquippableDifferent2": "La puissance maximale n'est pas limité par la règle de \"Un seul exotique\" lors du calcul de la puissance de vos récompenses puissantes et de prestige.",
@@ -628,8 +673,6 @@
     "FilteredItems": "Objets filtrés",
     "FindAnother": "Trouver un autre {{name}}",
     "FromEquipped": "Équipé",
-    "GatherEngrams": "Réunir les Engrammes",
-    "GatherEngramsExceptExotics": "Exotiques",
     "Generated": "P{{tier}} Équipement",
     "HashtagTip": "Astuce : Utilisez des #hashtags dans vos noms ou notes d'équipement et ils apparaîtront ici.",
     "Import": {
@@ -639,6 +682,7 @@
       "PasteHere": "Collez un lien d'équipement pour ouvrir l'équipement."
     },
     "ImportLoadout": "Importer équipement",
+    "InGameLoadouts": "Équipements en jeu",
     "ItemErrorSummary": "1 erreur d'objet :",
     "ItemErrorSummary_plural": "{{count}} erreurs d'objet :",
     "ItemLeveling": "Infusion d'objet",
@@ -665,11 +709,19 @@
     "MissingItemsWarning": "Certains des objets dans cet équipement ne sont plus dans votre inventaire.",
     "ModErrorSummary": "1 erreur de mod :",
     "ModErrorSummary_plural": "{{count}} erreurs de mod :",
-    "ModPlacement": "Placement des mods",
+    "ModPlacement": {
+      "InvalidMods": "Mods invalides",
+      "InvalidModsDesc": "1 mod ne peut pas être placé dans n'importe quelle pièce d'armure.",
+      "InvalidModsDesc_plural": "{{count}} mods ne peuvent pas être placés dans n'importe quelle pièce d'armure.",
+      "ModPlacement": "Placement des mods",
+      "UnassignedMods": "Mods non assignés",
+      "UnassignedModsDesc": "1 mod n'a pas pu être placé en raison d'un manque d'énergie ou d'emplacement de mod. L'amélioration de l'énergie de l'armure sélectionnée ne résoudra pas le problème.",
+      "UnassignedModsDesc_plural": "{{count}} mods n'ont pas pu être placés en raison d'un manque d'énergie ou d'emplacement de mod. L'amélioration de l'énergie de l'armure sélectionnée ne résoudra pas le problème.",
+      "UpgradeCosts": "Coûts d'amélioration",
+      "UpgradeCostsDesc": "Certaines armures ont besoin d'une amélioration d'énergie pour pouvoir accepter les mods demandés. Au total, ces améliorations coûtent :"
+    },
     "Mods": "Mods",
     "MoveItems": "Déplacement des objets",
-    "NoEngrams": "Aucun engrammes non-exotique n'est disponible pour le transfert.",
-    "NoExotics": "Aucun engrammes n'est disponible pour le transfert.",
     "NoSpace": "Vous n'avez plus d'espace libre dans le coffre et votre autres personnages.",
     "NoneMatch": "Aucun de vos équipements ne correspond aux filtres.",
     "NotStarted": "En attente que d'autres actions soient terminées, ou que l'inventaire soit actualisé pour terminer le chargement",
@@ -692,13 +744,16 @@
     "PullFromPostmasterPopupTitle": "Récupérer du commis des postes",
     "Random": "Aléatoire",
     "Randomize": "Équipement aléatoire",
+    "RandomizeButton": "Aléatoire",
     "RandomizePrompt": "Équiper des armes, armures et spectre au hasard ?",
+    "RandomizeQueryHint": "Astuce : Recherchez d'abord des objets pour réduire la liste des objets qui peuvent être choisis aléatoirement.",
     "RandomizeSearch": "Équiper aléatoire à partir de la recherche",
     "RandomizeSearchPrompt": "Équiper au hasard à partir de la recherche \"{{query}}\"?",
     "RandomizeWeapons": "Équiper des armes au hasard ?",
     "Redo": "Refaire",
     "RestoreAllItems": "Tous les objets",
     "Save": "Sauvegarder",
+    "SaveAsDIM": "Sauvegarder en tant qu'équipement DIM",
     "SaveAsNew": "Sauvegarder comme nouveau",
     "SaveAsNewTooltip": "Garder l'équipement original et enregistrer celui-ci comme un nouvel équipement",
     "SaveDisabled": {
@@ -726,6 +781,7 @@
     },
     "ShareLoadout": "Partager l'équipement",
     "ShowModPlacement": "Afficher le placement des mods",
+    "Snapshot": "Sauvegarder en tant qu'équipement en jeu",
     "SocketOverrides": "Changement des options de doctrine",
     "SortByEditTime": "Trier par dernière modification",
     "SortByName": "Trier par nom",
@@ -735,7 +791,6 @@
     "SyncFromEquipped": "Synchroniser avec ceux équipés",
     "TooManyRequested": "Vous avez {{total}} {{itemname}} mais votre équipement demande {{requested}}. Nous avons transféré tous ceux que vous possédiez.",
     "UnassignedModError": "Le mot n'a pas pu être équipé sur votre armure actuelle",
-    "UnassignedMods": "Mods non assignés",
     "Undo": "Annuler",
     "Unequipped": "Non équipé",
     "Update": "Enregistrer les modifications",
@@ -753,8 +808,8 @@
     "Daily": "Défi Journalier",
     "OneTime": "Défi Unique",
     "PinnacleCap": "Limite de prestige",
-    "PowerFloor": "Plancher de puissance",
-    "PowerfulCap": "Lmite puissante",
+    "PowerFloor": "Puissance minimum",
+    "PowerfulCap": "Limite puissante",
     "SeasonEnds": "La saison se termine dans ",
     "SeasonalRank": "Rang Saisonnier {{rank}}",
     "SoftCap": "Limite basse",
@@ -769,16 +824,18 @@
   "MovePopup": {
     "Acquired": "Cet élément est déverrouillé dans les collections.",
     "AcquiredMod": "Ce mod est débloqué dans les collections.",
-    "AddNote": "Ajouter une note",
+    "AddNote": "Ajouter des notes",
     "AddToLoadout": "Équipement",
+    "AddToLoadoutTitle": "Ajouter à cet équipement",
     "All": "Tous",
     "CannotCurrentlyRoll": "Cet attribut ne peut pas être obtenu sur la version actuelle de cet objet.",
-    "CantPullFromPostmaster": "Vous devez aller à la tour pour récupérer cet objet.",
+    "CantPullFromPostmaster": "Vous devez visiter le commis des postes en jeu pour récuperer cet objet.",
     "CatalystProgress": "Progression du catalyseur",
     "CommunityData": "Informations de la communauté",
     "Consolidate": "Réunir",
     "DistributeEvenly": "Distribuer équitablement",
-    "Equip": "Équiper",
+    "Equip": "Équiper sur :",
+    "EquipWithName": "Équiper sur {{character}}",
     "FavoriteUnFavorite": {
       "Favorite": "Mettre {{itemType}} en favoris",
       "Favorited": "Favoris",
@@ -786,6 +843,7 @@
       "Unfavorited": "Non favoris"
     },
     "Infuse": "Infuser",
+    "InfuseTitle": "Ouvrir l'outil d'infusion",
     "LockUnlock": {
       "AutoLock": "L'état du verrouillage est synchronisé avec les étiquettes de cet objet",
       "Lock": "Bloquer {{itemType}}",
@@ -804,8 +862,8 @@
     "ReadLoreLink": "Lire l'histoire",
     "Rewards": "Récompenses:",
     "SendToVault": "Envoyer au Coffre",
-    "Store": "Déposer",
-    "StoreWithName": "Déposer sur {{character}}",
+    "Store": "Récuperer sur :",
+    "StoreWithName": "Récuperer sur {{character}}",
     "Subtitle": {
       "QuestProgress": "Étape {{questStepNum}} sur {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
@@ -824,7 +882,7 @@
   },
   "Notes": {
     "Error": "Erreur! Max 120 caractères pour les notes.",
-    "Help": "Ajouter des notes à cet objet"
+    "Help": "Ajouter des notes, #hashtags, et :symbols:"
   },
   "Notification": {
     "Cancel": "Annuler",
@@ -880,8 +938,7 @@
     "Lock": "Vérouiller",
     "NoItems": "Aucun objet sélectionné",
     "NoMobile": "Tournez votre téléphone sur le côté pour utiliser l'Organisateur.",
-    "Note": "Définir la Note",
-    "NotePrompt": "Note:",
+    "Note": "Changer les notes",
     "OpenIn": "Afficher dans l'organisateur",
     "Organizer": "Organisateur",
     "SelectAll": "Tout sélectionner",
@@ -1077,7 +1134,7 @@
     "AutoBackup": "Nous avons sauvegardé vos données dans un fichier appelé dim-data.json dans votre dossier de téléchargements.",
     "BackUpFirst": "Vous DEVEZ d'abord sauvegarder vos données avant de les supprimer. Au cas où.",
     "BrowserMayClearData": "Votre navigateur peut supprimer cette information si vous n'avez plus d'espace ou si vous ne visitez pas DIM fréquemment.",
-    "DataIsLocal": "Les données des étiquettes et des notes sont uniquement locales",
+    "DataIsLocal": "Les données d'étiquette et de notes sont seulement locales",
     "DeleteAllData": "Supprimer TOUTES les données des serveurs de synchronisation DIM",
     "DeleteAllDataConfirm": "Êtes-vous sûr de vouloir supprimer TOUTES vos données, pour tous les comptes, de la synchronisation DIM ? Vous ne pouvez pas annuler cette opération.",
     "DeleteAllDataLabel": "Effacer les données de synchronisation DIM",
@@ -1234,10 +1291,8 @@
       "TranslationText": "Nous utilisons {{link}} pour faciliter la traduction. Si vous souhaitez améliorer l'une des traductions de DIM, rejoignez l'équipe.",
       "TwitterHelp": "Suivez-nous pour rester informé des mises à jour et des informations en temps réel sur le status de l'application.",
       "Version": "Version {{version}} ({{flavor}}), built on {{date}}",
-      "Wiki": "Wiki Mode d'Emploi DIM",
-      "WikiHelp": "Apprenez à utiliser DIM et contribuez à notre mode d'emploi communautaire.",
-      "YouTube": "YouTube",
-      "YouTubeHelp": "Découvrez comment utiliser DIM sur notre chaîne YouTube."
+      "Wiki": "Mode d'emploi DIM",
+      "WikiHelp": "Apprendre à utiliser les fonctionnalités de DIM."
     },
     "Login": {
       "Auth": "Autoriser avec Bungie.net",

@@ -5,12 +5,15 @@ import xpIcon from '../../images/xpIcon.svg';
 import styles from './ArtifactXP.m.scss';
 const formatter = new Intl.NumberFormat();
 
-export function ArtifactXP(
-  characterProgress: DestinyCharacterProgressionComponent | undefined,
-  bonusPowerProgressionHash: number | undefined
-) {
+export function ArtifactXP({
+  characterProgress,
+  bonusPowerProgressionHash,
+}: {
+  characterProgress: DestinyCharacterProgressionComponent | undefined;
+  bonusPowerProgressionHash: number | undefined;
+}) {
   if (!bonusPowerProgressionHash) {
-    return;
+    return null;
   }
   const artifactProgress =
     characterProgress?.progressions[bonusPowerProgressionHash] ??
@@ -18,7 +21,7 @@ export function ArtifactXP(
   const { progressToNextLevel, nextLevelAt, level } = artifactProgress;
 
   if (!progressToNextLevel || !nextLevelAt || level === undefined) {
-    return;
+    return null;
   }
   const progressBarStyle = {
     width: percent(progressToNextLevel / nextLevelAt),

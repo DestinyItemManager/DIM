@@ -14,7 +14,7 @@ interface StatNode<T> {
 /**
  * Result helper for distinguishing between different cases in the better stats helper
  */
-enum BetterStatsResult {
+const enum BetterStatsResult {
   // There exists a known set of stats with at least one higher stat than the input, and NO lower stats
   BETTER_STATS_EXIST = -1,
   // There exists a known set of stats with exactly the same stats as the input, but nothing better

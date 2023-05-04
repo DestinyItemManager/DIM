@@ -3,12 +3,10 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { getTagSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
-import { isPluggableItem } from 'app/inventory/store/sockets';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { chainComparator, compareBy } from 'app/utils/comparators';
-import { emptyArray } from 'app/utils/empty';
 import { getModTypeTagByPlugCategoryHash } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
 import { proxy, releaseProxy, wrap } from 'comlink';
@@ -23,12 +21,12 @@ import {
   ItemGroup,
   ItemsByBucket,
   LockableBucketHash,
+  ModStatChanges,
   StatFilters,
   StatRanges,
 } from '../types';
 import {
   getAutoMods,
-  getTotalModStatChanges,
   hydrateArmorSet,
   mapArmor2ModToProcessMod,
   mapAutoMods,
@@ -49,6 +47,7 @@ interface ProcessState {
      */
     mods: PluggableInventoryItemDefinition[];
     armorEnergyRules: ArmorEnergyRules;
+    modStatChanges: ModStatChanges;
     combos: number;
     processTime: number;
     statRangesFiltered?: StatRanges;
@@ -67,6 +66,7 @@ export function useProcess({
   filteredItems,
   lockedModMap,
   subclass,
+  modStatChanges,
   armorEnergyRules,
   statOrder,
   statFilters,
@@ -78,6 +78,7 @@ export function useProcess({
   filteredItems: ItemsByBucket;
   lockedModMap: ModMap;
   subclass: ResolvedLoadoutItem | undefined;
+  modStatChanges: ModStatChanges;
   armorEnergyRules: ArmorEnergyRules;
   statOrder: number[];
   statFilters: StatFilters;
@@ -163,18 +164,12 @@ export function useProcess({
       }
     }
 
-    const subclassPlugs = subclass?.loadoutItem.socketOverrides
-      ? Object.values(subclass.loadoutItem.socketOverrides)
-          .map((hash) => defs.InventoryItem.get(hash))
-          .filter(isPluggableItem)
-      : emptyArray<PluggableInventoryItemDefinition>();
-
     // TODO: could potentially partition the problem (split the largest item category maybe) to spread across more cores
     const workerStart = performance.now();
     worker
       .process(
         processItems,
-        getTotalModStatChanges(allMods, subclassPlugs, selectedStore.classType),
+        _.mapValues(modStatChanges, (stat) => stat.value),
         lockedProcessMods,
         statOrder,
         statFilters,
@@ -197,6 +192,7 @@ export function useProcess({
             sets: hydratedSets,
             mods: allMods,
             armorEnergyRules,
+            modStatChanges,
             combos,
             processTime: performance.now() - processStart,
             statRangesFiltered,
@@ -219,12 +215,13 @@ export function useProcess({
     statFilters,
     statOrder,
     anyExotic,
-    subclass?.loadoutItem.socketOverrides,
+    subclass,
     armorEnergyRules,
     autoStatMods,
     lockedModMap,
     autoModOptions,
     getUserItemTag,
+    modStatChanges,
   ]);
 
   return { result, processing, remainingTime };

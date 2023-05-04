@@ -1,7 +1,7 @@
 import Dropdown, { Option } from 'app/dim-ui/Dropdown';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
-import { AppIcon, clearIcon, downloadIcon, helpIcon } from 'app/shell/icons';
+import { AppIcon, clearIcon, disabledIcon, downloadIcon, helpIcon } from 'app/shell/icons';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
@@ -98,7 +98,17 @@ export default function LoadoutEditSection({
             </PressTip>
           )}
         </div>
-        <Dropdown kebab options={options} placement="bottom-end" />
+        {onClear && (
+          <button
+            type="button"
+            className={styles.clear}
+            onClick={onClear}
+            title={t('Loadouts.ClearSection')}
+          >
+            <AppIcon icon={disabledIcon} />
+          </button>
+        )}
+        <Dropdown kebab options={options} />
       </div>
       {children}
     </div>

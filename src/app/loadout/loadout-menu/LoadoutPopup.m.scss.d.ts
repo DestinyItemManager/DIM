@@ -5,10 +5,13 @@ interface CssExports {
   'content': string;
   'filterInput': string;
   'filterPills': string;
-  'inGameLoadoutIcon': string;
+  'hint': string;
+  'inGameLoadoutButton': string;
+  'inGameLoadouts': string;
   'list': string;
   'loadoutTypeIcon': string;
   'menuItem': string;
+  'moreLoadouts': string;
   'note': string;
   'warningIcon': string;
 }

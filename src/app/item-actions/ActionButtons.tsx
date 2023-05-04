@@ -2,18 +2,18 @@ import { addCompareItem } from 'app/compare/actions';
 import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { showInfuse } from 'app/infuse/infuse';
+import { canSyncLockState } from 'app/inventory/SyncTagLock';
 import { DimItem } from 'app/inventory/item-types';
 import { consolidate, distribute } from 'app/inventory/move-item';
 import { sortedStoresSelector, tagSelector } from 'app/inventory/selectors';
 import { getStore } from 'app/inventory/stores-helpers';
-import { canSyncLockState } from 'app/inventory/SyncTagLock';
 import ActionButton from 'app/item-actions/ActionButton';
 import LockButton from 'app/item-actions/LockButton';
+import ItemTagSelector from 'app/item-popup/ItemTagSelector';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ItemActionsModel } from 'app/item-popup/item-popup-actions';
-import ItemTagSelector from 'app/item-popup/ItemTagSelector';
 import { addItemToLoadout } from 'app/loadout-drawer/loadout-events';
-import { addIcon, AppIcon, compareIcon } from 'app/shell/icons';
+import { AppIcon, addIcon, compareIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -41,14 +41,18 @@ export function CompareActionButton({ item, label }: ActionButtonProps) {
   }
 
   return (
-    <ActionButton onClick={openCompare}>
+    <ActionButton onClick={openCompare} hotkey="c" hotkeyDescription={t('Compare.ButtonHelp')}>
       <AppIcon icon={compareIcon} />
       {label && <span className={styles.label}>{t('Compare.Button')}</span>}
     </ActionButton>
   );
 }
 
-export function LockActionButton({ item, label }: ActionButtonProps) {
+export function LockActionButton({
+  item,
+  label,
+  noHotkey,
+}: ActionButtonProps & { noHotkey?: boolean }) {
   const autoLockTagged = useSelector(settingSelector('autoLockTagged'));
   const tag = useSelector(tagSelector(item));
 
@@ -73,7 +77,7 @@ export function LockActionButton({ item, label }: ActionButtonProps) {
       : t('MovePopup.TrackUntrack.Untracked');
 
   return (
-    <LockButton item={item} type={type} disabled={disabled}>
+    <LockButton item={item} type={type} disabled={disabled} noHotkey={noHotkey}>
       {label && <span className={styles.label}>{title}</span>}
     </LockButton>
   );
@@ -167,7 +171,7 @@ export function InfuseActionButton({
   };
 
   return (
-    <ActionButton onClick={infuse}>
+    <ActionButton onClick={infuse} hotkey="i" hotkeyDescription={t('MovePopup.InfuseTitle')}>
       <img src={d2Infuse} />
       {label && <span className={styles.label}>{t('MovePopup.Infuse')}</span>}
     </ActionButton>
@@ -189,7 +193,7 @@ export function LoadoutActionButton({
   };
 
   return (
-    <ActionButton onClick={addToLoadout}>
+    <ActionButton onClick={addToLoadout} title={t('MovePopup.AddToLoadoutTitle')}>
       <AppIcon icon={addIcon} />
       {label && <span className={styles.label}>{t('MovePopup.AddToLoadout')}</span>}
     </ActionButton>

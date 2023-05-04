@@ -1,0 +1,60 @@
+@use '../../variables.scss' as *;
+
+.sheet {
+  width: fit-content;
+  margin: auto;
+}
+
+.controls {
+  margin: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.loadoutGrid {
+  --sub-item-size: calc(var(--item-size) * 0.5);
+  --item-icon-size: calc(var(--item-size) * 0.75);
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-columns: var(--item-icon-size) repeat(auto-fit, minmax(0, min-content));
+  gap: 4px;
+  align-items: center;
+  margin: 8px;
+  width: 100%;
+
+  :global(.item-socket) {
+    margin: 0;
+  }
+}
+
+.itemImage {
+  --item-size: var(--item-icon-size);
+  cursor: default;
+  pointer-events: auto;
+  grid-column: 1;
+}
+
+.smallSockets {
+  --item-size: var(--sub-item-size);
+  display: grid;
+  grid-template-rows: auto auto;
+  grid-auto-flow: column;
+  width: fit-content;
+  grid-column: span 5;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  h1 {
+    margin-bottom: 0 !important;
+  }
+}
+
+.itemGroups {
+  display: flex;
+  flex-flow: row wrap;
+  column-gap: 16px;
+}

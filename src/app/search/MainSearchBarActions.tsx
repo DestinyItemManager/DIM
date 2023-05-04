@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import { toggleSearchResults } from 'app/shell/actions';
 import { AppIcon, faList } from 'app/shell/icons';
-import { querySelector, searchResultsOpenSelector } from 'app/shell/selectors';
+import { querySelector, searchResultsOpenSelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyArray } from 'app/utils/empty';
 import { Portal } from 'app/utils/temp-container';
 import { motion } from 'framer-motion';
@@ -9,8 +9,8 @@ import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import styles from './MainSearchBarActions.m.scss';
-import { filteredItemsSelector, queryValidSelector } from './search-filter';
 import SearchResults from './SearchResults';
+import { filteredItemsSelector, queryValidSelector } from './search-filter';
 
 /**
  * The extra buttons that appear in the main search bar when there are matched items.
@@ -21,6 +21,7 @@ export default function MainSearchBarActions() {
   const filteredItems = useSelector(filteredItemsSelector);
   const searchResultsOpen = useSelector(searchResultsOpenSelector);
   const dispatch = useDispatch();
+  const isPhonePortrait = useIsPhonePortrait();
 
   const location = useLocation();
   const onInventory = location.pathname.endsWith('inventory');
@@ -30,7 +31,7 @@ export default function MainSearchBarActions() {
 
   // We don't have access to the selected store so we'd match multiple characters' worth.
   // Just suppress the count for now
-  const showSearchResults = onInventory;
+  const showSearchResults = onInventory && !isPhonePortrait;
   const showSearchCount = Boolean(
     queryValid && searchQuery && !onProgress && !onRecords && !onVendors
   );
@@ -69,7 +70,7 @@ export default function MainSearchBarActions() {
         </motion.div>
       )}
 
-      {showSearchResults && searchResultsOpen && (
+      {searchResultsOpen && (
         <Portal>
           <SearchResults
             items={queryValid ? filteredItems : emptyArray()}

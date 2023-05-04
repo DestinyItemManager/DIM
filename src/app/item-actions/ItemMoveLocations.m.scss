@@ -25,8 +25,8 @@
   }
 }
 
-.move,
-.equip {
+.move {
+  composes: resetButton from 'app/dim-ui/common.m.scss';
   cursor: pointer;
   position: relative;
   display: flex;
@@ -68,24 +68,22 @@
     }
   }
 
-  &:hover {
+  &:hover,
+  &:focus-visible {
+    outline: none;
     &::after {
       content: '';
       display: block;
       position: absolute;
-      top: -2px;
-      left: -2px;
-      right: -2px;
-      bottom: -2px;
+      inset: -2px -2px -2px -2px;
       border: 1px solid white;
     }
   }
-}
 
-.disabled {
-  filter: contrast(0.5) brightness(0.5);
-  cursor: default;
-  pointer-events: none;
+  &:disabled {
+    filter: contrast(0.5) brightness(0.5);
+    cursor: not-allowed;
+  }
 }
 
 .vaultLabel {

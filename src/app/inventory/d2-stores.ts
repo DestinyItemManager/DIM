@@ -6,36 +6,24 @@ import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { loadClarity } from 'app/clarity/descriptions/loadDescriptions';
 import { customStatsSelector } from 'app/dim-api/selectors';
-import { t } from 'app/i18next-t';
-import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
 import { processInGameLoadouts } from 'app/loadout-drawer/loadout-type-converters';
 import { inGameLoadoutLoaded } from 'app/loadout/ingame/actions';
 import { loadCoreSettings } from 'app/manifest/actions';
 import { d2ManifestSelector, manifestSelector } from 'app/manifest/selectors';
-import { getCharacterProgressions } from 'app/progress/selectors';
 import { get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
-import {
-  DestinyCharacterProgressionComponent,
-  DestinyItemComponent,
-  DestinyProfileResponse,
-} from 'bungie-api-ts/destiny2';
-import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
-import helmetIcon from '../../../destiny-icons/armor_types/helmet.svg';
-import xpIcon from '../../images/xpIcon.svg';
+import { DestinyItemComponent, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import { BucketHashes } from 'data/d2/generated-enums';
 import { getCharacters as d1GetCharacters } from '../bungie-api/destiny1-api';
 import { getCharacters, getStores } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions';
 import { bungieNetPath } from '../dim-ui/BungieImage';
-import { getLight } from '../loadout-drawer/loadout-utils';
 import { showNotification } from '../notifications/notifications';
 import { loadingTracker } from '../shell/loading-tracker';
 import { reportException } from '../utils/exceptions';
-import { ArtifactXP } from './ArtifactXP';
-import { ItemPowerSet } from './ItemPowerSet';
 import {
   CharacterInfo,
   charactersUpdated,
@@ -46,18 +34,12 @@ import {
   update,
 } from './actions';
 import { cleanInfos } from './dim-item-info';
-import { DimItem } from './item-types';
 import { d2BucketsSelector, storesLoadedSelector, storesSelector } from './selectors';
-import { DimCharacterStat, DimStore } from './store-types';
-import {
-  getBucketsWithClassifiedItems,
-  getCharacterStatsData as getD1CharacterStatsData,
-  hasAffectingClassified,
-} from './store/character-utils';
+import { DimStore } from './store-types';
+import { getCharacterStatsData as getD1CharacterStatsData } from './store/character-utils';
 import { ItemCreationContext, processItems } from './store/d2-item-factory';
 import { getCharacterStatsData, makeCharacter, makeVault } from './store/d2-store-factory';
 import { resetItemIndexGenerator } from './store/item-index';
-import { getArtifactBonus } from './stores-helpers';
 
 /**
  * Update the high level character information for all the stores
@@ -360,7 +342,7 @@ export function buildStores(
 ): DimStore[] {
   // TODO: components may be hidden (privacy)
 
-  const { defs, profileResponse } = itemCreationContext;
+  const { profileResponse } = itemCreationContext;
 
   if (
     !profileResponse.profileInventory.data ||
@@ -387,24 +369,6 @@ export function buildStores(
   processSpan?.finish();
 
   const stores = [...characters, vault];
-
-  const allItems = stores.flatMap((s) => s.items);
-  const bucketsWithClassifieds = getBucketsWithClassifiedItems(allItems);
-  const characterProgress = getCharacterProgressions(profileResponse);
-
-  for (const s of stores) {
-    updateBasePower(
-      allItems,
-      s,
-      defs,
-      characterProgress,
-      // optional chaining here accounts for an edge-case, possible, but type-unadvertised,
-      // missing artifact power bonus. please keep this here.
-      profileResponse.profileProgression?.data?.seasonalArtifact?.powerBonusProgression
-        ?.progressionHash,
-      bucketsWithClassifieds
-    );
-  }
 
   return stores;
 }
@@ -442,7 +406,7 @@ function processCharacter(
   const store = makeCharacter(defs, character, lastPlayedDate, profileRecords);
 
   // We work around the weird account-wide buckets by assigning them to the current character
-  const items = characterInventory.concat(characterEquipment.flat());
+  const items = characterInventory.concat(characterEquipment);
 
   if (store.current) {
     for (const i of profileInventory) {
@@ -488,74 +452,4 @@ function findLastPlayedDate(profileInfo: DestinyProfileResponse) {
     return new Date(dateLastPlayed);
   }
   return new Date(0);
-}
-
-export const fakeCharacterStatHashes = {
-  maxGearPower: -3,
-  powerBonus: -2,
-  maxTotalPower: -1,
-};
-
-// Add a fake stat for "max base power"
-function updateBasePower(
-  allItems: DimItem[],
-  store: DimStore,
-  defs: D2ManifestDefinitions,
-  characterProgress: DestinyCharacterProgressionComponent | undefined,
-  bonusPowerProgressionHash: number | undefined,
-  // calculate this once in the parent function then use it for each store this function assesses
-  bucketsWithClassifieds: Set<number>
-) {
-  if (!store.isVault) {
-    const def = defs.Stat.get(StatHashes.Power);
-    const { equippable, unrestricted } = maxLightItemSet(allItems, store);
-
-    // ALL WEAPONS count toward your drops. armor on another character doesn't count.
-    // (maybe just because it's on a different class? who knows. can't test.)
-    const dropPowerItemSet = maxLightItemSet(
-      allItems.filter((i) => i.bucket.inWeapons || i.owner === 'vault' || i.owner === store.id),
-      store
-    ).unrestricted;
-    const dropPowerLevel = getLight(store, dropPowerItemSet);
-
-    const unrestrictedMaxGearPower = getLight(store, unrestricted);
-    const unrestrictedPowerFloor = Math.floor(unrestrictedMaxGearPower);
-    const equippableMaxGearPower = getLight(store, equippable);
-
-    const statProblems: DimCharacterStat['statProblems'] = {};
-
-    statProblems.notEquippable = unrestrictedMaxGearPower !== equippableMaxGearPower;
-    statProblems.notOnStore = dropPowerLevel !== unrestrictedMaxGearPower;
-
-    statProblems.hasClassified = hasAffectingClassified(unrestricted, bucketsWithClassifieds);
-    store.stats.maxGearPower = {
-      hash: fakeCharacterStatHashes.maxGearPower,
-      name: t('Stats.MaxGearPowerAll'),
-      // used to be t('Stats.MaxGearPower'), a translation i don't want to lose yet
-      statProblems,
-      description: '',
-      richTooltip: ItemPowerSet(unrestricted, unrestrictedPowerFloor),
-      value: unrestrictedMaxGearPower,
-      icon: helmetIcon,
-    };
-
-    const artifactPower = getArtifactBonus(store);
-    store.stats.powerModifier = {
-      hash: fakeCharacterStatHashes.powerBonus,
-      name: t('Stats.PowerModifier'),
-      description: '',
-      richTooltip: ArtifactXP(characterProgress, bonusPowerProgressionHash),
-      value: artifactPower,
-      icon: xpIcon,
-    };
-
-    store.stats.maxTotalPower = {
-      hash: fakeCharacterStatHashes.maxTotalPower,
-      name: t('Stats.MaxTotalPower'),
-      statProblems,
-      description: '',
-      value: unrestrictedMaxGearPower + artifactPower,
-      icon: bungieNetPath(def.displayProperties.icon),
-    };
-  }
 }

@@ -1,18 +1,5 @@
 @import '../variables';
 
-.items {
-  flex: 1;
-  white-space: nowrap;
-  overflow-x: scroll;
-  overflow-y: hidden;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  -webkit-overflow-scrolling: touch;
-  contain: content;
-  touch-action: none;
-}
-
 .statLabel {
   position: relative;
   padding-right: 8px;

@@ -774,9 +774,9 @@ export const symbolData: {
     codepoint: 61198,
     glyph: '',
     source: {
-      tableName: 'InventoryItem',
-      hash: 2269884985,
-      fromRichText: false,
+      tableName: 'SandboxPerk',
+      hash: 501809574,
+      fromRichText: true,
     },
   },
   {
@@ -845,7 +845,6 @@ export type TranslateManually = typeof translateManually[number];
  * [Aim Down Sights]
  * [Alternate Weapon Action]
  * [Light Attack]
- * [Strand]
  * [Heavy Attack]
  * [Super]
  * [Sprint]

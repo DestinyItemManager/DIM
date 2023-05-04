@@ -9,7 +9,6 @@ import { AppIcon, helpIcon, mastodonIcon, refreshIcon, twitterIcon } from '../sh
 import styles from './ErrorPanel.m.scss';
 
 const bungieHelpLink = 'http://twitter.com/BungieHelp';
-const dimHelpLink = 'http://twitter.com/ThisIsDIM';
 const dimHelpMastodonLink = 'http://mstdn.games/@ThisIsDIM';
 const troubleshootingLink = 'https://github.com/DestinyItemManager/DIM/wiki/Troubleshooting';
 const Timeline = React.lazy(async () => {
@@ -27,7 +26,7 @@ function Twitters() {
   return (
     <div className={styles.twitters}>
       <React.Suspense fallback={null}>
-        {['BungieHelp', 'ThisIsDIM'].map((account) => (
+        {['BungieHelp'].map((account) => (
           <div key={account} className={styles.timeline}>
             <Timeline
               dataSource={{
@@ -46,6 +45,14 @@ function Twitters() {
             />
           </div>
         ))}
+
+        <div className={styles.timeline}>
+          <iframe
+            allowFullScreen
+            sandbox="allow-top-navigation allow-scripts allow-popups allow-popups-to-escape-sandbox"
+            src="https://www.mastofeed.com/apiv2/feed?userurl=https%3A%2F%2Fmstdn.games%2Fusers%2FThisIsDIM&theme=dark&size=100&header=false&replies=false&boosts=true"
+          />
+        </div>
       </React.Suspense>
     </div>
   );
@@ -124,9 +131,6 @@ export default function ErrorPanel({
             <AppIcon icon={twitterIcon} /> @BungieHelp
           </ExternalLink>
         )}
-        <ExternalLink href={dimHelpLink} className="dim-button">
-          <AppIcon icon={twitterIcon} /> @ThisIsDim
-        </ExternalLink>
         <ExternalLink href={dimHelpMastodonLink} className="dim-button">
           <AppIcon icon={mastodonIcon} /> @ThisIsDim@mstdn.games
         </ExternalLink>

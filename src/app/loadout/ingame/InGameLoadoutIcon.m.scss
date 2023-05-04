@@ -1,0 +1,20 @@
+.wrapper {
+  position: relative;
+  width: fit-content;
+  height: fit-content;
+  img {
+    display: block;
+  }
+}
+.index {
+  position: absolute;
+  bottom: -3%;
+  right: 3%;
+  font-weight: bold;
+  font-size: 30%;
+  text-shadow: 0 0 5px #000;
+}
+
+.iconImg {
+  background-size: contain;
+}

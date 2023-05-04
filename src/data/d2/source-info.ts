@@ -271,6 +271,7 @@ const D2Sources: {
       3226099405, // Source: Crucible Seasonal Ritual Rank Reward
       3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit playlists.
       3348906688, // Source: Earn ranks in Vanguard strikes, Crucible, or Gambit.
+      3466789677, // Source: Place Ascendant III Division or higher in ranked Crucible playlists.
       3656787928, // Source: Crucible Salvager's Salvo Armament
     ],
     searchString: [],
@@ -571,6 +572,7 @@ const D2Sources: {
       2011810450, // Source: Season 13 Guardian Games
       2187511136, // Source: Earned during the seasonal Revelry event.
       2364515524, // Source: Earned during the 2022 Dawning event
+      2473294025, // Source: Guardian Games 2023
       2502262376, // Source: Earned during the seasonal Crimson Days event.
       2797674516, // Source: Moments of Triumph 2021
       3092212681, // Source: Dawning 2019
@@ -1292,6 +1294,7 @@ const D2Sources: {
       3226099405, // Source: Crucible Seasonal Ritual Rank Reward
       3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit playlists.
       3348906688, // Source: Earn ranks in Vanguard strikes, Crucible, or Gambit.
+      3466789677, // Source: Place Ascendant III Division or higher in ranked Crucible playlists.
       3656787928, // Source: Crucible Salvager's Salvo Armament
     ],
     searchString: [],

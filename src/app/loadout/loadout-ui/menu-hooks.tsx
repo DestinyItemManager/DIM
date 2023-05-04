@@ -5,9 +5,9 @@ import FilterPills, { Option } from 'app/dim-ui/FilterPills';
 import { DimLanguage } from 'app/i18n';
 import { t } from 'app/i18next-t';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
-import { InGameLoadout, isInGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
+import { isInGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { isMissingItemsSelector } from 'app/loadout-drawer/loadout-utils';
-import { loadoutsSelector } from 'app/loadout-drawer/selectors';
+import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
 import { plainString } from 'app/search/search-filters/freeform';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import deprecatedMods from 'data/d2/deprecated-mods.json';
@@ -21,14 +21,17 @@ import { useSelector } from 'react-redux';
 export function useSavedLoadoutsForClassType(classType: DestinyClass) {
   const allSavedLoadouts = useSelector(loadoutsSelector);
   return useMemo(
-    () =>
-      allSavedLoadouts.filter(
-        (loadout) =>
-          classType === DestinyClass.Unknown ||
-          loadout.classType === DestinyClass.Unknown ||
-          loadout.classType === classType
-      ),
+    () => filterLoadoutsToClass(allSavedLoadouts, classType),
     [allSavedLoadouts, classType]
+  );
+}
+
+export function filterLoadoutsToClass(loadouts: Loadout[], classType: DestinyClass) {
+  return loadouts.filter(
+    (loadout) =>
+      classType === DestinyClass.Unknown ||
+      loadout.classType === DestinyClass.Unknown ||
+      loadout.classType === classType
   );
 }
 
@@ -38,23 +41,22 @@ export function useSavedLoadoutsForClassType(classType: DestinyClass) {
  */
 export function useLoadoutFilterPills(
   savedLoadouts: Loadout[],
-  inGameLoadouts: InGameLoadout[] | undefined,
   selectedStoreId: string,
-  includeWarningPills: boolean,
-  className?: string,
-  darkBackground?: boolean,
-  extra?: React.ReactNode
-): [
-  filteredLoadouts: (Loadout | InGameLoadout)[],
-  filterPillsElement: React.ReactNode,
-  hasSelectedFilters: boolean
-] {
+  {
+    includeWarningPills,
+    className,
+    darkBackground,
+    extra,
+  }: {
+    includeWarningPills?: boolean;
+    className?: string;
+    darkBackground?: boolean;
+    extra?: React.ReactNode;
+  } = {}
+): [filteredLoadouts: Loadout[], filterPillsElement: React.ReactNode, hasSelectedFilters: boolean] {
   if (!$featureFlags.loadoutFilterPills) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useMemo(
-      () => [[...(inGameLoadouts ?? []), ...savedLoadouts], null, false],
-      [inGameLoadouts, savedLoadouts]
-    );
+    return useMemo(() => [savedLoadouts, null, false], [savedLoadouts]);
   }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -64,14 +66,14 @@ export function useLoadoutFilterPills(
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const loadoutsByHashtag = useMemo(() => {
-    const loadoutsByHashtag: { [hashtag: string]: (Loadout | InGameLoadout)[] } = {};
+    const loadoutsByHashtag: { [hashtag: string]: Loadout[] } = {};
     for (const loadout of savedLoadouts) {
       const hashtags = [
         ...getHashtagsFromNote(loadout.name),
         ...getHashtagsFromNote(loadout.notes),
       ];
       for (const hashtag of hashtags) {
-        (loadoutsByHashtag[hashtag.replace('#', '')] ??= []).push(loadout);
+        (loadoutsByHashtag[hashtag.replace('#', '').replace(/_/g, ' ')] ??= []).push(loadout);
       }
     }
     return loadoutsByHashtag;
@@ -141,10 +143,9 @@ export function useLoadoutFilterPills(
               }
             })
           )
-        : [...(inGameLoadouts ?? []), ...savedLoadouts],
+        : savedLoadouts,
     [
       savedLoadouts,
-      inGameLoadouts,
       loadoutsByHashtag,
       loadoutsWithDeprecatedMods,
       loadoutsWithMissingItems,
@@ -172,7 +173,7 @@ export function useLoadoutFilterPills(
  * Apply the given query to loadouts, and sort them according to preference.
  */
 export function searchAndSortLoadoutsByQuery(
-  loadouts: (Loadout | InGameLoadout)[],
+  loadouts: Loadout[],
   query: string,
   language: DimLanguage,
   loadoutSort: LoadoutSort

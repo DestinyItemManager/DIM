@@ -4,6 +4,7 @@ import { customStatsSelector } from 'app/dim-api/selectors';
 import { TagValue } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { createSelector } from 'reselect';
 import {
@@ -12,7 +13,7 @@ import {
   getNotesSelector,
   getTagSelector,
 } from '../inventory/selectors';
-import { loadoutsSelector } from '../loadout-drawer/selectors';
+
 import { FilterDefinition, SuggestionsContext, canonicalFilterFormats } from './filter-types';
 
 //
@@ -66,10 +67,11 @@ const operators = ['<', '>', '<=', '>=']; // TODO: add "none"? remove >=, <=?
 export function generateSuggestionsForFilter(
   filterDefinition: Pick<
     FilterDefinition,
-    'keywords' | 'suggestions' | 'format' | 'overload' | 'deprecated'
-  >
+    'keywords' | 'suggestions' | 'format' | 'overload' | 'deprecated' | 'suggestionsGenerator'
+  >,
+  suggestionsContext: SuggestionsContext = {}
 ) {
-  return generateGroupedSuggestionsForFilter(filterDefinition, false).flatMap(
+  return generateGroupedSuggestionsForFilter(filterDefinition, false, suggestionsContext).flatMap(
     ({ keyword, ops }) => {
       if (ops) {
         return [keyword].concat(ops.map((op) => `${keyword}${op}`));
@@ -83,9 +85,10 @@ export function generateSuggestionsForFilter(
 export function generateGroupedSuggestionsForFilter(
   filterDefinition: Pick<
     FilterDefinition,
-    'keywords' | 'suggestions' | 'format' | 'overload' | 'deprecated'
+    'keywords' | 'suggestions' | 'format' | 'overload' | 'deprecated' | 'suggestionsGenerator'
   >,
-  forHelp?: boolean
+  forHelp?: boolean,
+  suggestionsContext: SuggestionsContext = {}
 ): { keyword: string; ops?: string[] }[] {
   if (filterDefinition.deprecated) {
     return [];
@@ -162,6 +165,14 @@ export function generateGroupedSuggestionsForFilter(
         break;
       case 'custom':
         break;
+    }
+  }
+
+  for (const suggestion of filterDefinition.suggestionsGenerator?.(suggestionsContext) ?? []) {
+    if (typeof suggestion === 'string') {
+      allSuggestions.push({ keyword: suggestion });
+    } else {
+      allSuggestions.push(suggestion);
     }
   }
 

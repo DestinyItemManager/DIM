@@ -1,3 +1,5 @@
+@import '../variables';
+
 .values {
   display: flex;
   justify-content: space-between;
@@ -5,4 +7,30 @@
 
 .label {
   margin-right: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.row {
+  display: contents;
+  &.boostedValue {
+    color: $blue;
+  }
+}
+
+.icon {
+  width: 14px;
+  height: 14px;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+.breakdown {
+  display: grid;
+  grid-template-columns: min-content min-content 1fr min-content;
+  grid-auto-rows: 1fr;
+}
+
+.breakdownValue {
+  justify-self: end;
 }

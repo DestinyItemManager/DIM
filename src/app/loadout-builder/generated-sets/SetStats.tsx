@@ -6,16 +6,18 @@ import { AppIcon, powerIndicatorIcon } from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { ArmorStatHashes, ArmorStats } from '../types';
+import { ArmorStatHashes, ArmorStats, ModStatChanges } from '../types';
 import { remEuclid, statTierWithHalf } from '../utils';
 import styles from './SetStats.m.scss';
 import { calculateTotalTier, sumEnabledStats } from './utils';
 
 interface Props {
   stats: ArmorStats;
+  getStatsBreakdown: () => ModStatChanges;
   maxPower: number;
   statOrder: ArmorStatHashes[];
   enabledStats: Set<ArmorStatHashes>;
+  boostedStats: Set<ArmorStatHashes>;
   className?: string;
   existingLoadoutName?: string;
 }
@@ -25,9 +27,11 @@ interface Props {
  */
 function SetStats({
   stats,
+  getStatsBreakdown,
   maxPower,
   statOrder,
   enabledStats,
+  boostedStats,
   className,
   existingLoadoutName,
 }: Props) {
@@ -75,12 +79,14 @@ function SetStats({
                   name: statDefs[statHash].displayProperties.name,
                   value: stats[statHash],
                   description: statDefs[statHash].displayProperties.description,
+                  breakdown: getStatsBreakdown()[statHash].breakdown,
                 }}
               />
             )}
           >
             <Stat
               isActive={enabledStats.has(statHash)}
+              isBoosted={boostedStats.has(statHash)}
               stat={statDefs[statHash]}
               value={stats[statHash]}
             />
@@ -94,12 +100,15 @@ function SetStats({
 function Stat({
   stat,
   isActive,
+  isBoosted,
   value,
 }: {
   stat: DestinyStatDefinition;
   isActive: boolean;
+  isBoosted: boolean;
   value: number;
 }) {
+  const isHalfTier = isActive && remEuclid(value, 10) >= 5;
   return (
     <span
       className={clsx(styles.statSegment, {
@@ -108,7 +117,8 @@ function Stat({
     >
       <span
         className={clsx(styles.tier, {
-          [styles.halfTierValue]: isActive && remEuclid(value, 10) >= 5,
+          [styles.halfTierValue]: isHalfTier,
+          [styles.boostedValue]: !isHalfTier && isBoosted,
         })}
       >
         {t('LoadoutBuilder.TierNumber', {

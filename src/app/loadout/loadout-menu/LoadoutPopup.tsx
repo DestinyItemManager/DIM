@@ -1,21 +1,22 @@
 import { languageSelector, settingSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClassIcon from 'app/dim-ui/ClassIcon';
+import HelpLink from 'app/dim-ui/HelpLink';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import useConfirm from 'app/dim-ui/useConfirm';
 import { startFarming } from 'app/farming/actions';
 import { t } from 'app/i18next-t';
 import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
+import { powerLevelSelector } from 'app/inventory/store/selectors';
 import {
-  gatherEngramsLoadout,
   itemLevelingLoadout,
   itemMoveLoadout,
   randomLoadout,
 } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { InGameLoadout, Loadout, isInGameLoadout } from 'app/loadout-drawer/loadout-types';
+import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { isMissingItems, newLoadout } from 'app/loadout-drawer/loadout-utils';
 import { makeRoomForPostmaster, totalPostmasterItems } from 'app/loadout-drawer/postmaster';
 import { previousLoadoutSelector } from 'app/loadout-drawer/selectors';
@@ -26,7 +27,6 @@ import { filteredItemsSelector, searchFilterSelector } from 'app/search/search-f
 import {
   AppIcon,
   addIcon,
-  banIcon,
   editIcon,
   engramIcon,
   faList,
@@ -49,7 +49,7 @@ import consumablesIcon from 'destiny-icons/general/consumables.svg';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import InGameLoadoutIcon from '../ingame/InGameLoadoutIcon';
+import { InGameLoadoutIconWithIndex } from '../ingame/InGameLoadoutIcon';
 import { applyInGameLoadout } from '../ingame/ingame-loadout-apply';
 import { inGameLoadoutsForCharacterSelector } from '../ingame/selectors';
 import {
@@ -80,6 +80,9 @@ export default function LoadoutPopup({
   const filteredItems = useSelector(filteredItemsSelector);
   const loadoutSort = useSelector(settingSelector('loadoutSort'));
   const dispatch = useThunkDispatch();
+  const hasClassifiedAffectingMaxPower = useSelector(
+    (state: RootState) => powerLevelSelector(state, dimStore.id)?.problems.hasClassified
+  );
 
   const loadouts = useSavedLoadoutsForClassType(dimStore.classType);
   const inGameLoadouts = useSelector((state: RootState) =>
@@ -110,28 +113,25 @@ export default function LoadoutPopup({
     dispatch(applyLoadout(dimStore, loadout, { allowUndo: true }));
   };
 
-  // A D1 dynamic loadout set up to grab engrams from inventory
-  const applyGatherEngramsLoadout = (options: { exotics: boolean } = { exotics: false }) => {
-    let loadout;
-    try {
-      loadout = gatherEngramsLoadout(allItems, options);
-    } catch (e) {
-      showNotification({ type: 'warning', title: t('Loadouts.GatherEngrams'), body: e.message });
-      return;
-    }
-    dispatch(applyLoadout(dimStore, loadout, { allowUndo: true }));
-  };
-
   const [confirmDialog, confirm] = useConfirm();
   const applyRandomLoadout = async (e: React.MouseEvent, weaponsOnly = false) => {
     e.stopPropagation();
     if (
       !(await confirm(
-        weaponsOnly
-          ? t('Loadouts.RandomizeWeapons')
-          : query.length > 0
-          ? t('Loadouts.RandomizeSearchPrompt', { query })
-          : t('Loadouts.RandomizePrompt')
+        weaponsOnly ? (
+          t('Loadouts.RandomizeWeapons')
+        ) : query.length > 0 ? (
+          t('Loadouts.RandomizeSearchPrompt', { query })
+        ) : (
+          <>
+            {t('Loadouts.RandomizePrompt')}
+            <p className={styles.hint}>
+              {t('Loadouts.RandomizeQueryHint')}{' '}
+              <HelpLink helpLink="https://github.com/DestinyItemManager/DIM/wiki/Randomize-Loadout" />
+            </p>
+          </>
+        ),
+        { okLabel: t('Loadouts.RandomizeButton') }
       ))
     ) {
       e.preventDefault();
@@ -168,11 +168,8 @@ export default function LoadoutPopup({
 
   const [pillFilteredLoadouts, filterPills, hasSelectedFilters] = useLoadoutFilterPills(
     loadouts,
-    inGameLoadouts,
     dimStore.id,
-    false,
-    styles.filterPills,
-    true
+    { className: styles.filterPills, darkBackground: true }
   );
   const filteredLoadouts = searchAndSortLoadoutsByQuery(
     pillFilteredLoadouts,
@@ -240,21 +237,6 @@ export default function LoadoutPopup({
           </li>
         )}
 
-        {!filteringLoadouts && dimStore.destinyVersion === 1 && (
-          <li className={styles.menuItem}>
-            <span onClick={() => applyGatherEngramsLoadout({ exotics: true })}>
-              <AppIcon icon={engramIcon} />
-              <span>{t('Loadouts.GatherEngrams')}</span>
-            </span>
-            <span
-              className={styles.altButton}
-              onClick={() => applyGatherEngramsLoadout({ exotics: false })}
-            >
-              <AppIcon icon={banIcon} /> <span>{t('Loadouts.GatherEngramsExceptExotics')}</span>
-            </span>
-          </li>
-        )}
-
         {!filteringLoadouts && dimStore.destinyVersion === 2 && (
           <li className={styles.menuItem}>
             <Link to="../loadouts" state={{ storeId: dimStore.id }}>
@@ -295,7 +277,7 @@ export default function LoadoutPopup({
               <MaxlightButton
                 allItems={allItems}
                 dimStore={dimStore}
-                hasClassified={Boolean(dimStore.stats.maxGearPower?.statProblems?.hasClassified)}
+                hasClassified={Boolean(hasClassifiedAffectingMaxPower)}
               />
             </li>
 
@@ -321,41 +303,55 @@ export default function LoadoutPopup({
           </>
         )}
 
-        {filteredLoadouts.map((loadout) =>
-          isInGameLoadout(loadout) ? (
-            <li key={loadout.id} className={styles.menuItem}>
-              <span title={loadout.name} onClick={() => handleApplyInGameLoadout(loadout)}>
-                <InGameLoadoutIcon className={styles.inGameLoadoutIcon} loadout={loadout} />
-                {loadout.name}
-              </span>
-            </li>
-          ) : (
-            <li key={loadout.id} className={styles.menuItem}>
-              <span
-                title={loadout.notes ? loadout.notes : loadout.name}
-                onClick={() => applySavedLoadout(loadout)}
-              >
-                {(dimStore.isVault || loadout.classType === DestinyClass.Unknown) && (
-                  <ClassIcon className={styles.loadoutTypeIcon} classType={loadout.classType} />
-                )}
-                {isMissingItems(defs, allItems, dimStore.id, loadout) && (
-                  <AlertIcon
-                    className={styles.warningIcon}
-                    title={t('Loadouts.MissingItemsWarning')}
-                  />
-                )}
-                <ColorDestinySymbols text={loadout.name} />
-              </span>
-              <span
-                className={styles.altButton}
-                title={t('Loadouts.Edit')}
-                onClick={() => editLoadout(loadout, dimStore.id, { isNew: false })}
-              >
-                <AppIcon icon={editIcon} />
-              </span>
-            </li>
-          )
+        {!filteringLoadouts && (
+          <li>
+            <ul
+              className={clsx(styles.inGameLoadouts, {
+                [styles.moreLoadouts]: inGameLoadouts.length > 6,
+              })}
+            >
+              {inGameLoadouts.map((loadout) => (
+                <li key={loadout.id}>
+                  <button
+                    type="button"
+                    className={styles.inGameLoadoutButton}
+                    title={loadout.name}
+                    onClick={() => handleApplyInGameLoadout(loadout)}
+                  >
+                    <InGameLoadoutIconWithIndex loadout={loadout} />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </li>
         )}
+
+        {filteredLoadouts.map((loadout) => (
+          <li key={loadout.id} className={styles.menuItem}>
+            <span
+              title={loadout.notes ? loadout.notes : loadout.name}
+              onClick={() => applySavedLoadout(loadout)}
+            >
+              {(dimStore.isVault || loadout.classType === DestinyClass.Unknown) && (
+                <ClassIcon className={styles.loadoutTypeIcon} classType={loadout.classType} />
+              )}
+              {isMissingItems(defs, allItems, dimStore.id, loadout) && (
+                <AlertIcon
+                  className={styles.warningIcon}
+                  title={t('Loadouts.MissingItemsWarning')}
+                />
+              )}
+              <ColorDestinySymbols text={loadout.name} />
+            </span>
+            <span
+              className={styles.altButton}
+              title={t('Loadouts.Edit')}
+              onClick={() => editLoadout(loadout, dimStore.id, { isNew: false })}
+            >
+              <AppIcon icon={editIcon} />
+            </span>
+          </li>
+        ))}
 
         {!dimStore.isVault && !loadoutQuery && (
           <li className={styles.menuItem}>

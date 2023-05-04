@@ -2,6 +2,7 @@ import ArmorySheet from 'app/armory/ArmorySheet';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
+import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import type { ItemTierName } from 'app/search/d2-known-values';
@@ -34,26 +35,31 @@ export default function ItemPopupHeader({
   noLink?: boolean;
 }) {
   const [showArmory, setShowArmory] = useState(false);
+  useHotkey('a', t('Hotkey.Armory'), () => setShowArmory(true));
 
   const showElementIcon = Boolean(item.element);
 
-  const linkToArmory = item.destinyVersion === 2;
+  const linkToArmory = !noLink && item.destinyVersion === 2;
 
   return (
-    <div
+    <button
+      type="button"
+      disabled={!linkToArmory}
       className={clsx(styles.header, tierClassName[item.tier], {
         [styles.masterwork]: item.masterwork,
         [styles.pursuit]: item.pursuit,
         [styles.armory]: linkToArmory,
       })}
-      onClick={linkToArmory ? () => setShowArmory(true) : undefined}
+      title={linkToArmory ? `${t('Hotkey.Armory')} [A]` : undefined}
+      aria-keyshortcuts={linkToArmory ? 'a' : undefined}
+      onClick={() => setShowArmory(true)}
     >
-      {noLink || item.destinyVersion === 1 ? (
+      {!linkToArmory ? (
         <span className={styles.title}>{item.name}</span>
       ) : (
-        <a className={styles.title}>
+        <h1 className={styles.title}>
           <RichDestinyText text={item.name} ownerId={item.owner} />
-        </a>
+        </h1>
       )}
 
       <div className={styles.subtitle}>
@@ -87,7 +93,7 @@ export default function ItemPopupHeader({
           <ArmorySheet onClose={() => setShowArmory(false)} item={item} />
         </Portal>
       )}
-    </div>
+    </button>
   );
 }
 
