@@ -239,18 +239,12 @@ export const subclassAbilitySocketCategoryHashes: SocketCategoryHashes[] = [
 export function isModCostVisible(
   plug: DestinyItemPlugDefinition
 ): plug is WithRequiredProperty<DestinyItemPlugDefinition, 'energyCost'> {
-  // hide cost if it's less than 1
-  if ((plug.energyCost?.energyCost ?? 0) < 1) {
-    return false;
-  }
-  if (
-    plug.plugCategoryIdentifier.endsWith('.fragments') ||
-    plug.plugCategoryIdentifier.endsWith('.trinkets')
-  ) {
-    return false;
-  }
-
-  return true;
+  return (
+    // hide cost if it's less than 1
+    !((plug.energyCost?.energyCost ?? 0) < 1) &&
+    !plug.plugCategoryIdentifier.endsWith('.fragments') &&
+    !plug.plugCategoryIdentifier.endsWith('.trinkets')
+  );
 }
 
 /**

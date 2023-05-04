@@ -207,10 +207,11 @@ function compareSelectedItems(state: CompareState, items: DimItem[]) {
   }
 
   const itemCategoryHashes = getItemCategoryHashesFromExampleItem(items[0]);
+  const itemIds = items.map((i) => `id:${i.id}`);
   return {
     ...state,
     session: {
-      query: `(${items.map((i) => `id:${i.id}`).join(' or ')})`,
+      query: `(${itemIds.join(' or ')})`,
       itemCategoryHashes,
     },
   };

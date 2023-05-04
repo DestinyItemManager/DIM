@@ -2,7 +2,7 @@
 
 import { DimItem } from 'app/inventory/item-types';
 import { Observable } from 'app/utils/observable';
-import produce from 'immer';
+import { produce } from 'immer';
 
 /**
  * What part of the loadout application process are we currently in?
@@ -216,8 +216,5 @@ export function anyActionFailed(state: LoadoutApplyState) {
   ) {
     return true;
   }
-  if (state.modStates.some((s) => s.state !== LoadoutModState.Applied)) {
-    return true;
-  }
-  return false;
+  return state.modStates.some((s) => s.state !== LoadoutModState.Applied);
 }

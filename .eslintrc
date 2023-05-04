@@ -12,7 +12,7 @@
     "prettier",
     "plugin:array-func/all",
     "plugin:css-modules/recommended",
-    "plugin:radar/recommended"
+    "plugin:sonarjs/recommended"
   ],
   "globals": {
     "Atomics": "readonly",
@@ -59,7 +59,7 @@
     "array-func",
     "react-redux",
     "css-modules",
-    "radar",
+    "sonarjs",
     "jsx-expressions",
     "github"
   ],
@@ -295,10 +295,12 @@
     "react-redux/no-unused-prop-types": "error",
     "react/no-unused-prop-types": "off",
     "css-modules/no-undef-class": "off",
-    "radar/cognitive-complexity": "off",
-    "radar/no-small-switch": "off",
-    "radar/no-duplicate-string": "off",
-    "radar/prefer-immediate-return": "off",
+    "sonarjs/cognitive-complexity": "off",
+    "sonarjs/no-small-switch": "off",
+    "sonarjs/no-duplicate-string": "off",
+    "sonarjs/prefer-immediate-return": "off",
+    "sonarjs/no-nested-switch": "off",
+    "sonarjs/no-nested-template-literals": "off",
     "jsx-expressions/strict-logical-expressions": ["error", { "allowString": true }],
     "github/array-foreach": "error",
     "github/async-currenttarget": "error",
