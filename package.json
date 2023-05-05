@@ -29,7 +29,7 @@
     "i18n": "i18next-scanner",
     "watch": "yarn -s build:dev --watch",
     "start": "run-p watch:i18n devserver",
-    "devserver": "nodemon --watch config/webpack.ts --watch 'src/locale/*.json' --watch 'yarn.lock' --exec 'webpack serve --config ./config/webpack.ts --env=dev'",
+    "devserver": "nodemon --watch config/webpack.ts --watch \"src/locale/*.json\" --watch yarn.lock --exec \"webpack serve --config ./config/webpack.ts --env=dev\"",
     "watch:i18n": "nodemon --watch config/i18n.json --exec \"yarn i18n\"",
     "syntax": "find dist -name \"*.js\" | xargs -n 1 node --check",
     "install": "git submodule update --init --recursive",
