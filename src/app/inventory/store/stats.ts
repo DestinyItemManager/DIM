@@ -538,7 +538,7 @@ function attachPlugStats(
         // User our calculated baseItemInvestment stat, which is the items investment stat value minus
         // the active plugs investment stat value
         const baseInvestmentStat =
-          baseItemInvestmentStats[plugInvestmentStat.statTypeHash] ?? itemStat.value;
+          baseItemInvestmentStats[plugInvestmentStat.statTypeHash] ?? itemStat.investmentValue;
 
         // This time we use the baseItemInvestment value we computed earlier to calculate the interpolated stat value with
         // and without the perk's value, using the difference to get its individual contribution to the stat.
