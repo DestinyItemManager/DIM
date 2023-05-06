@@ -129,6 +129,7 @@ export function ArmorExtras({
           <LoadoutStats
             showTier
             stats={getLoadoutStats(defs, loadout.classType, subclass, equippedItems, allMods)}
+            classType={loadout.classType}
           />
         </div>
       )}

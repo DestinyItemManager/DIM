@@ -4,23 +4,12 @@ import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, powerIndicatorIcon } from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
-import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
+import { DestinyClass, DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ArmorStatHashes, ArmorStats, ModStatChanges } from '../types';
 import { remEuclid, statTierWithHalf } from '../utils';
 import styles from './SetStats.m.scss';
 import { calculateTotalTier, sumEnabledStats } from './utils';
-
-interface Props {
-  stats: ArmorStats;
-  getStatsBreakdown: () => ModStatChanges;
-  maxPower: number;
-  statOrder: ArmorStatHashes[];
-  enabledStats: Set<ArmorStatHashes>;
-  boostedStats: Set<ArmorStatHashes>;
-  className?: string;
-  existingLoadoutName?: string;
-}
 
 /**
  * Displays the overall tier and per-stat tier of a set.
@@ -34,7 +23,18 @@ function SetStats({
   boostedStats,
   className,
   existingLoadoutName,
-}: Props) {
+  classType,
+}: {
+  stats: ArmorStats;
+  getStatsBreakdown: () => ModStatChanges;
+  maxPower: number;
+  statOrder: ArmorStatHashes[];
+  enabledStats: Set<ArmorStatHashes>;
+  boostedStats: Set<ArmorStatHashes>;
+  className?: string;
+  existingLoadoutName?: string;
+  classType: DestinyClass;
+}) {
   const defs = useD2Definitions()!;
   const statDefs: { [statHash: number]: DestinyStatDefinition } = {};
   for (const statHash of statOrder) {
@@ -81,6 +81,7 @@ function SetStats({
                   description: statDefs[statHash].displayProperties.description,
                   breakdown: getStatsBreakdown()[statHash].breakdown,
                 }}
+                classType={classType}
               />
             )}
           >

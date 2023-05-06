@@ -98,6 +98,7 @@ export default function LoadoutItemCategorySection({
               <LoadoutStats
                 showTier
                 stats={getLoadoutStats(defs, loadout.classType, subclass, equippedItems, allMods)}
+                classType={loadout.classType}
               />
             </div>
           )}
