@@ -139,6 +139,28 @@ function StatTooltip({ stat, classType }: { stat: Stat; classType: DestinyClass 
           </table>
         </>
       )}
+      {clarityStatData && (
+        <>
+          <hr />
+          {'TimeTgoFullHP' in clarityStatData && (
+            <div>Time to Full HP: {clarityStatData.TimeToFullHP[tier]}s</div>
+          )}
+          {'WalkingSpeed' in clarityStatData && (
+            <>
+              <div>Walking Speed: {clarityStatData.WalkingSpeed[tier]} m/s</div>
+              <div>Strafing Speed: {clarityStatData.StrafeSpeed[tier]} m/s</div>
+              <div>Crouching Speed: {clarityStatData.CrouchSpeed[tier]} m/s</div>
+            </>
+          )}
+          {'TotalHP' in clarityStatData && (
+            <>
+              <div>Total HP: {clarityStatData.TotalHP[tier]} HP</div>
+              <div>DamageResistance: {clarityStatData.DamageResistance[tier]}%</div>
+              <div>FlinchResistance: {clarityStatData.FlinchResistance[tier]}%</div>
+            </>
+          )}
+        </>
+      )}
     </div>
   );
 }
