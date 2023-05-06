@@ -9,6 +9,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { StatHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import styles from './StatTooltip.m.scss';
 
@@ -29,6 +30,21 @@ const statHashToClarityName: { [key: number]: keyof ClarityCharacterStats } = {
   [StatHashes.Strength]: 'Strength',
 };
 
+function getClass(type: DestinyClass) {
+  switch (type) {
+    case DestinyClass.Titan:
+      return 'titan';
+    case DestinyClass.Hunter:
+      return 'hunter';
+    case DestinyClass.Warlock:
+      return 'warlock';
+    case DestinyClass.Unknown:
+      return 'unknown';
+    case DestinyClass.Classified:
+      return 'classified';
+  }
+}
+
 /**
  * A rich tooltip for character-level stats like Mobility, Intellect, etc.
  */
@@ -41,11 +57,32 @@ function StatTooltip({ stat, classType }: { stat: Stat; classType: DestinyClass 
 
   const clarityStatData = clarityCharacterStats?.[statHashToClarityName[stat.hash]];
 
-  console.log({ useClarityInfo, clarityCharacterStats, clarityStatData });
+  const consolidated: { [cooldown: number]: Set<string> } = {};
+  if (clarityStatData) {
+    for (const a of clarityStatData.Abilities) {
+      const abilityDef = defs.InventoryItem.get(a.Hash);
+
+      if (
+        [getClass(classType), 'shared'].some((prefix) =>
+          abilityDef.plug?.plugCategoryIdentifier.startsWith(prefix + '.')
+        )
+      ) {
+        const cooldown = a.Cooldowns[tier];
+        const name = defs.InventoryItem.get(a.Hash)?.displayProperties.name;
+        (consolidated[cooldown] ??= new Set()).add(name);
+      }
+    }
+  }
+
+  console.log({ useClarityInfo, clarityCharacterStats, clarityStatData, consolidated });
 
   // TODO: group effects by time?
   // TODO: filter by class type
   // TODO: graph?
+
+  // TODO: include icons?
+  // TODO: remove common words?
+  // TODO: styling
 
   return (
     <div>
@@ -85,19 +122,21 @@ function StatTooltip({ stat, classType }: { stat: Stat; classType: DestinyClass 
           </div>
         </>
       )}
-      {clarityStatData && (
+      {!_.isEmpty(consolidated) && (
         <>
           <hr />
-          {clarityStatData.Abilities.map(
-            (a) =>
-              [classType, DestinyClass.Unknown].includes(
-                defs.InventoryItem.get(a.Hash).classType
-              ) && (
-                <div key={a.Hash}>
-                  {defs.InventoryItem.get(a.Hash)?.displayProperties.name}: {a.Cooldowns[tier]}s
-                </div>
-              )
-          )}
+          <table>
+            <tbody>
+              {Object.keys(consolidated)
+                .sort((a, b) => Number(a) - Number(b))
+                .map((cooldown) => (
+                  <tr key={cooldown}>
+                    <td>{cooldown}s:</td>
+                    <td>{[...consolidated[Number(cooldown)]].sort().join(', ')}</td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
         </>
       )}
     </div>
