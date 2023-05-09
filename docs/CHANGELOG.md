@@ -1,5 +1,5 @@
 ## Next
-* Added several weapons missing weapons to source:ritual-weapon search filter
+* Added several missing weapons to source:ritual-weapon search filter.
 
 ## 7.67.0 <span class="changelog-date">(2023-05-07)</span>
 
