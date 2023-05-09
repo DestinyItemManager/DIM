@@ -1148,6 +1148,19 @@ const D2Sources: {
       3535742959, // Randy's Throwing Knife
       4184808992, // Adored
       4227181568, // Exit Strategy
+      3001205424, // Ecliptic Distaff
+      2060863616, // Salvagers Salvo
+      616582330, // Cry Mutiny
+      3105930175, // Chain of Command
+      153979396, // Luna's Howl
+      153979399, // Not Forgotten
+      1161276682, // Redrix's Broadsword
+      3993415705, // The mountaintop
+      3354242550, // The Recluse
+      654608616, // Revoker
+      324382200, // Breakneck
+      1600633250, // 21% Delirium
+      1584643826, // Hush
     ],
     sourceHashes: [
       3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit playlists.
