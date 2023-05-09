@@ -1161,6 +1161,10 @@ const D2Sources: {
       324382200, // Breakneck
       1600633250, // 21% Delirium
       1584643826, // Hush
+      580961571, // Loaded Question
+      792755504, // Nightshade
+      3907337522, // Oxygen SR3
+      578459533, // Wendigo GL3
     ],
     sourceHashes: [
       3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit playlists.
