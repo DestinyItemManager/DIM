@@ -1152,6 +1152,7 @@ const D2Sources: {
       2060863616, // Salvagers Salvo
       616582329, // Cry Mutiny
       3105930174, // Chain of Command
+      3216652511, // Reckless Endangerment
     ],
     sourceHashes: [
       3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit playlists.
