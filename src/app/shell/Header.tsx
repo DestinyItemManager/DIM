@@ -1,5 +1,7 @@
 import MenuAccounts from 'app/accounts/MenuAccounts';
 import { currentAccountSelector } from 'app/accounts/selectors';
+import { clarityAttribute } from 'app/clarity/integration/attributes';
+import { clarityActive } from 'app/clarity/selectors';
 import Sheet from 'app/dim-ui/Sheet';
 import { showCheatSheet$ } from 'app/hotkeys/HotkeysCheatSheet';
 import { Hotkey } from 'app/hotkeys/hotkeys';
@@ -22,6 +24,7 @@ import { useLocation } from 'react-router';
 import { Link, NavLink } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useSubscription } from 'use-subscription';
+
 import ClickOutside from '../dim-ui/ClickOutside';
 import ExternalLink from '../dim-ui/ExternalLink';
 import SearchFilter from '../search/SearchFilter';
@@ -70,6 +73,9 @@ export default function Header() {
   const hideDropdown = useCallback(() => {
     setDropdownOpen(false);
   }, []);
+
+  // is clarity DIM extension installed and enebaled
+  const clarityEnabled = useSelector(clarityActive);
 
   // Mobile search bar
   const [showSearch, setShowSearch] = useState(false);
@@ -212,6 +218,11 @@ export default function Header() {
         to: `${path}/activities`,
         text: t('Activities.Activities'),
       },
+      account.destinyVersion === 2 &&
+        clarityEnabled && {
+          to: `${path}/clarity`,
+          text: 'Clarity menu',
+        },
     ]);
   }
 
@@ -279,7 +290,7 @@ export default function Header() {
 
   return (
     <header className={styles.container} ref={headerRef}>
-      <div className={styles.header}>
+      <div className={styles.header} {...clarityAttribute('background')}>
         <button
           type="button"
           className={clsx(styles.menuItem, styles.menu)}

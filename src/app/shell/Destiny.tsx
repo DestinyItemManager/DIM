@@ -6,6 +6,8 @@ import {
   currentAccountSelector,
 } from 'app/accounts/selectors';
 import ArmoryPage from 'app/armory/ArmoryPage';
+import ClarityPage from 'app/clarity/integration/ClarityPage';
+import { clarityActive } from 'app/clarity/selectors';
 import CompareContainer from 'app/compare/CompareContainer';
 import { settingSelector } from 'app/dim-api/selectors';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
@@ -28,6 +30,7 @@ import _ from 'lodash';
 import React, { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes, useLocation, useParams } from 'react-router';
+
 import { Hotkey } from '../hotkeys/hotkeys';
 import { itemTagList } from '../inventory/dim-item-info';
 import ItemPickerContainer from '../item-picker/ItemPickerContainer';
@@ -114,6 +117,9 @@ export default function Destiny() {
       dispatch(fetchWishList());
     }
   }, [dispatch, isD2]);
+
+  // is clarity DIM extension installed and enebaled
+  const clarityEnabled = useSelector(clarityActive);
 
   const { pathname, search } = useLocation();
 
@@ -236,6 +242,9 @@ export default function Destiny() {
           )}
           {account.destinyVersion === 1 && (
             <Route path="activities" element={<Activities account={account} />} />
+          )}
+          {account.destinyVersion === 2 && clarityEnabled && (
+            <Route path="clarity" element={<ClarityPage />} />
           )}
           <Route path="*" element={<Navigate to="inventory" />} />
         </Routes>
