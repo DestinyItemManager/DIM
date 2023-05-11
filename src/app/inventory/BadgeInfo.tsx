@@ -1,3 +1,4 @@
+import { TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { getColor } from 'app/shell/formatters';
 import { isD1Item } from 'app/utils/item-utils';
 import { InventoryWishListRoll, toUiWishListRoll } from 'app/wishlists/wishlists';
@@ -38,6 +39,12 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
   const isBounty = Boolean(!item.primaryStat && item.objectives);
   const isStackable = Boolean(item.maxStackSize > 1);
   const isGeneric = !isBounty && !isStackable;
+  // For vendor armor that reports stats (thus often randomized),
+  // show the total points as a means to indicate whether it's worth picking up
+  const totalArmorStat =
+    item.bucket?.inArmor &&
+    item.vendor &&
+    item.stats?.find((stat) => stat.statHash === TOTAL_STAT_HASH);
 
   const hideBadge = Boolean(
     item.location.hash === BucketHashes.Subclass ||
@@ -54,6 +61,9 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
   const badgeContent =
     (isBounty && `${Math.floor(100 * item.percentComplete)}%`) ||
     (isStackable && item.amount.toString()) ||
+    // totalArmorStat can be false, so optional chain is wrong here
+    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
+    (totalArmorStat && totalArmorStat.value.toString()) ||
     (isGeneric && item.primaryStat?.value.toString()) ||
     (item.classified && <ClassifiedNotes item={item} />);
 
