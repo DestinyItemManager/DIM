@@ -223,7 +223,7 @@ export function optimizeSingleStat(
   items: ProcessItem[],
   setStats: number[],
   statFiltersInStatOrder: MinMaxIgnored[],
-  statIndex: number
+  optimizeStatIndex: number
 ): number {
   const { remainingEnergiesPerAssignment, setEnergy } = getRemainingEnergiesPerAssignment(
     info,
@@ -248,7 +248,7 @@ export function optimizeSingleStat(
 
   // eslint-disable-next-line no-constant-condition
   while (true) {
-    explorationStats[statIndex] += 5;
+    explorationStats[optimizeStatIndex] += 5;
     const picks = chooseAutoMods(
       info,
       explorationStats,
@@ -257,7 +257,7 @@ export function optimizeSingleStat(
       setEnergy
     );
     if (!picks) {
-      return explorationStats[statIndex] - 5 + setStats[statIndex];
+      return explorationStats[optimizeStatIndex] - 5 + setStats[optimizeStatIndex];
     }
   }
 }

@@ -11,6 +11,7 @@ import {
   StatRanges,
 } from '../types';
 import {
+  optimizeSingleStat,
   pickAndAssignSlotIndependentMods,
   pickOptimalStatMods,
   precalculateStructures,
@@ -437,7 +438,6 @@ export function process(
 
       armorOnlyStats[statHash] = stats[statIndex] - modStatsInStatOrder[statIndex];
 
-      /*
       // Track the stat ranges after our auto mods picks
       const range = statRangesFilteredInStatOrder[statIndex];
       const finalValue = optimizeSingleStat(
@@ -450,7 +450,6 @@ export function process(
       if (finalValue > range.max) {
         range.max = finalValue;
       }
-      */
     }
 
     return {
@@ -461,7 +460,6 @@ export function process(
     };
   });
 
-  /*
   for (let statIndex = 0; statIndex < statOrder.length; statIndex++) {
     // Track the stat ranges after our auto mods picks
     const range = statRangesFilteredInStatOrder[statIndex];
@@ -478,7 +476,6 @@ export function process(
       }
     }
   }
-  */
 
   const totalTime = performance.now() - pstart;
 
