@@ -4,7 +4,7 @@ import { buildDefinedPlug } from 'app/inventory/store/sockets';
 import { Assignment, PluggingAction } from 'app/loadout-drawer/loadout-types';
 import { getInterestingSocketMetadatas } from 'app/utils/item-utils';
 import { plugFitsIntoSocket } from 'app/utils/socket-utils';
-import produce from 'immer';
+import { produce } from 'immer';
 import {
   bulwarkFinishModHash,
   distributionModHash,
