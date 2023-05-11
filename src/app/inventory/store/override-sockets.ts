@@ -1,7 +1,7 @@
 import { UNSET_PLUG_HASH } from 'app/loadout/known-values';
 import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { errorLog } from 'app/utils/log';
-import produce from 'immer';
+import { produce } from 'immer';
 import _ from 'lodash';
 import { useCallback, useState } from 'react';
 import { DimItem, DimPlug, DimSocket } from '../item-types';

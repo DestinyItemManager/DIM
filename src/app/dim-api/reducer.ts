@@ -24,7 +24,7 @@ import { count, uniqBy } from 'app/utils/util';
 import { clearWishLists } from 'app/wishlists/actions';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { deepEqual } from 'fast-equals';
-import produce, { Draft } from 'immer';
+import { Draft, produce } from 'immer';
 import _ from 'lodash';
 import { ActionType, getType } from 'typesafe-actions';
 import * as inventoryActions from '../inventory/actions';

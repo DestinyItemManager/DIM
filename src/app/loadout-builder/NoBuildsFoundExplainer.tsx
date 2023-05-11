@@ -224,8 +224,8 @@ export default function NoBuildsFoundExplainer({
     problems.push({
       id: 'armorEnergyRestrictions',
       description: t('LoadoutBuilder.NoBuildsFoundExplainer.AssumptionsRestricted'),
-      suggestions: _.compact([
-        capacityMayCauseProblems && {
+      suggestions: [
+        {
           id: 'assumeMasterworked',
           contents: (
             <button
@@ -243,7 +243,7 @@ export default function NoBuildsFoundExplainer({
             </button>
           ),
         },
-      ]),
+      ],
     });
   }
 

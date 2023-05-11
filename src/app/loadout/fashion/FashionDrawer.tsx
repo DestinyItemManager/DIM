@@ -24,7 +24,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes, PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
-import produce from 'immer';
+import { produce } from 'immer';
 import _ from 'lodash';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';

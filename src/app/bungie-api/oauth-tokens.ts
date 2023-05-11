@@ -62,10 +62,7 @@ export function hasValidAuthTokens() {
 
   // Get a new token from refresh token
   const refreshTokenIsValid = token && !hasTokenExpired(token.refreshToken);
-  if (!refreshTokenIsValid) {
-    return false;
-  }
-  return true;
+  return refreshTokenIsValid;
 }
 
 /**
