@@ -7,13 +7,12 @@
 @use '../variables.scss' as *;
 
 .arrow {
-  width: var(--theme-tooltip-arrow-size);
-  height: var(--theme-tooltip-arrow-size);
+  width: $theme-tooltip-arrow-size;
+  height: $theme-tooltip-arrow-size;
   border-style: solid;
   position: absolute;
-  border-width: var(--theme-tooltip-arrow-size);
+  border-width: $theme-tooltip-arrow-size;
   border-color: transparent;
-  filter: drop-shadow(0 0 3px #000);
 }
 
 .desktopPopupRoot {
@@ -47,7 +46,7 @@
     height: 0;
     border-bottom-width: 0;
     border-top-color: var(--theme-tooltip-background-color);
-    bottom: calc(-1 * var(--theme-tooltip-arrow-size));
+    bottom: calc(-1 * $theme-tooltip-arrow-size);
   }
 
   &[data-popper-placement^='bottom'] .arrow {
@@ -55,7 +54,7 @@
     height: 0;
     border-top-width: 0;
     border-bottom-color: var(--theme-tooltip-background-color);
-    top: calc(-1 * var(--theme-tooltip-arrow-size));
+    top: calc(-1 * $theme-tooltip-arrow-size);
 
     &.exotic {
       border-bottom-color: $exotic;
@@ -78,14 +77,14 @@
     height: 0;
     border-left-width: 0;
     border-right-color: var(--theme-tooltip-background-color);
-    left: calc(-1 * var(--theme-tooltip-arrow-size));
+    left: calc(-1 * $theme-tooltip-arrow-size);
   }
   &[data-popper-placement^='left'] .arrow {
     width: 0;
     height: 0;
     border-right-width: 0;
     border-left-color: var(--theme-tooltip-background-color);
-    right: calc(-1 * var(--theme-tooltip-arrow-size));
+    right: calc(-1 * $theme-tooltip-arrow-size);
   }
   textarea {
     resize: vertical;

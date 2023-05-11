@@ -1,0 +1,56 @@
+// Theme variables
+:root {
+  // Base colours
+  --theme-accent-primary: var(--dim-brand); // Interaction styles (hover, active, focus)
+  --theme-accent-secondary: #68a0b7; // Nested interaction (character menu), armor/weapon stat deltas
+
+  // Generic fills for modal backgrounds (see below)
+  --theme-fill-modal: #000; // Base fill for popups, drawers, dropdowns etc
+  --theme-fill-modal-actions: #161616; // Layered/contextual modals (search, item actions)
+
+  // Buttons
+  --theme-button: rgba(255, 255, 255, 0.2);
+
+  // Input field (text boxes and text areas)
+  --theme-input: #333;
+
+  // Shadows
+  --theme-drop-shadow: 0 0 18px 0 #000;
+
+  // Tooltips
+  --theme-tooltip-background-color: #151523;
+  --theme-tooltip-border-color: #8e8e9e;
+  --theme-tooltip-minimal-color: #5d5970;
+
+  // Background gradient colours
+  --theme-background-app-gradient-start: hsl(240, 20%, 28%);
+  --theme-background-app-gradient-end: hsl(240, 27%, 12%);
+
+  // Background gradient pattern
+  --theme-background-app-gradient: radial-gradient(
+    circle at 50% 70px,
+    var(--theme-background-app-gradient-start) 0%,
+    var(--theme-background-app-gradient-end) 100%
+  );
+
+  // Backgrounds
+  // App, headers, and navigation
+  --theme-background-app-header-nav: var(--theme-background-app-gradient);
+  --theme-background-app-header-characters: var(--theme-background-app-gradient);
+  --theme-background-app-body: var(--theme-background-app-gradient);
+  --theme-background-app-header-nav-slideout-menu: var(--theme-fill-modal);
+
+  // Dropdowns
+  --theme-background-dropdown-menu: var(--theme-fill-modal);
+  --theme-background-search-dropdown: var(--theme-fill-modal-actions);
+
+  // Item modals
+  --theme-background-item-popup: var(--theme-fill-modal);
+  --theme-background-item-actions: var(--theme-fill-modal-actions);
+  --theme-background-item-feed: var(--theme-fill-modal);
+  --theme-background-item-compare: var(--theme-fill-modal);
+
+  // Item progression (masterwork, crafted, catalyst)
+  --theme-background-item-progress-panel: #333;
+  --theme-background-item-progress-bar: #222;
+}

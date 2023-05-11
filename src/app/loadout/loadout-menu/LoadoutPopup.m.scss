@@ -10,7 +10,7 @@
   z-index: 2;
   color: rgba(245, 245, 245, 0.6);
   overscroll-behavior: contain;
-  background-color: var(--theme-fill-primary);
+  background-color: var(--theme-background-dropdown-menu);
 
   @include visible-scrollbars;
 

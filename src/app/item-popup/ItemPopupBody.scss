@@ -72,7 +72,7 @@
 .masterwork-progress {
   margin: 4px 0;
   padding: 4px 10px 4px;
-  background: var(--theme-fill-lighten);
+  background: var(--theme-background-item-progress-panel);
 
   span {
     color: var(--theme-accent-primary);
@@ -88,14 +88,14 @@
 
 .crafted-progress {
   padding: 4px 10px 4px;
-  background: var(--theme-fill-lighten);
+  background: var(--theme-background-item-progress-panel);
   gap: 4px;
 
   display: flex;
   align-items: center;
 
   .objective-progress {
-    background: var(--theme-fill-darken);
+    background: var(--theme-background-item-progress-bar);
   }
 
   .objective-progress-bar {

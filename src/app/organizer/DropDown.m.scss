@@ -30,7 +30,7 @@ $dropdown-menu: 10;
     right: 0;
   }
 
-  background: var(--theme-fill-primary);
+  background: var(--theme-background-dropdown-menu);
 
   @include visible-scrollbars;
 }

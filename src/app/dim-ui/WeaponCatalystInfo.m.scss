@@ -12,11 +12,16 @@
 .catalystProgress {
   display: flex;
   flex-direction: column;
-  background: var(--theme-fill-lighten);
+  background: var(--theme-background-item-progress-panel);
   gap: 4px;
 
+  // Add spacer when adjacent to crafted weapon progress
+  :global(.crafted-progress) + & {
+    margin-top: 4px;
+  }
+
   :global(.objective-progress) {
-    background: var(--theme-fill-darken);
+    background: var(--theme-background-item-progress-bar);
   }
 }
 

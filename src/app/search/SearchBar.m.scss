@@ -20,7 +20,7 @@
   overflow: hidden;
   margin: 0;
   border-top: 0;
-  background: var(--theme-fill-secondary);
+  background: var(--theme-background-search-dropdown);
   position: absolute;
   z-index: 50;
   list-style: none;
@@ -28,8 +28,8 @@
   left: 0;
   right: 0;
   top: 32px;
-  border-bottom-left-radius: var(--theme-corner-radius-search);
-  border-bottom-right-radius: var(--theme-corner-radius-search);
+  border-bottom-left-radius: $theme-corner-radius-search;
+  border-bottom-right-radius: $theme-corner-radius-search;
 
   @include phone-portrait {
     top: calc(100% + 1px);

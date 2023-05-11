@@ -16,7 +16,7 @@ import computeSidecarPosition from 'app/item-popup/sidecar-popper-modifier';
 import _ from 'lodash';
 import React, { useLayoutEffect, useRef } from 'react';
 
-// ensure this stays in sync with '--theme-tooltip-arrow-size' in '_variables.scss'
+// ensure this stays in sync with '$theme-tooltip-arrow-size' in '_variables.scss'
 const popperArrowSize = 8;
 
 /** Makes a custom popper that doesn't have the event listeners modifier */
