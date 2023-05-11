@@ -30,7 +30,7 @@ import {
   knownModPlugCategoryHashes,
   slotSpecificPlugCategoryHashes,
 } from './known-values';
-import { isInsertableArmor2Mod, sortModGroups } from './mod-utils';
+import { getModExclusionGroup, isInsertableArmor2Mod, sortModGroups } from './mod-utils';
 import PlugDrawer from './plug-drawer/PlugDrawer';
 import { PlugSet } from './plug-drawer/types';
 
@@ -312,6 +312,12 @@ function isModSelectable(
 ) {
   const { plugCategoryHash, energyCost } = mod.plug;
   const isSlotSpecificCategory = slotSpecificPlugCategoryHashes.includes(plugCategoryHash);
+
+  // If there's an already selected mod that excludes this mod, we can't select this one
+  const exclusionGroup = getModExclusionGroup(mod);
+  if (exclusionGroup && selected.some((mod) => getModExclusionGroup(mod) === exclusionGroup)) {
+    return false;
+  }
 
   // Already selected mods that are in the same category as "mod"
   let associatedLockedMods: PluggableInventoryItemDefinition[] = [];

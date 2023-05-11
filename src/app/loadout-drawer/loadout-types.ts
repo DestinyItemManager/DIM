@@ -117,6 +117,17 @@ export interface PluggingAction extends Assignment {
    * If not, this is an optional action which clears out other mod slots.
    */
   required: boolean;
+  /**
+   * The mutual exclusion group of the mod that will be plugged in this socket by the action.
+   * Performing this plugging action requires that all sockets, including the targeted socket,
+   * currently don't have a mod in this group plugged.
+   */
+  exclusionGroupAdded: string | undefined;
+  /**
+   * The mutual exclusion group of the mod that's currently plugged in the socket.
+   * Performing this plugging action will remove one mod in this group.
+   */
+  exclusionGroupReleased: string | undefined;
 }
 
 export function isInGameLoadout(loadout: Loadout | InGameLoadout): loadout is InGameLoadout {

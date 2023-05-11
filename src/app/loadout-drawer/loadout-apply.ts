@@ -1239,7 +1239,7 @@ function applyLoadoutMods(
         }
       }
 
-      const pluggingSteps = createPluggingStrategy(item, assignments);
+      const pluggingSteps = createPluggingStrategy(defs, item, assignments);
       const assignmentSequence = pluggingSteps.filter((assignment) => assignment.required);
       infoLog('loadout mods', 'Applying', assignmentSequence, 'to', item.name);
       if (assignmentSequence) {
