@@ -166,15 +166,10 @@ export function pickAndAssignSlotIndependentMods(
   return undefined;
 }
 
-/**
- * Optimizes the auto stat mod picks to maximize total tier, prioritizing stats earlier in the stat order.
- */
-export function pickOptimalStatMods(
+export function getRemainingEnergiesPerAssignment(
   info: LoSessionInfo,
-  items: ProcessItem[],
-  setStats: number[],
-  statFiltersInStatOrder: MinMaxIgnored[]
-): { mods: number[]; numBonusTiers: number; bonusStats: number[] } | undefined {
+  items: ProcessItem[]
+): { setEnergy: number; remainingEnergiesPerAssignment: number[][] } {
   const remainingEnergiesPerAssignment: number[][] = [];
 
   let setEnergy = 0;
@@ -215,12 +210,79 @@ export function pickOptimalStatMods(
     remainingEnergyCapacities.sort((a, b) => b - a);
     remainingEnergiesPerAssignment.push(remainingEnergyCapacities);
   }
+
+  return { setEnergy, remainingEnergiesPerAssignment };
+}
+
+/**
+ * Optimize a single stat to the highest possible value subject to other stat constraints.
+ * Returns the reached stat value.
+ */
+export function optimizeSingleStat(
+  info: LoSessionInfo,
+  items: ProcessItem[],
+  setStats: number[],
+  statFiltersInStatOrder: MinMaxIgnored[],
+  statIndex: number
+): number {
+  const { remainingEnergiesPerAssignment, setEnergy } = getRemainingEnergiesPerAssignment(
+    info,
+    items
+  );
+
+  const explorationStats = [0, 0, 0, 0, 0, 0];
+
+  for (let statIndex = setStats.length - 1; statIndex >= 0; statIndex--) {
+    const value = setStats[statIndex];
+    const filter = statFiltersInStatOrder[statIndex];
+    if (!filter.ignored) {
+      const neededValue = filter.min * 10 - value;
+      if (neededValue > 0) {
+        // As per function preconditions, we know that we can hit these minimum stats
+        explorationStats[statIndex] = neededValue;
+      }
+    }
+  }
+
+  const numArtificeMods = items.filter((i) => i.isArtifice).length;
+
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    explorationStats[statIndex] += 5;
+    const picks = chooseAutoMods(
+      info,
+      explorationStats,
+      numArtificeMods,
+      remainingEnergiesPerAssignment,
+      setEnergy
+    );
+    if (!picks) {
+      return explorationStats[statIndex] - 5 + setStats[statIndex];
+    }
+  }
+}
+
+/**
+ * Optimizes the auto stat mod picks to maximize total tier, prioritizing stats earlier in the stat order.
+ */
+export function pickOptimalStatMods(
+  info: LoSessionInfo,
+  items: ProcessItem[],
+  setStats: number[],
+  statFiltersInStatOrder: MinMaxIgnored[]
+): { mods: number[]; numBonusTiers: number; bonusStats: number[] } | undefined {
+  const { remainingEnergiesPerAssignment, setEnergy } = getRemainingEnergiesPerAssignment(
+    info,
+    items
+  );
+
   // The amount of additional stat points after which stats don't give us a benefit anymore.
   const maxAddedStats = [0, 0, 0, 0, 0, 0];
   const explorationStats = [0, 0, 0, 0, 0, 0];
 
   for (let statIndex = setStats.length - 1; statIndex >= 0; statIndex--) {
     const value = Math.min(Math.max(setStats[statIndex], 0), 100);
+    // const value = setStats[statIndex];
     const filter = statFiltersInStatOrder[statIndex];
     if (!filter.ignored) {
       const neededValue = filter.min * 10 - value;

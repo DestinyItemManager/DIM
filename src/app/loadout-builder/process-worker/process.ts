@@ -29,6 +29,13 @@ import {
 const RETURNED_ARMOR_SETS = 200;
 
 /**
+ * We retain the best X sets per stat and at the end of the process, optimize them only
+ * in this stat for a stochastic way to figure out what the highest reachable tier in each stat
+ * is. Not particularly exhaustive but better than nothing and still quite cheap.
+ */
+const RETAINED_SETS_FOR_MAX_TIER_EVALUATION_PER_STAT = 20;
+
+/**
  * This processes all permutations of armor to build sets
  * @param filteredItems pared down list of items to process sets from
  * @param modStatTotals Stats that are applied to final stat totals, think general and other mod stats
@@ -79,6 +86,10 @@ export function process(
       statOrder.map((statHash) => Math.max(item.stats[statHash], 0))
     );
   }
+
+  // For every stat, a list of sets that do particularly well in that stat. Sorted ascending.
+  const highestValueSetsPerStat: { set: ProcessItem[]; setStats: number[]; statValue: number }[][] =
+    statOrder.map((_val) => []);
 
   // Each of these groups has already been reduced (in useProcess.ts) to the
   // minimum number of examples that are worth considering.
@@ -336,14 +347,33 @@ export function process(
                 }
               }
 
-              // Track the stat ranges of sets that made it through all our filters
+              // Update the maximum if our set already gives us a higher possible stat tier
               const range = statRangesFilteredInStatOrder[index];
               const value = stats[index];
               if (value > range.max) {
                 range.max = value;
               }
-              if (value < range.min) {
-                range.min = value;
+
+              const predictedSingleStatValue = value + numArtifice * artificeStatBoost;
+
+              if (
+                highestValueSetsPerStat[index].length <
+                  RETAINED_SETS_FOR_MAX_TIER_EVALUATION_PER_STAT ||
+                highestValueSetsPerStat[index][0].statValue < predictedSingleStatValue
+              ) {
+                let insertionIndex = highestValueSetsPerStat[index].findIndex(
+                  (set) => set.statValue >= predictedSingleStatValue
+                );
+                insertionIndex =
+                  insertionIndex === -1 ? highestValueSetsPerStat[index].length : insertionIndex;
+                // Drop the "worst" set
+                highestValueSetsPerStat[index].splice(0, 1);
+                // And insert this one at the correct spot
+                highestValueSetsPerStat[index].splice(insertionIndex, 0, {
+                  set: armor,
+                  setStats: stats,
+                  statValue: predictedSingleStatValue,
+                });
               }
             }
 
@@ -400,21 +430,27 @@ export function process(
     const armorOnlyStats: Partial<ArmorStats> = {};
     const fullStats: Partial<ArmorStats> = {};
 
-    for (let i = 0; i < statOrder.length; i++) {
-      const statHash = statOrder[i];
-      const value = stats[i] + bonusStats[i];
+    for (let statIndex = 0; statIndex < statOrder.length; statIndex++) {
+      const statHash = statOrder[statIndex];
+      const value = stats[statIndex] + bonusStats[statIndex];
       fullStats[statHash] = value;
 
-      armorOnlyStats[statHash] = stats[i] - modStatsInStatOrder[i];
+      armorOnlyStats[statHash] = stats[statIndex] - modStatsInStatOrder[statIndex];
 
+      /*
       // Track the stat ranges after our auto mods picks
-      const range = statRangesFilteredInStatOrder[i];
-      if (value > range.max) {
-        range.max = value;
+      const range = statRangesFilteredInStatOrder[statIndex];
+      const finalValue = optimizeSingleStat(
+        precalculatedInfo,
+        armor,
+        stats,
+        statFiltersInStatOrder,
+        statIndex
+      );
+      if (finalValue > range.max) {
+        range.max = finalValue;
       }
-      if (value < range.min) {
-        range.min = value;
-      }
+      */
     }
 
     return {
@@ -424,6 +460,25 @@ export function process(
       statMods: mods,
     };
   });
+
+  /*
+  for (let statIndex = 0; statIndex < statOrder.length; statIndex++) {
+    // Track the stat ranges after our auto mods picks
+    const range = statRangesFilteredInStatOrder[statIndex];
+    for (const set of highestValueSetsPerStat[statIndex]) {
+      const finalValue = optimizeSingleStat(
+        precalculatedInfo,
+        set.set,
+        set.setStats,
+        statFiltersInStatOrder,
+        statIndex
+      );
+      if (finalValue > range.max) {
+        range.max = finalValue;
+      }
+    }
+  }
+  */
 
   const totalTime = performance.now() - pstart;
 

@@ -6,7 +6,6 @@ import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-typ
 import { ProcessItem } from './process-worker/types';
 
 export interface MinMax {
-  min: number;
   max: number;
 }
 
