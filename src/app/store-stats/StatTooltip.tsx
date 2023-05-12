@@ -124,15 +124,15 @@ function ClarityStatInfo({
   // TODO: styling, "community insights header"
   // TODO: "overrides"
 
-  const consolidated: [cooldown: number, item: DestinyInventoryItemDefinition][] = [];
+  const consolidated: [cooldown: number[], item: DestinyInventoryItemDefinition][] = [];
   if (clarityStatData) {
     for (const a of clarityStatData.Abilities) {
       if (equippedHashes.size > 0 && !equippedHashes.has(a.Hash)) {
         continue;
       }
-      const cooldown = a.Cooldowns[tier];
+      const cooldowns = a.Cooldowns;
       const name = defs.InventoryItem.get(a.Hash);
-      consolidated.push([cooldown, name]);
+      consolidated.push([cooldowns, name]);
     }
   }
 
@@ -146,21 +146,40 @@ function ClarityStatInfo({
   const intrinsicCooldowns: JSX.Element[] = [];
   if ('TimeToFullHP' in clarityStatData) {
     intrinsicCooldowns.push(
-      <div key="TimeToFullHP">Time to Full HP: {clarityStatData.TimeToFullHP[tier]}s</div>
+      <div key="TimeToFullHP">
+        Time to Full HP: {clarityStatData.TimeToFullHP[tier]}s
+        <Graph tier={tier} cooldowns={clarityStatData.TimeToFullHP} />
+      </div>
     );
   } else if ('WalkingSpeed' in clarityStatData) {
     intrinsicCooldowns.push(
-      <div key="WalkingSpeed">Walking Speed: {clarityStatData.WalkingSpeed[tier]} m/s</div>,
-      <div key="StrafingSpeed">Strafing Speed: {clarityStatData.StrafeSpeed[tier]} m/s</div>,
-      <div key="CrouchingSpeed">Crouching Speed: {clarityStatData.CrouchSpeed[tier]} m/s</div>
+      <div key="WalkingSpeed">
+        Walking Speed: {clarityStatData.WalkingSpeed[tier]} m/s
+        <Graph tier={tier} cooldowns={clarityStatData.WalkingSpeed} />
+      </div>,
+      <div key="StrafingSpeed">
+        Strafing Speed: {clarityStatData.StrafeSpeed[tier]} m/s
+        <Graph tier={tier} cooldowns={clarityStatData.StrafeSpeed} />
+      </div>,
+      <div key="CrouchingSpeed">
+        Crouching Speed: {clarityStatData.CrouchSpeed[tier]} m/s
+        <Graph tier={tier} cooldowns={clarityStatData.CrouchSpeed} />
+      </div>
     );
   } else if ('TotalHP' in clarityStatData) {
     intrinsicCooldowns.push(
-      <div key="TotalHP">Total HP: {clarityStatData.TotalHP[tier]} HP</div>,
+      <div key="TotalHP">
+        Total HP: {clarityStatData.TotalHP[tier]} HP
+        <Graph tier={tier} cooldowns={clarityStatData.TotalHP} />
+      </div>,
       <div key="DamageResistance">
         Damage Resistance: {clarityStatData.DamageResistance[tier]}%
+        <Graph tier={tier} cooldowns={clarityStatData.DamageResistance} />
       </div>,
-      <div key="FlinchResistance">Flinch Resistance: {clarityStatData.FlinchResistance[tier]}%</div>
+      <div key="FlinchResistance">
+        Flinch Resistance: {clarityStatData.FlinchResistance[tier]}%
+        <Graph tier={tier} cooldowns={clarityStatData.FlinchResistance} />
+      </div>
     );
   }
 
@@ -169,13 +188,29 @@ function ClarityStatInfo({
       {(intrinsicCooldowns.length > 0 || !_.isEmpty(consolidated)) && <hr />}
       {intrinsicCooldowns}
       {consolidated
-        .sort((a, b) => a[0] - b[0])
-        .map(([cooldown, item]) => (
+        .sort((a, b) => a[0][tier] - b[0][tier])
+        .map(([cooldowns, item]) => (
           <div key={item.hash}>
             <BungieImage src={item.displayProperties.icon} height={16} width={16} />{' '}
-            {item.displayProperties.name}: {cooldown}s
+            {item.displayProperties.name}: {cooldowns[tier]}s
+            <Graph tier={tier} cooldowns={cooldowns} />
           </div>
         ))}
     </>
+  );
+}
+
+function Graph({ tier, cooldowns }: { tier: number; cooldowns: number[] }) {
+  const maxCooldown = _.max(cooldowns)!;
+  return (
+    <div className={styles.graph}>
+      {_.times(10, (i) => (
+        <div
+          key={i}
+          className={clsx(styles.bar, { [styles.barCurrent]: i === tier })}
+          style={{ height: `${(80 * cooldowns[i]) / maxCooldown}px` }}
+        />
+      ))}
+    </div>
   );
 }
