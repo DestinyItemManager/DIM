@@ -249,7 +249,6 @@ function GeneratedSet({
             enabledStats={enabledStats}
             boostedStats={boostedStats}
             existingLoadoutName={existingLoadout?.name}
-            classType={selectedStore.classType}
           />
         </div>
         <div className={styles.items}>

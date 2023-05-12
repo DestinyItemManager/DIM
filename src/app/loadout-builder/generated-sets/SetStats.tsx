@@ -4,7 +4,7 @@ import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, powerIndicatorIcon } from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
-import { DestinyClass, DestinyStatDefinition } from 'bungie-api-ts/destiny2';
+import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ArmorStatHashes, ArmorStats, ModStatChanges } from '../types';
 import { remEuclid, statTierWithHalf } from '../utils';
@@ -24,7 +24,6 @@ function SetStats({
   boostedStats,
   className,
   existingLoadoutName,
-  classType,
 }: {
   stats: ArmorStats;
   getStatsBreakdown: () => ModStatChanges;
@@ -34,7 +33,6 @@ function SetStats({
   boostedStats: Set<ArmorStatHashes>;
   className?: string;
   existingLoadoutName?: string;
-  classType: DestinyClass;
 }) {
   const defs = useD2Definitions()!;
   const statDefs: { [statHash: number]: DestinyStatDefinition } = {};
@@ -84,7 +82,6 @@ function SetStats({
                   description: statDefs[statHash].displayProperties.description,
                   breakdown: getStatsBreakdown()[statHash].breakdown,
                 }}
-                classType={classType}
                 equippedHashes={new Set()}
               />
             )}

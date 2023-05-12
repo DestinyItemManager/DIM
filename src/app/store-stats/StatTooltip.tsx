@@ -1,12 +1,13 @@
 import { ClarityCharacterStats } from 'app/clarity/descriptions/character-stats';
 import { clarityCharacterStatsSelector } from 'app/clarity/selectors';
 import { settingSelector } from 'app/dim-api/selectors';
+import BungieImage from 'app/dim-ui/BungieImage';
 import { Tooltip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { DimCharacterStatChange } from 'app/inventory/store-types';
 import { statTier } from 'app/loadout-builder/utils';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -30,31 +31,14 @@ const statHashToClarityName: { [key: number]: keyof ClarityCharacterStats } = {
   [StatHashes.Strength]: 'Strength',
 };
 
-function getClass(type: DestinyClass) {
-  switch (type) {
-    case DestinyClass.Titan:
-      return 'titan';
-    case DestinyClass.Hunter:
-      return 'hunter';
-    case DestinyClass.Warlock:
-      return 'warlock';
-    case DestinyClass.Unknown:
-      return 'unknown';
-    case DestinyClass.Classified:
-      return 'classified';
-  }
-}
-
 /**
  * A rich tooltip for character-level stats like Mobility, Intellect, etc.
  */
 export default function StatTooltip({
   stat,
-  classType,
   equippedHashes,
 }: {
   stat: Stat;
-  classType: DestinyClass;
   /**
    * Hashes of equipped/selected items and subclass plugs for this character or loadout. Can be limited to
    * exotic armor + subclass plugs - make sure to include default-selected subclass plugs.
@@ -104,12 +88,7 @@ export default function StatTooltip({
         </>
       )}
       {useClarityInfo && (
-        <ClarityStatInfo
-          statHash={stat.hash}
-          tier={tier}
-          classType={classType}
-          equippedHashes={equippedHashes}
-        />
+        <ClarityStatInfo statHash={stat.hash} tier={tier} equippedHashes={equippedHashes} />
       )}
     </div>
   );
@@ -121,12 +100,10 @@ export default function StatTooltip({
 function ClarityStatInfo({
   statHash,
   tier,
-  classType,
   equippedHashes,
 }: {
   statHash: number;
   tier: number;
-  classType: DestinyClass;
   /**
    * Hashes of equipped/selected items and subclass plugs for this character or loadout. Can be limited to
    * exotic armor + subclass plugs - make sure to include default-selected subclass plugs. This is used to
@@ -147,25 +124,15 @@ function ClarityStatInfo({
   // TODO: styling, "community insights header"
   // TODO: "overrides"
 
-  // Group effects together based on cooldown to reduce duplication
-  const consolidated: { [cooldown: number]: Set<string> } = {};
+  const consolidated: [cooldown: number, item: DestinyInventoryItemDefinition][] = [];
   if (clarityStatData) {
     for (const a of clarityStatData.Abilities) {
       if (equippedHashes.size > 0 && !equippedHashes.has(a.Hash)) {
         continue;
       }
-
-      const abilityDef = defs.InventoryItem.get(a.Hash);
-
-      if (
-        [getClass(classType), 'shared'].some((prefix) =>
-          abilityDef.plug?.plugCategoryIdentifier.startsWith(prefix + '.')
-        )
-      ) {
-        const cooldown = a.Cooldowns[tier];
-        const name = defs.InventoryItem.get(a.Hash)?.displayProperties.name;
-        (consolidated[cooldown] ??= new Set()).add(name);
-      }
+      const cooldown = a.Cooldowns[tier];
+      const name = defs.InventoryItem.get(a.Hash);
+      consolidated.push([cooldown, name]);
     }
   }
 
@@ -199,29 +166,16 @@ function ClarityStatInfo({
 
   return (
     <>
-      {!_.isEmpty(consolidated) && (
-        <>
-          <hr />
-          <table>
-            <tbody>
-              {Object.keys(consolidated)
-                .sort((a, b) => Number(a) - Number(b))
-                .map((cooldown) => (
-                  <tr key={cooldown}>
-                    <td>{cooldown}s:</td>
-                    <td>{[...consolidated[Number(cooldown)]].sort().join(', ')}</td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-        </>
-      )}
-      {intrinsicCooldowns.length > 0 && (
-        <>
-          <hr />
-          {intrinsicCooldowns}
-        </>
-      )}
+      {(intrinsicCooldowns.length > 0 || !_.isEmpty(consolidated)) && <hr />}
+      {intrinsicCooldowns}
+      {consolidated
+        .sort((a, b) => a[0] - b[0])
+        .map(([cooldown, item]) => (
+          <div key={item.hash}>
+            <BungieImage src={item.displayProperties.icon} height={16} width={16} />{' '}
+            {item.displayProperties.name}: {cooldown}s
+          </div>
+        ))}
     </>
   );
 }

@@ -17,7 +17,6 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
 import { armorStats } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -151,12 +150,10 @@ export function PowerFormula({ storeId }: { storeId: string }) {
 export function CharacterStats({
   stats,
   showTier,
-  classType,
   equippedHashes,
 }: {
   stats: DimStore['stats'];
   showTier?: boolean;
-  classType: DestinyClass;
   equippedHashes: Set<number>;
 }) {
   // Select only the armor stats, in the correct order
@@ -174,9 +171,7 @@ export function CharacterStats({
       {statInfos.map((stat) => (
         <PressTip
           key={stat.hash}
-          tooltip={
-            <StatTooltip stat={stat} classType={classType} equippedHashes={equippedHashes} />
-          }
+          tooltip={<StatTooltip stat={stat} equippedHashes={equippedHashes} />}
         >
           <div className="stat" aria-label={`${stat.name} ${stat.value}`} role="group">
             <img src={stat.icon} alt={stat.name} />
@@ -206,13 +201,7 @@ export function StoreCharacterStats({ store }: { store: DimStore }) {
       }
     }
   }
-  return (
-    <CharacterStats
-      stats={store.stats}
-      classType={store.classType}
-      equippedHashes={equippedHashes}
-    />
-  );
+  return <CharacterStats stats={store.stats} equippedHashes={equippedHashes} />;
 }
 
 /**
@@ -250,12 +239,5 @@ export function LoadoutCharacterStats({
 
   const stats = getLoadoutStats(defs, loadout.classType, subclass, equippedItems, allMods);
 
-  return (
-    <CharacterStats
-      showTier
-      stats={stats}
-      classType={loadout.classType}
-      equippedHashes={equippedHashes}
-    />
-  );
+  return <CharacterStats showTier stats={stats} equippedHashes={equippedHashes} />;
 }
