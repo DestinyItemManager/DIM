@@ -1143,7 +1143,9 @@ const D2Sources: {
       847329160, // Edgewise
       1179141605, // Felwinter's Lie
       1644680957, // Null Composure
+      2060863616, // Salvager's Salvo
       2697058914, // Komodo-4FR
+      3001205424, // Ecliptic Distaff
       3434944005, // Point of the Stag
       3535742959, // Randy's Throwing Knife
       4184808992, // Adored
