@@ -147,37 +147,37 @@ function ClarityStatInfo({
   if ('TimeToFullHP' in clarityStatData) {
     intrinsicCooldowns.push(
       <div key="TimeToFullHP">
-        Time to Full HP: {clarityStatData.TimeToFullHP[tier]}s
+        Time to Full HP: {Math.round(clarityStatData.TimeToFullHP[tier]).toLocaleString()}s
         <Graph tier={tier} cooldowns={clarityStatData.TimeToFullHP} />
       </div>
     );
   } else if ('WalkingSpeed' in clarityStatData) {
     intrinsicCooldowns.push(
       <div key="WalkingSpeed">
-        Walking Speed: {clarityStatData.WalkingSpeed[tier]} m/s
+        Walking Speed: {Math.round(clarityStatData.WalkingSpeed[tier]).toLocaleString()}m/s
         <Graph tier={tier} cooldowns={clarityStatData.WalkingSpeed} />
       </div>,
       <div key="StrafingSpeed">
-        Strafing Speed: {clarityStatData.StrafeSpeed[tier]} m/s
+        Strafing Speed: {Math.round(clarityStatData.StrafeSpeed[tier]).toLocaleString()}m/s
         <Graph tier={tier} cooldowns={clarityStatData.StrafeSpeed} />
       </div>,
       <div key="CrouchingSpeed">
-        Crouching Speed: {clarityStatData.CrouchSpeed[tier]} m/s
+        Crouching Speed: {Math.round(clarityStatData.CrouchSpeed[tier]).toLocaleString()}m/s
         <Graph tier={tier} cooldowns={clarityStatData.CrouchSpeed} />
       </div>
     );
   } else if ('TotalHP' in clarityStatData) {
     intrinsicCooldowns.push(
       <div key="TotalHP">
-        Total HP: {clarityStatData.TotalHP[tier]} HP
+        Total HP: {Math.round(clarityStatData.TotalHP[tier]).toLocaleString()} HP
         <Graph tier={tier} cooldowns={clarityStatData.TotalHP} />
       </div>,
       <div key="DamageResistance">
-        Damage Resistance: {clarityStatData.DamageResistance[tier]}%
+        Damage Resistance: {Math.round(clarityStatData.DamageResistance[tier]).toLocaleString()}%
         <Graph tier={tier} cooldowns={clarityStatData.DamageResistance} />
       </div>,
       <div key="FlinchResistance">
-        Flinch Resistance: {clarityStatData.FlinchResistance[tier]}%
+        Flinch Resistance: {Math.round(clarityStatData.FlinchResistance[tier]).toLocaleString()}%
         <Graph tier={tier} cooldowns={clarityStatData.FlinchResistance} />
       </div>
     );
@@ -186,16 +186,16 @@ function ClarityStatInfo({
   return (
     <>
       {(intrinsicCooldowns.length > 0 || !_.isEmpty(consolidated)) && <hr />}
-      {intrinsicCooldowns}
       {consolidated
         .sort((a, b) => a[0][tier] - b[0][tier])
         .map(([cooldowns, item]) => (
           <div key={item.hash}>
             <BungieImage src={item.displayProperties.icon} height={16} width={16} />{' '}
-            {item.displayProperties.name}: {cooldowns[tier]}s
+            {item.displayProperties.name}: {Math.round(cooldowns[tier]).toLocaleString()}s
             <Graph tier={tier} cooldowns={cooldowns} />
           </div>
         ))}
+      {intrinsicCooldowns}
     </>
   );
 }
@@ -204,11 +204,11 @@ function Graph({ tier, cooldowns }: { tier: number; cooldowns: number[] }) {
   const maxCooldown = _.max(cooldowns)!;
   return (
     <div className={styles.graph}>
-      {_.times(10, (i) => (
+      {_.times(11, (i) => (
         <div
           key={i}
           className={clsx(styles.bar, { [styles.barCurrent]: i === tier })}
-          style={{ height: `${(80 * cooldowns[i]) / maxCooldown}px` }}
+          style={{ height: `${(50 * cooldowns[i]) / maxCooldown}px` }}
         />
       ))}
     </div>
