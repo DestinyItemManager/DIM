@@ -1,5 +1,51 @@
 @use '../variables.scss' as *;
 
+.compareItem {
+  border-left: 1px solid rgba(245, 245, 245, 0.25);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  // Make sure even if there are no stats that there's enough room to not clip
+  // the icon (e.g. for ghosts)
+  min-height: calc(var(--item-size) + 60px);
+
+  > * {
+    padding-left: 4px;
+  }
+
+  // TODO push these into sockets component?
+  :global(.socket-container) {
+    img {
+      width: 26px;
+      height: 26px;
+    }
+  }
+
+  :global(.item-sockets) {
+    gap: 2px;
+  }
+
+  :global(.item-socket-category) {
+    margin-right: 4px;
+  }
+
+  :global(.item-socket-category-Reusable) :global(.item-socket) {
+    border: none;
+    padding: 0;
+  }
+
+  :global(.item-details) {
+    clear: both;
+    margin: 4px 4px 0 0;
+  }
+
+  // D1 talent grids are like sockets
+  :global(.talent-grid) {
+    padding: 4px 2px 0 2px;
+    box-sizing: border-box;
+  }
+}
+
 .header {
   display: flex;
   flex-direction: row;

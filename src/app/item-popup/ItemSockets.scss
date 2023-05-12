@@ -2,7 +2,8 @@
 
 .item-sockets {
   display: flex;
-  flex-flow: row wrap;
+  flex-direction: row;
+  gap: 4px;
 }
 
 .sockets {
@@ -28,7 +29,6 @@
 }
 
 .item-socket {
-  margin-right: 4px;
   display: flex;
   flex-direction: column;
   &:last-child {
@@ -41,12 +41,11 @@
 
   .item-socket-category-Reusable & {
     border-right: 0.5px solid #444;
-    padding-right: 4px;
+    padding-right: 3px;
 
     &:last-child {
       border: none;
       padding-right: 0;
-      margin-right: 0;
     }
   }
 

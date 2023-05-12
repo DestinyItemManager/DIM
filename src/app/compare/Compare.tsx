@@ -31,7 +31,6 @@ import styles from './Compare.m.scss';
 import CompareItem from './CompareItem';
 import CompareSuggestions from './CompareSuggestions';
 import { endCompareSession, removeCompareItem, updateCompareQuery } from './actions';
-import './compare.scss';
 import { CompareSession } from './reducer';
 import { compareItemsSelector, compareOrganizerLinkSelector } from './selectors';
 
@@ -123,8 +122,6 @@ export default function Compare({ session }: { session: CompareSession }) {
       cancel();
     }
   }, [cancel, hasItems]);
-
-  // TODO: make a function that takes items and perk overrides and produces new items!
 
   // Memoize computing the list of stats
   const allStats = useMemo(
@@ -227,7 +224,7 @@ export default function Compare({ session }: { session: CompareSession }) {
     <Sheet onClose={cancel} header={header} allowClickThrough>
       <div className="loadout-drawer compare">
         <div className={styles.bucket} onPointerLeave={() => setHighlight(undefined)}>
-          <div className={clsx('compare-item', styles.fixedLeft)}>
+          <div className={styles.statList}>
             <div className={styles.spacer} />
             {allStats.map((stat) => (
               <div

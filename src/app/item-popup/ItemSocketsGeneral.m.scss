@@ -14,6 +14,9 @@
 }
 .minimalSockets {
   flex-flow: column nowrap;
+  > * {
+    margin-bottom: 8px !important;
+  }
 }
 .generalSockets {
   margin: 10px;

@@ -2,13 +2,13 @@
 // Please do not change this file!
 interface CssExports {
   'bucket': string;
-  'fixedLeft': string;
   'highlightBar': string;
   'options': string;
   'organizerLink': string;
   'sorted': string;
   'spacer': string;
   'statLabel': string;
+  'statList': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

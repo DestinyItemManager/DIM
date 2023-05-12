@@ -6,9 +6,8 @@
 
 .perks {
   position: relative;
-  :global(.item-socket) {
-    padding-right: 3px;
-    margin-right: 3px;
+  :global(.item-sockets) {
+    gap: 3px;
   }
 }
 
@@ -37,6 +36,10 @@
     background-color: $orange !important;
     color: black !important;
   }
+}
+
+.minimal > * {
+  margin-bottom: 8px;
 }
 
 .grid {
