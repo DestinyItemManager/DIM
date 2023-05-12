@@ -48,41 +48,22 @@ function getClass(type: DestinyClass) {
 /**
  * A rich tooltip for character-level stats like Mobility, Intellect, etc.
  */
-function StatTooltip({ stat, classType }: { stat: Stat; classType: DestinyClass }) {
+export default function StatTooltip({
+  stat,
+  classType,
+  equippedHashes,
+}: {
+  stat: Stat;
+  classType: DestinyClass;
+  /**
+   * Hashes of equipped/selected items and subclass plugs for this character or loadout. Can be limited to
+   * exotic armor + subclass plugs - make sure to include default-selected subclass plugs.
+   */
+  equippedHashes: Set<number>;
+}) {
   const tier = statTier(stat.value);
-  const clarityCharacterStats = useSelector(clarityCharacterStatsSelector);
   const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
   const useClarityInfo = descriptionsToDisplay !== 'bungie';
-  const defs = useD2Definitions()!;
-
-  const clarityStatData = clarityCharacterStats?.[statHashToClarityName[stat.hash]];
-
-  const consolidated: { [cooldown: number]: Set<string> } = {};
-  if (clarityStatData) {
-    for (const a of clarityStatData.Abilities) {
-      const abilityDef = defs.InventoryItem.get(a.Hash);
-
-      if (
-        [getClass(classType), 'shared'].some((prefix) =>
-          abilityDef.plug?.plugCategoryIdentifier.startsWith(prefix + '.')
-        )
-      ) {
-        const cooldown = a.Cooldowns[tier];
-        const name = defs.InventoryItem.get(a.Hash)?.displayProperties.name;
-        (consolidated[cooldown] ??= new Set()).add(name);
-      }
-    }
-  }
-
-  console.log({ useClarityInfo, clarityCharacterStats, clarityStatData, consolidated });
-
-  // TODO: group effects by time?
-  // TODO: filter by class type
-  // TODO: graph?
-
-  // TODO: include icons?
-  // TODO: remove common words?
-  // TODO: styling
 
   return (
     <div>
@@ -122,6 +103,102 @@ function StatTooltip({ stat, classType }: { stat: Stat; classType: DestinyClass 
           </div>
         </>
       )}
+      {useClarityInfo && (
+        <ClarityStatInfo
+          statHash={stat.hash}
+          tier={tier}
+          classType={classType}
+          equippedHashes={equippedHashes}
+        />
+      )}
+    </div>
+  );
+}
+
+/**
+ * Use Clarity's database of cooldown info to show extended, accurate cooldown info for equipped subclass mods and exotics.
+ */
+function ClarityStatInfo({
+  statHash,
+  tier,
+  classType,
+  equippedHashes,
+}: {
+  statHash: number;
+  tier: number;
+  classType: DestinyClass;
+  /**
+   * Hashes of equipped/selected items and subclass plugs for this character or loadout. Can be limited to
+   * exotic armor + subclass plugs - make sure to include default-selected subclass plugs. This is used to
+   * determine which cooldowns to show and also to calculate any overrides from aspects or exotics.
+   */
+  equippedHashes: Set<number>;
+}) {
+  const defs = useD2Definitions()!;
+  const clarityCharacterStats = useSelector(clarityCharacterStatsSelector);
+  const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
+  const useClarityInfo = descriptionsToDisplay !== 'bungie';
+  const clarityStatData = clarityCharacterStats?.[statHashToClarityName[statHash]];
+
+  // TODO: only show effects for equipped stuff
+  // TODO: graph? or at least show next tier
+  // TODO: include icons?
+  // TODO: remove common words?
+  // TODO: styling, "community insights header"
+  // TODO: "overrides"
+
+  // Group effects together based on cooldown to reduce duplication
+  const consolidated: { [cooldown: number]: Set<string> } = {};
+  if (clarityStatData) {
+    for (const a of clarityStatData.Abilities) {
+      if (equippedHashes.size > 0 && !equippedHashes.has(a.Hash)) {
+        continue;
+      }
+
+      const abilityDef = defs.InventoryItem.get(a.Hash);
+
+      if (
+        [getClass(classType), 'shared'].some((prefix) =>
+          abilityDef.plug?.plugCategoryIdentifier.startsWith(prefix + '.')
+        )
+      ) {
+        const cooldown = a.Cooldowns[tier];
+        const name = defs.InventoryItem.get(a.Hash)?.displayProperties.name;
+        (consolidated[cooldown] ??= new Set()).add(name);
+      }
+    }
+  }
+
+  console.log({ useClarityInfo, clarityCharacterStats, clarityStatData, consolidated });
+
+  if (!clarityStatData) {
+    return null;
+  }
+
+  // Cooldowns that are not about some specific ability
+  const intrinsicCooldowns: JSX.Element[] = [];
+  if ('TimeToFullHP' in clarityStatData) {
+    intrinsicCooldowns.push(
+      <div key="TimeToFullHP">Time to Full HP: {clarityStatData.TimeToFullHP[tier]}s</div>
+    );
+  } else if ('WalkingSpeed' in clarityStatData) {
+    intrinsicCooldowns.push(
+      <div key="WalkingSpeed">Walking Speed: {clarityStatData.WalkingSpeed[tier]} m/s</div>,
+      <div key="StrafingSpeed">Strafing Speed: {clarityStatData.StrafeSpeed[tier]} m/s</div>,
+      <div key="CrouchingSpeed">Crouching Speed: {clarityStatData.CrouchSpeed[tier]} m/s</div>
+    );
+  } else if ('TotalHP' in clarityStatData) {
+    intrinsicCooldowns.push(
+      <div key="TotalHP">Total HP: {clarityStatData.TotalHP[tier]} HP</div>,
+      <div key="DamageResistance">
+        Damage Resistance: {clarityStatData.DamageResistance[tier]}%
+      </div>,
+      <div key="FlinchResistance">Flinch Resistance: {clarityStatData.FlinchResistance[tier]}%</div>
+    );
+  }
+
+  return (
+    <>
       {!_.isEmpty(consolidated) && (
         <>
           <hr />
@@ -139,30 +216,12 @@ function StatTooltip({ stat, classType }: { stat: Stat; classType: DestinyClass 
           </table>
         </>
       )}
-      {clarityStatData && (
+      {intrinsicCooldowns.length > 0 && (
         <>
           <hr />
-          {'TimeTgoFullHP' in clarityStatData && (
-            <div>Time to Full HP: {clarityStatData.TimeToFullHP[tier]}s</div>
-          )}
-          {'WalkingSpeed' in clarityStatData && (
-            <>
-              <div>Walking Speed: {clarityStatData.WalkingSpeed[tier]} m/s</div>
-              <div>Strafing Speed: {clarityStatData.StrafeSpeed[tier]} m/s</div>
-              <div>Crouching Speed: {clarityStatData.CrouchSpeed[tier]} m/s</div>
-            </>
-          )}
-          {'TotalHP' in clarityStatData && (
-            <>
-              <div>Total HP: {clarityStatData.TotalHP[tier]} HP</div>
-              <div>DamageResistance: {clarityStatData.DamageResistance[tier]}%</div>
-              <div>FlinchResistance: {clarityStatData.FlinchResistance[tier]}%</div>
-            </>
-          )}
+          {intrinsicCooldowns}
         </>
       )}
-    </div>
+    </>
   );
 }
-
-export default StatTooltip;

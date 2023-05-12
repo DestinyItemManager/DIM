@@ -75,6 +75,7 @@ function GeneratedSet({
   // Items are sorted by their energy capacity when grouping
   let displayedItems: DimItem[] = set.armor.map((items) => items[0]);
 
+  // This has got to be expensive when the user has a lot of loadouts?
   for (const loadout of loadouts) {
     const equippedLoadoutItems = loadout.items.filter((item) => item.equip);
     const allSetItems = set.armor.flat();

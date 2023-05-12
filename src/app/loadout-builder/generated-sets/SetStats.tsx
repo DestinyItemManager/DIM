@@ -12,8 +12,9 @@ import styles from './SetStats.m.scss';
 import { calculateTotalTier, sumEnabledStats } from './utils';
 
 /**
- * Displays the overall tier and per-stat tier of a set.
+ * Displays the overall tier and per-stat tier of a generated loadout set.
  */
+// TODO: would be a lot easier if this was just passed a Loadout or FullyResolvedLoadout...
 function SetStats({
   stats,
   getStatsBreakdown,
@@ -42,6 +43,8 @@ function SetStats({
   }
   const totalTier = calculateTotalTier(stats);
   const enabledTier = sumEnabledStats(stats, enabledStats);
+
+  // TODO: calculate equipped Hashes for clarity data
 
   return (
     <div className={clsx(styles.container, className)}>
@@ -82,6 +85,7 @@ function SetStats({
                   breakdown: getStatsBreakdown()[statHash].breakdown,
                 }}
                 classType={classType}
+                equippedHashes={new Set()}
               />
             )}
           >
