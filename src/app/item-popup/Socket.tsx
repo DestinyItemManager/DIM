@@ -1,8 +1,7 @@
 import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
-import clsx from 'clsx';
 import Plug from './Plug';
-import styles from './Socket.m.scss';
+import './Socket.scss';
 
 /**
  * A socket may have multiple plugs - this can represent either a perk column or a mod socket.
@@ -26,11 +25,7 @@ export default function Socket({
   }
 
   return (
-    <div
-      className={clsx('item-socket', {
-        [styles.hasMenu]: hasMenu,
-      })}
-    >
+    <div className="item-socket">
       {socket.plugOptions
         .filter((plug) => !pluggedOnly || socket.plugged === plug)
         .map((plug) => (

@@ -61,6 +61,8 @@
 
   &.destiny2 {
     flex-direction: column;
+    gap: 0;
+
     .stat-row {
       display: flex;
       flex-direction: row;

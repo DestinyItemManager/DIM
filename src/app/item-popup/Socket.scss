@@ -16,11 +16,3 @@
     }
   }
 }
-
-.hasMenu {
-  cursor: pointer;
-  &:hover,
-  &:focus-visible {
-    outline: 1px solid $orange;
-  }
-}

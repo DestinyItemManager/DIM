@@ -56,6 +56,7 @@ export default function Plug({
       className={clsx('socket-container', {
         [styles.disabled]: !plug.enabled,
         [styles.selectable]: selectable,
+        [styles.hasMenu]: hasMenu,
       })}
       onClick={hasMenu || selectable ? doClick : undefined}
     >
