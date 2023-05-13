@@ -222,36 +222,34 @@ export default function Compare({ session }: { session: CompareSession }) {
 
   return (
     <Sheet onClose={cancel} header={header} allowClickThrough>
-      <div className="loadout-drawer compare">
-        <div className={styles.bucket} onPointerLeave={() => setHighlight(undefined)}>
-          <div className={styles.statList}>
-            <div className={styles.spacer} />
-            {allStats.map((stat) => (
-              <div
-                key={stat.id}
-                className={clsx(styles.statLabel, {
-                  [styles.sorted]: stat.id === sortedHash,
-                })}
-                onPointerEnter={() => setHighlight(stat.id)}
-                onClick={() => changeSort(stat.id)}
-              >
-                {stat.displayProperties.hasIcon && (
-                  <span title={stat.displayProperties.name}>
-                    <BungieImage src={stat.displayProperties.icon} />
-                  </span>
-                )}
-                {stat.id in statLabels
-                  ? t(statLabels[stat.id as StatHashes]!)
-                  : stat.displayProperties.name}{' '}
-                {stat.id === sortedHash && (
-                  <AppIcon icon={sortBetterFirst ? faAngleRight : faAngleLeft} />
-                )}
-                {stat.id === highlight && <div className={styles.highlightBar} />}
-              </div>
-            ))}
-          </div>
-          {items}
+      <div className={styles.bucket} onPointerLeave={() => setHighlight(undefined)}>
+        <div className={styles.statList}>
+          <div className={styles.spacer} />
+          {allStats.map((stat) => (
+            <div
+              key={stat.id}
+              className={clsx(styles.statLabel, {
+                [styles.sorted]: stat.id === sortedHash,
+              })}
+              onPointerEnter={() => setHighlight(stat.id)}
+              onClick={() => changeSort(stat.id)}
+            >
+              {stat.displayProperties.hasIcon && (
+                <span title={stat.displayProperties.name}>
+                  <BungieImage src={stat.displayProperties.icon} />
+                </span>
+              )}
+              {stat.id in statLabels
+                ? t(statLabels[stat.id as StatHashes]!)
+                : stat.displayProperties.name}{' '}
+              {stat.id === sortedHash && (
+                <AppIcon icon={sortBetterFirst ? faAngleRight : faAngleLeft} />
+              )}
+              {stat.id === highlight && <div className={styles.highlightBar} />}
+            </div>
+          ))}
         </div>
+        {items}
       </div>
     </Sheet>
   );

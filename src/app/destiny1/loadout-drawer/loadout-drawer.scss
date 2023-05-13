@@ -1,61 +1,7 @@
 @use '../../variables.scss' as *;
 
-.loadout-drawer {
-  max-height: calc(var(--viewport-height) - var(--header-height) - 16px);
-  @include phone-portrait {
-    @include max-sheet-height;
-  }
-  .dim-stats {
-    display: block;
-    width: 300px;
-    opacity: 0.3;
-
-    &.complete {
-      opacity: 1;
-    }
-  }
-}
-
-.loadout-drawer-header {
-  width: 100%;
-
-  .stat-bars.destiny2 {
-    cursor: default;
-    max-width: 280px;
-    flex-direction: row;
-    opacity: 1;
-  }
-  .power {
-    color: $gold;
-    flex: inherit;
-    margin-right: 20px;
-    svg {
-      vertical-align: top;
-      margin-top: 4px;
-      font-size: 0.5em;
-    }
-  }
-  .stat-row {
-    justify-content: space-between;
-  }
-}
-
-.loadout-equip-help {
-  border: 1px solid #333;
-  background-color: #f00;
-  margin: 0 2px;
-  width: 16px;
-  height: 16px;
-  vertical-align: text-bottom;
-}
-
 .loadout-item {
   position: relative;
-
-  // TODO: uhh gotta deal with this
-  .close {
-    right: 2px;
-  }
 }
 
 .loadout-item-class-icon {
@@ -98,6 +44,7 @@
   flex-flow: row wrap;
   min-height: calc(var(--item-size) + 4px);
   margin-top: 4px;
+
   @include phone-portrait {
     flex-flow: column nowrap;
   }
@@ -110,6 +57,7 @@
   display: flex;
   box-sizing: border-box;
   margin-right: 16px;
+
   @include phone-portrait {
     margin-right: 0;
   }
@@ -144,6 +92,7 @@
     ); // ↑ fit at least 1 equipped + 1 unequipped item
 
     width: max-content;
+
     @include phone-portrait {
       max-width: 100%;
       width: 100%;

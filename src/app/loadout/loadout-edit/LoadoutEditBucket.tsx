@@ -334,11 +334,7 @@ function FashionButton({
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setShowFashionDrawer(true)}
-        className="dim-button loadout-add"
-      >
+      <button type="button" onClick={() => setShowFashionDrawer(true)} className="dim-button">
         <AppIcon icon={faTshirt} /> {t('Loadouts.Fashion')}
       </button>
       {showFashionDrawer && (
