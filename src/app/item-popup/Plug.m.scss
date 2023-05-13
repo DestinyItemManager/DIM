@@ -1,5 +1,25 @@
 @use '../variables.scss' as *;
 
+// A global class becuse some things still tweak the size of the plug image.
+// TODO: customize with CSS vars instead
+:global(.plug) {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+
+  :global(.item-socket-category-Consumable) & {
+    border: 1px solid #888;
+  }
+
+  img,
+  :global(.perk-circle) {
+    -webkit-touch-callout: none;
+    width: calc(32 / 50 * var(--item-size));
+    height: calc(32 / 50 * var(--item-size));
+    display: block;
+  }
+}
+
 .none {
   fill: transparent;
 }

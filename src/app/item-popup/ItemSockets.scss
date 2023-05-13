@@ -12,21 +12,3 @@
   text-transform: uppercase;
   margin-bottom: 2px;
 }
-
-.plug {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-
-  .item-socket-category-Consumable & {
-    border: 1px solid #888;
-  }
-
-  img,
-  .perk-circle {
-    -webkit-touch-callout: none;
-    width: calc(32 / 50 * var(--item-size));
-    height: calc(32 / 50 * var(--item-size));
-    display: block;
-  }
-}
