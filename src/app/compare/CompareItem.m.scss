@@ -16,8 +16,8 @@
   // TODO push these into sockets component?
   :global(.socket-container) {
     img {
-      width: 26px;
-      height: 26px;
+      width: calc(26 / 50 * var(--item-size));
+      height: calc(26 / 50 * var(--item-size));
     }
   }
 

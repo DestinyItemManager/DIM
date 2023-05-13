@@ -1,5 +1,5 @@
-import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
+import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import styles from './EmoteSockets.m.scss';
@@ -21,16 +21,18 @@ export default function EmoteSockets({
   sockets: DimSocket[];
   onClick?: (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => void;
 }) {
-  const selectorIcon = <DefItemIcon itemDef={itemDef} />;
+  const selectorIcon = <DefItemIcon itemDef={itemDef} className={styles.collectionIcon} />;
 
   return (
-    <div className={clsx(styles.emoteWheel, 'item-socket-category-Consumable socket-container')}>
+    <div className={clsx(styles.emoteWheel, 'item-socket-category-Consumable item-sockets')}>
       {sockets.map((s, i) => (
         <div style={{ gridArea: `slot${i}` }} key={`${item.id}${s.socketIndex}`}>
           <Socket item={item} socket={s} onClick={onClick} />
         </div>
       ))}
-      <div style={{ gridArea: 'collection' }}>{selectorIcon}</div>
+      <div className="socket-container" style={{ gridArea: 'collection' }}>
+        {selectorIcon}
+      </div>
     </div>
   );
 }

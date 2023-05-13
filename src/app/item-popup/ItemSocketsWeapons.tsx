@@ -145,7 +145,7 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
             </ArchetypeSocket>
           )}
           {!minimal && mods.length > 0 && (
-            <div className="item-socket-category-Consumable socket-container">
+            <div className="item-socket-category-Consumable item-sockets">
               {mods.map(renderSocket)}
             </div>
           )}
@@ -195,9 +195,7 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
           </div>
         ))}
       {minimal && mods.length > 0 && (
-        <div className="item-socket-category-Consumable socket-container">
-          {mods.map(renderSocket)}
-        </div>
+        <div className="item-socket-category-Consumable item-sockets">{mods.map(renderSocket)}</div>
       )}
       {socketInMenu && (
         <Portal>
