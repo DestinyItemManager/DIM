@@ -1,11 +1,9 @@
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
-import { t } from 'app/i18next-t';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { thumbsUpIcon } from 'app/shell/icons';
-import AppIcon from 'app/shell/icons/AppIcon';
 import { isEnhancedPerk } from 'app/utils/socket-utils';
+import WishListPerkThumb from 'app/wishlists/WishListPerkThumb';
 import clsx from 'clsx';
 import { PressTip } from '../dim-ui/PressTip';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
@@ -73,18 +71,7 @@ export default function Plug({
           notSelected={notSelected}
         />
       ) : (
-        <>
-          <PressTip tooltip={tooltip}>{contents}</PressTip>
-          {/* is this ↓ reachable?? wishlists mainly apply to isReusable type sockets.
-              they can detect masterworks, but no thumbs up appears on that socket */}
-          {wishlistRoll?.wishListPerks.has(plug.plugDef.hash) && (
-            <AppIcon
-              className="thumbs-up"
-              icon={thumbsUpIcon}
-              title={t('WishListRoll.BestRatedTip')}
-            />
-          )}
-        </>
+        <PressTip tooltip={tooltip}>{contents}</PressTip>
       )}
     </div>
   );
@@ -145,9 +132,7 @@ export function PerkCircleWithTooltip({
           unreliablePerkOption={unreliablePerkOption}
         />
       </PressTip>
-      {isRecommendedPerk && (
-        <AppIcon className="thumbs-up" icon={thumbsUpIcon} title={t('WishListRoll.BestRatedTip')} />
-      )}
+      {isRecommendedPerk && <WishListPerkThumb wishListRoll={wishlistRoll!} floated />}
     </>
   );
 }

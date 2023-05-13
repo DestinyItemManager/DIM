@@ -9,10 +9,9 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { getDamageTypeForSubclassPlug } from 'app/inventory/subclass';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
-import { thumbsUpIcon } from 'app/shell/icons';
-import AppIcon from 'app/shell/icons/AppIcon';
 import { getDimPlugStats, getPlugDefStats, usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { isEnhancedPerk, isModCostVisible } from 'app/utils/socket-utils';
+import WishListPerkThumb from 'app/wishlists/WishListPerkThumb';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import {
   DamageType,
@@ -36,7 +35,7 @@ interface PlugTooltipProps {
   enableFailReasons?: string;
   cannotCurrentlyRoll?: boolean;
   unreliablePerkOption?: boolean;
-  wishListTip?: string;
+  wishListTip?: React.ReactNode;
   automaticallyPicked?: boolean;
   hideRequirements?: boolean;
   craftingData?: DestinyPlugItemCraftingRequirements;
@@ -55,9 +54,9 @@ export function DimPlugTooltip({
 }) {
   // TODO: show insertion costs
 
-  const wishListTip = wishlistRoll?.wishListPerks.has(plug.plugDef.hash)
-    ? t('WishListRoll.BestRatedTip', { count: wishlistRoll.wishListPerks.size })
-    : undefined;
+  const wishListTip = wishlistRoll?.wishListPerks.has(plug.plugDef.hash) ? (
+    <WishListPerkThumb wishListRoll={wishlistRoll} legend />
+  ) : undefined;
 
   const stats = getDimPlugStats(item, plug);
 
@@ -265,11 +264,9 @@ function PlugTooltip({
           <p>{t('LoadoutBuilder.AutomaticallyPicked')}</p>
         </Tooltip.Section>
       )}
-      {wishListTip && (
+      {Boolean(wishListTip) && (
         <Tooltip.Section>
-          <p>
-            <AppIcon className="thumbs-up" icon={thumbsUpIcon} /> = {wishListTip}
-          </p>
+          <p>{wishListTip}</p>
         </Tooltip.Section>
       )}
     </>

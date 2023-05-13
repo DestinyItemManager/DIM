@@ -52,13 +52,6 @@
     width: calc(30 / 50 * var(--item-size));
     height: calc(30 / 50 * var(--item-size));
   }
-
-  :global(.thumbs-up) {
-    position: absolute;
-    top: -4px;
-    right: -5px;
-    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.9));
-  }
 }
 
 .perkInfo {
