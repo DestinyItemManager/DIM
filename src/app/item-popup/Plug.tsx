@@ -53,7 +53,7 @@ export default function Plug({
   return (
     <div
       key={plug.plugDef.hash}
-      className={clsx('socket-container', {
+      className={clsx('plug', {
         [styles.disabled]: !plug.enabled,
         [styles.selectable]: selectable,
         [styles.hasMenu]: hasMenu,

@@ -30,7 +30,7 @@ export default function EmoteSockets({
           <Socket item={item} socket={s} onClick={onClick} />
         </div>
       ))}
-      <div className="socket-container" style={{ gridArea: 'collection' }}>
+      <div className="plug" style={{ gridArea: 'collection' }}>
         {selectorIcon}
       </div>
     </div>

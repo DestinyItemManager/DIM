@@ -37,7 +37,7 @@
   padding: 3px;
   font-size: 8px !important;
   letter-spacing: normal;
-  .socket-container & {
+  .plug & {
     position: absolute;
     top: -4px;
     right: -5px;
@@ -45,7 +45,7 @@
   }
 }
 
-.socket-container {
+.plug {
   position: relative;
   display: flex;
   flex-direction: row;
