@@ -109,7 +109,7 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
           handleSocketClick={handleSocketClick}
         />
       )}
-      <div className={clsx('sockets', styles.generalSockets, { [styles.minimalSockets]: minimal })}>
+      <div className={clsx(styles.generalSockets, { [styles.minimalSockets]: minimal })}>
         {emoteWheelCategory && (
           <EmoteSockets
             item={item}

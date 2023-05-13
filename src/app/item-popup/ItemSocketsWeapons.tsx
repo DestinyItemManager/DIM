@@ -125,7 +125,7 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
   );
 
   return (
-    <div className={clsx('sockets', styles.weaponSockets, { [styles.minimal]: minimal })}>
+    <div className={clsx(styles.weaponSockets, { [styles.minimal]: minimal })}>
       {(archetypeSocket?.plugged || (!minimal && mods.length > 0)) && (
         <ArchetypeRow minimal={minimal} isWeapons={true}>
           {archetypeSocket?.plugged && (
