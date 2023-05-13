@@ -20,6 +20,10 @@
 }
 .generalSockets {
   margin: 10px;
+  display: flex;
+  flex-flow: row wrap;
+  gap: 4px 16px;
+
   &.minimalSockets {
     margin: 0;
   }

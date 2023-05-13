@@ -121,7 +121,7 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
         {categories.map((category) => (
           <div
             key={category.category.hash}
-            className={clsx('item-socket-category', categoryStyle(category.category.categoryStyle))}
+            className={categoryStyle(category.category.categoryStyle)}
           >
             {!minimal && (
               <div className="item-socket-category-name">
@@ -210,6 +210,6 @@ function categoryStyle(categoryStyle: DestinySocketCategoryStyle) {
     case DestinySocketCategoryStyle.EnergyMeter:
       return 'item-socket-category-EnergyMeter';
     default:
-      return null;
+      return undefined;
   }
 }

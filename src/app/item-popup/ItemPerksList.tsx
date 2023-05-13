@@ -12,13 +12,18 @@ import './ItemSockets.scss';
 import { PerkCircleWithTooltip } from './Plug';
 import { DimPlugTooltip } from './PlugTooltip';
 
-interface Props {
+/**
+ * The list-style, vertical display of perks for a weapon.
+ */
+export default function ItemPerksList({
+  item,
+  perks,
+  onClick,
+}: {
   item: DimItem;
   perks: DimSocketCategory;
   onClick?: (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => void;
-}
-
-export default function ItemPerksList({ item, perks, onClick }: Props) {
+}) {
   const defs = useD2Definitions();
   const wishlistRoll = useSelector(wishListSelector(item));
 

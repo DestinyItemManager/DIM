@@ -42,7 +42,6 @@ interface PlugTooltipProps {
   craftingData?: DestinyPlugItemCraftingRequirements;
 }
 
-// TODO: Connect this to redux
 export function DimPlugTooltip({
   item,
   plug,

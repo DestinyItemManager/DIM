@@ -4,6 +4,9 @@
   display: flex;
   flex-direction: row;
   gap: 4px;
+
+  .item-socket-category-Reusable & {
+  }
 }
 
 .sockets {
@@ -12,20 +15,9 @@
   margin-top: 10px;
 }
 
-// TODO: different styles for mods and perks
-.item-socket-category {
-  margin-bottom: 4px;
-  margin-right: 16px;
-  &:last-child {
-    margin-bottom: 0;
-    margin-right: 0;
-  }
-}
-
 .item-socket-category-name {
   text-transform: uppercase;
   margin-bottom: 2px;
-  display: flex;
 }
 
 .item-socket {
@@ -72,20 +64,6 @@
     vertical-align: bottom;
     margin-right: 2px;
   }
-}
-
-.category-name {
-  display: inline-block;
-}
-
-.best-rated-key {
-  text-transform: none !important;
-  padding-left: 20px;
-}
-
-.best-rated-tip {
-  font-size: 10px;
-  margin-top: 6px;
 }
 
 .thumbs-up {
