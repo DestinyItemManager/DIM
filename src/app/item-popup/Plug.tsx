@@ -7,7 +7,6 @@ import { thumbsUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { isEnhancedPerk } from 'app/utils/socket-utils';
 import clsx from 'clsx';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { PressTip } from '../dim-ui/PressTip';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { InventoryWishListRoll, isWishListPlug } from '../wishlists/wishlists';
@@ -43,8 +42,6 @@ export default function Plug({
     return null;
   }
 
-  const itemCategories = plug?.plugDef.itemCategoryHashes || [];
-
   const doClick = onClick && (() => onClick(plug));
 
   const contents = <DefItemIcon itemDef={plug.plugDef} borderless={true} />;
@@ -57,9 +54,8 @@ export default function Plug({
     <div
       key={plug.plugDef.hash}
       className={clsx('socket-container', {
-        disabled: !plug.enabled,
-        selectable,
-        notIntrinsic: !itemCategories.includes(ItemCategoryHashes.WeaponModsIntrinsic),
+        [styles.disabled]: !plug.enabled,
+        [styles.selectable]: selectable,
       })}
       onClick={hasMenu || selectable ? doClick : undefined}
     >

@@ -1,46 +1,16 @@
 @use '../variables.scss' as *;
 
+// Horizontal list of sockets
 .item-sockets {
   display: flex;
   flex-direction: row;
   gap: 4px;
-
-  .item-socket-category-Reusable & {
-  }
 }
 
+// Uppercased title for socket categories
 .item-socket-category-name {
   text-transform: uppercase;
   margin-bottom: 2px;
-}
-
-.item-socket {
-  display: flex;
-  flex-direction: column;
-  &:last-child {
-    margin-right: 0;
-  }
-
-  .disabled {
-    opacity: 0.4;
-  }
-
-  .item-socket-category-Reusable & {
-    border-right: 0.5px solid #444;
-    padding-right: 3px;
-
-    &:last-child {
-      border: none;
-      padding-right: 0;
-    }
-  }
-
-  &.hasMenu {
-    cursor: pointer;
-    &:hover {
-      outline: 1px solid $orange;
-    }
-  }
 }
 
 .plug-stats {
@@ -90,33 +60,5 @@
     width: calc(32 / 50 * var(--item-size));
     height: calc(32 / 50 * var(--item-size));
     display: block;
-  }
-}
-
-.item-socket-category-Reusable .socket-container.notIntrinsic {
-  padding: calc(2 / 50 * var(--item-size));
-  margin-bottom: 1px;
-  &:last-child {
-    margin-bottom: 0;
-  }
-
-  img,
-  .perk-circle {
-    border: none;
-    width: calc(32 / 50 * var(--item-size));
-    height: calc(32 / 50 * var(--item-size));
-  }
-
-  @include phone-portrait {
-    padding: 2px;
-    img,
-    .perk-circle {
-      width: 32px;
-      height: 32px;
-    }
-  }
-
-  &.selectable {
-    cursor: pointer;
   }
 }
