@@ -21,24 +21,11 @@
     }
   }
 
-  :global(.item-sockets) {
-    gap: 2px;
-  }
-
-  :global(.item-socket-category-Reusable) :global(.item-socket) {
-    border: none;
-    padding: 0;
-  }
-
-  :global(.item-details) {
-    clear: both;
-    margin: 4px 4px 0 0;
-  }
-
   // D1 talent grids are like sockets
   :global(.talent-grid) {
     padding: 4px 2px 0 2px;
-    box-sizing: border-box;
+    max-width: 150px;
+    height: auto;
   }
 }
 

@@ -40,14 +40,29 @@
   }
 }
 
-.minimal > * {
-  margin-bottom: 8px;
+.minimal {
+  > * {
+    margin-bottom: 8px;
+  }
+
+  // Tighten up spacing between sockets
+  :global(.item-sockets) {
+    gap: 2px;
+  }
 }
 
 .grid {
-  margin: 10px;
+  margin: 8px 10px;
+
   .minimal & {
     margin: 0;
+    gap: 2px;
+
+    // Remove line between sockets in minimal mode
+    :global(.item-socket) {
+      border: none;
+      padding: 0;
+    }
   }
 
   :global(.socket-container) {
