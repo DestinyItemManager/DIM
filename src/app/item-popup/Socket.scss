@@ -2,11 +2,11 @@
 
 // An individual socket. Global class because it's currently directly overridden
 // in places like Compare.
-:global(.item-socket) {
+.item-socket {
   display: flex;
   flex-direction: column;
 
-  :global(.item-socket-category-Reusable) & {
+  .item-socket-category-Reusable & {
     border-right: 0.5px solid #444;
     padding-right: 3px;
 
