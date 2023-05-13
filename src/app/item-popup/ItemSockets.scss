@@ -13,23 +13,6 @@
   margin-bottom: 2px;
 }
 
-.plug-stats {
-  display: grid;
-  grid-template: auto / auto 1fr;
-  column-gap: 4px;
-  margin-top: 4px;
-  > div {
-    &:nth-child(2n + 1) {
-      font-weight: bold;
-      justify-self: end;
-    }
-  }
-  img {
-    vertical-align: bottom;
-    margin-right: 2px;
-  }
-}
-
 .plug {
   position: relative;
   display: flex;

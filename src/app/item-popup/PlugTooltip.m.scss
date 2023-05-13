@@ -97,3 +97,20 @@
 .tooltipElementStrand {
   @include tooltip-ribbon-color($strand);
 }
+
+.plugStats {
+  display: grid;
+  grid-template: auto / auto 1fr;
+  column-gap: 4px;
+  margin-top: 4px;
+  > div {
+    &:nth-child(2n + 1) {
+      font-weight: bold;
+      justify-self: end;
+    }
+  }
+  img {
+    vertical-align: bottom;
+    margin-right: 2px;
+  }
+}

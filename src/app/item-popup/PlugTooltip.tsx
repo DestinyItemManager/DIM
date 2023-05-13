@@ -145,13 +145,7 @@ function PlugTooltip({
       />
     </Tooltip.Section>
   );
-  const renderedStats = statsArray.length > 0 && (
-    <div className="plug-stats">
-      {statsArray.map((stat) => (
-        <StatValue key={stat.statHash} statHash={stat.statHash} value={stat.value} />
-      ))}
-    </div>
-  );
+  const renderedStats = statsArray.length > 0 && <PlugStats stats={statsArray} />;
 
   const isPluggable = isPluggableItem(def);
   const energyCost = isPluggable && isModCostVisible(def.plug) ? def.plug.energyCost : null;
@@ -270,6 +264,16 @@ function PlugTooltip({
         </Tooltip.Section>
       )}
     </>
+  );
+}
+
+export function PlugStats({ stats }: { stats: { statHash: number; value: number }[] }) {
+  return (
+    <div className={styles.plugStats}>
+      {stats.map((stat) => (
+        <StatValue key={stat.statHash} statHash={stat.statHash} value={stat.value} />
+      ))}
+    </div>
   );
 }
 
