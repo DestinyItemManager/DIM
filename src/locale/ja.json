@@ -9,7 +9,7 @@
   },
   "Accounts": {
     "Choose": "{{bungieName}} のプロファイル",
-    "ErrorLoadInventory": "Destiny {{version}} のキャラクターとインベントリをロードできません",
+    "ErrorLoadInventory": "Destiny {{version}} のキャラクターと所持アイテムの情報をロードできません",
     "ErrorLoadManifest": "BungieからDestinyの情報データベースをロードできません",
     "ErrorLoading": "Bungie.netからDestinyのアカウント情報をロードできません",
     "MissingAccountWarning": "ここに自分のアカウントが表示されない場合は、正しい Bungie.net アカウントにログインしていないか、 Bungie.net がメンテナンスでダウンしている可能性があります。",
@@ -38,7 +38,7 @@
     "YourItems": "あなたのアイテム"
   },
   "Browsercheck": {
-    "Steam": "Steam ブラウザにこのページが読み込まれているようです。 機能やリソースが限られているため、予期しないまたは断続的に DIM の実行に失敗する可能性があります。サポートを提供できません。",
+    "Steam": "Steam ブラウザでこのページを開いていると検出しました。このブラウザは機能が限られていて予期しない不具合が突然起きる可能性があります。それらの不具合に対してサポート外となります。",
     "Unsupported": "DIM チームはこのブラウザの利用をサポートしていません。DIM の一部または全ての機能が動作しない可能性があります。"
   },
   "Bucket": {
@@ -76,7 +76,7 @@
     "ItemUniquenessExplanation": "1個しか持てないアイテム '{{name}}' {{type}} を {{character}} に転送しようとしましたが、すでに同じアイテムを所持しているため転送できませんでした。",
     "ItemUniquenessExplanation_female": "1個しか持てないアイテム '{{name}}' {{type}} を {{character}} に転送しようとしましたが、すでに同じアイテムを所持しているため転送できませんでした。",
     "ItemUniquenessExplanation_male": "1個しか持てないアイテム '{{name}}' {{type}} を {{character}} に転送しようとしましたが、すでに同じアイテムを所持しているため転送できませんでした。",
-    "Maintenance": "Bungie.netサーバーはメンテナンス中です。",
+    "Maintenance": "Bungie.netのサーバーがメンテナンスによってダウンしています。",
     "MissingInventory": "Bungie.netから所持品データをロードできませんでした。ブラウザのプライバシー設定などにより、ロードできない場合があります。一度ログアウトしてから、再度ログインしてみてください。",
     "NetworkError": "ネットワークエラー。{{status}} {{statusText}}",
     "NoAccount": "Destiny のアカウントが見つかりません。正しいプラットフォームが選択されているかご確認ください。",
@@ -88,7 +88,7 @@
     "SlowDetails": "Bungie.netは現在、問い合わせの返答に時間がかかっています。多くのプレイヤーが同時にサーバー接続している場合や、Bungie.netに問題がある場合にこのような事態が発生することがあります。また、利用されているインターネット接続に問題がある可能性もあります。引き続き、サーバーからの返答をお待ちください。",
     "SlowResponse": "Bungie.netのサーバーからの応答時間が非常に遅く、返答がありません。",
     "Throttled": "Bungie.netは、DIMが作成できるリクエストの数を制限しています。",
-    "Twitter": "最新情報に更新します。:",
+    "Twitter": "最新情報はこちらから:",
     "UnknownError": "Bungie.netからのメッセージ: {{message}}",
     "VendorNotFound": "ベンダー情報が取得できません。"
   },
@@ -136,13 +136,13 @@
     "Used": "使用中"
   },
   "ErrorBoundary": {
-    "Title": "何か問題が発生したようです"
+    "Title": "エラー発生"
   },
   "ErrorPanel": {
     "Description": "Destiny 2のコンパニオンアプリで保管庫データにアクセスして、 Bungie.net がダウンしているかどうか試してみてください。",
     "EmblemError": "ゲーム内で全キャラクターのエンブレムを入れ替えると直るかもしれません。",
     "EmblemErrorLink": "修正方法の詳細を読む",
-    "SystemDown": "これはすべての Destiny アプリに影響し、 DIM チームで修正したり回避ができません。",
+    "SystemDown": "Destinyに関連するすべてのアプリに影響する内容で、 DIM チームにて修正したり回避ができない内容です。",
     "Troubleshooting": "トラブルシューティングガイド"
   },
   "FarmingMode": {
@@ -364,7 +364,7 @@
     "MaterialCounts": "素材数",
     "Menu": "メニュー",
     "ProfileAge": "Destinyサーバーが最後にデータ更新したのは {{age}} (時/分/秒)前です。\nDIM から更新できるかもしれませんが、 Bungie.net は過去の情報を繰り返し送信しているだけのおそれがあります。",
-    "Refresh": "Destiny データ [R] を更新",
+    "Refresh": "更新する [R] キー",
     "ReloadApp": "アプリの再読み込み",
     "ReportBug": "バグの報告",
     "SaveSearch": "検索を保存",
@@ -876,7 +876,7 @@
       "Untracked": "追跡をやめる"
     },
     "TriageTab": "トリアージ",
-    "UnreliablePerkOption": "このパークは、コレクション ビューにのみ表示されます。 このアイテムではランダムにロールしない場合があります。",
+    "UnreliablePerkOption": "このパークは、コレクションビューにのみ表示されます。ランダムアイテムには付かない可能性があります。",
     "Vault": "保管庫",
     "WeaponLevel": "武器レベル {{level}}"
   },
@@ -923,12 +923,12 @@
       "Quality": "クオリティ %",
       "Recency": "直近",
       "Season": "シーズン",
-      "Source": "ソース",
+      "Source": "入手先",
       "StatQuality": "Statsクオリティ",
       "StatQualityStat": "{{stat}}%",
       "Stats": "統計データ",
       "Tag": "タグ",
-      "Tier": "等級",
+      "Tier": "レア度",
       "Traits": "固定パーク",
       "WishList": "ウィッシュリスト",
       "WishListNotes": "ウィッシュリストのメモ",

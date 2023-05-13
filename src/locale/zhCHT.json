@@ -241,7 +241,7 @@
     "InLoadout": "is:inloadout 用於篩選在任何配裝中的物品。使用inloadout: 篩選在配裝中且具有匹配名稱的物品。當使用 #標簽 時，inloadout: 會篩選在具有對應標籤或備忘錄的配裝中的物品。",
     "Infusable": "顯示可以灌注的物品.",
     "InfusionFodder": "顯示可用於灌注同類物品且只消耗微光的物品。",
-    "IsAdept": "Shows weapons compatible with Adept mods.",
+    "IsAdept": "顯示可安裝專家模組的武器。",
     "IsCrafted": "顯示製作獲取的武器。",
     "IsSunset": "顯示已退環境且不能再被灌注到光等上限的物品。",
     "ItemHash": "顯示具有給定物品 hash 的物品。此為高級用戶選項。",
@@ -829,7 +829,7 @@
     "AddToLoadoutTitle": "添加此物品到配裝",
     "All": "全部",
     "CannotCurrentlyRoll": "此特性不會出現在此物品的當前版本上。",
-    "CantPullFromPostmaster": "You must visit the postmaster in game to retrieve this item.",
+    "CantPullFromPostmaster": "你必須去郵政官処取回此物品。",
     "CatalystProgress": "催化劑進度",
     "CommunityData": "社区描述",
     "Consolidate": "合併",
@@ -1291,8 +1291,8 @@
       "TranslationText": "我們使用{{link}} 工具來使得翻譯工作更加簡便。 如果您希望為DIM的任意語言翻譯語言出一份力，那麼請加入我們的翻譯小組吧( • ̀ω•́)✧！",
       "TwitterHelp": "請務必關注我們，以便瞭解我們的最新動向和即時狀態更新資訊。",
       "Version": "當前版本Ver{{version}}({{flavor}})，編譯於：{{date}}",
-      "Wiki": "DIM User Guide",
-      "WikiHelp": "Learn how to use DIM's features."
+      "Wiki": "DIM 用戶指南",
+      "WikiHelp": "瞭解 DIM 功能"
     },
     "Login": {
       "Auth": "用Bungie.Net授權",
