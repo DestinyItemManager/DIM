@@ -25,7 +25,7 @@ export default function EmoteSockets({
   const selectorIcon = <DefItemIcon itemDef={itemDef} className={styles.collectionIcon} />;
 
   return (
-    <div className={clsx(styles.emoteWheel, 'item-socket-category-Consumable item-sockets')}>
+    <div className={clsx(styles.emoteWheel, 'item-sockets')}>
       {sockets.map((s, i) => (
         <div style={{ gridArea: `slot${i}` }} key={`${item.id}${s.socketIndex}`}>
           <Socket item={item} socket={s} onClick={onClick} />

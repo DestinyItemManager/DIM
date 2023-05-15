@@ -18,6 +18,7 @@ export default function Plug({
   socketInfo,
   wishlistRoll,
   hasMenu,
+  isMod,
   onClick,
   plugged,
   selected,
@@ -30,6 +31,7 @@ export default function Plug({
   socketInfo: DimSocket;
   wishlistRoll?: InventoryWishListRoll;
   hasMenu: boolean;
+  isMod?: boolean;
   onClick?: (plug: DimPlug) => void;
 } & PlugStatuses) {
   const defs = useD2Definitions()!;
@@ -41,11 +43,6 @@ export default function Plug({
   }
 
   const doClick = onClick && (() => onClick(plug));
-
-  const contents = <DefItemIcon itemDef={plug.plugDef} borderless={true} />;
-
-  const tooltip = () => <DimPlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} />;
-
   const selectable = socketInfo.plugOptions.length > 1;
 
   return (
@@ -55,6 +52,7 @@ export default function Plug({
         [styles.disabled]: !plug.enabled,
         [styles.selectable]: selectable,
         [styles.hasMenu]: hasMenu,
+        [styles.mod]: isMod,
       })}
       onClick={hasMenu || selectable ? doClick : undefined}
     >
@@ -71,7 +69,9 @@ export default function Plug({
           notSelected={notSelected}
         />
       ) : (
-        <PressTip tooltip={tooltip}>{contents}</PressTip>
+        <PressTip tooltip={<DimPlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} />}>
+          <DefItemIcon itemDef={plug.plugDef} borderless />
+        </PressTip>
       )}
     </div>
   );

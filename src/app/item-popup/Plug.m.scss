@@ -7,10 +7,6 @@
   display: flex;
   flex-direction: row;
 
-  :global(.item-socket-category-Consumable) & {
-    border: 1px solid #888;
-  }
-
   img,
   :global(.perk-circle) {
     -webkit-touch-callout: none;
@@ -18,6 +14,15 @@
     height: calc(32 / 50 * var(--item-size));
     display: block;
   }
+
+  :global(.item-img) {
+    border: none;
+  }
+}
+
+// In game, mods have a border around them that isn't part of the icon
+.mod {
+  border: 1px solid #888;
 }
 
 .none {

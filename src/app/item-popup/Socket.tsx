@@ -37,6 +37,7 @@ export default function Socket({
             socketInfo={socket}
             wishlistRoll={wishlistRoll}
             hasMenu={hasMenu}
+            isMod={socket.isMod}
             onClick={onClick && (() => onClick(item, socket, plug, hasMenu))}
           />
         ))}

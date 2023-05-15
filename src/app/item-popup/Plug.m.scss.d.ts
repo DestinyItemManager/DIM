@@ -4,6 +4,7 @@ interface CssExports {
   'cannotRoll': string;
   'disabled': string;
   'hasMenu': string;
+  'mod': string;
   'none': string;
   'notSelected': string;
   'plugged': string;

@@ -106,10 +106,7 @@ export default function ItemSocketsGeneral({
           />
         )}
         {categories.map((category) => (
-          <div
-            key={category.category.hash}
-            className={categoryStyle(category.category.categoryStyle)}
-          >
+          <div key={category.category.hash}>
             {!minimal && (
               <div className="item-socket-category-name">
                 {category.category.displayProperties.name}
@@ -167,14 +164,4 @@ function IntrinsicArmorPerk({
       </ArchetypeSocket>
     </ArchetypeRow>
   );
-}
-
-/** converts a socket category to a valid css class name */
-export function categoryStyle(categoryStyle: DestinySocketCategoryStyle) {
-  switch (categoryStyle) {
-    case DestinySocketCategoryStyle.Consumable:
-      return 'item-socket-category-Consumable';
-    default:
-      return undefined;
-  }
 }

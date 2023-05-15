@@ -27,7 +27,6 @@ import ArchetypeSocket, { ArchetypeRow } from './ArchetypeSocket';
 import ItemPerksList from './ItemPerksList';
 import { PlugClickHandler } from './ItemSockets';
 import './ItemSockets.scss';
-import { categoryStyle } from './ItemSocketsGeneral';
 import styles from './ItemSocketsWeapons.m.scss';
 import Socket from './Socket';
 
@@ -134,9 +133,7 @@ export default function ItemSocketsWeapons({
             </ArchetypeSocket>
           )}
           {!minimal && mods.length > 0 && (
-            <div className="item-socket-category-Consumable item-sockets">
-              {mods.map(renderSocket)}
-            </div>
+            <div className="item-sockets">{mods.map(renderSocket)}</div>
           )}
         </ArchetypeRow>
       )}
@@ -156,7 +153,7 @@ export default function ItemSocketsWeapons({
             <ItemPerksList item={item} perks={perks} onClick={onPlugClicked} />
           </div>
         ) : (
-          <div className={clsx(categoryStyle(perks.category.categoryStyle), styles.perks)}>
+          <div className={styles.perks}>
             {!minimal && !grid && (
               <button
                 className={styles.displayStyleButton}
@@ -183,9 +180,7 @@ export default function ItemSocketsWeapons({
             </div>
           </div>
         ))}
-      {minimal && mods.length > 0 && (
-        <div className="item-socket-category-Consumable item-sockets">{mods.map(renderSocket)}</div>
-      )}
+      {minimal && mods.length > 0 && <div className="item-sockets">{mods.map(renderSocket)}</div>}
     </div>
   );
 }
