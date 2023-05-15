@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 import styles from './Milestones.m.scss';
 import { PowerCaps } from './PowerCaps';
 import Pursuit from './Pursuit';
+import PursuitGrid from './PursuitGrid';
 import { sortPursuits } from './Pursuits';
 import SeasonalRank from './SeasonalRank';
 import WellRestedPerkIcon from './WellRestedPerkIcon';
@@ -66,7 +67,7 @@ export default function Milestones({
   return (
     <>
       {characterProgressions && (
-        <div className="progress-for-character">
+        <PursuitGrid>
           <SeasonalRank
             store={store}
             characterProgressions={characterProgressions}
@@ -80,7 +81,7 @@ export default function Milestones({
             seasonPass={seasonPass}
           />
           <PowerCaps />
-        </div>
+        </PursuitGrid>
       )}
       {Object.keys(milestonesByPower)
         .sort(sortPowerBonus)
@@ -91,11 +92,11 @@ export default function Milestones({
                 ? t('Progress.PowerBonusHeaderUndefined')
                 : t('Progress.PowerBonusHeader', { powerBonus })}
             </h2>
-            <div className="progress-for-character">
+            <PursuitGrid>
               {milestonesByPower[powerBonus].sort(sortPursuits).map((item) => (
                 <Pursuit key={item.hash} item={item} />
               ))}
-            </div>
+            </PursuitGrid>
           </div>
         ))}
     </>

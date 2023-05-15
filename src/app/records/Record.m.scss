@@ -9,6 +9,7 @@
   flex-direction: row;
   align-items: flex-start;
   box-sizing: border-box;
+  user-select: text;
 
   @include phone-portrait {
     width: 100%;
@@ -165,6 +166,7 @@
     width: calc(var(--item-size) / 3.1) !important;
     height: auto !important;
   }
+
   @media (hover: none) {
     display: block;
     opacity: 0.7;

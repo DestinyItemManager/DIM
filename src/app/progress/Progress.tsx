@@ -21,12 +21,12 @@ import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import '../records/PresentationNode.scss';
 import { Event } from './Event';
 import Milestones from './Milestones';
+import styles from './Progress.m.scss';
 import Pursuits from './Pursuits';
 import Raids from './Raids';
 import Ranks from './Ranks';
 import SeasonalChallenges from './SeasonalChallenges';
 import { TrackedTriumphs } from './TrackedTriumphs';
-import './progress.scss';
 
 export default function Progress({ account }: { account: DestinyAccount }) {
   const defs = useD2Definitions();
@@ -109,7 +109,7 @@ export default function Progress({ account }: { account: DestinyAccount }) {
 
   return (
     <ErrorBoundary name="Progress">
-      <PageWithMenu className="progress-page">
+      <PageWithMenu>
         <PageWithMenu.Menu>
           {selectedStore && (
             <CharacterSelect
@@ -119,7 +119,7 @@ export default function Progress({ account }: { account: DestinyAccount }) {
             />
           )}
           {!isPhonePortrait && (
-            <div className="progress-menu">
+            <div className={styles.menuLinks}>
               {menuItems.map((menuItem) => (
                 <PageWithMenu.MenuButton key={menuItem.id} anchor={menuItem.id}>
                   <span>{menuItem.title}</span>
