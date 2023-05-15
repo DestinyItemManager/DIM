@@ -1,6 +1,6 @@
 @use '../variables.scss' as *;
 
-// A global class becuse some things still tweak the size of the plug image.
+// A global class because some things still tweak the size of the plug image.
 // TODO: customize with CSS vars instead
 :global(.plug) {
   position: relative;

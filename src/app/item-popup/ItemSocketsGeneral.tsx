@@ -172,18 +172,10 @@ function IntrinsicArmorPerk({
 /** converts a socket category to a valid css class name */
 export function categoryStyle(categoryStyle: DestinySocketCategoryStyle) {
   switch (categoryStyle) {
-    case DestinySocketCategoryStyle.Unknown:
-      return 'item-socket-category-Unknown';
     case DestinySocketCategoryStyle.Reusable:
       return 'item-socket-category-Reusable';
     case DestinySocketCategoryStyle.Consumable:
       return 'item-socket-category-Consumable';
-    case DestinySocketCategoryStyle.Unlockable:
-      return 'item-socket-category-Unlockable';
-    case DestinySocketCategoryStyle.Intrinsic:
-      return 'item-socket-category-Intrinsic';
-    case DestinySocketCategoryStyle.EnergyMeter:
-      return 'item-socket-category-EnergyMeter';
     default:
       return undefined;
   }
