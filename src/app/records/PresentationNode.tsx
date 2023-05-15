@@ -14,17 +14,6 @@ import './PresentationNode.scss';
 import PresentationNodeLeaf from './PresentationNodeLeaf';
 import { DimPresentationNode } from './presentation-nodes';
 
-interface Props {
-  node: DimPresentationNode;
-  ownedItemHashes?: Set<number>;
-  path: number[];
-  parents: number[];
-  isInTriumphs?: boolean;
-  overrideName?: string;
-  isRootNode?: boolean;
-  onNodePathSelected: (nodePath: number[]) => void;
-}
-
 export default function PresentationNode({
   node,
   ownedItemHashes,
@@ -34,31 +23,21 @@ export default function PresentationNode({
   isInTriumphs,
   isRootNode,
   overrideName,
-}: Props) {
+}: {
+  node: DimPresentationNode;
+  ownedItemHashes?: Set<number>;
+  path: number[];
+  parents: number[];
+  isInTriumphs?: boolean;
+  overrideName?: string;
+  isRootNode?: boolean;
+  onNodePathSelected: (nodePath: number[]) => void;
+}) {
   const defs = useD2Definitions()!;
   const completedRecordsHidden = useSelector(settingSelector('completedRecordsHidden'));
   const redactedRecordsRevealed = useSelector(settingSelector('redactedRecordsRevealed'));
-  const headerRef = useRef<HTMLDivElement>(null);
-  const lastPath = useRef<number[]>();
   const presentationNodeHash = node.nodeDef.hash;
-
-  useEffect(() => {
-    if (
-      headerRef.current &&
-      path[path.length - 1] === presentationNodeHash &&
-      !deepEqual(lastPath.current, path)
-    ) {
-      const clientRect = headerRef.current.getBoundingClientRect();
-      if (clientRect.top < 50) {
-        scrollToPosition({
-          top: window.scrollY + clientRect.top - 50,
-          left: 0,
-          behavior: 'smooth',
-        });
-      }
-    }
-    lastPath.current = path;
-  }, [path, presentationNodeHash]);
+  const headerRef = useScrollNodeIntoView(path, presentationNodeHash);
 
   const expandChildren = () => {
     const childrenExpanded = path.includes(presentationNodeHash);
@@ -73,7 +52,6 @@ export default function PresentationNode({
     return null;
   }
 
-  // TODO: use nodes as parents?
   const parent = parents.slice(-1)[0];
   const thisAndParents = [...parents, presentationNodeHash];
 
@@ -82,7 +60,6 @@ export default function PresentationNode({
     (p) => defs.PresentationNode.get(p).screenStyle === DestinyPresentationScreenStyle.CategorySets
   );
 
-  // todo: export this hash/depth and clean up the boolean string
   const alwaysExpanded =
     // if we're not in triumphs
     !isInTriumphs &&
@@ -98,8 +75,6 @@ export default function PresentationNode({
   /** whether this node's children are currently shown */
   const childrenExpanded =
     isRootNode || onlyChild || path.includes(presentationNodeHash) || alwaysExpanded;
-
-  // TODO: need more info on what iconSequences are
 
   const title = (
     <span className="node-name">
@@ -161,6 +136,35 @@ export default function PresentationNode({
       )}
     </div>
   );
+}
+
+/**
+ * Scrolls the given presentation node into view if it is not already. Assign
+ * the returned headerRef to the header of the presentation node.
+ */
+function useScrollNodeIntoView(path: number[], presentationNodeHash: number) {
+  const headerRef = useRef<HTMLDivElement>(null);
+  const lastPath = useRef<number[]>();
+
+  useEffect(() => {
+    if (
+      headerRef.current &&
+      path[path.length - 1] === presentationNodeHash &&
+      !deepEqual(lastPath.current, path)
+    ) {
+      const clientRect = headerRef.current.getBoundingClientRect();
+      if (clientRect.top < 50) {
+        scrollToPosition({
+          top: window.scrollY + clientRect.top - 50,
+          left: 0,
+          behavior: 'smooth',
+        });
+      }
+    }
+    lastPath.current = path;
+  }, [path, presentationNodeHash]);
+
+  return headerRef;
 }
 
 /**
