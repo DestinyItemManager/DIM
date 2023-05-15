@@ -2,7 +2,6 @@ import { DimItem } from 'app/inventory/item-types';
 import { createItemContextSelector } from 'app/inventory/selectors';
 import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { percent } from 'app/shell/formatters';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { VendorItemDisplay } from 'app/vendors/VendorItemComponent';
 import clsx from 'clsx';
@@ -11,6 +10,7 @@ import { useSelector } from 'react-redux';
 import BungieImage from '../dim-ui/BungieImage';
 import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
 import { count } from '../utils/util';
+import { PresentationNodeProgress } from './PresentationNode';
 
 const plugSetOrder = chainComparator<DimItem>(
   compareBy((i) => i.tier),
@@ -67,17 +67,7 @@ export default function PlugSet({
           <AppIcon className="collapse-icon" icon={childrenExpanded ? collapseIcon : expandIcon} />{' '}
           {title}
         </span>
-        <div className="node-progress">
-          <div className="node-progress-count">
-            {acquired} / {plugSetItems.length}
-          </div>
-          <div className="node-progress-bar">
-            <div
-              className="node-progress-bar-amount"
-              style={{ width: percent(acquired / plugSetItems.length) }}
-            />
-          </div>
-        </div>
+        <PresentationNodeProgress acquired={acquired} visible={plugSetItems.length} />
       </div>
       {childrenExpanded && (
         <div className="collectibles plugset">

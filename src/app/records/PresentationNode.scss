@@ -1,9 +1,5 @@
 @use '../variables.scss' as *;
 
-.presentation-node-root {
-  margin-bottom: 16px;
-}
-
 .presentation-node {
   .collapse-icon {
     margin-right: 8px;
@@ -12,25 +8,6 @@
     img {
       height: 24px;
       vertical-align: middle;
-    }
-  }
-
-  .node-progress {
-    text-align: right;
-    .node-progress-count {
-      font-size: 12px;
-      text-transform: none;
-      letter-spacing: 0;
-    }
-    .node-progress-bar {
-      background: #666;
-      height: 2px;
-      width: 8em;
-      margin-top: 2px;
-    }
-    .node-progress-bar-amount {
-      background: #ccc;
-      height: 2px;
     }
   }
 
@@ -53,9 +30,6 @@
         color: #f5dc56;
         background-color: rgba(245, 220, 86, 0.1);
         opacity: 0.7;
-        .node-progress-bar-amount {
-          background-color: #f5dc56;
-        }
         &.hide-complete {
           cursor: default;
           .collapse-icon {
@@ -100,12 +74,6 @@
         color: rgb(255, 255, 255);
         font-size: 14px;
         letter-spacing: normal;
-      }
-    }
-    .node-progress {
-      /* margin-right: 16px; */
-      .node-progress-count {
-        font-size: 11px;
       }
     }
   }

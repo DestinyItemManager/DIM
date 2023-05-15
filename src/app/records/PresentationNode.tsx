@@ -9,9 +9,10 @@ import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import BungieImage from '../dim-ui/BungieImage';
 import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
-import { DimPresentationNode } from './presentation-nodes';
+import styles from './PresentationNode.m.scss';
 import './PresentationNode.scss';
 import PresentationNodeLeaf from './PresentationNodeLeaf';
+import { DimPresentationNode } from './presentation-nodes';
 
 interface Props {
   node: DimPresentationNode;
@@ -135,17 +136,7 @@ export default function PresentationNode({
               {title}
             </span>
           )}
-          <div className="node-progress">
-            <div className="node-progress-count">
-              {acquired} / {visible}
-            </div>
-            <div className="node-progress-bar">
-              <div
-                className="node-progress-bar-amount"
-                style={{ width: percent(acquired / visible) }}
-              />
-            </div>
-          </div>
+          <PresentationNodeProgress acquired={acquired} visible={visible} />
         </div>
       )}
       {childrenExpanded &&
@@ -168,6 +159,31 @@ export default function PresentationNode({
           redactedRecordsRevealed={redactedRecordsRevealed}
         />
       )}
+    </div>
+  );
+}
+
+/**
+ * The little progress bar in the header of a presentation node that shows how much has been unlocked.
+ */
+export function PresentationNodeProgress({
+  acquired,
+  visible,
+}: {
+  acquired: number;
+  visible: number;
+}) {
+  return (
+    <div className={styles.nodeProgress}>
+      <div className={styles.nodeProgressCount}>
+        {acquired} / {visible}
+      </div>
+      <div className={styles.nodeProgressBar}>
+        <div
+          className={styles.nodeProgressBarAmount}
+          style={{ width: percent(acquired / visible) }}
+        />
+      </div>
     </div>
   );
 }
