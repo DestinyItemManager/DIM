@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { DimItem, DimPlug, DimSocket, DimSocketCategory } from '../inventory/item-types';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import styles from './ItemPerksList.m.scss';
+import { PlugClickHandler } from './ItemSockets';
 import './ItemSockets.scss';
 import { PerkCircleWithTooltip } from './Plug';
 import { DimPlugTooltip } from './PlugTooltip';
@@ -22,7 +23,7 @@ export default function ItemPerksList({
 }: {
   item: DimItem;
   perks: DimSocketCategory;
-  onClick?: (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => void;
+  onClick?: PlugClickHandler;
 }) {
   const defs = useD2Definitions();
   const wishlistRoll = useSelector(wishListSelector(item));

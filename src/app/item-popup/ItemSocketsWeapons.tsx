@@ -11,7 +11,6 @@ import {
   getSocketsByIndexes,
   getWeaponArchetypeSocket,
 } from 'app/utils/socket-utils';
-import { Portal } from 'app/utils/temp-container';
 import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
 import {
@@ -21,43 +20,33 @@ import {
   StatHashes,
 } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
+import { DimItem, DimSocket } from '../inventory/item-types';
 import { wishListSelector } from '../wishlists/selectors';
 import ArchetypeSocket, { ArchetypeRow } from './ArchetypeSocket';
 import ItemPerksList from './ItemPerksList';
+import { PlugClickHandler } from './ItemSockets';
 import './ItemSockets.scss';
 import { categoryStyle } from './ItemSocketsGeneral';
 import styles from './ItemSocketsWeapons.m.scss';
 import Socket from './Socket';
-import SocketDetails from './SocketDetails';
 
-interface Props {
+export default function ItemSocketsWeapons({
+  item,
+  minimal,
+  grid,
+  onPlugClicked,
+}: {
   item: DimItem;
   /** minimal style used for loadout generator and compare */
   minimal?: boolean;
+  /** Force grid style */
   grid?: boolean;
-  onPlugClicked?: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
-}
-
-export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked }: Props) {
+  onPlugClicked: PlugClickHandler;
+}) {
   const defs = useD2Definitions();
   const wishlistRoll = useSelector(wishListSelector(item));
-  const [socketInMenu, setSocketInMenu] = useState<DimSocket | null>(null);
   const [listPerks, setListPerks] = useSetting('perkList');
-
-  const handleSocketClick = (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => {
-    if (hasMenu) {
-      setSocketInMenu(socket);
-    } else {
-      onPlugClicked?.({
-        item,
-        socket,
-        plugHash: plug.plugDef.hash,
-      });
-    }
-  };
 
   if (!item.sockets || !defs) {
     return null;
@@ -120,7 +109,7 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
       item={item}
       socket={socketInfo}
       wishlistRoll={wishlistRoll}
-      onClick={handleSocketClick}
+      onClick={onPlugClicked}
     />
   );
 
@@ -164,7 +153,7 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
                 <AppIcon icon={faGrid} />
               </button>
             )}
-            <ItemPerksList item={item} perks={perks} onClick={handleSocketClick} />
+            <ItemPerksList item={item} perks={perks} onClick={onPlugClicked} />
           </div>
         ) : (
           <div className={clsx(categoryStyle(perks.category.categoryStyle), styles.perks)}>
@@ -187,7 +176,7 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
                       item={item}
                       socket={socketInfo}
                       wishlistRoll={wishlistRoll}
-                      onClick={handleSocketClick}
+                      onClick={onPlugClicked}
                     />
                   )
               )}
@@ -196,18 +185,6 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
         ))}
       {minimal && mods.length > 0 && (
         <div className="item-socket-category-Consumable item-sockets">{mods.map(renderSocket)}</div>
-      )}
-      {socketInMenu && (
-        <Portal>
-          <SocketDetails
-            key={socketInMenu.socketIndex}
-            item={item}
-            socket={socketInMenu}
-            allowInsertPlug
-            onClose={() => setSocketInMenu(null)}
-            onPlugSelected={onPlugClicked}
-          />
-        </Portal>
       )}
     </div>
   );
