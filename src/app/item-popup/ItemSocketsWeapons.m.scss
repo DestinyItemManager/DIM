@@ -78,12 +78,12 @@
     }
   }
 
+  :global(.item-socket) {
+    gap: 1px;
+  }
+
   :global(.plug) {
     padding: calc(2 / 50 * var(--item-size));
-    margin-bottom: 1px;
-    &:last-child {
-      margin-bottom: 0;
-    }
 
     @include phone-portrait {
       padding: 2px;

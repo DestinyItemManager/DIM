@@ -12,6 +12,15 @@ import './ItemSockets.scss';
 import styles from './Plug.m.scss';
 import { DimPlugTooltip } from './PlugTooltip';
 
+interface PlugStatuses {
+  plugged?: boolean;
+  selected?: boolean;
+  cannotRoll?: boolean;
+  notSelected?: boolean;
+  unreliablePerkOption?: boolean;
+}
+
+/** A single plug in a socket - either a perk (circle) or a mod/ability (square) */
 export default function Plug({
   plug,
   item,
@@ -42,8 +51,8 @@ export default function Plug({
     return null;
   }
 
-  const doClick = onClick && (() => onClick(plug));
   const selectable = socketInfo.plugOptions.length > 1;
+  const doClick = (hasMenu || selectable) && onClick ? () => onClick(plug) : undefined;
 
   return (
     <div
@@ -55,7 +64,8 @@ export default function Plug({
         [styles.mod]: isMod,
         [styles.masterwork]: item.masterwork && isWeaponMasterworkSocket(socketInfo),
       })}
-      onClick={hasMenu || selectable ? doClick : undefined}
+      role={doClick ? 'button' : undefined}
+      onClick={doClick}
     >
       {socketInfo.isReusable ? (
         <PerkCircleWithTooltip
@@ -136,14 +146,6 @@ export function PerkCircleWithTooltip({
       {isRecommendedPerk && <WishListPerkThumb wishListRoll={wishlistRoll!} floated />}
     </>
   );
-}
-
-interface PlugStatuses {
-  plugged?: boolean;
-  selected?: boolean;
-  cannotRoll?: boolean;
-  notSelected?: boolean;
-  unreliablePerkOption?: boolean;
 }
 
 /**
