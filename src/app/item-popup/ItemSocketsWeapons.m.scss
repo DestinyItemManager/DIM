@@ -55,7 +55,7 @@
 
 .minimal {
   > * {
-    margin-bottom: 8px;
+    margin-bottom: 8px !important;
   }
 
   // Tighten up spacing between sockets

@@ -7,19 +7,20 @@
     margin-right: 2px;
   }
 
+  // Shrink down the intrinsic perk - it's super small
   :global(.plug) {
     padding: 4px;
-  }
 
-  img {
-    width: calc(24 / 50 * var(--item-size));
-    height: calc(24 / 50 * var(--item-size));
-    transform: scale(1.4);
-
-    .minimal & {
-      width: 16px !important;
-      height: 16px !important;
+    img {
+      width: calc(24 / 50 * var(--item-size));
+      height: calc(24 / 50 * var(--item-size));
       transform: scale(1.4);
+
+      .minimal & {
+        width: 16px !important;
+        height: 16px !important;
+        transform: scale(1.4);
+      }
     }
   }
 }
@@ -47,16 +48,6 @@
 
   &.isWeapons {
     align-items: center;
-  }
-
-  :global(.plug) img {
-    width: calc(24 / 50 * var(--item-size));
-    height: calc(24 / 50 * var(--item-size));
-  }
-
-  :global(.item-socket-category-Consumable) img {
-    width: calc(32 / 50 * var(--item-size));
-    height: calc(32 / 50 * var(--item-size));
   }
 }
 
