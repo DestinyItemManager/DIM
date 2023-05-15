@@ -1,18 +1,6 @@
-@use '../variables.scss' as *;
-
 // An individual socket. Global class because it's currently directly overridden
 // in places like Compare.
 .item-socket {
   display: flex;
   flex-direction: column;
-
-  .item-socket-category-Reusable & {
-    border-right: 0.5px solid #444;
-    padding-right: 3px;
-
-    &:last-child {
-      border: none;
-      padding-right: 0;
-    }
-  }
 }

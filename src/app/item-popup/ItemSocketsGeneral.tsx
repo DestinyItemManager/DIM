@@ -172,8 +172,6 @@ function IntrinsicArmorPerk({
 /** converts a socket category to a valid css class name */
 export function categoryStyle(categoryStyle: DestinySocketCategoryStyle) {
   switch (categoryStyle) {
-    case DestinySocketCategoryStyle.Reusable:
-      return 'item-socket-category-Reusable';
     case DestinySocketCategoryStyle.Consumable:
       return 'item-socket-category-Consumable';
     default:

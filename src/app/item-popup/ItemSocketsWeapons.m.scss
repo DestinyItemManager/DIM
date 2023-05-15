@@ -9,7 +9,20 @@
 .perks {
   position: relative;
   :global(.item-sockets) {
+    // TODO: adjust these through CSS vars?
     gap: 3px;
+  }
+
+  // Draw lines between the sockets (columns), like in game.
+  // TODO: maybe get rid of this
+  :global(.item-socket) {
+    border-right: 0.5px solid #444;
+    padding-right: 3px;
+
+    &:last-child {
+      border: none;
+      padding-right: 0;
+    }
   }
 }
 
