@@ -13,7 +13,6 @@ import {
 } from 'app/utils/socket-utils';
 import { Portal } from 'app/utils/temp-container';
 import { LookupTable } from 'app/utils/util-types';
-import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import {
   ItemCategoryHashes,
@@ -29,6 +28,7 @@ import { wishListSelector } from '../wishlists/selectors';
 import ArchetypeSocket, { ArchetypeRow } from './ArchetypeSocket';
 import ItemPerksList from './ItemPerksList';
 import './ItemSockets.scss';
+import { categoryStyle } from './ItemSocketsGeneral';
 import styles from './ItemSocketsWeapons.m.scss';
 import Socket from './Socket';
 import SocketDetails from './SocketDetails';
@@ -211,24 +211,4 @@ export default function ItemSocketsWeapons({ item, minimal, grid, onPlugClicked 
       )}
     </div>
   );
-}
-
-/** converts a socket category to a valid css class name */
-function categoryStyle(categoryStyle: DestinySocketCategoryStyle) {
-  switch (categoryStyle) {
-    case DestinySocketCategoryStyle.Unknown:
-      return 'item-socket-category-Unknown';
-    case DestinySocketCategoryStyle.Reusable:
-      return 'item-socket-category-Reusable';
-    case DestinySocketCategoryStyle.Consumable:
-      return 'item-socket-category-Consumable';
-    case DestinySocketCategoryStyle.Unlockable:
-      return 'item-socket-category-Unlockable';
-    case DestinySocketCategoryStyle.Intrinsic:
-      return 'item-socket-category-Intrinsic';
-    case DestinySocketCategoryStyle.EnergyMeter:
-      return 'item-socket-category-EnergyMeter';
-    default:
-      return null;
-  }
 }

@@ -195,7 +195,7 @@ function IntrinsicArmorPerk({
 }
 
 /** converts a socket category to a valid css class name */
-function categoryStyle(categoryStyle: DestinySocketCategoryStyle) {
+export function categoryStyle(categoryStyle: DestinySocketCategoryStyle) {
   switch (categoryStyle) {
     case DestinySocketCategoryStyle.Unknown:
       return 'item-socket-category-Unknown';
