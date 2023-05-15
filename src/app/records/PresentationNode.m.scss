@@ -1,3 +1,20 @@
+.onlyChild {
+  margin-left: 0 !important;
+}
+
+.nodeName {
+  img {
+    height: 24px;
+    vertical-align: middle;
+  }
+
+  :global(.always-expanded) & {
+    color: rgb(255, 255, 255);
+    font-size: 14px;
+    letter-spacing: normal;
+  }
+}
+
 /* Styles for PresentationNodeProgress */
 .nodeProgress {
   text-align: right;

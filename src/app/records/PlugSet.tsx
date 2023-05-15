@@ -7,11 +7,10 @@ import { VendorItemDisplay } from 'app/vendors/VendorItemComponent';
 import clsx from 'clsx';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
-import BungieImage from '../dim-ui/BungieImage';
 import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
 import { count } from '../utils/util';
 import CollectiblesGrid from './CollectiblesGrid';
-import { PresentationNodeProgress } from './PresentationNode';
+import { PresentationNodeProgress, PresentationNodeTitle } from './PresentationNode';
 
 const plugSetOrder = chainComparator<DimItem>(
   compareBy((i) => i.tier),
@@ -52,11 +51,7 @@ export default function PlugSet({
   const childrenExpanded = path.includes(plugSetHash);
   const displayItem = defs.InventoryItem.get(plugSetCollection.displayItem);
 
-  const title = (
-    <span className="node-name">
-      <BungieImage src={displayItem.displayProperties.icon} /> {displayItem.displayProperties.name}
-    </span>
-  );
+  const title = <PresentationNodeTitle def={displayItem} />;
 
   return (
     <div className="presentation-node">

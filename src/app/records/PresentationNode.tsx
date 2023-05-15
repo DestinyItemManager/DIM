@@ -2,7 +2,10 @@ import { settingSelector } from 'app/dim-api/selectors';
 import { scrollToPosition } from 'app/dim-ui/scroll';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { percent } from 'app/shell/formatters';
-import { DestinyPresentationScreenStyle } from 'bungie-api-ts/destiny2';
+import {
+  DestinyDisplayPropertiesDefinition,
+  DestinyPresentationScreenStyle,
+} from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { deepEqual } from 'fast-equals';
 import { useEffect, useRef } from 'react';
@@ -76,17 +79,12 @@ export default function PresentationNode({
   const childrenExpanded =
     isRootNode || onlyChild || path.includes(presentationNodeHash) || alwaysExpanded;
 
-  const title = (
-    <span className="node-name">
-      {nodeDef.displayProperties.icon && <BungieImage src={nodeDef.displayProperties.icon} />}{' '}
-      {overrideName || nodeDef.displayProperties.name}
-    </span>
-  );
+  const title = <PresentationNodeTitle def={nodeDef} overrideName={overrideName} />;
 
   return (
     <div
       className={clsx('presentation-node', {
-        'only-child': onlyChild,
+        [styles.onlyChild]: onlyChild,
         'always-expanded': alwaysExpanded,
       })}
     >
@@ -189,5 +187,20 @@ export function PresentationNodeProgress({
         />
       </div>
     </div>
+  );
+}
+
+export function PresentationNodeTitle({
+  def,
+  overrideName,
+}: {
+  def: { displayProperties: DestinyDisplayPropertiesDefinition };
+  overrideName?: string;
+}) {
+  return (
+    <span className={styles.nodeName}>
+      {def.displayProperties.icon && <BungieImage src={def.displayProperties.icon} />}{' '}
+      {overrideName || def.displayProperties.name}
+    </span>
   );
 }
