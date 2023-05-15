@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import BungieImage from '../dim-ui/BungieImage';
 import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
 import { count } from '../utils/util';
+import CollectiblesGrid from './CollectiblesGrid';
 import { PresentationNodeProgress } from './PresentationNode';
 
 const plugSetOrder = chainComparator<DimItem>(
@@ -70,7 +71,7 @@ export default function PlugSet({
         <PresentationNodeProgress acquired={acquired} visible={plugSetItems.length} />
       </div>
       {childrenExpanded && (
-        <div className="collectibles plugset">
+        <CollectiblesGrid className="plugset">
           {plugSetItems.map((item) => (
             <VendorItemDisplay
               key={item.index}
@@ -79,7 +80,7 @@ export default function PlugSet({
               owned={false}
             />
           ))}
-        </div>
+        </CollectiblesGrid>
       )}
     </div>
   );

@@ -29,13 +29,6 @@ import Objective from '../progress/Objective';
 import styles from './Record.m.scss';
 import { DimRecord } from './presentation-nodes';
 
-interface Props {
-  record: DimRecord;
-  completedRecordsHidden: boolean;
-  redactedRecordsRevealed: boolean;
-  hideRecordIcon?: boolean;
-}
-
 interface RecordInterval {
   objective: DestinyObjectiveProgress;
   score: number;
@@ -50,8 +43,11 @@ export default function Record({
   record,
   completedRecordsHidden,
   redactedRecordsRevealed,
-  hideRecordIcon,
-}: Props) {
+}: {
+  record: DimRecord;
+  completedRecordsHidden: boolean;
+  redactedRecordsRevealed: boolean;
+}) {
   const defs = useD2Definitions()!;
   const { recordDef, trackedInGame, recordComponent } = record;
   const state = recordComponent.state;
@@ -183,7 +179,7 @@ export default function Record({
       })}
     >
       {recordShouldGlow && <div className={styles.glow} />}
-      {!hideRecordIcon && recordIcon && <BungieImage className={styles.icon} src={recordIcon} />}
+      {recordIcon && <BungieImage className={styles.icon} src={recordIcon} />}
       <div className={styles.info}>
         {!obscured && recordDef.completionInfo && <div className={styles.score}>{scoreValue}</div>}
         <h3>{name}</h3>
@@ -265,4 +261,37 @@ function getIntervals(
     prevIntervalProgress = data.completionValue;
   }
   return intervals;
+}
+
+/** A grid of records as seen in triumph presentation nodes or Tracked Triumphs. */
+export function RecordGrid({
+  records,
+  completedRecordsHidden,
+  redactedRecordsRevealed,
+}: {
+  records: DimRecord[];
+  completedRecordsHidden: boolean;
+  redactedRecordsRevealed: boolean;
+}) {
+  // TODO: was there really a problem with duplicate records?
+  const seenRecords = new Set<number>();
+
+  return (
+    <div className={styles.recordsGrid}>
+      {records.map((record) => {
+        if (seenRecords.has(record.recordDef.hash)) {
+          return null;
+        }
+        seenRecords.add(record.recordDef.hash);
+        return (
+          <Record
+            key={record.recordDef.hash}
+            record={record}
+            completedRecordsHidden={completedRecordsHidden}
+            redactedRecordsRevealed={redactedRecordsRevealed}
+          />
+        );
+      })}
+    </div>
+  );
 }
