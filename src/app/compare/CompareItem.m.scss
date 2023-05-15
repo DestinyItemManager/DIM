@@ -15,9 +15,10 @@
 
   // TODO push these into sockets component?
   :global(.plug) {
+    --item-size-mod: calc(26 / 50 * var(--item-size));
+    // This relies on the fact that only mods are img - perks are svg
     img {
-      width: calc(26 / 50 * var(--item-size));
-      height: calc(26 / 50 * var(--item-size));
+      --item-size: var(--item-size-mod) !important;
     }
   }
 

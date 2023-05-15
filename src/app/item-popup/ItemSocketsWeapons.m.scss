@@ -85,20 +85,9 @@
       margin-bottom: 0;
     }
 
-    img,
-    :global(.perk-circle) {
-      border: none;
-      width: calc(32 / 50 * var(--item-size));
-      height: calc(32 / 50 * var(--item-size));
-    }
-
     @include phone-portrait {
       padding: 2px;
-      img,
-      :global(.perk-circle) {
-        width: 32px;
-        height: 32px;
-      }
+      --item-size: 32px;
     }
   }
 }

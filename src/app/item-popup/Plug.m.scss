@@ -6,23 +6,33 @@
   position: relative;
   display: flex;
   flex-direction: row;
-
+  --item-size-adjusted: calc(32 / 50 * var(--item-size));
   img,
-  :global(.perk-circle) {
+  .perkCircle {
+    --item-size: var(--item-size-adjusted);
     -webkit-touch-callout: none;
-    width: calc(32 / 50 * var(--item-size));
-    height: calc(32 / 50 * var(--item-size));
     display: block;
   }
+}
 
-  :global(.item-img) {
-    border: none;
-  }
+.perkCircle {
+  height: var(--item-size);
+  width: var(--item-size);
+  border: none;
 }
 
 // In game, mods have a border around them that isn't part of the icon
 .mod {
-  border: 1px solid #888;
+  :global(.item-img) {
+    border-color: #888;
+  }
+}
+
+// In game, mods have a border around them that isn't part of the icon
+.masterwork {
+  :global(.item-img) {
+    border-color: $masterwork-border-color;
+  }
 }
 
 .none {

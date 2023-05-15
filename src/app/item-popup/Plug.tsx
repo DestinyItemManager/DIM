@@ -2,7 +2,7 @@ import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { isEnhancedPerk } from 'app/utils/socket-utils';
+import { isEnhancedPerk, isWeaponMasterworkSocket } from 'app/utils/socket-utils';
 import WishListPerkThumb from 'app/wishlists/WishListPerkThumb';
 import clsx from 'clsx';
 import { PressTip } from '../dim-ui/PressTip';
@@ -53,6 +53,7 @@ export default function Plug({
         [styles.selectable]: selectable,
         [styles.hasMenu]: hasMenu,
         [styles.mod]: isMod,
+        [styles.masterwork]: item.masterwork && isWeaponMasterworkSocket(socketInfo),
       })}
       onClick={hasMenu || selectable ? doClick : undefined}
     >
@@ -70,7 +71,7 @@ export default function Plug({
         />
       ) : (
         <PressTip tooltip={<DimPlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} />}>
-          <DefItemIcon itemDef={plug.plugDef} borderless />
+          <DefItemIcon itemDef={plug.plugDef} />
         </PressTip>
       )}
     </div>
@@ -147,8 +148,6 @@ interface PlugStatuses {
 
 /**
  * an encircled perk image.
- * this has a global classname .perk-circle available so parents can define how big sockets should be
- *
  */
 function PerkCircle({
   plug,
@@ -171,7 +170,12 @@ function PerkCircle({
       [styles.notSelected]: notSelected,
     }) || styles.none;
   return (
-    <svg viewBox="0 0 100 100" width="100" height="100" className={clsx(className, 'perk-circle')}>
+    <svg
+      viewBox="0 0 100 100"
+      width="100"
+      height="100"
+      className={clsx(styles.perkCircle, className)}
+    >
       <defs>
         <linearGradient id="mw" x1="0" x2="0" y1="0" y2="1">
           <stop stopColor="#eade8b" offset="50%" stopOpacity="0" />
