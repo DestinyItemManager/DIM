@@ -1,13 +1,5 @@
 @use '../variables.scss' as *;
 
-.progress-panel {
-  margin-top: 8px;
-
-  @include phone-portrait {
-    margin-top: 0;
-  }
-}
-
 .progress-page {
   user-select: text;
   .progress-characters {
