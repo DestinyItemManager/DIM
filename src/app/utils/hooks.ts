@@ -98,3 +98,41 @@ export function useThrottledSubscription<T>(observable: Observable<T>, delay: nu
   const value = useSubscription(throttledObservable);
   return value;
 }
+
+/**
+ * Determine a height for a given element based on its position and height
+ * relative to the bottom of the viewport.
+ */
+export function useHeightFromViewportBottom(
+  elementRef: React.RefObject<HTMLElement> | void,
+  setHeightFromViewportBottom: (value: number) => void,
+  itemHeight: number | void,
+  withPadding: boolean
+) {
+  const padding = withPadding ? 10 : 0;
+
+  const updateHeight = useCallback(() => {
+    if (elementRef?.current && window.visualViewport) {
+      const rect = elementRef.current.getBoundingClientRect();
+      const { y, height } = rect;
+      const { height: viewportHeight } = window.visualViewport;
+      // pixels remaining in viewport minus offset minus 20px for padding
+      const pxAvailable = viewportHeight - y - height - padding;
+      const heightFromBottom =
+        itemHeight !== undefined
+          ? Math.floor(pxAvailable / itemHeight) * itemHeight
+          : Math.floor(pxAvailable);
+
+      setHeightFromViewportBottom(heightFromBottom);
+    }
+  }, [setHeightFromViewportBottom, elementRef, itemHeight, padding]);
+
+  useEffect(() => {
+    window.visualViewport?.addEventListener('resize', updateHeight);
+    return () => window.visualViewport?.removeEventListener('resize', updateHeight);
+  });
+
+  useEffect(() => {
+    updateHeight();
+  }, [updateHeight]);
+}
