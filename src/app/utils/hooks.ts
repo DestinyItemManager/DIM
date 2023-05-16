@@ -100,7 +100,7 @@ export function useThrottledSubscription<T>(observable: Observable<T>, delay: nu
 }
 
 /**
- * Determine a height for a given element based on its position and height
+ * Determine a height for a given element based on its height and position
  * relative to the bottom of the viewport.
  */
 export function useHeightFromViewportBottom(
