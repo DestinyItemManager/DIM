@@ -170,7 +170,7 @@
   grid-template-columns:
     repeat(var(--num-characters), calc(6px + var(--character-column-width) + var(--column-padding)))
     calc(6px + var(--character-column-width) + var(--column-padding)) 1fr !important;
-  background: var(--theme-background-app-header-characters);
+  background: var(--theme-header-characters-bg);
   background-position: center top;
   background-repeat: no-repeat;
   background-size: 100% 100vh;

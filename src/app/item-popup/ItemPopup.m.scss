@@ -23,7 +23,7 @@
   // Mod drawer has z-index of 14 and needs to sit over this
   z-index: 13;
 
-  --background-color: rgba(0, 0, 0, 1);
+  --background-color: rgba(0, 0, 0, 1); // Fallback background
 
   &.exotic {
     --background-color: rgba(22, 18, 4, 1);
@@ -45,7 +45,7 @@
     width: 0;
     height: 0;
     border-bottom-width: 0;
-    border-top-color: var(--theme-tooltip-background-color);
+    border-top-color: var(--theme-tooltip-bg);
     bottom: calc(-1 * $theme-tooltip-arrow-size);
   }
 
@@ -53,7 +53,7 @@
     width: 0;
     height: 0;
     border-top-width: 0;
-    border-bottom-color: var(--theme-tooltip-background-color);
+    border-bottom-color: var(--theme-tooltip-bg);
     top: calc(-1 * $theme-tooltip-arrow-size);
 
     &.exotic {
@@ -76,14 +76,14 @@
     width: 0;
     height: 0;
     border-left-width: 0;
-    border-right-color: var(--theme-tooltip-background-color);
+    border-right-color: var(--theme-tooltip-bg);
     left: calc(-1 * $theme-tooltip-arrow-size);
   }
   &[data-popper-placement^='left'] .arrow {
     width: 0;
     height: 0;
     border-right-width: 0;
-    border-left-color: var(--theme-tooltip-background-color);
+    border-left-color: var(--theme-tooltip-bg);
     right: calc(-1 * $theme-tooltip-arrow-size);
   }
   textarea {

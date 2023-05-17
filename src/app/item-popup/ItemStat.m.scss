@@ -6,6 +6,7 @@
   text-align: right;
   margin-right: 8px;
   max-width: 130px;
+
   @include phone-portrait {
     max-width: 40vw;
   }
@@ -82,12 +83,12 @@
   background-color: var(--theme-accent-primary);
 }
 .moddedStatBar {
-  background-color: var(--theme-accent-secondary);
+  background-color: $statDelta;
   & + .moddedStatBar {
-    background-color: var(--theme-accent-secondary);
+    background-color: $statDelta;
     opacity: 0.8;
     & + .moddedStatBar {
-      background-color: var(--theme-accent-secondary);
+      background-color: $statDelta;
       opacity: 0.6;
     }
   }
@@ -101,7 +102,7 @@
 }
 
 .modded {
-  color: var(--theme-accent-secondary);
+  color: $statDelta;
   .statName {
     font-weight: bold;
   }
@@ -128,7 +129,7 @@
 }
 
 .totalStatModded {
-  color: var(--theme-accent-secondary);
+  color: $statDelta;
 }
 
 .totalStatNegativeModded {

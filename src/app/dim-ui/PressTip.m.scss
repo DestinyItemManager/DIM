@@ -12,11 +12,11 @@ $horizontal-padding: 11px;
 
 .tooltip {
   position: absolute;
-  background-color: var(--theme-tooltip-background-color);
+  background-color: var(--theme-tooltip-bg);
   color: #dadaea;
   width: fit-content;
   max-width: 306px;
-  border: 1px solid var(--theme-tooltip-border-color);
+  border: 1px solid var(--theme-tooltip-border);
   border-top-width: $theme-tooltip-corner-radius;
   border-radius: $theme-tooltip-corner-radius;
   box-shadow: 0 0 24px 6px #080811;
@@ -26,13 +26,14 @@ $horizontal-padding: 11px;
   box-sizing: border-box;
   user-select: none;
 
-  // The 'ribbon' at the top of the tooltip. We can't use border or an inset box shadow because the change in
-  // color between the left/right and top edges results in weird slanted artifacts.
+  // The top 'ribbon' in tooltips that's tinted in different contexts (exotic perks, sub-class details)
+  // Note: We don't use border-top-color or 'box-shadow: inset' to color the ribbon
+  // to avoid alignment artefacts along the miter joints (top left & right corners) since the top border is thicker
   &::after {
     content: '';
     display: block;
     position: absolute;
-    background-color: var(--theme-tooltip-border-color);
+    background-color: var(--tooltip-ribbon-color);
     height: $theme-tooltip-corner-radius;
     top: calc(-1 * $theme-tooltip-corner-radius);
     left: -1px;
@@ -45,7 +46,7 @@ $horizontal-padding: 11px;
   }
 
   hr {
-    border-color: var(--theme-tooltip-border-color);
+    border-color: var(--theme-tooltip-border);
   }
 
   p {
@@ -88,28 +89,28 @@ $horizontal-padding: 11px;
     width: 0;
     height: 0;
     border-bottom-width: 0;
-    border-top-color: var(--theme-tooltip-border-color);
+    border-top-color: var(--theme-tooltip-border);
     bottom: calc($theme-tooltip-arrow-size * -1);
   }
   &[data-popper-placement='bottom'] .arrow {
     width: 0;
     height: 0;
     border-top-width: 0;
-    border-bottom-color: var(--theme-tooltip-border-color);
+    border-bottom-color: var(--theme-tooltip-border);
     top: calc(calc(-1 * $theme-tooltip-corner-radius) - $theme-tooltip-arrow-size);
   }
   &[data-popper-placement='right'] .arrow {
     width: 0;
     height: 0;
     border-left-width: 0;
-    border-right-color: var(--theme-tooltip-border-color);
+    border-right-color: var(--theme-tooltip-border);
     left: calc($theme-tooltip-arrow-size * -1);
   }
   &[data-popper-placement='left'] .arrow {
     width: 0;
     height: 0;
     border-right-width: 0;
-    border-left-color: var(--theme-tooltip-border-color);
+    border-left-color: var(--theme-tooltip-border);
     right: calc($theme-tooltip-arrow-size * -1);
   }
 
@@ -117,7 +118,7 @@ $horizontal-padding: 11px;
     border-radius: 3px;
     border: none;
     box-shadow: var(--theme-drop-shadow-only);
-    background-color: var(--theme-tooltip-minimal-color);
+    background-color: var(--theme-tooltip-minimal-bg);
 
     // hide ribbon
     &::after {
@@ -129,19 +130,19 @@ $horizontal-padding: 11px;
     }
 
     &[data-popper-placement='left'] .arrow {
-      border-left-color: var(--theme-tooltip-minimal-color);
+      border-left-color: var(--theme-tooltip-minimal-bg);
       top: calc($theme-tooltip-arrow-size-mini / 2) !important;
     }
     &[data-popper-placement='right'] .arrow {
-      border-right-color: var(--theme-tooltip-minimal-color);
+      border-right-color: var(--theme-tooltip-minimal-bg);
       top: calc($theme-tooltip-arrow-size-mini / 2) !important;
     }
     &[data-popper-placement='top'] .arrow {
-      border-top-color: var(--theme-tooltip-minimal-color);
+      border-top-color: var(--theme-tooltip-minimal-bg);
       bottom: calc(100% - 2px) !important;
     }
     &[data-popper-placement='bottom'] .arrow {
-      border-bottom-color: var(--theme-tooltip-minimal-color);
+      border-bottom-color: var(--theme-tooltip-minimal-bg);
       top: calc($theme-tooltip-arrow-size-mini * -1) !important;
     }
   }
@@ -149,7 +150,7 @@ $horizontal-padding: 11px;
   .section:not(:empty) {
     margin: 8px #{-$horizontal-padding} -8px #{-$horizontal-padding};
     padding: 5px $horizontal-padding 7px $horizontal-padding;
-    border-top: 1px solid var(--theme-tooltip-border-color);
+    border-top: 1px solid var(--theme-tooltip-border);
 
     > :first-child {
       margin-top: 0;

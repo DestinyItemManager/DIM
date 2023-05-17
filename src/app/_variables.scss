@@ -4,6 +4,7 @@
 $dim-brand: #e8a534;
 $red: #ff3232; // For warnings/errors
 $green: #51a351; // For success statuses or positive deltas
+$statDelta: #68a0b7; // For highlighting the difference in modded item stats
 
 // Blue used to denote community-provided data
 $communityBlue: #0d7fad;
@@ -60,12 +61,6 @@ $easeOutCubic: cubic-bezier(0.215, 0.61, 0.355, 1);
 $easeInOutCubic: cubic-bezier(0.645, 0.045, 0.355, 1);
 
 // Theme style properties that remain consistent across all themes
-
-// Expose primary brand colour as a css variable so it can be used in themes
-:root {
-  --dim-brand: #{$dim-brand};
-}
-
 // Tooltips and arrows
 $theme-tooltip-arrow-size: 8px; // Ensure this stays in sync with 'popperArrowSize' in 'usePopper.ts'
 $theme-tooltip-arrow-size-mini: 6px;
