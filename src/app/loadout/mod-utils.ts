@@ -8,6 +8,7 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import deprecatedMods from 'data/d2/deprecated-mods.json';
 import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
+import mutuallyExclusiveMods from 'data/d2/mutually-exclusive-mods.json';
 import { normalToReducedMod, reducedToNormalMod } from 'data/d2/reduced-cost-mod-mappings';
 import _ from 'lodash';
 import { knownModPlugCategoryHashes } from './known-values';
@@ -130,4 +131,13 @@ export function mapToNonReducedModCostVariant(plugHash: number): number {
  */
 export function mapToOtherModCostVariant(plugHash: number): number | undefined {
   return reducedToNormalMod[plugHash] ?? normalToReducedMod[plugHash];
+}
+
+/**
+ * Some mods form a group of which only one mod can be equipped,
+ * which is enforced by game servers. DIM must respect this when building
+ * loadouts or applying mods.
+ */
+export function getModExclusionGroup(mod: PluggableInventoryItemDefinition): string | undefined {
+  return mutuallyExclusiveMods[mod.hash];
 }
