@@ -38,7 +38,7 @@ const popperOptions = (
   arrowClassName?: string,
   menuClassName?: string,
   boundarySelector?: string,
-  offset = arrowClassName ? popperArrowSize / 2 : 0,
+  offset = arrowClassName ? popperArrowSize : 0,
   fixed = false
 ): Partial<Options> => {
   const headerHeight = parseInt(

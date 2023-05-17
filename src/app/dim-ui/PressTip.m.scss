@@ -122,9 +122,7 @@ $horizontal-padding: 11px;
     box-shadow: var(--theme-drop-shadow);
     background-color: var(--theme-tooltip-minimal-bg);
 
-    &,
-    & > * {
-      // Set mininal arrow size on tooltip container and it's immediate children
+    .arrow {
       --arrow-size: #{$theme-tooltip-arrow-size-mini};
     }
 
@@ -137,24 +135,17 @@ $horizontal-padding: 11px;
       padding: 3px 6px;
     }
 
-    &[data-popper-placement='left'] {
-      margin-right: var(--arrow-size) !important;
-
-      .arrow {
-        border-left-color: var(--theme-tooltip-minimal-bg);
-        top: 50% !important;
-        transform: translateY(-50%) !important;
-      }
+    &[data-popper-placement='left'] .arrow {
+      border-left-color: var(--theme-tooltip-minimal-bg);
+      top: 50% !important;
+      transform: translateY(-50%) !important;
     }
-    &[data-popper-placement='right'] {
-      margin-left: var(--arrow-size) !important;
-
-      .arrow {
-        border-right-color: var(--theme-tooltip-minimal-bg);
-        top: 50% !important;
-        transform: translateY(-50%) !important;
-      }
+    &[data-popper-placement='right'] .arrow {
+      border-right-color: var(--theme-tooltip-minimal-bg);
+      top: 50% !important;
+      transform: translateY(-50%) !important;
     }
+
     &[data-popper-placement='top'] .arrow {
       border-top-color: var(--theme-tooltip-minimal-bg);
       bottom: calc(100% - 2px) !important;
