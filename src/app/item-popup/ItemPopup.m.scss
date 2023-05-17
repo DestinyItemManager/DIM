@@ -45,7 +45,7 @@
     width: 0;
     height: 0;
     border-bottom-width: 0;
-    border-top-color: var(--theme-tooltip-bg);
+    border-top-color: var(--theme-item-popup-arrow);
     bottom: calc(-1 * $theme-tooltip-arrow-size);
   }
 
@@ -53,7 +53,7 @@
     width: 0;
     height: 0;
     border-top-width: 0;
-    border-bottom-color: var(--theme-tooltip-bg);
+    border-bottom-color: var(--theme-item-popup-arrow);
     top: calc(-1 * $theme-tooltip-arrow-size);
 
     &.exotic {
@@ -76,14 +76,14 @@
     width: 0;
     height: 0;
     border-left-width: 0;
-    border-right-color: var(--theme-tooltip-bg);
+    border-right-color: var(--theme-item-popup-arrow);
     left: calc(-1 * $theme-tooltip-arrow-size);
   }
   &[data-popper-placement^='left'] .arrow {
     width: 0;
     height: 0;
     border-right-width: 0;
-    border-left-color: var(--theme-tooltip-bg);
+    border-left-color: var(--theme-item-popup-arrow);
     right: calc(-1 * $theme-tooltip-arrow-size);
   }
   textarea {

@@ -11,7 +11,7 @@ $horizontal-padding: 11px;
 
 .tooltip {
   position: absolute;
-  background-color: var(--theme-tooltip-bg);
+  background-color: var(--theme-tooltip-body-bg);
   color: #dadaea;
   width: fit-content;
   max-width: 306px;
@@ -53,7 +53,7 @@ $horizontal-padding: 11px;
   }
 
   .header {
-    background-color: var(--theme-fill-secondary);
+    background-color: var(--theme-tooltip-header-bg);
     padding: 6px $horizontal-padding;
 
     h2 {

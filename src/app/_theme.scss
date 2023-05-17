@@ -18,7 +18,8 @@
   --theme-drop-shadow: 0 0 18px 0 #000;
 
   // Tooltips
-  --theme-tooltip-bg: #151523;
+  --theme-tooltip-header-bg: #0a0a0f;
+  --theme-tooltip-body-bg: #151523;
   --theme-tooltip-border: #8e8e9e;
   --theme-tooltip-minimal-bg: #5d5970;
 
@@ -45,9 +46,10 @@
   // Search
   --theme-search-dropdown-bg: var(--theme-fill-modal-actions);
 
-  // Item modals
+  // Item popup
+  --theme-item-popup-arrow: var(--theme-fill-modal-actions);
   --theme-item-popup-actions-bg: var(--theme-fill-modal-actions);
-  --theme-item-popup-panel-bg: #333; // Panels for progress (masterwork, crafted, catalyst) and mod sockets
+  --theme-item-popup-panel-bg: #333; // Panels for progress (masterwork, crafted, catalyst) and archetype
   --theme-item-popup-progress-bar-bg: #222;
 
   // Item feed
