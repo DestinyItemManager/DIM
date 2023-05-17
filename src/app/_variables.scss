@@ -63,11 +63,11 @@ $easeInOutCubic: cubic-bezier(0.645, 0.045, 0.355, 1);
 // Theme style properties that remain consistent across all themes
 // Tooltips and arrows
 $theme-tooltip-arrow-size: 8px; // Ensure this stays in sync with 'popperArrowSize' in 'usePopper.ts'
-$theme-tooltip-arrow-size-mini: 6px;
+$theme-tooltip-arrow-size-mini: 5px;
 $theme-tooltip-corner-radius: 6px;
 
 // Search
-$theme-corner-radius-search: 6px;
+$theme-corner-radius-search: 4px;
 
 // A mixin that allows targeting styles only when in phone-portrait display mode
 @mixin phone-portrait {

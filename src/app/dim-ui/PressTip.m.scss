@@ -1,7 +1,6 @@
 @use '../variables.scss' as *;
 @use 'sass:color';
 
-$minimal-arrow-size: 8px;
 $horizontal-padding: 11px;
 
 .control {
@@ -77,12 +76,15 @@ $horizontal-padding: 11px;
   }
 
   .arrow {
-    width: $theme-tooltip-arrow-size;
-    height: $theme-tooltip-arrow-size;
+    // Local variable used to re-size tooltip arrow when minimal size
+    --arrow-size: #{$theme-tooltip-arrow-size};
+
+    width: var(--arrow-size);
+    height: var(--arrow-size);
     border-style: solid;
     position: absolute;
     border-color: transparent;
-    border-width: $theme-tooltip-arrow-size;
+    border-width: var(--arrow-size);
   }
 
   &[data-popper-placement='top'] .arrow {
@@ -90,35 +92,41 @@ $horizontal-padding: 11px;
     height: 0;
     border-bottom-width: 0;
     border-top-color: var(--theme-tooltip-border);
-    bottom: calc($theme-tooltip-arrow-size * -1);
+    bottom: calc(var(--arrow-size) * -1);
   }
   &[data-popper-placement='bottom'] .arrow {
     width: 0;
     height: 0;
     border-top-width: 0;
     border-bottom-color: var(--theme-tooltip-border);
-    top: calc(calc(-1 * $theme-tooltip-corner-radius) - $theme-tooltip-arrow-size);
+    top: calc(calc(-1 * $theme-tooltip-corner-radius) - var(--arrow-size));
   }
   &[data-popper-placement='right'] .arrow {
     width: 0;
     height: 0;
     border-left-width: 0;
     border-right-color: var(--theme-tooltip-border);
-    left: calc($theme-tooltip-arrow-size * -1);
+    left: calc(var(--arrow-size) * -1);
   }
   &[data-popper-placement='left'] .arrow {
     width: 0;
     height: 0;
     border-right-width: 0;
     border-left-color: var(--theme-tooltip-border);
-    right: calc($theme-tooltip-arrow-size * -1);
+    right: calc(var(--arrow-size) * -1);
   }
 
   &.minimalTooltip {
     border-radius: 3px;
     border: none;
-    box-shadow: var(--theme-drop-shadow-only);
+    box-shadow: var(--theme-drop-shadow);
     background-color: var(--theme-tooltip-minimal-bg);
+
+    &,
+    & > * {
+      // Set mininal arrow size on tooltip container and it's immediate children
+      --arrow-size: #{$theme-tooltip-arrow-size-mini};
+    }
 
     // hide ribbon
     &::after {
@@ -129,13 +137,23 @@ $horizontal-padding: 11px;
       padding: 3px 6px;
     }
 
-    &[data-popper-placement='left'] .arrow {
-      border-left-color: var(--theme-tooltip-minimal-bg);
-      top: calc($theme-tooltip-arrow-size-mini / 2) !important;
+    &[data-popper-placement='left'] {
+      margin-right: var(--arrow-size) !important;
+
+      .arrow {
+        border-left-color: var(--theme-tooltip-minimal-bg);
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+      }
     }
-    &[data-popper-placement='right'] .arrow {
-      border-right-color: var(--theme-tooltip-minimal-bg);
-      top: calc($theme-tooltip-arrow-size-mini / 2) !important;
+    &[data-popper-placement='right'] {
+      margin-left: var(--arrow-size) !important;
+
+      .arrow {
+        border-right-color: var(--theme-tooltip-minimal-bg);
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+      }
     }
     &[data-popper-placement='top'] .arrow {
       border-top-color: var(--theme-tooltip-minimal-bg);
@@ -143,7 +161,7 @@ $horizontal-padding: 11px;
     }
     &[data-popper-placement='bottom'] .arrow {
       border-bottom-color: var(--theme-tooltip-minimal-bg);
-      top: calc($theme-tooltip-arrow-size-mini * -1) !important;
+      top: calc(var(--arrow-size) * -1) !important;
     }
   }
 
