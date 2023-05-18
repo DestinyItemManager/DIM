@@ -147,12 +147,17 @@ $horizontal-padding: 11px;
     }
 
     &[data-popper-placement='top'] .arrow {
-      border-top-color: var(--theme-tooltip-minimal-bg);
-      bottom: calc(100% - 2px) !important;
+      border-bottom: var(--arrow-size) solid var(--theme-tooltip-minimal-bg);
+      border-top: 0 solid transparent;
+      bottom: 100% !important;
+      right: 50% !important;
+      left: initial !important;
     }
     &[data-popper-placement='bottom'] .arrow {
       border-bottom-color: var(--theme-tooltip-minimal-bg);
       top: calc(var(--arrow-size) * -1) !important;
+      right: 50% !important;
+      left: initial !important;
     }
   }
 
