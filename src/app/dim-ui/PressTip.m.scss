@@ -79,8 +79,6 @@ $horizontal-padding: 11px;
     // Local variable used to re-size tooltip arrow when minimal size
     --arrow-size: #{$theme-tooltip-arrow-size};
 
-    width: var(--arrow-size);
-    height: var(--arrow-size);
     border-style: solid;
     position: absolute;
     border-color: transparent;
@@ -88,29 +86,22 @@ $horizontal-padding: 11px;
   }
 
   &[data-popper-placement='top'] .arrow {
-    width: 0;
-    height: 0;
     border-bottom-width: 0;
     border-top-color: var(--theme-tooltip-border);
     bottom: calc(var(--arrow-size) * -1);
   }
   &[data-popper-placement='bottom'] .arrow {
-    width: 0;
-    height: 0;
     border-top-width: 0;
     border-bottom-color: var(--theme-tooltip-border);
-    top: calc(calc(-1 * $theme-tooltip-corner-radius) - var(--arrow-size));
+    // Include corner radius so the arrow doesn't overlap with the ribbon
+    top: calc((var(--arrow-size) + $theme-tooltip-corner-radius) * -1);
   }
   &[data-popper-placement='right'] .arrow {
-    width: 0;
-    height: 0;
     border-left-width: 0;
     border-right-color: var(--theme-tooltip-border);
     left: calc(var(--arrow-size) * -1);
   }
   &[data-popper-placement='left'] .arrow {
-    width: 0;
-    height: 0;
     border-right-width: 0;
     border-left-color: var(--theme-tooltip-border);
     right: calc(var(--arrow-size) * -1);
@@ -137,27 +128,17 @@ $horizontal-padding: 11px;
 
     &[data-popper-placement='left'] .arrow {
       border-left-color: var(--theme-tooltip-minimal-bg);
-      top: 50% !important;
-      transform: translateY(-50%) !important;
     }
     &[data-popper-placement='right'] .arrow {
       border-right-color: var(--theme-tooltip-minimal-bg);
-      top: 50% !important;
-      transform: translateY(-50%) !important;
     }
-
     &[data-popper-placement='top'] .arrow {
-      border-bottom: var(--arrow-size) solid var(--theme-tooltip-minimal-bg);
-      border-top: 0 solid transparent;
-      bottom: 100% !important;
-      right: 50% !important;
-      left: initial !important;
+      border-top-color: var(--theme-tooltip-minimal-bg);
     }
     &[data-popper-placement='bottom'] .arrow {
       border-bottom-color: var(--theme-tooltip-minimal-bg);
-      top: calc(var(--arrow-size) * -1) !important;
-      right: 50% !important;
-      left: initial !important;
+      // Exclude corner radius because minimal tooltips don't have a ribbon
+      top: calc(var(--arrow-size) * -1);
     }
   }
 
