@@ -1,5 +1,7 @@
 ## Next
 
+## 7.69.0 <span class="changelog-date">(2023-05-21)</span>
+
 ## 7.68.0 <span class="changelog-date">(2023-05-14)</span>
 
 * Item tiles for armor on the Vendors page will now show their stat total instead of power level.
