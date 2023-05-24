@@ -147,37 +147,37 @@ function ClarityStatInfo({
   if ('TimeToFullHP' in clarityStatData) {
     intrinsicCooldowns.push(
       <div key="TimeToFullHP">
-        Time to Full HP: {Math.round(clarityStatData.TimeToFullHP[tier]).toLocaleString()}s
+        Time to Full HP: {clarityStatData.TimeToFullHP[tier].toLocaleString()}s
         <Graph tier={tier} cooldowns={clarityStatData.TimeToFullHP} />
       </div>
     );
   } else if ('WalkingSpeed' in clarityStatData) {
     intrinsicCooldowns.push(
       <div key="WalkingSpeed">
-        Walking Speed: {Math.round(clarityStatData.WalkingSpeed[tier]).toLocaleString()}m/s
+        Walking Speed: {clarityStatData.WalkingSpeed[tier].toLocaleString()}m/s
         <Graph tier={tier} cooldowns={clarityStatData.WalkingSpeed} />
       </div>,
       <div key="StrafingSpeed">
-        Strafing Speed: {Math.round(clarityStatData.StrafeSpeed[tier]).toLocaleString()}m/s
+        Strafing Speed: {clarityStatData.StrafeSpeed[tier].toLocaleString()}m/s
         <Graph tier={tier} cooldowns={clarityStatData.StrafeSpeed} />
       </div>,
       <div key="CrouchingSpeed">
-        Crouching Speed: {Math.round(clarityStatData.CrouchSpeed[tier]).toLocaleString()}m/s
+        Crouching Speed: {clarityStatData.CrouchSpeed[tier].toLocaleString()}m/s
         <Graph tier={tier} cooldowns={clarityStatData.CrouchSpeed} />
       </div>
     );
   } else if ('TotalHP' in clarityStatData) {
     intrinsicCooldowns.push(
       <div key="TotalHP">
-        Total HP: {Math.round(clarityStatData.TotalHP[tier]).toLocaleString()} HP
+        Total HP: {clarityStatData.TotalHP[tier].toLocaleString()} HP
         <Graph tier={tier} cooldowns={clarityStatData.TotalHP} />
       </div>,
       <div key="DamageResistance">
-        Damage Resistance: {Math.round(clarityStatData.DamageResistance[tier]).toLocaleString()}%
+        Damage Resistance: {clarityStatData.DamageResistance[tier].toLocaleString()}%
         <Graph tier={tier} cooldowns={clarityStatData.DamageResistance} />
       </div>,
       <div key="FlinchResistance">
-        Flinch Resistance: {Math.round(clarityStatData.FlinchResistance[tier]).toLocaleString()}%
+        Flinch Resistance: {clarityStatData.FlinchResistance[tier].toLocaleString()}%
         <Graph tier={tier} cooldowns={clarityStatData.FlinchResistance} />
       </div>
     );
