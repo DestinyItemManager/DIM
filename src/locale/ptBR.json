@@ -241,7 +241,7 @@
     "InLoadout": "is:inloadout mostra os itens que estão incluídos em qualquer set. Buscando com inloadout: mostra os itens que estão inclusos nos sets com títulos correspondentes. Quando usado com uma hashtag, inloadout: mostrará itens cujos sets possuem a hashtag no título ou nas anotações.",
     "Infusable": "Mostra itens que podem ser infundidos.",
     "InfusionFodder": "Exibe itens que podem ser infundidos em versões de menor poder do mesmo item usando apenas lúmen.",
-    "IsAdept": "Shows weapons compatible with Adept mods.",
+    "IsAdept": "Mostra armas compatíveis com os mods Adeptos.",
     "IsCrafted": "Mostra armas que foram criadas.",
     "IsSunset": "Exibe itens que tiveram o poder limitado e que não podem mais ser infundidos ao poder máximo.",
     "ItemHash": "Exibe itens com determinado hash de inventário de item. Para usuários avançados.",
@@ -829,7 +829,7 @@
     "AddToLoadoutTitle": "Adicionar isto a um set",
     "All": "Tudo",
     "CannotCurrentlyRoll": "Este perk não pode ser utilizado na versão atual deste item.",
-    "CantPullFromPostmaster": "You must visit the postmaster in game to retrieve this item.",
+    "CantPullFromPostmaster": "Você deve visitar o postmaster no jogo para recuperar este item.",
     "CatalystProgress": "Progresso do Catalisador",
     "CommunityData": "Conhecimento da Comunidade",
     "Consolidate": "Consolidar",
@@ -1291,8 +1291,8 @@
       "TranslationText": "Nós usamos o {{link}} para facilitar as traduções. Se você deseja aperfeiçoar alguma das traduções do DIM, junte-se ao time.",
       "TwitterHelp": "Siga-nos para se manter informado sobre atualizações e notificação em tempo real sobre o aplicativo.",
       "Version": "Versão {{version}} ({{flavor}}), construído em {{date}}",
-      "Wiki": "DIM User Guide",
-      "WikiHelp": "Learn how to use DIM's features."
+      "Wiki": "Guia do Usuário DIM",
+      "WikiHelp": "Aprenda como utilizar os recursos do DIM."
     },
     "Login": {
       "Auth": "Autorize com Bungie.net",

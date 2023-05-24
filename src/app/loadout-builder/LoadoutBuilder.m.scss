@@ -3,13 +3,14 @@
 .page {
   :global .perk-image {
     &.locked-perk {
-      border-color: $orange;
+      border-color: var(--theme-accent-primary);
     }
   }
 }
 
 .menuContent {
   box-sizing: border-box;
+
   @include phone-portrait {
     padding: 0 10px;
   }
@@ -24,6 +25,7 @@
   padding: 10px 10px;
   position: fixed;
   left: 50%;
+
   @include below-header;
 
   white-space: nowrap;
@@ -48,15 +50,16 @@
   flex-flow: row wrap;
   align-items: center;
   box-sizing: border-box;
+
   @include phone-portrait {
     padding: 0 10px;
   }
   gap: 4px;
-  margin-top: 12px;
 }
 
 .guide {
   box-sizing: border-box;
+
   @include phone-portrait {
     padding: 0 10px;
   }

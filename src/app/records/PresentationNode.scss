@@ -1,37 +1,8 @@
 @use '../variables.scss' as *;
 
-.presentation-node-root {
-  margin-bottom: 16px;
-}
-
 .presentation-node {
   .collapse-icon {
     margin-right: 8px;
-  }
-  .node-name {
-    img {
-      height: 24px;
-      vertical-align: middle;
-    }
-  }
-
-  .node-progress {
-    text-align: right;
-    .node-progress-count {
-      font-size: 12px;
-      text-transform: none;
-      letter-spacing: 0;
-    }
-    .node-progress-bar {
-      background: #666;
-      height: 2px;
-      width: 8em;
-      margin-top: 2px;
-    }
-    .node-progress-bar-amount {
-      background: #ccc;
-      height: 2px;
-    }
   }
 
   /* indent child nodes more than their parent */
@@ -44,18 +15,12 @@
       &.collapsed {
         background-color: rgba(0, 0, 0, 0.4);
       }
-    }
 
-    #triumphs &,
-    #collections & {
       /* styling for completed triumph categories */
-      > .title.completed {
-        color: #f5dc56;
+      .completed {
+        color: $gold;
         background-color: rgba(245, 220, 86, 0.1);
         opacity: 0.7;
-        .node-progress-bar-amount {
-          background-color: #f5dc56;
-        }
         &.hide-complete {
           cursor: default;
           .collapse-icon {
@@ -77,9 +42,6 @@
       }
     }
   }
-  &.only-child {
-    margin-left: 0 !important;
-  }
 
   /* always expanded (weapon icons & some top level parents(collections)) */
   /* stylelint-disable-next-line no-descending-specificity */
@@ -95,47 +57,6 @@
       background-color: rgba(0, 0, 0, 0);
       opacity: 1;
       display: flex;
-      /* margin: 8px 0 4px 2px; */
-      .node-name {
-        color: rgb(255, 255, 255);
-        font-size: 14px;
-        letter-spacing: normal;
-      }
     }
-    .node-progress {
-      /* margin-right: 16px; */
-      .node-progress-count {
-        font-size: 11px;
-      }
-    }
-  }
-}
-
-.records {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 8px;
-  margin: 8px 0;
-  @include phone-portrait {
-    margin: 8px;
-    grid-template-columns: none;
-  }
-  .progress-for-character & {
-    margin: 0;
-  }
-}
-
-.collectibles {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, var(--item-size));
-  grid-template-rows: min-content;
-  gap: 4px;
-  margin: 6px 10px 8px;
-  /* margin exception because plugset doesn't have an always-expanded parent */
-  .always-expanded & {
-    margin: 2px 0 8px;
-  }
-  > div {
-    margin-right: 0;
   }
 }

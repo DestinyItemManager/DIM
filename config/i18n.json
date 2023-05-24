@@ -1317,6 +1317,8 @@
   "WishListRoll": {
     "BestRatedTip": "This perk exactly matches a weapon roll on your wishlist.",
     "BestRatedTip_plural": "These perks exactly match a weapon roll on your wishlist.",
+    "WorstRatedTip": "This perk exactly matches a weapon roll on your trashlist.",
+    "WorstRatedTip_plural": "These perks exactly match a weapon roll on your trashlist.",
     "Clear": "Clear Wish List",
     "ChoosyVoltron": "choosy_voltron",
     "ChoosyVoltronDescription": "choosy_voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy, along with some trash list rolls.",

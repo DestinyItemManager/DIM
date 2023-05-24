@@ -16,10 +16,10 @@
   background-image: url('images/close.png');
   background-color: rgba(100, 100, 100, 0.8);
   &:hover {
-    background-color: $orange;
+    background-color: var(--theme-accent-primary);
   }
   &:focus {
-    outline: 1px solid $blue;
+    outline: 1px solid var(--theme-accent-secondary);
   }
 }
 

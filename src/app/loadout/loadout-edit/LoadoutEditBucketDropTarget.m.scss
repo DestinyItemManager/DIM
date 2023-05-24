@@ -1,8 +1,8 @@
 @use '../../variables.scss' as *;
 
 .over {
-  border-color: $orange !important;
-  color: $orange;
+  border-color: var(--theme-accent-primary) !important;
+  color: var(--theme-accent-primary);
 }
 
 .options {

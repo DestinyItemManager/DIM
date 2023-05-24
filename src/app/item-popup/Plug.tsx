@@ -1,13 +1,10 @@
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
-import { t } from 'app/i18next-t';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { thumbsUpIcon } from 'app/shell/icons';
-import AppIcon from 'app/shell/icons/AppIcon';
-import { isEnhancedPerk } from 'app/utils/socket-utils';
+import { isEnhancedPerk, isWeaponMasterworkSocket } from 'app/utils/socket-utils';
+import WishListPerkThumb from 'app/wishlists/WishListPerkThumb';
 import clsx from 'clsx';
-import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { PressTip } from '../dim-ui/PressTip';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { InventoryWishListRoll, isWishListPlug } from '../wishlists/wishlists';
@@ -15,12 +12,22 @@ import './ItemSockets.scss';
 import styles from './Plug.m.scss';
 import { DimPlugTooltip } from './PlugTooltip';
 
+interface PlugStatuses {
+  plugged?: boolean;
+  selected?: boolean;
+  cannotRoll?: boolean;
+  notSelected?: boolean;
+  unreliablePerkOption?: boolean;
+}
+
+/** A single plug in a socket - either a perk (circle) or a mod/ability (square) */
 export default function Plug({
   plug,
   item,
   socketInfo,
   wishlistRoll,
   hasMenu,
+  isMod,
   onClick,
   plugged,
   selected,
@@ -33,6 +40,7 @@ export default function Plug({
   socketInfo: DimSocket;
   wishlistRoll?: InventoryWishListRoll;
   hasMenu: boolean;
+  isMod?: boolean;
   onClick?: (plug: DimPlug) => void;
 } & PlugStatuses) {
   const defs = useD2Definitions()!;
@@ -43,25 +51,21 @@ export default function Plug({
     return null;
   }
 
-  const itemCategories = plug?.plugDef.itemCategoryHashes || [];
-
-  const doClick = onClick && (() => onClick(plug));
-
-  const contents = <DefItemIcon itemDef={plug.plugDef} borderless={true} />;
-
-  const tooltip = () => <DimPlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} />;
-
   const selectable = socketInfo.plugOptions.length > 1;
+  const doClick = (hasMenu || selectable) && onClick ? () => onClick(plug) : undefined;
 
   return (
     <div
       key={plug.plugDef.hash}
-      className={clsx('socket-container', {
-        disabled: !plug.enabled,
-        selectable,
-        notIntrinsic: !itemCategories.includes(ItemCategoryHashes.WeaponModsIntrinsic),
+      className={clsx('plug', {
+        [styles.disabled]: !plug.enabled,
+        [styles.selectable]: selectable,
+        [styles.hasMenu]: hasMenu,
+        [styles.mod]: isMod,
+        [styles.masterwork]: item.masterwork && isWeaponMasterworkSocket(socketInfo),
       })}
-      onClick={hasMenu || selectable ? doClick : undefined}
+      role={doClick ? 'button' : undefined}
+      onClick={doClick}
     >
       {socketInfo.isReusable ? (
         <PerkCircleWithTooltip
@@ -76,18 +80,9 @@ export default function Plug({
           notSelected={notSelected}
         />
       ) : (
-        <>
-          <PressTip tooltip={tooltip}>{contents}</PressTip>
-          {/* is this ↓ reachable?? wishlists mainly apply to isReusable type sockets.
-              they can detect masterworks, but no thumbs up appears on that socket */}
-          {wishlistRoll?.wishListPerks.has(plug.plugDef.hash) && (
-            <AppIcon
-              className="thumbs-up"
-              icon={thumbsUpIcon}
-              title={t('WishListRoll.BestRatedTip')}
-            />
-          )}
-        </>
+        <PressTip tooltip={<DimPlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} />}>
+          <DefItemIcon itemDef={plug.plugDef} />
+        </PressTip>
       )}
     </div>
   );
@@ -148,25 +143,13 @@ export function PerkCircleWithTooltip({
           unreliablePerkOption={unreliablePerkOption}
         />
       </PressTip>
-      {isRecommendedPerk && (
-        <AppIcon className="thumbs-up" icon={thumbsUpIcon} title={t('WishListRoll.BestRatedTip')} />
-      )}
+      {isRecommendedPerk && <WishListPerkThumb wishListRoll={wishlistRoll!} floated />}
     </>
   );
 }
 
-interface PlugStatuses {
-  plugged?: boolean;
-  selected?: boolean;
-  cannotRoll?: boolean;
-  notSelected?: boolean;
-  unreliablePerkOption?: boolean;
-}
-
 /**
  * an encircled perk image.
- * this has a global classname .perk-circle available so parents can define how big sockets should be
- *
  */
 function PerkCircle({
   plug,
@@ -189,7 +172,12 @@ function PerkCircle({
       [styles.notSelected]: notSelected,
     }) || styles.none;
   return (
-    <svg viewBox="0 0 100 100" width="100" height="100" className={clsx(className, 'perk-circle')}>
+    <svg
+      viewBox="0 0 100 100"
+      width="100"
+      height="100"
+      className={clsx(styles.perkCircle, className)}
+    >
       <defs>
         <linearGradient id="mw" x1="0" x2="0" y1="0" y2="1">
           <stop stopColor="#eade8b" offset="50%" stopOpacity="0" />

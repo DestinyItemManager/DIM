@@ -126,7 +126,8 @@ export default function About() {
           <div>
             <h2>
               <ExternalLink href={openCollectiveLinkDirect}>
-                <AppIcon icon={heartIcon} /> {t('Views.Support.Support')}
+                <AppIcon icon={heartIcon} />
+                {t('Views.Support.Support')}
               </ExternalLink>
             </h2>
             <div
@@ -139,7 +140,8 @@ export default function About() {
         <div>
           <h2>
             <ExternalLink href={wikiLink}>
-              <AppIcon icon={helpIcon} /> {t('Views.About.Wiki')}
+              <AppIcon icon={helpIcon} />
+              {t('Views.About.Wiki')}
             </ExternalLink>
           </h2>
           {t('Views.About.WikiHelp')} <br />
@@ -148,7 +150,8 @@ export default function About() {
           <div>
             <h2>
               <ExternalLink href={storeLinkDirect}>
-                <AppIcon icon={faTshirt} /> {t('Header.Shop')}
+                <AppIcon icon={faTshirt} />
+                {t('Header.Shop')}
               </ExternalLink>
             </h2>
             <div
@@ -161,7 +164,8 @@ export default function About() {
         <div>
           <h2>
             <ExternalLink href={discordLink}>
-              <AppIcon icon={faDiscord} /> {t('Views.About.Discord')}
+              <AppIcon icon={faDiscord} />
+              {t('Views.About.Discord')}
             </ExternalLink>
           </h2>
           {t('Views.About.DiscordHelp')}
@@ -169,7 +173,8 @@ export default function About() {
         <div>
           <h2>
             <ExternalLink href={redditLink}>
-              <AppIcon icon={faReddit} /> {t('Views.About.Reddit')}
+              <AppIcon icon={faReddit} />
+              {t('Views.About.Reddit')}
             </ExternalLink>
           </h2>
           {t('Views.About.RedditHelp')} <br />
@@ -178,7 +183,8 @@ export default function About() {
         <div>
           <h2>
             <ExternalLink href={mastodonLink}>
-              <AppIcon icon={mastodonIcon} /> Mastodon
+              <AppIcon icon={mastodonIcon} />
+              Mastodon
             </ExternalLink>
           </h2>
           {t('Views.About.TwitterHelp')} <br />
@@ -187,7 +193,8 @@ export default function About() {
         <div>
           <h2>
             <ExternalLink href={githubLinkDirect}>
-              <AppIcon icon={faGithub} /> {t('Views.About.GitHub')}
+              <AppIcon icon={faGithub} />
+              {t('Views.About.GitHub')}
             </ExternalLink>
           </h2>
           <div

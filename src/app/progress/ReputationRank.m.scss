@@ -43,7 +43,7 @@
 }
 
 .crucibleRankTotalProgress {
-  stroke: $blue;
+  stroke: var(--theme-accent-secondary);
   fill: none;
 }
 

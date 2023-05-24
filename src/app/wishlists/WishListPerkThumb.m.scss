@@ -1,0 +1,20 @@
+.trashlist {
+  color: #d14334;
+}
+
+.thumb {
+  background: #ddd;
+  border-radius: 50%;
+  color: #0b486b;
+  padding: 3px;
+  font-size: 8px !important;
+  letter-spacing: normal;
+}
+
+// For when the thumb should appear above a perk circle
+.floated {
+  position: absolute;
+  top: -4px;
+  right: -5px;
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.9));
+}

@@ -158,7 +158,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
             </PageWithMenu.MenuButton>
           ))}
       </PageWithMenu.Menu>
-      <PageWithMenu.Contents className={styles.page}>
+      <PageWithMenu.Contents>
         {$featureFlags.warnNoSync && !apiPermissionGranted && (
           <p>
             <AlertIcon /> {t('Storage.DimSyncNotEnabled')}

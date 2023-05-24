@@ -6,7 +6,7 @@
   bottom: 0;
   right: -5px;
   display: block;
-  background-color: $orange;
+  background-color: var(--theme-accent-primary);
   border-radius: 50%;
   height: 8px;
   width: 8px;
@@ -16,6 +16,6 @@
   position: absolute;
   bottom: -8px;
   right: -12px;
-  color: $orange !important;
+  color: var(--theme-accent-primary) !important;
   font-size: 18px !important;
 }

@@ -10,6 +10,7 @@ interface CssExports {
   'energyCost': string;
   'objectives': string;
   'perkName': string;
+  'plugStats': string;
   'requirement': string;
   'source': string;
   'subheader': string;

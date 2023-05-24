@@ -41,23 +41,16 @@
 .perkIconWrapper {
   grid-area: icon;
   align-self: flex-start;
-  position: relative;
+  position: relative; // to position the thumbs-up correctly
 
   display: block;
   padding: 1px;
   flex-shrink: 0;
 
-  svg {
-    display: block;
-    width: calc(30 / 50 * var(--item-size));
-    height: calc(30 / 50 * var(--item-size));
-  }
-
-  :global(.thumbs-up) {
-    position: absolute;
-    top: -4px;
-    right: -5px;
-    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.9));
+  // Change the size of the perk icons
+  --item-size-adjusted: calc(30 / 50 * var(--item-size));
+  > * {
+    --item-size: var(--item-size-adjusted);
   }
 }
 

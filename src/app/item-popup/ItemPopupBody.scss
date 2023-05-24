@@ -14,7 +14,7 @@
   background-color: black;
   &.selected {
     opacity: 1;
-    border-bottom: 2px solid $orange;
+    border-bottom: 2px solid var(--theme-accent-primary);
   }
   &:hover {
     color: white;
@@ -72,10 +72,10 @@
 .masterwork-progress {
   margin: 4px 0;
   padding: 4px 10px 4px;
-  background: #333;
+  background: var(--theme-item-popup-panel-bg);
 
   span {
-    color: $orange;
+    color: var(--theme-accent-primary);
     font-weight: bold;
   }
 
@@ -88,14 +88,14 @@
 
 .crafted-progress {
   padding: 4px 10px 4px;
-  background: #333;
+  background: var(--theme-item-popup-panel-bg);
   gap: 4px;
 
   display: flex;
   align-items: center;
 
   .objective-progress {
-    background: #222;
+    background: var(--theme-item-popup-progress-bar-bg);
   }
 
   .objective-progress-bar {
@@ -195,9 +195,4 @@
 
 .popup-tab-title {
   position: relative;
-  .thumbs-up {
-    position: absolute;
-    top: 0;
-    right: -18px;
-  }
 }

@@ -4,11 +4,10 @@
 .symbolsWindow {
   width: 300px;
   height: 350px;
-  background-color: black;
+  background-color: var(--theme-dropdown-menu-bg);
   display: flex;
   flex-flow: column;
-
-  box-shadow: 0 0 24px 6px #080811;
+  box-shadow: var(--theme-drop-shadow);
 }
 
 .symbolsButton {
@@ -20,7 +19,7 @@
   }
   &:hover {
     color: black;
-    background-color: $orange;
+    background-color: var(--theme-accent-primary);
   }
 }
 
@@ -74,7 +73,7 @@
 
   &:hover {
     color: black;
-    background-color: $orange;
+    background-color: var(--theme-accent-primary);
   }
 }
 

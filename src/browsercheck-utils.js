@@ -40,7 +40,7 @@ export const steamBrowser = {
     'Parece ser que esta página está cargada en el navegador de Steam. Debido a sus limitadas características y recursos podría fallar inesperadamente o intermitentemente al ejecutar DIM. No podemos proveer soporte para ello.',
   fr: 'Il semble que cette page est chargé dans le navigateur Steam. À cause de ses fonctionnalités et ressources limitées, il pourrait échouer à lancer DIM de manière inattendue ou intermittente. Nous ne pouvons pas fournir de support pour cela.',
   it: 'Sembra che questa pagina sia caricata tramite il browser di Steam. A causa delle sue risorse e caratteristiche limitate, potrebbe non riuscire ad eseguire DIM correttamente. Non possiamo fornire supporto a riguardo.',
-  ja: 'Steam ブラウザにこのページが読み込まれているようです。 機能やリソースが限られているため、予期しないまたは断続的に DIM の実行に失敗する可能性があります。サポートを提供できません。',
+  ja: 'Steam ブラウザでこのページを開いていると検出しました。このブラウザは機能が限られていて予期しない不具合が突然起きる可能性があります。それらの不具合に対してサポート外となります。',
   ko: '이 페이지가 Steam 브라우저에서 로드된 것 같습니다. 한정된 기능과 자원으로 인해, 예기치 않게 혹은 간헐적으로 DIM을 실행에 실패할 수 있습니다. 이에 대한 지원은 제공되지 않습니다.',
   pl: 'Wygląda na to, że ta strona jest załadowana w przeglądarce Steam. Ze względu na ograniczone funkcje i zasoby, DIM może nie działać. Nie możemy zapewnić wsparcia dla tej przeglądarki.',
   'pt-br':

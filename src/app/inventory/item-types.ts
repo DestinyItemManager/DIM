@@ -501,6 +501,10 @@ export interface DimSocket {
    * This might be widely synonymous with isReusable, but seems like it's being used for things other than display style logic.
    */
   isPerk: boolean;
+  /**
+   * Is this socket a mod socket - these are displayed as squares with a border.
+   */
+  isMod: boolean;
   /** Is this socket reusable? This is a notably different behavior and UI in Destiny, displayed in circles rather than squares. */
   isReusable: boolean;
   /** Deep information about this socket, including what types of things can be inserted into it. TODO: do we need all of this? */

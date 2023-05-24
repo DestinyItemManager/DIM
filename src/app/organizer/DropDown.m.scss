@@ -30,12 +30,12 @@ $dropdown-menu: 10;
     right: 0;
   }
 
-  background: black;
+  background: var(--theme-dropdown-menu-bg);
+
   @include visible-scrollbars;
 }
 
 .checkButton {
-  background-color: black;
   border-radius: 0;
   border: none;
   box-sizing: border-box;
@@ -50,13 +50,11 @@ $dropdown-menu: 10;
   padding: 8px 12px;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
 
-  &:hover {
-    background-color: #151515;
-  }
-
+  &:hover,
   &:active {
+    color: #000;
     box-shadow: none;
-    background-color: $orange;
+    background-color: var(--theme-accent-primary);
   }
 
   :global(.app-icon) {

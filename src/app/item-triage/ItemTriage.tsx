@@ -19,7 +19,8 @@ import { loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
 import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
 import { filterFactorySelector } from 'app/search/search-filter';
 import { loadoutToSearchString } from 'app/search/search-filters/loadouts';
-import { AppIcon, compareIcon, editIcon, thumbsUpIcon } from 'app/shell/icons';
+import { AppIcon, compareIcon, editIcon } from 'app/shell/icons';
+import WishListPerkThumb from 'app/wishlists/WishListPerkThumb';
 import { wishListSelector } from 'app/wishlists/selectors';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -68,9 +69,7 @@ export function TriageTabToggle({ currentTab, item }: { currentTab: ItemPopupTab
       {currentTab === ItemPopupTab.Overview && (
         <>
           {wishlistRoll && (
-            <span title={t('WishListRoll.BestRatedTip')}>
-              <AppIcon className={clsx('thumbs-up', styles.thumbsUp)} icon={thumbsUpIcon} />
-            </span>
+            <WishListPerkThumb wishListRoll={wishlistRoll} className={styles.thumbsUp} />
           )}
           {isInLoadout && (
             <img title={t('Triage.InLoadouts')} src={helmet} className={styles.inLoadout} />
@@ -109,7 +108,7 @@ function WishlistTriageSection({ item }: { item: DimItem }) {
       title={t('WishListRoll.Header')}
       sectionId="triage-wishlist"
       defaultCollapsed={false}
-      extra={wishlistItem ? <AppIcon className="thumbs-up" icon={thumbsUpIcon} /> : '–'}
+      extra={wishlistItem ? <WishListPerkThumb wishListRoll={wishlistItem} /> : '–'}
       disabled={disabled}
     >
       {wishlistItem && Boolean(wishlistItem?.notes?.length) && (

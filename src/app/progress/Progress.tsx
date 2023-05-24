@@ -12,7 +12,7 @@ import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { RAID_NODE } from 'app/search/d2-known-values';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
-import { motion, PanInfo } from 'framer-motion';
+import { PanInfo, motion } from 'framer-motion';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
@@ -21,7 +21,7 @@ import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import '../records/PresentationNode.scss';
 import { Event } from './Event';
 import Milestones from './Milestones';
-import './progress.scss';
+import styles from './Progress.m.scss';
 import Pursuits from './Pursuits';
 import Raids from './Raids';
 import Ranks from './Ranks';
@@ -109,7 +109,7 @@ export default function Progress({ account }: { account: DestinyAccount }) {
 
   return (
     <ErrorBoundary name="Progress">
-      <PageWithMenu className="progress-page">
+      <PageWithMenu>
         <PageWithMenu.Menu>
           {selectedStore && (
             <CharacterSelect
@@ -119,7 +119,7 @@ export default function Progress({ account }: { account: DestinyAccount }) {
             />
           )}
           {!isPhonePortrait && (
-            <div className="progress-menu">
+            <div className={styles.menuLinks}>
               {menuItems.map((menuItem) => (
                 <PageWithMenu.MenuButton key={menuItem.id} anchor={menuItem.id}>
                   <span>{menuItem.title}</span>
@@ -129,7 +129,7 @@ export default function Progress({ account }: { account: DestinyAccount }) {
           )}
         </PageWithMenu.Menu>
 
-        <PageWithMenu.Contents className="progress-panel">
+        <PageWithMenu.Contents>
           <motion.div className="horizontal-swipable" onPanEnd={handleSwipe}>
             <section id="ranks">
               <CollapsibleTitle title={t('Progress.CrucibleRank')} sectionId="profile-ranks">

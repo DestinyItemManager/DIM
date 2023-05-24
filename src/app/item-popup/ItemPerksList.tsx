@@ -8,17 +8,23 @@ import { useSelector } from 'react-redux';
 import { DimItem, DimPlug, DimSocket, DimSocketCategory } from '../inventory/item-types';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import styles from './ItemPerksList.m.scss';
+import { PlugClickHandler } from './ItemSockets';
 import './ItemSockets.scss';
 import { PerkCircleWithTooltip } from './Plug';
 import { DimPlugTooltip } from './PlugTooltip';
 
-interface Props {
+/**
+ * The list-style, vertical display of perks for a weapon.
+ */
+export default function ItemPerksList({
+  item,
+  perks,
+  onClick,
+}: {
   item: DimItem;
   perks: DimSocketCategory;
-  onClick?: (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => void;
-}
-
-export default function ItemPerksList({ item, perks, onClick }: Props) {
+  onClick?: PlugClickHandler;
+}) {
   const defs = useD2Definitions();
   const wishlistRoll = useSelector(wishListSelector(item));
 

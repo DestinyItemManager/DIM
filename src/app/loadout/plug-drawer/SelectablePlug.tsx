@@ -2,7 +2,7 @@ import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { StatValue } from 'app/item-popup/PlugTooltip';
+import { PlugStats } from 'app/item-popup/PlugTooltip';
 import { getPlugDefStats, usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -87,13 +87,7 @@ function SelectablePlugDetails({
             )}
           </div>
         ))}
-        {stats.length > 0 && (
-          <div className="plug-stats">
-            {stats.map((stat) => (
-              <StatValue key={stat.statHash} statHash={stat.statHash} value={stat.value} />
-            ))}
-          </div>
-        )}
+        {stats.length > 0 && <PlugStats stats={stats} />}
       </div>
     </>
   );

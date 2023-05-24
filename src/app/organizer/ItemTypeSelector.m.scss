@@ -26,7 +26,7 @@
   &:hover,
   &:active,
   &.checked {
-    background-color: $orange;
+    background-color: var(--theme-accent-primary);
     color: black;
     > img {
       filter: none !important;

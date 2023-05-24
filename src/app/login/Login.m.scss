@@ -83,7 +83,7 @@
   font-weight: bold;
   text-align: center;
   padding: 1em 3em;
-  background-color: $orange;
+  background-color: var(--theme-accent-primary);
   color: black;
   text-shadow: none;
   &:hover {

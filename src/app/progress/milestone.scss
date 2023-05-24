@@ -21,6 +21,7 @@ button.milestone-quest {
   align-self: start;
   transition: opacity 0.2s;
   overflow: hidden;
+  user-select: text;
 
   .complete {
     color: #a1a2a2;
@@ -82,23 +83,6 @@ button.milestone-quest {
     // ALSOHACK
     .raid-tier:nth-child(n + 2) {
       margin-top: 14px;
-    }
-  }
-
-  .milestone-reward-activity {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin: 4px 0 0 0;
-
-    img {
-      width: 20px;
-      height: 20px;
-      margin-right: 4px;
-    }
-
-    i {
-      margin-right: 4px;
     }
   }
 

@@ -1,6 +1,6 @@
 @import '../../variables';
 
-$or-color: $orange;
+$or-color: var(--theme-accent-primary);
 $and-color: #814bcf;
 
 .loadout-builder {
@@ -97,7 +97,7 @@ $and-color: #814bcf;
   }
 
   .expand-configs:hover {
-    color: $orange;
+    color: var(--theme-accent-primary);
     cursor: pointer;
   }
 

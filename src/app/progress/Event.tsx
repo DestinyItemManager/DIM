@@ -13,9 +13,10 @@ import {
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import styles from './Event.m.scss';
-import { recordToPursuitItem } from './milestone-items';
 import Pursuit from './Pursuit';
+import PursuitGrid from './PursuitGrid';
 import { sortPursuits } from './Pursuits';
+import { recordToPursuitItem } from './milestone-items';
 
 /**
  * A component for showing objectives of seasonal events v2,
@@ -87,10 +88,10 @@ export function Event({
   }
 
   return (
-    <div className="progress-for-character">
+    <PursuitGrid>
       {pursuits.sort(sortPursuits).map((item) => (
         <Pursuit item={item} key={item.index} />
       ))}
-    </div>
+    </PursuitGrid>
   );
 }

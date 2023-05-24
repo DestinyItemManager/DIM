@@ -1,14 +1,28 @@
 @use '../variables.scss' as *;
 
 .weaponSockets {
+  display: flex;
   flex-flow: column nowrap;
+  margin-top: 10px;
 }
 
 .perks {
   position: relative;
+  :global(.item-sockets) {
+    // TODO: adjust these through CSS vars?
+    gap: 3px;
+  }
+
+  // Draw lines between the sockets (columns), like in game.
+  // TODO: maybe get rid of this
   :global(.item-socket) {
+    border-right: 0.5px solid #444;
     padding-right: 3px;
-    margin-right: 3px;
+
+    &:last-child {
+      border: none;
+      padding-right: 0;
+    }
   }
 }
 
@@ -34,14 +48,46 @@
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
   &:hover,
   &:active {
-    background-color: $orange !important;
+    background-color: var(--theme-accent-primary) !important;
     color: black !important;
   }
 }
 
+.minimal {
+  > * {
+    margin-bottom: 8px !important;
+  }
+
+  // Tighten up spacing between sockets
+  :global(.item-sockets) {
+    gap: 2px;
+  }
+}
+
 .grid {
-  margin: 10px;
+  margin: 8px 10px;
+
   .minimal & {
     margin: 0;
+    gap: 2px;
+
+    // Remove line between sockets in minimal mode
+    :global(.item-socket) {
+      border: none;
+      padding: 0;
+    }
+  }
+
+  :global(.item-socket) {
+    gap: 1px;
+  }
+
+  :global(.plug) {
+    padding: calc(2 / 50 * var(--item-size));
+
+    @include phone-portrait {
+      padding: 2px;
+      --item-size: 32px;
+    }
   }
 }
