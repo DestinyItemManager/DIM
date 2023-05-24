@@ -229,7 +229,8 @@ export default function Compare({ session }: { session: CompareSession }) {
             <div
               key={stat.id}
               className={clsx(styles.statLabel, {
-                [styles.sorted]: stat.id === sortedHash,
+                [styles.sortDesc]: stat.id === sortedHash && sortBetterFirst,
+                [styles.sortAsc]: stat.id === sortedHash && !sortBetterFirst,
               })}
               onPointerEnter={() => setHighlight(stat.id)}
               onClick={() => changeSort(stat.id)}

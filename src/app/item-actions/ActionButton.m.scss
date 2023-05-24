@@ -31,7 +31,7 @@
     &:hover,
     &:focus-visible {
       outline: none;
-      background: $orange;
+      background: var(--theme-accent-primary);
       color: black;
       :global(.app-icon) {
         color: black;

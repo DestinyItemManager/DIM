@@ -49,7 +49,7 @@
 }
 // This has been selected by the user but isn't the original plugged item
 .selected {
-  fill: $orange;
+  fill: var(--theme-accent-primary);
 }
 
 .cannotRoll {
@@ -76,6 +76,6 @@
   cursor: pointer;
   &:hover,
   &:focus-visible {
-    outline: 1px solid $orange;
+    outline: 1px solid var(--theme-accent-primary);
   }
 }

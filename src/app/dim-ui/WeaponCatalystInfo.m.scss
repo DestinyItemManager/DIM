@@ -5,23 +5,27 @@
   padding-top: 2px;
   padding-bottom: 2px;
 
-  color: $orange;
+  color: $exotic;
   font-weight: bold;
 }
 
 .catalystProgress {
   display: flex;
   flex-direction: column;
-  background: #222;
+  background: var(--theme-item-popup-panel-bg);
   gap: 4px;
 
+  // Add spacer when adjacent to crafted weapon progress
+  :global(.crafted-progress) + & {
+    margin-top: 4px;
+  }
+
   :global(.objective-progress) {
-    background: #222;
+    background: var(--theme-item-popup-progress-bar-bg);
   }
 }
 
 .catalystProgressSection {
   padding: 4px 10px 4px;
-  background: #333;
   flex-grow: 1;
 }

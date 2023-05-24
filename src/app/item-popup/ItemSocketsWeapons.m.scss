@@ -48,7 +48,7 @@
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
   &:hover,
   &:active {
-    background-color: $orange !important;
+    background-color: var(--theme-accent-primary) !important;
     color: black !important;
   }
 }

@@ -3,7 +3,7 @@
 .page {
   :global .perk-image {
     &.locked-perk {
-      border-color: $orange;
+      border-color: var(--theme-accent-primary);
     }
   }
 }

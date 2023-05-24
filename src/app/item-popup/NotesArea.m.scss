@@ -6,7 +6,7 @@
   margin-top: 0 !important;
   margin-bottom: 0 !important;
   &:hover {
-    color: $orange;
+    color: var(--theme-accent-primary);
   }
   &.noNotesYet {
     // if there's no existing notes, don't span the entire

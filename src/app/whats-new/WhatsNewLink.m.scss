@@ -1,14 +1,14 @@
 @use '../variables.scss' as *;
 
 .upgrade {
-  color: $orange !important;
+  color: var(--theme-accent-primary) !important;
   font-size: 18px !important;
   margin-right: 4px;
 }
 
 .badgeNew {
   display: inline-block;
-  background-color: $orange;
+  background-color: var(--theme-accent-primary);
   border-radius: 50%;
   height: 8px;
   width: 8px;

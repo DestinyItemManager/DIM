@@ -3,7 +3,7 @@
 .badge {
   border-radius: 50%;
   border-radius: 10px;
-  background: $orange;
+  background: var(--theme-accent-primary);
   padding: 0 4px;
   color: black;
   font-size: 9px;
@@ -19,6 +19,6 @@
 
   &:hover .badge {
     background-color: black;
-    color: $orange;
+    color: var(--theme-accent-primary);
   }
 }

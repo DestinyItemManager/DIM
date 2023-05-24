@@ -28,7 +28,7 @@
 }
 
 .selected {
-  border-color: $orange;
+  border-color: var(--theme-accent-primary);
   background: rgba(0, 0, 0, 0.6);
 }
 

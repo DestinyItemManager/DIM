@@ -59,7 +59,7 @@
     @include tooltip-section-color($red);
   }
   .automaticallyPickedSection {
-    @include tooltip-section-color($orange);
+    @include tooltip-section-color(#e8a534);
   }
 }
 .tooltipExotic {

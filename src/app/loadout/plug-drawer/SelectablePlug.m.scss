@@ -16,7 +16,7 @@
     background-color: rgba(255, 255, 255, 0.1);
   }
   &:focus {
-    outline: 1px solid $blue;
+    outline: 1px solid var(--theme-accent-secondary);
   }
 }
 
@@ -38,7 +38,7 @@
 }
 
 .lockedPerk {
-  border-color: $orange;
+  border-color: var(--theme-accent-primary);
   &:focus {
     outline: none;
   }

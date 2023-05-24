@@ -14,8 +14,11 @@
   }
 }
 
-.sorted {
-  color: $orange;
+.sortDesc {
+  color: var(--theme-accent-primary);
+}
+.sortAsc {
+  color: var(--theme-accent-secondary);
 }
 
 .spacer {

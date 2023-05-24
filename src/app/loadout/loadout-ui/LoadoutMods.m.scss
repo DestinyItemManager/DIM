@@ -34,7 +34,7 @@
   width: var(--item-icon-size);
 
   &:focus {
-    border-color: $orange;
+    border-color: var(--theme-accent-primary);
   }
 
   &:hover {

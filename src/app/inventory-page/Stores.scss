@@ -12,6 +12,7 @@
     (var(--num-characters) + 1) *
       (var(--inventory-column-padding) * 2 + var(--character-column-width))
   );
+
   @include phone-portrait {
     min-width: auto;
     // Give room for the category selector strip (height 53px)
@@ -31,7 +32,7 @@
       var(--num-characters),
       calc(#{$equipped-item-total-outset} + var(--character-column-width) + var(--column-padding))
     )
-    // Vault takes the rest
+    /* Vault takes the rest*/
     1fr;
   box-sizing: border-box;
   padding-right: calc(var(--sidebar-size) * var(--expanded-sidebars));
@@ -65,6 +66,7 @@
 
   &.vault {
     min-width: calc(var(--character-column-width) + var(--inventory-column-padding));
+
     @include phone-portrait {
       min-width: auto;
     }
@@ -111,6 +113,7 @@
       grid-template-columns: repeat(10, 1fr);
       gap: 0;
       padding: 4px 0 0 0;
+
       @include phone-portrait {
         padding: 4px 0;
       }
@@ -119,6 +122,7 @@
     .item-drag-container,
     .empty-engram {
       --item-size: var(--engram-size);
+
       @include phone-portrait {
         --item-size: calc((100vw - (2 * var(--inventory-column-padding))) / 10);
       }
@@ -158,6 +162,7 @@
 .store-header {
   position: fixed;
   backface-visibility: hidden;
+
   @include below-header;
   left: 0;
   width: 100%;
@@ -165,7 +170,7 @@
   grid-template-columns:
     repeat(var(--num-characters), calc(6px + var(--character-column-width) + var(--column-padding)))
     calc(6px + var(--character-column-width) + var(--column-padding)) 1fr !important;
-  background: $gradient;
+  background: var(--theme-header-characters-bg);
   background-position: center top;
   background-repeat: no-repeat;
   background-size: 100% 100vh;
@@ -173,6 +178,7 @@
   &:focus {
     outline: none;
   }
+
   @supports (position: sticky) {
     position: sticky;
   }

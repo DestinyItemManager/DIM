@@ -48,7 +48,7 @@
 }
 
 .initialItem {
-  color: $orange;
+  color: var(--theme-accent-primary);
   font-weight: bold;
 }
 
@@ -84,6 +84,6 @@
   background-position: center;
   background-repeat: no-repeat;
   &:hover {
-    background-color: $orange;
+    background-color: var(--theme-accent-primary);
   }
 }

@@ -346,7 +346,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
       (_v, n) =>
         `[role="cell"]:nth-of-type(${numColumns * 2}n+${
           n + 2
-        }){background-color:#1d1c2b !important;}`
+        }){background-color:var(--theme-organizer-row-even-bg) !important;}`
     )
     .join('\n');
 
