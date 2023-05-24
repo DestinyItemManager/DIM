@@ -1,5 +1,35 @@
 @use '../variables.scss' as *;
 
+.compareItem {
+  border-left: 1px solid rgba(245, 245, 245, 0.25);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  // Make sure even if there are no stats that there's enough room to not clip
+  // the icon (e.g. for ghosts)
+  min-height: calc(var(--item-size) + 60px);
+
+  > * {
+    padding-left: 4px;
+  }
+
+  // TODO push these into sockets component?
+  :global(.plug) {
+    --item-size-mod: calc(26 / 50 * var(--item-size));
+    // This relies on the fact that only mods are img - perks are svg
+    img {
+      --item-size: var(--item-size-mod) !important;
+    }
+  }
+
+  // D1 talent grids are like sockets
+  :global(.talent-grid) {
+    padding: 4px 2px 0 2px;
+    max-width: 150px;
+    height: auto;
+  }
+}
+
 .header {
   display: flex;
   flex-direction: row;

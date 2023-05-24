@@ -28,6 +28,7 @@ function useHasScrollbars(ref: React.RefObject<HTMLDivElement>) {
   return hasScrollbars;
 }
 
+/** A sidebar menu. This gets displayed inline on mobile. */
 PageWithMenu.Menu = function Menu({
   children,
   className,
@@ -42,11 +43,12 @@ PageWithMenu.Menu = function Menu({
       ref={ref}
       className={clsx(className, styles.menu, { [styles.menuScrollbars]: hasScrollbars })}
     >
-      <div>{children}</div>
+      {children}
     </div>
   );
 };
 
+/** The main contents of the page, displayed beside the menu on desktop and below the menu on mobile. */
 PageWithMenu.Contents = function Contents({
   children,
   className,
@@ -57,6 +59,7 @@ PageWithMenu.Contents = function Contents({
   return <div className={clsx(className, styles.contents)}>{children}</div>;
 };
 
+/** A header for a section of links (MenuButtons) within a Menu. */
 PageWithMenu.MenuHeader = function MenuHeader({
   children,
   className,
@@ -67,6 +70,10 @@ PageWithMenu.MenuHeader = function MenuHeader({
   return <div className={clsx(className, styles.menuHeader)}>{children}</div>;
 };
 
+/**
+ * A link into a section of the page, to be displayed in the menu. The page
+ * will smoothly scroll to the given anchor name.
+ */
 PageWithMenu.MenuButton = function MenuButton({
   children,
   className,

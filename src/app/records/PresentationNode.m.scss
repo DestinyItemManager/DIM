@@ -1,0 +1,42 @@
+@use '../variables.scss' as *;
+
+.onlyChild {
+  margin-left: 0 !important;
+}
+
+.nodeName {
+  img {
+    height: 24px;
+    vertical-align: middle;
+  }
+
+  :global(.always-expanded) & {
+    color: rgb(255, 255, 255);
+    font-size: 14px;
+    letter-spacing: normal;
+  }
+}
+
+/* Styles for PresentationNodeProgress */
+.nodeProgress {
+  text-align: right;
+}
+.nodeProgressCount {
+  font-size: 12px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.nodeProgressBar {
+  background: #666;
+  height: 2px;
+  width: 8em;
+  margin-top: 2px;
+}
+.nodeProgressBarAmount {
+  background: #ccc;
+  height: 100%;
+
+  :global(.title.completed) & {
+    background: $gold;
+  }
+}

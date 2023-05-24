@@ -3,7 +3,7 @@
 .statLabel {
   position: relative;
   padding-right: 8px;
-  padding-left: 0;
+  padding-left: 4px;
   cursor: pointer;
   height: 16px;
   img {
@@ -34,32 +34,29 @@
   }
 }
 
+.statList {
+  display: flex;
+  flex-direction: column;
+}
+
 .bucket {
   white-space: nowrap;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  .fixedLeft {
-    border-left: none;
-  }
-  :global(.talent-grid) {
-    padding: 4px 2px 0 2px;
-    box-sizing: border-box;
-    width: 150px;
-    height: auto;
-  }
 }
 
 .options {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  min-height: 30px;
   gap: 4px;
 
   :global(.setting) {
     margin-right: 4px;
   }
+
+  // TODO: Bake some of this back into dim-button
   :global(.dim-button) {
     display: flex;
     align-items: center;
@@ -79,7 +76,7 @@
 }
 
 .highlightBar {
-  background-color: #202020;
+  background-color: rgba(255, 255, 255, 0.125);
   position: absolute;
   top: 0;
   left: 0;

@@ -1,9 +1,5 @@
 @use '../variables.scss' as *;
 
-.page {
-  margin-top: 10px;
-}
-
 .menu {
   :global(.dim-button),
   select {

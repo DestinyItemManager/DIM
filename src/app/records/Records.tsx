@@ -110,13 +110,13 @@ export default function Records({ account }: Props) {
     <PageWithMenu className="d2-vendors">
       <PageWithMenu.Menu>
         {!isPhonePortrait && (
-          <div className="progress-menu">
+          <>
             {menuItems.map((menuItem) => (
               <PageWithMenu.MenuButton key={menuItem.id} anchor={menuItem.id}>
                 <span>{menuItem.title}</span>
               </PageWithMenu.MenuButton>
             ))}
-          </div>
+          </>
         )}
         <div className={styles.presentationNodeOptions}>
           <CheckButton

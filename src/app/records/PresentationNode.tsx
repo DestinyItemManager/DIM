@@ -2,27 +2,20 @@ import { settingSelector } from 'app/dim-api/selectors';
 import { scrollToPosition } from 'app/dim-ui/scroll';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { percent } from 'app/shell/formatters';
-import { DestinyPresentationScreenStyle } from 'bungie-api-ts/destiny2';
+import {
+  DestinyDisplayPropertiesDefinition,
+  DestinyPresentationScreenStyle,
+} from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { deepEqual } from 'fast-equals';
 import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import BungieImage from '../dim-ui/BungieImage';
 import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
-import { DimPresentationNode } from './presentation-nodes';
+import styles from './PresentationNode.m.scss';
 import './PresentationNode.scss';
 import PresentationNodeLeaf from './PresentationNodeLeaf';
-
-interface Props {
-  node: DimPresentationNode;
-  ownedItemHashes?: Set<number>;
-  path: number[];
-  parents: number[];
-  isInTriumphs?: boolean;
-  overrideName?: string;
-  isRootNode?: boolean;
-  onNodePathSelected: (nodePath: number[]) => void;
-}
+import { DimPresentationNode } from './presentation-nodes';
 
 export default function PresentationNode({
   node,
@@ -33,31 +26,21 @@ export default function PresentationNode({
   isInTriumphs,
   isRootNode,
   overrideName,
-}: Props) {
+}: {
+  node: DimPresentationNode;
+  ownedItemHashes?: Set<number>;
+  path: number[];
+  parents: number[];
+  isInTriumphs?: boolean;
+  overrideName?: string;
+  isRootNode?: boolean;
+  onNodePathSelected: (nodePath: number[]) => void;
+}) {
   const defs = useD2Definitions()!;
   const completedRecordsHidden = useSelector(settingSelector('completedRecordsHidden'));
   const redactedRecordsRevealed = useSelector(settingSelector('redactedRecordsRevealed'));
-  const headerRef = useRef<HTMLDivElement>(null);
-  const lastPath = useRef<number[]>();
   const presentationNodeHash = node.nodeDef.hash;
-
-  useEffect(() => {
-    if (
-      headerRef.current &&
-      path[path.length - 1] === presentationNodeHash &&
-      !deepEqual(lastPath.current, path)
-    ) {
-      const clientRect = headerRef.current.getBoundingClientRect();
-      if (clientRect.top < 50) {
-        scrollToPosition({
-          top: window.scrollY + clientRect.top - 50,
-          left: 0,
-          behavior: 'smooth',
-        });
-      }
-    }
-    lastPath.current = path;
-  }, [path, presentationNodeHash]);
+  const headerRef = useScrollNodeIntoView(path, presentationNodeHash);
 
   const expandChildren = () => {
     const childrenExpanded = path.includes(presentationNodeHash);
@@ -72,7 +55,6 @@ export default function PresentationNode({
     return null;
   }
 
-  // TODO: use nodes as parents?
   const parent = parents.slice(-1)[0];
   const thisAndParents = [...parents, presentationNodeHash];
 
@@ -81,7 +63,6 @@ export default function PresentationNode({
     (p) => defs.PresentationNode.get(p).screenStyle === DestinyPresentationScreenStyle.CategorySets
   );
 
-  // todo: export this hash/depth and clean up the boolean string
   const alwaysExpanded =
     // if we're not in triumphs
     !isInTriumphs &&
@@ -98,19 +79,12 @@ export default function PresentationNode({
   const childrenExpanded =
     isRootNode || onlyChild || path.includes(presentationNodeHash) || alwaysExpanded;
 
-  // TODO: need more info on what iconSequences are
-
-  const title = (
-    <span className="node-name">
-      {nodeDef.displayProperties.icon && <BungieImage src={nodeDef.displayProperties.icon} />}{' '}
-      {overrideName || nodeDef.displayProperties.name}
-    </span>
-  );
+  const title = <PresentationNodeTitle def={nodeDef} overrideName={overrideName} />;
 
   return (
     <div
       className={clsx('presentation-node', {
-        'only-child': onlyChild,
+        [styles.onlyChild]: onlyChild,
         'always-expanded': alwaysExpanded,
       })}
     >
@@ -135,17 +109,7 @@ export default function PresentationNode({
               {title}
             </span>
           )}
-          <div className="node-progress">
-            <div className="node-progress-count">
-              {acquired} / {visible}
-            </div>
-            <div className="node-progress-bar">
-              <div
-                className="node-progress-bar-amount"
-                style={{ width: percent(acquired / visible) }}
-              />
-            </div>
-          </div>
+          <PresentationNodeProgress acquired={acquired} visible={visible} />
         </div>
       )}
       {childrenExpanded &&
@@ -169,5 +133,74 @@ export default function PresentationNode({
         />
       )}
     </div>
+  );
+}
+
+/**
+ * Scrolls the given presentation node into view if it is not already. Assign
+ * the returned headerRef to the header of the presentation node.
+ */
+function useScrollNodeIntoView(path: number[], presentationNodeHash: number) {
+  const headerRef = useRef<HTMLDivElement>(null);
+  const lastPath = useRef<number[]>();
+
+  useEffect(() => {
+    if (
+      headerRef.current &&
+      path[path.length - 1] === presentationNodeHash &&
+      !deepEqual(lastPath.current, path)
+    ) {
+      const clientRect = headerRef.current.getBoundingClientRect();
+      if (clientRect.top < 50) {
+        scrollToPosition({
+          top: window.scrollY + clientRect.top - 50,
+          left: 0,
+          behavior: 'smooth',
+        });
+      }
+    }
+    lastPath.current = path;
+  }, [path, presentationNodeHash]);
+
+  return headerRef;
+}
+
+/**
+ * The little progress bar in the header of a presentation node that shows how much has been unlocked.
+ */
+export function PresentationNodeProgress({
+  acquired,
+  visible,
+}: {
+  acquired: number;
+  visible: number;
+}) {
+  return (
+    <div className={styles.nodeProgress}>
+      <div className={styles.nodeProgressCount}>
+        {acquired} / {visible}
+      </div>
+      <div className={styles.nodeProgressBar}>
+        <div
+          className={styles.nodeProgressBarAmount}
+          style={{ width: percent(acquired / visible) }}
+        />
+      </div>
+    </div>
+  );
+}
+
+export function PresentationNodeTitle({
+  def,
+  overrideName,
+}: {
+  def: { displayProperties: DestinyDisplayPropertiesDefinition };
+  overrideName?: string;
+}) {
+  return (
+    <span className={styles.nodeName}>
+      {def.displayProperties.icon && <BungieImage src={def.displayProperties.icon} />}{' '}
+      {overrideName || def.displayProperties.name}
+    </span>
   );
 }

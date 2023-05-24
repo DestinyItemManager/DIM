@@ -28,7 +28,7 @@ import _ from 'lodash';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import ItemStats from './ItemStats';
-import { StatValue } from './PlugTooltip';
+import { PlugStats } from './PlugTooltip';
 import { SocketDetailsMod } from './SocketDetails';
 import styles from './SocketDetailsSelectedPlug.m.scss';
 
@@ -244,11 +244,9 @@ export default function SocketDetailsSelectedPlug({
 
       {stats.length > 0 && (
         <div className={styles.modStats}>
-          {stats.map((stat) => (
-            <div className="plug-stats" key={stat.dimStat.statHash}>
-              <StatValue value={stat.modValue} statHash={stat.dimStat.statHash} />
-            </div>
-          ))}
+          <PlugStats
+            stats={stats.map((stat) => ({ statHash: stat.dimStat.statHash, value: stat.modValue }))}
+          />
         </div>
       )}
       {stats.length > 0 && (

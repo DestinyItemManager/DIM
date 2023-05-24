@@ -11,6 +11,7 @@ import _ from 'lodash';
 import { useState } from 'react';
 import BountyGuide, { BountyFilter, DefType, matchBountyFilters } from './BountyGuide';
 import Pursuit, { showPursuitAsExpired } from './Pursuit';
+import PursuitGrid from './PursuitGrid';
 
 const defaultExpirationDate = new Date(8640000000000000);
 
@@ -92,7 +93,7 @@ export function PursuitsGroup({
         onSelectedFiltersChanged={setBountyFilters}
         pursuitsInfo={pursuitsInfo}
       />
-      <div className="progress-for-character">
+      <PursuitGrid>
         {pursuits.sort(sortPursuits).map((item) => (
           <Pursuit
             item={item}
@@ -101,7 +102,7 @@ export function PursuitsGroup({
             hideDescription={hideDescriptions}
           />
         ))}
-      </div>
+      </PursuitGrid>
     </>
   );
 }

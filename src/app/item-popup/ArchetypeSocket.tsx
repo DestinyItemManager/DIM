@@ -1,7 +1,8 @@
-import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
+import { DimItem, DimSocket } from 'app/inventory/item-types';
 import clsx from 'clsx';
 import React from 'react';
 import styles from './ArchetypeSocket.m.scss';
+import { PlugClickHandler } from './ItemSockets';
 import Socket from './Socket';
 
 /**
@@ -16,7 +17,7 @@ export default function ArchetypeSocket({
   archetypeSocket?: DimSocket;
   item: DimItem;
   children?: React.ReactNode;
-  onClick?: (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => void;
+  onClick?: PlugClickHandler;
 }) {
   if (!archetypeSocket?.plugged) {
     return null;

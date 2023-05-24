@@ -9,9 +9,8 @@
     '  .      slot0     .  '
     'slot2 collection slot3'
     '  .      slot1     .  ';
-  & > div > img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-  }
+}
+
+.collectionIcon {
+  border: 0;
 }

@@ -26,6 +26,10 @@
 
 .clickableMod {
   cursor: pointer;
+
+  :global(.item-img) {
+    border-color: #888;
+  }
 }
 
 .categoryIcon {

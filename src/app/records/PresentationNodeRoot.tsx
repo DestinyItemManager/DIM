@@ -6,10 +6,11 @@ import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import PlugSet from './PlugSet';
+import PresentationNode from './PresentationNode';
+import styles from './PresentationNodeRoot.m.scss';
+import PresentationNodeSearchResults from './PresentationNodeSearchResults';
 import { unlockedItemsForCharacterOrProfilePlugSet } from './plugset-helpers';
 import { filterPresentationNodesToSearch, toPresentationNodeTree } from './presentation-nodes';
-import PresentationNode from './PresentationNode';
-import PresentationNodeSearchResults from './PresentationNodeSearchResults';
 
 interface Props {
   presentationNodeHash: number;
@@ -97,7 +98,7 @@ export default function PresentationNodeRoot({
   ];
 
   return (
-    <div className="presentation-node-root">
+    <div className={styles.root}>
       <PresentationNode
         node={nodeTree}
         ownedItemHashes={ownedItemHashes}

@@ -319,7 +319,7 @@ export function toRecord(
   defs: D2ManifestDefinitions,
   profileResponse: DestinyProfileResponse,
   recordHash: number
-) {
+): DimRecord | null {
   const recordDef = defs.Record.get(recordHash);
   if (!recordDef) {
     return null;

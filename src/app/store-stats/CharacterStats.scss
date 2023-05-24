@@ -7,6 +7,7 @@
   justify-content: space-around;
   margin-top: 8px;
   opacity: 1;
+  gap: 4px;
 
   > div {
     flex: 1;
@@ -60,6 +61,8 @@
 
   &.destiny2 {
     flex-direction: column;
+    gap: 0;
+
     .stat-row {
       display: flex;
       flex-direction: row;
