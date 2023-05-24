@@ -20,7 +20,7 @@ $content-cells: 5;
   > div {
     padding: 4px 8px;
     padding-top: calc(var(--item-size) * 0.75 * 0.5 - 4px);
-    background-color: #27263a;
+    background-color: var(--theme-organizer-row-odd-bg);
   }
 }
 

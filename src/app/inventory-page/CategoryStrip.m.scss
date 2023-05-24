@@ -28,6 +28,6 @@
 }
 
 .selected {
-  color: $orange;
-  border-bottom: 2px solid $orange;
+  color: var(--theme-accent-primary);
+  border-bottom: 2px solid var(--theme-accent-primary);
 }

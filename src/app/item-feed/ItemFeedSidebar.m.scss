@@ -2,6 +2,7 @@
 
 .trayContainer {
   position: fixed;
+
   @include below-header;
   right: 0;
   height: calc(var(--viewport-height) - var(--header-height));
@@ -15,7 +16,7 @@
 }
 
 .sideTray {
-  background-color: black;
+  background-color: var(--theme-item-feed-bg);
   padding: 10px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -26,10 +27,6 @@
   scrollbar-width: none;
   &::-webkit-scrollbar {
     display: none;
-  }
-
-  > div {
-    background-color: black;
   }
 }
 
@@ -48,7 +45,7 @@
 
   &:hover {
     color: black;
-    background-color: $orange;
+    background-color: var(--theme-accent-primary);
   }
 
   :global(.app-icon) {

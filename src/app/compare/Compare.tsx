@@ -232,8 +232,10 @@ export default function Compare({ session }: { session: CompareSession }) {
             {allStats.map((stat) => (
               <div
                 key={stat.id}
-                className={clsx(styles.statLabel, {
-                  [styles.sorted]: stat.id === sortedHash,
+                className={clsx({
+                  [styles.statLabel]: true,
+                  [styles.sortDesc]: stat.id === sortedHash && sortBetterFirst,
+                  [styles.sortAsc]: stat.id === sortedHash && !sortBetterFirst,
                 })}
                 onPointerEnter={() => setHighlight(stat.id)}
                 onClick={() => changeSort(stat.id)}

@@ -6,7 +6,8 @@ interface CssExports {
   'highlightBar': string;
   'options': string;
   'organizerLink': string;
-  'sorted': string;
+  'sortAsc': string;
+  'sortDesc': string;
   'spacer': string;
   'statLabel': string;
 }

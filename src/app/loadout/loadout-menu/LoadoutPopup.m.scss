@@ -10,7 +10,7 @@
   z-index: 2;
   color: rgba(245, 245, 245, 0.6);
   overscroll-behavior: contain;
-  background-color: black;
+  background-color: var(--theme-dropdown-menu-bg);
 
   @include visible-scrollbars;
 
@@ -105,7 +105,7 @@
 
   &:hover,
   a:hover {
-    background-color: $orange;
+    background-color: var(--theme-accent-primary);
     color: black !important;
     > span:first-child > :global(.app-icon) {
       color: black !important;
@@ -141,7 +141,7 @@
     }
   }
   &:hover {
-    background-color: $blue;
+    background-color: var(--theme-accent-secondary);
     color: #222;
   }
 }
@@ -155,7 +155,6 @@
 }
 
 .content {
-  background-color: black;
   color: #e4e4e4;
 }
 
@@ -200,7 +199,7 @@
   composes: resetButton from '../../dim-ui/common.m.scss';
   &:hover,
   &:focus-visible {
-    outline: 2px solid $orange;
+    outline: 2px solid var(--theme-accent-primary);
   }
   display: block;
 }

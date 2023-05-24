@@ -11,6 +11,7 @@
 
   &.vault {
     width: calc(6px + var(--character-column-width) - var(--item-margin));
+
     @include phone-portrait {
       width: auto;
     }
@@ -22,7 +23,7 @@
     top: 0;
     left: 0;
     z-index: 1;
-    border-top: 13px solid $orange;
+    border-top: 13px solid var(--theme-accent-primary);
     border-right: 13px solid transparent;
   }
 
@@ -40,10 +41,7 @@
         content: '';
         display: block;
         position: absolute;
-        top: -4px;
-        left: -4px;
-        right: -4px;
-        bottom: -4px;
+        inset: -4px -4px -4px -4px;
         border: 1px solid white;
         pointer-events: none;
       }

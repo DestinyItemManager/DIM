@@ -18,7 +18,7 @@
 }
 
 .selected {
-  border-color: $orange;
+  border-color: var(--theme-accent-primary);
 }
 
 .disabled {
