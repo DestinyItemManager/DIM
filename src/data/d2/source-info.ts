@@ -154,6 +154,7 @@ const D2Sources: {
       100617404, // Requires Titan Class
       286427063, // Source: Fallen Empire campaign.
       409652252, // Source: The Witch Queen campaign
+      460742691, // Requires Guardian Rank 6: Masterwork Weapons
       569214265, // Source: Earned over the course of the Red War campaign.
       677167936, // Source: Complete the campaign as a Warlock.
       736336644, // Source: "A Spark of Hope" quest.
@@ -164,17 +165,16 @@ const D2Sources: {
       1103518848, // Source: Earned over the course of the Warmind campaign.
       1118966764, // Source: Dismantle an item with this shader applied to it.
       1281387702, // Source: Unlock your Void subclass.
-      1670837732, // Source: Found in Legendary world engrams.
       1701477406, // Source: Flashpoint milestones; Legendary engrams.
       2242939082, // Requires Hunter Class
       2278847330, // Requires Guardian Rank 5
       2308290458, // Requires 1,000 Warlock Kills
+      2552784968, // Requires Guardian Rank 2
       2744321951, // Source: Complete a heroic Public Event.
       2892963218, // Source: Earned while leveling.
       2895784523, // Source: Pledge to all factions on a single character.
       2929562373, // Source: Unlock your Solar subclass.
       2988465950, // Source: Planetary faction chests.
-      3083076965, // Source: Unlocked by default.
       3099553329, // Source: Complete the campaign as a Titan.
       3126774631, // Requires 1,000 Hunter Kills
       3174947771, // Requires Guardian Rank 6: Powerful Rewards
@@ -256,12 +256,12 @@ const D2Sources: {
       745186842, // Source: Complete this reward's associated Crucible quest.
       897576623, // Source: Complete Crucible matches and earn rank-up packages from Lord Shaxx.
       929025440, // Acquired by competing in the Crucible during the Prismatic Inferno.
-      1145551111, // Source: Found in Crucible engrams.
       1217831333, // Source: Complete this reward's associated Crucible quest.
       1223492644, // Source: Complete the "Reconnaissance by Fire" quest.
       1494513645, // Source: Complete Glory matches in Crucible.
       2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory Rank "Mythic."
       2537301256, // Source: Reach a Glory Rank of "Fabled" in the Crucible.
+      2558941813, // Place Silver III Division or higher in ranked Crucible playlists.
       2641169841, // Source: Purchased from Lord Shaxx.
       2658055900, // Source: Complete the "Season 8: Battle Drills" quest.
       2669524419, // Source: Crucible.
@@ -449,7 +449,6 @@ const D2Sources: {
       887452441, // Source: Gambit Salvager's Salvo Armament
       1127923611, // Source: Reset your Gambit Rank 3 times in a single Season.
       1162859311, // Source: Complete the "Clean Getaway" quest.
-      2000002391, // Source: Found in Gambit engrams.
       2170269026, // Source: Complete Gambit matches and earn rank-up packages from the Drifter.
       2364933290, // Source: Gambit Seasonal Ritual Rank Reward
       2601524261, // Source: Complete this reward's associated Gambit quest.
@@ -493,6 +492,7 @@ const D2Sources: {
       1597738585, // Source: "Spire of the Watcher" Dungeon
       1745960977, // Source: Pit of Heresy
       2856954949, // Source: "Let Loose Thy Talons" Exotic quest.
+      3288974535, // Source: "Ghosts of the Deep" Dungeon
       3597879858, // Source: Presage Exotic Quest
     ],
     searchString: ['shatteredthrone', 'pit', 'prophecy', 'presage', 'harbinger'],
@@ -635,7 +635,6 @@ const D2Sources: {
       887452441, // Source: Gambit Salvager's Salvo Armament
       1127923611, // Source: Reset your Gambit Rank 3 times in a single Season.
       1162859311, // Source: Complete the "Clean Getaway" quest.
-      2000002391, // Source: Found in Gambit engrams.
       2170269026, // Source: Complete Gambit matches and earn rank-up packages from the Drifter.
       2364933290, // Source: Gambit Seasonal Ritual Rank Reward
       2601524261, // Source: Complete this reward's associated Gambit quest.
@@ -943,6 +942,7 @@ const D2Sources: {
       277706045, // Source: Season of the Splicer Nightfall Grandmaster
       354493557, // Source: Complete Nightfall strike "Savathûn's Song."
       817015032, // Source: Complete Nightfall strike "The Inverted Spire."
+      827839814, // Source: Flawless chest in the Trials of Osiris Lighthouse, or Grandmaster Nightfall completions.
       860666126, // Source: Nightfall
       1175566043, // Source: Complete Nightfall strike "A Garden World."
       1283862526, // Source: Season of the Haunted Nightfall Grandmaster
@@ -1146,6 +1146,7 @@ const D2Sources: {
       2060863616, // Salvager's Salvo
       2697058914, // Komodo-4FR
       3001205424, // Ecliptic Distaff
+      3292795429, // Randy's Throwing Knife
       3434944005, // Point of the Stag
       3535742959, // Randy's Throwing Knife
       4184808992, // Adored
@@ -1225,10 +1226,13 @@ const D2Sources: {
     ],
     sourceHashes: [
       450719423, // Source: Season of the Risen
+      813075729, // Source: Season of the Deep Vendor Reputation Reward
+      927967626, // Source: Season of the Deep
       1560428737, // Source: Season of Defiance
       1593696611, // Source: Season Pass Reward
       1763998430, // Source: Season Pass
       1838401392, // Source: Earned as a Season Pass reward.
+      2257836668, // Source: Season of the Deep Fishing
       2379344669, // Source: Season Pass.
       2676881949, // Source: Season of the Haunted
       3308438907, // Source: Season of Plunder
@@ -1281,12 +1285,12 @@ const D2Sources: {
       745186842, // Source: Complete this reward's associated Crucible quest.
       897576623, // Source: Complete Crucible matches and earn rank-up packages from Lord Shaxx.
       929025440, // Acquired by competing in the Crucible during the Prismatic Inferno.
-      1145551111, // Source: Found in Crucible engrams.
       1217831333, // Source: Complete this reward's associated Crucible quest.
       1223492644, // Source: Complete the "Reconnaissance by Fire" quest.
       1494513645, // Source: Complete Glory matches in Crucible.
       2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory Rank "Mythic."
       2537301256, // Source: Reach a Glory Rank of "Fabled" in the Crucible.
+      2558941813, // Place Silver III Division or higher in ranked Crucible playlists.
       2641169841, // Source: Purchased from Lord Shaxx.
       2658055900, // Source: Complete the "Season 8: Battle Drills" quest.
       2669524419, // Source: Crucible.
@@ -1305,6 +1309,17 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       96303009, // Source: Purchased from Amanda Holliday.
+    ],
+    searchString: [],
+  },
+  sonar: {
+    itemHashes: [],
+    sourceHashes: [
+      813075729, // Source: Season of the Deep Vendor Reputation Reward
+      927967626, // Source: Season of the Deep
+      2257836668, // Source: Season of the Deep Fishing
+      2755511565, // Source: Season of the Deep Triumph
+      2811716495, // Source: Season of the Deep Activities
     ],
     searchString: [],
   },
@@ -1373,7 +1388,6 @@ const D2Sources: {
       1244908294, // Source: Complete the "Loaded Question" quest from Zavala.
       1433518193, // Source: Vanguard Salvager's Salvo Armament Quest
       1564061133, // Source: Complete this reward's associated Vanguard quest.
-      1593570812, // Source: Found in Vanguard engrams.
       2317365255, // Source: Complete the "A Loud Racket" quest.
       2335095658, // Source: Strikes.
       2527168932, // Source: Complete strikes and earn rank-up packages from Commander Zavala.
@@ -1435,6 +1449,7 @@ const D2Sources: {
       139599745, // Source: Earn seven wins on a single Trials ticket.
       550270332, // Source: Complete all Nightmare Hunt time trials on Master difficulty.
       752988954, // Source: Flawless chest completion in the Trials of Osiris Lighthouse.
+      827839814, // Source: Flawless chest in the Trials of Osiris Lighthouse, or Grandmaster Nightfall completions.
       1607607347, // Source: Complete Trials tickets and earn rank-up packages from the Emissary of the Nine.
       2857787138, // Source: Trials of Osiris
       3390015730, // Source: Earned by completing challenges in the Trials of Osiris.
@@ -1632,7 +1647,6 @@ const D2Sources: {
       1244908294, // Source: Complete the "Loaded Question" quest from Zavala.
       1433518193, // Source: Vanguard Salvager's Salvo Armament Quest
       1564061133, // Source: Complete this reward's associated Vanguard quest.
-      1593570812, // Source: Found in Vanguard engrams.
       2317365255, // Source: Complete the "A Loud Racket" quest.
       2335095658, // Source: Strikes.
       2527168932, // Source: Complete strikes and earn rank-up packages from Commander Zavala.
