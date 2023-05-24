@@ -24,7 +24,7 @@ import {
   LoadoutItem as DimLoadoutItem,
   InGameLoadout,
 } from './loadout-types';
-import { newLoadout, potentialLoadoutItemsByItemId } from './loadout-utils';
+import { convertToLoadoutItem, newLoadout, potentialLoadoutItemsByItemId } from './loadout-utils';
 
 /**
  * DIM API stores loadouts in a new format, but the app still uses the old format everywhere. These functions convert
@@ -238,11 +238,8 @@ export function convertInGameLoadoutToDimLoadout(
           : undefined;
 
       const loadoutItem: DimLoadoutItem = {
-        id: inGameItem.itemInstanceId,
-        hash: matchingItem.hash,
+        ...convertToLoadoutItem(matchingItem, true),
         socketOverrides,
-        equip: true,
-        amount: 1,
       };
 
       return loadoutItem;
