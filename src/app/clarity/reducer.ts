@@ -25,10 +25,16 @@ export const clarity: Reducer<ClarityState, ClarityAction> = (
 ) => {
   switch (action.type) {
     case getType(actions.loadDescriptions): {
-      const [descriptions, characterStats] = action.payload;
+      const descriptions = action.payload;
       return {
         ...state,
         descriptions: descriptions ?? state.descriptions,
+      };
+    }
+    case getType(actions.loadCharacterStats): {
+      const characterStats = action.payload;
+      return {
+        ...state,
         characterStats: characterStats ?? state.characterStats,
       };
     }
