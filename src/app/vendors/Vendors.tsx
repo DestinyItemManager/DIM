@@ -11,7 +11,7 @@ import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
 import { DestinyCurrenciesComponent } from 'bungie-api-ts/destiny2';
-import { motion, PanInfo } from 'framer-motion';
+import { PanInfo, motion } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
@@ -20,6 +20,9 @@ import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { sortedStoresSelector } from '../inventory/selectors';
 import { loadingTracker } from '../shell/loading-tracker';
 import { refresh$ } from '../shell/refresh-events';
+import Vendor from './Vendor';
+import styles from './Vendors.m.scss';
+import VendorsMenu from './VendorsMenu';
 import { loadAllVendors } from './actions';
 import {
   D2VendorGroup,
@@ -31,9 +34,6 @@ import {
   vendorGroupsForCharacterSelector,
   vendorsByCharacterSelector,
 } from './selectors';
-import Vendor from './Vendor';
-import styles from './Vendors.m.scss';
-import VendorsMenu from './VendorsMenu';
 
 /**
  * The "All Vendors" page for D2 that shows all the rotating vendors.

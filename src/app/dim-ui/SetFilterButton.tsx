@@ -1,6 +1,5 @@
 import { setSearchQuery } from 'app/shell/actions';
 import { AppIcon, searchIcon } from 'app/shell/icons';
-import React from 'react';
 import { useDispatch } from 'react-redux';
 import styles from './SetFilterButton.m.scss';
 

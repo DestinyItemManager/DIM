@@ -2,7 +2,6 @@ import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { AppIcon, faCalculator } from 'app/shell/icons';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 

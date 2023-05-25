@@ -1,5 +1,3 @@
-import React from 'react';
-
 /**
  * A value from 100 to -100 where positive is right and negative is left and zero is straight up
  * See https://imgur.com/LKwWUNV

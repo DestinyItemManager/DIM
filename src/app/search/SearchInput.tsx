@@ -2,7 +2,6 @@ import { searchIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { isiOSBrowser } from 'app/utils/browsers';
-import React from 'react';
 
 /**
  * A styled text input without fancy features like autocompletion or de-bouncing.

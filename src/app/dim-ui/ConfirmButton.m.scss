@@ -9,15 +9,11 @@
     overflow: hidden;
   }
 
-  // applies to both the children container and the "confirm" message container
+  // applies to both the icon, children container and the "confirm" message container
   & > div {
     // while transitioning out of confirm mode, linger the message, then sweep it away slowly
     transition: height 0.5s ease-in 0.5s;
     overflow: hidden;
-  }
-
-  // applies to both icon and "confirm" message container
-  & > div {
     display: flex;
     align-items: center;
     justify-content: center;

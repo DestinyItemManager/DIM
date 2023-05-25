@@ -11,7 +11,7 @@ import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 import ItemTable from './ItemTable';
-import ItemTypeSelector, { getSelectionTree, ItemCategoryTreeNode } from './ItemTypeSelector';
+import ItemTypeSelector, { ItemCategoryTreeNode, getSelectionTree } from './ItemTypeSelector';
 import styles from './Organizer.m.scss';
 
 interface Props {

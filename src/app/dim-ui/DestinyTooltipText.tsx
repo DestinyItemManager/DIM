@@ -3,8 +3,8 @@ import { AppIcon, faClock } from 'app/shell/icons';
 import { DestinyItemTooltipNotification } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import shapedIcon from 'images/shaped.png';
-import RichDestinyText from './destiny-symbols/RichDestinyText';
 import styles from './DestinyTooltipText.m.scss';
+import RichDestinyText from './destiny-symbols/RichDestinyText';
 
 export function DestinyTooltipText({ item }: { item: DimItem }) {
   if (!item.tooltipNotifications) {

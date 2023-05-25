@@ -1,4 +1,3 @@
-import React from 'react';
 import './DragPerformanceFix.scss';
 
 function hideOverlay() {

@@ -6,10 +6,7 @@
   justify-content: center;
   align-items: center;
   position: fixed;
-  top: var(--header-height);
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: var(--header-height) 0 0 0;
   overflow: hidden;
   z-index: 100;
   pointer-events: none;

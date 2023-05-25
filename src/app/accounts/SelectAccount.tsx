@@ -6,8 +6,8 @@ import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Account from './Account';
-import { logOut } from './platforms';
 import styles from './SelectAccount.m.scss';
+import { logOut } from './platforms';
 import { accountsSelector } from './selectors';
 
 /**

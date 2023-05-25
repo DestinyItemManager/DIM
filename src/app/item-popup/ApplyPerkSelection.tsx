@@ -6,7 +6,7 @@ import { showNotification } from 'app/notifications/notifications';
 import { AppIcon, faCheckCircle, refreshIcon, thumbsUpIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { wishListSelector } from 'app/wishlists/selectors';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './ApplyPerkSelection.m.scss';
 

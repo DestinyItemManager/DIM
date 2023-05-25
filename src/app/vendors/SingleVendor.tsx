@@ -21,12 +21,12 @@ import {
 } from '../inventory/selectors';
 import { loadingTracker } from '../shell/loading-tracker';
 import { refresh$ } from '../shell/refresh-events';
-import { loadAllVendors } from './actions';
-import { toVendor } from './d2-vendors';
-import { ownedVendorItemsSelector, vendorsByCharacterSelector } from './selectors';
 import styles from './SingleVendor.m.scss';
 import { VendorLocation } from './Vendor';
 import VendorItems from './VendorItems';
+import { loadAllVendors } from './actions';
+import { toVendor } from './d2-vendors';
+import { ownedVendorItemsSelector, vendorsByCharacterSelector } from './selectors';
 
 /**
  * A page that loads its own info for a single vendor, so we can link to a vendor or show engram previews.

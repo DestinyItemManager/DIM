@@ -4,8 +4,8 @@ import { useAutocomplete } from 'app/dim-ui/text-complete/text-complete';
 import { t } from 'app/i18next-t';
 import React, { useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { Loadout } from './loadout-types';
 import styles from './LoadoutDrawerHeader.m.scss';
+import { Loadout } from './loadout-types';
 import { loadoutsHashtagsSelector } from './selectors';
 
 export default function LoadoutDrawerHeader({

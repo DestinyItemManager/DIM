@@ -44,6 +44,7 @@
   background-color: black;
   align-items: center;
   padding: 4px 4px 4px 0;
+
   @include phone-portrait {
     grid-template-areas: 'name range minimum maximum';
     grid-template-columns: 1fr min-content 45px 45px;

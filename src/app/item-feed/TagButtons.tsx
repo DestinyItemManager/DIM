@@ -1,5 +1,5 @@
 import { clearNewItem, setTag } from 'app/inventory/actions';
-import { tagConfig, TagValue } from 'app/inventory/dim-item-info';
+import { TagValue, tagConfig } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { AppIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';

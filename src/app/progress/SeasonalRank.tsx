@@ -11,7 +11,6 @@ import {
   DestinySeasonPassDefinition,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import { ProgressBar, StackAmount } from './PursuitItem';
 import styles from './SeasonalRank.m.scss';

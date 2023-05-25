@@ -1,6 +1,5 @@
 import { DimItem } from 'app/inventory/item-types';
 import { ItemActionsModel } from 'app/item-popup/item-popup-actions';
-import React from 'react';
 import {
   CompareActionButton,
   ConsolidateActionButton,
