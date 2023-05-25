@@ -50,7 +50,7 @@ export default function ClarityCharacterStat({
       if (!equippedHashes.has(a.Hash)) {
         continue;
       }
-      let cooldowns = a.Cooldowns.map((c) => Math.round(c));
+      let cooldowns = a.Cooldowns;
       const item = defs.InventoryItem.get(a.Hash);
 
       const overrides = [];
@@ -74,6 +74,7 @@ export default function ClarityCharacterStat({
         }
       }
 
+      cooldowns = cooldowns.map((c) => Math.round(c));
       abilityCooldowns.push({ cooldowns, item, overrides });
     }
   }
