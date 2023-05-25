@@ -1179,6 +1179,7 @@ const missingSources: { [key: string]: number[] } = {
     153144587, // Solstice Cloak (Drained)
     226436555, // Solstice Mask (Renewed)
     231432261, // Solstice Bond (Resplendent)
+    233896077, // Compass Rose
     234970842, // Solstice Boots (Resplendent)
     250513201, // Solstice Greaves (Resplendent)
     335763433, // Solstice Plate (Resplendent)
@@ -1265,6 +1266,7 @@ const missingSources: { [key: string]: number[] } = {
     3159052337, // Solstice Mask (Majestic)
     3192336962, // Solstice Cloak (Scorched)
     3236510875, // Solstice Grasps (Resplendent)
+    3240434620, // Something New
     3559361670, // The Title
     3611487543, // Solstice Hood (Rekindled)
     3685996623, // Solstice Greaves (Rekindled)
@@ -1607,7 +1609,9 @@ const missingSources: { [key: string]: number[] } = {
   ],
   gunsmith: [],
   harbinger: [],
-  haunted: [],
+  haunted: [
+    3864896927, // Nightmare Harvester
+  ],
   ikora: [
     89175653, // Noble Constant Mark
     185326970, // Noble Constant Type 2
@@ -1869,8 +1873,11 @@ const missingSources: { [key: string]: number[] } = {
     16387641, // Mark of the Great Hunt
     49280456, // Gloves of the Great Hunt
     65929376, // Gauntlets of the Great Hunt
+    70083888, // Nation of Beasts
     146275556, // Vest of the Great Hunt
     196235132, // Grips of the Great Hunt
+    424291879, // Age-Old Bond
+    501329015, // Chattering Bone
     576683388, // Gauntlets of the Great Hunt
     726265506, // Boots of the Great Hunt
     776723133, // Robes of the Great Hunt
@@ -1888,12 +1895,14 @@ const missingSources: { [key: string]: number[] } = {
     1477271933, // Bond of the Great Hunt
     1646520469, // Cloak of the Great Hunt
     1656835365, // Plate of the Great Hunt
+    1851777734, // Apex Predator
     2112541750, // Cloak of the Great Hunt
     2274520361, // Helm of the Great Hunt
     2280287728, // Bond of the Great Hunt
     2550116544, // Robes of the Great Hunt
     2598685593, // Gloves of the Great Hunt
     2868042232, // Vest of the Great Hunt
+    2884596447, // The Supremacy
     2950533187, // Strides of the Great Hunt
     3055836250, // Greaves of the Great Hunt
     3119383537, // Grips of the Great Hunt
@@ -1901,14 +1910,17 @@ const missingSources: { [key: string]: number[] } = {
     3208178411, // Gauntlets of the Great Hunt
     3227674085, // Boots of the Great Hunt
     3251351304, // Hood of the Great Hunt
+    3388655311, // Tyranny of Heaven
     3445296383, // Robes of the Great Hunt
     3445582154, // Hood of the Great Hunt
     3492720019, // Gloves of the Great Hunt
     3494130310, // Strides of the Great Hunt
+    3591141932, // Techeun Force
     3614211816, // Plate of the Great Hunt
     3838639757, // Mask of the Great Hunt
     3868637058, // Helm of the Great Hunt
     3874578566, // Greaves of the Great Hunt
+    3885259140, // Transfiguration
     4219088013, // Helm of the Great Hunt
   ],
   legendaryengram: [
@@ -2256,8 +2268,11 @@ const missingSources: { [key: string]: number[] } = {
     16387641, // Mark of the Great Hunt
     49280456, // Gloves of the Great Hunt
     65929376, // Gauntlets of the Great Hunt
+    70083888, // Nation of Beasts
     146275556, // Vest of the Great Hunt
     196235132, // Grips of the Great Hunt
+    424291879, // Age-Old Bond
+    501329015, // Chattering Bone
     576683388, // Gauntlets of the Great Hunt
     726265506, // Boots of the Great Hunt
     776723133, // Robes of the Great Hunt
@@ -2275,12 +2290,14 @@ const missingSources: { [key: string]: number[] } = {
     1477271933, // Bond of the Great Hunt
     1646520469, // Cloak of the Great Hunt
     1656835365, // Plate of the Great Hunt
+    1851777734, // Apex Predator
     2112541750, // Cloak of the Great Hunt
     2274520361, // Helm of the Great Hunt
     2280287728, // Bond of the Great Hunt
     2550116544, // Robes of the Great Hunt
     2598685593, // Gloves of the Great Hunt
     2868042232, // Vest of the Great Hunt
+    2884596447, // The Supremacy
     2950533187, // Strides of the Great Hunt
     3055836250, // Greaves of the Great Hunt
     3119383537, // Grips of the Great Hunt
@@ -2288,14 +2305,17 @@ const missingSources: { [key: string]: number[] } = {
     3208178411, // Gauntlets of the Great Hunt
     3227674085, // Boots of the Great Hunt
     3251351304, // Hood of the Great Hunt
+    3388655311, // Tyranny of Heaven
     3445296383, // Robes of the Great Hunt
     3445582154, // Hood of the Great Hunt
     3492720019, // Gloves of the Great Hunt
     3494130310, // Strides of the Great Hunt
+    3591141932, // Techeun Force
     3614211816, // Plate of the Great Hunt
     3838639757, // Mask of the Great Hunt
     3868637058, // Helm of the Great Hunt
     3874578566, // Greaves of the Great Hunt
+    3885259140, // Transfiguration
     4219088013, // Helm of the Great Hunt
   ],
   mars: [],
@@ -2442,6 +2462,7 @@ const missingSources: { [key: string]: number[] } = {
     64543268, // Boots of the Emperor's Minister
     64543269, // Boots of the Fulminator
     65929376, // Gauntlets of the Great Hunt
+    70083888, // Nation of Beasts
     146275556, // Vest of the Great Hunt
     196235132, // Grips of the Great Hunt
     223783885, // Insigne Shade Bond
@@ -2461,8 +2482,10 @@ const missingSources: { [key: string]: number[] } = {
     383742277, // Cloak of Feltroc
     388999052, // Bulletsmith's Ire Mark
     407863747, // Vest of the Ace-Defiant
+    424291879, // Age-Old Bond
     455108040, // Helm of the Emperor's Champion
     455108041, // Mask of Rull
+    501329015, // Chattering Bone
     503773817, // Insigne Shade Gloves
     519078295, // Helm of Righteousness
     548581042, // Insigne Shade Boots
@@ -2528,6 +2551,7 @@ const missingSources: { [key: string]: number[] } = {
     1675393889, // Insigne Shade Cover
     1756558505, // Mask of Sekris
     1793869832, // Turris Shade Greaves
+    1851777734, // Apex Predator
     1862963733, // Shadow's Plate
     1876645653, // Chassis of Rull
     1879942843, // Gauntlets of Rull
@@ -2580,6 +2604,7 @@ const missingSources: { [key: string]: number[] } = {
     2769298993, // Shadow's Boots
     2868042232, // Vest of the Great Hunt
     2878130185, // Bulletsmith's Ire Greaves
+    2884596447, // The Supremacy
     2904930850, // Turris Shade Plate
     2913992255, // Helm of the Emperor's Champion
     2921334134, // Bulletsmith's Ire Helm
@@ -2610,6 +2635,7 @@ const missingSources: { [key: string]: number[] } = {
     3349283422, // Shadow's Mind
     3359121706, // Mask of Nohr
     3364682867, // Gauntlets of Nohr
+    3388655311, // Tyranny of Heaven
     3395856235, // Insigne Shade Boots
     3416932282, // Turris Shade Mark
     3440648382, // Equitis Shade Cowl
@@ -2625,6 +2651,7 @@ const missingSources: { [key: string]: number[] } = {
     3549177695, // Cloak of Temptation
     3567761471, // Gunsmith's Devotion Bond
     3581198350, // Turris Shade Gauntlets
+    3591141932, // Techeun Force
     3592548938, // Robes of the Fulminator
     3614211816, // Plate of the Great Hunt
     3711700026, // Mask of the Emperor's Agent
@@ -2641,6 +2668,7 @@ const missingSources: { [key: string]: number[] } = {
     3867160430, // Insigne Shade Bond
     3868637058, // Helm of the Great Hunt
     3874578566, // Greaves of the Great Hunt
+    3885259140, // Transfiguration
     3887559710, // Gauntlets of Exaltation
     3939809874, // Plate of Transcendence
     3950028838, // Cloak of the Emperor's Agent
@@ -2662,6 +2690,7 @@ const missingSources: { [key: string]: number[] } = {
   rasputin: [
     555148853, // Wendigo GL3 (Adept)
     681067419, // Hung Jury SR4 (Adept)
+    1631448645, // Seraph Cipher
     4074251943, // Hung Jury SR4 (Adept)
   ],
   'ritual-weapon': [],
@@ -2707,8 +2736,11 @@ const missingSources: { [key: string]: number[] } = {
   ],
   seasonpass: [
     1387688628, // The Gate Lord's Eye
+    1631448645, // Seraph Cipher
     2871264750, // Skeleton Key
     3358687360, // Synaptic Spear
+    3644991365, // Ascendant Scepter
+    3864896927, // Nightmare Harvester
   ],
   servitor: [
     3380377210, // Paradrome Cube
@@ -2822,6 +2854,7 @@ const missingSources: { [key: string]: number[] } = {
     4264096388, // Wing Theorem
   ],
   shipwright: [],
+  sonar: [],
   sos: [
     223783885, // Insigne Shade Bond
     503773817, // Insigne Shade Gloves
