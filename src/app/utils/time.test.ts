@@ -19,14 +19,27 @@ describe('english localization', () => {
   beforeEach(() => {
     i18next.changeLanguage('en');
   });
+
   test.each([
     [1000, '0:00'],
     [0, '0:00'],
+    [86400000, '1 Day 0:00'],
     [279241234, '3 Days 5:34'],
     [20041234, '5:34'],
   ])('i15dDurationFromMs(%s) === "%s"', (timestamp, expected) => {
     expect(i15dDurationFromMs(timestamp)).toBe(expected);
   });
+
+  test.each([
+    [1000, '0:00'],
+    [0, '0:00'],
+    [86400000, '1d 0:00'],
+    [279241234, '3d 5:34'],
+    [20041234, '5:34'],
+  ])('i15dDurationFromMs(%s) === "%s"', (timestamp, expected) => {
+    expect(i15dDurationFromMs(timestamp, true)).toBe(expected);
+  });
+
   test.each([
     [1000, '0:00:01'],
     [0, '0:00:00'],
@@ -45,11 +58,23 @@ describe('japanese localization', () => {
   test.each([
     [1000, '0:00'],
     [0, '0:00'],
+    [86400000, '１日 0:00'],
     [279241234, '3 日間 5:34'],
     [20041234, '5:34'],
   ])('i15dDurationFromMs(%s) === "%s"', (timestamp, expected) => {
     expect(i15dDurationFromMs(timestamp)).toBe(expected);
   });
+
+  test.each([
+    [1000, '0:00'],
+    [0, '0:00'],
+    [86400000, '1d 0:00'],
+    [279241234, '3 日 5:34'],
+    [20041234, '5:34'],
+  ])('i15dDurationFromMs(%s) === "%s"', (timestamp, expected) => {
+    expect(i15dDurationFromMs(timestamp, true)).toBe(expected);
+  });
+
   test.each([
     [1000, '0:00:01'],
     [0, '0:00:00'],
