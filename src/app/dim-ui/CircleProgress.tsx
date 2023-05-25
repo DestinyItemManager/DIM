@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './DiamondProgress.m.scss';
 
 interface Props {

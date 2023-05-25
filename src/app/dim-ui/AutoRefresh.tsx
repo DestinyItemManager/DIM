@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { isDragging$ } from '../inventory/drag-events';
 import { loadingTracker } from '../shell/loading-tracker';
-import { refresh as triggerRefresh, refresh$ } from '../shell/refresh-events';
+import { refresh$, refresh as triggerRefresh } from '../shell/refresh-events';
 
 const globalSettingsSelector = (state: RootState) => state.dimApi.globalSettings;
 

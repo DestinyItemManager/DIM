@@ -2,9 +2,9 @@ import { t } from 'app/i18next-t';
 import { PullFromPostmaster } from 'app/inventory/PullFromPostmaster';
 import { currentStoreSelector } from 'app/inventory/selectors';
 import {
+  POSTMASTER_SIZE,
   postmasterAlmostFull,
   postmasterSpaceUsed,
-  POSTMASTER_SIZE,
 } from 'app/loadout-drawer/postmaster';
 import React from 'react';
 import { useSelector } from 'react-redux';

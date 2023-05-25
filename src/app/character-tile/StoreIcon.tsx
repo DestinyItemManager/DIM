@@ -1,7 +1,6 @@
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { DimStore } from 'app/inventory/store-types';
 import clsx from 'clsx';
-import React from 'react';
 import styles from './StoreIcon.m.scss';
 
 /**

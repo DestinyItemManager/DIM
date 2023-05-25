@@ -15,10 +15,10 @@ import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useSubscription } from 'use-subscription';
 import ErrorPanel from './ErrorPanel';
+import styles from './RefreshButton.m.scss';
 import { AppIcon, faClock, faExclamationTriangle, refreshIcon } from './icons';
 import { loadingTracker } from './loading-tracker';
 import { refresh } from './refresh-events';
-import styles from './RefreshButton.m.scss';
 
 /** We consider the profile stale if it's out of date with respect to the game data by this much */
 const STALE_PROFILE_THRESHOLD = 90_000;

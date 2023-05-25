@@ -4,7 +4,6 @@ import {
   DestinyProgression,
   DestinyVendorComponent,
 } from 'bungie-api-ts/destiny2';
-import React from 'react';
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import CircleProgress from '../dim-ui/CircleProgress';
 import DiamondProgress from '../dim-ui/DiamondProgress';

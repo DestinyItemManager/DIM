@@ -6,8 +6,8 @@ import { AppIcon, refreshIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { useEffect, useState } from 'react';
-import { decodeShareUrl, getDecodedLoadout } from './loadout-import';
 import styles from './LoadoutImportSheet.m.scss';
+import { decodeShareUrl, getDecodedLoadout } from './loadout-import';
 
 const placeHolder = `https://dim.gg/bwipb2a/, https://app.destinyitemmanager.com/loadouts?loadout=...`;
 

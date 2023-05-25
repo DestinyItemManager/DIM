@@ -1,6 +1,5 @@
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import StaticPage from 'app/dim-ui/StaticPage';
-import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './Privacy.m.scss';
 

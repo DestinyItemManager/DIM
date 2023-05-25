@@ -10,8 +10,8 @@ import {
 import { DestinyPresentationNodeDefinition, DestinyRecordState } from 'bungie-api-ts/destiny2';
 import seasonalChallengesInfo from 'data/d2/seasonal-challenges.json';
 import { useSelector } from 'react-redux';
-import { recordToPursuitItem } from './milestone-items';
 import { PursuitsGroup } from './Pursuits';
+import { recordToPursuitItem } from './milestone-items';
 
 /**
  * List out all the seasonal challenges for the character, grouped out in a useful way.

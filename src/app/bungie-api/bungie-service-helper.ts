@@ -11,9 +11,9 @@ import { fetchWithBungieOAuth } from './authenticated-fetch';
 import { API_KEY } from './bungie-api-utils';
 import {
   BungieError,
+  HttpStatusError,
   createFetchWithNonStoppingTimeout,
   createHttpClient,
-  HttpStatusError,
   responsivelyThrottleHttpClient,
 } from './http-client';
 import { rateLimitedFetch } from './rate-limiter';

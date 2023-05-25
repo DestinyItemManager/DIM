@@ -1,6 +1,6 @@
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
-import { DimItem } from 'app/inventory/item-types';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
+import { DimItem } from 'app/inventory/item-types';
 import { isNewSelector } from 'app/inventory/selectors';
 import { isBooleanObjective } from 'app/inventory/store/objectives';
 import ItemExpiration from 'app/item-popup/ItemExpiration';

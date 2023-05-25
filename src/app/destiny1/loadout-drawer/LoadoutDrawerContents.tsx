@@ -6,15 +6,15 @@ import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { getStore } from 'app/inventory/stores-helpers';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import {
+  LoadoutUpdateFunction,
   fillLoadoutFromEquipped,
   fillLoadoutFromUnequipped,
-  LoadoutUpdateFunction,
 } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { findSameLoadoutItemIndex, fromEquippedTypes } from 'app/loadout-drawer/loadout-utils';
 import { useD1Definitions } from 'app/manifest/selectors';
 import { D1BucketHashes } from 'app/search/d1-known-values';
-import { addIcon, AppIcon } from 'app/shell/icons';
+import { AppIcon, addIcon } from 'app/shell/icons';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';

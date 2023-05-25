@@ -1,6 +1,6 @@
 import BungieImage from 'app/dim-ui/BungieImage';
-import { DimItem } from 'app/inventory/item-types';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
+import { DimItem } from 'app/inventory/item-types';
 import {
   isBooleanObjective,
   isFlawlessPassage,

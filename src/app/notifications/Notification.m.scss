@@ -3,6 +3,7 @@
 .notification {
   margin: 0 0 8px;
   width: 350px;
+
   @include phone-portrait {
     width: 100%;
   }
