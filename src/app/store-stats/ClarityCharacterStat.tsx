@@ -1,6 +1,5 @@
 import { ClarityCharacterStats } from 'app/clarity/descriptions/character-stats';
 import { clarityCharacterStatsSelector } from 'app/clarity/selectors';
-import { settingSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { Tooltip } from 'app/dim-ui/PressTip';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -38,30 +37,51 @@ export default function ClarityCharacterStat({
 }) {
   const defs = useD2Definitions()!;
   const clarityCharacterStats = useSelector(clarityCharacterStatsSelector);
-  const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
-  const useClarityInfo = descriptionsToDisplay !== 'bungie';
   const clarityStatData = clarityCharacterStats?.[statHashToClarityName[statHash]];
 
-  // TODO: only show effects for equipped stuff
-  // TODO: graph? or at least show next tier
-  // TODO: include icons?
-  // TODO: remove common words?
-  // TODO: styling, "community insights header"
-  // TODO: "overrides"
-
-  const consolidated: [cooldown: number[], item: DestinyInventoryItemDefinition][] = [];
+  const abilityCooldowns: {
+    cooldowns: number[];
+    item: DestinyInventoryItemDefinition;
+    overrides: DestinyInventoryItemDefinition[];
+  }[] = [];
   if (clarityStatData) {
+    const applicableOverrides = clarityStatData.Overrides.filter((o) => equippedHashes.has(o.Hash));
     for (const a of clarityStatData.Abilities) {
       if (!equippedHashes.has(a.Hash)) {
         continue;
       }
-      const cooldowns = a.Cooldowns.map((c) => Math.round(c));
-      const name = defs.InventoryItem.get(a.Hash);
-      consolidated.push([cooldowns, name]);
+      let cooldowns = a.Cooldowns.map((c) => Math.round(c));
+      const item = defs.InventoryItem.get(a.Hash);
+
+      const overrides = [];
+
+      // Apply cooldown overrides based on equipped items.
+      for (const o of applicableOverrides) {
+        const abilityIndex = o.Requirements.indexOf(a.Hash);
+        if (abilityIndex !== -1) {
+          if (o.CooldownOverride?.some((v) => v > 0)) {
+            cooldowns = o.CooldownOverride;
+          }
+          const scalar = o.Scalar?.[abilityIndex];
+          if (scalar) {
+            cooldowns = cooldowns.map((v) => scalar * v);
+          }
+          const flatIncrease = o.FlatIncrease?.[abilityIndex];
+          if (flatIncrease) {
+            cooldowns = cooldowns.map((v) => v + flatIncrease);
+          }
+          overrides.push(defs.InventoryItem.get(o.Hash));
+        }
+      }
+
+      abilityCooldowns.push({ cooldowns, item, overrides });
     }
   }
 
-  console.log({ useClarityInfo, clarityCharacterStats, clarityStatData, consolidated });
+  console.log({
+    clarityStatData,
+    abilityCooldowns,
+  });
 
   if (!clarityStatData) {
     return null;
@@ -129,7 +149,7 @@ export default function ClarityCharacterStat({
     );
   }
 
-  if (intrinsicCooldowns.length + consolidated.length === 0) {
+  if (intrinsicCooldowns.length + abilityCooldowns.length === 0) {
     return null;
   }
 
@@ -138,32 +158,35 @@ export default function ClarityCharacterStat({
       <h3>{t('MovePopup.CommunityData')}</h3>
       <table>
         <thead>
-          <th />
-          {tier - 1 >= 0 && (
-            <>
-              <th>{t('LoadoutBuilder.TierNumber', { tier: tier - 1 })}</th>
-              <th />
-            </>
-          )}
-          <th className={styles.currentColumn}>{t('LoadoutBuilder.TierNumber', { tier })}</th>
-          <th />
-          {tier + 1 <= 10 && (
-            <>
-              <th>{t('LoadoutBuilder.TierNumber', { tier: tier + 1 })}</th>
-              <th />
-            </>
-          )}
+          <tr>
+            <th />
+            {tier - 1 >= 0 && (
+              <>
+                <th>{t('LoadoutBuilder.TierNumber', { tier: tier - 1 })}</th>
+                <th />
+              </>
+            )}
+            <th className={styles.currentColumn}>{t('LoadoutBuilder.TierNumber', { tier })}</th>
+            <th />
+            {tier + 1 <= 10 && (
+              <>
+                <th>{t('LoadoutBuilder.TierNumber', { tier: tier + 1 })}</th>
+                <th />
+              </>
+            )}
+          </tr>
         </thead>
         <tbody>
-          {consolidated
-            .sort((a, b) => a[0][tier] - b[0][tier])
-            .map(([cooldowns, item]) => (
+          {abilityCooldowns
+            .sort((a, b) => a.cooldowns[tier] - b.cooldowns[tier])
+            .map(({ cooldowns, item, overrides }) => (
               <StatTableRow
                 key={item.hash}
                 name={item.displayProperties.name}
                 icon={item.displayProperties.icon}
                 cooldowns={cooldowns}
                 tier={tier}
+                overrides={overrides}
                 unit="s"
               />
             ))}
@@ -180,20 +203,34 @@ function StatTableRow({
   cooldowns,
   tier,
   unit,
+  overrides = [],
 }: {
   name: string;
   icon?: string;
   unit: string;
   tier: number;
   cooldowns: number[];
+  overrides?: DestinyInventoryItemDefinition[];
 }) {
   const unitEl = <td className={styles.unit}>{unit}</td>;
 
   return (
     <tr>
       <th>
-        {icon && <BungieImage src={icon} height={16} width={16} />}
-        {name}
+        <span>
+          {icon && <BungieImage src={icon} height={16} width={16} />}
+          {name}
+        </span>
+        {overrides.map((o) => (
+          <span key={o.hash} className={styles.override}>
+            {' '}
+            +{' '}
+            {o.displayProperties.icon && (
+              <BungieImage src={o.displayProperties.icon} height={12} width={12} />
+            )}
+            {o.displayProperties.name}
+          </span>
+        ))}
       </th>
       {tier - 1 >= 0 && (
         <>

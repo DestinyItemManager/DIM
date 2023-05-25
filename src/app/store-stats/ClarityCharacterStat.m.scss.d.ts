@@ -3,6 +3,7 @@
 interface CssExports {
   'communityInsightSection': string;
   'currentColumn': string;
+  'override': string;
   'unit': string;
 }
 export const cssExports: CssExports;
