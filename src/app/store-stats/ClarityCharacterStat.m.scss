@@ -1,20 +1,6 @@
 @use '../variables' as *;
 @use '../dim-ui/tooltip-mixins' as *;
 
-.graph {
-  display: flex;
-  flex-direction: row;
-  gap: 2px;
-  align-items: flex-end;
-}
-.bar {
-  background-color: #888;
-  width: 10px;
-}
-.barCurrent {
-  background-color: #fff;
-}
-
 .communityInsightSection {
   @include tooltip-section-color($communityBlue);
   h3 {
@@ -28,34 +14,30 @@
     width: 100%;
   }
 
+  th {
+    font-weight: normal;
+  }
+
   th,
   td {
     opacity: 0.5;
     &:nth-child(2n) {
       text-align: right;
+      padding-left: 6px;
+      font-variant-numeric: tabular-nums;
     }
   }
 
-  th {
-    font-weight: normal;
-  }
-
-  td {
-    padding-left: 6px;
-  }
-
+  /* stylelint-disable-next-line no-descending-specificity */
   tbody th {
     text-align: right;
-    padding-right: 4px;
+    padding-right: 6px;
     opacity: 1;
   }
 
+  /* stylelint-disable-next-line no-descending-specificity */
   thead th {
-    padding-left: 6px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    &:empty {
-      padding: 0;
-    }
     &:first-child {
       border: none;
     }
