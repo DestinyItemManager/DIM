@@ -249,6 +249,8 @@ function GeneratedSet({
             enabledStats={enabledStats}
             boostedStats={boostedStats}
             existingLoadoutName={existingLoadout?.name}
+            subclass={subclass}
+            exoticArmorHash={params.exoticArmorHash}
           />
         </div>
         <div className={styles.items}>

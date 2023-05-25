@@ -52,7 +52,7 @@ export default function ClarityCharacterStat({
   const consolidated: [cooldown: number[], item: DestinyInventoryItemDefinition][] = [];
   if (clarityStatData) {
     for (const a of clarityStatData.Abilities) {
-      if (equippedHashes.size > 0 && !equippedHashes.has(a.Hash)) {
+      if (!equippedHashes.has(a.Hash)) {
         continue;
       }
       const cooldowns = a.Cooldowns.map((c) => Math.round(c));

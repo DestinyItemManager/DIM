@@ -1,6 +1,7 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
+import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, powerIndicatorIcon } from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
@@ -24,6 +25,8 @@ function SetStats({
   boostedStats,
   className,
   existingLoadoutName,
+  subclass,
+  exoticArmorHash,
 }: {
   stats: ArmorStats;
   getStatsBreakdown: () => ModStatChanges;
@@ -33,6 +36,8 @@ function SetStats({
   boostedStats: Set<ArmorStatHashes>;
   className?: string;
   existingLoadoutName?: string;
+  subclass?: ResolvedLoadoutItem;
+  exoticArmorHash?: number;
 }) {
   const defs = useD2Definitions()!;
   const statDefs: { [statHash: number]: DestinyStatDefinition } = {};
@@ -42,7 +47,19 @@ function SetStats({
   const totalTier = calculateTotalTier(stats);
   const enabledTier = sumEnabledStats(stats, enabledStats);
 
-  // TODO: calculate equipped Hashes for clarity data
+  // Fill in info about selected items / subclass options for Clarity character stats
+  const equippedHashes = new Set<number>();
+  if (exoticArmorHash) {
+    equippedHashes.add(exoticArmorHash);
+  }
+  if (subclass?.item.sockets) {
+    for (const socket of subclass.item.sockets.allSockets) {
+      const hash = socket.plugged?.plugDef.hash;
+      if (hash !== undefined) {
+        equippedHashes.add(hash);
+      }
+    }
+  }
 
   return (
     <div className={clsx(styles.container, className)}>
@@ -82,7 +99,7 @@ function SetStats({
                   description: statDefs[statHash].displayProperties.description,
                   breakdown: getStatsBreakdown()[statHash].breakdown,
                 }}
-                equippedHashes={new Set()}
+                equippedHashes={equippedHashes}
               />
             )}
           >

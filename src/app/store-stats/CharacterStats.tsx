@@ -147,7 +147,7 @@ export function PowerFormula({ storeId }: { storeId: string }) {
  * Display each of the main stats (Resistance, Discipline, etc) for a character. The actual stat info is passed in.
  * This shows stats for both loadouts and characters - anything that has a character stats list.
  */
-export function CharacterStats({
+function CharacterStats({
   stats,
   showTier,
   equippedHashes,
