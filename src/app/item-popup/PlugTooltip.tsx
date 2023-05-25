@@ -5,6 +5,7 @@ import { Tooltip, useTooltipCustomization } from 'app/dim-ui/PressTip';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { resonantElementObjectiveHashes } from 'app/inventory/store/deepsight';
+import { getValueStyle } from 'app/inventory/store/objectives';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { getDamageTypeForSubclassPlug } from 'app/inventory/subclass';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -18,6 +19,7 @@ import {
   DestinyClass,
   DestinyObjectiveProgress,
   DestinyPlugItemCraftingRequirements,
+  DestinyUnlockValueUIStyle,
   TierType,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -123,7 +125,10 @@ function PlugTooltip({
 
   // filter out plug objectives related to Resonant Elements
   const filteredPlugObjectives = plugObjectives?.filter(
-    (o) => !resonantElementObjectiveHashes.includes(o.objectiveHash)
+    (o) =>
+      !resonantElementObjectiveHashes.includes(o.objectiveHash) &&
+      getValueStyle(defs?.Objective.get(o.objectiveHash), o.progress ?? 0, o.completionValue) !==
+        DestinyUnlockValueUIStyle.Hidden
   );
 
   const bungieDescription =
