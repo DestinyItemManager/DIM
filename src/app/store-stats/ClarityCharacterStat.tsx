@@ -5,10 +5,8 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import { Tooltip } from 'app/dim-ui/PressTip';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
 import { StatHashes } from 'data/d2/generated-enums';
 import { t } from 'i18next';
-import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import styles from './ClarityCharacterStat.m.scss';
 
@@ -57,7 +55,7 @@ export default function ClarityCharacterStat({
       if (equippedHashes.size > 0 && !equippedHashes.has(a.Hash)) {
         continue;
       }
-      const cooldowns = a.Cooldowns;
+      const cooldowns = a.Cooldowns.map((c) => Math.round(c));
       const name = defs.InventoryItem.get(a.Hash);
       consolidated.push([cooldowns, name]);
     }
@@ -73,40 +71,61 @@ export default function ClarityCharacterStat({
   const intrinsicCooldowns: JSX.Element[] = [];
   if ('TimeToFullHP' in clarityStatData) {
     intrinsicCooldowns.push(
-      <div key="TimeToFullHP">
-        Time to Full HP: {clarityStatData.TimeToFullHP[tier].toLocaleString()}s
-        <Graph tier={tier} cooldowns={clarityStatData.TimeToFullHP} />
-      </div>
+      <StatTableRow
+        key="TimeToFullHP"
+        name="Time to Full HP"
+        cooldowns={clarityStatData.TimeToFullHP}
+        tier={tier}
+        unit="s"
+      />
     );
   } else if ('WalkingSpeed' in clarityStatData) {
     intrinsicCooldowns.push(
-      <div key="WalkingSpeed">
-        Walking Speed: {clarityStatData.WalkingSpeed[tier].toLocaleString()}m/s
-        <Graph tier={tier} cooldowns={clarityStatData.WalkingSpeed} />
-      </div>,
-      <div key="StrafingSpeed">
-        Strafing Speed: {clarityStatData.StrafeSpeed[tier].toLocaleString()}m/s
-        <Graph tier={tier} cooldowns={clarityStatData.StrafeSpeed} />
-      </div>,
-      <div key="CrouchingSpeed">
-        Crouching Speed: {clarityStatData.CrouchSpeed[tier].toLocaleString()}m/s
-        <Graph tier={tier} cooldowns={clarityStatData.CrouchSpeed} />
-      </div>
+      <StatTableRow
+        key="WalkingSpeed"
+        name="Walking"
+        cooldowns={clarityStatData.WalkingSpeed}
+        tier={tier}
+        unit="m/s"
+      />,
+      <StatTableRow
+        key="StrafingSpeed"
+        name="Strafing"
+        cooldowns={clarityStatData.StrafeSpeed}
+        tier={tier}
+        unit="m/s"
+      />,
+      <StatTableRow
+        key="CrouchingSpeed"
+        name="Crouching"
+        cooldowns={clarityStatData.CrouchSpeed}
+        tier={tier}
+        unit="m/s"
+      />
     );
   } else if ('TotalHP' in clarityStatData) {
     intrinsicCooldowns.push(
-      <div key="TotalHP">
-        Total HP: {clarityStatData.TotalHP[tier].toLocaleString()} HP
-        <Graph tier={tier} cooldowns={clarityStatData.TotalHP} />
-      </div>,
-      <div key="DamageResistance">
-        Damage Resistance: {clarityStatData.DamageResistance[tier].toLocaleString()}%
-        <Graph tier={tier} cooldowns={clarityStatData.DamageResistance} />
-      </div>,
-      <div key="FlinchResistance">
-        Flinch Resistance: {clarityStatData.FlinchResistance[tier].toLocaleString()}%
-        <Graph tier={tier} cooldowns={clarityStatData.FlinchResistance} />
-      </div>
+      <StatTableRow
+        key="TotalHP"
+        name="Total HP"
+        cooldowns={clarityStatData.TotalHP}
+        tier={tier}
+        unit="HP"
+      />,
+      <StatTableRow
+        key="DamageResistance"
+        name="Damage Resist"
+        cooldowns={clarityStatData.DamageResistance}
+        tier={tier}
+        unit="%"
+      />,
+      <StatTableRow
+        key="FlinchResistance"
+        name="Flinch Resist"
+        cooldowns={clarityStatData.FlinchResistance}
+        tier={tier}
+        unit="%"
+      />
     );
   }
 
@@ -117,31 +136,79 @@ export default function ClarityCharacterStat({
   return (
     <Tooltip.Section className={styles.communityInsightSection}>
       <h3>{t('MovePopup.CommunityData')}</h3>
-      {consolidated
-        .sort((a, b) => a[0][tier] - b[0][tier])
-        .map(([cooldowns, item]) => (
-          <div key={item.hash}>
-            <BungieImage src={item.displayProperties.icon} height={16} width={16} />{' '}
-            {item.displayProperties.name}: {Math.round(cooldowns[tier]).toLocaleString()}s
-            <Graph tier={tier} cooldowns={cooldowns} />
-          </div>
-        ))}
-      {intrinsicCooldowns}
+      <table>
+        <thead>
+          <th />
+          {tier - 1 >= 0 && (
+            <>
+              <th>{t('LoadoutBuilder.TierNumber', { tier: tier - 1 })}</th>
+              <th />
+            </>
+          )}
+          <th className={styles.currentColumn}>{t('LoadoutBuilder.TierNumber', { tier })}</th>
+          <th />
+          {tier + 1 <= 10 && (
+            <>
+              <th>{t('LoadoutBuilder.TierNumber', { tier: tier + 1 })}</th>
+              <th />
+            </>
+          )}
+        </thead>
+        <tbody>
+          {consolidated
+            .sort((a, b) => a[0][tier] - b[0][tier])
+            .map(([cooldowns, item]) => (
+              <StatTableRow
+                key={item.hash}
+                name={item.displayProperties.name}
+                icon={item.displayProperties.icon}
+                cooldowns={cooldowns}
+                tier={tier}
+                unit="s"
+              />
+            ))}
+          {intrinsicCooldowns}
+        </tbody>
+      </table>
     </Tooltip.Section>
   );
 }
 
-function Graph({ tier, cooldowns }: { tier: number; cooldowns: number[] }) {
-  const maxCooldown = _.max(cooldowns)!;
+function StatTableRow({
+  name,
+  icon,
+  cooldowns,
+  tier,
+  unit,
+}: {
+  name: string;
+  icon?: string;
+  unit: string;
+  tier: number;
+  cooldowns: number[];
+}) {
+  const unitEl = <td className={styles.unit}>{unit}</td>;
+
   return (
-    <div className={styles.graph}>
-      {_.times(11, (i) => (
-        <div
-          key={i}
-          className={clsx(styles.bar, { [styles.barCurrent]: i === tier })}
-          style={{ height: `${(50 * cooldowns[i]) / maxCooldown}px` }}
-        />
-      ))}
-    </div>
+    <tr>
+      <th>
+        {icon && <BungieImage src={icon} height={16} width={16} />}
+        {name}
+      </th>
+      {tier - 1 >= 0 && (
+        <>
+          <td>{cooldowns[tier - 1].toLocaleString()}</td>
+          {unitEl}
+        </>
+      )}
+      <td className={styles.currentColumn}>{cooldowns[tier].toLocaleString()}</td>
+      {unitEl}
+      {tier + 1 <= 10 && (
+        <>
+          <td>{cooldowns[tier + 1].toLocaleString()}</td>
+          {unitEl}
+        </>
+      )}
+    </tr>
   );
 }

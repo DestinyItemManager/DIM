@@ -22,4 +22,56 @@
     margin: 0;
     font-size: inherit;
   }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th,
+  td {
+    opacity: 0.5;
+    &:nth-child(2n) {
+      text-align: right;
+    }
+  }
+
+  th {
+    font-weight: normal;
+  }
+
+  td {
+    padding-left: 6px;
+  }
+
+  tbody th {
+    text-align: right;
+    padding-right: 4px;
+    opacity: 1;
+  }
+
+  thead th {
+    padding-left: 6px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    &:empty {
+      padding: 0;
+    }
+    &:first-child {
+      border: none;
+    }
+  }
+
+  img {
+    vertical-align: bottom;
+    margin-right: 4px;
+  }
+
+  .currentColumn {
+    opacity: 1;
+  }
+}
+
+.unit {
+  font-weight: normal !important;
+  font-size: 0.85em;
 }

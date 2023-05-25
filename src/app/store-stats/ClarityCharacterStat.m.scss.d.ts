@@ -4,7 +4,9 @@ interface CssExports {
   'bar': string;
   'barCurrent': string;
   'communityInsightSection': string;
+  'currentColumn': string;
   'graph': string;
+  'unit': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
