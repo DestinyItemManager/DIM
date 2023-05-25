@@ -1,0 +1,25 @@
+@use '../variables' as *;
+@use '../dim-ui/tooltip-mixins' as *;
+
+.graph {
+  display: flex;
+  flex-direction: row;
+  gap: 2px;
+  align-items: flex-end;
+}
+.bar {
+  background-color: #888;
+  width: 10px;
+}
+.barCurrent {
+  background-color: #fff;
+}
+
+.communityInsightSection {
+  @include tooltip-section-color($communityBlue);
+  h3 {
+    opacity: 0.6;
+    margin: 0;
+    font-size: inherit;
+  }
+}

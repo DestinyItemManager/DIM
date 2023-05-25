@@ -1,4 +1,5 @@
-@import '../variables';
+@use '../variables' as *;
+@use '../dim-ui/tooltip-mixins' as *;
 
 .values {
   display: flex;
@@ -33,18 +34,4 @@
 
 .breakdownValue {
   justify-self: end;
-}
-
-.graph {
-  display: flex;
-  flex-direction: row;
-  gap: 2px;
-  align-items: flex-end;
-}
-.bar {
-  background-color: #888;
-  width: 10px;
-}
-.barCurrent {
-  background-color: #fff;
 }
