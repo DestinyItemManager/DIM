@@ -1,5 +1,13 @@
 @use '../variables.scss' as *;
 
+.perkCircle {
+  display: block;
+  -webkit-touch-callout: none;
+  height: var(--item-size);
+  width: var(--item-size);
+  border: none;
+}
+
 // A global class because some things still tweak the size of the plug image.
 // TODO: customize with CSS vars instead
 :global(.plug) {
@@ -7,18 +15,15 @@
   display: flex;
   flex-direction: row;
   --item-size-adjusted: calc(32 / 50 * var(--item-size));
+
+  @include phone-portrait {
+    --item-size-adjusted: 32px;
+  }
+
   img,
   .perkCircle {
     --item-size: var(--item-size-adjusted);
   }
-}
-
-.perkCircle {
-  display: block;
-  -webkit-touch-callout: none;
-  height: var(--item-size);
-  width: var(--item-size);
-  border: none;
 }
 
 // In game, mods have a border around them that isn't part of the icon
