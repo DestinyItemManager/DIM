@@ -78,11 +78,6 @@ export default function ClarityCharacterStat({
     }
   }
 
-  console.log({
-    clarityStatData,
-    abilityCooldowns,
-  });
-
   if (!clarityStatData) {
     return null;
   }
@@ -93,58 +88,58 @@ export default function ClarityCharacterStat({
     intrinsicCooldowns.push(
       <StatTableRow
         key="TimeToFullHP"
-        name="Time to Full HP"
+        name={t('Stats.TimeToFullHP')}
         cooldowns={clarityStatData.TimeToFullHP}
         tier={tier}
-        unit="s"
+        unit={t('Stats.Second')}
       />
     );
   } else if ('WalkingSpeed' in clarityStatData) {
     intrinsicCooldowns.push(
       <StatTableRow
         key="WalkingSpeed"
-        name="Walking"
+        name={t('Stats.WalkingSpeed')}
         cooldowns={clarityStatData.WalkingSpeed}
         tier={tier}
-        unit="m/s"
+        unit={t('Stats.MetersPerSecond')}
       />,
       <StatTableRow
         key="StrafingSpeed"
-        name="Strafing"
+        name={t('Stats.StrafingSpeed')}
         cooldowns={clarityStatData.StrafeSpeed}
         tier={tier}
-        unit="m/s"
+        unit={t('Stats.MetersPerSecond')}
       />,
       <StatTableRow
         key="CrouchingSpeed"
-        name="Crouching"
+        name={t('Stats.CrouchingSpeed')}
         cooldowns={clarityStatData.CrouchSpeed}
         tier={tier}
-        unit="m/s"
+        unit={t('Stats.MetersPerSecond')}
       />
     );
   } else if ('TotalHP' in clarityStatData) {
     intrinsicCooldowns.push(
       <StatTableRow
         key="TotalHP"
-        name="Total HP"
+        name={t('Stats.TotalHP')}
         cooldowns={clarityStatData.TotalHP}
         tier={tier}
-        unit="HP"
+        unit={t('Stats.HP')}
       />,
       <StatTableRow
         key="DamageResistance"
-        name="Damage Resist"
+        name={t('Stats.DamageResistance')}
         cooldowns={clarityStatData.DamageResistance}
         tier={tier}
-        unit="%"
+        unit={t('Stats.Percentage')}
       />,
       <StatTableRow
         key="FlinchResistance"
-        name="Flinch Resist"
+        name={t('Stats.FlinchResistance')}
         cooldowns={clarityStatData.FlinchResistance}
         tier={tier}
-        unit="%"
+        unit={t('Stats.Percentage')}
       />
     );
   }
@@ -187,7 +182,7 @@ export default function ClarityCharacterStat({
                 cooldowns={cooldowns}
                 tier={tier}
                 overrides={overrides}
-                unit="s"
+                unit={t('Stats.Second')}
               />
             ))}
           {intrinsicCooldowns}
