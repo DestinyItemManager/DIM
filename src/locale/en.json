@@ -1105,7 +1105,7 @@
     "CrouchingSpeed": "Crouching",
     "Custom": "Custom Total",
     "CustomDesc": "Custom total of selected base stats, ignoring mods or masterworks. Visit Settings to configure which stats are included.",
-    "DamageResistance": "Damage Resist",
+    "DamageResistance": "PvE Damage Resist",
     "Discipline": "Discipline",
     "FlinchResistance": "Flinch Resist",
     "HP": "HP",
