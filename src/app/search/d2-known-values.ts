@@ -272,6 +272,9 @@ export const VENDORS = {
 /** used to snag the icon for display */
 export const WELL_RESTED_PERK = 2352765282;
 
+/** this one has a bad icon https://github.com/Bungie-net/api/issues/1832 */
+export const FISHING_BAIT_PERK = 3056678280;
+
 /** an "All" trait we want to filter out of trait lists */
 export const ALL_TRAIT = 1434215347;
 
