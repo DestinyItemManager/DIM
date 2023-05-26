@@ -8,7 +8,7 @@
 .menu {
   position: absolute;
   background: var(--theme-dropdown-menu-bg);
-  color: white;
+  color: var(--theme-text);
   font-size: 12px;
   z-index: 100;
 }
@@ -27,7 +27,7 @@
   }
 
   :global(.app-icon) {
-    color: white !important;
+    color: var(--theme-text) !important;
     width: 16px;
     text-align: center;
     margin-right: 4px;
@@ -44,9 +44,9 @@
 
 .highlighted {
   background-color: var(--theme-accent-primary);
-  color: black !important;
+  color: var(--theme-text-invert) !important;
   :global(.app-icon) {
-    color: black !important;
+    color: var(--theme-text-invert) !important;
   }
 }
 

@@ -41,7 +41,7 @@
 
   p.gildingText {
     margin: 8px 0 0 0;
-    color: white;
+    color: var(--theme-text);
   }
 
   p + p.gildingText {
@@ -223,7 +223,7 @@
   }
 
   .currentScore {
-    color: white;
+    color: var(--theme-text);
     font-weight: bold;
   }
 

@@ -36,7 +36,7 @@
   background: rgb(46, 46, 46);
   border: none;
   border-bottom: 1px solid #555;
-  color: white;
+  color: var(--theme-text);
   width: 100%;
 
   @include phone-portrait {

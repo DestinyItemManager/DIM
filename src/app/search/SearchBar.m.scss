@@ -16,7 +16,7 @@
 }
 
 .menu {
-  color: white;
+  color: var(--theme-text);
   overflow: hidden;
   margin: 0;
   border-top: 0;
@@ -114,9 +114,9 @@
 
 .highlightedItem {
   background-color: var(--theme-accent-primary);
-  color: black !important;
+  color: var(--theme-text-invert) !important;
   .menuItemIcon {
-    color: black;
+    color: var(--theme-text-invert);
   }
   .deleteIcon {
     color: #333;
@@ -153,8 +153,8 @@
 .keyHelp {
   margin-top: 2px;
   .highlightedItem & {
-    color: #222;
-    border-color: #222;
+    color: var(--theme-text-invert);
+    border-color: var(--theme-text-invert);
   }
 }
 

@@ -25,6 +25,6 @@
   &:hover,
   &:active {
     background-color: rgba(255, 255, 255, 0.2) !important;
-    color: white !important;
+    color: var(--theme-text) !important;
   }
 }

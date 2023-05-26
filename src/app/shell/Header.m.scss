@@ -78,7 +78,7 @@ $header-height: 44px;
     margin: 0 12px;
   }
 
-  color: white;
+  color: var(--theme-text);
   cursor: pointer;
 
   &:hover,
@@ -191,7 +191,7 @@ $header-height: 44px;
     transition: none;
 
     &.active {
-      color: white;
+      color: var(--theme-text);
       border-left: 4px solid var(--theme-accent-primary);
       padding-left: calc(1rem - 4px);
     }
@@ -205,7 +205,7 @@ $header-height: 44px;
     &:hover,
     &:focus {
       background-color: var(--theme-accent-primary);
-      color: black;
+      color: var(--theme-text-invert);
     }
 
     .launchSeparateIcon {
