@@ -16,5 +16,5 @@
 .hideButton {
   composes: resetButton from '../dim-ui/common.m.scss';
   margin-left: 16px;
-  color: white;
+  color: var(--theme-text);
 }

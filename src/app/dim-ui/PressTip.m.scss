@@ -59,7 +59,7 @@ $horizontal-padding: 11px;
     h2 {
       font-size: 14px;
       margin: 0;
-      color: white;
+      color: var(--theme-text);
 
       @include destiny-header;
     }

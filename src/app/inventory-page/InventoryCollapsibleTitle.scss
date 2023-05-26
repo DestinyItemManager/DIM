@@ -15,7 +15,7 @@
       }
     }
     &.collapsed {
-      color: white;
+      color: var(--theme-text);
       font-weight: bold;
       min-height: 32px;
       padding-bottom: 4px;
