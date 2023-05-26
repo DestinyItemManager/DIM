@@ -6,6 +6,11 @@
   height: var(--item-size);
   width: var(--item-size);
   border: none;
+
+  &:hover > circle:last-of-type {
+    stroke: var(--theme-accent-primary);
+    stroke-width: 6px;
+  }
 }
 
 // A global class because some things still tweak the size of the plug image.
@@ -46,7 +51,7 @@
 
 // Another plug was selected by the user
 .notSelected {
-  fill: #4887ba80;
+  fill: rgba(255, 255, 255, 0.2);
 }
 
 .plugged {
