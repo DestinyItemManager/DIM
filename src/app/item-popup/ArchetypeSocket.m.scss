@@ -11,9 +11,10 @@
   :global(.plug) {
     padding: 4px;
 
+    --item-size-mod: calc(24 / 50 * var(--item-size));
+
     img {
-      width: calc(24 / 50 * var(--item-size));
-      height: calc(24 / 50 * var(--item-size));
+      --item-size: var(--item-size-mod);
       transform: scale(1.4);
 
       .minimal & {
