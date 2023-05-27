@@ -21,14 +21,14 @@
     flex-direction: row;
     align-items: center;
   }
+}
 
-  :global(.countdown) {
-    font-size: 11px;
-    text-align: right;
-    flex: 1;
-    margin-left: 8px;
-    white-space: nowrap;
-  }
+.countdown {
+  font-size: 11px;
+  text-align: right;
+  flex: 1;
+  margin-left: 8px;
+  white-space: nowrap;
 }
 
 .titleDetails {

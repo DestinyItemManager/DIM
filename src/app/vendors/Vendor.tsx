@@ -66,7 +66,7 @@ export default function Vendor({
             </div>
           </>
         }
-        extra={refreshTime && <Countdown endTime={refreshTime} />}
+        extra={refreshTime && <Countdown endTime={refreshTime} className={styles.countdown} />}
         sectionId={`d2vendor-${vendor.def.hash}`}
       >
         <VendorItems
