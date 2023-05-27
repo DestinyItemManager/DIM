@@ -685,7 +685,19 @@ export function createPluggingStrategy(
 
   for (const assignment of assignments) {
     const destinationSocket = getSocketByIndex(item.sockets!, assignment.socketIndex)!;
-    const existingModCost = destinationSocket.plugged!.plugDef.plug.energyCost?.energyCost || 0;
+
+    // an item might have a classified def (ornament or mod) plugged into a socket,
+    // in which case DIM will have a null plugged here.
+    // we fall back to assuming 0 energy cost and let bungie.net be the arbiter of the outcome
+    // TO-DO: instead, allow classified plugs instead. soon (tm)
+    if (!destinationSocket.plugged) {
+      warnLog(
+        'loadout mods',
+        `${item.name} socket #${assignment.socketIndex} was found to be null, indicating it might not exist at all in practice. attempting to create a plugging plan for it, but it might not work`
+      );
+    }
+    const existingModCost = destinationSocket.plugged?.plugDef.plug.energyCost?.energyCost || 0;
+
     const plannedModCost = assignment.mod.plug.energyCost?.energyCost || 0;
     const energySpend = plannedModCost - existingModCost;
 
