@@ -1333,7 +1333,9 @@
     "UpdateExternalSource": "Actualizar Fuente de la Lista de Deseos",
     "Voltron": "voltron (por defecto)",
     "VoltronDescription": "voltron es una colección auto-actulizada de tiradas de listas de deseos de JvE y JcJ a través de la comunidad de Destiny. Elegimos esta por defecto.",
-    "WishListNotes": "Notas de la Lista de Deseos: {{notes}}"
+    "WishListNotes": "Notas de la Lista de Deseos: {{notes}}",
+    "WorstRatedTip": "Esta ventaja coincide exactamente con una tirada de arma en tu lista de basura.",
+    "WorstRatedTip_plural": "Estas ventajas coinciden exactamente con una tirada de arma en tu lista de basura."
   },
   "no-space": "",
   "wrong-level": ""

@@ -711,8 +711,8 @@
     "ModErrorSummary_plural": "{{count}} 个模组出错：",
     "ModPlacement": {
       "InvalidMods": "无效模组",
-      "InvalidModsDesc": "1 个模组不能插入任何护甲。",
-      "InvalidModsDesc_plural": "{{count}} 个模组不能插入任何护甲。",
+      "InvalidModsDesc": "有 1 个模组不能安装到任何护甲上。",
+      "InvalidModsDesc_plural": "有 {{count}} 个模组不能安装到任何护甲上。",
       "ModPlacement": "模组位置",
       "UnassignedMods": "未分配的模组",
       "UnassignedModsDesc": "由于能量容量或模组插槽不足，一个模组无法安装。即便为所选护甲升级能量也是如此。",
@@ -781,7 +781,7 @@
     },
     "ShareLoadout": "分享配装",
     "ShowModPlacement": "显示模组位置",
-    "Snapshot": "作为游戏内配装保存",
+    "Snapshot": "保存为游戏内配装",
     "SocketOverrides": "正在更改子职业选项",
     "SortByEditTime": "按最后编辑时间排序",
     "SortByName": "按名称排序",
@@ -1333,7 +1333,9 @@
     "UpdateExternalSource": "更新愿望清单来源",
     "Voltron": "voltron（默认）",
     "VoltronDescription": "voltron 是来自《命运》社区的 PvE 和 PvP 愿望清单特性表，并会自动更新。这是我们的默认列表。",
-    "WishListNotes": "愿望清单备注:{{notes}}"
+    "WishListNotes": "愿望清单备注:{{notes}}",
+    "WorstRatedTip": "This perk exactly matches a weapon roll on your trashlist.",
+    "WorstRatedTip_plural": "These perks exactly match a weapon roll on your trashlist."
   },
   "no-space": "",
   "wrong-level": ""

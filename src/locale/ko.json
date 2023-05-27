@@ -1333,7 +1333,9 @@
     "UpdateExternalSource": "희망 아이템 목록 업데이트",
     "Voltron": "voltron (기본값)",
     "VoltronDescription": "voltron은 데스티니 커뮤니티가 작성한 자동으로 업데이트되는 PvE와 PvP 희망 아이템 목록입니다. DIM에 기본으로 포함되어 있습니다.",
-    "WishListNotes": "희망 아이템 메모: {{notes}}"
+    "WishListNotes": "희망 아이템 메모: {{notes}}",
+    "WorstRatedTip": "쓰레기 아이템 목록에 있는 무기의 특성 조합과 일치하는 특성입니다.",
+    "WorstRatedTip_plural": "쓰레기 아이템 목록에 있는 무기의 특성 조합과 일치합니다."
   },
   "no-space": "",
   "wrong-level": ""

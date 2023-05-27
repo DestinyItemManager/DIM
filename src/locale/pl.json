@@ -1333,7 +1333,9 @@
     "UpdateExternalSource": "Aktualizuj źródło listy życzeń",
     "Voltron": "voltron (domyślna)",
     "VoltronDescription": "voltron to automatycznie aktualizowana kolekcja rolli z listy życzeń PvE i PvP od całej społeczności Destiny. Dostarczamy je domyślnie.",
-    "WishListNotes": "Notatki z listy życzeń: {{notes}}"
+    "WishListNotes": "Notatki z listy życzeń: {{notes}}",
+    "WorstRatedTip": "This perk exactly matches a weapon roll on your trashlist.",
+    "WorstRatedTip_plural": "These perks exactly match a weapon roll on your trashlist."
   },
   "no-space": "",
   "wrong-level": ""
