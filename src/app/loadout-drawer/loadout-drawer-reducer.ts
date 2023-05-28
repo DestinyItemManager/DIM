@@ -16,7 +16,7 @@ import { errorLog } from 'app/utils/log';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyClass, DestinyProfileResponse, TierType } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
-import { produce } from 'immer';
+import { Draft, produce } from 'immer';
 import _ from 'lodash';
 import { Loadout, LoadoutItem, ResolvedLoadoutItem, ResolvedLoadoutMod } from './loadout-types';
 import {
@@ -51,11 +51,6 @@ import {
  * setLoadout(addItem(defs, item))
  */
 export type LoadoutUpdateFunction = (loadout: Loadout) => Loadout;
-
-/** A helper for composing loadout update functions in the reducer */
-function compose(...args: LoadoutUpdateFunction[]): LoadoutUpdateFunction {
-  return (loadout) => args.reduce((prevLoadout, nextFn) => nextFn(prevLoadout), loadout);
-}
 
 /**
  * Produce a new loadout that adds a new item to the given loadout.
@@ -148,31 +143,37 @@ export function addItem(
   });
 }
 
-function replaceEquippedItem(
-  defs: D2ManifestDefinitions | D1ManifestDefinitions,
-  item: DimItem,
-  equip: boolean
-) {
-  return produce((draftLoadout) => {
-    setEquipForItemInLoadout(defs, item, draftLoadout, equip);
-  });
-}
-
+/**
+ * Defines the multilayered functionality for dropping an item in the loadout drawer.
+ *
+ * It does the following
+ * 1. If the item is a subclass, it clears the currently selected subclass.
+ *
+ */
 export function dropItem(
   defs: D2ManifestDefinitions | D1ManifestDefinitions,
   item: DimItem,
   equip?: boolean,
   socketOverrides?: SocketOverrides
 ): LoadoutUpdateFunction {
-  const updateFunctions: LoadoutUpdateFunction[] = [];
-  return (loadout) => {
+  return produce((draftLoadout) => {
     if (item.bucket.hash === BucketHashes.Subclass) {
-      loadout = clearSubclass(defs)(loadout);
+      draftLoadout = clearSubclass(defs)(draftLoadout);
     }
-    loadout = replaceEquippedItem(defs, item, Boolean(equip))(loadout);
-    loadout = addItem(defs, item, equip, socketOverrides)(loadout);
-    return loadout;
-  };
+
+    const loadoutItemIndex = findSameLoadoutItemIndex(
+      defs,
+      draftLoadout.items,
+      convertToLoadoutItem(item, false, 1)
+    );
+
+    if (loadoutItemIndex !== -1) {
+      setEquipForItemInLoadout(defs, item, draftLoadout, Boolean(equip));
+    } else {
+      draftLoadout = addItem(defs, item, equip, socketOverrides)(draftLoadout);
+    }
+    return draftLoadout;
+  });
 }
 
 /**
@@ -215,10 +216,20 @@ export function removeItem(
   });
 }
 
+/**
+ * Sets the equipped status for the item, with the value from the equip parameter.
+ *
+ * This does more than just set the value of the item. It also does the following for the cases when
+ * an item is being set as being equipped,
+ * 1. Unequips all other items in the same bucket if equipping the item
+ * 2. If the item is an exotic, it will unequip other exotics with the same item type as unequipped.
+ *
+ * @param isEquipped The desired `equip` value for the passed in item in the draftLoadout.
+ */
 function setEquipForItemInLoadout(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   item: DimItem,
-  loadout: Loadout,
+  draftLoadout: Draft<Loadout>,
   isEquipped: boolean
 ) {
   // Subclasses and some others are always equipped
@@ -231,22 +242,22 @@ function setEquipForItemInLoadout(
   // changes the socketOverrides, so simply search by unmodified ID and hash.
   const loadoutItemIndex = findSameLoadoutItemIndex(
     defs,
-    loadout.items,
+    draftLoadout.items,
     convertToLoadoutItem(item, false, 1)
   );
 
   if (loadoutItemIndex === -1) {
     return;
   }
-  const loadoutItem = loadout.items[loadoutItemIndex];
+  const loadoutItem = draftLoadout.items[loadoutItemIndex];
 
   if (item.equipment) {
     if (!isEquipped) {
       // It's equipped, mark it unequipped
       loadoutItem.equip = false;
     } else {
-      // It's unequipped - mark all the other items in the same bucket, and conflicting exotics, as unequipped unequipped, then mark this equipped
-      for (const li of loadout.items) {
+      // It's unequipped - mark all the other items in the same bucket, and conflicting exotics, as unequipped, then mark this equipped
+      for (const li of draftLoadout.items) {
         const itemDef = defs.InventoryItem.get(li.hash);
         const bucketHash =
           itemDef &&
