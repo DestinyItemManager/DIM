@@ -12,7 +12,7 @@
     text-transform: none !important;
   }
   :global(.dim-button) {
-    color: white;
+    color: var(--theme-text);
     font-size: 12px;
   }
   p {

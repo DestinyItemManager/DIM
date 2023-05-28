@@ -1333,7 +1333,9 @@
     "UpdateExternalSource": "Aggiorna la fonte della Lista Desideri",
     "Voltron": "voltron (default)",
     "VoltronDescription": "voltron è una collezione auto-aggiornata di roll Lista Desideri per PvE e PvP da tutta la comunità di Destiny. La utilizziamo come default.",
-    "WishListNotes": "Note della Lista Desideri: {{notes}}"
+    "WishListNotes": "Note della Lista Desideri: {{notes}}",
+    "WorstRatedTip": "Questo perk corrisponde esattamente ad un roll della tua lista degli scarti.",
+    "WorstRatedTip_plural": "Questi perk corrispondono esattamente ad un roll della tua lista degli scarti."
   },
   "no-space": "",
   "wrong-level": ""

@@ -1,7 +1,7 @@
 import { infoLog } from 'app/utils/log';
 import { dedupePromise } from 'app/utils/util';
 import { oauthClientId, oauthClientSecret } from './bungie-api-utils';
-import { setToken, Token, Tokens } from './oauth-tokens';
+import { Token, Tokens, setToken } from './oauth-tokens';
 
 // all these api url params don't match our variable naming conventions
 

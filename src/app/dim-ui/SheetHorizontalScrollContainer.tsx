@@ -1,5 +1,6 @@
 import { isEventFromFirefoxScrollbar } from 'app/utils/browsers';
-import React, { PropsWithChildren, useCallback, useRef } from 'react';
+import clsx from 'clsx';
+import React, { useCallback, useRef } from 'react';
 import styles from './SheetHorizontalScrollContainer.m.scss';
 
 // After this many pixels of dragging in either direction, we consider ourselves to be part of a scrolling gesture.
@@ -11,7 +12,13 @@ const HORIZ_SCROLL_DRAG_THRESHOLD = 20;
  * get interupted and work as expected.
  */
 
-export function SheetHorizontalScrollContainer({ children }: PropsWithChildren) {
+export function SheetHorizontalScrollContainer({
+  className,
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) {
   // This uses pointer events to directly set the scroll position based on dragging the items. This works around an
   // iOS bug around nested draggables, but also is kinda nice on desktop. I wasn't able to get it to do an inertial
   // animation after releasing.
@@ -64,7 +71,7 @@ export function SheetHorizontalScrollContainer({ children }: PropsWithChildren) 
   return (
     <div
       ref={ref}
-      className={styles.horizontalScrollContainer}
+      className={clsx(styles.horizontalScrollContainer, className)}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}

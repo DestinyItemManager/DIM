@@ -3,6 +3,7 @@
 .notification {
   margin: 0 0 8px;
   width: 350px;
+
   @include phone-portrait {
     width: 100%;
   }
@@ -10,7 +11,7 @@
 }
 
 .inner {
-  color: white;
+  color: var(--theme-text);
   box-sizing: border-box;
   border-top: 4px solid black;
   pointer-events: all;

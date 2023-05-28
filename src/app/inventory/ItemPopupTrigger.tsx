@@ -4,8 +4,8 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { ThunkResult } from 'app/store/types';
 import React, { useCallback, useEffect, useRef } from 'react';
 import {
-  hideItemPopup,
   ItemPopupExtraInfo,
+  hideItemPopup,
   showItemPopup,
   showItemPopup$,
 } from '../item-popup/item-popup';

@@ -1,6 +1,5 @@
 import { useD2Definitions } from 'app/manifest/selectors';
 import { KillTracker } from 'app/utils/item-utils';
-import React from 'react';
 import BungieImage from './BungieImage';
 
 /**

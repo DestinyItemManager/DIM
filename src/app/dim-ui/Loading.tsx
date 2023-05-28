@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import styles from './Loading.m.scss';
 

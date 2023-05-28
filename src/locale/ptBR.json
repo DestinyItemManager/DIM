@@ -1333,7 +1333,9 @@
     "UpdateExternalSource": "Atualizar fonte da Lista de Desejos",
     "Voltron": "voltron (padrão)",
     "VoltronDescription": "voltron é uma coleção atualizada automaticamente de listas de desejos PvE e PvP de acordo com a comunidade de Destiny. Nós a usamos por padrão.",
-    "WishListNotes": "Anotações da Lista de Desejos: {{notes}}"
+    "WishListNotes": "Anotações da Lista de Desejos: {{notes}}",
+    "WorstRatedTip": "This perk exactly matches a weapon roll on your trashlist.",
+    "WorstRatedTip_plural": "These perks exactly match a weapon roll on your trashlist."
   },
   "no-space": "",
   "wrong-level": ""

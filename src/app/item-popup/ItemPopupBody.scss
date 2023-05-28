@@ -17,7 +17,7 @@
     border-bottom: 2px solid var(--theme-accent-primary);
   }
   &:hover {
-    color: white;
+    color: var(--theme-text);
     background-color: #3f3f3f;
   }
 }
@@ -47,7 +47,7 @@
     white-space: normal;
     max-width: fit-content;
     a {
-      color: white;
+      color: var(--theme-text);
       font-size: 12px;
     }
   }
@@ -126,7 +126,7 @@
   margin-bottom: 2px;
 }
 .failure-reason {
-  color: white;
+  color: var(--theme-text);
   background-color: #923c3c;
   margin: 0;
   padding: 2px 8px;
@@ -158,7 +158,7 @@
   &.is-Rare,
   &.is-Legendary {
     .sheet-close {
-      color: white;
+      color: var(--theme-text);
     }
     .sheet-handle div {
       background-color: white;

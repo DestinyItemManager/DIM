@@ -5,7 +5,6 @@ import {
   DestinySeasonDefinition,
   DestinySeasonPassDefinition,
 } from 'bungie-api-ts/destiny2';
-import React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import { isWellRested } from '../inventory/store/well-rested';
 

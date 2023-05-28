@@ -29,6 +29,6 @@
   &:active,
   &:hover,
   &:focus-visible {
-    color: white;
+    color: var(--theme-text);
   }
 }

@@ -135,11 +135,12 @@ function getTitleInfo(
   profileRecords: DestinyProfileRecordsComponent | undefined,
   genderHash: number
 ): DimTitle | undefined {
-  const titleRecordDef = defs?.Record.get(titleRecordHash);
-  if (!titleRecordDef) {
+  // Titles can be classified, in which case `titleInfo` is missing
+  const titleInfo = defs?.Record.get(titleRecordHash)?.titleInfo;
+  if (!titleInfo) {
     return undefined;
   }
-  const title = titleRecordDef.titleInfo.titlesByGenderHash[genderHash];
+  const title = titleInfo.titlesByGenderHash[genderHash];
   if (!title) {
     return undefined;
   }
@@ -148,9 +149,8 @@ function getTitleInfo(
   let isGildedForCurrentSeason = false;
 
   // Gilding information is stored per-profile, not per-character
-  if (titleRecordDef.titleInfo.gildingTrackingRecordHash) {
-    const gildedRecord =
-      profileRecords?.records[titleRecordDef.titleInfo.gildingTrackingRecordHash];
+  if (titleInfo.gildingTrackingRecordHash) {
+    const gildedRecord = profileRecords?.records[titleInfo.gildingTrackingRecordHash];
 
     if (gildedRecord?.completedCount) {
       gildedNum = gildedRecord.completedCount;

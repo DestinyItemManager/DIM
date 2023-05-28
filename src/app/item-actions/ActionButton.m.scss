@@ -32,9 +32,9 @@
     &:focus-visible {
       outline: none;
       background: var(--theme-accent-primary);
-      color: black;
+      color: var(--theme-text-invert);
       :global(.app-icon) {
-        color: black;
+        color: var(--theme-text-invert);
       }
     }
   }

@@ -1,5 +1,5 @@
-import { getPlatforms } from 'app/accounts/platforms';
 import SelectAccount from 'app/accounts/SelectAccount';
+import { getPlatforms } from 'app/accounts/platforms';
 import {
   accountsLoadedSelector,
   accountsSelector,

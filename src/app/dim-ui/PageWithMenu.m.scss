@@ -1,8 +1,6 @@
 @use '../variables.scss' as *;
 
 .page {
-  composes: dim-page from global;
-
   max-width: 100%;
   display: flex;
   flex-direction: row;
@@ -62,10 +60,14 @@
   -webkit-overflow-scrolling: touch;
   max-height: calc(var(--viewport-height) - var(--header-height) - 8px);
 
+  > * {
+    max-width: 230px;
+  }
+
   // Add in some width when a scrollbar is present!
   // It'd be cooler if https://developer.mozilla.org/en-US/docs/Web/CSS/scrollbar-gutter existed.
   &.menuScrollbars {
-    margin-right: 12px + 17px + 4px; // Windows scrollbars are 17px, added to the original margin
+    width: 230px + 17px; // Windows scrollbars are 17px, added to the original width
   }
 
   @include phone-portrait {

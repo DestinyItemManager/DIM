@@ -1333,7 +1333,9 @@
     "UpdateExternalSource": "Обновить источник Списка Желаний",
     "Voltron": "voltron (стандартный)",
     "VoltronDescription": "voltron - автоматически обновляемый Список Желаний с коллекцией PvE (ПвЕ) и PvP (ПвП) роллов от всего сообщества Destiny. Мы используем это по умолчанию.",
-    "WishListNotes": "Заметки к Списку Желаний: {{notes}}"
+    "WishListNotes": "Заметки к Списку Желаний: {{notes}}",
+    "WorstRatedTip": "This perk exactly matches a weapon roll on your trashlist.",
+    "WorstRatedTip_plural": "These perks exactly match a weapon roll on your trashlist."
   },
   "no-space": "",
   "wrong-level": ""

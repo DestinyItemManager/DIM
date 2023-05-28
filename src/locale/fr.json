@@ -1333,7 +1333,9 @@
     "UpdateExternalSource": "Mettre à jour la source de la liste de souhaits",
     "Voltron": "voltron (par défaut)",
     "VoltronDescription": "voltron est une liste de souhaits JcE et JcJ de la communauté Destiny mise à jour automatiquement. Elle est activée par défaut.",
-    "WishListNotes": "Notes de liste de souhaits: {{notes}}"
+    "WishListNotes": "Notes de liste de souhaits: {{notes}}",
+    "WorstRatedTip": "Cet attribut correspond exactement à une arme de votre liste d'indésirables.",
+    "WorstRatedTip_plural": "Ces attributs correspondent exactement à une arme de votre liste d'indésirables."
   },
   "no-space": "",
   "wrong-level": ""

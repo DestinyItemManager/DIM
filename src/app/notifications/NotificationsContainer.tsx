@@ -1,9 +1,9 @@
 import { useEventBusListener } from 'app/utils/hooks';
 import { AnimatePresence, Spring } from 'framer-motion';
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import Notification from './Notification';
-import { notifications$, Notify } from './notifications';
 import styles from './NotificationsContainer.m.scss';
+import { Notify, notifications$ } from './notifications';
 
 const spring: Spring = { type: 'spring', bounce: 0, duration: 0.3 };
 

@@ -12,8 +12,8 @@ import { DimItem } from '../inventory/item-types';
 import { allItemsSelector } from '../inventory/selectors';
 import { filterFactorySelector } from '../search/search-filter';
 import { itemSorterSelector } from '../settings/item-sort';
-import { ItemPickerState } from './item-picker';
 import './ItemPicker.scss';
+import { ItemPickerState } from './item-picker';
 
 export default function ItemPicker({
   prompt,

@@ -2,7 +2,7 @@ import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { pullablePostmasterItems, pullFromPostmaster } from '../loadout-drawer/postmaster';
 import { AppIcon, refreshIcon, sendIcon } from '../shell/icons';

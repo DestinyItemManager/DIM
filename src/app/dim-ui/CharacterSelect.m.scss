@@ -36,6 +36,7 @@
 
 .frame {
   max-width: 250px;
+
   @include phone-portrait {
     max-width: 260px;
   }

@@ -5,7 +5,7 @@ import { BungieMembershipType, DestinyClass } from 'bungie-api-ts/destiny2';
 import copy from 'fast-copy';
 import { DeleteLoadoutUpdateWithRollback } from './api-types';
 import { finishedUpdates, prepareToFlushUpdates } from './basic-actions';
-import { dimApi, DimApiState, initialState as apiInitialState } from './reducer';
+import { DimApiState, initialState as apiInitialState, dimApi } from './reducer';
 
 const currentAccount: DestinyAccount = {
   membershipId: '98765',
