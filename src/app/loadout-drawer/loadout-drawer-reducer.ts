@@ -165,12 +165,14 @@ export function dropItem(
   socketOverrides?: SocketOverrides
 ): LoadoutUpdateFunction {
   const updateFunctions: LoadoutUpdateFunction[] = [];
-  if (item.bucket.hash === BucketHashes.Subclass) {
-    updateFunctions.push(clearSubclass(defs));
-  }
-  updateFunctions.push(replaceEquippedItem(defs, item, Boolean(equip)));
-  updateFunctions.push(addItem(defs, item, equip, socketOverrides));
-  return compose(...updateFunctions);
+  return (loadout) => {
+    if (item.bucket.hash === BucketHashes.Subclass) {
+      loadout = clearSubclass(defs)(loadout);
+    }
+    loadout = replaceEquippedItem(defs, item, Boolean(equip))(loadout);
+    loadout = addItem(defs, item, equip, socketOverrides)(loadout);
+    return loadout;
+  };
 }
 
 /**
