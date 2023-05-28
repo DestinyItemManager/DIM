@@ -228,12 +228,9 @@ export function LoadoutCharacterStats({
   // All equipped items
   const equippedHashes = new Set([...equippedItems.map((i) => i.hash)]);
   // Plus all subclass mods
-  if (subclass?.item.sockets) {
-    for (const socket of subclass.item.sockets.allSockets) {
-      const hash = socket.plugged?.plugDef.hash;
-      if (hash !== undefined) {
-        equippedHashes.add(hash);
-      }
+  if (subclass?.loadoutItem.socketOverrides) {
+    for (const hash of Object.values(subclass?.loadoutItem.socketOverrides)) {
+      equippedHashes.add(hash);
     }
   }
 

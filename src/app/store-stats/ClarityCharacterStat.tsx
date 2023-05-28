@@ -4,6 +4,7 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import { Tooltip } from 'app/dim-ui/PressTip';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import { StatHashes } from 'data/d2/generated-enums';
 import { t } from 'i18next';
 import { useSelector } from 'react-redux';
@@ -39,48 +40,47 @@ export default function ClarityCharacterStat({
   const clarityCharacterStats = useSelector(clarityCharacterStatsSelector);
   const clarityStatData = clarityCharacterStats?.[statHashToClarityName[statHash]];
 
+  if (!clarityStatData) {
+    return null;
+  }
+
   const abilityCooldowns: {
     cooldowns: number[];
     item: DestinyInventoryItemDefinition;
     overrides: DestinyInventoryItemDefinition[];
   }[] = [];
-  if (clarityStatData) {
-    const applicableOverrides = clarityStatData.Overrides.filter((o) => equippedHashes.has(o.Hash));
-    for (const a of clarityStatData.Abilities) {
-      if (!equippedHashes.has(a.Hash)) {
-        continue;
-      }
-      let cooldowns = a.Cooldowns;
-      const item = defs.InventoryItem.get(a.Hash);
 
-      const overrides = [];
-
-      // Apply cooldown overrides based on equipped items.
-      for (const o of applicableOverrides) {
-        const abilityIndex = o.Requirements.indexOf(a.Hash);
-        if (abilityIndex !== -1) {
-          if (o.CooldownOverride?.some((v) => v > 0)) {
-            cooldowns = o.CooldownOverride;
-          }
-          const scalar = o.Scalar?.[abilityIndex];
-          if (scalar) {
-            cooldowns = cooldowns.map((v) => scalar * v);
-          }
-          const flatIncrease = o.FlatIncrease?.[abilityIndex];
-          if (flatIncrease) {
-            cooldowns = cooldowns.map((v) => v + flatIncrease);
-          }
-          overrides.push(defs.InventoryItem.get(o.Hash));
-        }
-      }
-
-      cooldowns = cooldowns.map((c) => Math.round(c));
-      abilityCooldowns.push({ cooldowns, item, overrides });
+  const applicableOverrides = clarityStatData.Overrides.filter((o) => equippedHashes.has(o.Hash));
+  for (const a of clarityStatData.Abilities) {
+    if (!equippedHashes.has(a.Hash)) {
+      continue;
     }
-  }
+    let cooldowns = a.Cooldowns;
+    const item = defs.InventoryItem.get(a.Hash);
 
-  if (!clarityStatData) {
-    return null;
+    const overrides = [];
+
+    // Apply cooldown overrides based on equipped items.
+    for (const o of applicableOverrides) {
+      const abilityIndex = o.Requirements.indexOf(a.Hash);
+      if (abilityIndex !== -1) {
+        if (o.CooldownOverride?.some((v) => v > 0)) {
+          cooldowns = o.CooldownOverride;
+        }
+        const scalar = o.Scalar?.[abilityIndex];
+        if (scalar) {
+          cooldowns = cooldowns.map((v) => scalar * v);
+        }
+        const flatIncrease = o.FlatIncrease?.[abilityIndex];
+        if (flatIncrease) {
+          cooldowns = cooldowns.map((v) => v + flatIncrease);
+        }
+        overrides.push(defs.InventoryItem.get(o.Hash));
+      }
+    }
+
+    cooldowns = cooldowns.map((c) => Math.round(c));
+    abilityCooldowns.push({ cooldowns, item, overrides });
   }
 
   // Cooldowns that are not about some specific ability
@@ -219,8 +219,7 @@ function StatTableRow({
         </span>
         {overrides.map((o) => (
           <span key={o.hash} className={styles.override}>
-            {' '}
-            +{' '}
+            {'+ '}
             {o.displayProperties.icon && (
               <BungieImage src={o.displayProperties.icon} height={12} width={12} />
             )}
@@ -235,7 +234,7 @@ function StatTableRow({
         </>
       )}
       <td className={styles.currentColumn}>{cooldowns[tier].toLocaleString()}</td>
-      {unitEl}
+      <td className={clsx(styles.unit, styles.currentColumn)}>{unit}</td>
       {tier + 1 <= 10 && (
         <>
           <td>{cooldowns[tier + 1].toLocaleString()}</td>
