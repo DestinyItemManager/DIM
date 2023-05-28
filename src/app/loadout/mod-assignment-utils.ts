@@ -712,7 +712,9 @@ export function createPluggingStrategy(
     //   another requiredSpend that frees an exclusion group.
     // See https://github.com/DestinyItemManager/DIM/issues/7465#issuecomment-1379112834 for a fun cyclical dependency.
 
-    const existingExclusionGroup = getModExclusionGroup(destinationSocket.plugged!.plugDef);
+    const existingExclusionGroup = destinationSocket.plugged
+      ? getModExclusionGroup(destinationSocket.plugged.plugDef)
+      : undefined;
     const assignmentExclusionGroup = getModExclusionGroup(assignment.mod);
 
     const pluggingAction: PluggingAction = {
@@ -723,7 +725,7 @@ export function createPluggingStrategy(
       exclusionGroupReleased: existingExclusionGroup,
     };
 
-    if (destinationSocket.plugged!.plugDef.hash === assignment.mod.hash) {
+    if (destinationSocket.plugged?.plugDef.hash === assignment.mod.hash) {
       // this is an assignment to itself, which is a no-op, so we can just
       // immediately perform it if needed
       if (pluggingAction.required) {
