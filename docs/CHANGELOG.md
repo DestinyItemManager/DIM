@@ -1,5 +1,7 @@
 ## Next
 
+* Added Community Insights for the impact of various stat tiers on ability cooldowns, etc. This takes into account your current subclass config and equipped exotic. For loadouts, it uses the subclass config and exotic that are saved in the loadout to display details. This information comes from the Clarity database, and like all Community Insights is sourced from lots of manual investigation.
+
 ## 7.69.0 <span class="changelog-date">(2023-05-21)</span>
 
 ## 7.68.0 <span class="changelog-date">(2023-05-14)</span>
