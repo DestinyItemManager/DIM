@@ -1,4 +1,4 @@
-@import '../../variables';
+@use '../../variables' as *;
 
 .subclassContainer {
   --item-icon-size: calc(0.8 * var(--item-size));

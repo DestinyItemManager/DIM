@@ -1,4 +1,4 @@
-@import '../variables';
+@use '../variables' as *;
 
 .level {
   box-sizing: border-box;

@@ -1,4 +1,4 @@
-@import '../variables';
+@use '../variables' as *;
 .buttons {
   composes: flexRow from '../dim-ui/common.m.scss';
 }

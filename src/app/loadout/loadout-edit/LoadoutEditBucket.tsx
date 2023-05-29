@@ -8,10 +8,9 @@ import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { getLoadoutStats, singularBucketHashes } from 'app/loadout-drawer/loadout-utils';
-import { useD2Definitions } from 'app/manifest/selectors';
+import { singularBucketHashes } from 'app/loadout-drawer/loadout-utils';
 import { AppIcon, addIcon, faTshirt } from 'app/shell/icons';
-import { LoadoutStats } from 'app/store-stats/CharacterStats';
+import { LoadoutCharacterStats } from 'app/store-stats/CharacterStats';
 import { emptyArray } from 'app/utils/empty';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { Portal } from 'app/utils/temp-container';
@@ -118,7 +117,6 @@ export function ArmorExtras({
   items?: ResolvedLoadoutItem[];
   onModsByBucketUpdated: (modsByBucket: LoadoutParameters['modsByBucket']) => void;
 }) {
-  const defs = useD2Definitions()!;
   const equippedItems =
     items?.filter((li) => li.loadoutItem.equip && !li.missing).map((li) => li.item) ?? [];
 
@@ -126,9 +124,11 @@ export function ArmorExtras({
     <>
       {equippedItems.length === 5 && (
         <div className="stat-bars destiny2">
-          <LoadoutStats
-            showTier
-            stats={getLoadoutStats(defs, loadout.classType, subclass, equippedItems, allMods)}
+          <LoadoutCharacterStats
+            loadout={loadout}
+            subclass={subclass}
+            allMods={allMods}
+            items={items}
           />
         </div>
       )}

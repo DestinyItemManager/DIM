@@ -1,4 +1,4 @@
-@import '../variables';
+@use '../variables' as *;
 
 .buttons {
   composes: item-details from global;

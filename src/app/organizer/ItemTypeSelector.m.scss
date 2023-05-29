@@ -1,4 +1,4 @@
-@import '../variables';
+@use '../variables' as *;
 
 .selector {
   background-color: rgba(0, 0, 0, 0);

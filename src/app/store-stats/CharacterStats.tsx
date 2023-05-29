@@ -6,16 +6,19 @@ import { showGearPower } from 'app/gear-power/gear-power';
 import { t } from 'app/i18next-t';
 import { ArtifactXP } from 'app/inventory/ArtifactXP';
 import { ItemPowerSet } from 'app/inventory/ItemPowerSet';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { profileResponseSelector } from 'app/inventory/selectors';
-import type { DimCharacterStat, DimStore } from 'app/inventory/store-types';
+import type { DimStore } from 'app/inventory/store-types';
 import { StorePowerLevel, powerLevelSelector } from 'app/inventory/store/selectors';
 import { statTier } from 'app/loadout-builder/utils';
+import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
 import { armorStats } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
-import { StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -23,35 +26,6 @@ import helmetIcon from '../../../destiny-icons/armor_types/helmet.svg';
 import xpIcon from '../../images/xpIcon.svg';
 import './CharacterStats.scss';
 import StatTooltip from './StatTooltip';
-
-interface CharacterStatProps {
-  stats: {
-    stat: DimCharacterStat;
-  }[];
-  showTier?: boolean;
-}
-
-function CharacterStats({ stats, showTier }: CharacterStatProps) {
-  return (
-    <div className="stat-row">
-      {showTier && (
-        <div className="stat tier">
-          {t('LoadoutBuilder.TierNumber', {
-            tier: _.sumBy(stats, (s) => statTier(s.stat.value)),
-          })}
-        </div>
-      )}
-      {stats.map(({ stat }) => (
-        <PressTip key={stat.hash} tooltip={() => <StatTooltip stat={stat} />}>
-          <div className="stat" aria-label={`${stat.name} ${stat.value}`} role="group">
-            <img src={stat.icon} alt={stat.name} />
-            <div>{stat.value}</div>
-          </div>
-        </PressTip>
-      ))}
-    </div>
-  );
-}
 
 function CharacterPower({ stats }: { stats: PowerStat[] }) {
   return (
@@ -169,19 +143,98 @@ export function PowerFormula({ storeId }: { storeId: string }) {
   return <CharacterPower stats={[maxTotalPower, maxGearPower, artifactPower]} />;
 }
 
-export function LoadoutStats({
+/**
+ * Display each of the main stats (Resistance, Discipline, etc) for a character. The actual stat info is passed in.
+ * This shows stats for both loadouts and characters - anything that has a character stats list.
+ */
+function CharacterStats({
   stats,
   showTier,
+  equippedHashes,
 }: {
   stats: DimStore['stats'];
   showTier?: boolean;
+  equippedHashes: Set<number>;
 }) {
-  const statInfos = armorStats
-    .map((h) => stats[h])
-    .map((stat) => ({
-      stat,
-      tooltip: <StatTooltip stat={stat} />,
-    }));
+  // Select only the armor stats, in the correct order
+  const statInfos = armorStats.map((h) => stats[h]);
 
-  return <CharacterStats showTier={showTier} stats={statInfos} />;
+  return (
+    <div className="stat-row">
+      {showTier && (
+        <div className="stat tier">
+          {t('LoadoutBuilder.TierNumber', {
+            tier: _.sumBy(statInfos, (s) => statTier(s.value)),
+          })}
+        </div>
+      )}
+      {statInfos.map((stat) => (
+        <PressTip
+          key={stat.hash}
+          tooltip={<StatTooltip stat={stat} equippedHashes={equippedHashes} />}
+        >
+          <div className="stat" aria-label={`${stat.name} ${stat.value}`} role="group">
+            <img src={stat.icon} alt={stat.name} />
+            <div>{stat.value}</div>
+          </div>
+        </PressTip>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * Show the stats for a DimStore.
+ */
+export function StoreCharacterStats({ store }: { store: DimStore }) {
+  const equippedItems = store.items.filter((i) => i.equipped);
+  const subclass = equippedItems.find((i) => i.bucket.hash === BucketHashes.Subclass);
+
+  // All equipped items
+  const equippedHashes = new Set([...equippedItems.map((i) => i.hash)]);
+  // Plus all subclass mods
+  if (subclass?.sockets) {
+    for (const socket of subclass.sockets.allSockets) {
+      const hash = socket.plugged?.plugDef.hash;
+      if (hash !== undefined) {
+        equippedHashes.add(hash);
+      }
+    }
+  }
+  return <CharacterStats stats={store.stats} equippedHashes={equippedHashes} />;
+}
+
+/**
+ * Show the stats for a DIM Loadout.
+ */
+// TODO: just take a FullyResolvedLoadout?
+export function LoadoutCharacterStats({
+  loadout,
+  subclass,
+  items,
+  allMods,
+}: {
+  loadout: Loadout;
+  subclass?: ResolvedLoadoutItem;
+  allMods: PluggableInventoryItemDefinition[];
+  items?: (ResolvedLoadoutItem | DimItem)[];
+}) {
+  const defs = useD2Definitions()!;
+  const equippedItems =
+    items
+      ?.filter((li) => ('loadoutItem' in li ? li.loadoutItem.equip && !li.missing : li.equipped))
+      .map((li) => ('loadoutItem' in li ? li.item : li)) ?? [];
+
+  // All equipped items
+  const equippedHashes = new Set([...equippedItems.map((i) => i.hash)]);
+  // Plus all subclass mods
+  if (subclass?.loadoutItem.socketOverrides) {
+    for (const hash of Object.values(subclass?.loadoutItem.socketOverrides)) {
+      equippedHashes.add(hash);
+    }
+  }
+
+  const stats = getLoadoutStats(defs, loadout.classType, subclass, equippedItems, allMods);
+
+  return <CharacterStats showTier stats={stats} equippedHashes={equippedHashes} />;
 }

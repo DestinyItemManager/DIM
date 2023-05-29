@@ -1125,7 +1125,18 @@
     "Tier": "Tier {{tier}}",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 for T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
-    "Total": "Total"
+    "Total": "Total",
+    "Second": "s",
+    "MetersPerSecond": "m/s",
+    "Percentage": "%",
+    "HP": "HP",
+    "TimeToFullHP": "Time to Full HP",
+    "WalkingSpeed": "Walking",
+    "StrafingSpeed": "Strafing",
+    "CrouchingSpeed": "Crouching",
+    "TotalHP": "Total HP",
+    "DamageResistance": "PvE Damage Resist",
+    "FlinchResistance": "Flinch Resist"
   },
   "Storage": {
     "ApiPermissionPrompt": {
