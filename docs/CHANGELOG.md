@@ -4,20 +4,34 @@
 
 ## 7.70.0 <span class="changelog-date">(2023-05-28)</span>
 
+* Fixed an issue where equipping classified titles (e.g. Ghoul), or ornaments would crash DIM.
+* Fixed the sizing and spacing of abilities in the subclass picker.
+* Fixed the display of the "Fishing Tackle" item to show current values and not show an ugly placeholder icon.
+* Updated information used to detect which season an item is from, after changes in the Bungie.net data since Season of the Deep.
+* Improved the hover indication for the search field buttons.
+* Fixed tracking crafted date for loadouts - they were not saving crafted date for items as intended, and were thus losing crafted items when they got reshaped.
+
 ## 7.69.0 <span class="changelog-date">(2023-05-21)</span>
 
 ## 7.68.0 <span class="changelog-date">(2023-05-14)</span>
 
 * Item tiles for armor on the Vendors page will now show their stat total instead of power level.
+* Refreshing your profile data no longer blocks item moves.
+* DIM now correctly handles mods that have mutually exclusive rules - e.g. you can't have multiple finisher mods on your class item.
 
 ## 7.67.0 <span class="changelog-date">(2023-05-07)</span>
 
+* Fixed an issue where sometimes the stat bonuses shown on perks was wrong.
+
 ## 7.66.0 <span class="changelog-date">(2023-04-30)</span>
+
+* Changed the wording when you need to visit a postmaster to pull an item.
+* Added an `is:adept` search filter. This allows you to find weapons which can equip Adept mods.
+* `:` and `-` are now allowed in hashtags.
 
 ## 7.65.1 <span class="changelog-date">(2023-04-28)</span>
 
 * Enhanced adept weapons from Root of Nightmares should now show with correct stats.
-* Added an `is:adept` search filter. This allows you to find weapons which can equip Adept mods.
 
 ## 7.65.0 <span class="changelog-date">(2023-04-23)</span>
 
