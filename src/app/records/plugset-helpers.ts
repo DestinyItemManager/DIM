@@ -15,6 +15,8 @@ function itemsForCharacterOrProfilePlugSet(
   );
 }
 
+const HARMONIC_RESISTANCE = 1293710444; // InventoryItem "Harmonic Resistance"
+
 export function filterUnlockedPlugs(
   plugSetHash: number,
   plugSetItems: DestinyItemPlug[],
@@ -22,7 +24,17 @@ export function filterUnlockedPlugs(
 ) {
   const useCanInsert = universalOrnamentPlugSetHashes.includes(plugSetHash);
   for (const plugSetItem of plugSetItems) {
-    if (useCanInsert ? plugSetItem.canInsert : plugSetItem.enabled) {
+    if (
+      useCanInsert
+        ? plugSetItem.canInsert
+        : plugSetItem.enabled ||
+          // Harmonic Resistance may report as disabled when the user
+          // has Strand equipped since in that case, it provides...
+          (plugSetItem.plugItemHash === HARMONIC_RESISTANCE &&
+            plugSetItem.enableFailIndexes.length === 1 &&
+            // ..."No Current Benefit"
+            plugSetItem.enableFailIndexes[0] === 2)
+    ) {
       outUnlockedPlugs.add(plugSetItem.plugItemHash);
     }
   }
