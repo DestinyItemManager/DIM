@@ -1,4 +1,4 @@
-import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import { DestinyItemPlug, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import universalOrnamentPlugSetHashes from 'data/d2/universal-ornament-plugset-hashes.json';
 
 /**
@@ -15,8 +15,22 @@ function itemsForCharacterOrProfilePlugSet(
   );
 }
 
+export function filterUnlockedPlugs(
+  plugSetHash: number,
+  plugSetItems: DestinyItemPlug[],
+  outUnlockedPlugs: Set<number>
+) {
+  const useCanInsert = universalOrnamentPlugSetHashes.includes(plugSetHash);
+  for (const plugSetItem of plugSetItems) {
+    if (useCanInsert ? plugSetItem.canInsert : plugSetItem.enabled) {
+      outUnlockedPlugs.add(plugSetItem.plugItemHash);
+    }
+  }
+}
+
 /**
  * The set of plug item hashes that are unlocked in the given plugset by the given character.
+ * TODO: would be great to precalculate/memoize this by character ID and profileResponse
  */
 export function unlockedItemsForCharacterOrProfilePlugSet(
   profileResponse: DestinyProfileResponse,
@@ -26,13 +40,6 @@ export function unlockedItemsForCharacterOrProfilePlugSet(
   const unlockedPlugs = new Set<number>();
 
   const plugSetItems = itemsForCharacterOrProfilePlugSet(profileResponse, plugSetHash, characterId);
-  const useCanInsert = universalOrnamentPlugSetHashes.includes(plugSetHash);
-  // TODO: would be great to precalculate/memoize this by character ID and profileResponse
-  for (const plugSetItem of plugSetItems) {
-    // TODO: https://github.com/DestinyItemManager/DIM/issues/7561
-    if (useCanInsert ? plugSetItem.canInsert : plugSetItem.enabled) {
-      unlockedPlugs.add(plugSetItem.plugItemHash);
-    }
-  }
+  filterUnlockedPlugs(plugSetHash, plugSetItems, unlockedPlugs);
   return unlockedPlugs;
 }
