@@ -1,6 +1,14 @@
 ## Next
 
 * Added Community Insights for the impact of various stat tiers on ability cooldowns, etc. This takes into account your current subclass config and equipped exotic. For loadouts, it uses the subclass config and exotic that are saved in the loadout to display details. This information comes from the Clarity database, and like all Community Insights is sourced from lots of manual investigation.
+* Fixed an issue where DIM might not properly force you to re-login with Bungie.net, and would instead continually throw errors trying to talk to Bungie.net.
+* The loadout dropdown in the "Compare Loadouts" sheet from Loadout Optimizer can no longer be taller than the screen.
+* Added `is:iningameloadout` search to find items that are in an in-game loadout.
+* In-game loadouts now appear above the "Max Power" loadout in the loadouts menu.
+* Fixed an issue with farming mode where it would show a bunch of error notifications.
+* `is:inloadout:` searches now autocomplete hashtags in loadout names and descriptions.
+* Fixed plugging Harmonic Resonance mods when using a Strand subclass.
+* You can now drag and drop subclasses into the loadout editor, including from other loadouts.
 
 ## 7.70.0 <span class="changelog-date">(2023-05-28)</span>
 
