@@ -35,9 +35,10 @@
       "url": "/settings"
     }
   ],
-  "theme_color": "#000000",
-  "background_color": "#000000",
+  "theme_color": "#202034",
+  "background_color": "#202034",
   "display": "standalone",
+  "display_override": ["window-controls-overlay"],
   "categories": ["games", "entertainment", "productivity", "utilities"],
   "start_url": "/index.html?utm_source=homescreen",
   "launch_handler": {
