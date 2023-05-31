@@ -1,4 +1,3 @@
-import { FilterContext } from './filter-types';
 import { canonicalizeQuery, parseQuery, QueryAST } from './query-parser';
 import { FiltersMap } from './search-config';
 import { matchFilter } from './search-filter';
@@ -48,10 +47,10 @@ function extractOpAndValue(rangeString: string, overloads?: { [key: string]: num
   throw new Error("Doesn't match our range comparison syntax, or invalid overload");
 }
 
-export function parseAndValidateQuery(
+export function parseAndValidateQuery<I, FilterCtx, SuggestionsCtx>(
   query: string,
-  filtersMap: FiltersMap,
-  filterContext?: FilterContext
+  filtersMap: FiltersMap<I, FilterCtx, SuggestionsCtx>,
+  filterContext?: FilterCtx
 ): {
   /** Is the query valid at all? */
   valid: boolean;
@@ -97,10 +96,10 @@ export function parseAndValidateQuery(
  * Return whether the query is completely valid - syntactically, and where every term matches a known filter
  * and every filter RHS matches the declared format and options for the filter syntax.
  */
-function validateQuery(
+function validateQuery<I, FilterCtx, SuggestionsCtx>(
   query: QueryAST,
-  filtersMap: FiltersMap,
-  filterContext?: FilterContext
+  filtersMap: FiltersMap<I, FilterCtx, SuggestionsCtx>,
+  filterContext?: FilterCtx
 ): boolean {
   if (query.error) {
     return false;
