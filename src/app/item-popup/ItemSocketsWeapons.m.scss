@@ -55,12 +55,7 @@
 
 .minimal {
   > * {
-    margin-bottom: 8px !important;
-  }
-
-  // Tighten up spacing between sockets
-  :global(.item-sockets) {
-    gap: 2px;
+    margin-bottom: 4px !important;
   }
 }
 
@@ -69,7 +64,7 @@
 
   .minimal & {
     margin: 0;
-    gap: 2px;
+    gap: 0;
 
     // Remove line between sockets in minimal mode
     :global(.item-socket) {
@@ -79,7 +74,7 @@
   }
 
   :global(.item-socket) {
-    gap: 1px;
+    gap: 0;
   }
 
   :global(.plug) {
