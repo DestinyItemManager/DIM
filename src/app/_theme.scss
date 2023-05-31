@@ -35,6 +35,8 @@
     var(--theme-app-bg-gradient-start) 0%,
     var(--theme-app-bg-gradient-end) 100%
   );
+  // The color of PWA elements like the title bar. This cannot be a gradient.
+  --theme-pwa-chrome-background: #202034;
 
   // App
   --theme-app-bg: var(--theme-app-bg-gradient);
