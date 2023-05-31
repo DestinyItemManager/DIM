@@ -116,9 +116,9 @@ export function useHeightFromViewportBottom(
       return;
     }
     const updateHeight = () => {
-      const rect = elementRef.current.getBoundingClientRect();
+      const rect = elementRef.current!.getBoundingClientRect();
       const { y, height } = rect;
-      const { height: viewportHeight } = window.visualViewport;
+      const { height: viewportHeight } = window.visualViewport!;
       // pixels remaining in viewport minus offset minus padding
       const pxAvailable = viewportHeight - y - height - padding;
       const heightFromBottom =
@@ -131,6 +131,6 @@ export function useHeightFromViewportBottom(
 
     updateHeight();
     window.visualViewport.addEventListener('resize', updateHeight);
-    return () => window.visualViewport.removeEventListener('resize', updateHeight);
+    return () => window.visualViewport!.removeEventListener('resize', updateHeight);
   }, [setHeightFromViewportBottom, elementRef, itemHeight, padding]);
 }

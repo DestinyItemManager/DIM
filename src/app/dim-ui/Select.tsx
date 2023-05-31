@@ -100,12 +100,7 @@ export default function Select<T>({
     }
   }, [dropdownWidth, maxButtonWidth, maxDropdownWidth]);
 
-  useHeightFromViewportBottom(
-    buttonRef?.current
-    setDropdownHeight,
-    28,
-    true
-  );
+  useHeightFromViewportBottom(buttonRef, setDropdownHeight, 28, true);
 
   let buttonStyle: CSSProperties | undefined;
 
