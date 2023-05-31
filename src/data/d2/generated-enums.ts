@@ -750,6 +750,7 @@ export const enum PlugCategoryHashes {
   V700WeaponsModsMissionAvalon = 709861688,
   V710NewAutoRifle0Masterwork = 1602267206,
   V710NewAutoRifle0Skins = 3118667164,
+  V710NewTraceRifle0Masterwork = 880719790,
   V710PursuitScoutRifle0Skins = 657820579,
   VehiclesModSpeed = 821963863,
   WarlockArcAspects = 2111409167,
