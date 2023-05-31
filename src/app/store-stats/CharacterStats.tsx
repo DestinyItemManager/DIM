@@ -222,7 +222,7 @@ export function LoadoutCharacterStats({
   const defs = useD2Definitions()!;
   const equippedItems =
     items
-      ?.filter((li) => ('loadoutItem' in li ? li.loadoutItem.equip && !li.missing : li.equipped))
+      ?.filter((li) => ('loadoutItem' in li ? li.loadoutItem.equip && !li.missing : true))
       .map((li) => ('loadoutItem' in li ? li.item : li)) ?? [];
 
   // All equipped items
