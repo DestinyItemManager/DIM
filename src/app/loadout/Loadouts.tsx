@@ -6,6 +6,7 @@ import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
+import useScrollPaginate from 'app/dim-ui/useScrollPaginate';
 import { t, tl } from 'app/i18next-t';
 import { artifactUnlocksSelector, sortedStoresSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
@@ -17,6 +18,7 @@ import { useSetting } from 'app/settings/hooks';
 import { AppIcon, addIcon, faCalculator, uploadIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { Portal } from 'app/utils/temp-container';
+import _ from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
@@ -118,6 +120,8 @@ function Loadouts({ account }: { account: DestinyAccount }) {
     editLoadout(loadout, selectedStore.id, { isNew: true });
   };
 
+  const [numItemsToShow, _resetPage, marker] = useScrollPaginate(isPhonePortrait ? 2 : 10);
+
   return (
     <PageWithMenu>
       <PageWithMenu.Menu className={styles.menu}>
@@ -173,7 +177,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
         />
         <h2>{t('Loadouts.DimLoadouts')}</h2>
         {filterPills}
-        {loadouts.map((loadout) => (
+        {_.take(loadouts, numItemsToShow).map((loadout) => (
           <LoadoutRow
             key={loadout.id}
             loadout={loadout}
@@ -185,6 +189,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
           />
         ))}
         {loadouts.length === 0 && <p>{t('Loadouts.NoneMatch', { query })}</p>}
+        {marker}
       </PageWithMenu.Contents>
       {sharedLoadout && (
         <Portal>
