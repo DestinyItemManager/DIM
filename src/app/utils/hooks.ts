@@ -104,19 +104,22 @@ export function useThrottledSubscription<T>(observable: Observable<T>, delay: nu
  * relative to the bottom of the viewport.
  */
 export function useHeightFromViewportBottom(
-  elementRef: React.RefObject<HTMLElement> | void,
+  elementRef: React.RefObject<HTMLElement>,
   setHeightFromViewportBottom: (value: number) => void,
-  itemHeight: number | void,
+  itemHeight: number | undefined,
   withPadding: boolean
 ) {
   const padding = withPadding ? 10 : 0;
 
-  const updateHeight = useCallback(() => {
-    if (elementRef?.current && window.visualViewport) {
+  useEffect(() => {
+    if (!window.visualViewport || !elementRef.current) {
+      return;
+    }
+    const updateHeight = () => {
       const rect = elementRef.current.getBoundingClientRect();
       const { y, height } = rect;
       const { height: viewportHeight } = window.visualViewport;
-      // pixels remaining in viewport minus offset minus 20px for padding
+      // pixels remaining in viewport minus offset minus padding
       const pxAvailable = viewportHeight - y - height - padding;
       const heightFromBottom =
         itemHeight !== undefined
@@ -124,15 +127,10 @@ export function useHeightFromViewportBottom(
           : Math.floor(pxAvailable);
 
       setHeightFromViewportBottom(heightFromBottom);
-    }
-  }, [setHeightFromViewportBottom, elementRef, itemHeight, padding]);
+    };
 
-  useEffect(() => {
-    window.visualViewport?.addEventListener('resize', updateHeight);
-    return () => window.visualViewport?.removeEventListener('resize', updateHeight);
-  });
-
-  useEffect(() => {
     updateHeight();
-  }, [updateHeight]);
+    window.visualViewport.addEventListener('resize', updateHeight);
+    return () => window.visualViewport.removeEventListener('resize', updateHeight);
+  }, [setHeightFromViewportBottom, elementRef, itemHeight, padding]);
 }
