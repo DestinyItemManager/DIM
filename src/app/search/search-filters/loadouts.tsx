@@ -49,6 +49,15 @@ const loadoutFilters: FilterDefinition[] = [
         );
     },
   },
+  {
+    keywords: 'iningameloadout',
+    format: 'simple',
+    description: tl('Filter.InInGameLoadout'),
+    filter:
+      ({ loadoutsByItem }) =>
+      (item) =>
+        Boolean(loadoutsByItem[item.id]?.some((l) => isInGameLoadout(l.loadout))),
+  },
 ];
 
 export default loadoutFilters;
