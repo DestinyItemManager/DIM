@@ -120,7 +120,8 @@ function Loadouts({ account }: { account: DestinyAccount }) {
     editLoadout(loadout, selectedStore.id, { isNew: true });
   };
 
-  const [numItemsToShow, _resetPage, marker] = useScrollPaginate(isPhonePortrait ? 2 : 10);
+  const [numItemsToShow, _resetPage, marker] = useScrollPaginate(2);
+  const paginatedLoadouts = isPhonePortrait ? _.take(loadouts, numItemsToShow) : loadouts;
 
   return (
     <PageWithMenu>
@@ -177,7 +178,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
         />
         <h2>{t('Loadouts.DimLoadouts')}</h2>
         {filterPills}
-        {_.take(loadouts, numItemsToShow).map((loadout) => (
+        {paginatedLoadouts.map((loadout) => (
           <LoadoutRow
             key={loadout.id}
             loadout={loadout}
@@ -189,7 +190,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
           />
         ))}
         {loadouts.length === 0 && <p>{t('Loadouts.NoneMatch', { query })}</p>}
-        {marker}
+        {isPhonePortrait && marker}
       </PageWithMenu.Contents>
       {sharedLoadout && (
         <Portal>
