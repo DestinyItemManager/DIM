@@ -23,8 +23,11 @@
   @include phone-portrait {
     &:hover,
     &.collapsed {
-      background-color: transparent;
       color: var(--theme-text);
+    }
+
+    &:hover {
+      background-color: transparent;
     }
   }
 

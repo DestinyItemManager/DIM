@@ -5,4 +5,8 @@
   flex-direction: column;
   margin: 8px 0;
   gap: 8px;
+
+  @include phone-portrait {
+    padding: 0 10px;
+  }
 }
