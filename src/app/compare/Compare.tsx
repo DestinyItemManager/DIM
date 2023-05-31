@@ -10,7 +10,7 @@ import {
 import { recoilValue } from 'app/item-popup/RecoilStat';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { statLabels } from 'app/organizer/Columns';
-import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
+import { armorStats, weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import Checkbox from 'app/settings/Checkbox';
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, faAngleLeft, faAngleRight, faList } from 'app/shell/icons';
@@ -19,7 +19,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { emptyArray } from 'app/utils/empty';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -35,7 +35,7 @@ import { CompareSession } from './reducer';
 import { compareItemsSelector, compareOrganizerLinkSelector } from './selectors';
 
 export interface StatInfo {
-  id: number | 'EnergyCapacity';
+  id: number | 'EnergyCapacity' | 'StatDistance';
   displayProperties: DestinyDisplayPropertiesDefinition;
   min: number;
   max: number;
@@ -123,10 +123,15 @@ export default function Compare({ session }: { session: CompareSession }) {
     }
   }, [cancel, hasItems]);
 
+  // If the session was started with a specific item, this is it
+  const initialItem = session.initialItemId
+    ? compareItems.find((i) => i.id === session.initialItemId)
+    : undefined;
+
   // Memoize computing the list of stats
   const allStats = useMemo(
-    () => getAllStats(compareItems, compareBaseStats),
-    [compareItems, compareBaseStats]
+    () => getAllStats(compareItems, compareBaseStats, initialItem),
+    [compareItems, compareBaseStats, initialItem]
   );
 
   const updateQuery = useCallback(
@@ -153,10 +158,6 @@ export default function Compare({ session }: { session: CompareSession }) {
     setSortBetterFirst(sortedHash === newSortedHash ? !sortBetterFirst : true);
   };
 
-  // If the session was started with a specific item, this is it
-  const initialItem = session.initialItemId
-    ? compareItems.find((i) => i.id === session.initialItemId)
-    : undefined;
   const firstCompareItem = compareItems[0];
   // The example item is the one we'll use for generating suggestion buttons
   const exampleItem = initialItem || firstCompareItem;
@@ -333,7 +334,11 @@ function sortCompareItemsComparator(
   );
 }
 
-function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): StatInfo[] {
+function getAllStats(
+  comparisonItems: DimItem[],
+  compareBaseStats: boolean,
+  initialItem: DimItem | undefined
+): StatInfo[] {
   if (!comparisonItems.length) {
     return emptyArray<StatInfo>();
   }
@@ -363,8 +368,25 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
             value: item.energy.energyCapacity,
           }) ||
           undefined,
-        10,
-        false
+        { statMaximumValue: 10 }
+      )
+    );
+  }
+
+  if (
+    comparisonItems.length > 1 &&
+    initialItem?.bucket.inArmor &&
+    initialItem.bucket.hash !== BucketHashes.ClassArmor
+  ) {
+    stats.push(
+      makeFakeStat(
+        'StatDistance',
+        t('Stats.StatDistance'),
+        (item: DimItem) => ({
+          value: statDistance(item, initialItem),
+          statHash: -3,
+        }),
+        { statMaximumValue: 10, lowerBetter: true }
       )
     );
   }
@@ -424,9 +446,7 @@ function makeFakeStat(
   id: StatInfo['id'],
   displayProperties: DestinyDisplayPropertiesDefinition | string,
   getStat: StatGetter,
-  statMaximumValue = 0,
-  bar = false,
-  lowerBetter = false
+  { statMaximumValue = 0, bar = false, lowerBetter = false } = {}
 ): StatInfo {
   if (typeof displayProperties === 'string') {
     displayProperties = { name: displayProperties } as DestinyDisplayPropertiesDefinition;
@@ -442,4 +462,23 @@ function makeFakeStat(
     getStat,
     bar,
   };
+}
+function statDistance(item: DimItem, initialItem: DimItem): number {
+  const armorStatValues = (item: DimItem) =>
+    armorStats.map((statHash) => item.stats?.find((s) => s.statHash === statHash)?.base ?? 0);
+
+  const initialItemStats = armorStatValues(initialItem);
+  const compareItemStats = armorStatValues(item);
+
+  console.log({
+    initialItemStats,
+    compareItemStats,
+    distance: Math.sqrt(
+      _.sum(_.zip(initialItemStats, compareItemStats).map(([a, b]) => (a! - b!) * (a! - b!)))
+    ),
+  });
+
+  return Math.sqrt(
+    _.sum(_.zip(initialItemStats, compareItemStats).map(([a, b]) => (a! - b!) * (a! - b!)))
+  );
 }
