@@ -82,7 +82,7 @@ export default memo(function CompareItem({
         <ItemPopupTrigger item={item} noCompare={true}>
           {(ref, onClick) => (
             <div className={styles.itemAside} ref={ref} onClick={onClick}>
-              <PressTip minimal className={styles.itemAside} tooltip={itemNotes}>
+              <PressTip minimal tooltip={itemNotes}>
                 <ConnectedInventoryItem item={item} />
               </PressTip>
             </div>

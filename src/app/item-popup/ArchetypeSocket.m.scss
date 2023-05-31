@@ -39,7 +39,8 @@
   &.minimal {
     background-color: transparent;
     align-items: center;
-    padding: 0;
+    padding: 0 4px;
+    margin: 0;
   }
 
   :global(.armory) & {
@@ -49,6 +50,10 @@
 
   &.isWeapons {
     align-items: center;
+
+    &.minimal {
+      padding-left: 0;
+    }
   }
 }
 

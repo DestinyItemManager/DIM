@@ -86,16 +86,18 @@ export default function ItemSocketsGeneral({
   // Remove categories where all the sockets were filtered out.
   categories = categories.filter((c) => socketsByCategory.get(c)?.length);
 
+  const intrinsicRow = intrinsicArmorPerkSocket && (
+    <IntrinsicArmorPerk
+      item={item}
+      socket={intrinsicArmorPerkSocket}
+      minimal={minimal}
+      onPlugClicked={onPlugClicked}
+    />
+  );
+
   return (
     <>
-      {intrinsicArmorPerkSocket && (
-        <IntrinsicArmorPerk
-          item={item}
-          socket={intrinsicArmorPerkSocket}
-          minimal={minimal}
-          onPlugClicked={onPlugClicked}
-        />
-      )}
+      {!minimal && intrinsicRow}
       <div className={clsx(styles.generalSockets, { [styles.minimalSockets]: minimal })}>
         {emoteWheelCategory && (
           <EmoteSockets
@@ -126,6 +128,7 @@ export default function ItemSocketsGeneral({
           </div>
         ))}
       </div>
+      {minimal && intrinsicRow}
     </>
   );
 }
