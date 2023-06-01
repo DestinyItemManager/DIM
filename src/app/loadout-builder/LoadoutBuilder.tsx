@@ -168,7 +168,13 @@ export default memo(function LoadoutBuilder({
       })),
       statOrder
     );
-    const newSavedLoadoutParams = _.pick(newLoadoutParameters, 'assumeArmorMasterwork');
+
+    // Only these properties will be saved between sessions
+    const newSavedLoadoutParams = _.pick(
+      newLoadoutParameters,
+      'assumeArmorMasterwork',
+      'autoStatMods'
+    );
 
     setSetting('loParameters', newSavedLoadoutParams);
     setSetting('loStatConstraintsByClass', {
