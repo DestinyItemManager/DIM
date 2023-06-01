@@ -201,7 +201,7 @@ export function newLoadoutFromEquipped(
       mods,
     };
   }
-  if (artifactUnlocks) {
+  if (artifactUnlocks?.unlockedItemHashes.length) {
     loadout.parameters = {
       ...loadout.parameters,
       artifactUnlocks,

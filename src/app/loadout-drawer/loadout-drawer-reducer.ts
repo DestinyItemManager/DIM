@@ -648,9 +648,13 @@ export function syncArtifactUnlocksFromEquipped(
 ): LoadoutUpdateFunction {
   const artifactUnlocks = profileResponse && getArtifactUnlocks(profileResponse, store.id);
 
-  return setLoadoutParameters({
-    artifactUnlocks,
-  });
+  if (artifactUnlocks?.unlockedItemHashes.length) {
+    return setLoadoutParameters({
+      artifactUnlocks,
+    });
+  } else {
+    return (loadout) => loadout;
+  }
 }
 
 /**
