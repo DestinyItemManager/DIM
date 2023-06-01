@@ -265,14 +265,6 @@ export default memo(function LockArmorAndPerks({
           </button>
         </div>
       </div>
-      {/* Armor Upgrades */}
-      {isPhonePortrait && (
-        <div className={styles.guide}>
-          <ol start={3}>
-            <li>{t('LoadoutBuilder.OptimizerExplanationUpgrades')}</li>
-          </ol>
-        </div>
-      )}
       {/* Pinned items */}
       <LoadoutBucketDropTarget className={styles.area} onItemLocked={pinItem}>
         {Boolean(allPinnedItems.length) && (

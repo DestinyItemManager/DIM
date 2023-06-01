@@ -1,32 +1,22 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
-import { DestinyAccount } from 'app/accounts/destiny-account';
-import { createLoadoutShare } from 'app/dim-api/dim-api';
 import { savedLoStatConstraintsByClassSelector } from 'app/dim-api/selectors';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
-import usePrompt from 'app/dim-ui/usePrompt';
 import { t } from 'app/i18next-t';
-import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-converters';
 import { Loadout, ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
-import {
-  newLoadout,
-  newLoadoutFromEquipped,
-  resolveLoadoutModHashes,
-} from 'app/loadout-drawer/loadout-utils';
+import { newLoadoutFromEquipped, resolveLoadoutModHashes } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
 import { categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { showNotification } from 'app/notifications/notifications';
 import { armorStats } from 'app/search/d2-known-values';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { useSetSetting } from 'app/settings/hooks';
 import { AppIcon, redoIcon, refreshIcon, undoIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { Portal } from 'app/utils/temp-container';
-import { copyString } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -65,14 +55,12 @@ const autoAssignmentPCHs = [PlugCategoryHashes.EnhancementsArtifice];
  * The Loadout Optimizer screen
  */
 export default memo(function LoadoutBuilder({
-  account,
   stores,
   initialClassType,
   initialLoadoutParameters,
   notes,
   preloadedLoadout,
 }: {
-  account: DestinyAccount;
   stores: DimStore[];
   initialClassType: DestinyClass | undefined;
   initialLoadoutParameters: LoadoutParameters | undefined;
@@ -316,34 +304,6 @@ export default memo(function LoadoutBuilder({
     [statOrder, enabledStats, resultSets]
   );
 
-  const shareBuild = async (notes?: string) => {
-    // TODO: replace this with a new share tool
-    const loadout = newLoadout(t('LoadoutBuilder.ShareBuildTitle'), [], classType);
-    if (subclass) {
-      loadout.items = [subclass.loadoutItem];
-    }
-    loadout.notes = notes;
-    loadout.parameters = params;
-    const shareUrl = await createLoadoutShare(
-      account.membershipId,
-      convertDimLoadoutToApiLoadout(loadout)
-    );
-    copyString(shareUrl);
-    showNotification({
-      type: 'success',
-      title: t('LoadoutBuilder.CopiedBuild'),
-    });
-  };
-
-  // TODO: replace with rich-text dialog, and an "append" option
-  const [promptDialog, prompt] = usePrompt();
-  const shareBuildWithNotes = async () => {
-    const newNotes = await prompt(t('MovePopup.Notes'), { defaultValue: notes });
-    if (newNotes) {
-      shareBuild(newNotes);
-    }
-  };
-
   // I don't think this can actually happen?
   if (!selectedStore) {
     return null;
@@ -351,7 +311,6 @@ export default memo(function LoadoutBuilder({
 
   const menuContent = (
     <>
-      {promptDialog}
       {isPhonePortrait && (
         <div className={styles.guide}>
           <ol>
@@ -403,7 +362,7 @@ export default memo(function LoadoutBuilder({
       />
       {isPhonePortrait && (
         <div className={styles.guide}>
-          <ol start={4}>
+          <ol start={3}>
             <li>{t('LoadoutBuilder.OptimizerExplanationSearch')}</li>
           </ol>
           <p>{t('LoadoutBuilder.OptimizerExplanationGuide')}</p>
@@ -451,22 +410,6 @@ export default memo(function LoadoutBuilder({
         </AnimatePresence>
         <div className={styles.toolbar}>
           <UserGuideLink topic="Loadout-Optimizer" />
-          <button
-            type="button"
-            className="dim-button"
-            onClick={() => shareBuild(notes)}
-            disabled={!filteredSets}
-          >
-            {t('LoadoutBuilder.ShareBuild')}
-          </button>
-          <button
-            type="button"
-            className="dim-button"
-            onClick={shareBuildWithNotes}
-            disabled={!filteredSets}
-          >
-            {t('LoadoutBuilder.ShareBuildWithNotes')}
-          </button>
           {result && (
             <div className={styles.speedReport}>
               {t('LoadoutBuilder.SpeedReport', {
@@ -481,7 +424,6 @@ export default memo(function LoadoutBuilder({
             <ol>
               <li>{t('LoadoutBuilder.OptimizerExplanationStats')}</li>
               <li>{t('LoadoutBuilder.OptimizerExplanationMods')}</li>
-              <li>{t('LoadoutBuilder.OptimizerExplanationUpgrades')}</li>
               <li>{t('LoadoutBuilder.OptimizerExplanationSearch')}</li>
             </ol>
             <p>{t('LoadoutBuilder.OptimizerExplanationGuide')}</p>
