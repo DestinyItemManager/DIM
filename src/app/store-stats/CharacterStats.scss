@@ -87,7 +87,7 @@
           &::before,
           &::after {
             font-size: 13px;
-            color: #aaa;
+            color: var(--theme-text-secondary);
           }
           &::before {
             content: '=';

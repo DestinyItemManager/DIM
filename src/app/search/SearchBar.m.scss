@@ -40,7 +40,7 @@
 }
 
 .invalid {
-  color: #aaa !important;
+  color: var(--theme-text-secondary) !important;
 }
 
 .openButton {

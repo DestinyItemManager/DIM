@@ -2,7 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'lockedPerk': string;
-  'partialDescription': string;
   'plug': string;
   'plugInfo': string;
   'plugTitle': string;

@@ -58,12 +58,12 @@ export const emptySocketHashes = [
 ];
 
 export const armor2PlugCategoryHashesByName = {
-  general: PlugCategoryHashes.EnhancementsV2General,
   helmet: PlugCategoryHashes.EnhancementsV2Head,
   gauntlets: PlugCategoryHashes.EnhancementsV2Arms,
   chest: PlugCategoryHashes.EnhancementsV2Chest,
   leg: PlugCategoryHashes.EnhancementsV2Legs,
   classitem: PlugCategoryHashes.EnhancementsV2ClassItem,
+  general: PlugCategoryHashes.EnhancementsV2General,
 } as const;
 
 /** The consistent armour 2 mod category hashes. This excludes raid, combat and legacy slots as they tend to change. */

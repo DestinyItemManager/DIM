@@ -6,7 +6,7 @@ import { PlugStats } from 'app/item-popup/PlugTooltip';
 import { getPlugDefStats, usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import styles from './SelectablePlug.m.scss';
 
 /**
@@ -80,12 +80,12 @@ function SelectablePlugDetails({
       <div className={styles.plugInfo}>
         <div className={styles.plugTitle}>{plug.displayProperties.name}</div>
         {plugDescriptions.perks.map((perkDesc) => (
-          <div className={styles.partialDescription} key={perkDesc.perkHash}>
+          <React.Fragment key={perkDesc.perkHash}>
             {perkDesc.description && <RichDestinyText text={perkDesc.description} />}
             {perkDesc.requirement && (
               <div className={styles.requirement}>{perkDesc.requirement}</div>
             )}
-          </div>
+          </React.Fragment>
         ))}
         {stats.length > 0 && <PlugStats stats={stats} />}
       </div>
