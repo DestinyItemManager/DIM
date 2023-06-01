@@ -9,6 +9,7 @@
 * `is:inloadout:` searches now autocomplete hashtags in loadout names and descriptions.
 * Fixed plugging Harmonic Resonance mods when using a Strand subclass.
 * You can now drag and drop subclasses into the loadout editor, including from other loadouts.
+* When DIM is installed as a PWA on desktop, you can now choose to hide the title bar.
 
 ## 7.70.0 <span class="changelog-date">(2023-05-28)</span>
 
