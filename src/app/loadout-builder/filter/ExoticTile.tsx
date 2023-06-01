@@ -47,36 +47,29 @@ function ExoticTileContents({ exotic }: Pick<Props, 'exotic'>) {
 
   return (
     <>
-      <div className={styles.itemName}>{def.displayProperties.name}</div>
+      <div className={styles.itemImage}>
+        <DefItemIcon itemDef={def} />
+      </div>
       <div className={styles.details}>
-        <div className={styles.itemImage}>
-          <DefItemIcon itemDef={def} />
-        </div>
+        <div className={styles.itemName}>{def.displayProperties.name}</div>
         {exoticPerk && (
-          <div className={styles.perkOrModInfo}>
-            <div className={styles.perkOrModNameAndImage}>
-              <DefItemIcon className={styles.perkOrModImage} itemDef={exoticPerk} />
-              <div className={styles.perkOrModName}>{exoticPerk.displayProperties.name}</div>
-            </div>
+          <>
+            <div className={styles.perkOrModName}>{exoticPerk.displayProperties.name}</div>
             <div className={styles.perkDescription}>{perkShortDescription}</div>
-          </div>
+          </>
         )}
-        <div className={styles.mods}>
-          {exoticMods?.map((mod) => (
-            <div key={mod.hash} className={styles.perkOrModInfo}>
-              <div className={styles.perkOrModNameAndImage}>
-                <DefItemIcon className={styles.perkOrModImage} itemDef={mod} />
-                <div className={styles.perkOrModName}>{mod.displayProperties.name}</div>
-              </div>
-            </div>
-          ))}
-        </div>
+        {exoticMods?.map((mod) => (
+          <div key={mod.hash} className={styles.perkOrModNameAndImage}>
+            <DefItemIcon className={styles.perkOrModImage} itemDef={mod} />
+            <div className={styles.perkOrModName}>{mod.displayProperties.name}</div>
+          </div>
+        ))}
       </div>
     </>
   );
 }
 
-function ExoticTile({ exotic, selected, onSelected }: Props) {
+export default function ExoticTile({ exotic, selected, onSelected }: Props) {
   return exotic.isArmor1 ? (
     <PressTip
       className={clsx(styles.exotic, styles.disabled)}
@@ -106,17 +99,13 @@ export function FakeExoticTile({
 }) {
   return (
     <div className={clsx(styles.exotic, { [styles.selected]: selected })} onClick={onSelected}>
-      <div className={styles.itemName}>{title}</div>
+      <div className={styles.itemImage}>
+        <img src={icon} className="item-img" />
+      </div>
       <div className={styles.details}>
-        <div className={styles.itemImage}>
-          <img src={icon} className="item-img" />
-        </div>
-        <div className={styles.perkOrModInfo}>
-          <div className={styles.perkDescription}>{description}</div>
-        </div>
+        <div className={styles.itemName}>{title}</div>
+        <div className={styles.perkDescription}>{description}</div>
       </div>
     </div>
   );
 }
-
-export default ExoticTile;

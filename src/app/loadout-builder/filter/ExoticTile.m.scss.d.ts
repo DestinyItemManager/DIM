@@ -6,10 +6,8 @@ interface CssExports {
   'exotic': string;
   'itemImage': string;
   'itemName': string;
-  'mods': string;
   'perkDescription': string;
   'perkOrModImage': string;
-  'perkOrModInfo': string;
   'perkOrModName': string;
   'perkOrModNameAndImage': string;
   'selected': string;

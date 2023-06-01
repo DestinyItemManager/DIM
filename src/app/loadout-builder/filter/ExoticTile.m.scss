@@ -1,19 +1,16 @@
 @use '../../variables' as *;
 
 .exotic {
-  > * {
-    margin-right: 8px;
-  }
-
+  composes: flexRow from '../../dim-ui/common.m.scss';
   border: 1px solid #666;
   padding: 8px;
-  display: flex;
-  flex-direction: column;
+  gap: 8px;
   cursor: pointer;
-  height: 100%;
   box-sizing: border-box;
-  &:hover {
+  &:hover,
+  :focus-visible {
     background-color: rgba(255, 255, 255, 0.1);
+    border-color: var(--theme-accent-primary);
   }
 }
 
@@ -27,58 +24,34 @@
 }
 
 .details {
-  display: flex;
-  flex-direction: row;
+  composes: flexColumn from '../../dim-ui/common.m.scss';
+  gap: 2px;
 }
 
 .itemImage {
   position: relative;
-  height: calc(var(--item-size) * 1.2);
-  width: calc(var(--item-size) * 1.2);
-  margin-right: 4px;
-  flex-shrink: 0;
-  flex-grow: 0;
+  flex: 0;
 }
 
 .itemName {
   font-weight: bold;
-  font-size: 16px;
-  margin-bottom: 4px;
-}
-
-.mods {
-  display: flex;
-  flex-direction: column;
-
-  > :not(:last-child) {
-    margin-bottom: 4px;
-  }
-}
-
-.perkOrModInfo {
-  display: flex;
-  flex-direction: column;
 }
 
 .perkOrModNameAndImage {
-  display: flex;
-  flex-direction: row;
+  composes: flexRow from '../../dim-ui/common.m.scss';
   align-items: center;
+  gap: 4px;
 }
 
 .perkOrModImage {
-  border: none;
-  height: calc(var(--item-size) / 2);
-  width: calc(var(--item-size) / 2);
+  height: 16px;
+  width: 16px;
 }
 
 .perkOrModName {
-  font-weight: bold;
-  font-size: 13px;
-  margin: 0 4px 4px 4px;
+  font-weight: normal;
 }
 
 .perkDescription {
-  grid-column: 2;
-  grid-row: 4;
+  color: #aaa;
 }
