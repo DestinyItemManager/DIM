@@ -6,6 +6,11 @@
   height: var(--item-size);
   width: var(--item-size);
   border: none;
+
+  &:hover .perkOutline {
+    stroke: var(--theme-accent-primary);
+    stroke-width: 6px;
+  }
 }
 
 // A global class because some things still tweak the size of the plug image.

@@ -206,7 +206,15 @@ function PerkCircle({
         mask="url(#mask)"
       />
 
-      <circle cx="50" cy="50" r="46" stroke="white" fill="transparent" strokeWidth="2" />
+      <circle
+        cx="50"
+        cy="50"
+        r="46"
+        stroke="white"
+        fill="transparent"
+        strokeWidth="2"
+        className={styles.perkOutline}
+      />
       {enhanced && <path d="M5,50 l0,-24 l-6,0 l9,-16 l9,16 l-6,0 l0,24 z" fill="#eade8b" />}
     </svg>
   );
