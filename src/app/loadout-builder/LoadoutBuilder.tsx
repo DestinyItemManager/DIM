@@ -342,7 +342,7 @@ export default memo(function LoadoutBuilder({
       />
       {isPhonePortrait && (
         <div className={styles.guide}>
-          <ol start={4}>
+          <ol start={3}>
             <li>{t('LoadoutBuilder.OptimizerExplanationSearch')}</li>
           </ol>
           <p>{t('LoadoutBuilder.OptimizerExplanationGuide')}</p>
