@@ -72,7 +72,6 @@ export default function LoadoutBuilderContainer({ account }: Props) {
   // TODO: key off the URL params?
   return (
     <LoadoutBuilder
-      account={account}
       stores={stores}
       preloadedLoadout={preloadedLoadout}
       initialClassType={urlClassType ?? preloadedLoadout?.classType}
