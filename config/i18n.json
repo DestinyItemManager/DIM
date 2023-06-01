@@ -564,6 +564,7 @@
     "ShareBuildWithNotes": "Share With Notes",
     "AddHalfTierMods": "Add +5 Mods",
     "AutomaticallyPicked": "This mod was added automatically to improve build stats.",
+    "DisabledByAutoStatMods": "Stat mods are being chosen automatically by Loadout Optimizer.",
     "AutoStatMods": "Automatically add stat mods",
     "All": "All",
     "AnyExotic": "Any Exotic",

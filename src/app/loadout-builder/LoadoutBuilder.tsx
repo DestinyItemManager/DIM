@@ -137,7 +137,21 @@ export default memo(function LoadoutBuilder({
     () => resolveLoadoutModHashes(defs, loadoutParameters.mods ?? [], unlockedPlugs),
     [defs, loadoutParameters.mods, unlockedPlugs]
   );
-  const modsToAssign = useMemo(() => resolvedMods.map((mod) => mod.resolvedMod), [resolvedMods]);
+
+  const modsToAssign = useMemo(
+    // If auto stat mods are enabled, ignore any saved stat mods
+    () =>
+      resolvedMods
+        .filter(
+          (mod) =>
+            !(
+              autoStatMods &&
+              mod.resolvedMod.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsV2General
+            )
+        )
+        .map((mod) => mod.resolvedMod),
+    [resolvedMods, autoStatMods]
+  );
 
   const characterItems = items[classType];
 
@@ -168,7 +182,13 @@ export default memo(function LoadoutBuilder({
       })),
       statOrder
     );
-    const newSavedLoadoutParams = _.pick(newLoadoutParameters, 'assumeArmorMasterwork');
+
+    // Only these properties will be saved between sessions
+    const newSavedLoadoutParams = _.pick(
+      newLoadoutParameters,
+      'assumeArmorMasterwork',
+      'autoStatMods'
+    );
 
     setSetting('loParameters', newSavedLoadoutParams);
     setSetting('loStatConstraintsByClass', {
@@ -517,7 +537,11 @@ export default memo(function LoadoutBuilder({
               owner={selectedStore.id}
               lockedMods={resolvedMods}
               plugCategoryHashWhitelist={modPicker.plugCategoryHashWhitelist}
-              plugCategoryHashDenyList={autoAssignmentPCHs}
+              plugCategoryHashDenyList={
+                autoStatMods
+                  ? [...autoAssignmentPCHs, PlugCategoryHashes.EnhancementsV2General]
+                  : autoAssignmentPCHs
+              }
               onAccept={(newLockedMods) =>
                 lbDispatch({
                   type: 'lockedModsChanged',
@@ -539,6 +563,7 @@ export default memo(function LoadoutBuilder({
               classType={classType}
               params={params}
               notes={notes}
+              lockedMods={modsToAssign}
               onClose={() => lbDispatch({ type: 'closeCompareDrawer' })}
             />
           </Portal>

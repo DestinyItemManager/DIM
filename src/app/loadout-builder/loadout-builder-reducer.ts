@@ -172,8 +172,6 @@ const lbConfigInit = ({
   const statOrder = statOrderFromLoadoutParameters(loadoutParameters);
   const statFilters = statFiltersFromLoadoutParamaters(loadoutParameters);
 
-  // FIXME: Always require turning on auto mods explicitly for now...
-  loadoutParameters = { ...loadoutParameters, autoStatMods: undefined };
   // Also delete artifice mods -- artifice mods are always picked automatically per set.
   if (loadoutParameters.mods) {
     loadoutParameters.mods = loadoutParameters.mods.filter((modHash) => {

@@ -20,6 +20,7 @@ import {
   subclassAbilitySocketCategoryHashes,
 } from 'app/utils/socket-utils';
 import { Portal } from 'app/utils/temp-container';
+import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { Dispatch, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import LoadoutBucketDropTarget from '../LoadoutBucketDropTarget';
@@ -210,6 +211,10 @@ export default memo(function LockArmorAndPerks({
                 plug={mod.resolvedMod}
                 onClose={() => onModClicked(mod)}
                 forClassType={selectedStore.classType}
+                disabledByAutoStatMods={
+                  autoStatMods &&
+                  mod.resolvedMod.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsV2General
+                }
               />
             ))}
           </div>
