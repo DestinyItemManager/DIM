@@ -5,6 +5,7 @@
   flex-direction: row;
   align-items: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  gap: 16px;
 
   @include phone-portrait {
     flex-direction: column;
@@ -17,24 +18,13 @@
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  padding: 10px 0 4px 0;
-}
-
-.header {
-  color: #ddd;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding-bottom: 4px;
+  padding: 10px 0 16px 0;
+  gap: 4px;
 }
 
 .items {
   display: flex;
   flex-flow: row wrap;
   padding: 0;
-
-  > * {
-    margin-right: 14px;
-    margin-bottom: 14px;
-  }
+  gap: 14px;
 }

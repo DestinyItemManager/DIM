@@ -240,19 +240,17 @@ function GeneratedSet({
   return (
     <div className={styles.container} style={style} ref={forwardedRef}>
       <div className={styles.build}>
-        <div className={styles.header}>
-          <SetStats
-            stats={set.stats}
-            getStatsBreakdown={getStatsBreakdown}
-            maxPower={getPower(displayedItems)}
-            statOrder={statOrder}
-            enabledStats={enabledStats}
-            boostedStats={boostedStats}
-            existingLoadoutName={existingLoadout?.name}
-            subclass={subclass}
-            exoticArmorHash={params.exoticArmorHash}
-          />
-        </div>
+        <SetStats
+          stats={set.stats}
+          getStatsBreakdown={getStatsBreakdown}
+          maxPower={getPower(displayedItems)}
+          statOrder={statOrder}
+          enabledStats={enabledStats}
+          boostedStats={boostedStats}
+          existingLoadoutName={existingLoadout?.name}
+          subclass={subclass}
+          exoticArmorHash={params.exoticArmorHash}
+        />
         <div className={styles.items}>
           {displayedItems.map((item, i) => (
             <GeneratedSetItem
