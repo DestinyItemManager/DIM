@@ -1,3 +1,4 @@
+import { TileGrid } from 'app/dim-ui/TileGrid';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { useCallback } from 'react';
@@ -59,31 +60,28 @@ export default function PlugSection({
         }
 
         return (
-          <div key={header}>
-            <div className={styles.header}>{header}</div>
-            <div className={styles.items}>
-              {plugs.map((plug) => {
-                const isSelected = plugSet.selected.some((s) => s.hash === plug.hash);
-                const multiSelect = selectionType === 'multi';
-                const selectable = multiSelect
-                  ? plugSet.selected.length < maxSelectable && isPlugSelectable(plug)
-                  : !isSelected && isPlugSelectable(plug);
-                return (
-                  <SelectablePlug
-                    key={plug.hash}
-                    selected={isSelected}
-                    plug={plug}
-                    classType={classType}
-                    selectable={selectable}
-                    selectionType={selectionType}
-                    removable={multiSelect}
-                    onPlugSelected={handlePlugSelected}
-                    onPlugRemoved={handlePlugRemoved}
-                  />
-                );
-              })}
-            </div>
-          </div>
+          <TileGrid key={header} header={header} className={styles.section}>
+            {plugs.map((plug) => {
+              const isSelected = plugSet.selected.some((s) => s.hash === plug.hash);
+              const multiSelect = selectionType === 'multi';
+              const selectable = multiSelect
+                ? plugSet.selected.length < maxSelectable && isPlugSelectable(plug)
+                : !isSelected && isPlugSelectable(plug);
+              return (
+                <SelectablePlug
+                  key={plug.hash}
+                  selected={isSelected}
+                  plug={plug}
+                  classType={classType}
+                  selectable={selectable}
+                  selectionType={selectionType}
+                  removable={multiSelect}
+                  onPlugSelected={handlePlugSelected}
+                  onPlugRemoved={handlePlugRemoved}
+                />
+              );
+            })}
+          </TileGrid>
         );
       })}
     </>

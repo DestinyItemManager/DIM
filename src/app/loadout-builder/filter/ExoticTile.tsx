@@ -1,10 +1,9 @@
-import { PressTip } from 'app/dim-ui/PressTip';
+import { TileGridTile } from 'app/dim-ui/TileGrid';
 import { t } from 'app/i18next-t';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
 import React from 'react';
 import styles from './ExoticTile.m.scss';
 
@@ -24,13 +23,13 @@ interface Props {
 }
 
 /**
- * A square tile container the exotic name, icon, and perk/mods info.
+ * A tile containing the exotic name, icon, and perk/mods info.
  *
  * When rendering perks a short description will be pulled from the SandboxPerk definition.
  * Mods on the other hand only get a name and icon as multiple descriptions takes up too
  * much room on screen.
  */
-function ExoticTileContents({ exotic }: Pick<Props, 'exotic'>) {
+export default function ExoticTile({ exotic, selected, onSelected }: Props) {
   const defs = useD2Definitions()!;
   const { def, exoticPerk, exoticMods } = exotic;
   let perkShortDescription = exoticPerk?.displayProperties.description;
@@ -46,44 +45,38 @@ function ExoticTileContents({ exotic }: Pick<Props, 'exotic'>) {
   }
 
   return (
-    <>
-      <div className={styles.itemImage}>
-        <DefItemIcon itemDef={def} />
-      </div>
-      <div className={styles.details}>
-        <div className={styles.itemName}>{def.displayProperties.name}</div>
-        {exoticPerk && (
-          <>
-            <div className={styles.perkOrModName}>{exoticPerk.displayProperties.name}</div>
-            <div className={styles.perkDescription}>{perkShortDescription}</div>
-          </>
-        )}
-        {exoticMods?.map((mod) => (
-          <div key={mod.hash} className={styles.perkOrModNameAndImage}>
-            <DefItemIcon className={styles.perkOrModImage} itemDef={mod} />
-            <div className={styles.perkOrModName}>{mod.displayProperties.name}</div>
-          </div>
-        ))}
-      </div>
-    </>
-  );
-}
-
-export default function ExoticTile({ exotic, selected, onSelected }: Props) {
-  return exotic.isArmor1 ? (
-    <PressTip
-      className={clsx(styles.exotic, styles.disabled)}
-      tooltip={<div>{t('LB.IncompatibleWithOptimizer')}</div>}
+    <TileGridTile
+      selected={selected}
+      onClick={onSelected}
+      disabled={exotic.isArmor1}
+      icon={
+        <div className="item">
+          <DefItemIcon itemDef={def} />
+        </div>
+      }
     >
-      <ExoticTileContents exotic={exotic} />
-    </PressTip>
-  ) : (
-    <div className={clsx(styles.exotic, { [styles.selected]: selected })} onClick={onSelected}>
-      <ExoticTileContents exotic={exotic} />
-    </div>
+      <div className={styles.itemName}>{def.displayProperties.name}</div>
+      {exotic.isArmor1 && <div>{t('LB.IncompatibleWithOptimizer')}</div>}
+      {exoticPerk && (
+        <>
+          <div>{exoticPerk.displayProperties.name}</div>
+          <div className={styles.perkDescription}>{perkShortDescription}</div>
+        </>
+      )}
+      {exoticMods?.map((mod) => (
+        <div key={mod.hash} className={styles.perkOrModNameAndImage}>
+          <DefItemIcon className={styles.perkOrModImage} itemDef={mod} />
+          <div>{mod.displayProperties.name}</div>
+        </div>
+      ))}
+    </TileGridTile>
   );
 }
 
+/**
+ * A fake version of the exotic tile that isn't associated with a real item
+ * definition, used for things like "no exotic".
+ */
 export function FakeExoticTile({
   title,
   description,
@@ -98,14 +91,17 @@ export function FakeExoticTile({
   onSelected: React.MouseEventHandler<HTMLDivElement>;
 }) {
   return (
-    <div className={clsx(styles.exotic, { [styles.selected]: selected })} onClick={onSelected}>
-      <div className={styles.itemImage}>
-        <img src={icon} className="item-img" />
-      </div>
-      <div className={styles.details}>
-        <div className={styles.itemName}>{title}</div>
-        <div className={styles.perkDescription}>{description}</div>
-      </div>
-    </div>
+    <TileGridTile
+      selected={selected}
+      onClick={onSelected}
+      icon={
+        <div className="item">
+          <img src={icon} className="item-img" />
+        </div>
+      }
+    >
+      <div className={styles.itemName}>{title}</div>
+      <div className={styles.perkDescription}>{description}</div>
+    </TileGridTile>
   );
 }

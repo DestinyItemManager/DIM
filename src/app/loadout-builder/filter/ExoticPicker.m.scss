@@ -4,16 +4,3 @@
   padding: 10px 10px 16px 10px;
   gap: 14px;
 }
-
-.header {
-  font-weight: 600;
-  font-size: 14px;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
-
-.items {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 4px;
-}

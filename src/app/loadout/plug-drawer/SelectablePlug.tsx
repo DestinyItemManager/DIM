@@ -1,11 +1,11 @@
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
+import { TileGridTile } from 'app/dim-ui/TileGrid';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { PlugStats } from 'app/item-popup/PlugTooltip';
 import { getPlugDefStats, usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
 import React, { useCallback, useMemo } from 'react';
 import styles from './SelectablePlug.m.scss';
 
@@ -46,17 +46,18 @@ export default function SelectablePlug({
 
   return (
     <ClosableContainer onClose={selected && removable ? onClose : undefined}>
-      <div
-        className={clsx(styles.plug, {
-          [styles.lockedPerk]: selected,
-          [styles.unselectable]: selectionType === 'multi' && !selectable,
-        })}
+      <TileGridTile
+        selected={selected}
+        disabled={selectionType === 'multi' && !selectable}
+        icon={
+          <div className="item" title={plug.displayProperties.name}>
+            <DefItemIcon itemDef={plug} />
+          </div>
+        }
         onClick={handleClick}
-        role="button"
-        tabIndex={0}
       >
         {plugDetails}
-      </div>
+      </TileGridTile>
     </ClosableContainer>
   );
 }
@@ -74,21 +75,14 @@ function SelectablePlugDetails({
   const plugDescriptions = usePlugDescriptions(plug, stats, /* forceUseBungieDescriptions */ true);
   return (
     <>
-      <div className="item" title={plug.displayProperties.name}>
-        <DefItemIcon itemDef={plug} />
-      </div>
-      <div className={styles.plugInfo}>
-        <div className={styles.plugTitle}>{plug.displayProperties.name}</div>
-        {plugDescriptions.perks.map((perkDesc) => (
-          <React.Fragment key={perkDesc.perkHash}>
-            {perkDesc.description && <RichDestinyText text={perkDesc.description} />}
-            {perkDesc.requirement && (
-              <div className={styles.requirement}>{perkDesc.requirement}</div>
-            )}
-          </React.Fragment>
-        ))}
-        {stats.length > 0 && <PlugStats stats={stats} />}
-      </div>
+      <div className={styles.plugTitle}>{plug.displayProperties.name}</div>
+      {plugDescriptions.perks.map((perkDesc) => (
+        <React.Fragment key={perkDesc.perkHash}>
+          {perkDesc.description && <RichDestinyText text={perkDesc.description} />}
+          {perkDesc.requirement && <div className={styles.requirement}>{perkDesc.requirement}</div>}
+        </React.Fragment>
+      ))}
+      {stats.length > 0 && <PlugStats stats={stats} />}
     </>
   );
 }

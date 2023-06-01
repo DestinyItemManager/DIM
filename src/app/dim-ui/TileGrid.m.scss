@@ -1,0 +1,49 @@
+@use '../variables' as *;
+
+.header {
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--tile-grid-width, 250px), 1fr));
+  gap: 4px;
+}
+
+.tile {
+  composes: flexColumn from '../dim-ui/common.m.scss';
+  border: 1px solid #666;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  height: 100%;
+  box-sizing: border-box;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  &:focus-visible {
+    border-color: var(--theme-accent-primary);
+    outline: none;
+  }
+}
+
+.details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.selected {
+  border-color: var(--theme-accent-primary);
+}
+
+.disabled {
+  opacity: 0.5;
+  cursor: default;
+}

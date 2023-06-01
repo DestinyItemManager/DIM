@@ -1,38 +1,5 @@
 @use '../../variables' as *;
 
-.exotic {
-  composes: flexRow from '../../dim-ui/common.m.scss';
-  border: 1px solid #666;
-  padding: 8px;
-  gap: 8px;
-  cursor: pointer;
-  box-sizing: border-box;
-  &:hover,
-  :focus-visible {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-color: var(--theme-accent-primary);
-  }
-}
-
-.selected {
-  border-color: var(--theme-accent-primary);
-}
-
-.disabled {
-  cursor: default;
-  filter: contrast(0.5) brightness(0.5);
-}
-
-.details {
-  composes: flexColumn from '../../dim-ui/common.m.scss';
-  gap: 2px;
-}
-
-.itemImage {
-  position: relative;
-  flex: 0;
-}
-
 .itemName {
   font-weight: bold;
 }
@@ -46,10 +13,6 @@
 .perkOrModImage {
   height: 16px;
   width: 16px;
-}
-
-.perkOrModName {
-  font-weight: normal;
 }
 
 .perkDescription {
