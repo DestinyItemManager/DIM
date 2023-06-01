@@ -404,7 +404,6 @@ export default memo(function LoadoutBuilder({
             <ol>
               <li>{t('LoadoutBuilder.OptimizerExplanationStats')}</li>
               <li>{t('LoadoutBuilder.OptimizerExplanationMods')}</li>
-              <li>{t('LoadoutBuilder.OptimizerExplanationUpgrades')}</li>
               <li>{t('LoadoutBuilder.OptimizerExplanationSearch')}</li>
             </ol>
             <p>{t('LoadoutBuilder.OptimizerExplanationGuide')}</p>
