@@ -239,32 +239,30 @@ function GeneratedSet({
 
   return (
     <div className={styles.container} style={style} ref={forwardedRef}>
-      <div className={styles.build}>
-        <SetStats
-          stats={set.stats}
-          getStatsBreakdown={getStatsBreakdown}
-          maxPower={getPower(displayedItems)}
-          statOrder={statOrder}
-          enabledStats={enabledStats}
-          boostedStats={boostedStats}
-          existingLoadoutName={existingLoadout?.name}
-          subclass={subclass}
-          exoticArmorHash={params.exoticArmorHash}
-        />
-        <div className={styles.items}>
-          {displayedItems.map((item, i) => (
-            <GeneratedSetItem
-              key={item.index}
-              item={item}
-              itemOptions={set.armor[i]}
-              pinned={pinnedItems[item.bucket.hash] === item}
-              lbDispatch={lbDispatch}
-              assignedMods={itemModAssignments[item.id]}
-              automaticallyPickedMods={autoModsPerItem[item.id]}
-              energy={resultingItemEnergies[item.id]}
-            />
-          ))}
-        </div>
+      <SetStats
+        stats={set.stats}
+        getStatsBreakdown={getStatsBreakdown}
+        maxPower={getPower(displayedItems)}
+        statOrder={statOrder}
+        enabledStats={enabledStats}
+        boostedStats={boostedStats}
+        existingLoadoutName={existingLoadout?.name}
+        subclass={subclass}
+        exoticArmorHash={params.exoticArmorHash}
+      />
+      <div className={styles.items}>
+        {displayedItems.map((item, i) => (
+          <GeneratedSetItem
+            key={item.index}
+            item={item}
+            itemOptions={set.armor[i]}
+            pinned={pinnedItems[item.bucket.hash] === item}
+            lbDispatch={lbDispatch}
+            assignedMods={itemModAssignments[item.id]}
+            automaticallyPickedMods={autoModsPerItem[item.id]}
+            energy={resultingItemEnergies[item.id]}
+          />
+        ))}
       </div>
       <GeneratedSetButtons
         set={set}

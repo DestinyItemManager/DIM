@@ -1,14 +1,29 @@
 @use '../../variables.scss' as *;
 
 .container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+  display: grid;
+  grid-template-columns: max-content min-content;
+  grid-auto-rows: min-content;
+  grid-template-areas:
+    'stats stats'
+    'items buttons';
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-  gap: 16px;
+  gap: 8px 16px;
+  box-sizing: border-box;
+  padding-top: 10px;
+  padding-bottom: 14px;
+  width: fit-content !important;
+
+  &:last-child {
+    border-bottom: 0;
+  }
 
   @include phone-portrait {
-    flex-direction: column;
+    grid-template-columns: 100%;
+    grid-template-areas:
+      'stats'
+      'items'
+      'buttons';
     padding-left: 12px;
     padding-right: 12px;
   }
@@ -23,6 +38,7 @@
 }
 
 .items {
+  grid-area: items;
   display: flex;
   flex-flow: row wrap;
   padding: 0;

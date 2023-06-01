@@ -1,12 +1,22 @@
 @use '../../variables' as *;
 
 .container {
+  grid-area: stats;
   color: #ddd;
   font-size: 14px;
   display: flex;
   flex-flow: row wrap;
   gap: 4px 8px;
   align-items: center;
+
+  @include phone-portrait {
+    display: grid;
+    grid-template-columns: repeat(7, min-content);
+
+    > *:nth-child(n + 9) {
+      grid-column: span 6;
+    }
+  }
 }
 
 .statIcon {
@@ -40,6 +50,10 @@
   .nonActiveStat {
     margin-left: 0.25em;
   }
+
+  @include phone-portrait {
+    margin-right: 0;
+  }
 }
 
 .tier {
@@ -63,6 +77,10 @@
   justify-content: flex-start;
   white-space: nowrap;
   min-width: 48px;
+
+  @include phone-portrait {
+    min-width: 0;
+  }
 }
 
 .halfTierValue {
