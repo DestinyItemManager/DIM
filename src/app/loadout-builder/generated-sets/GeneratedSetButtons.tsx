@@ -28,6 +28,7 @@ export default function GeneratedSetButtons({
   halfTierMods,
   onLoadoutSet,
   lbDispatch,
+  lockedMods,
 }: {
   store: DimStore;
   set: ArmorSet;
@@ -39,17 +40,18 @@ export default function GeneratedSetButtons({
   halfTierMods: PluggableInventoryItemDefinition[];
   onLoadoutSet: (loadout: Loadout) => void;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
+  lockedMods: PluggableInventoryItemDefinition[];
 }) {
   const dispatch = useThunkDispatch();
 
   // Opens the loadout menu for the generated set
   const openLoadout = () => {
-    onLoadoutSet(createLoadout(store.classType, set, items, subclass, params, notes));
+    onLoadoutSet(createLoadout(store.classType, set, items, subclass, params, notes, lockedMods));
   };
 
   // Automatically equip items for this generated set to the active store
   const equipItems = () => {
-    const loadout = createLoadout(store.classType, set, items, subclass, params, notes);
+    const loadout = createLoadout(store.classType, set, items, subclass, params, notes, lockedMods);
     return dispatch(applyLoadout(store, loadout, { allowUndo: true }));
   };
 
@@ -105,7 +107,8 @@ function createLoadout(
   items: DimItem[],
   subclass: ResolvedLoadoutItem | undefined,
   params: LoadoutParameters,
-  notes?: string
+  notes: string | undefined,
+  lockedMods: PluggableInventoryItemDefinition[]
 ): Loadout {
   const data = {
     tier: _.sumBy(Object.values(set.stats), statTier),
@@ -118,9 +121,7 @@ function createLoadout(
 
   const loadout = newLoadout(t('Loadouts.Generated', data), loadoutItems, classType);
   loadout.notes = notes;
-  // FIXME(#8733) add auto mods to autoStatMods instead of adding them to regular mods
-  const allMods = [...(params.mods ?? []), ...set.statMods];
+  const allMods = [...lockedMods.map((m) => m.hash), ...set.statMods];
   loadout.parameters = { ...params, mods: allMods.length ? allMods : undefined };
-  // loadout.autoStatMods = set.statMods.length ? set.statMods : undefined;
   return loadout;
 }

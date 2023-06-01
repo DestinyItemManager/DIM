@@ -279,6 +279,7 @@ function GeneratedSet({
         lbDispatch={lbDispatch}
         notes={notes}
         params={params}
+        lockedMods={lockedMods}
       />
     </div>
   );

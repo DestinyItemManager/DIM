@@ -571,6 +571,7 @@
     "ConfirmOverwrite": "Are you sure you want to replace the armor in the loadout \"{{name}}\" with this new set of armor?",
     "CopiedBuild": "Copied build settings URL to clipboard",
     "CreateLoadout": "Save Loadout",
+    "DisabledByAutoStatMods": "Stat mods are being chosen automatically by Loadout Optimizer.",
     "DisabledDueToMaintenance": "The Loadout Optimizer is currently disabled due to Bungie API maintenance.",
     "EquipItems": "Equip",
     "ExcludeItem": "Exclude Item",

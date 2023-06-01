@@ -30,19 +30,6 @@ import Objective from '../progress/Objective';
 import './ItemSockets.scss';
 import styles from './PlugTooltip.m.scss';
 
-interface PlugTooltipProps {
-  def: PluggableInventoryItemDefinition;
-  stats?: { statHash: number; value: number }[];
-  plugObjectives?: DestinyObjectiveProgress[];
-  enableFailReasons?: string;
-  cannotCurrentlyRoll?: boolean;
-  unreliablePerkOption?: boolean;
-  wishListTip?: React.ReactNode;
-  automaticallyPicked?: boolean;
-  hideRequirements?: boolean;
-  craftingData?: DestinyPlugItemCraftingRequirements;
-}
-
 export function DimPlugTooltip({
   item,
   plug,
@@ -90,13 +77,22 @@ export function PlugDefTooltip({
   def,
   classType,
   automaticallyPicked,
+  disabledByAutoStatMods,
 }: {
   def: PluggableInventoryItemDefinition;
   classType?: DestinyClass;
   automaticallyPicked?: boolean;
+  disabledByAutoStatMods?: boolean;
 }) {
   const stats = getPlugDefStats(def, classType);
-  return <PlugTooltip def={def} stats={stats} automaticallyPicked={automaticallyPicked} />;
+  return (
+    <PlugTooltip
+      def={def}
+      stats={stats}
+      automaticallyPicked={automaticallyPicked}
+      disabledByAutoStatMods={disabledByAutoStatMods}
+    />
+  );
 }
 
 /**
@@ -114,9 +110,22 @@ function PlugTooltip({
   unreliablePerkOption,
   wishListTip,
   automaticallyPicked,
+  disabledByAutoStatMods,
   hideRequirements,
   craftingData,
-}: PlugTooltipProps) {
+}: {
+  def: PluggableInventoryItemDefinition;
+  stats?: { statHash: number; value: number }[];
+  plugObjectives?: DestinyObjectiveProgress[];
+  enableFailReasons?: string;
+  cannotCurrentlyRoll?: boolean;
+  unreliablePerkOption?: boolean;
+  wishListTip?: React.ReactNode;
+  automaticallyPicked?: boolean;
+  disabledByAutoStatMods?: boolean;
+  hideRequirements?: boolean;
+  craftingData?: DestinyPlugItemCraftingRequirements;
+}) {
   const defs = useD2Definitions();
   const statsArray = stats || [];
   const plugDescriptions = usePlugDescriptions(def, statsArray);
@@ -261,6 +270,11 @@ function PlugTooltip({
       {automaticallyPicked && (
         <Tooltip.Section className={styles.automaticallyPickedSection}>
           <p>{t('LoadoutBuilder.AutomaticallyPicked')}</p>
+        </Tooltip.Section>
+      )}
+      {disabledByAutoStatMods && (
+        <Tooltip.Section className={styles.automaticallyPickedSection}>
+          <p>{t('LoadoutBuilder.DisabledByAutoStatMods')}</p>
         </Tooltip.Section>
       )}
       {Boolean(wishListTip) && (
