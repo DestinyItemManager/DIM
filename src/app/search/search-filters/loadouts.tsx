@@ -8,30 +8,28 @@ export function loadoutToSearchString(loadout: Loadout | InGameLoadout) {
   return 'inloadout:' + quoteFilterString(loadout.name.toLowerCase());
 }
 
-// XXX: revisit when issue #9069 has been fixed and check if suggestions still fail
-//      see: https://github.com/DestinyItemManager/DIM/issues/9069
-//      to check: `inloadout:#hashta` should not suggest `inloadout:inloadout:#hashtag` (double prefix)
-//
-// function loadoutToSuggestions(loadout: Loadout) {
-//   return [
-//     quoteFilterString(loadout.name.toLowerCase()),
-//     ...getHashtagsFromNote(loadout.name),
-//     ...getHashtagsFromNote(loadout.notes),
-//   ].map(suggestion => 'inloadout:' + suggestion);
-// }
+// related: https://github.com/DestinyItemManager/DIM/issues/9069
+// sanity check: `inloadout:#hashta` should not suggest `inloadout:inloadout:#hashtag` (double prefix)
+function loadoutToSuggestions(loadout: Loadout) {
+  return [
+    quoteFilterString(loadout.name.toLowerCase()), // loadout name
+    ...getHashtagsFromNote(loadout.name), // #hashtags in the name
+    ...getHashtagsFromNote(loadout.notes), // #hashtags in the notes
+  ].map((suggestion) => 'inloadout:' + suggestion);
+}
 
 const loadoutFilters: FilterDefinition[] = [
   {
     keywords: 'inloadout',
     format: ['simple', 'freeform'],
 
-    suggestionsGenerator: ({ loadouts }) => loadouts?.map(loadoutToSearchString),
+    suggestionsGenerator: ({ loadouts }) => loadouts?.flatMap(loadoutToSuggestions),
 
     description: tl('Filter.InLoadout'),
-    filter: ({ filterValue, loadoutsByItem }) => {
+    filter: ({ lhs, filterValue, loadoutsByItem }) => {
       // the default search:
       // is:inloadout
-      if (filterValue === 'inloadout') {
+      if (lhs === 'is') {
         return (item) => Boolean(loadoutsByItem[item.id]);
       }
 
@@ -41,15 +39,24 @@ const loadoutFilters: FilterDefinition[] = [
       // inloadout:"#pve" (for all loadouts with the #pve hashtag in name or notes)
       return (item) =>
         loadoutsByItem[item.id]?.some(
-          (l) =>
-            l.loadout.name.toLowerCase().includes(filterValue) ||
+          ({ loadout }) =>
+            loadout.name.toLowerCase().includes(filterValue) ||
             (filterValue.startsWith('#') && // short circuit for less load
-              !isInGameLoadout(l.loadout) &&
-              getHashtagsFromNote(l.loadout.notes)
+              !isInGameLoadout(loadout) &&
+              getHashtagsFromNote(loadout.notes)
                 .map((t) => t.toLowerCase())
                 .includes(filterValue))
         );
     },
+  },
+  {
+    keywords: 'iningameloadout',
+    format: 'simple',
+    description: tl('Filter.InInGameLoadout'),
+    filter:
+      ({ loadoutsByItem }) =>
+      (item) =>
+        Boolean(loadoutsByItem[item.id]?.some((l) => isInGameLoadout(l.loadout))),
   },
 ];
 

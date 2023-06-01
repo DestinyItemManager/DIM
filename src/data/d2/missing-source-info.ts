@@ -1068,6 +1068,7 @@ const missingSources: { [key: string]: number[] } = {
     4047213660, // Deep Explorer Mask
   ],
   dungeon: [
+    51786498, // Vest of the Taken King
     145651147, // Deep Explorer Vest
     286271818, // Twisting Echo Cloak
     399065241, // Descending Echo Greaves
@@ -1075,23 +1076,34 @@ const missingSources: { [key: string]: number[] } = {
     436695703, // TM-Cogburn Custom Plate
     498918879, // TM-Earp Custom Grips
     587312237, // Twisting Echo Grips
+    638836294, // Plate of the Taken King
     708921139, // TM-Cogburn Custom Legguards
+    767306222, // Grasps of the Taken King
     833653807, // Twisting Echo Strides
+    837865641, // Vestment of the Taken King
+    956827695, // Mark of the Taken King
     1148597205, // Deep Explorer Grasps
     1349399252, // TM-Earp Custom Cloaked Stetson
+    1664757090, // Gauntlets of the Taken King
     1756483796, // Twisting Echo Mask
+    1913823311, // Gloves of the Taken King
     1951355667, // Twisting Echo Vest
     2057955626, // Deep Explorer Vestments
     2244604734, // Corrupting Echo Gloves
     2341879253, // TM-Moss Custom Bond
+    2488323569, // Boots of the Taken King
     2499351855, // Deep Explorer Gauntlets
     2565015142, // TM-Cogburn Custom Mark
+    2618168932, // Bond of the Taken King
+    2643850526, // Hood of the Taken King
     2649394513, // Deep Explorer Greaves
     2663987096, // Corrupting Echo Boots
     2694773307, // Deep Explorer Bond
     2724719415, // Deep Explorer Strides
     2797334754, // Deep Explorer Cloak
     2819810688, // Deep Explorer Boots
+    2820604007, // Mask of the Taken King
+    2850384360, // Strides of the Taken King
     2885497847, // Descending Echo Gauntlets
     2935559305, // Deep Explorer Plate
     3048458482, // Corrupting Echo Robes
@@ -1102,7 +1114,9 @@ const missingSources: { [key: string]: number[] } = {
     3326914239, // Deep Explorer Hood
     3344225390, // TM-Earp Custom Hood
     3511740432, // TM-Moss Custom Gloves
+    3570749779, // Cloak of the Taken King
     3685276035, // Corrupting Echo Bond
+    3708902812, // Greaves of the Taken King
     3715136417, // TM-Earp Custom Chaps
     3870375786, // TM-Moss Custom Pants
     3871537958, // Descending Echo Helm
@@ -1111,6 +1125,7 @@ const missingSources: { [key: string]: number[] } = {
     4039955353, // TM-Moss Custom Hat
     4047213660, // Deep Explorer Mask
     4050474396, // Descending Echo Mark
+    4130276947, // Helm of the Taken King
     4177293424, // TM-Cogburn Custom Cover
     4288623897, // TM-Earp Custom Vest
   ],
@@ -1179,7 +1194,6 @@ const missingSources: { [key: string]: number[] } = {
     153144587, // Solstice Cloak (Drained)
     226436555, // Solstice Mask (Renewed)
     231432261, // Solstice Bond (Resplendent)
-    233896077, // Compass Rose
     234970842, // Solstice Boots (Resplendent)
     250513201, // Solstice Greaves (Resplendent)
     335763433, // Solstice Plate (Resplendent)
@@ -1266,7 +1280,6 @@ const missingSources: { [key: string]: number[] } = {
     3159052337, // Solstice Mask (Majestic)
     3192336962, // Solstice Cloak (Scorched)
     3236510875, // Solstice Grasps (Resplendent)
-    3240434620, // Something New
     3559361670, // The Title
     3611487543, // Solstice Hood (Rekindled)
     3685996623, // Solstice Greaves (Rekindled)

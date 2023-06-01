@@ -1,4 +1,4 @@
-@import '../../variables';
+@use '../../variables' as *;
 
 .subclassContainer {
   --item-icon-size: calc(0.8 * var(--item-size));
@@ -54,4 +54,14 @@
 
 .missingItem {
   opacity: 0.3;
+}
+
+.canDrop {
+  filter: invert(20%);
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.isOver {
+  filter: invert(40%);
+  background-color: rgba(255, 255, 255, 0.4);
 }

@@ -256,6 +256,29 @@ export default function LoadoutPopup({
           </li>
         )}
 
+        {!filteringLoadouts && (
+          <li>
+            <ul
+              className={clsx(styles.inGameLoadouts, {
+                [styles.moreLoadouts]: inGameLoadouts.length > 6,
+              })}
+            >
+              {inGameLoadouts.map((loadout) => (
+                <li key={loadout.id}>
+                  <button
+                    type="button"
+                    className={styles.inGameLoadoutButton}
+                    title={loadout.name}
+                    onClick={() => handleApplyInGameLoadout(loadout)}
+                  >
+                    <InGameLoadoutIconWithIndex loadout={loadout} />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </li>
+        )}
+
         {!filteringLoadouts && previousLoadout && (
           <li className={styles.menuItem}>
             <span
@@ -301,29 +324,6 @@ export default function LoadoutPopup({
               </>
             )}
           </>
-        )}
-
-        {!filteringLoadouts && (
-          <li>
-            <ul
-              className={clsx(styles.inGameLoadouts, {
-                [styles.moreLoadouts]: inGameLoadouts.length > 6,
-              })}
-            >
-              {inGameLoadouts.map((loadout) => (
-                <li key={loadout.id}>
-                  <button
-                    type="button"
-                    className={styles.inGameLoadoutButton}
-                    title={loadout.name}
-                    onClick={() => handleApplyInGameLoadout(loadout)}
-                  >
-                    <InGameLoadoutIconWithIndex loadout={loadout} />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </li>
         )}
 
         {filteredLoadouts.map((loadout) => (

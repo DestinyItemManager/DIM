@@ -1,11 +1,11 @@
-@import '../../variables';
+@use '../../variables' as *;
 
 .itemGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, var(--item-size));
   grid-template-rows: repeat(auto-fill, minmax(var(--item-size), 1fr));
-  justify-content: space-around;
   margin-bottom: 3px;
+  gap: 4px;
 
   :global(.item-drag-container) {
     margin: 0;

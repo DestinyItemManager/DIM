@@ -1,4 +1,4 @@
-@import '../../variables';
+@use '../../variables' as *;
 
 $or-color: var(--theme-accent-primary);
 $and-color: #814bcf;

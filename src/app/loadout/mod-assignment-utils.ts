@@ -685,7 +685,19 @@ export function createPluggingStrategy(
 
   for (const assignment of assignments) {
     const destinationSocket = getSocketByIndex(item.sockets!, assignment.socketIndex)!;
-    const existingModCost = destinationSocket.plugged!.plugDef.plug.energyCost?.energyCost || 0;
+
+    // an item might have a classified def (ornament or mod) plugged into a socket,
+    // in which case DIM will have a null plugged here.
+    // we fall back to assuming 0 energy cost and let bungie.net be the arbiter of the outcome
+    // TO-DO: instead, allow classified plugs instead. soon (tm)
+    if (!destinationSocket.plugged) {
+      warnLog(
+        'loadout mods',
+        `${item.name} socket #${assignment.socketIndex} was found to be null, indicating it might not exist at all in practice. attempting to create a plugging plan for it, but it might not work`
+      );
+    }
+    const existingModCost = destinationSocket.plugged?.plugDef.plug.energyCost?.energyCost || 0;
+
     const plannedModCost = assignment.mod.plug.energyCost?.energyCost || 0;
     const energySpend = plannedModCost - existingModCost;
 
@@ -700,7 +712,9 @@ export function createPluggingStrategy(
     //   another requiredSpend that frees an exclusion group.
     // See https://github.com/DestinyItemManager/DIM/issues/7465#issuecomment-1379112834 for a fun cyclical dependency.
 
-    const existingExclusionGroup = getModExclusionGroup(destinationSocket.plugged!.plugDef);
+    const existingExclusionGroup = destinationSocket.plugged
+      ? getModExclusionGroup(destinationSocket.plugged.plugDef)
+      : undefined;
     const assignmentExclusionGroup = getModExclusionGroup(assignment.mod);
 
     const pluggingAction: PluggingAction = {
@@ -711,7 +725,7 @@ export function createPluggingStrategy(
       exclusionGroupReleased: existingExclusionGroup,
     };
 
-    if (destinationSocket.plugged!.plugDef.hash === assignment.mod.hash) {
+    if (destinationSocket.plugged?.plugDef.hash === assignment.mod.hash) {
       // this is an assignment to itself, which is a no-op, so we can just
       // immediately perform it if needed
       if (pluggingAction.required) {

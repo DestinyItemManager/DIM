@@ -237,6 +237,7 @@
     "HasShader": "Shows items that have a shader applied.",
     "HasOrnament": "Shows items that have an ornament applied.",
     "InLoadout": "is:inloadout shows items that are included in any loadout. Searching with inloadout: shows items that are included in loadouts with matching titles. When used with a hashtag, inloadout: shows items whose loadouts have the hashtag in the title or notes.",
+    "InInGameLoadout": "is:iningameloadout shows items that are included in any in-game loadout.",
     "Infusable": "Shows items that can be infused.",
     "IsAdept": "Shows weapons compatible with Adept mods.",
     "IsCrafted": "Shows weapons that have been crafted.",
@@ -1125,7 +1126,18 @@
     "Tier": "Tier {{tier}}",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 for T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
-    "Total": "Total"
+    "Total": "Total",
+    "Second": "s",
+    "MetersPerSecond": "m/s",
+    "Percentage": "%",
+    "HP": "HP",
+    "TimeToFullHP": "Time to Full HP",
+    "WalkingSpeed": "Walking",
+    "StrafingSpeed": "Strafing",
+    "CrouchingSpeed": "Crouching",
+    "TotalHP": "Total HP",
+    "DamageResistance": "PvE Damage Resist",
+    "FlinchResistance": "Flinch Resist"
   },
   "Storage": {
     "ApiPermissionPrompt": {

@@ -1,0 +1,65 @@
+@use '../variables' as *;
+@use '../dim-ui/tooltip-mixins' as *;
+
+.communityInsightSection {
+  @include tooltip-section-color($communityBlue);
+  h3 {
+    opacity: 0.6;
+    margin: 0;
+    font-size: inherit;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th {
+    font-weight: normal;
+  }
+
+  th,
+  td {
+    opacity: 0.5;
+    &:nth-child(2n) {
+      text-align: right;
+      padding-left: 6px;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  tbody th {
+    text-align: right;
+    padding-right: 6px;
+    opacity: 1;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  thead th {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    &:first-child {
+      border: none;
+    }
+  }
+
+  img {
+    vertical-align: bottom;
+    margin-right: 4px;
+  }
+
+  .currentColumn {
+    opacity: 1;
+  }
+}
+
+.unit {
+  font-weight: normal !important;
+  line-height: 12px;
+  font-size: 11px;
+}
+
+.override {
+  display: block;
+  font-size: 11px;
+}

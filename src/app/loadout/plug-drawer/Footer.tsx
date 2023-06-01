@@ -30,13 +30,11 @@ export default function Footer({
 
   return (
     <div className={styles.footer}>
-      <div>
-        <button type="button" className={styles.submitButton} onClick={onSubmit}>
-          {!isPhonePortrait && '⏎ '}
-          {acceptButtonText}
-        </button>
-      </div>
-      <SheetHorizontalScrollContainer>
+      <button type="button" className={styles.submitButton} onClick={onSubmit}>
+        {!isPhonePortrait && '⏎ '}
+        {acceptButtonText}
+      </button>
+      <SheetHorizontalScrollContainer className={styles.selectedPlugs}>
         {plugSets.flatMap((plugSet) =>
           plugSet.selected.map((plug) => (
             <PlugDef

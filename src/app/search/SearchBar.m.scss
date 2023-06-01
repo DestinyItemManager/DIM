@@ -16,7 +16,7 @@
 }
 
 .menu {
-  color: white;
+  color: var(--theme-text);
   overflow: hidden;
   margin: 0;
   border-top: 0;
@@ -56,6 +56,10 @@
   align-items: flex-start;
   padding: 6px 9px 6px 9px;
   gap: 6px;
+
+  &:hover {
+    cursor: pointer;
+  }
 
   @include phone-portrait {
     padding: 10px 10px 10px 9px;
@@ -114,9 +118,9 @@
 
 .highlightedItem {
   background-color: var(--theme-accent-primary);
-  color: black !important;
+  color: var(--theme-text-invert) !important;
   .menuItemIcon {
-    color: black;
+    color: var(--theme-text-invert);
   }
   .deleteIcon {
     color: #333;
@@ -153,8 +157,8 @@
 .keyHelp {
   margin-top: 2px;
   .highlightedItem & {
-    color: #222;
-    border-color: #222;
+    color: var(--theme-text-invert);
+    border-color: var(--theme-text-invert);
   }
 }
 
@@ -187,7 +191,7 @@
   > :global(.app-icon),
   > button > :global(.app-icon) {
     font-size: 14px !important;
-    color: #999 !important;
+    color: #999;
     // Increase touch target size
     padding: 4px;
     margin: -4px;
@@ -195,12 +199,15 @@
     &:first-child {
       margin-left: -4px;
     }
-    &:hover {
-      color: #e8a534 !important;
-    }
     :global(.mobile-search-link) & {
       font-size: 18px !important;
     }
+  }
+
+  &:hover > span,
+  &:hover > :global(.app-icon),
+  &:hover button > :global(.app-icon) {
+    color: var(--theme-accent-primary);
   }
 
   > span,

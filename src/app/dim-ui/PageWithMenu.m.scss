@@ -49,25 +49,28 @@
   flex-shrink: 0;
   margin-right: 12px;
   margin-top: 8px;
-  margin-left: -4px;
-  padding: 4px; // To allow for the outline of the character selector to show
+  margin-left: -4px; // To undo the padding on the inner div
   position: sticky;
   top: calc(var(--header-height) + 8px);
-  width: 230px;
+  width: 230px + 8px;
   overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
   max-height: calc(var(--viewport-height) - var(--header-height) - 8px);
 
-  > * {
-    max-width: 230px;
+  // This inner container div exists to keep the contents from changing widths,
+  // while the outer .menu container may change size as the scrollbars appear
+  // and disappear.
+  > div {
+    width: 230px;
+    padding: 4px; // To allow for the outline of the character selector to show
   }
 
   // Add in some width when a scrollbar is present!
   // It'd be cooler if https://developer.mozilla.org/en-US/docs/Web/CSS/scrollbar-gutter existed.
   &.menuScrollbars {
-    width: 230px + 17px; // Windows scrollbars are 17px, added to the original width
+    width: 230px + 17px + 8px; // Windows scrollbars are 17px, then padding
   }
 
   @include phone-portrait {
@@ -76,6 +79,13 @@
     width: 100%;
     padding: 0;
     max-height: none;
+
+    // On mobile, the inner div can be full size and we just allow scrollbars to
+    // appear over the content.
+    > div {
+      width: 100%;
+      padding: 0;
+    }
   }
 
   ul {

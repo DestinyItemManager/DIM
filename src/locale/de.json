@@ -146,7 +146,7 @@
     "Troubleshooting": "Fehlerbehebung"
   },
   "FarmingMode": {
-    "D2Desc": "DIM verhindert, dass Gegenstände an die Poststelle gehen, indem sichergestellt wird, dass auf {{store}} immer ein freier Platz pro Item Typ vorhanden ist.",
+    "D2Desc": "DIM verhindert, dass Gegenstände an die Poststelle gehen, indem sichergestellt wird, dass auf {{store}} immer ein freier Platz pro Gegenstandstyp vorhanden ist.",
     "D2Desc_female": "DIM verhindert, dass Gegenstände an die Poststelle gehen, indem sichergestellt wird, dass auf {{store}} immer ein freier Platz pro Item Typ vorhanden ist.",
     "D2Desc_female_plural": "DIM verhindert, dass Gegenstände an die Poststelle gehen, indem sichergestellt wird, dass auf {{store}} immer {{count}} freie Plätze pro Item Typ vorhanden sind.",
     "D2Desc_male": "DIM verhindert, dass Gegenstände an die Poststelle gehen, indem sichergestellt wird, dass auf {{store}} immer ein freier Platz pro Item Typ vorhanden ist.",
@@ -1323,7 +1323,7 @@
     "Header": "Wunschliste",
     "Import": "Wunschlisten-Rolls laden",
     "ImportError": "Fehler beim Laden der Wunschliste: {{error}}",
-    "ImportFailed": "Keine Wunschlist-Informationen gefunden.",
+    "ImportFailed": "Keine Wunschlisten-Informationen gefunden.",
     "ImportNoFile": "Keine Datei ausgewählt.",
     "InvalidExternalSource": "Bitte gib eine gültige URL für die externe Wunschlistenquelle ein. Die URL muss wie folgt beginnen:",
     "LastUpdated": "Zuletzt aktualisiert: {{lastUpdatedDate}} um {{lastUpdatedTime}}",
@@ -1333,7 +1333,9 @@
     "UpdateExternalSource": "Quelle der Wunschliste aktualisieren",
     "Voltron": "Voltron (Standard)",
     "VoltronDescription": "Voltron ist eine automatisch aktualisierte Sammlung von PvE und PvP Wunschlisten-Rolls der Destiny-Community. Wir liefern diese standardmäßig mit aus.",
-    "WishListNotes": "Wunschlisten-Notizen: {{notes}}"
+    "WishListNotes": "Wunschlisten-Notizen: {{notes}}",
+    "WorstRatedTip": "Dieser Perk passt genau zu einem Waffenroll auf deiner Müll-Liste.",
+    "WorstRatedTip_plural": "Diese Perks entsprechen genau einem Waffenroll auf deiner Müll-Liste."
   },
   "no-space": "",
   "wrong-level": ""

@@ -1,4 +1,4 @@
-@import '../variables';
+@use '../variables' as *;
 
 $dropdown-menu: 10;
 
@@ -39,7 +39,7 @@ $dropdown-menu: 10;
   border-radius: 0;
   border: none;
   box-sizing: border-box;
-  color: white;
+  color: var(--theme-text);
   cursor: pointer;
   display: flex;
   flex-direction: row;
@@ -52,7 +52,7 @@ $dropdown-menu: 10;
 
   &:hover,
   &:active {
-    color: #000;
+    color: var(--theme-text-invert);
     box-shadow: none;
     background-color: var(--theme-accent-primary);
   }

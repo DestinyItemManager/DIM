@@ -48,7 +48,6 @@ import { hasVisibleLoadoutParameters } from '../loadout-ui/LoadoutParametersDisp
 import { useLoadoutMods } from '../mod-assignment-drawer/selectors';
 import styles from './LoadoutEdit.m.scss';
 import LoadoutEditBucket, { ArmorExtras } from './LoadoutEditBucket';
-import LoadoutEditBucketDropTarget from './LoadoutEditBucketDropTarget';
 import LoadoutEditSection from './LoadoutEditSection';
 import LoadoutEditSubclass from './LoadoutEditSubclass';
 
@@ -155,44 +154,39 @@ export default function LoadoutEdit({
           onClear={handleClearSubclass}
           onFillFromEquipped={handleFillSubclassFromEquipped}
         >
-          <LoadoutEditBucketDropTarget
-            category="Subclass"
+          <LoadoutEditSubclass
+            defs={defs}
+            subclass={subclass}
             classType={loadout.classType}
-            equippedOnly={true}
-          >
-            <LoadoutEditSubclass
-              defs={defs}
-              subclass={subclass}
-              power={power}
-              onRemove={handleClearSubclass}
-              onPick={() => onClickSubclass(subclass?.item)}
-            />
-            {subclass && (
-              <div className={styles.buttons}>
-                {subclass.item.sockets ? (
-                  <button
-                    type="button"
-                    className="dim-button"
-                    onClick={() => setPlugDrawerOpen(true)}
-                  >
-                    {t('LB.SelectSubclassOptions')}
-                  </button>
-                ) : (
-                  <div>{t('Loadouts.CannotCustomizeSubclass')}</div>
-                )}
-              </div>
-            )}
-            {plugDrawerOpen && subclass && (
-              <Portal>
-                <SubclassPlugDrawer
-                  subclass={subclass.item}
-                  socketOverrides={subclass.loadoutItem.socketOverrides ?? {}}
-                  onClose={() => setPlugDrawerOpen(false)}
-                  onAccept={(overrides) => handleApplySocketOverrides(subclass, overrides)}
-                />
-              </Portal>
-            )}
-          </LoadoutEditBucketDropTarget>
+            power={power}
+            onRemove={handleClearSubclass}
+            onPick={() => onClickSubclass(subclass?.item)}
+          />
+          {subclass && (
+            <div className={styles.buttons}>
+              {subclass.item.sockets ? (
+                <button
+                  type="button"
+                  className="dim-button"
+                  onClick={() => setPlugDrawerOpen(true)}
+                >
+                  {t('LB.SelectSubclassOptions')}
+                </button>
+              ) : (
+                <div>{t('Loadouts.CannotCustomizeSubclass')}</div>
+              )}
+            </div>
+          )}
+          {plugDrawerOpen && subclass && (
+            <Portal>
+              <SubclassPlugDrawer
+                subclass={subclass.item}
+                socketOverrides={subclass.loadoutItem.socketOverrides ?? {}}
+                onClose={() => setPlugDrawerOpen(false)}
+                onAccept={(overrides) => handleApplySocketOverrides(subclass, overrides)}
+              />
+            </Portal>
+          )}
         </LoadoutEditSection>
       )}
       {(anyClass

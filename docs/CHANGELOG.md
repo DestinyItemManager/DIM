@@ -1,19 +1,45 @@
 ## Next
 
+* Added Community Insights for the impact of various stat tiers on ability cooldowns, etc. This takes into account your current subclass config and equipped exotic. For loadouts, it uses the subclass config and exotic that are saved in the loadout to display details. This information comes from the Clarity database, and like all Community Insights is sourced from lots of manual investigation.
+* Fixed an issue where DIM might not properly force you to re-login with Bungie.net, and would instead continually throw errors trying to talk to Bungie.net.
+* The loadout dropdown in the "Compare Loadouts" sheet from Loadout Optimizer can no longer be taller than the screen.
+* Added `is:iningameloadout` search to find items that are in an in-game loadout.
+* In-game loadouts now appear above the "Max Power" loadout in the loadouts menu.
+* Fixed an issue with farming mode where it would show a bunch of error notifications.
+* `is:inloadout:` searches now autocomplete hashtags in loadout names and descriptions.
+* Fixed plugging Harmonic Resonance mods when using a Strand subclass.
+* You can now drag and drop subclasses into the loadout editor, including from other loadouts.
+
+## 7.70.0 <span class="changelog-date">(2023-05-28)</span>
+
+* Fixed an issue where equipping classified titles (e.g. Ghoul), or ornaments would crash DIM.
+* Fixed the sizing and spacing of abilities in the subclass picker.
+* Fixed the display of the "Fishing Tackle" item to show current values and not show an ugly placeholder icon.
+* Updated information used to detect which season an item is from, after changes in the Bungie.net data since Season of the Deep.
+* Improved the hover indication for the search field buttons.
+* Fixed tracking crafted date for loadouts - they were not saving crafted date for items as intended, and were thus losing crafted items when they got reshaped.
+
 ## 7.69.0 <span class="changelog-date">(2023-05-21)</span>
 
 ## 7.68.0 <span class="changelog-date">(2023-05-14)</span>
 
 * Item tiles for armor on the Vendors page will now show their stat total instead of power level.
+* Refreshing your profile data no longer blocks item moves.
+* DIM now correctly handles mods that have mutually exclusive rules - e.g. you can't have multiple finisher mods on your class item.
 
 ## 7.67.0 <span class="changelog-date">(2023-05-07)</span>
 
+* Fixed an issue where sometimes the stat bonuses shown on perks was wrong.
+
 ## 7.66.0 <span class="changelog-date">(2023-04-30)</span>
+
+* Changed the wording when you need to visit a postmaster to pull an item.
+* Added an `is:adept` search filter. This allows you to find weapons which can equip Adept mods.
+* `:` and `-` are now allowed in hashtags.
 
 ## 7.65.1 <span class="changelog-date">(2023-04-28)</span>
 
 * Enhanced adept weapons from Root of Nightmares should now show with correct stats.
-* Added an `is:adept` search filter. This allows you to find weapons which can equip Adept mods.
 
 ## 7.65.0 <span class="changelog-date">(2023-04-23)</span>
 

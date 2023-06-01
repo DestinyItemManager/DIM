@@ -1,4 +1,4 @@
-@import '../variables';
+@use '../variables' as *;
 
 .selector {
   background-color: rgba(0, 0, 0, 0);
@@ -27,7 +27,7 @@
   &:active,
   &.checked {
     background-color: var(--theme-accent-primary);
-    color: black;
+    color: var(--theme-text-invert);
     > img {
       filter: none !important;
     }

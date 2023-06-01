@@ -11,7 +11,7 @@
   height: 100%;
   top: 0;
   left: 0;
-  color: white;
+  color: var(--theme-text);
   font-size: 1em;
   background-color: rgba(0, 0, 0, 0.9);
   z-index: 2000;
@@ -36,7 +36,7 @@
   grid-template-columns: repeat(auto-fill, 75px minmax(200px, 1fr));
   margin: 0 auto;
   max-width: 800px;
-  color: white;
+  color: var(--theme-text);
 }
 
 .keys {

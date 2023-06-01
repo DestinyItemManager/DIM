@@ -44,23 +44,18 @@
   height: 24px;
   z-index: 1;
   background-color: rgba(255, 255, 255, 0.2);
-  color: white;
+  color: var(--theme-text);
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
   &:hover,
   &:active {
     background-color: var(--theme-accent-primary) !important;
-    color: black !important;
+    color: var(--theme-text-invert) !important;
   }
 }
 
 .minimal {
   > * {
-    margin-bottom: 8px !important;
-  }
-
-  // Tighten up spacing between sockets
-  :global(.item-sockets) {
-    gap: 2px;
+    margin-bottom: 4px !important;
   }
 }
 
@@ -69,7 +64,7 @@
 
   .minimal & {
     margin: 0;
-    gap: 2px;
+    gap: 0;
 
     // Remove line between sockets in minimal mode
     :global(.item-socket) {
@@ -79,7 +74,7 @@
   }
 
   :global(.item-socket) {
-    gap: 1px;
+    gap: 0;
   }
 
   :global(.plug) {

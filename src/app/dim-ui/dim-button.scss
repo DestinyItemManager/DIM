@@ -7,7 +7,7 @@
   padding: 4px 10px;
   display: inline-block;
   background-color: var(--theme-button-bg);
-  color: white;
+  color: var(--theme-text);
   font-size: 12px;
   line-height: calc(16 / 12);
   font-family: 'Open Sans', sans-serif, 'Destiny Symbols';
@@ -38,7 +38,7 @@
   &:active,
   &.selected {
     background-color: var(--theme-accent-primary) !important;
-    color: black !important;
+    color: var(--theme-text-invert) !important;
     img {
       filter: invert(1) drop-shadow(0 0 1px black);
     }
@@ -54,7 +54,7 @@
     &:active,
     &.selected {
       background-color: var(--theme-button-bg) !important;
-      color: white !important;
+      color: var(--theme-text) !important;
       img {
         filter: drop-shadow(0 0 1px black);
       }

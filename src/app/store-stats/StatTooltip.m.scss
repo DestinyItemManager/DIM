@@ -1,4 +1,5 @@
-@import '../variables';
+@use '../variables' as *;
+@use '../dim-ui/tooltip-mixins' as *;
 
 .values {
   display: flex;

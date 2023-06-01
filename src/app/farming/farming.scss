@@ -20,7 +20,7 @@
   padding-bottom: Max(0.5rem, env(safe-area-inset-bottom));
 
   button {
-    color: white;
+    color: var(--theme-text);
     background-color: rgba(128, 128, 128, 0.4);
     border: none;
     padding: 0.5rem 1rem;

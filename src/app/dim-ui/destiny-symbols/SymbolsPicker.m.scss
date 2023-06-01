@@ -67,12 +67,12 @@
   font-family: unset;
   text-align: center;
   font-size: 18px;
-  color: white;
+  color: var(--theme-text);
 
   padding: 2px;
 
   &:hover {
-    color: black;
+    color: var(--theme-text-invert);
     background-color: var(--theme-accent-primary);
   }
 }

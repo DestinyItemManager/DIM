@@ -111,10 +111,10 @@
     "Super": "スーパースキルのクールダウン: {{cooldown}}"
   },
   "Countdown": {
-    "Days": "１日",
-    "Days_compact": "{{count}}d",
-    "Days_compact_plural": "{{count}} 日",
-    "Days_plural": "{{count}} 日間"
+    "Days": "1日",
+    "Days_compact": "{{count}}日",
+    "Days_compact_plural": "{{count}}日間",
+    "Days_plural": "{{count}}日間"
   },
   "Csv": {
     "EmptyFile": "ファイルにラインがありませんでした。",
@@ -831,7 +831,7 @@
     "CannotCurrentlyRoll": "このアイテムの現在のバージョンでは、このパークをロールできません。",
     "CantPullFromPostmaster": "このアイテムを取得するには、ゲーム内のポストマスターにアクセスする必要があります。",
     "CatalystProgress": "媒体の進行",
-    "CommunityData": "コミュニティの評価",
+    "CommunityData": "コミュニティでの調査結果",
     "Consolidate": "統合する",
     "DistributeEvenly": "均等に割り当てる。",
     "Equip": "装備先:",
@@ -875,7 +875,7 @@
       "Untrack": "{{itemType}} を追跡しない",
       "Untracked": "追跡をやめる"
     },
-    "TriageTab": "トリアージ",
+    "TriageTab": "厳選",
     "UnreliablePerkOption": "このパークは、コレクションビューにのみ表示されます。ランダムアイテムには付かない可能性があります。",
     "Vault": "保管庫",
     "WeaponLevel": "武器レベル {{level}}"
@@ -910,8 +910,8 @@
       "Loadouts": "ロードアウト",
       "Location": "保管場所",
       "Locked": "ロック中",
-      "MasterworkStat": "マスターワーク",
-      "MasterworkTier": "マスターワークの等級",
+      "MasterworkStat": "MWの種類",
+      "MasterworkTier": "MWの等級",
       "ModSlot": "Modスロット",
       "Name": "名前",
       "New": "New",
@@ -1239,7 +1239,7 @@
     "StatBetterArmorDesc": "すべてのステータスが同等以上で、かつ少なくとも1つが優れている。",
     "StatNotPerkArmorDesc": "ステータスのみテストします。下位のピースでも、特別な mod スロットや固有パークを持つ場合があります。",
     "StatWorseArmorDesc": "より良ステータスは無く、少なくとも1つは悪いステータス。",
-    "ThisItem": "このアイテム",
+    "ThisItem": "アイテム特徴から比較",
     "WorseArmor": "厳密に悪い防具",
     "WorseArtificeArmor": "悪いアーティフィスアーマー以外",
     "WorseStatArmor": "悪いステータスの防具",
@@ -1313,7 +1313,7 @@
   },
   "WishListRoll": {
     "BestRatedTip": "このパークは、正確に希望の武器ロールと一致しています。",
-    "BestRatedTip_plural": "これらのパークは、正確に希望の武器ロールと一致しています。",
+    "BestRatedTip_plural": "ウィッシュリストにある推奨ロールと完全一致しています。",
     "ChoosyVoltron": "choosy_voltron",
     "ChoosyVoltronDescription": "choosey_voltronは、Mercules904とpandapaxyによるPvEとPvPウィッシュリストロールの自動更新されたコレクションで、いくつかのゴミリストロールもあります。",
     "Clear": "ウィッシュリストをクリア",
@@ -1333,7 +1333,9 @@
     "UpdateExternalSource": "ウィッシュリストのソースをアップデート",
     "Voltron": "voltron (標準)",
     "VoltronDescription": "voltronとはMercules904とpandapaxyによって作成されたPvEとPvPウィッシュリストロールを自動で更新する機能です。デフォルトで使用しています。",
-    "WishListNotes": "ウィッシュリスト メモ: {{notes}}"
+    "WishListNotes": "ウィッシュリスト メモ: {{notes}}",
+    "WorstRatedTip": "ごみリストにある非推奨パークと完全一致しています。",
+    "WorstRatedTip_plural": "ごみリストにある非推奨パークと完全一致しています。"
   },
   "no-space": "",
   "wrong-level": ""

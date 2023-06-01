@@ -1333,7 +1333,9 @@
     "UpdateExternalSource": "更新願望清單來源",
     "Voltron": "voltron（默認）",
     "VoltronDescription": "voltron 是來自《天命》社區的 PvE 和 PvP 願望清單特性表，并會自動更新。這是我們的默認列表。",
-    "WishListNotes": "願望清單備註:{{notes}}"
+    "WishListNotes": "願望清單備註:{{notes}}",
+    "WorstRatedTip": "This perk exactly matches a weapon roll on your trashlist.",
+    "WorstRatedTip_plural": "These perks exactly match a weapon roll on your trashlist."
   },
   "no-space": "",
   "wrong-level": ""

@@ -33,6 +33,7 @@ import LoadoutEdit from '../loadout/loadout-edit/LoadoutEdit';
 import { deleteLoadout, updateLoadout } from './actions';
 import {
   addItem,
+  dropItem,
   fillLoadoutFromEquipped,
   fillLoadoutFromUnequipped,
   LoadoutUpdateFunction,
@@ -101,6 +102,12 @@ export default function LoadoutDrawer({
   const onAddItem = useCallback(
     (item: DimItem, equip?: boolean, socketOverrides?: SocketOverrides) =>
       setLoadout(addItem(defs, item, equip, socketOverrides)),
+    [defs, setLoadout]
+  );
+
+  const onDropItem = useCallback(
+    (item: DimItem, equip?: boolean, socketOverrides?: SocketOverrides) =>
+      setLoadout(dropItem(defs, item, equip, socketOverrides)),
     [defs, setLoadout]
   );
 
@@ -277,7 +284,7 @@ export default function LoadoutDrawer({
       allowClickThrough
     >
       <LoadoutDrawerDropTarget
-        onDroppedItem={onAddItem}
+        onDroppedItem={onDropItem}
         classType={loadout.classType}
         className={styles.body}
       >

@@ -34,7 +34,7 @@
 
   > input[type='text'] {
     border: none;
-    color: white;
+    color: var(--theme-text);
     background: transparent;
     outline: none;
     flex: 1;

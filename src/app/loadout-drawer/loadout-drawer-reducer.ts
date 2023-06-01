@@ -16,7 +16,7 @@ import { errorLog } from 'app/utils/log';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyClass, DestinyProfileResponse, TierType } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
-import { produce } from 'immer';
+import { Draft, produce } from 'immer';
 import _ from 'lodash';
 import { Loadout, LoadoutItem, ResolvedLoadoutItem, ResolvedLoadoutMod } from './loadout-types';
 import {
@@ -84,8 +84,6 @@ export function addItem(
       return;
     }
 
-    const typeInventory = loadoutItemsInBucket(defs, draftLoadout, item.bucket.hash);
-
     const dupeIndex = findSameLoadoutItemIndex(defs, draftLoadout.items, loadoutItem);
     if (dupeIndex !== -1) {
       const dupe = draftLoadout.items[dupeIndex];
@@ -94,20 +92,11 @@ export function addItem(
         const increment = Math.min(dupe.amount + item.amount, item.maxStackSize) - dupe.amount;
         dupe.amount += increment;
       }
-      // Handles dnd of items already in the loadout, e.g. this allows us to drag an unequipped item
-      // into equipped.
-      if (equip !== undefined && dupe.equip !== equip) {
-        if (equip) {
-          for (const item of typeInventory) {
-            item.equip = false;
-          }
-        }
-        dupe.equip = equip;
-      }
       // No need for further modifications so we bail out
       return;
     }
 
+    const typeInventory = loadoutItemsInBucket(defs, draftLoadout, item.bucket.hash);
     if (typeInventory.length >= maxSlots) {
       // We're already full
       errorLog('loadouts', "Can't add", item);
@@ -155,6 +144,39 @@ export function addItem(
 }
 
 /**
+ * Defines the multilayered functionality for dropping an item in the loadout drawer.
+ *
+ * It does the following
+ * 1. If the item is a subclass, it clears the currently selected subclass.
+ *
+ */
+export function dropItem(
+  defs: D2ManifestDefinitions | D1ManifestDefinitions,
+  item: DimItem,
+  equip?: boolean,
+  socketOverrides?: SocketOverrides
+): LoadoutUpdateFunction {
+  return produce((draftLoadout) => {
+    if (item.bucket.hash === BucketHashes.Subclass) {
+      draftLoadout = clearSubclass(defs)(draftLoadout);
+    }
+
+    const loadoutItemIndex = findSameLoadoutItemIndex(
+      defs,
+      draftLoadout.items,
+      convertToLoadoutItem(item, false, 1)
+    );
+
+    if (loadoutItemIndex !== -1) {
+      setEquipForItemInLoadout(defs, item, draftLoadout, Boolean(equip));
+    } else {
+      draftLoadout = addItem(defs, item, equip, socketOverrides)(draftLoadout);
+    }
+    return draftLoadout;
+  });
+}
+
+/**
  * Produce a new Loadout with the given item removed from the original loadout.
  */
 export function removeItem(
@@ -195,63 +217,89 @@ export function removeItem(
 }
 
 /**
+ * Sets the equipped status for the item, with the value from the equip parameter.
+ *
+ * This does more than just set the value of the item. It also does the following for the cases when
+ * an item is being set as being equipped,
+ * 1. Unequips all other items in the same bucket if equipping the item
+ * 2. If the item is an exotic, it will unequip other exotics with the same item type as unequipped.
+ *
+ * @param isEquipped The desired `equip` value for the passed in item in the draftLoadout.
+ */
+function setEquipForItemInLoadout(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  item: DimItem,
+  draftLoadout: Draft<Loadout>,
+  isEquipped: boolean
+) {
+  // Subclasses and some others are always equipped
+  if (singularBucketHashes.includes(item.bucket.hash)) {
+    return;
+  }
+
+  // TODO: it might be nice if we just assigned a unique ID to every loadout item just for in-memory ops like deleting
+  // We can't just look it up by identity since Immer wraps objects in a proxy and getItemsFromLoadoutItems
+  // changes the socketOverrides, so simply search by unmodified ID and hash.
+  const loadoutItemIndex = findSameLoadoutItemIndex(
+    defs,
+    draftLoadout.items,
+    convertToLoadoutItem(item, false, 1)
+  );
+
+  if (loadoutItemIndex === -1) {
+    return;
+  }
+  const loadoutItem = draftLoadout.items[loadoutItemIndex];
+
+  if (item.equipment) {
+    if (!isEquipped) {
+      // It's equipped, mark it unequipped
+      loadoutItem.equip = false;
+    } else {
+      // It's unequipped - mark all the other items in the same bucket, and conflicting exotics, as unequipped, then mark this equipped
+      for (const li of draftLoadout.items) {
+        const itemDef = defs.InventoryItem.get(li.hash);
+        const bucketHash =
+          itemDef &&
+          ('bucketTypeHash' in itemDef
+            ? itemDef.bucketTypeHash
+            : itemDef.inventory?.bucketTypeHash);
+
+        const equippingLabel =
+          itemDef && 'tierType' in itemDef
+            ? itemDef.tierType === TierType.Exotic
+              ? itemDef.itemType.toString()
+              : undefined
+            : itemDef.equippingBlock?.uniqueLabel;
+
+        // Others in this slot
+        if (
+          bucketHash === item.bucket.hash ||
+          // Other exotics
+          (item.equippingLabel && equippingLabel === item.equippingLabel)
+        ) {
+          li.equip = false;
+        }
+      }
+      loadoutItem.equip = true;
+    }
+  }
+}
+
+/**
  * Produce a new loadout with the given item switched to being equipped (or unequipped if it's already equipped).
  */
 export function equipItem(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
-  { item, loadoutItem: searchLoadoutItem }: ResolvedLoadoutItem
+  resolvedItem: ResolvedLoadoutItem
 ): LoadoutUpdateFunction {
   return produce((draftLoadout) => {
-    // Subclasses and some others are always equipped
-    if (singularBucketHashes.includes(item.bucket.hash)) {
-      return;
-    }
-
-    // TODO: it might be nice if we just assigned a unique ID to every loadout item just for in-memory ops like deleting
-    // We can't just look it up by identity since Immer wraps objects in a proxy and getItemsFromLoadoutItems
-    // changes the socketOverrides, so simply search by unmodified ID and hash.
-    const loadoutItemIndex = draftLoadout.items.findIndex(
-      (i) => i.hash === searchLoadoutItem.hash && i.id === searchLoadoutItem.id
+    setEquipForItemInLoadout(
+      defs,
+      resolvedItem.item,
+      draftLoadout,
+      !resolvedItem.loadoutItem.equip
     );
-
-    if (loadoutItemIndex === -1) {
-      return;
-    }
-    const loadoutItem = draftLoadout.items[loadoutItemIndex];
-
-    if (item.equipment) {
-      if (loadoutItem.equip) {
-        // It's equipped, mark it unequipped
-        loadoutItem.equip = false;
-      } else {
-        // It's unequipped - mark all the other items in the same bucket, and conflicting exotics, as unequipped unequipped, then mark this equipped
-        for (const li of draftLoadout.items) {
-          const itemDef = defs.InventoryItem.get(li.hash);
-          const bucketHash =
-            itemDef &&
-            ('bucketTypeHash' in itemDef
-              ? itemDef.bucketTypeHash
-              : itemDef.inventory?.bucketTypeHash);
-
-          const equippingLabel =
-            itemDef && 'tierType' in itemDef
-              ? itemDef.tierType === TierType.Exotic
-                ? itemDef.itemType.toString()
-                : undefined
-              : itemDef.equippingBlock?.uniqueLabel;
-
-          // Others in this slot
-          if (
-            bucketHash === item.bucket.hash ||
-            // Other exotics
-            (item.equippingLabel && equippingLabel === item.equippingLabel)
-          ) {
-            li.equip = false;
-          }
-        }
-        loadoutItem.equip = true;
-      }
-    }
   });
 }
 

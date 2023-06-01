@@ -12,7 +12,7 @@
 
 // a style for inputs or input wrappers
 .inputlike {
-  color: white;
+  color: var(--theme-text);
   align-items: center;
   background: #4443;
   border-radius: 4px;

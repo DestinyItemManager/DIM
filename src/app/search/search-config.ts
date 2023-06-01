@@ -2,10 +2,16 @@ import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { languageSelector } from 'app/dim-api/selectors';
 import { DimLanguage } from 'app/i18n';
+import { DimItem } from 'app/inventory/item-types';
 import memoizeOne from 'memoize-one';
 import { createSelector } from 'reselect';
 import { ArmoryEntry, buildArmoryIndex } from './armory-search';
-import { FilterDefinition, SuggestionsContext, canonicalFilterFormats } from './filter-types';
+import {
+  FilterContext,
+  FilterDefinition,
+  SuggestionsContext,
+  canonicalFilterFormats,
+} from './filter-types';
 import advancedFilters from './search-filters/advanced';
 import d1Filters from './search-filters/d1-filters';
 import dupeFilters from './search-filters/dupes';
@@ -50,12 +56,12 @@ export const searchConfigSelector = createSelector(
 // SearchConfig
 //
 
-export interface FiltersMap {
-  allFilters: FilterDefinition[];
+export interface FiltersMap<I, FilterCtx, SuggestionsCtx> {
+  allFilters: FilterDefinition<I, FilterCtx, SuggestionsCtx>[];
   /* `is:keyword` filters */
-  isFilters: Record<string, FilterDefinition>;
+  isFilters: Record<string, FilterDefinition<I, FilterCtx, SuggestionsCtx>>;
   /* `keyword:value` filters */
-  kvFilters: Record<string, FilterDefinition>;
+  kvFilters: Record<string, FilterDefinition<I, FilterCtx, SuggestionsCtx>>;
 }
 
 export interface Suggestion {
@@ -65,59 +71,61 @@ export interface Suggestion {
   plainText: string;
 }
 
-export interface SearchConfig {
-  filtersMap: FiltersMap;
+export interface SearchConfig<I, FilterCtx, SuggestionsCtx> {
+  filtersMap: FiltersMap<I, FilterCtx, SuggestionsCtx>;
   language: DimLanguage;
   suggestions: Suggestion[];
   armorySuggestions?: ArmoryEntry[];
 }
 
-export const buildFiltersMap = memoizeOne((destinyVersion: DestinyVersion): FiltersMap => {
-  const isFilters: Record<string, FilterDefinition> = {};
-  const kvFilters: Record<string, FilterDefinition> = {};
-  const allApplicableFilters: FilterDefinition[] = [];
-  for (const filter of allFilters) {
-    if (!filter.destinyVersion || filter.destinyVersion === destinyVersion) {
-      allApplicableFilters.push(filter);
-      const filterKeywords = Array.isArray(filter.keywords) ? filter.keywords : [filter.keywords];
-      const filterFormats = canonicalFilterFormats(filter.format);
-      const hasSimple = filterFormats.some((f) => f === 'simple');
-      const hasKv = filterFormats.some((f) => f !== 'simple');
+export const buildFiltersMap = memoizeOne(
+  (destinyVersion: DestinyVersion): FiltersMap<DimItem, FilterContext, SuggestionsContext> => {
+    const isFilters: Record<string, FilterDefinition> = {};
+    const kvFilters: Record<string, FilterDefinition> = {};
+    const allApplicableFilters: FilterDefinition[] = [];
+    for (const filter of allFilters) {
+      if (!filter.destinyVersion || filter.destinyVersion === destinyVersion) {
+        allApplicableFilters.push(filter);
+        const filterKeywords = Array.isArray(filter.keywords) ? filter.keywords : [filter.keywords];
+        const filterFormats = canonicalFilterFormats(filter.format);
+        const hasSimple = filterFormats.some((f) => f === 'simple');
+        const hasKv = filterFormats.some((f) => f !== 'simple');
 
-      for (const keyword of filterKeywords) {
-        if (hasSimple) {
-          if ($DIM_FLAVOR === 'test' && isFilters[keyword]) {
-            throw new Error(
-              `Conflicting is:${keyword} filter -- only the last inserted filter will work.`
-            );
+        for (const keyword of filterKeywords) {
+          if (hasSimple) {
+            if ($DIM_FLAVOR === 'test' && isFilters[keyword]) {
+              throw new Error(
+                `Conflicting is:${keyword} filter -- only the last inserted filter will work.`
+              );
+            }
+            isFilters[keyword] = filter;
           }
-          isFilters[keyword] = filter;
-        }
-        if (hasKv) {
-          if ($DIM_FLAVOR === 'test' && kvFilters[keyword]) {
-            throw new Error(
-              `Conflicting ${keyword}:value filter -- only the last inserted filter will work.`
-            );
+          if (hasKv) {
+            if ($DIM_FLAVOR === 'test' && kvFilters[keyword]) {
+              throw new Error(
+                `Conflicting ${keyword}:value filter -- only the last inserted filter will work.`
+              );
+            }
+            kvFilters[keyword] = filter;
           }
-          kvFilters[keyword] = filter;
         }
       }
     }
-  }
 
-  return {
-    isFilters,
-    kvFilters,
-    allFilters: allApplicableFilters,
-  };
-});
+    return {
+      isFilters,
+      kvFilters,
+      allFilters: allApplicableFilters,
+    };
+  }
+);
 
 /** Builds an object that describes the available search keywords and filter definitions. */
 export function buildSearchConfig(
   destinyVersion: DestinyVersion,
   language: DimLanguage,
   suggestionsContext: SuggestionsContext = {}
-): SearchConfig {
+): SearchConfig<DimItem, FilterContext, SuggestionsContext> {
   const suggestions = new Set<string>();
   const filtersMap = buildFiltersMap(destinyVersion);
   for (const filter of filtersMap.allFilters) {

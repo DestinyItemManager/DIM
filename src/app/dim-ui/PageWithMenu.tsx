@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './PageWithMenu.m.scss';
 import { scrollToHref } from './scroll';
 
@@ -11,20 +11,19 @@ function PageWithMenu({ children, className }: { children: React.ReactNode; clas
 function useHasScrollbars(ref: React.RefObject<HTMLDivElement>) {
   const [hasScrollbars, setHasScrollbars] = useState(false);
 
-  const updateResize = useCallback(() => {
-    if (ref.current) {
-      setHasScrollbars(ref.current.clientWidth < ref.current.offsetWidth);
+  useEffect(() => {
+    const elem = ref.current;
+    if (!elem) {
+      return;
     }
-  }, [ref]);
 
-  useEffect(() => {
+    const updateResize = () => setHasScrollbars(elem.clientWidth < elem.offsetWidth);
+
     updateResize();
-  });
-
-  useEffect(() => {
     window.addEventListener('resize', updateResize);
     return () => window.removeEventListener('resize', updateResize);
-  });
+  }, [ref]);
+
   return hasScrollbars;
 }
 
@@ -43,7 +42,7 @@ PageWithMenu.Menu = function Menu({
       ref={ref}
       className={clsx(className, styles.menu, { [styles.menuScrollbars]: hasScrollbars })}
     >
-      {children}
+      <div>{children}</div>
     </div>
   );
 };
