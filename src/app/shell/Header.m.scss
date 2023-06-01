@@ -36,6 +36,10 @@ $header-height: 44px;
   background-size: 100vw 100vh;
   -webkit-app-region: drag;
 
+  // Use the size of this element for the container query in .headerLinks. This
+  // is needed for the PWA mode where the header is narrower than the page.
+  container-type: inline-size;
+
   @include phone-portrait {
     background: #000;
   }
@@ -141,7 +145,13 @@ $header-height: 44px;
     display: none;
   }
 
+  // Hide the links if the page is too small
   @media (max-width: 1200px) {
+    display: none;
+  }
+
+  // Only the newest browsers support container queries
+  @container (max-width: 1200px) {
     display: none;
   }
 
