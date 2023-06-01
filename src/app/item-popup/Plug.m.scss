@@ -7,7 +7,7 @@
   width: var(--item-size);
   border: none;
 
-  &:hover > circle:last-of-type {
+  &:hover .perkOutline {
     stroke: var(--theme-accent-primary);
     stroke-width: 6px;
   }
@@ -51,7 +51,7 @@
 
 // Another plug was selected by the user
 .notSelected {
-  fill: rgba(255, 255, 255, 0.2);
+  fill: #4887ba80;
 }
 
 .plugged {

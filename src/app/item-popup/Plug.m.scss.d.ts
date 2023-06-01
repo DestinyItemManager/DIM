@@ -9,6 +9,7 @@ interface CssExports {
   'none': string;
   'notSelected': string;
   'perkCircle': string;
+  'perkOutline': string;
   'plugged': string;
   'selectable': string;
   'selected': string;
