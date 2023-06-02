@@ -7,6 +7,7 @@ import { getItemDamageShortName } from 'app/utils/item-utils';
 import { StringLookup } from 'app/utils/util-types';
 import { DestinyAmmunitionType, DestinyClass, DestinyRecordState } from 'bungie-api-ts/destiny2';
 import { D2EventEnum, D2EventPredicateLookup } from 'data/d2/d2-event-info';
+import focusingOutputs from 'data/d2/focusing-item-outputs.json';
 import { BreakerTypeHashes } from 'data/d2/generated-enums';
 import missingSources from 'data/d2/missing-source-info';
 import D2Sources from 'data/d2/source-info';
@@ -239,6 +240,12 @@ const knownValuesFilters: FilterDefinition[] = [
         throw new Error('Unknown item source ' + filterValue);
       }
     },
+  },
+  {
+    keywords: 'focusable',
+    description: tl('Filter.Focusable'),
+    destinyVersion: 2,
+    filter: () => (item) => Object.values(focusingOutputs).includes(item.hash),
   },
 ];
 
