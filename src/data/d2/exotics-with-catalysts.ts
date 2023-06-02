@@ -46,6 +46,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   2907129556, // Sturm
   2907129557, // Sunshot
   3089417789, // Riskrunner
+  3118061005, // Vexcalibur
   3141979346, // D.A.R.C.I.
   3141979347, // Borealis
   3211806999, // Izanagi's Burden
