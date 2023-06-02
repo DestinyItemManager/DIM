@@ -15,6 +15,7 @@
 * Hid the Artifact Unlocks section from loadouts until Bungie.net starts returning artifact info again.
 * Improved highlighting and selection styles for item perks.
 * Improved layout for mods in the Compare drawer - they stay in a line now.
+* Vendors will now show your current count of Engrams and other resources needed for focusing in their currencies section.
 * Added `is:focusable` search to find items that can be focused at a vendor.
 
 ## 7.70.0 <span class="changelog-date">(2023-05-28)</span>

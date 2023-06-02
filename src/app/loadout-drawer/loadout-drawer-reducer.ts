@@ -22,6 +22,7 @@ import { Loadout, LoadoutItem, ResolvedLoadoutItem, ResolvedLoadoutMod } from '.
 import {
   convertToLoadoutItem,
   createSocketOverridesFromEquipped,
+  createSubclassDefaultSocketOverrides,
   extractArmorModHashes,
   findSameLoadoutItemIndex,
   fromEquippedTypes,
@@ -58,12 +59,11 @@ export type LoadoutUpdateFunction = (loadout: Loadout) => Loadout;
 export function addItem(
   defs: D2ManifestDefinitions | D1ManifestDefinitions,
   item: DimItem,
-  equip?: boolean,
-  socketOverrides?: SocketOverrides
+  equip?: boolean
 ): LoadoutUpdateFunction {
   const loadoutItem = convertToLoadoutItem(item, false, 1);
-  if (socketOverrides) {
-    loadoutItem.socketOverrides = socketOverrides;
+  if (item.sockets && item.bucket.hash === BucketHashes.Subclass) {
+    loadoutItem.socketOverrides = createSubclassDefaultSocketOverrides(item);
   }
 
   // We only allow one subclass, and it must be equipped. Same with a couple other things.
@@ -153,8 +153,7 @@ export function addItem(
 export function dropItem(
   defs: D2ManifestDefinitions | D1ManifestDefinitions,
   item: DimItem,
-  equip?: boolean,
-  socketOverrides?: SocketOverrides
+  equip?: boolean
 ): LoadoutUpdateFunction {
   return produce((draftLoadout) => {
     if (item.bucket.hash === BucketHashes.Subclass) {
@@ -170,7 +169,7 @@ export function dropItem(
     if (loadoutItemIndex !== -1) {
       setEquipForItemInLoadout(defs, item, draftLoadout, Boolean(equip));
     } else {
-      draftLoadout = addItem(defs, item, equip, socketOverrides)(draftLoadout);
+      draftLoadout = addItem(defs, item, equip)(draftLoadout);
     }
     return draftLoadout;
   });
