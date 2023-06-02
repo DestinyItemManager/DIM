@@ -23,9 +23,9 @@ function durationFromMs(ms: number) {
  *
  * negative durations are treated as 0
  */
-export function timerDurationFromMs(milliseconds: number) {
+export function timerDurationFromMs(milliseconds: number, minSegments = 3) {
   const duration = durationFromMs(milliseconds).slice(0, -1);
-  while (duration[0] === 0 && duration.length > 3) {
+  while (duration[0] === 0 && duration.length > minSegments) {
     duration.shift();
   }
   return duration.map((u, i) => `${u}`.padStart(i === 0 ? 0 : 2, '0')).join(':');
