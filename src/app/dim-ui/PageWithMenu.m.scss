@@ -111,6 +111,14 @@
   margin-bottom: 4px;
   min-height: 24px;
 
+  &:hover {
+    color: var(--theme-accent-primary);
+
+    :global(.app-icon) {
+      color: var(--theme-accent-primary);
+    }
+  }
+
   img {
     height: 24px;
     width: 24px;

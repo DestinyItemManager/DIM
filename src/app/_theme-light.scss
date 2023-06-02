@@ -1,7 +1,7 @@
-// Theme variables
-:root {
+// Light theme
+[data-theme='theme-light'] {
   // Base colours
-  --theme-accent-primary: var(--dim-brand); // Interaction styles (hover, active, focus)
+  --theme-accent-primary: rgb(218, 92, 14); // Interaction styles (hover, active, focus)
   --theme-accent-secondary: #68a0b7; // Secondary interactions
 
   // Generic fills for modal backgrounds (see below)
@@ -9,22 +9,22 @@
   --theme-fill-modal-actions: #161616; // Layered/contextual modals (search, item actions)
 
   // Text
-  --theme-text: #fff;
-  --theme-text-invert: #000;
+  --theme-text: #777;
+  --theme-text-invert: #fff;
 
   // Buttons
-  --theme-button-bg: rgba(255, 255, 255, 0.2);
-  --theme-button-text: white;
+  --theme-button-bg: rgba(0, 0, 0, 0.2);
+  --theme-button-text: black;
 
   // Icons
-  --theme-icon-tile: transparent;
-  --theme-header-characters-icon: 1; // 0-1 (fully) scale of how heavily to invert icon from grey -> white
+  --theme-icon-tile: #999;
+  --theme-header-characters-icon: 0.25; // 0-1 scale of how much to invert black → white icons
 
   // Input field (text boxes and text areas)
   --theme-input-bg: #333;
 
   // Shadows
-  --theme-drop-shadow: 0 0 18px 0 #000;
+  --theme-drop-shadow: 0 0 10px 0 #999;
 
   // Tooltips
   --theme-tooltip-header-bg: #0a0a0f;
@@ -33,8 +33,8 @@
   --theme-tooltip-minimal-bg: #5d5970;
 
   // App background gradient pattern
-  --theme-app-bg-gradient-start: hsl(240, 20%, 28%);
-  --theme-app-bg-gradient-end: hsl(240, 27%, 12%);
+  --theme-app-bg-gradient-start: hsl(200, 6%, 19%);
+  --theme-app-bg-gradient-end: hsl(240, 5%, 9%);
   --theme-app-bg-gradient: radial-gradient(
     circle at 50% 70px,
     var(--theme-app-bg-gradient-start) 0%,
@@ -42,35 +42,36 @@
   );
 
   // App
-  --theme-app-bg: var(--theme-app-bg-gradient);
+  --theme-app-bg: #eee;
   // The color of PWA elements like the title bar. This cannot be a gradient.
   --theme-pwa-chrome-background: #202034;
 
   // Header
-  --theme-header-nav-bg: var(--theme-app-bg-gradient);
+  --theme-header-nav-bg: #ccc;
   --theme-header-nav-slideout-menu-bg: var(--theme-fill-modal);
-  --theme-header-characters-bg: var(--theme-app-bg-gradient);
+  --theme-header-characters-bg: #ddd;
+  --theme-header-characters-txt: #555;
 
   // Dropdown menu
   --theme-dropdown-menu-bg: var(--theme-fill-modal);
 
   // Search
-  --theme-search-bg: rgba(255, 255, 255, 0.2);
+  --theme-search-bg: white;
   --theme-search-dropdown-bg: var(--theme-fill-modal-actions);
   --theme-search-dropdown-border: transparent;
 
   // Items
-  --theme-item-polaroid: #ddd;
-  --theme-item-polaroid-txt: var(--theme-text-invert);
-  --theme-item-polaroid-hover-border: #ddd;
-  --theme-item-polaroid-masterwork: #eade8b;
-  --theme-item-polaroid-masterwork-txt: var(--theme-text-invert);
+  --theme-item-polaroid: #aaa;
+  --theme-item-polaroid-txt: #000;
+  --theme-item-polaroid-hover-border: var(--theme-accent-primary);
+  --theme-item-polaroid-masterwork: #e0d069;
+  --theme-item-polaroid-masterwork-txt: #000;
   --theme-item-polaroid-masterwork-border: white;
 
   // Item popup
-  --theme-item-popup-border: transparent;
+  --theme-item-popup-border: #666;
   --theme-item-popup-arrow: var(--theme-fill-modal-actions);
-  --theme-item-popup-actions-bg: var(--theme-fill-modal-actions);
+  --theme-item-popup-actions-bg: #dedede;
   --theme-item-popup-panel-bg: #333; // Panels for progress (masterwork, crafted, catalyst) and archetype
   --theme-item-popup-progress-bar-bg: #222;
 

@@ -261,7 +261,7 @@ $header-height: 44px;
   }
 
   :global(.search-filter) {
-    background: rgba(0, 0, 0, 0.4);
+    background: var(--theme-search-bg);
   }
 }
 

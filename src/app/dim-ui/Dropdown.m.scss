@@ -52,6 +52,10 @@
 
 .disabled {
   color: #999 !important;
+  filter: grayscale(1);
+  opacity: 0.5;
+  cursor: not-allowed;
+
   :global(.app-icon) {
     color: #999 !important;
   }

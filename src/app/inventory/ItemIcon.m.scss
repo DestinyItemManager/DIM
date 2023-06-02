@@ -13,7 +13,7 @@ $commonBg: #366f42;
   width: var(--item-size);
   height: var(--item-size);
   box-sizing: border-box;
-  border: $item-border-width solid #ddd;
+  border: $item-border-width solid var(--theme-item-polaroid);
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
@@ -46,7 +46,7 @@ $commonBg: #366f42;
 
 // Alternate border styles
 .masterwork {
-  border-color: $masterwork-border-color;
+  border-color: var(--theme-item-polaroid-masterwork);
 }
 .deepsight {
   border-color: $deepsight-border-color;
@@ -66,26 +66,107 @@ $commonBg: #366f42;
 .backgroundOverlay {
   // -0.4px to force the browser round down rendered value not the actual value
   // If it rounds up that leaves a 1px gap between the image and the border
-  $new-border-width: $item-border-width - 0.4px;
+  //$new-border-width: $item-border-width - 0.4px;
+  // $new-border-width: $item-border-width;
 
-  box-sizing: border-box;
-  top: $new-border-width;
-  left: $new-border-width;
-  border-width: 0;
-  height: calc(var(--item-size) - #{2 * $new-border-width});
-  width: calc(var(--item-size) - #{2 * $new-border-width});
+  // box-sizing: border-box;
+  // top: $new-border-width;
+  // left: $new-border-width;
+  // border-width: 0;
+  // height: calc(var(--item-size) - #{2 * $new-border-width});
+  // width: calc(var(--item-size) - #{2 * $new-border-width});
+  // position: absolute;
+  // pointer-events: none;
+  // background-repeat: no-repeat;
+  // background-position: center;
+  // background-size: calc((var(--item-size) - #{2 * $new-border-width}) * (96 / 90))
+  //   calc((var(--item-size) - #{2 * $new-border-width}) * (96 / 90));
+
   position: absolute;
-  pointer-events: none;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: calc((var(--item-size) - #{2 * $new-border-width}) * (96 / 90))
-    calc((var(--item-size) - #{2 * $new-border-width}) * (96 / 90));
+  box-sizing: border-box;
+  height: calc(var(--item-size) - ($item-border-width * 2));
+  width: calc(var(--item-size) - ($item-border-width * 2));
+  top: $item-border-width;
+  left: $item-border-width;
 }
 .legendaryMasterwork {
-  background-image: url('../../images/masterwork.png');
+  border-width: 1px;
+  border-style: solid;
+  border-image-slice: 1;
+  border-image-source: conic-gradient(
+    from 45deg at 50% 50%,
+    var(--theme-item-polaroid-masterwork-border) 0%,
+    transparent 24%,
+    transparent 25%,
+    var(--theme-item-polaroid-masterwork-border) 50%,
+    var(--theme-item-polaroid-masterwork-border) 50%,
+    transparent 74%,
+    transparent 75%,
+    var(--theme-item-polaroid-masterwork-border) 100%
+  );
+  //background-image: radial-gradient(circle at 50% 140%, rgba(255,255,255,.1) 0%, transparent 50%);
+  background-image: linear-gradient(rgba(0, 0, 0, 0.2) 0%, transparent 50%),
+    linear-gradient(transparent 50%, rgba(255, 255, 255, 0.2) 150%);
+  background-repeat: no-repeat;
 }
 .exoticMasterwork {
-  background-image: url('../../images/exotic-masterwork.png');
+  border-width: 1px;
+  border-style: solid;
+  border-image-slice: 1;
+  border-image-source: conic-gradient(
+    from 45deg at 50% 50%,
+    var(--theme-item-polaroid-masterwork-border) 0%,
+    transparent 24%,
+    transparent 25%,
+    var(--theme-item-polaroid-masterwork-border) 50%,
+    var(--theme-item-polaroid-masterwork-border) 50%,
+    transparent 74%,
+    transparent 75%,
+    var(--theme-item-polaroid-masterwork-border) 100%
+  );
+
+  $pttrn-even: rgba(255, 255, 255, 0.05);
+  $pttrn-odd: rgba(0, 0, 0, 0.02);
+
+  // Masterwork pattern a la .src/images/exotic-masterwork.png
+  // Dark gradient from top, light gradient from bottom, striped diamond overlay for texture
+  // TODO check whether rendering a bunch of gradients is less performant than slapping in a PNG
+  background: linear-gradient(rgba(0, 0, 0, 0.2) 0%, transparent 50%),
+    linear-gradient(transparent 50%, white 150%),
+    repeating-linear-gradient(
+        to bottom right,
+        $pttrn-even 0%,
+        $pttrn-even 5%,
+        $pttrn-odd 5%,
+        $pttrn-odd 10%
+      )
+      bottom right,
+    repeating-linear-gradient(
+        to bottom left,
+        $pttrn-even 0%,
+        $pttrn-even 5%,
+        $pttrn-odd 5%,
+        $pttrn-odd 10%
+      )
+      bottom left,
+    repeating-linear-gradient(
+        to top left,
+        $pttrn-even 0%,
+        $pttrn-even 5%,
+        $pttrn-odd 5%,
+        $pttrn-odd 10%
+      )
+      top left,
+    repeating-linear-gradient(
+        to top right,
+        $pttrn-even 0%,
+        $pttrn-even 5%,
+        $pttrn-odd 5%,
+        $pttrn-odd 10%
+      )
+      top right;
+  background-repeat: no-repeat;
+  background-size: 100%, 100%, 50% 50%, 50% 50%, 50% 50%, 50% 50%;
 }
 .deepsightBorder {
   border: 2px solid $deepsight-border-color;

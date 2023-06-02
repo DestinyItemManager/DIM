@@ -27,7 +27,7 @@
 .iconButton {
   composes: resetButton from '../dim-ui/common.m.scss';
   margin-left: 6px;
-  color: red;
+  color: var(--theme-text);
   padding: 0 2px;
 }
 

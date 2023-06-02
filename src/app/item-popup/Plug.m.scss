@@ -41,7 +41,7 @@
 // In game, mods have a border around them that isn't part of the icon
 .masterwork {
   :global(.item-img) {
-    border-color: $masterwork-border-color;
+    border-color: var(--theme-item-polaroid-masterwork);
   }
 }
 

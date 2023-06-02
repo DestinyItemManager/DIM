@@ -29,6 +29,7 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
+  filter: saturate(0) brightness(0.75) invert(var(--theme-header-characters-icon));
 
   .tracked & {
     border-color: #bdfc7f;

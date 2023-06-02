@@ -93,7 +93,7 @@ $search-bar-height: 28px;
 }
 
 @mixin draggable-hover-border {
-  outline: 1px solid #ddd;
+  outline: 1px solid var(--theme-item-polaroid-hover-border);
 
   @include phone-portrait {
     outline: none;

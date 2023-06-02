@@ -46,6 +46,8 @@
       width: 14px;
       margin-right: 2px;
       opacity: 1;
+      // Make all icons black and then invert
+      filter: brightness(0) invert(var(--theme-header-characters-icon));
     }
   }
 
@@ -74,9 +76,6 @@
           opacity: 0.6;
           height: 17px;
           width: 17px;
-        }
-        img[src^='data'] {
-          filter: invert(1);
         }
         .powerStat {
           font-size: 125%;
@@ -108,7 +107,7 @@
     .stat {
       flex: 0;
       font-size: 11px;
-      color: #ccc;
+      color: var(--theme-header-characters-txt);
       &.pointerCursor {
         cursor: pointer;
       }

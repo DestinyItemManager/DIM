@@ -7,6 +7,8 @@
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 @use 'variables.scss' as *;
 @use 'theme';
+@use 'theme-dark';
+@use 'theme-light';
 
 @font-face {
   font-family: 'Destiny Symbols';
@@ -147,7 +149,7 @@ label {
 }
 
 a {
-  color: #ddd;
+  color: var(--theme-text);
   cursor: pointer;
   text-decoration: underline;
 }
