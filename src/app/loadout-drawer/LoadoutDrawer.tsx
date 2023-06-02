@@ -8,7 +8,6 @@ import { useAutocomplete } from 'app/dim-ui/text-complete/text-complete';
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimStore } from 'app/inventory/store-types';
-import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { getStore } from 'app/inventory/stores-helpers';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { pickSubclass } from 'app/loadout/item-utils';
@@ -45,7 +44,7 @@ import {
 } from './loadout-drawer-reducer';
 import { addItem$ } from './loadout-events';
 import { Loadout, ResolvedLoadoutItem } from './loadout-types';
-import { createSubclassDefaultSocketOverrides, findSameLoadoutItemIndex } from './loadout-utils';
+import { findSameLoadoutItemIndex } from './loadout-utils';
 import styles from './LoadoutDrawer.m.scss';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerFooter from './LoadoutDrawerFooter';
@@ -100,14 +99,12 @@ export default function LoadoutDrawer({
   const store = getStore(stores, storeId)!;
 
   const onAddItem = useCallback(
-    (item: DimItem, equip?: boolean, socketOverrides?: SocketOverrides) =>
-      setLoadout(addItem(defs, item, equip, socketOverrides)),
+    (item: DimItem, equip?: boolean) => setLoadout(addItem(defs, item, equip)),
     [defs, setLoadout]
   );
 
   const onDropItem = useCallback(
-    (item: DimItem, equip?: boolean, socketOverrides?: SocketOverrides) =>
-      setLoadout(dropItem(defs, item, equip, socketOverrides)),
+    (item: DimItem, equip?: boolean) => setLoadout(dropItem(defs, item, equip)),
     [defs, setLoadout]
   );
 
@@ -400,7 +397,7 @@ async function pickLoadoutItem(
 async function pickLoadoutSubclass(
   loadout: Loadout,
   storeId: string,
-  add: (item: DimItem, equip?: boolean, socketOverrides?: SocketOverrides) => void,
+  add: (item: DimItem, equip?: boolean) => void,
   onShowItemPicker: (shown: boolean) => void
 ) {
   const loadoutClassType = loadout.classType;
@@ -416,7 +413,7 @@ async function pickLoadoutSubclass(
   onShowItemPicker(true);
   const item = await pickSubclass(subclassItemFilter);
   if (item) {
-    add(item, undefined, createSubclassDefaultSocketOverrides(item));
+    add(item, undefined);
   }
   onShowItemPicker(false);
 }
