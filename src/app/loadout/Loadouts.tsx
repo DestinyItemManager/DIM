@@ -19,7 +19,7 @@ import { AppIcon, addIcon, faCalculator, uploadIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { Portal } from 'app/utils/temp-container';
 import _ from 'lodash';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import styles from './Loadouts.m.scss';
@@ -120,8 +120,22 @@ function Loadouts({ account }: { account: DestinyAccount }) {
     editLoadout(loadout, selectedStore.id, { isNew: true });
   };
 
-  const [numItemsToShow, _resetPage, marker] = useScrollPaginate(2);
+  const [numItemsToShow, resetPage, marker] = useScrollPaginate(2);
   const paginatedLoadouts = isPhonePortrait ? _.take(loadouts, numItemsToShow) : loadouts;
+
+  const handleCharacterChanged = (selectedStoreId: string) => {
+    setSelectedStoreId(selectedStoreId);
+    if (selectedStoreId !== selectedStore.id) {
+      resetPage();
+    }
+  };
+
+  // Reset the paginator whenever we filter the loadouts list
+  useEffect(() => {
+    if (loadouts.length < numItemsToShow) {
+      resetPage();
+    }
+  }, [loadouts.length, numItemsToShow, resetPage]);
 
   return (
     <PageWithMenu>
@@ -129,7 +143,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
         <CharacterSelect
           stores={stores}
           selectedStore={selectedStore}
-          onCharacterChanged={setSelectedStoreId}
+          onCharacterChanged={handleCharacterChanged}
         />
         <div className={styles.menuButtons}>
           <select
