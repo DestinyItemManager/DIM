@@ -591,7 +591,11 @@ export function makeItem(
 
   // Catalyst
   if (createdItem.isExotic && createdItem.bucket.inWeapons) {
-    createdItem.catalystInfo = buildCatalystInfo(createdItem.hash, profileRecords);
+    createdItem.catalystInfo = buildCatalystInfo(
+      createdItem.hash,
+      profileRecords,
+      profileResponse.characterRecords?.data
+    );
   }
 
   try {

@@ -17,6 +17,7 @@
 * Improved layout for mods in the Compare drawer - they stay in a line now.
 * Vendors will now show your current count of Engrams and other resources needed for focusing in their currencies section.
 * Added `is:focusable` search to find items that can be focused at a vendor.
+* Fixed DIM not showing Leviathan's Breath catalyst progress in the item popup.
 
 ## 7.70.0 <span class="changelog-date">(2023-05-28)</span>
 
