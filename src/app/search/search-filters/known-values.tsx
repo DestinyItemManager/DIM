@@ -245,7 +245,10 @@ const knownValuesFilters: FilterDefinition[] = [
     keywords: 'focusable',
     description: tl('Filter.Focusable'),
     destinyVersion: 2,
-    filter: () => (item) => Object.values(focusingOutputs).includes(item.hash),
+    filter: () => {
+      const outputValues = Object.values(focusingOutputs);
+      return (item) => outputValues.includes(item.hash);
+    },
   },
 ];
 
