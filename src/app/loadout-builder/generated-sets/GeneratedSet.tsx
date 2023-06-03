@@ -239,20 +239,18 @@ function GeneratedSet({
 
   return (
     <div className={styles.container} style={style} ref={forwardedRef}>
+      <SetStats
+        stats={set.stats}
+        getStatsBreakdown={getStatsBreakdown}
+        maxPower={getPower(displayedItems)}
+        statOrder={statOrder}
+        enabledStats={enabledStats}
+        boostedStats={boostedStats}
+        existingLoadoutName={existingLoadout?.name}
+        subclass={subclass}
+        exoticArmorHash={params.exoticArmorHash}
+      />
       <div className={styles.build}>
-        <div className={styles.header}>
-          <SetStats
-            stats={set.stats}
-            getStatsBreakdown={getStatsBreakdown}
-            maxPower={getPower(displayedItems)}
-            statOrder={statOrder}
-            enabledStats={enabledStats}
-            boostedStats={boostedStats}
-            existingLoadoutName={existingLoadout?.name}
-            subclass={subclass}
-            exoticArmorHash={params.exoticArmorHash}
-          />
-        </div>
         <div className={styles.items}>
           {displayedItems.map((item, i) => (
             <GeneratedSetItem
@@ -267,20 +265,20 @@ function GeneratedSet({
             />
           ))}
         </div>
+        <GeneratedSetButtons
+          set={set}
+          items={displayedItems}
+          subclass={subclass}
+          store={selectedStore}
+          canCompareLoadouts={canCompareLoadouts}
+          halfTierMods={halfTierMods}
+          onLoadoutSet={setCreateLoadout}
+          lbDispatch={lbDispatch}
+          notes={notes}
+          params={params}
+          lockedMods={lockedMods}
+        />
       </div>
-      <GeneratedSetButtons
-        set={set}
-        items={displayedItems}
-        subclass={subclass}
-        store={selectedStore}
-        canCompareLoadouts={canCompareLoadouts}
-        halfTierMods={halfTierMods}
-        onLoadoutSet={setCreateLoadout}
-        lbDispatch={lbDispatch}
-        notes={notes}
-        params={params}
-        lockedMods={lockedMods}
-      />
     </div>
   );
 }

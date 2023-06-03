@@ -9,7 +9,6 @@ import { List, WindowScroller } from 'react-virtualized';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorEnergyRules, ArmorSet, ModStatChanges, PinnedItems } from '../types';
 import GeneratedSet from './GeneratedSet';
-import styles from './GeneratedSets.m.scss';
 
 /** Taller item groups have either the swap icon under the item, an exotic perk, or a raid mod socket. */
 function hasExoticPerkRaidModOrSwapIcon(items: DimItem[]) {
@@ -132,7 +131,7 @@ export default memo(function GeneratedSets({
   });
 
   return (
-    <div className={styles.sets}>
+    <>
       {measureSet && rowHeight === 0 ? (
         <GeneratedSet
           ref={measureSetRef}
@@ -191,6 +190,6 @@ export default memo(function GeneratedSets({
           </WindowScroller>
         )
       )}
-    </div>
+    </>
   );
 });

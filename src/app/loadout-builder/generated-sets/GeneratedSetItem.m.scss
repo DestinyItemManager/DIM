@@ -1,21 +1,16 @@
 @use '../../variables.scss' as *;
 
 .item {
-  display: grid;
-  grid-template-areas: 'item sockets';
+  composes: flexRow from '../../dim-ui/common.m.scss';
   gap: 6px;
   width: min-content;
   align-items: start;
   justify-content: start;
-  margin-top: 4px;
-
-  > *:first-child {
-    grid-area: item;
-  }
 
   .energyMeter {
     margin-top: 3px;
     padding: 3px 0;
+    width: 100%;
 
     @include phone-portrait {
       padding: 3px 0 20px;
@@ -24,8 +19,7 @@
 }
 
 .energySwapContainer {
-  display: flex;
-  flex-direction: row;
+  composes: flexRow from '../../dim-ui/common.m.scss';
   justify-content: flex-start;
   align-items: center;
   font-size: 10px;
@@ -36,8 +30,7 @@
 }
 
 .energyValue {
-  display: flex;
-  flex-direction: row;
+  composes: flexRow from '../../dim-ui/common.m.scss';
   align-items: center;
 }
 
@@ -56,8 +49,9 @@
 }
 
 .swapButtonContainer {
-  display: grid;
+  composes: flexColumn from '../../dim-ui/common.m.scss';
   min-height: 24px;
+  align-items: center;
 
   @include phone-portrait {
     min-height: 32px;

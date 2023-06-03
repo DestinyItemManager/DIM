@@ -61,7 +61,7 @@ function SetStats({
   return (
     <div className={clsx(styles.container, className)}>
       <div className={styles.tierLightContainer}>
-        <span className={clsx(styles.tier, styles.tierLightSegment)}>
+        <span className={clsx(styles.tier)}>
           {t('LoadoutBuilder.TierNumber', {
             tier: enabledTier,
           })}
@@ -73,42 +73,41 @@ function SetStats({
             })})`}
           </span>
         )}
-        <span className={styles.light}>
-          <AppIcon icon={powerIndicatorIcon} className={clsx(styles.statIcon)} /> {maxPower}
-        </span>
-        {existingLoadoutName ? (
-          <span className={styles.existingLoadout}>
-            {t('LoadoutBuilder.ExistingLoadout')}:{' '}
-            <span className={styles.loadoutName}>{existingLoadoutName}</span>
-          </span>
-        ) : null}
       </div>
-      <div className={styles.statSegmentContainer}>
-        {statOrder.map((statHash) => (
-          <PressTip
-            key={statHash}
-            tooltip={() => (
-              <StatTooltip
-                stat={{
-                  hash: statHash,
-                  name: statDefs[statHash].displayProperties.name,
-                  value: stats[statHash],
-                  description: statDefs[statHash].displayProperties.description,
-                  breakdown: getStatsBreakdown()[statHash].breakdown,
-                }}
-                equippedHashes={equippedHashes}
-              />
-            )}
-          >
-            <Stat
-              isActive={enabledStats.has(statHash)}
-              isBoosted={boostedStats.has(statHash)}
-              stat={statDefs[statHash]}
-              value={stats[statHash]}
+      {statOrder.map((statHash) => (
+        <PressTip
+          key={statHash}
+          tooltip={() => (
+            <StatTooltip
+              stat={{
+                hash: statHash,
+                name: statDefs[statHash].displayProperties.name,
+                value: stats[statHash],
+                description: statDefs[statHash].displayProperties.description,
+                breakdown: getStatsBreakdown()[statHash].breakdown,
+              }}
+              equippedHashes={equippedHashes}
             />
-          </PressTip>
-        ))}
-      </div>
+          )}
+        >
+          <Stat
+            isActive={enabledStats.has(statHash)}
+            isBoosted={boostedStats.has(statHash)}
+            stat={statDefs[statHash]}
+            value={stats[statHash]}
+          />
+        </PressTip>
+      ))}
+      <span className={styles.light}>
+        <AppIcon icon={powerIndicatorIcon} />
+        {maxPower}
+      </span>
+      {existingLoadoutName ? (
+        <span className={styles.existingLoadout}>
+          {t('LoadoutBuilder.ExistingLoadout')}:{' '}
+          <span className={styles.loadoutName}>{existingLoadoutName}</span>
+        </span>
+      ) : null}
     </div>
   );
 }
@@ -131,6 +130,7 @@ function Stat({
         [styles.nonActiveStat]: !isActive,
       })}
     >
+      <BungieImage className={clsx(styles.statIcon)} src={stat.displayProperties.icon} />
       <span
         className={clsx(styles.tier, {
           [styles.halfTierValue]: isHalfTier,
@@ -141,8 +141,6 @@ function Stat({
           tier: statTierWithHalf(value),
         })}
       </span>
-      <BungieImage className={clsx(styles.statIcon)} src={stat.displayProperties.icon} />{' '}
-      {stat.displayProperties.name}
     </span>
   );
 }
