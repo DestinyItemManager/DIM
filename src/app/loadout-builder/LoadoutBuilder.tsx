@@ -5,7 +5,7 @@ import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadoutFromEquipped, resolveLoadoutModHashes } from 'app/loadout-drawer/loadout-utils';
@@ -46,7 +46,12 @@ import { filterItems } from './item-filter';
 import { useLbState } from './loadout-builder-reducer';
 import { buildLoadoutParams } from './loadout-params';
 import { useAutoMods, useProcess } from './process/useProcess';
-import { ArmorEnergyRules, LOCKED_EXOTIC_ANY_EXOTIC, loDefaultArmorEnergyRules } from './types';
+import {
+  ArmorEnergyRules,
+  ArmorStatHashes,
+  LOCKED_EXOTIC_ANY_EXOTIC,
+  loDefaultArmorEnergyRules,
+} from './types';
 
 /** Do not allow the user to choose artifice mods manually in Loadout Optimizer since we're supposed to be doing that */
 const autoAssignmentPCHs = [PlugCategoryHashes.EnhancementsArtifice];
@@ -179,24 +184,19 @@ export default memo(function LoadoutBuilder({
   // TODO: maybe load from URL state async and fire a dispatch?
   // TODO: save params to URL when they change? or leave it for the share...
 
+  // TODO: maybe better to combine enabled & statOrder by making this a list in stat order?
   const enabledStats = useMemo(
     () => new Set(armorStats.filter((statType) => !statFilters[statType].ignored)),
     [statFilters]
   );
 
-  const autoMods = useAutoMods(selectedStore.id);
-  // Half tier mods in stat order so that the quick-add button automatically adds them,
-  // but for stats we care about (and only if we're not adding mods ourselves)
-  const halfTierMods = useMemo(
-    () =>
-      (!loadoutParameters.autoStatMods &&
-        _.compact(
-          statOrder.map(
-            (statHash) => enabledStats.has(statHash) && autoMods.generalMods[statHash]?.minorMod
-          )
-        )) ||
-      [],
-    [autoMods.generalMods, enabledStats, loadoutParameters.autoStatMods, statOrder]
+  // TODO: build a bundled up context object to pass to GeneratedSets?
+
+  const halfTierMods = useHalfTierMods(
+    selectedStore.id,
+    Boolean(loadoutParameters.autoStatMods),
+    statOrder,
+    enabledStats
   );
 
   const [armorEnergyRules, filteredItems, filterInfo] = useMemo(() => {
@@ -524,5 +524,32 @@ function useArmorItems(classType: DestinyClass): DimItem[] {
         (item) => isClassCompatible(item.classType, classType) && isLoadoutBuilderItem(item)
       ),
     [allItems, classType]
+  );
+}
+
+/**
+ * Half tier (+5) mods in user stat order so that the quick-add button
+ * automatically adds them, but only for stats we care about (and only if we're
+ * not adding stat mods automatically ourselves).
+ */
+function useHalfTierMods(
+  selectedStoreId: string,
+  autoStatMods: boolean,
+  statOrder: ArmorStatHashes[],
+  enabledStats: Set<ArmorStatHashes>
+): PluggableInventoryItemDefinition[] {
+  // Info about stat mods
+  const autoMods = useAutoMods(selectedStoreId);
+  return useMemo(
+    () =>
+      // If we are automatically assigning stat mods, don't even offer half tier quick-add
+      autoStatMods
+        ? emptyArray()
+        : _.compact(
+            statOrder.map(
+              (statHash) => enabledStats.has(statHash) && autoMods.generalMods[statHash]?.minorMod
+            )
+          ),
+    [autoMods.generalMods, enabledStats, autoStatMods, statOrder]
   );
 }

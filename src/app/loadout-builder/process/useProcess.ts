@@ -420,6 +420,9 @@ function mapItemsToGroups(
   return groups;
 }
 
+/**
+ * Compute information about the mods LO could automatically assign.
+ */
 export function useAutoMods(storeId: string) {
   const defs = useD2Definitions()!;
   const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(storeId));
