@@ -11,6 +11,7 @@ import { EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
 import { DestinyClass, ItemPerkVisibility } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
+import { t } from 'i18next';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { compareBy } from './comparators';
@@ -227,7 +228,6 @@ function getPerkDescriptions(
     } else {
       addDescriptionAsFunctionality();
     }
-    addTooltipNotifsAsRequirement();
   } else {
     if (plugDescription) {
       addDescriptionAsFunctionality();
@@ -263,9 +263,31 @@ function getPerkDescriptions(
       usedStrings.add(firstPerk.requirementDisplayString);
     }
 
+    // Check if we are dealing with a harmonic mod
+    if (
+      plug.displayProperties.name.includes(t('Element.Harmonic')) &&
+      perkDesc.description?.includes(t('Element.Arc'))
+    ) {
+      perkDesc.description = perkDesc.description.replace(
+        t('Element.Arc').toString(),
+        t('Element.SubclassMatching').toString()
+      );
+    }
+
     if (perkDesc.description || perkDesc.requirement) {
       results.push(perkDesc);
     }
+  }
+
+  /*
+    Some plugs (e.g. armor mods) store their functionality in their perk descriptions and use the description
+    field for auxiliary info like requirements and caveats. For these plugs, we want to prioritize strings in the
+    perks and only fall back to the actual description if we don't have any perks.
+
+    this is here to due some mods stacking and having hidden perks
+  */
+  if (plug.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)) {
+    addTooltipNotifsAsRequirement();
   }
 
   return results;

@@ -129,6 +129,11 @@
     "Cancel": "Cancel",
     "OK": "OK"
   },
+  "Element": {
+    "Arc": "Arc",
+    "Harmonic": "Harmonic",
+    "SubclassMatching": "sublass matching elemental"
+  },
   "EnergyMeter": {
     "Energy": "Energy",
     "Unused": "Unused",

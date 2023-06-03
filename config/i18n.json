@@ -322,6 +322,15 @@
     "WishlistUnknown": "Shows items with no roll recommendations in the loaded wish lists.",
     "Year": "Shows items from which year of Destiny they appeared in."
   },
+  "Element": {
+    "Solar": "Solar",
+    "Arc": "Arc",
+    "Void": "Void",
+    "Stasis": "Stasis",
+    "Strand": "Strand",
+    "Harmonic": "Harmonic",
+    "SubclassMatching": "sublass matching elemental"
+  },
   "General": {
     "ClickForDetails": "Click for details",
     "Confirm": "Confirm?",
