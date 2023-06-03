@@ -1288,8 +1288,6 @@
       "GitHubHelp": "If you're interested in contributing to the project, visit us at our project page on {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
       "HowItsMade": "DIM is a free, open source app built by community developers upon the same services used by Bungie.net and the Destiny Companion App.",
-      "Reddit": "Reddit",
-      "RedditHelp": "If you have questions, comments, or suggestions - let us know!",
       "Schedule": {
         "beta": "This beta version of DIM is updated every time we change the code - it gets the latest features and fixes, but also the latest bugs!",
         "release": "This version of DIM is updated once a week, at approximately midnight on Sundays, US Pacific time."
