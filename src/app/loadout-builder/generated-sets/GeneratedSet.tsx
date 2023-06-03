@@ -250,33 +250,35 @@ function GeneratedSet({
         subclass={subclass}
         exoticArmorHash={params.exoticArmorHash}
       />
-      <div className={styles.items}>
-        {displayedItems.map((item, i) => (
-          <GeneratedSetItem
-            key={item.index}
-            item={item}
-            itemOptions={set.armor[i]}
-            pinned={pinnedItems[item.bucket.hash] === item}
-            lbDispatch={lbDispatch}
-            assignedMods={itemModAssignments[item.id]}
-            automaticallyPickedMods={autoModsPerItem[item.id]}
-            energy={resultingItemEnergies[item.id]}
-          />
-        ))}
+      <div className={styles.build}>
+        <div className={styles.items}>
+          {displayedItems.map((item, i) => (
+            <GeneratedSetItem
+              key={item.index}
+              item={item}
+              itemOptions={set.armor[i]}
+              pinned={pinnedItems[item.bucket.hash] === item}
+              lbDispatch={lbDispatch}
+              assignedMods={itemModAssignments[item.id]}
+              automaticallyPickedMods={autoModsPerItem[item.id]}
+              energy={resultingItemEnergies[item.id]}
+            />
+          ))}
+        </div>
+        <GeneratedSetButtons
+          set={set}
+          items={displayedItems}
+          subclass={subclass}
+          store={selectedStore}
+          canCompareLoadouts={canCompareLoadouts}
+          halfTierMods={halfTierMods}
+          onLoadoutSet={setCreateLoadout}
+          lbDispatch={lbDispatch}
+          notes={notes}
+          params={params}
+          lockedMods={lockedMods}
+        />
       </div>
-      <GeneratedSetButtons
-        set={set}
-        items={displayedItems}
-        subclass={subclass}
-        store={selectedStore}
-        canCompareLoadouts={canCompareLoadouts}
-        halfTierMods={halfTierMods}
-        onLoadoutSet={setCreateLoadout}
-        lbDispatch={lbDispatch}
-        notes={notes}
-        params={params}
-        lockedMods={lockedMods}
-      />
     </div>
   );
 }

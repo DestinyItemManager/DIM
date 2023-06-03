@@ -1,14 +1,10 @@
 @use '../../variables.scss' as *;
 
 .container {
-  display: grid;
-  grid-template-columns: max-content min-content;
-  grid-auto-rows: min-content;
-  grid-template-areas:
-    'stats stats'
-    'items buttons';
+  display: flex;
+  flex-direction: column;
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-  gap: 8px 16px;
+  gap: 8px;
   box-sizing: border-box;
   padding-top: 10px;
   padding-bottom: 14px;
@@ -19,26 +15,21 @@
   }
 
   @include phone-portrait {
-    grid-template-columns: 100%;
-    grid-template-areas:
-      'stats'
-      'items'
-      'buttons';
     padding-left: 12px;
     padding-right: 12px;
   }
 }
 
 .build {
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  padding: 10px 0 16px 0;
-  gap: 4px;
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  gap: 16px;
+
+  @include phone-portrait {
+    flex-direction: column;
+  }
 }
 
 .items {
-  grid-area: items;
   display: flex;
   flex-flow: row wrap;
   padding: 0;
