@@ -20,16 +20,13 @@ const disabledDueToMaintenanceSelector = createSelector(
   (items) => items.length > 0 && items.every((item) => item.missingSockets || !item.sockets)
 );
 
-interface Props {
-  account: DestinyAccount;
-}
-
 /**
- * The Loadout Optimizer screen
- * TODO This isn't really a container but I can't think of a better name. It's more like
- * a LoadoutBuilderEnsureStuffIsLoaded
+ * The entry point for the Loadout Optimizer screen. This is responsible for
+ * making sure things are loading and reading initial loadout optimizer state
+ * from URL parameters. It then delegates to LoadoutBuilder which does most of
+ * the work.
  */
-export default function LoadoutBuilderContainer({ account }: Props) {
+export default function LoadoutBuilderContainer({ account }: { account: DestinyAccount }) {
   usePageTitle(t('LB.LB'));
   const location = useLocation();
   const dispatch = useThunkDispatch();
@@ -38,11 +35,14 @@ export default function LoadoutBuilderContainer({ account }: Props) {
   const storesLoaded = useLoadStores(account);
 
   let query: string | undefined;
+
+  // Get an entire loadout from state - this is used when optimizing a loadout from within DIM.
   const preloadedLoadout = (location.state as { loadout: Loadout } | undefined)?.loadout;
   if (preloadedLoadout?.parameters?.query) {
     query = preloadedLoadout.parameters.query;
   }
 
+  // Apply the preloaded loadout's query to the main search bar
   useEffect(() => {
     if (query) {
       dispatch(setSearchQuery(query));
