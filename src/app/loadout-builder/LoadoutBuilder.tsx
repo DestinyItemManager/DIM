@@ -24,9 +24,10 @@ import { isClassCompatible } from 'app/utils/item-utils';
 import { Portal } from 'app/utils/temp-container';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
+import { deepEqual } from 'fast-equals';
 import { AnimatePresence, motion } from 'framer-motion';
 import _ from 'lodash';
-import { memo, useCallback, useEffect, useMemo } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import {
   allItemsSelector,
@@ -132,14 +133,20 @@ export default memo(function LoadoutBuilder({
   );
 
   // Save a subset of the loadout parameters to settings in order to remember them between sessions
-  const setSetting = useSetSetting();
   const hasPreloadedLoadout = Boolean(preloadedLoadout);
+  const setSetting = useSetSetting();
+  const firstRun = useRef(true);
   useEffect(() => {
     // If the user is playing with an existing loadout (potentially one they
-    // received from a loadout share), do not overwrite the global saved loadout
-    // parameters. If they decide to save that loadout, these will still be
-    // saved with the loadout.
+    // received from a loadout share) or a direct /optimizer link, do not
+    // overwrite the global saved loadout parameters. If they decide to save
+    // that loadout, these will still be saved with the loadout.
     if (hasPreloadedLoadout) {
+      return;
+    }
+
+    if (firstRun.current) {
+      firstRun.current = false;
       return;
     }
 
@@ -147,17 +154,32 @@ export default memo(function LoadoutBuilder({
       assumeArmorMasterwork: loadoutParameters.assumeArmorMasterwork,
       autoStatMods: loadoutParameters.autoStatMods,
     });
-    setSetting('loStatConstraintsByClass', {
-      ...savedStatConstraintsByClass,
-      [classType]: statOrder
-        .filter((statHash) => enabledStats.has(statHash))
-        .map((statHash) => ({ statHash })),
-    });
+  }, [
+    setSetting,
+    loadoutParameters.assumeArmorMasterwork,
+    loadoutParameters.autoStatMods,
+    hasPreloadedLoadout,
+  ]);
+  useEffect(() => {
+    // If the user is playing with an existing loadout (potentially one they received from a loadout share)
+    // or a direct /optimizer link, do not overwrite the global saved loadout parameters.
+    // If they decide to save that loadout, these will still be saved with the loadout.
+    if (hasPreloadedLoadout) {
+      return;
+    }
+
+    const newStatConstraints = statOrder
+      .filter((statHash) => enabledStats.has(statHash))
+      .map((statHash) => ({ statHash }));
+    if (!deepEqual(newStatConstraints, savedStatConstraintsByClass[classType])) {
+      setSetting('loStatConstraintsByClass', {
+        ...savedStatConstraintsByClass,
+        [classType]: newStatConstraints,
+      });
+    }
   }, [
     setSetting,
     statOrder,
-    loadoutParameters.assumeArmorMasterwork,
-    loadoutParameters.autoStatMods,
     savedStatConstraintsByClass,
     classType,
     hasPreloadedLoadout,
