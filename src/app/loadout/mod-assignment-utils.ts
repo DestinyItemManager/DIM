@@ -894,9 +894,7 @@ interface ItemEnergy {
  * Validates whether a mod can be assigned to an item in the mod assignments algorithm.
  *
  * This checks that the summed mod energies are within the derived mod capacity for
- * an item (derived from armour upgrade options). It also ensures that all the mod
- * energy types align and that the mod can be slotted into an item socket based on
- * item energy type.
+ * an item (derived from armour upgrade options).
  */
 function isModEnergyValid(
   itemEnergy: ItemEnergy,
