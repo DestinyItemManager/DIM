@@ -111,7 +111,9 @@ export default memo(function GeneratedSets({
     if (measureSetRef.current) {
       setRowSize({
         rowHeight: measureSetRef.current.clientHeight,
-        rowWidth: measureSetRef.current.clientWidth,
+        rowWidth:
+          measureSetRef.current.clientWidth +
+          1 /* Some sort of measurement error when sizes are fractional */,
       });
     }
     // Include sets to recover after no sets were found and rowHeight stayed 0
