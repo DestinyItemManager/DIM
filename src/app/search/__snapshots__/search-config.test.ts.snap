@@ -36,6 +36,7 @@ exports[`buildSearchConfig generates a reasonable filter map: is filters 1`] = `
   "exotic",
   "extraperk",
   "finishers",
+  "focusable",
   "fusionrifle",
   "gauntlets",
   "ghost",
