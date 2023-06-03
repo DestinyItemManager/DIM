@@ -4,9 +4,10 @@ import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
+import { DimStore } from 'app/inventory/store-types';
 import { Loadout, ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
 import { newLoadoutFromEquipped, resolveLoadoutModHashes } from 'app/loadout-drawer/loadout-utils';
-import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
+import { useSavedLoadoutsForClassType } from 'app/loadout/loadout-ui/menu-hooks';
 import { categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -63,7 +64,6 @@ export default memo(function LoadoutBuilder({
 }) {
   const defs = useD2Definitions()!;
   const stores = useSelector(sortedStoresSelector);
-  const allLoadouts = useSelector(loadoutsSelector);
   const allItems = useSelector(allItemsSelector);
   const searchFilter = useSelector(searchFilterSelector);
   const searchQuery = useSelector(querySelector);
@@ -115,6 +115,7 @@ export default memo(function LoadoutBuilder({
   const selectedStore = stores.find((store) => store.id === selectedStoreId)!;
   const classType = selectedStore.classType;
   const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(selectedStoreId));
+  const loadouts = useRelevantLoadouts(selectedStore);
 
   const resolvedMods: ResolvedLoadoutMod[] = useMemo(
     () => resolveLoadoutModHashes(defs, loadoutParameters.mods ?? [], unlockedPlugs),
@@ -223,18 +224,6 @@ export default memo(function LoadoutBuilder({
       [],
     [autoMods.generalMods, enabledStats, loadoutParameters.autoStatMods, statOrder]
   );
-
-  const loadouts = useMemo(() => {
-    const equippedLoadout: Loadout | undefined = newLoadoutFromEquipped(
-      t('Loadouts.CurrentlyEquipped'),
-      selectedStore,
-      undefined
-    );
-    const classLoadouts = allLoadouts.filter(
-      (l) => l.classType === selectedStore.classType || l.classType === DestinyClass.Unknown
-    );
-    return equippedLoadout ? [...classLoadouts, equippedLoadout] : classLoadouts;
-  }, [allLoadouts, selectedStore]);
 
   const [armorEnergyRules, filteredItems, filterInfo] = useMemo(() => {
     const armorEnergyRules: ArmorEnergyRules = {
@@ -510,3 +499,26 @@ export default memo(function LoadoutBuilder({
     </PageWithMenu>
   );
 });
+
+/**
+ * Get a list of all loadouts that could be shown as "matching loadouts" or
+ * used to compare loadouts. This is all loadouts usable by the selected store's
+ * class plus the currently equipped loadout.
+ */
+function useRelevantLoadouts(selectedStore: DimStore) {
+  const classLoadouts = useSavedLoadoutsForClassType(selectedStore.classType);
+
+  // TODO: consider using fullyResolvedLoadoutsSelector
+  const loadouts = useMemo(() => {
+    // TODO: use a selector / weakMemoize for this?
+    const equippedLoadout = newLoadoutFromEquipped(
+      t('Loadouts.CurrentlyEquipped'),
+      selectedStore,
+      // TODO: pipe in
+      undefined
+    );
+    return [...classLoadouts, equippedLoadout];
+  }, [classLoadouts, selectedStore]);
+
+  return loadouts;
+}
