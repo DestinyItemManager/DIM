@@ -1,9 +1,5 @@
 @use '../../variables' as *;
 
-.itemName {
-  font-weight: bold;
-}
-
 .perkOrModNameAndImage {
   composes: flexRow from '../../dim-ui/common.m.scss';
   align-items: center;
@@ -13,8 +9,4 @@
 .perkOrModImage {
   height: 16px;
   width: 16px;
-}
-
-.perkDescription {
-  color: var(--theme-text-secondary);
 }

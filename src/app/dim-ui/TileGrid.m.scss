@@ -37,6 +37,7 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  //color: var(--theme-text-secondary);
 }
 
 .selected {
@@ -46,4 +47,10 @@
 .disabled {
   opacity: 0.5;
   cursor: default;
+}
+
+.title {
+  color: var(--theme-text);
+  font-weight: bold;
+  font-size: 14px;
 }

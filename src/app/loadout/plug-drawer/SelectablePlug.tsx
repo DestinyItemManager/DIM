@@ -49,6 +49,7 @@ export default function SelectablePlug({
       <TileGridTile
         selected={selected}
         disabled={selectionType === 'multi' && !selectable}
+        title={plug.displayProperties.name}
         icon={
           <div className="item" title={plug.displayProperties.name}>
             <DefItemIcon itemDef={plug} />
@@ -75,7 +76,6 @@ function SelectablePlugDetails({
   const plugDescriptions = usePlugDescriptions(plug, stats, /* forceUseBungieDescriptions */ true);
   return (
     <>
-      <div className={styles.plugTitle}>{plug.displayProperties.name}</div>
       {plugDescriptions.perks.map((perkDesc) => (
         <React.Fragment key={perkDesc.perkHash}>
           {perkDesc.description && <RichDestinyText text={perkDesc.description} />}

@@ -49,20 +49,15 @@ export default function ExoticTile({ exotic, selected, onSelected }: Props) {
       selected={selected}
       onClick={onSelected}
       disabled={exotic.isArmor1}
+      title={def.displayProperties.name}
       icon={
         <div className="item">
           <DefItemIcon itemDef={def} />
         </div>
       }
     >
-      <div className={styles.itemName}>{def.displayProperties.name}</div>
       {exotic.isArmor1 && <div>{t('LB.IncompatibleWithOptimizer')}</div>}
-      {exoticPerk && (
-        <>
-          <div>{exoticPerk.displayProperties.name}</div>
-          <div className={styles.perkDescription}>{perkShortDescription}</div>
-        </>
-      )}
+      {exoticPerk && perkShortDescription}
       {exoticMods?.map((mod) => (
         <div key={mod.hash} className={styles.perkOrModNameAndImage}>
           <DefItemIcon className={styles.perkOrModImage} itemDef={mod} />
@@ -94,14 +89,14 @@ export function FakeExoticTile({
     <TileGridTile
       selected={selected}
       onClick={onSelected}
+      title={title}
       icon={
         <div className="item">
           <img src={icon} className="item-img" />
         </div>
       }
     >
-      <div className={styles.itemName}>{title}</div>
-      <div className={styles.perkDescription}>{description}</div>
+      {description}
     </TileGridTile>
   );
 }

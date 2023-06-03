@@ -1,11 +1,7 @@
 @use '../../variables' as *;
 
-.plugTitle {
-  font-weight: bold;
-}
-
 .requirement {
   font-style: italic;
-  color: var(--theme-text-secondary);
   font-size: 11px;
+  color: var(--theme-text-secondary);
 }

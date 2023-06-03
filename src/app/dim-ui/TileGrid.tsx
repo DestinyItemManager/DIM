@@ -31,13 +31,15 @@ export function TileGridTile({
   className,
   children,
   icon,
+  title,
   selected,
   disabled,
   onClick,
 }: {
   className?: string;
   children: React.ReactNode;
-  icon?: React.ReactNode;
+  icon: React.ReactNode;
+  title: React.ReactNode;
   selected?: boolean;
   disabled?: boolean;
   onClick: React.MouseEventHandler<HTMLElement>;
@@ -56,7 +58,10 @@ export function TileGridTile({
     >
       <>
         {icon}
-        <div className={styles.details}>{children}</div>
+        <div className={styles.details}>
+          <div className={styles.title}>{title}</div>
+          {children}
+        </div>
       </>
     </div>
   );
