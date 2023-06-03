@@ -293,11 +293,11 @@ export function fitMostMods({
     const targetItem = items.find((item) => item.bucket.hash === bucketHash);
 
     if (targetItem) {
-      bucketSpecificAssignments[targetItem.id] = assignBucketSpecificMods({
+      bucketSpecificAssignments[targetItem.id] = assignBucketSpecificMods(
         armorEnergyRules,
-        item: targetItem,
-        modsToAssign,
-      });
+        targetItem,
+        modsToAssign
+      );
     } else {
       unassignedMods.push(...modsToAssign);
     }
@@ -497,20 +497,17 @@ function getArmorSocketsAndMods(
 }
 
 /**
- * Assign bucket specific mods based on assumed energy type, assumed mod energy capacity, and available sockets,
- * partitioning mods based whether it could fit them into the item.
- * Socket choice for mod assignment is greedy, but uses a heuristic based on the number of sockets a mod could
- * fit into, since mods that can fit into fewer sockets must be prioritized.
+ * Assign bucket specific mods based on the configured max energy capacity and
+ * available socket types, partitioning mods based whether they could fit.
+ * Socket choice for mod assignment is greedy, but uses a heuristic based on the
+ * number of sockets a mod could fit into, since mods that can fit into fewer
+ * sockets must be prioritized.
  */
-export function assignBucketSpecificMods({
-  item,
-  armorEnergyRules,
-  modsToAssign,
-}: {
-  armorEnergyRules: ArmorEnergyRules;
-  item: DimItem;
-  modsToAssign: PluggableInventoryItemDefinition[];
-}): {
+export function assignBucketSpecificMods(
+  armorEnergyRules: ArmorEnergyRules,
+  item: DimItem,
+  modsToAssign: PluggableInventoryItemDefinition[]
+): {
   assigned: PluggableInventoryItemDefinition[];
   unassigned: PluggableInventoryItemDefinition[];
 } {

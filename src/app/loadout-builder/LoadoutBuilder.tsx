@@ -5,6 +5,7 @@ import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
+import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadoutFromEquipped, resolveLoadoutModHashes } from 'app/loadout-drawer/loadout-utils';
@@ -21,9 +22,8 @@ import { emptyArray } from 'app/utils/empty';
 import { isClassCompatible } from 'app/utils/item-utils';
 import { Portal } from 'app/utils/temp-container';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
+import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Draft } from 'immer';
 import _ from 'lodash';
 import { memo, useCallback, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
@@ -46,13 +46,7 @@ import { filterItems } from './item-filter';
 import { useLbState } from './loadout-builder-reducer';
 import { buildLoadoutParams } from './loadout-params';
 import { useAutoMods, useProcess } from './process/useProcess';
-import {
-  ArmorEnergyRules,
-  ItemsByBucket,
-  LOCKED_EXOTIC_ANY_EXOTIC,
-  LockableBucketHash,
-  loDefaultArmorEnergyRules,
-} from './types';
+import { ArmorEnergyRules, LOCKED_EXOTIC_ANY_EXOTIC, loDefaultArmorEnergyRules } from './types';
 
 /** Do not allow the user to choose artifice mods manually in Loadout Optimizer since we're supposed to be doing that */
 const autoAssignmentPCHs = [PlugCategoryHashes.EnhancementsArtifice];
@@ -118,15 +112,11 @@ export default memo(function LoadoutBuilder({
   );
 
   /** Gets items for the loadout builder and creates a mapping of classType -> bucketHash -> item array. */
-  const armorByBucketHash = useArmorByBucketHash(classType);
+  const armorItems = useArmorItems(classType);
 
   const { modMap: lockedModMap, unassignedMods } = useMemo(
-    () =>
-      categorizeArmorMods(
-        modsToAssign,
-        armorByBucketHash ? Object.values(armorByBucketHash).flat() : []
-      ),
-    [armorByBucketHash, modsToAssign]
+    () => categorizeArmorMods(modsToAssign, armorItems),
+    [armorItems, modsToAssign]
   );
 
   // Save a subset of the loadout parameters to settings in order to remember them between sessions
@@ -218,7 +208,7 @@ export default memo(function LoadoutBuilder({
     }
     const [items, filterInfo] = filterItems({
       defs,
-      items: armorByBucketHash,
+      items: armorItems,
       pinnedItems,
       excludedItems,
       lockedModMap,
@@ -231,7 +221,7 @@ export default memo(function LoadoutBuilder({
   }, [
     loadoutParameters.assumeArmorMasterwork,
     defs,
-    armorByBucketHash,
+    armorItems,
     pinnedItems,
     excludedItems,
     lockedModMap,
@@ -525,25 +515,14 @@ function useResolvedMods(
 
 /**
  * Gets all armor items that could be used to build loadouts for the specified class.
- * @return a mapping of bucketHash -> items.
  */
-function useArmorByBucketHash(classType: DestinyClass): ItemsByBucket {
+function useArmorItems(classType: DestinyClass): DimItem[] {
   const allItems = useSelector(allItemsSelector);
-  return useMemo(() => {
-    const items: Draft<ItemsByBucket> = {
-      [BucketHashes.Helmet]: [],
-      [BucketHashes.Gauntlets]: [],
-      [BucketHashes.ChestArmor]: [],
-      [BucketHashes.LegArmor]: [],
-      [BucketHashes.ClassArmor]: [],
-    };
-    for (const item of allItems) {
-      if (!isClassCompatible(item.classType, classType) || !isLoadoutBuilderItem(item)) {
-        continue;
-      }
-
-      items[item.bucket.hash as LockableBucketHash].push(item);
-    }
-    return items;
-  }, [allItems, classType]);
+  return useMemo(
+    () =>
+      allItems.filter(
+        (item) => isClassCompatible(item.classType, classType) && isLoadoutBuilderItem(item)
+      ),
+    [allItems, classType]
+  );
 }
