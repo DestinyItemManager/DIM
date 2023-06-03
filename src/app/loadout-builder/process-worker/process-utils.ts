@@ -220,13 +220,15 @@ export function pickOptimalStatMods(
   const explorationStats = [0, 0, 0, 0, 0, 0];
 
   for (let statIndex = setStats.length - 1; statIndex >= 0; statIndex--) {
-    const value = Math.min(Math.max(setStats[statIndex], 0), 100);
     const filter = statFiltersInStatOrder[statIndex];
     if (!filter.ignored) {
-      const neededValue = filter.min * 10 - value;
-      if (neededValue > 0) {
-        // As per function preconditions, we know that we can hit these minimum stats
-        explorationStats[statIndex] = neededValue;
+      const value = setStats[statIndex];
+      if (filter.min > 0) {
+        const neededValue = filter.min * 10 - value;
+        if (neededValue > 0) {
+          // As per function preconditions, we know that we can hit these minimum stats
+          explorationStats[statIndex] = neededValue;
+        }
       }
       maxAddedStats[statIndex] = filter.max * 10 - value;
     }

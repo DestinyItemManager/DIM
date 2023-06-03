@@ -269,10 +269,9 @@ export function process(
 
             // Check in which stats we're lacking
             for (let index = 0; index < 6; index++) {
-              const value = Math.min(Math.max(stats[index], 0), 100);
               const filter = statFiltersInStatOrder[index];
-
-              if (!filter.ignored) {
+              if (!filter.ignored && filter.min > 0) {
+                const value = stats[index];
                 const neededValue = filter.min * 10 - value;
                 if (neededValue > 0) {
                   totalNeededStats += neededValue;
