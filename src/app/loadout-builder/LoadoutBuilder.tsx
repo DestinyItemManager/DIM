@@ -1,3 +1,4 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { savedLoStatConstraintsByClassSelector } from 'app/dim-api/selectors';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
@@ -5,7 +6,7 @@ import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
-import { Loadout, ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadoutFromEquipped, resolveLoadoutModHashes } from 'app/loadout-drawer/loadout-utils';
 import { useSavedLoadoutsForClassType } from 'app/loadout/loadout-ui/menu-hooks';
 import { categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
@@ -16,6 +17,7 @@ import { searchFilterSelector } from 'app/search/search-filter';
 import { useSetSetting } from 'app/settings/hooks';
 import { AppIcon, redoIcon, refreshIcon, undoIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
+import { emptyArray } from 'app/utils/empty';
 import { Portal } from 'app/utils/temp-container';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
@@ -62,6 +64,7 @@ export default memo(function LoadoutBuilder({
 }: {
   preloadedLoadout: Loadout | undefined;
 }) {
+  const isPhonePortrait = useIsPhonePortrait();
   const defs = useD2Definitions()!;
   const stores = useSelector(sortedStoresSelector);
   const allItems = useSelector(allItemsSelector);
@@ -90,6 +93,7 @@ export default memo(function LoadoutBuilder({
 
   const optimizingLoadoutId = preloadedLoadout?.id;
 
+  // All Loadout Optimizer state is managed via this hook/reducer
   const [
     {
       loadoutParameters,
@@ -106,21 +110,16 @@ export default memo(function LoadoutBuilder({
     },
     lbDispatch,
   ] = useLbState(stores, defs, preloadedLoadout);
-  const isPhonePortrait = useIsPhonePortrait();
 
+  const modHashes = loadoutParameters.mods ?? emptyArray();
   const lockedExoticHash = loadoutParameters.exoticArmorHash;
-
   const autoStatMods = loadoutParameters.autoStatMods ?? false;
 
   const selectedStore = stores.find((store) => store.id === selectedStoreId)!;
   const classType = selectedStore.classType;
-  const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(selectedStoreId));
   const loadouts = useRelevantLoadouts(selectedStore);
 
-  const resolvedMods: ResolvedLoadoutMod[] = useMemo(
-    () => resolveLoadoutModHashes(defs, loadoutParameters.mods ?? [], unlockedPlugs),
-    [defs, loadoutParameters.mods, unlockedPlugs]
-  );
+  const resolvedMods = useResolvedMods(defs, modHashes, selectedStoreId);
 
   const modsToAssign = useMemo(
     // If auto stat mods are enabled, ignore any saved stat mods
@@ -521,4 +520,20 @@ function useRelevantLoadouts(selectedStore: DimStore) {
   }, [classLoadouts, selectedStore]);
 
   return loadouts;
+}
+
+/**
+ * Get a list of "resolved" mods given a list of mod hashes (presumably the ones selected by the user).
+ * Resolved mods may be substituted with more appropriate choices.
+ */
+function useResolvedMods(
+  defs: D2ManifestDefinitions,
+  modHashes: number[],
+  selectedStoreId: string | undefined
+) {
+  const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(selectedStoreId));
+  return useMemo(
+    () => resolveLoadoutModHashes(defs, modHashes, unlockedPlugs),
+    [defs, modHashes, unlockedPlugs]
+  );
 }
