@@ -18,6 +18,7 @@ import { useSetSetting } from 'app/settings/hooks';
 import { AppIcon, redoIcon, refreshIcon, undoIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyArray } from 'app/utils/empty';
+import { isClassCompatible } from 'app/utils/item-utils';
 import { Portal } from 'app/utils/temp-container';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
@@ -67,29 +68,9 @@ export default memo(function LoadoutBuilder({
   const isPhonePortrait = useIsPhonePortrait();
   const defs = useD2Definitions()!;
   const stores = useSelector(sortedStoresSelector);
-  const allItems = useSelector(allItemsSelector);
   const searchFilter = useSelector(searchFilterSelector);
   const searchQuery = useSelector(querySelector);
   const savedStatConstraintsByClass = useSelector(savedLoStatConstraintsByClassSelector);
-
-  /** Gets items for the loadout builder and creates a mapping of classType -> bucketHash -> item array. */
-  const items = useMemo(() => {
-    const items: Partial<Record<DestinyClass, Draft<ItemsByBucket>>> = {};
-    for (const item of allItems) {
-      if (!item || !isLoadoutBuilderItem(item)) {
-        continue;
-      }
-      const { classType, bucket } = item;
-      (items[classType] ??= {
-        [BucketHashes.Helmet]: [],
-        [BucketHashes.Gauntlets]: [],
-        [BucketHashes.ChestArmor]: [],
-        [BucketHashes.LegArmor]: [],
-        [BucketHashes.ClassArmor]: [],
-      })[bucket.hash as LockableBucketHash].push(item);
-    }
-    return items as Partial<Record<DestinyClass, ItemsByBucket>>;
-  }, [allItems]);
 
   const optimizingLoadoutId = preloadedLoadout?.id;
 
@@ -136,12 +117,16 @@ export default memo(function LoadoutBuilder({
     [resolvedMods, autoStatMods]
   );
 
-  const characterItems = items[classType];
+  /** Gets items for the loadout builder and creates a mapping of classType -> bucketHash -> item array. */
+  const armorByBucketHash = useArmorByBucketHash(classType);
 
   const { modMap: lockedModMap, unassignedMods } = useMemo(
     () =>
-      categorizeArmorMods(modsToAssign, characterItems ? Object.values(characterItems).flat() : []),
-    [characterItems, modsToAssign]
+      categorizeArmorMods(
+        modsToAssign,
+        armorByBucketHash ? Object.values(armorByBucketHash).flat() : []
+      ),
+    [armorByBucketHash, modsToAssign]
   );
 
   // Save a subset of the loadout parameters to settings in order to remember them between sessions
@@ -233,7 +218,7 @@ export default memo(function LoadoutBuilder({
     }
     const [items, filterInfo] = filterItems({
       defs,
-      items: characterItems,
+      items: armorByBucketHash,
       pinnedItems,
       excludedItems,
       lockedModMap,
@@ -246,7 +231,7 @@ export default memo(function LoadoutBuilder({
   }, [
     loadoutParameters.assumeArmorMasterwork,
     defs,
-    characterItems,
+    armorByBucketHash,
     pinnedItems,
     excludedItems,
     lockedModMap,
@@ -536,4 +521,29 @@ function useResolvedMods(
     () => resolveLoadoutModHashes(defs, modHashes, unlockedPlugs),
     [defs, modHashes, unlockedPlugs]
   );
+}
+
+/**
+ * Gets all armor items that could be used to build loadouts for the specified class.
+ * @return a mapping of bucketHash -> items.
+ */
+function useArmorByBucketHash(classType: DestinyClass): ItemsByBucket {
+  const allItems = useSelector(allItemsSelector);
+  return useMemo(() => {
+    const items: Draft<ItemsByBucket> = {
+      [BucketHashes.Helmet]: [],
+      [BucketHashes.Gauntlets]: [],
+      [BucketHashes.ChestArmor]: [],
+      [BucketHashes.LegArmor]: [],
+      [BucketHashes.ClassArmor]: [],
+    };
+    for (const item of allItems) {
+      if (!isClassCompatible(item.classType, classType) || !isLoadoutBuilderItem(item)) {
+        continue;
+      }
+
+      items[item.bucket.hash as LockableBucketHash].push(item);
+    }
+    return items;
+  }, [allItems, classType]);
 }
