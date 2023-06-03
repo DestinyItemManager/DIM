@@ -15,7 +15,7 @@ import { useDefinitions } from 'app/manifest/selectors';
 import { addIcon, AppIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
-import { itemCanBeInLoadout } from 'app/utils/item-utils';
+import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { infoLog, warnLog } from 'app/utils/log';
 import { useHistory } from 'app/utils/undo-redo-history';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -187,7 +187,6 @@ export default function LoadoutDrawer({
 
   /** Prompt the user to select a replacement for a missing item. */
   const fixWarnItem = async (li: ResolvedLoadoutItem) => {
-    const loadoutClassType = loadout?.classType;
     const warnItem = li.item;
 
     setShowingItemPicker(true);
@@ -198,10 +197,7 @@ export default function LoadoutDrawer({
             ? item.bucket.hash === warnItem.bucket.hash
             : item.hash === warnItem.hash) &&
           itemCanBeInLoadout(item) &&
-          (!loadout ||
-            loadout.classType === DestinyClass.Unknown ||
-            item.classType === loadoutClassType ||
-            item.classType === DestinyClass.Unknown),
+          isClassCompatible(item.classType, loadout.classType),
         prompt: t('Loadouts.FindAnother', {
           name: warnItem.bucket.inArmor ? warnItem.bucket.name : warnItem.name,
         }),
@@ -336,10 +332,7 @@ function filterLoadoutToAllowedItems(
     // Filter out items that don't fit the class type
     loadout.items = loadout.items.filter((loadoutItem) => {
       const classType = defs.InventoryItem.get(loadoutItem.hash)?.classType;
-      return (
-        classType !== undefined &&
-        (classType === DestinyClass.Unknown || classType === loadout.classType)
-      );
+      return classType !== undefined && isClassCompatible(classType, loadout.classType);
     });
 
     if (loadout.classType === DestinyClass.Unknown && loadout.parameters) {
@@ -369,7 +362,6 @@ async function pickLoadoutItem(
   onShowItemPicker: (shown: boolean) => void,
   store: DimStore
 ) {
-  const loadoutClassType = loadout?.classType;
   const loadoutHasItem = (item: DimItem) =>
     findSameLoadoutItemIndex(defs, loadout.items, item) !== -1;
   onShowItemPicker(true);
@@ -377,10 +369,7 @@ async function pickLoadoutItem(
     const { item } = await showItemPicker({
       filterItems: (item: DimItem) =>
         item.bucket.hash === bucket.hash &&
-        (!loadout ||
-          loadout.classType === DestinyClass.Unknown ||
-          item.classType === loadoutClassType ||
-          item.classType === DestinyClass.Unknown) &&
+        isClassCompatible(item.classType, loadout.classType) &&
         itemCanBeInLoadout(item) &&
         !loadoutHasItem(item) &&
         (!item.notransfer || item.owner === store.id),

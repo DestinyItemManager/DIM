@@ -14,6 +14,7 @@ import {
 import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
 import { plainString } from 'app/search/search-filters/freeform';
 import { emptyArray } from 'app/utils/empty';
+import { isClassCompatible } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import deprecatedMods from 'data/d2/deprecated-mods.json';
 import _ from 'lodash';
@@ -32,12 +33,7 @@ export function useSavedLoadoutsForClassType(classType: DestinyClass) {
 }
 
 export function filterLoadoutsToClass(loadouts: Loadout[], classType: DestinyClass) {
-  return loadouts.filter(
-    (loadout) =>
-      classType === DestinyClass.Unknown ||
-      loadout.classType === DestinyClass.Unknown ||
-      loadout.classType === classType
-  );
+  return loadouts.filter((loadout) => isClassCompatible(classType, loadout.classType));
 }
 
 /**
