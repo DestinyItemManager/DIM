@@ -59,6 +59,12 @@ jobs:
       - name: Install
         run: yarn install --frozen-lockfile --prefer-offline
 
+      - name: Prettier
+        run: yarn lint:prettier
+
+      - name: StyleLint
+        run: yarn lint:stylelint
+
       - name: ESLint (Forked)
         if: github.event.pull_request.head.repo.full_name != github.repository
         run: yarn lintcached
