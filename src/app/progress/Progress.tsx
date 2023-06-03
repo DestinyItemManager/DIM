@@ -41,9 +41,9 @@ export default function Progress({ account }: { account: DestinyAccount }) {
 
   const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(undefined);
 
-  useLoadStores(account);
+  const storesLoaded = useLoadStores(account);
 
-  if (!defs || !profileInfo || !stores.length) {
+  if (!defs || !profileInfo || !storesLoaded) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 

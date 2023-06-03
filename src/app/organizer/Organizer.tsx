@@ -2,7 +2,6 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
-import { storesSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { setSearchQuery } from 'app/shell/actions';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
@@ -51,12 +50,11 @@ function drillToSelection(
 }
 
 export default function Organizer({ account }: Props) {
+  usePageTitle(t('Organizer.Organizer'));
   const dispatch = useThunkDispatch();
   const isPhonePortrait = useIsPhonePortrait();
-  const stores = useSelector(storesSelector);
   const searchQuery = useSelector(querySelector);
-  useLoadStores(account);
-  usePageTitle(t('Organizer.Organizer'));
+  const storesLoaded = useLoadStores(account);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -116,7 +114,7 @@ export default function Organizer({ account }: Props) {
     return <div className={styles.noMobile}>{t('Organizer.NoMobile')}</div>;
   }
 
-  if (!stores.length) {
+  if (!storesLoaded) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 

@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { createSelector } from 'reselect';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { allItemsSelector, sortedStoresSelector } from '../inventory/selectors';
+import { allItemsSelector } from '../inventory/selectors';
 import LoadoutBuilder from './LoadoutBuilder';
 
 const disabledDueToMaintenanceSelector = createSelector(
@@ -30,13 +30,12 @@ interface Props {
  * a LoadoutBuilderEnsureStuffIsLoaded
  */
 export default function LoadoutBuilderContainer({ account }: Props) {
+  usePageTitle(t('LB.LB'));
   const location = useLocation();
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions();
-  const stores = useSelector(sortedStoresSelector);
   const disabledDueToMaintenance = useSelector(disabledDueToMaintenanceSelector);
-  useLoadStores(account);
-  usePageTitle(t('LB.LB'));
+  const storesLoaded = useLoadStores(account);
 
   let query: string | undefined;
   const preloadedLoadout = (location.state as { loadout: Loadout } | undefined)?.loadout;
@@ -50,7 +49,7 @@ export default function LoadoutBuilderContainer({ account }: Props) {
     }
   }, [dispatch, query]);
 
-  if (!stores?.length || !defs) {
+  if (!storesLoaded || !defs) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
@@ -63,11 +62,5 @@ export default function LoadoutBuilderContainer({ account }: Props) {
     );
   }
 
-  return (
-    <LoadoutBuilder
-      key={preloadedLoadout?.id ?? 'lo'}
-      stores={stores}
-      preloadedLoadout={preloadedLoadout}
-    />
-  );
+  return <LoadoutBuilder key={preloadedLoadout?.id ?? 'lo'} preloadedLoadout={preloadedLoadout} />;
 }

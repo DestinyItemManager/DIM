@@ -61,8 +61,8 @@ export default function RecordBooks({ account }: Props) {
   const stores = useSelector(storesSelector) as D1Store[];
   const [hideCompletedRecords, setHideCompletedRecords] = useSetting('hideCompletedRecords');
 
-  useLoadStores(account);
-  if (!defs || !stores.length) {
+  const storesLoaded = useLoadStores(account);
+  if (!defs || !storesLoaded) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
   const hideCompletedRecordsChanged = (e: React.ChangeEvent<HTMLInputElement>) =>

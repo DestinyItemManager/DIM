@@ -57,12 +57,12 @@ interface Props {
 
 export default function Activities({ account }: Props) {
   usePageTitle(t('Activities.Activities'));
-  useLoadStores(account);
+  const storesLoaded = useLoadStores(account);
   const stores = useSelector(sortedStoresSelector);
 
   const defs = useD1Definitions();
 
-  if (!defs || !stores.length) {
+  if (!defs || !storesLoaded) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
