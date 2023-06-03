@@ -540,8 +540,8 @@
       "ProcessingMode": "Processing mode"
     },
     "Scaled": "Scaled",
-    "SearchAMod": "Search a mod or description",
-    "SearchAnExotic": "Search an exotic or description",
+    "SearchAMod": "Search for mod name or description",
+    "SearchAnExotic": "Search for exotic name or description",
     "SelectExotic": "Select exotic",
     "SelectMods": "Select Mods",
     "SelectSubclass": "Select subclass",

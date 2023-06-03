@@ -1,17 +1,6 @@
 .container {
   display: flex;
   flex-direction: column;
-  padding: 0 10px 16px 10px;
-}
-
-.header {
-  font-weight: 600;
-  font-size: 20px;
-  margin: 8px 0 4px 0;
-}
-
-.items {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 10px;
+  padding: 10px 10px 16px 10px;
+  gap: 14px;
 }

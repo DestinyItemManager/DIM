@@ -1,6 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { languageSelector } from 'app/dim-api/selectors';
 import Sheet from 'app/dim-ui/Sheet';
+import { TileGrid } from 'app/dim-ui/TileGrid';
 import { DimLanguage } from 'app/i18n';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
@@ -177,48 +178,45 @@ export default function ExoticPicker({ lockedExoticHash, classType, onSelected, 
     >
       {({ onClose }) => (
         <div className={styles.container}>
-          <div>
-            <div className={styles.header}>{t('LoadoutBuilder.ExoticSpecialCategory')}</div>
-            <div className={styles.items}>
-              <FakeExoticTile
-                selected={lockedExoticHash === LOCKED_EXOTIC_NO_EXOTIC}
-                title={t('LoadoutBuilder.NoExotic')}
-                description={t('LoadoutBuilder.NoExoticDescription')}
-                icon={noExoticIcon}
-                onSelected={() => {
-                  onSelected(LOCKED_EXOTIC_NO_EXOTIC);
-                  onClose();
-                }}
-              />
-              <FakeExoticTile
-                selected={lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC}
-                title={t('LoadoutBuilder.AnyExotic')}
-                description={t('LoadoutBuilder.AnyExoticDescription')}
-                icon={anyExoticIcon}
-                onSelected={() => {
-                  onSelected(LOCKED_EXOTIC_ANY_EXOTIC);
-                  onClose();
-                }}
-              />
-            </div>
-          </div>
+          <TileGrid header={t('LoadoutBuilder.ExoticSpecialCategory')}>
+            <FakeExoticTile
+              selected={lockedExoticHash === LOCKED_EXOTIC_NO_EXOTIC}
+              title={t('LoadoutBuilder.NoExotic')}
+              description={t('LoadoutBuilder.NoExoticDescription')}
+              icon={noExoticIcon}
+              onSelected={() => {
+                onSelected(LOCKED_EXOTIC_NO_EXOTIC);
+                onClose();
+              }}
+            />
+            <FakeExoticTile
+              selected={lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC}
+              title={t('LoadoutBuilder.AnyExotic')}
+              description={t('LoadoutBuilder.AnyExoticDescription')}
+              icon={anyExoticIcon}
+              onSelected={() => {
+                onSelected(LOCKED_EXOTIC_ANY_EXOTIC);
+                onClose();
+              }}
+            />
+          </TileGrid>
           {filteredOrderedAndGroupedExotics.map((exotics) => (
-            <div key={exotics[0].def.inventory!.bucketTypeHash}>
-              <div className={styles.header}>{exotics[0].def.itemTypeDisplayName}</div>
-              <div className={styles.items}>
-                {exotics.map((exotic) => (
-                  <ExoticTile
-                    key={exotic.def.hash}
-                    selected={lockedExoticHash === exotic.def.hash}
-                    exotic={exotic}
-                    onSelected={() => {
-                      onSelected(exotic.def.hash);
-                      onClose();
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
+            <TileGrid
+              key={exotics[0].def.inventory!.bucketTypeHash}
+              header={exotics[0].def.itemTypeDisplayName}
+            >
+              {exotics.map((exotic) => (
+                <ExoticTile
+                  key={exotic.def.hash}
+                  selected={lockedExoticHash === exotic.def.hash}
+                  exotic={exotic}
+                  onSelected={() => {
+                    onSelected(exotic.def.hash);
+                    onClose();
+                  }}
+                />
+              ))}
+            </TileGrid>
           ))}
         </div>
       )}
