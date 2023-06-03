@@ -7,6 +7,7 @@ import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
+import { getStore } from 'app/inventory/stores-helpers';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadoutFromEquipped, resolveLoadoutModHashes } from 'app/loadout-drawer/loadout-utils';
 import { useSavedLoadoutsForClassType } from 'app/loadout/loadout-ui/menu-hooks';
@@ -124,6 +125,12 @@ export default memo(function LoadoutBuilder({
     [armorItems, modsToAssign]
   );
 
+  // TODO: maybe better to combine enabled & statOrder by making this a list in stat order?
+  const enabledStats = useMemo(
+    () => new Set(armorStats.filter((statType) => !statFilters[statType].ignored)),
+    [statFilters]
+  );
+
   // Save a subset of the loadout parameters to settings in order to remember them between sessions
   const setSetting = useSetSetting();
   const hasPreloadedLoadout = Boolean(preloadedLoadout);
@@ -136,46 +143,32 @@ export default memo(function LoadoutBuilder({
       return;
     }
 
-    const newLoadoutParameters = buildLoadoutParams(
-      loadoutParameters,
-      '', // and the search query
-      // and don't save stat ranges either, just whether they're ignored
-      _.mapValues(statFilters, (m) => ({
-        ignored: m.ignored,
-        min: 0,
-        max: 10,
-      })),
-      statOrder
-    );
-
-    // Only these properties will be saved between sessions
-    const newSavedLoadoutParams = _.pick(
-      newLoadoutParameters,
-      'assumeArmorMasterwork',
-      'autoStatMods'
-    );
-
-    setSetting('loParameters', newSavedLoadoutParams);
+    setSetting('loParameters', {
+      assumeArmorMasterwork: loadoutParameters.assumeArmorMasterwork,
+      autoStatMods: loadoutParameters.autoStatMods,
+    });
     setSetting('loStatConstraintsByClass', {
       ...savedStatConstraintsByClass,
-      [classType]: newLoadoutParameters.statConstraints,
+      [classType]: statOrder
+        .filter((statHash) => enabledStats.has(statHash))
+        .map((statHash) => ({ statHash })),
     });
   }, [
     setSetting,
-    statFilters,
     statOrder,
-    loadoutParameters,
-    optimizingLoadoutId,
+    loadoutParameters.assumeArmorMasterwork,
+    loadoutParameters.autoStatMods,
     savedStatConstraintsByClass,
     classType,
     hasPreloadedLoadout,
+    enabledStats,
   ]);
 
   const onCharacterChanged = useCallback(
     (storeId: string) =>
       lbDispatch({
         type: 'changeCharacter',
-        store: stores.find((store) => store.id === storeId)!,
+        store: getStore(stores, storeId)!,
         savedStatConstraintsByClass,
       }),
     [lbDispatch, savedStatConstraintsByClass, stores]
@@ -183,12 +176,6 @@ export default memo(function LoadoutBuilder({
 
   // TODO: maybe load from URL state async and fire a dispatch?
   // TODO: save params to URL when they change? or leave it for the share...
-
-  // TODO: maybe better to combine enabled & statOrder by making this a list in stat order?
-  const enabledStats = useMemo(
-    () => new Set(armorStats.filter((statType) => !statFilters[statType].ignored)),
-    [statFilters]
-  );
 
   // TODO: build a bundled up context object to pass to GeneratedSets?
 
