@@ -1,0 +1,20 @@
+.scrollContainer {
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  contain: strict;
+  box-sizing: border-box;
+}
+
+.contentsPlaceholder {
+  width: 100%;
+  position: relative;
+}
+
+.virtualArea {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}

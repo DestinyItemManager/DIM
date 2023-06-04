@@ -47,10 +47,10 @@ export default function GeneratedSets({
       numElements={sets.length}
       estimatedSize={160}
       itemContainerClassName={containerClass}
+      getItemKey={(index) => index}
     >
       {(index) => (
         <GeneratedSet
-          index={index}
           set={sets[index]}
           subclass={subclass}
           selectedStore={selectedStore}

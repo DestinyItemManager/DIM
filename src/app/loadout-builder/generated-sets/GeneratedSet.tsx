@@ -9,7 +9,6 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
 import { errorLog } from 'app/utils/log';
-import { useWhatChanged } from 'app/utils/useWhatChanged';
 import { StatHashes } from 'data/d2/generated-enums';
 import { t } from 'i18next';
 import _ from 'lodash';
@@ -27,7 +26,6 @@ import SetStats from './SetStats';
  * but only the highest light set is displayed.
  */
 function GeneratedSet({
-  index,
   set,
   subclass,
   notes,
@@ -43,7 +41,6 @@ function GeneratedSet({
   halfTierMods,
   armorEnergyRules,
 }: {
-  index: number;
   set: ArmorSet;
   subclass: ResolvedLoadoutItem | undefined;
   notes?: string;
@@ -59,23 +56,6 @@ function GeneratedSet({
   halfTierMods: PluggableInventoryItemDefinition[];
   armorEnergyRules: ArmorEnergyRules;
 }) {
-  useWhatChanged('set' + index, {
-    index,
-    set,
-    subclass,
-    notes,
-    selectedStore,
-    lockedMods,
-    pinnedItems,
-    statOrder,
-    enabledStats,
-    modStatChanges,
-    loadouts,
-    lbDispatch,
-    params,
-    halfTierMods,
-    armorEnergyRules,
-  });
   const defs = useD2Definitions()!;
 
   // Set the loadout property to show/hide the loadout menu

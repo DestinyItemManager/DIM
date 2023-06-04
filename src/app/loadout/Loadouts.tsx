@@ -174,12 +174,15 @@ function Loadouts({ account }: { account: DestinyAccount }) {
         />
         <h2>{t('Loadouts.DimLoadouts')}</h2>
         {filterPills}
-        <WindowVirtualList numElements={loadouts.length} estimatedSize={300}>
+        <WindowVirtualList
+          numElements={loadouts.length}
+          estimatedSize={300}
+          getItemKey={(index) => loadouts[index].id}
+        >
           {(index) => {
             const loadout = loadouts[index];
             return (
               <LoadoutRow
-                key={loadout.id}
                 loadout={loadout}
                 store={selectedStore}
                 saved={savedLoadoutIds.has(loadout.id)}
