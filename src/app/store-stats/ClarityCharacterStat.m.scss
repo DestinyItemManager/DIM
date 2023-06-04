@@ -21,11 +21,6 @@
   th,
   td {
     opacity: 0.5;
-    &:nth-child(2n) {
-      text-align: right;
-      padding-left: 6px;
-      font-variant-numeric: tabular-nums;
-    }
   }
 
   /* stylelint-disable-next-line no-descending-specificity */
@@ -62,4 +57,10 @@
 .override {
   display: block;
   font-size: 11px;
+}
+
+.value {
+  text-align: right;
+  padding-left: 6px;
+  font-variant-numeric: tabular-nums;
 }
