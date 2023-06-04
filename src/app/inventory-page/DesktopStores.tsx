@@ -1,3 +1,4 @@
+import WindowVirtualList from 'app/dim-ui/WindowVirtualList';
 import { itemPop } from 'app/dim-ui/scroll';
 import { t } from 'app/i18next-t';
 import { InventoryBucket, InventoryBuckets } from 'app/inventory/inventory-buckets';
@@ -176,16 +177,27 @@ function StoresInventory(
 ) {
   const { buckets, stores } = props;
 
+  const bucketEntries = Object.entries(buckets.byCategory);
+
   return (
     <>
-      {Object.entries(buckets.byCategory).map(([category, inventoryBucket]) => (
-        <CollapsibleContainer
-          key={category}
-          {...props}
-          category={category}
-          inventoryBucket={inventoryBucket}
-        />
-      ))}
+      <WindowVirtualList
+        numElements={bucketEntries.length}
+        estimatedSize={400}
+        getItemKey={(index) => bucketEntries[index][0]}
+      >
+        {(index) => {
+          const [category, inventoryBucket] = bucketEntries[index];
+          return (
+            <CollapsibleContainer
+              key={category}
+              {...props}
+              category={category}
+              inventoryBucket={inventoryBucket}
+            />
+          );
+        }}
+      </WindowVirtualList>
       {stores[0].destinyVersion === 1 && <D1ReputationSection stores={stores} />}
     </>
   );
