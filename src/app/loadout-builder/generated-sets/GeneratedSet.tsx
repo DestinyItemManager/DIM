@@ -9,10 +9,11 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
 import { errorLog } from 'app/utils/log';
+import { useWhatChanged } from 'app/utils/useWhatChanged';
 import { StatHashes } from 'data/d2/generated-enums';
 import { t } from 'i18next';
 import _ from 'lodash';
-import React, { Dispatch, useMemo } from 'react';
+import { Dispatch, memo, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorEnergyRules, ArmorSet, ArmorStatHashes, ModStatChanges, PinnedItems } from '../types';
 import { getPower } from '../utils';
@@ -21,16 +22,35 @@ import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
 import SetStats from './SetStats';
 
-interface Props {
+/**
+ * A single "stat mix" of builds. Each armor slot contains multiple possibilities,
+ * but only the highest light set is displayed.
+ */
+function GeneratedSet({
+  index,
+  set,
+  subclass,
+  notes,
+  selectedStore,
+  lockedMods,
+  pinnedItems,
+  statOrder,
+  enabledStats,
+  modStatChanges,
+  loadouts,
+  lbDispatch,
+  params,
+  halfTierMods,
+  armorEnergyRules,
+}: {
+  index: number;
   set: ArmorSet;
   subclass: ResolvedLoadoutItem | undefined;
   notes?: string;
   selectedStore: DimStore;
   lockedMods: PluggableInventoryItemDefinition[];
   pinnedItems: PinnedItems;
-  style: React.CSSProperties;
   statOrder: ArmorStatHashes[];
-  forwardedRef?: React.Ref<HTMLDivElement>;
   enabledStats: Set<number>;
   modStatChanges: ModStatChanges;
   loadouts: Loadout[];
@@ -38,30 +58,24 @@ interface Props {
   params: LoadoutParameters;
   halfTierMods: PluggableInventoryItemDefinition[];
   armorEnergyRules: ArmorEnergyRules;
-}
-
-/**
- * A single "stat mix" of builds. Each armor slot contains multiple possibilities,
- * but only the highest light set is displayed.
- */
-function GeneratedSet({
-  set,
-  subclass,
-  notes,
-  selectedStore,
-  lockedMods,
-  pinnedItems,
-  style,
-  statOrder,
-  enabledStats,
-  modStatChanges,
-  forwardedRef,
-  loadouts,
-  lbDispatch,
-  params,
-  halfTierMods,
-  armorEnergyRules,
-}: Props) {
+}) {
+  useWhatChanged('set' + index, {
+    index,
+    set,
+    subclass,
+    notes,
+    selectedStore,
+    lockedMods,
+    pinnedItems,
+    statOrder,
+    enabledStats,
+    modStatChanges,
+    loadouts,
+    lbDispatch,
+    params,
+    halfTierMods,
+    armorEnergyRules,
+  });
   const defs = useD2Definitions()!;
 
   // Set the loadout property to show/hide the loadout menu
@@ -238,7 +252,7 @@ function GeneratedSet({
     loadouts.some((l) => l.classType === selectedStore.classType);
 
   return (
-    <div className={styles.container} style={style} ref={forwardedRef}>
+    <>
       <SetStats
         stats={set.stats}
         getStatsBreakdown={getStatsBreakdown}
@@ -279,12 +293,10 @@ function GeneratedSet({
           lockedMods={lockedMods}
         />
       </div>
-    </div>
+    </>
   );
 }
 
-const ForwardedGeneratedSet = React.forwardRef<HTMLDivElement, Props>((props, ref) => (
-  <GeneratedSet forwardedRef={ref} {...props} />
-));
+export default memo(GeneratedSet);
 
-export default React.memo(ForwardedGeneratedSet);
+export const containerClass = styles.container;
