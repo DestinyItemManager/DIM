@@ -32,6 +32,23 @@ export function timerDurationFromMs(milliseconds: number, minSegments = 3) {
 }
 
 /**
+ * print a number of milliseconds as m:s.ms
+ *
+ * negative durations are treated as 0
+ */
+export function timerDurationFromMsWithDecimal(milliseconds: number) {
+  const duration = durationFromMs(milliseconds);
+  while (duration[0] === 0 && duration.length > 3) {
+    duration.shift();
+  }
+
+  const ms = duration.pop()!;
+  duration[duration.length - 1] = (duration[duration.length - 1] * 1000 + ms) / 1000;
+
+  return duration.map((u, i) => (i !== 0 && u < 10 ? `0${u}` : u)).join(':');
+}
+
+/**
  * print a number of milliseconds as something like "4d 0:51",
  * containing days, minutes, and hours.
  * uses i18n to choose an appropriate substitute for that "d"

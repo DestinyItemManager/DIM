@@ -1123,7 +1123,6 @@
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 for T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "Total",
-    "Second": "s",
     "MetersPerSecond": "m/s",
     "Percentage": "%",
     "HP": "HP",
