@@ -1,5 +1,5 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
-import WindowVirtualList from 'app/dim-ui/WindowVirtualList';
+import { WindowVirtualList } from 'app/dim-ui/VirtualList';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';

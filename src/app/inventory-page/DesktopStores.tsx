@@ -1,4 +1,4 @@
-import WindowVirtualList from 'app/dim-ui/WindowVirtualList';
+import { WindowVirtualList } from 'app/dim-ui/VirtualList';
 import { itemPop } from 'app/dim-ui/scroll';
 import { t } from 'app/i18next-t';
 import { InventoryBucket, InventoryBuckets } from 'app/inventory/inventory-buckets';

@@ -1,7 +1,6 @@
 import CheckButton from 'app/dim-ui/CheckButton';
 import ClassIcon from 'app/dim-ui/ClassIcon';
-import VirtualList from 'app/dim-ui/VirtualList';
-import WindowVirtualList from 'app/dim-ui/WindowVirtualList';
+import { VirtualList, WindowVirtualList } from 'app/dim-ui/VirtualList';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
