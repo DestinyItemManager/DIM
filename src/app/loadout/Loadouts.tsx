@@ -5,6 +5,7 @@ import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import WindowVirtualList from 'app/dim-ui/WindowVirtualList';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { t, tl } from 'app/i18next-t';
 import { artifactUnlocksSelector, sortedStoresSelector } from 'app/inventory/selectors';
@@ -173,17 +174,22 @@ function Loadouts({ account }: { account: DestinyAccount }) {
         />
         <h2>{t('Loadouts.DimLoadouts')}</h2>
         {filterPills}
-        {loadouts.map((loadout) => (
-          <LoadoutRow
-            key={loadout.id}
-            loadout={loadout}
-            store={selectedStore}
-            saved={savedLoadoutIds.has(loadout.id)}
-            equippable={loadout !== currentLoadout}
-            onShare={setSharedLoadout}
-            onSnapshotInGameLoadout={handleSnapshot}
-          />
-        ))}
+        <WindowVirtualList numElements={loadouts.length} estimatedSize={300}>
+          {(index) => {
+            const loadout = loadouts[index];
+            return (
+              <LoadoutRow
+                key={loadout.id}
+                loadout={loadout}
+                store={selectedStore}
+                saved={savedLoadoutIds.has(loadout.id)}
+                equippable={loadout !== currentLoadout}
+                onShare={setSharedLoadout}
+                onSnapshotInGameLoadout={handleSnapshot}
+              />
+            );
+          }}
+        </WindowVirtualList>
         {loadouts.length === 0 && <p>{t('Loadouts.NoneMatch', { query })}</p>}
       </PageWithMenu.Contents>
       {sharedLoadout && (
