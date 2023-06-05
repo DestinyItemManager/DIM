@@ -1,5 +1,7 @@
 ## Next
 
+* The Loadouts page now has a filter pill to find Loadouts with empty Fragment sockets.
+
 ## 7.71.0 <span class="changelog-date">(2023-06-04)</span>
 
 * Added Community Insights for the impact of various stat tiers on ability cooldowns, etc. This takes into account your current subclass config and equipped exotic. For loadouts, it uses the subclass config and exotic that are saved in the loadout to display details. This information comes from the Clarity database, and like all Community Insights is sourced from lots of manual investigation.
