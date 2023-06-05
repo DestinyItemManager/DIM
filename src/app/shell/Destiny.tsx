@@ -13,6 +13,7 @@ import Farming from 'app/farming/Farming';
 import { useHotkey, useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import InfusionFinder from 'app/infuse/InfusionFinder';
+import { ItemDragPreview } from 'app/inventory/ItemDragPreview';
 import SyncTagLock from 'app/inventory/SyncTagLock';
 import { blockingProfileErrorSelector, storesSelector } from 'app/inventory/selectors';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
@@ -249,6 +250,7 @@ export default function Destiny() {
       <ItemPickerContainer />
       <GlobalEffects />
       {autoLockTagged && <SyncTagLock />}
+      <ItemDragPreview />
     </>
   );
 }
