@@ -1,6 +1,6 @@
-import { useVirtualizer, useWindowVirtualizer } from '@tanstack/react-virtual';
+import { Virtualizer, useVirtualizer, useWindowVirtualizer } from '@tanstack/react-virtual';
 import clsx from 'clsx';
-import { Key, useLayoutEffect, useRef } from 'react';
+import { Key, forwardRef, useImperativeHandle, useLayoutEffect, useRef } from 'react';
 import styles from './VirtualList.m.scss';
 
 interface VirtualListProps {
@@ -19,20 +19,27 @@ interface VirtualListProps {
   getItemKey: (index: number) => Key;
 }
 
+export interface VirtualListRef {
+  scrollToIndex: Virtualizer<HTMLDivElement, Element>['scrollToIndex'];
+}
+
 /**
  * A virtual scrolling list linked to a scrollable element. e.g. Item Feed.
  *
  * @see WindowVirtualList for a window-linked virtual scroller.
  */
-export function VirtualList({
-  numElements,
-  estimatedSize,
-  className,
-  itemContainerClassName,
-  overscan,
-  children,
-  getItemKey,
-}: VirtualListProps) {
+export const VirtualList = forwardRef(function VirtualList(
+  {
+    numElements,
+    estimatedSize,
+    className,
+    itemContainerClassName,
+    overscan,
+    children,
+    getItemKey,
+  }: VirtualListProps,
+  ref: React.ForwardedRef<VirtualListRef>
+) {
   // Dynamic-height element-based virtual list code based on https://tanstack.com/virtual/v3/docs/examples/react/dynamic
   const parentRef = useRef<HTMLDivElement>(null);
 
@@ -43,6 +50,10 @@ export function VirtualList({
     getItemKey,
     overscan,
   });
+
+  useImperativeHandle(ref, () => ({ scrollToIndex: virtualizer.scrollToIndex }), [
+    virtualizer.scrollToIndex,
+  ]);
 
   if (numElements === 0) {
     return null;
@@ -78,36 +89,51 @@ export function VirtualList({
       </div>
     </div>
   );
-}
+});
 
 /**
  * A virtual scrolling list linked to window scroll. e.g. Optimizer sets or Loadouts.
  *
  * @see VirtualList for an element-linked virtual scroller
  */
-export function WindowVirtualList({
-  numElements,
-  estimatedSize,
-  className,
-  itemContainerClassName,
-  children,
-  overscan,
-  getItemKey,
-}: VirtualListProps) {
+export const WindowVirtualList = forwardRef(function WindowVirtualList(
+  {
+    numElements,
+    estimatedSize,
+    className,
+    itemContainerClassName,
+    children,
+    overscan,
+    getItemKey,
+  }: VirtualListProps,
+  ref: React.ForwardedRef<VirtualListRef>
+) {
   // Dynamic-height window-based virtual list code based on https://tanstack.com/virtual/v3/docs/examples/react/dynamic
   const parentRef = useRef<HTMLDivElement>(null);
   const parentOffsetRef = useRef(0);
   useLayoutEffect(() => {
     parentOffsetRef.current = parentRef.current?.offsetTop ?? 0;
   }, []);
+  const headerHeightRef = useRef(0);
+  useLayoutEffect(() => {
+    headerHeightRef.current = parseInt(
+      document.querySelector('html')!.style.getPropertyValue('--header-height'),
+      10
+    );
+  }, []);
 
   const virtualizer = useWindowVirtualizer({
     count: numElements,
     estimateSize: () => estimatedSize,
     scrollMargin: parentOffsetRef.current,
+    scrollPaddingStart: headerHeightRef.current,
     getItemKey,
     overscan,
   });
+
+  useImperativeHandle(ref, () => ({ scrollToIndex: virtualizer.scrollToIndex }), [
+    virtualizer.scrollToIndex,
+  ]);
 
   if (numElements === 0) {
     return null;
@@ -142,4 +168,4 @@ export function WindowVirtualList({
       </div>
     </div>
   );
-}
+});
