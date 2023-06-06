@@ -10,8 +10,6 @@ declare const $BROWSERS: string[];
 
 declare const $featureFlags: ReturnType<typeof import('../config/feature-flags').makeFeatureFlags>;
 
-declare function ga(...params: string[]): void;
-
 interface Window {
   OC?: unknown;
   MSStream?: unknown;
