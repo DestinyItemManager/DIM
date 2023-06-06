@@ -17,6 +17,7 @@
   border-radius: $theme-corner-radius-search;
   min-width: 350px;
   box-sizing: border-box;
+  caret-color: var(--theme-accent-primary);
 
   ::placeholder {
     color: #999;
@@ -30,6 +31,7 @@
   &:hover,
   &:focus {
     outline: none;
+    box-shadow: inset 0 0 0 1px var(--theme-search-dropdown-border);
   }
 
   > input[type='text'] {

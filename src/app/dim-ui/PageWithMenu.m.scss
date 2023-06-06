@@ -111,11 +111,13 @@
   margin-bottom: 4px;
   min-height: 24px;
 
-  &:hover {
-    color: var(--theme-accent-primary);
-
-    :global(.app-icon) {
+  @media (hover: hover) {
+    &:hover {
       color: var(--theme-accent-primary);
+
+      :global(.app-icon) {
+        color: var(--theme-accent-primary);
+      }
     }
   }
 

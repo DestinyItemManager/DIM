@@ -79,9 +79,10 @@ export default function InventoryCollapsibleTitle({
                   [styles.postmasterFull]: showPostmasterFull,
                   [styles.spanColumns]: !checkPostmaster,
                 })}
+                onClick={toggle}
               >
                 {index === 0 ? (
-                  <span className="collapse-handle" onClick={toggle}>
+                  <span className="collapse-handle">
                     <AppIcon
                       className="collapse-icon"
                       icon={collapsed ? expandIcon : collapseIcon}

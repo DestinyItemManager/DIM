@@ -16,10 +16,6 @@
   --theme-button-bg: rgba(255, 255, 255, 0.2);
   --theme-button-text: white;
 
-  // Icons
-  --theme-icon-tile: transparent;
-  --theme-header-characters-icon: 1; // 0-1 (fully) scale of how heavily to invert icon from grey -> white
-
   // Input field (text boxes and text areas)
   --theme-input-bg: #333;
 
@@ -27,6 +23,7 @@
   --theme-drop-shadow: 0 0 18px 0 #000;
 
   // Tooltips
+  --theme-tooltip-underline: transparent;
   --theme-tooltip-header-bg: #0a0a0f;
   --theme-tooltip-body-bg: #151523;
   --theme-tooltip-border: #8e8e9e;
@@ -50,12 +47,13 @@
   --theme-header-nav-bg: var(--theme-app-bg-gradient);
   --theme-header-nav-slideout-menu-bg: var(--theme-fill-modal);
   --theme-header-characters-bg: var(--theme-app-bg-gradient);
+  --theme-header-characters-txt: #ccc;
 
   // Dropdown menu
   --theme-dropdown-menu-bg: var(--theme-fill-modal);
 
   // Search
-  --theme-search-bg: rgba(255, 255, 255, 0.2);
+  --theme-search-bg: rgba(0, 0, 0, 0.4);
   --theme-search-dropdown-bg: var(--theme-fill-modal-actions);
   --theme-search-dropdown-border: transparent;
 
@@ -68,7 +66,7 @@
   --theme-item-polaroid-masterwork-border: white;
 
   // Item popup
-  --theme-item-popup-border: transparent;
+  --theme-item-popup-border: #222;
   --theme-item-popup-arrow: var(--theme-fill-modal-actions);
   --theme-item-popup-actions-bg: var(--theme-fill-modal-actions);
   --theme-item-popup-panel-bg: #333; // Panels for progress (masterwork, crafted, catalyst) and archetype

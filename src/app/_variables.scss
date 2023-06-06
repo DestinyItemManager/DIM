@@ -68,7 +68,7 @@ $theme-tooltip-arrow-size-mini: 5px;
 $theme-tooltip-corner-radius: 6px;
 
 // Search
-$theme-corner-radius-search: 4px;
+$theme-corner-radius-search: 6px;
 $search-bar-height: 28px;
 
 // A mixin that allows targeting styles only when in phone-portrait display mode
@@ -118,6 +118,68 @@ $search-bar-height: 28px;
       height: 10px;
     }
   }
+}
+
+// Masterwork pattern a la .src/images/exotic-masterwork.png
+// Border with gradient running into top-right / bottom-left corners
+// Dark gradient from top, masterwork border gradient from bottom, striped diamond overlay for texture
+// TODO check whether rendering a bunch of gradients is less performant than slapping in a PNG
+@mixin masterwork($top-gradient: 0.05, $light-stripe: 0.05, $dark-stripe: 0.02) {
+  // Border
+  border-width: 1px;
+  border-style: solid;
+  border-image-slice: 1;
+  border-image-source: conic-gradient(
+    from 45deg at 50% 50%,
+    var(--theme-item-polaroid-masterwork-border) 0%,
+    transparent 24%,
+    transparent 25%,
+    var(--theme-item-polaroid-masterwork-border) 50%,
+    var(--theme-item-polaroid-masterwork-border) 50%,
+    transparent 74%,
+    transparent 75%,
+    var(--theme-item-polaroid-masterwork-border) 100%
+  );
+
+  // Overlay
+  $light-stripe: rgba(255, 255, 255, $light-stripe);
+  $dark-stripe: rgba(0, 0, 0, $dark-stripe);
+  background: linear-gradient(rgba(0, 0, 0, $top-gradient) 0%, transparent 50%),
+    linear-gradient(transparent 50%, var(--theme-item-polaroid-masterwork-border) 250%),
+    repeating-linear-gradient(
+        to bottom right,
+        #{$light-stripe} 0%,
+        #{$light-stripe} 5%,
+        #{$dark-stripe} 5%,
+        #{$dark-stripe} 10%
+      )
+      bottom right,
+    repeating-linear-gradient(
+        to bottom left,
+        #{$light-stripe} 0%,
+        #{$light-stripe} 5%,
+        #{$dark-stripe} 5%,
+        #{$dark-stripe} 10%
+      )
+      bottom left,
+    repeating-linear-gradient(
+        to top left,
+        #{$light-stripe} 0%,
+        #{$light-stripe} 5%,
+        #{$dark-stripe} 5%,
+        #{$dark-stripe} 10%
+      )
+      top left,
+    repeating-linear-gradient(
+        to top right,
+        #{$light-stripe} 0%,
+        #{$light-stripe} 5%,
+        #{$dark-stripe} 5%,
+        #{$dark-stripe} 10%
+      )
+      top right;
+  background-repeat: no-repeat;
+  background-size: 100%, 100%, 50% 50%, 50% 50%, 50% 50%, 50% 50%;
 }
 
 /*

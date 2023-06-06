@@ -28,14 +28,15 @@
   --theme-drop-shadow: 0 0 18px 0 #000;
 
   // Tooltips
+  --theme-tooltip-underline: var(--theme-accent-primary);
   --theme-tooltip-header-bg: #000;
   --theme-tooltip-body-bg: #1a1a1a;
   --theme-tooltip-border: #555;
   --theme-tooltip-minimal-bg: #5d5970;
 
   // App background gradient pattern
-  --theme-app-bg-gradient-start: hsl(200, 6%, 19%);
-  --theme-app-bg-gradient-end: hsl(240, 5%, 9%);
+  --theme-app-bg-gradient-start: #1a1a1a;
+  --theme-app-bg-gradient-end: #111;
   --theme-app-bg-gradient: radial-gradient(
     circle at 50% 70px,
     var(--theme-app-bg-gradient-start) 0%,
@@ -51,14 +52,15 @@
   --theme-header-nav-bg: black;
   --theme-header-nav-slideout-menu-bg: var(--theme-fill-modal);
   --theme-header-characters-bg: rgba(15, 15, 15, 0.9);
+  --theme-header-characters-txt: #888;
 
   // Dropdown menu
   --theme-dropdown-menu-bg: var(--theme-fill-modal);
 
   // Search
-  --theme-search-bg: rgba(255, 255, 255, 0.2);
+  --theme-search-bg: rgba(255, 255, 255, 0.15);
   --theme-search-dropdown-bg: var(--theme-fill-modal-actions);
-  --theme-search-dropdown-border: rgba(255, 255, 255, 0.5);
+  --theme-search-dropdown-border: rgba(255, 255, 255, 0.2);
 
   // Items 'polaroid' framed icons
   --theme-item-polaroid: #567;
@@ -68,14 +70,14 @@
   --theme-item-polaroid-masterwork-border: #ae791e;
 
   // Item popup
-  --theme-item-popup-border: rgba(255, 255, 255, 0.5);
-  --theme-item-popup-arrow: var(--theme-fill-modal-actions);
+  --theme-item-popup-border: #333;
+  --theme-item-popup-arrow: #333;
   --theme-item-popup-actions-bg: var(--theme-fill-modal-actions);
   --theme-item-popup-panel-bg: rgba(
     255,
     255,
     255,
-    0.08
+    0.06
   ); // Panels for progress (masterwork, crafted, catalyst) and archetype
   --theme-item-popup-progress-bar-bg: rgba(0, 0, 0, 0.3);
 
