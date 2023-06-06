@@ -377,8 +377,6 @@ export default (env: Env) => {
       filename: 'index.html',
       template: 'src/index.html',
       chunks: ['main', 'browsercheck'],
-      // Don't defer scripts so GA can load correctly?
-      scriptLoading: 'blocking',
       templateParameters: {
         version,
         date: new Date(buildTime).toString(),

@@ -11,6 +11,7 @@ export default function csp(env: 'release' | 'beta' | 'dev') {
     scriptSrc: [
       SELF,
       'https://*.googletagmanager.com',
+      'https://*.google-analytics.com',
       // Twitter Widget
       'https://platform.twitter.com',
       // OpenCollective backers
