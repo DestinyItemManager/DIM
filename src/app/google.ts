@@ -22,18 +22,20 @@ export function gaEvent(type: string, params: Record<string, string>) {
   ga('event', type, params);
 }
 
-ga('js', new Date());
-ga('set', {
-  dim_version: $DIM_VERSION,
-  dim_flavor: $DIM_FLAVOR,
-});
+export function initGoogleAnalytics() {
+  ga('js', new Date());
+  ga('set', {
+    dim_version: $DIM_VERSION,
+    dim_flavor: $DIM_FLAVOR,
+  });
 
-const token = getToken();
-if (token?.bungieMembershipId) {
-  ga('set', { user_id: token.bungieMembershipId });
+  const token = getToken();
+  if (token?.bungieMembershipId) {
+    ga('set', { user_id: token.bungieMembershipId });
+  }
+
+  ga('config', $ANALYTICS_PROPERTY, {
+    store_gac: false,
+    allow_ad_personalization_signals: false,
+  });
 }
-
-ga('config', $ANALYTICS_PROPERTY, {
-  store_gac: false,
-  allow_ad_personalization_signals: false,
-});
