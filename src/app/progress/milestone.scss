@@ -23,12 +23,6 @@ button.milestone-quest {
   overflow: hidden;
   user-select: text;
 
-  &[type='button']:hover {
-    .milestone-name {
-      color: var(--theme-accent-primary);
-    }
-  }
-
   .complete {
     color: #a1a2a2;
   }
@@ -60,6 +54,12 @@ button.milestone-quest {
 
   .milestone-name {
     font-size: 14px;
+
+    [type='button']:hover & {
+      .milestone-name {
+        color: var(--theme-accent-primary);
+      }
+    }
   }
 
   .milestone-location {
@@ -68,8 +68,7 @@ button.milestone-quest {
   }
 
   .milestone-description {
-    color: var(--theme-text);
-    opacity: 0.6;
+    color: var(--theme-text-secondary);
     white-space: pre-wrap;
     line-height: 1.3;
     max-height: 3.9em;
