@@ -5,12 +5,14 @@ const SELF = "'self'";
 /**
  * Generate a Content Security Policy directive for a particular DIM environment (beta, release)
  */
-export default function csp(env: 'release' | 'beta' | 'dev') {
+export default function csp(env: 'release' | 'beta' | 'dev', analyticsHash: string) {
   const baseCSP: Record<string, string[] | string | boolean> = {
     defaultSrc: ["'none'"],
     scriptSrc: [
       SELF,
+      `'${analyticsHash}'`,
       'https://*.googletagmanager.com',
+      'https://*.google-analytics.com',
       // Twitter Widget
       'https://platform.twitter.com',
       // OpenCollective backers

@@ -6,6 +6,7 @@ import { execSync } from 'child_process';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import CompressionPlugin from 'compression-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
+import crypto from 'crypto';
 import ForkTsCheckerNotifierWebpackPlugin from 'fork-ts-checker-notifier-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import fs from 'fs';
@@ -73,9 +74,34 @@ export default (env: Env) => {
 
   const buildTime = Date.now();
 
-  const contentSecurityPolicy = csp(env.name);
-
+  function createSha256CspHash(content: string) {
+    return 'sha256-' + crypto.createHash('sha256').update(content).digest('base64');
+  }
   const analyticsProperty = env.release ? 'G-1PW23SGMHN' : 'G-MYWW38Z3LR';
+  const analyticsSetupScript = `window.dataLayer = window.dataLayer || [];
+window.ga = function ga() {
+  window.dataLayer.push(arguments);
+};
+(function(ga) {
+ga('js', new Date());
+ga('set', {
+  dim_version: ${JSON.stringify(version)},
+  dim_flavor: ${JSON.stringify(env.release)},
+});
+const tokenString = localStorage.getItem('authorization');
+const token = tokenString ? JSON.parse(tokenString) : null;
+if (token.bungieMembershipId) {
+  ga('set', { user_id: token.bungieMembershipId });
+}
+ga('config', ${JSON.stringify(analyticsProperty)}, {
+  store_gac: false,
+  allow_ad_personalization_signals: false,
+});
+})(window.ga);
+`;
+  const analyticsHash = createSha256CspHash(analyticsSetupScript);
+
+  const contentSecurityPolicy = csp(env.name, analyticsHash);
 
   const config: webpack.Configuration = {
     mode: env.dev ? ('development' as const) : ('production' as const),
@@ -377,13 +403,12 @@ export default (env: Env) => {
       filename: 'index.html',
       template: 'src/index.html',
       chunks: ['main', 'browsercheck'],
-      // Don't defer scripts so GA can load correctly?
-      scriptLoading: 'blocking',
       templateParameters: {
         version,
         date: new Date(buildTime).toString(),
         splash,
         analyticsProperty,
+        analyticsSetupScript,
       },
       minify: env.dev
         ? false
