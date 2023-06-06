@@ -12,7 +12,7 @@ import { errorLog } from 'app/utils/log';
 import { StatHashes } from 'data/d2/generated-enums';
 import { t } from 'i18next';
 import _ from 'lodash';
-import React, { Dispatch, useMemo } from 'react';
+import { Dispatch, memo, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorEnergyRules, ArmorSet, ArmorStatHashes, ModStatChanges, PinnedItems } from '../types';
 import { getPower } from '../utils';
@@ -20,25 +20,6 @@ import styles from './GeneratedSet.m.scss';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
 import SetStats from './SetStats';
-
-interface Props {
-  set: ArmorSet;
-  subclass: ResolvedLoadoutItem | undefined;
-  notes?: string;
-  selectedStore: DimStore;
-  lockedMods: PluggableInventoryItemDefinition[];
-  pinnedItems: PinnedItems;
-  style: React.CSSProperties;
-  statOrder: ArmorStatHashes[];
-  forwardedRef?: React.Ref<HTMLDivElement>;
-  enabledStats: Set<number>;
-  modStatChanges: ModStatChanges;
-  loadouts: Loadout[];
-  lbDispatch: Dispatch<LoadoutBuilderAction>;
-  params: LoadoutParameters;
-  halfTierMods: PluggableInventoryItemDefinition[];
-  armorEnergyRules: ArmorEnergyRules;
-}
 
 /**
  * A single "stat mix" of builds. Each armor slot contains multiple possibilities,
@@ -51,17 +32,30 @@ function GeneratedSet({
   selectedStore,
   lockedMods,
   pinnedItems,
-  style,
   statOrder,
   enabledStats,
   modStatChanges,
-  forwardedRef,
   loadouts,
   lbDispatch,
   params,
   halfTierMods,
   armorEnergyRules,
-}: Props) {
+}: {
+  set: ArmorSet;
+  subclass: ResolvedLoadoutItem | undefined;
+  notes?: string;
+  selectedStore: DimStore;
+  lockedMods: PluggableInventoryItemDefinition[];
+  pinnedItems: PinnedItems;
+  statOrder: ArmorStatHashes[];
+  enabledStats: Set<number>;
+  modStatChanges: ModStatChanges;
+  loadouts: Loadout[];
+  lbDispatch: Dispatch<LoadoutBuilderAction>;
+  params: LoadoutParameters;
+  halfTierMods: PluggableInventoryItemDefinition[];
+  armorEnergyRules: ArmorEnergyRules;
+}) {
   const defs = useD2Definitions()!;
 
   // Set the loadout property to show/hide the loadout menu
@@ -238,21 +232,19 @@ function GeneratedSet({
     loadouts.some((l) => l.classType === selectedStore.classType);
 
   return (
-    <div className={styles.container} style={style} ref={forwardedRef}>
+    <>
+      <SetStats
+        stats={set.stats}
+        getStatsBreakdown={getStatsBreakdown}
+        maxPower={getPower(displayedItems)}
+        statOrder={statOrder}
+        enabledStats={enabledStats}
+        boostedStats={boostedStats}
+        existingLoadoutName={existingLoadout?.name}
+        subclass={subclass}
+        exoticArmorHash={params.exoticArmorHash}
+      />
       <div className={styles.build}>
-        <div className={styles.header}>
-          <SetStats
-            stats={set.stats}
-            getStatsBreakdown={getStatsBreakdown}
-            maxPower={getPower(displayedItems)}
-            statOrder={statOrder}
-            enabledStats={enabledStats}
-            boostedStats={boostedStats}
-            existingLoadoutName={existingLoadout?.name}
-            subclass={subclass}
-            exoticArmorHash={params.exoticArmorHash}
-          />
-        </div>
         <div className={styles.items}>
           {displayedItems.map((item, i) => (
             <GeneratedSetItem
@@ -267,26 +259,24 @@ function GeneratedSet({
             />
           ))}
         </div>
+        <GeneratedSetButtons
+          set={set}
+          items={displayedItems}
+          subclass={subclass}
+          store={selectedStore}
+          canCompareLoadouts={canCompareLoadouts}
+          halfTierMods={halfTierMods}
+          onLoadoutSet={setCreateLoadout}
+          lbDispatch={lbDispatch}
+          notes={notes}
+          params={params}
+          lockedMods={lockedMods}
+        />
       </div>
-      <GeneratedSetButtons
-        set={set}
-        items={displayedItems}
-        subclass={subclass}
-        store={selectedStore}
-        canCompareLoadouts={canCompareLoadouts}
-        halfTierMods={halfTierMods}
-        onLoadoutSet={setCreateLoadout}
-        lbDispatch={lbDispatch}
-        notes={notes}
-        params={params}
-        lockedMods={lockedMods}
-      />
-    </div>
+    </>
   );
 }
 
-const ForwardedGeneratedSet = React.forwardRef<HTMLDivElement, Props>((props, ref) => (
-  <GeneratedSet forwardedRef={ref} {...props} />
-));
+export default memo(GeneratedSet);
 
-export default React.memo(ForwardedGeneratedSet);
+export const containerClass = styles.container;

@@ -1,6 +1,11 @@
 import i18next from 'i18next';
 import { setupi18n } from 'testing/test-utils';
-import { i15dDurationFromMs, i15dDurationFromMsWithSeconds, timerDurationFromMs } from './time';
+import {
+  i15dDurationFromMs,
+  i15dDurationFromMsWithSeconds,
+  timerDurationFromMs,
+  timerDurationFromMsWithDecimal,
+} from './time';
 
 beforeAll(() => {
   setupi18n();
@@ -13,6 +18,15 @@ test.each([
   [20041234, '5:34:01'],
 ])('timerDurationFromMs(%s) === "%s"', (timestamp, expected) => {
   expect(timerDurationFromMs(timestamp)).toBe(expected);
+});
+
+test.each([
+  [1000, '0:01'],
+  [0, '0:00'],
+  [279241234, '3:05:34:01.234'],
+  [20041234, '5:34:01.234'],
+])('timerDurationFromMs(%s) === "%s"', (timestamp, expected) => {
+  expect(timerDurationFromMsWithDecimal(timestamp)).toBe(expected);
 });
 
 describe('english localization', () => {

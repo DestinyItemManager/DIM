@@ -37,7 +37,6 @@ onwrongclass
 reacquirable
 recalc
 recents
-Reddit
 regen
 reimplemented
 Repurchasable

@@ -116,6 +116,12 @@ function useDisableParent(
 }
 
 /**
+ * The total number of sheets that are open. Used by the sneaky updates code to
+ * determine if the user is in the middle of something.
+ */
+export let sheetsOpen = 0;
+
+/**
  * A Sheet is a UI element that comes up from the bottom of the screen,
  * and can be dragged downward to dismiss
  */
@@ -223,6 +229,14 @@ export default function Sheet({
   useEffect(() => {
     animationControls.start('open');
   }, [animationControls]);
+
+  // Track the total number of sheets that are open (to help prevent reloads while users are doing things)
+  useEffect(() => {
+    sheetsOpen++;
+    return () => {
+      sheetsOpen--;
+    };
+  }, []);
 
   return (
     <SheetDisabledContext.Provider value={setParentDisabled}>

@@ -17,17 +17,9 @@
 
 .sideTray {
   background-color: var(--theme-item-feed-bg);
-  padding: 10px;
-  overflow-y: auto;
-  overflow-x: hidden;
   width: var(--sidebar-size);
   height: 100%;
   box-sizing: border-box;
-
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
 }
 
 .trayButton {

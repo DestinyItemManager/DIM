@@ -3,6 +3,7 @@ import { clarityCharacterStatsSelector } from 'app/clarity/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { Tooltip } from 'app/dim-ui/PressTip';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { timerDurationFromMsWithDecimal } from 'app/utils/time';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { StatHashes } from 'data/d2/generated-enums';
@@ -92,7 +93,7 @@ export default function ClarityCharacterStat({
         name={t('Stats.TimeToFullHP')}
         cooldowns={clarityStatData.TimeToFullHP}
         tier={tier}
-        unit={t('Stats.Second')}
+        unit="s"
       />
     );
   } else if ('WalkingSpeed' in clarityStatData) {
@@ -158,16 +159,19 @@ export default function ClarityCharacterStat({
             <th />
             {tier - 1 >= 0 && (
               <>
-                <th>{t('LoadoutBuilder.TierNumber', { tier: tier - 1 })}</th>
-                <th />
+                <th colSpan={2} className={styles.value}>
+                  {t('LoadoutBuilder.TierNumber', { tier: tier - 1 })}
+                </th>
               </>
             )}
-            <th className={styles.currentColumn}>{t('LoadoutBuilder.TierNumber', { tier })}</th>
-            <th />
+            <th colSpan={2} className={clsx(styles.value, styles.currentColumn)}>
+              {t('LoadoutBuilder.TierNumber', { tier })}
+            </th>
             {tier + 1 <= 10 && (
               <>
-                <th>{t('LoadoutBuilder.TierNumber', { tier: tier + 1 })}</th>
-                <th />
+                <th colSpan={2} className={styles.value}>
+                  {t('LoadoutBuilder.TierNumber', { tier: tier + 1 })}
+                </th>
               </>
             )}
           </tr>
@@ -183,7 +187,7 @@ export default function ClarityCharacterStat({
                 cooldowns={cooldowns}
                 tier={tier}
                 overrides={overrides}
-                unit={t('Stats.Second')}
+                unit="s"
               />
             ))}
           {intrinsicCooldowns}
@@ -209,6 +213,16 @@ function StatTableRow({
   overrides?: DestinyInventoryItemDefinition[];
 }) {
   const unitEl = <td className={styles.unit}>{unit}</td>;
+  const seconds = unit === 's';
+
+  const formatValue = (val: number) => {
+    if (seconds) {
+      return timerDurationFromMsWithDecimal(val * 1000);
+    }
+    return val.toLocaleString();
+  };
+
+  const colspan = seconds ? 2 : 1;
 
   return (
     <tr>
@@ -229,16 +243,22 @@ function StatTableRow({
       </th>
       {tier - 1 >= 0 && (
         <>
-          <td>{cooldowns[tier - 1].toLocaleString()}</td>
-          {unitEl}
+          <td className={styles.value} colSpan={colspan}>
+            {formatValue(cooldowns[tier - 1])}
+          </td>
+          {!seconds && unitEl}
         </>
       )}
-      <td className={styles.currentColumn}>{cooldowns[tier].toLocaleString()}</td>
-      <td className={clsx(styles.unit, styles.currentColumn)}>{unit}</td>
+      <td className={clsx(styles.value, styles.currentColumn)} colSpan={colspan}>
+        {formatValue(cooldowns[tier])}
+      </td>
+      {!seconds && <td className={clsx(styles.unit, styles.currentColumn)}>{unit}</td>}
       {tier + 1 <= 10 && (
         <>
-          <td>{cooldowns[tier + 1].toLocaleString()}</td>
-          {unitEl}
+          <td className={styles.value} colSpan={colspan}>
+            {formatValue(cooldowns[tier + 1])}
+          </td>
+          {!seconds && unitEl}
         </>
       )}
     </tr>

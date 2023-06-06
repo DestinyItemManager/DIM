@@ -119,7 +119,8 @@ export default function SingleVendor({ account }: { account: DestinyAccount }) {
     vendorHash,
     vendor,
     characterId,
-    vendorResponse?.sales.data?.[vendorHash]?.saleItems
+    vendorResponse?.sales.data?.[vendorHash]?.saleItems,
+    vendorResponse
   );
 
   if (!d2Vendor) {

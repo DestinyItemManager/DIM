@@ -1,5 +1,9 @@
 ## Next
 
+* Fixed showing the item under your finger while you're dragging it on iOS/iPadOS. As a reminder, on touchscreen devices you need to press the item for a little bit to "pick it up". And as a reminder for everyone, any time you see an item in DIM, pretty much wherever it is, you can drag it around to move the item or add it to a Loadout you're editing. This works from the Inventory, Item Feed, Loadouts screen, etc.
+
+## 7.71.0 <span class="changelog-date">(2023-06-04)</span>
+
 * Added Community Insights for the impact of various stat tiers on ability cooldowns, etc. This takes into account your current subclass config and equipped exotic. For loadouts, it uses the subclass config and exotic that are saved in the loadout to display details. This information comes from the Clarity database, and like all Community Insights is sourced from lots of manual investigation.
 * Automatic stat mods in Loadout Optimizer have graduated from Beta! We now remember this setting, and we ignore any manually chosen stat mods when auto stat mods are on. Enabling auto stat mods allows Loadout Optimizer to automatically assign stat mods to potential loadouts in order to hit the stats you've requested, in the priority order that you've chosen.
 * Fixed an issue where DIM might not properly force you to re-login with Bungie.net, and would instead continually throw errors trying to talk to Bungie.net.
@@ -15,6 +19,10 @@
 * Hid the Artifact Unlocks section from loadouts until Bungie.net starts returning artifact info again.
 * Improved highlighting and selection styles for item perks.
 * Improved layout for mods in the Compare drawer - they stay in a line now.
+* Vendors will now show your current count of Engrams and other resources needed for focusing in their currencies section.
+* Added `is:focusable` search to find items that can be focused at a vendor.
+* Fixed DIM not showing Leviathan's Breath catalyst progress in the item popup.
+* Cleaned up the design of Loadout Optimizer stats, mod picker, exotic picker, and subclass editor.
 
 ## 7.70.0 <span class="changelog-date">(2023-05-28)</span>
 

@@ -1,6 +1,8 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import { VENDORS } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
+import { compareBy } from 'app/utils/comparators';
 import {
   DestinyCollectibleState,
   DestinyDestinationDefinition,
@@ -57,7 +59,8 @@ export function toVendorGroups(
                   vendorHash,
                   vendorsResponse.vendors.data?.[vendorHash],
                   characterId,
-                  vendorsResponse.sales.data?.[vendorHash]?.saleItems
+                  vendorsResponse.sales.data?.[vendorHash]?.saleItems,
+                  vendorsResponse
                 )
               )
               .filter((vendor) => vendor?.items.length)
@@ -82,7 +85,8 @@ export function toVendor(
     | {
         [key: string]: DestinyVendorSaleItemComponent;
       }
-    | undefined
+    | undefined,
+  vendorsResponse: DestinyVendorsResponse | undefined
 ): D2Vendor | undefined {
   const { defs } = context;
   const vendorDef = defs.Vendor.get(vendorHash);
@@ -100,16 +104,13 @@ export function toVendor(
   const placeDef = destinationDef && defs.Place.get(destinationDef.placeHash);
 
   const vendorCurrencyHashes = new Set<number>();
-  for (const item of vendorItems) {
-    for (const cost of item.costs) {
-      vendorCurrencyHashes.add(cost.itemHash);
-    }
-  }
+  gatherVendorCurrencies(defs, vendorDef, vendorsResponse, sales, vendorCurrencyHashes);
   const currencies = _.compact(
     Array.from(vendorCurrencyHashes, (h) => defs.InventoryItem.get(h)).filter(
       (i) => !i?.itemCategoryHashes?.includes(ItemCategoryHashes.Shaders)
     )
   );
+  currencies.sort(compareBy((i) => i.inventory?.tierType));
 
   return {
     component: vendor,
@@ -119,6 +120,50 @@ export function toVendor(
     items: vendorItems,
     currencies,
   };
+}
+
+/**
+ * Recursively look at sub-vendors of the current `vendor` to find
+ * all currency hashes needed to purchase the sales, and collect them in `vendorCurrencyHashes`.
+ */
+function gatherVendorCurrencies(
+  defs: D2ManifestDefinitions,
+  vendor: DestinyVendorDefinition,
+  vendorsResponse: DestinyVendorsResponse | undefined,
+  sales:
+    | {
+        [key: string]: DestinyVendorSaleItemComponent;
+      }
+    | undefined,
+  vendorCurrencyHashes: Set<number>,
+  // prevent infinite recursion just in case vendors have a cycle in their items' previewvendorHashes
+  seenVendors = new Set<number>()
+) {
+  for (const sale of sales
+    ? Object.values(sales).flatMap((saleItem) => saleItem.costs)
+    : vendor.itemList.flatMap((item) => item.currencies)) {
+    vendorCurrencyHashes.add(sale.itemHash);
+  }
+
+  for (const item of vendor.itemList) {
+    const itemDef = defs.InventoryItem.get(item.itemHash);
+    if (!itemDef) {
+      continue;
+    }
+    const subVendorHash = defs.InventoryItem.get(item.itemHash)?.preview?.previewVendorHash;
+    if (subVendorHash && !seenVendors.has(subVendorHash)) {
+      seenVendors.add(subVendorHash);
+      const subVendor = defs.Vendor.get(subVendorHash);
+      gatherVendorCurrencies(
+        defs,
+        subVendor,
+        vendorsResponse,
+        vendorsResponse?.sales.data?.[subVendorHash]?.saleItems,
+        vendorCurrencyHashes,
+        seenVendors
+      );
+    }
+  }
 }
 
 function getVendorItems(

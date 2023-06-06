@@ -518,6 +518,8 @@ describe('process-utils optimal mods', () => {
     [[68, 66, 30, 30, 30, 30], [0, 0, 0, 0, 0], 4, [8, 6, 3, 3, 3, 3]],
     // do everything we can to hit min bounds
     [[68, 66, 30, 30, 11, 30], [2, 2, 0, 0, 0], 4, [7, 6, 3, 3, 3, 3]],
+    // ensure that negative stat amounts aren't clamped too early
+    [[30, 61, 30, 30, 30, -14], [5, 5, 5, 5, 5], 5, [5, 6, 3, 3, 3, 3]],
   ];
 
   const pickMods = (setStats: number[], remainingEnergy: number[], numArtifice: number) => {

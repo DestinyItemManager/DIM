@@ -65,7 +65,7 @@
   white-space: pre-wrap;
 
   > div {
-    color: #aaa;
+    color: var(--theme-text-secondary);
   }
   h3 {
     color: var(--theme-text);

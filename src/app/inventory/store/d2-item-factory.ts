@@ -591,7 +591,11 @@ export function makeItem(
 
   // Catalyst
   if (createdItem.isExotic && createdItem.bucket.inWeapons) {
-    createdItem.catalystInfo = buildCatalystInfo(createdItem.hash, profileRecords);
+    createdItem.catalystInfo = buildCatalystInfo(
+      createdItem.hash,
+      profileRecords,
+      profileResponse.characterRecords?.data
+    );
   }
 
   try {
@@ -677,14 +681,12 @@ export function makeItem(
 
   // TODO: compute this on demand
   createdItem.foundry =
-    // TODO: we should generate extendedFoundry without the "foundry." prefix
-    (
-      extendedFoundry[createdItem.hash] ??
-      itemDef.traitIds
-        ?.find((trait) => trait.startsWith('foundry.'))
-        // tex_mechanica
-        ?.replace('_', '-')
-    )?.replace('foundry.', '');
+    extendedFoundry[createdItem.hash] ??
+    itemDef.traitIds
+      ?.find((trait) => trait.startsWith('foundry.'))
+      // tex_mechanica
+      ?.replace('_', '-')
+      ?.replace('foundry.', '');
 
   // linear fusion rifles always seem to contain the "fusion rifle" category as well.
   // it's a fascinating "did you know", but ultimately not useful to us, so we remove it

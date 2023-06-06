@@ -15,11 +15,10 @@
   right: 2px;
   background-image: url('images/close.png');
   background-color: rgba(100, 100, 100, 0.8);
-  &:hover {
+  &:hover,
+  &:focus-visible {
     background-color: var(--theme-accent-primary);
-  }
-  &:focus {
-    outline: 1px solid var(--theme-accent-secondary);
+    outline: none;
   }
 }
 

@@ -44,7 +44,7 @@
 }
 
 .invalid {
-  color: #aaa !important;
+  color: var(--theme-text-secondary) !important;
 }
 
 .openButton {
@@ -208,14 +208,14 @@
     }
   }
 
+  > span,
+  > a {
+    margin: 0 !important;
+  }
+
   &:hover > span,
   &:hover > :global(.app-icon),
   &:hover button > :global(.app-icon) {
     color: var(--theme-accent-primary);
-  }
-
-  > span,
-  > a {
-    margin: 0 !important;
   }
 }
