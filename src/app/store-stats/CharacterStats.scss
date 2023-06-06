@@ -87,11 +87,10 @@
           &::before,
           &::after {
             font-size: 13px;
-            //color: var(--theme-header-characters-txt);
+            color: var(--theme-header-characters-txt);
             margin-left: 4px;
             margin-right: 4px;
             text-decoration: none !important;
-            color: var(--theme-text-secondary);
           }
           &::before {
             content: '=';
