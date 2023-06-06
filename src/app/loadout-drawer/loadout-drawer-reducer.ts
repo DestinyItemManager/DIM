@@ -346,10 +346,8 @@ export function clearLoadoutParameters(): LoadoutUpdateFunction {
     if (draft.parameters) {
       delete draft.parameters.assumeArmorMasterwork;
       delete draft.parameters.exoticArmorHash;
-      delete draft.parameters.lockArmorEnergyType;
       delete draft.parameters.query;
       delete draft.parameters.statConstraints;
-      delete draft.parameters.upgradeSpendTier;
       delete draft.parameters.autoStatMods;
     }
   });
