@@ -23,6 +23,12 @@ button.milestone-quest {
   overflow: hidden;
   user-select: text;
 
+  &[type='button']:hover {
+    .milestone-name {
+      color: var(--theme-accent-primary);
+    }
+  }
+
   .complete {
     color: #a1a2a2;
   }
