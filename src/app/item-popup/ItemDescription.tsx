@@ -54,12 +54,7 @@ export function LoreLink({ loreHash }: { loreHash: number }) {
   const loreLink = `http://www.ishtar-collective.net/entries/${loreHash}`;
 
   return (
-    <ExternalLink
-      className={styles.loreLink}
-      href={loreLink}
-      title={t('MovePopup.ReadLore')}
-      onClick={() => ga('send', 'event', 'Item Popup', 'Read Lore')}
-    >
+    <ExternalLink className={styles.loreLink} href={loreLink} title={t('MovePopup.ReadLore')}>
       <img src={ishtarLogo} height="16" width="16" />
       {t('MovePopup.ReadLoreLink')}
     </ExternalLink>
