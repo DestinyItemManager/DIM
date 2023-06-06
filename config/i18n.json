@@ -141,9 +141,8 @@
   "ErrorPanel": {
     "Description": "Try loading your inventory in the Destiny 2 Companion App to see if Bungie.net is down.",
     "Troubleshooting": "Troubleshooting Guide",
-    "EmblemError": "You may be able to fix this by switching your emblems in game on all characters.",
-    "EmblemErrorLink": "Read more about how to fix it.",
-    "SystemDown": "This affects all Destiny apps, and the DIM team cannot fix or bypass it."
+    "SystemDown": "This affects all Destiny apps, and the DIM team cannot fix or bypass it.",
+    "ReadTheGuide": "Read our User Guide (linked from the menu) for troubleshooting steps."
   },
   "FarmingMode": {
     "Vault": "It will move items to the vault to make room.",
@@ -1294,8 +1293,6 @@
       "GitHubHelp": "If you're interested in contributing to the project, visit us at our project page on {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
       "HowItsMade": "DIM is a free, open source app built by community developers upon the same services used by Bungie.net and the Destiny Companion App.",
-      "Reddit": "Reddit",
-      "RedditHelp": "If you have questions, comments, or suggestions - let us know!",
       "Schedule": {
         "beta": "This beta version of DIM is updated every time we change the code - it gets the latest features and fixes, but also the latest bugs!",
         "release": "This version of DIM is updated once a week, at approximately midnight on Sundays, US Pacific time."

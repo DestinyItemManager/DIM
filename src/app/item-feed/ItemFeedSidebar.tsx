@@ -3,8 +3,7 @@ import { t } from 'app/i18next-t';
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, collapseIcon, faCaretUp } from 'app/shell/icons';
 import clsx from 'clsx';
-import { motion } from 'framer-motion';
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import styles from './ItemFeedSidebar.m.scss';
 
 const ItemFeed = React.lazy(() => import(/* webpackChunkName: "item-feed" */ './ItemFeed'));
@@ -14,18 +13,8 @@ const ItemFeed = React.lazy(() => import(/* webpackChunkName: "item-feed" */ './
  */
 export default function ItemFeedSidebar() {
   const [expanded, setExpanded] = useSetting('itemFeedExpanded');
-  const [itemsToShow, setItemsToShow] = useState(10);
 
-  const handleToggle = () => {
-    setExpanded(!expanded);
-    if (!expanded) {
-      setItemsToShow(10);
-    }
-  };
-
-  const handlePaginate = () => {
-    setItemsToShow((itemsToShow) => itemsToShow + 10);
-  };
+  const handleToggle = () => setExpanded(!expanded);
 
   useEffect(() => {
     document.querySelector('html')!.style.setProperty('--expanded-sidebars', `${expanded ? 1 : 0}`);
@@ -39,9 +28,8 @@ export default function ItemFeedSidebar() {
       {expanded && (
         <div className={styles.sideTray}>
           <Suspense fallback={<ShowPageLoading message={t('Loading.Code')} />}>
-            <ItemFeed itemsToShow={itemsToShow} resetItemCount={() => setItemsToShow(10)} />
+            <ItemFeed />
           </Suspense>
-          <motion.div onViewportEnter={handlePaginate} />
         </div>
       )}
     </div>
