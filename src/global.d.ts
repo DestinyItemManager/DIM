@@ -7,6 +7,7 @@ declare const $DIM_WEB_CLIENT_ID: string;
 declare const $DIM_WEB_CLIENT_SECRET: string;
 declare const $DIM_API_KEY: string;
 declare const $BROWSERS: string[];
+declare const $ANALYTICS_PROPERTY: string;
 
 declare const $featureFlags: ReturnType<typeof import('../config/feature-flags').makeFeatureFlags>;
 

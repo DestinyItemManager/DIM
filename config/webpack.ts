@@ -75,6 +75,8 @@ export default (env: Env) => {
 
   const contentSecurityPolicy = csp(env.name);
 
+  const analyticsProperty = env.release ? 'G-1PW23SGMHN' : 'G-MYWW38Z3LR';
+
   const config: webpack.Configuration = {
     mode: env.dev ? ('development' as const) : ('production' as const),
 
@@ -379,6 +381,7 @@ export default (env: Env) => {
         version,
         date: new Date(buildTime).toString(),
         splash,
+        analyticsProperty,
       },
       minify: env.dev
         ? false
@@ -443,6 +446,7 @@ export default (env: Env) => {
       $DIM_WEB_CLIENT_ID: JSON.stringify(process.env.WEB_OAUTH_CLIENT_ID),
       $DIM_WEB_CLIENT_SECRET: JSON.stringify(process.env.WEB_OAUTH_CLIENT_SECRET),
       $DIM_API_KEY: JSON.stringify(process.env.DIM_API_KEY),
+      $ANALYTICS_PROPERTY: analyticsProperty,
 
       $BROWSERS: JSON.stringify(browserslist(packageJson.browserslist)),
 
