@@ -3,6 +3,7 @@ import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { useD1Definitions } from 'app/manifest/selectors';
 import Objective from 'app/progress/Objective';
+import { usePageTitle } from 'app/utils/hooks';
 import { StringLookup } from 'app/utils/util-types';
 import clsx from 'clsx';
 import _ from 'lodash';
@@ -55,6 +56,7 @@ interface Props {
 }
 
 export default function Activities({ account }: Props) {
+  usePageTitle(t('Activities.Activities'));
   useLoadStores(account);
   const stores = useSelector(sortedStoresSelector);
 

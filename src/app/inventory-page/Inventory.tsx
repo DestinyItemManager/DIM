@@ -7,12 +7,14 @@ import DragPerformanceFix from 'app/inventory/DragPerformanceFix';
 import { storesLoadedSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { MaterialCountsSheet } from 'app/material-counts/MaterialCountsWrappers';
+import { usePageTitle } from 'app/utils/hooks';
 import { useSelector } from 'react-redux';
 import Stores from './Stores';
 
 export default function Inventory({ account }: { account: DestinyAccount }) {
   const storesLoaded = useSelector(storesLoadedSelector);
   useLoadStores(account);
+  usePageTitle(t('Header.Inventory'));
 
   if (!storesLoaded) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
