@@ -18,6 +18,7 @@ import idbReady from 'safari-14-idb-fix';
 import { StorageBroken, storageTest } from './StorageTest';
 import Root from './app/Root';
 import setupRateLimiter from './app/bungie-api/rate-limit-config';
+import { installDebuggingHooks } from './app/debugging-hooks';
 import { initGoogleAnalytics } from './app/google';
 import { initi18n } from './app/i18n';
 import registerServiceWorker from './app/register-service-worker';
@@ -35,6 +36,8 @@ safariTouchFix();
 if ($DIM_FLAVOR !== 'dev') {
   registerServiceWorker();
 }
+
+installDebuggingHooks();
 
 setupRateLimiter();
 scheduleMemoryMeasurement();

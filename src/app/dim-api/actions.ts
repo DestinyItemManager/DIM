@@ -3,6 +3,7 @@ import { needsDeveloper } from 'app/accounts/actions';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { accountsSelector, currentAccountSelector } from 'app/accounts/selectors';
 import { dimErrorToaster } from 'app/bungie-api/error-toaster';
+import { getDimProfileRefreshIntervalOverride } from 'app/debugging-hooks';
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import { Settings, initialSettingsState } from 'app/settings/initial-settings';
@@ -210,10 +211,13 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
     }
     const currentAccount = currentAccountSelector(getState());
 
+    const refreshInterval =
+      getDimProfileRefreshIntervalOverride() ??
+      getState().dimApi.globalSettings.dimProfileMinimumRefreshInterval;
+
     // How long before the API data is considered stale is controlled from the server
     const profileOutOfDateOrMissing =
-      profileLastLoaded(getState().dimApi, currentAccount) >
-      getState().dimApi.globalSettings.dimProfileMinimumRefreshInterval * 1000;
+      profileLastLoaded(getState().dimApi, currentAccount) > refreshInterval * 1000;
 
     if (forceLoad || profileOutOfDateOrMissing) {
       try {
