@@ -9,8 +9,7 @@
     background-color: transparent;
 
     &:hover {
-      color: var(--theme-accent-primary);
-      cursor: pointer;
+      color: var(--theme-text);
 
       .collapse {
         color: rgba(245, 245, 245, 0.25);
@@ -27,7 +26,8 @@
     cursor: pointer;
     height: 100%;
     padding-right: 8px;
-    &:hover .collapse {
+
+    &:hover {
       color: var(--theme-accent-primary);
     }
   }
