@@ -9,7 +9,7 @@ $horizontal-padding: 11px;
 
   @media (hover: hover) {
     &:hover {
-      text-decoration: 3px underline dotted var(--theme-tooltip-underline);
+      text-decoration: 1px underline dashed var(--theme-tooltip-underline);
       text-underline-offset: 4px;
 
       &::before,
