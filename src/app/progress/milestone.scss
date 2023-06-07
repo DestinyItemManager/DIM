@@ -54,11 +54,12 @@ button.milestone-quest {
 
   .milestone-name {
     font-size: 14px;
+  }
 
-    [type='button']:hover & {
-      .milestone-name {
-        color: var(--theme-accent-primary);
-      }
+  // Apply hover style only on clickable milestone buttons
+  &[type='button']:hover {
+    .milestone-name {
+      color: var(--theme-accent-primary);
     }
   }
 
