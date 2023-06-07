@@ -3,6 +3,7 @@ import { clarityDiscordLink, clarityLink } from 'app/clarity/about';
 import StaticPage from 'app/dim-ui/StaticPage';
 import { t } from 'app/i18next-t';
 import { isAppStoreVersion } from 'app/utils/browsers';
+import { usePageTitle } from 'app/utils/hooks';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { UAParser } from 'ua-parser-js';
@@ -45,6 +46,7 @@ function getSystemInfo() {
 }
 
 export default function About() {
+  usePageTitle(t('Header.About'));
   // The App Store version can't show donation links I guess?
   const iOSApp = isAppStoreVersion();
 

@@ -5,7 +5,7 @@ import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { useD2Definitions } from 'app/manifest/selectors';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { useEventBusListener } from 'app/utils/hooks';
+import { useEventBusListener, usePageTitle } from 'app/utils/hooks';
 import clsx from 'clsx';
 import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
@@ -75,6 +75,7 @@ export default function SingleVendor({ account }: { account: DestinyAccount }) {
   }, [account, characterId, vendorDef, dispatch, vendorHash]);
 
   useLoadStores(account);
+  usePageTitle(vendorDef?.displayProperties.name ?? t('Vendors.Vendors'));
 
   if (!defs || !buckets) {
     return <ShowPageLoading message={t('Manifest.Load')} />;

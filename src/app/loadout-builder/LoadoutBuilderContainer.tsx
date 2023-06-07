@@ -7,6 +7,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { setSearchQuery } from 'app/shell/actions';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { usePageTitle } from 'app/utils/hooks';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
@@ -36,6 +37,7 @@ export default function LoadoutBuilderContainer({ account }: Props) {
   const stores = useSelector(sortedStoresSelector);
   const disabledDueToMaintenance = useSelector(disabledDueToMaintenanceSelector);
   useLoadStores(account);
+  usePageTitle(t('LB.LB'));
 
   const decodedParameters = decodeUrlLoadoutParameters(location.search);
   const {

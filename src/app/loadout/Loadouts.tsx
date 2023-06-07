@@ -17,6 +17,7 @@ import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-u
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, addIcon, faCalculator, uploadIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
+import { usePageTitle } from 'app/utils/hooks';
 import { Portal } from 'app/utils/temp-container';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -54,6 +55,7 @@ const sortOptions = [
  */
 export default function LoadoutsContainer({ account }: { account: DestinyAccount }) {
   const storesLoaded = useLoadStores(account);
+  usePageTitle(t('Loadouts.Loadouts'));
 
   if (!storesLoaded) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
