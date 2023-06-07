@@ -2,7 +2,6 @@ import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { decodeUrlLoadoutParameters } from 'app/loadout/loadout-share/loadout-import';
 import { useD2Definitions } from 'app/manifest/selectors';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { setSearchQuery } from 'app/shell/actions';
@@ -37,14 +36,7 @@ export default function LoadoutBuilderContainer({ account }: Props) {
   const disabledDueToMaintenance = useSelector(disabledDueToMaintenanceSelector);
   useLoadStores(account);
 
-  const decodedParameters = decodeUrlLoadoutParameters(location.search);
-  const {
-    classType: urlClassType,
-    notes: urlNotes,
-    parameters: urlLoadoutParameters,
-  } = decodedParameters;
-  let query = decodedParameters.query;
-
+  let query: string | undefined;
   const preloadedLoadout = (location.state as { loadout: Loadout } | undefined)?.loadout;
   if (preloadedLoadout?.parameters?.query) {
     query = preloadedLoadout.parameters.query;
@@ -69,14 +61,11 @@ export default function LoadoutBuilderContainer({ account }: Props) {
     );
   }
 
-  // TODO: key off the URL params?
   return (
     <LoadoutBuilder
+      key={preloadedLoadout?.id ?? 'lo'}
       stores={stores}
       preloadedLoadout={preloadedLoadout}
-      initialClassType={urlClassType ?? preloadedLoadout?.classType}
-      initialLoadoutParameters={urlLoadoutParameters || preloadedLoadout?.parameters}
-      notes={urlNotes ?? preloadedLoadout?.notes}
     />
   );
 }
