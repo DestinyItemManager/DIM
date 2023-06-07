@@ -10,6 +10,7 @@
 * Fixed the keyboard automatically appearing on the iOS App Store version.
 * Removed support for old Loadout Optimizer share links.
 * Fixed showing catalyst perk descriptions.
+* Added `memento:none` filter to highlight weapons with an empty memento socket.
 
 ## 7.71.0 <span class="changelog-date">(2023-06-04)</span>
 
