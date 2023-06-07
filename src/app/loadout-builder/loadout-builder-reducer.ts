@@ -82,25 +82,22 @@ const lbConfigInit = ({
   stores,
   defs,
   preloadedLoadout,
-  initialClassType,
-  initialLoadoutParameters,
   savedLoadoutBuilderParameters,
   savedStatConstraintsPerClass,
 }: {
   stores: DimStore[];
   defs: D2ManifestDefinitions;
   preloadedLoadout: Loadout | undefined;
-  initialClassType: DestinyClass | undefined;
-  initialLoadoutParameters: LoadoutParameters | undefined;
   savedLoadoutBuilderParameters: LoadoutParameters;
   savedStatConstraintsPerClass: { [classType: number]: StatConstraint[] };
 }): LoadoutBuilderConfiguration => {
   const pinnedItems: PinnedItems = {};
 
   // Preloaded loadouts from the "Optimize Armor" button take priority
-  let classType: DestinyClass = initialClassType ?? DestinyClass.Unknown;
+  let classType: DestinyClass = preloadedLoadout?.classType ?? DestinyClass.Unknown;
   // Pick a store that matches the classType
   const storeMatchingClass = pickBackingStore(stores, undefined, classType);
+  let initialLoadoutParameters = preloadedLoadout?.parameters;
 
   // If we requested a specific class type but the user doesn't have it, we
   // need to pick some different store, but ensure that class-specific stuff
@@ -543,9 +540,7 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
 export function useLbState(
   stores: DimStore[],
   defs: D2ManifestDefinitions,
-  preloadedLoadout: Loadout | undefined,
-  initialClassType: DestinyClass | undefined,
-  initialLoadoutParameters: LoadoutParameters | undefined
+  preloadedLoadout: Loadout | undefined
 ) {
   const savedLoadoutBuilderParameters = useSelector(savedLoadoutParametersSelector);
   const savedStatConstraintsPerClass = useSelector(savedLoStatConstraintsByClassSelector);
@@ -562,8 +557,6 @@ export function useLbState(
       stores,
       defs,
       preloadedLoadout,
-      initialClassType,
-      initialLoadoutParameters,
       savedLoadoutBuilderParameters,
       savedStatConstraintsPerClass,
     })
