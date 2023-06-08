@@ -180,7 +180,6 @@ const lbConfigInit = ({
       );
     });
   }
-  delete loadoutParameters.lockArmorEnergyType;
 
   return {
     loadoutParameters,

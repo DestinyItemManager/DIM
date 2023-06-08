@@ -6,37 +6,10 @@ import { defaultLanguage, DimLanguage } from 'app/i18n';
  */
 export interface Settings extends DimApiSettings {
   language: DimLanguage;
-
-  /** supplements itemSortOrderCustom by allowing each sort to be reversed */
-  itemSortReversals: string[];
-
-  /** Select descriptions to display */
-  readonly descriptionsToDisplay: 'bungie' | 'community' | 'both';
-
-  /** Plug the T10 masterwork into D2Y2+ random roll weapons for comparison purposes. */
-  readonly compareWeaponMasterwork: boolean;
-
-  /**
-   * Cutoff point; the instance ID of the newest item that isn't shown in
-   * the item feed anymore after the user presses the "clear" button.
-   */
-  readonly itemFeedWatermark: string;
-
-  /** Automatically sync lock status with tag */
-  readonly autoLockTagged: boolean;
-
-  /** Add font mods' runtime stat boosts to build stats */
-  readonly loIncludeFontModStats: boolean;
 }
 
 export const initialSettingsState: Settings = {
   ...defaultSettings,
   language: defaultLanguage(),
-  itemSortReversals: [],
-  descriptionsToDisplay: 'both',
-  compareWeaponMasterwork: false,
   itemFeedWatermark: '0',
-  autoLockTagged: false,
-  customStats: [],
-  loIncludeFontModStats: false,
 };
