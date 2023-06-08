@@ -10,6 +10,7 @@
 * Fixed the keyboard automatically appearing on the iOS App Store version.
 * Removed support for old Loadout Optimizer share links.
 * Fixed showing catalyst perk descriptions.
+* `deepsight:harmonizable` highlights weapons where Deepsight Resonance can be activated using a Deepsight Harmonizer.
 
 ## 7.71.0 <span class="changelog-date">(2023-06-04)</span>
 
