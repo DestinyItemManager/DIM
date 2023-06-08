@@ -53,7 +53,7 @@
 }
 
 .equipped-item {
-  border: $equipped-item-border solid #ddd;
+  border: $equipped-item-border solid var(--theme-item-polaroid-hover-border);
   height: fit-content;
   padding: $equipped-item-padding;
 }

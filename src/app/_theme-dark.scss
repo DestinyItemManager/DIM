@@ -64,11 +64,12 @@
   --theme-search-dropdown-border: rgba(255, 255, 255, 0.2);
 
   // Items 'polaroid' framed icons
-  --theme-item-polaroid: #456;
-  --theme-item-polaroid-txt: white;
-  --theme-item-polaroid-masterwork: black;
-  --theme-item-polaroid-masterwork-txt: #e8a534;
-  --theme-item-polaroid-masterwork-border: #ae791e;
+  --theme-item-polaroid: #333;
+  --theme-item-polaroid-txt: var(--theme-text);
+  --theme-item-polaroid-hover-border: #777;
+  --theme-item-polaroid-masterwork: #5a5032;
+  --theme-item-polaroid-masterwork-txt: #eade8b;
+  --theme-item-polaroid-masterwork-border: #eade8b;
   --theme-item-polaroid-godroll: white;
   --theme-item-polaroid-trashroll: #d14334;
 

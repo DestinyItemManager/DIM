@@ -145,7 +145,7 @@ $search-bar-height: 28px;
   $light-stripe: rgba(255, 255, 255, $light-stripe);
   $dark-stripe: rgba(0, 0, 0, $dark-stripe);
   background: linear-gradient(rgba(0, 0, 0, $top-gradient) 0%, transparent 50%),
-    linear-gradient(transparent 50%, var(--theme-item-polaroid-masterwork-border) 250%),
+    linear-gradient(transparent 50%, $masterwork-border-color 250%),
     repeating-linear-gradient(
         to bottom right,
         #{$light-stripe} 0%,
