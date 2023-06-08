@@ -27,6 +27,7 @@
     "WeeklyHeroic": "Weekly Heroic Strike"
   },
   "Armory": {
+    "Armory": "Armory",
     "NoNotes": "No Notes",
     "OpenInArmory": "view in Armory",
     "Season": "Season {{season}}, Year {{year}}",

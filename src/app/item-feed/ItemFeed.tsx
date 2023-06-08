@@ -72,7 +72,7 @@ export default function ItemFeed({ page }: { page?: boolean }) {
 
   const untaggedItems = hideTagged ? allItems.filter((i) => !hideTagged || !getTag(i)) : allItems;
 
-  const items = untaggedItems.filter((i) => isNewerThan(i, itemFeedWatermark));
+  const items = untaggedItems.filter((i) => isNewerThan(i, itemFeedWatermark ?? '0'));
 
   const header = (
     <>

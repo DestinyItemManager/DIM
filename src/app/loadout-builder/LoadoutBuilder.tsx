@@ -1,4 +1,3 @@
-import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { savedLoStatConstraintsByClassSelector } from 'app/dim-api/selectors';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
@@ -56,15 +55,9 @@ const autoAssignmentPCHs = [PlugCategoryHashes.EnhancementsArtifice];
  */
 export default memo(function LoadoutBuilder({
   stores,
-  initialClassType,
-  initialLoadoutParameters,
-  notes,
   preloadedLoadout,
 }: {
   stores: DimStore[];
-  initialClassType: DestinyClass | undefined;
-  initialLoadoutParameters: LoadoutParameters | undefined;
-  notes: string | undefined;
   preloadedLoadout: Loadout | undefined;
 }) {
   const defs = useD2Definitions()!;
@@ -110,7 +103,7 @@ export default memo(function LoadoutBuilder({
       canUndo,
     },
     lbDispatch,
-  ] = useLbState(stores, defs, preloadedLoadout, initialClassType, initialLoadoutParameters);
+  ] = useLbState(stores, defs, preloadedLoadout);
   const isPhonePortrait = useIsPhonePortrait();
 
   const lockedExoticHash = loadoutParameters.exoticArmorHash;
@@ -151,11 +144,13 @@ export default memo(function LoadoutBuilder({
 
   // Save a subset of the loadout parameters to settings in order to remember them between sessions
   const setSetting = useSetSetting();
+  const hasPreloadedLoadout = Boolean(preloadedLoadout);
   useEffect(() => {
-    // If the user is playing with an existing loadout (potentially one they received from a loadout share)
-    // or a direct /optimizer link, do not overwrite the global saved loadout parameters.
-    // If they decide to save that loadout, these will still be saved with the loadout.
-    if (initialLoadoutParameters) {
+    // If the user is playing with an existing loadout (potentially one they
+    // received from a loadout share), do not overwrite the global saved loadout
+    // parameters. If they decide to save that loadout, these will still be
+    // saved with the loadout.
+    if (hasPreloadedLoadout) {
       return;
     }
 
@@ -191,8 +186,7 @@ export default memo(function LoadoutBuilder({
     optimizingLoadoutId,
     savedStatConstraintsByClass,
     classType,
-    preloadedLoadout,
-    initialLoadoutParameters,
+    hasPreloadedLoadout,
   ]);
 
   const onCharacterChanged = useCallback(
@@ -429,10 +423,10 @@ export default memo(function LoadoutBuilder({
             <p>{t('LoadoutBuilder.OptimizerExplanationGuide')}</p>
           </div>
         )}
-        {notes && (
+        {preloadedLoadout?.notes && (
           <div className={styles.guide}>
             <p>
-              <b>{t('MovePopup.Notes')}</b> {notes}
+              <b>{t('MovePopup.Notes')}</b> {preloadedLoadout?.notes}
             </p>
           </div>
         )}
@@ -451,7 +445,7 @@ export default memo(function LoadoutBuilder({
             params={params}
             halfTierMods={halfTierMods}
             armorEnergyRules={result.armorEnergyRules}
-            notes={notes}
+            notes={preloadedLoadout?.notes}
           />
         ) : (
           !processing && (
@@ -504,7 +498,7 @@ export default memo(function LoadoutBuilder({
               subclass={subclass}
               classType={classType}
               params={params}
-              notes={notes}
+              notes={preloadedLoadout?.notes}
               lockedMods={modsToAssign}
               onClose={() => lbDispatch({ type: 'closeCompareDrawer' })}
             />

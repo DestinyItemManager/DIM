@@ -51,7 +51,6 @@ export default function WishListSettings() {
   const reloadWishList = async (reloadWishListSource: string | undefined) => {
     try {
       await dispatch(fetchWishList(reloadWishListSource));
-      ga('send', 'event', 'WishList', 'From URL');
     } catch (e) {
       showNotification({
         type: 'error',
@@ -75,7 +74,6 @@ export default function WishListSettings() {
       if (reader.result && typeof reader.result === 'string') {
         const wishListAndInfo = toWishList(reader.result);
         dispatch(transformAndStoreWishList(wishListAndInfo));
-        ga('send', 'event', 'WishList', 'From File');
       }
     };
 
@@ -89,18 +87,15 @@ export default function WishListSettings() {
   };
 
   const clearWishListEvent = () => {
-    ga('send', 'event', 'WishList', 'Clear');
     dispatch(clearWishLists());
   };
 
   const resetToChoosyVoltron = () => {
-    ga('send', 'event', 'WishList', 'Reset to choosy voltron');
     setLiveWishListSource(choosyVoltronLocation);
     reloadWishList(choosyVoltronLocation);
   };
 
   const resetToVoltron = () => {
-    ga('send', 'event', 'WishList', 'Reset to voltron');
     setLiveWishListSource(voltronLocation);
     reloadWishList(voltronLocation);
   };

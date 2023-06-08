@@ -12,11 +12,10 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
 import store from './store/store';
+import { isNativeDragAndDropSupported } from './utils/browsers';
 
 // Wrap App with Sentry profiling
 const WrappedApp = $featureFlags.sentry ? withProfiler(App) : App;
-
-const isNativeDragAndDropSupported = () => 'draggable' in document.createElement('div');
 
 function Root() {
   const options: MultiBackendOptions = {

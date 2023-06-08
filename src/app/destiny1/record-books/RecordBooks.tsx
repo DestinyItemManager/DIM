@@ -3,6 +3,7 @@ import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { useD1Definitions } from 'app/manifest/selectors';
 import { useSetting } from 'app/settings/hooks';
+import { usePageTitle } from 'app/utils/hooks';
 import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
@@ -55,6 +56,7 @@ interface RecordBookPage {
 }
 
 export default function RecordBooks({ account }: Props) {
+  usePageTitle(t('RecordBooks.RecordBooks'));
   const defs = useD1Definitions();
   const stores = useSelector(storesSelector) as D1Store[];
   const [hideCompletedRecords, setHideCompletedRecords] = useSetting('hideCompletedRecords');

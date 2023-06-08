@@ -7,6 +7,7 @@ import { useLoadStores } from 'app/inventory/store/hooks';
 import { setSearchQuery } from 'app/shell/actions';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { usePageTitle } from 'app/utils/hooks';
 import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
@@ -55,6 +56,7 @@ export default function Organizer({ account }: Props) {
   const stores = useSelector(storesSelector);
   const searchQuery = useSelector(querySelector);
   useLoadStores(account);
+  usePageTitle(t('Organizer.Organizer'));
 
   const navigate = useNavigate();
   const location = useLocation();

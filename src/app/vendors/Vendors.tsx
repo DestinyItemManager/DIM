@@ -9,7 +9,7 @@ import { searchFilterSelector } from 'app/search/search-filter';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { useEventBusListener } from 'app/utils/hooks';
+import { useEventBusListener, usePageTitle } from 'app/utils/hooks';
 import { DestinyCurrenciesComponent } from 'bungie-api-ts/destiny2';
 import { PanInfo, motion } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
@@ -46,6 +46,7 @@ export default function Vendors({ account }: { account: DestinyAccount }) {
   const filterItems = useSelector(searchFilterSelector);
   const vendors = useSelector(vendorsByCharacterSelector);
   const dispatch = useThunkDispatch();
+  usePageTitle(t('Vendors.Vendors'));
 
   const [filterToUnacquired, setFilterToUnacquired] = useState(false);
 

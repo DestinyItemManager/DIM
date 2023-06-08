@@ -1,3 +1,4 @@
+import { gaPageView } from 'app/google';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -9,7 +10,7 @@ export default function GATracker() {
 
   useEffect(() => {
     // Replace the profile membership ID so we can consolidate paths
-    ga('send', 'pageview', pathname.replace(/\/\d+\//, '/profileMembershipId/'));
+    gaPageView(pathname.replace(/\/\d+\//, '/profileMembershipId/'));
   }, [pathname]);
 
   return null;

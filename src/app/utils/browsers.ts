@@ -35,6 +35,8 @@ export function isMac() {
   return mac;
 }
 
+export const isNativeDragAndDropSupported = () => 'draggable' in document.createElement('div');
+
 /**
  * Firefox makes the baffling decision to bubble clicks on its scrollbars down
  * to page contents. This is the only way I found to distinguish them.

@@ -1,4 +1,4 @@
-import { defaultLoadoutParameters, LoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { getSharedLoadout } from 'app/dim-api/dim-api';
 import { generateMissingLoadoutItemId } from 'app/loadout-drawer/loadout-item-conversion';
 import { convertDimApiLoadoutToLoadout } from 'app/loadout-drawer/loadout-type-converters';
@@ -67,43 +67,8 @@ export function decodeShareUrl(shareUrl: string): DecodedShareLink | undefined {
       if (loadout) {
         return { tag: 'urlLoadout', loadout };
       }
-    } else if (pathname.endsWith('/optimizer')) {
-      const params = decodeUrlLoadoutParameters(search);
-      if (params.classType !== undefined || params.notes || params.parameters || params.query) {
-        return { tag: 'urlParameters', urlParameters: params };
-      }
     }
   } catch {}
-}
-
-/**
- * Decode the deprecated Loadout Optimizer links containing only Loadout Optimizer settings.
- * `search` is the URL query string beginning with ?.
- */
-export function decodeUrlLoadoutParameters(search: string): UrlLoadoutParameters {
-  const searchParams = new URLSearchParams(search);
-  const urlClassTypeString = searchParams.get('class');
-  const urlLoadoutParametersJSON = searchParams.get('p');
-  const notes = searchParams.get('n') ?? undefined;
-
-  const classType = urlClassTypeString ? parseInt(urlClassTypeString) : undefined;
-
-  let query = '';
-  let parameters: LoadoutParameters | undefined;
-  if (urlLoadoutParametersJSON) {
-    parameters = JSON.parse(urlLoadoutParametersJSON);
-    parameters = { ...defaultLoadoutParameters, ...parameters };
-    if (parameters?.query) {
-      query = parameters.query;
-    }
-  }
-
-  return {
-    parameters,
-    classType,
-    notes,
-    query,
-  };
 }
 
 /**

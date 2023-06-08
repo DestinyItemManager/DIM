@@ -30,7 +30,6 @@ export default function NotesArea({
   const [notesOpen, setNotesOpen] = useState(false);
   const openNotes = useCallback(() => {
     setNotesOpen(true);
-    ga('send', 'event', 'Item Popup', 'Edit Notes');
   }, []);
 
   useHotkey('n', t('Hotkey.Notes'), openNotes);

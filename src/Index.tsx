@@ -1,6 +1,7 @@
 // organize-imports-ignore
 // We want our main CSS to load before all other CSS.
 import './app/main.scss';
+import './app/utils/exceptions';
 import { saveAccountsToIndexedDB } from 'app/accounts/observers';
 import updateCSSVariables from 'app/css-variables';
 import { loadDimApiData } from 'app/dim-api/actions';
@@ -12,24 +13,23 @@ import { streamDeckEnabled } from 'app/stream-deck/util/local-storage';
 import { infoLog } from 'app/utils/log';
 import { scheduleMemoryMeasurement } from 'app/utils/measure-memory';
 import ReactDOM from 'react-dom/client';
+import { Provider } from 'react-redux';
 import idbReady from 'safari-14-idb-fix';
 import { StorageBroken, storageTest } from './StorageTest';
 import Root from './app/Root';
 import setupRateLimiter from './app/bungie-api/rate-limit-config';
-import './app/google';
+import { initGoogleAnalytics } from './app/google';
 import { initi18n } from './app/i18n';
 import registerServiceWorker from './app/register-service-worker';
 import { safariTouchFix } from './app/safari-touch-fix';
 import { watchLanguageChanges } from './app/settings/observers';
-import './app/utils/exceptions';
 import { saveWishListToIndexedDB } from './app/wishlists/observers';
-import { Provider } from 'react-redux';
-
 infoLog(
   'app',
   `DIM v${$DIM_VERSION} (${$DIM_FLAVOR}) - Please report any errors to https://www.github.com/DestinyItemManager/DIM/issues`
 );
 
+initGoogleAnalytics();
 safariTouchFix();
 
 if ($DIM_FLAVOR !== 'dev') {
