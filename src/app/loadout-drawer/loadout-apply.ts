@@ -86,7 +86,12 @@ import {
   setSocketOverrideResult,
 } from './loadout-apply-state';
 import { Assignment, InGameLoadout, Loadout, LoadoutItem } from './loadout-types';
-import { backupLoadout, findItemForLoadout, getModsFromLoadout } from './loadout-utils';
+import {
+  backupLoadout,
+  findItemForLoadout,
+  getLoadoutSubclassFragmentCapacity,
+  getModsFromLoadout,
+} from './loadout-utils';
 
 // TODO: move this whole file to "loadouts" folder
 
@@ -1032,30 +1037,10 @@ function applySocketOverrides(
           if (aspectSocketCategoryHashes.includes(category.category.hash)) {
             handleShuffledSockets(category.socketIndexes);
           } else if (fragmentSocketCategoryHashes.includes(category.category.hash)) {
-            // For fragments, we first need to figure out how many sockets we have available.
-            // If the loadout specifies overrides for aspects, we use all override aspects to calculate
-            // fragment capacity, otherwise we look at the item itself because we don't unplug any aspects
-            // if the overrides don't list any.
-            const aspectSocketIndices = dimItem.sockets!.categories.find((c) =>
-              aspectSocketCategoryHashes.includes(c.category.hash)
-            )!.socketIndexes;
-            let aspectDefs = _.compact(
-              aspectSocketIndices.map((aspectSocketIndex) => {
-                const aspectHash = loadoutItem.socketOverrides![aspectSocketIndex];
-                return aspectHash && defs.InventoryItem.get(aspectHash);
-              })
-            );
-            if (!aspectDefs.length) {
-              aspectDefs = _.compact(
-                getSocketsByIndexes(dimItem.sockets!, aspectSocketIndices).map(
-                  (socket) => socket.plugged?.plugDef
-                )
-              );
-            }
-            const fragmentCapacity = _.sumBy(
-              aspectDefs,
-              (aspectDef) => aspectDef.plug?.energyCapacity?.capacityValue || 0
-            );
+            const fragmentCapacity = getLoadoutSubclassFragmentCapacity(defs, {
+              item: dimItem,
+              loadoutItem,
+            });
             handleShuffledSockets(category.socketIndexes.slice(0, fragmentCapacity));
           } else {
             const sockets = getSocketsByIndexes(dimItem.sockets!, category.socketIndexes);

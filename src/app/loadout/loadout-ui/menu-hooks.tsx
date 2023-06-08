@@ -6,9 +6,14 @@ import { DimLanguage } from 'app/i18n';
 import { t } from 'app/i18next-t';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
 import { isInGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
-import { isMissingItemsSelector } from 'app/loadout-drawer/loadout-utils';
+import {
+  FragmentProblem,
+  getFragmentProblemsSelector,
+  isMissingItemsSelector,
+} from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
 import { plainString } from 'app/search/search-filters/freeform';
+import { emptyArray } from 'app/utils/empty';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import deprecatedMods from 'data/d2/deprecated-mods.json';
 import _ from 'lodash';
@@ -62,6 +67,8 @@ export function useLoadoutFilterPills(
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const isMissingItems = useSelector(isMissingItemsSelector);
   // eslint-disable-next-line react-hooks/rules-of-hooks
+  const getFragmentProblems = useSelector(getFragmentProblemsSelector);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [selectedFilters, setSelectedFilters] = useState<Option[]>([]);
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -103,6 +110,17 @@ export function useLoadoutFilterPills(
     [savedLoadouts]
   );
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [loadoutsWithEmptyFragmentSlots, loadoutsWithTooManyFragments] = useMemo(() => {
+    const problematicLoadouts = _.groupBy(savedLoadouts, (loadout) =>
+      getFragmentProblems(selectedStoreId, loadout)
+    );
+    return [
+      problematicLoadouts[FragmentProblem.EmptyFragmentSlots] ?? emptyArray(),
+      problematicLoadouts[FragmentProblem.TooManyFragments] ?? emptyArray(),
+    ] as const;
+  }, [getFragmentProblems, savedLoadouts, selectedStoreId]);
+
   if (includeWarningPills) {
     if (loadoutsWithMissingItems.length) {
       filterOptions.push({
@@ -125,6 +143,27 @@ export function useLoadoutFilterPills(
         ),
       });
     }
+
+    if (loadoutsWithEmptyFragmentSlots.length) {
+      filterOptions.push({
+        key: 'emptyFragmentSlots',
+        content: (
+          <>
+            <AlertIcon /> {t('Loadouts.EmptyFragmentSlots')}
+          </>
+        ),
+      });
+    }
+    if (loadoutsWithTooManyFragments.length) {
+      filterOptions.push({
+        key: 'tooManyFragments',
+        content: (
+          <>
+            <AlertIcon /> {t('Loadouts.TooManyFragments')}
+          </>
+        ),
+      });
+    }
   }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -138,6 +177,10 @@ export function useLoadoutFilterPills(
                   return loadoutsWithDeprecatedMods;
                 case 'missingitems':
                   return loadoutsWithMissingItems;
+                case 'emptyFragmentSlots':
+                  return loadoutsWithEmptyFragmentSlots;
+                case 'tooManyFragments':
+                  return loadoutsWithTooManyFragments;
                 default:
                   return loadoutsByHashtag[f.key] ?? [];
               }
@@ -145,11 +188,13 @@ export function useLoadoutFilterPills(
           )
         : savedLoadouts,
     [
+      selectedFilters,
       savedLoadouts,
-      loadoutsByHashtag,
       loadoutsWithDeprecatedMods,
       loadoutsWithMissingItems,
-      selectedFilters,
+      loadoutsWithEmptyFragmentSlots,
+      loadoutsWithTooManyFragments,
+      loadoutsByHashtag,
     ]
   );
 

@@ -1,6 +1,7 @@
 ## Next
 
 * Fixed showing the item under your finger while you're dragging it on iOS/iPadOS. As a reminder, on touchscreen devices you need to press the item for a little bit to "pick it up". And as a reminder for everyone, any time you see an item in DIM, pretty much wherever it is, you can drag it around to move the item or add it to a Loadout you're editing. This works from the Inventory, Item Feed, Loadouts screen, etc.
+* The Loadouts page now has a filter pill to find Loadouts with empty Fragment sockets.
 * The popup shown on the refresh button when Bungie.net is down no longer has buttons you can't click, and no longer exceeds the width of the screen on mobile.
 * DIM will not update itself in the background if you're in the middle of editing a loadout or doing many other tasks.
 * Removed references to Reddit.
