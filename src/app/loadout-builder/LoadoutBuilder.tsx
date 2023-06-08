@@ -23,8 +23,11 @@ import { Draft } from 'immer';
 import _ from 'lodash';
 import { memo, useCallback, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { allItemsSelector, unlockedPlugSetItemsSelector } from '../inventory/selectors';
-import { DimStore } from '../inventory/store-types';
+import {
+  allItemsSelector,
+  sortedStoresSelector,
+  unlockedPlugSetItemsSelector,
+} from '../inventory/selectors';
 import ModPicker from '../loadout/ModPicker';
 import { isLoadoutBuilderItem } from '../loadout/item-utils';
 import styles from './LoadoutBuilder.m.scss';
@@ -54,13 +57,12 @@ const autoAssignmentPCHs = [PlugCategoryHashes.EnhancementsArtifice];
  * The Loadout Optimizer screen
  */
 export default memo(function LoadoutBuilder({
-  stores,
   preloadedLoadout,
 }: {
-  stores: DimStore[];
   preloadedLoadout: Loadout | undefined;
 }) {
   const defs = useD2Definitions()!;
+  const stores = useSelector(sortedStoresSelector);
   const allLoadouts = useSelector(loadoutsSelector);
   const allItems = useSelector(allItemsSelector);
   const searchFilter = useSelector(searchFilterSelector);
