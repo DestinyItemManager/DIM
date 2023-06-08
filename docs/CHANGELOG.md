@@ -7,6 +7,9 @@
 * Removed references to Reddit.
 * Improved performance of viewing lots of loadouts, especially on iOS. The Loadouts page should no longer hang on load on iOS.
 * The tab title includes the name of the current page you're on.
+* Fixed the keyboard automatically appearing on the iOS App Store version.
+* Removed support for old Loadout Optimizer share links.
+* Fixed showing catalyst perk descriptions.
 
 ## 7.71.0 <span class="changelog-date">(2023-06-04)</span>
 
