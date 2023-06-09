@@ -9,6 +9,7 @@
 .title {
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
+  user-select: text;
 
   h2 {
     flex: 1;
