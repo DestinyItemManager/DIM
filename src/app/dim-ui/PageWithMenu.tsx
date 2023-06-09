@@ -1,3 +1,4 @@
+import useResizeObserver from '@react-hook/resize-observer';
 import clsx from 'clsx';
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './PageWithMenu.m.scss';
@@ -23,6 +24,13 @@ function useHasScrollbars(ref: React.RefObject<HTMLDivElement>) {
     window.addEventListener('resize', updateResize);
     return () => window.removeEventListener('resize', updateResize);
   }, [ref]);
+  useResizeObserver(ref, () => {
+    const elem = ref.current;
+    if (!elem) {
+      return;
+    }
+    setHasScrollbars(elem.clientWidth < elem.offsetWidth);
+  });
 
   return hasScrollbars;
 }
