@@ -7,8 +7,8 @@ import { AppIcon, powerIndicatorIcon } from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import { remEuclid, statTierWithHalf } from '../stat-utils';
 import { ArmorStatHashes, ArmorStats, ModStatChanges } from '../types';
-import { remEuclid, statTierWithHalf } from '../utils';
 import styles from './SetStats.m.scss';
 import { calculateTotalTier, sumEnabledStats } from './utils';
 

@@ -10,7 +10,7 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { profileResponseSelector } from 'app/inventory/selectors';
 import type { DimStore } from 'app/inventory/store-types';
 import { StorePowerLevel, powerLevelSelector } from 'app/inventory/store/selectors';
-import { statTier } from 'app/loadout-builder/utils';
+import { statTier } from 'app/loadout-builder/stat-utils';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';

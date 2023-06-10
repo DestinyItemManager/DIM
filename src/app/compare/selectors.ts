@@ -9,13 +9,7 @@ import { currySelector } from 'app/utils/selector-utils';
 import { characterVendorItemsSelector } from 'app/vendors/selectors';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { createSelector } from 'reselect';
-
-/**
- * The current compare session settings.
- */
-export const compareSessionSelector = (state: RootState) => state.compare.session;
-
-export const compareOpenSelector = (state: RootState) => Boolean(compareSessionSelector(state));
+import { compareSessionSelector } from './selectors2';
 
 /**
  * Returns all the items matching the item category of the current compare session.

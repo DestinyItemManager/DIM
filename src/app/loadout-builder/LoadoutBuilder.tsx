@@ -13,6 +13,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { getStore } from 'app/inventory/stores-helpers';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadoutFromEquipped, resolveLoadoutModHashes } from 'app/loadout-drawer/loadout-utils';
+import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { useSavedLoadoutsForClassType } from 'app/loadout/loadout-ui/menu-hooks';
 import { categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
@@ -37,7 +38,6 @@ import {
   unlockedPlugSetItemsSelector,
 } from '../inventory/selectors';
 import ModPicker from '../loadout/ModPicker';
-import { isLoadoutBuilderItem } from '../loadout/item-utils';
 import styles from './LoadoutBuilder.m.scss';
 import NoBuildsFoundExplainer from './NoBuildsFoundExplainer';
 import EnergyOptions from './filter/EnergyOptions';
@@ -50,6 +50,7 @@ import { filterItems } from './item-filter';
 import { useLbState } from './loadout-builder-reducer';
 import { useLoVendorItems } from './loadout-builder-vendors';
 import { buildLoadoutParams } from './loadout-params';
+import { OperationMode } from './process-worker/types';
 import { useProcess } from './process/useProcess';
 import {
   ArmorEnergyRules,
@@ -60,6 +61,8 @@ import {
 
 /** Do not allow the user to choose artifice mods manually in Loadout Optimizer since we're supposed to be doing that */
 const autoAssignmentPCHs = [PlugCategoryHashes.EnhancementsArtifice];
+
+const lbOpMode: OperationMode = { op: 'enumerate' };
 
 /**
  * The Loadout Optimizer screen
@@ -207,6 +210,7 @@ export default memo(function LoadoutBuilder({
   // Run the actual loadout generation process in a web worker
   const { result, processing, remainingTime } = useProcess({
     defs,
+    opMode: lbOpMode,
     selectedStore,
     filteredItems,
     lockedModMap,
@@ -509,7 +513,7 @@ function useResolvedMods(
 /**
  * Gets all armor items that could be used to build loadouts for the specified class.
  */
-function useArmorItems(classType: DestinyClass, vendorItems: DimItem[]): DimItem[] {
+export function useArmorItems(classType: DestinyClass, vendorItems: DimItem[]): DimItem[] {
   const allItems = useSelector(allItemsSelector);
   return useMemo(
     () =>

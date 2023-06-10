@@ -1,11 +1,12 @@
 import { LoadoutSort } from '@destinyitemmanager/dim-api-types';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
-import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import FilterPills, { Option } from 'app/dim-ui/FilterPills';
+import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { DimLanguage } from 'app/i18n';
 import { t } from 'app/i18next-t';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
-import { isInGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
+import { AutoOptimizationReport, AutoOptimizationResult } from 'app/loadout-builder/auto-optimizer';
+import { Loadout, isInGameLoadout } from 'app/loadout-drawer/loadout-types';
 import {
   FragmentProblem,
   getFragmentProblemsSelector,
@@ -14,12 +15,12 @@ import {
 import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
 import { plainString } from 'app/search/search-filters/freeform';
 import { emptyArray } from 'app/utils/empty';
-import { isClassCompatible } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import deprecatedMods from 'data/d2/deprecated-mods.json';
 import _ from 'lodash';
 import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { filterLoadoutsToClass } from './utils';
 
 /**
  * Get the saved loadouts that apply to the given class type, out of all saved loadouts.
@@ -32,10 +33,6 @@ export function useSavedLoadoutsForClassType(classType: DestinyClass) {
   );
 }
 
-export function filterLoadoutsToClass(loadouts: Loadout[], classType: DestinyClass) {
-  return loadouts.filter((loadout) => isClassCompatible(classType, loadout.classType));
-}
-
 /**
  * Set up the filter pills for loadouts - allowing for filtering by hashtag and some other special properties.
  * This returns a component ready to be used in the React tree as well as the list of filtered loadouts.
@@ -43,6 +40,7 @@ export function filterLoadoutsToClass(loadouts: Loadout[], classType: DestinyCla
 export function useLoadoutFilterPills(
   savedLoadouts: Loadout[],
   selectedStoreId: string,
+  autoUpgradeResults: AutoOptimizationReport | undefined,
   {
     includeWarningPills,
     className,
@@ -117,6 +115,42 @@ export function useLoadoutFilterPills(
     ] as const;
   }, [getFragmentProblems, savedLoadouts, selectedStoreId]);
 
+  if (autoUpgradeResults) {
+    const results = Object.values(autoUpgradeResults);
+
+    if (
+      results.some(
+        (result) =>
+          result.tag === 'finished' && result.result === AutoOptimizationResult.StrongBetterSet
+      )
+    ) {
+      filterOptions.push({
+        key: 'strongUpgrades',
+        content: (
+          <>
+            <AlertIcon /> Strong Upgrades
+          </>
+        ),
+      });
+    }
+
+    if (
+      results.some(
+        (result) =>
+          result.tag === 'finished' && result.result === AutoOptimizationResult.WeakBetterSet
+      )
+    ) {
+      filterOptions.push({
+        key: 'weakUpgrades',
+        content: (
+          <>
+            <AlertIcon /> Weak Upgrades
+          </>
+        ),
+      });
+    }
+  }
+
   if (includeWarningPills) {
     if (loadoutsWithMissingItems.length) {
       filterOptions.push({
@@ -177,6 +211,22 @@ export function useLoadoutFilterPills(
                   return loadoutsWithEmptyFragmentSlots;
                 case 'tooManyFragments':
                   return loadoutsWithTooManyFragments;
+                case 'strongUpgrades':
+                  return savedLoadouts.filter((l) => {
+                    const result = autoUpgradeResults?.[l.id];
+                    return (
+                      result?.tag === 'finished' &&
+                      result.result === AutoOptimizationResult.StrongBetterSet
+                    );
+                  });
+                case 'weakUpgrades':
+                  return savedLoadouts.filter((l) => {
+                    const result = autoUpgradeResults?.[l.id];
+                    return (
+                      result?.tag === 'finished' &&
+                      result.result === AutoOptimizationResult.WeakBetterSet
+                    );
+                  });
                 default:
                   return loadoutsByHashtag[f.key] ?? [];
               }
@@ -191,6 +241,7 @@ export function useLoadoutFilterPills(
       loadoutsWithEmptyFragmentSlots,
       loadoutsWithTooManyFragments,
       loadoutsByHashtag,
+      autoUpgradeResults,
     ]
   );
 

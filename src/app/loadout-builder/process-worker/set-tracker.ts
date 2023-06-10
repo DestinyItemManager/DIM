@@ -1,4 +1,4 @@
-import { getPower } from '../utils';
+import { getPower } from '../stat-utils';
 import { IntermediateProcessArmorSet, ProcessItem } from './types';
 
 interface TierSet {

@@ -5,7 +5,7 @@ import { Suspense, lazy, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { endCompareSession } from './actions';
-import { compareSessionSelector } from './selectors';
+import { compareSessionSelector } from './selectors2';
 
 const Compare = lazy(() => import(/* webpackChunkName: "compare" */ './Compare'));
 

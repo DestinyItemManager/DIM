@@ -169,6 +169,7 @@ export default function LoadoutPopup({
   const [pillFilteredLoadouts, filterPills, hasSelectedFilters] = useLoadoutFilterPills(
     loadouts,
     dimStore.id,
+    undefined,
     { className: styles.filterPills, darkBackground: true }
   );
   const filteredLoadouts = searchAndSortLoadoutsByQuery(

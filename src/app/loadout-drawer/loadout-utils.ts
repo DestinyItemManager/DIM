@@ -9,6 +9,8 @@ import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { findItemsByBucket, getCurrentStore, getStore } from 'app/inventory/stores-helpers';
+import { ArmorEnergyRules } from 'app/loadout-builder/types';
+import { calculateAssumedItemEnergy } from 'app/loadout/armor-upgrade-utils';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { UNSET_PLUG_HASH } from 'app/loadout/known-values';
 import {
@@ -19,7 +21,11 @@ import {
 import { getTotalModStatChanges } from 'app/loadout/stats';
 import { manifestSelector } from 'app/manifest/selectors';
 import { D1BucketHashes } from 'app/search/d1-known-values';
-import { armorStats, deprecatedPlaceholderArmorModHash } from 'app/search/d2-known-values';
+import {
+  MAX_ARMOR_ENERGY_CAPACITY,
+  armorStats,
+  deprecatedPlaceholderArmorModHash,
+} from 'app/search/d2-known-values';
 import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import {
   aspectSocketCategoryHashes,
@@ -298,7 +304,8 @@ export function getLoadoutStats(
   classType: DestinyClass,
   subclass: ResolvedLoadoutItem | undefined,
   armor: DimItem[],
-  mods: PluggableInventoryItemDefinition[]
+  mods: PluggableInventoryItemDefinition[],
+  armorEnergyRules?: ArmorEnergyRules
 ) {
   const statDefs = armorStats.map((hash) => defs.Stat.get(hash));
 
@@ -314,12 +321,14 @@ export function getLoadoutStats(
   // Sum the items stats into the stats
   const armorPiecesStats = _.mapValues(stats, () => 0);
   for (const item of armor) {
+    const itemEnergy = armorEnergyRules && calculateAssumedItemEnergy(item, armorEnergyRules);
     const itemStats = _.groupBy(item.stats, (stat) => stat.statHash);
     const energySocket =
       item.sockets && getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.ArmorTier);
     for (const hash of armorStats) {
       armorPiecesStats[hash] += itemStats[hash]?.[0].base ?? 0;
-      armorPiecesStats[hash] += energySocket?.plugged?.stats?.[hash] ?? 0;
+      armorPiecesStats[hash] +=
+        itemEnergy === MAX_ARMOR_ENERGY_CAPACITY ? 2 : energySocket?.plugged?.stats?.[hash] ?? 0;
     }
   }
 

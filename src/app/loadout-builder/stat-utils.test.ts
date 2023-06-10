@@ -1,4 +1,4 @@
-import { statTierWithHalf } from './utils';
+import { statTierWithHalf } from './stat-utils';
 
 describe('statTierWithHalf', () => {
   test('checks proper visual tier formatting', () => {

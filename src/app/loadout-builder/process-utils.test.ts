@@ -27,8 +27,8 @@ import {
   mapAutoMods,
   mapDimItemToProcessItem,
 } from './process/mappers';
+import { statTier } from './stat-utils';
 import { MIN_LO_ITEM_ENERGY, MinMaxIgnored } from './types';
-import { statTier } from './utils';
 
 // We don't really pay attention to this in the tests but the parameter is needed
 const modStatistics: ModAssignmentStatistics = {

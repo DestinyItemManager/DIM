@@ -7,6 +7,7 @@ import {
   LockableBucketHashes,
   LockableBuckets,
   majorStatBoost,
+  MinMaxIgnored,
   StatFilters,
   StatRanges,
 } from '../types';
@@ -19,9 +20,11 @@ import { SetTracker } from './set-tracker';
 import {
   AutoModData,
   LockedProcessMods,
+  OperationMode,
   ProcessArmorSet,
   ProcessItem,
   ProcessItemsByBucket,
+  ProcessResult,
   ProcessStatistics,
 } from './types';
 
@@ -35,6 +38,7 @@ const RETURNED_ARMOR_SETS = 200;
  */
 export function process(
   filteredItems: ProcessItemsByBucket,
+  opMode: OperationMode,
   /** Selected mods' total contribution to each stat */
   modStatTotals: ArmorStats,
   /** Mods to add onto the sets */
@@ -49,17 +53,19 @@ export function process(
   /** Use stat mods to hit stat minimums */
   autoStatMods: boolean,
   onProgress: (remainingTime: number) => void
-): {
-  sets: ProcessArmorSet[];
-  combos: number;
-  /** The stat ranges of all sets that matched our filters & mod selection. */
-  statRangesFiltered?: StatRanges;
-  processInfo?: ProcessStatistics;
-} {
+): ProcessResult {
   const pstart = performance.now();
 
   const modStatsInStatOrder = statOrder.map((h) => modStatTotals[h]);
   const statFiltersInStatOrder = statOrder.map((h) => statFilters[h]);
+
+  const strongUpgradeStatFilters =
+    opMode.op === 'optimize'
+      ? statFiltersInStatOrder.map((val, idx) => ({
+          ...val,
+          min: Math.min(Math.max(Math.floor(opMode.stats[statOrder[idx]] / 10), 0), 10),
+        }))
+      : undefined;
 
   // This stores the computed min and max value for each stat as we process all sets, so we
   // can display it on the stat filter dropdowns
@@ -106,6 +112,7 @@ export function process(
   }
 
   const setTracker = new SetTracker(10_000);
+  const strongUpgradeTracker = new SetTracker(10_000);
 
   const { activityMods, generalMods } = lockedMods;
 
@@ -136,6 +143,7 @@ export function process(
       },
     },
   };
+
   const processStatistics: ProcessStatistics = {
     numProcessed: 0,
     numValidSets: 0,
@@ -367,6 +375,24 @@ export function process(
             // And now insert our set using the predicted tier. The rest of the stats string still uses the unboosted tiers but the error should be small
             tiersString = totalTier.toString(16) + tiersString;
             setTracker.insert(totalTier + predictedExtraTiers, tiersString, armor, stats, statMods);
+
+            if (strongUpgradeStatFilters) {
+              const opt = pickOptimalStatMods(
+                precalculatedInfo,
+                armor,
+                stats,
+                strongUpgradeStatFilters
+              );
+              if (opt) {
+                strongUpgradeTracker.insert(
+                  totalTier + predictedExtraTiers,
+                  tiersString,
+                  armor,
+                  stats,
+                  statMods
+                );
+              }
+            }
           }
         }
       }
@@ -384,45 +410,103 @@ export function process(
     }
   }
 
-  const finalSets = setTracker.getArmorSets(RETURNED_ARMOR_SETS);
+  const finalSets = setTracker
+    .getArmorSets(RETURNED_ARMOR_SETS)
+    .concat(strongUpgradeTracker.getArmorSets(RETURNED_ARMOR_SETS));
 
-  const sets = finalSets.map(({ armor, stats }) => {
-    // This only fails if minimum tier requirements cannot be hit, but we know they can because
-    // we ensured it internally.
-    const { mods, bonusStats } = pickOptimalStatMods(
-      precalculatedInfo,
-      armor,
-      stats,
-      statFiltersInStatOrder
-    )!;
-
-    const armorOnlyStats: Partial<ArmorStats> = {};
-    const fullStats: Partial<ArmorStats> = {};
-
-    for (let i = 0; i < statOrder.length; i++) {
-      const statHash = statOrder[i];
-      const value = stats[i] + bonusStats[i];
-      fullStats[statHash] = value;
-
-      armorOnlyStats[statHash] = stats[i] - modStatsInStatOrder[i];
-
-      // Track the stat ranges after our auto mods picks
-      const range = statRangesFilteredInStatOrder[i];
-      if (value > range.max) {
-        range.max = value;
-      }
-      if (value < range.min) {
-        range.min = value;
+  const getTiers = (stats: ArmorStats) => {
+    const tiers = [
+      Math.min(Math.max(Math.floor(stats[statOrder[0]] / 10), 0), 10),
+      Math.min(Math.max(Math.floor(stats[statOrder[1]] / 10), 0), 10),
+      Math.min(Math.max(Math.floor(stats[statOrder[2]] / 10), 0), 10),
+      Math.min(Math.max(Math.floor(stats[statOrder[3]] / 10), 0), 10),
+      Math.min(Math.max(Math.floor(stats[statOrder[4]] / 10), 0), 10),
+      Math.min(Math.max(Math.floor(stats[statOrder[5]] / 10), 0), 10),
+    ];
+    let tierString = '';
+    let totalTier = 0;
+    for (let index = 0; index < 6; index++) {
+      const tier = tiers[index];
+      totalTier += tier;
+      // Make each stat exactly one code unit so the string compares correctly
+      const filter = statFiltersInStatOrder[index];
+      if (!filter.ignored) {
+        // using a power of 2 (16) instead of 11 is faster
+        tierString += tier.toString(16);
       }
     }
+    tierString = totalTier.toString(16).padStart(2, '0') + tierString;
 
-    return {
-      armor: armor.map((item) => item.id),
-      stats: fullStats as ArmorStats,
-      armorStats: armorOnlyStats as ArmorStats,
-      statMods: mods,
-    };
+    return [tiers, tierString] as const;
+  };
+
+  const optimizeSetsWithStatFilters = (
+    filters: MinMaxIgnored[],
+    setCb: (set: ProcessArmorSet) => void
+  ) => {
+    for (const { armor, stats } of finalSets) {
+      // This only fails if minimum tier requirements cannot be hit, but we know they can because
+      // we ensured it internally.
+      const { mods, bonusStats } = pickOptimalStatMods(precalculatedInfo, armor, stats, filters)!;
+
+      const armorOnlyStats: Partial<ArmorStats> = {};
+      const fullStats: Partial<ArmorStats> = {};
+
+      for (let i = 0; i < statOrder.length; i++) {
+        const statHash = statOrder[i];
+        const value = stats[i] + bonusStats[i];
+        fullStats[statHash] = value;
+
+        armorOnlyStats[statHash] = stats[i] - modStatsInStatOrder[i];
+
+        // Track the stat ranges after our auto mods picks
+        const range = statRangesFilteredInStatOrder[i];
+        if (value > range.max) {
+          range.max = value;
+        }
+        if (value < range.min) {
+          range.min = value;
+        }
+      }
+
+      setCb({
+        armor: armor.map((item) => item.id),
+        stats: fullStats as ArmorStats,
+        armorStats: armorOnlyStats as ArmorStats,
+        statMods: mods,
+      });
+    }
+  };
+
+  const sets: ProcessArmorSet[] = [];
+  let hasWeakUpgrade = false;
+  let hasStrongUpgrade = false;
+  let referenceTiers: number[] | undefined, referenceTierString: string | undefined;
+  if (opMode.op === 'optimize') {
+    [referenceTiers, referenceTierString] = getTiers(opMode.stats);
+  }
+  // First, optimize our sets for the "best" stats.
+  optimizeSetsWithStatFilters(statFiltersInStatOrder, (set) => {
+    const [, tierString] = getTiers(set.stats);
+    if (tierString > referenceTierString!) {
+      hasWeakUpgrade = true;
+    }
+
+    sets.push(set);
   });
+  if (opMode.op === 'optimize') {
+    // Then, optimize sets to try for a strong upgrade.
+    optimizeSetsWithStatFilters(statFiltersInStatOrder, (set) => {
+      const [tiers] = getTiers(set.stats);
+      if (
+        tiers.every((tier, idx) => tier >= referenceTiers![idx]) &&
+        tiers.some((tier, idx) => tier > referenceTiers![idx])
+      ) {
+        hasStrongUpgrade = true;
+        sets.unshift(set);
+      }
+    });
+  }
 
   const totalTime = performance.now() - pstart;
 
@@ -456,5 +540,7 @@ export function process(
     combos,
     statRangesFiltered,
     processInfo: processStatistics,
+    hasStrongUpgrade,
+    hasWeakUpgrade,
   };
 }

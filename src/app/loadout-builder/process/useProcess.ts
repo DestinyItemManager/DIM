@@ -14,7 +14,12 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { ProcessItem, ProcessItemsByBucket, ProcessStatistics } from '../process-worker/types';
+import {
+  OperationMode,
+  ProcessItem,
+  ProcessItemsByBucket,
+  ProcessStatistics,
+} from '../process-worker/types';
 import {
   ArmorEnergyRules,
   ArmorSet,
@@ -36,6 +41,7 @@ import {
 interface ProcessState {
   processing: boolean;
   resultStoreId: string;
+  resultGeneration?: number;
   result: {
     sets: ArmorSet[];
     /**
@@ -62,6 +68,7 @@ interface ProcessState {
  */
 export function useProcess({
   defs,
+  opMode,
   selectedStore,
   filteredItems,
   lockedModMap,
@@ -72,8 +79,10 @@ export function useProcess({
   statFilters,
   anyExotic,
   autoStatMods,
+  resultGeneration,
 }: {
   defs: D2ManifestDefinitions;
+  opMode: OperationMode;
   selectedStore: DimStore;
   filteredItems: ItemsByBucket;
   lockedModMap: ModMap;
@@ -84,6 +93,7 @@ export function useProcess({
   statFilters: StatFilters;
   anyExotic: boolean;
   autoStatMods: boolean;
+  resultGeneration?: number;
 }) {
   const [remainingTime, setRemainingTime] = useState(0);
   const [{ result, processing }, setState] = useState<ProcessState>({
@@ -123,6 +133,7 @@ export function useProcess({
     setState((state) => ({
       processing: true,
       resultStoreId: selectedStore.id,
+      resultGeneration,
       result: selectedStore.id === state.resultStoreId ? state.result : null,
       currentCleanup: cleanup,
     }));
@@ -169,6 +180,7 @@ export function useProcess({
     worker
       .process(
         processItems,
+        opMode,
         _.mapValues(modStatChanges, (stat) => stat.value),
         lockedProcessMods,
         statOrder,
@@ -188,6 +200,7 @@ export function useProcess({
         setState((oldState) => ({
           ...oldState,
           processing: false,
+          resultGeneration,
           result: {
             sets: hydratedSets,
             mods: allMods,
@@ -222,12 +235,14 @@ export function useProcess({
     autoModOptions,
     getUserItemTag,
     modStatChanges,
+    opMode,
+    resultGeneration,
   ]);
 
   return { result, processing, remainingTime };
 }
 
-function createWorker() {
+export function createWorker() {
   const instance = new Worker(
     /* webpackChunkName: "lo-worker" */ new URL('../process-worker/ProcessWorker', import.meta.url)
   );
@@ -287,7 +302,7 @@ const groupComparator = (getTag: (item: DimItem) => TagValue | undefined) =>
  * - Energy capacity
  * - If there are mods with tags (activity/combat style) it will create groups split by compatible tags
  */
-function mapItemsToGroups(
+export function mapItemsToGroups(
   items: readonly DimItem[],
   statOrder: number[],
   armorEnergyRules: ArmorEnergyRules,

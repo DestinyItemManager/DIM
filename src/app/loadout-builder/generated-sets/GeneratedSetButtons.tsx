@@ -11,8 +11,8 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { Dispatch } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
+import { statTier } from '../stat-utils';
 import { ArmorSet } from '../types';
-import { statTier } from '../utils';
 import styles from './GeneratedSetButtons.m.scss';
 
 /**

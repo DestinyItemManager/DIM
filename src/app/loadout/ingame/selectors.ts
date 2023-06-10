@@ -27,7 +27,7 @@ import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { t } from 'i18next';
 import { createSelector } from 'reselect';
-import { filterLoadoutsToClass } from '../loadout-ui/menu-hooks';
+import { filterLoadoutsToClass } from '../loadout-ui/utils';
 import { implementsDimLoadout, itemCouldBeEquipped } from './ingame-loadout-utils';
 
 /** A DIM loadout with all of its parameters resolved to real inventory. */

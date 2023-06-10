@@ -7,8 +7,8 @@ import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React, { memo } from 'react';
+import { statTierWithHalf } from '../stat-utils';
 import { ArmorStatHashes, MinMaxIgnored, StatFilters, StatRanges } from '../types';
-import { statTierWithHalf } from '../utils';
 import styles from './TierSelect.m.scss';
 
 const IGNORE = 'ignore';

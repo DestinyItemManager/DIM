@@ -11,6 +11,7 @@ import { t, tl } from 'app/i18next-t';
 import { artifactUnlocksSelector, sortedStoresSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
+import { useAutoOptimization } from 'app/loadout-builder/auto-optimizer';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
@@ -102,9 +103,12 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const [viewingInGameLoadout, setViewingInGameLoadout] = useState<InGameLoadout>();
   const handleViewingSheetClose = useCallback(() => setViewingInGameLoadout(undefined), []);
 
+  const autoUpgrades = useAutoOptimization(selectedStoreId);
+
   const [filteredLoadouts, filterPills, hasSelectedFilters] = useLoadoutFilterPills(
     savedLoadouts,
     selectedStoreId,
+    autoUpgrades,
     {
       includeWarningPills: true,
       extra: <span className={styles.hashtagTip}>{t('Loadouts.HashtagTip')}</span>,

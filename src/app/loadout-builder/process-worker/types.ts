@@ -1,4 +1,36 @@
-import { ArmorStatHashes, ArmorStats, LockableBucketHash } from '../types';
+import { ArmorStatHashes, ArmorStats, LockableBucketHash, StatRanges } from '../types';
+
+export type OperationMode =
+  | {
+      /** Find all builds that fit the given constraints and return the best of them. */
+      op: 'enumerate';
+    }
+  | {
+      /**
+       * Try to optimize a reference build, by finding strong or weak upgrades.
+       * A strong upgrade is a set that is equal or better in all considered stats and better in at least one.
+       * A weak upgrade is a set that still matches the original stat constraints but compares
+       * more favorably in lexicographic stat tier comparison.
+       */
+      op: 'optimize';
+      /** The complete stats of the build being optimized. */
+      stats: Readonly<ArmorStats>;
+      /** Whether a single strong upgrade is sufficient and we can exit early */
+      stopOnBetter: boolean;
+    };
+
+export interface ProcessResult {
+  /** A small number of the best sets, depending on operation mode. */
+  sets: ProcessArmorSet[];
+  /** The total number of combinations considered. */
+  combos: number;
+  /** The stat ranges of all sets that matched our filters & mod selection. */
+  statRangesFiltered?: StatRanges;
+  /** Statistics about how many sets passed/failed the constraints, for error reporting */
+  processInfo?: ProcessStatistics;
+  hasStrongUpgrade?: boolean;
+  hasWeakUpgrade?: boolean;
+}
 
 export interface ProcessItem {
   id: string;
