@@ -27,6 +27,7 @@
     "WeeklyHeroic": "每週英雄突擊"
   },
   "Armory": {
+    "Armory": "Armory",
     "NoNotes": "無注釋",
     "OpenInArmory": "查看武器詳情",
     "Season": "年 {{year}}，第 {{season}} 賽季",
@@ -140,8 +141,7 @@
   },
   "ErrorPanel": {
     "Description": "嘗試使用命運2同伴App來載入你的物品欄以測試Bungie.net是否出現問題。",
-    "EmblemError": "你可以通過在游戲中更換所有角色的徽章以修復這個問題。",
-    "EmblemErrorLink": "閲讀更多關於如何修復該問題的信息。",
+    "ReadTheGuide": "Read our User Guide (linked from the menu) for troubleshooting steps.",
     "SystemDown": "這一問題影響所有的命運應用程序，DIM團隊也無法修復或繞過。",
     "Troubleshooting": "故障排除指南"
   },
@@ -659,6 +659,7 @@
     "DimLoadouts": "DIM 配裝",
     "Edit": "編輯配裝",
     "EditBrief": "編輯",
+    "EmptyFragmentSlots": "Empty Fragment Slots",
     "EquipInGameLoadout": "正在裝備游戲内配裝",
     "EquipItems": "正在裝備物品",
     "EquippableDifferent1": "計算你的最大能量等級時使用了多件異域裝備，所以在遊戲內配裝時可能達不到這個數值。",
@@ -786,6 +787,7 @@
     "SubclassOptionsSearch": "搜索{{subclass}} 選項",
     "Succeeded": "配裝成功",
     "SyncFromEquipped": "同步已裝備物品",
+    "TooManyFragments": "Too Many Fragments",
     "TooManyRequested": "你有{{total}} 個{{itemname}}, 但完成配裝需要{{requested}} 個. 我們已經處理所有已擁有的",
     "UnassignedModError": "模組不適合你當前的護甲",
     "Undo": "撤銷",
@@ -1119,7 +1121,6 @@
     "PowerModifier": "季節神器提升光等",
     "Prestige": "威望等級: {{level}}\n{{exp}}xp 于5明亮之塵之前.",
     "Quality": "品質",
-    "Second": "s",
     "StrafingSpeed": "掃射",
     "Strength": "力量",
     "Sunset": "退環境",
@@ -1288,8 +1289,6 @@
       "GitHubHelp": "如果您有興趣為該項目做出一份貢獻，請訪問我們在{{link}} 上的項目位址！",
       "Header": "DIM (命運物品管理器)",
       "HowItsMade": "DIM是壹個由社區開發者在Bungie.net和Destiny Companion 應用程式使用的同類服務基礎上開發的免費、開源的應用程式",
-      "Reddit": "Reddit",
-      "RedditHelp": "如果您有任何意見,疑問或者建議，請在Reddit上留下評論，務必讓我們知曉。",
       "Schedule": {
         "beta": "每當我們更改代碼時這個測試版的DIM就會自動應用更新 - 它將應用最新的功能和修復補丁，當然咯 也會有最新的Bug哦~",
         "release": "DIM將於太平洋時間的每週日午夜進行例行版本更新。"

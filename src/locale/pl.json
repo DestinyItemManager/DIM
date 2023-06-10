@@ -27,6 +27,7 @@
     "WeeklyHeroic": "Cotygodniowy Heroiczny Szturm"
   },
   "Armory": {
+    "Armory": "Armory",
     "NoNotes": "Brak notatek",
     "OpenInArmory": "view in Armory",
     "Season": "Sezon {{season}}, rok {{year}}",
@@ -140,8 +141,7 @@
   },
   "ErrorPanel": {
     "Description": "Spróbuj załadować swój ekwipunek w aplikacji Destiny 2 Companion, aby sprawdzić, czy Bungie.net jest wyłączony.",
-    "EmblemError": "Możesz to naprawić, zmieniając swoje emblematy w grze na wszystkich postaciach.",
-    "EmblemErrorLink": "Dowiedz się więcej, jak to naprawić.",
+    "ReadTheGuide": "Read our User Guide (linked from the menu) for troubleshooting steps.",
     "SystemDown": "Ma to wpływ na wszystkie aplikacje Destiny, a zespół DIM nie może tego naprawić ani obejść.",
     "Troubleshooting": "Przewodnik rozwiązywania problemów"
   },
@@ -659,6 +659,7 @@
     "DimLoadouts": "DIM Loadouts",
     "Edit": "Edytuj Uzbrojenie",
     "EditBrief": "Edytuj",
+    "EmptyFragmentSlots": "Empty Fragment Slots",
     "EquipInGameLoadout": "Equipping in-game loadout",
     "EquipItems": "Wyposażanie przedmiotów",
     "EquippableDifferent1": "Wielokrotne przedmioty egzotyczne zostały użyte do obliczenia twojej maksymalnej mocy, więc pokazana liczba może nie być osiągalna podczas wyposażenia twoich przedmiotów w grze.",
@@ -786,6 +787,7 @@
     "SubclassOptionsSearch": "Szukaj opcje {{subclass}}",
     "Succeeded": "Uzbrojenie powiodło się",
     "SyncFromEquipped": "Synchronizuj z wyposażonych przedmiotów",
+    "TooManyFragments": "Too Many Fragments",
     "TooManyRequested": "Masz {{total}} {{itemname}}, ale Twoje wyposażenie wymaga {{requested}}. Przenieśliśmy wszystko, co miałeś.",
     "UnassignedModError": "Modyfikacja nie pasuję do twojej bieżącej zbroi",
     "Undo": "Cofnij",
@@ -1119,7 +1121,6 @@
     "PowerModifier": "Moc przyznana przez postęp sezonowego doświadczenia",
     "Prestige": "Poziom Prestiżu: {{level}}\n{{exp}}xp do 5 pyłków światła.",
     "Quality": "Jakość statystyk",
-    "Second": "s",
     "StrafingSpeed": "Strafing",
     "Strength": "Siła",
     "Sunset": "Przedawniony",
@@ -1288,8 +1289,6 @@
       "GitHubHelp": "Jeśli chcesz wziąć udział w projekcie, odwiedź nas na naszej stronie projektu {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
       "HowItsMade": "DIM jest darmową aplikacją z otwartym źródłem, tworzona przez programistów społeczności używając tych samych usług, z których korzysta Bungie.net i aplikacja Destiny Companion.",
-      "Reddit": "Reddit",
-      "RedditHelp": "Jeśli masz pytania, komentarze albo sugestie - daj nam znać!",
       "Schedule": {
         "beta": "Ta wersja beta DIM jest aktualizowana za każdym razem, gdy zmieniamy kod - dostaje najnowsze funkcje i poprawki, ale także najnowsze błędy!",
         "release": "Ta wersja DIM jest aktualizowana raz w tygodniu, około północy w niedziele czasu Pacyficznego."

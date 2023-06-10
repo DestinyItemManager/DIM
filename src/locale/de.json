@@ -27,6 +27,7 @@
     "WeeklyHeroic": "Wöchentlicher Heroischer Strike"
   },
   "Armory": {
+    "Armory": "Armory",
     "NoNotes": "Keine Notizen",
     "OpenInArmory": "im Arsenal ansehen",
     "Season": "Saison {{season}}, Jahr {{year}}",
@@ -140,8 +141,7 @@
   },
   "ErrorPanel": {
     "Description": "Versuche dein Inventar in der Destiny 2 Companion App zu laden, um zu sehen, ob Bungie.net nicht verfügbar ist.",
-    "EmblemError": "Möglicherweise kannst du dies beheben, indem du deine Embleme im Spiel auf allen Charakteren wechselst.",
-    "EmblemErrorLink": "Lies mehr darüber, wie man es beheben kann.",
+    "ReadTheGuide": "Lies unser Benutzerhandbuch (im Menü verlinkt) für Schritte zur Fehlerbehebung.",
     "SystemDown": "Dies betrifft alle Destiny-Apps, und das DIM-Team kann es nicht reparieren oder umgehen.",
     "Troubleshooting": "Fehlerbehebung"
   },
@@ -536,8 +536,8 @@
       "ProcessingMode": "Berechnung"
     },
     "Scaled": "Skaliert",
-    "SearchAMod": "Search for mod name or description",
-    "SearchAnExotic": "Search for exotic name or description",
+    "SearchAMod": "Suche Mod-Name oder -Beschreibung",
+    "SearchAnExotic": "Suche Namen oder Beschreibung von Exotischen",
     "SelectExotic": "Wähle Exotisches",
     "SelectMods": "Mods auswählen",
     "SelectSubclass": "Fokus wählen",
@@ -659,6 +659,7 @@
     "DimLoadouts": "DIM-Loadouts",
     "Edit": "Loadout bearbeiten",
     "EditBrief": "Bearbeiten",
+    "EmptyFragmentSlots": "Empty Fragment Slots",
     "EquipInGameLoadout": "Rüste In-Game-Loadout aus",
     "EquipItems": "Rüste Gegenstände aus",
     "EquippableDifferent1": "Mehrere exotische Gegenstände wurden zur Berechnung deines maximalen Powerlevels verwendet, sodass die angezeigte Zahl beim Ausrüsten deiner Gegenstände im Spiel möglicherweise nicht erreichbar ist.",
@@ -786,6 +787,7 @@
     "SubclassOptionsSearch": "{{subclass}}-Optionen suchen",
     "Succeeded": "Loadout angewendet",
     "SyncFromEquipped": "Von Ausgerüstetem synchronisieren",
+    "TooManyFragments": "Too Many Fragments",
     "TooManyRequested": "Du hast {{total}} {{itemname}}, aber dein Loadout verlangt jedoch {{requested}}. Wir haben alles übertragen, was da war.",
     "UnassignedModError": "Mod passt nicht auf deine aktuelle Rüstung",
     "Undo": "Rückgängig",
@@ -1119,7 +1121,6 @@
     "PowerModifier": "Power gewährt durch saisonalen Erfahrungsfortschritt",
     "Prestige": "Prestige Level: {{level}}\n{{exp}}xp bis 5 Lichtpartikel.",
     "Quality": "Wert-Qualität",
-    "Second": "s",
     "StrafingSpeed": "Seitwärts",
     "Strength": "Stärke",
     "Sunset": "Ruhestand",
@@ -1288,8 +1289,6 @@
       "GitHubHelp": "Wenn du an dem Projekt mitwirken möchtest, besuche uns auf unserer Projektseite auf {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
       "HowItsMade": "DIM ist eine kostenlose Open-Source-App, die von Community-Entwicklern, mit den gleichen Diensten von Bungie.net und der Destiny Companion App, gebaut wurde.",
-      "Reddit": "Reddit",
-      "RedditHelp": "Wenn du Fragen, Kommentare oder Anregungen hast - lass es uns wissen!",
       "Schedule": {
         "beta": "Diese Beta-Version von DIM wird jedes Mal aktualisiert, wenn wir etwas am Code ändern - sie erhält die neuesten Funktionen und Fehlerbehebungen, aber auch die neuesten Fehler!",
         "release": "Diese Version von DIM wird pro Woche einmal um circa Mitternacht am Sonntag, US Pazifischer Zeit aktualisiert."

@@ -27,6 +27,7 @@
     "WeeklyHeroic": "Недельный Героический Налёт"
   },
   "Armory": {
+    "Armory": "Armory",
     "NoNotes": "Нет заметок",
     "OpenInArmory": "просмотреть в Оружейной",
     "Season": "Сезон {{season}}, год {{year}}",
@@ -140,8 +141,7 @@
   },
   "ErrorPanel": {
     "Description": "Попробуйте загрузить свой инвентарь в приложении-компаньоне Destiny 2, чтобы убедиться, что Bungie.net недоступен.",
-    "EmblemError": "Возможно, вы сможете исправить это, поменяв свои эмблемы в игре на всех ваших персонажах.",
-    "EmblemErrorLink": "Подробнее о том, как это исправить.",
+    "ReadTheGuide": "Read our User Guide (linked from the menu) for troubleshooting steps.",
     "SystemDown": "Это влияет на все приложения Destiny, и команда DIM не может это исправить или обойти.",
     "Troubleshooting": "Устранение неполадок"
   },
@@ -659,6 +659,7 @@
     "DimLoadouts": "DIM Loadouts",
     "Edit": "Изменить Набор",
     "EditBrief": "Изменить",
+    "EmptyFragmentSlots": "Empty Fragment Slots",
     "EquipInGameLoadout": "Equipping in-game loadout",
     "EquipItems": "Экипирование предметов",
     "EquippableDifferent1": "Несколько экзотических предметов было использовано при подсчёте вашей максимальной Силы, потому отображаемое число может быть недостижимо при экипировании ваших предметов в игре.",
@@ -786,6 +787,7 @@
     "SubclassOptionsSearch": "Искать параметры {{subclass}}",
     "Succeeded": "Набор применён успешно",
     "SyncFromEquipped": "Синхронизировать с экипированными предметами",
+    "TooManyFragments": "Too Many Fragments",
     "TooManyRequested": "В наличии {{total}} {{itemname}}; Набор запрашивает {{requested}}. Передали все замеченные.",
     "UnassignedModError": "Мод не поместился на вашей текущей броне",
     "Undo": "Отменить",
@@ -1119,7 +1121,6 @@
     "PowerModifier": "Бонус Силы сезонного Артефакта",
     "Prestige": "Уровень Престижа: {{level}}\n{{exp}} опыта до 5 частиц света.",
     "Quality": "Качество характеристик",
-    "Second": "s",
     "StrafingSpeed": "Strafing",
     "Strength": "Стойкость",
     "Sunset": "Сансэт",
@@ -1288,8 +1289,6 @@
       "GitHubHelp": "Если вы заинтересованы внести вклад в проект, посетите страницу нашего проекта на {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
       "HowItsMade": "DIM - бесплатный open source проект от разработчиков сообщества Destiny использующий аналогичные для сайта и официального приложения сервисы Bungie.Net.",
-      "Reddit": "Reddit",
-      "RedditHelp": "Если у вас есть вопросы, комментарии или пожелания - дайте нам знать!",
       "Schedule": {
         "beta": "Бета-версия DIM обновляется каждый раз, когда мы изменяем код - она получает самые последние возможности и исправления, но так же и свежие баги!",
         "release": "Эта версия DIM обновляется раз в неделю, приблизительно по Воскресеньям, по тихоокеанскому времени США."
