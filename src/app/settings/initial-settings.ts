@@ -11,5 +11,4 @@ export interface Settings extends DimApiSettings {
 export const initialSettingsState: Settings = {
   ...defaultSettings,
   language: defaultLanguage(),
-  itemFeedWatermark: '0',
 };
