@@ -32,7 +32,7 @@ export function isMac() {
   return mac;
 }
 
-const android = navigator.platform.includes('Android');
+const android = navigator.userAgent.includes('Android');
 export function isAndroid() {
   return android;
 }
