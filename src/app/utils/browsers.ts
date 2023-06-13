@@ -32,7 +32,16 @@ export function isMac() {
   return mac;
 }
 
+const android = navigator.platform.includes('Android');
+export function isAndroid() {
+  return android;
+}
 export const isNativeDragAndDropSupported = () => {
+  // Chrome on Android should support native DnD, but React-DnD may not be able
+  // to work around some quirk of it.
+  if (isAndroid()) {
+    return false;
+  }
   const div = document.createElement('div');
   return 'draggable' in div && 'ondragstart' in div;
 };
