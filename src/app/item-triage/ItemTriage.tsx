@@ -22,7 +22,7 @@ import { loadoutToSearchString } from 'app/search/search-filters/loadouts';
 import { AppIcon, compareIcon, editIcon } from 'app/shell/icons';
 import WishListPerkThumb from 'app/wishlists/WishListPerkThumb';
 import { wishListSelector } from 'app/wishlists/selectors';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import helmet from 'destiny-icons/armor_types/helmet.svg';
 import _ from 'lodash';

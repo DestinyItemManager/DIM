@@ -10,7 +10,7 @@ import {
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { uniqBy } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';

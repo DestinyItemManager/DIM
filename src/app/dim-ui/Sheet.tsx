@@ -2,7 +2,7 @@ import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import {
   PanInfo,
   Spring,

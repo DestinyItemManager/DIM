@@ -1,5 +1,5 @@
 import { Virtualizer, useVirtualizer, useWindowVirtualizer } from '@tanstack/react-virtual';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { Key, forwardRef, useImperativeHandle, useLayoutEffect, useRef } from 'react';
 import styles from './VirtualList.m.scss';
 

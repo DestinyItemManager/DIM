@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { AppIcon, helpIcon } from '../shell/icons';
 import ExternalLink from './ExternalLink';
 

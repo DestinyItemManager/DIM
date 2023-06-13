@@ -1,5 +1,5 @@
 import { hideItemPopup } from 'app/item-popup/item-popup';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import React from 'react';
 import { useDrag } from 'react-dnd';
 import styles from './DraggableInventoryItem.m.scss';

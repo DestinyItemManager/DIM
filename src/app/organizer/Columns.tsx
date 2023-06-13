@@ -59,7 +59,7 @@ import {
 } from 'app/utils/socket-utils';
 import { LookupTable } from 'app/utils/util-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info';
 import { StatHashes } from 'data/d2/generated-enums';
 import shapedOverlay from 'images/shapedOverlay.png';

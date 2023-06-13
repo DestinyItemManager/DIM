@@ -6,7 +6,7 @@ import {
   DestinyDisplayPropertiesDefinition,
   DestinyPresentationScreenStyle,
 } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { deepEqual } from 'fast-equals';
 import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';

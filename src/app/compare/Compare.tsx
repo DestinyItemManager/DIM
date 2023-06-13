@@ -18,7 +18,7 @@ import { acquisitionRecencyComparator } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { emptyArray } from 'app/utils/empty';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';

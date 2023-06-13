@@ -1,7 +1,7 @@
 import { StrategyProps, Textcomplete } from '@textcomplete/core';
 import { TextareaEditor } from '@textcomplete/textarea';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { SymbolsMap, symbolsSelector } from '../destiny-symbols/destiny-symbols';

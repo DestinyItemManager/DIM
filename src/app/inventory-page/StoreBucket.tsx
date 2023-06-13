@@ -18,7 +18,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import emptyEngram from 'destiny-icons/general/empty-engram.svg';
 import { shallowEqual } from 'fast-equals';

@@ -1,7 +1,7 @@
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { infoLog } from 'app/utils/log';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { animate, motion, PanInfo, Spring, useMotionValue, useTransform } from 'framer-motion';
 import _ from 'lodash';
 import { useEffect, useRef } from 'react';

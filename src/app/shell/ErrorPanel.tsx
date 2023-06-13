@@ -4,14 +4,14 @@ import { t } from 'app/i18next-t';
 import { DimError } from 'app/utils/dim-error';
 import BungieAlerts from 'app/whats-new/BungieAlerts';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
-import React, { useState } from 'react';
+import React, { lazy, useState } from 'react';
 import { AppIcon, helpIcon, mastodonIcon, refreshIcon, twitterIcon } from '../shell/icons';
 import styles from './ErrorPanel.m.scss';
 
 const bungieHelpLink = 'http://twitter.com/BungieHelp';
 const dimHelpMastodonLink = 'http://mstdn.games/@ThisIsDIM';
 const troubleshootingLink = 'https://github.com/DestinyItemManager/DIM/wiki/Troubleshooting';
-const Timeline = React.lazy(async () => {
+const Timeline = lazy(async () => {
   const m = await import(/* webpackChunkName: "twitter" */ 'react-twitter-widgets');
   return { default: m.Timeline };
 });

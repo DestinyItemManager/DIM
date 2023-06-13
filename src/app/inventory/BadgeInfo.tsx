@@ -3,7 +3,7 @@ import { getColor } from 'app/shell/formatters';
 import { isD1Item } from 'app/utils/item-utils';
 import { InventoryWishListRoll, toUiWishListRoll } from 'app/wishlists/wishlists';
 import { DamageType } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import shapedIcon from 'images/shaped.png';
 import { useSelector } from 'react-redux';

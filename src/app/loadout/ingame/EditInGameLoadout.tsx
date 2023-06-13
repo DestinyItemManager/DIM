@@ -5,7 +5,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
 import { compareBy } from 'app/utils/comparators';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { t } from 'i18next';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';

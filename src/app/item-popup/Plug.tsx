@@ -4,7 +4,7 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { isEnhancedPerk, isWeaponMasterworkSocket } from 'app/utils/socket-utils';
 import WishListPerkThumb from 'app/wishlists/WishListPerkThumb';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { PressTip } from '../dim-ui/PressTip';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import { InventoryWishListRoll, isWishListPlug } from '../wishlists/wishlists';

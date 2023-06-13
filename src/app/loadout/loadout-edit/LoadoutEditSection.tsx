@@ -2,7 +2,7 @@ import Dropdown, { Option } from 'app/dim-ui/Dropdown';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { AppIcon, clearIcon, disabledIcon, downloadIcon, helpIcon } from 'app/shell/icons';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import _ from 'lodash';
 import React from 'react';
 import styles from './LoadoutEditSection.m.scss';

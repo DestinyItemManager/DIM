@@ -1,7 +1,7 @@
 import { settingSelector } from 'app/dim-api/selectors';
 import { RootState } from 'app/store/types';
-import clsx from 'clsx';
-import React, { Suspense } from 'react';
+import { clsx } from 'clsx';
+import { Suspense, lazy } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes, useLocation } from 'react-router';
 import styles from './App.m.scss';
@@ -24,13 +24,11 @@ import Privacy from './shell/Privacy';
 import ScrollToTop from './shell/ScrollToTop';
 import SneakyUpdates from './shell/SneakyUpdates';
 
-const WhatsNew = React.lazy(
-  () => import(/* webpackChunkName: "whatsNew" */ './whats-new/WhatsNew')
-);
-const SettingsPage = React.lazy(
+const WhatsNew = lazy(() => import(/* webpackChunkName: "whatsNew" */ './whats-new/WhatsNew'));
+const SettingsPage = lazy(
   () => import(/* webpackChunkName: "settings" */ './settings/SettingsPage')
 );
-const SearchHistory = React.lazy(
+const SearchHistory = lazy(
   () => import(/* webpackChunkName: "searchHistory" */ './search/SearchHistory')
 );
 

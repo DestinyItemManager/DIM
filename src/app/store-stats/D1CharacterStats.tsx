@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 import type { DimStore } from 'app/inventory/store-types';
 import { getD1CharacterStatTiers, statsWithTiers } from 'app/inventory/store/character-utils';
 import { percent } from 'app/shell/formatters';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import './CharacterStats.scss';
 
 interface Props {

@@ -6,7 +6,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, powerIndicatorIcon } from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { ArmorStatHashes, ArmorStats, ModStatChanges } from '../types';
 import { remEuclid, statTierWithHalf } from '../utils';
 import styles from './SetStats.m.scss';

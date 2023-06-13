@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
 import { AppIcon, thumbsDownIcon, thumbsUpIcon } from 'app/shell/icons';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import styles from './WishListPerkThumb.m.scss';
 import { WishListRoll } from './types';
 import { InventoryWishListRoll } from './wishlists';

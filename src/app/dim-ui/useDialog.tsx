@@ -3,7 +3,7 @@ import 'dialog-polyfill/dist/dialog-polyfill.css';
 import styles from './useDialog.m.scss';
 
 import { Portal } from 'app/utils/temp-container';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
 // Redecalare forwardRef

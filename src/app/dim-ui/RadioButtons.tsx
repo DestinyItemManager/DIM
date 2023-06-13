@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { memo, useMemo } from 'react';
 import { PressTip } from './PressTip';
 import styles from './RadioButtons.m.scss';

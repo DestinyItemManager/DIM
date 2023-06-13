@@ -44,7 +44,7 @@ import { queueAction } from 'app/utils/action-queue';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { emptyArray } from 'app/utils/empty';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import consumablesIcon from 'destiny-icons/general/consumables.svg';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';

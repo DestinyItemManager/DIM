@@ -1,7 +1,7 @@
 import { DimItem } from 'app/inventory/item-types';
 import { AppIcon, faClock } from 'app/shell/icons';
 import { DestinyItemTooltipNotification } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import shapedIcon from 'images/shaped.png';
 import styles from './DestinyTooltipText.m.scss';
 import RichDestinyText from './destiny-symbols/RichDestinyText';

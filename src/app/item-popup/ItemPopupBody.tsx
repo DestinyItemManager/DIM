@@ -2,7 +2,7 @@ import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { doShowTriage, ItemTriage, TriageTabToggle } from 'app/item-triage/ItemTriage';
 import { percent } from 'app/shell/formatters';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { DimItem } from '../inventory/item-types';
 import { ItemPopupExtraInfo } from './item-popup';
 import ItemDetails from './ItemDetails';

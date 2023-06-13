@@ -1,7 +1,7 @@
 import StaticPage from 'app/dim-ui/StaticPage';
 import { t } from 'app/i18next-t';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './FilterHelp.m.scss';

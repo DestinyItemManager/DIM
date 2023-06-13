@@ -5,7 +5,7 @@ import { setTag } from 'app/inventory/actions';
 import { tagSelector } from 'app/inventory/selectors';
 import { AppIcon, clearIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { TagInfo, TagValue, itemTagSelectorList } from '../inventory/dim-item-info';

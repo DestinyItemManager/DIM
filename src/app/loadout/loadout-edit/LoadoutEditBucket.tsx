@@ -15,7 +15,7 @@ import { emptyArray } from 'app/utils/empty';
 import { Portal } from 'app/utils/temp-container';
 import { LookupTable } from 'app/utils/util-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';

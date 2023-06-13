@@ -8,7 +8,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { percent } from 'app/shell/formatters';
 import { RootState } from 'app/store/types';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useSelector } from 'react-redux';
 import { ObjectiveValue } from './Objective';
 import PursuitItem from './PursuitItem';

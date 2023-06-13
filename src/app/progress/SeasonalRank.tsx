@@ -10,7 +10,7 @@ import {
   DestinySeasonDefinition,
   DestinySeasonPassDefinition,
 } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import BungieImage from '../dim-ui/BungieImage';
 import { ProgressBar, StackAmount } from './PursuitItem';
 import styles from './SeasonalRank.m.scss';

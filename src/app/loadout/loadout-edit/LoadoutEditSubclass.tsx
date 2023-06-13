@@ -7,7 +7,7 @@ import { storesSelector } from 'app/inventory/selectors';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';

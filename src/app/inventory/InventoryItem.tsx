@@ -1,5 +1,5 @@
 import { percent } from 'app/shell/formatters';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useMemo } from 'react';
 import BungieImage from '../dim-ui/BungieImage';

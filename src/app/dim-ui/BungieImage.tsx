@@ -1,5 +1,5 @@
-import clsx from 'clsx';
-import React from 'react';
+import { clsx } from 'clsx';
+import React, { memo } from 'react';
 
 /**
  * A relative path to a Bungie.net image asset.
@@ -13,7 +13,7 @@ export type BungieImageProps = Omit<React.ImgHTMLAttributes<HTMLImageElement>, '
 /**
  * An image tag that links its src to bungie.net. Other props pass through to the underlying image.
  */
-export default React.memo(function BungieImage(props: BungieImageProps) {
+export default memo(function BungieImage(props: BungieImageProps) {
   const { src, ...otherProps } = props;
   return (
     <img

@@ -9,7 +9,7 @@ import { AppIcon, addIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { Portal } from 'app/utils/temp-container';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import ModPicker from '../ModPicker';

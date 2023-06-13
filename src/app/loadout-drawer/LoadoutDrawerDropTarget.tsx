@@ -2,7 +2,7 @@ import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { emptyArray } from 'app/utils/empty';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import React from 'react';
 import { DropTargetMonitor, useDrop } from 'react-dnd';
 import { useSelector } from 'react-redux';

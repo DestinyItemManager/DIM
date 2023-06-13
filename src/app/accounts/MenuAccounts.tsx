@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import { accountRoute } from 'app/routes';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';

@@ -11,7 +11,7 @@ import ItemMoveAmount from 'app/item-popup/ItemMoveAmount';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ItemActionsModel, StoreButtonInfo } from 'app/item-popup/item-popup-actions';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { useState } from 'react';

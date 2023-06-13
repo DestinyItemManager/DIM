@@ -12,7 +12,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { F_OK } from 'constants';
 import fs from 'fs/promises';
-import i18next from 'i18next';
+import i18next, { init } from 'i18next';
 import en from 'locale/en.json';
 import ja from 'locale/ja.json';
 import _ from 'lodash';
@@ -107,7 +107,7 @@ export const getTestStores = _.once(async () => {
  * Use `i18next.changeLanguage('en');` to set language before tests.
  */
 export function setupi18n() {
-  i18next.init({
+  init({
     lng: 'en',
     debug: true,
     initImmediate: true,

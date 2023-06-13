@@ -5,7 +5,7 @@ import {
   materialsSelector,
   transmogCurrenciesSelector,
 } from 'app/inventory/selectors';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import spiderMats from 'data/d2/spider-mats.json';
 import _ from 'lodash';
 import React from 'react';

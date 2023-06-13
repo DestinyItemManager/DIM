@@ -5,7 +5,7 @@ import { useD1Definitions } from 'app/manifest/selectors';
 import { useSetting } from 'app/settings/hooks';
 import { usePageTitle } from 'app/utils/hooks';
 import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';

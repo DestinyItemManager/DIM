@@ -19,7 +19,7 @@ import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import D2MissingSources from 'data/d2/missing-source-info';
 import D2Sources from 'data/d2/source-info';
 import _ from 'lodash';
-import Papa from 'papaparse';
+import Papa, { parse, unparse } from 'papaparse';
 import { setItemNote, setItemTagsBulk } from './actions';
 import { TagValue, tagConfig } from './dim-item-info';
 import { D1GridNode, DimItem, DimSockets } from './item-types';
@@ -141,7 +141,7 @@ export function importTagsNotesFromCsv(files: File[]): ThunkResult<number | unde
 
     for (const file of files) {
       const results = await new Promise<Papa.ParseResult<CSVRow>>((resolve, reject) =>
-        Papa.parse(file, {
+        parse(file, {
           header: true,
           complete: resolve,
           error: reject,
@@ -306,7 +306,7 @@ function downloadGhost(
     return row;
   });
 
-  downloadCsv('destinyGhosts', Papa.unparse(data));
+  downloadCsv('destinyGhosts', unparse(data));
 }
 
 function equippable(item: DimItem) {
@@ -428,7 +428,7 @@ function downloadArmor(
 
     return row;
   });
-  downloadCsv('destinyArmor', Papa.unparse(data));
+  downloadCsv('destinyArmor', unparse(data));
 }
 
 function downloadWeapons(
@@ -624,5 +624,5 @@ function downloadWeapons(
     return row;
   });
 
-  downloadCsv('destinyWeapons', Papa.unparse(data));
+  downloadCsv('destinyWeapons', unparse(data));
 }

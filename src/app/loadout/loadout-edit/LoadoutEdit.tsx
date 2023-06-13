@@ -39,7 +39,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { emptyObject } from 'app/utils/empty';
 import { Portal } from 'app/utils/temp-container';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import _ from 'lodash';
 import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';

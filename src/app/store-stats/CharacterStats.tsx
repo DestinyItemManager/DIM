@@ -17,7 +17,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
 import { armorStats } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';

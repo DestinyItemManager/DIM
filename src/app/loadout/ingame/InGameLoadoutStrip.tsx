@@ -10,7 +10,7 @@ import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { AppIcon, faCheckCircle, faExclamationCircle, saveIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';

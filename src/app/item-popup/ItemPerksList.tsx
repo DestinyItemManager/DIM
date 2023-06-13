@@ -2,7 +2,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { isKillTrackerSocket } from 'app/utils/item-utils';
 import { getSocketsByIndexes } from 'app/utils/socket-utils';
 import { wishListSelector } from 'app/wishlists/selectors';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { DimItem, DimPlug, DimSocket, DimSocketCategory } from '../inventory/item-types';

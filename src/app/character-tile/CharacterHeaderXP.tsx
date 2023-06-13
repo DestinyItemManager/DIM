@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import { D1ProgressionHashes } from 'app/search/d1-known-values';
 import { percent } from 'app/shell/formatters';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { PressTip } from '../dim-ui/PressTip';
 import { D1Store } from '../inventory/store-types';
 import styles from './CharacterHeaderXP.m.scss';

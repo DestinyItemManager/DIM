@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import _ from 'lodash';
 import { memo } from 'react';
 import { bungieNetPath } from '../dim-ui/BungieImage';

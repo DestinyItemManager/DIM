@@ -9,7 +9,7 @@ import { AppIcon, editIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isiOSBrowser } from 'app/utils/browsers';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import TextareaAutosize from 'react-textarea-autosize';

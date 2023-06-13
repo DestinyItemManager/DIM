@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
 import { powerLevelByKeyword } from 'app/search/d2-known-values';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import styles from './powercaps.m.scss';
 
 interface PowerCapValue {

@@ -15,7 +15,7 @@ import {
   DestinyRecordDefinition,
   DestinyRecordState,
 } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import catalystIcons from 'data/d2/catalyst-triumph-icons.json';
 import dimTrackedIcon from 'images/dimTrackedIcon.svg';
 import trackedIcon from 'images/trackedIcon.svg';

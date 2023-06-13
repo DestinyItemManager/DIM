@@ -9,7 +9,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useSetCSSVarToHeight } from 'app/utils/hooks';
 import { isD1Item } from 'app/utils/item-utils';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import _ from 'lodash';
 import { memo, useCallback, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';

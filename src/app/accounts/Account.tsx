@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { AppIcon } from '../shell/icons';
 import styles from './Account.m.scss';
 import { DestinyAccount, PLATFORM_ICONS } from './destiny-account';

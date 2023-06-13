@@ -15,7 +15,7 @@ import { ItemActionsModel } from 'app/item-popup/item-popup-actions';
 import { addItemToLoadout } from 'app/loadout-drawer/loadout-events';
 import { AppIcon, addIcon, compareIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { useDispatch, useSelector } from 'react-redux';
 import arrowsIn from '../../images/arrows-in.png';

@@ -15,7 +15,7 @@ import { allAtomicStats } from 'app/search/search-filter-values';
 import { AppIcon, addIcon, banIcon, deleteIcon, editIcon, saveIcon } from 'app/shell/icons';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 // eslint-disable-next-line css-modules/no-unused-class

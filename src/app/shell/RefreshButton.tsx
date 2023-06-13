@@ -10,7 +10,7 @@ import {
 } from 'app/inventory/selectors';
 import { useEventBusListener } from 'app/utils/hooks';
 import { i15dDurationFromMsWithSeconds } from 'app/utils/time';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useSubscription } from 'use-subscription';

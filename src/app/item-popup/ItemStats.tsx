@@ -1,5 +1,5 @@
 import { isD1Item } from 'app/utils/item-utils';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { DimItem, DimStat } from '../inventory/item-types';
 import ItemStat, { D1QualitySummaryStat, isD1Stat } from './ItemStat';
 import styles from './ItemStats.m.scss';

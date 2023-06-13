@@ -1,10 +1,18 @@
 import { t } from 'app/i18next-t';
 import { SearchInput } from 'app/search/SearchInput';
 import { tempContainer } from 'app/utils/temp-container';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { FontGlyphs } from 'data/d2/d2-font-glyphs';
-import React, { HTMLProps, useCallback, useContext, useEffect, useRef, useState } from 'react';
-import ReactDOM from 'react-dom';
+import React, {
+  HTMLProps,
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import { createPortal } from 'react-dom';
 import { useSelector } from 'react-redux';
 import ClickOutside from '../ClickOutside';
 import { PressTipRoot } from '../PressTip';
@@ -42,7 +50,7 @@ export function WithSymbolsPicker<T extends HTMLTextAreaElement | HTMLInputEleme
   );
 }
 
-const SymbolsWindow = React.memo(function ({
+const SymbolsWindow = memo(function ({
   onChooseGlyph,
 }: {
   onChooseGlyph: (unicode: string) => void;
@@ -153,7 +161,7 @@ function SymbolsPickerButton<T extends HTMLTextAreaElement | HTMLInputElement>({
         <span>{symbolsIcon}</span>
       </button>
       {open &&
-        ReactDOM.createPortal(
+        createPortal(
           <div ref={tooltipContents} style={{ zIndex: 20 }}>
             <ClickOutside onClickOutside={() => setOpen(false)}>
               <SymbolsWindow onChooseGlyph={onChooseGlyph} />

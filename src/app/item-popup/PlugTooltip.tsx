@@ -22,7 +22,7 @@ import {
   DestinyUnlockValueUIStyle,
   TierType,
 } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
 import { useCallback } from 'react';
 import { DimItem, DimPlug, PluggableInventoryItemDefinition } from '../inventory/item-types';

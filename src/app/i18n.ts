@@ -1,4 +1,4 @@
-import i18next from 'i18next';
+import i18next, { use } from 'i18next';
 import HttpApi from 'i18next-http-backend';
 import de from 'locale/de.json';
 import en from 'locale/en.json';
@@ -49,7 +49,7 @@ export function initi18n(): Promise<unknown> {
   const lang = defaultLanguage();
   return new Promise((resolve, reject) => {
     // See https://github.com/i18next/i18next
-    i18next.use(HttpApi).init(
+    use(HttpApi).init(
       {
         initImmediate: true,
         compatibilityJSON: 'v3',

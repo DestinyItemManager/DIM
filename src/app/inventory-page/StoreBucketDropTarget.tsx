@@ -4,7 +4,7 @@ import { dropItem } from 'app/inventory/move-item';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { itemCanBeEquippedByStoreId } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import React from 'react';
 import { useDrop } from 'react-dnd';
 import styles from './StoreBucketDropTarget.m.scss';

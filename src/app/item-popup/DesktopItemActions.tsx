@@ -12,7 +12,7 @@ import { hideItemPopup } from 'app/item-popup/item-popup';
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useSelector } from 'react-redux';
 import styles from './DesktopItemActions.m.scss';
 import { ItemActionsModel } from './item-popup-actions';

@@ -4,7 +4,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { modTypeTagByPlugCategoryHash } from 'app/search/specialty-modslots';
 import { isEventArmorRerollSocket } from 'app/utils/socket-utils';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { pickPlugPositions } from '../mod-assignment-utils';
 import PlugDef from './PlugDef';

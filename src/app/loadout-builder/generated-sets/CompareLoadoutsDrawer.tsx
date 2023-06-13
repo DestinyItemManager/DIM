@@ -14,7 +14,7 @@ import { convertToLoadoutItem } from 'app/loadout-drawer/loadout-utils';
 import LoadoutView from 'app/loadout/LoadoutView';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { produce } from 'immer';
 import React, { useMemo, useState } from 'react';

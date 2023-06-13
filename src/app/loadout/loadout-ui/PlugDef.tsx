@@ -4,7 +4,7 @@ import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { PlugDefTooltip } from 'app/item-popup/PlugTooltip';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 
 /**
  * Displays a plug (mod, perk) based on just its definition, with optional close button.

@@ -1,7 +1,7 @@
 import { dimNeedsUpdate$ } from 'app/register-service-worker';
 import { GlobalAlertLevelsToToastLevels } from 'app/whats-new/BungieAlerts';
 import { DimVersions } from 'app/whats-new/versions';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useSelector } from 'react-redux';
 import { useSubscription } from 'use-subscription';
 import styles from './MenuBadge.m.scss';

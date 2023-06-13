@@ -7,7 +7,7 @@ import ItemAccessoryButtons from 'app/item-actions/ItemAccessoryButtons';
 import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
 import type { ItemTierName } from 'app/search/d2-known-values';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import DesktopItemActions, { menuClassName } from './DesktopItemActions';

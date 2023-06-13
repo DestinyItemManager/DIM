@@ -21,7 +21,7 @@ import { isPlugStatActive } from 'app/utils/item-utils';
 import { usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { LookupTable } from 'app/utils/util-types';
 import { DestinyItemSocketEntryDefinition } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { PlugCategoryHashes, SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { motion } from 'framer-motion';
 import _ from 'lodash';

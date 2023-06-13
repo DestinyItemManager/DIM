@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
 import { bungieAlertsSelector } from 'app/shell/selectors';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { useSubscription } from 'use-subscription';

@@ -1,6 +1,6 @@
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { bucketsSelector } from 'app/inventory/selectors';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { useSelector } from 'react-redux';

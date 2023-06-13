@@ -1,5 +1,5 @@
 import { d2MissingIcon } from 'app/search/d2-known-values';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import BungieImage from '../BungieImage';

@@ -7,7 +7,7 @@ import {
   postmasterSpaceUsed,
 } from 'app/loadout-drawer/postmaster';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useCallback, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';

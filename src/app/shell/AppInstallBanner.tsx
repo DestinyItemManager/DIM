@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
 import { useLocalStorage } from 'app/utils/hooks';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import React from 'react';
 import styles from './AppInstallBanner.m.scss';
 import { AppIcon, closeIcon } from './icons';

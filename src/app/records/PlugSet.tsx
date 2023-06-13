@@ -4,7 +4,7 @@ import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { VendorItemDisplay } from 'app/vendors/VendorItemComponent';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';

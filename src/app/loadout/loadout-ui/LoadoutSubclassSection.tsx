@@ -5,7 +5,7 @@ import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useMemo } from 'react';
 import { getSubclassPlugs } from '../item-utils';
 import { createGetModRenderKey } from '../mod-utils';

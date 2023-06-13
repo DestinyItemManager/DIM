@@ -12,7 +12,8 @@
     "prettier",
     "plugin:array-func/all",
     "plugin:css-modules/recommended",
-    "plugin:sonarjs/recommended"
+    "plugin:sonarjs/recommended",
+    "plugin:import/typescript"
   ],
   "globals": {
     "Atomics": "readonly",
@@ -48,6 +49,10 @@
         { "name": "Link", "linkAttribute": "to" },
         { "name": "NavLink", "linkAttribute": "to" }
       ]
+    },
+    "import/resolver": {
+      "typescript": true,
+      "webpack": true
     }
   },
   "plugins": [
@@ -61,7 +66,8 @@
     "css-modules",
     "sonarjs",
     "jsx-expressions",
-    "github"
+    "github",
+    "import"
   ],
   "reportUnusedDisableDirectives": true,
   "rules": {
@@ -305,7 +311,13 @@
     "github/array-foreach": "error",
     "github/async-currenttarget": "error",
     "github/async-preventdefault": "error",
-    "github/no-innerText": "error"
+    "github/no-innerText": "error",
+    "import/no-named-as-default": "error",
+    "import/no-named-as-default-member": "error",
+    "import/no-cycle": "off",
+    "import/dynamic-import-chunkname": "error",
+    "import/no-duplicates": "error",
+    "import/no-named-default": "error"
   },
   "overrides": [
     {

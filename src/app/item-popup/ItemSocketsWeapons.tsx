@@ -12,7 +12,7 @@ import {
   getWeaponArchetypeSocket,
 } from 'app/utils/socket-utils';
 import { LookupTable } from 'app/utils/util-types';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import {
   ItemCategoryHashes,
   PlugCategoryHashes,

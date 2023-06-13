@@ -13,7 +13,7 @@ import { isiOSBrowser } from 'app/utils/browsers';
 import { useSetCSSVarToHeight } from 'app/utils/hooks';
 import { infoLog } from 'app/utils/log';
 import { Portal } from 'app/utils/temp-container';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import logo from 'images/logo-type-right-light.svg';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';

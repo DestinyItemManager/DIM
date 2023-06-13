@@ -17,7 +17,7 @@ import StreamDeckSettings from 'app/stream-deck/StreamDeckSettings/StreamDeckSet
 import { clearAppBadge } from 'app/utils/app-badge';
 import { usePageTitle } from 'app/utils/hooks';
 import { errorLog } from 'app/utils/log';
-import i18next from 'i18next';
+import { changeLanguage as i18nextChangeLanguage } from 'i18next';
 import exampleWeaponImage from 'images/example-weapon.jpg';
 import _ from 'lodash';
 import React from 'react';
@@ -133,7 +133,7 @@ export default function SettingsPage() {
     languageChanged = true;
     const language = e.target.value;
     localStorage.setItem('dimLanguage', language);
-    i18next.changeLanguage(language, () => {
+    i18nextChangeLanguage(language, () => {
       setSetting('language', language);
     });
   };

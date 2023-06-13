@@ -2,7 +2,7 @@ import 'app/inventory-page/StoreBucket.scss';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { addIcon, AppIcon } from 'app/shell/icons';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';

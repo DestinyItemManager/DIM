@@ -10,7 +10,7 @@ import { classFilter } from 'app/search/search-filters/known-values';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { LookupTable } from 'app/utils/util-types';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
 import { useSubscription } from 'use-subscription';

@@ -1,5 +1,5 @@
 import { useShiftHeld } from 'app/utils/hooks';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import React from 'react';
 import BungieImage from '../../dim-ui/BungieImage';
 import ClickOutside from '../../dim-ui/ClickOutside';

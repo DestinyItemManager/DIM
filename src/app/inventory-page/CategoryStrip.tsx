@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import styles from './CategoryStrip.m.scss';
 
 /**

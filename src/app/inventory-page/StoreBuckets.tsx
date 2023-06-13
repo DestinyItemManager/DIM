@@ -7,7 +7,7 @@ import {
   postmasterAlmostFull,
   postmasterSpaceUsed,
 } from 'app/loadout-drawer/postmaster';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import StoreBucket from '../inventory-page/StoreBucket';

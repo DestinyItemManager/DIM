@@ -9,7 +9,7 @@ import {
   isEventArmorRerollSocket,
 } from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
 import { DimItem, DimSocket, DimSocketCategory } from '../inventory/item-types';

@@ -9,7 +9,7 @@ import { AppIcon, disabledIcon, enabledIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
 import Cost from 'app/vendors/Cost';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import { AnimatePresence, motion } from 'framer-motion';
 import _ from 'lodash';

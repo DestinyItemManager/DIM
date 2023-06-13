@@ -1,6 +1,6 @@
 import { moveDownIcon, moveUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useSelect } from 'downshift';
 
 import { useHeightFromViewportBottom } from 'app/utils/hooks';

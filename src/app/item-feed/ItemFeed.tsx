@@ -12,7 +12,7 @@ import { useSetting } from 'app/settings/hooks';
 import { getItemRecencyKey, isNewerThan } from 'app/shell/item-comparators';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import _ from 'lodash';
 import { memo } from 'react';
 import { useSelector } from 'react-redux';

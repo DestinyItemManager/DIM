@@ -4,9 +4,9 @@ import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, dragHandleIcon } from 'app/shell/icons';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import _ from 'lodash';
-import React from 'react';
+import React, { memo } from 'react';
 import { ArmorStatHashes, MinMaxIgnored, StatFilters, StatRanges } from '../types';
 import { statTierWithHalf } from '../utils';
 import styles from './TierSelect.m.scss';
@@ -14,7 +14,7 @@ import styles from './TierSelect.m.scss';
 const IGNORE = 'ignore';
 const INCLUDE = 'include';
 
-const MinMaxSelect = React.memo(MinMaxSelectInner);
+const MinMaxSelect = memo(MinMaxSelectInner);
 
 /**
  * A selector that allows for choosing minimum and maximum stat ranges, plus reordering the stat priority.

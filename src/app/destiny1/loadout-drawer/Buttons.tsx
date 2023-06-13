@@ -1,5 +1,5 @@
 import { addIcon, AppIcon } from 'app/shell/icons';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import styles from './Buttons.m.scss';
 
 interface AddButtonProps {

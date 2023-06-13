@@ -1,7 +1,7 @@
 import { Placement } from '@popperjs/core';
 import { kebabIcon, moveDownIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useSelect } from 'downshift';
 import { ReactNode, useRef } from 'react';
 import styles from './Dropdown.m.scss';

@@ -20,7 +20,7 @@ import { createPlugSearchPredicate } from 'app/search/plug-search';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { emptySet } from 'app/utils/empty';
 import { DestinyProfileResponse, PlugUiStyles, SocketPlugSources } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import { memo, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';

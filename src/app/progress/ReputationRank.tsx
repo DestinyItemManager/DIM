@@ -2,7 +2,7 @@ import { useDynamicStringReplacer } from 'app/dim-ui/destiny-symbols/RichDestiny
 import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyProgression } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import _ from 'lodash';
 import BungieImage, { bungieNetPath } from '../dim-ui/BungieImage';
 import CompletionCheckbox from './CompletionCheckbox';

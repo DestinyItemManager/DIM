@@ -16,7 +16,7 @@ import { DimError } from 'app/utils/dim-error';
 import { useThrottledSubscription } from 'app/utils/hooks';
 import { Observable } from 'app/utils/observable';
 import { LookupTable } from 'app/utils/util-types';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import ConnectedInventoryItem from './ConnectedInventoryItem';

@@ -1,6 +1,6 @@
 // TODO: cache intersection observer?
 
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 import { getItemImageStyles } from './ItemIcon';
 import styles from './ItemIconPlaceholder.m.scss';

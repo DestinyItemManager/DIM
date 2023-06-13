@@ -22,7 +22,7 @@ import {
   DestinyCollectibleDefinition,
   DestinyInventoryItemDefinition,
 } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { BucketHashes, PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import { produce } from 'immer';
 import _ from 'lodash';

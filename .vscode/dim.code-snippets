@@ -38,10 +38,10 @@
     "scope": "javascriptreact,typescriptreact"
   },
 
-  "import clsx": {
+  "import { clsx }": {
     "prefix": "imc",
-    "body": ["import clsx from 'clsx';"],
-    "description": "Import clsx",
+    "body": ["import { clsx } from 'clsx';"],
+    "description": "import { clsx }",
     "scope": "javascriptreact,typescriptreact"
   },
 
@@ -50,5 +50,5 @@
     "body": ["import styles from './$TM_FILENAME_BASE.m.scss';"],
     "description": "Import CSS module",
     "scope": "javascriptreact,typescriptreact"
-  },
+  }
 }

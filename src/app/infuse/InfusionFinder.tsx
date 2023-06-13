@@ -9,7 +9,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { DimThunkDispatch } from 'app/store/types';
 import { useEventBusListener } from 'app/utils/hooks';
 import { isD1Item } from 'app/utils/item-utils';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useCallback, useDeferredValue, useEffect, useReducer } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';

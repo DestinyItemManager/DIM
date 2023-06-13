@@ -1,7 +1,7 @@
 import { DimItem } from 'app/inventory/item-types';
 import { ItemPopupExtraInfo } from 'app/item-popup/item-popup';
 import { DestinyCollectibleState } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { Link } from 'react-router-dom';

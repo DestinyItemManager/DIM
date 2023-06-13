@@ -10,7 +10,7 @@ import { AppIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
 import StoreStats from 'app/store-stats/StoreStats';
 import { useEventBusListener } from 'app/utils/hooks';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useMemo } from 'react';
 import StoreHeading from '../character-tile/StoreHeading';
 import D1ReputationSection from './D1ReputationSection';

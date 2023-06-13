@@ -5,7 +5,7 @@ import { Tooltip } from 'app/dim-ui/PressTip';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { timerDurationFromMsWithDecimal } from 'app/utils/time';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { StatHashes } from 'data/d2/generated-enums';
 import { t } from 'i18next';
 import { useSelector } from 'react-redux';

@@ -1,7 +1,7 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import clsx from 'clsx';
-import React from 'react';
+import { clsx } from 'clsx';
+import { memo } from 'react';
 import './AppIcon.scss';
 
 function AppIcon({
@@ -34,4 +34,4 @@ function AppIcon({
   }
 }
 
-export default React.memo(AppIcon);
+export default memo(AppIcon);

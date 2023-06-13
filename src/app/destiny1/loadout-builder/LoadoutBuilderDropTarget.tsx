@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import React from 'react';
 import { useDrop } from 'react-dnd';
 import { DimItem } from '../../inventory/item-types';

@@ -11,7 +11,7 @@ import { useIsPhonePortrait } from 'app/shell/selectors';
 import { LoadoutCharacterStats } from 'app/store-stats/CharacterStats';
 import { emptyArray } from 'app/utils/empty';
 import { LookupTable } from 'app/utils/util-types';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { BucketPlaceholder } from './BucketPlaceholder';

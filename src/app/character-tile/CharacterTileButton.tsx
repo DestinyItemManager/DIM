@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { DimStore } from '../inventory/store-types';
 import CharacterTile from './CharacterTile';
 import './StoreHeading.scss';

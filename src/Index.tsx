@@ -12,7 +12,7 @@ import { lazyLoadStreamDeck, startStreamDeckConnection } from 'app/stream-deck/s
 import { streamDeckEnabled } from 'app/stream-deck/util/local-storage';
 import { infoLog } from 'app/utils/log';
 import { scheduleMemoryMeasurement } from 'app/utils/measure-memory';
-import ReactDOM from 'react-dom/client';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import idbReady from 'safari-14-idb-fix';
 import { StorageBroken, storageTest } from './StorageTest';
@@ -42,7 +42,7 @@ scheduleMemoryMeasurement();
 const i18nPromise = initi18n();
 
 (async () => {
-  const root = ReactDOM.createRoot(document.getElementById('app')!);
+  const root = createRoot(document.getElementById('app')!);
 
   // idbReady works around a bug in Safari 14 where IndexedDB doesn't initialize sometimes
   await idbReady();

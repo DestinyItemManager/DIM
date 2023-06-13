@@ -1,6 +1,6 @@
 import { percent } from 'app/shell/formatters';
 import { DestinyCharacterProgressionComponent } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import xpIcon from '../../images/xpIcon.svg';
 import styles from './ArtifactXP.m.scss';
 const formatter = new Intl.NumberFormat();

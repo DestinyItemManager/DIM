@@ -5,7 +5,7 @@ import { useD1Definitions } from 'app/manifest/selectors';
 import Objective from 'app/progress/Objective';
 import { usePageTitle } from 'app/utils/hooks';
 import { StringLookup } from 'app/utils/util-types';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../../accounts/destiny-account';

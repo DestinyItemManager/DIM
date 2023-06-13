@@ -9,7 +9,7 @@ import type { ItemTierName } from 'app/search/d2-known-values';
 import { Portal } from 'app/utils/temp-container';
 import { LookupTable } from 'app/utils/util-types';
 import { DestinyAmmunitionType, DestinyClass } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import heavy from 'destiny-icons/general/ammo-heavy.svg';
 import primary from 'destiny-icons/general/ammo-primary.svg';

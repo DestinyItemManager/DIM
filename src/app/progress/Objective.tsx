@@ -15,7 +15,7 @@ import {
   DestinyObjectiveProgress,
   DestinyUnlockValueUIStyle,
 } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import '../item-popup/ItemObjectives.scss';
 import ObjectiveDescription from './ObjectiveDescription';
 

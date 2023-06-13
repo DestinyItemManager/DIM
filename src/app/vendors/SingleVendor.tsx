@@ -6,7 +6,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener, usePageTitle } from 'app/utils/hooks';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router';

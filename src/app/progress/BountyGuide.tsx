@@ -12,7 +12,7 @@ import { ThunkDispatchProp } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { LookupTable, isIn } from 'app/utils/util-types';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import grenade from 'destiny-icons/weapons/grenade.svg';
 import headshot from 'destiny-icons/weapons/headshot.svg';
 import melee from 'destiny-icons/weapons/melee.svg';

@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
 import { CanceledError } from 'app/utils/cancel';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { motion, MotionProps, Transition } from 'framer-motion';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './Notification.m.scss';

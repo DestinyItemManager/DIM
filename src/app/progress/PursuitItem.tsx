@@ -10,7 +10,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { percent } from 'app/shell/formatters';
 import { count } from 'app/utils/util';
 import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import dimTrackedIcon from 'images/dimTrackedIcon.svg';
 import pursuitComplete from 'images/pursuitComplete.svg';
 import pursuitExpired from 'images/pursuitExpired.svg';

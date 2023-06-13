@@ -3,7 +3,7 @@ import { Tooltip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { DimCharacterStatChange } from 'app/inventory/store-types';
 import { statTier } from 'app/loadout-builder/utils';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { useSelector } from 'react-redux';
 import ClarityCharacterStat from './ClarityCharacterStat';
 import styles from './StatTooltip.m.scss';

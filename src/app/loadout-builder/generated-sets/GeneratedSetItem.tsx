@@ -4,7 +4,7 @@ import { showItemPicker } from 'app/item-picker/item-picker';
 import Sockets from 'app/loadout/loadout-ui/Sockets';
 import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';
 import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { Dispatch } from 'react';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';

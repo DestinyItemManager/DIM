@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
 import { D1Store, DimStore } from 'app/inventory/store-types';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import D1Reputation from './D1Reputation';
 

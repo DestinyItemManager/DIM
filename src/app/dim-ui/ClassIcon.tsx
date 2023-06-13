@@ -1,7 +1,7 @@
 import { AppIcon, globeIcon, hunterIcon, titanIcon, warlockIcon } from 'app/shell/icons';
-import dimHunterProportionalIcon from 'app/shell/icons/custom/HunterProportional';
-import dimTitanProportionalIcon from 'app/shell/icons/custom/TitanProportional';
-import dimWarlockProportionalIcon from 'app/shell/icons/custom/WarlockProportional';
+import { dimHunterProportionalIcon } from 'app/shell/icons/custom/HunterProportional';
+import { dimTitanProportionalIcon } from 'app/shell/icons/custom/TitanProportional';
+import { dimWarlockProportionalIcon } from 'app/shell/icons/custom/WarlockProportional';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 
 const classIcons = {

@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './PageWithMenu.m.scss';
 import { scrollToHref } from './scroll';

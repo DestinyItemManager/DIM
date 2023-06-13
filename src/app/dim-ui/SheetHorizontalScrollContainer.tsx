@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import React, { useCallback, useRef } from 'react';
 import styles from './SheetHorizontalScrollContainer.m.scss';
 

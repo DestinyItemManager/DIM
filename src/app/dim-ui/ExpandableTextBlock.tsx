@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import styles from './ExpandableTextBlock.m.scss';
 

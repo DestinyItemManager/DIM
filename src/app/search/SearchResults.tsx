@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import Sheet from '../dim-ui/Sheet';

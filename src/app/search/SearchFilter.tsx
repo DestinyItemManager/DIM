@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import { querySelector, searchQueryVersionSelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import React, { useCallback, useMemo } from 'react';
+import React, { forwardRef, useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { setSearchQuery } from '../shell/actions';
@@ -13,7 +13,7 @@ import { SearchInput } from './SearchInput';
 /**
  * The main search filter that's in the header.
  */
-export default React.forwardRef(function SearchFilter(
+export default forwardRef(function SearchFilter(
   {
     onClear,
   }: {

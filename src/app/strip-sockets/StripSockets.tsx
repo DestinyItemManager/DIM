@@ -7,7 +7,7 @@ import { AppIcon, faCheckCircle, refreshIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { withCancel } from 'app/utils/cancel';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import chestArmorItem from 'destiny-icons/armor_types/chest.svg';
 import ghostIcon from 'destiny-icons/general/ghost.svg';
 import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';

@@ -1,5 +1,5 @@
 import { D1BucketHashes } from 'app/search/d1-known-values';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { useDrop } from 'react-dnd';

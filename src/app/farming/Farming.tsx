@@ -2,7 +2,7 @@ import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { useSetting } from 'app/settings/hooks';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import clsx from 'clsx';
+import { clsx } from 'clsx';
 import React, { useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
