@@ -20,7 +20,7 @@ import { getTotalModStatChanges } from 'app/loadout/stats';
 import { manifestSelector } from 'app/manifest/selectors';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { armorStats, deprecatedPlaceholderArmorModHash } from 'app/search/d2-known-values';
-import { itemCanBeInLoadout } from 'app/utils/item-utils';
+import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import {
   aspectSocketCategoryHashes,
   fragmentSocketCategoryHashes,
@@ -886,10 +886,7 @@ export function pickBackingStore(
     !preferredStoreId || preferredStoreId === 'vault'
       ? getCurrentStore(stores)
       : getStore(stores, preferredStoreId);
-  return requestedStore &&
-    (classType === DestinyClass.Unknown || requestedStore.classType === classType)
+  return requestedStore && isClassCompatible(classType, requestedStore.classType)
     ? requestedStore
-    : stores.find(
-        (s) => !s.isVault && (s.classType === classType || classType === DestinyClass.Unknown)
-      );
+    : stores.find((s) => !s.isVault && isClassCompatible(classType, s.classType));
 }

@@ -53,7 +53,7 @@ import { queueAction } from 'app/utils/action-queue';
 import { CancelToken, CanceledError, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
 import { emptyArray } from 'app/utils/empty';
-import { itemCanBeEquippedBy } from 'app/utils/item-utils';
+import { isClassCompatible, itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
 import {
   aspectSocketCategoryHashes,
@@ -67,7 +67,7 @@ import {
 } from 'app/utils/socket-utils';
 import { count } from 'app/utils/util';
 import { HashLookup } from 'app/utils/util-types';
-import { DestinyClass, PlatformErrorCodes } from 'bungie-api-ts/destiny2';
+import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { Draft, produce } from 'immer';
 import _ from 'lodash';
@@ -265,7 +265,7 @@ function doApplyLoadout(
             // Don't apply perks/mods/subclass configs when moving items to the vault
             store.isVault ||
             // Only apply perks/mods/subclass configs if the item is usable by the store we're applying to
-            (item.classType !== DestinyClass.Unknown && item.classType !== store.classType)
+            !isClassCompatible(item.classType, store.classType)
           ) {
             return undefined;
           } else if (item.bucket.hash === BucketHashes.Subclass) {
