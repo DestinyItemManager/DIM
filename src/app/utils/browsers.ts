@@ -32,4 +32,7 @@ export function isMac() {
   return mac;
 }
 
-export const isNativeDragAndDropSupported = () => 'draggable' in document.createElement('div');
+export const isNativeDragAndDropSupported = () => {
+  const div = document.createElement('div');
+  return 'draggable' in div && 'ondragstart' in div;
+};
