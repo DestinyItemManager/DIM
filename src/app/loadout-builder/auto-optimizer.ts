@@ -2,8 +2,7 @@
  * The auto-optimizer takes existing saved loadouts and runs a special version
  * of Loadout Optimizer on them.
  */
-
-import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import { AssumeArmorMasterwork, LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { savedLoadoutParametersSelector } from 'app/dim-api/selectors';
 import { DimItem } from 'app/inventory/item-types';
 import {
@@ -24,11 +23,12 @@ import { getItemsAndSubclassFromLoadout } from 'app/loadout/LoadoutView';
 import { useSavedLoadoutsForClassType } from 'app/loadout/loadout-ui/menu-hooks';
 import { categorizeArmorMods, fitMostMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
-import { armorStats } from 'app/search/d2-known-values';
+import { MAX_ARMOR_ENERGY_CAPACITY, armorStats } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { filterFactorySelector, validateQuerySelector } from 'app/search/search-filter';
 import { useSetting } from 'app/settings/hooks';
 import { RootState } from 'app/store/types';
+import { compareBy } from 'app/utils/comparators';
 import { infoLog } from 'app/utils/log';
 import { currySelector } from 'app/utils/selector-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -143,13 +143,18 @@ export const enum LoadoutError {
   BadSearchQuery,
 }
 
-function matchesExoticArmorHash(exoticArmorHash: number | undefined, exotic: DimItem | undefined) {
+function matchesExoticArmorHash(
+  exoticArmorHash: number | undefined,
+  exotic: DimItem | undefined
+): [valid: boolean, exoticArmorHash: number | undefined] {
   if (exoticArmorHash === LOCKED_EXOTIC_NO_EXOTIC) {
-    return !exotic;
+    return [!exotic, exoticArmorHash];
   } else if (exoticArmorHash === LOCKED_EXOTIC_ANY_EXOTIC) {
-    return Boolean(exotic);
+    return [Boolean(exotic), exoticArmorHash];
+  } else if (exoticArmorHash === undefined) {
+    return [true, exotic?.hash];
   } else {
-    return exoticArmorHash === undefined || exoticArmorHash === exotic?.hash;
+    return [exoticArmorHash === exotic?.hash, exoticArmorHash];
   }
 }
 
@@ -199,11 +204,33 @@ function extractOptimizationParameters(
     return LoadoutError.NotAFullArmorSet;
   }
 
+  // Infer a masterwork setting. If the loadout has a non-masterworked legendary armor,
+  // setting stays the same. If all legendaries are MWed but the exotic isn't, set to Legendary only.
+  // If the exotic is MWed or there isn't an exotic, assume everything is MWed.
+  let allLegendariesMasterworked = true;
+  let exoticNotMasterworked = false;
+  for (const armorItem of armorItems) {
+    if (armorItem.energy!.energyCapacity < MAX_ARMOR_ENERGY_CAPACITY) {
+      if (armorItem.isExotic) {
+        exoticNotMasterworked = true;
+      } else {
+        allLegendariesMasterworked = false;
+      }
+    }
+  }
+  if (allLegendariesMasterworked) {
+    armorEnergyRules.assumeArmorMasterwork =
+      exoticNotMasterworked && armorEnergyRules.assumeArmorMasterwork !== AssumeArmorMasterwork.All
+        ? AssumeArmorMasterwork.Legendary
+        : AssumeArmorMasterwork.All;
+  }
+
   const exotic = armorItems.find((i) => i.isExotic);
-  if (!matchesExoticArmorHash(loadoutParameters.exoticArmorHash, exotic)) {
+  const [valid, newHash] = matchesExoticArmorHash(loadoutParameters.exoticArmorHash, exotic);
+  if (!valid) {
     return LoadoutError.DoesNotRespectExotic;
   }
-  loadoutParameters.exoticArmorHash = exotic?.hash;
+  loadoutParameters.exoticArmorHash = newHash;
 
   let originalLoadoutMods = getModsFromLoadout(
     autoOptContext.itemCreationContext.defs,
@@ -239,6 +266,11 @@ function extractOptimizationParameters(
     armorEnergyRules
   );
 
+  // Force auto stat mods to on if there are stat mods.
+  loadoutParameters.autoStatMods ||= originalLoadoutMods.some(
+    (mod) => mod.resolvedMod.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsV2General
+  );
+
   // Save back the actual mods for LO to use
   loadoutParameters.mods = originalLoadoutMods
     .filter(
@@ -256,7 +288,14 @@ function extractOptimizationParameters(
     // that the loadout parameters accurately reflect the stats the user cares about.
     // Converting the existing set stats to tier minimums ensures that every weak upgrade is
     // also a strong upgrade.
-    loadoutParameters.statConstraints = armorStats.map((statHash) => ({
+    const loadoutStatOrder = [...armorStats].sort(
+      compareBy(
+        (stat) =>
+          loadoutParameters?.statConstraints?.findIndex((c) => c.statHash === stat) ??
+          Number.MAX_VALUE
+      )
+    );
+    loadoutParameters.statConstraints = loadoutStatOrder.map((statHash) => ({
       statHash,
       min: statTier(setStats[statHash].value),
       max: 10,

@@ -1,15 +1,15 @@
 import _ from 'lodash';
-import { infoLog } from '../../utils/log';
+import { errorLog, infoLog } from '../../utils/log';
 import {
   ArmorStatHashes,
   ArmorStats,
-  artificeStatBoost,
   LockableBucketHashes,
   LockableBuckets,
-  majorStatBoost,
   MinMaxIgnored,
   StatFilters,
   StatRanges,
+  artificeStatBoost,
+  majorStatBoost,
 } from '../types';
 import {
   pickAndAssignSlotIndependentMods,
@@ -445,9 +445,14 @@ export function process(
     setCb: (set: ProcessArmorSet) => void
   ) => {
     for (const { armor, stats } of finalSets) {
-      // This only fails if minimum tier requirements cannot be hit, but we know they can because
-      // we ensured it internally.
-      const { mods, bonusStats } = pickOptimalStatMods(precalculatedInfo, armor, stats, filters)!;
+      const optResult = pickOptimalStatMods(precalculatedInfo, armor, stats, filters);
+      if (!optResult) {
+        if (filters !== strongUpgradeStatFilters) {
+          errorLog('loadout optimizer', 'unexpectedly could not hit minimum tiers for set');
+        }
+        continue;
+      }
+      const { mods, bonusStats } = optResult;
 
       const armorOnlyStats: Partial<ArmorStats> = {};
       const fullStats: Partial<ArmorStats> = {};
@@ -494,9 +499,9 @@ export function process(
 
     sets.push(set);
   });
-  if (opMode.op === 'optimize') {
+  if (strongUpgradeStatFilters) {
     // Then, optimize sets to try for a strong upgrade.
-    optimizeSetsWithStatFilters(statFiltersInStatOrder, (set) => {
+    optimizeSetsWithStatFilters(strongUpgradeStatFilters, (set) => {
       const [tiers] = getTiers(set.stats);
       if (
         tiers.every((tier, idx) => tier >= referenceTiers![idx]) &&
