@@ -14,7 +14,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { produce } from 'immer';
 import _ from 'lodash';
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import CharacterSelect from '../../dim-ui/CharacterSelect';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
@@ -121,7 +121,7 @@ const initialState: State = {
   },
 };
 
-class D1LoadoutBuilder extends React.Component<Props, State> {
+class D1LoadoutBuilder extends Component<Props, State> {
   state: State = initialState;
 
   private cancelToken: { cancelled: boolean } = {

@@ -1,7 +1,6 @@
 import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { t } from 'app/i18next-t';
-import { isTrialsPassage, isWinsObjective } from 'app/inventory/store/objectives';
 import {
   D2ItemTiers,
   THE_FORBIDDEN_BUCKET,
@@ -53,7 +52,7 @@ import { buildCraftedInfo } from './crafted';
 import { buildDeepsightInfo } from './deepsight';
 import { createItemIndex } from './item-index';
 import { buildMasterwork } from './masterwork';
-import { buildObjectives } from './objectives';
+import { buildObjectives, isTrialsPassage, isWinsObjective } from './objectives';
 import { buildPatternInfo } from './patterns';
 import { buildSockets } from './sockets';
 import { buildStats } from './stats';
