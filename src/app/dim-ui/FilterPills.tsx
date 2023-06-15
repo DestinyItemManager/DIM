@@ -5,6 +5,7 @@ import styles from './FilterPills.m.scss';
 export interface Option {
   readonly key: string;
   readonly content: React.ReactNode;
+  readonly disabled?: boolean;
 }
 
 /**
@@ -60,7 +61,8 @@ export default function FilterPills({
           className={clsx(styles.pill, {
             [styles.selected]: selectedOptions.some((other) => other.key === o.key),
           })}
-          onClick={(e) => onClickPill(e, o)}
+          onClick={!o.disabled ? (e) => onClickPill(e, o) : undefined}
+          disabled={o.disabled}
         >
           {o.content}
         </button>

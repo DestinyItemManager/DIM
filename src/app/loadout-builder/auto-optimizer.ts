@@ -13,7 +13,7 @@ import {
 } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
-import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
 import {
   getLoadoutStats,
   getModsFromLoadout,
@@ -40,6 +40,12 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { useArmorItems } from './LoadoutBuilder';
+import {
+  AutoOptimizationParameters,
+  AutoOptimizationReport,
+  AutoOptimizationResult,
+  LoadoutError,
+} from './auto-optimizer-types';
 import { filterItems } from './item-filter';
 import { useLoVendorItems } from './loadout-builder-vendors';
 import {
@@ -103,46 +109,6 @@ const autoOptimizationContextSelector = currySelector(
   )
 );
 
-export interface AutoOptimizationParameters {
-  existingStats: ArmorStats;
-  loadoutParameters: LoadoutParameters;
-  subclass: ResolvedLoadoutItem | undefined;
-  searchFilter: ItemFilter;
-}
-
-export type ArmorSetResult =
-  | { tag: 'finished'; result: AutoOptimizationResult }
-  | { tag: 'error'; error: LoadoutError };
-
-/**
- * We ran the auto-opt process for a set and this was the result.
- */
-export const enum AutoOptimizationResult {
-  /** This build is the best it could be. Hooray! */
-  Nothing = 0,
-  /** There's a set that is better or equal in all stats and better in at least one stat. */
-  StrongBetterSet,
-  /**
-   * There's a set that matches the original constraints and compares more favorably
-   * (higher tier total, or equal tier total and better in highest-priority stat, or...)
-   */
-  WeakBetterSet,
-}
-
-/**
- * A loadout was ineligible for auto-optimizing.
- */
-export const enum LoadoutError {
-  /** The armor set did not have 5 equipped armor items, so we can't come up with stats to compare against. */
-  NotAFullArmorSet = 1,
-  /** The armor set specifies an exotic but the loadout doesn't even have that exotic, so that's cheating! */
-  DoesNotRespectExotic,
-  /** The armor set does not fit all requested mods in the first place, so there's no meaningful comparison with other sets. */
-  ModsDontFit,
-  /** The loadout's search query is invalid */
-  BadSearchQuery,
-}
-
 function matchesExoticArmorHash(
   exoticArmorHash: number | undefined,
   exotic: DimItem | undefined
@@ -156,10 +122,6 @@ function matchesExoticArmorHash(
   } else {
     return [exoticArmorHash === exotic?.hash, exoticArmorHash];
   }
-}
-
-export interface AutoOptimizationReport {
-  [loadoutId: string]: ArmorSetResult;
 }
 
 function extractOptimizationParameters(
@@ -324,12 +286,18 @@ export function useAutoOptimization(selectedStoreId: string) {
   const { vendorItems } = useLoVendorItems(selectedStoreId, includeVendorItems);
   const armorItems = useArmorItems(autoOptContext.classType, vendorItems);
 
-  // Flush the cache when anything changes
-  useEffect(() => setResults({}), [autoOptContext, includeVendorItems, armorItems]);
-
-  const nextLoadout = useMemo(() => loadouts.find((l) => !results[l.id]), [loadouts, results]);
-
   const getUserItemTag = useSelector(getTagSelector);
+
+  // Flush the cache when anything changes
+  useEffect(
+    () => setResults(Object.fromEntries(loadouts.map((l) => [l.id, { tag: 'pending' }] as const))),
+    [autoOptContext, loadouts, includeVendorItems, armorItems]
+  );
+
+  const nextLoadout = useMemo(
+    () => loadouts.find((l) => results[l.id]?.tag === 'pending'),
+    [loadouts, results]
+  );
   const cleanupRef = useRef<(() => void) | null>();
 
   // Cleanup worker on unmount
@@ -357,7 +325,10 @@ export function useAutoOptimization(selectedStoreId: string) {
 
     const optParamResult = extractOptimizationParameters(autoOptContext, armorItems, nextLoadout);
     if (typeof optParamResult === 'number') {
-      setResults({ ...results, [nextLoadout.id]: { tag: 'error', error: optParamResult } });
+      setResults((results) => ({
+        ...results,
+        [nextLoadout.id]: { tag: 'error', error: optParamResult },
+      }));
       return;
     }
 

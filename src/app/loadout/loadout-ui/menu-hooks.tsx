@@ -5,7 +5,11 @@ import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols'
 import { DimLanguage } from 'app/i18n';
 import { t } from 'app/i18next-t';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
-import { AutoOptimizationReport, AutoOptimizationResult } from 'app/loadout-builder/auto-optimizer';
+import {
+  AutoOptimizationReport,
+  AutoOptimizationResult,
+  LoadoutError,
+} from 'app/loadout-builder/auto-optimizer-types';
 import { Loadout, isInGameLoadout } from 'app/loadout-drawer/loadout-types';
 import {
   FragmentProblem,
@@ -32,6 +36,13 @@ export function useSavedLoadoutsForClassType(classType: DestinyClass) {
     [allSavedLoadouts, classType]
   );
 }
+
+const loadoutAnalysisErrors: Record<string, [LoadoutError, string]> = {
+  notAFullArmorSet: [LoadoutError.NotAFullArmorSet, 'Missing Armor'],
+  doesNotRespectExotic: [LoadoutError.DoesNotRespectExotic, 'Exotic Mismatch'],
+  unassignedMods: [LoadoutError.ModsDontFit, 'Unassigned Mods'],
+  invalidSearchQuery: [LoadoutError.BadSearchQuery, 'Invalid Search Query'],
+};
 
 /**
  * Set up the filter pills for loadouts - allowing for filtering by hashtag and some other special properties.
@@ -117,6 +128,29 @@ export function useLoadoutFilterPills(
 
   if (autoUpgradeResults) {
     const results = Object.values(autoUpgradeResults);
+
+    const total = results.length;
+    const analyzed = results.filter((res) => res.tag !== 'pending').length;
+    if (analyzed < total) {
+      filterOptions.push({
+        key: 'analyzingHint',
+        content: <>Analyzing {`${analyzed}/${total}`}</>,
+        disabled: true,
+      });
+    }
+
+    for (const [key, [error, desc]] of Object.entries(loadoutAnalysisErrors)) {
+      if (results.some((result) => result.tag === 'error' && result.error === error)) {
+        filterOptions.push({
+          key,
+          content: (
+            <>
+              <AlertIcon /> {desc}
+            </>
+          ),
+        });
+      }
+    }
 
     if (
       results.some(
@@ -227,8 +261,17 @@ export function useLoadoutFilterPills(
                       result.result === AutoOptimizationResult.WeakBetterSet
                     );
                   });
-                default:
-                  return loadoutsByHashtag[f.key] ?? [];
+                default: {
+                  const loadoutError = loadoutAnalysisErrors[f.key];
+                  if (loadoutError) {
+                    return savedLoadouts.filter((l) => {
+                      const result = autoUpgradeResults?.[l.id];
+                      return result?.tag === 'error' && result.error === loadoutError[0];
+                    });
+                  } else {
+                    return loadoutsByHashtag[f.key] ?? [];
+                  }
+                }
               }
             })
           )
