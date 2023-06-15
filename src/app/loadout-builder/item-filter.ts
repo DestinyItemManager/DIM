@@ -8,6 +8,7 @@ import {
   ArmorEnergyRules,
   ExcludedItems,
   ItemsByBucket,
+  LOCKED_EXOTIC_ANY_EXOTIC,
   LOCKED_EXOTIC_NO_EXOTIC,
   LockableBucketHash,
   LockableBucketHashes,
@@ -83,6 +84,17 @@ export function filterItems({
     return [filteredItems, filterInfo];
   }
 
+  // Usability hack: If the user requests exotics but none of the exotics match the search filter, ignore the search filter for exotics.
+  // This allows things like `modslot:xyz` to apply to legendary armor without removing all exotics.
+  const excludeExoticsFromFilter = !Object.values(items)
+    .flat()
+    .some(
+      (item) =>
+        item.isExotic &&
+        (lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC || item.hash === lockedExoticHash) &&
+        searchFilter(item)
+    );
+
   for (const bucket of LockableBucketHashes) {
     const lockedModsForPlugCategoryHash = lockedModMap.bucketSpecificMods[bucket] || [];
 
@@ -136,7 +148,9 @@ export function filterItems({
           }).unassigned.length === 0
       );
 
-      const searchFilteredItems = excludedAndModsFilteredItems.filter(searchFilter);
+      const searchFilteredItems = excludedAndModsFilteredItems.filter(
+        (item) => (item.isExotic && excludeExoticsFromFilter) || searchFilter(item)
+      );
 
       filteredItems[bucket] = searchFilteredItems.length
         ? searchFilteredItems
