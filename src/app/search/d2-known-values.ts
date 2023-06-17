@@ -267,6 +267,8 @@ export const VENDORS = {
    * of that season's artifact
    */
   ARTIFACT: 2894222926,
+  DEVRIM_KAY: 396892126,
+  FAILSAFE: 1576276905,
 };
 
 /** used to snag the icon for display */

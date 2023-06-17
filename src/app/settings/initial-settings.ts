@@ -6,9 +6,11 @@ import { defaultLanguage, DimLanguage } from 'app/i18n';
  */
 export interface Settings extends DimApiSettings {
   language: DimLanguage;
+  loIncludeVendorItems: boolean;
 }
 
 export const initialSettingsState: Settings = {
   ...defaultSettings,
+  loIncludeVendorItems: false,
   language: defaultLanguage(),
 };
