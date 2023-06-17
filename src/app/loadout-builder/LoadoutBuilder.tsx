@@ -1,3 +1,4 @@
+import { LoadoutParameters, StatConstraint } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { savedLoStatConstraintsByClassSelector } from 'app/dim-api/selectors';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
@@ -93,6 +94,7 @@ export default memo(function LoadoutBuilder({
     lbDispatch,
   ] = useLbState(stores, defs, preloadedLoadout);
 
+  // TODO: bundle these together into an LO context?
   const modHashes = loadoutParameters.mods ?? emptyArray();
   const lockedExoticHash = loadoutParameters.exoticArmorHash;
   const autoStatMods = loadoutParameters.autoStatMods ?? false;
@@ -103,22 +105,24 @@ export default memo(function LoadoutBuilder({
 
   const resolvedMods = useResolvedMods(defs, modHashes, selectedStoreId);
 
+  // The list of mod items that need to be assigned to armor items
   const modsToAssign = useMemo(
-    // If auto stat mods are enabled, ignore any saved stat mods
     () =>
       resolvedMods
         .filter(
           (mod) =>
             !(
-              autoStatMods &&
-              mod.resolvedMod.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsV2General
+              // If auto stat mods are enabled, ignore any saved stat mods
+              (
+                autoStatMods &&
+                mod.resolvedMod.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsV2General
+              )
             )
         )
         .map((mod) => mod.resolvedMod),
     [resolvedMods, autoStatMods]
   );
 
-  /** Gets items for the loadout builder and creates a mapping of classType -> bucketHash -> item array. */
   const armorItems = useArmorItems(classType);
 
   const { modMap: lockedModMap, unassignedMods } = useMemo(
@@ -132,59 +136,16 @@ export default memo(function LoadoutBuilder({
     [statFilters]
   );
 
-  // Save a subset of the loadout parameters to settings in order to remember them between sessions
   const hasPreloadedLoadout = Boolean(preloadedLoadout);
-  const setSetting = useSetSetting();
-  const firstRun = useRef(true);
-  useEffect(() => {
-    // If the user is playing with an existing loadout (potentially one they
-    // received from a loadout share) or a direct /optimizer link, do not
-    // overwrite the global saved loadout parameters. If they decide to save
-    // that loadout, these will still be saved with the loadout.
-    if (hasPreloadedLoadout) {
-      return;
-    }
-
-    if (firstRun.current) {
-      firstRun.current = false;
-      return;
-    }
-
-    setSetting('loParameters', {
-      assumeArmorMasterwork: loadoutParameters.assumeArmorMasterwork,
-      autoStatMods: loadoutParameters.autoStatMods,
-    });
-  }, [
-    setSetting,
-    loadoutParameters.assumeArmorMasterwork,
-    loadoutParameters.autoStatMods,
+  // Save a subset of the loadout parameters to settings in order to remember them between sessions
+  useSaveLoadoutParameters(hasPreloadedLoadout, loadoutParameters);
+  useSaveStatConstraints(
     hasPreloadedLoadout,
-  ]);
-  useEffect(() => {
-    // If the user is playing with an existing loadout (potentially one they received from a loadout share)
-    // or a direct /optimizer link, do not overwrite the global saved loadout parameters.
-    // If they decide to save that loadout, these will still be saved with the loadout.
-    if (hasPreloadedLoadout) {
-      return;
-    }
-
-    const newStatConstraints = statOrder
-      .filter((statHash) => enabledStats.has(statHash))
-      .map((statHash) => ({ statHash }));
-    if (!deepEqual(newStatConstraints, savedStatConstraintsByClass[classType])) {
-      setSetting('loStatConstraintsByClass', {
-        ...savedStatConstraintsByClass,
-        [classType]: newStatConstraints,
-      });
-    }
-  }, [
-    setSetting,
     statOrder,
-    savedStatConstraintsByClass,
-    classType,
-    hasPreloadedLoadout,
     enabledStats,
-  ]);
+    savedStatConstraintsByClass,
+    classType
+  );
 
   const onCharacterChanged = useCallback(
     (storeId: string) =>
@@ -561,4 +522,89 @@ function useHalfTierMods(
           ),
     [autoMods.generalMods, enabledStats, autoStatMods, statOrder]
   );
+}
+
+/**
+ * Save a subset of the loadout parameters to settings in order to remember them between sessions
+ */
+function useSaveLoadoutParameters(
+  hasPreloadedLoadout: boolean,
+  loadoutParameters: LoadoutParameters
+) {
+  const setSetting = useSetSetting();
+  const firstRun = useRef(true);
+  useEffect(() => {
+    // If the user is playing with an existing loadout (potentially one they
+    // received from a loadout share) or a direct /optimizer link, do not
+    // overwrite the global saved loadout parameters. If they decide to save
+    // that loadout, these will still be saved with the loadout.
+    if (hasPreloadedLoadout) {
+      return;
+    }
+
+    // Don't save the settings when we first load, since they won't have changed.
+    if (firstRun.current) {
+      firstRun.current = false;
+      return;
+    }
+
+    setSetting('loParameters', {
+      assumeArmorMasterwork: loadoutParameters.assumeArmorMasterwork,
+      autoStatMods: loadoutParameters.autoStatMods,
+    });
+  }, [
+    setSetting,
+    loadoutParameters.assumeArmorMasterwork,
+    loadoutParameters.autoStatMods,
+    hasPreloadedLoadout,
+  ]);
+}
+
+/**
+ * Save stat constraints (stat order / enablement) per class when it changes
+ */
+function useSaveStatConstraints(
+  hasPreloadedLoadout: boolean,
+  statOrder: ArmorStatHashes[],
+  enabledStats: Set<ArmorStatHashes>,
+  savedStatConstraintsByClass: {
+    [key: number]: StatConstraint[];
+  },
+  classType: DestinyClass
+) {
+  const setSetting = useSetSetting();
+  const firstRun = useRef(true);
+
+  useEffect(() => {
+    // If the user is playing with an existing loadout (potentially one they
+    // received from a loadout share) or a direct /optimizer link, do not
+    // overwrite the global saved loadout parameters. If they decide to save
+    // that loadout, these will still be saved with the loadout.
+    if (hasPreloadedLoadout) {
+      return;
+    }
+
+    // Don't save the settings when we first load, since they won't have changed.
+    if (firstRun.current) {
+      firstRun.current = false;
+      return;
+    }
+
+    const newStatConstraints = statOrder
+      .filter((statHash) => enabledStats.has(statHash))
+      .map((statHash) => ({ statHash }));
+    if (!deepEqual(newStatConstraints, savedStatConstraintsByClass[classType])) {
+      setSetting('loStatConstraintsByClass', {
+        ...savedStatConstraintsByClass,
+        [classType]: newStatConstraints,
+      });
+    }
+  }, [
+    setSetting,
+    statOrder,
+    savedStatConstraintsByClass,
+    classType,
+    hasPreloadedLoadout,
+    enabledStats,
+  ]);
 }
