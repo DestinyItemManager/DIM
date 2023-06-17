@@ -1642,15 +1642,6 @@ export const symbolData: {
     },
   },
   {
-    codepoint: 57657,
-    glyph: '',
-    source: {
-      tableName: 'Trait',
-      hash: 2968599152,
-      fromRichText: false,
-    },
-  },
-  {
     codepoint: 57481,
     glyph: '',
     source: {
@@ -2462,12 +2453,12 @@ export const symbolData: {
     },
   },
 ];
-const translateManually = [57495, 57654, 983359, 57665, 57671, 983376, 983269] as const;
+const translateManually = [57495, 57654, 983359, 57665, 57671, 57426, 983376, 983269] as const;
 export type TranslateManually = typeof translateManually[number];
 
 /*
  * Could not find a source for (did the definitions disappear?): 
- * [Light Level]
+
 
  * Unused rich text replacements (these should only be input actions replaced with the mapped buttons by the game): 
  * [Stasis: Glyph 0]
