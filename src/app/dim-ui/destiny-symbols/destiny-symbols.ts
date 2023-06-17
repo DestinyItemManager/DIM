@@ -13,13 +13,37 @@ const manualTranslations: { [key in TranslateManually]: I18nKey } = {
   [FontGlyphs.environment_hazard]: tl('Glyphs.Misadventure'),
   [FontGlyphs.void_quickfall]: tl('Glyphs.Quickfall'),
   [FontGlyphs.spear_launcher]: tl('Glyphs.ScorchCannon'),
-  [DimCustomSymbols.hive_relic]: tl('Glyphs.HiveRelic'),
-  [FontGlyphs.light]: tl('Glyphs.Light'),
+  [DimCustomSymbols.hive_relic]: tl('Glyphs.HiveSword'),
   [DimCustomSymbols.harmonic]: tl('Glyphs.Harmonic'),
   [DimCustomSymbols.respawn_restricted]: tl('Glyphs.RespawnRestricted'),
 };
 
 export type SymbolsMap = { glyph: string; name: string; fullName: string }[];
+
+const getTableLoc = (defs: D2ManifestDefinitions, tableName: string, hash: number) => {
+  switch (tableName) {
+    case 'Trait':
+      return defs.Trait.get(hash)?.displayProperties?.name;
+    case 'InventoryItem':
+      return defs.InventoryItem.get(hash)?.displayProperties?.name;
+    case 'SandboxPerk':
+      return defs.SandboxPerk.get(hash)?.displayProperties?.name;
+    case 'ActivityMode':
+      return defs.ActivityMode[hash]?.displayProperties?.name;
+    case 'Objective':
+      return defs.Objective.get(hash)?.progressDescription;
+    case 'ItemCategory':
+      return defs.ItemCategory.get(hash)?.displayProperties?.name;
+    case 'InventoryBucket':
+      return defs.InventoryBucket[hash]?.displayProperties?.name;
+    case 'Faction':
+      return defs.Faction[hash]?.displayProperties?.name;
+    case 'Stat':
+      return defs.Stat.get(hash)?.displayProperties?.name;
+    case 'DamageType':
+      return defs.DamageType.get(hash)?.displayProperties?.name;
+  }
+};
 
 const simplifyName = (name: string) =>
   name

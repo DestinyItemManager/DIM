@@ -346,16 +346,14 @@
   "Glyphs": {
     "Gilded": "Gilded",
     "Harmonic": "Harmonic",
-    "HiveRelic": "Hive Relic",
-    "Light": "Light",
+    "HiveSword": "Hive Sword",
     "Misadventure": "Misadventure",
     "Missing": "Missing",
     "OpenSymbolsPicker": "Open Symbols Picker",
     "Quickfall": "Quickfall",
-    "RespawnRestricted": "RespawnRestricted",
+    "RespawnRestricted": "Respawn Restricted",
     "ScorchCannon": "Scorch Cannon",
-    "SearchSymbols": "Search Symbols...",
-    "Smoke": "Smoke"
+    "SearchSymbols": "Search Symbols..."
   },
   "Header": {
     "About": "About DIM",
