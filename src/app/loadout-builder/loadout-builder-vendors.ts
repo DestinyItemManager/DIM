@@ -37,5 +37,6 @@ export function useLoVendorItems(selectedStoreId: string, includeVendorItems: bo
   return {
     vendorItemsLoading: includeVendorItems && !vendors[selectedStoreId]?.vendorsResponse,
     vendorItems: includeVendorItems ? vendorItems : emptyArray<DimItem>(),
+    error: (includeVendorItems && vendors[selectedStoreId]?.error) || undefined,
   };
 }

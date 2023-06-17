@@ -3,6 +3,7 @@ import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import CheckButton from 'app/dim-ui/CheckButton';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
+import { PressTip } from 'app/dim-ui/PressTip';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { Loadout, ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
@@ -14,7 +15,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { useSetSetting, useSetting } from 'app/settings/hooks';
-import { AppIcon, redoIcon, refreshIcon, undoIcon } from 'app/shell/icons';
+import { AppIcon, faExclamationTriangle, redoIcon, refreshIcon, undoIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { Portal } from 'app/utils/temp-container';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -100,7 +101,11 @@ export default memo(function LoadoutBuilder({
   const classType = selectedStore.classType;
   const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(selectedStoreId));
 
-  const { vendorItems, vendorItemsLoading } = useLoVendorItems(selectedStoreId, includeVendorItems);
+  const {
+    vendorItems,
+    vendorItemsLoading,
+    error: vendorError,
+  } = useLoVendorItems(selectedStoreId, includeVendorItems);
   /** Gets items for the loadout builder and creates a mapping of classType -> bucketHash -> item array. */
   const items = useMemo(() => {
     const items: Partial<Record<DestinyClass, Draft<ItemsByBucket>>> = {};
@@ -355,10 +360,18 @@ export default memo(function LoadoutBuilder({
           name="includeVendorItems"
           checked={includeVendorItems}
         >
-          {vendorItemsLoading && (
-            <span>
-              <AppIcon icon={refreshIcon} spinning={true} />
-            </span>
+          {vendorError ? (
+            <PressTip tooltip={vendorError.message}>
+              <span>
+                <AppIcon icon={faExclamationTriangle} />
+              </span>
+            </PressTip>
+          ) : (
+            vendorItemsLoading && (
+              <span>
+                <AppIcon icon={refreshIcon} spinning={true} />
+              </span>
+            )
           )}{' '}
           {t('LoadoutBuilder.IncludeVendorItems')}
         </CheckButton>
