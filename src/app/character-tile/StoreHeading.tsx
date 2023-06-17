@@ -3,7 +3,7 @@ import { isD1Store } from 'app/inventory/stores-helpers';
 import LoadoutPopup from 'app/loadout/loadout-menu/LoadoutPopup';
 import clsx from 'clsx';
 import React, { useCallback, useRef, useState } from 'react';
-import ReactDOM from 'react-dom';
+import { createPortal } from 'react-dom';
 import ClickOutside from '../dim-ui/ClickOutside';
 import { DimStore } from '../inventory/store-types';
 import { AppIcon, kebabIcon } from '../shell/icons';
@@ -86,7 +86,7 @@ export default function StoreHeading({ store, selectedStore, loadoutMenuRef, onT
     );
 
     loadoutMenu = loadoutMenuRef
-      ? ReactDOM.createPortal(menuContents, loadoutMenuRef.current!)
+      ? createPortal(menuContents, loadoutMenuRef.current!)
       : menuContents;
   }
 

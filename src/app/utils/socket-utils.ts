@@ -1,7 +1,9 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import {
   DimItem,
+  DimSocket,
   DimSocketCategory,
+  DimSockets,
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
 import {
@@ -11,7 +13,6 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { DimSocket, DimSockets } from '../inventory/item-types';
 import { isArmor2Mod, isKillTrackerSocket } from './item-utils';
 
 type WithRequiredProperty<T, K extends keyof T> = T & {

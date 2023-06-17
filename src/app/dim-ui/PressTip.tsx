@@ -2,9 +2,8 @@ import { Placement } from '@popperjs/core';
 import { tempContainer } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import _ from 'lodash';
-import {
+import React, {
   MutableRefObject,
-  default as React,
   createContext,
   useCallback,
   useContext,
@@ -12,7 +11,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import ReactDOM from 'react-dom';
+import { createPortal } from 'react-dom';
 import styles from './PressTip.m.scss';
 import { usePopper } from './usePopper';
 
@@ -116,7 +115,7 @@ function Control({
     <Component ref={triggerRef} className={clsx(styles.control, className)} {...rest}>
       {children}
       {open &&
-        ReactDOM.createPortal(
+        createPortal(
           <div
             className={clsx(styles.tooltip, customization.className, {
               [styles.wideTooltip]: wide,
