@@ -16,6 +16,7 @@ const manualTranslations: { [key in TranslateManually]: I18nKey } = {
   [DimCustomSymbols.hive_relic]: tl('Glyphs.HiveSword'),
   [DimCustomSymbols.harmonic]: tl('Glyphs.Harmonic'),
   [DimCustomSymbols.respawn_restricted]: tl('Glyphs.RespawnRestricted'),
+  [FontGlyphs.light]: tl('Glyphs.LightLevel'),
 };
 
 export type SymbolsMap = { glyph: string; name: string; fullName: string }[];

@@ -3310,6 +3310,7 @@ export type TranslateManually = (typeof translateManually)[number];
  * Golden Gun - Deadshot
  * Golden Gun - Marksman
 
+
  * Unused rich text replacements (these should only be input actions replaced with the mapped buttons by the game): 
  * [Stasis: Glyph 0]
  * [Stasis: Glyph 3 Locked]

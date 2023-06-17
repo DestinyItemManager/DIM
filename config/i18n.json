@@ -365,7 +365,8 @@
     "SearchSymbols": "Search Symbols...",
     "HiveSword": "Hive Sword",
     "Harmonic": "Harmonic",
-    "RespawnRestricted": "Respawn Restricted"
+    "RespawnRestricted": "Respawn Restricted",
+    "LightLevel": "Light Level"
   },
   "Header": {
     "About": "About DIM",
