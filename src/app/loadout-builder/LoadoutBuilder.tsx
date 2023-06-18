@@ -205,6 +205,7 @@ export default memo(function LoadoutBuilder({
     [classType, defs, modsToAssign, subclass]
   );
 
+  // Run the actual loadout generation process in a web worker
   const { result, processing, remainingTime } = useProcess({
     defs,
     selectedStore,
@@ -220,7 +221,8 @@ export default memo(function LoadoutBuilder({
   });
 
   // A representation of the current loadout optimizer parameters that can be saved with generated loadouts
-  // TODO: replace some of these individual params with this object
+  // TODO: replace some of these individual params with this object << what
+  // TODO: build a skeleton loadout here?
   const params = useMemo(
     () => buildLoadoutParams(loadoutParameters, searchQuery, statFilters, statOrder),
     [loadoutParameters, searchQuery, statFilters, statOrder]
@@ -228,7 +230,7 @@ export default memo(function LoadoutBuilder({
 
   const resultSets = result?.sets;
 
-  const filteredSets = useMemo(
+  const sortedSets = useMemo(
     () => resultSets && sortGeneratedSets(resultSets, statOrder, enabledStats),
     [statOrder, enabledStats, resultSets]
   );
@@ -365,9 +367,9 @@ export default memo(function LoadoutBuilder({
             </p>
           </div>
         )}
-        {result && filteredSets?.length ? (
+        {result && sortedSets?.length ? (
           <GeneratedSets
-            sets={filteredSets}
+            sets={sortedSets}
             subclass={subclass}
             lockedMods={result.mods}
             pinnedItems={pinnedItems}
