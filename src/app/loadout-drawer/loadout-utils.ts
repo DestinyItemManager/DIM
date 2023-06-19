@@ -824,6 +824,12 @@ const oldToNewMod: HashLookup<number> = {
   3253038666: 4287799666, // InventoryItem "Strength Mod"
 };
 
+/**
+ * Convert a list of plug item hashes into ResolvedLoadoutMods, which may not be
+ * the same as the original hashes as we try to be smart about what the user meant.
+ * e.g. we replace some mods with lower-cost variants depending on the artifact state.
+ * @param unlockedPlugs all unlocked mod hashes. See unlockedPlugSetItemsSelector.
+ */
 export function resolveLoadoutModHashes(
   defs: D2ManifestDefinitions | undefined,
   modHashes: number[],

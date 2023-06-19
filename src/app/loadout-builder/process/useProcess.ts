@@ -277,7 +277,7 @@ const groupComparator = (getTag: (item: DimItem) => TagValue | undefined) =>
  * Creating a group for every item is trivially correct but inefficient. Erroneously forgetting to include a bit
  * of information in the grouping key that is relevant to the web worker results in the worker failing to discover
  * certain sets, or set rendering suddenly failing in unexpected ways when it prefers an alternative due to an existing
- * loadout or more convenient energy types, so everything in ProcessItem that affects the operation of the worker
+ * loadout, so everything in ProcessItem that affects the operation of the worker
  * must be accounted for in this function.
  *
  * It can group by any number of the following concepts depending on locked mods and armor upgrades,
@@ -285,7 +285,6 @@ const groupComparator = (getTag: (item: DimItem) => TagValue | undefined) =>
  * - Masterwork status
  * - Exoticness (every exotic must be distinguished from other exotics and all legendaries)
  * - Energy capacity
- * - If there are energy requirements for slot independent mods it creates groups split by energy type
  * - If there are mods with tags (activity/combat style) it will create groups split by compatible tags
  */
 function mapItemsToGroups(
@@ -329,7 +328,7 @@ function mapItemsToGroups(
     }
   >();
   for (const item of mappedItems) {
-    // Id, name are not important, exoticness+hash and energy type were grouped by in phase 1.
+    // Id, name are not important, exoticness+hash were grouped by in phase 1.
     // Energy value is the same for all items.
 
     // Item stats are important for the stat results of a full set
@@ -423,6 +422,9 @@ function mapItemsToGroups(
   return groups;
 }
 
+/**
+ * Compute information about the mods LO could automatically assign.
+ */
 export function useAutoMods(storeId: string) {
   const defs = useD2Definitions()!;
   const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(storeId));

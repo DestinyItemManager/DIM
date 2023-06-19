@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setSettingAction } from './actions';
 import { Settings } from './initial-settings';
 
+/** A convenience for being able to dispatch an arbitrary setting action. */
 export function useSetSetting() {
   const dispatch = useDispatch();
   return useCallback(

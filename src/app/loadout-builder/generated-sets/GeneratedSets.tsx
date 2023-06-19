@@ -3,9 +3,12 @@ import { WindowVirtualList } from 'app/dim-ui/VirtualList';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { Dispatch } from 'react';
+import { emptyArray } from 'app/utils/empty';
+import _ from 'lodash';
+import { Dispatch, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { ArmorEnergyRules, ArmorSet, ModStatChanges, PinnedItems } from '../types';
+import { useAutoMods } from '../process/useProcess';
+import { ArmorEnergyRules, ArmorSet, ArmorStatHashes, ModStatChanges, PinnedItems } from '../types';
 import GeneratedSet, { containerClass } from './GeneratedSet';
 
 /**
@@ -23,7 +26,6 @@ export default function GeneratedSets({
   loadouts,
   lbDispatch,
   params,
-  halfTierMods,
   armorEnergyRules,
   notes,
 }: {
@@ -38,10 +40,16 @@ export default function GeneratedSets({
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   params: LoadoutParameters;
-  halfTierMods: PluggableInventoryItemDefinition[];
   armorEnergyRules: ArmorEnergyRules;
   notes?: string;
 }) {
+  const halfTierMods = useHalfTierMods(
+    selectedStore.id,
+    Boolean(params.autoStatMods),
+    statOrder,
+    enabledStats
+  );
+
   return (
     <WindowVirtualList
       numElements={sets.length}
@@ -68,5 +76,32 @@ export default function GeneratedSets({
         />
       )}
     </WindowVirtualList>
+  );
+}
+
+/**
+ * Half tier (+5) mods in user stat order so that the quick-add button
+ * automatically adds them, but only for stats we care about (and only if we're
+ * not adding stat mods automatically ourselves).
+ */
+function useHalfTierMods(
+  selectedStoreId: string,
+  autoStatMods: boolean,
+  statOrder: ArmorStatHashes[],
+  enabledStats: Set<ArmorStatHashes>
+): PluggableInventoryItemDefinition[] {
+  // Info about stat mods
+  const autoMods = useAutoMods(selectedStoreId);
+  return useMemo(
+    () =>
+      // If we are automatically assigning stat mods, don't even offer half tier quick-add
+      autoStatMods
+        ? emptyArray()
+        : _.compact(
+            statOrder.map(
+              (statHash) => enabledStats.has(statHash) && autoMods.generalMods[statHash]?.minorMod
+            )
+          ),
+    [autoMods.generalMods, enabledStats, autoStatMods, statOrder]
   );
 }

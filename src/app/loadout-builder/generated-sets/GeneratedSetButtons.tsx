@@ -3,6 +3,7 @@ import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
+import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { convertToLoadoutItem, newLoadout } from 'app/loadout-drawer/loadout-utils';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -26,7 +27,6 @@ export default function GeneratedSetButtons({
   params,
   canCompareLoadouts,
   halfTierMods,
-  onLoadoutSet,
   lbDispatch,
   lockedMods,
 }: {
@@ -38,22 +38,21 @@ export default function GeneratedSetButtons({
   params: LoadoutParameters;
   canCompareLoadouts: boolean;
   halfTierMods: PluggableInventoryItemDefinition[];
-  onLoadoutSet: (loadout: Loadout) => void;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   lockedMods: PluggableInventoryItemDefinition[];
 }) {
   const dispatch = useThunkDispatch();
+  const loadout = () =>
+    createLoadout(store.classType, set, items, subclass, params, notes, lockedMods);
 
   // Opens the loadout menu for the generated set
-  const openLoadout = () => {
-    onLoadoutSet(createLoadout(store.classType, set, items, subclass, params, notes, lockedMods));
-  };
+  const openLoadout = () =>
+    editLoadout(loadout(), store.id, {
+      showClass: false,
+    });
 
   // Automatically equip items for this generated set to the active store
-  const equipItems = () => {
-    const loadout = createLoadout(store.classType, set, items, subclass, params, notes, lockedMods);
-    return dispatch(applyLoadout(store, loadout, { allowUndo: true }));
-  };
+  const equipItems = () => dispatch(applyLoadout(store, loadout(), { allowUndo: true }));
 
   const statsWithPlus5: number[] = [];
 

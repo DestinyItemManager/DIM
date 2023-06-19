@@ -165,7 +165,7 @@ export const permissiveArmorEnergyRules: ArmorEnergyRules = {
 };
 
 /**
- * Rules describing how armor can change energy type and capacity
+ * Rules describing how armor can change energy capacity
  * to accommodate mods and hit optimal stats.
  */
 export interface ArmorEnergyRules {
