@@ -2,7 +2,6 @@ import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore, statSourceOrder } from 'app/inventory/store-types';
-import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { fitMostMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
@@ -59,13 +58,6 @@ export default memo(function GeneratedSet({
   armorEnergyRules: ArmorEnergyRules;
 }) {
   const defs = useD2Definitions()!;
-
-  // Set the loadout property to show/hide the loadout menu
-  const setCreateLoadout = (loadout: Loadout) => {
-    editLoadout(loadout, selectedStore.id, {
-      showClass: false,
-    });
-  };
 
   let existingLoadout: Loadout | undefined;
   // Items are sorted by their energy capacity when grouping
@@ -188,7 +180,6 @@ export default memo(function GeneratedSet({
           store={selectedStore}
           canCompareLoadouts={canCompareLoadouts}
           halfTierMods={halfTierMods}
-          onLoadoutSet={setCreateLoadout}
           lbDispatch={lbDispatch}
           notes={notes}
           params={params}
