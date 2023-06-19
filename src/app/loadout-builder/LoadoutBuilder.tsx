@@ -6,7 +6,7 @@ import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { getStore } from 'app/inventory/stores-helpers';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
@@ -27,7 +27,6 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { deepEqual } from 'fast-equals';
 import { AnimatePresence, motion } from 'framer-motion';
-import _ from 'lodash';
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import {
@@ -48,7 +47,7 @@ import { sortGeneratedSets } from './generated-sets/utils';
 import { filterItems } from './item-filter';
 import { useLbState } from './loadout-builder-reducer';
 import { buildLoadoutParams } from './loadout-params';
-import { useAutoMods, useProcess } from './process/useProcess';
+import { useProcess } from './process/useProcess';
 import {
   ArmorEnergyRules,
   ArmorStatHashes,
@@ -161,13 +160,6 @@ export default memo(function LoadoutBuilder({
   // TODO: save params to URL when they change? or leave it for the share...
 
   // TODO: build a bundled up context object to pass to GeneratedSets?
-
-  const halfTierMods = useHalfTierMods(
-    selectedStore.id,
-    Boolean(loadoutParameters.autoStatMods),
-    statOrder,
-    enabledStats
-  );
 
   const [armorEnergyRules, filteredItems, filterInfo] = useMemo(() => {
     const armorEnergyRules: ArmorEnergyRules = {
@@ -380,7 +372,6 @@ export default memo(function LoadoutBuilder({
             modStatChanges={result.modStatChanges}
             loadouts={loadouts}
             params={params}
-            halfTierMods={halfTierMods}
             armorEnergyRules={result.armorEnergyRules}
             notes={preloadedLoadout?.notes}
           />
@@ -412,7 +403,8 @@ export default memo(function LoadoutBuilder({
               plugCategoryHashWhitelist={modPicker.plugCategoryHashWhitelist}
               plugCategoryHashDenyList={
                 autoStatMods
-                  ? [...autoAssignmentPCHs, PlugCategoryHashes.EnhancementsV2General]
+                  ? // Exclude stat mods from the mod picker when they're auto selected
+                    [...autoAssignmentPCHs, PlugCategoryHashes.EnhancementsV2General]
                   : autoAssignmentPCHs
               }
               onAccept={(newLockedMods) =>
@@ -496,33 +488,6 @@ function useArmorItems(classType: DestinyClass): DimItem[] {
         (item) => isClassCompatible(item.classType, classType) && isLoadoutBuilderItem(item)
       ),
     [allItems, classType]
-  );
-}
-
-/**
- * Half tier (+5) mods in user stat order so that the quick-add button
- * automatically adds them, but only for stats we care about (and only if we're
- * not adding stat mods automatically ourselves).
- */
-function useHalfTierMods(
-  selectedStoreId: string,
-  autoStatMods: boolean,
-  statOrder: ArmorStatHashes[],
-  enabledStats: Set<ArmorStatHashes>
-): PluggableInventoryItemDefinition[] {
-  // Info about stat mods
-  const autoMods = useAutoMods(selectedStoreId);
-  return useMemo(
-    () =>
-      // If we are automatically assigning stat mods, don't even offer half tier quick-add
-      autoStatMods
-        ? emptyArray()
-        : _.compact(
-            statOrder.map(
-              (statHash) => enabledStats.has(statHash) && autoMods.generalMods[statHash]?.minorMod
-            )
-          ),
-    [autoMods.generalMods, enabledStats, autoStatMods, statOrder]
   );
 }
 
