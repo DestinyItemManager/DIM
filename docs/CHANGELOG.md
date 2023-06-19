@@ -1,6 +1,12 @@
 ## Next
 
+* You may now include vendors' items in loadout optimizer, in case they have a better roll available than what you have.
+
 ## 7.73.0 <span class="changelog-date">(2023-06-18)</span>
+
+* DIM should no longer show a popup to enable DIM Sync before you've logged in.
+* Fixed drag and drop on Android.
+* Fixed scroll bar behaving weirdly on the sidebar of certain pages.
 
 ## 7.72.0 <span class="changelog-date">(2023-06-11)</span>
 
