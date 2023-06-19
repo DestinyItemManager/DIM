@@ -138,12 +138,10 @@ export default memo(function LoadoutBuilder({
       resolvedMods
         .filter(
           (mod) =>
+            // If auto stat mods are enabled, ignore any saved stat mods
             !(
-              // If auto stat mods are enabled, ignore any saved stat mods
-              (
-                autoStatMods &&
-                mod.resolvedMod.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsV2General
-              )
+              autoStatMods &&
+              mod.resolvedMod.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsV2General
             )
         )
         .map((mod) => mod.resolvedMod),
