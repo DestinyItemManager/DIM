@@ -317,8 +317,7 @@ export function gatherUnlockedPlugSetItems(
 }
 
 /** gets all the dynamic strings from a profile response */
-export const dynamicStringsSelector = (state: RootState) => {
-  const profileResp = profileResponseSelector(state);
+export const dynamicStringsSelector = createSelector(profileResponseSelector, (profileResp) => {
   if (profileResp) {
     const { profileStringVariables, characterStringVariables } = profileResp;
     const allProfile: {
@@ -339,7 +338,7 @@ export const dynamicStringsSelector = (state: RootState) => {
       byCharacter,
     };
   }
-};
+});
 
 export const artifactUnlocksSelector = currySelector(
   createSelector(
