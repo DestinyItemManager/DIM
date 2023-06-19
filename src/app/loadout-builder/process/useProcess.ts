@@ -252,6 +252,8 @@ const groupComparator = (getTag: (item: DimItem) => TagValue | undefined) =>
   chainComparator(
     // Prefer higher-energy (ideally masterworked)
     compareBy(({ dimItem }: MappedItem) => -(dimItem.energy?.energyCapacity || 0)),
+    // Prefer owned items over vendor items
+    compareBy(({ dimItem }: MappedItem) => Boolean(dimItem.vendor)),
     // Prefer favorited items
     compareBy(({ dimItem }: MappedItem) => getTag(dimItem) !== 'favorite'),
     // Prefer items with higher power

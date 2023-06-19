@@ -18,3 +18,13 @@
     border: 1px solid var(--theme-accent-primary);
   }
 }
+
+.vendorItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  > span {
+    color: lightgray;
+    font-size: calc(var(--item-icon-size) * 2 / 3);
+  }
+}
