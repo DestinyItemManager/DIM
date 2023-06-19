@@ -1,5 +1,7 @@
 ## Next
 
+## 7.73.0 <span class="changelog-date">(2023-06-18)</span>
+
 ## 7.72.0 <span class="changelog-date">(2023-06-11)</span>
 
 * Fixed showing the item under your finger while you're dragging it on iOS/iPadOS. As a reminder, on touchscreen devices you need to press the item for a little bit to "pick it up". And as a reminder for everyone, any time you see an item in DIM, pretty much wherever it is, you can drag it around to move the item or add it to a Loadout you're editing. This works from the Inventory, Item Feed, Loadouts screen, etc.
