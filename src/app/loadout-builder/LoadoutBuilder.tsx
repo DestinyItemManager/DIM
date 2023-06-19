@@ -105,30 +105,6 @@ export default memo(function LoadoutBuilder({
   const selectedStore = stores.find((store) => store.id === selectedStoreId)!;
   const classType = selectedStore.classType;
   const loadouts = useRelevantLoadouts(selectedStore);
-    
-  const {
-    vendorItems,
-    vendorItemsLoading,
-    error: vendorError,
-  } = useLoVendorItems(selectedStoreId, includeVendorItems);
-  /** Gets items for the loadout builder and creates a mapping of classType -> bucketHash -> item array. */
-  const items = useMemo(() => {
-    const items: Partial<Record<DestinyClass, Draft<ItemsByBucket>>> = {};
-    for (const item of allItems.concat(vendorItems)) {
-      if (!item || !isLoadoutBuilderItem(item)) {
-        continue;
-      }
-      const { classType, bucket } = item;
-      (items[classType] ??= {
-        [BucketHashes.Helmet]: [],
-        [BucketHashes.Gauntlets]: [],
-        [BucketHashes.ChestArmor]: [],
-        [BucketHashes.LegArmor]: [],
-        [BucketHashes.ClassArmor]: [],
-      })[bucket.hash as LockableBucketHash].push(item);
-    }
-    return items as Partial<Record<DestinyClass, ItemsByBucket>>;
-  }, [allItems, vendorItems]);
 
   const resolvedMods = useResolvedMods(defs, modHashes, selectedStoreId);
 
@@ -148,7 +124,12 @@ export default memo(function LoadoutBuilder({
     [resolvedMods, autoStatMods]
   );
 
-  const armorItems = useArmorItems(classType);
+  const {
+    vendorItems,
+    vendorItemsLoading,
+    error: vendorError,
+  } = useLoVendorItems(selectedStoreId, includeVendorItems);
+  const armorItems = useArmorItems(classType, vendorItems);
 
   const { modMap: lockedModMap, unassignedMods } = useMemo(
     () => categorizeArmorMods(modsToAssign, armorItems),
@@ -528,14 +509,16 @@ function useResolvedMods(
 /**
  * Gets all armor items that could be used to build loadouts for the specified class.
  */
-function useArmorItems(classType: DestinyClass): DimItem[] {
+function useArmorItems(classType: DestinyClass, vendorItems: DimItem[]): DimItem[] {
   const allItems = useSelector(allItemsSelector);
   return useMemo(
     () =>
-      allItems.filter(
-        (item) => isClassCompatible(item.classType, classType) && isLoadoutBuilderItem(item)
-      ),
-    [allItems, classType]
+      allItems
+        .concat(vendorItems)
+        .filter(
+          (item) => isClassCompatible(item.classType, classType) && isLoadoutBuilderItem(item)
+        ),
+    [allItems, vendorItems, classType]
   );
 }
 
