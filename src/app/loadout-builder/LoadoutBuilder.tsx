@@ -1,7 +1,9 @@
 import { savedLoStatConstraintsByClassSelector } from 'app/dim-api/selectors';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
+import CheckButton from 'app/dim-ui/CheckButton';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
+import { PressTip } from 'app/dim-ui/PressTip';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { Loadout, ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
@@ -12,8 +14,8 @@ import { getTotalModStatChanges } from 'app/loadout/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
 import { searchFilterSelector } from 'app/search/search-filter';
-import { useSetSetting } from 'app/settings/hooks';
-import { AppIcon, redoIcon, refreshIcon, undoIcon } from 'app/shell/icons';
+import { useSetSetting, useSetting } from 'app/settings/hooks';
+import { AppIcon, faExclamationTriangle, redoIcon, refreshIcon, undoIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { Portal } from 'app/utils/temp-container';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -40,6 +42,7 @@ import GeneratedSets from './generated-sets/GeneratedSets';
 import { sortGeneratedSets } from './generated-sets/utils';
 import { filterItems } from './item-filter';
 import { useLbState } from './loadout-builder-reducer';
+import { useLoVendorItems } from './loadout-builder-vendors';
 import { buildLoadoutParams } from './loadout-params';
 import { useAutoMods, useProcess } from './process/useProcess';
 import {
@@ -68,25 +71,7 @@ export default memo(function LoadoutBuilder({
   const searchFilter = useSelector(searchFilterSelector);
   const searchQuery = useSelector(querySelector);
   const savedStatConstraintsByClass = useSelector(savedLoStatConstraintsByClassSelector);
-
-  /** Gets items for the loadout builder and creates a mapping of classType -> bucketHash -> item array. */
-  const items = useMemo(() => {
-    const items: Partial<Record<DestinyClass, Draft<ItemsByBucket>>> = {};
-    for (const item of allItems) {
-      if (!item || !isLoadoutBuilderItem(item)) {
-        continue;
-      }
-      const { classType, bucket } = item;
-      (items[classType] ??= {
-        [BucketHashes.Helmet]: [],
-        [BucketHashes.Gauntlets]: [],
-        [BucketHashes.ChestArmor]: [],
-        [BucketHashes.LegArmor]: [],
-        [BucketHashes.ClassArmor]: [],
-      })[bucket.hash as LockableBucketHash].push(item);
-    }
-    return items as Partial<Record<DestinyClass, ItemsByBucket>>;
-  }, [allItems]);
+  const [includeVendorItems, setIncludeVendorItems] = useSetting('loIncludeVendorItems');
 
   const optimizingLoadoutId = preloadedLoadout?.id;
 
@@ -115,6 +100,30 @@ export default memo(function LoadoutBuilder({
   const selectedStore = stores.find((store) => store.id === selectedStoreId)!;
   const classType = selectedStore.classType;
   const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(selectedStoreId));
+
+  const {
+    vendorItems,
+    vendorItemsLoading,
+    error: vendorError,
+  } = useLoVendorItems(selectedStoreId, includeVendorItems);
+  /** Gets items for the loadout builder and creates a mapping of classType -> bucketHash -> item array. */
+  const items = useMemo(() => {
+    const items: Partial<Record<DestinyClass, Draft<ItemsByBucket>>> = {};
+    for (const item of allItems.concat(vendorItems)) {
+      if (!item || !isLoadoutBuilderItem(item)) {
+        continue;
+      }
+      const { classType, bucket } = item;
+      (items[classType] ??= {
+        [BucketHashes.Helmet]: [],
+        [BucketHashes.Gauntlets]: [],
+        [BucketHashes.ChestArmor]: [],
+        [BucketHashes.LegArmor]: [],
+        [BucketHashes.ClassArmor]: [],
+      })[bucket.hash as LockableBucketHash].push(item);
+    }
+    return items as Partial<Record<DestinyClass, ItemsByBucket>>;
+  }, [allItems, vendorItems]);
 
   const resolvedMods: ResolvedLoadoutMod[] = useMemo(
     () => resolveLoadoutModHashes(defs, loadoutParameters.mods ?? [], unlockedPlugs),
@@ -345,6 +354,28 @@ export default memo(function LoadoutBuilder({
         assumeArmorMasterwork={loadoutParameters.assumeArmorMasterwork}
         lbDispatch={lbDispatch}
       />
+      <div className={styles.area}>
+        <CheckButton
+          onChange={setIncludeVendorItems}
+          name="includeVendorItems"
+          checked={includeVendorItems}
+        >
+          {vendorError ? (
+            <PressTip tooltip={vendorError.message}>
+              <span>
+                <AppIcon icon={faExclamationTriangle} />
+              </span>
+            </PressTip>
+          ) : (
+            vendorItemsLoading && (
+              <span>
+                <AppIcon icon={refreshIcon} spinning={true} />
+              </span>
+            )
+          )}{' '}
+          {t('LoadoutBuilder.IncludeVendorItems')}
+        </CheckButton>
+      </div>
       <LockArmorAndPerks
         selectedStore={selectedStore}
         pinnedItems={pinnedItems}

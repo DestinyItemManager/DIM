@@ -61,7 +61,7 @@ interface LoadoutBuilderConfiguration {
   statFilters: Readonly<StatFilters>;
   pinnedItems: PinnedItems;
   excludedItems: ExcludedItems;
-  selectedStoreId?: string;
+  selectedStoreId: string;
   subclass?: ResolvedLoadoutItem;
 }
 
