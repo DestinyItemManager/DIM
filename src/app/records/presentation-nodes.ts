@@ -271,6 +271,8 @@ function searchRewards(
   );
 }
 
+// START HERE
+
 function toCollectibles(
   itemCreationContext: ItemCreationContext,
   collectibleHashes: DestinyPresentationNodeCollectibleChildEntry[]
@@ -290,6 +292,7 @@ function toCollectibles(
       ) {
         return null;
       }
+      // Below, perhaps try to find/check if collectibleDef.<unlockStatus> is a thing; basically find some wya to check unlock status to determine if it should be added
       const item = makeFakeItem(itemCreationContext, collectibleDef.itemHash);
       if (!item) {
         return null;
@@ -304,6 +307,8 @@ function toCollectibles(
     })
   );
 }
+
+//
 
 function toRecords(
   defs: D2ManifestDefinitions,
