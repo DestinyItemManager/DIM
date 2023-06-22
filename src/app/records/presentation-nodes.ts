@@ -77,7 +77,6 @@ export function toPresentationNodeTree(
     return null;
   }
   if (presentationNodeDef.children.collectibles?.length) {
-    // Add preprocessing to the toCollectibles function to clean it before mounting it
     const collectibles = toCollectibles(
       itemCreationContext,
       presentationNodeDef.children.collectibles
@@ -298,6 +297,7 @@ function toCollectibles(
       if (!item) {
         return null;
       }
+      item.missingSockets = false;
       return {
         state,
         collectibleDef,
