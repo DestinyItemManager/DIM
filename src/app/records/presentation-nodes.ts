@@ -77,6 +77,7 @@ export function toPresentationNodeTree(
     return null;
   }
   if (presentationNodeDef.children.collectibles?.length) {
+    // Add preprocessing to the toCollectibles function to clean it before mounting it
     const collectibles = toCollectibles(
       itemCreationContext,
       presentationNodeDef.children.collectibles
@@ -278,7 +279,10 @@ function toCollectibles(
   collectibleHashes: DestinyPresentationNodeCollectibleChildEntry[]
 ): DimCollectible[] {
   const { defs, profileResponse } = itemCreationContext;
-  return _.compact(
+
+  const encounteredHashes = new Set();
+
+  const result = _.compact(
     collectibleHashes.map(({ collectibleHash }) => {
       const collectibleDef = defs.Collectible.get(collectibleHash);
       if (!collectibleDef) {
@@ -292,12 +296,10 @@ function toCollectibles(
       ) {
         return null;
       }
-      // Below, perhaps try to find/check if collectibleDef.<unlockStatus> is a thing; basically find some wya to check unlock status to determine if it should be added
       const item = makeFakeItem(itemCreationContext, collectibleDef.itemHash);
       if (!item) {
         return null;
       }
-      item.missingSockets = false;
       return {
         state,
         collectibleDef,
@@ -306,6 +308,12 @@ function toCollectibles(
       };
     })
   );
+
+  return result.filter((item) => {
+    const duplicate = encounteredHashes.has(item.collectibleDef.itemHash);
+    encounteredHashes.add(item.collectibleDef.itemHash);
+    return !duplicate;
+  });
 }
 
 //
