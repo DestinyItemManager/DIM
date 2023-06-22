@@ -272,8 +272,6 @@ function searchRewards(
   );
 }
 
-// START HERE
-
 function toCollectibles(
   itemCreationContext: ItemCreationContext,
   collectibleHashes: DestinyPresentationNodeCollectibleChildEntry[]
@@ -308,15 +306,13 @@ function toCollectibles(
       };
     })
   );
-
+  // Filter out duplicates
   return result.filter((item) => {
     const duplicate = encounteredHashes.has(item.collectibleDef.itemHash);
     encounteredHashes.add(item.collectibleDef.itemHash);
     return !duplicate;
   });
 }
-
-//
 
 function toRecords(
   defs: D2ManifestDefinitions,
