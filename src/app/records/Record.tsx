@@ -19,7 +19,7 @@ import clsx from 'clsx';
 import catalystIcons from 'data/d2/catalyst-triumph-icons.json';
 import dimTrackedIcon from 'images/dimTrackedIcon.svg';
 import trackedIcon from 'images/trackedIcon.svg';
-import _ from 'lodash';
+import _, { orderBy } from 'lodash';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ishtarIcon from '../../images/ishtar-collective.svg';
@@ -275,6 +275,28 @@ export function RecordGrid({
 }) {
   // TODO: was there really a problem with duplicate records?
   const seenRecords = new Set<number>();
+
+  // I need to do this check so it wont have an error about recordTypeName not existing
+  if (
+    'recordTypeName' in records[0].recordDef &&
+    records[0].recordDef.recordTypeName === 'Weapon Pattern'
+  ) {
+    records = orderBy(
+      records,
+      (entry) => {
+        const numerator = entry.recordComponent.objectives[0].progress;
+        const denominator = entry.recordComponent.objectives[0].completionValue;
+
+        // This is done so completed items will be pushed to the end
+        if (entry.recordComponent.objectives[0].complete) {
+          return -1;
+        }
+
+        return numerator! / denominator;
+      },
+      ['desc']
+    );
+  }
 
   return (
     <div className={styles.recordsGrid}>
