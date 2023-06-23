@@ -3,10 +3,17 @@ import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { ItemFilter } from 'app/search/filter-types';
 import { ArmorStats } from './types';
 
+/**
+ * The LoadoutBuilder state extracted from an existing Loadout by `extractOptimizationParameters`.
+ */
 export interface AutoOptimizationParameters {
+  /** The effective Loadout Builder stats this loadout has, including assumed masterwork bonuses and subclass/mods. */
   existingStats: ArmorStats;
+  /** The LoadoutBuilder parameters. These are slightly different from the saved loadout parameters. */
   loadoutParameters: LoadoutParameters;
+  /** The subclass from the loadout. */
   subclass: ResolvedLoadoutItem | undefined;
+  /** The active search filter for item pre-filtering. */
   searchFilter: ItemFilter;
 }
 
@@ -36,7 +43,7 @@ export const enum AutoOptimizationResult {
 export const enum LoadoutError {
   /** The armor set did not have 5 equipped armor items, so we can't come up with stats to compare against. */
   NotAFullArmorSet = 1,
-  /** The armor set specifies an exotic but the loadout doesn't even have that exotic, so that's cheating! */
+  /** The loadout parameters specify an exotic but the loadout doesn't even have that exotic, so that's cheating! */
   DoesNotRespectExotic,
   /** The armor set does not fit all requested mods in the first place, so there's no meaningful comparison with other sets. */
   ModsDontFit,

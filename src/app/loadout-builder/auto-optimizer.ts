@@ -109,6 +109,11 @@ const autoOptimizationContextSelector = currySelector(
   )
 );
 
+/**
+ * Returns `valid` iff the exotic armor used in the loadout matches
+ * the saved exoticArmorHash from LoadoutParameters, and returns in
+ * `exoticArmorHash` the exotic that should be locked in Loadout Optimizer.
+ */
 function matchesExoticArmorHash(
   exoticArmorHash: number | undefined,
   exotic: DimItem | undefined
@@ -124,6 +129,14 @@ function matchesExoticArmorHash(
   }
 }
 
+/**
+ * Extract the parameters for the optimization algorithm from an existing Loadout.
+ * This performs some adjustments on the saved parameters and overrides some overly pessimistic
+ * settings so that it's useful even if users didn't take care to include accurate LoadoutParameters
+ * in every saved Loadout.
+ *
+ * TODO This basically does the same things as `lbConfigInit` -- merge them when the LO workflow rework happens.
+ */
 function extractOptimizationParameters(
   autoOptContext: AutoOptimizationContext,
   allItems: DimItem[],
@@ -187,6 +200,7 @@ function extractOptimizationParameters(
         : AssumeArmorMasterwork.All;
   }
 
+  // If the loadout has a given exotic, ensure we find similar loadouts with that same exotic.
   const exotic = armorItems.find((i) => i.isExotic);
   const [valid, newHash] = matchesExoticArmorHash(loadoutParameters.exoticArmorHash, exotic);
   if (!valid) {
