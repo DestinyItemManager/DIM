@@ -472,7 +472,7 @@
     "PostmasterAlmostFull": "ほぼ満杯!",
     "PostmasterFull": "満杯!",
     "PreviewVendor": "{{type}} コンテンツのプレビュー",
-    "StackFull": "既に{{name}} の完全なスタックがあります",
+    "StackFull": "{{name}} はすでに上限数まで持っているのでこれ以上取得できません。",
     "StoreName": "{{genderRace}} {{className}}"
   },
   "KillType": {
@@ -578,6 +578,7 @@
     "ExistingLoadout": "既存のロードアウト",
     "ExoticSpecialCategory": "スペシャル",
     "Filter": "フィルター",
+    "IncludeVendorItems": "ベンダーアイテムを含む",
     "Legendary": "レジェンダリー",
     "LockEquipped": "ピン留めされたアイテムを装備",
     "LockItem": "アイテムをピン留めする",
@@ -884,7 +885,7 @@
   },
   "Notification": {
     "Cancel": "キャンセル",
-    "OK": "やめる"
+    "OK": "キャンセル"
   },
   "Objectives": {
     "Complete": "完成",
