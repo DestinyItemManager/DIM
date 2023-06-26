@@ -1,5 +1,7 @@
 ## Next
 
+## 7.74.0 <span class="changelog-date">(2023-06-25)</span>
+
 * You may now include vendors' items in loadout optimizer, in case they have a better roll available than what you have.
 
 ## 7.73.0 <span class="changelog-date">(2023-06-18)</span>
