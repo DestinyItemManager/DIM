@@ -1,3 +1,4 @@
+import { orderBy } from 'lodash';
 import Collectible from './Collectible';
 import CollectiblesGrid from './CollectiblesGrid';
 import Craftable from './Craftable';
@@ -19,6 +20,15 @@ export default function PresentationNodeLeaf({
   completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
 }) {
+  // let temp;
+  if ('childPresentationNodes' in node && 'acquired' in node) {
+    node.childPresentationNodes = orderBy(
+      node.childPresentationNodes!,
+      (entry) => entry['acquired'] / entry['visible'],
+      ['asc']
+    );
+  }
+
   return (
     <>
       {node.collectibles && node.collectibles.length > 0 && (
