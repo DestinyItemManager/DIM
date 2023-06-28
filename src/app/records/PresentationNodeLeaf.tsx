@@ -14,14 +14,15 @@ export default function PresentationNodeLeaf({
   ownedItemHashes,
   completedRecordsHidden,
   redactedRecordsRevealed,
+  sortRecordProgression,
 }: {
   node: DimPresentationNodeLeaf;
   ownedItemHashes?: Set<number>;
   completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
+  sortRecordProgression: boolean;
 }) {
-  // let temp;
-  if ('childPresentationNodes' in node && 'acquired' in node) {
+  if (!sortRecordProgression && 'childPresentationNodes' in node && 'acquired' in node) {
     node.childPresentationNodes = orderBy(
       node.childPresentationNodes!,
       (entry) => entry['acquired'] / entry['visible'],
