@@ -1259,7 +1259,8 @@
   "Triumphs": {
     "GildingTriumph": "Gilding Triumph",
     "HideCompleted": "Hide completed triumphs",
-    "RevealRedacted": "Reveal redacted triumphs"
+    "RevealRedacted": "Reveal redacted triumphs",
+    "SortRecords": "Sort triumphs"
   },
   "Vendors": {
     "Collections": "Collections",
