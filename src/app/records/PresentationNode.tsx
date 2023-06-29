@@ -8,6 +8,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { deepEqual } from 'fast-equals';
+import { orderBy } from 'lodash';
 import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import BungieImage from '../dim-ui/BungieImage';
@@ -82,6 +83,17 @@ export default function PresentationNode({
 
   const title = <PresentationNodeTitle def={nodeDef} overrideName={overrideName} />;
 
+  // makes shallow copy so original node will be unsorted, makes toggle work
+  const sortedNode = { ...node };
+  if (sortRecordProgression && sortedNode.acquired) {
+    sortedNode.childPresentationNodes = orderBy(
+      sortedNode.childPresentationNodes,
+      (entry) => entry['acquired'] / entry['visible'],
+      ['asc']
+    );
+    node = sortedNode;
+  }
+
   return (
     <div
       className={clsx('presentation-node', {
@@ -131,7 +143,6 @@ export default function PresentationNode({
           ownedItemHashes={ownedItemHashes}
           completedRecordsHidden={completedRecordsHidden}
           redactedRecordsRevealed={redactedRecordsRevealed}
-          sortRecordProgression={sortRecordProgression}
         />
       )}
     </div>
