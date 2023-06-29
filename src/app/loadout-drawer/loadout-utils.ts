@@ -20,7 +20,7 @@ import { getTotalModStatChanges } from 'app/loadout/stats';
 import { manifestSelector } from 'app/manifest/selectors';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { armorStats, deprecatedPlaceholderArmorModHash } from 'app/search/d2-known-values';
-import { itemCanBeInLoadout } from 'app/utils/item-utils';
+import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import {
   aspectSocketCategoryHashes,
   fragmentSocketCategoryHashes,
@@ -201,7 +201,7 @@ export function newLoadoutFromEquipped(
       mods,
     };
   }
-  if (artifactUnlocks) {
+  if (artifactUnlocks?.unlockedItemHashes.length) {
     loadout.parameters = {
       ...loadout.parameters,
       artifactUnlocks,
@@ -532,6 +532,7 @@ export function getResolutionInfo(
   | {
       hash: number;
       instanced: boolean;
+      bucketHash: number;
     }
   | undefined {
   const hash = oldToNewItems[loadoutItemHash] ?? loadoutItemHash;
@@ -560,6 +561,7 @@ export function getResolutionInfo(
   return {
     hash,
     instanced,
+    bucketHash,
   };
 }
 
@@ -674,6 +676,91 @@ export const isMissingItemsSelector = createSelector(
     isMissingItems(defs!, allItems, storeId, loadout)
 );
 
+export const enum FragmentProblem {
+  EmptyFragmentSlots = 1,
+  TooManyFragments,
+}
+
+export const getFragmentProblemsSelector = createSelector(
+  manifestSelector,
+  allItemsSelector,
+  (defs, allItems) => (storeId: string, loadout: Loadout) =>
+    defs?.isDestiny2() ? getFragmentProblems(defs, allItems, storeId, loadout.items) : undefined
+);
+
+function getFragmentProblems(
+  defs: D2ManifestDefinitions,
+  allItems: DimItem[],
+  storeId: string,
+  loadoutItems: LoadoutItem[]
+) {
+  const subclass = getSubclass(defs, allItems, storeId, loadoutItems);
+  if (subclass) {
+    const fragmentCapacity = getLoadoutSubclassFragmentCapacity(defs, subclass);
+    const fragmentSockets = getSocketsByCategoryHashes(
+      subclass.item.sockets,
+      fragmentSocketCategoryHashes
+    );
+    const loadoutFragments = fragmentSockets.filter(
+      (socket) => subclass.loadoutItem.socketOverrides?.[socket.socketIndex]
+    ).length;
+    return fragmentCapacity > loadoutFragments
+      ? FragmentProblem.EmptyFragmentSlots
+      : fragmentCapacity < loadoutFragments
+      ? FragmentProblem.TooManyFragments
+      : undefined;
+  }
+
+  return undefined;
+}
+
+function getSubclass(
+  defs: D2ManifestDefinitions,
+  allItems: DimItem[],
+  storeId: string,
+  loadoutItems: LoadoutItem[]
+): ResolvedLoadoutItem | undefined {
+  for (const loadoutItem of loadoutItems) {
+    const info = getResolutionInfo(defs, loadoutItem.hash);
+    if (info?.bucketHash === BucketHashes.Subclass) {
+      const item = getUninstancedLoadoutItem(allItems, info.hash, storeId);
+      if (item) {
+        return { item, loadoutItem };
+      }
+    }
+  }
+  return undefined;
+}
+
+export function getLoadoutSubclassFragmentCapacity(
+  defs: D2ManifestDefinitions,
+  item: ResolvedLoadoutItem
+): number {
+  // For fragments, we first need to figure out how many sockets we have available.
+  // If the loadout specifies overrides for aspects, we use all override aspects to calculate
+  // fragment capacity, otherwise we look at the item itself because we don't unplug any aspects
+  // if the overrides don't list any.
+  if (item.item.sockets) {
+    const aspectSocketIndices = item.item.sockets.categories.find((c) =>
+      aspectSocketCategoryHashes.includes(c.category.hash)
+    )!.socketIndexes;
+    const aspectDefs =
+      item.loadoutItem.socketOverrides &&
+      _.compact(
+        aspectSocketIndices.map((aspectSocketIndex) => {
+          const aspectHash = item.loadoutItem.socketOverrides![aspectSocketIndex];
+          return aspectHash && defs.InventoryItem.get(aspectHash);
+        })
+      );
+    if (aspectDefs?.length) {
+      return _.sumBy(aspectDefs, (aspectDef) => aspectDef.plug?.energyCapacity?.capacityValue || 0);
+    } else {
+      return getSubclassFragmentCapacity(item.item);
+    }
+  }
+  return 0;
+}
+
 export function isMissingItems(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   allItems: DimItem[],
@@ -737,6 +824,12 @@ const oldToNewMod: HashLookup<number> = {
   3253038666: 4287799666, // InventoryItem "Strength Mod"
 };
 
+/**
+ * Convert a list of plug item hashes into ResolvedLoadoutMods, which may not be
+ * the same as the original hashes as we try to be smart about what the user meant.
+ * e.g. we replace some mods with lower-cost variants depending on the artifact state.
+ * @param unlockedPlugs all unlocked mod hashes. See unlockedPlugSetItemsSelector.
+ */
 export function resolveLoadoutModHashes(
   defs: D2ManifestDefinitions | undefined,
   modHashes: number[],
@@ -799,10 +892,7 @@ export function pickBackingStore(
     !preferredStoreId || preferredStoreId === 'vault'
       ? getCurrentStore(stores)
       : getStore(stores, preferredStoreId);
-  return requestedStore &&
-    (classType === DestinyClass.Unknown || requestedStore.classType === classType)
+  return requestedStore && isClassCompatible(classType, requestedStore.classType)
     ? requestedStore
-    : stores.find(
-        (s) => !s.isVault && (s.classType === classType || classType === DestinyClass.Unknown)
-      );
+    : stores.find((s) => !s.isVault && isClassCompatible(classType, s.classType));
 }

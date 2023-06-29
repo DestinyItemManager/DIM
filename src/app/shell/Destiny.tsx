@@ -13,6 +13,7 @@ import Farming from 'app/farming/Farming';
 import { useHotkey, useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import InfusionFinder from 'app/infuse/InfusionFinder';
+import { ItemDragPreview } from 'app/inventory/ItemDragPreview';
 import SyncTagLock from 'app/inventory/SyncTagLock';
 import { blockingProfileErrorSelector, storesSelector } from 'app/inventory/selectors';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
@@ -25,7 +26,7 @@ import StripSockets from 'app/strip-sockets/StripSockets';
 import { setAppBadge } from 'app/utils/app-badge';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 import _ from 'lodash';
-import React, { useEffect, useMemo } from 'react';
+import { lazy, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes, useLocation, useParams } from 'react-router';
 import { Hotkey } from '../hotkeys/hotkeys';
@@ -36,44 +37,38 @@ import styles from './Destiny.m.scss';
 import ErrorPanel from './ErrorPanel';
 
 // TODO: Could be slightly better to group these a bit, but for now we break them each into a separate chunk.
-const Inventory = React.lazy(
+const Inventory = lazy(
   () => import(/* webpackChunkName: "inventory" */ 'app/inventory-page/Inventory')
 );
-const Progress = React.lazy(
-  () => import(/* webpackChunkName: "progress" */ 'app/progress/Progress')
-);
-const LoadoutBuilderContainer = React.lazy(
+const Progress = lazy(() => import(/* webpackChunkName: "progress" */ 'app/progress/Progress'));
+const LoadoutBuilderContainer = lazy(
   () =>
     import(/* webpackChunkName: "loadoutBuilder" */ 'app/loadout-builder/LoadoutBuilderContainer')
 );
-const D1LoadoutBuilder = React.lazy(
+const D1LoadoutBuilder = lazy(
   () =>
     import(
       /* webpackChunkName: "d1LoadoutBuilder" */ 'app/destiny1/loadout-builder/D1LoadoutBuilder'
     )
 );
-const Vendors = React.lazy(async () => ({
+const Vendors = lazy(async () => ({
   default: (await import(/* webpackChunkName: "vendors" */ 'app/vendors/components')).Vendors,
 }));
-const SingleVendor = React.lazy(async () => ({
+const SingleVendor = lazy(async () => ({
   default: (await import(/* webpackChunkName: "vendors" */ 'app/vendors/components')).SingleVendor,
 }));
-const D1Vendors = React.lazy(
+const D1Vendors = lazy(
   () => import(/* webpackChunkName: "d1vendors" */ 'app/destiny1/vendors/D1Vendors')
 );
-const RecordBooks = React.lazy(
+const RecordBooks = lazy(
   () => import(/* webpackChunkName: "recordbooks" */ 'app/destiny1/record-books/RecordBooks')
 );
-const Organizer = React.lazy(
-  () => import(/* webpackChunkName: "organizer" */ 'app/organizer/Organizer')
-);
-const Activities = React.lazy(
+const Organizer = lazy(() => import(/* webpackChunkName: "organizer" */ 'app/organizer/Organizer'));
+const Activities = lazy(
   () => import(/* webpackChunkName: "activities" */ 'app/destiny1/activities/Activities')
 );
-const Records = React.lazy(() => import(/* webpackChunkName: "records" */ 'app/records/Records'));
-const Loadouts = React.lazy(
-  () => import(/* webpackChunkName: "loadouts" */ 'app/loadout/Loadouts')
-);
+const Records = lazy(() => import(/* webpackChunkName: "records" */ 'app/records/Records'));
+const Loadouts = lazy(() => import(/* webpackChunkName: "loadouts" */ 'app/loadout/Loadouts'));
 
 /**
  * Base view for pages that show Destiny content.
@@ -248,7 +243,8 @@ export default function Destiny() {
       <ItemPopupContainer boundarySelector=".store-header" />
       <ItemPickerContainer />
       <GlobalEffects />
-      {autoLockTagged && <SyncTagLock />}
+      {Boolean(autoLockTagged) && <SyncTagLock />}
+      <ItemDragPreview />
     </>
   );
 }

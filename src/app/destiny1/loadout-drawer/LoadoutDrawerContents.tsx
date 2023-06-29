@@ -15,8 +15,7 @@ import { findSameLoadoutItemIndex, fromEquippedTypes } from 'app/loadout-drawer/
 import { useD1Definitions } from 'app/manifest/selectors';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { AppIcon, addIcon } from 'app/shell/icons';
-import { itemCanBeInLoadout } from 'app/utils/item-utils';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
@@ -142,7 +141,6 @@ async function pickLoadoutItem(
   add: (item: DimItem) => void,
   onShowItemPicker: (shown: boolean) => void
 ) {
-  const loadoutClassType = loadout?.classType;
   const loadoutHasItem = (item: DimItem) =>
     findSameLoadoutItemIndex(defs, loadout.items, item) !== -1;
 
@@ -151,10 +149,7 @@ async function pickLoadoutItem(
     const { item } = await showItemPicker({
       filterItems: (item: DimItem) =>
         item.bucket.hash === bucket.hash &&
-        (!loadout ||
-          loadout.classType === DestinyClass.Unknown ||
-          item.classType === loadoutClassType ||
-          item.classType === DestinyClass.Unknown) &&
+        isClassCompatible(item.classType, loadout.classType) &&
         itemCanBeInLoadout(item) &&
         !loadoutHasItem(item),
       prompt: t('Loadouts.ChooseItem', { name: bucket.name }),

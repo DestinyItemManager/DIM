@@ -28,6 +28,7 @@
     "WeeklyHeroic": "Weekly Heroic Strike"
   },
   "Armory": {
+    "Armory": "Armory",
     "OpenInArmory": "view in Armory",
     "WishlistedRolls": "Wishlisted Roll",
     "WishlistedRolls_plural": "{{count, number}} Wishlisted Rolls",
@@ -141,9 +142,8 @@
   "ErrorPanel": {
     "Description": "Try loading your inventory in the Destiny 2 Companion App to see if Bungie.net is down.",
     "Troubleshooting": "Troubleshooting Guide",
-    "EmblemError": "You may be able to fix this by switching your emblems in game on all characters.",
-    "EmblemErrorLink": "Read more about how to fix it.",
-    "SystemDown": "This affects all Destiny apps, and the DIM team cannot fix or bypass it."
+    "SystemDown": "This affects all Destiny apps, and the DIM team cannot fix or bypass it.",
+    "ReadTheGuide": "Read our User Guide (linked from the menu) for troubleshooting steps."
   },
   "FarmingMode": {
     "Vault": "It will move items to the vault to make room.",
@@ -229,6 +229,7 @@
     "Event": "Shows items from which event in Destiny 2 they appeared in.",
     "ExtraPerk": "Shows random-rolled Legendary weapons with an additional selectable perk.",
     "Filter": "Filter",
+    "Focusable": "Shows items that can be focused at a vendor",
     "Foundry": "Shows items by which foundry created them.",
     "Glimmer": "Shows items that are consumables that are related to gaining glimmer.",
     "HasMemento": "Shows crafted weapons that currently have a memento inserted.",
@@ -350,7 +351,7 @@
     "FilterHelpBrief": "Search items",
     "FilterHelpRecords": "Search triumphs and collections",
     "FilterHelpProgress": "Search milestones and bounties",
-    "FilterHelpOptimizer": "Filter armor from loadouts: {{example}}",
+    "FilterHelpOptimizer": "Select armor to be considered for loadouts: {{example}}",
     "FilterHelpLoadouts": "Search loadout names and notes",
     "FilterMatchCount": "1 item",
     "FilterMatchCount_plural": "{{count}} items",
@@ -539,8 +540,8 @@
       "ProcessingMode": "Processing mode"
     },
     "Scaled": "Scaled",
-    "SearchAMod": "Search a mod or description",
-    "SearchAnExotic": "Search an exotic or description",
+    "SearchAMod": "Search for mod name or description",
+    "SearchAnExotic": "Search for exotic name or description",
     "SelectExotic": "Select exotic",
     "SelectMods": "Select Mods",
     "SelectSubclass": "Select subclass",
@@ -558,12 +559,9 @@
     "Vendors": "Loading Destiny vendors..."
   },
   "LoadoutBuilder": {
-    "CopiedBuild": "Copied build settings URL to clipboard",
-    "ShareBuild": "Share Build Settings",
-    "ShareBuildTitle": "Loadout Optimizer Settings",
-    "ShareBuildWithNotes": "Share With Notes",
     "AddHalfTierMods": "Add +5 Mods",
     "AutomaticallyPicked": "This mod was added automatically to improve build stats.",
+    "DisabledByAutoStatMods": "Stat mods are being chosen automatically by Loadout Optimizer.",
     "AutoStatMods": "Automatically add stat mods",
     "All": "All",
     "AnyExotic": "Any Exotic",
@@ -584,6 +582,7 @@
     "ExistingLoadout": "Existing Loadout",
     "ExoticSpecialCategory": "Special",
     "Filter": "Filters",
+    "IncludeVendorItems": "Include Vendor items",
     "Legendary": "Legendary",
     "LockEquipped": "Pin equipped",
     "LockItem": "Pin item",
@@ -613,8 +612,7 @@
     "None": "None",
     "OptimizerExplanationStats": "Drag the most important stats to the top, and set stats you don't care about to Ignore.",
     "OptimizerExplanationMods": "Choose an exotic and any mods you want to use. Loadout Optimizer only includes stat bonuses from mods you choose - all mods already on the armor are ignored.",
-    "OptimizerExplanationSearch": "Use the search bar to filter the items Loadout Optimizer uses.",
-    "OptimizerExplanationUpgrades": "Select which Armor Upgrades Loadout Optimizer can spend materials on. It may suggest masterworks to increase stats, or energy upgrades to fit your requested mods.",
+    "OptimizerExplanationSearch": "Use the search bar to narrow down which armor to consider. If no armor matches the search in a slot, all armor in that slot will be considered.",
     "OptimizerExplanationGuide": "Read the User Guide for more info and a video tutorial.",
     "OptimizerSet": "Optimizer Set",
     "ProcessingSets": "Processing sets for\n{{character}} ({{remainingTime}}s)",
@@ -661,6 +659,7 @@
     "DimLoadouts": "DIM Loadouts",
     "Edit": "Edit Loadout",
     "EditBrief": "Edit",
+    "EmptyFragmentSlots": "Empty Fragment Slots",
     "EquippableDifferent1": "Multiple Exotic items were used to calculate your Maximum Power, so the number shown may not be achievable when equipping your items in-game.",
     "EquippableDifferent2": "Maximum Power isn't limited by the \"One Exotic\" rule when determining the Power of your drops, powerful, and pinnacle rewards.",
     "Equipped": "Equipped",
@@ -783,6 +782,7 @@
     "SyncFromEquipped": "Sync from equipped",
     "FillFromEquipped": "Fill in using equipped",
     "FillFromInventory": "Fill in using non-equipped",
+    "TooManyFragments": "Too Many Fragments",
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
     "UnassignedModError": "Mod didn't fit on your current armor",
     "Undo": "Undo",
@@ -1127,7 +1127,6 @@
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 for T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "Total",
-    "Second": "s",
     "MetersPerSecond": "m/s",
     "Percentage": "%",
     "HP": "HP",
@@ -1297,8 +1296,6 @@
       "GitHubHelp": "If you're interested in contributing to the project, visit us at our project page on {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
       "HowItsMade": "DIM is a free, open source app built by community developers upon the same services used by Bungie.net and the Destiny Companion App.",
-      "Reddit": "Reddit",
-      "RedditHelp": "If you have questions, comments, or suggestions - let us know!",
       "Schedule": {
         "beta": "This beta version of DIM is updated every time we change the code - it gets the latest features and fixes, but also the latest bugs!",
         "release": "This version of DIM is updated once a week, at approximately midnight on Sundays, US Pacific time."

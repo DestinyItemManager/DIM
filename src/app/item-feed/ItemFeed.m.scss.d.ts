@@ -5,6 +5,7 @@ interface CssExports {
   'clearButton': string;
   'info': string;
   'item': string;
+  'list': string;
   'title': string;
 }
 export const cssExports: CssExports;

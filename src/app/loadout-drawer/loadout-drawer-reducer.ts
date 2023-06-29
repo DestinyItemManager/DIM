@@ -11,7 +11,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { mapToNonReducedModCostVariant } from 'app/loadout/mod-utils';
 import { showNotification } from 'app/notifications/notifications';
-import { itemCanBeInLoadout } from 'app/utils/item-utils';
+import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyClass, DestinyProfileResponse, TierType } from 'bungie-api-ts/destiny2';
@@ -22,6 +22,7 @@ import { Loadout, LoadoutItem, ResolvedLoadoutItem, ResolvedLoadoutMod } from '.
 import {
   convertToLoadoutItem,
   createSocketOverridesFromEquipped,
+  createSubclassDefaultSocketOverrides,
   extractArmorModHashes,
   findSameLoadoutItemIndex,
   fromEquippedTypes,
@@ -58,12 +59,11 @@ export type LoadoutUpdateFunction = (loadout: Loadout) => Loadout;
 export function addItem(
   defs: D2ManifestDefinitions | D1ManifestDefinitions,
   item: DimItem,
-  equip?: boolean,
-  socketOverrides?: SocketOverrides
+  equip?: boolean
 ): LoadoutUpdateFunction {
   const loadoutItem = convertToLoadoutItem(item, false, 1);
-  if (socketOverrides) {
-    loadoutItem.socketOverrides = socketOverrides;
+  if (item.sockets && item.bucket.hash === BucketHashes.Subclass) {
+    loadoutItem.socketOverrides = createSubclassDefaultSocketOverrides(item);
   }
 
   // We only allow one subclass, and it must be equipped. Same with a couple other things.
@@ -76,7 +76,7 @@ export function addItem(
       return;
     }
 
-    if (item.classType !== DestinyClass.Unknown && draftLoadout.classType !== item.classType) {
+    if (!isClassCompatible(item.classType, draftLoadout.classType)) {
       showNotification({
         type: 'warning',
         title: t('Loadouts.ClassTypeMismatch', { className: item.classTypeNameLocalized }),
@@ -153,8 +153,7 @@ export function addItem(
 export function dropItem(
   defs: D2ManifestDefinitions | D1ManifestDefinitions,
   item: DimItem,
-  equip?: boolean,
-  socketOverrides?: SocketOverrides
+  equip?: boolean
 ): LoadoutUpdateFunction {
   return produce((draftLoadout) => {
     if (item.bucket.hash === BucketHashes.Subclass) {
@@ -170,7 +169,7 @@ export function dropItem(
     if (loadoutItemIndex !== -1) {
       setEquipForItemInLoadout(defs, item, draftLoadout, Boolean(equip));
     } else {
-      draftLoadout = addItem(defs, item, equip, socketOverrides)(draftLoadout);
+      draftLoadout = addItem(defs, item, equip)(draftLoadout);
     }
     return draftLoadout;
   });
@@ -347,10 +346,8 @@ export function clearLoadoutParameters(): LoadoutUpdateFunction {
     if (draft.parameters) {
       delete draft.parameters.assumeArmorMasterwork;
       delete draft.parameters.exoticArmorHash;
-      delete draft.parameters.lockArmorEnergyType;
       delete draft.parameters.query;
       delete draft.parameters.statConstraints;
-      delete draft.parameters.upgradeSpendTier;
       delete draft.parameters.autoStatMods;
     }
   });
@@ -648,9 +645,13 @@ export function syncArtifactUnlocksFromEquipped(
 ): LoadoutUpdateFunction {
   const artifactUnlocks = profileResponse && getArtifactUnlocks(profileResponse, store.id);
 
-  return setLoadoutParameters({
-    artifactUnlocks,
-  });
+  if (artifactUnlocks?.unlockedItemHashes.length) {
+    return setLoadoutParameters({
+      artifactUnlocks,
+    });
+  } else {
+    return (loadout) => loadout;
+  }
 }
 
 /**

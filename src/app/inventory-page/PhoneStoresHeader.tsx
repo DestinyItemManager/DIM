@@ -80,9 +80,13 @@ export default function PhoneStoresHeader({
   };
 
   const onPanEnd = (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    if (!trackRef.current) {
+      return;
+    }
+
     // Animate to one of the settled whole-number indexes
     let newIndex = Math.round(offset.get());
-    const scale = trackRef.current!.clientWidth / numSegments;
+    const scale = trackRef.current.clientWidth / numSegments;
 
     const direction = -Math.sign(info.velocity.x);
     if (newIndex === 0) {

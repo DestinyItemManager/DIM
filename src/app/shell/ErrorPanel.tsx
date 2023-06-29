@@ -4,18 +4,17 @@ import { t } from 'app/i18next-t';
 import { DimError } from 'app/utils/dim-error';
 import BungieAlerts from 'app/whats-new/BungieAlerts';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
-import React, { useState } from 'react';
+import React, { lazy, useState } from 'react';
 import { AppIcon, helpIcon, mastodonIcon, refreshIcon, twitterIcon } from '../shell/icons';
 import styles from './ErrorPanel.m.scss';
 
 const bungieHelpLink = 'http://twitter.com/BungieHelp';
 const dimHelpMastodonLink = 'http://mstdn.games/@ThisIsDIM';
 const troubleshootingLink = 'https://github.com/DestinyItemManager/DIM/wiki/Troubleshooting';
-const Timeline = React.lazy(async () => {
+const Timeline = lazy(async () => {
   const m = await import(/* webpackChunkName: "twitter" */ 'react-twitter-widgets');
   return { default: m.Timeline };
 });
-const error1618LinkDirect = 'https://github.com/DestinyItemManager/DIM/wiki/BungieError-1618';
 
 function Twitters() {
   const [error, setError] = useState(false);
@@ -71,6 +70,7 @@ export default function ErrorPanel({
   fallbackMessage?: string;
   showTwitters?: boolean;
   showReload?: boolean;
+  /** Suitable for showing in a tooltip */
   frameless?: boolean;
 }) {
   const underlyingError = error instanceof DimError ? error.cause : undefined;
@@ -114,35 +114,29 @@ export default function ErrorPanel({
               : t('ErrorPanel.Description')}
           </span>
         )}
-        {underlyingError instanceof BungieError &&
-          underlyingError.code === PlatformErrorCodes.DestinyUnexpectedError && (
-            <span>
-              {' '}
-              {t('ErrorPanel.EmblemError')}{' '}
-              <ExternalLink href={error1618LinkDirect}>
-                {t('ErrorPanel.EmblemErrorLink')}
-              </ExternalLink>
-            </span>
-          )}
       </p>
-      <div className={styles.twitterLinks}>
-        {!ourFault && (
-          <ExternalLink href={bungieHelpLink} className="dim-button">
-            <AppIcon icon={twitterIcon} /> @BungieHelp
+      {frameless ? (
+        <p>{t('ErrorPanel.ReadTheGuide')}</p>
+      ) : (
+        <div className={styles.twitterLinks}>
+          {!ourFault && (
+            <ExternalLink href={bungieHelpLink} className="dim-button">
+              <AppIcon icon={twitterIcon} /> @BungieHelp
+            </ExternalLink>
+          )}
+          <ExternalLink href={dimHelpMastodonLink} className="dim-button">
+            <AppIcon icon={mastodonIcon} /> @ThisIsDim@mstdn.games
           </ExternalLink>
-        )}
-        <ExternalLink href={dimHelpMastodonLink} className="dim-button">
-          <AppIcon icon={mastodonIcon} /> @ThisIsDim@mstdn.games
-        </ExternalLink>
-        <ExternalLink href={troubleshootingLink} className="dim-button">
-          <AppIcon icon={helpIcon} /> {t('ErrorPanel.Troubleshooting')}
-        </ExternalLink>
-        {showReload && (
-          <div className="dim-button" onClick={() => window.location.reload()}>
-            <AppIcon icon={refreshIcon} /> Reload
-          </div>
-        )}
-      </div>
+          <ExternalLink href={troubleshootingLink} className="dim-button">
+            <AppIcon icon={helpIcon} /> {t('ErrorPanel.Troubleshooting')}
+          </ExternalLink>
+          {showReload && (
+            <div className="dim-button" onClick={() => window.location.reload()}>
+              <AppIcon icon={refreshIcon} /> Reload
+            </div>
+          )}
+        </div>
+      )}
     </>
   );
 

@@ -1,5 +1,6 @@
+import useResizeObserver from '@react-hook/resize-observer';
 import clsx from 'clsx';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styles from './PageWithMenu.m.scss';
 import { scrollToHref } from './scroll';
 
@@ -11,18 +12,13 @@ function PageWithMenu({ children, className }: { children: React.ReactNode; clas
 function useHasScrollbars(ref: React.RefObject<HTMLDivElement>) {
   const [hasScrollbars, setHasScrollbars] = useState(false);
 
-  useEffect(() => {
+  useResizeObserver(ref, () => {
     const elem = ref.current;
     if (!elem) {
       return;
     }
-
-    const updateResize = () => setHasScrollbars(elem.clientWidth < elem.offsetWidth);
-
-    updateResize();
-    window.addEventListener('resize', updateResize);
-    return () => window.removeEventListener('resize', updateResize);
-  }, [ref]);
+    setHasScrollbars(elem.clientWidth < elem.offsetWidth);
+  });
 
   return hasScrollbars;
 }

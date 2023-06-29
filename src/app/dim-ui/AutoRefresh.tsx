@@ -10,6 +10,7 @@ import { useLocation } from 'react-router';
 import { isDragging$ } from '../inventory/drag-events';
 import { loadingTracker } from '../shell/loading-tracker';
 import { refresh$, refresh as triggerRefresh } from '../shell/refresh-events';
+import { sheetsOpen } from './Sheet';
 
 const globalSettingsSelector = (state: RootState) => state.dimApi.globalSettings;
 
@@ -171,10 +172,17 @@ function useOnlineRefresh() {
  * Trigger a refresh attempt whenever the page becomes visible. This also includes
  * "sneaky updates" where DIM will try to reload itself if it becomes invisible while
  * it needs an update.
+ *
+ * We try not to do the sneaky update when the user is in the middle of something (sheets, etc)
+ *
+ * TODO: Chrome can and will also kill tabs randomly now to save memory. They suggest apps store state in IDB and
+ * restore it on load instead (there's a flag you can read to see if you were killed automatically).
  */
 function useVisibilityRefresh() {
   const { refreshProfileOnVisible } = useSelector(globalSettingsSelector);
   const hasSearchQuery = useSelector(hasSearchQuerySelector);
+  const { pathname } = useLocation();
+  const onOptimizerPage = pathname.endsWith('/optimizer');
 
   useEffect(() => {
     const visibilityHandler = () => {
@@ -182,7 +190,15 @@ function useVisibilityRefresh() {
         if (refreshProfileOnVisible) {
           triggerTryRefresh();
         }
-      } else if (dimNeedsUpdate$.getCurrentValue() && !hasSearchQuery) {
+      } else if (
+        dimNeedsUpdate$.getCurrentValue() &&
+        // Don't wipe out a user's in-progress search
+        !hasSearchQuery &&
+        // Loadout optimizer is all about state, don't reload it
+        !onOptimizerPage &&
+        // If a sheet is up, the user is doing something. We check sheetsOpen here, because it is not reactive!
+        sheetsOpen <= 0
+      ) {
         // Sneaky updates - if DIM is hidden and needs an update, do the update.
         reloadDIM();
       }
@@ -191,5 +207,5 @@ function useVisibilityRefresh() {
     return () => {
       document.removeEventListener('visibilitychange', visibilityHandler);
     };
-  }, [hasSearchQuery, refreshProfileOnVisible]);
+  }, [hasSearchQuery, onOptimizerPage, refreshProfileOnVisible]);
 }

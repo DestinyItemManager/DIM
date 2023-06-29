@@ -10,10 +10,8 @@ interface CssExports {
   'nonActiveStat': string;
   'statIcon': string;
   'statSegment': string;
-  'statSegmentContainer': string;
   'tier': string;
   'tierLightContainer': string;
-  'tierLightSegment': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

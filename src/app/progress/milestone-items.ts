@@ -5,9 +5,9 @@ import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { DimRecord } from 'app/records/presentation-nodes';
 import { d2MissingIcon } from 'app/search/d2-known-values';
+import { isClassCompatible } from 'app/utils/item-utils';
 import {
   DestinyAmmunitionType,
-  DestinyClass,
   DestinyDisplayPropertiesDefinition,
   DestinyMilestone,
   DestinyMilestoneDefinition,
@@ -95,7 +95,7 @@ function availableQuestToItem(
           .filter(
             (i) =>
               i &&
-              (i.classType === store.classType || i.classType === DestinyClass.Unknown) &&
+              isClassCompatible(i.classType, store.classType) &&
               // And quest steps, they're not interesting
               !i.itemCategoryHashes?.includes(ItemCategoryHashes.QuestStep)
           ),

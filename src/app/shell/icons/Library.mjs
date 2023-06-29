@@ -83,5 +83,4 @@ export const faPlayStation = 'fab fa-playstation';
 export const faSteam = 'fab fa-steam';
 export const faDiscord = 'fab fa-discord';
 export const faGithub = 'fab fa-github';
-export const faReddit = 'fab fa-reddit';
 export const saveIcon = 'fas fa-save';

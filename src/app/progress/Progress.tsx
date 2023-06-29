@@ -12,6 +12,7 @@ import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { RAID_NODE } from 'app/search/d2-known-values';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
+import { usePageTitle } from 'app/utils/hooks';
 import { PanInfo, motion } from 'framer-motion';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -36,12 +37,13 @@ export default function Progress({ account }: { account: DestinyAccount }) {
   const profileInfo = useSelector(profileResponseSelector);
   const searchQuery = useSelector(querySelector);
   const coreSettings = useSelector(destiny2CoreSettingsSelector);
+  usePageTitle(t('Progress.Progress'));
 
   const [selectedStoreId, setSelectedStoreId] = useState<string | undefined>(undefined);
 
-  useLoadStores(account);
+  const storesLoaded = useLoadStores(account);
 
-  if (!defs || !profileInfo || !stores.length) {
+  if (!defs || !profileInfo || !storesLoaded) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 

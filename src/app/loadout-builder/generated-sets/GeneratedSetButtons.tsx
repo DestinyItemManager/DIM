@@ -3,6 +3,7 @@ import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
+import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { convertToLoadoutItem, newLoadout } from 'app/loadout-drawer/loadout-utils';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -26,8 +27,8 @@ export default function GeneratedSetButtons({
   params,
   canCompareLoadouts,
   halfTierMods,
-  onLoadoutSet,
   lbDispatch,
+  lockedMods,
 }: {
   store: DimStore;
   set: ArmorSet;
@@ -37,21 +38,21 @@ export default function GeneratedSetButtons({
   params: LoadoutParameters;
   canCompareLoadouts: boolean;
   halfTierMods: PluggableInventoryItemDefinition[];
-  onLoadoutSet: (loadout: Loadout) => void;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
+  lockedMods: PluggableInventoryItemDefinition[];
 }) {
   const dispatch = useThunkDispatch();
+  const loadout = () =>
+    createLoadout(store.classType, set, items, subclass, params, notes, lockedMods);
 
   // Opens the loadout menu for the generated set
-  const openLoadout = () => {
-    onLoadoutSet(createLoadout(store.classType, set, items, subclass, params, notes));
-  };
+  const openLoadout = () =>
+    editLoadout(loadout(), store.id, {
+      showClass: false,
+    });
 
   // Automatically equip items for this generated set to the active store
-  const equipItems = () => {
-    const loadout = createLoadout(store.classType, set, items, subclass, params, notes);
-    return dispatch(applyLoadout(store, loadout, { allowUndo: true }));
-  };
+  const equipItems = () => dispatch(applyLoadout(store, loadout(), { allowUndo: true }));
 
   const statsWithPlus5: number[] = [];
 
@@ -105,7 +106,8 @@ function createLoadout(
   items: DimItem[],
   subclass: ResolvedLoadoutItem | undefined,
   params: LoadoutParameters,
-  notes?: string
+  notes: string | undefined,
+  lockedMods: PluggableInventoryItemDefinition[]
 ): Loadout {
   const data = {
     tier: _.sumBy(Object.values(set.stats), statTier),
@@ -118,9 +120,7 @@ function createLoadout(
 
   const loadout = newLoadout(t('Loadouts.Generated', data), loadoutItems, classType);
   loadout.notes = notes;
-  // FIXME(#8733) add auto mods to autoStatMods instead of adding them to regular mods
-  const allMods = [...(params.mods ?? []), ...set.statMods];
+  const allMods = [...lockedMods.map((m) => m.hash), ...set.statMods];
   loadout.parameters = { ...params, mods: allMods.length ? allMods : undefined };
-  // loadout.autoStatMods = set.statMods.length ? set.statMods : undefined;
   return loadout;
 }

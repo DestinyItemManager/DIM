@@ -26,7 +26,7 @@ export const plugCategoryHashToBucketHash: LookupTable<PlugCategoryHashes, Bucke
  * 1. The known plug category hashes, see ./types#knownModPlugCategoryHashes for ordering
  * 2. itemTypeDisplayName, so that legacy and combat mods are ordered alphabetically by their category name
  * 4. by energy cost, so cheaper mods come before more expensive mods
- * 5. by mod name, so mods in the same category with the same energy type and cost are alphabetical
+ * 5. by mod name, so mods in the same category with the same energy cost are alphabetical
  */
 export const sortMods = chainComparator<PluggableInventoryItemDefinition>(
   compareBy((mod) => {
