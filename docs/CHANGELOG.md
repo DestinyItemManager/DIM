@@ -79,6 +79,7 @@
 * Fixed DIM not showing Leviathan's Breath catalyst progress in the item popup.
 * Cleaned up the design of Loadout Optimizer stats, mod picker, exotic picker, and subclass editor.
 * Weapon patterns are now sorted by completion %.
+* Added a toggle button for sorting tabs in the records page.
 
 ## 7.70.0 <span class="changelog-date">(2023-05-28)</span>
 
