@@ -24,6 +24,7 @@ import registerServiceWorker from './app/register-service-worker';
 import { safariTouchFix } from './app/safari-touch-fix';
 import { watchLanguageChanges } from './app/settings/observers';
 import { saveWishListToIndexedDB } from './app/wishlists/observers';
+import { StrictMode } from 'react';
 infoLog(
   'app',
   `DIM v${$DIM_VERSION} (${$DIM_FLAVOR}) - Please report any errors to https://www.github.com/DestinyItemManager/DIM/issues`
@@ -81,5 +82,9 @@ const i18nPromise = initi18n();
   // Settings depends on i18n
   watchLanguageChanges();
 
-  root.render(<Root />);
+  root.render(
+    <StrictMode>
+      <Root />
+    </StrictMode>
+  );
 })();
