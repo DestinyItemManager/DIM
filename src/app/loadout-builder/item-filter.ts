@@ -98,7 +98,7 @@ export function filterItems({
         (lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC || item.hash === lockedExoticHash) &&
         searchFilter(item)
     );
-  
+
   // Group by bucket (the types for _.groupBy don't work out...)
   const itemsByBucket: Draft<ItemsByBucket> = {
     [BucketHashes.Helmet]: [],
