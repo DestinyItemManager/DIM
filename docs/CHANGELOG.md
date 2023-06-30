@@ -1,6 +1,10 @@
 ## Next
 * Added a toggle button for sorting tabs in the records page.
 
+* Organizer's "Loadouts" column now sorts items by the number of Loadouts using them.
+* Added `memento:none` filter to highlight weapons with an empty memento socket.
+* `deepsight:harmonizable` highlights weapons where Deepsight Resonance can be activated using a Deepsight Harmonizer.
+
 ## 7.74.0 <span class="changelog-date">(2023-06-25)</span>
 
 * You may now include vendors' items in loadout optimizer, in case they have a better roll available than what you have.

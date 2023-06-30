@@ -704,6 +704,7 @@ function buildSocket(
     isPerk,
     isMod,
     isReusable,
+    visibleInGame: socket.isVisible,
     socketDefinition: socketDef,
   };
 }
