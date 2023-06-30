@@ -237,17 +237,22 @@ const socketFilters: FilterDefinition[] = [
   },
   {
     keywords: 'memento',
-    description: tl('Filter.HasMemento'),
+    description: tl('Filter.Memento'),
     format: 'query',
     destinyVersion: 2,
-    suggestions: ['any', ...Object.keys(craftingMementos)],
+    suggestions: ['any', 'none', ...Object.keys(craftingMementos)],
     filter: ({ filterValue }) => {
       const list = (craftingMementos as StringLookup<number[]>)[filterValue];
       return (item) =>
         item.sockets?.allSockets.some(
           (s) =>
-            s.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Mementos &&
-            (filterValue === 'any' || list?.includes(s.plugged.plugDef.hash))
+            (s.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Mementos &&
+              (filterValue === 'any' || list?.includes(s.plugged.plugDef.hash))) ||
+            // Crafted items with no memento
+            (filterValue === 'none' &&
+              item.crafted &&
+              s.plugged?.plugDef.plug.plugCategoryHash ===
+                PlugCategoryHashes.CraftingRecipesEmptySocket)
         );
     },
   },

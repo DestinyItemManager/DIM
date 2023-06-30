@@ -232,7 +232,7 @@
     "Focusable": "Shows items that can be focused at a vendor",
     "Foundry": "Shows items by which foundry created them.",
     "Glimmer": "Shows items that are consumables that are related to gaining glimmer.",
-    "HasMemento": "Shows crafted weapons that currently have a memento inserted.",
+    "Memento": "Shows weapons that have a memento socket.",
     "InfusionFodder": "Shows items that could be infused into lower-power versions of the same item for only glimmer.",
     "HasNotes": "Show items that have notes applied.",
     "HasShader": "Shows items that have a shader applied.",
