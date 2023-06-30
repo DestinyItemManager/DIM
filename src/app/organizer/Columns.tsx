@@ -5,7 +5,7 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { PressTip, Tooltip } from 'app/dim-ui/PressTip';
 import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
-import { t, tl } from 'app/i18next-t';
+import { I18nKey, t, tl } from 'app/i18next-t';
 import ItemIcon, { DefItemIcon } from 'app/inventory/ItemIcon';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
@@ -79,7 +79,7 @@ export function getColumnSelectionId(column: ColumnDefinition) {
 }
 
 // Some stat labels are long. This lets us replace them with i18n
-export const statLabels: LookupTable<StatHashes, string> = {
+export const statLabels: LookupTable<StatHashes, I18nKey> = {
   [StatHashes.RoundsPerMinute]: tl('Organizer.Stats.RPM'),
   [StatHashes.ReloadSpeed]: tl('Organizer.Stats.Reload'),
   [StatHashes.AimAssistance]: tl('Organizer.Stats.Aim'),

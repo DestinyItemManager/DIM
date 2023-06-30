@@ -9,7 +9,7 @@ import { SetFilterButton } from 'app/dim-ui/SetFilterButton';
 import filterButtonStyles from 'app/dim-ui/SetFilterButton.m.scss';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
-import { t, tl } from 'app/i18next-t';
+import { I18nKey, t, tl } from 'app/i18next-t';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { ItemPopupTab } from 'app/item-popup/ItemPopupBody';
 import { hideItemPopup } from 'app/item-popup/item-popup';
@@ -263,7 +263,7 @@ function BetterItemsTriageSection({ item }: { item: DimItem }) {
     artificeWorseStatItems,
   } = betterWorseResults;
 
-  const rows: [string, readonly [string, string], DimItem[], boolean][] = [
+  const rows: [I18nKey, readonly [I18nKey, I18nKey], DimItem[], boolean][] = [
     [t('Triage.BetterArmor'), descriptionBulletPoints.better, betterItems, false],
     [t('Triage.WorseStatArmor'), descriptionBulletPoints.betterStats, betterStatItems, false],
     [t('Triage.BetterArtificeArmor'), descriptionBulletPoints.better, artificeBetterItems, true],

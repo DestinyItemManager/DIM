@@ -21,9 +21,7 @@
   },
   "Activities": {
     "Activities": "Activities",
-    "Hard": "Hard",
     "Nightfall": "Nightfall Strike",
-    "Normal": "Normal",
     "WeeklyHeroic": "Weekly Heroic Strike"
   },
   "Armory": {
@@ -105,11 +103,6 @@
     "InitialItem": "This is the item the Compare tool was launched from",
     "IsVendorItem": "This item is not owned. This is in a vendor's inventory and may be for sale.",
     "SoldBy": "Sold by: {{vendorName}}"
-  },
-  "Cooldown": {
-    "Grenade": "Grenade cooldown: {{cooldown}}",
-    "Melee": "Melee cooldown: {{cooldown}}",
-    "Super": "Super cooldown: {{cooldown}}"
   },
   "Countdown": {
     "Days": "1 Day",
@@ -1079,30 +1072,8 @@
   "Sockets": {
     "ApplyPerks": "Apply Perks",
     "GridStyle": "Display perks as a grid",
-    "Insert": {
-      "Ability": "Equip Ability",
-      "Aspect": "Insert Aspect",
-      "Fragment": "Insert Fragment",
-      "Mod": "Insert Mod",
-      "Ornament": "Apply Ornament",
-      "Projection": "Apply Ghost Projection",
-      "Shader": "Apply Shader",
-      "Super": "Equip Super",
-      "Transmat": "Apply Transmat Effect"
-    },
     "ListStyle": "Display perks as a list",
     "Search": "Search names or descriptions",
-    "Select": {
-      "Ability": "Preview Ability",
-      "Aspect": "Preview Aspect",
-      "Fragment": "Preview Fragment",
-      "Mod": "Preview Mod",
-      "Ornament": "Preview Ornament",
-      "Projection": "Preview Ghost Projection",
-      "Shader": "Preview Shader",
-      "Super": "Preview Super",
-      "Transmat": "Preview Transmat Effect"
-    },
     "SelectWishlistPerks": "Preview Wishlist Perks"
   },
   "Stats": {

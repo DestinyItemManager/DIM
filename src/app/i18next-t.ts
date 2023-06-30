@@ -1,4 +1,7 @@
 export { t } from 'i18next';
+import type { ParseKeys } from 'i18next';
+
+export type I18nKey = ParseKeys;
 
 /**
  * This is a "marker function" that tells our i18next-scanner that you will translate this string later (tl = translate later).
@@ -6,6 +9,6 @@ export { t } from 'i18next';
  * has no runtime presence.
  */
 /*@__INLINE__*/
-export function tl<T extends string>(key: T): T {
+export function tl<T extends I18nKey>(key: T): T {
   return key;
 }
