@@ -1,6 +1,6 @@
 import { ItemAnnotation, ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { tl } from 'app/i18next-t';
+import { I18nKey, tl } from 'app/i18next-t';
 import { ThunkResult } from 'app/store/types';
 import _ from 'lodash';
 import { archiveIcon, banIcon, boltIcon, heartIcon, tagIcon } from '../shell/icons';
@@ -105,7 +105,7 @@ export interface ItemInfos {
 
 export interface TagInfo {
   type?: TagValue;
-  label: string;
+  label: I18nKey;
   sortOrder?: number;
   displacePriority?: number;
   hotkey?: string;

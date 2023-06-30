@@ -1,7 +1,7 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
-import { t } from 'app/i18next-t';
+import { I18nKey, t } from 'app/i18next-t';
 import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
 import {
   DimItem,
@@ -168,8 +168,8 @@ export default function SocketDetailsSelectedPlug({
 
   const kind = uiCategorizeSocket(defs, socket.socketDefinition);
   const insertName = canDoAWA
-    ? t(`Sockets.Insert.${kind}`, { metadata: { keys: 'sockets' } })
-    : t(`Sockets.Select.${kind}`, { metadata: { keys: 'sockets' } });
+    ? t(`Sockets.Insert.${kind}` as I18nKey, { metadata: { keys: 'sockets' } })
+    : t(`Sockets.Select.${kind}` as I18nKey, { metadata: { keys: 'sockets' } });
 
   const [insertInProgress, setInsertInProgress] = useState(false);
 

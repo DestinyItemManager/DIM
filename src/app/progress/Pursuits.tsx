@@ -1,5 +1,5 @@
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
-import { t } from 'app/i18next-t';
+import { I18nKey, t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { findItemsByBucket } from 'app/inventory/stores-helpers';
@@ -59,7 +59,7 @@ export default function Pursuits({ store }: { store: DimStore }) {
           pursuits[group] && (
             <section id={group} key={group}>
               <CollapsibleTitle
-                title={t(`Progress.${group}`, { metadata: { keys: 'progress' } })}
+                title={t(`Progress.${group}` as I18nKey, { metadata: { keys: 'progress' } })}
                 sectionId={'pursuits-' + group}
               >
                 <PursuitsGroup pursuits={pursuits[group]} store={store} />

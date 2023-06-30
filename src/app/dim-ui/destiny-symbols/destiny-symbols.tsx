@@ -1,5 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { t, tl } from 'app/i18next-t';
+import { I18nKey, t, tl } from 'app/i18next-t';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { StringLookup } from 'app/utils/util-types';
 import { FontGlyphs } from 'data/d2/d2-font-glyphs';
@@ -7,7 +7,7 @@ import { TranslateManually, symbolData } from 'data/d2/symbol-name-sources';
 import { createSelector } from 'reselect';
 import { conversionTableSelector } from './rich-destiny-text';
 
-const manualTranslations: { [key in TranslateManually]: string } = {
+const manualTranslations: { [key in TranslateManually]: I18nKey } = {
   [FontGlyphs.gilded_title]: tl('Glyphs.Gilded'),
   [FontGlyphs.hunter_smoke]: tl('Glyphs.Smoke'),
   [FontGlyphs.environment_hazard]: tl('Glyphs.Misadventure'),
@@ -46,7 +46,7 @@ export const symbolsSelector = createSelector(
     }
 
     for (const { codepoint, glyph, source } of symbolData) {
-      const manualTranslation = (manualTranslations as StringLookup<string>)[codepoint];
+      const manualTranslation = (manualTranslations as StringLookup<I18nKey>)[codepoint];
       if (manualTranslation) {
         const hardCodedName = t(manualTranslation);
         list.push({
