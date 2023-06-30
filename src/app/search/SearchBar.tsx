@@ -20,6 +20,9 @@ import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 import _ from 'lodash';
 import React, {
   Suspense,
+  forwardRef,
+  lazy,
+  memo,
   useCallback,
   useDeferredValue,
   useEffect,
@@ -125,11 +128,9 @@ function mapStateToProps() {
   };
 }
 
-const LazyFilterHelp = React.lazy(
-  () => import(/* webpackChunkName: "filter-help" */ './FilterHelp')
-);
+const LazyFilterHelp = lazy(() => import(/* webpackChunkName: "filter-help" */ './FilterHelp'));
 
-const RowContents = React.memo(({ item }: { item: SearchItem }) => {
+const RowContents = memo(({ item }: { item: SearchItem }) => {
   function highlight(text: string, section: string) {
     return item.highlightRange?.section === section ? (
       <HighlightedText
@@ -175,7 +176,7 @@ const RowContents = React.memo(({ item }: { item: SearchItem }) => {
   }
 });
 
-const Row = React.memo(
+const Row = memo(
   ({
     highlighted,
     item,
@@ -622,6 +623,4 @@ function SearchBar(
   );
 }
 
-export default connect(mapStateToProps, null, null, { forwardRef: true })(
-  React.forwardRef(SearchBar)
-);
+export default connect(mapStateToProps, null, null, { forwardRef: true })(forwardRef(SearchBar));

@@ -37,7 +37,7 @@ function Root() {
           ],
   };
   return (
-    <Router>
+    <Router future={{ v7_startTransition: true }}>
       <Provider store={store}>
         <LocationSwitcher />
         <DndProvider options={options}>

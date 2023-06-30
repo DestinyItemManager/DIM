@@ -27,7 +27,7 @@
     "WeeklyHeroic": "每週英雄突擊"
   },
   "Armory": {
-    "Armory": "Armory",
+    "Armory": "軍械庫",
     "NoNotes": "無注釋",
     "OpenInArmory": "查看武器詳情",
     "Season": "年 {{year}}，第 {{season}} 賽季",
@@ -141,7 +141,7 @@
   },
   "ErrorPanel": {
     "Description": "嘗試使用命運2同伴App來載入你的物品欄以測試Bungie.net是否出現問題。",
-    "ReadTheGuide": "Read our User Guide (linked from the menu) for troubleshooting steps.",
+    "ReadTheGuide": "閲讀我們的用戶指南（連接在菜單）以瞭解故障排除步驟。",
     "SystemDown": "這一問題影響所有的命運應用程序，DIM團隊也無法修復或繞過。",
     "Troubleshooting": "故障排除指南"
   },
@@ -578,6 +578,7 @@
     "ExistingLoadout": "已有配裝",
     "ExoticSpecialCategory": "特殊",
     "Filter": "過濾",
+    "IncludeVendorItems": "包括商販物品",
     "Legendary": "传说",
     "LockEquipped": "固定已裝備",
     "LockItem": "固定物品",
@@ -659,7 +660,7 @@
     "DimLoadouts": "DIM 配裝",
     "Edit": "編輯配裝",
     "EditBrief": "編輯",
-    "EmptyFragmentSlots": "Empty Fragment Slots",
+    "EmptyFragmentSlots": "空的碎片槽",
     "EquipInGameLoadout": "正在裝備游戲内配裝",
     "EquipItems": "正在裝備物品",
     "EquippableDifferent1": "計算你的最大能量等級時使用了多件異域裝備，所以在遊戲內配裝時可能達不到這個數值。",
@@ -787,7 +788,7 @@
     "SubclassOptionsSearch": "搜索{{subclass}} 選項",
     "Succeeded": "配裝成功",
     "SyncFromEquipped": "同步已裝備物品",
-    "TooManyFragments": "Too Many Fragments",
+    "TooManyFragments": "碎片過多",
     "TooManyRequested": "你有{{total}} 個{{itemname}}, 但完成配裝需要{{requested}} 個. 我們已經處理所有已擁有的",
     "UnassignedModError": "模組不適合你當前的護甲",
     "Undo": "撤銷",

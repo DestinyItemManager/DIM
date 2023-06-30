@@ -1,5 +1,17 @@
 ## Next
 
+* Organizer's "Loadouts" column now sorts items by the number of Loadouts using them.
+
+## 7.74.0 <span class="changelog-date">(2023-06-25)</span>
+
+* You may now include vendors' items in loadout optimizer, in case they have a better roll available than what you have.
+
+## 7.73.0 <span class="changelog-date">(2023-06-18)</span>
+
+* DIM should no longer show a popup to enable DIM Sync before you've logged in.
+* Fixed drag and drop on Android.
+* Fixed scroll bar behaving weirdly on the sidebar of certain pages.
+
 ## 7.72.0 <span class="changelog-date">(2023-06-11)</span>
 
 * Fixed showing the item under your finger while you're dragging it on iOS/iPadOS. As a reminder, on touchscreen devices you need to press the item for a little bit to "pick it up". And as a reminder for everyone, any time you see an item in DIM, pretty much wherever it is, you can drag it around to move the item or add it to a Loadout you're editing. This works from the Inventory, Item Feed, Loadouts screen, etc.

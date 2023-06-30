@@ -578,6 +578,7 @@
     "ExistingLoadout": "Dotazione Esistente",
     "ExoticSpecialCategory": "Speciale",
     "Filter": "Filtri",
+    "IncludeVendorItems": "Includi oggetti dei mercanti",
     "Legendary": "Leggendaria",
     "LockEquipped": "Blocca equipaggiato",
     "LockItem": "Blocca oggetto",
@@ -943,12 +944,12 @@
     "SelectItem": "Seleziona o deleseziona {{name}}",
     "ShiftTip": "Suggerimento: Tieni premuto il tasto Maiusc e clicca su una cella per filtrare gli oggetti",
     "Stats": {
-      "Aim": "Mira Assistita",
+      "Aim": "Mira assistita",
       "Airborne": "Efficacia in volo",
       "Power": "Potere",
-      "RPM": "C.a.m.",
-      "Recoil": "Direzione Rinculo",
-      "Reload": "Velocità Ricarica"
+      "RPM": "Proiettili al minuto",
+      "Recoil": "Direzione del rinculo",
+      "Reload": "Velocità di ricarica"
     },
     "Unlock": "Sblocca"
   },
