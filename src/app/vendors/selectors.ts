@@ -1,3 +1,4 @@
+import { DimItem } from 'app/inventory/item-types';
 import {
   createItemContextSelector,
   ownedItemsSelector,
@@ -8,6 +9,7 @@ import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { currySelector } from 'app/utils/selector-utils';
+import _ from 'lodash';
 import { createSelector } from 'reselect';
 import { D2VendorGroup, toVendorGroups } from './d2-vendors';
 
@@ -31,11 +33,28 @@ export const nonCurriedVendorGroupsForCharacterSelector = createSelector(
       : emptyArray<D2VendorGroup>();
   }
 );
+
 /**
  * returns a character's vendors and their sale items
  */
 export const vendorGroupsForCharacterSelector = currySelector(
   nonCurriedVendorGroupsForCharacterSelector
+);
+
+/**
+ * Returns vendor items (for comparison, loadout builder, ...)
+ */
+export const characterVendorItemsSelector = createSelector(
+  (_state: RootState, vendorCharacterId?: string) => vendorCharacterId,
+  nonCurriedVendorGroupsForCharacterSelector,
+  (vendorCharacterId, vendorGroups) => {
+    if (!vendorCharacterId) {
+      return emptyArray<DimItem>();
+    }
+    return _.compact(
+      vendorGroups.flatMap((vg) => vg.vendors.flatMap((vs) => vs.items.map((vi) => vi.item)))
+    );
+  }
 );
 
 export const ownedVendorItemsSelector = currySelector(

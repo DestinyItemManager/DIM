@@ -27,6 +27,7 @@
     "WeeklyHeroic": "週間英雄ストライク"
   },
   "Armory": {
+    "Armory": "武器庫",
     "NoNotes": "メモなし",
     "OpenInArmory": "アーマリーで見る",
     "Season": "{{year}} 年目、シーズン {{season}}",
@@ -140,8 +141,7 @@
   },
   "ErrorPanel": {
     "Description": "Destiny 2のコンパニオンアプリで保管庫データにアクセスして、 Bungie.net がダウンしているかどうか試してみてください。",
-    "EmblemError": "ゲーム内で全キャラクターのエンブレムを入れ替えると直るかもしれません。",
-    "EmblemErrorLink": "修正方法の詳細を読む",
+    "ReadTheGuide": "トラブルシューティングの手順については、ユーザーガイド(メニュー内のリンク) をご覧ください。",
     "SystemDown": "Destinyに関連するすべてのアプリに影響する内容で、 DIM チームにて修正したり回避ができない内容です。",
     "Troubleshooting": "トラブルシューティングガイド"
   },
@@ -472,7 +472,7 @@
     "PostmasterAlmostFull": "ほぼ満杯!",
     "PostmasterFull": "満杯!",
     "PreviewVendor": "{{type}} コンテンツのプレビュー",
-    "StackFull": "既に{{name}} の完全なスタックがあります",
+    "StackFull": "{{name}} はすでに上限数まで持っているのでこれ以上取得できません。",
     "StoreName": "{{genderRace}} {{className}}"
   },
   "KillType": {
@@ -578,6 +578,7 @@
     "ExistingLoadout": "既存のロードアウト",
     "ExoticSpecialCategory": "スペシャル",
     "Filter": "フィルター",
+    "IncludeVendorItems": "ベンダーアイテムを含む",
     "Legendary": "レジェンダリー",
     "LockEquipped": "ピン留めされたアイテムを装備",
     "LockItem": "アイテムをピン留めする",
@@ -659,6 +660,7 @@
     "DimLoadouts": "DIMロードアウト",
     "Edit": "ロードアウトを編集",
     "EditBrief": "編集",
+    "EmptyFragmentSlots": "空のかけらスロット",
     "EquipInGameLoadout": "ゲーム内ロードアウトを装備中",
     "EquipItems": "アイテムを装備",
     "EquippableDifferent1": "複数のエキゾチックアイテムを使用して最大パワーを計算しました。ゲーム内でアイテムを装備しようとしても、数値が計算通りにならない恐れがあります。",
@@ -786,6 +788,7 @@
     "SubclassOptionsSearch": "{{subclass}} オプションを検索",
     "Succeeded": "ロードアウトに成功",
     "SyncFromEquipped": "装備中から同期する",
+    "TooManyFragments": "かけらが多すぎます",
     "TooManyRequested": "あなたは{{total}} {{itemname}} を持っていますが、あなたのロードアウトは{{requested}} を要求します。あなたが持っていた物をすべてを転送しました。",
     "UnassignedModError": "Modが現在のアーマーに適用できませんでした",
     "Undo": "元に戻す",
@@ -882,7 +885,7 @@
   },
   "Notification": {
     "Cancel": "キャンセル",
-    "OK": "やめる"
+    "OK": "キャンセル"
   },
   "Objectives": {
     "Complete": "完成",
@@ -1119,7 +1122,6 @@
     "PowerModifier": "パワーボーナスと経験値",
     "Prestige": "評判レベル： {{level}}\n光の欠片5個までは後 {{exp}}xp",
     "Quality": "品質",
-    "Second": "秒",
     "StrafingSpeed": "ADS歩行速度",
     "Strength": "腕力",
     "Sunset": "退役",
@@ -1288,8 +1290,6 @@
       "GitHubHelp": "もし、このプロジェクトに協力していただけるなら、このリンクから{{link}} へ。",
       "Header": "DIM (Destiny Item Manager)",
       "HowItsMade": "DIMは、Bungie.netやDestiny Companion Appで使用されているものと同じサービスをベースに、コミュニティ開発者によって作られた無料のオープンソースアプリケーションです。",
-      "Reddit": "Reddit",
-      "RedditHelp": "質問、コメント、提案があれば私たちに教えてください！",
       "Schedule": {
         "beta": "DIMのベータ版はコードを変える度にアップデートされます。ー最新の更新、改良がされるとともに新しい不具合も導入されます！",
         "release": "DIMのバージョンは週に1度、日本時間で日曜日のPM 17: 00 頃に更新されます。"

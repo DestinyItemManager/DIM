@@ -4,10 +4,9 @@ import { t } from 'app/i18next-t';
 import { D1ItemCategoryHashes } from 'app/search/d1-known-values';
 import { armorStats, evenStatWeights, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
-import { isPlugStatActive } from 'app/utils/item-utils';
+import { isClassCompatible, isPlugStatActive } from 'app/utils/item-utils';
 import { weakMemoize } from 'app/utils/util';
 import {
-  DestinyClass,
   DestinyInventoryItemDefinition,
   DestinyItemInvestmentStatDefinition,
   DestinyStatAggregationType,
@@ -195,10 +194,7 @@ export function buildStats(
     // synthesize custom stats for meaningfully stat-bearing items
     if (createdItem.type !== 'ClassItem') {
       for (const customStat of customStats) {
-        if (
-          customStat.class === createdItem.classType ||
-          customStat.class === DestinyClass.Unknown
-        ) {
+        if (isClassCompatible(customStat.class, createdItem.classType)) {
           const cStat = makeCustomStat(
             investmentStats,
             customStat.weights,

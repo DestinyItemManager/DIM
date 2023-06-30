@@ -1,5 +1,21 @@
 ## Next
 
+* Organizer's "Loadouts" column now sorts items by the number of Loadouts using them.
+* Added `memento:none` filter to highlight weapons with an empty memento socket.
+* `deepsight:harmonizable` highlights weapons where Deepsight Resonance can be activated using a Deepsight Harmonizer.
+
+## 7.74.0 <span class="changelog-date">(2023-06-25)</span>
+
+* You may now include vendors' items in loadout optimizer, in case they have a better roll available than what you have.
+
+## 7.73.0 <span class="changelog-date">(2023-06-18)</span>
+
+* DIM should no longer show a popup to enable DIM Sync before you've logged in.
+* Fixed drag and drop on Android.
+* Fixed scroll bar behaving weirdly on the sidebar of certain pages.
+
+## 7.72.0 <span class="changelog-date">(2023-06-11)</span>
+
 * Fixed showing the item under your finger while you're dragging it on iOS/iPadOS. As a reminder, on touchscreen devices you need to press the item for a little bit to "pick it up". And as a reminder for everyone, any time you see an item in DIM, pretty much wherever it is, you can drag it around to move the item or add it to a Loadout you're editing. This works from the Inventory, Item Feed, Loadouts screen, etc.
 * The Loadouts page now has a filter pill to find Loadouts with empty Fragment sockets.
 * The popup shown on the refresh button when Bungie.net is down no longer has buttons you can't click, and no longer exceeds the width of the screen on mobile.
@@ -10,7 +26,6 @@
 * Fixed the keyboard automatically appearing on the iOS App Store version.
 * Removed support for old Loadout Optimizer share links.
 * Fixed showing catalyst perk descriptions.
-* Added `memento:none` filter to highlight weapons with an empty memento socket.
 
 ## 7.71.0 <span class="changelog-date">(2023-06-04)</span>
 

@@ -564,11 +564,21 @@ export function getColumns(
     c({
       id: 'loadouts',
       header: t('Organizer.Columns.Loadouts'),
-      value: (item) =>
-        loadoutsByItem[item.id]
-          ?.map((l) => l.loadout.name)
-          .sort()
-          .join(','),
+      value: (item) => {
+        const loadouts = loadoutsByItem[item.id];
+        // The raw comparison value compares by number of loadouts first,
+        // then by first loadout name
+        return (
+          loadouts &&
+          // 99999 loadouts ought to be enough for anyone
+          loadouts.length.toString().padStart(5, '0') +
+            ':' +
+            loadouts
+              .map((l) => l.loadout.name)
+              .sort()
+              .join(',')
+        );
+      },
       cell: (_val, item) => {
         const inloadouts = loadoutsByItem[item.id];
         return (

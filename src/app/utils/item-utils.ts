@@ -165,7 +165,7 @@ export function itemCanBeEquippedByStoreId(
           // if it's equipped by this store, it's obviously equippable to this store!
           (item.owner === storeId && item.equipped)
         : // For the right class
-          item.classType === DestinyClass.Unknown || item.classType === storeClassType) &&
+          isClassCompatible(item.classType, storeClassType)) &&
       // can be moved or is already here
       (!item.notransfer || item.owner === storeId) &&
       (allowPostmaster || !item.location.inPostmaster)
@@ -368,4 +368,17 @@ export function getStatValuesByHash(item: DimItem, byWhichValue: 'base' | 'value
     output[stat.statHash] = stat[byWhichValue];
   }
   return output;
+}
+
+/**
+ * Are two Destiny classes compatible? e.g. can an item (firstClass) be equipped
+ * by a character (secondClass)? True if they're the same class or one is the
+ * wildcard class.
+ */
+export function isClassCompatible(firstClass: DestinyClass, secondClass: DestinyClass) {
+  return (
+    firstClass === DestinyClass.Unknown ||
+    secondClass === DestinyClass.Unknown ||
+    firstClass === secondClass
+  );
 }

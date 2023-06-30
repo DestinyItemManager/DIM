@@ -20,7 +20,7 @@ import { getTotalModStatChanges } from 'app/loadout/stats';
 import { manifestSelector } from 'app/manifest/selectors';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { armorStats, deprecatedPlaceholderArmorModHash } from 'app/search/d2-known-values';
-import { itemCanBeInLoadout } from 'app/utils/item-utils';
+import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import {
   aspectSocketCategoryHashes,
   fragmentSocketCategoryHashes,
@@ -824,6 +824,12 @@ const oldToNewMod: HashLookup<number> = {
   3253038666: 4287799666, // InventoryItem "Strength Mod"
 };
 
+/**
+ * Convert a list of plug item hashes into ResolvedLoadoutMods, which may not be
+ * the same as the original hashes as we try to be smart about what the user meant.
+ * e.g. we replace some mods with lower-cost variants depending on the artifact state.
+ * @param unlockedPlugs all unlocked mod hashes. See unlockedPlugSetItemsSelector.
+ */
 export function resolveLoadoutModHashes(
   defs: D2ManifestDefinitions | undefined,
   modHashes: number[],
@@ -886,10 +892,7 @@ export function pickBackingStore(
     !preferredStoreId || preferredStoreId === 'vault'
       ? getCurrentStore(stores)
       : getStore(stores, preferredStoreId);
-  return requestedStore &&
-    (classType === DestinyClass.Unknown || requestedStore.classType === classType)
+  return requestedStore && isClassCompatible(classType, requestedStore.classType)
     ? requestedStore
-    : stores.find(
-        (s) => !s.isVault && (s.classType === classType || classType === DestinyClass.Unknown)
-      );
+    : stores.find((s) => !s.isVault && isClassCompatible(classType, s.classType));
 }

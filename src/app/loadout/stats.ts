@@ -87,8 +87,8 @@ function getFontMods(mods: PluggableInventoryItemDefinition[]) {
 
 /**
  * This sums up the total stat contributions across mods passed in. These are then applied
- * to the loadouts after all the items base values have been summed. This mimics how mods
- * effect stat values in game and allows us to do some preprocessing.
+ * to the loadouts after all the items' base stat values have been summed. This mimics how mods
+ * affect stat values in game and allows us to do some preprocessing.
  */
 export function getTotalModStatChanges(
   defs: D2ManifestDefinitions,

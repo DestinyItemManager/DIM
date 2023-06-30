@@ -215,17 +215,25 @@ const socketFilters: FilterDefinition[] = [
   {
     keywords: 'deepsight',
     description: tl('Filter.Deepsight'),
-    format: 'simple',
+    format: ['simple', 'query'],
+    suggestions: ['harmonizable', 'extractable'],
     destinyVersion: 2,
-    filter: () => (item) => {
-      if (!item.deepsightInfo) {
-        return false;
-      }
-      return Boolean(
-        item.patternUnlockRecord &&
-          item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted
-      );
-    },
+    filter:
+      ({ filterValue }) =>
+      (item) =>
+        filterValue === 'harmonizable'
+          ? Boolean(
+              item.sockets?.allSockets.some(
+                (s) =>
+                  s.plugged?.plugDef.plug.plugCategoryHash ===
+                    PlugCategoryHashes.CraftingPlugsWeaponsModsExtractors && s.visibleInGame
+              )
+            )
+          : Boolean(
+              item.deepsightInfo &&
+                item.patternUnlockRecord &&
+                item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted
+            ),
   },
   {
     keywords: 'memento',

@@ -1,6 +1,6 @@
 {
   "name": "dim",
-  "version": "7.71.0",
+  "version": "7.74.0",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "private": true,
@@ -70,7 +70,7 @@
     "last 2 Opera versions"
   ],
   "resolutions": {
-    "@types/react": "18.2.8",
+    "@types/react": "18.2.14",
     "react-redux": "^8.0.1",
     "react-is": "^18.1.0"
   },
@@ -172,7 +172,7 @@
     "style-loader": "^3.0.0",
     "stylelint": "^15.1.0",
     "stylelint-config-css-modules": "^4.1.0",
-    "stylelint-config-standard-scss": "^9.0.0",
+    "stylelint-config-standard-scss": "^10.0.0",
     "svgo": "^3.0.2",
     "svgo-loader": "^4.0.0",
     "terser-webpack-plugin": "^5.0.2",
@@ -226,8 +226,8 @@
     "react-dom": "^18.1.0",
     "react-dropzone": "^14.2.0",
     "react-redux": "^8.0.1",
-    "react-router": "^6.0.2",
-    "react-router-dom": "^6.0.2",
+    "react-router": "^6.14.1",
+    "react-router-dom": "^6.14.1",
     "react-textarea-autosize": "^8.4.0",
     "react-transition-group": "^4.0.0",
     "react-twitter-widgets": "^1.7.1",

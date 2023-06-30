@@ -12,7 +12,7 @@ import { lazyLoadStreamDeck, startStreamDeckConnection } from 'app/stream-deck/s
 import { streamDeckEnabled } from 'app/stream-deck/util/local-storage';
 import { infoLog } from 'app/utils/log';
 import { scheduleMemoryMeasurement } from 'app/utils/measure-memory';
-import ReactDOM from 'react-dom/client';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import idbReady from 'safari-14-idb-fix';
 import { StorageBroken, storageTest } from './StorageTest';
@@ -24,6 +24,7 @@ import registerServiceWorker from './app/register-service-worker';
 import { safariTouchFix } from './app/safari-touch-fix';
 import { watchLanguageChanges } from './app/settings/observers';
 import { saveWishListToIndexedDB } from './app/wishlists/observers';
+import { StrictMode } from 'react';
 infoLog(
   'app',
   `DIM v${$DIM_VERSION} (${$DIM_FLAVOR}) - Please report any errors to https://www.github.com/DestinyItemManager/DIM/issues`
@@ -42,7 +43,7 @@ scheduleMemoryMeasurement();
 const i18nPromise = initi18n();
 
 (async () => {
-  const root = ReactDOM.createRoot(document.getElementById('app')!);
+  const root = createRoot(document.getElementById('app')!);
 
   // idbReady works around a bug in Safari 14 where IndexedDB doesn't initialize sometimes
   await idbReady();
@@ -81,5 +82,9 @@ const i18nPromise = initi18n();
   // Settings depends on i18n
   watchLanguageChanges();
 
-  root.render(<Root />);
+  root.render(
+    <StrictMode>
+      <Root />
+    </StrictMode>
+  );
 })();

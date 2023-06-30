@@ -15,7 +15,7 @@ import {
 import { RootState } from 'app/store/types';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
-import { modMetadataByPlugCategoryHash } from 'app/utils/item-utils';
+import { isClassCompatible, modMetadataByPlugCategoryHash } from 'app/utils/item-utils';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { uniqBy } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -111,9 +111,7 @@ function mapStateToProps() {
           // If classType is passed in, only use items from said class,
           // otherwise use items from all characters.
           // Useful if in loadouts and only mods and guns
-          (classType !== DestinyClass.Unknown &&
-            classType !== undefined &&
-            item.classType !== classType)
+          (classType !== undefined && !isClassCompatible(classType, item.classType))
         ) {
           continue;
         }

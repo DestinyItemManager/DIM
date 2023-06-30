@@ -1,11 +1,14 @@
+import { PressTip } from 'app/dim-ui/PressTip';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { modTypeTagByPlugCategoryHash } from 'app/search/specialty-modslots';
+import { AppIcon, shoppingCart } from 'app/shell/icons';
 import { isEventArmorRerollSocket } from 'app/utils/socket-utils';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
+import { t } from 'i18next';
 import { pickPlugPositions } from '../mod-assignment-utils';
 import PlugDef from './PlugDef';
 import styles from './Sockets.m.scss';
@@ -106,7 +109,31 @@ function Sockets({ item, lockedMods, size, onSocketClick, automaticallyPickedMod
           forClassType={item.classType}
         />
       ))}
+      {item.vendor && <VendorItemPlug item={item} />}
     </div>
+  );
+}
+
+function VendorItemPlug({ item }: { item: DimItem }) {
+  const defs = useD2Definitions()!;
+  return (
+    <PressTip
+      elementType="span"
+      tooltip={() => {
+        const vendorName = defs.Vendor.get(item.vendor!.vendorHash).displayProperties.name;
+        return (
+          <>
+            {t('Compare.IsVendorItem')}
+            <br />
+            {t('Compare.SoldBy', { vendorName })}
+          </>
+        );
+      }}
+    >
+      <div className={clsx('item', styles.vendorItem)}>
+        <AppIcon icon={shoppingCart} />
+      </div>
+    </PressTip>
   );
 }
 

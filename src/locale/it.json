@@ -27,6 +27,7 @@
     "WeeklyHeroic": "Assalto Eroico Settimanale"
   },
   "Armory": {
+    "Armory": "Armeria",
     "NoNotes": "Nessuna Nota",
     "OpenInArmory": "mostra in Armeria",
     "Season": "Stagione {{season}}, Anno {{year}}",
@@ -140,8 +141,7 @@
   },
   "ErrorPanel": {
     "Description": "Prova a visualizzare il tuo inventario sulla Companion App di Destiny 2 per vedere se Bungie.net sta funzionando.",
-    "EmblemError": "Potresti essere in grado di risolvere questo problema cambiando nel gioco gli emblemi su tutti i personaggi.",
-    "EmblemErrorLink": "Scopri come risolverlo.",
+    "ReadTheGuide": "Leggi la nostra Guida Utente (link nel menu) per la risoluzione problemi.",
     "SystemDown": "Questo influisce su tutte le app di Destiny, e il team di DIM non può né risolverlo né aggirarlo.",
     "Troubleshooting": "Guida alla risoluzione dei problemi"
   },
@@ -180,7 +180,7 @@
     "ClearOrnamentsTitle": "Reimposta tutti i decori su \"nessuna preferenza\"",
     "ClearShaders": "Cancella Shader",
     "ClearShadersTitle": "Reimposta tutti gli shader su \"nessuna preferenza\"",
-    "NoPreference": "Nessuna preferenza - questo slot non verrà cambiato",
+    "NoPreference": "Nessuna preferenza - questo alloggiamento non verrà cambiato",
     "Reset": "Cancella stile",
     "Sync": "Sincronizza",
     "SyncOrnaments": "Sincronizza Decori",
@@ -261,9 +261,9 @@
     "Locked": "Mostra gli oggetti basandosi sullo stato del loro blocco.",
     "Masterwork": "Mostra gli oggetti basandosi sulla loro statistica o livello di Prodigio.",
     "MasterworkKills": "Mostra gli oggetti in base al loro contatore uccisioni prodigioso.",
-    "MaxPower": "Mostra gli oggetti al livello di Potere più alto per ogni slot.",
+    "MaxPower": "Mostra gli oggetti al livello di Potere più alto per ogni alloggiamento.",
     "MaxPowerLoadout": "Mostra gli oggetti nella dotazione che potrebbero massimizzare il tuo livello di Potere per ciascun personaggio.",
-    "ModSlot": "Mostra armature con uno specifico slot Modifica stagionale.",
+    "ModSlot": "Mostra armature con uno specifico alloggiamento Modifica stagionale.",
     "Mods": {
       "Y2": "Mostra gli oggetti con una Modifica anno 2 inserita.",
       "Y3": "Mostra gli oggetti con qualunque Modifica armatura 2.0 selezionata."
@@ -402,7 +402,7 @@
   },
   "InGameLoadout": {
     "Applying": "Equipaggiamento dotazione...",
-    "ClearSlot": "Cancella slot {{index}}",
+    "ClearSlot": "Cancella alloggiamento {{index}}",
     "Create": "Crea dotazione",
     "CreateTitle": "Crea dotazione in gioco dall'equipaggiamento attuale",
     "CurrentlyEquipped": "Attualmente equipaggiato",
@@ -578,6 +578,7 @@
     "ExistingLoadout": "Dotazione Esistente",
     "ExoticSpecialCategory": "Speciale",
     "Filter": "Filtri",
+    "IncludeVendorItems": "Includi oggetti dei mercanti",
     "Legendary": "Leggendaria",
     "LockEquipped": "Blocca equipaggiato",
     "LockItem": "Blocca oggetto",
@@ -590,7 +591,7 @@
       "AlwaysInvalidMods": "Queste Modifiche non si adattano a nessuno dei tuoi oggetti:",
       "AssumeMasterworked": "Consenti a DIM di raccomandarti armature da portare al massimo livello prodigio",
       "AssumptionsRestricted": "DIM non può raccomandarti dei cambiamenti al tipo di energia dell'armatura:",
-      "BadSlot": "Nello slot {{bucketName}}, nessun oggetto di quelli consentiti poteva alloggiare queste Modifiche:",
+      "BadSlot": "Nell'alloggiamento {{bucketName}}, nessun oggetto di quelli consentiti poteva alloggiare queste Modifiche:",
       "Header": "Nessuna build trovata. Queste sono le possibili ragioni per cui DIM non ha trovato nessuna build:",
       "LowerBoundsFailed": "Molti set non soddisfacevano i requisiti minimi delle statistiche",
       "MaybeAllowMoreItems": "Considera la possibilità di permettere altri oggetti:",
@@ -659,6 +660,7 @@
     "DimLoadouts": "Dotazioni DIM",
     "Edit": "Modifica dotazione",
     "EditBrief": "Modifica",
+    "EmptyFragmentSlots": "Alloggiamenti per frammenti vuoti",
     "EquipInGameLoadout": "Equipaggiamento dotazione in gioco",
     "EquipItems": "Equipaggiando oggetti",
     "EquippableDifferent1": "Sono stati utilizzati più esotici per calcolare il tuo Potere massimo, quindi il numero mostrato potrebbe non essere raggiungibile equipaggiando gli oggetti in gioco.",
@@ -786,6 +788,7 @@
     "SubclassOptionsSearch": "Cerca {{subclass}} opzioni",
     "Succeeded": "Dotazione applicata correttamente",
     "SyncFromEquipped": "Sincronizza da equipaggiati",
+    "TooManyFragments": "Troppi frammenti",
     "TooManyRequested": "Hai un totale di {{total}} {{itemname}} ma la tua dotazione ne richiede {{requested}}. Abbiamo trasferito tutti quelli che avevi.",
     "UnassignedModError": "La Modifica non è adatta alla tua armatura attuale",
     "Undo": "Annulla",
@@ -908,7 +911,7 @@
       "Locked": "Bloccato",
       "MasterworkStat": "Statistica Prodigio",
       "MasterworkTier": "Grado Prodigio",
-      "ModSlot": "Slot Modifiche",
+      "ModSlot": "Alloggiamento Modifiche",
       "Name": "Nome",
       "New": "Nuovo",
       "Notes": "Note",
@@ -941,12 +944,12 @@
     "SelectItem": "Seleziona o deleseziona {{name}}",
     "ShiftTip": "Suggerimento: Tieni premuto il tasto Maiusc e clicca su una cella per filtrare gli oggetti",
     "Stats": {
-      "Aim": "Mira Assistita",
+      "Aim": "Mira assistita",
       "Airborne": "Efficacia in volo",
       "Power": "Potere",
-      "RPM": "C.a.m.",
-      "Recoil": "Direzione Rinculo",
-      "Reload": "Velocità Ricarica"
+      "RPM": "Proiettili al minuto",
+      "Recoil": "Direzione del rinculo",
+      "Reload": "Velocità di ricarica"
     },
     "Unlock": "Sblocca"
   },
@@ -1119,14 +1122,13 @@
     "PowerModifier": "Potere dato dal progresso dell'esperienza stagionale",
     "Prestige": "Livello Prestigio: {{level}}\n{{exp}}xp fino alle 5 particelle di luce.",
     "Quality": "Qualità statistiche",
-    "Second": "s",
     "StrafingSpeed": "Mentre miri",
     "Strength": "Forza",
     "Sunset": "Obsoleto",
     "Tier": "Grado {{tier}}",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 per T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
-    "TimeToFullHP": "Tempo a piena salute",
+    "TimeToFullHP": "Tempo per salute piena",
     "Total": "Totale",
     "TotalHP": "Salute totale",
     "WalkingSpeed": "Mentre cammini"
@@ -1288,8 +1290,6 @@
       "GitHubHelp": "Se sei interessato a contribuire al progetto, visita la pagina su {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
       "HowItsMade": "DIM é un'app gratuita ed open source costruita da sviluppatori della comunità basandosi sugli stessi servizi di Bungie.net e la Companion App di Destiny.",
-      "Reddit": "Reddit",
-      "RedditHelp": "Se hai qualche domanda, commento, oppure suggerimento, facci sapere!",
       "Schedule": {
         "beta": "Questa versione beta di DIM è aggiornata ogni volta che cambiamo il codice - ha tutte le ultime novità e correzioni, ma anche tutti i nuovi bug!",
         "release": "Questa versione di DIM viene aggiornata una volta alla settimana, approssimativamente a mezzanotte di domenica, orario degli Stati Uniti, costa del Pacifico."
