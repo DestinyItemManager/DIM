@@ -34,6 +34,7 @@ import RefreshButton from './RefreshButton';
 import { setSearchQuery } from './actions';
 import { installPrompt$ } from './app-install';
 import { AppIcon, faExternalLinkAlt, menuIcon, searchIcon, settingsIcon } from './icons';
+import { userGuideLink } from './links';
 import { useIsPhonePortrait } from './selectors';
 
 const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
@@ -317,10 +318,7 @@ export default function Header() {
                     {t('Header.KeyboardShortcuts')}
                   </a>
                 )}
-                <ExternalLink
-                  className={styles.menuItem}
-                  href="https://github.com/DestinyItemManager/DIM/wiki"
-                >
+                <ExternalLink className={styles.menuItem} href={userGuideLink}>
                   {t('General.UserGuideLink')}
                 </ExternalLink>
                 {installable ? (
