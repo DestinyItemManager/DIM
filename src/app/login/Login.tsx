@@ -98,7 +98,7 @@ export default function Login() {
           </div>
         )}
         {!apiPermissionPreviouslyDisabled && !apiPermissionGranted && (
-          <div className={styles.warning}>{t('Views.Login.DisabledDimSyncWarning')}</div>
+          <div className={styles.warning}>{t('Storage.DimSyncNotEnabled')}</div>
         )}
       </section>
       <section className={styles.section}>
