@@ -1,5 +1,7 @@
 ## Next
 
+## 7.75.0 <span class="changelog-date">(2023-07-02)</span>
+
 * Organizer's "Loadouts" column now sorts items by the number of Loadouts using them.
 * Added `memento:none` filter to highlight weapons with an empty memento socket.
 * `deepsight:harmonizable` highlights weapons where Deepsight Resonance can be activated using a Deepsight Harmonizer.
