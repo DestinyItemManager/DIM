@@ -14,6 +14,7 @@ import {
 import { t } from 'app/i18next-t';
 import { profileErrorSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
+import { TroubleshootingSettings } from 'app/settings/Troubleshooting';
 import { systemInfo } from 'app/shell/About';
 import LocalStorageInfo from 'app/storage/LocalStorageInfo';
 import { set } from 'app/storage/idb-keyval';
@@ -240,6 +241,10 @@ export default function Debug() {
             <b>Character stats loaded?:</b> {JSON.stringify(Boolean(clarityCharacterStats))}
           </p>
         </section>
+
+        {$DIM_FLAVOR !== 'release' && currentAccount?.destinyVersion === 2 && (
+          <TroubleshootingSettings />
+        )}
       </div>
     </div>
   );
