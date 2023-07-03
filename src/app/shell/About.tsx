@@ -26,7 +26,7 @@ const bungieLink = `<a href='${bungieLinkDirect}' target='_blank' rel='noopener 
 const openCollectiveLink = `<a href='${openCollectiveLinkDirect}' target='_blank' rel='noopener noreferrer'>OpenCollective</a>`;
 const storeLink = `<a href='${storeLinkDirect}' target='_blank' rel='noopener noreferrer'>DesignByHumans</a>`;
 
-const systemInfo = getSystemInfo();
+export const systemInfo = getSystemInfo();
 
 function getSystemInfo() {
   const parser = new UAParser();
@@ -83,7 +83,7 @@ export default function About() {
           </span>
         </Link>
         <br />
-        <span>{systemInfo}</span>
+        <span>{systemInfo}</span> <Link to="/debug">Debug</Link>
       </div>
       <p>{t('Views.About.HowItsMade')}</p>
       {$DIM_FLAVOR === 'release' && <p>{t(`Views.About.Schedule.release`)}</p>}
