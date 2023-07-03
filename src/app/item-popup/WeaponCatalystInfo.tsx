@@ -17,12 +17,10 @@ export function WeaponCatalystInfo({ item }: { item: DimItem }) {
 
   return (
     <div className={styles.catalystProgress}>
-      <span className={styles.catalystProgressTitle}>{t('MovePopup.CatalystProgress')}</span>
-      <div className={styles.catalystProgressSection}>
-        {catalystInfo.objectives.map((objective) => (
-          <Objective key={objective.objectiveHash} objective={objective} />
-        ))}
-      </div>
+      <div className={styles.catalystProgressTitle}>{t('MovePopup.CatalystProgress')}</div>
+      {catalystInfo.objectives.map((objective) => (
+        <Objective key={objective.objectiveHash} objective={objective} />
+      ))}
     </div>
   );
 }
