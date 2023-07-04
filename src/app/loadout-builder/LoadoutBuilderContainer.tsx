@@ -37,16 +37,15 @@ export default function LoadoutBuilderContainer({ account }: { account: DestinyA
   let query: string | undefined;
 
   // Get an entire loadout from state - this is used when optimizing a loadout from within DIM.
-  const preloadedLoadout = (location.state as { loadout: Loadout } | undefined)?.loadout;
+  const locationState = location.state as
+    | { loadout: Loadout | undefined; storeId: string | undefined }
+    | undefined;
+  const preloadedLoadout = locationState?.loadout;
   if (preloadedLoadout?.parameters?.query) {
     query = preloadedLoadout.parameters.query;
   }
 
-  const searchParams = new URLSearchParams(location.search);
-  const urlClassTypeString = searchParams.get('class');
-
-  const classType =
-    !preloadedLoadout && urlClassTypeString ? parseInt(urlClassTypeString) : undefined;
+  const storeId = locationState?.storeId;
 
   // Apply the preloaded loadout's query to the main search bar
   useEffect(() => {
@@ -70,9 +69,9 @@ export default function LoadoutBuilderContainer({ account }: { account: DestinyA
 
   return (
     <LoadoutBuilder
-      key={preloadedLoadout?.id ?? 'lo'}
+      key={preloadedLoadout?.id ?? storeId ?? 'lo'}
       preloadedLoadout={preloadedLoadout}
-      initialClassType={classType}
+      storeId={storeId}
     />
   );
 }

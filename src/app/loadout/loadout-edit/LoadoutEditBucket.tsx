@@ -138,7 +138,7 @@ export function ArmorExtras({
           storeId={storeId}
           onModsByBucketUpdated={onModsByBucketUpdated}
         />
-        <OptimizerButton loadout={loadout} />
+        <OptimizerButton loadout={loadout} storeId={storeId} />
       </div>
     </>
   );
