@@ -42,6 +42,12 @@ export default function LoadoutBuilderContainer({ account }: { account: DestinyA
     query = preloadedLoadout.parameters.query;
   }
 
+  const searchParams = new URLSearchParams(location.search);
+  const urlClassTypeString = searchParams.get('class');
+
+  const classType =
+    !preloadedLoadout && urlClassTypeString ? parseInt(urlClassTypeString) : undefined;
+
   // Apply the preloaded loadout's query to the main search bar
   useEffect(() => {
     if (query) {
@@ -62,5 +68,11 @@ export default function LoadoutBuilderContainer({ account }: { account: DestinyA
     );
   }
 
-  return <LoadoutBuilder key={preloadedLoadout?.id ?? 'lo'} preloadedLoadout={preloadedLoadout} />;
+  return (
+    <LoadoutBuilder
+      key={preloadedLoadout?.id ?? 'lo'}
+      preloadedLoadout={preloadedLoadout}
+      initialClassType={classType}
+    />
+  );
 }

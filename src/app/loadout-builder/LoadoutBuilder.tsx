@@ -66,8 +66,18 @@ const autoAssignmentPCHs = [PlugCategoryHashes.EnhancementsArtifice];
  */
 export default memo(function LoadoutBuilder({
   preloadedLoadout,
+  initialClassType,
 }: {
+  /**
+   * A specific loadout to optimize, chosen from the Loadouts or Loadout Edit
+   * page.
+   */
   preloadedLoadout: Loadout | undefined;
+  /**
+   * If `preloadedLoadout` is `undefined`, this can be used to preselect a class
+   * type - for example when navigating from the Loadouts page.
+   */
+  initialClassType: DestinyClass | undefined;
 }) {
   const isPhonePortrait = useIsPhonePortrait();
   const defs = useD2Definitions()!;
@@ -95,7 +105,9 @@ export default memo(function LoadoutBuilder({
       canUndo,
     },
     lbDispatch,
-  ] = useLbState(stores, defs, preloadedLoadout);
+  ] = useLbState(stores, defs, preloadedLoadout, initialClassType);
+
+  // TODO: if we're editing a loadout, grey out incompatible classes?
 
   // TODO: bundle these together into an LO context?
   const modHashes = loadoutParameters.mods ?? emptyArray();
