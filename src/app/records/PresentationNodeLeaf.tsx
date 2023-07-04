@@ -1,3 +1,4 @@
+import { orderBy } from 'lodash';
 import Collectible from './Collectible';
 import CollectiblesGrid from './CollectiblesGrid';
 import Craftable from './Craftable';
@@ -19,6 +20,66 @@ export default function PresentationNodeLeaf({
   completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
 }) {
+  if (node.records) {
+    console.log('before', node.records);
+    const temp = { ...node };
+    temp.records = orderBy(
+      temp.records,
+      (record) => {
+        let numerator;
+        let denominator;
+        let objectives;
+
+        // check if which key is used to track progress
+        if (record.recordComponent.intervalObjectives) {
+          objectives = record.recordComponent.intervalObjectives;
+        } else {
+          objectives = record.recordComponent.objectives;
+        }
+
+        // triumph is already completed
+        if (objectives[objectives.length - 1].complete) {
+          return -1;
+        }
+
+        // check if the progress is divided into milestones
+        if (objectives.length > 1) {
+          // progress is not checked with check boxes
+          if (objectives[objectives.length - 1].completionValue !== 1) {
+            numerator = objectives[objectives.length - 1].progress;
+            denominator = objectives[objectives.length - 1].completionValue;
+          } else {
+            numerator = 0;
+            denominator = objectives.length;
+            for (const i of objectives) {
+              if (i.complete) {
+                numerator += 1;
+              }
+            }
+          }
+        } else {
+          numerator = objectives[0].progress!;
+          denominator = objectives[0].completionValue;
+        }
+
+        /**
+         * Check is done this way since some objective progress can exceed
+         * completion value
+         */
+        if (objectives.length === 1 && objectives[0].complete) {
+          return -1;
+        }
+
+        return numerator! / denominator;
+      },
+      ['desc']
+    );
+    console.log('after', temp.records);
+    console.log('*************************');
+
+    node.records = temp.records;
+  }
+
   return (
     <>
       {node.collectibles && node.collectibles.length > 0 && (
