@@ -26,58 +26,51 @@ export default function PresentationNodeLeaf({
     temp.records = orderBy(
       temp.records,
       (record) => {
-        let numerator;
-        let denominator;
-        let objectives;
+        /**
+         * Triumph is already completed so move it to back of list
+         * state is a bitmask where the ones place is for when the
+         * record has been redeemed.
+         */
+        if (record.recordComponent.state & 1) {
+          return -1;
+        }
 
         // check which key is used to track progress
+        let objectives;
         if (record.recordComponent.intervalObjectives) {
           objectives = record.recordComponent.intervalObjectives;
         } else {
           objectives = record.recordComponent.objectives;
         }
 
-        // triumph is already completed so move it to back of list
-        if (objectives[objectives.length - 1].complete) {
-          return -1;
-        }
-
-        /**
-         * check if completionValue is 1
-         *    if it is, it is a checkbox value
-         *      -add progress / completionValue to totalProgress
-         * else its not a checkbox so
+        /** ALGORITHM
+         * try to classify each into a type?
+         * Possible cases:
+         *    multiple checkboxes - all completion values are 1
+         *    one progress bar with milestones
+         *    one progress bar with no milestones
+         *    checkboxes an progress bar
+         *
          */
 
-        // check if the progress is divided into milestones
-        if (objectives.length > 1) {
-          // this check is for when progress is tracked through checkboxes
-          if (objectives[objectives.length - 1].completionValue === 1) {
-            numerator = 0;
-            denominator = objectives.length;
-            for (const i of objectives) {
-              if (i.complete) {
-                numerator += 1;
-              }
-            }
-          } else {
-            numerator = objectives[objectives.length - 1].progress;
-            denominator = objectives[objectives.length - 1].completionValue;
+        // its a progress bar with no milestones
+        if (objectives.length === 1) {
+          return objectives[0].progress! / objectives[0].completionValue;
+        }
+
+        const hasCheckBox: bool = false;
+        const isMileStoneBar: bool = false;
+
+        let totalProgress = 0;
+
+        for (const x of objectives) {
+          if (x.complete) {
+            totalProgress += 1;
           }
-        } else {
-          numerator = objectives[0].progress!;
-          denominator = objectives[0].completionValue;
+          totalProgress += x.progress! / x.completionValue;
         }
 
-        /**
-         * Check is done this way since some objective progress can exceed
-         * completion value
-         */
-        if (objectives.length === 1 && objectives[0].complete) {
-          return -1;
-        }
-
-        return numerator! / denominator;
+        return totalProgress / objectives.length;
       },
       ['desc']
     );
