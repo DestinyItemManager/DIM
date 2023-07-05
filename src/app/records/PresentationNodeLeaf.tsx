@@ -30,25 +30,29 @@ export default function PresentationNodeLeaf({
         let denominator;
         let objectives;
 
-        // check if which key is used to track progress
+        // check which key is used to track progress
         if (record.recordComponent.intervalObjectives) {
           objectives = record.recordComponent.intervalObjectives;
         } else {
           objectives = record.recordComponent.objectives;
         }
 
-        // triumph is already completed
+        // triumph is already completed so move it to back of list
         if (objectives[objectives.length - 1].complete) {
           return -1;
         }
 
+        /**
+         * check if completionValue is 1
+         *    if it is, it is a checkbox value
+         *      -add progress / completionValue to totalProgress
+         * else its not a checkbox so
+         */
+
         // check if the progress is divided into milestones
         if (objectives.length > 1) {
-          // progress is not checked with check boxes
-          if (objectives[objectives.length - 1].completionValue !== 1) {
-            numerator = objectives[objectives.length - 1].progress;
-            denominator = objectives[objectives.length - 1].completionValue;
-          } else {
+          // this check is for when progress is tracked through checkboxes
+          if (objectives[objectives.length - 1].completionValue === 1) {
             numerator = 0;
             denominator = objectives.length;
             for (const i of objectives) {
@@ -56,6 +60,9 @@ export default function PresentationNodeLeaf({
                 numerator += 1;
               }
             }
+          } else {
+            numerator = objectives[objectives.length - 1].progress;
+            denominator = objectives[objectives.length - 1].completionValue;
           }
         } else {
           numerator = objectives[0].progress!;
