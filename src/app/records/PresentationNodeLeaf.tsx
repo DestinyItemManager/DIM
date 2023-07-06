@@ -23,6 +23,7 @@ export default function PresentationNodeLeaf({
   if (node.records) {
     console.log('before', node.records);
     const temp = { ...node };
+    // let index = -1;
     temp.records = orderBy(
       temp.records,
       (record) => {
@@ -32,6 +33,8 @@ export default function PresentationNodeLeaf({
          * record has been redeemed.
          */
         if (record.recordComponent.state & 1) {
+          //    index++;
+          //    console.log("index1: ", index, " ", -1)
           return -1;
         }
 
@@ -43,33 +46,57 @@ export default function PresentationNodeLeaf({
           objectives = record.recordComponent.objectives;
         }
 
-        /** ALGORITHM
-         * try to classify each into a type?
-         * Possible cases:
-         *    multiple checkboxes - all completion values are 1
-         *    one progress bar with milestones
-         *    one progress bar with no milestones
-         *    checkboxes an progress bar
-         *
-         */
-
         // its a progress bar with no milestones
         if (objectives.length === 1) {
+          //     index++;
+          //      console.log("index2: ", index, " ", objectives[0].progress! / objectives[0].completionValue)
           return objectives[0].progress! / objectives[0].completionValue;
         }
 
-        const hasCheckBox: bool = false;
-        const isMileStoneBar: bool = false;
+        /** ALGORITHM
+         * try to classify each into a type?
+         * Possible cases:
+         *    multiple checkboxes - all completionValues are 1
+         *    one progress bar with milestones
+         *    checkboxes an progress bar
+         *    different progress bars with no relation
+         */
 
+        let isMilestones = true;
+
+        // This checks if there are checkboxes in the record component
+        for (let i = 1; i < objectives.length; i++) {
+          if (
+            objectives[i - 1].completionValue === 1 ||
+            objectives[i].completionValue < objectives[i - 1].completionValue
+          ) {
+            isMilestones = false;
+            break;
+          }
+        }
+
+        // its one progress bar with milestones, return the last index's progress / completionValue
+        if (isMilestones) {
+          //      index++;
+          //      console.log("index3: ", index, " ", objectives[objectives.length - 1].progress! / objectives[objectives.length - 1].completionValue)
+          return (
+            objectives[objectives.length - 1].progress! /
+            objectives[objectives.length - 1].completionValue
+          );
+        }
+
+        // it has multiple ways of tracking progress
         let totalProgress = 0;
-
         for (const x of objectives) {
+          // some progress bars exceed its completionValue
           if (x.complete) {
             totalProgress += 1;
+            continue;
           }
           totalProgress += x.progress! / x.completionValue;
         }
-
+        //    index++;
+        //  console.log("index4: ", index, " ", totalProgress)
         return totalProgress / objectives.length;
       },
       ['desc']
