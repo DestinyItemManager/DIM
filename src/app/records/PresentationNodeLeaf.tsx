@@ -1,3 +1,4 @@
+import { DestinyCollectibleState, DestinyRecordState } from 'bungie-api-ts/destiny2';
 import { orderBy } from 'lodash';
 import Collectible from './Collectible';
 import CollectiblesGrid from './CollectiblesGrid';
@@ -20,55 +21,73 @@ export default function PresentationNodeLeaf({
   completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
 }) {
-  console.log('before', node);
-  if (node.records) {
+  console.log(node);
+  if (node) {
     const temp = { ...node };
-    const index = -1;
-    temp.records = orderBy(
-      temp.records,
-      (record) => {
-        /**
-         * Triumph is already completed so move it to back of list
-         * state is a bitmask where the ones place is for when the
-         * record has been redeemed.
-         */
-        if (record.recordComponent.state & 65 || !record.recordComponent.state) {
-          return -1;
-        }
-
-        // check which key is used to track progress
-        let objectives;
-        if (record.recordComponent.intervalObjectives) {
-          objectives = record.recordComponent.intervalObjectives;
-        } else {
-          objectives = record.recordComponent.objectives;
-        }
-
-        // its a progress bar with no milestones
-        if (objectives.length === 1) {
-          return objectives[0].progress! / objectives[0].completionValue;
-        }
-
-        /**
-         * Iterate through the objectives array and return the average
-         * of its % progress
-         */
-        let totalProgress = 0;
-        for (const x of objectives) {
-          // some progress bars exceed its completionValue
-          if (x.complete) {
-            totalProgress += 1;
-            continue;
+    if (node.records) {
+      temp.records = orderBy(
+        temp.records,
+        (record) => {
+          /**
+           * Triumph is already completed so move it to back of list
+           * state is a bitmask where the ones place is for when the
+           * record has been redeemed.
+           */
+          if (
+            record.recordComponent.state & DestinyRecordState.RecordRedeemed ||
+            record.recordComponent.state & DestinyRecordState.CanEquipTitle ||
+            !record.recordComponent.state
+          ) {
+            return -1;
           }
-          totalProgress += x.progress! / x.completionValue;
-        }
-        return totalProgress / objectives.length;
-      },
-      ['desc']
-    );
-    node.records = temp.records;
+
+          // check which key is used to track progress
+          let objectives;
+          if (record.recordComponent.intervalObjectives) {
+            objectives = record.recordComponent.intervalObjectives;
+          } else {
+            objectives = record.recordComponent.objectives;
+          }
+
+          // its a progress bar with no milestones
+          if (objectives.length === 1) {
+            return objectives[0].progress! / objectives[0].completionValue;
+          }
+
+          /**
+           * Iterate through the objectives array and return the average
+           * of its % progress
+           */
+          let totalProgress = 0;
+          for (const x of objectives) {
+            // some progress bars exceed its completionValue
+            if (x.complete) {
+              totalProgress += 1;
+              continue;
+            }
+            totalProgress += x.progress! / x.completionValue;
+          }
+          return totalProgress / objectives.length;
+        },
+        ['desc']
+      );
+      node.records = temp.records;
+    } else if (node.collectibles) {
+      temp.collectibles = orderBy(
+        temp.collectibles,
+        (collectible) => {
+          if (collectible.state & DestinyCollectibleState.NotAcquired) {
+            return 1;
+          }
+          return 0;
+        },
+        ['desc']
+      );
+      node.collectibles = temp.collectibles;
+    }
   }
-  console.log('after', node.records);
+
+  console.log('after', node);
   console.log('*************************');
 
   return (
