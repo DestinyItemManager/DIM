@@ -123,7 +123,6 @@ $search-bar-height: 28px;
 // Masterwork pattern a la .src/images/exotic-masterwork.png
 // Border with gradient running into top-right / bottom-left corners
 // Dark gradient from top, masterwork border gradient from bottom, striped diamond overlay for texture
-// TODO check whether rendering a bunch of gradients is less performant than slapping in a PNG
 @mixin masterwork($top-gradient: 0.05, $light-stripe: 0.05, $dark-stripe: 0.02) {
   // Border
   border-width: 1px;
@@ -145,7 +144,7 @@ $search-bar-height: 28px;
   $light-stripe: rgba(255, 255, 255, $light-stripe);
   $dark-stripe: rgba(0, 0, 0, $dark-stripe);
   background: linear-gradient(rgba(0, 0, 0, $top-gradient) 0%, transparent 50%),
-    linear-gradient(transparent 50%, var(--theme-item-polaroid-masterwork-border) 250%),
+    linear-gradient(transparent 50%, var(--theme-item-polaroid-masterwork-border) 225%),
     repeating-linear-gradient(
         to bottom right,
         #{$light-stripe} 0%,
