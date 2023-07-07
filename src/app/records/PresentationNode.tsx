@@ -40,7 +40,7 @@ export default function PresentationNode({
   const defs = useD2Definitions()!;
   const completedRecordsHidden = useSelector(settingSelector('completedRecordsHidden'));
   const redactedRecordsRevealed = useSelector(settingSelector('redactedRecordsRevealed'));
-  const sortRecordProgression = useSelector(settingSelector('sortRecordProgression'));
+  // const sortRecordProgression = useSelector(settingSelector('sortRecordProgression'));
   const presentationNodeHash = node.nodeDef.hash;
   const headerRef = useScrollNodeIntoView(path, presentationNodeHash);
 

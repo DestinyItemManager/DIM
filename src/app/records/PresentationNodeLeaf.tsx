@@ -21,12 +21,11 @@ export default function PresentationNodeLeaf({
   completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
 }) {
-  console.log(node);
   if (node) {
-    const temp = { ...node };
+    const sortedTriumphs = { ...node };
     if (node.records) {
-      temp.records = orderBy(
-        temp.records,
+      sortedTriumphs.records = orderBy(
+        sortedTriumphs.records,
         (record) => {
           /**
            * Triumph is already completed so move it to back of list
@@ -71,10 +70,10 @@ export default function PresentationNodeLeaf({
         },
         ['desc']
       );
-      node.records = temp.records;
+      node.records = sortedTriumphs.records;
     } else if (node.collectibles) {
-      temp.collectibles = orderBy(
-        temp.collectibles,
+      sortedTriumphs.collectibles = orderBy(
+        sortedTriumphs.collectibles,
         (collectible) => {
           if (collectible.state & DestinyCollectibleState.NotAcquired) {
             return 1;
@@ -83,12 +82,27 @@ export default function PresentationNodeLeaf({
         },
         ['desc']
       );
-      node.collectibles = temp.collectibles;
+      node.collectibles = sortedTriumphs.collectibles;
+    } else if (node.metrics) {
+      // console.log(node)
+      sortedTriumphs.metrics = orderBy(
+        sortedTriumphs.metrics,
+        (metric) => {
+          const objectives = metric.metricComponent.objectiveProgress;
+          if (objectives.complete) {
+            // console.log(-1)
+            return -1;
+          }
+          // console.log(objectives.progress! / objectives.completionValue)
+          return objectives.progress! / objectives.completionValue;
+        },
+        ['desc']
+      );
+      node.metrics = sortedTriumphs.metrics;
     }
   }
-
-  console.log('after', node);
-  console.log('*************************');
+  //  console.log('after', node);
+  //  console.log('*************************');
 
   return (
     <>
