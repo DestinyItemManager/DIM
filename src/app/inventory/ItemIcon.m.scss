@@ -72,11 +72,11 @@ $commonBg: #366f42;
   left: $item-border-width;
 }
 .legendaryMasterwork {
-  @include masterwork(0.05, 0.03, 0.02);
+  @include masterwork(0.15, 0.03, 0.02);
 }
 
 .exoticMasterwork {
-  @include masterwork(0.2, 0.05, 0.03);
+  @include masterwork(0.25, 0.05, 0.03);
 }
 .deepsightBorder {
   border: 2px solid $deepsight-border-color;

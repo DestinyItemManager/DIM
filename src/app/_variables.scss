@@ -143,8 +143,8 @@ $search-bar-height: 28px;
   // Overlay
   $light-stripe: rgba(255, 255, 255, $light-stripe);
   $dark-stripe: rgba(0, 0, 0, $dark-stripe);
-  background: linear-gradient(rgba(0, 0, 0, $top-gradient) 0%, transparent 50%),
-    linear-gradient(transparent 50%, var(--theme-item-polaroid-masterwork-border) 225%),
+  background: linear-gradient(rgba(0, 0, 0, $top-gradient) 0%, transparent 33%),
+    linear-gradient(transparent 50%, var(--theme-item-polaroid-masterwork-border) 200%),
     repeating-linear-gradient(
         to bottom right,
         #{$light-stripe} 0%,
