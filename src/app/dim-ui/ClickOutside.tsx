@@ -1,8 +1,15 @@
 import { useEventBusListener } from 'app/utils/hooks';
 import { EventBus } from 'app/utils/observable';
-import React, { useCallback, useContext, useEffect, useRef } from 'react';
+import React, {
+  createContext,
+  forwardRef,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+} from 'react';
 
-export const ClickOutsideContext = React.createContext(new EventBus<React.MouseEvent>());
+export const ClickOutsideContext = createContext(new EventBus<React.MouseEvent>());
 
 type Props = React.HTMLAttributes<HTMLDivElement> & {
   children: React.ReactNode;
@@ -18,7 +25,7 @@ type Props = React.HTMLAttributes<HTMLDivElement> & {
  * React DOM hierarchy rather than the real one. This is important for things like sheets
  * spawned through portals from the item popup.
  */
-export default React.forwardRef<HTMLDivElement, Props>(function ClickOutside(
+export default forwardRef<HTMLDivElement, Props>(function ClickOutside(
   { onClickOutside, children, extraRef, onClick, ...other },
   ref
 ) {

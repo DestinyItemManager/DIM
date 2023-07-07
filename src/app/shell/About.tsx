@@ -3,22 +3,14 @@ import { clarityDiscordLink, clarityLink } from 'app/clarity/about';
 import StaticPage from 'app/dim-ui/StaticPage';
 import { t } from 'app/i18next-t';
 import { isAppStoreVersion } from 'app/utils/browsers';
+import { usePageTitle } from 'app/utils/hooks';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { UAParser } from 'ua-parser-js';
 import logo from '../../images/logo-light.svg';
 import ExternalLink from '../dim-ui/ExternalLink';
 import styles from './About.m.scss';
-import {
-  AppIcon,
-  faDiscord,
-  faGithub,
-  faReddit,
-  faTshirt,
-  heartIcon,
-  helpIcon,
-  mastodonIcon,
-} from './icons';
+import { AppIcon, faDiscord, faGithub, faTshirt, heartIcon, helpIcon, mastodonIcon } from './icons';
 
 const githubLinkDirect = 'https://github.com/DestinyItemManager/DIM/';
 const crowdinLinkDirect =
@@ -33,7 +25,6 @@ const bungieLink = `<a href='${bungieLinkDirect}' target='_blank' rel='noopener 
 const openCollectiveLink = `<a href='${openCollectiveLinkDirect}' target='_blank' rel='noopener noreferrer'>OpenCollective</a>`;
 const storeLink = `<a href='${storeLinkDirect}' target='_blank' rel='noopener noreferrer'>DesignByHumans</a>`;
 const mastodonLink = 'https://mstdn.games/@ThisIsDIM';
-const redditLink = 'https://destinyitemmanager.reddit.com';
 const discordLink = 'https://discord.gg/UK2GWC7';
 const wikiLink = 'https://github.com/DestinyItemManager/DIM/wiki';
 
@@ -55,6 +46,7 @@ function getSystemInfo() {
 }
 
 export default function About() {
+  usePageTitle(t('Header.About'));
   // The App Store version can't show donation links I guess?
   const iOSApp = isAppStoreVersion();
 
@@ -169,16 +161,6 @@ export default function About() {
             </ExternalLink>
           </h2>
           {t('Views.About.DiscordHelp')}
-        </div>
-        <div>
-          <h2>
-            <ExternalLink href={redditLink}>
-              <AppIcon icon={faReddit} />
-              {t('Views.About.Reddit')}
-            </ExternalLink>
-          </h2>
-          {t('Views.About.RedditHelp')} <br />
-          <ExternalLink href={redditLink}>/r/destinyitemmanager</ExternalLink>
         </div>
         <div>
           <h2>

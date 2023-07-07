@@ -72,6 +72,14 @@ export default function LoadoutEdit({
   const missingSockets = allItems.some((i) => i.missingSockets);
   const [plugDrawerOpen, setPlugDrawerOpen] = useState(false);
   const itemCreationContext = useSelector(createItemContextSelector);
+  const unlockedArtifactMods = useSelector(artifactUnlocksSelector(store.id));
+
+  // Don't show the artifact unlocks section unless there are artifact mods saved in this loadout
+  // or there are unlocked artifact mods we could copy into this loadout.
+  const showArtifactUnlocks = Boolean(
+    unlockedArtifactMods?.unlockedItemHashes.length ||
+      loadout.parameters?.artifactUnlocks?.unlockedItemHashes.length
+  );
 
   // TODO: filter down by usable mods?
   const modsByBucket: {
@@ -247,20 +255,22 @@ export default function LoadoutEdit({
           onClearUnsetModsChanged={handleClearUnsetModsChanged}
         />
       </LoadoutEditSection>
-      <LoadoutEditSection
-        title={artifactTitle}
-        titleInfo={t('Loadouts.ArtifactUnlocksDesc')}
-        className={styles.section}
-        onClear={handleClearArtifactUnlocks}
-        onSyncFromEquipped={profileResponse ? handleSyncArtifactUnlocksFromEquipped : undefined}
-      >
-        <LoadoutArtifactUnlocks
-          loadout={loadout}
-          storeId={store.id}
-          onRemoveMod={handleRemoveArtifactUnlock}
+      {showArtifactUnlocks && (
+        <LoadoutEditSection
+          title={artifactTitle}
+          titleInfo={t('Loadouts.ArtifactUnlocksDesc')}
+          className={styles.section}
+          onClear={handleClearArtifactUnlocks}
           onSyncFromEquipped={profileResponse ? handleSyncArtifactUnlocksFromEquipped : undefined}
-        />
-      </LoadoutEditSection>
+        >
+          <LoadoutArtifactUnlocks
+            loadout={loadout}
+            storeId={store.id}
+            onRemoveMod={handleRemoveArtifactUnlock}
+            onSyncFromEquipped={profileResponse ? handleSyncArtifactUnlocksFromEquipped : undefined}
+          />
+        </LoadoutEditSection>
+      )}
     </div>
   );
 }

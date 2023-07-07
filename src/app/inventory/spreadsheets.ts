@@ -1,4 +1,5 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
+import { gaEvent } from 'app/google';
 import { t } from 'app/i18next-t';
 import { LoadoutsByItem, loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
 import { D1_StatHashes } from 'app/search/d1-known-values';
@@ -118,8 +119,6 @@ export function downloadCsvFiles(type: 'Weapons' | 'Armor' | 'Ghost'): ThunkResu
         downloadGhost(items, nameMap, getTag, getNotes, loadoutsForItem);
         break;
     }
-
-    ga('send', 'event', 'Download CSV', type);
   };
 }
 
@@ -210,7 +209,12 @@ function capitalizeFirstLetter(str: string) {
 }
 
 function downloadCsv(filename: string, csv: string) {
-  download(csv, `${filename}.csv`, 'text/csv');
+  const filenameWithExt = `${filename}.csv`;
+  gaEvent('file_download', {
+    file_name: filenameWithExt,
+    file_extension: 'csv',
+  });
+  download(csv, filenameWithExt, 'text/csv');
 }
 
 function buildSocketNames(sockets: DimSockets): string[] {

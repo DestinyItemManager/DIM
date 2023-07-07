@@ -1,4 +1,5 @@
 import { InfuseDirection } from '@destinyitemmanager/dim-api-types';
+import { gaPageView } from 'app/google';
 import { t } from 'app/i18next-t';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { LoadoutItem } from 'app/loadout-drawer/loadout-types';
@@ -149,7 +150,7 @@ export default function InfusionFinder() {
 
   useEffect(() => {
     if (show && destinyVersion) {
-      ga('send', 'pageview', `/profileMembershipId/d${destinyVersion}/infuse`);
+      gaPageView(`/profileMembershipId/d${destinyVersion}/infuse`);
     }
   }, [destinyVersion, show]);
 

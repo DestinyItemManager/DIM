@@ -1,7 +1,7 @@
 import { isWindows } from 'app/utils/browsers';
 import { t } from 'i18next';
 import { useCallback } from 'react';
-import { Buttons, Title, default as useDialog } from './useDialog';
+import useDialog, { Buttons, Title } from './useDialog';
 
 export interface ConfirmOpts {
   okLabel?: React.ReactNode;

@@ -53,7 +53,7 @@ import { queueAction } from 'app/utils/action-queue';
 import { CancelToken, CanceledError, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
 import { emptyArray } from 'app/utils/empty';
-import { itemCanBeEquippedBy } from 'app/utils/item-utils';
+import { isClassCompatible, itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
 import {
   aspectSocketCategoryHashes,
@@ -67,7 +67,7 @@ import {
 } from 'app/utils/socket-utils';
 import { count } from 'app/utils/util';
 import { HashLookup } from 'app/utils/util-types';
-import { DestinyClass, PlatformErrorCodes } from 'bungie-api-ts/destiny2';
+import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { Draft, produce } from 'immer';
 import _ from 'lodash';
@@ -86,7 +86,12 @@ import {
   setSocketOverrideResult,
 } from './loadout-apply-state';
 import { Assignment, InGameLoadout, Loadout, LoadoutItem } from './loadout-types';
-import { backupLoadout, findItemForLoadout, getModsFromLoadout } from './loadout-utils';
+import {
+  backupLoadout,
+  findItemForLoadout,
+  getLoadoutSubclassFragmentCapacity,
+  getModsFromLoadout,
+} from './loadout-utils';
 
 // TODO: move this whole file to "loadouts" folder
 
@@ -260,7 +265,7 @@ function doApplyLoadout(
             // Don't apply perks/mods/subclass configs when moving items to the vault
             store.isVault ||
             // Only apply perks/mods/subclass configs if the item is usable by the store we're applying to
-            (item.classType !== DestinyClass.Unknown && item.classType !== store.classType)
+            !isClassCompatible(item.classType, store.classType)
           ) {
             return undefined;
           } else if (item.bucket.hash === BucketHashes.Subclass) {
@@ -1032,30 +1037,10 @@ function applySocketOverrides(
           if (aspectSocketCategoryHashes.includes(category.category.hash)) {
             handleShuffledSockets(category.socketIndexes);
           } else if (fragmentSocketCategoryHashes.includes(category.category.hash)) {
-            // For fragments, we first need to figure out how many sockets we have available.
-            // If the loadout specifies overrides for aspects, we use all override aspects to calculate
-            // fragment capacity, otherwise we look at the item itself because we don't unplug any aspects
-            // if the overrides don't list any.
-            const aspectSocketIndices = dimItem.sockets!.categories.find((c) =>
-              aspectSocketCategoryHashes.includes(c.category.hash)
-            )!.socketIndexes;
-            let aspectDefs = _.compact(
-              aspectSocketIndices.map((aspectSocketIndex) => {
-                const aspectHash = loadoutItem.socketOverrides![aspectSocketIndex];
-                return aspectHash && defs.InventoryItem.get(aspectHash);
-              })
-            );
-            if (!aspectDefs.length) {
-              aspectDefs = _.compact(
-                getSocketsByIndexes(dimItem.sockets!, aspectSocketIndices).map(
-                  (socket) => socket.plugged?.plugDef
-                )
-              );
-            }
-            const fragmentCapacity = _.sumBy(
-              aspectDefs,
-              (aspectDef) => aspectDef.plug?.energyCapacity?.capacityValue || 0
-            );
+            const fragmentCapacity = getLoadoutSubclassFragmentCapacity(defs, {
+              item: dimItem,
+              loadoutItem,
+            });
             handleShuffledSockets(category.socketIndexes.slice(0, fragmentCapacity));
           } else {
             const sockets = getSocketsByIndexes(dimItem.sockets!, category.socketIndexes);

@@ -1,12 +1,12 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { currenciesSelector } from 'app/inventory/selectors';
 import _ from 'lodash';
-import React from 'react';
+import React, { memo } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './AccountCurrencies.m.scss';
 
 /** The account currencies (glimmer, shards, etc.) */
-export default React.memo(function AccountCurrency() {
+export default memo(function AccountCurrency() {
   const currencies = useSelector(currenciesSelector);
   return currencies.length > 0 ? (
     <React.Fragment key={currencies.map((c) => c.itemHash).join()}>

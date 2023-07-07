@@ -9,7 +9,7 @@ import { useSetSetting } from 'app/settings/hooks';
 import { AppIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
 import StoreStats from 'app/store-stats/StoreStats';
 import { useEventBusListener } from 'app/utils/hooks';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { isClassCompatible } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { useMemo } from 'react';
 import StoreHeading from '../character-tile/StoreHeading';
@@ -43,9 +43,7 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
       stores.length > 2 ||
       (currentStore &&
         stores.some((s) =>
-          s.items.some(
-            (i) => i.classType !== DestinyClass.Unknown && i.classType !== currentStore.classType
-          )
+          s.items.some((i) => !isClassCompatible(i.classType, currentStore.classType))
         )),
     [stores, currentStore]
   );

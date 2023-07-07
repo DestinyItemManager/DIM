@@ -24,7 +24,7 @@ export default function D1Vendors({ account }: { account: DestinyAccount }) {
     [vendorHash: number]: Vendor;
   }>();
 
-  useLoadStores(account);
+  const storesLoaded = useLoadStores(account);
 
   useEffect(() => {
     (async () => {
@@ -35,7 +35,7 @@ export default function D1Vendors({ account }: { account: DestinyAccount }) {
     })();
   }, [stores.length, dispatch]);
 
-  if (!vendors || !stores.length) {
+  if (!vendors || !storesLoaded) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 

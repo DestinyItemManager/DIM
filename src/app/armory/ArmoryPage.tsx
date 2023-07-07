@@ -2,10 +2,12 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
+import { usePageTitle } from 'app/utils/hooks';
 import { useLocation, useParams } from 'react-router';
 import Armory from './Armory';
 
 export default function ArmoryPage({ account }: { account: DestinyAccount }) {
+  usePageTitle(t('Armory.Armory'));
   const { itemHash: itemHashString } = useParams();
   const itemHash = parseInt(itemHashString ?? '', 10);
   const { search } = useLocation();

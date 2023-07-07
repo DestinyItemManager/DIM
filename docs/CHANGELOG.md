@@ -1,6 +1,40 @@
 ## Next
 
+* Fixed Fashion Loadouts being unable to store an Ornament for the Titan exotic Loreley Splendor Helm.
+
+## 7.75.0 <span class="changelog-date">(2023-07-02)</span>
+
+* Organizer's "Loadouts" column now sorts items by the number of Loadouts using them.
+* Added `memento:none` filter to highlight weapons with an empty memento socket.
+* `deepsight:harmonizable` highlights weapons where Deepsight Resonance can be activated using a Deepsight Harmonizer.
+
+## 7.74.0 <span class="changelog-date">(2023-06-25)</span>
+
+* You may now include vendors' items in loadout optimizer, in case they have a better roll available than what you have.
+
+## 7.73.0 <span class="changelog-date">(2023-06-18)</span>
+
+* DIM should no longer show a popup to enable DIM Sync before you've logged in.
+* Fixed drag and drop on Android.
+* Fixed scroll bar behaving weirdly on the sidebar of certain pages.
+
+## 7.72.0 <span class="changelog-date">(2023-06-11)</span>
+
+* Fixed showing the item under your finger while you're dragging it on iOS/iPadOS. As a reminder, on touchscreen devices you need to press the item for a little bit to "pick it up". And as a reminder for everyone, any time you see an item in DIM, pretty much wherever it is, you can drag it around to move the item or add it to a Loadout you're editing. This works from the Inventory, Item Feed, Loadouts screen, etc.
+* The Loadouts page now has a filter pill to find Loadouts with empty Fragment sockets.
+* The popup shown on the refresh button when Bungie.net is down no longer has buttons you can't click, and no longer exceeds the width of the screen on mobile.
+* DIM will not update itself in the background if you're in the middle of editing a loadout or doing many other tasks.
+* Removed references to Reddit.
+* Improved performance of viewing lots of loadouts, especially on iOS. The Loadouts page should no longer hang on load on iOS.
+* The tab title includes the name of the current page you're on.
+* Fixed the keyboard automatically appearing on the iOS App Store version.
+* Removed support for old Loadout Optimizer share links.
+* Fixed showing catalyst perk descriptions.
+
+## 7.71.0 <span class="changelog-date">(2023-06-04)</span>
+
 * Added Community Insights for the impact of various stat tiers on ability cooldowns, etc. This takes into account your current subclass config and equipped exotic. For loadouts, it uses the subclass config and exotic that are saved in the loadout to display details. This information comes from the Clarity database, and like all Community Insights is sourced from lots of manual investigation.
+* Automatic stat mods in Loadout Optimizer have graduated from Beta! We now remember this setting, and we ignore any manually chosen stat mods when auto stat mods are on. Enabling auto stat mods allows Loadout Optimizer to automatically assign stat mods to potential loadouts in order to hit the stats you've requested, in the priority order that you've chosen.
 * Fixed an issue where DIM might not properly force you to re-login with Bungie.net, and would instead continually throw errors trying to talk to Bungie.net.
 * The loadout dropdown in the "Compare Loadouts" sheet from Loadout Optimizer can no longer be taller than the screen.
 * Added `is:iningameloadout` search to find items that are in an in-game loadout.
@@ -9,7 +43,15 @@
 * `is:inloadout:` searches now autocomplete hashtags in loadout names and descriptions.
 * Fixed plugging Harmonic Resonance mods when using a Strand subclass.
 * You can now drag and drop subclasses into the loadout editor, including from other loadouts.
-* Added a toggle button for sorting tabs in the records page.
+* When DIM is installed as a PWA on desktop, you can now choose to hide the title bar.
+* Removed loadout sharing buttons from Loadout Optimizer. You can share from the Loadouts screen.
+* Hid the Artifact Unlocks section from loadouts until Bungie.net starts returning artifact info again.
+* Improved highlighting and selection styles for item perks.
+* Improved layout for mods in the Compare drawer - they stay in a line now.
+* Vendors will now show your current count of Engrams and other resources needed for focusing in their currencies section.
+* Added `is:focusable` search to find items that can be focused at a vendor.
+* Fixed DIM not showing Leviathan's Breath catalyst progress in the item popup.
+* Cleaned up the design of Loadout Optimizer stats, mod picker, exotic picker, and subclass editor.
 
 ## 7.70.0 <span class="changelog-date">(2023-05-28)</span>
 

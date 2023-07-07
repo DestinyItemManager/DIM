@@ -1,4 +1,3 @@
-import { isEventFromFirefoxScrollbar } from 'app/utils/browsers';
 import clsx from 'clsx';
 import React, { useCallback, useRef } from 'react';
 import styles from './SheetHorizontalScrollContainer.m.scss';
@@ -29,10 +28,6 @@ export function SheetHorizontalScrollContainer({
     scrolling: boolean;
   }>();
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
-    if (isEventFromFirefoxScrollbar(e)) {
-      return;
-    }
-
     // Don't do any of this if the view isn't scrollable in the first place
     if (ref.current!.scrollWidth <= ref.current!.clientWidth) {
       return;

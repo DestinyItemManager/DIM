@@ -4,7 +4,7 @@ import { allItemsSelector, storesSelector } from 'app/inventory/selectors';
 import { allInGameLoadoutsSelector } from 'app/loadout/ingame/selectors';
 import { manifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { isClassCompatible } from 'app/utils/item-utils';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
 import { InGameLoadout, Loadout, LoadoutItem, isInGameLoadout } from './loadout-types';
@@ -71,11 +71,7 @@ export const loadoutsByItemSelector = createSelector(
             // applicable stores for the loadout and associate every resolved
             // instance ID with the loadout.
             for (const store of stores) {
-              if (
-                store.classType !== DestinyClass.Unknown &&
-                (loadout.classType === DestinyClass.Unknown ||
-                  loadout.classType === store.classType)
-              ) {
+              if (!store.isVault && isClassCompatible(store.classType, loadout.classType)) {
                 const resolvedItem = getUninstancedLoadoutItem(allItems, info.hash, store.id);
                 if (resolvedItem) {
                   recordLoadout(resolvedItem.id, loadout, loadoutItem);

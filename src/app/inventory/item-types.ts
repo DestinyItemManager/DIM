@@ -507,6 +507,8 @@ export interface DimSocket {
   isMod: boolean;
   /** Is this socket reusable? This is a notably different behavior and UI in Destiny, displayed in circles rather than squares. */
   isReusable: boolean;
+  /** Is this socket visible in-game? DIM mostly ignores this, but for some known sockets this controls item behavior / filter matching */
+  visibleInGame?: boolean;
   /** Deep information about this socket, including what types of things can be inserted into it. TODO: do we need all of this? */
   socketDefinition: DestinyItemSocketEntryDefinition;
 }

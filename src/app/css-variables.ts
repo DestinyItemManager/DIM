@@ -31,6 +31,9 @@ export default function updateCSSVariables() {
     ) {
       setCSSVariable('--tiles-per-char-column', nextState.charColMobile);
     }
+
+    // TODO: temporary until we have theme switching
+    syncThemeColor();
   });
 
   // a subscribe on isPhonePortrait is needed when the user on mobile changes from portrait to landscape
@@ -66,5 +69,21 @@ export default function updateCSSVariables() {
     };
     defineVH();
     window.addEventListener('resize', defineVH);
+  }
+}
+
+/**
+ * Read the --theme-pwa-chrome-background CSS variable and use it to set the meta theme-color element.
+ */
+// TODO: this will end up needing to be reactive to theme changes when those exist
+export function syncThemeColor() {
+  const background = getComputedStyle(document.documentElement).getPropertyValue(
+    '--theme-pwa-chrome-background'
+  );
+  if (background) {
+    const metaElem = document.querySelector("meta[name='theme-color']");
+    if (metaElem) {
+      metaElem.setAttribute('content', background);
+    }
   }
 }

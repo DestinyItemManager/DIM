@@ -105,7 +105,7 @@ export default function Select<T>({
   let buttonStyle: CSSProperties | undefined;
 
   const dropdownStyle: CSSProperties = {
-    overflowY: 'scroll',
+    overflowY: 'auto',
     overscrollBehaviorY: 'contain',
     maxHeight: dropdownHeight,
   };

@@ -10,7 +10,8 @@ export default function csp(env: 'release' | 'beta' | 'dev') {
     defaultSrc: ["'none'"],
     scriptSrc: [
       SELF,
-      'https://www.google-analytics.com',
+      'https://*.googletagmanager.com',
+      'https://*.google-analytics.com',
       // Twitter Widget
       'https://platform.twitter.com',
       // OpenCollective backers
@@ -27,7 +28,9 @@ export default function csp(env: 'release' | 'beta' | 'dev') {
     connectSrc: [
       SELF,
       // Google Analytics
-      'https://www.google-analytics.com',
+      'https://*.google-analytics.com',
+      'https://*.analytics.google.com',
+      'https://*.googletagmanager.com',
       // Bungie.net API
       'https://www.bungie.net',
       // Sentry
@@ -49,9 +52,8 @@ export default function csp(env: 'release' | 'beta' | 'dev') {
       // Bungie.net images
       'https://www.bungie.net',
       // Google analytics tracking
-      'https://ssl.google-analytics.com',
-      'https://www.google-analytics.com',
-      'https://csi.gstatic.com',
+      'https://*.google-analytics.com',
+      'https://*.googletagmanager.com',
       // OpenCollective backers
       'https://opencollective.com',
     ],

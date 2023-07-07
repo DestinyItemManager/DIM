@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import { querySelector, searchQueryVersionSelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import React, { useCallback, useMemo } from 'react';
+import React, { forwardRef, useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { setSearchQuery } from '../shell/actions';
@@ -13,7 +13,7 @@ import { SearchInput } from './SearchInput';
 /**
  * The main search filter that's in the header.
  */
-export default React.forwardRef(function SearchFilter(
+export default forwardRef(function SearchFilter(
   {
     onClear,
   }: {
@@ -50,7 +50,7 @@ export default React.forwardRef(function SearchFilter(
         : onProgress
         ? t('Header.FilterHelpProgress')
         : onOptimizer
-        ? t('Header.FilterHelpOptimizer', { example: '-is:exotic, modslot:nightmare' })
+        ? t('Header.FilterHelpOptimizer', { example: '-is:exotic, perkname:"iron lord\'s pride"' })
         : onLoadouts
         ? t('Header.FilterHelpLoadouts')
         : isPhonePortrait

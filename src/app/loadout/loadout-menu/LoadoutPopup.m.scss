@@ -37,6 +37,10 @@
   list-style: none;
 }
 
+.note {
+  color: #888;
+}
+
 .menuItem {
   display: flex;
   flex-direction: row;
@@ -160,10 +164,6 @@
 
 .content {
   color: #e4e4e4;
-}
-
-.note {
-  color: #888;
 }
 
 .filterInput {

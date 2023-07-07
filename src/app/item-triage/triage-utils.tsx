@@ -5,9 +5,8 @@ import { armorStats, CUSTOM_TOTAL_STAT_HASH, TOTAL_STAT_HASH } from 'app/search/
 import { ItemFilter } from 'app/search/filter-types';
 import { quoteFilterString } from 'app/search/query-parser';
 import { classFilter, itemTypeFilter } from 'app/search/search-filters/known-values';
-import { getInterestingSocketMetadatas } from 'app/utils/item-utils';
+import { getInterestingSocketMetadatas, isClassCompatible } from 'app/utils/item-utils';
 import { getIntrinsicArmorPerkSocket } from 'app/utils/socket-utils';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { Factor, factorComboCategories, FactorComboCategory, factorCombos } from './triage-factors';
 
@@ -215,9 +214,7 @@ function collectRelevantStatMaxes(
       // compare only items with the same canonical bucket.
       item.bucket.hash !== exampleItem.bucket.hash ||
       // item needs to be class-comparable
-      (exampleItem.classType !== DestinyClass.Unknown &&
-        item.classType !== DestinyClass.Unknown &&
-        item.classType !== exampleItem.classType) ||
+      !isClassCompatible(exampleItem.classType, item.classType) ||
       // compare exotics' stats only to dupes
       (exampleItem.isExotic && exampleItem.hash !== item.hash)
     ) {

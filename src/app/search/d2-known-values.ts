@@ -58,12 +58,12 @@ export const emptySocketHashes = [
 ];
 
 export const armor2PlugCategoryHashesByName = {
-  general: PlugCategoryHashes.EnhancementsV2General,
   helmet: PlugCategoryHashes.EnhancementsV2Head,
   gauntlets: PlugCategoryHashes.EnhancementsV2Arms,
   chest: PlugCategoryHashes.EnhancementsV2Chest,
   leg: PlugCategoryHashes.EnhancementsV2Legs,
   classitem: PlugCategoryHashes.EnhancementsV2ClassItem,
+  general: PlugCategoryHashes.EnhancementsV2General,
 } as const;
 
 /** The consistent armour 2 mod category hashes. This excludes raid, combat and legacy slots as they tend to change. */
@@ -267,6 +267,8 @@ export const VENDORS = {
    * of that season's artifact
    */
   ARTIFACT: 2894222926,
+  DEVRIM_KAY: 396892126,
+  FAILSAFE: 1576276905,
 };
 
 /** used to snag the icon for display */
@@ -279,7 +281,7 @@ export const FISHING_BAIT_PERK = 3056678280;
 export const ALL_TRAIT = 1434215347;
 
 /** the trait hash that is used to identify Exotic weapon catalyst plugs */
-export const EXOTIC_CATALYST_TRAIT = 1505531793;
+export const EXOTIC_CATALYST_TRAIT = 4036726046;
 
 /**
  * Maps TierType to tierTypeName in English and vice versa.

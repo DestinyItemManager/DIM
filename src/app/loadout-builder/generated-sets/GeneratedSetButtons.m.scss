@@ -1,7 +1,7 @@
 @use '../../variables.scss' as *;
 
 .buttons {
-  width: min-content;
+  grid-area: buttons;
   text-align: center;
   display: flex;
   flex-direction: column;

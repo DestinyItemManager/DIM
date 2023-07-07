@@ -134,3 +134,13 @@ export function useHeightFromViewportBottom(
     return () => window.visualViewport!.removeEventListener('resize', updateHeight);
   }, [setHeightFromViewportBottom, elementRef, itemHeight, padding]);
 }
+
+export function usePageTitle(title: string) {
+  useEffect(() => {
+    const titleElem = document.getElementsByTagName('title')[0]!;
+    titleElem.textContent = `DIM - ${title}`;
+    return () => {
+      titleElem.textContent = `DIM`;
+    };
+  }, [title]);
+}
