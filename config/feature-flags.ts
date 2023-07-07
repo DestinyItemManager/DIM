@@ -43,6 +43,6 @@ export function makeFeatureFlags(env: { release: boolean; beta: boolean; dev: bo
     solsticePresentationNodes: false,
     // not ready to turn these on but the code is there
     customStatWeights: false,
-    themePicker: false,
+    themePicker: env.dev,
   };
 }
