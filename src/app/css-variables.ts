@@ -33,8 +33,7 @@ export default function updateCSSVariables() {
     }
 
     // Set a class on the body to control the theme
-    document.body.className = currentState.theme;
-    if (currentState.theme !== nextState.theme) {
+    if ($featureFlags.themePicker && currentState.theme !== nextState.theme) {
       const themeClass = 'theme-' + nextState.theme;
       document.body.className = themeClass;
     }
