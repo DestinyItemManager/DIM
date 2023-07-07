@@ -81,6 +81,11 @@ const languageOptions = mapToOptions({
 // This state is outside the settings page because the settings loses its
 let languageChanged = false;
 
+const themeOptions = mapToOptions({
+  default: 'Classic DIM (Default)',
+  dark: 'Dark',
+});
+
 export default function SettingsPage() {
   usePageTitle(t('Settings.Settings'));
   const dispatch = useThunkDispatch();
@@ -136,6 +141,11 @@ export default function SettingsPage() {
     i18next.changeLanguage(language, () => {
       setSetting('language', language);
     });
+  };
+
+  const changeTheme = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const theme = e.target.value;
+    setSetting('theme', theme);
   };
 
   const changeDescriptionDisplay = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -231,6 +241,7 @@ export default function SettingsPage() {
 
   const menuItems = _.compact([
     { id: 'general', title: t('Settings.Language') },
+    $featureFlags.themePicker ? { id: 'theme', title: t('Settings.Theme') } : undefined,
     { id: 'items', title: t('Settings.Items') },
     { id: 'inventory', title: t('Settings.Inventory') },
     $featureFlags.wishLists ? { id: 'wishlist', title: t('WishListRoll.Header') } : undefined,
@@ -273,6 +284,21 @@ export default function SettingsPage() {
               )}
             </div>
           </section>
+
+          {$featureFlags.themePicker && (
+            <section id="theme">
+              <h2>{t('Settings.Theme')}</h2>
+              <div className="setting">
+                <Select
+                  label={t('Settings.Theme')}
+                  name="theme"
+                  value={settings.theme}
+                  options={themeOptions}
+                  onChange={changeTheme}
+                />
+              </div>
+            </section>
+          )}
 
           <section id="items">
             <h2>{t('Settings.Items')}</h2>

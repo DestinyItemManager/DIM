@@ -32,6 +32,13 @@ export default function updateCSSVariables() {
       setCSSVariable('--tiles-per-char-column', nextState.charColMobile);
     }
 
+    // Set a class on the body to control the theme
+    document.body.className = currentState.theme;
+    if (currentState.theme !== nextState.theme) {
+      const themeClass = 'theme-' + nextState.theme;
+      document.body.className = themeClass;
+    }
+
     // TODO: temporary until we have theme switching
     syncThemeColor();
   });
