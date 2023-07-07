@@ -6,19 +6,6 @@ $horizontal-padding: 11px;
   user-select: none;
   touch-action: none;
   -webkit-touch-callout: none;
-
-  @media (hover: hover) {
-    &:hover {
-      text-decoration: 1px underline dashed var(--theme-tooltip-underline);
-      text-underline-offset: 4px;
-
-      &::before,
-      &::after {
-        display: inline-block !important;
-        text-decoration: none !important;
-      }
-    }
-  }
 }
 
 .tooltip {
