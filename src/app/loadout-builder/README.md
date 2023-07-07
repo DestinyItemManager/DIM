@@ -37,7 +37,7 @@ Now lets get a little more in depth and look at the journey we take through spec
 
     The grouping is a little complicated as it aims to group as many items as it can, class items are a good example here. For example, if you have no mods locked there are essentially two types of class items, masterworked and non-masterworked as masterworked have stats.
 
-    This needs to get more complicated as we start locking mods, as energy type and activity mod slot type (e.g. raid or nightmare) become important in the processing algorithm. At this point it's best to just go and read the `groupItems` function and it's comment to get a better idea at what it does.
+    This needs to get more complicated as we start locking mods, as activity mod slot types (e.g. raid or nightmare) become important in the processing algorithm. At this point it's best to just go and read the `groupItems` function and it's comment to get a better idea at what it does.
 
 1. Now we map items down to a smaller footprint with some calculated values. The web worker essentially works over a Post request, so smaller objects here mean less data to be transferred. Also precalculating some values saves us doing it in the heavy loop in the web worker.
 
@@ -46,7 +46,6 @@ Now lets get a little more in depth and look at the journey we take through spec
     Notably here we calculate the following values for items
     - The energy used from slot specific mods
     - The energy capacity available with the selected armor upgrades, if we have an option that assumes items are masterworked this will always be 10
-    - The energy type available with the selected armor upgrades and locked mods, if an item is allowed to swap energy type this will be the `Any` type
     - The tags of mods which can be socketed into the item e.g. VoG raid mods or nightmare mods
 
 1. Next we send all the mapped items and various other values to the web worker. The web worker is created in `process/useProcess#useProcess` but the script it runs lives in `process-worker/process#process` because it needs a special `tsconfig` setup for web workers.

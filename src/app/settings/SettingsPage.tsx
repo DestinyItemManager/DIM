@@ -15,6 +15,7 @@ import DimApiSettings from 'app/storage/DimApiSettings';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import StreamDeckSettings from 'app/stream-deck/StreamDeckSettings/StreamDeckSettings';
 import { clearAppBadge } from 'app/utils/app-badge';
+import { usePageTitle } from 'app/utils/hooks';
 import { errorLog } from 'app/utils/log';
 import i18next from 'i18next';
 import exampleWeaponImage from 'images/example-weapon.jpg';
@@ -81,6 +82,7 @@ const languageOptions = mapToOptions({
 let languageChanged = false;
 
 export default function SettingsPage() {
+  usePageTitle(t('Settings.Settings'));
   const dispatch = useThunkDispatch();
   const settings = useSelector(settingsSelector);
   const currentAccount = useSelector(currentAccountSelector);

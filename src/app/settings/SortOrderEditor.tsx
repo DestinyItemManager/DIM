@@ -2,7 +2,7 @@ import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea
 import { t } from 'app/i18next-t';
 import clsx from 'clsx';
 import _ from 'lodash';
-import React from 'react';
+import React, { memo } from 'react';
 import {
   AppIcon,
   dragHandleIcon,
@@ -22,7 +22,7 @@ export interface SortProperty {
   readonly reversed: boolean;
 }
 
-const SortEditorItemList = React.memo(({ order }: { order: SortProperty[] }) => (
+const SortEditorItemList = memo(({ order }: { order: SortProperty[] }) => (
   <>
     {order.map((item, index) => (
       <SortEditorItem key={item.id} item={item} index={index} />

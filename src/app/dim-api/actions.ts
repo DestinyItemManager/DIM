@@ -3,6 +3,7 @@ import { needsDeveloper } from 'app/accounts/actions';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { accountsSelector, currentAccountSelector } from 'app/accounts/selectors';
 import { dimErrorToaster } from 'app/bungie-api/error-toaster';
+import { getToken } from 'app/bungie-api/oauth-tokens';
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import { Settings, initialSettingsState } from 'app/settings/initial-settings';
@@ -168,7 +169,8 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
     }
 
     // Show a prompt if the user has not said one way or another whether they want to use the API
-    if (getState().dimApi.apiPermissionGranted === null) {
+    const hasBungieToken = Boolean(getToken());
+    if (getState().dimApi.apiPermissionGranted === null && hasBungieToken) {
       waitingForApiPermission = true;
       try {
         const useApi = await promptForApiPermission();

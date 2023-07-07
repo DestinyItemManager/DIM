@@ -11,6 +11,7 @@ import {
 } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { allItemsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
@@ -61,7 +62,7 @@ interface LoadoutBuilderConfiguration {
   statFilters: Readonly<StatFilters>;
   pinnedItems: PinnedItems;
   excludedItems: ExcludedItems;
-  selectedStoreId?: string;
+  selectedStoreId: string;
   subclass?: ResolvedLoadoutItem;
 }
 
@@ -80,33 +81,30 @@ export function warnMissingClass(classType: DestinyClass, defs: D2ManifestDefini
 
 const lbConfigInit = ({
   stores,
+  allItems,
   defs,
   preloadedLoadout,
-  initialClassType,
-  initialLoadoutParameters,
   savedLoadoutBuilderParameters,
   savedStatConstraintsPerClass,
 }: {
   stores: DimStore[];
+  allItems: DimItem[];
   defs: D2ManifestDefinitions;
   preloadedLoadout: Loadout | undefined;
-  initialClassType: DestinyClass | undefined;
-  initialLoadoutParameters: LoadoutParameters | undefined;
   savedLoadoutBuilderParameters: LoadoutParameters;
   savedStatConstraintsPerClass: { [classType: number]: StatConstraint[] };
 }): LoadoutBuilderConfiguration => {
-  const pinnedItems: PinnedItems = {};
-
   // Preloaded loadouts from the "Optimize Armor" button take priority
-  let classType: DestinyClass = initialClassType ?? DestinyClass.Unknown;
+  const classTypeFromPreloadedLoadout = preloadedLoadout?.classType ?? DestinyClass.Unknown;
   // Pick a store that matches the classType
-  const storeMatchingClass = pickBackingStore(stores, undefined, classType);
+  const storeMatchingClass = pickBackingStore(stores, undefined, classTypeFromPreloadedLoadout);
+  let initialLoadoutParameters = preloadedLoadout?.parameters;
 
   // If we requested a specific class type but the user doesn't have it, we
   // need to pick some different store, but ensure that class-specific stuff
   // doesn't end up in LO parameters.
-  if (!storeMatchingClass && classType !== DestinyClass.Unknown) {
-    warnMissingClass(classType, defs);
+  if (!storeMatchingClass && classTypeFromPreloadedLoadout !== DestinyClass.Unknown) {
+    warnMissingClass(classTypeFromPreloadedLoadout, defs);
     initialLoadoutParameters = { ...initialLoadoutParameters, exoticArmorHash: undefined };
     // ensure we don't start a LO session with items for a totally different class type
     preloadedLoadout = undefined;
@@ -115,7 +113,7 @@ const lbConfigInit = ({
   // Fall back to the current store if we didn't find a store matching our class
   const selectedStore = storeMatchingClass ?? getCurrentStore(stores)!;
   const selectedStoreId = selectedStore.id;
-  classType = selectedStore.classType;
+  const classType = selectedStore.classType;
 
   // In order of increasing priority:
   // default parameters, global saved parameters, stat order for this class,
@@ -128,13 +126,14 @@ const lbConfigInit = ({
   loadoutParameters = { ...loadoutParameters, ...initialLoadoutParameters };
 
   let subclass: ResolvedLoadoutItem | undefined;
+  const pinnedItems: PinnedItems = {};
 
   // Loadouts only support items that are supported by the Loadout's class
   if (preloadedLoadout) {
-    // TODO: instead of locking items, show the loadout fixed at the top to compare against and leave all items free
+    // Pin all the items in the preloaded loadout, and extract its subclass
+    // TODO: instead of pinning items, show the loadout fixed at the top to compare against and leave all items free
     for (const loadoutItem of preloadedLoadout.items) {
       if (loadoutItem.equip) {
-        const allItems = stores.flatMap((s) => s.items);
         const item = findItemForLoadout(defs, allItems, selectedStoreId, loadoutItem);
         if (item && isLoadoutBuilderItem(item)) {
           pinnedItems[item.bucket.hash] = item;
@@ -153,6 +152,7 @@ const lbConfigInit = ({
       }
     }
 
+    // If we load a loadout with an exotic, pre-fill the exotic armor selection
     if (!loadoutParameters.exoticArmorHash) {
       const equippedExotic = preloadedLoadout.items
         .filter((li) => li.equip)
@@ -172,7 +172,9 @@ const lbConfigInit = ({
   const statOrder = statOrderFromLoadoutParameters(loadoutParameters);
   const statFilters = statFiltersFromLoadoutParamaters(loadoutParameters);
 
-  // Also delete artifice mods -- artifice mods are always picked automatically per set.
+  // Also delete artifice mods -- artifice mods are always picked automatically
+  // per set. In contrast we remove stat mods dynamically depending on the auto
+  // stat mods setting.
   if (loadoutParameters.mods) {
     loadoutParameters.mods = loadoutParameters.mods.filter((modHash) => {
       const def = defs.InventoryItem.get(modHash);
@@ -183,7 +185,6 @@ const lbConfigInit = ({
       );
     });
   }
-  delete loadoutParameters.lockArmorEnergyType;
 
   return {
     loadoutParameters,
@@ -543,12 +544,11 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
 export function useLbState(
   stores: DimStore[],
   defs: D2ManifestDefinitions,
-  preloadedLoadout: Loadout | undefined,
-  initialClassType: DestinyClass | undefined,
-  initialLoadoutParameters: LoadoutParameters | undefined
+  preloadedLoadout: Loadout | undefined
 ) {
   const savedLoadoutBuilderParameters = useSelector(savedLoadoutParametersSelector);
   const savedStatConstraintsPerClass = useSelector(savedLoStatConstraintsByClassSelector);
+  const allItems = useSelector(allItemsSelector);
 
   const {
     state: lbConfState,
@@ -560,10 +560,9 @@ export function useLbState(
   } = useHistory(
     lbConfigInit({
       stores,
+      allItems,
       defs,
       preloadedLoadout,
-      initialClassType,
-      initialLoadoutParameters,
       savedLoadoutBuilderParameters,
       savedStatConstraintsPerClass,
     })

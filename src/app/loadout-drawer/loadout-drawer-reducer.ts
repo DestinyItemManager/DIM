@@ -11,7 +11,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { mapToNonReducedModCostVariant } from 'app/loadout/mod-utils';
 import { showNotification } from 'app/notifications/notifications';
-import { itemCanBeInLoadout } from 'app/utils/item-utils';
+import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyClass, DestinyProfileResponse, TierType } from 'bungie-api-ts/destiny2';
@@ -76,7 +76,7 @@ export function addItem(
       return;
     }
 
-    if (item.classType !== DestinyClass.Unknown && draftLoadout.classType !== item.classType) {
+    if (!isClassCompatible(item.classType, draftLoadout.classType)) {
       showNotification({
         type: 'warning',
         title: t('Loadouts.ClassTypeMismatch', { className: item.classTypeNameLocalized }),
@@ -346,10 +346,8 @@ export function clearLoadoutParameters(): LoadoutUpdateFunction {
     if (draft.parameters) {
       delete draft.parameters.assumeArmorMasterwork;
       delete draft.parameters.exoticArmorHash;
-      delete draft.parameters.lockArmorEnergyType;
       delete draft.parameters.query;
       delete draft.parameters.statConstraints;
-      delete draft.parameters.upgradeSpendTier;
       delete draft.parameters.autoStatMods;
     }
   });

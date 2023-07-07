@@ -11,7 +11,8 @@
 .item {
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: flex-start;
-  margin: 8px 0 16px 0;
+  margin: 8px 0;
+  padding-left: 1px; // to account for the item hover outline
 }
 
 .info {

@@ -3,7 +3,7 @@ import { tl } from 'app/i18next-t';
 import { DimItem, DimStat } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { maxLightItemSet, maxStatLoadout } from 'app/loadout-drawer/auto-loadouts';
-import { getStatValuesByHash } from 'app/utils/item-utils';
+import { getStatValuesByHash, isClassCompatible } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { FilterDefinition } from '../filter-types';
@@ -211,8 +211,8 @@ function createStatCombiner(
 
       if (namedCustomStats.length) {
         return (statValuesByHash: NodeJS.Dict<number>, _: any, item: DimItem) => {
-          const thisClassCustomStat = namedCustomStats.find(
-            (c) => c.class === item.classType || c.class === DestinyClass.Unknown
+          const thisClassCustomStat = namedCustomStats.find((c) =>
+            isClassCompatible(c.class, item.classType)
           );
           // if this item's guardian class doesn't have a custom stat named statName
           // return false to not match

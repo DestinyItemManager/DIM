@@ -27,6 +27,7 @@
     "WeeklyHeroic": "주간 영웅 공격전"
   },
   "Armory": {
+    "Armory": "무기고",
     "NoNotes": "메모 없음",
     "OpenInArmory": "무기고에서 보기",
     "Season": "{{season}}시즌, {{year}}년차",
@@ -140,8 +141,7 @@
   },
   "ErrorPanel": {
     "Description": "Destiny 2 컴패니언 앱에서 소지품을 불러와서 Bungie.net 서버 상태를 확인해 보세요.",
-    "EmblemError": "게임 내 모든 캐릭터의 문양을 교체하여 이 문제를 해결할 수 있습니다.",
-    "EmblemErrorLink": "문제를 해결하려면 다음을 참고하십시오.",
+    "ReadTheGuide": "문제가 발생한 경우 사용 설명서(메뉴의 링크)를 읽어보세요.",
     "SystemDown": "이 문제는 모든 데스티니 앱에 해당되며, DIM 팀이 고치거나 우회할 수 없습니다.",
     "Troubleshooting": "문제 해결 가이드"
   },
@@ -218,7 +218,7 @@
     "CurrentClass": "현재 접속한 수호자에게 장착할 수 있는 아이템을 표시합니다.",
     "CustomStatLower": "사용자 정의 총합 능력치만 고려하여 동일한 종류의 다른 방어구보다 능력치가 확실하게 낮은 방어구를 표시합니다.",
     "DamageType": "공격 속성에 따라 아이템을 표시합니다.",
-    "Deepsight": "패턴을 추출할 수 있는 심안 공명이 담긴 무기 표시",
+    "Deepsight": "심안 공명에서 패턴을 추출할 수 있거나 심안 융화기를 사용하여 심안 공명을 활성화할 수 있는 무기 표시",
     "Description": "설명",
     "Dupe": "재출시를 포함하여 중복된 아이템을 표시합니다.",
     "DupeCount": "특정 개수만큼 중복된 아이템 표시",
@@ -234,7 +234,6 @@
     "Focusable": "상인에게서 집중 가능한 아이템 표시",
     "Foundry": "제조사에 따라 아이템을 표시합니다.",
     "Glimmer": "미광체 수급에 관련된 소모품을 표시합니다.",
-    "HasMemento": "유품이 삽입된 제작된 무기를 표시합니다.",
     "HasNotes": "메모가 추가된 아이템 표시",
     "HasOrnament": "장식이 적용된 아이템을 표시합니다.",
     "HasShader": "안료가 적용된 아이템을 표시합니다.",
@@ -263,6 +262,7 @@
     "MasterworkKills": "걸작 처치 추적기 수치에 따라 아이템을 표시합니다.",
     "MaxPower": "각 슬롯에서 가장 높은 전투력의 아이템을 표시합니다.",
     "MaxPowerLoadout": "로드아웃에서 각 직업의 전투력을 최대화할 수 있는 아이템을 표시합니다.",
+    "Memento": "유품 소켓이 있는 무기 표시",
     "ModSlot": "특정 시즌의 개조 부품 슬롯이 있는 방어구를 표시합니다.",
     "Mods": {
       "Y2": "2년 차 개조 부품이 장착된 아이템을 표시합니다.",
@@ -578,6 +578,7 @@
     "ExistingLoadout": "기존 로드아웃",
     "ExoticSpecialCategory": "특수",
     "Filter": "필터",
+    "IncludeVendorItems": "상인 아이템 포함",
     "Legendary": "전설",
     "LockEquipped": "장착된 아이템 고정",
     "LockItem": "아이템 잠금",
@@ -659,6 +660,7 @@
     "DimLoadouts": "DIM 로드아웃",
     "Edit": "로드아웃 편집",
     "EditBrief": "수정",
+    "EmptyFragmentSlots": "조각 슬롯이 비어있음",
     "EquipInGameLoadout": "게임 내 로드아웃 장착",
     "EquipItems": "장비 장착 중",
     "EquippableDifferent1": "최대 전투력을 계산할 때 여러 개의 경이 아이템이 사용되었으므로, 게임 내 아이템을 장착할 때 표시된 숫자를 달성하지 못할 수 있습니다.",
@@ -786,6 +788,7 @@
     "SubclassOptionsSearch": "{{subclass}} 옵션 검색",
     "Succeeded": "로드아웃 성공",
     "SyncFromEquipped": "장착한 아이템 동기화",
+    "TooManyFragments": "조각이 너무 많음",
     "TooManyRequested": "{{total}}개의 {{itemname}}을(를) 가지고 있으나 로드아웃이 {{requested}}개를 필요로 합니다. 가지고 있는 모든 것을 옮겼습니다.",
     "UnassignedModError": "개조 부품이 현재 방어구에 맞지 않음",
     "Undo": "되돌리기",
@@ -1119,7 +1122,6 @@
     "PowerModifier": "시즌 경험치 획득으로 주어진 전투력",
     "Prestige": "명성 레벨: {{level}}\n5개의 빛의 티끌까지 {{exp}}xp",
     "Quality": "능력치 품질",
-    "Second": "초",
     "StrafingSpeed": "횡이동",
     "Strength": "힘",
     "Sunset": "만료",
@@ -1288,8 +1290,6 @@
       "GitHubHelp": "이 프로젝트에 기여하는데 관심이 있으시다면, 저희 프로젝트 페이지인 {{link}}에 방문해보세요.",
       "Header": "DIM (Destiny Item Manager)",
       "HowItsMade": "DIM은 무료이며 커뮤니티 개발자들이 Bungie.net, 데스티니 가디언즈 컴패니언 앱과 동일한 서비스를 사용하여 만든 오픈 소스 앱입니다.",
-      "Reddit": "Reddit",
-      "RedditHelp": "질문, 댓글 혹은 제안이 있다면 저희에게 알려주세요!",
       "Schedule": {
         "beta": "베타 버전의 DIM은 코드를 변경할 때마다 업데이트됩니다 - 최신 기능과 수정 사항은 물론 최신 버그도 얻을 수 있습니다!",
         "release": "이 버전의 DIM은 태평양 표준시 기준으로 매주 일요일 자정쯤에 업데이트됩니다."

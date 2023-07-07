@@ -148,10 +148,7 @@ function handleErrors(error: Error) {
 
       case PlatformErrorCodes.AuthorizationCodeInvalid:
       case PlatformErrorCodes.AccessNotPermittedByApplicationScope:
-        throw new DimError(
-          'BungieService.AppNotPermitted',
-          'DIM does not have permission to perform this action.'
-        ).withError(error);
+        throw new DimError('BungieService.AppNotPermitted').withError(error);
 
       case PlatformErrorCodes.SystemDisabled:
         throw new DimError('BungieService.Maintenance').withError(error);

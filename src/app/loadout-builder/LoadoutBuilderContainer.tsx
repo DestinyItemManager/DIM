@@ -2,17 +2,17 @@ import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { decodeUrlLoadoutParameters } from 'app/loadout/loadout-share/loadout-import';
 import { useD2Definitions } from 'app/manifest/selectors';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { setSearchQuery } from 'app/shell/actions';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { usePageTitle } from 'app/utils/hooks';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { createSelector } from 'reselect';
 import { DestinyAccount } from '../accounts/destiny-account';
-import { allItemsSelector, sortedStoresSelector } from '../inventory/selectors';
+import { allItemsSelector } from '../inventory/selectors';
 import LoadoutBuilder from './LoadoutBuilder';
 
 const disabledDueToMaintenanceSelector = createSelector(
@@ -20,43 +20,36 @@ const disabledDueToMaintenanceSelector = createSelector(
   (items) => items.length > 0 && items.every((item) => item.missingSockets || !item.sockets)
 );
 
-interface Props {
-  account: DestinyAccount;
-}
-
 /**
- * The Loadout Optimizer screen
- * TODO This isn't really a container but I can't think of a better name. It's more like
- * a LoadoutBuilderEnsureStuffIsLoaded
+ * The entry point for the Loadout Optimizer screen. This is responsible for
+ * making sure things are loading and reading initial loadout optimizer state
+ * from URL parameters. It then delegates to LoadoutBuilder which does most of
+ * the work.
  */
-export default function LoadoutBuilderContainer({ account }: Props) {
+export default function LoadoutBuilderContainer({ account }: { account: DestinyAccount }) {
+  usePageTitle(t('LB.LB'));
   const location = useLocation();
   const dispatch = useThunkDispatch();
   const defs = useD2Definitions();
-  const stores = useSelector(sortedStoresSelector);
   const disabledDueToMaintenance = useSelector(disabledDueToMaintenanceSelector);
-  useLoadStores(account);
+  const storesLoaded = useLoadStores(account);
 
-  const decodedParameters = decodeUrlLoadoutParameters(location.search);
-  const {
-    classType: urlClassType,
-    notes: urlNotes,
-    parameters: urlLoadoutParameters,
-  } = decodedParameters;
-  let query = decodedParameters.query;
+  let query: string | undefined;
 
+  // Get an entire loadout from state - this is used when optimizing a loadout from within DIM.
   const preloadedLoadout = (location.state as { loadout: Loadout } | undefined)?.loadout;
   if (preloadedLoadout?.parameters?.query) {
     query = preloadedLoadout.parameters.query;
   }
 
+  // Apply the preloaded loadout's query to the main search bar
   useEffect(() => {
     if (query) {
       dispatch(setSearchQuery(query));
     }
   }, [dispatch, query]);
 
-  if (!stores?.length || !defs) {
+  if (!storesLoaded || !defs) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
@@ -69,14 +62,5 @@ export default function LoadoutBuilderContainer({ account }: Props) {
     );
   }
 
-  // TODO: key off the URL params?
-  return (
-    <LoadoutBuilder
-      stores={stores}
-      preloadedLoadout={preloadedLoadout}
-      initialClassType={urlClassType ?? preloadedLoadout?.classType}
-      initialLoadoutParameters={urlLoadoutParameters || preloadedLoadout?.parameters}
-      notes={urlNotes ?? preloadedLoadout?.notes}
-    />
-  );
+  return <LoadoutBuilder key={preloadedLoadout?.id ?? 'lo'} preloadedLoadout={preloadedLoadout} />;
 }

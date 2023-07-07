@@ -17,7 +17,7 @@ import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { stripSockets } from 'app/strip-sockets/strip-sockets-actions';
 import _ from 'lodash';
-import React from 'react';
+import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { TagCommand, itemTagSelectorList } from '../inventory/dim-item-info';
@@ -40,7 +40,7 @@ import styles from './ItemActionsDropdown.m.scss';
 /**
  * Various actions that can be performed on an item
  */
-export default React.memo(function ItemActionsDropdown({
+export default memo(function ItemActionsDropdown({
   searchActive,
   filteredItems,
   searchQuery,

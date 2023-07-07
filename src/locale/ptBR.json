@@ -27,6 +27,7 @@
     "WeeklyHeroic": "Assalto Heroico Semanal"
   },
   "Armory": {
+    "Armory": "Arsenal",
     "NoNotes": "Sem anotações",
     "OpenInArmory": "ver no Arsenal",
     "Season": "Temporada {{season}}, ano {{year}}",
@@ -140,8 +141,7 @@
   },
   "ErrorPanel": {
     "Description": "Tente carregar seu inventário no app Destiny 2 Companion para saber se a Bungie.net está fora do ar.",
-    "EmblemError": "Você pode tentar corrigir isso trocando o emblema de todos os personagens por dentro do próprio jogo.",
-    "EmblemErrorLink": "Leia mais sobre como corrigir isso.",
+    "ReadTheGuide": "Leia nosso Guia do Usuário (link do menu) para etapas de solução de problemas.",
     "SystemDown": "Este problema afeta todos os apps de Destiny. Sendo assim, nem mesmo o DIM será capaz de resolver.",
     "Troubleshooting": "Guia para Solução de Problemas"
   },
@@ -218,7 +218,7 @@
     "CurrentClass": "Exibe itens que podem ser equipados no guardião que está jogando atualmente.",
     "CustomStatLower": "Exibe as armaduras nas quais seus atributos são necessariamente menores que as outras do mesmo tipo, levando em conta somente os atributos da lista personalizada de atributos daquela classe.",
     "DamageType": "Mostra itens baseado no seu tipo de dano.",
-    "Deepsight": "Mostra armas com Visão Penetrante, que podem ter seus padrões extraídos.",
+    "Deepsight": "Shows weapons with Deepsight Resonance, which can have their pattern extracted, or which can have Deepsight Resonance enabled using a Deepsight Harmonizer.",
     "Description": "Descrição",
     "Dupe": "Exibe itens duplicados, incluindo revisões",
     "DupeCount": "Itens que tenham o número especificado de duplicatas.",
@@ -231,10 +231,9 @@
     "Event": "Mostra itens de que evento apareceram no Destiny 2.",
     "ExtraPerk": "Mostra armas Lendárias com valores aleatórios que tenham um perk adicional selecionável.",
     "Filter": "Filtro",
-    "Focusable": "Shows items that can be focused at a vendor",
+    "Focusable": "Exibe itens que podem ser focados em um vendedor",
     "Foundry": "Exibe itens de acordo com sua fonte criadora.",
     "Glimmer": "Exibe itens que são consumíveis que estão relacionados a ganho de lúmen.",
-    "HasMemento": "Exibe armas criadas que atualmente possuem um memento inserido.",
     "HasNotes": "Exibe itens que possuem anotações.",
     "HasOrnament": "Mostra itens que tem um ornamento aplicado.",
     "HasShader": "Mostra itens que tem um tonalizador aplicado.",
@@ -263,6 +262,7 @@
     "MasterworkKills": "Exibe itens baseado no contador de mortes de obra-prima.",
     "MaxPower": "Exibe os itens que possuem o maior poder por slot.",
     "MaxPowerLoadout": "Exibe os itens no set que maximizarão seu nível de poder para cada classe de personagem.",
+    "Memento": "Shows weapons that have a memento socket.",
     "ModSlot": "Exibe armaduras com um slot específico de Mod de Temporada.",
     "Mods": {
       "Y2": "Exibe itens com mod Ano 2 anexado.",
@@ -536,8 +536,8 @@
       "ProcessingMode": "Modo de processamento"
     },
     "Scaled": "Nivelado",
-    "SearchAMod": "Search for mod name or description",
-    "SearchAnExotic": "Search for exotic name or description",
+    "SearchAMod": "Busca pelo nome ou descrição do mod",
+    "SearchAnExotic": "Busca pelo nome ou descrição do exótico",
     "SelectExotic": "Selecionar exótico",
     "SelectMods": "Selecionar mods",
     "SelectSubclass": "Selecionar Subclasse",
@@ -578,6 +578,7 @@
     "ExistingLoadout": "Set Existente",
     "ExoticSpecialCategory": "Especial",
     "Filter": "Filtros",
+    "IncludeVendorItems": "Incluir itens de Vendedores",
     "Legendary": "Lendária",
     "LockEquipped": "Fixar equipado",
     "LockItem": "Fixar item",
@@ -659,6 +660,7 @@
     "DimLoadouts": "Sets no DIM",
     "Edit": "Editar set",
     "EditBrief": "Editar",
+    "EmptyFragmentSlots": "Slots de Fragmento Vazios",
     "EquipInGameLoadout": "Equipando set do jogo",
     "EquipItems": "Equipando itens",
     "EquippableDifferent1": "Múltiplos itens exóticos foram usados para calcular seu Poder Máximo. Então o número mostrado pode não ser alcançável ao equipar seus itens no jogo.",
@@ -786,6 +788,7 @@
     "SubclassOptionsSearch": "Pesquisa as opções da {{subclass}}",
     "Succeeded": "Set aplicado com sucesso",
     "SyncFromEquipped": "Sincronizar a partir dos equipados",
+    "TooManyFragments": "Muitos Fragmentos",
     "TooManyRequested": "Você tem {{total}} {{itemname}} mas o seu set busca por {{requested}}. Nós transferimos tudo o que você tem.",
     "UnassignedModError": "Mod incompatível com a armadura atual",
     "Undo": "Desfazer",
@@ -1119,7 +1122,6 @@
     "PowerModifier": "Poder concedido pela progressão de experiência sazonal",
     "Prestige": "Nível de prestígio: {{level}}\n{{exp}}xp para 5 fragmentos de luz.",
     "Quality": "Níveis de qualidade",
-    "Second": "s",
     "StrafingSpeed": "Movimentação Lateral",
     "Strength": "Força",
     "Sunset": "Poder Limitado",
@@ -1288,8 +1290,6 @@
       "GitHubHelp": "Se você está interessado em contribuir com o projeto, visite nossa página no {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
       "HowItsMade": "DIM é um app gratuito e de código-aberto, construído pela comunidade de desenvolvedores sobre os mesmos serviços usados pela Bungie.net e pelo app Destiny Companion.",
-      "Reddit": "Reddit",
-      "RedditHelp": "Se você tem dúvidas, comentários ou sugestões, mande pra gente!",
       "Schedule": {
         "beta": "Esta versão beta do DIM é atualizada toda vez que alteramos o código - ele recebe os recursos mais recentes e correções, mas também os erros mais recentes!",
         "release": "Esta versão do DIM é atualizada uma vez por semana, aproximadamente à meia-noite de Domingo, hora do Pacífico dos EUA."

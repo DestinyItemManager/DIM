@@ -27,6 +27,7 @@
     "WeeklyHeroic": "週間英雄ストライク"
   },
   "Armory": {
+    "Armory": "武器庫",
     "NoNotes": "メモなし",
     "OpenInArmory": "アーマリーで見る",
     "Season": "{{year}} 年目、シーズン {{season}}",
@@ -140,8 +141,7 @@
   },
   "ErrorPanel": {
     "Description": "Destiny 2のコンパニオンアプリで保管庫データにアクセスして、 Bungie.net がダウンしているかどうか試してみてください。",
-    "EmblemError": "ゲーム内で全キャラクターのエンブレムを入れ替えると直るかもしれません。",
-    "EmblemErrorLink": "修正方法の詳細を読む",
+    "ReadTheGuide": "トラブルシューティングの手順については、ユーザーガイド(メニュー内のリンク) をご覧ください。",
     "SystemDown": "Destinyに関連するすべてのアプリに影響する内容で、 DIM チームにて修正したり回避ができない内容です。",
     "Troubleshooting": "トラブルシューティングガイド"
   },
@@ -218,7 +218,7 @@
     "CurrentClass": "現在ログインしているガーディアンが装備可能なアイテムを表示します。",
     "CustomStatLower": "カスタム後のステータス合計値のみを考慮して、同じサブクラス防具でも厳密に低いステータス値を持つ防具を表示します。",
     "DamageType": "ダメージタイプ別にアイテムを表示",
-    "Deepsight": "パターンを抽出可能な、ディープサイト共振成分のある武器を表示。",
+    "Deepsight": "ディープサイトの共振を抽出できる武器を表示します。ディープサイトの共振は武器パターンを抽出したり、一部の対象武器はディープサイト・ハーモナイザーを使用してディープサイトの発動を付与できます。",
     "Description": "説明",
     "Dupe": "再登場版も含む、重複アイテムを表示します。",
     "DupeCount": "指定された数の重複があるアイテム。",
@@ -234,7 +234,6 @@
     "Focusable": "現時点でベンダーから入手できるアイテムを表示",
     "Foundry": "指定した武器メーカー製のアイテムを表示する",
     "Glimmer": "グリマーの増加に関連する消耗品のアイテムを表示しています。",
-    "HasMemento": "記憶ソケットを挿入している形成武器を表示する",
     "HasNotes": "メモが適用されているアイテムを表示します。",
     "HasOrnament": "装飾品が施されているアイテムが表示されます。",
     "HasShader": "シェーダが適用されている項目を表示します。",
@@ -263,6 +262,7 @@
     "MasterworkKills": "マスターワークキルトラッカー数に基づいてアイテムを表示",
     "MaxPower": "スロット毎の最大出力でアイテムを表示します。",
     "MaxPowerLoadout": "各キャラクタークラスのパワーレベルを最大化するアイテムのロードアウトを表示します。",
+    "Memento": "記憶を装着したクラフト武器を表示",
     "ModSlot": "特定のシーズンMODスロットを持つ防具を表示します。",
     "Mods": {
       "Y2": "2年目のMODが装備されたアイテムを表示します。",
@@ -472,7 +472,7 @@
     "PostmasterAlmostFull": "ほぼ満杯!",
     "PostmasterFull": "満杯!",
     "PreviewVendor": "{{type}} コンテンツのプレビュー",
-    "StackFull": "既に{{name}} の完全なスタックがあります",
+    "StackFull": "{{name}} はすでに上限数まで持っているのでこれ以上取得できません。",
     "StoreName": "{{genderRace}} {{className}}"
   },
   "KillType": {
@@ -578,6 +578,7 @@
     "ExistingLoadout": "既存のロードアウト",
     "ExoticSpecialCategory": "スペシャル",
     "Filter": "フィルター",
+    "IncludeVendorItems": "ベンダーアイテムを含む",
     "Legendary": "レジェンダリー",
     "LockEquipped": "ピン留めされたアイテムを装備",
     "LockItem": "アイテムをピン留めする",
@@ -659,6 +660,7 @@
     "DimLoadouts": "DIMロードアウト",
     "Edit": "ロードアウトを編集",
     "EditBrief": "編集",
+    "EmptyFragmentSlots": "空のかけらスロット",
     "EquipInGameLoadout": "ゲーム内ロードアウトを装備中",
     "EquipItems": "アイテムを装備",
     "EquippableDifferent1": "複数のエキゾチックアイテムを使用して最大パワーを計算しました。ゲーム内でアイテムを装備しようとしても、数値が計算通りにならない恐れがあります。",
@@ -786,6 +788,7 @@
     "SubclassOptionsSearch": "{{subclass}} オプションを検索",
     "Succeeded": "ロードアウトに成功",
     "SyncFromEquipped": "装備中から同期する",
+    "TooManyFragments": "かけらが多すぎます",
     "TooManyRequested": "あなたは{{total}} {{itemname}} を持っていますが、あなたのロードアウトは{{requested}} を要求します。あなたが持っていた物をすべてを転送しました。",
     "UnassignedModError": "Modが現在のアーマーに適用できませんでした",
     "Undo": "元に戻す",
@@ -882,7 +885,7 @@
   },
   "Notification": {
     "Cancel": "キャンセル",
-    "OK": "やめる"
+    "OK": "キャンセル"
   },
   "Objectives": {
     "Complete": "完成",
@@ -1119,7 +1122,6 @@
     "PowerModifier": "パワーボーナスと経験値",
     "Prestige": "評判レベル： {{level}}\n光の欠片5個までは後 {{exp}}xp",
     "Quality": "品質",
-    "Second": "秒",
     "StrafingSpeed": "ADS歩行速度",
     "Strength": "腕力",
     "Sunset": "退役",
@@ -1288,8 +1290,6 @@
       "GitHubHelp": "もし、このプロジェクトに協力していただけるなら、このリンクから{{link}} へ。",
       "Header": "DIM (Destiny Item Manager)",
       "HowItsMade": "DIMは、Bungie.netやDestiny Companion Appで使用されているものと同じサービスをベースに、コミュニティ開発者によって作られた無料のオープンソースアプリケーションです。",
-      "Reddit": "Reddit",
-      "RedditHelp": "質問、コメント、提案があれば私たちに教えてください！",
       "Schedule": {
         "beta": "DIMのベータ版はコードを変える度にアップデートされます。ー最新の更新、改良がされるとともに新しい不具合も導入されます！",
         "release": "DIMのバージョンは週に1度、日本時間で日曜日のPM 17: 00 頃に更新されます。"

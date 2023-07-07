@@ -13,6 +13,13 @@
     "destiny-icons": true,
     "manifest-cache": true
   },
+  "files.readonlyInclude": {
+    "node_modules/**": true,
+    "src/data/**": true,
+    "destiny-icons/**": true,
+    "src/locale/*": true,
+    "**/*.m.scss.d.ts": true
+  },
   "editor.codeActionsOnSave": {
     "source.fixAll": true
   },
