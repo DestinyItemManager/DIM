@@ -20,24 +20,19 @@ export default function PresentationNodeLeaf({
   completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
 }) {
+  console.log('before', node);
   if (node.records) {
-    console.log('before', node.records);
     const temp = { ...node };
-    let index = -1;
+    const index = -1;
     temp.records = orderBy(
       temp.records,
       (record) => {
         /**
          * Triumph is already completed so move it to back of list
          * state is a bitmask where the ones place is for when the
-         * record has been redeemed. If the state is 0 it is completed but
-         * not redeemed yet
+         * record has been redeemed.
          */
-        if (record.recordComponent.state & 1) {
-          index++;
-          console.log('index1: ', index, ' ', -1);
-          return -2;
-        } else if (!record.recordComponent.state) {
+        if (record.recordComponent.state & 65 || !record.recordComponent.state) {
           return -1;
         }
 
@@ -51,27 +46,13 @@ export default function PresentationNodeLeaf({
 
         // its a progress bar with no milestones
         if (objectives.length === 1) {
-          index++;
-          console.log(
-            'index2: ',
-            index,
-            ' ',
-            objectives[0].progress! / objectives[0].completionValue
-          );
           return objectives[0].progress! / objectives[0].completionValue;
         }
 
-        /** ALGORITHM
-         * try to classify each into a type?
-         * Possible cases:
-         *    multiple checkboxes - all completionValues are 1
-         *    one progress bar with milestones
-         *    checkboxes an progress bar
-         *    different progress bars with no relation
-         *    multiple progress bars
+        /**
+         * Iterate through the objectives array and return the average
+         * of its % progress
          */
-
-        // it has multiple ways of tracking progress
         let totalProgress = 0;
         for (const x of objectives) {
           // some progress bars exceed its completionValue
@@ -81,17 +62,14 @@ export default function PresentationNodeLeaf({
           }
           totalProgress += x.progress! / x.completionValue;
         }
-        index++;
-        console.log('index4: ', index, ' ', totalProgress);
         return totalProgress / objectives.length;
       },
       ['desc']
     );
-    console.log('after', temp.records);
-    console.log('*************************');
-
     node.records = temp.records;
   }
+  console.log('after', node.records);
+  console.log('*************************');
 
   return (
     <>
