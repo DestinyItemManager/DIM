@@ -23,18 +23,21 @@ export default function PresentationNodeLeaf({
   if (node.records) {
     console.log('before', node.records);
     const temp = { ...node };
-    // let index = -1;
+    let index = -1;
     temp.records = orderBy(
       temp.records,
       (record) => {
         /**
          * Triumph is already completed so move it to back of list
          * state is a bitmask where the ones place is for when the
-         * record has been redeemed.
+         * record has been redeemed. If the state is 0 it is completed but
+         * not redeemed yet
          */
         if (record.recordComponent.state & 1) {
-          //    index++;
-          //    console.log("index1: ", index, " ", -1)
+          index++;
+          console.log('index1: ', index, ' ', -1);
+          return -2;
+        } else if (!record.recordComponent.state) {
           return -1;
         }
 
@@ -48,8 +51,13 @@ export default function PresentationNodeLeaf({
 
         // its a progress bar with no milestones
         if (objectives.length === 1) {
-          //     index++;
-          //      console.log("index2: ", index, " ", objectives[0].progress! / objectives[0].completionValue)
+          index++;
+          console.log(
+            'index2: ',
+            index,
+            ' ',
+            objectives[0].progress! / objectives[0].completionValue
+          );
           return objectives[0].progress! / objectives[0].completionValue;
         }
 
@@ -60,30 +68,8 @@ export default function PresentationNodeLeaf({
          *    one progress bar with milestones
          *    checkboxes an progress bar
          *    different progress bars with no relation
+         *    multiple progress bars
          */
-
-        let isMilestones = true;
-
-        // This checks if there are checkboxes in the record component
-        for (let i = 1; i < objectives.length; i++) {
-          if (
-            objectives[i - 1].completionValue === 1 ||
-            objectives[i].completionValue < objectives[i - 1].completionValue
-          ) {
-            isMilestones = false;
-            break;
-          }
-        }
-
-        // its one progress bar with milestones, return the last index's progress / completionValue
-        if (isMilestones) {
-          //      index++;
-          //      console.log("index3: ", index, " ", objectives[objectives.length - 1].progress! / objectives[objectives.length - 1].completionValue)
-          return (
-            objectives[objectives.length - 1].progress! /
-            objectives[objectives.length - 1].completionValue
-          );
-        }
 
         // it has multiple ways of tracking progress
         let totalProgress = 0;
@@ -95,8 +81,8 @@ export default function PresentationNodeLeaf({
           }
           totalProgress += x.progress! / x.completionValue;
         }
-        //    index++;
-        //  console.log("index4: ", index, " ", totalProgress)
+        index++;
+        console.log('index4: ', index, ' ', totalProgress);
         return totalProgress / objectives.length;
       },
       ['desc']
