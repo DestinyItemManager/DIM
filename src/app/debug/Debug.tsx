@@ -251,7 +251,7 @@ export default function Debug() {
           </p>
           <p>
             <b>Weird recommendedPerks?:</b>{' '}
-            {weirdWishlistRoll ? typeof weirdWishlistRoll : 'All good'}
+            {weirdWishlistRoll ? typeof weirdWishlistRoll.recommendedPerks : 'All good'}
           </p>
         </section>
 
