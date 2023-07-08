@@ -23,20 +23,20 @@ export default function PresentationNodeLeaf({
   redactedRecordsRevealed: boolean;
   sortRecordProgression: boolean;
 }) {
+  const newNode = { ...node };
   if (sortRecordProgression) {
-    const sortedNode = { ...node };
     /**
      * RECORDS
      */
     if (node.records) {
-      sortedNode.records = orderBy(
-        sortedNode.records,
+      newNode.records = orderBy(
+        newNode.records,
         (record) => {
           /**
-           * Triumph is already completed so move it to back of list
-           * state is a bitmask where the ones place is for when the
+           * Triumph is already completed so move it to back of list.
+           * State is a bitmask where the ones place is for when the
            * record has been redeemed. The other checks move completed
-           * but not redeemed to the back
+           * but not redeemed to the back.
            */
           if (
             record.recordComponent.state & DestinyRecordState.RecordRedeemed ||
@@ -57,14 +57,9 @@ export default function PresentationNodeLeaf({
             return 0;
           }
 
-          // its a progress bar with no milestones
-          if (objectives.length === 1) {
-            return objectives[0].progress! / objectives[0].completionValue;
-          }
-
           /**
            * Iterate through the objectives array and return the average
-           * of its % progress
+           * of its % progress.
            */
           let totalProgress = 0;
           for (const x of objectives) {
@@ -84,13 +79,13 @@ export default function PresentationNodeLeaf({
        */
     } else if (node.collectibles) {
       //  Only need to push owned items to the back of the list
-      sortedNode.collectibles = orderBy(
-        sortedNode.collectibles,
+      newNode.collectibles = orderBy(
+        newNode.collectibles,
         (collectible) => {
           if (collectible.state & DestinyCollectibleState.NotAcquired) {
-            return 1;
+            return 0;
           }
-          return 0;
+          return -1;
         },
         ['desc']
       );
@@ -98,8 +93,8 @@ export default function PresentationNodeLeaf({
        * METRICS
        */
     } else if (node.metrics) {
-      sortedNode.metrics = orderBy(
-        sortedNode.metrics,
+      newNode.metrics = orderBy(
+        newNode.metrics,
         (metric) => {
           const objectives = metric.metricComponent.objectiveProgress;
           if (objectives.complete) {
@@ -110,14 +105,13 @@ export default function PresentationNodeLeaf({
         ['desc']
       );
     }
-    node = sortedNode;
   }
 
   return (
     <>
-      {node.collectibles && node.collectibles.length > 0 && (
+      {newNode.collectibles && newNode.collectibles.length > 0 && (
         <CollectiblesGrid>
-          {node.collectibles.map((collectible) => (
+          {newNode.collectibles.map((collectible) => (
             <Collectible
               key={collectible.collectibleDef.hash}
               collectible={collectible}
@@ -127,19 +121,19 @@ export default function PresentationNodeLeaf({
         </CollectiblesGrid>
       )}
 
-      {node.records && node.records.length > 0 && (
+      {newNode.records && newNode.records.length > 0 && (
         <RecordGrid
-          records={node.records}
+          records={newNode.records}
           completedRecordsHidden={completedRecordsHidden}
           redactedRecordsRevealed={redactedRecordsRevealed}
         />
       )}
 
-      {node.metrics && node.metrics.length > 0 && <Metrics metrics={node.metrics} />}
+      {newNode.metrics && newNode.metrics.length > 0 && <Metrics metrics={newNode.metrics} />}
 
-      {node.craftables && node.craftables.length > 0 && (
+      {newNode.craftables && newNode.craftables.length > 0 && (
         <CollectiblesGrid>
-          {node.craftables.map((craftable) => (
+          {newNode.craftables.map((craftable) => (
             <Craftable key={craftable.item.hash} craftable={craftable} />
           ))}
         </CollectiblesGrid>
