@@ -18,9 +18,11 @@ import { TroubleshootingSettings } from 'app/settings/Troubleshooting';
 import { systemInfo } from 'app/shell/About';
 import LocalStorageInfo from 'app/storage/LocalStorageInfo';
 import { set } from 'app/storage/idb-keyval';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { DimError } from 'app/utils/dim-error';
 import { usePageTitle } from 'app/utils/hooks';
-import { wishListsLastFetchedSelector } from 'app/wishlists/selectors';
+import { wishListsLastFetchedSelector, wishListsSelector } from 'app/wishlists/selectors';
+import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './Debug.m.scss';
@@ -33,6 +35,7 @@ import styles from './Debug.m.scss';
  */
 export default function Debug() {
   usePageTitle('Debug');
+  const dispatch = useThunkDispatch();
   const bungieToken = getToken();
   const dimApiToken = getDimApiToken();
 
@@ -46,6 +49,7 @@ export default function Debug() {
   const apiPermissionGranted = useSelector(apiPermissionGrantedSelector);
   const wishListsLastFetched = useSelector(wishListsLastFetchedSelector);
   const wishlistSource = useSelector(settingSelector('wishListSource'));
+  const wishList = useSelector(wishListsSelector);
   const clarityDescriptions = useSelector(clarityDescriptionsSelector);
   const clarityCharacterStats = useSelector(clarityCharacterStatsSelector);
 
@@ -78,10 +82,21 @@ export default function Debug() {
     })();
   }, []);
 
+  const isD2 = currentAccount?.destinyVersion === 2;
+  useEffect(() => {
+    if ($featureFlags.wishLists && isD2) {
+      dispatch(fetchWishList());
+    }
+  }, [dispatch, isD2]);
+
   const now = (
     <p>
       <b>Now:</b> {new Date().toISOString()}
     </p>
+  );
+
+  const weirdWishlistRoll = wishList?.wishListAndInfo?.wishListRolls.find(
+    (r) => r.recommendedPerks && !(r.recommendedPerks instanceof Set)
   );
 
   // TODO: If these tiles get too complicated, they could be broken out into components
@@ -229,6 +244,14 @@ export default function Debug() {
           </p>
           <p>
             <b>Last Fetched:</b> {wishListsLastFetched?.toISOString() ?? 'Never'}
+          </p>
+          <p>
+            <b>Wish list rolls:</b>{' '}
+            {wishList?.wishListAndInfo?.wishListRolls.length.toLocaleString() ?? 'No wishlist'}
+          </p>
+          <p>
+            <b>Weird recommendedPerks?:</b>{' '}
+            {weirdWishlistRoll ? typeof weirdWishlistRoll : 'All good'}
           </p>
         </section>
 
