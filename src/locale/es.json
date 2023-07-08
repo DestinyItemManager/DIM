@@ -213,12 +213,12 @@
     "ContributePower": "Muestra los objetos que tienen poder y contribuyen a subir tu nivel de poder.",
     "Cosmetic": "Muestra objetos que son cosméticos o estilo.",
     "Craftable": "Muestra objetos que son fabricables.",
-    "CraftedDupe": "",
+    "CraftedDupe": "Muestras armas duplicadas donde al menos una de las duplicadas está fabricada.",
     "Curated": "Muestra objetos que tengan una tirada de curador.",
     "CurrentClass": "Muestra objetos que sean equipables en el personaje actualmente conectado.",
     "CustomStatLower": "Muestra armadura cuyas estadísticas son estríctamente más bajas que cualquier otra del mismo del mismo tipo de armadura, tomando cuenta sólo las estadísticas en es lista total de estadísticas personalizadas.",
     "DamageType": "Muestra los objetos basado en su tipo de daño.",
-    "Deepsight": "Muestra armas con Resonancia de Visión Profunda, de las cuales se puede extraer su patrón.",
+    "Deepsight": "Muestra armas con Resonancia de Visión Profunda, que pueden tener su patrón extraído, o que puedan tener Resonancia de Visión Profunda habilitada usando un Armonizador de Visión Profunda.",
     "Description": "Descripción",
     "Dupe": "Muestra objetos duplicados, incluyendo reincidencias",
     "DupeCount": "Objetos que tienen el número especificado de duplicados.",
@@ -234,7 +234,6 @@
     "Focusable": "Muestra objetos que pueden ser concentrados en un comerciante",
     "Foundry": "Muestra objetos basados en la fundición que los creó.",
     "Glimmer": "Muestra objetos que son consumibles que están relacionados con la ganancia de lumen.",
-    "HasMemento": "Muestra armas fabricadas que actualmente tienen un recuerdo insertado.",
     "HasNotes": "Muestra objetos que contengan notas.",
     "HasOrnament": "Muestra objeto que tengan el diseño aplicado.",
     "HasShader": "Mostrar objetos que tengan shader aplicado.",
@@ -263,6 +262,7 @@
     "MasterworkKills": "Muestra objetos basados en su registro de contador de bajas de Obra Maestra.",
     "MaxPower": "Muestra los objetos en el nivel más alto de poder por ranura.",
     "MaxPowerLoadout": "Muestra los objetos en la equipación que podrían maximizar tu Poder de Luz para cada clase de personaje.",
+    "Memento": "Muestra armas que tengan una ranura para recuerdo.",
     "ModSlot": "Muestra armadura con una ranura específica de Modificador de Temporada.",
     "Mods": {
       "Y2": "Muestra objetos con un modificador de Año 2 aplicado.",
@@ -391,7 +391,6 @@
     "MarkItemAs": "Marcar objeto como '{{tag}}'",
     "Menu": "Alternar menú",
     "Note": "Introducir notas",
-    "Notes": "",
     "Pull": "Traer objeto al personaje activo",
     "RefreshInventory": "Actualizar inventario",
     "ShowHotkeys": "Mostrar atajos del teclado",
@@ -1303,7 +1302,6 @@
     },
     "Login": {
       "Auth": "Autorizar con Bungie.net",
-      "DisabledDimSyncWarning": "",
       "EnableDimSyncWarning": "Ya habías deshabilitado previamente Sincronización DIM y sólo estaba usando almacenamiento de datos local. Activar Sincronización DIM reemplazará cualquier información local con la información de Sincronización DIM. Deberías hacer una copia de seguridad de tus datos antes de activar Sincronización DIM. Puedes reestablecerla desde esa copia de seguridad en Configuración.",
       "Explanation": "Permite a DIM ver y modificar tus personajes de Destiny, depósito y progreso.",
       "LearnMore": "Aprenda más sobre cuentas e inicio de sesión",
@@ -1344,6 +1342,6 @@
     "WorstRatedTip": "Esta ventaja coincide exactamente con una tirada de arma en tu lista de basura.",
     "WorstRatedTip_plural": "Estas ventajas coinciden exactamente con una tirada de arma en tu lista de basura."
   },
-  "no-space": "",
-  "wrong-level": ""
+  "no-space": "sin-espacio",
+  "wrong-level": "nivel-incorrecto"
 }

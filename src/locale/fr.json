@@ -27,7 +27,7 @@
     "WeeklyHeroic": "Assaut « Épique » de la Semaine"
   },
   "Armory": {
-    "Armory": "Armory",
+    "Armory": "Armurerie",
     "NoNotes": "Aucune notes",
     "OpenInArmory": "voir dans l'armurerie",
     "Season": "Saison {{season}}, Année {{year}}",
@@ -141,7 +141,7 @@
   },
   "ErrorPanel": {
     "Description": "Essayez de charger votre inventaire dans l'application Compagnon de Destiny 2 pour voir si Bungie.net est hors-ligne.",
-    "ReadTheGuide": "Read our User Guide (linked from the menu) for troubleshooting steps.",
+    "ReadTheGuide": "Lisez notre manuel d'utilisation (lien dans le menu) pour les étapes de dépannage.",
     "SystemDown": "Ceci affecte toutes les applications Destiny et l'équipe DIM ne peut pas le réparer ou le contourner.",
     "Troubleshooting": "Guide de Dépannage"
   },
@@ -213,12 +213,12 @@
     "ContributePower": "Affiche les objets qui ont de la puissance et qui peuvent contribuer à votre niveau de puissance.",
     "Cosmetic": "Affiche les objets de style ou cosmétiques.",
     "Craftable": "Affiche les objets pouvant être façonné.",
-    "CraftedDupe": "",
+    "CraftedDupe": "Affiche les armes en double quand au moins un des doublons est façonné.",
     "Curated": "Affiche les objets qui ont des attributs prédéterminés.",
     "CurrentClass": "Affiche les objets qui peuvent être équipés sur le personnage actuellement connecté.",
     "CustomStatLower": "Affiche les armures dont les statistiques sont strictement plus basses que celles d'une autre armure du même type, en ne prenant en compte que les statistiques dans le total de statistiques personnalisé de cette classe.",
     "DamageType": "Affiche les objets selon leur type de dégât.",
-    "Deepsight": "Affiche les armes avec une résonance de souvenance dont le modèle peut être extrait.",
+    "Deepsight": "Montre les armes avec une résonance de souvenance, dont le modèle peut être extrait, ou qui peuvent avoir une résonance de souvenance activée à l'aide d'un harmonisateur de souvenance.",
     "Description": "Description",
     "Dupe": "Affiche les doublons, y compris les rééditions",
     "DupeCount": "Objets qui ont le nombre spécifié de doublons.",
@@ -234,7 +234,6 @@
     "Focusable": "Affiche les objets qui peuvent être concentrés auprès d'un vendeur",
     "Foundry": "Affiche les objets en fonction de la fonderie qui les a créés.",
     "Glimmer": "Affiche les objets consommables qui ont un rapport avec l'obtention de lumen.",
-    "HasMemento": "Affiche les armes façonnées ayant actuellement un memento inséré.",
     "HasNotes": "Afficher les objets ayant des notes.",
     "HasOrnament": "Affiche les objets ayant un ornement appliqué.",
     "HasShader": "Affiche les objets qui ont un revêtement appliqué.",
@@ -263,6 +262,7 @@
     "MasterworkKills": "Affiche les objets en fonction du nombre de frags sur le compte-frags de la pièce maîtresse.",
     "MaxPower": "Affiche les objets avec la puissance la plus élevée pour chaque emplacement.",
     "MaxPowerLoadout": "Affiche les objets qui maximiseraient votre niveau de puissance pour chaque classes.",
+    "Memento": "Affiche les armes qui ont un emplacement de memento.",
     "ModSlot": "Affiche les armures avec un emplacement de Mod Saisonnier spécifique.",
     "Mods": {
       "Y2": "Affiche les objets avec un mod de l'année 2 attaché.",
@@ -391,7 +391,6 @@
     "MarkItemAs": "Marquer objet comme '{{tag}}'",
     "Menu": "Activer/Désactiver le menu",
     "Note": "Saisir des notes",
-    "Notes": "",
     "Pull": "Transférer vers le personnage actif",
     "RefreshInventory": "Actualiser l'inventaire",
     "ShowHotkeys": "Afficher les raccourcis clavier",
@@ -578,7 +577,7 @@
     "ExistingLoadout": "Équipement existant",
     "ExoticSpecialCategory": "Spécial",
     "Filter": "Filtres",
-    "IncludeVendorItems": "Include Vendor items",
+    "IncludeVendorItems": "Inclure les objets des marchands",
     "Legendary": "Légendaire",
     "LockEquipped": "Inc. équipés",
     "LockItem": "Inclure objet",
@@ -660,7 +659,7 @@
     "DimLoadouts": "Équipements DIM",
     "Edit": "Modifier l'équipement",
     "EditBrief": "Éditer",
-    "EmptyFragmentSlots": "Empty Fragment Slots",
+    "EmptyFragmentSlots": "Vider les emplacements de fragment",
     "EquipInGameLoadout": "Équipement de l'équipement en jeu",
     "EquipItems": "Équipement des objets",
     "EquippableDifferent1": "Plusieurs objets exotiques ont été utilisé pour calculer votre puissance maximale, le niveau affiché pourrait donc ne pas être obtenable en équipant vos objets en jeu.",
@@ -788,7 +787,7 @@
     "SubclassOptionsSearch": "Rechercher dans les options de {{subclass}}",
     "Succeeded": "Équipement réussi",
     "SyncFromEquipped": "Synchroniser avec ceux équipés",
-    "TooManyFragments": "Too Many Fragments",
+    "TooManyFragments": "Trop de fragments",
     "TooManyRequested": "Vous avez {{total}} {{itemname}} mais votre équipement demande {{requested}}. Nous avons transféré tous ceux que vous possédiez.",
     "UnassignedModError": "Le mot n'a pas pu être équipé sur votre armure actuelle",
     "Undo": "Annuler",
@@ -1303,7 +1302,6 @@
     },
     "Login": {
       "Auth": "Autoriser avec Bungie.net",
-      "DisabledDimSyncWarning": "",
       "EnableDimSyncWarning": "Vous aviez précédemment désactivé la synchronisation \nDIM et n'utilisiez que le stockage de données local. L'activation de la synchronisation DIM remplacera toutes les données locales par les données de la synchronisation DIM. Vous devriez sauvegarder vos données avant d'activer la synchronisation DIM. Vous pouvez restaurer à partir de cette sauvegarde dans les Paramètres.",
       "Explanation": "Permettre à DIM de visualiser et de modifier vos personnages Destiny, coffre et sa progression.",
       "LearnMore": "En savoir plus sur les comptes et la connexion",
@@ -1344,6 +1342,6 @@
     "WorstRatedTip": "Cet attribut correspond exactement à une arme de votre liste d'indésirables.",
     "WorstRatedTip_plural": "Ces attributs correspondent exactement à une arme de votre liste d'indésirables."
   },
-  "no-space": "",
-  "wrong-level": ""
+  "no-space": "no-space",
+  "wrong-level": "wrong-level"
 }

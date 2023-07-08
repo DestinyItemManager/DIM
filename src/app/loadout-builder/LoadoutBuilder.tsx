@@ -66,8 +66,17 @@ const autoAssignmentPCHs = [PlugCategoryHashes.EnhancementsArtifice];
  */
 export default memo(function LoadoutBuilder({
   preloadedLoadout,
+  storeId,
 }: {
+  /**
+   * A specific loadout to optimize, chosen from the Loadouts or Loadout Edit
+   * page.
+   */
   preloadedLoadout: Loadout | undefined;
+  /**
+   *A preselected store ID, used when navigating from the Loadouts page.
+   */
+  storeId: string | undefined;
 }) {
   const isPhonePortrait = useIsPhonePortrait();
   const defs = useD2Definitions()!;
@@ -95,7 +104,9 @@ export default memo(function LoadoutBuilder({
       canUndo,
     },
     lbDispatch,
-  ] = useLbState(stores, defs, preloadedLoadout);
+  ] = useLbState(stores, defs, preloadedLoadout, storeId);
+
+  // TODO: if we're editing a loadout, grey out incompatible classes?
 
   // TODO: bundle these together into an LO context?
   const modHashes = loadoutParameters.mods ?? emptyArray();

@@ -215,7 +215,7 @@ export const LoadoutArtifactUnlocks = memo(function LoadoutArtifactUnlocks({
       })
     : t('Loadouts.ArtifactUnlocks');
 
-  if (!loadout.parameters?.artifactUnlocks?.unlockedItemHashes.length) {
+  if (!unlockedArtifactMods?.unlockedItemHashes.length) {
     return null;
   }
 

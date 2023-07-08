@@ -213,12 +213,12 @@
     "ContributePower": "顯示擁有光等的物品.",
     "Cosmetic": "顯示飾品或裝飾物品。",
     "Craftable": "顯示可製作的物品。",
-    "CraftedDupe": "",
+    "CraftedDupe": "Shows duplicate weapons where at least one of the duplicates is crafted.",
     "Curated": "顯示擁有指定特性的物品。",
     "CurrentClass": "顯示當前登錄的守護者可裝備的物品。",
     "CustomStatLower": "顯示相比其他同類別護甲而言屬性全面更低的護甲，但只考慮對應職業的自定義屬性總和里的屬性。",
     "DamageType": "按照傷害類型顯示.",
-    "Deepsight": "顯示帶有深視共振的武器，可用於提取樣式。",
+    "Deepsight": "Shows weapons with Deepsight Resonance, which can have their pattern extracted, or which can have Deepsight Resonance enabled using a Deepsight Harmonizer.",
     "Description": "描述",
     "Dupe": "顯示重複的物品，包含不同賽季版本",
     "DupeCount": "擁有指定重複數量的物品。",
@@ -234,7 +234,6 @@
     "Focusable": "顯示可以在商販處聚焦的物品",
     "Foundry": "按武器製造商顯示物品。",
     "Glimmer": "顯示與增加微光獲取有關的消耗品。",
-    "HasMemento": "顯示通過製造獲得并已插入了複刻版的武器。",
     "HasNotes": "顯示已有備註的物品",
     "HasOrnament": "顯示已應用皮膚的物品",
     "HasShader": "顯示已應用著色器的物品",
@@ -263,6 +262,7 @@
     "MasterworkKills": "按大師傑作擊殺追蹤器顯示物品。",
     "MaxPower": "顯示每個槽位最高光等的物品。",
     "MaxPowerLoadout": "顯示每個職業中能最大化光等的配裝物品。",
+    "Memento": "Shows weapons that have a memento socket.",
     "ModSlot": "顯示有某種賽季模組插槽的護甲。",
     "Mods": {
       "Y2": "顯示帶有年2模組的物品",
@@ -391,7 +391,6 @@
     "MarkItemAs": "將物品標記為 “{{tag}}”",
     "Menu": "切換菜單",
     "Note": "添加備注",
-    "Notes": "",
     "Pull": "為當前角色取回物品",
     "RefreshInventory": "刷新背包",
     "ShowHotkeys": "顯示鍵盤快速鍵",
@@ -1303,7 +1302,6 @@
     },
     "Login": {
       "Auth": "用Bungie.Net授權",
-      "DisabledDimSyncWarning": "",
       "EnableDimSyncWarning": "你曾禁用過 DIM 同步，僅使用本地數據存儲。啟用 DIM 同步將用 DIM 同步數據替換本地數據。在啟用 DIM 同步前，應該備份你的數據。你可以在設置中恢復備份。",
       "Explanation": "允許DIM查看並修改您的命運角色，保險庫和進度。",
       "LearnMore": "了解賬戶與登錄",
@@ -1344,6 +1342,6 @@
     "WorstRatedTip": "這個特性與您願望清單上的某個武器完全匹配。",
     "WorstRatedTip_plural": "這些特性與您垃圾清單上的某個武器完全匹配。"
   },
-  "no-space": "",
-  "wrong-level": ""
+  "no-space": "no-space",
+  "wrong-level": "wrong-level"
 }

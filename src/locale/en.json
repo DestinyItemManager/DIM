@@ -213,7 +213,7 @@
     "ContributePower": "Shows items that have power and can contribute to your power level.",
     "Cosmetic": "Shows items that are flair or cosmetic.",
     "Craftable": "Shows items that are craftable.",
-    "CraftedDupe": "",
+    "CraftedDupe": "Shows duplicate weapons where at least one of the duplicates is crafted.",
     "Curated": "Shows items that are a curated roll.",
     "CurrentClass": "Shows items that are equippable on the currently logged in guardian.",
     "CustomStatLower": "Shows armor whose stats are strictly lower than another of the same type of armor, only taking into account stats in that class' custom stat total list.",
@@ -391,7 +391,6 @@
     "MarkItemAs": "Mark item as '{{tag}}'",
     "Menu": "Toggle menu",
     "Note": "Enter notes",
-    "Notes": "",
     "Pull": "Pull item to active character",
     "RefreshInventory": "Refresh inventory",
     "ShowHotkeys": "Show keyboard shortcuts",
@@ -1304,7 +1303,6 @@
     },
     "Login": {
       "Auth": "Authorize with Bungie.net",
-      "DisabledDimSyncWarning": "",
       "EnableDimSyncWarning": "You had previously disabled DIM Sync and were only using local data storage. Enabling DIM Sync will replace any local data with the data from DIM Sync. You should back up your data before enabling DIM Sync. You can restore from that backup in Settings.",
       "Explanation": "Allow DIM to view and modify your Destiny characters, vault, and progression.",
       "LearnMore": "Learn more about accounts and login",
@@ -1345,6 +1343,6 @@
     "WorstRatedTip": "This perk exactly matches a weapon roll on your trashlist.",
     "WorstRatedTip_plural": "These perks exactly match a weapon roll on your trashlist."
   },
-  "no-space": "",
-  "wrong-level": ""
+  "no-space": "no-space",
+  "wrong-level": "wrong-level"
 }

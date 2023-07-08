@@ -37,6 +37,7 @@ import {
   sendIcon,
   undoIcon,
 } from 'app/shell/icons';
+import { userGuideUrl } from 'app/shell/links';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
@@ -127,7 +128,7 @@ export default function LoadoutPopup({
             {t('Loadouts.RandomizePrompt')}
             <p className={styles.hint}>
               {t('Loadouts.RandomizeQueryHint')}{' '}
-              <HelpLink helpLink="https://github.com/DestinyItemManager/DIM/wiki/Randomize-Loadout" />
+              <HelpLink helpLink={userGuideUrl('Randomize-Loadout')} />
             </p>
           </>
         ),

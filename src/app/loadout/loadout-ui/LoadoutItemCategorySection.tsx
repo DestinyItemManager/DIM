@@ -101,7 +101,7 @@ export default function LoadoutItemCategorySection({
             </div>
           )}
           {loadout.parameters && <LoadoutParametersDisplay params={loadout.parameters} />}
-          {!hideOptimizeArmor && <OptimizerButton loadout={loadout} />}
+          {!hideOptimizeArmor && <OptimizerButton loadout={loadout} storeId={storeId} />}
         </>
       )}
     </div>

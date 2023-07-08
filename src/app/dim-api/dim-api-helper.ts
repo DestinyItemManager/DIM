@@ -127,7 +127,7 @@ export interface DimAuthToken {
 /**
  * Get all token information from saved storage.
  */
-function getToken(): DimAuthToken | undefined {
+export function getToken(): DimAuthToken | undefined {
   const tokenString = localStorage.getItem(localStorageKey);
   return tokenString ? (JSON.parse(tokenString) as DimAuthToken) : undefined;
 }

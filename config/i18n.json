@@ -68,6 +68,7 @@
     "Title": "A message from Bungie:"
   },
   "BungieService": {
+    "AppNotPermitted": "DIM does not have permission to perform this action.",
     "DestinyLegacyPlatform": "Bungie's services currently have a bug that prevents DIM from loading info for your Destiny 2 account if you played Destiny 1 on a last-gen console. Bungie will fix this soon, but until then you must play Destiny 1 on a current-gen console to be able to access your info.",
     "DevVersion": "Are you running a development version of DIM? You must register your chrome extension with Bungie.net.",
     "Difficulties": "Bungie.net is currently experiencing difficulties.",
@@ -212,6 +213,7 @@
     "Combine": "Filters can be combined or grouped with parentheses, \"or\" and \"and\" to narrow down your search, for example \"{{example}}\".",
     "ContributePower": "Shows items that have power and can contribute to your power level.",
     "Craftable": "Shows items that are craftable.",
+    "CraftedDupe": "Shows duplicate weapons where at least one of the duplicates is crafted.",
     "Curated": "Shows items that are a curated roll.",
     "CurrentClass": "Shows items that are equippable on the currently logged in guardian.",
     "DamageType": "Shows items based on their damage type.",
@@ -1311,6 +1313,7 @@
       "Auth": "Authorize with Bungie.net",
       "BackupPrompt": "Are you sure you want to enable DIM Sync without a backup?",
       "EnableDimSyncWarning": "You had previously disabled DIM Sync and were only using local data storage. Enabling DIM Sync will replace any local data with the data from DIM Sync. You should back up your data before enabling DIM Sync. You can restore from that backup in Settings.",
+      "DisabledDimSyncWarning": "You had previously enabled DIM Sync and were only using local data storage. Enabling DIM Sync will replace any local data with the data from DIM Sync. You should back up your data before enabling DIM Sync. You can restore from that backup in Settings.",
       "Explanation": "Allow DIM to view and modify your Destiny characters, vault, and progression.",
       "LearnMore": "Learn more about accounts and login",
       "NewAccount": "Log in with a different Bungie.net account",
@@ -1349,5 +1352,7 @@
     "WishListNotes": "Wish List Notes: {{notes}}",
     "CopyLine": "Copy Selected Perks as Wish List Roll",
     "CopiedLine": "Wish List roll copied to clipboard"
-  }
+  },
+  "wrong-level": "wrong-level",
+  "no-space": "no-space"
 }

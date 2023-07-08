@@ -1,6 +1,7 @@
 import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
+import { wishListGuideLink } from 'app/shell/links';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { fetchWishList, transformAndStoreWishList } from 'app/wishlists/wishlist-fetch';
 import { toWishList } from 'app/wishlists/wishlist-file';
@@ -109,7 +110,7 @@ export default function WishListSettings() {
     <section id="wishlist">
       <h2>
         {t('WishListRoll.Header')}
-        <HelpLink helpLink="https://github.com/DestinyItemManager/DIM/blob/master/docs/COMMUNITY_CURATIONS.md" />
+        <HelpLink helpLink={wishListGuideLink} />
       </h2>
       <div className="setting">
         <FileUpload onDrop={loadWishList} title={t('WishListRoll.Import')} />
