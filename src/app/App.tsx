@@ -36,6 +36,8 @@ export default function App() {
   const language = useSelector(settingSelector('language'));
   const itemQuality = useSelector(settingSelector('itemQuality'));
   const charColMobile = useSelector(settingSelector('charColMobile'));
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const theme = $featureFlags.themePicker ? useSelector(settingSelector('theme')) : 'default';
   const needsLogin = useSelector((state: RootState) => state.accounts.needsLogin);
   const needsDeveloper = useSelector((state: RootState) => state.accounts.needsDeveloper);
   const { pathname, search } = useLocation();
@@ -43,9 +45,15 @@ export default function App() {
   return (
     <div
       key={`lang-${language}`}
-      className={clsx(styles.app, `lang-${language}`, `char-cols-${charColMobile}`, {
-        itemQuality,
-      })}
+      className={clsx(
+        styles.app,
+        `lang-${language}`,
+        `char-cols-${charColMobile}`,
+        `theme-${theme}`,
+        {
+          itemQuality,
+        }
+      )}
     >
       <ScrollToTop />
       <GATracker />
