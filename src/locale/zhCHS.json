@@ -213,12 +213,12 @@
     "ContributePower": "显示拥有光等的物品.",
     "Cosmetic": "显示饰品或装饰物品。",
     "Craftable": "显示可制作的物品。",
-    "CraftedDupe": "",
+    "CraftedDupe": "显示包含在愿望单中且至少重复一件的武器。",
     "Curated": "显示拥有指定特性的物品。",
     "CurrentClass": "显示当前登录的守护者可装备的物品。",
     "CustomStatLower": "显示相比其他同类别护甲而言属性全面更低的护甲，但只考虑对应职业的自定义属性总和里的属性。",
     "DamageType": "按照伤害类型显示.",
-    "Deepsight": "Shows weapons with Deepsight Resonance, which can have their pattern extracted, or which can have Deepsight Resonance enabled using a Deepsight Harmonizer.",
+    "Deepsight": "显示可提取模式或可通过深视协调器激活深视共振的武器。",
     "Description": "描述",
     "Dupe": "显示重复的物品，包含不同赛季版本",
     "DupeCount": "拥有指定重复数量的物品。",
@@ -262,7 +262,7 @@
     "MasterworkKills": "按大师杰作击杀追踪器显示物品。",
     "MaxPower": "显示每个槽位最高光等的物品。",
     "MaxPowerLoadout": "显示每个职业中能最大化光等的配装物品。",
-    "Memento": "Shows weapons that have a memento socket.",
+    "Memento": "显示包含纪念物插槽的武器。",
     "ModSlot": "显示有某种赛季模组插槽的护甲。",
     "Mods": {
       "Y2": "显示带有年2模组的物品",
@@ -391,7 +391,6 @@
     "MarkItemAs": "将物品标记为 “{{tag}}”",
     "Menu": "切换菜单",
     "Note": "添加备注",
-    "Notes": "",
     "Pull": "为当前角色取回物品",
     "RefreshInventory": "刷新背包",
     "ShowHotkeys": "显示键盘快速键",
@@ -1128,7 +1127,7 @@
     "Tier": "{{tier}} 阶",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 于 T{{nextTier}})",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)",
-    "TimeToFullHP": "生命值恢复耗时",
+    "TimeToFullHP": "恢复满生命值耗时",
     "Total": "总计",
     "TotalHP": "总生命值",
     "WalkingSpeed": "步行移动速度"
@@ -1303,7 +1302,6 @@
     },
     "Login": {
       "Auth": "用Bungie.Net授权",
-      "DisabledDimSyncWarning": "",
       "EnableDimSyncWarning": "你曾禁用过 DIM 同步，仅使用本地数据存储。启用 DIM 同步将用 DIM 同步数据替换本地数据。在启用 DIM 同步前，应该备份你的数据。你可以在设置中恢复备份。",
       "Explanation": "允许DIM查看并修改您的命运角色，保险库和进度。",
       "LearnMore": "了解账户与登录",
@@ -1344,6 +1342,6 @@
     "WorstRatedTip": "这个特性与您垃圾清单上的某个武器完全匹配。",
     "WorstRatedTip_plural": "这些特性与您垃圾清单上的某个武器完全匹配。"
   },
-  "no-space": "",
-  "wrong-level": ""
+  "no-space": "空间不足",
+  "wrong-level": "等级错误"
 }

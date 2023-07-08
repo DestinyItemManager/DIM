@@ -213,7 +213,7 @@
     "ContributePower": "전투력이 있으며, 캐릭터의 전투력에 기여할 수 있는 아이템을 표시합니다.",
     "Cosmetic": "장식 및 기타 아이템을 표시합니다.",
     "Craftable": "제작 가능한 아이템을 표시합니다.",
-    "CraftedDupe": "",
+    "CraftedDupe": "중복된 무기 중 하나 이상이 제작된 무기인 경우 표시합니다.",
     "Curated": "고정 특성 조합이 있는 아이템을 표시합니다.",
     "CurrentClass": "현재 접속한 수호자에게 장착할 수 있는 아이템을 표시합니다.",
     "CustomStatLower": "사용자 정의 총합 능력치만 고려하여 동일한 종류의 다른 방어구보다 능력치가 확실하게 낮은 방어구를 표시합니다.",
@@ -391,7 +391,6 @@
     "MarkItemAs": "아이템을 '{{tag}}'로 표시하기",
     "Menu": "메뉴 표시 전환",
     "Note": "메모 입력",
-    "Notes": "",
     "Pull": "아이템을 활성화된 캐릭터로 이동",
     "RefreshInventory": "소지품 새로고침",
     "ShowHotkeys": "키보드 단축키 표시",
@@ -1303,7 +1302,6 @@
     },
     "Login": {
       "Auth": "Bungie.net으로 인증",
-      "DisabledDimSyncWarning": "",
       "EnableDimSyncWarning": "이전에 DIM 동기화를 비활성화하고 로컬 데이터 저장소만 사용하였습니다. DIM 동기화를 활성화하면 로컬 데이터를 DIM 동기화의 데이터로 덮어쓰게 됩니다. DIM 동기화를 활성화하기 전에 데이터를 백업해야 합니다. 설정에서 백업을 복원할 수 있습니다.",
       "Explanation": "DIM이 데스티니 캐릭터, 금고, 진척도를 확인하고 수정할 수 있도록 허용해주세요.",
       "LearnMore": "계정과 로그인에 대해 더 알아보기",
@@ -1344,6 +1342,6 @@
     "WorstRatedTip": "쓰레기 아이템 목록에 있는 무기의 특성 조합과 일치하는 특성입니다.",
     "WorstRatedTip_plural": "쓰레기 아이템 목록에 있는 무기의 특성 조합과 일치합니다."
   },
-  "no-space": "",
-  "wrong-level": ""
+  "no-space": "no-space",
+  "wrong-level": "wrong-level"
 }

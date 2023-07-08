@@ -213,7 +213,7 @@
     "ContributePower": "Muestra los objetos que tienen poder y contribuyen a subir tu nivel de poder.",
     "Cosmetic": "Muestra objetos que son cosméticos o estilo.",
     "Craftable": "Muestra objetos que son fabricables.",
-    "CraftedDupe": "",
+    "CraftedDupe": "Muestras armas duplicadas donde al menos una de las duplicadas está fabricada.",
     "Curated": "Muestra objetos que tengan una tirada de curador.",
     "CurrentClass": "Muestra objetos que sean equipables en el personaje actualmente conectado.",
     "CustomStatLower": "Muestra armadura cuyas estadísticas son estríctamente más bajas que cualquier otra del mismo del mismo tipo de armadura, tomando cuenta sólo las estadísticas en es lista total de estadísticas personalizadas.",
@@ -391,7 +391,6 @@
     "MarkItemAs": "Marcar objeto como '{{tag}}'",
     "Menu": "Alternar menú",
     "Note": "Introducir notas",
-    "Notes": "",
     "Pull": "Traer objeto al personaje activo",
     "RefreshInventory": "Actualizar inventario",
     "ShowHotkeys": "Mostrar atajos del teclado",
@@ -1303,7 +1302,6 @@
     },
     "Login": {
       "Auth": "Autorizar con Bungie.net",
-      "DisabledDimSyncWarning": "",
       "EnableDimSyncWarning": "Ya habías deshabilitado previamente Sincronización DIM y sólo estaba usando almacenamiento de datos local. Activar Sincronización DIM reemplazará cualquier información local con la información de Sincronización DIM. Deberías hacer una copia de seguridad de tus datos antes de activar Sincronización DIM. Puedes reestablecerla desde esa copia de seguridad en Configuración.",
       "Explanation": "Permite a DIM ver y modificar tus personajes de Destiny, depósito y progreso.",
       "LearnMore": "Aprenda más sobre cuentas e inicio de sesión",
@@ -1344,6 +1342,6 @@
     "WorstRatedTip": "Esta ventaja coincide exactamente con una tirada de arma en tu lista de basura.",
     "WorstRatedTip_plural": "Estas ventajas coinciden exactamente con una tirada de arma en tu lista de basura."
   },
-  "no-space": "",
-  "wrong-level": ""
+  "no-space": "sin-espacio",
+  "wrong-level": "nivel-incorrecto"
 }

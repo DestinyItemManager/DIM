@@ -213,7 +213,7 @@
     "ContributePower": "Mostra gli oggetti che hanno Potere e possono contribuire al tuo livello Potere.",
     "Cosmetic": "Mostra gli oggetti di stile o cosmetici.",
     "Craftable": "Mostra gli oggetti che sono forgiabili.",
-    "CraftedDupe": "",
+    "CraftedDupe": "Mostra le armi duplicate dove almeno uno dei duplicati è forgiato.",
     "Curated": "Mostra gli oggetti che hanno un roll curato.",
     "CurrentClass": "Mostra tutti gli oggetti che sono equipaggiabili sul Guardiano attualmente in uso.",
     "CustomStatLower": "Mostra le armature le cui statistiche sono rigorosamente più basse di un'altra dello stesso tipo, considerando soltanto il tipo di statistica di classe specificata.",
@@ -391,7 +391,6 @@
     "MarkItemAs": "Contrassegna oggetto come '{{tag}}'",
     "Menu": "Attiva/Disattiva menù",
     "Note": "Inserisci note",
-    "Notes": "",
     "Pull": "Invia l'oggetto al personaggio attivo",
     "RefreshInventory": "Aggiorna l'inventario",
     "ShowHotkeys": "Mostra scorciatoie da tastiera",
@@ -1303,7 +1302,6 @@
     },
     "Login": {
       "Auth": "Richiedi autorizzazione su Bungie.net",
-      "DisabledDimSyncWarning": "",
       "EnableDimSyncWarning": "In precedenza hai disabilitato DIM Sync e stavi usando soltanto la memoria locale. Attivando DIM Sync sovrascriverai qualsiasi salvataggio locale con i dati di DIM Sync. Dovresti fare un backup dei tuoi dati prima di attivare DIM Sync. Potrai ripristinarli da quel backup nelle Impostazioni.",
       "Explanation": "Permetti a DIM di consultare e modificare i tuoi personaggi, deposito e progresso di Destiny.",
       "LearnMore": "Informazioni sugli account e accesso",
@@ -1344,6 +1342,6 @@
     "WorstRatedTip": "Questo perk corrisponde esattamente ad un roll della tua lista degli scarti.",
     "WorstRatedTip_plural": "Questi perk corrispondono esattamente ad un roll della tua lista degli scarti."
   },
-  "no-space": "",
-  "wrong-level": ""
+  "no-space": "nessuno spazio",
+  "wrong-level": "livello errato"
 }
