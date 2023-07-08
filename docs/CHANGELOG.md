@@ -27,6 +27,7 @@
 ## 7.76.0 <span class="changelog-date">(2023-07-09)</span>
 
 * Fixed Fashion Loadouts being unable to store an Ornament for the Titan exotic Loreley Splendor Helm.
+* Added button to sort triumphs by completion.
 
 ## 7.75.0 <span class="changelog-date">(2023-07-02)</span>
 
