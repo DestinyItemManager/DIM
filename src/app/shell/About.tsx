@@ -11,6 +11,7 @@ import logo from '../../images/logo-light.svg';
 import ExternalLink from '../dim-ui/ExternalLink';
 import styles from './About.m.scss';
 import { AppIcon, faDiscord, faGithub, faTshirt, heartIcon, helpIcon, mastodonIcon } from './icons';
+import { dimHelpMastodonLink, dimMastodonAccount, discordLink, userGuideLink } from './links';
 
 const githubLinkDirect = 'https://github.com/DestinyItemManager/DIM/';
 const crowdinLinkDirect =
@@ -24,11 +25,8 @@ const crowdinLink = `<a href='${crowdinLinkDirect}' target='_blank' rel='noopene
 const bungieLink = `<a href='${bungieLinkDirect}' target='_blank' rel='noopener noreferrer'>Bungie.net</a>`;
 const openCollectiveLink = `<a href='${openCollectiveLinkDirect}' target='_blank' rel='noopener noreferrer'>OpenCollective</a>`;
 const storeLink = `<a href='${storeLinkDirect}' target='_blank' rel='noopener noreferrer'>DesignByHumans</a>`;
-const mastodonLink = 'https://mstdn.games/@ThisIsDIM';
-const discordLink = 'https://discord.gg/UK2GWC7';
-const wikiLink = 'https://github.com/DestinyItemManager/DIM/wiki';
 
-const systemInfo = getSystemInfo();
+export const systemInfo = getSystemInfo();
 
 function getSystemInfo() {
   const parser = new UAParser();
@@ -85,7 +83,7 @@ export default function About() {
           </span>
         </Link>
         <br />
-        <span>{systemInfo}</span>
+        <span>{systemInfo}</span> <Link to="/debug">Debug</Link>
       </div>
       <p>{t('Views.About.HowItsMade')}</p>
       {$DIM_FLAVOR === 'release' && <p>{t(`Views.About.Schedule.release`)}</p>}
@@ -131,7 +129,7 @@ export default function About() {
         )}
         <div>
           <h2>
-            <ExternalLink href={wikiLink}>
+            <ExternalLink href={userGuideLink}>
               <AppIcon icon={helpIcon} />
               {t('Views.About.Wiki')}
             </ExternalLink>
@@ -164,13 +162,13 @@ export default function About() {
         </div>
         <div>
           <h2>
-            <ExternalLink href={mastodonLink}>
+            <ExternalLink href={dimHelpMastodonLink}>
               <AppIcon icon={mastodonIcon} />
               Mastodon
             </ExternalLink>
           </h2>
           {t('Views.About.TwitterHelp')} <br />
-          <ExternalLink href={mastodonLink}>@ThisIsDIM@mstdn.games</ExternalLink>
+          <ExternalLink href={dimHelpMastodonLink}>{dimMastodonAccount}</ExternalLink>
         </div>
         <div>
           <h2>

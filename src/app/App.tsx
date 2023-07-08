@@ -31,6 +31,7 @@ const SettingsPage = lazy(
 const SearchHistory = lazy(
   () => import(/* webpackChunkName: "searchHistory" */ './search/SearchHistory')
 );
+const Debug = lazy(() => import(/* webpackChunkName: "debug" */ './debug/Debug'));
 
 export default function App() {
   const language = useSelector(settingSelector('language'));
@@ -61,6 +62,7 @@ export default function App() {
               <Route path="whats-new" element={<WhatsNew />} />
               <Route path="login" element={<Login />} />
               <Route path="settings" element={<SettingsPage />} />
+              <Route path="debug" element={<Debug />} />
               {$DIM_FLAVOR === 'dev' && <Route path="developer" element={<Developer />} />}
               {needsLogin ? (
                 <Route
