@@ -213,12 +213,12 @@
     "ContributePower": "Mostra os itens que tem poder e que podem contribuir para o seu nível de poder.",
     "Cosmetic": "Exibe itens que são de estilo ou cosméticos.",
     "Craftable": "Exibe itens que são fabricáveis.",
-    "CraftedDupe": "",
+    "CraftedDupe": "Exibe os itens duplicados onde pelo menos uma das duplicatas tenha sido criada.",
     "Curated": "Exibe itens que possuem valores curados.",
     "CurrentClass": "Exibe itens que podem ser equipados no guardião que está jogando atualmente.",
     "CustomStatLower": "Exibe as armaduras nas quais seus atributos são necessariamente menores que as outras do mesmo tipo, levando em conta somente os atributos da lista personalizada de atributos daquela classe.",
     "DamageType": "Mostra itens baseado no seu tipo de dano.",
-    "Deepsight": "Shows weapons with Deepsight Resonance, which can have their pattern extracted, or which can have Deepsight Resonance enabled using a Deepsight Harmonizer.",
+    "Deepsight": "Exibe armas com Ressonância de Visão Penetrante, que podem ter seus padrões extraídos, ou que podem ter Ressonância de Visão Penetrante habilitada utilizando um Harmonizador de Visão Penetrante.",
     "Description": "Descrição",
     "Dupe": "Exibe itens duplicados, incluindo revisões",
     "DupeCount": "Itens que tenham o número especificado de duplicatas.",
@@ -262,7 +262,7 @@
     "MasterworkKills": "Exibe itens baseado no contador de mortes de obra-prima.",
     "MaxPower": "Exibe os itens que possuem o maior poder por slot.",
     "MaxPowerLoadout": "Exibe os itens no set que maximizarão seu nível de poder para cada classe de personagem.",
-    "Memento": "Shows weapons that have a memento socket.",
+    "Memento": "Exibe armas que possuem um soquete de memento.",
     "ModSlot": "Exibe armaduras com um slot específico de Mod de Temporada.",
     "Mods": {
       "Y2": "Exibe itens com mod Ano 2 anexado.",
@@ -391,7 +391,6 @@
     "MarkItemAs": "Etiquetar item como '{{tag}}'",
     "Menu": "Alternar menu",
     "Note": "Inserir anotações",
-    "Notes": "",
     "Pull": "Trazer o item para o personagem ativo",
     "RefreshInventory": "Atualizar inventário",
     "ShowHotkeys": "Exibir teclas de atalho",
@@ -1303,7 +1302,6 @@
     },
     "Login": {
       "Auth": "Autorize com Bungie.net",
-      "DisabledDimSyncWarning": "",
       "EnableDimSyncWarning": "Você havia desativado a Sincronização DIM e estava usando apenas o armazenamento de dados local. Ao ativar agora, todos os dados locais serão substituídos pelos dados disponíveis remotamente. Você deve fazer backup dos seus dados antes de ativar a Sincronização DIM. Você pode restaurar a partir desse backup em Configurações.",
       "Explanation": "Dar permissão ao DIM para ver e modificar os seus personagens, cofre e progressão.",
       "LearnMore": "Saiba mais sobre contas e login",
@@ -1344,6 +1342,6 @@
     "WorstRatedTip": "Este perk combina exatamente com um valor de arma em sua lista de itens indesejáveis.",
     "WorstRatedTip_plural": "Estes perks combinam exatamente com um valor de arma em sua lista de itens indesejáveis."
   },
-  "no-space": "",
-  "wrong-level": ""
+  "no-space": "sem-espaço",
+  "wrong-level": "nível-errado"
 }

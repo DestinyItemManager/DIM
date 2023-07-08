@@ -213,7 +213,7 @@
     "ContributePower": "Zeige Gegenstände, die Power haben und zu deinem Power-Level beitragen können.",
     "Cosmetic": "Zeigt Gegenstände, die Flair oder Kosmetika sind.",
     "Craftable": "Zeigt formbare Gegenstände an.",
-    "CraftedDupe": "",
+    "CraftedDupe": "Shows duplicate weapons where at least one of the duplicates is crafted.",
     "Curated": "Zeigt Gegenstände die ein kuratierter Roll sind.",
     "CurrentClass": "Zeigt Gegenstände an, die auf dem derzeit eingeloggten Hüter ausrüstbar sind.",
     "CustomStatLower": "Zeigt Rüstungen an, deren Werte strikt niedriger sind als die anderer Rüstungen desselben Typs, wobei nur die Werte in der benutzerdefinierten Statistik-Gesamtliste dieser Klasse berücksichtigt werden.",
@@ -391,7 +391,6 @@
     "MarkItemAs": "Markiere Gegenstand als '{{tag}}'",
     "Menu": "Menü umschalten",
     "Note": "Notizen eingeben",
-    "Notes": "",
     "Pull": "Ziehe Gegenstand zum aktiven Charakter",
     "RefreshInventory": "Aktualisiere Inventar",
     "ShowHotkeys": "Tastaturkürzel anzeigen",
@@ -1303,7 +1302,6 @@
     },
     "Login": {
       "Auth": "Autorisiere mit Bungie.net",
-      "DisabledDimSyncWarning": "",
       "EnableDimSyncWarning": "Du hattest DIM Sync zuvor deaktiviert und nur lokalen Datenspeicher verwendet. Das Aktivieren von DIM Sync ersetzt alle lokalen Daten durch die Daten von DIM Sync. Du solltest deine Daten sichern bevor du DIM Sync aktivierst. Du kannst sie in den Einstellungen wiederherstellen.",
       "Explanation": "Erlaube DIM, deine Destiny-Charaktere, deinen Tresor und Fortschritt einzusehen und zu bearbeiten.",
       "LearnMore": "Erfahre mehr über Konten und Login",
@@ -1344,6 +1342,6 @@
     "WorstRatedTip": "Dieser Perk passt genau zu einem Waffenroll auf deiner Müll-Liste.",
     "WorstRatedTip_plural": "Diese Perks entsprechen genau einem Waffenroll auf deiner Müll-Liste."
   },
-  "no-space": "",
-  "wrong-level": ""
+  "no-space": "no-space",
+  "wrong-level": "wrong-level"
 }

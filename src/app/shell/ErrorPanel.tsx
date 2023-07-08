@@ -7,10 +7,14 @@ import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import React, { lazy, useState } from 'react';
 import { AppIcon, helpIcon, mastodonIcon, refreshIcon, twitterIcon } from '../shell/icons';
 import styles from './ErrorPanel.m.scss';
+import {
+  bungieHelpLink,
+  bungieTwitterAccount,
+  dimHelpMastodonLink,
+  dimMastodonAccount,
+  troubleshootingLink,
+} from './links';
 
-const bungieHelpLink = 'http://twitter.com/BungieHelp';
-const dimHelpMastodonLink = 'http://mstdn.games/@ThisIsDIM';
-const troubleshootingLink = 'https://github.com/DestinyItemManager/DIM/wiki/Troubleshooting';
 const Timeline = lazy(async () => {
   const m = await import(/* webpackChunkName: "twitter" */ 'react-twitter-widgets');
   return { default: m.Timeline };
@@ -121,11 +125,11 @@ export default function ErrorPanel({
         <div className={styles.twitterLinks}>
           {!ourFault && (
             <ExternalLink href={bungieHelpLink} className="dim-button">
-              <AppIcon icon={twitterIcon} /> @BungieHelp
+              <AppIcon icon={twitterIcon} /> {bungieTwitterAccount}
             </ExternalLink>
           )}
           <ExternalLink href={dimHelpMastodonLink} className="dim-button">
-            <AppIcon icon={mastodonIcon} /> @ThisIsDim@mstdn.games
+            <AppIcon icon={mastodonIcon} /> {dimMastodonAccount}
           </ExternalLink>
           <ExternalLink href={troubleshootingLink} className="dim-button">
             <AppIcon icon={helpIcon} /> {t('ErrorPanel.Troubleshooting')}

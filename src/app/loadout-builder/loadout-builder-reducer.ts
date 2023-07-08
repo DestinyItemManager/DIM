@@ -79,25 +79,34 @@ export function warnMissingClass(classType: DestinyClass, defs: D2ManifestDefini
   });
 }
 
+/**
+ * Create the initial state object for the loadout optimizer.
+ */
 const lbConfigInit = ({
   stores,
   allItems,
   defs,
   preloadedLoadout,
+  storeId,
   savedLoadoutBuilderParameters,
   savedStatConstraintsPerClass,
 }: {
   stores: DimStore[];
   allItems: DimItem[];
   defs: D2ManifestDefinitions;
+  /**
+   * A loadout that we are starting with, from the Loadouts page or editor.
+   * This can be null to start with a brand new loadout.
+   */
   preloadedLoadout: Loadout | undefined;
+  storeId: string | undefined;
   savedLoadoutBuilderParameters: LoadoutParameters;
   savedStatConstraintsPerClass: { [classType: number]: StatConstraint[] };
 }): LoadoutBuilderConfiguration => {
   // Preloaded loadouts from the "Optimize Armor" button take priority
   const classTypeFromPreloadedLoadout = preloadedLoadout?.classType ?? DestinyClass.Unknown;
   // Pick a store that matches the classType
-  const storeMatchingClass = pickBackingStore(stores, undefined, classTypeFromPreloadedLoadout);
+  const storeMatchingClass = pickBackingStore(stores, storeId, classTypeFromPreloadedLoadout);
   let initialLoadoutParameters = preloadedLoadout?.parameters;
 
   // If we requested a specific class type but the user doesn't have it, we
@@ -544,7 +553,8 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
 export function useLbState(
   stores: DimStore[],
   defs: D2ManifestDefinitions,
-  preloadedLoadout: Loadout | undefined
+  preloadedLoadout: Loadout | undefined,
+  storeId: string | undefined
 ) {
   const savedLoadoutBuilderParameters = useSelector(savedLoadoutParametersSelector);
   const savedStatConstraintsPerClass = useSelector(savedLoStatConstraintsByClassSelector);
@@ -563,6 +573,7 @@ export function useLbState(
       allItems,
       defs,
       preloadedLoadout,
+      storeId,
       savedLoadoutBuilderParameters,
       savedStatConstraintsPerClass,
     })

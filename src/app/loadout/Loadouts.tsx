@@ -161,7 +161,11 @@ function Loadouts({ account }: { account: DestinyAccount }) {
           >
             <AppIcon icon={uploadIcon} /> <span>{t('Loadouts.ImportLoadout')}</span>
           </button>
-          <Link className={styles.menuButton} to={`../optimizer?class=${selectedStore.classType}`}>
+          <Link
+            className={styles.menuButton}
+            to="../optimizer"
+            state={{ storeId: selectedStore.id }}
+          >
             <AppIcon icon={faCalculator} /> {t('LB.LB')}
           </Link>
         </div>

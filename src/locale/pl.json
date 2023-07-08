@@ -213,7 +213,7 @@
     "ContributePower": "Pokazuje przedmioty, które mają moc i mogą przyczynić się do twojego poziomu mocy.",
     "Cosmetic": "Pokazuje przedmioty, które są znaczkami lub kosmetykami.",
     "Craftable": "Pokazuje przedmioty, które można stworzyć.",
-    "CraftedDupe": "",
+    "CraftedDupe": "Shows duplicate weapons where at least one of the duplicates is crafted.",
     "Curated": "Pokazuje przedmioty, które są kurowanym rollem.",
     "CurrentClass": "Pokazuje przedmioty, które można założyć na aktualnie zalogowanym strażniku.",
     "CustomStatLower": "Pokazuje zbroję, której statystyki są niższe niż inna tego samego typu zbroi, tylko biorąc pod uwagę statystyki na liście niestandardowych sum statystyk dla tej klasy.",
@@ -391,7 +391,6 @@
     "MarkItemAs": "Oznacz przedmiot jako '{{tag}}'",
     "Menu": "Przełącz menu",
     "Note": "Enter notes",
-    "Notes": "",
     "Pull": "Odbierz przedmiot do aktywnej postaci",
     "RefreshInventory": "Odśwież ekwipunek",
     "ShowHotkeys": "Pokaż skróty klawiszowe",
@@ -1303,7 +1302,6 @@
     },
     "Login": {
       "Auth": "Autoryzuj za pomocą Bungie.net",
-      "DisabledDimSyncWarning": "",
       "EnableDimSyncWarning": "Wcześniej wyłączono synchronizację DIM i używano tylko lokalnego przechowywania danych. Włączenie synchronizacji DIM zastąpi wszystkie lokalne dane danymi z synchronizacji DIM. Przed włączeniem synchronizacji DIM powinieneś utworzyć kopię zapasową swoich danych. Możesz przywrócić tę kopię zapasową w ustawieniach.",
       "Explanation": "Pozwól, aby DIM mógł wyświetlać i modyfikować postacie, schowek i postęp w Destiny.",
       "LearnMore": "Dowiedz się więcej o kontach i logowaniu",
@@ -1344,6 +1342,6 @@
     "WorstRatedTip": "This perk exactly matches a weapon roll on your trashlist.",
     "WorstRatedTip_plural": "These perks exactly match a weapon roll on your trashlist."
   },
-  "no-space": "",
-  "wrong-level": ""
+  "no-space": "no-space",
+  "wrong-level": "wrong-level"
 }

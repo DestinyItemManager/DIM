@@ -1,6 +1,7 @@
 import CheckButton from 'app/dim-ui/CheckButton';
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { t } from 'app/i18next-t';
+import { userGuideUrl } from 'app/shell/links';
 import { exportBackupData, exportLocalData } from 'app/storage/export-data';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isAppStoreVersion } from 'app/utils/browsers';
@@ -10,8 +11,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { oauthClientId } from '../bungie-api/bungie-api-utils';
 import styles from './Login.m.scss';
 
-export const dimApiHelpLink = 'https://github.com/DestinyItemManager/DIM/wiki/DIM-Sync';
-const loginHelpLink = 'https://github.com/DestinyItemManager/DIM/wiki/Accounts-and-Login';
+export const dimApiHelpLink = userGuideUrl('DIM-Sync');
+const loginHelpLink = userGuideUrl('Accounts-and-Login');
 
 export default function Login() {
   const dispatch = useThunkDispatch();

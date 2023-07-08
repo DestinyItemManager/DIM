@@ -10,6 +10,7 @@ import { statsMs } from 'app/inventory/store/stats';
 import { TOTAL_STAT_HASH, armorStats } from 'app/search/d2-known-values';
 import { getColor, percent } from 'app/shell/formatters';
 import { AppIcon, helpIcon } from 'app/shell/icons';
+import { userGuideUrl } from 'app/shell/links';
 import { isPlugStatActive } from 'app/utils/item-utils';
 import { LookupTable } from 'app/utils/util-types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
@@ -262,7 +263,7 @@ export function D1QualitySummaryStat({ item }: { item: D1Item }) {
       <div className={styles.qualitySummary} style={getColor(item.quality.min, 'color')}>
         {t('Stats.OfMaxRoll', { range: item.quality.range })}
         <ExternalLink
-          href="https://github.com/DestinyItemManager/DIM/wiki/View-how-good-the-stat-(Int-Dis-Str)-roll-on-your-armor-is"
+          href={userGuideUrl('View-how-good-the-stat-(Int-Dis-Str)-roll-on-your-armor-is')}
           title={t('Stats.PercentHelp')}
         >
           <AppIcon icon={helpIcon} />
