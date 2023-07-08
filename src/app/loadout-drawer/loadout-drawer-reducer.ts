@@ -550,7 +550,7 @@ export function setClearSpace(clearSpace: boolean): LoadoutUpdateFunction {
   });
 }
 
-function setLoadoutParameters(params: Partial<LoadoutParameters>): LoadoutUpdateFunction {
+export function setLoadoutParameters(params: Partial<LoadoutParameters>): LoadoutUpdateFunction {
   return (loadout) => ({
     ...loadout,
     parameters: { ...loadout.parameters, ...params },
