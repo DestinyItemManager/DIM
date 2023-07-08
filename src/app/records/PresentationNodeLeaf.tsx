@@ -15,22 +15,28 @@ export default function PresentationNodeLeaf({
   ownedItemHashes,
   completedRecordsHidden,
   redactedRecordsRevealed,
+  sortRecordProgression,
 }: {
   node: DimPresentationNodeLeaf;
   ownedItemHashes?: Set<number>;
   completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
+  sortRecordProgression: boolean;
 }) {
-  if (node) {
-    const sortedTriumphs = { ...node };
+  if (sortRecordProgression) {
+    const sortedNode = { ...node };
+    /**
+     * RECORDS
+     */
     if (node.records) {
-      sortedTriumphs.records = orderBy(
-        sortedTriumphs.records,
+      sortedNode.records = orderBy(
+        sortedNode.records,
         (record) => {
           /**
            * Triumph is already completed so move it to back of list
            * state is a bitmask where the ones place is for when the
-           * record has been redeemed.
+           * record has been redeemed. The other checks move completed
+           * but not redeemed to the back
            */
           if (
             record.recordComponent.state & DestinyRecordState.RecordRedeemed ||
@@ -44,8 +50,11 @@ export default function PresentationNodeLeaf({
           let objectives;
           if (record.recordComponent.intervalObjectives) {
             objectives = record.recordComponent.intervalObjectives;
-          } else {
+          } else if (record.recordComponent.objectives) {
             objectives = record.recordComponent.objectives;
+          } else {
+            // its a legacy triumph so it has no objectives
+            return 0;
           }
 
           // its a progress bar with no milestones
@@ -70,10 +79,13 @@ export default function PresentationNodeLeaf({
         },
         ['desc']
       );
-      node.records = sortedTriumphs.records;
+      /**
+       * COLLECTIBLES
+       */
     } else if (node.collectibles) {
-      sortedTriumphs.collectibles = orderBy(
-        sortedTriumphs.collectibles,
+      //  Only need to push owned items to the back of the list
+      sortedNode.collectibles = orderBy(
+        sortedNode.collectibles,
         (collectible) => {
           if (collectible.state & DestinyCollectibleState.NotAcquired) {
             return 1;
@@ -82,27 +94,24 @@ export default function PresentationNodeLeaf({
         },
         ['desc']
       );
-      node.collectibles = sortedTriumphs.collectibles;
+      /**
+       * METRICS
+       */
     } else if (node.metrics) {
-      // console.log(node)
-      sortedTriumphs.metrics = orderBy(
-        sortedTriumphs.metrics,
+      sortedNode.metrics = orderBy(
+        sortedNode.metrics,
         (metric) => {
           const objectives = metric.metricComponent.objectiveProgress;
           if (objectives.complete) {
-            // console.log(-1)
             return -1;
           }
-          // console.log(objectives.progress! / objectives.completionValue)
           return objectives.progress! / objectives.completionValue;
         },
         ['desc']
       );
-      node.metrics = sortedTriumphs.metrics;
     }
+    node = sortedNode;
   }
-  //  console.log('after', node);
-  //  console.log('*************************');
 
   return (
     <>

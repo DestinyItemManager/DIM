@@ -49,7 +49,7 @@ export default function Records({ account }: Props) {
   const [completedRecordsHidden, setCompletedRecordsHidden] = useSetting('completedRecordsHidden');
   const [redactedRecordsRevealed, setRedactedRecordsRevealed] =
     useSetting('redactedRecordsRevealed');
-  const [sortRecordProgression, setsortRecordProgression] = useSetting('sortRecordProgression');
+  const [sortRecordProgression, setSortRecordProgression] = useSetting('sortRecordProgression');
 
   const defs = useD2Definitions();
 
@@ -108,8 +108,7 @@ export default function Records({ account }: Props) {
 
   const onToggleCompletedRecordsHidden = (checked: boolean) => setCompletedRecordsHidden(checked);
   const onToggleRedactedRecordsRevealed = (checked: boolean) => setRedactedRecordsRevealed(checked);
-  const onTogglesortRecordProgression = (checked: boolean) => setsortRecordProgression(checked);
-
+  const onToggleSortRecordProgression = (checked: boolean) => setSortRecordProgression(checked);
   return (
     <PageWithMenu className="d2-vendors">
       <PageWithMenu.Menu>
@@ -138,9 +137,9 @@ export default function Records({ account }: Props) {
             {t('Triumphs.RevealRedacted')}
           </CheckButton>
           <CheckButton
-            name="show-progression"
+            name="sort-progression"
             checked={sortRecordProgression}
-            onChange={onTogglesortRecordProgression}
+            onChange={onToggleSortRecordProgression}
           >
             {t('Triumphs.SortRecords')}
           </CheckButton>
