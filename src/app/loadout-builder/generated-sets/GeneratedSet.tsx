@@ -119,11 +119,11 @@ export default memo(function GeneratedSet({
   const boostedStats = useMemo(
     () =>
       new Set(
-        statOrder.filter((hash) =>
+        armorStats.filter((hash) =>
           modStatChanges[hash].breakdown?.some((change) => change.source === 'runtimeEffect')
         )
       ),
-    [modStatChanges, statOrder]
+    [modStatChanges]
   );
 
   // Distribute our automatically picked mods across the items so that item components

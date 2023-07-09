@@ -1,4 +1,8 @@
-import { LoadoutParameters, StatConstraint } from '@destinyitemmanager/dim-api-types';
+import {
+  LoadoutParameters,
+  StatConstraint,
+  defaultLoadoutParameters,
+} from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { savedLoStatConstraintsByClassSelector } from 'app/dim-api/selectors';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
@@ -50,7 +54,7 @@ import { sortGeneratedSets } from './generated-sets/utils';
 import { filterItems } from './item-filter';
 import { useLbState } from './loadout-builder-reducer';
 import { useLoVendorItems } from './loadout-builder-vendors';
-import { statOrderFromLoadoutParameters } from './loadout-params';
+import { statOrderFromStatConstraints } from './loadout-params';
 import { useProcess } from './process/useProcess';
 import { ArmorEnergyRules, LOCKED_EXOTIC_ANY_EXOTIC, loDefaultArmorEnergyRules } from './types';
 
@@ -105,12 +109,10 @@ export default memo(function LoadoutBuilder({
   const loadoutParameters = loadout.parameters!;
   const modHashes = loadoutParameters.mods ?? emptyArray();
   const lockedExoticHash = loadoutParameters.exoticArmorHash;
-  const statConstraints = loadoutParameters.statConstraints ?? emptyArray();
+  const statConstraints =
+    loadoutParameters.statConstraints ?? defaultLoadoutParameters.statConstraints!;
   const autoStatMods = loadoutParameters.autoStatMods ?? false;
-  const statOrder = useMemo(
-    () => statOrderFromLoadoutParameters(loadoutParameters),
-    [loadoutParameters]
-  );
+  const statOrder = useMemo(() => statOrderFromStatConstraints(statConstraints), [statConstraints]);
 
   const selectedStore = stores.find((store) => store.id === selectedStoreId)!;
   const classType = selectedStore.classType;

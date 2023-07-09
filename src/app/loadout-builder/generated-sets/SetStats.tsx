@@ -4,6 +4,7 @@ import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { armorStats } from 'app/search/d2-known-values';
 import { AppIcon, powerIndicatorIcon } from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
@@ -42,7 +43,7 @@ function SetStats({
 }) {
   const defs = useD2Definitions()!;
   const statDefs: { [statHash: number]: DestinyStatDefinition } = {};
-  for (const statHash of statOrder) {
+  for (const statHash of armorStats) {
     statDefs[statHash] = defs.Stat.get(statHash);
   }
   const totalTier = calculateTotalTier(stats);
