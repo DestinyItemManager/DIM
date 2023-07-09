@@ -13,6 +13,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { getStore } from 'app/inventory/stores-helpers';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadoutFromEquipped, resolveLoadoutModHashes } from 'app/loadout-drawer/loadout-utils';
+import { getItemsAndSubclassFromLoadout } from 'app/loadout/LoadoutView';
 import { useSavedLoadoutsForClassType } from 'app/loadout/loadout-ui/menu-hooks';
 import { categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
@@ -22,7 +23,7 @@ import { searchFilterSelector } from 'app/search/search-filter';
 import { useSetSetting, useSetting } from 'app/settings/hooks';
 import { AppIcon, faExclamationTriangle, redoIcon, refreshIcon, undoIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
-import { emptyArray } from 'app/utils/empty';
+import { emptyArray, emptyObject } from 'app/utils/empty';
 import { isClassCompatible } from 'app/utils/item-utils';
 import { Portal } from 'app/utils/temp-container';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -33,6 +34,7 @@ import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import {
   allItemsSelector,
+  createItemContextSelector,
   sortedStoresSelector,
   unlockedPlugSetItemsSelector,
 } from '../inventory/selectors';
@@ -49,7 +51,11 @@ import { sortGeneratedSets } from './generated-sets/utils';
 import { filterItems } from './item-filter';
 import { useLbState } from './loadout-builder-reducer';
 import { useLoVendorItems } from './loadout-builder-vendors';
-import { buildLoadoutParams } from './loadout-params';
+import {
+  buildLoadoutParams,
+  statFiltersFromLoadoutParameters,
+  statOrderFromLoadoutParameters,
+} from './loadout-params';
 import { useProcess } from './process/useProcess';
 import {
   ArmorEnergyRules,
@@ -91,13 +97,10 @@ export default memo(function LoadoutBuilder({
   // All Loadout Optimizer state is managed via this hook/reducer
   const [
     {
-      loadoutParameters,
-      statOrder,
+      loadout,
       pinnedItems,
       excludedItems,
-      subclass,
       selectedStoreId,
-      statFilters,
       modPicker,
       compareSet,
       canRedo,
@@ -109,15 +112,43 @@ export default memo(function LoadoutBuilder({
   // TODO: if we're editing a loadout, grey out incompatible classes?
 
   // TODO: bundle these together into an LO context?
+  const loadoutParameters = loadout.parameters!;
   const modHashes = loadoutParameters.mods ?? emptyArray();
   const lockedExoticHash = loadoutParameters.exoticArmorHash;
   const autoStatMods = loadoutParameters.autoStatMods ?? false;
+  const statOrder = useMemo(
+    () => statOrderFromLoadoutParameters(loadoutParameters),
+    [loadoutParameters]
+  );
+  const statFilters = useMemo(
+    () => statFiltersFromLoadoutParameters(loadoutParameters),
+    [loadoutParameters]
+  );
 
   const selectedStore = stores.find((store) => store.id === selectedStoreId)!;
   const classType = selectedStore.classType;
   const loadouts = useRelevantLoadouts(selectedStore);
 
   const resolvedMods = useResolvedMods(defs, modHashes, selectedStoreId);
+
+  const itemCreationContext = useSelector(createItemContextSelector);
+  const allItems = useSelector(allItemsSelector);
+  const modsByBucket: {
+    [bucketHash: number]: number[];
+  } = loadoutParameters.modsByBucket ?? emptyObject();
+
+  // Turn loadout items into real DimItems, filtering out unequippable items
+  const [_items, subclass, _warnitems] = useMemo(
+    () =>
+      getItemsAndSubclassFromLoadout(
+        itemCreationContext,
+        loadout.items,
+        selectedStore,
+        allItems,
+        modsByBucket
+      ),
+    [itemCreationContext, loadout.items, selectedStore, allItems, modsByBucket]
+  );
 
   // The list of mod items that need to be assigned to armor items
   const modsToAssign = useMemo(
@@ -173,9 +204,6 @@ export default memo(function LoadoutBuilder({
       }),
     [lbDispatch, savedStatConstraintsByClass, stores]
   );
-
-  // TODO: maybe load from URL state async and fire a dispatch?
-  // TODO: save params to URL when they change? or leave it for the share...
 
   // TODO: build a bundled up context object to pass to GeneratedSets?
 
@@ -278,13 +306,11 @@ export default memo(function LoadoutBuilder({
         </button>
       </div>
       <TierSelect
-        stats={statFilters}
+        statConstraints={loadoutParameters.statConstraints ?? emptyArray()}
         statRangesFiltered={result?.statRangesFiltered}
-        order={statOrder}
-        onStatFiltersChanged={(statFilters) =>
-          lbDispatch({ type: 'statFiltersChanged', statFilters })
+        onStatConstraintsChanged={(statConstraints) =>
+          lbDispatch({ type: 'statConstraintsChanged', statConstraints })
         }
-        onStatOrderChanged={(sortOrder) => lbDispatch({ type: 'sortOrderChanged', sortOrder })}
       />
       <EnergyOptions
         assumeArmorMasterwork={loadoutParameters.assumeArmorMasterwork}

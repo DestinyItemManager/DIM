@@ -579,6 +579,7 @@
     "Filter": "Filters",
     "IncludeVendorItems": "Include Vendor items",
     "Legendary": "Legendary",
+    "LoadoutName": "Optimized Loadout",
     "LockEquipped": "Pin equipped",
     "LockItem": "Pin item",
     "MaxTier": "Max {{tier}}",

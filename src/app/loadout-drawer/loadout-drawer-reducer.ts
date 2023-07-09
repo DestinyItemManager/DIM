@@ -304,7 +304,7 @@ export function equipItem(
 
 export function applySocketOverrides(
   { loadoutItem: searchLoadoutItem }: ResolvedLoadoutItem,
-  socketOverrides: SocketOverrides
+  socketOverrides: SocketOverrides | undefined
 ): LoadoutUpdateFunction {
   return produce((draftLoadout) => {
     // TODO: it might be nice if we just assigned a unique ID to every loadout item just for in-memory ops like deleting

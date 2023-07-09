@@ -1,3 +1,4 @@
+import { StatConstraint } from '@destinyitemmanager/dim-api-types';
 import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
@@ -7,7 +8,11 @@ import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React, { memo } from 'react';
-import { ArmorStatHashes, MinMaxIgnored, StatFilters, StatRanges } from '../types';
+import {
+  statFiltersFromLoadoutParameters,
+  statOrderFromLoadoutParameters,
+} from '../loadout-params';
+import { ArmorStatHashes, MinMaxIgnored, StatRanges } from '../types';
 import { statTierWithHalf } from '../utils';
 import styles from './TierSelect.m.scss';
 
@@ -20,30 +25,49 @@ const MinMaxSelect = memo(MinMaxSelectInner);
  * A selector that allows for choosing minimum and maximum stat ranges, plus reordering the stat priority.
  */
 export default function TierSelect({
-  stats,
+  statConstraints,
   statRangesFiltered,
-  order,
-  onStatOrderChanged,
-  onStatFiltersChanged,
+  onStatConstraintsChanged,
 }: {
-  stats: StatFilters;
+  statConstraints: StatConstraint[];
   /** The ranges the stats could have gotten to INCLUDING stat filters and mod compatibility */
   statRangesFiltered?: Readonly<StatRanges>;
-  order: ArmorStatHashes[]; // stat hashes in user order
-  onStatOrderChanged: (order: ArmorStatHashes[]) => void;
-  onStatFiltersChanged: (stats: StatFilters) => void;
+  onStatConstraintsChanged: (constraints: StatConstraint[]) => void;
 }) {
   const defs = useD2Definitions()!;
+  const order = statOrderFromLoadoutParameters({ statConstraints });
+  const stats = statFiltersFromLoadoutParameters({ statConstraints });
   const handleTierChange = (
     statHash: ArmorStatHashes,
-    changed: { min?: number; max?: number; ignored: boolean }
+    changed: { min: number; max: number; ignored: boolean }
   ) => {
-    const newTiers = {
-      ...stats,
-      [statHash]: { ...stats[statHash], ...changed },
-    };
+    // TODO: really annoying that ignored stats are missing from the list
+    // TODO: handle the case where a previously ignored stat was un-ignored
+    const newStatConstraints = _.compact(
+      statConstraints.map((s) => {
+        if (s.statHash !== statHash) {
+          return s;
+        }
 
-    onStatFiltersChanged(newTiers);
+        if (changed.ignored) {
+          return undefined;
+        }
+
+        const newStat = { ...s };
+        if (changed.min > 0) {
+          newStat.minTier = changed.min;
+        } else {
+          delete newStat.minTier;
+        }
+        if (changed.max < 10) {
+          newStat.maxTier = changed.max;
+        } else {
+          delete newStat.maxTier;
+        }
+        return newStat;
+      })
+    );
+    onStatConstraintsChanged(newStatConstraints);
   };
 
   const statDefs: { [statHash: number]: DestinyStatDefinition } = {};
@@ -56,8 +80,14 @@ export default function TierSelect({
     if (!result.destination) {
       return;
     }
-    const newOrder = reorder(order, result.source.index, result.destination.index);
-    onStatOrderChanged(newOrder);
+    let newStatConstraints = statConstraints;
+    let sourceIndex = result.source.index;
+    if (result.source.index >= statConstraints.length) {
+      newStatConstraints = [...statConstraints, { statHash: order[sourceIndex] }];
+      sourceIndex = newStatConstraints.length - 1;
+    }
+    const newOrder = reorder(newStatConstraints, sourceIndex, result.destination.index);
+    onStatConstraintsChanged(newOrder);
   };
 
   return (
