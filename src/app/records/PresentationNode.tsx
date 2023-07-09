@@ -143,6 +143,7 @@ export default function PresentationNode({
           ownedItemHashes={ownedItemHashes}
           completedRecordsHidden={completedRecordsHidden}
           redactedRecordsRevealed={redactedRecordsRevealed}
+          sortRecordProgression={sortRecordProgression}
         />
       )}
     </div>
