@@ -51,6 +51,7 @@ export default function Records({ account }: Props) {
     useSetting('redactedRecordsRevealed');
   const [sortRecordProgression, setSortRecordProgression] = useSetting('sortRecordProgression');
 
+
   const defs = useD2Definitions();
 
   if (!profileResponse || !defs || !buckets) {
@@ -109,6 +110,7 @@ export default function Records({ account }: Props) {
   const onToggleCompletedRecordsHidden = (checked: boolean) => setCompletedRecordsHidden(checked);
   const onToggleRedactedRecordsRevealed = (checked: boolean) => setRedactedRecordsRevealed(checked);
   const onToggleSortRecordProgression = (checked: boolean) => setSortRecordProgression(checked);
+
   return (
     <PageWithMenu className="d2-vendors">
       <PageWithMenu.Menu>

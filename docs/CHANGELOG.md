@@ -1,4 +1,5 @@
 ## Next
+* Added a toggle button for sorting tabs in the records page.
 
 * Fixed Fashion Loadouts being unable to store an Ornament for the Titan exotic Loreley Splendor Helm.
 * Added button to sort triumphs by completion.
