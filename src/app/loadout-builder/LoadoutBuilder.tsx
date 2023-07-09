@@ -57,12 +57,7 @@ import {
   statOrderFromLoadoutParameters,
 } from './loadout-params';
 import { useProcess } from './process/useProcess';
-import {
-  ArmorEnergyRules,
-  ArmorStatHashes,
-  LOCKED_EXOTIC_ANY_EXOTIC,
-  loDefaultArmorEnergyRules,
-} from './types';
+import { ArmorEnergyRules, LOCKED_EXOTIC_ANY_EXOTIC, loDefaultArmorEnergyRules } from './types';
 
 /** Do not allow the user to choose artifice mods manually in Loadout Optimizer since we're supposed to be doing that */
 const autoAssignmentPCHs = [PlugCategoryHashes.EnhancementsArtifice];
@@ -115,6 +110,7 @@ export default memo(function LoadoutBuilder({
   const loadoutParameters = loadout.parameters!;
   const modHashes = loadoutParameters.mods ?? emptyArray();
   const lockedExoticHash = loadoutParameters.exoticArmorHash;
+  const statConstraints = loadoutParameters.statConstraints ?? emptyArray();
   const autoStatMods = loadoutParameters.autoStatMods ?? false;
   const statOrder = useMemo(
     () => statOrderFromLoadoutParameters(loadoutParameters),
@@ -189,8 +185,7 @@ export default memo(function LoadoutBuilder({
   useSaveLoadoutParameters(hasPreloadedLoadout, loadoutParameters);
   useSaveStatConstraints(
     hasPreloadedLoadout,
-    statOrder,
-    enabledStats,
+    statConstraints,
     savedStatConstraintsByClass,
     classType
   );
@@ -306,7 +301,7 @@ export default memo(function LoadoutBuilder({
         </button>
       </div>
       <TierSelect
-        statConstraints={loadoutParameters.statConstraints ?? emptyArray()}
+        statConstraints={statConstraints}
         statRangesFiltered={result?.statRangesFiltered}
         onStatConstraintsChanged={(statConstraints) =>
           lbDispatch({ type: 'statConstraintsChanged', statConstraints })
@@ -600,8 +595,7 @@ function useSaveLoadoutParameters(
  */
 function useSaveStatConstraints(
   hasPreloadedLoadout: boolean,
-  statOrder: ArmorStatHashes[],
-  enabledStats: Set<ArmorStatHashes>,
+  statConstraints: StatConstraint[],
   savedStatConstraintsByClass: {
     [key: number]: StatConstraint[];
   },
@@ -625,21 +619,13 @@ function useSaveStatConstraints(
       return;
     }
 
-    const newStatConstraints = statOrder
-      .filter((statHash) => enabledStats.has(statHash))
-      .map((statHash) => ({ statHash }));
+    // Strip out min/max tiers and just save the order
+    const newStatConstraints = statConstraints.map(({ statHash }) => ({ statHash }));
     if (!deepEqual(newStatConstraints, savedStatConstraintsByClass[classType])) {
       setSetting('loStatConstraintsByClass', {
         ...savedStatConstraintsByClass,
         [classType]: newStatConstraints,
       });
     }
-  }, [
-    setSetting,
-    statOrder,
-    savedStatConstraintsByClass,
-    classType,
-    hasPreloadedLoadout,
-    enabledStats,
-  ]);
+  }, [setSetting, statConstraints, savedStatConstraintsByClass, classType, hasPreloadedLoadout]);
 }
