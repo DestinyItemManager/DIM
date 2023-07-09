@@ -1,3 +1,4 @@
+import { StatConstraint } from '@destinyitemmanager/dim-api-types';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
@@ -20,8 +21,8 @@ function SetStats({
   stats,
   getStatsBreakdown,
   maxPower,
+  statConstraints,
   statOrder,
-  enabledStats,
   boostedStats,
   className,
   existingLoadoutName,
@@ -32,7 +33,7 @@ function SetStats({
   getStatsBreakdown: () => ModStatChanges;
   maxPower: number;
   statOrder: ArmorStatHashes[];
-  enabledStats: Set<ArmorStatHashes>;
+  statConstraints: StatConstraint[];
   boostedStats: Set<ArmorStatHashes>;
   className?: string;
   existingLoadoutName?: string;
@@ -45,7 +46,7 @@ function SetStats({
     statDefs[statHash] = defs.Stat.get(statHash);
   }
   const totalTier = calculateTotalTier(stats);
-  const enabledTier = sumEnabledStats(stats, enabledStats);
+  const enabledTier = sumEnabledStats(stats, statConstraints);
 
   // Fill in info about selected items / subclass options for Clarity character stats
   const equippedHashes = new Set<number>();
@@ -91,7 +92,7 @@ function SetStats({
           )}
         >
           <Stat
-            isActive={enabledStats.has(statHash)}
+            isActive={statConstraints.some((s) => s.statHash === statHash)}
             isBoosted={boostedStats.has(statHash)}
             stat={statDefs[statHash]}
             value={stats[statHash]}

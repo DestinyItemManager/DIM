@@ -1,4 +1,4 @@
-import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import { LoadoutParameters, StatConstraint } from '@destinyitemmanager/dim-api-types';
 import { WindowVirtualList } from 'app/dim-ui/VirtualList';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
@@ -21,7 +21,7 @@ export default function GeneratedSets({
   sets,
   subclass,
   statOrder,
-  enabledStats,
+  statConstraints,
   modStatChanges,
   loadouts,
   lbDispatch,
@@ -35,7 +35,7 @@ export default function GeneratedSets({
   lockedMods: PluggableInventoryItemDefinition[];
   pinnedItems: PinnedItems;
   statOrder: number[];
-  enabledStats: Set<number>;
+  statConstraints: StatConstraint[];
   modStatChanges: ModStatChanges;
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
@@ -46,8 +46,7 @@ export default function GeneratedSets({
   const halfTierMods = useHalfTierMods(
     selectedStore.id,
     Boolean(params.autoStatMods),
-    statOrder,
-    enabledStats
+    statConstraints
   );
 
   return (
@@ -66,7 +65,7 @@ export default function GeneratedSets({
           pinnedItems={pinnedItems}
           lbDispatch={lbDispatch}
           statOrder={statOrder}
-          enabledStats={enabledStats}
+          statConstraints={statConstraints}
           modStatChanges={modStatChanges}
           loadouts={loadouts}
           params={params}
@@ -87,8 +86,7 @@ export default function GeneratedSets({
 function useHalfTierMods(
   selectedStoreId: string,
   autoStatMods: boolean,
-  statOrder: ArmorStatHashes[],
-  enabledStats: Set<ArmorStatHashes>
+  statConstraints: StatConstraint[]
 ): PluggableInventoryItemDefinition[] {
   // Info about stat mods
   const autoMods = useAutoMods(selectedStoreId);
@@ -98,10 +96,10 @@ function useHalfTierMods(
       autoStatMods
         ? emptyArray()
         : _.compact(
-            statOrder.map(
-              (statHash) => enabledStats.has(statHash) && autoMods.generalMods[statHash]?.minorMod
+            statConstraints.map(
+              (s) => autoMods.generalMods[s.statHash as ArmorStatHashes]?.minorMod
             )
           ),
-    [autoMods.generalMods, enabledStats, autoStatMods, statOrder]
+    [autoMods.generalMods, statConstraints, autoStatMods]
   );
 }

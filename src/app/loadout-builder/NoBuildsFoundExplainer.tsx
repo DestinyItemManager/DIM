@@ -1,4 +1,4 @@
-import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
+import { AssumeArmorMasterwork, StatConstraint } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import { t } from 'app/i18next-t';
@@ -17,7 +17,7 @@ import LockedItem from './filter/LockedItem';
 import { FilterInfo } from './item-filter';
 import { LoadoutBuilderAction } from './loadout-builder-reducer';
 import { ProcessStatistics, RejectionRate } from './process-worker/types';
-import { ArmorEnergyRules, LockableBucketHashes, PinnedItems, StatFilters } from './types';
+import { ArmorEnergyRules, LockableBucketHashes, PinnedItems } from './types';
 
 interface ActionableSuggestion {
   id: string;
@@ -51,7 +51,7 @@ export default function NoBuildsFoundExplainer({
   lockedModMap,
   alwaysInvalidMods,
   armorEnergyRules,
-  statFilters,
+  statConstraints,
   pinnedItems,
   lockedExoticHash,
   filterInfo,
@@ -65,7 +65,7 @@ export default function NoBuildsFoundExplainer({
   lockedModMap: ModMap;
   alwaysInvalidMods: PluggableInventoryItemDefinition[];
   armorEnergyRules: ArmorEnergyRules;
-  statFilters: StatFilters;
+  statConstraints: StatConstraint[];
   pinnedItems: PinnedItems;
   lockedExoticHash: number | undefined;
   filterInfo?: FilterInfo;
@@ -207,7 +207,7 @@ export default function NoBuildsFoundExplainer({
   // two non-solar combat mods, mod assignment is trivially infeasible and we
   // can point that out directly?
 
-  const anyStatMinimums = Object.values(statFilters).some((f) => !f.ignored && f.min > 0);
+  const anyStatMinimums = statConstraints.some((f) => Boolean(f.minTier));
 
   const bucketIndependentMods = [...lockedModMap.generalMods, ...lockedModMap.activityMods];
 

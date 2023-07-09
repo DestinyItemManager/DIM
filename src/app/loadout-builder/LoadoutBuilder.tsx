@@ -18,7 +18,6 @@ import { useSavedLoadoutsForClassType } from 'app/loadout/loadout-ui/menu-hooks'
 import { categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { armorStats } from 'app/search/d2-known-values';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { useSetSetting, useSetting } from 'app/settings/hooks';
 import { AppIcon, faExclamationTriangle, redoIcon, refreshIcon, undoIcon } from 'app/shell/icons';
@@ -51,7 +50,7 @@ import { sortGeneratedSets } from './generated-sets/utils';
 import { filterItems } from './item-filter';
 import { useLbState } from './loadout-builder-reducer';
 import { useLoVendorItems } from './loadout-builder-vendors';
-import { statFiltersFromLoadoutParameters, statOrderFromLoadoutParameters } from './loadout-params';
+import { statOrderFromLoadoutParameters } from './loadout-params';
 import { useProcess } from './process/useProcess';
 import { ArmorEnergyRules, LOCKED_EXOTIC_ANY_EXOTIC, loDefaultArmorEnergyRules } from './types';
 
@@ -112,10 +111,6 @@ export default memo(function LoadoutBuilder({
     () => statOrderFromLoadoutParameters(loadoutParameters),
     [loadoutParameters]
   );
-  const statFilters = useMemo(
-    () => statFiltersFromLoadoutParameters(loadoutParameters),
-    [loadoutParameters]
-  );
 
   const selectedStore = stores.find((store) => store.id === selectedStoreId)!;
   const classType = selectedStore.classType;
@@ -168,12 +163,6 @@ export default memo(function LoadoutBuilder({
   const { modMap: lockedModMap, unassignedMods } = useMemo(
     () => categorizeArmorMods(modsToAssign, armorItems),
     [armorItems, modsToAssign]
-  );
-
-  // TODO: maybe better to combine enabled & statOrder by making this a list in stat order?
-  const enabledStats = useMemo(
-    () => new Set(armorStats.filter((statType) => !statFilters[statType].ignored)),
-    [statFilters]
   );
 
   const hasPreloadedLoadout = Boolean(preloadedLoadout);
@@ -251,7 +240,7 @@ export default memo(function LoadoutBuilder({
     modStatChanges,
     armorEnergyRules,
     statOrder,
-    statFilters,
+    statConstraints,
     anyExotic: lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC,
     autoStatMods,
   });
@@ -259,8 +248,8 @@ export default memo(function LoadoutBuilder({
   const resultSets = result?.sets;
 
   const sortedSets = useMemo(
-    () => resultSets && sortGeneratedSets(resultSets, statOrder, enabledStats),
-    [statOrder, enabledStats, resultSets]
+    () => resultSets && sortGeneratedSets(resultSets, statConstraints),
+    [statConstraints, resultSets]
   );
 
   // I don't think this can actually happen?
@@ -424,7 +413,7 @@ export default memo(function LoadoutBuilder({
             selectedStore={selectedStore}
             lbDispatch={lbDispatch}
             statOrder={statOrder}
-            enabledStats={enabledStats}
+            statConstraints={statConstraints}
             modStatChanges={result.modStatChanges}
             loadouts={loadouts}
             params={loadoutParameters}
@@ -443,7 +432,7 @@ export default memo(function LoadoutBuilder({
               autoAssignStatMods={autoStatMods}
               armorEnergyRules={armorEnergyRules}
               lockedExoticHash={lockedExoticHash}
-              statFilters={statFilters}
+              statConstraints={statConstraints}
               pinnedItems={pinnedItems}
               filterInfo={filterInfo}
               processInfo={result?.processInfo}

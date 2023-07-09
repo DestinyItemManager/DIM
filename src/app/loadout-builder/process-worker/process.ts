@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { StatConstraint } from '@destinyitemmanager/dim-api-types';
 import { infoLog } from '../../utils/log';
 import {
   ArmorStatHashes,
@@ -7,7 +7,7 @@ import {
   LockableBucketHashes,
   LockableBuckets,
   majorStatBoost,
-  StatFilters,
+  MinMaxIgnored,
   StatRanges,
 } from '../types';
 import {
@@ -41,7 +41,7 @@ export function process(
   lockedMods: LockedProcessMods,
   /** The user's chosen stat order, including disabled stats */
   statOrder: ArmorStatHashes[],
-  statFilters: StatFilters,
+  statConstraints: StatConstraint[],
   /** Ensure every set includes one exotic */
   anyExotic: boolean,
   /** Which artifice mods, large, and small stat mods are available */
@@ -59,14 +59,23 @@ export function process(
   const pstart = performance.now();
 
   const modStatsInStatOrder = statOrder.map((h) => modStatTotals[h]);
-  const statFiltersInStatOrder = statOrder.map((h) => statFilters[h]);
+  const statFiltersInStatOrder: MinMaxIgnored[] = statOrder.map((h) => ({
+    min: statConstraints[h]?.minTier ?? 0,
+    max: statConstraints[h]?.maxTier ?? 10,
+    ignored: !statConstraints[h],
+  }));
 
   // This stores the computed min and max value for each stat as we process all sets, so we
   // can display it on the stat filter dropdowns
-  const statRangesFiltered: StatRanges = _.mapValues(statFilters, () => ({
-    min: 100,
-    max: 0,
-  }));
+  const statRangesFiltered = Object.fromEntries(
+    statOrder.map((h) => [
+      h,
+      {
+        min: 100,
+        max: 0,
+      },
+    ])
+  ) as StatRanges;
   const statRangesFilteredInStatOrder = statOrder.map((h) => statRangesFiltered[h]);
 
   // Store stat arrays for each items in stat order

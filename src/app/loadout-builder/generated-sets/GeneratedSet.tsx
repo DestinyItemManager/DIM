@@ -1,4 +1,4 @@
-import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import { LoadoutParameters, StatConstraint } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore, statSourceOrder } from 'app/inventory/store-types';
@@ -34,7 +34,7 @@ export default memo(function GeneratedSet({
   lockedMods,
   pinnedItems,
   statOrder,
-  enabledStats,
+  statConstraints,
   modStatChanges,
   loadouts,
   lbDispatch,
@@ -49,7 +49,7 @@ export default memo(function GeneratedSet({
   lockedMods: PluggableInventoryItemDefinition[];
   pinnedItems: PinnedItems;
   statOrder: ArmorStatHashes[];
-  enabledStats: Set<number>;
+  statConstraints: StatConstraint[];
   modStatChanges: ModStatChanges;
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
@@ -152,7 +152,7 @@ export default memo(function GeneratedSet({
         getStatsBreakdown={getStatsBreakdownOnce}
         maxPower={getPower(displayedItems)}
         statOrder={statOrder}
-        enabledStats={enabledStats}
+        statConstraints={statConstraints}
         boostedStats={boostedStats}
         existingLoadoutName={existingLoadout?.name}
         subclass={subclass}

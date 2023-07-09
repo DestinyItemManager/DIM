@@ -1,4 +1,4 @@
-import { TagValue } from '@destinyitemmanager/dim-api-types';
+import { StatConstraint, TagValue } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { getTagSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
@@ -18,11 +18,11 @@ import { ProcessItem, ProcessItemsByBucket, ProcessStatistics } from '../process
 import {
   ArmorEnergyRules,
   ArmorSet,
+  ArmorStatHashes,
   ItemGroup,
   ItemsByBucket,
   LockableBucketHash,
   ModStatChanges,
-  StatFilters,
   StatRanges,
 } from '../types';
 import {
@@ -69,7 +69,7 @@ export function useProcess({
   modStatChanges,
   armorEnergyRules,
   statOrder,
-  statFilters,
+  statConstraints,
   anyExotic,
   autoStatMods,
 }: {
@@ -80,8 +80,8 @@ export function useProcess({
   subclass: ResolvedLoadoutItem | undefined;
   modStatChanges: ModStatChanges;
   armorEnergyRules: ArmorEnergyRules;
-  statOrder: number[];
-  statFilters: StatFilters;
+  statOrder: ArmorStatHashes[];
+  statConstraints: StatConstraint[];
   anyExotic: boolean;
   autoStatMods: boolean;
 }) {
@@ -172,7 +172,7 @@ export function useProcess({
         _.mapValues(modStatChanges, (stat) => stat.value),
         lockedProcessMods,
         statOrder,
-        statFilters,
+        statConstraints,
         anyExotic,
         autoModsData,
         autoStatMods,
@@ -212,7 +212,7 @@ export function useProcess({
     filteredItems,
     selectedStore.classType,
     selectedStore.id,
-    statFilters,
+    statConstraints,
     statOrder,
     anyExotic,
     subclass,

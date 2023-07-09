@@ -244,7 +244,8 @@ export default memo(function LockArmorAndPerks({
                 onClose={
                   isAbility
                     ? undefined
-                    : () => lbDispatch({ type: 'removeSingleSubclassSocketOverride', plug })
+                    : () =>
+                        lbDispatch({ type: 'removeSingleSubclassSocketOverride', plug, subclass })
                 }
                 forClassType={selectedStore.classType}
               />
