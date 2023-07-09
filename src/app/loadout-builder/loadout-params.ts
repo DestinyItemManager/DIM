@@ -1,40 +1,16 @@
 /* Functions for dealing with the LoadoutParameters structure we save with loadouts and use to save and share LO settings. */
 
-import {
-  defaultLoadoutParameters,
-  LoadoutParameters,
-  StatConstraint,
-} from '@destinyitemmanager/dim-api-types';
+import { defaultLoadoutParameters, LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { armorStats } from 'app/search/d2-known-values';
 import _ from 'lodash';
-import { ArmorStatHashes, MinMaxIgnored, StatFilters } from './types';
+import { ArmorStatHashes, StatFilters } from './types';
 
 export function buildLoadoutParams(
   loadoutParameters: LoadoutParameters,
-  searchQuery: string,
-  statFilters: Readonly<{ [statType in ArmorStatHashes]: MinMaxIgnored }>,
-  statOrder: ArmorStatHashes[]
+  searchQuery: string
 ): LoadoutParameters {
   const params: LoadoutParameters = {
     ...loadoutParameters,
-    statConstraints: _.compact(
-      statOrder.map((statHash) => {
-        const minMax = statFilters[statHash];
-        if (minMax.ignored) {
-          return undefined;
-        }
-        const stat: StatConstraint = {
-          statHash,
-        };
-        if (minMax.min > 0) {
-          stat.minTier = minMax.min;
-        }
-        if (minMax.max < 10) {
-          stat.maxTier = minMax.max;
-        }
-        return stat;
-      })
-    ),
   };
 
   if (searchQuery) {

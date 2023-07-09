@@ -51,11 +51,7 @@ import { sortGeneratedSets } from './generated-sets/utils';
 import { filterItems } from './item-filter';
 import { useLbState } from './loadout-builder-reducer';
 import { useLoVendorItems } from './loadout-builder-vendors';
-import {
-  buildLoadoutParams,
-  statFiltersFromLoadoutParameters,
-  statOrderFromLoadoutParameters,
-} from './loadout-params';
+import { statFiltersFromLoadoutParameters, statOrderFromLoadoutParameters } from './loadout-params';
 import { useProcess } from './process/useProcess';
 import { ArmorEnergyRules, LOCKED_EXOTIC_ANY_EXOTIC, loDefaultArmorEnergyRules } from './types';
 
@@ -200,6 +196,13 @@ export default memo(function LoadoutBuilder({
     [lbDispatch, savedStatConstraintsByClass, stores]
   );
 
+  // Write the search query into the loadout
+  useEffect(() => {
+    if ((searchQuery || undefined) !== loadoutParameters.query) {
+      lbDispatch({ type: 'setSearchQuery', query: searchQuery });
+    }
+  }, [lbDispatch, loadoutParameters.query, searchQuery]);
+
   // TODO: build a bundled up context object to pass to GeneratedSets?
 
   const [armorEnergyRules, filteredItems, filterInfo] = useMemo(() => {
@@ -252,14 +255,6 @@ export default memo(function LoadoutBuilder({
     anyExotic: lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC,
     autoStatMods,
   });
-
-  // A representation of the current loadout optimizer parameters that can be saved with generated loadouts
-  // TODO: replace some of these individual params with this object << what
-  // TODO: build a skeleton loadout here?
-  const params = useMemo(
-    () => buildLoadoutParams(loadoutParameters, searchQuery, statFilters, statOrder),
-    [loadoutParameters, searchQuery, statFilters, statOrder]
-  );
 
   const resultSets = result?.sets;
 
@@ -432,7 +427,7 @@ export default memo(function LoadoutBuilder({
             enabledStats={enabledStats}
             modStatChanges={result.modStatChanges}
             loadouts={loadouts}
-            params={params}
+            params={loadoutParameters}
             armorEnergyRules={result.armorEnergyRules}
             notes={preloadedLoadout?.notes}
           />
@@ -487,7 +482,7 @@ export default memo(function LoadoutBuilder({
               initialLoadoutId={optimizingLoadoutId}
               subclass={subclass}
               classType={classType}
-              params={params}
+              params={loadoutParameters}
               notes={preloadedLoadout?.notes}
               lockedMods={modsToAssign}
               onClose={() => lbDispatch({ type: 'closeCompareDrawer' })}

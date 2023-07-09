@@ -245,7 +245,8 @@ type LoadoutBuilderConfigAction =
       subclass: ResolvedLoadoutItem;
     }
   | { type: 'lockExotic'; lockedExoticHash: number }
-  | { type: 'removeLockedExotic' };
+  | { type: 'removeLockedExotic' }
+  | { type: 'setSearchQuery'; query: string };
 
 type LoadoutBuilderUIAction =
   | { type: 'openModPicker'; plugCategoryHashWhitelist?: number[] }
@@ -513,6 +514,11 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
         return {
           ...state,
           loadout: setLoadoutParameters({ autoStatMods: action.autoStatMods })(state.loadout),
+        };
+      case 'setSearchQuery':
+        return {
+          ...state,
+          loadout: setLoadoutParameters({ query: action.query || undefined })(state.loadout),
         };
     }
   };
