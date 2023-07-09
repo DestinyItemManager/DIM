@@ -51,7 +51,6 @@ export default function Records({ account }: Props) {
     useSetting('redactedRecordsRevealed');
   const [sortRecordProgression, setSortRecordProgression] = useSetting('sortRecordProgression');
 
-
   const defs = useD2Definitions();
 
   if (!profileResponse || !defs || !buckets) {
