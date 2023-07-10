@@ -82,8 +82,12 @@ const languageOptions = mapToOptions({
 let languageChanged = false;
 
 const themeOptions = mapToOptions({
-  default: 'Classic DIM (Default)',
-  dark: 'Dark',
+  default: 'DIM Classic (Default)',
+  europa: 'Europa',
+  neomuna: 'Neomuna',
+  pyramid: 'Pyramid Fleet',
+  throneworld: 'Throne World',
+  vexnet: 'Vex Network',
 });
 
 export default function SettingsPage() {

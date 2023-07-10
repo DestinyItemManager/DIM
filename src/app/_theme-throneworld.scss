@@ -1,0 +1,87 @@
+// Throne World theme
+.theme-throneworld {
+  // Base colours
+  --theme-accent-primary: #2ae9c6; // Interaction styles (hover, active, focus)
+  --theme-accent-secondary: #c17e2b; // Secondary interactions
+
+  // Generic fills for modal backgrounds (see below)
+  --theme-fill-modal: #1b422c; // Base fill for popups, drawers, dropdowns etc
+  --theme-fill-modal-actions: #161616; // Layered/contextual modals (search, item actions)
+
+  // Text
+  --theme-text: #fff;
+  --theme-text-invert: #000;
+  --theme-text-secondary: #eee;
+
+  // Buttons
+  --theme-button-bg: rgba(255, 255, 255, 0.2);
+  --theme-button-text: white;
+
+  // Input field (text boxes and text areas)
+  --theme-input-bg: #333;
+
+  // Shadows
+  --theme-drop-shadow: 0 0 18px 0 #000;
+
+  // Tooltips
+  --theme-tooltip-underline: transparent;
+  --theme-tooltip-header-bg: #0a0a0f;
+  --theme-tooltip-body-bg: #151523;
+  --theme-tooltip-border: #8e8e9e;
+  --theme-tooltip-minimal-bg: #5d5970;
+
+  // App background gradient pattern
+  --theme-app-bg-gradient-start: #72d8ba;
+  --theme-app-bg-gradient-end: #06562a;
+  --theme-app-bg-gradient: radial-gradient(
+    circle at 50% 70px,
+    var(--theme-app-bg-gradient-start) 0%,
+    var(--theme-app-bg-gradient-end) 100%
+  );
+
+  // App
+  --theme-app-bg: var(--theme-app-bg-gradient);
+  // The color of PWA elements like the title bar. This cannot be a gradient.
+  --theme-pwa-background: #1b422c;
+
+  // Header
+  --theme-header-nav-bg: #1b422c;
+  --theme-header-nav-slideout-menu-bg: var(--theme-fill-modal);
+  --theme-header-characters-bg: #366b4d;
+  --theme-header-characters-txt: #ccc;
+
+  // Dropdown menu
+  --theme-dropdown-menu-bg: var(--theme-fill-modal);
+
+  // Search
+  --theme-search-bg: rgba(0, 0, 0, 0.4);
+  --theme-search-dropdown-bg: var(--theme-fill-modal-actions);
+  --theme-search-dropdown-border: transparent;
+
+  // Items
+  --theme-item-polaroid: #e3f9db;
+  --theme-item-polaroid-txt: var(--theme-text-invert);
+  --theme-item-polaroid-hover-border: #ddd;
+  --theme-item-polaroid-masterwork: #9aad11;
+  --theme-item-polaroid-masterwork-txt: black;
+  --theme-item-polaroid-masterwork-border: #d1e15d;
+  --theme-item-polaroid-godroll: #0b486b;
+  --theme-item-polaroid-trashroll: #d14334;
+
+  // Item popup
+  --theme-item-popup-border: #222;
+  --theme-item-popup-arrow: var(--theme-fill-modal-actions);
+  --theme-item-popup-actions-bg: var(--theme-fill-modal-actions);
+  --theme-item-popup-panel-bg: #333; // Panels for progress (masterwork, crafted, catalyst) and archetype
+  --theme-item-popup-progress-bar-bg: #222;
+
+  // Item feed
+  --theme-item-feed-bg: var(--theme-fill-modal);
+
+  // Item sheet (compare, armory)
+  --theme-item-sheet-bg: var(--theme-fill-modal);
+
+  // Organizer
+  --theme-organizer-row-odd-bg: #2c7c55;
+  --theme-organizer-row-even-bg: #3c926c;
+}

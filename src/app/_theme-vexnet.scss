@@ -1,22 +1,24 @@
-// Dark theme
-.theme-pyramid {
+// Vex Network theme
+.theme-vexnet {
   // Base colours
-  --theme-accent-primary: #ff3f00; // Interaction styles (hover, active, focus)
-  --theme-accent-secondary: #68a0b7; // Secondary interactions
+  --theme-accent-primary: #5ed12c; // Interaction styles (hover, active, focus)
+  --theme-accent-secondary: #f27b8a; // Secondary interactions
 
   // More vibrant P3 colourspace tints for displays that support them
-  @supports (color: color(display-p3 1 1 1)) {
-    --theme-accent-primary: oklch(0.66 0.24 37.65);
-  }
+  // @supports (color: color(display-p3 1 1 1)) {
+  //   --theme-accent-primary: oklch(0.61 0.29 336.78);
+  //   --theme-item-polaroid: oklch(0.77 0.16 213.81);
+  //   --theme-item-polaroid-masterwork: oklch(0.59 0.27 341.42);
+  // }
 
   // Generic fills for modal backgrounds (see below)
-  --theme-fill-modal: #000; // Base fill for popups, drawers, dropdowns etc
-  --theme-fill-modal-actions: #161616; // Layered/contextual modals (search, item actions)
+  --theme-fill-modal: #0d2f63; // Base fill for popups, drawers, dropdowns etc
+  --theme-fill-modal-actions: #0b2432; // Layered/contextual modals (search, item actions)
 
   // Text
-  --theme-text: #ccc;
-  --theme-text-invert: #fff;
-  --theme-text-secondary: #777;
+  --theme-text: #fff;
+  --theme-text-invert: #000;
+  --theme-text-secondary: #fff;
 
   // Buttons
   --theme-button-bg: rgba(255, 255, 255, 0.2);
@@ -36,8 +38,8 @@
   --theme-tooltip-minimal-bg: #5d5970;
 
   // App background gradient pattern
-  --theme-app-bg-gradient-start: #1a1a1a;
-  --theme-app-bg-gradient-end: #111;
+  --theme-app-bg-gradient-start: #65ccbd;
+  --theme-app-bg-gradient-end: #195b80;
   --theme-app-bg-gradient: radial-gradient(
     circle at 50% 70px,
     var(--theme-app-bg-gradient-start) 0%,
@@ -47,12 +49,12 @@
   // App
   --theme-app-bg: var(--theme-app-bg-gradient);
   // The color of PWA elements like the title bar. This cannot be a gradient.
-  --theme-pwa-background: #000;
+  --theme-pwa-background: #0d2f63;
 
   // Header
-  --theme-header-nav-bg: black;
+  --theme-header-nav-bg: #0d2f63;
   --theme-header-nav-slideout-menu-bg: var(--theme-fill-modal);
-  --theme-header-characters-bg: rgba(15, 15, 15, 0.9);
+  --theme-header-characters-bg: #204c74;
   --theme-header-characters-txt: #aaa;
 
   // Dropdown menu
@@ -64,11 +66,11 @@
   --theme-search-dropdown-border: rgba(255, 255, 255, 0.2);
 
   // Items 'polaroid' framed icons
-  --theme-item-polaroid: #456;
-  --theme-item-polaroid-txt: white;
-  --theme-item-polaroid-masterwork: black;
-  --theme-item-polaroid-masterwork-txt: #e8a534;
-  --theme-item-polaroid-masterwork-border: #ae791e;
+  --theme-item-polaroid: #98cbd5;
+  --theme-item-polaroid-txt: black;
+  --theme-item-polaroid-masterwork: #5ed12c;
+  --theme-item-polaroid-masterwork-txt: #000;
+  --theme-item-polaroid-masterwork-border: #40abb5;
   --theme-item-polaroid-godroll: white;
   --theme-item-polaroid-trashroll: #d14334;
 
@@ -91,6 +93,6 @@
   --theme-item-sheet-bg: var(--theme-fill-modal);
 
   // Organizer
-  --theme-organizer-row-odd-bg: #171717;
-  --theme-organizer-row-even-bg: #2b2b2b;
+  --theme-organizer-row-odd-bg: #2b5483;
+  --theme-organizer-row-even-bg: #2e3d69;
 }
