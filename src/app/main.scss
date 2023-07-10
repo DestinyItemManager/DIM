@@ -206,6 +206,10 @@ option {
   font-family: 'Open Sans', sans-serif, 'Destiny Symbols';
 }
 
+input[type='text'] {
+  caret-color: var(--theme-accent-primary);
+}
+
 input[type='search'] {
   appearance: textfield;
 }
@@ -223,6 +227,7 @@ textarea {
   font-size: inherit;
   // Setting this makes yuku/textcomplete faster because it doesn't need to make a fake element to measure line height (incorrectly, too)
   line-height: calc(16 / 12);
+  caret-color: var(--theme-accent-primary);
 }
 
 select {

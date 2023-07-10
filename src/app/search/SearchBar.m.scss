@@ -13,7 +13,6 @@
 .open {
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
-
   box-shadow: inset 0 0 0 1px var(--theme-search-dropdown-border);
 }
 
@@ -29,6 +28,8 @@
   padding: 0;
   left: 0;
   right: 0;
+  // Add a top offset for the 1px inset box-shadow/border
+  // This avoids an unwanted dividing line between the search box + dropdown when open
   top: calc($search-bar-height - 1px);
   border-bottom-left-radius: $theme-corner-radius-search;
   border-bottom-right-radius: $theme-corner-radius-search;
