@@ -37,7 +37,7 @@ import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useCallback, useMemo, useReducer } from 'react';
 import { useSelector } from 'react-redux';
-import { statFiltersFromLoadoutParamaters, statOrderFromLoadoutParameters } from './loadout-params';
+import { statFiltersFromLoadoutParameters, statOrderFromLoadoutParameters } from './loadout-params';
 import {
   ArmorSet,
   ArmorStatHashes,
