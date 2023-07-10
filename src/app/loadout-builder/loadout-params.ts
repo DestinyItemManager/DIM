@@ -55,7 +55,7 @@ export function statOrderFromLoadoutParameters(params: LoadoutParameters): Armor
   }) as ArmorStatHashes[];
 }
 
-export function statFiltersFromLoadoutParamaters(params: LoadoutParameters): StatFilters {
+export function statFiltersFromLoadoutParameters(params: LoadoutParameters): StatFilters {
   const statConstraintsByStatHash = _.keyBy(params.statConstraints, (c) => c.statHash);
   return armorStats.reduce((memo, statHash) => {
     const c = statConstraintsByStatHash[statHash];

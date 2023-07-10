@@ -37,7 +37,7 @@ import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useCallback, useMemo, useReducer } from 'react';
 import { useSelector } from 'react-redux';
-import { statFiltersFromLoadoutParamaters, statOrderFromLoadoutParameters } from './loadout-params';
+import { statFiltersFromLoadoutParameters, statOrderFromLoadoutParameters } from './loadout-params';
 import {
   ArmorSet,
   ArmorStatHashes,
@@ -179,7 +179,7 @@ const lbConfigInit = ({
   }
 
   const statOrder = statOrderFromLoadoutParameters(loadoutParameters);
-  const statFilters = statFiltersFromLoadoutParamaters(loadoutParameters);
+  const statFilters = statFiltersFromLoadoutParameters(loadoutParameters);
 
   // Also delete artifice mods -- artifice mods are always picked automatically
   // per set. In contrast we remove stat mods dynamically depending on the auto
@@ -289,7 +289,7 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
           excludedItems: {},
           loadoutParameters,
           statOrder: statOrderFromLoadoutParameters(loadoutParameters),
-          statFilters: statFiltersFromLoadoutParamaters(loadoutParameters),
+          statFilters: statFiltersFromLoadoutParameters(loadoutParameters),
           subclass: undefined,
         };
       }
