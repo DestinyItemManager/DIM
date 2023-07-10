@@ -214,6 +214,11 @@ input[type='search'] {
   appearance: textfield;
 }
 
+input[type='range'],
+input[type='radio'] {
+  accent-color: var(--theme-accent-primary);
+}
+
 textarea {
   width: 100%;
   height: 30px;
