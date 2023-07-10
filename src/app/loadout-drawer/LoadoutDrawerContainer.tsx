@@ -66,6 +66,9 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
           pickBackingStore(stores, storeId, loadout.classType) ?? getCurrentStore(stores);
 
         if (!editingStore) {
+          if (defs) {
+            warnMissingClass(loadout.classType, defs);
+          }
           return;
         }
 
@@ -76,7 +79,7 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
           isNew: Boolean(isNew),
         });
       },
-      [stores]
+      [stores, defs]
     )
   );
 

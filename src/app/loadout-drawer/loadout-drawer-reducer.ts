@@ -61,16 +61,16 @@ export function addItem(
   item: DimItem,
   equip?: boolean
 ): LoadoutUpdateFunction {
-  const loadoutItem = convertToLoadoutItem(item, false, 1);
-  if (item.sockets && item.bucket.hash === BucketHashes.Subclass) {
-    loadoutItem.socketOverrides = createSubclassDefaultSocketOverrides(item);
-  }
-
-  // We only allow one subclass, and it must be equipped. Same with a couple other things.
-  const singular = singularBucketHashes.includes(item.bucket.hash);
-  const maxSlots = singular ? 1 : item.bucket.capacity;
-
   return produce((draftLoadout) => {
+    const loadoutItem = convertToLoadoutItem(item, false, 1);
+    if (item.sockets && item.bucket.hash === BucketHashes.Subclass) {
+      loadoutItem.socketOverrides = createSubclassDefaultSocketOverrides(item);
+    }
+
+    // We only allow one subclass, and it must be equipped. Same with a couple other things.
+    const singular = singularBucketHashes.includes(item.bucket.hash);
+    const maxSlots = singular ? 1 : item.bucket.capacity;
+
     if (!itemCanBeInLoadout(item)) {
       showNotification({ type: 'warning', title: t('Loadouts.OnlyItems') });
       return;
@@ -550,7 +550,7 @@ export function setClearSpace(clearSpace: boolean): LoadoutUpdateFunction {
   });
 }
 
-function setLoadoutParameters(params: Partial<LoadoutParameters>): LoadoutUpdateFunction {
+export function setLoadoutParameters(params: Partial<LoadoutParameters>): LoadoutUpdateFunction {
   return (loadout) => ({
     ...loadout,
     parameters: { ...loadout.parameters, ...params },
