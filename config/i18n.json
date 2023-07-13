@@ -826,6 +826,9 @@
     "Unknown": "Challenge",
     "Weekly": "Weekly Challenge"
   },
+  "Mods": {
+    "HarmonicModDescription": "This mod's effect comes at a reduced cost and changes depending on the subclass used."
+  },
   "MoveAmount": {
     "Amount": "Amount:"
   },

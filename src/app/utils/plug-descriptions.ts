@@ -11,6 +11,7 @@ import { EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
 import { DestinyClass, ItemPerkVisibility } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
+import { t } from 'i18next';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { compareBy } from './comparators';
@@ -204,6 +205,14 @@ function getPerkDescriptions(
       usedStrings.add(notif);
     }
   }
+  function addSpecialDescriptions() {
+    if (plug.displayProperties.name.includes('Harmonic')) {
+      results.push({
+        perkHash: -usedStrings.size,
+        description: t('Mods.HarmonicModDescription').toString(),
+      });
+    }
+  }
 
   /*
   Most plugs use the description field to describe their functionality.
@@ -227,7 +236,6 @@ function getPerkDescriptions(
     } else {
       addDescriptionAsFunctionality();
     }
-    addTooltipNotifsAsRequirement();
   } else {
     if (plugDescription) {
       addDescriptionAsFunctionality();
@@ -235,6 +243,7 @@ function getPerkDescriptions(
       addPerkDescriptions();
     }
   }
+  addSpecialDescriptions();
 
   // a fallback: if we still don't have any perk descriptions, at least keep the first perk for display.
   // there are mods like this (e.g. Elemental Armaments): no description, and annoyingly all perks are set
@@ -266,6 +275,11 @@ function getPerkDescriptions(
     if (perkDesc.description || perkDesc.requirement) {
       results.push(perkDesc);
     }
+  }
+
+  // Needs to be last added otherwise we can break the above statement causing a description to not be added
+  if (plug.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)) {
+    addTooltipNotifsAsRequirement();
   }
 
   return results;
