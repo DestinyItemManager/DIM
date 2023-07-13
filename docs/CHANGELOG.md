@@ -1,5 +1,4 @@
 ## Next
-
 * Fixed Harmonic mods i.e. "Harmonic Siphon" from having no description
 
 ## 7.76.0 <span class="changelog-date">(2023-07-09)</span>
