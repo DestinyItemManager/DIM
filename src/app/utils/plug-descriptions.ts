@@ -2,6 +2,7 @@ import { Perk } from 'app/clarity/descriptions/descriptionInterface';
 import { clarityDescriptionsSelector } from 'app/clarity/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingSelector } from 'app/dim-api/selectors';
+import { t } from 'app/i18next-t';
 import { DimItem, DimPlug, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { getStatSortOrder, isAllowedItemStat, isAllowedPlugStat } from 'app/inventory/store/stats';
 import { activityModPlugCategoryHashes } from 'app/loadout/known-values';
@@ -11,7 +12,6 @@ import { EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
 import { DestinyClass, ItemPerkVisibility } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
-import { t } from 'i18next';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { compareBy } from './comparators';
@@ -205,12 +205,13 @@ function getPerkDescriptions(
       usedStrings.add(notif);
     }
   }
-  function addSpecialDescriptions() {
+  function addCustomDescriptionAsFunctionality() {
     if (plug.displayProperties.name.includes('Harmonic')) {
       results.push({
         perkHash: -usedStrings.size,
-        description: t('Mods.HarmonicModDescription').toString(),
+        description: t('Mods.HarmonicModDescription'),
       });
+      usedStrings.add(t('Mods.HarmonicModDescription'));
     }
   }
 
@@ -243,7 +244,9 @@ function getPerkDescriptions(
       addPerkDescriptions();
     }
   }
-  addSpecialDescriptions();
+
+  // Add custom descriptions created for mods who's description is hard to access or an accurate description isn't present
+  addCustomDescriptionAsFunctionality();
 
   // a fallback: if we still don't have any perk descriptions, at least keep the first perk for display.
   // there are mods like this (e.g. Elemental Armaments): no description, and annoyingly all perks are set
