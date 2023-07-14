@@ -1,5 +1,7 @@
 ## Next
 
+* When opening the Compare view from the Triage tab of a Vendor item, this Vendor item will now be included in the compared items.
+
 ## 7.76.0 <span class="changelog-date">(2023-07-09)</span>
 
 * Fixed Fashion Loadouts being unable to store an Ornament for the Titan exotic Loreley Splendor Helm.

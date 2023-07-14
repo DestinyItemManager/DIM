@@ -80,7 +80,7 @@ export const compare: Reducer<CompareState, CompareAction> = (
         state,
         action.payload.query,
         action.payload.filteredItems,
-        action.payload.initialItemId
+        action.payload.initialItem
       );
 
     case getType(actions.compareSelectedItems):
@@ -182,8 +182,8 @@ function compareFilteredItems(
   state: CompareState,
   query: string,
   filteredItems: DimItem[],
-  /** The instance ID of the first item added to compare, so we can highlight it. */
-  initialItemId?: string
+  /** The first item added to compare, so we can highlight it. */
+  initialItem: DimItem | undefined
 ): CompareState {
   if (state.session) {
     return state;
@@ -196,7 +196,8 @@ function compareFilteredItems(
     session: {
       query: query,
       itemCategoryHashes,
-      initialItemId,
+      initialItemId: initialItem?.id,
+      vendorCharacterId: initialItem?.vendor?.characterId,
     },
   };
 }
