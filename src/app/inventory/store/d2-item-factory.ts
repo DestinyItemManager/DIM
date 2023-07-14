@@ -543,12 +543,16 @@ export function makeItem(
   }
 
   if (createdItem.hash in extendedICH) {
-    createdItem.itemCategoryHashes = [
-      ...createdItem.itemCategoryHashes,
-      extendedICH[createdItem.hash]!,
-    ];
+    const additionalICH = extendedICH[createdItem.hash]!;
+    createdItem.itemCategoryHashes = [...createdItem.itemCategoryHashes, additionalICH];
+    // Special grenade launchers are not heavy grenade launchers
+    if (additionalICH === -ItemCategoryHashes.GrenadeLaunchers) {
+      createdItem.itemCategoryHashes = createdItem.itemCategoryHashes.filter(
+        (ich) => ich !== ItemCategoryHashes.GrenadeLaunchers
+      );
+    }
     // Masks are helmets too
-    if (extendedICH[createdItem.hash] === ItemCategoryHashes.Mask) {
+    if (additionalICH === ItemCategoryHashes.Mask) {
       createdItem.itemCategoryHashes = [
         ...createdItem.itemCategoryHashes,
         ItemCategoryHashes.Helmets,
