@@ -14,6 +14,7 @@ import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
+import modsWithoutDescription from '../../data/d2/mods-with-bad-descriptions.json';
 import { compareBy } from './comparators';
 import { isPlugStatActive } from './item-utils';
 import { LookupTable } from './util-types';
@@ -206,12 +207,14 @@ function getPerkDescriptions(
     }
   }
   function addCustomDescriptionAsFunctionality() {
-    if (plug.displayProperties.name.includes('Harmonic')) {
-      results.push({
-        perkHash: -usedStrings.size,
-        description: t('Mods.HarmonicModDescription'),
-      });
-      usedStrings.add(t('Mods.HarmonicModDescription'));
+    for (const mod of modsWithoutDescription['Harmonic']) {
+      if (plug.hash === mod) {
+        results.push({
+          perkHash: -usedStrings.size,
+          description: t('Mods.HarmonicModDescription'),
+        });
+        usedStrings.add(t('Mods.HarmonicModDescription'));
+      }
     }
   }
 
