@@ -404,7 +404,7 @@
     "ClearSlot": "Clear Slot {{index}}",
     "Create": "Создать Набор",
     "CreateTitle": "Create In-Game Loadout From Current Equipment",
-    "CurrentlyEquipped": "Сейчас экипировано",
+    "CurrentlyEquipped": "В настоящее время экипировано",
     "DeleteFailed": "Failed to delete loadout",
     "Deleted": "Набор удалён",
     "DeletedBody": "Cleared the in-game loadout at slot {{index}}",
@@ -779,7 +779,7 @@
     },
     "ShareLoadout": "Поделиться Набором",
     "ShowModPlacement": "Показать расположение модов",
-    "Snapshot": "Сохранить как Игровой Набор",
+    "Snapshot": "Сохранить как Набор в игре",
     "SocketOverrides": "Изменение параметров подкласса",
     "SortByEditTime": "Сортировать по дате обновления",
     "SortByName": "Сортировать по имени",
@@ -874,7 +874,7 @@
       "Untracked": "Отслеживание"
     },
     "TriageTab": "Приоритет",
-    "UnreliablePerkOption": "Этот перк отображается только при просмотре в коллекции. Он не может случайным образом выпасть на этот предмет.",
+    "UnreliablePerkOption": "Этот перк отображается только при просмотре в Коллекции. Он не может случайным образом выпасть на этот предмет.",
     "Vault": "Хранилище",
     "WeaponLevel": "Уровень оружия {{level}}"
   },
