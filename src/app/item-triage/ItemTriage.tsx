@@ -218,7 +218,7 @@ function SimilarItemsTriageSection({ item }: { item: DimItem }) {
               <FactorCombo exampleItem={item} factorCombo={factorCombo} />
               <span className={styles.count}>{count}</span>
               <span className={styles.controls}>
-                <StartCompareButton filter={query} items={items} />
+                <StartCompareButton filter={query} items={items} initialItem={item} />
                 <SetFilterButton filter={query} />
               </span>
             </div>
@@ -325,7 +325,7 @@ function BetterItemsTriageSection({ item }: { item: DimItem }) {
                   <StartCompareButton
                     filter={`id:${item.id} or ` + filter}
                     items={itemCollection}
-                    initialItemId={item.id}
+                    initialItem={item}
                   />
                 </span>
               </div>
@@ -424,18 +424,19 @@ function FactorCombo({
 function StartCompareButton({
   filter,
   items,
-  initialItemId,
+  initialItem,
 }: {
   filter: string;
   items: DimItem[];
-  /** The instance ID of the first item added to compare, so we can highlight it. */
-  initialItemId?: string;
+  /** The first item added to compare, so we can highlight it. */
+  initialItem: DimItem;
 }) {
   const dispatch = useDispatch();
   const compare = () => {
-    dispatch(compareFilteredItems(filter, items, initialItemId));
+    dispatch(compareFilteredItems(filter, items, initialItem));
     hideItemPopup();
   };
+
   const type = items[0]?.typeName;
   if (!type || items.some((i) => i.typeName !== type)) {
     return null;

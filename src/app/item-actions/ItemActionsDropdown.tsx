@@ -84,7 +84,7 @@ export default memo(function ItemActionsDropdown({
   });
 
   const compareMatching = () => {
-    dispatch(compareFilteredItems(searchQuery, filteredItems));
+    dispatch(compareFilteredItems(searchQuery, filteredItems, undefined));
   };
 
   // Move items matching the current search. Max 9 per type.
