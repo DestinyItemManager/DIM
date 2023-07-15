@@ -64,7 +64,7 @@ export function TriageTabToggle({ currentTab, item }: { currentTab: ItemPopupTab
   const isInLoadout = Boolean(loadoutsByItem[item.id]);
 
   return (
-    <span className="popup-tab-title">
+    <span className={styles.popupTabTitle}>
       {t('MovePopup.TriageTab')}
       {currentTab === ItemPopupTab.Overview && (
         <>
