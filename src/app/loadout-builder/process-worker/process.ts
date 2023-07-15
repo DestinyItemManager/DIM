@@ -59,11 +59,14 @@ export function process(
   const pstart = performance.now();
 
   const modStatsInStatOrder = statOrder.map((h) => modStatTotals[h]);
-  const statFiltersInStatOrder: MinMaxIgnored[] = statOrder.map((h) => ({
-    min: statConstraints[h]?.minTier ?? 0,
-    max: statConstraints[h]?.maxTier ?? 10,
-    ignored: !statConstraints[h],
-  }));
+  const statFiltersInStatOrder: MinMaxIgnored[] = statOrder.map((h) => {
+    const statConstraint = statConstraints.find((s) => s.statHash === h);
+    return {
+      min: statConstraint?.minTier ?? 0,
+      max: statConstraint?.maxTier ?? 10,
+      ignored: !statConstraint,
+    };
+  });
 
   // This stores the computed min and max value for each stat as we process all sets, so we
   // can display it on the stat filter dropdowns

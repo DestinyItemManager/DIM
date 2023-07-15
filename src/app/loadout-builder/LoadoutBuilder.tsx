@@ -111,7 +111,7 @@ export default memo(function LoadoutBuilder({
   const lockedExoticHash = loadoutParameters.exoticArmorHash;
   const statConstraints =
     loadoutParameters.statConstraints ?? defaultLoadoutParameters.statConstraints!;
-  const autoStatMods = loadoutParameters.autoStatMods ?? false;
+  const autoStatMods = Boolean(loadoutParameters.autoStatMods);
   const statOrder = useMemo(() => statOrderFromStatConstraints(statConstraints), [statConstraints]);
 
   const selectedStore = stores.find((store) => store.id === selectedStoreId)!;
