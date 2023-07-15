@@ -82,8 +82,6 @@ export default memo(function LoadoutBuilder({
   const savedStatConstraintsByClass = useSelector(savedLoStatConstraintsByClassSelector);
   const [includeVendorItems, setIncludeVendorItems] = useSetting('loIncludeVendorItems');
 
-  const optimizingLoadoutId = preloadedLoadout?.id;
-
   // All Loadout Optimizer state is managed via this hook/reducer
   const [
     {
@@ -458,11 +456,8 @@ export default memo(function LoadoutBuilder({
             <CompareLoadoutsDrawer
               set={compareSet}
               selectedStore={selectedStore}
+              loadout={loadout}
               loadouts={loadouts}
-              initialLoadoutId={optimizingLoadoutId}
-              subclass={subclass}
-              params={loadoutParameters}
-              notes={preloadedLoadout?.notes}
               lockedMods={modsToAssign}
               onClose={() => lbDispatch({ type: 'closeCompareDrawer' })}
             />

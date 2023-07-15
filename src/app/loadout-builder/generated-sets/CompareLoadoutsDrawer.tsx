@@ -1,161 +1,81 @@
-import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import Select from 'app/dim-ui/Select';
 import Sheet from 'app/dim-ui/Sheet';
 import useConfirm from 'app/dim-ui/useConfirm';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
-import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import { updateLoadout } from 'app/loadout-drawer/actions';
-import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
-import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { convertToLoadoutItem } from 'app/loadout-drawer/loadout-utils';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
 import LoadoutView from 'app/loadout/LoadoutView';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { BucketHashes } from 'data/d2/generated-enums';
-import { produce } from 'immer';
 import React, { useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { ArmorSet, LockableBucketHashes } from '../types';
+import { ArmorSet } from '../types';
+import { mergeLoadout } from '../updated-loadout';
 import styles from './CompareLoadoutsDrawer.m.scss';
+
+// TODO: just get rid of compare loadout feature altogether!
 
 function chooseInitialLoadout(
   setItems: DimItem[],
   useableLoadouts: Loadout[],
   initialLoadoutId?: string
-): Loadout | undefined {
+) {
+  // Most of all, try to find the loadout we started with
   const loadoutFromInitialId = useableLoadouts.find((lo) => lo.id === initialLoadoutId);
   if (loadoutFromInitialId) {
     return loadoutFromInitialId;
   }
   const exotic = setItems.find((i) => i.isExotic);
-  return (
+  const initialLoadout =
+    // Prefer finding a loadout that shares an exotic
     (exotic && useableLoadouts.find((l) => l.items.some((i) => i.hash === exotic.hash))) ||
-    (useableLoadouts.length ? useableLoadouts[0] : undefined)
-  );
-}
-
-/**
- * Creates an updated loadout from an old `loadout`, with
- * equipped armor replaced with `setItems`, any subclass
- * replaced with `subclass`, and the given `params` and `notes`.
- */
-function createLoadoutUsingLOItems(
-  itemCreationContext: ItemCreationContext,
-  allItems: DimItem[],
-  autoMods: number[],
-  storeId: string | undefined,
-  setItems: DimItem[],
-  subclass: ResolvedLoadoutItem | undefined,
-  loadout: Loadout | undefined,
-  params: LoadoutParameters,
-  notes: string | undefined,
-  lockedMods: PluggableInventoryItemDefinition[]
-) {
-  return produce(loadout, (draftLoadout) => {
-    if (draftLoadout) {
-      const [resolvedItems, warnItems] = getItemsFromLoadoutItems(
-        itemCreationContext,
-        draftLoadout.items,
-        storeId,
-        allItems
-      );
-      const newItems = setItems.map((item) => convertToLoadoutItem(item, true));
-      if (subclass) {
-        newItems.push(subclass.loadoutItem);
-      }
-
-      // We treat missing and existing items all the same here, we just need to
-      // investigate the resolution result for whether items need to be
-      // retained or will be replaced.
-      // NB this drops items if fake item creation fails, but that's fine
-      // because the user gets a preview of the entire loadout as it would be saved
-      for (const existingItem of resolvedItems.concat(warnItems)) {
-        // An item is replaced if
-        const hasBeenReplaced =
-          // it's an equipped armor piece (since our LO set always consists of 5 equipped pieces)
-          (existingItem.loadoutItem.equip &&
-            LockableBucketHashes.includes(existingItem.item.bucket.hash)) ||
-          // it already exists in our setItems (it may be pocketed)
-          setItems.some((i) => i.id === existingItem.item.id) ||
-          // or we replace the subclass
-          (subclass && existingItem.item.bucket.hash === BucketHashes.Subclass);
-        if (!hasBeenReplaced) {
-          newItems.push(existingItem.loadoutItem);
-        }
-      }
-
-      draftLoadout.items = newItems;
-      const allMods = [...lockedMods.map((m) => m.hash), ...autoMods];
-      params = { ...params, mods: allMods.length ? allMods : undefined };
-      draftLoadout.parameters = params;
-      draftLoadout.notes = notes || draftLoadout.notes;
-    }
-  });
+    // Or else just get whatever the first (in an arbitrary order?) is
+    (useableLoadouts.length ? useableLoadouts[0] : undefined);
+  if (!initialLoadout) {
+    throw new Error("bug: Shouldn't show compare loadouts drawer without any loadouts");
+  }
+  return initialLoadout;
 }
 
 export default function CompareLoadoutsDrawer({
   loadouts,
+  loadout,
   selectedStore,
-  initialLoadoutId,
   set,
-  subclass,
-  params,
-  notes,
   lockedMods,
   onClose,
 }: {
   set: ArmorSet;
   selectedStore: DimStore;
   loadouts: Loadout[];
-  initialLoadoutId?: string;
-  subclass: ResolvedLoadoutItem | undefined;
-  params: LoadoutParameters;
-  notes?: string;
+  loadout: Loadout;
   lockedMods: PluggableInventoryItemDefinition[];
   onClose: () => void;
 }) {
+  const defs = useD2Definitions()!;
   const dispatch = useThunkDispatch();
 
   const setItems = set.armor.map((items) => items[0]);
 
-  const [selectedLoadout, setSelectedLoadout] = useState<Loadout | undefined>(() =>
-    chooseInitialLoadout(setItems, loadouts, initialLoadoutId)
+  const [selectedLoadout, setSelectedLoadout] = useState(() =>
+    chooseInitialLoadout(setItems, loadouts, loadout.id)
   );
-
-  const allItems = useSelector(allItemsSelector);
-  const itemCreationContext = useSelector(createItemContextSelector);
 
   // This probably isn't needed but I am being cautious as it iterates over the stores.
   const generatedLoadout = useMemo(
     () =>
-      createLoadoutUsingLOItems(
-        itemCreationContext,
-        allItems,
-        set.statMods,
-        selectedStore.id,
-        setItems,
-        subclass,
+      mergeLoadout(
+        defs,
         selectedLoadout,
-        params,
-        notes,
+        loadout,
+        set,
+        // TODO: pass along the displayItems
+        set.armor.map((a) => a[0]),
         lockedMods
       ),
-    [
-      itemCreationContext,
-      allItems,
-      set.statMods,
-      selectedStore.id,
-      setItems,
-      subclass,
-      selectedLoadout,
-      params,
-      notes,
-      lockedMods,
-    ]
+    [defs, selectedLoadout, loadout, set, lockedMods]
   );
 
   const [confirmDialog, confirm] = useConfirm();
@@ -231,7 +151,7 @@ export default function CompareLoadoutsDrawer({
                 key="select-loadout"
                 value={selectedLoadout}
                 options={loadoutOptions}
-                onChange={(l) => setSelectedLoadout(l)}
+                onChange={(l) => setSelectedLoadout(l!)}
               />,
             ]}
           />

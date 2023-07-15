@@ -184,6 +184,7 @@ const lbConfigInit = ({
           pinnedItems[item.bucket.hash] = item;
         }
       }
+      // TODO: maybe swap in the updated item ID for items here, to make future manipulation easier
     }
 
     // If we load a loadout with an exotic, pre-fill the exotic armor selection

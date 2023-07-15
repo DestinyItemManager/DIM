@@ -2,6 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { convertToLoadoutItem } from 'app/loadout-drawer/loadout-utils';
+import { BucketHashes } from 'data/d2/generated-enums';
 import { t } from 'i18next';
 import _ from 'lodash';
 import { ArmorSet, LockableBucketHashes } from './types';
@@ -13,7 +14,7 @@ import { statTier } from './utils';
  */
 export function updateLoadoutWithArmorSet(
   defs: D2ManifestDefinitions,
-  originalLoadout: Loadout,
+  loadout: Loadout,
   set: ArmorSet,
   items: DimItem[],
   lockedMods: PluggableInventoryItemDefinition[]
@@ -21,10 +22,17 @@ export function updateLoadoutWithArmorSet(
   const data = {
     tier: _.sumBy(Object.values(set.stats), statTier),
   };
-  const existingItemsWithoutArmor = originalLoadout.items.filter(
+
+  const existingItemsWithoutArmor = loadout.items.filter(
     (li) =>
-      !LockableBucketHashes.includes(
-        defs.InventoryItem.get(li.hash)?.inventory?.bucketTypeHash ?? 0
+      // The new item might already be in the loadout (but unequipped), remove it
+      !items.some((i) => i.id === li.id) &&
+      // Remove equipped armor items
+      !(
+        li.equip &&
+        LockableBucketHashes.includes(
+          defs.InventoryItem.get(li.hash)?.inventory?.bucketTypeHash ?? 0
+        )
       )
   );
   const loadoutItems = items.map((item) => convertToLoadoutItem(item, true));
@@ -34,12 +42,47 @@ export function updateLoadoutWithArmorSet(
   // invalid mods, mods that don't fit, and general mods if we're auto-assigning general mods.
   const allMods = [...lockedMods.map((m) => m.hash), ...set.statMods];
   return {
-    ...originalLoadout,
+    ...loadout,
     parameters: {
-      ...originalLoadout.parameters,
+      ...loadout.parameters,
       mods: allMods.length ? allMods : undefined,
     },
     items: [...existingItemsWithoutArmor, ...loadoutItems],
-    name: originalLoadout.name ?? t('Loadouts.Generated', data),
+    name: loadout.name ?? t('Loadouts.Generated', data),
   };
+}
+
+/**
+ * Create a new loadout from the original prototype loadout, but with the armor items replaced with this loadout's armor.
+ * Used for equipping or creating a new saved loadout.
+ */
+export function mergeLoadout(
+  defs: D2ManifestDefinitions,
+  originalLoadout: Loadout,
+  newLoadout: Loadout,
+  set: ArmorSet,
+  items: DimItem[],
+  lockedMods: PluggableInventoryItemDefinition[]
+): Loadout {
+  const loadoutWithArmorSet = updateLoadoutWithArmorSet(
+    defs,
+    originalLoadout,
+    set,
+    items,
+    lockedMods
+  );
+
+  const newSubclass = newLoadout.items.find(
+    (li) => defs.InventoryItem.get(li.hash)?.inventory?.bucketTypeHash === BucketHashes.Subclass
+  );
+
+  if (newSubclass) {
+    const itemsWithoutSubclass = loadoutWithArmorSet.items.filter(
+      (li) => defs.InventoryItem.get(li.hash)?.inventory?.bucketTypeHash !== BucketHashes.Subclass
+    );
+    itemsWithoutSubclass.push(newSubclass);
+    loadoutWithArmorSet.items = itemsWithoutSubclass;
+  }
+
+  return loadoutWithArmorSet;
 }
