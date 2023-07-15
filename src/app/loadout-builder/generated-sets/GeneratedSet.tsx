@@ -45,6 +45,7 @@ export default memo(function GeneratedSet({
   halfTierMods,
   armorEnergyRules,
   equippedHashes,
+  existingLoadout,
 }: {
   originalLoadout: Loadout;
   set: ArmorSet;
@@ -58,10 +59,11 @@ export default memo(function GeneratedSet({
   halfTierMods: PluggableInventoryItemDefinition[];
   armorEnergyRules: ArmorEnergyRules;
   equippedHashes: Set<number>;
+  existingLoadout: boolean;
 }) {
   const defs = useD2Definitions()!;
 
-  let existingLoadout: Loadout | undefined;
+  let overlappingLoadout: Loadout | undefined;
   // Items are sorted by their energy capacity when grouping
   let displayedItems: DimItem[] = set.armor.map((items) => items[0]);
   const allSetItems = set.armor.flat();
@@ -72,7 +74,7 @@ export default memo(function GeneratedSet({
     const equippedLoadoutItems = loadout.items.filter((item) => item.equip);
     const intersection = _.intersectionBy(allSetItems, equippedLoadoutItems, (item) => item.id);
     if (intersection.length === set.armor.length) {
-      existingLoadout = loadout;
+      overlappingLoadout = loadout;
       // Replace the list of items to show with the ones that were from the matching loadout
       displayedItems = intersection;
       break;
@@ -155,7 +157,7 @@ export default memo(function GeneratedSet({
         maxPower={getPower(displayedItems)}
         resolvedStatConstraints={resolvedStatConstraints}
         boostedStats={boostedStats}
-        existingLoadoutName={existingLoadout?.name}
+        existingLoadoutName={overlappingLoadout?.name}
         equippedHashes={equippedHashes}
       />
       <div className={styles.build}>
@@ -177,7 +179,9 @@ export default memo(function GeneratedSet({
           originalLoadout={originalLoadout}
           set={set}
           items={displayedItems}
+          lockedMods={lockedMods}
           store={selectedStore}
+          existingLoadout={existingLoadout}
           canCompareLoadouts={canCompareLoadouts}
           halfTierMods={halfTierMods}
           lbDispatch={lbDispatch}

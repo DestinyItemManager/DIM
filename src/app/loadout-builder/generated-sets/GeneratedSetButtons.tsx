@@ -23,6 +23,8 @@ export default function GeneratedSetButtons({
   store,
   set,
   items,
+  existingLoadout,
+  lockedMods,
   canCompareLoadouts,
   halfTierMods,
   lbDispatch,
@@ -32,18 +34,21 @@ export default function GeneratedSetButtons({
   set: ArmorSet;
   /** The list of items to use - these are chosen from the set's options and match what's displayed. */
   items: DimItem[];
+  lockedMods: PluggableInventoryItemDefinition[];
+  existingLoadout: boolean;
   canCompareLoadouts: boolean;
   halfTierMods: PluggableInventoryItemDefinition[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
   const defs = useD2Definitions()!;
   const dispatch = useThunkDispatch();
-  const loadout = () => createLoadout(defs, originalLoadout, set, items);
+  const loadout = () => createLoadout(defs, originalLoadout, set, items, lockedMods);
 
   // Opens the loadout menu for the generated set
   const openLoadout = () =>
     editLoadout(loadout(), store.id, {
       showClass: false,
+      isNew: !existingLoadout,
     });
 
   // Automatically equip items for this generated set to the active store
@@ -100,7 +105,8 @@ function createLoadout(
   defs: D2ManifestDefinitions,
   originalLoadout: Loadout,
   set: ArmorSet,
-  items: DimItem[]
+  items: DimItem[],
+  lockedMods: PluggableInventoryItemDefinition[]
 ): Loadout {
   const data = {
     tier: _.sumBy(Object.values(set.stats), statTier),
@@ -114,8 +120,9 @@ function createLoadout(
   const loadoutItems = items.map((item) => convertToLoadoutItem(item, true));
 
   // We need to add in this set's specific stat mods (artifice, general) to the list of user-chosen mods
-  // TODO: pretty sure this (which was "lockedModMap.allMods") is just the list of mods in the loadout, especially if we filter "invalid" mods in the reducer?
-  const allMods = [...(originalLoadout.parameters?.mods ?? []), ...set.statMods];
+  // We can't start with the list of mods in the existing loadout parameters because lockedMods has filtered out
+  // invalid mods, mods that don't fit, and general mods if we're auto-assigning general mods.
+  const allMods = [...lockedMods.map((m) => m.hash), ...set.statMods];
   return {
     ...originalLoadout,
     parameters: {
@@ -123,6 +130,6 @@ function createLoadout(
       mods: allMods.length ? allMods : undefined,
     },
     items: [...existingItemsWithoutArmor, ...loadoutItems],
-    name: t('Loadouts.Generated', data),
+    name: originalLoadout.name ?? t('Loadouts.Generated', data),
   };
 }

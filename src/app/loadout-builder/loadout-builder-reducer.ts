@@ -159,7 +159,7 @@ const lbConfigInit = ({
   const selectedStore = storeMatchingClass ?? getCurrentStore(stores)!;
   const selectedStoreId = selectedStore.id;
   const classType = selectedStore.classType;
-  let loadout = preloadedLoadout ?? newLoadout(t('LoadoutBuilder.LoadoutName'), [], classType);
+  let loadout = preloadedLoadout ?? newLoadout('', [], classType);
 
   // In order of increasing priority:
   // default parameters, global saved parameters, stat order for this class,
