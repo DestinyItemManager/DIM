@@ -744,7 +744,9 @@ export function randomizeLoadoutItems(
     const randomizedLoadout = randomLoadout(
       store,
       allItems,
-      (item) => itemMatchesCategory(item, category) && (!itemFilter || itemFilter(item))
+      (item) =>
+        itemMatchesCategory(item, category) &&
+        (!itemFilter || item.bucket.hash === BucketHashes.Subclass || itemFilter(item))
     );
     const randomizedLoadoutBuckets = randomizedLoadout.items.map((li) =>
       getBucketHashFromItemHash(defs, li.hash)
