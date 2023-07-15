@@ -1,4 +1,4 @@
-import { LoadoutParameters, StatConstraint } from '@destinyitemmanager/dim-api-types';
+import { StatConstraint } from '@destinyitemmanager/dim-api-types';
 import { WindowVirtualList } from 'app/dim-ui/VirtualList';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
@@ -18,6 +18,10 @@ import {
 } from '../types';
 import GeneratedSet, { containerClass } from './GeneratedSet';
 
+function getItemKey(index: number) {
+  return index;
+}
+
 /**
  * Renders the entire list of generated stat mixes, one per mix.
  */
@@ -31,9 +35,8 @@ export default function GeneratedSets({
   modStatChanges,
   loadouts,
   lbDispatch,
-  params,
   armorEnergyRules,
-  notes,
+  loadout,
 }: {
   selectedStore: DimStore;
   sets: readonly ArmorSet[];
@@ -44,27 +47,41 @@ export default function GeneratedSets({
   modStatChanges: ModStatChanges;
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
-  params: LoadoutParameters;
   armorEnergyRules: ArmorEnergyRules;
-  notes?: string;
+  loadout: Loadout;
 }) {
+  const params = loadout.parameters!;
   const halfTierMods = useHalfTierMods(
     selectedStore.id,
     Boolean(params.autoStatMods),
     params.statConstraints!
   );
 
+  const equippedHashes = useMemo(() => {
+    const exoticArmorHash = params.exoticArmorHash;
+    // Fill in info about selected items / subclass options for Clarity character stats
+    const equippedHashes = new Set<number>();
+    if (exoticArmorHash) {
+      equippedHashes.add(exoticArmorHash);
+    }
+    if (subclass?.loadoutItem.socketOverrides) {
+      for (const hash of Object.values(subclass.loadoutItem.socketOverrides)) {
+        equippedHashes.add(hash);
+      }
+    }
+    return equippedHashes;
+  }, [params.exoticArmorHash, subclass?.loadoutItem.socketOverrides]);
+
   return (
     <WindowVirtualList
       numElements={sets.length}
       estimatedSize={160}
       itemContainerClassName={containerClass}
-      getItemKey={(index) => index}
+      getItemKey={getItemKey}
     >
       {(index) => (
         <GeneratedSet
           set={sets[index]}
-          subclass={subclass}
           selectedStore={selectedStore}
           lockedMods={lockedMods}
           pinnedItems={pinnedItems}
@@ -72,10 +89,10 @@ export default function GeneratedSets({
           resolvedStatConstraints={resolvedStatConstraints}
           modStatChanges={modStatChanges}
           loadouts={loadouts}
-          params={params}
           halfTierMods={halfTierMods}
           armorEnergyRules={armorEnergyRules}
-          notes={notes}
+          originalLoadout={loadout}
+          equippedHashes={equippedHashes}
         />
       )}
     </WindowVirtualList>
@@ -87,6 +104,7 @@ export default function GeneratedSets({
  * automatically adds them, but only for stats we care about (and only if we're
  * not adding stat mods automatically ourselves).
  */
+// TODO: selectorize this so it can be moved into the buttons component?
 function useHalfTierMods(
   selectedStoreId: string,
   autoStatMods: boolean,

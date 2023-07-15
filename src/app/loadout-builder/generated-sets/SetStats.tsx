@@ -1,7 +1,6 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
-import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, powerIndicatorIcon } from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
@@ -16,7 +15,7 @@ import { calculateTotalTier, sumEnabledStats } from './utils';
  * Displays the overall tier and per-stat tier of a generated loadout set.
  */
 // TODO: would be a lot easier if this was just passed a Loadout or FullyResolvedLoadout...
-function SetStats({
+export default function SetStats({
   stats,
   getStatsBreakdown,
   maxPower,
@@ -24,8 +23,7 @@ function SetStats({
   boostedStats,
   className,
   existingLoadoutName,
-  subclass,
-  exoticArmorHash,
+  equippedHashes,
 }: {
   stats: ArmorStats;
   getStatsBreakdown: () => ModStatChanges;
@@ -34,8 +32,7 @@ function SetStats({
   boostedStats: Set<ArmorStatHashes>;
   className?: string;
   existingLoadoutName?: string;
-  subclass?: ResolvedLoadoutItem;
-  exoticArmorHash?: number;
+  equippedHashes: Set<number>;
 }) {
   const defs = useD2Definitions()!;
   const totalTier = calculateTotalTier(stats);
@@ -43,17 +40,6 @@ function SetStats({
     stats,
     resolvedStatConstraints.filter((c) => !c.ignored)
   );
-
-  // Fill in info about selected items / subclass options for Clarity character stats
-  const equippedHashes = new Set<number>();
-  if (exoticArmorHash) {
-    equippedHashes.add(exoticArmorHash);
-  }
-  if (subclass?.loadoutItem.socketOverrides) {
-    for (const hash of Object.values(subclass.loadoutItem.socketOverrides)) {
-      equippedHashes.add(hash);
-    }
-  }
 
   return (
     <div className={clsx(styles.container, className)}>
@@ -146,5 +132,3 @@ function Stat({
     </span>
   );
 }
-
-export default SetStats;

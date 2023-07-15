@@ -1,8 +1,7 @@
-import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore, statSourceOrder } from 'app/inventory/store-types';
-import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { fitMostMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -34,9 +33,8 @@ import SetStats from './SetStats';
  * but only the highest light set is displayed.
  */
 export default memo(function GeneratedSet({
+  originalLoadout,
   set,
-  subclass,
-  notes,
   selectedStore,
   lockedMods,
   pinnedItems,
@@ -44,13 +42,12 @@ export default memo(function GeneratedSet({
   modStatChanges,
   loadouts,
   lbDispatch,
-  params,
   halfTierMods,
   armorEnergyRules,
+  equippedHashes,
 }: {
+  originalLoadout: Loadout;
   set: ArmorSet;
-  subclass: ResolvedLoadoutItem | undefined;
-  notes?: string;
   selectedStore: DimStore;
   lockedMods: PluggableInventoryItemDefinition[];
   pinnedItems: PinnedItems;
@@ -58,9 +55,9 @@ export default memo(function GeneratedSet({
   modStatChanges: ModStatChanges;
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
-  params: LoadoutParameters;
   halfTierMods: PluggableInventoryItemDefinition[];
   armorEnergyRules: ArmorEnergyRules;
+  equippedHashes: Set<number>;
 }) {
   const defs = useD2Definitions()!;
 
@@ -159,8 +156,7 @@ export default memo(function GeneratedSet({
         resolvedStatConstraints={resolvedStatConstraints}
         boostedStats={boostedStats}
         existingLoadoutName={existingLoadout?.name}
-        subclass={subclass}
-        exoticArmorHash={params.exoticArmorHash}
+        equippedHashes={equippedHashes}
       />
       <div className={styles.build}>
         <div className={styles.items}>
@@ -178,16 +174,13 @@ export default memo(function GeneratedSet({
           ))}
         </div>
         <GeneratedSetButtons
+          originalLoadout={originalLoadout}
           set={set}
           items={displayedItems}
-          subclass={subclass}
           store={selectedStore}
           canCompareLoadouts={canCompareLoadouts}
           halfTierMods={halfTierMods}
           lbDispatch={lbDispatch}
-          notes={notes}
-          params={params}
-          lockedMods={lockedMods}
         />
       </div>
     </>

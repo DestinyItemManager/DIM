@@ -1,17 +1,17 @@
-import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { convertToLoadoutItem, newLoadout } from 'app/loadout-drawer/loadout-utils';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { convertToLoadoutItem } from 'app/loadout-drawer/loadout-utils';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { Dispatch } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { ArmorSet } from '../types';
+import { ArmorSet, LockableBucketHashes } from '../types';
 import { statTier } from '../utils';
 import styles from './GeneratedSetButtons.m.scss';
 
@@ -19,31 +19,26 @@ import styles from './GeneratedSetButtons.m.scss';
  * Renders the Create Loadout and Equip Items buttons for each generated set
  */
 export default function GeneratedSetButtons({
+  originalLoadout,
   store,
   set,
   items,
-  subclass,
-  notes,
-  params,
   canCompareLoadouts,
   halfTierMods,
   lbDispatch,
-  lockedMods,
 }: {
+  originalLoadout: Loadout;
   store: DimStore;
   set: ArmorSet;
+  /** The list of items to use - these are chosen from the set's options and match what's displayed. */
   items: DimItem[];
-  subclass: ResolvedLoadoutItem | undefined;
-  notes?: string;
-  params: LoadoutParameters;
   canCompareLoadouts: boolean;
   halfTierMods: PluggableInventoryItemDefinition[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
-  lockedMods: PluggableInventoryItemDefinition[];
 }) {
+  const defs = useD2Definitions()!;
   const dispatch = useThunkDispatch();
-  const loadout = () =>
-    createLoadout(store.classType, set, items, subclass, params, notes, lockedMods);
+  const loadout = () => createLoadout(defs, originalLoadout, set, items);
 
   // Opens the loadout menu for the generated set
   const openLoadout = () =>
@@ -98,29 +93,36 @@ export default function GeneratedSetButtons({
 }
 
 /**
- * Create a Loadout object, used for equipping or creating a new saved loadout
+ * Create a new loadout from the original prototype loadout, but with the armor items replaced with this loadout's armor.
+ * Used for equipping or creating a new saved loadout.
  */
 function createLoadout(
-  classType: DestinyClass,
+  defs: D2ManifestDefinitions,
+  originalLoadout: Loadout,
   set: ArmorSet,
-  items: DimItem[],
-  subclass: ResolvedLoadoutItem | undefined,
-  params: LoadoutParameters,
-  notes: string | undefined,
-  lockedMods: PluggableInventoryItemDefinition[]
+  items: DimItem[]
 ): Loadout {
   const data = {
     tier: _.sumBy(Object.values(set.stats), statTier),
   };
+  const existingItemsWithoutArmor = originalLoadout.items.filter(
+    (li) =>
+      !LockableBucketHashes.includes(
+        defs.InventoryItem.get(li.hash)?.inventory?.bucketTypeHash ?? 0
+      )
+  );
   const loadoutItems = items.map((item) => convertToLoadoutItem(item, true));
 
-  if (subclass) {
-    loadoutItems.push(subclass.loadoutItem);
-  }
-
-  const loadout = newLoadout(t('Loadouts.Generated', data), loadoutItems, classType);
-  loadout.notes = notes;
-  const allMods = [...lockedMods.map((m) => m.hash), ...set.statMods];
-  loadout.parameters = { ...params, mods: allMods.length ? allMods : undefined };
-  return loadout;
+  // We need to add in this set's specific stat mods (artifice, general) to the list of user-chosen mods
+  // TODO: pretty sure this (which was "lockedModMap.allMods") is just the list of mods in the loadout, especially if we filter "invalid" mods in the reducer?
+  const allMods = [...(originalLoadout.parameters?.mods ?? []), ...set.statMods];
+  return {
+    ...originalLoadout,
+    parameters: {
+      ...originalLoadout.parameters,
+      mods: allMods.length ? allMods : undefined,
+    },
+    items: [...existingItemsWithoutArmor, ...loadoutItems],
+    name: t('Loadouts.Generated', data),
+  };
 }

@@ -398,6 +398,7 @@ export default memo(function LoadoutBuilder({
         )}
         {result && sortedSets?.length ? (
           <GeneratedSets
+            loadout={loadout}
             sets={sortedSets}
             subclass={subclass}
             lockedMods={result.mods}
@@ -407,9 +408,7 @@ export default memo(function LoadoutBuilder({
             resolvedStatConstraints={resolvedStatConstraints}
             modStatChanges={result.modStatChanges}
             loadouts={loadouts}
-            params={loadoutParameters}
             armorEnergyRules={result.armorEnergyRules}
-            notes={preloadedLoadout?.notes}
           />
         ) : (
           !processing && (
