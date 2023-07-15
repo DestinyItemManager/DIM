@@ -8,10 +8,7 @@ import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React, { memo } from 'react';
-import {
-  statFiltersFromLoadoutParameters,
-  statOrderFromLoadoutParameters,
-} from '../loadout-params';
+import { statFiltersFromStatConstraints, statOrderFromStatConstraints } from '../loadout-params';
 import { ArmorStatHashes, MinMaxIgnored, StatRanges } from '../types';
 import { statTierWithHalf } from '../utils';
 import styles from './TierSelect.m.scss';
@@ -35,8 +32,8 @@ export default function TierSelect({
   onStatConstraintsChanged: (constraints: StatConstraint[]) => void;
 }) {
   const defs = useD2Definitions()!;
-  const order = statOrderFromLoadoutParameters({ statConstraints });
-  const stats = statFiltersFromLoadoutParameters({ statConstraints });
+  const order = statOrderFromStatConstraints(statConstraints);
+  const stats = statFiltersFromStatConstraints(statConstraints);
   const handleTierChange = (
     statHash: ArmorStatHashes,
     changed: { min: number; max: number; ignored: boolean }

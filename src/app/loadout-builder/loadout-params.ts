@@ -1,6 +1,6 @@
 /* Functions for dealing with the LoadoutParameters structure we save with loadouts and use to save and share LO settings. */
 
-import { LoadoutParameters, StatConstraint } from '@destinyitemmanager/dim-api-types';
+import { StatConstraint } from '@destinyitemmanager/dim-api-types';
 import { armorStats } from 'app/search/d2-known-values';
 import _ from 'lodash';
 import { ArmorStatHashes, StatFilters } from './types';
@@ -17,8 +17,8 @@ export function statOrderFromStatConstraints(statConstraints: StatConstraint[]):
   });
 }
 
-export function statFiltersFromLoadoutParameters(params: LoadoutParameters): StatFilters {
-  const statConstraintsByStatHash = _.keyBy(params.statConstraints, (c) => c.statHash);
+export function statFiltersFromStatConstraints(statConstraints: StatConstraint[]): StatFilters {
+  const statConstraintsByStatHash = _.keyBy(statConstraints, (c) => c.statHash);
   return armorStats.reduce((memo, statHash) => {
     const c = statConstraintsByStatHash[statHash];
     memo[statHash] = c
