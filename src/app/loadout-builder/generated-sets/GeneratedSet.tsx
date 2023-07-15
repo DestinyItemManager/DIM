@@ -145,9 +145,7 @@ export default memo(function GeneratedSet({
     return autoModHashes;
   });
 
-  const canCompareLoadouts =
-    set.armor.every((items) => items[0].classType === selectedStore.classType) &&
-    loadouts.some((l) => l.classType === selectedStore.classType);
+  const canCompareLoadouts = loadouts.length > 0;
 
   return (
     <>

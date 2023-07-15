@@ -103,7 +103,6 @@ export default function CompareLoadoutsDrawer({
   initialLoadoutId,
   set,
   subclass,
-  classType,
   params,
   notes,
   lockedMods,
@@ -114,19 +113,17 @@ export default function CompareLoadoutsDrawer({
   loadouts: Loadout[];
   initialLoadoutId?: string;
   subclass: ResolvedLoadoutItem | undefined;
-  classType: DestinyClass;
   params: LoadoutParameters;
   notes?: string;
   lockedMods: PluggableInventoryItemDefinition[];
   onClose: () => void;
 }) {
   const dispatch = useThunkDispatch();
-  const usableLoadouts = loadouts.filter((l) => l.classType === classType);
 
   const setItems = set.armor.map((items) => items[0]);
 
   const [selectedLoadout, setSelectedLoadout] = useState<Loadout | undefined>(() =>
-    chooseInitialLoadout(setItems, usableLoadouts, initialLoadoutId)
+    chooseInitialLoadout(setItems, loadouts, initialLoadoutId)
   );
 
   const allItems = useSelector(allItemsSelector);
@@ -184,12 +181,12 @@ export default function CompareLoadoutsDrawer({
 
   const loadoutOptions = useMemo(
     () =>
-      usableLoadouts.map((l) => ({
+      loadouts.map((l) => ({
         key: l.id,
         value: l,
         content: l.name,
       })),
-    [usableLoadouts]
+    [loadouts]
   );
 
   // This is likely never to happen but since it is disconnected to the button its here for safety.

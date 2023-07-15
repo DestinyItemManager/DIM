@@ -13,8 +13,8 @@ import { DimStore } from 'app/inventory/store-types';
 import { getStore } from 'app/inventory/stores-helpers';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadoutFromEquipped, resolveLoadoutModHashes } from 'app/loadout-drawer/loadout-utils';
+import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
 import { getItemsAndSubclassFromLoadout } from 'app/loadout/LoadoutView';
-import { useSavedLoadoutsForClassType } from 'app/loadout/loadout-ui/menu-hooks';
 import { categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -33,6 +33,7 @@ import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import {
   allItemsSelector,
+  artifactUnlocksSelector,
   createItemContextSelector,
   sortedStoresSelector,
   unlockedPlugSetItemsSelector,
@@ -460,7 +461,6 @@ export default memo(function LoadoutBuilder({
               loadouts={loadouts}
               initialLoadoutId={optimizingLoadoutId}
               subclass={subclass}
-              classType={classType}
               params={loadoutParameters}
               notes={preloadedLoadout?.notes}
               lockedMods={modsToAssign}
@@ -475,23 +475,25 @@ export default memo(function LoadoutBuilder({
 
 /**
  * Get a list of all loadouts that could be shown as "matching loadouts" or
- * used to compare loadouts. This is all loadouts usable by the selected store's
+ * used to compare loadouts. This is all loadouts specific to the selected store's
  * class plus the currently equipped loadout.
  */
 function useRelevantLoadouts(selectedStore: DimStore) {
-  const classLoadouts = useSavedLoadoutsForClassType(selectedStore.classType);
+  const allSavedLoadouts = useSelector(loadoutsSelector);
+  const artifactUnlocks = useSelector(artifactUnlocksSelector(selectedStore.id));
 
   // TODO: consider using fullyResolvedLoadoutsSelector
   const loadouts = useMemo(() => {
+    const classLoadouts = allSavedLoadouts.filter((l) => l.classType === selectedStore.classType);
+
     // TODO: use a selector / weakMemoize for this?
     const equippedLoadout = newLoadoutFromEquipped(
       t('Loadouts.CurrentlyEquipped'),
       selectedStore,
-      // TODO: pipe in
-      undefined
+      artifactUnlocks
     );
     return [...classLoadouts, equippedLoadout];
-  }, [classLoadouts, selectedStore]);
+  }, [allSavedLoadouts, selectedStore, artifactUnlocks]);
 
   return loadouts;
 }
