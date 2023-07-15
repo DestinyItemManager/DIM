@@ -9,8 +9,9 @@ import { DimItem } from 'app/inventory/item-types';
 import { getArtifactUnlocks } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
-import { mapToNonReducedModCostVariant } from 'app/loadout/mod-utils';
+import { getModExclusionGroup, mapToNonReducedModCostVariant } from 'app/loadout/mod-utils';
 import { showNotification } from 'app/notifications/notifications';
+import { ItemFilter } from 'app/search/filter-types';
 import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
@@ -18,12 +19,14 @@ import { DestinyClass, DestinyProfileResponse, TierType } from 'bungie-api-ts/de
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import { Draft, produce } from 'immer';
 import _ from 'lodash';
+import { randomLoadout, randomSubclassConfiguration } from './auto-loadouts';
 import { Loadout, LoadoutItem, ResolvedLoadoutItem, ResolvedLoadoutMod } from './loadout-types';
 import {
   convertToLoadoutItem,
   createSocketOverridesFromEquipped,
   createSubclassDefaultSocketOverrides,
   extractArmorModHashes,
+  findItemForLoadout,
   findSameLoadoutItemIndex,
   fromEquippedTypes,
   getUnequippedItemsForLoadout,
@@ -410,10 +413,7 @@ export function setLoadoutSubclassFromEquipped(
     }
 
     const newLoadoutItem: LoadoutItem = {
-      id: newSubclass.id,
-      hash: newSubclass.hash,
-      equip: true,
-      amount: 1,
+      ...convertToLoadoutItem(newSubclass, true),
       socketOverrides: createSocketOverridesFromEquipped(newSubclass),
     };
 
@@ -446,14 +446,7 @@ export function fillLoadoutFromEquipped(
     );
 
     const newEquippedItems = store.items.filter(
-      (item) =>
-        item.equipped &&
-        itemCanBeInLoadout(item) &&
-        (category
-          ? category === 'General'
-            ? item.bucket.hash !== BucketHashes.Subclass && item.bucket.sort === category
-            : item.bucket.sort === category
-          : fromEquippedTypes.includes(item.bucket.hash))
+      (item) => item.equipped && itemCanBeInLoadout(item) && itemMatchesCategory(item, category)
     );
     const mods: number[] = [];
     for (const item of newEquippedItems) {
@@ -679,5 +672,163 @@ export function removeArtifactUnlock(mod: number): LoadoutUpdateFunction {
         loadout.parameters.artifactUnlocks.unlockedItemHashes.splice(index, 1);
       }
     }
+  });
+}
+
+/** Replace the loadout's subclass with the store's currently equipped subclass */
+export function randomizeLoadoutSubclass(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  store: DimStore
+): LoadoutUpdateFunction {
+  return (loadout) => {
+    const newSubclass = _.sample(
+      store.items.filter(
+        (item) => item.bucket.hash === BucketHashes.Subclass && itemCanBeInLoadout(item)
+      )
+    );
+
+    if (!newSubclass || !defs.isDestiny2()) {
+      return loadout;
+    }
+
+    const newLoadoutItem: LoadoutItem = {
+      ...convertToLoadoutItem(newSubclass, true),
+      socketOverrides: randomSubclassConfiguration(defs, newSubclass),
+    };
+
+    const isSubclass = (i: LoadoutItem) =>
+      defs.InventoryItem.get(i.hash)?.inventory?.bucketTypeHash === BucketHashes.Subclass;
+
+    const newLoadout = {
+      ...loadout,
+      items: [...loadout.items.filter((i) => !isSubclass(i)), newLoadoutItem],
+    };
+
+    return newLoadout;
+  };
+}
+
+function itemMatchesCategory(item: DimItem, category: D2BucketCategory | undefined) {
+  return category
+    ? category === 'General'
+      ? item.bucket.hash !== BucketHashes.Subclass && item.bucket.sort === category
+      : item.bucket.sort === category
+    : fromEquippedTypes.includes(item.bucket.hash);
+}
+
+export function randomizeFullLoadout(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  store: DimStore,
+  allItems: DimItem[],
+  itemFilter: ItemFilter | undefined,
+  unlockedPlugs: Set<number>
+) {
+  return (loadout: Loadout) => {
+    loadout = randomizeLoadoutItems(defs, store, allItems, undefined, itemFilter)(loadout);
+    return randomizeLoadoutMods(defs, store, allItems, unlockedPlugs)(loadout);
+  };
+}
+
+/**
+ * Fill in items from the store's equipped items, keeping any equipped items already in the loadout in place.
+ */
+export function randomizeLoadoutItems(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  store: DimStore,
+  allItems: DimItem[],
+  /** Fill in from only this specific category */
+  category: D2BucketCategory | undefined,
+  itemFilter: ItemFilter | undefined
+): LoadoutUpdateFunction {
+  return produce((loadout) => {
+    const randomizedLoadout = randomLoadout(
+      store,
+      allItems,
+      (item) => itemMatchesCategory(item, category) && (!itemFilter || itemFilter(item))
+    );
+    const randomizedLoadoutBuckets = randomizedLoadout.items.map((li) =>
+      getBucketHashFromItemHash(defs, li.hash)
+    );
+    loadout.items = loadout.items.filter(
+      (i) => !i.equip || !randomizedLoadoutBuckets.includes(getBucketHashFromItemHash(defs, i.hash))
+    );
+    loadout.items.push(...randomizedLoadout.items);
+    if (defs.isDestiny2()) {
+      for (const item of loadout.items) {
+        if (getBucketHashFromItemHash(defs, item.hash) === BucketHashes.Subclass) {
+          item.socketOverrides = randomSubclassConfiguration(
+            defs,
+            allItems.find((dimItem) => dimItem.hash === item.hash)!
+          );
+        }
+      }
+    }
+  });
+}
+
+/**
+ * Replace the mods in this loadout with all the mods currently on this character's equipped armor.
+ */
+export function randomizeLoadoutMods(
+  defs: D2ManifestDefinitions | D1ManifestDefinitions,
+  store: DimStore,
+  allItems: DimItem[],
+  unlockedPlugs: Set<number>
+): LoadoutUpdateFunction {
+  return produce((loadout) => {
+    const equippedArmor = store.items.filter(
+      (item) => item.equipped && itemCanBeInLoadout(item) && item.bucket.sort === 'Armor'
+    );
+
+    for (const li of loadout.items) {
+      const existingItem = findItemForLoadout(defs, allItems, store.id, li);
+      if (existingItem?.bucket.sort === 'Armor') {
+        const idx = equippedArmor.findIndex(
+          (item) => item.bucket.hash === existingItem.bucket.hash
+        );
+        equippedArmor[idx] = existingItem;
+      }
+    }
+
+    const mods = [];
+    for (const item of equippedArmor) {
+      if (item.sockets) {
+        let energy = item.energy?.energyCapacity ?? 0;
+        const exclusionGroups: string[] = [];
+        const sockets = _.shuffle(
+          getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorMods)
+        );
+        for (const socket of sockets) {
+          const chosenMod = _.sample(
+            socket.plugSet?.plugs.filter((plug) => {
+              if (
+                plug.plugDef.hash === socket.emptyPlugItemHash ||
+                !unlockedPlugs.has(plug.plugDef.hash)
+              ) {
+                return false;
+              }
+              const cost = plug.plugDef.plug.energyCost?.energyCost;
+              const exclusionGroup = getModExclusionGroup(plug.plugDef);
+              return (
+                (cost === undefined || cost <= energy) &&
+                (exclusionGroup === undefined || !exclusionGroups.includes(exclusionGroup))
+              );
+            })
+          );
+          if (chosenMod) {
+            mods.push(mapToNonReducedModCostVariant(chosenMod.plugDef.hash));
+            energy -= chosenMod.plugDef.plug.energyCost?.energyCost ?? 0;
+            const exclusionGroup = getModExclusionGroup(chosenMod.plugDef);
+            if (exclusionGroup !== undefined) {
+              exclusionGroups.push(exclusionGroup);
+            }
+          }
+        }
+      }
+    }
+
+    return setLoadoutParameters({
+      mods,
+    })(loadout);
   });
 }

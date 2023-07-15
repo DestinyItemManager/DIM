@@ -9,6 +9,7 @@ import {
   artifactUnlocksSelector,
   createItemContextSelector,
   profileResponseSelector,
+  unlockedPlugSetItemsSelector,
 } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import {
@@ -23,6 +24,9 @@ import {
   equipItem,
   fillLoadoutFromEquipped,
   fillLoadoutFromUnequipped,
+  randomizeLoadoutItems,
+  randomizeLoadoutMods,
+  randomizeLoadoutSubclass,
   removeArtifactUnlock,
   removeItem,
   removeMod,
@@ -38,6 +42,7 @@ import { getUnequippedItemsForLoadout } from 'app/loadout-drawer/loadout-utils';
 import { getItemsAndSubclassFromLoadout, loadoutPower } from 'app/loadout/LoadoutView';
 import { LoadoutArtifactUnlocks, LoadoutMods } from 'app/loadout/loadout-ui/LoadoutMods';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { searchFilterSelector } from 'app/search/search-filter';
 import { emptyObject } from 'app/utils/empty';
 import { Portal } from 'app/utils/temp-container';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -74,7 +79,9 @@ export default function LoadoutEdit({
   const missingSockets = allItems.some((i) => i.missingSockets);
   const [plugDrawerOpen, setPlugDrawerOpen] = useState(false);
   const itemCreationContext = useSelector(createItemContextSelector);
+  const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(store.id));
   const unlockedArtifactMods = useSelector(artifactUnlocksSelector(store.id));
+  const searchFilter = useSelector(searchFilterSelector);
 
   // Don't show the artifact unlocks section unless there are artifact mods saved in this loadout
   // or there are unlocked artifact mods we could copy into this loadout.
@@ -139,6 +146,9 @@ export default function LoadoutEdit({
   const handleFillSubclassFromEquipped = withDefsStoreUpdater(setLoadoutSubclassFromEquipped);
   const handleFillCategoryFromUnequipped = withDefsStoreUpdater(fillLoadoutFromUnequipped);
   const handleFillCategoryFromEquipped = withDefsStoreUpdater(fillLoadoutFromEquipped);
+  const handleRandomizeSubclass = withDefsStoreUpdater(randomizeLoadoutSubclass);
+  const handleRandomizeCategory = withDefsStoreUpdater(randomizeLoadoutItems);
+  const handleRandomizeMods = withDefsStoreUpdater(randomizeLoadoutMods);
   const handleClearMods = withUpdater(clearMods);
   const onRemoveItem = withDefsUpdater(removeItem);
   const handleClearSubclass = withDefsUpdater(clearSubclass);
@@ -163,6 +173,7 @@ export default function LoadoutEdit({
           className={styles.section}
           title={t('Bucket.Class')}
           onClear={handleClearSubclass}
+          onRandomize={handleRandomizeSubclass}
           onFillFromEquipped={handleFillSubclassFromEquipped}
         >
           <LoadoutEditSubclass
@@ -209,6 +220,7 @@ export default function LoadoutEdit({
           className={styles.section}
           title={t(`Bucket.${category}`, { metadata: { keys: 'buckets' } })}
           onClear={() => handleClearCategory(category)}
+          onRandomize={() => handleRandomizeCategory(allItems, category, searchFilter)}
           onFillFromEquipped={() => handleFillCategoryFromEquipped(artifactUnlocks, category)}
           fillFromInventoryCount={getUnequippedItemsForLoadout(store, category).length}
           onFillFromInventory={() => handleFillCategoryFromUnequipped(category)}
@@ -261,6 +273,7 @@ export default function LoadoutEdit({
         title={t('Loadouts.Mods')}
         className={clsx(styles.section, styles.mods)}
         onClear={handleClearMods}
+        onRandomize={() => handleRandomizeMods(allItems, unlockedPlugs)}
         onSyncFromEquipped={missingSockets ? undefined : handleSyncModsFromEquipped}
       >
         <LoadoutMods

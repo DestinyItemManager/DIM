@@ -9,6 +9,10 @@
 ### Beta Only
 
 * We've now got some experimental new themes for DIM - you can choose one in settings. These aren't final designs but they show off what can be changed.
+* Greatly expanded the "Randomize Loadout" feature. You can now randomize a Loadout's subclass and its configuration, weapons, armor, and armor mods.
+  * Randomize them individually through the three dots in a Loadout section.
+  * Randomize the entire Loadout using the "Randomize" button at the bottom of the Loadout drawer.
+  * If you have an active search query, weapons and armor will be restricted to those matching the query.
 
 ## 7.77.3 <span class="changelog-date">(2023-07-18)</span>
 

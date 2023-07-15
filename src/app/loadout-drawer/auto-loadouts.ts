@@ -1,14 +1,28 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
+import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { D2ItemTiers } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { isD1Item, itemCanBeEquippedBy } from 'app/utils/item-utils';
+import {
+  aspectSocketCategoryHashes,
+  fragmentSocketCategoryHashes,
+  getSocketsByCategoryHashes,
+  subclassAbilitySocketCategoryHashes,
+} from 'app/utils/socket-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { DimItem } from '../inventory/item-types';
+import { DimItem, DimSocket } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { Loadout } from './loadout-types';
-import { convertToLoadoutItem, newLoadout, optimalItemSet, optimalLoadout } from './loadout-utils';
+import {
+  convertToLoadoutItem,
+  getLoadoutSubclassFragmentCapacity,
+  newLoadout,
+  optimalItemSet,
+  optimalLoadout,
+} from './loadout-utils';
 
 /**
  *  A dynamic loadout set up to level weapons and armor
@@ -255,4 +269,57 @@ export function randomLoadout(store: DimStore, allItems: DimItem[], filter: Item
 
   // Use "random" as the value function
   return optimalLoadout(applicableItems, () => Math.random(), t('Loadouts.Random'));
+}
+
+export function randomSubclassConfiguration(
+  defs: D2ManifestDefinitions,
+  item: DimItem
+): SocketOverrides {
+  const socketOverrides: SocketOverrides = {};
+  // Pick abilities
+  const abilityAndSuperSockets = getSocketsByCategoryHashes(
+    item.sockets,
+    subclassAbilitySocketCategoryHashes
+  );
+  for (const socket of abilityAndSuperSockets) {
+    // Stasis has no super plugSet
+    if (socket.plugSet) {
+      socketOverrides[socket.socketIndex] = _.sample(socket.plugSet.plugs)!.plugDef.hash;
+    }
+  }
+
+  const randomizeSocketSeries = (sockets: DimSocket[], maxCount: number) => {
+    if (sockets.length && maxCount > 0) {
+      const blockedPlugs = [sockets[0].emptyPlugItemHash];
+      for (const socket of sockets) {
+        if (maxCount === 0) {
+          break;
+        }
+        maxCount--;
+        const chosenHash = _.sample(
+          socket.plugSet!.plugs.filter((plug) => !blockedPlugs.includes(plug.plugDef.hash))
+        )!.plugDef.hash;
+        if (chosenHash === undefined) {
+          break;
+        }
+        socketOverrides[socket.socketIndex] = chosenHash;
+        blockedPlugs.push(chosenHash);
+      }
+    }
+  };
+
+  // Pick aspects
+  const aspectSockets = getSocketsByCategoryHashes(item.sockets, aspectSocketCategoryHashes);
+  randomizeSocketSeries(aspectSockets, aspectSockets.length);
+
+  // Pick as many fragments as allowed
+  const fragmentCount = getLoadoutSubclassFragmentCapacity(defs, {
+    item: item,
+    loadoutItem: { ...convertToLoadoutItem(item, false), socketOverrides },
+  });
+
+  const fragmentSockets = getSocketsByCategoryHashes(item.sockets, fragmentSocketCategoryHashes);
+  randomizeSocketSeries(fragmentSockets, fragmentCount);
+
+  return socketOverrides;
 }

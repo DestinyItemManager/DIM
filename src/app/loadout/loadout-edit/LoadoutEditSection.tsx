@@ -1,7 +1,14 @@
 import Dropdown, { Option } from 'app/dim-ui/Dropdown';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
-import { AppIcon, clearIcon, disabledIcon, downloadIcon, helpIcon } from 'app/shell/icons';
+import {
+  AppIcon,
+  clearIcon,
+  disabledIcon,
+  downloadIcon,
+  faRandom,
+  helpIcon,
+} from 'app/shell/icons';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
@@ -15,6 +22,7 @@ export default function LoadoutEditSection({
   onClear,
   onFillFromEquipped,
   onSyncFromEquipped,
+  onRandomize,
   fillFromInventoryCount,
   onFillFromInventory,
   onClearLoadoutParameters,
@@ -26,6 +34,7 @@ export default function LoadoutEditSection({
   onClear: () => void;
   onFillFromEquipped?: () => void;
   onSyncFromEquipped?: () => void;
+  onRandomize?: () => void;
   fillFromInventoryCount?: number;
   onFillFromInventory?: () => void;
   onClearLoadoutParameters?: () => void;
@@ -61,6 +70,17 @@ export default function LoadoutEditSection({
             <>
               <AppIcon icon={downloadIcon} /> {t('Loadouts.FillFromInventory')}
               {fillFromInventoryCount !== undefined && ` (${fillFromInventoryCount})`}
+            </>
+          ),
+        }
+      : undefined,
+    onRandomize
+      ? {
+          key: 'randomize',
+          onSelected: onRandomize,
+          content: (
+            <>
+              <AppIcon icon={faRandom} /> {t('Loadouts.RandomizeButton')}
             </>
           ),
         }
