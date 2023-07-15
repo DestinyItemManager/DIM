@@ -3,6 +3,7 @@
 interface CssExports {
   'catalystProgress': string;
   'catalystProgressTitle': string;
+  'elementIcon': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

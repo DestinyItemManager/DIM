@@ -4,6 +4,12 @@
   margin-bottom: 4px;
 }
 
+.elementIcon {
+  height: 11px;
+  width: 12px;
+  margin-right: 4px;
+}
+
 .catalystProgress {
   composes: flexColumn from '../dim-ui/common.m.scss';
   background: var(--theme-item-popup-panel-bg);
