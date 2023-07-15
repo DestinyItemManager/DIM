@@ -151,7 +151,7 @@ export const swordStatsByName = {
 
 /** D2 has these item types but D1 doesn't */
 export const D2ItemCategoryHashesByName = {
-  grenadelauncher: ItemCategoryHashes.GrenadeLaunchers,
+  heavygrenadelauncher: ItemCategoryHashes.GrenadeLaunchers,
   specialgrenadelauncher: -ItemCategoryHashes.GrenadeLaunchers,
   tracerifle: ItemCategoryHashes.TraceRifles,
   linearfusionrifle: ItemCategoryHashes.LinearFusionRifles,

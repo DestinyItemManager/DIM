@@ -142,9 +142,21 @@ const d2SelectionTree: ItemCategoryTreeNode = {
           terminal: true,
         },
         {
+          id: 'specialgrenadelauncher',
+          itemCategoryHash: -ItemCategoryHashes.GrenadeLaunchers,
+          subCategories: [kinetic, energy],
+          terminal: true,
+        },
+        {
           id: 'tracerifle',
           itemCategoryHash: ItemCategoryHashes.TraceRifles,
           subCategories: [kinetic, energy],
+          terminal: true,
+        },
+        {
+          id: 'glaive',
+          itemCategoryHash: ItemCategoryHashes.Glaives,
+          subCategories: [energy, power],
           terminal: true,
         },
         {
@@ -158,9 +170,9 @@ const d2SelectionTree: ItemCategoryTreeNode = {
           terminal: true,
         },
         {
-          id: 'grenadelauncher',
+          id: 'heavygrenadelauncher',
           itemCategoryHash: ItemCategoryHashes.GrenadeLaunchers,
-          subCategories: [kinetic, energy, power],
+          subCategories: [power],
           terminal: true,
         },
         {
@@ -172,12 +184,6 @@ const d2SelectionTree: ItemCategoryTreeNode = {
           id: 'linearfusionrifle',
           itemCategoryHash: ItemCategoryHashes.LinearFusionRifles,
           subCategories: [kinetic, energy, power],
-          terminal: true,
-        },
-        {
-          id: 'glaive',
-          itemCategoryHash: ItemCategoryHashes.Glaives,
-          subCategories: [energy, power],
           terminal: true,
         },
       ],
