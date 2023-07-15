@@ -1,5 +1,6 @@
 ## Next
 
+* DIM now considers breech-loaded (special) Grenade Launchers and Heavy Grenade Launchers completely separate item types. This means Special Grenade Launchers now have their own Organizer tab, Triage for Heavy Grenade Launchers will no longer show "similar" Special Grenade Launchers, and Compare will not include them when comparing Heavy Grenade Launchers.
 * When opening the Compare view from the Triage tab of a Vendor item, this Vendor item will now be included in the compared items.
 
 ## 7.76.0 <span class="changelog-date">(2023-07-09)</span>

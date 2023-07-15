@@ -1,0 +1,33 @@
+@use '../variables.scss' as *;
+
+.movePopupTabs {
+  display: flex;
+  justify-content: space-around;
+}
+.movePopupTab {
+  color: hsl(0, 0%, 80%);
+  padding: 5px 0 3px;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  border-bottom: 2px solid #222;
+  background-color: black;
+  &.selected {
+    border-bottom-color: var(--theme-accent-primary);
+  }
+  &:hover {
+    color: var(--theme-text);
+    background-color: #3f3f3f;
+  }
+
+  @include phone-portrait {
+    font-size: 16px;
+  }
+}
+
+.failureReason {
+  color: var(--theme-text);
+  background-color: #923c3c;
+  margin: 0;
+  padding: 2px 8px;
+}

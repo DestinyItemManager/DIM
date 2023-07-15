@@ -1,19 +1,23 @@
 @use '../variables.scss' as *;
 
 .catalystProgressTitle {
-  margin-left: 4px;
-  padding-top: 2px;
-  padding-bottom: 2px;
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  margin-bottom: 4px;
+}
 
-  color: $exotic;
-  font-weight: bold;
+.elementIcon {
+  width: 17px;
+  height: 12px;
+  margin-right: 4px;
+  background-size: contain;
+  background-position: center;
 }
 
 .catalystProgress {
-  display: flex;
-  flex-direction: column;
+  composes: flexColumn from '../dim-ui/common.m.scss';
   background: var(--theme-item-popup-panel-bg);
-  gap: 4px;
+  padding: 4px 10px;
 
   // Add spacer when adjacent to crafted weapon progress
   :global(.crafted-progress) + & {
@@ -23,9 +27,4 @@
   :global(.objective-progress) {
     background: var(--theme-item-popup-progress-bar-bg);
   }
-}
-
-.catalystProgressSection {
-  padding: 4px 10px 4px;
-  flex-grow: 1;
 }
