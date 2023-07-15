@@ -89,15 +89,14 @@ export function addItem(
       const dupe = draftLoadout.items[dupeIndex];
       if (item.maxStackSize > 1) {
         // The item is already here but we'd like to add more of it (only D1 loadouts hold stackables)
-        const increment = Math.min(dupe.amount + item.amount, item.maxStackSize) - dupe.amount;
-        dupe.amount += increment;
+        loadoutItem.amount += Math.min(dupe.amount + item.amount, item.maxStackSize);
       }
-      // No need for further modifications so we bail out
-      return;
+      // Remove the dupe, we'll replace it with the new item
+      draftLoadout.items.splice(dupeIndex, 1);
     }
 
     const typeInventory = loadoutItemsInBucket(defs, draftLoadout, item.bucket.hash);
-    if (typeInventory.length >= maxSlots) {
+    if (dupeIndex === -1 && typeInventory.length >= maxSlots && !singular) {
       // We're already full
       errorLog('loadouts', "Can't add", item);
       showNotification({
