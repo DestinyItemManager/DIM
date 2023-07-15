@@ -1,13 +1,10 @@
 import { DestinyTooltipText } from 'app/dim-ui/DestinyTooltipText';
-import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
-import { WeaponCatalystInfo } from 'app/dim-ui/WeaponCatalystInfo';
-import { WeaponCraftedInfo } from 'app/dim-ui/WeaponCraftedInfo';
-import { WeaponDeepsightInfo } from 'app/dim-ui/WeaponDeepsightInfo';
 import { t } from 'app/i18next-t';
 import { createItemContextSelector, storesSelector } from 'app/inventory/selectors';
 import { isTrialsPassage } from 'app/inventory/store/objectives';
 import { applySocketOverrides, useSocketOverrides } from 'app/inventory/store/override-sockets';
 import { getStore } from 'app/inventory/stores-helpers';
+import { KillTrackerInfo } from 'app/item-popup/KillTracker';
 import { useDefinitions } from 'app/manifest/selectors';
 import { ActivityModifier } from 'app/progress/ActivityModifier';
 import Objective from 'app/progress/Objective';
@@ -35,6 +32,9 @@ import ItemSockets from './ItemSockets';
 import ItemStats from './ItemStats';
 import ItemTalentGrid from './ItemTalentGrid';
 import MetricCategories from './MetricCategories';
+import { WeaponCatalystInfo } from './WeaponCatalystInfo';
+import { WeaponCraftedInfo } from './WeaponCraftedInfo';
+import { WeaponDeepsightInfo } from './WeaponDeepsightInfo';
 import { ItemPopupExtraInfo } from './item-popup';
 
 // TODO: probably need to load manifest. We can take a lot of properties off the item if we just load the definition here.
