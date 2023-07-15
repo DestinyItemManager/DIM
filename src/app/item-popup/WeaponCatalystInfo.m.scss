@@ -1,13 +1,17 @@
 @use '../variables.scss' as *;
 
 .catalystProgressTitle {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
   margin-bottom: 4px;
 }
 
 .elementIcon {
-  height: 11px;
-  width: 12px;
+  width: 17px;
+  height: 12px;
   margin-right: 4px;
+  background-size: contain;
+  background-position: center;
 }
 
 .catalystProgress {
