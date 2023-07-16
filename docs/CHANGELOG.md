@@ -4,6 +4,7 @@
 * DIM now considers breech-loaded (special) Grenade Launchers and Heavy Grenade Launchers completely separate item types. This means Special Grenade Launchers now have their own Organizer tab, Triage for Heavy Grenade Launchers will no longer show "similar" Special Grenade Launchers, and Compare will not include them when comparing Heavy Grenade Launchers.
 * When opening the Compare view from the Triage tab of a Vendor item, this Vendor item will now be included in the compared items.
 * New versions of the Last Wish weapons now appear in collections.
+* Added Bungie Day Giving Festival Banner.
 
 ## 7.76.0 <span class="changelog-date">(2023-07-09)</span>
 
@@ -120,7 +121,6 @@
 * Added hotkeys to organizer - bulk tag, note, compare, or move selected items easily.
 * Added a new "N" hotkey for editing notes on an item.
 
-
 ## 7.63.3 <span class="changelog-date">(2023-04-06)</span>
 
 * Fixed equipping in game loadouts
@@ -209,7 +209,6 @@
 ### Beta Only
 
 * Loadout Optimizer's toggle to include required stat mods has been changed to optimize all builds using as many stat mods as possible. This is a consequence of the artifice changes.
-
 
 ## 7.58.0 <span class="changelog-date">(2023-02-26)</span>
 
