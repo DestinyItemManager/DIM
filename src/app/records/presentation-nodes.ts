@@ -290,7 +290,7 @@ function toCollectibles(
   const { defs, profileResponse } = itemCreationContext;
   return _.compact(
     collectibleChildren.flatMap(({ collectibleHash }) => {
-      const fakeItemHash = (extraItemCollectibles as NodeJS.Dict<number>)[collectibleHash];
+      const fakeItemHash = extraItemCollectibles[collectibleHash];
       const collectibleDef = defs.Collectible.get(collectibleHash);
       if (!collectibleDef) {
         return null;

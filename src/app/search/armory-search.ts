@@ -5,6 +5,7 @@ import { chainComparator, compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { getItemYear } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
+import extraItemCollectibles from 'data/d2/unreferenced-collections-items.json';
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
 import { ArmorySearchItem, SearchItemType } from './autocomplete';
@@ -25,10 +26,14 @@ export const buildArmoryIndex = memoizeOne((defs: D2ManifestDefinitions, languag
   const results: ArmoryEntry[] = [];
   const invItemTable = defs.InventoryItem.getAll();
   const seasons = Object.values(defs.Season.getAll());
+  const additionalCollectibles = Object.values(extraItemCollectibles);
   for (const h in invItemTable) {
     const i = invItemTable[h];
     if (
-      i.collectibleHash &&
+      // A good heuristic for "is this weapon not totally irrelevant" is the presence of
+      // the exact hash in collections, but some reissues do no reference the latest collections
+      // version. `additionalCollectibles` patches those in.
+      (i.collectibleHash || additionalCollectibles.includes(i.hash)) &&
       i.displayProperties &&
       (i.inventory?.bucketTypeHash === BucketHashes.KineticWeapons ||
         i.inventory?.bucketTypeHash === BucketHashes.EnergyWeapons ||
