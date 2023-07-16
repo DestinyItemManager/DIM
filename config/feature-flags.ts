@@ -31,7 +31,7 @@ export function makeFeatureFlags(env: { release: boolean; beta: boolean; dev: bo
     // Warn when DIM Sync is off and you save some DIM-specific data
     warnNoSync: true,
     // Expose the "Automatically add stat mods" Loadout Optimizer toggle
-    loAutoStatMods: !env.release,
+    loAutoStatMods: true,
     // Pretend that Bungie.net is down for maintenance
     simulateBungieMaintenance: false,
     // Pretend that Bungie.net is not returning sockets info
@@ -40,7 +40,7 @@ export function makeFeatureFlags(env: { release: boolean; beta: boolean; dev: bo
     loadoutFilterPills: true,
     // Request the PresentationNodes component only needed during
     // Solstice to associate each character with a set of triumphs.
-    solsticePresentationNodes: false,
+    solsticePresentationNodes: true,
     // not ready to turn these on but the code is there
     customStatWeights: false,
   };

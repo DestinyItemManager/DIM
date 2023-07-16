@@ -1,15 +1,14 @@
 import { t } from 'app/i18next-t';
 import { bungieAlertsSelector } from 'app/shell/selectors';
 import clsx from 'clsx';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { useSubscription } from 'use-subscription';
 import { dimNeedsUpdate$, reloadDIM } from '../register-service-worker';
 import { AppIcon, updateIcon } from '../shell/icons';
 import { GlobalAlertLevelsToToastLevels } from './BungieAlerts';
-import { DimVersions } from './versions';
 import styles from './WhatsNewLink.m.scss';
+import { DimVersions } from './versions';
 
 /**
  * A link/button to the "What's New" page that highlights the most important action.

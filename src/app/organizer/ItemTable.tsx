@@ -41,8 +41,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React, { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import ReactDOM from 'react-dom';
+import React, { ReactNode, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Dropzone, { DropzoneOptions } from 'react-dropzone';
 import { useSelector } from 'react-redux';
 import { getColumnSelectionId, getColumns } from './Columns';
@@ -51,6 +50,8 @@ import ItemActions, { TagCommandInfo } from './ItemActions';
 import { itemIncludesCategories } from './filtering-utils';
 
 import { compareSelectedItems } from 'app/compare/actions';
+
+import { createPortal } from 'react-dom';
 // eslint-disable-next-line css-modules/no-unused-class
 import styles from './ItemTable.m.scss';
 import { ItemCategoryTreeNode, armorTopLevelCatHashes } from './ItemTypeSelector';
@@ -74,7 +75,7 @@ const downloadButtonSettings = [
   { categoryId: ['ghosts'], csvType: 'Ghost' as const, label: tl('Bucket.Ghost') },
 ];
 
-const MemoRow = React.memo(TableRow);
+const MemoRow = memo(TableRow);
 
 export default function ItemTable({ categories }: { categories: ItemCategoryTreeNode[] }) {
   const [columnSorts, setColumnSorts] = useState<ColumnSort[]>([
@@ -346,7 +347,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
       (_v, n) =>
         `[role="cell"]:nth-of-type(${numColumns * 2}n+${
           n + 2
-        }){background-color:#1d1c2b !important;}`
+        }){background-color:var(--theme-organizer-row-even-bg) !important;}`
     )
     .join('\n');
 
@@ -501,7 +502,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
             forClass={classIfAny}
           />
         </div>
-        {ReactDOM.createPortal(<style>{rowStyle}</style>, document.head)}
+        {createPortal(<style>{rowStyle}</style>, document.head)}
       </div>
       <div className={clsx(styles.selection, styles.header)} role="columnheader" aria-sort="none">
         <div>

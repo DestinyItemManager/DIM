@@ -8,6 +8,7 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import deprecatedMods from 'data/d2/deprecated-mods.json';
 import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
+import mutuallyExclusiveMods from 'data/d2/mutually-exclusive-mods.json';
 import { normalToReducedMod, reducedToNormalMod } from 'data/d2/reduced-cost-mod-mappings';
 import _ from 'lodash';
 import { knownModPlugCategoryHashes } from './known-values';
@@ -25,7 +26,7 @@ export const plugCategoryHashToBucketHash: LookupTable<PlugCategoryHashes, Bucke
  * 1. The known plug category hashes, see ./types#knownModPlugCategoryHashes for ordering
  * 2. itemTypeDisplayName, so that legacy and combat mods are ordered alphabetically by their category name
  * 4. by energy cost, so cheaper mods come before more expensive mods
- * 5. by mod name, so mods in the same category with the same energy type and cost are alphabetical
+ * 5. by mod name, so mods in the same category with the same energy cost are alphabetical
  */
 export const sortMods = chainComparator<PluggableInventoryItemDefinition>(
   compareBy((mod) => {
@@ -130,4 +131,13 @@ export function mapToNonReducedModCostVariant(plugHash: number): number {
  */
 export function mapToOtherModCostVariant(plugHash: number): number | undefined {
   return reducedToNormalMod[plugHash] ?? normalToReducedMod[plugHash];
+}
+
+/**
+ * Some mods form a group of which only one mod can be equipped,
+ * which is enforced by game servers. DIM must respect this when building
+ * loadouts or applying mods.
+ */
+export function getModExclusionGroup(mod: PluggableInventoryItemDefinition): string | undefined {
+  return mutuallyExclusiveMods[mod.hash];
 }

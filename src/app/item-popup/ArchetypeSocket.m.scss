@@ -7,19 +7,21 @@
     margin-right: 2px;
   }
 
-  :global(.item-socket) {
+  // Shrink down the intrinsic perk - it's super large
+  :global(.plug) {
     padding: 4px;
-  }
 
-  img {
-    width: calc(24 / 50 * var(--item-size));
-    height: calc(24 / 50 * var(--item-size));
-    transform: scale(1.4);
+    --item-size-mod: calc(24 / 50 * var(--item-size));
 
-    .minimal & {
-      width: 16px !important;
-      height: 16px !important;
+    img {
+      --item-size: var(--item-size-mod);
       transform: scale(1.4);
+
+      .minimal & {
+        width: 16px !important;
+        height: 16px !important;
+        transform: scale(1.4);
+      }
     }
   }
 }
@@ -29,7 +31,7 @@
   align-items: flex-start;
   padding: 6px 10px;
   margin-bottom: 4px;
-  background-color: #333;
+  background-color: var(--theme-item-popup-panel-bg);
   width: 100%;
   border-bottom: none;
   box-sizing: border-box;
@@ -37,7 +39,8 @@
   &.minimal {
     background-color: transparent;
     align-items: center;
-    padding: 0;
+    padding: 0 4px;
+    margin: 0;
   }
 
   :global(.armory) & {
@@ -47,16 +50,10 @@
 
   &.isWeapons {
     align-items: center;
-  }
 
-  :global(.socket-container) img {
-    width: calc(24 / 50 * var(--item-size));
-    height: calc(24 / 50 * var(--item-size));
-  }
-
-  :global(.item-socket-category-Consumable) img {
-    width: calc(32 / 50 * var(--item-size));
-    height: calc(32 / 50 * var(--item-size));
+    &.minimal {
+      padding-left: 0;
+    }
   }
 }
 

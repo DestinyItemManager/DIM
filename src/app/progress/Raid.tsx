@@ -1,8 +1,7 @@
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DestinyMilestone } from 'bungie-api-ts/destiny2';
-import React from 'react';
-import './milestone.scss';
 import { RaidActivity, RaidDisplay } from './RaidDisplay';
+import './milestone.scss';
 
 /**
  * Raids offer powerful rewards. Unlike Milestones, some raids have multiple tiers,

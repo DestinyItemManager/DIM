@@ -1,40 +1,8 @@
 @use '../variables.scss' as *;
 
-.move-popup-tabs {
-  display: flex;
-  justify-content: space-around;
-}
-.move-popup-tab {
-  color: hsl(0, 0%, 80%);
-  padding: 5px 0 3px;
-  cursor: pointer;
-  width: 100%;
-  text-align: center;
-  border-bottom: 2px solid #222;
-  background-color: black;
-  &.selected {
-    opacity: 1;
-    border-bottom: 2px solid $orange;
-  }
-  &:hover {
-    color: white;
-    background-color: #3f3f3f;
-  }
-}
-
-@include phone-portrait {
-  .move-popup-tab {
-    font-size: 16px;
-  }
-}
-
 /**
  * Move Popup - Details
  */
-
-.item-details-body {
-  overflow: hidden;
-}
 
 .item-details {
   margin: 10px;
@@ -47,35 +15,19 @@
     white-space: normal;
     max-width: fit-content;
     a {
-      color: white;
+      color: var(--theme-text);
       font-size: 12px;
     }
   }
 }
 
-.item-description {
-  margin: 5px 10px;
-  white-space: pre-wrap;
-  font-style: italic;
-}
-
-.item-source {
-  font-style: italic;
-  opacity: 0.7;
-}
-
-.item-shader {
-  display: block;
-  margin: 15px auto;
-}
-
 .masterwork-progress {
   margin: 4px 0;
   padding: 4px 10px 4px;
-  background: #333;
+  background: var(--theme-item-popup-panel-bg);
 
   span {
-    color: $orange;
+    color: var(--theme-accent-primary);
     font-weight: bold;
   }
 
@@ -88,116 +40,17 @@
 
 .crafted-progress {
   padding: 4px 10px 4px;
-  background: #333;
+  background: var(--theme-item-popup-panel-bg);
   gap: 4px;
 
   display: flex;
   align-items: center;
 
   .objective-progress {
-    background: #222;
+    background: var(--theme-item-popup-progress-bar-bg);
   }
 
   .objective-progress-bar {
     background-color: $deepsight-border-color;
-  }
-}
-
-.item-perks {
-  margin: 5px 10px;
-}
-
-.item-perk {
-  display: flex;
-  flex-direction: row;
-
-  img {
-    height: 48px;
-    width: 48px;
-  }
-}
-
-.item-perk-info {
-  flex: 1;
-  margin-left: 8px;
-}
-.item-perk-name {
-  font-weight: bold;
-  margin-bottom: 2px;
-}
-.failure-reason {
-  color: white;
-  background-color: #923c3c;
-  margin: 0;
-  padding: 2px 8px;
-}
-
-.sheet {
-  .move-popup {
-    width: auto;
-    box-shadow: none;
-  }
-}
-
-.item-popup {
-  .sheet-header {
-    padding: 0;
-    border: none;
-  }
-  .sheet-close {
-    padding: 12px 10px;
-    color: black;
-    opacity: 0.7;
-  }
-  .sheet-handle div {
-    background-color: black;
-    opacity: 0.7;
-  }
-
-  &.is-Uncommon,
-  &.is-Rare,
-  &.is-Legendary {
-    .sheet-close {
-      color: white;
-    }
-    .sheet-handle div {
-      background-color: white;
-    }
-  }
-}
-
-.acquired-icon {
-  background: #3c94ff;
-}
-
-.owned-icon {
-  background: $acquiredGreen;
-}
-
-.owned-icon,
-.acquired-icon {
-  width: calc(var(--item-size) / 4) !important;
-  height: calc(var(--item-size) / 4) !important;
-  font-size: calc(var(--item-size) / 6) !important;
-  border-radius: 50%;
-  padding: 3px;
-  box-sizing: border-box;
-  .mods & {
-    width: calc(var(--item-size) / 2.5) !important;
-    height: calc(var(--item-size) / 2.5) !important;
-    font-size: calc(var(--item-size) / 5) !important;
-    vertical-align: -0.5em;
-    padding: 0;
-    filter: invert(1);
-    background: none !important;
-  }
-}
-
-.popup-tab-title {
-  position: relative;
-  .thumbs-up {
-    position: absolute;
-    top: 0;
-    right: -18px;
   }
 }

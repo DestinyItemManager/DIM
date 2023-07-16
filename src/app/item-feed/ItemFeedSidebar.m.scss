@@ -2,6 +2,7 @@
 
 .trayContainer {
   position: fixed;
+
   @include below-header;
   right: 0;
   height: calc(var(--viewport-height) - var(--header-height));
@@ -15,22 +16,10 @@
 }
 
 .sideTray {
-  background-color: black;
-  padding: 10px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  background-color: var(--theme-item-feed-bg);
   width: var(--sidebar-size);
   height: 100%;
   box-sizing: border-box;
-
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  > div {
-    background-color: black;
-  }
 }
 
 .trayButton {
@@ -39,7 +28,7 @@
   background: black;
   position: absolute;
   right: 100%;
-  color: white;
+  color: var(--theme-text);
   padding: 8px;
   top: -25px;
   transform-origin: bottom right;
@@ -47,8 +36,8 @@
   font-size: 16px;
 
   &:hover {
-    color: black;
-    background-color: $orange;
+    color: var(--theme-text-invert);
+    background-color: var(--theme-accent-primary);
   }
 
   :global(.app-icon) {

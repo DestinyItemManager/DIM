@@ -107,8 +107,13 @@ export function initi18n(): Promise<unknown> {
         }
       }
     );
-    if (DIM_LANG_INFOS[lang]?.pluralOverride) {
-      i18next.services.pluralResolver.addRule(lang, i18next.services.pluralResolver.getRule('en'));
+    for (const otherLang of DIM_LANGS) {
+      if (DIM_LANG_INFOS[otherLang]?.pluralOverride) {
+        i18next.services.pluralResolver.addRule(
+          otherLang,
+          i18next.services.pluralResolver.getRule('en')
+        );
+      }
     }
   });
 }

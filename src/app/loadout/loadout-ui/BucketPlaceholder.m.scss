@@ -19,7 +19,7 @@
 .clickable {
   composes: resetButton from '../../dim-ui/common.m.scss';
   &:focus {
-    border-color: $orange;
+    border-color: var(--theme-accent-primary);
   }
   .placeholder {
     &:hover {

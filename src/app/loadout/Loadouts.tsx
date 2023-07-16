@@ -5,6 +5,7 @@ import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { VirtualListRef, WindowVirtualList } from 'app/dim-ui/VirtualList';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { t, tl } from 'app/i18next-t';
 import { artifactUnlocksSelector, sortedStoresSelector } from 'app/inventory/selectors';
@@ -16,8 +17,9 @@ import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-u
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, addIcon, faCalculator, uploadIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
+import { usePageTitle } from 'app/utils/hooks';
 import { Portal } from 'app/utils/temp-container';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import styles from './Loadouts.m.scss';
@@ -53,6 +55,7 @@ const sortOptions = [
  */
 export default function LoadoutsContainer({ account }: { account: DestinyAccount }) {
   const storesLoaded = useLoadStores(account);
+  usePageTitle(t('Loadouts.Loadouts'));
 
   if (!storesLoaded) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
@@ -118,6 +121,17 @@ function Loadouts({ account }: { account: DestinyAccount }) {
     editLoadout(loadout, selectedStore.id, { isNew: true });
   };
 
+  const virtualListRef = useRef<VirtualListRef>(null);
+  const scrollToLoadout = useCallback(
+    (id: string) => {
+      const index = loadouts.findIndex((l) => l.id === id);
+      if (index >= 0) {
+        virtualListRef.current?.scrollToIndex(index, { align: 'start' });
+      }
+    },
+    [loadouts]
+  );
+
   return (
     <PageWithMenu>
       <PageWithMenu.Menu className={styles.menu}>
@@ -147,18 +161,22 @@ function Loadouts({ account }: { account: DestinyAccount }) {
           >
             <AppIcon icon={uploadIcon} /> <span>{t('Loadouts.ImportLoadout')}</span>
           </button>
-          <Link className={styles.menuButton} to={`../optimizer?class=${selectedStore.classType}`}>
+          <Link
+            className={styles.menuButton}
+            to="../optimizer"
+            state={{ storeId: selectedStore.id }}
+          >
             <AppIcon icon={faCalculator} /> {t('LB.LB')}
           </Link>
         </div>
         {!isPhonePortrait &&
           loadouts.map((loadout) => (
-            <PageWithMenu.MenuButton anchor={loadout.id} key={loadout.id}>
+            <PageWithMenu.MenuButton onClick={() => scrollToLoadout(loadout.id)} key={loadout.id}>
               <ColorDestinySymbols text={loadout.name} />
             </PageWithMenu.MenuButton>
           ))}
       </PageWithMenu.Menu>
-      <PageWithMenu.Contents className={styles.page}>
+      <PageWithMenu.Contents>
         {$featureFlags.warnNoSync && !apiPermissionGranted && (
           <p>
             <AlertIcon /> {t('Storage.DimSyncNotEnabled')}
@@ -173,17 +191,27 @@ function Loadouts({ account }: { account: DestinyAccount }) {
         />
         <h2>{t('Loadouts.DimLoadouts')}</h2>
         {filterPills}
-        {loadouts.map((loadout) => (
-          <LoadoutRow
-            key={loadout.id}
-            loadout={loadout}
-            store={selectedStore}
-            saved={savedLoadoutIds.has(loadout.id)}
-            equippable={loadout !== currentLoadout}
-            onShare={setSharedLoadout}
-            onSnapshotInGameLoadout={handleSnapshot}
-          />
-        ))}
+        <WindowVirtualList
+          ref={virtualListRef}
+          numElements={loadouts.length}
+          itemContainerClassName={styles.loadoutRow}
+          estimatedSize={270}
+          getItemKey={(index) => loadouts[index].id}
+        >
+          {(index) => {
+            const loadout = loadouts[index];
+            return (
+              <LoadoutRow
+                loadout={loadout}
+                store={selectedStore}
+                saved={savedLoadoutIds.has(loadout.id)}
+                equippable={loadout !== currentLoadout}
+                onShare={setSharedLoadout}
+                onSnapshotInGameLoadout={handleSnapshot}
+              />
+            );
+          }}
+        </WindowVirtualList>
         {loadouts.length === 0 && <p>{t('Loadouts.NoneMatch', { query })}</p>}
       </PageWithMenu.Contents>
       {sharedLoadout && (

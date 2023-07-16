@@ -15,7 +15,7 @@
       }
     }
     &.collapsed {
-      color: white;
+      color: var(--theme-text);
       font-weight: bold;
       min-height: 32px;
       padding-bottom: 4px;
@@ -27,7 +27,7 @@
     height: 100%;
     padding-right: 8px;
     &:hover .collapse {
-      color: $orange;
+      color: var(--theme-accent-primary);
     }
   }
 }

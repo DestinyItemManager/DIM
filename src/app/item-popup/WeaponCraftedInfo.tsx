@@ -1,13 +1,13 @@
+import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { getCraftedSocket } from 'app/inventory/store/crafted';
+import { KillTrackerInfo } from 'app/item-popup/KillTracker';
 import Objective from 'app/progress/Objective';
 import { percent, percentWithSingleDecimal } from 'app/shell/formatters';
 import { isKillTrackerSocket, plugToKillTracker } from 'app/utils/item-utils';
 import shapedIcon from 'images/shaped.png';
 import _ from 'lodash';
-import { KillTrackerInfo } from './KillTracker';
-import { PressTip } from './PressTip';
 import styles from './WeaponCraftedInfo.m.scss';
 
 /**

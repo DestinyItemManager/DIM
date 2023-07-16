@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'close': string;
+  'compareItem': string;
   'header': string;
   'initialItem': string;
   'isFindable': string;

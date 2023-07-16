@@ -2,7 +2,7 @@ import type { DimStore } from 'app/inventory/store-types';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import clsx from 'clsx';
 import React from 'react';
-import { LoadoutStats, PowerFormula } from '../store-stats/CharacterStats';
+import { PowerFormula, StoreCharacterStats } from '../store-stats/CharacterStats';
 import AccountCurrencies from './AccountCurrencies';
 import D1CharacterStats from './D1CharacterStats';
 import styles from './StoreStats.m.scss';
@@ -29,7 +29,7 @@ export default function StoreStats({
       ) : (
         <div className="stat-bars destiny2">
           <PowerFormula storeId={store.id} />
-          <LoadoutStats stats={store.stats} />
+          <StoreCharacterStats store={store} />
         </div>
       )}
     </div>

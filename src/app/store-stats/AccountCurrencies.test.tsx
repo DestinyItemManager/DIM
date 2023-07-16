@@ -1,6 +1,5 @@
 import { AccountCurrency } from 'app/inventory/store-types';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import renderer from 'react-test-renderer';
 import AccountCurrencies from './AccountCurrencies';

@@ -1,26 +1,71 @@
-import { memo } from 'react';
-import { DimItem, DimSocket } from '../inventory/item-types';
+import { Portal } from 'app/utils/temp-container';
+import { memo, useState } from 'react';
+import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import './ItemSockets.scss';
 import ItemSocketsGeneral from './ItemSocketsGeneral';
 import ItemSocketsWeapons from './ItemSocketsWeapons';
+import SocketDetails from './SocketDetails';
 
-interface ProvidedProps {
+export type PlugClickHandler = (
+  item: DimItem,
+  socket: DimSocket,
+  plug: DimPlug,
+  hasMenu: boolean
+) => void;
+
+export default memo(function ItemSockets({
+  item,
+  minimal,
+  grid,
+  onPlugClicked,
+}: {
   item: DimItem;
   /** minimal style used for loadout generator and compare */
   minimal?: boolean;
   /** Force grid style */
   grid?: boolean;
   onPlugClicked?: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
-}
+}) {
+  const [socketInMenu, setSocketInMenu] = useState<DimSocket | null>(null);
 
-type Props = ProvidedProps;
+  const handlePlugClick: PlugClickHandler = (item, socket, plug, hasMenu) => {
+    if (hasMenu) {
+      setSocketInMenu(socket);
+    } else {
+      onPlugClicked?.({
+        item,
+        socket,
+        plugHash: plug.plugDef.hash,
+      });
+    }
+  };
 
-export default memo(function ItemSockets(props: Props) {
-  const item = props.item;
-
-  if (item.destinyVersion === 2 && item.bucket.inWeapons) {
-    return <ItemSocketsWeapons {...props} />;
-  }
-
-  return <ItemSocketsGeneral {...props} />;
+  const content =
+    item.destinyVersion === 2 && item.bucket.inWeapons ? (
+      <ItemSocketsWeapons
+        item={item}
+        minimal={minimal}
+        grid={grid}
+        onPlugClicked={handlePlugClick}
+      />
+    ) : (
+      <ItemSocketsGeneral item={item} minimal={minimal} onPlugClicked={handlePlugClick} />
+    );
+  return (
+    <>
+      {content}
+      {socketInMenu && (
+        <Portal>
+          <SocketDetails
+            key={socketInMenu.socketIndex}
+            item={item}
+            socket={socketInMenu}
+            allowInsertPlug
+            onClose={() => setSocketInMenu(null)}
+            onPlugSelected={onPlugClicked}
+          />
+        </Portal>
+      )}
+    </>
+  );
 });

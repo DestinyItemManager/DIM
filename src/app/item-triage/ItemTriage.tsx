@@ -19,7 +19,8 @@ import { loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
 import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
 import { filterFactorySelector } from 'app/search/search-filter';
 import { loadoutToSearchString } from 'app/search/search-filters/loadouts';
-import { AppIcon, compareIcon, editIcon, thumbsUpIcon } from 'app/shell/icons';
+import { AppIcon, compareIcon, editIcon } from 'app/shell/icons';
+import WishListPerkThumb from 'app/wishlists/WishListPerkThumb';
 import { wishListSelector } from 'app/wishlists/selectors';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -63,14 +64,12 @@ export function TriageTabToggle({ currentTab, item }: { currentTab: ItemPopupTab
   const isInLoadout = Boolean(loadoutsByItem[item.id]);
 
   return (
-    <span className="popup-tab-title">
+    <span className={styles.popupTabTitle}>
       {t('MovePopup.TriageTab')}
       {currentTab === ItemPopupTab.Overview && (
         <>
           {wishlistRoll && (
-            <span title={t('WishListRoll.BestRatedTip')}>
-              <AppIcon className={clsx('thumbs-up', styles.thumbsUp)} icon={thumbsUpIcon} />
-            </span>
+            <WishListPerkThumb wishListRoll={wishlistRoll} className={styles.thumbsUp} />
           )}
           {isInLoadout && (
             <img title={t('Triage.InLoadouts')} src={helmet} className={styles.inLoadout} />
@@ -109,7 +108,7 @@ function WishlistTriageSection({ item }: { item: DimItem }) {
       title={t('WishListRoll.Header')}
       sectionId="triage-wishlist"
       defaultCollapsed={false}
-      extra={wishlistItem ? <AppIcon className="thumbs-up" icon={thumbsUpIcon} /> : '–'}
+      extra={wishlistItem ? <WishListPerkThumb wishListRoll={wishlistItem} /> : '–'}
       disabled={disabled}
     >
       {wishlistItem && Boolean(wishlistItem?.notes?.length) && (
@@ -219,7 +218,7 @@ function SimilarItemsTriageSection({ item }: { item: DimItem }) {
               <FactorCombo exampleItem={item} factorCombo={factorCombo} />
               <span className={styles.count}>{count}</span>
               <span className={styles.controls}>
-                <StartCompareButton filter={query} items={items} />
+                <StartCompareButton filter={query} items={items} initialItem={item} />
                 <SetFilterButton filter={query} />
               </span>
             </div>
@@ -326,7 +325,7 @@ function BetterItemsTriageSection({ item }: { item: DimItem }) {
                   <StartCompareButton
                     filter={`id:${item.id} or ` + filter}
                     items={itemCollection}
-                    initialItemId={item.id}
+                    initialItem={item}
                   />
                 </span>
               </div>
@@ -425,18 +424,19 @@ function FactorCombo({
 function StartCompareButton({
   filter,
   items,
-  initialItemId,
+  initialItem,
 }: {
   filter: string;
   items: DimItem[];
-  /** The instance ID of the first item added to compare, so we can highlight it. */
-  initialItemId?: string;
+  /** The first item added to compare, so we can highlight it. */
+  initialItem: DimItem;
 }) {
   const dispatch = useDispatch();
   const compare = () => {
-    dispatch(compareFilteredItems(filter, items, initialItemId));
+    dispatch(compareFilteredItems(filter, items, initialItem));
     hideItemPopup();
   };
+
   const type = items[0]?.typeName;
   if (!type || items.some((i) => i.typeName !== type)) {
     return null;

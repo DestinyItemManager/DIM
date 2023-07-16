@@ -82,7 +82,7 @@ export default memo(function CompareItem({
         <ItemPopupTrigger item={item} noCompare={true}>
           {(ref, onClick) => (
             <div className={styles.itemAside} ref={ref} onClick={onClick}>
-              <PressTip minimal className={styles.itemAside} tooltip={itemNotes}>
+              <PressTip minimal tooltip={itemNotes}>
                 <ConnectedInventoryItem item={item} />
               </PressTip>
             </div>
@@ -94,7 +94,7 @@ export default memo(function CompareItem({
   );
 
   return (
-    <div className="compare-item">
+    <div className={styles.compareItem}>
       {itemHeader}
       {stats.map((stat) => (
         <CompareStat
@@ -109,7 +109,7 @@ export default memo(function CompareItem({
       {item.missingSockets && isInitialItem && (
         <div className="item-details warning">{t('MovePopup.MissingSockets')}</div>
       )}
-      {item.sockets && <ItemSockets item={item} minimal={true} onPlugClicked={onPlugClicked} />}
+      {item.sockets && <ItemSockets item={item} minimal onPlugClicked={onPlugClicked} />}
     </div>
   );
 });

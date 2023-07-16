@@ -1,11 +1,10 @@
 import { settingSelector } from 'app/dim-api/selectors';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import React from 'react';
 import { useSelector } from 'react-redux';
-import { DimPresentationNodeSearchResult } from './presentation-nodes';
 import PresentationNodeLeaf from './PresentationNodeLeaf';
 import PresentationNodeRoot from './PresentationNodeRoot';
 import styles from './PresentationNodeSearchResults.m.scss';
+import { DimPresentationNodeSearchResult } from './presentation-nodes';
 
 export default function PresentationNodeSearchResults({
   searchResults,

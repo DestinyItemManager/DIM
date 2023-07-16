@@ -5,12 +5,12 @@
   gap: 4px;
 
   :global(.objective-progress) {
-    background: #222;
+    background: var(--theme-item-popup-progress-bar-bg);
   }
 }
 
 .deepsightProgressSection {
   padding: 4px 10px 4px;
-  background: #333;
+  background: var(--theme-item-popup-panel-bg);
   flex-grow: 1;
 }

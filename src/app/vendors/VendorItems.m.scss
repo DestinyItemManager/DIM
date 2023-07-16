@@ -5,8 +5,10 @@
   margin-top: 4px;
   margin-bottom: 4px;
   display: flex;
-  flex-direction: row;
+  flex-flow: row wrap;
+  row-gap: 4px;
   justify-content: flex-end;
+
   @include phone-portrait {
     margin-right: var(--item-margin);
   }
@@ -76,6 +78,7 @@
 .vendorRow {
   margin-bottom: 4px;
   margin-right: 32px;
+
   @include phone-portrait {
     margin-right: 0;
   }

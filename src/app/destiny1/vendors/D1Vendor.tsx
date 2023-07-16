@@ -1,5 +1,4 @@
 import { VendorIcon, VendorLocation } from 'app/vendors/Vendor';
-import React from 'react';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
 import Countdown from '../../dim-ui/Countdown';
 import D1VendorItems from './D1VendorItems';

@@ -1,7 +1,6 @@
 import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { t } from 'app/i18next-t';
-import { isTrialsPassage, isWinsObjective } from 'app/inventory/store/objectives';
 import {
   D2ItemTiers,
   THE_FORBIDDEN_BUCKET,
@@ -53,7 +52,7 @@ import { buildCraftedInfo } from './crafted';
 import { buildDeepsightInfo } from './deepsight';
 import { createItemIndex } from './item-index';
 import { buildMasterwork } from './masterwork';
-import { buildObjectives } from './objectives';
+import { buildObjectives, isTrialsPassage, isWinsObjective } from './objectives';
 import { buildPatternInfo } from './patterns';
 import { buildSockets } from './sockets';
 import { buildStats } from './stats';
@@ -544,12 +543,16 @@ export function makeItem(
   }
 
   if (createdItem.hash in extendedICH) {
-    createdItem.itemCategoryHashes = [
-      ...createdItem.itemCategoryHashes,
-      extendedICH[createdItem.hash]!,
-    ];
+    const additionalICH = extendedICH[createdItem.hash]!;
+    createdItem.itemCategoryHashes = [...createdItem.itemCategoryHashes, additionalICH];
+    // Special grenade launchers are not heavy grenade launchers
+    if (additionalICH === -ItemCategoryHashes.GrenadeLaunchers) {
+      createdItem.itemCategoryHashes = createdItem.itemCategoryHashes.filter(
+        (ich) => ich !== ItemCategoryHashes.GrenadeLaunchers
+      );
+    }
     // Masks are helmets too
-    if (extendedICH[createdItem.hash] === ItemCategoryHashes.Mask) {
+    if (additionalICH === ItemCategoryHashes.Mask) {
       createdItem.itemCategoryHashes = [
         ...createdItem.itemCategoryHashes,
         ItemCategoryHashes.Helmets,
@@ -591,7 +594,11 @@ export function makeItem(
 
   // Catalyst
   if (createdItem.isExotic && createdItem.bucket.inWeapons) {
-    createdItem.catalystInfo = buildCatalystInfo(createdItem.hash, profileRecords);
+    createdItem.catalystInfo = buildCatalystInfo(
+      createdItem.hash,
+      profileRecords,
+      profileResponse.characterRecords?.data
+    );
   }
 
   try {
@@ -677,14 +684,12 @@ export function makeItem(
 
   // TODO: compute this on demand
   createdItem.foundry =
-    // TODO: we should generate extendedFoundry without the "foundry." prefix
-    (
-      extendedFoundry[createdItem.hash] ??
-      itemDef.traitIds
-        ?.find((trait) => trait.startsWith('foundry.'))
-        // tex_mechanica
-        ?.replace('_', '-')
-    )?.replace('foundry.', '');
+    extendedFoundry[createdItem.hash] ??
+    itemDef.traitIds
+      ?.find((trait) => trait.startsWith('foundry.'))
+      // tex_mechanica
+      ?.replace('_', '-')
+      ?.replace('foundry.', '');
 
   // linear fusion rifles always seem to contain the "fusion rifle" category as well.
   // it's a fascinating "did you know", but ultimately not useful to us, so we remove it

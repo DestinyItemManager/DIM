@@ -26,8 +26,8 @@
   }
   &:hover,
   &:focus {
-    border-color: $orange;
-    color: $orange;
+    border-color: var(--theme-accent-primary);
+    color: var(--theme-accent-primary);
     background-color: rgba(255, 255, 255, 0.1);
   }
 }

@@ -1,7 +1,8 @@
-import { DimItem, DimPlug, DimSocket } from 'app/inventory/item-types';
+import { DimItem, DimSocket } from 'app/inventory/item-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
-import clsx from 'clsx';
+import { PlugClickHandler } from './ItemSockets';
 import Plug from './Plug';
+import './Socket.scss';
 
 /**
  * A socket may have multiple plugs - this can represent either a perk column or a mod socket.
@@ -16,7 +17,7 @@ export default function Socket({
   item: DimItem;
   socket: DimSocket;
   wishlistRoll?: InventoryWishListRoll;
-  onClick?: (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => void;
+  onClick?: PlugClickHandler;
   pluggedOnly?: boolean;
 }) {
   const hasMenu = Boolean(onClick && !socket.isPerk && socket.socketDefinition.plugSources);
@@ -25,11 +26,7 @@ export default function Socket({
   }
 
   return (
-    <div
-      className={clsx('item-socket', {
-        hasMenu,
-      })}
-    >
+    <div className="item-socket">
       {socket.plugOptions
         .filter((plug) => !pluggedOnly || socket.plugged === plug)
         .map((plug) => (
@@ -40,6 +37,7 @@ export default function Socket({
             socketInfo={socket}
             wishlistRoll={wishlistRoll}
             hasMenu={hasMenu}
+            isMod={socket.isMod}
             onClick={onClick && (() => onClick(item, socket, plug, hasMenu))}
           />
         ))}

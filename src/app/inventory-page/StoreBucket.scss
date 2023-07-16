@@ -53,6 +53,7 @@
 
   &.not-equippable {
     padding-left: 6px;
+
     @include phone-portrait {
       padding-left: 4px;
     }

@@ -31,10 +31,10 @@
     &:hover,
     &:focus-visible {
       outline: none;
-      background: $orange;
-      color: black;
+      background: var(--theme-accent-primary);
+      color: var(--theme-text-invert);
       :global(.app-icon) {
-        color: black;
+        color: var(--theme-text-invert);
       }
     }
   }

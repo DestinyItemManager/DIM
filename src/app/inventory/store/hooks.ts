@@ -4,7 +4,6 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
 import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { queueAction } from '../../utils/action-queue';
 import { loadStores as d1LoadStores } from '../d1-stores';
 import { loadStores as d2LoadStores } from '../d2-stores';
 import { storesLoadedSelector } from '../selectors';
@@ -34,13 +33,11 @@ export function useLoadStores(account: DestinyAccount | undefined) {
     refresh$,
     useCallback(() => {
       if (account) {
-        queueAction(() => {
-          if (account?.destinyVersion === 2) {
-            return dispatch(d2LoadStores());
-          } else {
-            return dispatch(d1LoadStores());
-          }
-        });
+        if (account?.destinyVersion === 2) {
+          return dispatch(d2LoadStores());
+        } else {
+          return dispatch(d1LoadStores());
+        }
       }
     }, [account, dispatch])
   );

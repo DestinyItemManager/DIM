@@ -1,4 +1,5 @@
 import { t } from 'app/i18next-t';
+import { bungieHelpLink, bungieTwitterAccount } from 'app/shell/links';
 import ExternalLink from '../dim-ui/ExternalLink';
 import { NotifyInput } from '../notifications/notifications';
 import { AppIcon, twitterIcon } from '../shell/icons';
@@ -17,8 +18,8 @@ export function bungieErrorToaster(e: Error): NotifyInput {
         {e ? e.message : t('BungieService.Difficulties')}{' '}
         <div>
           {t('BungieService.Twitter')}{' '}
-          <ExternalLink href="http://twitter.com/BungieHelp">@BungieHelp</ExternalLink>{' '}
-          <ExternalLink href="http://twitter.com/BungieHelp">
+          <ExternalLink href={bungieHelpLink}>{bungieTwitterAccount}</ExternalLink>{' '}
+          <ExternalLink href={bungieHelpLink}>
             <span style={{ fontSize: '1.5em', verticalAlign: 'middle' }}>
               <AppIcon icon={twitterIcon} />
             </span>

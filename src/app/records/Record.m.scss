@@ -1,5 +1,17 @@
 @use '../variables.scss' as *;
 
+.recordsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 8px;
+  margin: 8px 0;
+
+  @include phone-portrait {
+    margin: 8px;
+    grid-template-columns: none;
+  }
+}
+
 .triumphRecord {
   position: relative;
   background: rgba(255, 255, 255, 0.05);
@@ -9,6 +21,7 @@
   flex-direction: row;
   align-items: flex-start;
   box-sizing: border-box;
+  user-select: text;
 
   @include phone-portrait {
     width: 100%;
@@ -28,7 +41,7 @@
 
   p.gildingText {
     margin: 8px 0 0 0;
-    color: white;
+    color: var(--theme-text);
   }
 
   p + p.gildingText {
@@ -128,10 +141,7 @@
 
 .trackedInDim .glow {
   display: block;
-  background: linear-gradient(
-    scale-color($orange, $alpha: -100%) 0%,
-    scale-color($orange, $alpha: -80%) 100%
-  );
+  background: linear-gradient(transparent 0%, var(--theme-accent-primary) 500%);
 }
 
 .redeemed.gildingTriumph .glow {
@@ -165,6 +175,7 @@
     width: calc(var(--item-size) / 3.1) !important;
     height: auto !important;
   }
+
   @media (hover: none) {
     display: block;
     opacity: 0.7;
@@ -212,7 +223,7 @@
   }
 
   .currentScore {
-    color: white;
+    color: var(--theme-text);
     font-weight: bold;
   }
 

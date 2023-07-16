@@ -1,7 +1,6 @@
 import { t } from 'app/i18next-t';
 import { AppIcon, uploadIcon } from 'app/shell/icons';
 import clsx from 'clsx';
-import React from 'react';
 import Dropzone, { DropzoneOptions } from 'react-dropzone';
 import styles from './FileUpload.m.scss';
 

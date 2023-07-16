@@ -1,5 +1,4 @@
 import Switch from 'app/dim-ui/Switch';
-import React from 'react';
 import HelpLink from '../dim-ui/HelpLink';
 import { Settings } from './initial-settings';
 

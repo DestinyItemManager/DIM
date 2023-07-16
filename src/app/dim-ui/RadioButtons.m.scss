@@ -1,4 +1,4 @@
-@import '../variables';
+@use '../variables' as *;
 .buttons {
   composes: flexRow from '../dim-ui/common.m.scss';
 }
@@ -15,7 +15,7 @@
     content: '';
     display: block;
     position: absolute;
-    background-color: $orange;
+    background-color: var(--theme-accent-primary);
     height: 2px;
     bottom: -1px;
     left: -1px;

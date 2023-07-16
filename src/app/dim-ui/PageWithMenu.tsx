@@ -1,5 +1,6 @@
+import useResizeObserver from '@react-hook/resize-observer';
 import clsx from 'clsx';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styles from './PageWithMenu.m.scss';
 import { scrollToHref } from './scroll';
 
@@ -11,23 +12,18 @@ function PageWithMenu({ children, className }: { children: React.ReactNode; clas
 function useHasScrollbars(ref: React.RefObject<HTMLDivElement>) {
   const [hasScrollbars, setHasScrollbars] = useState(false);
 
-  const updateResize = useCallback(() => {
-    if (ref.current) {
-      setHasScrollbars(ref.current.clientWidth < ref.current.offsetWidth);
+  useResizeObserver(ref, () => {
+    const elem = ref.current;
+    if (!elem) {
+      return;
     }
-  }, [ref]);
-
-  useEffect(() => {
-    updateResize();
+    setHasScrollbars(elem.clientWidth < elem.offsetWidth);
   });
 
-  useEffect(() => {
-    window.addEventListener('resize', updateResize);
-    return () => window.removeEventListener('resize', updateResize);
-  });
   return hasScrollbars;
 }
 
+/** A sidebar menu. This gets displayed inline on mobile. */
 PageWithMenu.Menu = function Menu({
   children,
   className,
@@ -47,6 +43,7 @@ PageWithMenu.Menu = function Menu({
   );
 };
 
+/** The main contents of the page, displayed beside the menu on desktop and below the menu on mobile. */
 PageWithMenu.Contents = function Contents({
   children,
   className,
@@ -57,6 +54,7 @@ PageWithMenu.Contents = function Contents({
   return <div className={clsx(className, styles.contents)}>{children}</div>;
 };
 
+/** A header for a section of links (MenuButtons) within a Menu. */
 PageWithMenu.MenuHeader = function MenuHeader({
   children,
   className,
@@ -67,6 +65,10 @@ PageWithMenu.MenuHeader = function MenuHeader({
   return <div className={clsx(className, styles.menuHeader)}>{children}</div>;
 };
 
+/**
+ * A link into a section of the page, to be displayed in the menu. The page
+ * will smoothly scroll to the given anchor name.
+ */
 PageWithMenu.MenuButton = function MenuButton({
   children,
   className,

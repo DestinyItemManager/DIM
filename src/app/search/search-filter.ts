@@ -27,6 +27,7 @@ import {
   FilterContext,
   FilterDefinition,
   ItemFilter,
+  SuggestionsContext,
   canonicalFilterFormats,
 } from './filter-types';
 import { QueryAST, parseQuery } from './query-parser';
@@ -97,7 +98,7 @@ function makeFilterContext(
 export const filterFactorySelector = createSelector(
   searchConfigSelector,
   filterContextSelector,
-  makeSearchFilterFactory
+  makeSearchFilterFactory<DimItem, FilterContext, SuggestionsContext>
 );
 
 /** A selector for a function for searching items, given the current search query. */
@@ -131,11 +132,11 @@ export const queryValidSelector = createSelector(
   (query, validateQuery) => validateQuery(query).valid
 );
 
-function makeSearchFilterFactory(
-  { filtersMap: { isFilters, kvFilters } }: SearchConfig,
-  filterContext: FilterContext
+function makeSearchFilterFactory<I, FilterCtx, SuggestionsCtx>(
+  { filtersMap: { isFilters, kvFilters } }: SearchConfig<I, FilterCtx, SuggestionsCtx>,
+  filterContext: FilterCtx
 ) {
-  return (query: string): ItemFilter => {
+  return (query: string): ItemFilter<I> => {
     query = query.trim().toLowerCase();
     if (!query.length) {
       // By default, show anything that doesn't have the archive tag
@@ -145,7 +146,7 @@ function makeSearchFilterFactory(
     const parsedQuery = parseQuery(query);
 
     // Transform our query syntax tree into a filter function by recursion.
-    const transformAST = (ast: QueryAST): ItemFilter | undefined => {
+    const transformAST = (ast: QueryAST): ItemFilter<I> | undefined => {
       switch (ast.op) {
         case 'and': {
           const fns = _.compact(ast.operands.map(transformAST));
@@ -234,12 +235,12 @@ function makeSearchFilterFactory(
 }
 
 /** Matches a non-`is` filter syntax and returns a way to actually create the matched filter function. */
-export function matchFilter(
-  filterDef: FilterDefinition,
+export function matchFilter<I, FilterCtx, SuggestionsCtx>(
+  filterDef: FilterDefinition<I, FilterCtx, SuggestionsCtx>,
   lhs: string,
   filterValue: string,
-  currentFilterContext?: FilterContext
-): ((args: FilterContext) => ItemFilter) | undefined {
+  currentFilterContext?: FilterCtx
+): ((args: FilterCtx) => ItemFilter<I>) | undefined {
   for (const format of canonicalFilterFormats(filterDef.format)) {
     switch (format) {
       case 'simple': {

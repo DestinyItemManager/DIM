@@ -1,4 +1,4 @@
-@import '../variables';
+@use '../variables' as *;
 
 .insertButton {
   composes: dim-button from global;
@@ -37,7 +37,7 @@
     background-color: rgba(255, 255, 255, 0.1);
   }
   &:focus {
-    outline: 1px solid $blue;
+    outline: 1px solid var(--theme-accent-secondary);
   }
 }
 
@@ -49,7 +49,7 @@
 
 .buttonTitle {
   &.selectedTitle {
-    color: $orange;
+    color: var(--theme-accent-primary);
   }
   font-weight: bold;
   font-size: 13px;
@@ -57,7 +57,7 @@
 }
 
 .selectedButton {
-  border-color: $orange;
+  border-color: var(--theme-accent-primary);
   &:focus {
     outline: none;
   }

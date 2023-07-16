@@ -1,13 +1,11 @@
 @use '../variables.scss' as *;
 
 .page {
-  composes: dim-page from global;
-
   max-width: 100%;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  padding: 0 14px 0 10px;
+  padding: 0 14px 0 14px;
 
   @include phone-portrait {
     flex-direction: column;
@@ -27,13 +25,19 @@
 
 .contents {
   flex: 1;
+  margin-top: 12px; // 8px to match the menu, plus 4px to match the padding
   width: 100%;
   box-sizing: border-box;
   h2:first-child {
-    margin-top: 8px;
+    margin-top: 0;
+  }
+
+  @include phone-portrait {
+    margin-top: 0;
   }
   :global(.issue-banner-shown) & {
     padding-bottom: $issue-banner-height;
+
     @include phone-portrait {
       padding-bottom: 0;
     }
@@ -45,6 +49,7 @@
   flex-shrink: 0;
   margin-right: 12px;
   margin-top: 8px;
+  margin-left: -4px; // To undo the padding on the inner div
   position: sticky;
   top: calc(var(--header-height) + 8px);
   width: 230px + 8px;
@@ -54,9 +59,12 @@
   -webkit-overflow-scrolling: touch;
   max-height: calc(var(--viewport-height) - var(--header-height) - 8px);
 
+  // This inner container div exists to keep the contents from changing widths,
+  // while the outer .menu container may change size as the scrollbars appear
+  // and disappear.
   > div {
     width: 230px;
-    padding: 4px;
+    padding: 4px; // To allow for the outline of the character selector to show
   }
 
   // Add in some width when a scrollbar is present!
@@ -68,9 +76,12 @@
   @include phone-portrait {
     position: static;
     margin: 0;
-    padding: 0;
     width: 100%;
+    padding: 0;
     max-height: none;
+
+    // On mobile, the inner div can be full size and we just allow scrollbars to
+    // appear over the content.
     > div {
       width: 100%;
       padding: 0;

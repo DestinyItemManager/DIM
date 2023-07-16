@@ -41,17 +41,4 @@ describe('dim.gg loadout share links parsing', () => {
     }
     expect(decoded.loadout.parameters!.mods!.length).not.toBe(0);
   });
-
-  test.each([
-    [
-      // guardianforge
-      'https://app.destinyitemmanager.com/optimizer?class=0&p=%7B%22mods%22%3A%5B518224751%2C640058316%2C4283235143%2C555005975%2C3394151347%2C3394151347%2C282898303%2C2645858828%2C403494087%2C864745275%2C2216063963%2C2645858828%2C2588939505%2C2216063960%2C2645858828%2C3320641683%2C1708067044%2C2979815167%2C555005975%2C3974455041%2C3974455041%2C1484685887%5D%7D',
-    ],
-  ])('valid deprecated LO link %s', (arg) => {
-    const decoded = decodeShareUrl(arg);
-    if (!decoded || decoded.tag !== 'urlParameters') {
-      throw new Error();
-    }
-    expect(decoded.urlParameters!.parameters!.mods!.length).not.toBe(0);
-  });
 });

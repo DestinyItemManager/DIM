@@ -35,6 +35,7 @@ export const inGameLoadouts: Reducer<InGameLoadoutState, InGameLoadoutAction> = 
       return {
         ...state,
         loadouts: {
+          ...state.loadouts,
           [characterId]: state.loadouts[characterId]?.filter((l) => l.index !== index) ?? [],
         },
       };

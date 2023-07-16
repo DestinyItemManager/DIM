@@ -1,4 +1,4 @@
-@import '../variables';
+@use '../variables' as *;
 
 .sheetDisabled {
   transform-origin: center bottom;
@@ -10,7 +10,7 @@
 .disabledScreen {
   background-color: black;
   position: absolute;
-  inset: 0 0 0 0;
+  inset: 0;
   display: none;
   transition: opacity 300ms linear;
   .sheetDisabled & {

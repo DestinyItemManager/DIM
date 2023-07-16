@@ -12,7 +12,7 @@
 
 // a style for inputs or input wrappers
 .inputlike {
-  color: white;
+  color: var(--theme-text);
   align-items: center;
   background: #4443;
   border-radius: 4px;
@@ -56,7 +56,7 @@
   border: 1px solid;
   margin: 8px 0;
   padding: 6px;
-  animation-name: pulseBorder;
+  animation-name: pulse-border;
   animation-duration: 2s;
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
@@ -120,7 +120,7 @@
   }
 }
 
-@keyframes pulseBorder {
+@keyframes pulse-border {
   0% {
     border-color: #fff8;
   }

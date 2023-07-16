@@ -26,6 +26,10 @@
 
 .clickableMod {
   cursor: pointer;
+
+  :global(.item-img) {
+    border-color: #888;
+  }
 }
 
 .categoryIcon {
@@ -39,7 +43,7 @@
 
 .selected,
 .clickableMod:focus {
-  outline: 2px solid $orange !important;
+  outline: 2px solid var(--theme-accent-primary) !important;
 }
 
 .energyElement {

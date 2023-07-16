@@ -85,7 +85,9 @@ const filterNames = [
  * Produce a memoized autocompleter function that takes search text plus a list of recent/saved searches
  * and produces the contents of the autocomplete list.
  */
-export default function createAutocompleter(searchConfig: SearchConfig) {
+export default function createAutocompleter<I, FilterCtx, SuggestionsCtx>(
+  searchConfig: SearchConfig<I, FilterCtx, SuggestionsCtx>
+) {
   const filterComplete = makeFilterComplete(searchConfig);
 
   return (
@@ -292,11 +294,11 @@ function findLastFilter(queryUpToCaret: string): number[] | null {
  * Given a query and a cursor position, isolate the term that's being typed and offer reformulated queries
  * that replace that term with one from our filterComplete function.
  */
-export function autocompleteTermSuggestions(
+export function autocompleteTermSuggestions<I, FilterCtx, SuggestionsCtx>(
   query: string,
   caretIndex: number,
   filterComplete: (term: string) => string[],
-  searchConfig: SearchConfig
+  searchConfig: SearchConfig<I, FilterCtx, SuggestionsCtx>
 ): SearchItem[] {
   if (!query) {
     return [];
@@ -346,7 +348,10 @@ export function autocompleteTermSuggestions(
   return [];
 }
 
-function findFilter(term: string, filtersMap: FiltersMap) {
+function findFilter<I, FilterCtx, SuggestionsCtx>(
+  term: string,
+  filtersMap: FiltersMap<I, FilterCtx, SuggestionsCtx>
+) {
   const parts = term.split(':');
   const filterName = parts[0];
   const filterValue = parts[1];
@@ -362,7 +367,9 @@ const freeformTerms = freeformFilters.flatMap((f) => f.keywords).map((s) => `${s
  * This builds a filter-complete function that uses the given search config's keywords to
  * offer autocomplete suggestions for a partially typed term.
  */
-export function makeFilterComplete(searchConfig: SearchConfig) {
+export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
+  searchConfig: SearchConfig<I, FilterCtx, SuggestionsCtx>
+) {
   // TODO: also search filter descriptions
   return (typed: string): string[] => {
     if (!typed) {

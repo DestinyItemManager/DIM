@@ -13,9 +13,9 @@ import { ThunkResult } from 'app/store/types';
 import { CancelToken, withCancel } from 'app/utils/cancel';
 import { infoLog } from 'app/utils/log';
 import { observeStore } from 'app/utils/redux-utils';
+import { dedupePromise } from 'app/utils/util';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { InventoryBucket } from '../inventory/inventory-buckets';
 import {
   MoveReservations,
@@ -63,9 +63,23 @@ export function startFarming(storeId: string): ThunkResult {
 
     infoLog('farming', 'Started farming', farmingStore.name);
 
-    let unsubscribe = _.noop;
+    // Use a deduped promise for actually performing the farming operations. Since the store
+    // observer will fire every time an item is moved, we'd schedule duplicate moves if we didn't
+    // do this deduping.
+    const doFarm = dedupePromise(async (farmingStore: DimStore, cancelToken: CancelToken) => {
+      if (farmingInterruptedSelector(getState())) {
+        infoLog('farming', 'Farming interrupted, will resume when tasks are complete');
+      } else {
+        if (isD1Store(farmingStore)) {
+          return dispatch(farmD1(farmingStore, cancelToken));
+        } else {
+          // In D2 we just make room
+          return dispatch(makeRoomForItems(farmingStore, cancelToken));
+        }
+      }
+    });
 
-    unsubscribe = observeStore(farmingStoreSelector, (_prev, farmingStore) => {
+    const unsubscribe = observeStore(farmingStoreSelector, (_prev, farmingStore) => {
       const [cancelToken, cancel] = withCancel();
 
       if (!farmingStore || farmingStore.id !== storeId) {
@@ -73,19 +87,10 @@ export function startFarming(storeId: string): ThunkResult {
         cancel();
         return;
       }
-
-      if (farmingInterruptedSelector(getState())) {
-        infoLog('farming', 'Farming interrupted, will resume when tasks are complete');
-      } else {
-        if (isD1Store(farmingStore)) {
-          dispatch(farmD1(farmingStore, cancelToken));
-        } else {
-          // In D2 we just make room
-          dispatch(makeRoomForItems(farmingStore, cancelToken));
-        }
-      }
+      doFarm(farmingStore, cancelToken);
     });
 
+    window.clearInterval(intervalId);
     intervalId = window.setInterval(refresh, FARMING_REFRESH_RATE);
   };
 }
@@ -108,9 +113,7 @@ function makeRoomForItems(store: DimStore, cancelToken: CancelToken): ThunkResul
     const makeRoomBuckets = Object.values(buckets.byHash).filter(
       (b) => b.category === BucketCategory.Equippable && b.type
     );
-    return dispatch(
-      makeRoomForItemsInBuckets(storesSelector(getState()), store, makeRoomBuckets, cancelToken)
-    );
+    return dispatch(makeRoomForItemsInBuckets(store, makeRoomBuckets, cancelToken));
   };
 }
 
@@ -145,21 +148,19 @@ function makeRoomForD1Items(store: D1Store, cancelToken: CancelToken): ThunkResu
   return async (dispatch, getState) => {
     const buckets = bucketsSelector(getState())!;
     const makeRoomBuckets = makeRoomTypes.map((type) => buckets.byHash[type]);
-    return dispatch(
-      makeRoomForItemsInBuckets(storesSelector(getState()), store, makeRoomBuckets, cancelToken)
-    );
+    return dispatch(makeRoomForItemsInBuckets(store, makeRoomBuckets, cancelToken));
   };
 }
 
 // Ensure that there's {{inventoryClearSpaces}} number of open space(s) in each category that could
 // hold an item, so they don't go to the postmaster.
 function makeRoomForItemsInBuckets(
-  stores: DimStore[],
   store: DimStore,
   makeRoomBuckets: InventoryBucket[],
   cancelToken: CancelToken
 ): ThunkResult {
   return async (dispatch, getState) => {
+    const stores = storesSelector(getState());
     // If any category is full, we'll move one aside
     const itemsToMove: DimItem[] = [];
     const getTag = getTagSelector(getState());

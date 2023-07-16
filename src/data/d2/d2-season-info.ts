@@ -295,6 +295,20 @@ export const D2SeasonInfo: Record<
     resetTime: '17:00:00Z',
     numWeeks: 12,
   },
+  21: {
+    DLCName: '',
+    seasonName: 'Season of the Deep',
+    seasonTag: 'deep',
+    season: 21,
+    maxLevel: 50,
+    powerFloor: 1600,
+    softCap: 1750,
+    powerfulCap: 1800,
+    pinnacleCap: 1810,
+    releaseDate: '2023-05-23',
+    resetTime: '17:00:00Z',
+    numWeeks: 13,
+  },
 };
 
-export const D2CalculatedSeason = 20;
+export const D2CalculatedSeason = 21;

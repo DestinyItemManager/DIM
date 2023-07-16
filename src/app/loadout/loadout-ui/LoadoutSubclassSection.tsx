@@ -1,5 +1,6 @@
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
+import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -32,20 +33,22 @@ export default function LoadoutSubclassSection({
         })}
       >
         {subclass ? (
-          <ItemPopupTrigger item={subclass.item}>
-            {(ref, onClick) => (
-              <ConnectedInventoryItem
-                innerRef={ref}
-                // Disable the popup when plugs are available as we are showing
-                // plugs in the loadout and they may be different to the popup
-                onClick={plugs.length ? undefined : onClick}
-                item={subclass.item}
-                // don't show the selected Super ability because we are displaying the Super ability plug next
-                // to the subclass icon
-                hideSelectedSuper
-              />
-            )}
-          </ItemPopupTrigger>
+          <DraggableInventoryItem item={subclass.item}>
+            <ItemPopupTrigger item={subclass.item}>
+              {(ref, onClick) => (
+                <ConnectedInventoryItem
+                  innerRef={ref}
+                  // Disable the popup when plugs are available as we are showing
+                  // plugs in the loadout and they may be different to the popup
+                  onClick={plugs.length ? undefined : onClick}
+                  item={subclass.item}
+                  // don't show the selected Super ability because we are displaying the Super ability plug next
+                  // to the subclass icon
+                  hideSelectedSuper
+                />
+              )}
+            </ItemPopupTrigger>
+          </DraggableInventoryItem>
         ) : (
           <EmptySubclass />
         )}

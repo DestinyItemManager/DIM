@@ -7,10 +7,12 @@ import { useEffect, useState } from 'react';
 export default function Countdown({
   endTime,
   compact,
+  className,
 }: {
   endTime: Date;
   /** Render the time as a compact string instead of spelled out */
   compact?: boolean;
+  className?: string;
 }) {
   const [diff, setDiff] = useState(endTime.getTime() - Date.now());
 
@@ -30,8 +32,8 @@ export default function Countdown({
   }, [endTime]);
 
   return (
-    <span className="countdown" title={endTime.toLocaleString()}>
+    <time dateTime={endTime.toISOString()} className={className} title={endTime.toLocaleString()}>
       {i15dDurationFromMs(diff, compact)}
-    </span>
+    </time>
   );
 }

@@ -2,6 +2,8 @@ import { moveDownIcon, moveUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import clsx from 'clsx';
 import { useSelect } from 'downshift';
+
+import { useHeightFromViewportBottom } from 'app/utils/hooks';
 import { CSSProperties, ReactNode, useEffect, useRef, useState } from 'react';
 import styles from './Select.m.scss';
 import { usePopper } from './usePopper';
@@ -74,6 +76,7 @@ export default function Select<T>({
   const [dropdownWidth, setDropdownWidth] = useState<number | undefined>(() =>
     typeof maxDropdownWidth === 'number' ? maxDropdownWidth : undefined
   );
+  const [dropdownHeight, setDropdownHeight] = useState<number | undefined>();
 
   usePopper({
     contents: menuRef,
@@ -97,18 +100,19 @@ export default function Select<T>({
     }
   }, [dropdownWidth, maxButtonWidth, maxDropdownWidth]);
 
+  useHeightFromViewportBottom(buttonRef, setDropdownHeight, 28, true);
+
   let buttonStyle: CSSProperties | undefined;
-  let dropdownStyle: CSSProperties | undefined;
+
+  const dropdownStyle: CSSProperties = {
+    overflowY: 'auto',
+    overscrollBehaviorY: 'contain',
+    maxHeight: dropdownHeight,
+  };
 
   if (maxButtonWidth !== undefined) {
     buttonStyle = {
       maxWidth: maxButtonWidth,
-    };
-  }
-
-  if (dropdownWidth !== undefined) {
-    dropdownStyle = {
-      maxWidth: dropdownWidth,
     };
   }
 

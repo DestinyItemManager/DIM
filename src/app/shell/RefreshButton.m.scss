@@ -38,6 +38,10 @@
   @include tooltip-ribbon-color($red);
 
   max-width: 800px;
+
+  @include phone-portrait {
+    max-width: 95%;
+  }
 }
 
 .errorDetails {

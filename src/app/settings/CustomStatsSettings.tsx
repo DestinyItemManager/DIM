@@ -10,10 +10,11 @@ import { t } from 'app/i18next-t';
 import { getClassTypeNameLocalized } from 'app/inventory/store/d2-item-factory';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
-import { armorStats, CUSTOM_TOTAL_STAT_HASH, evenStatWeights } from 'app/search/d2-known-values';
+import { CUSTOM_TOTAL_STAT_HASH, armorStats, evenStatWeights } from 'app/search/d2-known-values';
 import { allAtomicStats } from 'app/search/search-filter-values';
-import { addIcon, AppIcon, banIcon, deleteIcon, editIcon, saveIcon } from 'app/shell/icons';
+import { AppIcon, addIcon, banIcon, deleteIcon, editIcon, saveIcon } from 'app/shell/icons';
 import { chainComparator, compareBy } from 'app/utils/comparators';
+import { isClassCompatible } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
@@ -334,11 +335,7 @@ function useSaveStat() {
       !newStat.shortLabel ||
       // or there's an existing stat with an overlapping label & class
       allOtherStats.some(
-        (s) =>
-          s.shortLabel === newStat.shortLabel &&
-          (s.class === newStat.class ||
-            s.class === DestinyClass.Unknown ||
-            newStat.class === DestinyClass.Unknown)
+        (s) => s.shortLabel === newStat.shortLabel && isClassCompatible(s.class, newStat.class)
       ) ||
       // or this shortLabel conflicts with a real stat.
       // don't name your custom stat discipline!!

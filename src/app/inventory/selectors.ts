@@ -6,6 +6,7 @@ import {
   settingsSelector,
 } from 'app/dim-api/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
+import { filterUnlockedPlugs } from 'app/records/plugset-helpers';
 import { RootState } from 'app/store/types';
 import { emptyObject, emptySet } from 'app/utils/empty';
 import { currySelector } from 'app/utils/selector-utils';
@@ -13,7 +14,6 @@ import { DestinyItemPlug, DestinyProfileResponse } from 'bungie-api-ts/destiny2'
 import { resonantMaterialStringVarHashes } from 'data/d2/crafting-resonant-elements';
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
-import universalOrnamentPlugSetHashes from 'data/d2/universal-ornament-plugset-hashes.json';
 import { createSelector } from 'reselect';
 import { getBuckets as getBucketsD1 } from '../destiny1/d1-buckets';
 import { getBuckets as getBucketsD2 } from '../destiny2/d2-buckets';
@@ -116,14 +116,15 @@ export const transmogCurrenciesSelector = createSelector(
 );
 
 /** materials/currencies that aren't top level stuff */
-export const materialsSelector = (state: RootState) =>
-  allItemsSelector(state).filter(
+export const materialsSelector = createSelector(allItemsSelector, (allItems) =>
+  allItems.filter(
     (i) =>
       i.itemCategoryHashes.includes(ItemCategoryHashes.Materials) ||
       i.itemCategoryHashes.includes(ItemCategoryHashes.ReputationTokens) ||
       i.hash === 3702027555 || // Spoils of Conquest do not have item category hashes
       i.hash === 1289622079 // neither do Strand Meditations
-  );
+  )
+);
 
 /** The actual raw profile response from the Bungie.net profile API */
 export const profileResponseSelector = (state: RootState) =>
@@ -303,32 +304,21 @@ export function gatherUnlockedPlugSetItems(
     for (const plugSetHashStr in profileResponse.profilePlugSets.data.plugs) {
       const plugSetHash = parseInt(plugSetHashStr, 10);
       const plugs = profileResponse.profilePlugSets.data.plugs[plugSetHash];
-      for (const plugSetItem of plugs) {
-        const useCanInsert = universalOrnamentPlugSetHashes.includes(plugSetHash);
-        if (useCanInsert ? plugSetItem.canInsert : plugSetItem.enabled) {
-          unlockedPlugs.add(plugSetItem.plugItemHash);
-        }
-      }
+      filterUnlockedPlugs(plugSetHash, plugs, unlockedPlugs);
     }
   }
   if (characterId && profileResponse?.characterPlugSets.data?.[characterId]?.plugs) {
     for (const plugSetHashStr in profileResponse.characterPlugSets.data[characterId].plugs) {
       const plugSetHash = parseInt(plugSetHashStr, 10);
       const plugs = profileResponse.characterPlugSets.data[characterId].plugs[plugSetHash];
-      for (const plugSetItem of plugs) {
-        const useCanInsert = universalOrnamentPlugSetHashes.includes(plugSetHash);
-        if (useCanInsert ? plugSetItem.canInsert : plugSetItem.enabled) {
-          unlockedPlugs.add(plugSetItem.plugItemHash);
-        }
-      }
+      filterUnlockedPlugs(plugSetHash, plugs, unlockedPlugs);
     }
   }
   return unlockedPlugs;
 }
 
 /** gets all the dynamic strings from a profile response */
-export const dynamicStringsSelector = (state: RootState) => {
-  const profileResp = profileResponseSelector(state);
+export const dynamicStringsSelector = createSelector(profileResponseSelector, (profileResp) => {
   if (profileResp) {
     const { profileStringVariables, characterStringVariables } = profileResp;
     const allProfile: {
@@ -349,7 +339,7 @@ export const dynamicStringsSelector = (state: RootState) => {
       byCharacter,
     };
   }
-};
+});
 
 export const artifactUnlocksSelector = currySelector(
   createSelector(

@@ -10,16 +10,16 @@ import {
 } from 'app/inventory/stores-helpers';
 import type { ItemTierName } from 'app/search/d2-known-values';
 import { ThunkResult } from 'app/store/types';
-import { CanceledError, CancelToken, withCancel } from 'app/utils/cancel';
+import { CancelToken, CanceledError, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import {
+  MoveReservations,
   createMoveSession,
   executeMoveItem,
-  MoveReservations,
 } from '../inventory/item-move-service';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';

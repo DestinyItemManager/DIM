@@ -5,20 +5,21 @@ import { Tooltip, useTooltipCustomization } from 'app/dim-ui/PressTip';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { resonantElementObjectiveHashes } from 'app/inventory/store/deepsight';
+import { getValueStyle } from 'app/inventory/store/objectives';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { getDamageTypeForSubclassPlug } from 'app/inventory/subclass';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
-import { thumbsUpIcon } from 'app/shell/icons';
-import AppIcon from 'app/shell/icons/AppIcon';
 import { getDimPlugStats, getPlugDefStats, usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { isEnhancedPerk, isModCostVisible } from 'app/utils/socket-utils';
+import WishListPerkThumb from 'app/wishlists/WishListPerkThumb';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import {
   DamageType,
   DestinyClass,
   DestinyObjectiveProgress,
   DestinyPlugItemCraftingRequirements,
+  DestinyUnlockValueUIStyle,
   TierType,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -29,20 +30,6 @@ import Objective from '../progress/Objective';
 import './ItemSockets.scss';
 import styles from './PlugTooltip.m.scss';
 
-interface PlugTooltipProps {
-  def: PluggableInventoryItemDefinition;
-  stats?: { statHash: number; value: number }[];
-  plugObjectives?: DestinyObjectiveProgress[];
-  enableFailReasons?: string;
-  cannotCurrentlyRoll?: boolean;
-  unreliablePerkOption?: boolean;
-  wishListTip?: string;
-  automaticallyPicked?: boolean;
-  hideRequirements?: boolean;
-  craftingData?: DestinyPlugItemCraftingRequirements;
-}
-
-// TODO: Connect this to redux
 export function DimPlugTooltip({
   item,
   plug,
@@ -56,9 +43,9 @@ export function DimPlugTooltip({
 }) {
   // TODO: show insertion costs
 
-  const wishListTip = wishlistRoll?.wishListPerks.has(plug.plugDef.hash)
-    ? t('WishListRoll.BestRatedTip', { count: wishlistRoll.wishListPerks.size })
-    : undefined;
+  const wishListTip = wishlistRoll?.wishListPerks.has(plug.plugDef.hash) ? (
+    <WishListPerkThumb wishListRoll={wishlistRoll} legend />
+  ) : undefined;
 
   const stats = getDimPlugStats(item, plug);
 
@@ -90,13 +77,22 @@ export function PlugDefTooltip({
   def,
   classType,
   automaticallyPicked,
+  disabledByAutoStatMods,
 }: {
   def: PluggableInventoryItemDefinition;
   classType?: DestinyClass;
   automaticallyPicked?: boolean;
+  disabledByAutoStatMods?: boolean;
 }) {
   const stats = getPlugDefStats(def, classType);
-  return <PlugTooltip def={def} stats={stats} automaticallyPicked={automaticallyPicked} />;
+  return (
+    <PlugTooltip
+      def={def}
+      stats={stats}
+      automaticallyPicked={automaticallyPicked}
+      disabledByAutoStatMods={disabledByAutoStatMods}
+    />
+  );
 }
 
 /**
@@ -114,9 +110,22 @@ function PlugTooltip({
   unreliablePerkOption,
   wishListTip,
   automaticallyPicked,
+  disabledByAutoStatMods,
   hideRequirements,
   craftingData,
-}: PlugTooltipProps) {
+}: {
+  def: PluggableInventoryItemDefinition;
+  stats?: { statHash: number; value: number }[];
+  plugObjectives?: DestinyObjectiveProgress[];
+  enableFailReasons?: string;
+  cannotCurrentlyRoll?: boolean;
+  unreliablePerkOption?: boolean;
+  wishListTip?: React.ReactNode;
+  automaticallyPicked?: boolean;
+  disabledByAutoStatMods?: boolean;
+  hideRequirements?: boolean;
+  craftingData?: DestinyPlugItemCraftingRequirements;
+}) {
   const defs = useD2Definitions();
   const statsArray = stats || [];
   const plugDescriptions = usePlugDescriptions(def, statsArray);
@@ -125,7 +134,10 @@ function PlugTooltip({
 
   // filter out plug objectives related to Resonant Elements
   const filteredPlugObjectives = plugObjectives?.filter(
-    (o) => !resonantElementObjectiveHashes.includes(o.objectiveHash)
+    (o) =>
+      !resonantElementObjectiveHashes.includes(o.objectiveHash) &&
+      getValueStyle(defs?.Objective.get(o.objectiveHash), o.progress ?? 0, o.completionValue) !==
+        DestinyUnlockValueUIStyle.Hidden
   );
 
   const bungieDescription =
@@ -147,13 +159,7 @@ function PlugTooltip({
       />
     </Tooltip.Section>
   );
-  const renderedStats = statsArray.length > 0 && (
-    <div className="plug-stats">
-      {statsArray.map((stat) => (
-        <StatValue key={stat.statHash} statHash={stat.statHash} value={stat.value} />
-      ))}
-    </div>
-  );
+  const renderedStats = statsArray.length > 0 && <PlugStats stats={statsArray} />;
 
   const isPluggable = isPluggableItem(def);
   const energyCost = isPluggable && isModCostVisible(def.plug) ? def.plug.energyCost : null;
@@ -266,14 +272,27 @@ function PlugTooltip({
           <p>{t('LoadoutBuilder.AutomaticallyPicked')}</p>
         </Tooltip.Section>
       )}
-      {wishListTip && (
+      {disabledByAutoStatMods && (
+        <Tooltip.Section className={styles.automaticallyPickedSection}>
+          <p>{t('LoadoutBuilder.DisabledByAutoStatMods')}</p>
+        </Tooltip.Section>
+      )}
+      {Boolean(wishListTip) && (
         <Tooltip.Section>
-          <p>
-            <AppIcon className="thumbs-up" icon={thumbsUpIcon} /> = {wishListTip}
-          </p>
+          <p>{wishListTip}</p>
         </Tooltip.Section>
       )}
     </>
+  );
+}
+
+export function PlugStats({ stats }: { stats: { statHash: number; value: number }[] }) {
+  return (
+    <div className={styles.plugStats}>
+      {stats.map((stat) => (
+        <StatValue key={stat.statHash} statHash={stat.statHash} value={stat.value} />
+      ))}
+    </div>
   );
 }
 

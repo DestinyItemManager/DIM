@@ -4,6 +4,7 @@ interface CssExports {
   'automaticallyPicked': string;
   'lockedItems': string;
   'small': string;
+  'vendorItem': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

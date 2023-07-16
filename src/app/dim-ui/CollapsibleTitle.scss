@@ -3,7 +3,7 @@
 .title {
   padding: 0 16px;
   background-color: rgba(0, 0, 0, 0.2);
-  color: white;
+  color: var(--theme-text);
   min-height: 34px;
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -23,8 +23,11 @@
   @include phone-portrait {
     &:hover,
     &.collapsed {
+      color: var(--theme-text);
+    }
+
+    &:hover {
       background-color: transparent;
-      color: white;
     }
   }
 
@@ -42,7 +45,7 @@
   .collapse-icon {
     font-size: 16px;
     &:hover {
-      color: $orange;
+      color: var(--theme-accent-primary);
     }
     margin-left: -4px;
     width: 10px;

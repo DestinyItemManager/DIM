@@ -1,84 +1,12 @@
-@import '../../variables';
-
-.exotic {
-  > * {
-    margin-right: 8px;
-  }
-
-  border: 1px solid #666;
-  padding: 8px;
-  display: flex;
-  flex-direction: column;
-  cursor: pointer;
-  height: 100%;
-  box-sizing: border-box;
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-}
-
-.selected {
-  border-color: $orange;
-}
-
-.disabled {
-  cursor: default;
-  filter: contrast(0.5) brightness(0.5);
-}
-
-.details {
-  display: flex;
-  flex-direction: row;
-}
-
-.itemImage {
-  position: relative;
-  height: calc(var(--item-size) * 1.2);
-  width: calc(var(--item-size) * 1.2);
-  margin-right: 4px;
-  flex-shrink: 0;
-  flex-grow: 0;
-}
-
-.itemName {
-  font-weight: bold;
-  font-size: 16px;
-  margin-bottom: 4px;
-}
-
-.mods {
-  display: flex;
-  flex-direction: column;
-
-  > :not(:last-child) {
-    margin-bottom: 4px;
-  }
-}
-
-.perkOrModInfo {
-  display: flex;
-  flex-direction: column;
-}
+@use '../../variables' as *;
 
 .perkOrModNameAndImage {
-  display: flex;
-  flex-direction: row;
+  composes: flexRow from '../../dim-ui/common.m.scss';
   align-items: center;
+  gap: 4px;
 }
 
 .perkOrModImage {
-  border: none;
-  height: calc(var(--item-size) / 2);
-  width: calc(var(--item-size) / 2);
-}
-
-.perkOrModName {
-  font-weight: bold;
-  font-size: 13px;
-  margin: 0 4px 4px 4px;
-}
-
-.perkDescription {
-  grid-column: 2;
-  grid-row: 4;
+  height: 16px;
+  width: 16px;
 }

@@ -1,4 +1,4 @@
-@import '../variables';
+@use '../variables' as *;
 
 .sort-order-editor {
   padding: 4px 0 0 0;
@@ -40,9 +40,9 @@
   }
 
   .sort-forward {
-    color: $orange;
+    color: var(--theme-accent-primary);
   }
   .sort-reverse {
-    color: $blue;
+    color: var(--theme-accent-secondary);
   }
 }

@@ -37,6 +37,7 @@ import {
   sendIcon,
   undoIcon,
 } from 'app/shell/icons';
+import { userGuideUrl } from 'app/shell/links';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
@@ -127,7 +128,7 @@ export default function LoadoutPopup({
             {t('Loadouts.RandomizePrompt')}
             <p className={styles.hint}>
               {t('Loadouts.RandomizeQueryHint')}{' '}
-              <HelpLink helpLink="https://github.com/DestinyItemManager/DIM/wiki/Randomize-Loadout" />
+              <HelpLink helpLink={userGuideUrl('Randomize-Loadout')} />
             </p>
           </>
         ),
@@ -256,6 +257,29 @@ export default function LoadoutPopup({
           </li>
         )}
 
+        {!filteringLoadouts && (
+          <li>
+            <ul
+              className={clsx(styles.inGameLoadouts, {
+                [styles.moreLoadouts]: inGameLoadouts.length > 6,
+              })}
+            >
+              {inGameLoadouts.map((loadout) => (
+                <li key={loadout.id}>
+                  <button
+                    type="button"
+                    className={styles.inGameLoadoutButton}
+                    title={loadout.name}
+                    onClick={() => handleApplyInGameLoadout(loadout)}
+                  >
+                    <InGameLoadoutIconWithIndex loadout={loadout} />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </li>
+        )}
+
         {!filteringLoadouts && previousLoadout && (
           <li className={styles.menuItem}>
             <span
@@ -301,29 +325,6 @@ export default function LoadoutPopup({
               </>
             )}
           </>
-        )}
-
-        {!filteringLoadouts && (
-          <li>
-            <ul
-              className={clsx(styles.inGameLoadouts, {
-                [styles.moreLoadouts]: inGameLoadouts.length > 6,
-              })}
-            >
-              {inGameLoadouts.map((loadout) => (
-                <li key={loadout.id}>
-                  <button
-                    type="button"
-                    className={styles.inGameLoadoutButton}
-                    title={loadout.name}
-                    onClick={() => handleApplyInGameLoadout(loadout)}
-                  >
-                    <InGameLoadoutIconWithIndex loadout={loadout} />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </li>
         )}
 
         {filteredLoadouts.map((loadout) => (

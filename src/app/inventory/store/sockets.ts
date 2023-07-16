@@ -244,6 +244,9 @@ function buildDefinedSocket(
     socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Unlockable ||
     isIntrinsic ||
     isReusable;
+  const isMod =
+    socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Consumable ||
+    socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Abilities;
 
   // The currently equipped plug, if any
   const reusablePlugs: DimPlug[] = [];
@@ -389,6 +392,7 @@ function buildDefinedSocket(
       Boolean(socketDef.randomizedPlugSetHash) || socketTypeDef.alwaysRandomizeSockets,
     isPerk,
     isReusable,
+    isMod,
     socketDefinition: socketDef,
     craftingData,
   };
@@ -611,6 +615,9 @@ function buildSocket(
     socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Unlockable ||
     isIntrinsic ||
     isReusable;
+  const isMod =
+    socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Consumable ||
+    socketCategoryDef.categoryStyle === DestinySocketCategoryStyle.Abilities;
 
   const plugSet = socketDef.reusablePlugSetHash
     ? buildCachedDimPlugSet(defs, socketDef.reusablePlugSetHash)
@@ -695,7 +702,9 @@ function buildSocket(
     hasRandomizedPlugItems,
     reusablePlugItems: reusablePlugs,
     isPerk,
+    isMod,
     isReusable,
+    visibleInGame: socket.isVisible,
     socketDefinition: socketDef,
   };
 }

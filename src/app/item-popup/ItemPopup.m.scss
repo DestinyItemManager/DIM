@@ -7,59 +7,54 @@
 @use '../variables.scss' as *;
 
 .arrow {
-  width: 10px;
-  height: 10px;
+  width: $theme-tooltip-arrow-size;
+  height: $theme-tooltip-arrow-size;
   border-style: solid;
   position: absolute;
-  border-color: black;
-  z-index: -1;
+  border-width: $theme-tooltip-arrow-size;
+  border-color: transparent;
 }
 
 .desktopPopupRoot {
   pointer-events: none;
-  .arrow {
-    border-color: #161626;
-  }
 }
 
 .movePopupDialog {
   // Mod drawer has z-index of 14 and needs to sit over this
   z-index: 13;
 
-  --background-color: 0, 0%, 0%;
+  --background-color: rgba(0, 0, 0, 1); // Fallback background
 
   &.exotic {
-    --background-color: 48, 71%, 5%;
+    --background-color: rgba(22, 18, 4, 1);
   }
   &.legendary {
-    --background-color: 279, 36%, 5%;
+    --background-color: rgba(14, 8, 17, 1);
   }
   &.rare {
-    --background-color: 213, 34%, 6%;
+    --background-color: rgba(10, 15, 21, 1);
   }
   &.uncommon {
-    --background-color: 126, 35%, 5%;
+    --background-color: rgba(8, 17, 9, 1);
   }
   &.common {
-    --background-color: 0, 0%, 7%;
+    --background-color: rgba(18, 18, 18, 1);
   }
 
   &[data-popper-placement^='top'] .arrow {
     width: 0;
     height: 0;
-    border-width: 5px 5px 0 5px;
-    border-left-color: transparent;
-    border-right-color: transparent;
-    border-bottom-color: transparent;
-    bottom: -5px;
+    border-bottom-width: 0;
+    border-top-color: var(--theme-item-popup-arrow);
+    bottom: calc(-1 * $theme-tooltip-arrow-size);
   }
 
   &[data-popper-placement^='bottom'] .arrow {
     width: 0;
     height: 0;
-    border-width: 0 5px 5px 5px;
-    top: -5px;
-    border-color: transparent transparent white transparent;
+    border-top-width: 0;
+    border-bottom-color: var(--theme-item-popup-arrow);
+    top: calc(-1 * $theme-tooltip-arrow-size);
 
     &.exotic {
       border-bottom-color: $exotic;
@@ -80,20 +75,16 @@
   &[data-popper-placement^='right'] .arrow {
     width: 0;
     height: 0;
-    border-width: 5px 5px 5px 0;
-    border-left-color: transparent;
-    border-top-color: transparent;
-    border-bottom-color: transparent;
-    left: -5px;
+    border-left-width: 0;
+    border-right-color: var(--theme-item-popup-arrow);
+    left: calc(-1 * $theme-tooltip-arrow-size);
   }
   &[data-popper-placement^='left'] .arrow {
     width: 0;
     height: 0;
-    border-width: 5px 0 5px 5px;
-    border-top-color: transparent;
-    border-right-color: transparent;
-    border-bottom-color: transparent;
-    right: -5px;
+    border-right-width: 0;
+    border-left-color: var(--theme-item-popup-arrow);
+    right: calc(-1 * $theme-tooltip-arrow-size);
   }
   textarea {
     resize: vertical;
@@ -101,9 +92,10 @@
 }
 
 .popupBackground {
-  background-color: #{'hsl(var(--background-color))'};
+  background-color: var(--background-color);
   contain: content;
   box-shadow: 0 -1px 24px 4px #161626;
+
   @include phone-portrait {
     box-shadow: none;
   }
@@ -149,4 +141,31 @@
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+}
+
+.itemPopup {
+  :global(.sheet-header) {
+    padding: 0;
+    border: none;
+  }
+  :global(.sheet-close) {
+    padding: 12px 10px;
+    color: black;
+    opacity: 0.7;
+  }
+  :global(.sheet-handle) div {
+    background-color: black;
+    opacity: 0.7;
+  }
+
+  &.uncommon,
+  &.rare,
+  &.legendary {
+    :global(.sheet-close) {
+      color: var(--theme-text);
+    }
+    :global(.sheet-handle) div {
+      background-color: white;
+    }
+  }
 }

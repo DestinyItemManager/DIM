@@ -48,7 +48,6 @@ import { hasVisibleLoadoutParameters } from '../loadout-ui/LoadoutParametersDisp
 import { useLoadoutMods } from '../mod-assignment-drawer/selectors';
 import styles from './LoadoutEdit.m.scss';
 import LoadoutEditBucket, { ArmorExtras } from './LoadoutEditBucket';
-import LoadoutEditBucketDropTarget from './LoadoutEditBucketDropTarget';
 import LoadoutEditSection from './LoadoutEditSection';
 import LoadoutEditSubclass from './LoadoutEditSubclass';
 
@@ -73,6 +72,14 @@ export default function LoadoutEdit({
   const missingSockets = allItems.some((i) => i.missingSockets);
   const [plugDrawerOpen, setPlugDrawerOpen] = useState(false);
   const itemCreationContext = useSelector(createItemContextSelector);
+  const unlockedArtifactMods = useSelector(artifactUnlocksSelector(store.id));
+
+  // Don't show the artifact unlocks section unless there are artifact mods saved in this loadout
+  // or there are unlocked artifact mods we could copy into this loadout.
+  const showArtifactUnlocks = Boolean(
+    unlockedArtifactMods?.unlockedItemHashes.length ||
+      loadout.parameters?.artifactUnlocks?.unlockedItemHashes.length
+  );
 
   // TODO: filter down by usable mods?
   const modsByBucket: {
@@ -155,44 +162,39 @@ export default function LoadoutEdit({
           onClear={handleClearSubclass}
           onFillFromEquipped={handleFillSubclassFromEquipped}
         >
-          <LoadoutEditBucketDropTarget
-            category="Subclass"
+          <LoadoutEditSubclass
+            defs={defs}
+            subclass={subclass}
             classType={loadout.classType}
-            equippedOnly={true}
-          >
-            <LoadoutEditSubclass
-              defs={defs}
-              subclass={subclass}
-              power={power}
-              onRemove={handleClearSubclass}
-              onPick={() => onClickSubclass(subclass?.item)}
-            />
-            {subclass && (
-              <div className={styles.buttons}>
-                {subclass.item.sockets ? (
-                  <button
-                    type="button"
-                    className="dim-button"
-                    onClick={() => setPlugDrawerOpen(true)}
-                  >
-                    {t('LB.SelectSubclassOptions')}
-                  </button>
-                ) : (
-                  <div>{t('Loadouts.CannotCustomizeSubclass')}</div>
-                )}
-              </div>
-            )}
-            {plugDrawerOpen && subclass && (
-              <Portal>
-                <SubclassPlugDrawer
-                  subclass={subclass.item}
-                  socketOverrides={subclass.loadoutItem.socketOverrides ?? {}}
-                  onClose={() => setPlugDrawerOpen(false)}
-                  onAccept={(overrides) => handleApplySocketOverrides(subclass, overrides)}
-                />
-              </Portal>
-            )}
-          </LoadoutEditBucketDropTarget>
+            power={power}
+            onRemove={handleClearSubclass}
+            onPick={() => onClickSubclass(subclass?.item)}
+          />
+          {subclass && (
+            <div className={styles.buttons}>
+              {subclass.item.sockets ? (
+                <button
+                  type="button"
+                  className="dim-button"
+                  onClick={() => setPlugDrawerOpen(true)}
+                >
+                  {t('LB.SelectSubclassOptions')}
+                </button>
+              ) : (
+                <div>{t('Loadouts.CannotCustomizeSubclass')}</div>
+              )}
+            </div>
+          )}
+          {plugDrawerOpen && subclass && (
+            <Portal>
+              <SubclassPlugDrawer
+                subclass={subclass.item}
+                socketOverrides={subclass.loadoutItem.socketOverrides ?? {}}
+                onClose={() => setPlugDrawerOpen(false)}
+                onAccept={(overrides) => handleApplySocketOverrides(subclass, overrides)}
+              />
+            </Portal>
+          )}
         </LoadoutEditSection>
       )}
       {(anyClass
@@ -253,20 +255,22 @@ export default function LoadoutEdit({
           onClearUnsetModsChanged={handleClearUnsetModsChanged}
         />
       </LoadoutEditSection>
-      <LoadoutEditSection
-        title={artifactTitle}
-        titleInfo={t('Loadouts.ArtifactUnlocksDesc')}
-        className={styles.section}
-        onClear={handleClearArtifactUnlocks}
-        onSyncFromEquipped={profileResponse ? handleSyncArtifactUnlocksFromEquipped : undefined}
-      >
-        <LoadoutArtifactUnlocks
-          loadout={loadout}
-          storeId={store.id}
-          onRemoveMod={handleRemoveArtifactUnlock}
+      {showArtifactUnlocks && (
+        <LoadoutEditSection
+          title={artifactTitle}
+          titleInfo={t('Loadouts.ArtifactUnlocksDesc')}
+          className={styles.section}
+          onClear={handleClearArtifactUnlocks}
           onSyncFromEquipped={profileResponse ? handleSyncArtifactUnlocksFromEquipped : undefined}
-        />
-      </LoadoutEditSection>
+        >
+          <LoadoutArtifactUnlocks
+            loadout={loadout}
+            storeId={store.id}
+            onRemoveMod={handleRemoveArtifactUnlock}
+            onSyncFromEquipped={profileResponse ? handleSyncArtifactUnlocksFromEquipped : undefined}
+          />
+        </LoadoutEditSection>
+      )}
     </div>
   );
 }

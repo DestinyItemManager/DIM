@@ -1,7 +1,7 @@
 .horizontalScrollContainer {
   flex: 1;
   white-space: nowrap;
-  overflow-x: scroll;
+  overflow-x: auto;
   overflow-y: hidden;
   display: flex;
   flex-direction: row;

@@ -3,7 +3,7 @@ import Select from 'app/dim-ui/Select';
 import Sheet from 'app/dim-ui/Sheet';
 import useConfirm from 'app/dim-ui/useConfirm';
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
@@ -21,18 +21,6 @@ import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ArmorSet, LockableBucketHashes } from '../types';
 import styles from './CompareLoadoutsDrawer.m.scss';
-
-interface Props {
-  set: ArmorSet;
-  selectedStore: DimStore;
-  loadouts: Loadout[];
-  initialLoadoutId?: string;
-  subclass: ResolvedLoadoutItem | undefined;
-  classType: DestinyClass;
-  params: LoadoutParameters;
-  notes?: string;
-  onClose: () => void;
-}
 
 function chooseInitialLoadout(
   setItems: DimItem[],
@@ -64,7 +52,8 @@ function createLoadoutUsingLOItems(
   subclass: ResolvedLoadoutItem | undefined,
   loadout: Loadout | undefined,
   params: LoadoutParameters,
-  notes: string | undefined
+  notes: string | undefined,
+  lockedMods: PluggableInventoryItemDefinition[]
 ) {
   return produce(loadout, (draftLoadout) => {
     if (draftLoadout) {
@@ -100,11 +89,9 @@ function createLoadoutUsingLOItems(
       }
 
       draftLoadout.items = newItems;
-      const allMods = [...(params.mods ?? []), ...autoMods];
-      // FIXME(#8733) add auto mods to autoStatMods instead of adding them to regular mods
+      const allMods = [...lockedMods.map((m) => m.hash), ...autoMods];
       params = { ...params, mods: allMods.length ? allMods : undefined };
       draftLoadout.parameters = params;
-      // loadout.autoStatMods = autoMods.length ? autoMods : undefined;
       draftLoadout.notes = notes || draftLoadout.notes;
     }
   });
@@ -119,8 +106,20 @@ export default function CompareLoadoutsDrawer({
   classType,
   params,
   notes,
+  lockedMods,
   onClose,
-}: Props) {
+}: {
+  set: ArmorSet;
+  selectedStore: DimStore;
+  loadouts: Loadout[];
+  initialLoadoutId?: string;
+  subclass: ResolvedLoadoutItem | undefined;
+  classType: DestinyClass;
+  params: LoadoutParameters;
+  notes?: string;
+  lockedMods: PluggableInventoryItemDefinition[];
+  onClose: () => void;
+}) {
   const dispatch = useThunkDispatch();
   const usableLoadouts = loadouts.filter((l) => l.classType === classType);
 
@@ -145,7 +144,8 @@ export default function CompareLoadoutsDrawer({
         subclass,
         selectedLoadout,
         params,
-        notes
+        notes,
+        lockedMods
       ),
     [
       itemCreationContext,
@@ -157,6 +157,7 @@ export default function CompareLoadoutsDrawer({
       selectedLoadout,
       params,
       notes,
+      lockedMods,
     ]
   );
 

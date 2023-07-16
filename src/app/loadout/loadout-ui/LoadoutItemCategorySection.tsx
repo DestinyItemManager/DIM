@@ -7,10 +7,8 @@ import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { bucketsSelector } from 'app/inventory/selectors';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
-import { useD2Definitions } from 'app/manifest/selectors';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { LoadoutStats } from 'app/store-stats/CharacterStats';
+import { LoadoutCharacterStats } from 'app/store-stats/CharacterStats';
 import { emptyArray } from 'app/utils/empty';
 import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
@@ -49,7 +47,6 @@ export default function LoadoutItemCategorySection({
   loadout: Loadout;
   hideOptimizeArmor?: boolean;
 }) {
-  const defs = useD2Definitions()!;
   const buckets = useSelector(bucketsSelector)!;
   const itemsByBucket = _.groupBy(items, (li) => li.item.bucket.hash);
   const isPhonePortrait = useIsPhonePortrait();
@@ -95,14 +92,16 @@ export default function LoadoutItemCategorySection({
         <>
           {equippedItems.length === 5 && (
             <div className="stat-bars destiny2">
-              <LoadoutStats
-                showTier
-                stats={getLoadoutStats(defs, loadout.classType, subclass, equippedItems, allMods)}
+              <LoadoutCharacterStats
+                loadout={loadout}
+                subclass={subclass}
+                allMods={allMods}
+                items={items}
               />
             </div>
           )}
           {loadout.parameters && <LoadoutParametersDisplay params={loadout.parameters} />}
-          {!hideOptimizeArmor && <OptimizerButton loadout={loadout} />}
+          {!hideOptimizeArmor && <OptimizerButton loadout={loadout} storeId={storeId} />}
         </>
       )}
     </div>

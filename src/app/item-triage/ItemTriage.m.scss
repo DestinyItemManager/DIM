@@ -46,12 +46,18 @@
 
 .header {
   display: contents;
-  > span:nth-child(n + 2) {
-    text-align: center;
-  }
   > span {
     min-width: max-content;
+    &:nth-child(n + 2) {
+      text-align: center;
+    }
   }
+}
+
+.headerDivider {
+  grid-column-end: span 2;
+  background: #888;
+  height: 1px;
 }
 
 .similarItemsTable {
@@ -75,22 +81,16 @@
   }
 }
 
-.headerDivider {
-  grid-column-end: span 2;
-  background: #888;
-  height: 1px;
-}
-
 .tableRow {
   display: contents;
-  &:nth-child(n + 2) > * {
-    border-top: 1px solid #5555;
-    padding: 4px;
-  }
-  & > * {
+  > * {
     height: 30px;
     display: flex;
     align-items: center;
+  }
+  &:nth-child(n + 2) > * {
+    border-top: 1px solid #5555;
+    padding: 4px;
   }
 }
 
@@ -205,5 +205,9 @@
 }
 
 .artificeExplanation {
-  color: $orange;
+  color: var(--theme-accent-primary);
+}
+
+.popupTabTitle {
+  position: relative;
 }

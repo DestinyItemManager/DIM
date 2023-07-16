@@ -24,7 +24,7 @@
 
 .upgradeButton {
   composes: resetButton from '../dim-ui/common.m.scss';
-  color: #fff;
+  color: var(--theme-text);
   font-size: 16px;
 }
 

@@ -1,10 +1,4 @@
-import {
-  AssumeArmorMasterwork,
-  Loadout,
-  LoadoutItem,
-  LoadoutParameters,
-  UpgradeSpendTier,
-} from '@destinyitemmanager/dim-api-types';
+import { Loadout, LoadoutItem, LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
@@ -24,7 +18,7 @@ import {
   LoadoutItem as DimLoadoutItem,
   InGameLoadout,
 } from './loadout-types';
-import { newLoadout, potentialLoadoutItemsByItemId } from './loadout-utils';
+import { convertToLoadoutItem, newLoadout, potentialLoadoutItemsByItemId } from './loadout-utils';
 
 /**
  * DIM API stores loadouts in a new format, but the app still uses the old format everywhere. These functions convert
@@ -38,8 +32,8 @@ export function convertDimLoadoutToApiLoadout(dimLoadout: DimLoadout): Loadout {
   const loadout: Loadout = {
     ...rest,
     name: name.trim(),
-    clearSpace: clearSpace || false,
-    parameters: migrateUpgradeSpendTierAndLockItemEnergy(parameters),
+    clearSpace: clearSpace ?? false,
+    parameters: migrateLoadoutParameters(parameters, clearSpace ?? false),
     equipped,
     unequipped,
     lastUpdatedAt: Date.now(),
@@ -69,43 +63,16 @@ function convertDimLoadoutItemToLoadoutItem(item: DimLoadoutItem): LoadoutItem {
   return result;
 }
 
-function migrateUpgradeSpendTierAndLockItemEnergy(
-  parameters: DimLoadout['parameters']
+function migrateLoadoutParameters(
+  parameters: DimLoadout['parameters'],
+  clearSpace: boolean
 ): DimLoadout['parameters'] {
-  const migrated = { ...parameters };
-  const { upgradeSpendTier, assumeArmorMasterwork, lockArmorEnergyType } = migrated;
-
-  delete migrated.upgradeSpendTier;
-  delete migrated.lockItemEnergyType;
-  delete migrated.lockArmorEnergyType;
-  delete migrated.assumeMasterworked;
-
-  if (assumeArmorMasterwork || lockArmorEnergyType) {
-    return migrated;
+  // Migrate the single "clear" parameter into separate armor/weapons parameters
+  if (clearSpace && !parameters?.clearArmor && !parameters?.clearWeapons) {
+    return { ...parameters, clearArmor: true, clearWeapons: true };
   }
 
-  switch (upgradeSpendTier) {
-    case UpgradeSpendTier.AscendantShards:
-      return {
-        ...migrated,
-        assumeArmorMasterwork: AssumeArmorMasterwork.All,
-      };
-    case UpgradeSpendTier.AscendantShardsNotExotic:
-    case UpgradeSpendTier.AscendantShardsNotMasterworked:
-      return {
-        ...migrated,
-        assumeArmorMasterwork: AssumeArmorMasterwork.Legendary,
-      };
-    case UpgradeSpendTier.AscendantShardsLockEnergyType:
-    case UpgradeSpendTier.EnhancementPrisms:
-    case UpgradeSpendTier.LegendaryShards:
-    case UpgradeSpendTier.Nothing:
-    default:
-      return {
-        ...migrated,
-        assumeArmorMasterwork: AssumeArmorMasterwork.None,
-      };
-  }
+  return parameters;
 }
 
 /**
@@ -116,8 +83,8 @@ export function convertDimApiLoadoutToLoadout(loadout: Loadout): DimLoadout {
   const { equipped = [], unequipped = [], clearSpace, parameters, ...rest } = loadout;
   return {
     ...rest,
-    parameters: migrateUpgradeSpendTierAndLockItemEnergy(parameters),
-    clearSpace: clearSpace || false,
+    parameters: migrateLoadoutParameters(parameters, clearSpace ?? false),
+    clearSpace: clearSpace ?? false,
     items: [
       ...equipped.map((i) => convertDimApiLoadoutItemToLoadoutItem(i, true)),
       ...unequipped.map((i) => convertDimApiLoadoutItemToLoadoutItem(i, false)),
@@ -238,11 +205,8 @@ export function convertInGameLoadoutToDimLoadout(
           : undefined;
 
       const loadoutItem: DimLoadoutItem = {
-        id: inGameItem.itemInstanceId,
-        hash: matchingItem.hash,
+        ...convertToLoadoutItem(matchingItem, true),
         socketOverrides,
-        equip: true,
-        amount: 1,
       };
 
       return loadoutItem;

@@ -10,7 +10,7 @@
   z-index: 2;
   color: rgba(245, 245, 245, 0.6);
   overscroll-behavior: contain;
-  background-color: black;
+  background-color: var(--theme-dropdown-menu-bg);
 
   @include visible-scrollbars;
 
@@ -35,6 +35,10 @@
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.note {
+  color: #888;
 }
 
 .menuItem {
@@ -91,7 +95,7 @@
 
   input[type='text'] {
     border: none;
-    color: white;
+    color: var(--theme-text);
     outline: none;
     flex: 1;
     width: 0;
@@ -105,13 +109,17 @@
 
   &:hover,
   a:hover {
-    background-color: $orange;
-    color: black !important;
+    background-color: var(--theme-accent-primary);
+    color: var(--theme-text-invert) !important;
     > span:first-child > :global(.app-icon) {
-      color: black !important;
+      color: var(--theme-text-invert) !important;
     }
     > span:first-child > img:first-child {
       filter: none;
+    }
+
+    .note {
+      color: var(--theme-text-invert);
     }
   }
 
@@ -141,7 +149,7 @@
     }
   }
   &:hover {
-    background-color: $blue;
+    background-color: var(--theme-accent-secondary);
     color: #222;
   }
 }
@@ -155,12 +163,7 @@
 }
 
 .content {
-  background-color: black;
   color: #e4e4e4;
-}
-
-.note {
-  color: #888;
 }
 
 .filterInput {
@@ -168,7 +171,7 @@
   &:hover,
   a:hover {
     background-color: black;
-    color: white !important;
+    color: var(--theme-text) !important;
     cursor: default;
   }
 }
@@ -200,7 +203,7 @@
   composes: resetButton from '../../dim-ui/common.m.scss';
   &:hover,
   &:focus-visible {
-    outline: 2px solid $orange;
+    outline: 2px solid var(--theme-accent-primary);
   }
   display: block;
 }

@@ -72,9 +72,7 @@ export default function EnergyMeter({ item }: { item: DimItem }) {
     defs && (
       <div className={styles.energyMeter}>
         <div className="item-socket-category-name">
-          <div>
-            <b>{Math.max(minCapacity, previewCapacity)}</b> <span>{t('EnergyMeter.Energy')}</span>
-          </div>
+          <b>{Math.max(minCapacity, previewCapacity)}</b> <span>{t('EnergyMeter.Energy')}</span>
         </div>
         <div className={clsx('energyMeterIncrements', 'medium')}>
           {meterIncrements.map((incrementStyle, i) => (

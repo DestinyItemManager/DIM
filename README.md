@@ -11,7 +11,7 @@ Loadouts give players the ability to define sets of items that they want on thei
 
 DIM is based on the same services used by the Destiny Companion app to move and equip items. DIM will not be able to dismantle any of your items.
 
-Visit [Discord](https://discordapp.com/invite/UK2GWC7) or [/r/DestinyItemManager](http://www.reddit.com/r/DestinyItemManager/) for updates and more details.
+Visit [Discord](https://discordapp.com/invite/UK2GWC7) for updates and more details.
 
 ## Bugs and feature requests
 Have a bug or a feature request? Please first search for [existing and closed issues](https://github.com/DestinyItemManager/DIM/issues). If your problem or idea is not addressed yet, please open a new issue.

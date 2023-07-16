@@ -15,7 +15,7 @@ import {
 import { RootState } from 'app/store/types';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
-import { modMetadataByPlugCategoryHash } from 'app/utils/item-utils';
+import { isClassCompatible, modMetadataByPlugCategoryHash } from 'app/utils/item-utils';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { uniqBy } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -30,7 +30,7 @@ import {
   knownModPlugCategoryHashes,
   slotSpecificPlugCategoryHashes,
 } from './known-values';
-import { isInsertableArmor2Mod, sortModGroups } from './mod-utils';
+import { getModExclusionGroup, isInsertableArmor2Mod, sortModGroups } from './mod-utils';
 import PlugDrawer from './plug-drawer/PlugDrawer';
 import { PlugSet } from './plug-drawer/types';
 
@@ -111,9 +111,7 @@ function mapStateToProps() {
           // If classType is passed in, only use items from said class,
           // otherwise use items from all characters.
           // Useful if in loadouts and only mods and guns
-          (classType !== DestinyClass.Unknown &&
-            classType !== undefined &&
-            item.classType !== classType)
+          (classType !== undefined && !isClassCompatible(classType, item.classType))
         ) {
           continue;
         }
@@ -312,6 +310,12 @@ function isModSelectable(
 ) {
   const { plugCategoryHash, energyCost } = mod.plug;
   const isSlotSpecificCategory = slotSpecificPlugCategoryHashes.includes(plugCategoryHash);
+
+  // If there's an already selected mod that excludes this mod, we can't select this one
+  const exclusionGroup = getModExclusionGroup(mod);
+  if (exclusionGroup && selected.some((mod) => getModExclusionGroup(mod) === exclusionGroup)) {
+    return false;
+  }
 
   // Already selected mods that are in the same category as "mod"
   let associatedLockedMods: PluggableInventoryItemDefinition[] = [];

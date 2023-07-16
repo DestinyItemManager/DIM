@@ -1,7 +1,9 @@
 import { getBuckets } from 'app/destiny2/d2-buckets';
 import { allTables, buildDefinitionsFromManifest } from 'app/destiny2/d2-definitions';
+import { DIM_LANG_INFOS } from 'app/i18n';
 import { buildStores } from 'app/inventory/d2-stores';
 import { downloadManifestComponents } from 'app/manifest/manifest-service-json';
+import { humanBytes } from 'app/storage/human-bytes';
 import { delay } from 'app/utils/util';
 import {
   DestinyManifest,
@@ -10,11 +12,14 @@ import {
 } from 'bungie-api-ts/destiny2';
 import { F_OK } from 'constants';
 import fs from 'fs/promises';
+import i18next from 'i18next';
+import en from 'locale/en.json';
+import ja from 'locale/ja.json';
 import _ from 'lodash';
 import path from 'path';
 import { getManifest as d2GetManifest } from '../app/bungie-api/destiny2-api';
 import profile from './data/profile-2023-02-28.json';
-import vendors from './data/vendors-2023-02-28.json';
+import vendors from './data/vendors-2023-05-24.json';
 
 /**
  * Get the current manifest as JSON. Downloads the manifest if not cached.
@@ -95,3 +100,50 @@ export const getTestStores = _.once(async () => {
   });
   return stores;
 });
+
+/**
+ * Set up i18n so the `t` function will work, for en and ja locales.
+ *
+ * Use `i18next.changeLanguage('en');` to set language before tests.
+ */
+export function setupi18n() {
+  i18next.init({
+    lng: 'en',
+    debug: true,
+    initImmediate: true,
+    compatibilityJSON: 'v3',
+    lowerCaseLng: true,
+    interpolation: {
+      escapeValue: false,
+      format(val: string, format) {
+        switch (format) {
+          case 'pct':
+            return `${Math.min(100, Math.floor(100 * parseFloat(val)))}%`;
+          case 'humanBytes':
+            return humanBytes(parseInt(val, 10));
+          case 'number':
+            return parseInt(val, 10).toLocaleString();
+          default:
+            return val;
+        }
+      },
+    },
+    resources: {
+      en: {
+        translation: en,
+      },
+      ja: {
+        translation: ja,
+      },
+    },
+  });
+
+  for (const [otherLang, { pluralOverride }] of Object.entries(DIM_LANG_INFOS)) {
+    if (pluralOverride) {
+      i18next.services.pluralResolver.addRule(
+        otherLang,
+        i18next.services.pluralResolver.getRule('en')
+      );
+    }
+  }
+}

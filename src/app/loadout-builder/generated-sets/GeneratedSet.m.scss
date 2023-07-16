@@ -2,39 +2,36 @@
 
 .container {
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  gap: 8px;
+  box-sizing: border-box;
+  padding-top: 10px;
+  padding-bottom: 14px;
+  width: fit-content !important;
+
+  &:last-child {
+    border-bottom: 0;
+  }
 
   @include phone-portrait {
-    flex-direction: column;
     padding-left: 12px;
     padding-right: 12px;
   }
 }
 
 .build {
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  padding: 10px 0 4px 0;
-}
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  gap: 16px;
 
-.header {
-  color: #ddd;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding-bottom: 4px;
+  @include phone-portrait {
+    flex-direction: column;
+  }
 }
 
 .items {
   display: flex;
   flex-flow: row wrap;
   padding: 0;
-
-  > * {
-    margin-right: 14px;
-    margin-bottom: 14px;
-  }
+  gap: 14px;
 }

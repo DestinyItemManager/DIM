@@ -8,13 +8,13 @@
 }
 
 .menu {
-  background: black;
-  color: white;
+  background: var(--theme-dropdown-menu-bg);
+  color: var(--theme-text);
   font-size: 12px;
   z-index: 100;
   position: absolute;
   &.open {
-    outline: 2px solid change-color($orange, $alpha: 0.4) !important;
+    outline: 2px solid rgba(232, 165, 52, 0.4) !important;
   }
 }
 
@@ -24,13 +24,14 @@
   align-items: center;
   min-width: 10em;
   padding: 6px 9px;
+
   @include phone-portrait {
     padding: 10px 16px;
     font-size: 14px;
   }
 
   :global(.app-icon) {
-    color: white !important;
+    color: var(--theme-text) !important;
     width: 16px;
     text-align: center;
     margin-right: 4px;
@@ -40,10 +41,16 @@
 }
 
 .highlighted {
-  background-color: $orange;
-  color: black !important;
-  :global(.app-icon) {
-    color: black !important;
+  background-color: var(--theme-accent-primary);
+  color: var(--theme-text-invert);
+  cursor: pointer;
+  & :global(.app-icon) {
+    color: var(--theme-text-inverted) !important;
+  }
+  // Maintain legibility of keyHelp
+  & span {
+    color: var(--theme-text-invert);
+    border-color: var(--theme-text-invert);
   }
 }
 

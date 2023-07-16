@@ -2,7 +2,7 @@ import { t } from 'app/i18next-t';
 import { infoLog, warnLog } from 'app/utils/log';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { getAccessTokenFromRefreshToken } from './oauth';
-import { getToken, hasTokenExpired, removeAccessToken, Tokens } from './oauth-tokens';
+import { Tokens, getToken, hasTokenExpired, removeAccessToken } from './oauth-tokens';
 
 /**
  * A fatal token error means we have to log in again.
@@ -59,12 +59,6 @@ export async function fetchWithBungieOAuth(
 }
 
 async function responseIndicatesBadToken(response: Response) {
-  // https://github.com/Bungie-net/api/issues/1151: D1 endpoints have a bug where they can return 401 if you've logged in via Stadia.
-  // This hack prevents a login loop
-  if (/\/D1\/Platform\/Destiny\/\d+\/Account\/\d+\/$/.test(response.url)) {
-    return false;
-  }
-
   if (response.status === 401) {
     return true;
   }
@@ -134,12 +128,20 @@ async function handleRefreshTokenError(response: Error | Response): Promise<Toke
 
   if (data) {
     if (data.error === 'server_error') {
-      if (data.error_description === 'SystemDisabled') {
-        throw new Error(t('BungieService.Maintenance'));
-      } else if (data.error_description !== 'AuthorizationRecordExpired') {
-        throw new Error(
-          `Unknown error getting response token: ${data.error}, ${data.error_description}`
-        );
+      switch (data.error_description) {
+        case 'SystemDisabled':
+          throw new Error(t('BungieService.Maintenance'));
+        case 'RefreshTokenNotYetValid':
+        case 'AccessTokenHasExpired':
+        case 'AuthorizationCodeInvalid':
+        case 'AuthorizationRecordExpired':
+          throw new FatalTokenError(
+            'Refresh token expired or not valid, platform error ' + data.error_description
+          );
+        default:
+          throw new Error(
+            `Unknown error getting response token: ${data.error}, ${data.error_description}`
+          );
       }
     }
 

@@ -1,17 +1,11 @@
 @use 'sass:color';
 
 // Variables and mixins that can be used from any SCSS file
-
-// DIM orange and blue, accent colors
-$orange: #e8a534;
-$blue: #68a0b7;
+$dim-brand: #e8a534;
 $red: #ff3232; // For warnings/errors
 $green: #51a351; // For success statuses or positive deltas
-$gradient: radial-gradient(
-  circle at 50% 70px,
-  hsl(240, 20%, 28%) 0%,
-  hsl(240, 27%, 12%) 100%
-); // new background gradient
+$stat-modded: #68a0b7; // For highlighting the difference in modded item stats
+$stat-masterworked: #e8a534;
 
 // Blue used to denote community-provided data
 $communityBlue: #0d7fad;
@@ -67,6 +61,16 @@ $easeInCubic: cubic-bezier(0.55, 0.055, 0.675, 0.19);
 $easeOutCubic: cubic-bezier(0.215, 0.61, 0.355, 1);
 $easeInOutCubic: cubic-bezier(0.645, 0.045, 0.355, 1);
 
+// Theme style properties that remain consistent across all themes
+// Tooltips and arrows
+$theme-tooltip-arrow-size: 8px; // Ensure this stays in sync with 'popperArrowSize' in 'usePopper.ts'
+$theme-tooltip-arrow-size-mini: 5px;
+$theme-tooltip-corner-radius: 6px;
+
+// Search
+$theme-corner-radius-search: 4px;
+$search-bar-height: 28px;
+
 // A mixin that allows targeting styles only when in phone-portrait display mode
 @mixin phone-portrait {
   // This seems like a good breakpoint for portrait based on https://material.io/devices/
@@ -79,11 +83,6 @@ $easeInOutCubic: cubic-bezier(0.645, 0.045, 0.355, 1);
 // Position something directly below the header
 @mixin below-header {
   top: var(--header-height);
-}
-
-// The tallest a "full screen" sheet should be
-@mixin max-sheet-height {
-  max-height: calc(var(--viewport-height) - var(--header-height) - 92px);
 }
 
 // A header for items or perks that matches the in-game display

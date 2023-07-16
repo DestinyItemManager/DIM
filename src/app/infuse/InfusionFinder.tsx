@@ -1,4 +1,5 @@
 import { InfuseDirection } from '@destinyitemmanager/dim-api-types';
+import { gaPageView } from 'app/google';
 import { t } from 'app/i18next-t';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { LoadoutItem } from 'app/loadout-drawer/loadout-types';
@@ -22,7 +23,7 @@ import { showNotification } from '../notifications/notifications';
 import { filterFactorySelector } from '../search/search-filter';
 import { AppIcon, faArrowCircleDown, faEquals, faRandom, helpIcon, plusIcon } from '../shell/icons';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
-import './InfusionFinder.scss';
+import styles from './InfusionFinder.m.scss';
 import { showInfuse$ } from './infuse';
 
 const itemComparator = chainComparator(
@@ -149,7 +150,7 @@ export default function InfusionFinder() {
 
   useEffect(() => {
     if (show && destinyVersion) {
-      ga('send', 'pageview', `/profileMembershipId/d${destinyVersion}/infuse`);
+      gaPageView(`/profileMembershipId/d${destinyVersion}/infuse`);
     }
   }, [destinyVersion, show]);
 
@@ -214,7 +215,7 @@ export default function InfusionFinder() {
   }
 
   const missingItem = (
-    <div className="item missingItem">
+    <div className={clsx('item', styles.missingItem)}>
       <div className="item-img">
         <AppIcon icon={helpIcon} />
       </div>
@@ -223,7 +224,7 @@ export default function InfusionFinder() {
   );
 
   const header = ({ onClose }: { onClose: () => void }) => (
-    <div className="infuseHeader">
+    <div className={styles.infuseHeader}>
       <h1>
         {direction === InfuseDirection.INFUSE
           ? t('Infusion.InfuseTarget', {
@@ -233,20 +234,20 @@ export default function InfusionFinder() {
               name: query.name,
             })}
       </h1>
-      <div className="infusionControls">
-        <div className="infuseTopRow">
-          <div className="infusionEquation">
+      <div className={styles.infusionControls}>
+        <div className={styles.infuseTopRow}>
+          <div className={styles.infusionEquation}>
             {effectiveTarget ? <ConnectedInventoryItem item={effectiveTarget} /> : missingItem}
-            <div className="icon">
+            <div className={styles.icon}>
               <AppIcon icon={plusIcon} />
             </div>
             {effectiveSource ? <ConnectedInventoryItem item={effectiveSource} /> : missingItem}
-            <div className="icon">
+            <div className={styles.icon}>
               <AppIcon icon={faEquals} />
             </div>
             {result ? <ConnectedInventoryItem item={result} /> : missingItem}
           </div>
-          <div className="infuseActions">
+          <div className={styles.infuseActions}>
             <button type="button" className="dim-button" onClick={switchDirection}>
               <AppIcon icon={faRandom} /> {t('Infusion.SwitchDirection')}
             </button>
@@ -264,7 +265,7 @@ export default function InfusionFinder() {
           </div>
         </div>
         <SearchBar
-          className="infuseSearch"
+          className={styles.infuseSearch}
           onQueryChanged={onQueryChanged}
           placeholder={t('Infusion.Filter')}
           instant
@@ -276,7 +277,7 @@ export default function InfusionFinder() {
   const renderItem = (item: DimItem) => (
     <div
       key={item.id}
-      className={clsx({ 'infuse-selected': item === target })}
+      className={clsx({ [styles.infuseSelected]: item === target })}
       onClick={() => selectItem(item)}
     >
       <ConnectedInventoryItem item={item} />
@@ -284,8 +285,13 @@ export default function InfusionFinder() {
   );
 
   return (
-    <Sheet onClose={reset} header={header} sheetClassName="infuseDialog" freezeInitialHeight={true}>
-      <div className="infuseSources">
+    <Sheet
+      onClose={reset}
+      header={header}
+      sheetClassName={styles.infuseDialog}
+      freezeInitialHeight={true}
+    >
+      <div className={styles.infuseSources}>
         {items.length > 0 || dupes.length > 0 ? (
           <>
             <div className="sub-bucket">{dupes.map(renderItem)}</div>

@@ -85,12 +85,7 @@ export default function ItemPopup({
       onClose={onClose}
       zIndex={zIndex}
       header={header}
-      sheetClassName={clsx(
-        'item-popup',
-        `is-${item.tier}`,
-        tierClasses[item.tier],
-        styles.movePopupDialog
-      )}
+      sheetClassName={clsx(styles.itemPopup, tierClasses[item.tier], styles.movePopupDialog)}
       footer={
         itemActionsModel.hasMoveControls && (
           <div className={styles.mobileMoveLocations}>

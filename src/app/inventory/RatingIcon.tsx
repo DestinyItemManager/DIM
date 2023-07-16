@@ -1,5 +1,4 @@
 import { UiWishListRoll } from 'app/wishlists/wishlists';
-import React from 'react';
 import { AppIcon, thumbsDownIcon, thumbsUpIcon } from '../shell/icons';
 import styles from './RatingIcon.m.scss';
 

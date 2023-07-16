@@ -9,8 +9,8 @@ import { loadingTracker } from '../shell/loading-tracker';
 import * as actions from './actions';
 import { getBungieAccount } from './bungie-account';
 import {
-  compareAccounts,
   DestinyAccount,
+  compareAccounts,
   getDestinyAccountsForBungieAccount,
 } from './destiny-account';
 import { accountsLoadedSelector, accountsSelector, currentAccountSelector } from './selectors';

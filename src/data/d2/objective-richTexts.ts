@@ -18,9 +18,8 @@ const richTextManifestSourceData = {
   '[Heavy Attack]': ['SandboxPerk', 971817906],
   '[Insert Medal Here]': ['Objective', 2254471463],
   '[Light Attack]': ['SandboxPerk', 355406666],
-  '[Light Level]': ['SandboxPerk', 2081053584],
   '[Linear Fusion Rifle]': ['Objective', 1878887814],
-  '[Machine Gun]': ['Objective', 606807407],
+  '[Machine Gun]': ['Objective', 1588957719],
   '[Melee]': ['Objective', 44811435],
   '[Pulse Rifle]': ['Objective', 189060104],
   '[Quest]': ['Objective', 119206183],
@@ -44,9 +43,10 @@ const richTextManifestSourceData = {
   '[Strand]': ['SandboxPerk', 501809574],
   '[Super]': ['SandboxPerk', 1330059512],
   '[Sword]': ['Objective', 1250089450],
-  '[Trace Rifle]': ['Objective', 704693244],
+  '[Trace Rifle]': ['Objective', 1047174894],
   '[Void]': ['Objective', 33657378],
   '': ['Objective', 4231452845],
+  '': ['Objective', 1080160166],
 } as const;
 
 export type StringsNeedingReplacement = keyof typeof richTextManifestSourceData;

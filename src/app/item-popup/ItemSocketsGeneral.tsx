@@ -8,44 +8,31 @@ import {
   getSocketsByIndexes,
   isEventArmorRerollSocket,
 } from 'app/utils/socket-utils';
-import { Portal } from 'app/utils/temp-container';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
-import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { DimItem, DimPlug, DimSocket, DimSocketCategory } from '../inventory/item-types';
+import { DimItem, DimSocket, DimSocketCategory } from '../inventory/item-types';
 import { wishListSelector } from '../wishlists/selectors';
 import ArchetypeSocket, { ArchetypeRow } from './ArchetypeSocket';
 import EmoteSockets from './EmoteSockets';
+import { PlugClickHandler } from './ItemSockets';
 import './ItemSockets.scss';
 import styles from './ItemSocketsGeneral.m.scss';
 import Socket from './Socket';
-import SocketDetails from './SocketDetails';
 
-interface Props {
+export default function ItemSocketsGeneral({
+  item,
+  minimal,
+  onPlugClicked,
+}: {
   item: DimItem;
   /** minimal style used for loadout generator and compare */
   minimal?: boolean;
-  onPlugClicked?: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
-}
-
-export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Props) {
+  onPlugClicked: PlugClickHandler;
+}) {
   const defs = useD2Definitions();
   const wishlistRoll = useSelector(wishListSelector(item));
-  const [socketInMenu, setSocketInMenu] = useState<DimSocket | null>(null);
-
-  const handleSocketClick = (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => {
-    if (hasMenu) {
-      setSocketInMenu(socket);
-    } else {
-      onPlugClicked?.({
-        item,
-        socket,
-        plugHash: plug.plugDef.hash,
-      });
-    }
-  };
 
   if (!item.sockets || !defs) {
     return null;
@@ -99,30 +86,29 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
   // Remove categories where all the sockets were filtered out.
   categories = categories.filter((c) => socketsByCategory.get(c)?.length);
 
+  const intrinsicRow = intrinsicArmorPerkSocket && (
+    <IntrinsicArmorPerk
+      item={item}
+      socket={intrinsicArmorPerkSocket}
+      minimal={minimal}
+      onPlugClicked={onPlugClicked}
+    />
+  );
+
   return (
     <>
-      {intrinsicArmorPerkSocket && (
-        <IntrinsicArmorPerk
-          item={item}
-          socket={intrinsicArmorPerkSocket}
-          minimal={minimal}
-          handleSocketClick={handleSocketClick}
-        />
-      )}
-      <div className={clsx('sockets', styles.generalSockets, { [styles.minimalSockets]: minimal })}>
+      {!minimal && intrinsicRow}
+      <div className={clsx(styles.generalSockets, { [styles.minimalSockets]: minimal })}>
         {emoteWheelCategory && (
           <EmoteSockets
             item={item}
             itemDef={defs.InventoryItem.get(item.hash)}
             sockets={emoteWheelCategory.socketIndexes.map((s) => item.sockets!.allSockets[s])}
-            onClick={handleSocketClick}
+            onClick={onPlugClicked}
           />
         )}
         {categories.map((category) => (
-          <div
-            key={category.category.hash}
-            className={clsx('item-socket-category', categoryStyle(category.category.categoryStyle))}
-          >
+          <div key={category.category.hash}>
             {!minimal && (
               <div className="item-socket-category-name">
                 {category.category.displayProperties.name}
@@ -135,25 +121,14 @@ export default function ItemSocketsGeneral({ item, minimal, onPlugClicked }: Pro
                   item={item}
                   socket={socketInfo}
                   wishlistRoll={wishlistRoll}
-                  onClick={handleSocketClick}
+                  onClick={onPlugClicked}
                 />
               ))}
             </div>
           </div>
         ))}
-        {socketInMenu && (
-          <Portal>
-            <SocketDetails
-              key={socketInMenu.socketIndex}
-              item={item}
-              socket={socketInMenu}
-              allowInsertPlug
-              onClose={() => setSocketInMenu(null)}
-              onPlugSelected={onPlugClicked}
-            />
-          </Portal>
-        )}
       </div>
+      {minimal && intrinsicRow}
     </>
   );
 }
@@ -162,17 +137,17 @@ function IntrinsicArmorPerk({
   item,
   socket,
   minimal,
-  handleSocketClick,
+  onPlugClicked,
 }: {
   item: DimItem;
   socket: DimSocket;
   minimal?: boolean;
-  handleSocketClick: (item: DimItem, socket: DimSocket, plug: DimPlug, hasMenu: boolean) => void;
+  onPlugClicked: PlugClickHandler;
 }) {
   const plugDescriptions = usePlugDescriptions(socket.plugged?.plugDef);
   return (
     <ArchetypeRow minimal={minimal}>
-      <ArchetypeSocket archetypeSocket={socket} item={item} onClick={handleSocketClick}>
+      <ArchetypeSocket archetypeSocket={socket} item={item} onClick={onPlugClicked}>
         {!minimal && (
           <div className={styles.armorIntrinsicDescription}>
             {plugDescriptions.perks.map(
@@ -192,24 +167,4 @@ function IntrinsicArmorPerk({
       </ArchetypeSocket>
     </ArchetypeRow>
   );
-}
-
-/** converts a socket category to a valid css class name */
-function categoryStyle(categoryStyle: DestinySocketCategoryStyle) {
-  switch (categoryStyle) {
-    case DestinySocketCategoryStyle.Unknown:
-      return 'item-socket-category-Unknown';
-    case DestinySocketCategoryStyle.Reusable:
-      return 'item-socket-category-Reusable';
-    case DestinySocketCategoryStyle.Consumable:
-      return 'item-socket-category-Consumable';
-    case DestinySocketCategoryStyle.Unlockable:
-      return 'item-socket-category-Unlockable';
-    case DestinySocketCategoryStyle.Intrinsic:
-      return 'item-socket-category-Intrinsic';
-    case DestinySocketCategoryStyle.EnergyMeter:
-      return 'item-socket-category-EnergyMeter';
-    default:
-      return null;
-  }
 }
