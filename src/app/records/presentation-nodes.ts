@@ -439,22 +439,19 @@ function getCraftableInfo(itemHash: number, profileResponse: DestinyProfileRespo
 
 export function getCollectibleState(
   collectibleDef: DestinyCollectibleDefinition,
-  profileResponse: DestinyProfileResponse,
-  collectibleHashOverride?: number
+  profileResponse: DestinyProfileResponse
 ) {
   return collectibleDef.scope === DestinyScope.Character
     ? profileResponse.characterCollectibles?.data
       ? _.minBy(
           // Find the version of the collectible that's unlocked, if any
           Object.values(profileResponse.characterCollectibles.data)
-            .map((c) => c.collectibles[collectibleHashOverride ?? collectibleDef.hash].state)
+            .map((c) => c.collectibles[collectibleDef.hash].state)
             .filter((s) => s !== undefined),
           (state) => state & DestinyCollectibleState.NotAcquired
         )
       : undefined
-    : profileResponse.profileCollectibles?.data?.collectibles[
-        collectibleHashOverride ?? collectibleDef.hash
-      ]?.state;
+    : profileResponse.profileCollectibles?.data?.collectibles[collectibleDef.hash]?.state;
 }
 
 function getMetricComponent(
