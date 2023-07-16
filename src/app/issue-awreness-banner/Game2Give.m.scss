@@ -48,8 +48,8 @@
           rgba(0, 0, 0, 0.1) 66%,
           transparent 66%
         ),
-        linear-gradient(top, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0.25)),
-        linear-gradient(left, #ac7b28, #e8a534);
+        linear-gradient(to top, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0.25)),
+        linear-gradient(to left, #ac7b28, #e8a534);
       border-radius: 2px;
       background-size: 35px 100%, 100% 100%, 100% 100%;
     }
