@@ -8,7 +8,7 @@ import { StringLookup } from 'app/utils/util-types';
 import { DestinyAmmunitionType, DestinyClass, DestinyRecordState } from 'bungie-api-ts/destiny2';
 import { D2EventEnum, D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import focusingOutputs from 'data/d2/focusing-item-outputs.json';
-import { BreakerTypeHashes } from 'data/d2/generated-enums';
+import { BreakerTypeHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import missingSources from 'data/d2/missing-source-info';
 import D2Sources from 'data/d2/source-info';
 import { D1ItemCategoryHashes } from '../d1-known-values';
@@ -91,9 +91,16 @@ export const itemTypeFilter: FilterDefinition = {
 };
 
 export const itemCategoryFilter: FilterDefinition = {
-  keywords: Object.keys(itemCategoryHashesByName),
+  keywords: [...Object.keys(itemCategoryHashesByName), 'grenadelauncher'],
   description: tl('Filter.WeaponType'),
   filter: ({ filterValue }) => {
+    // Before special GLs and heavy GLs were entirely separated, `is:grenadelauncher` matched both.
+    // This keeps existing searches valid and unchanged in behavior.
+    if (filterValue === 'grenadelauncher') {
+      return (item) =>
+        item.itemCategoryHashes.includes(ItemCategoryHashes.GrenadeLaunchers) ||
+        item.itemCategoryHashes.includes(-ItemCategoryHashes.GrenadeLaunchers);
+    }
     const categoryHash = itemCategoryHashesByName[filterValue.replace(/\s/g, '')];
     if (!categoryHash) {
       throw new Error('Unknown weapon type ' + filterValue);

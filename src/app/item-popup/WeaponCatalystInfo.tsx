@@ -1,3 +1,4 @@
+import { EnergyCostIcon } from 'app/dim-ui/ElementIcon';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import Objective from 'app/progress/Objective';
@@ -17,12 +18,13 @@ export function WeaponCatalystInfo({ item }: { item: DimItem }) {
 
   return (
     <div className={styles.catalystProgress}>
-      <span className={styles.catalystProgressTitle}>{t('MovePopup.CatalystProgress')}</span>
-      <div className={styles.catalystProgressSection}>
-        {catalystInfo.objectives.map((objective) => (
-          <Objective key={objective.objectiveHash} objective={objective} />
-        ))}
+      <div className={styles.catalystProgressTitle}>
+        <EnergyCostIcon className={styles.elementIcon} />
+        {t('MovePopup.CatalystProgress')}
       </div>
+      {catalystInfo.objectives.map((objective) => (
+        <Objective key={objective.objectiveHash} objective={objective} />
+      ))}
     </div>
   );
 }
