@@ -3,6 +3,8 @@ import { DimItem } from 'app/inventory/item-types';
 import { ItemCreationContext, makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { ItemFilter } from 'app/search/filter-types';
 import { count } from 'app/utils/util';
+import extraItemCollectibles from 'data/d2/unreferenced-collections-items.json';
+
 import {
   DestinyCollectibleDefinition,
   DestinyCollectibleState,
@@ -52,6 +54,13 @@ export interface DimCollectible {
   state: DestinyCollectibleState;
   collectibleDef: DestinyCollectibleDefinition;
   item: DimItem;
+  /**
+   * true if this was artificially created by DIM.
+   * some items are missing in collectibles, and we can fix that,
+   * but they shouldn't be counted toward completion meters
+   * or they'll seem wrong compared to in-game collections
+   */
+  fake: boolean;
 }
 
 export interface DimCraftable {
@@ -81,8 +90,11 @@ export function toPresentationNodeTree(
       itemCreationContext,
       presentationNodeDef.children.collectibles
     );
-    const visible = collectibles.length;
-    const acquired = count(collectibles, (c) => !(c.state & DestinyCollectibleState.NotAcquired));
+    const visible = collectibles.filter((c) => !c.fake).length;
+    const acquired = count(
+      collectibles,
+      (c) => !c.fake && !(c.state & DestinyCollectibleState.NotAcquired)
+    );
 
     // add an entry for self and return
     return {
@@ -273,34 +285,38 @@ function searchRewards(
 
 function toCollectibles(
   itemCreationContext: ItemCreationContext,
-  collectibleHashes: DestinyPresentationNodeCollectibleChildEntry[]
+  collectibleChildren: DestinyPresentationNodeCollectibleChildEntry[]
 ): DimCollectible[] {
   const { defs, profileResponse } = itemCreationContext;
   return _.compact(
-    collectibleHashes.map(({ collectibleHash }) => {
+    collectibleChildren.flatMap(({ collectibleHash }) => {
+      const fakeItemHash = (extraItemCollectibles as NodeJS.Dict<number>)[collectibleHash];
       const collectibleDef = defs.Collectible.get(collectibleHash);
       if (!collectibleDef) {
         return null;
       }
-      const state = getCollectibleState(collectibleDef, profileResponse);
-      if (
-        state === undefined ||
-        state & DestinyCollectibleState.Invisible ||
-        collectibleDef.redacted
-      ) {
-        return null;
-      }
-      const item = makeFakeItem(itemCreationContext, collectibleDef.itemHash);
-      if (!item) {
-        return null;
-      }
-      item.missingSockets = false;
-      return {
-        state,
-        collectibleDef,
-        item,
-        owned: false,
-      };
+      const itemHashes = _.compact([collectibleDef.itemHash, fakeItemHash]);
+      return itemHashes.map((itemHash) => {
+        const state = getCollectibleState(collectibleDef, profileResponse);
+        if (
+          state === undefined ||
+          state & DestinyCollectibleState.Invisible ||
+          collectibleDef.redacted
+        ) {
+          return null;
+        }
+        const item = makeFakeItem(itemCreationContext, itemHash);
+        if (!item) {
+          return null;
+        }
+        item.missingSockets = false;
+        return {
+          state,
+          collectibleDef,
+          item,
+          fake: fakeItemHash === itemHash,
+        };
+      });
     })
   );
 }
