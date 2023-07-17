@@ -73,7 +73,8 @@ export default (env: Env) => {
 
   const buildTime = Date.now();
 
-  const contentSecurityPolicy = csp(env.name);
+  const featureFlags = makeFeatureFlags(env);
+  const contentSecurityPolicy = csp(env.name, featureFlags);
 
   const analyticsProperty = env.release ? 'G-1PW23SGMHN' : 'G-MYWW38Z3LR';
 
@@ -452,7 +453,7 @@ export default (env: Env) => {
 
       // Feature flags!
       ...Object.fromEntries(
-        Object.entries(makeFeatureFlags(env)).map(([key, value]) => [
+        Object.entries(featureFlags).map(([key, value]) => [
           `$featureFlags.${key}`,
           JSON.stringify(value),
         ])

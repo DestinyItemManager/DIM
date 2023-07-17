@@ -1,11 +1,13 @@
 import builder from 'content-security-policy-builder';
+import _ from 'lodash';
+import { FeatureFlags } from './feature-flags';
 
 const SELF = "'self'";
 
 /**
  * Generate a Content Security Policy directive for a particular DIM environment (beta, release)
  */
-export default function csp(env: 'release' | 'beta' | 'dev') {
+export default function csp(env: 'release' | 'beta' | 'dev', featureFlags: FeatureFlags) {
   const baseCSP: Record<string, string[] | string | boolean> = {
     defaultSrc: ["'none'"],
     scriptSrc: [
@@ -25,7 +27,7 @@ export default function csp(env: 'release' | 'beta' | 'dev') {
       // Google Fonts
       'https://fonts.googleapis.com/',
     ],
-    connectSrc: [
+    connectSrc: _.compact([
       SELF,
       // Google Analytics
       'https://*.google-analytics.com',
@@ -34,19 +36,19 @@ export default function csp(env: 'release' | 'beta' | 'dev') {
       // Bungie.net API
       'https://www.bungie.net',
       // Sentry
-      'https://sentry.io/api/279673/',
+      featureFlags.sentry && 'https://sentry.io/api/279673/',
       // Wishlists
-      'https://raw.githubusercontent.com',
-      'https://gist.githubusercontent.com',
+      featureFlags.wishLists && 'https://raw.githubusercontent.com',
+      featureFlags.wishLists && 'https://gist.githubusercontent.com',
       // DIM Sync
       'https://api.destinyitemmanager.com',
       // Clarity
-      'https://database-clarity.github.io',
+      featureFlags.clarityDescriptions && 'https://database-clarity.github.io',
       // Stream Deck Plugin
-      'ws://localhost:9120',
+      featureFlags.elgatoStreamDeck && 'ws://localhost:9120',
       // Game2Give
-      'https://bungiefoundation.donordrive.com',
-    ],
+      featureFlags.issueBanner && 'https://bungiefoundation.donordrive.com',
+    ]),
     imgSrc: [
       SELF,
       // Webpack inlines some images

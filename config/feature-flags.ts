@@ -45,3 +45,5 @@ export function makeFeatureFlags(env: { release: boolean; beta: boolean; dev: bo
     customStatWeights: false,
   };
 }
+
+export type FeatureFlags = ReturnType<typeof makeFeatureFlags>;
