@@ -239,20 +239,21 @@ export default function LoadoutEdit({
                 onModsByBucketUpdated={handleModsByBucketUpdated}
               />
             )}
-            {(category === 'Armor' || category === 'Weapons') && (
-              <CheckButton
-                className={styles.clearButton}
-                name={`clearSpace${category}`}
-                checked={Boolean(
-                  category === 'Armor'
-                    ? loadout.parameters?.clearArmor
-                    : loadout.parameters?.clearWeapons
-                )}
-                onChange={(clear) => handleSetClear(clear, category)}
-              >
-                {t('Loadouts.ClearSpace')}
-              </CheckButton>
-            )}
+            {(category === 'Armor' || category === 'Weapons') &&
+              Boolean(categories[category]?.length) && (
+                <CheckButton
+                  className={styles.clearButton}
+                  name={`clearSpace${category}`}
+                  checked={Boolean(
+                    category === 'Armor'
+                      ? loadout.parameters?.clearArmor
+                      : loadout.parameters?.clearWeapons
+                  )}
+                  onChange={(clear) => handleSetClear(clear, category)}
+                >
+                  {t('Loadouts.ClearSpace')}
+                </CheckButton>
+              )}
           </LoadoutEditBucket>
         </LoadoutEditSection>
       ))}
