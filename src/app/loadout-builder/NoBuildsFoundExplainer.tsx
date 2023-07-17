@@ -1,4 +1,4 @@
-import { AssumeArmorMasterwork, StatConstraint } from '@destinyitemmanager/dim-api-types';
+import { AssumeArmorMasterwork, LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import { t } from 'app/i18next-t';
@@ -46,28 +46,24 @@ export default function NoBuildsFoundExplainer({
   defs,
   dispatch,
   classType,
-  autoAssignStatMods,
+  params,
   resolvedMods,
   lockedModMap,
   alwaysInvalidMods,
   armorEnergyRules,
-  statConstraints,
   pinnedItems,
-  lockedExoticHash,
   filterInfo,
   processInfo,
 }: {
   defs: D2ManifestDefinitions;
   dispatch: Dispatch<LoadoutBuilderAction>;
   classType: DestinyClass;
-  autoAssignStatMods: boolean;
+  params: LoadoutParameters;
   resolvedMods: ResolvedLoadoutMod[];
   lockedModMap: ModMap;
   alwaysInvalidMods: PluggableInventoryItemDefinition[];
   armorEnergyRules: ArmorEnergyRules;
-  statConstraints: StatConstraint[];
   pinnedItems: PinnedItems;
-  lockedExoticHash: number | undefined;
   filterInfo?: FilterInfo;
   processInfo?: ProcessStatistics;
 }) {
@@ -136,6 +132,7 @@ export default function NoBuildsFoundExplainer({
   // then we should consider removing some item restrictions (such as unpinning/unrestricting items)
   // or removing mods.
   if (filterInfo) {
+    const lockedExoticHash = params.exoticArmorHash;
     const lockedExoticBucketHash =
       lockedExoticHash !== undefined &&
       lockedExoticHash > 0 &&
@@ -207,7 +204,7 @@ export default function NoBuildsFoundExplainer({
   // two non-solar combat mods, mod assignment is trivially infeasible and we
   // can point that out directly?
 
-  const anyStatMinimums = statConstraints.some((f) => Boolean(f.minTier));
+  const anyStatMinimums = params.statConstraints!.some((f) => Boolean(f.minTier));
 
   const bucketIndependentMods = [...lockedModMap.generalMods, ...lockedModMap.activityMods];
 
@@ -335,7 +332,7 @@ export default function NoBuildsFoundExplainer({
         id: 'lowerBoundsExceeded',
         description: t('LoadoutBuilder.NoBuildsFoundExplainer.LowerBoundsFailed'),
         suggestions: _.compact([
-          !autoAssignStatMods &&
+          !params.autoStatMods &&
             $featureFlags.loAutoStatMods && {
               id: 'hint1',
               contents: (
@@ -354,7 +351,7 @@ export default function NoBuildsFoundExplainer({
                 </button>
               ),
             },
-          autoAssignStatMods &&
+          params.autoStatMods &&
             lockedModMap.generalMods.length > 0 && {
               id: 'removeGeneralMods',
               contents: (

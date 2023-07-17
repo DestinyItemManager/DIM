@@ -417,13 +417,11 @@ export default memo(function LoadoutBuilder({
               defs={defs}
               classType={classType}
               dispatch={lbDispatch}
+              params={loadoutParameters}
               resolvedMods={resolvedMods}
               lockedModMap={lockedModMap}
               alwaysInvalidMods={unassignedMods}
-              autoAssignStatMods={autoStatMods}
               armorEnergyRules={armorEnergyRules}
-              lockedExoticHash={lockedExoticHash}
-              statConstraints={statConstraints}
               pinnedItems={pinnedItems}
               filterInfo={filterInfo}
               processInfo={result?.processInfo}
