@@ -832,11 +832,11 @@ const oldToNewMod: HashLookup<number> = {
  */
 export function resolveLoadoutModHashes(
   defs: D2ManifestDefinitions | undefined,
-  modHashes: number[],
+  modHashes: number[] | undefined,
   unlockedPlugs: Set<number>
 ) {
   const mods: ResolvedLoadoutMod[] = [];
-  if (defs) {
+  if (defs && modHashes) {
     for (const originalModHash of modHashes) {
       const migratedModHash = oldToNewMod[originalModHash] ?? originalModHash;
       const resolvedModHash = mapToAvailableModCostVariant(migratedModHash, unlockedPlugs);

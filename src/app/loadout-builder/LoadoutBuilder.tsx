@@ -1,8 +1,4 @@
-import {
-  LoadoutParameters,
-  StatConstraint,
-  defaultLoadoutParameters,
-} from '@destinyitemmanager/dim-api-types';
+import { LoadoutParameters, StatConstraint } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { savedLoStatConstraintsByClassSelector } from 'app/dim-api/selectors';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
@@ -26,7 +22,7 @@ import { searchFilterSelector } from 'app/search/search-filter';
 import { useSetSetting, useSetting } from 'app/settings/hooks';
 import { AppIcon, faExclamationTriangle, redoIcon, refreshIcon, undoIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
-import { emptyArray, emptyObject } from 'app/utils/empty';
+import { emptyObject } from 'app/utils/empty';
 import { isClassCompatible } from 'app/utils/item-utils';
 import { Portal } from 'app/utils/temp-container';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -54,7 +50,6 @@ import { sortGeneratedSets } from './generated-sets/utils';
 import { filterItems } from './item-filter';
 import { useLbState } from './loadout-builder-reducer';
 import { useLoVendorItems } from './loadout-builder-vendors';
-import { statOrderFromStatConstraints } from './loadout-params';
 import { useProcess } from './process/useProcess';
 import { ArmorEnergyRules, LOCKED_EXOTIC_ANY_EXOTIC, loDefaultArmorEnergyRules } from './types';
 
@@ -92,6 +87,7 @@ export default memo(function LoadoutBuilder({
   const [
     {
       loadout,
+      resolvedStatConstraints,
       pinnedItems,
       excludedItems,
       selectedStoreId,
@@ -107,18 +103,15 @@ export default memo(function LoadoutBuilder({
 
   // TODO: bundle these together into an LO context?
   const loadoutParameters = loadout.parameters!;
-  const modHashes = loadoutParameters.mods ?? emptyArray();
   const lockedExoticHash = loadoutParameters.exoticArmorHash;
-  const statConstraints =
-    loadoutParameters.statConstraints ?? defaultLoadoutParameters.statConstraints!;
+  const statConstraints = loadoutParameters.statConstraints!;
   const autoStatMods = Boolean(loadoutParameters.autoStatMods);
-  const statOrder = useMemo(() => statOrderFromStatConstraints(statConstraints), [statConstraints]);
 
   const selectedStore = stores.find((store) => store.id === selectedStoreId)!;
   const classType = selectedStore.classType;
   const loadouts = useRelevantLoadouts(selectedStore);
 
-  const resolvedMods = useResolvedMods(defs, modHashes, selectedStoreId);
+  const resolvedMods = useResolvedMods(defs, loadoutParameters.mods, selectedStoreId);
 
   const itemCreationContext = useSelector(createItemContextSelector);
   const allItems = useSelector(allItemsSelector);
@@ -241,8 +234,7 @@ export default memo(function LoadoutBuilder({
     subclass,
     modStatChanges,
     armorEnergyRules,
-    statOrder,
-    statConstraints,
+    resolvedStatConstraints,
     anyExotic: lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC,
     autoStatMods,
   });
@@ -287,7 +279,7 @@ export default memo(function LoadoutBuilder({
         </button>
       </div>
       <TierSelect
-        statConstraints={statConstraints}
+        resolvedStatConstraints={resolvedStatConstraints}
         statRangesFiltered={result?.statRangesFiltered}
         lbDispatch={lbDispatch}
       />
@@ -412,8 +404,7 @@ export default memo(function LoadoutBuilder({
             pinnedItems={pinnedItems}
             selectedStore={selectedStore}
             lbDispatch={lbDispatch}
-            statOrder={statOrder}
-            statConstraints={statConstraints}
+            resolvedStatConstraints={resolvedStatConstraints}
             modStatChanges={result.modStatChanges}
             loadouts={loadouts}
             params={loadoutParameters}
@@ -512,7 +503,7 @@ function useRelevantLoadouts(selectedStore: DimStore) {
  */
 function useResolvedMods(
   defs: D2ManifestDefinitions,
-  modHashes: number[],
+  modHashes: number[] | undefined,
   selectedStoreId: string | undefined
 ) {
   const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(selectedStoreId));

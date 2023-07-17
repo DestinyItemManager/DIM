@@ -1,4 +1,8 @@
-import { LoadoutParameters, StatConstraint } from '@destinyitemmanager/dim-api-types';
+import {
+  LoadoutParameters,
+  StatConstraint,
+  defaultLoadoutParameters,
+} from '@destinyitemmanager/dim-api-types';
 import { WindowVirtualList } from 'app/dim-ui/VirtualList';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
@@ -8,7 +12,14 @@ import _ from 'lodash';
 import { Dispatch, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { useAutoMods } from '../process/useProcess';
-import { ArmorEnergyRules, ArmorSet, ArmorStatHashes, ModStatChanges, PinnedItems } from '../types';
+import {
+  ArmorEnergyRules,
+  ArmorSet,
+  ArmorStatHashes,
+  ModStatChanges,
+  PinnedItems,
+  ResolvedStatConstraint,
+} from '../types';
 import GeneratedSet, { containerClass } from './GeneratedSet';
 
 /**
@@ -20,8 +31,7 @@ export default function GeneratedSets({
   selectedStore,
   sets,
   subclass,
-  statOrder,
-  statConstraints,
+  resolvedStatConstraints,
   modStatChanges,
   loadouts,
   lbDispatch,
@@ -34,8 +44,7 @@ export default function GeneratedSets({
   subclass: ResolvedLoadoutItem | undefined;
   lockedMods: PluggableInventoryItemDefinition[];
   pinnedItems: PinnedItems;
-  statOrder: number[];
-  statConstraints: StatConstraint[];
+  resolvedStatConstraints: ResolvedStatConstraint[];
   modStatChanges: ModStatChanges;
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
@@ -46,7 +55,7 @@ export default function GeneratedSets({
   const halfTierMods = useHalfTierMods(
     selectedStore.id,
     Boolean(params.autoStatMods),
-    statConstraints
+    params.statConstraints ?? defaultLoadoutParameters.statConstraints!
   );
 
   return (
@@ -64,8 +73,7 @@ export default function GeneratedSets({
           lockedMods={lockedMods}
           pinnedItems={pinnedItems}
           lbDispatch={lbDispatch}
-          statOrder={statOrder}
-          statConstraints={statConstraints}
+          resolvedStatConstraints={resolvedStatConstraints}
           modStatChanges={modStatChanges}
           loadouts={loadouts}
           params={params}

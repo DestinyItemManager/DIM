@@ -7,13 +7,11 @@ import { statTier } from '../utils';
 
 function getComparatorsForMatchedSetSorting(statConstraints: StatConstraint[]) {
   const comparators: Comparator<ArmorSet>[] = [
-    compareBy((s: ArmorSet) => -sumEnabledStats(s.stats, statConstraints)),
+    compareBy((s) => -sumEnabledStats(s.stats, statConstraints)),
   ];
 
   for (const constraint of statConstraints) {
-    comparators.push(
-      compareBy((s: ArmorSet) => -statTier(s.stats[constraint.statHash as ArmorStatHashes]))
-    );
+    comparators.push(compareBy((s) => -statTier(s.stats[constraint.statHash as ArmorStatHashes])));
   }
   return comparators;
 }

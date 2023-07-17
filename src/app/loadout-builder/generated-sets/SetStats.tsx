@@ -1,15 +1,13 @@
-import { StatConstraint } from '@destinyitemmanager/dim-api-types';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { armorStats } from 'app/search/d2-known-values';
 import { AppIcon, powerIndicatorIcon } from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { ArmorStatHashes, ArmorStats, ModStatChanges } from '../types';
+import { ArmorStatHashes, ArmorStats, ModStatChanges, ResolvedStatConstraint } from '../types';
 import { remEuclid, statTierWithHalf } from '../utils';
 import styles from './SetStats.m.scss';
 import { calculateTotalTier, sumEnabledStats } from './utils';
@@ -22,8 +20,7 @@ function SetStats({
   stats,
   getStatsBreakdown,
   maxPower,
-  statConstraints,
-  statOrder,
+  resolvedStatConstraints,
   boostedStats,
   className,
   existingLoadoutName,
@@ -33,8 +30,7 @@ function SetStats({
   stats: ArmorStats;
   getStatsBreakdown: () => ModStatChanges;
   maxPower: number;
-  statOrder: ArmorStatHashes[];
-  statConstraints: StatConstraint[];
+  resolvedStatConstraints: ResolvedStatConstraint[];
   boostedStats: Set<ArmorStatHashes>;
   className?: string;
   existingLoadoutName?: string;
@@ -42,12 +38,11 @@ function SetStats({
   exoticArmorHash?: number;
 }) {
   const defs = useD2Definitions()!;
-  const statDefs: { [statHash: number]: DestinyStatDefinition } = {};
-  for (const statHash of armorStats) {
-    statDefs[statHash] = defs.Stat.get(statHash);
-  }
   const totalTier = calculateTotalTier(stats);
-  const enabledTier = sumEnabledStats(stats, statConstraints);
+  const enabledTier = sumEnabledStats(
+    stats,
+    resolvedStatConstraints.filter((c) => !c.ignored)
+  );
 
   // Fill in info about selected items / subclass options for Clarity character stats
   const equippedHashes = new Set<number>();
@@ -76,30 +71,35 @@ function SetStats({
           </span>
         )}
       </div>
-      {statOrder.map((statHash) => (
-        <PressTip
-          key={statHash}
-          tooltip={() => (
-            <StatTooltip
-              stat={{
-                hash: statHash,
-                name: statDefs[statHash].displayProperties.name,
-                value: stats[statHash],
-                description: statDefs[statHash].displayProperties.description,
-                breakdown: getStatsBreakdown()[statHash].breakdown,
-              }}
-              equippedHashes={equippedHashes}
+      {resolvedStatConstraints.map((c) => {
+        const statHash = c.statHash as ArmorStatHashes;
+        const statDef = defs.Stat.get(statHash);
+        const value = stats[statHash];
+        return (
+          <PressTip
+            key={statHash}
+            tooltip={() => (
+              <StatTooltip
+                stat={{
+                  hash: statHash,
+                  name: statDef.displayProperties.name,
+                  value,
+                  description: statDef.displayProperties.description,
+                  breakdown: getStatsBreakdown()[statHash].breakdown,
+                }}
+                equippedHashes={equippedHashes}
+              />
+            )}
+          >
+            <Stat
+              isActive={!c.ignored}
+              isBoosted={boostedStats.has(statHash)}
+              stat={statDef}
+              value={value}
             />
-          )}
-        >
-          <Stat
-            isActive={statConstraints.some((s) => s.statHash === statHash)}
-            isBoosted={boostedStats.has(statHash)}
-            stat={statDefs[statHash]}
-            value={stats[statHash]}
-          />
-        </PressTip>
-      ))}
+          </PressTip>
+        );
+      })}
       <span className={styles.light}>
         <AppIcon icon={powerIndicatorIcon} />
         {maxPower}

@@ -1,13 +1,11 @@
-import { StatConstraint } from '@destinyitemmanager/dim-api-types';
 import { infoLog } from '../../utils/log';
 import {
-  ArmorStatHashes,
   ArmorStats,
   artificeStatBoost,
   LockableBucketHashes,
   LockableBuckets,
   majorStatBoost,
-  MinMaxIgnored,
+  ResolvedStatConstraint,
   StatRanges,
 } from '../types';
 import {
@@ -39,9 +37,8 @@ export function process(
   modStatTotals: ArmorStats,
   /** Mods to add onto the sets */
   lockedMods: LockedProcessMods,
-  /** The user's chosen stat order, including disabled stats */
-  statOrder: ArmorStatHashes[],
-  statConstraints: StatConstraint[],
+  /** The user's chosen stat constraints, including disabled stats */
+  resolvedStatConstraints: ResolvedStatConstraint[],
   /** Ensure every set includes one exotic */
   anyExotic: boolean,
   /** Which artifice mods, large, and small stat mods are available */
@@ -58,15 +55,8 @@ export function process(
 } {
   const pstart = performance.now();
 
+  const statOrder = resolvedStatConstraints.map(({ statHash }) => statHash);
   const modStatsInStatOrder = statOrder.map((h) => modStatTotals[h]);
-  const statFiltersInStatOrder: MinMaxIgnored[] = statOrder.map((h) => {
-    const statConstraint = statConstraints.find((s) => s.statHash === h);
-    return {
-      min: statConstraint?.minTier ?? 0,
-      max: statConstraint?.maxTier ?? 10,
-      ignored: !statConstraint,
-    };
-  });
 
   // This stores the computed min and max value for each stat as we process all sets, so we
   // can display it on the stat filter dropdowns
@@ -243,9 +233,9 @@ export function process(
             let statRangeExceeded = false;
             for (let index = 0; index < 6; index++) {
               const tier = tiers[index];
-              const filter = statFiltersInStatOrder[index];
+              const filter = resolvedStatConstraints[index];
               if (!filter.ignored) {
-                if (tier > filter.max) {
+                if (tier > filter.maxTier) {
                   statRangeExceeded = true;
                 }
                 totalTier += tier;
@@ -281,10 +271,10 @@ export function process(
 
             // Check in which stats we're lacking
             for (let index = 0; index < 6; index++) {
-              const filter = statFiltersInStatOrder[index];
-              if (!filter.ignored && filter.min > 0) {
+              const filter = resolvedStatConstraints[index];
+              if (!filter.ignored && filter.minTier > 0) {
                 const value = stats[index];
-                const neededValue = filter.min * 10 - value;
+                const neededValue = filter.minTier * 10 - value;
                 if (neededValue > 0) {
                   totalNeededStats += neededValue;
                   neededStats[index] = neededValue;
@@ -332,12 +322,12 @@ export function process(
             for (let index = 0; index < 6; index++) {
               const tier = tiers[index];
               // Make each stat exactly one code unit so the string compares correctly
-              const filter = statFiltersInStatOrder[index];
+              const filter = resolvedStatConstraints[index];
               if (!filter.ignored) {
                 // using a power of 2 (16) instead of 11 is faster
                 tiersString += tier.toString(16);
 
-                if (stats[index] < filter.max * 10) {
+                if (stats[index] < filter.maxTier * 10) {
                   pointsNeededForTiers.push(
                     Math.ceil((10 - (stats[index] % 10)) / artificeStatBoost)
                   );
@@ -405,7 +395,7 @@ export function process(
       precalculatedInfo,
       armor,
       stats,
-      statFiltersInStatOrder
+      resolvedStatConstraints
     )!;
 
     const armorOnlyStats: Partial<ArmorStats> = {};

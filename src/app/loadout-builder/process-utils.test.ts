@@ -27,7 +27,7 @@ import {
   mapAutoMods,
   mapDimItemToProcessItem,
 } from './process/mappers';
-import { MIN_LO_ITEM_ENERGY, MinMaxIgnored } from './types';
+import { MIN_LO_ITEM_ENERGY, ResolvedStatConstraint } from './types';
 import { statTier } from './utils';
 
 // We don't really pay attention to this in the tests but the parameter is needed
@@ -467,7 +467,7 @@ describe('process-utils optimal mods', () => {
 
   // use these for testing as they are reset after each test
   let items: ProcessItem[];
-  let statFilters: MinMaxIgnored[];
+  let resolvedStatConstraints: ResolvedStatConstraint[];
   let loSessionInfo: LoSessionInfo;
 
   beforeAll(async () => {
@@ -494,10 +494,11 @@ describe('process-utils optimal mods', () => {
     const autoModData = mapAutoMods(getAutoMods(defs, emptySet()));
     loSessionInfo = precalculateStructures(autoModData, [], [], true, armorStats);
 
-    statFilters = armorStats.map(() => ({
+    resolvedStatConstraints = armorStats.map((statHash) => ({
+      statHash,
       ignored: false,
-      max: 8,
-      min: 3,
+      maxTier: 8,
+      minTier: 3,
     }));
   });
 
@@ -531,7 +532,12 @@ describe('process-utils optimal mods', () => {
         isArtifice: i < numArtifice,
       });
     }
-    const statMods = pickOptimalStatMods(loSessionInfo, ourItems, setStats, statFilters)!;
+    const statMods = pickOptimalStatMods(
+      loSessionInfo,
+      ourItems,
+      setStats,
+      resolvedStatConstraints
+    )!;
     const finalStats = [...setStats];
     for (let i = 0; i < armorStats.length; i++) {
       finalStats[i] += statMods.bonusStats[i];

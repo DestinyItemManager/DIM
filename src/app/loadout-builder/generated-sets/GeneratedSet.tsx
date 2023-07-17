@@ -1,4 +1,4 @@
-import { LoadoutParameters, StatConstraint } from '@destinyitemmanager/dim-api-types';
+import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore, statSourceOrder } from 'app/inventory/store-types';
@@ -15,7 +15,14 @@ import { t } from 'i18next';
 import _ from 'lodash';
 import { Dispatch, memo, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { ArmorEnergyRules, ArmorSet, ArmorStatHashes, ModStatChanges, PinnedItems } from '../types';
+import {
+  ArmorEnergyRules,
+  ArmorSet,
+  ArmorStatHashes,
+  ModStatChanges,
+  PinnedItems,
+  ResolvedStatConstraint,
+} from '../types';
 import { getPower } from '../utils';
 import styles from './GeneratedSet.m.scss';
 import GeneratedSetButtons from './GeneratedSetButtons';
@@ -33,8 +40,7 @@ export default memo(function GeneratedSet({
   selectedStore,
   lockedMods,
   pinnedItems,
-  statOrder,
-  statConstraints,
+  resolvedStatConstraints,
   modStatChanges,
   loadouts,
   lbDispatch,
@@ -48,8 +54,7 @@ export default memo(function GeneratedSet({
   selectedStore: DimStore;
   lockedMods: PluggableInventoryItemDefinition[];
   pinnedItems: PinnedItems;
-  statOrder: ArmorStatHashes[];
-  statConstraints: StatConstraint[];
+  resolvedStatConstraints: ResolvedStatConstraint[];
   modStatChanges: ModStatChanges;
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
@@ -151,8 +156,7 @@ export default memo(function GeneratedSet({
         stats={set.stats}
         getStatsBreakdown={getStatsBreakdownOnce}
         maxPower={getPower(displayedItems)}
-        statOrder={statOrder}
-        statConstraints={statConstraints}
+        resolvedStatConstraints={resolvedStatConstraints}
         boostedStats={boostedStats}
         existingLoadoutName={existingLoadout?.name}
         subclass={subclass}

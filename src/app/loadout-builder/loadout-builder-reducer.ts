@@ -41,7 +41,14 @@ import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useCallback, useMemo, useReducer } from 'react';
 import { useSelector } from 'react-redux';
-import { ArmorSet, ExcludedItems, LockableBucketHashes, MinMaxIgnored, PinnedItems } from './types';
+import { resolveStatConstraints, unresolveStatConstraints } from './loadout-params';
+import {
+  ArmorSet,
+  ExcludedItems,
+  LockableBucketHashes,
+  PinnedItems,
+  ResolvedStatConstraint,
+} from './types';
 
 interface LoadoutBuilderUI {
   modPicker: {
@@ -70,6 +77,15 @@ interface LoadoutBuilderConfiguration {
    * distinguishes between "clean slate" and when we started with a loadout.
    */
   existingLoadout: boolean;
+
+  /**
+   * A copy of `loadout.parameters.statConstraints`, but with ignored stats
+   * included. This is more convenient to use than the raw `statConstraints` but
+   * is kept in sync. Like `statConstraints` this is always in stat preference
+   * order.
+   */
+  resolvedStatConstraints: ResolvedStatConstraint[];
+
   // TODO: While I can think of reasons to have them, I don't love the complex
   // interaction of selecting individual pinned/excluded items. Maybe instead
   // rely on search (e.g. -is:inloadout) and otherwise let LO choose via mods.
@@ -205,6 +221,7 @@ const lbConfigInit = ({
   return {
     loadout,
     existingLoadout,
+    resolvedStatConstraints: resolveStatConstraints(loadoutParameters.statConstraints!),
     pinnedItems,
     excludedItems: emptyObject(),
     selectedStoreId,
@@ -217,7 +234,7 @@ type LoadoutBuilderConfigAction =
       store: DimStore;
       savedStatConstraintsByClass: { [classType: number]: StatConstraint[] };
     }
-  | { type: 'statConstraintChanged'; statHash: number; constraint: MinMaxIgnored }
+  | { type: 'statConstraintChanged'; constraint: ResolvedStatConstraint }
   | { type: 'statOrderChanged'; sourceIndex: number; destinationIndex: number; statHash: number }
   | {
       type: 'assumeArmorMasterworkChanged';
@@ -315,40 +332,30 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
         };
       }
       case 'statConstraintChanged': {
-        const { statHash, constraint } = action;
+        const { constraint } = action;
+        const newStatConstraints = state.resolvedStatConstraints.map((s) => {
+          if (s.statHash !== constraint.statHash) {
+            return s;
+          }
 
-        const originalConstraints = state.loadout.parameters?.statConstraints ?? [];
+          if (constraint.ignored) {
+            return undefined;
+          }
 
-        // TODO: really annoying that ignored stats are missing from the list
-        // TODO: handle the case where a previously ignored stat was un-ignored
-        const newStatConstraints = _.compact(
-          originalConstraints.map((s) => {
-            if (s.statHash !== statHash) {
-              return s;
-            }
-
-            if (constraint.ignored) {
-              return undefined;
-            }
-
-            const newStat = { ...s };
-            if (constraint.min > 0) {
-              newStat.minTier = constraint.min;
-            } else {
-              delete newStat.minTier;
-            }
-            if (constraint.max < 10) {
-              newStat.maxTier = constraint.max;
-            } else {
-              delete newStat.maxTier;
-            }
-            return newStat;
-          })
-        );
-        return {
-          ...state,
-          loadout: setLoadoutParameters({ statConstraints: newStatConstraints })(state.loadout),
-        };
+          const newStat = { ...s };
+          if (constraint.min > 0) {
+            newStat.minTier = constraint.min;
+          } else {
+            delete newStat.minTier;
+          }
+          if (constraint.max < 10) {
+            newStat.maxTier = constraint.max;
+          } else {
+            delete newStat.maxTier;
+          }
+          return newStat;
+        });
+        return updateStatConstraints(state, newStatConstraints);
       }
       case 'statOrderChanged': {
         const { destinationIndex, statHash } = action;
@@ -570,6 +577,19 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
           loadout: setLoadoutParameters({ query: action.query || undefined })(state.loadout),
         };
     }
+  };
+}
+
+function updateStatConstraints(
+  state: LoadoutBuilderConfiguration,
+  resolvedStatConstraints: ResolvedStatConstraint[]
+): LoadoutBuilderConfiguration {
+  return {
+    ...state,
+    resolvedStatConstraints,
+    loadout: setLoadoutParameters({
+      statConstraints: unresolveStatConstraints(resolvedStatConstraints),
+    })(state.loadout),
   };
 }
 
