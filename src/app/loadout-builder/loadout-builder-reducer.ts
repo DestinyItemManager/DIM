@@ -333,46 +333,15 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
       }
       case 'statConstraintChanged': {
         const { constraint } = action;
-        const newStatConstraints = state.resolvedStatConstraints.map((s) => {
-          if (s.statHash !== constraint.statHash) {
-            return s;
-          }
-
-          if (constraint.ignored) {
-            return undefined;
-          }
-
-          const newStat = { ...s };
-          if (constraint.min > 0) {
-            newStat.minTier = constraint.min;
-          } else {
-            delete newStat.minTier;
-          }
-          if (constraint.max < 10) {
-            newStat.maxTier = constraint.max;
-          } else {
-            delete newStat.maxTier;
-          }
-          return newStat;
-        });
+        const newStatConstraints = state.resolvedStatConstraints.map((c) =>
+          c.statHash === constraint.statHash ? constraint : c
+        );
         return updateStatConstraints(state, newStatConstraints);
       }
       case 'statOrderChanged': {
-        const { destinationIndex, statHash } = action;
-        let { sourceIndex } = action;
-
-        const originalConstraints = state.loadout.parameters?.statConstraints ?? [];
-        let newStatConstraints = originalConstraints;
-        if (sourceIndex >= originalConstraints.length) {
-          newStatConstraints = [...originalConstraints, { statHash }];
-          sourceIndex = newStatConstraints.length - 1;
-        }
-        const newOrder = reorder(newStatConstraints, sourceIndex, destinationIndex);
-
-        return {
-          ...state,
-          loadout: setLoadoutParameters({ statConstraints: newOrder })(state.loadout),
-        };
+        const { sourceIndex, destinationIndex } = action;
+        const newOrder = reorder(state.resolvedStatConstraints, sourceIndex, destinationIndex);
+        return updateStatConstraints(state, newOrder);
       }
       case 'pinItem': {
         const { item } = action;

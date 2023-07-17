@@ -162,9 +162,7 @@ function MinMaxSelectInner({
     let update: ResolvedStatConstraint;
     if (e.target.value === IGNORE || e.target.value === INCLUDE) {
       update = {
-        statHash,
-        minTier: stat.minTier,
-        maxTier: stat.maxTier,
+        ...stat,
         ignored: e.target.value === IGNORE,
       };
     } else {
