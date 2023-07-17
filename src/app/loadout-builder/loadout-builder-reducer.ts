@@ -302,7 +302,7 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
           loadoutParameters = { ...loadoutParameters, statConstraints: constraints };
         }
 
-        loadout = setLoadoutParameters(loadoutParameters)(state.loadout);
+        loadout = setLoadoutParameters(loadoutParameters)(loadout);
 
         return {
           ...state,
