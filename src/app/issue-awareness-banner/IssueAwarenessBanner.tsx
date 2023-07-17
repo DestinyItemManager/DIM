@@ -1,4 +1,6 @@
+import { issueBannerEnabledSelector } from 'app/dim-api/selectors';
 import { useIsPhonePortrait } from 'app/shell/selectors';
+import { useSelector } from 'react-redux';
 import Game2Give from './Game2Give';
 
 /**
@@ -6,6 +8,7 @@ import Game2Give from './Game2Give';
  */
 export default function IssueAwarenessBanner() {
   const isPhonePortrait = useIsPhonePortrait();
+  const issueBannerEnabled = useSelector(issueBannerEnabledSelector);
 
-  return <>{!isPhonePortrait && <Game2Give />}</>;
+  return !isPhonePortrait && issueBannerEnabled ? <Game2Give /> : null;
 }
