@@ -44,6 +44,8 @@ export default function csp(env: 'release' | 'beta' | 'dev') {
       'https://database-clarity.github.io',
       // Stream Deck Plugin
       'ws://localhost:9120',
+      // Game2Give
+      'https://bungiefoundation.donordrive.com',
     ],
     imgSrc: [
       SELF,

@@ -17,6 +17,7 @@ import { ItemDragPreview } from 'app/inventory/ItemDragPreview';
 import SyncTagLock from 'app/inventory/SyncTagLock';
 import { blockingProfileErrorSelector, storesSelector } from 'app/inventory/selectors';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
+import IssueAwarenessBanner from 'app/issue-awreness-banner/IssueAwarenessBanner';
 import ItemFeedPage from 'app/item-feed/ItemFeedPage';
 import LoadoutDrawerContainer from 'app/loadout-drawer/LoadoutDrawerContainer';
 import { totalPostmasterItems } from 'app/loadout-drawer/postmaster';
@@ -186,7 +187,15 @@ export default function Destiny() {
     <>
       <div className={styles.content}>
         <Routes>
-          <Route path="inventory" element={<Inventory account={account} />} />
+          <Route
+            path="inventory"
+            element={
+              <>
+                <Inventory account={account} />
+                {$featureFlags.issueBanner && <IssueAwarenessBanner />}
+              </>
+            }
+          />
           {account.destinyVersion === 2 && (
             <Route path="progress" element={<Progress account={account} />} />
           )}
