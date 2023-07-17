@@ -24,7 +24,6 @@ export default function Game2Give() {
     <div className={styles.issueAwarenessBanner}>
       {game2GiveState.loaded && (
         <div className={styles.item}>
-          <img src={heroimage} className={styles.hero} />
           <div className={styles.info}>
             <p className={styles.cta}>
               Support the Bungie Foundation so together we can make an impact on the world.
@@ -65,6 +64,7 @@ export default function Game2Give() {
               <div className={styles.goal}>${game2GiveState.goal.toLocaleString()}</div>
             </div>
           </div>
+          <img src={heroimage} className={styles.hero} />
           {/* {game2GiveState.error && <div>Error loading latest</div>} */}
         </div>
       )}
