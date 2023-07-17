@@ -72,3 +72,7 @@ export const trackedTriumphsSelector = createSelector(
   currentProfileSelector,
   (profile) => profile?.triumphs || []
 );
+
+/** Server control over the issue/campaign banner */
+export const issueBannerEnabledSelector = (state: RootState) =>
+  state.dimApi.globalSettings.showIssueBanner;

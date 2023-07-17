@@ -1,5 +1,7 @@
 ## Next
 
+* Moved the Bungie Day Giving Festival Banner.
+
 ## 7.77.0 <span class="changelog-date">(2023-07-16)</span>
 
 * Fixed Harmonic mods ex. "Harmonic Siphon" from having no description

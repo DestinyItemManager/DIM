@@ -4,6 +4,7 @@ import { InventoryBucket, InventoryBuckets } from 'app/inventory/inventory-bucke
 import { locateItem$ } from 'app/inventory/locate-item';
 import { DimStore } from 'app/inventory/store-types';
 import { findItemsByBucket, getCurrentStore, getVault } from 'app/inventory/stores-helpers';
+import IssueAwarenessBanner from 'app/issue-awareness-banner/IssueAwarenessBanner';
 import ItemFeedSidebar from 'app/item-feed/ItemFeedSidebar';
 import { useSetSetting } from 'app/settings/hooks';
 import { AppIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
@@ -93,6 +94,7 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
               </button>
             )}
           </div>
+          {$featureFlags.issueBanner && <IssueAwarenessBanner />}
         </HeaderShadowDiv>
 
         <StoresInventory
