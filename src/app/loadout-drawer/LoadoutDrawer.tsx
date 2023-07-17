@@ -38,7 +38,6 @@ import {
   LoadoutUpdateFunction,
   removeItem,
   setClassType,
-  setClearSpace,
   setName,
   setNotes,
 } from './loadout-drawer-reducer';
@@ -226,8 +225,6 @@ export default function LoadoutDrawer({
     setLoadout(fillLoadoutFromEquipped(defs, store, artifactUnlocks));
   const handleFillLoadoutFromUnequipped = () => setLoadout(fillLoadoutFromUnequipped(defs, store));
 
-  const handleSetClearSpace = withUpdater(setClearSpace);
-
   const toggleAnyClass = (checked: boolean) =>
     setLoadout(setClassType(checked ? DestinyClass.Unknown : store.classType));
 
@@ -307,13 +304,6 @@ export default function LoadoutDrawer({
             name="anyClass"
           >
             {t('Loadouts.Any')}
-          </CheckButton>
-          <CheckButton
-            name="clearSpace"
-            checked={Boolean(loadout.clearSpace)}
-            onChange={handleSetClearSpace}
-          >
-            {t('Loadouts.ClearSpace')}
           </CheckButton>
         </div>
       </LoadoutDrawerDropTarget>

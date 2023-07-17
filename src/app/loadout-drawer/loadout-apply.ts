@@ -640,13 +640,15 @@ function doApplyLoadout(
 
       // If this is marked to clear space (and we're not applying it to the vault), move items not
       // in the loadout off the character
-      if (loadout.clearSpace && !store.isVault) {
+      if ((loadout.parameters?.clearWeapons || loadout.parameters?.clearArmor) && !store.isVault) {
         setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.ClearSpace));
         await dispatch(
           clearSpaceAfterLoadout(
             getTargetStore(),
             applicableLoadoutItems.map((i) => getLoadoutItem(i)!),
-            moveSession
+            moveSession,
+            loadout.parameters.clearWeapons ?? false,
+            loadout.parameters.clearArmor ?? false
           )
         );
       }
@@ -786,7 +788,9 @@ function applyLoadoutItem(
 function clearSpaceAfterLoadout(
   store: DimStore,
   items: DimItem[],
-  moveSession: MoveSession
+  moveSession: MoveSession,
+  clearWeapons: boolean,
+  clearArmor: boolean
 ): ThunkResult {
   const itemsByType = _.groupBy(items, (i) => i.bucket.hash);
 
@@ -798,20 +802,16 @@ function clearSpaceAfterLoadout(
   const itemsToRemove: DimItem[] = [];
 
   for (const [bucketId, loadoutItems] of Object.entries(itemsByType)) {
-    // Exclude a handful of buckets from being cleared out
+    const bucketHash = parseInt(bucketId, 10);
+    // Only clear the buckets that were selected by the user
     if (
-      [
-        BucketHashes.Consumables,
-        BucketHashes.Materials,
-        BucketHashes.Ghost,
-        BucketHashes.Ships,
-        BucketHashes.Vehicle,
-      ].includes(loadoutItems[0].bucket.hash)
+      !(clearArmor && D2Categories.Armor.includes(bucketHash)) &&
+      !(clearWeapons && D2Categories.Weapons.includes(bucketHash))
     ) {
       continue;
     }
+
     let numUnequippedLoadoutItems = 0;
-    const bucketHash = parseInt(bucketId, 10);
     for (const existingItem of findItemsByBucket(store, bucketHash)) {
       if (existingItem.equipped) {
         // ignore equipped items

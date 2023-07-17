@@ -1,5 +1,6 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
@@ -25,6 +26,7 @@ import {
   removeArtifactUnlock,
   removeItem,
   removeMod,
+  setClearSpace,
   setLoadoutSubclassFromEquipped,
   syncArtifactUnlocksFromEquipped,
   syncModsFromEquipped,
@@ -145,6 +147,7 @@ export default function LoadoutEdit({
     setLoadout(syncArtifactUnlocksFromEquipped(store, profileResponse));
   const handleClearArtifactUnlocks = withUpdater(clearArtifactUnlocks);
   const handleRemoveArtifactUnlock = withUpdater(removeArtifactUnlock);
+  const handleSetClear = withUpdater(setClearSpace);
 
   const artifactTitle = loadout.parameters?.artifactUnlocks
     ? t('Loadouts.ArtifactUnlocksWithSeason', {
@@ -235,6 +238,20 @@ export default function LoadoutEdit({
                 allMods={modDefinitions}
                 onModsByBucketUpdated={handleModsByBucketUpdated}
               />
+            )}
+            {(category === 'Armor' || category === 'Weapons') && (
+              <CheckButton
+                className={styles.clearButton}
+                name={`clearSpace${category}`}
+                checked={Boolean(
+                  category === 'Armor'
+                    ? loadout.parameters?.clearArmor
+                    : loadout.parameters?.clearWeapons
+                )}
+                onChange={(clear) => handleSetClear(clear, category)}
+              >
+                {t('Loadouts.ClearSpace')}
+              </CheckButton>
             )}
           </LoadoutEditBucket>
         </LoadoutEditSection>
