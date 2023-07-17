@@ -5,7 +5,6 @@
 }
 
 .issueAwarenessBanner {
-  cursor: default;
   position: fixed;
   bottom: -1px;
   left: 50%;
@@ -17,30 +16,17 @@
   align-content: center;
   align-items: center;
   transition: opacity 0.5s ease-in-out;
-
-  button {
-    cursor: pointer;
-  }
-
-  img {
-    display: block;
-  }
 }
 
 .item {
-  font-size: 24px;
   background-color: #111;
-  position: unset;
-  contain: unset;
-  box-sizing: unset;
-  width: auto;
-  height: unset;
-  transition: unset;
   display: flex;
+  flex-direction: row;
 }
 
 .hero {
-  width: 50%;
+  display: block;
+  width: 45%;
   object-fit: contain;
 }
 
@@ -54,7 +40,6 @@
 }
 
 .cta {
-  font-size: 1rem;
   margin: 0;
   text-align: center;
   flex-grow: 1;
