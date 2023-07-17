@@ -289,9 +289,7 @@ export default memo(function LoadoutBuilder({
       <TierSelect
         statConstraints={statConstraints}
         statRangesFiltered={result?.statRangesFiltered}
-        onStatConstraintsChanged={(statConstraints) =>
-          lbDispatch({ type: 'statConstraintsChanged', statConstraints })
-        }
+        lbDispatch={lbDispatch}
       />
       <EnergyOptions
         assumeArmorMasterwork={loadoutParameters.assumeArmorMasterwork}

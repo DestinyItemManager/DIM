@@ -35,12 +35,13 @@ import {
   subclassAbilitySocketCategoryHashes,
 } from 'app/utils/socket-utils';
 import { useHistory } from 'app/utils/undo-redo-history';
+import { reorder } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useCallback, useMemo, useReducer } from 'react';
 import { useSelector } from 'react-redux';
-import { ArmorSet, ExcludedItems, LockableBucketHashes, PinnedItems } from './types';
+import { ArmorSet, ExcludedItems, LockableBucketHashes, MinMaxIgnored, PinnedItems } from './types';
 
 interface LoadoutBuilderUI {
   modPicker: {
@@ -216,8 +217,8 @@ type LoadoutBuilderConfigAction =
       store: DimStore;
       savedStatConstraintsByClass: { [classType: number]: StatConstraint[] };
     }
-  // TODO: can we change the stat constraints directly?
-  | { type: 'statConstraintsChanged'; statConstraints: StatConstraint[] }
+  | { type: 'statConstraintChanged'; statHash: number; constraint: MinMaxIgnored }
+  | { type: 'statOrderChanged'; sourceIndex: number; destinationIndex: number; statHash: number }
   | {
       type: 'assumeArmorMasterworkChanged';
       assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
@@ -313,10 +314,58 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
           excludedItems: {},
         };
       }
-      case 'statConstraintsChanged': {
-        const { statConstraints } = action;
-        // TODO: stat filters to constraints?
-        return { ...state, loadout: setLoadoutParameters({ statConstraints })(state.loadout) };
+      case 'statConstraintChanged': {
+        const { statHash, constraint } = action;
+
+        const originalConstraints = state.loadout.parameters?.statConstraints ?? [];
+
+        // TODO: really annoying that ignored stats are missing from the list
+        // TODO: handle the case where a previously ignored stat was un-ignored
+        const newStatConstraints = _.compact(
+          originalConstraints.map((s) => {
+            if (s.statHash !== statHash) {
+              return s;
+            }
+
+            if (constraint.ignored) {
+              return undefined;
+            }
+
+            const newStat = { ...s };
+            if (constraint.min > 0) {
+              newStat.minTier = constraint.min;
+            } else {
+              delete newStat.minTier;
+            }
+            if (constraint.max < 10) {
+              newStat.maxTier = constraint.max;
+            } else {
+              delete newStat.maxTier;
+            }
+            return newStat;
+          })
+        );
+        return {
+          ...state,
+          loadout: setLoadoutParameters({ statConstraints: newStatConstraints })(state.loadout),
+        };
+      }
+      case 'statOrderChanged': {
+        const { destinationIndex, statHash } = action;
+        let { sourceIndex } = action;
+
+        const originalConstraints = state.loadout.parameters?.statConstraints ?? [];
+        let newStatConstraints = originalConstraints;
+        if (sourceIndex >= originalConstraints.length) {
+          newStatConstraints = [...originalConstraints, { statHash }];
+          sourceIndex = newStatConstraints.length - 1;
+        }
+        const newOrder = reorder(newStatConstraints, sourceIndex, destinationIndex);
+
+        return {
+          ...state,
+          loadout: setLoadoutParameters({ statConstraints: newOrder })(state.loadout),
+        };
       }
       case 'pinItem': {
         const { item } = action;

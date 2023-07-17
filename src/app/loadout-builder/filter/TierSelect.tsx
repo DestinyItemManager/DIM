@@ -7,7 +7,8 @@ import { AppIcon, dragHandleIcon } from 'app/shell/icons';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { memo } from 'react';
+import React, { Dispatch, memo } from 'react';
+import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { statFiltersFromStatConstraints, statOrderFromStatConstraints } from '../loadout-params';
 import { ArmorStatHashes, MinMaxIgnored, StatRanges } from '../types';
 import { statTierWithHalf } from '../utils';
@@ -24,67 +25,39 @@ const MinMaxSelect = memo(MinMaxSelectInner);
 export default function TierSelect({
   statConstraints,
   statRangesFiltered,
-  onStatConstraintsChanged,
+  lbDispatch,
 }: {
   statConstraints: StatConstraint[];
   /** The ranges the stats could have gotten to INCLUDING stat filters and mod compatibility */
   statRangesFiltered?: Readonly<StatRanges>;
-  onStatConstraintsChanged: (constraints: StatConstraint[]) => void;
+  lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
   const defs = useD2Definitions()!;
   const order = statOrderFromStatConstraints(statConstraints);
   const stats = statFiltersFromStatConstraints(statConstraints);
-  const handleTierChange = (
-    statHash: ArmorStatHashes,
-    changed: { min: number; max: number; ignored: boolean }
-  ) => {
-    // TODO: really annoying that ignored stats are missing from the list
-    // TODO: handle the case where a previously ignored stat was un-ignored
-    const newStatConstraints = _.compact(
-      statConstraints.map((s) => {
-        if (s.statHash !== statHash) {
-          return s;
-        }
-
-        if (changed.ignored) {
-          return undefined;
-        }
-
-        const newStat = { ...s };
-        if (changed.min > 0) {
-          newStat.minTier = changed.min;
-        } else {
-          delete newStat.minTier;
-        }
-        if (changed.max < 10) {
-          newStat.maxTier = changed.max;
-        } else {
-          delete newStat.maxTier;
-        }
-        return newStat;
-      })
-    );
-    onStatConstraintsChanged(newStatConstraints);
-  };
 
   const statDefs: { [statHash: number]: DestinyStatDefinition } = {};
   for (const statHash of order) {
     statDefs[statHash] = defs.Stat.get(statHash);
   }
 
+  const handleTierChange = (
+    statHash: ArmorStatHashes,
+    changed: { min: number; max: number; ignored: boolean }
+  ) => lbDispatch({ type: 'statConstraintChanged', statHash: statHash, constraint: changed });
+
   const onDragEnd = (result: DropResult) => {
     // dropped outside the list
     if (!result.destination) {
       return;
     }
-    let newStatConstraints = statConstraints;
-    let sourceIndex = result.source.index;
-    if (result.source.index >= statConstraints.length) {
-      newStatConstraints = [...statConstraints, { statHash: order[sourceIndex] }];
-      sourceIndex = newStatConstraints.length - 1;
-    }
-    const newOrder = reorder(newStatConstraints, sourceIndex, result.destination.index);
-    onStatConstraintsChanged(newOrder);
+    const sourceIndex = result.source.index;
+    lbDispatch({
+      type: 'statOrderChanged',
+      statHash: order[sourceIndex],
+      sourceIndex,
+      destinationIndex: result.destination.index,
+    });
   };
 
   return (
@@ -92,7 +65,7 @@ export default function TierSelect({
       <Droppable droppableId="droppable">
         {(provided) => (
           <div ref={provided.innerRef}>
-            {order.map((statHash: ArmorStatHashes, index) => (
+            {order.map((statHash, index) => (
               <DraggableItem
                 key={statHash}
                 id={statHash.toString()}
@@ -266,13 +239,4 @@ function MinMaxSelectInner({
       )}
     </select>
   );
-}
-
-// a little function to help us with reordering the result
-function reorder<T>(list: T[], startIndex: number, endIndex: number): T[] {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-
-  return result;
 }
