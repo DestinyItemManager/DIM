@@ -1,24 +1,11 @@
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { percent } from 'app/shell/formatters';
-import { useEffect } from 'react';
 import styles from './Game2Give.m.scss';
 import heroimage from './bungie-day-giving-festival.jpg';
 import useGame2GiveData from './useGame2GiveData';
 
 export default function Game2Give() {
   const game2GiveState = useGame2GiveData();
-
-  useEffect(() => {
-    const className = 'issue-awareness-active';
-
-    if (game2GiveState.loaded) {
-      document.body.classList.add(className);
-    }
-
-    return () => {
-      document.body.classList.remove(className);
-    };
-  }, [game2GiveState.loaded]);
 
   return (
     <div className={styles.issueAwarenessBanner}>
