@@ -54,6 +54,7 @@ export interface DimCollectible {
   state: DestinyCollectibleState;
   collectibleDef: DestinyCollectibleDefinition;
   item: DimItem;
+  key: string;
   /**
    * true if this was artificially created by DIM.
    * some items are missing in collectibles, and we can fix that,
@@ -314,6 +315,7 @@ function toCollectibles(
           state,
           collectibleDef,
           item,
+          key: `${collectibleHash}-${itemHash}`,
           fake: fakeItemHash === itemHash,
         };
       });

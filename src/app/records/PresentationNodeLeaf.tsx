@@ -25,9 +25,9 @@ export default function PresentationNodeLeaf({
         <CollectiblesGrid>
           {node.collectibles.map((collectible) => (
             <Collectible
-              key={collectible.collectibleDef.hash}
+              key={collectible.key}
               collectible={collectible}
-              owned={Boolean(ownedItemHashes?.has(collectible.collectibleDef.itemHash))}
+              owned={Boolean(ownedItemHashes?.has(collectible.item.hash))}
             />
           ))}
         </CollectiblesGrid>
