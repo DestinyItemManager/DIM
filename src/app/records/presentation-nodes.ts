@@ -54,6 +54,7 @@ export interface DimCollectible {
   state: DestinyCollectibleState;
   collectibleDef: DestinyCollectibleDefinition;
   item: DimItem;
+  key: string;
   /**
    * true if this was artificially created by DIM.
    * some items are missing in collectibles, and we can fix that,
@@ -290,7 +291,7 @@ function toCollectibles(
   const { defs, profileResponse } = itemCreationContext;
   return _.compact(
     collectibleChildren.flatMap(({ collectibleHash }) => {
-      const fakeItemHash = (extraItemCollectibles as NodeJS.Dict<number>)[collectibleHash];
+      const fakeItemHash = extraItemCollectibles[collectibleHash];
       const collectibleDef = defs.Collectible.get(collectibleHash);
       if (!collectibleDef) {
         return null;
@@ -314,6 +315,7 @@ function toCollectibles(
           state,
           collectibleDef,
           item,
+          key: `${collectibleHash}-${itemHash}`,
           fake: fakeItemHash === itemHash,
         };
       });
