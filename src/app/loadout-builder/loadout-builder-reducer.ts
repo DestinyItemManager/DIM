@@ -236,7 +236,7 @@ type LoadoutBuilderConfigAction =
       savedStatConstraintsByClass: { [classType: number]: StatConstraint[] };
     }
   | { type: 'statConstraintChanged'; constraint: ResolvedStatConstraint }
-  | { type: 'statOrderChanged'; sourceIndex: number; destinationIndex: number; statHash: number }
+  | { type: 'statOrderChanged'; sourceIndex: number; destinationIndex: number }
   | {
       type: 'assumeArmorMasterworkChanged';
       assumeArmorMasterwork: AssumeArmorMasterwork | undefined;

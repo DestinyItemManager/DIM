@@ -1,8 +1,4 @@
-import {
-  LoadoutParameters,
-  StatConstraint,
-  defaultLoadoutParameters,
-} from '@destinyitemmanager/dim-api-types';
+import { LoadoutParameters, StatConstraint } from '@destinyitemmanager/dim-api-types';
 import { WindowVirtualList } from 'app/dim-ui/VirtualList';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
@@ -55,7 +51,7 @@ export default function GeneratedSets({
   const halfTierMods = useHalfTierMods(
     selectedStore.id,
     Boolean(params.autoStatMods),
-    params.statConstraints ?? defaultLoadoutParameters.statConstraints!
+    params.statConstraints!
   );
 
   return (

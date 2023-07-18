@@ -42,7 +42,6 @@ export default function TierSelect({
     const sourceIndex = result.source.index;
     lbDispatch({
       type: 'statOrderChanged',
-      statHash: resolvedStatConstraints[sourceIndex].statHash,
       sourceIndex,
       destinationIndex: result.destination.index,
     });
