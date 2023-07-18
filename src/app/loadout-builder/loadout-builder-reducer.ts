@@ -326,6 +326,7 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
         return {
           ...state,
           loadout,
+          resolvedStatConstraints: resolveStatConstraints(loadoutParameters.statConstraints!),
           selectedStoreId: action.store.id,
           // Also clear out pinned/excluded items
           pinnedItems: {},

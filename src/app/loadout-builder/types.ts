@@ -10,12 +10,6 @@ export interface MinMax {
   max: number;
 }
 
-export interface MinMaxIgnored {
-  min: number;
-  max: number;
-  ignored: boolean;
-}
-
 /**
  * Normally stat constraints are simply missing if ignored - the resolved
  * version still exists but has an ignored flag. Also, values cannot be undefined.

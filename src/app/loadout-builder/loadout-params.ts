@@ -3,19 +3,7 @@
 import { StatConstraint, defaultLoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { armorStats } from 'app/search/d2-known-values';
 import _ from 'lodash';
-import { ArmorStatHashes, ResolvedStatConstraint } from './types';
-
-/**
- * Stat constraints are already in priority order, but they do not include
- * ignored stats. This fills in the ignored stats as well and returns a list of
- * armor stat hashes.
- */
-export function statOrderFromStatConstraints(statConstraints: StatConstraint[]): ArmorStatHashes[] {
-  return _.sortBy(armorStats, (h) => {
-    const index = statConstraints.findIndex((c) => c.statHash === h);
-    return index >= 0 ? index : 100;
-  });
-}
+import { ResolvedStatConstraint } from './types';
 
 /**
  * Stat constraints are already in priority order, but they do not include
@@ -27,7 +15,7 @@ export function resolveStatConstraints(
   const statConstraintsByStatHash = _.keyBy(statConstraints, (c) => c.statHash);
   const resolvedStatConstraints: ResolvedStatConstraint[] = armorStats.map((statHash) => {
     const c = statConstraintsByStatHash[statHash];
-    return { statHash, minTier: c?.minTier ?? 0, maxTier: c?.maxTier ?? 0, ignored: Boolean(c) };
+    return { statHash, minTier: c?.minTier ?? 0, maxTier: c?.maxTier ?? 10, ignored: !c };
   });
 
   return _.sortBy(resolvedStatConstraints, (h) => {
