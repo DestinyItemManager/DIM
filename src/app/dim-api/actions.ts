@@ -155,13 +155,14 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
   return async (dispatch, getState) => {
     installApiPermissionObserver();
 
+    // Load from indexedDB if needed
+    const profileFromIDB = dispatch(loadProfileFromIndexedDB());
+
     // Load global settings first. This fails open (we fall back to defaults)
     // but loading it first gives us a chance to find out if the API is disabled
     // and what the current refresh rate is, which gives us important
     // operational controls in case the API is knocked over.
-    if (!getState().dimApi.globalSettingsLoaded) {
-      await dispatch(loadGlobalSettings());
-    }
+    const globalSettingsLoad = dispatch(loadGlobalSettings());
 
     // Don't let actions pile up blocked on the approval UI
     if (waitingForApiPermission) {
@@ -183,9 +184,10 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
     // Load accounts info - we can't load the profile-specific DIM API data without it.
     const getPlatformsPromise = dispatch(getPlatforms()); // in parallel, we'll wait later
 
-    // Load from indexedDB if needed
-    await dispatch(loadProfileFromIndexedDB());
+    await profileFromIDB;
     installObservers(dispatch); // idempotent
+
+    await globalSettingsLoad;
 
     // They don't want to sync from the server, or the API is disabled - stick with local data
     if (
