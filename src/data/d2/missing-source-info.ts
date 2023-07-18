@@ -1194,6 +1194,7 @@ const missingSources: { [key: string]: number[] } = {
     153144587, // Solstice Cloak (Drained)
     226436555, // Solstice Mask (Renewed)
     231432261, // Solstice Bond (Resplendent)
+    233896077, // Compass Rose
     234970842, // Solstice Boots (Resplendent)
     250513201, // Solstice Greaves (Resplendent)
     335763433, // Solstice Plate (Resplendent)
@@ -1280,6 +1281,7 @@ const missingSources: { [key: string]: number[] } = {
     3159052337, // Solstice Mask (Majestic)
     3192336962, // Solstice Cloak (Scorched)
     3236510875, // Solstice Grasps (Resplendent)
+    3240434620, // Something New
     3559361670, // The Title
     3611487543, // Solstice Hood (Rekindled)
     3685996623, // Solstice Greaves (Rekindled)
