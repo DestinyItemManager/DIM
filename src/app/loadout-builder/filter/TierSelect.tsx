@@ -166,15 +166,23 @@ function MinMaxSelectInner({
       };
     } else {
       const value = parseInt(e.target.value, 10);
-      const lower = `${type}Tier` as const;
-      const opposite = lower === 'minTier' ? 'maxTier' : 'minTier';
+      // Bump the opposite tier to match this value if necessary, to avoid them
+      // becoming inverted
+      const minMax =
+        type === 'min'
+          ? {
+              minTier: value,
+              maxTier: Math.max(stat.maxTier, value),
+            }
+          : {
+              minTier: Math.min(stat.minTier, value),
+              maxTier: value,
+            };
       update = {
+        ...minMax,
         statHash,
-        [lower]: value,
-        [opposite]:
-          opposite === 'minTier' ? Math.min(stat.minTier, value) : Math.max(stat.maxTier, value),
         ignored: false,
-      } as unknown as ResolvedStatConstraint;
+      };
     }
 
     handleTierChange(update);
@@ -188,7 +196,7 @@ function MinMaxSelectInner({
       onChange={handleChange}
     >
       <option disabled>
-        {t(`LoadoutBuilder.Select${type}`, { metadata: { keys: 'minMax' } })}
+        {type === 'min' ? t('LoadoutBuilder.SelectMin') : t('LoadoutBuilder.SelectMax')}
       </option>
       {!ignored &&
         _.range(min, max + 1).map((tier) => (
