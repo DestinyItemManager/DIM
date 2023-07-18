@@ -1,6 +1,6 @@
 import { refresh$ } from 'app/shell/refresh-events';
 import { useEventBusListener } from 'app/utils/hooks';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 interface Game2GiveJSONResponse {
   fundraisingGoal: number;
@@ -11,6 +11,7 @@ interface Game2GiveJSONResponse {
 }
 
 export default function useGame2GiveData() {
+  const lastFetched = useRef(0);
   const [fundraisingState, setFundraisingState] = useState({
     goal: 0,
     donations: 0,
@@ -30,10 +31,12 @@ export default function useGame2GiveData() {
   );
 
   const getData = useCallback(async () => {
+    // Don't refresh any more frequently than 10 minutes.
+    if (Date.now() - lastFetched.current < 10 * 60 * 1000) {
+      return;
+    }
     try {
-      const response = await fetch(
-        `https://bungiefoundation.donordrive.com/api/1.3/participants/19805`
-      );
+      const response = await fetch('https://api.destinyitemmanager.com/donate');
 
       // If there is an error communicating with the Game2Giver server, error gracefully.
       if (!response.ok) {
@@ -61,6 +64,8 @@ export default function useGame2GiveData() {
       setSyncError(false);
     } catch {
       setSyncError(true);
+    } finally {
+      lastFetched.current = Date.now();
     }
   }, []);
 
