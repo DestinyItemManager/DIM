@@ -1,4 +1,5 @@
 import { destinyVersionSelector } from 'app/accounts/selectors';
+import { triggerTryRefresh } from 'app/dim-ui/AutoRefresh';
 import { PressTip, useTooltipCustomization } from 'app/dim-ui/PressTip';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
@@ -18,7 +19,6 @@ import ErrorPanel from './ErrorPanel';
 import styles from './RefreshButton.m.scss';
 import { AppIcon, faClock, faExclamationTriangle, refreshIcon } from './icons';
 import { loadingTracker } from './loading-tracker';
-import { refresh } from './refresh-events';
 
 /** We consider the profile stale if it's out of date with respect to the game data by this much */
 const STALE_PROFILE_THRESHOLD = 90_000;
@@ -44,7 +44,7 @@ export default function RefreshButton({ className }: { className?: string }) {
     };
   }, [handleChanges]);
 
-  useHotkey('r', t('Hotkey.RefreshInventory'), refresh);
+  useHotkey('r', t('Hotkey.RefreshInventory'), triggerTryRefresh);
 
   const profileAge = useProfileAge();
   const outOfDate = profileAge !== undefined && profileAge > STALE_PROFILE_THRESHOLD;
@@ -64,7 +64,7 @@ export default function RefreshButton({ className }: { className?: string }) {
       <button
         type="button"
         className={clsx(styles.refreshButton, className, { disabled })}
-        onClick={refresh}
+        onClick={triggerTryRefresh}
         title={t('Header.Refresh') + (autoRefresh ? '\n' + t('Header.AutoRefresh') : '')}
         aria-keyshortcuts="R"
       >

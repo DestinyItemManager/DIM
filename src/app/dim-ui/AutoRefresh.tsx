@@ -18,7 +18,7 @@ const globalSettingsSelector = (state: RootState) => state.dimApi.globalSettings
 // out of some circular dependencies and decouples the triggering of "we might want to refresh"
 // from the decision of whether to actually refresh.
 const tryRefresh$ = new EventBus<undefined>();
-function triggerTryRefresh() {
+export function triggerTryRefresh() {
   tryRefresh$.next(undefined);
 }
 
