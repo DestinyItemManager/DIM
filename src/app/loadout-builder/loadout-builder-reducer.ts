@@ -19,6 +19,7 @@ import {
   addItem,
   applySocketOverrides,
   clearSubclass,
+  LoadoutUpdateFunction,
   removeMod,
   setLoadoutParameters,
   updateMods,
@@ -411,19 +412,11 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
           },
         };
       }
-      case 'lockedModsChanged': {
-        return {
-          ...state,
-          // TODO: maybe have an updateLoadout method?
-          loadout: updateMods(action.lockedMods)(state.loadout),
-        };
-      }
+      case 'lockedModsChanged':
+        return updateLoadout(state, updateMods(action.lockedMods));
       case 'assumeArmorMasterworkChanged': {
         const { assumeArmorMasterwork } = action;
-        return {
-          ...state,
-          loadout: setLoadoutParameters({ assumeArmorMasterwork })(state.loadout),
-        };
+        return updateLoadout(state, setLoadoutParameters({ assumeArmorMasterwork }));
       }
       case 'addGeneralMods': {
         const newMods = [...(state.loadout.parameters?.mods ?? [])];
@@ -453,34 +446,17 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
           });
         }
 
-        return {
-          ...state,
-          loadout: updateMods(newMods)(state.loadout),
-        };
+        return updateLoadout(state, updateMods(newMods));
       }
-      case 'removeLockedMod': {
-        return {
-          ...state,
-          loadout: removeMod(action.mod)(state.loadout),
-        };
-      }
-      case 'updateSubclass': {
-        const { item } = action;
-
-        return {
-          ...state,
-          loadout: addItem(defs, item)(state.loadout),
-        };
-      }
-      case 'removeSubclass': {
-        return { ...state, loadout: clearSubclass(defs)(state.loadout) };
-      }
+      case 'removeLockedMod':
+        return updateLoadout(state, removeMod(action.mod));
+      case 'updateSubclass':
+        return updateLoadout(state, addItem(defs, action.item));
+      case 'removeSubclass':
+        return updateLoadout(state, clearSubclass(defs));
       case 'updateSubclassSocketOverrides': {
         const { socketOverrides, subclass } = action;
-        return {
-          ...state,
-          loadout: applySocketOverrides(subclass, socketOverrides)(state.loadout),
-        };
+        return updateLoadout(state, applySocketOverrides(subclass, socketOverrides));
       }
       case 'removeSingleSubclassSocketOverride': {
         const { plug, subclass } = action;
@@ -514,38 +490,33 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
           // If its not an ability we just remove it from the overrides
           delete newSocketOverrides[socketIndexToRemove];
         }
-        return {
-          ...state,
-          loadout: applySocketOverrides(
+
+        return updateLoadout(
+          state,
+          applySocketOverrides(
             subclass,
             Object.keys(newSocketOverrides).length ? newSocketOverrides : undefined
-          )(state.loadout),
-        };
+          )
+        );
       }
       case 'lockExotic': {
         const { lockedExoticHash } = action;
-        return {
-          ...state,
-          loadout: setLoadoutParameters({ exoticArmorHash: lockedExoticHash })(state.loadout),
-        };
+        return updateLoadout(state, setLoadoutParameters({ exoticArmorHash: lockedExoticHash }));
       }
-      case 'removeLockedExotic': {
-        return {
-          ...state,
-          loadout: setLoadoutParameters({ exoticArmorHash: undefined })(state.loadout),
-        };
-      }
+      case 'removeLockedExotic':
+        return updateLoadout(state, setLoadoutParameters({ exoticArmorHash: undefined }));
       case 'autoStatModsChanged':
-        return {
-          ...state,
-          loadout: setLoadoutParameters({ autoStatMods: action.autoStatMods })(state.loadout),
-        };
+        return updateLoadout(state, setLoadoutParameters({ autoStatMods: action.autoStatMods }));
       case 'setSearchQuery':
-        return {
-          ...state,
-          loadout: setLoadoutParameters({ query: action.query || undefined })(state.loadout),
-        };
+        return updateLoadout(state, setLoadoutParameters({ query: action.query || undefined }));
     }
+  };
+}
+
+function updateLoadout(state: LoadoutBuilderConfiguration, updateFn: LoadoutUpdateFunction) {
+  return {
+    ...state,
+    loadout: updateFn(state.loadout),
   };
 }
 
