@@ -101,10 +101,11 @@ export function updateCharacters(): ThunkResult {
   };
 }
 
+let firstTime = true;
+
 /**
  * Returns a promise for a fresh view of the stores and their items.
  */
-
 export function loadStores(): ThunkResult<DimStore[] | undefined> {
   return async (dispatch, getState) => {
     let account = currentAccountSelector(getState());
@@ -120,7 +121,13 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
     dispatch(loadCoreSettings()); // no need to wait
     $featureFlags.clarityDescriptions && dispatch(loadClarity()); // no need to await
     await dispatch(loadNewItems(account));
-    const stores = await dispatch(loadStoresData(account));
+    // The first time we load, allow the data to be loaded from IDB. We then do a second
+    // load to make sure that we immediately try to get remote data.
+    if (firstTime) {
+      firstTime = false;
+      await dispatch(loadStoresData(account, firstTime));
+    }
+    const stores = await dispatch(loadStoresData(account, firstTime));
     return stores;
   };
 }
@@ -130,7 +137,10 @@ const BUNGIE_CACHE_TTL = 15_000;
 
 let minimumCacheAge = Number.MAX_SAFE_INTEGER;
 
-function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileResponse | undefined> {
+function loadProfile(
+  account: DestinyAccount,
+  firstTime: boolean
+): ThunkResult<DestinyProfileResponse | undefined> {
   return async (dispatch, getState) => {
     const mockProfileData = getState().inventory.mockProfileData;
     if (mockProfileData) {
@@ -148,6 +158,10 @@ function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileRespons
       } else {
         infoLog('d2-stores', 'Loaded cached profile from IndexedDB');
         dispatch(profileLoaded({ profile: profileResponse, live: false }));
+        // The first time we load, just use the IDB version if we can, to speed up loading
+        if (firstTime) {
+          return profileResponse;
+        }
       }
     }
 
@@ -227,7 +241,10 @@ function loadProfile(account: DestinyAccount): ThunkResult<DestinyProfileRespons
   };
 }
 
-function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undefined> {
+function loadStoresData(
+  account: DestinyAccount,
+  firstTime: boolean
+): ThunkResult<DimStore[] | undefined> {
   return async (dispatch, getState) => {
     const promise = (async () => {
       // If we switched account since starting this, give up
@@ -246,7 +263,7 @@ function loadStoresData(account: DestinyAccount): ThunkResult<DimStore[] | undef
 
         const [defs, profileResponse] = await Promise.all([
           dispatch(getDefinitions())!,
-          dispatch(loadProfile(account)),
+          dispatch(loadProfile(account, firstTime)),
         ]);
 
         // If we switched account since starting this, give up
