@@ -221,6 +221,7 @@ export default function LoadoutEdit({
           title={t(`Bucket.${category}`, { metadata: { keys: 'buckets' } })}
           onClear={() => handleClearCategory(category)}
           onRandomize={() => handleRandomizeCategory(allItems, category, searchFilter)}
+          hasRandomizeQuery={searchFilter !== _.stubTrue}
           onFillFromEquipped={() => handleFillCategoryFromEquipped(artifactUnlocks, category)}
           fillFromInventoryCount={getUnequippedItemsForLoadout(store, category).length}
           onFillFromInventory={() => handleFillCategoryFromUnequipped(category)}

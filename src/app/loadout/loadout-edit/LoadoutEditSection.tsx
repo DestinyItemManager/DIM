@@ -23,6 +23,7 @@ export default function LoadoutEditSection({
   onFillFromEquipped,
   onSyncFromEquipped,
   onRandomize,
+  hasRandomizeQuery,
   fillFromInventoryCount,
   onFillFromInventory,
   onClearLoadoutParameters,
@@ -35,6 +36,7 @@ export default function LoadoutEditSection({
   onFillFromEquipped?: () => void;
   onSyncFromEquipped?: () => void;
   onRandomize?: () => void;
+  hasRandomizeQuery?: boolean;
   fillFromInventoryCount?: number;
   onFillFromInventory?: () => void;
   onClearLoadoutParameters?: () => void;
@@ -80,7 +82,8 @@ export default function LoadoutEditSection({
           onSelected: onRandomize,
           content: (
             <>
-              <AppIcon icon={faRandom} /> {t('Loadouts.RandomizeButton')}
+              <AppIcon icon={faRandom} />{' '}
+              {!hasRandomizeQuery ? t('Loadouts.RandomizeButton') : t('Loadouts.RandomizeSearch')}
             </>
           ),
         }

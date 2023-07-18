@@ -22,6 +22,7 @@ import { useHistory } from 'app/utils/undo-redo-history';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { produce } from 'immer';
+import _ from 'lodash';
 import React, { useCallback, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import TextareaAutosize from 'react-textarea-autosize';
@@ -311,7 +312,10 @@ export default function LoadoutDrawer({
             <AppIcon icon={addIcon} /> {t('Loadouts.FillFromInventory')}
           </button>
           <button type="button" className="dim-button" onClick={handleRandomizeLoadout}>
-            <AppIcon icon={faRandom} /> {t('Loadouts.RandomizeButton')}
+            <AppIcon icon={faRandom} />{' '}
+            {searchFilter === _.stubTrue
+              ? t('Loadouts.RandomizeButton')
+              : t('Loadouts.RandomizeSearch')}
           </button>
           <CheckButton
             checked={loadout.classType === DestinyClass.Unknown}

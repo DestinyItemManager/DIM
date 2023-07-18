@@ -62,12 +62,13 @@ export type LoadoutUpdateFunction = (loadout: Loadout) => Loadout;
 export function addItem(
   defs: D2ManifestDefinitions | D1ManifestDefinitions,
   item: DimItem,
-  equip?: boolean
+  equip?: boolean,
+  socketOverrides?: SocketOverrides
 ): LoadoutUpdateFunction {
   return produce((draftLoadout) => {
     const loadoutItem = convertToLoadoutItem(item, false, 1);
     if (item.sockets && item.bucket.hash === BucketHashes.Subclass) {
-      loadoutItem.socketOverrides = createSubclassDefaultSocketOverrides(item);
+      loadoutItem.socketOverrides = socketOverrides ?? createSubclassDefaultSocketOverrides(item);
     }
 
     // We only allow one subclass, and it must be equipped. Same with a couple other things.
@@ -412,20 +413,8 @@ export function setLoadoutSubclassFromEquipped(
       return loadout;
     }
 
-    const newLoadoutItem: LoadoutItem = {
-      ...convertToLoadoutItem(newSubclass, true),
-      socketOverrides: createSocketOverridesFromEquipped(newSubclass),
-    };
-
-    const isSubclass = (i: LoadoutItem) =>
-      defs.InventoryItem.get(i.hash)?.inventory?.bucketTypeHash === BucketHashes.Subclass;
-
-    const newLoadout = {
-      ...loadout,
-      items: [...loadout.items.filter((i) => !isSubclass(i)), newLoadoutItem],
-    };
-
-    return newLoadout;
+    const withoutSubclass = clearSubclass(defs)(loadout);
+    return addItem(defs, newSubclass, true)(withoutSubclass);
   };
 }
 
@@ -675,7 +664,7 @@ export function removeArtifactUnlock(mod: number): LoadoutUpdateFunction {
   });
 }
 
-/** Replace the loadout's subclass with the store's currently equipped subclass */
+/** Randomize the subclass and subclass configuration */
 export function randomizeLoadoutSubclass(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   store: DimStore
@@ -691,20 +680,13 @@ export function randomizeLoadoutSubclass(
       return loadout;
     }
 
-    const newLoadoutItem: LoadoutItem = {
-      ...convertToLoadoutItem(newSubclass, true),
-      socketOverrides: randomSubclassConfiguration(defs, newSubclass),
-    };
-
-    const isSubclass = (i: LoadoutItem) =>
-      defs.InventoryItem.get(i.hash)?.inventory?.bucketTypeHash === BucketHashes.Subclass;
-
-    const newLoadout = {
-      ...loadout,
-      items: [...loadout.items.filter((i) => !isSubclass(i)), newLoadoutItem],
-    };
-
-    return newLoadout;
+    const withoutSubclass = clearSubclass(defs)(loadout);
+    return addItem(
+      defs,
+      newSubclass,
+      true,
+      randomSubclassConfiguration(defs, newSubclass)
+    )(withoutSubclass);
   };
 }
 
@@ -716,6 +698,9 @@ function itemMatchesCategory(item: DimItem, category: D2BucketCategory | undefin
     : fromEquippedTypes.includes(item.bucket.hash);
 }
 
+/**
+ * Randomize the subclass (+ configuration), items, and mods of the loadout.
+ */
 export function randomizeFullLoadout(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   store: DimStore,
@@ -730,13 +715,13 @@ export function randomizeFullLoadout(
 }
 
 /**
- * Fill in items from the store's equipped items, keeping any equipped items already in the loadout in place.
+ * Randomize the equipped items, filling empty buckets and replacing existing equipped items.
  */
 export function randomizeLoadoutItems(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   store: DimStore,
   allItems: DimItem[],
-  /** Fill in from only this specific category */
+  /** Randomize only this specific category */
   category: D2BucketCategory | undefined,
   itemFilter: ItemFilter | undefined
 ): LoadoutUpdateFunction {
@@ -754,22 +739,28 @@ export function randomizeLoadoutItems(
     loadout.items = loadout.items.filter(
       (i) => !i.equip || !randomizedLoadoutBuckets.includes(getBucketHashFromItemHash(defs, i.hash))
     );
-    loadout.items.push(...randomizedLoadout.items);
-    if (defs.isDestiny2()) {
-      for (const item of loadout.items) {
-        if (getBucketHashFromItemHash(defs, item.hash) === BucketHashes.Subclass) {
-          item.socketOverrides = randomSubclassConfiguration(
+    for (const item of randomizedLoadout.items) {
+      let loadoutItem = item;
+      if (
+        defs.isDestiny2() &&
+        getBucketHashFromItemHash(defs, item.hash) === BucketHashes.Subclass
+      ) {
+        loadoutItem = {
+          ...loadoutItem,
+          socketOverrides: randomSubclassConfiguration(
             defs,
             allItems.find((dimItem) => dimItem.hash === item.hash)!
-          );
-        }
+          ),
+        };
       }
+      loadout.items.push(loadoutItem);
     }
   });
 }
 
 /**
- * Replace the mods in this loadout with all the mods currently on this character's equipped armor.
+ * Replace the loadout's mods with randomly chosen mods that will fit on the
+ * loadout's equipped armor (falling back to character-equipped items).
  */
 export function randomizeLoadoutMods(
   defs: D2ManifestDefinitions | D1ManifestDefinitions,
