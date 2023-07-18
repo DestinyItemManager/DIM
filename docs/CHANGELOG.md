@@ -1,5 +1,7 @@
 ## Next
 
+## 7.77.1 <span class="changelog-date">(2023-07-17)</span>
+
 * Moved the Bungie Day Giving Festival Banner.
 
 ## 7.77.0 <span class="changelog-date">(2023-07-16)</span>
