@@ -32,7 +32,12 @@ export default function updateCSSVariables() {
       setCSSVariable('--tiles-per-char-column', nextState.charColMobile);
     }
 
-    syncThemeColor();
+    // Set a class on the body to control the theme. This must be applied on the body for syncThemeColor to work.
+    if ($featureFlags.themePicker && currentState.theme !== nextState.theme) {
+      const themeClass = 'theme-' + nextState.theme;
+      document.body.className = themeClass;
+      syncThemeColor();
+    }
   });
 
   // a subscribe on isPhonePortrait is needed when the user on mobile changes from portrait to landscape
