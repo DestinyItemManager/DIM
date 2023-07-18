@@ -1,5 +1,6 @@
 import { infoLog } from '../../utils/log';
 import {
+  ArmorStatHashes,
   ArmorStats,
   artificeStatBoost,
   LockableBucketHashes,
@@ -55,7 +56,7 @@ export function process(
 } {
   const pstart = performance.now();
 
-  const statOrder = resolvedStatConstraints.map(({ statHash }) => statHash);
+  const statOrder = resolvedStatConstraints.map(({ statHash }) => statHash as ArmorStatHashes);
   const modStatsInStatOrder = statOrder.map((h) => modStatTotals[h]);
 
   // This stores the computed min and max value for each stat as we process all sets, so we
