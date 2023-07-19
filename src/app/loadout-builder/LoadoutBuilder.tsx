@@ -87,7 +87,7 @@ export default memo(function LoadoutBuilder({
     {
       loadout,
       resolvedStatConstraints,
-      existingLoadout,
+      isEditingExistingLoadout,
       pinnedItems,
       excludedItems,
       selectedStoreId,
@@ -406,7 +406,7 @@ export default memo(function LoadoutBuilder({
             modStatChanges={result.modStatChanges}
             loadouts={loadouts}
             armorEnergyRules={result.armorEnergyRules}
-            existingLoadout={existingLoadout}
+            isEditingExistingLoadout={isEditingExistingLoadout}
           />
         ) : (
           !processing && (

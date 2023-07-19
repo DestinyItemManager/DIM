@@ -37,7 +37,7 @@ export default function GeneratedSets({
   lbDispatch,
   armorEnergyRules,
   loadout,
-  existingLoadout,
+  isEditingExistingLoadout,
 }: {
   selectedStore: DimStore;
   sets: readonly ArmorSet[];
@@ -50,7 +50,7 @@ export default function GeneratedSets({
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   armorEnergyRules: ArmorEnergyRules;
   loadout: Loadout;
-  existingLoadout: boolean;
+  isEditingExistingLoadout: boolean;
 }) {
   const params = loadout.parameters!;
   const halfTierMods = useHalfTierMods(
@@ -95,7 +95,7 @@ export default function GeneratedSets({
           armorEnergyRules={armorEnergyRules}
           originalLoadout={loadout}
           equippedHashes={equippedHashes}
-          existingLoadout={existingLoadout}
+          isEditingExistingLoadout={isEditingExistingLoadout}
         />
       )}
     </WindowVirtualList>

@@ -20,7 +20,7 @@ export default function GeneratedSetButtons({
   store,
   set,
   items,
-  existingLoadout,
+  isEditingExistingLoadout,
   lockedMods,
   canCompareLoadouts,
   halfTierMods,
@@ -32,7 +32,7 @@ export default function GeneratedSetButtons({
   /** The list of items to use - these are chosen from the set's options and match what's displayed. */
   items: DimItem[];
   lockedMods: PluggableInventoryItemDefinition[];
-  existingLoadout: boolean;
+  isEditingExistingLoadout: boolean;
   canCompareLoadouts: boolean;
   halfTierMods: PluggableInventoryItemDefinition[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
@@ -45,7 +45,7 @@ export default function GeneratedSetButtons({
   const openLoadout = () =>
     editLoadout(loadout(), store.id, {
       showClass: false,
-      isNew: !existingLoadout,
+      isNew: !isEditingExistingLoadout,
     });
 
   // Automatically equip items for this generated set to the active store

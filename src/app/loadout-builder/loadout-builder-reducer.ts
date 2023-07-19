@@ -77,7 +77,7 @@ interface LoadoutBuilderConfiguration {
    * have been saved (e.g. coming from a loadout share) but this still
    * distinguishes between "clean slate" and when we started with a loadout.
    */
-  existingLoadout: boolean;
+  isEditingExistingLoadout: boolean;
 
   /**
    * A copy of `loadout.parameters.statConstraints`, but with ignored stats
@@ -143,7 +143,7 @@ const lbConfigInit = ({
   const storeMatchingClass = pickBackingStore(stores, storeId, classTypeFromPreloadedLoadout);
   const initialLoadoutParameters = preloadedLoadout?.parameters;
 
-  const existingLoadout = Boolean(preloadedLoadout);
+  const isEditingExistingLoadout = Boolean(preloadedLoadout);
 
   // If we requested a specific class type but the user doesn't have it, we
   // need to pick some different store, but ensure that class-specific stuff
@@ -222,7 +222,7 @@ const lbConfigInit = ({
 
   return {
     loadout,
-    existingLoadout,
+    isEditingExistingLoadout,
     resolvedStatConstraints: resolveStatConstraints(loadoutParameters.statConstraints!),
     pinnedItems,
     excludedItems: emptyObject(),
