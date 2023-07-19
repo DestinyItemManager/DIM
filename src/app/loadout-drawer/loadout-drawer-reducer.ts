@@ -413,8 +413,7 @@ export function setLoadoutSubclassFromEquipped(
       return loadout;
     }
 
-    const withoutSubclass = clearSubclass(defs)(loadout);
-    return addItem(defs, newSubclass, true)(withoutSubclass);
+    return addItem(defs, newSubclass, true)(loadout);
   };
 }
 
@@ -680,13 +679,12 @@ export function randomizeLoadoutSubclass(
       return loadout;
     }
 
-    const withoutSubclass = clearSubclass(defs)(loadout);
     return addItem(
       defs,
       newSubclass,
       true,
       randomSubclassConfiguration(defs, newSubclass)
-    )(withoutSubclass);
+    )(loadout);
   };
 }
 
@@ -731,7 +729,9 @@ export function randomizeLoadoutItems(
       allItems,
       (item) =>
         itemMatchesCategory(item, category) &&
-        (!itemFilter || item.bucket.hash === BucketHashes.Subclass || itemFilter(item))
+        (!(item.bucket.sort === 'Weapons' || item.bucket.sort === 'Armor') ||
+          !itemFilter ||
+          itemFilter(item))
     );
     const randomizedLoadoutBuckets = randomizedLoadout.items.map((li) =>
       getBucketHashFromItemHash(defs, li.hash)
