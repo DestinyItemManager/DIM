@@ -1,17 +1,17 @@
-// Theme variables
-:root {
+// Throne World theme
+.theme-throneworld {
   // Base colours
-  --theme-accent-primary: var(--dim-brand); // Interaction styles (hover, active, focus)
-  --theme-accent-secondary: #68a0b7; // Secondary interactions
+  --theme-accent-primary: #2ae9c6; // Interaction styles (hover, active, focus)
+  --theme-accent-secondary: #c17e2b; // Secondary interactions
 
   // Generic fills for modal backgrounds (see below)
-  --theme-fill-modal: #000; // Base fill for popups, drawers, dropdowns etc
+  --theme-fill-modal: #1b422c; // Base fill for popups, drawers, dropdowns etc
   --theme-fill-modal-actions: #161616; // Layered/contextual modals (search, item actions)
 
   // Text
   --theme-text: #fff;
   --theme-text-invert: #000;
-  --theme-text-secondary: #aaa;
+  --theme-text-secondary: #eee;
 
   // Buttons
   --theme-button-bg: rgba(255, 255, 255, 0.2);
@@ -31,8 +31,8 @@
   --theme-tooltip-minimal-bg: #5d5970;
 
   // App background gradient pattern
-  --theme-app-bg-gradient-start: hsl(240, 20%, 28%);
-  --theme-app-bg-gradient-end: hsl(240, 27%, 12%);
+  --theme-app-bg-gradient-start: #72d8ba;
+  --theme-app-bg-gradient-end: #06562a;
   --theme-app-bg-gradient: radial-gradient(
     circle at 50% 70px,
     var(--theme-app-bg-gradient-start) 0%,
@@ -42,12 +42,12 @@
   // App
   --theme-app-bg: var(--theme-app-bg-gradient);
   // The color of PWA elements like the title bar. This cannot be a gradient.
-  --theme-pwa-background: #202034;
+  --theme-pwa-background: #1b422c;
 
   // Header
-  --theme-header-nav-bg: var(--theme-app-bg-gradient);
+  --theme-header-nav-bg: #1b422c;
   --theme-header-nav-slideout-menu-bg: var(--theme-fill-modal);
-  --theme-header-characters-bg: var(--theme-app-bg-gradient);
+  --theme-header-characters-bg: #366b4d;
   --theme-header-characters-txt: #ccc;
 
   // Dropdown menu
@@ -59,12 +59,12 @@
   --theme-search-dropdown-border: transparent;
 
   // Items
-  --theme-item-polaroid: #ddd;
+  --theme-item-polaroid: #e3f9db;
   --theme-item-polaroid-txt: var(--theme-text-invert);
   --theme-item-polaroid-hover-border: #ddd;
-  --theme-item-polaroid-masterwork: #eade8b;
-  --theme-item-polaroid-masterwork-txt: var(--theme-text-invert);
-  --theme-item-polaroid-masterwork-border: #ae791e;
+  --theme-item-polaroid-masterwork: #9aad11;
+  --theme-item-polaroid-masterwork-txt: black;
+  --theme-item-polaroid-masterwork-border: #d1e15d;
   --theme-item-polaroid-godroll: #0b486b;
   --theme-item-polaroid-trashroll: #d14334;
 
@@ -82,6 +82,6 @@
   --theme-item-sheet-bg: var(--theme-fill-modal);
 
   // Organizer
-  --theme-organizer-row-odd-bg: #27263a;
-  --theme-organizer-row-even-bg: #1d1c2b;
+  --theme-organizer-row-odd-bg: #2c7c55;
+  --theme-organizer-row-even-bg: #3c926c;
 }

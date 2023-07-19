@@ -9,13 +9,13 @@
     background-color: transparent;
 
     &:hover {
-      background-color: transparent;
+      color: var(--theme-text);
+
       .collapse {
         color: rgba(245, 245, 245, 0.25);
       }
     }
     &.collapsed {
-      color: var(--theme-text);
       font-weight: bold;
       min-height: 32px;
       padding-bottom: 4px;
@@ -26,7 +26,8 @@
     cursor: pointer;
     height: 100%;
     padding-right: 8px;
-    &:hover .collapse {
+
+    &:hover {
       color: var(--theme-accent-primary);
     }
   }

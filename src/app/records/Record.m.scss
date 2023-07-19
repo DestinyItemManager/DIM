@@ -35,7 +35,7 @@
 
   p {
     margin: 0 0 8px 0;
-    color: #a1a2a2;
+    color: var(--theme-text-secondary);
     white-space: pre-wrap;
   }
 
@@ -196,6 +196,7 @@
   height: auto;
   flex-shrink: 0;
   margin-right: 8px;
+  background: var(--theme-icon-tile);
 }
 
 .info {

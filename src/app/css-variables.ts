@@ -32,8 +32,12 @@ export default function updateCSSVariables() {
       setCSSVariable('--tiles-per-char-column', nextState.charColMobile);
     }
 
-    // TODO: temporary until we have theme switching
-    syncThemeColor();
+    // Set a class on the body to control the theme. This must be applied on the body for syncThemeColor to work.
+    if ($featureFlags.themePicker && currentState.theme !== nextState.theme) {
+      const themeClass = 'theme-' + nextState.theme;
+      document.body.className = themeClass;
+      syncThemeColor();
+    }
   });
 
   // a subscribe on isPhonePortrait is needed when the user on mobile changes from portrait to landscape
@@ -73,13 +77,10 @@ export default function updateCSSVariables() {
 }
 
 /**
- * Read the --theme-pwa-chrome-background CSS variable and use it to set the meta theme-color element.
+ * Read the --theme-pwa-background CSS variable and use it to set the meta theme-color element.
  */
-// TODO: this will end up needing to be reactive to theme changes when those exist
 export function syncThemeColor() {
-  const background = getComputedStyle(document.documentElement).getPropertyValue(
-    '--theme-pwa-chrome-background'
-  );
+  const background = getComputedStyle(document.body).getPropertyValue('--theme-pwa-background');
   if (background) {
     const metaElem = document.querySelector("meta[name='theme-color']");
     if (metaElem) {

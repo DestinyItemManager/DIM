@@ -2,8 +2,8 @@
 
 .badge {
   margin-top: -1 * $item-border-width;
-  background-color: #ddd;
-  color: black;
+  background-color: var(--theme-item-polaroid);
+  color: var(--theme-item-polaroid-txt);
   height: calc(#{$badge-height});
   font-size: calc(#{$badge-font-size});
   width: 100%;
@@ -64,7 +64,8 @@
 }
 
 .masterwork {
-  background-color: $masterwork-border-color;
+  background-color: var(--theme-item-polaroid-masterwork);
+  color: var(--theme-item-polaroid-masterwork-txt);
 }
 
 .deepsight {

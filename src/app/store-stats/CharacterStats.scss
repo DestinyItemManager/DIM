@@ -87,17 +87,16 @@
           &::before,
           &::after {
             font-size: 13px;
-            color: var(--theme-text-secondary);
+            color: var(--theme-header-characters-txt);
+            margin-left: 4px;
+            margin-right: 4px;
+            text-decoration: none !important;
           }
           &::before {
             content: '=';
-            margin-left: 4px;
-            margin-right: 4px;
           }
           &::after {
             content: '+';
-            margin-left: 4px;
-            margin-right: 4px;
           }
         }
       }
@@ -108,7 +107,7 @@
     .stat {
       flex: 0;
       font-size: 11px;
-      color: #ccc;
+      color: var(--theme-header-characters-txt);
       &.pointerCursor {
         cursor: pointer;
       }

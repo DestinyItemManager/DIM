@@ -14,10 +14,13 @@
   align-items: center;
   cursor: pointer;
 
-  &:hover,
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.4);
+    color: var(--theme-accent-primary);
+  }
+
   &.collapsed {
     background-color: rgba(0, 0, 0, 0.4);
-    color: #ccc;
   }
 
   @include phone-portrait {

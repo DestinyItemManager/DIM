@@ -1082,7 +1082,8 @@
     "SortCustom": "Custom Sort",
     "SortName": "Name",
     "SpacesSize": "{{count}} space",
-    "SpacesSize_plural": "{{count}} spaces"
+    "SpacesSize_plural": "{{count}} spaces",
+    "Theme": "Theme"
   },
   "Sockets": {
     "ApplyPerks": "Apply Perks",

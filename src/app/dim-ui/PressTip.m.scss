@@ -1,5 +1,4 @@
 @use '../variables.scss' as *;
-@use 'sass:color';
 
 $horizontal-padding: 11px;
 
@@ -18,7 +17,7 @@ $horizontal-padding: 11px;
   border: 1px solid var(--theme-tooltip-border);
   border-top-width: $theme-tooltip-corner-radius;
   border-radius: $theme-tooltip-corner-radius;
-  box-shadow: 0 0 24px 6px #080811;
+  box-shadow: var(--theme-drop-shadow);
   text-align: left;
   z-index: 99999;
   white-space: pre-wrap;
