@@ -1,5 +1,11 @@
 ## Next
 
+* The "Clear other items" setting in Loadouts has been split into a separate option for clearing weapons and clearing armor.
+
+### Beta Only
+
+* We've now got some experimental new themes for DIM - you can choose one in settings. These aren't final designs but they show off what can be changed.
+
 ## 7.77.3 <span class="changelog-date">(2023-07-18)</span>
 
 ## 7.77.2 <span class="changelog-date">(2023-07-17)</span>

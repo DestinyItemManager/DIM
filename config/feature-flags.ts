@@ -44,7 +44,7 @@ export function makeFeatureFlags(env: { release: boolean; beta: boolean; dev: bo
     // not ready to turn these on but the code is there
     customStatWeights: false,
     // Allow for non-default visual themes
-    themePicker: env.dev,
+    themePicker: !env.release,
   };
 }
 
