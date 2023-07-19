@@ -101,11 +101,11 @@ export default memo(function LoadoutBuilder({
 
   // TODO: if we're editing a loadout, grey out incompatible classes?
 
-  // TODO: bundle these together into an LO context?
   const loadoutParameters = loadout.parameters!;
   const lockedExoticHash = loadoutParameters.exoticArmorHash;
   const statConstraints = loadoutParameters.statConstraints!;
   const autoStatMods = Boolean(loadoutParameters.autoStatMods);
+  const assumeArmorMasterwork = loadoutParameters.assumeArmorMasterwork;
 
   const selectedStore = stores.find((store) => store.id === selectedStoreId)!;
   const classType = selectedStore.classType;
@@ -193,8 +193,8 @@ export default memo(function LoadoutBuilder({
     const armorEnergyRules: ArmorEnergyRules = {
       ...loDefaultArmorEnergyRules,
     };
-    if (loadoutParameters.assumeArmorMasterwork !== undefined) {
-      armorEnergyRules.assumeArmorMasterwork = loadoutParameters.assumeArmorMasterwork;
+    if (assumeArmorMasterwork !== undefined) {
+      armorEnergyRules.assumeArmorMasterwork = assumeArmorMasterwork;
     }
     const [items, filterInfo] = filterItems({
       defs,
@@ -209,7 +209,7 @@ export default memo(function LoadoutBuilder({
     });
     return [armorEnergyRules, items, filterInfo];
   }, [
-    loadoutParameters.assumeArmorMasterwork,
+    assumeArmorMasterwork,
     defs,
     armorItems,
     pinnedItems,
@@ -283,10 +283,7 @@ export default memo(function LoadoutBuilder({
         statRangesFiltered={result?.statRangesFiltered}
         lbDispatch={lbDispatch}
       />
-      <EnergyOptions
-        assumeArmorMasterwork={loadoutParameters.assumeArmorMasterwork}
-        lbDispatch={lbDispatch}
-      />
+      <EnergyOptions assumeArmorMasterwork={assumeArmorMasterwork} lbDispatch={lbDispatch} />
       <div className={styles.area}>
         <CheckButton
           onChange={setIncludeVendorItems}
