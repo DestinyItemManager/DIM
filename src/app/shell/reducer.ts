@@ -29,7 +29,6 @@ export interface ShellState {
   readonly routerLocation?: string;
 
   readonly bungieAlerts: GlobalAlert[];
-  readonly bungieAlertsLastUpdated: number;
 }
 
 export type ShellAction = ActionType<typeof actions>;
@@ -42,7 +41,6 @@ const initialState: ShellState = {
   loadingMessages: [],
   routerLocation: '',
   bungieAlerts: [],
-  bungieAlertsLastUpdated: 0,
 };
 
 export const shell: Reducer<ShellState, ShellAction> = (
@@ -112,7 +110,7 @@ export const shell: Reducer<ShellState, ShellAction> = (
     case getType(actions.updateBungieAlerts): {
       return deepEqual(state.bungieAlerts, action.payload)
         ? state
-        : { ...state, bungieAlerts: action.payload, bungieAlertsLastUpdated: Date.now() };
+        : { ...state, bungieAlerts: action.payload };
     }
 
     case getType(actions.setRouterLocation): {
