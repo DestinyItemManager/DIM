@@ -542,10 +542,16 @@ export function setClassType(classType: DestinyClass): LoadoutUpdateFunction {
   });
 }
 
-export function setClearSpace(clearSpace: boolean): LoadoutUpdateFunction {
+export function setClearSpace(
+  clearSpace: boolean,
+  category: 'Weapons' | 'Armor'
+): LoadoutUpdateFunction {
   return (loadout) => ({
     ...loadout,
-    clearSpace,
+    parameters: {
+      ...loadout.parameters,
+      [category === 'Weapons' ? 'clearWeapons' : 'clearArmor']: clearSpace,
+    },
   });
 }
 

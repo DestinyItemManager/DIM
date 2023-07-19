@@ -25,17 +25,17 @@ import { convertToLoadoutItem, newLoadout, potentialLoadoutItemsByItemId } from 
  * back and forth.
  */
 export function convertDimLoadoutToApiLoadout(dimLoadout: DimLoadout): Loadout {
-  const { items, name, clearSpace, parameters, ...rest } = dimLoadout;
+  const { items, name, parameters, ...rest } = dimLoadout;
   const equipped = items.filter((i) => i.equip).map(convertDimLoadoutItemToLoadoutItem);
   const unequipped = items.filter((i) => !i.equip).map(convertDimLoadoutItemToLoadoutItem);
 
   const loadout: Loadout = {
     ...rest,
     name: name.trim(),
-    clearSpace: clearSpace ?? false,
-    parameters: migrateLoadoutParameters(parameters, clearSpace ?? false),
     equipped,
     unequipped,
+    parameters,
+    clearSpace: Boolean(parameters?.clearArmor && parameters?.clearWeapons),
     lastUpdatedAt: Date.now(),
   };
   if (!loadout.notes) {
@@ -68,7 +68,11 @@ function migrateLoadoutParameters(
   clearSpace: boolean
 ): DimLoadout['parameters'] {
   // Migrate the single "clear" parameter into separate armor/weapons parameters
-  if (clearSpace && !parameters?.clearArmor && !parameters?.clearWeapons) {
+  if (
+    clearSpace &&
+    parameters?.clearArmor === undefined &&
+    parameters?.clearWeapons === undefined
+  ) {
     return { ...parameters, clearArmor: true, clearWeapons: true };
   }
 

@@ -19,6 +19,7 @@
 }
 
 .section {
+  composes: flexColumn from '../../dim-ui/common.m.scss';
   position: relative;
   padding: 8px 12px;
   background-color: rgba(255, 255, 255, 0.1);
@@ -28,4 +29,9 @@
     --item-margin: 4px;
     flex: 1;
   }
+}
+
+// Align the "clear space" buttons on the bottom of the cell
+.clearButton {
+  margin-top: auto;
 }
