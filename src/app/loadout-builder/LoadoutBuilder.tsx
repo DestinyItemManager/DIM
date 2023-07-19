@@ -13,16 +13,16 @@ import { DimStore } from 'app/inventory/store-types';
 import { getStore } from 'app/inventory/stores-helpers';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadoutFromEquipped, resolveLoadoutModHashes } from 'app/loadout-drawer/loadout-utils';
+import { getItemsAndSubclassFromLoadout } from 'app/loadout/LoadoutView';
 import { useSavedLoadoutsForClassType } from 'app/loadout/loadout-ui/menu-hooks';
 import { categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { armorStats } from 'app/search/d2-known-values';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { useSetSetting, useSetting } from 'app/settings/hooks';
 import { AppIcon, faExclamationTriangle, redoIcon, refreshIcon, undoIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
-import { emptyArray } from 'app/utils/empty';
+import { emptyObject } from 'app/utils/empty';
 import { isClassCompatible } from 'app/utils/item-utils';
 import { Portal } from 'app/utils/temp-container';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -33,6 +33,7 @@ import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import {
   allItemsSelector,
+  createItemContextSelector,
   sortedStoresSelector,
   unlockedPlugSetItemsSelector,
 } from '../inventory/selectors';
@@ -49,14 +50,8 @@ import { sortGeneratedSets } from './generated-sets/utils';
 import { filterItems } from './item-filter';
 import { useLbState } from './loadout-builder-reducer';
 import { useLoVendorItems } from './loadout-builder-vendors';
-import { buildLoadoutParams } from './loadout-params';
 import { useProcess } from './process/useProcess';
-import {
-  ArmorEnergyRules,
-  ArmorStatHashes,
-  LOCKED_EXOTIC_ANY_EXOTIC,
-  loDefaultArmorEnergyRules,
-} from './types';
+import { ArmorEnergyRules, LOCKED_EXOTIC_ANY_EXOTIC, loDefaultArmorEnergyRules } from './types';
 
 /** Do not allow the user to choose artifice mods manually in Loadout Optimizer since we're supposed to be doing that */
 const autoAssignmentPCHs = [PlugCategoryHashes.EnhancementsArtifice];
@@ -91,13 +86,11 @@ export default memo(function LoadoutBuilder({
   // All Loadout Optimizer state is managed via this hook/reducer
   const [
     {
-      loadoutParameters,
-      statOrder,
+      loadout,
+      resolvedStatConstraints,
       pinnedItems,
       excludedItems,
-      subclass,
       selectedStoreId,
-      statFilters,
       modPicker,
       compareSet,
       canRedo,
@@ -109,15 +102,35 @@ export default memo(function LoadoutBuilder({
   // TODO: if we're editing a loadout, grey out incompatible classes?
 
   // TODO: bundle these together into an LO context?
-  const modHashes = loadoutParameters.mods ?? emptyArray();
+  const loadoutParameters = loadout.parameters!;
   const lockedExoticHash = loadoutParameters.exoticArmorHash;
-  const autoStatMods = loadoutParameters.autoStatMods ?? false;
+  const statConstraints = loadoutParameters.statConstraints!;
+  const autoStatMods = Boolean(loadoutParameters.autoStatMods);
 
   const selectedStore = stores.find((store) => store.id === selectedStoreId)!;
   const classType = selectedStore.classType;
   const loadouts = useRelevantLoadouts(selectedStore);
 
-  const resolvedMods = useResolvedMods(defs, modHashes, selectedStoreId);
+  const resolvedMods = useResolvedMods(defs, loadoutParameters.mods, selectedStoreId);
+
+  const itemCreationContext = useSelector(createItemContextSelector);
+  const allItems = useSelector(allItemsSelector);
+  const modsByBucket: {
+    [bucketHash: number]: number[];
+  } = loadoutParameters.modsByBucket ?? emptyObject();
+
+  // Turn loadout items into real DimItems, filtering out unequippable items
+  const [_items, subclass, _warnitems] = useMemo(
+    () =>
+      getItemsAndSubclassFromLoadout(
+        itemCreationContext,
+        loadout.items,
+        selectedStore,
+        allItems,
+        modsByBucket
+      ),
+    [itemCreationContext, loadout.items, selectedStore, allItems, modsByBucket]
+  );
 
   // The list of mod items that need to be assigned to armor items
   const modsToAssign = useMemo(
@@ -147,19 +160,12 @@ export default memo(function LoadoutBuilder({
     [armorItems, modsToAssign]
   );
 
-  // TODO: maybe better to combine enabled & statOrder by making this a list in stat order?
-  const enabledStats = useMemo(
-    () => new Set(armorStats.filter((statType) => !statFilters[statType].ignored)),
-    [statFilters]
-  );
-
   const hasPreloadedLoadout = Boolean(preloadedLoadout);
   // Save a subset of the loadout parameters to settings in order to remember them between sessions
   useSaveLoadoutParameters(hasPreloadedLoadout, loadoutParameters);
   useSaveStatConstraints(
     hasPreloadedLoadout,
-    statOrder,
-    enabledStats,
+    statConstraints,
     savedStatConstraintsByClass,
     classType
   );
@@ -174,8 +180,12 @@ export default memo(function LoadoutBuilder({
     [lbDispatch, savedStatConstraintsByClass, stores]
   );
 
-  // TODO: maybe load from URL state async and fire a dispatch?
-  // TODO: save params to URL when they change? or leave it for the share...
+  // Write the search query into the loadout
+  useEffect(() => {
+    if ((searchQuery || undefined) !== loadoutParameters.query) {
+      lbDispatch({ type: 'setSearchQuery', query: searchQuery });
+    }
+  }, [lbDispatch, loadoutParameters.query, searchQuery]);
 
   // TODO: build a bundled up context object to pass to GeneratedSets?
 
@@ -224,25 +234,16 @@ export default memo(function LoadoutBuilder({
     subclass,
     modStatChanges,
     armorEnergyRules,
-    statOrder,
-    statFilters,
+    resolvedStatConstraints,
     anyExotic: lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC,
     autoStatMods,
   });
 
-  // A representation of the current loadout optimizer parameters that can be saved with generated loadouts
-  // TODO: replace some of these individual params with this object << what
-  // TODO: build a skeleton loadout here?
-  const params = useMemo(
-    () => buildLoadoutParams(loadoutParameters, searchQuery, statFilters, statOrder),
-    [loadoutParameters, searchQuery, statFilters, statOrder]
-  );
-
   const resultSets = result?.sets;
 
   const sortedSets = useMemo(
-    () => resultSets && sortGeneratedSets(resultSets, statOrder, enabledStats),
-    [statOrder, enabledStats, resultSets]
+    () => resultSets && sortGeneratedSets(resultSets, statConstraints),
+    [statConstraints, resultSets]
   );
 
   // I don't think this can actually happen?
@@ -278,13 +279,9 @@ export default memo(function LoadoutBuilder({
         </button>
       </div>
       <TierSelect
-        stats={statFilters}
+        resolvedStatConstraints={resolvedStatConstraints}
         statRangesFiltered={result?.statRangesFiltered}
-        order={statOrder}
-        onStatFiltersChanged={(statFilters) =>
-          lbDispatch({ type: 'statFiltersChanged', statFilters })
-        }
-        onStatOrderChanged={(sortOrder) => lbDispatch({ type: 'sortOrderChanged', sortOrder })}
+        lbDispatch={lbDispatch}
       />
       <EnergyOptions
         assumeArmorMasterwork={loadoutParameters.assumeArmorMasterwork}
@@ -407,11 +404,10 @@ export default memo(function LoadoutBuilder({
             pinnedItems={pinnedItems}
             selectedStore={selectedStore}
             lbDispatch={lbDispatch}
-            statOrder={statOrder}
-            enabledStats={enabledStats}
+            resolvedStatConstraints={resolvedStatConstraints}
             modStatChanges={result.modStatChanges}
             loadouts={loadouts}
-            params={params}
+            params={loadoutParameters}
             armorEnergyRules={result.armorEnergyRules}
             notes={preloadedLoadout?.notes}
           />
@@ -421,13 +417,11 @@ export default memo(function LoadoutBuilder({
               defs={defs}
               classType={classType}
               dispatch={lbDispatch}
+              params={loadoutParameters}
               resolvedMods={resolvedMods}
               lockedModMap={lockedModMap}
               alwaysInvalidMods={unassignedMods}
-              autoAssignStatMods={autoStatMods}
               armorEnergyRules={armorEnergyRules}
-              lockedExoticHash={lockedExoticHash}
-              statFilters={statFilters}
               pinnedItems={pinnedItems}
               filterInfo={filterInfo}
               processInfo={result?.processInfo}
@@ -466,7 +460,7 @@ export default memo(function LoadoutBuilder({
               initialLoadoutId={optimizingLoadoutId}
               subclass={subclass}
               classType={classType}
-              params={params}
+              params={loadoutParameters}
               notes={preloadedLoadout?.notes}
               lockedMods={modsToAssign}
               onClose={() => lbDispatch({ type: 'closeCompareDrawer' })}
@@ -507,7 +501,7 @@ function useRelevantLoadouts(selectedStore: DimStore) {
  */
 function useResolvedMods(
   defs: D2ManifestDefinitions,
-  modHashes: number[],
+  modHashes: number[] | undefined,
   selectedStoreId: string | undefined
 ) {
   const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(selectedStoreId));
@@ -574,8 +568,7 @@ function useSaveLoadoutParameters(
  */
 function useSaveStatConstraints(
   hasPreloadedLoadout: boolean,
-  statOrder: ArmorStatHashes[],
-  enabledStats: Set<ArmorStatHashes>,
+  statConstraints: StatConstraint[],
   savedStatConstraintsByClass: {
     [key: number]: StatConstraint[];
   },
@@ -599,21 +592,13 @@ function useSaveStatConstraints(
       return;
     }
 
-    const newStatConstraints = statOrder
-      .filter((statHash) => enabledStats.has(statHash))
-      .map((statHash) => ({ statHash }));
+    // Strip out min/max tiers and just save the order
+    const newStatConstraints = statConstraints.map(({ statHash }) => ({ statHash }));
     if (!deepEqual(newStatConstraints, savedStatConstraintsByClass[classType])) {
       setSetting('loStatConstraintsByClass', {
         ...savedStatConstraintsByClass,
         [classType]: newStatConstraints,
       });
     }
-  }, [
-    setSetting,
-    statOrder,
-    savedStatConstraintsByClass,
-    classType,
-    hasPreloadedLoadout,
-    enabledStats,
-  ]);
+  }, [setSetting, statConstraints, savedStatConstraintsByClass, classType, hasPreloadedLoadout]);
 }

@@ -298,7 +298,7 @@ function buildLessCostlyRelations(
 export function buildAutoModsMap(
   autoModOptions: AutoModData,
   availableGeneralStatMods: number,
-  statOrder: number[]
+  statOrder: ArmorStatHashes[]
 ): AutoModsMap {
   return {
     statCaches: Object.fromEntries(

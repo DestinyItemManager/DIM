@@ -1,5 +1,6 @@
 import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd';
 import { t } from 'app/i18next-t';
+import { reorder } from 'app/utils/util';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React, { memo } from 'react';
@@ -110,15 +111,6 @@ export default function SortOrderEditor({
       </Droppable>
     </DragDropContext>
   );
-}
-
-// a little function to help us with reordering the result
-function reorder<T>(list: T[], startIndex: number, endIndex: number): T[] {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-
-  return result;
 }
 
 function SortEditorItem(props: { index: number; item: SortProperty }) {

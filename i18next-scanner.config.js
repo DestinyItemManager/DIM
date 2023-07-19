@@ -41,7 +41,6 @@ module.exports = {
       buckets: { list: ['General', 'Inventory', 'Postmaster', 'Progress', 'Unknown'] },
       cooldowns: { list: ['Grenade', 'Melee', 'Super'] },
       difficulty: { list: ['Normal', 'Hard'] },
-      minMax: { list: ['Min', 'Max'] },
       progress: { list: ['Bounties', 'Items', 'Quests'] },
       sockets: { list: ['Mod', 'Ability', 'Shader', 'Ornament', 'Fragment', 'Aspect', 'Projection', 'Transmat', 'Super'] },
       unsupported: { list: ['Unsupported', 'Steam'] },

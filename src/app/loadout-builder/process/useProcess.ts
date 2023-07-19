@@ -22,7 +22,7 @@ import {
   ItemsByBucket,
   LockableBucketHash,
   ModStatChanges,
-  StatFilters,
+  ResolvedStatConstraint,
   StatRanges,
 } from '../types';
 import {
@@ -68,8 +68,7 @@ export function useProcess({
   subclass,
   modStatChanges,
   armorEnergyRules,
-  statOrder,
-  statFilters,
+  resolvedStatConstraints,
   anyExotic,
   autoStatMods,
 }: {
@@ -80,8 +79,7 @@ export function useProcess({
   subclass: ResolvedLoadoutItem | undefined;
   modStatChanges: ModStatChanges;
   armorEnergyRules: ArmorEnergyRules;
-  statOrder: number[];
-  statFilters: StatFilters;
+  resolvedStatConstraints: ResolvedStatConstraint[];
   anyExotic: boolean;
   autoStatMods: boolean;
 }) {
@@ -151,7 +149,7 @@ export function useProcess({
 
       const groupedItems = mapItemsToGroups(
         items,
-        statOrder,
+        resolvedStatConstraints,
         armorEnergyRules,
         activityMods,
         bucketSpecificMods[bucketHash] || [],
@@ -171,8 +169,7 @@ export function useProcess({
         processItems,
         _.mapValues(modStatChanges, (stat) => stat.value),
         lockedProcessMods,
-        statOrder,
-        statFilters,
+        resolvedStatConstraints,
         anyExotic,
         autoModsData,
         autoStatMods,
@@ -212,8 +209,7 @@ export function useProcess({
     filteredItems,
     selectedStore.classType,
     selectedStore.id,
-    statFilters,
-    statOrder,
+    resolvedStatConstraints,
     anyExotic,
     subclass,
     armorEnergyRules,
@@ -289,7 +285,7 @@ const groupComparator = (getTag: (item: DimItem) => TagValue | undefined) =>
  */
 function mapItemsToGroups(
   items: readonly DimItem[],
-  statOrder: number[],
+  resolvedStatConstraints: ResolvedStatConstraint[],
   armorEnergyRules: ArmorEnergyRules,
   activityMods: PluggableInventoryItemDefinition[],
   modsForSlot: PluggableInventoryItemDefinition[],
@@ -332,7 +328,9 @@ function mapItemsToGroups(
     // Energy value is the same for all items.
 
     // Item stats are important for the stat results of a full set
-    const statValues: number[] = statOrder.map((s) => item.processItem.stats[s]);
+    const statValues: number[] = resolvedStatConstraints.map(
+      (c) => item.processItem.stats[c.statHash]
+    );
     // Energy capacity affects mod assignment
     const energyCapacity = item.processItem.energy?.capacity || 0;
     // Supported mod tags affect mod assignment

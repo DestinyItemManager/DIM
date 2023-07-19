@@ -3,11 +3,11 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, dragHandleIcon } from 'app/shell/icons';
-import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { memo } from 'react';
-import { ArmorStatHashes, MinMaxIgnored, StatFilters, StatRanges } from '../types';
+import React, { Dispatch, memo } from 'react';
+import { LoadoutBuilderAction } from '../loadout-builder-reducer';
+import { ArmorStatHashes, ResolvedStatConstraint, StatRanges } from '../types';
 import { statTierWithHalf } from '../utils';
 import styles from './TierSelect.m.scss';
 
@@ -20,44 +20,31 @@ const MinMaxSelect = memo(MinMaxSelectInner);
  * A selector that allows for choosing minimum and maximum stat ranges, plus reordering the stat priority.
  */
 export default function TierSelect({
-  stats,
+  resolvedStatConstraints,
   statRangesFiltered,
-  order,
-  onStatOrderChanged,
-  onStatFiltersChanged,
+  lbDispatch,
 }: {
-  stats: StatFilters;
+  resolvedStatConstraints: ResolvedStatConstraint[];
   /** The ranges the stats could have gotten to INCLUDING stat filters and mod compatibility */
   statRangesFiltered?: Readonly<StatRanges>;
-  order: ArmorStatHashes[]; // stat hashes in user order
-  onStatOrderChanged: (order: ArmorStatHashes[]) => void;
-  onStatFiltersChanged: (stats: StatFilters) => void;
+  lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
   const defs = useD2Definitions()!;
-  const handleTierChange = (
-    statHash: ArmorStatHashes,
-    changed: { min?: number; max?: number; ignored: boolean }
-  ) => {
-    const newTiers = {
-      ...stats,
-      [statHash]: { ...stats[statHash], ...changed },
-    };
 
-    onStatFiltersChanged(newTiers);
-  };
-
-  const statDefs: { [statHash: number]: DestinyStatDefinition } = {};
-  for (const statHash of order) {
-    statDefs[statHash] = defs.Stat.get(statHash);
-  }
+  const handleTierChange = (constraint: ResolvedStatConstraint) =>
+    lbDispatch({ type: 'statConstraintChanged', constraint });
 
   const onDragEnd = (result: DropResult) => {
     // dropped outside the list
     if (!result.destination) {
       return;
     }
-    const newOrder = reorder(order, result.source.index, result.destination.index);
-    onStatOrderChanged(newOrder);
+    const sourceIndex = result.source.index;
+    lbDispatch({
+      type: 'statOrderChanged',
+      sourceIndex,
+      destinationIndex: result.destination.index,
+    });
   };
 
   return (
@@ -65,55 +52,51 @@ export default function TierSelect({
       <Droppable droppableId="droppable">
         {(provided) => (
           <div ref={provided.innerRef}>
-            {order.map((statHash: ArmorStatHashes, index) => (
-              <DraggableItem
-                key={statHash}
-                id={statHash.toString()}
-                index={index}
-                className={styles.row}
-                name={
-                  <span
-                    className={clsx(
-                      { [styles.ignored]: stats[statHash].ignored },
-                      styles.statDisplayInfo
-                    )}
-                  >
-                    <BungieImage
-                      className={styles.iconStat}
-                      src={statDefs[statHash].displayProperties.icon}
-                    />
-                    <span
-                      className={styles.statName}
-                      title={statDefs[statHash].displayProperties.name}
-                    >
-                      {statDefs[statHash].displayProperties.name}
+            {resolvedStatConstraints.map((c, index) => {
+              const statHash = c.statHash as ArmorStatHashes;
+              const statDef = defs.Stat.get(statHash);
+              return (
+                <DraggableItem
+                  key={statHash}
+                  id={statHash.toString()}
+                  index={index}
+                  className={styles.row}
+                  name={
+                    <span className={clsx({ [styles.ignored]: c.ignored }, styles.statDisplayInfo)}>
+                      <BungieImage
+                        className={styles.iconStat}
+                        src={statDef.displayProperties.icon}
+                      />
+                      <span className={styles.statName} title={statDef.displayProperties.name}>
+                        {statDef.displayProperties.name}
+                      </span>
                     </span>
+                  }
+                >
+                  <span className={styles.range}>
+                    {statRangesFiltered
+                      ? t('LoadoutBuilder.MaxTier', {
+                          tier: t('LoadoutBuilder.TierNumber', {
+                            tier: statTierWithHalf(statRangesFiltered[statHash].max),
+                          }),
+                        })
+                      : '-'}
                   </span>
-                }
-              >
-                <span className={styles.range}>
-                  {statRangesFiltered
-                    ? t('LoadoutBuilder.MaxTier', {
-                        tier: t('LoadoutBuilder.TierNumber', {
-                          tier: statTierWithHalf(statRangesFiltered[statHash].max),
-                        }),
-                      })
-                    : '-'}
-                </span>
-                <MinMaxSelect
-                  statHash={statHash}
-                  stat={stats[statHash]}
-                  type="Min"
-                  handleTierChange={handleTierChange}
-                />
-                <MinMaxSelect
-                  statHash={statHash}
-                  stat={stats[statHash]}
-                  type="Max"
-                  handleTierChange={handleTierChange}
-                />
-              </DraggableItem>
-            ))}
+                  <MinMaxSelect
+                    statHash={statHash}
+                    stat={c}
+                    type="min"
+                    handleTierChange={handleTierChange}
+                  />
+                  <MinMaxSelect
+                    statHash={statHash}
+                    stat={c}
+                    type="max"
+                    handleTierChange={handleTierChange}
+                  />
+                </DraggableItem>
+              );
+            })}
 
             {provided.placeholder}
           </div>
@@ -165,57 +148,55 @@ function MinMaxSelectInner({
   handleTierChange,
 }: {
   statHash: number;
-  type: 'Min' | 'Max';
+  type: 'min' | 'max';
   /** Filter config for a single stat */
-  stat: MinMaxIgnored;
-  handleTierChange: (
-    statHash: number,
-    changed: {
-      min: number;
-      max: number;
-      ignored: boolean;
-    }
-  ) => void;
+  stat: ResolvedStatConstraint;
+  handleTierChange: (changed: ResolvedStatConstraint) => void;
 }) {
   const min = 0;
   const max = 10;
   const ignored = stat.ignored;
 
   function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    let update: {
-      min: number;
-      max: number;
-      ignored: boolean;
-    };
+    let update: ResolvedStatConstraint;
     if (e.target.value === IGNORE || e.target.value === INCLUDE) {
       update = {
-        min: stat.min,
-        max: stat.max,
+        ...stat,
         ignored: e.target.value === IGNORE,
       };
     } else {
       const value = parseInt(e.target.value, 10);
-      const lower = type.toLowerCase();
-      const opposite = lower === 'min' ? 'max' : 'min';
+      // Bump the opposite tier to match this value if necessary, to avoid them
+      // becoming inverted
+      const minMax =
+        type === 'min'
+          ? {
+              minTier: value,
+              maxTier: Math.max(stat.maxTier, value),
+            }
+          : {
+              minTier: Math.min(stat.minTier, value),
+              maxTier: value,
+            };
       update = {
-        [lower]: value,
-        [opposite]: opposite === 'min' ? Math.min(stat.min, value) : Math.max(stat.max, value),
+        ...minMax,
+        statHash,
         ignored: false,
-      } as typeof update;
+      };
     }
 
-    handleTierChange(statHash, update);
+    handleTierChange(update);
   }
 
-  const value = type === 'Min' ? Math.max(min, stat.min) : Math.min(max, stat.max);
+  const value = type === 'min' ? Math.max(min, stat.minTier) : Math.min(max, stat.maxTier);
   return (
     <select
-      className={type === 'Min' ? styles.minimum : styles.maximum}
+      className={type === 'min' ? styles.minimum : styles.maximum}
       value={ignored ? '-' : value}
       onChange={handleChange}
     >
       <option disabled>
-        {t(`LoadoutBuilder.Select${type}`, { metadata: { keys: 'minMax' } })}
+        {type === 'min' ? t('LoadoutBuilder.SelectMin') : t('LoadoutBuilder.SelectMax')}
       </option>
       {!ignored &&
         _.range(min, max + 1).map((tier) => (
@@ -239,13 +220,4 @@ function MinMaxSelectInner({
       )}
     </select>
   );
-}
-
-// a little function to help us with reordering the result
-function reorder<T>(list: T[], startIndex: number, endIndex: number): T[] {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-
-  return result;
 }

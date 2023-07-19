@@ -244,7 +244,8 @@ export default memo(function LockArmorAndPerks({
                 onClose={
                   isAbility
                     ? undefined
-                    : () => lbDispatch({ type: 'removeSingleSubclassSocketOverride', plug })
+                    : () =>
+                        lbDispatch({ type: 'removeSingleSubclassSocketOverride', plug, subclass })
                 }
                 forClassType={selectedStore.classType}
               />
@@ -314,7 +315,7 @@ export default memo(function LockArmorAndPerks({
             subclass={subclass.item}
             socketOverrides={subclass.loadoutItem.socketOverrides ?? emptyObject()}
             onAccept={(socketOverrides) =>
-              lbDispatch({ type: 'updateSubclassSocketOverrides', socketOverrides })
+              lbDispatch({ type: 'updateSubclassSocketOverrides', socketOverrides, subclass })
             }
             onClose={() => setShowSubclassOptionsPicker(false)}
           />

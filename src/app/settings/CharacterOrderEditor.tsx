@@ -1,4 +1,5 @@
 import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd';
+import { reorder } from 'app/utils/util';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { sortedStoresSelector } from '../inventory/selectors';
@@ -75,13 +76,4 @@ export default function CharacterOrderEditor({
       </Droppable>
     </DragDropContext>
   );
-}
-
-// a little function to help us with reordering the result
-function reorder<T>(list: T[], startIndex: number, endIndex: number): T[] {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-
-  return result;
 }

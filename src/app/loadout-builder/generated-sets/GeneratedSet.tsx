@@ -15,7 +15,14 @@ import { t } from 'i18next';
 import _ from 'lodash';
 import { Dispatch, memo, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { ArmorEnergyRules, ArmorSet, ArmorStatHashes, ModStatChanges, PinnedItems } from '../types';
+import {
+  ArmorEnergyRules,
+  ArmorSet,
+  ArmorStatHashes,
+  ModStatChanges,
+  PinnedItems,
+  ResolvedStatConstraint,
+} from '../types';
 import { getPower } from '../utils';
 import styles from './GeneratedSet.m.scss';
 import GeneratedSetButtons from './GeneratedSetButtons';
@@ -33,8 +40,7 @@ export default memo(function GeneratedSet({
   selectedStore,
   lockedMods,
   pinnedItems,
-  statOrder,
-  enabledStats,
+  resolvedStatConstraints,
   modStatChanges,
   loadouts,
   lbDispatch,
@@ -48,8 +54,7 @@ export default memo(function GeneratedSet({
   selectedStore: DimStore;
   lockedMods: PluggableInventoryItemDefinition[];
   pinnedItems: PinnedItems;
-  statOrder: ArmorStatHashes[];
-  enabledStats: Set<number>;
+  resolvedStatConstraints: ResolvedStatConstraint[];
   modStatChanges: ModStatChanges;
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
@@ -119,11 +124,11 @@ export default memo(function GeneratedSet({
   const boostedStats = useMemo(
     () =>
       new Set(
-        statOrder.filter((hash) =>
+        armorStats.filter((hash) =>
           modStatChanges[hash].breakdown?.some((change) => change.source === 'runtimeEffect')
         )
       ),
-    [modStatChanges, statOrder]
+    [modStatChanges]
   );
 
   // Distribute our automatically picked mods across the items so that item components
@@ -151,8 +156,7 @@ export default memo(function GeneratedSet({
         stats={set.stats}
         getStatsBreakdown={getStatsBreakdownOnce}
         maxPower={getPower(displayedItems)}
-        statOrder={statOrder}
-        enabledStats={enabledStats}
+        resolvedStatConstraints={resolvedStatConstraints}
         boostedStats={boostedStats}
         existingLoadoutName={existingLoadout?.name}
         subclass={subclass}
