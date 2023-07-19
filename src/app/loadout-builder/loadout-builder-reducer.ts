@@ -56,7 +56,14 @@ interface LoadoutBuilderUI {
     open: boolean;
     plugCategoryHashWhitelist?: number[];
   };
-  compareSet?: ArmorSet;
+  compareSet?: {
+    set: ArmorSet;
+    /**
+     * The items selected from the armor set's options to use. This isn't
+     * always just the first option for each bucket.
+     */
+    items: DimItem[];
+  };
 }
 
 interface LoadoutBuilderConfiguration {
@@ -271,7 +278,7 @@ type LoadoutBuilderConfigAction =
 type LoadoutBuilderUIAction =
   | { type: 'openModPicker'; plugCategoryHashWhitelist?: number[] }
   | { type: 'closeModPicker' }
-  | { type: 'openCompareDrawer'; set: ArmorSet }
+  | { type: 'openCompareDrawer'; set: ArmorSet; items: DimItem[] }
   | { type: 'closeCompareDrawer' };
 
 export type LoadoutBuilderAction =
@@ -283,7 +290,7 @@ export type LoadoutBuilderAction =
 function lbUIReducer(state: LoadoutBuilderUI, action: LoadoutBuilderUIAction) {
   switch (action.type) {
     case 'openCompareDrawer':
-      return { ...state, compareSet: action.set };
+      return { ...state, compareSet: { set: action.set, items: action.items } };
     case 'openModPicker':
       return {
         ...state,

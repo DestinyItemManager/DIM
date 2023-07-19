@@ -43,11 +43,14 @@ export default function CompareLoadoutsDrawer({
   loadouts,
   loadout,
   selectedStore,
-  set,
+  compareSet,
   lockedMods,
   onClose,
 }: {
-  set: ArmorSet;
+  compareSet: {
+    set: ArmorSet;
+    items: DimItem[];
+  };
   selectedStore: DimStore;
   loadouts: Loadout[];
   loadout: Loadout;
@@ -56,26 +59,16 @@ export default function CompareLoadoutsDrawer({
 }) {
   const defs = useD2Definitions()!;
   const dispatch = useThunkDispatch();
-
-  const setItems = set.armor.map((items) => items[0]);
+  const { set, items } = compareSet;
 
   const [selectedLoadout, setSelectedLoadout] = useState(() =>
-    chooseInitialLoadout(setItems, loadouts, loadout.id)
+    chooseInitialLoadout(items, loadouts, loadout.id)
   );
 
   // This probably isn't needed but I am being cautious as it iterates over the stores.
   const generatedLoadout = useMemo(
-    () =>
-      mergeLoadout(
-        defs,
-        selectedLoadout,
-        loadout,
-        set,
-        // TODO: pass along the displayItems
-        set.armor.map((a) => a[0]),
-        lockedMods
-      ),
-    [defs, selectedLoadout, loadout, set, lockedMods]
+    () => mergeLoadout(defs, selectedLoadout, loadout, set, items, lockedMods),
+    [defs, selectedLoadout, loadout, set, items, lockedMods]
   );
 
   const [confirmDialog, confirm] = useConfirm();

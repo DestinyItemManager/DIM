@@ -9,8 +9,9 @@ import { ArmorSet, LockableBucketHashes } from './types';
 import { statTier } from './utils';
 
 /**
- * Create a new loadout from the original prototype loadout, but with the armor items replaced with this loadout's armor.
- * Used for equipping or creating a new saved loadout.
+ * Create a new loadout from the original prototype loadout, but with the armor
+ * items replaced with this loadout's armor. Used for equipping or creating a
+ * new saved loadout.
  */
 export function updateLoadoutWithArmorSet(
   defs: D2ManifestDefinitions,
@@ -37,9 +38,11 @@ export function updateLoadoutWithArmorSet(
   );
   const loadoutItems = items.map((item) => convertToLoadoutItem(item, true));
 
-  // We need to add in this set's specific stat mods (artifice, general) to the list of user-chosen mods
-  // We can't start with the list of mods in the existing loadout parameters because lockedMods has filtered out
-  // invalid mods, mods that don't fit, and general mods if we're auto-assigning general mods.
+  // We need to add in this set's specific stat mods (artifice, general) to the
+  // list of user-chosen mods We can't start with the list of mods in the
+  // existing loadout parameters because lockedMods has filtered out invalid
+  // mods, mods that don't fit, and general mods if we're auto-assigning general
+  // mods.
   const allMods = [...lockedMods.map((m) => m.hash), ...set.statMods];
   return {
     ...loadout,
@@ -53,8 +56,9 @@ export function updateLoadoutWithArmorSet(
 }
 
 /**
- * Create a new loadout from the original prototype loadout, but with the armor items replaced with this loadout's armor.
- * Used for equipping or creating a new saved loadout.
+ * Create a new loadout from an original prototype loadout, using mods and
+ * subclass from another loadout, and the items from an armor set. Used for the
+ * "compare loadout" drawer.
  */
 export function mergeLoadout(
   defs: D2ManifestDefinitions,

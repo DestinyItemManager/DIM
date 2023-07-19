@@ -451,7 +451,7 @@ export default memo(function LoadoutBuilder({
         {compareSet && (
           <Portal>
             <CompareLoadoutsDrawer
-              set={compareSet}
+              compareSet={compareSet}
               selectedStore={selectedStore}
               loadout={loadout}
               loadouts={loadouts}

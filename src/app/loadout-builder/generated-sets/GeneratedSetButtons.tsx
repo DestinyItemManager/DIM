@@ -77,7 +77,7 @@ export default function GeneratedSetButtons({
         <button
           type="button"
           className="dim-button"
-          onClick={() => lbDispatch({ type: 'openCompareDrawer', set })}
+          onClick={() => lbDispatch({ type: 'openCompareDrawer', set, items })}
         >
           {t('LoadoutBuilder.CompareLoadout')}
         </button>
