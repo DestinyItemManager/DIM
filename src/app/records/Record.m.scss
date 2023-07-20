@@ -75,9 +75,10 @@
   border-color: var(--theme-record-redeemed);
   color: var(--theme-record-redeemed);
   background: transparent;
-  p {
+  p,
+  span {
     color: var(--theme-record-redeemed);
-    opacity: 0.7;
+    opacity: 0.8;
   }
 }
 
@@ -218,7 +219,7 @@
 
 .score {
   float: right;
-  color: #a1a2a2;
+  color: var(--theme-text-secondary);
   margin-left: 4px;
   :global(.catalysts) & {
     display: none;
