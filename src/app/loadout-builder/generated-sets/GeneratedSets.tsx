@@ -18,10 +18,6 @@ import {
 } from '../types';
 import GeneratedSet, { containerClass } from './GeneratedSet';
 
-function getItemKey(index: number) {
-  return index;
-}
-
 /**
  * Renders the entire list of generated stat mixes, one per mix.
  */
@@ -79,7 +75,7 @@ export default function GeneratedSets({
       numElements={sets.length}
       estimatedSize={160}
       itemContainerClassName={containerClass}
-      getItemKey={getItemKey}
+      getItemKey={_.identity}
     >
       {(index) => (
         <GeneratedSet

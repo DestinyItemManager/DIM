@@ -306,7 +306,6 @@ function lbUIReducer(state: LoadoutBuilderUI, action: LoadoutBuilderUIAction) {
   }
 }
 
-// TODO: Move more logic inside the reducer
 function lbConfigReducer(defs: D2ManifestDefinitions) {
   return (
     state: LoadoutBuilderConfiguration,
@@ -314,17 +313,21 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
   ): LoadoutBuilderConfiguration => {
     switch (action.type) {
       case 'changeCharacter': {
+        const { store } = action;
+        const originalLoadout = state.loadout;
+        let loadout: Loadout = { ...originalLoadout, classType: store.classType };
+
         // Always remove the subclass
-        let loadout = clearSubclass(defs)(state.loadout);
+        loadout = clearSubclass(defs)(loadout);
 
         // And the exotic
         let loadoutParameters = {
-          ...state.loadout.parameters,
+          ...loadout.parameters,
           exoticArmorHash: undefined,
         };
 
         // Apply stat constraint preferences
-        const constraints = action.savedStatConstraintsByClass[action.store.classType];
+        const constraints = action.savedStatConstraintsByClass[store.classType];
         if (constraints) {
           loadoutParameters = { ...loadoutParameters, statConstraints: constraints };
         }
@@ -335,7 +338,7 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
           ...state,
           loadout,
           resolvedStatConstraints: resolveStatConstraints(loadoutParameters.statConstraints!),
-          selectedStoreId: action.store.id,
+          selectedStoreId: store.id,
           // Also clear out pinned/excluded items
           pinnedItems: {},
           excludedItems: {},

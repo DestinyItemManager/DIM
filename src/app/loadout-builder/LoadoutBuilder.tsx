@@ -106,9 +106,9 @@ export default memo(function LoadoutBuilder({
   const statConstraints = loadoutParameters.statConstraints!;
   const autoStatMods = Boolean(loadoutParameters.autoStatMods);
   const assumeArmorMasterwork = loadoutParameters.assumeArmorMasterwork;
+  const classType = loadout.classType;
 
   const selectedStore = stores.find((store) => store.id === selectedStoreId)!;
-  const classType = selectedStore.classType;
   const loadouts = useRelevantLoadouts(selectedStore);
 
   const resolvedMods = useResolvedMods(defs, loadoutParameters.mods, selectedStoreId);
