@@ -2,9 +2,13 @@
 
 .empty {
   width: var(--item-size);
-  height: calc(var(--item-size) + #{$badge-height} - #{$item-border-width});
+  height: var(--item-size);
   border: 1px solid #ddd;
   box-sizing: border-box;
+
+  &.hasBadge {
+    height: calc(var(--item-size) + #{$badge-height} - #{$item-border-width});
+  }
 }
 
 .placeholder {

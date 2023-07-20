@@ -830,7 +830,7 @@ function clearSpaceAfterLoadout(
         // This was one of our loadout items (or it can't be moved)
         numUnequippedLoadoutItems++;
       } else {
-        // Otherwise ee should move it to the vault
+        // Otherwise we should move it to the vault
         itemsToRemove.push(existingItem);
       }
     }
