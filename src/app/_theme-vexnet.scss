@@ -5,11 +5,9 @@
   --theme-accent-secondary: #f27b8a; // Secondary interactions
 
   // More vibrant P3 colourspace tints for displays that support them
-  // @supports (color: color(display-p3 1 1 1)) {
-  //   --theme-accent-primary: oklch(0.61 0.29 336.78);
-  //   --theme-item-polaroid: oklch(0.77 0.16 213.81);
-  //   --theme-item-polaroid-masterwork: oklch(0.59 0.27 341.42);
-  // }
+  @supports (color: color(display-p3 1 1 1)) {
+    --theme-accent-primary: oklch(0.72 0.27 140.8);
+  }
 
   // Generic fills for modal backgrounds (see below)
   --theme-fill-modal: #0d2f63; // Base fill for popups, drawers, dropdowns etc
