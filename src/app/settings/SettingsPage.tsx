@@ -83,6 +83,7 @@ let languageChanged = false;
 
 const themeOptions = mapToOptions({
   default: 'DIM Classic (Default)',
+  dimdark: 'DIM Dark Mode',
   europa: 'Europa',
   neomuna: 'Neomuna',
   pyramid: 'Pyramid Fleet',
