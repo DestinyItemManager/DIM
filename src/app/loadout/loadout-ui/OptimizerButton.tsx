@@ -8,7 +8,15 @@ import { Link } from 'react-router-dom';
 /**
  * Link to open a loadout in the Optimizer.
  */
-export function OptimizerButton({ loadout, storeId }: { loadout: Loadout; storeId: string }) {
+export function OptimizerButton({
+  loadout,
+  storeId,
+  missingArmor,
+}: {
+  loadout: Loadout;
+  storeId: string;
+  missingArmor: boolean;
+}) {
   // We need to build an absolute path rather than a relative one because the loadout editor is mounted higher than the destiny routes.
   const account = useSelector(currentAccountSelector);
   if (!account) {
@@ -20,7 +28,8 @@ export function OptimizerButton({ loadout, storeId }: { loadout: Loadout; storeI
       to={`/${account.membershipId}/d${account.destinyVersion}/optimizer`}
       state={{ loadout, storeId }}
     >
-      <AppIcon icon={faCalculator} /> {t('Loadouts.OpenInOptimizer')}
+      <AppIcon icon={faCalculator} />{' '}
+      {missingArmor ? t('Loadouts.ChooseArmor') : t('Loadouts.OpenInOptimizer')}
     </Link>
   );
 }

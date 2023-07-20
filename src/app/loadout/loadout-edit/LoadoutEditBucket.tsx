@@ -117,6 +117,7 @@ export function ArmorExtras({
 }) {
   const equippedItems =
     items?.filter((li) => li.loadoutItem.equip && !li.missing).map((li) => li.item) ?? [];
+  const anyMissing = Boolean(items?.some((li) => li.loadoutItem.equip && li.missing));
 
   return (
     <>
@@ -138,7 +139,7 @@ export function ArmorExtras({
           storeId={storeId}
           onModsByBucketUpdated={onModsByBucketUpdated}
         />
-        <OptimizerButton loadout={loadout} storeId={storeId} />
+        <OptimizerButton loadout={loadout} storeId={storeId} missingArmor={anyMissing} />
       </div>
     </>
   );

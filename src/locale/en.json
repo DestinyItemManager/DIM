@@ -643,6 +643,7 @@
     "Before": "Before '{{name}}'",
     "CancelEditing": "Cancel Editing",
     "CannotCustomizeSubclass": "This subclass cannot be configured",
+    "ChooseArmor": "Choose Armor",
     "ChooseItem": "Add {{name}}",
     "ClassTypeMismatch": "A {{className}} item cannot be added to this loadout",
     "ClassTypeMissing": "You do not have a {{className}} to create a loadout for",

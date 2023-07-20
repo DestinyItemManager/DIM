@@ -101,7 +101,13 @@ export default function LoadoutItemCategorySection({
             </div>
           )}
           {loadout.parameters && <LoadoutParametersDisplay params={loadout.parameters} />}
-          {!hideOptimizeArmor && <OptimizerButton loadout={loadout} storeId={storeId} />}
+          {!hideOptimizeArmor && (
+            <OptimizerButton
+              loadout={loadout}
+              storeId={storeId}
+              missingArmor={Boolean(items?.some((li) => li.loadoutItem.equip && li.missing))}
+            />
+          )}
         </>
       )}
     </div>
