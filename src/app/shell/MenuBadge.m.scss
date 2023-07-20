@@ -6,16 +6,17 @@
   bottom: 0;
   right: -5px;
   display: block;
-  background-color: var(--theme-accent-primary);
+  background-color: $new-notification-dot;
   border-radius: 50%;
   height: 8px;
   width: 8px;
+  box-shadow: 0 0 0 2px var(--theme-pwa-background); // Use PWA fill var as it'll always be solid (not a gradient)
 }
 .upgrade {
   margin: 0 !important;
   position: absolute;
   bottom: -8px;
   right: -12px;
-  color: var(--theme-accent-primary) !important;
+  color: $new-notification-dot !important;
   font-size: 18px !important;
 }

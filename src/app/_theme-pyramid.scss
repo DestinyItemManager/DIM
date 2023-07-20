@@ -1,12 +1,12 @@
-// Dark theme
+// Pyramid Fleet theme
 .theme-pyramid {
   // Base colours
-  --theme-accent-primary: #ff3f00; // Interaction styles (hover, active, focus)
+  --theme-accent-primary: #e34400; // Interaction styles (hover, active, focus)
   --theme-accent-secondary: #68a0b7; // Secondary interactions
 
   // More vibrant P3 colourspace tints for displays that support them
   @supports (color: color(display-p3 1 1 1)) {
-    --theme-accent-primary: oklch(0.66 0.24 37.65);
+    --theme-accent-primary: oklch(0.61 0.21 41.64);
   }
 
   // Generic fills for modal backgrounds (see below)
@@ -52,7 +52,7 @@
   // Header
   --theme-header-nav-bg: black;
   --theme-header-nav-slideout-menu-bg: var(--theme-fill-modal);
-  --theme-header-characters-bg: rgba(15, 15, 15, 0.9);
+  --theme-header-characters-bg: #101010;
   --theme-header-characters-txt: #aaa;
 
   // Dropdown menu
@@ -66,9 +66,9 @@
   // Items 'polaroid' framed icons
   --theme-item-polaroid: #456;
   --theme-item-polaroid-txt: white;
-  --theme-item-polaroid-masterwork: black;
-  --theme-item-polaroid-masterwork-txt: #e8a534;
-  --theme-item-polaroid-masterwork-border: #ae791e;
+  --theme-item-polaroid-masterwork: #d19b00;
+  --theme-item-polaroid-masterwork-txt: #000;
+  --theme-item-polaroid-masterwork-border: #e2761d;
   --theme-item-polaroid-godroll: white;
   --theme-item-polaroid-trashroll: #d14334;
 
@@ -93,4 +93,7 @@
   // Organizer
   --theme-organizer-row-odd-bg: #171717;
   --theme-organizer-row-even-bg: #2b2b2b;
+
+  // Records
+  --theme-record-redeemed: #c88861;
 }

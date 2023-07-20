@@ -31,7 +31,7 @@
   --theme-tooltip-minimal-bg: #5d5970;
 
   // App background gradient pattern
-  --theme-app-bg-gradient-start: #72d8ba;
+  --theme-app-bg-gradient-start: #40a687;
   --theme-app-bg-gradient-end: #06562a;
   --theme-app-bg-gradient: radial-gradient(
     circle at 50% 70px,
@@ -47,7 +47,7 @@
   // Header
   --theme-header-nav-bg: #1b422c;
   --theme-header-nav-slideout-menu-bg: var(--theme-fill-modal);
-  --theme-header-characters-bg: #366b4d;
+  --theme-header-characters-bg: #265c42;
   --theme-header-characters-txt: #ccc;
 
   // Dropdown menu
@@ -84,4 +84,7 @@
   // Organizer
   --theme-organizer-row-odd-bg: #2c7c55;
   --theme-organizer-row-even-bg: #3c926c;
+
+  // Records
+  --theme-record-redeemed: #ecd610;
 }

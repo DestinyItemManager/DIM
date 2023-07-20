@@ -6,6 +6,7 @@ $red: #ff3232; // For warnings/errors
 $green: #51a351; // For success statuses or positive deltas
 $stat-modded: #68a0b7; // For highlighting the difference in modded item stats
 $stat-masterworked: #e8a534;
+$new-notification-dot: #cf0707;
 
 // Blue used to denote community-provided data
 $communityBlue: #0d7fad;
@@ -124,22 +125,6 @@ $search-bar-height: 28px;
 // Border with gradient running into top-right / bottom-left corners
 // Dark gradient from top, masterwork border gradient from bottom, striped diamond overlay for texture
 @mixin masterwork($top-gradient: 0.05, $light-stripe: 0.05, $dark-stripe: 0.02) {
-  // Border
-  border-width: 1px;
-  border-style: solid;
-  border-image-slice: 1;
-  border-image-source: conic-gradient(
-    from 45deg at 50% 50%,
-    var(--theme-item-polaroid-masterwork-border) 0%,
-    transparent 24%,
-    transparent 25%,
-    var(--theme-item-polaroid-masterwork-border) 50%,
-    var(--theme-item-polaroid-masterwork-border) 50%,
-    transparent 74%,
-    transparent 75%,
-    var(--theme-item-polaroid-masterwork-border) 100%
-  );
-
   // Overlay
   $light-stripe: rgba(255, 255, 255, $light-stripe);
   $dark-stripe: rgba(0, 0, 0, $dark-stripe);
@@ -179,6 +164,30 @@ $search-bar-height: 28px;
       top right;
   background-repeat: no-repeat;
   background-size: 100%, 100%, 50% 50%, 50% 50%, 50% 50%, 50% 50%;
+
+  // Border
+  &::before {
+    content: '';
+    position: absolute;
+    box-sizing: border-box;
+    height: calc(var(--item-size) - #{2 * $item-border-width});
+    width: calc(var(--item-size) - #{2 * $item-border-width});
+
+    border-width: 1px;
+    border-style: solid;
+    border-image-slice: 1;
+    border-image-source: conic-gradient(
+      from 45deg at 50% 50%,
+      var(--theme-item-polaroid-masterwork-border) 0%,
+      transparent 24%,
+      transparent 25%,
+      var(--theme-item-polaroid-masterwork-border) 50%,
+      var(--theme-item-polaroid-masterwork-border) 50%,
+      transparent 74%,
+      transparent 75%,
+      var(--theme-item-polaroid-masterwork-border) 100%
+    );
+  }
 }
 
 /*
