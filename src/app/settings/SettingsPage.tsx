@@ -82,11 +82,11 @@ const languageOptions = mapToOptions({
 let languageChanged = false;
 
 const themeOptions = mapToOptions({
-  default: 'DIM Default (Default)',
+  default: 'Default (Beyond Light)',
+  pyramid: 'Pyramid Fleet',
   classic: 'DIM Classic',
   europa: 'Europa',
   neomuna: 'Neomuna',
-  pyramid: 'Pyramid Fleet',
   throneworld: 'Throne World',
   vexnet: 'Vex Network',
 });
