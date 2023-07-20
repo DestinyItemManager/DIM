@@ -1,6 +1,7 @@
 ## Next
 
 * The "Clear other items" setting in Loadouts has been split into a separate option for clearing weapons and clearing armor.
+* Added button to sort triumphs by completion.
 
 ### Beta Only
 
@@ -27,7 +28,6 @@
 ## 7.76.0 <span class="changelog-date">(2023-07-09)</span>
 
 * Fixed Fashion Loadouts being unable to store an Ornament for the Titan exotic Loreley Splendor Helm.
-* Added button to sort triumphs by completion.
 
 ## 7.75.0 <span class="changelog-date">(2023-07-02)</span>
 
@@ -79,8 +79,6 @@
 * Added `is:focusable` search to find items that can be focused at a vendor.
 * Fixed DIM not showing Leviathan's Breath catalyst progress in the item popup.
 * Cleaned up the design of Loadout Optimizer stats, mod picker, exotic picker, and subclass editor.
-* Weapon patterns are now sorted by completion %.
-* Added a toggle button for sorting tabs in the records page.
 
 ## 7.70.0 <span class="changelog-date">(2023-05-28)</span>
 

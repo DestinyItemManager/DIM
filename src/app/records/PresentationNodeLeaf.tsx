@@ -62,21 +62,21 @@ export default function PresentationNodeLeaf({
   );
 }
 
-function sortRecords(node: DimPresentationNodeLeaf) {
+/**
+ * Sorts the passed node if it has a DimRecord[] | DimCollectible[] | DimMetric[]
+ */
+function sortRecords(node: DimPresentationNodeLeaf): DimPresentationNodeLeaf {
   const sortedNode = { ...node };
   // RECORDS
   if (sortedNode.records) {
     sortedNode.records = sortBy(sortedNode.records, (record) => {
       //  Triumph is already completed so move it to back of list.
-      //  State is a bitmask where the ones place is for when the
-      //  record has been redeemed. The other checks move completed
-      //  but not redeemed to the back.
       if (
         record.recordComponent.state & DestinyRecordState.RecordRedeemed ||
         record.recordComponent.state & DestinyRecordState.CanEquipTitle ||
         !record.recordComponent.state
       ) {
-        return 999;
+        return -1;
       }
 
       // check which key is used to track progress
@@ -86,42 +86,40 @@ function sortRecords(node: DimPresentationNodeLeaf) {
       } else if (record.recordComponent.objectives) {
         objectives = record.recordComponent.objectives;
       } else {
-        // its a legacy triumph so it has no objectives
-        return 999;
+        // its a legacy triumph so it has no objectives and is not completed
+        return 0;
       }
 
-      //  Iterate through the objectives array and return the average
-      //  of its % progress.
-      //
+      //  Sum up the progress
       let totalProgress = 0;
       for (const x of objectives) {
-        // some progress bars exceed its completionValue
+        // Some progress bars exceed its completionValue
         if (x.complete) {
           totalProgress += 1;
           continue;
         }
         totalProgress += x.progress! / x.completionValue;
       }
-      return -totalProgress / objectives.length;
-    });
+      return totalProgress / objectives.length;
+    }).reverse();
     // COLLECTIBLES
   } else if (sortedNode.collectibles) {
     //  Only need to push owned items to the back of the list
     sortedNode.collectibles = sortBy(sortedNode.collectibles, (collectible) => {
       if (collectible.state & DestinyCollectibleState.NotAcquired) {
-        return 0;
+        return -1;
       }
-      return 1;
+      return 0;
     });
     // METRICS
   } else if (sortedNode.metrics) {
     sortedNode.metrics = sortBy(sortedNode.metrics, (metric) => {
       const objectives = metric.metricComponent.objectiveProgress;
       if (objectives.complete) {
-        return 999;
+        return -1;
       }
       return objectives.progress! / objectives.completionValue;
-    });
+    }).reverse();
   }
   return sortedNode;
 }
