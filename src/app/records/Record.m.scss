@@ -72,11 +72,12 @@
 }
 
 .redeemed {
-  border-color: #c4b578;
-  color: #c4b578;
+  border-color: var(--theme-record-redeemed);
+  color: var(--theme-record-redeemed);
   background: transparent;
   p {
-    color: scale-color(#c4b578, $lightness: -40%);
+    color: var(--theme-record-redeemed);
+    opacity: 0.7;
   }
 }
 
@@ -267,6 +268,6 @@
   }
 
   .redeemed & {
-    background-color: scale-color(#c4b578, $lightness: -20%) !important;
+    background-color: var(--theme-record-redeemed) !important;
   }
 }
