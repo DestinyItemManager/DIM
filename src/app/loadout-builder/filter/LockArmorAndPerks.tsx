@@ -1,24 +1,19 @@
 import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { hideItemPicker, showItemPicker } from 'app/item-picker/item-picker';
 import { ResolvedLoadoutItem, ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
 import SubclassPlugDrawer from 'app/loadout/SubclassPlugDrawer';
-import { isLoadoutBuilderItem, pickSubclass } from 'app/loadout/item-utils';
+import { getSubclassPlugs, isLoadoutBuilderItem, pickSubclass } from 'app/loadout/item-utils';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import { createGetModRenderKey } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { AppIcon, faTimesCircle, pinIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { emptyArray, emptyObject } from 'app/utils/empty';
+import { emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
-import {
-  getSocketByIndex,
-  getSocketsByCategoryHashes,
-  subclassAbilitySocketCategoryHashes,
-} from 'app/utils/socket-utils';
 import { Portal } from 'app/utils/temp-container';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -134,37 +129,7 @@ export default memo(function LockArmorAndPerks({
     LockableBucketHashes.indexOf(i.bucket.hash)
   );
 
-  // This creates a list of socket override plugs for the subclass.
-  // We need to track whether it is a default ability as those cannot be deleted.
-  const socketOverridePlugs: {
-    plug: PluggableInventoryItemDefinition;
-    isAbility: boolean;
-  }[] = useMemo(() => {
-    if (!subclass?.loadoutItem.socketOverrides || !subclass.item.sockets) {
-      return emptyArray();
-    }
-
-    const rtn: { plug: PluggableInventoryItemDefinition; isAbility: boolean }[] = [];
-
-    for (const socketIndexString of Object.keys(subclass?.loadoutItem.socketOverrides)) {
-      const socketIndex = parseInt(socketIndexString, 10);
-      const socket = getSocketByIndex(subclass.item.sockets, socketIndex);
-      const abilityAndSuperSockets = getSocketsByCategoryHashes(
-        subclass.item.sockets,
-        subclassAbilitySocketCategoryHashes
-      );
-
-      const overridePlug = defs.InventoryItem.get(
-        subclass.loadoutItem.socketOverrides[socketIndex]
-      ) as PluggableInventoryItemDefinition;
-
-      const isAbility = Boolean(socket && abilityAndSuperSockets.includes(socket));
-
-      rtn.push({ plug: overridePlug, isAbility });
-    }
-
-    return rtn;
-  }, [defs, subclass?.loadoutItem.socketOverrides, subclass?.item.sockets]);
+  const socketOverridePlugs = useMemo(() => getSubclassPlugs(defs, subclass), [defs, subclass]);
 
   const onMaxStatModsChanged = (autoStatMods: boolean) =>
     lbDispatch({ type: 'autoStatModsChanged', autoStatMods });
@@ -237,15 +202,15 @@ export default memo(function LockArmorAndPerks({
               lockedItem={subclass.item}
               onRemove={() => lbDispatch({ type: 'removeSubclass' })}
             />
-            {socketOverridePlugs.map(({ plug, isAbility }) => (
+            {socketOverridePlugs.map(({ plug, canBeRemoved }) => (
               <PlugDef
                 key={getModRenderKey(plug)}
                 plug={plug}
                 onClose={
-                  isAbility
-                    ? undefined
-                    : () =>
+                  canBeRemoved
+                    ? () =>
                         lbDispatch({ type: 'removeSingleSubclassSocketOverride', plug, subclass })
+                    : undefined
                 }
                 forClassType={selectedStore.classType}
               />

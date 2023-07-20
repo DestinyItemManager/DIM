@@ -47,22 +47,22 @@ export function getSubclassPlugs(
   defs: D2ManifestDefinitions,
   subclass: ResolvedLoadoutItem | undefined
 ) {
-  const plugs: PluggableInventoryItemDefinition[] = [];
+  const plugs: { plug: PluggableInventoryItemDefinition; canBeRemoved: boolean }[] = [];
 
   if (subclass?.item.sockets?.categories) {
     for (const category of subclass.item.sockets.categories) {
-      const showInitial =
-        !aspectSocketCategoryHashes.includes(category.category.hash) &&
-        !fragmentSocketCategoryHashes.includes(category.category.hash);
+      const canBeRemoved =
+        aspectSocketCategoryHashes.includes(category.category.hash) ||
+        fragmentSocketCategoryHashes.includes(category.category.hash);
       const sockets = getSocketsByIndexes(subclass.item.sockets, category.socketIndexes);
 
       for (const socket of sockets) {
         const override = subclass.loadoutItem.socketOverrides?.[socket.socketIndex];
         const initial = getDefaultAbilityChoiceHash(socket);
-        const hash = override || (showInitial && initial);
+        const hash = override || (!canBeRemoved && initial);
         const plug = hash && defs.InventoryItem.get(hash);
         if (plug && isPluggableItem(plug)) {
-          plugs.push(plug);
+          plugs.push({ plug, canBeRemoved });
         }
       }
     }
