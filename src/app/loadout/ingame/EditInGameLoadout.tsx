@@ -1,5 +1,6 @@
 import BungieImage, { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
 import Sheet from 'app/dim-ui/Sheet';
+import { resolveInGameLoadoutIdentifiers } from 'app/loadout-drawer/loadout-type-converters';
 import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -69,9 +70,11 @@ export default function EditInGameLoadout({
     loadout?.iconHash ?? overwrittenLoadout?.iconHash ?? defaultIcon
   );
 
-  const name = defs.LoadoutName.get(nameHash)?.name ?? 'Unknown';
-  const colorIcon = defs.LoadoutColor.get(colorHash)?.colorImagePath ?? '';
-  const icon = defs.LoadoutIcon.get(iconHash)?.iconImagePath ?? '';
+  const { name, colorIcon, icon } = resolveInGameLoadoutIdentifiers(defs, {
+    nameHash,
+    colorHash,
+    iconHash,
+  });
 
   const handleSetSlot = (newSlotNum: number) => {
     const destSlotLoadout = loadouts.find((l) => l.index === newSlotNum);
