@@ -254,7 +254,7 @@ export function getColumns(
         <ItemPopupTrigger item={item}>
           {(ref, onClick) => (
             <div ref={ref} onClick={onClick} className="item">
-              <ItemIcon item={item} className={styles.itemIcon} />
+              <ItemIcon item={item} />
               {item.crafted && <img src={shapedOverlay} className={styles.shapedIconOverlay} />}
             </div>
           )}
