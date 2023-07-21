@@ -131,7 +131,7 @@ export function implementsDimLoadout(
     for (const plug of dimSubclassPlugs) {
       // We only check one direction as DIM subclasses can be partially complete by
       // design.
-      if (!inGameSubclass.plugItemHashes.includes(plug.hash)) {
+      if (!inGameSubclass.plugItemHashes.includes(plug.plug.hash)) {
         return false;
       }
     }
