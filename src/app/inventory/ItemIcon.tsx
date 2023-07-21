@@ -10,6 +10,7 @@ import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/ge
 import pursuitComplete from 'images/highlightedObjective.svg';
 import { DimItem } from './item-types';
 import styles from './ItemIcon.m.scss';
+import { isPluggableItem } from './store/sockets';
 
 const itemTierStyles: Record<ItemTierName, string> = {
   Legendary: styles.legendary,
@@ -161,8 +162,8 @@ export function DefItemIcon({
  * given a mod definition or hash, returns its energy cost if it should be shown
  */
 function getModCostInfo(mod: DestinyInventoryItemDefinition) {
-  if (mod?.plug && isModCostVisible(mod.plug)) {
-    return mod.plug.energyCost.energyCost;
+  if (isPluggableItem(mod) && isModCostVisible(mod)) {
+    return mod.plug.energyCost!.energyCost;
   }
 
   return undefined;

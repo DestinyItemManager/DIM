@@ -6,12 +6,13 @@ import {
   DimSockets,
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
+import { armor2PlugCategoryHashes } from 'app/search/d2-known-values';
+import { DestinySocketCategoryStyle, TierType } from 'bungie-api-ts/destiny2';
 import {
-  DestinyItemPlugDefinition,
-  DestinySocketCategoryStyle,
-  TierType,
-} from 'bungie-api-ts/destiny2';
-import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+  ItemCategoryHashes,
+  PlugCategoryHashes,
+  SocketCategoryHashes,
+} from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { isArmor2Mod, isKillTrackerSocket } from './item-utils';
 
@@ -237,14 +238,19 @@ export const subclassAbilitySocketCategoryHashes: SocketCategoryHashes[] = [
   SocketCategoryHashes.Super,
 ];
 
-export function isModCostVisible(
-  plug: DestinyItemPlugDefinition
-): plug is WithRequiredProperty<DestinyItemPlugDefinition, 'energyCost'> {
+export function isModCostVisible(plug: PluggableInventoryItemDefinition): boolean {
   return (
     // hide cost if it's less than 1
-    !((plug.energyCost?.energyCost ?? 0) < 1) &&
-    !plug.plugCategoryIdentifier.endsWith('.fragments') &&
-    !plug.plugCategoryIdentifier.endsWith('.trinkets')
+    !((plug.plug.energyCost?.energyCost ?? 0) < 1) &&
+    // subclass stuff is always 1
+    !plug.plug.plugCategoryIdentifier.endsWith('.fragments') &&
+    !plug.plug.plugCategoryIdentifier.endsWith('.trinkets') &&
+    // artifact unlocks happen to have the armor PCHs, but don't have
+    // the "armor mod" ICH because they don't go in armor
+    !(
+      armor2PlugCategoryHashes.includes(plug.plug.plugCategoryHash) &&
+      !plug.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)
+    )
   );
 }
 
