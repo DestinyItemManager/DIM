@@ -56,7 +56,14 @@ interface LoadoutBuilderUI {
     open: boolean;
     plugCategoryHashWhitelist?: number[];
   };
-  compareSet?: ArmorSet;
+  compareSet?: {
+    set: ArmorSet;
+    /**
+     * The items selected from the armor set's options to use. This isn't
+     * always just the first option for each bucket.
+     */
+    items: DimItem[];
+  };
 }
 
 interface LoadoutBuilderConfiguration {
@@ -77,7 +84,7 @@ interface LoadoutBuilderConfiguration {
    * have been saved (e.g. coming from a loadout share) but this still
    * distinguishes between "clean slate" and when we started with a loadout.
    */
-  existingLoadout: boolean;
+  isEditingExistingLoadout: boolean;
 
   /**
    * A copy of `loadout.parameters.statConstraints`, but with ignored stats
@@ -143,7 +150,7 @@ const lbConfigInit = ({
   const storeMatchingClass = pickBackingStore(stores, storeId, classTypeFromPreloadedLoadout);
   const initialLoadoutParameters = preloadedLoadout?.parameters;
 
-  const existingLoadout = Boolean(preloadedLoadout);
+  const isEditingExistingLoadout = Boolean(preloadedLoadout);
 
   // If we requested a specific class type but the user doesn't have it, we
   // need to pick some different store, but ensure that class-specific stuff
@@ -159,7 +166,7 @@ const lbConfigInit = ({
   const selectedStore = storeMatchingClass ?? getCurrentStore(stores)!;
   const selectedStoreId = selectedStore.id;
   const classType = selectedStore.classType;
-  let loadout = preloadedLoadout ?? newLoadout(t('LoadoutBuilder.LoadoutName'), [], classType);
+  let loadout = preloadedLoadout ?? newLoadout('', [], classType);
 
   // In order of increasing priority:
   // default parameters, global saved parameters, stat order for this class,
@@ -184,6 +191,7 @@ const lbConfigInit = ({
           pinnedItems[item.bucket.hash] = item;
         }
       }
+      // TODO: maybe swap in the updated item ID for items here, to make future manipulation easier
     }
 
     // If we load a loadout with an exotic, pre-fill the exotic armor selection
@@ -221,7 +229,7 @@ const lbConfigInit = ({
 
   return {
     loadout,
-    existingLoadout,
+    isEditingExistingLoadout,
     resolvedStatConstraints: resolveStatConstraints(loadoutParameters.statConstraints!),
     pinnedItems,
     excludedItems: emptyObject(),
@@ -270,7 +278,7 @@ type LoadoutBuilderConfigAction =
 type LoadoutBuilderUIAction =
   | { type: 'openModPicker'; plugCategoryHashWhitelist?: number[] }
   | { type: 'closeModPicker' }
-  | { type: 'openCompareDrawer'; set: ArmorSet }
+  | { type: 'openCompareDrawer'; set: ArmorSet; items: DimItem[] }
   | { type: 'closeCompareDrawer' };
 
 export type LoadoutBuilderAction =
@@ -282,7 +290,7 @@ export type LoadoutBuilderAction =
 function lbUIReducer(state: LoadoutBuilderUI, action: LoadoutBuilderUIAction) {
   switch (action.type) {
     case 'openCompareDrawer':
-      return { ...state, compareSet: action.set };
+      return { ...state, compareSet: { set: action.set, items: action.items } };
     case 'openModPicker':
       return {
         ...state,
@@ -298,7 +306,6 @@ function lbUIReducer(state: LoadoutBuilderUI, action: LoadoutBuilderUIAction) {
   }
 }
 
-// TODO: Move more logic inside the reducer
 function lbConfigReducer(defs: D2ManifestDefinitions) {
   return (
     state: LoadoutBuilderConfiguration,
@@ -306,17 +313,21 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
   ): LoadoutBuilderConfiguration => {
     switch (action.type) {
       case 'changeCharacter': {
+        const { store } = action;
+        const originalLoadout = state.loadout;
+        let loadout: Loadout = { ...originalLoadout, classType: store.classType };
+
         // Always remove the subclass
-        let loadout = clearSubclass(defs)(state.loadout);
+        loadout = clearSubclass(defs)(loadout);
 
         // And the exotic
         let loadoutParameters = {
-          ...state.loadout.parameters,
+          ...loadout.parameters,
           exoticArmorHash: undefined,
         };
 
         // Apply stat constraint preferences
-        const constraints = action.savedStatConstraintsByClass[action.store.classType];
+        const constraints = action.savedStatConstraintsByClass[store.classType];
         if (constraints) {
           loadoutParameters = { ...loadoutParameters, statConstraints: constraints };
         }
@@ -327,7 +338,7 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
           ...state,
           loadout,
           resolvedStatConstraints: resolveStatConstraints(loadoutParameters.statConstraints!),
-          selectedStoreId: action.store.id,
+          selectedStoreId: store.id,
           // Also clear out pinned/excluded items
           pinnedItems: {},
           excludedItems: {},

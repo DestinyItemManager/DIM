@@ -1,8 +1,7 @@
-import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore, statSourceOrder } from 'app/inventory/store-types';
-import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { fitMostMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -34,9 +33,8 @@ import SetStats from './SetStats';
  * but only the highest light set is displayed.
  */
 export default memo(function GeneratedSet({
+  originalLoadout,
   set,
-  subclass,
-  notes,
   selectedStore,
   lockedMods,
   pinnedItems,
@@ -44,13 +42,13 @@ export default memo(function GeneratedSet({
   modStatChanges,
   loadouts,
   lbDispatch,
-  params,
   halfTierMods,
   armorEnergyRules,
+  equippedHashes,
+  isEditingExistingLoadout,
 }: {
+  originalLoadout: Loadout;
   set: ArmorSet;
-  subclass: ResolvedLoadoutItem | undefined;
-  notes?: string;
   selectedStore: DimStore;
   lockedMods: PluggableInventoryItemDefinition[];
   pinnedItems: PinnedItems;
@@ -58,13 +56,14 @@ export default memo(function GeneratedSet({
   modStatChanges: ModStatChanges;
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
-  params: LoadoutParameters;
   halfTierMods: PluggableInventoryItemDefinition[];
   armorEnergyRules: ArmorEnergyRules;
+  equippedHashes: Set<number>;
+  isEditingExistingLoadout: boolean;
 }) {
   const defs = useD2Definitions()!;
 
-  let existingLoadout: Loadout | undefined;
+  let overlappingLoadout: Loadout | undefined;
   // Items are sorted by their energy capacity when grouping
   let displayedItems: DimItem[] = set.armor.map((items) => items[0]);
   const allSetItems = set.armor.flat();
@@ -75,7 +74,7 @@ export default memo(function GeneratedSet({
     const equippedLoadoutItems = loadout.items.filter((item) => item.equip);
     const intersection = _.intersectionBy(allSetItems, equippedLoadoutItems, (item) => item.id);
     if (intersection.length === set.armor.length) {
-      existingLoadout = loadout;
+      overlappingLoadout = loadout;
       // Replace the list of items to show with the ones that were from the matching loadout
       displayedItems = intersection;
       break;
@@ -146,9 +145,7 @@ export default memo(function GeneratedSet({
     return autoModHashes;
   });
 
-  const canCompareLoadouts =
-    set.armor.every((items) => items[0].classType === selectedStore.classType) &&
-    loadouts.some((l) => l.classType === selectedStore.classType);
+  const canCompareLoadouts = loadouts.length > 0;
 
   return (
     <>
@@ -158,9 +155,8 @@ export default memo(function GeneratedSet({
         maxPower={getPower(displayedItems)}
         resolvedStatConstraints={resolvedStatConstraints}
         boostedStats={boostedStats}
-        existingLoadoutName={existingLoadout?.name}
-        subclass={subclass}
-        exoticArmorHash={params.exoticArmorHash}
+        existingLoadoutName={overlappingLoadout?.name}
+        equippedHashes={equippedHashes}
       />
       <div className={styles.build}>
         <div className={styles.items}>
@@ -178,16 +174,15 @@ export default memo(function GeneratedSet({
           ))}
         </div>
         <GeneratedSetButtons
+          originalLoadout={originalLoadout}
           set={set}
           items={displayedItems}
-          subclass={subclass}
+          lockedMods={lockedMods}
           store={selectedStore}
+          isEditingExistingLoadout={isEditingExistingLoadout}
           canCompareLoadouts={canCompareLoadouts}
           halfTierMods={halfTierMods}
           lbDispatch={lbDispatch}
-          notes={notes}
-          params={params}
-          lockedMods={lockedMods}
         />
       </div>
     </>

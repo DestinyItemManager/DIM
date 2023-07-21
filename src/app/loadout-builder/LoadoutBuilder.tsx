@@ -13,8 +13,8 @@ import { DimStore } from 'app/inventory/store-types';
 import { getStore } from 'app/inventory/stores-helpers';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadoutFromEquipped, resolveLoadoutModHashes } from 'app/loadout-drawer/loadout-utils';
+import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
 import { getItemsAndSubclassFromLoadout } from 'app/loadout/LoadoutView';
-import { useSavedLoadoutsForClassType } from 'app/loadout/loadout-ui/menu-hooks';
 import { categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -33,6 +33,7 @@ import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import {
   allItemsSelector,
+  artifactUnlocksSelector,
   createItemContextSelector,
   sortedStoresSelector,
   unlockedPlugSetItemsSelector,
@@ -81,13 +82,12 @@ export default memo(function LoadoutBuilder({
   const savedStatConstraintsByClass = useSelector(savedLoStatConstraintsByClassSelector);
   const [includeVendorItems, setIncludeVendorItems] = useSetting('loIncludeVendorItems');
 
-  const optimizingLoadoutId = preloadedLoadout?.id;
-
   // All Loadout Optimizer state is managed via this hook/reducer
   const [
     {
       loadout,
       resolvedStatConstraints,
+      isEditingExistingLoadout,
       pinnedItems,
       excludedItems,
       selectedStoreId,
@@ -101,14 +101,14 @@ export default memo(function LoadoutBuilder({
 
   // TODO: if we're editing a loadout, grey out incompatible classes?
 
-  // TODO: bundle these together into an LO context?
   const loadoutParameters = loadout.parameters!;
   const lockedExoticHash = loadoutParameters.exoticArmorHash;
   const statConstraints = loadoutParameters.statConstraints!;
   const autoStatMods = Boolean(loadoutParameters.autoStatMods);
+  const assumeArmorMasterwork = loadoutParameters.assumeArmorMasterwork;
+  const classType = loadout.classType;
 
   const selectedStore = stores.find((store) => store.id === selectedStoreId)!;
-  const classType = selectedStore.classType;
   const loadouts = useRelevantLoadouts(selectedStore);
 
   const resolvedMods = useResolvedMods(defs, loadoutParameters.mods, selectedStoreId);
@@ -193,8 +193,8 @@ export default memo(function LoadoutBuilder({
     const armorEnergyRules: ArmorEnergyRules = {
       ...loDefaultArmorEnergyRules,
     };
-    if (loadoutParameters.assumeArmorMasterwork !== undefined) {
-      armorEnergyRules.assumeArmorMasterwork = loadoutParameters.assumeArmorMasterwork;
+    if (assumeArmorMasterwork !== undefined) {
+      armorEnergyRules.assumeArmorMasterwork = assumeArmorMasterwork;
     }
     const [items, filterInfo] = filterItems({
       defs,
@@ -209,7 +209,7 @@ export default memo(function LoadoutBuilder({
     });
     return [armorEnergyRules, items, filterInfo];
   }, [
-    loadoutParameters.assumeArmorMasterwork,
+    assumeArmorMasterwork,
     defs,
     armorItems,
     pinnedItems,
@@ -283,10 +283,7 @@ export default memo(function LoadoutBuilder({
         statRangesFiltered={result?.statRangesFiltered}
         lbDispatch={lbDispatch}
       />
-      <EnergyOptions
-        assumeArmorMasterwork={loadoutParameters.assumeArmorMasterwork}
-        lbDispatch={lbDispatch}
-      />
+      <EnergyOptions assumeArmorMasterwork={assumeArmorMasterwork} lbDispatch={lbDispatch} />
       <div className={styles.area}>
         <CheckButton
           onChange={setIncludeVendorItems}
@@ -398,6 +395,7 @@ export default memo(function LoadoutBuilder({
         )}
         {result && sortedSets?.length ? (
           <GeneratedSets
+            loadout={loadout}
             sets={sortedSets}
             subclass={subclass}
             lockedMods={result.mods}
@@ -407,9 +405,8 @@ export default memo(function LoadoutBuilder({
             resolvedStatConstraints={resolvedStatConstraints}
             modStatChanges={result.modStatChanges}
             loadouts={loadouts}
-            params={loadoutParameters}
             armorEnergyRules={result.armorEnergyRules}
-            notes={preloadedLoadout?.notes}
+            isEditingExistingLoadout={isEditingExistingLoadout}
           />
         ) : (
           !processing && (
@@ -454,14 +451,10 @@ export default memo(function LoadoutBuilder({
         {compareSet && (
           <Portal>
             <CompareLoadoutsDrawer
-              set={compareSet}
+              compareSet={compareSet}
               selectedStore={selectedStore}
+              loadout={loadout}
               loadouts={loadouts}
-              initialLoadoutId={optimizingLoadoutId}
-              subclass={subclass}
-              classType={classType}
-              params={loadoutParameters}
-              notes={preloadedLoadout?.notes}
               lockedMods={modsToAssign}
               onClose={() => lbDispatch({ type: 'closeCompareDrawer' })}
             />
@@ -474,23 +467,25 @@ export default memo(function LoadoutBuilder({
 
 /**
  * Get a list of all loadouts that could be shown as "matching loadouts" or
- * used to compare loadouts. This is all loadouts usable by the selected store's
+ * used to compare loadouts. This is all loadouts specific to the selected store's
  * class plus the currently equipped loadout.
  */
 function useRelevantLoadouts(selectedStore: DimStore) {
-  const classLoadouts = useSavedLoadoutsForClassType(selectedStore.classType);
+  const allSavedLoadouts = useSelector(loadoutsSelector);
+  const artifactUnlocks = useSelector(artifactUnlocksSelector(selectedStore.id));
 
   // TODO: consider using fullyResolvedLoadoutsSelector
   const loadouts = useMemo(() => {
+    const classLoadouts = allSavedLoadouts.filter((l) => l.classType === selectedStore.classType);
+
     // TODO: use a selector / weakMemoize for this?
     const equippedLoadout = newLoadoutFromEquipped(
       t('Loadouts.CurrentlyEquipped'),
       selectedStore,
-      // TODO: pipe in
-      undefined
+      artifactUnlocks
     );
     return [...classLoadouts, equippedLoadout];
-  }, [classLoadouts, selectedStore]);
+  }, [allSavedLoadouts, selectedStore, artifactUnlocks]);
 
   return loadouts;
 }
