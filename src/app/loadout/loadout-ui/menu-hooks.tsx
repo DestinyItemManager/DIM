@@ -43,12 +43,7 @@ export function filterLoadoutsToClass(loadouts: Loadout[], classType: DestinyCla
 export function useLoadoutFilterPills(
   savedLoadouts: Loadout[],
   selectedStoreId: string,
-  {
-    includeWarningPills,
-    className,
-    darkBackground,
-    extra,
-  }: {
+  options: {
     includeWarningPills?: boolean;
     className?: string;
     darkBackground?: boolean;
@@ -61,13 +56,28 @@ export function useLoadoutFilterPills(
   }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
+  return useLoadoutFilterPillsInternal(savedLoadouts, selectedStoreId, options);
+}
+
+function useLoadoutFilterPillsInternal(
+  savedLoadouts: Loadout[],
+  selectedStoreId: string,
+  {
+    includeWarningPills,
+    className,
+    darkBackground,
+    extra,
+  }: {
+    includeWarningPills?: boolean;
+    className?: string;
+    darkBackground?: boolean;
+    extra?: React.ReactNode;
+  } = {}
+): [filteredLoadouts: Loadout[], filterPillsElement: React.ReactNode, hasSelectedFilters: boolean] {
   const isMissingItems = useSelector(isMissingItemsSelector);
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const getFragmentProblems = useSelector(getFragmentProblemsSelector);
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [selectedFilters, setSelectedFilters] = useState<Option[]>([]);
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const loadoutsByHashtag = useMemo(() => {
     const loadoutsByHashtag: { [hashtag: string]: Loadout[] } = {};
     for (const loadout of savedLoadouts) {
@@ -92,12 +102,10 @@ export function useLoadoutFilterPills(
     (o) => o.key
   );
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const loadoutsWithMissingItems = useMemo(
     () => savedLoadouts.filter((loadout) => isMissingItems(selectedStoreId, loadout)),
     [isMissingItems, savedLoadouts, selectedStoreId]
   );
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const loadoutsWithDeprecatedMods = useMemo(
     () =>
       savedLoadouts.filter((loadout) =>
@@ -106,7 +114,6 @@ export function useLoadoutFilterPills(
     [savedLoadouts]
   );
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [loadoutsWithEmptyFragmentSlots, loadoutsWithTooManyFragments] = useMemo(() => {
     const problematicLoadouts = _.groupBy(savedLoadouts, (loadout) =>
       getFragmentProblems(selectedStoreId, loadout)
@@ -162,7 +169,6 @@ export function useLoadoutFilterPills(
     }
   }
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const filteredLoadouts = useMemo(
     () =>
       selectedFilters.length > 0
