@@ -59,7 +59,7 @@ export default function ItemPopupBody({
       {failureStrings.map(
         (failureString) =>
           failureString.length > 0 && (
-            <div className={clsx('item-details', styles.failureReason)} key={failureString}>
+            <div className={styles.failureReason} key={failureString}>
               <RichDestinyText text={failureString} ownerId={item.owner} />
             </div>
           )
