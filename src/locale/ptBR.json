@@ -648,7 +648,9 @@
     "Classified": "Alguns de seus itens são secretos e não podem ser incluídos no cálculo do Poder máximo.",
     "ClearLoadoutParameters": "Remover configurações do Otimizador de Set",
     "ClearSection": "Remover todas",
-    "ClearSpace": "Mover outros itens para fora",
+    "ClearSpace": "Move others away",
+    "ClearSpaceArmor": "Move other armor away",
+    "ClearSpaceWeapons": "Move other weapons away",
     "ClearUnsetMods": "Remover outros mods",
     "ClearingSpace": "Movendo outros itens para fora",
     "Create": "Criar set",
@@ -815,6 +817,9 @@
     "Tutorial": "Desafio de Tutorial",
     "Unknown": "Desafio",
     "Weekly": "Desafio Semanal"
+  },
+  "Mods": {
+    "HarmonicModDescription": "O efeito deste mod vem a um custo reduzido e muda o elemento dependendo da subclasse equipada."
   },
   "MoveAmount": {
     "Amount": "Quantidade:"
@@ -1068,7 +1073,8 @@
     "SortCustom": "Ordenação Personalizada",
     "SortName": "Nome",
     "SpacesSize": "{{count}} espaço",
-    "SpacesSize_plural": "{{count}} espaços"
+    "SpacesSize_plural": "{{count}} espaços",
+    "Theme": "Theme"
   },
   "Sockets": {
     "ApplyPerks": "Aplicar perks",

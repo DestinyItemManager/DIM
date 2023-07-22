@@ -648,7 +648,9 @@
     "Classified": "Alcuni dei tuoi oggetti sono nascosti, e non possono essere usati nel calcolo per il massimo Potere.",
     "ClearLoadoutParameters": "Rimuovi impostazioni Ottimizzatore di Dotazioni",
     "ClearSection": "Rimuovi tutto",
-    "ClearSpace": "Sposta via altri oggetti",
+    "ClearSpace": "Sposta via gli altri",
+    "ClearSpaceArmor": "Sposta via le altre armature",
+    "ClearSpaceWeapons": "Sposta via le altre armi",
     "ClearUnsetMods": "Rimuovi altre Modifiche",
     "ClearingSpace": "Spostando via gli altri oggetti",
     "Create": "Crea dotazione",
@@ -815,6 +817,9 @@
     "Tutorial": "Sfida Tutorial",
     "Unknown": "Sfida",
     "Weekly": "Sfida Settimanale"
+  },
+  "Mods": {
+    "HarmonicModDescription": "L'effetto di questa Modifica ha un costo ridotto e cambia elemento a seconda della sottoclasse equipaggiata."
   },
   "MoveAmount": {
     "Amount": "Quantità:"
@@ -1068,7 +1073,8 @@
     "SortCustom": "Ordinamento Personalizzato",
     "SortName": "Nome",
     "SpacesSize": "{{count}} spazio",
-    "SpacesSize_plural": "{{count}} spazi"
+    "SpacesSize_plural": "{{count}} spazi",
+    "Theme": "Tema"
   },
   "Sockets": {
     "ApplyPerks": "Applica Perk",

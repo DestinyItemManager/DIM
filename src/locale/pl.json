@@ -648,7 +648,9 @@
     "Classified": "Niektóre z twoich przedmiotów są sklasyfikowane i nie mogą być uwzględnione przy kalkulacji maksymalnej mocy.",
     "ClearLoadoutParameters": "Usuń ustawienia Optymalizatora Uzbrojenia",
     "ClearSection": "Usuń wszystko",
-    "ClearSpace": "Odsuń inne przedmioty",
+    "ClearSpace": "Move others away",
+    "ClearSpaceArmor": "Move other armor away",
+    "ClearSpaceWeapons": "Move other weapons away",
     "ClearUnsetMods": "Usuń inne Modyfikacje",
     "ClearingSpace": "Przenoszenie innych przedmiotów",
     "Create": "Utwórz Uzbrojenie",
@@ -815,6 +817,9 @@
     "Tutorial": "Wyzwanie Samouczka",
     "Unknown": "Wyzwanie",
     "Weekly": "Cotygodniowe wyzwanie"
+  },
+  "Mods": {
+    "HarmonicModDescription": "This mod's effect comes at a reduced cost and changes element depending on the equipped subclass."
   },
   "MoveAmount": {
     "Amount": "Ilość:"
@@ -1068,7 +1073,8 @@
     "SortCustom": "Sortowanie niestandardowe",
     "SortName": "Nazwa",
     "SpacesSize": "{{count}} miejsce",
-    "SpacesSize_plural": "{{count}} miejsc"
+    "SpacesSize_plural": "{{count}} miejsc",
+    "Theme": "Theme"
   },
   "Sockets": {
     "ApplyPerks": "Zastosuj perki",

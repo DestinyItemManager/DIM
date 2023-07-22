@@ -648,7 +648,9 @@
     "Classified": "Algunos de tus objetos son clasificados y no pueden ser incluidos en el cálculo de Poder máximo.",
     "ClearLoadoutParameters": "Eliminar configuración del Optimizador de Equipamientos",
     "ClearSection": "Quitar todo",
-    "ClearSpace": "Quitar objetos no usados",
+    "ClearSpace": "Mover otros fuera",
+    "ClearSpaceArmor": "Mover otras armaduras fuera",
+    "ClearSpaceWeapons": "Mover otras armas fuera",
     "ClearUnsetMods": "Quitar otros mods",
     "ClearingSpace": "Moviendo otros objetos",
     "Create": "Crear equipamiento",
@@ -815,6 +817,9 @@
     "Tutorial": "Tutorial de Desafíos",
     "Unknown": "Desafío",
     "Weekly": "Desafío Semanal"
+  },
+  "Mods": {
+    "HarmonicModDescription": "El efecto de este mod tiene un costo reducido y cambia el elemento dependiendo de la subclase equipada."
   },
   "MoveAmount": {
     "Amount": "Cantidad:"
@@ -1068,7 +1073,8 @@
     "SortCustom": "Orden Personalizado",
     "SortName": "Nombre",
     "SpacesSize": "{{count}} espacio",
-    "SpacesSize_plural": "{{count}} espacios"
+    "SpacesSize_plural": "{{count}} espacios",
+    "Theme": "Tema"
   },
   "Sockets": {
     "ApplyPerks": "Aplicar Perks",
