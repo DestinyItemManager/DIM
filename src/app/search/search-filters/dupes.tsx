@@ -182,11 +182,9 @@ const dupeFilters: FilterDefinition[] = [
 
       for (const customStat of customStats) {
         const relevantStatHashes: number[] = [];
-        const statWeights = customStat.weights;
-        for (const statHash in statWeights) {
-          const weight = statWeights[statHash];
+        for (const [hash, weight] of Object.entries(customStat.weights)) {
           if (weight && weight > 0) {
-            relevantStatHashes.push(parseInt(statHash));
+            relevantStatHashes.push(Number(hash));
           }
         }
         (duplicateSetsByClass[customStat.class] ||= []).push(
@@ -200,6 +198,29 @@ const dupeFilters: FilterDefinition[] = [
         // this duplicates existing behavior for old style default-named custom stat,
         // but should be extended to also be a stat name-based filter
         // for users with multiple stats per class, a la customstatlower:pve
+        duplicateSetsByClass[item.classType]?.every((dupeSet) => dupeSet.has(item.id));
+    },
+  },
+  {
+    keywords: 'customtotalstatlower',
+    description: tl('Filter.CustomTotalStatLower'),
+    filter: ({ allItems, customStats }) => {
+      const duplicateSetsByClass: Partial<Record<DimItem['classType'], Set<string>[]>> = {};
+
+      for (const customStat of customStats) {
+        const relevantStatHashes: number[] = [];
+        for (const [hash, weight] of Object.entries(customStat.weights)) {
+          if (weight && weight > 0) {
+            relevantStatHashes.push(Number(hash));
+          }
+        }
+        (duplicateSetsByClass[customStat.class] ||= []).push(
+          computeStatDupeLower(allItems, relevantStatHashes, true)
+        );
+      }
+
+      return (item) =>
+        item.bucket.inArmor &&
         duplicateSetsByClass[item.classType]?.every((dupeSet) => dupeSet.has(item.id));
     },
   },
@@ -236,7 +257,11 @@ export function checkIfIsDupe(
   );
 }
 
-function computeStatDupeLower(allItems: DimItem[], relevantStatHashes: number[] = armorStats) {
+function computeStatDupeLower(
+  allItems: DimItem[],
+  relevantStatHashes: number[] = armorStats,
+  useTotals = false
+) {
   // disregard no-class armor
   const armor = allItems.filter((i) => i.bucket.inArmor && i.classType !== DestinyClass.Classified);
 
@@ -253,10 +278,13 @@ function computeStatDupeLower(allItems: DimItem[], relevantStatHashes: number[] 
   const statsCache = new Map<DimItem, number[][]>();
   for (const item of armor) {
     if (item.stats && item.power && item.bucket.hash !== BucketHashes.ClassArmor) {
-      const statValues = item.stats
+      let statValues = item.stats
         .filter((s) => relevantStatHashes.includes(s.statHash))
         .sort((a, b) => a.statHash - b.statHash)
         .map((s) => s.base);
+      if (useTotals) {
+        statValues = [statValues.reduce((a, b) => a + b, 0)];
+      }
       if (isArtifice(item)) {
         statsCache.set(
           item,
