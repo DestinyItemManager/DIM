@@ -648,7 +648,9 @@
     "Classified": "Algunos de tus items son \"Clasificados\", y no pueden ser incluidos en el cálculo de luz máxima.",
     "ClearLoadoutParameters": "Eliminar configuración del Optimizador de Equipaciones",
     "ClearSection": "Eliminar todo",
-    "ClearSpace": "Mover otros objetos fuera",
+    "ClearSpace": "Mover otros fuera",
+    "ClearSpaceArmor": "Mover otras armaduras fuera",
+    "ClearSpaceWeapons": "Mover otras armas fuera",
     "ClearUnsetMods": "Eliminar otros modificadores",
     "ClearingSpace": "Moviendo otros objetos fuera",
     "Create": "Crear equipación",
@@ -815,6 +817,9 @@
     "Tutorial": "Desafío Tutorial",
     "Unknown": "Desafío",
     "Weekly": "Desafío Semanal"
+  },
+  "Mods": {
+    "HarmonicModDescription": "El efecto de este modificador tiene un coste reducido y cambia el elemento dependiendo de la subclase equipada."
   },
   "MoveAmount": {
     "Amount": "Cantidad:"
@@ -1068,7 +1073,8 @@
     "SortCustom": "Orden Personalizado",
     "SortName": "Nombre",
     "SpacesSize": "{{count}} espacio",
-    "SpacesSize_plural": "{{count}} espacios"
+    "SpacesSize_plural": "{{count}} espacios",
+    "Theme": "Tema"
   },
   "Sockets": {
     "ApplyPerks": "Aplicar Ventajas",

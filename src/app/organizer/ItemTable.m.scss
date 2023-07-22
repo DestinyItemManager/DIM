@@ -160,6 +160,10 @@ $content-cells: 5;
   > :global(.item) {
     --item-size: var(--icon-item-size) !important;
     height: var(--item-size);
+    &:hover {
+      outline: 1px solid var(--theme-item-polaroid-hover-border);
+      cursor: pointer;
+    }
   }
 }
 
@@ -308,10 +312,6 @@ $modslotSize: 30px;
   text-align: center;
   grid-column: 1 / -1;
   padding: 2em !important;
-}
-
-.itemIcon {
-  cursor: pointer;
 }
 
 // The numeric value of the stat

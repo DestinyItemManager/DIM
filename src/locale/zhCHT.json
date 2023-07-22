@@ -648,7 +648,9 @@
     "Classified": "你的某些物品是隱藏的，因此不能用於到最大光等的計算之中。",
     "ClearLoadoutParameters": "刪除配裝優化器設置",
     "ClearSection": "移除所有",
-    "ClearSpace": "移除其他裝備",
+    "ClearSpace": "Move others away",
+    "ClearSpaceArmor": "Move other armor away",
+    "ClearSpaceWeapons": "Move other weapons away",
     "ClearUnsetMods": "移除其它模組",
     "ClearingSpace": "正在移走其他物品",
     "Create": "創建配裝",
@@ -815,6 +817,9 @@
     "Tutorial": "挑戰教程",
     "Unknown": "挑戰",
     "Weekly": "每週挑戰"
+  },
+  "Mods": {
+    "HarmonicModDescription": "This mod's effect comes at a reduced cost and changes element depending on the equipped subclass."
   },
   "MoveAmount": {
     "Amount": "數量："
@@ -1068,7 +1073,8 @@
     "SortCustom": "自訂排序",
     "SortName": "名稱",
     "SpacesSize": "{{count}} 個空位",
-    "SpacesSize_plural": "{{count}} 個空位"
+    "SpacesSize_plural": "{{count}} 個空位",
+    "Theme": "Theme"
   },
   "Sockets": {
     "ApplyPerks": "應用特性",

@@ -172,6 +172,8 @@ $search-bar-height: 28px;
     box-sizing: border-box;
     height: calc(var(--item-size) - #{2 * $item-border-width});
     width: calc(var(--item-size) - #{2 * $item-border-width});
+    left: 0;
+    top: 0;
 
     border-width: 1px;
     border-style: solid;

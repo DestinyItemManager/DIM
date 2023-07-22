@@ -649,6 +649,8 @@
     "ClearLoadoutParameters": "로드아웃 최적화 설정 제거",
     "ClearSection": "모두 제거",
     "ClearSpace": "다른 아이템 이동",
+    "ClearSpaceArmor": "다른 방어구 이동",
+    "ClearSpaceWeapons": "다른 무기 이동",
     "ClearUnsetMods": "다른 개조 부품 제거",
     "ClearingSpace": "다른 아이템 이동 중",
     "Create": "로드아웃 생성",
@@ -815,6 +817,9 @@
     "Tutorial": "튜토리얼 도전",
     "Unknown": "도전",
     "Weekly": "주간 도전"
+  },
+  "Mods": {
+    "HarmonicModDescription": "이 개조 부품의 효과는 낮은 비용으로 제공되며 장착된 하위 직업에 따라 속성이 변화됩니다."
   },
   "MoveAmount": {
     "Amount": "수량:"
@@ -1068,7 +1073,8 @@
     "SortCustom": "사용자 지정 정렬",
     "SortName": "이름",
     "SpacesSize": "{{count}}개의 공간",
-    "SpacesSize_plural": "{{count}}개의 공간"
+    "SpacesSize_plural": "{{count}}개의 공간",
+    "Theme": "테마"
   },
   "Sockets": {
     "ApplyPerks": "특성 적용",
