@@ -22,23 +22,21 @@ export default function PresentationNodeSearchResults({
   return (
     <div>
       {searchResults.map((sr) => (
-        <div key={sr.path.map((p) => p.nodeDef.hash).join('.')}>
+        <div key={sr.path.map((p) => p.hash).join('.')}>
           <ul className={styles.path}>
-            {sr.path.map(
-              (p, index) =>
-                index > 0 && <li key={p.nodeDef.hash}>{p.nodeDef.displayProperties.name}</li>
-            )}
+            {sr.path.map((p, index) => index > 0 && <li key={p.hash}>{p.name}</li>)}
           </ul>
           <div>
             {!sr.collectibles &&
               !sr.records &&
               !sr.metrics &&
               !sr.craftables &&
+              !sr.plugs &&
               (() => {
                 const node = sr.path[sr.path.length - 1];
                 return node.childPresentationNodes ? (
                   <PresentationNodeRoot
-                    presentationNodeHash={node.nodeDef.hash}
+                    presentationNodeHash={node.hash}
                     ownedItemHashes={ownedItemHashes}
                     profileResponse={profileResponse}
                   />

@@ -159,7 +159,6 @@ export default function Records({ account }: Props) {
                   <PresentationNodeRoot
                     presentationNodeHash={nodeDef.hash}
                     profileResponse={profileResponse}
-                    buckets={buckets}
                     ownedItemHashes={ownedItemHashes.accountWideOwned}
                     openedPresentationHash={presentationNodeHash}
                     searchQuery={searchQuery}

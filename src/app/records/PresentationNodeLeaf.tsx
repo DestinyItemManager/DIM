@@ -1,3 +1,4 @@
+import { VendorItemDisplay } from 'app/vendors/VendorItemComponent';
 import Collectible from './Collectible';
 import CollectiblesGrid from './CollectiblesGrid';
 import Craftable from './Craftable';
@@ -47,6 +48,14 @@ export default function PresentationNodeLeaf({
         <CollectiblesGrid>
           {node.craftables.map((craftable) => (
             <Craftable key={craftable.item.hash} craftable={craftable} />
+          ))}
+        </CollectiblesGrid>
+      )}
+
+      {node.plugs && node.plugs.length > 0 && (
+        <CollectiblesGrid>
+          {node.plugs.map(({ item, unlocked }) => (
+            <VendorItemDisplay key={item.index} item={item} unavailable={!unlocked} owned={false} />
           ))}
         </CollectiblesGrid>
       )}
