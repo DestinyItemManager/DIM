@@ -4,12 +4,15 @@ import { DimItem } from 'app/inventory/item-types';
 import { getSeason } from 'app/inventory/store/season';
 import { isArtifice } from 'app/item-triage/triage-utils';
 import { StatsSet } from 'app/loadout-builder/process-worker/stats-set';
+import { getInterestingSocketMetadatas } from 'app/utils/item-utils';
+import { getIntrinsicArmorPerkSocket } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { chainComparator, compareBy, reverseComparator } from '../../utils/comparators';
 import { DEFAULT_SHADER, armorStats } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
+import { ModSocketMetadata } from '../specialty-modslots';
 
 const notableTags = ['favorite', 'keep'];
 
@@ -240,9 +243,26 @@ function computeStatDupeLower(allItems: DimItem[], relevantStatHashes: number[] 
   // disregard no-class armor
   const armor = allItems.filter((i) => i.bucket.inArmor && i.classType !== DestinyClass.Classified);
 
-  // Group by class and armor type. Also, compare exotics with each other, not the general pool.
+  // Grouped by Bucket -> Class -> (Exotic | ArmorIntrinsic | ModSlot | Other)
   const grouped = Object.values(
-    _.groupBy(armor, (i) => `${i.bucket.hash}-${i.classType}-${i.isExotic ? i.hash : ''}`)
+    _.groupBy(armor, (i) => {
+      // Folows the same logic as app/item-triage/triage-factors to group armor
+      let armorGroupTag = `${i.bucket.hash}-${i.classType}`;
+      const armorPerk = !i.isExotic && getIntrinsicArmorPerkSocket(i);
+      const modslots = !i.isExotic && getInterestingSocketMetadatas(i);
+      if (i.isExotic) {
+        armorGroupTag += `-${i.hash}`;
+      } else if (armorPerk) {
+        armorGroupTag += `-${armorPerk.socketDefinition.socketTypeHash}`;
+      }
+      // In case we get armor with the same perk (eg artifice), but unique modslots (eg raid/nightmare-specific)
+      if (modslots) {
+        // It's unlikely that we'll have more than 1 weird modslot, but just in case...
+        armorGroupTag += `-${modslots.map((i: ModSocketMetadata) => i.slotTag).join('_')}`;
+      }
+
+      return armorGroupTag;
+    })
   );
 
   const dupes = new Set<string>();
