@@ -56,7 +56,30 @@ const fakeWeapon = {
   },
   visible: true,
   primaryStat: {
-    value: 300,
+    value: 1600,
+  },
+  itemCategoryHashes: [],
+  destinyVersion: 2,
+};
+
+const fakeWeaponMasterwork = {
+  icon: `~${exampleWeaponImage}`,
+  element: {
+    displayProperties: {
+      icon: '/img/destiny_content/damage_types/destiny2/thermal.png',
+    },
+  },
+  isNew: true,
+  masterwork: true,
+  location: {
+    type: 'energy',
+  },
+  bucket: {
+    type: 'energy',
+  },
+  visible: true,
+  primaryStat: {
+    value: 1600,
   },
   itemCategoryHashes: [],
   destinyVersion: 2,
@@ -307,13 +330,23 @@ export default function SettingsPage() {
 
           <section id="items">
             <h2>{t('Settings.Items')}</h2>
-            <div className="examples">
-              <InventoryItem
-                item={fakeWeapon as unknown as DimItem}
-                isNew={true}
-                tag="favorite"
-                autoLockTagged={settings.autoLockTagged}
-              />
+            <div className="sub-bucket">
+              <div className="examples">
+                <InventoryItem
+                  item={fakeWeapon as unknown as DimItem}
+                  isNew={true}
+                  tag="favorite"
+                  autoLockTagged={settings.autoLockTagged}
+                />
+              </div>
+              <div className="examples">
+                <InventoryItem
+                  item={fakeWeaponMasterwork as unknown as DimItem}
+                  isNew={true}
+                  tag="favorite"
+                  autoLockTagged={settings.autoLockTagged}
+                />
+              </div>
             </div>
 
             {!isPhonePortrait && (
