@@ -43,9 +43,10 @@ function resolveIcon(props: BucketIconProps) {
 
 /** returns an img corresponding to the specified bucket or item category */
 export default function BucketIcon(props: BucketIconProps) {
-  // TODO: calculate aspect ratio frm
   const resolved = resolveIcon(props);
   if (resolved.icon) {
+    // TODO: calculate aspect ratio from icon dimensions and set `width` and/or `height` accordingly.
+    // Could possibly use this trick: https://stackoverflow.com/a/22211990
     const svgCssImage = `url('${resolved.icon.svg.replaceAll(`'`, `"`)}')`;
     if (resolved.icon.colorized) {
       return (
