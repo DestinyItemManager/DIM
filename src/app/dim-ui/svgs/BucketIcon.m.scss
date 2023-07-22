@@ -1,7 +1,19 @@
 .icon {
-  filter: invert(1) !important;
+  display: inline-block;
+  background-color: white;
+  width: 16px;
+  height: 16px;
 }
 
 .colorized {
-  filter: none !important;
+  background-color: transparent !important;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.mask {
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
 }

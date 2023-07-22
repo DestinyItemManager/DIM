@@ -17,19 +17,30 @@
   align-items: flex-start;
 }
 
+.icon {
+  background-color: var(--theme-button-text);
+
+  // TODO: don't hardcode the width here, rely on BucketIcon to calculate the correct width while
+  // preserving original aspect ratio
+  width: 24px;
+  height: 1.3em;
+  vertical-align: bottom;
+  margin: 0 0.3em 0 0;
+  filter: drop-shadow(0 0 1px black);
+  transition: background-color 150ms ease-out;
+}
+
 .button {
   composes: dim-button from global;
   margin: 2px;
-  > img {
-    margin-left: 0 !important;
-  }
   &:hover,
   &:active,
   &.checked {
     background-color: var(--theme-accent-primary);
     color: var(--theme-text-invert);
-    > img {
-      filter: none !important;
+
+    .icon {
+      background-color: var(--theme-text-invert);
     }
   }
 }

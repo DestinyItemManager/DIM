@@ -38,6 +38,15 @@ import kineticWeaponSlot from 'images/weapon-slot-kinetic.svg';
 export interface ItemCategoryIcon {
   svg: string;
   colorized: boolean;
+
+  /*
+  TODO: Store image dimensions here, so we can calculate aspect ratio for sizing within BucketIcon.
+
+  Options:
+    a) hardcode the image dimensions in each call to `monochrome` or `colorized` (manually copy the
+       values from the SVG files).
+    b) write a (or find an existing) Webpack loader that emits the image dimensions.
+  */
 }
 function monochrome(svg: string): ItemCategoryIcon {
   return { svg, colorized: false };

@@ -43,16 +43,31 @@ function resolveIcon(props: BucketIconProps) {
 
 /** returns an img corresponding to the specified bucket or item category */
 export default function BucketIcon(props: BucketIconProps) {
+  // TODO: calculate aspect ratio frm
   const resolved = resolveIcon(props);
-  return resolved.icon ? (
-    <img
-      src={resolved.icon.svg}
-      {...resolved.otherProps}
-      className={clsx(props.className, styles.icon, {
-        [styles.colorized]: resolved.icon.colorized,
-      })}
-    />
-  ) : (
-    <BungieImage src={d2MissingIcon} {...resolved.otherProps} />
-  );
+  if (resolved.icon) {
+    const svgCssImage = `url('${resolved.icon.svg.replaceAll(`'`, `"`)}')`;
+    if (resolved.icon.colorized) {
+      return (
+        <div
+          {...resolved.otherProps}
+          className={clsx(styles.icon, styles.colorized, props.className)}
+          style={{ backgroundImage: svgCssImage }}
+        />
+      );
+    } else {
+      return (
+        <div
+          {...resolved.otherProps}
+          className={clsx(styles.icon, styles.mask, props.className)}
+          style={{
+            maskImage: svgCssImage,
+            WebkitMaskImage: svgCssImage,
+          }}
+        />
+      );
+    }
+  } else {
+    return <BungieImage src={d2MissingIcon} {...resolved.otherProps} />;
+  }
 }

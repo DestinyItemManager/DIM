@@ -3,6 +3,7 @@
 interface CssExports {
   'colorized': string;
   'icon': string;
+  'mask': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
