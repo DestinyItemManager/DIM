@@ -18,6 +18,10 @@
   --theme-text-invert: #000;
   --theme-text-secondary: #fff;
 
+  // Filters (see https://codepen.io/sosuke/pen/Pjoqqp)
+  --theme-filter-black-to-text: invert(1);
+  --theme-filter-black-to-text-invert: invert(0);
+
   // Buttons
   --theme-button-bg: rgba(255, 255, 255, 0.2);
   --theme-button-text: white;

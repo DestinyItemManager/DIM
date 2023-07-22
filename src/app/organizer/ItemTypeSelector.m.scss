@@ -29,7 +29,7 @@
     background-color: var(--theme-accent-primary);
     color: var(--theme-text-invert);
     > img {
-      filter: none !important;
+      filter: var(--theme-filter-black-to-text-invert) !important;
     }
   }
 }

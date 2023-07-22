@@ -1,5 +1,5 @@
 .icon {
-  filter: invert(1) !important;
+  filter: var(--theme-filter-black-to-text) !important;
 }
 
 .colorized {
