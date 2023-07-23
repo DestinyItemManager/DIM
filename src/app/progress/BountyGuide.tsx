@@ -55,8 +55,8 @@ export type DefType =
 // Reward types we'll show in the bounty guide. Could be expanded (e.g. to seasonal mats)
 const rewardAllowList = [
   ...Object.keys(xpItems).map((i) => parseInt(i, 10)),
-  2817410917, // bright dust
-  3168101969, // bright dust
+  2817410917, // InventoryItem "Bright Dust"
+  3168101969, // InventoryItem "Bright Dust"
 ];
 
 export interface BountyFilter {
