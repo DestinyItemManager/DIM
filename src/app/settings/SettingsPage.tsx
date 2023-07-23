@@ -62,28 +62,7 @@ const fakeWeapon = {
   destinyVersion: 2,
 };
 
-const fakeWeaponMasterwork = {
-  icon: `~${exampleWeaponImage}`,
-  element: {
-    displayProperties: {
-      icon: '/img/destiny_content/damage_types/destiny2/thermal.png',
-    },
-  },
-  isNew: true,
-  masterwork: true,
-  location: {
-    type: 'energy',
-  },
-  bucket: {
-    type: 'energy',
-  },
-  visible: true,
-  primaryStat: {
-    value: 1600,
-  },
-  itemCategoryHashes: [],
-  destinyVersion: 2,
-};
+const fakeWeaponMasterwork = { ...fakeWeapon, masterwork: true };
 
 const languageOptions = mapToOptions({
   de: 'Deutsch',
