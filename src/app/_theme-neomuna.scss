@@ -7,8 +7,8 @@
   // More vibrant P3 colourspace tints for displays that support them
   @supports (color: color(display-p3 1 1 1)) {
     --theme-accent-primary: oklch(0.61 0.29 336.78);
-    --theme-item-polaroid: oklch(0.77 0.16 213.81);
-    --theme-item-polaroid-masterwork: oklch(0.59 0.27 341.42);
+    --theme-item-polaroid: oklch(0.74 0.15 213.27);
+    --theme-item-polaroid-masterwork: oklch(0.55 0.26 340.71);
   }
 
   // Generic fills for modal backgrounds (see below)
@@ -66,9 +66,9 @@
   --theme-search-dropdown-border: rgba(255, 255, 255, 0.2);
 
   // Items 'polaroid' framed icons
-  --theme-item-polaroid: #1ad2f3;
+  --theme-item-polaroid: #00c2e3;
   --theme-item-polaroid-txt: black;
-  --theme-item-polaroid-masterwork: #db00aa;
+  --theme-item-polaroid-masterwork: #c9009e;
   --theme-item-polaroid-masterwork-txt: #dec1d8;
   --theme-item-polaroid-masterwork-border: #40abb5;
   --theme-item-polaroid-capped: #ebb920;
