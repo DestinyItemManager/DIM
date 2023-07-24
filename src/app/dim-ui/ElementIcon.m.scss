@@ -5,6 +5,7 @@
   background-size: 100%;
   background-repeat: no-repeat;
   display: inline-block;
+  filter: saturate(2.5);
 
   :global(.destiny1) & {
     width: calc((10 / 50) * var(--item-size));

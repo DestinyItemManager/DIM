@@ -81,8 +81,8 @@
   margin-right: auto;
 }
 
-/* some element icons don't show up well on polaroid white. we darken these. */
+/* some elements icons (arc / void / strand) don't show up well on polaroid white. we darken these. */
 .fixContrast {
-  filter: brightness(75%) saturate(200%);
+  filter: brightness(var(--theme-item-polaroid-element-adjust-brightness)) saturate(2.5);
   background-color: transparent !important;
 }
