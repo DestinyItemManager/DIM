@@ -1,5 +1,7 @@
 ## Next
 
+## 7.78.0 <span class="changelog-date">(2023-07-23)</span>
+
 * The "Clear other items" setting in Loadouts has been split into a separate option for clearing weapons and clearing armor.
 
 ### Beta Only
