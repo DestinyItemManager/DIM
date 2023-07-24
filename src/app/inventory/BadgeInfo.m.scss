@@ -56,11 +56,11 @@
 
 .fullstack {
   font-weight: bold;
-  color: #f2721b;
+  color: var(--theme-item-polaroid-capped-txt);
 }
 
 .capped {
-  background-color: $gold;
+  background-color: var(--theme-item-polaroid-capped);
 }
 
 .masterwork {
