@@ -84,7 +84,8 @@ const languageOptions = mapToOptions({
 let languageChanged = false;
 
 const themeOptions = mapToOptions({
-  default: 'DIM Classic (Default)',
+  default: 'Default (Beyond Light)',
+  classic: 'DIM Classic',
   dimdark: 'DIM Dark Mode',
   europa: 'Europa',
   neomuna: 'Neomuna',
