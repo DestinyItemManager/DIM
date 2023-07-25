@@ -3,16 +3,20 @@ import { t, tl } from 'app/i18next-t';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { StringLookup } from 'app/utils/util-types';
 import { FontGlyphs } from 'data/d2/d2-font-glyphs';
+import { DimCustomSymbols } from 'data/d2/dim-custom-symbols';
 import { TranslateManually, symbolData } from 'data/d2/symbol-name-sources';
 import { createSelector } from 'reselect';
 import { conversionTableSelector } from './rich-destiny-text';
 
 const manualTranslations: { [key in TranslateManually]: string } = {
   [FontGlyphs.gilded_title]: tl('Glyphs.Gilded'),
-  [FontGlyphs.hunter_smoke]: tl('Glyphs.Smoke'),
   [FontGlyphs.environment_hazard]: tl('Glyphs.Misadventure'),
   [FontGlyphs.void_quickfall]: tl('Glyphs.Quickfall'),
   [FontGlyphs.spear_launcher]: tl('Glyphs.ScorchCannon'),
+  [DimCustomSymbols.hive_relic]: tl('Glyphs.HiveSword'),
+  [DimCustomSymbols.harmonic]: tl('Glyphs.Harmonic'),
+  [DimCustomSymbols.respawn_restricted]: tl('Glyphs.RespawnRestricted'),
+  [FontGlyphs.light]: tl('Glyphs.LightLevel'),
 };
 
 export type SymbolsMap = { glyph: string; name: string; fullName: string }[];
@@ -27,6 +31,18 @@ const getTableLoc = (defs: D2ManifestDefinitions, tableName: string, hash: numbe
       return defs.SandboxPerk.get(hash)?.displayProperties?.name;
     case 'ActivityMode':
       return defs.ActivityMode[hash]?.displayProperties?.name;
+    case 'Objective':
+      return defs.Objective.get(hash)?.progressDescription;
+    case 'ItemCategory':
+      return defs.ItemCategory.get(hash)?.displayProperties?.name;
+    case 'InventoryBucket':
+      return defs.InventoryBucket[hash]?.displayProperties?.name;
+    case 'Faction':
+      return defs.Faction[hash]?.displayProperties?.name;
+    case 'Stat':
+      return defs.Stat.get(hash)?.displayProperties?.name;
+    case 'DamageType':
+      return defs.DamageType.get(hash)?.displayProperties?.name;
   }
 };
 
