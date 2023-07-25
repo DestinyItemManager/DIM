@@ -213,12 +213,12 @@
     "ContributePower": "Zeige Gegenstände, die Power haben und zu deinem Power-Level beitragen können.",
     "Cosmetic": "Zeigt Gegenstände, die Flair oder Kosmetika sind.",
     "Craftable": "Zeigt formbare Gegenstände an.",
-    "CraftedDupe": "Shows duplicate weapons where at least one of the duplicates is crafted.",
+    "CraftedDupe": "Zeigt doppelte Waffen, bei denen mindestens eines der Duplikate hergestellt wurde.",
     "Curated": "Zeigt Gegenstände die ein kuratierter Roll sind.",
     "CurrentClass": "Zeigt Gegenstände an, die auf dem derzeit eingeloggten Hüter ausrüstbar sind.",
     "CustomStatLower": "Zeigt Rüstungen an, deren Werte strikt niedriger sind als die anderer Rüstungen desselben Typs, wobei nur die Werte in der benutzerdefinierten Statistik-Gesamtliste dieser Klasse berücksichtigt werden.",
     "DamageType": "Zeigt Gegenstände basierend auf deren Schadenstyp.",
-    "Deepsight": "Shows weapons with Deepsight Resonance, which can have their pattern extracted, or which can have Deepsight Resonance enabled using a Deepsight Harmonizer.",
+    "Deepsight": "Zeigt Waffen mit Tiefenblick-Resonanz, deren Bauplan extrahiert oder die Tiefenblick-Resonanz mit einem Tiefenblick-Harmonizer aktiviert werden kann.",
     "Description": "Beschreibung",
     "Dupe": "Zeigt doppelte Gegenstände, einschließlich Neuveröffentlichungen",
     "DupeCount": "Gegenstände, die die angegebene Anzahl an Duplikaten haben.",
@@ -262,7 +262,7 @@
     "MasterworkKills": "Zeigt Gegenstände basierend auf dem Wert des Meisterwerk-Kill-Trackers an.",
     "MaxPower": "Zeigt Gegenstände mit der höchsten Power pro Slot.",
     "MaxPowerLoadout": "Zeigt die Gegenstände im Loadout, die deinen Powerlevel für jede Charakterklasse maximieren würden.",
-    "Memento": "Shows weapons that have a memento socket.",
+    "Memento": "Zeigt Waffen, die einen Memento-Slot haben.",
     "ModSlot": "Zeigt Rüstungen mit einem bestimmten Saison-Mod-Slot.",
     "Mods": {
       "Y2": "Zeigt Gegenstände mit einem ausgerüstetem Jahr 2 Mod.",
@@ -648,7 +648,9 @@
     "Classified": "Einige deiner Gegenstände sind klassifiziert und können nicht in die Max-Power-Berechnung einbezogen werden.",
     "ClearLoadoutParameters": "Loadout-Optimierer-Einstellungen entfernen",
     "ClearSection": "Alle entfernen",
-    "ClearSpace": "Andere Gegenstände wegräumen",
+    "ClearSpace": "Anderes wegräumen",
+    "ClearSpaceArmor": "Andere Rüstung wegräumen",
+    "ClearSpaceWeapons": "Andere Waffen wegräumen",
     "ClearUnsetMods": "Andere Mods entfernen",
     "ClearingSpace": "Verschiebe andere Gegenstände",
     "Create": "Loadout erstellen",
@@ -815,6 +817,9 @@
     "Tutorial": "Tutorial-Herausforderung",
     "Unknown": "Herausforderung",
     "Weekly": "Wöchentliche Herausforderung"
+  },
+  "Mods": {
+    "HarmonicModDescription": "Der Effekt dieses Mods hat reduzierte Kosten und ändert sein Element je nach dem ausgerüsteten Fokus."
   },
   "MoveAmount": {
     "Amount": "Menge:"
@@ -1068,7 +1073,8 @@
     "SortCustom": "Benutzerdefinierte Sortierung",
     "SortName": "Name",
     "SpacesSize": "{{count}} Platz",
-    "SpacesSize_plural": "{{count}} Plätze"
+    "SpacesSize_plural": "{{count}} Plätze",
+    "Theme": "Aussehen"
   },
   "Sockets": {
     "ApplyPerks": "Perks anwenden",

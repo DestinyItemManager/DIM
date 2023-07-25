@@ -162,7 +162,7 @@ function PlugTooltip({
   const renderedStats = statsArray.length > 0 && <PlugStats stats={statsArray} />;
 
   const isPluggable = isPluggableItem(def);
-  const energyCost = isPluggable && isModCostVisible(def.plug) ? def.plug.energyCost : null;
+  const energyCost = isPluggable && isModCostVisible(def) ? def.plug.energyCost : null;
   const subclassDamageType = isPluggable && getDamageTypeForSubclassPlug(def);
 
   const isInTooltip = useTooltipCustomization({

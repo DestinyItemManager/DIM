@@ -327,15 +327,20 @@ function filterLoadoutToAllowedItems(
 
     if (loadout.classType === DestinyClass.Unknown && loadout.parameters) {
       // Remove fashion and non-mod loadout parameters from Any Class loadouts
+      // FIXME It's really easy to forget to consider properties of LoadoutParameters here,
+      // maybe some type voodoo can force us to make a decision for every property?
       if (
         loadout.parameters.mods?.length ||
         loadout.parameters.clearMods ||
-        loadout.parameters.artifactUnlocks
+        loadout.parameters.artifactUnlocks ||
+        // weapons but not armor since AnyClass loadouts can't have armor
+        loadout.parameters.clearWeapons
       ) {
         loadout.parameters = {
           mods: loadout.parameters.mods,
           clearMods: loadout.parameters.clearMods,
           artifactUnlocks: loadout.parameters.artifactUnlocks,
+          clearWeapons: loadout.parameters.clearWeapons,
         };
       } else {
         delete loadout.parameters;

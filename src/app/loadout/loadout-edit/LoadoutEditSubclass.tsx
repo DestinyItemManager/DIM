@@ -99,8 +99,8 @@ export default function LoadoutEditSubclass({
         <div className={styles.subclassMods}>
           {plugs?.map((plug) => (
             <PlugDef
-              key={getModRenderKey(plug)}
-              plug={plug}
+              key={getModRenderKey(plug.plug)}
+              plug={plug.plug}
               forClassType={subclass?.item.classType}
             />
           ))}

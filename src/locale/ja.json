@@ -648,7 +648,9 @@
     "Classified": "一部のアイテムは分類されており、最大出力の計算に含めることはできません。",
     "ClearLoadoutParameters": "ロードアウトの設定を削除",
     "ClearSection": "すべて削除",
-    "ClearSpace": "他のアイテムを移動する",
+    "ClearSpace": "他を移動する",
+    "ClearSpaceArmor": "他の防具を移動する",
+    "ClearSpaceWeapons": "他の武器を移動する",
     "ClearUnsetMods": "他の MOD を削除",
     "ClearingSpace": "他のアイテムを移動する",
     "Create": "ロードアウトを作成",
@@ -815,6 +817,9 @@
     "Tutorial": "チュートリアルチャレンジ",
     "Unknown": "チャレン(挑戦)",
     "Weekly": "ウィークチャレンジ(週間の挑戦)"
+  },
+  "Mods": {
+    "HarmonicModDescription": "このModはコストを軽減し、装備するサブクラスで効果を変化します。"
   },
   "MoveAmount": {
     "Amount": "量 : "
@@ -1068,7 +1073,8 @@
     "SortCustom": "カスタムソート",
     "SortName": "名前",
     "SpacesSize": "{{count}} スペース",
-    "SpacesSize_plural": "{{count}} スペース"
+    "SpacesSize_plural": "{{count}} スペース",
+    "Theme": "テーマ"
   },
   "Sockets": {
     "ApplyPerks": "パークを適用",
