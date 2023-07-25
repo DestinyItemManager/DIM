@@ -169,5 +169,18 @@ async function handleRefreshTokenError(response: Error | Response): Promise<Toke
     }
   }
 
-  throw new Error('Unknown error getting response token: ' + JSON.stringify(response));
+  let responseBody = data;
+  if (!responseBody) {
+    try {
+      responseBody = await response.text();
+    } catch {
+      responseBody = 'No response body';
+    }
+  }
+
+  throw new Error(
+    `Unknown error getting response token. status: ${response.status}, response: ${JSON.stringify(
+      responseBody
+    )}`
+  );
 }
