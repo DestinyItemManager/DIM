@@ -43,6 +43,7 @@ import {
 } from 'app/stream-deck/interfaces';
 import { DeferredPromise } from 'app/stream-deck/util/deferred';
 import { clientIdentifier, streamDeckToken } from 'app/stream-deck/util/local-storage';
+import { delay } from 'app/utils/util';
 import { DamageType } from 'bungie-api-ts/destiny2';
 
 // Deferred promise used with selections notifications and actions
@@ -75,8 +76,6 @@ function refreshHandler(): ThunkResult {
     refresh();
   };
 }
-
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function searchHandler({ msg, state, store }: HandlerArgs<SearchAction>): ThunkResult {
   return async (dispatch, getState) => {
