@@ -202,14 +202,12 @@ export function pullFromPostmaster(store: DimStore): ThunkResult {
               // Show the error separately and continue
               showNoSpaceError(e);
             }
+          } else if (items.length === 1) {
+            // Transform the notification into an error
+            throw new Error(t('Loadouts.PullFromPostmasterError', { error: e.message }));
           } else {
-            if (items.length === 1) {
-              // Transform the notification into an error
-              throw new Error(t('Loadouts.PullFromPostmasterError', { error: e.message }));
-            } else {
-              // Show the error separately and continue
-              errorNotification(e.message);
-            }
+            // Show the error separately and continue
+            errorNotification(e.message);
           }
         }
       }

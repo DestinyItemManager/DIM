@@ -240,12 +240,10 @@ function getPerkDescriptions(
     } else {
       addDescriptionAsFunctionality();
     }
+  } else if (plugDescription) {
+    addDescriptionAsFunctionality();
   } else {
-    if (plugDescription) {
-      addDescriptionAsFunctionality();
-    } else {
-      addPerkDescriptions();
-    }
+    addPerkDescriptions();
   }
 
   // Add custom descriptions created for mods who's description is hard to access or an accurate description isn't present

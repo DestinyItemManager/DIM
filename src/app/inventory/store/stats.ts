@@ -296,7 +296,7 @@ function buildStat(
   statDef: DestinyStatDefinition,
   statDisplaysByStatHash: StatDisplayLookup
 ): DimStat {
-  value = value || 0;
+  value ||= 0;
   const investmentValue = value;
   let maximumValue = statGroup.maximumValue;
   let bar = !statsNoBar.includes(statHash);
@@ -612,7 +612,7 @@ export function interpolateStatValue(value: number, statDisplay: DestinyStatDisp
  */
 function bankersRound(x: number) {
   const r = Math.round(x);
-  return (x > 0 ? x : -x) % 1 === 0.5 ? (0 === r % 2 ? r : r - 1) : r;
+  return (x > 0 ? x : -x) % 1 === 0.5 ? (r % 2 === 0 ? r : r - 1) : r;
 }
 
 export function keyByStatHash(stats: DimStat[]): StatLookup;

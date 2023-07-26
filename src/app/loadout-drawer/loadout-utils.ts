@@ -779,12 +779,11 @@ export function isMissingItems(
       if (!getInstancedLoadoutItem(allItems, loadoutItem)) {
         return true;
       }
-    } else {
-      // The vault can't really have uninstanced items like subclasses or emblems, so no point
-      // in reporting a missing item in that case.
-      if (storeId !== 'vault' && !getUninstancedLoadoutItem(allItems, info.hash, storeId)) {
-        return true;
-      }
+    }
+    // The vault can't really have uninstanced items like subclasses or emblems, so no point
+    // in reporting a missing item in that case.
+    else if (storeId !== 'vault' && !getUninstancedLoadoutItem(allItems, info.hash, storeId)) {
+      return true;
     }
   }
   return false;

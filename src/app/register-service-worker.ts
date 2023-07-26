@@ -88,18 +88,15 @@ export default function registerServiceWorker() {
                   preventDevToolsReloadLoop = true;
                   window.location.reload();
                 });
-              } else {
-                // At this point, everything has been precached.
-                // It's the perfect time to display a
-                // "Content is cached for offline use." message.
-                if ($featureFlags.debugSW) {
-                  infoLog('SW', 'Content is cached for offline use.');
-                }
               }
-            } else {
-              if ($featureFlags.debugSW) {
-                infoLog('SW', 'New Service Worker state: ', installingWorker.state);
+              // At this point, everything has been precached.
+              // It's the perfect time to display a
+              // "Content is cached for offline use." message.
+              else if ($featureFlags.debugSW) {
+                infoLog('SW', 'Content is cached for offline use.');
               }
+            } else if ($featureFlags.debugSW) {
+              infoLog('SW', 'New Service Worker state: ', installingWorker.state);
             }
           };
         };
