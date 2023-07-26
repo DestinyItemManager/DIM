@@ -134,6 +134,11 @@
         "object": "_",
         "property": "forIn",
         "message": "Please use Object.values or Object.entries instead"
+      },
+      {
+        "object": "_",
+        "property": "noop",
+        "message": "Import noop directly instead of using it through _.noop, to satisfy the unbound-method lint"
       }
     ],
     "no-restricted-imports": [
@@ -311,7 +316,6 @@
     "@typescript-eslint/no-unsafe-call": "off",
     "@typescript-eslint/no-unsafe-member-access": "off",
     "@typescript-eslint/no-unsafe-return": "off",
-    "@typescript-eslint/unbound-method": "off",
     "@typescript-eslint/no-redundant-type-constituents": "off",
     "no-implied-eval": "off",
     "@typescript-eslint/no-implied-eval": "error",

@@ -4,7 +4,7 @@ import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { emptyArray } from 'app/utils/empty';
-import _ from 'lodash';
+import _, { identity } from 'lodash';
 import { Dispatch, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { useAutoMods } from '../process/useProcess';
@@ -75,7 +75,7 @@ export default function GeneratedSets({
       numElements={sets.length}
       estimatedSize={160}
       itemContainerClassName={containerClass}
-      getItemKey={_.identity}
+      getItemKey={identity}
     >
       {(index) => (
         <GeneratedSet

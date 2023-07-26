@@ -669,7 +669,7 @@ function TableRow({
           key={column.id}
           onClick={onRowClick(row, column)}
           className={clsx(possibleStyles[column.id], {
-            [styles.hasFilter]: column.filter,
+            [styles.hasFilter]: column.filter !== undefined,
             [styles.customstat]: column.id.startsWith('customstat_'),
           })}
           role="cell"
