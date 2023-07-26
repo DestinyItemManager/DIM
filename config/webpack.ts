@@ -24,6 +24,7 @@ import { InjectManifest } from 'workbox-webpack-plugin';
 import zlib from 'zlib';
 import csp from './content-security-policy';
 import { makeFeatureFlags } from './feature-flags';
+import PostCSSAssetsPlugin from 'postcss-assets-webpack-plugin';
 const renderer = new marked.Renderer();
 
 import { StatsWriterPlugin } from 'webpack-stats-plugin';
@@ -244,7 +245,6 @@ export default (env: Env) => {
                       : '[contenthash:base64:8]',
                   exportLocalsConvention: 'camelCaseOnly',
                 },
-                sourceMap: true,
                 importLoaders: 2,
               },
             },
@@ -258,19 +258,18 @@ export default (env: Env) => {
           exclude: /\.m\.scss$/,
           use: [
             env.dev ? 'style-loader' : MiniCssExtractPlugin.loader,
-            {
-              loader: 'css-loader',
-              options: {
-                sourceMap: true,
-              },
-            },
+            'css-loader',
             'postcss-loader',
             { loader: 'sass-loader', options: { sassOptions: { quietDeps: true } } },
           ],
         },
         {
           test: /\.css$/,
-          use: [env.dev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader'],
+          use: [
+            env.dev ? 'style-loader' : MiniCssExtractPlugin.loader,
+            'css-loader',
+            'postcss-loader',
+          ],
         },
         // All files with a '.ts' or '.tsx' extension will be handled by 'babel-loader'.
         {
@@ -371,6 +370,28 @@ export default (env: Env) => {
     new MiniCssExtractPlugin({
       filename: env.dev ? '[name]-[contenthash].css' : '[name]-[contenthash:8].css',
       chunkFilename: env.dev ? '[name]-[contenthash].css' : '[id]-[contenthash:8].css',
+    }),
+
+    // Compress CSS after bundling so we can optimize across rules
+    new PostCSSAssetsPlugin({
+      test: /\.css$/,
+      log: false,
+      plugins: [
+        // Sort media queries so they can be merged by cssnano
+        require('postcss-sort-media-queries')({
+          sort: 'desktop-first',
+        }),
+        require('cssnano')({
+          preset: [
+            'default',
+            {
+              autoprefixer: false,
+              // We've already run svgo on all images
+              svgo: false,
+            },
+          ],
+        }),
+      ],
     }),
 
     new HtmlWebpackPlugin({
