@@ -159,7 +159,7 @@ export default function Developer(this: never) {
                 type="button"
                 className="dim-button"
                 onClick={getDimApiKey}
-                disabled={!apiKey || !dimAppName || !dimAppName.match(/^[a-z0-9-]{3,}$/)}
+                disabled={!apiKey || !dimAppName?.match(/^[a-z0-9-]{3,}$/)}
               >
                 Get API Key
               </button>

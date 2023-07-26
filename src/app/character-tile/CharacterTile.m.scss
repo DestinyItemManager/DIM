@@ -45,7 +45,6 @@
   @include phone-portrait {
     :global(.vault) & {
       display: grid;
-      grid-template-columns: repeat(2, 16px minmax(-webkit-min-content, 1fr));
       grid-template-columns: repeat(2, 16px minmax(min-content, 1fr));
       grid-auto-rows: 16px;
       gap: 3px 2px;

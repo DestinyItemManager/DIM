@@ -547,8 +547,7 @@ class D1LoadoutBuilder extends Component<Props, State> {
       return items.filter(
         (item) =>
           item.primaryStat?.statHash === D1_StatHashes.Defense &&
-          item.talentGrid &&
-          item.talentGrid.nodes &&
+          item.talentGrid?.nodes &&
           item.stats
       );
     }

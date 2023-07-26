@@ -142,8 +142,7 @@ const socketFilters: FilterDefinition[] = [
         Boolean(
           socket.plugged &&
             !emptySocketHashes.includes(socket.plugged.plugDef.hash) &&
-            socket.plugged.plugDef.plug &&
-            socket.plugged.plugDef.plug.plugCategoryIdentifier.match(
+            socket.plugged.plugDef.plug?.plugCategoryIdentifier.match(
               /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
             ) &&
             // enforce that this provides a perk (excludes empty slots)
@@ -164,8 +163,7 @@ const socketFilters: FilterDefinition[] = [
         Boolean(
           socket.plugged &&
             !emptySocketHashes.includes(socket.plugged.plugDef.hash) &&
-            socket.plugged.plugDef.plug &&
-            socket.plugged.plugDef.plug.plugCategoryIdentifier.match(
+            socket.plugged.plugDef.plug?.plugCategoryIdentifier.match(
               /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
             ) &&
             // enforce that this provides a perk (excludes empty slots)
