@@ -13,6 +13,7 @@ import { chainComparator, compareBy, reverseComparator } from 'app/utils/compara
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { LookupTable, isIn } from 'app/utils/util-types';
 import clsx from 'clsx';
+import { TraitHashes } from 'data/d2/generated-enums';
 import grenade from 'destiny-icons/weapons/grenade.svg';
 import headshot from 'destiny-icons/weapons/headshot.svg';
 import melee from 'destiny-icons/weapons/melee.svg';
@@ -50,7 +51,16 @@ export type DefType =
   | 'DamageType'
   | 'ItemCategory'
   | 'KillType'
-  | 'Reward';
+  | 'Reward'
+  | 'QuestTrait';
+
+const pursuitCategoryTraitHashes: TraitHashes[] = [
+  TraitHashes.Seasonal_Quests,
+  TraitHashes.Lightfall,
+  TraitHashes.Exotics,
+  TraitHashes.Playlists,
+  TraitHashes.ThePast,
+];
 
 // Reward types we'll show in the bounty guide. Could be expanded (e.g. to seasonal mats)
 const rewardAllowList = [
@@ -109,6 +119,7 @@ export default function BountyGuide({
     ItemCategory: {},
     KillType: {},
     Reward: {},
+    QuestTrait: {},
   };
   for (const i of bounties) {
     const expired = i.pursuit?.expirationDate
@@ -131,6 +142,14 @@ export default function BountyGuide({
             if (rewardAllowList.includes(reward.itemHash)) {
               (mapped.Reward[reward.itemHash] ??= []).push(i);
             }
+          }
+        }
+      }
+      const traitHashes = defs.InventoryItem.get(i.hash)?.traitHashes;
+      if (traitHashes) {
+        for (const traitHash of traitHashes) {
+          if (pursuitCategoryTraitHashes.includes(traitHash)) {
+            (mapped.QuestTrait[traitHash] ??= []).push(i);
           }
         }
       }
@@ -184,7 +203,7 @@ export default function BountyGuide({
             // Show "synergy" when this category contains at least one bounty that overlaps with at least one of the selected filters
             [styles.synergy]:
               selectedFilters.length > 0 &&
-              bounties.some((i) => matchBountyFilters(i, selectedFilters, pursuitsInfo)),
+              bounties.some((i) => matchBountyFilters(defs, i, selectedFilters, pursuitsInfo)),
           })}
           onClick={(e) => onClickPill(e, type, value)}
         >
@@ -260,6 +279,17 @@ function PillContent({
           {defs.InventoryItem.get(value).displayProperties.name}
         </>
       );
+    case 'QuestTrait':
+      return (
+        <>
+          {/* the seasonal quest trait has the Season of the Lost icon? */}
+          {value !== TraitHashes.Seasonal_Quests &&
+            defs.Trait.get(value).displayProperties.hasIcon && (
+              <BungieImage height="16" src={defs.Trait.get(value).displayProperties.icon} />
+            )}
+          {defs.Trait.get(value).displayProperties.name}
+        </>
+      );
   }
 }
 
@@ -271,6 +301,7 @@ function matchPill(type: DefType, hash: number, filters: BountyFilter[]) {
  * Returns true if the filter list is empty, or if the item matches *any* of the provided filters ("or").
  */
 export function matchBountyFilters(
+  defs: D2ManifestDefinitions,
   item: DimItem,
   filters: BountyFilter[],
   pursuitsInfo: { [hash: string]: { [type in DefType]?: number[] } }
@@ -281,9 +312,9 @@ export function matchBountyFilters(
   const info = pursuitsInfo[item.hash];
   for (const filter of filters) {
     if (filter.type === 'Reward') {
-      if (item.pursuit?.rewards.some((r) => r.itemHash === filter.hash)) {
-        return true;
-      }
+      return item.pursuit?.rewards.some((r) => r.itemHash === filter.hash);
+    } else if (filter.type === 'QuestTrait') {
+      return defs.InventoryItem.get(item.hash)?.traitHashes?.includes(filter.hash);
     } else if (info?.[filter.type]?.includes(filter.hash)) {
       return true;
     }

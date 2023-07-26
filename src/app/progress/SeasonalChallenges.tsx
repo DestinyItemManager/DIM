@@ -56,7 +56,12 @@ export default function SeasonalChallenges({
         title={seasonalChallengesPresentationNode.displayProperties.name}
         sectionId="seasonal-challenges"
       >
-        <PursuitsGroup pursuits={pursuits} store={store} pursuitsInfo={seasonalChallengesInfo} />
+        <PursuitsGroup
+          defs={itemCreationContext.defs}
+          pursuits={pursuits}
+          store={store}
+          pursuitsInfo={seasonalChallengesInfo}
+        />
       </CollapsibleTitle>
     </section>
   );
