@@ -506,7 +506,7 @@ describe('process-utils optimal mods', () => {
     setStats: number[],
     remainingEnergy: number[],
     numArtifice: number,
-    expectedTiers: number[]
+    expectedTiers: number[],
   ][] = [
     // the trick here is that we can use two small mods to boost resilience by a tier,
     // but it's better to use two large mods to boost discipline (cheaper mods...)
@@ -558,7 +558,7 @@ describe('process-utils optimal mods', () => {
     setStats: number[],
     remainingEnergy: number[],
     numArtifice: number,
-    expectedStats: number[]
+    expectedStats: number[],
   ][] = [
     // Nice
     [[18, 80, 80, 26, 80, 30], [0, 0, 0, 3, 0], 4, [30, 80, 80, 31, 80, 30]],

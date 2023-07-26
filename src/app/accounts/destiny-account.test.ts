@@ -13,7 +13,7 @@ jest.mock('app/bungie-api/oauth-tokens', () => ({
   getToken: (): Tokens =>
     ({
       accessToken: { value: 'foo' },
-    } as Tokens),
+    }) as Tokens,
   hasTokenExpired: () => false,
 }));
 

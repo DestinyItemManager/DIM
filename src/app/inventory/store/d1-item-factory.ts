@@ -497,8 +497,7 @@ function buildTalentGrid(
   if (
     !item.progression ||
     !talentGridDef ||
-    !item.nodes ||
-    !item.nodes.length ||
+    !item.nodes?.length ||
     !progressDefs.get(item.progression.progressionHash)
   ) {
     return null;

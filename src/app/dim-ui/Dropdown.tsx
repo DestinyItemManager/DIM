@@ -66,10 +66,11 @@ export default function Dropdown({
         // Unselect to reset the state
         reset();
       },
+      isItemDisabled: (item) => (isDropdownOption(item) ? Boolean(item.disabled) : true),
     });
 
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const menuRef = useRef<HTMLElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   usePopper({
     contents: menuRef,
@@ -94,7 +95,7 @@ export default function Dropdown({
           </>
         )}
       </button>
-      <div {...getMenuProps({ ref: menuRef })} className={styles.menu}>
+      <div {...getMenuProps({ ref: menuRef, className: styles.menu })}>
         {isOpen &&
           items.map((item, index) =>
             !isDropdownOption(item) ? (
@@ -104,7 +105,6 @@ export default function Dropdown({
                 {...getItemProps({
                   item,
                   index,
-                  disabled: true,
                 })}
               />
             ) : (
@@ -117,7 +117,6 @@ export default function Dropdown({
                 {...getItemProps({
                   item,
                   index,
-                  disabled: item.disabled,
                 })}
               >
                 {item.content}

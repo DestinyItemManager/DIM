@@ -129,7 +129,7 @@ export function makeLoadoutApplyState(): [
   /** Set the current state to a new state */
   set: LoadoutStateUpdater,
   /** An observable that can be used to subscribe to state updates. */
-  observable: Observable<LoadoutApplyState>
+  observable: Observable<LoadoutApplyState>,
 ] {
   // TODO: fill in more of the initial state from the loadout, or wait for loadout-apply to do it?
   const initialLoadoutApplyState: LoadoutApplyState = {

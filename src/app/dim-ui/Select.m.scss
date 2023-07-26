@@ -14,7 +14,9 @@
   z-index: 100;
   position: absolute;
   &.open {
-    box-shadow: 0 0 0 1px var(--theme-item-popup-border), var(--theme-drop-shadow);
+    box-shadow:
+      0 0 0 1px var(--theme-item-popup-border),
+      var(--theme-drop-shadow);
   }
 }
 

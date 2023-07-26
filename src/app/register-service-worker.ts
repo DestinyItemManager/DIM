@@ -29,20 +29,23 @@ let currentVersion = $DIM_VERSION;
 
 (async () => {
   await delay(10 * 1000);
-  setInterval(async () => {
-    try {
-      const serverVersion = await getServerVersion();
-      if (isNewVersion(serverVersion, currentVersion)) {
-        const updated = await updateServiceWorker();
-        if (updated) {
-          currentVersion = serverVersion;
-          dimNeedsUpdate$.next(true);
+  setInterval(
+    async () => {
+      try {
+        const serverVersion = await getServerVersion();
+        if (isNewVersion(serverVersion, currentVersion)) {
+          const updated = await updateServiceWorker();
+          if (updated) {
+            currentVersion = serverVersion;
+            dimNeedsUpdate$.next(true);
+          }
         }
+      } catch (e) {
+        errorLog('SW', 'Failed to check version.json', e);
       }
-    } catch (e) {
-      errorLog('SW', 'Failed to check version.json', e);
-    }
-  }, 15 * 60 * 1000);
+    },
+    15 * 60 * 1000
+  );
 })();
 
 /**

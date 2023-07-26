@@ -635,7 +635,7 @@ function chooseMoveAsideItem(
   // Iterate through other stores from least recently played to most recently played.
   // The concept is that we prefer filling up the least-recently-played character before even
   // bothering with the others.
-  // eslint-disable-next-line sonarjs/no-ignored-return
+
   _.sortBy(
     otherStores.filter((s) => !s.isVault),
     (s) => s.lastPlayed.getTime()

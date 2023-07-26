@@ -207,7 +207,7 @@ function getPerkDescriptions(
     }
   }
   function addCustomDescriptionAsFunctionality() {
-    for (const mod of modsWithoutDescription['Harmonic']) {
+    for (const mod of modsWithoutDescription.Harmonic) {
       if (plug.hash === mod) {
         results.push({
           perkHash: -usedStrings.size,

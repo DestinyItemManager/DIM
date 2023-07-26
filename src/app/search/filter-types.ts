@@ -100,7 +100,7 @@ export interface FilterArgs {
 export interface FilterDefinition<
   I = DimItem,
   FilterCtx = FilterContext,
-  SuggestionsCtx = SuggestionsContext
+  SuggestionsCtx = SuggestionsContext,
 > {
   /**
    * One or more keywords which trigger the filter when typed into search bar.

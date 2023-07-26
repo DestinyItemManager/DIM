@@ -115,15 +115,17 @@ export default function ItemSocketsGeneral({
               </div>
             )}
             <div className="item-sockets">
-              {socketsByCategory.get(category)?.map((socketInfo) => (
-                <Socket
-                  key={socketInfo.socketIndex}
-                  item={item}
-                  socket={socketInfo}
-                  wishlistRoll={wishlistRoll}
-                  onClick={onPlugClicked}
-                />
-              ))}
+              {socketsByCategory
+                .get(category)
+                ?.map((socketInfo) => (
+                  <Socket
+                    key={socketInfo.socketIndex}
+                    item={item}
+                    socket={socketInfo}
+                    wishlistRoll={wishlistRoll}
+                    onClick={onPlugClicked}
+                  />
+                ))}
             </div>
           </div>
         ))}

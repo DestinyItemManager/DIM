@@ -128,7 +128,8 @@ $search-bar-height: 28px;
   // Overlay
   $light-stripe: rgba(255, 255, 255, $light-stripe);
   $dark-stripe: rgba(0, 0, 0, $dark-stripe);
-  background: linear-gradient(rgba(0, 0, 0, $top-gradient) 0%, transparent 33%),
+  background:
+    linear-gradient(rgba(0, 0, 0, $top-gradient) 0%, transparent 33%),
     linear-gradient(transparent 50%, var(--theme-item-polaroid-masterwork-border) 200%),
     repeating-linear-gradient(
         to bottom right,
@@ -163,7 +164,13 @@ $search-bar-height: 28px;
       )
       top right;
   background-repeat: no-repeat;
-  background-size: 100%, 100%, 50% 50%, 50% 50%, 50% 50%, 50% 50%;
+  background-size:
+    100%,
+    100%,
+    50% 50%,
+    50% 50%,
+    50% 50%,
+    50% 50%;
 
   // Border
   &::before {

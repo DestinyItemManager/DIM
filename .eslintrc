@@ -8,7 +8,8 @@
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-type-checked",
+    "plugin:@typescript-eslint/stylistic-type-checked",
     "prettier",
     "plugin:array-func/all",
     "plugin:css-modules/recommended",
@@ -288,6 +289,30 @@
       }
     ],
     "@typescript-eslint/no-for-in-array": "error",
+    "@typescript-eslint/consistent-indexed-object-style": "off",
+    "@typescript-eslint/no-floating-promises": "off",
+    "@typescript-eslint/require-await": "off",
+    "@typescript-eslint/no-unsafe-argument": "off",
+    "@typescript-eslint/no-unsafe-enum-comparison": "off",
+    "@typescript-eslint/prefer-nullish-coalescing": [
+      "off",
+      {
+        "ignoreConditionalTests": true,
+        "ignoreTernaryTests": false,
+        "ignoreMixedLogicalExpressions": true,
+        "ignorePrimitives": {
+          "boolean": true,
+          "number": false,
+          "string": true
+        }
+      }
+    ],
+    "@typescript-eslint/no-unsafe-assignment": "off",
+    "@typescript-eslint/no-unsafe-call": "off",
+    "@typescript-eslint/no-unsafe-member-access": "off",
+    "@typescript-eslint/no-unsafe-return": "off",
+    "@typescript-eslint/unbound-method": "off",
+    "@typescript-eslint/no-redundant-type-constituents": "off",
     "no-implied-eval": "off",
     "@typescript-eslint/no-implied-eval": "error",
     "array-func/prefer-array-from": "off",

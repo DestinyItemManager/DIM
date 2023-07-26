@@ -76,7 +76,7 @@ export function calcArmorStats(
     // that do not scale correctly as the scaling is currently implemented.
     // See https://github.com/DestinyItemManager/DIM/issues/5191 for details
     if ([2820418554, 2122538507, 2300914892].includes(armor.item.hash)) {
-      stats[144602215].value += int['base'];
+      stats[144602215].value += int.base;
     } else {
       stats[144602215].value += int[scaleType];
       stats[1735777505].value += dis[scaleType];

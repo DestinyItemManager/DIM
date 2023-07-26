@@ -33,7 +33,8 @@
   top: calc($search-bar-height - 1px);
   border-bottom-left-radius: $theme-corner-radius-search;
   border-bottom-right-radius: $theme-corner-radius-search;
-  box-shadow: inset 0 -1px 0 0 var(--theme-search-dropdown-bg),
+  box-shadow:
+    inset 0 -1px 0 0 var(--theme-search-dropdown-bg),
     inset 0 -1px 0 1px var(--theme-search-dropdown-border);
 
   @include phone-portrait {
