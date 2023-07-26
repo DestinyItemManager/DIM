@@ -2,7 +2,7 @@ module.exports = function (api) {
   const isProduction = api.env('production');
   const isTest = api.env('test');
   const plugins = [
-    'lodash',
+    '@sigmacomputing/babel-plugin-lodash',
     'babel-plugin-optimize-clsx',
     'object-to-json-parse',
     [
