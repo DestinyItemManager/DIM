@@ -12,6 +12,7 @@ import { ThunkDispatchProp } from 'app/store/types';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { LookupTable, isIn } from 'app/utils/util-types';
+import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { TraitHashes } from 'data/d2/generated-enums';
 import grenade from 'destiny-icons/weapons/grenade.svg';
@@ -225,6 +226,24 @@ export default function BountyGuide({
   );
 }
 
+function contentFromDisplayProperties(
+  {
+    displayProperties,
+  }: {
+    displayProperties: DestinyDisplayPropertiesDefinition;
+  },
+  hideIcon?: boolean
+) {
+  return (
+    <>
+      {displayProperties.hasIcon && !hideIcon && (
+        <BungieImage height="16" src={displayProperties.icon} />
+      )}
+      {displayProperties.name}
+    </>
+  );
+}
+
 function PillContent({
   type,
   defs,
@@ -236,24 +255,10 @@ function PillContent({
 }) {
   switch (type) {
     case 'ActivityMode':
-      return (
-        <>
-          {defs[type][value].displayProperties.hasIcon && (
-            <BungieImage height="16" src={defs[type][value].displayProperties.icon} />
-          )}
-          {defs[type][value].displayProperties.name}
-        </>
-      );
+      return contentFromDisplayProperties(defs[type][value]);
     case 'Destination':
     case 'DamageType':
-      return (
-        <>
-          {defs[type].get(value).displayProperties.hasIcon && (
-            <BungieImage height="16" src={defs[type].get(value).displayProperties.icon} />
-          )}
-          {defs[type].get(value).displayProperties.name}
-        </>
-      );
+      return contentFromDisplayProperties(defs[type].get(value));
     case 'ItemCategory':
       return (
         <>
@@ -271,24 +276,12 @@ function PillContent({
         </>
       );
     case 'Reward':
-      return (
-        <>
-          {defs.InventoryItem.get(value).displayProperties.hasIcon && (
-            <BungieImage height="16" src={defs.InventoryItem.get(value).displayProperties.icon} />
-          )}
-          {defs.InventoryItem.get(value).displayProperties.name}
-        </>
-      );
+      return contentFromDisplayProperties(defs.InventoryItem.get(value));
     case 'QuestTrait':
-      return (
-        <>
-          {/* the seasonal quest trait has the Season of the Lost icon? */}
-          {value !== TraitHashes.Seasonal_Quests &&
-            defs.Trait.get(value).displayProperties.hasIcon && (
-              <BungieImage height="16" src={defs.Trait.get(value).displayProperties.icon} />
-            )}
-          {defs.Trait.get(value).displayProperties.name}
-        </>
+      return contentFromDisplayProperties(
+        defs.Trait.get(value),
+        // the seasonal quest trait has the Season of the Lost icon?
+        /* hideIcon */ value === TraitHashes.Seasonal_Quests
       );
   }
 }
