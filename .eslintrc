@@ -9,6 +9,7 @@
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/stylistic",
     "prettier",
     "plugin:array-func/all",
     "plugin:css-modules/recommended",
@@ -288,6 +289,7 @@
       }
     ],
     "@typescript-eslint/no-for-in-array": "error",
+    "@typescript-eslint/consistent-indexed-object-style": "off",
     "no-implied-eval": "off",
     "@typescript-eslint/no-implied-eval": "error",
     "array-func/prefer-array-from": "off",
