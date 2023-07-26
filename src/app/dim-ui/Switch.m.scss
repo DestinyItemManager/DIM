@@ -44,7 +44,9 @@ $touchPadding: 2px; // A bit of extra hit area
       height: $dotSize - 4px;
       border-radius: 50%;
       background-color: white;
-      transition: left $duration ease-out, background-color $duration ease-out;
+      transition:
+        left $duration ease-out,
+        background-color $duration ease-out;
       top: $touchPadding;
       left: $touchPadding;
       border: 2px solid transparent;

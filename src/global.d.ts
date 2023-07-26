@@ -41,7 +41,7 @@ interface MeasureMemoryResult {
       {
         url: string;
         scope: string;
-      }
+      },
     ];
     types: string[];
   }[];

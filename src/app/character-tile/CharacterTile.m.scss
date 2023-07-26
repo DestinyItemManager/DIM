@@ -54,7 +54,9 @@
 
 .characterText {
   flex: 1;
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.5);
+  text-shadow:
+    1px 1px 1px rgba(0, 0, 0, 0.5),
+    0 0 10px rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
   margin: 0 6px;
@@ -130,12 +132,16 @@
 .title {
   font-style: italic;
   color: #e1c2ec;
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.5);
+  text-shadow:
+    1px 1px 1px rgba(0, 0, 0, 0.5),
+    0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .gildedCurrentSeason {
   color: rgb(249, 222, 184);
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.5);
+  text-shadow:
+    1px 1px 1px rgba(0, 0, 0, 0.5),
+    0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .gildedIcon {

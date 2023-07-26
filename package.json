@@ -152,6 +152,7 @@
     "jest-fetch-mock": "^3.0.3",
     "jest-junit": "^16.0.0",
     "json-sort-cli": "^3.0.0",
+    "lint-staged": ">=10",
     "lodash-webpack-plugin": "^0.11.5",
     "markdown-loader": "^8.0.0",
     "mini-css-extract-plugin": "^2.1.0",
@@ -161,9 +162,8 @@
     "npm-run-all": "^4.1.5",
     "postcss": "^8.0.9",
     "postcss-loader": "^7.0.0",
-    "prettier": "^2.5.0",
+    "prettier": "^3.0.0",
     "prettier-plugin-organize-imports": "^3.0.0",
-    "pretty-quick": "^3.1.2",
     "react-refresh": "^0.14.0",
     "react-test-renderer": "^18.1.0",
     "sass": "^1.52.0",
@@ -245,5 +245,10 @@
     "workbox-precaching": "^7.0.0",
     "workbox-routing": "^7.0.0",
     "workbox-strategies": "^7.0.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": "eslint --fix --ext .js,.ts,.tsx",
+    "*.{css,scss}": "stylelint --fix",
+    "*.{js,jsx,ts,tsx,css,scss,md,html}": "prettier --write"
   }
 }

@@ -108,8 +108,8 @@ function useLoadoutFilterPillsInternal(
   );
   const loadoutsWithDeprecatedMods = useMemo(
     () =>
-      savedLoadouts.filter((loadout) =>
-        loadout.parameters?.mods?.some((modHash) => deprecatedMods.includes(modHash))
+      savedLoadouts.filter(
+        (loadout) => loadout.parameters?.mods?.some((modHash) => deprecatedMods.includes(modHash))
       ),
     [savedLoadouts]
   );

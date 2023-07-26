@@ -6,7 +6,9 @@
   justify-content: space-between;
   background-color: var(--theme-item-popup-actions-bg);
   user-select: none;
-  box-shadow: 0 0 0 1px var(--theme-item-popup-border), var(--theme-drop-shadow);
+  box-shadow:
+    0 0 0 1px var(--theme-item-popup-border),
+    var(--theme-drop-shadow);
 }
 
 .collapseButton {

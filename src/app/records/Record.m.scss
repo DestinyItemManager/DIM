@@ -112,7 +112,9 @@
   // at the 0 point, which prevents that one point from being
   // more saturated than the rest of the lines.
   // There is no visible gap.
-  background-position: 0 0, 0 2px;
+  background-position:
+    0 0,
+    0 2px;
   background-repeat: repeat-x;
 }
 

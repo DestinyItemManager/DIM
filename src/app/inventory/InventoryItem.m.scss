@@ -15,7 +15,9 @@
   width: var(--item-size);
   height: var(--item-size);
   // searchHidden will adjust opacity/transform, this transitions them
-  transition: opacity 0.2s, transform 0.2s;
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
 }
 
 .hasBadge {

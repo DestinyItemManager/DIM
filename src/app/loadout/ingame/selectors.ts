@@ -108,8 +108,9 @@ export const inGameLoadoutsForCharacterSelector = createSelector(
  * How many loadout slots has the user unlocked? We get this directly from the profile because we
  * want to count all loadouts, even the empty ones.
  */
-export const availableLoadoutSlotsSelector = createSelector(characterLoadoutsSelector, (loadouts) =>
-  loadouts ? Object.values(loadouts)[0]?.loadouts.length ?? 0 : 0
+export const availableLoadoutSlotsSelector = createSelector(
+  characterLoadoutsSelector,
+  (loadouts) => (loadouts ? Object.values(loadouts)[0]?.loadouts.length ?? 0 : 0)
 );
 
 /** Loadouts supported directly by D2 (post-Lightfall), for a specific character */

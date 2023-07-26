@@ -607,11 +607,11 @@ class D1LoadoutBuilder extends Component<Props, State> {
       // Remove overlapping perks in allPerks from vendorPerks
       for (const [classType, perksWithType] of Object.entries(vendorPerks) as unknown as [
         ClassTypes,
-        PerkCombination
+        PerkCombination,
       ][]) {
         for (const [type, perkArr] of Object.entries(perksWithType) as unknown as [
           ArmorTypes,
-          D1GridNode[]
+          D1GridNode[],
         ][]) {
           vendorPerks[classType][type] = _.reject(perkArr, (perk) =>
             perks[classType][type].map((i) => i.hash).includes(perk.hash)

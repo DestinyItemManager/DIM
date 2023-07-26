@@ -649,7 +649,7 @@ export interface D1VendorDefinition {
       {
         itemHash: number;
         quantity: number;
-      }
+      },
     ];
     price: number;
     currencyHash: number;
