@@ -1,3 +1,4 @@
+import { HttpStatusError } from 'app/bungie-api/http-client';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { loadingEnd, loadingStart } from 'app/shell/actions';
@@ -5,7 +6,7 @@ import { del, get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { errorLog, infoLog, timer } from 'app/utils/log';
-import { dedupePromise } from 'app/utils/util';
+import { convertToError, dedupePromise } from 'app/utils/util';
 import { LookupTable } from 'app/utils/util-types';
 import {
   AllDestinyManifestComponents,
@@ -116,26 +117,28 @@ function doGetManifest(tableAllowList: string[]): ThunkResult<AllDestinyManifest
       }
       return manifest;
     } catch (e) {
-      let message = e.message || e;
+      let message = e instanceof Error ? e.message : e;
 
-      if (e instanceof TypeError || e.status === -1) {
+      if (e instanceof TypeError || (e instanceof HttpStatusError && e.status === -1)) {
         message = navigator.onLine
           ? t('BungieService.NotConnectedOrBlocked')
           : t('BungieService.NotConnected');
-      } else if (e.status === 503 || e.status === 522 /* cloudflare */) {
-        message = t('BungieService.Difficulties');
-      } else if (e.status < 200 || e.status >= 400) {
-        message = t('BungieService.NetworkError', {
-          status: e.status,
-          statusText: e.statusText,
-        });
+      } else if (e instanceof HttpStatusError) {
+        if (e.status === 503 || e.status === 522 /* cloudflare */) {
+          message = t('BungieService.Difficulties');
+        } else if (e.status < 200 || e.status >= 400) {
+          message = t('BungieService.NetworkError', {
+            status: e.status,
+            statusText: e.message,
+          });
+        }
       } else {
         // Something may be wrong with the manifest
         await deleteManifestFile();
       }
 
       const statusText = t('Manifest.Error', { error: message });
-      errorLog('manifest', 'Manifest loading error', { error: e }, e);
+      errorLog('manifest', 'Manifest loading error', e);
       reportException('manifest load', e);
       const error = new Error(statusText);
       error.name = 'ManifestError';
@@ -228,8 +231,8 @@ export async function downloadManifestComponents(
   const futures = tableAllowList
     .map((t) => `Destiny${t}Definition` as DestinyManifestComponentName)
     .map(async (table) => {
-      let response: Response | null = null;
-      let error = null;
+      let response: Response;
+      let error: Error | undefined;
       let body = null;
 
       for (const query of cacheBusterStrings) {
@@ -240,9 +243,9 @@ export async function downloadManifestComponents(
             body = await response.json();
             break;
           }
-          error ??= response;
+          error ??= new HttpStatusError(response);
         } catch (e) {
-          error ??= e;
+          error ??= convertToError(e);
         }
       }
       if (!body && error) {

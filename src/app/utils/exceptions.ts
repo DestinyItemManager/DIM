@@ -1,5 +1,5 @@
+import { BrowserTracing } from '@sentry/browser';
 import { BrowserOptions, captureException, init, setTag, setUser, withScope } from '@sentry/react';
-import { Integrations as TracingIntegrations } from '@sentry/tracing';
 import { BungieError } from 'app/bungie-api/http-client';
 import { getToken } from 'app/bungie-api/oauth-tokens';
 import { HashLookupFailure } from 'app/destiny2/definitions';
@@ -11,7 +11,7 @@ import { errorLog } from './log';
 // TODO: rename this file "sentry"
 
 /** Sentry.io exception reporting */
-export let reportException = (name: string, e: Error, errorInfo?: Record<string, unknown>) => {
+export let reportException = (name: string, e: any, errorInfo?: Record<string, unknown>) => {
   errorLog(
     'exception',
     name,
@@ -51,7 +51,7 @@ if ($featureFlags.sentry) {
     sampleRate: $DIM_VERSION === 'beta' ? 0.5 : 0.01, // Sample Beta at 50%, Prod at 1%
     attachStacktrace: true,
     integrations: [
-      new TracingIntegrations.BrowserTracing({
+      new BrowserTracing({
         // Only send trace headers to our own server
         tracePropagationTargets: ['api.destinyitemmanager.com'],
         beforeNavigate: (context) => ({
@@ -133,7 +133,7 @@ if ($featureFlags.sentry) {
   // Capture locale
   setTag('lang', defaultLanguage());
 
-  reportException = (name: string, e: Error, errorInfo?: Record<string, unknown>) => {
+  reportException = (name: string, e: any, errorInfo?: Record<string, unknown>) => {
     // TODO: we can also do this in some situations to gather more feedback from users
     // Sentry.showReportDialog();
     withScope((scope) => {

@@ -21,6 +21,7 @@ import { set } from 'app/storage/idb-keyval';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { DimError } from 'app/utils/dim-error';
 import { usePageTitle } from 'app/utils/hooks';
+import { convertToError } from 'app/utils/util';
 import { wishListsLastFetchedSelector, wishListsSelector } from 'app/wishlists/selectors';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 import { useEffect, useState } from 'react';
@@ -62,7 +63,7 @@ export default function Debug() {
       try {
         await set('idb-test', true);
       } catch (e) {
-        setIdbError(e);
+        setIdbError(convertToError(e));
       }
     })();
   }, []);
@@ -71,7 +72,7 @@ export default function Debug() {
     try {
       localStorage.setItem('test', 'true');
     } catch (e) {
-      setLocalStorageError(e);
+      setLocalStorageError(convertToError(e));
     }
   }, []);
 

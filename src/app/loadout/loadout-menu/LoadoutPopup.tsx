@@ -44,6 +44,7 @@ import { RootState } from 'app/store/types';
 import { queueAction } from 'app/utils/action-queue';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { emptyArray } from 'app/utils/empty';
+import { errorMessage } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import consumablesIcon from 'destiny-icons/general/consumables.svg';
@@ -149,7 +150,7 @@ export default function LoadoutPopup({
         dispatch(applyLoadout(dimStore, loadout, { allowUndo: true }));
       }
     } catch (e) {
-      showNotification({ type: 'warning', title: t('Loadouts.Random'), body: e.message });
+      showNotification({ type: 'warning', title: t('Loadouts.Random'), body: errorMessage(e) });
     }
     onClick?.(e);
   };

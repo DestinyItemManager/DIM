@@ -4,6 +4,7 @@ import NotificationButton from 'app/notifications/NotificationButton';
 import { showNotification } from 'app/notifications/notifications';
 import { AppIcon, undoIcon } from 'app/shell/icons';
 import { ThunkResult } from 'app/store/types';
+import { errorMessage } from 'app/utils/util';
 import _ from 'lodash';
 import { canSyncLockState } from './SyncTagLock';
 import { setItemHashTag, setItemTagsBulk } from './actions';
@@ -128,7 +129,7 @@ export function bulkLockItems(items: DimItem[], locked: boolean): ThunkResult {
       showNotification({
         type: 'error',
         title: locked ? t('Filter.LockAllFailed') : t('Filter.UnlockAllFailed'),
-        body: e.message,
+        body: errorMessage(e),
       });
     }
   };

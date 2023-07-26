@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "strict": true,
-    "useUnknownInCatchVariables": false,
     "esModuleInterop": true,
     "outDir": "./dist/",
     "sourceMap": true,

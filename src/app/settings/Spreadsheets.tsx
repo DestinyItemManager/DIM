@@ -5,6 +5,7 @@ import { storesLoadedSelector } from 'app/inventory/selectors';
 import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
 import { showNotification } from 'app/notifications/notifications';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { errorMessage } from 'app/utils/util';
 import { DropzoneOptions } from 'react-dropzone';
 import { useSelector } from 'react-redux';
 import { AppIcon, spreadsheetIcon } from '../shell/icons';
@@ -27,7 +28,7 @@ export default function Spreadsheets() {
       const result = await dispatch(importTagsNotesFromCsv(acceptedFiles));
       showNotification({ type: 'success', title: t('Csv.ImportSuccess', { count: result }) });
     } catch (e) {
-      showNotification({ type: 'error', title: t('Csv.ImportFailed', { error: e.message }) });
+      showNotification({ type: 'error', title: t('Csv.ImportFailed', { error: errorMessage(e) }) });
     }
   };
 
