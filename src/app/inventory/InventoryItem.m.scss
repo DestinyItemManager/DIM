@@ -75,7 +75,7 @@
 // The container for the tag/notes/wishlist icons
 .icons {
   position: absolute;
-  left: $item-border-width + 2px;
+  right: $item-border-width;
   top: calc(var(--item-size) - #{$badge-height});
   display: flex;
   flex-direction: row;

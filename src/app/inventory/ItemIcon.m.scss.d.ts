@@ -19,6 +19,8 @@ interface CssExports {
   'legendaryMasterwork': string;
   'masterwork': string;
   'rare': string;
+  'shapedIcon': string;
+  'shapedOverlay': string;
   'strandColorFix': string;
 }
 export const cssExports: CssExports;

@@ -5,7 +5,6 @@ import { InventoryWishListRoll, toUiWishListRoll } from 'app/wishlists/wishlists
 import { DamageType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
-import shapedIcon from 'images/shaped.png';
 import { useSelector } from 'react-redux';
 import ElementIcon from '../dim-ui/ElementIcon';
 import styles from './BadgeInfo.m.scss';
@@ -74,11 +73,7 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
       item.element.enumValue === DamageType.Strand);
 
   const wishlistRollIcon = toUiWishListRoll(wishlistRoll);
-  const summaryIcon = item.crafted ? (
-    <img className={styles.shapedIcon} src={shapedIcon} />
-  ) : (
-    wishlistRollIcon && <RatingIcon uiWishListRoll={wishlistRollIcon} />
-  );
+  const summaryIcon = wishlistRollIcon && <RatingIcon uiWishListRoll={wishlistRollIcon} />;
 
   return (
     <div
