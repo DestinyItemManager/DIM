@@ -25,7 +25,7 @@ import { RootState } from 'app/store/types';
 import StripSockets from 'app/strip-sockets/StripSockets';
 import { setAppBadge } from 'app/utils/app-badge';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
-import _ from 'lodash';
+import { noop } from 'lodash';
 import { lazy, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes, useLocation, useParams } from 'react-router';
@@ -113,14 +113,14 @@ export default function Destiny() {
   const { pathname, search } = useLocation();
 
   // Define some hotkeys without implementation, so they show up in the help
-  useHotkey('c', t('Compare.ButtonHelp'), _.noop);
-  useHotkey('l', t('Hotkey.LockUnlock'), _.noop);
-  useHotkey('k', t('MovePopup.ToggleSidecar'), _.noop);
-  useHotkey('v', t('Hotkey.Vault'), _.noop);
-  useHotkey('p', t('Hotkey.Pull'), _.noop);
-  useHotkey('i', t('MovePopup.InfuseTitle'), _.noop);
-  useHotkey('a', t('Hotkey.Armory'), _.noop);
-  useHotkey('shift+0', t('Tags.ClearTag'), _.noop);
+  useHotkey('c', t('Compare.ButtonHelp'), noop);
+  useHotkey('l', t('Hotkey.LockUnlock'), noop);
+  useHotkey('k', t('MovePopup.ToggleSidecar'), noop);
+  useHotkey('v', t('Hotkey.Vault'), noop);
+  useHotkey('p', t('Hotkey.Pull'), noop);
+  useHotkey('i', t('MovePopup.InfuseTitle'), noop);
+  useHotkey('a', t('Hotkey.Armory'), noop);
+  useHotkey('shift+0', t('Tags.ClearTag'), noop);
 
   const hotkeys = useMemo(() => {
     const hotkeys: Hotkey[] = [];

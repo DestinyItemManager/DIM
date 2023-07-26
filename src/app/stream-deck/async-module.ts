@@ -236,7 +236,7 @@ function checkPluginUpdate(): ThunkResult {
         body: t('StreamDeck.Authorization.Update'),
         type: 'error',
         duration: 200,
-        onClick: notificationPromise.resolve,
+        onClick: () => notificationPromise.resolve(),
         promise: notificationPromise.promise,
       });
     }

@@ -10,7 +10,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useSetCSSVarToHeight } from 'app/utils/hooks';
 import { isD1Item } from 'app/utils/item-utils';
 import clsx from 'clsx';
-import _ from 'lodash';
+import { noop } from 'lodash';
 import { memo, useCallback, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
@@ -130,7 +130,7 @@ function VendorItemWarning({ item }: { item: DimItem }) {
         );
       }}
     >
-      <ActionButton onClick={_.noop} disabled>
+      <ActionButton onClick={noop} disabled>
         <AppIcon icon={shoppingCart} />
       </ActionButton>
     </PressTip>
