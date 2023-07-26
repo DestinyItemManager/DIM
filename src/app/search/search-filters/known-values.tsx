@@ -180,7 +180,7 @@ const knownValuesFilters: FilterDefinition[] = [
     filter: ({ filterValue }) => {
       const breakerType = breakerTypes[filterValue as keyof typeof breakerTypes];
       if (!breakerType) {
-        throw new Error('Unknown breaker type ' + breakerType);
+        throw new Error('Unknown breaker type ' + filterValue);
       }
       return (item) => breakerType.includes(item.breakerType?.hash as BreakerTypeHashes);
     },

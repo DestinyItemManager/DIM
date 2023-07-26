@@ -39,7 +39,7 @@ export default function Login() {
       state: authorizationState,
       ...(reauth && { reauth }),
     });
-    return `https://www.bungie.net/en/OAuth/Authorize?${queryParams}`;
+    return `https://www.bungie.net/en/OAuth/Authorize?${queryParams.toString()}`;
   };
 
   // If API permissions had been explicitly disabled before, don't even show the option to enable DIM Sync

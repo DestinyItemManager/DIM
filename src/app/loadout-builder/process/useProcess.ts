@@ -349,7 +349,9 @@ function mapItemsToGroups(
   // Group items by everything relevant.
   const finalGroupingFn = (item: DimItem) => {
     const info = cache.get(item)!;
-    return `${info.stats}-${info.energyCapacity}-${[...info.relevantModSeasons.values()]}`;
+    return `${info.stats.toString()}-${info.energyCapacity}-${[
+      ...info.relevantModSeasons.values(),
+    ].toString()}`;
   };
 
   const energyGroups = _.groupBy(mappedItems, ({ processItem }) =>
