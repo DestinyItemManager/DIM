@@ -70,7 +70,7 @@
     "last 2 Opera versions"
   ],
   "resolutions": {
-    "@types/react": "18.2.14",
+    "@types/react": "18.2.16",
     "react-redux": "^8.0.1",
     "react-is": "^18.1.0"
   },
@@ -212,7 +212,7 @@
     "fast-copy": "^3.0.0",
     "fast-equals": "^5.0.0",
     "framer-motion": "^10.0.0",
-    "i18next": "^22.0.4",
+    "i18next": "^23.2.11",
     "i18next-http-backend": "^2.0.0",
     "immer": "^10.0.1",
     "lodash": "^4.17.8",
