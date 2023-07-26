@@ -40,7 +40,7 @@ export interface DimPresentationNode extends DimPresentationNodeLeaf {
    * The required properties `hash`, `name` and `icon` are duplicated from the def
    * or generated with fake info.
    */
-  nodeDef?: DestinyPresentationNodeDefinition;
+  nodeDef: DestinyPresentationNodeDefinition | undefined;
   /** May or may not be an actual hash */
   hash: number;
   name: string;
@@ -104,7 +104,7 @@ export function toPresentationNodeTree(
     return null;
   }
   const commonNodeProperties = {
-    presentationNodeDef,
+    nodeDef: presentationNodeDef,
     hash: presentationNodeDef.hash,
     name: presentationNodeDef.displayProperties.name,
     icon: presentationNodeDef.displayProperties.icon,
@@ -222,6 +222,7 @@ function buildPlugSetPresentationNode(
   const acquired = count(plugEntries, (i) => i.unlocked);
 
   const subnode: DimPresentationNode = {
+    nodeDef: undefined,
     hash: -hash,
     name: item.displayProperties.name,
     icon: item.displayProperties.icon,
