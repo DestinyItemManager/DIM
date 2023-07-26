@@ -54,7 +54,7 @@ $commonBg: #366f42;
 
 // Completed items or capped stackables image
 .complete {
-  border-color: $gold;
+  border-color: var(--theme-item-polaroid-capped);
 }
 
 // Engrams and packages

@@ -56,11 +56,13 @@ const fakeWeapon = {
   },
   visible: true,
   primaryStat: {
-    value: 300,
+    value: 1600,
   },
   itemCategoryHashes: [],
   destinyVersion: 2,
 };
+
+const fakeWeaponMasterwork = { ...fakeWeapon, masterwork: true };
 
 const languageOptions = mapToOptions({
   de: 'Deutsch',
@@ -82,7 +84,8 @@ const languageOptions = mapToOptions({
 let languageChanged = false;
 
 const themeOptions = mapToOptions({
-  default: 'DIM Classic (Default)',
+  default: 'Default (Beyond Light)',
+  classic: 'DIM Classic',
   dimdark: 'DIM Dark Mode',
   europa: 'Europa',
   neomuna: 'Neomuna',
@@ -307,13 +310,23 @@ export default function SettingsPage() {
 
           <section id="items">
             <h2>{t('Settings.Items')}</h2>
-            <div className="examples">
-              <InventoryItem
-                item={fakeWeapon as unknown as DimItem}
-                isNew={true}
-                tag="favorite"
-                autoLockTagged={settings.autoLockTagged}
-              />
+            <div className="sub-bucket">
+              <div className="examples">
+                <InventoryItem
+                  item={fakeWeapon as unknown as DimItem}
+                  isNew={true}
+                  tag="favorite"
+                  autoLockTagged={settings.autoLockTagged}
+                />
+              </div>
+              <div className="examples">
+                <InventoryItem
+                  item={fakeWeaponMasterwork as unknown as DimItem}
+                  isNew={true}
+                  tag="favorite"
+                  autoLockTagged={settings.autoLockTagged}
+                />
+              </div>
             </div>
 
             {!isPhonePortrait && (

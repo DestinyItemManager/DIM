@@ -1,0 +1,21 @@
+// Classic DIM theme
+.theme-classic {
+  // App
+  --theme-app-bg: #313233;
+
+  // App background gradient pattern
+  --theme-app-bg-gradient: var(--theme-app-bg);
+
+  // The color of PWA elements like the title bar. This cannot be a gradient.
+  --theme-pwa-background: #1d2b5e;
+
+  // Header
+  --theme-header-nav-bg: #000;
+  --theme-header-characters-bg: var(--theme-app-bg);
+
+  // Organizer
+  --theme-organizer-row-odd-bg: var(--theme-app-bg);
+  --theme-organizer-row-even-bg: #252627;
+
+  --theme-search-bg: var(--theme-app-bg);
+}
