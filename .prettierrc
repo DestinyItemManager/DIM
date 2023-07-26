@@ -6,5 +6,6 @@
     {
       "files": "*.html"
     }
-  ]
+  ],
+  "plugins": ["prettier-plugin-organize-imports"]
 }
