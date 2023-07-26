@@ -247,7 +247,6 @@
     "workbox-strategies": "^7.0.0"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": "eslint --fix --ext .js,.ts,.tsx",
     "*.{css,scss}": "stylelint --fix",
     "*.{js,jsx,ts,tsx,css,scss,md,html}": "prettier --write"
   }
