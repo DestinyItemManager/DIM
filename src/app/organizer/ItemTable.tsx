@@ -144,7 +144,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
         }
       }
 
-      document.querySelector('html')!.style.setProperty('--table-header-height', height + 1 + 'px');
+      document.querySelector('html')!.style.setProperty('--table-header-height', `${height + 1}px`);
     }
   });
 

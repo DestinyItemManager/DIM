@@ -178,7 +178,7 @@ export default function RecordBooks({ account }: Props) {
       {recordBooks.map((book) => (
         <CollapsibleTitle
           key={book.hash}
-          sectionId={'rb-' + book.hash}
+          sectionId={`rb-${book.hash}`}
           title={
             <>
               <BungieImage src={book.icon} className="book-icon" /> {book.name}
@@ -199,7 +199,7 @@ export default function RecordBooks({ account }: Props) {
                     className={clsx('record-book-page', { complete: page.complete })}
                   >
                     <CollapsibleTitle
-                      sectionId={'rbpage-' + page.id}
+                      sectionId={`rbpage-${page.id}`}
                       title={<span className="record-book-page-title">{page.name}</span>}
                       extra={
                         <span className="record-book-completion">

@@ -93,6 +93,6 @@ function handleAccessToken(
 
     return tokens;
   } else {
-    throw new Error('No data or access token in response: ' + JSON.stringify(response));
+    throw new Error(`No data or access token in response: ${JSON.stringify(response)}`);
   }
 }

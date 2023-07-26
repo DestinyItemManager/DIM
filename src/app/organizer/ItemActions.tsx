@@ -147,7 +147,7 @@ function ItemActions({
         disabled={!itemsAreSelected}
         name="note"
         onClick={onNote}
-        title={t('Organizer.Note') + ' [N]'}
+        title={`${t('Organizer.Note')} [N]`}
         aria-keyshortcuts="n"
       >
         <AppIcon icon={stickyNoteIcon} />
@@ -159,7 +159,7 @@ function ItemActions({
         disabled={!itemsAreSelected}
         name="compare"
         onClick={onCompareSelectedItems}
-        title={t('Compare.Button') + ' [C]'}
+        title={`${t('Compare.Button')} [C]`}
         aria-keyshortcuts="c"
       >
         <AppIcon icon={compareIcon} />

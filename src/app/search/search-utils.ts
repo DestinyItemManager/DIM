@@ -30,7 +30,7 @@ export function rangeStringToComparator(
     case '>=':
       return (compare: number | undefined) => compare !== undefined && compare >= comparisonValue;
   }
-  throw new Error('Unknown range operator ' + operator);
+  throw new Error(`Unknown range operator ${operator}`);
 }
 
 function extractOpAndValue(rangeString: string, overloads?: { [key: string]: number }) {
