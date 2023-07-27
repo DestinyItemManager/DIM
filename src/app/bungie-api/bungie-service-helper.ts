@@ -2,7 +2,6 @@ import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog, infoLog } from 'app/utils/log';
-import { convertToError } from 'app/utils/util';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { HttpClient, HttpClientConfig } from 'bungie-api-ts/http';
 import _ from 'lodash';
@@ -209,7 +208,7 @@ function handleErrors(error: unknown) {
 
   // Any other error
   errorLog('bungie api', 'No response data:', error);
-  throw new DimError('BungieService.Difficulties').withError(convertToError(error));
+  throw new DimError('BungieService.Difficulties').withError(error);
 }
 
 // Handle "DestinyUniquenessViolation" (1648)

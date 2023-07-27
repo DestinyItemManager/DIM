@@ -299,11 +299,7 @@ async function getAwaToken(
       }
       */
     } catch (e) {
-      const dimError = new DimError('AWA.FailedToken');
-      if (e instanceof Error) {
-        dimError.withError(e);
-      }
-      throw dimError;
+      throw new DimError('AWA.FailedToken').withError(e);
 
       // TODO: handle userSelection, responseReason (TimedOut, Replaced)
     }

@@ -1405,18 +1405,14 @@ function applyMod(
         e
       );
       const plugName = mod.displayProperties.name ?? 'Unknown Plug';
-      const dimError = new DimError(
+      throw new DimError(
         'AWA.ErrorMessage',
         t('AWA.ErrorMessage', {
           error: errorMessage(e),
           item: item.name,
           plug: plugName,
         })
-      );
-      if (e instanceof Error) {
-        dimError.withError(e);
-      }
-      throw dimError;
+      ).withError(e);
     }
   };
 }

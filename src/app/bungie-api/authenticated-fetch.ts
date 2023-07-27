@@ -98,15 +98,11 @@ export async function getActiveToken(): Promise<Tokens> {
   try {
     return await getAccessTokenFromRefreshToken(token.refreshToken!);
   } catch (e) {
-    if (e instanceof Error || e instanceof Response) {
-      return await handleRefreshTokenError(e);
-    } else {
-      throw e;
-    }
+    return await handleRefreshTokenError(e);
   }
 }
 
-async function handleRefreshTokenError(response: Error | Response): Promise<Tokens> {
+async function handleRefreshTokenError(response: unknown): Promise<Tokens> {
   if (response instanceof TypeError) {
     warnLog(
       'bungie auth',
@@ -115,7 +111,7 @@ async function handleRefreshTokenError(response: Error | Response): Promise<Toke
     );
     throw response;
   }
-  if (response instanceof Error) {
+  if (!(response instanceof Response)) {
     warnLog(
       'bungie auth',
       'Other error getting auth token from refresh token. Not clearing auth tokens',
@@ -123,7 +119,6 @@ async function handleRefreshTokenError(response: Error | Response): Promise<Toke
     );
     throw response;
   }
-
   let data;
   try {
     data = await response.json();
