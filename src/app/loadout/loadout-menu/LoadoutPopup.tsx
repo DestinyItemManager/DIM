@@ -318,7 +318,7 @@ export default function LoadoutPopup({
         ))}
 
         {!dimStore.isVault && !loadoutQuery && (
-          <RandomLoadoutButton store={dimStore} query={query} />
+          <RandomLoadoutButton store={dimStore} query={query} onClick={onClick} />
         )}
       </ul>
     </div>
@@ -335,7 +335,15 @@ function filterLoadoutToEquipped(loadout: Loadout) {
   };
 }
 
-function RandomLoadoutButton({ store, query }: { store: DimStore; query: string }) {
+function RandomLoadoutButton({
+  store,
+  query,
+  onClick,
+}: {
+  store: DimStore;
+  query: string;
+  onClick?: (e: React.MouseEvent) => void;
+}) {
   const defs = useDefinitions()!;
   const dispatch = useThunkDispatch();
   const allItems = useSelector(allItemsSelector);
@@ -357,6 +365,8 @@ function RandomLoadoutButton({ store, query }: { store: DimStore; query: string 
       query,
     });
     if (!options) {
+      e.preventDefault();
+      onClick?.(e);
       return;
     }
 
@@ -384,6 +394,7 @@ function RandomLoadoutButton({ store, query }: { store: DimStore; query: string 
     } catch (e) {
       showNotification({ type: 'warning', title: t('Loadouts.Random'), body: errorMessage(e) });
     }
+    onClick?.(e);
   };
 
   return (
