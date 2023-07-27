@@ -24,7 +24,7 @@ import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { isMissingItems, newLoadout } from 'app/loadout-drawer/loadout-utils';
 import { makeRoomForPostmaster, totalPostmasterItems } from 'app/loadout-drawer/postmaster';
 import { previousLoadoutSelector } from 'app/loadout-drawer/selectors';
-import { useDefinitions } from 'app/manifest/selectors';
+import { manifestSelector, useDefinitions } from 'app/manifest/selectors';
 import { showMaterialCount } from 'app/material-counts/MaterialCountsWrappers';
 import { showNotification } from 'app/notifications/notifications';
 import { filteredItemsSelector, searchFilterSelector } from 'app/search/search-filter';
@@ -43,7 +43,7 @@ import {
 } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { RootState } from 'app/store/types';
+import { RootState, ThunkResult } from 'app/store/types';
 import { queueAction } from 'app/utils/action-queue';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { emptyArray } from 'app/utils/empty';
@@ -51,7 +51,7 @@ import { errorMessage } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import consumablesIcon from 'destiny-icons/general/consumables.svg';
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { InGameLoadoutIconWithIndex } from '../ingame/InGameLoadoutIcon';
@@ -63,7 +63,7 @@ import {
   useSavedLoadoutsForClassType,
 } from '../loadout-ui/menu-hooks';
 import styles from './LoadoutPopup.m.scss';
-import { useRandomizeLoadout } from './LoadoutPopupRandomize';
+import { RandomLoadoutOptions, useRandomizeLoadout } from './LoadoutPopupRandomize';
 import MaxlightButton from './MaxlightButton';
 
 export default function LoadoutPopup({
@@ -318,7 +318,12 @@ export default function LoadoutPopup({
         ))}
 
         {!dimStore.isVault && !loadoutQuery && (
-          <RandomLoadoutButton store={dimStore} query={query} onClick={onClick} />
+          <RandomLoadoutButton
+            store={dimStore}
+            query={query}
+            isD2={defs.isDestiny2()}
+            onClick={onClick}
+          />
         )}
       </ul>
     </div>
@@ -337,31 +342,23 @@ function filterLoadoutToEquipped(loadout: Loadout) {
 
 function RandomLoadoutButton({
   store,
+  isD2,
   query,
   onClick,
 }: {
   store: DimStore;
+  isD2: boolean;
   query: string;
   onClick?: (e: React.MouseEvent) => void;
 }) {
-  const defs = useDefinitions()!;
   const dispatch = useThunkDispatch();
-  const allItems = useSelector(allItemsSelector);
-  const searchFilter = useSelector(searchFilterSelector);
-  const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(store.id));
-
-  const createRandomLoadout = useCallback(() => {
-    let loadout = newLoadout(t('Loadouts.Random'), [], store.classType);
-    loadout = randomizeFullLoadout(defs, store, allItems, searchFilter, unlockedPlugs)(loadout);
-    editLoadout(loadout, store.id, { isNew: true });
-  }, [allItems, defs, searchFilter, store, unlockedPlugs]);
 
   const [dialog, getRandomizeOptions] = useRandomizeLoadout();
 
   const applyRandomLoadout = async (e: React.MouseEvent) => {
     e.stopPropagation();
     const options = await getRandomizeOptions({
-      d2: defs.isDestiny2(),
+      d2: isD2,
       query,
     });
     if (!options) {
@@ -369,6 +366,42 @@ function RandomLoadoutButton({
       onClick?.(e);
       return;
     }
+    dispatch(doApplyRandomLoadout(store, options));
+    onClick?.(e);
+  };
+
+  return (
+    <li className={styles.menuItem}>
+      {dialog}
+      <span onClick={applyRandomLoadout}>
+        <AppIcon icon={faRandom} />
+        <span>{query.length > 0 ? t('Loadouts.RandomizeSearch') : t('Loadouts.Randomize')}</span>
+      </span>
+      <span className={styles.altButton} onClick={() => dispatch(createRandomLoadout(store))}>
+        <span>{t('Loadouts.RandomizeNew')}</span>
+      </span>
+    </li>
+  );
+}
+
+function createRandomLoadout(store: DimStore): ThunkResult {
+  return async (_dispatch, getState) => {
+    const defs = manifestSelector(getState())!;
+    const allItems = allItemsSelector(getState());
+    const searchFilter = searchFilterSelector(getState());
+    const unlockedPlugs = unlockedPlugSetItemsSelector(store.id)(getState());
+    let loadout = newLoadout(t('Loadouts.Random'), [], store.classType);
+    loadout = randomizeFullLoadout(defs, store, allItems, searchFilter, unlockedPlugs)(loadout);
+    editLoadout(loadout, store.id, { isNew: true });
+  };
+}
+
+function doApplyRandomLoadout(store: DimStore, options: RandomLoadoutOptions): ThunkResult {
+  return async (dispatch, getState) => {
+    const defs = manifestSelector(getState())!;
+    const allItems = allItemsSelector(getState());
+    const searchFilter = searchFilterSelector(getState());
+    const unlockedPlugs = unlockedPlugSetItemsSelector(store.id)(getState());
 
     let loadout = newLoadout(t('Loadouts.Random'), [], store.classType);
     if (options.subclass) {
@@ -389,24 +422,10 @@ function RandomLoadoutButton({
 
     try {
       if (loadout) {
-        dispatch(applyLoadout(store, loadout, { allowUndo: true }));
+        await dispatch(applyLoadout(store, loadout, { allowUndo: true }));
       }
     } catch (e) {
       showNotification({ type: 'warning', title: t('Loadouts.Random'), body: errorMessage(e) });
     }
-    onClick?.(e);
   };
-
-  return (
-    <li className={styles.menuItem}>
-      {dialog}
-      <span onClick={applyRandomLoadout}>
-        <AppIcon icon={faRandom} />
-        <span>{query.length > 0 ? t('Loadouts.RandomizeSearch') : t('Loadouts.Randomize')}</span>
-      </span>
-      <span className={styles.altButton} onClick={createRandomLoadout}>
-        <span>{t('Loadouts.RandomizeNew')}</span>
-      </span>
-    </li>
-  );
 }

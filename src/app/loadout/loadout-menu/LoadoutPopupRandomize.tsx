@@ -6,7 +6,7 @@ import { isWindows } from 'app/utils/browsers';
 import React, { useCallback, useState } from 'react';
 import styles from './LoadoutPopupRandomize.m.scss';
 
-export interface RandomizeCheckboxes {
+export interface RandomLoadoutOptions {
   subclass: boolean;
   weapons: boolean;
   armor: boolean;
@@ -15,7 +15,7 @@ export interface RandomizeCheckboxes {
 }
 
 /** Persist these in a browser session. Maybe store in DIM Sync instead? */
-let lastOptions: RandomizeCheckboxes = {
+let lastOptions: RandomLoadoutOptions = {
   weapons: true,
   armor: false,
   general: false,
@@ -23,7 +23,7 @@ let lastOptions: RandomizeCheckboxes = {
   subclass: false,
 };
 
-const checkBoxes: { label: string; d2Only?: boolean; prop: keyof RandomizeCheckboxes }[] = [
+const checkBoxes: { label: string; d2Only?: boolean; prop: keyof RandomLoadoutOptions }[] = [
   { label: t('Bucket.Class'), prop: 'subclass' },
   { label: t('Bucket.Weapons'), prop: 'weapons' },
   { label: t('Bucket.Armor'), prop: 'armor' },
@@ -36,11 +36,11 @@ export function useRandomizeLoadout(): [
   getRandomizeOptions: (args: {
     query: string;
     d2: boolean;
-  }) => Promise<RandomizeCheckboxes | null>,
+  }) => Promise<RandomLoadoutOptions | null>,
 ] {
   const [dialog, showDialog] = useDialog<
     { query: string; d2: boolean },
-    RandomizeCheckboxes | null
+    RandomLoadoutOptions | null
   >(({ query, d2 }, close) => <RandomizeLoadoutDialog d2={d2} query={query} close={close} />);
 
   return [dialog, showDialog];
@@ -53,7 +53,7 @@ function RandomizeLoadoutDialog({
 }: {
   d2: boolean;
   query: string;
-  close: (result: RandomizeCheckboxes | null) => void;
+  close: (result: RandomLoadoutOptions | null) => void;
 }) {
   const [options, setOptions] = useState({ ...lastOptions, mods: d2 && lastOptions.mods });
 
