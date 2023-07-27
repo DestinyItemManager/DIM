@@ -192,8 +192,8 @@ function NotesEditor({
     const offsets = calculateElementOffset(form.current);
     const dropdown = form.current.querySelector('.textcomplete-dropdown');
     if (dropdown && dropdown instanceof HTMLElement && dropdown.style.left) {
-      dropdown.style.left = parseInt(dropdown.style.left, 10) - offsets.left + 'px';
-      dropdown.style.top = parseInt(dropdown.style.top, 10) - offsets.top + 'px';
+      dropdown.style.left = `${parseInt(dropdown.style.left, 10) - offsets.left}px`;
+      dropdown.style.top = `${parseInt(dropdown.style.top, 10) - offsets.top}px`;
     }
   }, [notes]);
 

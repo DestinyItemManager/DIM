@@ -9,13 +9,13 @@ import { AppIcon, twitterIcon } from '../shell/icons';
  *
  * Use this for when you suspect Bungie.net is down.
  */
-export function bungieErrorToaster(e: Error): NotifyInput {
+export function bungieErrorToaster(errorMessage: string | undefined): NotifyInput {
   return {
     type: 'error',
     title: t('BungieService.ErrorTitle'),
     body: (
       <>
-        {e ? e.message : t('BungieService.Difficulties')}{' '}
+        {errorMessage ?? t('BungieService.Difficulties')}{' '}
         <div>
           {t('BungieService.Twitter')}{' '}
           <ExternalLink href={bungieHelpLink}>{bungieTwitterAccount}</ExternalLink>{' '}
@@ -30,14 +30,14 @@ export function bungieErrorToaster(e: Error): NotifyInput {
   };
 }
 
-export function dimErrorToaster(title: string, message: string, e: Error): NotifyInput {
+export function dimErrorToaster(title: string, message: string, errorMessage: string): NotifyInput {
   return {
     type: 'error',
     title,
     body: (
       <>
         <div>{message}</div>
-        <div>{e.message}</div>
+        <div>{errorMessage}</div>
       </>
     ),
     duration: 60_000,

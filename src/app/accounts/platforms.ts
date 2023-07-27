@@ -3,7 +3,7 @@ import { deleteDimApiToken } from 'app/dim-api/dim-api-helper';
 import { del, get } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { errorLog } from 'app/utils/log';
-import { dedupePromise } from 'app/utils/util';
+import { convertToError, dedupePromise } from 'app/utils/util';
 import { removeToken } from '../bungie-api/oauth-tokens';
 import { loadingTracker } from '../shell/loading-tracker';
 import * as actions from './actions';
@@ -40,7 +40,7 @@ const getPlatformsAction: ThunkResult = dedupePromise(async (dispatch, getState)
     try {
       await realAccountsPromise;
     } catch (e) {
-      dispatch(actions.error(e));
+      dispatch(actions.error(convertToError(e)));
       errorLog('accounts', 'Unable to load accounts from Bungie.net', e);
     }
   }

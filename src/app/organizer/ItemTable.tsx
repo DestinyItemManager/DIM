@@ -51,6 +51,7 @@ import { itemIncludesCategories } from './filtering-utils';
 
 import { compareSelectedItems } from 'app/compare/actions';
 
+import { errorMessage } from 'app/utils/util';
 import { createPortal } from 'react-dom';
 // eslint-disable-next-line css-modules/no-unused-class
 import styles from './ItemTable.m.scss';
@@ -144,7 +145,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
         }
       }
 
-      document.querySelector('html')!.style.setProperty('--table-header-height', height + 1 + 'px');
+      document.querySelector('html')!.style.setProperty('--table-header-height', `${height + 1}px`);
     }
   });
 
@@ -456,7 +457,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
       const result = await dispatch(importTagsNotesFromCsv(acceptedFiles));
       showNotification({ type: 'success', title: t('Csv.ImportSuccess', { count: result }) });
     } catch (e) {
-      showNotification({ type: 'error', title: t('Csv.ImportFailed', { error: e.message }) });
+      showNotification({ type: 'error', title: t('Csv.ImportFailed', { error: errorMessage(e) }) });
     }
   };
 

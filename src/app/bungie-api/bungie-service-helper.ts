@@ -87,7 +87,7 @@ function dimErrorHandledHttpClient(httpClient: HttpClient): HttpClient {
 /**
  * if HttpClient throws an error (js, Bungie, http) this enriches it with DIM concepts and then re-throws it
  */
-function handleErrors(error: Error) {
+function handleErrors(error: unknown) {
   if (error instanceof DOMException && error.name === 'AbortError') {
     throw (
       navigator.onLine
@@ -212,12 +212,11 @@ function handleErrors(error: Error) {
 }
 
 // Handle "DestinyUniquenessViolation" (1648)
-export function handleUniquenessViolation(
-  error: BungieError,
-  item: DimItem,
-  store: DimStore
-): never {
-  if (error?.code === PlatformErrorCodes.DestinyUniquenessViolation) {
+export function handleUniquenessViolation(error: unknown, item: DimItem, store: DimStore): never {
+  if (
+    error instanceof BungieError &&
+    error.code === PlatformErrorCodes.DestinyUniquenessViolation
+  ) {
     throw new DimError(
       'BungieService.ItemUniquenessExplanation',
       t('BungieService.ItemUniquenessExplanation', {

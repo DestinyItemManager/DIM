@@ -8,6 +8,7 @@ import { CanceledError, neverCanceled, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog } from 'app/utils/log';
+import { errorMessage } from 'app/utils/util';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { showNotification } from '../notifications/notifications';
@@ -220,9 +221,9 @@ export function consolidate(actionableItem: DimItem, store: DimStore): ThunkResu
               title: t('ItemMove.Consolidate', data),
               body: message,
             });
-          } catch (a) {
-            showNotification({ type: 'error', title: actionableItem.name, body: a.message });
-            errorLog('move', 'error consolidating', actionableItem, a);
+          } catch (e) {
+            showNotification({ type: 'error', title: actionableItem.name, body: errorMessage(e) });
+            errorLog('move', 'error consolidating', actionableItem, e);
           }
         })()
       )
@@ -311,9 +312,9 @@ export function distribute(actionableItem: DimItem): ThunkResult {
               type: 'success',
               title: t('ItemMove.Distributed', { name: actionableItem.name }),
             });
-          } catch (a) {
-            showNotification({ type: 'error', title: actionableItem.name, body: a.message });
-            errorLog('move', 'error distributing', actionableItem, a);
+          } catch (e) {
+            showNotification({ type: 'error', title: actionableItem.name, body: errorMessage(e) });
+            errorLog('move', 'error distributing', actionableItem, e);
           }
         })()
       )

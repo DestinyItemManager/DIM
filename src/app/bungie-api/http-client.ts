@@ -1,4 +1,4 @@
-import { delay } from 'app/utils/util';
+import { convertToError, delay } from 'app/utils/util';
 import { PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/destiny2';
 import { HttpClient, HttpClientConfig } from 'bungie-api-ts/http';
 
@@ -172,7 +172,7 @@ export function createHttpClient(fetchFunction: typeof fetch, apiKey: string): H
     try {
       data = await response.json();
     } catch (e) {
-      parseError = e;
+      parseError = convertToError(e);
     }
     // try throwing bungie errors, which have more information, first
     throwBungieError(data, fetchOptions);

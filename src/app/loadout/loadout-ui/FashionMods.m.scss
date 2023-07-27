@@ -7,6 +7,9 @@
   :global(.item) {
     height: var(--item-icon-size) !important;
   }
+  :global(.item-img) {
+    border-color: var(--theme-item-socket-border);
+  }
 }
 
 .unequipped {

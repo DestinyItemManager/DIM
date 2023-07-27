@@ -325,11 +325,6 @@ $modslotSize: 30px;
   }
 }
 
-.shapedIcon {
-  width: calc((16 / 50) * var(--item-size));
-  height: calc((16 / 50) * var(--item-size));
-}
-
 .shapedIconOverlay {
   position: absolute;
   bottom: 1px;

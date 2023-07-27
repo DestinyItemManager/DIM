@@ -69,13 +69,11 @@ export function startFarming(storeId: string): ThunkResult {
     const doFarm = dedupePromise(async (farmingStore: DimStore, cancelToken: CancelToken) => {
       if (farmingInterruptedSelector(getState())) {
         infoLog('farming', 'Farming interrupted, will resume when tasks are complete');
+      } else if (isD1Store(farmingStore)) {
+        return dispatch(farmD1(farmingStore, cancelToken));
       } else {
-        if (isD1Store(farmingStore)) {
-          return dispatch(farmD1(farmingStore, cancelToken));
-        } else {
-          // In D2 we just make room
-          return dispatch(makeRoomForItems(farmingStore, cancelToken));
-        }
+        // In D2 we just make room
+        return dispatch(makeRoomForItems(farmingStore, cancelToken));
       }
     });
 

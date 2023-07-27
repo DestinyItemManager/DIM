@@ -657,7 +657,7 @@ class D1LoadoutBuilder extends Component<Props, State> {
     this.setState((state) => ({ showAdvanced: !state.showAdvanced }));
 
   private onFullModeChanged: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
-    const fullMode = e.target.value === 'true' ? true : false;
+    const fullMode = e.target.value === 'true';
     this.setState({ fullMode, progress: 0 });
   };
 

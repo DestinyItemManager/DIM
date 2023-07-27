@@ -99,7 +99,7 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
     }
 
     case getType(actions.awaItemChanged): {
-      const { changes, item, itemCreationContext: itemCreationContext } = action.payload;
+      const { changes, item, itemCreationContext } = action.payload;
       return produce(state, (draft) => awaItemChanged(draft, changes, item, itemCreationContext));
     }
 

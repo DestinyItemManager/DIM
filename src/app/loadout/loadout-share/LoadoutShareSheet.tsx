@@ -9,7 +9,7 @@ import { showNotification } from 'app/notifications/notifications';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { copyIcon, shareIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
-import { copyString, count } from 'app/utils/util';
+import { convertToError, copyString, count } from 'app/utils/util';
 import React, { useEffect, useState } from 'react';
 import styles from './LoadoutShareSheet.m.scss';
 
@@ -41,7 +41,7 @@ export default function LoadoutShareSheet({
         }
       } catch (e) {
         if (!canceled) {
-          setShareError(e);
+          setShareError(convertToError(e));
         }
       }
     })();

@@ -732,7 +732,9 @@ export function makeItem(
     buildPursuitInfo(createdItem, item, itemDef);
   } catch (e) {
     errorLog('d2-stores', `Error building Quest info for ${createdItem.name}`, item, itemDef, e);
-    reportException('Quest', e, { itemHash: item.itemHash });
+    if (e instanceof Error) {
+      reportException('Quest', e, { itemHash: item.itemHash });
+    }
   }
 
   if (createdItem.primaryStat && lightStats.includes(createdItem.primaryStat.statHash)) {

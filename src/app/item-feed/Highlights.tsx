@@ -49,7 +49,7 @@ export default function Highlights({ item }: { item: DimItem }) {
             <BungieImage src={stat.displayProperties.icon} />
           </span>
         ) : (
-          stat.displayProperties.name + ': '
+          `${stat.displayProperties.name}: `
         )}
         {stat.value}
       </div>

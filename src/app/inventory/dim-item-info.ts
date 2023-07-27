@@ -148,30 +148,28 @@ export function cleanInfos(stores: DimStore[]): ThunkResult {
         const info = infos[item.id];
         if (info && (info.tag !== undefined || info.notes?.length)) {
           cleanupIds.delete(item.id);
-        } else {
+        } else if (item.craftedInfo?.craftedDate) {
           // Double-check crafted items - we may have them under a different ID. If so,
           // patch up the data by re-tagging them under the new ID.
-          if (item.craftedInfo?.craftedDate) {
-            const craftedInfo = infosByCraftedDate[item.craftedInfo.craftedDate];
-            if (craftedInfo) {
-              if (craftedInfo.tag) {
-                dispatch(
-                  setItemTag({
-                    itemId: item.id,
-                    tag: craftedInfo.tag,
-                    craftedDate: item.craftedInfo.craftedDate,
-                  })
-                );
-              }
-              if (craftedInfo.notes) {
-                dispatch(
-                  setItemNote({
-                    itemId: item.id,
-                    note: craftedInfo.notes,
-                    craftedDate: item.craftedInfo.craftedDate,
-                  })
-                );
-              }
+          const craftedInfo = infosByCraftedDate[item.craftedInfo.craftedDate];
+          if (craftedInfo) {
+            if (craftedInfo.tag) {
+              dispatch(
+                setItemTag({
+                  itemId: item.id,
+                  tag: craftedInfo.tag,
+                  craftedDate: item.craftedInfo.craftedDate,
+                })
+              );
+            }
+            if (craftedInfo.notes) {
+              dispatch(
+                setItemNote({
+                  itemId: item.id,
+                  note: craftedInfo.notes,
+                  craftedDate: item.craftedInfo.craftedDate,
+                })
+              );
             }
           }
         }

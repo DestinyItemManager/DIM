@@ -6,7 +6,7 @@ import { setMockProfileResponse } from 'app/inventory/actions';
 import { loadStores } from 'app/inventory/d2-stores';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { ThunkResult } from 'app/store/types';
-import { download } from 'app/utils/util';
+import { download, errorMessage } from 'app/utils/util';
 import { DropzoneOptions } from 'react-dropzone';
 import { useSelector } from 'react-redux';
 import './settings.scss';
@@ -37,7 +37,7 @@ export function TroubleshootingSettings() {
       alert('succeeded');
     } catch (e) {
       // eslint-disable-next-line no-alert
-      alert(e.message);
+      alert(errorMessage(e));
     }
   };
 
