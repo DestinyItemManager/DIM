@@ -465,7 +465,7 @@ function migrateSettings(state: DimApiState) {
     const customStats = [...state.settings.customStats];
 
     for (const classEnumString in oldCustomStats) {
-      const classEnum: DestinyClass = parseInt(classEnumString);
+      const classEnum: DestinyClass = parseInt(classEnumString, 10);
       const statHashList = oldCustomStats[classEnum];
 
       if (classEnum !== DestinyClass.Unknown && statHashList?.length > 0) {
@@ -931,15 +931,13 @@ function setTag(
         craftedDate,
       };
     }
-  } else {
-    if (existingTag?.tag) {
-      delete existingTag.tag;
-      if (!existingTag.notes) {
-        delete tags[itemId];
-      }
-    } else {
-      return; // nothing to do
+  } else if (existingTag?.tag) {
+    delete existingTag.tag;
+    if (!existingTag.notes) {
+      delete tags[itemId];
     }
+  } else {
+    return; // nothing to do
   }
 
   draft.updateQueue.push(updateAction);

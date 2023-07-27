@@ -352,7 +352,7 @@ export function getColumns(
         header: t('Organizer.Columns.WishList'),
         value: (item) => {
           const roll = wishList(item);
-          return roll ? (roll.isUndesirable ? false : true) : undefined;
+          return roll ? !roll.isUndesirable : undefined;
         },
         cell: (value) =>
           value !== undefined ? (

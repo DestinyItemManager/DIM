@@ -186,7 +186,7 @@ const dupeFilters: FilterDefinition[] = [
         for (const statHash in statWeights) {
           const weight = statWeights[statHash];
           if (weight && weight > 0) {
-            relevantStatHashes.push(parseInt(statHash));
+            relevantStatHashes.push(parseInt(statHash, 10));
           }
         }
         (duplicateSetsByClass[customStat.class] ||= []).push(
