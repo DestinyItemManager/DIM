@@ -1,4 +1,5 @@
-import { Span, getCurrentHub } from '@sentry/browser';
+import { getCurrentHub } from '@sentry/browser';
+import { Span } from '@sentry/tracing';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import { isInInGameLoadoutForSelector } from 'app/loadout-drawer/selectors';

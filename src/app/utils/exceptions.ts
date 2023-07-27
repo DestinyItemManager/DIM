@@ -1,5 +1,5 @@
-import { BrowserTracing } from '@sentry/browser';
 import { BrowserOptions, captureException, init, setTag, setUser, withScope } from '@sentry/react';
+import { Integrations as TracingIntegrations } from '@sentry/tracing';
 import { BungieError } from 'app/bungie-api/http-client';
 import { getToken } from 'app/bungie-api/oauth-tokens';
 import { HashLookupFailure } from 'app/destiny2/definitions';
@@ -51,7 +51,7 @@ if ($featureFlags.sentry) {
     sampleRate: $DIM_VERSION === 'beta' ? 0.5 : 0.01, // Sample Beta at 50%, Prod at 1%
     attachStacktrace: true,
     integrations: [
-      new BrowserTracing({
+      new TracingIntegrations.BrowserTracing({
         // Only send trace headers to our own server
         tracePropagationTargets: ['api.destinyitemmanager.com'],
         beforeNavigate: (context) => ({
