@@ -36,7 +36,7 @@ export default function updateCSSVariables() {
     if ($featureFlags.themePicker && currentState.theme !== nextState.theme) {
       const themeClass = 'theme-' + nextState.theme;
       document.body.className = themeClass;
-      syncThemeColor();
+      syncThemeColor(isPhonePortraitSelector(state));
     }
   });
 
@@ -48,6 +48,7 @@ export default function updateCSSVariables() {
       '--tiles-per-char-column',
       isPhonePortrait ? settings.charColMobile : settings.charCol
     );
+    syncThemeColor(isPhonePortrait);
   });
 
   // Set a CSS var for the true viewport height. This changes when the keyboard appears/disappears.
@@ -79,11 +80,11 @@ export default function updateCSSVariables() {
 /**
  * Read the --theme-pwa-background CSS variable and use it to set the meta theme-color element.
  */
-export function syncThemeColor() {
+export function syncThemeColor(isPhonePortrait: boolean) {
   let background = getComputedStyle(document.body).getPropertyValue('--theme-pwa-background');
 
   // Extract tint from mobile header on mobile devices to match notch/dynamic island fill
-  if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+  if (isPhonePortrait) {
     background = getComputedStyle(document.body).getPropertyValue('--theme-mobile-background');
   }
 

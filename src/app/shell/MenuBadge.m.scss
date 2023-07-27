@@ -11,6 +11,10 @@
   height: 8px;
   width: 8px;
   box-shadow: 0 0 0 2px var(--theme-pwa-background); // Use PWA fill var as it'll always be solid (not a gradient)
+
+  @include phone-portrait {
+    box-shadow: 0 0 0 2px var(--theme-mobile-background);
+  }
 }
 .upgrade {
   margin: 0 !important;
