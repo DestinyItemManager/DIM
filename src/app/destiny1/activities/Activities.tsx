@@ -88,7 +88,7 @@ export default function Activities({ account }: Props) {
       activityId === 'heroicstrike'
         ? []
         : stores.map((store) => {
-            const activity = store.advisors.activities![activityId];
+            const activity = store.advisors.activities[activityId];
             let steps = activity.activityTiers[index].steps;
 
             if (!steps) {
@@ -172,7 +172,7 @@ export default function Activities({ account }: Props) {
       'elderchallenge',
     ];
 
-    const rawActivities = Object.values(stores[0].advisors.activities!).filter(
+    const rawActivities = Object.values(stores[0].advisors.activities).filter(
       (a: any) => a.activityTiers && allowList.includes(a.identifier)
     );
     const activities = _.sortBy(rawActivities, (a: any) => {
@@ -182,7 +182,7 @@ export default function Activities({ account }: Props) {
 
     for (const a of activities) {
       for (const t of a.tiers) {
-        if (t.hash === stores[0].advisors.activities!.weeklyfeaturedraid.display.activityHash) {
+        if (t.hash === stores[0].advisors.activities.weeklyfeaturedraid.display.activityHash) {
           a.featured = true;
           t.name = t.hash === 1387993552 ? '390' : t.name;
         }

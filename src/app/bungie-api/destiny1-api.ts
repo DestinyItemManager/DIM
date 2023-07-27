@@ -15,8 +15,8 @@ import {
   D1GetAdvisorsResponse,
   D1GetInventoryResponse,
   D1GetProgressionResponse,
+  D1GetVaultInventoryResponse,
   D1MungedCharacter,
-  D1Vault,
 } from '../destiny1/d1-manifest-types';
 import { DimItem } from '../inventory/item-types';
 import { D1Store, DimStore } from '../inventory/store-types';
@@ -65,37 +65,33 @@ export async function getStores(platform: DestinyAccount): Promise<D1CharacterWi
   return data[0];
 }
 
-function processInventoryResponse(
-  character: D1MungedCharacter | D1Vault,
-  response: ServerResponse<D1GetInventoryResponse>
-): D1CharacterWithInventory {
-  const payload = response.Response;
-
-  return { ...payload, character };
-}
-
 function getDestinyInventories(platform: DestinyAccount, characters: D1MungedCharacter[]) {
   // Guardians
-  const promises = characters.map(async (character) => {
-    const response = (await authenticatedHttpClient(
-      bungieApiQuery(
-        `/D1/Platform/Destiny/${platform.originalPlatformType}/Account/${platform.membershipId}/Character/${character.id}/Inventory/`
-      )
-    )) as ServerResponse<D1GetInventoryResponse>;
-    return processInventoryResponse(character, response);
-  });
+  const promises: Promise<D1CharacterWithInventory>[] = characters.map(
+    async (character): Promise<D1CharacterWithInventory> => {
+      const response = (await authenticatedHttpClient(
+        bungieApiQuery(
+          `/D1/Platform/Destiny/${platform.originalPlatformType}/Account/${platform.membershipId}/Character/${character.id}/Inventory/`
+        )
+      )) as ServerResponse<D1GetInventoryResponse>;
 
-  // Vault
-  const vault: D1Vault = {
-    id: 'vault',
-    base: null,
-  };
-
-  const vaultPromise = authenticatedHttpClient(
-    bungieApiQuery(`/D1/Platform/Destiny/${platform.originalPlatformType}/MyAccount/Vault/`)
-  ).then((response: ServerResponse<D1GetInventoryResponse>) =>
-    processInventoryResponse(vault, response)
+      return { ...response.Response, character, type: 'character' };
+    }
   );
+
+  const vaultPromise: Promise<D1CharacterWithInventory> = (async () => {
+    const response = (await authenticatedHttpClient(
+      bungieApiQuery(`/D1/Platform/Destiny/${platform.originalPlatformType}/MyAccount/Vault/`)
+    )) as ServerResponse<D1GetVaultInventoryResponse>;
+
+    return {
+      ...response.Response,
+      character: {
+        id: 'vault',
+      },
+      type: 'vault',
+    };
+  })();
 
   promises.push(vaultPromise);
 

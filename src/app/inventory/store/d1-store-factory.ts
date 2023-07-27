@@ -1,4 +1,9 @@
-import { D1CharacterWithInventory, D1ItemComponent } from 'app/destiny1/d1-manifest-types';
+import {
+  D1Inventory,
+  D1ItemComponent,
+  D1MungedCharacter,
+  D1VaultInventory,
+} from 'app/destiny1/d1-manifest-types';
 import { t } from 'app/i18next-t';
 import { HashLookup } from 'app/utils/util-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -6,7 +11,7 @@ import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
 import _ from 'lodash';
 import { D1ManifestDefinitions } from '../../destiny1/d1-definitions';
-import { D1Progression, D1Store, DimStore } from '../store-types';
+import { D1Store, DimStore } from '../store-types';
 import { getCharacterStatsData } from './character-utils';
 
 // Label isn't used, but it helps us understand what each one is
@@ -26,14 +31,15 @@ const progressionMeta: HashLookup<{ label: string; order: number }> = {
 };
 
 export function makeCharacter(
-  raw: D1CharacterWithInventory,
+  characterComponent: D1MungedCharacter,
+  inventory: D1Inventory,
   defs: D1ManifestDefinitions,
   mostRecentLastPlayed: Date
 ): {
   store: D1Store;
   items: D1ItemComponent[];
 } {
-  const character = raw.character.base;
+  const character = characterComponent.base;
   const race = defs.Race[character.characterBase.raceHash];
   const klass = defs.Class[character.characterBase.classHash];
   let genderRace = '';
@@ -57,7 +63,7 @@ export function makeCharacter(
 
   const lastPlayed = new Date(character.characterBase.dateLastPlayed);
 
-  const progressions: D1Progression[] = raw.character.progression?.progressions ?? [];
+  const progressions = characterComponent.progression?.progressions ?? [];
   for (const prog of progressions) {
     Object.assign(
       prog,
@@ -72,7 +78,7 @@ export function makeCharacter(
 
   const store: D1Store = {
     destinyVersion: 1,
-    id: raw.id,
+    id: characterComponent.id,
     name: t('ItemService.StoreName', {
       genderRace,
       className,
@@ -92,14 +98,14 @@ export function makeCharacter(
     genderName,
     percentToNextLevel: character.percentToNextLevel / 100,
     progressions,
-    advisors: raw.character.advisors,
+    advisors: characterComponent.advisors!,
     isVault: false,
     items: [],
     hadErrors: false,
   };
 
   let items: D1ItemComponent[] = [];
-  for (const buckets of Object.values(raw.data.buckets)) {
+  for (const buckets of Object.values(inventory.buckets)) {
     for (const bucket of buckets) {
       for (const item of bucket.items) {
         item.bucket = bucket.bucketHash;
@@ -124,7 +130,7 @@ export function makeCharacter(
   };
 }
 
-export function makeVault(raw: D1CharacterWithInventory): {
+export function makeVault(inventory: D1VaultInventory): {
   store: D1Store;
   items: D1ItemComponent[];
 } {
@@ -142,7 +148,14 @@ export function makeVault(raw: D1CharacterWithInventory): {
     items: [],
     isVault: true,
     progressions: [],
-    advisors: {},
+    advisors: {
+      activities: {},
+      activityCategories: {},
+      bounties: {},
+      quests: {},
+      progressions: {},
+      recordBooks: {},
+    },
     level: 0,
     percentToNextLevel: 0,
     powerLevel: 0,
@@ -155,7 +168,7 @@ export function makeVault(raw: D1CharacterWithInventory): {
 
   let items: D1ItemComponent[] = [];
 
-  for (const bucket of raw.data.buckets) {
+  for (const bucket of Object.values(inventory.buckets)) {
     for (const item of bucket.items) {
       item.bucket = bucket.bucketHash;
     }

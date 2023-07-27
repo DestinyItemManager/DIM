@@ -1,3 +1,4 @@
+import { D1Progression } from 'app/inventory/store-types';
 import {
   BungieMembershipType,
   DamageType,
@@ -312,24 +313,6 @@ export interface D1RecordDefinition {
   index: number;
   contentIdentifier: string;
   redacted: boolean;
-}
-
-export interface D1Progression extends D1LevelProgression {
-  name: string;
-  scope: number;
-  repeatLastStep: boolean;
-  steps: D1ProgressionStep[];
-  visible: boolean;
-  hash: number;
-  index: number;
-  redacted: boolean;
-  identifier?: string;
-  icon?: string;
-  label?: string;
-  order?: number;
-  faction?: D1FactionDefinition;
-  description?: string;
-  source?: string;
 }
 
 export interface D1ProgressionStep {
@@ -664,10 +647,17 @@ export interface D1VendorDefinition {
   redacted: boolean;
 }
 
-export interface D1CharacterWithInventory {
-  character: D1Vault | D1MungedCharacter;
-  data: D1Inventory;
-}
+export type D1CharacterWithInventory =
+  | {
+      type: 'character';
+      character: D1MungedCharacter;
+      data: D1Inventory;
+    }
+  | {
+      type: 'vault';
+      character: D1Vault;
+      data: D1VaultInventory;
+    };
 
 export interface D1MungedCharacter {
   id: string;
@@ -679,11 +669,6 @@ export interface D1MungedCharacter {
 
 export interface D1Vault {
   id: 'vault';
-  base: null;
-}
-
-export function isD1Vault(character: D1Vault | D1MungedCharacter): character is D1Vault {
-  return character.id === 'vault';
 }
 
 export interface D1GetAccountResponse {
@@ -700,6 +685,10 @@ export interface D1GetAccountResponse {
 
 export interface D1GetInventoryResponse {
   data: D1Inventory;
+}
+
+export interface D1GetVaultInventoryResponse {
+  data: D1VaultInventory;
 }
 
 export interface D1Character {
@@ -732,6 +721,7 @@ export interface D1CharacterBase {
   genderType: DestinyGender;
   classType: DestinyClass;
   buildStatGroupHash: number;
+  peerView?: { equipment: { itemHash: number }[] };
 }
 
 export interface D1LevelProgression {
@@ -746,15 +736,15 @@ export interface D1LevelProgression {
 }
 
 export interface D1Inventory {
-  buckets: D1Buckets;
+  buckets: { [bucketLabel in D1BucketLabel]: D1Bucket[] };
   currencies: { itemHash: number; value: number }[];
 }
 
-export interface D1Buckets {
-  Invisible: D1Bucket[];
-  Item: D1Bucket[];
-  Currency: D1Bucket[];
+export interface D1VaultInventory {
+  buckets: { [bucketLabel in D1BucketLabel]: D1Bucket };
 }
+
+export type D1BucketLabel = 'Invisible' | 'Item' | 'Currency';
 
 export interface D1Bucket {
   items: D1ItemComponent[];
@@ -774,7 +764,7 @@ export interface D1GetProgressionResponse {
 
 export interface D1GetAdvisorsResponse {
   data: {
-    activities: { [activityHash: number]: D1ActivityComponent };
+    activities: { [activityLabel: string]: D1ActivityComponent };
     activityCategories: { [activityHash: number]: { categoryHash: number } };
     bounties: { [pursuitHash: number]: D1Pursuit };
     quests: { [pursuitHash: number]: D1Pursuit };
@@ -803,5 +793,7 @@ export type D1StatLabel =
   | 'STAT_ARMOR'
   | 'STAT_AGILITY'
   | 'STAT_RECOVERY'
-  | 'STAT_OPTICS';
-export type D1Stats = { [stat in D1StatLabel]: D1Stat };
+  | 'STAT_OPTICS'
+  | 'STAT_MAGAZINE_SIZE'
+  | 'STAT_ATTACK_ENERGY';
+export type D1Stats = { [stat in D1StatLabel]: D1Stat | undefined };

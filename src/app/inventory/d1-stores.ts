@@ -1,11 +1,7 @@
 import { handleAuthErrors } from 'app/accounts/actions';
 import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
-import {
-  D1CharacterWithInventory,
-  D1ItemComponent,
-  isD1Vault,
-} from 'app/destiny1/d1-manifest-types';
+import { D1CharacterWithInventory, D1ItemComponent } from 'app/destiny1/d1-manifest-types';
 import { ThunkResult } from 'app/store/types';
 import { errorLog, infoLog } from 'app/utils/log';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
@@ -97,8 +93,13 @@ export function loadStores(): ThunkResult<D1Store[] | undefined> {
 }
 
 function processCurrencies(rawStores: D1CharacterWithInventory[], defs: D1ManifestDefinitions) {
+  const firstCharacter = rawStores[0];
+  if (firstCharacter.type !== 'character') {
+    throw new Error('Expected first store to be a character');
+  }
+
   try {
-    return rawStores[0].character.base!.inventory.currencies.map((c) => {
+    return firstCharacter.character.base.inventory.currencies.map((c) => {
       const itemDef = defs.InventoryItem.get(c.itemHash);
       return {
         itemHash: c.itemHash,
@@ -132,12 +133,12 @@ function processStore(
 
   let store: D1Store;
   let rawItems: D1ItemComponent[];
-  if (isD1Vault(raw.character)) {
-    const result = makeVault(raw);
+  if (raw.type === 'vault') {
+    const result = makeVault(raw.data);
     store = result.store;
     rawItems = result.items;
   } else {
-    const result = makeCharacter(raw, defs, lastPlayedDate);
+    const result = makeCharacter(raw.character, raw.data, defs, lastPlayedDate);
     store = result.store;
     rawItems = result.items;
   }
@@ -153,7 +154,7 @@ function processStore(
  */
 function findLastPlayedDate(rawStores: D1CharacterWithInventory[]): Date {
   return Object.values(rawStores).reduce((memo, rawStore) => {
-    if (isD1Vault(rawStore.character)) {
+    if (rawStore.type === 'vault') {
       return memo;
     }
 
