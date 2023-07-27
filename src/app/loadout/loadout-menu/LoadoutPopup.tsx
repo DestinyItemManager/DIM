@@ -1,20 +1,24 @@
 import { languageSelector, settingSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClassIcon from 'app/dim-ui/ClassIcon';
-import HelpLink from 'app/dim-ui/HelpLink';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
-import useConfirm from 'app/dim-ui/useConfirm';
 import { startFarming } from 'app/farming/actions';
 import { t } from 'app/i18next-t';
-import { allItemsSelector, bucketsSelector } from 'app/inventory/selectors';
+import {
+  allItemsSelector,
+  bucketsSelector,
+  unlockedPlugSetItemsSelector,
+} from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { powerLevelSelector } from 'app/inventory/store/selectors';
-import {
-  itemLevelingLoadout,
-  itemMoveLoadout,
-  randomLoadout,
-} from 'app/loadout-drawer/auto-loadouts';
+import { itemLevelingLoadout, itemMoveLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
+import {
+  randomizeFullLoadout,
+  randomizeLoadoutItems,
+  randomizeLoadoutMods,
+  randomizeLoadoutSubclass,
+} from 'app/loadout-drawer/loadout-drawer-reducer';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { isMissingItems, newLoadout } from 'app/loadout-drawer/loadout-utils';
@@ -37,7 +41,6 @@ import {
   sendIcon,
   undoIcon,
 } from 'app/shell/icons';
-import { userGuideUrl } from 'app/shell/links';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
@@ -48,7 +51,7 @@ import { errorMessage } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import consumablesIcon from 'destiny-icons/general/consumables.svg';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { InGameLoadoutIconWithIndex } from '../ingame/InGameLoadoutIcon';
@@ -60,6 +63,7 @@ import {
   useSavedLoadoutsForClassType,
 } from '../loadout-ui/menu-hooks';
 import styles from './LoadoutPopup.m.scss';
+import { useRandomizeLoadout } from './LoadoutPopupRandomize';
 import MaxlightButton from './MaxlightButton';
 
 export default function LoadoutPopup({
@@ -76,7 +80,7 @@ export default function LoadoutPopup({
   const language = useSelector(languageSelector);
   const previousLoadout = useSelector(previousLoadoutSelector(dimStore.id));
   const query = useSelector(querySelector);
-  const searchFilter = useSelector(searchFilterSelector);
+  // const searchFilter = useSelector(searchFilterSelector);
   const buckets = useSelector(bucketsSelector)!;
   const allItems = useSelector(allItemsSelector);
   const filteredItems = useSelector(filteredItemsSelector);
@@ -115,46 +119,6 @@ export default function LoadoutPopup({
     dispatch(applyLoadout(dimStore, loadout, { allowUndo: true }));
   };
 
-  const [confirmDialog, confirm] = useConfirm();
-  const applyRandomLoadout = async (e: React.MouseEvent, weaponsOnly = false) => {
-    e.stopPropagation();
-    if (
-      !(await confirm(
-        weaponsOnly ? (
-          t('Loadouts.RandomizeWeapons')
-        ) : query.length > 0 ? (
-          t('Loadouts.RandomizeSearchPrompt', { query })
-        ) : (
-          <>
-            {t('Loadouts.RandomizePrompt')}
-            <p className={styles.hint}>
-              {t('Loadouts.RandomizeQueryHint')}{' '}
-              <HelpLink helpLink={userGuideUrl('Randomize-Loadout')} />
-            </p>
-          </>
-        ),
-        { okLabel: t('Loadouts.RandomizeButton') }
-      ))
-    ) {
-      e.preventDefault();
-      onClick?.(e);
-      return;
-    }
-    try {
-      const loadout = randomLoadout(
-        dimStore,
-        allItems,
-        weaponsOnly ? (i) => i.bucket?.sort === 'Weapons' && searchFilter(i) : searchFilter
-      );
-      if (loadout) {
-        dispatch(applyLoadout(dimStore, loadout, { allowUndo: true }));
-      }
-    } catch (e) {
-      showNotification({ type: 'warning', title: t('Loadouts.Random'), body: errorMessage(e) });
-    }
-    onClick?.(e);
-  };
-
   // Move items matching the current search. Max 9 per type.
   const applySearchLoadout = () => {
     const loadout = itemMoveLoadout(filteredItems, dimStore);
@@ -189,7 +153,6 @@ export default function LoadoutPopup({
 
   return (
     <div className={styles.content} onClick={onClick} role="menu">
-      {confirmDialog}
       {totalLoadouts >= 10 && (
         <li className={clsx(styles.menuItem, styles.filterInput)}>
           <form>
@@ -356,19 +319,7 @@ export default function LoadoutPopup({
         ))}
 
         {!dimStore.isVault && !loadoutQuery && (
-          <li className={styles.menuItem}>
-            <span onClick={applyRandomLoadout}>
-              <AppIcon icon={faRandom} />
-              <span>
-                {query.length > 0 ? t('Loadouts.RandomizeSearch') : t('Loadouts.Randomize')}
-              </span>
-            </span>
-            {query.length === 0 && (
-              <span className={styles.altButton} onClick={(e) => applyRandomLoadout(e, true)}>
-                <span>{t('Loadouts.WeaponsOnly')}</span>
-              </span>
-            )}
-          </li>
+          <RandomLoadoutButton store={dimStore} query={query} />
         )}
       </ul>
     </div>
@@ -383,4 +334,69 @@ function filterLoadoutToEquipped(loadout: Loadout) {
     ...loadout,
     items: loadout.items.filter((i) => i.equip),
   };
+}
+
+function RandomLoadoutButton({ store, query }: { store: DimStore; query: string }) {
+  const defs = useDefinitions()!;
+  const dispatch = useThunkDispatch();
+  const allItems = useSelector(allItemsSelector);
+  const searchFilter = useSelector(searchFilterSelector);
+  const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(store.id));
+
+  const createRandomLoadout = useCallback(() => {
+    let loadout = newLoadout(t('Loadouts.Random'), [], store.classType);
+    loadout = randomizeFullLoadout(defs, store, allItems, searchFilter, unlockedPlugs)(loadout);
+    editLoadout(loadout, store.id, { isNew: true });
+  }, [allItems, defs, searchFilter, store, unlockedPlugs]);
+
+  const [dialog, getRandomizeOptions] = useRandomizeLoadout();
+
+  const applyRandomLoadout = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const options = await getRandomizeOptions({
+      d2: defs.isDestiny2(),
+      query,
+    });
+    if (!options) {
+      return;
+    }
+
+    let loadout = newLoadout(t('Loadouts.Random'), [], store.classType);
+    if (options.subclass) {
+      loadout = randomizeLoadoutSubclass(defs, store)(loadout);
+    }
+    if (options.armor) {
+      loadout = randomizeLoadoutItems(defs, store, allItems, 'Armor', searchFilter)(loadout);
+    }
+    if (options.weapons) {
+      loadout = randomizeLoadoutItems(defs, store, allItems, 'Weapons', searchFilter)(loadout);
+    }
+    if (options.general) {
+      loadout = randomizeLoadoutItems(defs, store, allItems, 'General', searchFilter)(loadout);
+    }
+    if (options.mods) {
+      loadout = randomizeLoadoutMods(defs, store, allItems, unlockedPlugs)(loadout);
+    }
+
+    try {
+      if (loadout) {
+        dispatch(applyLoadout(store, loadout, { allowUndo: true }));
+      }
+    } catch (e) {
+      showNotification({ type: 'warning', title: t('Loadouts.Random'), body: errorMessage(e) });
+    }
+  };
+
+  return (
+    <li className={styles.menuItem}>
+      {dialog}
+      <span onClick={applyRandomLoadout}>
+        <AppIcon icon={faRandom} />
+        <span>{query.length > 0 ? t('Loadouts.RandomizeSearch') : t('Loadouts.Randomize')}</span>
+      </span>
+      <span className={styles.altButton} onClick={createRandomLoadout}>
+        <span>{t('Loadouts.RandomizeNew')}</span>
+      </span>
+    </li>
+  );
 }
