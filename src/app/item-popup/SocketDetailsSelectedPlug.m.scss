@@ -47,7 +47,7 @@
   grid-area: mod;
 
   :global(.item-img) {
-    border-color: #888;
+    border-color: var(--theme-item-socket-border);
   }
 }
 

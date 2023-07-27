@@ -34,14 +34,14 @@
 // In game, mods have a border around them that isn't part of the icon
 .mod {
   :global(.item-img) {
-    border-color: #888;
+    border-color: var(--theme-item-socket-border);
   }
 }
 
 // In game, mods have a border around them that isn't part of the icon
 .masterwork {
   :global(.item-img) {
-    border-color: var(--theme-item-polaroid-masterwork);
+    border-color: var(--theme-item-polaroid-masterwork) !important;
   }
 }
 
@@ -87,5 +87,9 @@
   &:hover,
   &:focus-visible {
     outline: 1px solid var(--theme-accent-primary);
+  }
+
+  :global(.item-img) {
+    border-color: var(--theme-item-socket-border);
   }
 }
