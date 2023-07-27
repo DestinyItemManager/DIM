@@ -196,6 +196,24 @@ $search-bar-height: 28px;
       transparent 75%,
       var(--theme-item-polaroid-masterwork-border) 100%
     );
+
+    @media (min-resolution: 1.1dppx) and (max-resolution: 1.1dppx) {
+      height: calc(var(--item-size) - 1.75px);
+      width: calc(var(--item-size) - 1.75px);
+      border-width: 1.1px;
+    }
+
+    @media (min-resolution: 1.25dppx) and (max-resolution: 1.25dppx) {
+      height: calc(var(--item-size) - 1.75px);
+      width: calc(var(--item-size) - 1.75px);
+      border-width: 1.25px;
+    }
+
+    @media (min-resolution: 1.5dppx) and (max-resolution: 1.75dppx) {
+      height: calc(var(--item-size) - 1.25px);
+      width: calc(var(--item-size) - 1.25px);
+      border-width: 1px;
+    }
   }
 }
 

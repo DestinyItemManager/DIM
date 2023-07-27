@@ -70,6 +70,25 @@ $commonBg: #366f42;
   width: calc(var(--item-size) - ($item-border-width * 2));
   top: $item-border-width;
   left: $item-border-width;
+
+  @media (min-resolution: 1.1dppx) and (max-resolution: 1.1dppx) {
+    $item-border-width: 1.1px;
+    height: calc(var(--item-size) - ($item-border-width * 2));
+    width: calc(var(--item-size) - ($item-border-width * 2));
+  }
+
+  @media (min-resolution: 1.25dppx) and (max-resolution: 1.25dppx) {
+    $item-border-width: 1.25px;
+    height: calc(var(--item-size) - ($item-border-width * 2));
+    width: calc(var(--item-size) - ($item-border-width * 2));
+  }
+
+  @media (min-resolution: 1.5dppx) and (max-resolution: 1.75dppx) {
+    height: calc(var(--item-size) - 0.75px);
+    width: calc(var(--item-size) - 0.75px);
+    top: 0.75px;
+    left: 0.75px;
+  }
 }
 .legendaryMasterwork {
   @include masterwork(0.15, 0.03, 0.02);
