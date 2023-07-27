@@ -32,8 +32,7 @@ export async function fetchWithBungieOAuth(
     const token = await getActiveToken();
     request.headers.set('Authorization', `Bearer ${token.accessToken.value}`);
   } catch (e) {
-    // Note: instanceof doesn't work due to a babel bug:
-    if (e.name === 'FatalTokenError') {
+    if (e instanceof FatalTokenError) {
       warnLog('bungie auth', 'Unable to get auth token', e);
     }
     throw e;
@@ -103,7 +102,7 @@ export async function getActiveToken(): Promise<Tokens> {
   }
 }
 
-async function handleRefreshTokenError(response: Error | Response): Promise<Tokens> {
+async function handleRefreshTokenError(response: unknown): Promise<Tokens> {
   if (response instanceof TypeError) {
     warnLog(
       'bungie auth',
@@ -112,7 +111,7 @@ async function handleRefreshTokenError(response: Error | Response): Promise<Toke
     );
     throw response;
   }
-  if (response instanceof Error) {
+  if (!(response instanceof Response)) {
     warnLog(
       'bungie auth',
       'Other error getting auth token from refresh token. Not clearing auth tokens',
@@ -120,7 +119,6 @@ async function handleRefreshTokenError(response: Error | Response): Promise<Toke
     );
     throw response;
   }
-
   let data;
   try {
     data = await response.json();

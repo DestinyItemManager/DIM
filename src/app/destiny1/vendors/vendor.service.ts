@@ -15,6 +15,7 @@ import { processItems } from '../../inventory/store/d1-item-factory';
 import { loadingTracker } from '../../shell/loading-tracker';
 import { D1ManifestDefinitions } from '../d1-definitions';
 import { factionAligned } from '../d1-factions';
+import { D1ItemComponent, D1VendorDefinition } from '../d1-manifest-types';
 
 /*
 const allVendors = [
@@ -106,7 +107,7 @@ export interface Vendor {
     title: string;
     saleItems: VendorSaleItem[];
   }[];
-  def: VendorDefinition;
+  def: D1VendorDefinition;
 
   cacheKeys: {
     [storeId: string]: {
@@ -118,7 +119,7 @@ export interface Vendor {
 
   saleItemCategories: {
     saleItems: {
-      item: { itemInstanceId: string };
+      item: D1ItemComponent;
       vendorItemIndex: number;
       costs: { value: number; itemHash: number }[];
       failureIndexes: number[];
@@ -126,21 +127,6 @@ export interface Vendor {
     }[];
     categoryIndex: number;
   }[];
-}
-
-interface VendorDefinition {
-  hash: number;
-  summary: {
-    vendorName: string;
-    factionHash: number;
-    factionIcon?: string;
-    vendorIcon: string;
-    vendorOrder: number;
-    vendorSubcategoryHash: number;
-    vendorCategoryHash: number;
-  };
-  categories: { [x: string]: any };
-  failureStrings: { [x: string]: any };
 }
 
 /**
@@ -173,7 +159,7 @@ export function loadVendors(): ThunkResult<{ [vendorHash: number]: Vendor }> {
 }
 
 async function fetchVendor(
-  vendorDef: VendorDefinition,
+  vendorDef: D1VendorDefinition,
   characters: D1Store[],
   account: DestinyAccount,
   defs: D1ManifestDefinitions,
@@ -243,7 +229,7 @@ function mergeCategory(
 async function loadVendorForCharacter(
   account: DestinyAccount,
   store: D1Store,
-  vendorDef: VendorDefinition,
+  vendorDef: D1VendorDefinition,
   defs: D1ManifestDefinitions,
   buckets: InventoryBuckets
 ) {
@@ -275,7 +261,7 @@ function factionLevel(store: D1Store, factionHash: number) {
  * changed level for the faction associated with this vendor (or changed whether
  * they're aligned with that faction).
  */
-function cachedVendorUpToDate(vendor: Vendor, store: D1Store, vendorDef: VendorDefinition) {
+function cachedVendorUpToDate(vendor: Vendor, store: D1Store, vendorDef: D1VendorDefinition) {
   return (
     vendor &&
     vendor.expires > Date.now() &&
@@ -287,7 +273,7 @@ function cachedVendorUpToDate(vendor: Vendor, store: D1Store, vendorDef: VendorD
 function loadVendor(
   account: DestinyAccount,
   store: D1Store,
-  vendorDef: VendorDefinition,
+  vendorDef: D1VendorDefinition,
   defs: D1ManifestDefinitions,
   buckets: InventoryBuckets
 ) {
@@ -364,7 +350,7 @@ function calculateExpiration(nextRefreshDate: string, vendorHash: number): numbe
 
 async function processVendor(
   vendor: Vendor,
-  vendorDef: VendorDefinition,
+  vendorDef: D1VendorDefinition,
   defs: D1ManifestDefinitions,
   store: D1Store,
   buckets: InventoryBuckets
@@ -403,8 +389,8 @@ async function processVendor(
   }
 
   const items: (D1Item & { vendorIcon?: string })[] = processItems(
-    { id: null } as any,
-    saleItems.map((i) => i.item) as any[],
+    undefined,
+    saleItems.map((i) => i.item),
     defs,
     buckets
   );

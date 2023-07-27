@@ -8,6 +8,7 @@ import { decodeUrlLoadout } from 'app/loadout/loadout-share/loadout-import';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { useEventBusListener } from 'app/utils/hooks';
+import { errorMessage } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { Suspense, lazy, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -147,7 +148,7 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
       showNotification({
         type: 'error',
         title: t('Loadouts.BadLoadoutShare'),
-        body: t('Loadouts.BadLoadoutShareBody', { error: e.message }),
+        body: t('Loadouts.BadLoadoutShareBody', { error: errorMessage(e) }),
       });
       // ... or if it contained errors
       navigate(pathname, { replace: true });

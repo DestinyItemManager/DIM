@@ -1,9 +1,10 @@
 import { errorLog } from 'app/utils/log';
+import { errorMessage } from 'app/utils/util';
 import { getAccessTokenFromCode } from './app/bungie-api/oauth';
 import { setToken } from './app/bungie-api/oauth-tokens';
 import { reportException } from './app/utils/exceptions';
 
-function handleAuthReturn() {
+async function handleAuthReturn() {
   const queryParams = new URL(window.location.href).searchParams;
   const code = queryParams.get('code');
   const state = queryParams.get('state');
@@ -32,22 +33,21 @@ function handleAuthReturn() {
     return;
   }
 
-  getAccessTokenFromCode(code)
-    .then((token) => {
-      setToken(token);
-      window.location.href = '/';
-    })
-    .catch((error) => {
-      if (error instanceof TypeError || error.status === -1) {
-        setError(
-          'A content blocker is interfering with either DIM or Bungie.net, or you are not connected to the internet.'
-        );
-        return;
-      }
-      errorLog('bungie auth', "Couldn't get access token", error);
-      reportException('authReturn', error);
-      setError(error.message || error.data?.error_description || 'Unknown');
-    });
+  try {
+    const token = await getAccessTokenFromCode(code);
+    setToken(token);
+    window.location.href = '/';
+  } catch (error) {
+    if (error instanceof TypeError || (error instanceof Response && error.status === -1)) {
+      setError(
+        'A content blocker is interfering with either DIM or Bungie.net, or you are not connected to the internet.'
+      );
+      return;
+    }
+    errorLog('bungie auth', "Couldn't get access token", error);
+    reportException('authReturn', error);
+    setError(errorMessage(error));
+  }
 }
 
 function setError(error: string) {

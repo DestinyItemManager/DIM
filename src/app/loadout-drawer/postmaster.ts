@@ -13,6 +13,7 @@ import { ThunkResult } from 'app/store/types';
 import { CancelToken, CanceledError, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
+import { convertToError, errorMessage } from 'app/utils/util';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
@@ -86,7 +87,7 @@ export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets
         showNotification({
           type: 'error',
           title: t('Loadouts.MakeRoom'),
-          body: t('Loadouts.MakeRoomError', { error: e.message }),
+          body: t('Loadouts.MakeRoomError', { error: errorMessage(e) }),
         });
         throw e;
       }
@@ -188,7 +189,8 @@ export function pullFromPostmaster(store: DimStore): ThunkResult {
         try {
           await dispatch(executeMoveItem(item, store, { equip: false, amount }, moveSession));
           succeeded++;
-        } catch (e) {
+        } catch (err) {
+          const e = convertToError(err);
           if (e instanceof CanceledError) {
             return false;
           }
@@ -202,14 +204,12 @@ export function pullFromPostmaster(store: DimStore): ThunkResult {
               // Show the error separately and continue
               showNoSpaceError(e);
             }
+          } else if (items.length === 1) {
+            // Transform the notification into an error
+            throw new Error(t('Loadouts.PullFromPostmasterError', { error: e.message }));
           } else {
-            if (items.length === 1) {
-              // Transform the notification into an error
-              throw new Error(t('Loadouts.PullFromPostmasterError', { error: e.message }));
-            } else {
-              // Show the error separately and continue
-              errorNotification(e.message);
-            }
+            // Show the error separately and continue
+            errorNotification(e.message);
           }
         }
       }

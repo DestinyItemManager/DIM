@@ -19,6 +19,7 @@ import AppIcon from 'app/shell/icons/AppIcon';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isPlugStatActive } from 'app/utils/item-utils';
 import { usePlugDescriptions } from 'app/utils/plug-descriptions';
+import { errorMessage } from 'app/utils/util';
 import { DestinyItemSocketEntryDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes, SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
@@ -194,7 +195,7 @@ export default function SocketDetailsSelectedPlug({
         showNotification({
           type: 'error',
           title: t('AWA.Error'),
-          body: t('AWA.ErrorMessage', { error: e.message, item: item.name, plug: plugName }),
+          body: t('AWA.ErrorMessage', { error: errorMessage(e), item: item.name, plug: plugName }),
         });
       } finally {
         setInsertInProgress(false);

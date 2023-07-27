@@ -62,7 +62,6 @@ import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info';
 import { StatHashes } from 'data/d2/generated-enums';
-import shapedOverlay from 'images/shapedOverlay.png';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -255,7 +254,6 @@ export function getColumns(
           {(ref, onClick) => (
             <div ref={ref} onClick={onClick} className="item">
               <ItemIcon item={item} />
-              {item.crafted && <img src={shapedOverlay} className={styles.shapedIconOverlay} />}
             </div>
           )}
         </ItemPopupTrigger>
@@ -354,7 +352,7 @@ export function getColumns(
         header: t('Organizer.Columns.WishList'),
         value: (item) => {
           const roll = wishList(item);
-          return roll ? (roll.isUndesirable ? false : true) : undefined;
+          return roll ? !roll.isUndesirable : undefined;
         },
         cell: (value) =>
           value !== undefined ? (

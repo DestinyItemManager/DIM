@@ -14,6 +14,7 @@ import { get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
+import { convertToError, errorMessage } from 'app/utils/util';
 import { DestinyItemComponent, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { getCharacters as d1GetCharacters } from '../bungie-api/destiny1-api';
@@ -78,18 +79,18 @@ export function updateCharacters(): ThunkResult {
         : [];
     } else {
       const profileInfo = await d1GetCharacters(account);
-      characters = profileInfo.map((character) => ({
-        characterId: character.id,
-        level: character.base.characterLevel,
-        powerLevel: character.base.characterBase.powerLevel,
-        percentToNextLevel: character.base.percentToNextLevel / 100,
-        background: bungieNetPath(character.base.backgroundPath),
-        icon: bungieNetPath(character.base.emblemPath),
-        stats: getD1CharacterStatsData(
-          getState().manifest.d1Manifest!,
-          character.base.characterBase
-        ),
-      }));
+      characters = profileInfo.characters.map((character) => {
+        const characterBase = character.characterBase;
+        return {
+          characterId: characterBase.characterId,
+          level: character.characterLevel,
+          powerLevel: characterBase.powerLevel,
+          percentToNextLevel: character.percentToNextLevel / 100,
+          background: bungieNetPath(character.backgroundPath),
+          icon: bungieNetPath(character.emblemPath),
+          stats: getD1CharacterStatsData(getState().manifest.d1Manifest!, characterBase),
+        };
+      });
     }
 
     // If we switched account since starting this, give up
@@ -226,11 +227,12 @@ function loadProfile(
       dispatch(profileLoaded({ profile: profileResponse, live: true }));
       return profileResponse;
     } catch (e) {
-      dispatch(profileError(e));
+      dispatch(profileError(convertToError(e)));
       if (profileResponse) {
         errorLog(
           'd2-stores',
-          'Error loading profile from Bungie.net, falling back to cached profile'
+          'Error loading profile from Bungie.net, falling back to cached profile',
+          e
         );
         // undefined means skip processing, in case we already have computed stores
         return storesLoadedSelector(getState()) ? undefined : profileResponse;
@@ -339,9 +341,9 @@ function loadStoresData(
 
         if (storesSelector(getState()).length > 0) {
           // don't replace their inventory with the error, just notify
-          showNotification(bungieErrorToaster(e));
+          showNotification(bungieErrorToaster(errorMessage(e)));
         } else {
-          dispatch(error(e));
+          dispatch(error(convertToError(e)));
         }
         return undefined;
       } finally {

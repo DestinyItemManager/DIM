@@ -8,6 +8,7 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import pursuitComplete from 'images/highlightedObjective.svg';
+import shapedIcon from 'images/shaped.png';
 import { DimItem } from './item-types';
 import styles from './ItemIcon.m.scss';
 import { isPluggableItem } from './store/sockets';
@@ -73,6 +74,11 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
       )}
       {item.iconOverlay && (
         <div className={styles.iconOverlay} style={bungieBackgroundStyle(item.iconOverlay)} />
+      )}
+      {item.crafted && (
+        <div className={styles.shapedOverlay}>
+          <img className={styles.shapedIcon} src={shapedIcon} />
+        </div>
       )}
       {(item.masterwork || item.deepsightInfo) && (
         <div

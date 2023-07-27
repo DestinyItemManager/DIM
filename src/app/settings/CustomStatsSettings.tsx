@@ -260,7 +260,7 @@ function useStatWeightsEditor(w: CustomStatWeights) {
   return [
     weights,
     (statHash: number, value: string) =>
-      setWeights((old) => ({ ...old, [statHash]: parseInt(value) || 0 })),
+      setWeights((old) => ({ ...old, [statHash]: parseInt(value, 10) || 0 })),
   ] as const;
 }
 

@@ -76,11 +76,17 @@
 
 // The container for the tag/notes/wishlist icons
 .icons {
+  width: var(--item-size);
+  height: var(--item-size);
+  max-width: 66%;
   position: absolute;
-  left: $item-border-width + 2px;
-  top: calc(var(--item-size) - #{$badge-height});
+  right: ($item-border-width * 3);
+  bottom: calc(#{$badge-height} + (#{$item-border-width} * 3));
+  padding-bottom: $item-border-width;
   display: flex;
-  flex-direction: row;
+  flex-flow: row-reverse wrap-reverse;
+  align-content: flex-start;
+  align-items: baseline;
 }
 
 // Individual icons in the icon tray
@@ -90,7 +96,8 @@
   width: calc(var(--item-size) / 5);
   height: calc(var(--item-size) / 5);
   font-size: calc(var(--item-size) / 5);
-  margin-right: 1px;
+  margin-left: 3px;
+  margin-top: 3px;
   color: #29f36a; // #5eff92;
   filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8));
 }

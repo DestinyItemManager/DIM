@@ -1,4 +1,5 @@
 import { registerApp } from 'app/dim-api/register-app';
+import { errorMessage } from 'app/utils/util';
 import React, { useState } from 'react';
 
 const createAppUrl = 'https://www.bungie.net/en/Application/Create';
@@ -62,7 +63,7 @@ export default function Developer(this: never) {
       setDimApiKey(app.dimApiKey);
     } catch (e) {
       // eslint-disable-next-line no-alert
-      alert(e.message);
+      alert(errorMessage(e));
     }
   };
 

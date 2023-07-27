@@ -9,7 +9,7 @@ import { CancelToken } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
-import { count } from 'app/utils/util';
+import { count, errorMessage } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -472,7 +472,7 @@ function canEquipExotic(
           t('ItemService.ExoticError', {
             itemname: item.name,
             slot: otherExotic.type,
-            error: e.message,
+            error: errorMessage(e),
           })
         );
       }
