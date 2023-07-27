@@ -351,6 +351,7 @@ export default (env: Env) => {
         docs: path.resolve('./docs/'),
         'destiny-icons': path.resolve('./destiny-icons/'),
         'textarea-caret': path.resolve('./src/app/utils/textarea-caret'),
+        lodash: 'lodash-es',
       },
 
       fallback: {
