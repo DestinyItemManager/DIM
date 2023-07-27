@@ -4,7 +4,6 @@ import { useLoadStores } from 'app/inventory/store/hooks';
 import { useD1Definitions } from 'app/manifest/selectors';
 import { useSetting } from 'app/settings/hooks';
 import { usePageTitle } from 'app/utils/hooks';
-import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
@@ -17,7 +16,7 @@ import { D1Store } from '../../inventory/store-types';
 import Objective from '../../progress/Objective';
 import { count } from '../../utils/util';
 import { D1ManifestDefinitions } from '../d1-definitions';
-import { D1RecordBook, D1RecordComponent } from '../d1-manifest-types';
+import { D1ObjectiveProgress, D1RecordBook, D1RecordComponent } from '../d1-manifest-types';
 import './record-books.scss';
 
 interface Props {
@@ -49,7 +48,7 @@ interface RecordBookPage {
     icon: string;
     name: string;
     description: string;
-    objectives: DestinyObjectiveProgress[];
+    objectives: D1ObjectiveProgress[];
   }[];
   complete: boolean;
   completedCount: number;
@@ -104,7 +103,7 @@ export default function RecordBooks({ account }: Props) {
         description: recordDef.description,
         name: recordDef.displayName,
         objectives: record.objectives,
-        complete: record.objectives.every((o: any) => o.isComplete),
+        complete: record.objectives.every((o) => o.isComplete),
       };
     };
 
@@ -112,13 +111,13 @@ export default function RecordBooks({ account }: Props) {
     const recordByHash = _.keyBy(records, (r) => r.hash);
 
     let i = 0;
-    recordBook.pages = recordBookDef.pages.map((page: any) => {
+    recordBook.pages = recordBookDef.pages.map((page) => {
       const createdPage: RecordBookPage = {
         id: `${recordBook.hash}-${i++}`,
         name: page.displayName,
         description: page.displayDescription,
         rewardsPage: page.displayStyle === 1,
-        records: page.records.map((r: any) => recordByHash[r.recordHash]),
+        records: page.records.map((r) => recordByHash[r.recordHash]),
         // rewards - map to items!
         // ItemFactory.processItems({ id: null }
         // may have to extract store service bits...
@@ -140,7 +139,7 @@ export default function RecordBooks({ account }: Props) {
       rawRecordBook.progress = rawRecordBook.progression;
       rawRecordBook.percentComplete =
         rawRecordBook.progress.currentProgress /
-        _.sumBy(rawRecordBook.progress.steps, (s: any) => s.progressTotal);
+        _.sumBy(rawRecordBook.progress.steps, (s) => s.progressTotal);
     } else {
       recordBook.percentComplete = count(records, (r) => r.complete) / records.length;
     }

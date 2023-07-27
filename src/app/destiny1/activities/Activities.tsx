@@ -173,9 +173,9 @@ export default function Activities({ account }: Props) {
     ];
 
     const rawActivities = Object.values(stores[0].advisors.activities).filter(
-      (a: any) => a.activityTiers && allowList.includes(a.identifier)
+      (a) => a.activityTiers && allowList.includes(a.identifier)
     );
-    const activities = _.sortBy(rawActivities, (a: any) => {
+    const activities = _.sortBy(rawActivities, (a) => {
       const ix = allowList.indexOf(a.identifier);
       return ix === -1 ? 999 : ix;
     }).map((a) => processActivities(defs, stores, a));
