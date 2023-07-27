@@ -24,7 +24,7 @@ let lastOptions: RandomizeCheckboxes = {
 };
 
 const checkBoxes: { label: string; d2Only?: boolean; prop: keyof RandomizeCheckboxes }[] = [
-  { label: 'Subclass', prop: 'subclass' },
+  { label: t('Bucket.Class'), prop: 'subclass' },
   { label: t('Bucket.Weapons'), prop: 'weapons' },
   { label: t('Bucket.Armor'), prop: 'armor' },
   { label: t('Bucket.General'), prop: 'general' },
