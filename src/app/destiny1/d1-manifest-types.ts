@@ -70,16 +70,7 @@ export interface D1ItemComponent {
   damageTypeHash: number;
   damageTypeNodeIndex: number;
   damageTypeStepIndex: number;
-  progression?: {
-    dailyProgress: number;
-    weeklyProgress: number;
-    currentProgress: number;
-    level: number;
-    step: number;
-    progressToNextLevel: number;
-    nextLevelAt: number;
-    progressionHash: number;
-  };
+  progression?: D1LevelProgression;
   talentGridHash: number;
   nodes: D1TalentNode[];
   useCustomDyes: boolean;
@@ -251,7 +242,7 @@ export interface D1StatDefinition {
   statName: string;
   statDescription: string;
   icon: string;
-  statIdentifier: string;
+  statIdentifier: D1StatLabel;
   aggregationType: DestinyStatAggregationType;
   hasComputedBlock: boolean;
   interpolate: boolean;
@@ -323,26 +314,27 @@ export interface D1RecordDefinition {
   redacted: boolean;
 }
 
-export interface D1Progression {
-  dailyProgress: number;
-  weeklyProgress: number;
-  currentProgress: number;
-  level: number;
-  step: number;
-  progressToNextLevel: number;
-  nextLevelAt: number;
-  progressionHash: number;
+export interface D1Progression extends D1LevelProgression {
   name: string;
   scope: number;
   repeatLastStep: boolean;
-  steps: {
-    progressTotal: number;
-    rewardItems: DestinyItemQuantity[];
-  }[];
+  steps: D1ProgressionStep[];
   visible: boolean;
   hash: number;
   index: number;
   redacted: boolean;
+  identifier?: string;
+  icon?: string;
+  label?: string;
+  order?: number;
+  faction?: D1FactionDefinition;
+  description?: string;
+  source?: string;
+}
+
+export interface D1ProgressionStep {
+  progressTotal: number;
+  rewardItems: DestinyItemQuantity[];
 }
 
 export interface D1RecordBook {
@@ -672,67 +664,140 @@ export interface D1VendorDefinition {
   redacted: boolean;
 }
 
-export interface D1CharacterResponse {
-  character: {
-    base: {
-      backgroundPath: string;
-      baseCharacterLevel: number;
-      characterBase: {
-        membershipId: string;
-        membershipType: BungieMembershipType;
-        classType: DestinyClass;
-        characterId: string;
-        dateLastPlayed: string;
-        minutesPlayedThisSession: string;
-        minutesPlayedTotal: string;
-        powerLevel: number;
-        raceHash: number;
-        genderHash: number;
-        genderType: DestinyGender;
-        classHash: number;
-        currentActivityHash: number;
-        lastCompletedStoryHash: number;
-        stats: {
-          [statLabel: string]: D1Stat;
-        };
-        grimoireScore: number;
-        peerView: { equipment: { itemHash: number }[] };
-      };
-      characterLevel: number;
-      emblemHash: number;
-      emblemPath: string;
-      isPrestigeLevel: false;
-      levelProgression: {
-        dailyProgress: number;
-        weeklyProgress: number;
-        currentProgress: number;
-        level: number;
-        step: number;
-      };
-      percentToNextLevel: number;
-      inventory: {
-        buckets: {
-          Currency: { items: D1ItemComponent[]; bucketHash: number }[];
-          Invisible: { items: D1ItemComponent[]; bucketHash: number }[];
-          Item: { items: D1ItemComponent[]; bucketHash: number }[];
-        };
-        currencies: { itemHash: number; value: number }[];
-      };
-    };
-    progression: { progressions: never[] };
-    advisors: any;
-  };
+export interface D1CharacterWithInventory {
+  character: D1MungedCharacter | D1Vault;
+  data: D1Inventory;
+}
+
+export interface D1MungedCharacter {
   id: string;
+  base: D1Character & { inventory: D1Inventory };
+  dateLastPlayed?: string;
+  progression?: D1GetProgressionResponse['data'];
+  advisors?: D1GetAdvisorsResponse['data'];
+}
+
+export interface D1Vault {
+  id: 'vault';
+  base: null;
+}
+
+export interface D1GetAccountResponse {
   data: {
-    buckets: { [key: string]: { items: D1ItemComponent[]; bucketHash: number }[] };
-    currencies: { itemHash: number; value: number }[];
+    membershipId: string;
+    membershipType: BungieMembershipType;
+    characters: D1Character[];
+    inventory: D1Inventory;
+    grimoireScore: number;
+    dateLastPlayed: string;
+    versions: number;
   };
 }
 
-export interface D1VaultResponse {
-  id: 'vault';
+export interface D1GetInventoryResponse {
+  data: D1Inventory;
+}
+
+export interface D1Character {
+  characterBase: D1CharacterBase;
+  levelProgression: D1LevelProgression;
+  emblemPath: string;
+  backgroundPath: string;
+  emblemHash: number;
+  characterLevel: number;
+  baseCharacterLevel: number;
+  isPrestigeLevel: boolean;
+  percentToNextLevel: number;
+}
+
+export interface D1CharacterBase {
+  membershipId: string;
+  membershipType: BungieMembershipType;
+  characterId: string;
+  dateLastPlayed: string;
+  minutesPlayedThisSession: string;
+  minutesPlayedTotal: string;
+  powerLevel: number;
+  raceHash: number;
+  genderHash: number;
+  classHash: number;
+  currentActivityHash: number;
+  lastCompletedStoryHash: number;
+  stats: D1Stats;
+  grimoireScore: number;
+  genderType: DestinyGender;
+  classType: DestinyClass;
+  buildStatGroupHash: number;
+}
+
+export interface D1LevelProgression {
+  dailyProgress: number;
+  weeklyProgress: number;
+  currentProgress: number;
+  level: number;
+  step: number;
+  progressToNextLevel: number;
+  nextLevelAt: number;
+  progressionHash: number;
+}
+
+export interface D1Inventory {
+  buckets: D1Buckets;
+  currencies: DestinyItemQuantity[];
+}
+
+export interface D1Buckets {
+  Invisible: D1Bucket[];
+  Item: D1Bucket[];
+  Currency: D1Bucket[];
+}
+
+export interface D1Bucket {
+  items: D1ItemComponent[];
+  bucketHash: number;
+}
+
+export interface D1GetProgressionResponse {
   data: {
-    buckets: { items: D1ItemComponent[]; bucketHash: number }[];
-    currencies: { itemHash: number; value: number }[];
+    progressions: D1Progression[];
+    levelProgression: D1LevelProgression;
+    baseCharacterLevel: number;
+    isPrestigeLevel: boolean;
+    factionProgressionHash: number;
+    percentToNextLevel: number;
   };
 }
+
+export interface D1GetAdvisorsResponse {
+  data: {
+    activities: { [activityHash: number]: D1ActivityComponent };
+    activityCategories: { [activityHash: number]: { categoryHash: number } };
+    bounties: { [pursuitHash: number]: D1Pursuit };
+    quests: { [pursuitHash: number]: D1Pursuit };
+    progressions: { [progressionHash: number]: D1Progression };
+    recordBooks: { [recordBookHash: number]: D1RecordBook };
+  };
+}
+
+export interface D1Pursuit {
+  questHash: number;
+  stepHash: number;
+  stepObjectives: any[];
+  tracked: boolean;
+  itemInstanceId: string;
+  completed: boolean;
+  started: boolean;
+  vendorHash: number;
+}
+
+export type D1StatLabel =
+  | 'STAT_DEFENSE'
+  | 'STAT_INTELLECT'
+  | 'STAT_DISCIPLINE'
+  | 'STAT_STRENGTH'
+  | 'STAT_LIGHT'
+  | 'STAT_ARMOR'
+  | 'STAT_AGILITY'
+  | 'STAT_RECOVERY'
+  | 'STAT_OPTICS';
+export type D1Stats = { [stat in D1StatLabel]: D1Stat };

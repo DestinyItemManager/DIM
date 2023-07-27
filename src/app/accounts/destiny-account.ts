@@ -1,5 +1,6 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { D1MungedCharacter } from 'app/destiny1/d1-manifest-types';
 import { t } from 'app/i18next-t';
 import {
   battleNetIcon,
@@ -231,13 +232,13 @@ async function findD1Characters(account: DestinyAccount): Promise<DestinyAccount
 /**
  * Find the date of the most recently played character.
  */
-function getLastPlayedD1Character(response: { id: string; dateLastPlayed: string }[]): Date {
+function getLastPlayedD1Character(response: D1MungedCharacter[]): Date {
   return response.reduce((memo, rawStore) => {
     if (rawStore.id === 'vault') {
       return memo;
     }
 
-    const d1 = new Date(rawStore.dateLastPlayed);
+    const d1 = new Date(rawStore.dateLastPlayed ?? 0);
 
     return memo ? (d1 >= memo ? d1 : memo) : d1;
   }, new Date(0));

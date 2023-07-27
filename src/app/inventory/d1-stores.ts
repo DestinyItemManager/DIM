@@ -3,6 +3,7 @@ import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import {
   D1CharacterResponse,
+  D1CharacterWithInventory,
   D1ItemComponent,
   D1VaultResponse,
 } from 'app/destiny1/d1-manifest-types';
@@ -151,13 +152,14 @@ function processStore(
 /**
  * Find the date of the most recently played character.
  */
-function findLastPlayedDate(rawStores: any[]): Date {
+function findLastPlayedDate(rawStores: D1CharacterWithInventory[]): Date {
   return Object.values(rawStores).reduce((memo, rawStore) => {
-    if (rawStore.id === 'vault') {
+    const character = rawStore.character;
+    if (character.id === 'vault') {
       return memo;
     }
 
-    const d1 = new Date(rawStore.character.base.characterBase.dateLastPlayed);
+    const d1 = new Date(character.base.characterBase.dateLastPlayed);
 
     return memo ? (d1 >= memo ? d1 : memo) : d1;
   }, new Date(0));
