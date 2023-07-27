@@ -33,9 +33,7 @@ export default function FilterHelp() {
           ? t(...filter.description)
           : t(filter.description);
 
-        if (localDesc.toLowerCase().includes(searchLower)) {
-          return true;
-        }
+        return localDesc.toLowerCase().includes(searchLower);
       })
     : searchConfig.allFilters.filter((s) => !s.deprecated);
 
