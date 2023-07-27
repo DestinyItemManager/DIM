@@ -41,7 +41,7 @@ $header-height: 44px;
   container-type: inline-size;
 
   @include phone-portrait {
-    background: #000;
+    background: var(--theme-mobile-background);
   }
 
   button,

@@ -80,7 +80,13 @@ export default function updateCSSVariables() {
  * Read the --theme-pwa-background CSS variable and use it to set the meta theme-color element.
  */
 export function syncThemeColor() {
-  const background = getComputedStyle(document.body).getPropertyValue('--theme-pwa-background');
+  let background = getComputedStyle(document.body).getPropertyValue('--theme-pwa-background');
+
+  // Extract tint from mobile header on mobile devices to match notch/dynamic island fill
+  if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    background = getComputedStyle(document.body).getPropertyValue('--theme-mobile-background');
+  }
+
   if (background) {
     const metaElem = document.querySelector("meta[name='theme-color']");
     if (metaElem) {
