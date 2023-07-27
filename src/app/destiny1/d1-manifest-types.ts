@@ -653,27 +653,12 @@ export interface D1StoresData {
   vaultInventory: D1VaultInventory;
 }
 
-export type D1CharacterWithInventory =
-  | {
-      type: 'character';
-      character: D1CharacterData;
-    }
-  | {
-      type: 'vault';
-      character: D1Vault;
-      data: D1VaultInventory;
-    };
-
 export interface D1CharacterData {
   id: string;
   character: D1Character;
   inventory: D1Inventory;
   progression?: D1GetProgressionResponse['data'];
   advisors?: D1GetAdvisorsResponse['data'];
-}
-
-export interface D1Vault {
-  id: 'vault';
 }
 
 export interface D1GetAccountResponse {
