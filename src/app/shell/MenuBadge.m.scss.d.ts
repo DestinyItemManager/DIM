@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'badgeNew': string;
+  'dot': string;
   'upgrade': string;
 }
 export const cssExports: CssExports;
