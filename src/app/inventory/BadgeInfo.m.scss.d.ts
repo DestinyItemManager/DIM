@@ -11,6 +11,7 @@ interface CssExports {
   'fullstack': string;
   'masterwork': string;
   'quality': string;
+  'shapedIcon': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
