@@ -112,7 +112,7 @@ function loadManifestRemote(version: string, path: string): ThunkResult<object> 
   };
 }
 
-async function saveManifestToIndexedDB(typedArray: object, version: string) {
+async function saveManifestToIndexedDB(typedArray: unknown, version: string) {
   try {
     await set(idbKey, typedArray);
     infoLog('manifest', `Successfully stored manifest file.`);

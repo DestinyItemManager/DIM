@@ -40,7 +40,7 @@ export function getSetBucketsStep(
   activeHighestSets: { [setHash: number]: SetType };
   collapsedConfigs: boolean[];
 }> {
-  const bestArmor: any = getBestArmor(
+  const bestArmor = getBestArmor(
     activeGuardianBucket,
     vendorBucket,
     lockeditems,
