@@ -286,7 +286,7 @@ export function getColumns(
         value: isSunset,
         defaultSort: SortDirection.ASC,
         cell: (value) => (value ? <AppIcon icon={faCheck} /> : undefined),
-        filter: (value) => (value ? '' : '-') + 'is:sunset',
+        filter: (value) => `${value ? '' : '-'}is:sunset`,
       }),
     !isGhost &&
       (destinyVersion === 2 || isWeapon) &&
@@ -313,7 +313,7 @@ export function getColumns(
       value: (i) => i.locked,
       cell: (value) => (value ? <AppIcon icon={lockIcon} /> : undefined),
       defaultSort: SortDirection.DESC,
-      filter: (value) => (value ? '' : '-') + 'is:locked',
+      filter: (value) => `${value ? '' : '-'}is:locked`,
     }),
     c({
       id: 'tag',
@@ -329,7 +329,7 @@ export function getColumns(
       value: (item) => newItems.has(item.id),
       cell: (value) => (value ? <NewItemIndicator /> : undefined),
       defaultSort: SortDirection.DESC,
-      filter: (value) => (value ? '' : '-') + 'is:new',
+      filter: (value) => `${value ? '' : '-'}is:new`,
     }),
     destinyVersion === 2 &&
       c({
@@ -339,7 +339,7 @@ export function getColumns(
         cell: (craftedDate) =>
           craftedDate ? <>{new Date(craftedDate * 1000).toLocaleString()}</> : undefined,
         defaultSort: SortDirection.DESC,
-        filter: (value) => (value ? '' : '-') + 'is:crafted',
+        filter: (value) => `${value ? '' : '-'}is:crafted`,
       }),
     c({
       id: 'recency',
@@ -571,12 +571,10 @@ export function getColumns(
         return (
           loadouts &&
           // 99999 loadouts ought to be enough for anyone
-          loadouts.length.toString().padStart(5, '0') +
-            ':' +
-            loadouts
-              .map((l) => l.loadout.name)
-              .sort()
-              .join(',')
+          `${loadouts.length.toString().padStart(5, '0')}:${loadouts
+            .map((l) => l.loadout.name)
+            .sort()
+            .join(',')}`
         );
       },
       cell: (_val, item) => {

@@ -23,7 +23,7 @@ export default function LoadoutParametersDisplay({ params }: { params: LoadoutPa
   if (!show) {
     return null;
   }
-  const lbParamDesc = (str: string) => t('Loadouts.LoadoutParameters') + ' – ' + str;
+  const lbParamDesc = (str: string) => `${t('Loadouts.LoadoutParameters')} – ${str}`;
 
   return (
     <div className={styles.loParams}>
@@ -69,9 +69,9 @@ export default function LoadoutParametersDisplay({ params }: { params: LoadoutPa
               ) : s.maxTier !== undefined ? (
                 <span>T{s.maxTier}-</span>
               ) : (
-                t('LoadoutBuilder.TierNumber', {
+                `${t('LoadoutBuilder.TierNumber', {
                   tier: 10,
-                }) + '-'
+                })}-`
               )}
             </div>
           ))}

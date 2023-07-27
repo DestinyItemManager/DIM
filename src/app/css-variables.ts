@@ -34,7 +34,7 @@ export default function updateCSSVariables() {
 
     // Set a class on the body to control the theme. This must be applied on the body for syncThemeColor to work.
     if ($featureFlags.themePicker && currentState.theme !== nextState.theme) {
-      const themeClass = 'theme-' + nextState.theme;
+      const themeClass = `theme-${nextState.theme}`;
       document.body.className = themeClass;
       syncThemeColor();
     }

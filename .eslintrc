@@ -165,6 +165,7 @@
     "prefer-regex-literals": "error",
     "prefer-promise-reject-errors": "error",
     "require-atomic-updates": "off",
+    "prefer-template": "error",
     "class-methods-use-this": ["error", { "exceptMethods": ["render"] }],
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off",

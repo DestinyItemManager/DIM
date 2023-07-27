@@ -5,7 +5,7 @@ import { FilterDefinition } from '../filter-types';
 import { quoteFilterString } from '../query-parser';
 
 export function loadoutToSearchString(loadout: Loadout | InGameLoadout) {
-  return 'inloadout:' + quoteFilterString(loadout.name.toLowerCase());
+  return `inloadout:${quoteFilterString(loadout.name.toLowerCase())}`;
 }
 
 // related: https://github.com/DestinyItemManager/DIM/issues/9069
@@ -15,7 +15,7 @@ function loadoutToSuggestions(loadout: Loadout) {
     quoteFilterString(loadout.name.toLowerCase()), // loadout name
     ...getHashtagsFromNote(loadout.name), // #hashtags in the name
     ...getHashtagsFromNote(loadout.notes), // #hashtags in the notes
-  ].map((suggestion) => 'inloadout:' + suggestion);
+  ].map((suggestion) => `inloadout:${suggestion}`);
 }
 
 const loadoutFilters: FilterDefinition[] = [

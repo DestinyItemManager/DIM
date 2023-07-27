@@ -110,7 +110,7 @@ export default function PhoneStoresHeader({
   }
 
   // Transform the segment-relative offset back into percents
-  const offsetPercent = useTransform(offset, (o) => (100 / segments.length) * -(o + 2) + '%');
+  const offsetPercent = useTransform(offset, (o) => `${(100 / segments.length) * -(o + 2)}%`);
 
   const keys: { [key: string]: number } = {};
   const makeKey = (key: string) => {

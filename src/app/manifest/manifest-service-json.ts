@@ -265,7 +265,7 @@ async function saveManifestToIndexedDB(
     await set(idbKey, typedArray);
     infoLog('manifest', `Successfully stored manifest file.`);
     localStorage.setItem(localStorageKey, version);
-    localStorage.setItem(localStorageKey + '-whitelist', JSON.stringify(tableAllowList));
+    localStorage.setItem(`${localStorageKey}-whitelist`, JSON.stringify(tableAllowList));
   } catch (e) {
     errorLog('manifest', 'Error saving manifest file', e);
     showNotification({
@@ -294,7 +294,7 @@ async function loadManifestFromCache(
   }
 
   const currentManifestVersion = localStorage.getItem(localStorageKey);
-  const currentAllowList = JSON.parse(localStorage.getItem(localStorageKey + '-whitelist') || '[]');
+  const currentAllowList = JSON.parse(localStorage.getItem(`${localStorageKey}-whitelist`) || '[]');
   if (currentManifestVersion === version && deepEqual(currentAllowList, tableAllowList)) {
     const manifest = await get<AllDestinyManifestComponents>(idbKey);
     if (!manifest) {

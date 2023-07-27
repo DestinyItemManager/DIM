@@ -42,7 +42,7 @@ export function useShiftHeld() {
 export function useSetCSSVarToHeight(ref: React.RefObject<HTMLElement>, propertyName: string) {
   const updateVar = useCallback(
     (height: number) => {
-      document.querySelector('html')!.style.setProperty(propertyName, height + 'px');
+      document.querySelector('html')!.style.setProperty(propertyName, `${height}px`);
     },
     [propertyName]
   );

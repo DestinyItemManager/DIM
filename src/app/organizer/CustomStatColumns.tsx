@@ -8,7 +8,7 @@ export function createCustomStatColumns(
   customStatDefs: CustomStatDef[]
 ): (ColumnDefinition | undefined)[] {
   return customStatDefs.map((c) => ({
-    id: 'customstat_' + c.shortLabel + c.statHash,
+    id: `customstat_${c.shortLabel}${c.statHash}`,
     header: (
       <>
         {c.label}

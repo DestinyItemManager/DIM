@@ -11,7 +11,7 @@ export const dimMastodonAccount = '@ThisIsDIM@mstdn.games';
 export const bungieTwitterAccount = '@BungieHelp';
 
 export function userGuideUrl(topic: string) {
-  return userGuideLink + '/' + topic;
+  return `${userGuideLink}/${topic}`;
 }
 
 export const troubleshootingLink = userGuideUrl('Troubleshooting');
