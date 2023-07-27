@@ -167,6 +167,7 @@
     "prefer-spread": "error",
     "radix": "error",
     "yoda": "error",
+    "prefer-template": "error",
     "class-methods-use-this": ["error", { "exceptMethods": ["render"] }],
     "no-unmodified-loop-condition": "error",
     "no-unreachable-loop": "error",

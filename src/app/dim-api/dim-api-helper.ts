@@ -48,7 +48,7 @@ export async function unauthenticatedApi<T>(
   if (response.status === 401) {
     // Delete our token
     deleteDimApiToken();
-    throw new FatalTokenError('Unauthorized call to ' + config.url);
+    throw new FatalTokenError(`Unauthorized call to ${config.url}`);
   }
   if (response.ok) {
     return response.json() as Promise<T>;
@@ -62,7 +62,7 @@ export async function unauthenticatedApi<T>(
     throw new Error(`${responseData.error}: ${responseData.message}`);
   }
 
-  throw new Error('Failed to call DIM API: ' + response.status);
+  throw new Error(`Failed to call DIM API: ${response.status}`);
 }
 
 /**
@@ -112,7 +112,7 @@ export async function authenticatedApi<T>(config: HttpClientConfig): Promise<T> 
     throw new Error(`${responseData.error}: ${responseData.message}`);
   }
 
-  throw new Error('Failed to call DIM API: ' + response.status);
+  throw new Error(`Failed to call DIM API: ${response.status}`);
 }
 
 export interface DimAuthToken {

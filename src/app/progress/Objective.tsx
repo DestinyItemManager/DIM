@@ -147,11 +147,11 @@ export function ObjectiveValue({
       }
       break;
     case DestinyUnlockValueUIStyle.ExplicitPercentage:
-      return <>{progress + '%'}</>;
+      return <>{`${progress}%`}</>;
     case DestinyUnlockValueUIStyle.FractionFloat:
       return <>{percent(progress * completionValue)}</>;
     case DestinyUnlockValueUIStyle.Multiplier:
-      return <>{progress.toLocaleString() + '𝗑'}</>;
+      return <>{`${progress.toLocaleString()}𝗑`}</>;
     case DestinyUnlockValueUIStyle.RawFloat:
       return <>{(progress / 100).toLocaleString()}</>;
     case DestinyUnlockValueUIStyle.TimeDuration:

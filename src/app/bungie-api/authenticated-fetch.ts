@@ -136,7 +136,7 @@ async function handleRefreshTokenError(response: Error | Response): Promise<Toke
         case 'AuthorizationCodeInvalid':
         case 'AuthorizationRecordExpired':
           throw new FatalTokenError(
-            'Refresh token expired or not valid, platform error ' + data.error_description
+            `Refresh token expired or not valid, platform error ${data.error_description}`
           );
         default:
           throw new Error(
@@ -152,7 +152,7 @@ async function handleRefreshTokenError(response: Error | Response): Promise<Toke
         case PlatformErrorCodes.AuthorizationCodeInvalid:
         case PlatformErrorCodes.AuthorizationRecordExpired:
           throw new FatalTokenError(
-            'Refresh token expired or not valid, platform error ' + data.ErrorCode
+            `Refresh token expired or not valid, platform error ${data.ErrorCode}`
           );
       }
     }
@@ -165,7 +165,7 @@ async function handleRefreshTokenError(response: Error | Response): Promise<Toke
       );
     case 401:
     case 403: {
-      throw new FatalTokenError('Refresh token expired or not valid, status ' + response.status);
+      throw new FatalTokenError(`Refresh token expired or not valid, status ${response.status}`);
     }
   }
 
