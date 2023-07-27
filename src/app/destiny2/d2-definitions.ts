@@ -207,9 +207,8 @@ export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
               failedHash: id,
               failedComponent: table,
             });
-          }
-          // an invalid hash that, in new loadouts, just means lookup should fail
-          else if (id !== UNSET_PLUG_HASH) {
+          } else if (id !== UNSET_PLUG_HASH) {
+            // an invalid hash that, in new loadouts, just means lookup should fail
             warnLogCollapsedStack('hashLookupFailure', `${table}[${id}]`, requestor);
           }
         }

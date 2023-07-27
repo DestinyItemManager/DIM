@@ -88,11 +88,10 @@ export default function registerServiceWorker() {
                   preventDevToolsReloadLoop = true;
                   window.location.reload();
                 });
-              }
-              // At this point, everything has been precached.
-              // It's the perfect time to display a
-              // "Content is cached for offline use." message.
-              else if ($featureFlags.debugSW) {
+              } else if ($featureFlags.debugSW) {
+                // At this point, everything has been precached.
+                // It's the perfect time to display a
+                // "Content is cached for offline use." message.
                 infoLog('SW', 'Content is cached for offline use.');
               }
             } else if ($featureFlags.debugSW) {
