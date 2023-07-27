@@ -50,6 +50,6 @@ export function initGoogleAnalytics() {
       allow_ad_personalization_signals: false,
     });
   };
-  script.src = 'https://www.googletagmanager.com/gtag/js?id=' + $ANALYTICS_PROPERTY;
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${$ANALYTICS_PROPERTY}`;
   document.head.appendChild(script);
 }

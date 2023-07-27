@@ -323,7 +323,7 @@ function BetterItemsTriageSection({ item }: { item: DimItem }) {
                 <span className={styles.count}>{itemCollection.length}</span>
                 <span className={styles.controls}>
                   <StartCompareButton
-                    filter={`id:${item.id} or ` + filter}
+                    filter={`id:${item.id} or ${filter}`}
                     items={itemCollection}
                     initialItem={item}
                   />

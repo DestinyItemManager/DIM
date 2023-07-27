@@ -103,7 +103,7 @@ export const itemCategoryFilter: FilterDefinition = {
     }
     const categoryHash = itemCategoryHashesByName[filterValue.replace(/\s/g, '')];
     if (!categoryHash) {
-      throw new Error('Unknown weapon type ' + filterValue);
+      throw new Error(`Unknown weapon type ${filterValue}`);
     }
     return (item) => item.itemCategoryHashes.includes(categoryHash);
   },
@@ -147,7 +147,7 @@ const knownValuesFilters: FilterDefinition[] = [
     filter: ({ filterValue }) => {
       const tierName = tierMap[filterValue];
       if (!tierName) {
-        throw new Error('Unknown rarity type ' + filterValue);
+        throw new Error(`Unknown rarity type ${filterValue}`);
       }
       return (item) => item.tier === tierName;
     },
@@ -180,7 +180,7 @@ const knownValuesFilters: FilterDefinition[] = [
     filter: ({ filterValue }) => {
       const breakerType = breakerTypes[filterValue as keyof typeof breakerTypes];
       if (!breakerType) {
-        throw new Error('Unknown breaker type ' + filterValue);
+        throw new Error(`Unknown breaker type ${filterValue}`);
       }
       return (item) => breakerType.includes(item.breakerType?.hash as BreakerTypeHashes);
     },
@@ -244,7 +244,7 @@ const knownValuesFilters: FilterDefinition[] = [
         const predicate = d2EventPredicates[filterValue];
         return (item: DimItem) => getEvent(item) === predicate;
       } else {
-        throw new Error('Unknown item source ' + filterValue);
+        throw new Error(`Unknown item source ${filterValue}`);
       }
     },
   },

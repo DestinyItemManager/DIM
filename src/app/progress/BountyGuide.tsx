@@ -138,11 +138,11 @@ export default function BountyGuide({
             }
           }
         }
-        if (i.pursuit) {
-          for (const reward of i.pursuit.rewards) {
-            if (rewardAllowList.includes(reward.itemHash)) {
-              (mapped.Reward[reward.itemHash] ??= []).push(i);
-            }
+      }
+      if (i.pursuit) {
+        for (const reward of i.pursuit.rewards) {
+          if (rewardAllowList.includes(reward.itemHash)) {
+            (mapped.Reward[reward.itemHash] ??= []).push(i);
           }
         }
       }

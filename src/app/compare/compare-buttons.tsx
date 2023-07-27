@@ -35,7 +35,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
     {
       buttonLabel: [
         <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
-        '+ ' + t('Stats.Sunset'),
+        `+ ${t('Stats.Sunset')}`,
       ],
       query: '', // since we already filter by itemCategoryHash, an empty query gives you all items matching that category
     },
@@ -163,15 +163,12 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
         <WeaponSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />,
       ],
-      query:
-        '(' +
-        bucketToSearch[exampleItem.bucket.hash as keyof typeof bucketToSearch] +
-        ' ' +
-        (exampleItem.destinyVersion === 2 && intrinsic
+      query: `(${bucketToSearch[exampleItem.bucket.hash as keyof typeof bucketToSearch]} ${
+        exampleItem.destinyVersion === 2 && intrinsic
           ? // TODO: add a search by perk hash? It'd be slightly different than searching by name
             `perkname:${quoteFilterString(intrinsic.displayProperties.name)}`
-          : `stat:rpm:${getRpm(exampleItem)}`) +
-        ')',
+          : `stat:rpm:${getRpm(exampleItem)}`
+      })`,
     },
 
     // above, but also same (kinetic/energy/heavy) slot

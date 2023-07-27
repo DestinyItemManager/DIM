@@ -83,13 +83,13 @@ const popperOptions = (
       hasArrow && {
         name: 'arrow',
         options: {
-          element: '.' + arrowClassName,
+          element: `.${arrowClassName}`,
         },
       },
       hasMenu && {
         name: 'computeSidecarPosition',
         options: {
-          element: '.' + menuClassName,
+          element: `.${menuClassName}`,
         },
       },
     ]),

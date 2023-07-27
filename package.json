@@ -215,7 +215,7 @@
     "i18next": "^23.2.11",
     "i18next-http-backend": "^2.0.0",
     "immer": "^10.0.1",
-    "lodash": "^4.17.8",
+    "lodash-es": "^4.17.21",
     "memoize-one": "^6.0.0",
     "papaparse": "^5.0.0",
     "react": "^18.1.0",

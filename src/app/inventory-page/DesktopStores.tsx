@@ -85,9 +85,9 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
                 title={
                   singleCharacter
                     ? t('Settings.ExpandSingleCharacter')
-                    : t('Settings.SingleCharacter') +
-                      ': ' +
-                      t('Settings.SingleCharacterExplanation')
+                    : `${t('Settings.SingleCharacter')}: ${t(
+                        'Settings.SingleCharacterExplanation'
+                      )}`
                 }
               >
                 <AppIcon icon={singleCharacter ? minimizeIcon : maximizeIcon} />
