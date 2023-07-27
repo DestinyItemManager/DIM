@@ -26,7 +26,7 @@ export default function D1CharacterStats({ stats }: Props) {
 
       let cooldown = stat.cooldown || '';
       if (cooldown) {
-        cooldown = t(`Cooldown.${stat.effect}`, {
+        cooldown = t(`Cooldown.${stat.effect!}`, {
           cooldown,
           metadata: { keys: 'cooldowns' },
         });

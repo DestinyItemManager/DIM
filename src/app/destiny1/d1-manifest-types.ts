@@ -409,7 +409,7 @@ export interface D1VendorCategoryDefinition {
 
 export interface D1ActivityTier {
   activityHash: number;
-  tierDisplayName: string;
+  tierDisplayName: 'Normal' | 'Hard';
   completion: {
     complete: boolean;
     success: boolean;

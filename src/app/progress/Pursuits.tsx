@@ -26,7 +26,7 @@ export const sortPursuits = chainComparator(
   compareBy((item) => item.name)
 );
 
-const pursuitsOrder = ['Bounties', 'Quests', 'Items'];
+const pursuitsOrder = ['Bounties', 'Quests', 'Items'] as const;
 
 /**
  * List out all the Pursuits for the character, grouped out in a useful way.

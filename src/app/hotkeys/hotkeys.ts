@@ -1,4 +1,4 @@
-import { t, tl } from 'app/i18next-t';
+import { I18nKey, t, tl } from 'app/i18next-t';
 import { isMac } from 'app/utils/browsers';
 import { compareBy } from 'app/utils/comparators';
 import { StringLookup } from 'app/utils/util-types';
@@ -17,7 +17,7 @@ const map: StringLookup<string> = {
 };
 
 /** We translate the keys that don't have fun symbols. */
-const keyi18n: StringLookup<string> = {
+const keyi18n: StringLookup<I18nKey> = {
   tab: tl('Hotkey.Tab'),
   enter: tl('Hotkey.Enter'),
 };

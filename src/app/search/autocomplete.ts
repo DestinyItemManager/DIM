@@ -323,16 +323,16 @@ export function autocompleteTermSuggestions<I, FilterCtx, SuggestionsCtx>(
     const result = candidates.map((word): SearchItem => {
       const filterDef = findFilter(word, searchConfig.filtersMap);
       const newQuery = base + word + query.slice(caretIndex);
+      const helpText: string | undefined = filterDef
+        ? Array.isArray(filterDef.description)
+          ? t(...filterDef.description)
+          : t(filterDef.description)
+        : undefined;
       return {
         query: {
           fullText: newQuery,
           body: newQuery,
-          helpText: filterDef
-            ? (Array.isArray(filterDef.description)
-                ? t(...filterDef.description)
-                : t(filterDef.description)
-              )?.replace(/\.$/, '')
-            : undefined,
+          helpText: helpText?.replace(/\.$/, ''),
         },
         type: SearchItemType.Autocomplete,
         highlightRange: {
