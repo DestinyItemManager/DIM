@@ -326,7 +326,6 @@ function SearchBar(
     getItemProps,
     setInputValue,
     reset: clearFilter,
-    openMenu,
   } = useCombobox<SearchItem>({
     items,
     stateReducer,
@@ -350,12 +349,6 @@ function SearchBar(
   ) {
     const { type, changes } = actionAndChanges;
     switch (type) {
-      // FIXME: Do not act on focus because it interacts badly with autofocus
-      // Downshift will likely switch away from using focus because too
-      // https://github.com/downshift-js/downshift/issues/1439
-      // (Also see onFocus below)
-      case useCombobox.stateChangeTypes.InputFocus:
-        return state;
       case useCombobox.stateChangeTypes.ItemClick:
       case useCombobox.stateChangeTypes.InputKeyDownEnter:
         if (!changes.selectedItem) {
@@ -383,14 +376,6 @@ function SearchBar(
         return changes; // no handling for other types
     }
   }
-
-  // FIXME: Maybe follow suit when Downshift changes opening behavior to
-  // just use clicks and not focus (see stateReducer above)
-  const onFocus = () => {
-    if (!liveQuery && !isOpen && !autoFocus) {
-      openMenu();
-    }
-  };
 
   // Reset live query when search version changes
   useEffect(() => {
@@ -524,11 +509,10 @@ function SearchBar(
         className={clsx(className, 'search-filter', styles.searchBar, { [styles.open]: isOpen })}
         role="search"
       >
-        <AppIcon icon={searchIcon} className="search-bar-icon" {...getLabelProps()} />
+        <AppIcon {...getLabelProps({ icon: searchIcon, className: 'search-bar-icon' })} />
         <input
           {...getInputProps({
             onBlur,
-            onFocus,
             onKeyDown,
             ref: inputElement,
             className: clsx({ [styles.invalid]: !valid }),

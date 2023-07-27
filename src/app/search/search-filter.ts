@@ -6,7 +6,7 @@ import { d2ManifestSelector } from 'app/manifest/selectors';
 import { Settings } from 'app/settings/initial-settings';
 import { errorLog } from 'app/utils/log';
 import { WishListRoll } from 'app/wishlists/types';
-import _ from 'lodash';
+import _, { stubTrue } from 'lodash';
 import { createSelector } from 'reselect';
 import { DimItem } from '../inventory/item-types';
 import {
@@ -140,7 +140,7 @@ function makeSearchFilterFactory<I, FilterCtx, SuggestionsCtx>(
     query = query.trim().toLowerCase();
     if (!query.length) {
       // By default, show anything that doesn't have the archive tag
-      return _.stubTrue;
+      return stubTrue;
     }
 
     const parsedQuery = parseQuery(query);

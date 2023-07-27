@@ -306,8 +306,9 @@ export function fitMostMods({
   // Artifice mods are free and thus can be greedily assigned.
   const artificeItems = items.filter(isArtifice);
   for (const artificeMod of artificeMods) {
-    let targetItemIndex = artificeItems.findIndex((item) =>
-      item.sockets?.allSockets.some((socket) => socket.plugged?.plugDef.hash === artificeMod.hash)
+    let targetItemIndex = artificeItems.findIndex(
+      (item) =>
+        item.sockets?.allSockets.some((socket) => socket.plugged?.plugDef.hash === artificeMod.hash)
     );
     if (targetItemIndex === -1) {
       targetItemIndex = artificeItems.length ? 0 : -1;

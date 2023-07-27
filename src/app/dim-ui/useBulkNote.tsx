@@ -30,7 +30,7 @@ export interface BulkNoteResult {
 
 export default function useBulkNote(): [
   element: React.ReactNode,
-  bulkNote: (items: DimItem[]) => Promise<void>
+  bulkNote: (items: DimItem[]) => Promise<void>,
 ] {
   const [dialog, showDialog] = useDialog<DimItem[], BulkNoteResult | null>((args, close) => (
     <BulkNoteDialog close={close} items={args} />

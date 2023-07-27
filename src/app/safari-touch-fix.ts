@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { noop } from 'lodash';
 import { isNativeDragAndDropSupported, isiOSBrowser } from './utils/browsers';
 
 // This can likely be removed now, but definitely after we minimally support iOS 15
@@ -18,11 +18,11 @@ export function safariTouchFix() {
         return supportsPassive;
       },
     });
-    window.addEventListener('testPassive', _.noop, opts);
-    window.removeEventListener('testPassive', _.noop, opts);
+    window.addEventListener('testPassive', noop, opts);
+    window.removeEventListener('testPassive', noop, opts);
   } catch (e) {}
 
   supportsPassive
-    ? window.addEventListener('touchmove', _.noop, { passive: false })
-    : window.addEventListener('touchmove', _.noop);
+    ? window.addEventListener('touchmove', noop, { passive: false })
+    : window.addEventListener('touchmove', noop);
 }

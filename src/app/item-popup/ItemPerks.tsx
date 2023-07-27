@@ -2,7 +2,6 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { DimItem } from 'app/inventory/item-types';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { FISHING_BAIT_PERK } from 'app/search/d2-known-values';
 import { DestinyItemPerkEntryDefinition } from 'bungie-api-ts/destiny2';
 import styles from './ItemPerks.m.scss';
 
@@ -27,7 +26,7 @@ function ItemPerk({ perk }: { perk: DestinyItemPerkEntryDefinition }) {
 
   return (
     <div className={styles.itemPerk}>
-      {hasIcon && perk.perkHash !== FISHING_BAIT_PERK && <BungieImage src={icon} />}
+      {hasIcon && <BungieImage src={icon} />}
       <div>
         <div className={styles.itemPerkName}>{name}</div>
         <RichDestinyText text={description} />

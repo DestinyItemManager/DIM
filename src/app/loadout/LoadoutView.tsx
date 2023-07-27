@@ -35,7 +35,7 @@ export function getItemsAndSubclassFromLoadout(
 ): [
   items: ResolvedLoadoutItem[],
   subclass: ResolvedLoadoutItem | undefined,
-  warnitems: ResolvedLoadoutItem[]
+  warnitems: ResolvedLoadoutItem[],
 ] {
   let [items, warnitems] = getItemsFromLoadoutItems(
     itemCreationContext,

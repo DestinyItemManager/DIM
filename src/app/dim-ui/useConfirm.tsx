@@ -14,7 +14,7 @@ export interface ConfirmOpts {
  */
 export default function useConfirm(): [
   element: React.ReactNode,
-  confirm: (message: React.ReactNode, opts?: ConfirmOpts) => Promise<boolean>
+  confirm: (message: React.ReactNode, opts?: ConfirmOpts) => Promise<boolean>,
 ] {
   const [dialog, showDialog] = useDialog<
     ConfirmOpts & {

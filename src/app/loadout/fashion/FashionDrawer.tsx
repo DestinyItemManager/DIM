@@ -222,7 +222,7 @@ export default function FashionDrawer({
 
       return collectibleHash && defs.Collectible.get(collectibleHash)?.parentNodeHashes[0];
     });
-    delete groupedOrnaments['undefined'];
+    delete groupedOrnaments.undefined;
     const mostCommonOrnamentSet = _.maxBy(
       Object.entries(groupedOrnaments),
       ([_presentationHash, ornaments]) => ornaments.length

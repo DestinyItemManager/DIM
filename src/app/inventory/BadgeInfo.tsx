@@ -61,8 +61,6 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
   const badgeContent =
     (isBounty && `${Math.floor(100 * item.percentComplete)}%`) ||
     (isStackable && item.amount.toString()) ||
-    // totalArmorStat can be false, so optional chain is wrong here
-    // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
     (totalArmorStat && totalArmorStat.value.toString()) ||
     (isGeneric && item.primaryStat?.value.toString()) ||
     (item.classified && <ClassifiedNotes item={item} />);

@@ -116,7 +116,7 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
       existingWishLists?.wishListAndInfo?.wishListRolls?.length !==
       wishListAndInfo.wishListRolls.length
     ) {
-      dispatch(transformAndStoreWishList(wishListAndInfo));
+      await dispatch(transformAndStoreWishList(wishListAndInfo));
     } else {
       infoLog('wishlist', 'Refreshed wishlist, but it matched the one we already have');
       dispatch(touchWishLists());

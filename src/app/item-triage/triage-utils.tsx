@@ -231,7 +231,7 @@ function collectRelevantStatMaxes(
         thisItemCustomStatTotal += stat.base;
       }
     }
-    statMaxes['custom'] = Math.max(statMaxes['custom'], thisItemCustomStatTotal);
+    statMaxes.custom = Math.max(statMaxes.custom, thisItemCustomStatTotal);
   }
 
   return statMaxes;

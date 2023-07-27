@@ -1,3 +1,4 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
@@ -62,7 +63,7 @@ export default function Pursuits({ store }: { store: DimStore }) {
                 title={t(`Progress.${group}`, { metadata: { keys: 'progress' } })}
                 sectionId={'pursuits-' + group}
               >
-                <PursuitsGroup pursuits={pursuits[group]} store={store} />
+                <PursuitsGroup defs={defs} pursuits={pursuits[group]} store={store} />
               </CollapsibleTitle>
             </section>
           )
@@ -72,11 +73,13 @@ export default function Pursuits({ store }: { store: DimStore }) {
 }
 
 export function PursuitsGroup({
+  defs,
   store,
   pursuits,
   hideDescriptions,
   pursuitsInfo = pursuitsInfoFile,
 }: {
+  defs: D2ManifestDefinitions;
   store: DimStore;
   pursuits: DimItem[];
   hideDescriptions?: boolean;
@@ -98,7 +101,7 @@ export function PursuitsGroup({
           <Pursuit
             item={item}
             key={item.index}
-            searchHidden={!matchBountyFilters(item, bountyFilters, pursuitsInfo)}
+            searchHidden={!matchBountyFilters(defs, item, bountyFilters, pursuitsInfo)}
             hideDescription={hideDescriptions}
           />
         ))}
