@@ -19,6 +19,7 @@ import {
   DestinyClass,
   DestinyDamageTypeDefinition,
   DestinyDisplayPropertiesDefinition,
+  DestinyInventoryItemStatDefinition,
   ItemBindStatus,
   ItemLocation,
   ItemState,
@@ -47,7 +48,7 @@ const tiers = ['Unknown', 'Unknown', 'Common', 'Uncommon', 'Rare', 'Legendary', 
  * @return a promise for the list of items
  */
 export function processItems(
-  owner: D1Store,
+  owner: D1Store | undefined,
   items: D1ItemComponent[],
   defs: D1ManifestDefinitions,
   buckets: InventoryBuckets
@@ -62,7 +63,9 @@ export function processItems(
       reportException('Processing D1 item', e);
     }
     if (createdItem !== null) {
-      createdItem.owner = owner.id;
+      if (owner) {
+        createdItem.owner = owner.id;
+      }
       result.push(createdItem);
     } else {
       // the item failed to be created for some reason. 2 things can currently cause this:
@@ -71,7 +74,7 @@ export function processItems(
       // dummies and invisible items are not a big deal
       const bucketDef = defs.InventoryBucket[item.bucket];
       // if it's a named, non-invisible bucket, it may be a problem that the item wasn't generated
-      if (bucketDef.category !== BucketCategory.Invisible && bucketDef.bucketName) {
+      if (owner && bucketDef.category !== BucketCategory.Invisible && bucketDef.bucketName) {
         owner.hadErrors = true;
       }
     }
@@ -697,7 +700,7 @@ function buildStats(
 
   return _.sortBy(
     _.compact(
-      Object.values(itemDef.stats).map((stat) => {
+      Object.values(itemDef.stats).map((stat: D1Stat | DestinyInventoryItemStatDefinition) => {
         const def = statDefs.get(stat.statHash);
         if (!def) {
           return undefined;
