@@ -79,7 +79,7 @@
   max-width: 66%;
   position: absolute;
   right: ($item-border-width * 3);
-  bottom: calc(#{$badge-height} + (#{$item-border-width} * 2));
+  bottom: calc(#{$badge-height} + (#{$item-border-width} * 3));
   padding-bottom: $item-border-width;
   display: flex;
   flex-flow: row-reverse wrap-reverse;
