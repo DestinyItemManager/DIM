@@ -80,7 +80,6 @@ export default function LoadoutPopup({
   const language = useSelector(languageSelector);
   const previousLoadout = useSelector(previousLoadoutSelector(dimStore.id));
   const query = useSelector(querySelector);
-  // const searchFilter = useSelector(searchFilterSelector);
   const buckets = useSelector(bucketsSelector)!;
   const allItems = useSelector(allItemsSelector);
   const filteredItems = useSelector(filteredItemsSelector);
