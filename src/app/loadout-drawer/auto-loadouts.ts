@@ -285,7 +285,11 @@ export function randomLoadout(store: DimStore, allItems: DimItem[], filter: Item
 export function randomSubclassConfiguration(
   defs: D2ManifestDefinitions,
   item: DimItem
-): SocketOverrides {
+): SocketOverrides | undefined {
+  if (!item.sockets) {
+    return undefined;
+  }
+
   const socketOverrides: SocketOverrides = {};
   // Pick abilities
   const abilityAndSuperSockets = getSocketsByCategoryHashes(

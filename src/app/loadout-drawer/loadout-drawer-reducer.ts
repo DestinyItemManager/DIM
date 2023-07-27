@@ -675,7 +675,7 @@ export function randomizeLoadoutSubclass(
       )
     );
 
-    if (!newSubclass || !defs.isDestiny2()) {
+    if (!newSubclass) {
       return loadout;
     }
 
@@ -683,7 +683,7 @@ export function randomizeLoadoutSubclass(
       defs,
       newSubclass,
       true,
-      randomSubclassConfiguration(defs, newSubclass)
+      defs.isDestiny2() ? randomSubclassConfiguration(defs, newSubclass) : undefined
     )(loadout);
   };
 }
