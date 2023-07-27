@@ -3,8 +3,7 @@ import useDialog, { Body, Buttons, Title } from 'app/dim-ui/useDialog';
 import { t } from 'app/i18next-t';
 import { userGuideUrl } from 'app/shell/links';
 import { isWindows } from 'app/utils/browsers';
-import _ from 'lodash';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styles from './LoadoutPopupRandomize.m.scss';
 
 export interface RandomizeCheckboxes {
@@ -23,6 +22,14 @@ let lastOptions: RandomizeCheckboxes = {
   mods: false,
   subclass: false,
 };
+
+const checkBoxes: { label: string; d2Only?: boolean; prop: keyof RandomizeCheckboxes }[] = [
+  { label: 'Subclass', prop: 'subclass' },
+  { label: t('Bucket.Weapons'), prop: 'weapons' },
+  { label: t('Bucket.Armor'), prop: 'armor' },
+  { label: t('Bucket.General'), prop: 'general' },
+  { label: t('Loadouts.Mods'), prop: 'mods', d2Only: true },
+];
 
 export function useRandomizeLoadout(): [
   element: React.ReactNode,
@@ -55,18 +62,6 @@ function RandomizeLoadoutDialog({
     lastOptions = options;
     close(options);
   }, [close, options]);
-
-  const checkBoxes: { label: string; prop: keyof RandomizeCheckboxes }[] = useMemo(
-    () =>
-      _.compact([
-        { label: t('Bucket.Weapons'), prop: 'weapons' },
-        { label: t('Bucket.Armor'), prop: 'armor' },
-        { label: t('Bucket.General'), prop: 'general' },
-        d2 && { label: t('Loadouts.Mods'), prop: 'mods' },
-        { label: 'Subclass', prop: 'subclass' },
-      ]),
-    [d2]
-  );
 
   const okButton = (
     <button
@@ -103,21 +98,27 @@ function RandomizeLoadoutDialog({
         <h2>{t('Loadouts.Randomize')}</h2>
       </Title>
       <Body>
-        {checkBoxes.map(({ prop, label }) => (
-          <React.Fragment key={prop}>
-            <input
-              name={prop}
-              type="checkbox"
-              checked={options[prop]}
-              onChange={(event) =>
-                setOptions((oldOptions) => ({ ...oldOptions, [prop]: event.target.checked }))
-              }
-            />
-            <label htmlFor={prop} title={t('FarmingMode.MakeRoom.Tooltip')}>
-              {label}
-            </label>
-          </React.Fragment>
-        ))}
+        {checkBoxes.map(
+          ({ prop, label, d2Only }) =>
+            (!d2Only || d2) && (
+              <React.Fragment key={prop}>
+                <div className={styles.checkboxRow}>
+                  <input
+                    name={prop}
+                    type="checkbox"
+                    checked={options[prop]}
+                    onChange={(event) =>
+                      setOptions((oldOptions) => ({ ...oldOptions, [prop]: event.target.checked }))
+                    }
+                  />
+                  <label htmlFor={prop} title={t('FarmingMode.MakeRoom.Tooltip')}>
+                    {label}
+                  </label>
+                </div>
+                <br />
+              </React.Fragment>
+            )
+        )}
         {description}
       </Body>
       <Buttons>
