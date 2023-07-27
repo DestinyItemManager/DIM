@@ -1,5 +1,5 @@
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
-import { I18nKey, t } from 'app/i18next-t';
+import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { useD1Definitions } from 'app/manifest/selectors';
 import Objective from 'app/progress/Objective';
@@ -79,7 +79,7 @@ export default function Activities({ account }: Props) {
       tier.activityData.recommendedLight === 390
         ? '390'
         : tier.tierDisplayName
-        ? t(`Activities.${tier.tierDisplayName}` as I18nKey, {
+        ? t(`Activities.${tier.tierDisplayName}`, {
             metadata: { keys: 'difficulty' },
           })
         : tierDef.activityName;

@@ -125,7 +125,7 @@ export interface DimCharacterStat {
   description: string;
 
   /** A localized description of this stat's effect. */
-  effect?: string;
+  effect?: 'Grenade' | 'Melee' | 'Super';
   /** Cooldown time for the associated ability. */
   cooldown?: string;
 

@@ -1,5 +1,5 @@
 import { PressTip } from 'app/dim-ui/PressTip';
-import { I18nKey, t } from 'app/i18next-t';
+import { t } from 'app/i18next-t';
 import type { DimStore } from 'app/inventory/store-types';
 import { getD1CharacterStatTiers, statsWithTiers } from 'app/inventory/store/character-utils';
 import { percent } from 'app/shell/formatters';
@@ -26,7 +26,7 @@ export default function D1CharacterStats({ stats }: Props) {
 
       let cooldown = stat.cooldown || '';
       if (cooldown) {
-        cooldown = t(`Cooldown.${stat.effect}` as I18nKey, {
+        cooldown = t(`Cooldown.${stat.effect!}`, {
           cooldown,
           metadata: { keys: 'cooldowns' },
         });
