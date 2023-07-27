@@ -256,15 +256,26 @@ const randomLoadoutTypes = new Set<BucketHashes | D1BucketHashes>([
   BucketHashes.ClassArmor,
   D1BucketHashes.Artifact,
   BucketHashes.Ghost,
+  BucketHashes.Vehicle,
+  BucketHashes.Ships,
+  BucketHashes.Emblems,
 ]);
 
 /**
  * Create a random loadout from items across the whole inventory. Optionally filter items with the filter method.
  */
 export function randomLoadout(store: DimStore, allItems: DimItem[], filter: ItemFilter) {
+  // Do not allow random loadouts to pull cosmetics from other characters or the vault because it's obnoxious
+  const onAcceptableRandomizeStore = (item: DimItem) =>
+    item.bucket.sort !== 'General' || item.owner === store.id;
+
   // Any item equippable by this character in the given types
   const applicableItems = allItems.filter(
-    (i) => randomLoadoutTypes.has(i.bucket.hash) && itemCanBeEquippedBy(i, store) && filter(i)
+    (i) =>
+      randomLoadoutTypes.has(i.bucket.hash) &&
+      itemCanBeEquippedBy(i, store) &&
+      onAcceptableRandomizeStore(i) &&
+      filter(i)
   );
 
   // Use "random" as the value function
