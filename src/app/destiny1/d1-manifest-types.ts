@@ -154,7 +154,7 @@ export interface D1DamageTypeDefinition {
   redacted: boolean;
 }
 
-interface D1TalentGridNodeStepDefinition {
+export interface D1TalentGridNodeStepDefinition {
   stepIndex: number;
   nodeStepHash: number;
   nodeStepName?: string;
@@ -181,7 +181,7 @@ interface D1TalentGridNodeStepDefinition {
   affectsLevel: boolean;
 }
 
-interface D1TalentGridNodeDefinition {
+export interface D1TalentGridNodeDefinition {
   nodeIndex: number;
   nodeHash: number;
   row: number;
@@ -665,7 +665,7 @@ export interface D1VendorDefinition {
 }
 
 export interface D1CharacterWithInventory {
-  character: D1MungedCharacter | D1Vault;
+  character: D1Vault | D1MungedCharacter;
   data: D1Inventory;
 }
 
@@ -680,6 +680,10 @@ export interface D1MungedCharacter {
 export interface D1Vault {
   id: 'vault';
   base: null;
+}
+
+export function isD1Vault(character: D1Vault | D1MungedCharacter): character is D1Vault {
+  return character.id === 'vault';
 }
 
 export interface D1GetAccountResponse {
@@ -743,7 +747,7 @@ export interface D1LevelProgression {
 
 export interface D1Inventory {
   buckets: D1Buckets;
-  currencies: DestinyItemQuantity[];
+  currencies: { itemHash: number; value: number }[];
 }
 
 export interface D1Buckets {

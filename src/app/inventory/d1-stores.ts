@@ -2,10 +2,9 @@ import { handleAuthErrors } from 'app/accounts/actions';
 import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import {
-  D1CharacterResponse,
   D1CharacterWithInventory,
   D1ItemComponent,
-  D1VaultResponse,
+  isD1Vault,
 } from 'app/destiny1/d1-manifest-types';
 import { ThunkResult } from 'app/store/types';
 import { errorLog, infoLog } from 'app/utils/log';
@@ -97,9 +96,9 @@ export function loadStores(): ThunkResult<D1Store[] | undefined> {
   };
 }
 
-function processCurrencies(rawStores: D1CharacterResponse[], defs: D1ManifestDefinitions) {
+function processCurrencies(rawStores: D1CharacterWithInventory[], defs: D1ManifestDefinitions) {
   try {
-    return rawStores[0].character.base.inventory.currencies.map((c) => {
+    return rawStores[0].character.base!.inventory.currencies.map((c) => {
       const itemDef = defs.InventoryItem.get(c.itemHash);
       return {
         itemHash: c.itemHash,
@@ -122,7 +121,7 @@ function processCurrencies(rawStores: D1CharacterResponse[], defs: D1ManifestDef
  * Process a single store from its raw form to a DIM store, with all the items.
  */
 function processStore(
-  raw: D1CharacterResponse | D1VaultResponse,
+  raw: D1CharacterWithInventory,
   defs: D1ManifestDefinitions,
   buckets: InventoryBuckets,
   lastPlayedDate: Date
@@ -133,12 +132,12 @@ function processStore(
 
   let store: D1Store;
   let rawItems: D1ItemComponent[];
-  if (raw.id === 'vault') {
-    const result = makeVault(raw as D1VaultResponse);
+  if (isD1Vault(raw.character)) {
+    const result = makeVault(raw);
     store = result.store;
     rawItems = result.items;
   } else {
-    const result = makeCharacter(raw as D1CharacterResponse, defs, lastPlayedDate);
+    const result = makeCharacter(raw, defs, lastPlayedDate);
     store = result.store;
     rawItems = result.items;
   }
@@ -154,12 +153,11 @@ function processStore(
  */
 function findLastPlayedDate(rawStores: D1CharacterWithInventory[]): Date {
   return Object.values(rawStores).reduce((memo, rawStore) => {
-    const character = rawStore.character;
-    if (character.id === 'vault') {
+    if (isD1Vault(rawStore.character)) {
       return memo;
     }
 
-    const d1 = new Date(character.base.characterBase.dateLastPlayed);
+    const d1 = new Date(rawStore.character.base.characterBase.dateLastPlayed);
 
     return memo ? (d1 >= memo ? d1 : memo) : d1;
   }, new Date(0));

@@ -1,8 +1,4 @@
-import {
-  D1CharacterResponse,
-  D1ItemComponent,
-  D1VaultResponse,
-} from 'app/destiny1/d1-manifest-types';
+import { D1CharacterWithInventory, D1ItemComponent } from 'app/destiny1/d1-manifest-types';
 import { t } from 'app/i18next-t';
 import { HashLookup } from 'app/utils/util-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -30,7 +26,7 @@ const progressionMeta: HashLookup<{ label: string; order: number }> = {
 };
 
 export function makeCharacter(
-  raw: D1CharacterResponse,
+  raw: D1CharacterWithInventory,
   defs: D1ManifestDefinitions,
   mostRecentLastPlayed: Date
 ): {
@@ -128,7 +124,7 @@ export function makeCharacter(
   };
 }
 
-export function makeVault(raw: D1VaultResponse): {
+export function makeVault(raw: D1CharacterWithInventory): {
   store: D1Store;
   items: D1ItemComponent[];
 } {
