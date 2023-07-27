@@ -19,6 +19,7 @@ import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { inGameLoadoutItemsFromEquipped } from 'app/loadout-drawer/loadout-utils';
 import { showNotification } from 'app/notifications/notifications';
 import { ThunkResult } from 'app/store/types';
+import { errorMessage } from 'app/utils/util';
 import { inGameLoadoutDeleted, inGameLoadoutUpdated } from './actions';
 import { getItemsFromInGameLoadout } from './ingame-loadout-utils';
 
@@ -89,7 +90,7 @@ export function deleteInGameLoadout(loadout: InGameLoadout): ThunkResult {
       showNotification({
         type: 'error',
         title: t('InGameLoadout.DeleteFailed'),
-        body: e.message,
+        body: errorMessage(e),
       });
     }
   };
@@ -105,7 +106,7 @@ export function editInGameLoadout(loadout: InGameLoadout): ThunkResult {
       showNotification({
         type: 'error',
         title: t('InGameLoadout.EditFailed'),
-        body: e.message,
+        body: errorMessage(e),
       });
     }
   };
@@ -123,7 +124,7 @@ export function snapshotInGameLoadout(loadout: InGameLoadout): ThunkResult {
       showNotification({
         type: 'error',
         title: t('InGameLoadout.SnapshotFailed'),
-        body: e.message,
+        body: errorMessage(e),
       });
     }
   };

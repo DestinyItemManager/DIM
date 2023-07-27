@@ -18,6 +18,8 @@
 <string> ::= WORD | "\"" WORD {" " WORD} "\"" | "'" WORD {" " WORD} "'\"'"
 */
 
+import { convertToError } from 'app/utils/util';
+
 /* **** Parser **** */
 
 interface QueryASTCommon {
@@ -263,7 +265,7 @@ export function parseQuery(query: string): QueryAST {
         }
       }
     } catch (e) {
-      ast.error = e;
+      ast.error = convertToError(e);
     }
 
     return ast;
@@ -275,7 +277,7 @@ export function parseQuery(query: string): QueryAST {
       return { op: 'noop', startIndex: 0, length: 0 };
     }
   } catch (e) {
-    return { op: 'noop', error: e, startIndex: 0, length: 0 };
+    return { op: 'noop', error: convertToError(e), startIndex: 0, length: 0 };
   }
   const ast = parse(tokens);
   return ast;

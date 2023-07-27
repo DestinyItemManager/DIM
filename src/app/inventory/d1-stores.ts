@@ -8,6 +8,7 @@ import {
 } from 'app/destiny1/d1-manifest-types';
 import { ThunkResult } from 'app/store/types';
 import { errorLog, infoLog } from 'app/utils/log';
+import { convertToError, errorMessage } from 'app/utils/util';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { getStores } from '../bungie-api/destiny1-api';
@@ -80,9 +81,9 @@ export function loadStores(): ThunkResult<D1Store[] | undefined> {
 
         if (storesSelector(getState()).length > 0) {
           // don't replace their inventory with the error, just notify
-          showNotification(bungieErrorToaster(e));
+          showNotification(bungieErrorToaster(errorMessage(e)));
         } else {
-          dispatch(error(e));
+          dispatch(error(convertToError(e)));
         }
         // It's important that we swallow all errors here - otherwise
         // our observable will fail on the first error. We could work

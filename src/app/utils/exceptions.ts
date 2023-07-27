@@ -11,7 +11,7 @@ import { errorLog } from './log';
 // TODO: rename this file "sentry"
 
 /** Sentry.io exception reporting */
-export let reportException = (name: string, e: Error, errorInfo?: Record<string, unknown>) => {
+export let reportException = (name: string, e: any, errorInfo?: Record<string, unknown>) => {
   errorLog(
     'exception',
     name,
@@ -133,7 +133,7 @@ if ($featureFlags.sentry) {
   // Capture locale
   setTag('lang', defaultLanguage());
 
-  reportException = (name: string, e: Error, errorInfo?: Record<string, unknown>) => {
+  reportException = (name: string, e: any, errorInfo?: Record<string, unknown>) => {
     // TODO: we can also do this in some situations to gather more feedback from users
     // Sentry.showReportDialog();
     withScope((scope) => {

@@ -12,7 +12,7 @@ import { refresh$ } from 'app/shell/refresh-events';
 import { get, set } from 'app/storage/idb-keyval';
 import { RootState, ThunkResult } from 'app/store/types';
 import { errorLog, infoLog } from 'app/utils/log';
-import { delay } from 'app/utils/util';
+import { convertToError, delay, errorMessage } from 'app/utils/util';
 import { deepEqual } from 'fast-equals';
 import _ from 'lodash';
 import { AnyAction } from 'redux';
@@ -226,11 +226,14 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
 
         // Quickly heal from being failure backoff
         getProfileBackoff = Math.floor(getProfileBackoff / 2);
-      } catch (e) {
+      } catch (err) {
         // Only notify error once
         if (!getState().dimApi.profileLoadedError) {
-          showProfileLoadErrorNotification(e);
+          showProfileLoadErrorNotification(err);
         }
+
+        const e = convertToError(err);
+
         dispatch(profileLoadError(e));
 
         errorLog('loadDimApiData', 'Unable to get profile from DIM API', e);
@@ -400,12 +403,14 @@ export function deleteAllApiData(): ThunkResult<DeleteAllResponse['deleted']> {
   };
 }
 
-function showProfileLoadErrorNotification(e: Error) {
+function showProfileLoadErrorNotification(e: unknown) {
   showNotification(
-    dimErrorToaster(t('Storage.ProfileErrorTitle'), t('Storage.ProfileErrorBody'), e)
+    dimErrorToaster(t('Storage.ProfileErrorTitle'), t('Storage.ProfileErrorBody'), errorMessage(e))
   );
 }
 
-function showUpdateErrorNotification(e: Error) {
-  showNotification(dimErrorToaster(t('Storage.UpdateErrorTitle'), t('Storage.UpdateErrorBody'), e));
+function showUpdateErrorNotification(e: unknown) {
+  showNotification(
+    dimErrorToaster(t('Storage.UpdateErrorTitle'), t('Storage.UpdateErrorBody'), errorMessage(e))
+  );
 }

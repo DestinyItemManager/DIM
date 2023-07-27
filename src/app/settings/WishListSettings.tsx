@@ -3,6 +3,7 @@ import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import { wishListGuideLink } from 'app/shell/links';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { errorMessage } from 'app/utils/util';
 import { fetchWishList, transformAndStoreWishList } from 'app/wishlists/wishlist-fetch';
 import { toWishList } from 'app/wishlists/wishlist-file';
 import React, { useEffect, useState } from 'react';
@@ -56,7 +57,7 @@ export default function WishListSettings() {
       showNotification({
         type: 'error',
         title: t('WishListRoll.Header'),
-        body: t('WishListRoll.ImportError', { error: e.message }),
+        body: t('WishListRoll.ImportError', { error: errorMessage(e) }),
       });
     }
   };

@@ -1,6 +1,7 @@
 import { BungieError } from 'app/bungie-api/http-client';
 import { t } from 'app/i18next-t';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
+import { convertToError } from './util';
 
 /**
  * An internal error that captures more error info for reporting.
@@ -20,8 +21,8 @@ export class DimError extends Error {
     this.name = 'DimError';
   }
 
-  public withError(error: Error): DimError {
-    this.cause = error;
+  public withError(error: unknown): DimError {
+    this.cause = convertToError(error);
     return this;
   }
 

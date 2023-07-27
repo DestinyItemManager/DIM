@@ -10,6 +10,7 @@ import { Settings, initialSettingsState } from 'app/settings/initial-settings';
 import { ThunkResult } from 'app/store/types';
 import { errorLog, infoLog } from 'app/utils/log';
 import { observeStore } from 'app/utils/redux-utils';
+import { errorMessage } from 'app/utils/util';
 import _ from 'lodash';
 import { loadDimApiData } from './actions';
 import { profileLoadedFromIDB } from './basic-actions';
@@ -45,7 +46,7 @@ export function importDataBackup(data: ExportResponse, silent = false): ThunkRes
       } catch (e) {
         if (!silent) {
           errorLog('importLegacyData', 'Error importing legacy data into DIM API', e);
-          showImportFailedNotification(e);
+          showImportFailedNotification(errorMessage(e));
         }
         return;
       }
@@ -65,7 +66,7 @@ export function importDataBackup(data: ExportResponse, silent = false): ThunkRes
             'Error importing legacy data into DIM - no data found in import file. (no settings upgrade/API upload attempted. DIM Sync is turned off)',
             data
           );
-          showImportFailedNotification(new Error(t('Storage.ImportNotification.NoData')));
+          showImportFailedNotification(t('Storage.ImportNotification.NoData'));
         }
         return;
       }
@@ -176,11 +177,11 @@ function showImportSuccessNotification(
   });
 }
 
-function showImportFailedNotification(e: Error) {
+function showImportFailedNotification(message: string) {
   showNotification({
     type: 'error',
     title: t('Storage.ImportNotification.FailedTitle'),
-    body: t('Storage.ImportNotification.FailedBody', { error: e.message }),
+    body: t('Storage.ImportNotification.FailedBody', { error: message }),
     duration: 15000,
   });
 }

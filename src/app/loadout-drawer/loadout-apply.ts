@@ -65,7 +65,7 @@ import {
   plugFitsIntoSocket,
   subclassAbilitySocketCategoryHashes,
 } from 'app/utils/socket-utils';
-import { count } from 'app/utils/util';
+import { convertToError, count, errorMessage } from 'app/utils/util';
 import { HashLookup } from 'app/utils/util-types';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -466,7 +466,8 @@ function doApplyLoadout(
                 }
               })
             );
-          } catch (e) {
+          } catch (err) {
+            const e = convertToError(err);
             if (e instanceof CanceledError) {
               throw e;
             }
@@ -516,7 +517,8 @@ function doApplyLoadout(
               })
             );
           }
-        } catch (e) {
+        } catch (err) {
+          const e = convertToError(err);
           if (e instanceof CanceledError) {
             throw e;
           }
@@ -573,7 +575,8 @@ function doApplyLoadout(
               }
             })
           );
-        } catch (e) {
+        } catch (err) {
+          const e = convertToError(err);
           if (e instanceof CanceledError) {
             throw e;
           }
@@ -928,7 +931,8 @@ export function clearItemsOffCharacter(
             moveSession
           )
         );
-      } catch (e) {
+      } catch (err) {
+        const e = convertToError(err);
         if (e instanceof CanceledError) {
           throw e;
         }
@@ -1357,7 +1361,8 @@ function equipModsToItem(
         try {
           await dispatch(applyMod(item, socket, mod));
           onSuccess(assignment);
-        } catch (e) {
+        } catch (err) {
+          const e = convertToError(err);
           const equipNotPossible =
             e instanceof DimError && checkEquipNotPossible(e.bungieErrorCode());
           onFailure(assignment, e, equipNotPossible);
@@ -1403,7 +1408,7 @@ function applyMod(
       throw new DimError(
         'AWA.ErrorMessage',
         t('AWA.ErrorMessage', {
-          error: e.message,
+          error: errorMessage(e),
           item: item.name,
           plug: plugName,
         })
