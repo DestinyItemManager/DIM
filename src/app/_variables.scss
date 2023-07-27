@@ -128,41 +128,8 @@ $search-bar-height: 28px;
   // Overlay
   $light-stripe: rgba(255, 255, 255, $light-stripe);
   $dark-stripe: rgba(0, 0, 0, $dark-stripe);
-  background:
-    linear-gradient(rgba(0, 0, 0, $top-gradient) 0%, transparent 33%),
-    linear-gradient(transparent 50%, var(--theme-item-polaroid-masterwork-border) 200%),
-    repeating-linear-gradient(
-        to bottom right,
-        #{$light-stripe} 0%,
-        #{$light-stripe} 5%,
-        #{$dark-stripe} 5%,
-        #{$dark-stripe} 10%
-      )
-      bottom right,
-    repeating-linear-gradient(
-        to bottom left,
-        #{$light-stripe} 0%,
-        #{$light-stripe} 5%,
-        #{$dark-stripe} 5%,
-        #{$dark-stripe} 10%
-      )
-      bottom left,
-    repeating-linear-gradient(
-        to top left,
-        #{$light-stripe} 0%,
-        #{$light-stripe} 5%,
-        #{$dark-stripe} 5%,
-        #{$dark-stripe} 10%
-      )
-      top left,
-    repeating-linear-gradient(
-        to top right,
-        #{$light-stripe} 0%,
-        #{$light-stripe} 5%,
-        #{$dark-stripe} 5%,
-        #{$dark-stripe} 10%
-      )
-      top right;
+  background: linear-gradient(rgba(0, 0, 0, $top-gradient) 0%, transparent 33%),
+    linear-gradient(transparent 65%, var(--theme-item-polaroid-masterwork-border) 180%);
   background-repeat: no-repeat;
   background-size:
     100%,
@@ -171,32 +138,6 @@ $search-bar-height: 28px;
     50% 50%,
     50% 50%,
     50% 50%;
-
-  // Border
-  &::before {
-    content: '';
-    position: absolute;
-    box-sizing: border-box;
-    height: calc(var(--item-size) - #{2 * $item-border-width});
-    width: calc(var(--item-size) - #{2 * $item-border-width});
-    left: 0;
-    top: 0;
-
-    border-width: 1px;
-    border-style: solid;
-    border-image-slice: 1;
-    border-image-source: conic-gradient(
-      from 45deg at 50% 50%,
-      var(--theme-item-polaroid-masterwork-border) 0%,
-      transparent 24%,
-      transparent 25%,
-      var(--theme-item-polaroid-masterwork-border) 50%,
-      var(--theme-item-polaroid-masterwork-border) 50%,
-      transparent 74%,
-      transparent 75%,
-      var(--theme-item-polaroid-masterwork-border) 100%
-    );
-  }
 }
 
 /*
