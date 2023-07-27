@@ -134,7 +134,6 @@ export interface DimCharacterStat {
 }
 
 export interface D1Progression extends DestinyProgression {
-  /** The faction definition associated with this progress. */
   name: string;
   scope: number;
   repeatLastStep: boolean;
