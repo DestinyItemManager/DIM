@@ -647,11 +647,16 @@ export interface D1VendorDefinition {
   redacted: boolean;
 }
 
+export interface D1StoresData {
+  characters: D1CharacterData[];
+  profileInventory: D1Inventory;
+  vaultInventory: D1VaultInventory;
+}
+
 export type D1CharacterWithInventory =
   | {
       type: 'character';
-      character: D1MungedCharacter;
-      data: D1Inventory;
+      character: D1CharacterData;
     }
   | {
       type: 'vault';
@@ -659,10 +664,10 @@ export type D1CharacterWithInventory =
       data: D1VaultInventory;
     };
 
-export interface D1MungedCharacter {
+export interface D1CharacterData {
   id: string;
-  base: D1Character & { inventory: D1Inventory };
-  dateLastPlayed?: string;
+  character: D1Character;
+  inventory: D1Inventory;
   progression?: D1GetProgressionResponse['data'];
   advisors?: D1GetAdvisorsResponse['data'];
 }

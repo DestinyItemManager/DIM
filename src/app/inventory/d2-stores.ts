@@ -78,18 +78,18 @@ export function updateCharacters(): ThunkResult {
         : [];
     } else {
       const profileInfo = await d1GetCharacters(account);
-      characters = profileInfo.map((character) => ({
-        characterId: character.id,
-        level: character.base.characterLevel,
-        powerLevel: character.base.characterBase.powerLevel,
-        percentToNextLevel: character.base.percentToNextLevel / 100,
-        background: bungieNetPath(character.base.backgroundPath),
-        icon: bungieNetPath(character.base.emblemPath),
-        stats: getD1CharacterStatsData(
-          getState().manifest.d1Manifest!,
-          character.base.characterBase
-        ),
-      }));
+      characters = profileInfo.characters.map((character) => {
+        const characterBase = character.characterBase;
+        return {
+          characterId: characterBase.characterId,
+          level: character.characterLevel,
+          powerLevel: characterBase.powerLevel,
+          percentToNextLevel: character.percentToNextLevel / 100,
+          background: bungieNetPath(character.backgroundPath),
+          icon: bungieNetPath(character.emblemPath),
+          stats: getD1CharacterStatsData(getState().manifest.d1Manifest!, characterBase),
+        };
+      });
     }
 
     // If we switched account since starting this, give up

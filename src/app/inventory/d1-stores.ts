@@ -1,7 +1,12 @@
 import { handleAuthErrors } from 'app/accounts/actions';
 import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
-import { D1CharacterWithInventory, D1ItemComponent } from 'app/destiny1/d1-manifest-types';
+import {
+  D1CharacterData,
+  D1Inventory,
+  D1ItemComponent,
+  D1VaultInventory,
+} from 'app/destiny1/d1-manifest-types';
 import { ThunkResult } from 'app/store/types';
 import { errorLog, infoLog } from 'app/utils/log';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
@@ -40,19 +45,24 @@ export function loadStores(): ThunkResult<D1Store[] | undefined> {
       try {
         resetItemIndexGenerator();
 
-        const [defs, , rawStores] = await Promise.all([
+        const [defs, , { characters, profileInventory, vaultInventory }] = await Promise.all([
           dispatch(getDefinitions()) as any as Promise<D1ManifestDefinitions>,
           dispatch(loadNewItems(account)),
           getStores(account),
         ]);
 
-        const lastPlayedDate = findLastPlayedDate(rawStores);
+        const lastPlayedDate = findLastPlayedDate(characters);
         const buckets = d1BucketsSelector(getState())!;
 
-        const stores = _.compact(
-          rawStores.map((raw) => processStore(raw, defs, buckets, lastPlayedDate))
-        );
-        const currencies = processCurrencies(rawStores, defs);
+        const stores = [
+          ..._.compact(
+            characters.map((characterData) =>
+              processCharacter(characterData, defs, buckets, lastPlayedDate)
+            )
+          ),
+          processVault(vaultInventory, defs, buckets),
+        ];
+        const currencies = processCurrencies(profileInventory, defs);
 
         // If we switched account since starting this, give up
         if (account !== currentAccountSelector(getState())) {
@@ -92,14 +102,9 @@ export function loadStores(): ThunkResult<D1Store[] | undefined> {
   };
 }
 
-function processCurrencies(rawStores: D1CharacterWithInventory[], defs: D1ManifestDefinitions) {
-  const firstCharacter = rawStores[0];
-  if (firstCharacter.type !== 'character') {
-    throw new Error('Expected first store to be a character');
-  }
-
+function processCurrencies(profileInventory: D1Inventory, defs: D1ManifestDefinitions) {
   try {
-    return firstCharacter.character.base.inventory.currencies.map((c) => {
+    return profileInventory.currencies.map((c) => {
       const itemDef = defs.InventoryItem.get(c.itemHash);
       return {
         itemHash: c.itemHash,
@@ -121,44 +126,59 @@ function processCurrencies(rawStores: D1CharacterWithInventory[], defs: D1Manife
 /**
  * Process a single store from its raw form to a DIM store, with all the items.
  */
-function processStore(
-  raw: D1CharacterWithInventory,
+function processCharacter(
+  characterData: D1CharacterData,
   defs: D1ManifestDefinitions,
   buckets: InventoryBuckets,
   lastPlayedDate: Date
 ) {
-  if (!raw) {
-    return undefined;
+  const store = makeCharacter(characterData, defs, lastPlayedDate);
+
+  let items: D1ItemComponent[] = [];
+  for (const buckets of Object.values(characterData.inventory.buckets)) {
+    for (const bucket of buckets) {
+      for (const item of bucket.items) {
+        item.bucket = bucket.bucketHash;
+      }
+      items = items.concat(bucket.items);
+    }
   }
 
-  let store: D1Store;
-  let rawItems: D1ItemComponent[];
-  if (raw.type === 'vault') {
-    const result = makeVault(raw.data);
-    store = result.store;
-    rawItems = result.items;
-  } else {
-    const result = makeCharacter(raw.character, raw.data, defs, lastPlayedDate);
-    store = result.store;
-    rawItems = result.items;
+  store.items = processItems(store, items, defs, buckets);
+  store.hadErrors = items.length !== store.items.length;
+  return store;
+}
+
+/**
+ * Process a single store from its raw form to a DIM store, with all the items.
+ */
+function processVault(
+  vaultInventory: D1VaultInventory,
+  defs: D1ManifestDefinitions,
+  buckets: InventoryBuckets
+) {
+  const store = makeVault();
+
+  let items: D1ItemComponent[] = [];
+
+  for (const bucket of Object.values(vaultInventory.buckets)) {
+    for (const item of bucket.items) {
+      item.bucket = bucket.bucketHash;
+    }
+    items = items.concat(bucket.items);
   }
 
-  const items = processItems(store, rawItems, defs, buckets);
-  store.items = items;
-  store.hadErrors = rawItems.length !== items.length;
+  store.items = processItems(store, items, defs, buckets);
+  store.hadErrors = items.length !== store.items.length;
   return store;
 }
 
 /**
  * Find the date of the most recently played character.
  */
-function findLastPlayedDate(rawStores: D1CharacterWithInventory[]): Date {
-  return Object.values(rawStores).reduce((memo, rawStore) => {
-    if (rawStore.type === 'vault') {
-      return memo;
-    }
-
-    const d1 = new Date(rawStore.character.base.characterBase.dateLastPlayed);
+function findLastPlayedDate(characterData: D1CharacterData[]): Date {
+  return characterData.reduce((memo, characterData) => {
+    const d1 = new Date(characterData.character.characterBase.dateLastPlayed);
 
     return memo ? (d1 >= memo ? d1 : memo) : d1;
   }, new Date(0));

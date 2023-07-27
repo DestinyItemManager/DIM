@@ -1,6 +1,6 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { D1MungedCharacter } from 'app/destiny1/d1-manifest-types';
+import { D1Character } from 'app/destiny1/d1-manifest-types';
 import { t } from 'app/i18next-t';
 import {
   battleNetIcon,
@@ -196,14 +196,14 @@ export async function generatePlatforms(
 
 async function findD1Characters(account: DestinyAccount): Promise<DestinyAccount | null> {
   try {
-    const response = await getCharacters(account);
-    if (response?.length) {
+    const { characters } = await getCharacters(account);
+    if (characters?.length) {
       return {
         ...account,
         destinyVersion: 1,
         // D1 didn't support cross-save!
         platforms: [account.originalPlatformType],
-        lastPlayed: getLastPlayedD1Character(response),
+        lastPlayed: getLastPlayedD1Character(characters),
       };
     }
     return null;
@@ -232,13 +232,9 @@ async function findD1Characters(account: DestinyAccount): Promise<DestinyAccount
 /**
  * Find the date of the most recently played character.
  */
-function getLastPlayedD1Character(response: D1MungedCharacter[]): Date {
-  return response.reduce((memo, rawStore) => {
-    if (rawStore.id === 'vault') {
-      return memo;
-    }
-
-    const d1 = new Date(rawStore.dateLastPlayed ?? 0);
+function getLastPlayedD1Character(characters: D1Character[]): Date {
+  return characters.reduce((memo, character) => {
+    const d1 = new Date(character.characterBase.dateLastPlayed ?? 0);
 
     return memo ? (d1 >= memo ? d1 : memo) : d1;
   }, new Date(0));

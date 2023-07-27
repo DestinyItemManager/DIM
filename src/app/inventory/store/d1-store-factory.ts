@@ -1,9 +1,4 @@
-import {
-  D1Inventory,
-  D1ItemComponent,
-  D1MungedCharacter,
-  D1VaultInventory,
-} from 'app/destiny1/d1-manifest-types';
+import { D1CharacterData } from 'app/destiny1/d1-manifest-types';
 import { t } from 'app/i18next-t';
 import { HashLookup } from 'app/utils/util-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -31,15 +26,11 @@ const progressionMeta: HashLookup<{ label: string; order: number }> = {
 };
 
 export function makeCharacter(
-  characterComponent: D1MungedCharacter,
-  inventory: D1Inventory,
+  characterComponent: D1CharacterData,
   defs: D1ManifestDefinitions,
   mostRecentLastPlayed: Date
-): {
-  store: D1Store;
-  items: D1ItemComponent[];
-} {
-  const character = characterComponent.base;
+) {
+  const character = characterComponent.character;
   const race = defs.Race[character.characterBase.raceHash];
   const klass = defs.Class[character.characterBase.classHash];
   let genderRace = '';
@@ -104,36 +95,10 @@ export function makeCharacter(
     hadErrors: false,
   };
 
-  let items: D1ItemComponent[] = [];
-  for (const buckets of Object.values(inventory.buckets)) {
-    for (const bucket of buckets) {
-      for (const item of bucket.items) {
-        item.bucket = bucket.bucketHash;
-      }
-      items = items.concat(bucket.items);
-    }
-  }
-
-  if (_.has(character.inventory.buckets, 'Invisible')) {
-    const buckets = character.inventory.buckets.Invisible;
-    for (const bucket of buckets) {
-      for (const item of bucket.items) {
-        item.bucket = bucket.bucketHash;
-      }
-      items = items.concat(bucket.items);
-    }
-  }
-
-  return {
-    store,
-    items,
-  };
+  return store;
 }
 
-export function makeVault(inventory: D1VaultInventory): {
-  store: D1Store;
-  items: D1ItemComponent[];
-} {
+export function makeVault() {
   const store: D1Store = {
     destinyVersion: 1,
     id: 'vault',
@@ -165,18 +130,5 @@ export function makeVault(inventory: D1VaultInventory): {
     stats: [],
     hadErrors: false,
   };
-
-  let items: D1ItemComponent[] = [];
-
-  for (const bucket of Object.values(inventory.buckets)) {
-    for (const item of bucket.items) {
-      item.bucket = bucket.bucketHash;
-    }
-    items = items.concat(bucket.items);
-  }
-
-  return {
-    store,
-    items,
-  };
+  return store;
 }

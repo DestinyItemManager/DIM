@@ -1,5 +1,5 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
-import { D1MungedCharacter, D1StatLabel } from 'app/destiny1/d1-manifest-types';
+import { D1Character, D1StatLabel } from 'app/destiny1/d1-manifest-types';
 import { warnLog } from 'app/utils/log';
 import { StatHashes } from 'data/d2/generated-enums';
 import disciplineIcon from 'images/discipline.png';
@@ -107,7 +107,7 @@ const stats: D1StatLabel[] = [
  */
 export function getCharacterStatsData(
   defs: D1ManifestDefinitions,
-  data: D1MungedCharacter['base']['characterBase']
+  data: D1Character['characterBase']
 ) {
   const ret: { [statHash: string]: DimCharacterStat } = {};
   for (const statId of stats) {
