@@ -1,5 +1,5 @@
 import { BungieError } from 'app/bungie-api/http-client';
-import { t } from 'app/i18next-t';
+import { I18nKey, t } from 'app/i18next-t';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { convertToError } from './util';
 
@@ -15,7 +15,7 @@ export class DimError extends Error {
   cause?: Error;
 
   /** Pass in just a message key to set the message to the localized version of that key, or override with the second parameter. */
-  constructor(messageKey: string, message?: string) {
+  constructor(messageKey: I18nKey, message?: string) {
     super(message || t(messageKey));
     this.code = messageKey;
     this.name = 'DimError';

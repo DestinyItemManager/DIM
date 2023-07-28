@@ -4,7 +4,7 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import { CustomStatWeightsFromHash } from 'app/dim-ui/CustomStatWeights';
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { PressTip } from 'app/dim-ui/PressTip';
-import { t, tl } from 'app/i18next-t';
+import { I18nKey, t, tl } from 'app/i18next-t';
 import { D1Item, D1Stat, DimItem, DimSocket, DimStat } from 'app/inventory/item-types';
 import { statsMs } from 'app/inventory/store/stats';
 import { TOTAL_STAT_HASH, armorStats } from 'app/search/d2-known-values';
@@ -30,7 +30,7 @@ const modItemCategoryHashes = [
 ];
 
 // Some stat labels are long. This lets us replace them with i18n
-const statLabels: LookupTable<StatHashes, string> = {
+const statLabels: LookupTable<StatHashes, I18nKey> = {
   [StatHashes.RoundsPerMinute]: tl('Organizer.Stats.RPM'),
   [StatHashes.AirborneEffectiveness]: tl('Organizer.Stats.Airborne'),
 };

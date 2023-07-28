@@ -20,7 +20,6 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isPlugStatActive } from 'app/utils/item-utils';
 import { usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { errorMessage } from 'app/utils/util';
-import { LookupTable } from 'app/utils/util-types';
 import { DestinyItemSocketEntryDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes, SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
@@ -40,13 +39,13 @@ const costStatHashes = [
   StatHashes.ArcCost,
 ];
 
-const whitelistPlugCategoryToLocKey: LookupTable<PlugCategoryHashes, string> = {
+const whitelistPlugCategoryToLocKey = {
   [PlugCategoryHashes.Shader]: 'Shader',
   [PlugCategoryHashes.ShipSpawnfx]: 'Transmat',
   [PlugCategoryHashes.Hologram]: 'Projection',
-};
+} as const;
 
-const socketCategoryToLocKey: LookupTable<SocketCategoryHashes, string> = {
+const socketCategoryToLocKey = {
   [SocketCategoryHashes.Super]: 'Super',
   [SocketCategoryHashes.Abilities_Abilities]: 'Ability',
   [SocketCategoryHashes.Abilities_Abilities_Ikora]: 'Ability',
@@ -56,23 +55,33 @@ const socketCategoryToLocKey: LookupTable<SocketCategoryHashes, string> = {
   [SocketCategoryHashes.Fragments_Abilities_Ikora]: 'Fragment',
   [SocketCategoryHashes.Fragments_Abilities_Neomuna]: 'Fragment',
   [SocketCategoryHashes.Fragments_Abilities_Stranger]: 'Fragment',
-};
+} as const;
 
-/** Figures out what kind of socket this is so that the "Apply" button can name the correct thing
- * instead of generically saying "Select/Insert Mod".
- * Note that these are used as part of the localization key.
+/**
+ * Figures out what kind of socket this is so that the "Apply" button can name
+ * the correct thing instead of generically saying "Select/Insert Mod". Note
+ * that these are used as part of the localization key. We're using keyof typeof
+ * here so that we automatically type the return value to the possible
+ * localization keys.
  */
 function uiCategorizeSocket(defs: D2ManifestDefinitions, socket: DestinyItemSocketEntryDefinition) {
   const socketTypeDef = socket.socketTypeHash && defs.SocketType.get(socket.socketTypeHash);
   if (socketTypeDef) {
-    if (socketCategoryToLocKey[socketTypeDef.socketCategoryHash as SocketCategoryHashes]) {
-      return socketCategoryToLocKey[socketTypeDef.socketCategoryHash as SocketCategoryHashes];
+    const socketCategoryHash =
+      socketTypeDef.socketCategoryHash as keyof typeof socketCategoryToLocKey;
+    if (socketCategoryToLocKey[socketCategoryHash]) {
+      return socketCategoryToLocKey[socketCategoryHash];
     } else {
       const plug = socketTypeDef.plugWhitelist.find(
-        (p) => whitelistPlugCategoryToLocKey[p.categoryHash as PlugCategoryHashes]
+        (p) =>
+          whitelistPlugCategoryToLocKey[
+            p.categoryHash as keyof typeof whitelistPlugCategoryToLocKey
+          ]
       );
       if (plug) {
-        return whitelistPlugCategoryToLocKey[plug.categoryHash as PlugCategoryHashes];
+        return whitelistPlugCategoryToLocKey[
+          plug.categoryHash as keyof typeof whitelistPlugCategoryToLocKey
+        ];
       }
     }
   }

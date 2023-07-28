@@ -1,7 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
-import { t, tl } from 'app/i18next-t';
+import { I18nKey, t, tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { moveItemTo } from 'app/inventory/move-item';
 import { DimStore } from 'app/inventory/store-types';
@@ -37,7 +37,7 @@ const killTypeIcons: LookupTable<KillType, string> = {
   [KillType.Precision]: headshot,
 };
 
-const killTypeDescriptions: Record<KillType, string> = {
+const killTypeDescriptions: Record<KillType, I18nKey> = {
   [KillType.Melee]: tl('KillType.Melee'),
   [KillType.Super]: tl('KillType.Super'),
   [KillType.Grenade]: tl('KillType.Grenade'),

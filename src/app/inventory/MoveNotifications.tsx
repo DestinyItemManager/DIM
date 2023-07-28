@@ -1,5 +1,5 @@
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
-import { t, tl } from 'app/i18next-t';
+import { I18nKey, t, tl } from 'app/i18next-t';
 import {
   LoadoutApplyPhase,
   LoadoutApplyState,
@@ -76,7 +76,7 @@ export function loadoutNotification(
   };
 }
 
-const messageByPhase: { [phase in LoadoutApplyPhase]: string } = {
+const messageByPhase: { [phase in LoadoutApplyPhase]: I18nKey } = {
   [LoadoutApplyPhase.NotStarted]: tl('Loadouts.NotStarted'),
   [LoadoutApplyPhase.Deequip]: tl('Loadouts.Deequip'),
   [LoadoutApplyPhase.MoveItems]: tl('Loadouts.MoveItems'),

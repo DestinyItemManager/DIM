@@ -1,5 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { tl } from 'app/i18next-t';
+import { I18nKey, tl } from 'app/i18next-t';
 import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
@@ -50,7 +50,7 @@ export function collectSocketsToStrip(
 ) {
   const socketsByKind: {
     [kind in SocketKind]: {
-      name: string;
+      name: I18nKey;
       items?: StripAction[];
     };
   } = {
