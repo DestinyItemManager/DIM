@@ -56,7 +56,7 @@ export async function getTestManifestJson() {
       .catch(() => false);
 
     if (fileExists) {
-      return JSON.parse(await fs.readFile(filename, 'utf-8'));
+      return JSON.parse(await fs.readFile(filename, 'utf-8')) as AllDestinyManifestComponents;
     }
 
     await fs.mkdir(cacheDir, { recursive: true });
@@ -74,7 +74,7 @@ export async function getTestManifestJson() {
 
 export const getTestDefinitions = _.once(async () => {
   const manifestJson = await getTestManifestJson();
-  return buildDefinitionsFromManifest(manifestJson as AllDestinyManifestComponents);
+  return buildDefinitionsFromManifest(manifestJson);
 });
 
 export const testAccount = {

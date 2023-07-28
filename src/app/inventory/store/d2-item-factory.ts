@@ -125,7 +125,7 @@ export function processItems(
 }
 
 export const getClassTypeNameLocalized = _.memoize(
-  (type: DestinyClass, defs: D2ManifestDefinitions) => {
+  (type: DestinyClass, defs: D2ManifestDefinitions): string => {
     const klass = Object.values(defs.Class).find((c) => c.classType === type);
     if (klass) {
       return klass.displayProperties.name;

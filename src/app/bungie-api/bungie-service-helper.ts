@@ -77,6 +77,7 @@ export const unauthenticatedHttpClient = dimErrorHandledHttpClient(
 function dimErrorHandledHttpClient(httpClient: HttpClient): HttpClient {
   return async (config: HttpClientConfig) => {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return await httpClient(config);
     } catch (e) {
       handleErrors(e);

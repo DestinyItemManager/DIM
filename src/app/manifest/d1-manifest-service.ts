@@ -71,7 +71,7 @@ function doGetManifest(): ThunkResult<AllDestinyManifestComponents> {
   };
 }
 
-function loadManifest(): ThunkResult<any> {
+function loadManifest(): ThunkResult<AllDestinyManifestComponents> {
   return async (dispatch, getState) => {
     await settingsReady; // wait for settings to be ready
     const language = settingsSelector(getState()).language;
@@ -92,14 +92,17 @@ function loadManifest(): ThunkResult<any> {
 /**
  * Returns a promise for the manifest data as a Uint8Array. Will cache it on success.
  */
-function loadManifestRemote(version: string, path: string): ThunkResult<object> {
+function loadManifestRemote(
+  version: string,
+  path: string
+): ThunkResult<AllDestinyManifestComponents> {
   return async (dispatch) => {
     dispatch(loadingStart(t('Manifest.Download')));
 
     try {
       const response = await fetch(path);
       const manifest = await (response.ok
-        ? response.json()
+        ? (response.json() as Promise<AllDestinyManifestComponents>)
         : Promise.reject(await toHttpStatusError(response)));
 
       // We intentionally don't wait on this promise
@@ -136,14 +139,14 @@ function deleteManifestFile() {
  * Returns a promise for the cached manifest of the specified
  * version as a Uint8Array, or rejects.
  */
-async function loadManifestFromCache(version: string): Promise<object> {
+async function loadManifestFromCache(version: string): Promise<AllDestinyManifestComponents> {
   if (alwaysLoadRemote) {
     throw new Error('Testing - always load remote');
   }
 
   const currentManifestVersion = localStorage.getItem(localStorageKey);
   if (currentManifestVersion === version) {
-    const manifest = await get<object>(idbKey);
+    const manifest = await get<AllDestinyManifestComponents>(idbKey);
     if (!manifest) {
       throw new Error('Empty cached manifest file');
     }

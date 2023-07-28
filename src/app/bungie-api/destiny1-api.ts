@@ -141,7 +141,7 @@ export async function getVendorForCharacter(
       `/D1/Platform/Destiny/${account.originalPlatformType}/MyAccount/Character/${character.id}/Vendor/${vendorHash}/`
     )
   );
-  return response.Response.data;
+  return response.Response.data as Vendor;
 }
 
 export async function transfer(
@@ -151,7 +151,7 @@ export async function transfer(
   amount: number
 ) {
   try {
-    return await authenticatedHttpClient(
+    return (await authenticatedHttpClient(
       bungieApiUpdate('/D1/Platform/Destiny/TransferItem/', {
         characterId: store.isVault ? item.owner : store.id,
         membershipType: account.originalPlatformType,
@@ -160,7 +160,7 @@ export async function transfer(
         stackSize: amount || item.amount,
         transferToVault: store.isVault,
       })
-    );
+    )) as ServerResponse<number>;
   } catch (e) {
     return handleUniquenessViolation(e, item, store);
   }

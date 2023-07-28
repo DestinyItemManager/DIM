@@ -34,7 +34,7 @@ const localStorageKey = 'authorization';
  */
 export function getToken(): Tokens | null {
   const tokenString = localStorage.getItem(localStorageKey);
-  return tokenString ? JSON.parse(tokenString) : null;
+  return tokenString ? (JSON.parse(tokenString) as Tokens) : null;
 }
 
 /**

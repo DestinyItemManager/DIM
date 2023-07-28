@@ -221,6 +221,7 @@ export function responsivelyThrottleHttpClient(
       const result = await httpClient(config);
       // Quickly heal from being throttled
       timesThrottled = Math.floor(timesThrottled / 2);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return result;
     } catch (e) {
       if (e instanceof BungieError) {

@@ -79,7 +79,7 @@ function getDefaultStore() {
 }
 
 export function get<Type>(key: IDBValidKey, store = getDefaultStore()): Promise<Type> {
-  let req: IDBRequest;
+  let req: IDBRequest<Type>;
   return store
     ._withIDBStore('readonly', (store) => {
       req = store.get(key);
