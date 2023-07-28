@@ -1,7 +1,7 @@
 @use '../variables.scss' as *;
 
 .upgrade {
-  color: $new-notification-dot !important;
+  color: $upgrade-notification-dot !important;
   font-size: 18px !important;
   margin-right: 4px;
 }
