@@ -1,5 +1,6 @@
 import { t } from 'app/i18next-t';
 import { CanceledError } from 'app/utils/cancel';
+import { convertToError } from 'app/utils/util';
 import clsx from 'clsx';
 import { motion, MotionProps, Transition } from 'framer-motion';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -37,7 +38,9 @@ export default function Notification({ notification, onClose, ...animation }: Pr
     if (!error && !success && notification.promise) {
       notification.promise
         .then(() => setSuccess(true))
-        .catch((e) => (e instanceof CanceledError ? setSuccess(true) : setError(e)));
+        .catch((e) =>
+          e instanceof CanceledError ? setSuccess(true) : setError(convertToError(e))
+        );
     } else if (notification.duration || error) {
       timer.current = window.setTimeout(
         () => {

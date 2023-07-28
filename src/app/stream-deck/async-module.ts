@@ -22,7 +22,12 @@ import {
   streamDeckUpdatePopupShowed,
 } from 'app/stream-deck/actions';
 import { randomStringToken } from 'app/stream-deck/AuthorizationNotification/AuthorizationNotification';
-import { LoadoutSelection, SelectionArgs, SendToStreamDeckArgs } from 'app/stream-deck/interfaces';
+import {
+  LoadoutSelection,
+  SelectionArgs,
+  SendToStreamDeckArgs,
+  StreamDeckMessage,
+} from 'app/stream-deck/interfaces';
 import { handleStreamDeckMessage, notificationPromise } from 'app/stream-deck/msg-handlers';
 import { streamDeck } from 'app/stream-deck/reducer';
 import { streamDeckUpdatePopupSelector } from 'app/stream-deck/selectors';
@@ -301,7 +306,7 @@ function startStreamDeckConnection(): ThunkResult {
       };
 
       streamDeckWebSocket.onmessage = function ({ data }) {
-        dispatch(handleStreamDeckMessage(JSON.parse(data)));
+        dispatch(handleStreamDeckMessage(JSON.parse(data as string) as StreamDeckMessage));
       };
 
       streamDeckWebSocket.onerror = function () {

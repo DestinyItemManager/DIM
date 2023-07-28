@@ -6,6 +6,7 @@ import { downloadManifestComponents } from 'app/manifest/manifest-service-json';
 import { humanBytes } from 'app/storage/human-bytes';
 import { delay } from 'app/utils/util';
 import {
+  AllDestinyManifestComponents,
   DestinyManifest,
   DestinyProfileResponse,
   DestinyVendorsResponse,
@@ -73,7 +74,7 @@ export async function getTestManifestJson() {
 
 export const getTestDefinitions = _.once(async () => {
   const manifestJson = await getTestManifestJson();
-  return buildDefinitionsFromManifest(manifestJson);
+  return buildDefinitionsFromManifest(manifestJson as AllDestinyManifestComponents);
 });
 
 export const testAccount = {

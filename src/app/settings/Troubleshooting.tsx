@@ -7,6 +7,7 @@ import { loadStores } from 'app/inventory/d2-stores';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { ThunkResult } from 'app/store/types';
 import { download, errorMessage } from 'app/utils/util';
+import { DestinyProfileResponse, ServerResponse } from 'bungie-api-ts/destiny2';
 import { DropzoneOptions } from 'react-dropzone';
 import { useSelector } from 'react-redux';
 import './settings.scss';
@@ -63,14 +64,19 @@ export function TroubleshootingSettings() {
 function importMockProfileResponse(file: File): ThunkResult {
   return async (dispatch) => {
     const fileText = await file.text();
-    let profileResponse = JSON.parse(fileText);
+    const profileResponseOrWrapped = JSON.parse(fileText) as
+      | DestinyProfileResponse
+      | ServerResponse<DestinyProfileResponse>;
     // if it's a full copy of the bnet Response wrapper, unwrap it
-    if (profileResponse?.Response?.profileInventory) {
-      profileResponse = profileResponse.Response;
+    let profileResponse: DestinyProfileResponse;
+    if ('Response' in profileResponseOrWrapped) {
+      profileResponse = profileResponseOrWrapped.Response;
+    } else {
+      profileResponse = profileResponseOrWrapped;
     }
     // if it doesn't look like it has what we need, throw
     if (!profileResponse?.profileInventory) {
-      throw 'uploaded profile response looks invalid';
+      throw new Error('uploaded profile response looks invalid');
     }
     dispatch(setMockProfileResponse(profileResponse));
   };

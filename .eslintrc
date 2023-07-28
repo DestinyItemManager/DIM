@@ -310,7 +310,6 @@
     "@typescript-eslint/consistent-indexed-object-style": "off",
     "@typescript-eslint/no-floating-promises": "off",
     "@typescript-eslint/require-await": "off",
-    "@typescript-eslint/no-unsafe-argument": "off",
     "@typescript-eslint/no-unsafe-enum-comparison": "off",
     "@typescript-eslint/prefer-nullish-coalescing": [
       "off",
@@ -325,6 +324,7 @@
         }
       }
     ],
+    "@typescript-eslint/no-unsafe-argument": "error",
     "@typescript-eslint/no-unsafe-assignment": "off",
     "@typescript-eslint/no-unsafe-call": "off",
     "@typescript-eslint/no-unsafe-member-access": "off",

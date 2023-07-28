@@ -648,7 +648,7 @@ class D1LoadoutBuilder extends Component<Props, State> {
       this.state.fullMode,
       this.cancelToken
     ).then((result) => {
-      this.setState({ ...(result as any), progress: 1 });
+      this.setState({ ...result, progress: 1 });
     });
   };
 
@@ -661,16 +661,16 @@ class D1LoadoutBuilder extends Component<Props, State> {
     this.setState({ fullMode, progress: 0 });
   };
 
-  private onChange: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (e) => {
+  private onChange: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
     if (e.target.name.length === 0) {
       errorLog('loadout optimizer', new Error('You need to have a name on the form input'));
     }
 
-    if (isInputElement(e.target) && e.target.type === 'checkbox') {
-      this.setState({ [e.target.name as any]: e.target.checked, progress: 0 } as any);
-    } else {
-      this.setState({ [e.target.name as any]: e.target.value, progress: 0 } as any);
-    }
+    // https://github.com/Microsoft/TypeScript/issues/13948
+    this.setState({
+      [e.target.name as 'type' | 'scaleType']: e.target.value,
+      progress: 0,
+    } as unknown as Pick<State, keyof State>);
   };
 
   private onActiveSetsChange: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
@@ -805,10 +805,6 @@ class D1LoadoutBuilder extends Component<Props, State> {
 }
 
 export default connect(mapStateToProps)(D1LoadoutBuilder);
-
-function isInputElement(element: HTMLElement): element is HTMLInputElement {
-  return element.nodeName === 'INPUT';
-}
 
 const unwantedPerkHashes = [
   1270552711, 217480046, 191086989, 913963685, 1034209669, 1263323987, 193091484, 2133116599,

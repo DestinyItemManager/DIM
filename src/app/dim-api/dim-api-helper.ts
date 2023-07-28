@@ -26,7 +26,8 @@ export async function unauthenticatedApi<T>(
 
   let url = `${DIM_API_HOST}${config.url}`;
   if (config.params) {
-    url = `${url}?${new URLSearchParams(config.params).toString()}`;
+    // TODO: properly type HttpClientConfig
+    url = `${url}?${new URLSearchParams(config.params as Record<string, string>).toString()}`;
   }
 
   const headers: RequestInit['headers'] = {};
@@ -77,7 +78,8 @@ export async function authenticatedApi<T>(config: HttpClientConfig): Promise<T> 
 
   let url = `${DIM_API_HOST}${config.url}`;
   if (config.params) {
-    url = `${url}?${new URLSearchParams(config.params).toString()}`;
+    // TODO: properly type HttpClientConfig
+    url = `${url}?${new URLSearchParams(config.params as Record<string, string>).toString()}`;
   }
 
   const headers: RequestInit['headers'] = {

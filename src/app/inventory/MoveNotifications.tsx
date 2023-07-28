@@ -15,6 +15,7 @@ import { AppIcon, faCheckCircle, faExclamationCircle, refreshIcon } from 'app/sh
 import { DimError } from 'app/utils/dim-error';
 import { useThrottledSubscription } from 'app/utils/hooks';
 import { Observable } from 'app/utils/observable';
+import { errorMessage } from 'app/utils/util';
 import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
 import _ from 'lodash';
@@ -63,7 +64,7 @@ export function loadoutNotification(
 ): NotifyInput {
   return {
     promise: loadoutPromise.catch((e) => {
-      throw new NotificationError(e.message, {
+      throw new NotificationError(errorMessage(e), {
         body: <ApplyLoadoutProgressBody stateObservable={stateObservable} />,
         type: stateObservable.getCurrentValue().inGameLoadoutInActivity ? 'warning' : 'error',
       });

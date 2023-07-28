@@ -24,7 +24,7 @@ export const getAccessTokenFromRefreshToken = dedupePromise(
       },
     });
     if (response.ok) {
-      const token = handleAccessToken(await response.json());
+      const token = handleAccessToken((await response.json()) as OauthTokenResponse);
       setToken(token);
       infoLog('bungie auth', 'Successfully updated auth token from refresh token.');
       return token;
@@ -50,23 +50,21 @@ export async function getAccessTokenFromCode(code: string): Promise<Tokens> {
   });
 
   if (response.ok) {
-    return handleAccessToken(await response.json());
+    return handleAccessToken((await response.json()) as OauthTokenResponse);
   } else {
     throw new HttpStatusError(response);
   }
 }
 
-function handleAccessToken(
-  response:
-    | {
-        access_token: string;
-        expires_in: number;
-        membership_id: string;
-        refresh_token?: string;
-        refresh_expires_in: number;
-      }
-    | undefined
-): Tokens {
+interface OauthTokenResponse {
+  access_token: string;
+  expires_in: number;
+  membership_id: string;
+  refresh_token?: string;
+  refresh_expires_in: number;
+}
+
+function handleAccessToken(response: OauthTokenResponse | undefined): Tokens {
   if (response?.access_token) {
     const data = response;
     const inception = Date.now();
