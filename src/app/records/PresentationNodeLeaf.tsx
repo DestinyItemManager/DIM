@@ -1,6 +1,6 @@
+import { VendorItemDisplay } from 'app/vendors/VendorItemComponent';
 import { DestinyCollectibleState, DestinyRecordState } from 'bungie-api-ts/destiny2';
 import { sortBy } from 'lodash';
-import { VendorItemDisplay } from 'app/vendors/VendorItemComponent';
 import Collectible from './Collectible';
 import CollectiblesGrid from './CollectiblesGrid';
 import Craftable from './Craftable';
