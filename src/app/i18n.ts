@@ -109,10 +109,10 @@ export function initi18n(): Promise<unknown> {
     );
     for (const otherLang of DIM_LANGS) {
       if (DIM_LANG_INFOS[otherLang]?.pluralOverride) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        // eslint-disable-next-line
         i18next.services.pluralResolver.addRule(
           otherLang,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+          // eslint-disable-next-line
           i18next.services.pluralResolver.getRule('en')
         );
       }

@@ -49,7 +49,7 @@ export function TroubleshootingSettings() {
           {t('Settings.ExportProfile')}
         </button>
 
-        {($DIM_FLAVOR === 'dev' || (window as any).enableMockProfile) && (
+        {$DIM_FLAVOR === 'dev' && (
           <FileUpload
             title="Upload Profile Response JSON"
             accept={{ 'application/json': ['.json'] }}

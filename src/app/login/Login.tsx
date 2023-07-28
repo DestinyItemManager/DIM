@@ -19,7 +19,7 @@ export default function Login() {
   const authorizationState = useMemo(() => (isAppStoreVersion() ? 'dimauth-' : '') + uuidv4(), []);
   const clientId = oauthClientId();
   const { state } = useLocation();
-  const previousPath = state?.path as string;
+  const previousPath = (state as { path?: string } | undefined)?.path;
 
   useEffect(() => {
     localStorage.setItem('authorizationState', authorizationState);

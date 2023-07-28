@@ -16,6 +16,7 @@ import {
   ComponentPrivacySetting,
   DestinyAmmunitionType,
   DestinyClass,
+  DestinyDisplayPropertiesDefinition,
   DestinyInventoryItemDefinition,
   DestinyItemComponent,
   DestinyItemComponentSetOfint64,
@@ -39,6 +40,7 @@ import extendedFoundry from 'data/d2/extended-foundry.json';
 import extendedICH from 'data/d2/extended-ich.json';
 import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import extraItemCollectibles from 'data/d2/unreferenced-collections-items.json';
+import { Draft } from 'immer';
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
@@ -268,9 +270,10 @@ export function makeItem(
   if (!(itemDef.displayProperties.name || itemDef.setData?.questLineName)) {
     if (item.itemHash === 3377778206) {
       // https://d2.destinygamewiki.com/wiki/Gift_of_the_Lighthouse
-      (itemDef.displayProperties as any).name = 'Gift of the Lighthouse';
+      (itemDef.displayProperties as Draft<DestinyDisplayPropertiesDefinition>).name =
+        'Gift of the Lighthouse';
     } else {
-      (itemDef.displayProperties as any).name = '???';
+      (itemDef.displayProperties as Draft<DestinyDisplayPropertiesDefinition>).name = '???';
     }
   }
 

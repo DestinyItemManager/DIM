@@ -2,13 +2,13 @@ import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import {
   D1FactionDefinition,
   D1GetAdvisorsResponse,
+  D1LevelProgression,
   D1ProgressionStep,
 } from 'app/destiny1/d1-manifest-types';
 import {
   DestinyClass,
   DestinyColor,
   DestinyDisplayPropertiesDefinition,
-  DestinyProgression,
 } from 'bungie-api-ts/destiny2';
 import { D1Item, DimItem } from './item-types';
 
@@ -133,7 +133,7 @@ export interface DimCharacterStat {
   breakdown?: DimCharacterStatChange[];
 }
 
-export interface D1Progression extends DestinyProgression {
+export interface D1Progression extends D1LevelProgression {
   name: string;
   scope: number;
   repeatLastStep: boolean;

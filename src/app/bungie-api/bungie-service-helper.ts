@@ -77,7 +77,6 @@ export const unauthenticatedHttpClient = dimErrorHandledHttpClient(
 function dimErrorHandledHttpClient(httpClient: HttpClient): HttpClient {
   return async (config: HttpClientConfig) => {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return await httpClient(config);
     } catch (e) {
       handleErrors(e);
@@ -88,7 +87,7 @@ function dimErrorHandledHttpClient(httpClient: HttpClient): HttpClient {
 /**
  * if HttpClient throws an error (js, Bungie, http) this enriches it with DIM concepts and then re-throws it
  */
-function handleErrors(error: unknown) {
+function handleErrors(error: unknown): never {
   if (error instanceof DOMException && error.name === 'AbortError') {
     throw (
       navigator.onLine

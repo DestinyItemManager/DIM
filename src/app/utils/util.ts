@@ -26,7 +26,7 @@ type PropertiesOfType<T, PropType> = keyof {
  */
 export function objectifyArray<T>(array: T[], key: PropertiesOfType<T, any[]>): NodeJS.Dict<T> {
   return array.reduce<NodeJS.Dict<T>>((acc, val) => {
-    const prop = val[key] as any[];
+    const prop = val[key] as string[];
     for (const eachKeyName of prop) {
       acc[eachKeyName] = val;
     }

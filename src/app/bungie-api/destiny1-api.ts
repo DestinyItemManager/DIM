@@ -29,11 +29,11 @@ import { authenticatedHttpClient, handleUniquenessViolation } from './bungie-ser
  */
 
 export async function getCharacters(account: DestinyAccount) {
-  const response = (await authenticatedHttpClient(
+  const response = await authenticatedHttpClient<ServerResponse<D1GetAccountResponse>>(
     bungieApiQuery(
       `/D1/Platform/Destiny/${account.originalPlatformType}/Account/${account.membershipId}/`
     )
-  )) as ServerResponse<D1GetAccountResponse>;
+  );
   if (!response || Object.keys(response.Response).length === 0) {
     throw new DimError(
       'BungieService.NoAccountForPlatform',
@@ -85,11 +85,11 @@ export async function getStores(account: DestinyAccount): Promise<D1StoresData> 
 function getDestinyInventories(account: DestinyAccount, characterIds: string[]) {
   // Guardians
   const promises = characterIds.map(async (characterId) => {
-    const response = (await authenticatedHttpClient(
+    const response = await authenticatedHttpClient<ServerResponse<D1GetInventoryResponse>>(
       bungieApiQuery(
         `/D1/Platform/Destiny/${account.originalPlatformType}/Account/${account.membershipId}/Character/${characterId}/Inventory/`
       )
-    )) as ServerResponse<D1GetInventoryResponse>;
+    );
 
     return response.Response.data;
   });
@@ -98,20 +98,20 @@ function getDestinyInventories(account: DestinyAccount, characterIds: string[]) 
 }
 
 async function getVaultInventory(account: DestinyAccount) {
-  const response = (await authenticatedHttpClient(
+  const response = await authenticatedHttpClient<ServerResponse<D1GetVaultInventoryResponse>>(
     bungieApiQuery(`/D1/Platform/Destiny/${account.originalPlatformType}/MyAccount/Vault/`)
-  )) as ServerResponse<D1GetVaultInventoryResponse>;
+  );
 
   return response.Response.data;
 }
 
 async function getDestinyProgression(account: DestinyAccount, characterIds: string[]) {
   const promises = characterIds.map(async (characterId) => {
-    const response = (await authenticatedHttpClient(
+    const response = await authenticatedHttpClient<ServerResponse<D1GetProgressionResponse>>(
       bungieApiQuery(
         `/D1/Platform/Destiny/${account.originalPlatformType}/Account/${account.membershipId}/Character/${characterId}/Progression/`
       )
-    )) as ServerResponse<D1GetProgressionResponse>;
+    );
     return response.Response.data;
   });
 
@@ -120,11 +120,11 @@ async function getDestinyProgression(account: DestinyAccount, characterIds: stri
 
 async function getDestinyAdvisors(account: DestinyAccount, characterIds: string[]) {
   const promises = characterIds.map(async (characterId) => {
-    const response = (await authenticatedHttpClient(
+    const response = await authenticatedHttpClient<ServerResponse<D1GetAdvisorsResponse>>(
       bungieApiQuery(
         `/D1/Platform/Destiny/${account.originalPlatformType}/Account/${account.membershipId}/Character/${characterId}/Advisors/V2/`
       )
-    )) as ServerResponse<D1GetAdvisorsResponse>;
+    );
     return response.Response.data;
   });
 
@@ -136,12 +136,12 @@ export async function getVendorForCharacter(
   character: D1Store,
   vendorHash: number
 ): Promise<Vendor> {
-  const response = await authenticatedHttpClient(
+  const response = await authenticatedHttpClient<ServerResponse<{ data: Vendor }>>(
     bungieApiQuery(
       `/D1/Platform/Destiny/${account.originalPlatformType}/MyAccount/Character/${character.id}/Vendor/${vendorHash}/`
     )
   );
-  return response.Response.data as Vendor;
+  return response.Response.data;
 }
 
 export async function transfer(
@@ -151,26 +151,26 @@ export async function transfer(
   amount: number
 ) {
   try {
-    return (await authenticatedHttpClient(
+    return await authenticatedHttpClient<ServerResponse<number>>(
       bungieApiUpdate('/D1/Platform/Destiny/TransferItem/', {
         characterId: store.isVault ? item.owner : store.id,
-        membershipType: account.originalPlatformType,
+        membershipType: account.originalPlatformType.toString(),
         itemId: item.id,
-        itemReferenceHash: item.hash,
-        stackSize: amount || item.amount,
-        transferToVault: store.isVault,
+        itemReferenceHash: item.hash.toString(),
+        stackSize: (amount || item.amount).toString(),
+        transferToVault: store.isVault.toString(),
       })
-    )) as ServerResponse<number>;
+    );
   } catch (e) {
     return handleUniquenessViolation(e, item, store);
   }
 }
 
 export function equip(account: DestinyAccount, item: DimItem) {
-  return authenticatedHttpClient(
+  return authenticatedHttpClient<ServerResponse<number>>(
     bungieApiUpdate('/D1/Platform/Destiny/EquipItem/', {
       characterId: item.owner,
-      membershipType: account.originalPlatformType,
+      membershipType: account.originalPlatformType.toString(),
       itemId: item.id,
     })
   );
@@ -187,15 +187,15 @@ export async function equipItems(
   // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
   items = _.sortBy(items, (i) => (i.isExotic ? 1 : 0));
 
-  const response = await authenticatedHttpClient(
+  const response = await authenticatedHttpClient<ServerResponse<DestinyEquipItemResults>>(
     bungieApiUpdate('/D1/Platform/Destiny/EquipItems/', {
       characterId: store.id,
-      membershipType: account.originalPlatformType,
-      itemIds: items.map((i) => i.id),
+      membershipType: account.originalPlatformType.toString(),
+      itemIds: items.map((i) => i.id).join(','),
     })
   );
 
-  const data = response.Response as DestinyEquipItemResults;
+  const data = response.Response;
   return Object.fromEntries(data.equipResults.map((r) => [r.itemInstanceId, r.equipStatus]));
 }
 
@@ -219,9 +219,9 @@ export function setItemState(
   return authenticatedHttpClient(
     bungieApiUpdate(`/D1/Platform/Destiny/${method}/`, {
       characterId: storeId,
-      membershipType: account.originalPlatformType,
+      membershipType: account.originalPlatformType.toString(),
       itemId: item.id,
-      state: lockState,
+      state: lockState.toString(),
     })
   );
 }

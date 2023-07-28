@@ -95,7 +95,7 @@ import {
 
 // TODO: move this whole file to "loadouts" folder
 
-const outOfSpaceWarning = _.throttle((store) => {
+const outOfSpaceWarning = _.throttle((store: DimStore) => {
   showNotification({
     type: 'info',
     title: t('FarmingMode.OutOfRoomTitle'),

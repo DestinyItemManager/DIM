@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 const fs = require('fs');
 
 const de = require('./locale/de.json');

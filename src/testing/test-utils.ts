@@ -10,6 +10,7 @@ import {
   DestinyManifest,
   DestinyProfileResponse,
   DestinyVendorsResponse,
+  ServerResponse,
 } from 'bungie-api-ts/destiny2';
 import { F_OK } from 'constants';
 import fs from 'fs/promises';
@@ -87,8 +88,8 @@ export const testAccount = {
   lastPlayed: '2021-05-08T03:34:26.000Z',
 };
 
-export const getTestProfile = () => (profile as any).Response as DestinyProfileResponse;
-export const getTestVendors = () => (vendors as any).Response as DestinyVendorsResponse;
+export const getTestProfile = () => (profile as ServerResponse<DestinyProfileResponse>).Response;
+export const getTestVendors = () => (vendors as ServerResponse<DestinyVendorsResponse>).Response;
 
 export const getTestStores = _.once(async () => {
   const manifest = await getTestDefinitions();
@@ -141,10 +142,10 @@ export function setupi18n() {
 
   for (const [otherLang, { pluralOverride }] of Object.entries(DIM_LANG_INFOS)) {
     if (pluralOverride) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      // eslint-disable-next-line
       i18next.services.pluralResolver.addRule(
         otherLang,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        // eslint-disable-next-line
         i18next.services.pluralResolver.getRule('en')
       );
     }
