@@ -93,7 +93,10 @@ class PeekableGenerator<T> {
    */
   peek(): T | undefined {
     if (!this.next) {
-      this.next = this.gen.next().value;
+      const n = this.gen.next();
+      if (!n.done) {
+        this.next = n.value;
+      }
     }
     return this.next;
   }
@@ -107,7 +110,10 @@ class PeekableGenerator<T> {
       this.next = undefined;
       return ret;
     }
-    return this.gen.next().value as T | undefined;
+    const n = this.gen.next();
+    if (!n.done) {
+      return n.value;
+    }
   }
 }
 

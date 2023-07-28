@@ -240,7 +240,8 @@ export async function downloadManifestComponents(
           response = await fetch(`https://www.bungie.net${components[table]}${query}`);
           if (response.ok) {
             // Sometimes the file is found, but isn't parseable as JSON
-            body = await response.json();
+            body =
+              (await response.json()) as AllDestinyManifestComponents[DestinyManifestComponentName];
             break;
           }
           error ??= await toHttpStatusError(response);
@@ -248,9 +249,12 @@ export async function downloadManifestComponents(
           error ??= convertToError(e);
         }
       }
-      if (!body && error) {
-        throw error;
+      if (!body) {
+        throw error ?? new Error(`Table ${table}`);
       }
+
+      // I couldn't figure out how to make these types work...
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       manifest[table] = table in tableTrimmers ? tableTrimmers[table]!(body) : body;
     });
 
@@ -297,7 +301,9 @@ async function loadManifestFromCache(
   }
 
   const currentManifestVersion = localStorage.getItem(localStorageKey);
-  const currentAllowList = JSON.parse(localStorage.getItem(`${localStorageKey}-whitelist`) || '[]');
+  const currentAllowList = JSON.parse(
+    localStorage.getItem(`${localStorageKey}-whitelist`) || '[]'
+  ) as string[];
   if (currentManifestVersion === version && deepEqual(currentAllowList, tableAllowList)) {
     const manifest = await get<AllDestinyManifestComponents>(idbKey);
     if (!manifest) {

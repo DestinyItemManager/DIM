@@ -55,9 +55,9 @@ export async function unauthenticatedApi<T>(
     return response.json() as Promise<T>;
   }
 
-  let responseData: { error: string; message: string } | undefined;
+  let responseData;
   try {
-    responseData = await response.json();
+    responseData = (await response.json()) as { error: string; message: string };
   } catch {}
   if (responseData?.error) {
     throw new Error(`${responseData.error}: ${responseData.message}`);
@@ -106,9 +106,9 @@ export async function authenticatedApi<T>(config: HttpClientConfig): Promise<T> 
     return response.json() as Promise<T>;
   }
 
-  let responseData: { error: string; message: string } | undefined;
+  let responseData;
   try {
-    responseData = await response.json();
+    responseData = (await response.json()) as { error: string; message: string };
   } catch {}
   if (responseData?.error) {
     throw new Error(`${responseData.error}: ${responseData.message}`);

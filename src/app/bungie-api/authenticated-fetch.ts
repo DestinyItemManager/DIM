@@ -120,12 +120,14 @@ function handleRefreshTokenError(error: unknown): Promise<Tokens> {
     );
     throw error;
   }
-  let data:
-    | { error?: string; error_description?: string; ErrorCode?: PlatformErrorCodes }
-    | undefined;
+  let data;
   if (error.responseBody) {
     try {
-      data = JSON.parse(error.responseBody);
+      data = JSON.parse(error.responseBody) as {
+        error?: string;
+        error_description?: string;
+        ErrorCode?: PlatformErrorCodes;
+      };
     } catch (e) {}
   }
 

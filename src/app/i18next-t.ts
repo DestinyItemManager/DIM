@@ -1,7 +1,12 @@
-export { t } from 'i18next';
 import type { ParseKeys } from 'i18next';
+import { t as originalT } from 'i18next';
 
 export type I18nKey = ParseKeys;
+
+export const t = (
+  key: I18nKey,
+  opts?: { count?: number } & { [arg: string]: number | string }
+): string => originalT(key, opts);
 
 /**
  * This is a "marker function" that tells our i18next-scanner that you will translate this string later (tl = translate later).

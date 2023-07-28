@@ -82,7 +82,7 @@ export function get<Type>(key: IDBValidKey, store = getDefaultStore()): Promise<
   let req: IDBRequest<Type>;
   return store
     ._withIDBStore('readonly', (store) => {
-      req = store.get(key);
+      req = store.get(key) as IDBRequest<Type>;
     })
     .then(() => req.result);
 }

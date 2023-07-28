@@ -163,7 +163,10 @@ export function createHttpClient(fetchFunction: typeof fetch, apiKey: string): H
     const fetchOptions = new Request(url, {
       method: config.method,
       body: config.body ? JSON.stringify(config.body) : undefined,
-      headers: { 'X-API-Key': apiKey, ...(config.body && { 'Content-Type': 'application/json' }) },
+      headers: {
+        'X-API-Key': apiKey,
+        ...(config.body ? { 'Content-Type': 'application/json' } : undefined),
+      },
       credentials: 'omit',
     });
 
