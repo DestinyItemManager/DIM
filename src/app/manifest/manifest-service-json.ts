@@ -1,4 +1,4 @@
-import { HttpStatusError } from 'app/bungie-api/http-client';
+import { HttpStatusError, toHttpStatusError } from 'app/bungie-api/http-client';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { loadingEnd, loadingStart } from 'app/shell/actions';
@@ -243,7 +243,7 @@ export async function downloadManifestComponents(
             body = await response.json();
             break;
           }
-          error ??= new HttpStatusError(response);
+          error ??= await toHttpStatusError(response);
         } catch (e) {
           error ??= convertToError(e);
         }

@@ -1,4 +1,5 @@
 import { getCurrentHub } from '@sentry/browser';
+import { toHttpStatusError } from './bungie-api/http-client';
 import { reportException } from './utils/exceptions';
 import { errorLog, infoLog, warnLog } from './utils/log';
 import { Observable } from './utils/observable';
@@ -148,7 +149,7 @@ async function getServerVersion() {
     }
     return data.version as string;
   } else {
-    throw response;
+    throw await toHttpStatusError(response);
   }
 }
 

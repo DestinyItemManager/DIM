@@ -298,6 +298,7 @@
     "@typescript-eslint/consistent-type-definitions": "error",
     "@typescript-eslint/consistent-generic-constructors": "error",
     "@typescript-eslint/no-duplicate-enum-values": "error",
+    "@typescript-eslint/no-throw-literal": "error",
     "@typescript-eslint/no-unused-vars": [
       "error",
       {

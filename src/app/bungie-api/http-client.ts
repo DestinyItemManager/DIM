@@ -7,9 +7,21 @@ import { HttpClient, HttpClientConfig } from 'bungie-api-ts/http';
  */
 export class HttpStatusError extends Error {
   status: number;
-  constructor(response: Response) {
-    super(response.statusText);
+  responseBody?: string;
+
+  constructor(response: Response, responseBody?: string) {
+    super(responseBody ?? response.statusText);
     this.status = response.status;
+    this.responseBody = responseBody;
+  }
+}
+
+export async function toHttpStatusError(response: Response) {
+  try {
+    const responseBody = await response.text();
+    return new HttpStatusError(response, responseBody);
+  } catch (e) {
+    return new HttpStatusError(response);
   }
 }
 
@@ -34,11 +46,10 @@ export class BungieError extends Error {
  * this is a non-affecting pass-through for successful http requests,
  * but throws JS errors for a non-200 response
  */
-function throwHttpError(response: Response) {
+async function throwHttpError(response: Response) {
   if (response.status < 200 || response.status >= 400) {
-    throw new HttpStatusError(response);
+    throw await toHttpStatusError(response);
   }
-  return response;
 }
 
 /**
@@ -177,7 +188,7 @@ export function createHttpClient(fetchFunction: typeof fetch, apiKey: string): H
     // try throwing bungie errors, which have more information, first
     throwBungieError(data, fetchOptions);
     // then throw errors on generic http error codes
-    throwHttpError(response);
+    await throwHttpError(response);
     if (parseError) {
       throw parseError;
     }

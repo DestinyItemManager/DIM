@@ -1,4 +1,4 @@
-import { HttpStatusError } from 'app/bungie-api/http-client';
+import { HttpStatusError, toHttpStatusError } from 'app/bungie-api/http-client';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { loadingEnd, loadingStart } from 'app/shell/actions';
@@ -100,7 +100,7 @@ function loadManifestRemote(version: string, path: string): ThunkResult<object> 
       const response = await fetch(path);
       const manifest = await (response.ok
         ? response.json()
-        : Promise.reject(new HttpStatusError(response)));
+        : Promise.reject(await toHttpStatusError(response)));
 
       // We intentionally don't wait on this promise
       saveManifestToIndexedDB(manifest, version);

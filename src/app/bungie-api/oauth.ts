@@ -1,13 +1,17 @@
 import { infoLog } from 'app/utils/log';
 import { dedupePromise } from 'app/utils/util';
 import { oauthClientId, oauthClientSecret } from './bungie-api-utils';
-import { HttpStatusError } from './http-client';
+import { toHttpStatusError } from './http-client';
 import { Token, Tokens, setToken } from './oauth-tokens';
 
 // all these api url params don't match our variable naming conventions
 
 const TOKEN_URL = 'https://www.bungie.net/platform/app/oauth/token/';
 
+/**
+ * Get a new token given a valid refresh token. This can throw with a
+ * full HTTP response!
+ */
 export const getAccessTokenFromRefreshToken = dedupePromise(
   async (refreshToken: Token): Promise<Tokens> => {
     const body = new URLSearchParams({
@@ -29,7 +33,7 @@ export const getAccessTokenFromRefreshToken = dedupePromise(
       infoLog('bungie auth', 'Successfully updated auth token from refresh token.');
       return token;
     } else {
-      throw response;
+      throw await toHttpStatusError(response);
     }
   }
 );
@@ -52,7 +56,7 @@ export async function getAccessTokenFromCode(code: string): Promise<Tokens> {
   if (response.ok) {
     return handleAccessToken((await response.json()) as OauthTokenResponse);
   } else {
-    throw new HttpStatusError(response);
+    throw await toHttpStatusError(response);
   }
 }
 

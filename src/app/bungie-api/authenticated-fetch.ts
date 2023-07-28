@@ -1,6 +1,7 @@
 import { t } from 'app/i18next-t';
 import { infoLog, warnLog } from 'app/utils/log';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
+import { HttpStatusError } from './http-client';
 import { getAccessTokenFromRefreshToken } from './oauth';
 import { Tokens, getToken, hasTokenExpired, removeAccessToken } from './oauth-tokens';
 
@@ -98,30 +99,30 @@ export async function getActiveToken(): Promise<Tokens> {
   try {
     return await getAccessTokenFromRefreshToken(token.refreshToken!);
   } catch (e) {
-    return await handleRefreshTokenError(e);
+    return handleRefreshTokenError(e);
   }
 }
 
-async function handleRefreshTokenError(response: unknown): Promise<Tokens> {
-  if (response instanceof TypeError) {
+function handleRefreshTokenError(error: unknown): Promise<Tokens> {
+  if (error instanceof TypeError) {
     warnLog(
       'bungie auth',
       "Error getting auth token from refresh token because there's no internet connection (or a permissions issue). Not clearing token.",
-      response
+      error
     );
-    throw response;
+    throw error;
   }
-  if (!(response instanceof Response)) {
+  if (!(error instanceof HttpStatusError)) {
     warnLog(
       'bungie auth',
       'Other error getting auth token from refresh token. Not clearing auth tokens',
-      response
+      error
     );
-    throw response;
+    throw error;
   }
-  let data;
+  let data: any;
   try {
-    data = await response.json();
+    data = JSON.stringify(error.responseBody);
   } catch (e) {}
 
   if (data) {
@@ -156,29 +157,20 @@ async function handleRefreshTokenError(response: unknown): Promise<Tokens> {
     }
   }
 
-  switch (response.status) {
+  switch (error.status) {
     case -1:
       throw new Error(
         "Error getting auth token from refresh token because there's no internet connection. Not clearing token."
       );
     case 401:
     case 403: {
-      throw new FatalTokenError(`Refresh token expired or not valid, status ${response.status}`);
-    }
-  }
-
-  let responseBody = data;
-  if (!responseBody) {
-    try {
-      responseBody = await response.text();
-    } catch {
-      responseBody = 'No response body';
+      throw new FatalTokenError(`Refresh token expired or not valid, status ${error.status}`);
     }
   }
 
   throw new Error(
-    `Unknown error getting response token. status: ${response.status}, response: ${JSON.stringify(
-      responseBody
-    )}`
+    `Unknown error getting response token. status: ${error.status}, response: ${
+      error.responseBody ?? 'No response body'
+    }`
   );
 }
