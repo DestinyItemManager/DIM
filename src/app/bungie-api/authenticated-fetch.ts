@@ -63,7 +63,7 @@ async function responseIndicatesBadToken(response: Response) {
     return true;
   }
   try {
-    const data = await response.clone().json();
+    const data = (await response.clone().json()) as { ErrorCode: PlatformErrorCodes } | undefined;
     return Boolean(
       data &&
         (data.ErrorCode === PlatformErrorCodes.AccessTokenHasExpired ||
@@ -120,10 +120,14 @@ function handleRefreshTokenError(error: unknown): Promise<Tokens> {
     );
     throw error;
   }
-  let data: any;
-  try {
-    data = JSON.stringify(error.responseBody);
-  } catch (e) {}
+  let data:
+    | { error?: string; error_description?: string; ErrorCode?: PlatformErrorCodes }
+    | undefined;
+  if (error.responseBody) {
+    try {
+      data = JSON.parse(error.responseBody);
+    } catch (e) {}
+  }
 
   if (data) {
     if (data.error === 'server_error') {
@@ -153,6 +157,8 @@ function handleRefreshTokenError(error: unknown): Promise<Tokens> {
           throw new FatalTokenError(
             `Refresh token expired or not valid, platform error ${data.ErrorCode}`
           );
+        default:
+          break;
       }
     }
   }
