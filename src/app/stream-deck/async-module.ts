@@ -14,7 +14,7 @@ import { LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getItemsFromInGameLoadout } from 'app/loadout/ingame/ingame-loadout-utils';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
-import { RootState, ThunkResult } from 'app/store/types';
+import { DimThunkDispatch, RootState, ThunkResult } from 'app/store/types';
 import {
   streamDeckClearSelection,
   streamDeckConnected,
@@ -175,7 +175,7 @@ function streamDeckSelectLoadout(
   };
 }
 
-const installFarmingObserver = _.once((dispatch) => {
+const installFarmingObserver = _.once((dispatch: DimThunkDispatch) => {
   observeStore(
     (state) => state.farming.storeId,
     (_, newState) => {

@@ -141,8 +141,10 @@ export function setupi18n() {
 
   for (const [otherLang, { pluralOverride }] of Object.entries(DIM_LANG_INFOS)) {
     if (pluralOverride) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       i18next.services.pluralResolver.addRule(
         otherLang,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         i18next.services.pluralResolver.getRule('en')
       );
     }

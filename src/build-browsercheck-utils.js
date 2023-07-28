@@ -14,6 +14,9 @@ const ru = require('./locale/ru.json');
 const zhCHS = require('./locale/zhCHS.json');
 const zhCHT = require('./locale/zhCHT.json');
 
+/**
+ * @param {string} key
+ */
 function getI18nKey(key) {
   let key1 = key.split('.')[0];
   let key2 = key.split('.')[1];
