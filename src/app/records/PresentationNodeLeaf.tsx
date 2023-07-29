@@ -30,7 +30,7 @@ export default function PresentationNodeLeaf({
   sortRecordProgression: boolean;
 }) {
   if (sortRecordProgression) {
-    sortRecords(node);
+    sortNode(node);
   }
 
   return (
