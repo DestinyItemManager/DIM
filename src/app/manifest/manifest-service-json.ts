@@ -6,7 +6,7 @@ import { del, get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { errorLog, infoLog, timer } from 'app/utils/log';
-import { convertToError, dedupePromise } from 'app/utils/util';
+import { convertToError, dedupePromise, errorMessage } from 'app/utils/util';
 import { LookupTable } from 'app/utils/util-types';
 import {
   AllDestinyManifestComponents,
@@ -117,7 +117,7 @@ function doGetManifest(tableAllowList: string[]): ThunkResult<AllDestinyManifest
       }
       return manifest;
     } catch (e) {
-      let message = e instanceof Error ? e.message : e;
+      let message = errorMessage(e);
 
       if (e instanceof TypeError || (e instanceof HttpStatusError && e.status === -1)) {
         message = navigator.onLine

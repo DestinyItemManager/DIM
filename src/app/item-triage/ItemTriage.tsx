@@ -263,7 +263,7 @@ function BetterItemsTriageSection({ item }: { item: DimItem }) {
     artificeWorseStatItems,
   } = betterWorseResults;
 
-  const rows: [I18nKey, readonly [I18nKey, I18nKey], DimItem[], boolean][] = [
+  const rows: [string, readonly [I18nKey, I18nKey], DimItem[], boolean][] = [
     [t('Triage.BetterArmor'), descriptionBulletPoints.better, betterItems, false],
     [t('Triage.WorseStatArmor'), descriptionBulletPoints.betterStats, betterStatItems, false],
     [t('Triage.BetterArtificeArmor'), descriptionBulletPoints.better, artificeBetterItems, true],

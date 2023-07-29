@@ -17,7 +17,7 @@ export function WeaponCraftedInfo({ item, className }: { item: DimItem; classNam
   if (!item.crafted || !item.craftedInfo) {
     return null;
   }
-  const progress = item.craftedInfo.progress || 0;
+  const progress = item.craftedInfo.progress;
   const progressBarStyle = {
     // can't use percentWithSingleDecimal because the decimal separator is locale-dependent (can be `.` or `,`)
     width: percent(progress),

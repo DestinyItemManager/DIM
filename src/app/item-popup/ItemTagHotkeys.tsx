@@ -32,7 +32,7 @@ export default function ItemTagHotkeys({ item }: Props) {
         if (tag.hotkey) {
           hotkeys.push({
             combo: tag.hotkey,
-            description: t('Hotkey.MarkItemAs', { tag: tag.type }),
+            description: t('Hotkey.MarkItemAs', { tag: tag.type! }),
             callback: () => dispatch(setTag(item, itemTag === tag.type ? 'clear' : tag.type)),
           });
         }

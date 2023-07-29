@@ -88,8 +88,10 @@ export const testAccount = {
   lastPlayed: '2021-05-08T03:34:26.000Z',
 };
 
-export const getTestProfile = () => (profile as ServerResponse<DestinyProfileResponse>).Response;
-export const getTestVendors = () => (vendors as ServerResponse<DestinyVendorsResponse>).Response;
+export const getTestProfile = () =>
+  (profile as unknown as ServerResponse<DestinyProfileResponse>).Response;
+export const getTestVendors = () =>
+  (vendors as unknown as ServerResponse<DestinyVendorsResponse>).Response;
 
 export const getTestStores = _.once(async () => {
   const manifest = await getTestDefinitions();

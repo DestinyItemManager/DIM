@@ -825,7 +825,7 @@ function ensureCanMoveToStore(
       ) {
         const itemtype = moveAsideTarget.isVault
           ? moveAsideItem.destinyVersion === 1
-            ? moveAsideItem.bucket.sort
+            ? moveAsideItem.bucket.sort!
             : ''
           : moveAsideItem.type;
 

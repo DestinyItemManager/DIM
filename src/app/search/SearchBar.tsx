@@ -155,7 +155,7 @@ const RowContents = memo(({ item }: { item: SearchItem }) => {
           <span className={styles.namedQueryBody}>
             {`${item.armoryItem.seasonName} (${t('Armory.Season', {
               season: item.armoryItem.season,
-              year: item.armoryItem.year,
+              year: item.armoryItem.year ?? '?',
             })})`}
           </span>
         </>
