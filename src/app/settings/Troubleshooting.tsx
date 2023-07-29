@@ -12,6 +12,12 @@ import { DropzoneOptions } from 'react-dropzone';
 import { useSelector } from 'react-redux';
 import './settings.scss';
 
+/**
+ * Allow users to export their Destiny profile and send them to a dev for
+ * debugging. In dev mode, or if you run `enableMockProfile = true` in the
+ * console, you can use that saved JSON profile to debug the app using another
+ * person's data.
+ */
 export function TroubleshootingSettings() {
   const currentAccount = useSelector(currentAccountSelector);
   const dispatch = useThunkDispatch();
@@ -49,7 +55,7 @@ export function TroubleshootingSettings() {
           {t('Settings.ExportProfile')}
         </button>
 
-        {$DIM_FLAVOR === 'dev' && (
+        {($DIM_FLAVOR === 'dev' || window.enableMockProfile) && (
           <FileUpload
             title="Upload Profile Response JSON"
             accept={{ 'application/json': ['.json'] }}
