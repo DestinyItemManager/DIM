@@ -731,6 +731,7 @@
     "OnWrongCharacterWarning": "当前角色光等最高的护甲在其他角色上。要使强力装备和巅峰装备掉落时的光等达到最高，这些护甲必须存储在当前角色上或是保险库中。",
     "OnlyItems": "只有可装备物品,材料和消耗品才可以加载.",
     "OpenInOptimizer": "优化护甲",
+    "PickArmor": "Pick Armor",
     "PickMods": "添加护甲模组",
     "PullFromPostmaster": "从邮政官处取回物品",
     "PullFromPostmasterError": "无法从邮政官处取回物品:{{error}}.",
@@ -745,11 +746,10 @@
     "Random": "随机",
     "Randomize": "随机配装",
     "RandomizeButton": "随机搭配",
-    "RandomizePrompt": "确定要将你的武器、护甲和机灵随机搭配吗？",
+    "RandomizeNew": "Create Random",
     "RandomizeQueryHint": "提示：可通过搜索条件来限制随机物品池。",
     "RandomizeSearch": "从搜索结果随机选取",
     "RandomizeSearchPrompt": "从“{{query}}”的搜索结果随机配装？",
-    "RandomizeWeapons": "确定要将你的武器随机搭配吗？",
     "Redo": "重做",
     "RestoreAllItems": "所有物品",
     "Save": "保存",
@@ -794,8 +794,7 @@
     "UnassignedModError": "模组不适合你当前的护甲",
     "Undo": "撤销",
     "Update": "保存更改",
-    "VendorsCannotEquip": "您没有这些项目。点击来选择一个替换或点击 X 来删除：",
-    "WeaponsOnly": "仅限武器"
+    "VendorsCannotEquip": "您没有这些项目。点击来选择一个替换或点击 X 来删除："
   },
   "Manifest": {
     "Download": "正在从 Bungie 下载最新的命运信息数据库...",

@@ -731,6 +731,7 @@
     "OnWrongCharacterWarning": "このキャラクターの最も強力なアーマーは、別のキャラクターが所持しています。 パワーのドロップ、強力、最高峰の報酬にカウントするには、アーマーはこのキャラクターか保管庫に存在しなければなりません。",
     "OnlyItems": "装備可能なアイテム、マテリアル、消耗品のみをロードアウトに追加することができます。",
     "OpenInOptimizer": "防具の最適化",
+    "PickArmor": "アーマーを選択",
     "PickMods": "アーマー mod を追加",
     "PullFromPostmaster": "ポストマスターからアイテムを取得する",
     "PullFromPostmasterError": "ポストマスターから転送できません：{{error}}",
@@ -745,11 +746,10 @@
     "Random": "ランダム",
     "Randomize": "ロードアウトのランダム化",
     "RandomizeButton": "ランダム化",
-    "RandomizePrompt": "装備した武器、アーマー、ゴーストをランダム化しますか?",
+    "RandomizeNew": "ランダムに作成",
     "RandomizeQueryHint": "ヒント : 最初にアイテムを検索し、ランダムに選択できるアイテムを制限する。",
     "RandomizeSearch": "ランダム検索",
     "RandomizeSearchPrompt": "検索検\"{{query}}\"から装備アイテムをランダム化しますか？",
-    "RandomizeWeapons": "装備した武器をランダム化しますか?",
     "Redo": "やり直す",
     "RestoreAllItems": "全アイテム",
     "Save": "保存",
@@ -794,8 +794,7 @@
     "UnassignedModError": "Modが現在のアーマーに適用できませんでした",
     "Undo": "元に戻す",
     "Update": "変更を保存",
-    "VendorsCannotEquip": "これらのアイテムはありません。タップして交換を選択するか、Xをクリックして削除します。",
-    "WeaponsOnly": "武器のみ"
+    "VendorsCannotEquip": "これらのアイテムはありません。タップして交換を選択するか、Xをクリックして削除します。"
   },
   "Manifest": {
     "Download": "最新のDestiny情報をBungieからダウンロードしています...",

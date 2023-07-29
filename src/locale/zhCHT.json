@@ -731,6 +731,7 @@
     "OnWrongCharacterWarning": "當前角色的光等最高的防具在其他角色的物品欄中，要使强大裝備和巔峰裝備掉落時的光等達到最高，這些防具必須存儲在當前角色的物品欄或是保險庫中。",
     "OnlyItems": "只有可裝備物品,材料和消耗品才可以載入.",
     "OpenInOptimizer": "防具優化",
+    "PickArmor": "Pick Armor",
     "PickMods": "添加防具模組",
     "PullFromPostmaster": "從郵政官處取回物品",
     "PullFromPostmasterError": "無法從郵政官處取回物品:{{error}}.",
@@ -745,11 +746,10 @@
     "Random": "隨機",
     "Randomize": "隨機配装",
     "RandomizeButton": "隨機搭配",
-    "RandomizePrompt": "確定要將你的武器、護甲和機靈隨機搭配嗎？",
+    "RandomizeNew": "Create Random",
     "RandomizeQueryHint": "提示：可通過搜索條件來限制隨機物品池",
     "RandomizeSearch": "從搜索結果隨機選取",
     "RandomizeSearchPrompt": "從「{{query}}」的搜索結果隨機配裝？",
-    "RandomizeWeapons": "確定要將你的武器隨機搭配嗎？",
     "Redo": "重做",
     "RestoreAllItems": "全部專案",
     "Save": "保存",
@@ -794,8 +794,7 @@
     "UnassignedModError": "模組不適合你當前的護甲",
     "Undo": "撤銷",
     "Update": "保存更改",
-    "VendorsCannotEquip": "您沒有這些項目。點擊來選擇一個替換或點擊 X 來刪除：",
-    "WeaponsOnly": "僅限武器"
+    "VendorsCannotEquip": "您沒有這些項目。點擊來選擇一個替換或點擊 X 來刪除："
   },
   "Manifest": {
     "Download": "正在從 Bungie 下載最新的命運信息數據庫...",
