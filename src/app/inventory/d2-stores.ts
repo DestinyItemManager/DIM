@@ -254,7 +254,9 @@ function loadStoresData(
         return;
       }
 
-      const transaction = startTransaction({ name: 'loadStoresD2' });
+      const transaction = $featureFlags.sentry
+        ? startTransaction({ name: 'loadStoresD2' })
+        : undefined;
       // set the transaction on the scope so it picks up any errors
       getCurrentHub()?.configureScope((scope) => scope.setSpan(transaction));
 

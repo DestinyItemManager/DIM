@@ -1,5 +1,13 @@
-import { BrowserOptions, captureException, init, setTag, setUser, withScope } from '@sentry/react';
-import { Integrations as TracingIntegrations } from '@sentry/tracing';
+import { BrowserTracing } from '@sentry/browser';
+import {
+  BrowserOptions,
+  addTracingExtensions,
+  captureException,
+  init,
+  setTag,
+  setUser,
+  withScope,
+} from '@sentry/react';
 import { BungieError } from 'app/bungie-api/http-client';
 import { getToken } from 'app/bungie-api/oauth-tokens';
 import { HashLookupFailure } from 'app/destiny2/definitions';
@@ -51,7 +59,7 @@ if ($featureFlags.sentry) {
     sampleRate: $DIM_VERSION === 'beta' ? 0.5 : 0.01, // Sample Beta at 50%, Prod at 1%
     attachStacktrace: true,
     integrations: [
-      new TracingIntegrations.BrowserTracing({
+      new BrowserTracing({
         // Only send trace headers to our own server
         tracePropagationTargets: ['api.destinyitemmanager.com'],
         beforeNavigate: (context) => ({
@@ -121,7 +129,7 @@ if ($featureFlags.sentry) {
 
   // TODO: There's a redux integration but I'm worried it'd be too much trouble to trim out all the stuff we wouldn't want to report (by default it sends the whole action & state.
   // https://docs.sentry.io/platforms/javascript/guides/react/configuration/integrations/redux/
-
+  addTracingExtensions();
   init(options);
 
   // Set user ID (membership ID) to help debug and to better count affected users
