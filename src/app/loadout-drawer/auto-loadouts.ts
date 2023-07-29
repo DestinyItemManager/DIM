@@ -1,14 +1,28 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
+import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { D2ItemTiers } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { isD1Item, itemCanBeEquippedBy } from 'app/utils/item-utils';
+import {
+  aspectSocketCategoryHashes,
+  fragmentSocketCategoryHashes,
+  getSocketsByCategoryHashes,
+  subclassAbilitySocketCategoryHashes,
+} from 'app/utils/socket-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { DimItem } from '../inventory/item-types';
+import { DimItem, DimSocket } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
 import { Loadout } from './loadout-types';
-import { convertToLoadoutItem, newLoadout, optimalItemSet, optimalLoadout } from './loadout-utils';
+import {
+  convertToLoadoutItem,
+  getLoadoutSubclassFragmentCapacity,
+  newLoadout,
+  optimalItemSet,
+  optimalLoadout,
+} from './loadout-utils';
 
 /**
  *  A dynamic loadout set up to level weapons and armor
@@ -242,17 +256,85 @@ const randomLoadoutTypes = new Set<BucketHashes | D1BucketHashes>([
   BucketHashes.ClassArmor,
   D1BucketHashes.Artifact,
   BucketHashes.Ghost,
+  BucketHashes.Vehicle,
+  BucketHashes.Ships,
+  BucketHashes.Emblems,
 ]);
 
 /**
  * Create a random loadout from items across the whole inventory. Optionally filter items with the filter method.
  */
 export function randomLoadout(store: DimStore, allItems: DimItem[], filter: ItemFilter) {
+  // Do not allow random loadouts to pull cosmetics from other characters or the vault because it's obnoxious
+  const onAcceptableRandomizeStore = (item: DimItem) =>
+    item.bucket.sort !== 'General' || item.owner === store.id;
+
   // Any item equippable by this character in the given types
   const applicableItems = allItems.filter(
-    (i) => randomLoadoutTypes.has(i.bucket.hash) && itemCanBeEquippedBy(i, store) && filter(i)
+    (i) =>
+      randomLoadoutTypes.has(i.bucket.hash) &&
+      itemCanBeEquippedBy(i, store) &&
+      onAcceptableRandomizeStore(i) &&
+      filter(i)
   );
 
   // Use "random" as the value function
   return optimalLoadout(applicableItems, () => Math.random(), t('Loadouts.Random'));
+}
+
+export function randomSubclassConfiguration(
+  defs: D2ManifestDefinitions,
+  item: DimItem
+): SocketOverrides | undefined {
+  if (!item.sockets) {
+    return undefined;
+  }
+
+  const socketOverrides: SocketOverrides = {};
+  // Pick abilities
+  const abilityAndSuperSockets = getSocketsByCategoryHashes(
+    item.sockets,
+    subclassAbilitySocketCategoryHashes
+  );
+  for (const socket of abilityAndSuperSockets) {
+    // Stasis has no super plugSet
+    if (socket.plugSet) {
+      socketOverrides[socket.socketIndex] = _.sample(socket.plugSet.plugs)!.plugDef.hash;
+    }
+  }
+
+  const randomizeSocketSeries = (sockets: DimSocket[], maxCount: number) => {
+    if (sockets.length && maxCount > 0) {
+      const blockedPlugs = [sockets[0].emptyPlugItemHash];
+      for (const socket of sockets) {
+        if (maxCount === 0) {
+          break;
+        }
+        maxCount--;
+        const chosenHash = _.sample(
+          socket.plugSet!.plugs.filter((plug) => !blockedPlugs.includes(plug.plugDef.hash))
+        )!.plugDef.hash;
+        if (chosenHash === undefined) {
+          break;
+        }
+        socketOverrides[socket.socketIndex] = chosenHash;
+        blockedPlugs.push(chosenHash);
+      }
+    }
+  };
+
+  // Pick aspects
+  const aspectSockets = getSocketsByCategoryHashes(item.sockets, aspectSocketCategoryHashes);
+  randomizeSocketSeries(aspectSockets, aspectSockets.length);
+
+  // Pick as many fragments as allowed
+  const fragmentCount = getLoadoutSubclassFragmentCapacity(defs, {
+    item: item,
+    loadoutItem: { ...convertToLoadoutItem(item, false), socketOverrides },
+  });
+
+  const fragmentSockets = getSocketsByCategoryHashes(item.sockets, fragmentSocketCategoryHashes);
+  randomizeSocketSeries(fragmentSockets, fragmentCount);
+
+  return socketOverrides;
 }

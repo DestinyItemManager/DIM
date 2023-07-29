@@ -12,7 +12,8 @@ import { getStore } from 'app/inventory/stores-helpers';
 import { showItemPicker } from 'app/item-picker/item-picker';
 import { pickSubclass } from 'app/loadout/item-utils';
 import { useDefinitions } from 'app/manifest/selectors';
-import { addIcon, AppIcon } from 'app/shell/icons';
+import { searchFilterSelector } from 'app/search/search-filter';
+import { addIcon, AppIcon, faRandom } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
 import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
@@ -21,13 +22,19 @@ import { useHistory } from 'app/utils/undo-redo-history';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { produce } from 'immer';
+import _ from 'lodash';
 import React, { useCallback, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import TextareaAutosize from 'react-textarea-autosize';
 import { v4 as uuidv4 } from 'uuid';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
-import { artifactUnlocksSelector, storesSelector } from '../inventory/selectors';
+import {
+  allItemsSelector,
+  artifactUnlocksSelector,
+  storesSelector,
+  unlockedPlugSetItemsSelector,
+} from '../inventory/selectors';
 import LoadoutEdit from '../loadout/loadout-edit/LoadoutEdit';
 import { deleteLoadout, updateLoadout } from './actions';
 import {
@@ -36,6 +43,7 @@ import {
   fillLoadoutFromEquipped,
   fillLoadoutFromUnequipped,
   LoadoutUpdateFunction,
+  randomizeFullLoadout,
   removeItem,
   setClassType,
   setName,
@@ -75,6 +83,9 @@ export default function LoadoutDrawer({
   const dispatch = useThunkDispatch();
   const defs = useDefinitions()!;
   const stores = useSelector(storesSelector);
+  const allItems = useSelector(allItemsSelector);
+  const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(storeId));
+  const searchFilter = useSelector(searchFilterSelector);
   const [showingItemPicker, setShowingItemPicker] = useState(false);
   const {
     state: loadout,
@@ -224,6 +235,8 @@ export default function LoadoutDrawer({
   const handleFillLoadoutFromEquipped = () =>
     setLoadout(fillLoadoutFromEquipped(defs, store, artifactUnlocks));
   const handleFillLoadoutFromUnequipped = () => setLoadout(fillLoadoutFromUnequipped(defs, store));
+  const handleRandomizeLoadout = () =>
+    setLoadout(randomizeFullLoadout(defs, store, allItems, searchFilter, unlockedPlugs));
 
   const toggleAnyClass = (checked: boolean) =>
     setLoadout(setClassType(checked ? DestinyClass.Unknown : store.classType));
@@ -297,6 +310,12 @@ export default function LoadoutDrawer({
           </button>
           <button type="button" className="dim-button" onClick={handleFillLoadoutFromUnequipped}>
             <AppIcon icon={addIcon} /> {t('Loadouts.FillFromInventory')}
+          </button>
+          <button type="button" className="dim-button" onClick={handleRandomizeLoadout}>
+            <AppIcon icon={faRandom} />{' '}
+            {searchFilter === _.stubTrue
+              ? t('Loadouts.RandomizeButton')
+              : t('Loadouts.RandomizeSearch')}
           </button>
           <CheckButton
             checked={loadout.classType === DestinyClass.Unknown}
