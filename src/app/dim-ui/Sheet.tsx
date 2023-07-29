@@ -1,7 +1,7 @@
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
-import { isiOSBrowser } from 'app/utils/browsers';
-import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
+import { isAndroid, isiOSBrowser } from 'app/utils/browsers';
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock-upgrade';
 import clsx from 'clsx';
 import {
   PanInfo,
@@ -324,7 +324,7 @@ function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivEleme
       sheetContents.current = contents;
       if (sheetContents.current) {
         sheetContents.current.addEventListener('touchstart', blockEvents);
-        if (isiOSBrowser()) {
+        if (isiOSBrowser() || isAndroid()) {
           // as-is, body-scroll-lock does not work on on Android #5615
           document.body.classList.add('body-scroll-lock');
           enableBodyScroll(sheetContents.current);
@@ -339,7 +339,7 @@ function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivEleme
     () => () => {
       if (sheetContents.current) {
         sheetContents.current.removeEventListener('touchstart', blockEvents);
-        if (isiOSBrowser()) {
+        if (isiOSBrowser() || isAndroid()) {
           setTimeout(() => {
             document.body.classList.remove('body-scroll-lock');
           }, 0);
