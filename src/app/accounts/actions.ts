@@ -1,3 +1,4 @@
+import { FatalTokenError } from 'app/bungie-api/authenticated-fetch';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
 import { createAction } from 'typesafe-actions';
@@ -24,8 +25,9 @@ export function handleAuthErrors(e: unknown): ThunkResult {
       dispatch(needsDeveloper());
     } else if (
       e instanceof Error &&
-      (e.name === 'FatalTokenError' ||
-        (e instanceof DimError && e.code === 'BungieService.NotLoggedIn'))
+      (e instanceof FatalTokenError ||
+        (e instanceof DimError &&
+          (e.code === 'BungieService.NotLoggedIn' || e.cause instanceof FatalTokenError)))
     ) {
       dispatch(loggedOut());
     }

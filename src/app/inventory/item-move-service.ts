@@ -1,5 +1,6 @@
 import { getCurrentHub } from '@sentry/browser';
 import { Span } from '@sentry/tracing';
+import { handleAuthErrors } from 'app/accounts/actions';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import { isInInGameLoadoutForSelector } from 'app/loadout-drawer/selectors';
@@ -307,33 +308,44 @@ export function equipItems(
     }
 
     session.cancelToken.checkCanceled();
-    const results = await equipItemsApi(items[0])(
-      currentAccountSelector(getState())!,
-      store,
-      items
-    );
-    // Update our view of each successful item
-    for (const [itemInstanceId, resultCode] of Object.entries(results)) {
-      if (resultCode === PlatformErrorCodes.Success) {
-        const item = items.find((i) => i.id === itemInstanceId);
-        if (item) {
-          dispatch(updateItemModel(item, store, store, true));
+
+    try {
+      const results = await equipItemsApi(items[0])(
+        currentAccountSelector(getState())!,
+        store,
+        items
+      );
+      // Update our view of each successful item
+      for (const [itemInstanceId, resultCode] of Object.entries(results)) {
+        if (resultCode === PlatformErrorCodes.Success) {
+          const item = items.find((i) => i.id === itemInstanceId);
+          if (item) {
+            dispatch(updateItemModel(item, store, store, true));
+          }
         }
       }
+      return results;
+    } catch (e) {
+      dispatch(handleAuthErrors(e));
+      throw e;
     }
-    return results;
   };
 }
 
 function equipItem(item: DimItem, cancelToken: CancelToken): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
-    const store = getStore(storesSelector(getState()), item.owner)!;
-    if ($featureFlags.debugMoves) {
-      infoLog('equip', 'Equip', item.name, item.type, 'to', store.name);
+    try {
+      const store = getStore(storesSelector(getState()), item.owner)!;
+      if ($featureFlags.debugMoves) {
+        infoLog('equip', 'Equip', item.name, item.type, 'to', store.name);
+      }
+      cancelToken.checkCanceled();
+      await equipApi(item)(currentAccountSelector(getState())!, item);
+      return dispatch(updateItemModel(item, store, store, true));
+    } catch (e) {
+      dispatch(handleAuthErrors(e));
+      throw e;
     }
-    cancelToken.checkCanceled();
-    await equipApi(item)(currentAccountSelector(getState())!, item);
-    return dispatch(updateItemModel(item, store, store, true));
   };
 }
 
@@ -407,6 +419,7 @@ function moveToStore(
     try {
       await transferApi(item)(currentAccountSelector(getState())!, item, store, amount);
     } catch (e) {
+      dispatch(handleAuthErrors(e));
       // Not sure why this happens - maybe out of sync game state?
       if (
         e instanceof DimError &&
