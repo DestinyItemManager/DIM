@@ -68,7 +68,7 @@ export default function DesktopItemActions({
           type="button"
           className={styles.collapseButton}
           onClick={toggleSidecar}
-          title={t('MovePopup.ToggleSidecar') + ' [K]'}
+          title={`${t('MovePopup.ToggleSidecar')} [K]`}
           aria-keyshortcuts="k"
         >
           <AppIcon icon={sidecarCollapsed ? maximizeIcon : minimizeIcon} />

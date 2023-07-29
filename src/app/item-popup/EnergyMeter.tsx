@@ -8,6 +8,7 @@ import { showNotification } from 'app/notifications/notifications';
 import { AppIcon, disabledIcon, enabledIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
+import { errorMessage } from 'app/utils/util';
 import Cost from 'app/vendors/Cost';
 import clsx from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
@@ -64,7 +65,7 @@ export default function EnergyMeter({ item }: { item: DimItem }) {
 
       // TODO: show confirmation, hide preview, update item
     } catch (e) {
-      showNotification({ type: 'error', title: 'Error', body: e.message });
+      showNotification({ type: 'error', title: 'Error', body: errorMessage(e) });
     }
   };
 

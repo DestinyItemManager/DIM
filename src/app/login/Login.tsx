@@ -1,6 +1,7 @@
 import CheckButton from 'app/dim-ui/CheckButton';
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { t } from 'app/i18next-t';
+import { userGuideUrl } from 'app/shell/links';
 import { exportBackupData, exportLocalData } from 'app/storage/export-data';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isAppStoreVersion } from 'app/utils/browsers';
@@ -10,8 +11,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { oauthClientId } from '../bungie-api/bungie-api-utils';
 import styles from './Login.m.scss';
 
-export const dimApiHelpLink = 'https://github.com/DestinyItemManager/DIM/wiki/DIM-Sync';
-const loginHelpLink = 'https://github.com/DestinyItemManager/DIM/wiki/Accounts-and-Login';
+export const dimApiHelpLink = userGuideUrl('DIM-Sync');
+const loginHelpLink = userGuideUrl('Accounts-and-Login');
 
 export default function Login() {
   const dispatch = useThunkDispatch();
@@ -38,7 +39,7 @@ export default function Login() {
       state: authorizationState,
       ...(reauth && { reauth }),
     });
-    return `https://www.bungie.net/en/OAuth/Authorize?${queryParams}`;
+    return `https://www.bungie.net/en/OAuth/Authorize?${queryParams.toString()}`;
   };
 
   // If API permissions had been explicitly disabled before, don't even show the option to enable DIM Sync
@@ -98,7 +99,7 @@ export default function Login() {
           </div>
         )}
         {!apiPermissionPreviouslyDisabled && !apiPermissionGranted && (
-          <div className={styles.warning}>{t('Views.Login.DisabledDimSyncWarning')}</div>
+          <div className={styles.warning}>{t('Storage.DimSyncNotEnabled')}</div>
         )}
       </section>
       <section className={styles.section}>

@@ -5,6 +5,7 @@ interface CssExports {
   'currentColumn': string;
   'override': string;
   'unit': string;
+  'value': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

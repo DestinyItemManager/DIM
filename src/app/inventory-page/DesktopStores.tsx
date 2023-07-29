@@ -1,15 +1,16 @@
 import { itemPop } from 'app/dim-ui/scroll';
 import { t } from 'app/i18next-t';
-import { InventoryBucket, InventoryBuckets } from 'app/inventory/inventory-buckets';
+import { BucketSortType, InventoryBucket, InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { locateItem$ } from 'app/inventory/locate-item';
 import { DimStore } from 'app/inventory/store-types';
 import { findItemsByBucket, getCurrentStore, getVault } from 'app/inventory/stores-helpers';
+import IssueAwarenessBanner from 'app/issue-awareness-banner/IssueAwarenessBanner';
 import ItemFeedSidebar from 'app/item-feed/ItemFeedSidebar';
 import { useSetSetting } from 'app/settings/hooks';
 import { AppIcon, maximizeIcon, minimizeIcon } from 'app/shell/icons';
 import StoreStats from 'app/store-stats/StoreStats';
 import { useEventBusListener } from 'app/utils/hooks';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { isClassCompatible } from 'app/utils/item-utils';
 import clsx from 'clsx';
 import { useMemo } from 'react';
 import StoreHeading from '../character-tile/StoreHeading';
@@ -43,9 +44,7 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
       stores.length > 2 ||
       (currentStore &&
         stores.some((s) =>
-          s.items.some(
-            (i) => i.classType !== DestinyClass.Unknown && i.classType !== currentStore.classType
-          )
+          s.items.some((i) => !isClassCompatible(i.classType, currentStore.classType))
         )),
     [stores, currentStore]
   );
@@ -86,15 +85,16 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
                 title={
                   singleCharacter
                     ? t('Settings.ExpandSingleCharacter')
-                    : t('Settings.SingleCharacter') +
-                      ': ' +
-                      t('Settings.SingleCharacterExplanation')
+                    : `${t('Settings.SingleCharacter')}: ${t(
+                        'Settings.SingleCharacterExplanation'
+                      )}`
                 }
               >
                 <AppIcon icon={singleCharacter ? minimizeIcon : maximizeIcon} />
               </button>
             )}
           </div>
+          {$featureFlags.issueBanner && <IssueAwarenessBanner />}
         </HeaderShadowDiv>
 
         <StoresInventory
@@ -151,7 +151,7 @@ function CollapsibleContainer({
 
   return (
     <InventoryCollapsibleTitle
-      title={t(`Bucket.${category}`, { metadata: { keys: 'buckets' } })}
+      title={t(`Bucket.${category as BucketSortType}`, { metadata: { keys: 'buckets' } })}
       sectionId={category}
       stores={stores}
     >

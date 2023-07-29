@@ -4,10 +4,9 @@ import { t } from 'app/i18next-t';
 import { D1ItemCategoryHashes } from 'app/search/d1-known-values';
 import { armorStats, evenStatWeights, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
-import { isPlugStatActive } from 'app/utils/item-utils';
+import { isClassCompatible, isPlugStatActive } from 'app/utils/item-utils';
 import { weakMemoize } from 'app/utils/util';
 import {
-  DestinyClass,
   DestinyInventoryItemDefinition,
   DestinyItemInvestmentStatDefinition,
   DestinyStatAggregationType,
@@ -195,10 +194,7 @@ export function buildStats(
     // synthesize custom stats for meaningfully stat-bearing items
     if (createdItem.type !== 'ClassItem') {
       for (const customStat of customStats) {
-        if (
-          customStat.class === createdItem.classType ||
-          customStat.class === DestinyClass.Unknown
-        ) {
+        if (isClassCompatible(customStat.class, createdItem.classType)) {
           const cStat = makeCustomStat(
             investmentStats,
             customStat.weights,
@@ -300,7 +296,7 @@ function buildStat(
   statDef: DestinyStatDefinition,
   statDisplaysByStatHash: StatDisplayLookup
 ): DimStat {
-  value = value || 0;
+  value ||= 0;
   const investmentValue = value;
   let maximumValue = statGroup.maximumValue;
   let bar = !statsNoBar.includes(statHash);
@@ -616,7 +612,7 @@ export function interpolateStatValue(value: number, statDisplay: DestinyStatDisp
  */
 function bankersRound(x: number) {
   const r = Math.round(x);
-  return (x > 0 ? x : -x) % 1 === 0.5 ? (0 === r % 2 ? r : r - 1) : r;
+  return (x > 0 ? x : -x) % 1 === 0.5 ? (r % 2 === 0 ? r : r - 1) : r;
 }
 
 export function keyByStatHash(stats: DimStat[]): StatLookup;

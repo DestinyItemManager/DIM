@@ -1,11 +1,11 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { tl } from 'app/i18next-t';
+import { I18nKey, tl } from 'app/i18next-t';
 import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { ThunkResult } from 'app/store/types';
 import { CancelToken } from 'app/utils/cancel';
-import { uniqBy } from 'app/utils/util';
+import { errorMessage, uniqBy } from 'app/utils/util';
 import { Destiny2CoreSettings } from 'bungie-api-ts/core';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 
@@ -50,7 +50,7 @@ export function collectSocketsToStrip(
 ) {
   const socketsByKind: {
     [kind in SocketKind]: {
-      name: string;
+      name: I18nKey;
       items?: StripAction[];
     };
   } = {
@@ -148,7 +148,7 @@ export function doStripSockets(
         await dispatch(insertPlug(entry.item, socket, socket.emptyPlugItemHash!));
         progressCallback(i, undefined);
       } catch (e) {
-        progressCallback(i, e.message ?? '???');
+        progressCallback(i, errorMessage(e));
       }
     }
   };

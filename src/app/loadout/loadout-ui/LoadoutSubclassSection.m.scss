@@ -39,6 +39,9 @@
   :global(.item) {
     --item-size: var(--item-icon-size);
   }
+  :global(.item-img) {
+    border-color: var(--theme-item-socket-border);
+  }
 }
 
 .modsPlaceholder {

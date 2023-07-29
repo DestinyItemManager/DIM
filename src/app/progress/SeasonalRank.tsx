@@ -2,6 +2,7 @@ import Countdown from 'app/dim-ui/Countdown';
 import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { isClassCompatible } from 'app/utils/item-utils';
 import {
   DestinyCharacterProgressionComponent,
   DestinyClass,
@@ -95,7 +96,7 @@ export default function SeasonalRank({
         }
       }
 
-      return def.classType === DestinyClass.Unknown || def.classType === store.classType;
+      return isClassCompatible(def.classType, store.classType);
     })
     // Premium reward first to match companion
     .reverse();

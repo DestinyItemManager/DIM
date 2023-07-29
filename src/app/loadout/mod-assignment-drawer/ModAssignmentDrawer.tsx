@@ -32,7 +32,7 @@ function Header({
   mods: PluggableInventoryItemDefinition[];
 }) {
   return (
-    <>
+    <div>
       <h1>{t('Loadouts.ModPlacement.ModPlacement')}</h1>
       <div className={styles.headerInfo}>
         <div className={styles.headerName}>{loadout.name}</div>
@@ -45,7 +45,7 @@ function Header({
           />
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

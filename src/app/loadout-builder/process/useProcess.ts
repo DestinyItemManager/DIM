@@ -22,7 +22,7 @@ import {
   ItemsByBucket,
   LockableBucketHash,
   ModStatChanges,
-  StatFilters,
+  ResolvedStatConstraint,
   StatRanges,
 } from '../types';
 import {
@@ -68,8 +68,7 @@ export function useProcess({
   subclass,
   modStatChanges,
   armorEnergyRules,
-  statOrder,
-  statFilters,
+  resolvedStatConstraints,
   anyExotic,
   autoStatMods,
 }: {
@@ -80,8 +79,7 @@ export function useProcess({
   subclass: ResolvedLoadoutItem | undefined;
   modStatChanges: ModStatChanges;
   armorEnergyRules: ArmorEnergyRules;
-  statOrder: number[];
-  statFilters: StatFilters;
+  resolvedStatConstraints: ResolvedStatConstraint[];
   anyExotic: boolean;
   autoStatMods: boolean;
 }) {
@@ -151,7 +149,7 @@ export function useProcess({
 
       const groupedItems = mapItemsToGroups(
         items,
-        statOrder,
+        resolvedStatConstraints,
         armorEnergyRules,
         activityMods,
         bucketSpecificMods[bucketHash] || [],
@@ -171,8 +169,7 @@ export function useProcess({
         processItems,
         _.mapValues(modStatChanges, (stat) => stat.value),
         lockedProcessMods,
-        statOrder,
-        statFilters,
+        resolvedStatConstraints,
         anyExotic,
         autoModsData,
         autoStatMods,
@@ -212,8 +209,7 @@ export function useProcess({
     filteredItems,
     selectedStore.classType,
     selectedStore.id,
-    statFilters,
-    statOrder,
+    resolvedStatConstraints,
     anyExotic,
     subclass,
     armorEnergyRules,
@@ -252,6 +248,8 @@ const groupComparator = (getTag: (item: DimItem) => TagValue | undefined) =>
   chainComparator(
     // Prefer higher-energy (ideally masterworked)
     compareBy(({ dimItem }: MappedItem) => -(dimItem.energy?.energyCapacity || 0)),
+    // Prefer owned items over vendor items
+    compareBy(({ dimItem }: MappedItem) => Boolean(dimItem.vendor)),
     // Prefer favorited items
     compareBy(({ dimItem }: MappedItem) => getTag(dimItem) !== 'favorite'),
     // Prefer items with higher power
@@ -275,7 +273,7 @@ const groupComparator = (getTag: (item: DimItem) => TagValue | undefined) =>
  * Creating a group for every item is trivially correct but inefficient. Erroneously forgetting to include a bit
  * of information in the grouping key that is relevant to the web worker results in the worker failing to discover
  * certain sets, or set rendering suddenly failing in unexpected ways when it prefers an alternative due to an existing
- * loadout or more convenient energy types, so everything in ProcessItem that affects the operation of the worker
+ * loadout, so everything in ProcessItem that affects the operation of the worker
  * must be accounted for in this function.
  *
  * It can group by any number of the following concepts depending on locked mods and armor upgrades,
@@ -283,12 +281,11 @@ const groupComparator = (getTag: (item: DimItem) => TagValue | undefined) =>
  * - Masterwork status
  * - Exoticness (every exotic must be distinguished from other exotics and all legendaries)
  * - Energy capacity
- * - If there are energy requirements for slot independent mods it creates groups split by energy type
  * - If there are mods with tags (activity/combat style) it will create groups split by compatible tags
  */
 function mapItemsToGroups(
   items: readonly DimItem[],
-  statOrder: number[],
+  resolvedStatConstraints: ResolvedStatConstraint[],
   armorEnergyRules: ArmorEnergyRules,
   activityMods: PluggableInventoryItemDefinition[],
   modsForSlot: PluggableInventoryItemDefinition[],
@@ -327,11 +324,13 @@ function mapItemsToGroups(
     }
   >();
   for (const item of mappedItems) {
-    // Id, name are not important, exoticness+hash and energy type were grouped by in phase 1.
+    // Id, name are not important, exoticness+hash were grouped by in phase 1.
     // Energy value is the same for all items.
 
     // Item stats are important for the stat results of a full set
-    const statValues: number[] = statOrder.map((s) => item.processItem.stats[s]);
+    const statValues: number[] = resolvedStatConstraints.map(
+      (c) => item.processItem.stats[c.statHash]
+    );
     // Energy capacity affects mod assignment
     const energyCapacity = item.processItem.energy?.capacity || 0;
     // Supported mod tags affect mod assignment
@@ -350,7 +349,9 @@ function mapItemsToGroups(
   // Group items by everything relevant.
   const finalGroupingFn = (item: DimItem) => {
     const info = cache.get(item)!;
-    return `${info.stats}-${info.energyCapacity}-${[...info.relevantModSeasons.values()]}`;
+    return `${info.stats.toString()}-${info.energyCapacity}-${[
+      ...info.relevantModSeasons.values(),
+    ].toString()}`;
   };
 
   const energyGroups = _.groupBy(mappedItems, ({ processItem }) =>
@@ -421,6 +422,9 @@ function mapItemsToGroups(
   return groups;
 }
 
+/**
+ * Compute information about the mods LO could automatically assign.
+ */
 export function useAutoMods(storeId: string) {
   const defs = useD2Definitions()!;
   const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(storeId));

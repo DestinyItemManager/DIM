@@ -3,10 +3,9 @@ import { StoreIcon } from 'app/character-tile/StoreIcon';
 import { StatInfo } from 'app/compare/Compare';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
-import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
 import { PressTip, Tooltip } from 'app/dim-ui/PressTip';
 import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
-import { t, tl } from 'app/i18next-t';
+import { I18nKey, t, tl } from 'app/i18next-t';
 import ItemIcon, { DefItemIcon } from 'app/inventory/ItemIcon';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
@@ -19,6 +18,7 @@ import { getEvent, getSeason } from 'app/inventory/store/season';
 import { getStatSortOrder } from 'app/inventory/store/stats';
 import { getStore } from 'app/inventory/stores-helpers';
 import { ItemStatValue } from 'app/item-popup/ItemStat';
+import { KillTrackerInfo } from 'app/item-popup/KillTracker';
 import NotesArea from 'app/item-popup/NotesArea';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import { recoilValue } from 'app/item-popup/RecoilStat';
@@ -79,7 +79,7 @@ export function getColumnSelectionId(column: ColumnDefinition) {
 }
 
 // Some stat labels are long. This lets us replace them with i18n
-export const statLabels: LookupTable<StatHashes, string> = {
+export const statLabels: LookupTable<StatHashes, I18nKey> = {
   [StatHashes.RoundsPerMinute]: tl('Organizer.Stats.RPM'),
   [StatHashes.ReloadSpeed]: tl('Organizer.Stats.Reload'),
   [StatHashes.AimAssistance]: tl('Organizer.Stats.Aim'),
@@ -254,7 +254,7 @@ export function getColumns(
         <ItemPopupTrigger item={item}>
           {(ref, onClick) => (
             <div ref={ref} onClick={onClick} className="item">
-              <ItemIcon item={item} className={styles.itemIcon} />
+              <ItemIcon item={item} />
               {item.crafted && <img src={shapedOverlay} className={styles.shapedIconOverlay} />}
             </div>
           )}
@@ -286,7 +286,7 @@ export function getColumns(
         value: isSunset,
         defaultSort: SortDirection.ASC,
         cell: (value) => (value ? <AppIcon icon={faCheck} /> : undefined),
-        filter: (value) => (value ? '' : '-') + 'is:sunset',
+        filter: (value) => `${value ? '' : '-'}is:sunset`,
       }),
     !isGhost &&
       (destinyVersion === 2 || isWeapon) &&
@@ -313,7 +313,7 @@ export function getColumns(
       value: (i) => i.locked,
       cell: (value) => (value ? <AppIcon icon={lockIcon} /> : undefined),
       defaultSort: SortDirection.DESC,
-      filter: (value) => (value ? '' : '-') + 'is:locked',
+      filter: (value) => `${value ? '' : '-'}is:locked`,
     }),
     c({
       id: 'tag',
@@ -329,7 +329,7 @@ export function getColumns(
       value: (item) => newItems.has(item.id),
       cell: (value) => (value ? <NewItemIndicator /> : undefined),
       defaultSort: SortDirection.DESC,
-      filter: (value) => (value ? '' : '-') + 'is:new',
+      filter: (value) => `${value ? '' : '-'}is:new`,
     }),
     destinyVersion === 2 &&
       c({
@@ -339,7 +339,7 @@ export function getColumns(
         cell: (craftedDate) =>
           craftedDate ? <>{new Date(craftedDate * 1000).toLocaleString()}</> : undefined,
         defaultSort: SortDirection.DESC,
-        filter: (value) => (value ? '' : '-') + 'is:crafted',
+        filter: (value) => `${value ? '' : '-'}is:crafted`,
       }),
     c({
       id: 'recency',
@@ -354,7 +354,7 @@ export function getColumns(
         header: t('Organizer.Columns.WishList'),
         value: (item) => {
           const roll = wishList(item);
-          return roll ? (roll.isUndesirable ? false : true) : undefined;
+          return roll ? !roll.isUndesirable : undefined;
         },
         cell: (value) =>
           value !== undefined ? (
@@ -564,11 +564,19 @@ export function getColumns(
     c({
       id: 'loadouts',
       header: t('Organizer.Columns.Loadouts'),
-      value: (item) =>
-        loadoutsByItem[item.id]
-          ?.map((l) => l.loadout.name)
-          .sort()
-          .join(','),
+      value: (item) => {
+        const loadouts = loadoutsByItem[item.id];
+        // The raw comparison value compares by number of loadouts first,
+        // then by first loadout name
+        return (
+          loadouts &&
+          // 99999 loadouts ought to be enough for anyone
+          `${loadouts.length.toString().padStart(5, '0')}:${loadouts
+            .map((l) => l.loadout.name)
+            .sort()
+            .join(',')}`
+        );
+      },
       cell: (_val, item) => {
         const inloadouts = loadoutsByItem[item.id];
         return (

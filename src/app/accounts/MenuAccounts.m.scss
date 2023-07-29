@@ -13,7 +13,7 @@
     text-decoration: none;
     > div {
       padding: 10px 2rem 10px 1rem;
-      color: #aaa;
+      color: var(--theme-text-secondary);
 
       &:hover,
       &:focus {

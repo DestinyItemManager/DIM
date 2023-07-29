@@ -80,9 +80,13 @@ export default function PhoneStoresHeader({
   };
 
   const onPanEnd = (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    if (!trackRef.current) {
+      return;
+    }
+
     // Animate to one of the settled whole-number indexes
     let newIndex = Math.round(offset.get());
-    const scale = trackRef.current!.clientWidth / numSegments;
+    const scale = trackRef.current.clientWidth / numSegments;
 
     const direction = -Math.sign(info.velocity.x);
     if (newIndex === 0) {
@@ -106,7 +110,7 @@ export default function PhoneStoresHeader({
   }
 
   // Transform the segment-relative offset back into percents
-  const offsetPercent = useTransform(offset, (o) => (100 / segments.length) * -(o + 2) + '%');
+  const offsetPercent = useTransform(offset, (o) => `${(100 / segments.length) * -(o + 2)}%`);
 
   const keys: { [key: string]: number } = {};
   const makeKey = (key: string) => {

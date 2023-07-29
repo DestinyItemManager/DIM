@@ -59,7 +59,16 @@
     @include tooltip-section-color($red);
   }
   .automaticallyPickedSection {
-    @include tooltip-section-color(#e8a534);
+    @include tooltip-section-color($dim-brand);
+    border-radius: 0 0 $theme-tooltip-corner-radius $theme-tooltip-corner-radius;
+
+    // Re-define colors using accent if browser supports color-mix
+    @supports (background: color-mix(in srgb, black 50%, white)) {
+      &:not(:empty) {
+        color: color-mix(in srgb, var(--theme-accent-primary) 100%, white 100%);
+        background-color: color-mix(in srgb, var(--theme-accent-primary) 20%, black);
+      }
+    }
   }
 }
 .tooltipExotic {

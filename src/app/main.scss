@@ -7,6 +7,13 @@
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 @use 'variables.scss' as *;
 @use 'theme';
+@use 'theme-dimdark';
+@use 'theme-pyramid';
+@use 'theme-classic';
+@use 'theme-neomuna';
+@use 'theme-throneworld';
+@use 'theme-vexnet';
+@use 'theme-europa';
 
 @font-face {
   font-family: 'Destiny Symbols';
@@ -147,7 +154,7 @@ label {
 }
 
 a {
-  color: #ddd;
+  color: var(--theme-text);
   cursor: pointer;
   text-decoration: underline;
 }
@@ -205,8 +212,17 @@ option {
   font-family: 'Open Sans', sans-serif, 'Destiny Symbols';
 }
 
+input[type='text'] {
+  caret-color: var(--theme-accent-primary);
+}
+
 input[type='search'] {
   appearance: textfield;
+}
+
+input[type='range'],
+input[type='radio'] {
+  accent-color: var(--theme-accent-primary);
 }
 
 textarea {
@@ -222,6 +238,7 @@ textarea {
   font-size: inherit;
   // Setting this makes yuku/textcomplete faster because it doesn't need to make a fake element to measure line height (incorrectly, too)
   line-height: calc(16 / 12);
+  caret-color: var(--theme-accent-primary);
 }
 
 select {

@@ -83,13 +83,13 @@ const popperOptions = (
       hasArrow && {
         name: 'arrow',
         options: {
-          element: '.' + arrowClassName,
+          element: `.${arrowClassName}`,
         },
       },
       hasMenu && {
         name: 'computeSidecarPosition',
         options: {
-          element: '.' + menuClassName,
+          element: `.${menuClassName}`,
         },
       },
     ]),
@@ -140,21 +140,19 @@ export function usePopper({
     // Reposition the popup as it is shown or if its size changes
     if (!contents.current || !reference.current) {
       return destroy();
+    } else if (popper.current) {
+      popper.current.update();
     } else {
-      if (popper.current) {
-        popper.current.update();
-      } else {
-        const options = popperOptions(
-          placement,
-          arrowClassName,
-          menuClassName,
-          boundarySelector,
-          offset,
-          fixed
-        );
-        popper.current = createPopper(reference.current, contents.current, options);
-        popper.current.update();
-      }
+      const options = popperOptions(
+        placement,
+        arrowClassName,
+        menuClassName,
+        boundarySelector,
+        offset,
+        fixed
+      );
+      popper.current = createPopper(reference.current, contents.current, options);
+      popper.current.update();
     }
 
     return destroy;

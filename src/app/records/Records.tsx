@@ -9,6 +9,7 @@ import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { useSetting } from 'app/settings/hooks';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
+import { usePageTitle } from 'app/utils/hooks';
 import { objectKeys } from 'app/utils/util-types';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
@@ -34,6 +35,7 @@ export default function Records({ account }: Props) {
   const isPhonePortrait = useIsPhonePortrait();
   useLoadStores(account);
   const [searchParams] = useSearchParams();
+  usePageTitle(t('Records.Title'));
 
   const presentationNodeHash = searchParams.has('presentationNodeHash')
     ? parseInt(searchParams.get('presentationNodeHash')!, 10)
@@ -157,7 +159,6 @@ export default function Records({ account }: Props) {
                   <PresentationNodeRoot
                     presentationNodeHash={nodeDef.hash}
                     profileResponse={profileResponse}
-                    buckets={buckets}
                     ownedItemHashes={ownedItemHashes.accountWideOwned}
                     openedPresentationHash={presentationNodeHash}
                     searchQuery={searchQuery}

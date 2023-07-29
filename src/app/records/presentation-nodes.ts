@@ -3,6 +3,8 @@ import { DimItem } from 'app/inventory/item-types';
 import { ItemCreationContext, makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { ItemFilter } from 'app/search/filter-types';
 import { count } from 'app/utils/util';
+import extraItemCollectibles from 'data/d2/unreferenced-collections-items.json';
+
 import {
   DestinyCollectibleDefinition,
   DestinyCollectibleState,
@@ -22,16 +24,27 @@ import {
   DestinyScope,
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
+import { unlockedItemsForCharacterOrProfilePlugSet } from './plugset-helpers';
 
 export interface DimPresentationNodeLeaf {
   records?: DimRecord[];
   collectibles?: DimCollectible[];
   metrics?: DimMetric[];
   craftables?: DimCraftable[];
+  plugs?: DimCollectiblePlug[];
 }
 
 export interface DimPresentationNode extends DimPresentationNodeLeaf {
-  nodeDef: DestinyPresentationNodeDefinition;
+  /**
+   * The node definition may be missing if it's one of the fake nodes for PlugSets.
+   * The required properties `hash`, `name` and `icon` are duplicated from the def
+   * or generated with fake info.
+   */
+  nodeDef: DestinyPresentationNodeDefinition | undefined;
+  /** May or may not be an actual hash */
+  hash: number;
+  name: string;
+  icon: string;
   visible: number;
   acquired: number;
   childPresentationNodes?: DimPresentationNode[];
@@ -52,6 +65,14 @@ export interface DimCollectible {
   state: DestinyCollectibleState;
   collectibleDef: DestinyCollectibleDefinition;
   item: DimItem;
+  key: string;
+  /**
+   * true if this was artificially created by DIM.
+   * some items are missing in collectibles, and we can fix that,
+   * but they shouldn't be counted toward completion meters
+   * or they'll seem wrong compared to in-game collections
+   */
+  fake: boolean;
 }
 
 export interface DimCraftable {
@@ -59,6 +80,11 @@ export interface DimCraftable {
   item: DimItem;
   canCraftThis: boolean;
   canCraftAllPlugs: boolean;
+}
+
+export interface DimCollectiblePlug {
+  item: DimItem;
+  unlocked: boolean;
 }
 
 export interface DimPresentationNodeSearchResult extends DimPresentationNodeLeaf {
@@ -69,24 +95,34 @@ export interface DimPresentationNodeSearchResult extends DimPresentationNodeLeaf
 /** Process the live data into DIM types that collect everything in one place and can be filtered/searched. */
 export function toPresentationNodeTree(
   itemCreationContext: ItemCreationContext,
-  node: number
+  node: number,
+  plugSetCollections?: { hash: number; displayItem: number }[]
 ): DimPresentationNode | null {
   const { defs, buckets, profileResponse } = itemCreationContext;
   const presentationNodeDef = defs.PresentationNode.get(node);
   if (presentationNodeDef.redacted) {
     return null;
   }
+  const commonNodeProperties = {
+    nodeDef: presentationNodeDef,
+    hash: presentationNodeDef.hash,
+    name: presentationNodeDef.displayProperties.name,
+    icon: presentationNodeDef.displayProperties.icon,
+  };
   if (presentationNodeDef.children.collectibles?.length) {
     const collectibles = toCollectibles(
       itemCreationContext,
       presentationNodeDef.children.collectibles
     );
-    const visible = collectibles.length;
-    const acquired = count(collectibles, (c) => !(c.state & DestinyCollectibleState.NotAcquired));
+    const visible = collectibles.filter((c) => !c.fake).length;
+    const acquired = count(
+      collectibles,
+      (c) => !c.fake && !(c.state & DestinyCollectibleState.NotAcquired)
+    );
 
     // add an entry for self and return
     return {
-      nodeDef: presentationNodeDef,
+      ...commonNodeProperties,
       visible,
       acquired,
       collectibles,
@@ -100,7 +136,7 @@ export function toPresentationNodeTree(
 
     // add an entry for self and return
     return {
-      nodeDef: presentationNodeDef,
+      ...commonNodeProperties,
       visible,
       acquired,
       records,
@@ -114,7 +150,7 @@ export function toPresentationNodeTree(
 
     // add an entry for self and return
     return {
-      nodeDef: presentationNodeDef,
+      ...commonNodeProperties,
       visible,
       acquired,
       craftables,
@@ -126,7 +162,7 @@ export function toPresentationNodeTree(
     const visible = metrics.length;
     const acquired = count(metrics, (m) => Boolean(m.metricComponent.objectiveProgress.complete));
     return {
-      nodeDef: presentationNodeDef,
+      ...commonNodeProperties,
       visible,
       acquired,
       metrics,
@@ -139,7 +175,8 @@ export function toPresentationNodeTree(
     for (const presentationNode of presentationNodeDef.children.presentationNodes) {
       const subnode = toPresentationNodeTree(
         itemCreationContext,
-        presentationNode.presentationNodeHash
+        presentationNode.presentationNodeHash,
+        undefined
       );
       if (subnode) {
         acquired += subnode.acquired;
@@ -147,13 +184,53 @@ export function toPresentationNodeTree(
         children.push(subnode);
       }
     }
+
+    if (plugSetCollections) {
+      for (const collection of plugSetCollections) {
+        // Explicitly do not include counts in parent counts, since it would differ from
+        // the numbers shown in-game
+        children.push(buildPlugSetPresentationNode(itemCreationContext, collection));
+      }
+    }
     return {
-      nodeDef: presentationNodeDef,
+      ...commonNodeProperties,
       visible,
       acquired,
       childPresentationNodes: children,
     };
   }
+}
+
+function buildPlugSetPresentationNode(
+  itemCreationContext: ItemCreationContext,
+  { hash, displayItem }: { hash: number; displayItem: number }
+): DimPresentationNode {
+  const plugSetDef = itemCreationContext.defs.PlugSet.get(hash);
+  const item = itemCreationContext.defs.InventoryItem.get(displayItem);
+  const unlockedItems = unlockedItemsForCharacterOrProfilePlugSet(
+    itemCreationContext.profileResponse,
+    hash,
+    ''
+  );
+  const plugSetItems = _.compact(
+    plugSetDef.reusablePlugItems.map((i) => makeFakeItem(itemCreationContext, i.plugItemHash))
+  );
+  const plugEntries = plugSetItems.map((item) => ({
+    item,
+    unlocked: unlockedItems.has(item.hash),
+  }));
+  const acquired = count(plugEntries, (i) => i.unlocked);
+
+  const subnode: DimPresentationNode = {
+    nodeDef: undefined,
+    hash: -hash,
+    name: item.displayProperties.name,
+    icon: item.displayProperties.icon,
+    visible: plugSetItems.length,
+    acquired,
+    plugs: plugEntries,
+  };
+  return subnode;
 }
 
 // TODO: how to flatten this down to individual category trees
@@ -168,7 +245,11 @@ export function filterPresentationNodesToSearch(
   defs: D2ManifestDefinitions
 ): DimPresentationNodeSearchResult[] {
   // If the node itself matches
-  if (searchDisplayProperties(node.nodeDef.displayProperties, searchQuery)) {
+  if (
+    node.nodeDef
+      ? searchDisplayProperties(node.nodeDef.displayProperties, searchQuery)
+      : node.name.toLowerCase().includes(searchQuery)
+  ) {
     // Return this whole node
     return [{ path: [...path, node] }];
   }
@@ -249,6 +330,19 @@ export function filterPresentationNodesToSearch(
       : [];
   }
 
+  if (node.plugs) {
+    const plugs = node.plugs.filter((p) => filterItems(p.item));
+
+    return plugs.length
+      ? [
+          {
+            path: [...path, node],
+            plugs,
+          },
+        ]
+      : [];
+  }
+
   return [];
 }
 
@@ -273,34 +367,39 @@ function searchRewards(
 
 function toCollectibles(
   itemCreationContext: ItemCreationContext,
-  collectibleHashes: DestinyPresentationNodeCollectibleChildEntry[]
+  collectibleChildren: DestinyPresentationNodeCollectibleChildEntry[]
 ): DimCollectible[] {
   const { defs, profileResponse } = itemCreationContext;
   return _.compact(
-    collectibleHashes.map(({ collectibleHash }) => {
+    collectibleChildren.flatMap(({ collectibleHash }) => {
+      const fakeItemHash = extraItemCollectibles[collectibleHash];
       const collectibleDef = defs.Collectible.get(collectibleHash);
       if (!collectibleDef) {
         return null;
       }
-      const state = getCollectibleState(collectibleDef, profileResponse);
-      if (
-        state === undefined ||
-        state & DestinyCollectibleState.Invisible ||
-        collectibleDef.redacted
-      ) {
-        return null;
-      }
-      const item = makeFakeItem(itemCreationContext, collectibleDef.itemHash);
-      if (!item) {
-        return null;
-      }
-      item.missingSockets = false;
-      return {
-        state,
-        collectibleDef,
-        item,
-        owned: false,
-      };
+      const itemHashes = _.compact([collectibleDef.itemHash, fakeItemHash]);
+      return itemHashes.map((itemHash) => {
+        const state = getCollectibleState(collectibleDef, profileResponse);
+        if (
+          state === undefined ||
+          state & DestinyCollectibleState.Invisible ||
+          collectibleDef.redacted
+        ) {
+          return null;
+        }
+        const item = makeFakeItem(itemCreationContext, itemHash);
+        if (!item) {
+          return null;
+        }
+        item.missingSockets = false;
+        return {
+          state,
+          collectibleDef,
+          item,
+          key: `${collectibleHash}-${itemHash}`,
+          fake: fakeItemHash === itemHash,
+        };
+      });
     })
   );
 }

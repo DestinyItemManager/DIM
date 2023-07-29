@@ -44,8 +44,10 @@ export default function LoadoutDrawerOptions({
   const handleSetClassType = (e: React.ChangeEvent<HTMLSelectElement>) =>
     setLoadout(setClassType(parseInt(e.target.value, 10)));
 
-  const handleSetClearSpace = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setLoadout(setClearSpace(e.target.checked));
+  const handleSetClearSpace = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    category: 'Weapons' | 'Armor'
+  ) => setLoadout(setClearSpace(e.target.checked, category));
 
   const addNotes = () => setLoadout(setNotes(''));
 
@@ -89,10 +91,18 @@ export default function LoadoutDrawerOptions({
         <label>
           <input
             type="checkbox"
-            checked={Boolean(loadout.clearSpace)}
-            onChange={handleSetClearSpace}
+            checked={Boolean(loadout.parameters?.clearWeapons)}
+            onChange={(e) => handleSetClearSpace(e, 'Weapons')}
           />{' '}
-          {t('Loadouts.ClearSpace')}
+          {t('Loadouts.ClearSpaceWeapons')}
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={Boolean(loadout.parameters?.clearArmor)}
+            onChange={(e) => handleSetClearSpace(e, 'Armor')}
+          />{' '}
+          {t('Loadouts.ClearSpaceArmor')}
         </label>
       </div>
     </div>

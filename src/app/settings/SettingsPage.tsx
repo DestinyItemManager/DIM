@@ -15,6 +15,7 @@ import DimApiSettings from 'app/storage/DimApiSettings';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import StreamDeckSettings from 'app/stream-deck/StreamDeckSettings/StreamDeckSettings';
 import { clearAppBadge } from 'app/utils/app-badge';
+import { usePageTitle } from 'app/utils/hooks';
 import { errorLog } from 'app/utils/log';
 import i18next from 'i18next';
 import exampleWeaponImage from 'images/example-weapon.jpg';
@@ -55,11 +56,13 @@ const fakeWeapon = {
   },
   visible: true,
   primaryStat: {
-    value: 300,
+    value: 1600,
   },
   itemCategoryHashes: [],
   destinyVersion: 2,
 };
+
+const fakeWeaponMasterwork = { ...fakeWeapon, masterwork: true };
 
 const languageOptions = mapToOptions({
   de: 'Deutsch',
@@ -80,7 +83,19 @@ const languageOptions = mapToOptions({
 // This state is outside the settings page because the settings loses its
 let languageChanged = false;
 
+const themeOptions = mapToOptions({
+  default: 'Default (Beyond Light)',
+  classic: 'DIM Classic',
+  dimdark: 'DIM Dark Mode',
+  europa: 'Europa',
+  neomuna: 'Neomuna',
+  pyramid: 'Pyramid Fleet',
+  throneworld: 'Throne World',
+  vexnet: 'Vex Network',
+});
+
 export default function SettingsPage() {
+  usePageTitle(t('Settings.Settings'));
   const dispatch = useThunkDispatch();
   const settings = useSelector(settingsSelector);
   const currentAccount = useSelector(currentAccountSelector);
@@ -134,6 +149,11 @@ export default function SettingsPage() {
     i18next.changeLanguage(language, () => {
       setSetting('language', language);
     });
+  };
+
+  const changeTheme = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const theme = e.target.value;
+    setSetting('theme', theme);
   };
 
   const changeDescriptionDisplay = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -229,6 +249,7 @@ export default function SettingsPage() {
 
   const menuItems = _.compact([
     { id: 'general', title: t('Settings.Language') },
+    $featureFlags.themePicker ? { id: 'theme', title: t('Settings.Theme') } : undefined,
     { id: 'items', title: t('Settings.Items') },
     { id: 'inventory', title: t('Settings.Inventory') },
     $featureFlags.wishLists ? { id: 'wishlist', title: t('WishListRoll.Header') } : undefined,
@@ -272,15 +293,40 @@ export default function SettingsPage() {
             </div>
           </section>
 
+          {$featureFlags.themePicker && (
+            <section id="theme">
+              <h2>{t('Settings.Theme')}</h2>
+              <div className="setting">
+                <Select
+                  label={t('Settings.Theme')}
+                  name="theme"
+                  value={settings.theme}
+                  options={themeOptions}
+                  onChange={changeTheme}
+                />
+              </div>
+            </section>
+          )}
+
           <section id="items">
             <h2>{t('Settings.Items')}</h2>
-            <div className="examples">
-              <InventoryItem
-                item={fakeWeapon as unknown as DimItem}
-                isNew={true}
-                tag="favorite"
-                autoLockTagged={settings.autoLockTagged}
-              />
+            <div className="sub-bucket">
+              <div className="examples">
+                <InventoryItem
+                  item={fakeWeapon as unknown as DimItem}
+                  isNew={true}
+                  tag="favorite"
+                  autoLockTagged={settings.autoLockTagged}
+                />
+              </div>
+              <div className="examples">
+                <InventoryItem
+                  item={fakeWeaponMasterwork as unknown as DimItem}
+                  isNew={true}
+                  tag="favorite"
+                  autoLockTagged={settings.autoLockTagged}
+                />
+              </div>
             </div>
 
             {!isPhonePortrait && (

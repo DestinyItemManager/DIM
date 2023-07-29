@@ -7,6 +7,7 @@ import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import { getWeaponArchetype, socketContainsPlugWithCategory } from 'app/utils/socket-utils';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
+import '../store-stats/CharacterStats.scss';
 import styles from './Highlights.m.scss';
 
 /**
@@ -48,7 +49,7 @@ export default function Highlights({ item }: { item: DimItem }) {
             <BungieImage src={stat.displayProperties.icon} />
           </span>
         ) : (
-          stat.displayProperties.name + ': '
+          `${stat.displayProperties.name}: `
         )}
         {stat.value}
       </div>

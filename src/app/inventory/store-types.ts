@@ -1,8 +1,8 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import {
-  D1ActivityComponent,
   D1FactionDefinition,
-  D1RecordBook,
+  D1GetAdvisorsResponse,
+  D1ProgressionStep,
 } from 'app/destiny1/d1-manifest-types';
 import {
   DestinyClass,
@@ -125,7 +125,7 @@ export interface DimCharacterStat {
   description: string;
 
   /** A localized description of this stat's effect. */
-  effect?: string;
+  effect?: 'Grenade' | 'Melee' | 'Super';
   /** Cooldown time for the associated ability. */
   cooldown?: string;
 
@@ -134,9 +134,21 @@ export interface DimCharacterStat {
 }
 
 export interface D1Progression extends DestinyProgression {
-  /** The faction definition associated with this progress. */
-  faction: D1FactionDefinition;
+  name: string;
+  scope: number;
+  repeatLastStep: boolean;
+  steps: D1ProgressionStep[];
+  visible: boolean;
+  hash: number;
+  index: number;
+  redacted: boolean;
+  identifier?: string;
+  icon?: string;
+  label?: string;
   order: number;
+  faction: D1FactionDefinition;
+  description?: string;
+  source?: string;
 }
 
 /**
@@ -144,10 +156,5 @@ export interface D1Progression extends DestinyProgression {
  */
 export interface D1Store extends DimStore<D1Item> {
   progressions: D1Progression[];
-
-  // TODO: shape?
-  advisors: {
-    recordBooks?: D1RecordBook[];
-    activities?: { [activityId: string]: D1ActivityComponent };
-  };
+  advisors: D1GetAdvisorsResponse['data'];
 }

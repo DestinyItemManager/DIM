@@ -94,7 +94,9 @@
 .popupBackground {
   background-color: var(--background-color);
   contain: content;
-  box-shadow: 0 -1px 24px 4px #161626;
+  box-shadow:
+    0 0 0 1px var(--theme-item-popup-border),
+    var(--theme-drop-shadow);
 
   @include phone-portrait {
     box-shadow: none;
@@ -141,4 +143,31 @@
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+}
+
+.itemPopup {
+  :global(.sheet-header) {
+    padding: 0;
+    border: none;
+  }
+  :global(.sheet-close) {
+    padding: 12px 10px;
+    color: black;
+    opacity: 0.7;
+  }
+  :global(.sheet-handle) div {
+    background-color: black;
+    opacity: 0.7;
+  }
+
+  &.uncommon,
+  &.rare,
+  &.legendary {
+    :global(.sheet-close) {
+      color: var(--theme-text);
+    }
+    :global(.sheet-handle) div {
+      background-color: white;
+    }
+  }
 }

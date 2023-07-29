@@ -20,6 +20,9 @@ import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 import _ from 'lodash';
 import React, {
   Suspense,
+  forwardRef,
+  lazy,
+  memo,
   useCallback,
   useDeferredValue,
   useEffect,
@@ -125,11 +128,9 @@ function mapStateToProps() {
   };
 }
 
-const LazyFilterHelp = React.lazy(
-  () => import(/* webpackChunkName: "filter-help" */ './FilterHelp')
-);
+const LazyFilterHelp = lazy(() => import(/* webpackChunkName: "filter-help" */ './FilterHelp'));
 
-const RowContents = React.memo(({ item }: { item: SearchItem }) => {
+const RowContents = memo(({ item }: { item: SearchItem }) => {
   function highlight(text: string, section: string) {
     return item.highlightRange?.section === section ? (
       <HighlightedText
@@ -175,7 +176,7 @@ const RowContents = React.memo(({ item }: { item: SearchItem }) => {
   }
 });
 
-const Row = React.memo(
+const Row = memo(
   ({
     highlighted,
     item,
@@ -325,7 +326,6 @@ function SearchBar(
     getItemProps,
     setInputValue,
     reset: clearFilter,
-    openMenu,
   } = useCombobox<SearchItem>({
     items,
     stateReducer,
@@ -349,12 +349,6 @@ function SearchBar(
   ) {
     const { type, changes } = actionAndChanges;
     switch (type) {
-      // FIXME: Do not act on focus because it interacts badly with autofocus
-      // Downshift will likely switch away from using focus because too
-      // https://github.com/downshift-js/downshift/issues/1439
-      // (Also see onFocus below)
-      case useCombobox.stateChangeTypes.InputFocus:
-        return state;
       case useCombobox.stateChangeTypes.ItemClick:
       case useCombobox.stateChangeTypes.InputKeyDownEnter:
         if (!changes.selectedItem) {
@@ -382,14 +376,6 @@ function SearchBar(
         return changes; // no handling for other types
     }
   }
-
-  // FIXME: Maybe follow suit when Downshift changes opening behavior to
-  // just use clicks and not focus (see stateReducer above)
-  const onFocus = () => {
-    if (!liveQuery && !isOpen && !autoFocus) {
-      openMenu();
-    }
-  };
 
   // Reset live query when search version changes
   useEffect(() => {
@@ -523,11 +509,10 @@ function SearchBar(
         className={clsx(className, 'search-filter', styles.searchBar, { [styles.open]: isOpen })}
         role="search"
       >
-        <AppIcon icon={searchIcon} className="search-bar-icon" {...getLabelProps()} />
+        <AppIcon {...getLabelProps({ icon: searchIcon, className: 'search-bar-icon' })} />
         <input
           {...getInputProps({
             onBlur,
-            onFocus,
             onKeyDown,
             ref: inputElement,
             className: clsx({ [styles.invalid]: !valid }),
@@ -622,6 +607,4 @@ function SearchBar(
   );
 }
 
-export default connect(mapStateToProps, null, null, { forwardRef: true })(
-  React.forwardRef(SearchBar)
-);
+export default connect(mapStateToProps, null, null, { forwardRef: true })(forwardRef(SearchBar));

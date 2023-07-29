@@ -14,7 +14,9 @@
   z-index: 100;
   position: absolute;
   &.open {
-    outline: 2px solid rgba(232, 165, 52, 0.4) !important;
+    box-shadow:
+      0 0 0 1px var(--theme-item-popup-border),
+      var(--theme-drop-shadow);
   }
 }
 

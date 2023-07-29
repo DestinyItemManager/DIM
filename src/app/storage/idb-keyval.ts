@@ -5,7 +5,10 @@ export class Store {
   private readonly _storeName: string;
   private _dbp: Promise<IDBDatabase> | undefined;
 
-  constructor(dbName = 'keyval-store', readonly storeName = 'keyval') {
+  constructor(
+    dbName = 'keyval-store',
+    readonly storeName = 'keyval'
+  ) {
     this._dbName = dbName;
     this._storeName = storeName;
   }

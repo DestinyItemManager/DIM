@@ -29,20 +29,23 @@ let currentVersion = $DIM_VERSION;
 
 (async () => {
   await delay(10 * 1000);
-  setInterval(async () => {
-    try {
-      const serverVersion = await getServerVersion();
-      if (isNewVersion(serverVersion, currentVersion)) {
-        const updated = await updateServiceWorker();
-        if (updated) {
-          currentVersion = serverVersion;
-          dimNeedsUpdate$.next(true);
+  setInterval(
+    async () => {
+      try {
+        const serverVersion = await getServerVersion();
+        if (isNewVersion(serverVersion, currentVersion)) {
+          const updated = await updateServiceWorker();
+          if (updated) {
+            currentVersion = serverVersion;
+            dimNeedsUpdate$.next(true);
+          }
         }
+      } catch (e) {
+        errorLog('SW', 'Failed to check version.json', e);
       }
-    } catch (e) {
-      errorLog('SW', 'Failed to check version.json', e);
-    }
-  }, 15 * 60 * 1000);
+    },
+    15 * 60 * 1000
+  );
 })();
 
 /**
@@ -85,18 +88,14 @@ export default function registerServiceWorker() {
                   preventDevToolsReloadLoop = true;
                   window.location.reload();
                 });
-              } else {
+              } else if ($featureFlags.debugSW) {
                 // At this point, everything has been precached.
                 // It's the perfect time to display a
                 // "Content is cached for offline use." message.
-                if ($featureFlags.debugSW) {
-                  infoLog('SW', 'Content is cached for offline use.');
-                }
+                infoLog('SW', 'Content is cached for offline use.');
               }
-            } else {
-              if ($featureFlags.debugSW) {
-                infoLog('SW', 'New Service Worker state: ', installingWorker.state);
-              }
+            } else if ($featureFlags.debugSW) {
+              infoLog('SW', 'New Service Worker state: ', installingWorker.state);
             }
           };
         };

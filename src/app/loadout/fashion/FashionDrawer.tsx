@@ -222,7 +222,7 @@ export default function FashionDrawer({
 
       return collectibleHash && defs.Collectible.get(collectibleHash)?.parentNodeHashes[0];
     });
-    delete groupedOrnaments['undefined'];
+    delete groupedOrnaments.undefined;
     const mostCommonOrnamentSet = _.maxBy(
       Object.entries(groupedOrnaments),
       ([_presentationHash, ornaments]) => ornaments.length
@@ -435,6 +435,10 @@ function FashionItem({
     return null;
   }
 
+  // Divide valid sockets (with something plugged) into a shader socket and
+  // an ornament socket -- all items have two cosmetic sockets
+  // (really old Solstice armor has a third one for the glow at the end, and
+  // the exotic Loreley Splendor helm has a dummy socket with nothing plugged)
   const isShaderSocket = (s: DimSocket) =>
     defs.SocketType.get(s.socketDefinition.socketTypeHash)?.plugWhitelist.some(
       (pw) => pw.categoryHash === PlugCategoryHashes.Shader
@@ -442,7 +446,7 @@ function FashionItem({
   const cosmeticSockets = getSocketsByCategoryHash(
     exampleItem.sockets,
     SocketCategoryHashes.ArmorCosmetics
-  );
+  ).filter((s) => s.plugged);
   const shaderSocket = cosmeticSockets.find(isShaderSocket);
   const ornamentSocket = cosmeticSockets.find((s) => !isShaderSocket(s));
 

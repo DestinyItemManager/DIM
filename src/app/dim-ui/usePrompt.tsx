@@ -16,7 +16,7 @@ export interface PromptOpts {
  */
 export default function usePrompt(): [
   element: React.ReactNode,
-  prompt: (message: string, opts?: PromptOpts) => Promise<string | null>
+  prompt: (message: string, opts?: PromptOpts) => Promise<string | null>,
 ] {
   const [dialog, showDialog] = useDialog<PromptOpts & { message: React.ReactNode }, string | null>(
     (args, close) => (

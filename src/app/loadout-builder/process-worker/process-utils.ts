@@ -1,6 +1,6 @@
 import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
 import _ from 'lodash';
-import { ArmorStatHashes, MinMaxIgnored } from '../types';
+import { ArmorStatHashes, ResolvedStatConstraint } from '../types';
 import { AutoModsMap, ModsPick, buildAutoModsMap, chooseAutoMods } from './auto-stat-mod-utils';
 import { AutoModData, ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
 
@@ -129,13 +129,12 @@ export function pickAndAssignSlotIndependentMods(
 
     // This is a valid activity and combat mod assignment. See how much energy is left over per piece
     // eslint-disable-next-line github/array-foreach
-    items.forEach(
-      (item, idx) =>
-        (remainingEnergyCapacities[idx] =
-          (item.energy?.capacity || 0) -
-          (item.energy?.val || 0) -
-          (activityPermutation[idx]?.energy?.val || 0))
-    );
+    items.forEach((item, idx) => {
+      remainingEnergyCapacities[idx] =
+        (item.energy?.capacity || 0) -
+        (item.energy?.val || 0) -
+        (activityPermutation[idx]?.energy?.val || 0);
+    });
     remainingEnergyCapacities.sort((a, b) => b - a);
 
     if (neededStats) {
@@ -173,7 +172,7 @@ export function pickOptimalStatMods(
   info: LoSessionInfo,
   items: ProcessItem[],
   setStats: number[],
-  statFiltersInStatOrder: MinMaxIgnored[]
+  resolvedStatConstraints: ResolvedStatConstraint[]
 ): { mods: number[]; numBonusTiers: number; bonusStats: number[] } | undefined {
   const remainingEnergiesPerAssignment: number[][] = [];
 
@@ -220,15 +219,17 @@ export function pickOptimalStatMods(
   const explorationStats = [0, 0, 0, 0, 0, 0];
 
   for (let statIndex = setStats.length - 1; statIndex >= 0; statIndex--) {
-    const value = Math.min(Math.max(setStats[statIndex], 0), 100);
-    const filter = statFiltersInStatOrder[statIndex];
+    const filter = resolvedStatConstraints[statIndex];
     if (!filter.ignored) {
-      const neededValue = filter.min * 10 - value;
-      if (neededValue > 0) {
-        // As per function preconditions, we know that we can hit these minimum stats
-        explorationStats[statIndex] = neededValue;
+      const value = setStats[statIndex];
+      if (filter.minTier > 0) {
+        const neededValue = filter.minTier * 10 - value;
+        if (neededValue > 0) {
+          // As per function preconditions, we know that we can hit these minimum stats
+          explorationStats[statIndex] = neededValue;
+        }
       }
-      maxAddedStats[statIndex] = filter.max * 10 - value;
+      maxAddedStats[statIndex] = filter.maxTier * 10 - value;
     }
   }
 

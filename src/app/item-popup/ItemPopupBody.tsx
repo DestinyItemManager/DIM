@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import { DimItem } from '../inventory/item-types';
 import { ItemPopupExtraInfo } from './item-popup';
 import ItemDetails from './ItemDetails';
+import styles from './ItemPopupBody.m.scss';
 import './ItemPopupBody.scss';
 
 export const enum ItemPopupTab {
@@ -58,7 +59,7 @@ export default function ItemPopupBody({
       {failureStrings.map(
         (failureString) =>
           failureString.length > 0 && (
-            <div className="item-details failure-reason" key={failureString}>
+            <div className={styles.failureReason} key={failureString}>
               <RichDestinyText text={failureString} ownerId={item.owner} />
             </div>
           )
@@ -66,12 +67,12 @@ export default function ItemPopupBody({
       <div className="move-popup-details">
         {tabs.length > 1 ? (
           <>
-            <div className="move-popup-tabs">
+            <div className={styles.movePopupTabs}>
               {tabs.map((ta) => (
                 <span
                   key={ta.tab}
-                  className={clsx('move-popup-tab', {
-                    selected: tab === ta.tab,
+                  className={clsx(styles.movePopupTab, {
+                    [styles.selected]: tab === ta.tab,
                   })}
                   onClick={() => onTabChanged(ta.tab)}
                 >

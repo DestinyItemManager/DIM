@@ -9,6 +9,7 @@ import {
   ItemCategoryHashes,
   PlugCategoryHashes,
   StatHashes,
+  TraitHashes,
 } from 'data/d2/generated-enums';
 
 // ✨ magic values ✨
@@ -58,12 +59,12 @@ export const emptySocketHashes = [
 ];
 
 export const armor2PlugCategoryHashesByName = {
-  general: PlugCategoryHashes.EnhancementsV2General,
   helmet: PlugCategoryHashes.EnhancementsV2Head,
   gauntlets: PlugCategoryHashes.EnhancementsV2Arms,
   chest: PlugCategoryHashes.EnhancementsV2Chest,
   leg: PlugCategoryHashes.EnhancementsV2Legs,
   classitem: PlugCategoryHashes.EnhancementsV2ClassItem,
+  general: PlugCategoryHashes.EnhancementsV2General,
 } as const;
 
 /** The consistent armour 2 mod category hashes. This excludes raid, combat and legacy slots as they tend to change. */
@@ -151,7 +152,7 @@ export const swordStatsByName = {
 
 /** D2 has these item types but D1 doesn't */
 export const D2ItemCategoryHashesByName = {
-  grenadelauncher: ItemCategoryHashes.GrenadeLaunchers,
+  heavygrenadelauncher: ItemCategoryHashes.GrenadeLaunchers,
   specialgrenadelauncher: -ItemCategoryHashes.GrenadeLaunchers,
   tracerifle: ItemCategoryHashes.TraceRifles,
   linearfusionrifle: ItemCategoryHashes.LinearFusionRifles,
@@ -181,19 +182,19 @@ export const powerfulSources = [
   4143344829, // InventoryItem "Luminous Engram"
   4039143015, // InventoryItem "Powerful Gear"
   4249081773, // InventoryItem "Powerful Armor"
-  73143230, // Pinnacle
-  3114385605, // Tier 1
-  4039143015, // Powerful
-  3114385606, // Tier 2
-  3114385607, // Tier 3
+  73143230, // InventoryItem "Pinnacle Gear"
+  3114385605, // InventoryItem "Powerful Gear (Tier 1)"
+  4039143015, // InventoryItem "Powerful Gear"
+  3114385606, // InventoryItem "Powerful Gear (Tier 2)"
+  3114385607, // InventoryItem "Powerful Gear (Tier 3)"
 ];
 
 export const pinnacleSources = [
-  73143230, // Pinnacle
+  73143230, // InventoryItem "Pinnacle Gear"
 ];
 
 // For loadout mods obliterated from the defs, we instead return this def
-export const deprecatedPlaceholderArmorModHash = 3947616002;
+export const deprecatedPlaceholderArmorModHash = 3947616002; // InventoryItem "Deprecated Armor Mod"
 
 //
 // BUCKETS KNOWN VALUES
@@ -228,8 +229,8 @@ export const uniqueEquipBuckets = [
 // PRESENTATION NODE KNOWN VALUES
 //
 
-export const RAID_NODE = 4025982223;
-export const SHADER_NODE = 1516796296;
+export const RAID_NODE = 4025982223; // PresentationNode "Raids"
+export const SHADER_NODE = 1516796296; // PresentationNode "Shaders"
 
 //
 // MISC KNOWN HASHES / ENUMS
@@ -267,19 +268,18 @@ export const VENDORS = {
    * of that season's artifact
    */
   ARTIFACT: 2894222926,
+  DEVRIM_KAY: 396892126,
+  FAILSAFE: 1576276905,
 };
 
 /** used to snag the icon for display */
-export const WELL_RESTED_PERK = 2352765282;
-
-/** this one has a bad icon https://github.com/Bungie-net/api/issues/1832 */
-export const FISHING_BAIT_PERK = 3056678280;
+export const WELL_RESTED_PERK = 2352765282; // SandboxPerk "Well-Rested"
 
 /** an "All" trait we want to filter out of trait lists */
-export const ALL_TRAIT = 1434215347;
+export const ALL_TRAIT = TraitHashes.All;
 
 /** the trait hash that is used to identify Exotic weapon catalyst plugs */
-export const EXOTIC_CATALYST_TRAIT = 1505531793;
+export const EXOTIC_CATALYST_TRAIT = TraitHashes.ItemExoticCatalyst;
 
 /**
  * Maps TierType to tierTypeName in English and vice versa.

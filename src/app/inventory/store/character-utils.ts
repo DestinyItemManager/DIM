@@ -1,5 +1,5 @@
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
-import { D1CharacterResponse } from 'app/destiny1/d1-manifest-types';
+import { D1Character, D1StatLabel } from 'app/destiny1/d1-manifest-types';
 import { warnLog } from 'app/utils/log';
 import { StatHashes } from 'data/d2/generated-enums';
 import disciplineIcon from 'images/discipline.png';
@@ -93,7 +93,7 @@ export function getD1CharacterStatTiers(stat: DimCharacterStat) {
   return tiers;
 }
 
-const stats = [
+const stats: D1StatLabel[] = [
   'STAT_INTELLECT',
   'STAT_DISCIPLINE',
   'STAT_STRENGTH',
@@ -107,7 +107,7 @@ const stats = [
  */
 export function getCharacterStatsData(
   defs: D1ManifestDefinitions,
-  data: D1CharacterResponse['character']['base']['characterBase']
+  data: D1Character['characterBase']
 ) {
   const ret: { [statHash: string]: DimCharacterStat } = {};
   for (const statId of stats) {
@@ -135,6 +135,8 @@ export function getCharacterStatsData(
       case 'STAT_STRENGTH':
         stat.effect = 'Melee';
         stat.icon = strengthIcon;
+        break;
+      default:
         break;
     }
 

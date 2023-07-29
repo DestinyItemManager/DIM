@@ -3,6 +3,7 @@
 interface CssExports {
   'clickable': string;
   'empty': string;
+  'hasBadge': string;
   'placeholder': string;
 }
 export const cssExports: CssExports;

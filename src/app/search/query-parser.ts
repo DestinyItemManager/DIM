@@ -18,6 +18,8 @@
 <string> ::= WORD | "\"" WORD {" " WORD} "\"" | "'" WORD {" " WORD} "'\"'"
 */
 
+import { convertToError } from 'app/utils/util';
+
 /* **** Parser **** */
 
 interface QueryASTCommon {
@@ -212,7 +214,7 @@ export function parseQuery(query: string): QueryAST {
       }
       default:
         throw new Error(
-          'Unexpected token type, looking for an atom: ' + JSON.stringify(token) + ', ' + query
+          `Unexpected token type, looking for an atom: ${JSON.stringify(token)}, ${query}`
         );
     }
   }
@@ -234,7 +236,7 @@ export function parseQuery(query: string): QueryAST {
         }
         const operator = operators[token.type as keyof typeof operators];
         if (!operator) {
-          throw new Error('Expected an operator, got ' + JSON.stringify(token));
+          throw new Error(`Expected an operator, got ${JSON.stringify(token)}`);
         } else if (operator.precedence < minPrecedence) {
           break;
         }
@@ -263,7 +265,7 @@ export function parseQuery(query: string): QueryAST {
         }
       }
     } catch (e) {
-      ast.error = e;
+      ast.error = convertToError(e);
     }
 
     return ast;
@@ -275,7 +277,7 @@ export function parseQuery(query: string): QueryAST {
       return { op: 'noop', startIndex: 0, length: 0 };
     }
   } catch (e) {
-    return { op: 'noop', error: e, startIndex: 0, length: 0 };
+    return { op: 'noop', error: convertToError(e), startIndex: 0, length: 0 };
   }
   const ast = parse(tokens);
   return ast;
@@ -407,7 +409,7 @@ export function* lexer(query: string): Generator<Token> {
             consume(escaped);
           } else {
             throw new QueryLexerError(
-              'Unrecognized escape sequence \\' + escaped,
+              `Unrecognized escape sequence \\${escaped}`,
               escapeStart,
               i - escapeStart
             );
@@ -484,7 +486,7 @@ export function* lexer(query: string): Generator<Token> {
         args = match;
       } else {
         throw new QueryLexerError(
-          'missing keyword arguments for ' + keyword,
+          `missing keyword arguments for ${keyword}`,
           startIndex,
           query.length - startIndex
         );
@@ -514,7 +516,7 @@ export function* lexer(query: string): Generator<Token> {
       }
     } else {
       throw new QueryLexerError(
-        'unrecognized tokens: |' + query.slice(i) + '| ' + i,
+        `unrecognized tokens: |${query.slice(i)}| ${i}`,
         startIndex,
         query.length - startIndex
       );

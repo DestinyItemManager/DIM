@@ -10,6 +10,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   603721696, // Cryosthesia 77K
   776191470, // Tommy's Matchbook
   814876685, // Trinity Ghoul
+  940371471, // Wicked Implement
   1234150730, // Trespasser
   1331482397, // MIDA Multi-Tool
   1345867570, // Sweet Business
@@ -46,6 +47,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   2907129556, // Sturm
   2907129557, // Sunshot
   3089417789, // Riskrunner
+  3118061005, // Vexcalibur
   3141979346, // D.A.R.C.I.
   3141979347, // Borealis
   3211806999, // Izanagi's Burden

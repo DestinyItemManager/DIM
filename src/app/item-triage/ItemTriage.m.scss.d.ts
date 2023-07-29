@@ -16,6 +16,7 @@ interface CssExports {
   'loadoutList': string;
   'loadoutName': string;
   'loadoutRow': string;
+  'popupTabTitle': string;
   'similarItemsTable': string;
   'statTable': string;
   'statValue': string;

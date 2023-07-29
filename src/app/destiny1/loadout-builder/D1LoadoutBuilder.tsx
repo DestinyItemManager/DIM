@@ -14,7 +14,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { produce } from 'immer';
 import _ from 'lodash';
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import CharacterSelect from '../../dim-ui/CharacterSelect';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
@@ -121,7 +121,7 @@ const initialState: State = {
   },
 };
 
-class D1LoadoutBuilder extends React.Component<Props, State> {
+class D1LoadoutBuilder extends Component<Props, State> {
   state: State = initialState;
 
   private cancelToken: { cancelled: boolean } = {
@@ -547,8 +547,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
       return items.filter(
         (item) =>
           item.primaryStat?.statHash === D1_StatHashes.Defense &&
-          item.talentGrid &&
-          item.talentGrid.nodes &&
+          item.talentGrid?.nodes &&
           item.stats
       );
     }
@@ -608,11 +607,11 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
       // Remove overlapping perks in allPerks from vendorPerks
       for (const [classType, perksWithType] of Object.entries(vendorPerks) as unknown as [
         ClassTypes,
-        PerkCombination
+        PerkCombination,
       ][]) {
         for (const [type, perkArr] of Object.entries(perksWithType) as unknown as [
           ArmorTypes,
-          D1GridNode[]
+          D1GridNode[],
         ][]) {
           vendorPerks[classType][type] = _.reject(perkArr, (perk) =>
             perks[classType][type].map((i) => i.hash).includes(perk.hash)
@@ -658,7 +657,7 @@ class D1LoadoutBuilder extends React.Component<Props, State> {
     this.setState((state) => ({ showAdvanced: !state.showAdvanced }));
 
   private onFullModeChanged: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
-    const fullMode = e.target.value === 'true' ? true : false;
+    const fullMode = e.target.value === 'true';
     this.setState({ fullMode, progress: 0 });
   };
 

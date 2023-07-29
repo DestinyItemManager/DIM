@@ -2,10 +2,7 @@ import { settingSelector } from 'app/dim-api/selectors';
 import { scrollToPosition } from 'app/dim-ui/scroll';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { percent } from 'app/shell/formatters';
-import {
-  DestinyDisplayPropertiesDefinition,
-  DestinyPresentationScreenStyle,
-} from 'bungie-api-ts/destiny2';
+import { DestinyPresentationScreenStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { deepEqual } from 'fast-equals';
 import { useEffect, useRef } from 'react';
@@ -39,7 +36,7 @@ export default function PresentationNode({
   const defs = useD2Definitions()!;
   const completedRecordsHidden = useSelector(settingSelector('completedRecordsHidden'));
   const redactedRecordsRevealed = useSelector(settingSelector('redactedRecordsRevealed'));
-  const presentationNodeHash = node.nodeDef.hash;
+  const presentationNodeHash = node.hash;
   const headerRef = useScrollNodeIntoView(path, presentationNodeHash);
 
   const expandChildren = () => {
@@ -48,7 +45,7 @@ export default function PresentationNode({
     return false;
   };
 
-  const { visible, acquired, nodeDef } = node;
+  const { visible, acquired } = node;
   const completed = Boolean(acquired >= visible);
 
   if (!visible) {
@@ -60,7 +57,9 @@ export default function PresentationNode({
 
   // "CategorySet" DestinyPresentationScreenStyle is for armor sets
   const aParentIsCategorySetStyle = thisAndParents.some(
-    (p) => defs.PresentationNode.get(p).screenStyle === DestinyPresentationScreenStyle.CategorySets
+    (p) =>
+      p > 0 &&
+      defs.PresentationNode.get(p)?.screenStyle === DestinyPresentationScreenStyle.CategorySets
   );
 
   const alwaysExpanded =
@@ -79,7 +78,7 @@ export default function PresentationNode({
   const childrenExpanded =
     isRootNode || onlyChild || path.includes(presentationNodeHash) || alwaysExpanded;
 
-  const title = <PresentationNodeTitle def={nodeDef} overrideName={overrideName} />;
+  const title = <PresentationNodeTitle displayProperties={node} overrideName={overrideName} />;
 
   return (
     <div
@@ -115,7 +114,7 @@ export default function PresentationNode({
       {childrenExpanded &&
         node.childPresentationNodes?.map((subNode) => (
           <PresentationNode
-            key={subNode.nodeDef.hash}
+            key={subNode.hash}
             node={subNode}
             ownedItemHashes={ownedItemHashes}
             path={path}
@@ -191,16 +190,16 @@ export function PresentationNodeProgress({
 }
 
 export function PresentationNodeTitle({
-  def,
+  displayProperties,
   overrideName,
 }: {
-  def: { displayProperties: DestinyDisplayPropertiesDefinition };
+  displayProperties: { name: string; icon: string };
   overrideName?: string;
 }) {
   return (
     <span className={styles.nodeName}>
-      {def.displayProperties.icon && <BungieImage src={def.displayProperties.icon} />}{' '}
-      {overrideName || def.displayProperties.name}
+      {displayProperties.icon && <BungieImage src={displayProperties.icon} />}{' '}
+      {overrideName || displayProperties.name}
     </span>
   );
 }

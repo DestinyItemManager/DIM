@@ -69,10 +69,11 @@ export default function Select<T>({
     selectedItem: items.find((o) => o.value === value),
     itemToString: (i) => i?.key || 'none',
     onSelectedItemChange: ({ selectedItem }) => onChange(selectedItem?.value),
+    isItemDisabled: (item) => Boolean(item.disabled),
   });
 
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const menuRef = useRef<HTMLElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const [dropdownWidth, setDropdownWidth] = useState<number | undefined>(() =>
     typeof maxDropdownWidth === 'number' ? maxDropdownWidth : undefined
   );
@@ -105,7 +106,7 @@ export default function Select<T>({
   let buttonStyle: CSSProperties | undefined;
 
   const dropdownStyle: CSSProperties = {
-    overflowY: 'scroll',
+    overflowY: 'auto',
     overscrollBehaviorY: 'contain',
     maxHeight: dropdownHeight,
   };
@@ -135,8 +136,7 @@ export default function Select<T>({
         )}
       </button>
       <div
-        {...getMenuProps({ ref: menuRef })}
-        className={clsx(styles.menu, { [styles.open]: isOpen })}
+        {...getMenuProps({ ref: menuRef, className: clsx(styles.menu, { [styles.open]: isOpen }) })}
       >
         <div style={dropdownStyle}>
           {isOpen &&
@@ -152,7 +152,6 @@ export default function Select<T>({
                     {...getItemProps({
                       item,
                       index,
-                      disabled: item.disabled,
                     })}
                   >
                     {item.content}

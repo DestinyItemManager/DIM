@@ -13,7 +13,6 @@ interface CssExports {
   'importButton': string;
   'inlineIcon': string;
   'isPerk': string;
-  'itemIcon': string;
   'killTrackerDisplay': string;
   'loadout': string;
   'loadouts': string;

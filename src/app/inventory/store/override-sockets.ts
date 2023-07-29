@@ -116,7 +116,7 @@ export function applySocketOverrides(
 export function useSocketOverrides(): [
   socketOverrides: SocketOverrides,
   onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void,
-  resetOverrides: () => void
+  resetOverrides: () => void,
 ] {
   const [socketOverrides, setSocketOverrides] = useState<SocketOverrides>({});
   const onPlugClicked = useCallback(
@@ -148,7 +148,7 @@ export function useSocketOverridesForItems(
   initialOverrides: SocketOverridesForItems = {}
 ): [
   socketOverrides: SocketOverridesForItems,
-  onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void
+  onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void,
 ] {
   const [socketOverrides, setSocketOverrides] = useState<SocketOverridesForItems>(initialOverrides);
   const onPlugClicked = useCallback(

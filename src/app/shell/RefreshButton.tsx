@@ -65,7 +65,7 @@ export default function RefreshButton({ className }: { className?: string }) {
         type="button"
         className={clsx(styles.refreshButton, className, { disabled })}
         onClick={refresh}
-        title={t('Header.Refresh') + (autoRefresh ? '\n' + t('Header.AutoRefresh') : '')}
+        title={t('Header.Refresh') + (autoRefresh ? `\n${t('Header.AutoRefresh')}` : '')}
         aria-keyshortcuts="R"
       >
         <AppIcon icon={refreshIcon} spinning={active} />
@@ -123,7 +123,7 @@ function RefreshButtonTooltip({
         </div>
       ) : (
         <>
-          <b>{t('Header.Refresh') + (autoRefresh ? '\n' + t('Header.AutoRefresh') : '')}</b>
+          <b>{t('Header.Refresh') + (autoRefresh ? `\n${t('Header.AutoRefresh')}` : '')}</b>
           {profileAge !== undefined && (
             <div>{t('Header.ProfileAge', { age: i15dDurationFromMsWithSeconds(profileAge) })}</div>
           )}

@@ -1,6 +1,6 @@
 import { ItemAnnotation, ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { tl } from 'app/i18next-t';
+import { I18nKey, tl } from 'app/i18next-t';
 import { ThunkResult } from 'app/store/types';
 import _ from 'lodash';
 import { archiveIcon, banIcon, boltIcon, heartIcon, tagIcon } from '../shell/icons';
@@ -105,7 +105,7 @@ export interface ItemInfos {
 
 export interface TagInfo {
   type?: TagValue;
-  label: string;
+  label: I18nKey;
   sortOrder?: number;
   displacePriority?: number;
   hotkey?: string;
@@ -148,30 +148,28 @@ export function cleanInfos(stores: DimStore[]): ThunkResult {
         const info = infos[item.id];
         if (info && (info.tag !== undefined || info.notes?.length)) {
           cleanupIds.delete(item.id);
-        } else {
+        } else if (item.craftedInfo?.craftedDate) {
           // Double-check crafted items - we may have them under a different ID. If so,
           // patch up the data by re-tagging them under the new ID.
-          if (item.craftedInfo?.craftedDate) {
-            const craftedInfo = infosByCraftedDate[item.craftedInfo.craftedDate];
-            if (craftedInfo) {
-              if (craftedInfo.tag) {
-                dispatch(
-                  setItemTag({
-                    itemId: item.id,
-                    tag: craftedInfo.tag,
-                    craftedDate: item.craftedInfo.craftedDate,
-                  })
-                );
-              }
-              if (craftedInfo.notes) {
-                dispatch(
-                  setItemNote({
-                    itemId: item.id,
-                    note: craftedInfo.notes,
-                    craftedDate: item.craftedInfo.craftedDate,
-                  })
-                );
-              }
+          const craftedInfo = infosByCraftedDate[item.craftedInfo.craftedDate];
+          if (craftedInfo) {
+            if (craftedInfo.tag) {
+              dispatch(
+                setItemTag({
+                  itemId: item.id,
+                  tag: craftedInfo.tag,
+                  craftedDate: item.craftedInfo.craftedDate,
+                })
+              );
+            }
+            if (craftedInfo.notes) {
+              dispatch(
+                setItemNote({
+                  itemId: item.id,
+                  note: craftedInfo.notes,
+                  craftedDate: item.craftedInfo.craftedDate,
+                })
+              );
             }
           }
         }

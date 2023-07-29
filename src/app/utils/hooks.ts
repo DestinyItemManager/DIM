@@ -42,7 +42,7 @@ export function useShiftHeld() {
 export function useSetCSSVarToHeight(ref: React.RefObject<HTMLElement>, propertyName: string) {
   const updateVar = useCallback(
     (height: number) => {
-      document.querySelector('html')!.style.setProperty(propertyName, height + 'px');
+      document.querySelector('html')!.style.setProperty(propertyName, `${height}px`);
     },
     [propertyName]
   );
@@ -133,4 +133,14 @@ export function useHeightFromViewportBottom(
     window.visualViewport.addEventListener('resize', updateHeight);
     return () => window.visualViewport!.removeEventListener('resize', updateHeight);
   }, [setHeightFromViewportBottom, elementRef, itemHeight, padding]);
+}
+
+export function usePageTitle(title: string) {
+  useEffect(() => {
+    const titleElem = document.getElementsByTagName('title')[0]!;
+    titleElem.textContent = `DIM - ${title}`;
+    return () => {
+      titleElem.textContent = `DIM`;
+    };
+  }, [title]);
 }

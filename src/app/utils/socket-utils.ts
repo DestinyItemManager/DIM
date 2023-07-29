@@ -1,17 +1,19 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import {
   DimItem,
+  DimSocket,
   DimSocketCategory,
+  DimSockets,
   PluggableInventoryItemDefinition,
 } from 'app/inventory/item-types';
+import { armor2PlugCategoryHashes } from 'app/search/d2-known-values';
+import { DestinySocketCategoryStyle, TierType } from 'bungie-api-ts/destiny2';
 import {
-  DestinyItemPlugDefinition,
-  DestinySocketCategoryStyle,
-  TierType,
-} from 'bungie-api-ts/destiny2';
-import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+  ItemCategoryHashes,
+  PlugCategoryHashes,
+  SocketCategoryHashes,
+} from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { DimSocket, DimSockets } from '../inventory/item-types';
 import { isArmor2Mod, isKillTrackerSocket } from './item-utils';
 
 type WithRequiredProperty<T, K extends keyof T> = T & {
@@ -111,8 +113,8 @@ export function getFirstSocketByCategoryHash(sockets: DimSockets, categoryHash: 
 }
 
 function getSocketsByPlugCategoryIdentifier(sockets: DimSockets, plugCategoryIdentifier: string) {
-  return sockets.allSockets.find((socket) =>
-    socket.plugged?.plugDef.plug.plugCategoryIdentifier.includes(plugCategoryIdentifier)
+  return sockets.allSockets.find(
+    (socket) => socket.plugged?.plugDef.plug.plugCategoryIdentifier.includes(plugCategoryIdentifier)
   );
 }
 
@@ -202,8 +204,8 @@ export const eventArmorRerollSocketIdentifiers: string[] = ['events.solstice.'];
  * other armor but if it does, just add to this function.
  */
 export function isEventArmorRerollSocket(socket: DimSocket) {
-  return eventArmorRerollSocketIdentifiers.some((i) =>
-    socket.plugged?.plugDef.plug.plugCategoryIdentifier.startsWith(i)
+  return eventArmorRerollSocketIdentifiers.some(
+    (i) => socket.plugged?.plugDef.plug.plugCategoryIdentifier.startsWith(i)
   );
 }
 
@@ -236,14 +238,19 @@ export const subclassAbilitySocketCategoryHashes: SocketCategoryHashes[] = [
   SocketCategoryHashes.Super,
 ];
 
-export function isModCostVisible(
-  plug: DestinyItemPlugDefinition
-): plug is WithRequiredProperty<DestinyItemPlugDefinition, 'energyCost'> {
+export function isModCostVisible(plug: PluggableInventoryItemDefinition): boolean {
   return (
     // hide cost if it's less than 1
-    !((plug.energyCost?.energyCost ?? 0) < 1) &&
-    !plug.plugCategoryIdentifier.endsWith('.fragments') &&
-    !plug.plugCategoryIdentifier.endsWith('.trinkets')
+    !((plug.plug.energyCost?.energyCost ?? 0) < 1) &&
+    // subclass stuff is always 1
+    !plug.plug.plugCategoryIdentifier.endsWith('.fragments') &&
+    !plug.plug.plugCategoryIdentifier.endsWith('.trinkets') &&
+    // artifact unlocks happen to have the armor PCHs, but don't have
+    // the "armor mod" ICH because they don't go in armor
+    !(
+      armor2PlugCategoryHashes.includes(plug.plug.plugCategoryHash) &&
+      !plug.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)
+    )
   );
 }
 

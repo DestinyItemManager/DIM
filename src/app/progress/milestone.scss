@@ -56,13 +56,20 @@ button.milestone-quest {
     font-size: 14px;
   }
 
+  // Apply hover style only on clickable milestone buttons
+  &[type='button']:hover {
+    .milestone-name {
+      color: var(--theme-accent-primary);
+    }
+  }
+
   .milestone-location {
     font-size: 10px;
     margin: 0 0 2px 0;
   }
 
   .milestone-description {
-    color: #a1a2a2;
+    color: var(--theme-text-secondary);
     white-space: pre-wrap;
     line-height: 1.3;
     max-height: 3.9em;

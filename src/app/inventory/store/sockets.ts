@@ -5,6 +5,7 @@ import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import {
   eventArmorRerollSocketIdentifiers,
+  isEnhancedPerk,
   subclassAbilitySocketCategoryHashes,
 } from 'app/utils/socket-utils';
 import {
@@ -16,6 +17,7 @@ import {
   DestinyItemSocketEntryPlugItemRandomizedDefinition,
   DestinyItemSocketState,
   DestinyObjectiveProgress,
+  DestinyPlugItemCraftingRequirements,
   DestinySocketCategoryStyle,
   DestinySocketTypeDefinition,
   SocketPlugSources,
@@ -211,6 +213,23 @@ function filterReusablePlug(reusablePlug: DimPlug) {
 }
 
 /**
+ * Some craftable items have perks that can no longer roll, but the enhanced
+ * version of those perks still shows up in the list and claims to be roll-able.
+ * This helps us filter them out.
+ */
+function isUncraftableEnhancedPerk(
+  built: DimPlug,
+  craftingRequirements: DestinyPlugItemCraftingRequirements | undefined
+) {
+  return (
+    isEnhancedPerk(built.plugDef) &&
+    craftingRequirements &&
+    craftingRequirements.unlockRequirements.length === 0 &&
+    craftingRequirements.materialRequirementHashes.length === 0
+  );
+}
+
+/**
  * Build a socket from definitions, without the benefit of live profile info.
  */
 function buildDefinedSocket(
@@ -275,7 +294,8 @@ function buildDefinedSocket(
             reusablePlug.plugItemHash,
             reusablePlug.currentlyCanRoll
           );
-          if (built) {
+
+          if (built && !isUncraftableEnhancedPerk(built, reusablePlug.craftingRequirements)) {
             reusablePlugs.push(built);
             addCraftingReqs(reusablePlug);
           }
@@ -310,10 +330,14 @@ function buildDefinedSocket(
             randomPlug.plugItemHash,
             randomPlug.currentlyCanRoll
           );
+
           // we don't want "stat roll" plugs to count as reusablePlugs, but they're almost
           // indistinguishable from exotic intrinsic armor perks, so we stop them here based
           // on the fact that they have no name
-          if (built?.plugDef.displayProperties.name) {
+          if (
+            built?.plugDef.displayProperties.name &&
+            !isUncraftableEnhancedPerk(built, randomPlug.craftingRequirements)
+          ) {
             reusablePlugs.push(built);
             addCraftingReqs(randomPlug);
           }
@@ -351,18 +375,20 @@ function buildDefinedSocket(
       }
     }
   }
-  // if there's crafting data, sort plugs by their required level
-  // TO-DO: the order is correct in the original plugset def,
-  // we should address whatever is changing plug order in DIM
-  if (craftingData) {
-    const cd = craftingData;
-    plugOptions.sort(
-      compareBy((p: DimPlug) =>
-        // shove retired perks to the bottom (our choice) and consider requiredLevel:undefined to be 0 (bungie data works this way)
-        p.cannotCurrentlyRoll ? 999 : cd[p.plugDef.hash]?.requiredLevel ?? 0
-      )
-    );
-  }
+  // Plugs are already in the right order from the plugset, but some weapons
+  // have retired/collections perks in the middle of the list so we sort them
+  // down. Sort is stable so the existing crafting-cost-order will be preserved.
+  plugOptions.sort(
+    compareBy((p: DimPlug) =>
+      // shove retired perks to the bottom (our choice)
+      p.cannotCurrentlyRoll
+        ? 999
+        : // And collections rolls almost as far
+        p.unreliablePerkOption
+        ? 998
+        : 0
+    )
+  );
   // If the socket category is the intrinsic trait, assume that there is only one option and plug it.
   let plugged: DimPlug | null = null;
   if (
@@ -704,6 +730,7 @@ function buildSocket(
     isPerk,
     isMod,
     isReusable,
+    visibleInGame: socket.isVisible,
     socketDefinition: socketDef,
   };
 }

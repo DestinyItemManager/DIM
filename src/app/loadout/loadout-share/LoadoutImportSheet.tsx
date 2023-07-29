@@ -5,6 +5,7 @@ import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { AppIcon, refreshIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { isiOSBrowser } from 'app/utils/browsers';
+import { errorMessage } from 'app/utils/util';
 import { useEffect, useState } from 'react';
 import styles from './LoadoutImportSheet.m.scss';
 import { decodeShareUrl, getDecodedLoadout } from './loadout-import';
@@ -46,7 +47,7 @@ export default function LoadoutImportSheet({
         }
       } catch (e) {
         if (!canceled) {
-          setState(`${t('Loadouts.Import.Error')} ${e.message}`);
+          setState(`${t('Loadouts.Import.Error')} ${errorMessage(e)}`);
         }
       }
     })();

@@ -21,11 +21,12 @@ $header-height: 44px;
 .header {
   width: 100%;
   box-sizing: border-box;
-  padding-left: env(safe-area-inset-left, 2px);
-  padding-right: env(safe-area-inset-right);
-  padding-top: env(safe-area-inset-top);
-  height: $header-height;
-  height: calc(#{$header-height} + env(safe-area-inset-top));
+  padding-left: env(titlebar-area-x, env(safe-area-inset-left, 2px));
+  padding-right: calc(
+    100% - env(titlebar-area-width, 100%) - env(titlebar-area-x, 0) + env(safe-area-inset-right)
+  );
+  padding-top: env(titlebar-area-y, env(safe-area-inset-top));
+  height: calc(env(titlebar-area-height, #{$header-height}) + env(safe-area-inset-top));
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -33,13 +34,19 @@ $header-height: 44px;
   background-position: center top;
   background-repeat: no-repeat;
   background-size: 100vw 100vh;
+  -webkit-app-region: drag;
+
+  // Use the size of this element for the container query in .headerLinks. This
+  // is needed for the PWA mode where the header is narrower than the page.
+  container-type: inline-size;
 
   @include phone-portrait {
-    background: #000;
+    background: var(--theme-mobile-background);
   }
 
   button,
   a {
+    -webkit-app-region: no-drag;
     > :global(.app-icon) {
       font-size: 1.33em;
 
@@ -89,6 +96,7 @@ $header-height: 44px;
 }
 
 .headerRight {
+  -webkit-app-region: no-drag;
   cursor: default;
   display: flex;
   flex: 1;
@@ -137,7 +145,13 @@ $header-height: 44px;
     display: none;
   }
 
+  // Hide the links if the page is too small
   @media (max-width: 1200px) {
+    display: none;
+  }
+
+  // Only the newest browsers support container queries
+  @container (max-width: 1200px) {
     display: none;
   }
 
@@ -247,7 +261,7 @@ $header-height: 44px;
   }
 
   :global(.search-filter) {
-    background: rgba(0, 0, 0, 0.4);
+    background: var(--theme-search-bg);
   }
 }
 

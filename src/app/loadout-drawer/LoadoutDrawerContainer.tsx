@@ -8,18 +8,19 @@ import { decodeUrlLoadout } from 'app/loadout/loadout-share/loadout-import';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { useEventBusListener } from 'app/utils/hooks';
+import { errorMessage } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import React, { Suspense, useCallback, useEffect, useState } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 import { addItem$, editLoadout$ } from './loadout-events';
 import { Loadout } from './loadout-types';
 import { convertToLoadoutItem, newLoadout, pickBackingStore } from './loadout-utils';
 
-const LoadoutDrawer = React.lazy(
+const LoadoutDrawer = lazy(
   () => import(/* webpackChunkName: "loadout-drawer" */ './LoadoutDrawer')
 );
-const D1LoadoutDrawer = React.lazy(
+const D1LoadoutDrawer = lazy(
   () =>
     import(
       /* webpackChunkName: "d1-loadout-drawer" */ 'app/destiny1/loadout-drawer/D1LoadoutDrawer'
@@ -66,6 +67,9 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
           pickBackingStore(stores, storeId, loadout.classType) ?? getCurrentStore(stores);
 
         if (!editingStore) {
+          if (defs) {
+            warnMissingClass(loadout.classType, defs);
+          }
           return;
         }
 
@@ -76,7 +80,7 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
           isNew: Boolean(isNew),
         });
       },
-      [stores]
+      [stores, defs]
     )
   );
 
@@ -144,7 +148,7 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
       showNotification({
         type: 'error',
         title: t('Loadouts.BadLoadoutShare'),
-        body: t('Loadouts.BadLoadoutShareBody', { error: e.message }),
+        body: t('Loadouts.BadLoadoutShareBody', { error: errorMessage(e) }),
       });
       // ... or if it contained errors
       navigate(pathname, { replace: true });

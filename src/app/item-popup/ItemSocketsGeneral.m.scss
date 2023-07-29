@@ -1,7 +1,7 @@
 @use '../variables' as *;
 
 .armorIntrinsicDescription {
-  color: #aaa;
+  color: var(--theme-text-secondary);
   white-space: pre-line;
   h3 {
     color: var(--theme-text);
@@ -14,9 +14,6 @@
 }
 .minimalSockets {
   flex-flow: column nowrap;
-  > * {
-    margin-bottom: 8px !important;
-  }
 }
 .generalSockets {
   margin: 10px;
@@ -25,6 +22,6 @@
   gap: 4px 16px;
 
   &.minimalSockets {
-    margin: 0;
+    margin: 4px 0;
   }
 }

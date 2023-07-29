@@ -4,7 +4,7 @@ import { armorStats } from 'app/search/d2-known-values';
 import { useSetting } from 'app/settings/hooks';
 import { DestinyClass, DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import React, { ReactElement, ReactNode } from 'react';
+import React, { ReactElement, ReactNode, cloneElement } from 'react';
 import styles from './CustomStatTotal.m.scss';
 
 export type StatHashListsKeyedByDestinyClass = Record<number, number[]>;
@@ -111,6 +111,6 @@ function toggleArrayElement<T>(element: T, arr: T[]) {
 /** places a divider between each element of arr */
 function addDividers<T extends React.ReactNode>(arr: T[], divider: ReactElement): ReactNode[] {
   return arr
-    .flatMap((e, index) => [e, React.cloneElement(divider, { key: `divider-${index}` })])
+    .flatMap((e, index) => [e, cloneElement(divider, { key: `divider-${index}` })])
     .slice(0, -1);
 }

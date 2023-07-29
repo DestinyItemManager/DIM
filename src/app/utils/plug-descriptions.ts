@@ -2,6 +2,7 @@ import { Perk } from 'app/clarity/descriptions/descriptionInterface';
 import { clarityDescriptionsSelector } from 'app/clarity/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingSelector } from 'app/dim-api/selectors';
+import { t } from 'app/i18next-t';
 import { DimItem, DimPlug, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { getStatSortOrder, isAllowedItemStat, isAllowedPlugStat } from 'app/inventory/store/stats';
 import { activityModPlugCategoryHashes } from 'app/loadout/known-values';
@@ -13,6 +14,7 @@ import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
+import modsWithoutDescription from '../../data/d2/mods-with-bad-descriptions.json';
 import { compareBy } from './comparators';
 import { isPlugStatActive } from './item-utils';
 import { LookupTable } from './util-types';
@@ -204,6 +206,17 @@ function getPerkDescriptions(
       usedStrings.add(notif);
     }
   }
+  function addCustomDescriptionAsFunctionality() {
+    for (const mod of modsWithoutDescription.Harmonic) {
+      if (plug.hash === mod) {
+        results.push({
+          perkHash: -usedStrings.size,
+          description: t('Mods.HarmonicModDescription'),
+        });
+        usedStrings.add(t('Mods.HarmonicModDescription'));
+      }
+    }
+  }
 
   /*
   Most plugs use the description field to describe their functionality.
@@ -227,14 +240,14 @@ function getPerkDescriptions(
     } else {
       addDescriptionAsFunctionality();
     }
-    addTooltipNotifsAsRequirement();
+  } else if (plugDescription) {
+    addDescriptionAsFunctionality();
   } else {
-    if (plugDescription) {
-      addDescriptionAsFunctionality();
-    } else {
-      addPerkDescriptions();
-    }
+    addPerkDescriptions();
   }
+
+  // Add custom descriptions created for mods who's description is hard to access or an accurate description isn't present
+  addCustomDescriptionAsFunctionality();
 
   // a fallback: if we still don't have any perk descriptions, at least keep the first perk for display.
   // there are mods like this (e.g. Elemental Armaments): no description, and annoyingly all perks are set
@@ -266,6 +279,11 @@ function getPerkDescriptions(
     if (perkDesc.description || perkDesc.requirement) {
       results.push(perkDesc);
     }
+  }
+
+  // Needs to be last added otherwise we can break the above statement causing a description to not be added
+  if (plug.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)) {
+    addTooltipNotifsAsRequirement();
   }
 
   return results;

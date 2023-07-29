@@ -52,7 +52,6 @@ export const LoadoutMods = memo(function LoadoutMods({
   storeId,
   clearUnsetMods,
   missingSockets,
-  hasArtifactUnlocks,
   hideShowModPlacements,
   onUpdateMods,
   onRemoveMod,
@@ -64,7 +63,6 @@ export const LoadoutMods = memo(function LoadoutMods({
   hideShowModPlacements?: boolean;
   clearUnsetMods?: boolean;
   missingSockets?: boolean;
-  hasArtifactUnlocks?: boolean;
   /** If present, show an "Add Mod" button */
   onUpdateMods?: (newMods: number[]) => void;
   onRemoveMod?: (mod: ResolvedLoadoutMod) => void;
@@ -87,7 +85,7 @@ export const LoadoutMods = memo(function LoadoutMods({
   // TODO: let these be dragged and dropped into the loadout editor
 
   if (allMods.length === 0 && !onUpdateMods) {
-    return !isPhonePortrait && !hasArtifactUnlocks ? (
+    return !isPhonePortrait ? (
       <div className={styles.modsPlaceholder}>
         {missingSockets ? (
           <div className="item-details warning">{t('MovePopup.MissingSockets')}</div>
@@ -216,6 +214,10 @@ export const LoadoutArtifactUnlocks = memo(function LoadoutArtifactUnlocks({
         seasonNumber: loadout.parameters?.artifactUnlocks?.seasonNumber,
       })
     : t('Loadouts.ArtifactUnlocks');
+
+  if (!unlockedArtifactMods?.unlockedItemHashes.length) {
+    return null;
+  }
 
   return (
     <div className={className}>

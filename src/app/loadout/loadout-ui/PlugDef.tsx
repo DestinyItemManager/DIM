@@ -6,15 +6,6 @@ import { PlugDefTooltip } from 'app/item-popup/PlugTooltip';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 
-interface Props {
-  plug: PluggableInventoryItemDefinition;
-  className?: string;
-  onClick?: () => void;
-  onClose?: () => void;
-  automaticallyPicked?: boolean;
-  forClassType: DestinyClass | undefined;
-}
-
 /**
  * Displays a plug (mod, perk) based on just its definition, with optional close button.
  */
@@ -24,8 +15,17 @@ export default function PlugDef({
   onClick,
   onClose,
   automaticallyPicked,
+  disabledByAutoStatMods,
   forClassType,
-}: Props) {
+}: {
+  plug: PluggableInventoryItemDefinition;
+  className?: string;
+  onClick?: () => void;
+  onClose?: () => void;
+  automaticallyPicked?: boolean;
+  disabledByAutoStatMods?: boolean;
+  forClassType: DestinyClass | undefined;
+}) {
   const contents = (
     <div
       role={onClick ? 'button' : undefined}
@@ -39,11 +39,12 @@ export default function PlugDef({
           <PlugDefTooltip
             def={plug}
             automaticallyPicked={automaticallyPicked}
+            disabledByAutoStatMods={disabledByAutoStatMods}
             classType={forClassType}
           />
         )}
       >
-        <DefItemIcon itemDef={plug} />
+        <DefItemIcon className={disabledByAutoStatMods ? 'disabled' : undefined} itemDef={plug} />
       </PressTip>
     </div>
   );

@@ -4,10 +4,8 @@ import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { useD2Definitions } from 'app/manifest/selectors';
 import ErrorPanel from 'app/shell/ErrorPanel';
-import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { useEventBusListener } from 'app/utils/hooks';
+import { usePageTitle } from 'app/utils/hooks';
 import clsx from 'clsx';
-import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useParams } from 'react-router';
 import { DestinyAccount } from '../accounts/destiny-account';
@@ -19,13 +17,11 @@ import {
   profileResponseSelector,
   storesSelector,
 } from '../inventory/selectors';
-import { loadingTracker } from '../shell/loading-tracker';
-import { refresh$ } from '../shell/refresh-events';
 import styles from './SingleVendor.m.scss';
 import { VendorLocation } from './Vendor';
 import VendorItems from './VendorItems';
-import { loadAllVendors } from './actions';
 import { toVendor } from './d2-vendors';
+import { useLoadVendors } from './hooks';
 import { ownedVendorItemsSelector, vendorsByCharacterSelector } from './selectors';
 
 /**
@@ -41,7 +37,6 @@ export default function SingleVendor({ account }: { account: DestinyAccount }) {
   const vendors = useSelector(vendorsByCharacterSelector);
   const defs = useD2Definitions();
   const itemCreationContext = useSelector(createItemContextSelector);
-  const dispatch = useThunkDispatch();
 
   // TODO: get for all characters, or let people select a character? This is a hack
   // we at least need to display that character!
@@ -59,22 +54,9 @@ export default function SingleVendor({ account }: { account: DestinyAccount }) {
 
   const vendorDef = defs?.Vendor.get(vendorHash);
   const returnWithVendorRequest = vendorDef?.returnWithVendorRequest;
-  useEventBusListener(
-    refresh$,
-    useCallback(() => {
-      if (returnWithVendorRequest) {
-        loadingTracker.addPromise(dispatch(loadAllVendors(account, characterId)));
-      }
-    }, [account, characterId, dispatch, returnWithVendorRequest])
-  );
-
-  useEffect(() => {
-    if (characterId && vendorDef?.returnWithVendorRequest) {
-      dispatch(loadAllVendors(account, characterId));
-    }
-  }, [account, characterId, vendorDef, dispatch, vendorHash]);
-
   useLoadStores(account);
+  useLoadVendors(account, characterId, /* active */ returnWithVendorRequest);
+  usePageTitle(vendorDef?.displayProperties.name ?? t('Vendors.Vendors'));
 
   if (!defs || !buckets) {
     return <ShowPageLoading message={t('Manifest.Load')} />;
@@ -119,7 +101,8 @@ export default function SingleVendor({ account }: { account: DestinyAccount }) {
     vendorHash,
     vendor,
     characterId,
-    vendorResponse?.sales.data?.[vendorHash]?.saleItems
+    vendorResponse?.sales.data?.[vendorHash]?.saleItems,
+    vendorResponse
   );
 
   if (!d2Vendor) {

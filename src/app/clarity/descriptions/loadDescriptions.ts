@@ -7,21 +7,22 @@ import * as actions from '../actions';
 import { ClarityCharacterStats, ClarityStatsVersion } from './character-stats';
 import { ClarityDescription, ClarityVersions } from './descriptionInterface';
 
+const CLARITY_BASE = 'https://database-clarity.github.io/';
 const urls = {
-  descriptions: 'https://database-clarity.github.io/Live-Clarity-Database/descriptions/dim.json',
-  characterStats: 'https://database-clarity.github.io/Character-Stats/CharacterStatInfo-NI.json',
-  version: 'https://database-clarity.github.io/Live-Clarity-Database/versions.json',
-  statsVersion: 'https://database-clarity.github.io/Character-Stats/update.json',
+  descriptions: `${CLARITY_BASE}Live-Clarity-Database/descriptions/dim.json`,
+  characterStats: `${CLARITY_BASE}Character-Stats/CharacterStatInfo-NI.json`,
+  version: `${CLARITY_BASE}Live-Clarity-Database/versions.json`,
+  statsVersion: `${CLARITY_BASE}Character-Stats/update.json`,
 } as const;
 
 const fetchClarity = async (type: keyof typeof urls) => {
   const data = await fetch(urls[type]);
   if (!data.ok) {
-    throw new Error('failed to fetch ' + type);
+    throw new Error(`failed to fetch ${type}`);
   }
   const json = await data.json();
   if (_.isEmpty(json)) {
-    throw new Error('empty response JSON for ' + type);
+    throw new Error(`empty response JSON for ${type}`);
   }
   return json;
 };

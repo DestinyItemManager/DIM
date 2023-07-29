@@ -8,9 +8,12 @@
   height: 100%;
   height: 46px;
   white-space: nowrap;
+  box-sizing: border-box;
 
   &.vault {
     width: calc(6px + var(--character-column-width) - var(--item-margin));
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-right: none;
 
     @include phone-portrait {
       width: auto;

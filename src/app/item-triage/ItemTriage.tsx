@@ -9,7 +9,7 @@ import { SetFilterButton } from 'app/dim-ui/SetFilterButton';
 import filterButtonStyles from 'app/dim-ui/SetFilterButton.m.scss';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
-import { t, tl } from 'app/i18next-t';
+import { I18nKey, t, tl } from 'app/i18next-t';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { ItemPopupTab } from 'app/item-popup/ItemPopupBody';
 import { hideItemPopup } from 'app/item-popup/item-popup';
@@ -64,7 +64,7 @@ export function TriageTabToggle({ currentTab, item }: { currentTab: ItemPopupTab
   const isInLoadout = Boolean(loadoutsByItem[item.id]);
 
   return (
-    <span className="popup-tab-title">
+    <span className={styles.popupTabTitle}>
       {t('MovePopup.TriageTab')}
       {currentTab === ItemPopupTab.Overview && (
         <>
@@ -218,7 +218,7 @@ function SimilarItemsTriageSection({ item }: { item: DimItem }) {
               <FactorCombo exampleItem={item} factorCombo={factorCombo} />
               <span className={styles.count}>{count}</span>
               <span className={styles.controls}>
-                <StartCompareButton filter={query} items={items} />
+                <StartCompareButton filter={query} items={items} initialItem={item} />
                 <SetFilterButton filter={query} />
               </span>
             </div>
@@ -263,7 +263,7 @@ function BetterItemsTriageSection({ item }: { item: DimItem }) {
     artificeWorseStatItems,
   } = betterWorseResults;
 
-  const rows: [string, readonly [string, string], DimItem[], boolean][] = [
+  const rows: [I18nKey, readonly [I18nKey, I18nKey], DimItem[], boolean][] = [
     [t('Triage.BetterArmor'), descriptionBulletPoints.better, betterItems, false],
     [t('Triage.WorseStatArmor'), descriptionBulletPoints.betterStats, betterStatItems, false],
     [t('Triage.BetterArtificeArmor'), descriptionBulletPoints.better, artificeBetterItems, true],
@@ -323,9 +323,9 @@ function BetterItemsTriageSection({ item }: { item: DimItem }) {
                 <span className={styles.count}>{itemCollection.length}</span>
                 <span className={styles.controls}>
                   <StartCompareButton
-                    filter={`id:${item.id} or ` + filter}
+                    filter={`id:${item.id} or ${filter}`}
                     items={itemCollection}
-                    initialItemId={item.id}
+                    initialItem={item}
                   />
                 </span>
               </div>
@@ -424,18 +424,19 @@ function FactorCombo({
 function StartCompareButton({
   filter,
   items,
-  initialItemId,
+  initialItem,
 }: {
   filter: string;
   items: DimItem[];
-  /** The instance ID of the first item added to compare, so we can highlight it. */
-  initialItemId?: string;
+  /** The first item added to compare, so we can highlight it. */
+  initialItem: DimItem;
 }) {
   const dispatch = useDispatch();
   const compare = () => {
-    dispatch(compareFilteredItems(filter, items, initialItemId));
+    dispatch(compareFilteredItems(filter, items, initialItem));
     hideItemPopup();
   };
+
   const type = items[0]?.typeName;
   if (!type || items.some((i) => i.typeName !== type)) {
     return null;

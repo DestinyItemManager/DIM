@@ -1,7 +1,7 @@
 import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimLanguage } from 'app/i18n';
-import { t } from 'app/i18next-t';
+import { I18nKey, t } from 'app/i18next-t';
 import { TagValue } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
@@ -100,7 +100,7 @@ export interface FilterArgs {
 export interface FilterDefinition<
   I = DimItem,
   FilterCtx = FilterContext,
-  SuggestionsCtx = SuggestionsContext
+  SuggestionsCtx = SuggestionsContext,
 > {
   /**
    * One or more keywords which trigger the filter when typed into search bar.
@@ -112,7 +112,7 @@ export interface FilterDefinition<
    * A t()-compatible arg tuple or i18n key pointing to a full description of
    * the filter, to show in filter help
    */
-  description: string | I18nInput;
+  description: I18nKey | I18nInput;
 
   /**
    * What kind of query this is, used to help generate suggestions.

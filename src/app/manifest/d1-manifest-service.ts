@@ -1,10 +1,11 @@
+import { HttpStatusError } from 'app/bungie-api/http-client';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { loadingEnd, loadingStart } from 'app/shell/actions';
 import { del, get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { errorLog, infoLog } from 'app/utils/log';
-import { dedupePromise } from 'app/utils/util';
+import { convertToError, dedupePromise } from 'app/utils/util';
 import { AllDestinyManifestComponents } from 'bungie-api-ts/destiny2';
 import { showNotification } from '../notifications/notifications';
 import { settingsReady } from '../settings/settings';
@@ -38,20 +39,23 @@ function doGetManifest(): ThunkResult<AllDestinyManifestComponents> {
         throw new Error('Manifest corrupted, please reload');
       }
       return manifest;
-    } catch (e) {
-      let message = e.message || e;
+    } catch (err) {
+      const e = convertToError(err);
+      let message = e.message;
 
-      if (e instanceof TypeError || e.status === -1) {
+      if (e instanceof TypeError || (e instanceof HttpStatusError && e.status === -1)) {
         message = navigator.onLine
           ? t('BungieService.NotConnectedOrBlocked')
           : t('BungieService.NotConnected');
-      } else if (e.status === 503 || e.status === 522 /* cloudflare */) {
-        message = t('BungieService.Difficulties');
-      } else if (e.status < 200 || e.status >= 400) {
-        message = t('BungieService.NetworkError', {
-          status: e.status,
-          statusText: e.statusText,
-        });
+      } else if (e instanceof HttpStatusError) {
+        if (e.status === 503 || e.status === 522 /* cloudflare */) {
+          message = t('BungieService.Difficulties');
+        } else if (e.status < 200 || e.status >= 400) {
+          message = t('BungieService.NetworkError', {
+            status: e.status,
+            statusText: e.message,
+          });
+        }
       } else {
         // Something may be wrong with the manifest
         deleteManifestFile();
@@ -94,7 +98,9 @@ function loadManifestRemote(version: string, path: string): ThunkResult<object> 
 
     try {
       const response = await fetch(path);
-      const manifest = await (response.ok ? response.json() : Promise.reject(response));
+      const manifest = await (response.ok
+        ? response.json()
+        : Promise.reject(new HttpStatusError(response)));
 
       // We intentionally don't wait on this promise
       saveManifestToIndexedDB(manifest, version);
@@ -106,7 +112,7 @@ function loadManifestRemote(version: string, path: string): ThunkResult<object> 
   };
 }
 
-async function saveManifestToIndexedDB(typedArray: object, version: string) {
+async function saveManifestToIndexedDB(typedArray: unknown, version: string) {
   try {
     await set(idbKey, typedArray);
     infoLog('manifest', `Successfully stored manifest file.`);

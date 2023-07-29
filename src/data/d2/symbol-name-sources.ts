@@ -533,6 +533,15 @@ export const symbolData: {
     },
   },
   {
+    codepoint: 61230,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 988980155,
+      fromRichText: false,
+    },
+  },
+  {
     codepoint: 61190,
     glyph: '',
     source: {
@@ -551,11 +560,29 @@ export const symbolData: {
     },
   },
   {
+    codepoint: 61229,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 4249729125,
+      fromRichText: false,
+    },
+  },
+  {
     codepoint: 61192,
     glyph: '',
     source: {
       tableName: 'InventoryItem',
       hash: 2307689415,
+      fromRichText: false,
+    },
+  },
+  {
+    codepoint: 61228,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 262821319,
       fromRichText: false,
     },
   },

@@ -61,6 +61,9 @@ const computeDupesByIdFn = (allItems: DimItem[], makeDupeIdFn: (item: DimItem) =
   const duplicates: { [dupeID: string]: DimItem[] } = {};
 
   for (const i of allItems) {
+    if (!i.comparable) {
+      continue;
+    }
     const dupeID = makeDupeIdFn(i);
     if (!duplicates[dupeID]) {
       duplicates[dupeID] = [];
@@ -183,7 +186,7 @@ const dupeFilters: FilterDefinition[] = [
         for (const statHash in statWeights) {
           const weight = statWeights[statHash];
           if (weight && weight > 0) {
-            relevantStatHashes.push(parseInt(statHash));
+            relevantStatHashes.push(parseInt(statHash, 10));
           }
         }
         (duplicateSetsByClass[customStat.class] ||= []).push(

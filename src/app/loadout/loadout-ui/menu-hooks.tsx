@@ -6,9 +6,15 @@ import { DimLanguage } from 'app/i18n';
 import { t } from 'app/i18next-t';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
 import { isInGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
-import { isMissingItemsSelector } from 'app/loadout-drawer/loadout-utils';
+import {
+  FragmentProblem,
+  getFragmentProblemsSelector,
+  isMissingItemsSelector,
+} from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
 import { plainString } from 'app/search/search-filters/freeform';
+import { emptyArray } from 'app/utils/empty';
+import { isClassCompatible } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import deprecatedMods from 'data/d2/deprecated-mods.json';
 import _ from 'lodash';
@@ -27,12 +33,7 @@ export function useSavedLoadoutsForClassType(classType: DestinyClass) {
 }
 
 export function filterLoadoutsToClass(loadouts: Loadout[], classType: DestinyClass) {
-  return loadouts.filter(
-    (loadout) =>
-      classType === DestinyClass.Unknown ||
-      loadout.classType === DestinyClass.Unknown ||
-      loadout.classType === classType
-  );
+  return loadouts.filter((loadout) => isClassCompatible(classType, loadout.classType));
 }
 
 /**
@@ -40,6 +41,25 @@ export function filterLoadoutsToClass(loadouts: Loadout[], classType: DestinyCla
  * This returns a component ready to be used in the React tree as well as the list of filtered loadouts.
  */
 export function useLoadoutFilterPills(
+  savedLoadouts: Loadout[],
+  selectedStoreId: string,
+  options: {
+    includeWarningPills?: boolean;
+    className?: string;
+    darkBackground?: boolean;
+    extra?: React.ReactNode;
+  } = {}
+): [filteredLoadouts: Loadout[], filterPillsElement: React.ReactNode, hasSelectedFilters: boolean] {
+  if (!$featureFlags.loadoutFilterPills) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return useMemo(() => [savedLoadouts, null, false], [savedLoadouts]);
+  }
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  return useLoadoutFilterPillsInternal(savedLoadouts, selectedStoreId, options);
+}
+
+function useLoadoutFilterPillsInternal(
   savedLoadouts: Loadout[],
   selectedStoreId: string,
   {
@@ -54,17 +74,10 @@ export function useLoadoutFilterPills(
     extra?: React.ReactNode;
   } = {}
 ): [filteredLoadouts: Loadout[], filterPillsElement: React.ReactNode, hasSelectedFilters: boolean] {
-  if (!$featureFlags.loadoutFilterPills) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useMemo(() => [savedLoadouts, null, false], [savedLoadouts]);
-  }
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const isMissingItems = useSelector(isMissingItemsSelector);
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const getFragmentProblems = useSelector(getFragmentProblemsSelector);
   const [selectedFilters, setSelectedFilters] = useState<Option[]>([]);
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const loadoutsByHashtag = useMemo(() => {
     const loadoutsByHashtag: { [hashtag: string]: Loadout[] } = {};
     for (const loadout of savedLoadouts) {
@@ -89,19 +102,27 @@ export function useLoadoutFilterPills(
     (o) => o.key
   );
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const loadoutsWithMissingItems = useMemo(
     () => savedLoadouts.filter((loadout) => isMissingItems(selectedStoreId, loadout)),
     [isMissingItems, savedLoadouts, selectedStoreId]
   );
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const loadoutsWithDeprecatedMods = useMemo(
     () =>
-      savedLoadouts.filter((loadout) =>
-        loadout.parameters?.mods?.some((modHash) => deprecatedMods.includes(modHash))
+      savedLoadouts.filter(
+        (loadout) => loadout.parameters?.mods?.some((modHash) => deprecatedMods.includes(modHash))
       ),
     [savedLoadouts]
   );
+
+  const [loadoutsWithEmptyFragmentSlots, loadoutsWithTooManyFragments] = useMemo(() => {
+    const problematicLoadouts = _.groupBy(savedLoadouts, (loadout) =>
+      getFragmentProblems(selectedStoreId, loadout)
+    );
+    return [
+      problematicLoadouts[FragmentProblem.EmptyFragmentSlots] ?? emptyArray(),
+      problematicLoadouts[FragmentProblem.TooManyFragments] ?? emptyArray(),
+    ] as const;
+  }, [getFragmentProblems, savedLoadouts, selectedStoreId]);
 
   if (includeWarningPills) {
     if (loadoutsWithMissingItems.length) {
@@ -125,9 +146,29 @@ export function useLoadoutFilterPills(
         ),
       });
     }
+
+    if (loadoutsWithEmptyFragmentSlots.length) {
+      filterOptions.push({
+        key: 'emptyFragmentSlots',
+        content: (
+          <>
+            <AlertIcon /> {t('Loadouts.EmptyFragmentSlots')}
+          </>
+        ),
+      });
+    }
+    if (loadoutsWithTooManyFragments.length) {
+      filterOptions.push({
+        key: 'tooManyFragments',
+        content: (
+          <>
+            <AlertIcon /> {t('Loadouts.TooManyFragments')}
+          </>
+        ),
+      });
+    }
   }
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const filteredLoadouts = useMemo(
     () =>
       selectedFilters.length > 0
@@ -138,6 +179,10 @@ export function useLoadoutFilterPills(
                   return loadoutsWithDeprecatedMods;
                 case 'missingitems':
                   return loadoutsWithMissingItems;
+                case 'emptyFragmentSlots':
+                  return loadoutsWithEmptyFragmentSlots;
+                case 'tooManyFragments':
+                  return loadoutsWithTooManyFragments;
                 default:
                   return loadoutsByHashtag[f.key] ?? [];
               }
@@ -145,11 +190,13 @@ export function useLoadoutFilterPills(
           )
         : savedLoadouts,
     [
+      selectedFilters,
       savedLoadouts,
-      loadoutsByHashtag,
       loadoutsWithDeprecatedMods,
       loadoutsWithMissingItems,
-      selectedFilters,
+      loadoutsWithEmptyFragmentSlots,
+      loadoutsWithTooManyFragments,
+      loadoutsByHashtag,
     ]
   );
 

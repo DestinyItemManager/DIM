@@ -35,7 +35,7 @@
 
   p {
     margin: 0 0 8px 0;
-    color: #a1a2a2;
+    color: var(--theme-text-secondary);
     white-space: pre-wrap;
   }
 
@@ -72,11 +72,13 @@
 }
 
 .redeemed {
-  border-color: #c4b578;
-  color: #c4b578;
+  border-color: var(--theme-record-redeemed);
+  color: var(--theme-record-redeemed);
   background: transparent;
-  p {
-    color: scale-color(#c4b578, $lightness: -40%);
+  p,
+  span {
+    color: var(--theme-record-redeemed);
+    opacity: 0.8;
   }
 }
 
@@ -110,7 +112,9 @@
   // at the 0 point, which prevents that one point from being
   // more saturated than the rest of the lines.
   // There is no visible gap.
-  background-position: 0 0, 0 2px;
+  background-position:
+    0 0,
+    0 2px;
   background-repeat: repeat-x;
 }
 
@@ -196,6 +200,7 @@
   height: auto;
   flex-shrink: 0;
   margin-right: 8px;
+  background: var(--theme-icon-tile);
 }
 
 .info {
@@ -216,7 +221,7 @@
 
 .score {
   float: right;
-  color: #a1a2a2;
+  color: var(--theme-text-secondary);
   margin-left: 4px;
   :global(.catalysts) & {
     display: none;
@@ -266,6 +271,6 @@
   }
 
   .redeemed & {
-    background-color: scale-color(#c4b578, $lightness: -20%) !important;
+    background-color: var(--theme-record-redeemed) !important;
   }
 }

@@ -24,6 +24,7 @@ import { InjectManifest } from 'workbox-webpack-plugin';
 import zlib from 'zlib';
 import csp from './content-security-policy';
 import { makeFeatureFlags } from './feature-flags';
+import PostCSSAssetsPlugin from 'postcss-assets-webpack-plugin';
 const renderer = new marked.Renderer();
 
 import { StatsWriterPlugin } from 'webpack-stats-plugin';
@@ -73,7 +74,10 @@ export default (env: Env) => {
 
   const buildTime = Date.now();
 
-  const contentSecurityPolicy = csp(env.name);
+  const featureFlags = makeFeatureFlags(env);
+  const contentSecurityPolicy = csp(env.name, featureFlags);
+
+  const analyticsProperty = env.release ? 'G-1PW23SGMHN' : 'G-MYWW38Z3LR';
 
   const config: webpack.Configuration = {
     mode: env.dev ? ('development' as const) : ('production' as const),
@@ -241,7 +245,6 @@ export default (env: Env) => {
                       : '[contenthash:base64:8]',
                   exportLocalsConvention: 'camelCaseOnly',
                 },
-                sourceMap: true,
                 importLoaders: 2,
               },
             },
@@ -255,19 +258,18 @@ export default (env: Env) => {
           exclude: /\.m\.scss$/,
           use: [
             env.dev ? 'style-loader' : MiniCssExtractPlugin.loader,
-            {
-              loader: 'css-loader',
-              options: {
-                sourceMap: true,
-              },
-            },
+            'css-loader',
             'postcss-loader',
             { loader: 'sass-loader', options: { sassOptions: { quietDeps: true } } },
           ],
         },
         {
           test: /\.css$/,
-          use: [env.dev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader'],
+          use: [
+            env.dev ? 'style-loader' : MiniCssExtractPlugin.loader,
+            'css-loader',
+            'postcss-loader',
+          ],
         },
         // All files with a '.ts' or '.tsx' extension will be handled by 'babel-loader'.
         {
@@ -348,6 +350,7 @@ export default (env: Env) => {
         docs: path.resolve('./docs/'),
         'destiny-icons': path.resolve('./destiny-icons/'),
         'textarea-caret': path.resolve('./src/app/utils/textarea-caret'),
+        lodash: 'lodash-es',
       },
 
       fallback: {
@@ -370,6 +373,28 @@ export default (env: Env) => {
       chunkFilename: env.dev ? '[name]-[contenthash].css' : '[id]-[contenthash:8].css',
     }),
 
+    // Compress CSS after bundling so we can optimize across rules
+    new PostCSSAssetsPlugin({
+      test: /\.css$/,
+      log: false,
+      plugins: [
+        // Sort media queries so they can be merged by cssnano
+        require('postcss-sort-media-queries')({
+          sort: 'desktop-first',
+        }),
+        require('cssnano')({
+          preset: [
+            'default',
+            {
+              autoprefixer: false,
+              // We've already run svgo on all images
+              svgo: false,
+            },
+          ],
+        }),
+      ],
+    }),
+
     new HtmlWebpackPlugin({
       inject: true,
       filename: 'index.html',
@@ -379,6 +404,7 @@ export default (env: Env) => {
         version,
         date: new Date(buildTime).toString(),
         splash,
+        analyticsProperty,
       },
       minify: env.dev
         ? false
@@ -443,12 +469,13 @@ export default (env: Env) => {
       $DIM_WEB_CLIENT_ID: JSON.stringify(process.env.WEB_OAUTH_CLIENT_ID),
       $DIM_WEB_CLIENT_SECRET: JSON.stringify(process.env.WEB_OAUTH_CLIENT_SECRET),
       $DIM_API_KEY: JSON.stringify(process.env.DIM_API_KEY),
+      $ANALYTICS_PROPERTY: JSON.stringify(analyticsProperty),
 
       $BROWSERS: JSON.stringify(browserslist(packageJson.browserslist)),
 
       // Feature flags!
       ...Object.fromEntries(
-        Object.entries(makeFeatureFlags(env)).map(([key, value]) => [
+        Object.entries(featureFlags).map(([key, value]) => [
           `$featureFlags.${key}`,
           JSON.stringify(value),
         ])

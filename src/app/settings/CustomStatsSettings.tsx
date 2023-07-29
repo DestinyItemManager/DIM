@@ -14,6 +14,7 @@ import { CUSTOM_TOTAL_STAT_HASH, armorStats, evenStatWeights } from 'app/search/
 import { allAtomicStats } from 'app/search/search-filter-values';
 import { AppIcon, addIcon, banIcon, deleteIcon, editIcon, saveIcon } from 'app/shell/icons';
 import { chainComparator, compareBy } from 'app/utils/comparators';
+import { isClassCompatible } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
@@ -259,7 +260,7 @@ function useStatWeightsEditor(w: CustomStatWeights) {
   return [
     weights,
     (statHash: number, value: string) =>
-      setWeights((old) => ({ ...old, [statHash]: parseInt(value) || 0 })),
+      setWeights((old) => ({ ...old, [statHash]: parseInt(value, 10) || 0 })),
   ] as const;
 }
 
@@ -334,11 +335,7 @@ function useSaveStat() {
       !newStat.shortLabel ||
       // or there's an existing stat with an overlapping label & class
       allOtherStats.some(
-        (s) =>
-          s.shortLabel === newStat.shortLabel &&
-          (s.class === newStat.class ||
-            s.class === DestinyClass.Unknown ||
-            newStat.class === DestinyClass.Unknown)
+        (s) => s.shortLabel === newStat.shortLabel && isClassCompatible(s.class, newStat.class)
       ) ||
       // or this shortLabel conflicts with a real stat.
       // don't name your custom stat discipline!!

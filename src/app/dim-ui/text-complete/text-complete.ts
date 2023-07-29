@@ -28,7 +28,7 @@ function createTagsCompleter(
           continue;
         }
         // favor startswith
-        if (tagLower.startsWith('#' + termLower)) {
+        if (tagLower.startsWith(`#${termLower}`)) {
           possibleTags.unshift(t);
           // over full text search
         } else if (tagLower.includes(termLower)) {

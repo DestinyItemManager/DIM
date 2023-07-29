@@ -27,7 +27,7 @@ import {
   mapAutoMods,
   mapDimItemToProcessItem,
 } from './process/mappers';
-import { MIN_LO_ITEM_ENERGY, MinMaxIgnored } from './types';
+import { MIN_LO_ITEM_ENERGY, ResolvedStatConstraint } from './types';
 import { statTier } from './utils';
 
 // We don't really pay attention to this in the tests but the parameter is needed
@@ -467,7 +467,7 @@ describe('process-utils optimal mods', () => {
 
   // use these for testing as they are reset after each test
   let items: ProcessItem[];
-  let statFilters: MinMaxIgnored[];
+  let resolvedStatConstraints: ResolvedStatConstraint[];
   let loSessionInfo: LoSessionInfo;
 
   beforeAll(async () => {
@@ -494,10 +494,11 @@ describe('process-utils optimal mods', () => {
     const autoModData = mapAutoMods(getAutoMods(defs, emptySet()));
     loSessionInfo = precalculateStructures(autoModData, [], [], true, armorStats);
 
-    statFilters = armorStats.map(() => ({
+    resolvedStatConstraints = armorStats.map((statHash) => ({
+      statHash,
       ignored: false,
-      max: 8,
-      min: 3,
+      maxTier: 8,
+      minTier: 3,
     }));
   });
 
@@ -505,7 +506,7 @@ describe('process-utils optimal mods', () => {
     setStats: number[],
     remainingEnergy: number[],
     numArtifice: number,
-    expectedTiers: number[]
+    expectedTiers: number[],
   ][] = [
     // the trick here is that we can use two small mods to boost resilience by a tier,
     // but it's better to use two large mods to boost discipline (cheaper mods...)
@@ -518,6 +519,8 @@ describe('process-utils optimal mods', () => {
     [[68, 66, 30, 30, 30, 30], [0, 0, 0, 0, 0], 4, [8, 6, 3, 3, 3, 3]],
     // do everything we can to hit min bounds
     [[68, 66, 30, 30, 11, 30], [2, 2, 0, 0, 0], 4, [7, 6, 3, 3, 3, 3]],
+    // ensure that negative stat amounts aren't clamped too early
+    [[30, 61, 30, 30, 30, -14], [5, 5, 5, 5, 5], 5, [5, 6, 3, 3, 3, 3]],
   ];
 
   const pickMods = (setStats: number[], remainingEnergy: number[], numArtifice: number) => {
@@ -529,7 +532,12 @@ describe('process-utils optimal mods', () => {
         isArtifice: i < numArtifice,
       });
     }
-    const statMods = pickOptimalStatMods(loSessionInfo, ourItems, setStats, statFilters)!;
+    const statMods = pickOptimalStatMods(
+      loSessionInfo,
+      ourItems,
+      setStats,
+      resolvedStatConstraints
+    )!;
     const finalStats = [...setStats];
     for (let i = 0; i < armorStats.length; i++) {
       finalStats[i] += statMods.bonusStats[i];
@@ -550,7 +558,7 @@ describe('process-utils optimal mods', () => {
     setStats: number[],
     remainingEnergy: number[],
     numArtifice: number,
-    expectedStats: number[]
+    expectedStats: number[],
   ][] = [
     // Nice
     [[18, 80, 80, 26, 80, 30], [0, 0, 0, 3, 0], 4, [30, 80, 80, 31, 80, 30]],

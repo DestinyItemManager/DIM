@@ -1,6 +1,6 @@
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { errorLog } from 'app/utils/log';
-import React from 'react';
+import React, { Component } from 'react';
 import { reportException } from '../utils/exceptions';
 
 interface Props {
@@ -12,7 +12,7 @@ interface State {
   error?: Error;
 }
 
-export default class ErrorBoundary extends React.Component<Props, State> {
+export default class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {};

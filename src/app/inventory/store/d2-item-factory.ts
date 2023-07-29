@@ -1,7 +1,6 @@
 import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { t } from 'app/i18next-t';
-import { isTrialsPassage, isWinsObjective } from 'app/inventory/store/objectives';
 import {
   D2ItemTiers,
   THE_FORBIDDEN_BUCKET,
@@ -39,6 +38,7 @@ import extendedBreaker from 'data/d2/extended-breaker.json';
 import extendedFoundry from 'data/d2/extended-foundry.json';
 import extendedICH from 'data/d2/extended-ich.json';
 import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import extraItemCollectibles from 'data/d2/unreferenced-collections-items.json';
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
@@ -53,10 +53,14 @@ import { buildCraftedInfo } from './crafted';
 import { buildDeepsightInfo } from './deepsight';
 import { createItemIndex } from './item-index';
 import { buildMasterwork } from './masterwork';
-import { buildObjectives } from './objectives';
+import { buildObjectives, isTrialsPassage, isWinsObjective } from './objectives';
 import { buildPatternInfo } from './patterns';
 import { buildSockets } from './sockets';
 import { buildStats } from './stats';
+
+const extraItemsToCollectibles = _.mapValues(_.invert(extraItemCollectibles), (val) =>
+  parseInt(val, 10)
+);
 
 const collectiblesByItemHash = memoizeOne(
   (Collectible: ReturnType<D2ManifestDefinitions['Collectible']['getAll']>) =>
@@ -391,7 +395,7 @@ export function makeItem(
     itemDef.iconWatermarkShelved ||
     undefined;
 
-  const collectibleHash = itemDef.collectibleHash;
+  const collectibleHash = itemDef.collectibleHash ?? extraItemsToCollectibles[itemDef.hash];
   // Do we need this now?
   const source = collectibleHash
     ? defs.Collectible.get(collectibleHash, itemDef.hash)?.sourceHash
@@ -544,12 +548,16 @@ export function makeItem(
   }
 
   if (createdItem.hash in extendedICH) {
-    createdItem.itemCategoryHashes = [
-      ...createdItem.itemCategoryHashes,
-      extendedICH[createdItem.hash]!,
-    ];
+    const additionalICH = extendedICH[createdItem.hash]!;
+    createdItem.itemCategoryHashes = [...createdItem.itemCategoryHashes, additionalICH];
+    // Special grenade launchers are not heavy grenade launchers
+    if (additionalICH === -ItemCategoryHashes.GrenadeLaunchers) {
+      createdItem.itemCategoryHashes = createdItem.itemCategoryHashes.filter(
+        (ich) => ich !== ItemCategoryHashes.GrenadeLaunchers
+      );
+    }
     // Masks are helmets too
-    if (extendedICH[createdItem.hash] === ItemCategoryHashes.Mask) {
+    if (additionalICH === ItemCategoryHashes.Mask) {
       createdItem.itemCategoryHashes = [
         ...createdItem.itemCategoryHashes,
         ItemCategoryHashes.Helmets,
@@ -591,7 +599,11 @@ export function makeItem(
 
   // Catalyst
   if (createdItem.isExotic && createdItem.bucket.inWeapons) {
-    createdItem.catalystInfo = buildCatalystInfo(createdItem.hash, profileRecords);
+    createdItem.catalystInfo = buildCatalystInfo(
+      createdItem.hash,
+      profileRecords,
+      profileResponse.characterRecords?.data
+    );
   }
 
   try {
@@ -677,14 +689,12 @@ export function makeItem(
 
   // TODO: compute this on demand
   createdItem.foundry =
-    // TODO: we should generate extendedFoundry without the "foundry." prefix
-    (
-      extendedFoundry[createdItem.hash] ??
-      itemDef.traitIds
-        ?.find((trait) => trait.startsWith('foundry.'))
-        // tex_mechanica
-        ?.replace('_', '-')
-    )?.replace('foundry.', '');
+    extendedFoundry[createdItem.hash] ??
+    itemDef.traitIds
+      ?.find((trait) => trait.startsWith('foundry.'))
+      // tex_mechanica
+      ?.replace('_', '-')
+      ?.replace('foundry.', '');
 
   // linear fusion rifles always seem to contain the "fusion rifle" category as well.
   // it's a fascinating "did you know", but ultimately not useful to us, so we remove it
@@ -722,7 +732,9 @@ export function makeItem(
     buildPursuitInfo(createdItem, item, itemDef);
   } catch (e) {
     errorLog('d2-stores', `Error building Quest info for ${createdItem.name}`, item, itemDef, e);
-    reportException('Quest', e, { itemHash: item.itemHash });
+    if (e instanceof Error) {
+      reportException('Quest', e, { itemHash: item.itemHash });
+    }
   }
 
   if (createdItem.primaryStat && lightStats.includes(createdItem.primaryStat.statHash)) {

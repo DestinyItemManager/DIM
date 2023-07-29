@@ -8,7 +8,8 @@
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-type-checked",
+    "plugin:@typescript-eslint/stylistic-type-checked",
     "prettier",
     "plugin:array-func/all",
     "plugin:css-modules/recommended",
@@ -133,6 +134,11 @@
         "object": "_",
         "property": "forIn",
         "message": "Please use Object.values or Object.entries instead"
+      },
+      {
+        "object": "_",
+        "property": "noop",
+        "message": "Import noop directly instead of using it through _.noop, to satisfy the unbound-method lint"
       }
     ],
     "no-restricted-imports": [
@@ -158,8 +164,21 @@
     "@typescript-eslint/return-await": ["error", "in-try-catch"],
     "prefer-regex-literals": "error",
     "prefer-promise-reject-errors": "error",
-    "require-atomic-updates": "off",
+    "prefer-spread": "error",
+    "radix": "error",
+    "yoda": "error",
+    "prefer-template": "error",
     "class-methods-use-this": ["error", { "exceptMethods": ["render"] }],
+    "no-unmodified-loop-condition": "error",
+    "no-unreachable-loop": "error",
+    "no-unused-private-class-members": "error",
+    "func-name-matching": "error",
+    "logical-assignment-operators": "error",
+    "no-lonely-if": "error",
+    "no-unneeded-ternary": "error",
+    "no-useless-call": "error",
+    "no-useless-concat": "error",
+    "no-useless-rename": "error",
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off",
     "react/no-unescaped-entities": "off",
@@ -288,6 +307,29 @@
       }
     ],
     "@typescript-eslint/no-for-in-array": "error",
+    "@typescript-eslint/consistent-indexed-object-style": "off",
+    "@typescript-eslint/no-floating-promises": "off",
+    "@typescript-eslint/require-await": "off",
+    "@typescript-eslint/no-unsafe-argument": "off",
+    "@typescript-eslint/no-unsafe-enum-comparison": "off",
+    "@typescript-eslint/prefer-nullish-coalescing": [
+      "off",
+      {
+        "ignoreConditionalTests": true,
+        "ignoreTernaryTests": false,
+        "ignoreMixedLogicalExpressions": true,
+        "ignorePrimitives": {
+          "boolean": true,
+          "number": false,
+          "string": true
+        }
+      }
+    ],
+    "@typescript-eslint/no-unsafe-assignment": "off",
+    "@typescript-eslint/no-unsafe-call": "off",
+    "@typescript-eslint/no-unsafe-member-access": "off",
+    "@typescript-eslint/no-unsafe-return": "off",
+    "@typescript-eslint/no-redundant-type-constituents": "off",
     "no-implied-eval": "off",
     "@typescript-eslint/no-implied-eval": "error",
     "array-func/prefer-array-from": "off",

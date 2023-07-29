@@ -28,6 +28,7 @@
     "WeeklyHeroic": "Weekly Heroic Strike"
   },
   "Armory": {
+    "Armory": "Armory",
     "OpenInArmory": "view in Armory",
     "WishlistedRolls": "Wishlisted Roll",
     "WishlistedRolls_plural": "{{count, number}} Wishlisted Rolls",
@@ -67,6 +68,7 @@
     "Title": "A message from Bungie:"
   },
   "BungieService": {
+    "AppNotPermitted": "DIM does not have permission to perform this action.",
     "DestinyLegacyPlatform": "Bungie's services currently have a bug that prevents DIM from loading info for your Destiny 2 account if you played Destiny 1 on a last-gen console. Bungie will fix this soon, but until then you must play Destiny 1 on a current-gen console to be able to access your info.",
     "DevVersion": "Are you running a development version of DIM? You must register your chrome extension with Bungie.net.",
     "Difficulties": "Bungie.net is currently experiencing difficulties.",
@@ -141,9 +143,8 @@
   "ErrorPanel": {
     "Description": "Try loading your inventory in the Destiny 2 Companion App to see if Bungie.net is down.",
     "Troubleshooting": "Troubleshooting Guide",
-    "EmblemError": "You may be able to fix this by switching your emblems in game on all characters.",
-    "EmblemErrorLink": "Read more about how to fix it.",
-    "SystemDown": "This affects all Destiny apps, and the DIM team cannot fix or bypass it."
+    "SystemDown": "This affects all Destiny apps, and the DIM team cannot fix or bypass it.",
+    "ReadTheGuide": "Read our User Guide (linked from the menu) for troubleshooting steps."
   },
   "FarmingMode": {
     "Vault": "It will move items to the vault to make room.",
@@ -212,10 +213,11 @@
     "Combine": "Filters can be combined or grouped with parentheses, \"or\" and \"and\" to narrow down your search, for example \"{{example}}\".",
     "ContributePower": "Shows items that have power and can contribute to your power level.",
     "Craftable": "Shows items that are craftable.",
+    "CraftedDupe": "Shows duplicate weapons where at least one of the duplicates is crafted.",
     "Curated": "Shows items that are a curated roll.",
     "CurrentClass": "Shows items that are equippable on the currently logged in guardian.",
     "DamageType": "Shows items based on their damage type.",
-    "Deepsight": "Shows weapons with Deepsight Resonance, which can have their pattern extracted.",
+    "Deepsight": "Shows weapons with Deepsight Resonance, which can have their pattern extracted, or which can have Deepsight Resonance enabled using a Deepsight Harmonizer.",
     "Description": "Description",
     "RetiredPerk": "Shows weapons with perks that no longer obtainable.",
     "Dupe": "Shows duplicate items, including reissues",
@@ -229,9 +231,10 @@
     "Event": "Shows items from which event in Destiny 2 they appeared in.",
     "ExtraPerk": "Shows random-rolled Legendary weapons with an additional selectable perk.",
     "Filter": "Filter",
+    "Focusable": "Shows items that can be focused at a vendor",
     "Foundry": "Shows items by which foundry created them.",
     "Glimmer": "Shows items that are consumables that are related to gaining glimmer.",
-    "HasMemento": "Shows crafted weapons that currently have a memento inserted.",
+    "Memento": "Shows weapons that have a memento socket.",
     "InfusionFodder": "Shows items that could be infused into lower-power versions of the same item for only glimmer.",
     "HasNotes": "Show items that have notes applied.",
     "HasShader": "Shows items that have a shader applied.",
@@ -350,7 +353,7 @@
     "FilterHelpBrief": "Search items",
     "FilterHelpRecords": "Search triumphs and collections",
     "FilterHelpProgress": "Search milestones and bounties",
-    "FilterHelpOptimizer": "Filter armor from loadouts: {{example}}",
+    "FilterHelpOptimizer": "Select armor to be considered for loadouts: {{example}}",
     "FilterHelpLoadouts": "Search loadout names and notes",
     "FilterMatchCount": "1 item",
     "FilterMatchCount_plural": "{{count}} items",
@@ -539,8 +542,8 @@
       "ProcessingMode": "Processing mode"
     },
     "Scaled": "Scaled",
-    "SearchAMod": "Search a mod or description",
-    "SearchAnExotic": "Search an exotic or description",
+    "SearchAMod": "Search for mod name or description",
+    "SearchAnExotic": "Search for exotic name or description",
     "SelectExotic": "Select exotic",
     "SelectMods": "Select Mods",
     "SelectSubclass": "Select subclass",
@@ -558,12 +561,9 @@
     "Vendors": "Loading Destiny vendors..."
   },
   "LoadoutBuilder": {
-    "CopiedBuild": "Copied build settings URL to clipboard",
-    "ShareBuild": "Share Build Settings",
-    "ShareBuildTitle": "Loadout Optimizer Settings",
-    "ShareBuildWithNotes": "Share With Notes",
     "AddHalfTierMods": "Add +5 Mods",
     "AutomaticallyPicked": "This mod was added automatically to improve build stats.",
+    "DisabledByAutoStatMods": "Stat mods are being chosen automatically by Loadout Optimizer.",
     "AutoStatMods": "Automatically add stat mods",
     "All": "All",
     "AnyExotic": "Any Exotic",
@@ -584,6 +584,7 @@
     "ExistingLoadout": "Existing Loadout",
     "ExoticSpecialCategory": "Special",
     "Filter": "Filters",
+    "IncludeVendorItems": "Include Vendor items",
     "Legendary": "Legendary",
     "LockEquipped": "Pin equipped",
     "LockItem": "Pin item",
@@ -613,8 +614,7 @@
     "None": "None",
     "OptimizerExplanationStats": "Drag the most important stats to the top, and set stats you don't care about to Ignore.",
     "OptimizerExplanationMods": "Choose an exotic and any mods you want to use. Loadout Optimizer only includes stat bonuses from mods you choose - all mods already on the armor are ignored.",
-    "OptimizerExplanationSearch": "Use the search bar to filter the items Loadout Optimizer uses.",
-    "OptimizerExplanationUpgrades": "Select which Armor Upgrades Loadout Optimizer can spend materials on. It may suggest masterworks to increase stats, or energy upgrades to fit your requested mods.",
+    "OptimizerExplanationSearch": "Use the search bar to narrow down which armor to consider. If no armor matches the search in a slot, all armor in that slot will be considered.",
     "OptimizerExplanationGuide": "Read the User Guide for more info and a video tutorial.",
     "OptimizerSet": "Optimizer Set",
     "ProcessingSets": "Processing sets for\n{{character}} ({{remainingTime}}s)",
@@ -652,7 +652,9 @@
     "ClassTypeMissing": "You do not have a {{className}} to create a loadout for",
     "ClearSection": "Remove all",
     "ClearLoadoutParameters": "Remove Loadout Optimizer settings",
-    "ClearSpace": "Move other items away",
+    "ClearSpace": "Move others away",
+    "ClearSpaceWeapons": "Move other weapons away",
+    "ClearSpaceArmor": "Move other armor away",
     "ClearUnsetMods": "Remove other mods",
     "Create": "Create Loadout",
     "CurrentlyEquipped": "Currently Equipped",
@@ -661,6 +663,7 @@
     "DimLoadouts": "DIM Loadouts",
     "Edit": "Edit Loadout",
     "EditBrief": "Edit",
+    "EmptyFragmentSlots": "Empty Fragment Slots",
     "EquippableDifferent1": "Multiple Exotic items were used to calculate your Maximum Power, so the number shown may not be achievable when equipping your items in-game.",
     "EquippableDifferent2": "Maximum Power isn't limited by the \"One Exotic\" rule when determining the Power of your drops, powerful, and pinnacle rewards.",
     "Equipped": "Equipped",
@@ -724,6 +727,7 @@
     "OnWrongCharacterWarning": "This character's most powerful armor is on another character. To count toward the Power of drops, powerful, and pinnacle rewards, armor must be on this character or in the Vault.",
     "OnWrongCharacterAdvice": "Click here to find this character's highest Power items.",
     "OpenInOptimizer": "Optimize Armor",
+    "PickArmor": "Pick Armor",
     "PickMods": "Add armor mods",
     "PullFromPostmaster": "Collect Postmaster",
     "PullFromPostmasterNotification": "Pulling 1 Postmaster item to {{store}}.",
@@ -738,6 +742,7 @@
     "NoSpace": "You're out of space in the vault and any other characters.",
     "Random": "Random",
     "Randomize": "Randomize Loadout",
+    "RandomizeNew": "Create Random",
     "RandomizeButton": "Randomize",
     "RandomizePrompt": "Randomize your equipped weapons, armor and ghost?",
     "RandomizeQueryHint": "Tip: Search for items first to restrict what items can be randomly chosen.",
@@ -783,6 +788,7 @@
     "SyncFromEquipped": "Sync from equipped",
     "FillFromEquipped": "Fill in using equipped",
     "FillFromInventory": "Fill in using non-equipped",
+    "TooManyFragments": "Too Many Fragments",
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
     "UnassignedModError": "Mod didn't fit on your current armor",
     "Undo": "Undo",
@@ -823,6 +829,9 @@
     "Tutorial": "Tutorial Challenge",
     "Unknown": "Challenge",
     "Weekly": "Weekly Challenge"
+  },
+  "Mods": {
+    "HarmonicModDescription": "This mod's effect comes at a reduced cost and changes element depending on the equipped subclass."
   },
   "MoveAmount": {
     "Amount": "Amount:"
@@ -1074,7 +1083,8 @@
     "SortCustom": "Custom Sort",
     "SortName": "Name",
     "SpacesSize": "{{count}} space",
-    "SpacesSize_plural": "{{count}} spaces"
+    "SpacesSize_plural": "{{count}} spaces",
+    "Theme": "Theme"
   },
   "Sockets": {
     "ApplyPerks": "Apply Perks",
@@ -1127,7 +1137,6 @@
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 for T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
     "Total": "Total",
-    "Second": "s",
     "MetersPerSecond": "m/s",
     "Percentage": "%",
     "HP": "HP",
@@ -1296,8 +1305,6 @@
       "GitHubHelp": "If you're interested in contributing to the project, visit us at our project page on {{link}}.",
       "Header": "DIM (Destiny Item Manager)",
       "HowItsMade": "DIM is a free, open source app built by community developers upon the same services used by Bungie.net and the Destiny Companion App.",
-      "Reddit": "Reddit",
-      "RedditHelp": "If you have questions, comments, or suggestions - let us know!",
       "Schedule": {
         "beta": "This beta version of DIM is updated every time we change the code - it gets the latest features and fixes, but also the latest bugs!",
         "release": "This version of DIM is updated once a week, at approximately midnight on Sundays, US Pacific time."
@@ -1313,6 +1320,7 @@
       "Auth": "Authorize with Bungie.net",
       "BackupPrompt": "Are you sure you want to enable DIM Sync without a backup?",
       "EnableDimSyncWarning": "You had previously disabled DIM Sync and were only using local data storage. Enabling DIM Sync will replace any local data with the data from DIM Sync. You should back up your data before enabling DIM Sync. You can restore from that backup in Settings.",
+      "DisabledDimSyncWarning": "You had previously enabled DIM Sync and were only using local data storage. Enabling DIM Sync will replace any local data with the data from DIM Sync. You should back up your data before enabling DIM Sync. You can restore from that backup in Settings.",
       "Explanation": "Allow DIM to view and modify your Destiny characters, vault, and progression.",
       "LearnMore": "Learn more about accounts and login",
       "NewAccount": "Log in with a different Bungie.net account",
@@ -1351,5 +1359,7 @@
     "WishListNotes": "Wish List Notes: {{notes}}",
     "CopyLine": "Copy Selected Perks as Wish List Roll",
     "CopiedLine": "Wish List roll copied to clipboard"
-  }
+  },
+  "wrong-level": "wrong-level",
+  "no-space": "no-space"
 }

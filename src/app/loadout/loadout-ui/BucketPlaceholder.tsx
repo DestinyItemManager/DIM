@@ -6,6 +6,8 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import styles from './BucketPlaceholder.m.scss';
 
+const badgeLessBuckets = [BucketHashes.Ghost, BucketHashes.Emblems, BucketHashes.Ships];
+
 export function BucketPlaceholder({
   bucketHash,
   onClick,
@@ -21,7 +23,10 @@ export function BucketPlaceholder({
 
   return (
     <Component
-      className={clsx(styles.empty, { [styles.clickable]: onClick })}
+      className={clsx(styles.empty, {
+        [styles.clickable]: onClick,
+        [styles.hasBadge]: !badgeLessBuckets.includes(bucketHash),
+      })}
       title={bucket.name}
       onClick={onClick}
       type={onClick ? 'button' : undefined}

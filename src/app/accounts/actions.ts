@@ -1,3 +1,4 @@
+import { FatalTokenError } from 'app/bungie-api/authenticated-fetch';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
 import { createAction } from 'typesafe-actions';
@@ -17,15 +18,16 @@ export const needsDeveloper = createAction('accounts/DEV_INFO_NEEDED')();
 /**
  * Inspect an error and potentially log out the user or send them to the developer page
  */
-export function handleAuthErrors(e: Error): ThunkResult {
+export function handleAuthErrors(e: unknown): ThunkResult {
   return async (dispatch) => {
     // This means we don't have an API key or the API key is wrong
     if ($DIM_FLAVOR === 'dev' && e instanceof DimError && e.code === 'BungieService.DevVersion') {
       dispatch(needsDeveloper());
     } else if (
       e instanceof Error &&
-      (e.name === 'FatalTokenError' ||
-        (e instanceof DimError && e.code === 'BungieService.NotLoggedIn'))
+      (e instanceof FatalTokenError ||
+        (e instanceof DimError &&
+          (e.code === 'BungieService.NotLoggedIn' || e.cause instanceof FatalTokenError)))
     ) {
       dispatch(loggedOut());
     }

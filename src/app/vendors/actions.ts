@@ -1,5 +1,6 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { ThunkResult } from 'app/store/types';
+import { convertToError } from 'app/utils/util';
 import { DestinyVendorsResponse } from 'bungie-api-ts/destiny2';
 import { createAction } from 'typesafe-actions';
 import { getVendors as getVendorsApi } from '../bungie-api/destiny2-api';
@@ -33,7 +34,8 @@ export function loadAllVendors(
     try {
       const vendorsResponse = await getVendorsApi(account, characterId);
       dispatch(loadedAll({ vendorsResponse, characterId }));
-    } catch (error) {
+    } catch (e) {
+      const error = convertToError(e);
       dispatch(loadedError({ characterId, error }));
     }
   };

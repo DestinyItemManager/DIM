@@ -1,8 +1,8 @@
-import { t, tl } from 'app/i18next-t';
+import { I18nKey, t, tl } from 'app/i18next-t';
 import { isMac } from 'app/utils/browsers';
 import { compareBy } from 'app/utils/comparators';
 import { StringLookup } from 'app/utils/util-types';
-import _ from 'lodash';
+import { noop } from 'lodash';
 
 /** Mapping from key name to fun symbols */
 const map: StringLookup<string> = {
@@ -17,7 +17,7 @@ const map: StringLookup<string> = {
 };
 
 /** We translate the keys that don't have fun symbols. */
-const keyi18n: StringLookup<string> = {
+const keyi18n: StringLookup<I18nKey> = {
   tab: tl('Hotkey.Tab'),
   enter: tl('Hotkey.Enter'),
 };
@@ -56,7 +56,7 @@ const keyMap: { [combo: string]: Hotkey[] } = {};
  */
 export function registerHotkeys(hotkeys: Hotkey[]) {
   if (!hotkeys?.length) {
-    return _.noop;
+    return noop;
   }
   for (const hotkey of hotkeys) {
     bind(hotkey);

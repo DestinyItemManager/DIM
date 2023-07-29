@@ -35,7 +35,7 @@ export function getItemsAndSubclassFromLoadout(
 ): [
   items: ResolvedLoadoutItem[],
   subclass: ResolvedLoadoutItem | undefined,
-  warnitems: ResolvedLoadoutItem[]
+  warnitems: ResolvedLoadoutItem[],
 ] {
   let [items, warnitems] = getItemsFromLoadoutItems(
     itemCreationContext,
@@ -152,9 +152,6 @@ export default function LoadoutView({
                 storeId={store.id}
                 hideShowModPlacements={hideShowModPlacements}
                 missingSockets={missingSockets}
-                hasArtifactUnlocks={Boolean(
-                  loadout.parameters?.artifactUnlocks?.unlockedItemHashes.length
-                )}
               />
               <LoadoutArtifactUnlocks
                 loadout={loadout}

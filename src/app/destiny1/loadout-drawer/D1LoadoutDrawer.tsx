@@ -21,8 +21,7 @@ import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { useD1Definitions } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
-import { itemCanBeInLoadout } from 'app/utils/item-utils';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import TextareaAutosize from 'react-textarea-autosize';
@@ -96,7 +95,6 @@ export default function D1LoadoutDrawer({
 
   /** Prompt the user to select a replacement for a missing item. */
   const fixWarnItem = async (li: ResolvedLoadoutItem) => {
-    const loadoutClassType = loadout?.classType;
     const warnItem = li.item;
 
     setShowingItemPicker(true);
@@ -105,10 +103,7 @@ export default function D1LoadoutDrawer({
         filterItems: (item: DimItem) =>
           item.hash === warnItem.hash &&
           itemCanBeInLoadout(item) &&
-          (!loadout ||
-            loadout.classType === DestinyClass.Unknown ||
-            item.classType === loadoutClassType ||
-            item.classType === DestinyClass.Unknown),
+          (!loadout || isClassCompatible(item.classType, loadout.classType)),
         prompt: t('Loadouts.FindAnother', { name: warnItem.name }),
       });
 

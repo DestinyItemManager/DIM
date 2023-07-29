@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import React from 'react';
+import { memo } from 'react';
 import { getColumnSelectionId } from './Columns';
 import DropDown, { DropDownItem } from './DropDown';
 import { ColumnDefinition } from './table-types';
@@ -15,7 +15,7 @@ import { ColumnDefinition } from './table-types';
  * TODO: Convert to including drag and drop functionality so that columns can be reordered.
  */
 // TODO: Save to settings
-export default React.memo(function EnabledColumnsSelector({
+export default memo(function EnabledColumnsSelector({
   columns,
   enabledColumns,
   forClass,

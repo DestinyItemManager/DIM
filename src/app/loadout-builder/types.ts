@@ -1,4 +1,4 @@
-import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
+import { AssumeArmorMasterwork, StatConstraint } from '@destinyitemmanager/dim-api-types';
 import { DimCharacterStat } from 'app/inventory/store-types';
 import { armorBuckets } from 'app/search/d2-known-values';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
@@ -10,9 +10,11 @@ export interface MinMax {
   max: number;
 }
 
-export interface MinMaxIgnored {
-  min: number;
-  max: number;
+/**
+ * Normally stat constraints are simply missing if ignored - the resolved
+ * version still exists but has an ignored flag. Also, values cannot be undefined.
+ */
+export interface ResolvedStatConstraint extends Required<StatConstraint> {
   ignored: boolean;
 }
 
@@ -100,7 +102,6 @@ export type ArmorStatHashes =
   | StatHashes.Strength;
 
 export type StatRanges = { [statHash in ArmorStatHashes]: MinMax };
-export type StatFilters = { [statHash in ArmorStatHashes]: MinMaxIgnored };
 export type ArmorStats = { [statHash in ArmorStatHashes]: number };
 
 /**
@@ -165,7 +166,7 @@ export const permissiveArmorEnergyRules: ArmorEnergyRules = {
 };
 
 /**
- * Rules describing how armor can change energy type and capacity
+ * Rules describing how armor can change energy capacity
  * to accommodate mods and hit optimal stats.
  */
 export interface ArmorEnergyRules {

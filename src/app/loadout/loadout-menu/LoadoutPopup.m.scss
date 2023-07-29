@@ -37,6 +37,10 @@
   list-style: none;
 }
 
+.note {
+  color: #888;
+}
+
 .menuItem {
   display: flex;
   flex-direction: row;
@@ -162,10 +166,6 @@
   color: #e4e4e4;
 }
 
-.note {
-  color: #888;
-}
-
 .filterInput {
   margin: 8px 0;
   &:hover,
@@ -178,11 +178,6 @@
 
 .filterPills {
   margin: 8px;
-}
-
-.hint {
-  opacity: 0.6;
-  margin: 8px 0 0 0;
 }
 
 .inGameLoadouts {

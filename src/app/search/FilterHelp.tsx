@@ -29,13 +29,11 @@ export default function FilterHelp() {
           return true;
         }
 
-        const localDesc = Array.isArray(filter.description)
+        const localDesc: string = Array.isArray(filter.description)
           ? t(...filter.description)
           : t(filter.description);
 
-        if (localDesc.toLowerCase().includes(searchLower)) {
-          return true;
-        }
+        return localDesc.toLowerCase().includes(searchLower);
       })
     : searchConfig.allFilters.filter((s) => !s.deprecated);
 
@@ -80,7 +78,7 @@ function FilterExplanation({ filter }: { filter: FilterDefinition }) {
   const suggestions = Array.from(
     new Set([...generateGroupedSuggestionsForFilter(filter, true, {})])
   );
-  const localDesc = Array.isArray(filter.description)
+  const localDesc: string = Array.isArray(filter.description)
     ? t(...filter.description)
     : t(filter.description);
 

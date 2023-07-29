@@ -142,8 +142,7 @@ const socketFilters: FilterDefinition[] = [
         Boolean(
           socket.plugged &&
             !emptySocketHashes.includes(socket.plugged.plugDef.hash) &&
-            socket.plugged.plugDef.plug &&
-            socket.plugged.plugDef.plug.plugCategoryIdentifier.match(
+            socket.plugged.plugDef.plug?.plugCategoryIdentifier.match(
               /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
             ) &&
             // enforce that this provides a perk (excludes empty slots)
@@ -164,8 +163,7 @@ const socketFilters: FilterDefinition[] = [
         Boolean(
           socket.plugged &&
             !emptySocketHashes.includes(socket.plugged.plugDef.hash) &&
-            socket.plugged.plugDef.plug &&
-            socket.plugged.plugDef.plug.plugCategoryIdentifier.match(
+            socket.plugged.plugDef.plug?.plugCategoryIdentifier.match(
               /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
             ) &&
             // enforce that this provides a perk (excludes empty slots)
@@ -215,31 +213,44 @@ const socketFilters: FilterDefinition[] = [
   {
     keywords: 'deepsight',
     description: tl('Filter.Deepsight'),
-    format: 'simple',
+    format: ['simple', 'query'],
+    suggestions: ['harmonizable', 'extractable'],
     destinyVersion: 2,
-    filter: () => (item) => {
-      if (!item.deepsightInfo) {
-        return false;
-      }
-      return Boolean(
-        item.patternUnlockRecord &&
-          item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted
-      );
-    },
+    filter:
+      ({ filterValue }) =>
+      (item) =>
+        filterValue === 'harmonizable'
+          ? Boolean(
+              item.sockets?.allSockets.some(
+                (s) =>
+                  s.plugged?.plugDef.plug.plugCategoryHash ===
+                    PlugCategoryHashes.CraftingPlugsWeaponsModsExtractors && s.visibleInGame
+              )
+            )
+          : Boolean(
+              item.deepsightInfo &&
+                item.patternUnlockRecord &&
+                item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted
+            ),
   },
   {
     keywords: 'memento',
-    description: tl('Filter.HasMemento'),
+    description: tl('Filter.Memento'),
     format: 'query',
     destinyVersion: 2,
-    suggestions: ['any', ...Object.keys(craftingMementos)],
+    suggestions: ['any', 'none', ...Object.keys(craftingMementos)],
     filter: ({ filterValue }) => {
       const list = (craftingMementos as StringLookup<number[]>)[filterValue];
       return (item) =>
         item.sockets?.allSockets.some(
           (s) =>
-            s.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Mementos &&
-            (filterValue === 'any' || list?.includes(s.plugged.plugDef.hash))
+            (s.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Mementos &&
+              (filterValue === 'any' || list?.includes(s.plugged.plugDef.hash))) ||
+            // Crafted items with no memento
+            (filterValue === 'none' &&
+              item.crafted &&
+              s.plugged?.plugDef.plug.plugCategoryHash ===
+                PlugCategoryHashes.CraftingRecipesEmptySocket)
         );
     },
   },

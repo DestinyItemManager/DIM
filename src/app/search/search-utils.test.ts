@@ -7,7 +7,7 @@ describe('generateSuggestionsForFilter', () => {
     format: FilterDefinition['format'],
     keywords: FilterDefinition['keywords'],
     suggestions: FilterDefinition['suggestions'],
-    overload: { [key: string]: number } | undefined
+    overload: { [key: string]: number } | undefined,
   ][] = [
     [undefined, ['a', 'b', 'c'], undefined, undefined],
     ['query', 'a', ['b', 'c'], undefined],

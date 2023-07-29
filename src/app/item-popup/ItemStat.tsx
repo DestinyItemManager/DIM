@@ -4,12 +4,13 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import { CustomStatWeightsFromHash } from 'app/dim-ui/CustomStatWeights';
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { PressTip } from 'app/dim-ui/PressTip';
-import { t, tl } from 'app/i18next-t';
+import { I18nKey, t, tl } from 'app/i18next-t';
 import { D1Item, D1Stat, DimItem, DimSocket, DimStat } from 'app/inventory/item-types';
 import { statsMs } from 'app/inventory/store/stats';
 import { TOTAL_STAT_HASH, armorStats } from 'app/search/d2-known-values';
 import { getColor, percent } from 'app/shell/formatters';
 import { AppIcon, helpIcon } from 'app/shell/icons';
+import { userGuideUrl } from 'app/shell/links';
 import { isPlugStatActive } from 'app/utils/item-utils';
 import { LookupTable } from 'app/utils/util-types';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
@@ -29,7 +30,7 @@ const modItemCategoryHashes = [
 ];
 
 // Some stat labels are long. This lets us replace them with i18n
-const statLabels: LookupTable<StatHashes, string> = {
+const statLabels: LookupTable<StatHashes, I18nKey> = {
   [StatHashes.RoundsPerMinute]: tl('Organizer.Stats.RPM'),
   [StatHashes.AirborneEffectiveness]: tl('Organizer.Stats.Airborne'),
 };
@@ -262,7 +263,7 @@ export function D1QualitySummaryStat({ item }: { item: D1Item }) {
       <div className={styles.qualitySummary} style={getColor(item.quality.min, 'color')}>
         {t('Stats.OfMaxRoll', { range: item.quality.range })}
         <ExternalLink
-          href="https://github.com/DestinyItemManager/DIM/wiki/View-how-good-the-stat-(Int-Dis-Str)-roll-on-your-armor-is"
+          href={userGuideUrl('View-how-good-the-stat-(Int-Dis-Str)-roll-on-your-armor-is')}
           title={t('Stats.PercentHelp')}
         >
           <AppIcon icon={helpIcon} />
