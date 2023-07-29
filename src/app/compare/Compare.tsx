@@ -381,12 +381,12 @@ function getAllStats(
     stats.push(
       makeFakeStat(
         'StatDistance',
-        t('Stats.StatDistance'),
+        'Similarity',
         (item: DimItem) => ({
           value: statDistance(item, initialItem),
           statHash: -3,
         }),
-        { statMaximumValue: 10, lowerBetter: true }
+        { statMaximumValue: 10, lowerBetter: false }
       )
     );
   }
@@ -470,15 +470,22 @@ function statDistance(item: DimItem, initialItem: DimItem): number {
   const initialItemStats = armorStatValues(initialItem);
   const compareItemStats = armorStatValues(item);
 
+  const dot = (first: number[], second: number[]) =>
+    _.sum(_.zip(first, second).map(([a, b]) => a! * b!));
+
+  const magnitude = (vec: number[]) => Math.sqrt(_.sum(vec.map((a) => a ** 2)));
+
+  const cosine = (first: number[], second: number[]) =>
+    dot(first, second) / (magnitude(first) * magnitude(second));
+
+  const euclidean = (first: number[], second: number[]) =>
+    Math.sqrt(_.sum(_.zip(first, second).map(([a, b]) => (a! - b!) ** 2)));
   console.log({
     initialItemStats,
     compareItemStats,
-    distance: Math.sqrt(
-      _.sum(_.zip(initialItemStats, compareItemStats).map(([a, b]) => (a! - b!) * (a! - b!)))
-    ),
+    cosine: cosine(initialItemStats, compareItemStats),
+    euclidean: euclidean(initialItemStats, compareItemStats),
   });
 
-  return Math.sqrt(
-    _.sum(_.zip(initialItemStats, compareItemStats).map(([a, b]) => (a! - b!) * (a! - b!)))
-  );
+  return Math.ceil(cosine(initialItemStats, compareItemStats) * 100);
 }
