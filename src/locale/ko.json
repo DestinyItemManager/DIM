@@ -731,6 +731,7 @@
     "OnWrongCharacterWarning": "이 캐릭터에서 전투력이 가장 높은 방어구가 다른 캐릭터에 있습니다. 떨어지는 아이템, 강력한 보상, 최고조 보상의 전투력 계산에 포함되려면 방어구가 이 캐릭터나 창고에 있어야 합니다.",
     "OnlyItems": "오직 장착이 가능한 아이템, 재료, 소모품들만이 로드아웃에 추가될 수 있습니다.",
     "OpenInOptimizer": "방어구 최적화",
+    "PickArmor": "방어구 선택",
     "PickMods": "방어구 개조 부품 추가",
     "PullFromPostmaster": "우편 담당자에게서 수령",
     "PullFromPostmasterError": "우편 담당자로부터 가져올 수 없습니다: {{error}}",
@@ -745,11 +746,10 @@
     "Random": "무작위",
     "Randomize": "무작위 로드아웃",
     "RandomizeButton": "무작위",
-    "RandomizePrompt": "장착된 무기, 방어구, 고스트를 무작위로 설정하시겠습니까?",
+    "RandomizeNew": "무작위 생성",
     "RandomizeQueryHint": "팁: 먼저 아이템을 검색하여 무작위로 선택될 수 있는 아이템을 제한하세요.",
     "RandomizeSearch": "검색 결과에서 무작위화",
     "RandomizeSearchPrompt": "\"{{query}}\"로 검색된 결과에서 무작위로 장착하시겠습니까?",
-    "RandomizeWeapons": "장착된 무기를 무작위로 설정하시겠습니까?",
     "Redo": "다시 실행",
     "RestoreAllItems": "모든 아이템",
     "Save": "저장",
@@ -794,8 +794,7 @@
     "UnassignedModError": "개조 부품이 현재 방어구에 맞지 않음",
     "Undo": "되돌리기",
     "Update": "변경사항 저장",
-    "VendorsCannotEquip": "이 아이템을 소유하고 있지 않습니다. 클릭하여 대체품을 선택하거나 X를 눌러 제거합니다:",
-    "WeaponsOnly": "무기만"
+    "VendorsCannotEquip": "이 아이템을 소유하고 있지 않습니다. 클릭하여 대체품을 선택하거나 X를 눌러 제거합니다:"
   },
   "Manifest": {
     "Download": "Bungie에서 최신 데스티니 정보 데이터베이스 다운로드하는 중...",

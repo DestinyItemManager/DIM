@@ -731,6 +731,7 @@
     "OnWrongCharacterWarning": "La armadura más poderosa de este personaje está en otro personaje. Para contar el Poder del botín, recompensas poderosas e hito, la armadura debe estar en este personaje o en el Depósito.",
     "OnlyItems": "Solo objetos equipables, materiales y consumibles pueden añadirse a una configuración.",
     "OpenInOptimizer": "Optimizar Armadura",
+    "PickArmor": "Escoger Armadura",
     "PickMods": "Añadir modificadores de armadura",
     "PullFromPostmaster": "Recoger de Administración",
     "PullFromPostmasterError": "No se pudo extraer de Administración: {{error}}.",
@@ -745,11 +746,10 @@
     "Random": "Aleatorio",
     "Randomize": "Aleatorizar Equipación",
     "RandomizeButton": "Aleatorizar",
-    "RandomizePrompt": "¿Aleatorizar tus armas equipadas, armaduras y espectro?",
+    "RandomizeNew": "Crear aleatoria",
     "RandomizeQueryHint": "Consejo: Busca objetos primero para restringir cuales pueden ser aleatoriamente elegidos.",
     "RandomizeSearch": "Aleatorizar desde la Búsqueda",
     "RandomizeSearchPrompt": "Aleatorizar tus objetos equipados desde la búsqueda \"{{query}}\"?",
-    "RandomizeWeapons": "¿Aleatorizar tus armas equipadas?",
     "Redo": "Rehacer",
     "RestoreAllItems": "Todos los objetos",
     "Save": "Guardar",
@@ -794,8 +794,7 @@
     "UnassignedModError": "El modificador no encajó en tu armadura actual",
     "Undo": "Deshacer",
     "Update": "Guardar Cambios",
-    "VendorsCannotEquip": "No tienes estos objetos. Pulsa para escoger otro reemplazo o clica la X para quitar:",
-    "WeaponsOnly": "Sólo Armas"
+    "VendorsCannotEquip": "No tienes estos objetos. Pulsa para escoger otro reemplazo o clica la X para quitar:"
   },
   "Manifest": {
     "Download": "Descargando la última información de la base de datos desde Bungie...",

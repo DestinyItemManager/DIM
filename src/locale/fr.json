@@ -648,9 +648,9 @@
     "Classified": "Certains de vos objets sont classifiés et n'ont pas pu être inclus dans le calcul de votre puissance maximum.",
     "ClearLoadoutParameters": "Retirer les paramètres de l'optimiseur d'équipement",
     "ClearSection": "Tout retirer",
-    "ClearSpace": "Move others away",
-    "ClearSpaceArmor": "Move other armor away",
-    "ClearSpaceWeapons": "Move other weapons away",
+    "ClearSpace": "Déplacer les autres ailleurs",
+    "ClearSpaceArmor": "Déplacer l'autre armure ailleurs",
+    "ClearSpaceWeapons": "Déplacer les autres armes ailleurs",
     "ClearUnsetMods": "Retirer les autres mods",
     "ClearingSpace": "Déplacement des autres objets",
     "Create": "Créer un équipement",
@@ -731,6 +731,7 @@
     "OnWrongCharacterWarning": "Les armures les plus puissantes de ce personnage sont sur un autre personnage. Pour qu'ils comptent dans le calcul de puissance des récompenses normales, de puissance, et de prestige, les armures doivent être sur ce personnage ou dans le coffre.",
     "OnlyItems": "Seuls les objets équipables, matériaux et consommables peuvent être ajoutés à un équipement.",
     "OpenInOptimizer": "Optimiser l'armure",
+    "PickArmor": "Pick Armor",
     "PickMods": "Ajouter des mods d'armure",
     "PullFromPostmaster": "Collecter le commis des postes",
     "PullFromPostmasterError": "Impossible de récupérer du commis des postes: {{error}}.",
@@ -745,11 +746,10 @@
     "Random": "Aléatoire",
     "Randomize": "Équipement aléatoire",
     "RandomizeButton": "Aléatoire",
-    "RandomizePrompt": "Équiper des armes, armures et spectre au hasard ?",
+    "RandomizeNew": "Créer aléatoire",
     "RandomizeQueryHint": "Astuce : Recherchez d'abord des objets pour réduire la liste des objets qui peuvent être choisis aléatoirement.",
     "RandomizeSearch": "Équiper aléatoire à partir de la recherche",
     "RandomizeSearchPrompt": "Équiper au hasard à partir de la recherche \"{{query}}\"?",
-    "RandomizeWeapons": "Équiper des armes au hasard ?",
     "Redo": "Refaire",
     "RestoreAllItems": "Tous les objets",
     "Save": "Sauvegarder",
@@ -794,8 +794,7 @@
     "UnassignedModError": "Le mot n'a pas pu être équipé sur votre armure actuelle",
     "Undo": "Annuler",
     "Update": "Enregistrer les modifications",
-    "VendorsCannotEquip": "Vous n'avez pas ces objets. Appuyez pour sélectionner un remplacement ou cliquez sur X pour retirer:",
-    "WeaponsOnly": "Armes uniquement"
+    "VendorsCannotEquip": "Vous n'avez pas ces objets. Appuyez pour sélectionner un remplacement ou cliquez sur X pour retirer:"
   },
   "Manifest": {
     "Download": "Téléchargement de la dernière base de données d'informations Destiny depuis Bungie...",
@@ -819,7 +818,7 @@
     "Weekly": "Défi Hebdomadaire"
   },
   "Mods": {
-    "HarmonicModDescription": "This mod's effect comes at a reduced cost and changes element depending on the equipped subclass."
+    "HarmonicModDescription": "L'effet de ce mod a un coût réduis et change d'élément en fonction de la doctrine équipée."
   },
   "MoveAmount": {
     "Amount": "Quantité :"
@@ -1074,7 +1073,7 @@
     "SortName": "Nom",
     "SpacesSize": "{{count}} espace",
     "SpacesSize_plural": "{{count}} espaces",
-    "Theme": "Theme"
+    "Theme": "Thème"
   },
   "Sockets": {
     "ApplyPerks": "Appliquer les attributs",

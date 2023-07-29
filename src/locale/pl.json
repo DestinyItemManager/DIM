@@ -731,6 +731,7 @@
     "OnWrongCharacterWarning": "Najpotężniejszy pancerz tej postaci znajduje się na innej postaci. Aby liczyć się do Mocy dropów, potężnych i szczytowych nagród, pancerz musi znajdować się na tej postaci lub w Schowku.",
     "OnlyItems": "Tylko przedmioty, które można założyć, materiały i przedmioty konsumpcyjne można dodać do uzbrojenia.",
     "OpenInOptimizer": "Optymalizuj zbroję",
+    "PickArmor": "Pick Armor",
     "PickMods": "Dodaj modyfikacje pancerza",
     "PullFromPostmaster": "Odbierz Kuriera",
     "PullFromPostmasterError": "Nie można odebrać Kuriera: {{error}}.",
@@ -745,11 +746,10 @@
     "Random": "Losowy",
     "Randomize": "Wylosuj uzbrojenie",
     "RandomizeButton": "Randomize",
-    "RandomizePrompt": "Losować twoją założoną broń, zbroję i ducha?",
+    "RandomizeNew": "Create Random",
     "RandomizeQueryHint": "Tip: Search for items first to restrict what items can be randomly chosen.",
     "RandomizeSearch": "Losowo z Wyszukiwania",
     "RandomizeSearchPrompt": "Wylosuj wyposażone przedmioty z wyszukania \"{{query}}\"?",
-    "RandomizeWeapons": "Losować twoją założoną broń?",
     "Redo": "Przywróć",
     "RestoreAllItems": "Wszystkie Przedmioty",
     "Save": "Zapisz",
@@ -794,8 +794,7 @@
     "UnassignedModError": "Modyfikacja nie pasuję do twojej bieżącej zbroi",
     "Undo": "Cofnij",
     "Update": "Zapisz zmiany",
-    "VendorsCannotEquip": "Nie masz tych przedmiotów. Naciśnij, aby wybrać zamiennik lub kliknij X, aby usunąć:",
-    "WeaponsOnly": "Tylko bronie"
+    "VendorsCannotEquip": "Nie masz tych przedmiotów. Naciśnij, aby wybrać zamiennik lub kliknij X, aby usunąć:"
   },
   "Manifest": {
     "Download": "Pobieranie najnowszej bazy danych informacji Destiny od Bungie...",
