@@ -30,7 +30,7 @@ export function OptimizerButton({
       state={{ loadout, storeId }}
     >
       <AppIcon icon={faCalculator} />{' '}
-      {missingArmor ? t('Loadouts.ChooseArmor') : t('Loadouts.OpenInOptimizer')}
+      {missingArmor ? t('Loadouts.PickArmor') : t('Loadouts.OpenInOptimizer')}
     </Link>
   );
 }
