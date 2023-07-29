@@ -7,7 +7,7 @@ import { HttpClient, HttpClientConfig } from 'bungie-api-ts/http';
 import _ from 'lodash';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
-import { fetchWithBungieOAuth } from './authenticated-fetch';
+import { FatalTokenError, fetchWithBungieOAuth } from './authenticated-fetch';
 import { API_KEY } from './bungie-api-utils';
 import {
   BungieError,
@@ -107,6 +107,10 @@ function handleErrors(error: unknown) {
         ? new DimError('BungieService.NotConnectedOrBlocked')
         : new DimError('BungieService.NotConnected')
     ).withError(error);
+  }
+
+  if (error instanceof FatalTokenError) {
+    throw new DimError('BungieService.NotLoggedIn').withError(error);
   }
 
   if (error instanceof HttpStatusError) {
