@@ -29,33 +29,33 @@ export default function PresentationNodeLeaf({
   redactedRecordsRevealed: boolean;
   sortRecordProgression: boolean;
 }) {
-  if (sortRecordProgression) {
-    sortNode(node);
-  }
-
   return (
     <>
       {node.collectibles && node.collectibles.length > 0 && (
         <CollectiblesGrid>
-          {node.collectibles.map((collectible) => (
-            <Collectible
-              key={collectible.key}
-              collectible={collectible}
-              owned={Boolean(ownedItemHashes?.has(collectible.item.hash))}
-            />
-          ))}
+          {(sortRecordProgression ? sortCollectibles(node.collectibles) : node.collectibles).map(
+            (collectible) => (
+              <Collectible
+                key={collectible.key}
+                collectible={collectible}
+                owned={Boolean(ownedItemHashes?.has(collectible.item.hash))}
+              />
+            )
+          )}
         </CollectiblesGrid>
       )}
 
       {node.records && node.records.length > 0 && (
         <RecordGrid
-          records={node.records}
+          records={sortRecordProgression ? sortRecords(node.records) : node.records}
           completedRecordsHidden={completedRecordsHidden}
           redactedRecordsRevealed={redactedRecordsRevealed}
         />
       )}
 
-      {node.metrics && node.metrics.length > 0 && <Metrics metrics={node.metrics} />}
+      {node.metrics && node.metrics.length > 0 && (
+        <Metrics metrics={sortRecordProgression ? sortMetrics(node.metrics) : node.metrics} />
+      )}
 
       {node.craftables && node.craftables.length > 0 && (
         <CollectiblesGrid>
@@ -76,20 +76,7 @@ export default function PresentationNodeLeaf({
   );
 }
 
-/**
- * Sorts the passed node if it has a DimRecord[] | DimCollectible[] | DimMetric[]
- */
-function sortNode(node: DimPresentationNodeLeaf) {
-  if (node.records) {
-    return sortRecords(node.records);
-  } else if (node.collectibles) {
-    return sortCollectibles(node.collectibles);
-  } else if (node.metrics) {
-    return sortMetrics(node.metrics);
-  }
-}
-
-function sortRecords(records: DimRecord[]) {
+function sortRecords(records: DimRecord[]): DimRecord[] {
   return sortBy(records, (record) => {
     //  Triumph is already completed so move it to back of list.
     if (
@@ -120,7 +107,7 @@ function sortRecords(records: DimRecord[]) {
   }).reverse();
 }
 
-function sortCollectibles(collectibles: DimCollectible[]) {
+function sortCollectibles(collectibles: DimCollectible[]): DimCollectible[] {
   return sortBy(collectibles, (collectible) => {
     if (collectible.state & DestinyCollectibleState.NotAcquired) {
       return -1;
@@ -129,7 +116,7 @@ function sortCollectibles(collectibles: DimCollectible[]) {
   });
 }
 
-function sortMetrics(metrics: DimMetric[]) {
+function sortMetrics(metrics: DimMetric[]): DimMetric[] {
   return sortBy(metrics, (metric) => {
     const objectives = metric.metricComponent.objectiveProgress;
     if (objectives.complete) {
