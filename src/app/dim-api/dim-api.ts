@@ -93,10 +93,9 @@ export async function createLoadoutShare(platformMembershipId: string, loadout: 
 }
 
 export async function getSharedLoadout(shareId: string) {
-  // https://github.com/microsoft/TypeScript/issues/15300#issuecomment-1320421641
-  const params: Pick<GetSharedLoadoutRequest, keyof GetSharedLoadoutRequest> = {
+  const params = {
     shareId,
-  };
+  } satisfies GetSharedLoadoutRequest;
   const response = await unauthenticatedApi<GetSharedLoadoutResponse>({
     url: '/loadout_share',
     method: 'GET',

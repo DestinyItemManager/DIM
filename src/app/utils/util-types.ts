@@ -37,3 +37,11 @@ export function isIn<O extends Record<string | number, any>>(key: keyof O, obj: 
 export function objectKeys<O extends Record<string | number, unknown>>(obj: O) {
   return Object.keys(obj) as (keyof O)[];
 }
+
+/** performs `Object.values()` but properly types the values when the input object has number keys. */
+/*@__INLINE__*/
+export function objectValues<T>(
+  obj: { [key: string]: T } | { [key: number]: T } | ArrayLike<T>
+): T[] {
+  return Object.values(obj);
+}
