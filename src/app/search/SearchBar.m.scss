@@ -42,6 +42,8 @@
     overflow-y: auto;
     overscroll-behavior: none;
     max-height: calc(var(--viewport-height) - var(--header-height)) !important;
+    box-shadow: none;
+    border-radius: 0;
   }
 }
 

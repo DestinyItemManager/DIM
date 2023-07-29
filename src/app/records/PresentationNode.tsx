@@ -58,7 +58,9 @@ export default function PresentationNode({
 
   // "CategorySet" DestinyPresentationScreenStyle is for armor sets
   const aParentIsCategorySetStyle = thisAndParents.some(
-    (p) => defs.PresentationNode.get(p)?.screenStyle === DestinyPresentationScreenStyle.CategorySets
+    (p) =>
+      p > 0 &&
+      defs.PresentationNode.get(p)?.screenStyle === DestinyPresentationScreenStyle.CategorySets
   );
 
   const alwaysExpanded =

@@ -94,7 +94,6 @@ $commonBg: #366f42;
   background-size: contain;
   position: absolute;
   pointer-events: none;
-  z-index: 2;
 }
 
 .energyCostOverlay {
@@ -104,25 +103,6 @@ $commonBg: #366f42;
   background-position: center;
   background-size: cover;
   pointer-events: none;
-}
-
-.shapedOverlay {
-  position: absolute;
-  width: calc(var(--item-size) - (2 * $item-border-width));
-  height: calc(var(--item-size) - (2 * $item-border-width));
-  top: $item-border-width;
-  left: $item-border-width;
-  background-image: linear-gradient(to top right, #d25336, transparent 45%);
-}
-
-.shapedIcon {
-  position: absolute;
-  bottom: 3px;
-  left: 3px;
-  width: calc(var(--item-size) / 5); // Match dimensions of tag icons
-  height: calc(var(--item-size) / 5);
-  filter: brightness(200%);
-  z-index: 1;
 }
 
 .energyCost {

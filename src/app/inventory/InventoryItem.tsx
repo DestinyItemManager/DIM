@@ -105,13 +105,13 @@ export default function InventoryItem({
         <BadgeInfo item={item} isCapped={isCapped} wishlistRoll={wishlistRoll} />
         {(tag || item.locked || hasNotes) && (
           <div className={styles.icons}>
-            {tag && <TagIcon className={styles.icon} tag={tag} />}
             {item.locked && (!autoLockTagged || !tag || !canSyncLockState(item)) && (
               <AppIcon
                 className={styles.icon}
                 icon={item.bucket.hash !== BucketHashes.Finishers ? lockIcon : starIcon}
               />
             )}
+            {tag && <TagIcon className={styles.icon} tag={tag} />}
             {hasNotes && <AppIcon className={styles.icon} icon={stickyNoteIcon} />}
           </div>
         )}

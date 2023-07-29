@@ -1,22 +1,30 @@
 @use '../variables.scss' as *;
 
-.badgeNew {
+.dot {
   margin: 0 !important;
   position: absolute;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--theme-pwa-background); // Use PWA fill var as it'll always be solid (not a gradient)
+
+  @include phone-portrait {
+    box-shadow: 0 0 0 2px var(--theme-mobile-background);
+  }
+}
+
+.badgeNew {
+  composes: dot;
   bottom: 0;
   right: -5px;
   display: block;
   background-color: $new-notification-dot;
-  border-radius: 50%;
   height: 8px;
   width: 8px;
-  box-shadow: 0 0 0 2px var(--theme-pwa-background); // Use PWA fill var as it'll always be solid (not a gradient)
 }
+
 .upgrade {
-  margin: 0 !important;
-  position: absolute;
+  composes: dot;
   bottom: -8px;
   right: -12px;
-  color: $new-notification-dot !important;
+  color: $upgrade-notification-dot !important;
   font-size: 18px !important;
 }

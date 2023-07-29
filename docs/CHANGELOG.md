@@ -2,7 +2,12 @@
 
 * You can now search for Emotes and Ghost Projections on the Records page.
 * Added button to sort triumphs by completion.
- 
+* Greatly expanded the "Randomize Loadout" feature. You can now randomize a Loadout's subclass and its configuration, weapons, armor, cosmetics, and armor mods.
+  * Randomize them individually through the three dots in a Loadout section.
+  * Randomize the entire Loadout using the "Randomize" button at the bottom of the Loadout drawer.
+  * The existing "Randomize Loadout" button to immediately generate and apply a random Loadout now allows you to choose which parts of your current loadout to randomize
+  * If you have an active search query, weapons and armor will be restricted to those matching the query.
+
 ## 7.78.0 <span class="changelog-date">(2023-07-23)</span>
 
 * The "Clear other items" setting in Loadouts has been split into a separate option for clearing weapons and clearing armor.

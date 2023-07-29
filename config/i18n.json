@@ -741,6 +741,7 @@
     "NoSpace": "You're out of space in the vault and any other characters.",
     "Random": "Random",
     "Randomize": "Randomize Loadout",
+    "RandomizeNew": "Create Random",
     "RandomizeButton": "Randomize",
     "RandomizePrompt": "Randomize your equipped weapons, armor and ghost?",
     "RandomizeQueryHint": "Tip: Search for items first to restrict what items can be randomly chosen.",
