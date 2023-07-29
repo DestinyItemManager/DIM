@@ -18,7 +18,7 @@ import { BucketPlaceholder } from './BucketPlaceholder';
 import { FashionMods } from './FashionMods';
 import styles from './LoadoutItemCategorySection.m.scss';
 import LoadoutParametersDisplay from './LoadoutParametersDisplay';
-import { OptimizerButton } from './OptimizerButton';
+import { OptimizerButton, armorItemsMissing } from './OptimizerButton';
 
 const categoryStyles: LookupTable<D2BucketCategory, string> = {
   Weapons: styles.categoryWeapons,
@@ -105,7 +105,7 @@ export default function LoadoutItemCategorySection({
             <OptimizerButton
               loadout={loadout}
               storeId={storeId}
-              missingArmor={Boolean(items?.some((li) => li.loadoutItem.equip && li.missing))}
+              missingArmor={armorItemsMissing(items)}
             />
           )}
         </>

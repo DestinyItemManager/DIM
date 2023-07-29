@@ -24,7 +24,7 @@ import FashionDrawer from '../fashion/FashionDrawer';
 import { BucketPlaceholder } from '../loadout-ui/BucketPlaceholder';
 import { FashionMods } from '../loadout-ui/FashionMods';
 import LoadoutParametersDisplay from '../loadout-ui/LoadoutParametersDisplay';
-import { OptimizerButton } from '../loadout-ui/OptimizerButton';
+import { OptimizerButton, armorItemsMissing } from '../loadout-ui/OptimizerButton';
 import styles from './LoadoutEditBucket.m.scss';
 import { useEquipDropTargets } from './useEquipDropTargets';
 
@@ -117,7 +117,7 @@ export function ArmorExtras({
 }) {
   const equippedItems =
     items?.filter((li) => li.loadoutItem.equip && !li.missing).map((li) => li.item) ?? [];
-  const anyMissing = Boolean(items?.some((li) => li.loadoutItem.equip && li.missing));
+  const anyMissing = armorItemsMissing(items);
 
   return (
     <>

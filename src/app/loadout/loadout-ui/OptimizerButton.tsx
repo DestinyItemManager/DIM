@@ -1,7 +1,8 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { AppIcon, faCalculator } from 'app/shell/icons';
+import { count } from 'app/utils/util';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -32,4 +33,8 @@ export function OptimizerButton({
       {missingArmor ? t('Loadouts.ChooseArmor') : t('Loadouts.OpenInOptimizer')}
     </Link>
   );
+}
+
+export function armorItemsMissing(items?: ResolvedLoadoutItem[]) {
+  return !items || count(items, (li) => li.loadoutItem.equip && !li.missing) < 5;
 }
