@@ -19,12 +19,11 @@ import AppIcon from 'app/shell/icons/AppIcon';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isPlugStatActive } from 'app/utils/item-utils';
 import { usePlugDescriptions } from 'app/utils/plug-descriptions';
-import { errorMessage } from 'app/utils/util';
+import { errorMessage, filterMap } from 'app/utils/util';
 import { DestinyItemSocketEntryDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes, SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { motion } from 'framer-motion';
-import _ from 'lodash';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import ItemStats from './ItemStats';
@@ -127,48 +126,46 @@ export default function SocketDetailsSelectedPlug({
     ? defs.Collectible.get(plug.collectibleHash)?.sourceString
     : undefined;
 
-  const stats = _.compact(
-    plug.investmentStats.map((stat) => {
-      if (costStatHashes.includes(stat.statTypeHash)) {
-        return null;
-      }
-      const itemStat = item.stats?.find((s) => s.statHash === stat.statTypeHash);
-      if (!itemStat) {
-        return null;
-      }
+  const stats = filterMap(plug.investmentStats, (stat) => {
+    if (costStatHashes.includes(stat.statTypeHash)) {
+      return undefined;
+    }
+    const itemStat = item.stats?.find((s) => s.statHash === stat.statTypeHash);
+    if (!itemStat) {
+      return undefined;
+    }
 
-      if (!isPlugStatActive(item, plug, stat.statTypeHash, stat.isConditionallyActive)) {
-        return null;
-      }
+    if (!isPlugStatActive(item, plug, stat.statTypeHash, stat.isConditionallyActive)) {
+      return undefined;
+    }
 
-      const statGroupDef = defs.StatGroup.get(
-        defs.InventoryItem.get(item.hash).stats!.statGroupHash!
-      );
+    const statGroupDef = defs.StatGroup.get(
+      defs.InventoryItem.get(item.hash).stats!.statGroupHash!
+    );
 
-      const statDisplay = statGroupDef?.scaledStats.find((s) => s.statHash === stat.statTypeHash);
-      const currentModValue =
-        currentPlug?.plugDef.investmentStats.find((s) => s.statTypeHash === stat.statTypeHash)
-          ?.value || 0;
+    const statDisplay = statGroupDef?.scaledStats.find((s) => s.statHash === stat.statTypeHash);
+    const currentModValue =
+      currentPlug?.plugDef.investmentStats.find((s) => s.statTypeHash === stat.statTypeHash)
+        ?.value || 0;
 
-      let modValue = stat.value;
-      const updatedInvestmentValue = itemStat.investmentValue + modValue - currentModValue;
-      let itemStatValue = updatedInvestmentValue;
+    let modValue = stat.value;
+    const updatedInvestmentValue = itemStat.investmentValue + modValue - currentModValue;
+    let itemStatValue = updatedInvestmentValue;
 
-      if (statDisplay) {
-        itemStatValue = interpolateStatValue(updatedInvestmentValue, statDisplay);
-        modValue =
-          itemStatValue - interpolateStatValue(updatedInvestmentValue - modValue, statDisplay);
-      }
+    if (statDisplay) {
+      itemStatValue = interpolateStatValue(updatedInvestmentValue, statDisplay);
+      modValue =
+        itemStatValue - interpolateStatValue(updatedInvestmentValue - modValue, statDisplay);
+    }
 
-      return {
-        modValue,
-        dimStat: {
-          ...itemStat,
-          value: itemStatValue,
-        } as DimStat,
-      };
-    })
-  );
+    return {
+      modValue,
+      dimStat: {
+        ...itemStat,
+        value: itemStatValue,
+      } as DimStat,
+    };
+  });
 
   // Can we actually insert this mod instead of just previewing it?
   const canDoAWA =

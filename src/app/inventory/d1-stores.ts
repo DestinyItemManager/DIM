@@ -11,7 +11,6 @@ import { ThunkResult } from 'app/store/types';
 import { errorLog, infoLog } from 'app/utils/log';
 import { convertToError, errorMessage } from 'app/utils/util';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
 import { getStores } from '../bungie-api/destiny1-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { D1ManifestDefinitions, getDefinitions } from '../destiny1/d1-definitions';
@@ -56,10 +55,8 @@ export function loadStores(): ThunkResult<D1Store[] | undefined> {
         const buckets = d1BucketsSelector(getState())!;
 
         const stores = [
-          ..._.compact(
-            characters.map((characterData) =>
-              processCharacter(characterData, defs, buckets, lastPlayedDate)
-            )
+          ...characters.map((characterData) =>
+            processCharacter(characterData, defs, buckets, lastPlayedDate)
           ),
           processVault(vaultInventory, defs, buckets),
         ];

@@ -15,6 +15,7 @@ import { ItemFilter } from 'app/search/filter-types';
 import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import { filterMap } from 'app/utils/util';
 import { DestinyClass, DestinyProfileResponse, TierType } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import { Draft, produce } from 'immer';
@@ -463,10 +464,9 @@ export function fillLoadoutFromEquipped(
     const modsByBucket: { [bucketHash: number]: number[] } = {};
     for (const item of newEquippedItems.filter((i) => i.bucket.inArmor)) {
       const plugs = item.sockets
-        ? _.compact(
-            getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics).map(
-              (s) => s.plugged?.plugDef.hash
-            )
+        ? filterMap(
+            getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics),
+            (s) => s.plugged?.plugDef.hash
           )
         : [];
       if (plugs.length) {

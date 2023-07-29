@@ -2,6 +2,7 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
 import { useSetting } from 'app/settings/hooks';
+import { filterMap } from 'app/utils/util';
 import { DestinyClass, DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React, { ReactElement, ReactNode, cloneElement } from 'react';
@@ -47,16 +48,16 @@ export function StatTotalToggle({
         ].map(({ className, includesCheck }) => (
           <span key={className} className={clsx(className, { [styles.readOnly]: readOnly })}>
             {addDividers(
-              armorStats
-                .filter((statHash) => activeStats.includes(statHash) === includesCheck)
-                .map((statHash) => (
+              filterMap(armorStats, (statHash) =>
+                activeStats.includes(statHash) === includesCheck ? (
                   <StatToggleButton
                     key={statHash}
                     stat={defs.Stat.get(statHash)}
                     toggleStat={toggleStat}
                     readOnly={readOnly}
                   />
-                )),
+                ) : undefined
+              ),
               <span className={styles.divider} />
             )}
           </span>

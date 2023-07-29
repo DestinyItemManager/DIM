@@ -71,22 +71,23 @@ const SymbolsWindow = memo(function ({
         </div>
         <div className={styles.symbolsBody}>
           <div className={styles.symbolsContainer}>
-            {allSymbols
-              .filter((e) => e.fullName.includes(query) || e.name.includes(query))
-              .map((emoji) => (
-                <button
-                  className={styles.emojiButton}
-                  type="button"
-                  key={emoji.glyph}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onChooseGlyph(emoji.glyph);
-                  }}
-                  onPointerEnter={() => setPreview(emoji)}
-                >
-                  {emoji.glyph}
-                </button>
-              ))}
+            {allSymbols.map(
+              (emoji) =>
+                (emoji.fullName.includes(query) || emoji.name.includes(query)) && (
+                  <button
+                    className={styles.emojiButton}
+                    type="button"
+                    key={emoji.glyph}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onChooseGlyph(emoji.glyph);
+                    }}
+                    onPointerEnter={() => setPreview(emoji)}
+                  >
+                    {emoji.glyph}
+                  </button>
+                )
+            )}
           </div>
         </div>
         <div className={styles.symbolsFooter}>

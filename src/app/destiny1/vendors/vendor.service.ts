@@ -5,6 +5,7 @@ import { amountOfItem } from 'app/inventory/stores-helpers';
 import { get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { errorLog } from 'app/utils/log';
+import { filterMap } from 'app/utils/util';
 import copy from 'fast-copy';
 import _ from 'lodash';
 import { DestinyAccount } from '../../accounts/destiny-account';
@@ -395,47 +396,36 @@ async function processVendor(
     buckets
   );
   const itemsById = _.keyBy(items, (i) => i.id);
-  const categories = _.compact(
-    Object.values(vendor.saleItemCategories).map((category) => {
-      const categoryInfo = vendorDef.categories[category.categoryIndex];
-      if (categoryDenyList.includes(categoryInfo.categoryHash)) {
-        return null;
-      }
+  const categories = filterMap(Object.values(vendor.saleItemCategories), (category) => {
+    const categoryInfo = vendorDef.categories[category.categoryIndex];
+    if (categoryDenyList.includes(categoryInfo.categoryHash)) {
+      return undefined;
+    }
 
-      const categoryItems = _.compact(
-        category.saleItems.map((saleItem) => {
-          const unlocked = isSaleItemUnlocked(saleItem);
-          return {
-            index: saleItem.vendorItemIndex,
-            costs: saleItem.costs
-              .map((cost) => ({
-                value: cost.value,
-                currency: _.pick(
-                  defs.InventoryItem.get(cost.itemHash),
-                  'itemName',
-                  'icon',
-                  'itemHash'
-                ),
-              }))
-              .filter((c) => c.value > 0),
-            item: itemsById[`vendor-${vendorDef.hash}-${saleItem.vendorItemIndex}`],
-            // TODO: caveat, this won't update very often!
-            unlocked,
-            unlockedByCharacter: unlocked ? [store.id] : [],
-            failureStrings: saleItem.failureIndexes
-              .map((i) => vendorDef.failureStrings[i])
-              .join('. '),
-          };
-        })
-      );
-
+    const categoryItems = category.saleItems.map((saleItem) => {
+      const unlocked = isSaleItemUnlocked(saleItem);
       return {
-        index: category.categoryIndex,
-        title: categoryInfo.displayTitle,
-        saleItems: categoryItems,
+        index: saleItem.vendorItemIndex,
+        costs: saleItem.costs
+          .map((cost) => ({
+            value: cost.value,
+            currency: _.pick(defs.InventoryItem.get(cost.itemHash), 'itemName', 'icon', 'itemHash'),
+          }))
+          .filter((c) => c.value > 0),
+        item: itemsById[`vendor-${vendorDef.hash}-${saleItem.vendorItemIndex}`],
+        // TODO: caveat, this won't update very often!
+        unlocked,
+        unlockedByCharacter: unlocked ? [store.id] : [],
+        failureStrings: saleItem.failureIndexes.map((i) => vendorDef.failureStrings[i]).join('. '),
       };
-    })
-  );
+    });
+
+    return {
+      index: category.categoryIndex,
+      title: categoryInfo.displayTitle,
+      saleItems: categoryItems,
+    };
+  });
   for (const item of items) {
     item.vendorIcon = createdVendor.icon;
   }

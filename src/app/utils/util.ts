@@ -11,6 +11,23 @@ export function count<T>(
   return _.sumBy(list, (item) => (predicate(item) ? 1 : 0));
 }
 
+/**
+ * A single-pass filter and map function. Returning `undefined` from the mapping
+ * function will skip the value. Falsy values are still included!
+ *
+ * Similar to https://doc.rust-lang.org/std/iter/trait.Iterator.html#method.filter_map
+ */
+export function filterMap<In, Out>(list: readonly In[], fn: (value: In) => Out | undefined): Out[] {
+  const result: Out[] = [];
+  for (const value of list) {
+    const mapped = fn(value);
+    if (mapped !== undefined) {
+      result.push(mapped);
+    }
+  }
+  return result;
+}
+
 // Create a type from the keys of an object type that map to values of type PropType
 type PropertiesOfType<T, PropType> = keyof {
   [K in keyof T as T[K] extends PropType ? K : never]: T[K];

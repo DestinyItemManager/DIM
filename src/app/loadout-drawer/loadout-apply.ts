@@ -24,7 +24,7 @@ import {
   unlockedPlugSetItemsSelector,
 } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
-import { isPluggableItem } from 'app/inventory/store/sockets';
+import { hashesToPluggableItems, isPluggableItem } from 'app/inventory/store/sockets';
 import {
   amountOfItem,
   findItemsByBucket,
@@ -65,7 +65,7 @@ import {
   plugFitsIntoSocket,
   subclassAbilitySocketCategoryHashes,
 } from 'app/utils/socket-utils';
-import { convertToError, count, errorMessage } from 'app/utils/util';
+import { convertToError, count, errorMessage, filterMap } from 'app/utils/util';
 import { HashLookup } from 'app/utils/util-types';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -230,17 +230,15 @@ function doApplyLoadout(
 
       // TODO: would be great to avoid all these getLoadoutItems?
 
-      let resolvedItems = _.compact(
-        loadout.items.map((loadoutItem) => {
-          const item = getLoadoutItem(loadoutItem);
-          if (item) {
-            return {
-              loadoutItem,
-              item,
-            };
-          }
-        })
-      );
+      let resolvedItems = filterMap(loadout.items, (loadoutItem) => {
+        const item = getLoadoutItem(loadoutItem);
+        if (item) {
+          return {
+            loadoutItem,
+            item,
+          };
+        }
+      });
       if (onlyMatchingClass && !store.isVault) {
         // Trim down the list of items to only those that could be equipped by the store we're sending to.
         resolvedItems = resolvedItems.filter(
@@ -256,37 +254,35 @@ function doApplyLoadout(
 
       // Figure out which items have specific socket overrides that will need to be applied.
       // TODO: remove socket-overrides from the mods to apply list!
-      const itemsWithOverrides = _.compact(
-        loadout.items.map((loadoutItem) => {
-          const item = getLoadoutItem(loadoutItem);
-          if (
-            !loadoutItem.socketOverrides ||
-            !item ||
-            // Don't apply perks/mods/subclass configs when moving items to the vault
-            store.isVault ||
-            // Only apply perks/mods/subclass configs if the item is usable by the store we're applying to
-            !isClassCompatible(item.classType, store.classType)
-          ) {
-            return undefined;
-          } else if (item.bucket.hash === BucketHashes.Subclass) {
-            // Subclass ability sockets can be missing from socketOverrides, but show and
-            // should thus apply the result of `getDefaultAbilityChoiceHash`, so patch those in here.
-            const abilityAndSuperSockets = getSocketsByCategoryHashes(
-              item.sockets,
-              subclassAbilitySocketCategoryHashes
-            );
-            const newOverrides = { ...loadoutItem.socketOverrides };
-            for (const socket of abilityAndSuperSockets) {
-              if (newOverrides[socket.socketIndex] === undefined) {
-                newOverrides[socket.socketIndex] = getDefaultAbilityChoiceHash(socket);
-              }
+      const itemsWithOverrides = filterMap(loadout.items, (loadoutItem) => {
+        const item = getLoadoutItem(loadoutItem);
+        if (
+          !loadoutItem.socketOverrides ||
+          !item ||
+          // Don't apply perks/mods/subclass configs when moving items to the vault
+          store.isVault ||
+          // Only apply perks/mods/subclass configs if the item is usable by the store we're applying to
+          !isClassCompatible(item.classType, store.classType)
+        ) {
+          return undefined;
+        } else if (item.bucket.hash === BucketHashes.Subclass) {
+          // Subclass ability sockets can be missing from socketOverrides, but show and
+          // should thus apply the result of `getDefaultAbilityChoiceHash`, so patch those in here.
+          const abilityAndSuperSockets = getSocketsByCategoryHashes(
+            item.sockets,
+            subclassAbilitySocketCategoryHashes
+          );
+          const newOverrides = { ...loadoutItem.socketOverrides };
+          for (const socket of abilityAndSuperSockets) {
+            if (newOverrides[socket.socketIndex] === undefined) {
+              newOverrides[socket.socketIndex] = getDefaultAbilityChoiceHash(socket);
             }
-            return { ...loadoutItem, socketOverrides: newOverrides };
-          } else {
-            return loadoutItem;
           }
-        })
-      );
+          return { ...loadoutItem, socketOverrides: newOverrides };
+        } else {
+          return loadoutItem;
+        }
+      });
 
       // Filter out mods that no longer exist or that aren't unlocked on this character
       const unlockedPlugSetItems = _.once(() => unlockedPlugSetItemsSelector(store.id)(getState()));
@@ -419,9 +415,9 @@ function doApplyLoadout(
         return item?.equipped && item.owner !== store.id;
       });
 
-      const realItemsToDequip = _.compact(itemsToDequip.map((i) => getLoadoutItem(i)));
+      const realItemsToDequip = filterMap(itemsToDequip, getLoadoutItem);
 
-      const involvedItems = [..._.compact(itemsToEquip.map(getLoadoutItem)), ...realItemsToDequip];
+      const involvedItems = [...filterMap(itemsToEquip, getLoadoutItem), ...realItemsToDequip];
       const moveSession = createMoveSession(cancelToken, involvedItems);
 
       // Group dequips per character
@@ -434,13 +430,11 @@ function doApplyLoadout(
           }
           // You can't directly dequip things, you have to equip something
           // else - so choose an appropriate replacement for each item.
-          const itemsToEquip = _.compact(
-            dequipItems.map((i) =>
-              getSimilarItem(getState, getStores(), i, {
-                exclusions: applicableLoadoutItems,
-                excludeExotic: i.isExotic,
-              })
-            )
+          const itemsToEquip = filterMap(dequipItems, (i) =>
+            getSimilarItem(getState, getStores(), i, {
+              exclusions: applicableLoadoutItems,
+              excludeExotic: i.isExotic,
+            })
           );
           try {
             const result = await dispatch(
@@ -555,7 +549,7 @@ function doApplyLoadout(
         itemsToEquip = itemsToEquip.filter((i) =>
           successfulItems.some((si) => si.item.id === getLoadoutItem(i)?.id)
         );
-        const realItemsToEquip = _.compact(itemsToEquip.map((i) => getLoadoutItem(i)));
+        const realItemsToEquip = filterMap(itemsToEquip, getLoadoutItem);
         try {
           const result = await dispatch(equipItems(store, realItemsToEquip, [], moveSession));
           // Bulk equip can partially fail
@@ -988,12 +982,10 @@ function applySocketOverrides(
           // in an earlier, active socket.
           const handleShuffledSockets = (socketIndices: number[]) => {
             const sockets = getSocketsByIndexes(dimItem.sockets!, socketIndices);
-            const neededOverrides = _.compact(
-              socketIndices.map((socketIndex) => {
-                const hash = loadoutItem.socketOverrides![socketIndex];
-                return hash && { hash, loadoutSocketIndex: socketIndex };
-              })
-            );
+            const neededOverrides = filterMap(socketIndices, (socketIndex) => {
+              const hash = loadoutItem.socketOverrides![socketIndex];
+              return hash ? { hash, loadoutSocketIndex: socketIndex } : undefined;
+            });
             const excessSockets = [];
             // If the loadout doesn't specify aspects/fragments, don't touch them because that's how it worked for a long time.
             if (neededOverrides.length) {
@@ -1137,15 +1129,14 @@ function applyLoadoutMods(
         loadoutDimItems.push(item);
       }
     }
-    const armor = _.compact(
-      LockableBucketHashes.map(
-        (bucketHash) =>
-          loadoutDimItems.find((item) => item.bucket.hash === bucketHash) ||
-          currentEquippedArmor.find((item) => item.bucket.hash === bucketHash)
-      )
+    const armor = filterMap(
+      LockableBucketHashes,
+      (bucketHash) =>
+        loadoutDimItems.find((item) => item.bucket.hash === bucketHash) ||
+        currentEquippedArmor.find((item) => item.bucket.hash === bucketHash)
     );
 
-    const mods = modHashes.map((h) => defs.InventoryItem.get(h)).filter(isPluggableItem);
+    const mods = hashesToPluggableItems(defs, modHashes);
 
     // Early exit - if all the mods are already there, nothing to do
     if (

@@ -12,6 +12,7 @@ import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conver
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { filterMap } from 'app/utils/util';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useMemo } from 'react';
@@ -68,12 +69,11 @@ export function useEquippedLoadoutArmorAndSubclass(
           );
 
           const subclass = loadoutItemsByBucket[BucketHashes.Subclass];
-          const armor = _.compact(
-            LockableBucketHashes.map(
-              (bucketHash) =>
-                loadoutItemsByBucket[bucketHash]?.item ??
-                currentlyEquippedArmor.find((item) => item.bucket.hash === bucketHash)
-            )
+          const armor = filterMap(
+            LockableBucketHashes,
+            (bucketHash) =>
+              loadoutItemsByBucket[bucketHash]?.item ??
+              currentlyEquippedArmor.find((item) => item.bucket.hash === bucketHash)
           );
 
           return { armor, subclass };

@@ -33,6 +33,7 @@ const links = [
     name: 'Foundry',
     icon: foundry,
     link: (item: DimItem) => `https://d2foundry.gg/w/${item.hash}${buildFoundrySockets(item)}`,
+    weaponsOnly: true,
   },
   {
     name: 'data.destinysets.com',
@@ -48,19 +49,18 @@ export default function Links({ item }: { item: DimItem }) {
   const isPhonePortrait = useIsPhonePortrait();
   return (
     <ul className={styles.links}>
-      {links
-        .filter((l) => l.name !== 'Gunsmith' || item.bucket.inWeapons)
-        .map(
-          ({ link, name, icon, hideOnPhone }) =>
-            !(isPhonePortrait && hideOnPhone) && (
-              <li key={name}>
-                <ExternalLink href={link(item, language)}>
-                  <img src={icon} height={16} width={16} />
-                  {name}
-                </ExternalLink>
-              </li>
-            )
-        )}
+      {links.map(
+        ({ link, name, icon, hideOnPhone, weaponsOnly }) =>
+          (!weaponsOnly || item.bucket.inWeapons) &&
+          !(isPhonePortrait && hideOnPhone) && (
+            <li key={name}>
+              <ExternalLink href={link(item, language)}>
+                <img src={icon} height={16} width={16} />
+                {name}
+              </ExternalLink>
+            </li>
+          )
+      )}
       {item.loreHash !== undefined && (
         <li>
           <LoreLink loreHash={item.loreHash} />

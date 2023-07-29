@@ -78,7 +78,7 @@ export function processItems(
   const result: DimItem[] = [];
 
   for (const item of items) {
-    let createdItem: DimItem | null = null;
+    let createdItem: DimItem | undefined;
     try {
       createdItem = makeItem(context, item, owner);
     } catch (e) {
@@ -86,7 +86,7 @@ export function processItems(
       reportException('Processing Dim item', e);
     }
     if (
-      createdItem !== null &&
+      createdItem !== undefined &&
       // we want to allow makeItem to generate dummy items. they're useful in vendors, as consumables, etc.
       // but processItems is for building stores, and we don't want dummy weapons or armor,
       // which can invisibly interfere with allItems calculations and measurements
@@ -142,7 +142,7 @@ export function makeFakeItem(
   itemInstanceId = '0',
   quantity = 1,
   allowWishList = false
-): DimItem | null {
+): DimItem | undefined {
   const item = makeItem(
     context,
     {
@@ -178,9 +178,9 @@ export function makeItemSingle(
   context: ItemCreationContext,
   itemResponse: DestinyItemResponse,
   stores: DimStore[]
-): DimItem | null {
+): DimItem | undefined {
   if (!itemResponse.item.data) {
-    return null;
+    return undefined;
   }
 
   const owner = itemResponse.characterId
@@ -236,7 +236,7 @@ export function makeItem(
   item: DestinyItemComponent,
   /** the ID of the owning store - can be undefined for fake collections items */
   owner: DimStore | undefined
-): DimItem | null {
+): DimItem | undefined {
   itemComponents ??= profileResponse.itemComponents;
 
   const itemDef = defs.InventoryItem.get(item.itemHash);
@@ -253,7 +253,7 @@ export function makeItem(
   // Missing definition?
   if (!itemDef) {
     warnMissingDefinition();
-    return null;
+    return undefined;
   }
 
   if (itemDef.redacted) {

@@ -17,6 +17,7 @@ import { AppIcon, clearIcon, rightArrowIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { getSocketsByCategoryHash, plugFitsIntoSocket } from 'app/utils/socket-utils';
 import { Portal } from 'app/utils/temp-container';
+import { filterMap } from 'app/utils/util';
 import { HashLookup } from 'app/utils/util-types';
 import {
   DestinyCollectibleDefinition,
@@ -167,7 +168,7 @@ export default function FashionDrawer({
           : [];
         return [
           bucketHash,
-          _.compact(cosmeticSockets.map((s) => (s.actuallyPlugged || s.plugged)?.plugDef.hash)),
+          filterMap(cosmeticSockets, (s) => (s.actuallyPlugged || s.plugged)?.plugDef.hash),
         ];
       })
     );
@@ -232,12 +233,11 @@ export default function FashionDrawer({
     }
 
     const mostCommon = parseInt(mostCommonOrnamentSet[0], 10);
-    const set = _.compact(
-      defs.PresentationNode.get(mostCommon).children.collectibles.map(
-        (c) =>
-          defs.Collectible.get(c.collectibleHash).itemHash ??
-          manuallyFindItemForCollectible(defs, c.collectibleHash)?.hash
-      )
+    const set = filterMap(
+      defs.PresentationNode.get(mostCommon).children.collectibles,
+      (c) =>
+        defs.Collectible.get(c.collectibleHash)?.itemHash ??
+        manuallyFindItemForCollectible(defs, c.collectibleHash)?.hash
     );
 
     if (set.length !== 5) {

@@ -1,7 +1,7 @@
 import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { artifactUnlocksSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
-import { isPluggableItem } from 'app/inventory/store/sockets';
+import { hashesToPluggableItems } from 'app/inventory/store/sockets';
 import { Loadout, ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
@@ -198,11 +198,11 @@ export const LoadoutArtifactUnlocks = memo(function LoadoutArtifactUnlocks({
 
   const loadoutArtifactMods: ResolvedLoadoutMod[] = useMemo(
     () =>
-      loadout.parameters?.artifactUnlocks?.unlockedItemHashes
-        .map((item) => defs.InventoryItem.get(item))
-        .filter(isPluggableItem)
-        .map((def) => ({ originalModHash: def.hash, resolvedMod: def })) ?? [],
-    [defs.InventoryItem, loadout.parameters?.artifactUnlocks]
+      hashesToPluggableItems(
+        defs,
+        loadout.parameters?.artifactUnlocks?.unlockedItemHashes ?? []
+      ).map((def) => ({ originalModHash: def.hash, resolvedMod: def })) ?? [],
+    [defs, loadout.parameters?.artifactUnlocks?.unlockedItemHashes]
   );
 
   const handleRemoveMod = useCallback(

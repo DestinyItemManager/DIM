@@ -4,7 +4,8 @@ import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { emptyArray } from 'app/utils/empty';
-import _, { identity } from 'lodash';
+import { filterMap } from 'app/utils/util';
+import { identity } from 'lodash';
 import { Dispatch, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { useAutoMods } from '../process/useProcess';
@@ -116,10 +117,9 @@ function useHalfTierMods(
       // If we are automatically assigning stat mods, don't even offer half tier quick-add
       autoStatMods
         ? emptyArray()
-        : _.compact(
-            statConstraints.map(
-              (s) => autoMods.generalMods[s.statHash as ArmorStatHashes]?.minorMod
-            )
+        : filterMap(
+            statConstraints,
+            (s) => autoMods.generalMods[s.statHash as ArmorStatHashes]?.minorMod
           ),
     [autoMods.generalMods, statConstraints, autoStatMods]
   );

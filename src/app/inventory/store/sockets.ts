@@ -8,6 +8,7 @@ import {
   isEnhancedPerk,
   subclassAbilitySocketCategoryHashes,
 } from 'app/utils/socket-utils';
+import { filterMap } from 'app/utils/util';
 import {
   DestinyInventoryItemDefinition,
   DestinyItemComponent,
@@ -30,7 +31,6 @@ import {
   PlugCategoryHashes,
   SocketCategoryHashes,
 } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import {
   DimPlug,
   DimPlugSet,
@@ -434,6 +434,16 @@ export function isPluggableItem(
   return itemDef?.plug !== undefined;
 }
 
+/**
+ * Converts a list of item hashes to PluggableInventoryItemDefinitions (filtering out ones that aren't plugs)
+ */
+export function hashesToPluggableItems(
+  defs: D2ManifestDefinitions,
+  hashes: number[]
+): PluggableInventoryItemDefinition[] {
+  return hashes.map((hash) => defs.InventoryItem.get(hash)).filter(isPluggableItem);
+}
+
 function isDestinyItemPlug(
   plug: DestinyItemPlugBase | DestinyItemSocketState
 ): plug is DestinyItemPlugBase {
@@ -464,8 +474,9 @@ function buildPlug(
 
   // These are almost never present
   const failReasons = plug.enableFailIndexes
-    ? _.compact(
-        plug.enableFailIndexes.map((index) => plugDef.plug.enabledRules[index]?.failureMessage)
+    ? filterMap(
+        plug.enableFailIndexes,
+        (index) => plugDef.plug.enabledRules[index]?.failureMessage
       ).join('\n')
     : '';
 
@@ -769,9 +780,9 @@ function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number)
     precomputedEmptyPlugItemHash: defPlugSet.reusablePlugItems.find((p) =>
       isKnownEmptyPlugItemHash(p.plugItemHash)
     )?.plugItemHash,
-    plugHashesThatCannotRoll: plugs
-      .filter((p) => plugCannotCurrentlyRoll(plugs, p.plugDef.hash))
-      .map((p) => p.plugDef.hash),
+    plugHashesThatCannotRoll: filterMap(plugs, (p) =>
+      plugCannotCurrentlyRoll(plugs, p.plugDef.hash) ? p.plugDef.hash : undefined
+    ),
   };
   reusablePlugSetCache[plugSetHash] = dimPlugSet;
 

@@ -17,17 +17,18 @@ export default function CategoryStrip({
 }) {
   return (
     <div className={styles.options}>
-      {Object.keys(buckets.byCategory)
-        .filter((category) => category !== 'Postmaster')
-        .map((category) => (
-          <div
-            key={category}
-            onClick={() => onCategorySelected(category)}
-            className={clsx({ [styles.selected]: category === selectedCategoryId })}
-          >
-            {t(`Bucket.${category as BucketSortType}`, { metadata: { keys: 'buckets' } })}
-          </div>
-        ))}
+      {Object.keys(buckets.byCategory).map(
+        (category) =>
+          category !== 'Postmaster' && (
+            <div
+              key={category}
+              onClick={() => onCategorySelected(category)}
+              className={clsx({ [styles.selected]: category === selectedCategoryId })}
+            >
+              {t(`Bucket.${category as BucketSortType}`, { metadata: { keys: 'buckets' } })}
+            </div>
+          )
+      )}
     </div>
   );
 }

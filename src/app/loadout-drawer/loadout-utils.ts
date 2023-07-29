@@ -32,7 +32,7 @@ import {
   plugFitsIntoSocket,
   subclassAbilitySocketCategoryHashes,
 } from 'app/utils/socket-utils';
-import { weakMemoize } from 'app/utils/util';
+import { filterMap, weakMemoize } from 'app/utils/util';
 import { HashLookup, LookupTable } from 'app/utils/util-types';
 import {
   DestinyClass,
@@ -211,10 +211,9 @@ export function newLoadoutFromEquipped(
   const modsByBucket: { [bucketHash: number]: number[] } = {};
   for (const item of items.filter((i) => i.bucket.inArmor)) {
     const plugs = item.sockets
-      ? _.compact(
-          getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics).map(
-            (s) => s.plugged?.plugDef.hash
-          )
+      ? filterMap(
+          getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics),
+          (s) => s.plugged?.plugDef.hash
         )
       : [];
     if (plugs.length) {
@@ -472,13 +471,10 @@ export function extractArmorModHashes(item: DimItem) {
   if (!isLoadoutBuilderItem(item) || !item.sockets) {
     return [];
   }
-  return _.compact(
-    item.sockets.allSockets.map(
-      (socket) =>
-        socket.plugged &&
-        isInsertableArmor2Mod(socket.plugged.plugDef) &&
-        socket.plugged.plugDef.hash
-    )
+  return filterMap(item.sockets.allSockets, (socket) =>
+    socket.plugged && isInsertableArmor2Mod(socket.plugged.plugDef)
+      ? socket.plugged.plugDef.hash
+      : undefined
   );
 }
 
@@ -746,12 +742,10 @@ export function getLoadoutSubclassFragmentCapacity(
     )!.socketIndexes;
     const aspectDefs =
       item.loadoutItem.socketOverrides &&
-      _.compact(
-        aspectSocketIndices.map((aspectSocketIndex) => {
-          const aspectHash = item.loadoutItem.socketOverrides![aspectSocketIndex];
-          return aspectHash && defs.InventoryItem.get(aspectHash);
-        })
-      );
+      filterMap(aspectSocketIndices, (aspectSocketIndex) => {
+        const aspectHash = item.loadoutItem.socketOverrides![aspectSocketIndex];
+        return aspectHash ? defs.InventoryItem.get(aspectHash) : undefined;
+      });
     if (aspectDefs?.length) {
       return _.sumBy(aspectDefs, (aspectDef) => aspectDef.plug?.energyCapacity?.capacityValue || 0);
     } else {

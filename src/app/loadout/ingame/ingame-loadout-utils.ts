@@ -13,9 +13,9 @@ import {
   ResolvedLoadoutMod,
 } from 'app/loadout-drawer/loadout-types';
 import { potentialLoadoutItemsByItemId } from 'app/loadout-drawer/loadout-utils';
+import { filterMap } from 'app/utils/util';
 import { DestinyLoadoutItemComponent } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { getSubclassPlugs } from '../item-utils';
@@ -29,32 +29,28 @@ export function getItemsFromInGameLoadout(
   loadoutItems: DestinyLoadoutItemComponent[],
   allItems: DimItem[]
 ): ResolvedLoadoutItem[] {
-  return _.compact(
-    loadoutItems.map((li) => {
-      const realItem =
-        li.itemInstanceId !== '0'
-          ? potentialLoadoutItemsByItemId(allItems)[li.itemInstanceId]
-          : undefined;
-      if (!realItem) {
-        // We just skip missing items entirely - we can't find anything about them
-        return undefined;
-      }
-      const socketOverrides = convertInGameLoadoutPlugItemHashesToSocketOverrides(
-        li.plugItemHashes
-      );
-      const item = applySocketOverrides(itemCreationContext, realItem, socketOverrides);
-      return {
-        item,
-        loadoutItem: {
-          socketOverrides,
-          hash: item.hash,
-          id: item.id,
-          equip: true,
-          amount: 1,
-        },
-      };
-    })
-  );
+  return filterMap(loadoutItems, (li) => {
+    const realItem =
+      li.itemInstanceId !== '0'
+        ? potentialLoadoutItemsByItemId(allItems)[li.itemInstanceId]
+        : undefined;
+    if (!realItem) {
+      // We just skip missing items entirely - we can't find anything about them
+      return undefined;
+    }
+    const socketOverrides = convertInGameLoadoutPlugItemHashesToSocketOverrides(li.plugItemHashes);
+    const item = applySocketOverrides(itemCreationContext, realItem, socketOverrides);
+    return {
+      item,
+      loadoutItem: {
+        socketOverrides,
+        hash: item.hash,
+        id: item.id,
+        equip: true,
+        amount: 1,
+      },
+    };
+  });
 }
 
 /**

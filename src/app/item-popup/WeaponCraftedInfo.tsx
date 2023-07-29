@@ -6,8 +6,8 @@ import { KillTrackerInfo } from 'app/item-popup/KillTracker';
 import Objective from 'app/progress/Objective';
 import { percent, percentWithSingleDecimal } from 'app/shell/formatters';
 import { isKillTrackerSocket, plugToKillTracker } from 'app/utils/item-utils';
+import { filterMap } from 'app/utils/util';
 import shapedIcon from 'images/shaped.png';
-import _ from 'lodash';
 import styles from './WeaponCraftedInfo.m.scss';
 
 /**
@@ -38,10 +38,9 @@ export function WeaponCraftedInfo({ item, className }: { item: DimItem; classNam
 }
 
 export function CraftedDataMedallion({ item }: { item: DimItem }) {
-  const killTrackers = _.compact(
-    item.sockets?.allSockets
-      .find((s) => isKillTrackerSocket(s))
-      ?.plugOptions.map((p) => plugToKillTracker(p)) ?? []
+  const killTrackers = filterMap(
+    item.sockets?.allSockets.find((s) => isKillTrackerSocket(s))?.plugOptions ?? [],
+    (p) => plugToKillTracker(p)
   );
   const shapedDateObjective = getCraftedSocket(item)?.plugged?.plugObjectives.find(
     (o) => o.progress === item.craftedInfo?.craftedDate

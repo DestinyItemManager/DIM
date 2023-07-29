@@ -9,7 +9,7 @@ import { CancelToken } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
-import { count, errorMessage } from 'app/utils/util';
+import { count, errorMessage, filterMap } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -211,7 +211,7 @@ export function getSimilarItem(
     /** Don't pick an exotic to equip in this item's place (because we're specifically trying to dequip an exotic) */
     excludeExotic?: boolean;
   } = {}
-): DimItem | null {
+): DimItem | undefined {
   const target = getStore(stores, item.owner)!;
 
   // Try each store, preferring getting something from the same character, then vault, then any other character
@@ -225,7 +225,7 @@ export function getSimilarItem(
     }
   });
 
-  let result: DimItem | null = null;
+  let result: DimItem | undefined;
   for (const store of sortedStores) {
     result = searchForSimilarItem(getState, item, store, exclusions, target, excludeExotic);
     if (result) {
@@ -253,39 +253,37 @@ export function equipItems(
     const getStores = () => storesSelector(getState());
 
     // Check for (and move aside) exotics
-    const extraItemsToEquip: Promise<DimItem>[] = _.compact(
-      items.map((i) => {
-        if (i.equippingLabel) {
-          const otherExotic = getOtherExoticThatNeedsDequipping(i, store);
-          // If we aren't already equipping into that slot...
-          if (otherExotic && !items.find((i) => i.bucket.hash === otherExotic.bucket.hash)) {
-            const similarItem = getSimilarItem(getState, getStores(), otherExotic, {
-              excludeExotic: true,
-              exclusions,
-            });
-            if (!similarItem) {
-              return Promise.reject(
-                new DimError(
-                  'ItemService.Deequip',
-                  t('ItemService.Deequip', { itemname: otherExotic.name })
-                )
-              );
-            }
-            const target = getStore(getStores(), similarItem.owner)!;
+    const extraItemsToEquip: Promise<DimItem>[] = filterMap(items, (i) => {
+      if (i.equippingLabel) {
+        const otherExotic = getOtherExoticThatNeedsDequipping(i, store);
+        // If we aren't already equipping into that slot...
+        if (otherExotic && !items.find((i) => i.bucket.hash === otherExotic.bucket.hash)) {
+          const similarItem = getSimilarItem(getState, getStores(), otherExotic, {
+            excludeExotic: true,
+            exclusions,
+          });
+          if (!similarItem) {
+            return Promise.reject(
+              new DimError(
+                'ItemService.Deequip',
+                t('ItemService.Deequip', { itemname: otherExotic.name })
+              )
+            );
+          }
+          const target = getStore(getStores(), similarItem.owner)!;
 
-            if (store.id === target.id) {
-              return Promise.resolve(similarItem);
-            } else {
-              // If we need to get the similar item from elsewhere, do that first
-              return dispatch(executeMoveItem(similarItem, store, { equip: true }, session)).then(
-                () => similarItem
-              );
-            }
+          if (store.id === target.id) {
+            return Promise.resolve(similarItem);
+          } else {
+            // If we need to get the similar item from elsewhere, do that first
+            return dispatch(executeMoveItem(similarItem, store, { equip: true }, session)).then(
+              () => similarItem
+            );
           }
         }
-        return undefined;
-      })
-    );
+      }
+      return undefined;
+    });
 
     const extraItems = await Promise.all(extraItemsToEquip);
     items = items.concat(extraItems);
@@ -1162,7 +1160,7 @@ function searchForSimilarItem(
   exclusions: readonly Exclusion[] = [],
   target: DimStore,
   excludeExotic: boolean
-): DimItem | null {
+): DimItem | undefined {
   const candidates = store.items.filter(
     (i) =>
       i.location.hash === item.location.hash &&
@@ -1176,7 +1174,7 @@ function searchForSimilarItem(
   );
 
   if (!candidates.length) {
-    return null;
+    return undefined;
   }
 
   const getTag = getTagSelector(getState());
@@ -1214,6 +1212,6 @@ function searchForSimilarItem(
       } else {
         return true;
       }
-    }) || null
+    }) || undefined
   );
 }

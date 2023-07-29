@@ -27,20 +27,21 @@ export default function Socket({
 
   return (
     <div className="item-socket">
-      {socket.plugOptions
-        .filter((plug) => !pluggedOnly || socket.plugged === plug)
-        .map((plug) => (
-          <Plug
-            key={plug.plugDef.hash}
-            plug={plug}
-            item={item}
-            socketInfo={socket}
-            wishlistRoll={wishlistRoll}
-            hasMenu={hasMenu}
-            isMod={socket.isMod}
-            onClick={onClick && (() => onClick(item, socket, plug, hasMenu))}
-          />
-        ))}
+      {socket.plugOptions.map(
+        (plug) =>
+          (!pluggedOnly || socket.plugged === plug) && (
+            <Plug
+              key={plug.plugDef.hash}
+              plug={plug}
+              item={item}
+              socketInfo={socket}
+              wishlistRoll={wishlistRoll}
+              hasMenu={hasMenu}
+              isMod={socket.isMod}
+              onClick={onClick && (() => onClick(item, socket, plug, hasMenu))}
+            />
+          )
+      )}
     </div>
   );
 }
