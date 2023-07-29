@@ -18,7 +18,7 @@ export default function PresentationNodeSearchResults({
   // TODO: make each node in path linkable
   const completedRecordsHidden = useSelector(settingSelector('completedRecordsHidden'));
   const redactedRecordsRevealed = useSelector(settingSelector('redactedRecordsRevealed'));
-
+  const sortRecordProgression = useSelector(settingSelector('sortRecordProgression'));
   return (
     <div>
       {searchResults.map((sr) => (
@@ -46,6 +46,7 @@ export default function PresentationNodeSearchResults({
                     ownedItemHashes={ownedItemHashes}
                     completedRecordsHidden={completedRecordsHidden}
                     redactedRecordsRevealed={redactedRecordsRevealed}
+                    sortRecordProgression={sortRecordProgression}
                   />
                 );
               })()}
@@ -54,6 +55,7 @@ export default function PresentationNodeSearchResults({
               ownedItemHashes={ownedItemHashes}
               completedRecordsHidden={completedRecordsHidden}
               redactedRecordsRevealed={redactedRecordsRevealed}
+              sortRecordProgression={sortRecordProgression}
             />
           </div>
         </div>

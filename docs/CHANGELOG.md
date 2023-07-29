@@ -1,6 +1,7 @@
 ## Next
 
 * You can now search for Emotes and Ghost Projections on the Records page.
+* Added button to sort triumphs by completion.
 * Greatly expanded the "Randomize Loadout" feature. You can now randomize a Loadout's subclass and its configuration, weapons, armor, cosmetics, and armor mods.
   * Randomize them individually through the three dots in a Loadout section.
   * Randomize the entire Loadout using the "Randomize" button at the bottom of the Loadout drawer.
