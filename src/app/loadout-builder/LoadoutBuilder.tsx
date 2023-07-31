@@ -28,7 +28,7 @@ import { Portal } from 'app/utils/temp-container';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { deepEqual } from 'fast-equals';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, Tween, Variants, motion } from 'framer-motion';
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import {
@@ -56,6 +56,12 @@ import { ArmorEnergyRules, LOCKED_EXOTIC_ANY_EXOTIC, loDefaultArmorEnergyRules }
 
 /** Do not allow the user to choose artifice mods manually in Loadout Optimizer since we're supposed to be doing that */
 const autoAssignmentPCHs = [PlugCategoryHashes.EnhancementsArtifice];
+
+const processingAnimateVariants: Variants = {
+  hidden: { opacity: 0, y: -50 },
+  shown: { opacity: 1, y: 0 },
+};
+const processingAnimateTransition: Tween = { ease: 'easeInOut', duration: 0.5 };
 
 /**
  * The Loadout Optimizer screen
@@ -350,10 +356,11 @@ export default memo(function LoadoutBuilder({
           {processing && (
             <motion.div
               className={styles.processing}
-              initial={{ opacity: 0, y: -50 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -50 }}
-              transition={{ ease: 'easeInOut', duration: 0.5 }}
+              initial="hidden"
+              animate="shown"
+              exit="hidden"
+              variants={processingAnimateVariants}
+              transition={processingAnimateTransition}
             >
               <div>
                 {t('LoadoutBuilder.ProcessingSets', {

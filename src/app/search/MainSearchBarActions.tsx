@@ -9,6 +9,7 @@ import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import styles from './MainSearchBarActions.m.scss';
+import { searchButtonAnimateVariants } from './SearchBar';
 import SearchResults from './SearchResults';
 import { filteredItemsSelector, queryValidSelector } from './search-filter';
 
@@ -46,9 +47,10 @@ export default function MainSearchBarActions() {
         <motion.div
           key="count"
           layout
-          exit={{ scale: 0 }}
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
+          variants={searchButtonAnimateVariants}
+          exit="hidden"
+          initial="hidden"
+          animate="shown"
         >
           {showSearchResults ? (
             <button

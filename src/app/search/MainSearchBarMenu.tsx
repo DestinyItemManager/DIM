@@ -4,6 +4,7 @@ import { querySelector } from 'app/shell/selectors';
 import { motion } from 'framer-motion';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
+import { searchButtonAnimateVariants } from './SearchBar';
 import { filteredItemsSelector, queryValidSelector } from './search-filter';
 
 /**
@@ -28,9 +29,10 @@ export default function MainSearchBarMenu() {
     <motion.div
       layout
       key="action"
-      exit={{ scale: 0 }}
-      initial={{ scale: 0 }}
-      animate={{ scale: 1 }}
+      variants={searchButtonAnimateVariants}
+      exit="hidden"
+      initial="hidden"
+      animate="shown"
     >
       {promptDialog}
       <ItemActionsDropdown

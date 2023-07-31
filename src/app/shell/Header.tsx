@@ -14,7 +14,7 @@ import { useSetCSSVarToHeight } from 'app/utils/hooks';
 import { infoLog } from 'app/utils/log';
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, Tween, Variants, motion } from 'framer-motion';
 import logo from 'images/logo-type-right-light.svg';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -45,6 +45,12 @@ const logoStyles = {
   release: undefined,
   test: undefined,
 } as const;
+
+const menuAnimateVariants: Variants = {
+  open: { x: 0 },
+  collapsed: { x: -250 },
+};
+const menuAnimateTransition: Tween = { duration: 0.3, ease: 'easeOut' };
 
 // TODO: finally time to hack apart the header styles!
 
@@ -295,11 +301,8 @@ export default function Header() {
               initial="collapsed"
               animate="open"
               exit="collapsed"
-              variants={{
-                open: { x: 0 },
-                collapsed: { x: -250 },
-              }}
-              transition={{ duration: 0.2 }}
+              variants={menuAnimateVariants}
+              transition={menuAnimateTransition}
             >
               <ClickOutside
                 ref={dropdownRef}
