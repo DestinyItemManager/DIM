@@ -183,10 +183,9 @@ export function getBestArmor(
         (item) => !excludedIndices.has(item.index) && hasPerks(item) // Not excluded and has the correct locked perks
       );
 
-      // eslint-disable-next-line github/array-foreach
-      statHashes.forEach((hash, index) => {
+      for (const [index, hash] of statHashes.entries()) {
         if (!fullMode && index > 2) {
-          return;
+          continue;
         }
 
         curbest = getBestItem(filtered, hash.stats, hash.type, scaleTypeArg);
@@ -195,7 +194,7 @@ export function getBestArmor(
         if (curbest.item.isExotic && armortype !== 'ClassItem') {
           best.push(getBestItem(filtered, hash.stats, hash.type, scaleTypeArg, true));
         }
-      });
+      }
     }
 
     bestCombs = [];

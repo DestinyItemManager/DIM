@@ -259,8 +259,7 @@ function buildLessCostlyRelations(
   return Object.fromEntries(
     statOrder.map((armorStat1, statIndex1) => {
       const betterStatIndices: number[] = [];
-      // eslint-disable-next-line github/array-foreach
-      statOrder.forEach((armorStat2, statIndex2) => {
+      for (const [statIndex2, armorStat2] of statOrder.entries()) {
         if (availableGeneralStatMods === 0) {
           // No general mods means it doesn't matter how much our general mods actually cost
           if (!autoModOptions.artificeMods[armorStat1] || autoModOptions.artificeMods[armorStat2]) {
@@ -288,7 +287,7 @@ function buildLessCostlyRelations(
             }
           }
         }
-      });
+      }
 
       return [statIndex1, betterStatIndices];
     })
