@@ -18,7 +18,8 @@ export default function Login() {
   const dispatch = useThunkDispatch();
   const authorizationState = useMemo(() => (isAppStoreVersion() ? 'dimauth-' : '') + uuidv4(), []);
   const clientId = oauthClientId();
-  const { state } = useLocation();
+  const location = useLocation();
+  const state = location.state as { path?: string } | undefined;
   const previousPath = state?.path;
 
   useEffect(() => {

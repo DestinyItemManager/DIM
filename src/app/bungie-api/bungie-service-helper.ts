@@ -7,7 +7,7 @@ import { HttpClient, HttpClientConfig } from 'bungie-api-ts/http';
 import _ from 'lodash';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
-import { fetchWithBungieOAuth } from './authenticated-fetch';
+import { FatalTokenError, fetchWithBungieOAuth } from './authenticated-fetch';
 import { API_KEY } from './bungie-api-utils';
 import {
   BungieError,
@@ -87,7 +87,7 @@ function dimErrorHandledHttpClient(httpClient: HttpClient): HttpClient {
 /**
  * if HttpClient throws an error (js, Bungie, http) this enriches it with DIM concepts and then re-throws it
  */
-function handleErrors(error: unknown) {
+function handleErrors(error: unknown): never {
   if (error instanceof DOMException && error.name === 'AbortError') {
     throw (
       navigator.onLine
@@ -107,6 +107,10 @@ function handleErrors(error: unknown) {
         ? new DimError('BungieService.NotConnectedOrBlocked')
         : new DimError('BungieService.NotConnected')
     ).withError(error);
+  }
+
+  if (error instanceof FatalTokenError) {
+    throw new DimError('BungieService.NotLoggedIn').withError(error);
   }
 
   if (error instanceof HttpStatusError) {

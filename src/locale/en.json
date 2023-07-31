@@ -731,6 +731,7 @@
     "OnWrongCharacterWarning": "This character's most powerful armor is on another character. To count toward the Power of drops, powerful, and pinnacle rewards, armor must be on this character or in the Vault.",
     "OnlyItems": "Only equippable items, materials, and consumables can be added to a loadout.",
     "OpenInOptimizer": "Optimize Armor",
+    "PickArmor": "Pick Armor",
     "PickMods": "Add armor mods",
     "PullFromPostmaster": "Collect Postmaster",
     "PullFromPostmasterError": "Unable to pull from Postmaster: {{error}}.",
@@ -745,11 +746,10 @@
     "Random": "Random",
     "Randomize": "Randomize Loadout",
     "RandomizeButton": "Randomize",
-    "RandomizePrompt": "Randomize your equipped weapons, armor and ghost?",
+    "RandomizeNew": "Create Random",
     "RandomizeQueryHint": "Tip: Search for items first to restrict what items can be randomly chosen.",
     "RandomizeSearch": "Randomize from Search",
     "RandomizeSearchPrompt": "Randomize your equipped items from search \"{{query}}\"?",
-    "RandomizeWeapons": "Randomize your equipped weapons?",
     "Redo": "Redo",
     "RestoreAllItems": "All Items",
     "Save": "Save",
@@ -794,8 +794,7 @@
     "UnassignedModError": "Mod didn't fit on your current armor",
     "Undo": "Undo",
     "Update": "Save Changes",
-    "VendorsCannotEquip": "You don't have these items. Tap to pick a replacement or click the X to remove:",
-    "WeaponsOnly": "Weapons Only"
+    "VendorsCannotEquip": "You don't have these items. Tap to pick a replacement or click the X to remove:"
   },
   "Manifest": {
     "Download": "Downloading latest Destiny info database from Bungie...",
@@ -1263,7 +1262,8 @@
   "Triumphs": {
     "GildingTriumph": "Gilding Triumph",
     "HideCompleted": "Hide completed triumphs",
-    "RevealRedacted": "Reveal redacted triumphs"
+    "RevealRedacted": "Reveal redacted triumphs",
+    "SortRecords": "Sort triumphs by completion"
   },
   "Vendors": {
     "Collections": "Collections",

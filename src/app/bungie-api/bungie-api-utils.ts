@@ -1,11 +1,11 @@
-import { HttpClientConfig } from 'bungie-api-ts/http';
+import { HttpClientConfig, HttpQueryParams } from 'bungie-api-ts/http';
 
 export const API_KEY =
   $DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta' || $DIM_FLAVOR === 'test'
     ? $DIM_WEB_API_KEY
     : localStorage.getItem('apiKey')!;
 
-export function bungieApiUpdate(path: string, data?: Record<string, unknown>): HttpClientConfig {
+export function bungieApiUpdate(path: string, data?: HttpQueryParams): HttpClientConfig {
   return {
     method: 'POST',
     url: `https://www.bungie.net${path}`,
@@ -13,7 +13,7 @@ export function bungieApiUpdate(path: string, data?: Record<string, unknown>): H
   };
 }
 
-export function bungieApiQuery(path: string, params?: Record<string, unknown>): HttpClientConfig {
+export function bungieApiQuery(path: string, params?: HttpQueryParams): HttpClientConfig {
   return {
     method: 'GET',
     url: `https://www.bungie.net${path}`,

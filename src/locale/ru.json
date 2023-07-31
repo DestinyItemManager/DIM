@@ -731,6 +731,7 @@
     "OnWrongCharacterWarning": "Это самая мощная броня персонажа на другом персонаже. Для того чтобы засчитываться в Силу падений, мощных и сверхмощных наград, броня должна быть на этом персонаже или в Хранилище.",
     "OnlyItems": "Только надеваемые предметы, материалы и расходные материалы могут быть добавлены к набору.",
     "OpenInOptimizer": "Оптимизировать броню",
+    "PickArmor": "Pick Armor",
     "PickMods": "Добавить моды брони",
     "PullFromPostmaster": "Забрать предметы Почтмейстера",
     "PullFromPostmasterError": "Не удалось вытащить из Почтмейстера: {{error}}.",
@@ -745,11 +746,10 @@
     "Random": "Случайно",
     "Randomize": "Случайное снаряжение",
     "RandomizeButton": "Рандомизировать",
-    "RandomizePrompt": "Экипировать случайные оружия, броню и Призрака?",
+    "RandomizeNew": "Create Random",
     "RandomizeQueryHint": "Tip: Search for items first to restrict what items can be randomly chosen.",
     "RandomizeSearch": "Случайно на основе Поиска",
     "RandomizeSearchPrompt": "Надеть случайные предметы из результатов поискового запроса \"{{query}}\"?",
-    "RandomizeWeapons": "Экипировать случайные оружия?",
     "Redo": "Повторить",
     "RestoreAllItems": "Все предметы",
     "Save": "Сохранить",
@@ -794,8 +794,7 @@
     "UnassignedModError": "Мод не поместился на вашей текущей броне",
     "Undo": "Отменить",
     "Update": "Сохранить изменения",
-    "VendorsCannotEquip": "Предметы не найдены. ЛКМ для выбора предмета на замену или Х для очистки:",
-    "WeaponsOnly": "Только оружие"
+    "VendorsCannotEquip": "Предметы не найдены. ЛКМ для выбора предмета на замену или Х для очистки:"
   },
   "Manifest": {
     "Download": "Загрузка последней базы данных Destiny с Bungie.net...",

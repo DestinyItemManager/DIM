@@ -1,6 +1,20 @@
 ## Next
 
+## 7.79.0 <span class="changelog-date">(2023-07-30)</span>
+
 * You can now search for Emotes and Ghost Projections on the Records page.
+* Added button to sort triumphs by completion.
+* Greatly expanded the "Randomize Loadout" feature. You can now randomize a Loadout's subclass and its configuration, weapons, armor, cosmetics, and armor mods.
+  * Randomize them individually through the three dots in a Loadout section.
+  * Randomize the entire Loadout using the "Randomize" button at the bottom of the Loadout drawer.
+  * The existing "Randomize Loadout" button to immediately generate and apply a random Loadout now allows you to choose which parts of your current loadout to randomize
+  * If you have an active search query, weapons and armor will be restricted to those matching the query.
+* DIM should automatically log you out if you need to log back in manually at Bungie.net, rather than just not working.
+* The "Optimize Armor" button on loadouts changes to "Pick Armor" when you don't have a complete armor set.
+* In Armory and Collections, un-rollable perks are sorted to the bottom, and we no longer show enhanced options for uncraftable perks.
+* Tier 1 Powerful Exotic engrams are now counted as Powerful rewards on the Progress page.
+* The Quests section on the Progress page now has filtering pills that match the quest categories in game (e.g. Exotics, Lightfall, The Past).
+* Artifact unlocks on loadouts no longer show a "1" in the corner.
 
 ## 7.78.0 <span class="changelog-date">(2023-07-23)</span>
 

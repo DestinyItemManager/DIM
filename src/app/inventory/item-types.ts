@@ -267,11 +267,11 @@ export interface DimMasterwork {
 
 export interface DimCrafted {
   /** The level of this crafted weapon */
-  level?: number;
+  level: number;
   /** 0-1 progress to the next level */
-  progress?: number;
+  progress: number;
   /** when this weapon was crafted, UTC epoch seconds timestamp */
-  craftedDate?: number;
+  craftedDate: number;
 }
 
 export interface DimCatalyst {

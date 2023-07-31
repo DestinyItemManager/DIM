@@ -28,7 +28,8 @@ export function ReputationRank({
 
   const rankTotal = _.sumBy(progressionDef.steps, (cur) => cur.progressTotal);
 
-  const streakCheckboxes = streak && Array(5).fill(true).fill(false, streak.currentProgress);
+  const streakCheckboxes =
+    streak && Array<boolean>(5).fill(true).fill(false, streak.currentProgress);
 
   // language-agnostic css class name to identify which rank type we are in
   const factionClass = `faction-${progress.progressionHash}`;

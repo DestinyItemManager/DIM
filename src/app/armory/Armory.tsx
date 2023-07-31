@@ -124,7 +124,7 @@ export default function Armory({
               <div>
                 {t('MovePopup.Subtitle.QuestProgress', {
                   questStepNum: item.pursuit.questStepNum,
-                  questStepsTotal: item.pursuit.questStepsTotal,
+                  questStepsTotal: item.pursuit.questStepsTotal ?? '?',
                 })}
               </div>
             )}
@@ -134,8 +134,11 @@ export default function Armory({
                   <BungieImage height={15} width={15} src={season.displayProperties.icon} />
                 )}{' '}
                 {season.displayProperties.name} (
-                {t('Armory.Season', { season: season.seasonNumber, year: getItemYear(item) })})
-                {event && <span> - {D2EventInfo[getEvent(item)].name}</span>}
+                {t('Armory.Season', {
+                  season: season.seasonNumber,
+                  year: getItemYear(item) ?? '?',
+                })}
+                ){event && <span> - {D2EventInfo[getEvent(item)].name}</span>}
               </div>
             )}
           </div>

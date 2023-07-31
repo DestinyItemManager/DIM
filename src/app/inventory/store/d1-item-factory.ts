@@ -82,14 +82,16 @@ export function processItems(
   return result;
 }
 
-const getClassTypeNameLocalized = _.memoize((type: DestinyClass, defs: D1ManifestDefinitions) => {
-  const klass = Object.values(defs.Class).find((c) => c.classType === type);
-  if (klass) {
-    return klass.className;
-  } else {
-    return t('Loadouts.Any');
+const getClassTypeNameLocalized = _.memoize(
+  (type: DestinyClass, defs: D1ManifestDefinitions): string => {
+    const klass = Object.values(defs.Class).find((c) => c.classType === type);
+    if (klass) {
+      return klass.className;
+    } else {
+      return t('Loadouts.Any');
+    }
   }
-});
+);
 
 /**
  * Convert a D1DamageType to the D2 definition, so we don't have to maintain both codepaths

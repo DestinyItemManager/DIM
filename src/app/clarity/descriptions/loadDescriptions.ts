@@ -15,12 +15,12 @@ const urls = {
   statsVersion: `${CLARITY_BASE}Character-Stats/update.json`,
 } as const;
 
-const fetchClarity = async (type: keyof typeof urls) => {
+const fetchClarity = async <T>(type: keyof typeof urls) => {
   const data = await fetch(urls[type]);
   if (!data.ok) {
     throw new Error(`failed to fetch ${type}`);
   }
-  const json = await data.json();
+  const json = (await data.json()) as T;
   if (_.isEmpty(json)) {
     throw new Error(`empty response JSON for ${type}`);
   }
@@ -31,9 +31,9 @@ const loadClarityDescriptions = dedupePromise(async (loadFromIndexedDB) => {
   const savedVersion = Number(localStorage.getItem('clarityDescriptionVersion') ?? '0');
 
   try {
-    const liveVersion: ClarityVersions = await fetchClarity('version');
+    const liveVersion = await fetchClarity<ClarityVersions>('version');
     if (savedVersion !== liveVersion.descriptions) {
-      const descriptions: ClarityDescription = await fetchClarity('descriptions');
+      const descriptions = await fetchClarity<ClarityDescription>('descriptions');
       set('clarity-descriptions', descriptions);
       localStorage.setItem('clarityDescriptionVersion', liveVersion.descriptions.toString());
       return descriptions;
@@ -54,9 +54,9 @@ const loadClarityStats = dedupePromise(async (loadFromIndexedDB) => {
   const savedStatsVersion = Number(localStorage.getItem('clarityStatsVersion') ?? '0');
 
   try {
-    const liveStatsVersion: ClarityStatsVersion = await fetchClarity('statsVersion');
+    const liveStatsVersion = await fetchClarity<ClarityStatsVersion>('statsVersion');
     if (savedStatsVersion !== liveStatsVersion.lastUpdate) {
-      const characterStats: ClarityCharacterStats = await fetchClarity('characterStats');
+      const characterStats = await fetchClarity<ClarityCharacterStats>('characterStats');
       set('clarity-characterStats', characterStats);
       localStorage.setItem(
         'clarityDescriptionVersion',

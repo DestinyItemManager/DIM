@@ -648,9 +648,9 @@
     "Classified": "Alguns de seus itens são secretos e não podem ser incluídos no cálculo do Poder máximo.",
     "ClearLoadoutParameters": "Remover configurações do Otimizador de Set",
     "ClearSection": "Remover todas",
-    "ClearSpace": "Move others away",
-    "ClearSpaceArmor": "Move other armor away",
-    "ClearSpaceWeapons": "Move other weapons away",
+    "ClearSpace": "Move outros para fora",
+    "ClearSpaceArmor": "Move outras armaduras para fora",
+    "ClearSpaceWeapons": "Move outras armas para fora",
     "ClearUnsetMods": "Remover outros mods",
     "ClearingSpace": "Movendo outros itens para fora",
     "Create": "Criar set",
@@ -731,6 +731,7 @@
     "OnWrongCharacterWarning": "A armadura mais poderosa deste personagem está em outro personagem. Para garantir um maior Poder nos drops e recompensas pináculo, a armadura deve estar neste personagem ou no Cofre.",
     "OnlyItems": "Somente itens equipáveis, materiais e consumíveis podem ser adicionados em um set.",
     "OpenInOptimizer": "Otimizar armadura",
+    "PickArmor": "Pick Armor",
     "PickMods": "Adicionar mods de armadura",
     "PullFromPostmaster": "Coletar do Chefe do Correio",
     "PullFromPostmasterError": "Não foi possível resgatar do Chefe do Correio: {{error}}.",
@@ -745,11 +746,10 @@
     "Random": "Aleatória",
     "Randomize": "Set Aleatório",
     "RandomizeButton": "Tornar aleatório",
-    "RandomizePrompt": "Randomizar suas armas, armaduras e fantasma equipados?",
+    "RandomizeNew": "Criar Aleatório",
     "RandomizeQueryHint": "Dica: Primeiro, procure por itens para restringir quais itens podem ser escolhidos aleatoriamente.",
     "RandomizeSearch": "Tornar aleatório a partir da busca",
     "RandomizeSearchPrompt": "Tornar aleatório seus itens equipados a partir da busca \"{{query}}\"?",
-    "RandomizeWeapons": "Randomizar suas armas equipadas?",
     "Redo": "Refazer",
     "RestoreAllItems": "Todos os itens",
     "Save": "Salvar",
@@ -794,8 +794,7 @@
     "UnassignedModError": "Mod incompatível com a armadura atual",
     "Undo": "Desfazer",
     "Update": "Salvar Alterações",
-    "VendorsCannotEquip": "Você não tem esses itens. Toque para pegar um substituto ou clique no X para remover:",
-    "WeaponsOnly": "Somente Armas"
+    "VendorsCannotEquip": "Você não tem esses itens. Toque para pegar um substituto ou clique no X para remover:"
   },
   "Manifest": {
     "Download": "Baixando últimas informações da Bungie referentes à base de dados de Destiny...",
@@ -1074,7 +1073,7 @@
     "SortName": "Nome",
     "SpacesSize": "{{count}} espaço",
     "SpacesSize_plural": "{{count}} espaços",
-    "Theme": "Theme"
+    "Theme": "Tema"
   },
   "Sockets": {
     "ApplyPerks": "Aplicar perks",

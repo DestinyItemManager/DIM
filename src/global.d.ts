@@ -19,6 +19,12 @@ interface Window {
   __precacheManifest: string[] | undefined;
   __WB_MANIFEST: string[];
   skipWaiting(): void;
+
+  /**
+   * You can set this in console to enable the ability to use a saved JSON
+   * profile for debugging.
+   */
+  enableMockProfile?: boolean;
 }
 
 interface Navigator {

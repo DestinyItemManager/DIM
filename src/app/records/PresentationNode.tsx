@@ -36,6 +36,7 @@ export default function PresentationNode({
   const defs = useD2Definitions()!;
   const completedRecordsHidden = useSelector(settingSelector('completedRecordsHidden'));
   const redactedRecordsRevealed = useSelector(settingSelector('redactedRecordsRevealed'));
+  const sortRecordProgression = useSelector(settingSelector('sortRecordProgression'));
   const presentationNodeHash = node.hash;
   const headerRef = useScrollNodeIntoView(path, presentationNodeHash);
 
@@ -129,6 +130,7 @@ export default function PresentationNode({
           ownedItemHashes={ownedItemHashes}
           completedRecordsHidden={completedRecordsHidden}
           redactedRecordsRevealed={redactedRecordsRevealed}
+          sortRecordProgression={sortRecordProgression}
         />
       )}
     </div>

@@ -13,13 +13,7 @@ import {
   LockedPerkHash,
   SetType,
 } from './types';
-import {
-  calcArmorStats,
-  genSetHash,
-  getActiveHighestSets,
-  getBestArmor,
-  getBonusConfig,
-} from './utils';
+import { calcArmorStats, genSetHash, getBestArmor, getBonusConfig } from './utils';
 
 export function getSetBucketsStep(
   activeGuardian: D1Store,
@@ -33,12 +27,9 @@ export function getSetBucketsStep(
   fullMode: boolean,
   cancelToken: { cancelled: boolean }
 ): Promise<{
-  activeGuardian: D1Store;
   allSetTiers: string[];
   activesets: string;
   highestsets: { [setHash: number]: SetType };
-  activeHighestSets: { [setHash: number]: SetType };
-  collapsedConfigs: boolean[];
 }> {
   const bestArmor = getBestArmor(
     activeGuardianBucket,
@@ -90,12 +81,9 @@ export function getSetBucketsStep(
     artifacts.length;
   if (combos === 0) {
     return Promise.resolve({
-      activeGuardian,
       allSetTiers: [],
       activesets: '',
       highestsets: {},
-      activeHighestSets: {},
-      collapsedConfigs: [],
     });
   }
 
@@ -245,19 +233,6 @@ export function getSetBucketsStep(
       if (!allSetTiers.includes(activesets)) {
         activesets = allSetTiers[1];
       }
-      const activeHighestSets = getActiveHighestSets(setMap, activesets);
-      const collapsedConfigs = [
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-      ];
 
       if (cancelToken.cancelled) {
         infoLog('loadout optimizer', 'cancelled processing');
@@ -268,11 +243,8 @@ export function getSetBucketsStep(
       infoLog('loadout optimizer', 'processed', combos, 'combinations.');
 
       resolve({
-        activeGuardian,
         allSetTiers,
         activesets,
-        activeHighestSets,
-        collapsedConfigs,
         highestsets: setMap,
       });
     }

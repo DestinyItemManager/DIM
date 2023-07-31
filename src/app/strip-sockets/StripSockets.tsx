@@ -85,7 +85,7 @@ function reducer(state: State, action: UIAction): State {
           cancel: action.cancel,
           cancelling: false,
           socketList: action.socketList,
-          socketStates: Array(action.socketList.length).fill('todo'),
+          socketStates: Array<string>(action.socketList.length).fill('todo'),
         };
       }
       break;

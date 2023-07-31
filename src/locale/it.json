@@ -731,6 +731,7 @@
     "OnWrongCharacterWarning": "L'armatura più potente di questo personaggio è su un altro. Per contare nel Livello Potere delle ricompense, potenti e punta, l'armatura deve essere su questo personaggio o nel Deposito.",
     "OnlyItems": "Solo oggetti, che si possono equipaggiare, materiali e consumabili si possono aggiungere ad una dotazione.",
     "OpenInOptimizer": "Ottimizza Armatura",
+    "PickArmor": "Scegli armatura",
     "PickMods": "Aggiungi Modifiche armatura",
     "PullFromPostmaster": "Prendi dall'Amministratrice",
     "PullFromPostmasterError": "Impossibile prendere dall'Amministratrice: {{error}}.",
@@ -745,11 +746,10 @@
     "Random": "Casuale",
     "Randomize": "Dotazione casuale",
     "RandomizeButton": "Randomizza",
-    "RandomizePrompt": "Randomizzare le armi equipaggiate, armature e spettro?",
+    "RandomizeNew": "Crea casuale",
     "RandomizeQueryHint": "Consiglio: Cerca prima gli oggetti per limitare quelli che possono essere scelti casualmente.",
     "RandomizeSearch": "Randomizza da Ricerca",
     "RandomizeSearchPrompt": "Randomizzare i tuoi oggetti equipaggiati da ricerca\"{{query}}\"?",
-    "RandomizeWeapons": "Randomizzare le armi equipaggiate?",
     "Redo": "Ripeti",
     "RestoreAllItems": "Tutti gli Elementi",
     "Save": "Salva",
@@ -794,8 +794,7 @@
     "UnassignedModError": "La Modifica non è adatta alla tua armatura attuale",
     "Undo": "Annulla",
     "Update": "Salva Cambiamenti",
-    "VendorsCannotEquip": "Non possiedi questi oggetti. Tocca per trovare un sostituto oppure clicca la X per rimuovere:",
-    "WeaponsOnly": "Solo Armi"
+    "VendorsCannotEquip": "Non possiedi questi oggetti. Tocca per trovare un sostituto oppure clicca la X per rimuovere:"
   },
   "Manifest": {
     "Download": "Scaricamento del database di informazioni di Destiny più recente da Bungie...",

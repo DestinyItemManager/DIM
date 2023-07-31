@@ -731,6 +731,7 @@
     "OnWrongCharacterWarning": "Die mächtigste Rüstung dieses Charakters ist auf einem anderen Charakter. Um zur Power für Drops und für mächtige und Spitzen-Belohnungen zu zählen, muss die Rüstung auf diesem Charakter oder im Tresor sein.",
     "OnlyItems": "Es können nur ausrüstbare Gegenstände, Materialien und Verbrauchs-Gegenstände zu einer Ausrüstung hinzugefügt werden.",
     "OpenInOptimizer": "Rüstung optimieren",
+    "PickArmor": "Pick Armor",
     "PickMods": "Rüstungsmods hinzufügen",
     "PullFromPostmaster": "Poststelle einsammeln",
     "PullFromPostmasterError": "Abrufen von Poststelle nicht möglich: {{error}}.",
@@ -745,11 +746,10 @@
     "Random": "Zufällig",
     "Randomize": "Zufällige Ausrüstung",
     "RandomizeButton": "Zufällig generieren",
-    "RandomizePrompt": "Zufällig ausgerüstete Waffen, Rüstungen und Geist auswählen?",
+    "RandomizeNew": "Create Random",
     "RandomizeQueryHint": "Tipp: Benutze zuerst die Suche, um einzuschränken, zwischen welchen Gegenständen zufällig ausgewählt wird.",
     "RandomizeSearch": "Zufällig von Suche",
     "RandomizeSearchPrompt": "Zufällige Gegenstände von der Suche \"{{query}}\" ausrüsten?",
-    "RandomizeWeapons": "Zufällige ausgerüstete Waffen wählen?",
     "Redo": "Wiederholen",
     "RestoreAllItems": "Alle Gegenstände",
     "Save": "Speichern",
@@ -794,8 +794,7 @@
     "UnassignedModError": "Mod passt nicht auf deine aktuelle Rüstung",
     "Undo": "Rückgängig",
     "Update": "Änderungen speichern",
-    "VendorsCannotEquip": "Du hast diesen Gegenstand nicht. Tippe, um einen Ersatz zu wählen oder klicke auf X zum Entfernen:",
-    "WeaponsOnly": "Nur Waffen"
+    "VendorsCannotEquip": "Du hast diesen Gegenstand nicht. Tippe, um einen Ersatz zu wählen oder klicke auf X zum Entfernen:"
   },
   "Manifest": {
     "Download": "Lade die neueste Destiny Info-Datenbank von Bungie herunter...",

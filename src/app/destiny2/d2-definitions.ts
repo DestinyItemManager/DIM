@@ -24,7 +24,6 @@ import {
   DestinyLoadoutConstantsDefinition,
   DestinyLoadoutIconDefinition,
   DestinyLoadoutNameDefinition,
-  DestinyManifestComponentName,
   DestinyMaterialRequirementSetDefinition,
   DestinyMetricDefinition,
   DestinyMilestoneDefinition,
@@ -182,13 +181,13 @@ export function getDefinitions(): ThunkResult<D2ManifestDefinitions> {
 
 export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
   enhanceDBWithFakeEntries(db);
-  const defs: any = {
+  const defs: ManifestDefinitions & { [table: string]: any } = {
     isDestiny1: () => false,
     isDestiny2: () => true,
   };
 
   for (const tableShort of lazyTables) {
-    const table = `Destiny${tableShort}Definition` as DestinyManifestComponentName;
+    const table = `Destiny${tableShort}Definition` as const;
     const dbTable = db[table];
     if (!dbTable) {
       throw new Error(`Table ${table} does not exist in the manifest`);
@@ -221,7 +220,7 @@ export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
   }
   // Resources that need to be fully loaded (because they're iterated over)
   for (const tableShort of eagerTables) {
-    const table = `Destiny${tableShort}Definition` as DestinyManifestComponentName;
+    const table = `Destiny${tableShort}Definition` as const;
     defs[tableShort] = db[table];
   }
 

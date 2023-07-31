@@ -727,6 +727,7 @@
     "OnWrongCharacterWarning": "This character's most powerful armor is on another character. To count toward the Power of drops, powerful, and pinnacle rewards, armor must be on this character or in the Vault.",
     "OnWrongCharacterAdvice": "Click here to find this character's highest Power items.",
     "OpenInOptimizer": "Optimize Armor",
+    "PickArmor": "Pick Armor",
     "PickMods": "Add armor mods",
     "PullFromPostmaster": "Collect Postmaster",
     "PullFromPostmasterNotification": "Pulling 1 Postmaster item to {{store}}.",
@@ -741,6 +742,7 @@
     "NoSpace": "You're out of space in the vault and any other characters.",
     "Random": "Random",
     "Randomize": "Randomize Loadout",
+    "RandomizeNew": "Create Random",
     "RandomizeButton": "Randomize",
     "RandomizePrompt": "Randomize your equipped weapons, armor and ghost?",
     "RandomizeQueryHint": "Tip: Search for items first to restrict what items can be randomly chosen.",
@@ -1271,6 +1273,7 @@
   "Triumphs": {
     "HideCompleted": "Hide completed triumphs",
     "RevealRedacted": "Reveal redacted triumphs",
+    "SortRecords": "Sort triumphs by completion",
     "GildingTriumph": "Gilding Triumph"
   },
   "Vendors": {

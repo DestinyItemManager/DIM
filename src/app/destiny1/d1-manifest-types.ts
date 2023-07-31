@@ -23,6 +23,26 @@ import {
   TransferStatuses,
 } from 'bungie-api-ts/destiny2';
 
+export interface AllD1DestinyManifestComponents {
+  DestinyRecordDefinition: { [hash: number]: D1RecordDefinition };
+  DestinyItemCategoryDefinition: { [hash: number]: D1ItemCategoryDefinition };
+  DestinyVendorCategoryDefinition: { [hash: number]: D1VendorCategoryDefinition };
+  DestinyRecordBookDefinition: { [hash: number]: D1RecordBookDefinition };
+  DestinyActivityDefinition: { [hash: number]: D1ActivityDefinition };
+  DestinyActivityTypeDefinition: { [hash: number]: D1ActivityTypeDefinition };
+  DestinyDamageTypeDefinition: { [hash: number]: D1DamageTypeDefinition };
+  DestinyInventoryBucketDefinition: { [hash: number]: D1InventoryBucketDefinition };
+  DestinyClassDefinition: { [hash: number]: D1ClassDefinition };
+  DestinyRaceDefinition: { [hash: number]: D1RaceDefinition };
+  DestinyFactionDefinition: { [hash: number]: D1FactionDefinition };
+  DestinyVendorDefinition: { [hash: number]: D1VendorDefinition };
+  DestinyInventoryItemDefinition: { [key: number]: D1InventoryItemDefinition };
+  DestinyObjectiveDefinition: { [key: number]: D1ObjectiveDefinition };
+  DestinyStatDefinition: { [key: number]: D1StatDefinition };
+  DestinyTalentGridDefinition: { [key: number]: D1TalentGridDefinition };
+  DestinyProgressionDefinition: { [key: number]: D1ProgressionDefinition };
+}
+
 export interface D1TalentNode {
   isActivated: boolean;
   stepIndex: number;

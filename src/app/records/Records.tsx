@@ -10,7 +10,6 @@ import { searchFilterSelector } from 'app/search/search-filter';
 import { useSetting } from 'app/settings/hooks';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { usePageTitle } from 'app/utils/hooks';
-import { objectKeys } from 'app/utils/util-types';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
@@ -49,6 +48,7 @@ export default function Records({ account }: Props) {
   const [completedRecordsHidden, setCompletedRecordsHidden] = useSetting('completedRecordsHidden');
   const [redactedRecordsRevealed, setRedactedRecordsRevealed] =
     useSetting('redactedRecordsRevealed');
+  const [sortRecordProgression, setSortRecordProgression] = useSetting('sortRecordProgression');
 
   const defs = useD2Definitions();
 
@@ -87,9 +87,15 @@ export default function Records({ account }: Props) {
 
   // We discover the rest of the root nodes from the Bungie.net core settings
   const otherHashes = destiny2CoreSettings
-    ? objectKeys(destiny2CoreSettings)
-        .filter((k) => k.includes('RootNode') && k !== 'craftingRootNodeHash')
-        .map((k) => destiny2CoreSettings[k] as number)
+    ? _.compact(
+        Object.entries(destiny2CoreSettings).map(
+          ([key, value]) =>
+            key.includes('RootNode') &&
+            key !== 'craftingRootNodeHash' &&
+            typeof value === 'number' &&
+            value
+        )
+      )
     : [];
 
   // We put the hashes we know about from profile first
@@ -107,7 +113,7 @@ export default function Records({ account }: Props) {
 
   const onToggleCompletedRecordsHidden = (checked: boolean) => setCompletedRecordsHidden(checked);
   const onToggleRedactedRecordsRevealed = (checked: boolean) => setRedactedRecordsRevealed(checked);
-
+  const onToggleSortRecordProgression = (checked: boolean) => setSortRecordProgression(checked);
   return (
     <PageWithMenu className="d2-vendors">
       <PageWithMenu.Menu>
@@ -134,6 +140,13 @@ export default function Records({ account }: Props) {
             onChange={onToggleRedactedRecordsRevealed}
           >
             {t('Triumphs.RevealRedacted')}
+          </CheckButton>
+          <CheckButton
+            name="sort-progression"
+            checked={sortRecordProgression}
+            onChange={onToggleSortRecordProgression}
+          >
+            {t('Triumphs.SortRecords')}
           </CheckButton>
         </div>
       </PageWithMenu.Menu>

@@ -14,7 +14,7 @@ import { LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getItemsFromInGameLoadout } from 'app/loadout/ingame/ingame-loadout-utils';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
-import { RootState, ThunkResult } from 'app/store/types';
+import { DimThunkDispatch, RootState, ThunkResult } from 'app/store/types';
 import {
   streamDeckClearSelection,
   streamDeckConnected,
@@ -22,7 +22,12 @@ import {
   streamDeckUpdatePopupShowed,
 } from 'app/stream-deck/actions';
 import { randomStringToken } from 'app/stream-deck/AuthorizationNotification/AuthorizationNotification';
-import { LoadoutSelection, SelectionArgs, SendToStreamDeckArgs } from 'app/stream-deck/interfaces';
+import {
+  LoadoutSelection,
+  SelectionArgs,
+  SendToStreamDeckArgs,
+  StreamDeckMessage,
+} from 'app/stream-deck/interfaces';
 import { handleStreamDeckMessage, notificationPromise } from 'app/stream-deck/msg-handlers';
 import { streamDeck } from 'app/stream-deck/reducer';
 import { streamDeckUpdatePopupSelector } from 'app/stream-deck/selectors';
@@ -170,7 +175,7 @@ function streamDeckSelectLoadout(
   };
 }
 
-const installFarmingObserver = _.once((dispatch) => {
+const installFarmingObserver = _.once((dispatch: DimThunkDispatch) => {
   observeStore(
     (state) => state.farming.storeId,
     (_, newState) => {
@@ -301,7 +306,7 @@ function startStreamDeckConnection(): ThunkResult {
       };
 
       streamDeckWebSocket.onmessage = function ({ data }) {
-        dispatch(handleStreamDeckMessage(JSON.parse(data)));
+        dispatch(handleStreamDeckMessage(JSON.parse(data as string) as StreamDeckMessage));
       };
 
       streamDeckWebSocket.onerror = function () {

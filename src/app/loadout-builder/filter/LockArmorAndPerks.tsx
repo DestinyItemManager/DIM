@@ -15,6 +15,7 @@ import { useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { Portal } from 'app/utils/temp-container';
+import { objectValues } from 'app/utils/util-types';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { Dispatch, memo, useCallback, useEffect, useMemo, useState } from 'react';
@@ -25,18 +26,6 @@ import ExoticArmorChoice from './ExoticArmorChoice';
 import ExoticPicker from './ExoticPicker';
 import styles from './LockArmorAndPerks.m.scss';
 import LockedItem from './LockedItem';
-
-interface Props {
-  selectedStore: DimStore;
-  pinnedItems: PinnedItems;
-  excludedItems: ExcludedItems;
-  lockedMods: ResolvedLoadoutMod[];
-  subclass: ResolvedLoadoutItem | undefined;
-  lockedExoticHash?: number;
-  searchFilter: ItemFilter;
-  autoStatMods: boolean;
-  lbDispatch: Dispatch<LoadoutBuilderAction>;
-}
 
 /**
  * A control section that allows for locking items and perks, or excluding items from generated sets.
@@ -51,7 +40,17 @@ export default memo(function LockArmorAndPerks({
   searchFilter,
   autoStatMods,
   lbDispatch,
-}: Props) {
+}: {
+  selectedStore: DimStore;
+  pinnedItems: PinnedItems;
+  excludedItems: ExcludedItems;
+  lockedMods: ResolvedLoadoutMod[];
+  subclass: ResolvedLoadoutItem | undefined;
+  lockedExoticHash?: number;
+  searchFilter: ItemFilter;
+  autoStatMods: boolean;
+  lbDispatch: Dispatch<LoadoutBuilderAction>;
+}) {
   const [showExoticPicker, setShowExoticPicker] = useState(false);
   const [showSubclassOptionsPicker, setShowSubclassOptionsPicker] = useState(false);
   const defs = useD2Definitions()!;
@@ -122,10 +121,10 @@ export default memo(function LockArmorAndPerks({
   );
   const chooseExcludeItem = chooseItem(excludeItem, (item) => Boolean(searchFilter(item)));
 
-  const allPinnedItems = _.sortBy(_.compact(Object.values(pinnedItems)), (i) =>
+  const allPinnedItems = _.sortBy(_.compact(objectValues(pinnedItems)), (i) =>
     LockableBucketHashes.indexOf(i.bucket.hash)
   );
-  const allExcludedItems = _.sortBy(_.compact(Object.values(excludedItems)).flat(), (i) =>
+  const allExcludedItems = _.sortBy(_.compact(objectValues(excludedItems)).flat(), (i) =>
     LockableBucketHashes.indexOf(i.bucket.hash)
   );
 

@@ -169,6 +169,7 @@ export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: numbe
     );
     if (irreversiblePlugCheck.protected && irreversiblePlugCheck.plug) {
       throw new DimError(
+        'AWA.IrreversiblePlugging',
         t('AWA.IrreversiblePlugging', {
           plug: irreversiblePlugCheck.plug.plugDef.displayProperties.name,
         })
