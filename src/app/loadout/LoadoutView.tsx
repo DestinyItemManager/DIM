@@ -114,13 +114,13 @@ export default function LoadoutView({
             <ClassIcon className={styles.classIcon} classType={loadout.classType} />
           )}
           <ColorDestinySymbols text={loadout.name} />
-          {warnitems.length > 0 && (
-            <span className={styles.missingItems}>
-              <AlertIcon />
-              {t('Loadouts.MissingItemsWarning')}
-            </span>
-          )}
         </h2>
+        {warnitems.length > 0 && (
+          <span className={styles.missingItems}>
+            <AlertIcon />
+            {t('Loadouts.MissingItemsWarning')}
+          </span>
+        )}
         <div className={styles.actions}>{actionButtons}</div>
       </div>
       {loadout.notes && (
