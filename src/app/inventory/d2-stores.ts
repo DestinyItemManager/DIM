@@ -227,7 +227,6 @@ function loadProfile(
       dispatch(profileLoaded({ profile: profileResponse, live: true }));
       return profileResponse;
     } catch (e) {
-      dispatch(handleAuthErrors(e));
       dispatch(profileError(convertToError(e)));
       if (profileResponse) {
         errorLog(

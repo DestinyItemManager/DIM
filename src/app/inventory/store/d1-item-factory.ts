@@ -11,7 +11,7 @@ import { D1BucketHashes, D1_StatHashes } from 'app/search/d1-known-values';
 import { lightStats } from 'app/search/search-filter-values';
 import { getItemYear } from 'app/utils/item-utils';
 import { errorLog, warnLog } from 'app/utils/log';
-import { uniqBy } from 'app/utils/util';
+import { filterMap, uniqBy } from 'app/utils/util';
 import {
   BucketCategory,
   DamageType,
@@ -699,88 +699,86 @@ function buildStats(
   }
 
   return _.sortBy(
-    _.compact(
-      Object.values(itemDef.stats).map((stat: D1Stat | DestinyInventoryItemStatDefinition) => {
-        const def = statDefs.get(stat.statHash);
-        if (!def) {
-          return undefined;
+    filterMap(Object.values(itemDef.stats), (stat: D1Stat | DestinyInventoryItemStatDefinition) => {
+      const def = statDefs.get(stat.statHash);
+      if (!def) {
+        return undefined;
+      }
+
+      const identifier = def.statIdentifier;
+
+      // Only include these hidden stats, in this order
+      const secondarySort = ['STAT_AIM_ASSISTANCE', 'STAT_EQUIP_SPEED'];
+      let secondaryIndex = -1;
+
+      let sort = _.findIndex(item.stats, (s) => s.statHash === stat.statHash);
+      let itemStat;
+      if (sort < 0) {
+        secondaryIndex = secondarySort.indexOf(identifier);
+        sort = 50 + secondaryIndex;
+      } else {
+        itemStat = item.stats[sort];
+        // Always at the end
+        if (identifier === 'STAT_MAGAZINE_SIZE' || identifier === 'STAT_ATTACK_ENERGY') {
+          sort = 100;
         }
+      }
 
-        const identifier = def.statIdentifier;
+      if (!itemStat && secondaryIndex < 0) {
+        return undefined;
+      }
 
-        // Only include these hidden stats, in this order
-        const secondarySort = ['STAT_AIM_ASSISTANCE', 'STAT_EQUIP_SPEED'];
-        let secondaryIndex = -1;
+      let maximumValue = 100;
+      if (itemStat?.maximumValue) {
+        maximumValue = itemStat.maximumValue;
+      }
 
-        let sort = _.findIndex(item.stats, (s) => s.statHash === stat.statHash);
-        let itemStat;
-        if (sort < 0) {
-          secondaryIndex = secondarySort.indexOf(identifier);
-          sort = 50 + secondaryIndex;
-        } else {
-          itemStat = item.stats[sort];
-          // Always at the end
-          if (identifier === 'STAT_MAGAZINE_SIZE' || identifier === 'STAT_ATTACK_ENERGY') {
-            sort = 100;
-          }
-        }
+      const val: number = (itemStat ? itemStat.value : stat.value) || 0;
+      let base = val;
+      let bonus = 0;
 
-        if (!itemStat && secondaryIndex < 0) {
-          return undefined;
-        }
+      const primaryStatDef = item.primaryStat && statDefs.get(item.primaryStat.statHash);
 
-        let maximumValue = 100;
-        if (itemStat?.maximumValue) {
-          maximumValue = itemStat.maximumValue;
-        }
-
-        const val: number = (itemStat ? itemStat.value : stat.value) || 0;
-        let base = val;
-        let bonus = 0;
-
-        const primaryStatDef = item.primaryStat && statDefs.get(item.primaryStat.statHash);
+      if (
+        item.primaryStat &&
+        primaryStatDef?.statIdentifier === 'STAT_DEFENSE' &&
+        ((identifier === 'STAT_INTELLECT' &&
+          armorNodes.find((n) => n.hash === 1034209669 /* Increase Intellect */)) ||
+          (identifier === 'STAT_DISCIPLINE' &&
+            armorNodes.find((n) => n.hash === 1263323987 /* Increase Discipline */)) ||
+          (identifier === 'STAT_STRENGTH' &&
+            armorNodes.find((n) => n.hash === 193091484 /* Increase Strength */)))
+      ) {
+        bonus = getBonus(item.primaryStat.value, type);
 
         if (
-          item.primaryStat &&
-          primaryStatDef?.statIdentifier === 'STAT_DEFENSE' &&
-          ((identifier === 'STAT_INTELLECT' &&
-            armorNodes.find((n) => n.hash === 1034209669 /* Increase Intellect */)) ||
-            (identifier === 'STAT_DISCIPLINE' &&
-              armorNodes.find((n) => n.hash === 1263323987 /* Increase Discipline */)) ||
-            (identifier === 'STAT_STRENGTH' &&
-              armorNodes.find((n) => n.hash === 193091484 /* Increase Strength */)))
+          activeArmorNode &&
+          ((identifier === 'STAT_INTELLECT' && activeArmorNode.hash === 1034209669) ||
+            (identifier === 'STAT_DISCIPLINE' && activeArmorNode.hash === 1263323987) ||
+            (identifier === 'STAT_STRENGTH' && activeArmorNode.hash === 193091484))
         ) {
-          bonus = getBonus(item.primaryStat.value, type);
-
-          if (
-            activeArmorNode &&
-            ((identifier === 'STAT_INTELLECT' && activeArmorNode.hash === 1034209669) ||
-              (identifier === 'STAT_DISCIPLINE' && activeArmorNode.hash === 1263323987) ||
-              (identifier === 'STAT_STRENGTH' && activeArmorNode.hash === 193091484))
-          ) {
-            base = Math.max(0, val - bonus);
-          }
+          base = Math.max(0, val - bonus);
         }
+      }
 
-        return {
-          base,
-          bonus,
-          investmentValue: base,
-          statHash: stat.statHash,
-          displayProperties: {
-            name: def.statName,
-            description: def.statDescription,
-          } as DestinyDisplayPropertiesDefinition,
-          sort,
-          value: val,
-          maximumValue,
-          bar: identifier !== 'STAT_MAGAZINE_SIZE' && identifier !== 'STAT_ATTACK_ENERGY', // energy == magazine for swords
-          smallerIsBetter: [447667954, 2961396640].includes(stat.statHash),
-          additive: primaryStatDef?.statIdentifier === 'STAT_DEFENSE',
-          isConditionallyActive: false,
-        };
-      })
-    ),
+      return {
+        base,
+        bonus,
+        investmentValue: base,
+        statHash: stat.statHash,
+        displayProperties: {
+          name: def.statName,
+          description: def.statDescription,
+        } as DestinyDisplayPropertiesDefinition,
+        sort,
+        value: val,
+        maximumValue,
+        bar: identifier !== 'STAT_MAGAZINE_SIZE' && identifier !== 'STAT_ATTACK_ENERGY', // energy == magazine for swords
+        smallerIsBetter: [447667954, 2961396640].includes(stat.statHash),
+        additive: primaryStatDef?.statIdentifier === 'STAT_DEFENSE',
+        isConditionallyActive: false,
+      };
+    }),
     (s) => s.sort
   );
 }

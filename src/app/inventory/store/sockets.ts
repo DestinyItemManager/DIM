@@ -780,9 +780,9 @@ function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number)
     precomputedEmptyPlugItemHash: defPlugSet.reusablePlugItems.find((p) =>
       isKnownEmptyPlugItemHash(p.plugItemHash)
     )?.plugItemHash,
-    plugHashesThatCannotRoll: filterMap(plugs, (p) =>
-      plugCannotCurrentlyRoll(plugs, p.plugDef.hash) ? p.plugDef.hash : undefined
-    ),
+    plugHashesThatCannotRoll: plugs
+      .filter((p) => plugCannotCurrentlyRoll(plugs, p.plugDef.hash))
+      .map((p) => p.plugDef.hash),
   };
   reusablePlugSetCache[plugSetHash] = dimPlugSet;
 

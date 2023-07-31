@@ -119,10 +119,8 @@ export const processInGameLoadouts = (
   const characterLoadouts = profileResponse?.characterLoadouts?.data;
   if (characterLoadouts) {
     return _.mapValues(characterLoadouts, (c, characterId) =>
-      _.compact(
-        c.loadouts.map((l, i) =>
-          convertDestinyLoadoutComponentToInGameLoadout(l, i, characterId, defs)
-        )
+      filterMap(c.loadouts, (l, i) =>
+        convertDestinyLoadoutComponentToInGameLoadout(l, i, characterId, defs)
       )
     );
   }
@@ -237,10 +235,8 @@ export function convertInGameLoadoutPlugItemHashesToSocketOverrides(
   plugItemHashes: number[]
 ): SocketOverrides {
   return Object.fromEntries(
-    _.compact(
-      plugItemHashes.map((plugHash, i) =>
-        plugHash !== UNSET_PLUG_HASH ? [i, plugHash] : undefined
-      )
+    filterMap(plugItemHashes, (plugHash, i) =>
+      plugHash !== UNSET_PLUG_HASH ? [i, plugHash] : undefined
     )
   );
 }

@@ -17,10 +17,13 @@ export function count<T>(
  *
  * Similar to https://doc.rust-lang.org/std/iter/trait.Iterator.html#method.filter_map
  */
-export function filterMap<In, Out>(list: readonly In[], fn: (value: In) => Out | undefined): Out[] {
+export function filterMap<In, Out>(
+  list: readonly In[],
+  fn: (value: In, index: number) => Out | undefined
+): Out[] {
   const result: Out[] = [];
-  for (const value of list) {
-    const mapped = fn(value);
+  for (let i = 0; i < list.length; i++) {
+    const mapped = fn(list[i], i);
     if (mapped !== undefined) {
       result.push(mapped);
     }
