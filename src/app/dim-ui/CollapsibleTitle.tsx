@@ -1,7 +1,7 @@
 import { collapsedSelector } from 'app/dim-api/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
-import { AnimatePresence, Tween, Variants, motion } from 'framer-motion';
+import { AnimatePresence, Spring, Variants, motion } from 'framer-motion';
 import React, { useCallback, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { toggleCollapsedSection } from '../settings/actions';
@@ -68,7 +68,7 @@ const collapsibleTitleAnimateVariants: Variants = {
   open: { height: 'auto' },
   collapsed: { height: 0 },
 };
-const collapsibleTitleAnimateTransition: Tween = { duration: 0.3 };
+const collapsibleTitleAnimateTransition: Spring = { type: 'spring', duration: 0.5, bounce: 0 };
 
 export function CollapsedSection({
   collapsed,

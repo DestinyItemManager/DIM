@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 import { useSetting } from 'app/settings/hooks';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
-import { AnimatePresence, Tween, Variants, motion } from 'framer-motion';
+import { AnimatePresence, Spring, Variants, motion } from 'framer-motion';
 import React, { useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { stopFarming } from './actions';
@@ -14,7 +14,7 @@ const animateVariants: Variants = {
   shown: { y: 0, x: '-50%' },
   hidden: { y: 60, x: '-50%' },
 };
-const animateTransition: Tween = { duration: 0.2 };
+const animateTransition: Spring = { type: 'spring', duration: 0.3, bounce: 0 };
 
 export default function Farming() {
   const dispatch = useThunkDispatch();
