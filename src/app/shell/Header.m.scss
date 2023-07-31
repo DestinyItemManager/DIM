@@ -228,23 +228,6 @@ $header-height: 44px;
     }
   }
 }
-.dropdownEnter {
-  transform: translateX(-250px);
-}
-
-.dropdownEnter.dropdownEnterActive {
-  transform: translateX(0);
-  transition: transform 200ms $easeOutCubic;
-}
-
-.dropdownExit {
-  transform: translateX(0);
-}
-
-.dropdownExit.dropdownExitActive {
-  transform: translateX(-250px);
-  transition: transform 200ms $easeInCubic;
-}
 
 .pwaPrompt {
   margin: 1em 10px;
