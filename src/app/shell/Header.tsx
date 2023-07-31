@@ -14,7 +14,7 @@ import { useSetCSSVarToHeight } from 'app/utils/hooks';
 import { infoLog } from 'app/utils/log';
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
-import { AnimatePresence, Tween, Variants, motion } from 'framer-motion';
+import { AnimatePresence, Spring, Variants, motion } from 'framer-motion';
 import logo from 'images/logo-type-right-light.svg';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -50,7 +50,7 @@ const menuAnimateVariants: Variants = {
   open: { x: 0 },
   collapsed: { x: -250 },
 };
-const menuAnimateTransition: Tween = { duration: 0.3, ease: 'easeOut' };
+const menuAnimateTransition: Spring = { type: 'spring', duration: 0.3, bounce: 0 };
 
 // TODO: finally time to hack apart the header styles!
 
