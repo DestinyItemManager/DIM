@@ -68,7 +68,7 @@ export function getItemsFromLoadoutItems(
             : { ...loadoutItem, socketOverrides: overrides },
       });
     } else {
-      const fakeItem: DimItem | null = useTheseDefs.isDestiny2()
+      const fakeItem = useTheseDefs.isDestiny2()
         ? makeFakeItem(itemCreationContext, loadoutItem.hash)
         : makeFakeD1Item(useTheseDefs, buckets, loadoutItem.hash);
       if (fakeItem) {

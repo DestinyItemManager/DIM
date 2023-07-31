@@ -7,7 +7,7 @@ import { ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
 import { AppIcon, banIcon } from 'app/shell/icons';
-import { uniqBy } from 'app/utils/util';
+import { filterMap, uniqBy } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { Dispatch } from 'react';
@@ -260,7 +260,7 @@ export default function NoBuildsFoundExplainer({
       });
     }
 
-    const allPinnedItems = _.compact(LockableBucketHashes.map((hash) => pinnedItems[hash]));
+    const allPinnedItems = filterMap(LockableBucketHashes, (hash) => pinnedItems[hash]);
     let usedUnpinSuggestion = false;
     const unpinItemsSuggestion = () => {
       if (usedUnpinSuggestion) {

@@ -5,12 +5,12 @@ import { profileResponseSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { toRecord } from 'app/records/presentation-nodes';
+import { filterMap } from 'app/utils/util';
 import {
   DestinyEventCardDefinition,
   DestinyPresentationNodeState,
   DestinyRecordState,
 } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import styles from './Event.m.scss';
 import Pursuit from './Pursuit';
@@ -62,8 +62,8 @@ export function Event({
     return null;
   }
 
-  const records = _.compact(
-    classSpecificNode.children.records.map((h) => toRecord(defs, profileResponse, h.recordHash))
+  const records = filterMap(classSpecificNode.children.records, (h) =>
+    toRecord(defs, profileResponse, h.recordHash)
   );
 
   const pursuits = records

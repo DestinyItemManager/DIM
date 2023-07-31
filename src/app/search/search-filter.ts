@@ -5,6 +5,7 @@ import { TagValue } from 'app/inventory/dim-item-info';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { Settings } from 'app/settings/initial-settings';
 import { errorLog } from 'app/utils/log';
+import { filterMap } from 'app/utils/util';
 import { WishListRoll } from 'app/wishlists/types';
 import _, { stubTrue } from 'lodash';
 import { createSelector } from 'reselect';
@@ -149,7 +150,7 @@ function makeSearchFilterFactory<I, FilterCtx, SuggestionsCtx>(
     const transformAST = (ast: QueryAST): ItemFilter<I> | undefined => {
       switch (ast.op) {
         case 'and': {
-          const fns = _.compact(ast.operands.map(transformAST));
+          const fns = filterMap(ast.operands, transformAST);
           // Propagate filter errors
           return fns.length === ast.operands.length
             ? (item) => {
@@ -163,7 +164,7 @@ function makeSearchFilterFactory<I, FilterCtx, SuggestionsCtx>(
             : undefined;
         }
         case 'or': {
-          const fns = _.compact(ast.operands.map(transformAST));
+          const fns = filterMap(ast.operands, transformAST);
           // Propagate filter errors
           return fns.length === ast.operands.length
             ? (item) => {

@@ -21,7 +21,7 @@ import { ItemCreationContext, makeFakeItem } from '../inventory/store/d2-item-fa
  * This represents an item inside a vendor.
  */
 export interface VendorItem {
-  readonly item: DimItem | null;
+  readonly item: DimItem | undefined;
   readonly failureStrings: string[];
   readonly key: number;
   readonly displayProperties: DestinyDisplayPropertiesDefinition;

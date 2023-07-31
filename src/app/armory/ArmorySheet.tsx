@@ -1,6 +1,7 @@
 import ClickOutsideRoot from 'app/dim-ui/ClickOutsideRoot';
 import Sheet from 'app/dim-ui/Sheet';
 import { DimItem } from 'app/inventory/item-types';
+import { filterMap } from 'app/utils/util';
 import focusingItemOutputs from 'data/d2/focusing-item-outputs.json';
 import { useMemo } from 'react';
 import Armory from './Armory';
@@ -11,9 +12,9 @@ export default function ArmorySheet({ item, onClose }: { item: DimItem; onClose:
     () =>
       item.sockets
         ? Object.fromEntries(
-            item.sockets.allSockets
-              .filter((s) => s.plugged)
-              .map((s) => [s.socketIndex, s.plugged!.plugDef.hash])
+            filterMap(item.sockets.allSockets, (s) =>
+              s.plugged ? [s.socketIndex, s.plugged.plugDef.hash] : undefined
+            )
           )
         : {},
     [item.sockets]

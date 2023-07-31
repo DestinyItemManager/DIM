@@ -5,6 +5,7 @@ import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { UNSET_PLUG_HASH } from 'app/loadout/known-values';
 import { emptyObject } from 'app/utils/empty';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
+import { filterMap } from 'app/utils/util';
 import {
   DestinyClass,
   DestinyLoadoutComponent,
@@ -118,10 +119,8 @@ export const processInGameLoadouts = (
   const characterLoadouts = profileResponse?.characterLoadouts?.data;
   if (characterLoadouts) {
     return _.mapValues(characterLoadouts, (c, characterId) =>
-      _.compact(
-        c.loadouts.map((l, i) =>
-          convertDestinyLoadoutComponentToInGameLoadout(l, i, characterId, defs)
-        )
+      filterMap(c.loadouts, (l, i) =>
+        convertDestinyLoadoutComponentToInGameLoadout(l, i, characterId, defs)
       )
     );
   }
@@ -168,54 +167,52 @@ export function convertInGameLoadoutToDimLoadout(
   const armorMods: number[] = [];
   const modsByBucket: LoadoutParameters['modsByBucket'] = {};
 
-  const loadoutItems = _.compact(
-    inGameLoadout.items.map((inGameItem) => {
-      if (inGameItem.itemInstanceId === '0') {
-        return;
-      }
+  const loadoutItems = filterMap(inGameLoadout.items, (inGameItem) => {
+    if (inGameItem.itemInstanceId === '0') {
+      return;
+    }
 
-      const matchingItem = potentialLoadoutItemsByItemId(allItems)[inGameItem.itemInstanceId];
-      if (!matchingItem) {
-        return;
-      }
+    const matchingItem = potentialLoadoutItemsByItemId(allItems)[inGameItem.itemInstanceId];
+    if (!matchingItem) {
+      return;
+    }
 
-      if (matchingItem.bucket.inArmor) {
-        const armorModSockets = getSocketsByCategoryHash(
-          matchingItem.sockets,
-          SocketCategoryHashes.ArmorMods
-        );
-        const fashionModSockets = getSocketsByCategoryHash(
-          matchingItem.sockets,
-          SocketCategoryHashes.ArmorCosmetics
-        );
-        for (let i = 0; i < inGameItem.plugItemHashes.length; i++) {
-          const plugHash = inGameItem.plugItemHashes[i];
-          if (plugHash === UNSET_PLUG_HASH) {
-            continue;
-          }
-          if (!emptyPlugHashes.has(plugHash) && armorModSockets.some((s) => s.socketIndex === i)) {
-            armorMods.push(plugHash);
-          } else if (fashionModSockets.some((s) => s.socketIndex === i)) {
-            // For fashion, we do record the emply plug hashes
-            (modsByBucket[matchingItem.bucket.hash] ||= []).push(plugHash);
-          }
+    if (matchingItem.bucket.inArmor) {
+      const armorModSockets = getSocketsByCategoryHash(
+        matchingItem.sockets,
+        SocketCategoryHashes.ArmorMods
+      );
+      const fashionModSockets = getSocketsByCategoryHash(
+        matchingItem.sockets,
+        SocketCategoryHashes.ArmorCosmetics
+      );
+      for (let i = 0; i < inGameItem.plugItemHashes.length; i++) {
+        const plugHash = inGameItem.plugItemHashes[i];
+        if (plugHash === UNSET_PLUG_HASH) {
+          continue;
+        }
+        if (!emptyPlugHashes.has(plugHash) && armorModSockets.some((s) => s.socketIndex === i)) {
+          armorMods.push(plugHash);
+        } else if (fashionModSockets.some((s) => s.socketIndex === i)) {
+          // For fashion, we do record the emply plug hashes
+          (modsByBucket[matchingItem.bucket.hash] ||= []).push(plugHash);
         }
       }
+    }
 
-      const socketOverrides =
-        // TODO: Pretty soon we can capture all the socket overrides, but for now only copy over subclass config.
-        matchingItem.bucket.hash === BucketHashes.Subclass
-          ? convertInGameLoadoutPlugItemHashesToSocketOverrides(inGameItem.plugItemHashes)
-          : undefined;
+    const socketOverrides =
+      // TODO: Pretty soon we can capture all the socket overrides, but for now only copy over subclass config.
+      matchingItem.bucket.hash === BucketHashes.Subclass
+        ? convertInGameLoadoutPlugItemHashesToSocketOverrides(inGameItem.plugItemHashes)
+        : undefined;
 
-      const loadoutItem: DimLoadoutItem = {
-        ...convertToLoadoutItem(matchingItem, true),
-        socketOverrides,
-      };
+    const loadoutItem: DimLoadoutItem = {
+      ...convertToLoadoutItem(matchingItem, true),
+      socketOverrides,
+    };
 
-      return loadoutItem;
-    })
-  );
+    return loadoutItem;
+  });
 
   const loadout = newLoadout(inGameLoadout.name, loadoutItems, classType);
   loadout.parameters = {
@@ -238,10 +235,8 @@ export function convertInGameLoadoutPlugItemHashesToSocketOverrides(
   plugItemHashes: number[]
 ): SocketOverrides {
   return Object.fromEntries(
-    _.compact(
-      plugItemHashes.map((plugHash, i) =>
-        plugHash !== UNSET_PLUG_HASH ? [i, plugHash] : undefined
-      )
+    filterMap(plugItemHashes, (plugHash, i) =>
+      plugHash !== UNSET_PLUG_HASH ? [i, plugHash] : undefined
     )
   );
 }

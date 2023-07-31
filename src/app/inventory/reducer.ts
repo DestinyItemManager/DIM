@@ -431,7 +431,7 @@ function itemLockStateChanged(
 function awaItemChanged(
   draft: Draft<InventoryState>,
   changes: DestinyItemChangeResponse,
-  item: DimItem | null,
+  item: DimItem | undefined,
   itemCreationContext: ItemCreationContext
 ) {
   const { defs, buckets } = itemCreationContext;

@@ -15,6 +15,7 @@ import {
 } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { isArmor2Mod, isKillTrackerSocket } from './item-utils';
+import { filterMap } from './util';
 
 type WithRequiredProperty<T, K extends keyof T> = T & {
   [P in K]-?: NonNullable<T[P]>;
@@ -74,7 +75,7 @@ export function isUsedArmorModSocket(socket: DimSocket) {
 
 /** Given an item and a list of socketIndexes, find all the sockets that match those indices, in the order the indexes were provided */
 export function getSocketsByIndexes(sockets: DimSockets, socketIndexes: number[]) {
-  return _.compact(socketIndexes.map((i) => getSocketByIndex(sockets, i)));
+  return filterMap(socketIndexes, (i) => getSocketByIndex(sockets, i));
 }
 
 /** Given a socketIndex, find the socket that matches that index */

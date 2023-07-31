@@ -9,7 +9,7 @@ import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { allItemsSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { isValidMasterworkStat } from 'app/inventory/store/masterwork';
-import { isPluggableItem } from 'app/inventory/store/sockets';
+import { hashesToPluggableItems, isPluggableItem } from 'app/inventory/store/sockets';
 import { mapToOtherModCostVariant } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
@@ -198,7 +198,7 @@ export default function SocketDetails({
 
   const searchFilter = createPlugSearchPredicate(query, language, defs);
 
-  let mods = Array.from(modHashes, (h) => defs.InventoryItem.get(h)).filter(isPluggableItem);
+  let mods = hashesToPluggableItems(defs, Array.from(modHashes));
 
   if (socket.socketDefinition.socketTypeHash === weaponMasterworkY2SocketTypeHash) {
     const matchesMasterwork = (plugOption: PluggableInventoryItemDefinition) => {

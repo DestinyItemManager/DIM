@@ -1,4 +1,4 @@
-import { uniqBy } from 'app/utils/util';
+import { filterMap, uniqBy } from 'app/utils/util';
 import _ from 'lodash';
 import { ItemInfos } from './dim-item-info';
 
@@ -33,7 +33,7 @@ export function appendedToNote(originalNote: string | undefined, append: string)
   const originalSegmented = segmentHashtags(originalNote);
   const newSegmented = segmentHashtags(append);
   const existingHashtags = new Set(
-    _.compact(originalSegmented.map((s) => (typeof s !== 'string' ? s.hashtag : undefined)))
+    filterMap(originalSegmented, (s) => (typeof s !== 'string' ? s.hashtag : undefined))
   );
   // Don't add hashtags that already exist again - remove them from the input
   const filteredAppendSegments = newSegmented.filter(
@@ -69,10 +69,8 @@ export function removedFromNote(originalNote: string | undefined, removed: strin
       .trim();
   }
   // Otherwise subtract out the literal string
-  const hashtagSpans = _.compact(
-    originalSegmented.map((s) =>
-      typeof s === 'string' ? undefined : [s.index, s.index + s.hashtag.length]
-    )
+  const hashtagSpans = filterMap(originalSegmented, (s) =>
+    typeof s === 'string' ? undefined : [s.index, s.index + s.hashtag.length]
   );
   return originalNote
     ?.replaceAll(removed.trim(), (original, index) =>

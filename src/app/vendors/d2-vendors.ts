@@ -3,6 +3,7 @@ import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import { VENDORS } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { compareBy } from 'app/utils/comparators';
+import { filterMap } from 'app/utils/util';
 import {
   DestinyCollectibleState,
   DestinyDestinationDefinition,
@@ -50,21 +51,18 @@ export function toVendorGroups(
       return {
         def: groupDef,
         vendors: _.sortBy(
-          _.compact(
-            group.vendorHashes
-              .map((vendorHash) =>
-                toVendor(
-                  // Override the item components from the profile with this vendor's item components
-                  { ...context, itemComponents: vendorsResponse.itemComponents[vendorHash] },
-                  vendorHash,
-                  vendorsResponse.vendors.data?.[vendorHash],
-                  characterId,
-                  vendorsResponse.sales.data?.[vendorHash]?.saleItems,
-                  vendorsResponse
-                )
-              )
-              .filter((vendor) => vendor?.items.length)
-          ),
+          filterMap(group.vendorHashes, (vendorHash) => {
+            const vendor = toVendor(
+              // Override the item components from the profile with this vendor's item components
+              { ...context, itemComponents: vendorsResponse.itemComponents[vendorHash] },
+              vendorHash,
+              vendorsResponse.vendors.data?.[vendorHash],
+              characterId,
+              vendorsResponse.sales.data?.[vendorHash]?.saleItems,
+              vendorsResponse
+            );
+            return vendor?.items.length ? vendor : undefined;
+          }),
           (v) => {
             const index = vendorOrder.indexOf(v.def.hash);
             return index >= 0 ? index : v.def.hash;

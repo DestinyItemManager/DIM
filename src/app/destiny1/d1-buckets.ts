@@ -1,8 +1,8 @@
 import { D1BucketHashes } from 'app/search/d1-known-values';
+import { filterMap } from 'app/utils/util';
 import { HashLookup, StringLookup } from 'app/utils/util-types';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import type {
   D1BucketCategory,
   DimBucketType,
@@ -117,8 +117,9 @@ export function getBuckets(defs: D1ManifestDefinitions) {
     }
   }
   for (const [category, bucketHashes] of Object.entries(D1Categories)) {
-    buckets.byCategory[category] = _.compact(
-      bucketHashes.map((bucketHash) => buckets.byHash[bucketHash])
+    buckets.byCategory[category] = filterMap(
+      bucketHashes,
+      (bucketHash) => buckets.byHash[bucketHash]
     );
   }
   return buckets;

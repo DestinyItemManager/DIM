@@ -12,7 +12,7 @@ import {
   getSpecialtySocketMetadatas,
   isD1Item,
 } from 'app/utils/item-utils';
-import { download } from 'app/utils/util';
+import { download, filterMap } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { D2EventInfo } from 'data/d2/d2-event-info';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
@@ -166,18 +166,16 @@ export function importTagsNotesFromCsv(files: File[]): ThunkResult<number | unde
 
       dispatch(
         setItemTagsBulk(
-          _.compact(
-            contents.map((row) => {
-              if ('Id' in row && 'Hash' in row) {
-                row.Tag = row.Tag.toLowerCase();
-                row.Id = row.Id.replace(/"/g, ''); // strip quotes from row.Id
-                return {
-                  tag: row.Tag in tagConfig ? tagConfig[row.Tag as TagValue].type : undefined,
-                  itemId: row.Id,
-                };
-              }
-            })
-          )
+          filterMap(contents, (row) => {
+            if ('Id' in row && 'Hash' in row) {
+              row.Tag = row.Tag.toLowerCase();
+              row.Id = row.Id.replace(/"/g, ''); // strip quotes from row.Id
+              return {
+                tag: row.Tag in tagConfig ? tagConfig[row.Tag as TagValue].type : undefined,
+                itemId: row.Id,
+              };
+            }
+          })
         )
       );
 
@@ -232,14 +230,12 @@ function buildSocketNames(sockets: DimSockets): string[] {
 }
 
 function buildNodeNames(nodes: D1GridNode[]): string[] {
-  return _.compact(
-    nodes.map((node) => {
-      if (FILTER_NODE_NAMES.includes(node.name)) {
-        return;
-      }
-      return node.activated ? `${node.name}*` : node.name;
-    })
-  );
+  return filterMap(nodes, (node) => {
+    if (FILTER_NODE_NAMES.includes(node.name)) {
+      return;
+    }
+    return node.activated ? `${node.name}*` : node.name;
+  });
 }
 
 function getMaxPerks(items: DimItem[]) {

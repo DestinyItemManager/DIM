@@ -57,6 +57,7 @@ import {
   isEnhancedPerk,
   isUsedArmorModSocket,
 } from 'app/utils/socket-utils';
+import { filterMap } from 'app/utils/util';
 import { LookupTable } from 'app/utils/util-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import clsx from 'clsx';
@@ -125,50 +126,48 @@ export function getColumns(
 
   type ColumnWithStat = ColumnDefinition & { statHash: number };
   const statColumns: ColumnWithStat[] = _.sortBy(
-    _.compact(
-      Object.entries(statHashes).map(([statHashStr, statInfo]): ColumnWithStat | undefined => {
-        const statHash = parseInt(statHashStr, 10) as StatHashes;
-        if (customStatHashes.includes(statHash)) {
-          // Exclude custom total, it has its own column
-          return undefined;
-        }
-        const statLabel = statLabels[statHash];
+    filterMap(Object.entries(statHashes), ([statHashStr, statInfo]): ColumnWithStat | undefined => {
+      const statHash = parseInt(statHashStr, 10) as StatHashes;
+      if (customStatHashes.includes(statHash)) {
+        // Exclude custom total, it has its own column
+        return undefined;
+      }
+      const statLabel = statLabels[statHash];
 
-        return {
-          id: `stat${statHash}`,
-          header: statInfo.displayProperties.hasIcon ? (
-            <span title={statInfo.displayProperties.name}>
-              <BungieImage src={statInfo.displayProperties.icon} />
-            </span>
-          ) : statLabel ? (
-            t(statLabel)
-          ) : (
-            statInfo.displayProperties.name
-          ),
-          statHash,
-          columnGroup: statsGroup,
-          value: (item: DimItem) => {
-            const stat = item.stats?.find((s) => s.statHash === statHash);
-            if (stat?.statHash === StatHashes.RecoilDirection) {
-              return recoilValue(stat.value);
-            }
-            return stat?.value || 0;
-          },
-          cell: (_val, item: DimItem) => {
-            const stat = item.stats?.find((s) => s.statHash === statHash);
-            if (!stat) {
-              return null;
-            }
-            return <ItemStatValue stat={stat} item={item} />;
-          },
-          defaultSort: statInfo.lowerBetter ? SortDirection.ASC : SortDirection.DESC,
-          filter: (value) => {
-            const statName = _.invert(statHashByName)[statHash];
-            return `stat:${statName}:${statName === 'rof' ? '=' : '>='}${value}`;
-          },
-        };
-      })
-    ),
+      return {
+        id: `stat${statHash}`,
+        header: statInfo.displayProperties.hasIcon ? (
+          <span title={statInfo.displayProperties.name}>
+            <BungieImage src={statInfo.displayProperties.icon} />
+          </span>
+        ) : statLabel ? (
+          t(statLabel)
+        ) : (
+          statInfo.displayProperties.name
+        ),
+        statHash,
+        columnGroup: statsGroup,
+        value: (item: DimItem) => {
+          const stat = item.stats?.find((s) => s.statHash === statHash);
+          if (stat?.statHash === StatHashes.RecoilDirection) {
+            return recoilValue(stat.value);
+          }
+          return stat?.value || 0;
+        },
+        cell: (_val, item: DimItem) => {
+          const stat = item.stats?.find((s) => s.statHash === statHash);
+          if (!stat) {
+            return null;
+          }
+          return <ItemStatValue stat={stat} item={item} />;
+        },
+        defaultSort: statInfo.lowerBetter ? SortDirection.ASC : SortDirection.DESC,
+        filter: (value) => {
+          const statName = _.invert(statHashByName)[statHash];
+          return `stat:${statName}:${statName === 'rof' ? '=' : '>='}${value}`;
+        },
+      };
+    }),
     (s) => getStatSortOrder(s.statHash)
   );
 

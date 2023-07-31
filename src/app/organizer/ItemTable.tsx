@@ -51,7 +51,7 @@ import { itemIncludesCategories } from './filtering-utils';
 
 import { compareSelectedItems } from 'app/compare/actions';
 
-import { errorMessage } from 'app/utils/util';
+import { errorMessage, filterMap } from 'app/utils/util';
 import { createPortal } from 'react-dom';
 // eslint-disable-next-line css-modules/no-unused-class
 import styles from './ItemTable.m.scss';
@@ -238,16 +238,14 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
           columnSetting(itemType),
           Array.from(
             new Set(
-              _.compact(
-                columns.map((c) => {
-                  const cId = getColumnSelectionId(c);
-                  if (cId === id) {
-                    return checked ? cId : undefined;
-                  } else {
-                    return enabledColumns.includes(cId) ? cId : undefined;
-                  }
-                })
-              )
+              filterMap(columns, (c) => {
+                const cId = getColumnSelectionId(c);
+                if (cId === id) {
+                  return checked ? cId : undefined;
+                } else {
+                  return enabledColumns.includes(cId) ? cId : undefined;
+                }
+              })
             )
           )
         )

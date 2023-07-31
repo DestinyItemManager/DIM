@@ -2,7 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimCharacterStatSource } from 'app/inventory/store-types';
-import { isPluggableItem } from 'app/inventory/store/sockets';
+import { hashesToPluggableItems } from 'app/inventory/store/sockets';
 import { ArmorStatHashes, ModStatChanges } from 'app/loadout-builder/types';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { mapToOtherModCostVariant } from 'app/loadout/mod-utils';
@@ -103,9 +103,7 @@ export function getTotalModStatChanges(
   includeRuntimeStatBenefits: boolean
 ) {
   const subclassPlugs = subclass?.loadoutItem.socketOverrides
-    ? Object.values(subclass.loadoutItem.socketOverrides)
-        .map((hash) => defs.InventoryItem.get(hash))
-        .filter(isPluggableItem)
+    ? hashesToPluggableItems(defs, Object.values(subclass.loadoutItem.socketOverrides))
     : emptyArray<PluggableInventoryItemDefinition>();
 
   const totals: ModStatChanges = {

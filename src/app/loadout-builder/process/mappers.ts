@@ -8,6 +8,7 @@ import {
 } from 'app/loadout/known-values';
 import { MAX_ARMOR_ENERGY_CAPACITY, armorStats } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
+import { filterMap } from 'app/utils/util';
 import _ from 'lodash';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import {
@@ -141,12 +142,10 @@ export function getAutoMods(defs: D2ManifestDefinitions, allUnlockedPlugs: Set<n
   const autoMods: AutoModDefs = { generalMods: {}, artificeMods: {} };
   // Only consider plugs that give stats
   const mapPlugSet = (plugSetHash: number) =>
-    _.compact(
-      defs.PlugSet.get(plugSetHash)?.reusablePlugItems.map((plugEntry) => {
-        const def = defs.InventoryItem.get(plugEntry.plugItemHash);
-        return isPluggableItem(def) && def.investmentStats?.length && def;
-      }) ?? []
-    );
+    filterMap(defs.PlugSet.get(plugSetHash)?.reusablePlugItems ?? [], (plugEntry) => {
+      const def = defs.InventoryItem.get(plugEntry.plugItemHash);
+      return isPluggableItem(def) && def.investmentStats?.length ? def : undefined;
+    });
   const generalPlugSet = mapPlugSet(generalSocketReusablePlugSetHash);
   const artificePlugSet = mapPlugSet(artificeSocketReusablePlugSetHash);
 

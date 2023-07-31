@@ -2,7 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
 import { ItemCreationContext, makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { ItemFilter } from 'app/search/filter-types';
-import { count } from 'app/utils/util';
+import { count, filterMap } from 'app/utils/util';
 import extraItemCollectibles from 'data/d2/unreferenced-collections-items.json';
 
 import {
@@ -212,8 +212,8 @@ function buildPlugSetPresentationNode(
     hash,
     ''
   );
-  const plugSetItems = _.compact(
-    plugSetDef.reusablePlugItems.map((i) => makeFakeItem(itemCreationContext, i.plugItemHash))
+  const plugSetItems = filterMap(plugSetDef.reusablePlugItems, (i) =>
+    makeFakeItem(itemCreationContext, i.plugItemHash)
   );
   const plugEntries = plugSetItems.map((item) => ({
     item,
@@ -409,24 +409,22 @@ function toRecords(
   profileResponse: DestinyProfileResponse,
   recordHashes: DestinyPresentationNodeRecordChildEntry[]
 ): DimRecord[] {
-  return _.compact(
-    recordHashes.map(({ recordHash }) => toRecord(defs, profileResponse, recordHash))
-  );
+  return filterMap(recordHashes, ({ recordHash }) => toRecord(defs, profileResponse, recordHash));
 }
 
 export function toRecord(
   defs: D2ManifestDefinitions,
   profileResponse: DestinyProfileResponse,
   recordHash: number
-): DimRecord | null {
+): DimRecord | undefined {
   const recordDef = defs.Record.get(recordHash);
   if (!recordDef) {
-    return null;
+    return undefined;
   }
   const record = getRecordComponent(recordDef, profileResponse);
 
   if (record === undefined || record.state & DestinyRecordState.Invisible || recordDef.redacted) {
-    return null;
+    return undefined;
   }
 
   const trackedInGame = profileResponse?.profileRecords?.data?.trackedRecordHash === recordHash;
@@ -442,10 +440,9 @@ function toCraftables(
   itemCreationContext: ItemCreationContext,
   craftableChildren: DestinyPresentationNodeCraftableChildEntry[]
 ): DimCraftable[] {
-  return _.compact(
-    _.sortBy(craftableChildren, (c) => c.nodeDisplayPriority).map((c) =>
-      toCraftable(itemCreationContext, c.craftableItemHash)
-    )
+  return filterMap(
+    _.sortBy(craftableChildren, (c) => c.nodeDisplayPriority),
+    (c) => toCraftable(itemCreationContext, c.craftableItemHash)
   );
 }
 
@@ -477,24 +474,22 @@ function toMetrics(
   profileResponse: DestinyProfileResponse,
   metricHashes: DestinyPresentationNodeMetricChildEntry[]
 ): DimMetric[] {
-  return _.compact(
-    metricHashes.map(({ metricHash }) => {
-      const metricDef = defs.Metric.get(metricHash);
-      if (!metricDef) {
-        return null;
-      }
-      const metric = getMetricComponent(metricDef, profileResponse);
+  return filterMap(metricHashes, ({ metricHash }) => {
+    const metricDef = defs.Metric.get(metricHash);
+    if (!metricDef) {
+      return undefined;
+    }
+    const metric = getMetricComponent(metricDef, profileResponse);
 
-      if (!metric || metric.invisible || metricDef.redacted) {
-        return null;
-      }
+    if (!metric || metric.invisible || metricDef.redacted) {
+      return undefined;
+    }
 
-      return {
-        metricComponent: metric,
-        metricDef,
-      };
-    })
-  );
+    return {
+      metricComponent: metric,
+      metricDef,
+    };
+  });
 }
 
 function getRecordComponent(

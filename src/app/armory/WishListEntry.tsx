@@ -5,9 +5,8 @@ import { showNotification } from 'app/notifications/notifications';
 import { wishListGuideLink } from 'app/shell/links';
 import { isKillTrackerSocket } from 'app/utils/item-utils';
 import { getSocketsWithStyle } from 'app/utils/socket-utils';
-import { copyString } from 'app/utils/util';
+import { copyString, filterMap } from 'app/utils/util';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
 import styles from './WishListEntry.m.scss';
 
 /**
@@ -41,12 +40,10 @@ function createWishListRollString(item: DimItem) {
 
   if (item.sockets) {
     const sockets = getSocketsWithStyle(item.sockets, DestinySocketCategoryStyle.Reusable);
-    perkHashes = _.compact(
-      sockets.map((socket) =>
-        isKillTrackerSocket(socket) || socket.plugOptions.length <= 1
-          ? undefined
-          : socket.plugged?.plugDef.hash
-      )
+    perkHashes = filterMap(sockets, (socket) =>
+      isKillTrackerSocket(socket) || socket.plugOptions.length <= 1
+        ? undefined
+        : socket.plugged?.plugDef.hash
     );
   }
 

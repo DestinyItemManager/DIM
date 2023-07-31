@@ -28,7 +28,7 @@ import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
 import { BucketHashes, PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json';
 import _ from 'lodash';
-import { objectifyArray } from './util';
+import { filterMap, objectifyArray } from './util';
 
 // damage is a mess!
 // this function supports turning a destiny DamageType into a known english name
@@ -81,10 +81,9 @@ const getSpecialtySockets = (item?: DimItem): DimSocket[] | undefined => {
 
 /** returns ModMetadatas if the item has one or more specialty mod slots */
 export const getSpecialtySocketMetadatas = (item?: DimItem): ModSocketMetadata[] | undefined => {
-  const metadatas = _.compact(
-    getSpecialtySockets(item)?.map(
-      (s) => modMetadataBySocketTypeHash[s.socketDefinition.socketTypeHash]
-    )
+  const metadatas = filterMap(
+    getSpecialtySockets(item) ?? [],
+    (s) => modMetadataBySocketTypeHash[s.socketDefinition.socketTypeHash]
   );
   if (metadatas?.length) {
     return metadatas;
