@@ -46,7 +46,6 @@ export default function MainSearchBarActions() {
       {showSearchCount && (
         <motion.div
           key="count"
-          layout
           variants={searchButtonAnimateVariants}
           exit="hidden"
           initial="hidden"

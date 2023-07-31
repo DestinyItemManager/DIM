@@ -56,7 +56,7 @@ import './search-filter.scss';
 
 export const searchButtonAnimateVariants: Variants = {
   hidden: { scale: 0 },
-  shown: { scale: 0 },
+  shown: { scale: 1 },
 };
 
 const searchItemIcons: { [key in SearchItemType]: string } = {
@@ -539,7 +539,6 @@ function SearchBar(
 
             {liveQuery.length > 0 && (saveable || saved) && !isPhonePortrait && (
               <motion.button
-                layout
                 variants={searchButtonAnimateVariants}
                 exit="hidden"
                 initial="hidden"
@@ -556,7 +555,6 @@ function SearchBar(
 
             {(liveQuery.length > 0 || (isPhonePortrait && mainSearchBar)) && (
               <motion.button
-                layout
                 variants={searchButtonAnimateVariants}
                 exit="hidden"
                 initial="hidden"
