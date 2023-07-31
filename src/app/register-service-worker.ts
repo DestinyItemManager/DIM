@@ -1,4 +1,5 @@
 import { getCurrentHub } from '@sentry/browser';
+import { toHttpStatusError } from './bungie-api/http-client';
 import { reportException } from './utils/exceptions';
 import { errorLog, infoLog, warnLog } from './utils/log';
 import { Observable } from './utils/observable';
@@ -142,13 +143,13 @@ export default function registerServiceWorker() {
 async function getServerVersion() {
   const response = await fetch('/version.json');
   if (response.ok) {
-    const data = await response.json();
+    const data = (await response.json()) as { version?: string };
     if (!data.version) {
       throw new Error('No version property');
     }
-    return data.version as string;
+    return data.version;
   } else {
-    throw response;
+    throw await toHttpStatusError(response);
   }
 }
 

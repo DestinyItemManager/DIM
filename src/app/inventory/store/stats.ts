@@ -126,8 +126,8 @@ export interface StatLookup {
 }
 
 // apparently worth it, when needing this 100s of times per inv build
-const memoTotalName = _.once(() => t('Stats.Total'));
-const memoCustomDesc = _.once(() => t('Stats.CustomDesc'));
+const memoTotalName = _.once((): string => t('Stats.Total'));
+const memoCustomDesc = _.once((): string => t('Stats.CustomDesc'));
 
 const memoStatDisplaysByStatHash = weakMemoize((statGroup: DestinyStatGroupDefinition) =>
   keyByStatHash(statGroup.scaledStats)

@@ -1,4 +1,4 @@
-import { HttpStatusError } from 'app/bungie-api/http-client';
+import { HttpStatusError, toHttpStatusError } from 'app/bungie-api/http-client';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { loadingEnd, loadingStart } from 'app/shell/actions';
@@ -6,7 +6,7 @@ import { del, get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { errorLog, infoLog, timer } from 'app/utils/log';
-import { convertToError, dedupePromise } from 'app/utils/util';
+import { convertToError, dedupePromise, errorMessage } from 'app/utils/util';
 import { LookupTable } from 'app/utils/util-types';
 import {
   AllDestinyManifestComponents,
@@ -117,7 +117,7 @@ function doGetManifest(tableAllowList: string[]): ThunkResult<AllDestinyManifest
       }
       return manifest;
     } catch (e) {
-      let message = e instanceof Error ? e.message : e;
+      let message = errorMessage(e);
 
       if (e instanceof TypeError || (e instanceof HttpStatusError && e.status === -1)) {
         message = navigator.onLine
@@ -240,17 +240,21 @@ export async function downloadManifestComponents(
           response = await fetch(`https://www.bungie.net${components[table]}${query}`);
           if (response.ok) {
             // Sometimes the file is found, but isn't parseable as JSON
-            body = await response.json();
+            body =
+              (await response.json()) as AllDestinyManifestComponents[DestinyManifestComponentName];
             break;
           }
-          error ??= new HttpStatusError(response);
+          error ??= await toHttpStatusError(response);
         } catch (e) {
           error ??= convertToError(e);
         }
       }
-      if (!body && error) {
-        throw error;
+      if (!body) {
+        throw error ?? new Error(`Table ${table}`);
       }
+
+      // I couldn't figure out how to make these types work...
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       manifest[table] = table in tableTrimmers ? tableTrimmers[table]!(body) : body;
     });
 
@@ -297,7 +301,9 @@ async function loadManifestFromCache(
   }
 
   const currentManifestVersion = localStorage.getItem(localStorageKey);
-  const currentAllowList = JSON.parse(localStorage.getItem(`${localStorageKey}-whitelist`) || '[]');
+  const currentAllowList = JSON.parse(
+    localStorage.getItem(`${localStorageKey}-whitelist`) || '[]'
+  ) as string[];
   if (currentManifestVersion === version && deepEqual(currentAllowList, tableAllowList)) {
     const manifest = await get<AllDestinyManifestComponents>(idbKey);
     if (!manifest) {

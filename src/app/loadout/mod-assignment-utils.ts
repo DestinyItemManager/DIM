@@ -153,12 +153,12 @@ function getUpgradeCost(
 ) {
   if (!model.byRarity[item.rarity]) {
     const plugs = getEnergyUpgradePlugs(dimItem);
-    const costsPerTier: number[][] = Array(MAX_ARMOR_ENERGY_CAPACITY);
+    const costsPerTier = Array<number[]>(MAX_ARMOR_ENERGY_CAPACITY);
     for (let i = 0; i <= MAX_ARMOR_ENERGY_CAPACITY; i++) {
       const previousTierCosts = costsPerTier[i - 1];
       costsPerTier[i] = previousTierCosts
         ? [...previousTierCosts]
-        : Array(materialsInRarityOrder.length).fill(0);
+        : Array<number>(materialsInRarityOrder.length).fill(0);
       const plug = plugs.find((plug) => plug.plug.energyCapacity!.capacityValue === i);
       if (!plug) {
         continue;
@@ -259,7 +259,7 @@ export function fitMostMods({
 
   // just an arbitrarily large number
   // The total cost to upgrade armor to assign all the mods to a set
-  let assignmentUpgradeCost: number[] = Array(materialsInRarityOrder.length).fill(
+  let assignmentUpgradeCost: number[] = Array<number>(materialsInRarityOrder.length).fill(
     Number.MAX_SAFE_INTEGER
   );
   // The total number of mods that couldn't be assigned to the items

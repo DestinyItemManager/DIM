@@ -10,7 +10,12 @@ export const setPhonePortrait = createAction('shell/PHONE_PORTRAIT')<boolean>();
  */
 export const setSearchQuery = createAction(
   'shell/SEARCH_QUERY',
-  (query: string, updateVersion = true) => ({ query, updateVersion })
+  // Another lint auto-fixes this by removing :boolean, then thinks `updateVersion` is `any`
+  // eslint-disable-next-line
+  (query: string, updateVersion: boolean = true) => ({
+    query,
+    updateVersion,
+  })
 )();
 
 /**

@@ -36,7 +36,7 @@ export async function getDimApiProfile(account?: DestinyAccount) {
     params: account
       ? {
           platformMembershipId: account.membershipId,
-          destinyVersion: account.destinyVersion,
+          destinyVersion: account.destinyVersion.toString(),
           components: 'settings,loadouts,tags,hashtags,searches,triumphs',
         }
       : {
@@ -93,9 +93,9 @@ export async function createLoadoutShare(platformMembershipId: string, loadout: 
 }
 
 export async function getSharedLoadout(shareId: string) {
-  const params: GetSharedLoadoutRequest = {
+  const params = {
     shareId,
-  };
+  } satisfies GetSharedLoadoutRequest;
   const response = await unauthenticatedApi<GetSharedLoadoutResponse>({
     url: '/loadout_share',
     method: 'GET',

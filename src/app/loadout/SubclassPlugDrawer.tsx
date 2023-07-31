@@ -15,6 +15,7 @@ import {
   subclassAbilitySocketCategoryHashes,
 } from 'app/utils/socket-utils';
 import { uniqBy } from 'app/utils/util';
+import { objectValues } from 'app/utils/util-types';
 import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useCallback, useMemo } from 'react';
@@ -38,7 +39,7 @@ export default function SubclassPlugDrawer({
   const defs = useD2Definitions()!;
 
   const { plugSets, aspects, fragments, sortPlugGroups } = useMemo(() => {
-    const initiallySelected = Object.values(socketOverrides)
+    const initiallySelected = objectValues(socketOverrides)
       .map((hash) => defs.InventoryItem.get(hash))
       .filter(isPluggableItem);
 

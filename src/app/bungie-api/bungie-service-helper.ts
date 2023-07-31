@@ -87,7 +87,7 @@ function dimErrorHandledHttpClient(httpClient: HttpClient): HttpClient {
 /**
  * if HttpClient throws an error (js, Bungie, http) this enriches it with DIM concepts and then re-throws it
  */
-function handleErrors(error: unknown) {
+function handleErrors(error: unknown): never {
   if (error instanceof DOMException && error.name === 'AbortError') {
     throw (
       navigator.onLine

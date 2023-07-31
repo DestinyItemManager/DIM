@@ -217,16 +217,16 @@ function buildCacheForStat(
           numArtificeMods,
           numGeneralMods: numMinorMods + numMajorMods,
           generalModsCosts: [
-            ...Array(numMajorMods).fill(majorMod?.cost),
-            ...Array(numMinorMods).fill(minorMod?.cost),
+            ...Array<number>(numMajorMods).fill(majorMod?.cost ?? 0),
+            ...Array<number>(numMinorMods).fill(minorMod?.cost ?? 0),
           ],
           modHashes: [
-            ...Array(numMajorMods).fill(majorMod?.hash),
-            ...Array(numMinorMods).fill(minorMod?.hash),
-            ...Array(numArtificeMods).fill(artificeMod?.hash),
+            ...Array<number>(numMajorMods).fill(majorMod?.hash ?? 0),
+            ...Array<number>(numMinorMods).fill(minorMod?.hash ?? 0),
+            ...Array<number>(numArtificeMods).fill(artificeMod?.hash ?? 0),
           ],
           modEnergyCost:
-            numMinorMods * (minorMod?.cost || 0) + numMajorMods * (majorMod?.cost || 0),
+            numMinorMods * (minorMod?.cost ?? 0) + numMajorMods * (majorMod?.cost ?? 0),
           targetStatIndex: statIndex,
           exactStatPoints: statValue,
         };

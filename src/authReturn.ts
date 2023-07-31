@@ -1,3 +1,4 @@
+import { HttpStatusError } from 'app/bungie-api/http-client';
 import { errorLog } from 'app/utils/log';
 import { errorMessage } from 'app/utils/util';
 import { getAccessTokenFromCode } from './app/bungie-api/oauth';
@@ -38,7 +39,7 @@ async function handleAuthReturn() {
     setToken(token);
     window.location.href = '/';
   } catch (error) {
-    if (error instanceof TypeError || (error instanceof Response && error.status === -1)) {
+    if (error instanceof TypeError || (error instanceof HttpStatusError && error.status === -1)) {
       setError(
         'A content blocker is interfering with either DIM or Bungie.net, or you are not connected to the internet.'
       );

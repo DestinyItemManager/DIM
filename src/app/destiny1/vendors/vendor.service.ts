@@ -1,4 +1,5 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
+import { BungieError } from 'app/bungie-api/http-client';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { amountOfItem } from 'app/inventory/stores-helpers';
@@ -299,7 +300,7 @@ function loadVendor(
           })
           .catch((e) => {
             // log("vendor error", vendorDef.summary.vendorName, 'for', store.name, e, e.code, e.status);
-            if (e.status === 'DestinyVendorNotFound') {
+            if (e instanceof BungieError && e.status === 'DestinyVendorNotFound') {
               const vendor = {
                 failed: true,
                 code: e.code,

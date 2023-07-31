@@ -41,7 +41,7 @@ export default function LoadoutParametersDisplay({ params }: { params: LoadoutPa
           className={styles.loExotic}
           tooltip={() => {
             const [, exoticName] = getLockedExotic(defs, exoticArmorHash);
-            return lbParamDesc(t('Loadouts.LoadoutParametersExotic', { exoticName }));
+            return lbParamDesc(t('Loadouts.LoadoutParametersExotic', { exoticName: exoticName! }));
           }}
         >
           <ExoticArmorChoice lockedExoticHash={exoticArmorHash} />

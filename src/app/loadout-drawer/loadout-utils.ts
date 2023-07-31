@@ -628,7 +628,7 @@ export const potentialLoadoutItemsByItemId = weakMemoize((allItems: DimItem[]) =
 export const potentialLoadoutItemsByCraftedDate = weakMemoize((allItems: DimItem[]) =>
   _.keyBy(
     allItems.filter((i) => i.id !== '0' && i.craftedInfo?.craftedDate && itemCanBeInLoadout(i)),
-    (i) => i.craftedInfo!.craftedDate!
+    (i) => i.craftedInfo!.craftedDate
   )
 );
 

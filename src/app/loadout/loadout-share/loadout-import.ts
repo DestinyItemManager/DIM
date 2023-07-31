@@ -1,4 +1,4 @@
-import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import { Loadout as DimApiLoadout, LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { getSharedLoadout } from 'app/dim-api/dim-api';
 import { generateMissingLoadoutItemId } from 'app/loadout-drawer/loadout-item-conversion';
 import { convertDimApiLoadoutToLoadout } from 'app/loadout-drawer/loadout-type-converters';
@@ -6,7 +6,6 @@ import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout } from 'app/loadout-drawer/loadout-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { v4 as uuidv4 } from 'uuid';
-
 // A very permissive regex that allows directly pasted URLs, but also various ways in which
 // people might type it manually (such as a URL-like string with a missing protocol or just the share ID)
 // Hardcoding the lower limit of 7 characters so that a user typing the characters manually doesn't call
@@ -79,7 +78,9 @@ export function decodeUrlLoadout(search: string): Loadout | undefined {
   const searchParams = new URLSearchParams(search);
   const loadoutJSON = searchParams.get('loadout');
   if (loadoutJSON) {
-    return preprocessReceivedLoadout(convertDimApiLoadoutToLoadout(JSON.parse(loadoutJSON)));
+    return preprocessReceivedLoadout(
+      convertDimApiLoadoutToLoadout(JSON.parse(loadoutJSON) as DimApiLoadout)
+    );
   }
 }
 

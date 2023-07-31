@@ -6,9 +6,11 @@ import { downloadManifestComponents } from 'app/manifest/manifest-service-json';
 import { humanBytes } from 'app/storage/human-bytes';
 import { delay } from 'app/utils/util';
 import {
+  AllDestinyManifestComponents,
   DestinyManifest,
   DestinyProfileResponse,
   DestinyVendorsResponse,
+  ServerResponse,
 } from 'bungie-api-ts/destiny2';
 import { F_OK } from 'constants';
 import fs from 'fs/promises';
@@ -55,7 +57,7 @@ export async function getTestManifestJson() {
       .catch(() => false);
 
     if (fileExists) {
-      return JSON.parse(await fs.readFile(filename, 'utf-8'));
+      return JSON.parse(await fs.readFile(filename, 'utf-8')) as AllDestinyManifestComponents;
     }
 
     await fs.mkdir(cacheDir, { recursive: true });
@@ -86,8 +88,10 @@ export const testAccount = {
   lastPlayed: '2021-05-08T03:34:26.000Z',
 };
 
-export const getTestProfile = () => (profile as any).Response as DestinyProfileResponse;
-export const getTestVendors = () => (vendors as any).Response as DestinyVendorsResponse;
+export const getTestProfile = () =>
+  (profile as unknown as ServerResponse<DestinyProfileResponse>).Response;
+export const getTestVendors = () =>
+  (vendors as unknown as ServerResponse<DestinyVendorsResponse>).Response;
 
 export const getTestStores = _.once(async () => {
   const manifest = await getTestDefinitions();
@@ -140,8 +144,10 @@ export function setupi18n() {
 
   for (const [otherLang, { pluralOverride }] of Object.entries(DIM_LANG_INFOS)) {
     if (pluralOverride) {
+      // eslint-disable-next-line
       i18next.services.pluralResolver.addRule(
         otherLang,
+        // eslint-disable-next-line
         i18next.services.pluralResolver.getRule('en')
       );
     }

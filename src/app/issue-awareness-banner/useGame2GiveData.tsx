@@ -44,7 +44,7 @@ export default function useGame2GiveData() {
         return;
       }
 
-      const json: Game2GiveJSONResponse = await response.json();
+      const json = (await response.json()) as Game2GiveJSONResponse;
 
       // If there is unexpected data with the Game2Give response, error gracefully.
       if (!json) {

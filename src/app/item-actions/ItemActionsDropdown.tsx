@@ -94,7 +94,7 @@ export default memo(function ItemActionsDropdown({
     dispatch(applyLoadout(store, loadout, { allowUndo: true }));
   };
 
-  const bulkItemTags: TagCommandInfo[] = itemTagSelectorList
+  const bulkItemTags: (Omit<TagCommandInfo, 'label'> & { label: string })[] = itemTagSelectorList
     .filter((t) => t.type)
     .map((tag) => ({
       ...tag,

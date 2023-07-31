@@ -7,9 +7,21 @@ import { HttpClient, HttpClientConfig } from 'bungie-api-ts/http';
  */
 export class HttpStatusError extends Error {
   status: number;
-  constructor(response: Response) {
-    super(response.statusText);
+  responseBody?: string;
+
+  constructor(response: Response, responseBody?: string) {
+    super(responseBody ?? response.statusText);
     this.status = response.status;
+    this.responseBody = responseBody;
+  }
+}
+
+export async function toHttpStatusError(response: Response) {
+  try {
+    const responseBody = await response.text();
+    return new HttpStatusError(response, responseBody);
+  } catch (e) {
+    return new HttpStatusError(response);
   }
 }
 
@@ -21,8 +33,11 @@ export class BungieError extends Error {
   code?: PlatformErrorCodes;
   status?: string;
   endpoint: string;
-  constructor(response: Partial<ServerResponse<unknown>>, request: Request) {
-    super(response.Message);
+  constructor(
+    response: Partial<Pick<ServerResponse<unknown>, 'Message' | 'ErrorCode' | 'ErrorStatus'>>,
+    request: Request
+  ) {
+    super(response.Message ?? 'Unknown Bungie Error');
     this.name = 'BungieError';
     this.code = response.ErrorCode;
     this.status = response.ErrorStatus;
@@ -34,11 +49,10 @@ export class BungieError extends Error {
  * this is a non-affecting pass-through for successful http requests,
  * but throws JS errors for a non-200 response
  */
-function throwHttpError(response: Response) {
+async function throwHttpError(response: Response) {
   if (response.status < 200 || response.status >= 400) {
-    throw new HttpStatusError(response);
+    throw await toHttpStatusError(response);
   }
-  return response;
 }
 
 /**
@@ -47,12 +61,16 @@ function throwHttpError(response: Response) {
  * this is a non-affecting pass-through for successful API interactions,
  * but throws JS errors for "successful" fetches with Bungie error information
  */
-function throwBungieError<T>(
-  serverResponse: (ServerResponse<T> & { error?: string; error_description?: string }) | undefined,
-  request: Request
-) {
+function throwBungieError<T>(serverResponse: T | undefined, request: Request) {
+  if (!serverResponse || typeof serverResponse !== 'object') {
+    return serverResponse;
+  }
+
   // There's an alternate error response that can be returned during maintenance
-  const eMessage = serverResponse?.error && serverResponse.error_description;
+  const eMessage =
+    'error' in serverResponse &&
+    'error_description' in serverResponse &&
+    (serverResponse.error_description as string);
   if (eMessage) {
     throw new BungieError(
       {
@@ -64,8 +82,8 @@ function throwBungieError<T>(
     );
   }
 
-  if (serverResponse && serverResponse.ErrorCode !== PlatformErrorCodes.Success) {
-    throw new BungieError(serverResponse, request);
+  if ('ErrorCode' in serverResponse && serverResponse.ErrorCode !== PlatformErrorCodes.Success) {
+    throw new BungieError(serverResponse as Partial<ServerResponse<unknown>>, request);
   }
 
   return serverResponse;
@@ -136,20 +154,19 @@ export function createFetchWithNonStoppingTimeout(
 //
 
 export function createHttpClient(fetchFunction: typeof fetch, apiKey: string): HttpClient {
-  return async (config: HttpClientConfig) => {
+  return async <T>(config: HttpClientConfig) => {
     let url = config.url;
     if (config.params) {
-      // strip out undefined params keys. bungie-api-ts creates them for optional endpoint parameters
-      for (const key in config.params) {
-        typeof config.params[key] === 'undefined' && delete config.params[key];
-      }
-      url = `${url}?${new URLSearchParams(config.params as Record<string, string>).toString()}`;
+      url = `${url}?${new URLSearchParams(config.params).toString()}`;
     }
 
     const fetchOptions = new Request(url, {
       method: config.method,
       body: config.body ? JSON.stringify(config.body) : undefined,
-      headers: { 'X-API-Key': apiKey, ...(config.body && { 'Content-Type': 'application/json' }) },
+      headers: {
+        'X-API-Key': apiKey,
+        ...(config.body ? { 'Content-Type': 'application/json' } : undefined),
+      },
       credentials: 'omit',
     });
 
@@ -157,31 +174,30 @@ export function createHttpClient(fetchFunction: typeof fetch, apiKey: string): H
       throw new BungieError(
         {
           ErrorCode: PlatformErrorCodes.SystemDisabled,
-          ThrottleSeconds: 0,
           ErrorStatus: 'SystemDisabled',
           Message: 'This system is temporarily disabled for maintenance.',
-          MessageData: {},
         },
         fetchOptions
       );
     }
 
     const response = await fetchFunction(fetchOptions);
-    let data: ServerResponse<unknown> | undefined;
+    let data: T | undefined;
     let parseError: Error | undefined;
     try {
-      data = await response.json();
+      data = (await response.json()) as T;
     } catch (e) {
       parseError = convertToError(e);
     }
+
     // try throwing bungie errors, which have more information, first
     throwBungieError(data, fetchOptions);
     // then throw errors on generic http error codes
-    throwHttpError(response);
+    await throwHttpError(response);
     if (parseError) {
       throw parseError;
     }
-    return data;
+    return data!; // At this point it's not undefined, there would've been a parse error
   };
 }
 
@@ -198,7 +214,7 @@ export function responsivelyThrottleHttpClient(
   httpClient: HttpClient,
   onThrottle: (timesThrottled: number, waitTime: number, url: string) => void
 ): HttpClient {
-  return async (config: HttpClientConfig) => {
+  return async <T>(config: HttpClientConfig): Promise<T> => {
     if (timesThrottled > 0) {
       // Double the wait time, starting with 1 second, until we reach 5 minutes.
       const waitTime = Math.min(5 * 60 * 1000, Math.pow(2, timesThrottled) * 500);
@@ -207,9 +223,10 @@ export function responsivelyThrottleHttpClient(
     }
 
     try {
-      const result = await httpClient(config);
+      const result = await httpClient<T>(config);
       // Quickly heal from being throttled
       timesThrottled = Math.floor(timesThrottled / 2);
+
       return result;
     } catch (e) {
       if (e instanceof BungieError) {

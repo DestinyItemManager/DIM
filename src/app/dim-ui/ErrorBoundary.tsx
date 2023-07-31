@@ -18,7 +18,7 @@ export default class ErrorBoundary extends Component<Props, State> {
     this.state = {};
   }
 
-  componentDidCatch(error: Error, errorInfo: any) {
+  componentDidCatch(error: Error, errorInfo: { componentStack: string }) {
     const { name } = this.props;
 
     this.setState({ error });
