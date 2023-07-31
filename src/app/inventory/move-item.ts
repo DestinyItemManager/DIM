@@ -273,8 +273,7 @@ export function distribute(actionableItem: DimItem): ThunkResult {
           const vaultIndex = stores.length - 1;
           const vault = stores[vaultIndex];
 
-          // eslint-disable-next-line github/array-foreach
-          deltas.forEach((delta, index) => {
+          for (const [index, delta] of deltas.entries()) {
             if (delta < 0 && index !== vaultIndex) {
               vaultMoves.push({
                 source: stores[index],
@@ -288,7 +287,7 @@ export function distribute(actionableItem: DimItem): ThunkResult {
                 amount: delta,
               });
             }
-          });
+          }
 
           // All moves to vault in parallel, then all moves to targets in parallel
           async function applyMoves(moves: Move[]) {

@@ -8,6 +8,7 @@ export interface Settings extends DimApiSettings {
   language: DimLanguage;
   loIncludeVendorItems: boolean;
   theme: string;
+  sortRecordProgression: boolean;
 }
 
 export const initialSettingsState: Settings = {
@@ -15,4 +16,5 @@ export const initialSettingsState: Settings = {
   loIncludeVendorItems: false,
   language: defaultLanguage(),
   theme: 'default',
+  sortRecordProgression: false,
 };

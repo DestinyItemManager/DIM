@@ -128,13 +128,12 @@ export function pickAndAssignSlotIndependentMods(
     assignedModsAtLeastOnce = true;
 
     // This is a valid activity and combat mod assignment. See how much energy is left over per piece
-    // eslint-disable-next-line github/array-foreach
-    items.forEach((item, idx) => {
+    for (const [idx, item] of items.entries()) {
       remainingEnergyCapacities[idx] =
         (item.energy?.capacity || 0) -
         (item.energy?.val || 0) -
         (activityPermutation[idx]?.energy?.val || 0);
-    });
+    }
     remainingEnergyCapacities.sort((a, b) => b - a);
 
     if (neededStats) {
