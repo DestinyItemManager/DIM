@@ -1,8 +1,7 @@
 import { DimItem } from 'app/inventory/item-types';
-import { AppIcon, faClock } from 'app/shell/icons';
+import { AppIcon, faClock, shapedIcon } from 'app/shell/icons';
 import { DestinyItemTooltipNotification } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import shapedIcon from 'images/shaped.png';
 import styles from './DestinyTooltipText.m.scss';
 import RichDestinyText from './destiny-symbols/RichDestinyText';
 
@@ -20,9 +19,7 @@ export function DestinyTooltipText({ item }: { item: DimItem }) {
           })}
         >
           {isExpirationTooltip(tip) && <AppIcon icon={faClock} />}
-          {isPatternTooltip(tip) && (
-            <img className={styles.shapedIcon} src={shapedIcon} height={12} width={12} alt="" />
-          )}
+          {isPatternTooltip(tip) && <AppIcon className={styles.shapedIcon} icon={shapedIcon} />}
           <RichDestinyText text={tip.displayString} ownerId={item.owner} />
         </div>
       ))}

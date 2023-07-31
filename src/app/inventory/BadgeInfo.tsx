@@ -1,11 +1,12 @@
 import { TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { getColor } from 'app/shell/formatters';
+import { shapedIcon } from 'app/shell/icons';
+import AppIcon from 'app/shell/icons/AppIcon';
 import { isD1Item } from 'app/utils/item-utils';
 import { InventoryWishListRoll, toUiWishListRoll } from 'app/wishlists/wishlists';
 import { DamageType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
-import shapedIcon from 'images/shaped.png';
 import { useSelector } from 'react-redux';
 import ElementIcon from '../dim-ui/ElementIcon';
 import styles from './BadgeInfo.m.scss';
@@ -73,7 +74,7 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
 
   const wishlistRollIcon = toUiWishListRoll(wishlistRoll);
   const summaryIcon = item.crafted ? (
-    <img className={styles.shapedIcon} src={shapedIcon} />
+    <AppIcon className={styles.shapedIcon} icon={shapedIcon} />
   ) : (
     wishlistRollIcon && <RatingIcon uiWishListRoll={wishlistRollIcon} />
   );
