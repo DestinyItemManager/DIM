@@ -10,6 +10,7 @@ import { searchFilterSelector } from 'app/search/search-filter';
 import { useSetting } from 'app/settings/hooks';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { usePageTitle } from 'app/utils/hooks';
+import { filterMap } from 'app/utils/util';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
@@ -87,14 +88,10 @@ export default function Records({ account }: Props) {
 
   // We discover the rest of the root nodes from the Bungie.net core settings
   const otherHashes = destiny2CoreSettings
-    ? _.compact(
-        Object.entries(destiny2CoreSettings).map(
-          ([key, value]) =>
-            key.includes('RootNode') &&
-            key !== 'craftingRootNodeHash' &&
-            typeof value === 'number' &&
-            value
-        )
+    ? filterMap(Object.entries(destiny2CoreSettings), ([key, value]) =>
+        key.includes('RootNode') && key !== 'craftingRootNodeHash' && typeof value === 'number'
+          ? value
+          : undefined
       )
     : [];
 
