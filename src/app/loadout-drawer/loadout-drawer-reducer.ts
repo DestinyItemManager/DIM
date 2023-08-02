@@ -414,7 +414,12 @@ export function setLoadoutSubclassFromEquipped(
       return loadout;
     }
 
-    return addItem(defs, newSubclass, true)(loadout);
+    return addItem(
+      defs,
+      newSubclass,
+      true,
+      createSocketOverridesFromEquipped(newSubclass)
+    )(loadout);
   };
 }
 

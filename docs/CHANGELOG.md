@@ -1,5 +1,7 @@
 ## Next
 
+* Fixed "Fill in using equipped" in a Loadout's subclass section failing to copy Aspects and Fragments.
+
 ## 7.79.0 <span class="changelog-date">(2023-07-30)</span>
 
 * You can now search for Emotes and Ghost Projections on the Records page.
