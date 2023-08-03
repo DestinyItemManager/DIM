@@ -1,6 +1,7 @@
 ## Next
 
 * Fixed "Fill in using equipped" in a Loadout's subclass section failing to copy Aspects and Fragments.
+* You can now use left and right keys to switch between Overview and Triage tabs.
 
 ## 7.79.0 <span class="changelog-date">(2023-07-30)</span>
 

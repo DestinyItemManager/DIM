@@ -1,8 +1,10 @@
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
+import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { doShowTriage, ItemTriage, TriageTabToggle } from 'app/item-triage/ItemTriage';
 import { percent } from 'app/shell/formatters';
 import clsx from 'clsx';
+import { useCallback } from 'react';
 import { DimItem } from '../inventory/item-types';
 import { ItemPopupExtraInfo } from './item-popup';
 import ItemDetails from './ItemDetails';
@@ -49,6 +51,27 @@ export default function ItemPopupBody({
       component: <ItemTriage item={item} />,
     });
   }
+
+  const changeToTriageTab = useCallback((event: KeyboardEvent) => {
+    if (tabs.length < 2) {
+      return;
+    }
+    event.preventDefault();
+    onTabChanged(tabs[1].tab);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const changeToOverviewTab = useCallback((event: KeyboardEvent) => {
+    if (tabs.length < 2) {
+      return;
+    }
+    event.preventDefault();
+    onTabChanged(tabs[0].tab);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useHotkey('right', 'Switch to Triage tab', changeToTriageTab);
+  useHotkey('left', 'Switch to Overview tab', changeToOverviewTab);
 
   return (
     <div>
