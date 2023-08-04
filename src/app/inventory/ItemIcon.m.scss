@@ -62,7 +62,7 @@ $commonBg: #366f42;
   border-color: transparent;
 }
 
-// The overlay image for masterworks and Deepsight weapons
+// Masterwork pattern emulating .src/images/masterwork.png
 .backgroundOverlay {
   position: absolute;
   box-sizing: border-box;
@@ -72,11 +72,70 @@ $commonBg: #366f42;
   left: $item-border-width;
 }
 .legendaryMasterwork {
-  @include masterwork(0.15, 0.013, 0.015);
+  box-shadow: inset 0 0 2px 1px rgba(0, 0, 0, 0.25);
+  background:
+    radial-gradient(ellipse at center bottom, rgba(255, 255, 255, 0.2), transparent 75%) center
+      bottom,
+    radial-gradient(ellipse at center bottom, rgba(255, 255, 255, 0.1), transparent 75%) center
+      bottom;
+  background-size:
+    125% 30%,
+    50% 50%;
+  background-repeat: no-repeat, no-repeat;
 }
 
+// Exotic Masterwork pattern emulating .src/images/exotic-masterwork.png
 .exoticMasterwork {
-  @include masterwork(0.25, 0.035, 0.01);
+  $light-stripe: rgba(255, 255, 255, 0.003);
+  $dark-stripe: rgba(0, 0, 0, 0.025);
+  box-shadow: inset 0 0 2px 1px rgba(0, 0, 0, 0.25);
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.3) 0%, transparent 20%),
+    linear-gradient(
+      transparent 50%,
+      rgba(255, 255, 255, 0.225) 65%,
+      rgba(255, 255, 255, 0.225) 100%
+    ),
+    repeating-linear-gradient(
+        to bottom right,
+        #{$light-stripe} 0%,
+        #{$light-stripe} 5%,
+        #{$dark-stripe} 5%,
+        #{$dark-stripe} 12.5%
+      )
+      bottom right,
+    repeating-linear-gradient(
+        to bottom left,
+        #{$light-stripe} 0%,
+        #{$light-stripe} 5%,
+        #{$dark-stripe} 5%,
+        #{$dark-stripe} 12.5%
+      )
+      bottom left,
+    repeating-linear-gradient(
+        to top left,
+        #{$light-stripe} 0%,
+        #{$light-stripe} 5%,
+        #{$dark-stripe} 5%,
+        #{$dark-stripe} 12.5%
+      )
+      top left,
+    repeating-linear-gradient(
+        to top right,
+        #{$light-stripe} 0%,
+        #{$light-stripe} 5%,
+        #{$dark-stripe} 5%,
+        #{$dark-stripe} 12.5%
+      )
+      top right;
+  background-repeat: no-repeat;
+  background-size:
+    100%,
+    100%,
+    50% 50%,
+    50% 50%,
+    50% 50%,
+    50% 50%;
 }
 .deepsightBorder {
   border: 2px solid $deepsight-border-color;
