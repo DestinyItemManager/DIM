@@ -172,32 +172,6 @@ $search-bar-height: 28px;
     50% 50%,
     50% 50%,
     50% 50%;
-
-  // Border
-  &::before {
-    content: '';
-    position: absolute;
-    box-sizing: border-box;
-    height: calc(var(--item-size) - #{2 * $item-border-width});
-    width: calc(var(--item-size) - #{2 * $item-border-width});
-    left: 0;
-    top: 0;
-
-    border-width: 1px;
-    border-style: solid;
-    border-image-slice: 1;
-    border-image-source: conic-gradient(
-      from 45deg at 50% 50%,
-      var(--theme-item-polaroid-masterwork-border) 0%,
-      transparent 24%,
-      transparent 25%,
-      var(--theme-item-polaroid-masterwork-border) 50%,
-      var(--theme-item-polaroid-masterwork-border) 50%,
-      transparent 74%,
-      transparent 75%,
-      var(--theme-item-polaroid-masterwork-border) 100%
-    );
-  }
 }
 
 /*
