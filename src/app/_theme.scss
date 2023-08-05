@@ -1,7 +1,9 @@
+@use 'variables.scss' as *;
+
 // Theme variables
 :root {
   // Base colours
-  --theme-accent-primary: var(--dim-brand); // Interaction styles (hover, active, focus)
+  --theme-accent-primary: #{$dim-brand}; // Interaction styles (hover, active, focus)
   --theme-accent-secondary: #68a0b7; // Secondary interactions
 
   // Generic fills for modal backgrounds (see below)
@@ -72,6 +74,7 @@
   --theme-item-polaroid-trashroll: #d14334;
   --theme-item-polaroid-element-adjust-brightness: 70%; // Adjust for legibility of Arc, Strand, Void icons
   --theme-item-socket-border: #888; // Socketable slots (mods, fashion, sub-class/abilities)
+  --theme-item-shaped-icon: #{$shaped};
 
   // Item popup
   --theme-item-popup-border: #222;

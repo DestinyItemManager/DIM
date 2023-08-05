@@ -8,6 +8,7 @@ export { epicIcon } from './custom/Epic';
 export { dimHunterIcon as hunterIcon } from './custom/Hunter';
 export { dimPowerIcon as powerIndicatorIcon } from './custom/Power';
 export { dimPowerAltIcon as powerActionIcon } from './custom/PowerAlt';
+export { dimShapedIcon as shapedIcon } from './custom/Shaped';
 export { stadiaIcon } from './custom/Stadia';
 export { dimTitanIcon as titanIcon } from './custom/Titan';
 export { dimWarlockIcon as warlockIcon } from './custom/Warlock';

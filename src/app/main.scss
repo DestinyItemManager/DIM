@@ -54,9 +54,6 @@
 
   // prevents content shift with persistent scroll-y bar
   overflow-y: scroll;
-
-  // Expose primary brand colour as a css variable so it can be used directly in _theme.scss
-  --dim-brand: #{$dim-brand};
 }
 
 @media (max-width: 1025px) {

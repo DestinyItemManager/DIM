@@ -35,9 +35,12 @@ $xp: #5ea16a;
 $gold: #f5dc56;
 $power: $gold;
 
+// The in-game color for the shaped weapon icon
+$shaped: #d25336;
+
 // Color of the item border for masterworks
 $masterwork-border-color: #eade8b;
-$deepsight-border-color: #d25336;
+$deepsight-border-color: $shaped;
 $gilded-triumph-border-color: #a78355;
 
 // Yellow used for enhanced weapon perks
