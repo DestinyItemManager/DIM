@@ -1262,7 +1262,8 @@
   "Triumphs": {
     "GildingTriumph": "Triomphe doré",
     "HideCompleted": "Masquer les triomphes complétés",
-    "RevealRedacted": "Afficher les triomphes masqués"
+    "RevealRedacted": "Afficher les triomphes masqués",
+    "SortRecords": "Sort triumphs by completion"
   },
   "Vendors": {
     "Collections": "Collections",

@@ -1262,7 +1262,8 @@
   "Triumphs": {
     "GildingTriumph": "Trionfo Indorato",
     "HideCompleted": "Nascondi trionfi completati",
-    "RevealRedacted": "Mostra trionfi segreti"
+    "RevealRedacted": "Mostra trionfi segreti",
+    "SortRecords": "Ordina i trionfi per completamento"
   },
   "Vendors": {
     "Collections": "Collezioni",

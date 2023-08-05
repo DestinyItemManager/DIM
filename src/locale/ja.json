@@ -1262,7 +1262,8 @@
   "Triumphs": {
     "GildingTriumph": "金の勝利",
     "HideCompleted": "完了した勝利の道のりを隠す",
-    "RevealRedacted": "改定された勝利の道のりを表示する"
+    "RevealRedacted": "改定された勝利の道のりを表示する",
+    "SortRecords": "完了順に勝利の道のりを並べ替える"
   },
   "Vendors": {
     "Collections": "コレクション",

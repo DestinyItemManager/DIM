@@ -648,9 +648,9 @@
     "Classified": "Algunos de tus objetos son clasificados y no pueden ser incluidos en el cálculo de Poder máximo.",
     "ClearLoadoutParameters": "Eliminar configuración del Optimizador de Equipamientos",
     "ClearSection": "Quitar todo",
-    "ClearSpace": "Mover otros fuera",
-    "ClearSpaceArmor": "Mover otras armaduras fuera",
-    "ClearSpaceWeapons": "Mover otras armas fuera",
+    "ClearSpace": "Quitar objetos no usados",
+    "ClearSpaceArmor": "Quitar armaduras no usadas",
+    "ClearSpaceWeapons": "Quitar armas no usadas",
     "ClearUnsetMods": "Quitar otros mods",
     "ClearingSpace": "Moviendo otros objetos",
     "Create": "Crear equipamiento",
@@ -1262,7 +1262,8 @@
   "Triumphs": {
     "GildingTriumph": "Triunfo para Dorado",
     "HideCompleted": "Ocultar triunfos completados",
-    "RevealRedacted": "Revelar triunfos clasificados"
+    "RevealRedacted": "Revelar triunfos clasificados",
+    "SortRecords": "Ordenar triunfos por compleción"
   },
   "Vendors": {
     "Collections": "Colecciones",

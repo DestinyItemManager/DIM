@@ -1262,7 +1262,8 @@
   "Triumphs": {
     "GildingTriumph": "Triunfo para Dorado",
     "HideCompleted": "Ocultar triunfos completados",
-    "RevealRedacted": "Revelar triunfos clasificados"
+    "RevealRedacted": "Revelar triunfos clasificados",
+    "SortRecords": "Ordenar triunfos por compleción"
   },
   "Vendors": {
     "Collections": "Colecciones",

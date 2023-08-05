@@ -1262,7 +1262,8 @@
   "Triumphs": {
     "GildingTriumph": "鍍金成就",
     "HideCompleted": "隱藏已完成的成就",
-    "RevealRedacted": "顯示隱藏的成就"
+    "RevealRedacted": "顯示隱藏的成就",
+    "SortRecords": "Sort triumphs by completion"
   },
   "Vendors": {
     "Collections": "收藏品",

@@ -1262,7 +1262,8 @@
   "Triumphs": {
     "GildingTriumph": "Triumph-Vergoldung",
     "HideCompleted": "Abgeschlossene Triumphe ausblenden",
-    "RevealRedacted": "Versteckte Triumphe enthüllen"
+    "RevealRedacted": "Versteckte Triumphe enthüllen",
+    "SortRecords": "Sort triumphs by completion"
   },
   "Vendors": {
     "Collections": "Sammlungen",

@@ -1262,7 +1262,8 @@
   "Triumphs": {
     "GildingTriumph": "금박 업적",
     "HideCompleted": "완료한 업적 숨기기",
-    "RevealRedacted": "삭제된 업적 표시"
+    "RevealRedacted": "삭제된 업적 표시",
+    "SortRecords": "완료 여부에 따라 업적 정렬"
   },
   "Vendors": {
     "Collections": "수집품",

@@ -731,7 +731,7 @@
     "OnWrongCharacterWarning": "A armadura mais poderosa deste personagem está em outro personagem. Para garantir um maior Poder nos drops e recompensas pináculo, a armadura deve estar neste personagem ou no Cofre.",
     "OnlyItems": "Somente itens equipáveis, materiais e consumíveis podem ser adicionados em um set.",
     "OpenInOptimizer": "Otimizar armadura",
-    "PickArmor": "Pick Armor",
+    "PickArmor": "Pegar Armadura",
     "PickMods": "Adicionar mods de armadura",
     "PullFromPostmaster": "Coletar do Chefe do Correio",
     "PullFromPostmasterError": "Não foi possível resgatar do Chefe do Correio: {{error}}.",
@@ -1262,7 +1262,8 @@
   "Triumphs": {
     "GildingTriumph": "Triunfo para Dourar",
     "HideCompleted": "Ocultar triunfos concluídos",
-    "RevealRedacted": "Exibir triunfos editados"
+    "RevealRedacted": "Exibir triunfos editados",
+    "SortRecords": "Ordenar triunfos por conclusão"
   },
   "Vendors": {
     "Collections": "Coleções",
