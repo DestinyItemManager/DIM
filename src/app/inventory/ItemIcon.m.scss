@@ -62,7 +62,6 @@ $commonBg: #366f42;
   border-color: transparent;
 }
 
-// Masterwork pattern emulating .src/images/masterwork.png
 .backgroundOverlay {
   position: absolute;
   box-sizing: border-box;
@@ -71,12 +70,15 @@ $commonBg: #366f42;
   top: $item-border-width;
   left: $item-border-width;
 }
+
+// Masterwork pattern emulating .src/images/masterwork.png
+// Tint hue is based an RGB of $stat-masterworked
 .legendaryMasterwork {
   box-shadow: inset 0 0 1px 0 rgba(0, 0, 0, 0.25);
   background:
-    radial-gradient(ellipse at center bottom, rgba(255, 255, 255, 0.2), transparent 75%) center
+    radial-gradient(ellipse at center bottom, rgba(232, 165, 52, 0.2), transparent 75%) center
       bottom,
-    radial-gradient(ellipse at center bottom, rgba(255, 255, 255, 0.1), transparent 75%) center
+    radial-gradient(ellipse at center bottom, rgba(232, 165, 52, 0.1), transparent 75%) center
       bottom;
   background-size:
     125% 30%,
