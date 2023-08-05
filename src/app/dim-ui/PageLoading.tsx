@@ -26,7 +26,7 @@ export default function PageLoading() {
   const message = useSelector(messageSelector);
   const nodeRef = useRef<HTMLDivElement>(null);
   return (
-    message !== undefined && (
+    Boolean(message) && (
       <motion.div
         ref={nodeRef}
         className={clsx('dim-page', styles.pageLoading)}
