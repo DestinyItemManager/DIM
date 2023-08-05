@@ -14,13 +14,13 @@ import { useSetCSSVarToHeight } from 'app/utils/hooks';
 import { infoLog } from 'app/utils/log';
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
+import { AnimatePresence, Spring, Variants, motion } from 'framer-motion';
 import logo from 'images/logo-type-right-light.svg';
 import _ from 'lodash';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { Link, NavLink } from 'react-router-dom';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useSubscription } from 'use-subscription';
 import ClickOutside from '../dim-ui/ClickOutside';
 import ExternalLink from '../dim-ui/ExternalLink';
@@ -46,12 +46,11 @@ const logoStyles = {
   test: undefined,
 } as const;
 
-const transitionClasses = {
-  enter: styles.dropdownEnter,
-  enterActive: styles.dropdownEnterActive,
-  exit: styles.dropdownExit,
-  exitActive: styles.dropdownExitActive,
-} as const;
+const menuAnimateVariants: Variants = {
+  open: { x: 0 },
+  collapsed: { x: -250 },
+};
+const menuAnimateTransition: Spring = { type: 'spring', duration: 0.3, bounce: 0 };
 
 // TODO: finally time to hack apart the header styles!
 
@@ -293,20 +292,22 @@ export default function Header() {
           <AppIcon icon={menuIcon} />
           <MenuBadge />
         </button>
-        <TransitionGroup component={null}>
+        <AnimatePresence>
           {dropdownOpen && (
-            <CSSTransition
-              nodeRef={dropdownRef}
-              classNames={transitionClasses}
-              timeout={{ enter: 500, exit: 500 }}
+            <motion.div
+              key="dropdown"
+              className={styles.dropdown}
+              role="menu"
+              initial="collapsed"
+              animate="open"
+              exit="collapsed"
+              variants={menuAnimateVariants}
+              transition={menuAnimateTransition}
             >
               <ClickOutside
                 ref={dropdownRef}
                 extraRef={dropdownToggler}
-                key="dropdown"
-                className={styles.dropdown}
                 onClickOutside={hideDropdown}
-                role="menu"
               >
                 {destinyLinks}
                 <hr />
@@ -334,9 +335,9 @@ export default function Header() {
                 {dimLinks}
                 <MenuAccounts closeDropdown={hideDropdown} />
               </ClickOutside>
-            </CSSTransition>
+            </motion.div>
           )}
-        </TransitionGroup>
+        </AnimatePresence>
         <Link to="/" className={clsx(styles.menuItem, styles.logoLink)}>
           <img
             className={clsx(styles.logo, logoStyles[$DIM_FLAVOR])}

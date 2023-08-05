@@ -16,7 +16,7 @@ import { isiOSBrowser } from 'app/utils/browsers';
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import { UseComboboxState, UseComboboxStateChangeOptions, useCombobox } from 'downshift';
-import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
+import { AnimatePresence, LayoutGroup, Variants, motion } from 'framer-motion';
 import _ from 'lodash';
 import React, {
   Suspense,
@@ -53,6 +53,11 @@ import { canonicalizeQuery, parseQuery } from './query-parser';
 import { searchConfigSelector } from './search-config';
 import { validateQuerySelector } from './search-filter';
 import './search-filter.scss';
+
+export const searchButtonAnimateVariants: Variants = {
+  hidden: { scale: 0 },
+  shown: { scale: 1 },
+};
 
 const searchItemIcons: { [key in SearchItemType]: string } = {
   [SearchItemType.Recent]: faClock,
@@ -534,10 +539,10 @@ function SearchBar(
 
             {liveQuery.length > 0 && (saveable || saved) && !isPhonePortrait && (
               <motion.button
-                layout
-                exit={{ scale: 0 }}
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
+                variants={searchButtonAnimateVariants}
+                exit="hidden"
+                initial="hidden"
+                animate="shown"
                 key="save"
                 type="button"
                 className={clsx(styles.filterBarButton, styles.saveSearchButton)}
@@ -550,10 +555,10 @@ function SearchBar(
 
             {(liveQuery.length > 0 || (isPhonePortrait && mainSearchBar)) && (
               <motion.button
-                layout
-                exit={{ scale: 0 }}
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
+                variants={searchButtonAnimateVariants}
+                exit="hidden"
+                initial="hidden"
+                animate="shown"
                 key="clear"
                 type="button"
                 className={styles.filterBarButton}

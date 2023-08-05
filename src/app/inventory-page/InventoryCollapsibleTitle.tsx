@@ -1,4 +1,5 @@
 import { collapsedSelector } from 'app/dim-api/selectors';
+import { CollapsedSection } from 'app/dim-ui/CollapsibleTitle';
 import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
 import {
@@ -8,7 +9,6 @@ import {
 } from 'app/loadout-drawer/postmaster';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
-import { AnimatePresence, motion } from 'framer-motion';
 import React, { useCallback, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import '../dim-ui/CollapsibleTitle.scss';
@@ -113,24 +113,7 @@ export default function InventoryCollapsibleTitle({
           })}
       </div>
 
-      <AnimatePresence>
-        {!collapsed && (
-          <motion.div
-            key="content"
-            initial={initialMount.current ? false : 'collapsed'}
-            animate="open"
-            exit="collapsed"
-            variants={{
-              open: { height: 'auto' },
-              collapsed: { height: 0 },
-            }}
-            transition={{ duration: 0.3 }}
-            className="collapse-content"
-          >
-            {children}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <CollapsedSection collapsed={collapsed}>{children}</CollapsedSection>
     </>
   );
 }

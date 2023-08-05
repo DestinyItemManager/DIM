@@ -12,10 +12,16 @@ import { errorMessage } from 'app/utils/util';
 import Cost from 'app/vendors/Cost';
 import clsx from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, Tween, Variants, motion } from 'framer-motion';
 import _ from 'lodash';
 import { useState } from 'react';
 import styles from './EnergyMeter.m.scss';
+
+const upgradeAnimateVariants: Variants = {
+  shown: { height: 'auto', opacity: 1 },
+  hidden: { height: 0, opacity: 0 },
+};
+const upgradeAnimateTransition: Tween = { duration: 0.3 };
 
 export default function EnergyMeter({ item }: { item: DimItem }) {
   const defs = useD2Definitions()!;
@@ -92,14 +98,11 @@ export default function EnergyMeter({ item }: { item: DimItem }) {
           {previewCapacity > minCapacity && (
             <motion.div
               className={styles.upgradePreview}
-              initial="collapsed"
-              animate="open"
-              exit="collapsed"
-              variants={{
-                open: { height: 'auto', opacity: 1 },
-                collapsed: { height: 0, opacity: 0 },
-              }}
-              transition={{ duration: 0.3 }}
+              initial="hidden"
+              animate="shown"
+              exit="hidden"
+              variants={upgradeAnimateVariants}
+              transition={upgradeAnimateTransition}
             >
               <EnergyUpgradePreview
                 item={item}

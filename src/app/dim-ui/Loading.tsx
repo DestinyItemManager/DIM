@@ -1,17 +1,24 @@
+import { AnimatePresence, Orchestration, Tween, Variants, motion } from 'framer-motion';
 import _ from 'lodash';
-import { useRef } from 'react';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import styles from './Loading.m.scss';
 
-const transitionClasses = {
-  enter: styles.textEnter,
-  enterActive: styles.textEnterActive,
-  exit: styles.textExit,
-  exitActive: styles.textExitActive,
+const containerAnimateVariants: Variants = {
+  initial: { opacity: 0 },
+  open: { opacity: 1 },
+};
+const containerAnimateTransition: Tween & Orchestration = {
+  duration: 0.5,
+  delay: 1,
 };
 
+const messageAnimateVariants: Variants = {
+  initial: { y: -16, opacity: 0 },
+  open: { y: 0, opacity: 1 },
+  leave: { y: 16, opacity: 0 },
+};
+const messageAnimateTransition: Tween = { duration: 0.2, ease: 'easeOut' };
+
 export function Loading({ message }: { message?: string }) {
-  const nodeRef = useRef<HTMLDivElement>(null);
   return (
     <section className={styles.loading}>
       <div className={styles.container}>
@@ -20,20 +27,29 @@ export function Loading({ message }: { message?: string }) {
         ))}
       </div>
 
-      {message && (
-        <TransitionGroup className={styles.textContainer}>
-          <CSSTransition
-            key={message}
-            nodeRef={nodeRef}
-            classNames={transitionClasses}
-            timeout={{ enter: 200, exit: 200 }}
-          >
-            <div ref={nodeRef} className={styles.text}>
+      <motion.div
+        className={styles.textContainer}
+        initial="initial"
+        animate="open"
+        variants={containerAnimateVariants}
+        transition={containerAnimateTransition}
+      >
+        <AnimatePresence>
+          {message && (
+            <motion.div
+              key={message}
+              className={styles.text}
+              initial="initial"
+              animate="open"
+              exit="leave"
+              variants={messageAnimateVariants}
+              transition={messageAnimateTransition}
+            >
               {message}
-            </div>
-          </CSSTransition>
-        </TransitionGroup>
-      )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </section>
   );
 }
