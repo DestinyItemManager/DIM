@@ -72,14 +72,22 @@ $commonBg: #366f42;
 }
 
 // Masterwork pattern emulating .src/images/masterwork.png
-// Tint hue is based an RGB of $stat-masterworked
+$rgb-masterworked: dim-hex-to-rgb-values($stat-masterworked);
 .legendaryMasterwork {
   box-shadow: inset 0 0 1px 0 rgba(0, 0, 0, 0.25);
   background:
-    radial-gradient(ellipse at center bottom, rgba(232, 165, 52, 0.2), transparent 75%) center
-      bottom,
-    radial-gradient(ellipse at center bottom, rgba(232, 165, 52, 0.1), transparent 75%) center
-      bottom;
+    radial-gradient(
+        ellipse at center bottom,
+        dim-rgb-values-to-rgba($rgb-masterworked, $alpha: 0.2),
+        transparent 75%
+      )
+      center bottom,
+    radial-gradient(
+        ellipse at center bottom,
+        dim-rgb-values-to-rgba($rgb-masterworked, $alpha: 0.1),
+        transparent 75%
+      )
+      center bottom;
   background-size:
     125% 30%,
     50% 50%;
