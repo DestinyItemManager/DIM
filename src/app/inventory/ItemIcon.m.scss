@@ -101,11 +101,10 @@ $rgb-masterworked: dim-hex-to-rgb-values($stat-masterworked);
   box-shadow: inset 0 0 1px 1px rgba(0, 0, 0, 0.15);
   background:
     linear-gradient(rgba(0, 0, 0, 0.3) 0%, transparent 20%),
-    linear-gradient(
-      transparent 50%,
-      rgba(255, 255, 255, 0.225) 65%,
-      rgba(255, 255, 255, 0.225) 100%
-    ),
+    radial-gradient(ellipse at center bottom, rgba(255, 255, 255, 0.225), transparent 75%) center
+      bottom,
+    radial-gradient(ellipse at center bottom, rgba(255, 255, 255, 0.15), transparent 75%) center
+      bottom,
     repeating-linear-gradient(
         to bottom right,
         #{$light-stripe} 0%,
@@ -141,7 +140,8 @@ $rgb-masterworked: dim-hex-to-rgb-values($stat-masterworked);
   background-repeat: no-repeat;
   background-size:
     100%,
-    100%,
+    125% 30%,
+    50% 50%,
     50% 50%,
     50% 50%,
     50% 50%,
