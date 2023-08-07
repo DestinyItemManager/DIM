@@ -73,7 +73,7 @@ if ($featureFlags.sentry) {
       }),
     ],
     tracesSampleRate: 0.001, // Performance traces at 0.1%
-    beforeSend: function (event, hint) {
+    beforeSend: (event, hint) => {
       const e = hint?.originalException;
       const underlyingError = e instanceof DimError ? e.cause : undefined;
 

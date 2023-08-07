@@ -36,8 +36,4 @@ export class DimError extends Error {
       ? this.cause.bungieErrorCode()
       : undefined;
   }
-
-  // TODO: handle specially in exceptions.ts
-  // TODO: show sentry report dialog if there's an option in this class
-  // TODO: optional help link
 }
