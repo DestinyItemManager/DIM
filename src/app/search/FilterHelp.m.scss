@@ -8,15 +8,18 @@
     padding: 0;
     border-collapse: collapse;
     border-spacing: 0;
-    background-color: #222;
+    background-color: rgba(255, 255, 255, 0.15);
     width: 100%;
 
     @include phone-portrait {
       table-layout: fixed;
     }
 
+    tr:nth-child(2n) {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
     tr:nth-child(2n + 1) {
-      background-color: #1b1b1b;
+      background-color: rgba(0, 0, 0, 0.3);
     }
   }
   th {
@@ -53,6 +56,10 @@
 
 .search {
   margin: 8px 0 !important;
+
+  :global(.search-filter) {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
 }
 
 .entry {
