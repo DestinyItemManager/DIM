@@ -154,7 +154,7 @@ export default function LoadoutEdit({
   const handleClearSubclass = withDefsUpdater(clearSubclass);
   const handleSyncModsFromEquipped = () => setLoadout(syncModsFromEquipped(store));
   const handleSyncArtifactUnlocksFromEquipped = () =>
-    setLoadout(syncArtifactUnlocksFromEquipped(store, profileResponse));
+    setLoadout(syncArtifactUnlocksFromEquipped(unlockedArtifactMods));
   const handleClearArtifactUnlocks = withUpdater(clearArtifactUnlocks);
   const handleRemoveArtifactUnlock = withUpdater(removeArtifactUnlock);
   const handleSetClear = withUpdater(setClearSpace);
