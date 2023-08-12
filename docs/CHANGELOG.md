@@ -1,5 +1,7 @@
 ## Next
 
+* Again fixed unsaving previously saved, now invalid search queries.
+
 ## 7.80.0 <span class="changelog-date">(2023-08-06)</span>
 
 * Fixed "Fill in using equipped" in a Loadout's subclass section failing to copy Aspects and Fragments.
