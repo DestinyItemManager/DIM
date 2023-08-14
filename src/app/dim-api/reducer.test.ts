@@ -664,14 +664,14 @@ describe('saveSearch', () => {
     );
 
     updatedState = dimApi(
-      state,
+      updatedState,
       saveSearch({ query: '(is:masterwork) (is:weapon)', saved: false }),
       currentAccount
     );
 
     expect(updatedState.searches).toMatchObject({
       [1]: [],
-      [2]: [{ query: 'is:masterwork is:weapon', saved: true }],
+      [2]: [{ query: 'is:masterwork is:weapon', saved: false }],
     });
   });
 
