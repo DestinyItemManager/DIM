@@ -731,7 +731,7 @@
     "OnWrongCharacterWarning": "Die mächtigste Rüstung dieses Charakters ist auf einem anderen Charakter. Um zur Power für Drops und für mächtige und Spitzen-Belohnungen zu zählen, muss die Rüstung auf diesem Charakter oder im Tresor sein.",
     "OnlyItems": "Es können nur ausrüstbare Gegenstände, Materialien und Verbrauchs-Gegenstände zu einer Ausrüstung hinzugefügt werden.",
     "OpenInOptimizer": "Rüstung optimieren",
-    "PickArmor": "Pick Armor",
+    "PickArmor": "Wähle Rüstung",
     "PickMods": "Rüstungsmods hinzufügen",
     "PullFromPostmaster": "Poststelle einsammeln",
     "PullFromPostmasterError": "Abrufen von Poststelle nicht möglich: {{error}}.",
@@ -746,7 +746,7 @@
     "Random": "Zufällig",
     "Randomize": "Zufällige Ausrüstung",
     "RandomizeButton": "Zufällig generieren",
-    "RandomizeNew": "Create Random",
+    "RandomizeNew": "Zufällig erstellen",
     "RandomizeQueryHint": "Tipp: Benutze zuerst die Suche, um einzuschränken, zwischen welchen Gegenständen zufällig ausgewählt wird.",
     "RandomizeSearch": "Zufällig von Suche",
     "RandomizeSearchPrompt": "Zufällige Gegenstände von der Suche \"{{query}}\" ausrüsten?",
@@ -1263,7 +1263,7 @@
     "GildingTriumph": "Triumph-Vergoldung",
     "HideCompleted": "Abgeschlossene Triumphe ausblenden",
     "RevealRedacted": "Versteckte Triumphe enthüllen",
-    "SortRecords": "Sort triumphs by completion"
+    "SortRecords": "Triumphe nach Fertigstellung sortieren"
   },
   "Vendors": {
     "Collections": "Sammlungen",
