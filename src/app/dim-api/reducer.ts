@@ -1193,7 +1193,7 @@ function saveSearch(
   const { canonical, saveable } = parseAndValidateQuery(query, filtersMap, {
     customStats: draft.settings.customStats ?? [],
   } as FilterContext);
-  if (!saveable) {
+  if (!saveable && saved) {
     errorLog('searchUsed', 'Query not eligible to be saved', query);
     return;
   }

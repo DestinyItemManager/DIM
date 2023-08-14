@@ -4,7 +4,7 @@ import { setSettingAction } from 'app/settings/actions';
 import { BungieMembershipType, DestinyClass } from 'bungie-api-ts/destiny2';
 import copy from 'fast-copy';
 import { DeleteLoadoutUpdateWithRollback } from './api-types';
-import { finishedUpdates, prepareToFlushUpdates } from './basic-actions';
+import { finishedUpdates, prepareToFlushUpdates, saveSearch } from './basic-actions';
 import { DimApiState, initialState as apiInitialState, dimApi } from './reducer';
 
 const currentAccount: DestinyAccount = {
@@ -633,5 +633,81 @@ describe('finishedUpdates', () => {
 
     expect(updatedState.updateInProgressWatermark).toBe(0);
     expect(updatedState.updateQueue).toEqual([]);
+  });
+});
+
+describe('saveSearch', () => {
+  it('can save valid queries', () => {
+    const state: DimApiState = {
+      ...initialState,
+    };
+    const updatedState = dimApi(
+      state,
+      saveSearch({ query: '(is:masterwork) (is:weapon)', saved: true }),
+      currentAccount
+    );
+
+    expect(updatedState.searches).toMatchObject({
+      [1]: [],
+      [2]: [{ query: 'is:masterwork is:weapon', saved: true }],
+    });
+  });
+
+  it('can unsave valid queries', () => {
+    const state: DimApiState = {
+      ...initialState,
+    };
+    let updatedState = dimApi(
+      state,
+      saveSearch({ query: '(is:masterwork) (is:weapon)', saved: true }),
+      currentAccount
+    );
+
+    updatedState = dimApi(
+      updatedState,
+      saveSearch({ query: '(is:masterwork) (is:weapon)', saved: false }),
+      currentAccount
+    );
+
+    expect(updatedState.searches).toMatchObject({
+      [1]: [],
+      [2]: [{ query: 'is:masterwork is:weapon', saved: false }],
+    });
+  });
+
+  it('does not save invalid queries', () => {
+    const state: DimApiState = {
+      ...initialState,
+    };
+    const updatedState = dimApi(
+      state,
+      saveSearch({ query: 'deepsight:incomplete', saved: true }),
+      currentAccount
+    );
+    expect(updatedState.searches).toMatchObject({
+      [1]: [],
+      [2]: [],
+    });
+  });
+
+  it('can unsave invalid queries', () => {
+    const state: DimApiState = {
+      ...initialState,
+      searches: {
+        [1]: [],
+        [2]: [{ usageCount: 1, lastUsage: 919191, saved: true, query: 'deepsight:incomplete' }],
+      },
+    };
+    const updatedState = dimApi(
+      state,
+      saveSearch({ query: 'deepsight:incomplete', saved: false }),
+      currentAccount
+    );
+
+    // FIXME maybe delete this outright? It'll be cleaned up the next time DIM loads the remote profile anyway...
+    expect(updatedState.searches).toMatchObject({
+      [1]: [],
+      [2]: [{ usageCount: 1, saved: false, query: 'deepsight:incomplete' }],
+    });
   });
 });
