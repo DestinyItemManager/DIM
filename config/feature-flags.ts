@@ -40,7 +40,10 @@ export function makeFeatureFlags(env: { release: boolean; beta: boolean; dev: bo
     loadoutFilterPills: true,
     // Request the PresentationNodes component only needed during
     // Solstice to associate each character with a set of triumphs.
-    solsticePresentationNodes: true,
+    // Solstice 2022 had a set of challenges for each character,
+    // while Solstice 2023 had shared progress/challenges, so maybe
+    // this won't be needed going forward?
+    solsticePresentationNodes: false,
     // not ready to turn these on but the code is there
     customStatWeights: false,
     // Allow for non-default visual themes
