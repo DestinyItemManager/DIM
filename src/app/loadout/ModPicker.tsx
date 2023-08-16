@@ -19,6 +19,7 @@ import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { uniqBy } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import { produce } from 'immer';
 import _ from 'lodash';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
@@ -53,7 +54,7 @@ function useUnlockedPlugSets(
    * Build up a list of PlugSets used by armor in the user's inventory, and the
    * plug items contained within them, restricted to an optional plugCategoryHashWhitelist and plugCategoryHashDenyList
    */
-  return useMemo((): PlugSet[] => {
+  const plugSets = useMemo((): PlugSet[] => {
     const plugSetsByHash: { [plugSetHash: number]: PlugSet } = {};
     if (!profileResponse || !defs) {
       return emptyArray();
@@ -163,6 +164,25 @@ function useUnlockedPlugSets(
 
     const plugSets = Object.values(plugSetsByHash);
 
+    // However, sort the plugSets so that regular armor plugsets are preferred.
+    // Assigning the first artifact mod to the (Artifice Armor) header is confusing
+    // when a user doesn't have any artifice armor in the loadouts because the mod
+    // assignment might not actually need any artifice sockets.
+    plugSets.sort(compareBy((plugSet) => -plugSet.plugs.length));
+    return plugSets;
+  }, [
+    allItems,
+    classType,
+    currentStore,
+    defs,
+    owner,
+    plugCategoryHashDenyList,
+    plugCategoryHashWhitelist,
+    profileResponse,
+  ]);
+
+  // Make a copy with the selected mods filled in. This way we only reprocess this bit when the lockedMods changes.
+  return useMemo((): PlugSet[] => {
     // Order our mods so that we assign the most picky mods first (the mods that have the fewest
     // plugSets containing them). This is necessary for artifact mods in artificer sockets and
     // essentially the same logic that actual mod assignment uses.
@@ -171,38 +191,22 @@ function useUnlockedPlugSets(
       (mod) => plugSets.filter((s) => s.plugs.some((p) => p.hash === mod.resolvedMod.hash)).length
     );
 
-    // However, sort the plugSets so that regular armor plugsets are preferred.
-    // Assigning the first artifact mod to the (Artifice Armor) header is confusing
-    // when a user doesn't have any artifice armor in the loadouts because the mod
-    // assignment might not actually need any artifice sockets.
-    plugSets.sort(compareBy((plugSet) => -plugSet.plugs.length));
-
     // Now we populate the plugsets with their corresponding plugs.
-    for (const initiallySelected of orderedMods) {
-      const possiblePlugSets = plugSets.filter((set) =>
-        set.plugs.some((plug) => plug.hash === initiallySelected.resolvedMod.hash)
-      );
+    return produce(plugSets, (draft) => {
+      for (const initiallySelected of orderedMods) {
+        const possiblePlugSets = draft.filter((set) =>
+          set.plugs.some((plug) => plug.hash === initiallySelected.resolvedMod.hash)
+        );
 
-      for (const possiblePlugSet of possiblePlugSets) {
-        if (possiblePlugSet.selected.length < possiblePlugSet.maxSelectable) {
-          possiblePlugSet.selected.push(initiallySelected.resolvedMod);
-          break;
+        for (const possiblePlugSet of possiblePlugSets) {
+          if (possiblePlugSet.selected.length < possiblePlugSet.maxSelectable) {
+            possiblePlugSet.selected.push(initiallySelected.resolvedMod);
+            break;
+          }
         }
       }
-    }
-
-    return plugSets;
-  }, [
-    allItems,
-    classType,
-    currentStore,
-    defs,
-    lockedMods,
-    owner,
-    plugCategoryHashDenyList,
-    plugCategoryHashWhitelist,
-    profileResponse,
-  ]);
+    });
+  }, [lockedMods, plugSets]);
 }
 
 /**
