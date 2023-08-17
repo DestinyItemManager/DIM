@@ -16,7 +16,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { produce } from 'immer';
 import _ from 'lodash';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import CharacterSelect from '../../dim-ui/CharacterSelect';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
@@ -138,15 +138,14 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
 
   useEffect(() => {
     const calculateSets = () => {
-      const active = selectedCharacter;
       cancelToken.current.cancelled = true;
       cancelToken.current = {
         cancelled: false,
       };
       getSetBucketsStep(
-        active,
-        loadBucket(active, stores),
-        loadVendorsBucket(active, state.vendors),
+        selectedCharacter,
+        loadBucket(selectedCharacter, stores),
+        loadVendorsBucket(selectedCharacter, state.vendors),
         state.lockeditems,
         state.lockedperks,
         state.excludeditems,
@@ -206,8 +205,9 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vendorsLoaded]);
 
-  const calculateActivePerks = (active: D1Store) => {
-    const { vendors, includeVendors } = state;
+  const activePerks = useMemo(() => {
+    const vendors = state.vendors;
+    const includeVendors = state.includeVendors;
 
     const perks: { [classType in ClassTypes]: PerkCombination } = {
       [DestinyClass.Warlock]: {
@@ -347,11 +347,11 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
     }
 
     return getActiveBuckets<D1GridNode[]>(
-      perks[active.classType as ClassTypes],
-      vendorPerks[active.classType as ClassTypes],
+      perks[selectedCharacter.classType as ClassTypes],
+      vendorPerks[selectedCharacter.classType as ClassTypes],
       includeVendors
     );
-  };
+  }, [selectedCharacter.classType, state.vendors, state.includeVendors, stores]);
 
   const toggleShowHelp = () => setStateFull((state) => ({ ...state, showHelp: !state.showHelp }));
   const toggleShowAdvanced = () =>
@@ -455,7 +455,6 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
   };
 
   const lockEquipped = () => {
-    const store = selectedCharacter;
     const lockEquippedTypes = [
       'helmet',
       'gauntlets',
@@ -466,7 +465,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
       'ghost',
     ];
     const items = _.groupBy(
-      store.items.filter(
+      selectedCharacter.items.filter(
         (item) =>
           itemCanBeInLoadout(item) &&
           item.equipped &&
@@ -532,8 +531,6 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
-  const active = selectedCharacter;
-
   const i18nItemNames: { [key: string]: string } = _.zipObject(
     ['Helmet', 'Gauntlets', 'Chest', 'Leg', 'ClassItem', 'Artifact', 'Ghost'],
     [
@@ -549,12 +546,11 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
 
   // Armor of each type on a particular character
   // TODO: don't even need to load this much!
-  let bucket = loadBucket(active, stores);
+  let bucket = loadBucket(selectedCharacter, stores);
   if (includeVendors) {
-    bucket = mergeBuckets(bucket, loadVendorsBucket(active, vendors));
+    bucket = mergeBuckets(bucket, loadVendorsBucket(selectedCharacter, vendors));
   }
 
-  const activePerks = calculateActivePerks(active);
   const hasSets = allSetTiers.length > 0;
 
   const activeHighestSets = getActiveHighestSets(highestsets, activesets);
@@ -564,7 +560,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
       <PageWithMenu.Menu>
         <div className="character-select">
           <CharacterSelect
-            selectedStore={active}
+            selectedStore={selectedCharacter}
             stores={stores}
             onCharacterChanged={onSelectedChange}
           />
@@ -574,7 +570,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
         <CollapsibleTitle
           defaultCollapsed={true}
           sectionId="lb1-classitems"
-          title={t('LB.ShowGear', { class: active.className })}
+          title={t('LB.ShowGear', { class: selectedCharacter.className })}
         >
           <div className="section all-armor">
             {/* TODO: break into its own component */}
@@ -783,7 +779,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
               {activeHighestSets.map((setType) => (
                 <GeneratedSet
                   key={setType.set.setHash}
-                  store={active}
+                  store={selectedCharacter}
                   setType={setType}
                   activesets={activesets}
                   excludeItem={excludeItem}
