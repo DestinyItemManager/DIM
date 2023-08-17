@@ -61,6 +61,7 @@ export function makeCharacter(
     race: raceLocalizedName,
     genderRace,
     genderName: genderTypeToEnglish[gender.genderType] ?? '',
+    genderHash: character.genderHash,
     isVault: false,
     color: character.emblemColor,
     titleInfo: character.titleRecordHash

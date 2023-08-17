@@ -1,4 +1,4 @@
-import { createItemContextSelector } from 'app/inventory/selectors';
+import { createItemContextSelector, currentStoreSelector } from 'app/inventory/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { ItemFilter } from 'app/search/filter-types';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
@@ -63,14 +63,17 @@ export default function PresentationNodeRoot({
     fullNodePath.unshift(presentationNodeHash);
   }
 
+  const currentStore = useSelector(currentStoreSelector);
+
   const nodeTree = useMemo(
     () =>
       toPresentationNodeTree(
         itemCreationContext,
         presentationNodeHash,
-        showPlugSets ? plugSetCollections : []
+        showPlugSets ? plugSetCollections : [],
+        currentStore?.genderHash
       ),
-    [itemCreationContext, presentationNodeHash, showPlugSets]
+    [itemCreationContext, presentationNodeHash, showPlugSets, currentStore?.genderHash]
   );
 
   if (!nodeTree) {

@@ -35,6 +35,8 @@ export interface DimStore<Item = DimItem> {
   className: string;
   /** Localized gender. */
   gender: string;
+  /** The character's gender hash. */
+  genderHash?: number;
   /** Localized race. */
   race: string;
   /** Localized gender and race together. */
