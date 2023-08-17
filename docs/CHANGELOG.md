@@ -1,6 +1,7 @@
 ## Next
 
 * Again fixed unsaving previously saved, now invalid search queries.
+* The "Titles" section on the Records page now shows the corresponding title instead of the seal name (e.g. Dredgen and Rivensbane instead of "Gambit" and "Raids").
 
 ## 7.81.0 <span class="changelog-date">(2023-08-13)</span>
 

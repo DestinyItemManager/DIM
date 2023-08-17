@@ -37,7 +37,7 @@ export interface DimPresentationNodeLeaf {
 export interface DimPresentationNode extends DimPresentationNodeLeaf {
   /**
    * The node definition may be missing if it's one of the fake nodes for PlugSets.
-   * The required properties `hash`, `name` and `icon` are duplicated from the def
+   * The required properties `hash`, `name` and `icon` are derived from the def
    * or generated with fake info.
    */
   nodeDef: DestinyPresentationNodeDefinition | undefined;
@@ -48,6 +48,11 @@ export interface DimPresentationNode extends DimPresentationNodeLeaf {
   visible: number;
   acquired: number;
   childPresentationNodes?: DimPresentationNode[];
+  /**
+   * The record containing the title for seal presentation nodes.
+   * Contains some searchable strings.
+   */
+  completionRecord?: DestinyRecordDefinition;
 }
 
 export interface DimRecord {
@@ -96,18 +101,34 @@ export interface DimPresentationNodeSearchResult extends DimPresentationNodeLeaf
 export function toPresentationNodeTree(
   itemCreationContext: ItemCreationContext,
   node: number,
-  plugSetCollections?: { hash: number; displayItem: number }[]
+  plugSetCollections?: { hash: number; displayItem: number }[],
+  genderHash?: number
 ): DimPresentationNode | null {
   const { defs, buckets, profileResponse } = itemCreationContext;
   const presentationNodeDef = defs.PresentationNode.get(node);
   if (presentationNodeDef.redacted) {
     return null;
   }
+
+  // For titles, this is the record containing the actual title
+  const completionRecord = presentationNodeDef.completionRecordHash
+    ? defs.Record.get(presentationNodeDef.completionRecordHash)
+    : undefined;
+
+  // And the title is usually what people expect, not the seal presentation node name
+  // (which in some cases is extremely misleading/bad, e.g. "Raids" for Rivensbane)
+  const overrideName =
+    genderHash &&
+    completionRecord &&
+    completionRecord.titleInfo?.hasTitle &&
+    completionRecord.titleInfo?.titlesByGenderHash[genderHash];
+
   const commonNodeProperties = {
     nodeDef: presentationNodeDef,
     hash: presentationNodeDef.hash,
-    name: presentationNodeDef.displayProperties.name,
+    name: overrideName || presentationNodeDef.displayProperties.name,
     icon: presentationNodeDef.displayProperties.icon,
+    completionRecord,
   };
   if (presentationNodeDef.children.collectibles?.length) {
     const collectibles = toCollectibles(
@@ -176,7 +197,8 @@ export function toPresentationNodeTree(
       const subnode = toPresentationNodeTree(
         itemCreationContext,
         presentationNode.presentationNodeHash,
-        undefined
+        undefined,
+        genderHash
       );
       if (subnode) {
         acquired += subnode.acquired;
@@ -245,11 +267,7 @@ export function filterPresentationNodesToSearch(
   defs: D2ManifestDefinitions
 ): DimPresentationNodeSearchResult[] {
   // If the node itself matches
-  if (
-    node.nodeDef
-      ? searchDisplayProperties(node.nodeDef.displayProperties, searchQuery)
-      : node.name.toLowerCase().includes(searchQuery)
-  ) {
+  if (searchNode(node, searchQuery)) {
     // Return this whole node
     return [{ path: [...path, node] }];
   }
@@ -344,6 +362,18 @@ export function filterPresentationNodesToSearch(
   }
 
   return [];
+}
+
+function searchNode(node: DimPresentationNode, searchQuery: string) {
+  return (
+    (node.nodeDef &&
+      (searchDisplayProperties(node.nodeDef.displayProperties, searchQuery) ||
+        // titleInfo can be missing for classified titles
+        Object.values(node.completionRecord?.titleInfo?.titlesByGenderHash ?? {}).some((title) =>
+          title.toLowerCase().includes(searchQuery)
+        ))) ||
+    node.name.toLowerCase().includes(searchQuery)
+  );
 }
 
 export function searchDisplayProperties(
