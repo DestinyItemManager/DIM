@@ -33,17 +33,8 @@ export function MaterialCounts({
   const transmogCurrencies = useSelector(transmogCurrenciesSelector);
   const vendorCurrencyEngrams = useSelector(vendorCurrencyEngramsSelector);
 
-  const renderCurrencyGroup = (currencyGroup: AccountCurrency[]) =>
-    currencyGroup.map((currency) => (
-      <div className={styles.material} key={currency.itemHash}>
-        <span className={styles.amount}>{currency.quantity.toLocaleString()}</span>
-        <BungieImage src={currency.displayProperties.icon} />
-        <span>{currency.displayProperties.name}</span>
-      </div>
-    ));
-
   const content = [
-    includeCurrencies && renderCurrencyGroup(currencies),
+    includeCurrencies && <CurrencyGroup key="currencies" currencies={currencies} />,
     ...[seasonal, goodMats, crafting, showMats].map((matgroup) => (
       <React.Fragment key={matgroup[0]}>
         {matgroup.map((h) => {
@@ -70,8 +61,8 @@ export function MaterialCounts({
         })}
       </React.Fragment>
     )),
-    renderCurrencyGroup(vendorCurrencyEngrams),
-    renderCurrencyGroup(transmogCurrencies),
+    <CurrencyGroup key="engrams" currencies={vendorCurrencyEngrams} />,
+    <CurrencyGroup key="transmog" currencies={transmogCurrencies} />,
   ];
 
   return (
@@ -84,4 +75,14 @@ export function MaterialCounts({
       )}
     </div>
   );
+}
+
+function CurrencyGroup({ currencies }: { currencies: AccountCurrency[] }) {
+  return currencies.map((currency) => (
+    <div className={styles.material} key={currency.itemHash}>
+      <span className={styles.amount}>{currency.quantity.toLocaleString()}</span>
+      <BungieImage src={currency.displayProperties.icon} />
+      <span>{currency.displayProperties.name}</span>
+    </div>
+  ));
 }
