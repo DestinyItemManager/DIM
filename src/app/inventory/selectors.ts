@@ -295,7 +295,7 @@ export const unlockedPlugSetItemsSelector = currySelector(
   )
 );
 
-export function gatherUnlockedPlugSetItems(
+function gatherUnlockedPlugSetItems(
   characterId: string | undefined,
   profileResponse: DestinyProfileResponse | undefined
 ) {
@@ -341,6 +341,7 @@ export const dynamicStringsSelector = createSelector(profileResponseSelector, (p
   }
 });
 
+/** A flat list of all currently active artifact unlocks. */
 export const artifactUnlocksSelector = currySelector(
   createSelector(
     profileResponseSelector,
@@ -351,7 +352,7 @@ export const artifactUnlocksSelector = currySelector(
 );
 
 /** A flat list of all currently active artifact unlocks. */
-export function getArtifactUnlocks(
+function getArtifactUnlocks(
   profileResponse: DestinyProfileResponse,
   characterId: string
 ): LoadoutParameters['artifactUnlocks'] {
