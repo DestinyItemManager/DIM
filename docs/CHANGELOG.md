@@ -1,6 +1,7 @@
 ## Next
 
 * Again fixed unsaving previously saved, now invalid search queries.
+* Added vendor engrams to the materials tooltip/sheet accessible through or near the vault emblem.
 
 ## 7.81.0 <span class="changelog-date">(2023-08-13)</span>
 

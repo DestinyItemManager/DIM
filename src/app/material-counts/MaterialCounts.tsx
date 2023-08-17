@@ -1,10 +1,12 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import {
-  craftingMaterialCountsSelector,
   currenciesSelector,
   materialsSelector,
   transmogCurrenciesSelector,
+  vendorCurrencyEngramsSelector,
 } from 'app/inventory/selectors';
+import { AccountCurrency } from 'app/inventory/store-types';
+import { addDividers } from 'app/utils/react-utils';
 import clsx from 'clsx';
 import spiderMats from 'data/d2/spider-mats.json';
 import _ from 'lodash';
@@ -25,78 +27,60 @@ export function MaterialCounts({
   includeCurrencies?: boolean;
 }) {
   const allMats = useSelector(materialsSelector);
-  const craftingMaterialCounts = useSelector(craftingMaterialCountsSelector);
   const materials = _.groupBy(allMats, (m) => m.hash);
 
   const currencies = useSelector(currenciesSelector);
   const transmogCurrencies = useSelector(transmogCurrenciesSelector);
+  const vendorCurrencyEngrams = useSelector(vendorCurrencyEngramsSelector);
+
+  const renderCurrencyGroup = (currencyGroup: AccountCurrency[]) =>
+    currencyGroup.map((currency) => (
+      <div className={styles.material} key={currency.itemHash}>
+        <span className={styles.amount}>{currency.quantity.toLocaleString()}</span>
+        <BungieImage src={currency.displayProperties.icon} />
+        <span>{currency.displayProperties.name}</span>
+      </div>
+    ));
+
+  const content = [
+    includeCurrencies && renderCurrencyGroup(currencies),
+    ...[seasonal, goodMats, crafting, showMats].map((matgroup) => (
+      <React.Fragment key={matgroup[0]}>
+        {matgroup.map((h) => {
+          const items = materials[h];
+          if (!items) {
+            return null;
+          }
+          const amount = items.reduce((total, i) => total + i.amount, 0);
+          const item = items[0];
+          const materialName = item.name;
+          const icon = item.icon;
+
+          if (amount === undefined) {
+            return null;
+          }
+
+          return (
+            <div className={styles.material} key={h}>
+              <span className={styles.amount}>{amount.toLocaleString()}</span>
+              <BungieImage src={icon} />
+              <span>{materialName}</span>
+            </div>
+          );
+        })}
+      </React.Fragment>
+    )),
+    renderCurrencyGroup(vendorCurrencyEngrams),
+    renderCurrencyGroup(transmogCurrencies),
+  ];
 
   return (
     <div className={clsx(styles.materialCounts, { [styles.wide]: wide })}>
-      {includeCurrencies &&
-        currencies.map((currency) => (
-          <div className={styles.material} key={currency.itemHash}>
-            <span className={styles.amount}>{currency.quantity.toLocaleString()}</span>
-            <BungieImage src={currency.displayProperties.icon} />
-            <span>{currency.displayProperties.name}</span>
-          </div>
-        ))}
-      {[seasonal, goodMats, crafting, showMats].map((matgroup, i) => (
-        <React.Fragment key={matgroup[0]}>
-          {(includeCurrencies || i > 0) && (
-            <span className={styles.spanGrid}>
-              <hr />
-            </span>
-          )}
-          {/* tack on a special section when we hit the crafting mats group */}
-          {matgroup.includes(353704689) && (
-            <>
-              {craftingMaterialCounts.map(([name, icon, count]) => (
-                <React.Fragment key={name}>
-                  <span className={styles.amount}>{count.toLocaleString()}</span>
-                  <BungieImage src={icon} />
-                  <span>{name}</span>
-                </React.Fragment>
-              ))}
-            </>
-          )}
-          {matgroup.map((h) => {
-            const items = materials[h];
-            if (!items) {
-              return null;
-            }
-            const amount = items.reduce((total, i) => total + i.amount, 0);
-            const item = items[0];
-            const materialName = item.name;
-            const icon = item.icon;
-
-            if (amount === undefined) {
-              return null;
-            }
-
-            return (
-              <div className={styles.material} key={h}>
-                <span className={styles.amount}>{amount.toLocaleString()}</span>
-                <BungieImage src={icon} />
-                <span>{materialName}</span>
-              </div>
-            );
-          })}
-        </React.Fragment>
-      ))}
-      {transmogCurrencies.length > 0 && (
-        <>
-          <span className={styles.spanGrid}>
-            <hr />
-          </span>
-          {transmogCurrencies.map((currency) => (
-            <div className={styles.material} key={currency.itemHash}>
-              <span className={styles.amount}>{currency.quantity.toLocaleString()}</span>
-              <BungieImage src={currency.displayProperties.icon} />
-              <span>{currency.displayProperties.name}</span>
-            </div>
-          ))}
-        </>
+      {addDividers(
+        _.compact(content),
+        <span className={styles.spanGrid}>
+          <hr />
+        </span>
       )}
     </div>
   );

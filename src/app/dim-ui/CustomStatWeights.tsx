@@ -3,9 +3,9 @@ import { customStatsSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
+import { addDividers } from 'app/utils/react-utils';
 import { filterMap } from 'app/utils/util';
 import clsx from 'clsx';
-import React, { ReactElement, ReactNode, cloneElement } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './CustomStatWeights.m.scss';
 
@@ -65,9 +65,4 @@ export function CustomStatWeightsDisplay({
       )}
     </div>
   );
-}
-
-/** places a divider between each element of arr */
-function addDividers<T extends React.ReactNode>(arr: T[], divider: ReactElement): ReactNode[] {
-  return arr.flatMap((e, i) => [i ? cloneElement(divider, { key: `divider-${i}` }) : null, e]);
 }
