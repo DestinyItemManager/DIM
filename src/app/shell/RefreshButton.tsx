@@ -46,21 +46,12 @@ export default function RefreshButton({ className }: { className?: string }) {
 
   useHotkey('r', t('Hotkey.RefreshInventory'), refresh);
 
-  const profileAge = useProfileAge();
-  const outOfDate = profileAge !== undefined && profileAge > STALE_PROFILE_THRESHOLD;
+  const outOfDate = useProfileOutOfDate();
   const profileError = useSelector(profileErrorSelector);
   const showOutOfDateWarning = outOfDate && !active && !autoRefresh;
 
   return (
-    <PressTip
-      tooltip={
-        <RefreshButtonTooltip
-          autoRefresh={autoRefresh}
-          profileAge={profileAge}
-          profileError={profileError}
-        />
-      }
-    >
+    <PressTip tooltip={<RefreshButtonTooltip autoRefresh={autoRefresh} />}>
       <button
         type="button"
         className={clsx(styles.refreshButton, className, { disabled })}
@@ -88,18 +79,36 @@ function useProfileAge() {
     return () => clearInterval(interval);
   }, []);
 
+  return profileAge(profileMintedDate);
+}
+
+function profileAge(profileMintedDate: Date) {
   return profileMintedDate.getTime() === 0 ? undefined : Date.now() - profileMintedDate.getTime();
 }
 
-function RefreshButtonTooltip({
-  autoRefresh,
-  profileAge,
-  profileError,
-}: {
-  autoRefresh: boolean;
-  profileAge: number | undefined;
-  profileError: Error | undefined;
-}) {
+function profileOutOfDate(profileMintedDate: Date) {
+  const profileAgeMs = profileAge(profileMintedDate);
+  return profileAgeMs !== undefined && profileAgeMs > STALE_PROFILE_THRESHOLD;
+}
+
+/** Like useProfileAge but only sets a boolean to avoid lots of re-renders. */
+function useProfileOutOfDate() {
+  const profileMintedDate = useSelector(profileMintedSelector);
+  const [outOfDate, setOutOfDate] = useState(profileOutOfDate(profileMintedDate));
+  useEffect(() => {
+    setOutOfDate(profileOutOfDate(profileMintedDate));
+    const interval = setInterval(() => {
+      setOutOfDate(profileOutOfDate(profileMintedDate));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [profileMintedDate]);
+
+  return outOfDate;
+}
+
+function RefreshButtonTooltip({ autoRefresh }: { autoRefresh: boolean }) {
+  const profileAge = useProfileAge();
+  const profileError = useSelector(profileErrorSelector);
   const isManifestError = profileError?.name === 'ManifestError';
   const destinyVersion = useSelector(destinyVersionSelector);
 
