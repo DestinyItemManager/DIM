@@ -8,10 +8,9 @@ import {
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { filterUnlockedPlugs } from 'app/records/plugset-helpers';
 import { RootState } from 'app/store/types';
-import { emptyObject, emptySet } from 'app/utils/empty';
+import { emptyArray, emptyObject, emptySet } from 'app/utils/empty';
 import { currySelector } from 'app/utils/selector-utils';
 import { DestinyItemPlug, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import { resonantMaterialStringVarHashes } from 'data/d2/crafting-resonant-elements';
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import { createSelector } from 'reselect';
@@ -21,6 +20,7 @@ import { characterSortImportanceSelector, characterSortSelector } from '../setti
 import { ItemInfos, getNotes, getTag } from './dim-item-info';
 import { DimItem } from './item-types';
 import { collectNotesHashtags } from './note-hashtags';
+import { AccountCurrency } from './store-types';
 import { ItemCreationContext } from './store/d2-item-factory';
 import { getCurrentStore, getVault } from './stores-helpers';
 
@@ -115,6 +115,24 @@ export const transmogCurrenciesSelector = createSelector(
   (currencies) => currencies.filter((c) => transmogCurrencies.includes(c.itemHash))
 );
 
+/** Vendor engrams you can decrypt at a vendor or use for item focusing */
+export const vendorCurrencyEngramsSelector = createSelector(
+  d2ManifestSelector,
+  (state: RootState) => state.inventory.currencies,
+  (defs, currencies) => {
+    if (!defs) {
+      return emptyArray<AccountCurrency>();
+    }
+
+    return currencies.filter(
+      (curr) =>
+        defs.InventoryItem.get(curr.itemHash).inventory?.stackUniqueLabel.match(
+          /virtual_engram|\.virtual$/
+        )
+    );
+  }
+);
+
 /** materials/currencies that aren't top level stuff */
 export const materialsSelector = createSelector(allItemsSelector, (allItems) =>
   allItems.filter(
@@ -149,31 +167,6 @@ export const blockingProfileErrorSelector = (state: RootState) =>
 /** Whether DIM will automatically refresh on a schedule */
 export const autoRefreshEnabledSelector = (state: RootState) =>
   userIsPlayingSelector(state) && state.dimApi.globalSettings.autoRefresh;
-
-/** returns name/icon/amount for a hard-coded list of crafting materials */
-export const craftingMaterialCountsSelector = createSelector(
-  d2ManifestSelector,
-  profileResponseSelector,
-  (defs, profileResponse) => {
-    const numbersLookup = profileResponse?.profileStringVariables?.data?.integerValuesByHash;
-    const results: [name: string, icon: string, count: number][] = [];
-
-    if (defs && numbersLookup) {
-      for (const { materialHash, currentCountHash } of resonantMaterialStringVarHashes) {
-        const def = defs.InventoryItem.get(materialHash);
-
-        if (def) {
-          const { icon, name } = def.displayProperties;
-          const count = numbersLookup[currentCountHash];
-          if (icon && name && count !== undefined) {
-            results.push([name, icon, count]);
-          }
-        }
-      }
-    }
-    return results;
-  }
-);
 
 /**
  * All the dependencies for item creation. Don't use this before profile is loaded...
@@ -295,7 +288,7 @@ export const unlockedPlugSetItemsSelector = currySelector(
   )
 );
 
-export function gatherUnlockedPlugSetItems(
+function gatherUnlockedPlugSetItems(
   characterId: string | undefined,
   profileResponse: DestinyProfileResponse | undefined
 ) {
@@ -341,6 +334,7 @@ export const dynamicStringsSelector = createSelector(profileResponseSelector, (p
   }
 });
 
+/** A flat list of all currently active artifact unlocks. */
 export const artifactUnlocksSelector = currySelector(
   createSelector(
     profileResponseSelector,
@@ -351,7 +345,7 @@ export const artifactUnlocksSelector = currySelector(
 );
 
 /** A flat list of all currently active artifact unlocks. */
-export function getArtifactUnlocks(
+function getArtifactUnlocks(
   profileResponse: DestinyProfileResponse,
   characterId: string
 ): LoadoutParameters['artifactUnlocks'] {

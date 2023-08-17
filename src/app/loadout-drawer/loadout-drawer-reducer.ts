@@ -6,7 +6,6 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { D1BucketCategory, D2BucketCategory } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
-import { getArtifactUnlocks } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { getModExclusionGroup, mapToNonReducedModCostVariant } from 'app/loadout/mod-utils';
@@ -16,7 +15,7 @@ import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { filterMap } from 'app/utils/util';
-import { DestinyClass, DestinyProfileResponse, TierType } from 'bungie-api-ts/destiny2';
+import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import { Draft, produce } from 'immer';
 import _ from 'lodash';
@@ -631,11 +630,13 @@ export function updateModsByBucket(
  * Replace the artifact unlocks with the currently equipped ones.
  */
 export function syncArtifactUnlocksFromEquipped(
-  store: DimStore,
-  profileResponse: DestinyProfileResponse
+  artifactUnlocks:
+    | {
+        unlockedItemHashes: number[];
+        seasonNumber: number;
+      }
+    | undefined
 ): LoadoutUpdateFunction {
-  const artifactUnlocks = profileResponse && getArtifactUnlocks(profileResponse, store.id);
-
   if (artifactUnlocks?.unlockedItemHashes.length) {
     return setLoadoutParameters({
       artifactUnlocks,
