@@ -140,6 +140,8 @@ function handleRefreshTokenError(error: unknown): Promise<Tokens> {
         case 'AccessTokenHasExpired':
         case 'AuthorizationCodeInvalid':
         case 'AuthorizationRecordExpired':
+        case 'AuthorizationRecordRevoked':
+        case 'AuthorizationCodeStale':
           throw new FatalTokenError(
             `Refresh token expired or not valid, platform error ${data.error_description}`
           );
@@ -156,6 +158,8 @@ function handleRefreshTokenError(error: unknown): Promise<Tokens> {
         case PlatformErrorCodes.AccessTokenHasExpired:
         case PlatformErrorCodes.AuthorizationCodeInvalid:
         case PlatformErrorCodes.AuthorizationRecordExpired:
+        case PlatformErrorCodes.AuthorizationRecordRevoked:
+        case PlatformErrorCodes.AuthorizationCodeStale:
           throw new FatalTokenError(
             `Refresh token expired or not valid, platform error ${data.ErrorCode}`
           );
