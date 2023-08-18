@@ -9,10 +9,14 @@
 }
 
 .menuContent {
-  box-sizing: border-box;
-
   @include phone-portrait {
     padding: 0 10px;
+  }
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
   }
 }
 
@@ -76,7 +80,7 @@
 .undoRedo {
   display: flex;
   flex-direction: row;
-  margin: 10px 0;
+  margin: 6px 0;
 
   > * {
     flex: 1;
@@ -89,9 +93,4 @@
   user-select: text;
   display: inline;
   margin-left: 1em;
-}
-
-.area {
-  padding: 4px;
-  background-color: rgba(0, 0, 0, 0.4);
 }

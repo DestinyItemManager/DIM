@@ -4,6 +4,7 @@ import { t } from 'app/i18next-t';
 import { Dispatch, useCallback, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import styles from './EnergyOptions.m.scss';
+import { loMenuSection } from './LockArmorAndPerks';
 
 export default function EnergyOptions({
   assumeArmorMasterwork,
@@ -44,15 +45,13 @@ export default function EnergyOptions({
   );
 
   return (
-    <div className={styles.energyOptions}>
-      <div className={styles.settingGroup}>
-        <div className={styles.title}>{t('LoadoutBuilder.AssumeMasterwork')}</div>
-        <RadioButtons
-          value={assumeArmorMasterwork ?? AssumeArmorMasterwork.None}
-          onChange={handleChange}
-          options={assumeMasterworkOptions}
-        />
-      </div>
+    <div className={loMenuSection}>
+      <h3 className={styles.title}>{t('LoadoutBuilder.AssumeMasterwork')}</h3>
+      <RadioButtons
+        value={assumeArmorMasterwork ?? AssumeArmorMasterwork.None}
+        onChange={handleChange}
+        options={assumeMasterworkOptions}
+      />
     </div>
   );
 }
