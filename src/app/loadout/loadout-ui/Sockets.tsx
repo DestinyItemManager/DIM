@@ -22,7 +22,16 @@ const undesirablePlugs = [
   PlugCategoryHashes.V460PlugsArmorMasterworksStatResistance4,
 ];
 
-interface Props {
+/**
+ * Show sockets (mod slots) for a loadout armor item with the specified locked mods slotted into it.
+ */
+function Sockets({
+  item,
+  lockedMods,
+  size,
+  onSocketClick,
+  automaticallyPickedMods,
+}: {
   item: DimItem;
   lockedMods?: PluggableInventoryItemDefinition[];
   automaticallyPickedMods?: number[];
@@ -33,12 +42,7 @@ interface Props {
     // TODO: why not just pass the socketType hash or socket definition?
     plugCategoryHashWhitelist: number[]
   ) => void;
-}
-
-/**
- * Show sockets (mod slots) for a loadout armor item with the specified locked mods slotted into it.
- */
-function Sockets({ item, lockedMods, size, onSocketClick, automaticallyPickedMods }: Props) {
+}) {
   const defs = useD2Definitions()!;
   if (!item.sockets) {
     return null;
