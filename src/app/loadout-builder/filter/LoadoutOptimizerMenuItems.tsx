@@ -23,7 +23,7 @@ import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ExcludedItems, LockableBucketHashes, PinnedItems } from '../types';
 import ExoticArmorChoice from './ExoticArmorChoice';
 import ExoticPicker from './ExoticPicker';
-import styles from './LockArmorAndPerks.m.scss';
+import styles from './LoadoutOptimizerMenuItems.m.scss';
 import LockedItem from './LockedItem';
 
 export type ChooseItemFunction = (

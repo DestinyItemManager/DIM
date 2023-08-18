@@ -51,7 +51,7 @@ import {
   LoadoutOptimizerPinnedItems,
   LoadoutOptimizerSubclass,
   loMenuSection,
-} from './filter/LockArmorAndPerks';
+} from './filter/LoadoutOptimizerMenuItems';
 import TierSelect from './filter/TierSelect';
 import CompareLoadoutsDrawer from './generated-sets/CompareLoadoutsDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
