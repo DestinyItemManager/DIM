@@ -54,62 +54,27 @@ function useStableArray<T>(arr: T[]) {
  */
 const StoreBucketInner = memo(function StoreBucketInner({
   items,
-  sortItems,
   bucket,
   storeId,
   destinyVersion,
   storeName,
   storeClassType,
   isVault,
-  storeClassList,
-  characterOrder,
-  singleCharacter,
 }: {
   bucket: InventoryBucket;
-  singleCharacter: boolean;
   destinyVersion: DestinyVersion;
   storeId: string;
   storeName: string;
   storeClassType: DestinyClass;
   isVault: boolean;
   items: DimItem[];
-  sortItems: (items: readonly DimItem[]) => readonly DimItem[];
-  storeClassList: DestinyClass[];
-  characterOrder: string;
 }) {
   const dispatch = useThunkDispatch();
+  const sortItems = useSelector(itemSorterSelector);
 
   const pickEquipItem = useCallback(() => {
     dispatch(pullItem(storeId, bucket));
   }, [bucket, dispatch, storeId]);
-
-  // The vault divides armor by class
-  if (isVault && bucket.inArmor && !singleCharacter) {
-    const itemsByClass = _.groupBy(items, (item) => item.classType);
-    const classTypeOrder = _.sortBy(Object.keys(itemsByClass), (classType) => {
-      const classTypeNum = parseInt(classType, 10);
-      const index = storeClassList.findIndex((s) => s === classTypeNum);
-      return index === -1 ? 999 : characterOrder === 'mostRecentReverse' ? -index : index;
-    }).map((c) => parseInt(c, 10) as DestinyClass);
-
-    return (
-      <StoreBucketDropTarget
-        equip={false}
-        bucket={bucket}
-        storeId={storeId}
-        storeClassType={storeClassType}
-      >
-        {classTypeOrder.map((classType) => (
-          <React.Fragment key={classType}>
-            <ClassIcon classType={classType} className="armor-class-icon" />
-            {sortItems(itemsByClass[classType]).map((item) => (
-              <StoreInventoryItem key={item.index} item={item} />
-            ))}
-          </React.Fragment>
-        ))}
-      </StoreBucketDropTarget>
-    );
-  }
 
   const equippedItem = isVault ? undefined : items.find((i) => i.equipped);
   const unequippedItems = isVault ? sortItems(items) : sortItems(items.filter((i) => !i.equipped));
@@ -161,6 +126,9 @@ const StoreBucketInner = memo(function StoreBucketInner({
   );
 });
 
+/**
+ * The classes of each character, in the user's preferred order.
+ */
 const storeClassListSelector = createSelector(
   sortedStoresSelector,
   (stores) => stores.map((s) => s.classType).filter((c) => c !== DestinyClass.Unknown),
@@ -169,6 +137,58 @@ const storeClassListSelector = createSelector(
   { memoizeOptions: { resultEqualityCheck: shallowEqual } }
 );
 
+/**
+ * For armor in the vault, we separate items by which class they belong to. The
+ * arguments for this component are the bare minimum needed, so that we can
+ * memoize it to avoid unnecessary re-renders of unaffected buckets when moving
+ * items around. The StoreBucket component does the heavy lifting of picking
+ * apart these input props for VaultBucketDividedByClass.
+ */
+const VaultBucketDividedByClass = memo(function SingleCharacterVaultBucket({
+  items,
+  bucket,
+  storeId,
+  storeClassType,
+}: {
+  bucket: InventoryBucket;
+  storeId: string;
+  storeClassType: DestinyClass;
+  items: DimItem[];
+}) {
+  const storeClassList = useSelector(storeClassListSelector);
+  const characterOrder = useSelector(characterOrderSelector);
+  const sortItems = useSelector(itemSorterSelector);
+
+  // The vault divides armor by class
+  const itemsByClass = _.groupBy(items, (item) => item.classType);
+  const classTypeOrder = _.sortBy(Object.keys(itemsByClass), (classType) => {
+    const classTypeNum = parseInt(classType, 10);
+    const index = storeClassList.findIndex((s) => s === classTypeNum);
+    return index === -1 ? 999 : characterOrder === 'mostRecentReverse' ? -index : index;
+  }).map((c) => parseInt(c, 10) as DestinyClass);
+
+  return (
+    <StoreBucketDropTarget
+      equip={false}
+      bucket={bucket}
+      storeId={storeId}
+      storeClassType={storeClassType}
+    >
+      {classTypeOrder.map((classType) => (
+        <React.Fragment key={classType}>
+          <ClassIcon classType={classType} className="armor-class-icon" />
+          {sortItems(itemsByClass[classType]).map((item) => (
+            <StoreInventoryItem key={item.index} item={item} />
+          ))}
+        </React.Fragment>
+      ))}
+    </StoreBucketDropTarget>
+  );
+});
+
+/**
+ * The items for a single bucket on a single store.
+ */
 export default function StoreBucket({
   store,
   bucket,
@@ -180,9 +200,6 @@ export default function StoreBucket({
 }) {
   const currentStore = useSelector(currentStoreSelector);
   const stores = useSelector(storesSelector);
-  const sortItems = useSelector(itemSorterSelector);
-  const storeClassList = useSelector(storeClassListSelector);
-  const characterOrder = useSelector(characterOrderSelector);
 
   let items = findItemsByBucket(store, bucket.hash);
 
@@ -204,28 +221,31 @@ export default function StoreBucket({
     );
   }
 
-  const destinyVersion = store.destinyVersion;
-  const storeId = store.id;
-  const storeName = store.name;
-  const storeClassType = store.classType;
-  const isVault = store.isVault;
   const stableItems = useStableArray(items);
 
   // TODO: move grouping here?
 
+  // The vault divides armor by class
+  if (store.isVault && bucket.inArmor && !singleCharacter) {
+    return (
+      <VaultBucketDividedByClass
+        bucket={bucket}
+        storeId={store.id}
+        storeClassType={store.classType}
+        items={stableItems}
+      />
+    );
+  }
+
   return (
     <StoreBucketInner
       bucket={bucket}
-      singleCharacter={singleCharacter}
-      destinyVersion={destinyVersion}
-      storeId={storeId}
-      storeName={storeName}
-      storeClassType={storeClassType}
-      isVault={isVault}
+      destinyVersion={store.destinyVersion}
+      storeId={store.id}
+      storeName={store.name}
+      storeClassType={store.classType}
+      isVault={store.isVault}
       items={stableItems}
-      storeClassList={storeClassList}
-      characterOrder={characterOrder}
-      sortItems={sortItems}
     />
   );
 }
