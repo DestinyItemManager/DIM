@@ -191,7 +191,11 @@ export function getSetBucketsStep(
                       return;
                     }
                     if (processedCount % 50000 === 0) {
-                      infoLog('loadout optimizer', '50,000 combinations processed, still going...');
+                      infoLog(
+                        'loadout optimizer',
+                        processedCount,
+                        'combinations processed, still going...'
+                      );
                       setTimeout(() =>
                         step(activeGuardian, h, g, c, l, ci, gh, ar, processedCount)
                       );

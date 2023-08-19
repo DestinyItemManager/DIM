@@ -199,7 +199,7 @@ export default function Destiny() {
               account.destinyVersion === 2 ? (
                 <LoadoutBuilderContainer account={account} />
               ) : (
-                <D1LoadoutBuilder />
+                <D1LoadoutBuilder account={account} />
               )
             }
           />
