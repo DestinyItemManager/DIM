@@ -6028,7 +6028,7 @@ i18next-http-backend@^2.0.0:
   dependencies:
     cross-fetch "3.1.6"
 
-i18next-scanner@^4.0.0:
+i18next-scanner@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/i18next-scanner/-/i18next-scanner-4.3.0.tgz#853823a856d0b52ba6cfa579e874908154170f97"
   integrity sha512-pLMq5vf4wFl8VgSnTcG/8BQZRnc/dVaOPudcYWPb/Pbbk9E4vcOIfZ/NHfK/9Jrzkzkxw9pqLQfHwDfb8VzkwA==
