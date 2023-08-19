@@ -51,6 +51,7 @@ import { itemIncludesCategories } from './filtering-utils';
 
 import { compareSelectedItems } from 'app/compare/actions';
 
+import { useTableColumnSorts } from 'app/dim-ui/table-columns';
 import { errorMessage, filterMap } from 'app/utils/util';
 import { createPortal } from 'react-dom';
 // eslint-disable-next-line css-modules/no-unused-class
@@ -79,7 +80,7 @@ const downloadButtonSettings = [
 const MemoRow = memo(TableRow);
 
 export default function ItemTable({ categories }: { categories: ItemCategoryTreeNode[] }) {
-  const [columnSorts, setColumnSorts] = useState<ColumnSort[]>([
+  const [columnSorts, toggleColumnSort] = useTableColumnSorts([
     { columnId: 'name', sort: SortDirection.ASC },
   ]);
   const [selectedItemIds, setSelectedItemIds] = useState<string[]>([]);
@@ -351,37 +352,6 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     .join('\n');
 
   /**
-   * Toggle sorting of columns. If shift is held, adds this column to the sort.
-   */
-  const toggleColumnSort = (column: ColumnDefinition) => () => {
-    setColumnSorts((sorts) => {
-      const newColumnSorts = shiftHeld
-        ? Array.from(sorts)
-        : sorts.filter((s) => s.columnId === column.id);
-      let found = false;
-      let index = 0;
-      for (const columnSort of newColumnSorts) {
-        if (columnSort.columnId === column.id) {
-          newColumnSorts[index] = {
-            ...columnSort,
-            sort: columnSort.sort === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC,
-          };
-          found = true;
-          break;
-        }
-        index++;
-      }
-      if (!found) {
-        newColumnSorts.push({
-          columnId: column.id,
-          sort: column.defaultSort || SortDirection.ASC,
-        });
-      }
-      return newColumnSorts;
-    });
-  };
-
-  /**
    * Select all items, or if any are selected, clear the selection.
    */
   const selectAllItems: React.ChangeEventHandler<HTMLInputElement> = () => {
@@ -534,7 +504,13 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
             role="columnheader"
             aria-sort="none"
           >
-            <div onClick={column.noSort ? undefined : toggleColumnSort(column)}>
+            <div
+              onClick={
+                column.noSort
+                  ? undefined
+                  : toggleColumnSort(column.id, shiftHeld, column.defaultSort)
+              }
+            >
               {column.header}
               {!column.noSort && columnSorts.some((c) => c.columnId === column.id) && (
                 <AppIcon
