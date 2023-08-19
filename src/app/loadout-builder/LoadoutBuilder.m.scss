@@ -9,6 +9,8 @@
 }
 
 .menuContent {
+  box-sizing: border-box;
+
   @include phone-portrait {
     padding: 0 10px;
   }
