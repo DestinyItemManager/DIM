@@ -1106,7 +1106,7 @@
   },
   "Stats": {
     "CrouchingSpeed": "Schleichen",
-    "Custom": "Benutzerdef. Summe",
+    "Custom": "Ben.-def. Summe",
     "CustomDesc": "Benutzerdefinierte Summe der ausgewählten Basis-Werte, Mods oder Meisterwerke. Gehe in die Einstellungen, um zu konfigurieren, welche Werte enthalten sind.",
     "DamageResistance": "PvE-Schaden-Widerstand",
     "Discipline": "Disziplin",

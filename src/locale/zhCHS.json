@@ -731,7 +731,7 @@
     "OnWrongCharacterWarning": "当前角色光等最高的护甲在其他角色上。要使强力装备和巅峰装备掉落时的光等达到最高，这些护甲必须存储在当前角色上或是保险库中。",
     "OnlyItems": "只有可装备物品,材料和消耗品才可以加载.",
     "OpenInOptimizer": "优化护甲",
-    "PickArmor": "Pick Armor",
+    "PickArmor": "选择护甲",
     "PickMods": "添加护甲模组",
     "PullFromPostmaster": "从邮政官处取回物品",
     "PullFromPostmasterError": "无法从邮政官处取回物品:{{error}}.",
@@ -746,7 +746,7 @@
     "Random": "随机",
     "Randomize": "随机配装",
     "RandomizeButton": "随机搭配",
-    "RandomizeNew": "Create Random",
+    "RandomizeNew": "随机创建",
     "RandomizeQueryHint": "提示：可通过搜索条件来限制随机物品池。",
     "RandomizeSearch": "从搜索结果随机选取",
     "RandomizeSearchPrompt": "从“{{query}}”的搜索结果随机配装？",
@@ -1263,7 +1263,7 @@
     "GildingTriumph": "镀金成就",
     "HideCompleted": "隐藏已完成的成就",
     "RevealRedacted": "显示隐藏的成就",
-    "SortRecords": "Sort triumphs by completion"
+    "SortRecords": "优先显示未完成成就"
   },
   "Vendors": {
     "Collections": "收藏品",
