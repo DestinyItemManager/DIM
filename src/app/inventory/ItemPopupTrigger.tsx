@@ -46,13 +46,11 @@ export default function ItemPopupTrigger({
   // Close the popup if this component is unmounted
   useEffect(
     () => () => {
-      if (showItemPopup$.getCurrentValue()?.item === item) {
+      if (showItemPopup$.getCurrentValue()?.item?.index === item.index) {
         hideItemPopup();
       }
     },
-    // We really only want to do this on unmount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [item.index]
   );
 
   return children(ref, clicked) as JSX.Element;
