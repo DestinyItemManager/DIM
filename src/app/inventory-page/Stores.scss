@@ -169,7 +169,7 @@
   z-index: 10;
   grid-template-columns:
     repeat(var(--num-characters), calc(6px + var(--character-column-width) + var(--column-padding)))
-    calc(6px + var(--character-column-width) + var(--column-padding)) min-content 1fr !important;
+    min-content min-content 1fr !important;
   background: var(--theme-header-characters-bg);
   background-position: center top;
   background-repeat: no-repeat;
