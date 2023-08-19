@@ -3,6 +3,7 @@
 * Again fixed unsaving previously saved, now invalid search queries.
 * The "Titles" section on the Records page now shows the corresponding title instead of the seal name (e.g. Dredgen and Rivensbane instead of "Gambit" and "Raids").
 * Added vendor engrams to the materials tooltip/sheet accessible through or near the vault emblem.
+* The "Search History" table can now be sorted by its columns (times used, last used) just like the Organizer.
 * DIM now detects the Clarity browser extension and recommends uninstalling it. Clarity is no longer developed by its authors and it causes excessive system resource usage.
 
 ## 7.81.0 <span class="changelog-date">(2023-08-13)</span>

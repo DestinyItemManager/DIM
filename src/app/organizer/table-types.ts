@@ -1,11 +1,9 @@
+import { SortDirection } from 'app/dim-ui/table-columns';
 import { DimItem } from 'app/inventory/item-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import React from 'react';
 
-export const enum SortDirection {
-  ASC,
-  DESC,
-}
+export { SortDirection, type ColumnSort } from 'app/dim-ui/table-columns';
 
 export type Value = string | number | boolean | undefined | null;
 
@@ -59,11 +57,6 @@ export interface ColumnDefinition<V extends Value = Value> {
 export interface Row {
   item: DimItem;
   values: { [columnId: string]: Value };
-}
-
-export interface ColumnSort {
-  columnId: string;
-  sort: SortDirection;
 }
 
 export type ColumnWithStat = ColumnDefinition & { statHash: number };
