@@ -25,8 +25,8 @@ export default function ItemPickerContainer({ children }: { children: React.Reac
       parentSetOptions(undefined);
       setOptionsState((options) => {
         if (options) {
-          // Cancel / cleanup any existing item picker
-          options.onCancel();
+          // Cleanup any existing item picker
+          options.onItemSelected(undefined);
         }
         return newOptions;
       });
@@ -38,8 +38,8 @@ export default function ItemPickerContainer({ children }: { children: React.Reac
   const onClose = useCallback(() => {
     setOptionsState((options) => {
       if (options) {
-        // Cancel / cleanup any existing item picker
-        options.onCancel();
+        // Cleanup any existing item picker
+        options.onItemSelected(undefined);
       }
       return undefined;
     });

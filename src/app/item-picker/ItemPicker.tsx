@@ -21,7 +21,6 @@ export default function ItemPicker({
   sortBy,
   uniqueBy,
   onItemSelected,
-  onCancel,
   onSheetClosed,
 }: ItemPickerState & {
   onSheetClosed: () => void;
@@ -34,14 +33,14 @@ export default function ItemPicker({
 
   const onItemSelectedFn = useCallback(
     (item: DimItem, onClose: () => void) => {
-      onItemSelected({ item });
+      onItemSelected(item);
       onClose();
     },
     [onItemSelected]
   );
 
   const onSheetClosedFn = () => {
-    onCancel();
+    onItemSelected(undefined);
     onSheetClosed();
   };
 

@@ -74,15 +74,13 @@ export default function GeneratedSetItem({
   const chooseReplacement = async () => {
     const ids = new Set(itemOptions.map((i) => i.id));
 
-    try {
-      const { item } = await showItemPicker({
-        prompt: t('LoadoutBuilder.ChooseAlternateTitle'),
-        filterItems: (item: DimItem) => ids.has(item.id),
-      });
+    const item = await showItemPicker({
+      prompt: t('LoadoutBuilder.ChooseAlternateTitle'),
+      filterItems: (item: DimItem) => ids.has(item.id),
+    });
 
+    if (item) {
       pinItem(item);
-    } catch (e) {
-      // user canceled item picker without a selection
     }
   };
 

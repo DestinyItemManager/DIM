@@ -12,28 +12,28 @@ export interface ItemPickerOptions {
   uniqueBy?: (item: DimItem) => unknown;
 }
 
-export interface ItemSelectResult {
-  item: DimItem;
-}
-
 export type ItemPickerState = ItemPickerOptions & {
-  onItemSelected: (result: ItemSelectResult) => void;
-  onCancel: (reason?: Error) => void;
+  onItemSelected: (result: DimItem | undefined) => void;
 };
 
-export type ShowItemPickerFn = (options: ItemPickerOptions) => Promise<ItemSelectResult>;
+/**
+ * A function to show an item picker UI, optionally filtered to a specific set of items. When an item
+ * is selected, the promise is resolved with that item. It is resolved with undefined if the picker
+ * is closed without a selection.
+ */
+export type ShowItemPickerFn = (options: ItemPickerOptions) => Promise<DimItem | undefined>;
 
 /**
  * Returns a function to show an item picker UI, optionally filtered to a specific set of items. When an item
- * is selected, the promise is resolved with that item. It is rejected if the picker
+ * is selected, the promise is resolved with that item. It is resolved with undefined if the picker
  * is closed without a selection.
  */
 export function useItemPicker(): ShowItemPickerFn {
   const setOptions = useContext(ItemPickerContext);
   return useCallback(
     (options) =>
-      new Promise((resolve, reject) => {
-        setOptions({ ...options, onItemSelected: resolve, onCancel: reject });
+      new Promise((resolve) => {
+        setOptions({ ...options, onItemSelected: resolve });
       }),
     [setOptions]
   );

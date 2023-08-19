@@ -111,23 +111,21 @@ export default function LoadoutEdit({
   const fixWarnItem = async (li: ResolvedLoadoutItem) => {
     const warnItem = li.item;
 
-    try {
-      const { item } = await showItemPicker({
-        filterItems: (item: DimItem) =>
-          (warnItem.bucket.inArmor
-            ? item.bucket.hash === warnItem.bucket.hash
-            : item.hash === warnItem.hash) &&
-          itemCanBeInLoadout(item) &&
-          isClassCompatible(item.classType, loadout.classType),
-        prompt: t('Loadouts.FindAnother', {
-          name: warnItem.bucket.inArmor ? warnItem.bucket.name : warnItem.name,
-        }),
-      });
+    const item = await showItemPicker({
+      filterItems: (item: DimItem) =>
+        (warnItem.bucket.inArmor
+          ? item.bucket.hash === warnItem.bucket.hash
+          : item.hash === warnItem.hash) &&
+        itemCanBeInLoadout(item) &&
+        isClassCompatible(item.classType, loadout.classType),
+      prompt: t('Loadouts.FindAnother', {
+        name: warnItem.bucket.inArmor ? warnItem.bucket.name : warnItem.name,
+      }),
+    });
 
+    if (item) {
       handleAddItem(item);
       handleRemoveItem(li);
-    } catch (e) {
-      // user canceled item picker without a selection
     }
   };
 
@@ -368,20 +366,19 @@ async function pickLoadoutItem(
 ) {
   const loadoutHasItem = (item: DimItem) =>
     findSameLoadoutItemIndex(defs, loadout.items, item) !== -1;
-  try {
-    const { item } = await showItemPicker({
-      filterItems: (item: DimItem) =>
-        item.bucket.hash === bucket.hash &&
-        isClassCompatible(item.classType, loadout.classType) &&
-        itemCanBeInLoadout(item) &&
-        !loadoutHasItem(item) &&
-        (!item.notransfer || item.owner === store.id),
-      prompt: t('Loadouts.ChooseItem', { name: bucket.name }),
-    });
 
+  const item = await showItemPicker({
+    filterItems: (item: DimItem) =>
+      item.bucket.hash === bucket.hash &&
+      isClassCompatible(item.classType, loadout.classType) &&
+      itemCanBeInLoadout(item) &&
+      !loadoutHasItem(item) &&
+      (!item.notransfer || item.owner === store.id),
+    prompt: t('Loadouts.ChooseItem', { name: bucket.name }),
+  });
+
+  if (item) {
     add(item);
-  } catch (e) {
-    // user canceled item picker without a selection
   }
 }
 

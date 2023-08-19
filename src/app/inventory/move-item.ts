@@ -51,17 +51,18 @@ export function pullItem(
 ): ThunkResult {
   return async (dispatch, getState) => {
     const store = getStore(storesSelector(getState()), storeId)!;
-    try {
-      const { item } = await showItemPicker({
-        filterItems: (item) => item.bucket.hash === bucket.hash && itemCanBeEquippedBy(item, store),
-        prompt: t('MovePopup.PullItem', {
-          bucket: bucket.name,
-          store: store.name,
-        }),
-      });
 
+    const item = await showItemPicker({
+      filterItems: (item) => item.bucket.hash === bucket.hash && itemCanBeEquippedBy(item, store),
+      prompt: t('MovePopup.PullItem', {
+        bucket: bucket.name,
+        store: store.name,
+      }),
+    });
+
+    if (item) {
       await dispatch(moveItemTo(item, store));
-    } catch (e) {}
+    }
   };
 }
 

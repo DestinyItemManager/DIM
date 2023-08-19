@@ -99,20 +99,19 @@ export default function BountyGuide({
 
   const pullItemCategory = async (e: React.MouseEvent, itemCategory: number) => {
     e.stopPropagation();
-    try {
-      const bucket = defs.ItemCategory.get(itemCategory)?.displayProperties.name;
-      const { item } = await showItemPicker({
-        filterItems: (item) =>
-          item.itemCategoryHashes.includes(itemCategory) && itemCanBeEquippedBy(item, store),
-        prompt: t('MovePopup.PullItem', {
-          bucket,
-          store: store.name,
-        }),
-      });
 
+    const bucket = defs.ItemCategory.get(itemCategory)?.displayProperties.name;
+    const item = await showItemPicker({
+      filterItems: (item) =>
+        item.itemCategoryHashes.includes(itemCategory) && itemCanBeEquippedBy(item, store),
+      prompt: t('MovePopup.PullItem', {
+        bucket,
+        store: store.name,
+      }),
+    });
+
+    if (item) {
       await dispatch(moveItemTo(item, store));
-    } catch (e) {
-      // user canceled item picker without a selection
     }
   };
 

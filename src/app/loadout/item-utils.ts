@@ -30,22 +30,17 @@ export async function pickSubclass(
   showItemPicker: ShowItemPickerFn,
   filterItems: (item: DimItem) => boolean
 ) {
-  try {
-    const { item } = await showItemPicker({
-      filterItems: (item: DimItem) =>
-        item.bucket.hash === BucketHashes.Subclass && filterItems(item),
-      // We can only sort so that the classes are grouped and stasis comes first
-      sortBy: (item) => `${item.classType}-${item.energy?.energyType}`,
-      // We only want to show a single instance of a given subclass, we reconcile them by their hash from
-      // the appropriate store at render time
-      uniqueBy: (item) => item.hash,
-      prompt: t('Loadouts.ChooseItem', { name: t('Bucket.Class') }),
-    });
+  const item = await showItemPicker({
+    filterItems: (item: DimItem) => item.bucket.hash === BucketHashes.Subclass && filterItems(item),
+    // We can only sort so that the classes are grouped and stasis comes first
+    sortBy: (item) => `${item.classType}-${item.energy?.energyType}`,
+    // We only want to show a single instance of a given subclass, we reconcile them by their hash from
+    // the appropriate store at render time
+    uniqueBy: (item) => item.hash,
+    prompt: t('Loadouts.ChooseItem', { name: t('Bucket.Class') }),
+  });
 
-    return item;
-  } catch (e) {
-    // user canceled item picker without a selection
-  }
+  return item;
 }
 
 export function getSubclassPlugs(

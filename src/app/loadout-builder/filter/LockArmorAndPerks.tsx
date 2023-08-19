@@ -73,18 +73,16 @@ export default memo(function LockArmorAndPerks({
     async (e: React.MouseEvent) => {
       e.preventDefault();
 
-      try {
-        const { item } = await showItemPicker({
-          filterItems: (item: DimItem) =>
-            isLoadoutBuilderItem(item) &&
-            itemCanBeEquippedBy(item, selectedStore, true) &&
-            (!filter || filter(item)),
-          sortBy: (item) => LockableBucketHashes.indexOf(item.bucket.hash),
-        });
+      const item = await showItemPicker({
+        filterItems: (item: DimItem) =>
+          isLoadoutBuilderItem(item) &&
+          itemCanBeEquippedBy(item, selectedStore, true) &&
+          (!filter || filter(item)),
+        sortBy: (item) => LockableBucketHashes.indexOf(item.bucket.hash),
+      });
 
+      if (item) {
         updateFunc(item);
-      } catch (e) {
-        // user canceled item picker without a selection
       }
     };
 

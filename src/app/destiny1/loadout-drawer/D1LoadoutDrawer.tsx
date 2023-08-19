@@ -186,19 +186,17 @@ function LoadoutDrawerBody({
   const fixWarnItem = async (li: ResolvedLoadoutItem) => {
     const warnItem = li.item;
 
-    try {
-      const { item } = await showItemPicker({
-        filterItems: (item: DimItem) =>
-          item.hash === warnItem.hash &&
-          itemCanBeInLoadout(item) &&
-          (!loadout || isClassCompatible(item.classType, loadout.classType)),
-        prompt: t('Loadouts.FindAnother', { name: warnItem.name }),
-      });
+    const item = await showItemPicker({
+      filterItems: (item: DimItem) =>
+        item.hash === warnItem.hash &&
+        itemCanBeInLoadout(item) &&
+        (!loadout || isClassCompatible(item.classType, loadout.classType)),
+      prompt: t('Loadouts.FindAnother', { name: warnItem.name }),
+    });
 
+    if (item) {
       onAddItem(item);
       onRemoveItem(li);
-    } catch (e) {
-      // user canceled item picker without a selection
     }
   };
 

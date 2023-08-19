@@ -144,18 +144,16 @@ async function pickLoadoutItem(
   const loadoutHasItem = (item: DimItem) =>
     findSameLoadoutItemIndex(defs, loadout.items, item) !== -1;
 
-  try {
-    const { item } = await showItemPicker({
-      filterItems: (item: DimItem) =>
-        item.bucket.hash === bucket.hash &&
-        isClassCompatible(item.classType, loadout.classType) &&
-        itemCanBeInLoadout(item) &&
-        !loadoutHasItem(item),
-      prompt: t('Loadouts.ChooseItem', { name: bucket.name }),
-    });
+  const item = await showItemPicker({
+    filterItems: (item: DimItem) =>
+      item.bucket.hash === bucket.hash &&
+      isClassCompatible(item.classType, loadout.classType) &&
+      itemCanBeInLoadout(item) &&
+      !loadoutHasItem(item),
+    prompt: t('Loadouts.ChooseItem', { name: bucket.name }),
+  });
 
+  if (item) {
     add(item);
-  } catch (e) {
-    // user canceled item picker without a selection
   }
 }
