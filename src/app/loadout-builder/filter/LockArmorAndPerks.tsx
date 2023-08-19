@@ -2,7 +2,7 @@ import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
-import { hideItemPicker, showItemPicker } from 'app/item-picker/item-picker';
+import { useItemPicker } from 'app/item-picker/item-picker';
 import { ResolvedLoadoutItem, ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
 import SubclassPlugDrawer from 'app/loadout/SubclassPlugDrawer';
 import { getSubclassPlugs, isLoadoutBuilderItem, pickSubclass } from 'app/loadout/item-utils';
@@ -18,7 +18,7 @@ import { Portal } from 'app/utils/temp-container';
 import { objectValues } from 'app/utils/util-types';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React, { Dispatch, memo, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { Dispatch, memo, useCallback, useMemo, useState } from 'react';
 import LoadoutBucketDropTarget from '../LoadoutBucketDropTarget';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ExcludedItems, LockableBucketHashes, PinnedItems } from '../types';
@@ -56,7 +56,7 @@ export default memo(function LockArmorAndPerks({
   const defs = useD2Definitions()!;
   const isPhonePortrait = useIsPhonePortrait();
   const getModRenderKey = createGetModRenderKey();
-  useEffect(() => hideItemPicker(), [selectedStore.classType]);
+  const showItemPicker = useItemPicker();
 
   /**
    * Lock currently equipped items on a character
@@ -83,14 +83,16 @@ export default memo(function LockArmorAndPerks({
         });
 
         updateFunc(item);
-      } catch (e) {}
+      } catch (e) {
+        // user canceled item picker without a selection
+      }
     };
 
   const chooseSubclass = async () => {
     const subclassItemFilter = (item: DimItem) =>
       item.sockets !== null && selectedStore.items.includes(item) && itemCanBeInLoadout(item);
 
-    const item = await pickSubclass(subclassItemFilter);
+    const item = await pickSubclass(showItemPicker, subclassItemFilter);
 
     if (item) {
       lbDispatch({ type: 'updateSubclass', item });

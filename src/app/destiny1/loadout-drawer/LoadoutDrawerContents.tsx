@@ -4,7 +4,7 @@ import type { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { getStore } from 'app/inventory/stores-helpers';
-import { showItemPicker } from 'app/item-picker/item-picker';
+import { ShowItemPickerFn, useItemPicker } from 'app/item-picker/item-picker';
 import {
   LoadoutUpdateFunction,
   fillLoadoutFromEquipped,
@@ -55,7 +55,6 @@ export default function LoadoutDrawerContents({
   remove,
   add,
   setLoadout,
-  onShowItemPicker,
 }: {
   storeId: string;
   loadout: Loadout;
@@ -64,7 +63,6 @@ export default function LoadoutDrawerContents({
   equip: (resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent) => void;
   remove: (resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent) => void;
   add: (item: DimItem, equip?: boolean) => void;
-  onShowItemPicker: (shown: boolean) => void;
 }) {
   const defs = useD1Definitions()!;
   const buckets = useSelector(bucketsSelector)!;
@@ -86,6 +84,7 @@ export default function LoadoutDrawerContents({
   );
 
   const showFillFromEquipped = typesWithoutItems.some((b) => fromEquippedTypes.includes(b.hash));
+  const showItemPicker = useItemPicker();
 
   return (
     <>
@@ -110,7 +109,7 @@ export default function LoadoutDrawerContents({
           typesWithoutItems.map((bucket) => (
             <a
               key={bucket.hash}
-              onClick={() => pickLoadoutItem(defs, loadout, bucket, add, onShowItemPicker)}
+              onClick={() => pickLoadoutItem(defs, loadout, bucket, add, showItemPicker)}
               className="dim-button loadout-add"
             >
               <AppIcon icon={addIcon} /> {bucket.name}
@@ -124,7 +123,7 @@ export default function LoadoutDrawerContents({
             bucket={bucket}
             items={itemsByBucket[bucket.hash] || []}
             pickLoadoutItem={(bucket) =>
-              pickLoadoutItem(defs, loadout, bucket, add, onShowItemPicker)
+              pickLoadoutItem(defs, loadout, bucket, add, showItemPicker)
             }
             equip={equip}
             remove={remove}
@@ -140,12 +139,11 @@ async function pickLoadoutItem(
   loadout: Loadout,
   bucket: InventoryBucket,
   add: (item: DimItem) => void,
-  onShowItemPicker: (shown: boolean) => void
+  showItemPicker: ShowItemPickerFn
 ) {
   const loadoutHasItem = (item: DimItem) =>
     findSameLoadoutItemIndex(defs, loadout.items, item) !== -1;
 
-  onShowItemPicker(true);
   try {
     const { item } = await showItemPicker({
       filterItems: (item: DimItem) =>
@@ -158,7 +156,6 @@ async function pickLoadoutItem(
 
     add(item);
   } catch (e) {
-  } finally {
-    onShowItemPicker(false);
+    // user canceled item picker without a selection
   }
 }

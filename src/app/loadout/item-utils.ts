@@ -2,7 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { showItemPicker } from 'app/item-picker/item-picker';
+import { ShowItemPickerFn } from 'app/item-picker/item-picker';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { armorStats } from 'app/search/d2-known-values';
 import { isSunset } from 'app/utils/item-utils';
@@ -26,7 +26,10 @@ export function isLoadoutBuilderItem(item: DimItem) {
   );
 }
 
-export async function pickSubclass(filterItems: (item: DimItem) => boolean) {
+export async function pickSubclass(
+  showItemPicker: ShowItemPickerFn,
+  filterItems: (item: DimItem) => boolean
+) {
   try {
     const { item } = await showItemPicker({
       filterItems: (item: DimItem) =>
@@ -40,7 +43,9 @@ export async function pickSubclass(filterItems: (item: DimItem) => boolean) {
     });
 
     return item;
-  } catch (e) {}
+  } catch (e) {
+    // user canceled item picker without a selection
+  }
 }
 
 export function getSubclassPlugs(

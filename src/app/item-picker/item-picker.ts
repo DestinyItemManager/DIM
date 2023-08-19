@@ -1,5 +1,6 @@
-import { EventBus } from 'app/utils/observable';
+import { useCallback, useContext } from 'react';
 import { DimItem } from '../inventory/item-types';
+import { ItemPickerContext } from './ItemPickerContainer';
 
 export interface ItemPickerOptions {
   /** Override the default "Choose an Item" prompt. */
@@ -11,7 +12,7 @@ export interface ItemPickerOptions {
   uniqueBy?: (item: DimItem) => unknown;
 }
 
-interface ItemSelectResult {
+export interface ItemSelectResult {
   item: DimItem;
 }
 
@@ -20,20 +21,20 @@ export type ItemPickerState = ItemPickerOptions & {
   onCancel: (reason?: Error) => void;
 };
 
-export const showItemPicker$ = new EventBus<ItemPickerState | undefined>();
-export const hideItemPicker$ = new EventBus<void>();
+export type ShowItemPickerFn = (options: ItemPickerOptions) => Promise<ItemSelectResult>;
 
 /**
- * Show an item picker UI, optionally filtered to a specific set of items. When an item
+ * Returns a function to show an item picker UI, optionally filtered to a specific set of items. When an item
  * is selected, the promise is resolved with that item. It is rejected if the picker
  * is closed without a selection.
  */
-export function showItemPicker(options: ItemPickerOptions): Promise<ItemSelectResult> {
-  return new Promise((resolve, reject) => {
-    showItemPicker$.next({ ...options, onItemSelected: resolve, onCancel: reject });
-  });
-}
-
-export function hideItemPicker(): void {
-  hideItemPicker$.next();
+export function useItemPicker(): ShowItemPickerFn {
+  const setOptions = useContext(ItemPickerContext);
+  return useCallback(
+    (options) =>
+      new Promise((resolve, reject) => {
+        setOptions({ ...options, onItemSelected: resolve, onCancel: reject });
+      }),
+    [setOptions]
+  );
 }

@@ -183,7 +183,7 @@ export default function Destiny() {
   }
 
   return (
-    <>
+    <ItemPickerContainer>
       <div className={styles.content}>
         <Routes>
           <Route path="inventory" element={<Inventory account={account} />} />
@@ -241,11 +241,10 @@ export default function Destiny() {
       <Farming />
       <InfusionFinder />
       <ItemPopupContainer boundarySelector=".store-header" />
-      <ItemPickerContainer />
       <GlobalEffects />
       {Boolean(autoLockTagged) && <SyncTagLock />}
       <ItemDragPreview />
-    </>
+    </ItemPickerContainer>
   );
 }
 

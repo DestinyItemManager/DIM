@@ -11,6 +11,7 @@ import {
 } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { findItemsByBucket } from 'app/inventory/stores-helpers';
+import { useItemPicker } from 'app/item-picker/item-picker';
 import { characterOrderSelector } from 'app/settings/character-sort';
 import { itemSorterSelector } from 'app/settings/item-sort';
 import { AppIcon, addIcon } from 'app/shell/icons';
@@ -132,9 +133,10 @@ function StoreBucket({
 }: Props) {
   const dispatch = useThunkDispatch();
 
+  const showItemPicker = useItemPicker();
   const pickEquipItem = useCallback(() => {
-    dispatch(pullItem(storeId, bucket));
-  }, [bucket, dispatch, storeId]);
+    dispatch(pullItem(storeId, bucket, showItemPicker));
+  }, [bucket, dispatch, showItemPicker, storeId]);
 
   // The vault divides armor by class
   if (isVault && bucket.inArmor && !singleCharacter) {
