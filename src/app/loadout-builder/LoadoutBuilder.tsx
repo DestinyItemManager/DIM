@@ -267,23 +267,25 @@ export default memo(function LoadoutBuilder({
 
   useEffect(() => hideItemPicker(), [selectedStore.classType]);
 
-  const chooseItem =
+  const chooseItem = useCallback(
     (updateFunc: (item: DimItem) => void, filter?: (item: DimItem) => boolean) =>
-    async (e: React.MouseEvent) => {
-      e.preventDefault();
+      async (e: React.MouseEvent) => {
+        e.preventDefault();
 
-      try {
-        const { item } = await showItemPicker({
-          filterItems: (item: DimItem) =>
-            isLoadoutBuilderItem(item) &&
-            itemCanBeEquippedBy(item, selectedStore, true) &&
-            (!filter || filter(item)),
-          sortBy: (item) => LockableBucketHashes.indexOf(item.bucket.hash),
-        });
+        try {
+          const { item } = await showItemPicker({
+            filterItems: (item: DimItem) =>
+              isLoadoutBuilderItem(item) &&
+              itemCanBeEquippedBy(item, selectedStore, true) &&
+              (!filter || filter(item)),
+            sortBy: (item) => LockableBucketHashes.indexOf(item.bucket.hash),
+          });
 
-        updateFunc(item);
-      } catch (e) {}
-    };
+          updateFunc(item);
+        } catch (e) {}
+      },
+    [selectedStore]
+  );
 
   // I don't think this can actually happen?
   if (!selectedStore) {
