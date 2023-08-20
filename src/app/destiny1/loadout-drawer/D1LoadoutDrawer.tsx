@@ -170,7 +170,7 @@ function LoadoutDrawerBody({
     [defs, setLoadout]
   );
 
-   // If an item comes in on the addItem$ observable, add it.
+  // If an item comes in on the addItem$ observable, add it.
   useEventBusListener(addItem$, onAddItem);
 
   const onRemoveItem = (resolvedItem: ResolvedLoadoutItem, e?: React.MouseEvent) => {
