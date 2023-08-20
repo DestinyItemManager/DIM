@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
 import ErrorPanel from 'app/shell/ErrorPanel';
-import { set } from 'app/storage/idb-keyval';
+import { get, set } from 'app/storage/idb-keyval';
 import { errorLog } from 'app/utils/log';
 
 export function StorageBroken() {
@@ -35,5 +35,11 @@ export async function storageTest() {
     return false;
   }
 
-  return true;
+  try {
+    const idbValue = await get<boolean>('idb-test');
+    return idbValue;
+  } catch (e) {
+    errorLog('storage', 'Failed IndexedDB Test', e);
+    return false;
+  }
 }
