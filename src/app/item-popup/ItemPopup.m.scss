@@ -146,7 +146,7 @@
 }
 
 .itemPopup {
-  :global(.sheet-header) {
+  &:global(.sheet) :global(.sheet-header) {
     padding: 0;
     border: none;
   }
