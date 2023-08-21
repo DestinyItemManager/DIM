@@ -5,17 +5,25 @@
   display: flex;
   position: relative;
   z-index: 0;
+  height: 48px;
+  max-width: 237px;
 }
 
 .background {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-size: cover;
+  background-size: 237px 48px;
   background-position: left center;
   background-repeat: no-repeat;
   background-color: black;
   z-index: -1;
+  box-sizing: border-box;
+  :global(.vault) & {
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-right: none;
+    background-size: cover;
+  }
 }
 
 .top,
@@ -26,6 +34,7 @@
 
 .top {
   font-size: 20px;
+  margin-top: 2px;
 
   @include phone-portrait {
     .maxTotalPower {
@@ -67,6 +76,7 @@
     .top,
     .bottom {
       flex: 1;
+      margin-top: 0;
     }
   }
 

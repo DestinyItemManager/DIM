@@ -1,4 +1,6 @@
 const fs = require('fs');
+const path = require('path');
+const typescript = require('typescript');
 
 module.exports = {
   input: ['src/app/**/*.{js,jsx,ts,tsx}', 'src/browsercheck.js'],
@@ -26,9 +28,23 @@ module.exports = {
   },
   transform: function customTransform(file, enc, done) {
     'use strict';
+    const tsExts = ['.ts', '.tsx'];
     const parser = this.parser;
 
-    const content = fs.readFileSync(file.path, enc);
+    const { base, ext } = path.parse(file.path);
+    let content = fs.readFileSync(file.path, enc);
+    const isTs = tsExts.includes(ext) && !base.includes('.d.ts');
+
+    if (isTs) {
+      const { outputText } = typescript.transpileModule(content, {
+        compilerOptions: {
+          target: 'es2018',
+          jsx: 'preserve',
+        },
+        fileName: path.basename(file.path),
+      });
+      content = outputText;
+    }
 
     // prettier-ignore
     const contexts = {
@@ -45,8 +61,7 @@ module.exports = {
       sockets: { list: ['Mod', 'Ability', 'Shader', 'Ornament', 'Fragment', 'Aspect', 'Projection', 'Transmat', 'Super'] },
       unsupported: { list: ['Unsupported', 'Steam'] },
     };
-
-    parser.parseFuncFromString(content, { list: ['t', 'tl', 'DimError'] }, (key, options) => {
+    const dimTransformer = (key, options) => {
       if (options.metadata?.context) {
         // Add context based on metadata
         delete options.context;
@@ -69,7 +84,12 @@ module.exports = {
       if (!options.metadata) {
         parser.set(key, options);
       }
-    });
+    };
+
+    if (isTs) {
+      parser.parseTransFromString(content, { list: ['t', 'tl', 'DimError'] }, dimTransformer);
+    }
+    parser.parseFuncFromString(content, { list: ['t', 'tl', 'DimError'] }, dimTransformer);
 
     done();
   },

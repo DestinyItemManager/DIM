@@ -10,10 +10,8 @@ import { storesLoadedSelector } from '../selectors';
 
 /**
  * A simple hook (probably too simple!) that loads and refreshes stores. This is
- * meant for use by top level pages. It could have used useSubscription to be
- * extra cool, but I'm trying to avoid having both useSubscription and connect()
- * in the same component. useDispatch() is cheap because it just listens to a
- * context that never changes.
+ * meant for use by top level pages. useDispatch() is cheap because it just
+ * listens to a context that never changes.
  */
 export function useLoadStores(account: DestinyAccount | undefined) {
   const dispatch = useThunkDispatch();

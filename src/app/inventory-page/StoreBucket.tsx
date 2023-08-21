@@ -16,155 +16,67 @@ import { characterOrderSelector } from 'app/settings/character-sort';
 import { itemSorterSelector } from 'app/settings/item-sort';
 import { AppIcon, addIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { RootState } from 'app/store/types';
-import { emptyArray } from 'app/utils/empty';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import emptyEngram from 'destiny-icons/general/empty-engram.svg';
 import { shallowEqual } from 'fast-equals';
 import _ from 'lodash';
-import React, { useCallback } from 'react';
-import { ConnectedComponent, connect } from 'react-redux';
+import React, { memo, useCallback, useRef } from 'react';
+import { useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
 import './StoreBucket.scss';
 import StoreBucketDropTarget from './StoreBucketDropTarget';
 import StoreInventoryItem from './StoreInventoryItem';
 
-// Props provided from parents
-interface ProvidedProps {
-  // eslint-disable-next-line react-redux/no-unused-prop-types
-  store: DimStore;
-  bucket: InventoryBucket;
-  singleCharacter: boolean;
-}
-
-// Props from Redux via mapStateToProps
-interface StoreProps {
-  destinyVersion: DestinyVersion;
-  storeId: string;
-  storeName: string;
-  storeClassType: DestinyClass;
-  isVault: boolean;
-  items: DimItem[];
-  sortItems: (items: readonly DimItem[]) => readonly DimItem[];
-  storeClassList: DestinyClass[];
-  characterOrder: string;
+/**
+ * Given an array of objects, return the same version of the array
+ * (reference-equal with previous versions) as long as the contents of the
+ * passed in array is the same as other arrays. This prevents re-renders when we
+ * have to generate new arrays but the contents are the same.
+ *
+ * This is conceptually similar to useMemo except instead of memoizing on the
+ * inputs, it memoizes on the outputs.
+ */
+function useStableArray<T>(arr: T[]) {
+  const lastItems = useRef<T[]>([]);
+  if (!shallowEqual(lastItems.current, arr)) {
+    lastItems.current = arr;
+  }
+  return lastItems.current;
 }
 
 /**
- * Generate a function that will produce a new array (by-ref) only if the array's contents change.
+ * A single bucket of items (for a single store). The arguments for this
+ * component are the bare minimum needed, so that we can memoize it to avoid
+ * unnecessary re-renders of unaffected buckets when moving items around. The
+ * StoreBucket component does the heavy lifting of picking apart these input
+ * props for StoreBucketInner.
  */
-function makeInternArray<T>() {
-  let _lastItems: T[] = [];
-  return (arr: T[]) => {
-    if (!shallowEqual(_lastItems, arr)) {
-      _lastItems = arr;
-    }
-    return _lastItems;
-  };
-}
-
-function mapStateToProps() {
-  const internItems = makeInternArray<DimItem>();
-  const internClassList = makeInternArray<DestinyClass>();
-
-  return (
-    state: RootState,
-    props: ProvidedProps
-  ): StoreProps & {
-    store: DimStore | null;
-  } => {
-    const { store, bucket, singleCharacter } = props;
-
-    let items = findItemsByBucket(store, bucket.hash);
-    if (singleCharacter && store.isVault && bucket.vaultBucket) {
-      for (const otherStore of storesSelector(state)) {
-        if (!otherStore.current && !otherStore.isVault) {
-          items = [...items, ...findItemsByBucket(otherStore, bucket.hash)];
-        }
-      }
-      const currentStore = currentStoreSelector(state);
-      // TODO: When we switch accounts this suffers from the "zombie child" problem where the redux store has already
-      // updated (so currentStore is cleared) but the store from props is still around because its redux subscription
-      // hasn't fired yet.
-      items = items.filter(
-        (i) =>
-          i.classType === DestinyClass.Unknown ||
-          (currentStore && i.classType === currentStore.classType)
-      );
-    }
-
-    return {
-      store: null,
-      destinyVersion: store.destinyVersion,
-      storeId: store.id,
-      storeName: store.name,
-      storeClassType: store.classType,
-      isVault: store.isVault,
-      items: internItems(items),
-      sortItems: itemSorterSelector(state),
-      // We only need this property when this is a vault armor bucket
-      storeClassList:
-        store.isVault && bucket.inArmor
-          ? internClassList(sortedStoresSelector(state).map((s) => s.classType))
-          : emptyArray(),
-      characterOrder: characterOrderSelector(state),
-    };
-  };
-}
-
-type Props = ProvidedProps & StoreProps;
-
-/**
- * A single bucket of items (for a single store).
- */
-function StoreBucket({
+const StoreBucketInner = memo(function StoreBucketInner({
   items,
-  sortItems,
   bucket,
   storeId,
   destinyVersion,
   storeName,
   storeClassType,
   isVault,
-  storeClassList,
-  characterOrder,
-  singleCharacter,
-}: Props) {
+}: {
+  bucket: InventoryBucket;
+  destinyVersion: DestinyVersion;
+  storeId: string;
+  storeName: string;
+  storeClassType: DestinyClass;
+  isVault: boolean;
+  items: DimItem[];
+}) {
   const dispatch = useThunkDispatch();
+  const sortItems = useSelector(itemSorterSelector);
 
   const showItemPicker = useItemPicker();
   const pickEquipItem = useCallback(() => {
     dispatch(pullItem(storeId, bucket, showItemPicker));
   }, [bucket, dispatch, showItemPicker, storeId]);
-
-  // The vault divides armor by class
-  if (isVault && bucket.inArmor && !singleCharacter) {
-    const itemsByClass = _.groupBy(items, (item) => item.classType);
-    const classTypeOrder = _.sortBy(Object.keys(itemsByClass), (classType) => {
-      const classTypeNum = parseInt(classType, 10);
-      const index = storeClassList.findIndex((s) => s === classTypeNum);
-      return index === -1 ? 999 : characterOrder === 'mostRecentReverse' ? -index : index;
-    }).map((c) => parseInt(c, 10) as DestinyClass);
-
-    return (
-      <StoreBucketDropTarget
-        equip={false}
-        bucket={bucket}
-        storeId={storeId}
-        storeClassType={storeClassType}
-      >
-        {classTypeOrder.map((classType) => (
-          <React.Fragment key={classType}>
-            <ClassIcon classType={classType} className="armor-class-icon" />
-            {sortItems(itemsByClass[classType]).map((item) => (
-              <StoreInventoryItem key={item.index} item={item} />
-            ))}
-          </React.Fragment>
-        ))}
-      </StoreBucketDropTarget>
-    );
-  }
 
   const equippedItem = isVault ? undefined : items.find((i) => i.equipped);
   const unequippedItems = isVault ? sortItems(items) : sortItems(items.filter((i) => !i.equipped));
@@ -214,23 +126,128 @@ function StoreBucket({
       </StoreBucketDropTarget>
     </>
   );
-}
+});
 
-export default connect<StoreProps, {}, ProvidedProps, RootState>(mapStateToProps)(
-  StoreBucket
-) as ConnectedComponent<
-  typeof StoreBucket,
-  Omit<
-    ProvidedProps & StoreProps,
-    | 'destinyVersion'
-    | 'storeId'
-    | 'storeName'
-    | 'storeClassType'
-    | 'isVault'
-    | 'items'
-    | 'sortItems'
-    | 'storeClassList'
-    | 'characterOrder'
-  > &
-    ProvidedProps
->;
+/**
+ * The classes of each character, in the user's preferred order.
+ */
+const storeClassListSelector = createSelector(
+  sortedStoresSelector,
+  (stores) => stores.map((s) => s.classType).filter((c) => c !== DestinyClass.Unknown),
+  // Use shallow equality on the returned array so it only changes when the
+  // actual list of class types change
+  { memoizeOptions: { resultEqualityCheck: shallowEqual } }
+);
+
+/**
+ * For armor in the vault, we separate items by which class they belong to. The
+ * arguments for this component are the bare minimum needed, so that we can
+ * memoize it to avoid unnecessary re-renders of unaffected buckets when moving
+ * items around. The StoreBucket component does the heavy lifting of picking
+ * apart these input props for VaultBucketDividedByClass.
+ */
+const VaultBucketDividedByClass = memo(function SingleCharacterVaultBucket({
+  items,
+  bucket,
+  storeId,
+  storeClassType,
+}: {
+  bucket: InventoryBucket;
+  storeId: string;
+  storeClassType: DestinyClass;
+  items: DimItem[];
+}) {
+  const storeClassList = useSelector(storeClassListSelector);
+  const characterOrder = useSelector(characterOrderSelector);
+  const sortItems = useSelector(itemSorterSelector);
+
+  // The vault divides armor by class
+  const itemsByClass = _.groupBy(items, (item) => item.classType);
+  const classTypeOrder = _.sortBy(Object.keys(itemsByClass), (classType) => {
+    const classTypeNum = parseInt(classType, 10);
+    const index = storeClassList.findIndex((s) => s === classTypeNum);
+    return index === -1 ? 999 : characterOrder === 'mostRecentReverse' ? -index : index;
+  }).map((c) => parseInt(c, 10) as DestinyClass);
+
+  return (
+    <StoreBucketDropTarget
+      equip={false}
+      bucket={bucket}
+      storeId={storeId}
+      storeClassType={storeClassType}
+    >
+      {classTypeOrder.map((classType) => (
+        <React.Fragment key={classType}>
+          <ClassIcon classType={classType} className="armor-class-icon" />
+          {sortItems(itemsByClass[classType]).map((item) => (
+            <StoreInventoryItem key={item.index} item={item} />
+          ))}
+        </React.Fragment>
+      ))}
+    </StoreBucketDropTarget>
+  );
+});
+
+/**
+ * The items for a single bucket on a single store.
+ */
+export default function StoreBucket({
+  store,
+  bucket,
+  singleCharacter,
+}: {
+  store: DimStore;
+  bucket: InventoryBucket;
+  singleCharacter: boolean;
+}) {
+  const currentStore = useSelector(currentStoreSelector);
+  const stores = useSelector(storesSelector);
+
+  let items = findItemsByBucket(store, bucket.hash);
+
+  // Single character mode collapses all items from other characters into "the
+  // vault" (but only those items that could be used by the current character)
+  if (singleCharacter && store.isVault && bucket.vaultBucket) {
+    for (const otherStore of stores) {
+      if (!otherStore.current && !otherStore.isVault) {
+        items = [...items, ...findItemsByBucket(otherStore, bucket.hash)];
+      }
+    }
+    // TODO: When we switch accounts this suffers from the "zombie child" problem where the redux store has already
+    // updated (so currentStore is cleared) but the store from props is still around because its redux subscription
+    // hasn't fired yet.
+    items = items.filter(
+      (i) =>
+        i.classType === DestinyClass.Unknown ||
+        (currentStore && i.classType === currentStore.classType)
+    );
+  }
+
+  const stableItems = useStableArray(items);
+
+  // TODO: move grouping here?
+
+  // The vault divides armor by class
+  if (store.isVault && bucket.inArmor && !singleCharacter) {
+    return (
+      <VaultBucketDividedByClass
+        bucket={bucket}
+        storeId={store.id}
+        storeClassType={store.classType}
+        items={stableItems}
+      />
+    );
+  }
+
+  return (
+    <StoreBucketInner
+      bucket={bucket}
+      destinyVersion={store.destinyVersion}
+      storeId={store.id}
+      storeName={store.name}
+      storeClassType={store.classType}
+      isVault={store.isVault}
+      items={stableItems}
+    />
+  );
+}

@@ -3246,10 +3246,10 @@ body-parser@1.20.1:
     type-is "~1.6.18"
     unpipe "1.0.0"
 
-body-scroll-lock-upgrade@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/body-scroll-lock-upgrade/-/body-scroll-lock-upgrade-1.0.4.tgz#43e4df461c487f9b53be2a82b3550a81bed58d00"
-  integrity sha512-Wo3kbzr2yO/c9KFHo/HQ+lRYsBs0DsR0krUtk/R4KWPwaoDwv1sjOYFc3F3vh+7pw4k437R9XiDdHRg1uoOYEA==
+body-scroll-lock@^3.1.5:
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/body-scroll-lock/-/body-scroll-lock-3.1.5.tgz#c1392d9217ed2c3e237fee1e910f6cdd80b7aaec"
+  integrity sha512-Yi1Xaml0EvNA0OYWxXiYNqY24AfWkbA6w5vxE7GWxtKfzIbZM+Qw+aSmkgsbWzbHiy/RCSkUZBplVxTA+E4jJg==
 
 bonjour-service@^1.0.11:
   version "1.1.1"
@@ -6028,7 +6028,7 @@ i18next-http-backend@^2.0.0:
   dependencies:
     cross-fetch "3.1.6"
 
-i18next-scanner@^4.0.0:
+i18next-scanner@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/i18next-scanner/-/i18next-scanner-4.3.0.tgz#853823a856d0b52ba6cfa579e874908154170f97"
   integrity sha512-pLMq5vf4wFl8VgSnTcG/8BQZRnc/dVaOPudcYWPb/Pbbk9E4vcOIfZ/NHfK/9Jrzkzkxw9pqLQfHwDfb8VzkwA==
