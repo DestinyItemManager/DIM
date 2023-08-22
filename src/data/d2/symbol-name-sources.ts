@@ -802,7 +802,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'SandboxPerk',
-      hash: 501809574,
+      hash: 381243875,
       fromRichText: true,
     },
   },
@@ -878,6 +878,5 @@ export type TranslateManually = typeof translateManually[number];
  * [Block]
  * [Shoot]
  * [Boost]
- * [Air Move]
  * [Brake]
  */

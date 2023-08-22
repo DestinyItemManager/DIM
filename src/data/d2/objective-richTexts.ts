@@ -1,6 +1,5 @@
 const richTextManifestSourceData = {
   '[Aim Down Sights]': ['SandboxPerk', 104297121],
-  '[Air Move]': ['SandboxPerk', 3694014520],
   '[Alternate Weapon Action]': ['SandboxPerk', 250262009],
   '[Arc]': ['Objective', 19991929],
   '[Auto Rifle]': ['Objective', 60057218],
@@ -40,7 +39,7 @@ const richTextManifestSourceData = {
   '[Stasis: Glyph 2 Locked]': ['Objective', 1857129539],
   '[Stasis: Glyph 3 Locked]': ['Objective', 1481711502],
   '[Stasis]': ['Objective', 85761957],
-  '[Strand]': ['SandboxPerk', 501809574],
+  '[Strand]': ['SandboxPerk', 381243875],
   '[Super]': ['SandboxPerk', 1330059512],
   '[Sword]': ['Objective', 1250089450],
   '[Trace Rifle]': ['Objective', 1047174894],

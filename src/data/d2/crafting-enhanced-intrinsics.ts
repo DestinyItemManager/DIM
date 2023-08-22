@@ -3,6 +3,15 @@ const enhancedIntrinsics = new Set<number>([
   916649862, // Legacy PR-55 Frame
   2155015844, // Legacy PR-55 Frame
   3766386008, // Legacy PR-55 Frame
+  3355499393, // Adaptive Frame
+  2490530085, // Adaptive Frame
+  141515518, // Adaptive Frame
+  3435239180, // Adaptive Frame
+  4249817697, // Adaptive Frame
+  2178772051, // Adaptive Frame
+  489506521, // Adaptive Frame
+  1900989425, // Adaptive Frame
+  3133077199, // Adaptive Frame
   2012877834, // Lightweight Frame
   3048420653, // Lightweight Frame
   395096174, // Lightweight Frame
@@ -52,15 +61,6 @@ const enhancedIntrinsics = new Set<number>([
   1220310607, // Wave Frame
   1713394949, // Wave Frame
   3030812579, // Wave Frame
-  3355499393, // Adaptive Frame
-  2490530085, // Adaptive Frame
-  141515518, // Adaptive Frame
-  3435239180, // Adaptive Frame
-  4249817697, // Adaptive Frame
-  2178772051, // Adaptive Frame
-  489506521, // Adaptive Frame
-  1900989425, // Adaptive Frame
-  3133077199, // Adaptive Frame
   2897981193, // Pinpoint Slug Frame
   878620401, // Pinpoint Slug Frame
   2426674025, // Pinpoint Slug Frame
