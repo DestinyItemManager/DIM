@@ -2,6 +2,7 @@ import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
+import { useItemPicker } from 'app/item-picker/item-picker';
 import { ResolvedLoadoutItem, ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
 import SubclassPlugDrawer from 'app/loadout/SubclassPlugDrawer';
 import { getSubclassPlugs, isLoadoutBuilderItem, pickSubclass } from 'app/loadout/item-utils';
@@ -43,12 +44,13 @@ export const LoadoutOptimizerSubclass = memo(function LoadoutOptimizerSubclass({
   const [showSubclassOptionsPicker, setShowSubclassOptionsPicker] = useState(false);
   const defs = useD2Definitions()!;
   const getModRenderKey = createGetModRenderKey();
+  const showItemPicker = useItemPicker();
 
   const chooseSubclass = async () => {
     const subclassItemFilter = (item: DimItem) =>
       item.sockets !== null && selectedStore.items.includes(item) && itemCanBeInLoadout(item);
 
-    const item = await pickSubclass(subclassItemFilter);
+    const item = await pickSubclass(showItemPicker, subclassItemFilter);
 
     if (item) {
       lbDispatch({ type: 'updateSubclass', item });

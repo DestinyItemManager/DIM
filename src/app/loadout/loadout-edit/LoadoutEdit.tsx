@@ -12,8 +12,10 @@ import {
   unlockedPlugSetItemsSelector,
 } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
+import { ShowItemPickerFn, useItemPicker } from 'app/item-picker/item-picker';
 import {
   LoadoutUpdateFunction,
+  addItem,
   applySocketOverrides,
   changeClearMods,
   clearArtifactUnlocks,
@@ -38,19 +40,25 @@ import {
   updateModsByBucket,
 } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { getUnequippedItemsForLoadout } from 'app/loadout-drawer/loadout-utils';
+import {
+  findSameLoadoutItemIndex,
+  getUnequippedItemsForLoadout,
+} from 'app/loadout-drawer/loadout-utils';
 import { getItemsAndSubclassFromLoadout, loadoutPower } from 'app/loadout/LoadoutView';
 import { LoadoutArtifactUnlocks, LoadoutMods } from 'app/loadout/loadout-ui/LoadoutMods';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { emptyObject } from 'app/utils/empty';
+import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { Portal } from 'app/utils/temp-container';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import SubclassPlugDrawer from '../SubclassPlugDrawer';
+import { pickSubclass } from '../item-utils';
 import { hasVisibleLoadoutParameters } from '../loadout-ui/LoadoutParametersDisplay';
 import { useLoadoutMods } from '../mod-assignment-drawer/selectors';
 import styles from './LoadoutEdit.m.scss';
@@ -62,16 +70,10 @@ export default function LoadoutEdit({
   loadout,
   store,
   setLoadout,
-  onClickSubclass,
-  onClickPlaceholder,
-  onClickWarnItem,
 }: {
   loadout: Loadout;
   store: DimStore;
   setLoadout: (updater: LoadoutUpdateFunction) => void;
-  onClickSubclass: (subclass: DimItem | undefined) => void;
-  onClickPlaceholder: (params: { bucket: InventoryBucket; equip: boolean }) => void;
-  onClickWarnItem: (resolvedItem: ResolvedLoadoutItem) => void;
 }) {
   const defs = useD2Definitions()!;
   const profileResponse = useSelector(profileResponseSelector)!;
@@ -82,6 +84,53 @@ export default function LoadoutEdit({
   const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(store.id));
   const unlockedArtifactMods = useSelector(artifactUnlocksSelector(store.id));
   const searchFilter = useSelector(searchFilterSelector);
+  const showItemPicker = useItemPicker();
+
+  const handleAddItem = withDefsUpdater(addItem);
+
+  const handleClickPlaceholder = ({
+    bucket,
+    equip,
+  }: {
+    bucket: InventoryBucket;
+    equip: boolean;
+  }) => {
+    pickLoadoutItem(
+      showItemPicker,
+      defs,
+      loadout,
+      bucket,
+      (item) => handleAddItem(item, equip),
+      store
+    );
+  };
+
+  const handleRemoveItem = withDefsUpdater(removeItem);
+
+  /** Prompt the user to select a replacement for a missing item. */
+  const fixWarnItem = async (li: ResolvedLoadoutItem) => {
+    const warnItem = li.item;
+
+    const item = await showItemPicker({
+      filterItems: (item: DimItem) =>
+        (warnItem.bucket.inArmor
+          ? item.bucket.hash === warnItem.bucket.hash
+          : item.hash === warnItem.hash) &&
+        itemCanBeInLoadout(item) &&
+        isClassCompatible(item.classType, loadout.classType),
+      prompt: t('Loadouts.FindAnother', {
+        name: warnItem.bucket.inArmor ? warnItem.bucket.name : warnItem.name,
+      }),
+    });
+
+    if (item) {
+      handleAddItem(item);
+      handleRemoveItem(li);
+    }
+  };
+
+  const handleClickSubclass = () =>
+    pickLoadoutSubclass(showItemPicker, loadout, store.id, handleAddItem);
 
   // Don't show the artifact unlocks section unless there are artifact mods saved in this loadout
   // or there are unlocked artifact mods we could copy into this loadout.
@@ -182,7 +231,7 @@ export default function LoadoutEdit({
             classType={loadout.classType}
             power={power}
             onRemove={handleClearSubclass}
-            onPick={() => onClickSubclass(subclass?.item)}
+            onPick={handleClickSubclass}
           />
           {subclass && (
             <div className={styles.buttons}>
@@ -237,8 +286,8 @@ export default function LoadoutEdit({
             classType={loadout.classType}
             items={categories[category]}
             modsByBucket={modsByBucket}
-            onClickPlaceholder={onClickPlaceholder}
-            onClickWarnItem={onClickWarnItem}
+            onClickPlaceholder={handleClickPlaceholder}
+            onClickWarnItem={fixWarnItem}
             onRemoveItem={onRemoveItem}
             onToggleEquipped={handleToggleEquipped}
           >
@@ -305,4 +354,52 @@ export default function LoadoutEdit({
       )}
     </div>
   );
+}
+
+async function pickLoadoutItem(
+  showItemPicker: ShowItemPickerFn,
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  loadout: Loadout,
+  bucket: InventoryBucket,
+  add: (item: DimItem) => void,
+  store: DimStore
+) {
+  const loadoutHasItem = (item: DimItem) =>
+    findSameLoadoutItemIndex(defs, loadout.items, item) !== -1;
+
+  const item = await showItemPicker({
+    filterItems: (item: DimItem) =>
+      item.bucket.hash === bucket.hash &&
+      isClassCompatible(item.classType, loadout.classType) &&
+      itemCanBeInLoadout(item) &&
+      !loadoutHasItem(item) &&
+      (!item.notransfer || item.owner === store.id),
+    prompt: t('Loadouts.ChooseItem', { name: bucket.name }),
+  });
+
+  if (item) {
+    add(item);
+  }
+}
+
+async function pickLoadoutSubclass(
+  showItemPicker: ShowItemPickerFn,
+  loadout: Loadout,
+  storeId: string,
+  add: (item: DimItem, equip?: boolean) => void
+) {
+  const loadoutClassType = loadout.classType;
+  const loadoutHasItem = (item: DimItem) => loadout.items.some((i) => i.hash === item.hash);
+
+  const subclassItemFilter = (item: DimItem) =>
+    item.bucket.hash === BucketHashes.Subclass &&
+    item.classType === loadoutClassType &&
+    item.owner === storeId &&
+    itemCanBeInLoadout(item) &&
+    !loadoutHasItem(item);
+
+  const item = await pickSubclass(showItemPicker, subclassItemFilter);
+  if (item) {
+    add(item, undefined);
+  }
 }

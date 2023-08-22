@@ -5,7 +5,7 @@ import { I18nKey, t, tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { moveItemTo } from 'app/inventory/move-item';
 import { DimStore } from 'app/inventory/store-types';
-import { showItemPicker } from 'app/item-picker/item-picker';
+import { useItemPicker } from 'app/item-picker/item-picker';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, addIcon } from 'app/shell/icons';
 import { ThunkDispatchProp } from 'app/store/types';
@@ -95,22 +95,24 @@ export default function BountyGuide({
 }) {
   const defs = useD2Definitions()!;
   const dispatch = useDispatch<ThunkDispatchProp['dispatch']>();
+  const showItemPicker = useItemPicker();
 
   const pullItemCategory = async (e: React.MouseEvent, itemCategory: number) => {
     e.stopPropagation();
-    try {
-      const bucket = defs.ItemCategory.get(itemCategory)?.displayProperties.name;
-      const { item } = await showItemPicker({
-        filterItems: (item) =>
-          item.itemCategoryHashes.includes(itemCategory) && itemCanBeEquippedBy(item, store),
-        prompt: t('MovePopup.PullItem', {
-          bucket,
-          store: store.name,
-        }),
-      });
 
+    const bucket = defs.ItemCategory.get(itemCategory)?.displayProperties.name;
+    const item = await showItemPicker({
+      filterItems: (item) =>
+        item.itemCategoryHashes.includes(itemCategory) && itemCanBeEquippedBy(item, store),
+      prompt: t('MovePopup.PullItem', {
+        bucket,
+        store: store.name,
+      }),
+    });
+
+    if (item) {
       await dispatch(moveItemTo(item, store));
-    } catch (e) {}
+    }
   };
 
   const mapped: { [type in DefType]: { [key: number]: DimItem[] } } = {

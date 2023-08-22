@@ -1,5 +1,6 @@
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
+import ItemPickerContainer from 'app/item-picker/ItemPickerContainer';
 import { isAndroid, isiOSBrowser } from 'app/utils/browsers';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import clsx from 'clsx';
@@ -238,66 +239,70 @@ export default function Sheet({
     };
   }, []);
 
+  const sheetBody = (
+    <motion.div
+      // motion props
+      initial="close"
+      transition={reducedMotion ? reducedMotionTween : spring}
+      animate={animationControls}
+      variants={animationVariants}
+      onAnimationComplete={handleAnimationComplete}
+      drag="y"
+      dragControls={dragControls}
+      dragListener={false}
+      dragConstraints={dragConstraints}
+      dragElastic={0}
+      onDragEnd={handleDragEnd}
+      // regular props
+      style={{ zIndex }}
+      className={clsx('sheet', sheetClassName, { [styles.sheetDisabled]: disabled })}
+      ref={sheet}
+      role="dialog"
+      aria-modal="false"
+      onKeyDown={stopPropagation}
+      onKeyUp={stopPropagation}
+      onKeyPress={stopPropagation}
+      onClick={allowClickThrough ? undefined : stopPropagation}
+    >
+      <a
+        href="#"
+        className={clsx('sheet-close', { 'sheet-no-header': !header })}
+        onClick={triggerClose}
+      >
+        <AppIcon icon={disabledIcon} />
+      </a>
+
+      <div className="sheet-container" onPointerDown={dragHandleDown}>
+        {Boolean(header) && (
+          <div className="sheet-header" ref={dragHandle}>
+            {_.isFunction(header) ? header({ onClose: triggerClose }) : header}
+          </div>
+        )}
+
+        <div
+          className={clsx('sheet-contents', {
+            'sheet-has-footer': footer,
+          })}
+          style={frozenHeight ? { flexBasis: frozenHeight } : undefined}
+          ref={sheetContents}
+        >
+          {_.isFunction(children) ? children({ onClose: triggerClose }) : children}
+        </div>
+
+        {Boolean(footer) && (
+          <div className="sheet-footer">
+            {_.isFunction(footer) ? footer({ onClose: triggerClose }) : footer}
+          </div>
+        )}
+      </div>
+      <div className={styles.disabledScreen} />
+    </motion.div>
+  );
+
   return (
     <SheetDisabledContext.Provider value={setParentDisabled}>
       <PressTipRoot.Provider value={sheet}>
-        <motion.div
-          // motion props
-          initial="close"
-          transition={reducedMotion ? reducedMotionTween : spring}
-          animate={animationControls}
-          variants={animationVariants}
-          onAnimationComplete={handleAnimationComplete}
-          drag="y"
-          dragControls={dragControls}
-          dragListener={false}
-          dragConstraints={dragConstraints}
-          dragElastic={0}
-          onDragEnd={handleDragEnd}
-          // regular props
-          style={{ zIndex }}
-          className={clsx('sheet', sheetClassName, { [styles.sheetDisabled]: disabled })}
-          ref={sheet}
-          role="dialog"
-          aria-modal="false"
-          onKeyDown={stopPropagation}
-          onKeyUp={stopPropagation}
-          onKeyPress={stopPropagation}
-          onClick={allowClickThrough ? undefined : stopPropagation}
-        >
-          <a
-            href="#"
-            className={clsx('sheet-close', { 'sheet-no-header': !header })}
-            onClick={triggerClose}
-          >
-            <AppIcon icon={disabledIcon} />
-          </a>
-
-          <div className="sheet-container" onPointerDown={dragHandleDown}>
-            {Boolean(header) && (
-              <div className="sheet-header" ref={dragHandle}>
-                {_.isFunction(header) ? header({ onClose: triggerClose }) : header}
-              </div>
-            )}
-
-            <div
-              className={clsx('sheet-contents', {
-                'sheet-has-footer': footer,
-              })}
-              style={frozenHeight ? { flexBasis: frozenHeight } : undefined}
-              ref={sheetContents}
-            >
-              {_.isFunction(children) ? children({ onClose: triggerClose }) : children}
-            </div>
-
-            {Boolean(footer) && (
-              <div className="sheet-footer">
-                {_.isFunction(footer) ? footer({ onClose: triggerClose }) : footer}
-              </div>
-            )}
-          </div>
-          <div className={styles.disabledScreen} />
-        </motion.div>
+        <ItemPickerContainer>{sheetBody}</ItemPickerContainer>
       </PressTipRoot.Provider>
     </SheetDisabledContext.Provider>
   );

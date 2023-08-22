@@ -11,6 +11,7 @@ import {
 } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { findItemsByBucket } from 'app/inventory/stores-helpers';
+import { useItemPicker } from 'app/item-picker/item-picker';
 import { characterOrderSelector } from 'app/settings/character-sort';
 import { itemSorterSelector } from 'app/settings/item-sort';
 import { AppIcon, addIcon } from 'app/shell/icons';
@@ -72,9 +73,10 @@ const StoreBucketInner = memo(function StoreBucketInner({
   const dispatch = useThunkDispatch();
   const sortItems = useSelector(itemSorterSelector);
 
+  const showItemPicker = useItemPicker();
   const pickEquipItem = useCallback(() => {
-    dispatch(pullItem(storeId, bucket));
-  }, [bucket, dispatch, storeId]);
+    dispatch(pullItem(storeId, bucket, showItemPicker));
+  }, [bucket, dispatch, showItemPicker, storeId]);
 
   const equippedItem = isVault ? undefined : items.find((i) => i.equipped);
   const unequippedItems = isVault ? sortItems(items) : sortItems(items.filter((i) => !i.equipped));

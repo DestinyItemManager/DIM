@@ -2,7 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { showItemPicker } from 'app/item-picker/item-picker';
+import { ShowItemPickerFn } from 'app/item-picker/item-picker';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { armorStats } from 'app/search/d2-known-values';
 import { isSunset } from 'app/utils/item-utils';
@@ -26,21 +26,21 @@ export function isLoadoutBuilderItem(item: DimItem) {
   );
 }
 
-export async function pickSubclass(filterItems: (item: DimItem) => boolean) {
-  try {
-    const { item } = await showItemPicker({
-      filterItems: (item: DimItem) =>
-        item.bucket.hash === BucketHashes.Subclass && filterItems(item),
-      // We can only sort so that the classes are grouped and stasis comes first
-      sortBy: (item) => `${item.classType}-${item.energy?.energyType}`,
-      // We only want to show a single instance of a given subclass, we reconcile them by their hash from
-      // the appropriate store at render time
-      uniqueBy: (item) => item.hash,
-      prompt: t('Loadouts.ChooseItem', { name: t('Bucket.Class') }),
-    });
+export async function pickSubclass(
+  showItemPicker: ShowItemPickerFn,
+  filterItems: (item: DimItem) => boolean
+) {
+  const item = await showItemPicker({
+    filterItems: (item: DimItem) => item.bucket.hash === BucketHashes.Subclass && filterItems(item),
+    // We can only sort so that the classes are grouped and stasis comes first
+    sortBy: (item) => `${item.classType}-${item.energy?.energyType}`,
+    // We only want to show a single instance of a given subclass, we reconcile them by their hash from
+    // the appropriate store at render time
+    uniqueBy: (item) => item.hash,
+    prompt: t('Loadouts.ChooseItem', { name: t('Bucket.Class') }),
+  });
 
-    return item;
-  } catch (e) {}
+  return item;
 }
 
 export function getSubclassPlugs(

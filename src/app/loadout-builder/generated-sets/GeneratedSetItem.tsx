@@ -1,6 +1,6 @@
 import { EnergyIncrementsWithPresstip } from 'app/dim-ui/EnergyIncrements';
 import { t } from 'app/i18next-t';
-import { showItemPicker } from 'app/item-picker/item-picker';
+import { useItemPicker } from 'app/item-picker/item-picker';
 import Sockets from 'app/loadout/loadout-ui/Sockets';
 import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';
 import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
@@ -69,18 +69,19 @@ export default function GeneratedSetItem({
 }) {
   const pinItem = (item: DimItem) => lbDispatch({ type: 'pinItem', item });
   const unpinItem = () => lbDispatch({ type: 'unpinItem', item });
+  const showItemPicker = useItemPicker();
 
   const chooseReplacement = async () => {
     const ids = new Set(itemOptions.map((i) => i.id));
 
-    try {
-      const { item } = await showItemPicker({
-        prompt: t('LoadoutBuilder.ChooseAlternateTitle'),
-        filterItems: (item: DimItem) => ids.has(item.id),
-      });
+    const item = await showItemPicker({
+      prompt: t('LoadoutBuilder.ChooseAlternateTitle'),
+      filterItems: (item: DimItem) => ids.has(item.id),
+    });
 
+    if (item) {
       pinItem(item);
-    } catch (e) {}
+    }
   };
 
   const onSocketClick = (

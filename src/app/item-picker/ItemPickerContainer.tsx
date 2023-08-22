@@ -1,47 +1,60 @@
-import { useEventBusListener } from 'app/utils/hooks';
-import { useCallback, useEffect, useState } from 'react';
+import { noop } from 'lodash';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import ItemPicker from './ItemPicker';
-import { ItemPickerState, hideItemPicker$, showItemPicker$ } from './item-picker';
+import { ItemPickerState } from './item-picker';
 
-// TODO: nest components to make redux happier?
+export const ItemPickerContext = createContext<(value: ItemPickerState | undefined) => void>(noop);
 
 /**
- * A container that can show a single item picker. This is a
- * single element to help prevent multiple pickers from showing
- * at once and to make the API easier.
+ * A container that can show a single item picker. This is a single element to
+ * help prevent multiple pickers from showing at once and to make the API
+ * easier. It uses context so you can nest item picker containers and the
+ * closest one in the tree to your component will handle showing the picker.
  */
-export default function ItemPickerContainer() {
-  const [generation, setGeneration] = useState(0);
-  const [options, setOptions] = useState<ItemPickerState>();
+export default function ItemPickerContainer({ children }: { children: React.ReactNode }) {
+  const parentSetOptions = useContext(ItemPickerContext);
 
-  useEventBusListener(
-    showItemPicker$,
-    useCallback((newOptions) => {
-      setOptions((options) => {
+  // The "generation" just allows us to set a key so the item picker isn't reused between different invocations
+  const [generation, setGeneration] = useState(0);
+  const [options, setOptionsState] = useState<ItemPickerState>();
+
+  const setOptions = useCallback(
+    (newOptions: ItemPickerState | undefined) => {
+      // Close any open item pickers higher up the tree - we want to have only one
+      parentSetOptions(undefined);
+      setOptionsState((options) => {
         if (options) {
-          options.onCancel();
+          // Cleanup any existing item picker
+          options.onItemSelected(undefined);
         }
         return newOptions;
       });
       setGeneration((gen) => gen + 1);
-    }, [])
+    },
+    [parentSetOptions]
   );
 
-  useEventBusListener(
-    hideItemPicker$,
-    useCallback(() => {
-      setOptions(() => undefined);
-    }, [])
-  );
+  const onClose = useCallback(() => {
+    setOptionsState((options) => {
+      if (options) {
+        // Cleanup any existing item picker
+        options.onItemSelected(undefined);
+      }
+      return undefined;
+    });
+  }, []);
 
-  const onClose = () => setOptions(undefined);
+  // Close the item picker if we change page
   const location = useLocation();
-  useEffect(() => onClose(), [location.pathname]);
+  useEffect(() => {
+    onClose();
+  }, [location.pathname, onClose]);
 
-  if (!options) {
-    return null;
-  }
-
-  return <ItemPicker key={generation} {...options} onSheetClosed={onClose} />;
+  return (
+    <ItemPickerContext.Provider value={setOptions}>
+      {children}
+      {options && <ItemPicker key={generation} {...options} onSheetClosed={onClose} />}
+    </ItemPickerContext.Provider>
+  );
 }

@@ -6,24 +6,19 @@ import CheckButton from 'app/dim-ui/CheckButton';
 import { WithSymbolsPicker } from 'app/dim-ui/destiny-symbols/SymbolsPicker';
 import { useAutocomplete } from 'app/dim-ui/text-complete/text-complete';
 import { t } from 'app/i18next-t';
-import { InventoryBucket } from 'app/inventory/inventory-buckets';
-import { DimStore } from 'app/inventory/store-types';
 import { getStore } from 'app/inventory/stores-helpers';
-import { showItemPicker } from 'app/item-picker/item-picker';
-import { pickSubclass } from 'app/loadout/item-utils';
 import { useDefinitions } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/search-filter';
-import { addIcon, AppIcon, faRandom } from 'app/shell/icons';
+import { AppIcon, addIcon, faRandom } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
-import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
+import { isClassCompatible } from 'app/utils/item-utils';
 import { infoLog, warnLog } from 'app/utils/log';
 import { useHistory } from 'app/utils/undo-redo-history';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { BucketHashes } from 'data/d2/generated-enums';
 import { produce } from 'immer';
 import _ from 'lodash';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import TextareaAutosize from 'react-textarea-autosize';
 import { v4 as uuidv4 } from 'uuid';
@@ -36,26 +31,24 @@ import {
   unlockedPlugSetItemsSelector,
 } from '../inventory/selectors';
 import LoadoutEdit from '../loadout/loadout-edit/LoadoutEdit';
+import styles from './LoadoutDrawer.m.scss';
+import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
+import LoadoutDrawerFooter from './LoadoutDrawerFooter';
+import LoadoutDrawerHeader from './LoadoutDrawerHeader';
 import { deleteLoadout, updateLoadout } from './actions';
 import {
+  LoadoutUpdateFunction,
   addItem,
   dropItem,
   fillLoadoutFromEquipped,
   fillLoadoutFromUnequipped,
-  LoadoutUpdateFunction,
   randomizeFullLoadout,
-  removeItem,
   setClassType,
   setName,
   setNotes,
 } from './loadout-drawer-reducer';
 import { addItem$ } from './loadout-events';
-import { Loadout, ResolvedLoadoutItem } from './loadout-types';
-import { findSameLoadoutItemIndex } from './loadout-utils';
-import styles from './LoadoutDrawer.m.scss';
-import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
-import LoadoutDrawerFooter from './LoadoutDrawerFooter';
-import LoadoutDrawerHeader from './LoadoutDrawerHeader';
+import { Loadout } from './loadout-types';
 import { loadoutsHashtagsSelector } from './selectors';
 
 /**
@@ -86,7 +79,6 @@ export default function LoadoutDrawer({
   const allItems = useSelector(allItemsSelector);
   const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(storeId));
   const searchFilter = useSelector(searchFilterSelector);
-  const [showingItemPicker, setShowingItemPicker] = useState(false);
   const {
     state: loadout,
     setState: setLoadout,
@@ -99,11 +91,6 @@ export default function LoadoutDrawer({
 
   function withUpdater<T extends unknown[]>(fn: (...args: T) => LoadoutUpdateFunction) {
     return (...args: T) => setLoadout(fn(...args));
-  }
-  function withDefsUpdater<T extends unknown[]>(
-    fn: (defs: D1ManifestDefinitions | D2ManifestDefinitions, ...args: T) => LoadoutUpdateFunction
-  ) {
-    return (...args: T) => setLoadout(fn(defs, ...args));
   }
 
   const store = getStore(stores, storeId)!;
@@ -176,54 +163,6 @@ export default function LoadoutDrawer({
     return null;
   }
 
-  const handleClickPlaceholder = ({
-    bucket,
-    equip,
-  }: {
-    bucket: InventoryBucket;
-    equip: boolean;
-  }) => {
-    pickLoadoutItem(
-      defs,
-      loadout,
-      bucket,
-      (item) => onAddItem(item, equip),
-      setShowingItemPicker,
-      store
-    );
-  };
-
-  const handleRemoveItem = withDefsUpdater(removeItem);
-
-  /** Prompt the user to select a replacement for a missing item. */
-  const fixWarnItem = async (li: ResolvedLoadoutItem) => {
-    const warnItem = li.item;
-
-    setShowingItemPicker(true);
-    try {
-      const { item } = await showItemPicker({
-        filterItems: (item: DimItem) =>
-          (warnItem.bucket.inArmor
-            ? item.bucket.hash === warnItem.bucket.hash
-            : item.hash === warnItem.hash) &&
-          itemCanBeInLoadout(item) &&
-          isClassCompatible(item.classType, loadout.classType),
-        prompt: t('Loadouts.FindAnother', {
-          name: warnItem.bucket.inArmor ? warnItem.bucket.name : warnItem.name,
-        }),
-      });
-
-      onAddItem(item);
-      handleRemoveItem(li);
-    } catch (e) {
-    } finally {
-      setShowingItemPicker(false);
-    }
-  };
-
-  const handleClickSubclass = () =>
-    pickLoadoutSubclass(loadout, storeId, onAddItem, setShowingItemPicker);
-
   const handleDeleteLoadout = (close: () => void) => {
     dispatch(deleteLoadout(loadout.id));
     close();
@@ -279,13 +218,7 @@ export default function LoadoutDrawer({
   // TODO: build and publish a "loadouts API" via context?
 
   return (
-    <Sheet
-      onClose={onClose}
-      header={header}
-      footer={footer}
-      disabled={showingItemPicker}
-      allowClickThrough
-    >
+    <Sheet onClose={onClose} header={header} footer={footer} allowClickThrough>
       <LoadoutDrawerDropTarget
         onDroppedItem={onDropItem}
         classType={loadout.classType}
@@ -296,14 +229,7 @@ export default function LoadoutDrawer({
             <AlertIcon /> {t('Storage.DimSyncNotEnabled')}
           </p>
         )}
-        <LoadoutEdit
-          store={store}
-          loadout={loadout}
-          setLoadout={setLoadout}
-          onClickPlaceholder={handleClickPlaceholder}
-          onClickWarnItem={fixWarnItem}
-          onClickSubclass={handleClickSubclass}
-        />
+        <LoadoutEdit store={store} loadout={loadout} setLoadout={setLoadout} />
         <div className={styles.inputGroup}>
           <button type="button" className="dim-button" onClick={handleFillLoadoutFromEquipped}>
             <AppIcon icon={addIcon} /> {t('Loadouts.FillFromEquipped')}
@@ -366,57 +292,4 @@ function filterLoadoutToAllowedItems(
       }
     }
   });
-}
-
-async function pickLoadoutItem(
-  defs: D1ManifestDefinitions | D2ManifestDefinitions,
-  loadout: Loadout,
-  bucket: InventoryBucket,
-  add: (item: DimItem) => void,
-  onShowItemPicker: (shown: boolean) => void,
-  store: DimStore
-) {
-  const loadoutHasItem = (item: DimItem) =>
-    findSameLoadoutItemIndex(defs, loadout.items, item) !== -1;
-  onShowItemPicker(true);
-  try {
-    const { item } = await showItemPicker({
-      filterItems: (item: DimItem) =>
-        item.bucket.hash === bucket.hash &&
-        isClassCompatible(item.classType, loadout.classType) &&
-        itemCanBeInLoadout(item) &&
-        !loadoutHasItem(item) &&
-        (!item.notransfer || item.owner === store.id),
-      prompt: t('Loadouts.ChooseItem', { name: bucket.name }),
-    });
-
-    add(item);
-  } catch (e) {
-  } finally {
-    onShowItemPicker(false);
-  }
-}
-
-async function pickLoadoutSubclass(
-  loadout: Loadout,
-  storeId: string,
-  add: (item: DimItem, equip?: boolean) => void,
-  onShowItemPicker: (shown: boolean) => void
-) {
-  const loadoutClassType = loadout.classType;
-  const loadoutHasItem = (item: DimItem) => loadout.items.some((i) => i.hash === item.hash);
-
-  const subclassItemFilter = (item: DimItem) =>
-    item.bucket.hash === BucketHashes.Subclass &&
-    item.classType === loadoutClassType &&
-    item.owner === storeId &&
-    itemCanBeInLoadout(item) &&
-    !loadoutHasItem(item);
-
-  onShowItemPicker(true);
-  const item = await pickSubclass(subclassItemFilter);
-  if (item) {
-    add(item, undefined);
-  }
-  onShowItemPicker(false);
 }

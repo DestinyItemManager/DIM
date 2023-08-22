@@ -11,7 +11,7 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { getStore } from 'app/inventory/stores-helpers';
-import { hideItemPicker, showItemPicker } from 'app/item-picker/item-picker';
+import { useHideItemPicker, useItemPicker } from 'app/item-picker/item-picker';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadoutFromEquipped, resolveLoadoutModHashes } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
@@ -95,6 +95,8 @@ export default memo(function LoadoutBuilder({
 }) {
   const isPhonePortrait = useIsPhonePortrait();
   const defs = useD2Definitions()!;
+  const showItemPicker = useItemPicker();
+  const hideItemPicker = useHideItemPicker();
   const stores = useSelector(sortedStoresSelector);
   const searchFilter = useSelector(searchFilterSelector);
   const searchQuery = useSelector(querySelector);
@@ -265,26 +267,26 @@ export default memo(function LoadoutBuilder({
     [statConstraints, resultSets]
   );
 
-  useEffect(() => hideItemPicker(), [selectedStore.classType]);
+  useEffect(() => hideItemPicker(), [hideItemPicker, selectedStore.classType]);
 
   const chooseItem = useCallback(
     (updateFunc: (item: DimItem) => void, filter?: (item: DimItem) => boolean) =>
       async (e: React.MouseEvent) => {
         e.preventDefault();
 
-        try {
-          const { item } = await showItemPicker({
-            filterItems: (item: DimItem) =>
-              isLoadoutBuilderItem(item) &&
-              itemCanBeEquippedBy(item, selectedStore, true) &&
-              (!filter || filter(item)),
-            sortBy: (item) => LockableBucketHashes.indexOf(item.bucket.hash),
-          });
+        const item = await showItemPicker({
+          filterItems: (item: DimItem) =>
+            isLoadoutBuilderItem(item) &&
+            itemCanBeEquippedBy(item, selectedStore, true) &&
+            (!filter || filter(item)),
+          sortBy: (item) => LockableBucketHashes.indexOf(item.bucket.hash),
+        });
 
+        if (item) {
           updateFunc(item);
-        } catch (e) {}
+        }
       },
-    [selectedStore]
+    [selectedStore, showItemPicker]
   );
 
   // I don't think this can actually happen?

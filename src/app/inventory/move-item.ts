@@ -1,7 +1,7 @@
 import { getCurrentHub, startTransaction } from '@sentry/browser';
 import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
-import { showItemPicker } from 'app/item-picker/item-picker';
+import { ShowItemPickerFn } from 'app/item-picker/item-picker';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ThunkResult } from 'app/store/types';
 import { CanceledError, neverCanceled, withCancel } from 'app/utils/cancel';
@@ -44,20 +44,25 @@ export function moveItemToCurrentStore(item: DimItem, e?: React.MouseEvent): Thu
 /**
  * Show an item picker dialog, and then pull the selected item to the current store.
  */
-export function pullItem(storeId: string, bucket: InventoryBucket): ThunkResult {
+export function pullItem(
+  storeId: string,
+  bucket: InventoryBucket,
+  showItemPicker: ShowItemPickerFn
+): ThunkResult {
   return async (dispatch, getState) => {
     const store = getStore(storesSelector(getState()), storeId)!;
-    try {
-      const { item } = await showItemPicker({
-        filterItems: (item) => item.bucket.hash === bucket.hash && itemCanBeEquippedBy(item, store),
-        prompt: t('MovePopup.PullItem', {
-          bucket: bucket.name,
-          store: store.name,
-        }),
-      });
 
+    const item = await showItemPicker({
+      filterItems: (item) => item.bucket.hash === bucket.hash && itemCanBeEquippedBy(item, store),
+      prompt: t('MovePopup.PullItem', {
+        bucket: bucket.name,
+        store: store.name,
+      }),
+    });
+
+    if (item) {
       await dispatch(moveItemTo(item, store));
-    } catch (e) {}
+    }
   };
 }
 

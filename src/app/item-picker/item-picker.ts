@@ -1,5 +1,6 @@
-import { EventBus } from 'app/utils/observable';
+import { useCallback, useContext } from 'react';
 import { DimItem } from '../inventory/item-types';
+import { ItemPickerContext } from './ItemPickerContainer';
 
 export interface ItemPickerOptions {
   /** Override the default "Choose an Item" prompt. */
@@ -11,29 +12,37 @@ export interface ItemPickerOptions {
   uniqueBy?: (item: DimItem) => unknown;
 }
 
-interface ItemSelectResult {
-  item: DimItem;
-}
-
 export type ItemPickerState = ItemPickerOptions & {
-  onItemSelected: (result: ItemSelectResult) => void;
-  onCancel: (reason?: Error) => void;
+  onItemSelected: (result: DimItem | undefined) => void;
 };
 
-export const showItemPicker$ = new EventBus<ItemPickerState | undefined>();
-export const hideItemPicker$ = new EventBus<void>();
-
 /**
- * Show an item picker UI, optionally filtered to a specific set of items. When an item
- * is selected, the promise is resolved with that item. It is rejected if the picker
+ * A function to show an item picker UI, optionally filtered to a specific set of items. When an item
+ * is selected, the promise is resolved with that item. It is resolved with undefined if the picker
  * is closed without a selection.
  */
-export function showItemPicker(options: ItemPickerOptions): Promise<ItemSelectResult> {
-  return new Promise((resolve, reject) => {
-    showItemPicker$.next({ ...options, onItemSelected: resolve, onCancel: reject });
-  });
+export type ShowItemPickerFn = (options: ItemPickerOptions) => Promise<DimItem | undefined>;
+
+/**
+ * Returns a function to show an item picker UI, optionally filtered to a specific set of items. When an item
+ * is selected, the promise is resolved with that item. It is resolved with undefined if the picker
+ * is closed without a selection.
+ */
+export function useItemPicker(): ShowItemPickerFn {
+  const setOptions = useContext(ItemPickerContext);
+  return useCallback(
+    (options) =>
+      new Promise((resolve) => {
+        setOptions({ ...options, onItemSelected: resolve });
+      }),
+    [setOptions]
+  );
 }
 
-export function hideItemPicker(): void {
-  hideItemPicker$.next();
+/**
+ * Returns a function that can be used to hide the item picker.
+ */
+export function useHideItemPicker() {
+  const setOptions = useContext(ItemPickerContext);
+  return useCallback(() => setOptions(undefined), [setOptions]);
 }
