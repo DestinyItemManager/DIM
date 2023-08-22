@@ -152,17 +152,21 @@ function loadProfile(
     // First try loading from IndexedDB
     let profileResponse = getState().inventory.profileResponse;
     if (!profileResponse) {
-      profileResponse = await get<DestinyProfileResponse>(`profile-${account.membershipId}`);
-      // Check to make sure the profile hadn't been loaded in the meantime
-      if (getState().inventory.profileResponse) {
-        profileResponse = getState().inventory.profileResponse;
-      } else {
-        infoLog('d2-stores', 'Loaded cached profile from IndexedDB');
-        dispatch(profileLoaded({ profile: profileResponse, live: false }));
-        // The first time we load, just use the IDB version if we can, to speed up loading
-        if (firstTime) {
-          return profileResponse;
+      try {
+        profileResponse = await get<DestinyProfileResponse>(`profile-${account.membershipId}`);
+        // Check to make sure the profile hadn't been loaded in the meantime
+        if (getState().inventory.profileResponse) {
+          profileResponse = getState().inventory.profileResponse;
+        } else {
+          infoLog('d2-stores', 'Loaded cached profile from IndexedDB');
+          dispatch(profileLoaded({ profile: profileResponse, live: false }));
+          // The first time we load, just use the IDB version if we can, to speed up loading
+          if (firstTime) {
+            return profileResponse;
+          }
         }
+      } catch (e) {
+        errorLog('d2-stores', 'Failed to load profile response from IDB', e);
       }
     }
 

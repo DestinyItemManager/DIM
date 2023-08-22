@@ -1,6 +1,6 @@
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
-import { isiOSBrowser } from 'app/utils/browsers';
+import { isAndroid, isiOSBrowser } from 'app/utils/browsers';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import clsx from 'clsx';
 import {
@@ -138,7 +138,7 @@ export default function Sheet({
 }: Props) {
   const sheet = useRef<HTMLDivElement>(null);
   const sheetContents = useRef<HTMLDivElement | null>(null);
-  const sheetContentsRefFn = useLockSheetContents(sheetContents);
+  useLockSheetContents(sheetContents);
   const dragHandle = useRef<HTMLDivElement>(null);
 
   const [frozenHeight, setFrozenHeight] = useState<number | undefined>(undefined);
@@ -285,7 +285,7 @@ export default function Sheet({
                 'sheet-has-footer': footer,
               })}
               style={frozenHeight ? { flexBasis: frozenHeight } : undefined}
-              ref={sheetContentsRefFn}
+              ref={sheetContents}
             >
               {_.isFunction(children) ? children({ onClose: triggerClose }) : children}
             </div>
@@ -304,53 +304,29 @@ export default function Sheet({
 }
 
 /**
- * Locks body scroll except for touches in the sheet contents, and adds a block-events
- * touch handler to sheet contents.
+ * Locks body scroll except for touches in the sheet contents.
  */
 function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivElement | null>) {
-  /** Block touch/click events for the inner scrolling area if it's not at the top. */
-  const blockEvents = useCallback(
-    (e: TouchEvent | React.MouseEvent) => {
-      if (sheetContents.current!.scrollTop !== 0) {
-        e.stopPropagation();
-      }
-    },
-    [sheetContents]
-  );
+  useEffect(() => {
+    const elem = sheetContents.current;
 
-  // Use a ref callback to set up the ref immediately upon render
-  const sheetContentsRefFn = useCallback(
-    (contents: HTMLDivElement) => {
-      sheetContents.current = contents;
-      if (sheetContents.current) {
-        sheetContents.current.addEventListener('touchstart', blockEvents);
-        if (isiOSBrowser()) {
-          // as-is, body-scroll-lock does not work on on Android #5615
-          document.body.classList.add('body-scroll-lock');
-          enableBodyScroll(sheetContents.current);
-          disableBodyScroll(sheetContents.current);
-        }
-      }
-    },
-    [blockEvents, sheetContents]
-  );
+    if (!elem || !(isiOSBrowser() || isAndroid())) {
+      return;
+    }
 
-  useLayoutEffect(
-    () => () => {
-      if (sheetContents.current) {
-        sheetContents.current.removeEventListener('touchstart', blockEvents);
-        if (isiOSBrowser()) {
-          setTimeout(() => {
-            document.body.classList.remove('body-scroll-lock');
-          }, 0);
-          enableBodyScroll(sheetContents.current);
-        }
-      }
-    },
-    [blockEvents, sheetContents]
-  );
+    // This special style is needed because body-scroll-lock's styles cause the
+    // position: sticky header to move.
+    document.body.classList.add('body-scroll-lock');
+    disableBodyScroll(elem);
 
-  return sheetContentsRefFn;
+    return () => {
+      // TODO: This relies on the sheetsOpen effect running first, maybe combine them
+      if (sheetsOpen === 0) {
+        document.body.classList.remove('body-scroll-lock');
+      }
+      enableBodyScroll(elem);
+    };
+  }, [sheetContents]);
 }
 
 function isInside(element: HTMLElement, className: string) {

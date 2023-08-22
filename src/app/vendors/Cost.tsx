@@ -25,7 +25,7 @@ export default function Cost({
       title={`${cost.quantity.toLocaleString()} ${currencyItem.displayProperties.name}`}
     >
       {cost.quantity.toLocaleString()}
-      <BungieImage src={currencyItem.displayProperties.icon} />
+      <BungieImage height={12} width={12} src={currencyItem.displayProperties.icon} />
     </div>
   );
 }

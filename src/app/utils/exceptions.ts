@@ -47,15 +47,7 @@ if ($featureFlags.sentry) {
     dsn: 'https://1367619d45da481b8148dd345c1a1330@sentry.io/279673',
     release: $DIM_VERSION,
     environment: $DIM_FLAVOR,
-    ignoreErrors: [
-      /QuotaExceededError/,
-      'HTTP 503 returned',
-      'Waiting due to HTTP 503',
-      /FatalTokenError/,
-      /Failed to fetch/,
-      /AbortError/,
-      /Non-Error promise rejection/,
-    ],
+    ignoreErrors: [],
     sampleRate: $DIM_VERSION === 'beta' ? 0.5 : 0.01, // Sample Beta at 50%, Prod at 1%
     attachStacktrace: true,
     integrations: [

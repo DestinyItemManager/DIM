@@ -5,6 +5,7 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       443340273, // Source: Xûr's Treasure Hoard in Eternity
+      642326476, // Source: Complete Dares of Eternity in Eternity.
       675740011, // Source: "Grasp of Avarice" Dungeon
       1102533392, // Source: Xûr (Eternity)
       1394793197, // Source: "Magnum Opus" Quest
@@ -75,6 +76,7 @@ const D2Sources: {
   banshee: {
     itemHashes: [],
     sourceHashes: [
+      1459595344, // Source: Purchase from Banshee-44 or Ada-1.
       1788267693, // Source: Earn rank-up packages from Banshee-44.
       2986841134, // Source: Salvager's Salvo Armament Quest
       3512613235, // Source: A Sacred Fusion Quest
@@ -261,7 +263,8 @@ const D2Sources: {
       1494513645, // Source: Complete Glory matches in Crucible.
       2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory Rank "Mythic."
       2537301256, // Source: Reach a Glory Rank of "Fabled" in the Crucible.
-      2558941813, // Place Silver III Division or higher in ranked Crucible playlists.
+      2558941813, // Source: Place Silver III division or higher in ranked Crucible playlists.
+      2622122683, // Source: Rank up reputation with Lord Shaxx.
       2641169841, // Source: Purchased from Lord Shaxx.
       2658055900, // Source: Complete the "Season 8: Battle Drills" quest.
       2669524419, // Source: Crucible.
@@ -491,6 +494,7 @@ const D2Sources: {
       1282207663, // Source: Dungeon Duality
       1597738585, // Source: "Spire of the Watcher" Dungeon
       1745960977, // Source: Pit of Heresy
+      2745272818, // Source: Presage Exotic Quest
       2856954949, // Source: "Let Loose Thy Talons" Exotic quest.
       3288974535, // Source: "Ghosts of the Deep" Dungeon
       3597879858, // Source: Presage Exotic Quest
@@ -699,6 +703,7 @@ const D2Sources: {
   gunsmith: {
     itemHashes: [],
     sourceHashes: [
+      1459595344, // Source: Purchase from Banshee-44 or Ada-1.
       1788267693, // Source: Earn rank-up packages from Banshee-44.
       2986841134, // Source: Salvager's Salvo Armament Quest
       3512613235, // Source: A Sacred Fusion Quest
@@ -760,6 +765,7 @@ const D2Sources: {
       1027607603, // Source: Complete this reward's associated Iron Banner quest.
       1312894505, // Source: Iron Banner.
       1828622510, // Source: Chance to acquire when you win Iron Banner matches.
+      1926923633, // Source: Rank up reputation with Lord Saladin.
       2520862847, // Source: Iron Banner Iron-Handed Diplomacy
       2648408612, // Acquired by competing in the Iron Banner when the wolves were loud.
       3072862693, // Source: Complete Iron Banner matches and earn rank-up packages from Lord Saladin.
@@ -953,6 +959,7 @@ const D2Sources: {
       1749037998, // Source: Nightfall
       1850609592, // Source: Nightfall
       1924238751, // Source: Complete Nightfall strike "Will of the Thousands."
+      1992319882, // Source: Complete Grandmaster Nightfalls.
       2347293565, // Source: Complete Nightfall strike "The Arms Dealer."
       2376909801, // Source: Complete the "Master" Triumph in the Nightfall category by completing a Vanguard Nightfall on the Master difficulty setting.
       2487203690, // Source: Complete Nightfall strike "Tree of Probabilities."
@@ -1034,6 +1041,7 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       210885364, // Source: Flawless completion of Presage Exotic Quest on Master difficulty.
+      2745272818, // Source: Presage Exotic Quest
       3597879858, // Source: Presage Exotic Quest
     ],
     searchString: [],
@@ -1089,6 +1097,7 @@ const D2Sources: {
       1491707941, // Source: "Garden of Salvation" raid.
       1675483099, // Source: Leviathan, Spire of Stars raid lair.
       1692165595, // Source: Rock Bottom.
+      1897187034, // Source: Crota's End Raid
       2065138144, // Source: Venus Raid
       2085016678, // Source: Complete the "Scourge of the Past" raid within the first 24 hours after its launch.
       2399751101, // Acquired from the raid "Crown of Sorrow."
@@ -1103,6 +1112,7 @@ const D2Sources: {
       3147603678, // Acquired from the raid "Crown of Sorrow."
       3190710249, // Source: "Root of Nightmares" Raid
       3390269646, // Source: Guided Games Final Encounters
+      3807243511, // Source: Open raid chests.
       4009509410, // Source: Complete challenges in the Leviathan raid.
       4066007318, // Source: Leviathan, Eater of Worlds raid lair on Prestige difficulty.
       4246883461, // Source: Found in the "Scourge of the Past" raid.
@@ -1141,6 +1151,7 @@ const D2Sources: {
       805677041, // Buzzard
       838556752, // Python
       847329160, // Edgewise
+      888872889, // Point of the Stag
       1179141605, // Felwinter's Lie
       1644680957, // Null Composure
       2060863616, // Salvager's Salvo
@@ -1226,6 +1237,7 @@ const D2Sources: {
     ],
     sourceHashes: [
       450719423, // Source: Season of the Risen
+      794422188, // Source: Season of the Witch
       813075729, // Source: Season of the Deep Vendor Reputation Reward
       927967626, // Source: Season of the Deep
       1560428737, // Source: Season of Defiance
@@ -1290,7 +1302,8 @@ const D2Sources: {
       1494513645, // Source: Complete Glory matches in Crucible.
       2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory Rank "Mythic."
       2537301256, // Source: Reach a Glory Rank of "Fabled" in the Crucible.
-      2558941813, // Place Silver III Division or higher in ranked Crucible playlists.
+      2558941813, // Source: Place Silver III division or higher in ranked Crucible playlists.
+      2622122683, // Source: Rank up reputation with Lord Shaxx.
       2641169841, // Source: Purchased from Lord Shaxx.
       2658055900, // Source: Complete the "Season 8: Battle Drills" quest.
       2669524419, // Source: Crucible.
@@ -1388,6 +1401,7 @@ const D2Sources: {
       1244908294, // Source: Complete the "Loaded Question" quest from Zavala.
       1433518193, // Source: Vanguard Salvager's Salvo Armament Quest
       1564061133, // Source: Complete this reward's associated Vanguard quest.
+      2124937714, // Source: Rank up reputation with Zavala.
       2317365255, // Source: Complete the "A Loud Racket" quest.
       2335095658, // Source: Strikes.
       2527168932, // Source: Complete strikes and earn rank-up packages from Commander Zavala.
@@ -1442,12 +1456,14 @@ const D2Sources: {
   trials: {
     itemHashes: [
       1983519830, // Hardened by Trial
+      2069797994, // Dazzling Iridescence
       2071635914, // Light for the Lost
       2071635915, // Flawless Empyrean
     ],
     sourceHashes: [
       139599745, // Source: Earn seven wins on a single Trials ticket.
       550270332, // Source: Complete all Nightmare Hunt time trials on Master difficulty.
+      613791463, // Source: Rank up reputation with Saint-14.
       752988954, // Source: Flawless chest completion in the Trials of Osiris Lighthouse.
       827839814, // Source: Flawless chest in the Trials of Osiris Lighthouse, or Grandmaster Nightfall completions.
       1607607347, // Source: Complete Trials tickets and earn rank-up packages from the Emissary of the Nine.
@@ -1647,6 +1663,7 @@ const D2Sources: {
       1244908294, // Source: Complete the "Loaded Question" quest from Zavala.
       1433518193, // Source: Vanguard Salvager's Salvo Armament Quest
       1564061133, // Source: Complete this reward's associated Vanguard quest.
+      2124937714, // Source: Rank up reputation with Zavala.
       2317365255, // Source: Complete the "A Loud Racket" quest.
       2335095658, // Source: Strikes.
       2527168932, // Source: Complete strikes and earn rank-up packages from Commander Zavala.
