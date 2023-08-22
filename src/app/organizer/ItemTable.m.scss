@@ -302,7 +302,7 @@ $modslotSize: 30px;
 .shiftHeld {
   .hasFilter {
     &:hover {
-      background-color: #999 !important;
+      background-color: var(--theme-accent-primary) !important;
       cursor: pointer;
     }
   }
