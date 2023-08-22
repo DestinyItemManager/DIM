@@ -1,5 +1,7 @@
 ## Next
 
+## 7.82.1 <span class="changelog-date">(2023-08-22)</span>
+
 ## 7.82.0 <span class="changelog-date">(2023-08-20)</span>
 
 * Again fixed unsaving previously saved, now invalid search queries.

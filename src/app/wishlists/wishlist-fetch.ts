@@ -144,14 +144,18 @@ function loadWishListAndInfoFromIndexedDB(): ThunkResult {
       return;
     }
 
-    const wishListState = await get<WishListsState>('wishlist');
+    try {
+      const wishListState = await get<WishListsState>('wishlist');
 
-    if (getState().wishLists.loaded) {
-      return;
-    }
+      if (getState().wishLists.loaded) {
+        return;
+      }
 
-    if (wishListState?.wishListAndInfo?.wishListRolls?.length) {
-      dispatch(loadWishLists(wishListState));
+      if (wishListState?.wishListAndInfo?.wishListRolls?.length) {
+        dispatch(loadWishLists(wishListState));
+      }
+    } catch (e) {
+      errorLog('wishlist', 'unable to load wishlists from IDB', e);
     }
   };
 }

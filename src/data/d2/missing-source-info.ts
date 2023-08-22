@@ -1192,6 +1192,7 @@ const missingSources: { [key: string]: number[] } = {
     140842223, // Solstice Mask (Drained)
     143299650, // Solstice Plate (Renewed)
     153144587, // Solstice Cloak (Drained)
+    177568179, // Horror Story
     226436555, // Solstice Mask (Renewed)
     231432261, // Solstice Bond (Resplendent)
     233896077, // Compass Rose
@@ -1277,6 +1278,7 @@ const missingSources: { [key: string]: number[] } = {
     3015197581, // Solstice Gauntlets (Rekindled)
     3039687635, // Solstice Helm (Drained)
     3077367255, // Solstice Hood (Scorched)
+    3103255595, // Jurassic Green
     3104384024, // Solstice Boots (Rekindled)
     3159052337, // Solstice Mask (Majestic)
     3192336962, // Solstice Cloak (Scorched)
@@ -1286,6 +1288,7 @@ const missingSources: { [key: string]: number[] } = {
     3611487543, // Solstice Hood (Rekindled)
     3685996623, // Solstice Greaves (Rekindled)
     3748622249, // Solstice Hood (Resplendent)
+    3871226707, // Mechabre
     3892841518, // Solstice Gauntlets (Renewed)
     3929403535, // Solstice Gauntlets (Resplendent)
     3932814032, // Solstice Strides (Drained)
@@ -2750,9 +2753,13 @@ const missingSources: { [key: string]: number[] } = {
     4238134294, // Gunsmith's Devotion Robes
   ],
   seasonpass: [
+    214247063, // Deep Dive Key
     1387688628, // The Gate Lord's Eye
     1631448645, // Seraph Cipher
+    2769671712, // Salvage Key
+    2785855278, // NPA Repulsion Regulator
     2871264750, // Skeleton Key
+    3353281999, // Bait
     3358687360, // Synaptic Spear
     3644991365, // Ascendant Scepter
     3864896927, // Nightmare Harvester
@@ -2869,7 +2876,12 @@ const missingSources: { [key: string]: number[] } = {
     4264096388, // Wing Theorem
   ],
   shipwright: [],
-  sonar: [],
+  sonar: [
+    214247063, // Deep Dive Key
+    2769671712, // Salvage Key
+    2785855278, // NPA Repulsion Regulator
+    3353281999, // Bait
+  ],
   sos: [
     223783885, // Insigne Shade Bond
     503773817, // Insigne Shade Gloves
@@ -3137,6 +3149,7 @@ const missingSources: { [key: string]: number[] } = {
     945907383, // Floating Grips
     1164471069, // Helm of the Exile
     1193489623, // Cloak of the Exile
+    1526650446, // Trials Engram
     1574601402, // Whistler's Whim
     1697682876, // Astral Horizon
     1929400866, // Annihilating Helm

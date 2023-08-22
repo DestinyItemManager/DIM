@@ -38,3 +38,11 @@ export function useItemPicker(): ShowItemPickerFn {
     [setOptions]
   );
 }
+
+/**
+ * Returns a function that can be used to hide the item picker.
+ */
+export function useHideItemPicker() {
+  const setOptions = useContext(ItemPickerContext);
+  return useCallback(() => setOptions(undefined), [setOptions]);
+}

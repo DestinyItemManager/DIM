@@ -1,4 +1,3 @@
-import { Search } from '@destinyitemmanager/dim-api-types';
 import Armory from 'app/armory/Armory';
 import { saveSearch, searchDeleted, searchUsed } from 'app/dim-api/basic-actions';
 import { recentSearchesSelector } from 'app/dim-api/selectors';
@@ -11,7 +10,7 @@ import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { toggleSearchResults } from 'app/shell/actions';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
@@ -31,7 +30,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import {
   AppIcon,
@@ -68,70 +67,7 @@ const searchItemIcons: { [key in SearchItemType]: string } = {
   [SearchItemType.ArmoryEntry]: helpIcon,
 };
 
-interface ProvidedProps {
-  /** Placeholder text when nothing has been typed */
-  placeholder: string;
-  /** Is this the main search bar in the header? It behaves somewhat differently. */
-  mainSearchBar?: boolean;
-  /** A fake property that can be used to force the "live" query to be replaced with the one from props */
-  searchQueryVersion?: number;
-  /** The search query to fill in the input. This is used only initially, or when searchQueryVersion changes */
-  searchQuery?: string;
-  /** Children are used as optional extra action buttons only when there is a query. */
-  children?: React.ReactNode;
-  /** An optional menu of actions that can be executed on the search. Always shown. */
-  menu?: React.ReactNode;
-  instant?: boolean;
-  className?: string;
-  /** Fired whenever the query changes (already debounced) */
-  onQueryChanged: (query: string) => void;
-  /** Fired whenever the query has been cleared */
-  onClear?: () => void;
-}
-
-interface StoreProps {
-  recentSearches: Search[];
-  validateQuery: ReturnType<typeof validateQuerySelector>;
-  autocompleter: (
-    query: string,
-    caretIndex: number,
-    recentSearches: Search[],
-    includeArmory: boolean
-  ) => SearchItem[];
-}
-
-type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
-
 const autoCompleterSelector = createSelector(searchConfigSelector, createAutocompleter);
-
-function mapStateToProps() {
-  let prevSearchQueryVersion: number | undefined;
-  let prevSearchQuery: string | undefined;
-
-  return (
-    state: RootState,
-    { searchQuery, searchQueryVersion }: ProvidedProps
-  ): StoreProps & { searchQuery?: string } => {
-    // This is a hack that prevents `searchQuery` from changing if `searchQueryVersion`
-    // doesn't change, so we don't trigger an update.
-    let manipulatedSearchQuery = prevSearchQuery;
-    if (searchQueryVersion === undefined) {
-      // OK, they didn't even provide searchQueryVersion, just pass through the original query
-      manipulatedSearchQuery = searchQuery;
-    } else if (searchQueryVersion !== prevSearchQueryVersion) {
-      manipulatedSearchQuery = searchQuery;
-      prevSearchQuery = searchQuery;
-      prevSearchQueryVersion = searchQueryVersion;
-    }
-
-    return {
-      recentSearches: recentSearchesSelector(state),
-      autocompleter: autoCompleterSelector(state),
-      validateQuery: validateQuerySelector(state),
-      searchQuery: manipulatedSearchQuery,
-    };
-  };
-}
 
 const LazyFilterHelp = lazy(() => import(/* webpackChunkName: "filter-help" */ './FilterHelp'));
 
@@ -261,16 +197,35 @@ function SearchBar(
     onQueryChanged,
     instant,
     onClear,
-    dispatch,
-    validateQuery,
-    autocompleter,
-    recentSearches,
     className,
     menu,
-  }: Props,
+  }: {
+    /** Placeholder text when nothing has been typed */
+    placeholder: string;
+    /** Is this the main search bar in the header? It behaves somewhat differently. */
+    mainSearchBar?: boolean;
+    /** A fake property that can be used to force the "live" query to be replaced with the one from props */
+    searchQueryVersion?: number;
+    /** The search query to fill in the input. This is used only initially, or when searchQueryVersion changes */
+    searchQuery?: string;
+    /** Children are used as optional extra action buttons only when there is a query. */
+    children?: React.ReactNode;
+    /** An optional menu of actions that can be executed on the search. Always shown. */
+    menu?: React.ReactNode;
+    instant?: boolean;
+    className?: string;
+    /** Fired whenever the query changes (already debounced) */
+    onQueryChanged: (query: string) => void;
+    /** Fired whenever the query has been cleared */
+    onClear?: () => void;
+  },
   ref: React.Ref<SearchFilterRef>
 ) {
+  const dispatch = useThunkDispatch();
   const isPhonePortrait = useIsPhonePortrait();
+  const recentSearches = useSelector(recentSearchesSelector);
+  const autocompleter = useSelector(autoCompleterSelector);
+  const validateQuery = useSelector(validateQuerySelector);
 
   // On iOS at least, focusing the keyboard pushes the content off the screen
   const autoFocus = !mainSearchBar && !isPhonePortrait && !isiOSBrowser();
@@ -613,4 +568,4 @@ function SearchBar(
   );
 }
 
-export default connect(mapStateToProps, null, null, { forwardRef: true })(forwardRef(SearchBar));
+export default memo(forwardRef(SearchBar));

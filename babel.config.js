@@ -64,7 +64,10 @@ module.exports = function (api) {
   return {
     presets: [
       ['@babel/preset-env', presetEnvOptions],
-      ['@babel/preset-react', { useBuiltIns: true, loose: true, corejs: 3, runtime: 'automatic' }],
+      [
+        '@babel/preset-react',
+        { useBuiltIns: true, loose: true, corejs: 3, runtime: 'automatic', useSpread: true },
+      ],
     ],
     plugins,
     // https://babeljs.io/docs/en/assumptions

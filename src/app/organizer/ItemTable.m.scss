@@ -201,7 +201,8 @@ $content-cells: 5;
 
 .modPerks {
   break-inside: avoid;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 4px;
   padding-left: 5px;
 }
