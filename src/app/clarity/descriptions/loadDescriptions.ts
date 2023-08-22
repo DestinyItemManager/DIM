@@ -27,16 +27,20 @@ const fetchClarity = async <T>(type: keyof typeof urls) => {
   return json;
 };
 
-const loadClarityDescriptions = dedupePromise(async (loadFromIndexedDB) => {
-  const savedVersion = Number(localStorage.getItem('clarityDescriptionVersion') ?? '0');
+const fetchRemoteDescriptions = async (version: number) => {
+  const descriptions = await fetchClarity<ClarityDescription>('descriptions');
+  set('clarity-descriptions', descriptions);
+  localStorage.setItem('clarityDescriptionVersion', version.toString());
+  return descriptions;
+};
 
+const loadClarityDescriptions = dedupePromise(async (loadFromIndexedDB: boolean) => {
+  const savedVersion = Number(localStorage.getItem('clarityDescriptionVersion') ?? '0');
+  let liveVersion: ClarityVersions | undefined;
   try {
-    const liveVersion = await fetchClarity<ClarityVersions>('version');
+    liveVersion = await fetchClarity<ClarityVersions>('version');
     if (savedVersion !== liveVersion.descriptions) {
-      const descriptions = await fetchClarity<ClarityDescription>('descriptions');
-      set('clarity-descriptions', descriptions);
-      localStorage.setItem('clarityDescriptionVersion', liveVersion.descriptions.toString());
-      return descriptions;
+      return await fetchRemoteDescriptions(liveVersion.descriptions);
     }
   } catch (e) {
     errorLog('clarity', 'failed to load remote descriptions', e);
@@ -44,33 +48,42 @@ const loadClarityDescriptions = dedupePromise(async (loadFromIndexedDB) => {
 
   if (loadFromIndexedDB) {
     const savedDescriptions = await get<ClarityDescription>('clarity-descriptions');
-    return savedDescriptions;
+    return (
+      savedDescriptions ??
+      // If IDB doesn't have the data (e.g. after deleting IDB but not localStorage), fetch it
+      (liveVersion && (await fetchRemoteDescriptions(liveVersion.descriptions)))
+    );
   }
 
   return undefined;
 });
 
-const loadClarityStats = dedupePromise(async (loadFromIndexedDB) => {
-  const savedStatsVersion = Number(localStorage.getItem('clarityStatsVersion') ?? '0');
+const fetchRemoteStats = async (version: number) => {
+  const descriptions = await fetchClarity<ClarityCharacterStats>('characterStats');
+  set('clarity-characterStats', descriptions);
+  localStorage.setItem('clarityStatsVersion', version.toString());
+  return descriptions;
+};
 
+const loadClarityStats = dedupePromise(async (loadFromIndexedDB: boolean) => {
+  const savedStatsVersion = Number(localStorage.getItem('clarityStatsVersion') ?? '0');
+  let liveStatsVersion: ClarityStatsVersion | undefined;
   try {
-    const liveStatsVersion = await fetchClarity<ClarityStatsVersion>('statsVersion');
+    liveStatsVersion = await fetchClarity<ClarityStatsVersion>('statsVersion');
     if (savedStatsVersion !== liveStatsVersion.lastUpdate) {
-      const characterStats = await fetchClarity<ClarityCharacterStats>('characterStats');
-      set('clarity-characterStats', characterStats);
-      localStorage.setItem(
-        'clarityDescriptionVersion',
-        liveStatsVersion.lastBreakingChange.toString()
-      );
-      return characterStats;
+      return await fetchRemoteStats(liveStatsVersion.lastUpdate);
     }
   } catch (e) {
-    errorLog('clarity', 'failed to load remote descriptions', e);
+    errorLog('clarity', 'failed to load remote character stats', e);
   }
 
   if (loadFromIndexedDB) {
     const savedCharacterStats = await get<ClarityCharacterStats>('clarity-characterStats');
-    return savedCharacterStats;
+    return (
+      savedCharacterStats ??
+      // If IDB doesn't have the data (e.g. after deleting IDB but not localStorage), fetch it
+      (liveStatsVersion && (await fetchRemoteStats(liveStatsVersion.lastUpdate)))
+    );
   }
 
   return undefined;
