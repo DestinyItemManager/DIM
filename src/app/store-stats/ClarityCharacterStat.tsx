@@ -52,7 +52,11 @@ export default function ClarityCharacterStat({
   }[] = [];
 
   const applicableOverrides = clarityStatData.Overrides.filter((o) => equippedHashes.has(o.Hash));
-  for (const a of clarityStatData.Abilities) {
+  const abilitiesList =
+    'SuperAbilities' in clarityStatData
+      ? clarityStatData.SuperAbilities
+      : clarityStatData.Abilities;
+  for (const a of abilitiesList) {
     if (!equippedHashes.has(a.Hash)) {
       continue;
     }
@@ -86,12 +90,18 @@ export default function ClarityCharacterStat({
 
   // Cooldowns that are not about some specific ability
   const intrinsicCooldowns: JSX.Element[] = [];
-  if ('TimeToFullHP' in clarityStatData) {
+  const regenArray =
+    'TimeToFullHP' in clarityStatData
+      ? clarityStatData.TimeToFullHP
+      : 'TotalRegenTime' in clarityStatData
+      ? clarityStatData.TotalRegenTime
+      : undefined;
+  if (regenArray !== undefined) {
     intrinsicCooldowns.push(
       <StatTableRow
         key="TimeToFullHP"
         name={t('Stats.TimeToFullHP')}
-        cooldowns={clarityStatData.TimeToFullHP}
+        cooldowns={regenArray}
         tier={tier}
         unit="s"
       />
