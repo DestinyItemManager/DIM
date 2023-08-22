@@ -71,11 +71,13 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   3664831848, // Heartshadow
   3761898871, // Lorentz Driver
   3766045777, // Black Talon
+  3821409356, // Ex Diris
   3844694310, // The Jade Rabbit
   3856705927, // Hawkmoon
   3899270607, // The Colony
   4017959782, // Symmetry
   4036115577, // Sleeper Simulant
+  4068264807, // Monte Carlo
   4124984448, // Hard Light
   4174431791, // Hierarchy of Needs
   4190156464, // Merciless
