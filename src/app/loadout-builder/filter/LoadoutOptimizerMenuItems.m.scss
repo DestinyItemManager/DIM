@@ -19,6 +19,9 @@
 .area {
   padding: 4px;
   background-color: rgba(0, 0, 0, 0.4);
+  composes: flexColumn from '../../dim-ui/common.m.scss';
+  gap: 4px;
+  font-size: 12px;
 }
 
 .buttons {
@@ -29,9 +32,4 @@
   }
 
   gap: 4px;
-}
-
-// TODO: dedupe this
-.guide {
-  composes: guide from '../LoadoutBuilder.m.scss';
 }

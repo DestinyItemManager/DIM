@@ -11,6 +11,7 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { getStore } from 'app/inventory/stores-helpers';
+import { hideItemPicker, showItemPicker } from 'app/item-picker/item-picker';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadoutFromEquipped, resolveLoadoutModHashes } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
@@ -23,13 +24,13 @@ import { useSetSetting, useSetting } from 'app/settings/hooks';
 import { AppIcon, faExclamationTriangle, redoIcon, refreshIcon, undoIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyObject } from 'app/utils/empty';
-import { isClassCompatible } from 'app/utils/item-utils';
+import { isClassCompatible, itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { Portal } from 'app/utils/temp-container';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { deepEqual } from 'fast-equals';
 import { AnimatePresence, Tween, Variants, motion } from 'framer-motion';
-import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
+import { Dispatch, memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import {
   allItemsSelector,
@@ -43,16 +44,28 @@ import { isLoadoutBuilderItem } from '../loadout/item-utils';
 import styles from './LoadoutBuilder.m.scss';
 import NoBuildsFoundExplainer from './NoBuildsFoundExplainer';
 import EnergyOptions from './filter/EnergyOptions';
-import LockArmorAndPerks from './filter/LockArmorAndPerks';
+import {
+  LoadoutOptimizerExcludedItems,
+  LoadoutOptimizerExotic,
+  LoadoutOptimizerMods,
+  LoadoutOptimizerPinnedItems,
+  LoadoutOptimizerSubclass,
+  loMenuSection,
+} from './filter/LoadoutOptimizerMenuItems';
 import TierSelect from './filter/TierSelect';
 import CompareLoadoutsDrawer from './generated-sets/CompareLoadoutsDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { sortGeneratedSets } from './generated-sets/utils';
 import { filterItems } from './item-filter';
-import { useLbState } from './loadout-builder-reducer';
+import { LoadoutBuilderAction, useLbState } from './loadout-builder-reducer';
 import { useLoVendorItems } from './loadout-builder-vendors';
 import { useProcess } from './process/useProcess';
-import { ArmorEnergyRules, LOCKED_EXOTIC_ANY_EXOTIC, loDefaultArmorEnergyRules } from './types';
+import {
+  ArmorEnergyRules,
+  LOCKED_EXOTIC_ANY_EXOTIC,
+  LockableBucketHashes,
+  loDefaultArmorEnergyRules,
+} from './types';
 
 /** Do not allow the user to choose artifice mods manually in Loadout Optimizer since we're supposed to be doing that */
 const autoAssignmentPCHs = [PlugCategoryHashes.EnhancementsArtifice];
@@ -252,6 +265,28 @@ export default memo(function LoadoutBuilder({
     [statConstraints, resultSets]
   );
 
+  useEffect(() => hideItemPicker(), [selectedStore.classType]);
+
+  const chooseItem = useCallback(
+    (updateFunc: (item: DimItem) => void, filter?: (item: DimItem) => boolean) =>
+      async (e: React.MouseEvent) => {
+        e.preventDefault();
+
+        try {
+          const { item } = await showItemPicker({
+            filterItems: (item: DimItem) =>
+              isLoadoutBuilderItem(item) &&
+              itemCanBeEquippedBy(item, selectedStore, true) &&
+              (!filter || filter(item)),
+            sortBy: (item) => LockableBucketHashes.indexOf(item.bucket.hash),
+          });
+
+          updateFunc(item);
+        } catch (e) {}
+      },
+    [selectedStore]
+  );
+
   // I don't think this can actually happen?
   if (!selectedStore) {
     return null;
@@ -266,31 +301,14 @@ export default memo(function LoadoutBuilder({
           </ol>
         </div>
       )}
-      <div className={styles.undoRedo}>
-        <button
-          className="dim-button"
-          onClick={() => lbDispatch({ type: 'undo' })}
-          type="button"
-          disabled={!canUndo}
-        >
-          <AppIcon icon={undoIcon} /> {t('Loadouts.Undo')}
-        </button>
-        <button
-          className="dim-button"
-          onClick={() => lbDispatch({ type: 'redo' })}
-          type="button"
-          disabled={!canRedo}
-        >
-          <AppIcon icon={redoIcon} /> {t('Loadouts.Redo')}
-        </button>
-      </div>
+      <UndoRedoControls canRedo={canRedo} canUndo={canUndo} lbDispatch={lbDispatch} />
       <TierSelect
         resolvedStatConstraints={resolvedStatConstraints}
         statRangesFiltered={result?.statRangesFiltered}
         lbDispatch={lbDispatch}
       />
       <EnergyOptions assumeArmorMasterwork={assumeArmorMasterwork} lbDispatch={lbDispatch} />
-      <div className={styles.area}>
+      <div className={loMenuSection}>
         <CheckButton
           onChange={setIncludeVendorItems}
           name="includeVendorItems"
@@ -312,15 +330,40 @@ export default memo(function LoadoutBuilder({
           {t('LoadoutBuilder.IncludeVendorItems')}
         </CheckButton>
       </div>
-      <LockArmorAndPerks
+      {isPhonePortrait && (
+        <div className={styles.guide}>
+          <ol start={2}>
+            <li>{t('LoadoutBuilder.OptimizerExplanationMods')}</li>
+          </ol>
+        </div>
+      )}
+      <LoadoutOptimizerExotic
+        lockedExoticHash={lockedExoticHash}
+        classType={selectedStore.classType}
+        lbDispatch={lbDispatch}
+      />
+      <LoadoutOptimizerMods
+        classType={selectedStore.classType}
+        lockedMods={resolvedMods}
+        autoStatMods={autoStatMods}
+        lbDispatch={lbDispatch}
+      />
+      <LoadoutOptimizerSubclass
+        selectedStore={selectedStore}
+        subclass={subclass}
+        lbDispatch={lbDispatch}
+      />
+      <LoadoutOptimizerPinnedItems
+        chooseItem={chooseItem}
         selectedStore={selectedStore}
         pinnedItems={pinnedItems}
-        excludedItems={excludedItems}
-        lockedMods={resolvedMods}
-        subclass={subclass}
-        lockedExoticHash={lockedExoticHash}
         searchFilter={searchFilter}
-        autoStatMods={autoStatMods}
+        lbDispatch={lbDispatch}
+      />
+      <LoadoutOptimizerExcludedItems
+        chooseItem={chooseItem}
+        excludedItems={excludedItems}
+        searchFilter={searchFilter}
         lbDispatch={lbDispatch}
       />
       {isPhonePortrait && (
@@ -603,4 +646,35 @@ function useSaveStatConstraints(
       });
     }
   }, [setSetting, statConstraints, savedStatConstraintsByClass, classType, hasPreloadedLoadout]);
+}
+
+function UndoRedoControls({
+  canUndo,
+  canRedo,
+  lbDispatch,
+}: {
+  canUndo: boolean;
+  canRedo: boolean;
+  lbDispatch: Dispatch<LoadoutBuilderAction>;
+}) {
+  return (
+    <div className={styles.undoRedo}>
+      <button
+        className="dim-button"
+        onClick={() => lbDispatch({ type: 'undo' })}
+        type="button"
+        disabled={!canUndo}
+      >
+        <AppIcon icon={undoIcon} /> {t('Loadouts.Undo')}
+      </button>
+      <button
+        className="dim-button"
+        onClick={() => lbDispatch({ type: 'redo' })}
+        type="button"
+        disabled={!canRedo}
+      >
+        <AppIcon icon={redoIcon} /> {t('Loadouts.Redo')}
+      </button>
+    </div>
+  );
 }
