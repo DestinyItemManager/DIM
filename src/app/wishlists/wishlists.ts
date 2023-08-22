@@ -1,6 +1,5 @@
 import { enhancedToPerk } from 'app/armory/wishlist-collapser';
 import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
-import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import { DimItem, DimPlug } from '../inventory/item-types';
 import { DimWishList, WishListRoll } from './types';
 
@@ -115,30 +114,7 @@ function getWishListPlugs(item: DimItem, wishListRoll: WishListRoll): Set<number
  */
 function allDesiredPerksExist(item: DimItem, wishListRoll: WishListRoll): boolean {
   if (wishListRoll.isExpertMode) {
-    for (const recommendedPerk of wishListRoll.recommendedPerks) {
-      let included = false;
-
-      // this function serves only getInventoryWishListRoll,
-      // which has already ensured item.sockets exists
-      outer: for (const s of item.sockets!.allSockets) {
-        if (s.plugOptions) {
-          for (const plug of s.plugOptions) {
-            if (
-              plug.plugDef.hash === recommendedPerk ||
-              perkToEnhanced[recommendedPerk] === plug.plugDef.hash
-            ) {
-              included = true;
-              break outer;
-            }
-          }
-        }
-      }
-
-      if (!included) {
-        return false;
-      }
-    }
-    return true;
+    return false;
   }
 
   return item.sockets!.allSockets.every(
