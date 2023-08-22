@@ -13,7 +13,6 @@ import { infoLog } from 'app/utils/log';
 import { scheduleMemoryMeasurement } from 'app/utils/measure-memory';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
-import idbReady from 'safari-14-idb-fix';
 import { StorageBroken, storageTest } from './StorageTest';
 import Root from './app/Root';
 import setupRateLimiter from './app/bungie-api/rate-limit-config';
@@ -24,6 +23,7 @@ import { safariTouchFix } from './app/safari-touch-fix';
 import { watchLanguageChanges } from './app/settings/observers';
 import { saveWishListToIndexedDB } from './app/wishlists/observers';
 import { StrictMode } from 'react';
+import { initObjectStore } from 'app/storage/object-store';
 infoLog(
   'app',
   `DIM v${$DIM_VERSION} (${$DIM_FLAVOR}) - Please report any errors to https://www.github.com/DestinyItemManager/DIM/issues`
@@ -44,9 +44,9 @@ const i18nPromise = initi18n();
 (async () => {
   const root = createRoot(document.getElementById('app')!);
 
-  // idbReady works around a bug in Safari 14 where IndexedDB doesn't initialize sometimes. Fixed in Safari 14.7
-  await idbReady();
-  // Block on testing that we can use LocalStorage and IDB, before everything starts trying to use it
+  await initObjectStore();
+
+  // Block on testing that we can use LocalStorage and IDB or OPFS, before everything starts trying to use it
   const storageWorks = await storageTest();
   if (!storageWorks) {
     // Make sure localization is loaded

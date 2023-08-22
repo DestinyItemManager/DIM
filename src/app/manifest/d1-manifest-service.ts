@@ -3,7 +3,7 @@ import { AllD1DestinyManifestComponents } from 'app/destiny1/d1-manifest-types';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { loadingEnd, loadingStart } from 'app/shell/actions';
-import { del, get, set } from 'app/storage/idb-keyval';
+import { deleteObject, loadObject, storeObject } from 'app/storage/object-store';
 import { ThunkResult } from 'app/store/types';
 import { errorLog, infoLog } from 'app/utils/log';
 import { convertToError, dedupePromise } from 'app/utils/util';
@@ -117,7 +117,7 @@ function loadManifestRemote(
 
 async function saveManifestToIndexedDB(typedArray: unknown, version: string) {
   try {
-    await set(idbKey, typedArray);
+    await storeObject(idbKey, typedArray);
     infoLog('manifest', `Successfully stored manifest file.`);
     localStorage.setItem(localStorageKey, version);
   } catch (e) {
@@ -132,7 +132,7 @@ async function saveManifestToIndexedDB(typedArray: unknown, version: string) {
 
 function deleteManifestFile() {
   localStorage.removeItem(localStorageKey);
-  del(idbKey);
+  deleteObject(idbKey);
 }
 
 /**
@@ -146,7 +146,7 @@ async function loadManifestFromCache(version: string): Promise<AllD1DestinyManif
 
   const currentManifestVersion = localStorage.getItem(localStorageKey);
   if (currentManifestVersion === version) {
-    const manifest = await get<AllD1DestinyManifestComponents>(idbKey);
+    const manifest = await loadObject<AllD1DestinyManifestComponents>(idbKey);
     if (!manifest) {
       throw new Error('Empty cached manifest file');
     }

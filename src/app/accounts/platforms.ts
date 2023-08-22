@@ -1,6 +1,6 @@
 import { loadDimApiData } from 'app/dim-api/actions';
 import { deleteDimApiToken } from 'app/dim-api/dim-api-helper';
-import { del, get } from 'app/storage/idb-keyval';
+import { deleteObject, loadObject } from 'app/storage/object-store';
 import { ThunkResult } from 'app/store/types';
 import { errorLog } from 'app/utils/log';
 import { convertToError, dedupePromise } from 'app/utils/util';
@@ -16,7 +16,7 @@ import {
 import { accountsLoadedSelector, accountsSelector, currentAccountSelector } from './selectors';
 
 const loadAccountsFromIndexedDBAction: ThunkResult = dedupePromise(async (dispatch) => {
-  const accounts = await get<DestinyAccount[] | undefined>('accounts');
+  const accounts = await loadObject<DestinyAccount[]>('accounts');
   dispatch(actions.loadFromIDB(accounts || []));
 });
 
@@ -113,7 +113,7 @@ export function logOut(): ThunkResult {
     deleteDimApiToken();
     localStorage.removeItem('dim-last-membership-id');
     localStorage.removeItem('dim-last-destiny-version');
-    del('accounts'); // remove saved accounts from IDB
+    deleteObject('accounts'); // remove saved accounts from IDB
 
     dispatch(actions.loggedOut());
   };

@@ -1,4 +1,4 @@
-import { get, set } from 'app/storage/idb-keyval';
+import { loadObject, storeObject } from 'app/storage/object-store';
 import { ThunkResult } from 'app/store/types';
 import { errorLog } from 'app/utils/log';
 import { dedupePromise } from 'app/utils/util';
@@ -29,7 +29,7 @@ const fetchClarity = async <T>(type: keyof typeof urls) => {
 
 const fetchRemoteDescriptions = async (version: number) => {
   const descriptions = await fetchClarity<ClarityDescription>('descriptions');
-  set('clarity-descriptions', descriptions);
+  storeObject('clarity-descriptions', descriptions);
   localStorage.setItem('clarityDescriptionVersion', version.toString());
   return descriptions;
 };
@@ -47,7 +47,7 @@ const loadClarityDescriptions = dedupePromise(async (loadFromIndexedDB: boolean)
   }
 
   if (loadFromIndexedDB) {
-    const savedDescriptions = await get<ClarityDescription>('clarity-descriptions');
+    const savedDescriptions = await loadObject<ClarityDescription>('clarity-descriptions');
     return (
       savedDescriptions ??
       // If IDB doesn't have the data (e.g. after deleting IDB but not localStorage), fetch it
@@ -60,7 +60,7 @@ const loadClarityDescriptions = dedupePromise(async (loadFromIndexedDB: boolean)
 
 const fetchRemoteStats = async (version: number) => {
   const descriptions = await fetchClarity<ClarityCharacterStats>('characterStats');
-  set('clarity-characterStats', descriptions);
+  storeObject('clarity-characterStats', descriptions);
   localStorage.setItem('clarityStatsVersion', version.toString());
   return descriptions;
 };
@@ -78,7 +78,7 @@ const loadClarityStats = dedupePromise(async (loadFromIndexedDB: boolean) => {
   }
 
   if (loadFromIndexedDB) {
-    const savedCharacterStats = await get<ClarityCharacterStats>('clarity-characterStats');
+    const savedCharacterStats = await loadObject<ClarityCharacterStats>('clarity-characterStats');
     return (
       savedCharacterStats ??
       // If IDB doesn't have the data (e.g. after deleting IDB but not localStorage), fetch it

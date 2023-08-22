@@ -9,7 +9,7 @@ import { showNotification } from 'app/notifications/notifications';
 import { Settings, initialSettingsState } from 'app/settings/initial-settings';
 import { readyResolve } from 'app/settings/settings';
 import { refresh$ } from 'app/shell/refresh-events';
-import { get, set } from 'app/storage/idb-keyval';
+import { loadObject, storeObject } from 'app/storage/object-store';
 import { RootState, ThunkResult } from 'app/store/types';
 import { errorLog, infoLog } from 'app/utils/log';
 import { convertToError, delay, errorMessage } from 'app/utils/util';
@@ -85,7 +85,7 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, undefined, A
           searches: nextState.searches,
         };
         infoLog('dim sync', 'Saving profile data to IDB');
-        set('dim-api-profile', savedState);
+        storeObject('dim-api-profile', savedState);
       }
     }, 1000)
   );
@@ -369,7 +369,7 @@ function loadProfileFromIndexedDB(): ThunkResult {
       return;
     }
 
-    const profile = await get<ProfileIndexedDBState | undefined>('dim-api-profile');
+    const profile = await loadObject<ProfileIndexedDBState | undefined>('dim-api-profile');
     dispatch(profileLoadedFromIDB(profile));
   };
 }

@@ -1,5 +1,5 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
-import { set } from 'app/storage/idb-keyval';
+import { storeObject } from 'app/storage/object-store';
 import { RootState } from 'app/store/types';
 import { errorLog } from 'app/utils/log';
 import { observeStore } from 'app/utils/redux-utils';
@@ -19,7 +19,7 @@ export const saveItemInfosOnStateChange = _.once(() => {
       if (account) {
         const key = `newItems-m${account.membershipId}-d${account.destinyVersion}`;
         try {
-          return await set(key, newItems);
+          return await storeObject(key, newItems);
         } catch (e) {
           errorLog('new-items', "Couldn't save new items", e);
         }

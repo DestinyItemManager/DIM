@@ -17,6 +17,7 @@ import { useLoadStores } from 'app/inventory/store/hooks';
 import { TroubleshootingSettings } from 'app/settings/Troubleshooting';
 import { systemInfo } from 'app/shell/About';
 import LocalStorageInfo from 'app/storage/LocalStorageInfo';
+// eslint-disable-next-line no-restricted-imports
 import { set } from 'app/storage/idb-keyval';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { DimError } from 'app/utils/dim-error';

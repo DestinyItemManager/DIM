@@ -3,7 +3,7 @@ import { BungieError } from 'app/bungie-api/http-client';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { amountOfItem } from 'app/inventory/stores-helpers';
-import { get, set } from 'app/storage/idb-keyval';
+import { loadObject, storeObject } from 'app/storage/object-store';
 import { ThunkResult } from 'app/store/types';
 import { errorLog } from 'app/utils/log';
 import { filterMap } from 'app/utils/util';
@@ -272,7 +272,7 @@ function cachedVendorUpToDate(vendor: Vendor, store: D1Store, vendorDef: D1Vendo
   );
 }
 
-function loadVendor(
+async function loadVendor(
   account: DestinyAccount,
   store: D1Store,
   vendorDef: D1VendorDefinition,
@@ -282,50 +282,46 @@ function loadVendor(
   const vendorHash = vendorDef.hash;
 
   const key = vendorKey(store, vendorHash);
-  return get<Vendor>(key)
-    .then((vendor) => {
-      if (cachedVendorUpToDate(vendor, store, vendorDef)) {
-        // log("loaded local", vendorDef.summary.vendorName, key, vendor);
-        if (vendor.failed) {
-          throw new Error(`Cached failed vendor ${vendorDef.summary.vendorName}`);
-        }
-        return vendor;
-      } else {
-        // log("load remote", vendorDef.summary.vendorName, key, vendorHash, vendor, vendor?.nextRefreshDate);
-        return getVendorForCharacter(account, store, vendorHash)
-          .then((vendor) => {
-            vendor.expires = calculateExpiration(vendor.nextRefreshDate, vendorHash);
-            vendor.factionLevel = factionLevel(store, vendorDef.summary.factionHash);
-            vendor.factionAligned = factionAligned(store, vendorDef.summary.factionHash);
-            return set(key, vendor).then(() => vendor);
-          })
-          .catch((e) => {
-            // log("vendor error", vendorDef.summary.vendorName, 'for', store.name, e, e.code, e.status);
-            if (e instanceof BungieError && e.status === 'DestinyVendorNotFound') {
-              const vendor = {
-                failed: true,
-                code: e.code,
-                status: e.status,
-                expires: Date.now() + 60 * 60 * 1000 + (Math.random() - 0.5) * (60 * 60 * 1000),
-                factionLevel: factionLevel(store, vendorDef.summary.factionHash),
-                factionAligned: factionAligned(store, vendorDef.summary.factionHash),
-              };
+  let vendor = await loadObject<Vendor>(key);
 
-              return set(key, vendor).then(() => {
-                throw new Error(`Cached failed vendor ${vendorDef.summary.vendorName}`);
-              });
-            }
-            throw new Error(`Failed to load vendor ${vendorDef.summary.vendorName}`);
-          });
+  if (vendor && cachedVendorUpToDate(vendor, store, vendorDef)) {
+    // log("loaded local", vendorDef.summary.vendorName, key, vendor);
+    if (vendor.failed) {
+      throw new Error(`Cached failed vendor ${vendorDef.summary.vendorName}`);
+    }
+    return vendor;
+  } else {
+    try {
+      // log("load remote", vendorDef.summary.vendorName, key, vendorHash, vendor, vendor?.nextRefreshDate);
+      vendor = await getVendorForCharacter(account, store, vendorHash);
+      vendor.expires = calculateExpiration(vendor.nextRefreshDate, vendorHash);
+      vendor.factionLevel = factionLevel(store, vendorDef.summary.factionHash);
+      vendor.factionAligned = factionAligned(store, vendorDef.summary.factionHash);
+      await storeObject(key, vendor);
+    } catch (e) {
+      // log("vendor error", vendorDef.summary.vendorName, 'for', store.name, e, e.code, e.status);
+      if (e instanceof BungieError && e.status === 'DestinyVendorNotFound') {
+        const vendor = {
+          failed: true,
+          code: e.code,
+          status: e.status,
+          expires: Date.now() + 60 * 60 * 1000 + (Math.random() - 0.5) * (60 * 60 * 1000),
+          factionLevel: factionLevel(store, vendorDef.summary.factionHash),
+          factionAligned: factionAligned(store, vendorDef.summary.factionHash),
+        };
+
+        await storeObject(key, vendor);
+
+        throw new Error(`Cached failed vendor ${vendorDef.summary.vendorName}`);
       }
-    })
-    .then((vendor) => {
-      if (vendor?.enabled) {
-        return processVendor(vendor, vendorDef, defs, store, buckets);
-      }
-      // log("Couldn't load", vendorDef.summary.vendorName, 'for', store.name);
-      return Promise.resolve(null);
-    });
+      throw new Error(`Failed to load vendor ${vendorDef.summary.vendorName}`);
+    }
+  }
+  if (vendor?.enabled) {
+    return processVendor(vendor, vendorDef, defs, store, buckets);
+  }
+  // log("Couldn't load", vendorDef.summary.vendorName, 'for', store.name);
+  return null;
 }
 
 function vendorKey(store: D1Store, vendorHash: number) {

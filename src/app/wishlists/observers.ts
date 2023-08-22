@@ -1,4 +1,4 @@
-import { set } from 'app/storage/idb-keyval';
+import { storeObject } from 'app/storage/object-store';
 import { observeStore } from 'app/utils/redux-utils';
 
 export function saveWishListToIndexedDB() {
@@ -6,7 +6,7 @@ export function saveWishListToIndexedDB() {
     (state) => state.wishLists,
     (_prev, nextState) => {
       if (nextState.loaded) {
-        set('wishlist', {
+        storeObject('wishlist', {
           wishListAndInfo: nextState.wishListAndInfo,
           lastFetched: nextState.lastFetched,
         });

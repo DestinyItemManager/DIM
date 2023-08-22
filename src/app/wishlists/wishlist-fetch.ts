@@ -4,7 +4,7 @@ import { showNotification } from 'app/notifications/notifications';
 import { isValidWishListUrlDomain, wishListAllowedHosts } from 'app/settings/WishListSettings';
 import { setSettingAction } from 'app/settings/actions';
 import { settingsReady } from 'app/settings/settings';
-import { get } from 'app/storage/idb-keyval';
+import { loadObject } from 'app/storage/object-store';
 import { ThunkResult } from 'app/store/types';
 import { errorLog, infoLog } from 'app/utils/log';
 import { loadWishLists, touchWishLists } from './actions';
@@ -145,7 +145,7 @@ function loadWishListAndInfoFromIndexedDB(): ThunkResult {
     }
 
     try {
-      const wishListState = await get<WishListsState>('wishlist');
+      const wishListState = await loadObject<WishListsState>('wishlist');
 
       if (getState().wishLists.loaded) {
         return;

@@ -4,7 +4,7 @@ import { t } from 'app/i18next-t';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
-import { get, set } from 'app/storage/idb-keyval';
+import { loadObject, storeObject } from 'app/storage/object-store';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
 import { Destiny2CoreSettings } from 'bungie-api-ts/core';
@@ -273,7 +273,7 @@ async function getAwaToken(
   if (!awaCache) {
     // load from cache first time
     // TODO: maybe put this in Redux!
-    awaCache = (await get('awa-tokens')) || {};
+    awaCache = (await loadObject('awa-tokens')) || {};
   }
 
   let info = awaCache[action];
@@ -313,7 +313,7 @@ async function getAwaToken(
   info.used++;
 
   // TODO: really should use a separate db for this
-  await set('awa-tokens', awaCache);
+  await storeObject('awa-tokens', awaCache);
 
   return info.actionToken;
 }

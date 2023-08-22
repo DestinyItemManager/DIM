@@ -1,4 +1,4 @@
-import { set } from 'app/storage/idb-keyval';
+import { storeObject } from 'app/storage/object-store';
 import { observeStore } from 'app/utils/redux-utils';
 
 export function saveAccountsToIndexedDB() {
@@ -6,7 +6,7 @@ export function saveAccountsToIndexedDB() {
     (state) => state.accounts,
     (currentState, nextState) => {
       if (nextState.loaded && nextState.accounts !== currentState.accounts) {
-        set('accounts', nextState.accounts);
+        storeObject('accounts', nextState.accounts);
       }
     }
   );

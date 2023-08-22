@@ -2,7 +2,7 @@ import { HttpStatusError, toHttpStatusError } from 'app/bungie-api/http-client';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { loadingEnd, loadingStart } from 'app/shell/actions';
-import { del, get, set } from 'app/storage/idb-keyval';
+import { deleteObject, loadObject, storeObject } from 'app/storage/object-store';
 import { ThunkResult } from 'app/store/types';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { errorLog, infoLog, timer } from 'app/utils/log';
@@ -269,7 +269,7 @@ async function saveManifestToIndexedDB(
   tableAllowList: string[]
 ) {
   try {
-    await set(idbKey, typedArray);
+    await storeObject(idbKey, typedArray);
     infoLog('manifest', `Successfully stored manifest file.`);
     localStorage.setItem(localStorageKey, version);
     localStorage.setItem(`${localStorageKey}-whitelist`, JSON.stringify(tableAllowList));
@@ -285,7 +285,7 @@ async function saveManifestToIndexedDB(
 
 function deleteManifestFile() {
   localStorage.removeItem(localStorageKey);
-  return del(idbKey);
+  return deleteObject(idbKey);
 }
 
 /**
@@ -305,7 +305,7 @@ async function loadManifestFromCache(
     localStorage.getItem(`${localStorageKey}-whitelist`) || '[]'
   ) as string[];
   if (currentManifestVersion === version && deepEqual(currentAllowList, tableAllowList)) {
-    const manifest = await get<AllDestinyManifestComponents>(idbKey);
+    const manifest = await loadObject<AllDestinyManifestComponents>(idbKey);
     if (!manifest) {
       await deleteManifestFile();
       throw new Error('Empty cached manifest file');

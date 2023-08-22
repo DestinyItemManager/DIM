@@ -10,7 +10,7 @@ import { processInGameLoadouts } from 'app/loadout-drawer/loadout-type-converter
 import { inGameLoadoutLoaded } from 'app/loadout/ingame/actions';
 import { loadCoreSettings } from 'app/manifest/actions';
 import { d2ManifestSelector, manifestSelector } from 'app/manifest/selectors';
-import { get, set } from 'app/storage/idb-keyval';
+import { loadObject, storeObject } from 'app/storage/object-store';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
@@ -153,11 +153,13 @@ function loadProfile(
     let profileResponse = getState().inventory.profileResponse;
     if (!profileResponse) {
       try {
-        profileResponse = await get<DestinyProfileResponse>(`profile-${account.membershipId}`);
+        profileResponse = await loadObject<DestinyProfileResponse>(
+          `profile-${account.membershipId}`
+        );
         // Check to make sure the profile hadn't been loaded in the meantime
         if (getState().inventory.profileResponse) {
           profileResponse = getState().inventory.profileResponse;
-        } else {
+        } else if (profileResponse) {
           infoLog('d2-stores', 'Loaded cached profile from IndexedDB');
           dispatch(profileLoaded({ profile: profileResponse, live: false }));
           // The first time we load, just use the IDB version if we can, to speed up loading
@@ -227,7 +229,7 @@ function loadProfile(
       }
 
       profileResponse = remoteProfileResponse;
-      set(`profile-${account.membershipId}`, profileResponse); // don't await
+      storeObject(`profile-${account.membershipId}`, profileResponse); // don't await
       dispatch(profileLoaded({ profile: profileResponse, live: true }));
       return profileResponse;
     } catch (e) {

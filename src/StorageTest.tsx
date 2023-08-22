@@ -1,7 +1,6 @@
 import { t } from 'app/i18next-t';
 import ErrorPanel from 'app/shell/ErrorPanel';
-import { deleteDatabase, get, set } from 'app/storage/idb-keyval';
-import { reportException } from 'app/utils/exceptions';
+import { testObjectStore } from 'app/storage/object-store';
 import { errorLog } from 'app/utils/log';
 
 export function StorageBroken() {
@@ -29,39 +28,5 @@ export async function storageTest() {
     return false;
   }
 
-  try {
-    await set('idb-test', true);
-  } catch (e) {
-    errorLog('storage', 'Failed IndexedDB Set Test - trying to delete database', e);
-    try {
-      await deleteDatabase();
-      await set('idb-test', true);
-      // Report to sentry, I want to know if this ever works
-      reportException('deleting database fixed IDB set', e);
-    } catch (e2) {
-      errorLog('storage', 'Failed IndexedDB Set Test - deleting database did not help', e2);
-    }
-    reportException('Failed IndexedDB Set Test', e);
-    return false;
-  }
-
-  try {
-    const idbValue = await get<boolean>('idb-test');
-    return idbValue;
-  } catch (e) {
-    errorLog('storage', 'Failed IndexedDB Get Test - trying to delete database', e);
-    try {
-      await deleteDatabase();
-      const idbValue = await get<boolean>('idb-test');
-      if (idbValue) {
-        // Report to sentry, I want to know if this ever works
-        reportException('deleting database fixed IDB get', e);
-      }
-      return idbValue;
-    } catch (e2) {
-      errorLog('storage', 'Failed IndexedDB Get Test - deleting database did not help', e2);
-    }
-    reportException('Failed IndexedDB Get Test', e);
-    return false;
-  }
+  return testObjectStore();
 }
