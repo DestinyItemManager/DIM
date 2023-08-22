@@ -126,6 +126,8 @@ export default function VendorItems({
             <div className={styles.currency} key={currency.hash}>
               {(currencyLookups?.[currency.hash] || 0).toLocaleString()}{' '}
               <BungieImage
+                height={16}
+                width={16}
                 src={currency.displayProperties.icon}
                 title={currency.displayProperties.name}
               />
