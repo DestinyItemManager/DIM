@@ -39,7 +39,7 @@ export async function storageTest() {
       // Report to sentry, I want to know if this ever works
       reportException('deleting database fixed IDB set', e);
     } catch (e2) {
-      errorLog('storage', 'Failed IndexedDB Set Test - deleting database did not help', e);
+      errorLog('storage', 'Failed IndexedDB Set Test - deleting database did not help', e2);
     }
     reportException('Failed IndexedDB Set Test', e);
     return false;
@@ -59,7 +59,7 @@ export async function storageTest() {
       }
       return idbValue;
     } catch (e2) {
-      errorLog('storage', 'Failed IndexedDB Get Test - deleting database did not help', e);
+      errorLog('storage', 'Failed IndexedDB Get Test - deleting database did not help', e2);
     }
     reportException('Failed IndexedDB Get Test', e);
     return false;
