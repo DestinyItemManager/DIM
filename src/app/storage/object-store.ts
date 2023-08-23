@@ -15,7 +15,7 @@ const supportsOPFS =
   'storage' in navigator &&
   'getDirectory' in navigator.storage &&
   // Safari doesn't support the async methods and only really supports OPFS from a Worker context
-  'createWritable' in FileSystemFileHandle;
+  'createWritable' in FileSystemFileHandle.prototype;
 
 let root: FileSystemDirectoryHandle | undefined;
 
@@ -41,12 +41,10 @@ export async function loadObject<T>(key: string): Promise<T | undefined> {
         if (file.size === 0) {
           return undefined;
         }
-        const text = await file.text();
-        if (text) {
-          return (JSON.parse(text) as T) ?? undefined;
-        } else {
-          return undefined;
-        }
+
+        // Rather than JSON.stringify(await file.text()) we can theoretically off-main-thread stream it through Response?
+        const resp = new Response(file);
+        return ((await resp.json()) as T) ?? undefined;
       } catch (e) {
         if (e instanceof DOMException && e.name === 'NotFoundError') {
           return undefined;
