@@ -6,7 +6,7 @@
   }
 }
 
-.socketDetailsSheet {
+.socketDetailsSheet:global(.sheet) {
   // This fits 14 plugs + scroll bar
   max-width: 820px;
   margin: 0 auto;

@@ -1,4 +1,5 @@
 import ClickOutside from 'app/dim-ui/ClickOutside';
+import { PressTipRoot } from 'app/dim-ui/PressTip';
 import Sheet from 'app/dim-ui/Sheet';
 import { usePopper } from 'app/dim-ui/usePopper';
 import { DimItem } from 'app/inventory/item-types';
@@ -122,18 +123,20 @@ export default function ItemPopup({
         aria-modal="false"
       >
         <ClickOutside onClickOutside={onClose}>
-          <ItemTagHotkeys item={item} />
-          <div className={styles.desktopPopup}>
-            <div className={clsx(styles.desktopPopupBody, styles.popupBackground)}>
-              {header}
-              {body}
-            </div>
-            {itemActionsModel.hasControls && (
-              <div className={clsx(styles.desktopActions)}>
-                <DesktopItemActions item={item} actionsModel={itemActionsModel} />
+          <PressTipRoot.Provider value={popupRef}>
+            <ItemTagHotkeys item={item} />
+            <div className={styles.desktopPopup}>
+              <div className={clsx(styles.desktopPopupBody, styles.popupBackground)}>
+                {header}
+                {body}
               </div>
-            )}
-          </div>
+              {itemActionsModel.hasControls && (
+                <div className={clsx(styles.desktopActions)}>
+                  <DesktopItemActions item={item} actionsModel={itemActionsModel} />
+                </div>
+              )}
+            </div>
+          </PressTipRoot.Provider>
         </ClickOutside>
         <div className={clsx('arrow', styles.arrow, tierClasses[item.tier])} />
       </div>
