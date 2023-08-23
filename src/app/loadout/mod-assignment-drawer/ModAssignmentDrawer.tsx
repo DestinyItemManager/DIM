@@ -7,7 +7,6 @@ import { permissiveArmorEnergyRules } from 'app/loadout-builder/types';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { LoadoutCharacterStats } from 'app/store-stats/CharacterStats';
-import { Portal } from 'app/utils/temp-container';
 import Cost from 'app/vendors/Cost';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -195,16 +194,14 @@ export default function ModAssignmentDrawer({
         </div>
       </Sheet>
       {onUpdateMods && plugCategoryHashWhitelist && (
-        <Portal>
-          <ModPicker
-            classType={loadout.classType}
-            owner={storeId}
-            lockedMods={resolvedMods}
-            plugCategoryHashWhitelist={plugCategoryHashWhitelist}
-            onAccept={onUpdateMods}
-            onClose={() => setPlugCategoryHashWhitelist(undefined)}
-          />
-        </Portal>
+        <ModPicker
+          classType={loadout.classType}
+          owner={storeId}
+          lockedMods={resolvedMods}
+          plugCategoryHashWhitelist={plugCategoryHashWhitelist}
+          onAccept={onUpdateMods}
+          onClose={() => setPlugCategoryHashWhitelist(undefined)}
+        />
       )}
     </>
   );

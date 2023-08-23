@@ -18,7 +18,6 @@ import { useSetting } from 'app/settings/hooks';
 import { AppIcon, addIcon, faCalculator, uploadIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { usePageTitle } from 'app/utils/hooks';
-import { Portal } from 'app/utils/temp-container';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
@@ -215,42 +214,40 @@ function Loadouts({ account }: { account: DestinyAccount }) {
         {loadouts.length === 0 && <p>{t('Loadouts.NoneMatch', { query })}</p>}
       </PageWithMenu.Contents>
       {sharedLoadout && (
-        <Portal>
-          <LoadoutShareSheet
-            account={account}
-            loadout={sharedLoadout}
-            onClose={() => setSharedLoadout(undefined)}
-          />
-        </Portal>
+        <LoadoutShareSheet
+          account={account}
+          loadout={sharedLoadout}
+          onClose={() => setSharedLoadout(undefined)}
+        />
       )}
       {loadoutImportOpen && (
-        <Portal>
-          <LoadoutImportSheet
-            currentStoreId={selectedStoreId}
-            onClose={() => setLoadoutImportOpen(false)}
-          />
-        </Portal>
+        <LoadoutImportSheet
+          currentStoreId={selectedStoreId}
+          onClose={() => setLoadoutImportOpen(false)}
+        />
       )}
       {viewingInGameLoadout && (
-        <Portal>
-          <InGameLoadoutDetails
-            store={selectedStore}
-            loadout={viewingInGameLoadout}
-            onEdit={setEditingInGameLoadout}
-            onShare={setSharedLoadout}
-            onClose={handleViewingSheetClose}
-          />
-        </Portal>
+        <InGameLoadoutDetails
+          store={selectedStore}
+          loadout={viewingInGameLoadout}
+          onEdit={setEditingInGameLoadout}
+          onShare={setSharedLoadout}
+          onClose={handleViewingSheetClose}
+        />
       )}
       {showSnapshot && (
-        <Portal>
-          <EditInGameLoadout characterId={selectedStoreId} onClose={handleSnapshotSheetClose} />
-        </Portal>
+        <EditInGameLoadout
+          key="snapshot"
+          characterId={selectedStoreId}
+          onClose={handleSnapshotSheetClose}
+        />
       )}
       {editingInGameLoadout && (
-        <Portal key="editsheet">
-          <EditInGameLoadout loadout={editingInGameLoadout} onClose={handleEditSheetClose} />
-        </Portal>
+        <EditInGameLoadout
+          key="editsheet"
+          loadout={editingInGameLoadout}
+          onClose={handleEditSheetClose}
+        />
       )}
     </PageWithMenu>
   );

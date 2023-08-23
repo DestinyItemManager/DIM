@@ -12,7 +12,6 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { useSetCSSVarToHeight } from 'app/utils/hooks';
 import { infoLog } from 'app/utils/log';
-import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import { AnimatePresence, Spring, Variants, motion } from 'framer-motion';
 import logo from 'images/logo-type-right-light.svg';
@@ -389,11 +388,9 @@ export default function Header() {
         </HeaderWarningBanner>
       )}
       {promptIosPwa && (
-        <Portal>
-          <Sheet header={<h1>{t('Header.InstallDIM')}</h1>} onClose={() => setPromptIosPwa(false)}>
-            <p className={styles.pwaPrompt}>{t('Header.IosPwaPrompt')}</p>
-          </Sheet>
-        </Portal>
+        <Sheet header={<h1>{t('Header.InstallDIM')}</h1>} onClose={() => setPromptIosPwa(false)}>
+          <p className={styles.pwaPrompt}>{t('Header.IosPwaPrompt')}</p>
+        </Sheet>
       )}
     </header>
   );

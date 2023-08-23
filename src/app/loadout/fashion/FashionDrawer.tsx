@@ -16,7 +16,6 @@ import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { AppIcon, clearIcon, rightArrowIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { getSocketsByCategoryHash, plugFitsIntoSocket } from 'app/utils/socket-utils';
-import { Portal } from 'app/utils/temp-container';
 import { filterMap } from 'app/utils/util';
 import { HashLookup } from 'app/utils/util-types';
 import {
@@ -391,15 +390,13 @@ export default function FashionDrawer({
         </div>
       )}
       {pickPlug && (
-        <Portal>
-          <SocketDetails
-            item={pickPlug.item}
-            allowInsertPlug={false}
-            socket={pickPlug.socket}
-            onClose={() => setPickPlug(undefined)}
-            onPlugSelected={handlePlugSelected}
-          />
-        </Portal>
+        <SocketDetails
+          item={pickPlug.item}
+          allowInsertPlug={false}
+          socket={pickPlug.socket}
+          onClose={() => setPickPlug(undefined)}
+          onPlugSelected={handlePlugSelected}
+        />
       )}
     </Sheet>
   );
