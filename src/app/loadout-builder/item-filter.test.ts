@@ -5,6 +5,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { ModMap, categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
+import { plugCategoryHashToBucketHash } from 'app/loadout/mod-utils';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { count } from 'app/utils/util';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
@@ -17,6 +18,7 @@ import {
   ItemsByBucket,
   LOCKED_EXOTIC_ANY_EXOTIC,
   LOCKED_EXOTIC_NO_EXOTIC,
+  LockableBucketHash,
   LockableBucketHashes,
   loDefaultArmorEnergyRules,
 } from './types';
@@ -101,6 +103,8 @@ describe('loadout-builder item-filter', () => {
       [fontOfWisdomMod, fontOfWisdomMod, fontOfWisdomMod],
       items
     );
+
+    expect(unassignedMods.length).toBe(0);
 
     const cases: [rules: ArmorEnergyRules, expectAllItemsFit: boolean][] = [
       [loDefaultArmorEnergyRules, false],
@@ -276,5 +280,47 @@ describe('loadout-builder item-filter', () => {
       .flat()
       .filter((i) => i.isExotic);
     expect(originalExotics.length).toBe(filteredExotics.length);
+  });
+
+  it('mod assignment may cause exotic slot to not have options', () => {
+    // Find an exotic where every copy has less than 4 energy
+    const exotic = items.find(
+      (i) =>
+        i.isExotic &&
+        items.every(
+          (otherItem) => otherItem.hash !== i.hash || otherItem.energy!.energyCapacity < 9
+        )
+    )!;
+
+    const socket = exotic.sockets?.allSockets.find(
+      (i) =>
+        i.plugged &&
+        plugCategoryHashToBucketHash[
+          i.plugged.plugDef.plug.plugCategoryHash as PlugCategoryHashes
+        ] === exotic.bucket.hash
+    )!;
+    const mod = socket.plugSet!.plugs.find(
+      (plug) =>
+        plug.plugDef.plug.energyCost?.energyCost && plug.plugDef.plug.energyCost.energyCost >= 3
+    )!.plugDef;
+
+    // 3 mods with at least 3 cost each
+    const { modMap, unassignedMods } = categorizeArmorMods(
+      new Array<PluggableInventoryItemDefinition>(3).fill(mod),
+      items
+    );
+    expect(unassignedMods.length).toBe(0);
+
+    const [filteredItems, filterInfo] = filterItems({
+      ...defaultArgs,
+      defs,
+      items,
+      lockedModMap: modMap,
+      unassignedMods: unassignedMods,
+      lockedExoticHash: exotic.hash,
+    });
+
+    pinInvariants(filteredItems, filterInfo);
+    expect(filteredItems[exotic.bucket.hash as LockableBucketHash].length).toBe(0);
   });
 });
