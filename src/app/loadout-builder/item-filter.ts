@@ -27,7 +27,7 @@ export interface FilterInfo {
       totalConsidered: number;
       cantFitMods: number;
       finalValid: number;
-      searchQueryEffective: boolean;
+      removedBySearchFilter: number;
     };
   };
 }
@@ -70,7 +70,7 @@ export function filterItems({
     totalConsidered: 0,
     cantFitMods: 0,
     finalValid: 0,
-    searchQueryEffective: false,
+    removedBySearchFilter: 0,
   };
 
   const filterInfo: FilterInfo = {
@@ -172,15 +172,16 @@ export function filterItems({
     // the search. This allows users to filter some buckets without getting
     // stuck making no sets.
     filteredItems[bucket] = searchFilteredItems.length ? searchFilteredItems : itemsThatFitMods;
-    const searchQueryEffective =
-      searchFilteredItems.length > 0 && searchFilteredItems.length !== itemsThatFitMods.length;
-    filterInfo.searchQueryEffective ||= searchQueryEffective;
+    const removedBySearchFilter = searchFilteredItems.length
+      ? itemsThatFitMods.length - searchFilteredItems.length
+      : 0;
+    filterInfo.searchQueryEffective ||= removedBySearchFilter > 0;
 
     filterInfo.perBucketStats[bucket] = {
       totalConsidered: firstPassFilteredItems.length,
       cantFitMods: withoutExcluded.length - itemsThatFitMods.length,
+      removedBySearchFilter,
       finalValid: filteredItems[bucket].length,
-      searchQueryEffective,
     };
   }
 
