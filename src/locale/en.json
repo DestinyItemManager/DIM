@@ -1215,6 +1215,7 @@
     "Button": "Strip {{numSockets}} Sockets",
     "Cancel": "Cancel",
     "Choose": "Choose Sockets to strip",
+    "DiscountedMods": "{{count}}x Discounted Mod",
     "Done": "Stripped Sockets",
     "NoSockets": "No Sockets to clear",
     "Ok": "Ok",

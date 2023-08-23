@@ -1,6 +1,7 @@
 import { PressTip } from 'app/dim-ui/PressTip';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
+import { locateItem } from 'app/inventory/locate-item';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { filterFactorySelector } from 'app/search/search-filter';
 import { AppIcon, faCheckCircle, refreshIcon } from 'app/shell/icons';
@@ -253,7 +254,11 @@ function StripSocketsProcess({
     <div className={styles.iconList}>
       {socketList.map((socket, idx) => {
         const state = socketStates[idx];
-        const icon = <DefItemIcon itemDef={socket.plugItemDef} />;
+        const icon = (
+          <div onClick={() => locateItem(socket.item)}>
+            <DefItemIcon itemDef={socket.plugItemDef} />
+          </div>
+        );
         const failed = state !== 'ok' && state !== 'todo';
         const key = `${socket.item.index}-${socket.socketIndex}`;
         const className = clsx('item', styles.plug, {

@@ -2,6 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { I18nKey, tl } from 'app/i18next-t';
 import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { isReducedModCostVariant } from 'app/loadout/mod-utils';
 import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { ThunkResult } from 'app/store/types';
 import { CancelToken } from 'app/utils/cancel';
@@ -21,6 +22,7 @@ export type SocketKind =
   | 'ornaments'
   | 'weaponmods'
   | 'armormods'
+  | 'discountedmods'
   | 'subclass'
   | 'others';
 
@@ -35,6 +37,9 @@ function identifySocket(
   } else if (plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsDamage)) {
     return 'weaponmods';
   } else if (plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)) {
+    if (isReducedModCostVariant(plugDef.hash)) {
+      return 'discountedmods';
+    }
     return 'armormods';
   } else if (plugDef.plug.plugCategoryHash === PlugCategoryHashes.Hologram) {
     return 'others';
@@ -65,6 +70,9 @@ export function collectSocketsToStrip(
     },
     armormods: {
       name: tl('StripSockets.ArmorMods'),
+    },
+    discountedmods: {
+      name: tl('StripSockets.DiscountedMods'),
     },
     subclass: {
       name: tl('StripSockets.Subclass'),
