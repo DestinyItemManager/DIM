@@ -54,7 +54,10 @@ import consumablesIcon from 'destiny-icons/general/consumables.svg';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { InGameLoadoutIconWithIndex } from '../ingame/InGameLoadoutIcon';
+import {
+  InGameLoadoutIconFromIdentifiers,
+  InGameLoadoutIconWithIndex,
+} from '../ingame/InGameLoadoutIcon';
 import { applyInGameLoadout } from '../ingame/ingame-loadout-apply';
 import { inGameLoadoutsForCharacterSelector } from '../ingame/selectors';
 import {
@@ -298,6 +301,13 @@ export default function LoadoutPopup({
             >
               {(dimStore.isVault || loadout.classType === DestinyClass.Unknown) && (
                 <ClassIcon className={styles.loadoutTypeIcon} classType={loadout.classType} />
+              )}
+              {loadout.parameters?.inGameIdentifiers && (
+                <InGameLoadoutIconFromIdentifiers
+                  size={16}
+                  className={styles.loadoutIcon}
+                  identifiers={loadout.parameters.inGameIdentifiers}
+                />
               )}
               {isMissingItems(defs, allItems, dimStore.id, loadout) && (
                 <AlertIcon

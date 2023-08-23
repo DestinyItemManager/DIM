@@ -82,6 +82,7 @@
       > :global(.app-icon),
       > img {
         width: 12px;
+        height: auto;
         margin-right: 5px;
         text-align: center;
 
@@ -201,4 +202,8 @@
     outline: 2px solid var(--theme-accent-primary);
   }
   display: block;
+}
+
+.loadoutIcon {
+  width: 16px !important;
 }

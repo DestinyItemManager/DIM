@@ -8,6 +8,7 @@ interface CssExports {
   'inGameLoadoutButton': string;
   'inGameLoadouts': string;
   'list': string;
+  'loadoutIcon': string;
   'loadoutTypeIcon': string;
   'menuItem': string;
   'moreLoadouts': string;

@@ -26,6 +26,7 @@ import styles from './Loadouts.m.scss';
 import LoadoutRow from './LoadoutsRow';
 import EditInGameLoadout from './ingame/EditInGameLoadout';
 import { InGameLoadoutDetails } from './ingame/InGameLoadoutDetailsSheet';
+import { InGameLoadoutIconFromIdentifiers } from './ingame/InGameLoadoutIcon';
 import { InGameLoadoutStrip } from './ingame/InGameLoadoutStrip';
 import LoadoutImportSheet from './loadout-share/LoadoutImportSheet';
 import LoadoutShareSheet from './loadout-share/LoadoutShareSheet';
@@ -171,7 +172,17 @@ function Loadouts({ account }: { account: DestinyAccount }) {
         </div>
         {!isPhonePortrait &&
           loadouts.map((loadout) => (
-            <PageWithMenu.MenuButton onClick={() => scrollToLoadout(loadout.id)} key={loadout.id}>
+            <PageWithMenu.MenuButton
+              onClick={() => scrollToLoadout(loadout.id)}
+              key={loadout.id}
+              className={styles.loadoutMenuItem}
+            >
+              {loadout.parameters?.inGameIdentifiers && (
+                <InGameLoadoutIconFromIdentifiers
+                  identifiers={loadout.parameters.inGameIdentifiers}
+                  size={16}
+                />
+              )}
               <ColorDestinySymbols text={loadout.name} />
             </PageWithMenu.MenuButton>
           ))}
