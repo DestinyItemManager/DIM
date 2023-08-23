@@ -11,7 +11,6 @@ export default function setupRateLimiter() {
   addLimiter(
     new RateLimiterQueue(
       /www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/PullFromPostmaster/,
-
       100
     )
   );
@@ -32,5 +31,32 @@ export default function setupRateLimiter() {
       /www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/InsertSocketPlug/,
       500
     )
+  );
+  addLimiter(
+    new RateLimiterQueue(/www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/SetLockState/, 100)
+  );
+  addLimiter(
+    new RateLimiterQueue(
+      /www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/SetTrackedState/,
+      1000
+    )
+  );
+  addLimiter(
+    new RateLimiterQueue(/www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/EquipLoadout/, 1000)
+  );
+  addLimiter(
+    new RateLimiterQueue(
+      /www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/SnapshotLoadout/,
+      1000
+    )
+  );
+  addLimiter(
+    new RateLimiterQueue(
+      /www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/UpdateLoadoutIdentifiers/,
+      1000
+    )
+  );
+  addLimiter(
+    new RateLimiterQueue(/www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/ClearLoadout/, 1000)
   );
 }
