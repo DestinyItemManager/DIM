@@ -24,6 +24,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
 import StripSockets from 'app/strip-sockets/StripSockets';
 import { setAppBadge } from 'app/utils/app-badge';
+import SingleVendorSheet from 'app/vendors/single-vendor/SingleVendorSheet';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 import { noop } from 'lodash';
 import { lazy, useEffect, useMemo } from 'react';
@@ -54,8 +55,9 @@ const D1LoadoutBuilder = lazy(
 const Vendors = lazy(async () => ({
   default: (await import(/* webpackChunkName: "vendors" */ 'app/vendors/components')).Vendors,
 }));
-const SingleVendor = lazy(async () => ({
-  default: (await import(/* webpackChunkName: "vendors" */ 'app/vendors/components')).SingleVendor,
+const SingleVendorPage = lazy(async () => ({
+  default: (await import(/* webpackChunkName: "vendors" */ 'app/vendors/components'))
+    .SingleVendorPage,
 }));
 const D1Vendors = lazy(
   () => import(/* webpackChunkName: "d1vendors" */ 'app/destiny1/vendors/D1Vendors')
@@ -208,7 +210,7 @@ export default function Destiny() {
           )}
           <Route path="organizer" element={<Organizer account={account} />} />
           {account.destinyVersion === 2 && (
-            <Route path="vendors/:vendorHash" element={<SingleVendor account={account} />} />
+            <Route path="vendors/:vendorHash" element={<SingleVendorPage account={account} />} />
           )}
           <Route
             path="vendors"
@@ -242,6 +244,7 @@ export default function Destiny() {
       <InfusionFinder />
       <ItemPopupContainer boundarySelector=".store-header" />
       <GlobalEffects />
+      {account.destinyVersion === 2 && <SingleVendorSheet account={account} />}
       {Boolean(autoLockTagged) && <SyncTagLock />}
       <ItemDragPreview />
     </ItemPickerContainer>

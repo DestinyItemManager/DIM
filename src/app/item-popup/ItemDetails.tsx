@@ -11,13 +11,13 @@ import Objective from 'app/progress/Objective';
 import { Reward } from 'app/progress/Reward';
 import { RootState } from 'app/store/types';
 import { getItemKillTrackerInfo, isD1Item } from 'app/utils/item-utils';
+import { showSingleVendor } from 'app/vendors/single-vendor/single-vendor-sheet';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import helmetIcon from 'destiny-icons/armor_types/helmet.svg';
 import modificationIcon from 'destiny-icons/general/modifications.svg';
 import handCannonIcon from 'destiny-icons/weapons/hand_cannon.svg';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import BungieImage from '../dim-ui/BungieImage';
 import { DimItem } from '../inventory/item-types';
 import { AppIcon, faCheck } from '../shell/icons';
@@ -142,17 +142,20 @@ export default function ItemDetails({
         </div>
       )}
 
-      {item.previewVendor !== undefined && item.previewVendor !== 0 && (
-        <div className={styles.itemDescription}>
-          <Link
-            to={`vendors/${item.previewVendor}${
-              ownerStore && !ownerStore.isVault ? `?characterId=${ownerStore.id}` : ''
-            }`}
-          >
-            {t('ItemService.PreviewVendor', { type: item.typeName })}
-          </Link>
-        </div>
-      )}
+      {item.previewVendor !== undefined &&
+        item.previewVendor !== 0 &&
+        ownerStore &&
+        !ownerStore.isVault && (
+          <div className={styles.itemDescription}>
+            <a
+              onClick={() =>
+                showSingleVendor({ characterId: ownerStore.id, vendorHash: item.previewVendor })
+              }
+            >
+              {t('ItemService.PreviewVendor', { type: item.typeName })}
+            </a>
+          </div>
+        )}
 
       {defs.isDestiny2() && item.pursuit && item.pursuit.rewards.length !== 0 && (
         <div className="item-details">

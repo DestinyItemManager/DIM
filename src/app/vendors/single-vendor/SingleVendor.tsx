@@ -1,51 +1,43 @@
+import { DestinyAccount } from 'app/accounts/destiny-account';
+import Countdown from 'app/dim-ui/Countdown';
+import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
+import {
+  bucketsSelector,
+  createItemContextSelector,
+  profileResponseSelector,
+} from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
-import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { useD2Definitions } from 'app/manifest/selectors';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { usePageTitle } from 'app/utils/hooks';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
-import { useLocation, useParams } from 'react-router';
-import { DestinyAccount } from '../accounts/destiny-account';
-import Countdown from '../dim-ui/Countdown';
-import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import {
-  bucketsSelector,
-  createItemContextSelector,
-  profileResponseSelector,
-  storesSelector,
-} from '../inventory/selectors';
+import { VendorLocation } from '../Vendor';
+import VendorItems from '../VendorItems';
+import { toVendor } from '../d2-vendors';
+import { useLoadVendors } from '../hooks';
+import { ownedVendorItemsSelector, vendorsByCharacterSelector } from '../selectors';
 import styles from './SingleVendor.m.scss';
-import { VendorLocation } from './Vendor';
-import VendorItems from './VendorItems';
-import { toVendor } from './d2-vendors';
-import { useLoadVendors } from './hooks';
-import { ownedVendorItemsSelector, vendorsByCharacterSelector } from './selectors';
 
 /**
  * A page that loads its own info for a single vendor, so we can link to a vendor or show engram previews.
  */
-export default function SingleVendor({ account }: { account: DestinyAccount }) {
-  const { vendorHash: vendorHashString } = useParams();
-  const vendorHash = parseInt(vendorHashString ?? '', 10);
-  const { search } = useLocation();
-  const stores = useSelector(storesSelector);
+export default function SingleVendor({
+  account,
+  vendorHash,
+  characterId,
+}: {
+  account: DestinyAccount;
+  vendorHash: number;
+  characterId: string;
+}) {
   const buckets = useSelector(bucketsSelector);
   const profileResponse = useSelector(profileResponseSelector);
   const vendors = useSelector(vendorsByCharacterSelector);
   const defs = useD2Definitions();
   const itemCreationContext = useSelector(createItemContextSelector);
-
-  // TODO: get for all characters, or let people select a character? This is a hack
-  // we at least need to display that character!
-  const characterId =
-    (search && new URLSearchParams(search).get('characterId')) ||
-    (stores.length && getCurrentStore(stores)?.id);
-  if (!characterId) {
-    throw new Error('no characters chosen or found to use for vendor API call');
-  }
 
   const ownedItemHashes = useSelector(ownedVendorItemsSelector(characterId));
 
@@ -135,7 +127,7 @@ export default function SingleVendor({ account }: { account: DestinyAccount }) {
   }
 
   return (
-    <div className={clsx(styles.page, 'dim-page', artifactCheck)}>
+    <div className={clsx(artifactCheck)}>
       <ErrorBoundary name="SingleVendor">
         <div className={styles.featuredHeader}>
           <h1>

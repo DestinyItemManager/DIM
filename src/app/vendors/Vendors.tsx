@@ -12,7 +12,7 @@ import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { usePageTitle } from 'app/utils/hooks';
 import { DestinyCurrenciesComponent } from 'bungie-api-ts/destiny2';
 import { PanInfo, motion } from 'framer-motion';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
 import CharacterSelect from '../dim-ui/CharacterSelect';
@@ -33,6 +33,7 @@ import {
   vendorGroupsForCharacterSelector,
   vendorsByCharacterSelector,
 } from './selectors';
+import { showSingleVendor } from './single-vendor/single-vendor-sheet';
 
 /**
  * The "All Vendors" page for D2 that shows all the rotating vendors.
@@ -59,6 +60,10 @@ export default function Vendors({ account }: { account: DestinyAccount }) {
 
   useLoadStores(account);
   useLoadVendors(account, storeId);
+
+  useEffect(() => {
+    showSingleVendor({ characterId: storeId });
+  }, [storeId]);
 
   const handleSwipe = (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     // Velocity is in px/ms
