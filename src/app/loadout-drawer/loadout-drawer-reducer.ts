@@ -9,6 +9,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { getModExclusionGroup, mapToNonReducedModCostVariant } from 'app/loadout/mod-utils';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { ItemFilter } from 'app/search/filter-types';
 import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
@@ -55,6 +56,34 @@ import {
  * setLoadout(addItem(defs, item))
  */
 export type LoadoutUpdateFunction = (loadout: Loadout) => Loadout;
+
+/** Some helpers that bind our updater functions to the current environment */
+export function useLoadoutUpdaters(
+  store: DimStore,
+  setLoadout: (updater: LoadoutUpdateFunction) => void
+) {
+  const defs = useD2Definitions()!;
+
+  function withUpdater<T extends unknown[]>(fn: (...args: T) => LoadoutUpdateFunction) {
+    return (...args: T) => setLoadout(fn(...args));
+  }
+  function withDefsUpdater<T extends unknown[]>(
+    fn: (defs: D1ManifestDefinitions | D2ManifestDefinitions, ...args: T) => LoadoutUpdateFunction
+  ) {
+    return (...args: T) => setLoadout(fn(defs, ...args));
+  }
+  function withDefsStoreUpdater<T extends unknown[]>(
+    fn: (
+      defs: D1ManifestDefinitions | D2ManifestDefinitions,
+      store: DimStore,
+      ...args: T
+    ) => LoadoutUpdateFunction
+  ) {
+    return (...args: T) => setLoadout(fn(defs, store, ...args));
+  }
+
+  return { withUpdater, withDefsUpdater, withDefsStoreUpdater };
+}
 
 /**
  * Produce a new loadout that adds a new item to the given loadout.

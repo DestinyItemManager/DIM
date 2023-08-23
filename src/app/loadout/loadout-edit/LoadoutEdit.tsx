@@ -38,6 +38,7 @@ import {
   syncModsFromEquipped,
   updateMods,
   updateModsByBucket,
+  useLoadoutUpdaters,
 } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import {
@@ -79,12 +80,16 @@ export default function LoadoutEdit({
   const profileResponse = useSelector(profileResponseSelector)!;
   const allItems = useSelector(allItemsSelector);
   const missingSockets = allItems.some((i) => i.missingSockets);
-  const [plugDrawerOpen, setPlugDrawerOpen] = useState(false);
   const itemCreationContext = useSelector(createItemContextSelector);
   const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(store.id));
   const unlockedArtifactMods = useSelector(artifactUnlocksSelector(store.id));
   const searchFilter = useSelector(searchFilterSelector);
   const showItemPicker = useItemPicker();
+
+  const { withUpdater, withDefsUpdater, withDefsStoreUpdater } = useLoadoutUpdaters(
+    store,
+    setLoadout
+  );
 
   const handleAddItem = withDefsUpdater(addItem);
 
@@ -129,9 +134,6 @@ export default function LoadoutEdit({
     }
   };
 
-  const handleClickSubclass = () =>
-    pickLoadoutSubclass(showItemPicker, loadout, store.id, handleAddItem);
-
   // Don't show the artifact unlocks section unless there are artifact mods saved in this loadout
   // or there are unlocked artifact mods we could copy into this loadout.
   const showArtifactUnlocks = Boolean(
@@ -165,42 +167,19 @@ export default function LoadoutEdit({
   const power = loadoutPower(store, categories);
   const anyClass = loadout.classType === DestinyClass.Unknown;
 
-  // Some helpers that bind our updater functions to the current environment
-  function withUpdater<T extends unknown[]>(fn: (...args: T) => LoadoutUpdateFunction) {
-    return (...args: T) => setLoadout(fn(...args));
-  }
-  function withDefsUpdater<T extends unknown[]>(
-    fn: (defs: D1ManifestDefinitions | D2ManifestDefinitions, ...args: T) => LoadoutUpdateFunction
-  ) {
-    return (...args: T) => setLoadout(fn(defs, ...args));
-  }
-  function withDefsStoreUpdater<T extends unknown[]>(
-    fn: (
-      defs: D1ManifestDefinitions | D2ManifestDefinitions,
-      store: DimStore,
-      ...args: T
-    ) => LoadoutUpdateFunction
-  ) {
-    return (...args: T) => setLoadout(fn(defs, store, ...args));
-  }
-
   const handleUpdateMods = (newMods: number[]) => setLoadout(updateMods(newMods));
   const handleRemoveMod = withUpdater(removeMod);
   const handleClearCategory = withDefsUpdater(clearBucketCategory);
   const handleModsByBucketUpdated = withUpdater(updateModsByBucket);
-  const handleApplySocketOverrides = withUpdater(applySocketOverrides);
   const handleToggleEquipped = withDefsUpdater(equipItem);
   const handleClearUnsetModsChanged = withUpdater(changeClearMods);
   const handleClearLoadoutParameters = withUpdater(clearLoadoutParameters);
-  const handleFillSubclassFromEquipped = withDefsStoreUpdater(setLoadoutSubclassFromEquipped);
   const handleFillCategoryFromUnequipped = withDefsStoreUpdater(fillLoadoutFromUnequipped);
   const handleFillCategoryFromEquipped = withDefsStoreUpdater(fillLoadoutFromEquipped);
-  const handleRandomizeSubclass = withDefsStoreUpdater(randomizeLoadoutSubclass);
   const handleRandomizeCategory = withDefsStoreUpdater(randomizeLoadoutItems);
   const handleRandomizeMods = withDefsStoreUpdater(randomizeLoadoutMods);
   const handleClearMods = withUpdater(clearMods);
   const onRemoveItem = withDefsUpdater(removeItem);
-  const handleClearSubclass = withDefsUpdater(clearSubclass);
   const handleSyncModsFromEquipped = () => setLoadout(syncModsFromEquipped(store));
   const handleSyncArtifactUnlocksFromEquipped = () =>
     setLoadout(syncArtifactUnlocksFromEquipped(unlockedArtifactMods));
@@ -218,47 +197,13 @@ export default function LoadoutEdit({
   return (
     <div className={styles.contents}>
       {!anyClass && (
-        <LoadoutEditSection
-          className={styles.section}
-          title={t('Bucket.Class')}
-          onClear={handleClearSubclass}
-          onRandomize={handleRandomizeSubclass}
-          onFillFromEquipped={handleFillSubclassFromEquipped}
-        >
-          <LoadoutEditSubclass
-            defs={defs}
-            subclass={subclass}
-            classType={loadout.classType}
-            power={power}
-            onRemove={handleClearSubclass}
-            onPick={handleClickSubclass}
-          />
-          {subclass && (
-            <div className={styles.buttons}>
-              {subclass.item.sockets ? (
-                <button
-                  type="button"
-                  className="dim-button"
-                  onClick={() => setPlugDrawerOpen(true)}
-                >
-                  {t('LB.SelectSubclassOptions')}
-                </button>
-              ) : (
-                <div>{t('Loadouts.CannotCustomizeSubclass')}</div>
-              )}
-            </div>
-          )}
-          {plugDrawerOpen && subclass && (
-            <Portal>
-              <SubclassPlugDrawer
-                subclass={subclass.item}
-                socketOverrides={subclass.loadoutItem.socketOverrides ?? {}}
-                onClose={() => setPlugDrawerOpen(false)}
-                onAccept={(overrides) => handleApplySocketOverrides(subclass, overrides)}
-              />
-            </Portal>
-          )}
-        </LoadoutEditSection>
+        <LoadoutEditSubclassSection
+          loadout={loadout}
+          store={store}
+          setLoadout={setLoadout}
+          power={power}
+          subclass={subclass}
+        />
       )}
       {(anyClass
         ? (['Weapons', 'General'] as const)
@@ -382,24 +327,88 @@ async function pickLoadoutItem(
   }
 }
 
-async function pickLoadoutSubclass(
-  showItemPicker: ShowItemPickerFn,
-  loadout: Loadout,
-  storeId: string,
-  add: (item: DimItem, equip?: boolean) => void
-) {
-  const loadoutClassType = loadout.classType;
-  const loadoutHasItem = (item: DimItem) => loadout.items.some((i) => i.hash === item.hash);
+/** The section in the loadout drawer where you can edit your Subclass. */
+function LoadoutEditSubclassSection({
+  loadout,
+  store,
+  setLoadout,
+  power = 0,
+  subclass,
+}: {
+  loadout: Loadout;
+  store: DimStore;
+  setLoadout: (updater: LoadoutUpdateFunction) => void;
+  power?: number;
+  subclass: ResolvedLoadoutItem | undefined;
+}) {
+  const showItemPicker = useItemPicker();
+  const [plugDrawerOpen, setPlugDrawerOpen] = useState(false);
 
-  const subclassItemFilter = (item: DimItem) =>
-    item.bucket.hash === BucketHashes.Subclass &&
-    item.classType === loadoutClassType &&
-    item.owner === storeId &&
-    itemCanBeInLoadout(item) &&
-    !loadoutHasItem(item);
+  const { withUpdater, withDefsUpdater, withDefsStoreUpdater } = useLoadoutUpdaters(
+    store,
+    setLoadout
+  );
 
-  const item = await pickSubclass(showItemPicker, subclassItemFilter);
-  if (item) {
-    add(item, undefined);
-  }
+  const handleAddItem = withDefsUpdater(addItem);
+
+  const handleClickSubclass = async () => {
+    const loadoutClassType = loadout.classType;
+    const loadoutHasItem = (item: DimItem) => loadout.items.some((i) => i.hash === item.hash);
+
+    const subclassItemFilter = (item: DimItem) =>
+      item.bucket.hash === BucketHashes.Subclass &&
+      item.classType === loadoutClassType &&
+      item.owner === store.id &&
+      itemCanBeInLoadout(item) &&
+      !loadoutHasItem(item);
+
+    const item = await pickSubclass(showItemPicker, subclassItemFilter);
+    if (item) {
+      handleAddItem(item);
+    }
+  };
+
+  const handleApplySocketOverrides = withUpdater(applySocketOverrides);
+  const handleFillSubclassFromEquipped = withDefsStoreUpdater(setLoadoutSubclassFromEquipped);
+  const handleRandomizeSubclass = withDefsStoreUpdater(randomizeLoadoutSubclass);
+  const handleClearSubclass = withDefsUpdater(clearSubclass);
+
+  return (
+    <LoadoutEditSection
+      className={styles.section}
+      title={t('Bucket.Class')}
+      onClear={handleClearSubclass}
+      onRandomize={handleRandomizeSubclass}
+      onFillFromEquipped={handleFillSubclassFromEquipped}
+    >
+      <LoadoutEditSubclass
+        subclass={subclass}
+        classType={loadout.classType}
+        power={power}
+        onRemove={handleClearSubclass}
+        onPick={handleClickSubclass}
+      />
+      {subclass && (
+        <div className={styles.buttons}>
+          {subclass.item.sockets ? (
+            <button type="button" className="dim-button" onClick={() => setPlugDrawerOpen(true)}>
+              {t('LB.SelectSubclassOptions')}
+            </button>
+          ) : (
+            <div>{t('Loadouts.CannotCustomizeSubclass')}</div>
+          )}
+        </div>
+      )}
+      {plugDrawerOpen && subclass && (
+        <Portal>
+          <SubclassPlugDrawer
+            subclass={subclass.item}
+            socketOverrides={subclass.loadoutItem.socketOverrides ?? {}}
+            onClose={() => setPlugDrawerOpen(false)}
+            onAccept={(overrides) => handleApplySocketOverrides(subclass, overrides)}
+          />
+        </Portal>
+      )}
+    </LoadoutEditSection>
+  );
 }
