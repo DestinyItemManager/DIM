@@ -96,5 +96,5 @@ export function useIdentifierValues(defs: D2ManifestDefinitions) {
       .filter((i) => !i.redacted)
       .sort(compareBy((n) => n.index));
     return [names, colors, icons] as const;
-  }, []);
+  }, [defs]);
 }
