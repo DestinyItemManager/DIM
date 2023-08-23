@@ -41,7 +41,7 @@ const SheetDisabledContext = createContext<(shown: boolean) => void>(() => {
  * takes an "onClose" function that can be used to close the sheet. Using onClose to close
  * the sheet ensures that it will animate away rather than simply disappearing.
  */
-type SheetContent = React.ReactNode | ((args: { onClose: () => void }) => React.ReactNode);
+export type SheetContent = React.ReactNode | ((args: { onClose: () => void }) => React.ReactNode);
 
 interface Props {
   /** A static, non-scrollable header shown in line with the close button. */

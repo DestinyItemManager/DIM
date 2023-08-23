@@ -48,11 +48,13 @@ export function InGameLoadoutIconWithIndex({
 export function InGameLoadoutIconFromIdentifiers({
   identifiers,
   className,
+  size = 32,
 }: {
   identifiers: InGameLoadoutIdentifiers;
   className?: string;
+  size?: number;
 }) {
   const defs = useD2Definitions()!;
   const resolvedIdentifiers = resolveInGameLoadoutIdentifiers(defs, identifiers);
-  return <InGameLoadoutIcon loadout={resolvedIdentifiers} className={className} />;
+  return <InGameLoadoutIcon loadout={resolvedIdentifiers} className={className} size={size} />;
 }

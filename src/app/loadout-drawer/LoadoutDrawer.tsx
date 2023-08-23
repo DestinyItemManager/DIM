@@ -7,6 +7,7 @@ import { WithSymbolsPicker } from 'app/dim-ui/destiny-symbols/SymbolsPicker';
 import { useAutocomplete } from 'app/dim-ui/text-complete/text-complete';
 import { t } from 'app/i18next-t';
 import { getStore } from 'app/inventory/stores-helpers';
+import InGameLoadoutIdentifiersSelectButton from 'app/loadout/ingame/InGameLoadoutIdentifiersSelectButton';
 import { useDefinitions } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { AppIcon, addIcon, faRandom } from 'app/shell/icons';
@@ -181,7 +182,8 @@ export default function LoadoutDrawer({
     setLoadout(setClassType(checked ? DestinyClass.Unknown : store.classType));
 
   const header = (
-    <div>
+    <div className={styles.header}>
+      <InGameLoadoutIdentifiersSelectButton loadout={loadout} setLoadout={setLoadout} />
       <LoadoutDrawerHeader loadout={loadout} onNameChanged={handleNameChanged} />
       <details className={styles.notes} open={Boolean(loadout.notes?.length)}>
         <summary>{t('MovePopup.Notes')}</summary>

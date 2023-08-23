@@ -29,3 +29,22 @@
   align-items: center;
   gap: 4px;
 }
+
+.header {
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  grid-template-areas:
+    'identifiers title'
+    'identifiers notes';
+  gap: 0 12px;
+
+  > *:nth-child(1) {
+    grid-area: identifiers;
+  }
+  > *:nth-child(2) {
+    grid-area: title;
+  }
+  > *:nth-child(3) {
+    grid-area: notes;
+  }
+}

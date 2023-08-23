@@ -419,6 +419,7 @@
     "PrepareEquip": "Prepare Equip",
     "Replace": "Replace Loadout {{index}}",
     "Save": "Update Loadout",
+    "SaveIdentifiers": "Update Identifiers",
     "SnapshotFailed": "Failed to snapshot equipped loadout"
   },
   "Infusion": {

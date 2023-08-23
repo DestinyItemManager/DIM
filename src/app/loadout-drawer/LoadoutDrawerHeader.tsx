@@ -2,7 +2,6 @@ import ClassIcon from 'app/dim-ui/ClassIcon';
 import { WithSymbolsPicker } from 'app/dim-ui/destiny-symbols/SymbolsPicker';
 import { useAutocomplete } from 'app/dim-ui/text-complete/text-complete';
 import { t } from 'app/i18next-t';
-import InGameLoadoutIconSelectButton from 'app/loadout/ingame/InGameLoadoutIconSelectButton';
 import React, { useRef } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './LoadoutDrawerHeader.m.scss';
@@ -27,7 +26,6 @@ export default function LoadoutDrawerHeader({
 
   return (
     <div className={styles.loadoutName}>
-      <InGameLoadoutIconSelectButton loadout={loadout} />
       <ClassIcon classType={loadout.classType} />
       <WithSymbolsPicker className={styles.dimInput} input={inputRef} setValue={onNameChanged}>
         <input

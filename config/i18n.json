@@ -430,6 +430,7 @@
     "DeletedBody": "Cleared the in-game loadout at slot {{index}}",
     "DeleteFailed": "Failed to delete loadout",
     "Save": "Update Loadout",
+    "SaveIdentifiers": "Update Identifiers",
     "SaveToDimLoadout": "Save as DIM Loadout",
     "Replace": "Replace Loadout {{index}}",
     "SnapshotFailed": "Failed to snapshot equipped loadout"
