@@ -144,12 +144,14 @@ export default function ItemDetails({
 
       {item.previewVendor !== undefined &&
         item.previewVendor !== 0 &&
-        ownerStore &&
-        !ownerStore.isVault && (
+        (extraInfo.characterId ?? (ownerStore && !ownerStore.isVault)) && (
           <div className={styles.itemDescription}>
             <a
               onClick={() =>
-                showSingleVendor({ characterId: ownerStore.id, vendorHash: item.previewVendor })
+                showSingleVendor({
+                  characterId: extraInfo.characterId ?? ownerStore!.id,
+                  vendorHash: item.previewVendor,
+                })
               }
             >
               {t('ItemService.PreviewVendor', { type: item.typeName })}

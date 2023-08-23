@@ -61,7 +61,7 @@ export default function VendorItemComponent({
       unavailable={unavailable}
       owned={owned}
       acquired={acquired}
-      extraData={{ failureStrings: item.failureStrings, owned, acquired, mod }}
+      extraData={{ failureStrings: item.failureStrings, characterId, owned, acquired, mod }}
     >
       {item.costs.length > 0 && (
         <div className={styles.vendorCosts}>
