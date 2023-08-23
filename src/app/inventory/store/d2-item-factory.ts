@@ -295,7 +295,7 @@ export function makeItem(
   const needsShaderFix =
     itemDef.inventory!.bucketTypeHash === THE_FORBIDDEN_BUCKET &&
     itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Shaders);
-  // The same thing can happen with mods!
+  // The same thing can happen with mods and transmat effects (included in Mods)!
   const needsModsFix =
     itemDef.inventory!.bucketTypeHash === THE_FORBIDDEN_BUCKET &&
     itemDef.itemCategoryHashes?.includes(ItemCategoryHashes.Mods_Mod);
