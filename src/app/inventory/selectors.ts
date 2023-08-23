@@ -363,7 +363,7 @@ function getArtifactUnlocks(
   const unlockedItemHashes =
     artifactData.tiers
       ?.flatMap((tier) => tier.items)
-      .filter((item) => item.isActive)
+      .filter((item) => item.isVisible && item.isActive)
       .map((item) => item.itemHash) || [];
   return {
     unlockedItemHashes,
