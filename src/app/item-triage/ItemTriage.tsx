@@ -16,9 +16,7 @@ import { hideItemPopup } from 'app/item-popup/item-popup';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { isInGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
-import InGameLoadoutIcon, {
-  InGameLoadoutIconFromIdentifiers,
-} from 'app/loadout/ingame/InGameLoadoutIcon';
+import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
 import { filterFactorySelector } from 'app/search/search-filter';
 import { loadoutToSearchString } from 'app/search/search-filters/loadouts';
 import { AppIcon, compareIcon, editIcon } from 'app/shell/icons';
@@ -158,14 +156,7 @@ function LoadoutsTriageSection({ item }: { item: DimItem }) {
           return (
             <li className={styles.loadoutRow} key={loadout.id}>
               {isDimLoadout ? (
-                <>
-                  <ClassIcon classType={loadout.classType} className={styles.inlineIcon} />
-                  {loadout.parameters?.inGameIdentifiers && (
-                    <InGameLoadoutIconFromIdentifiers
-                      identifiers={loadout.parameters.inGameIdentifiers}
-                    />
-                  )}
-                </>
+                <ClassIcon classType={loadout.classType} className={styles.inlineIcon} />
               ) : (
                 <InGameLoadoutIcon loadout={loadout} />
               )}

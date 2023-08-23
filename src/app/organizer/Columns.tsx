@@ -25,9 +25,7 @@ import { recoilValue } from 'app/item-popup/RecoilStat';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { InGameLoadout, Loadout, isInGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { LoadoutsByItem } from 'app/loadout-drawer/selectors';
-import InGameLoadoutIcon, {
-  InGameLoadoutIconFromIdentifiers,
-} from 'app/loadout/ingame/InGameLoadoutIcon';
+import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
 import { quoteFilterString } from 'app/search/query-parser';
 import { statHashByName } from 'app/search/search-filter-values';
 import { getColor, percent } from 'app/shell/formatters';
@@ -636,7 +634,7 @@ function LoadoutsCell({
         <div key={loadout.id} className={styles.loadout}>
           {isInGameLoadout(loadout) ? (
             <a data-perk-name={loadout.id}>
-              <InGameLoadoutIcon loadout={loadout} />
+              {isInGameLoadout(loadout) && <InGameLoadoutIcon loadout={loadout} />}
               {loadout.name}
             </a>
           ) : (
@@ -646,11 +644,6 @@ function LoadoutsCell({
                 !e.shiftKey && editLoadout(loadout, owner, { isNew: false })
               }
             >
-              {loadout.parameters?.inGameIdentifiers && (
-                <InGameLoadoutIconFromIdentifiers
-                  identifiers={loadout.parameters.inGameIdentifiers}
-                />
-              )}
               {loadout.name}
             </a>
           )}

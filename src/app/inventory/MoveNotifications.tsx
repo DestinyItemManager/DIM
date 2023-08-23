@@ -8,9 +8,7 @@ import {
   LoadoutSocketOverrideState,
 } from 'app/loadout-drawer/loadout-apply-state';
 import { InGameLoadout, Loadout, isInGameLoadout } from 'app/loadout-drawer/loadout-types';
-import InGameLoadoutIcon, {
-  InGameLoadoutIconFromIdentifiers,
-} from 'app/loadout/ingame/InGameLoadoutIcon';
+import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { NotificationError, NotifyInput } from 'app/notifications/notifications';
 import { AppIcon, faCheckCircle, faExclamationCircle, refreshIcon } from 'app/shell/icons';
@@ -73,11 +71,7 @@ export function loadoutNotification(
     }),
     duration: 5_000,
     title: t('Loadouts.NotificationTitle', { name: loadout.name }),
-    icon: isInGameLoadout(loadout) ? (
-      <InGameLoadoutIcon loadout={loadout} />
-    ) : loadout.parameters?.inGameIdentifiers ? (
-      <InGameLoadoutIconFromIdentifiers identifiers={loadout.parameters.inGameIdentifiers} />
-    ) : undefined,
+    icon: isInGameLoadout(loadout) && <InGameLoadoutIcon loadout={loadout} />,
     body: <ApplyLoadoutProgressBody stateObservable={stateObservable} />,
     onCancel: cancel,
   };
