@@ -404,6 +404,9 @@ export default function Header() {
 function useClarityDetector(ref: React.RefObject<HTMLElement>) {
   const [clarityDetected, setClarityDetected] = useState(false);
   useEffect(() => {
+    if (ref.current?.querySelector('.Clarity_menu_button')) {
+      setClarityDetected(true);
+    }
     const observer = new MutationObserver((mutations) => {
       for (const mutation of mutations) {
         if (
