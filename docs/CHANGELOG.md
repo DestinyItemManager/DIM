@@ -1,6 +1,7 @@
 ## Next
 
 * You can choose between a number of different themes for DIM's interface in settings.
+* The Vendors page now has a toggle to hide all items sold for Silver.
 
 ## 7.82.1 <span class="changelog-date">(2023-08-22)</span>
 
