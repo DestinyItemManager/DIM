@@ -20,6 +20,7 @@ import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import { Draft, produce } from 'immer';
 import _ from 'lodash';
+import { useCallback } from 'react';
 import { randomLoadout, randomSubclassConfiguration } from './auto-loadouts';
 import { Loadout, LoadoutItem, ResolvedLoadoutItem, ResolvedLoadoutMod } from './loadout-types';
 import {
@@ -64,25 +65,27 @@ export function useLoadoutUpdaters(
 ) {
   const defs = useD2Definitions()!;
 
-  function withUpdater<T extends unknown[]>(fn: (...args: T) => LoadoutUpdateFunction) {
-    return (...args: T) => setLoadout(fn(...args));
+  function useUpdater<T extends unknown[]>(fn: (...args: T) => LoadoutUpdateFunction) {
+    return useCallback((...args: T) => setLoadout(fn(...args)), [fn]);
   }
-  function withDefsUpdater<T extends unknown[]>(
+  function useDefsUpdater<T extends unknown[]>(
     fn: (defs: D1ManifestDefinitions | D2ManifestDefinitions, ...args: T) => LoadoutUpdateFunction
   ) {
-    return (...args: T) => setLoadout(fn(defs, ...args));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return useCallback((...args: T) => setLoadout(fn(defs, ...args)), [fn, defs]);
   }
-  function withDefsStoreUpdater<T extends unknown[]>(
+  function useDefsStoreUpdater<T extends unknown[]>(
     fn: (
       defs: D1ManifestDefinitions | D2ManifestDefinitions,
       store: DimStore,
       ...args: T
     ) => LoadoutUpdateFunction
   ) {
-    return (...args: T) => setLoadout(fn(defs, store, ...args));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return useCallback((...args: T) => setLoadout(fn(defs, store, ...args)), [fn, defs, store]);
   }
 
-  return { withUpdater, withDefsUpdater, withDefsStoreUpdater };
+  return { useUpdater, useDefsUpdater, useDefsStoreUpdater };
 }
 
 /**

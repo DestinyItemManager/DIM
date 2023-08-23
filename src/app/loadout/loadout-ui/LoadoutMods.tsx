@@ -1,3 +1,4 @@
+import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { artifactUnlocksSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
@@ -181,13 +182,15 @@ export const LoadoutMods = memo(function LoadoutMods({
  * Shows artifact unlocks in the loadout view.
  */
 export const LoadoutArtifactUnlocks = memo(function LoadoutArtifactUnlocks({
-  loadout,
+  artifactUnlocks,
+  classType,
   storeId,
   className,
   onRemoveMod,
   onSyncFromEquipped,
 }: {
-  loadout: Loadout;
+  artifactUnlocks: LoadoutParameters['artifactUnlocks'];
+  classType: DestinyClass;
   storeId: string;
   className?: string;
   onRemoveMod?: (mod: number) => void;
@@ -198,20 +201,20 @@ export const LoadoutArtifactUnlocks = memo(function LoadoutArtifactUnlocks({
 
   const loadoutArtifactMods: ResolvedLoadoutMod[] = useMemo(
     () =>
-      hashesToPluggableItems(
-        defs,
-        loadout.parameters?.artifactUnlocks?.unlockedItemHashes ?? []
-      ).map((def) => ({ originalModHash: def.hash, resolvedMod: def })) ?? [],
-    [defs, loadout.parameters?.artifactUnlocks?.unlockedItemHashes]
+      hashesToPluggableItems(defs, artifactUnlocks?.unlockedItemHashes ?? []).map((def) => ({
+        originalModHash: def.hash,
+        resolvedMod: def,
+      })) ?? [],
+    [defs, artifactUnlocks?.unlockedItemHashes]
   );
 
   const handleRemoveMod = useCallback(
     (mod: ResolvedLoadoutMod) => onRemoveMod!(mod.originalModHash),
     [onRemoveMod]
   );
-  const artifactTitle = loadout.parameters?.artifactUnlocks
+  const artifactTitle = artifactUnlocks
     ? t('Loadouts.ArtifactUnlocksWithSeason', {
-        seasonNumber: loadout.parameters?.artifactUnlocks?.seasonNumber,
+        seasonNumber: artifactUnlocks?.seasonNumber,
       })
     : t('Loadouts.ArtifactUnlocks');
 
@@ -237,7 +240,7 @@ export const LoadoutArtifactUnlocks = memo(function LoadoutArtifactUnlocks({
                     [styles.artifactUnlock]: unlocked,
                     [styles.missingItem]: !unlocked,
                   })}
-                  classType={loadout.classType}
+                  classType={classType}
                   onRemoveMod={onRemoveMod ? handleRemoveMod : undefined}
                 />
               );
