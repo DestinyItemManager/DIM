@@ -6,11 +6,10 @@
   }
 }
 
-.socketDetailsSheet {
+.socketDetailsSheet:global(.sheet) {
   // This fits 14 plugs + scroll bar
   max-width: 820px;
   margin: 0 auto;
-  z-index: 14; // higher than item popup
 
   :global(.sheet-header) h1 {
     display: flex;

@@ -7,7 +7,6 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { AppIcon, addIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { Portal } from 'app/utils/temp-container';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { memo, useCallback, useMemo, useState } from 'react';
@@ -153,25 +152,21 @@ export const LoadoutMods = memo(function LoadoutMods({
           </div>
         )}
       {showModAssignmentDrawer && (
-        <Portal>
-          <ModAssignmentDrawer
-            loadout={loadout}
-            storeId={storeId}
-            onUpdateMods={onUpdateMods}
-            onClose={() => setShowModAssignmentDrawer(false)}
-          />
-        </Portal>
+        <ModAssignmentDrawer
+          loadout={loadout}
+          storeId={storeId}
+          onUpdateMods={onUpdateMods}
+          onClose={() => setShowModAssignmentDrawer(false)}
+        />
       )}
       {onUpdateMods && showModPicker && (
-        <Portal>
-          <ModPicker
-            classType={loadout.classType}
-            owner={storeId}
-            lockedMods={resolvedMods}
-            onAccept={onUpdateMods}
-            onClose={() => setShowModPicker(false)}
-          />
-        </Portal>
+        <ModPicker
+          classType={loadout.classType}
+          owner={storeId}
+          lockedMods={resolvedMods}
+          onAccept={onUpdateMods}
+          onClose={() => setShowModPicker(false)}
+        />
       )}
     </div>
   );

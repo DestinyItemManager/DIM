@@ -50,7 +50,6 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { emptyObject } from 'app/utils/empty';
 import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
-import { Portal } from 'app/utils/temp-container';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -249,14 +248,12 @@ export default function LoadoutEdit({
             </div>
           )}
           {plugDrawerOpen && subclass && (
-            <Portal>
-              <SubclassPlugDrawer
-                subclass={subclass.item}
-                socketOverrides={subclass.loadoutItem.socketOverrides ?? {}}
-                onClose={() => setPlugDrawerOpen(false)}
-                onAccept={(overrides) => handleApplySocketOverrides(subclass, overrides)}
-              />
-            </Portal>
+            <SubclassPlugDrawer
+              subclass={subclass.item}
+              socketOverrides={subclass.loadoutItem.socketOverrides ?? {}}
+              onClose={() => setPlugDrawerOpen(false)}
+              onAccept={(overrides) => handleApplySocketOverrides(subclass, overrides)}
+            />
           )}
         </LoadoutEditSection>
       )}
