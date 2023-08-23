@@ -1270,6 +1270,7 @@
     "Collections": "Collections",
     "Engram": "Reward Engram",
     "FilterToUnacquired": "Only show uncollected items",
+    "HideSilverItems": "Hide Silver items",
     "NoItems": "This Vendor is currently not offering any items.",
     "RefreshTime": "Inventory refreshes in:",
     "Vendors": "Vendors"
