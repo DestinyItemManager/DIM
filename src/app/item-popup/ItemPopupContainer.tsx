@@ -45,6 +45,7 @@ export default function ItemPopupContainer({ boundarySelector }: Props) {
 
   return (
     <ItemPopup
+      key={item.index}
       item={item}
       boundarySelector={boundarySelector}
       element={currentItem.element}
