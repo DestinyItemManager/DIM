@@ -154,7 +154,8 @@ export default function LoadoutView({
                 missingSockets={missingSockets}
               />
               <LoadoutArtifactUnlocks
-                loadout={loadout}
+                artifactUnlocks={loadout.parameters?.artifactUnlocks}
+                classType={loadout.classType}
                 storeId={store.id}
                 className={styles.artifactMods}
               />

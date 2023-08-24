@@ -9,6 +9,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { getModExclusionGroup, mapToNonReducedModCostVariant } from 'app/loadout/mod-utils';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { ItemFilter } from 'app/search/filter-types';
 import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
@@ -19,6 +20,7 @@ import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import { Draft, produce } from 'immer';
 import _ from 'lodash';
+import { useCallback } from 'react';
 import { randomLoadout, randomSubclassConfiguration } from './auto-loadouts';
 import { Loadout, LoadoutItem, ResolvedLoadoutItem, ResolvedLoadoutMod } from './loadout-types';
 import {
@@ -55,6 +57,38 @@ import {
  * setLoadout(addItem(defs, item))
  */
 export type LoadoutUpdateFunction = (loadout: Loadout) => Loadout;
+
+/** Some helpers that bind our updater functions to the current environment */
+export function useLoadoutUpdaters(
+  store: DimStore,
+  setLoadout: (updater: LoadoutUpdateFunction) => void
+) {
+  const defs = useD2Definitions()!;
+
+  function useUpdater<T extends unknown[]>(fn: (...args: T) => LoadoutUpdateFunction) {
+    return useCallback((...args: T) => setLoadout(fn(...args)), [fn]);
+  }
+  function useDefsUpdater<T extends unknown[]>(
+    fn: (defs: D1ManifestDefinitions | D2ManifestDefinitions, ...args: T) => LoadoutUpdateFunction
+  ) {
+    // exhaustive-deps wants us to remove the dependency on defs, but we really do need it
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return useCallback((...args: T) => setLoadout(fn(defs, ...args)), [fn, defs]);
+  }
+  function useDefsStoreUpdater<T extends unknown[]>(
+    fn: (
+      defs: D1ManifestDefinitions | D2ManifestDefinitions,
+      store: DimStore,
+      ...args: T
+    ) => LoadoutUpdateFunction
+  ) {
+    // exhaustive-deps wants us to remove the dependency on defs and store, but we really do need it
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return useCallback((...args: T) => setLoadout(fn(defs, store, ...args)), [fn, defs, store]);
+  }
+
+  return { useUpdater, useDefsUpdater, useDefsStoreUpdater };
+}
 
 /**
  * Produce a new loadout that adds a new item to the given loadout.
