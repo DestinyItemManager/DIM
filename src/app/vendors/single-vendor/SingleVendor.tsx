@@ -28,10 +28,12 @@ export default function SingleVendor({
   account,
   vendorHash,
   characterId,
+  updatePageTitle,
 }: {
   account: DestinyAccount;
   vendorHash: number;
   characterId: string;
+  updatePageTitle?: boolean;
 }) {
   const buckets = useSelector(bucketsSelector);
   const profileResponse = useSelector(profileResponseSelector);
@@ -48,7 +50,7 @@ export default function SingleVendor({
   const returnWithVendorRequest = vendorDef?.returnWithVendorRequest;
   useLoadStores(account);
   useLoadVendors(account, characterId, /* active */ returnWithVendorRequest);
-  usePageTitle(vendorDef?.displayProperties.name ?? t('Vendors.Vendors'));
+  usePageTitle(vendorDef?.displayProperties.name ?? t('Vendors.Vendors'), updatePageTitle ?? false);
 
   if (!defs || !buckets) {
     return <ShowPageLoading message={t('Manifest.Load')} />;

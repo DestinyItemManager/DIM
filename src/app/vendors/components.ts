@@ -2,3 +2,4 @@
 
 export { default as Vendors } from './Vendors';
 export { default as SingleVendorPage } from './single-vendor/SingleVendorPage';
+export { default as SingleVendorSheet } from './single-vendor/SingleVendorSheet';

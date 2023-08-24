@@ -5,8 +5,8 @@ export interface SingleVendorState {
   vendorHash?: number;
 }
 
-export const showSingleVendor$ = new EventBus<Partial<SingleVendorState>>();
+export const hideVendorSheet$ = new EventBus<undefined>();
 
-export function showSingleVendor(options: Partial<SingleVendorState>) {
-  showSingleVendor$.next(options);
+export function hideVendorSheet() {
+  hideVendorSheet$.next(undefined);
 }

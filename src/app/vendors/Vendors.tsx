@@ -33,7 +33,7 @@ import {
   vendorGroupsForCharacterSelector,
   vendorsByCharacterSelector,
 } from './selectors';
-import { showSingleVendor } from './single-vendor/single-vendor-sheet';
+import { hideVendorSheet } from './single-vendor/single-vendor-sheet';
 
 /**
  * The "All Vendors" page for D2 that shows all the rotating vendors.
@@ -62,7 +62,7 @@ export default function Vendors({ account }: { account: DestinyAccount }) {
   useLoadVendors(account, storeId);
 
   useEffect(() => {
-    showSingleVendor({ characterId: storeId });
+    hideVendorSheet();
   }, [storeId]);
 
   const handleSwipe = (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {

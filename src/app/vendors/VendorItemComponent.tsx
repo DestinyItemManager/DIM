@@ -3,7 +3,7 @@ import { ItemPopupExtraInfo } from 'app/item-popup/item-popup';
 import { DestinyCollectibleState } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import React from 'react';
+import React, { useContext } from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
@@ -11,7 +11,7 @@ import '../progress/milestone.scss';
 import { AppIcon, faCheck } from '../shell/icons';
 import Cost from './Cost';
 import styles from './VendorItem.m.scss';
-import { showSingleVendor } from './single-vendor/single-vendor-sheet';
+import { SingleVendorSheetContext } from './single-vendor/SingleVendorSheetContainer';
 import { VendorItem } from './vendor-item';
 
 export default function VendorItemComponent({
@@ -23,10 +23,11 @@ export default function VendorItemComponent({
   owned: boolean;
   characterId?: string;
 }) {
+  const showVendor = useContext(SingleVendorSheetContext);
   if (item.displayTile) {
     return (
       <div className={styles.vendorItem}>
-        <a onClick={() => showSingleVendor({ characterId, vendorHash: item.previewVendorHash })}>
+        <a onClick={() => showVendor?.({ characterId, vendorHash: item.previewVendorHash })}>
           <BungieImage
             className={styles.tile}
             title={item.displayProperties.name}

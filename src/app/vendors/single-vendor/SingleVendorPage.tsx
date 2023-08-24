@@ -27,7 +27,12 @@ export default function SingleVendorPage({ account }: { account: DestinyAccount 
 
   return (
     <div className={clsx(styles.page, 'dim-page')}>
-      <SingleVendor account={account} vendorHash={vendorHash} characterId={characterId} />
+      <SingleVendor
+        account={account}
+        vendorHash={vendorHash}
+        characterId={characterId}
+        updatePageTitle
+      />
     </div>
   );
 }
