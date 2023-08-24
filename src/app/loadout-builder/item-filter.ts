@@ -27,7 +27,7 @@ export interface FilterInfo {
       totalConsidered: number;
       cantFitMods: number;
       finalValid: number;
-      searchQueryEffective: boolean;
+      removedBySearchFilter: number;
     };
   };
 }
@@ -70,7 +70,7 @@ export function filterItems({
     totalConsidered: 0,
     cantFitMods: 0,
     finalValid: 0,
-    searchQueryEffective: false,
+    removedBySearchFilter: 0,
   };
 
   const filterInfo: FilterInfo = {
@@ -88,16 +88,16 @@ export function filterItems({
     return [filteredItems, filterInfo];
   }
 
-  // Usability hack: If the user requests exotics but none of the exotics match the search filter, ignore the search filter for exotics.
+  // Usability hack: If the user requests any exotic but none of the exotics match the search filter, ignore the search filter for exotics.
   // This allows things like `modslot:xyz` to apply to legendary armor without removing all exotics.
-  const excludeExoticsFromFilter = !Object.values(items)
-    .flat()
-    .some(
-      (item) =>
-        item.isExotic &&
-        (lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC || item.hash === lockedExoticHash) &&
-        searchFilter(item)
-    );
+  const excludeExoticsFromFilter =
+    lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC &&
+    !Object.values(items)
+      .flat()
+      .some(
+        (item) =>
+          item.isExotic && lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC && searchFilter(item)
+      );
 
   // Group by bucket (the types for _.groupBy don't work out...)
   const itemsByBucket: Draft<ItemsByBucket> = {
@@ -172,15 +172,16 @@ export function filterItems({
     // the search. This allows users to filter some buckets without getting
     // stuck making no sets.
     filteredItems[bucket] = searchFilteredItems.length ? searchFilteredItems : itemsThatFitMods;
-    const searchQueryEffective =
-      searchFilteredItems.length > 0 && searchFilteredItems.length !== itemsThatFitMods.length;
-    filterInfo.searchQueryEffective ||= searchQueryEffective;
+    const removedBySearchFilter = searchFilteredItems.length
+      ? itemsThatFitMods.length - searchFilteredItems.length
+      : 0;
+    filterInfo.searchQueryEffective ||= removedBySearchFilter > 0;
 
     filterInfo.perBucketStats[bucket] = {
       totalConsidered: firstPassFilteredItems.length,
       cantFitMods: withoutExcluded.length - itemsThatFitMods.length,
+      removedBySearchFilter,
       finalValid: filteredItems[bucket].length,
-      searchQueryEffective,
     };
   }
 

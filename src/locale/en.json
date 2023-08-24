@@ -1215,6 +1215,7 @@
     "Button": "Strip {{numSockets}} Sockets",
     "Cancel": "Cancel",
     "Choose": "Choose Sockets to strip",
+    "DiscountedMods": "{{count}}x Discounted Mod",
     "Done": "Stripped Sockets",
     "NoSockets": "No Sockets to clear",
     "Ok": "Ok",
@@ -1268,8 +1269,9 @@
   },
   "Vendors": {
     "Collections": "Collections",
-    "Engram": "Reward Engram",
+    "Engram": "Rank",
     "FilterToUnacquired": "Only show uncollected items",
+    "HideSilverItems": "Hide Silver items",
     "NoItems": "This Vendor is currently not offering any items.",
     "RefreshTime": "Inventory refreshes in:",
     "Vendors": "Vendors"

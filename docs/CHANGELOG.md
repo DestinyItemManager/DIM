@@ -1,6 +1,8 @@
 ## Next
 
 * You can choose between a number of different themes for DIM's interface in settings.
+* The Vendors page now has a toggle to hide all items sold for Silver.
+* Fixed a bug where Loadout Optimizer would sometimes interpret a search query too literally and require that all items match it, even if a slot doesn't have any items that match the query.
 
 ## 7.82.1 <span class="changelog-date">(2023-08-22)</span>
 

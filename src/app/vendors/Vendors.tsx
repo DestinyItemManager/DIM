@@ -6,6 +6,7 @@ import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/search-filter';
+import { useSetting } from 'app/settings/hooks';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { usePageTitle } from 'app/utils/hooks';
@@ -22,6 +23,7 @@ import styles from './Vendors.m.scss';
 import VendorsMenu from './VendorsMenu';
 import {
   D2VendorGroup,
+  filterVendorGroupsToNoSilver,
   filterVendorGroupsToSearch,
   filterVendorGroupsToUnacquired,
 } from './d2-vendors';
@@ -45,6 +47,7 @@ export default function Vendors({ account }: { account: DestinyAccount }) {
   usePageTitle(t('Vendors.Vendors'));
 
   const [filterToUnacquired, setFilterToUnacquired] = useState(false);
+  const [hideSilverItems, setHideSilverItems] = useSetting('vendorsHideSilverItems');
 
   // once the page is loaded, user can select this
   const [userSelectedStoreId, setUserSelectedStoreId] = useState<string>();
@@ -103,6 +106,9 @@ export default function Vendors({ account }: { account: DestinyAccount }) {
   if (vendorGroups && filterToUnacquired) {
     vendorGroups = filterVendorGroupsToUnacquired(vendorGroups, ownedItemHashes);
   }
+  if (vendorGroups && hideSilverItems) {
+    vendorGroups = filterVendorGroupsToNoSilver(vendorGroups);
+  }
   if (vendorGroups && searchQuery.length) {
     vendorGroups = filterVendorGroupsToSearch(vendorGroups, searchQuery, filterItems);
   }
@@ -125,6 +131,13 @@ export default function Vendors({ account }: { account: DestinyAccount }) {
               onChange={setFilterToUnacquired}
             >
               {t('Vendors.FilterToUnacquired')}
+            </CheckButton>
+            <CheckButton
+              name="vendorsHideSilverItems"
+              checked={hideSilverItems}
+              onChange={setHideSilverItems}
+            >
+              {t('Vendors.HideSilverItems')}
             </CheckButton>
           </div>
         )}

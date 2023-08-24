@@ -3,7 +3,6 @@ import { toggleSearchResults } from 'app/shell/actions';
 import { AppIcon, faList } from 'app/shell/icons';
 import { querySelector, searchResultsOpenSelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyArray } from 'app/utils/empty';
-import { Portal } from 'app/utils/temp-container';
 import { motion } from 'framer-motion';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -72,12 +71,10 @@ export default function MainSearchBarActions() {
       )}
 
       {searchResultsOpen && (
-        <Portal>
-          <SearchResults
-            items={queryValid ? filteredItems : emptyArray()}
-            onClose={handleCloseSearchResults}
-          />
-        </Portal>
+        <SearchResults
+          items={queryValid ? filteredItems : emptyArray()}
+          onClose={handleCloseSearchResults}
+        />
       )}
     </>
   );

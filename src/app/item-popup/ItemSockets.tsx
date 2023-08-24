@@ -1,4 +1,3 @@
-import { Portal } from 'app/utils/temp-container';
 import { memo, useState } from 'react';
 import { DimItem, DimPlug, DimSocket } from '../inventory/item-types';
 import './ItemSockets.scss';
@@ -55,16 +54,14 @@ export default memo(function ItemSockets({
     <>
       {content}
       {socketInMenu && (
-        <Portal>
-          <SocketDetails
-            key={socketInMenu.socketIndex}
-            item={item}
-            socket={socketInMenu}
-            allowInsertPlug
-            onClose={() => setSocketInMenu(null)}
-            onPlugSelected={onPlugClicked}
-          />
-        </Portal>
+        <SocketDetails
+          key={socketInMenu.socketIndex}
+          item={item}
+          socket={socketInMenu}
+          allowInsertPlug
+          onClose={() => setSocketInMenu(null)}
+          onPlugSelected={onPlugClicked}
+        />
       )}
     </>
   );

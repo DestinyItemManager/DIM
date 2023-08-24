@@ -1,6 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
-import { VENDORS } from 'app/search/d2-known-values';
+import { VENDORS, silverItemHash } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { compareBy } from 'app/utils/comparators';
 import { filterMap } from 'app/utils/util';
@@ -105,7 +105,9 @@ export function toVendor(
   gatherVendorCurrencies(defs, vendorDef, vendorsResponse, sales, vendorCurrencyHashes);
   const currencies = _.compact(
     Array.from(vendorCurrencyHashes, (h) => defs.InventoryItem.get(h)).filter(
-      (i) => !i?.itemCategoryHashes?.includes(ItemCategoryHashes.Shaders)
+      (i) =>
+        !i?.itemCategoryHashes?.includes(ItemCategoryHashes.Shaders) &&
+        !i?.itemCategoryHashes?.includes(ItemCategoryHashes.ShipModsTransmatEffects)
     )
   );
   currencies.sort(compareBy((i) => i.inventory?.tierType));
@@ -189,9 +191,9 @@ function getVendorItems(
   }
 }
 
-export function filterVendorGroupsToUnacquired(
+function filterVendorGroups(
   vendorGroups: readonly D2VendorGroup[],
-  ownedItemHashes: Set<number>
+  predicate: (item: VendorItem, vendor: D2Vendor) => boolean | null | undefined
 ) {
   return vendorGroups
     .map((group) => ({
@@ -199,18 +201,43 @@ export function filterVendorGroupsToUnacquired(
       vendors: group.vendors
         .map((vendor) => ({
           ...vendor,
-          items: vendor.items.filter(
-            ({ item, collectibleState }) =>
-              item &&
-              (collectibleState !== undefined
-                ? collectibleState & DestinyCollectibleState.NotAcquired
-                : item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Mod) &&
-                  !ownedItemHashes.has(item.hash))
-          ),
+          items: vendor.items.filter((item) => predicate(item, vendor)),
         }))
         .filter((v) => v.items.length),
     }))
     .filter((g) => g.vendors.length);
+}
+
+export function filterVendorGroupsToUnacquired(
+  vendorGroups: readonly D2VendorGroup[],
+  ownedItemHashes: Set<number>
+) {
+  return filterVendorGroups(
+    vendorGroups,
+    ({ item, collectibleState }) =>
+      item &&
+      (collectibleState !== undefined
+        ? (collectibleState & DestinyCollectibleState.NotAcquired) !== 0
+        : item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Mod) &&
+          !ownedItemHashes.has(item.hash))
+  );
+}
+
+export function filterVendorGroupsToNoSilver(vendorGroups: readonly D2VendorGroup[]) {
+  return filterVendorGroups(vendorGroups, ({ costs, displayCategoryIndex }, vendor) => {
+    if (costs.some((c) => c.itemHash === silverItemHash)) {
+      return false;
+    }
+    const categoryIdentifier =
+      displayCategoryIndex !== undefined &&
+      displayCategoryIndex >= 0 &&
+      vendor.def.displayCategories[displayCategoryIndex].identifier;
+    return !(
+      categoryIdentifier &&
+      (categoryIdentifier.startsWith('categories.campaigns') ||
+        categoryIdentifier.startsWith('categories.featured.carousel'))
+    );
+  });
 }
 
 export function filterVendorGroupsToSearch(
@@ -218,17 +245,10 @@ export function filterVendorGroupsToSearch(
   searchQuery: string,
   filterItems: ItemFilter
 ) {
-  return vendorGroups
-    .map((group) => ({
-      ...group,
-      vendors: group.vendors
-        .map((vendor) => ({
-          ...vendor,
-          items: vendor.def.displayProperties.name.toLowerCase().includes(searchQuery.toLowerCase())
-            ? vendor.items
-            : vendor.items.filter(({ item }) => item && filterItems(item)),
-        }))
-        .filter((v) => v.items.length),
-    }))
-    .filter((g) => g.vendors.length);
+  return filterVendorGroups(
+    vendorGroups,
+    ({ item }, vendor) =>
+      vendor.def.displayProperties.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (item && filterItems(item))
+  );
 }

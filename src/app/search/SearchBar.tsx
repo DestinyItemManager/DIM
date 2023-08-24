@@ -12,7 +12,6 @@ import { toggleSearchResults } from 'app/shell/actions';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isiOSBrowser } from 'app/utils/browsers';
-import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import { UseComboboxState, UseComboboxStateChangeOptions, useCombobox } from 'downshift';
 import { AnimatePresence, LayoutGroup, Variants, motion } from 'framer-motion';
@@ -170,13 +169,11 @@ export interface SearchFilterRef {
 
 function ArmorySheet({ itemHash, onClose }: { itemHash: number; onClose: () => void }) {
   return (
-    <Portal>
-      <Sheet onClose={onClose} sheetClassName={styles.armorySheet}>
-        <ClickOutsideRoot>
-          <Armory itemHash={itemHash} />
-        </ClickOutsideRoot>
-      </Sheet>
-    </Portal>
+    <Sheet onClose={onClose} sheetClassName={styles.armorySheet}>
+      <ClickOutsideRoot>
+        <Armory itemHash={itemHash} />
+      </ClickOutsideRoot>
+    </Sheet>
   );
 }
 
@@ -540,23 +537,21 @@ function SearchBar(
         </LayoutGroup>
 
         {filterHelpOpen && (
-          <Portal>
-            <Sheet
-              onClose={() => setFilterHelpOpen(false)}
-              header={
-                <>
-                  <h1>{t('Header.Filters')}</h1>
-                  <UserGuideLink topic="Item-Search" />
-                </>
-              }
-              freezeInitialHeight
-              sheetClassName={styles.filterHelp}
-            >
-              <Suspense fallback={<Loading message={t('Loading.FilterHelp')} />}>
-                <LazyFilterHelp />
-              </Suspense>
-            </Sheet>
-          </Portal>
+          <Sheet
+            onClose={() => setFilterHelpOpen(false)}
+            header={
+              <>
+                <h1>{t('Header.Filters')}</h1>
+                <UserGuideLink topic="Item-Search" />
+              </>
+            }
+            freezeInitialHeight
+            sheetClassName={styles.filterHelp}
+          >
+            <Suspense fallback={<Loading message={t('Loading.FilterHelp')} />}>
+              <LazyFilterHelp />
+            </Suspense>
+          </Sheet>
         )}
 
         {autocompleteMenu}

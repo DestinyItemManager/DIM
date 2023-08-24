@@ -193,6 +193,9 @@ export const pinnacleSources = [
   73143230, // InventoryItem "Pinnacle Gear"
 ];
 
+/** The premium Eververse currency */
+export const silverItemHash = 3147280338; // InventoryItem "Silver"
+
 // For loadout mods obliterated from the defs, we instead return this def
 export const deprecatedPlaceholderArmorModHash = 3947616002; // InventoryItem "Deprecated Armor Mod"
 

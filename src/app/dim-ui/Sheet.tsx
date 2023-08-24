@@ -2,6 +2,7 @@ import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import ItemPickerContainer from 'app/item-picker/ItemPickerContainer';
 import { isAndroid, isiOSBrowser } from 'app/utils/browsers';
+import { Portal } from 'app/utils/temp-container';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import clsx from 'clsx';
 import {
@@ -300,11 +301,13 @@ export default function Sheet({
   );
 
   return (
-    <SheetDisabledContext.Provider value={setParentDisabled}>
-      <PressTipRoot.Provider value={sheet}>
-        <ItemPickerContainer>{sheetBody}</ItemPickerContainer>
-      </PressTipRoot.Provider>
-    </SheetDisabledContext.Provider>
+    <Portal>
+      <SheetDisabledContext.Provider value={setParentDisabled}>
+        <PressTipRoot.Provider value={sheet}>
+          <ItemPickerContainer>{sheetBody}</ItemPickerContainer>
+        </PressTipRoot.Provider>
+      </SheetDisabledContext.Provider>
+    </Portal>
   );
 }
 

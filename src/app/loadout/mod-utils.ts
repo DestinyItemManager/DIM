@@ -126,6 +126,10 @@ export function mapToNonReducedModCostVariant(plugHash: number): number {
   return reducedToNormalMod[plugHash] ?? plugHash;
 }
 
+export function isReducedModCostVariant(plugHash: number): boolean {
+  return reducedToNormalMod[plugHash] !== undefined;
+}
+
 /**
  * Find the complementary cost variant.
  */
