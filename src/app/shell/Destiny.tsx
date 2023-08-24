@@ -186,7 +186,7 @@ export default function Destiny() {
 
   return (
     <ItemPickerContainer>
-      <SingleVendorSheetContainer account={account}>
+      <SingleVendorSheetContainer>
         <div className={styles.content}>
           <Routes>
             <Route path="inventory" element={<Inventory account={account} />} />

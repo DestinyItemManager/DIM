@@ -1,6 +1,7 @@
+import { currentAccountSelector } from 'app/accounts/selectors';
 import { useEventBusListener } from 'app/utils/hooks';
 import React, { Suspense, createContext, lazy, useCallback, useState } from 'react';
-import { DestinyAccount } from '../../accounts/destiny-account';
+import { useSelector } from 'react-redux';
 import { SingleVendorState, hideVendorSheet$ } from './single-vendor-sheet';
 
 const SingleVendorSheet = lazy(async () => ({
@@ -12,13 +13,8 @@ export const SingleVendorSheetContext = createContext<React.Dispatch<
   React.SetStateAction<SingleVendorState>
 > | null>(null);
 
-export default function SingleVendorSheetContainer({
-  account,
-  children,
-}: {
-  account: DestinyAccount;
-  children: React.ReactNode;
-}) {
+export default function SingleVendorSheetContainer({ children }: { children: React.ReactNode }) {
+  const account = useSelector(currentAccountSelector);
   const [currentVendorHash, setCurrentVendorHash] = useState<SingleVendorState>({});
 
   const onClose = useCallback(() => {
@@ -36,19 +32,19 @@ export default function SingleVendorSheetContainer({
     <>
       <SingleVendorSheetContext.Provider value={setCurrentVendorHash}>
         {children}
+        <Suspense fallback={null}>
+          {account &&
+            currentVendorHash.characterId &&
+            currentVendorHash.vendorHash !== undefined && (
+              <SingleVendorSheet
+                account={account}
+                characterId={currentVendorHash.characterId}
+                vendorHash={currentVendorHash.vendorHash}
+                onClose={onClose}
+              />
+            )}
+        </Suspense>
       </SingleVendorSheetContext.Provider>
-      <Suspense fallback={null}>
-        {currentVendorHash.characterId && currentVendorHash.vendorHash !== undefined && (
-          <SingleVendorSheetContainer account={account}>
-            <SingleVendorSheet
-              account={account}
-              characterId={currentVendorHash.characterId}
-              vendorHash={currentVendorHash.vendorHash}
-              onClose={onClose}
-            />
-          </SingleVendorSheetContainer>
-        )}
-      </Suspense>
     </>
   );
 }
