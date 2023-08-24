@@ -3,7 +3,6 @@
  */
 
 import ItemPopup from 'app/item-popup/ItemPopup';
-import { Portal } from 'app/utils/temp-container';
 import React, { useCallback, useRef, useState } from 'react';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
@@ -11,34 +10,6 @@ import { DimItem } from '../inventory/item-types';
 interface PopupState {
   item: DimItem;
   element: HTMLElement;
-}
-
-function useZIndex(): [number, React.RefCallback<HTMLDivElement>] {
-  const zIndex = useRef<number>(0);
-  const measureRef = useCallback((el: HTMLDivElement) => {
-    zIndex.current = getZIndex(el);
-  }, []);
-
-  return [zIndex.current, measureRef];
-}
-
-function getZIndex(e: HTMLElement): number {
-  if (!e) {
-    return 0;
-  }
-  let z: string | undefined;
-  try {
-    z = document.defaultView?.getComputedStyle(e).getPropertyValue('z-index');
-  } catch (e) {
-    return 0;
-  }
-  if (!z) {
-    return 0;
-  }
-  if (e.parentNode && (!z || isNaN(parseInt(z, 10)))) {
-    return getZIndex(e.parentNode as HTMLElement);
-  }
-  return parseInt(z, 10);
 }
 
 export default function ItemGrid({
@@ -49,11 +20,10 @@ export default function ItemGrid({
   /** Don't allow opening Armory from the header link */
   noLink?: boolean;
 }) {
-  const [zIndex, measureRef] = useZIndex();
   const [popup, setPopup] = useState<PopupState | undefined>();
 
   return (
-    <div className="sub-bucket" ref={measureRef}>
+    <div className="sub-bucket">
       {items.map((i) => (
         <BasicItemTrigger item={i} key={i.index} onShowPopup={setPopup}>
           {(ref, showPopup) => (
@@ -62,15 +32,12 @@ export default function ItemGrid({
         </BasicItemTrigger>
       ))}
       {popup && (
-        <Portal>
-          <ItemPopup
-            onClose={() => setPopup(undefined)}
-            item={popup.item}
-            element={popup.element}
-            zIndex={zIndex + 1}
-            noLink={noLink}
-          />
-        </Portal>
+        <ItemPopup
+          onClose={() => setPopup(undefined)}
+          item={popup.item}
+          element={popup.element}
+          noLink={noLink}
+        />
       )}
     </div>
   );

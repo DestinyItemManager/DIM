@@ -6,7 +6,6 @@ import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import type { ItemTierName } from 'app/search/d2-known-values';
-import { Portal } from 'app/utils/temp-container';
 import { LookupTable } from 'app/utils/util-types';
 import { DestinyAmmunitionType, DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -89,9 +88,7 @@ export default function ItemPopupHeader({
         </div>
       </div>
       {showArmory && linkToArmory && (
-        <Portal>
-          <ArmorySheet onClose={() => setShowArmory(false)} item={item} />
-        </Portal>
+        <ArmorySheet onClose={() => setShowArmory(false)} item={item} />
       )}
     </button>
   );

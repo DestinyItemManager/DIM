@@ -15,9 +15,8 @@ import { useSelector } from 'react-redux';
 import styles from './MaterialCounts.m.scss';
 
 const showMats = spiderMats;
-const goodMats = [2979281381, 4257549984, 3853748946, 4257549985, 3702027555];
-const seasonal = [1224079819, 1289622079, 1471199156];
-const crafting = [2497395625, 353704689, 2708128607];
+const goodMats = [2979281381, 4257549984, 3853748946, 4257549985, 3702027555, 353704689];
+const seasonal = [1224079819, 2329379380, 2329379381, 2392300858, 1289622079, 1471199156];
 
 export function MaterialCounts({
   wide,
@@ -35,7 +34,7 @@ export function MaterialCounts({
 
   const content = [
     includeCurrencies && <CurrencyGroup key="currencies" currencies={currencies} />,
-    ...[seasonal, goodMats, crafting, showMats].map((matgroup) => (
+    ...[seasonal, goodMats, showMats].map((matgroup) => (
       <React.Fragment key={matgroup[0]}>
         {matgroup.map((h) => {
           const items = materials[h];

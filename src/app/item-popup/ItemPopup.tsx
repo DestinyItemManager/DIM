@@ -1,4 +1,5 @@
 import ClickOutside from 'app/dim-ui/ClickOutside';
+import { PressTipRoot } from 'app/dim-ui/PressTip';
 import Sheet from 'app/dim-ui/Sheet';
 import { usePopper } from 'app/dim-ui/usePopper';
 import { DimItem } from 'app/inventory/item-types';
@@ -7,6 +8,7 @@ import ItemAccessoryButtons from 'app/item-actions/ItemAccessoryButtons';
 import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
 import type { ItemTierName } from 'app/search/d2-known-values';
 import { useIsPhonePortrait } from 'app/shell/selectors';
+import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import { useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -107,33 +109,37 @@ export default function ItemPopup({
       <div className={styles.popupBackground}>{body}</div>
     </Sheet>
   ) : (
-    <div
-      className={clsx(
-        'item-popup',
-        styles.movePopupDialog,
-        tierClasses[item.tier],
-        styles.desktopPopupRoot
-      )}
-      style={{ zIndex }}
-      ref={popupRef}
-      role="dialog"
-      aria-modal="false"
-    >
-      <ClickOutside onClickOutside={onClose}>
-        <ItemTagHotkeys item={item} />
-        <div className={styles.desktopPopup}>
-          <div className={clsx(styles.desktopPopupBody, styles.popupBackground)}>
-            {header}
-            {body}
-          </div>
-          {itemActionsModel.hasControls && (
-            <div className={clsx(styles.desktopActions)}>
-              <DesktopItemActions item={item} actionsModel={itemActionsModel} />
+    <Portal>
+      <div
+        className={clsx(
+          'item-popup',
+          styles.movePopupDialog,
+          tierClasses[item.tier],
+          styles.desktopPopupRoot
+        )}
+        style={{ zIndex }}
+        ref={popupRef}
+        role="dialog"
+        aria-modal="false"
+      >
+        <ClickOutside onClickOutside={onClose}>
+          <PressTipRoot.Provider value={popupRef}>
+            <ItemTagHotkeys item={item} />
+            <div className={styles.desktopPopup}>
+              <div className={clsx(styles.desktopPopupBody, styles.popupBackground)}>
+                {header}
+                {body}
+              </div>
+              {itemActionsModel.hasControls && (
+                <div className={clsx(styles.desktopActions)}>
+                  <DesktopItemActions item={item} actionsModel={itemActionsModel} />
+                </div>
+              )}
             </div>
-          )}
-        </div>
-      </ClickOutside>
-      <div className={clsx('arrow', styles.arrow, tierClasses[item.tier])} />
-    </div>
+          </PressTipRoot.Provider>
+        </ClickOutside>
+        <div className={clsx('arrow', styles.arrow, tierClasses[item.tier])} />
+      </div>
+    </Portal>
   );
 }

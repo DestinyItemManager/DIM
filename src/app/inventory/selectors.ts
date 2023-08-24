@@ -133,14 +133,20 @@ export const vendorCurrencyEngramsSelector = createSelector(
   }
 );
 
+const materialsWithMissingICH = [
+  3702027555, // InventoryItem "Spoils of Conquest"
+  2329379380, // InventoryItem "Salvage Key"
+  2329379381, // InventoryItem "Deep Dive Key",
+  1289622079, // InventoryItem "Strand Meditations"
+];
+
 /** materials/currencies that aren't top level stuff */
 export const materialsSelector = createSelector(allItemsSelector, (allItems) =>
   allItems.filter(
     (i) =>
       i.itemCategoryHashes.includes(ItemCategoryHashes.Materials) ||
       i.itemCategoryHashes.includes(ItemCategoryHashes.ReputationTokens) ||
-      i.hash === 3702027555 || // Spoils of Conquest do not have item category hashes
-      i.hash === 1289622079 // neither do Strand Meditations
+      materialsWithMissingICH.includes(i.hash)
   )
 );
 
@@ -357,7 +363,7 @@ function getArtifactUnlocks(
   const unlockedItemHashes =
     artifactData.tiers
       ?.flatMap((tier) => tier.items)
-      .filter((item) => item.isActive)
+      .filter((item) => item.isVisible && item.isActive)
       .map((item) => item.itemHash) || [];
   return {
     unlockedItemHashes,

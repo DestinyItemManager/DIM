@@ -8,7 +8,6 @@ import deprecatedMods from 'data/d2/deprecated-mods.json';
 import focusingItemOutputs from 'data/d2/focusing-item-outputs.json';
 import rahoolMats from 'data/d2/spider-mats.json';
 import _ from 'lodash';
-import { Link } from 'react-router-dom';
 import BungieImage from '../dim-ui/BungieImage';
 import { PressTip } from '../dim-ui/PressTip';
 import FactionIcon from '../progress/FactionIcon';
@@ -153,16 +152,6 @@ export default function VendorItems({
                     />
                   </div>
                 </PressTip>
-              )}
-              {Boolean(rewardVendorHash) && rewardItem && (
-                <Link to={`../vendors/${rewardVendorHash}?characterId=${characterId}`}>
-                  <div className="item" title={rewardItem.displayProperties.name}>
-                    <BungieImage
-                      className="item-img transparent"
-                      src={rewardItem.displayProperties.icon}
-                    />
-                  </div>
-                </Link>
               )}
             </div>
           </div>

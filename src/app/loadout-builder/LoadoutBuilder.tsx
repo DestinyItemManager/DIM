@@ -25,7 +25,6 @@ import { AppIcon, faExclamationTriangle, redoIcon, refreshIcon, undoIcon } from 
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyObject } from 'app/utils/empty';
 import { isClassCompatible, itemCanBeEquippedBy } from 'app/utils/item-utils';
-import { Portal } from 'app/utils/temp-container';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { deepEqual } from 'fast-equals';
@@ -478,39 +477,35 @@ export default memo(function LoadoutBuilder({
           )
         )}
         {modPicker.open && (
-          <Portal>
-            <ModPicker
-              classType={classType}
-              owner={selectedStore.id}
-              lockedMods={resolvedMods}
-              plugCategoryHashWhitelist={modPicker.plugCategoryHashWhitelist}
-              plugCategoryHashDenyList={
-                autoStatMods
-                  ? // Exclude stat mods from the mod picker when they're auto selected
-                    [...autoAssignmentPCHs, PlugCategoryHashes.EnhancementsV2General]
-                  : autoAssignmentPCHs
-              }
-              onAccept={(newLockedMods) =>
-                lbDispatch({
-                  type: 'lockedModsChanged',
-                  lockedMods: newLockedMods,
-                })
-              }
-              onClose={() => lbDispatch({ type: 'closeModPicker' })}
-            />
-          </Portal>
+          <ModPicker
+            classType={classType}
+            owner={selectedStore.id}
+            lockedMods={resolvedMods}
+            plugCategoryHashWhitelist={modPicker.plugCategoryHashWhitelist}
+            plugCategoryHashDenyList={
+              autoStatMods
+                ? // Exclude stat mods from the mod picker when they're auto selected
+                  [...autoAssignmentPCHs, PlugCategoryHashes.EnhancementsV2General]
+                : autoAssignmentPCHs
+            }
+            onAccept={(newLockedMods) =>
+              lbDispatch({
+                type: 'lockedModsChanged',
+                lockedMods: newLockedMods,
+              })
+            }
+            onClose={() => lbDispatch({ type: 'closeModPicker' })}
+          />
         )}
         {compareSet && (
-          <Portal>
-            <CompareLoadoutsDrawer
-              compareSet={compareSet}
-              selectedStore={selectedStore}
-              loadout={loadout}
-              loadouts={loadouts}
-              lockedMods={modsToAssign}
-              onClose={() => lbDispatch({ type: 'closeCompareDrawer' })}
-            />
-          </Portal>
+          <CompareLoadoutsDrawer
+            compareSet={compareSet}
+            selectedStore={selectedStore}
+            loadout={loadout}
+            loadouts={loadouts}
+            lockedMods={modsToAssign}
+            onClose={() => lbDispatch({ type: 'closeCompareDrawer' })}
+          />
         )}
       </PageWithMenu.Contents>
     </PageWithMenu>

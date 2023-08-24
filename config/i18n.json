@@ -1213,6 +1213,7 @@
     "Shaders": "{{count}}x Shader",
     "Ornaments": "{{count}}x Ornament",
     "WeaponMods": "{{count}}x Weapon Mod",
+    "DiscountedMods": "{{count}}x Discounted Mod",
     "ArmorMods": "{{count}}x Armor Mod",
     "Subclass": "{{count}}x Subclass Option",
     "Others": "{{count}}x Ghost Projection"
@@ -1280,7 +1281,7 @@
   },
   "Vendors": {
     "Collections": "Collections",
-    "Engram": "Reward Engram",
+    "Engram": "Rank",
     "FilterToUnacquired": "Only show uncollected items",
     "HideSilverItems": "Hide Silver items",
     "NoItems": "This Vendor is currently not offering any items.",

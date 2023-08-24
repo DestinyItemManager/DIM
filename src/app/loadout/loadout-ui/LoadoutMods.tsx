@@ -1,3 +1,4 @@
+import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
 import { artifactUnlocksSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
@@ -7,7 +8,6 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { AppIcon, addIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { Portal } from 'app/utils/temp-container';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { memo, useCallback, useMemo, useState } from 'react';
@@ -153,25 +153,21 @@ export const LoadoutMods = memo(function LoadoutMods({
           </div>
         )}
       {showModAssignmentDrawer && (
-        <Portal>
-          <ModAssignmentDrawer
-            loadout={loadout}
-            storeId={storeId}
-            onUpdateMods={onUpdateMods}
-            onClose={() => setShowModAssignmentDrawer(false)}
-          />
-        </Portal>
+        <ModAssignmentDrawer
+          loadout={loadout}
+          storeId={storeId}
+          onUpdateMods={onUpdateMods}
+          onClose={() => setShowModAssignmentDrawer(false)}
+        />
       )}
       {onUpdateMods && showModPicker && (
-        <Portal>
-          <ModPicker
-            classType={loadout.classType}
-            owner={storeId}
-            lockedMods={resolvedMods}
-            onAccept={onUpdateMods}
-            onClose={() => setShowModPicker(false)}
-          />
-        </Portal>
+        <ModPicker
+          classType={loadout.classType}
+          owner={storeId}
+          lockedMods={resolvedMods}
+          onAccept={onUpdateMods}
+          onClose={() => setShowModPicker(false)}
+        />
       )}
     </div>
   );
@@ -181,13 +177,15 @@ export const LoadoutMods = memo(function LoadoutMods({
  * Shows artifact unlocks in the loadout view.
  */
 export const LoadoutArtifactUnlocks = memo(function LoadoutArtifactUnlocks({
-  loadout,
+  artifactUnlocks,
+  classType,
   storeId,
   className,
   onRemoveMod,
   onSyncFromEquipped,
 }: {
-  loadout: Loadout;
+  artifactUnlocks: LoadoutParameters['artifactUnlocks'];
+  classType: DestinyClass;
   storeId: string;
   className?: string;
   onRemoveMod?: (mod: number) => void;
@@ -198,20 +196,20 @@ export const LoadoutArtifactUnlocks = memo(function LoadoutArtifactUnlocks({
 
   const loadoutArtifactMods: ResolvedLoadoutMod[] = useMemo(
     () =>
-      hashesToPluggableItems(
-        defs,
-        loadout.parameters?.artifactUnlocks?.unlockedItemHashes ?? []
-      ).map((def) => ({ originalModHash: def.hash, resolvedMod: def })) ?? [],
-    [defs, loadout.parameters?.artifactUnlocks?.unlockedItemHashes]
+      hashesToPluggableItems(defs, artifactUnlocks?.unlockedItemHashes ?? []).map((def) => ({
+        originalModHash: def.hash,
+        resolvedMod: def,
+      })) ?? [],
+    [defs, artifactUnlocks?.unlockedItemHashes]
   );
 
   const handleRemoveMod = useCallback(
     (mod: ResolvedLoadoutMod) => onRemoveMod!(mod.originalModHash),
     [onRemoveMod]
   );
-  const artifactTitle = loadout.parameters?.artifactUnlocks
+  const artifactTitle = artifactUnlocks
     ? t('Loadouts.ArtifactUnlocksWithSeason', {
-        seasonNumber: loadout.parameters?.artifactUnlocks?.seasonNumber,
+        seasonNumber: artifactUnlocks?.seasonNumber,
       })
     : t('Loadouts.ArtifactUnlocks');
 
@@ -237,7 +235,7 @@ export const LoadoutArtifactUnlocks = memo(function LoadoutArtifactUnlocks({
                     [styles.artifactUnlock]: unlocked,
                     [styles.missingItem]: !unlocked,
                   })}
-                  classType={loadout.classType}
+                  classType={classType}
                   onRemoveMod={onRemoveMod ? handleRemoveMod : undefined}
                 />
               );

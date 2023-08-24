@@ -12,7 +12,6 @@ import { singularBucketHashes } from 'app/loadout-drawer/loadout-utils';
 import { AppIcon, addIcon, faTshirt } from 'app/shell/icons';
 import { LoadoutCharacterStats } from 'app/store-stats/CharacterStats';
 import { emptyArray } from 'app/utils/empty';
-import { Portal } from 'app/utils/temp-container';
 import { LookupTable } from 'app/utils/util-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -317,15 +316,13 @@ function FashionButton({
         <AppIcon icon={faTshirt} /> {t('Loadouts.Fashion')}
       </button>
       {showFashionDrawer && (
-        <Portal>
-          <FashionDrawer
-            loadout={loadout}
-            items={items}
-            storeId={storeId}
-            onModsByBucketUpdated={onModsByBucketUpdated}
-            onClose={() => setShowFashionDrawer(false)}
-          />
-        </Portal>
+        <FashionDrawer
+          loadout={loadout}
+          items={items}
+          storeId={storeId}
+          onModsByBucketUpdated={onModsByBucketUpdated}
+          onClose={() => setShowFashionDrawer(false)}
+        />
       )}
     </>
   );

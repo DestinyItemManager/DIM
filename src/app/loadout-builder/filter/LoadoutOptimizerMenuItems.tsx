@@ -13,7 +13,6 @@ import { ItemFilter } from 'app/search/filter-types';
 import { AppIcon, faTimesCircle, pinIcon } from 'app/shell/icons';
 import { emptyObject } from 'app/utils/empty';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
-import { Portal } from 'app/utils/temp-container';
 import { objectValues } from 'app/utils/util-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
@@ -99,16 +98,14 @@ export const LoadoutOptimizerSubclass = memo(function LoadoutOptimizerSubclass({
       </div>
 
       {showSubclassOptionsPicker && subclass && (
-        <Portal>
-          <SubclassPlugDrawer
-            subclass={subclass.item}
-            socketOverrides={subclass.loadoutItem.socketOverrides ?? emptyObject()}
-            onAccept={(socketOverrides) =>
-              lbDispatch({ type: 'updateSubclassSocketOverrides', socketOverrides, subclass })
-            }
-            onClose={() => setShowSubclassOptionsPicker(false)}
-          />
-        </Portal>
+        <SubclassPlugDrawer
+          subclass={subclass.item}
+          socketOverrides={subclass.loadoutItem.socketOverrides ?? emptyObject()}
+          onAccept={(socketOverrides) =>
+            lbDispatch({ type: 'updateSubclassSocketOverrides', socketOverrides, subclass })
+          }
+          onClose={() => setShowSubclassOptionsPicker(false)}
+        />
       )}
     </>
   );
@@ -201,14 +198,12 @@ export const LoadoutOptimizerExotic = memo(function LoadoutOptimizerExotic({
         </div>
       </div>
       {showExoticPicker && (
-        <Portal>
-          <ExoticPicker
-            lockedExoticHash={lockedExoticHash}
-            classType={classType}
-            onSelected={(exotic) => lbDispatch({ type: 'lockExotic', lockedExoticHash: exotic })}
-            onClose={() => setShowExoticPicker(false)}
-          />
-        </Portal>
+        <ExoticPicker
+          lockedExoticHash={lockedExoticHash}
+          classType={classType}
+          onSelected={(exotic) => lbDispatch({ type: 'lockExotic', lockedExoticHash: exotic })}
+          onClose={() => setShowExoticPicker(false)}
+        />
       )}
     </>
   );

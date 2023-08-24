@@ -7,6 +7,8 @@ export const recoveryModHash = 4204488676; // InventoryItem "Recovery Mod"
 export const enhancedOperatorAugmentModHash = 817361141; // InventoryItem "Enhanced Operator Augment"
 /** class item mod, 3 energy */
 export const distributionModHash = 4039026690; // InventoryItem "Distribution"
+/** helmet mod, 3 energy */
+export const fontOfWisdomModHash = 1130820873; // InventoryItem "Font of Wisdom"
 
 /** 1st class item mod with mutual exclusion behavior, 1 energy */
 export const empoweringFinishModHash = 84503918; // InventoryItem "Empowered Finish"

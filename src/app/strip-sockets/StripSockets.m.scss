@@ -85,6 +85,8 @@
 }
 
 .plug {
+  cursor: pointer;
+
   &.ok {
     opacity: 0.3;
     transform: scale(0.8);
