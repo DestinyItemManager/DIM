@@ -1,7 +1,6 @@
 import { TagValue } from '@destinyitemmanager/dim-api-types';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { errorLog, infoLog } from 'app/utils/log';
-import { BucketHashes } from 'data/d2/generated-enums';
 import { memo, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -15,9 +14,7 @@ export function canSyncLockState(item: DimItem) {
     item.lockable &&
     item.taggable &&
     // don't auto-lock crafted items because they must be unlocked to reshape and DIM shouldn't re-lock an item while the user is choosing new perks
-    !item.crafted &&
-    // locking means something very different for finishers
-    item.bucket.hash !== BucketHashes.Finishers
+    !item.crafted
   );
 }
 
