@@ -3,7 +3,6 @@ import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import { setInGameLoadoutIdentifiers } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { Portal } from 'app/utils/temp-container';
 import noInGameLoadoutIdentifiers from 'images/no-loadout-identifiers.svg';
 import { useState } from 'react';
 import EditInGameLoadoutIdentifiers from './EditInGameLoadoutIdentifiers';
@@ -46,13 +45,11 @@ export default function InGameLoadoutIdentifiersSelectButton({
         </button>
       </ClosableContainer>
       {sheetOpen && (
-        <Portal>
-          <EditInGameLoadoutIdentifiers
-            identifiers={identifiers}
-            onSave={handleChooseIdentifiers}
-            onClose={() => setSheetOpen(false)}
-          />
-        </Portal>
+        <EditInGameLoadoutIdentifiers
+          identifiers={identifiers}
+          onSave={handleChooseIdentifiers}
+          onClose={() => setSheetOpen(false)}
+        />
       )}
     </>
   );
