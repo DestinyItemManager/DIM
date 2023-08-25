@@ -1,5 +1,6 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
+import './temp-container.scss';
 
 /**
  * A guaranteed-present element for attaching temporary elements to instead of
