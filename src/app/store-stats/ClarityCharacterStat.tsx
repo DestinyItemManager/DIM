@@ -67,7 +67,20 @@ export default function ClarityCharacterStat({
 
     // Apply cooldown overrides based on equipped items.
     for (const o of applicableOverrides) {
-      const abilityIndex = o.Requirements.indexOf(a.Hash);
+      const abilityIndex = (() => {
+        const abilityIndex = o.Requirements.indexOf(a.Hash);
+        if (abilityIndex !== -1) {
+          return abilityIndex;
+        }
+        const subclassIdx = o.Requirements.findIndex((r) => r < 0 && equippedHashes.has(-r));
+        if (subclassIdx !== -1) {
+          return subclassIdx;
+        }
+        if (o.Requirements.length === 1 && o.Requirements[0] === 0) {
+          return 0;
+        }
+        return -1;
+      })();
       if (abilityIndex !== -1) {
         if (o.CooldownOverride?.some((v) => v > 0)) {
           cooldowns = o.CooldownOverride;
