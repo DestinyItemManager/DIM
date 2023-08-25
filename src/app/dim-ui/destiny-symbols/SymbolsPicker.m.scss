@@ -8,6 +8,7 @@
   display: flex;
   flex-flow: column;
   box-shadow: var(--theme-drop-shadow);
+  pointer-events: auto;
 }
 
 .symbolsButton {

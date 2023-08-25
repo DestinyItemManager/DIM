@@ -5,6 +5,7 @@ import styles from './useDialog.m.scss';
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import ClickOutsideRoot from './ClickOutsideRoot';
 
 // Redecalare forwardRef
 declare module 'react' {
@@ -101,7 +102,7 @@ const Dialog = forwardRef(function Dialog<Args = [], Result = void>(
         onClose={handleCloseEvent}
         onClick={(e) => e.stopPropagation()}
       >
-        {dialogState && children(dialogState.args, close)}
+        <ClickOutsideRoot>{dialogState && children(dialogState.args, close)}</ClickOutsideRoot>
       </dialog>
     </Portal>
   );
