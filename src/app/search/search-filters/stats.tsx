@@ -53,7 +53,16 @@ const statFilters: FilterDefinition[] = [
     // Note: weapons of the same hash also have the same base stats, so this is only useful for
     // armor really, so the suggestions only list armor stats. But `validateStats` does allow
     // other stats too because there's no good reason to forbid it...
-    suggestions: [...searchableArmorStatNames, ...estStatNames],
+    suggestionsGenerator: ({ customStats }) =>
+      generateGroupedSuggestionsForFilter({
+        keywords: 'basestat',
+        format: 'stat',
+        suggestions: [
+          ...searchableArmorStatNames,
+          ...estStatNames,
+          ...(customStats?.map((c) => c.shortLabel) ?? []),
+        ],
+      }),
     validateStat,
     filter: ({ filterValue, compare, customStats }) =>
       statFilterFromString(filterValue, compare!, customStats, true),
