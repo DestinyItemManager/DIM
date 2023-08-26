@@ -59,6 +59,8 @@ function Ornaments({
   context: ItemCreationContext;
   ownedItemHashes: OrnamentStatus;
 }) {
+  // If none of the ornaments for this set are visible in an in-game socket, we should
+  // hide this, since it's likely some Eververse set
   if (set.ornamentHashes.every((hash) => !ownedItemHashes.visibleOrnaments.has(hash))) {
     return null;
   }

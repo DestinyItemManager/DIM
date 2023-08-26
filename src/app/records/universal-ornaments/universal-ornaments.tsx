@@ -11,24 +11,34 @@ import memoizeOne from 'memoize-one';
 import { createSelector } from 'reselect';
 
 export interface OrnamentsSet {
+  /** Name of the ornament set */
   name: string;
   key: string;
+  /** Plug item hashes of the ornaments, in bucket order */
   ornamentHashes: number[];
 }
 
+/**
+ * Ornament sets by class type.
+ */
 export interface OrnamentsData {
   [classType: number]: {
     classType: DestinyClass;
+    /** Name of the class for convenience */
     name: string;
+    /** All ornament sets for this class. */
     sets: { [setKey: string]: OrnamentsSet };
   };
 }
 
 export interface OrnamentStatus {
+  /** Ornaments that are visible in the in-game ornament socket. If they're not already unlocked, they're available for unlocking. */
   visibleOrnaments: Set<number>;
+  /** Ornaments that are visible in the in-game ornament socket. These are unlocked and can be equipped */
   unlockedOrnaments: Set<number>;
 }
 
+/** Retrieve info from the profile about which ornaments are unlocked, and which ones are visible. */
 export const univeralOrnamentsVisibilitySelector = createSelector(
   profileResponseSelector,
   (profileResponse) => {
@@ -74,7 +84,7 @@ export const univeralOrnamentsVisibilitySelector = createSelector(
 );
 
 /**
- * Returns universal ornament hashes keyed by class and sorted in inventory slot order
+ * Returns universal ornament plug set hashes keyed by class and sorted in inventory slot order
  * (helmet -> class item)
  */
 function identifyPlugSets(defs: D2ManifestDefinitions): { [classType: number]: number[] } {
@@ -102,6 +112,11 @@ function identifyPlugSets(defs: D2ManifestDefinitions): { [classType: number]: n
   return _.mapValues(sets, (set) => D2Categories.Armor.map((bucketHash) => set[bucketHash]));
 }
 
+/**
+ * Builds universal ornament sets based entirely on static definition data. This takes
+ * all universal ornament plugs and applies a bunch of heuristics to map them to armor sets
+ * using presentation node / collectible defs.
+ */
 export const buildSets = memoizeOne((defs: D2ManifestDefinitions): OrnamentsData => {
   const collectPresentationNodes = (
     nodeHash: number,
@@ -126,6 +141,7 @@ export const buildSets = memoizeOne((defs: D2ManifestDefinitions): OrnamentsData
     [DestinyClass.Warlock]: { classType: DestinyClass.Warlock, sets: {}, name: '' },
   };
 
+  // The Titan / Hunter / Warlock presentation nodes as children of the Armor node. NB hardcoded order here...
   const classPresentationNodes = defs.PresentationNode.get(ARMOR_NODE).children.presentationNodes;
   for (const classType of [
     DestinyClass.Titan,
@@ -151,13 +167,17 @@ export const buildSets = memoizeOne((defs: D2ManifestDefinitions): OrnamentsData
         }
         const item = defs.InventoryItem.get(entry.plugItemHash);
         if (item && !item.redacted) {
+          // If the plugSetItem has a collectible as its collectibleHash,
+          // we have a certain match.
           let node = relevantPresentationNodes.find((i) =>
             i.children.collectibles.some(
               (collectible) => collectible.collectibleHash === item.collectibleHash
             )
           );
           if (!node) {
-            // Tons of reissued armor sets
+            // Tons of reissued armor sets end up with an ornament set
+            // that is different from the set that actually has the collectible entries,
+            // so find a collectible that has the same name.
             node = relevantPresentationNodes.find((i) =>
               i.children.collectibles.some((collectible) => {
                 const collectibleDef = defs.Collectible.get(collectible.collectibleHash);
@@ -169,6 +189,8 @@ export const buildSets = memoizeOne((defs: D2ManifestDefinitions): OrnamentsData
           }
           if (!node) {
             // Y1 Trials / Prophecy: Bond Judgment vs. Judgement's Wrap
+            // The collectible icon will be different, but reference an item
+            // where the icon matches our icon
             node = relevantPresentationNodes.find((i) =>
               i.children.collectibles.some((collectible) => {
                 const collectibleDef = defs.Collectible.get(collectible.collectibleHash);
@@ -198,6 +220,8 @@ export const buildSets = memoizeOne((defs: D2ManifestDefinitions): OrnamentsData
       }
     }
 
+    // Finally, put all remaining items (as of writing, Masquerader's helmet and two class items per class)
+    // into their own section.
     data[classType].sets[-123] = {
       name: t('Records.UniversalOrnamentSetOther'),
       key: '-123',
