@@ -9,10 +9,11 @@
 
   display: grid;
   grid-template-areas: 'emblem class power' 'emblem bottom maxTotalPower';
-  grid-template-columns: 48px 1fr min-content;
+  grid-template-columns: 36px 1fr min-content;
   grid-template-rows: min-content 1fr;
   gap: 0 6px;
   padding-right: 6px;
+  padding-left: 6px;
 
   // Use the emblem as a background
   background-size: $emblem-width $emblem-height;
@@ -32,7 +33,7 @@
 .vault {
   // The vault tile is laid out differently
   grid-template-areas: 'emblem class vaultCapacity';
-  grid-template-columns: 54px 1fr min-content;
+  grid-template-columns: 46px 1fr min-content;
   grid-template-rows: 1fr;
   align-items: center;
   box-sizing: border-box;
