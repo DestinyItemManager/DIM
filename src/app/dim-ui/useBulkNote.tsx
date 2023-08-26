@@ -173,7 +173,7 @@ function NotesEditor({
   const isPhonePortrait = useIsPhonePortrait();
 
   const tags = useSelector(allNotesHashtagsSelector);
-  useAutocomplete(textArea, tags, form.current ?? undefined);
+  useAutocomplete(textArea, tags, form);
 
   // On iOS at least, focusing the keyboard pushes the content off the screen
   const nativeAutoFocus = !isPhonePortrait && !isiOSBrowser();
