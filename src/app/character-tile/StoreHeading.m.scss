@@ -1,0 +1,39 @@
+@use '../variables.scss' as *;
+
+.loadoutButton {
+  background-color: black;
+  width: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loadoutMenu {
+  position: absolute;
+  width: 300px;
+  box-sizing: border-box;
+  max-height: calc(var(--viewport-height) - var(--header-height) - #{62px + 16px});
+  overflow: auto;
+  z-index: 2;
+  color: rgba(245, 245, 245, 0.6);
+  overscroll-behavior: contain;
+  background-color: var(--theme-dropdown-menu-bg);
+
+  @include visible-scrollbars;
+
+  [role='button'] {
+    outline: none;
+  }
+
+  // The phone layout version
+  :global(.detached) & {
+    position: fixed;
+    top: calc(54px + var(--header-height));
+    z-index: 1000;
+    width: 100vw;
+    padding: 0;
+    max-height: calc(
+      var(--viewport-height) - 54px - var(--header-height) - env(safe-area-inset-bottom)
+    );
+  }
+}

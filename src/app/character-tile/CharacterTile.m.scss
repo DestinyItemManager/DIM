@@ -4,7 +4,6 @@
   flex: 1;
   display: flex;
   position: relative;
-  z-index: 0;
   height: 48px;
   max-width: 237px;
 }
@@ -114,6 +113,15 @@
   text-overflow: ellipsis;
   overflow: hidden;
   color: white;
+
+  // TODO: use container queries?
+  :global(.lang-ja) & {
+    font-size: 16px;
+  }
+
+  :global(.lang-ru) .vault & {
+    font-size: 16px;
+  }
 }
 
 .powerLevel {

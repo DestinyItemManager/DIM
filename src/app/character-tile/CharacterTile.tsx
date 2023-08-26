@@ -27,6 +27,7 @@ export default memo(function CharacterTile({ store }: { store: DimStore }) {
   const floorTotalPower = Math.floor(maxTotalPower || store.powerLevel);
   const isPhonePortrait = useIsPhonePortrait();
 
+  // TODO: title including emblem?
   return (
     <div className={styles.characterTile}>
       <div
