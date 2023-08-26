@@ -30,6 +30,7 @@ export default function UniversalOrnamentsContents() {
     <div className={styles.classType}>
       {objectValues(data).flatMap((sets) => (
         <CollapsibleTitle
+          key={sets.classType}
           title={sets.name}
           sectionId={`class-${sets.classType}`}
           defaultCollapsed={true}
@@ -37,7 +38,7 @@ export default function UniversalOrnamentsContents() {
           <div className={styles.records}>
             {Object.values(sets.sets).map((set) => (
               <Ornaments
-                key={`${sets.classType}-${set.key}`}
+                key={set.key}
                 set={set}
                 ownedItemHashes={unlocked}
                 context={createItemContext}
