@@ -8,7 +8,9 @@
   overflow: hidden;
 
   display: grid;
-  grid-template-areas: 'emblem class power' 'emblem bottom maxTotalPower';
+  grid-template-areas:
+    'emblem class power'
+    'emblem bottom maxTotalPower';
   grid-template-columns: 36px 1fr min-content;
   grid-template-rows: min-content 1fr;
   gap: 0 6px;
