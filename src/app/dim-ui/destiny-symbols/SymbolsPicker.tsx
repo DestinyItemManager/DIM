@@ -1,11 +1,21 @@
 import { t } from 'app/i18next-t';
 import { SearchInput } from 'app/search/SearchInput';
-import { Portal } from 'app/utils/temp-container';
+import { tempContainer } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import { FontGlyphs } from 'data/d2/d2-font-glyphs';
-import React, { HTMLProps, memo, useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  HTMLProps,
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import { createPortal } from 'react-dom';
 import { useSelector } from 'react-redux';
 import ClickOutside from '../ClickOutside';
+import { PressTipRoot } from '../PressTip';
 import { usePopper } from '../usePopper';
 import ColorDestinySymbols from './ColorDestinySymbols';
 import styles from './SymbolsPicker.m.scss';
@@ -104,6 +114,7 @@ function SymbolsPickerButton<T extends HTMLTextAreaElement | HTMLInputElement>({
   const controlRef = useRef<HTMLButtonElement>(null);
   const tooltipContents = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
+  const pressTipRoot = useContext(PressTipRoot);
 
   usePopper({
     contents: tooltipContents,
@@ -150,15 +161,15 @@ function SymbolsPickerButton<T extends HTMLTextAreaElement | HTMLInputElement>({
       >
         <span>{symbolsIcon}</span>
       </button>
-      {open && (
-        <Portal>
-          <div ref={tooltipContents} style={{ zIndex: 20 }}>
+      {open &&
+        createPortal(
+          <div ref={tooltipContents}>
             <ClickOutside onClickOutside={() => setOpen(false)}>
               <SymbolsWindow onChooseGlyph={onChooseGlyph} />
             </ClickOutside>
-          </div>
-        </Portal>
-      )}
+          </div>,
+          pressTipRoot.current ?? tempContainer
+        )}
     </>
   );
 }
