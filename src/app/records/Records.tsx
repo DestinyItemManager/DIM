@@ -23,6 +23,7 @@ import {
 } from '../inventory/selectors';
 import PresentationNodeRoot from './PresentationNodeRoot';
 import styles from './Records.m.scss';
+import UniversalOrnaments from './universal-ornaments/UniversalOrnaments';
 
 interface Props {
   account: DestinyAccount;
@@ -106,6 +107,7 @@ export default function Records({ account }: Props) {
         id: `p_${nodeDef.hash}`,
         title: overrideTitles[nodeDef.hash] || nodeDef.displayProperties.name,
       })),
+    { id: 'universalOrnaments', title: t('Records.UniversalOrnaments') },
   ];
 
   return (
@@ -178,6 +180,13 @@ export default function Records({ account }: Props) {
               </CollapsibleTitle>
             </section>
           ))}
+        <section id="universalOrnaments">
+          <CollapsibleTitle title={t('Records.UniversalOrnaments')} sectionId="universalOrnaments">
+            <ErrorBoundary name={t('Records.UniversalOrnaments')}>
+              <UniversalOrnaments />
+            </ErrorBoundary>
+          </CollapsibleTitle>
+        </section>
       </PageWithMenu.Contents>
     </PageWithMenu>
   );

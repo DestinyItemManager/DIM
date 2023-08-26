@@ -991,7 +991,9 @@
     "RecordBooks": "Record Books"
   },
   "Records": {
-    "Title": "Records"
+    "Title": "Records",
+    "UniversalOrnamentSetOther": "Other",
+    "UniversalOrnaments": "Universal Ornaments"
   },
   "SearchHistory": {
     "Date": "Last Used",

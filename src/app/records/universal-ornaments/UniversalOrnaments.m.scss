@@ -1,3 +1,7 @@
+.classType {
+  margin-left: 10px;
+}
+
 .records {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -26,10 +30,9 @@
 }
 
 .redeemed {
-  border-color: #c4b578;
-  color: #c4b578;
+  border-color: var(--theme-record-redeemed);
   background: transparent;
-  p {
-    color: scale-color(#c4b578, $lightness: -40%);
+  > h3 {
+    color: var(--theme-record-redeemed);
   }
 }
