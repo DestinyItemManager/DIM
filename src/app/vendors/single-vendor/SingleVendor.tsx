@@ -12,7 +12,6 @@ import { useLoadStores } from 'app/inventory/store/hooks';
 import { useD2Definitions } from 'app/manifest/selectors';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { usePageTitle } from 'app/utils/hooks';
-import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 import { VendorLocation } from '../Vendor';
 import VendorItems from '../VendorItems';
@@ -129,7 +128,7 @@ export default function SingleVendor({
   }
 
   return (
-    <div className={clsx(artifactCheck)}>
+    <div className={artifactCheck}>
       <ErrorBoundary name="SingleVendor">
         <div className={styles.featuredHeader}>
           <h1>
