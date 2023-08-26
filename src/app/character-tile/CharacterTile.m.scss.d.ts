@@ -7,6 +7,8 @@ interface CssExports {
   'characterTile': string;
   'class': string;
   'classIcon': string;
+  'current': string;
+  'destiny2': string;
   'emblem': string;
   'gildedCurrentSeason': string;
   'gildedIcon': string;

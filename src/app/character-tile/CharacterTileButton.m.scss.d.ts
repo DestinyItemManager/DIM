@@ -2,7 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'character': string;
-  'current': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

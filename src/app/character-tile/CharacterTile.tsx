@@ -29,7 +29,13 @@ export default memo(function CharacterTile({ store }: { store: DimStore }) {
 
   // TODO: title including emblem?
   return (
-    <div className={styles.characterTile}>
+    <div
+      className={clsx(styles.characterTile, {
+        [styles.current]: store.current,
+        [styles.vault]: store.isVault,
+        [styles.destiny2]: store.destinyVersion === 2,
+      })}
+    >
       <div
         className={styles.background}
         style={{

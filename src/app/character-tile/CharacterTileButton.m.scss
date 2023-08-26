@@ -1,19 +1,18 @@
 @use '../variables.scss' as *;
 
 .character {
-  cursor: pointer;
-  display: flex;
-  flex-direction: row;
+  composes: flexRow from '../dim-ui/common.m.scss';
   position: relative;
   white-space: nowrap;
   box-sizing: border-box;
-  max-width: 237px + 16px;
+  max-width: $emblem-width + 16px;
   width: calc(6px + var(--character-column-width) - var(--item-margin));
 
   @include phone-portrait {
     width: auto;
   }
 
+  // Display an outline when hovering characters
   @media (hover: hover) {
     &:hover,
     &:active {
@@ -28,14 +27,4 @@
       }
     }
   }
-}
-
-.current::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  border-top: 13px solid var(--theme-accent-primary);
-  border-right: 13px solid transparent;
 }

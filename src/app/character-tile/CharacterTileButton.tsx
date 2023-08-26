@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import { forwardRef } from 'react';
 import { DimStore } from '../inventory/store-types';
 import CharacterTile from './CharacterTile';
@@ -13,7 +12,7 @@ export default forwardRef(function CharacterTileButton(
   }: {
     character: DimStore;
     onClick?: (id: string) => void;
-    children: React.ReactNode;
+    children?: React.ReactNode;
   },
   ref: React.Ref<HTMLDivElement>
 ) {
@@ -24,12 +23,7 @@ export default forwardRef(function CharacterTileButton(
     <div
       role={onClick ? 'button' : undefined}
       onClick={handleClick}
-      className={clsx(styles.character, {
-        [styles.current]: character.current,
-        [styles.destiny2]: character.destinyVersion === 2,
-        // TODO: do we need this?
-        vault: character.isVault,
-      })}
+      className={styles.character}
       ref={ref}
     >
       <CharacterTile store={character} />

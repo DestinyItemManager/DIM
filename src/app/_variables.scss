@@ -76,6 +76,10 @@ $theme-tooltip-corner-radius: 6px;
 $theme-corner-radius-search: 6px;
 $search-bar-height: 28px;
 
+// Character Tile emblem native size - beyond this the emblem gets distorted
+$emblem-width: 237px;
+$emblem-height: 48px;
+
 // A mixin that allows targeting styles only when in phone-portrait display mode
 @mixin phone-portrait {
   // This seems like a good breakpoint for portrait based on https://material.io/devices/
