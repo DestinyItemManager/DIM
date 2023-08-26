@@ -6,19 +6,11 @@
   position: relative;
   height: $emblem-height;
   max-width: $emblem-width;
-}
-
-.background {
-  position: absolute;
-  width: 100%;
-  height: 100%;
   background-size: $emblem-width $emblem-height;
   background-position: left center;
   background-repeat: no-repeat;
-  background-color: black;
-  z-index: -1;
   box-sizing: border-box;
-  .vault & {
+  &.vault {
     border: 1px solid rgba(0, 0, 0, 0.3);
     border-right: none;
     background-size: cover;

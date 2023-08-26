@@ -35,18 +35,15 @@ export default memo(function CharacterTile({ store }: { store: DimStore }) {
         [styles.vault]: store.isVault,
         [styles.destiny2]: store.destinyVersion === 2,
       })}
+      style={{
+        backgroundImage: `url("${store.background}")`,
+        backgroundColor: store.color
+          ? `rgb(${Math.round(store.color.red)}, ${Math.round(store.color.green)}, ${Math.round(
+              store.color.blue
+            )}`
+          : 'black',
+      }}
     >
-      <div
-        className={styles.background}
-        style={{
-          backgroundImage: `url("${store.background}")`,
-          backgroundColor: store.color
-            ? `rgb(${Math.round(store.color.red)}, ${Math.round(store.color.green)}, ${Math.round(
-                store.color.blue
-              )}`
-            : 'black',
-        }}
-      />
       <CharacterEmblem store={store} />
       <div className={styles.characterText}>
         <div className={styles.top}>
