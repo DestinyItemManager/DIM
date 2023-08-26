@@ -10,10 +10,6 @@ import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './CharacterTile.m.scss';
 
-function CharacterEmblem({ store }: { store: DimStore }) {
-  return <div className={styles.emblem} style={{ backgroundImage: `url("${store.icon}")` }} />;
-}
-
 const gildedIcon = String.fromCodePoint(FontGlyphs.gilded_title);
 
 /**
@@ -27,13 +23,11 @@ export default memo(function CharacterTile({ store }: { store: DimStore }) {
   const floorTotalPower = Math.floor(maxTotalPower || store.powerLevel);
   const isPhonePortrait = useIsPhonePortrait();
 
-  // TODO: title including emblem?
   return (
     <div
       className={clsx(styles.characterTile, {
         [styles.current]: store.current,
         [styles.vault]: store.isVault,
-        [styles.destiny2]: store.destinyVersion === 2,
       })}
       style={{
         backgroundImage: `url("${store.background}")`,
@@ -44,37 +38,33 @@ export default memo(function CharacterTile({ store }: { store: DimStore }) {
           : 'black',
       }}
     >
-      <CharacterEmblem store={store} />
-      <div className={styles.characterText}>
-        <div className={styles.top}>
-          <div className={styles.class}>{store.className}</div>
-          {!store.isVault && (
-            <>
-              <div className={styles.powerLevel}>
-                <AppIcon icon={powerActionIcon} />
-                {store.powerLevel}
-              </div>
-              {isPhonePortrait && <div className={styles.maxTotalPower}>/ {floorTotalPower}</div>}
-            </>
-          )}
-        </div>
-        <div className={styles.bottom}>
-          {store.isVault ? (
-            isPhonePortrait && <VaultCapacity />
-          ) : (
-            <>
-              <div>{store.titleInfo ? <Title titleInfo={store.titleInfo} /> : store.race}</div>
-              {store.destinyVersion === 1 && store.level < 40 && (
-                <div className={styles.level}>{store.level}</div>
-              )}
-            </>
-          )}
-        </div>
-      </div>
+      {(store.destinyVersion === 1 || store.isVault) && (
+        <img className={styles.emblem} src={store.icon} height={32} width={32} />
+      )}
+      <div className={styles.class}>{store.className}</div>
+      {store.isVault ? (
+        isPhonePortrait && (
+          <div className={styles.vaultCapacity}>
+            <VaultCapacity />
+          </div>
+        )
+      ) : (
+        <>
+          <div className={styles.bottom}>
+            {store.titleInfo ? <Title titleInfo={store.titleInfo} /> : store.race}
+          </div>
+          <div className={styles.powerLevel}>
+            <AppIcon icon={powerActionIcon} />
+            {store.powerLevel}
+          </div>
+          {isPhonePortrait && <div className={styles.maxTotalPower}>/ {floorTotalPower}</div>}
+        </>
+      )}
     </div>
   );
 });
 
+/** An equipped Title, earned from completing a Seal */
 function Title({ titleInfo }: { titleInfo: DimTitle }) {
   const { title, gildedNum, isGildedForCurrentSeason } = titleInfo;
   return (

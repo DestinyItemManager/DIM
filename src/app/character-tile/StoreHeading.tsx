@@ -82,9 +82,9 @@ export default function StoreHeading({ store, selectedStore, loadoutMenuRef, onT
 
   // TODO: aria "open"
   return (
-    <div>
+    <>
       <CharacterHeader store={store} ref={menuTrigger} onClick={openLoadoutPopup} />
-      {loadoutMenu}
-    </div>
+      <div>{loadoutMenu}</div>
+    </>
   );
 }

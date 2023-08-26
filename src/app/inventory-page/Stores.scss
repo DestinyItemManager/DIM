@@ -71,10 +71,6 @@
     }
   }
 
-  > div {
-    white-space: normal;
-  }
-
   // Postmaster - items above, collect button below
   .bucket-215593132 & {
     flex-direction: column;
@@ -183,8 +179,5 @@
   .phone-portrait & {
     padding-left: 0;
     overflow: hidden;
-    .character {
-      margin: 0 5px;
-    }
   }
 }
