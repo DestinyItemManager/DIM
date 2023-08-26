@@ -344,6 +344,7 @@
     "AutoRefresh": "DIM se rechargera automatiquement tant que vous jouez.",
     "BulkTag": "Étiquetage de masse des objets",
     "BungieNetAlert": "Alerte Bungie",
+    "Clarity": "L'extension Clarity n'est plus supporté par ses développeurs et peut causer des problèmes avec DIM, comme une utilisation excessive du système. Veuillez la désinstaller.",
     "Clear": "Effacer le filtre de recherche",
     "CompareMatching": "Comparer les objets",
     "DeleteSearch": "Supprimer la recherche",
@@ -731,7 +732,7 @@
     "OnWrongCharacterWarning": "Les armures les plus puissantes de ce personnage sont sur un autre personnage. Pour qu'ils comptent dans le calcul de puissance des récompenses normales, de puissance, et de prestige, les armures doivent être sur ce personnage ou dans le coffre.",
     "OnlyItems": "Seuls les objets équipables, matériaux et consommables peuvent être ajoutés à un équipement.",
     "OpenInOptimizer": "Optimiser l'armure",
-    "PickArmor": "Pick Armor",
+    "PickArmor": "Choisir une armure",
     "PickMods": "Ajouter des mods d'armure",
     "PullFromPostmaster": "Collecter le commis des postes",
     "PullFromPostmasterError": "Impossible de récupérer du commis des postes: {{error}}.",
@@ -1214,6 +1215,7 @@
     "Button": "Vider {{numSockets}} emplacements",
     "Cancel": "Annuler",
     "Choose": "Choisissez les emplacements à vider",
+    "DiscountedMods": "{{count}}x mods à prix réduis",
     "Done": "Emplacements vidés",
     "NoSockets": "Aucun emplacement à vider",
     "Ok": "Ok",
@@ -1263,12 +1265,13 @@
     "GildingTriumph": "Triomphe doré",
     "HideCompleted": "Masquer les triomphes complétés",
     "RevealRedacted": "Afficher les triomphes masqués",
-    "SortRecords": "Sort triumphs by completion"
+    "SortRecords": "Trier les triomphes par complétion"
   },
   "Vendors": {
     "Collections": "Collections",
-    "Engram": "Engramme de récompense",
+    "Engram": "Rang",
     "FilterToUnacquired": "Afficher uniquement les objets non récupérés",
+    "HideSilverItems": "Masquer les objets en argentum",
     "NoItems": "Ce vendeur ne propose actuellement aucun objet.",
     "RefreshTime": "Actualisation de l'inventaire dans :",
     "Vendors": "Marchands"

@@ -344,6 +344,7 @@
     "AutoRefresh": "DIM atualizará automaticamente enquanto você estiver jogando.",
     "BulkTag": "Etiquetar itens em massa",
     "BungieNetAlert": "Alerta da Bungie",
+    "Clarity": "A extensão Clarity não é mais suportada por seus desenvolvedores e pode causar problemas com o DIM, como utilização excessiva do sistema. Por favor, desinstale-a.",
     "Clear": "Limpar filtro de busca",
     "CompareMatching": "Comparar Itens",
     "DeleteSearch": "Apagar pesquisa",
@@ -1214,6 +1215,7 @@
     "Button": "Limpar {{numSockets}} Soquetes",
     "Cancel": "Cancelar",
     "Choose": "Escolha os Soquetes para limpar",
+    "DiscountedMods": "{{count}}x Mod Descontados",
     "Done": "Soquetes limpos",
     "NoSockets": "Nenhum soquete para limpar",
     "Ok": "Ok",
@@ -1267,8 +1269,9 @@
   },
   "Vendors": {
     "Collections": "Coleções",
-    "Engram": "Engrama de Recompensa",
+    "Engram": "Ranque",
     "FilterToUnacquired": "Exibir apenas não coletados",
+    "HideSilverItems": "Ocultar Itens adquiridos com Prata",
     "NoItems": "Este Vendedor não está oferencendo nenhum item no momento.",
     "RefreshTime": "Inventário atualiza em:",
     "Vendors": "Vendedores"

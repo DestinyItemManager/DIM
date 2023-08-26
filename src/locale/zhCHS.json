@@ -344,6 +344,7 @@
     "AutoRefresh": "只要你仍在游戏，DIM 就会自动刷新。",
     "BulkTag": "批量标记物品",
     "BungieNetAlert": "Bungie提示您",
+    "Clarity": "Clarity插件开发者已终止对其支持，此插件可能会导致DIM出现故障，如系统占用率过高。请卸载此插件。",
     "Clear": "清除蒐索筛选器",
     "CompareMatching": "对比物品",
     "DeleteSearch": "删除搜索",
@@ -1214,6 +1215,7 @@
     "Button": "清空 {{numSockets}} 个插槽",
     "Cancel": "取消",
     "Choose": "选择要清空的插槽",
+    "DiscountedMods": "{{count}}x Discounted Mod",
     "Done": "已清空的插槽",
     "NoSockets": "无插槽可清空",
     "Ok": "确定",
@@ -1267,8 +1269,9 @@
   },
   "Vendors": {
     "Collections": "收藏品",
-    "Engram": "奖励记忆水晶",
+    "Engram": "等级",
     "FilterToUnacquired": "仅显示未收集物品",
+    "HideSilverItems": "隐藏银币物品",
     "NoItems": "此商人目前没有提供任何物品。",
     "RefreshTime": "库存刷新倒计时：",
     "Vendors": "商贩"

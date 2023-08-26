@@ -344,6 +344,7 @@
     "AutoRefresh": "游玩時，DIM 會自動刷新。",
     "BulkTag": "批量標記物品",
     "BungieNetAlert": "Bungie提示您",
+    "Clarity": "The Clarity extension is no longer supported by its developers and can cause problems with DIM, such as excessive system utilization. Please uninstall it.",
     "Clear": "清除蒐索篩選器",
     "CompareMatching": "對比物品",
     "DeleteSearch": "刪除搜索",
@@ -1214,6 +1215,7 @@
     "Button": "清空 {{numSockets}} 個插槽",
     "Cancel": "取消",
     "Choose": "選擇要清空的插槽",
+    "DiscountedMods": "{{count}}x Discounted Mod",
     "Done": "已清空插槽",
     "NoSockets": "沒有要清空的插槽。",
     "Ok": "確定",
@@ -1267,8 +1269,9 @@
   },
   "Vendors": {
     "Collections": "收藏品",
-    "Engram": "獎勵記憶水晶",
+    "Engram": "Rank",
     "FilterToUnacquired": "僅顯示未收集物品",
+    "HideSilverItems": "Hide Silver items",
     "NoItems": "此商人現時沒有提供任何物品。",
     "RefreshTime": "庫存刷新：",
     "Vendors": "商販"
