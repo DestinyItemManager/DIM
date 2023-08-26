@@ -6,14 +6,14 @@
 // Prefer CSS modules, or at least stylesheets that are imported directly by the components that need them, to putting things here.
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 @use 'variables.scss' as *;
-@use 'theme';
-@use 'theme-dimdark';
-@use 'theme-pyramid';
-@use 'theme-classic';
-@use 'theme-neomuna';
-@use 'theme-throneworld';
-@use 'theme-vexnet';
-@use 'theme-europa';
+@use 'themes/theme';
+@use 'themes/theme-dimdark';
+@use 'themes/theme-pyramid';
+@use 'themes/theme-classic';
+@use 'themes/theme-neomuna';
+@use 'themes/theme-throneworld';
+@use 'themes/theme-vexnet';
+@use 'themes/theme-europa';
 
 @font-face {
   font-family: 'Destiny Symbols';
