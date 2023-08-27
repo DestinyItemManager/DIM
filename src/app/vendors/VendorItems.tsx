@@ -1,10 +1,13 @@
+import { PressTip } from 'app/dim-ui/PressTip';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
+import FactionIcon from 'app/progress/FactionIcon';
 import { ReputationRank } from 'app/progress/ReputationRank';
 import { VENDORS } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { uniqBy } from 'app/utils/util';
+import { DestinyVendorProgressionType } from 'bungie-api-ts/destiny2';
 import deprecatedMods from 'data/d2/deprecated-mods.json';
 import focusingItemOutputs from 'data/d2/focusing-item-outputs.json';
 import rahoolMats from 'data/d2/spider-mats.json';
@@ -135,7 +138,23 @@ export default function VendorItems({
           <div className={styles.vendorRow}>
             <h3 className={styles.categoryTitle}>{t('Vendors.Engram')}</h3>
             <div className={styles.vendorItems}>
-              {factionProgress && <ReputationRank progress={factionProgress} />}
+              {factionProgress &&
+                (vendor.def.vendorProgressionType !== DestinyVendorProgressionType.Default ? (
+                  <ReputationRank progress={factionProgress} />
+                ) : (
+                  <PressTip
+                    minimal
+                    tooltip={`${factionProgress.progressToNextLevel}/${factionProgress.nextLevelAt}`}
+                  >
+                    <div>
+                      <FactionIcon
+                        factionProgress={factionProgress}
+                        factionDef={faction}
+                        vendor={vendor.component}
+                      />
+                    </div>
+                  </PressTip>
+                ))}
             </div>
           </div>
         )}
