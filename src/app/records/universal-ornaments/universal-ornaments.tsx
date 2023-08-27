@@ -1,8 +1,12 @@
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
+import { DimItem } from 'app/inventory/item-types';
 import { profileResponseSelector } from 'app/inventory/selectors';
+import { ItemCreationContext, makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { ARMOR_NODE, DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
+import { ItemFilter } from 'app/search/filter-types';
+import { filterMap } from 'app/utils/util';
 import { DestinyClass, DestinyPresentationNodeDefinition } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import universalOrnamentPlugSetHashes from 'data/d2/universal-ornament-plugset-hashes.json';
@@ -10,24 +14,24 @@ import _ from 'lodash';
 import memoizeOne from 'memoize-one';
 import { createSelector } from 'reselect';
 
-export interface OrnamentsSet {
+export interface OrnamentsSet<T = number> {
   /** Name of the ornament set */
   name: string;
   key: string;
-  /** Plug item hashes of the ornaments, in bucket order */
-  ornamentHashes: number[];
+  /** The set, in bucket order */
+  ornaments: T[];
 }
 
 /**
  * Ornament sets by class type.
  */
-export interface OrnamentsData {
+export interface OrnamentsData<T = number> {
   [classType: number]: {
     classType: DestinyClass;
     /** Name of the class for convenience */
     name: string;
     /** All ornament sets for this class. */
-    sets: { [setKey: string]: OrnamentsSet };
+    sets: { [setKey: string]: OrnamentsSet<T> };
   };
 }
 
@@ -211,8 +215,8 @@ export const buildSets = memoizeOne((defs: D2ManifestDefinitions): OrnamentsData
             (data[classType].sets[setKey] ??= {
               key: setKey,
               name: node.displayProperties.name,
-              ornamentHashes: [],
-            }).ornamentHashes.push(item.hash);
+              ornaments: [],
+            }).ornaments.push(item.hash);
           } else {
             otherItems.push(item.hash);
           }
@@ -225,9 +229,37 @@ export const buildSets = memoizeOne((defs: D2ManifestDefinitions): OrnamentsData
     data[classType].sets[-123] = {
       name: t('Records.UniversalOrnamentSetOther'),
       key: '-123',
-      ornamentHashes: otherItems,
+      ornaments: otherItems,
     };
   }
 
   return data;
 });
+
+/**
+ * Turn our def-based ornament hashes into DimItems, filtering them down to
+ * sets matching the search filter.
+ */
+export function filterOrnamentSets(
+  data: OrnamentsData,
+  itemCreationContext: ItemCreationContext,
+  searchQuery: string,
+  searchFilter: ItemFilter
+): OrnamentsData<DimItem> {
+  return _.mapValues(data, (classData) => ({
+    ...classData,
+    sets: Object.fromEntries(
+      filterMap(Object.entries(classData.sets), ([key, set]) => {
+        const items = filterMap(set.ornaments, (hash) => makeFakeItem(itemCreationContext, hash));
+        if (
+          !searchQuery ||
+          set.name.toLowerCase().includes(searchQuery) ||
+          items.some(searchFilter)
+        ) {
+          return [key, { ...set, ornaments: items }];
+        }
+        return undefined;
+      })
+    ),
+  }));
+}

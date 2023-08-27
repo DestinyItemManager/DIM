@@ -96,6 +96,9 @@ export default function Records({ account }: Props) {
       )
     : [];
 
+  const universalOrnamentsName =
+    defs.PresentationNode.get(3655910122)?.displayProperties.name ?? '???';
+
   // We put the hashes we know about from profile first
   const nodeHashes = [...new Set([...profileHashes, ...otherHashes])];
 
@@ -107,7 +110,7 @@ export default function Records({ account }: Props) {
         id: `p_${nodeDef.hash}`,
         title: overrideTitles[nodeDef.hash] || nodeDef.displayProperties.name,
       })),
-    { id: 'universalOrnaments', title: t('Records.UniversalOrnaments') },
+    { id: 'universalOrnaments', title: universalOrnamentsName },
   ];
 
   return (
@@ -181,9 +184,9 @@ export default function Records({ account }: Props) {
             </section>
           ))}
         <section id="universalOrnaments">
-          <CollapsibleTitle title={t('Records.UniversalOrnaments')} sectionId="universalOrnaments">
-            <ErrorBoundary name={t('Records.UniversalOrnaments')}>
-              <UniversalOrnaments />
+          <CollapsibleTitle title={universalOrnamentsName} sectionId="universalOrnaments">
+            <ErrorBoundary name={universalOrnamentsName}>
+              <UniversalOrnaments searchQuery={searchQuery} searchFilter={searchFilter} />
             </ErrorBoundary>
           </CollapsibleTitle>
         </section>

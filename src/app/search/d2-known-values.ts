@@ -247,6 +247,9 @@ export const RAID_NODE = 4025982223; // PresentationNode "Raids"
 export const SHADER_NODE = 1516796296; // PresentationNode "Shaders"
 export const ARMOR_NODE = 1605042242; // PresentationNode "Armor"
 
+/** Just to grab the string Universal Ornaments */
+export const UNIVERSAL_ORNAMENTS_NODE = 3655910122; // PresentationNode "Universal Ornaments"
+
 //
 // MISC KNOWN HASHES / ENUMS
 //
