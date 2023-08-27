@@ -35,22 +35,29 @@ export function InGameLoadoutStrip({
     inGameLoadoutsWithMetadataSelector(state, selectedStoreId)
   );
 
+  if (!inGameLoadoutInfos.length) {
+    return null;
+  }
+
   return (
-    <div className={styles.loadoutStrip}>
-      {inGameLoadoutInfos.map(({ isEquippable, isEquipped, matchingLoadouts, gameLoadout }) => (
-        <InGameLoadoutTile
-          store={store}
-          key={gameLoadout.id}
-          gameLoadout={gameLoadout}
-          isEquippable={isEquippable}
-          isEquipped={isEquipped}
-          matchingLoadouts={matchingLoadouts}
-          onEdit={onEdit}
-          onShare={onShare}
-          onShowDetails={onShowDetails}
-        />
-      ))}
-    </div>
+    <>
+      <h2>{t('Loadouts.InGameLoadouts')}</h2>
+      <div className={styles.loadoutStrip}>
+        {inGameLoadoutInfos.map(({ isEquippable, isEquipped, matchingLoadouts, gameLoadout }) => (
+          <InGameLoadoutTile
+            store={store}
+            key={gameLoadout.id}
+            gameLoadout={gameLoadout}
+            isEquippable={isEquippable}
+            isEquipped={isEquipped}
+            matchingLoadouts={matchingLoadouts}
+            onEdit={onEdit}
+            onShare={onShare}
+            onShowDetails={onShowDetails}
+          />
+        ))}
+      </div>
+    </>
   );
 }
 
