@@ -93,6 +93,33 @@ export default function VendorItems({
   const rewardItem =
     rewardVendorHash !== undefined ? defs.InventoryItem.get(faction!.rewardItemHash) : undefined;
   const factionProgress = vendor?.component?.progression;
+  const progressionDef = factionProgress && defs.Progression.get(factionProgress.progressionHash);
+
+  // If the level cap also matches the number of ranks, then we can assume
+  // this vendor can be reset.
+  const nextResetAt =
+    progressionDef && progressionDef.steps.length === factionProgress.levelCap
+      ? _.sumBy(progressionDef.steps, (step) => step.progressTotal)
+      : undefined;
+
+  // In this case, show the total reputation and the progress towards a full reset in the tooltip
+  const progressTooltip =
+    factionProgress !== undefined &&
+    (nextResetAt !== undefined ? (
+      <div className={styles.rankTooltip}>
+        <span>{`${factionProgress.progressToNextLevel}/${factionProgress.nextLevelAt}`}</span>
+        <br />
+        <span>
+          {factionProgress.currentProgress} (
+          {t('Progress.PercentPrestige', {
+            pct: Math.round((factionProgress.currentProgress / nextResetAt) * 100),
+          })}
+        </span>
+        )
+      </div>
+    ) : (
+      `${factionProgress.progressToNextLevel}/${factionProgress.nextLevelAt}`
+    ));
 
   let currencies = vendor.currencies;
 
@@ -140,10 +167,7 @@ export default function VendorItems({
             <h3 className={styles.categoryTitle}>{t('Vendors.Engram')}</h3>
             <div className={styles.vendorItems}>
               {factionProgress && faction && (
-                <PressTip
-                  minimal
-                  tooltip={`${factionProgress.progressToNextLevel}/${factionProgress.nextLevelAt}`}
-                >
+                <PressTip minimal tooltip={progressTooltip}>
                   <div>
                     <FactionIcon
                       factionProgress={factionProgress}

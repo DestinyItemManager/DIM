@@ -5,6 +5,7 @@ interface CssExports {
   'currencies': string;
   'currency': string;
   'itemCategories': string;
+  'rankTooltip': string;
   'vendorContents': string;
   'vendorItems': string;
   'vendorRow': string;
