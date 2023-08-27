@@ -39,7 +39,7 @@ export default memo(function CharacterTile({ store }: { store: DimStore }) {
       }}
     >
       {(store.destinyVersion === 1 || store.isVault) && (
-        <img className={styles.emblem} src={store.icon} height={32} width={32} />
+        <img className={styles.emblem} src={store.icon} height={40} width={40} />
       )}
       <div className={styles.class}>{store.className}</div>
       {store.isVault ? (

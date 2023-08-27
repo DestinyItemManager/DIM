@@ -18,7 +18,6 @@ export default forwardRef(function CharacterTileButton(
 ) {
   const handleClick = onClick ? () => onClick(character.id) : undefined;
 
-  // TODO: buttonize
   return (
     <div
       role={onClick ? 'button' : undefined}

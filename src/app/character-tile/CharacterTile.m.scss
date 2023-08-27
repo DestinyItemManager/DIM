@@ -14,8 +14,7 @@
   grid-template-columns: 36px 1fr min-content;
   grid-template-rows: min-content 1fr;
   gap: 0 6px;
-  padding-right: 6px;
-  padding-left: 6px;
+  padding: 0 6px;
 
   // Use the emblem as a background
   background-size: $emblem-width $emblem-height;
@@ -56,14 +55,20 @@
   border-right: 13px solid transparent;
 }
 
-// Either the equipped title, or the character race
-.bottom {
-  grid-area: bottom;
+.bigText {
+  font-size: 20px;
+  margin-top: 2px;
 }
-.bottom,
-.maxTotalPower {
+
+.smallText {
   font-size: 12px;
   line-height: 10px;
+}
+
+// Either the equipped title, or the character race
+.bottom {
+  composes: smallText;
+  grid-area: bottom;
 }
 
 // The emblem is only shown for D1 and the vault - D2 bakes it into the
@@ -81,14 +86,9 @@
   }
 }
 
-.class,
-.powerLevel {
-  font-size: 20px;
-  margin-top: 2px;
-}
-
 // The class name (Hunter, Titan, etc)
 .class {
+  composes: bigText;
   grid-area: class;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -98,7 +98,6 @@
     margin-top: 0;
   }
 
-  // TODO: use container queries?
   :global(.lang-ja) &,
   :global(.lang-ru) .vault & {
     font-size: 16px;
@@ -107,6 +106,7 @@
 
 // Current power level
 .powerLevel {
+  composes: bigText;
   grid-area: power;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif, 'Destiny Symbols';
   font-weight: 500;
@@ -122,6 +122,7 @@
 
 // The max power shown on mobile under the current power
 .maxTotalPower {
+  composes: smallText;
   grid-area: maxTotalPower;
   justify-self: self-end;
 }
