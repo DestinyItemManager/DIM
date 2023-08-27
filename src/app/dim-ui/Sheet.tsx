@@ -3,6 +3,7 @@ import { t } from 'app/i18next-t';
 import ItemPickerContainer from 'app/item-picker/ItemPickerContainer';
 import { isAndroid, isiOSBrowser } from 'app/utils/browsers';
 import { Portal } from 'app/utils/temp-container';
+import SingleVendorSheetContainer from 'app/vendors/single-vendor/SingleVendorSheetContainer';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import clsx from 'clsx';
 import {
@@ -304,7 +305,9 @@ export default function Sheet({
     <Portal>
       <SheetDisabledContext.Provider value={setParentDisabled}>
         <PressTipRoot.Provider value={sheet}>
-          <ItemPickerContainer>{sheetBody}</ItemPickerContainer>
+          <ItemPickerContainer>
+            <SingleVendorSheetContainer>{sheetBody}</SingleVendorSheetContainer>
+          </ItemPickerContainer>
         </PressTipRoot.Provider>
       </SheetDisabledContext.Provider>
     </Portal>

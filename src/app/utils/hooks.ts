@@ -135,12 +135,14 @@ export function useHeightFromViewportBottom(
   }, [setHeightFromViewportBottom, elementRef, itemHeight, padding]);
 }
 
-export function usePageTitle(title: string) {
+export function usePageTitle(title: string, active?: boolean) {
   useEffect(() => {
-    const titleElem = document.getElementsByTagName('title')[0]!;
-    titleElem.textContent = `DIM - ${title}`;
-    return () => {
-      titleElem.textContent = `DIM`;
-    };
-  }, [title]);
+    if (active !== false) {
+      const titleElem = document.getElementsByTagName('title')[0]!;
+      titleElem.textContent = `DIM - ${title}`;
+      return () => {
+        titleElem.textContent = `DIM`;
+      };
+    }
+  }, [active, title]);
 }

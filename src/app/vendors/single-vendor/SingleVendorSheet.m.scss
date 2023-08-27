@@ -1,0 +1,12 @@
+.vendorSheet {
+  max-width: 900px;
+  margin: 0 auto;
+
+  :global(.sheet-close) {
+    right: 16px;
+  }
+}
+
+.sheetContents {
+  padding: 16px;
+}
