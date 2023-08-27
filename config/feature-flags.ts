@@ -17,7 +17,7 @@ export function makeFeatureFlags(env: { release: boolean; beta: boolean; dev: bo
     // Community-curated wish lists
     wishLists: true,
     // Show a banner for supporting a charitable cause
-    issueBanner: true,
+    issueBanner: false,
     // Show the triage tab in the item popup
     triage: true,
     // Advanced Write Actions (inserting mods)
