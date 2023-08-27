@@ -14,6 +14,7 @@
   display: flex;
   flex-direction: row;
   align-items: flex-start;
+  min-width: 200px;
 
   @include phone-portrait {
     align-items: center;
