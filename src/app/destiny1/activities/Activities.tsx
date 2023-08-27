@@ -1,3 +1,4 @@
+import CharacterTile from 'app/character-tile/CharacterTile';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
@@ -9,7 +10,6 @@ import clsx from 'clsx';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../../accounts/destiny-account';
-import CharacterTileButton from '../../character-tile/CharacterTileButton';
 import BungieImage, { bungieBackgroundStyle } from '../../dim-ui/BungieImage';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
 import { sortedStoresSelector } from '../../inventory/selectors';
@@ -201,7 +201,7 @@ export default function Activities({ account }: Props) {
       <div className="activities-characters">
         {characters.map((store) => (
           <div key={store.id} className="activities-character">
-            <CharacterTileButton character={store} />
+            <CharacterTile store={store} />
           </div>
         ))}
       </div>

@@ -1,0 +1,30 @@
+@use '../variables.scss' as *;
+
+.character {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  position: relative;
+  white-space: nowrap;
+  box-sizing: border-box;
+  max-width: $emblem-width + 16px;
+  width: calc(6px + var(--character-column-width) - var(--item-margin));
+
+  @include phone-portrait {
+    width: auto;
+  }
+
+  // Display an outline when hovering characters
+  @media (hover: hover) {
+    &:hover,
+    &:active {
+      position: relative;
+      &::after {
+        content: '';
+        display: block;
+        position: absolute;
+        inset: -4px;
+        border: 1px solid white;
+        pointer-events: none;
+      }
+    }
+  }
+}

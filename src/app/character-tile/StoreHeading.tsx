@@ -1,15 +1,14 @@
 import { t } from 'app/i18next-t';
 import { isD1Store } from 'app/inventory/stores-helpers';
 import LoadoutPopup from 'app/loadout/loadout-menu/LoadoutPopup';
-import clsx from 'clsx';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { forwardRef, useCallback, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import ClickOutside from '../dim-ui/ClickOutside';
 import { DimStore } from '../inventory/store-types';
 import { AppIcon, kebabIcon } from '../shell/icons';
 import CharacterHeaderXPBar from './CharacterHeaderXP';
-import CharacterTile from './CharacterTile';
-import './StoreHeading.scss';
+import CharacterTileButton from './CharacterTileButton';
+import styles from './StoreHeading.m.scss';
 
 interface Props {
   store: DimStore;
@@ -22,34 +21,25 @@ interface Props {
 }
 
 // Wrap the {CharacterTile} with a button for the loadout menu and the D1 XP progress bar
-function CharacterHeader({
-  store,
-  menuRef,
-  onClick,
-}: {
-  store: DimStore;
-  menuRef: React.RefObject<HTMLDivElement>;
-  onClick: () => void;
-}) {
+const CharacterHeader = forwardRef(function CharacterHeader(
+  {
+    store,
+    onClick,
+  }: {
+    store: DimStore;
+    onClick: () => void;
+  },
+  ref: React.Ref<HTMLDivElement>
+) {
   return (
-    <div
-      className={clsx('character', {
-        current: store.current,
-        destiny1: store.destinyVersion === 1,
-        destiny2: store.destinyVersion === 2,
-        vault: store.isVault,
-      })}
-      ref={menuRef}
-      onClick={onClick}
-    >
-      <CharacterTile store={store} />
-      <div className="loadout-button">
+    <CharacterTileButton ref={ref} character={store} onClick={onClick}>
+      <div className={styles.loadoutButton}>
         <AppIcon icon={kebabIcon} title={t('Loadouts.Loadouts')} />
       </div>
       {!store.isVault && isD1Store(store) && <CharacterHeaderXPBar store={store} />}
-    </div>
+    </CharacterTileButton>
   );
-}
+});
 
 /**
  * This is the character dropdown used at the top of the inventory page.
@@ -79,7 +69,7 @@ export default function StoreHeading({ store, selectedStore, loadoutMenuRef, onT
       <ClickOutside
         onClickOutside={clickOutsideLoadoutMenu}
         extraRef={menuTrigger}
-        className="loadout-menu"
+        className={styles.loadoutMenu}
       >
         <LoadoutPopup dimStore={store} onClick={clickOutsideLoadoutMenu} />
       </ClickOutside>
@@ -90,10 +80,11 @@ export default function StoreHeading({ store, selectedStore, loadoutMenuRef, onT
       : menuContents;
   }
 
+  // TODO: aria "open"
   return (
-    <div>
-      <CharacterHeader store={store} menuRef={menuTrigger} onClick={openLoadoutPopup} />
-      {loadoutMenu}
-    </div>
+    <>
+      <CharacterHeader store={store} ref={menuTrigger} onClick={openLoadoutPopup} />
+      <div>{loadoutMenu}</div>
+    </>
   );
 }

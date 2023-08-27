@@ -44,11 +44,6 @@
   &.unequipped {
     flex: 1;
     width: 100%;
-
-    .vault & {
-      margin-left: 0;
-      margin-right: 0;
-    }
   }
 
   &.not-equippable {
