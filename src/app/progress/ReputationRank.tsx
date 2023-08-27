@@ -15,10 +15,12 @@ export function ReputationRank({
   progress,
   streak,
   resetCount,
+  isProgressRanks,
 }: {
   progress: DestinyProgression;
   streak?: DestinyProgression;
   resetCount?: number;
+  isProgressRanks?: boolean;
 }) {
   const defs = useD2Definitions()!;
   const replacer = useDynamicStringReplacer();
@@ -37,7 +39,7 @@ export function ReputationRank({
 
   return (
     <div
-      className={clsx(factionClass, styles.activityRank)}
+      className={clsx(factionClass, styles.activityRank, { [styles.gridLayout]: isProgressRanks })}
       title={replacer(progressionDef.displayProperties.description)}
     >
       <div>

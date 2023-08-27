@@ -61,6 +61,7 @@ export default function Ranks({ profileInfo }: { profileInfo: DestinyProfileResp
                 firstCharacterProgression[rankProgressionToStreakProgression[progressionHash] ?? 0]
               }
               resetCount={firstCharacterProgression[progressionHash]?.currentResetCount}
+              isProgressRanks
             />
           )
       )}

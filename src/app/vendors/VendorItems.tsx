@@ -10,8 +10,6 @@ import focusingItemOutputs from 'data/d2/focusing-item-outputs.json';
 import rahoolMats from 'data/d2/spider-mats.json';
 import _ from 'lodash';
 import BungieImage from '../dim-ui/BungieImage';
-import { PressTip } from '../dim-ui/PressTip';
-import FactionIcon from '../progress/FactionIcon';
 import VendorItemComponent from './VendorItemComponent';
 import styles from './VendorItems.m.scss';
 import { D2Vendor } from './d2-vendors';
@@ -137,17 +135,7 @@ export default function VendorItems({
           <div className={styles.vendorRow}>
             <h3 className={styles.categoryTitle}>{t('Vendors.Engram')}</h3>
             <div className={styles.vendorItems}>
-              {factionProgress && (
-                <PressTip tooltip={() => <ReputationRank progress={factionProgress} />}>
-                  <div>
-                    <FactionIcon
-                      factionProgress={factionProgress}
-                      factionDef={faction}
-                      vendor={vendor.component}
-                    />
-                  </div>
-                </PressTip>
-              )}
+              {factionProgress && <ReputationRank progress={factionProgress} />}
             </div>
           </div>
         )}

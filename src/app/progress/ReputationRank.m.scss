@@ -3,23 +3,12 @@
 .factionInfo {
   display: flex;
   flex-direction: column;
-
-  @include phone-portrait {
-    align-items: center;
-    text-align: center;
-  }
 }
 
 .activityRank {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  min-width: 200px;
-
-  @include phone-portrait {
-    align-items: center;
-    flex-direction: column;
-  }
 }
 
 .factionName {
@@ -33,9 +22,21 @@
   display: inline-block;
   width: 64px;
   height: 64px;
+}
 
+.gridLayout {
   @include phone-portrait {
-    margin: 0;
+    .factionInfo {
+      align-items: center;
+      text-align: center;
+    }
+    &.activityRank {
+      align-items: center;
+      flex-direction: column;
+    }
+    .crucibleRankIcon {
+      margin: 0;
+    }
   }
 }
 
