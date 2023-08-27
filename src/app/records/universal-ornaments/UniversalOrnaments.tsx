@@ -1,3 +1,4 @@
+import BungieImage from 'app/dim-ui/BungieImage';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import { DimItem } from 'app/inventory/item-types';
 import { createItemContextSelector } from 'app/inventory/selectors';
@@ -18,9 +19,9 @@ import {
 } from './universal-ornaments';
 
 /**
- * Displays "leaf node" contents for presentation nodes (collectibles, triumphs, metrics)
+ * Displays all unlocked and unlockable universal ornament, categorized into armor sets.
  */
-export default function UniversalOrnamentsContents({
+export default function UniversalOrnaments({
   searchQuery,
   searchFilter,
 }: {
@@ -46,7 +47,12 @@ export default function UniversalOrnamentsContents({
       {objectValues(populatedData).flatMap((sets) => (
         <CollapsibleTitle
           key={sets.classType}
-          title={sets.name}
+          title={
+            <>
+              <BungieImage className={styles.classIcon} src={sets.icon} />
+              {sets.name}
+            </>
+          }
           sectionId={`class-${sets.classType}`}
           defaultCollapsed={true}
         >

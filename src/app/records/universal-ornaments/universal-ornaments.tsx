@@ -30,6 +30,8 @@ export interface OrnamentsData<T = number> {
     classType: DestinyClass;
     /** Name of the class for convenience */
     name: string;
+    /** Class icon */
+    icon: string;
     /** All ornament sets for this class. */
     sets: { [setKey: string]: OrnamentsSet<T> };
   };
@@ -38,7 +40,7 @@ export interface OrnamentsData<T = number> {
 export interface OrnamentStatus {
   /** Ornaments that are visible in the in-game ornament socket. If they're not already unlocked, they're available for unlocking. */
   visibleOrnaments: Set<number>;
-  /** Ornaments that are visible in the in-game ornament socket. These are unlocked and can be equipped */
+  /** Ornaments that are available for the in-game ornament socket. These are unlocked and can be equipped. */
   unlockedOrnaments: Set<number>;
 }
 
@@ -140,9 +142,9 @@ export const buildSets = memoizeOne((defs: D2ManifestDefinitions): OrnamentsData
 
   const plugSetHashes = identifyPlugSets(defs);
   const data: OrnamentsData = {
-    [DestinyClass.Titan]: { classType: DestinyClass.Titan, sets: {}, name: '' },
-    [DestinyClass.Hunter]: { classType: DestinyClass.Hunter, sets: {}, name: '' },
-    [DestinyClass.Warlock]: { classType: DestinyClass.Warlock, sets: {}, name: '' },
+    [DestinyClass.Titan]: { classType: DestinyClass.Titan, sets: {}, name: '', icon: '' },
+    [DestinyClass.Hunter]: { classType: DestinyClass.Hunter, sets: {}, name: '', icon: '' },
+    [DestinyClass.Warlock]: { classType: DestinyClass.Warlock, sets: {}, name: '', icon: '' },
   };
 
   // The Titan / Hunter / Warlock presentation nodes as children of the Armor node. NB hardcoded order here...
@@ -157,6 +159,7 @@ export const buildSets = memoizeOne((defs: D2ManifestDefinitions): OrnamentsData
     const classNodeDef = defs.PresentationNode.get(classNode.presentationNodeHash);
     const relevantPresentationNodes = collectPresentationNodes(classNode.presentationNodeHash, []);
     data[classType].name = classNodeDef.displayProperties.name;
+    data[classType].icon = classNodeDef.displayProperties.icon;
 
     const otherItems: number[] = [];
 

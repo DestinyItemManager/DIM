@@ -2,6 +2,11 @@
   margin-left: 10px;
 }
 
+.classIcon {
+  height: 24px;
+  vertical-align: middle;
+}
+
 .records {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
