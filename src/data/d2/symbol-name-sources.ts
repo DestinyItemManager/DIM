@@ -569,6 +569,15 @@ export const symbolData: {
     },
   },
   {
+    codepoint: 61232,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 4249729124,
+      fromRichText: false,
+    },
+  },
+  {
     codepoint: 61192,
     glyph: '',
     source: {
