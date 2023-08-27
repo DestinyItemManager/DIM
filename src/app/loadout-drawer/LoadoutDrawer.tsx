@@ -94,7 +94,7 @@ export default function LoadoutDrawer({
     return (...args: T) => setLoadout(fn(...args));
   }
 
-  const store = getStore(stores, storeId)!;
+  const store = getStore(stores, storeId);
 
   const onAddItem = useCallback(
     (item: DimItem, equip?: boolean) => setLoadout(addItem(defs, item, equip)),

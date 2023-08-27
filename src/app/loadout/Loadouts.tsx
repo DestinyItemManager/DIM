@@ -181,7 +181,6 @@ function Loadouts({ account }: { account: DestinyAccount }) {
             <AlertIcon /> {t('Storage.DimSyncNotEnabled')}
           </p>
         )}
-        <h2>{t('Loadouts.InGameLoadouts')}</h2>
         <InGameLoadoutStrip
           store={selectedStore}
           onEdit={setEditingInGameLoadout}
