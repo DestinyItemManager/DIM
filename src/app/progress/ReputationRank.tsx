@@ -15,10 +15,12 @@ export function ReputationRank({
   progress,
   streak,
   resetCount,
+  isProgressRanks,
 }: {
   progress: DestinyProgression;
   streak?: DestinyProgression;
   resetCount?: number;
+  isProgressRanks?: boolean;
 }) {
   const defs = useD2Definitions()!;
   const replacer = useDynamicStringReplacer();
@@ -26,6 +28,7 @@ export function ReputationRank({
 
   const step = progressionDef.steps[Math.min(progress.level, progressionDef.steps.length - 1)];
 
+  const canReset = progressionDef.steps.length === progress.levelCap;
   const rankTotal = _.sumBy(progressionDef.steps, (cur) => cur.progressTotal);
 
   const streakCheckboxes =
@@ -36,7 +39,7 @@ export function ReputationRank({
 
   return (
     <div
-      className={clsx(factionClass, styles.activityRank)}
+      className={clsx(factionClass, styles.activityRank, { [styles.gridLayout]: isProgressRanks })}
       title={replacer(progressionDef.displayProperties.description)}
     >
       <div>
@@ -51,8 +54,11 @@ export function ReputationRank({
         </div>
         <div className={styles.factionName}>{step.stepName}</div>
         <div className={styles.factionLevel}>
-          <BungieImage className={styles.rankIcon} src={progressionDef.rankIcon} />
-          {progress.currentProgress} ({progress.progressToNextLevel} / {progress.nextLevelAt})
+          {progressionDef.rankIcon && (
+            <BungieImage className={styles.rankIcon} src={progressionDef.rankIcon} />
+          )}
+          {canReset && `${progress.currentProgress} `}({progress.progressToNextLevel} /{' '}
+          {progress.nextLevelAt})
         </div>
         {streakCheckboxes && (
           <div className={clsx(styles.winStreak, 'objective-row')}>
@@ -61,13 +67,19 @@ export function ReputationRank({
             ))}
           </div>
         )}
-        <div className={styles.factionLevel}>
-          {t('Progress.PercentPrestige', {
-            pct: Math.round((progress.currentProgress / rankTotal) * 100),
-          })}
-        </div>
-        {Boolean(resetCount) && (
-          <div className={styles.factionLevel}>{t('Progress.Resets', { count: resetCount })}</div>
+        {canReset && (
+          <>
+            <div className={styles.factionLevel}>
+              {t('Progress.PercentPrestige', {
+                pct: Math.round((progress.currentProgress / rankTotal) * 100),
+              })}
+            </div>
+            {Boolean(resetCount) && (
+              <div className={styles.factionLevel}>
+                {t('Progress.Resets', { count: resetCount })}
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
@@ -81,10 +93,15 @@ function ReputationRankIcon({ progress }: { progress: DestinyProgression }) {
 
   const step = progressionDef.steps[Math.min(progress.level, progressionDef.steps.length - 1)];
 
+  const canReset = progressionDef.steps.length === progress.levelCap;
   const rankTotal = _.sumBy(progressionDef.steps, (step) => step.progressTotal);
 
   const circumference = 2 * 22 * Math.PI;
   const circumference2 = 2 * 25 * Math.PI;
+
+  const strokeColor = progressionDef.color
+    ? `rgb(${progressionDef.color.red}, ${progressionDef.color.green},${progressionDef.color.blue})`
+    : 'white';
 
   return (
     <div className={styles.crucibleRankIcon}>
@@ -102,10 +119,10 @@ function ReputationRankIcon({ progress }: { progress: DestinyProgression }) {
             strokeDasharray={`${
               (circumference * progress.progressToNextLevel) / progress.nextLevelAt
             } ${circumference}`}
-            stroke={`rgb(${progressionDef.color.red}, ${progressionDef.color.green},${progressionDef.color.blue})`}
+            stroke={strokeColor}
           />
         )}
-        {progress.currentProgress > 0 && (
+        {canReset && progress.currentProgress > 0 && (
           <circle
             r="25.5"
             cx="-27"
