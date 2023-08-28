@@ -12,6 +12,7 @@
 * Fixed loadouts including last season's artifact unlocks.
 * Remove transmat effects from Rahool's currencies list.
 * Fixed display of character headers on mobile.
+* While In-Game Loadouts are disabled, their section of the Loadouts page will not appear.
 
 ## 7.82.1 <span class="changelog-date">(2023-08-22)</span>
 
