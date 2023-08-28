@@ -70,7 +70,7 @@
     "last 2 Opera versions"
   ],
   "resolutions": {
-    "@types/react": "18.2.16",
+    "@types/react": "18.2.21",
     "react-redux": "^8.0.1",
     "react-is": "^18.1.0"
   },
@@ -137,7 +137,7 @@
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.0.0",
     "eslint-plugin-react-redux": "^4.0.0",
-    "eslint-plugin-sonarjs": "^0.20.0",
+    "eslint-plugin-sonarjs": "^0.21.0",
     "fontawesome-subset": "^4.1.0",
     "fork-ts-checker-notifier-webpack-plugin": "^5.0.0",
     "fork-ts-checker-webpack-plugin": "^6.0.1",
