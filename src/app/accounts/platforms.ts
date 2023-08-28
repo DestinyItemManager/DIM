@@ -100,6 +100,7 @@ function loadPlatforms(membershipId: string): ThunkResult<readonly DestinyAccoun
       dispatch(actions.accountsLoaded(destinyAccounts));
     } catch (e) {
       if (!accountsSelector(getState()).length) {
+        dispatch(actions.handleAuthErrors(e));
         throw e;
       }
     }
