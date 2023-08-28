@@ -1,10 +1,5 @@
 .vendorSheet {
-  max-width: 900px;
-  margin: 0 auto;
-
-  :global(.sheet-close) {
-    right: 16px;
-  }
+  composes: sheet from 'app/armory/ArmorySheet.m.scss';
 }
 
 .sheetContents {
