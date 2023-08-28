@@ -238,6 +238,7 @@ const lbConfigInit = ({
 };
 
 type LoadoutBuilderConfigAction =
+  | { type: 'setLoadout'; updateFn: LoadoutUpdateFunction }
   | {
       type: 'changeCharacter';
       store: DimStore;
@@ -312,6 +313,9 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
     action: LoadoutBuilderConfigAction
   ): LoadoutBuilderConfiguration => {
     switch (action.type) {
+      case 'setLoadout': {
+        return updateLoadout(state, action.updateFn);
+      }
       case 'changeCharacter': {
         const { store } = action;
         const originalLoadout = state.loadout;

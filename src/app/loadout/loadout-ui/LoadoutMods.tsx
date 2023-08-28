@@ -10,6 +10,7 @@ import { AppIcon, addIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import ModPicker from '../ModPicker';
@@ -23,11 +24,14 @@ const LoadoutModMemo = memo(function LoadoutMod({
   mod,
   className,
   classType,
+  autoStatMods,
   onRemoveMod,
 }: {
   mod: ResolvedLoadoutMod;
   className: string;
   classType: DestinyClass;
+  /** Are stat mods being chosen automatically by LO? */
+  autoStatMods?: boolean;
   onRemoveMod?: (mod: ResolvedLoadoutMod) => void;
 }) {
   // We need this to be undefined if `onRemoveMod` is not present as the presence of the onClose
@@ -39,6 +43,10 @@ const LoadoutModMemo = memo(function LoadoutMod({
       plug={mod.resolvedMod}
       forClassType={classType}
       onClose={onClose}
+      disabledByAutoStatMods={
+        autoStatMods &&
+        mod.resolvedMod.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsV2General
+      }
     />
   );
 });
@@ -53,6 +61,7 @@ export const LoadoutMods = memo(function LoadoutMods({
   clearUnsetMods,
   missingSockets,
   hideShowModPlacements,
+  autoStatMods,
   onUpdateMods,
   onRemoveMod,
   onClearUnsetModsChanged,
@@ -63,6 +72,8 @@ export const LoadoutMods = memo(function LoadoutMods({
   hideShowModPlacements?: boolean;
   clearUnsetMods?: boolean;
   missingSockets?: boolean;
+  /** Are stat mods being chosen automatically by LO? */
+  autoStatMods?: boolean;
   /** If present, show an "Add Mod" button */
   onUpdateMods?: (newMods: number[]) => void;
   onRemoveMod?: (mod: ResolvedLoadoutMod) => void;
@@ -70,7 +81,6 @@ export const LoadoutMods = memo(function LoadoutMods({
 }) {
   const isPhonePortrait = useIsPhonePortrait();
   const getModRenderKey = createGetModRenderKey();
-  const [showModAssignmentDrawer, setShowModAssignmentDrawer] = useState(false);
   const [showModPicker, setShowModPicker] = useState(false);
 
   const unlockedPlugSetItems = useSelector(unlockedPlugSetItemsSelector(storeId));
@@ -116,6 +126,7 @@ export const LoadoutMods = memo(function LoadoutMods({
             mod={mod}
             classType={loadout.classType}
             onRemoveMod={onRemoveMod}
+            autoStatMods={Boolean(autoStatMods)}
           />
         ))}
         {onUpdateMods && (
@@ -133,13 +144,7 @@ export const LoadoutMods = memo(function LoadoutMods({
         (allMods.length > 0 || onUpdateMods) && (
           <div className={styles.buttons}>
             {!hideShowModPlacements && (
-              <button
-                className="dim-button"
-                type="button"
-                onClick={() => setShowModAssignmentDrawer(true)}
-              >
-                {t('Loadouts.ShowModPlacement')}
-              </button>
+              <ShowModAssignmentButton loadout={loadout} storeId={storeId} />
             )}
             {onClearUnsetModsChanged && (
               <CheckButton
@@ -152,14 +157,6 @@ export const LoadoutMods = memo(function LoadoutMods({
             )}
           </div>
         )}
-      {showModAssignmentDrawer && (
-        <ModAssignmentDrawer
-          loadout={loadout}
-          storeId={storeId}
-          onUpdateMods={onUpdateMods}
-          onClose={() => setShowModAssignmentDrawer(false)}
-        />
-      )}
       {onUpdateMods && showModPicker && (
         <ModPicker
           classType={loadout.classType}
@@ -254,3 +251,35 @@ export const LoadoutArtifactUnlocks = memo(function LoadoutArtifactUnlocks({
     </div>
   );
 });
+
+/**
+ * A button that shows the ModAssignmentDrawer.
+ */
+function ShowModAssignmentButton({
+  loadout,
+  storeId,
+  onUpdateMods,
+}: {
+  loadout: Loadout;
+  storeId: string;
+  /** If present, show an "Add Mod" button */
+  onUpdateMods?: (newMods: number[]) => void;
+}) {
+  const [showModAssignmentDrawer, setShowModAssignmentDrawer] = useState(false);
+
+  return (
+    <>
+      <button className="dim-button" type="button" onClick={() => setShowModAssignmentDrawer(true)}>
+        {t('Loadouts.ShowModPlacement')}
+      </button>
+      {showModAssignmentDrawer && (
+        <ModAssignmentDrawer
+          loadout={loadout}
+          storeId={storeId}
+          onUpdateMods={onUpdateMods}
+          onClose={() => setShowModAssignmentDrawer(false)}
+        />
+      )}
+    </>
+  );
+}

@@ -12,10 +12,15 @@ import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { getStore } from 'app/inventory/stores-helpers';
 import { useHideItemPicker, useItemPicker } from 'app/item-picker/item-picker';
+import { LoadoutUpdateFunction } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadoutFromEquipped, resolveLoadoutModHashes } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
 import { getItemsAndSubclassFromLoadout } from 'app/loadout/LoadoutView';
+import {
+  LoadoutEditModsSection,
+  LoadoutEditSubclassSection,
+} from 'app/loadout/loadout-edit/LoadoutEdit';
 import { categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -46,9 +51,7 @@ import EnergyOptions from './filter/EnergyOptions';
 import {
   LoadoutOptimizerExcludedItems,
   LoadoutOptimizerExotic,
-  LoadoutOptimizerMods,
   LoadoutOptimizerPinnedItems,
-  LoadoutOptimizerSubclass,
   loMenuSection,
 } from './filter/LoadoutOptimizerMenuItems';
 import TierSelect from './filter/TierSelect';
@@ -118,6 +121,9 @@ export default memo(function LoadoutBuilder({
     },
     lbDispatch,
   ] = useLbState(stores, defs, preloadedLoadout, storeId);
+  // For compatibility with LoadoutEdit components
+  const setLoadout = (updateFn: LoadoutUpdateFunction) =>
+    lbDispatch({ type: 'setLoadout', updateFn });
 
   // TODO: if we're editing a loadout, grey out incompatible classes?
 
@@ -343,16 +349,21 @@ export default memo(function LoadoutBuilder({
         classType={selectedStore.classType}
         lbDispatch={lbDispatch}
       />
-      <LoadoutOptimizerMods
-        classType={selectedStore.classType}
-        lockedMods={resolvedMods}
+      <LoadoutEditModsSection
+        loadout={loadout}
+        setLoadout={setLoadout}
+        store={selectedStore}
         autoStatMods={autoStatMods}
-        lbDispatch={lbDispatch}
+        allMods={resolvedMods}
+        className={styles.loadoutEditSection}
+        hideButtons
       />
-      <LoadoutOptimizerSubclass
-        selectedStore={selectedStore}
+      <LoadoutEditSubclassSection
+        loadout={loadout}
+        store={selectedStore}
         subclass={subclass}
-        lbDispatch={lbDispatch}
+        setLoadout={setLoadout}
+        className={styles.loadoutEditSection}
       />
       <LoadoutOptimizerPinnedItems
         chooseItem={chooseItem}
