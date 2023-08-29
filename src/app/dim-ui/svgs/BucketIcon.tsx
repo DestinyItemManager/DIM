@@ -49,7 +49,7 @@ export default function BucketIcon(props: BucketIconProps) {
       src={resolved.icon.svg}
       {...resolved.otherProps}
       className={clsx(props.className, styles.icon, {
-        [styles.colorized]: resolved.icon.colorized,
+        dontInvert: resolved.icon.dontInvert,
       })}
     />
   ) : (
