@@ -3,11 +3,13 @@
 .select {
   display: flex;
   justify-content: space-between;
-  max-width: $emblem-width;
 }
 
 .tile {
   height: $emblem-height;
+  > * {
+    max-width: Min(var(--page-with-menu-menu-width), $emblem-width);
+  }
 
   @include phone-portrait {
     min-width: $emblem-width;
