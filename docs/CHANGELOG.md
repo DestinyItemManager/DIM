@@ -1,5 +1,7 @@
 ## Next
 
+## 7.83.1 <span class="changelog-date">(2023-08-29)</span>
+
 * Fixed another case where you might not get bounced to the login page when you need to re-login.
 * Fixed the search autocomplete menu showing behind search results on mobile.
 * Unsightly long text in the mod picker now wraps instead of escaping its box.
