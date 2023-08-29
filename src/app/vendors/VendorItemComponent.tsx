@@ -8,7 +8,7 @@ import BungieImage from '../dim-ui/BungieImage';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
 import '../progress/milestone.scss';
-import { AppIcon, faCheck } from '../shell/icons';
+import { AppIcon, faCheck, lockIcon } from '../shell/icons';
 import Cost from './Cost';
 import styles from './VendorItem.m.scss';
 import { SingleVendorSheetContext } from './single-vendor/SingleVendorSheetContainer';
@@ -63,6 +63,7 @@ export default function VendorItemComponent({
       allowFilter={false}
       unavailable={unavailable}
       owned={owned}
+      locked={item.locked}
       acquired={acquired}
       extraData={{ failureStrings: item.failureStrings, characterId, owned, acquired, mod }}
     >
@@ -81,6 +82,7 @@ export function VendorItemDisplay({
   allowFilter,
   unavailable,
   owned,
+  locked,
   acquired,
   item,
   extraData,
@@ -90,6 +92,7 @@ export function VendorItemDisplay({
   /** i.e. greyed out */
   unavailable?: boolean;
   owned?: boolean;
+  locked?: boolean;
   acquired?: boolean;
   item: DimItem;
   extraData?: ItemPopupExtraInfo;
@@ -103,8 +106,10 @@ export function VendorItemDisplay({
     >
       {owned ? (
         <AppIcon className={styles.ownedIcon} icon={faCheck} />
+      ) : acquired ? (
+        <AppIcon className={styles.acquiredIcon} icon={faCheck} />
       ) : (
-        acquired && <AppIcon className={styles.acquiredIcon} icon={faCheck} />
+        locked && <AppIcon className={styles.lockedIcon} icon={lockIcon} />
       )}
       <ItemPopupTrigger item={item} extraData={extraData}>
         {(ref, onClick) => (

@@ -32,6 +32,11 @@
   background: $acquiredGreen;
 }
 
+.lockedIcon {
+  composes: ownershipIcon;
+  background: grey;
+}
+
 .vendorItem {
   display: flex;
   flex-direction: column;

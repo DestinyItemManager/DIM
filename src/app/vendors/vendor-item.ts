@@ -13,7 +13,7 @@ import {
   DestinyVendorSaleItemComponent,
 } from 'bungie-api-ts/destiny2';
 import focusingItemOutputs from 'data/d2/focusing-item-outputs.json';
-import { BucketHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import { DimItem } from '../inventory/item-types';
 import { ItemCreationContext, makeFakeItem } from '../inventory/store/d2-item-factory';
 
@@ -28,6 +28,7 @@ export interface VendorItem {
   readonly borderless: boolean;
   readonly displayTile: boolean;
   readonly owned: boolean;
+  readonly locked: boolean;
   readonly canBeSold: boolean;
   readonly displayCategoryIndex?: number;
   readonly originalCategoryIndex?: number;
@@ -90,7 +91,11 @@ function makeVendorItem(
     displayProperties: inventoryItem.displayProperties,
     borderless: Boolean(inventoryItem.uiItemDisplayStyle),
     displayTile: inventoryItem.uiItemDisplayStyle === 'ui_display_style_set_container',
-    owned: Boolean((saleItem?.augments || 0) & DestinyVendorItemState.Owned),
+    owned: Boolean(
+      inventoryItem.itemCategoryHashes?.includes(ItemCategoryHashes.Dummies) &&
+        (saleItem?.augments || 0) & DestinyVendorItemState.Owned
+    ),
+    locked: Boolean((saleItem?.augments || 0) & DestinyVendorItemState.Locked),
     canBeSold: !saleItem || saleItem.failureIndexes.length === 0,
     displayCategoryIndex: vendorItemDef?.displayCategoryIndex,
     originalCategoryIndex: vendorItemDef?.originalCategoryIndex,

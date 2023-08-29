@@ -3,6 +3,7 @@
 interface CssExports {
   'acquiredIcon': string;
   'cost': string;
+  'lockedIcon': string;
   'ownedIcon': string;
   'ownershipIcon': string;
   'tile': string;
