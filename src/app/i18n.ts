@@ -38,7 +38,7 @@ export type DimLanguage = keyof typeof DIM_LANG_INFOS;
 const DIM_LANGS = Object.keys(DIM_LANG_INFOS) as DimLanguage[];
 
 // Hot-reload translations in dev. You'll still need to get things to re-render when
-// translations change (unless we someday switch to react-i1next)
+// translations change (unless we someday switch to react-i18next)
 if (module.hot) {
   module.hot.accept('../../config/i18n.json', () => {
     i18next.reloadResources('en', undefined, () => {
