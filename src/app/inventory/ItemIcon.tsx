@@ -65,7 +65,7 @@ export default function ItemIcon({ item, className }: { item: DimItem; className
         <BucketIcon
           icon={classifiedPlaceholder}
           className={clsx(itemImageStyles, {
-            [styles.inverted]: !classifiedPlaceholder.dontInvert,
+            [styles.inverted]: !classifiedPlaceholder.colorized,
           })}
         />
       ) : (

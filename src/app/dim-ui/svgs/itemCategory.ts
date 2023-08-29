@@ -37,13 +37,13 @@ import kineticWeaponSlot from 'images/weapon-slot-kinetic.svg';
 
 export interface ItemCategoryIcon {
   svg: string;
-  dontInvert: boolean;
+  colorized: boolean;
 }
 function monochrome(svg: string): ItemCategoryIcon {
-  return { svg, dontInvert: false };
+  return { svg, colorized: false };
 }
-function dontInvert(svg: string): ItemCategoryIcon {
-  return { svg, dontInvert: true };
+function colorized(svg: string): ItemCategoryIcon {
+  return { svg, colorized: true };
 }
 
 const weaponTypeSvgByCategoryHash: LookupTable<ItemCategoryHashes, ItemCategoryIcon> = {
@@ -68,9 +68,9 @@ const weaponTypeSvgByCategoryHash: LookupTable<ItemCategoryHashes, ItemCategoryI
 };
 
 const weaponSlotSvgByCategoryHash: LookupTable<ItemCategoryHashes, ItemCategoryIcon> = {
-  [ItemCategoryHashes.KineticWeapon]: dontInvert(kineticWeaponSlot),
-  [ItemCategoryHashes.EnergyWeapon]: dontInvert(energyWeaponSlot),
-  [ItemCategoryHashes.PowerWeapon]: dontInvert(heavyAmmo),
+  [ItemCategoryHashes.KineticWeapon]: colorized(kineticWeaponSlot),
+  [ItemCategoryHashes.EnergyWeapon]: colorized(energyWeaponSlot),
+  [ItemCategoryHashes.PowerWeapon]: colorized(heavyAmmo),
 };
 
 const armorSlotSvgByCategoryHash: LookupTable<ItemCategoryHashes, ItemCategoryIcon> = {
