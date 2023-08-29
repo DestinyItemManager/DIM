@@ -94,6 +94,13 @@ export function toVendor(
   }
 
   const vendorItems = getVendorItems(context, vendorDef, characterId, sales);
+  vendorItems.sort(
+    compareBy(
+      (item) =>
+        item.originalCategoryIndex !== undefined &&
+        vendorDef.originalCategories[item.originalCategoryIndex]?.sortValue
+    )
+  );
 
   const destinationDef =
     typeof vendor?.vendorLocationIndex === 'number' && vendor.vendorLocationIndex >= 0

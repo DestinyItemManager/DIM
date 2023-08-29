@@ -5,7 +5,6 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import FactionIcon from 'app/progress/FactionIcon';
 import { ReputationRank } from 'app/progress/ReputationRank';
 import { VENDORS } from 'app/search/d2-known-values';
-import { chainComparator, compareBy } from 'app/utils/comparators';
 import { uniqBy } from 'app/utils/util';
 import { DestinyVendorProgressionType } from 'bungie-api-ts/destiny2';
 import deprecatedMods from 'data/d2/deprecated-mods.json';
@@ -16,42 +15,6 @@ import BungieImage from '../dim-ui/BungieImage';
 import VendorItemComponent from './VendorItemComponent';
 import styles from './VendorItems.m.scss';
 import { D2Vendor } from './d2-vendors';
-import { VendorItem } from './vendor-item';
-
-function vendorItemIndex(item: VendorItem) {
-  return item.key;
-}
-
-function itemSort(vendorHash: number, category: string) {
-  if (category === 'category.rank_rewards_seasonal') {
-    return chainComparator<VendorItem>(
-      compareBy((item) => item.item?.tier),
-      compareBy(vendorItemIndex)
-    );
-  } else if (category === 'category_bounties') {
-    if (vendorHash === VENDORS.ADA_TRANSMOG) {
-      return compareBy<VendorItem>((item) => item.item?.bungieIndex);
-    } else {
-      return chainComparator<VendorItem>(
-        compareBy((item) => item.item?.typeName),
-        compareBy(vendorItemIndex)
-      );
-    }
-  } else if (category === 'category_weapon') {
-    return chainComparator<VendorItem>(compareBy((item) => item.item?.itemCategoryHashes[0]));
-  } else if (category.startsWith('category_tier')) {
-    return undefined;
-  } else if (vendorHash === VENDORS.WAR_TABLE_UPGRADES_RISEN) {
-    // Purchasing an upgrade from the vendor swaps it out with a different item
-    // 10 positions later in the array.
-    return compareBy<VendorItem>((item) => item.key - (item.owned ? 10 : 0));
-  } else if (vendorHash === VENDORS.STAR_CHART_UPGRADES_PLUNDER) {
-    // Basically the same thing
-    return compareBy<VendorItem>((item) => item.key - (item.owned ? 21 : 0));
-  } else {
-    return chainComparator<VendorItem>(compareBy(vendorItemIndex));
-  }
-}
 
 // ignore what i think is the loot pool preview on some tower vendors?
 // ignore the "reset artifact" button on artifact "vendor"
@@ -159,29 +122,22 @@ export default function VendorItems({
                   />
                 </h3>
                 <div className={styles.vendorItems}>
-                  {items
-                    .sort(
-                      itemSort(
-                        vendor.def.hash,
-                        vendor.def.displayCategories[categoryIndex]?.identifier
+                  {items.map(
+                    (vendorItem) =>
+                      vendorItem.item && (
+                        <VendorItemComponent
+                          key={vendorItem.key}
+                          item={vendorItem}
+                          owned={Boolean(
+                            ownedItemHashes?.has(vendorItem.item.hash) ||
+                              vendorItem.owned ||
+                              (vendorItem.item.hash in focusingItemOutputs &&
+                                ownedItemHashes?.has(focusingItemOutputs[vendorItem.item.hash]!))
+                          )}
+                          characterId={characterId}
+                        />
                       )
-                    )
-                    .map(
-                      (vendorItem) =>
-                        vendorItem.item && (
-                          <VendorItemComponent
-                            key={vendorItem.key}
-                            item={vendorItem}
-                            owned={Boolean(
-                              ownedItemHashes?.has(vendorItem.item.hash) ||
-                                vendorItem.owned ||
-                                (vendorItem.item.hash in focusingItemOutputs &&
-                                  ownedItemHashes?.has(focusingItemOutputs[vendorItem.item.hash]!))
-                            )}
-                            characterId={characterId}
-                          />
-                        )
-                    )}
+                  )}
                 </div>
               </div>
             )

@@ -30,6 +30,7 @@ export interface VendorItem {
   readonly owned: boolean;
   readonly canBeSold: boolean;
   readonly displayCategoryIndex?: number;
+  readonly originalCategoryIndex?: number;
   readonly costs: DestinyItemQuantity[];
   readonly previewVendorHash?: number;
   /** The state of this item in the user's D2 Collection */
@@ -91,7 +92,8 @@ function makeVendorItem(
     displayTile: inventoryItem.uiItemDisplayStyle === 'ui_display_style_set_container',
     owned: Boolean((saleItem?.augments || 0) & DestinyVendorItemState.Owned),
     canBeSold: !saleItem || saleItem.failureIndexes.length === 0,
-    displayCategoryIndex: vendorItemDef ? vendorItemDef.displayCategoryIndex : undefined,
+    displayCategoryIndex: vendorItemDef?.displayCategoryIndex,
+    originalCategoryIndex: vendorItemDef?.originalCategoryIndex,
     costs: saleItem?.costs || [],
     previewVendorHash: inventoryItem.preview?.previewVendorHash,
     collectibleState: getCollectibleState(
