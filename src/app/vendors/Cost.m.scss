@@ -1,8 +1,8 @@
 .cost {
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
+  justify-content: flex-end;
   font-size: 10px;
-  text-align: center;
   img {
     height: 12px;
     width: 12px;
