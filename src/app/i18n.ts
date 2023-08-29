@@ -1,5 +1,5 @@
 import i18next from 'i18next';
-import HttpApi from 'i18next-http-backend';
+import HttpApi, { HttpBackendOptions } from 'i18next-http-backend';
 import de from 'locale/de.json';
 import en from 'locale/en.json';
 import es from 'locale/es.json';
@@ -13,7 +13,9 @@ import ptBR from 'locale/ptBR.json';
 import ru from 'locale/ru.json';
 import zhCHS from 'locale/zhCHS.json';
 import zhCHT from 'locale/zhCHT.json';
+import enSrc from '../../config/i18n.json';
 import { humanBytes } from './storage/human-bytes';
+import { infoLog } from './utils/log';
 
 export const DIM_LANG_INFOS = {
   de: { pluralOverride: false, latinBased: true },
@@ -35,6 +37,16 @@ export type DimLanguage = keyof typeof DIM_LANG_INFOS;
 
 const DIM_LANGS = Object.keys(DIM_LANG_INFOS) as DimLanguage[];
 
+// Hot-reload translations in dev. You'll still need to get things to re-render when
+// translations change (unless we someday switch to react-i1next)
+if (module.hot) {
+  module.hot.accept('../../config/i18n.json', () => {
+    i18next.reloadResources('en', undefined, () => {
+      infoLog('i18n', 'Reloaded translations');
+    });
+  });
+}
+
 // Try to pick a nice default language
 export function defaultLanguage(): DimLanguage {
   const storedLanguage = localStorage.getItem('dimLanguage') as DimLanguage;
@@ -49,7 +61,7 @@ export function initi18n(): Promise<unknown> {
   const lang = defaultLanguage();
   return new Promise((resolve, reject) => {
     // See https://github.com/i18next/i18next
-    i18next.use(HttpApi).init(
+    i18next.use(HttpApi).init<HttpBackendOptions>(
       {
         initImmediate: true,
         compatibilityJSON: 'v3',
@@ -78,7 +90,10 @@ export function initi18n(): Promise<unknown> {
           loadPath([lng]: string[]) {
             const path = {
               de,
-              en,
+              // In development, directly use the source English translations.
+              // In production we use a version that's gone through i18n-scanner
+              // to remove unused keys.
+              en: $DIM_FLAVOR === 'dev' ? enSrc : en,
               es,
               'es-mx': esMX,
               fr,
