@@ -1,5 +1,6 @@
 import MenuAccounts from 'app/accounts/MenuAccounts';
 import { currentAccountSelector } from 'app/accounts/selectors';
+import { PressTipRoot } from 'app/dim-ui/PressTip';
 import Sheet from 'app/dim-ui/Sheet';
 import { showCheatSheet$ } from 'app/hotkeys/HotkeysCheatSheet';
 import { Hotkey } from 'app/hotkeys/hotkeys';
@@ -281,118 +282,120 @@ export default function Header() {
   const clarityDetected = useClarityDetector(headerLinksRef);
 
   return (
-    <header className={styles.container} ref={headerRef}>
-      <div className={styles.header}>
-        <button
-          type="button"
-          className={clsx(styles.menuItem, styles.menu)}
-          ref={dropdownToggler}
-          onClick={toggleDropdown}
-          aria-haspopup="menu"
-          aria-label={t('Header.Menu')}
-          aria-expanded={dropdownOpen}
-        >
-          <AppIcon icon={menuIcon} />
-          <MenuBadge />
-        </button>
-        <AnimatePresence>
-          {dropdownOpen && (
-            <motion.div
-              key="dropdown"
-              className={styles.dropdown}
-              role="menu"
-              initial="collapsed"
-              animate="open"
-              exit="collapsed"
-              variants={menuAnimateVariants}
-              transition={menuAnimateTransition}
-            >
-              <ClickOutside
-                ref={dropdownRef}
-                extraRef={dropdownToggler}
-                onClickOutside={hideDropdown}
-              >
-                {destinyLinks}
-                <hr />
-                <NavLink className={navLinkClassName} to="/settings">
-                  {t('Settings.Settings')}
-                </NavLink>
-                {!isPhonePortrait && (
-                  <a className={styles.menuItem} onClick={showKeyboardHelp}>
-                    {t('Header.KeyboardShortcuts')}
-                  </a>
-                )}
-                <ExternalLink className={styles.menuItem} href={userGuideLink}>
-                  {t('General.UserGuideLink')}
-                </ExternalLink>
-                {installable ? (
-                  <a className={styles.menuItem} onClick={installDim}>
-                    {t('Header.InstallDIM')}
-                  </a>
-                ) : offerRelaunch ? (
-                  <a className={styles.menuItem} onClick={reLaunchDim}>
-                    {t('Header.LaunchDIMAlone')}{' '}
-                    <AppIcon icon={faExternalLinkAlt} className={styles.launchSeparateIcon} />
-                  </a>
-                ) : null}
-                {dimLinks}
-                <MenuAccounts closeDropdown={hideDropdown} />
-              </ClickOutside>
-            </motion.div>
-          )}
-        </AnimatePresence>
-        <Link to="/" className={clsx(styles.menuItem, styles.logoLink)}>
-          <img
-            className={clsx(styles.logo, logoStyles[$DIM_FLAVOR])}
-            title={`v${$DIM_VERSION} (${$DIM_FLAVOR})`}
-            src={logo}
-            alt="DIM"
-            aria-label="dim"
-          />
-        </Link>
-        <div className={styles.headerLinks} ref={headerLinksRef}>
-          {destinyLinks}
-        </div>
-        <div className={styles.headerRight}>
-          {account && !isPhonePortrait && (
-            <span className={styles.searchLink}>
-              <SearchFilter onClear={hideSearch} ref={searchFilter} />
-            </span>
-          )}
-          <RefreshButton className={clsx(styles.menuItem)} />
-          {!isPhonePortrait && (
-            <Link className={styles.menuItem} to="/settings" title={t('Settings.Settings')}>
-              <AppIcon icon={settingsIcon} />
-            </Link>
-          )}
+    <PressTipRoot.Provider value={headerRef}>
+      <header className={styles.container} ref={headerRef}>
+        <div className={styles.header}>
           <button
             type="button"
-            className={clsx(styles.menuItem, styles.searchButton)}
-            onClick={toggleSearch}
+            className={clsx(styles.menuItem, styles.menu)}
+            ref={dropdownToggler}
+            onClick={toggleDropdown}
+            aria-haspopup="menu"
+            aria-label={t('Header.Menu')}
+            aria-expanded={dropdownOpen}
           >
-            <AppIcon icon={searchIcon} />
+            <AppIcon icon={menuIcon} />
+            <MenuBadge />
           </button>
+          <AnimatePresence>
+            {dropdownOpen && (
+              <motion.div
+                key="dropdown"
+                className={styles.dropdown}
+                role="menu"
+                initial="collapsed"
+                animate="open"
+                exit="collapsed"
+                variants={menuAnimateVariants}
+                transition={menuAnimateTransition}
+              >
+                <ClickOutside
+                  ref={dropdownRef}
+                  extraRef={dropdownToggler}
+                  onClickOutside={hideDropdown}
+                >
+                  {destinyLinks}
+                  <hr />
+                  <NavLink className={navLinkClassName} to="/settings">
+                    {t('Settings.Settings')}
+                  </NavLink>
+                  {!isPhonePortrait && (
+                    <a className={styles.menuItem} onClick={showKeyboardHelp}>
+                      {t('Header.KeyboardShortcuts')}
+                    </a>
+                  )}
+                  <ExternalLink className={styles.menuItem} href={userGuideLink}>
+                    {t('General.UserGuideLink')}
+                  </ExternalLink>
+                  {installable ? (
+                    <a className={styles.menuItem} onClick={installDim}>
+                      {t('Header.InstallDIM')}
+                    </a>
+                  ) : offerRelaunch ? (
+                    <a className={styles.menuItem} onClick={reLaunchDim}>
+                      {t('Header.LaunchDIMAlone')}{' '}
+                      <AppIcon icon={faExternalLinkAlt} className={styles.launchSeparateIcon} />
+                    </a>
+                  ) : null}
+                  {dimLinks}
+                  <MenuAccounts closeDropdown={hideDropdown} />
+                </ClickOutside>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <Link to="/" className={clsx(styles.menuItem, styles.logoLink)}>
+            <img
+              className={clsx(styles.logo, logoStyles[$DIM_FLAVOR])}
+              title={`v${$DIM_VERSION} (${$DIM_FLAVOR})`}
+              src={logo}
+              alt="DIM"
+              aria-label="dim"
+            />
+          </Link>
+          <div className={styles.headerLinks} ref={headerLinksRef}>
+            {destinyLinks}
+          </div>
+          <div className={styles.headerRight}>
+            {account && !isPhonePortrait && (
+              <span className={styles.searchLink}>
+                <SearchFilter onClear={hideSearch} ref={searchFilter} />
+              </span>
+            )}
+            <RefreshButton className={clsx(styles.menuItem)} />
+            {!isPhonePortrait && (
+              <Link className={styles.menuItem} to="/settings" title={t('Settings.Settings')}>
+                <AppIcon icon={settingsIcon} />
+              </Link>
+            )}
+            <button
+              type="button"
+              className={clsx(styles.menuItem, styles.searchButton)}
+              onClick={toggleSearch}
+            >
+              <AppIcon icon={searchIcon} />
+            </button>
+          </div>
         </div>
-      </div>
-      {account && isPhonePortrait && showSearch && (
-        <span className="mobile-search-link">
-          <SearchFilter onClear={hideSearch} ref={searchFilter} />
-        </span>
-      )}
-      {isPhonePortrait && installable && <AppInstallBanner onClick={installDim} />}
-      <PostmasterWarningBanner />
-      {$featureFlags.warnNoSync && <DimApiWarningBanner />}
-      {clarityDetected && (
-        <HeaderWarningBanner>
-          <span>{t('Header.Clarity')}</span>
-        </HeaderWarningBanner>
-      )}
-      {promptIosPwa && (
-        <Sheet header={<h1>{t('Header.InstallDIM')}</h1>} onClose={() => setPromptIosPwa(false)}>
-          <p className={styles.pwaPrompt}>{t('Header.IosPwaPrompt')}</p>
-        </Sheet>
-      )}
-    </header>
+        {account && isPhonePortrait && showSearch && (
+          <span className="mobile-search-link">
+            <SearchFilter onClear={hideSearch} ref={searchFilter} />
+          </span>
+        )}
+        {isPhonePortrait && installable && <AppInstallBanner onClick={installDim} />}
+        <PostmasterWarningBanner />
+        {$featureFlags.warnNoSync && <DimApiWarningBanner />}
+        {clarityDetected && (
+          <HeaderWarningBanner>
+            <span>{t('Header.Clarity')}</span>
+          </HeaderWarningBanner>
+        )}
+        {promptIosPwa && (
+          <Sheet header={<h1>{t('Header.InstallDIM')}</h1>} onClose={() => setPromptIosPwa(false)}>
+            <p className={styles.pwaPrompt}>{t('Header.IosPwaPrompt')}</p>
+          </Sheet>
+        )}
+      </header>
+    </PressTipRoot.Provider>
   );
 }
 
