@@ -407,6 +407,8 @@ export function LoadoutEditModsSection({
   allMods: ResolvedLoadoutMod[];
   className?: string;
   hideButtons?: boolean;
+  /** Show the auto stat mods checkbox if this is defined */
+  onAutoStatModsChanged?: (checked: boolean) => void;
 }) {
   const allItems = useSelector(allItemsSelector);
   const missingSockets = allItems.some((i) => i.missingSockets);
@@ -440,6 +442,7 @@ export function LoadoutEditModsSection({
         onClearUnsetModsChanged={hideButtons ? undefined : handleClearUnsetModsChanged}
         hideShowModPlacements={hideButtons}
         autoStatMods={autoStatMods}
+        onAutoStatModsChanged={onAutoStatModsChanged}
       />
     </LoadoutEditSection>
   );

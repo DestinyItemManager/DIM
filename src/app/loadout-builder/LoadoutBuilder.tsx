@@ -294,6 +294,9 @@ export default memo(function LoadoutBuilder({
     [selectedStore, showItemPicker]
   );
 
+  const handleAutoStatModsChanged = (autoStatMods: boolean) =>
+    lbDispatch({ type: 'autoStatModsChanged', autoStatMods });
+
   // I don't think this can actually happen?
   if (!selectedStore) {
     return null;
@@ -356,6 +359,7 @@ export default memo(function LoadoutBuilder({
         autoStatMods={autoStatMods}
         allMods={resolvedMods}
         className={styles.loadoutEditSection}
+        onAutoStatModsChanged={handleAutoStatModsChanged}
         hideButtons
       />
       <LoadoutEditSubclassSection

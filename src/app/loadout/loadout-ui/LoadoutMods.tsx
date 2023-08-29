@@ -65,6 +65,7 @@ export const LoadoutMods = memo(function LoadoutMods({
   onUpdateMods,
   onRemoveMod,
   onClearUnsetModsChanged,
+  onAutoStatModsChanged,
 }: {
   loadout: Loadout;
   allMods: ResolvedLoadoutMod[];
@@ -78,6 +79,7 @@ export const LoadoutMods = memo(function LoadoutMods({
   onUpdateMods?: (newMods: number[]) => void;
   onRemoveMod?: (mod: ResolvedLoadoutMod) => void;
   onClearUnsetModsChanged?: (checked: boolean) => void;
+  onAutoStatModsChanged?: (checked: boolean) => void;
 }) {
   const isPhonePortrait = useIsPhonePortrait();
   const getModRenderKey = createGetModRenderKey();
@@ -140,7 +142,7 @@ export const LoadoutMods = memo(function LoadoutMods({
           </button>
         )}
       </div>
-      {(!hideShowModPlacements || onClearUnsetModsChanged) &&
+      {(!hideShowModPlacements || onClearUnsetModsChanged || onAutoStatModsChanged) &&
         (allMods.length > 0 || onUpdateMods) && (
           <div className={styles.buttons}>
             {!hideShowModPlacements && (
@@ -153,6 +155,16 @@ export const LoadoutMods = memo(function LoadoutMods({
                 onChange={onClearUnsetModsChanged}
               >
                 {t('Loadouts.ClearUnsetMods')}
+              </CheckButton>
+            )}
+
+            {$featureFlags.loAutoStatMods && onAutoStatModsChanged && (
+              <CheckButton
+                onChange={onAutoStatModsChanged}
+                name="autoStatMods"
+                checked={Boolean(autoStatMods)}
+              >
+                {t('LoadoutBuilder.AutoStatMods')}
               </CheckButton>
             )}
           </div>
