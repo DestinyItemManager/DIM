@@ -126,7 +126,7 @@ export default function VendorItems({
                     (vendorItem) =>
                       vendorItem.item && (
                         <VendorItemComponent
-                          key={vendorItem.key}
+                          key={vendorItem.vendorItemIndex}
                           item={vendorItem}
                           owned={Boolean(
                             ownedItemHashes?.has(vendorItem.item.hash) ||

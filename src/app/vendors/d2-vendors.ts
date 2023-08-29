@@ -2,7 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import { VENDORS, silverItemHash } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
-import { compareBy } from 'app/utils/comparators';
+import { chainComparator, compareBy } from 'app/utils/comparators';
 import { filterMap } from 'app/utils/util';
 import {
   DestinyCollectibleState,
@@ -95,10 +95,13 @@ export function toVendor(
 
   const vendorItems = getVendorItems(context, vendorDef, characterId, sales);
   vendorItems.sort(
-    compareBy(
-      (item) =>
-        item.originalCategoryIndex !== undefined &&
-        vendorDef.originalCategories[item.originalCategoryIndex]?.sortValue
+    chainComparator(
+      compareBy(
+        (item) =>
+          item.originalCategoryIndex !== undefined &&
+          vendorDef.originalCategories[item.originalCategoryIndex]?.sortValue
+      ),
+      compareBy((item) => item.vendorItemIndex)
     )
   );
 
