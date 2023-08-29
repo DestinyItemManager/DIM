@@ -360,7 +360,6 @@ export default memo(function LoadoutBuilder({
         allMods={resolvedMods}
         className={styles.loadoutEditSection}
         onAutoStatModsChanged={handleAutoStatModsChanged}
-        hideButtons
       />
       <LoadoutEditSubclassSection
         loadout={loadout}

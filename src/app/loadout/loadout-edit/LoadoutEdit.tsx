@@ -133,6 +133,8 @@ export default function LoadoutEdit({
         setLoadout={setLoadout}
         allMods={allMods}
         className={clsx(styles.section, styles.mods)}
+        showClearUnsetModsSetting
+        showModPlacementsButton
       />
       <LoadoutArtifactUnlocksSection
         artifactUnlocks={loadout.parameters?.artifactUnlocks}
@@ -398,7 +400,9 @@ export function LoadoutEditModsSection({
   setLoadout,
   allMods,
   className,
-  hideButtons,
+  showClearUnsetModsSetting,
+  showModPlacementsButton,
+  onAutoStatModsChanged,
 }: {
   loadout: Loadout;
   store: DimStore;
@@ -406,7 +410,8 @@ export function LoadoutEditModsSection({
   setLoadout: (updater: LoadoutUpdateFunction) => void;
   allMods: ResolvedLoadoutMod[];
   className?: string;
-  hideButtons?: boolean;
+  showModPlacementsButton?: boolean;
+  showClearUnsetModsSetting?: boolean;
   /** Show the auto stat mods checkbox if this is defined */
   onAutoStatModsChanged?: (checked: boolean) => void;
 }) {
@@ -439,8 +444,10 @@ export function LoadoutEditModsSection({
         onUpdateMods={handleUpdateMods}
         onRemoveMod={handleRemoveMod}
         clearUnsetMods={clearUnsetMods}
-        onClearUnsetModsChanged={hideButtons ? undefined : handleClearUnsetModsChanged}
-        hideShowModPlacements={hideButtons}
+        onClearUnsetModsChanged={
+          showClearUnsetModsSetting ? handleClearUnsetModsChanged : undefined
+        }
+        hideShowModPlacements={!showModPlacementsButton}
         autoStatMods={autoStatMods}
         onAutoStatModsChanged={onAutoStatModsChanged}
       />
