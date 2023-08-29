@@ -32,7 +32,12 @@ const CharacterHeader = forwardRef(function CharacterHeader(
   ref: React.Ref<HTMLDivElement>
 ) {
   return (
-    <CharacterTileButton ref={ref} character={store} onClick={onClick}>
+    <CharacterTileButton
+      ref={ref}
+      character={store}
+      onClick={onClick}
+      className={styles.characterHeader}
+    >
       <div className={styles.loadoutButton}>
         <AppIcon icon={kebabIcon} title={t('Loadouts.Loadouts')} />
       </div>
