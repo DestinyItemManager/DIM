@@ -1,5 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { isClassCompatible, itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { count } from 'app/utils/util';
@@ -11,7 +11,9 @@ import {
   addItem,
   applySocketOverrides,
   removeItem,
+  removeMod,
   toggleEquipped,
+  updateMods,
 } from './loadout-drawer-reducer';
 import { Loadout } from './loadout-types';
 import { newLoadout } from './loadout-utils';
@@ -328,5 +330,17 @@ describe('toggleEquipped', () => {
         socketOverrides: { 1: 42 },
       },
     ]);
+  });
+});
+
+describe('removeMod', () => {
+  it('removes a mod by inventory item hash', () => {
+    let loadout = updateMods([193878019, 837201397])(emptyLoadout);
+    expect(loadout.parameters!.mods).toStrictEqual([193878019, 837201397]);
+    loadout = removeMod({
+      originalModHash: 193878019,
+      resolvedMod: defs.InventoryItem.get(193878019) as PluggableInventoryItemDefinition,
+    })(loadout);
+    expect(loadout.parameters!.mods).toStrictEqual([837201397]);
   });
 });

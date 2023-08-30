@@ -303,7 +303,7 @@ function getBucketHashFromItemHash(
 /**
  * Remove all Loadout Optimizer parameters from a loadout. This leaves things like mods and fashion in place.
  */
-export function clearLoadoutParameters(): LoadoutUpdateFunction {
+export function clearLoadoutOptimizerParameters(): LoadoutUpdateFunction {
   return produce((draft) => {
     if (draft.parameters) {
       delete draft.parameters.assumeArmorMasterwork;
@@ -338,15 +338,17 @@ export function clearSubclass(
  * Remove a specific mod by its inventory item hash.
  */
 export function removeMod(mod: ResolvedLoadoutMod): LoadoutUpdateFunction {
-  return produce((loadout) => {
+  return (loadout) => {
     if (loadout.parameters?.mods) {
       const index = loadout.parameters?.mods.indexOf(mod.originalModHash);
       if (index !== -1) {
-        loadout.parameters.mods.splice(index, 1);
-        return;
+        const mods = [...loadout.parameters.mods];
+        mods.splice(index, 1);
+        return setLoadoutParameters({ mods })(loadout);
       }
     }
-  });
+    return loadout;
+  };
 }
 
 /** Replace the loadout's subclass with the store's currently equipped subclass */

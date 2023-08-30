@@ -20,7 +20,7 @@ import {
   changeClearMods,
   clearArtifactUnlocks,
   clearBucketCategory,
-  clearLoadoutParameters,
+  clearLoadoutOptimizerParameters,
   clearMods,
   clearSubclass,
   fillLoadoutFromEquipped,
@@ -324,7 +324,7 @@ function LoadoutEditCategorySection({
   const handleClearCategory = useDefsUpdater(clearBucketCategory);
   const handleModsByBucketUpdated = useUpdater(updateModsByBucket);
   const handleToggleEquipped = useDefsUpdater(toggleEquipped);
-  const handleClearLoadoutParameters = useUpdater(clearLoadoutParameters);
+  const handleClearLoadoutParameters = useUpdater(clearLoadoutOptimizerParameters);
   const handleFillCategoryFromUnequipped = useDefsStoreUpdater(fillLoadoutFromUnequipped);
   const handleFillCategoryFromEquipped = useDefsStoreUpdater(fillLoadoutFromEquipped);
   const handleRandomizeCategory = useDefsStoreUpdater(randomizeLoadoutItems);

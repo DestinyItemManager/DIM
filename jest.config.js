@@ -16,7 +16,7 @@ module.exports = {
     'Library\\.mjs$': 'identity-obj-proxy',
   },
   setupFiles: ['./src/testing/jest-setup.js'],
-  transformIgnorePatterns: ['node_modules/?!(bungie-api-ts)'],
+  transformIgnorePatterns: ['node_modules/(?!bungie-api-ts|@popper)'],
   globals: {
     $BROWSERS: [],
     $DIM_FLAVOR: 'test',
