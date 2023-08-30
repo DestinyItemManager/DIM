@@ -25,6 +25,9 @@ export const makeDupeID = (item: DimItem) =>
   }${
     // Some items have the same name across different tiers, e.g. "Traveler's Chosen"
     item.tier
+  }${
+    // The engram that dispenses the Taraxippos scout rifle is also called Taraxippos
+    item.type
   }`;
 
 const sortDupes = (

@@ -98,7 +98,6 @@ exports[`buildSearchConfig generates a reasonable filter map: is filters 1`] = `
   "rocketlauncher",
   "scoutrifle",
   "seasonalartifacts",
-  "seasonaldupe",
   "shaded",
   "shaped",
   "shapeddupe",
