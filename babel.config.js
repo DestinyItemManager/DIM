@@ -1,3 +1,5 @@
+const coreJSPackage = require('core-js/package.json');
+
 module.exports = function (api) {
   const isProduction = api.env('production');
   const isTest = api.env('test');
@@ -47,12 +49,14 @@ module.exports = function (api) {
     plugins.push(['@babel/plugin-transform-typescript', { isTSX: true, optimizeConstEnums: true }]);
   }
 
+  const corejs = { version: coreJSPackage.version, proposals: true };
+
   const presetEnvOptions = {
     bugfixes: true,
     modules: false,
     loose: true,
     useBuiltIns: 'usage',
-    corejs: 3,
+    corejs,
     shippedProposals: true,
   };
 
@@ -66,7 +70,13 @@ module.exports = function (api) {
       ['@babel/preset-env', presetEnvOptions],
       [
         '@babel/preset-react',
-        { useBuiltIns: true, loose: true, corejs: 3, runtime: 'automatic', useSpread: true },
+        {
+          useBuiltIns: true,
+          loose: true,
+          corejs,
+          runtime: 'automatic',
+          useSpread: true,
+        },
       ],
     ],
     plugins,
