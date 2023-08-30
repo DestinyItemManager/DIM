@@ -181,38 +181,6 @@ export function addItem(
 }
 
 /**
- * Defines the multilayered functionality for dropping an item in the loadout drawer.
- *
- * It does the following
- * 1. If the item is a subclass, it clears the currently selected subclass.
- *
- */
-export function dropItem(
-  defs: D2ManifestDefinitions | D1ManifestDefinitions,
-  item: DimItem,
-  equip?: boolean
-): LoadoutUpdateFunction {
-  return produce((draftLoadout) => {
-    if (item.bucket.hash === BucketHashes.Subclass) {
-      draftLoadout = clearSubclass(defs)(draftLoadout);
-    }
-
-    const loadoutItemIndex = findSameLoadoutItemIndex(
-      defs,
-      draftLoadout.items,
-      convertToLoadoutItem(item, false, 1)
-    );
-
-    if (loadoutItemIndex !== -1) {
-      setEquipForItemInLoadout(defs, item, draftLoadout, Boolean(equip));
-    } else {
-      draftLoadout = addItem(defs, item, equip)(draftLoadout);
-    }
-    return draftLoadout;
-  });
-}
-
-/**
  * Produce a new Loadout with the given item removed from the original loadout.
  */
 export function removeItem(
