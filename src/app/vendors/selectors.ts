@@ -41,6 +41,13 @@ export const vendorGroupsForCharacterSelector = currySelector(
     vendorsByCharacterSelector,
     vendorCharacterIdSelector,
     (context, vendors, selectedStoreId) => {
+      if (!context.defs || !context.buckets || !context.profileResponse) {
+        // createItemContextSelector assumes stuff is already loaded, but
+        // the SingleVendorPage still exists and may call this selector prior
+        // to everything being loaded...
+        return emptyArray<D2VendorGroup>();
+      }
+
       const vendorData = selectedStoreId ? vendors[selectedStoreId] : undefined;
       const vendorsResponse = vendorData?.vendorsResponse;
 

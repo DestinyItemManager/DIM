@@ -60,9 +60,19 @@ export default function Vendors({ account }: { account: DestinyAccount }) {
   useLoadStores(account);
   useLoadVendors(account, storeId);
 
+  // Hide the vendor sheets when switching characters
   useEffect(() => {
     hideVendorSheet();
   }, [storeId]);
+
+  // Turn off "show unacquired only" when leaving Vendors page
+  // to prevent it from applying to artifact on the Inventory page
+  useEffect(
+    () => () => {
+      dispatch(setShowUnacquiredOnly(false));
+    },
+    [dispatch]
+  );
 
   const handleSwipe = (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     // Velocity is in px/ms
