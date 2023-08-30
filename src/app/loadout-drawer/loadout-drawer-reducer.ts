@@ -186,12 +186,7 @@ export function removeItem(
   { item, loadoutItem: searchLoadoutItem }: ResolvedLoadoutItem
 ): LoadoutUpdateFunction {
   return produce((draftLoadout) => {
-    // TODO: it might be nice if we just assigned a unique ID to every loadout item just for in-memory ops like deleting
-    // We can't just look it up by identity since Immer wraps objects in a proxy and getItemsFromLoadoutItems
-    // changes the socketOverrides, so simply search by unmodified ID and hash.
-    const loadoutItemIndex = draftLoadout.items.findIndex(
-      (i) => i.hash === searchLoadoutItem.hash && i.id === searchLoadoutItem.id
-    );
+    const loadoutItemIndex = findSameLoadoutItemIndex(defs, draftLoadout.items, searchLoadoutItem);
 
     if (loadoutItemIndex === -1) {
       return;
@@ -261,18 +256,14 @@ export function toggleEquipped(
 }
 
 export function applySocketOverrides(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
   { loadoutItem: searchLoadoutItem }: ResolvedLoadoutItem,
   socketOverrides: SocketOverrides | undefined
 ): LoadoutUpdateFunction {
   return produce((draftLoadout) => {
-    // TODO: it might be nice if we just assigned a unique ID to every loadout item just for in-memory ops like deleting
-    // We can't just look it up by identity since Immer wraps objects in a proxy and getItemsFromLoadoutItems
-    // changes the socketOverrides, so simply search by unmodified ID and hash.
-    const loadoutItem = draftLoadout.items.find(
-      (li) => li.id === searchLoadoutItem.id && li.hash === searchLoadoutItem.hash
-    );
-    if (loadoutItem) {
-      loadoutItem.socketOverrides = socketOverrides;
+    const loadoutItemIndex = findSameLoadoutItemIndex(defs, draftLoadout.items, searchLoadoutItem);
+    if (loadoutItemIndex >= 0) {
+      draftLoadout.items[loadoutItemIndex].socketOverrides = socketOverrides;
     }
   });
 }
