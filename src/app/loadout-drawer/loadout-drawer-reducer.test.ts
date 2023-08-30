@@ -7,9 +7,14 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { getTestDefinitions, getTestStores } from 'testing/test-utils';
-import { addItem, removeItem, toggleEquipped } from './loadout-drawer-reducer';
+import {
+  addItem,
+  applySocketOverrides,
+  removeItem,
+  toggleEquipped,
+} from './loadout-drawer-reducer';
 import { Loadout } from './loadout-types';
-import { convertToLoadoutItem, newLoadout } from './loadout-utils';
+import { newLoadout } from './loadout-utils';
 
 let defs: D2ManifestDefinitions;
 let store: DimStore;
@@ -146,7 +151,7 @@ describe('addItem', () => {
     expect(loadout.items).toMatchObject([
       {
         equip: false,
-        id: item.id,
+        id: '1234',
       },
     ]);
   });
@@ -243,7 +248,7 @@ describe('removeItem', () => {
 
     // now the loadout has two items, one equipped, one unequipped
 
-    loadout = removeItem(defs, { item, loadoutItem: convertToLoadoutItem(item, false) })(loadout);
+    loadout = removeItem(defs, { item, loadoutItem: loadout.items[0] })(loadout);
 
     expect(loadout.items).toMatchObject([
       {
@@ -272,9 +277,7 @@ describe('toggleEquipped', () => {
     const item = items[0];
 
     let loadout = addItem(defs, item, true)(emptyLoadout);
-    loadout = toggleEquipped(defs, { item, loadoutItem: convertToLoadoutItem(item, true) })(
-      loadout
-    );
+    loadout = toggleEquipped(defs, { item, loadoutItem: loadout.items[0] })(loadout);
 
     expect(loadout.items).toMatchObject([
       {
@@ -288,9 +291,7 @@ describe('toggleEquipped', () => {
     const item = items[0];
 
     let loadout = addItem(defs, item, false)(emptyLoadout);
-    loadout = toggleEquipped(defs, { item, loadoutItem: convertToLoadoutItem(item, false) })(
-      loadout
-    );
+    loadout = toggleEquipped(defs, { item, loadoutItem: loadout.items[0] })(loadout);
     expect(loadout.items).toMatchObject([
       {
         equip: true,
@@ -303,13 +304,28 @@ describe('toggleEquipped', () => {
     const item = items.find((i) => i.bucket.hash === BucketHashes.Subclass)!;
 
     let loadout = addItem(defs, item, true)(emptyLoadout);
-    loadout = toggleEquipped(defs, { item, loadoutItem: convertToLoadoutItem(item, true) })(
-      loadout
-    );
+    loadout = toggleEquipped(defs, { item, loadoutItem: loadout.items[0] })(loadout);
     expect(loadout.items).toMatchObject([
       {
         equip: true,
         id: item.id,
+      },
+    ]);
+  });
+
+  it('does not lose socket overrides', () => {
+    const item = items[0];
+
+    let loadout = addItem(defs, item, true)(emptyLoadout);
+    loadout = applySocketOverrides({ item, loadoutItem: loadout.items[0] }, { 1: 42 })(loadout);
+
+    loadout = toggleEquipped(defs, { item, loadoutItem: loadout.items[0] })(loadout);
+
+    expect(loadout.items).toMatchObject([
+      {
+        equip: false,
+        id: item.id,
+        socketOverrides: { 1: 42 },
       },
     ]);
   });
