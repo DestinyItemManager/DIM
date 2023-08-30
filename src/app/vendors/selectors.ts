@@ -21,11 +21,16 @@ import {
   filterToNoSilver,
   filterToSearch,
   filterToUnacquired,
+  toVendor,
   toVendorGroups,
 } from './d2-vendors';
 import { VendorItem } from './vendor-item';
 
 export const vendorsByCharacterSelector = (state: RootState) => state.vendors.vendorsByCharacter;
+
+// get character ID from props not state
+const vendorCharacterIdSelector = (state: RootState, characterId: string | undefined) =>
+  characterId || getCurrentStore(sortedStoresSelector(state))?.id;
 
 /**
  * returns a character's vendors and their sale items
@@ -34,9 +39,7 @@ export const vendorGroupsForCharacterSelector = currySelector(
   createSelector(
     createItemContextSelector,
     vendorsByCharacterSelector,
-    // get character ID from props not state
-    (state: RootState, characterId: string | undefined) =>
-      characterId || getCurrentStore(sortedStoresSelector(state))?.id,
+    vendorCharacterIdSelector,
     (context, vendors, selectedStoreId) => {
       const vendorData = selectedStoreId ? vendors[selectedStoreId] : undefined;
       const vendorsResponse = vendorData?.vendorsResponse;
@@ -44,6 +47,50 @@ export const vendorGroupsForCharacterSelector = currySelector(
       return vendorsResponse && vendorData && selectedStoreId
         ? toVendorGroups(context, vendorsResponse, selectedStoreId)
         : emptyArray<D2VendorGroup>();
+    }
+  )
+);
+
+export const subVendorsForCharacterSelector = currySelector(
+  createSelector(
+    createItemContextSelector,
+    vendorsByCharacterSelector,
+    vendorGroupsForCharacterSelector.selector,
+    vendorCharacterIdSelector,
+    (context, vendors, vendorGroups, selectedStoreId) => {
+      const vendorData = selectedStoreId ? vendors[selectedStoreId] : undefined;
+      const vendorsResponse = vendorData?.vendorsResponse;
+
+      if (!vendorsResponse || !selectedStoreId) {
+        return {};
+      }
+
+      const subvendors: { [vendorHash: number]: D2Vendor } = {};
+      const workList = vendorGroups.flatMap((group) => group.vendors);
+      while (workList.length) {
+        const vendor = workList.pop()!;
+        for (const item of vendor.items) {
+          const vendorHash = item.previewVendorHash;
+          if (vendorHash && vendorsResponse.itemComponents[vendorHash]) {
+            const vendor = toVendor(
+              {
+                ...context,
+                itemComponents: vendorsResponse.itemComponents[vendorHash],
+              },
+              item.previewVendorHash,
+              vendorsResponse.vendors.data?.[vendorHash],
+              selectedStoreId,
+              vendorsResponse.sales.data?.[vendorHash]?.saleItems,
+              vendorsResponse
+            );
+            if (vendor) {
+              subvendors[vendorHash] = vendor;
+              workList.push(vendor);
+            }
+          }
+        }
+      }
+      return subvendors;
     }
   )
 );
@@ -86,10 +133,11 @@ export const vendorItemFilterSelector = currySelector(
   createSelector(
     ownedVendorItemsSelector.selector,
     showUnacquiredVendorItemsOnlySelector,
+    subVendorsForCharacterSelector.selector,
     querySelector,
     searchFilterSelector,
     (state: RootState) => settingSelector('vendorsHideSilverItems')(state),
-    (ownedItemHashes, showUnacquiredOnly, query, itemFilter, hideSilver) => {
+    (ownedItemHashes, showUnacquiredOnly, subVendors, query, itemFilter, hideSilver) => {
       const filters: VendorFilterFunction[] = [];
       if (hideSilver) {
         filters.push(filterToNoSilver());
@@ -100,7 +148,21 @@ export const vendorItemFilterSelector = currySelector(
       if (query.length) {
         filters.push(filterToSearch(query, itemFilter));
       }
-      return (item: VendorItem, vendor: D2Vendor) => filters.every((f) => f(item, vendor));
+      function filterItem(item: VendorItem, vendor: D2Vendor): boolean {
+        if (filters.every((f) => f(item, vendor))) {
+          // Our filters match this item or vendor directly
+          return true;
+        }
+        if (item.item?.previewVendor) {
+          // This item is a subvendor, check if one of the subvendor's items match filters
+          const subVendorData = subVendors[item.item.previewVendor];
+          if (subVendorData) {
+            return subVendorData.items.some((subItem) => filterItem(subItem, subVendorData));
+          }
+        }
+        return false;
+      }
+      return filterItem;
     }
   )
 );

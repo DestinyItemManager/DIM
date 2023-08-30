@@ -214,8 +214,9 @@ export function filterVendorGroups(
 }
 
 export function filterToUnacquired(ownedItemHashes: Set<number>): VendorFilterFunction {
-  return ({ item, collectibleState }) =>
+  return ({ owned, item, collectibleState }) =>
     item &&
+    !owned &&
     (collectibleState !== undefined
       ? (collectibleState & DestinyCollectibleState.NotAcquired) !== 0
       : item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Mod) &&
