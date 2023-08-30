@@ -78,7 +78,7 @@ export const subVendorsForCharacterSelector = currySelector(
         const vendor = workList.pop()!;
         for (const item of vendor.items) {
           const vendorHash = item.previewVendorHash;
-          if (vendorHash) {
+          if (vendorHash && !subvendors[vendorHash]) {
             const vendor = toVendor(
               {
                 ...context,
@@ -156,25 +156,33 @@ export const vendorItemFilterSelector = currySelector(
       if (query.length) {
         filters.push(filterToSearch(query, itemFilter));
       }
-      function filterItem(item: VendorItem, vendor: D2Vendor): boolean {
+      function filterItem(item: VendorItem, vendor: D2Vendor, seenVendors: number[]): boolean {
         if (filters.every((f) => f(item, vendor))) {
           // Our filters match this item or vendor directly
           return true;
         }
 
-        // This item is a subvendor, check if one of the subvendor's items match filters
+        // If this item is a subvendor, check if one of the subvendor's items match filters
         // But don't allow this if the item itself fails the silver check -- most eververse
         // bundles cost silver, but their contained items don't, but we still want to hide
-        // the bundle if "hide silver" is on
-        if (item.item?.previewVendor && (!hideSilver || silverFilter(item, vendor))) {
-          const subVendorData = subVendors[item.item.previewVendor];
+        // the bundle if "hide silver" is on.
+        // Finally, prevent infinite recusion for subvendors because that can happen.
+        const previewVendorHash = item.item?.previewVendor;
+        if (
+          previewVendorHash &&
+          !seenVendors.includes(previewVendorHash) &&
+          (!hideSilver || silverFilter(item, vendor))
+        ) {
+          const subVendorData = subVendors[previewVendorHash];
           if (subVendorData) {
-            return subVendorData.items.some((subItem) => filterItem(subItem, subVendorData));
+            return subVendorData.items.some((subItem) =>
+              filterItem(subItem, subVendorData, [...seenVendors, previewVendorHash])
+            );
           }
         }
         return false;
       }
-      return filterItem;
+      return (item: VendorItem, vendor: D2Vendor) => filterItem(item, vendor, []);
     }
   )
 );
