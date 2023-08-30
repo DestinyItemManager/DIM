@@ -437,7 +437,7 @@ export function fillLoadoutFromEquipped(
  * Replace all equipped items from the store's equipped items.
  */
 export function syncLoadoutCategoryFromEquipped(
-  defs: D2ManifestDefinitions,
+  defs: D2ManifestDefinitions | D1ManifestDefinitions,
   store: DimStore,
   category: D2BucketCategory
 ): LoadoutUpdateFunction {
@@ -481,13 +481,12 @@ export function syncLoadoutCategoryFromEquipped(
       };
     }
     // Save "fashion" mods for equipped items
-    const modsByBucket = {};
+    const modsByBucket: { [bucketHash: number]: number[] } = {};
     for (const item of newEquippedItems.filter((i) => i.bucket.inArmor)) {
       const plugs = item.sockets
-        ? _.compact(
-            getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics).map(
-              (s) => s.plugged?.plugDef.hash
-            )
+        ? filterMap(
+            getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics),
+            (s) => s.plugged?.plugDef.hash
           )
         : [];
       if (plugs.length) {
