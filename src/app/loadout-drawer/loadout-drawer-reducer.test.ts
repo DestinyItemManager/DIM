@@ -7,9 +7,9 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { getTestDefinitions, getTestStores } from 'testing/test-utils';
-import { addItem } from './loadout-drawer-reducer';
+import { addItem, removeItem } from './loadout-drawer-reducer';
 import { Loadout } from './loadout-types';
-import { newLoadout } from './loadout-utils';
+import { convertToLoadoutItem, newLoadout } from './loadout-utils';
 
 let defs: D2ManifestDefinitions;
 let store: DimStore;
@@ -71,9 +71,11 @@ describe('addItem', () => {
   });
 
   it('defaults equip when unset', () => {
-    const [item, item2] = items;
+    const [item, item2] = items.filter((i) => i.bucket.hash === BucketHashes.KineticWeapons);
 
+    // First kinetic weapon added should default to equipped
     let loadout = addItem(defs, item)(emptyLoadout);
+    // Second one should default to unequipped
     loadout = addItem(defs, item2)(loadout);
 
     expect(loadout.items).toMatchObject([
@@ -89,9 +91,10 @@ describe('addItem', () => {
   });
 
   it('can replace the currently equipped item', () => {
-    const [item, item2] = items;
+    const [item, item2] = items.filter((i) => i.bucket.hash === BucketHashes.KineticWeapons);
 
     let loadout = addItem(defs, item, true)(emptyLoadout);
+    // Second kinetic weapon displaces the first
     loadout = addItem(defs, item2, true)(loadout);
 
     expect(loadout.items).toMatchObject([
@@ -192,5 +195,38 @@ describe('addItem', () => {
     }
 
     expect(loadout!.items.length).toEqual(10);
+  });
+});
+
+describe('removeItem', () => {
+  it('promotes an unequipped item to equipped when the equipped item is removed', () => {
+    const [item, item2] = items.filter((i) => i.bucket.hash === BucketHashes.KineticWeapons);
+
+    let loadout = addItem(defs, item)(emptyLoadout);
+    loadout = addItem(defs, item2)(loadout);
+
+    // now the loadout has two items, one equipped, one unequipped
+
+    loadout = removeItem(defs, { item, loadoutItem: convertToLoadoutItem(item, false) })(loadout);
+
+    expect(loadout.items).toMatchObject([
+      {
+        id: item2.id,
+        equip: true,
+      },
+    ]);
+  });
+
+  it('does nothing when asked to remove an item that is not in the loadout', () => {
+    const item = items[0];
+
+    let loadout = addItem(defs, item)(emptyLoadout);
+
+    loadout = removeItem(defs, {
+      item,
+      loadoutItem: { id: '1234', hash: item.hash, equip: true, amount: 1 },
+    })(loadout);
+
+    expect(loadout.items.length).toBe(1);
   });
 });
