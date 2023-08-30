@@ -78,7 +78,7 @@ export const subVendorsForCharacterSelector = currySelector(
         const vendor = workList.pop()!;
         for (const item of vendor.items) {
           const vendorHash = item.previewVendorHash;
-          if (vendorHash && vendorsResponse.itemComponents[vendorHash]) {
+          if (vendorHash) {
             const vendor = toVendor(
               {
                 ...context,
@@ -146,8 +146,9 @@ export const vendorItemFilterSelector = currySelector(
     (state: RootState) => settingSelector('vendorsHideSilverItems')(state),
     (ownedItemHashes, showUnacquiredOnly, subVendors, query, itemFilter, hideSilver) => {
       const filters: VendorFilterFunction[] = [];
+      const silverFilter = filterToNoSilver();
       if (hideSilver) {
-        filters.push(filterToNoSilver());
+        filters.push(silverFilter);
       }
       if (showUnacquiredOnly) {
         filters.push(filterToUnacquired(ownedItemHashes));
@@ -160,8 +161,12 @@ export const vendorItemFilterSelector = currySelector(
           // Our filters match this item or vendor directly
           return true;
         }
-        if (item.item?.previewVendor) {
-          // This item is a subvendor, check if one of the subvendor's items match filters
+
+        // This item is a subvendor, check if one of the subvendor's items match filters
+        // But don't allow this if the item itself fails the silver check -- most eververse
+        // bundles cost silver, but their contained items don't, but we still want to hide
+        // the bundle if "hide silver" is on
+        if (item.item?.previewVendor && (!hideSilver || silverFilter(item, vendor))) {
           const subVendorData = subVendors[item.item.previewVendor];
           if (subVendorData) {
             return subVendorData.items.some((subItem) => filterItem(subItem, subVendorData));
