@@ -196,6 +196,28 @@ describe('addItem', () => {
 
     expect(loadout!.items.length).toEqual(10);
   });
+
+  it('de-equips an exotic in another bucket when equipping a new exotic', () => {
+    const exotics = items.filter((i) => i.isExotic);
+    const exotic1 = exotics[0];
+    const exotic2 = exotics.find(
+      (i) => i.bucket.hash !== exotic1.bucket.hash && i.equippingLabel === exotic1.equippingLabel
+    )!;
+
+    let loadout = addItem(defs, exotic1, true)(emptyLoadout);
+    loadout = addItem(defs, exotic2, true)(loadout);
+
+    expect(loadout.items).toMatchObject([
+      {
+        equip: false,
+        id: exotic1.id,
+      },
+      {
+        equip: true,
+        id: exotic2.id,
+      },
+    ]);
+  });
 });
 
 describe('removeItem', () => {
