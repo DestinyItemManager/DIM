@@ -1,5 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { VENDORS } from 'app/search/d2-known-values';
+import { THE_FORBIDDEN_BUCKET, VENDORS } from 'app/search/d2-known-values';
 import { emptyArray } from 'app/utils/empty';
 import {
   DestinyCollectibleState,
@@ -13,7 +13,7 @@ import {
   DestinyVendorSaleItemComponent,
 } from 'bungie-api-ts/destiny2';
 import focusingItemOutputs from 'data/d2/focusing-item-outputs.json';
-import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes } from 'data/d2/generated-enums';
 import { DimItem } from '../inventory/item-types';
 import { ItemCreationContext, makeFakeItem } from '../inventory/store/d2-item-factory';
 
@@ -94,7 +94,8 @@ function makeVendorItem(
     borderless: Boolean(inventoryItem.uiItemDisplayStyle),
     displayTile: inventoryItem.uiItemDisplayStyle === 'ui_display_style_set_container',
     owned: Boolean(
-      inventoryItem.itemCategoryHashes?.includes(ItemCategoryHashes.Dummies) &&
+      (!inventoryItem.inventory ||
+        inventoryItem.inventory.bucketTypeHash === THE_FORBIDDEN_BUCKET) &&
         (saleItem?.augments || 0) & DestinyVendorItemState.Owned
     ),
     locked: Boolean((saleItem?.augments || 0) & DestinyVendorItemState.Locked),
