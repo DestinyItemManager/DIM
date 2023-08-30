@@ -138,8 +138,9 @@ export const inGameLoadoutsWithMetadataSelector = createSelector(
 
     return (
       inGameLoadouts
-        // seems unlikely the game would return valid, itemful loadouts for slot you havne't earned, but we respect this setting.
-        // inGameLoadoutsForCharacterSelector filters out empty loadouts, so we have to go by their self-stated index, not array length
+        // seems unlikely the game would return valid, itemful loadouts for slots you haven't earned,
+        // but we respect this setting by filtering out any loadout whose index defies how many you have supposedly unlocked.
+        // inGameLoadoutsForCharacterSelector filters out empty loadouts, so we have to go by their self-stated index, not by array length
         .filter((gameLoadout) => gameLoadout.index < availableLoadoutSlots)
         .map((gameLoadout) => {
           const isEquippable = gameLoadout.items.every((li) => {
