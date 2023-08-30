@@ -629,8 +629,6 @@ export const potentialLoadoutItemsByCraftedDate = weakMemoize((allItems: DimItem
 );
 
 export function getInstancedLoadoutItem(allItems: DimItem[], loadoutItem: LoadoutItem) {
-  // TODO: so inefficient to look through all items over and over again - need an index by ID and hash
-  // yup
   const result = potentialLoadoutItemsByItemId(allItems)[loadoutItem.id];
   if (result) {
     return result;
@@ -790,13 +788,9 @@ export function isMissingItems(
 export function getModsFromLoadout(
   defs: D2ManifestDefinitions | undefined,
   loadout: Loadout,
-  unlockedPlugs: Set<number>,
-  includeAutoMods = true
+  unlockedPlugs: Set<number>
 ) {
-  const internalModHashes = [
-    ...(loadout.parameters?.mods ?? []),
-    ...((includeAutoMods && loadout.autoStatMods) || []),
-  ];
+  const internalModHashes = loadout.parameters?.mods ?? [];
 
   return resolveLoadoutModHashes(defs, internalModHashes, unlockedPlugs);
 }

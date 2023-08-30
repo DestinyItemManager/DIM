@@ -414,14 +414,6 @@ export function clearSubclass(
  */
 export function removeMod(mod: ResolvedLoadoutMod): LoadoutUpdateFunction {
   return produce((loadout) => {
-    if (loadout.autoStatMods) {
-      const index = loadout.autoStatMods.indexOf(mod.originalModHash);
-      if (index !== -1) {
-        loadout.autoStatMods.splice(index, 1);
-        return;
-      }
-    }
-
     if (loadout.parameters?.mods) {
       const index = loadout.parameters?.mods.indexOf(mod.originalModHash);
       if (index !== -1) {
@@ -636,7 +628,6 @@ function clearBuckets(
 export function clearMods(): LoadoutUpdateFunction {
   return produce((loadout) => {
     delete loadout.parameters?.mods;
-    delete loadout.autoStatMods;
   });
 }
 
