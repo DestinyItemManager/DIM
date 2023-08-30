@@ -97,11 +97,12 @@ export function addItem(
   defs: D2ManifestDefinitions | D1ManifestDefinitions,
   item: DimItem,
   equip?: boolean,
-  socketOverrides?: SocketOverrides
+  socketOverrides?: SocketOverrides,
+  loadoutItem: LoadoutItem = convertToLoadoutItem(item, false, 1)
 ): LoadoutUpdateFunction {
   return produce((draftLoadout) => {
-    const loadoutItem = convertToLoadoutItem(item, false, 1);
     if (item.sockets && item.bucket.hash === BucketHashes.Subclass) {
+      // TODO: use createSocketOverridesFromEquipped?
       loadoutItem.socketOverrides = socketOverrides ?? createSubclassDefaultSocketOverrides(item);
     }
 
@@ -250,9 +251,9 @@ function unequipOtherItems(
  */
 export function toggleEquipped(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
-  { item, loadoutItem: { equip } }: ResolvedLoadoutItem
+  { item, loadoutItem }: ResolvedLoadoutItem
 ): LoadoutUpdateFunction {
-  return addItem(defs, item, !equip);
+  return addItem(defs, item, !loadoutItem.equip, undefined, loadoutItem);
 }
 
 export function applySocketOverrides(
