@@ -452,15 +452,11 @@ export function backupLoadout(store: DimStore, name: string): Loadout {
 /**
  * Converts DimItem to a LoadoutItem.
  */
-export function convertToLoadoutItem(
-  item: DimItem,
-  equip: boolean,
-  amount = item.amount
-): LoadoutItem {
+export function convertToLoadoutItem(item: DimItem, equip: boolean): LoadoutItem {
   return {
     id: item.id,
     hash: item.hash,
-    amount,
+    amount: item.amount,
     equip,
     craftedDate: item.craftedInfo?.craftedDate,
   };
@@ -563,23 +559,24 @@ export function getResolutionInfo(
 
 /**
  * Returns the index of the LoadoutItem in the list of loadoutItems that would
- * resolve to the same item as loadoutItem, or -1 if not found.
+ * resolve to the provided item, or -1 if not found. This is meant for finding
+ * existing items that match some incoming item.
  */
 export function findSameLoadoutItemIndex(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   loadoutItems: LoadoutItem[],
-  loadoutItem: Pick<LoadoutItem, 'hash' | 'id' | 'craftedDate'>
+  item: DimItem
 ) {
-  const info = getResolutionInfo(defs, loadoutItem.hash)!;
+  const info = getResolutionInfo(defs, item.hash)!;
 
   return loadoutItems.findIndex((i) => {
     const newHash = oldToNewItems[i.hash] ?? i.hash;
     return (
       info.hash === newHash &&
       (!info.instanced ||
-        loadoutItem.id === i.id ||
+        item.id === i.id ||
         // Crafted items may change ID but keep their date
-        (loadoutItem.craftedDate && loadoutItem.craftedDate === i.craftedDate))
+        (item.craftedInfo?.craftedDate && item.craftedInfo.craftedDate === i.craftedDate))
     );
   });
 }

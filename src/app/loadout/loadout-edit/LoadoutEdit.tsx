@@ -184,7 +184,7 @@ function LoadoutEditSubclassSection({
   const showItemPicker = useItemPicker();
   const [plugDrawerOpen, setPlugDrawerOpen] = useState(false);
 
-  const { useDefsUpdater, useDefsStoreUpdater } = useLoadoutUpdaters(store, setLoadout);
+  const { useUpdater, useDefsUpdater, useDefsStoreUpdater } = useLoadoutUpdaters(store, setLoadout);
 
   const handleAddItem = useDefsUpdater(addItem);
 
@@ -205,7 +205,7 @@ function LoadoutEditSubclassSection({
     }
   };
 
-  const handleApplySocketOverrides = useDefsUpdater(applySocketOverrides);
+  const handleApplySocketOverrides = useUpdater(applySocketOverrides);
   const handleFillSubclassFromEquipped = useDefsStoreUpdater(setLoadoutSubclassFromEquipped);
   const handleRandomizeSubclass = useDefsStoreUpdater(randomizeLoadoutSubclass);
   const handleClearSubclass = useDefsUpdater(clearSubclass);

@@ -468,7 +468,7 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
         return updateLoadout(state, clearSubclass(defs));
       case 'updateSubclassSocketOverrides': {
         const { socketOverrides, subclass } = action;
-        return updateLoadout(state, applySocketOverrides(defs, subclass, socketOverrides));
+        return updateLoadout(state, applySocketOverrides(subclass, socketOverrides));
       }
       case 'removeSingleSubclassSocketOverride': {
         const { plug, subclass } = action;
@@ -506,7 +506,6 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
         return updateLoadout(
           state,
           applySocketOverrides(
-            defs,
             subclass,
             Object.keys(newSocketOverrides).length ? newSocketOverrides : undefined
           )

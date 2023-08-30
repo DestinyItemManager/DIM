@@ -137,6 +137,20 @@ describe('addItem', () => {
     ]);
   });
 
+  it('handles duplicates even if the new version is a reshaped version of the one saved in the loadout', () => {
+    const item = items.find((i) => i.crafted)!;
+
+    let loadout = addItem(defs, item, true)(emptyLoadout);
+    loadout = addItem(defs, { ...item, id: '1234' }, false)(loadout);
+
+    expect(loadout.items).toMatchObject([
+      {
+        equip: false,
+        id: item.id,
+      },
+    ]);
+  });
+
   it('fills in socket overrides when adding a subclass', () => {
     const subclass = items.find((i) => i.bucket.hash === BucketHashes.Subclass)!;
 
@@ -258,7 +272,7 @@ describe('toggleEquipped', () => {
     const item = items[0];
 
     let loadout = addItem(defs, item, true)(emptyLoadout);
-    loadout = toggleEquipped(defs, { item, loadoutItem: convertToLoadoutItem(item, true, 1) })(
+    loadout = toggleEquipped(defs, { item, loadoutItem: convertToLoadoutItem(item, true) })(
       loadout
     );
 
@@ -274,7 +288,7 @@ describe('toggleEquipped', () => {
     const item = items[0];
 
     let loadout = addItem(defs, item, false)(emptyLoadout);
-    loadout = toggleEquipped(defs, { item, loadoutItem: convertToLoadoutItem(item, false, 1) })(
+    loadout = toggleEquipped(defs, { item, loadoutItem: convertToLoadoutItem(item, false) })(
       loadout
     );
     expect(loadout.items).toMatchObject([
@@ -289,7 +303,7 @@ describe('toggleEquipped', () => {
     const item = items.find((i) => i.bucket.hash === BucketHashes.Subclass)!;
 
     let loadout = addItem(defs, item, true)(emptyLoadout);
-    loadout = toggleEquipped(defs, { item, loadoutItem: convertToLoadoutItem(item, true, 1) })(
+    loadout = toggleEquipped(defs, { item, loadoutItem: convertToLoadoutItem(item, true) })(
       loadout
     );
     expect(loadout.items).toMatchObject([
