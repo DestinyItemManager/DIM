@@ -21,7 +21,6 @@ export default function Vendor({
   vendor,
   ownedItemHashes,
   currencyLookups,
-  filtering,
   characterId,
 }: {
   vendor: D2Vendor;
@@ -29,7 +28,6 @@ export default function Vendor({
   currencyLookups: {
     [itemHash: number]: number;
   };
-  filtering: boolean;
   characterId: string;
 }) {
   const placeString = Array.from(
@@ -73,7 +71,6 @@ export default function Vendor({
           vendor={vendor}
           ownedItemHashes={ownedItemHashes}
           currencyLookups={currencyLookups}
-          filtering={filtering}
           characterId={characterId}
         />
       </CollapsibleTitle>

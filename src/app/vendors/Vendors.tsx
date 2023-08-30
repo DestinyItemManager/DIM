@@ -5,10 +5,10 @@ import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { searchFilterSelector } from 'app/search/search-filter';
 import { useSetting } from 'app/settings/hooks';
 import ErrorPanel from 'app/shell/ErrorPanel';
-import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
+import { useIsPhonePortrait } from 'app/shell/selectors';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { usePageTitle } from 'app/utils/hooks';
 import { DestinyCurrenciesComponent } from 'bungie-api-ts/destiny2';
 import { PanInfo, motion } from 'framer-motion';
@@ -21,16 +21,14 @@ import { sortedStoresSelector } from '../inventory/selectors';
 import Vendor from './Vendor';
 import styles from './Vendors.m.scss';
 import VendorsMenu from './VendorsMenu';
-import {
-  D2VendorGroup,
-  filterVendorGroupsToNoSilver,
-  filterVendorGroupsToSearch,
-  filterVendorGroupsToUnacquired,
-} from './d2-vendors';
+import { setShowUnacquiredOnly } from './actions';
+import { D2VendorGroup, filterVendorGroups } from './d2-vendors';
 import { useLoadVendors } from './hooks';
 import {
   ownedVendorItemsSelector,
+  showUnacquiredVendorItemsOnlySelector,
   vendorGroupsForCharacterSelector,
+  vendorItemFilterSelector,
   vendorsByCharacterSelector,
 } from './selectors';
 import { hideVendorSheet } from './single-vendor/single-vendor-sheet';
@@ -40,14 +38,13 @@ import { hideVendorSheet } from './single-vendor/single-vendor-sheet';
  */
 export default function Vendors({ account }: { account: DestinyAccount }) {
   const defs = useD2Definitions();
+  const dispatch = useThunkDispatch();
   const isPhonePortrait = useIsPhonePortrait();
   const stores = useSelector(sortedStoresSelector);
-  const searchQuery = useSelector(querySelector);
-  const filterItems = useSelector(searchFilterSelector);
   const vendors = useSelector(vendorsByCharacterSelector);
   usePageTitle(t('Vendors.Vendors'));
 
-  const [filterToUnacquired, setFilterToUnacquired] = useState(false);
+  const shouldFilterToUnacquired = useSelector(showUnacquiredVendorItemsOnlySelector);
   const [hideSilverItems, setHideSilverItems] = useSetting('vendorsHideSilverItems');
 
   // once the page is loaded, user can select this
@@ -57,6 +54,8 @@ export default function Vendors({ account }: { account: DestinyAccount }) {
 
   let vendorGroups = useSelector(vendorGroupsForCharacterSelector(storeId));
   const ownedItemHashes = useSelector(ownedVendorItemsSelector(storeId));
+
+  const vendorFilter = useSelector(vendorItemFilterSelector(storeId));
 
   useLoadStores(account);
   useLoadVendors(account, storeId);
@@ -108,15 +107,7 @@ export default function Vendors({ account }: { account: DestinyAccount }) {
   const selectedStore = stores.find((s) => s.id === storeId)!;
   const currencyLookups = vendorsResponse?.currencyLookups.data?.itemQuantities;
 
-  if (vendorGroups && filterToUnacquired) {
-    vendorGroups = filterVendorGroupsToUnacquired(vendorGroups, ownedItemHashes);
-  }
-  if (vendorGroups && hideSilverItems) {
-    vendorGroups = filterVendorGroupsToNoSilver(vendorGroups);
-  }
-  if (vendorGroups && searchQuery.length) {
-    vendorGroups = filterVendorGroupsToSearch(vendorGroups, searchQuery, filterItems);
-  }
+  vendorGroups = filterVendorGroups(vendorGroups, vendorFilter);
 
   return (
     <PageWithMenu>
@@ -132,8 +123,8 @@ export default function Vendors({ account }: { account: DestinyAccount }) {
           <div className={styles.buttons}>
             <CheckButton
               name="filter-to-unacquired"
-              checked={filterToUnacquired}
-              onChange={setFilterToUnacquired}
+              checked={shouldFilterToUnacquired}
+              onChange={(val) => dispatch(setShowUnacquiredOnly(val))}
             >
               {t('Vendors.FilterToUnacquired')}
             </CheckButton>
@@ -157,7 +148,6 @@ export default function Vendors({ account }: { account: DestinyAccount }) {
                 group={group}
                 ownedItemHashes={ownedItemHashes}
                 currencyLookups={currencyLookups}
-                filtering={filterToUnacquired || searchQuery.length > 0}
                 characterId={selectedStore.id}
               />
             ))
@@ -174,13 +164,11 @@ function VendorGroup({
   group,
   ownedItemHashes,
   currencyLookups,
-  filtering,
   characterId,
 }: {
   group: D2VendorGroup;
   ownedItemHashes?: Set<number>;
   currencyLookups: DestinyCurrenciesComponent['itemQuantities'];
-  filtering: boolean;
   characterId: string;
 }) {
   return (
@@ -192,7 +180,6 @@ function VendorGroup({
             vendor={vendor}
             ownedItemHashes={ownedItemHashes}
             currencyLookups={currencyLookups}
-            filtering={filtering}
             characterId={characterId}
           />
         </ErrorBoundary>

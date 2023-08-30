@@ -15,6 +15,8 @@ export const loadedError = createAction('vendors/LOADED_ERROR')<{
   error: Error;
 }>();
 
+export const setShowUnacquiredOnly = createAction('vendors/SHOW_UNCOLLECTED_ONLY')<boolean>();
+
 export function loadAllVendors(
   account: DestinyAccount,
   characterId: string,

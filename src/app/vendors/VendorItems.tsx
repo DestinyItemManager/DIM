@@ -64,7 +64,6 @@ export default function VendorItems({
   vendor,
   ownedItemHashes,
   currencyLookups,
-  filtering,
   characterId,
 }: {
   vendor: D2Vendor;
@@ -72,7 +71,6 @@ export default function VendorItems({
   currencyLookups?: {
     [itemHash: number]: number;
   };
-  filtering?: boolean;
   characterId: string;
 }) {
   const defs = useD2Definitions()!;
@@ -94,19 +92,6 @@ export default function VendorItems({
   const factionProgress = vendor?.component?.progression;
 
   let currencies = vendor.currencies;
-
-  // add in faction tokens if this vendor has them
-  if (!filtering && faction?.tokenValues) {
-    currencies = uniqBy(
-      [
-        ...Object.keys(faction.tokenValues)
-          .map((h) => defs.InventoryItem.get(parseInt(h, 10)))
-          .filter(Boolean),
-        ...currencies,
-      ],
-      (i) => i.hash
-    );
-  }
 
   // add all traded planetmats if this vendor is the spider
   if (vendor?.component?.vendorHash === VENDORS.RAHOOL) {
