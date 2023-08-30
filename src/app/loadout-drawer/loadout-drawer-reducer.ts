@@ -257,37 +257,7 @@ export function toggleEquipped(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   { item, loadoutItem: { equip } }: ResolvedLoadoutItem
 ): LoadoutUpdateFunction {
-  return produce((draftLoadout) => {
-    // Subclasses and some others are always equipped
-    if (singularBucketHashes.includes(item.bucket.hash)) {
-      return;
-    }
-
-    // TODO: it might be nice if we just assigned a unique ID to every loadout item just for in-memory ops like deleting
-    // We can't just look it up by identity since Immer wraps objects in a proxy and getItemsFromLoadoutItems
-    // changes the socketOverrides, so simply search by unmodified ID and hash.
-    const loadoutItemIndex = findSameLoadoutItemIndex(
-      defs,
-      draftLoadout.items,
-      convertToLoadoutItem(item, false, 1)
-    );
-
-    if (loadoutItemIndex === -1) {
-      return;
-    }
-    const loadoutItem = draftLoadout.items[loadoutItemIndex];
-
-    if (item.equipment) {
-      if (equip) {
-        // It's equipped, mark it unequipped
-        loadoutItem.equip = false;
-      } else {
-        // It's unequipped - mark all the other items in the same bucket, and conflicting exotics, as unequipped, then mark this equipped
-        unequipOtherItems(defs, item, draftLoadout);
-        loadoutItem.equip = true;
-      }
-    }
-  });
+  return addItem(defs, item, !equip);
 }
 
 export function applySocketOverrides(

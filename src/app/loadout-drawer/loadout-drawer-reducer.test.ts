@@ -7,7 +7,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { getTestDefinitions, getTestStores } from 'testing/test-utils';
-import { addItem, removeItem } from './loadout-drawer-reducer';
+import { addItem, removeItem, toggleEquipped } from './loadout-drawer-reducer';
 import { Loadout } from './loadout-types';
 import { convertToLoadoutItem, newLoadout } from './loadout-utils';
 
@@ -250,5 +250,53 @@ describe('removeItem', () => {
     })(loadout);
 
     expect(loadout.items.length).toBe(1);
+  });
+});
+
+describe('toggleEquipped', () => {
+  it('can switch an equipped item to unequipped if added again with the equip flag set', () => {
+    const item = items[0];
+
+    let loadout = addItem(defs, item, true)(emptyLoadout);
+    loadout = toggleEquipped(defs, { item, loadoutItem: convertToLoadoutItem(item, true, 1) })(
+      loadout
+    );
+
+    expect(loadout.items).toMatchObject([
+      {
+        equip: false,
+        id: item.id,
+      },
+    ]);
+  });
+
+  it('can switch an unequipped item to equipped if added again with the equip flag set', () => {
+    const item = items[0];
+
+    let loadout = addItem(defs, item, false)(emptyLoadout);
+    loadout = toggleEquipped(defs, { item, loadoutItem: convertToLoadoutItem(item, false, 1) })(
+      loadout
+    );
+    expect(loadout.items).toMatchObject([
+      {
+        equip: true,
+        id: item.id,
+      },
+    ]);
+  });
+
+  it('does nothing when applied to a subclass', () => {
+    const item = items.find((i) => i.bucket.hash === BucketHashes.Subclass)!;
+
+    let loadout = addItem(defs, item, true)(emptyLoadout);
+    loadout = toggleEquipped(defs, { item, loadoutItem: convertToLoadoutItem(item, true, 1) })(
+      loadout
+    );
+    expect(loadout.items).toMatchObject([
+      {
+        equip: true,
+        id: item.id,
+      },
+    ]);
   });
 });
