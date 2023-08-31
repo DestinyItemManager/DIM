@@ -480,7 +480,7 @@ AddDefaultCharset utf-8
     # credentialless is only supported by chrome but require-corp blocks Bungie.net messages
     # Disabled for now as it blocks our Google Fonts
     #Header set Cross-Origin-Embedder-Policy "credentialless"
-    #Header set Cross-Origin-Opener-Policy "same-origin"
+    Header set Cross-Origin-Opener-Policy "same-origin"
 
     # `mod_headers` cannot match based on the content-type, however,
     # the `Content-Security-Policy` response header should be send
@@ -489,13 +489,13 @@ AddDefaultCharset utf-8
     <FilesMatch "\.(appcache|atom|bbaw|bmp|crx|css|cur|eot|f4[abpv]|flv|geojson|gif|htc|ico|jpe?g|json(ld)?|m4[av]|manifest|map|mp4|oex|og[agv]|opus|otf|pdf|png|rdf|rss|safariextz|svgz?|swf|topojson|tt[cf]|txt|vcard|vcf|vtt|webapp|web[mp]|webmanifest|woff2?|xloc|xml|xpi)(\.(gz|br))?$">
         Header unset Content-Security-Policy
         #Header unset Cross-Origin-Embedder-Policy
-        #Header unset Cross-Origin-Opener-Policy
+        Header unset Cross-Origin-Opener-Policy
     </FilesMatch>
 
      <FilesMatch "\.(js)(\.(gz|br))?$">
         Header unset Content-Security-Policy
         #Header unset Cross-Origin-Embedder-Policy
-        #Header unset Cross-Origin-Opener-Policy
+        Header unset Cross-Origin-Opener-Policy
         # JavaScript files must set this cross-origin-embedder policy or we can't load web workers
         #Header set Cross-Origin-Embedder-Policy "require-corp"
     </FilesMatch>
