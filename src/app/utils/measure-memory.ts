@@ -3,6 +3,7 @@
 import { humanBytes } from 'app/storage/human-bytes';
 import { infoLog } from './log';
 
+// TODO: Revisit this once we can actually achieve crossOriginIsolated mode: https://web.dev/cross-origin-isolation-guide/
 export function scheduleMemoryMeasurement() {
   // Check measurement API is available.
   if (!window.crossOriginIsolated) {
