@@ -17,6 +17,7 @@ import marked from 'marked';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import svgToMiniDataURI from 'mini-svg-data-uri';
 import path from 'path';
+import PostCSSAssetsPlugin from 'postcss-assets-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
 import 'webpack-dev-server';
 import WebpackNotifierPlugin from 'webpack-notifier';
@@ -24,7 +25,6 @@ import { InjectManifest } from 'workbox-webpack-plugin';
 import zlib from 'zlib';
 import csp from './content-security-policy';
 import { makeFeatureFlags } from './feature-flags';
-import PostCSSAssetsPlugin from 'postcss-assets-webpack-plugin';
 const renderer = new marked.Renderer();
 
 import { StatsWriterPlugin } from 'webpack-stats-plugin';
@@ -297,7 +297,7 @@ export default (env: Env) => {
         },
         {
           test: /\.json/,
-          include: /src(\/|\\)locale/,
+          include: /(src(\/|\\)locale)|(i18n\.json)/,
           type: 'asset/resource',
           generator: {
             filename: '[name]-[contenthash:8][ext]',
