@@ -26,10 +26,8 @@
   }
 
   // The phone layout version
-  :global(.detached) & {
+  @include phone-portrait {
     position: fixed;
-    top: calc(54px + var(--header-height));
-    z-index: 1000;
     width: 100vw;
     padding: 0;
     max-height: calc(

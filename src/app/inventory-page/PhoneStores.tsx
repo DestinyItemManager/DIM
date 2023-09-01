@@ -6,7 +6,7 @@ import StoreStats from 'app/store-stats/StoreStats';
 import { useEventBusListener } from 'app/utils/hooks';
 import { wrap } from 'app/utils/util';
 import { PanInfo, motion } from 'framer-motion';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
 import { getCurrentStore, getStore, getVault } from '../inventory/stores-helpers';
 import CategoryStrip from './CategoryStrip';
@@ -35,7 +35,6 @@ export default function PhoneStores({ stores, buckets, singleCharacter }: Props)
     direction: 0,
   });
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>('Weapons');
-  const detachedLoadoutMenu = useRef<HTMLDivElement>(null);
 
   // Handle scrolling the right store into view when locating an item
   useEventBusListener(
@@ -117,14 +116,11 @@ export default function PhoneStores({ stores, buckets, singleCharacter }: Props)
           selectedStore={selectedStore}
           direction={direction}
           stores={headerStores}
-          loadoutMenuRef={detachedLoadoutMenu}
           setSelectedStoreId={(selectedStoreId, direction) =>
             setSelectedStoreId({ selectedStoreId, direction })
           }
         />
       </HeaderShadowDiv>
-
-      <div className="detached" ref={detachedLoadoutMenu} />
 
       <motion.div className="horizontal-swipable" onPanEnd={handleSwipe}>
         <StoresInventory
