@@ -28,7 +28,7 @@
     "build:dev": "yarn -s bundle --env=dev",
     "i18n": "i18next-scanner",
     "start": "run-p watch:i18n devserver",
-    "devserver": "nodemon --watch 'config/*.ts' --watch yarn.lock -e ts,js,json,lock --exec \"webpack serve --config ./config/webpack.ts --env=dev || yarn touch\"",
+    "devserver": "nodemon --delay 2 --watch config/webpack.ts --watch config/feature-flags.ts --watch config/content-security-policy.ts --watch yarn.lock -e ts,js,json,lock --exec \"webpack serve --config ./config/webpack.ts --env=dev || yarn touch\"",
     "touch": "node -e \"require('fs').utimes('config/webpack.ts', new Date(), new Date(), () => {})\"",
     "watch:i18n": "nodemon --watch config/i18n.json --exec \"i18next-scanner\"",
     "syntax": "find dist -name \"*.js\" | xargs -n 1 node --check",
