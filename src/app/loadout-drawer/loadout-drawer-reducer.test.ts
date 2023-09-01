@@ -2,16 +2,18 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { isClassCompatible, itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
-import { count } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { getTestDefinitions, getTestStores } from 'testing/test-utils';
 import {
   addItem,
   applySocketOverrides,
+  clearSubclass,
+  fillLoadoutFromEquipped,
   removeItem,
   removeMod,
+  setLoadoutParameters,
+  setLoadoutSubclassFromEquipped,
   toggleEquipped,
   updateMods,
 } from './loadout-drawer-reducer';
@@ -34,7 +36,7 @@ beforeAll(async () => {
     itemCanBeEquippedBy(item, store) &&
     itemCanBeInLoadout(item) &&
     isClassCompatible(item.classType, DestinyClass.Hunter);
-  store = _.maxBy(stores, (store) => count(allItems, (item) => isValidItem(store, item)))!;
+  store = stores.find((s) => s.classType === DestinyClass.Hunter)!;
   items = allItems.filter((item) => isValidItem(store, item));
 });
 
@@ -342,5 +344,120 @@ describe('removeMod', () => {
       resolvedMod: defs.InventoryItem.get(193878019) as PluggableInventoryItemDefinition,
     })(loadout);
     expect(loadout.parameters!.mods).toStrictEqual([837201397]);
+  });
+});
+
+describe('clearSubclass', () => {
+  it('removes the subclass', () => {
+    const item = items.find((i) => i.bucket.hash === BucketHashes.Subclass)!;
+
+    let loadout = addItem(defs, item, true)(emptyLoadout);
+    loadout = clearSubclass(defs)(loadout);
+    expect(loadout.items).toStrictEqual([]);
+  });
+});
+
+describe('setLoadoutSubclassFromEquipped', () => {
+  it('correctly populates the subclass and its overrides', () => {
+    let loadout = setLoadoutSubclassFromEquipped(defs, store)(emptyLoadout);
+    expect(loadout.items.length).toBe(1);
+    expect(defs.InventoryItem.get(loadout.items[0].hash).inventory!.bucketTypeHash).toBe(
+      BucketHashes.Subclass
+    );
+    // TODO: would be good to assert more about the socket overrides
+    expect(loadout.items[0].socketOverrides).not.toBeUndefined();
+  });
+});
+
+describe('fillLoadoutFromEquipped', () => {
+  let artifactUnlocks = {
+    unlockedItemHashes: [1, 2, 3],
+    seasonNumber: 22,
+  };
+
+  it('can fill in weapons', () => {
+    // Add a single item that's not equipped to the loadout
+    const item = items.find((i) => i.bucket.hash === BucketHashes.KineticWeapons && !i.equipped)!;
+    let loadout = addItem(defs, item)(emptyLoadout);
+
+    loadout = fillLoadoutFromEquipped(defs, store, artifactUnlocks, 'Weapons')(loadout);
+
+    // Three equipped items, and the original item was left in place
+    expect(loadout.items).toMatchObject([
+      {
+        equip: true,
+        id: item.id,
+      },
+      { equip: true },
+      { equip: true },
+    ]);
+    expect(loadout.parameters?.mods).toBeUndefined();
+    expect(loadout.parameters?.artifactUnlocks).toBeUndefined();
+    expect(loadout.parameters?.modsByBucket).toBeUndefined();
+  });
+
+  it('can fill in armor', () => {
+    // Add a single item that's not equipped to the loadout
+    const item = items.find((i) => i.bucket.hash === BucketHashes.Helmet && !i.equipped)!;
+    let loadout = addItem(defs, item)(emptyLoadout);
+
+    loadout = fillLoadoutFromEquipped(defs, store, artifactUnlocks, 'Armor')(loadout);
+
+    // Five equipped items, and the original item was left in place
+    expect(loadout.items).toMatchObject([
+      {
+        equip: true,
+        id: item.id,
+      },
+      { equip: true },
+      { equip: true },
+      { equip: true },
+      { equip: true },
+    ]);
+    // Mods don't get saved when just filling in a category
+    expect(loadout.parameters?.mods).toBeUndefined();
+    // Artifact unlocks don't get saved when just filling in a category
+    expect(loadout.parameters?.artifactUnlocks).toBeUndefined();
+    // Adding armor saves its fashion
+    expect(loadout.parameters?.modsByBucket).not.toBeUndefined();
+  });
+
+  it('can fill in everything', () => {
+    // Add a single item that's not equipped to the loadout
+    const item = items.find((i) => i.bucket.hash === BucketHashes.Helmet && !i.equipped)!;
+    let loadout = addItem(defs, item)(emptyLoadout);
+
+    loadout = fillLoadoutFromEquipped(defs, store, artifactUnlocks)(loadout);
+
+    // Five equipped items, and the original item was left in place
+    expect(loadout.items.length).toBe(13); // Subclass, weapons, armor, emblem, ship, ghost, sparrow
+    expect(loadout.items[0]).toMatchObject({ equip: true, id: item.id });
+    // Mods get saved when everything is filled in, if they weren't defined before
+    expect(loadout.parameters?.mods).not.toBeUndefined();
+    // Artifact unlocks are filled in too, if they weren't defined before
+    expect(loadout.parameters?.artifactUnlocks).not.toBeUndefined();
+    // As is fashion, if it wasn't defined before
+    expect(loadout.parameters?.modsByBucket).not.toBeUndefined();
+  });
+
+  it('will not overwrite mods if they are already there', () => {
+    let loadout = updateMods([1, 2, 3])(emptyLoadout);
+
+    loadout = fillLoadoutFromEquipped(defs, store, artifactUnlocks)(loadout);
+
+    expect(loadout.parameters?.mods).toEqual([1, 2, 3]);
+  });
+
+  it('will not overwrite artifact unlocks if they are already there', () => {
+    let loadout = setLoadoutParameters({
+      artifactUnlocks: { unlockedItemHashes: [1], seasonNumber: 1 },
+    })(emptyLoadout);
+
+    loadout = fillLoadoutFromEquipped(defs, store, artifactUnlocks)(loadout);
+
+    expect(loadout.parameters?.artifactUnlocks).toEqual({
+      unlockedItemHashes: [1],
+      seasonNumber: 1,
+    });
   });
 });

@@ -381,11 +381,11 @@ export function setLoadoutSubclassFromEquipped(
 export function fillLoadoutFromEquipped(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   store: DimStore,
-  artifactUnlocks?: LoadoutParameters['artifactUnlocks'],
+  artifactUnlocks: LoadoutParameters['artifactUnlocks'] | undefined,
   /** Fill in from only this specific category */
   category?: D2BucketCategory
 ): LoadoutUpdateFunction {
-  return produce((loadout) => {
+  return (loadout) => {
     const equippedItemsByBucket = _.keyBy(
       loadout.items.filter((li) => li.equip),
       (li) => getBucketHashFromItemHash(defs, li.hash)
@@ -395,48 +395,51 @@ export function fillLoadoutFromEquipped(
       (item) => item.equipped && itemCanBeInLoadout(item) && itemMatchesCategory(item, category)
     );
     const mods: number[] = [];
+    const modsByBucket: { [bucketHash: number]: number[] } = {};
     for (const item of newEquippedItems) {
       if (!(item.bucket.hash in equippedItemsByBucket)) {
-        const loadoutItem = convertToLoadoutItem(item, true);
-        if (item.bucket.hash === BucketHashes.Subclass) {
-          loadoutItem.socketOverrides = createSocketOverridesFromEquipped(item);
+        loadout = addItem(defs, item, true)(loadout);
+
+        // Only save fashion for the items we added
+        const plugs = item.sockets
+          ? filterMap(
+              getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics),
+              (s) => s.plugged?.plugDef.hash
+            )
+          : [];
+        if (plugs.length) {
+          modsByBucket[item.bucket.hash] = plugs;
         }
-        loadout.items.push(loadoutItem);
-        mods.push(...extractArmorModHashes(item).map(mapToNonReducedModCostVariant));
+      }
+      // If we're filling in the whole loadout, save armor mods to potentially use
+      if (!category) {
+        mods.push(...extractArmorModHashes(item));
       }
     }
-    if (mods.length && (loadout.parameters?.mods ?? []).length === 0) {
-      loadout.parameters = {
-        ...loadout.parameters,
-        mods,
-      };
+
+    // Populate mods if they aren't already there
+    if (mods.length && _.isEmpty(loadout.parameters?.mods)) {
+      loadout = updateMods(mods)(loadout);
     }
-    if (artifactUnlocks?.unlockedItemHashes.length) {
-      loadout.parameters = {
-        ...loadout.parameters,
-        artifactUnlocks,
-      };
+
+    // Populate artifactUnlocks if they aren't already there
+    if (
+      !category &&
+      artifactUnlocks?.unlockedItemHashes.length &&
+      _.isEmpty(loadout.parameters?.artifactUnlocks)
+    ) {
+      loadout = setLoadoutParameters({ artifactUnlocks })(loadout);
     }
-    // Save "fashion" mods for equipped items
-    const modsByBucket: { [bucketHash: number]: number[] } = {};
-    for (const item of newEquippedItems.filter((i) => i.bucket.inArmor)) {
-      const plugs = item.sockets
-        ? filterMap(
-            getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics),
-            (s) => s.plugged?.plugDef.hash
-          )
-        : [];
-      if (plugs.length) {
-        modsByBucket[item.bucket.hash] = plugs;
-      }
-    }
+
+    // Save "fashion" mods for newly equipped items
     if (!_.isEmpty(modsByBucket)) {
-      loadout.parameters = {
-        ...loadout.parameters,
-        modsByBucket,
-      };
+      loadout = updateModsByBucket({ ...loadout.parameters?.modsByBucket, ...modsByBucket })(
+        loadout
+      );
     }
-  });
+
+    return loadout;
+  };
 }
 
 /**
