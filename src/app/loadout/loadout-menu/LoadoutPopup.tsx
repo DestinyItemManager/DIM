@@ -71,7 +71,7 @@ export default function LoadoutPopup({
   onClick,
 }: {
   dimStore: DimStore;
-  onClick?: (e: React.MouseEvent) => void;
+  onClick?: () => void;
 }) {
   // For the most part we don't need to memoize this - this menu is destroyed when closed
   const defs = useDefinitions()!;
@@ -150,22 +150,33 @@ export default function LoadoutPopup({
 
   const filteringLoadouts = loadoutQuery.length > 0 || hasSelectedFilters;
 
+  const handleEscape = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      if (loadoutQuery === '') {
+        onClick?.();
+      } else {
+        setLoadoutQuery('');
+      }
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  };
+
   return (
     <div className={styles.content} onClick={onClick} role="menu">
       {totalLoadouts >= 10 && (
-        <li className={clsx(styles.menuItem, styles.filterInput)}>
-          <form>
-            <AppIcon icon={searchIcon} />
-            <input
-              type="text"
-              autoFocus={nativeAutoFocus}
-              placeholder={t('Header.FilterHelpLoadouts')}
-              onClick={blockPropagation}
-              value={loadoutQuery}
-              onChange={(e) => setLoadoutQuery(e.target.value)}
-            />
-          </form>
-        </li>
+        <form className={styles.filterInput}>
+          <AppIcon icon={searchIcon} className="search-bar-icon" />
+          <input
+            type="text"
+            autoFocus={nativeAutoFocus}
+            placeholder={t('Header.FilterHelpLoadouts')}
+            onClick={blockPropagation}
+            value={loadoutQuery}
+            onChange={(e) => setLoadoutQuery(e.target.value)}
+            onKeyDown={handleEscape}
+          />
+        </form>
       )}
 
       {filterPills}

@@ -7,7 +7,7 @@
 }
 
 .note {
-  color: #888;
+  color: var(--theme-text-secondary);
 }
 
 .menuItem {
@@ -62,20 +62,6 @@
     }
   }
 
-  input[type='text'] {
-    border: none;
-    color: var(--theme-text);
-    outline: none;
-    flex: 1;
-    width: 0;
-    padding: 7px;
-    margin-left: 4px;
-    background: #313233;
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-size: inherit;
-  }
-
   &:hover,
   a:hover {
     background-color: var(--theme-accent-primary);
@@ -124,7 +110,7 @@
 }
 
 .loadoutTypeIcon {
-  color: #999;
+  color: var(--theme-text);
 }
 
 .warningIcon {
@@ -132,17 +118,14 @@
 }
 
 .content {
-  color: #e4e4e4;
+  color: var(--theme-text);
 }
 
 .filterInput {
-  margin: 8px 0;
-  &:hover,
-  a:hover {
-    background-color: black;
-    color: var(--theme-text) !important;
-    cursor: default;
-  }
+  composes: search-filter from global;
+  min-width: unset;
+  margin: 8px;
+  background-color: var(--theme-search-bg);
 }
 
 .filterPills {
