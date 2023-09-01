@@ -13,8 +13,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { Suspense, lazy, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
-import { addItem$, editLoadout$ } from './loadout-events';
-import { Loadout } from './loadout-types';
+import { EditLoadoutState, addItem$, editLoadout$ } from './loadout-events';
 import { convertToLoadoutItem, newLoadout, pickBackingStore } from './loadout-utils';
 
 const LoadoutDrawer = lazy(
@@ -43,12 +42,7 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
   // TODO: Alternately we could come up with the concept of a
   // `useControlledReducer` that applied a reducer to mutate an object whose
   // state is handled outside the component.
-  const [initialLoadout, setInitialLoadout] = useState<{
-    loadout: Loadout;
-    storeId: string;
-    showClass: boolean;
-    isNew: boolean;
-  }>();
+  const [initialLoadout, setInitialLoadout] = useState<EditLoadoutState>();
 
   const handleDrawerClose = useCallback(() => {
     setInitialLoadout(undefined);
@@ -60,7 +54,8 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
   useEventBusListener(
     editLoadout$,
     useCallback(
-      ({ loadout, storeId, showClass, isNew }) => {
+      (state) => {
+        const { storeId, loadout } = state;
         // Fall back to current store because otherwise there's no way to delete loadouts
         // the user doesn't have a class for.
         const editingStore =
@@ -73,12 +68,7 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
           return;
         }
 
-        setInitialLoadout({
-          loadout,
-          storeId: editingStore.id,
-          showClass: Boolean(showClass),
-          isNew: Boolean(isNew),
-        });
+        setInitialLoadout({ ...state, storeId: editingStore.id });
       },
       [stores, defs]
     )
@@ -113,6 +103,7 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
             storeId: owner.id,
             isNew: true,
             showClass: true,
+            fromExternal: true,
           });
         }
       },
@@ -140,6 +131,7 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
           storeId,
           isNew: true,
           showClass: false,
+          fromExternal: true,
         });
         // Clear the loadout from params if the URL contained one...
         navigate(pathname, { replace: true });
@@ -173,6 +165,7 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
             storeId={initialLoadout.storeId}
             isNew={initialLoadout.isNew}
             onClose={handleDrawerClose}
+            fromExternal={initialLoadout.fromExternal}
           />
         ) : (
           <D1LoadoutDrawer

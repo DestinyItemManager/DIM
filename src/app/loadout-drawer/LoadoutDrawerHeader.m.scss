@@ -1,18 +1,5 @@
 @use '../variables.scss' as *;
 
-.loadoutName {
-  font-size: 18px;
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  max-width: 50em;
-
-  svg,
-  :global(.app-icon) {
-    margin-right: 8px;
-  }
-}
-
 .dimInput {
   padding-left: 5px;
   height: 23px;
@@ -22,6 +9,7 @@
   color: var(--theme-text);
   width: 100%;
   font-size: 18px;
+  max-width: 50em;
 
   display: flex;
   flex-direction: row;

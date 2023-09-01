@@ -10,8 +10,8 @@
 }
 
 .notes {
-  margin-top: 8px;
   font-size: 14px;
+  margin-top: 4px;
 
   summary {
     font-weight: bold;
@@ -31,20 +31,22 @@
 }
 
 .header {
-  display: grid;
-  grid-template-columns: min-content 1fr;
-  grid-template-areas:
-    'identifiers title'
-    'identifiers notes';
+  composes: flexRow from '../dim-ui/common.m.scss';
   gap: 0 12px;
+}
 
-  > *:nth-child(1) {
-    grid-area: identifiers;
-  }
-  > *:nth-child(2) {
-    grid-area: title;
-  }
-  > *:nth-child(3) {
-    grid-area: notes;
+.headerDetails {
+  composes: flexColumn from '../dim-ui/common.m.scss';
+  flex: 1;
+  gap: 4px;
+}
+
+.classType {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  gap: 0.25em;
+
+  svg {
+    height: 16px;
   }
 }

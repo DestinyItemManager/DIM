@@ -3,6 +3,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { apiPermissionGrantedSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import CheckButton from 'app/dim-ui/CheckButton';
+import ClassIcon from 'app/dim-ui/ClassIcon';
 import { WithSymbolsPicker } from 'app/dim-ui/destiny-symbols/SymbolsPicker';
 import { useAutocomplete } from 'app/dim-ui/text-complete/text-complete';
 import { t } from 'app/i18next-t';
@@ -61,6 +62,7 @@ export default function LoadoutDrawer({
   initialLoadout,
   storeId,
   isNew,
+  fromExternal,
   onClose,
 }: {
   initialLoadout: Loadout;
@@ -71,6 +73,7 @@ export default function LoadoutDrawer({
    */
   storeId: string;
   isNew: boolean;
+  fromExternal: boolean;
   onClose: () => void;
 }) {
   const dispatch = useThunkDispatch();
@@ -175,22 +178,35 @@ export default function LoadoutDrawer({
   const toggleAnyClass = (checked: boolean) =>
     setLoadout(setClassType(checked ? DestinyClass.Unknown : store.classType));
 
+  const showInGameLoadoutIdentifiers =
+    Boolean(loadout.parameters?.inGameIdentifiers) || loadout.items.length > 0;
+
   const header = (
     <div className={styles.header}>
-      <InGameLoadoutIdentifiersSelectButton loadout={loadout} setLoadout={setLoadout} />
-      <LoadoutDrawerHeader loadout={loadout} onNameChanged={handleNameChanged} />
-      <details className={styles.notes} open={Boolean(loadout.notes?.length)}>
-        <summary>{t('MovePopup.Notes')}</summary>
-        <WithSymbolsPicker input={ref} setValue={(val) => setLoadout(setNotes(val))}>
-          <TextareaAutosize
-            onChange={handleNotesChanged}
-            ref={ref}
-            value={loadout.notes}
-            maxLength={2048}
-            placeholder={t('Loadouts.NotesPlaceholder')}
-          />
-        </WithSymbolsPicker>
-      </details>
+      {showInGameLoadoutIdentifiers && (
+        <InGameLoadoutIdentifiersSelectButton loadout={loadout} setLoadout={setLoadout} />
+      )}
+      <div className={styles.headerDetails}>
+        {fromExternal && (
+          <div className={styles.classType}>
+            <ClassIcon classType={loadout.classType} />
+            {t('Loadouts.ClassType', { className: store.className, context: store.genderName })}
+          </div>
+        )}
+        <LoadoutDrawerHeader loadout={loadout} onNameChanged={handleNameChanged} />
+        <details className={styles.notes} open={Boolean(loadout.notes?.length)}>
+          <summary>{t('MovePopup.Notes')}</summary>
+          <WithSymbolsPicker input={ref} setValue={(val) => setLoadout(setNotes(val))}>
+            <TextareaAutosize
+              onChange={handleNotesChanged}
+              ref={ref}
+              value={loadout.notes}
+              maxLength={2048}
+              placeholder={t('Loadouts.NotesPlaceholder')}
+            />
+          </WithSymbolsPicker>
+        </details>
+      </div>
     </div>
   );
 
