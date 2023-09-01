@@ -91,13 +91,13 @@ export function useEquippedLoadoutArmorAndSubclass(
  * Loadout mod resolution may choose different versions of mods depending on artifact unlocks
  * and may replace defs that no longer exist with a placeholder deprecated mod.
  */
-export function useLoadoutMods(loadout: Loadout, storeId: string, includeAutoMods?: boolean) {
+export function useLoadoutMods(loadout: Loadout, storeId: string) {
   const defs = useD2Definitions();
   const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(storeId));
 
   return useMemo(() => {
-    const allMods = getModsFromLoadout(defs, loadout, unlockedPlugs, includeAutoMods);
+    const allMods = getModsFromLoadout(defs, loadout, unlockedPlugs);
     const modDefinitions = allMods.map((mod) => mod.resolvedMod);
     return [allMods, modDefinitions] as const;
-  }, [defs, includeAutoMods, loadout, unlockedPlugs]);
+  }, [defs, loadout, unlockedPlugs]);
 }

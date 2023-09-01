@@ -14,12 +14,10 @@ import styles from './ReputationRank.m.scss';
 export function ReputationRank({
   progress,
   streak,
-  resetCount,
   isProgressRanks,
 }: {
   progress: DestinyProgression;
   streak?: DestinyProgression;
-  resetCount?: number;
   isProgressRanks?: boolean;
 }) {
   const defs = useD2Definitions()!;
@@ -74,9 +72,9 @@ export function ReputationRank({
                 pct: Math.round((progress.currentProgress / rankTotal) * 100),
               })}
             </div>
-            {Boolean(resetCount) && (
+            {Boolean(progress.currentResetCount) && (
               <div className={styles.factionLevel}>
-                {t('Progress.Resets', { count: resetCount })}
+                {t('Progress.Resets', { count: progress.currentResetCount })}
               </div>
             )}
           </>

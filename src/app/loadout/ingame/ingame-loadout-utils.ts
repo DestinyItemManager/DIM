@@ -5,7 +5,6 @@ import { allItemsSelector, createItemContextSelector } from 'app/inventory/selec
 import { DimStore } from 'app/inventory/store-types';
 import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import { applySocketOverrides } from 'app/inventory/store/override-sockets';
-import { spaceLeftForItem } from 'app/inventory/stores-helpers';
 import { convertInGameLoadoutPlugItemHashesToSocketOverrides } from 'app/loadout-drawer/loadout-type-converters';
 import {
   InGameLoadout,
@@ -138,11 +137,16 @@ export function implementsDimLoadout(
 
 /**
  * to be equipped via in-game loadouts, an item must be on the char already,
- * or in the vault, but with room in the character's pockets for a transfer
+ * or in the vault, but with room in the character's pockets for a transfer.
+ *
+ * AUG 29 2023:
+ * Bungie has reenabled in-game loadouts, but they cannot pull from the vault.
+ * we temporarily only consider an item IGL-equippable if it's on the char in question.
  */
-export function itemCouldBeEquipped(store: DimStore, item: DimItem, stores: DimStore[]) {
+export function itemCouldBeEquipped(store: DimStore, item: DimItem, _stores: DimStore[]) {
   return (
-    item.owner === store.id || (item.owner === 'vault' && spaceLeftForItem(store, item, stores) > 0)
+    item.owner === store.id
+    // || (item.owner === 'vault' && spaceLeftForItem(store, item, stores) > 0)
   );
 }
 

@@ -1,7 +1,7 @@
+import { stripAdept } from 'app/compare/compare-buttons';
 import { tl } from 'app/i18next-t';
 import { TagValue } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
-import { getSeason } from 'app/inventory/store/season';
 import { isArtifice } from 'app/item-triage/triage-utils';
 import { StatsSet } from 'app/loadout-builder/process-worker/stats-set';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -16,15 +16,19 @@ const notableTags = ['favorite', 'keep'];
 /** outputs a string combination of the identifying features of an item, or the hash if classified */
 export const makeDupeID = (item: DimItem) =>
   (item.classified && `${item.hash}`) ||
-  `${item.name}${item.classType}${item.tier}${item.itemCategoryHashes.join('.')}`;
-
-// so, duplicate detection has gotten complicated in season 8. same items can have different hashes.
-// we use enough values to ensure this item is intended to be the same, as the index for looking up dupes
-const makeSeasonalDupeID = (item: DimItem) =>
-  (item.classified && `${item.hash}`) ||
-  `${item.name}${item.classType}${item.tier}item.collectibleHash}${item.powerCap}${getSeason(
-    item
-  )}${item.itemCategoryHashes.join('.')}`;
+  `${
+    // Consider adept versions of weapons to be the same as the normal type
+    item.bucket.inWeapons ? stripAdept(item.name) : item.name
+  }${
+    // Some items have the same name across different classes, e.g. "Kairos Function Boots"
+    item.classType
+  }${
+    // Some items have the same name across different tiers, e.g. "Traveler's Chosen"
+    item.tier
+  }${
+    // The engram that dispenses the Taraxippos scout rifle is also called Taraxippos
+    item.type
+  }`;
 
 const sortDupes = (
   dupes: {
@@ -35,14 +39,14 @@ const sortDupes = (
   // The comparator for sorting dupes - the first item will be the "best" and all others are "dupelower".
   const dupeComparator = reverseComparator(
     chainComparator<DimItem>(
-      // primary stat
-      compareBy((item) => item.power),
-      compareBy((item) => item.masterwork),
-      compareBy((item) => item.locked),
       compareBy((item) => {
         const tag = getTag(item);
         return Boolean(tag && notableTags.includes(tag));
       }),
+      compareBy((item) => item.masterwork),
+      compareBy((item) => item.locked),
+      // primary stat
+      compareBy((item) => item.power),
       compareBy((i) => i.id) // tiebreak by ID
     )
   );
@@ -79,12 +83,6 @@ const computeDupesByIdFn = (allItems: DimItem[], makeDupeIdFn: (item: DimItem) =
  */
 export const computeDupes = (allItems: DimItem[]) => computeDupesByIdFn(allItems, makeDupeID);
 
-/**
- * Find a map of duplicate items using the makeSeasonalDupeID function.
- */
-const computeSeasonalDupes = (allItems: DimItem[]) =>
-  computeDupesByIdFn(allItems, makeSeasonalDupeID);
-
 const dupeFilters: FilterDefinition[] = [
   {
     keywords: 'dupe',
@@ -93,18 +91,6 @@ const dupeFilters: FilterDefinition[] = [
       const duplicates = computeDupes(allItems);
       return (item) => {
         const dupeId = makeDupeID(item);
-        return checkIfIsDupe(duplicates, dupeId, item);
-      };
-    },
-  },
-  {
-    keywords: 'seasonaldupe',
-    description: tl('Filter.SeasonalDupe'),
-    destinyVersion: 2,
-    filter: ({ allItems }) => {
-      const duplicates = computeSeasonalDupes(allItems);
-      return (item) => {
-        const dupeId = makeSeasonalDupeID(item);
         return checkIfIsDupe(duplicates, dupeId, item);
       };
     },

@@ -213,6 +213,7 @@ export default function SocketDetailsSelectedPlug({
         <div className={styles.material} key={material.itemHash}>
           {material.count.toLocaleString()}
           <BungieImage
+            className="dontInvert"
             src={materialDef.displayProperties.icon}
             title={materialDef.displayProperties.name}
           />
