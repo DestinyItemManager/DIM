@@ -441,7 +441,7 @@ export function syncLoadoutCategoryFromEquipped(
   store: DimStore,
   category: D2BucketCategory
 ): LoadoutUpdateFunction {
-  return produce((loadout) => {
+  return (loadout) => {
     let categoryHashes = D2Categories[category];
     if (category === 'General') {
       categoryHashes = [
@@ -453,32 +453,19 @@ export function syncLoadoutCategoryFromEquipped(
     }
 
     // Remove equipped items from this bucket
-    loadout.items = loadout.items.filter(
-      (li) => !(li.equip && categoryHashes.includes(getBucketHashFromItemHash(defs, li.hash) ?? 0))
-    );
+    loadout = {
+      ...loadout,
+      items: loadout.items.filter(
+        (li) =>
+          !(li.equip && categoryHashes.includes(getBucketHashFromItemHash(defs, li.hash) ?? 0))
+      ),
+    };
     const newEquippedItems = store.items.filter(
       (item) =>
         item.equipped && itemCanBeInLoadout(item) && categoryHashes.includes(item.bucket.hash)
     );
-    const mods: number[] = [];
     for (const item of newEquippedItems) {
-      const loadoutItem: LoadoutItem = {
-        id: item.id,
-        hash: item.hash,
-        equip: true,
-        amount: 1,
-      };
-      if (item.bucket.hash === BucketHashes.Subclass) {
-        loadoutItem.socketOverrides = createSocketOverridesFromEquipped(item);
-      }
-      loadout.items.push(loadoutItem);
-      mods.push(...extractArmorModHashes(item));
-    }
-    if (mods.length && (loadout.parameters?.mods ?? []).length === 0) {
-      loadout.parameters = {
-        ...loadout.parameters,
-        mods,
-      };
+      loadout = addItem(defs, item, true)(loadout);
     }
     // Save "fashion" mods for equipped items
     const modsByBucket: { [bucketHash: number]: number[] } = {};
@@ -494,12 +481,10 @@ export function syncLoadoutCategoryFromEquipped(
       }
     }
     if (!_.isEmpty(modsByBucket)) {
-      loadout.parameters = {
-        ...loadout.parameters,
-        modsByBucket,
-      };
+      loadout = setLoadoutParameters({ modsByBucket })(loadout);
     }
-  });
+    return loadout;
+  };
 }
 
 /**
