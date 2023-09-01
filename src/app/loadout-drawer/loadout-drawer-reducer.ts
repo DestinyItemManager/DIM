@@ -422,9 +422,9 @@ export function fillLoadoutFromEquipped(
       loadout = syncArtifactUnlocksFromEquipped(artifactUnlocks)(loadout);
     }
 
-    // Save "fashion" mods for newly equipped items
+    // Save "fashion" mods for newly equipped items, but don't overwrite existing fashion
     if (!_.isEmpty(modsByBucket)) {
-      loadout = updateModsByBucket({ ...loadout.parameters?.modsByBucket, ...modsByBucket })(
+      loadout = updateModsByBucket({ ...modsByBucket, ...loadout.parameters?.modsByBucket })(
         loadout
       );
     }
