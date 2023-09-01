@@ -9,6 +9,7 @@ import { getTestDefinitions, getTestStores } from 'testing/test-utils';
 import {
   addItem,
   applySocketOverrides,
+  clearBucketCategory,
   clearSubclass,
   fillLoadoutFromEquipped,
   fillLoadoutFromUnequipped,
@@ -29,6 +30,11 @@ let items: DimItem[];
 // All items, even ones that couldn't be in a Hunter loadout
 let allItems: DimItem[];
 const emptyLoadout = newLoadout('Test', [], DestinyClass.Hunter);
+
+let artifactUnlocks = {
+  unlockedItemHashes: [1, 2, 3],
+  seasonNumber: 22,
+};
 
 beforeAll(async () => {
   let stores: DimStore[];
@@ -372,11 +378,6 @@ describe('setLoadoutSubclassFromEquipped', () => {
 });
 
 describe('fillLoadoutFromEquipped', () => {
-  let artifactUnlocks = {
-    unlockedItemHashes: [1, 2, 3],
-    seasonNumber: 22,
-  };
-
   it('can fill in weapons', () => {
     // Add a single item that's not equipped to the loadout
     const item = items.find((i) => i.bucket.hash === BucketHashes.KineticWeapons && !i.equipped)!;
@@ -529,5 +530,45 @@ describe('fillLoadoutFromUnequipped', () => {
     );
     expect(energyWeaponsInLoadout.length).toBe(10);
     expect(energyWeaponsInLoadout.some((i) => i.equip)).toBe(true);
+  });
+});
+
+describe('clearBucketCategory', () => {
+  it('clears the weapons category', () => {
+    let loadout = fillLoadoutFromEquipped(defs, store, artifactUnlocks)(emptyLoadout);
+    loadout = clearBucketCategory(defs, 'Weapons')(loadout);
+
+    expect(
+      loadout.items.some((i) =>
+        [
+          BucketHashes.KineticWeapons,
+          BucketHashes.EnergyWeapons,
+          BucketHashes.PowerWeapons,
+        ].includes(defs.InventoryItem.get(i.hash).inventory?.bucketTypeHash ?? 0)
+      )
+    ).toBe(false);
+  });
+
+  it('clears the general category without clearing subclass', () => {
+    let loadout = fillLoadoutFromEquipped(defs, store, artifactUnlocks)(emptyLoadout);
+    loadout = clearBucketCategory(defs, 'General')(loadout);
+
+    expect(
+      loadout.items.some((i) =>
+        [
+          BucketHashes.Ghost,
+          BucketHashes.Emblems,
+          BucketHashes.Ships,
+          BucketHashes.Vehicle,
+        ].includes(defs.InventoryItem.get(i.hash).inventory?.bucketTypeHash ?? 0)
+      )
+    ).toBe(false);
+    expect(
+      loadout.items.some((i) =>
+        [BucketHashes.Subclass].includes(
+          defs.InventoryItem.get(i.hash).inventory?.bucketTypeHash ?? 0
+        )
+      )
+    ).toBe(true);
   });
 });
