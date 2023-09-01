@@ -5,7 +5,6 @@ Here are some tips to make sure your Pull Request (PR) can be merged smoothly:
 1. If you want to add a feature or make some change to DIM, consider [filing an issue](https://github.com/DestinyItemManager/DIM/issues/new) describing your idea first. This will give the DIM community a chance to discuss the idea, offer suggestions and pointers, and make sure what you're thinking of fits with the style and direction of DIM. If you want a more free-form chat, [join our Discord](https://discordapp.com/invite/UK2GWC7).
 1. Resist the temptation to change more than one thing in your PR. Keeping PRs focused on a single change makes them much easier to review and accept. If you want to change multiple things, or clean up/refactor the code, make a new branch and submit those changes as a separate PR.
 1. All of our code is written in [TypeScript](https://typescriptlang.org) and uses React to build UI components.
-1. Take advantage of the [native JavaScript Array methods](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) and the [Lodash](https://lodash.com/) library to write compact, easy-to-understand code.
 1. Be sure to run `yarn fix` before submitting your PR - it'll catch most style problems and make things much easier to merge.
 1. Don't forget to add a description of your change to [docs/CHANGELOG.md](CHANGELOG.md) so it'll be included in the release notes!
 
@@ -29,20 +28,21 @@ Here are some tips to make sure your Pull Request (PR) can be merged smoothly:
 * Install [Git](https://git-scm.com/downloads)
 * Install [NodeJS](https://nodejs.org/)
 * Install [Yarn](https://yarnpkg.com/en/docs/install)
-  * Use Yarn 1.x as DIM is not guaranteed to be compatible with later versions of Yarn. If you're used to NPM, see "[Migrating from NPM](https://yarnpkg.com/lang/en/docs/migrating-from-npm/)".
+  * Use Yarn 1.x as DIM is not compatible with later versions of Yarn. If you're used to NPM, see "[Migrating from NPM](https://yarnpkg.com/lang/en/docs/migrating-from-npm/)".
 * It is highly recommended to use [VSCode](https://code.visualstudio.com/) to work on DIM. When you open DIM in VSCode, accept the recommended plugins it suggests (find them manually by searching "@recommended" in the Extensions window).
 
 ### Clone the repo
 
 To locally **run a copy** of DIM, you can simply clone the code repository:
+
 ```sh
 git clone https://github.com/DestinyItemManager/DIM.git
 ```
 
 To **contribute changes to the project**, you'll want to:
 
-* Make an account on GitHub
-* [Create an SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) and [add it to your account](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+1. Make an account on GitHub
+1. [Create an SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) and [add it to your account](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
 1. Fork DIM to make your own copy of the repository
 1. Clone the forked repository to your local machine
 1. Edit the local files
