@@ -1,0 +1,104 @@
+// Neomuna theme
+.theme-neomuna {
+  // Base colours
+  --theme-accent-primary: #fe2dde; // Interaction styles (hover, active, focus)
+  --theme-accent-secondary: #f27b8a; // Secondary interactions
+
+  // More vibrant P3 colourspace tints for displays that support them
+  @supports (color: color(display-p3 1 1 1)) {
+    --theme-accent-primary: oklch(0.61 0.29 336.78);
+    --theme-item-polaroid: oklch(0.74 0.15 213.27);
+    --theme-item-polaroid-masterwork: oklch(0.55 0.26 340.71);
+  }
+
+  // Generic fills for modal backgrounds (see below)
+  --theme-fill-modal: #0b2432; // Base fill for popups, drawers, dropdowns etc
+  --theme-fill-modal-actions: #0b2432; // Layered/contextual modals (search, item actions)
+
+  // Text
+  --theme-text: #e8f3f7;
+  --theme-text-invert: #beeeff;
+  --theme-text-secondary: #87adba;
+
+  // Buttons
+  --theme-button-bg: rgba(255, 255, 255, 0.2);
+  --theme-button-text: white;
+
+  // Input field (text boxes and text areas)
+  --theme-input-bg: #333;
+
+  // Shadows
+  --theme-drop-shadow: 0 0 18px 0 #000;
+
+  // Tooltips
+  --theme-tooltip-underline: var(--theme-accent-primary);
+  --theme-tooltip-header-bg: #000;
+  --theme-tooltip-body-bg: #1a1a1a;
+  --theme-tooltip-border: #555;
+  --theme-tooltip-minimal-bg: #5d5970;
+
+  // App background gradient pattern
+  --theme-app-bg-gradient-start: #1f78ac;
+  --theme-app-bg-gradient-end: #2d1137;
+  --theme-app-bg-gradient: radial-gradient(
+    circle at 50% 70px,
+    var(--theme-app-bg-gradient-start) 0%,
+    var(--theme-app-bg-gradient-end) 100%
+  );
+
+  // App
+  --theme-app-bg: var(--theme-app-bg-gradient);
+  // The color of PWA elements like the title bar. This cannot be a gradient.
+  --theme-pwa-background: #0b2432;
+  --theme-mobile-background: #0b2432;
+
+  // Header
+  --theme-header-nav-bg: #0b2432;
+  --theme-header-nav-slideout-menu-bg: var(--theme-fill-modal);
+  --theme-header-characters-bg: #10364d;
+  --theme-header-characters-txt: #aaa;
+
+  // Dropdown menu
+  --theme-dropdown-menu-bg: var(--theme-fill-modal);
+
+  // Search
+  --theme-search-bg: rgba(255, 255, 255, 0.15);
+  --theme-search-dropdown-bg: var(--theme-fill-modal-actions);
+  --theme-search-dropdown-border: rgba(255, 255, 255, 0.2);
+
+  // Items 'polaroid' framed icons
+  --theme-item-polaroid: #00c2e3;
+  --theme-item-polaroid-txt: black;
+  --theme-item-polaroid-masterwork: #c9009e;
+  --theme-item-polaroid-masterwork-txt: #dec1d8;
+  --theme-item-polaroid-capped: #ebb920;
+  --theme-item-polaroid-capped-txt: #000;
+  --theme-item-polaroid-godroll: white;
+  --theme-item-polaroid-trashroll: #d14334;
+  --theme-item-polaroid-element-adjust-brightness: 120%; // Adjust brightness level of Arc, Strand, Void icons
+
+  // Item popup
+  --theme-item-popup-border: #333;
+  --theme-item-popup-arrow: #333;
+  --theme-item-popup-actions-bg: var(--theme-fill-modal-actions);
+  --theme-item-popup-panel-bg: rgba(
+    255,
+    255,
+    255,
+    0.06
+  ); // Panels for progress (masterwork, crafted, catalyst) and archetype
+  --theme-item-popup-progress-bar-bg: rgba(0, 0, 0, 0.3);
+
+  // Item feed
+  --theme-item-feed-bg: var(--theme-fill-modal);
+
+  // Item sheet (compare, armory)
+  --theme-item-sheet-bg: var(--theme-fill-modal);
+
+  // Organizer
+  --theme-organizer-row-odd-bg: #2b5483;
+  --theme-organizer-row-even-bg: #2e3d69;
+
+  // Records
+  --theme-record-redeemed: #ee77ef;
+}

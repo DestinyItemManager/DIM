@@ -5,7 +5,6 @@ Here are some tips to make sure your Pull Request (PR) can be merged smoothly:
 1. If you want to add a feature or make some change to DIM, consider [filing an issue](https://github.com/DestinyItemManager/DIM/issues/new) describing your idea first. This will give the DIM community a chance to discuss the idea, offer suggestions and pointers, and make sure what you're thinking of fits with the style and direction of DIM. If you want a more free-form chat, [join our Discord](https://discordapp.com/invite/UK2GWC7).
 1. Resist the temptation to change more than one thing in your PR. Keeping PRs focused on a single change makes them much easier to review and accept. If you want to change multiple things, or clean up/refactor the code, make a new branch and submit those changes as a separate PR.
 1. All of our code is written in [TypeScript](https://typescriptlang.org) and uses React to build UI components.
-1. Take advantage of the [native JavaScript Array methods](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) and the [Lodash](https://lodash.com/) library to write compact, easy-to-understand code.
 1. Be sure to run `yarn fix` before submitting your PR - it'll catch most style problems and make things much easier to merge.
 1. Don't forget to add a description of your change to [docs/CHANGELOG.md](CHANGELOG.md) so it'll be included in the release notes!
 
@@ -19,26 +18,32 @@ Here are some tips to make sure your Pull Request (PR) can be merged smoothly:
 
 ### Pre-requisites
 
+**Note:** It's often easier to use a package manager like [Homebrew](https://brew.sh/) for Mac, or [Chocolatey](https://docs.chocolatey.org/en-us/choco/setup) for Windows, and install the prerequisites through them.
+
+* Homebrew: `brew install git nodejs yarn visual-studio-code`
+* Chocolatey: `choco install git nodejs-lts yarn vscode`
+
+#### Manual Install
+
 * Install [Git](https://git-scm.com/downloads)
 * Install [NodeJS](https://nodejs.org/)
 * Install [Yarn](https://yarnpkg.com/en/docs/install)
-  * Use Yarn 1.x as DIM is not guaranteed to be compatible with later versions of Yarn. If you're used to NPM, see "[Migrating from NPM](https://yarnpkg.com/lang/en/docs/migrating-from-npm/)".
-* Windows-based developers will need to install `windows-build-tools` (run `yarn global add windows-build-tools` in your terminal) globally prior to running `yarn install`. Refer to issue #1439 for [details](https://github.com/DestinyItemManager/DIM/issues/1439).
+  * Use Yarn 1.x as DIM is not compatible with later versions of Yarn. If you're used to NPM, see "[Migrating from NPM](https://yarnpkg.com/lang/en/docs/migrating-from-npm/)".
 * It is highly recommended to use [VSCode](https://code.visualstudio.com/) to work on DIM. When you open DIM in VSCode, accept the recommended plugins it suggests (find them manually by searching "@recommended" in the Extensions window).
-* Linux-based developers will need to install `build-essential` (`sudo apt-get install -y build-essential`) prior to running `yarn install`.
-
-**Docker Development**
-* As an alternative to installing the above, you can try a docker-based development environment, but be aware that none of the core developers use it so it may be broken. See: [Docker Development Guide](Docker.md)
+* On Windows, restart your system after installing everything.
 
 ### Clone the repo
 
 To locally **run a copy** of DIM, you can simply clone the code repository:
+
 ```sh
 git clone https://github.com/DestinyItemManager/DIM.git
 ```
 
 To **contribute changes to the project**, you'll want to:
 
+1. Make an account on GitHub
+1. [Create an SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) and [add it to your account](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
 1. Fork DIM to make your own copy of the repository
 1. Clone the forked repository to your local machine
 1. Edit the local files
@@ -52,6 +57,10 @@ More detailed information on these steps is [here](https://docs.github.com/en/ge
 Once you have cloned the repository or a fork of the repository to your local machine, in the root directory:
 
 * Run `yarn install`
+  * If `yarn` isn't installed, install it with `npm i -g yarn`.
+    * If you're using PowerShell on Windows, you may need to run `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted` to allow yarn to run.
+  * Windows-based developers will need to install `windows-build-tools` (run `yarn global add windows-build-tools` in your terminal) globally prior to running `yarn install`. Refer to issue #1439 for [details](https://github.com/DestinyItemManager/DIM/issues/1439).
+  * Linux-based developers will need to install `build-essential` (`sudo apt-get install -y build-essential`) prior to running `yarn install`.
 * Run `yarn start`
 
 On Windows machines, this will also install SnoreToast to provide notifications for parts of the development process, like when a build completes.

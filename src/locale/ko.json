@@ -344,6 +344,7 @@
     "AutoRefresh": "플레이하는 동안 DIM을 자동으로 새로고침합니다.",
     "BulkTag": "아이템 대량으로 태그하기",
     "BungieNetAlert": "Bungie 알림",
+    "Clarity": "Clarity 확장 프로그램은 개발자에 의해 더 이상 지원되지 않으며, DIM에서 시스템 과부하와 같은 문제를 일으킬 수 있습니다.",
     "Clear": "검색 필터 초기화",
     "CompareMatching": "아이템 비교",
     "DeleteSearch": "검색 삭제",
@@ -1214,6 +1215,7 @@
     "Button": "{{numSockets}}개의 소켓 해제",
     "Cancel": "취소",
     "Choose": "해제할 소켓 선택",
+    "DiscountedMods": "{{count}}x 할인된 개조 부품",
     "Done": "소켓 해제 완료",
     "NoSockets": "해제할 소켓 없음",
     "Ok": "확인",
@@ -1267,8 +1269,9 @@
   },
   "Vendors": {
     "Collections": "수집품",
-    "Engram": "보상 인그램",
+    "Engram": "등급",
     "FilterToUnacquired": "얻지 못한 아이템만 표시",
+    "HideSilverItems": "실버 아이템 숨기기",
     "NoItems": "이 상인은 현재 어떤 아이템도 판매하지 않습니다.",
     "RefreshTime": "소지품 새로고침:",
     "Vendors": "상인"

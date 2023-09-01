@@ -18,7 +18,7 @@ export default function StoreStats({
 }) {
   const isPhonePortrait = useIsPhonePortrait();
   return (
-    <div className={clsx({ ['store-cell']: Boolean(style), vault: store.isVault })} style={style}>
+    <div className={clsx({ ['store-cell']: Boolean(style) })} style={style}>
       {store.isVault ? (
         <div className={styles.vaultStats}>
           <AccountCurrencies />

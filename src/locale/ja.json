@@ -344,6 +344,7 @@
     "AutoRefresh": "プレイ中ならば DIM は自動的に再読み込みされます。",
     "BulkTag": "選択したアイテムにタグを付けています",
     "BungieNetAlert": "Bungie Alert",
+    "Clarity": "Clarity拡張機能は開発者によるサポートは終了しています。CPU使用率異常利用など、DIM使用時に障害を引き起こす可能性があります。アンインストールしてください。",
     "Clear": "フィルターをクリア",
     "CompareMatching": "アイテムを比較",
     "DeleteSearch": "検索の削除",
@@ -1214,6 +1215,7 @@
     "Button": "{{numSockets}} 個のアイテムを外す",
     "Cancel": "キャンセル",
     "Choose": "取り外すアイテムを選択してください",
+    "DiscountedMods": "{{count}}個のアイテムにコストが軽減されたModが適用されています",
     "Done": "ソケットから対象アイテムを外しました",
     "NoSockets": "外せるアイテムがありません",
     "Ok": "Ok",
@@ -1267,8 +1269,9 @@
   },
   "Vendors": {
     "Collections": "コレクション",
-    "Engram": "報酬エングラム",
+    "Engram": "ランク",
     "FilterToUnacquired": "未収集アイテムのみ表示",
+    "HideSilverItems": "シルバーでの販売アイテムを隠す",
     "NoItems": "このベンダーは現在、アイテムを提供していません。",
     "RefreshTime": "ベンダーアイテムがリセットされるまで残り:",
     "Vendors": "ベンダー"

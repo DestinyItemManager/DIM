@@ -1,55 +1,20 @@
+import { PressTip } from 'app/dim-ui/PressTip';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
+import FactionIcon from 'app/progress/FactionIcon';
+import { ReputationRank } from 'app/progress/ReputationRank';
 import { VENDORS } from 'app/search/d2-known-values';
-import { chainComparator, compareBy } from 'app/utils/comparators';
 import { uniqBy } from 'app/utils/util';
+import { DestinyVendorProgressionType } from 'bungie-api-ts/destiny2';
 import deprecatedMods from 'data/d2/deprecated-mods.json';
 import focusingItemOutputs from 'data/d2/focusing-item-outputs.json';
 import rahoolMats from 'data/d2/spider-mats.json';
 import _ from 'lodash';
 import BungieImage from '../dim-ui/BungieImage';
-import { PressTip } from '../dim-ui/PressTip';
-import FactionIcon from '../progress/FactionIcon';
 import VendorItemComponent from './VendorItemComponent';
 import styles from './VendorItems.m.scss';
 import { D2Vendor } from './d2-vendors';
-import { VendorItem } from './vendor-item';
-
-function vendorItemIndex(item: VendorItem) {
-  return item.key;
-}
-
-function itemSort(vendorHash: number, category: string) {
-  if (category === 'category.rank_rewards_seasonal') {
-    return chainComparator<VendorItem>(
-      compareBy((item) => item.item?.tier),
-      compareBy(vendorItemIndex)
-    );
-  } else if (category === 'category_bounties') {
-    if (vendorHash === VENDORS.ADA_TRANSMOG) {
-      return compareBy<VendorItem>((item) => item.item?.bungieIndex);
-    } else {
-      return chainComparator<VendorItem>(
-        compareBy((item) => item.item?.typeName),
-        compareBy(vendorItemIndex)
-      );
-    }
-  } else if (category === 'category_weapon') {
-    return chainComparator<VendorItem>(compareBy((item) => item.item?.itemCategoryHashes[0]));
-  } else if (category.startsWith('category_tier')) {
-    return undefined;
-  } else if (vendorHash === VENDORS.WAR_TABLE_UPGRADES_RISEN) {
-    // Purchasing an upgrade from the vendor swaps it out with a different item
-    // 10 positions later in the array.
-    return compareBy<VendorItem>((item) => item.key - (item.owned ? 10 : 0));
-  } else if (vendorHash === VENDORS.STAR_CHART_UPGRADES_PLUNDER) {
-    // Basically the same thing
-    return compareBy<VendorItem>((item) => item.key - (item.owned ? 21 : 0));
-  } else {
-    return chainComparator<VendorItem>(compareBy(vendorItemIndex));
-  }
-}
 
 // ignore what i think is the loot pool preview on some tower vendors?
 // ignore the "reset artifact" button on artifact "vendor"
@@ -62,7 +27,6 @@ export default function VendorItems({
   vendor,
   ownedItemHashes,
   currencyLookups,
-  filtering,
   characterId,
 }: {
   vendor: D2Vendor;
@@ -70,7 +34,6 @@ export default function VendorItems({
   currencyLookups?: {
     [itemHash: number]: number;
   };
-  filtering?: boolean;
   characterId: string;
 }) {
   const defs = useD2Definitions()!;
@@ -89,25 +52,9 @@ export default function VendorItems({
   const itemsByCategory = _.groupBy(vendor.items, (item) => item?.displayCategoryIndex);
 
   const faction = vendor.def.factionHash ? defs.Faction[vendor.def.factionHash] : undefined;
-  const rewardVendorHash = faction?.rewardVendorHash || undefined;
-  const rewardItem =
-    rewardVendorHash !== undefined ? defs.InventoryItem.get(faction!.rewardItemHash) : undefined;
   const factionProgress = vendor?.component?.progression;
 
   let currencies = vendor.currencies;
-
-  // add in faction tokens if this vendor has them
-  if (!filtering && faction?.tokenValues) {
-    currencies = uniqBy(
-      [
-        ...Object.keys(faction.tokenValues)
-          .map((h) => defs.InventoryItem.get(parseInt(h, 10)))
-          .filter(Boolean),
-        ...currencies,
-      ],
-      (i) => i.hash
-    );
-  }
 
   // add all traded planetmats if this vendor is the spider
   if (vendor?.component?.vendorHash === VENDORS.RAHOOL) {
@@ -135,24 +82,27 @@ export default function VendorItems({
         </div>
       )}
       <div className={styles.itemCategories}>
-        {((Boolean(rewardVendorHash) && rewardItem) || (factionProgress && faction)) && (
+        {faction && factionProgress && (
           <div className={styles.vendorRow}>
             <h3 className={styles.categoryTitle}>{t('Vendors.Engram')}</h3>
             <div className={styles.vendorItems}>
-              {factionProgress && faction && (
-                <PressTip
-                  minimal
-                  tooltip={`${factionProgress.progressToNextLevel}/${factionProgress.nextLevelAt}`}
-                >
-                  <div>
-                    <FactionIcon
-                      factionProgress={factionProgress}
-                      factionDef={faction}
-                      vendor={vendor.component}
-                    />
-                  </div>
-                </PressTip>
-              )}
+              {factionProgress &&
+                (vendor.def.vendorProgressionType !== DestinyVendorProgressionType.Default ? (
+                  <ReputationRank progress={factionProgress} />
+                ) : (
+                  <PressTip
+                    minimal
+                    tooltip={`${factionProgress.progressToNextLevel}/${factionProgress.nextLevelAt}`}
+                  >
+                    <div>
+                      <FactionIcon
+                        factionProgress={factionProgress}
+                        factionDef={faction}
+                        vendor={vendor.component}
+                      />
+                    </div>
+                  </PressTip>
+                ))}
             </div>
           </div>
         )}
@@ -172,29 +122,22 @@ export default function VendorItems({
                   />
                 </h3>
                 <div className={styles.vendorItems}>
-                  {items
-                    .sort(
-                      itemSort(
-                        vendor.def.hash,
-                        vendor.def.displayCategories[categoryIndex]?.identifier
+                  {items.map(
+                    (vendorItem) =>
+                      vendorItem.item && (
+                        <VendorItemComponent
+                          key={vendorItem.vendorItemIndex}
+                          item={vendorItem}
+                          owned={Boolean(
+                            ownedItemHashes?.has(vendorItem.item.hash) ||
+                              vendorItem.owned ||
+                              (vendorItem.item.hash in focusingItemOutputs &&
+                                ownedItemHashes?.has(focusingItemOutputs[vendorItem.item.hash]!))
+                          )}
+                          characterId={characterId}
+                        />
                       )
-                    )
-                    .map(
-                      (vendorItem) =>
-                        vendorItem.item && (
-                          <VendorItemComponent
-                            key={vendorItem.key}
-                            item={vendorItem}
-                            owned={Boolean(
-                              ownedItemHashes?.has(vendorItem.item.hash) ||
-                                vendorItem.owned ||
-                                (vendorItem.item.hash in focusingItemOutputs &&
-                                  ownedItemHashes?.has(focusingItemOutputs[vendorItem.item.hash]!))
-                            )}
-                            characterId={characterId}
-                          />
-                        )
-                    )}
+                  )}
                 </div>
               </div>
             )

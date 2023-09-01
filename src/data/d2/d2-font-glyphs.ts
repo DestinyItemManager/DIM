@@ -428,5 +428,6 @@ export const enum FontGlyphs {
   strand_hunter_clone = 61229,
   strand_titan_slide_melee = 61230,
   region_chest = 61231,
+  strand_hunter_buzzsaw = 61232,
   UniFFFD = 65533,
 }

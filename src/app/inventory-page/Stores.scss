@@ -64,23 +64,11 @@
   padding: 0 var(--inventory-column-padding);
   box-sizing: border-box;
 
-  &.vault {
-    min-width: calc(var(--character-column-width) + var(--inventory-column-padding));
-
-    @include phone-portrait {
-      min-width: auto;
-    }
-  }
-
   &.account-wide {
     grid-column: 1 / span var(--num-characters);
     .singleCharacter & {
       grid-column: auto;
     }
-  }
-
-  > div {
-    white-space: normal;
   }
 
   // Postmaster - items above, collect button below
@@ -191,8 +179,5 @@
   .phone-portrait & {
     padding-left: 0;
     overflow: hidden;
-    .character {
-      margin: 0 5px;
-    }
   }
 }

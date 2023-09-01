@@ -11,9 +11,9 @@ import LoadoutDrawerFooter from 'app/loadout-drawer/LoadoutDrawerFooter';
 import { deleteLoadout, updateLoadout } from 'app/loadout-drawer/actions';
 import {
   addItem,
-  equipItem,
   removeItem,
   setNotes,
+  toggleEquipped,
 } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { addItem$ } from 'app/loadout-drawer/loadout-events';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
@@ -178,7 +178,8 @@ function LoadoutDrawerBody({
     setLoadout(removeItem(defs, resolvedItem));
   };
 
-  const onEquipItem = (item: ResolvedLoadoutItem) => setLoadout(equipItem(defs, item));
+  const handleToggleEquipped = (item: ResolvedLoadoutItem) =>
+    setLoadout(toggleEquipped(defs, item));
 
   /** Prompt the user to select a replacement for a missing item. */
   const fixWarnItem = async (li: ResolvedLoadoutItem) => {
@@ -224,7 +225,7 @@ function LoadoutDrawerBody({
               storeId={storeId}
               loadout={loadout}
               items={items}
-              equip={onEquipItem}
+              equip={handleToggleEquipped}
               remove={onRemoveItem}
               add={onAddItem}
               setLoadout={setLoadout}

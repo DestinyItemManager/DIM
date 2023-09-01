@@ -1,8 +1,30 @@
 ## Next
 
+* The order of vendor items should now much more accurately match the in-game order.
+* Filters and toggles on the Vendors page now consider focusing/decoding subvendors. E.g. the "Only show uncollected items" toggle will now show focusing subvendors if they allow focusing items you don't have collected.
+
+## 7.83.1 <span class="changelog-date">(2023-08-29)</span>
+
+* Fixed another case where you might not get bounced to the login page when you need to re-login.
+* Fixed the search autocomplete menu showing behind search results on mobile.
+* Unsightly long text in the mod picker now wraps instead of escaping its box.
+* Fixed a few minor visual issues in sheets.
+
+## 7.83.0 <span class="changelog-date">(2023-08-27)</span>
+
 * You can choose between a number of different themes for DIM's interface in settings.
 * The Vendors page now has a toggle to hide all items sold for Silver.
+* Clicking on sub-vendors on the vendors page now opens them in a sheet, instead of taking you to a new page.
+* Vendor reputation is now displayed with all the same info as the ranks on the Progress page.
+* The "strip sockets" tool now has an option to remove only discounted-cost mods.
 * Fixed a bug where Loadout Optimizer would sometimes interpret a search query too literally and require that all items match it, even if a slot doesn't have any items that match the query.
+* Removed the ability to favorite finishers - this functionality has been removed from the game.
+* Fixed the color of search bars in sheets.
+* Fixed the ordering of popups, sheets, and tooltips so they won't display behind things anymore.
+* Fixed loadouts including last season's artifact unlocks.
+* Remove transmat effects from Rahool's currencies list.
+* Fixed display of character headers on mobile.
+* While In-Game Loadouts are disabled, their section of the Loadouts page will not appear.
 
 ## 7.82.1 <span class="changelog-date">(2023-08-22)</span>
 

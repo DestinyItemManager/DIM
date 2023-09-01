@@ -40,7 +40,6 @@ import { deleteLoadout, updateLoadout } from './actions';
 import {
   LoadoutUpdateFunction,
   addItem,
-  dropItem,
   fillLoadoutFromEquipped,
   fillLoadoutFromUnequipped,
   randomizeFullLoadout,
@@ -98,11 +97,6 @@ export default function LoadoutDrawer({
 
   const onAddItem = useCallback(
     (item: DimItem, equip?: boolean) => setLoadout(addItem(defs, item, equip)),
-    [defs, setLoadout]
-  );
-
-  const onDropItem = useCallback(
-    (item: DimItem, equip?: boolean) => setLoadout(dropItem(defs, item, equip)),
     [defs, setLoadout]
   );
 
@@ -222,7 +216,7 @@ export default function LoadoutDrawer({
   return (
     <Sheet onClose={onClose} header={header} footer={footer} allowClickThrough>
       <LoadoutDrawerDropTarget
-        onDroppedItem={onDropItem}
+        onDroppedItem={onAddItem}
         classType={loadout.classType}
         className={styles.body}
       >

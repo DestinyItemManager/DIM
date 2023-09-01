@@ -344,6 +344,7 @@
     "AutoRefresh": "DIM se recargará automáticamente todo el tiempo que estés jugando.",
     "BulkTag": "Etiquetar los objetos en general",
     "BungieNetAlert": "Alerta de Bungie",
+    "Clarity": "La extensión Clarity ya no está soportada por sus desarrolladores y puede causar problemas con DIM, tales como un uso excesivo del sistema. Por favor, desinstálala.",
     "Clear": "Limpiar filtro de búsqueda",
     "CompareMatching": "Comparar Objetos",
     "DeleteSearch": "Borrar Búsqueda",
@@ -1214,6 +1215,7 @@
     "Button": "Desocupar {{numSockets}} Ranuras",
     "Cancel": "Cancelar",
     "Choose": "Elige Ranuras a desocupar",
+    "DiscountedMods": "{{count}}x Mods con descuento",
     "Done": "Ranuras Desocupadas",
     "NoSockets": "No hay Espacios para limpiar",
     "Ok": "Ok",
@@ -1267,8 +1269,9 @@
   },
   "Vendors": {
     "Collections": "Colecciones",
-    "Engram": "Engrama de Recompensa",
+    "Engram": "Rango",
     "FilterToUnacquired": "Mostrar sólo objetos no coleccionados",
+    "HideSilverItems": "Ocultar objetos de Compra con Plata",
     "NoItems": "Este Vendedor no está ofreciendo ningún artículo en este momento.",
     "RefreshTime": "El inventario se actualiza en:",
     "Vendors": "Vendedores"

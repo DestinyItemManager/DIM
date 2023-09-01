@@ -116,7 +116,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
   const dispatch = useThunkDispatch();
   const storesLoaded = useLoadStores(account);
 
-  const selectedCharacter = state.selectedCharacter || getCurrentStore(stores)!;
+  const selectedCharacter = state.selectedCharacter || getCurrentStore(stores);
 
   // TODO: felwinters selectors??
   useEffect(() => {
@@ -137,30 +137,26 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
   }, [storesLoaded]);
 
   useEffect(() => {
-    const calculateSets = () => {
-      cancelToken.current.cancelled = true;
-      cancelToken.current = {
-        cancelled: false,
-      };
-      getSetBucketsStep(
-        selectedCharacter,
-        loadBucket(selectedCharacter, stores),
-        loadVendorsBucket(selectedCharacter, state.vendors),
-        state.lockeditems,
-        state.lockedperks,
-        state.excludeditems,
-        state.scaleType,
-        state.includeVendors,
-        state.fullMode,
-        cancelToken.current
-      ).then((result) => {
-        setState({ ...result, progress: 1 });
-      });
-    };
-
     // TODO: replace progress with state field (calculating/done)
-    if (defs && stores.length && !state.progress) {
-      calculateSets();
+    if (defs && selectedCharacter && stores.length && !state.progress) {
+      (async () => {
+        cancelToken.current.cancelled = true;
+        cancelToken.current = {
+          cancelled: false,
+        };
+        const result = await getSetBucketsStep(
+          loadBucket(selectedCharacter, stores),
+          loadVendorsBucket(selectedCharacter, state.vendors),
+          state.lockeditems,
+          state.lockedperks,
+          state.excludeditems,
+          state.scaleType,
+          state.includeVendors,
+          state.fullMode,
+          cancelToken.current
+        );
+        setState({ ...result, progress: 1 });
+      })();
     }
   }, [
     defs,
@@ -206,6 +202,9 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
   }, [vendorsLoaded]);
 
   const activePerks = useMemo(() => {
+    if (selectedCharacter?.classType === undefined) {
+      return undefined;
+    }
     const vendors = state.vendors;
     const includeVendors = state.includeVendors;
 
@@ -351,7 +350,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
       vendorPerks[selectedCharacter.classType as ClassTypes],
       includeVendors
     );
-  }, [selectedCharacter.classType, state.vendors, state.includeVendors, stores]);
+  }, [selectedCharacter?.classType, state.vendors, state.includeVendors, stores]);
 
   const toggleShowHelp = () => setStateFull((state) => ({ ...state, showHelp: !state.showHelp }));
   const toggleShowAdvanced = () =>
@@ -465,7 +464,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
       'ghost',
     ];
     const items = _.groupBy(
-      selectedCharacter.items.filter(
+      selectedCharacter!.items.filter(
         (item) =>
           itemCanBeInLoadout(item) &&
           item.equipped &&
@@ -527,7 +526,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
     vendors,
   } = state;
 
-  if (!stores.length || !buckets || !defs) {
+  if (!selectedCharacter || !stores.length || !buckets || !defs || !activePerks) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
@@ -794,14 +793,15 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
 }
 
 const unwantedPerkHashes = [
-  1270552711, 217480046, 191086989, 913963685, 1034209669, 1263323987, 193091484, 2133116599,
+  // ['Infuse', 'Twist Fate', 'Reforge Artifact', 'Reforge Shell', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma']
+  1270552711,
+  217480046, 191086989, 913963685, 1034209669, 1263323987, 193091484, 2133116599,
 ];
 
 function filterPerks(perks: D1GridNode[], item: D1Item) {
   if (!item.talentGrid) {
     return [];
   }
-  // ['Infuse', 'Twist Fate', 'Reforge Artifact', 'Reforge Shell', 'Increase Intellect', 'Increase Discipline', 'Increase Strength', 'Deactivate Chroma']
   return uniqBy(perks.concat(item.talentGrid.nodes), (node) => node.hash).filter(
     (node) => !unwantedPerkHashes.includes(node.hash)
   );

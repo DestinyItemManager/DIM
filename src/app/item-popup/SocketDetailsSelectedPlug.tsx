@@ -1,6 +1,7 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
+import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
 import {
@@ -212,6 +213,7 @@ export default function SocketDetailsSelectedPlug({
         <div className={styles.material} key={material.itemHash}>
           {material.count.toLocaleString()}
           <BungieImage
+            className="dontInvert"
             src={materialDef.displayProperties.icon}
             title={materialDef.displayProperties.name}
           />
@@ -241,9 +243,15 @@ export default function SocketDetailsSelectedPlug({
         </h3>
         {plugDescriptions.perks.map((perkDesc) => (
           <React.Fragment key={perkDesc.perkHash}>
-            {perkDesc.description && <div>{perkDesc.description}</div>}
+            {perkDesc.description && (
+              <div>
+                <RichDestinyText text={perkDesc.description} />
+              </div>
+            )}
             {!hideRequirements && perkDesc.requirement && (
-              <div className={styles.modRequirement}>{perkDesc.requirement}</div>
+              <div className={styles.modRequirement}>
+                <RichDestinyText text={perkDesc.requirement} />
+              </div>
             )}
           </React.Fragment>
         ))}

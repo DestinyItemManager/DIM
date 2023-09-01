@@ -9,6 +9,7 @@ interface CssExports {
   'factionInfo': string;
   'factionLevel': string;
   'factionName': string;
+  'gridLayout': string;
   'rankIcon': string;
   'winStreak': string;
 }

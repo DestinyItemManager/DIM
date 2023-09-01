@@ -76,7 +76,7 @@ function createSymbolsAutocompleter(symbols: SymbolsMap): StrategyProps {
 export function useAutocomplete(
   textArea: React.RefObject<HTMLTextAreaElement | HTMLInputElement>,
   tags: string[],
-  parent?: HTMLElement
+  parent?: React.RefObject<HTMLElement>
 ) {
   const symbols = useSelector(symbolsSelector);
   useEffect(() => {
@@ -91,7 +91,7 @@ export function useAutocomplete(
         {
           dropdown: {
             className: clsx(styles.dropdownMenu, 'textcomplete-dropdown'),
-            parent: parent ?? tempContainer,
+            parent: parent?.current ?? tempContainer,
           },
         }
       );

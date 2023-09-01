@@ -6,10 +6,13 @@
 }
 
 .tile {
-  height: 48px;
+  height: $emblem-height;
+  > * {
+    max-width: Min(var(--page-with-menu-menu-width), $emblem-width);
+  }
 
   @include phone-portrait {
-    min-width: 260px;
+    min-width: $emblem-width;
 
     > div {
       margin: 0 5px;

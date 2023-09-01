@@ -86,9 +86,6 @@ module.exports = {
       }
     };
 
-    if (isTs) {
-      parser.parseTransFromString(content, { list: ['t', 'tl', 'DimError'] }, dimTransformer);
-    }
     parser.parseFuncFromString(content, { list: ['t', 'tl', 'DimError'] }, dimTransformer);
 
     done();

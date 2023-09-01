@@ -43,6 +43,19 @@
       filter: invert(1) drop-shadow(0 0 1px black);
     }
   }
+
+  // Don't invert images/icons on buttons when they're not monochrome
+  // e.g. kinetic slot filters in compare/organizer, or material cost for mod preview
+  .dontInvert {
+    filter: invert(0) !important;
+
+    :hover &,
+    :active &,
+    .selected & {
+      filter: invert(0) !important;
+    }
+  }
+
   input {
     display: none;
   }

@@ -528,7 +528,6 @@ export function makeItem(
     masterworkInfo: null,
     infusionQuality: null,
     tooltipNotifications,
-    bungieIndex: itemDef.index,
   };
 
   // *able

@@ -20,7 +20,7 @@ import ja from 'locale/ja.json';
 import _ from 'lodash';
 import path from 'path';
 import { getManifest as d2GetManifest } from '../app/bungie-api/destiny2-api';
-import profile from './data/profile-2023-02-28.json';
+import profile from './data/profile-2023-08-31.json';
 import vendors from './data/vendors-2023-05-24.json';
 
 /**

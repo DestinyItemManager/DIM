@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React, { useMemo } from 'react';
 import BungieImage from '../dim-ui/BungieImage';
-import { AppIcon, lockIcon, starIcon, stickyNoteIcon } from '../shell/icons';
+import { AppIcon, lockIcon, stickyNoteIcon } from '../shell/icons';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import BadgeInfo, { shouldShowBadge } from './BadgeInfo';
 import styles from './InventoryItem.m.scss';
@@ -106,10 +106,7 @@ export default function InventoryItem({
         {(tag || item.locked || hasNotes) && (
           <div className={styles.icons}>
             {item.locked && (!autoLockTagged || !tag || !canSyncLockState(item)) && (
-              <AppIcon
-                className={styles.icon}
-                icon={item.bucket.hash !== BucketHashes.Finishers ? lockIcon : starIcon}
-              />
+              <AppIcon className={styles.icon} icon={lockIcon} />
             )}
             {tag && <TagIcon className={styles.icon} tag={tag} />}
             {hasNotes && <AppIcon className={styles.icon} icon={stickyNoteIcon} />}

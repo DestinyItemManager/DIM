@@ -50,7 +50,7 @@ export function StoreBuckets({
           </div>
         )}
         {(allStoresView || stores[0] === vault) && (
-          <div className="store-cell vault">
+          <div className="store-cell">
             <StoreBucket bucket={bucket} store={vault} singleCharacter={false} />
           </div>
         )}
@@ -61,8 +61,7 @@ export function StoreBuckets({
       <div
         key={store.id}
         className={clsx('store-cell', {
-          vault: store.isVault,
-          postmasterFull:
+          [styles.postmasterFull]:
             bucket.sort === 'Postmaster' &&
             store.destinyVersion === 2 &&
             postmasterAlmostFull(store),

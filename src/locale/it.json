@@ -344,6 +344,7 @@
     "AutoRefresh": "DIM si ricaricherà automaticamente finché stai ancora giocando.",
     "BulkTag": "Etichetta oggetti in massa",
     "BungieNetAlert": "Avviso da Bungie",
+    "Clarity": "L'estensione di Clarity non è più supportata dai suoi sviluppatori e può causare problemi con DIM, come un utilizzo eccessivo del sistema. Si prega di disinstallarla.",
     "Clear": "Cancella filtro di ricerca",
     "CompareMatching": "Confronta Oggetti",
     "DeleteSearch": "Elimina Ricerca",
@@ -1214,6 +1215,7 @@
     "Button": "Svuotamento {{numSockets}} alloggiamenti",
     "Cancel": "Annulla",
     "Choose": "Scegli gli alloggiamenti da svuotare",
+    "DiscountedMods": "{{count}}x Modifiche sconto",
     "Done": "Alloggiamenti svuotati",
     "NoSockets": "Nessun alloggiamento da svuotare",
     "Ok": "Ok",
@@ -1267,8 +1269,9 @@
   },
   "Vendors": {
     "Collections": "Collezioni",
-    "Engram": "Engramma Ricompensa",
+    "Engram": "Grado",
     "FilterToUnacquired": "Mostra solo oggetti non acquisiti",
+    "HideSilverItems": "Nascondi oggetti acquistabili con Argento",
     "NoItems": "Questo mercante al momento non offre alcun oggetto.",
     "RefreshTime": "L'inventario si aggiorna tra:",
     "Vendors": "Mercanti"

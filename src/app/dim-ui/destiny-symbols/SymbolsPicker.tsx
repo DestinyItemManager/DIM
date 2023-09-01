@@ -163,12 +163,12 @@ function SymbolsPickerButton<T extends HTMLTextAreaElement | HTMLInputElement>({
       </button>
       {open &&
         createPortal(
-          <div ref={tooltipContents} style={{ zIndex: 20 }}>
+          <div ref={tooltipContents}>
             <ClickOutside onClickOutside={() => setOpen(false)}>
               <SymbolsWindow onChooseGlyph={onChooseGlyph} />
             </ClickOutside>
           </div>,
-          pressTipRoot.current || tempContainer
+          pressTipRoot.current ?? tempContainer
         )}
     </>
   );

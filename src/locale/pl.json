@@ -344,6 +344,7 @@
     "AutoRefresh": "DIM automatycznie przeładuje się, dopóki nadal grasz.",
     "BulkTag": "Masowo otaguj przedmioty",
     "BungieNetAlert": "Alarm od Bungie",
+    "Clarity": "The Clarity extension is no longer supported by its developers and can cause problems with DIM, such as excessive system utilization. Please uninstall it.",
     "Clear": "Wyczyść filtry szukania",
     "CompareMatching": "Porównaj Przedmioty",
     "DeleteSearch": "Usuń Wyszukiwanie",
@@ -1214,6 +1215,7 @@
     "Button": "Opróżnij {{numSockets}} Gniazd(a)",
     "Cancel": "Anuluj",
     "Choose": "Wybierz Gniazda do opróżnienia",
+    "DiscountedMods": "{{count}}x Discounted Mod",
     "Done": "Opróżnione Gniazda",
     "NoSockets": "Brak Gniazd do wyczyszczenia",
     "Ok": "Ok",
@@ -1267,8 +1269,9 @@
   },
   "Vendors": {
     "Collections": "Kolekcja",
-    "Engram": "Nagroda - Engram",
+    "Engram": "Rank",
     "FilterToUnacquired": "Pokazuje tylko niezdobyte przedmioty",
+    "HideSilverItems": "Hide Silver items",
     "NoItems": "Ten sprzedawca nie oferuje obecnie żadnych przedmiotów.",
     "RefreshTime": "Ekwipunek odświeży się za:",
     "Vendors": "Sprzedawcy"

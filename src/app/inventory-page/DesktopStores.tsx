@@ -71,7 +71,7 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
       >
         <HeaderShadowDiv className={clsx('store-row', 'store-header')}>
           {headerStores.map((store) => (
-            <div className={clsx('store-cell', { vault: store.isVault })} key={store.id}>
+            <div className="store-cell" key={store.id}>
               <StoreHeading store={store} />
               <StoreStats store={store} />
             </div>

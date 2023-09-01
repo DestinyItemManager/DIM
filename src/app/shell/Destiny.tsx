@@ -24,6 +24,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
 import StripSockets from 'app/strip-sockets/StripSockets';
 import { setAppBadge } from 'app/utils/app-badge';
+import SingleVendorSheetContainer from 'app/vendors/single-vendor/SingleVendorSheetContainer';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 import { noop } from 'lodash';
 import { lazy, useEffect, useMemo } from 'react';
@@ -54,8 +55,9 @@ const D1LoadoutBuilder = lazy(
 const Vendors = lazy(async () => ({
   default: (await import(/* webpackChunkName: "vendors" */ 'app/vendors/components')).Vendors,
 }));
-const SingleVendor = lazy(async () => ({
-  default: (await import(/* webpackChunkName: "vendors" */ 'app/vendors/components')).SingleVendor,
+const SingleVendorPage = lazy(async () => ({
+  default: (await import(/* webpackChunkName: "vendors" */ 'app/vendors/components'))
+    .SingleVendorPage,
 }));
 const D1Vendors = lazy(
   () => import(/* webpackChunkName: "d1vendors" */ 'app/destiny1/vendors/D1Vendors')
@@ -184,66 +186,68 @@ export default function Destiny() {
 
   return (
     <ItemPickerContainer>
-      <div className={styles.content}>
-        <Routes>
-          <Route path="inventory" element={<Inventory account={account} />} />
-          {account.destinyVersion === 2 && (
-            <Route path="progress" element={<Progress account={account} />} />
-          )}
-          {account.destinyVersion === 2 && (
-            <Route path="records" element={<Records account={account} />} />
-          )}
-          <Route
-            path="optimizer"
-            element={
-              account.destinyVersion === 2 ? (
-                <LoadoutBuilderContainer account={account} />
-              ) : (
-                <D1LoadoutBuilder account={account} />
-              )
-            }
-          />
-          {account.destinyVersion === 2 && (
-            <Route path="loadouts" element={<Loadouts account={account} />} />
-          )}
-          <Route path="organizer" element={<Organizer account={account} />} />
-          {account.destinyVersion === 2 && (
-            <Route path="vendors/:vendorHash" element={<SingleVendor account={account} />} />
-          )}
-          <Route
-            path="vendors"
-            element={
-              account.destinyVersion === 2 ? (
-                <Vendors account={account} />
-              ) : (
-                <D1Vendors account={account} />
-              )
-            }
-          />
-          {account.destinyVersion === 2 && (
-            <Route path="armory/:itemHash" element={<ArmoryPage account={account} />} />
-          )}
-          {account.destinyVersion === 2 && (
-            <Route path="item-feed" element={<ItemFeedPage account={account} />} />
-          )}
-          {account.destinyVersion === 1 && (
-            <Route path="record-books" element={<RecordBooks account={account} />} />
-          )}
-          {account.destinyVersion === 1 && (
-            <Route path="activities" element={<Activities account={account} />} />
-          )}
-          <Route path="*" element={<Navigate to="inventory" />} />
-        </Routes>
-      </div>
-      <LoadoutDrawerContainer account={account} />
-      <CompareContainer destinyVersion={account.destinyVersion} />
-      {account.destinyVersion === 2 && <StripSockets />}
-      <Farming />
-      <InfusionFinder />
-      <ItemPopupContainer boundarySelector=".store-header" />
-      <GlobalEffects />
-      {Boolean(autoLockTagged) && <SyncTagLock />}
-      <ItemDragPreview />
+      <SingleVendorSheetContainer>
+        <div className={styles.content}>
+          <Routes>
+            <Route path="inventory" element={<Inventory account={account} />} />
+            {account.destinyVersion === 2 && (
+              <Route path="progress" element={<Progress account={account} />} />
+            )}
+            {account.destinyVersion === 2 && (
+              <Route path="records" element={<Records account={account} />} />
+            )}
+            <Route
+              path="optimizer"
+              element={
+                account.destinyVersion === 2 ? (
+                  <LoadoutBuilderContainer account={account} />
+                ) : (
+                  <D1LoadoutBuilder account={account} />
+                )
+              }
+            />
+            {account.destinyVersion === 2 && (
+              <Route path="loadouts" element={<Loadouts account={account} />} />
+            )}
+            <Route path="organizer" element={<Organizer account={account} />} />
+            {account.destinyVersion === 2 && (
+              <Route path="vendors/:vendorHash" element={<SingleVendorPage account={account} />} />
+            )}
+            <Route
+              path="vendors"
+              element={
+                account.destinyVersion === 2 ? (
+                  <Vendors account={account} />
+                ) : (
+                  <D1Vendors account={account} />
+                )
+              }
+            />
+            {account.destinyVersion === 2 && (
+              <Route path="armory/:itemHash" element={<ArmoryPage account={account} />} />
+            )}
+            {account.destinyVersion === 2 && (
+              <Route path="item-feed" element={<ItemFeedPage account={account} />} />
+            )}
+            {account.destinyVersion === 1 && (
+              <Route path="record-books" element={<RecordBooks account={account} />} />
+            )}
+            {account.destinyVersion === 1 && (
+              <Route path="activities" element={<Activities account={account} />} />
+            )}
+            <Route path="*" element={<Navigate to="inventory" />} />
+          </Routes>
+        </div>
+        <LoadoutDrawerContainer account={account} />
+        <CompareContainer destinyVersion={account.destinyVersion} />
+        {account.destinyVersion === 2 && <StripSockets />}
+        <Farming />
+        <InfusionFinder />
+        <ItemPopupContainer boundarySelector=".store-header" />
+        <GlobalEffects />
+        {Boolean(autoLockTagged) && <SyncTagLock />}
+        <ItemDragPreview />
+      </SingleVendorSheetContainer>
     </ItemPickerContainer>
   );
 }

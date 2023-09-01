@@ -294,7 +294,6 @@
     "RequiredLevel": "Shows items based on their required level.",
     "SearchPrompt": "Search available filter commands",
     "Season": "Shows items from which season of Destiny 2 they appeared in.",
-    "SeasonalDupe": "Shows duplicate items, not counting reissues from a different season as the same item.",
     "StackLevel": "Shows items based on the quantity of items in its stack.",
     "Stackable": "Shows items that can stack (ammo synths, strange coin, etc)",
     "StackFull": "Show items which are at-capacity for their stack (Enhancement Cores, Strange Coins, Gunsmith Materials etc)",

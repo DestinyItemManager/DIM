@@ -218,7 +218,7 @@
     "CurrentClass": "Zeigt Gegenstände an, die auf dem derzeit eingeloggten Hüter ausrüstbar sind.",
     "CustomStatLower": "Zeigt Rüstungen an, deren Werte strikt niedriger sind als die anderer Rüstungen desselben Typs, wobei nur die Werte in der benutzerdefinierten Statistik-Gesamtliste dieser Klasse berücksichtigt werden.",
     "DamageType": "Zeigt Gegenstände basierend auf deren Schadenstyp.",
-    "Deepsight": "Zeigt Waffen mit Tiefenblick-Resonanz, deren Bauplan extrahiert oder die Tiefenblick-Resonanz mit einem Tiefenblick-Harmonizer aktiviert werden kann.",
+    "Deepsight": "Zeigt Waffen mit Tiefenblick-Aktivierung, deren Bauplan extrahiert oder die Tiefenblick-Aktivierung mit einem Tiefenblick-Harmonisierer verliehen werden kann.",
     "Description": "Beschreibung",
     "Dupe": "Zeigt doppelte Gegenstände, einschließlich Neuveröffentlichungen",
     "DupeCount": "Gegenstände, die die angegebene Anzahl an Duplikaten haben.",
@@ -344,6 +344,7 @@
     "AutoRefresh": "DIM wird automatisch aktualisieren, solange du noch spielst.",
     "BulkTag": "Massenbeschriftung Gegenstände",
     "BungieNetAlert": "Bungie-Warnung",
+    "Clarity": "Die Clarity-Erweiterung wird nicht mehr von den Entwicklern unterstützt und kann Probleme mit DIM verursachen, wie zum Beispiel eine übermäßige Nutzung des Systems. Bitte deinstalliere sie.",
     "Clear": "Suchfilter löschen",
     "CompareMatching": "Vergleiche Gegenstände",
     "DeleteSearch": "Suche löschen",
@@ -818,7 +819,7 @@
     "Weekly": "Wöchentliche Herausforderung"
   },
   "Mods": {
-    "HarmonicModDescription": "Der Effekt dieses Mods hat reduzierte Kosten und ändert sein Element je nach dem ausgerüsteten Fokus."
+    "HarmonicModDescription": "Der Effekt dieses Mods hat einen reduzierten Preis und ändert sein Element abhängig von der ausgerüsteten Subklasse."
   },
   "MoveAmount": {
     "Amount": "Menge:"
@@ -1214,6 +1215,7 @@
     "Button": "{{numSockets}} Fassungen leeren",
     "Cancel": "Abbrechen",
     "Choose": "Fassungen zum Leeren auswählen",
+    "DiscountedMods": "{{count}}x Rabatt-Mod",
     "Done": "Fassungen geleert",
     "NoSockets": "Keine Fassungen zu leeren",
     "Ok": "OK",
@@ -1267,8 +1269,9 @@
   },
   "Vendors": {
     "Collections": "Sammlungen",
-    "Engram": "Belohnungs-Engramm",
+    "Engram": "Rang",
     "FilterToUnacquired": "Nur nicht erworbene Gegenstände anzeigen",
+    "HideSilverItems": "Silber-Gegenstände ausblenden",
     "NoItems": "Dieser Händler bietet zurzeit keine Gegenstände an.",
     "RefreshTime": "Inventar wird aktualisiert in:",
     "Vendors": "Händler"
