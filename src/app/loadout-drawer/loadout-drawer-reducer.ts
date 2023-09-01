@@ -453,10 +453,13 @@ export function fillLoadoutFromUnequipped(
 ): LoadoutUpdateFunction {
   return (loadout) => {
     const items = getUnequippedItemsForLoadout(store, category);
-    // TODO: batch addItems
     for (const item of items) {
-      // Add as an unequipped item
-      loadout = addItem(defs, item, false)(loadout);
+      // Don't mess with something that's already there
+      const dupeIndex = findSameLoadoutItemIndex(defs, loadout.items, item);
+      if (dupeIndex === -1) {
+        // Add as an unequipped item
+        loadout = addItem(defs, item, false)(loadout);
+      }
     }
     return loadout;
   };

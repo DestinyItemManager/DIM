@@ -4,12 +4,14 @@ import { DimStore } from 'app/inventory/store-types';
 import { isClassCompatible, itemCanBeEquippedBy, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
 import { getTestDefinitions, getTestStores } from 'testing/test-utils';
 import {
   addItem,
   applySocketOverrides,
   clearSubclass,
   fillLoadoutFromEquipped,
+  fillLoadoutFromUnequipped,
   removeItem,
   removeMod,
   setLoadoutParameters,
@@ -459,5 +461,73 @@ describe('fillLoadoutFromEquipped', () => {
       unlockedItemHashes: [1],
       seasonNumber: 1,
     });
+  });
+});
+
+describe('fillLoadoutFromUnequipped', () => {
+  it('fills in unequipped items but does not change an existing item', () => {
+    // Add a single item that's not equipped to the loadout
+    const item = items.find(
+      (i) => i.bucket.hash === BucketHashes.ClassArmor && !i.equipped && i.owner === store.id
+    )!;
+    let loadout = addItem(defs, item)(emptyLoadout);
+
+    loadout = fillLoadoutFromUnequipped(defs, store)(loadout);
+
+    const classArmorInLoadout = loadout.items.filter(
+      (i) => defs.InventoryItem.get(i.hash).inventory?.bucketTypeHash === BucketHashes.ClassArmor
+    );
+
+    // Make sure that previously equipped item is still equipped
+    expect(classArmorInLoadout[0]).toMatchObject({
+      equip: true,
+      id: item.id,
+    });
+    // Only 9 items because one of them was already in the loadout
+    expect(classArmorInLoadout.length).toBe(9);
+  });
+
+  it('fills in unequipped items for a single category', () => {
+    // Add a single item that's not equipped to the loadout
+    const item = items.find((i) => i.bucket.hash === BucketHashes.ClassArmor && !i.equipped)!;
+    let loadout = addItem(defs, item)(emptyLoadout);
+
+    loadout = fillLoadoutFromUnequipped(defs, store, 'Armor')(loadout);
+
+    const classArmorInLoadout = loadout.items.filter(
+      (i) => defs.InventoryItem.get(i.hash).inventory?.bucketTypeHash === BucketHashes.ClassArmor
+    );
+
+    // Make sure that previously equipped item is still equipped
+    expect(classArmorInLoadout[0]).toMatchObject({
+      equip: true,
+      id: item.id,
+    });
+    expect(classArmorInLoadout.length).toBe(9);
+  });
+
+  it('fills in unequipped items for a single category without overflow', () => {
+    // Add some items from the vault
+    const vaultedItems = _.take(
+      items.filter((i) => i.bucket.hash === BucketHashes.EnergyWeapons && i.owner === 'vault'),
+      5
+    );
+    let loadout = emptyLoadout;
+    for (const item of vaultedItems) {
+      loadout = addItem(defs, item)(loadout);
+    }
+
+    loadout = fillLoadoutFromUnequipped(defs, store, 'Weapons')(loadout);
+
+    for (const item of vaultedItems) {
+      // Each of the items we added is still there
+      expect(loadout.items.some((i) => i.id === item.id)).toBe(true);
+    }
+
+    const energyWeaponsInLoadout = loadout.items.filter(
+      (i) => defs.InventoryItem.get(i.hash).inventory?.bucketTypeHash === BucketHashes.EnergyWeapons
+    );
+    expect(energyWeaponsInLoadout.length).toBe(10);
+    expect(energyWeaponsInLoadout.some((i) => i.equip)).toBe(true);
   });
 });
