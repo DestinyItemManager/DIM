@@ -48,7 +48,6 @@
 .openButton {
   composes: resetButton from '../dim-ui/common.m.scss';
   display: inline-block;
-  margin-left: 5px;
   color: #999;
   font-size: 12px !important;
 }
@@ -186,10 +185,6 @@
     outline: 1px solid var(--theme-accent-primary);
   }
 
-  @include phone-portrait {
-    margin-right: 8px !important;
-  }
-
   > :global(.app-icon),
   > button > :global(.app-icon) {
     font-size: 14px !important;
@@ -211,9 +206,13 @@
     margin: 0 !important;
   }
 
-  &:hover > span,
-  &:hover > :global(.app-icon),
-  &:hover button > :global(.app-icon) {
-    color: var(--theme-accent-primary);
+  @media (hover: hover) {
+    &:hover {
+      > span,
+      > :global(.app-icon),
+      button > :global(.app-icon) {
+        color: var(--theme-accent-primary);
+      }
+    }
   }
 }
