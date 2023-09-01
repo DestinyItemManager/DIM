@@ -71,7 +71,8 @@ export default function LoadoutDrawerContents({
   // The store to use for "fill from equipped/unequipped"
   const dimStore = getStore(stores, storeId)!;
 
-  const doFillLoadoutFromEquipped = () => setLoadout(fillLoadoutFromEquipped(defs, dimStore));
+  const doFillLoadoutFromEquipped = () =>
+    setLoadout(fillLoadoutFromEquipped(defs, dimStore, undefined));
 
   const doFillLoadOutFromUnequipped = () => setLoadout(fillLoadoutFromUnequipped(defs, dimStore));
 
