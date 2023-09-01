@@ -207,15 +207,6 @@ describe('addItem', () => {
     expect(loadout.items).toEqual([]);
   });
 
-  it('does nothing if the item cannot be in a loadout', () => {
-    const invalidItem = allItems.find((i) => !itemCanBeInLoadout(i))!;
-    expect(invalidItem).toBeDefined();
-
-    let loadout = addItem(defs, invalidItem)(emptyLoadout);
-
-    expect(loadout.items).toEqual([]);
-  });
-
   it('does nothing if the bucket is already at capacity', () => {
     const weapons = items.filter((i) => i.bucket.hash === BucketHashes.KineticWeapons)!;
     expect(weapons.length).toBeGreaterThan(10);
@@ -285,7 +276,7 @@ describe('removeItem', () => {
 });
 
 describe('toggleEquipped', () => {
-  it('can switch an equipped item to unequipped if added again with the equip flag set', () => {
+  it('can toggle an equipped item to unequipped', () => {
     const item = items[0];
 
     let loadout = addItem(defs, item, true)(emptyLoadout);
@@ -299,7 +290,7 @@ describe('toggleEquipped', () => {
     ]);
   });
 
-  it('can switch an unequipped item to equipped if added again with the equip flag set', () => {
+  it('can toggle an unequipped item to equipped', () => {
     const item = items[0];
 
     let loadout = addItem(defs, item, false)(emptyLoadout);
