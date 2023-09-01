@@ -17,7 +17,11 @@ import { VendorLocation } from '../Vendor';
 import VendorItems from '../VendorItems';
 import { toVendor } from '../d2-vendors';
 import { useLoadVendors } from '../hooks';
-import { ownedVendorItemsSelector, vendorsByCharacterSelector } from '../selectors';
+import {
+  ownedVendorItemsSelector,
+  vendorItemFilterSelector,
+  vendorsByCharacterSelector,
+} from '../selectors';
 import styles from './SingleVendor.m.scss';
 
 /**
@@ -50,6 +54,8 @@ export default function SingleVendor({
   useLoadStores(account);
   useLoadVendors(account, characterId, /* active */ returnWithVendorRequest);
   usePageTitle(vendorDef?.displayProperties.name ?? t('Vendors.Vendors'), updatePageTitle ?? false);
+
+  const itemFilter = useSelector(vendorItemFilterSelector(characterId));
 
   if (!defs || !buckets) {
     return <ShowPageLoading message={t('Manifest.Load')} />;
@@ -89,7 +95,7 @@ export default function SingleVendor({
     .join(', ');
   // TODO: there's a cool background image but I'm not sure how to use it
 
-  const d2Vendor = toVendor(
+  let d2Vendor = toVendor(
     { ...itemCreationContext, itemComponents: vendorResponse?.itemComponents[vendorHash] },
     vendorHash,
     vendor,
@@ -101,6 +107,8 @@ export default function SingleVendor({
   if (!d2Vendor) {
     return <ErrorPanel error={new Error(`No known vendor with hash ${vendorHash}`)} />;
   }
+
+  d2Vendor = { ...d2Vendor, items: d2Vendor.items.filter((i) => itemFilter(i, d2Vendor!)) };
 
   let displayName = d2Vendor.def.displayProperties.name;
   let displayDesc = d2Vendor.def.displayProperties.description;

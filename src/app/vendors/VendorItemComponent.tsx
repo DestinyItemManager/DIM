@@ -59,6 +59,8 @@ export default function VendorItemComponent({
   return (
     <VendorItemDisplay
       item={item.item}
+      // do not allow dimming from filtering, since the D2 vendors page hides non-matching items entirely
+      allowFilter={false}
       unavailable={unavailable}
       owned={owned}
       acquired={acquired}
@@ -76,6 +78,7 @@ export default function VendorItemComponent({
 }
 
 export function VendorItemDisplay({
+  allowFilter,
   unavailable,
   owned,
   acquired,
@@ -83,6 +86,7 @@ export function VendorItemDisplay({
   extraData,
   children,
 }: {
+  allowFilter?: boolean;
   /** i.e. greyed out */
   unavailable?: boolean;
   owned?: boolean;
@@ -104,7 +108,12 @@ export function VendorItemDisplay({
       )}
       <ItemPopupTrigger item={item} extraData={extraData}>
         {(ref, onClick) => (
-          <ConnectedInventoryItem item={item} allowFilter={true} innerRef={ref} onClick={onClick} />
+          <ConnectedInventoryItem
+            item={item}
+            allowFilter={allowFilter ?? true}
+            innerRef={ref}
+            onClick={onClick}
+          />
         )}
       </ItemPopupTrigger>
       {children}
