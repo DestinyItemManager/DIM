@@ -16,25 +16,18 @@ import { DimStore } from 'app/inventory/store-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import {
-  addItem,
-  applySocketOverrides,
   clearSubclass,
   LoadoutUpdateFunction,
   removeMod,
   setLoadoutParameters,
   updateMods,
 } from 'app/loadout-drawer/loadout-drawer-reducer';
-import { Loadout, ResolvedLoadoutItem, ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
+import { Loadout, ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
 import { findItemForLoadout, newLoadout, pickBackingStore } from 'app/loadout-drawer/loadout-utils';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { emptyObject } from 'app/utils/empty';
-import { errorLog } from 'app/utils/log';
-import {
-  getSocketsByCategoryHashes,
-  subclassAbilitySocketCategoryHashes,
-} from 'app/utils/socket-utils';
 import { useHistory } from 'app/utils/undo-redo-history';
 import { reorder } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -260,18 +253,6 @@ type LoadoutBuilderConfigAction =
   | { type: 'removeLockedMod'; mod: ResolvedLoadoutMod }
   /** For adding "half tier mods" */
   | { type: 'addGeneralMods'; mods: PluggableInventoryItemDefinition[] }
-  | { type: 'updateSubclass'; item: DimItem }
-  | { type: 'removeSubclass' }
-  | {
-      type: 'updateSubclassSocketOverrides';
-      socketOverrides: { [socketIndex: number]: number };
-      subclass: ResolvedLoadoutItem;
-    }
-  | {
-      type: 'removeSingleSubclassSocketOverride';
-      plug: PluggableInventoryItemDefinition;
-      subclass: ResolvedLoadoutItem;
-    }
   | { type: 'lockExotic'; lockedExoticHash: number }
   | { type: 'removeLockedExotic' }
   | { type: 'setSearchQuery'; query: string };
@@ -466,55 +447,6 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
       }
       case 'removeLockedMod':
         return updateLoadout(state, removeMod(action.mod));
-      case 'updateSubclass':
-        return updateLoadout(state, addItem(defs, action.item));
-      case 'removeSubclass':
-        return updateLoadout(state, clearSubclass(defs));
-      case 'updateSubclassSocketOverrides': {
-        const { socketOverrides, subclass } = action;
-        return updateLoadout(state, applySocketOverrides(subclass, socketOverrides));
-      }
-      case 'removeSingleSubclassSocketOverride': {
-        const { plug, subclass } = action;
-        const abilityAndSuperSockets = getSocketsByCategoryHashes(
-          subclass.item.sockets,
-          subclassAbilitySocketCategoryHashes
-        );
-        const newSocketOverrides = { ...subclass?.loadoutItem.socketOverrides };
-        let socketIndexToRemove: number | undefined;
-
-        // Find the socket index to remove the plug from.
-        for (const socketIndexString of Object.keys(newSocketOverrides)) {
-          const socketIndex = parseInt(socketIndexString, 10);
-          const overridePlugHash = newSocketOverrides[socketIndex];
-          if (overridePlugHash === plug.hash) {
-            socketIndexToRemove = socketIndex;
-            break;
-          }
-        }
-
-        const isAbilitySocket = abilityAndSuperSockets.find(
-          (socket) => socket.socketIndex === socketIndexToRemove
-        );
-
-        if (isAbilitySocket) {
-          errorLog('loadout builder', 'cannot remove ability');
-          return state;
-        }
-
-        if (socketIndexToRemove !== undefined) {
-          // If its not an ability we just remove it from the overrides
-          delete newSocketOverrides[socketIndexToRemove];
-        }
-
-        return updateLoadout(
-          state,
-          applySocketOverrides(
-            subclass,
-            Object.keys(newSocketOverrides).length ? newSocketOverrides : undefined
-          )
-        );
-      }
       case 'lockExotic': {
         const { lockedExoticHash } = action;
         return updateLoadout(state, setLoadoutParameters({ exoticArmorHash: lockedExoticHash }));
