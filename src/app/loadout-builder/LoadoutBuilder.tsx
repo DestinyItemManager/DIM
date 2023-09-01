@@ -21,6 +21,7 @@ import {
   LoadoutEditModsSection,
   LoadoutEditSubclassSection,
 } from 'app/loadout/loadout-edit/LoadoutEdit';
+import { autoAssignmentPCHs } from 'app/loadout/loadout-ui/LoadoutMods';
 import { categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -68,9 +69,6 @@ import {
   LockableBucketHashes,
   loDefaultArmorEnergyRules,
 } from './types';
-
-/** Do not allow the user to choose artifice mods manually in Loadout Optimizer since we're supposed to be doing that */
-const autoAssignmentPCHs = [PlugCategoryHashes.EnhancementsArtifice];
 
 const processingAnimateVariants: Variants = {
   hidden: { opacity: 0, y: -50 },

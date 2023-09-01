@@ -20,6 +20,9 @@ import { createGetModRenderKey } from '../mod-utils';
 import styles from './LoadoutMods.m.scss';
 import PlugDef from './PlugDef';
 
+/** Do not allow the user to choose artifice mods manually in Loadout Optimizer since we're supposed to be doing that */
+export const autoAssignmentPCHs = [PlugCategoryHashes.EnhancementsArtifice];
+
 const LoadoutModMemo = memo(function LoadoutMod({
   mod,
   className,
@@ -175,6 +178,15 @@ export const LoadoutMods = memo(function LoadoutMods({
           owner={storeId}
           lockedMods={resolvedMods}
           onAccept={onUpdateMods}
+          plugCategoryHashDenyList={
+            // autoStatMods being set means we're in Loadout Optimizer, which should not allow picking artifice mods
+            autoStatMods !== undefined
+              ? autoStatMods
+                ? // Exclude stat mods from the mod picker when they're auto selected
+                  [...autoAssignmentPCHs, PlugCategoryHashes.EnhancementsV2General]
+                : autoAssignmentPCHs
+              : undefined
+          }
           onClose={() => setShowModPicker(false)}
         />
       )}
