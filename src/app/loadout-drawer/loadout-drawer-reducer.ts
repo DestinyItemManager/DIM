@@ -394,7 +394,6 @@ export function fillLoadoutFromEquipped(
     const newEquippedItems = store.items.filter(
       (item) => item.equipped && itemCanBeInLoadout(item) && itemMatchesCategory(item, category)
     );
-    const mods: number[] = [];
     const modsByBucket: { [bucketHash: number]: number[] } = {};
     for (const item of newEquippedItems) {
       if (!(item.bucket.hash in equippedItemsByBucket)) {
@@ -411,24 +410,16 @@ export function fillLoadoutFromEquipped(
           modsByBucket[item.bucket.hash] = plugs;
         }
       }
-      // If we're filling in the whole loadout, save armor mods to potentially use
-      if (!category) {
-        mods.push(...extractArmorModHashes(item));
-      }
     }
 
     // Populate mods if they aren't already there
-    if (mods.length && _.isEmpty(loadout.parameters?.mods)) {
-      loadout = updateMods(mods)(loadout);
+    if (!category && _.isEmpty(loadout.parameters?.mods)) {
+      loadout = syncModsFromEquipped(store)(loadout);
     }
 
     // Populate artifactUnlocks if they aren't already there
-    if (
-      !category &&
-      artifactUnlocks?.unlockedItemHashes.length &&
-      _.isEmpty(loadout.parameters?.artifactUnlocks)
-    ) {
-      loadout = setLoadoutParameters({ artifactUnlocks })(loadout);
+    if (!category && _.isEmpty(loadout.parameters?.artifactUnlocks)) {
+      loadout = syncArtifactUnlocksFromEquipped(artifactUnlocks)(loadout);
     }
 
     // Save "fashion" mods for newly equipped items
@@ -515,12 +506,10 @@ export function syncModsFromEquipped(store: DimStore): LoadoutUpdateFunction {
     (item) => item.equipped && itemCanBeInLoadout(item) && item.bucket.sort === 'Armor'
   );
   for (const item of equippedArmor) {
-    mods.push(...extractArmorModHashes(item).map(mapToNonReducedModCostVariant));
+    mods.push(...extractArmorModHashes(item));
   }
 
-  return setLoadoutParameters({
-    mods,
-  });
+  return updateMods(mods);
 }
 
 export function clearBucketCategory(
