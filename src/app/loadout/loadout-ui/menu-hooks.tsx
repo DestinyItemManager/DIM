@@ -18,7 +18,7 @@ import { isClassCompatible } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import deprecatedMods from 'data/d2/deprecated-mods.json';
 import _ from 'lodash';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 /**
@@ -76,7 +76,12 @@ function useLoadoutFilterPillsInternal(
 ): [filteredLoadouts: Loadout[], filterPillsElement: React.ReactNode, hasSelectedFilters: boolean] {
   const isMissingItems = useSelector(isMissingItemsSelector);
   const getFragmentProblems = useSelector(getFragmentProblemsSelector);
-  const [selectedFilters, setSelectedFilters] = useState<Option[]>([]);
+  const [selectedFilters, setSelectedFilters] = useState<Option[]>(emptyArray());
+
+  // Reset filters on character change
+  useEffect(() => {
+    setSelectedFilters(emptyArray());
+  }, [selectedStoreId]);
 
   const loadoutsByHashtag = useMemo(() => {
     const loadoutsByHashtag: { [hashtag: string]: Loadout[] } = {};
