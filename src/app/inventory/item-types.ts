@@ -59,7 +59,7 @@ export interface DimItem {
   /** Is this an Exotic item? */
   isExotic: boolean;
   /** If this came from a vendor (instead of character inventory), this houses enough information to re-identify the item. */
-  vendor?: { vendorHash: number; saleIndex: number; characterId: string };
+  vendor?: { vendorHash: number; vendorItemIndex: number; characterId: string };
   /** Localized name of the item. */
   name: string;
   /** Localized description of the item. */
@@ -227,8 +227,6 @@ export interface DimItem {
   foundry?: string;
   /** Extra tooltips to show in the item popup */
   tooltipNotifications?: DestinyItemTooltipNotification[];
-  /** Index assigned to item by Bungie */
-  bungieIndex: number;
 }
 
 /**

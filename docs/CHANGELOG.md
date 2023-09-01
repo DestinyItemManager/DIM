@@ -1,5 +1,6 @@
 ## Next
 
+* The order of vendor items should now much more accurately match the in-game order.
 * Filters and toggles on the Vendors page now consider focusing/decoding subvendors. E.g. the "Only show uncollected items" toggle will now show focusing subvendors if they allow focusing items you don't have collected.
 
 ## 7.83.1 <span class="changelog-date">(2023-08-29)</span>
