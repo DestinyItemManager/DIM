@@ -30,6 +30,7 @@ Here are some tips to make sure your Pull Request (PR) can be merged smoothly:
 * Install [Yarn](https://yarnpkg.com/en/docs/install)
   * Use Yarn 1.x as DIM is not compatible with later versions of Yarn. If you're used to NPM, see "[Migrating from NPM](https://yarnpkg.com/lang/en/docs/migrating-from-npm/)".
 * It is highly recommended to use [VSCode](https://code.visualstudio.com/) to work on DIM. When you open DIM in VSCode, accept the recommended plugins it suggests (find them manually by searching "@recommended" in the Extensions window).
+* On Windows, restart your system after installing everything.
 
 ### Clone the repo
 
@@ -56,6 +57,8 @@ More detailed information on these steps is [here](https://docs.github.com/en/ge
 Once you have cloned the repository or a fork of the repository to your local machine, in the root directory:
 
 * Run `yarn install`
+  * If `yarn` isn't installed, install it with `npm i -g yarn`.
+    * If you're using PowerShell on Windows, you may need to run `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted` to allow yarn to run.
   * Windows-based developers will need to install `windows-build-tools` (run `yarn global add windows-build-tools` in your terminal) globally prior to running `yarn install`. Refer to issue #1439 for [details](https://github.com/DestinyItemManager/DIM/issues/1439).
   * Linux-based developers will need to install `build-essential` (`sudo apt-get install -y build-essential`) prior to running `yarn install`.
 * Run `yarn start`
