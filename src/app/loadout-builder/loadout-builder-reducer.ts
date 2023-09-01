@@ -208,14 +208,7 @@ const lbConfigInit = ({
   // per set. In contrast we remove stat mods dynamically depending on the auto
   // stat mods setting.
   if (loadoutParameters.mods) {
-    loadoutParameters.mods = loadoutParameters.mods.filter((modHash) => {
-      const def = defs.InventoryItem.get(modHash);
-      return (
-        !def ||
-        !isPluggableItem(def) ||
-        def.plug.plugCategoryHash !== PlugCategoryHashes.EnhancementsArtifice
-      );
-    });
+    loadoutParameters.mods = stripArtificeMods(defs, loadoutParameters.mods);
   }
 
   loadout = { ...loadout, parameters: loadoutParameters };
@@ -229,6 +222,22 @@ const lbConfigInit = ({
     selectedStoreId,
   };
 };
+
+/**
+ * We never want to include artifice mods in the list of mods for a loadout
+ * being edited by LO - they should be chosen by LO itself, and only re-added
+ * when the loadout is saved.
+ */
+function stripArtificeMods(defs: D2ManifestDefinitions, mods: number[]) {
+  return mods.filter((modHash) => {
+    const def = defs.InventoryItem.get(modHash);
+    return (
+      !def ||
+      !isPluggableItem(def) ||
+      def.plug.plugCategoryHash !== PlugCategoryHashes.EnhancementsArtifice
+    );
+  });
+}
 
 type LoadoutBuilderConfigAction =
   | { type: 'setLoadout'; updateFn: LoadoutUpdateFunction }
@@ -295,7 +304,17 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
   ): LoadoutBuilderConfiguration => {
     switch (action.type) {
       case 'setLoadout': {
-        return updateLoadout(state, action.updateFn);
+        return updateLoadout(state, (loadout) => {
+          const updatedLoadout = action.updateFn(loadout);
+
+          // Always check to make sure Artifice mods haven't snuck in - if they have, remove them
+          const originalMods = updatedLoadout.parameters?.mods ?? [];
+          const strippedMods = stripArtificeMods(defs, originalMods);
+          if (strippedMods.length !== originalMods.length) {
+            return updateMods(strippedMods)(updatedLoadout);
+          }
+          return updatedLoadout;
+        });
       }
       case 'changeCharacter': {
         const { store } = action;
