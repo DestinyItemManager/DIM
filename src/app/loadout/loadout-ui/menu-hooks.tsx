@@ -13,7 +13,6 @@ import {
 } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
 import { plainString } from 'app/search/search-filters/freeform';
-import { emptyArray } from 'app/utils/empty';
 import { isClassCompatible } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import deprecatedMods from 'data/d2/deprecated-mods.json';
@@ -32,6 +31,49 @@ export function useSavedLoadoutsForClassType(classType: DestinyClass) {
   );
 }
 
+export interface LoadoutAndIssues {
+  loadout: Loadout;
+  hasMissingItems?: boolean;
+  hasDeprecatedMods?: boolean;
+  emptyFragmentSlots?: boolean;
+  tooManyFragments?: boolean;
+}
+
+/**
+ * Get the saved loadouts that apply to the given store, alongside applicable warning flags
+ */
+export function useSavedLoadoutsAndIssuesForStore(
+  classType: DestinyClass,
+  selectedStoreId: string
+): LoadoutAndIssues[] {
+  const savedLoadoutsThisClass = useSavedLoadoutsForClassType(classType);
+  const getFragmentProblems = useSelector(getFragmentProblemsSelector);
+  const isMissingItems = useSelector(isMissingItemsSelector);
+
+  return useMemo(
+    () =>
+      savedLoadoutsThisClass.map((loadout) => {
+        const hasMissingItems = isMissingItems(selectedStoreId, loadout);
+        const hasDeprecatedMods = Boolean(
+          loadout.parameters?.mods?.some((modHash) => deprecatedMods.includes(modHash))
+        );
+
+        const fragmentProblem = getFragmentProblems(selectedStoreId, loadout);
+        const emptyFragmentSlots = fragmentProblem === FragmentProblem.EmptyFragmentSlots;
+        const tooManyFragments = fragmentProblem === FragmentProblem.TooManyFragments;
+
+        return {
+          loadout,
+          hasMissingItems,
+          hasDeprecatedMods,
+          emptyFragmentSlots,
+          tooManyFragments,
+        };
+      }),
+    [getFragmentProblems, isMissingItems, savedLoadoutsThisClass, selectedStoreId]
+  );
+}
+
 export function filterLoadoutsToClass(loadouts: Loadout[], classType: DestinyClass) {
   return loadouts.filter((loadout) => isClassCompatible(classType, loadout.classType));
 }
@@ -41,27 +83,29 @@ export function filterLoadoutsToClass(loadouts: Loadout[], classType: DestinyCla
  * This returns a component ready to be used in the React tree as well as the list of filtered loadouts.
  */
 export function useLoadoutFilterPills(
-  savedLoadouts: Loadout[],
-  selectedStoreId: string,
+  savedLoadouts: LoadoutAndIssues[],
   options: {
     includeWarningPills?: boolean;
     className?: string;
     darkBackground?: boolean;
     extra?: React.ReactNode;
   } = {}
-): [filteredLoadouts: Loadout[], filterPillsElement: React.ReactNode, hasSelectedFilters: boolean] {
+): [
+  filteredLoadouts: LoadoutAndIssues[],
+  filterPillsElement: React.ReactNode,
+  hasSelectedFilters: boolean,
+] {
   if (!$featureFlags.loadoutFilterPills) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     return useMemo(() => [savedLoadouts, null, false], [savedLoadouts]);
   }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useLoadoutFilterPillsInternal(savedLoadouts, selectedStoreId, options);
+  return useLoadoutFilterPillsInternal(savedLoadouts, options);
 }
 
 function useLoadoutFilterPillsInternal(
-  savedLoadouts: Loadout[],
-  selectedStoreId: string,
+  savedLoadouts: LoadoutAndIssues[],
   {
     includeWarningPills,
     className,
@@ -73,20 +117,22 @@ function useLoadoutFilterPillsInternal(
     darkBackground?: boolean;
     extra?: React.ReactNode;
   } = {}
-): [filteredLoadouts: Loadout[], filterPillsElement: React.ReactNode, hasSelectedFilters: boolean] {
-  const isMissingItems = useSelector(isMissingItemsSelector);
-  const getFragmentProblems = useSelector(getFragmentProblemsSelector);
+): [
+  filteredLoadouts: LoadoutAndIssues[],
+  filterPillsElement: React.ReactNode,
+  hasSelectedFilters: boolean,
+] {
   const [selectedFilters, setSelectedFilters] = useState<Option[]>([]);
 
   const loadoutsByHashtag = useMemo(() => {
-    const loadoutsByHashtag: { [hashtag: string]: Loadout[] } = {};
-    for (const loadout of savedLoadouts) {
+    const loadoutsByHashtag: { [hashtag: string]: LoadoutAndIssues[] } = {};
+    for (const loadoutMeta of savedLoadouts) {
       const hashtags = [
-        ...getHashtagsFromNote(loadout.name),
-        ...getHashtagsFromNote(loadout.notes),
+        ...getHashtagsFromNote(loadoutMeta.loadout.name),
+        ...getHashtagsFromNote(loadoutMeta.loadout.notes),
       ];
       for (const hashtag of hashtags) {
-        (loadoutsByHashtag[hashtag.replace('#', '').replace(/_/g, ' ')] ??= []).push(loadout);
+        (loadoutsByHashtag[hashtag.replace('#', '').replace(/_/g, ' ')] ??= []).push(loadoutMeta);
       }
     }
     return loadoutsByHashtag;
@@ -102,27 +148,10 @@ function useLoadoutFilterPillsInternal(
     (o) => o.key
   );
 
-  const loadoutsWithMissingItems = useMemo(
-    () => savedLoadouts.filter((loadout) => isMissingItems(selectedStoreId, loadout)),
-    [isMissingItems, savedLoadouts, selectedStoreId]
-  );
-  const loadoutsWithDeprecatedMods = useMemo(
-    () =>
-      savedLoadouts.filter(
-        (loadout) => loadout.parameters?.mods?.some((modHash) => deprecatedMods.includes(modHash))
-      ),
-    [savedLoadouts]
-  );
-
-  const [loadoutsWithEmptyFragmentSlots, loadoutsWithTooManyFragments] = useMemo(() => {
-    const problematicLoadouts = _.groupBy(savedLoadouts, (loadout) =>
-      getFragmentProblems(selectedStoreId, loadout)
-    );
-    return [
-      problematicLoadouts[FragmentProblem.EmptyFragmentSlots] ?? emptyArray(),
-      problematicLoadouts[FragmentProblem.TooManyFragments] ?? emptyArray(),
-    ] as const;
-  }, [getFragmentProblems, savedLoadouts, selectedStoreId]);
+  const loadoutsWithMissingItems = savedLoadouts.filter((l) => l.hasMissingItems);
+  const loadoutsWithDeprecatedMods = savedLoadouts.filter((l) => l.hasDeprecatedMods);
+  const loadoutsWithEmptyFragmentSlots = savedLoadouts.filter((l) => l.emptyFragmentSlots);
+  const loadoutsWithTooManyFragments = savedLoadouts.filter((l) => l.tooManyFragments);
 
   if (includeWarningPills) {
     if (loadoutsWithMissingItems.length) {
@@ -220,24 +249,27 @@ function useLoadoutFilterPillsInternal(
  * Apply the given query to loadouts, and sort them according to preference.
  */
 export function searchAndSortLoadoutsByQuery(
-  loadouts: Loadout[],
+  loadoutMetas: LoadoutAndIssues[],
   query: string,
   language: DimLanguage,
   loadoutSort: LoadoutSort
 ) {
   const loadoutQueryPlain = plainString(query, language);
+  const filtered = loadoutMetas.filter(
+    ({ loadout }) =>
+      !query ||
+      plainString(loadout.name, language).includes(loadoutQueryPlain) ||
+      (!isInGameLoadout(loadout) &&
+        loadout.notes &&
+        plainString(loadout.notes, language).includes(loadoutQueryPlain))
+  );
   return _.sortBy(
-    loadouts.filter(
-      (loadout) =>
-        !query ||
-        plainString(loadout.name, language).includes(loadoutQueryPlain) ||
-        (!isInGameLoadout(loadout) &&
-          loadout.notes &&
-          plainString(loadout.notes, language).includes(loadoutQueryPlain))
-    ),
-    (l) => (isInGameLoadout(l) ? 0 : 1),
+    filtered,
+    // in-game are always first. is this still relevant anywhere?
+    // IGLs are handled very differently anywhere they're filtered & sorted
+    ({ loadout: l }) => (isInGameLoadout(l) ? 0 : 1),
     loadoutSort === LoadoutSort.ByEditTime
-      ? (l) => (isInGameLoadout(l) ? l.index : -(l.lastUpdatedAt ?? 0))
-      : (l) => (isInGameLoadout(l) ? l.index : l.name.toLocaleUpperCase())
+      ? ({ loadout: l }) => (isInGameLoadout(l) ? l.index : -(l.lastUpdatedAt ?? 0))
+      : ({ loadout: l }) => (isInGameLoadout(l) ? l.index : l.name.toLocaleUpperCase())
   );
 }

@@ -21,7 +21,7 @@ import {
 } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
-import { isMissingItems, newLoadout } from 'app/loadout-drawer/loadout-utils';
+import { newLoadout } from 'app/loadout-drawer/loadout-utils';
 import { makeRoomForPostmaster, totalPostmasterItems } from 'app/loadout-drawer/postmaster';
 import { previousLoadoutSelector } from 'app/loadout-drawer/selectors';
 import { manifestSelector, useDefinitions } from 'app/manifest/selectors';
@@ -60,7 +60,7 @@ import { inGameLoadoutsForCharacterSelector } from '../ingame/selectors';
 import {
   searchAndSortLoadoutsByQuery,
   useLoadoutFilterPills,
-  useSavedLoadoutsForClassType,
+  useSavedLoadoutsAndIssuesForStore,
 } from '../loadout-ui/menu-hooks';
 import styles from './LoadoutPopup.m.scss';
 import { RandomLoadoutOptions, useRandomizeLoadout } from './LoadoutPopupRandomize';
@@ -89,7 +89,7 @@ export default function LoadoutPopup({
     (state: RootState) => powerLevelSelector(state, dimStore.id)?.problems.hasClassified
   );
 
-  const loadouts = useSavedLoadoutsForClassType(dimStore.classType);
+  const loadouts = useSavedLoadoutsAndIssuesForStore(dimStore.classType, dimStore.id);
   const inGameLoadouts = useSelector((state: RootState) =>
     dimStore.isVault
       ? emptyArray<InGameLoadout>()
@@ -131,11 +131,10 @@ export default function LoadoutPopup({
 
   const totalLoadouts = loadouts.length;
 
-  const [pillFilteredLoadouts, filterPills, hasSelectedFilters] = useLoadoutFilterPills(
-    loadouts,
-    dimStore.id,
-    { className: styles.filterPills, darkBackground: true }
-  );
+  const [pillFilteredLoadouts, filterPills, hasSelectedFilters] = useLoadoutFilterPills(loadouts, {
+    className: styles.filterPills,
+    darkBackground: true,
+  });
   const filteredLoadouts = searchAndSortLoadoutsByQuery(
     pillFilteredLoadouts,
     loadoutQuery,
@@ -290,7 +289,7 @@ export default function LoadoutPopup({
           </>
         )}
 
-        {filteredLoadouts.map((loadout) => (
+        {filteredLoadouts.map(({ loadout, hasMissingItems }) => (
           <li key={loadout.id} className={styles.menuItem}>
             <span
               title={loadout.notes ? loadout.notes : loadout.name}
@@ -299,7 +298,7 @@ export default function LoadoutPopup({
               {(dimStore.isVault || loadout.classType === DestinyClass.Unknown) && (
                 <ClassIcon className={styles.loadoutTypeIcon} classType={loadout.classType} />
               )}
-              {isMissingItems(defs, allItems, dimStore.id, loadout) && (
+              {hasMissingItems && (
                 <AlertIcon
                   className={styles.warningIcon}
                   title={t('Loadouts.MissingItemsWarning')}

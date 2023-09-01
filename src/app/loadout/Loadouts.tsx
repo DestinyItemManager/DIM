@@ -31,7 +31,7 @@ import LoadoutShareSheet from './loadout-share/LoadoutShareSheet';
 import {
   searchAndSortLoadoutsByQuery,
   useLoadoutFilterPills,
-  useSavedLoadoutsForClassType,
+  useSavedLoadoutsAndIssuesForStore,
 } from './loadout-ui/menu-hooks';
 
 const sortOptions = [
@@ -81,8 +81,8 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const language = useSelector(languageSelector);
   const apiPermissionGranted = useSelector(apiPermissionGrantedSelector);
 
-  const savedLoadouts = useSavedLoadoutsForClassType(classType);
-  const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
+  const savedLoadoutMetas = useSavedLoadoutsAndIssuesForStore(classType, selectedStoreId);
+  const savedLoadoutIds = new Set(savedLoadoutMetas.map((l) => l.loadout.id));
 
   const artifactUnlocks = useSelector(artifactUnlocksSelector(selectedStoreId));
 
@@ -102,17 +102,16 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const handleViewingSheetClose = useCallback(() => setViewingInGameLoadout(undefined), []);
 
   const [filteredLoadouts, filterPills, hasSelectedFilters] = useLoadoutFilterPills(
-    savedLoadouts,
-    selectedStoreId,
+    savedLoadoutMetas,
     {
       includeWarningPills: true,
       extra: <span className={styles.hashtagTip}>{t('Loadouts.HashtagTip')}</span>,
     }
   );
 
-  const loadouts = searchAndSortLoadoutsByQuery(filteredLoadouts, query, language, loadoutSort);
+  const loadoutMetas = searchAndSortLoadoutsByQuery(filteredLoadouts, query, language, loadoutSort);
   if (!query && !hasSelectedFilters) {
-    loadouts.unshift(currentLoadout);
+    loadoutMetas.unshift({ loadout: currentLoadout });
   }
 
   const handleNewLoadout = () => {
@@ -123,12 +122,12 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const virtualListRef = useRef<VirtualListRef>(null);
   const scrollToLoadout = useCallback(
     (id: string) => {
-      const index = loadouts.findIndex((l) => l.id === id);
+      const index = loadoutMetas.findIndex((l) => l.loadout.id === id);
       if (index >= 0) {
         virtualListRef.current?.scrollToIndex(index, { align: 'start' });
       }
     },
-    [loadouts]
+    [loadoutMetas]
   );
 
   return (
@@ -169,7 +168,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
           </Link>
         </div>
         {!isPhonePortrait &&
-          loadouts.map((loadout) => (
+          loadoutMetas.map(({ loadout }) => (
             <PageWithMenu.MenuButton onClick={() => scrollToLoadout(loadout.id)} key={loadout.id}>
               <ColorDestinySymbols text={loadout.name} />
             </PageWithMenu.MenuButton>
@@ -192,26 +191,26 @@ function Loadouts({ account }: { account: DestinyAccount }) {
         {filterPills}
         <WindowVirtualList
           ref={virtualListRef}
-          numElements={loadouts.length}
+          numElements={loadoutMetas.length}
           itemContainerClassName={styles.loadoutRow}
           estimatedSize={270}
-          getItemKey={(index) => loadouts[index].id}
+          getItemKey={(index) => loadoutMetas[index].loadout.id}
         >
           {(index) => {
-            const loadout = loadouts[index];
+            const loadoutMeta = loadoutMetas[index];
             return (
               <LoadoutRow
-                loadout={loadout}
+                loadoutMeta={loadoutMeta}
                 store={selectedStore}
-                saved={savedLoadoutIds.has(loadout.id)}
-                equippable={loadout !== currentLoadout}
+                saved={savedLoadoutIds.has(loadoutMeta.loadout.id)}
+                equippable={loadoutMeta.loadout !== currentLoadout}
                 onShare={setSharedLoadout}
                 onSnapshotInGameLoadout={handleSnapshot}
               />
             );
           }}
         </WindowVirtualList>
-        {loadouts.length === 0 && <p>{t('Loadouts.NoneMatch', { query })}</p>}
+        {loadoutMetas.length === 0 && <p>{t('Loadouts.NoneMatch', { query })}</p>}
       </PageWithMenu.Contents>
       {sharedLoadout && (
         <LoadoutShareSheet

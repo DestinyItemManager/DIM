@@ -14,19 +14,20 @@ import { ReactNode, memo, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import LoadoutView from './LoadoutView';
 import styles from './LoadoutsRow.m.scss';
+import type { LoadoutAndIssues } from './loadout-ui/menu-hooks';
 
 /**
  * A single row in the Loadouts page.
  */
 export default memo(function LoadoutRow({
-  loadout,
+  loadoutMeta,
   store,
   saved,
   equippable,
   onShare,
   onSnapshotInGameLoadout,
 }: {
-  loadout: Loadout;
+  loadoutMeta: LoadoutAndIssues;
   store: DimStore;
   saved: boolean;
   equippable: boolean;
@@ -34,7 +35,7 @@ export default memo(function LoadoutRow({
   onSnapshotInGameLoadout: () => void;
 }) {
   const dispatch = useThunkDispatch();
-
+  const { loadout } = loadoutMeta;
   const streamDeckSelection = $featureFlags.elgatoStreamDeck
     ? // eslint-disable-next-line
       useSelector(streamDeckSelectionSelector)
@@ -122,7 +123,7 @@ export default memo(function LoadoutRow({
 
   return (
     <LoadoutView
-      loadout={loadout}
+      loadoutMeta={loadoutMeta}
       store={store}
       actionButtons={actionButtons}
       hideShowModPlacements={!equippable}

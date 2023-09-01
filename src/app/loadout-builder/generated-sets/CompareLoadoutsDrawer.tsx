@@ -120,7 +120,7 @@ export default function CompareLoadoutsDrawer({
             <div className={styles.setTitle}>{t('LoadoutBuilder.OptimizerSet')}</div>
           </div>
           <LoadoutView
-            loadout={generatedLoadout}
+            loadoutMeta={{ loadout: generatedLoadout }}
             store={selectedStore}
             hideOptimizeArmor={true}
             actionButtons={[
@@ -136,7 +136,7 @@ export default function CompareLoadoutsDrawer({
             <div className={styles.setTitle}>{t('LoadoutBuilder.ExistingLoadout')}</div>
           </div>
           <LoadoutView
-            loadout={selectedLoadout}
+            loadoutMeta={{ loadout: selectedLoadout }}
             store={selectedStore}
             hideOptimizeArmor={true}
             actionButtons={[

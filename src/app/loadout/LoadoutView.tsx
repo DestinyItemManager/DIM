@@ -1,18 +1,18 @@
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
-import { t } from 'app/i18next-t';
+import { t, tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
-import { Loadout, LoadoutItem, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { LoadoutItem, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
-import { count } from 'app/utils/util';
+import { count, filterMap } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -22,6 +22,7 @@ import styles from './LoadoutView.m.scss';
 import LoadoutItemCategorySection from './loadout-ui/LoadoutItemCategorySection';
 import { LoadoutArtifactUnlocks, LoadoutMods } from './loadout-ui/LoadoutMods';
 import LoadoutSubclassSection from './loadout-ui/LoadoutSubclassSection';
+import { LoadoutAndIssues } from './loadout-ui/menu-hooks';
 import { useLoadoutMods } from './mod-assignment-drawer/selectors';
 
 export function getItemsAndSubclassFromLoadout(
@@ -57,6 +58,13 @@ export function getItemsAndSubclassFromLoadout(
   return [items, subclass, warnitems];
 }
 
+const possibleLoadoutIssues = [
+  { prop: 'hasMissingItems', str: tl('Loadouts.MissingItemsWarning') },
+  { prop: 'hasDeprecatedMods', str: tl('Loadouts.DeprecatedMods') },
+  { prop: 'emptyFragmentSlots', str: tl('Loadouts.EmptyFragmentSlots') },
+  { prop: 'tooManyFragments', str: tl('Loadouts.TooManyFragments') },
+] as const;
+
 /**
  * A presentational component for a single loadout.
  *
@@ -65,22 +73,24 @@ export function getItemsAndSubclassFromLoadout(
  * button will by present under the mods section to activate the drawer.
  */
 export default function LoadoutView({
-  loadout,
+  loadoutMeta,
   store,
   actionButtons,
   hideOptimizeArmor,
   hideShowModPlacements,
 }: {
-  loadout: Loadout;
+  loadoutMeta: LoadoutAndIssues;
   store: DimStore;
   actionButtons: ReactNode[];
   hideOptimizeArmor?: boolean;
   hideShowModPlacements?: boolean;
 }) {
+  const { loadout } = loadoutMeta;
   const allItems = useSelector(allItemsSelector);
   const itemCreationContext = useSelector(createItemContextSelector);
   const missingSockets =
     loadout.name === t('Loadouts.FromEquipped') && allItems.some((i) => i.missingSockets);
+  const loadoutHasIssue = possibleLoadoutIssues.some((i) => loadoutMeta[i.prop]);
   const isPhonePortrait = useIsPhonePortrait();
 
   // TODO: filter down by usable mods?
@@ -115,10 +125,12 @@ export default function LoadoutView({
           )}
           <ColorDestinySymbols text={loadout.name} />
         </h2>
-        {warnitems.length > 0 && (
+        {loadoutHasIssue && (
           <span className={styles.missingItems}>
             <AlertIcon />
-            {t('Loadouts.MissingItemsWarning')}
+            {filterMap(possibleLoadoutIssues, (i) =>
+              loadoutMeta[i.prop] ? t(i.str) : undefined
+            ).join(' — ')}
           </span>
         )}
         <div className={styles.actions}>{actionButtons}</div>
