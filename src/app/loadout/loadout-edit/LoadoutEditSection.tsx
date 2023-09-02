@@ -21,6 +21,7 @@ export default function LoadoutEditSection({
   className,
   onClear,
   onFillFromEquipped,
+  fillFromEquippedDisabled,
   onSyncFromEquipped,
   onRandomize,
   hasRandomizeQuery,
@@ -34,6 +35,7 @@ export default function LoadoutEditSection({
   className?: string;
   onClear: () => void;
   onFillFromEquipped?: () => void;
+  fillFromEquippedDisabled?: boolean;
   onSyncFromEquipped?: () => void;
   onRandomize?: () => void;
   hasRandomizeQuery?: boolean;
@@ -46,6 +48,7 @@ export default function LoadoutEditSection({
       ? {
           key: 'fillFromEquipped',
           onSelected: onFillFromEquipped,
+          disabled: fillFromEquippedDisabled,
           content: (
             <>
               <AppIcon icon={downloadIcon} /> {t('Loadouts.FillFromEquipped')}

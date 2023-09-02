@@ -434,6 +434,60 @@ export function fillLoadoutFromEquipped(
 }
 
 /**
+ * Replace all equipped items from the store's equipped items.
+ */
+export function syncLoadoutCategoryFromEquipped(
+  defs: D2ManifestDefinitions | D1ManifestDefinitions,
+  store: DimStore,
+  category: D2BucketCategory
+): LoadoutUpdateFunction {
+  return (loadout) => {
+    let categoryHashes = D2Categories[category];
+    if (category === 'General') {
+      categoryHashes = [
+        BucketHashes.Ghost,
+        BucketHashes.Emblems,
+        BucketHashes.Ships,
+        BucketHashes.Vehicle,
+      ];
+    }
+
+    // Remove equipped items from this bucket
+    loadout = {
+      ...loadout,
+      items: loadout.items.filter(
+        (li) =>
+          !(li.equip && categoryHashes.includes(getBucketHashFromItemHash(defs, li.hash) ?? 0))
+      ),
+    };
+    const newEquippedItems = store.items.filter(
+      (item) =>
+        item.equipped && itemCanBeInLoadout(item) && categoryHashes.includes(item.bucket.hash)
+    );
+    for (const item of newEquippedItems) {
+      loadout = addItem(defs, item, true)(loadout);
+    }
+    // Save "fashion" mods for equipped items
+    const modsByBucket: { [bucketHash: number]: number[] } = {};
+    for (const item of newEquippedItems.filter((i) => i.bucket.inArmor)) {
+      const plugs = item.sockets
+        ? filterMap(
+            getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics),
+            (s) => s.plugged?.plugDef.hash
+          )
+        : [];
+      if (plugs.length) {
+        modsByBucket[item.bucket.hash] = plugs;
+      }
+    }
+    if (!_.isEmpty(modsByBucket)) {
+      loadout = setLoadoutParameters({ modsByBucket })(loadout);
+    }
+    return loadout;
+  };
+}
+
+/**
  * Add all the unequipped items on the given character to the loadout.
  */
 export function fillLoadoutFromUnequipped(
