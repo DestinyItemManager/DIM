@@ -14,7 +14,6 @@
   box-sizing: border-box;
   max-height: calc(var(--viewport-height) - var(--header-height) - #{62px + 16px});
   overflow: auto;
-  z-index: 2;
   color: rgba(245, 245, 245, 0.6);
   overscroll-behavior: contain;
   background-color: var(--theme-dropdown-menu-bg);
