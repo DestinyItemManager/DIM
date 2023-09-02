@@ -292,7 +292,6 @@
     "RetiredPerk": "显示带有已无法获取的特性的武器。",
     "SearchPrompt": "搜索可用的過濾器命令",
     "Season": "按照物品推出季度顯示.",
-    "SeasonalDupe": "顯示重複物品，不包括同一物品在不同賽季的版本。",
     "StackFull": "顯示堆疊已滿的物品 (强化覈心、奇异硬幣、槍匠資料等)",
     "StackLevel": "根據堆疊數量來顯示物品.",
     "Stackable": "顯示可以堆疊的物品(合成彈藥,奇怪硬幣等)",
@@ -527,7 +526,6 @@
     "Locked": "鎖定的物品",
     "LockedHelp": "拖放物品到選擇框中用以創建一個套裝組.使用Shift +按一下可移除物品.",
     "Missing2": "缺少稀有,傳奇,或異域物品用來打造套裝!",
-    "ModLockButton": "選擇模組",
     "ProcessingMode": {
       "Fast": "快速",
       "Full": "完全",
@@ -540,7 +538,6 @@
     "SearchAnExotic": "搜索異域裝備或描述",
     "SelectExotic": "選擇異域裝備",
     "SelectMods": "選擇模組",
-    "SelectSubclass": "選擇子職業",
     "SelectSubclassOptions": "自定義子職業",
     "ShowAllConfigs": "顯示所有配置",
     "ShowConfigs": "顯示配置",
@@ -763,6 +760,7 @@
       "NoName": "配裝需要一個名稱。"
     },
     "SaveLoadout": "保存配裝",
+    "Season": "Season {{season}}",
     "Share": {
       "Copied": "將配装連結複製到剪貼板",
       "CopyButton": "複製連結",

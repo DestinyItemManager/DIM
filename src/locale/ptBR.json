@@ -292,7 +292,6 @@
     "RetiredPerk": "Exibe armas com perks que não podem mais ser obtidos.",
     "SearchPrompt": "Pesquisa comandos disponíveis para filtros",
     "Season": "Mostra itens de que temporada apareceram no Destiny 2.",
-    "SeasonalDupe": "Exibe itens duplicados, desconsiderando revisões de uma temporada diferente de um mesmo item.",
     "StackFull": "Exibe itens que atingiram a capacidade máxima de acúmulo (Núcleos de Aprimoramento, Moedas Estranhas, Materiais do Armeiro, etc.)",
     "StackLevel": "Mostra itens baseados na quantidade de itens em sua pilha.",
     "Stackable": "Mostra itens que podem acumular (munições, moedas estranhas, etc)",
@@ -527,7 +526,6 @@
     "Locked": "Itens travados",
     "LockedHelp": "Arraste e solte itens para construir sets com itens específicos. SHIFT+Clique para excluir.",
     "Missing2": "Faltam itens raros, lendários ou exóticos para construir um set completo!",
-    "ModLockButton": "Selecionar mods",
     "ProcessingMode": {
       "Fast": "Rápido",
       "Full": "Completo",
@@ -540,7 +538,6 @@
     "SearchAnExotic": "Busca pelo nome ou descrição do exótico",
     "SelectExotic": "Selecionar exótico",
     "SelectMods": "Selecionar mods",
-    "SelectSubclass": "Selecionar Subclasse",
     "SelectSubclassOptions": "Personalizar subclasse",
     "ShowAllConfigs": "Exibir todas as configurações",
     "ShowConfigs": "Exibir configurações",
@@ -763,6 +760,7 @@
       "NoName": "O set precisa de um nome."
     },
     "SaveLoadout": "Salvar Set",
+    "Season": "Season {{season}}",
     "Share": {
       "Copied": "Link de compartilhamento copiado para a área de transferência",
       "CopyButton": "Copiar Link",

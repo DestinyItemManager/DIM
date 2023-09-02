@@ -292,7 +292,6 @@
     "RetiredPerk": "Zeigt Waffen mit nicht mehr erhältlichen Perks.",
     "SearchPrompt": "Verfügbare Filterbefehle durchsuchen",
     "Season": "Zeigt Items nach der Saison in der sie in Destiny 2 erschienen sind an.",
-    "SeasonalDupe": "Zeigt doppelte Gegenstände, gleiche Items aus einer anderen Saison sind ausgeschlossen.",
     "StackFull": "Zeigt Gegenstände, deren Stapel voll ist (Verbesserungskerne, Seltsame Münzen, Waffenmeister-Materialien, usw.)",
     "StackLevel": "Zeigt Items basierend auf der Menge der Items in ihrem Stapel.",
     "Stackable": "Zeigt Items an, die gestapelt werden können (Munition-Synthesen, Seltsame Münzen, etc.)",
@@ -527,7 +526,6 @@
     "Locked": "Gesperrte Gegenstände",
     "LockedHelp": "Ziehe einen beliebigen Gegenstand in sein Feld, um es in dem Loadout zu verwenden. Mit Shift + Klick kannst du Gegenstände ignorieren.",
     "Missing2": "Es fehlen seltene, legendäre oder exotische Gegenstände, um ein vollständiges Set zu generieren!",
-    "ModLockButton": "Mods auswählen",
     "ProcessingMode": {
       "Fast": "Schnell",
       "Full": "Vollständig",
@@ -540,7 +538,6 @@
     "SearchAnExotic": "Suche Namen oder Beschreibung von Exotischen",
     "SelectExotic": "Wähle Exotisches",
     "SelectMods": "Mods auswählen",
-    "SelectSubclass": "Fokus wählen",
     "SelectSubclassOptions": "Fokus anpassen",
     "ShowAllConfigs": "Zeige alle Einstellungen",
     "ShowConfigs": "Zeige Einstellungen",
@@ -763,6 +760,7 @@
       "NoName": "Das Loadout benötigt einen Namen."
     },
     "SaveLoadout": "Loadout speichern",
+    "Season": "Season {{season}}",
     "Share": {
       "Copied": "Loadout-Link in die Zwischenablage kopiert",
       "CopyButton": "Link kopieren",

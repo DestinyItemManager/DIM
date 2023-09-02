@@ -292,7 +292,6 @@
     "RetiredPerk": "Mostra le armi con perk non più ottenibili.",
     "SearchPrompt": "Cerca tra comandi per filtri disponibili",
     "Season": "Mostra oggetti in base a quale stagione di Destiny 2 sono comparsi.",
-    "SeasonalDupe": "Mostra gli oggetti duplicati, senza contare quelli ri-emessi in una stagione diversa come stesso oggetto.",
     "StackFull": "Mostra gli oggetti che sono alla massima capacità delle loro pile. (Nuclei ottimizzanti, Strane Monete, Materiali dell'Armaiolo ecc)",
     "StackLevel": "Mostra gli oggetti basandosi sulla quantità delle loro pile.",
     "Stackable": "Mostra gli oggetti accumulabili (sintesi munizioni, strane monete, ecc)",
@@ -527,7 +526,6 @@
     "Locked": "Oggetti Bloccati",
     "LockedHelp": "Trascina e rilascia un qualsiasi oggetto nel suo riquadro per costruire un set con quella specifica armatura. Shift + click per escludere oggetti.",
     "Missing2": "Manca un raro, un leggendario o un esotico per costruire un set completo!",
-    "ModLockButton": "Seleziona Modifiche",
     "ProcessingMode": {
       "Fast": "Veloce",
       "Full": "Completa",
@@ -540,7 +538,6 @@
     "SearchAnExotic": "Cerca una esotica per nome o descrizione",
     "SelectExotic": "Seleziona esotica",
     "SelectMods": "Seleziona Modifiche",
-    "SelectSubclass": "Seleziona Sottoclasse",
     "SelectSubclassOptions": "Personalizza sottoclasse",
     "ShowAllConfigs": "Mostra tutte le configurazioni",
     "ShowConfigs": "Mostra configurazioni",
@@ -763,6 +760,7 @@
       "NoName": "La dotazione ha bisogno di un nome."
     },
     "SaveLoadout": "Salva dotazione",
+    "Season": "Stagione {{season}}",
     "Share": {
       "Copied": "Collegamento alla dotazione copiato negli appunti",
       "CopyButton": "Copia Collegamento",

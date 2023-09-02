@@ -292,7 +292,6 @@
     "RetiredPerk": "显示带有已无法获取特性的武器",
     "SearchPrompt": "搜索可用的过滤器命令",
     "Season": "按照物品推出季度显示.",
-    "SeasonalDupe": "显示重复物品，不包括同一物品在不同赛季的版本。",
     "StackFull": "显示堆叠已满的物品（强化核心、奇异硬币、枪匠材料等）",
     "StackLevel": "根据堆叠数量来显示物品.",
     "Stackable": "显示可以堆叠的物品(合成弹药,奇怪硬币等)",
@@ -404,7 +403,7 @@
     "Applying": "正在装备配装...",
     "ClearSlot": "清空槽位 {{index}}",
     "Create": "创建配装",
-    "CreateTitle": "以当前装备创建游戏内配装",
+    "CreateTitle": "从当前装备创建游戏内配装",
     "CurrentlyEquipped": "当前装备",
     "DeleteFailed": "删除配装失败",
     "Deleted": "配装已删除",
@@ -527,7 +526,6 @@
     "Locked": "锁定的物品",
     "LockedHelp": "拖放物品到选择框中用以创建一个套装组.使用Shift +单击可移除物品.",
     "Missing2": "缺少稀有,传奇,或异域物品用来打造套装!",
-    "ModLockButton": "选择模组",
     "ProcessingMode": {
       "Fast": "快速",
       "Full": "完全",
@@ -540,7 +538,6 @@
     "SearchAnExotic": "搜索异域装备名称或描述",
     "SelectExotic": "选择异域装备",
     "SelectMods": "选择模组",
-    "SelectSubclass": "选择子职业",
     "SelectSubclassOptions": "自定义子职业",
     "ShowAllConfigs": "显示所有配置",
     "ShowConfigs": "显示配置",
@@ -716,7 +713,7 @@
       "InvalidModsDesc_plural": "有 {{count}} 个模组不能安装到任何护甲上。",
       "ModPlacement": "模组位置",
       "UnassignedMods": "未分配的模组",
-      "UnassignedModsDesc": "由于能量容量或模组插槽不足，一个模组无法安装。即便为所选护甲升级能量也是如此。",
+      "UnassignedModsDesc": "由于能量容量或模组插槽不足，一个模组无法安装。即便为所选护甲升级能量也无法修正此问题。",
       "UnassignedModsDesc_plural": "由于能量容量或模组插槽不足，{{count}} 个模组无法安装。即便为所选护甲升级能量也是如此。",
       "UpgradeCosts": "升级消耗成本",
       "UpgradeCostsDesc": "有些护甲需要能量容量升级才能装下所选的模组。升级总共会花费："
@@ -763,6 +760,7 @@
       "NoName": "配装需要名称。"
     },
     "SaveLoadout": "保存配装",
+    "Season": "Season {{season}}",
     "Share": {
       "Copied": "已复制配装链接到剪贴板",
       "CopyButton": "复制链接",
@@ -1215,7 +1213,7 @@
     "Button": "清空 {{numSockets}} 个插槽",
     "Cancel": "取消",
     "Choose": "选择要清空的插槽",
-    "DiscountedMods": "{{count}}x Discounted Mod",
+    "DiscountedMods": "{{count}} 个已享受折扣的模组",
     "Done": "已清空的插槽",
     "NoSockets": "无插槽可清空",
     "Ok": "确定",

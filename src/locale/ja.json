@@ -292,7 +292,6 @@
     "RetiredPerk": "入手不可のパークが付与された武器を表示します",
     "SearchPrompt": "利用可能なフィルタコマンドを検索",
     "Season": "Destiny 2のシーズンに登場したアイテムを表示します。",
-    "SeasonalDupe": "同シーズンの重複アイテムのみ表示します。異なるシーズンの同アイテムは別物としてカウントします。",
     "StackFull": "スタックに余裕があるアイテムを表示(強化のコア、奇妙なコイン、銃器技師の材料など)",
     "StackLevel": "スタック内のアイテムの量に基づいてアイテムを表示します。",
     "Stackable": "一纏め可能なアイテム(弾合成アイテム、奇妙なコインなど) を表示",
@@ -527,7 +526,6 @@
     "Locked": "ロックされたアイテム",
     "LockedHelp": "アイテムをドラッグ＆ドロップすることでそれを固定でセット作成できます。排除するには Shift + クリック.",
     "Missing2": "フルセットを作るためのレア、レジェンダリー、エキゾチックの部位が足りません！",
-    "ModLockButton": "Modを選択",
     "ProcessingMode": {
       "Fast": "最速",
       "Full": "すべて",
@@ -540,7 +538,6 @@
     "SearchAnExotic": "エキゾチック名または説明で検索",
     "SelectExotic": "使用するエキゾチックを選ぶ",
     "SelectMods": "Mod を選択",
-    "SelectSubclass": "サブクラスを選択",
     "SelectSubclassOptions": "サブクラスをカスタマイズ",
     "ShowAllConfigs": "全ての設定を表示する",
     "ShowConfigs": "設定を表示する",
@@ -763,6 +760,7 @@
       "NoName": "ロードアウトには名前が必要です。"
     },
     "SaveLoadout": "ロードアウトを保存",
+    "Season": "シーズン{{season}}",
     "Share": {
       "Copied": "ロードアウトのリンクをクリップボードにコピーしました",
       "CopyButton": "リンクをコピーする",

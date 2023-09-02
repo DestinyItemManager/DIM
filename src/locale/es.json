@@ -292,7 +292,6 @@
     "RetiredPerk": "Muestra armas con ventajas que ya no se pueden obtener.",
     "SearchPrompt": "Buscar filtros de comandos disponibles",
     "Season": "Mostrar objetos en cuya temporada de Destiny 2 aparecieron.",
-    "SeasonalDupe": "Muestra objetos duplicados, sin contar reincidencias de una temporada diferente como el mismo objeto.",
     "StackFull": "Muestra objetos que están al límite de capacidad para la pila (Núcleos de Mejora, Monedas Extrañas, Materiales de Armero, etc)",
     "StackLevel": "Muestra los objetos según la cantidad de objetos apilados.",
     "Stackable": "Muestra objetos que pueden ser apilados (municiones sintéticas, monedas extrañas, etc)",
@@ -527,7 +526,6 @@
     "Locked": "Objetos bloqueados",
     "LockedHelp": "Arrastrar y soltar cualquier objeto en su caja para crear conjunto con ese equipamiento específico. SHIFT+CLICK para excluir objetos.",
     "Missing2": "¡Faltan piezas raras, legendarias o exóticas para crear una equipación completa!",
-    "ModLockButton": "Seleccione modificadores",
     "ProcessingMode": {
       "Fast": "Rápido",
       "Full": "Completo",
@@ -540,7 +538,6 @@
     "SearchAnExotic": "Buscar por nombre de exótico o descripción",
     "SelectExotic": "Selecciona exótico",
     "SelectMods": "Seleccione Modificadores",
-    "SelectSubclass": "Seleccionar subclase",
     "SelectSubclassOptions": "Personalizar subclase",
     "ShowAllConfigs": "Mostrar todas las configuraciones",
     "ShowConfigs": "Mostrar configuraciones",
@@ -763,6 +760,7 @@
       "NoName": "Esta equipación necesita un nombre."
     },
     "SaveLoadout": "Guardar Equipación",
+    "Season": "Season {{season}}",
     "Share": {
       "Copied": "Copiado enlace de la equipación al portapapeles",
       "CopyButton": "Copiar Enlace",
@@ -1346,7 +1344,7 @@
     "Untitled": "Lista de Deseos sin nombre",
     "UpdateExternalSource": "Actualizar Fuente de la Lista de Deseos",
     "Voltron": "voltron (por defecto)",
-    "VoltronDescription": "voltron es una colección auto-actulizada de tiradas de listas de deseos de JvE y JcJ a través de la comunidad de Destiny. Elegimos esta por defecto.",
+    "VoltronDescription": "voltron es una colección auto-actulizada de tiradas de listas de deseos de JcE y JcJ a través de la comunidad de Destiny. Elegimos esta por defecto.",
     "WishListNotes": "Notas de la Lista de Deseos: {{notes}}",
     "WorstRatedTip": "Esta ventaja coincide exactamente con una tirada de arma en tu lista de basura.",
     "WorstRatedTip_plural": "Estas ventajas coinciden exactamente con una tirada de arma en tu lista de basura."

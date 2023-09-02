@@ -292,7 +292,6 @@
     "RetiredPerk": "Pokazuje broń z atutami, które nie są już dostępne.",
     "SearchPrompt": "Wyszukaj dostępne komendy filtrujące",
     "Season": "Pokazuje przedmioty na podstawie którego sezonu z Destiny 2 pochodzą.",
-    "SeasonalDupe": "Pokazuje zduplikowane przedmioty, nie licząc powtórzeń z innego sezonu jako tego samego przedmiotu.",
     "StackFull": "Pokaż, które przedmioty są wypełnione dla ich stosu (rdzenie wzmacniające, dziwne monety, materiały rusznikarza itp.)",
     "StackLevel": "Pokazuje przedmioty na podstawie ilości przedmiotów w ich stosie.",
     "Stackable": "Pokazuje przedmioty, które można stertować (syntezatory amunicji, dziwne monety, itd)",
@@ -527,7 +526,6 @@
     "Locked": "Zablokowane Przedmioty",
     "LockedHelp": "Przeciągnij i upuść dowolny przedmiot do jego wiaderka aby tworzyć zestaw z tym konkretnym sprzętem. Shift + kliknij aby wykluczyć przedmioty.",
     "Missing2": "Brakuje rzadkich, legendarnych lub egzotycznych części aby stworzyć pełny zestaw!",
-    "ModLockButton": "Wybierz modyfikacje",
     "ProcessingMode": {
       "Fast": "Szybki",
       "Full": "Pełny",
@@ -540,7 +538,6 @@
     "SearchAnExotic": "Search for exotic name or description",
     "SelectExotic": "Wybierz egzotyk",
     "SelectMods": "Wybierz modyfikacje",
-    "SelectSubclass": "Wybierz podklasę",
     "SelectSubclassOptions": "Dostostuj podklasę",
     "ShowAllConfigs": "Pokaż wszystkie konfiguracje",
     "ShowConfigs": "Pokaż konfiguracje",
@@ -763,6 +760,7 @@
       "NoName": "Uzbrojenie wymaga nazwy."
     },
     "SaveLoadout": "Zapisz Uzbrojenie",
+    "Season": "Season {{season}}",
     "Share": {
       "Copied": "Skopiowano link uzbrojenia do schowka",
       "CopyButton": "Kopiuj link",

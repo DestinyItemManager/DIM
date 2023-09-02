@@ -292,7 +292,6 @@
     "RetiredPerk": "더 이상 얻을 수 없는 특성이 포함된 아이템을 표시합니다.",
     "SearchPrompt": "사용 가능한 필터 명령어 검색",
     "Season": "데스티니 2의 특정 시즌에서 나온 아이템을 표시합니다.",
-    "SeasonalDupe": "중복된 아이템을 표시합니다, 다른 시즌의 재출시된 아이템은 같은 아이템으로 취급하지 않습니다.",
     "StackFull": "스택 당 최대 소지 제한에 도달한 아이템 표시 (강화 코어, 이상한 동전, 총기 제작 재료 등)",
     "StackLevel": "아이템의 개수를 기준으로 표시합니다.",
     "Stackable": "한 칸에 중첩 가능한 아이템(탄약 신스, 이상한 동전 등)을 표시합니다.",
@@ -527,7 +526,6 @@
     "Locked": "잠긴 아이템",
     "LockedHelp": "바구니에 아이템을 끌어다 놓아 해당 장비가 포함된 조합을 만드세요. 아이템을 제외하려면 쉬프트 + 클릭하세요.",
     "Missing2": "완전한 세트를 만들기 위해 필요한 희귀, 전설, 경이 등급의 장비가 부족합니다!",
-    "ModLockButton": "개조 부품 선택",
     "ProcessingMode": {
       "Fast": "빠름",
       "Full": "최대",
@@ -540,7 +538,6 @@
     "SearchAnExotic": "경이 이름이나 설명 검색",
     "SelectExotic": "경이 선택",
     "SelectMods": "개조 부품 선택",
-    "SelectSubclass": "하위직업 선택",
     "SelectSubclassOptions": "하위직업 사용자 정의",
     "ShowAllConfigs": "모든 설정 표시",
     "ShowConfigs": "설정 표시",
@@ -763,6 +760,7 @@
       "NoName": "로드아웃의 이름이 필요합니다."
     },
     "SaveLoadout": "로드아웃 저장",
+    "Season": "Season {{season}}",
     "Share": {
       "Copied": "클립보드로 로드아웃 주소가 복사됨",
       "CopyButton": "주소 복사",

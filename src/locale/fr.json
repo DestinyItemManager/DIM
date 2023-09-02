@@ -292,7 +292,6 @@
     "RetiredPerk": "Affiche les armes avec des attributs qui ne sont plus obtenable.",
     "SearchPrompt": "Rechercher les commandes de filtre disponibles",
     "Season": "Affiche les objets en fonction de la saison de Destiny 2 pendant lequel ils sont apparu.",
-    "SeasonalDupe": "Affiche les doublons, en ne comptant pas les rééditions d'une saison différente comme le même objet.",
     "StackFull": "Affiche les objets qui sont dans une pile pleine (Prismes d’amélioration, pièces étranges, matériaux des armuriers etc)",
     "StackLevel": "Affiche les objets en fonction de la quantité de ces mêmes objets.",
     "Stackable": "Affiche les objets qui peuvent être empilés (cartouches de munition, pièces étranges, etc)",
@@ -412,7 +411,7 @@
     "EditFailed": "Échec de la modification de l'équipement",
     "EditIdentifiers": "Changer l'apparence",
     "EditTitle": "Modifier le nom et l'icône de l'équipement",
-    "EquipNotReady": "Prêt pour l'équipement en jeu",
+    "EquipNotReady": "Pas prêt pour l'équipement en jeu",
     "EquipReady": "Prêt pour l'équipement en jeu",
     "LoadoutDetails": "Détails de l'équipement",
     "MatchingLoadouts": "Équipements correspondants :",
@@ -527,7 +526,6 @@
     "Locked": "Objets verrouillés",
     "LockedHelp": "Glissez et déplacez un objet dans cet espace pour construire votre set avec cet équipement. Shift + clique pour exclure les objets.",
     "Missing2": "Pièces rares, légendaires ou exotiques manquantes pour construire un set complet!",
-    "ModLockButton": "Sélectionner les mods",
     "ProcessingMode": {
       "Fast": "Rapide",
       "Full": "Complet",
@@ -540,7 +538,6 @@
     "SearchAnExotic": "Rechercher un nom ou une description d'exotique",
     "SelectExotic": "Sélectionner exotique",
     "SelectMods": "Sélectionner les Mods",
-    "SelectSubclass": "Sélectionner une doctrine",
     "SelectSubclassOptions": "Personnaliser la doctrine",
     "ShowAllConfigs": "Afficher toutes les configurations",
     "ShowConfigs": "Afficher les configurations",
@@ -763,6 +760,7 @@
       "NoName": "L'équipement a besoin d'un nom."
     },
     "SaveLoadout": "Sauvegarder l'équipement",
+    "Season": "Season {{season}}",
     "Share": {
       "Copied": "Lien de l'équipement copié dans le presse-papiers",
       "CopyButton": "Copier le lien",
