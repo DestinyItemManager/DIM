@@ -5,36 +5,18 @@ import FilterPills, { Option } from 'app/dim-ui/FilterPills';
 import { DimLanguage } from 'app/i18n';
 import { t } from 'app/i18next-t';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
-import { isInGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
 import {
   FragmentProblem,
   getFragmentProblemsSelector,
   isMissingItemsSelector,
 } from 'app/loadout-drawer/loadout-utils';
-import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
-import { plainString } from 'app/search/search-filters/freeform';
+import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
-import { isClassCompatible } from 'app/utils/item-utils';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 import deprecatedMods from 'data/d2/deprecated-mods.json';
 import _ from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-
-/**
- * Get the saved loadouts that apply to the given class type, out of all saved loadouts.
- */
-export function useSavedLoadoutsForClassType(classType: DestinyClass) {
-  const allSavedLoadouts = useSelector(loadoutsSelector);
-  return useMemo(
-    () => filterLoadoutsToClass(allSavedLoadouts, classType),
-    [allSavedLoadouts, classType]
-  );
-}
-
-export function filterLoadoutsToClass(loadouts: Loadout[], classType: DestinyClass) {
-  return loadouts.filter((loadout) => isClassCompatible(classType, loadout.classType));
-}
 
 /**
  * Set up the filter pills for loadouts - allowing for filtering by hashtag and some other special properties.
@@ -230,19 +212,45 @@ export function searchAndSortLoadoutsByQuery(
   language: DimLanguage,
   loadoutSort: LoadoutSort
 ) {
-  const loadoutQueryPlain = plainString(query, language);
-  return _.sortBy(
-    loadouts.filter(
-      (loadout) =>
-        !query ||
-        plainString(loadout.name, language).includes(loadoutQueryPlain) ||
-        (!isInGameLoadout(loadout) &&
-          loadout.notes &&
-          plainString(loadout.notes, language).includes(loadoutQueryPlain))
-    ),
-    (l) => (isInGameLoadout(l) ? 0 : 1),
+  const sortCollator = new Intl.Collator(language, {
+    numeric: true,
+    usage: 'sort',
+    sensitivity: 'accent',
+  });
+  const filterCollator = new Intl.Collator(language, { usage: 'search', sensitivity: 'base' });
+
+  const normalizedQuery = query.normalize('NFC');
+
+  // Unfortunately Collator does not have a substring search method
+  // See https://github.com/adobe/react-spectrum/blob/7f63e933e61f20891b4cf3f447ab817f918cb263/packages/%40react-aria/i18n/src/useFilter.ts#L58-L76
+  const contains = (string: string) => {
+    if (normalizedQuery.length === 0) {
+      return true;
+    }
+
+    string = string.normalize('NFC');
+
+    let scan = 0;
+    const sliceLen = normalizedQuery.length;
+    for (; scan + sliceLen <= string.length; scan++) {
+      const slice = string.slice(scan, scan + sliceLen);
+      if (filterCollator.compare(normalizedQuery, slice) === 0) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
+  const filteredLoadouts = query.length
+    ? loadouts.filter(
+        (loadout) => !query || contains(loadout.name) || (loadout.notes && contains(loadout.notes))
+      )
+    : [...loadouts];
+
+  return filteredLoadouts.sort(
     loadoutSort === LoadoutSort.ByEditTime
-      ? (l) => (isInGameLoadout(l) ? l.index : -(l.lastUpdatedAt ?? 0))
-      : (l) => (isInGameLoadout(l) ? l.index : l.name.toLocaleUpperCase())
+      ? compareBy((l) => -(l.lastUpdatedAt ?? 0))
+      : (a, b) => sortCollator.compare(a.name, b.name)
   );
 }
