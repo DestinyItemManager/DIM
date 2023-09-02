@@ -96,3 +96,14 @@
   display: inline;
   margin-left: 1em;
 }
+
+// Style for sections borrowed from LoadoutEdit
+.loadoutEditSection {
+  font-size: 12px; // reset from where PageWithMenu sets it to 14px
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 8px;
+  gap: 0;
+  // Fit 5 mods across, regardless of what the user's item size is
+  --item-size: 47px;
+  --loadout-edit-subclass-columns: 4;
+}

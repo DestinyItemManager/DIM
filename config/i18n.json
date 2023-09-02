@@ -533,7 +533,6 @@
     "Locked": "Locked Items",
     "LockedHelp": "Drag and drop any item into its bucket to build set with that specific gear. Shift + click to exclude items.",
     "Missing2": "Missing rare, legendary, or exotic pieces to build a full set!",
-    "ModLockButton": "Select mods",
     "ProcessingMode": {
       "Fast": "Fast",
       "Full": "Full",
@@ -546,7 +545,6 @@
     "SearchAnExotic": "Search for exotic name or description",
     "SelectExotic": "Select exotic",
     "SelectMods": "Select Mods",
-    "SelectSubclass": "Select subclass",
     "SelectSubclassOptions": "Customize subclass",
     "ShowAllConfigs": "Show all configurations",
     "ShowConfigs": "Show configurations",

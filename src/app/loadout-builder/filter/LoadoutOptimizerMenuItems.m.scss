@@ -21,7 +21,7 @@
   background-color: rgba(0, 0, 0, 0.4);
   composes: flexColumn from '../../dim-ui/common.m.scss';
   gap: 4px;
-  font-size: 12px;
+  font-size: 12px; // reset from where PageWithMenu sets it to 14px
 }
 
 .buttons {

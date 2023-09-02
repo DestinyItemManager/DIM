@@ -10,6 +10,7 @@ import { AppIcon, addIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import ModPicker from '../ModPicker';
@@ -19,15 +20,21 @@ import { createGetModRenderKey } from '../mod-utils';
 import styles from './LoadoutMods.m.scss';
 import PlugDef from './PlugDef';
 
+/** Do not allow the user to choose artifice mods manually in Loadout Optimizer since we're supposed to be doing that */
+export const autoAssignmentPCHs = [PlugCategoryHashes.EnhancementsArtifice];
+
 const LoadoutModMemo = memo(function LoadoutMod({
   mod,
   className,
   classType,
+  autoStatMods,
   onRemoveMod,
 }: {
   mod: ResolvedLoadoutMod;
   className: string;
   classType: DestinyClass;
+  /** Are stat mods being chosen automatically by LO? */
+  autoStatMods?: boolean;
   onRemoveMod?: (mod: ResolvedLoadoutMod) => void;
 }) {
   // We need this to be undefined if `onRemoveMod` is not present as the presence of the onClose
@@ -39,6 +46,10 @@ const LoadoutModMemo = memo(function LoadoutMod({
       plug={mod.resolvedMod}
       forClassType={classType}
       onClose={onClose}
+      disabledByAutoStatMods={
+        autoStatMods &&
+        mod.resolvedMod.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsV2General
+      }
     />
   );
 });
@@ -53,9 +64,11 @@ export const LoadoutMods = memo(function LoadoutMods({
   clearUnsetMods,
   missingSockets,
   hideShowModPlacements,
+  autoStatMods,
   onUpdateMods,
   onRemoveMod,
   onClearUnsetModsChanged,
+  onAutoStatModsChanged,
 }: {
   loadout: Loadout;
   allMods: ResolvedLoadoutMod[];
@@ -63,14 +76,16 @@ export const LoadoutMods = memo(function LoadoutMods({
   hideShowModPlacements?: boolean;
   clearUnsetMods?: boolean;
   missingSockets?: boolean;
+  /** Are stat mods being chosen automatically by LO? */
+  autoStatMods?: boolean;
   /** If present, show an "Add Mod" button */
   onUpdateMods?: (newMods: number[]) => void;
   onRemoveMod?: (mod: ResolvedLoadoutMod) => void;
   onClearUnsetModsChanged?: (checked: boolean) => void;
+  onAutoStatModsChanged?: (checked: boolean) => void;
 }) {
   const isPhonePortrait = useIsPhonePortrait();
   const getModRenderKey = createGetModRenderKey();
-  const [showModAssignmentDrawer, setShowModAssignmentDrawer] = useState(false);
   const [showModPicker, setShowModPicker] = useState(false);
 
   const unlockedPlugSetItems = useSelector(unlockedPlugSetItemsSelector(storeId));
@@ -116,6 +131,7 @@ export const LoadoutMods = memo(function LoadoutMods({
             mod={mod}
             classType={loadout.classType}
             onRemoveMod={onRemoveMod}
+            autoStatMods={Boolean(autoStatMods)}
           />
         ))}
         {onUpdateMods && (
@@ -129,17 +145,11 @@ export const LoadoutMods = memo(function LoadoutMods({
           </button>
         )}
       </div>
-      {(!hideShowModPlacements || onClearUnsetModsChanged) &&
+      {(!hideShowModPlacements || onClearUnsetModsChanged || onAutoStatModsChanged) &&
         (allMods.length > 0 || onUpdateMods) && (
           <div className={styles.buttons}>
             {!hideShowModPlacements && (
-              <button
-                className="dim-button"
-                type="button"
-                onClick={() => setShowModAssignmentDrawer(true)}
-              >
-                {t('Loadouts.ShowModPlacement')}
-              </button>
+              <ShowModAssignmentButton loadout={loadout} storeId={storeId} />
             )}
             {onClearUnsetModsChanged && (
               <CheckButton
@@ -150,22 +160,33 @@ export const LoadoutMods = memo(function LoadoutMods({
                 {t('Loadouts.ClearUnsetMods')}
               </CheckButton>
             )}
+
+            {$featureFlags.loAutoStatMods && onAutoStatModsChanged && (
+              <CheckButton
+                onChange={onAutoStatModsChanged}
+                name="autoStatMods"
+                checked={Boolean(autoStatMods)}
+              >
+                {t('LoadoutBuilder.AutoStatMods')}
+              </CheckButton>
+            )}
           </div>
         )}
-      {showModAssignmentDrawer && (
-        <ModAssignmentDrawer
-          loadout={loadout}
-          storeId={storeId}
-          onUpdateMods={onUpdateMods}
-          onClose={() => setShowModAssignmentDrawer(false)}
-        />
-      )}
       {onUpdateMods && showModPicker && (
         <ModPicker
           classType={loadout.classType}
           owner={storeId}
           lockedMods={resolvedMods}
           onAccept={onUpdateMods}
+          plugCategoryHashDenyList={
+            // autoStatMods being set means we're in Loadout Optimizer, which should not allow picking artifice mods
+            autoStatMods !== undefined
+              ? autoStatMods
+                ? // Exclude stat mods from the mod picker when they're auto selected
+                  [...autoAssignmentPCHs, PlugCategoryHashes.EnhancementsV2General]
+                : autoAssignmentPCHs
+              : undefined
+          }
           onClose={() => setShowModPicker(false)}
         />
       )}
@@ -254,3 +275,35 @@ export const LoadoutArtifactUnlocks = memo(function LoadoutArtifactUnlocks({
     </div>
   );
 });
+
+/**
+ * A button that shows the ModAssignmentDrawer.
+ */
+function ShowModAssignmentButton({
+  loadout,
+  storeId,
+  onUpdateMods,
+}: {
+  loadout: Loadout;
+  storeId: string;
+  /** If present, show an "Add Mod" button */
+  onUpdateMods?: (newMods: number[]) => void;
+}) {
+  const [showModAssignmentDrawer, setShowModAssignmentDrawer] = useState(false);
+
+  return (
+    <>
+      <button className="dim-button" type="button" onClick={() => setShowModAssignmentDrawer(true)}>
+        {t('Loadouts.ShowModPlacement')}
+      </button>
+      {showModAssignmentDrawer && (
+        <ModAssignmentDrawer
+          loadout={loadout}
+          storeId={storeId}
+          onUpdateMods={onUpdateMods}
+          onClose={() => setShowModAssignmentDrawer(false)}
+        />
+      )}
+    </>
+  );
+}

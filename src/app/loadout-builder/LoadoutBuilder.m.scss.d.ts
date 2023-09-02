@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'guide': string;
+  'loadoutEditSection': string;
   'menuContent': string;
   'page': string;
   'processing': string;

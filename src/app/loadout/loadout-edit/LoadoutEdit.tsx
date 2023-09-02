@@ -109,6 +109,7 @@ export default function LoadoutEdit({
           setLoadout={setLoadout}
           power={power}
           subclass={subclass}
+          className={styles.section}
         />
       )}
       {(anyClass
@@ -131,6 +132,9 @@ export default function LoadoutEdit({
         store={store}
         setLoadout={setLoadout}
         allMods={allMods}
+        className={clsx(styles.section, styles.mods)}
+        showClearUnsetModsSetting
+        showModPlacementsButton
       />
       <LoadoutArtifactUnlocksSection
         artifactUnlocks={loadout.parameters?.artifactUnlocks}
@@ -168,18 +172,20 @@ async function pickLoadoutItem(
   }
 }
 
-function LoadoutEditSubclassSection({
+export function LoadoutEditSubclassSection({
   loadout,
   store,
   setLoadout,
   power = 0,
   subclass,
+  className,
 }: {
   loadout: Loadout;
   store: DimStore;
   setLoadout: (updater: LoadoutUpdateFunction) => void;
   power?: number;
   subclass: ResolvedLoadoutItem | undefined;
+  className?: string;
 }) {
   const showItemPicker = useItemPicker();
   const [plugDrawerOpen, setPlugDrawerOpen] = useState(false);
@@ -212,7 +218,7 @@ function LoadoutEditSubclassSection({
 
   return (
     <LoadoutEditSection
-      className={styles.section}
+      className={className}
       title={t('Bucket.Class')}
       onClear={handleClearSubclass}
       onRandomize={handleRandomizeSubclass}
@@ -387,16 +393,27 @@ function LoadoutEditCategorySection({
   );
 }
 
-function LoadoutEditModsSection({
+export function LoadoutEditModsSection({
   loadout,
   store,
+  autoStatMods,
   setLoadout,
   allMods,
+  className,
+  showClearUnsetModsSetting,
+  showModPlacementsButton,
+  onAutoStatModsChanged,
 }: {
   loadout: Loadout;
   store: DimStore;
+  autoStatMods?: boolean;
   setLoadout: (updater: LoadoutUpdateFunction) => void;
   allMods: ResolvedLoadoutMod[];
+  className?: string;
+  showModPlacementsButton?: boolean;
+  showClearUnsetModsSetting?: boolean;
+  /** Show the auto stat mods checkbox if this is defined */
+  onAutoStatModsChanged?: (checked: boolean) => void;
 }) {
   const allItems = useSelector(allItemsSelector);
   const missingSockets = allItems.some((i) => i.missingSockets);
@@ -415,7 +432,7 @@ function LoadoutEditModsSection({
   return (
     <LoadoutEditSection
       title={t('Loadouts.Mods')}
-      className={clsx(styles.section, styles.mods)}
+      className={className}
       onClear={handleClearMods}
       onRandomize={() => handleRandomizeMods(allItems, unlockedPlugs)}
       onSyncFromEquipped={missingSockets ? undefined : handleSyncModsFromEquipped}
@@ -427,7 +444,12 @@ function LoadoutEditModsSection({
         onUpdateMods={handleUpdateMods}
         onRemoveMod={handleRemoveMod}
         clearUnsetMods={clearUnsetMods}
-        onClearUnsetModsChanged={handleClearUnsetModsChanged}
+        onClearUnsetModsChanged={
+          showClearUnsetModsSetting ? handleClearUnsetModsChanged : undefined
+        }
+        hideShowModPlacements={!showModPlacementsButton}
+        autoStatMods={autoStatMods}
+        onAutoStatModsChanged={onAutoStatModsChanged}
       />
     </LoadoutEditSection>
   );
