@@ -2,6 +2,11 @@
 
 * The order of vendor items should now much more accurately match the in-game order.
 * Filters and toggles on the Vendors page now consider focusing/decoding subvendors. E.g. the "Only show uncollected items" toggle will now show focusing subvendors if they allow focusing items you don't have collected.
+* Loadout editor menus now have a "Sync from equipped" option that replaces the loadout's items with your equipped items. The "Fill in using equipped" option is also disabled when there's no spaces to fill.
+* When loadouts are sorted by edit time, they are now grouped under headers showing which season they were last edited in.
+* The character menu no longer displays behind sheets.
+* "Fill in using non-equipped" will no longer attempt to add items for the wrong character class.
+* The Loadout Optimizer now uses the same editors as the Loadout Editor for subclass and mods, and has all the same options.
 
 ## 7.83.1 <span class="changelog-date">(2023-08-29)</span>
 
