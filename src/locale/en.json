@@ -760,6 +760,7 @@
       "NoName": "The loadout needs a name."
     },
     "SaveLoadout": "Save Loadout",
+    "Season": "Season {{season}}",
     "Share": {
       "Copied": "Copied loadout link to clipboard",
       "CopyButton": "Copy Link",

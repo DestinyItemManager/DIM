@@ -6,6 +6,7 @@ interface CssExports {
   'menu': string;
   'menuButton': string;
   'menuButtons': string;
+  'seasonHeader': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

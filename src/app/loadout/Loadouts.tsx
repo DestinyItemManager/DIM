@@ -2,6 +2,7 @@ import { LoadoutSort } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { apiPermissionGrantedSelector, languageSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
+import BungieImage from 'app/dim-ui/BungieImage';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
@@ -14,10 +15,12 @@ import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, addIcon, faCalculator, uploadIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { usePageTitle } from 'app/utils/hooks';
+import { DestinySeasonDefinition } from 'bungie-api-ts/destiny2';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
@@ -120,6 +123,9 @@ function Loadouts({ account }: { account: DestinyAccount }) {
     editLoadout(loadout, selectedStore.id, { isNew: true });
   };
 
+  // Insert season headers if we're sorting by edit time
+  const loadoutRows = useAddSeasonHeaders(loadouts, loadoutSort);
+
   const virtualListRef = useRef<VirtualListRef>(null);
   const scrollToLoadout = useCallback(
     (id: string) => {
@@ -191,23 +197,42 @@ function Loadouts({ account }: { account: DestinyAccount }) {
         {filterPills}
         <WindowVirtualList
           ref={virtualListRef}
-          numElements={loadouts.length}
+          numElements={loadoutRows.length}
           itemContainerClassName={styles.loadoutRow}
           estimatedSize={270}
-          getItemKey={(index) => loadouts[index].id}
+          getItemKey={(index) => {
+            const loadoutOrSeason = loadoutRows[index];
+            return 'id' in loadoutOrSeason ? loadoutOrSeason.id : loadoutOrSeason.startDate!;
+          }}
         >
           {(index) => {
-            const loadout = loadouts[index];
-            return (
-              <LoadoutRow
-                loadout={loadout}
-                store={selectedStore}
-                saved={savedLoadoutIds.has(loadout.id)}
-                equippable={loadout !== currentLoadout}
-                onShare={setSharedLoadout}
-                onSnapshotInGameLoadout={handleSnapshot}
-              />
-            );
+            const loadoutOrSeason = loadoutRows[index];
+            if ('id' in loadoutOrSeason) {
+              const loadout = loadoutOrSeason;
+              return (
+                <LoadoutRow
+                  loadout={loadout}
+                  store={selectedStore}
+                  saved={savedLoadoutIds.has(loadout.id)}
+                  equippable={loadout !== currentLoadout}
+                  onShare={setSharedLoadout}
+                  onSnapshotInGameLoadout={handleSnapshot}
+                />
+              );
+            } else {
+              const season = loadoutOrSeason;
+              return (
+                <h3 className={styles.seasonHeader}>
+                  {season.displayProperties.hasIcon && (
+                    <BungieImage height={24} width={24} src={season.displayProperties.icon} />
+                  )}{' '}
+                  {season.displayProperties.name} -{' '}
+                  {t('Loadouts.Season', {
+                    season: season.seasonNumber,
+                  })}
+                </h3>
+              );
+            }
           }}
         </WindowVirtualList>
         {loadouts.length === 0 && <p>{t('Loadouts.NoneMatch', { query })}</p>}
@@ -250,4 +275,29 @@ function Loadouts({ account }: { account: DestinyAccount }) {
       )}
     </PageWithMenu>
   );
+}
+
+function useAddSeasonHeaders(loadouts: Loadout[], loadoutSort: LoadoutSort) {
+  const defs = useD2Definitions()!;
+  let loadoutRows: (Loadout | DestinySeasonDefinition)[] = loadouts;
+  if (loadoutSort === LoadoutSort.ByEditTime) {
+    const seasons = Object.values(defs.Season.getAll()).sort(
+      (a, b) => b.seasonNumber - a.seasonNumber
+    );
+
+    // TODO: Map.groupBy
+    const grouped = new Map<DestinySeasonDefinition, Loadout[]>();
+    for (const loadout of loadouts) {
+      const season = seasons.find(
+        (s) =>
+          new Date(s.startDate ?? Date.now()).getTime() <= (loadout.lastUpdatedAt ?? Date.now())
+      )!;
+      const list = grouped.get(season) ?? [];
+      list.push(loadout);
+      grouped.set(season, list);
+    }
+
+    loadoutRows = [...grouped.entries()].flatMap(([season, loadouts]) => [season, ...loadouts]);
+  }
+  return loadoutRows;
 }
