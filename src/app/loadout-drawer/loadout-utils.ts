@@ -852,11 +852,12 @@ function getSubclassFragmentCapacity(subclassItem: DimItem): number {
 export function getUnequippedItemsForLoadout(dimStore: DimStore, category?: string) {
   return dimStore.items.filter(
     (item) =>
+      !item.equipped &&
       !item.location.inPostmaster &&
       !singularBucketHashes.includes(item.bucket.hash) &&
       itemCanBeInLoadout(item) &&
-      (category ? item.bucket.sort === category : fromEquippedTypes.includes(item.bucket.hash)) &&
-      !item.equipped
+      isClassCompatible(item.classType, dimStore.classType) &&
+      (category ? item.bucket.sort === category : fromEquippedTypes.includes(item.bucket.hash))
   );
 }
 
