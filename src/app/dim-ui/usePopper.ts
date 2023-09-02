@@ -39,14 +39,15 @@ const popperOptions = (
   menuClassName?: string,
   boundarySelector?: string,
   offset = arrowClassName ? popperArrowSize : 0,
-  fixed = false
+  fixed = false,
+  padding?: Padding
 ): Partial<Options> => {
   const headerHeight = parseInt(
     document.querySelector('html')!.style.getPropertyValue('--header-height')!,
     10
   );
   const boundaryElement = boundarySelector && document.querySelector(boundarySelector);
-  const padding: Padding = {
+  padding ??= {
     left: 10,
     top: headerHeight + (boundaryElement ? boundaryElement.clientHeight : 0) + 5,
     right: 10,
@@ -105,6 +106,7 @@ export function usePopper({
   placement,
   offset,
   fixed,
+  padding,
 }: {
   /** A ref to the rendered contents of a popper-positioned item */
   contents: React.RefObject<HTMLElement>;
@@ -122,6 +124,7 @@ export function usePopper({
   offset?: number;
   /** Is this placed on a fixed item? Workaround for https://github.com/popperjs/popper-core/issues/1156. TODO: make a "positioning context" context value for this */
   fixed?: boolean;
+  padding?: Padding;
 }) {
   const popper = useRef<Instance | undefined>();
 
@@ -149,7 +152,8 @@ export function usePopper({
         menuClassName,
         boundarySelector,
         offset,
-        fixed
+        fixed,
+        padding
       );
       popper.current = createPopper(reference.current, contents.current, options);
       popper.current.update();

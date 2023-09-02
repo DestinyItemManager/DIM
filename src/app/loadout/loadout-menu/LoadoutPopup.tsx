@@ -2,6 +2,7 @@ import { languageSelector, settingSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
+import { usePopper } from 'app/dim-ui/usePopper';
 import { startFarming } from 'app/farming/actions';
 import { t } from 'app/i18next-t';
 import {
@@ -69,9 +70,13 @@ import MaxlightButton from './MaxlightButton';
 export default function LoadoutPopup({
   dimStore,
   onClick,
+  menuRef,
+  positionRef,
 }: {
   dimStore: DimStore;
-  onClick?: (e: React.MouseEvent) => void;
+  menuRef: React.RefObject<HTMLElement>;
+  positionRef: React.RefObject<HTMLElement>;
+  onClick?: () => void;
 }) {
   // For the most part we don't need to memoize this - this menu is destroyed when closed
   const defs = useDefinitions()!;
@@ -149,6 +154,14 @@ export default function LoadoutPopup({
   const nativeAutoFocus = !isPhonePortrait && !isiOSBrowser();
 
   const filteringLoadouts = loadoutQuery.length > 0 || hasSelectedFilters;
+
+  usePopper({
+    contents: menuRef,
+    reference: positionRef,
+    placement: 'bottom-start',
+    fixed: true,
+    padding: 0,
+  });
 
   return (
     <div className={styles.content} onClick={onClick} role="menu">
