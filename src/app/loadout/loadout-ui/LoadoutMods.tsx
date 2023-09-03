@@ -149,7 +149,11 @@ export const LoadoutMods = memo(function LoadoutMods({
         (allMods.length > 0 || onUpdateMods) && (
           <div className={styles.buttons}>
             {!hideShowModPlacements && (
-              <ShowModAssignmentButton loadout={loadout} storeId={storeId} />
+              <ShowModAssignmentButton
+                loadout={loadout}
+                storeId={storeId}
+                onUpdateMods={onUpdateMods}
+              />
             )}
             {onClearUnsetModsChanged && (
               <CheckButton
