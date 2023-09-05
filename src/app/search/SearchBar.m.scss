@@ -38,6 +38,8 @@
     // Add a margin and change to outset shadows for clearer outlining on mobile
     margin: 0 1px;
     box-shadow:
+      0 0 0 1px var(--theme-search-dropdown-bg),
+      // fallback to fill the 1px margin if a theme has transparent borders
       0 0 0 1px var(--theme-search-dropdown-border),
       0 1px 4px 1px rgba(0, 0, 0, 0.5);
     overflow-y: auto;
