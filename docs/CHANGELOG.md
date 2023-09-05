@@ -1,5 +1,7 @@
 ## Next
 
+* The "Sort triumphs by completion" toggle on the Records page now maintains the order of triumphs with identical completion progress.
+
 ## 7.84.0 <span class="changelog-date">(2023-09-03)</span>
 
 * The order of vendor items should now much more accurately match the in-game order.
