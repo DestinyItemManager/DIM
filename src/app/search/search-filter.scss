@@ -54,4 +54,8 @@
   box-sizing: border-box;
   padding: 0 4px;
   background: var(--theme-mobile-background);
+
+  @include phone-portrait {
+    padding-bottom: 4px;
+  }
 }
