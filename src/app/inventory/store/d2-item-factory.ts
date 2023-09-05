@@ -386,8 +386,6 @@ export function makeItem(
         // why the optional chain? well, somehow, an item can return tooltipNotificationIndexes,
         // but have no tooltipNotifications in its def
         .map((i) => itemDef.tooltipNotifications?.[i])
-        // a temporary filter because as of witch queen, all tooltips are set to "on"
-        .filter((t) => t && t.displayStyle !== 'ui_display_style_info')
     : emptyArray<DestinyItemTooltipNotification>();
 
   // null out falsy values like a blank string for a url
