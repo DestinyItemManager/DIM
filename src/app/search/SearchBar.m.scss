@@ -35,12 +35,14 @@
 
   @include phone-portrait {
     top: 100%;
+    // Fallback to allow either fully or semi-transparent search box borders
     // Add a margin and change to outset shadows for clearer outlining on mobile
+    // Fill the 1px margin with re-stacked fills/borders to accurately colour-match
     margin: 0 1px;
     box-shadow:
-      0 0 0 1px var(--theme-search-dropdown-bg),
-      // fallback to fill the 1px margin if a theme has transparent borders
       0 0 0 1px var(--theme-search-dropdown-border),
+      0 0 0 1px var(--theme-sheet-search-bg),
+      0 0 0 1px var(--theme-mobile-background),
       0 1px 4px 1px rgba(0, 0, 0, 0.5);
     overflow-y: auto;
     overscroll-behavior: none;
