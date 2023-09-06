@@ -224,6 +224,20 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  crota: {
+    itemHashes: [],
+    sourceHashes: [
+      1897187034, // Source: Crota's End Raid
+    ],
+    searchString: [],
+  },
+  crotasend: {
+    itemHashes: [],
+    sourceHashes: [
+      1897187034, // Source: Crota's End Raid
+    ],
+    searchString: [],
+  },
   crownofsorrow: {
     itemHashes: [
       947448544, // Shadow of Earth Shell

@@ -621,6 +621,8 @@ const missingSources: { [key: string]: number[] } = {
     3759659288, // Shadow's Plate
     4152814806, // Shadow's Greaves
   ],
+  crota: [],
+  crotasend: [],
   crownofsorrow: [
     17280095, // Shadow's Strides
     256904954, // Shadow's Grips
