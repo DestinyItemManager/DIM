@@ -2,7 +2,7 @@
 
 .deepsightProgress {
   display: flex;
-  gap: 4px;
+  flex-direction: column;
 
   :global(.objective-progress) {
     background: var(--theme-item-popup-progress-bar-bg);
@@ -13,4 +13,18 @@
   padding: 4px 10px 4px;
   background: var(--theme-item-popup-panel-bg);
   flex-grow: 1;
+}
+
+.deepsightHarmonizableSection {
+  padding: 4px 10px 4px 11px;
+  background: var(--theme-item-popup-panel-bg);
+  display: flex;
+  gap: 8px;
+
+  .harmonizableIcon {
+    img {
+      width: 16px;
+      height: 16px;
+    }
+  }
 }
