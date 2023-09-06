@@ -1,5 +1,8 @@
+import BungieImage from 'app/dim-ui/BungieImage';
 import { DimItem } from 'app/inventory/item-types';
+import { useD2Definitions } from 'app/manifest/selectors';
 import Objective from 'app/progress/Objective';
+import { DEEPSIGHT_HARMONIZER } from 'app/search/d2-known-values';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import styles from './WeaponDeepsightInfo.m.scss';
 
@@ -15,6 +18,8 @@ export function WeaponDeepsightInfo({ item }: { item: DimItem }) {
       s.plugged?.plugDef.plug.plugCategoryHash ===
         PlugCategoryHashes.CraftingPlugsWeaponsModsExtractors && s.visibleInGame
   );
+  const defs = useD2Definitions()!;
+  const harmonizerIcon = defs.InventoryItem.get(DEEPSIGHT_HARMONIZER).displayProperties.icon;
 
   if (!relevantObjectives?.length) {
     return null;
@@ -32,7 +37,7 @@ export function WeaponDeepsightInfo({ item }: { item: DimItem }) {
           {isHarmonizable && isHarmonizable.length > 0 && (
             <div className={styles.deepsightHarmonizableSection}>
               <div className={styles.harmonizableIcon}>
-                <img src="https://www.bungie.net/common/destiny2_content/icons/e816fd6ecf653de012dfc52087d8d1d9.jpg" />
+                <BungieImage src={harmonizerIcon} />
               </div>
               <div>Deepsight harmonizer is available</div>
             </div>

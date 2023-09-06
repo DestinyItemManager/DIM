@@ -196,6 +196,9 @@ export const pinnacleSources = [
 /** The premium Eververse currency */
 export const silverItemHash = 3147280338; // InventoryItem "Silver"
 
+// Deepsight harmonizer currency for extracting weapon patterns
+export const DEEPSIGHT_HARMONIZER = 2228452164;
+
 // For loadout mods obliterated from the defs, we instead return this def
 export const deprecatedPlaceholderArmorModHash = 3947616002; // InventoryItem "Deprecated Armor Mod"
 
