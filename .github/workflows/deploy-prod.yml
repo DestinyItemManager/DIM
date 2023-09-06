@@ -38,7 +38,7 @@ jobs:
 
       - name: get-npm-version
         id: package-version
-        uses: martinbeentjes/npm-get-version-action@v1.1.0
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
 
       - name: set feature
         if: ${{ !github.event.inputs.patch }}
@@ -52,7 +52,7 @@ jobs:
 
       - name: Bump release version
         id: bump_version
-        uses: christian-draeger/increment-semantic-version@1.0.2
+        uses: christian-draeger/increment-semantic-version@1.0.3
         with:
           current-version: ${{ steps.package-version.outputs.current-version }}
           version-fragment: ${{ env.build_level }}
