@@ -2,29 +2,30 @@
 
 .deepsightProgress {
   display: flex;
-  flex-direction: column;
+  padding: 4px 10px;
+  gap: 4px;
+  background: var(--theme-item-popup-panel-bg);
+  justify-content: center;
+  align-items: center;
+  align-content: stretch;
 
   :global(.objective-progress) {
     background: var(--theme-item-popup-progress-bar-bg);
   }
-}
 
-.deepsightProgressSection {
-  padding: 4px 10px 4px;
-  background: var(--theme-item-popup-panel-bg);
-  flex-grow: 1;
-}
+  .deepsightHarmonizableIcon {
+    flex-grow: 1;
+    max-width: fit-content;
 
-.deepsightHarmonizableSection {
-  padding: 4px 10px 4px 11px;
-  background: var(--theme-item-popup-panel-bg);
-  display: flex;
-  gap: 8px;
-
-  .harmonizableIcon {
     img {
-      width: 16px;
-      height: 16px;
+      display: grid;
+      width: 15px;
+      height: 15px;
+      border: 1px solid #999;
     }
+  }
+
+  .deepsightProgressBar {
+    flex-grow: 1;
   }
 }

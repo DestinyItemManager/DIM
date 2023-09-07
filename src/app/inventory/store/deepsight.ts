@@ -33,3 +33,13 @@ export function isDeepsightResonanceSocket(socket: DimSocket): boolean {
     socketContainsPlugWithCategory(socket, PlugCategoryHashes.CraftingPlugsWeaponsModsMemories)
   );
 }
+
+export function isHarmonizable(item: DimItem) {
+  const isItemHarmonizable = item.sockets?.allSockets.filter(
+    (s) =>
+      s.plugged?.plugDef.plug.plugCategoryHash ===
+        PlugCategoryHashes.CraftingPlugsWeaponsModsExtractors && s.visibleInGame
+  );
+
+  return isItemHarmonizable;
+}
