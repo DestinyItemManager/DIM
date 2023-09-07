@@ -16,7 +16,8 @@ module.exports = {
     'Library\\.mjs$': 'identity-obj-proxy',
   },
   setupFiles: ['./src/testing/jest-setup.js'],
-  transformIgnorePatterns: ['node_modules/?!(bungie-api-ts)'],
+  // Babel transform is required to handle some es modules?
+  transformIgnorePatterns: ['node_modules/(?!bungie-api-ts|@popper|@react-hook)'],
   globals: {
     $BROWSERS: [],
     $DIM_FLAVOR: 'test',

@@ -10,7 +10,6 @@ import store from 'app/store/store';
 import { lazyLoadStreamDeck, startStreamDeckConnection } from 'app/stream-deck/stream-deck';
 import { streamDeckEnabled } from 'app/stream-deck/util/local-storage';
 import { infoLog } from 'app/utils/log';
-import { scheduleMemoryMeasurement } from 'app/utils/measure-memory';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import idbReady from 'safari-14-idb-fix';
@@ -36,7 +35,6 @@ if ($DIM_FLAVOR !== 'dev') {
 }
 
 setupRateLimiter();
-scheduleMemoryMeasurement();
 
 const i18nPromise = initi18n();
 
