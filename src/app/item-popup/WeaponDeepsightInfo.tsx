@@ -36,10 +36,12 @@ export function WeaponDeepsightInfo({ item }: { item: DimItem }) {
     <div className={styles.deepsightProgress}>
       {relevantObjectives && relevantObjectives.length > 0 && (
         <>
-          {harmonizable && harmonizable.length > 0 && (
+          {harmonizable && harmonizable.length > 0 ? (
             <PressTip tooltip={harmonizableTooltip} className={styles.deepsightHarmonizableIcon}>
               <BungieImage src={harmonizerIcon} />
             </PressTip>
+          ) : (
+            <div className="objective-checkbox" />
           )}
           <div className={styles.deepsightProgressBar}>
             {relevantObjectives.map((objective) => (

@@ -49,6 +49,10 @@ $horizontal-padding: 11px;
 
   p {
     margin-bottom: 0;
+
+    &:first-of-type {
+      margin: 0;
+    }
   }
 
   .header {
