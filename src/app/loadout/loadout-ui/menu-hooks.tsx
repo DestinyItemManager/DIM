@@ -13,6 +13,7 @@ import {
 } from 'app/loadout-drawer/loadout-utils';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
+import { localizedIncludes, localizedSorter } from 'app/utils/intl';
 import deprecatedMods from 'data/d2/deprecated-mods.json';
 import _ from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
@@ -212,45 +213,19 @@ export function searchAndSortLoadoutsByQuery(
   language: DimLanguage,
   loadoutSort: LoadoutSort
 ) {
-  const sortCollator = new Intl.Collator(language, {
-    numeric: true,
-    usage: 'sort',
-    sensitivity: 'accent',
-  });
-  const filterCollator = new Intl.Collator(language, { usage: 'search', sensitivity: 'base' });
-
-  const normalizedQuery = query.normalize('NFC');
-
-  // Unfortunately Collator does not have a substring search method
-  // See https://github.com/adobe/react-spectrum/blob/7f63e933e61f20891b4cf3f447ab817f918cb263/packages/%40react-aria/i18n/src/useFilter.ts#L58-L76
-  const contains = (string: string) => {
-    if (normalizedQuery.length === 0) {
-      return true;
-    }
-
-    string = string.normalize('NFC');
-
-    let scan = 0;
-    const sliceLen = normalizedQuery.length;
-    for (; scan + sliceLen <= string.length; scan++) {
-      const slice = string.slice(scan, scan + sliceLen);
-      if (filterCollator.compare(normalizedQuery, slice) === 0) {
-        return true;
-      }
-    }
-
-    return false;
-  };
-
-  const filteredLoadouts = query.length
-    ? loadouts.filter(
-        (loadout) => !query || contains(loadout.name) || (loadout.notes && contains(loadout.notes))
-      )
-    : [...loadouts];
+  let filteredLoadouts: Loadout[];
+  if (query.length) {
+    const includes = localizedIncludes(language, query);
+    filteredLoadouts = loadouts.filter(
+      (loadout) => includes(loadout.name) || (loadout.notes && includes(loadout.notes))
+    );
+  } else {
+    filteredLoadouts = [...loadouts];
+  }
 
   return filteredLoadouts.sort(
     loadoutSort === LoadoutSort.ByEditTime
       ? compareBy((l) => -(l.lastUpdatedAt ?? 0))
-      : (a, b) => sortCollator.compare(a.name, b.name)
+      : localizedSorter(language, (l) => l.name)
   );
 }
