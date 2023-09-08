@@ -21,12 +21,10 @@ export function useFixOverscrollBehavior(ref: React.RefObject<HTMLElement>) {
     const elem = entry.target as HTMLElement;
     if (elem.scrollHeight > elem.clientHeight) {
       // Scrollable contents
-      elem.style.overflowX = 'hidden';
       elem.style.overflowY = 'auto';
       elem.style.touchAction = '';
     } else {
       // Non-scrollable contents
-      elem.style.overflowX = 'hidden';
       elem.style.overflowY = 'hidden';
       elem.style.touchAction = 'none';
     }
