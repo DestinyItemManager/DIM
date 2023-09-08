@@ -20,7 +20,6 @@
   overscroll-behavior: contain;
   background-color: var(--theme-dropdown-menu-bg);
   will-change: transform;
-  touch-action: none;
 
   @include visible-scrollbars;
 

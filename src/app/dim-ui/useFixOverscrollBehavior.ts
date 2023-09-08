@@ -9,10 +9,10 @@ import useResizeObserver from '@react-hook/resize-observer';
  * We watch the size of the element, and if it's big enough to scroll we turn on
  * overflow: auto. If they're not, we have to turn them to overflow: hidden so
  * they no longer count as a user-scrollable item. For this to work, the initial
- * styles must also start with overflow: hidden, or else overriding it doesn't
- * seem to matter. Also - if we have -webkit-overflow-scrolling: touch, we get
- * unwanted scroll chaining. But the original reason to have that (native-style
- * scrolling) is the default now. See
+ * styles must also start with overflow: hidden or overflow: auto, or else we
+ * can't tell if we are overflowing the container initially. Also - if we have
+ * -webkit-overflow-scrolling: touch, we get unwanted scroll chaining. But the
+ * original reason to have that (native-style scrolling) is the default now. See
  * https://github.com/w3c/csswg-drafts/issues/3349#issuecomment-492721871 and
  * https://bugs.chromium.org/p/chromium/issues/detail?id=813094
  */
