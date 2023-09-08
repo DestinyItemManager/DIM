@@ -1,10 +1,9 @@
+import useResizeObserver from '@react-hook/resize-observer';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import ItemPickerContainer from 'app/item-picker/ItemPickerContainer';
-import { isAndroid, isiOSBrowser } from 'app/utils/browsers';
 import { Portal } from 'app/utils/temp-container';
 import SingleVendorSheetContainer from 'app/vendors/single-vendor/SingleVendorSheetContainer';
-import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import clsx from 'clsx';
 import {
   PanInfo,
@@ -141,7 +140,7 @@ export default function Sheet({
 }: Props) {
   const sheet = useRef<HTMLDivElement>(null);
   const sheetContents = useRef<HTMLDivElement | null>(null);
-  useLockSheetContents(sheetContents);
+  // useLockSheetContents(sheetContents);
   const dragHandle = useRef<HTMLDivElement>(null);
 
   const [frozenHeight, setFrozenHeight] = useState<number | undefined>(undefined);
@@ -200,6 +199,8 @@ export default function Sheet({
     },
     [dragControls]
   );
+
+  useFixOverscrollBehavior(sheetContents);
 
   // When drag ends we determine if the sheet should be closed either via the final
   // drag velocity or if the sheet has been dragged halfway the down from its height.
@@ -314,32 +315,6 @@ export default function Sheet({
   );
 }
 
-/**
- * Locks body scroll except for touches in the sheet contents.
- */
-function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivElement | null>) {
-  useEffect(() => {
-    const elem = sheetContents.current;
-
-    if (!elem || !(isiOSBrowser() || isAndroid())) {
-      return;
-    }
-
-    // This special style is needed because body-scroll-lock's styles cause the
-    // position: sticky header to move.
-    document.body.classList.add('body-scroll-lock');
-    disableBodyScroll(elem);
-
-    return () => {
-      // TODO: This relies on the sheetsOpen effect running first, maybe combine them
-      if (sheetsOpen === 0) {
-        document.body.classList.remove('body-scroll-lock');
-      }
-      enableBodyScroll(elem);
-    };
-  }, [sheetContents]);
-}
-
 function isInside(element: HTMLElement, className: string) {
   while (element?.classList) {
     if (element.classList.contains(className)) {
@@ -348,4 +323,36 @@ function isInside(element: HTMLElement, className: string) {
     element = element.parentNode as HTMLElement;
   }
   return false;
+}
+
+/*
+ * There is a bug in all browsers where overflow-behavior does not apply when
+ * an item that has overflow: auto is not tall enough to actually need to
+ * scroll. In those cases, scrolling "chains" to the main viewport, leading to
+ * an effect of touching the sheet but scrolling what's behind it. In the past
+ * we used libraries like body-scroll-lock to fix this, but a more targeted
+ * fix is here. We watch the size of the sheet contents, and if they're big
+ * enough to scroll we turn on overflow: auto. If they're not, we have to turn
+ * them to overflow: hidden so they no longer count as a user-scrollable item.
+ * For this to work, the .sheet-contents class must also start with overflow:
+ * hidden, or else overriding it doesn't seem to matter. Also - if we have
+ * -webkit-overflow-scrolling: touch, we get unwanted scroll chaining. But the
+ * original reason to have that (native-style scrolling) is the default now.
+ * See https://github.com/w3c/csswg-drafts/issues/3349#issuecomment-492721871
+ * and https://bugs.chromium.org/p/chromium/issues/detail?id=813094
+ */
+function useFixOverscrollBehavior(sheetContents: React.RefObject<HTMLElement>) {
+  useResizeObserver(sheetContents, (entry) => {
+    const elem = entry.target as HTMLElement;
+    if (elem.scrollHeight > elem.clientHeight) {
+      // Scrollable contents
+      elem.style.overflowX = 'hidden';
+      elem.style.overflowY = 'auto';
+    } else {
+      // Non-scrollable contents
+      // no override === 'hidden' from .sheet-contents class
+      elem.style.overflowX = '';
+      elem.style.overflowY = '';
+    }
+  });
 }
