@@ -140,8 +140,6 @@ export default function Sheet({
 }: Props) {
   const sheet = useRef<HTMLDivElement>(null);
   const sheetContents = useRef<HTMLDivElement | null>(null);
-  // useLockSheetContents(sheetContents);
-  const dragHandle = useRef<HTMLDivElement>(null);
 
   const [frozenHeight, setFrozenHeight] = useState<number | undefined>(undefined);
   const [disabled, setParentDisabled] = useDisableParent(forceDisabled);
@@ -185,13 +183,8 @@ export default function Sheet({
   // are scrolled all the way to the top.
   const dragHandleDown = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
-      // prevent item-tag-selector dropdown from triggering drag (Safari)
-      if (isInside(e.target as HTMLElement, 'item-tag-selector')) {
-        return;
-      }
-
       if (
-        dragHandle.current?.contains(e.target as Node) ||
+        !sheetContents.current!.contains(e.target as Node) ||
         sheetContents.current!.scrollTop === 0
       ) {
         dragControls.start(e);
@@ -277,7 +270,7 @@ export default function Sheet({
 
       <div className="sheet-container" onPointerDown={dragHandleDown}>
         {Boolean(header) && (
-          <div className="sheet-header" ref={dragHandle}>
+          <div className="sheet-header">
             {_.isFunction(header) ? header({ onClose: triggerClose }) : header}
           </div>
         )}
@@ -313,16 +306,6 @@ export default function Sheet({
       </SheetDisabledContext.Provider>
     </Portal>
   );
-}
-
-function isInside(element: HTMLElement, className: string) {
-  while (element?.classList) {
-    if (element.classList.contains(className)) {
-      return true;
-    }
-    element = element.parentNode as HTMLElement;
-  }
-  return false;
 }
 
 /*
