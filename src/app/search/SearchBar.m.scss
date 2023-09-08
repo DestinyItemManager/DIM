@@ -18,7 +18,6 @@
 
 .menu {
   color: var(--theme-text);
-  overflow: hidden;
   margin: 0;
   border-top: 0;
   background: var(--theme-search-dropdown-bg);
@@ -36,11 +35,11 @@
   box-shadow:
     inset 0 -1px 0 0 var(--theme-search-dropdown-bg),
     inset 0 -1px 0 1px var(--theme-search-dropdown-border);
+  overflow: hidden;
+  overscroll-behavior: none;
 
   @include phone-portrait {
     top: calc(100% + 1px);
-    overflow-y: auto;
-    overscroll-behavior: none;
     max-height: calc(var(--viewport-height) - var(--header-height)) !important;
     box-shadow: none;
     border-radius: 0;

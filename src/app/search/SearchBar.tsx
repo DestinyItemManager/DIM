@@ -7,6 +7,7 @@ import KeyHelp from 'app/dim-ui/KeyHelp';
 import { Loading } from 'app/dim-ui/Loading';
 import Sheet from 'app/dim-ui/Sheet';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
+import { useFixOverscrollBehavior } from 'app/dim-ui/useFixOverscrollBehavior';
 import { t } from 'app/i18next-t';
 import { toggleSearchResults } from 'app/shell/actions';
 import { useIsPhonePortrait } from 'app/shell/selectors';
@@ -417,11 +418,15 @@ function SearchBar(
     }
   };
 
+  const menuRef = useRef<HTMLUListElement>(null);
+  useFixOverscrollBehavior(menuRef);
+
   const autocompleteMenu = useMemo(
     () => (
       <ul
         {...getMenuProps()}
         className={styles.menu}
+        ref={menuRef}
         style={{
           maxHeight: menuMaxHeight,
         }}
