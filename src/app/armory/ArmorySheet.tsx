@@ -31,17 +31,15 @@ export default function ArmorySheet({
     [item?.sockets]
   );
 
-  itemHash ??= item.hash;
-
   // If we're opening a dummy weapon from a Vendor (like for item focusing),
   // try to find the definition of what a user would expect.
-  const betterItemHash = itemHash ?? (item.vendor && focusingItemOutputs[item.hash]);
+  const betterItemHash = item?.vendor && focusingItemOutputs[item.hash];
 
   return (
     <Sheet onClose={onClose} sheetClassName={styles.sheet}>
       <ClickOutsideRoot>
         <Armory
-          itemHash={betterItemHash ?? itemHash}
+          itemHash={itemHash ?? betterItemHash ?? item.hash}
           // Only use the sockets if we didn't change what item we're even looking at.
           realItemSockets={betterItemHash === undefined ? realItemSockets : undefined}
           realAvailablePlugHashes={
