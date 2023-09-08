@@ -327,7 +327,8 @@
   "General": {
     "ClickForDetails": "Click for details",
     "Confirm": "Confirm?",
-    "UserGuideLink": "User guide"
+    "UserGuideLink": "User guide",
+    "Close": "Close"
   },
   "Glyphs": {
     "Missing": "Missing",
