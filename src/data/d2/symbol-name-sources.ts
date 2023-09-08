@@ -882,6 +882,7 @@ export type TranslateManually = typeof translateManually[number];
  * [Alternate Weapon Action]
  * [Light Attack]
  * [Heavy Attack]
+ * [Air Dodge]
  * [Super]
  * [Sprint]
  * [Block]
