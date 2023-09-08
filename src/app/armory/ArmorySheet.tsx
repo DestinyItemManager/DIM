@@ -7,32 +7,41 @@ import { useMemo } from 'react';
 import Armory from './Armory';
 import styles from './ArmorySheet.m.scss';
 
-export default function ArmorySheet({ item, onClose }: { item: DimItem; onClose: () => void }) {
+export default function ArmorySheet({
+  item,
+  itemHash,
+  onClose,
+}: { onClose: () => void } & (
+  | { item: DimItem; itemHash?: undefined }
+  | { itemHash: number; item?: undefined }
+)) {
   const realItemSockets = useMemo(
     () =>
-      item.sockets
+      item?.sockets
         ? Object.fromEntries(
             filterMap(item.sockets.allSockets, (s) =>
               s.plugged ? [s.socketIndex, s.plugged.plugDef.hash] : undefined
             )
           )
         : {},
-    [item.sockets]
+    [item?.sockets]
   );
   const realAvailablePlugHashes = useMemo(
-    () => item.sockets?.allSockets.flatMap((s) => s.plugOptions.map((p) => p.plugDef.hash)) ?? [],
-    [item.sockets]
+    () => item?.sockets?.allSockets.flatMap((s) => s.plugOptions.map((p) => p.plugDef.hash)) ?? [],
+    [item?.sockets]
   );
+
+  itemHash ??= item.hash;
 
   // If we're opening a dummy weapon from a Vendor (like for item focusing),
   // try to find the definition of what a user would expect.
-  const betterItemHash = item.vendor && focusingItemOutputs[item.hash];
+  const betterItemHash = itemHash ?? (item.vendor && focusingItemOutputs[item.hash]);
 
   return (
     <Sheet onClose={onClose} sheetClassName={styles.sheet}>
       <ClickOutsideRoot>
         <Armory
-          itemHash={betterItemHash ?? item.hash}
+          itemHash={betterItemHash ?? itemHash}
           // Only use the sockets if we didn't change what item we're even looking at.
           realItemSockets={betterItemHash === undefined ? realItemSockets : undefined}
           realAvailablePlugHashes={
