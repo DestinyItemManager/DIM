@@ -1,5 +1,6 @@
 const richTextManifestSourceData = {
   '[Aim Down Sights]': ['SandboxPerk', 104297121],
+  '[Air Dodge]': ['SandboxPerk', 1000136554],
   '[Alternate Weapon Action]': ['SandboxPerk', 250262009],
   '[Arc]': ['Objective', 19991929],
   '[Auto Rifle]': ['Objective', 60057218],
