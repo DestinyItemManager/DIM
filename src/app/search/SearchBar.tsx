@@ -424,9 +424,8 @@ function SearchBar(
   const autocompleteMenu = useMemo(
     () => (
       <ul
-        {...getMenuProps()}
+        {...getMenuProps({ ref: menuRef })}
         className={styles.menu}
-        ref={menuRef}
         style={{
           maxHeight: menuMaxHeight,
         }}
