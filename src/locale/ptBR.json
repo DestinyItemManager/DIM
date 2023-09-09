@@ -760,7 +760,7 @@
       "NoName": "O set precisa de um nome."
     },
     "SaveLoadout": "Salvar Set",
-    "Season": "Season {{season}}",
+    "Season": "Temporada {{season}}",
     "Share": {
       "Copied": "Link de compartilhamento copiado para a área de transferência",
       "CopyButton": "Copiar Link",
