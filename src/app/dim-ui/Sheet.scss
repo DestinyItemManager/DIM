@@ -63,10 +63,9 @@ $control-color: rgba(255, 255, 255, 0.5);
     overscroll-behavior: none;
     -webkit-overflow-scrolling: touch;
     box-sizing: border-box;
-    padding-bottom: env(safe-area-inset-bottom);
 
-    &.sheet-has-footer {
-      padding-bottom: 0;
+    &:last-child {
+      padding-bottom: env(safe-area-inset-bottom);
     }
   }
 
