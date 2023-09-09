@@ -2,7 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'armoryItemIcon': string;
-  'armorySheet': string;
   'deleteIcon': string;
   'filterBarButton': string;
   'filterHelp': string;
