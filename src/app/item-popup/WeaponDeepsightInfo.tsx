@@ -15,7 +15,7 @@ export function WeaponDeepsightInfo({ item }: { item: DimItem }) {
   const relevantObjectives = record?.objectives.filter((o) => !o.complete);
 
   const defs = useD2Definitions()!;
-  const harmonizerIcon = defs.InventoryItem.get(DEEPSIGHT_HARMONIZER).displayProperties.icon;
+  const harmonizerIcon = defs.InventoryItem.get(DEEPSIGHT_HARMONIZER)?.displayProperties.icon;
 
   if (!relevantObjectives?.length) {
     return null;
