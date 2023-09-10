@@ -34,7 +34,7 @@ export function isDeepsightResonanceSocket(socket: DimSocket): boolean {
   );
 }
 
-export function isHarmonizable(item: DimItem) {
+export function isHarmonizable(item: DimItem): boolean | undefined {
   const isItemHarmonizable = item.sockets?.allSockets.some(
     (s) =>
       s.plugged?.plugDef.plug.plugCategoryHash ===

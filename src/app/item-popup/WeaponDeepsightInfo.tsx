@@ -1,12 +1,12 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip } from 'app/dim-ui/PressTip';
+import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { isHarmonizable } from 'app/inventory/store/deepsight';
 import { useD2Definitions } from 'app/manifest/selectors';
 import Objective from 'app/progress/Objective';
 import { DEEPSIGHT_HARMONIZER } from 'app/search/d2-known-values';
 import styles from './WeaponDeepsightInfo.m.scss';
-
 /**
  * A progress bar that shows a weapon's crafting pattern progress.
  */
@@ -27,7 +27,7 @@ export function WeaponDeepsightInfo({ item }: { item: DimItem }) {
     <>
       <p>{harmonizerTooltipText}</p>
       <p>
-        t('Filter.FilterWith') <code>deepsight:harmonizable</code>
+        {t('Filter.FilterWith')} <code>deepsight:harmonizable</code>
       </p>
     </>
   );
@@ -36,7 +36,7 @@ export function WeaponDeepsightInfo({ item }: { item: DimItem }) {
     <div className={styles.deepsightProgress}>
       {relevantObjectives && relevantObjectives.length > 0 && (
         <>
-          {harmonizable && harmonizable.length > 0 ? (
+          {harmonizable ? (
             <PressTip tooltip={harmonizableTooltip} className={styles.deepsightHarmonizableIcon}>
               <BungieImage src={harmonizerIcon} />
             </PressTip>
