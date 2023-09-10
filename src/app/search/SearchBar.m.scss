@@ -87,16 +87,6 @@
   height: 24px;
 }
 
-.armorySheet:global(.sheet) {
-  max-width: 900px;
-  margin: 0 auto;
-  z-index: 14; // higher than item popup
-
-  :global(.sheet-close) {
-    right: 16px;
-  }
-}
-
 .openInArmoryLabel {
   font-style: italic;
   color: grey;

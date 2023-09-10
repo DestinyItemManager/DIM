@@ -33,7 +33,7 @@ jobs:
 
       - name: get-npm-version
         id: package-version
-        uses: martinbeentjes/npm-get-version-action@v1.1.0
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
 
       - name: set beta
         run: |
@@ -73,6 +73,7 @@ jobs:
         env:
             SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
             SOURCE: "dist/"
+            REMOTE_USER: ${{ secrets.REMOTE_USER }}
             REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
             REMOTE_PATH: beta.destinyitemmanager.com
 

@@ -760,7 +760,7 @@
       "NoName": "Das Loadout benötigt einen Namen."
     },
     "SaveLoadout": "Loadout speichern",
-    "Season": "Season {{season}}",
+    "Season": "Saison {{season}}",
     "Share": {
       "Copied": "Loadout-Link in die Zwischenablage kopiert",
       "CopyButton": "Link kopieren",

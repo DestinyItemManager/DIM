@@ -38,7 +38,7 @@ jobs:
 
       - name: get-npm-version
         id: package-version
-        uses: martinbeentjes/npm-get-version-action@v1.1.0
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
 
       - name: set feature
         if: ${{ !github.event.inputs.patch }}
@@ -52,7 +52,7 @@ jobs:
 
       - name: Bump release version
         id: bump_version
-        uses: christian-draeger/increment-semantic-version@1.0.2
+        uses: christian-draeger/increment-semantic-version@1.0.3
         with:
           current-version: ${{ steps.package-version.outputs.current-version }}
           version-fragment: ${{ env.build_level }}
@@ -77,6 +77,7 @@ jobs:
           WEB_OAUTH_CLIENT_ID: ${{ secrets.PROD_OAUTH_CLIENT_ID }}
           WEB_OAUTH_CLIENT_SECRET: ${{ secrets.PROD_OAUTH_CLIENT_SECRET }}
           DIM_API_KEY: ${{ secrets.PROD_DIM_API_KEY }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_PATH: app.destinyitemmanager.com
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}

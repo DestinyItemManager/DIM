@@ -760,7 +760,7 @@
       "NoName": "Esta equipación necesita un nombre."
     },
     "SaveLoadout": "Guardar Equipación",
-    "Season": "Season {{season}}",
+    "Season": "Temporada {{season}}",
     "Share": {
       "Copied": "Copiado enlace de la equipación al portapapeles",
       "CopyButton": "Copiar Enlace",
