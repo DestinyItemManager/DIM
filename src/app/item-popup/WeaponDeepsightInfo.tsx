@@ -22,22 +22,16 @@ export function WeaponDeepsightInfo({ item }: { item: DimItem }) {
   }
 
   const harmonizable = isHarmonizable(item);
-  const harmonizerTooltipText = item.tooltipNotifications?.map((t) => t.displayString);
-  const harmonizableTooltip = (
-    <>
-      <p>{harmonizerTooltipText}</p>
-      <p>
-        {t('Filter.FilterWith')} <code>deepsight:harmonizable</code>
-      </p>
-    </>
-  );
 
   return (
     <div className={styles.deepsightProgress}>
       {relevantObjectives && relevantObjectives.length > 0 && (
         <>
           {harmonizable ? (
-            <PressTip tooltip={harmonizableTooltip} className={styles.deepsightHarmonizableIcon}>
+            <PressTip
+              tooltip={harmonizableTooltipContent(item)}
+              className={styles.deepsightHarmonizableIcon}
+            >
               <BungieImage src={harmonizerIcon} />
             </PressTip>
           ) : (
@@ -52,4 +46,18 @@ export function WeaponDeepsightInfo({ item }: { item: DimItem }) {
       )}
     </div>
   );
+}
+
+function harmonizableTooltipContent(item: DimItem) {
+  const harmonizableTooltipText = item.tooltipNotifications?.map((t) => t.displayString);
+  const harmonizableTooltip = (
+    <>
+      <p>{harmonizableTooltipText}</p>
+      <p>
+        {t('Filter.FilterWith')} <code>deepsight:harmonizable</code>
+      </p>
+    </>
+  );
+
+  return harmonizableTooltip;
 }
