@@ -114,14 +114,14 @@ const getRpm = (i: DimItem) => {
 };
 
 /**
- * Strips the (Timelost) or (Adept) suffixes for the user's language
+ * Strips the (Adept) (or (Timelost) or (Harrowed)) suffixes for the user's language
  * in order to include adept items in non-adept comparisons and vice versa.
  */
 export const stripAdept = (name: string) =>
   name
     .replace(new RegExp(t('Filter.Adept'), 'gi'), '')
-    .trim()
     .replace(new RegExp(t('Filter.Timelost'), 'gi'), '')
+    .replace(new RegExp(t('Filter.Harrowed'), 'gi'), '')
     .trim();
 
 export function compareNameQuery(item: DimItem) {
