@@ -27,7 +27,7 @@ export function WeaponDeepsightInfo({ item }: { item: DimItem }) {
     <>
       <p>{harmonizerTooltipText}</p>
       <p>
-        Filter with <code>deepsight:harmonizable</code>
+        t('Filter.FilterWith') <code>deepsight:harmonizable</code>
       </p>
     </>
   );
