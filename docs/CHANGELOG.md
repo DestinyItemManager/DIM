@@ -1,5 +1,7 @@
 ## Next
 
+## 7.85.0 <span class="changelog-date">(2023-09-10)</span>
+
 * Adding a subclass to a Loadout or selecting a subclass in Loadout Optimizer will now copy all currently equipped Aspects and Fragments too.
 
 ## 7.84.1 <span class="changelog-date">(2023-09-06)</span>
