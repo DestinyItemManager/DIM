@@ -149,10 +149,6 @@ $rgb-masterworked: dim-hex-to-rgb-values($stat-masterworked);
 }
 .deepsightBorder {
   border: 2px solid $deepsight-border-color;
-
-  &.legendaryMasterwork {
-    background-image: url('../../images/masterwork.png');
-  }
 }
 
 .iconOverlay {
