@@ -206,20 +206,18 @@ h4 {
 input,
 select,
 option {
-  font-family: 'Open Sans', sans-serif, 'Destiny Symbols';
+  font-family: inherit;
 }
 
-input[type='text'] {
+input[type='text'],
+input[type='search'] {
+  color: var(--theme-text);
   caret-color: var(--theme-accent-primary);
+  background-color: var(--theme-input-bg);
 }
 
 input[type='search'] {
   appearance: textfield;
-}
-
-input[type='range'],
-input[type='radio'] {
-  accent-color: var(--theme-accent-primary);
 }
 
 textarea {
@@ -236,6 +234,11 @@ textarea {
   // Setting this makes yuku/textcomplete faster because it doesn't need to make a fake element to measure line height (incorrectly, too)
   line-height: calc(16 / 12);
   caret-color: var(--theme-accent-primary);
+
+  &:hover,
+  &:focus {
+    box-shadow: inset 0 0 0 1px var(--theme-search-dropdown-border);
+  }
 }
 
 select {

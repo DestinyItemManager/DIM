@@ -108,15 +108,9 @@
 
   .wish-list-text {
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-    margin-bottom: 10px;
-    color: #999;
-    border-radius: 4px;
+    margin: 10px 0;
     height: 30px;
     border: none;
-    ::placeholder {
-      color: #999;
-    }
   }
 
   .customStats {

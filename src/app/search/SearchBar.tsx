@@ -515,10 +515,11 @@ function SearchBar(
             <motion.button
               layout
               key="menu"
-              type="button"
-              className={clsx(styles.filterBarButton, styles.openButton)}
-              {...getToggleButtonProps()}
-              aria-label="toggle menu"
+              {...getToggleButtonProps({
+                type: 'button',
+                className: clsx(styles.filterBarButton, styles.openButton),
+                'aria-label': 'toggle menu',
+              })}
             >
               <AppIcon icon={isOpen ? moveUpIcon : moveDownIcon} />
             </motion.button>
