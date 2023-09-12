@@ -12,27 +12,26 @@
 
 // a style for inputs or input wrappers
 .inputlike {
-  color: var(--theme-text);
+  box-sizing: border-box;
+  flex-grow: 1;
+  border: 0;
+
+  &:hover,
+  &:focus {
+    outline: none;
+    box-shadow: inset 0 0 0 1px var(--theme-search-dropdown-border);
+  }
+}
+
+.statOption {
   align-items: center;
   background: #4443;
+  border: 1px solid #0000;
   border-radius: 4px;
   box-sizing: border-box;
-  border: 1px solid transparent;
+  color: var(--theme-text);
   flex-grow: 1;
-
-  input {
-    margin: 0;
-    background-color: transparent;
-    border: none;
-    color: inherit;
-    text-align: center;
-    // remove default focus highlight
-    outline: none;
-  }
-  // a replacement focus highlight
-  &:focus-within {
-    border-color: #fff9;
-  }
+  gap: 4px;
 }
 
 .classOption {

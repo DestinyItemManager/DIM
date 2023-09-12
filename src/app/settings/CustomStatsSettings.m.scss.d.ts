@@ -14,6 +14,7 @@ interface CssExports {
   'inputlike': string;
   'label': string;
   'pulseBorder': string;
+  'statOption': string;
   'zero': string;
 }
 export const cssExports: CssExports;

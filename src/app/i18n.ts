@@ -35,7 +35,7 @@ export const DIM_LANG_INFOS = {
 
 export type DimLanguage = keyof typeof DIM_LANG_INFOS;
 
-const DIM_LANGS = Object.keys(DIM_LANG_INFOS) as DimLanguage[];
+export const DIM_LANGS = Object.keys(DIM_LANG_INFOS) as DimLanguage[];
 
 // Hot-reload translations in dev. You'll still need to get things to re-render when
 // translations change (unless we someday switch to react-i18next)

@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'disabledScreen': string;
+  'noHeader': string;
   'sheetDisabled': string;
 }
 export const cssExports: CssExports;

@@ -15,13 +15,14 @@ import { usePageTitle } from 'app/utils/hooks';
 import { useSelector } from 'react-redux';
 import { VendorLocation } from '../Vendor';
 import VendorItems from '../VendorItems';
-import { toVendor } from '../d2-vendors';
+import { D2Vendor, toVendor } from '../d2-vendors';
 import { useLoadVendors } from '../hooks';
 import {
   ownedVendorItemsSelector,
   vendorItemFilterSelector,
   vendorsByCharacterSelector,
 } from '../selectors';
+import ArtifactUnlocks from './ArtifactUnlocks';
 import styles from './SingleVendor.m.scss';
 
 /**
@@ -95,24 +96,9 @@ export default function SingleVendor({
     .join(', ');
   // TODO: there's a cool background image but I'm not sure how to use it
 
-  let d2Vendor = toVendor(
-    { ...itemCreationContext, itemComponents: vendorResponse?.itemComponents[vendorHash] },
-    vendorHash,
-    vendor,
-    characterId,
-    vendorResponse?.sales.data?.[vendorHash]?.saleItems,
-    vendorResponse
-  );
-
-  if (!d2Vendor) {
-    return <ErrorPanel error={new Error(`No known vendor with hash ${vendorHash}`)} />;
-  }
-
-  d2Vendor = { ...d2Vendor, items: d2Vendor.items.filter((i) => itemFilter(i, d2Vendor!)) };
-
-  let displayName = d2Vendor.def.displayProperties.name;
-  let displayDesc = d2Vendor.def.displayProperties.description;
-  let artifactCheck: string | undefined;
+  let displayName = vendorDef.displayProperties.name;
+  let displayDesc = vendorDef.displayProperties.description;
+  let isArtifact = false;
 
   // if this vendor is the seasonal artifact
   if (vendorDef.displayCategories.find((c) => c.identifier === 'category_reset')) {
@@ -126,36 +112,58 @@ export default function SingleVendor({
     if (artifactDisplay) {
       displayName = artifactDisplay.name;
       displayDesc = artifactDisplay.description;
-      artifactCheck = 'seasonalArtifact';
+      isArtifact = true;
     }
   }
 
-  let refreshTime = d2Vendor.component && new Date(d2Vendor.component.nextRefreshDate);
-  if (refreshTime?.getFullYear() === 9999) {
-    refreshTime = undefined;
+  // The artifact vendor isn't returned by Bungie.net, contains too
+  // many artifact mods, and doesn't allow us to figure out what's unlocked
+  // and what isn't, so we instead use <ArtifactUnlocks />, based on the character
+  // progression. For all the normal vendors we use the vendor items.
+  let d2Vendor: D2Vendor | undefined;
+  let refreshTime: Date | undefined;
+  if (!isArtifact) {
+    d2Vendor = toVendor(
+      { ...itemCreationContext, itemComponents: vendorResponse?.itemComponents[vendorHash] },
+      vendorHash,
+      vendor,
+      characterId,
+      vendorResponse?.sales.data?.[vendorHash]?.saleItems,
+      vendorResponse
+    );
+    if (!d2Vendor) {
+      return <ErrorPanel error={new Error(`No known vendor with hash ${vendorHash}`)} />;
+    }
+    d2Vendor = { ...d2Vendor, items: d2Vendor.items.filter((i) => itemFilter(i, d2Vendor!)) };
+    refreshTime = d2Vendor.component && new Date(d2Vendor.component.nextRefreshDate);
+    if (refreshTime?.getFullYear() === 9999) {
+      refreshTime = undefined;
+    }
   }
 
   return (
-    <div className={artifactCheck}>
-      <ErrorBoundary name="SingleVendor">
-        <div className={styles.featuredHeader}>
-          <h1>
-            {displayName} <VendorLocation>{placeString}</VendorLocation>
-          </h1>
-          <div>{displayDesc}</div>
-          {refreshTime && (
-            <div>
-              {t('Vendors.RefreshTime')} <Countdown endTime={refreshTime} />
-            </div>
-          )}
-        </div>
+    <ErrorBoundary name="SingleVendor">
+      <div className={styles.featuredHeader}>
+        <h1>
+          {displayName} <VendorLocation>{placeString}</VendorLocation>
+        </h1>
+        <div>{displayDesc}</div>
+        {refreshTime && (
+          <div>
+            {t('Vendors.RefreshTime')} <Countdown endTime={refreshTime} />
+          </div>
+        )}
+      </div>
+      {isArtifact ? (
+        <ArtifactUnlocks characterId={characterId} />
+      ) : (
         <VendorItems
-          vendor={d2Vendor}
+          vendor={d2Vendor!}
           ownedItemHashes={ownedItemHashes}
           currencyLookups={vendorResponse?.currencyLookups.data?.itemQuantities ?? {}}
           characterId={characterId}
         />
-      </ErrorBoundary>
-    </div>
+      )}
+    </ErrorBoundary>
   );
 }

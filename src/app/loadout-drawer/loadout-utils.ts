@@ -24,13 +24,11 @@ import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import {
   aspectSocketCategoryHashes,
   fragmentSocketCategoryHashes,
-  getDefaultAbilityChoiceHash,
   getFirstSocketByCategoryHash,
   getSocketsByCategoryHash,
   getSocketsByCategoryHashes,
   getSocketsByIndexes,
   plugFitsIntoSocket,
-  subclassAbilitySocketCategoryHashes,
 } from 'app/utils/socket-utils';
 import { filterMap, weakMemoize } from 'app/utils/util';
 import { HashLookup, LookupTable } from 'app/utils/util-types';
@@ -146,28 +144,6 @@ export function createSocketOverridesFromEquipped(item: DimItem) {
           socketOverrides[socket.socketIndex] = socket.plugged.plugDef.hash;
         }
       }
-    }
-    return socketOverrides;
-  }
-}
-
-/**
- * Create the socket overrides that this subclass should start with for loadout purposes.
- */
-export function createSubclassDefaultSocketOverrides(item: DimItem) {
-  if (item.bucket.hash === BucketHashes.Subclass && item.sockets) {
-    const socketOverrides: SocketOverrides = {};
-    const abilityAndSuperSockets = getSocketsByCategoryHashes(
-      item.sockets,
-      subclassAbilitySocketCategoryHashes
-    );
-
-    for (const socket of abilityAndSuperSockets) {
-      socketOverrides[socket.socketIndex] =
-        socket.plugged &&
-        socket.plugSet?.plugs.some((plug) => plug.plugDef.hash === socket.plugged!.plugDef.hash)
-          ? socket.plugged.plugDef.hash
-          : getDefaultAbilityChoiceHash(socket);
     }
     return socketOverrides;
   }

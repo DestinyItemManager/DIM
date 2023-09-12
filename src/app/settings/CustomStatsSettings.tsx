@@ -182,7 +182,7 @@ function CustomStatEditor({
 
           const className = weight ? 'stat-icon' : styles.zero;
           return (
-            <label className={styles.inputlike} key={statHash} title={stat.displayProperties.name}>
+            <label className={styles.statOption} key={statHash} title={stat.displayProperties.name}>
               <BungieImage className={className} src={stat.displayProperties.icon} />
               {weightsMode ? (
                 <input

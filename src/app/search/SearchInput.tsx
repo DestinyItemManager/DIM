@@ -25,7 +25,6 @@ export function SearchInput({
     <div className="search-filter" role="search">
       <AppIcon icon={searchIcon} className="search-bar-icon" />
       <input
-        className="filter-input"
         autoComplete="off"
         autoCorrect="off"
         autoCapitalize="off"
