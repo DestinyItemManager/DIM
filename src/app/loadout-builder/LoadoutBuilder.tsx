@@ -54,6 +54,7 @@ import {
   LoadoutOptimizerPinnedItems,
   loMenuSection,
 } from './filter/LoadoutOptimizerMenuItems';
+import StatConstraintEditor from './filter/StatConstraintEditor';
 import TierSelect from './filter/TierSelect';
 import CompareLoadoutsDrawer from './generated-sets/CompareLoadoutsDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
@@ -303,11 +304,19 @@ export default memo(function LoadoutBuilder({
         </div>
       )}
       <UndoRedoControls canRedo={canRedo} canUndo={canUndo} lbDispatch={lbDispatch} />
-      <TierSelect
-        resolvedStatConstraints={resolvedStatConstraints}
-        statRangesFiltered={result?.statRangesFiltered}
-        lbDispatch={lbDispatch}
-      />
+      {$featureFlags.statConstraintEditor ? (
+        <StatConstraintEditor
+          resolvedStatConstraints={resolvedStatConstraints}
+          statRangesFiltered={result?.statRangesFiltered}
+          lbDispatch={lbDispatch}
+        />
+      ) : (
+        <TierSelect
+          resolvedStatConstraints={resolvedStatConstraints}
+          statRangesFiltered={result?.statRangesFiltered}
+          lbDispatch={lbDispatch}
+        />
+      )}
       <EnergyOptions assumeArmorMasterwork={assumeArmorMasterwork} lbDispatch={lbDispatch} />
       <div className={loMenuSection}>
         <CheckButton

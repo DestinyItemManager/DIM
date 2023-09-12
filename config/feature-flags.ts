@@ -48,6 +48,8 @@ export function makeFeatureFlags(env: { release: boolean; beta: boolean; dev: bo
     customStatWeights: false,
     // Allow for non-default visual themes
     themePicker: true,
+    // New LO stat picker
+    statConstraintEditor: !env.release,
   };
 }
 
