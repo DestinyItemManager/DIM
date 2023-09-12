@@ -989,7 +989,7 @@
     "StatTrackers": "Stat Trackers",
     "TrackedTriumphs": "Tracked Triumphs",
     "QueryFilteredTrackedTriumphs": "None of your tracked triumphs matched the search",
-    "NoTrackedTriumph": "You have no tracked triumphs. Track one in the game, or as many as you like in DIM.",
+    "NoTrackedTriumph": "You have no tracked triumphs. Track as many as you like in DIM.",
     "NoEventChallenges": "You have completed all event challenges"
   },
   "RecordBooks": {
@@ -1290,7 +1290,7 @@
     "About": {
       "APIHistory": "View the history of all actions taken by DIM (and other Destiny apps)",
       "BungieCopyright": "All images and content are property of Bungie.",
-      "CommunityInsight": "Community Perk Insights courtesy of {{clarityLink}}. If you notice inaccuracies or have questions, join the {{clarityDiscordLink}}.",
+      "CommunityInsight": "Community Insights for Perks and Character Stats courtesy of {{clarityLink}}. If you notice inaccuracies or have questions, join the {{clarityDiscordLink}}.",
       "Discord": "Discord",
       "DiscordHelp": "Ask questions, give feedback, and get support in our Discord channels.",
       "FAQ": "Frequently Asked Questions",
