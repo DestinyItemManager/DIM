@@ -11,13 +11,16 @@ export function DeepsightHarmonizerIcon({ item }: { item: DimItem }) {
   const harmonizerIcon = defs.InventoryItem.get(DEEPSIGHT_HARMONIZER)?.displayProperties.icon;
 
   return (
-    <PressTip tooltip={harmonizableTooltipContent(item)} className={styles.deepsightHarmonizerIcon}>
+    <PressTip
+      tooltip={HarmonizableTooltipContent({ item })}
+      className={styles.deepsightHarmonizerIcon}
+    >
       <BungieImage src={harmonizerIcon} />
     </PressTip>
   );
 }
 
-function HarmonizableTooltipContent({ item }:{ item: DimItem }) {
+function HarmonizableTooltipContent({ item }: { item: DimItem }) {
   const harmonizableTooltipText = item.tooltipNotifications?.map((t) => t.displayString);
   const harmonizableTooltip = (
     <>
