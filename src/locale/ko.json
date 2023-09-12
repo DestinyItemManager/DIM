@@ -760,7 +760,7 @@
       "NoName": "로드아웃의 이름이 필요합니다."
     },
     "SaveLoadout": "로드아웃 저장",
-    "Season": "Season {{season}}",
+    "Season": "시즌 {{season}}",
     "Share": {
       "Copied": "클립보드로 로드아웃 주소가 복사됨",
       "CopyButton": "주소 복사",

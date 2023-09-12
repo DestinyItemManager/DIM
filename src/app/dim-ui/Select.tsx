@@ -122,7 +122,7 @@ export default function Select<T>({
       <button
         type="button"
         style={buttonStyle}
-        className={children ? undefined : styles.button}
+        className={styles.button}
         {...getToggleButtonProps({
           ref: buttonRef,
           disabled,

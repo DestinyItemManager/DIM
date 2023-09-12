@@ -21,13 +21,12 @@ import {
   newLoadoutFromEquipped,
   potentialLoadoutItemsByItemId,
 } from 'app/loadout-drawer/loadout-utils';
-import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
+import { loadoutsForClassTypeSelector } from 'app/loadout-drawer/loadouts-selector';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { t } from 'i18next';
 import { createSelector } from 'reselect';
-import { filterLoadoutsToClass } from '../loadout-ui/menu-hooks';
 import { implementsDimLoadout, itemCouldBeEquipped } from './ingame-loadout-utils';
 
 /** A DIM loadout with all of its parameters resolved to real inventory. */
@@ -41,15 +40,18 @@ export interface FullyResolvedLoadout {
 /** All loadouts relevant to a specific storeId, resolved to actual mods, and actual items */
 export const fullyResolvedLoadoutsSelector = createSelector(
   (_state: RootState, storeId: string) => storeId,
+  (state: RootState, storeId: string) => {
+    const stores = storesSelector(state);
+    const classType = getStore(stores, storeId)!.classType;
+    return loadoutsForClassTypeSelector(classType)(state);
+  },
   storesSelector,
-  loadoutsSelector,
   d2ManifestSelector,
   createItemContextSelector,
   allItemsSelector,
   unlockedPlugSetItemsSelector.selector,
-  (storeId, stores, allLoadouts, defs, itemCreationContext, allItems, unlockedPlugs) => {
-    const selectedStore = stores.find((s) => s.id === storeId)!;
-    const savedLoadouts = filterLoadoutsToClass(allLoadouts, selectedStore.classType);
+  (storeId, savedLoadouts, stores, defs, itemCreationContext, allItems, unlockedPlugs) => {
+    const selectedStore = getStore(stores, storeId)!;
 
     const loadouts = savedLoadouts
       ? savedLoadouts.map((loadout) =>

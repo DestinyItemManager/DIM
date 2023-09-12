@@ -1,8 +1,7 @@
-import Armory from 'app/armory/Armory';
+import ArmorySheet from 'app/armory/ArmorySheet';
 import { saveSearch, searchDeleted, searchUsed } from 'app/dim-api/basic-actions';
 import { recentSearchesSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
-import ClickOutsideRoot from 'app/dim-ui/ClickOutsideRoot';
 import KeyHelp from 'app/dim-ui/KeyHelp';
 import { Loading } from 'app/dim-ui/Loading';
 import Sheet from 'app/dim-ui/Sheet';
@@ -165,16 +164,6 @@ export interface SearchFilterRef {
   focusFilterInput: () => void;
   /** Clear the filter field */
   clearFilter: () => void;
-}
-
-function ArmorySheet({ itemHash, onClose }: { itemHash: number; onClose: () => void }) {
-  return (
-    <Sheet onClose={onClose} sheetClassName={styles.armorySheet}>
-      <ClickOutsideRoot>
-        <Armory itemHash={itemHash} />
-      </ClickOutsideRoot>
-    </Sheet>
-  );
 }
 
 /**
@@ -526,10 +515,11 @@ function SearchBar(
             <motion.button
               layout
               key="menu"
-              type="button"
-              className={clsx(styles.filterBarButton, styles.openButton)}
-              {...getToggleButtonProps()}
-              aria-label="toggle menu"
+              {...getToggleButtonProps({
+                type: 'button',
+                className: clsx(styles.filterBarButton, styles.openButton),
+                'aria-label': 'toggle menu',
+              })}
             >
               <AppIcon icon={isOpen ? moveUpIcon : moveDownIcon} />
             </motion.button>

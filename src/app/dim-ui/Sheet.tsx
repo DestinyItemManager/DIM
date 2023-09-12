@@ -284,9 +284,7 @@ export default function Sheet({
         )}
 
         <div
-          className={clsx('sheet-contents', {
-            'sheet-has-footer': footer,
-          })}
+          className="sheet-contents"
           style={frozenHeight ? { flexBasis: frozenHeight } : undefined}
           ref={sheetContents}
         >

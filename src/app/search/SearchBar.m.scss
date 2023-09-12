@@ -2,18 +2,12 @@
 
 .searchBar {
   position: relative;
-
-  input[type='text'] {
-    border-radius: 0;
-    appearance: none;
-    font-size: 13px;
-  }
 }
 
 .open {
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
-  box-shadow: inset 0 0 0 1px var(--theme-search-dropdown-border);
+  box-shadow: 0 1px 0 1px var(--theme-search-dropdown-border);
 }
 
 .menu {
@@ -33,17 +27,26 @@
   top: calc($search-bar-height - 1px);
   border-bottom-left-radius: $theme-corner-radius-search;
   border-bottom-right-radius: $theme-corner-radius-search;
-  box-shadow:
-    inset 0 -1px 0 0 var(--theme-search-dropdown-bg),
-    inset 0 -1px 0 1px var(--theme-search-dropdown-border);
+  box-shadow: inset 0 0 0 1px var(--theme-search-dropdown-border);
+
+  &:empty {
+    display: none !important;
+  }
 
   @include phone-portrait {
-    top: calc(100% + 1px);
+    top: 100%;
+    // Fallback to allow either fully or semi-transparent search box borders
+    // Add a margin and change to outset shadows for clearer outlining on mobile
+    // Fill the 1px margin with re-stacked fills/borders to accurately colour-match
+    margin: 0 1px;
+    box-shadow:
+      0 0 0 1px var(--theme-search-dropdown-border),
+      0 0 0 1px var(--theme-sheet-search-bg),
+      0 0 0 1px var(--theme-mobile-background),
+      0 1px 4px 1px rgba(0, 0, 0, 0.5);
     overflow-y: auto;
     overscroll-behavior: none;
     max-height: calc(var(--viewport-height) - var(--header-height)) !important;
-    box-shadow: none;
-    border-radius: 0;
   }
 }
 
@@ -54,7 +57,6 @@
 .openButton {
   composes: resetButton from '../dim-ui/common.m.scss';
   display: inline-block;
-  margin-left: 5px;
   color: #999;
   font-size: 12px !important;
 }
@@ -85,12 +87,6 @@
   margin-top: 5px;
   width: 24px;
   height: 24px;
-}
-
-.armorySheet:global(.sheet) {
-  max-width: 900px;
-  margin: 0 auto;
-  z-index: 14; // higher than item popup
 }
 
 .openInArmoryLabel {
@@ -188,10 +184,6 @@
     outline: 1px solid var(--theme-accent-primary);
   }
 
-  @include phone-portrait {
-    margin-right: 8px !important;
-  }
-
   > :global(.app-icon),
   > button > :global(.app-icon) {
     font-size: 14px !important;
@@ -213,9 +205,13 @@
     margin: 0 !important;
   }
 
-  &:hover > span,
-  &:hover > :global(.app-icon),
-  &:hover button > :global(.app-icon) {
-    color: var(--theme-accent-primary);
+  @media (hover: hover) {
+    &:hover {
+      > span,
+      > :global(.app-icon),
+      button > :global(.app-icon) {
+        color: var(--theme-accent-primary);
+      }
+    }
   }
 }

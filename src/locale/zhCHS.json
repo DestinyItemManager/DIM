@@ -760,7 +760,7 @@
       "NoName": "配装需要名称。"
     },
     "SaveLoadout": "保存配装",
-    "Season": "Season {{season}}",
+    "Season": "第 {{season}} 赛季",
     "Share": {
       "Copied": "已复制配装链接到剪贴板",
       "CopyButton": "复制链接",

@@ -26,7 +26,6 @@ import { Loadout, LoadoutItem, ResolvedLoadoutItem, ResolvedLoadoutMod } from '.
 import {
   convertToLoadoutItem,
   createSocketOverridesFromEquipped,
-  createSubclassDefaultSocketOverrides,
   extractArmorModHashes,
   findItemForLoadout,
   findSameLoadoutItemIndex,
@@ -105,8 +104,7 @@ export function addItem(
       loadoutItem.socketOverrides = socketOverrides;
     }
     if (item.sockets && item.bucket.hash === BucketHashes.Subclass && !socketOverrides) {
-      // TODO: use createSocketOverridesFromEquipped?
-      loadoutItem.socketOverrides = createSubclassDefaultSocketOverrides(item);
+      loadoutItem.socketOverrides = createSocketOverridesFromEquipped(item);
     }
 
     // We only allow one subclass, and it must be equipped. Same with a couple other things.
@@ -366,12 +364,7 @@ export function setLoadoutSubclassFromEquipped(
       return loadout;
     }
 
-    return addItem(
-      defs,
-      newSubclass,
-      true,
-      createSocketOverridesFromEquipped(newSubclass)
-    )(loadout);
+    return addItem(defs, newSubclass, true)(loadout);
   };
 }
 

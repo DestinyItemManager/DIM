@@ -73,6 +73,7 @@ jobs:
         env:
             SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
             SOURCE: "dist/"
+            REMOTE_USER: ${{ secrets.REMOTE_USER }}
             REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
             REMOTE_PATH: beta.destinyitemmanager.com
 

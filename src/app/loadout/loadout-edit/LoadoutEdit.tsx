@@ -214,7 +214,7 @@ export function LoadoutEditSubclassSection({
   };
 
   const handleApplySocketOverrides = useUpdater(applySocketOverrides);
-  const handleFillSubclassFromEquipped = useDefsStoreUpdater(setLoadoutSubclassFromEquipped);
+  const handleSyncSubclassFromEquipped = useDefsStoreUpdater(setLoadoutSubclassFromEquipped);
   const handleRandomizeSubclass = useDefsStoreUpdater(randomizeLoadoutSubclass);
   const handleClearSubclass = useDefsUpdater(clearSubclass);
 
@@ -224,7 +224,7 @@ export function LoadoutEditSubclassSection({
       title={t('Bucket.Class')}
       onClear={handleClearSubclass}
       onRandomize={handleRandomizeSubclass}
-      onFillFromEquipped={handleFillSubclassFromEquipped}
+      onSyncFromEquipped={handleSyncSubclassFromEquipped}
     >
       <LoadoutEditSubclass
         subclass={subclass}

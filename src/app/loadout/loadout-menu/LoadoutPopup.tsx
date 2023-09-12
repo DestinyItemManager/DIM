@@ -22,6 +22,7 @@ import {
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { isMissingItems, newLoadout } from 'app/loadout-drawer/loadout-utils';
+import { loadoutsForClassTypeSelector } from 'app/loadout-drawer/loadouts-selector';
 import { makeRoomForPostmaster, totalPostmasterItems } from 'app/loadout-drawer/postmaster';
 import { previousLoadoutSelector } from 'app/loadout-drawer/selectors';
 import { manifestSelector, useDefinitions } from 'app/manifest/selectors';
@@ -57,11 +58,7 @@ import { Link } from 'react-router-dom';
 import { InGameLoadoutIconWithIndex } from '../ingame/InGameLoadoutIcon';
 import { applyInGameLoadout } from '../ingame/ingame-loadout-apply';
 import { inGameLoadoutsForCharacterSelector } from '../ingame/selectors';
-import {
-  searchAndSortLoadoutsByQuery,
-  useLoadoutFilterPills,
-  useSavedLoadoutsForClassType,
-} from '../loadout-ui/menu-hooks';
+import { searchAndSortLoadoutsByQuery, useLoadoutFilterPills } from '../loadout-ui/menu-hooks';
 import styles from './LoadoutPopup.m.scss';
 import { RandomLoadoutOptions, useRandomizeLoadout } from './LoadoutPopupRandomize';
 import MaxlightButton from './MaxlightButton';
@@ -89,7 +86,7 @@ export default function LoadoutPopup({
     (state: RootState) => powerLevelSelector(state, dimStore.id)?.problems.hasClassified
   );
 
-  const loadouts = useSavedLoadoutsForClassType(dimStore.classType);
+  const loadouts = useSelector(loadoutsForClassTypeSelector(dimStore.classType));
   const inGameLoadouts = useSelector((state: RootState) =>
     dimStore.isVault
       ? emptyArray<InGameLoadout>()
@@ -150,22 +147,33 @@ export default function LoadoutPopup({
 
   const filteringLoadouts = loadoutQuery.length > 0 || hasSelectedFilters;
 
+  const handleEscape = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      if (loadoutQuery === '') {
+        onClick?.();
+      } else {
+        setLoadoutQuery('');
+      }
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  };
+
   return (
     <div className={styles.content} onClick={onClick} role="menu">
       {totalLoadouts >= 10 && (
-        <li className={clsx(styles.menuItem, styles.filterInput)}>
-          <form>
-            <AppIcon icon={searchIcon} />
-            <input
-              type="text"
-              autoFocus={nativeAutoFocus}
-              placeholder={t('Header.FilterHelpLoadouts')}
-              onClick={blockPropagation}
-              value={loadoutQuery}
-              onChange={(e) => setLoadoutQuery(e.target.value)}
-            />
-          </form>
-        </li>
+        <form className={styles.filterInput}>
+          <AppIcon icon={searchIcon} className="search-bar-icon" />
+          <input
+            type="text"
+            autoFocus={nativeAutoFocus}
+            placeholder={t('Header.FilterHelpLoadouts')}
+            onClick={blockPropagation}
+            value={loadoutQuery}
+            onChange={(e) => setLoadoutQuery(e.target.value)}
+            onKeyDown={handleEscape}
+          />
+        </form>
       )}
 
       {filterPills}
