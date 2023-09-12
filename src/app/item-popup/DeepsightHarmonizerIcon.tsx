@@ -17,7 +17,7 @@ export function DeepsightHarmonizerIcon({ item }: { item: DimItem }) {
   );
 }
 
-function harmonizableTooltipContent(item: DimItem) {
+function HarmonizableTooltipContent({ item }:{ item: DimItem }) {
   const harmonizableTooltipText = item.tooltipNotifications?.map((t) => t.displayString);
   const harmonizableTooltip = (
     <>
