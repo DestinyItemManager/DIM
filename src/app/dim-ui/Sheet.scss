@@ -70,6 +70,7 @@ $control-color: rgba(255, 255, 255, 0.5);
   }
 
   .sheet-close {
+    all: initial;
     z-index: 1;
     position: absolute;
     right: 0;
@@ -85,11 +86,7 @@ $control-color: rgba(255, 255, 255, 0.5);
     &:active,
     &:hover,
     &:focus-visible {
-      color: rgba(255, 255, 255, 1);
-    }
-
-    &.sheet-no-header {
-      right: 8px;
+      color: var(--theme-accent-primary);
     }
   }
 }

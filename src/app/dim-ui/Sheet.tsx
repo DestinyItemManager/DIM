@@ -266,13 +266,15 @@ export default function Sheet({
       onKeyPress={stopPropagation}
       onClick={allowClickThrough ? undefined : stopPropagation}
     >
-      <a
-        href="#"
-        className={clsx('sheet-close', { 'sheet-no-header': !header })}
+      <button
+        type="button"
+        className={clsx('sheet-close', { [styles.noHeader]: !header })}
         onClick={triggerClose}
+        aria-keyshortcuts="esc"
+        aria-label={t('General.Close')}
       >
         <AppIcon icon={disabledIcon} />
-      </a>
+      </button>
 
       <div className="sheet-container" onPointerDown={dragHandleDown}>
         {Boolean(header) && (
