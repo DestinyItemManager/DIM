@@ -58,6 +58,15 @@ const loadoutFilters: FilterDefinition[] = [
       (item) =>
         Boolean(loadoutsByItem[item.id]?.some((l) => isInGameLoadout(l.loadout))),
   },
+  {
+    keywords: 'indimloadout',
+    format: 'simple',
+    description: tl('Filter.InDimLoadout'),
+    filter:
+      ({ loadoutsByItem }) =>
+      (item) =>
+        Boolean(loadoutsByItem[item.id]?.some((l) => !isInGameLoadout(l.loadout))),
+  },
 ];
 
 export default loadoutFilters;
