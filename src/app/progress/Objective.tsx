@@ -5,6 +5,7 @@ import {
   getValueStyle,
   isBooleanObjective,
   isFlawlessObjective,
+  isPatternObjective,
   isRoundsWonObjective,
 } from 'app/inventory/store/objectives';
 import { useDefinitions } from 'app/manifest/selectors';
@@ -81,6 +82,7 @@ export default function Objective({
   }
 
   const isBoolean = isBooleanObjective(objectiveDef, progress, completionValue);
+  const showPatternProgress = isPatternObjective(objectiveDef);
   const showAsCounter = isTrialsPassage && isRoundsWonObjective(objective.objectiveHash);
   const passageFlawed =
     isTrialsPassage && isFlawlessObjective(objective.objectiveHash) && !complete;
@@ -100,7 +102,7 @@ export default function Objective({
 
   return (
     <div className={classes}>
-      {!showAsCounter && !isDate && <div className="objective-checkbox" />}
+      {!showPatternProgress && !showAsCounter && !isDate && <div className="objective-checkbox" />}
       <div className="objective-progress">
         {!isBoolean && !isDate && (
           <div className="objective-progress-bar" style={progressBarStyle} />

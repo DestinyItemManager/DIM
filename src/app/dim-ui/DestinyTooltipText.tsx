@@ -11,18 +11,19 @@ export function DestinyTooltipText({ item }: { item: DimItem }) {
   }
   return (
     <>
-      {item.tooltipNotifications.map((tip) => (
-        <div
-          key={tip.displayString}
-          className={clsx('quest-expiration item-details', {
-            [styles.seasonalExpiration]: isExpirationTooltip(tip),
-          })}
-        >
-          {isExpirationTooltip(tip) && <AppIcon icon={faClock} />}
-          {isPatternTooltip(tip) && <AppIcon className={styles.shapedIcon} icon={shapedIcon} />}
-          <RichDestinyText text={tip.displayString} ownerId={item.owner} />
-        </div>
-      ))}
+      {!isDeepsightTooltip &&
+        item.tooltipNotifications.map((tip) => (
+          <div
+            key={tip.displayString}
+            className={clsx('quest-expiration item-details', {
+              [styles.seasonalExpiration]: isExpirationTooltip(tip),
+            })}
+          >
+            {isExpirationTooltip(tip) && <AppIcon icon={faClock} />}
+            {isPatternTooltip(tip) && <AppIcon className={styles.shapedIcon} icon={shapedIcon} />}
+            <RichDestinyText text={tip.displayString} ownerId={item.owner} />
+          </div>
+        ))}
     </>
   );
 }
@@ -33,4 +34,8 @@ function isExpirationTooltip(tip: DestinyItemTooltipNotification) {
 
 function isPatternTooltip(tip: DestinyItemTooltipNotification) {
   return tip.displayStyle === 'ui_display_style_deepsight';
+}
+
+function isDeepsightTooltip(tip: DestinyItemTooltipNotification) {
+  return tip.displayStyle === 'ui_display_style_info';
 }

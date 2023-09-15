@@ -1,7 +1,8 @@
 import { DimItem } from 'app/inventory/item-types';
+import { isHarmonizable } from 'app/inventory/store/deepsight';
 import Objective from 'app/progress/Objective';
+import { DeepsightHarmonizerIcon } from './DeepsightHarmonizerIcon';
 import styles from './WeaponDeepsightInfo.m.scss';
-
 /**
  * A progress bar that shows a weapon's crafting pattern progress.
  */
@@ -16,11 +17,18 @@ export function WeaponDeepsightInfo({ item }: { item: DimItem }) {
   return (
     <div className={styles.deepsightProgress}>
       {relevantObjectives && relevantObjectives.length > 0 && (
-        <div className={styles.deepsightProgressSection}>
-          {relevantObjectives.map((objective) => (
-            <Objective key={objective.objectiveHash} objective={objective} showHidden />
-          ))}
-        </div>
+        <>
+          {isHarmonizable(item) ? (
+            <DeepsightHarmonizerIcon item={item} />
+          ) : (
+            <div className="objective-checkbox" />
+          )}
+          <div className={styles.deepsightProgressBar}>
+            {relevantObjectives.map((objective) => (
+              <Objective key={objective.objectiveHash} objective={objective} showHidden />
+            ))}
+          </div>
+        </>
       )}
     </div>
   );
