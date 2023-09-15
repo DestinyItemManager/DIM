@@ -39,14 +39,14 @@ const sortDupes = (
   // The comparator for sorting dupes - the first item will be the "best" and all others are "dupelower".
   const dupeComparator = reverseComparator(
     chainComparator<DimItem>(
+      // primary stat
+      compareBy((item) => item.power),
       compareBy((item) => {
         const tag = getTag(item);
         return Boolean(tag && notableTags.includes(tag));
       }),
       compareBy((item) => item.masterwork),
       compareBy((item) => item.locked),
-      // primary stat
-      compareBy((item) => item.power),
       compareBy((i) => i.id) // tiebreak by ID
     )
   );
