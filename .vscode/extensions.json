@@ -9,6 +9,8 @@
     "dbaeumer.vscode-eslint",
     "orta.vscode-jest",
     "stylelint.vscode-stylelint",
-    "amodio.tsl-problem-matcher"
+    "amodio.tsl-problem-matcher",
+    "timonwong.shellcheck",
+    "github.vscode-github-actions"
   ]
 }

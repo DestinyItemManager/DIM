@@ -27,6 +27,8 @@ import csp from './content-security-policy';
 import { makeFeatureFlags } from './feature-flags';
 const renderer = new marked.Renderer();
 
+import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
+
 import { StatsWriterPlugin } from 'webpack-stats-plugin';
 import NotifyPlugin from './notify-webpack-plugin';
 
@@ -341,14 +343,9 @@ export default (env: Env) => {
     resolve: {
       extensions: ['.js', '.json', '.ts', '.tsx', '.jsx'],
 
+      plugins: [new TsconfigPathsPlugin()],
+
       alias: {
-        app: path.resolve('./src/app/'),
-        data: path.resolve('./src/data/'),
-        images: path.resolve('./src/images/'),
-        locale: path.resolve('./src/locale/'),
-        testing: path.resolve('./src/testing/'),
-        docs: path.resolve('./docs/'),
-        'destiny-icons': path.resolve('./destiny-icons/'),
         'textarea-caret': path.resolve('./src/app/utils/textarea-caret'),
         lodash: 'lodash-es',
       },

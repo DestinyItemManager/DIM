@@ -16,10 +16,8 @@
     "plugin:sonarjs/recommended"
   ],
   "globals": {
-    "Atomics": "readonly",
-    "SharedArrayBuffer": "readonly",
     "$featureFlags": "readonly",
-    "ga": true,
+    "ga": "readonly",
     "$DIM_FLAVOR": "readonly",
     "$DIM_VERSION": "readonly",
     "$DIM_BUILD_DATE": "readonly",
@@ -28,16 +26,16 @@
     "$DIM_WEB_CLIENT_SECRET": "readonly",
     "$DIM_API_KEY": "readonly",
     "$BROWSERS": "readonly",
-    "workbox": true,
-    "React": true,
-    "require": true,
+    "workbox": "readonly",
+    "React": "readonly",
+    "require": "readonly",
     "module": "readonly"
   },
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
     },
-    "ecmaVersion": 2018,
+    "ecmaVersion": "latest",
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
@@ -157,7 +155,8 @@
       {
         "selector": "CallExpression[callee.property.name='compact'][callee.object.name='_'][arguments.0.callee.property.name='map']",
         "message": "Please use `filterMap` instead"
-      }, {
+      },
+      {
         "selector": "TSEnumDeclaration:not([const=true])",
         "message": "Please only use `const enum`s."
       }
@@ -263,16 +262,6 @@
       "error",
       {
         "checksVoidReturn": false
-      }
-    ],
-    "@typescript-eslint/ban-types": [
-      "error",
-      {
-        "types": {
-          "BigInt": "BigInt isn't supported in old versions (pre-14) of Safari",
-          "bigint": "BigInt isn't supported in old versions (pre-14) of Safari"
-        },
-        "extendDefaults": false
       }
     ],
     "@typescript-eslint/explicit-member-accessibility": "off",
