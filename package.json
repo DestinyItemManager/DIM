@@ -178,6 +178,7 @@
     "svgo": "^3.0.2",
     "svgo-loader": "^4.0.0",
     "terser-webpack-plugin": "^5.0.2",
+    "ts-jest": "^29.1.1",
     "ts-loader": "^9.1.1",
     "ts-unused-exports": "^10.0.0",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
