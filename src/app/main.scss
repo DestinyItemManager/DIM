@@ -166,6 +166,8 @@ html,
 body {
   // Disable pull to refresh in Android
   overscroll-behavior: none;
+  // Adjust so the anchor we scroll to doesn't end up behind the header
+  scroll-padding-top: var(--header-height);
 
   @include phone-portrait {
     user-select: none;
