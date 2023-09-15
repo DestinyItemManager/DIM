@@ -20,10 +20,9 @@
       "data/*": ["src/data/*"],
       "images/*": ["src/images/*"],
       "destiny-icons/*": ["destiny-icons/*"],
-      "locale/*": ["locale/*"],
+      "locale/*": ["src/locale/*"],
       "testing/*": ["src/testing/*"],
-      "docs/*": ["docs/*"],
-      "*.css": ["config/css-stub.js"]
+      "docs/*": ["docs/*"]
     }
   },
   "include": ["./src/**/*", "config/feature-flags.ts"]
