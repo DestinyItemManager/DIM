@@ -12,7 +12,7 @@ export function DeepsightHarmonizerIcon({ item }: { item: DimItem }) {
 
   return (
     <PressTip
-      tooltip={HarmonizableTooltipContent({ item })}
+      tooltip={<HarmonizableTooltipContent item={item} />}
       className={styles.deepsightHarmonizerIcon}
     >
       <BungieImage src={harmonizerIcon} />
