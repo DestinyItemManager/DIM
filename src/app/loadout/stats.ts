@@ -81,7 +81,7 @@ function getFontMods(mods: PluggableInventoryItemDefinition[]) {
 
   return _.mapValues(boosts, (boost) => ({
     ...boost!,
-    value: boostForNumFontStacks[boost!.count] ?? _.last(boostForNumFontStacks),
+    value: boostForNumFontStacks[boost!.count] ?? boostForNumFontStacks.at(-1),
   }));
 }
 

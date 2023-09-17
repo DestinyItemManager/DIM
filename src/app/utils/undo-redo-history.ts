@@ -39,7 +39,7 @@ function historyReducer<S>(oldState: History<S>, action: Action<S>): History<S> 
       if (undoStack.length < 1) {
         return oldState;
       }
-      const previousState = undoStack[undoStack.length - 1];
+      const previousState = undoStack.at(-1)!;
       return {
         state: previousState,
         undoStack: undoStack.slice(0, -1),
@@ -51,7 +51,7 @@ function historyReducer<S>(oldState: History<S>, action: Action<S>): History<S> 
       if (redoStack.length < 1) {
         return oldState;
       }
-      const nextState = redoStack[redoStack.length - 1];
+      const nextState = redoStack.at(-1)!;
       return {
         state: nextState,
         undoStack: [...undoStack, state],

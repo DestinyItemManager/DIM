@@ -304,8 +304,7 @@ function buildStat(
   const statDisplay = statDisplaysByStatHash[statHash];
   if (statDisplay) {
     const firstInterp = statDisplay.displayInterpolation[0];
-    const lastInterp =
-      statDisplay.displayInterpolation[statDisplay.displayInterpolation.length - 1];
+    const lastInterp = statDisplay.displayInterpolation.at(-1)!;
     smallerIsBetter = firstInterp.weight > lastInterp.weight;
     maximumValue = Math.max(statDisplay.maximumValue, firstInterp.weight, lastInterp.weight);
     bar = !statDisplay.displayAsNumeric;

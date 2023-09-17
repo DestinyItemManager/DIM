@@ -91,7 +91,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   const allItems = useSelector(allItemsSelector);
   const searchFilter = useSelector(searchFilterSelector);
   const originalItems = useMemo(() => {
-    const terminal = Boolean(_.last(categories)?.terminal);
+    const terminal = Boolean(categories.at(-1)?.terminal);
     if (!terminal) {
       return emptyArray<DimItem>();
     }
@@ -151,7 +151,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   });
 
   // Are we at a item category that can show items?
-  const terminal = Boolean(_.last(categories)?.terminal);
+  const terminal = Boolean(categories.at(-1)?.terminal);
 
   const defs = useD2Definitions();
   const items = useMemo(

@@ -33,7 +33,7 @@ export default function PresentationNodeSearchResults({
               !sr.craftables &&
               !sr.plugs &&
               (() => {
-                const node = sr.path[sr.path.length - 1];
+                const node = sr.path.at(-1)!;
                 return node.childPresentationNodes ? (
                   <PresentationNodeRoot
                     presentationNodeHash={node.hash}

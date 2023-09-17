@@ -122,7 +122,7 @@ export function collectSocketsToStrip(
       // show the current plug as a large icon for that button.
       // This immediately presents an example for what would happen if the user
       // decided to strip sockets of this kind.
-      const representativePlug = contents.items[contents.items.length - 1].plugItemDef;
+      const representativePlug = contents.items.at(-1)!.plugItemDef;
 
       socketKinds.push({
         kind: kind as SocketKind,
