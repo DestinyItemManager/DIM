@@ -14,7 +14,7 @@ import { findItemsByBucket } from 'app/inventory/stores-helpers';
 import { useItemPicker } from 'app/item-picker/item-picker';
 import { characterOrderSelector } from 'app/settings/character-sort';
 import { itemSorterSelector } from 'app/settings/item-sort';
-import { vaultGroupingSelector } from 'app/settings/vault-grouping';
+import { vaultGroupingSelector, vaultGroupingSettingsSelector } from 'app/settings/vault-grouping';
 import { AppIcon, addIcon } from 'app/shell/icons';
 import { vaultGroupingValueWithType } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -75,6 +75,7 @@ const StoreBucketInner = memo(function StoreBucketInner({
   const dispatch = useThunkDispatch();
   const sortItems = useSelector(itemSorterSelector);
   const groupItems = useSelector(vaultGroupingSelector);
+  const vaultGroupingSettings = useSelector(vaultGroupingSettingsSelector);
 
   const showItemPicker = useItemPicker();
   const pickEquipItem = useCallback(() => {
@@ -90,6 +91,7 @@ const StoreBucketInner = memo(function StoreBucketInner({
     <>
       {equippedItem && (
         <StoreBucketDropTarget
+          grouped={false}
           equip={true}
           bucket={bucket}
           storeId={storeId}
@@ -113,6 +115,7 @@ const StoreBucketInner = memo(function StoreBucketInner({
         </StoreBucketDropTarget>
       )}
       <StoreBucketDropTarget
+        grouped={isVault && Boolean(vaultGroupingSettings)}
         equip={false}
         bucket={bucket}
         storeId={storeId}
@@ -123,7 +126,7 @@ const StoreBucketInner = memo(function StoreBucketInner({
           'id' in groupOrItem ? (
             <StoreInventoryItem key={groupOrItem.index} item={groupOrItem} />
           ) : (
-            <div key={vaultGroupingValueWithType(groupOrItem.value)}>
+            <div className="vault-group" key={vaultGroupingValueWithType(groupOrItem.value)}>
               {groupOrItem.items.map((item) => (
                 <StoreInventoryItem key={item.index} item={item} />
               ))}
@@ -173,6 +176,8 @@ const VaultBucketDividedByClass = memo(function SingleCharacterVaultBucket({
   const storeClassList = useSelector(storeClassListSelector);
   const characterOrder = useSelector(characterOrderSelector);
   const sortItems = useSelector(itemSorterSelector);
+  const groupItems = useSelector(vaultGroupingSelector);
+  const vaultGroupingSettings = useSelector(vaultGroupingSettingsSelector);
 
   // The vault divides armor by class
   const itemsByClass = _.groupBy(items, (item) => item.classType);
@@ -184,6 +189,7 @@ const VaultBucketDividedByClass = memo(function SingleCharacterVaultBucket({
 
   return (
     <StoreBucketDropTarget
+      grouped={Boolean(vaultGroupingSettings)}
       equip={false}
       bucket={bucket}
       storeId={storeId}
@@ -192,9 +198,17 @@ const VaultBucketDividedByClass = memo(function SingleCharacterVaultBucket({
       {classTypeOrder.map((classType) => (
         <React.Fragment key={classType}>
           <ClassIcon classType={classType} className="armor-class-icon" />
-          {sortItems(itemsByClass[classType]).map((item) => (
-            <StoreInventoryItem key={item.index} item={item} />
-          ))}
+          {groupItems(sortItems(itemsByClass[classType])).map((groupOrItem) =>
+            'id' in groupOrItem ? (
+              <StoreInventoryItem key={groupOrItem.index} item={groupOrItem} />
+            ) : (
+              <div className="vault-group" key={vaultGroupingValueWithType(groupOrItem.value)}>
+                {groupOrItem.items.map((item) => (
+                  <StoreInventoryItem key={item.index} item={item} />
+                ))}
+              </div>
+            )
+          )}
         </React.Fragment>
       ))}
     </StoreBucketDropTarget>
