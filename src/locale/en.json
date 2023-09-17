@@ -1053,6 +1053,7 @@
     "ResetToDefault": "Reset",
     "ReverseSort": "Toggle forward/reverse sort",
     "SetSort": "Sort items by:",
+    "SetVaultGrouping": "Group vault items by:",
     "Settings": "Settings",
     "ShowNewItems": "Show a red dot on new items",
     "SingleCharacter": "Single-Character View",
@@ -1076,7 +1077,8 @@
     "SortName": "Name",
     "SpacesSize": "{{count}} space",
     "SpacesSize_plural": "{{count}} spaces",
-    "Theme": "Theme"
+    "Theme": "Theme",
+    "VaultGroupingNone": "None"
   },
   "Sockets": {
     "ApplyPerks": "Apply Perks",

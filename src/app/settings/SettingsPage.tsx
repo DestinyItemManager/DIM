@@ -172,6 +172,11 @@ export default function SettingsPage() {
     return false;
   };
 
+  const changeVaultGrouping = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const vaultGrouping = e.target.value;
+    setSetting('vaultGrouping', vaultGrouping);
+  };
+
   const itemSortOrderChanged = (sortOrder: SortProperty[]) => {
     setSetting(
       'itemSortOrderCustom',
@@ -209,6 +214,11 @@ export default function SettingsPage() {
     deepsight: t('Settings.SortByDeepsight'),
     // archetype: 'Archetype'
   };
+
+  const vaultGroupingOptions = mapToOptions({
+    '': t('Settings.VaultGroupingNone'),
+    ...itemSortProperties,
+  });
 
   const descriptionDisplayOptions = mapToOptions({
     both: t('Settings.BothDescriptions'),
@@ -365,6 +375,16 @@ export default function SettingsPage() {
                   <NewItemIndicator className="new-item" /> <span>{t('Hotkey.ClearNewItems')}</span>
                 </button>
               </div>
+            </div>
+
+            <div className="setting">
+              <Select
+                label={t('Settings.SetVaultGrouping')}
+                name="vaultGrouping"
+                value={settings.vaultGrouping}
+                options={vaultGroupingOptions}
+                onChange={changeVaultGrouping}
+              />
             </div>
 
             <div className="setting">
