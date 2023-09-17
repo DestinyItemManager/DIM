@@ -13,6 +13,7 @@
   &.grouped {
     display: flex;
     flex-wrap: wrap;
+    align-items: stretch;
   }
 
   &:empty {
@@ -82,13 +83,10 @@
 
 .vault-group {
   display: flex;
-  width: 100%;
   flex-flow: row wrap;
   align-items: flex-start;
   align-content: flex-start;
   gap: var(--item-margin);
-  padding-bottom: var(--item-margin);
-  border-bottom: 1px solid rgba(150, 150, 150, 0.5);
 
   &:last-of-type {
     border-bottom: none;
