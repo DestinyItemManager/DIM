@@ -109,6 +109,102 @@ const TAG_ITEM_COMPARATORS: {
   archive: (getTag) => compareBy((item) => getTag(item) === 'archive'),
 };
 
+const GROUP_BY_VALUE_GETTERS: {
+  [key: string]: (item: DimItem) => number | string | undefined | boolean;
+} = {
+  // A -> Z
+  typeName: (item) => item.typeName,
+  // exotic -> common
+  rarity: (item) => D2ItemTiers[item.tier],
+  // high -> low
+  primStat: (item) => item.primaryStat?.value ?? 0,
+  // high -> low
+  basePower: (item) => item.power,
+  // This only sorts by D1 item quality
+  rating: (item) => isD1Item(item) && item.quality?.min,
+  // Titan -> Hunter -> Warlock -> Unknown
+  classType: (item) => item.classType,
+  // None -> Primary -> Special -> Heavy -> Unknown
+  ammoType: (item) => item.ammoType,
+  // A -> Z
+  name: (item) => item.name,
+  // lots -> few
+  amount: (item) => item.amount,
+  // recent season -> old season
+
+  // FIXME
+  // season: reverseComparator(
+  //   chainComparator(
+  //     compareBy((item) => (item.destinyVersion === 2 ? getSeason(item) : 0)),
+  //     compareBy((item) => item.iconOverlay ?? '')
+  //   )
+  // ),
+
+  // sunset -> not sunset
+  sunset: isSunset,
+  // new -> old
+  acquisitionRecency: getItemRecencyKey,
+  // None -> Kinetic -> Arc -> Thermal -> Void -> Raid -> Stasis
+  elementWeapon: (item) => {
+    if (item.bucket.inWeapons) {
+      return item.element?.enumValue ?? Number.MAX_SAFE_INTEGER;
+    }
+  },
+  // masterwork -> not masterwork
+  masterworked: (item) => (item.masterwork ? 0 : 1),
+  // crafted -> not crafted
+  crafted: (item) => (item.crafted ? 0 : 1),
+  // deepsight -> no deepsight
+  deepsight: (item) => (item.deepsightInfo ? 1 : 2),
+};
+
+const valueProperty = (input: { value: string | number | boolean }) => input.value;
+
+const GROUP_BY_COMPARATORS: {
+  [key: string]: Comparator<{ value: string | number | boolean }>;
+} = {
+  // A -> Z
+  typeName: compareBy(valueProperty),
+  // exotic -> common
+  rarity: reverseComparator(compareBy(valueProperty)),
+  // high -> low
+  primStat: reverseComparator(compareBy(valueProperty)),
+  // high -> low
+  basePower: reverseComparator(compareBy(valueProperty)),
+  // This only sorts by D1 item quality
+  rating: reverseComparator(compareBy(valueProperty)),
+  // Titan -> Hunter -> Warlock -> Unknown
+  classType: compareBy(valueProperty),
+  // None -> Primary -> Special -> Heavy -> Unknown
+  ammoType: compareBy(valueProperty),
+  // A -> Z
+  name: compareBy(valueProperty),
+  // lots -> few
+  amount: reverseComparator(compareBy(valueProperty)),
+  // recent season -> old season
+
+  // FIXME
+  // season: reverseComparator(
+  //   chainComparator(
+  //     compareBy((item) => (item.destinyVersion === 2 ? getSeason(item) : 0)),
+  //     compareBy((item) => item.iconOverlay ?? '')
+  //   )
+  // ),
+
+  // sunset -> not sunset
+  sunset: compareBy(valueProperty),
+  // new -> old
+  acquisitionRecency: reverseComparator(compareBy(valueProperty)),
+  // None -> Kinetic -> Arc -> Thermal -> Void -> Raid -> Stasis
+  elementWeapon: compareBy(valueProperty),
+  // masterwork -> not masterwork
+  masterworked: compareBy(valueProperty),
+  // crafted -> not crafted
+  crafted: compareBy(valueProperty),
+  // deepsight -> no deepsight
+  deepsight: compareBy(valueProperty),
+};
+
 const ITEM_COMPARATORS: {
   [key: string]: Comparator<DimItem>;
 } = {
@@ -239,4 +335,58 @@ export function sortItems(
     })
   );
   return [...items].sort(comparator);
+}
+
+export const UNGROUPED_SECRET = '__UNGROUPED';
+
+export function groupItems(
+  items: readonly DimItem[],
+  vaultGrouping: string,
+  _getTag: (item: DimItem) => TagValue | undefined
+): readonly { value: string | number | boolean; items: readonly DimItem[] }[] {
+  const getter = GROUP_BY_VALUE_GETTERS[vaultGrouping];
+  const comparator = GROUP_BY_COMPARATORS[vaultGrouping];
+
+  if (!items.length || !getter || !comparator) {
+    return [{ value: UNGROUPED_SECRET, items }];
+  }
+
+  const grouped: { value: string | number | boolean; items: DimItem[] }[] = [];
+
+  for (const item of items) {
+    const indexOfUngrouped = grouped.findIndex((g) => g.value === UNGROUPED_SECRET);
+
+    if (!getter) {
+      if (indexOfUngrouped < 0) {
+        grouped.push({ value: UNGROUPED_SECRET, items: [item] });
+        continue;
+      }
+
+      grouped[indexOfUngrouped].items.push(item);
+      continue;
+    }
+
+    const value = getter(item);
+
+    if (typeof value === 'undefined') {
+      if (indexOfUngrouped < 0) {
+        grouped.push({ value: UNGROUPED_SECRET, items: [item] });
+        continue;
+      }
+
+      grouped[indexOfUngrouped].items.push(item);
+      continue;
+    }
+
+    const existingGroup = grouped.find((g) => g.value === value);
+
+    if (existingGroup) {
+      existingGroup.items.push(item);
+      continue;
+    }
+
+    grouped.push({ value, items: [item] });
+  }
+
+  return grouped.sort(comparator);
 }
