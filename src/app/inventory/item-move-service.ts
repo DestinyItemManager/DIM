@@ -818,9 +818,9 @@ function ensureCanMoveToStore(
       };
 
       // Move starting from the vault (which is always last)
-      const [sourceStoreId] = Object.entries(movesNeeded)
-        .reverse()
-        .find(([_storeId, moveAmount]) => moveAmount > 0)!;
+      const [sourceStoreId] = Object.entries(movesNeeded).findLast(
+        ([_storeId, moveAmount]) => moveAmount > 0
+      )!;
       const moveAsideSource = getStore(stores, sourceStoreId)!;
       const { item: moveAsideItem, target: moveAsideTarget } = chooseMoveAsideItem(
         getState,

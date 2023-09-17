@@ -715,18 +715,15 @@ function applyLoadoutItem(
       let amountNeeded = loadoutItem.amount - amountAlreadyHave;
       if (amountNeeded > 0) {
         const otherStores = stores.filter((otherStore) => store.id !== otherStore.id);
-        const storesByAmount = _.sortBy(
-          otherStores.map((store) => ({
-            store,
-            amount: amountOfItem(store, loadoutItem),
-          })),
-          (v) => v.amount
-        ).reverse();
+        const storesWithAmount = otherStores.map((store) => ({
+          store,
+          amount: amountOfItem(store, loadoutItem),
+        }));
 
         let totalAmount = amountAlreadyHave;
         // Keep moving from stacks until we get enough
         while (amountNeeded > 0) {
-          const source = _.maxBy(storesByAmount, (s) => s.amount)!;
+          const source = _.maxBy(storesWithAmount, (s) => s.amount)!;
           const amountToMove = Math.min(source.amount, amountNeeded);
           const sourceItem = source.store.items.find((i) => i.hash === loadoutItem.hash);
 

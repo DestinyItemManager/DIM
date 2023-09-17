@@ -327,7 +327,7 @@ export function clearSubclass(
 
     return {
       ...loadout,
-      items: [...loadout.items.filter((i) => !isSubclass(i))],
+      items: loadout.items.filter((i) => !isSubclass(i)),
     };
   };
 }

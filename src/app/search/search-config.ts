@@ -139,7 +139,7 @@ export function buildSearchConfig(
 
   return {
     filtersMap,
-    suggestions: [...suggestions].map((rawText) => ({
+    suggestions: Array.from(suggestions, (rawText) => ({
       rawText,
       plainText: plainString(rawText, language),
     })),
