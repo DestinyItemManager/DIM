@@ -2,13 +2,11 @@ import webpack from 'webpack';
 
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import browserslist from 'browserslist';
-import { execSync } from 'child_process';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import CompressionPlugin from 'compression-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import ForkTsCheckerNotifierWebpackPlugin from 'fork-ts-checker-notifier-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
-import fs from 'fs';
 import GenerateJsonPlugin from 'generate-json-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import _ from 'lodash';
@@ -53,12 +51,6 @@ export interface WebpackConfigurationGenerator {
 }
 
 export default (env: Env) => {
-  if (env.dev && env.WEBPACK_SERVE && (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem'))) {
-    console.log('Generating certificate');
-    execSync('mkcert create-ca --validity 825');
-    execSync('mkcert create-cert --validity 825 --key key.pem --cert cert.pem');
-  }
-
   env.name = Object.keys(env)[0] as Env['name'];
   (['release', 'beta', 'dev'] as const).forEach((e) => {
     // set booleans based on env
@@ -80,6 +72,8 @@ export default (env: Env) => {
   const contentSecurityPolicy = csp(env.name, featureFlags);
 
   const analyticsProperty = env.release ? 'G-1PW23SGMHN' : 'G-MYWW38Z3LR';
+  const jsFilenamePattern = env.dev ? '[name]-[fullhash].js' : '[name]-[contenthash:8].js';
+  const cssFilenamePattern = env.dev ? '[name]-[fullhash].css' : '[name]-[contenthash:8].css';
 
   const config: webpack.Configuration = {
     mode: env.dev ? ('development' as const) : ('production' as const),
@@ -96,8 +90,8 @@ export default (env: Env) => {
     output: {
       path: path.resolve('./dist'),
       publicPath: '/',
-      filename: env.dev ? '[name]-[fullhash].js' : '[name]-[contenthash:8].js',
-      chunkFilename: env.dev ? '[name]-[fullhash].js' : '[name]-[contenthash:8].js',
+      filename: jsFilenamePattern,
+      chunkFilename: jsFilenamePattern,
       assetModuleFilename: ASSET_NAME_PATTERN,
       hashFunction: 'xxhash64',
     },
@@ -109,10 +103,6 @@ export default (env: Env) => {
           allowedHosts: 'all',
           server: {
             type: 'https',
-            options: {
-              key: fs.readFileSync('key.pem'), // Private keys in PEM format.
-              cert: fs.readFileSync('cert.pem'), // Cert chains in PEM format.
-            },
           },
           devMiddleware: {
             stats: 'errors-only',
@@ -173,8 +163,7 @@ export default (env: Env) => {
             ecma: 2020,
             module: true,
             compress: { passes: 3, toplevel: true },
-            mangle: { safari10: true, toplevel: true },
-            output: { safari10: true },
+            mangle: { toplevel: true },
           },
         }),
       ],
@@ -328,13 +317,6 @@ export default (env: Env) => {
             },
           ],
         },
-        // https://github.com/pmndrs/react-spring/issues/2097, remove after react-spring is gone
-        {
-          test: /react-spring/i,
-          resolve: {
-            fullySpecified: false,
-          },
-        },
       ],
 
       noParse: /manifests/,
@@ -366,8 +348,8 @@ export default (env: Env) => {
     new NotifyPlugin('DIM', !env.dev),
 
     new MiniCssExtractPlugin({
-      filename: env.dev ? '[name]-[contenthash].css' : '[name]-[contenthash:8].css',
-      chunkFilename: env.dev ? '[name]-[contenthash].css' : '[id]-[contenthash:8].css',
+      filename: cssFilenamePattern,
+      chunkFilename: cssFilenamePattern,
     }),
 
     // Compress CSS after bundling so we can optimize across rules
@@ -392,6 +374,7 @@ export default (env: Env) => {
       ],
     }),
 
+    // TODO: prerender?
     new HtmlWebpackPlugin({
       inject: true,
       filename: 'index.html',
