@@ -1162,7 +1162,7 @@ function searchUsed(draft: Draft<DimApiState>, account: DestinyAccount, query: s
   }
 
   if (searches.length > MAX_SEARCH_HISTORY) {
-    const sortedSearches = [...searches].sort(recentSearchComparator);
+    const sortedSearches = searches.toSorted(recentSearchComparator);
 
     const numBuiltinSearches = count(sortedSearches, (s) => s.usageCount <= 0);
 

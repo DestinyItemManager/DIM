@@ -430,7 +430,7 @@ function applyPlugsToStats(
   // We sort the sockets by length so that we count contributions from plugs with fewer options first.
   // This is because multiple plugs can contribute to the same stat, so we want to sink the non-changeable
   // stats in first.
-  const sortedSockets = [...createdItem.sockets.allSockets].sort(
+  const sortedSockets = createdItem.sockets.allSockets.toSorted(
     compareBy((s) => s.plugOptions.length)
   );
   for (const socket of sortedSockets) {
