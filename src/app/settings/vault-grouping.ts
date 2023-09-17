@@ -5,14 +5,17 @@ import { groupItems } from 'app/shell/item-comparators';
 import { RootState } from 'app/store/types';
 import { createSelector } from 'reselect';
 
-export const vaultGroupingSettingsSelector = (state: RootState) =>
+export const vaultGroupingSettingSelector = (state: RootState) =>
   settingsSelector(state).vaultGrouping;
+
+export const vaultGroupingDisplaySettingSelector = (state: RootState) =>
+  settingsSelector(state).vaultGroupingDisplay;
 
 /**
  * Get a function that will sort items according to the user's preferences.
  */
 export const vaultGroupingSelector = createSelector(
-  vaultGroupingSettingsSelector,
+  vaultGroupingSettingSelector,
   getTagSelector,
   (vaultGrouping, getTag) => (items: readonly DimItem[]) => {
     if (!vaultGrouping) {
