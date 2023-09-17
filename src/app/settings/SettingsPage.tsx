@@ -222,7 +222,14 @@ export default function SettingsPage() {
 
   const vaultGroupingOptions = mapToOptions({
     '': t('Settings.VaultGroupingNone'),
-    ...itemSortProperties,
+    typeName: t('Settings.SortByType'),
+    rarity: t('Settings.SortByRarity'),
+    ammoType: t('Settings.SortByAmmoType'),
+    tag: t('Settings.SortByTag', { taglist: tagListString }),
+    elementWeapon: t('Settings.SortByWeaponElement'),
+    masterworked: t('Settings.Masterworked'),
+    crafted: t('Settings.SortByCrafted'),
+    deepsight: t('Settings.SortByDeepsight'),
   });
 
   const vaultGroupingDisplayOptions = [

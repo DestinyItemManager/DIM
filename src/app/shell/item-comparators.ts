@@ -116,34 +116,8 @@ const GROUP_BY_VALUE_GETTERS: {
   typeName: (item) => item.typeName,
   // exotic -> common
   rarity: (item) => D2ItemTiers[item.tier],
-  // high -> low
-  primStat: (item) => item.primaryStat?.value ?? 0,
-  // high -> low
-  basePower: (item) => item.power,
-  // This only sorts by D1 item quality
-  rating: (item) => isD1Item(item) && item.quality?.min,
-  // Titan -> Hunter -> Warlock -> Unknown
-  classType: (item) => item.classType,
   // None -> Primary -> Special -> Heavy -> Unknown
   ammoType: (item) => item.ammoType,
-  // A -> Z
-  name: (item) => item.name,
-  // lots -> few
-  amount: (item) => item.amount,
-  // recent season -> old season
-
-  // FIXME
-  // season: reverseComparator(
-  //   chainComparator(
-  //     compareBy((item) => (item.destinyVersion === 2 ? getSeason(item) : 0)),
-  //     compareBy((item) => item.iconOverlay ?? '')
-  //   )
-  // ),
-
-  // sunset -> not sunset
-  sunset: isSunset,
-  // new -> old
-  acquisitionRecency: getItemRecencyKey,
   // None -> Kinetic -> Arc -> Thermal -> Void -> Raid -> Stasis
   elementWeapon: (item) => {
     if (item.bucket.inWeapons) {
@@ -167,34 +141,8 @@ const GROUP_BY_COMPARATORS: {
   typeName: compareBy(valueProperty),
   // exotic -> common
   rarity: reverseComparator(compareBy(valueProperty)),
-  // high -> low
-  primStat: reverseComparator(compareBy(valueProperty)),
-  // high -> low
-  basePower: reverseComparator(compareBy(valueProperty)),
-  // This only sorts by D1 item quality
-  rating: reverseComparator(compareBy(valueProperty)),
-  // Titan -> Hunter -> Warlock -> Unknown
-  classType: compareBy(valueProperty),
   // None -> Primary -> Special -> Heavy -> Unknown
   ammoType: compareBy(valueProperty),
-  // A -> Z
-  name: compareBy(valueProperty),
-  // lots -> few
-  amount: reverseComparator(compareBy(valueProperty)),
-  // recent season -> old season
-
-  // FIXME
-  // season: reverseComparator(
-  //   chainComparator(
-  //     compareBy((item) => (item.destinyVersion === 2 ? getSeason(item) : 0)),
-  //     compareBy((item) => item.iconOverlay ?? '')
-  //   )
-  // ),
-
-  // sunset -> not sunset
-  sunset: compareBy(valueProperty),
-  // new -> old
-  acquisitionRecency: reverseComparator(compareBy(valueProperty)),
   // None -> Kinetic -> Arc -> Thermal -> Void -> Raid -> Stasis
   elementWeapon: compareBy(valueProperty),
   // masterwork -> not masterwork
