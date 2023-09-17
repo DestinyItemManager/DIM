@@ -340,8 +340,7 @@ export function removeMod(mod: ResolvedLoadoutMod): LoadoutUpdateFunction {
     if (loadout.parameters?.mods) {
       const index = loadout.parameters?.mods.indexOf(mod.originalModHash);
       if (index !== -1) {
-        const mods = [...loadout.parameters.mods];
-        mods.splice(index, 1);
+        const mods = loadout.parameters.mods.toSpliced(index, 1);
         return setLoadoutParameters({ mods })(loadout);
       }
     }
