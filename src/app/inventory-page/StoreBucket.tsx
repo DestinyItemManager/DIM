@@ -14,7 +14,9 @@ import { findItemsByBucket } from 'app/inventory/stores-helpers';
 import { useItemPicker } from 'app/item-picker/item-picker';
 import { characterOrderSelector } from 'app/settings/character-sort';
 import { itemSorterSelector } from 'app/settings/item-sort';
+import { vaultGroupingSelector } from 'app/settings/vault-grouping';
 import { AppIcon, addIcon } from 'app/shell/icons';
+import { vaultGroupingValueWithType } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -72,6 +74,7 @@ const StoreBucketInner = memo(function StoreBucketInner({
 }) {
   const dispatch = useThunkDispatch();
   const sortItems = useSelector(itemSorterSelector);
+  const groupItems = useSelector(vaultGroupingSelector);
 
   const showItemPicker = useItemPicker();
   const pickEquipItem = useCallback(() => {
@@ -79,7 +82,9 @@ const StoreBucketInner = memo(function StoreBucketInner({
   }, [bucket, dispatch, showItemPicker, storeId]);
 
   const equippedItem = isVault ? undefined : items.find((i) => i.equipped);
-  const unequippedItems = isVault ? sortItems(items) : sortItems(items.filter((i) => !i.equipped));
+  const unequippedItems = isVault
+    ? groupItems(sortItems(items))
+    : sortItems(items.filter((i) => !i.equipped));
 
   return (
     <>
@@ -114,9 +119,17 @@ const StoreBucketInner = memo(function StoreBucketInner({
         storeClassType={storeClassType}
         className={clsx({ 'not-equippable': !isVault && !equippedItem })}
       >
-        {unequippedItems.map((item) => (
-          <StoreInventoryItem key={item.index} item={item} />
-        ))}
+        {unequippedItems.map((groupOrItem) =>
+          'id' in groupOrItem ? (
+            <StoreInventoryItem key={groupOrItem.index} item={groupOrItem} />
+          ) : (
+            <div key={vaultGroupingValueWithType(groupOrItem.value)}>
+              {groupOrItem.items.map((item) => (
+                <StoreInventoryItem key={item.index} item={item} />
+              ))}
+            </div>
+          )
+        )}
         {destinyVersion === 2 &&
           bucket.hash === BucketHashes.Engrams && // Engrams. D1 uses this same bucket hash for "Missions"
           // lower bound of 0, in case this bucket becomes overfilled

@@ -390,3 +390,6 @@ export function groupItems(
 
   return grouped.sort(comparator);
 }
+
+export const vaultGroupingValueWithType = (value: string | number | boolean) =>
+  `${typeof value}-${value}`;

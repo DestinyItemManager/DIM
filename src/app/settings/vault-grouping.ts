@@ -14,5 +14,11 @@ export const vaultGroupingSettingsSelector = (state: RootState) =>
 export const vaultGroupingSelector = createSelector(
   vaultGroupingSettingsSelector,
   getTagSelector,
-  (vaultGrouping, getTag) => (items: readonly DimItem[]) => groupItems(items, vaultGrouping, getTag)
+  (vaultGrouping, getTag) => (items: readonly DimItem[]) => {
+    if (!vaultGrouping) {
+      return items;
+    }
+
+    return groupItems(items, vaultGrouping, getTag);
+  }
 );
