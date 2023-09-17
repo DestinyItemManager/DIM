@@ -110,8 +110,12 @@ const TAG_ITEM_COMPARATORS: {
 };
 
 const GROUP_BY_VALUE_GETTERS: {
-  [key: string]: (item: DimItem) => number | string | undefined | boolean;
+  [key: string]: (
+    item: DimItem,
+    getTag: (item: DimItem) => TagValue | undefined
+  ) => number | string | undefined | boolean;
 } = {
+  tag: (item, getTag) => getTag(item),
   // A -> Z
   typeName: (item) => item.typeName,
   // exotic -> common
@@ -132,11 +136,12 @@ const GROUP_BY_VALUE_GETTERS: {
   deepsight: (item) => (item.deepsightInfo ? 1 : 2),
 };
 
-const valueProperty = (input: { value: string | number | boolean }) => input.value;
+const valueProperty = (input: { value: string | number | boolean | undefined }) => input.value;
 
 const GROUP_BY_COMPARATORS: {
-  [key: string]: Comparator<{ value: string | number | boolean }>;
+  [key: string]: Comparator<{ value: string | number | boolean | undefined }>;
 } = {
+  tag: compareBy(valueProperty),
   // A -> Z
   typeName: compareBy(valueProperty),
   // exotic -> common
@@ -285,28 +290,26 @@ export function sortItems(
   return [...items].sort(comparator);
 }
 
-export const UNGROUPED_SECRET = '__UNGROUPED';
-
 export function groupItems(
   items: readonly DimItem[],
   vaultGrouping: string,
-  _getTag: (item: DimItem) => TagValue | undefined
-): readonly { value: string | number | boolean; items: readonly DimItem[] }[] {
+  getTag: (item: DimItem) => TagValue | undefined
+): readonly { value: string | number | boolean | undefined; items: readonly DimItem[] }[] {
   const getter = GROUP_BY_VALUE_GETTERS[vaultGrouping];
   const comparator = GROUP_BY_COMPARATORS[vaultGrouping];
 
   if (!items.length || !getter || !comparator) {
-    return [{ value: UNGROUPED_SECRET, items }];
+    return [{ value: undefined, items }];
   }
 
-  const grouped: { value: string | number | boolean; items: DimItem[] }[] = [];
+  const grouped: { value: string | number | boolean | undefined; items: DimItem[] }[] = [];
 
   for (const item of items) {
-    const indexOfUngrouped = grouped.findIndex((g) => g.value === UNGROUPED_SECRET);
+    const indexOfUngrouped = grouped.findIndex((g) => g.value === undefined);
 
     if (!getter) {
       if (indexOfUngrouped < 0) {
-        grouped.push({ value: UNGROUPED_SECRET, items: [item] });
+        grouped.push({ value: undefined, items: [item] });
         continue;
       }
 
@@ -314,11 +317,11 @@ export function groupItems(
       continue;
     }
 
-    const value = getter(item);
+    const value = getter(item, getTag);
 
     if (typeof value === 'undefined') {
       if (indexOfUngrouped < 0) {
-        grouped.push({ value: UNGROUPED_SECRET, items: [item] });
+        grouped.push({ value: undefined, items: [item] });
         continue;
       }
 
@@ -339,5 +342,5 @@ export function groupItems(
   return grouped.sort(comparator);
 }
 
-export const vaultGroupingValueWithType = (value: string | number | boolean) =>
+export const vaultGroupingValueWithType = (value: string | number | boolean | undefined) =>
   `${typeof value}-${value}`;
