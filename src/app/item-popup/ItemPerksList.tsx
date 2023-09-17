@@ -42,7 +42,7 @@ export default function ItemPerksList({
     return null;
   }
 
-  const socketIndices = [...perks.socketIndexes].reverse();
+  const socketIndices = perks.socketIndexes.toReversed();
   const sockets = getSocketsByIndexes(item.sockets, socketIndices);
 
   return (
