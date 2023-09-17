@@ -37,7 +37,7 @@ export const getVault = (stores: DimStore[]): DimStore | undefined => stores.fin
  * the store changes for any reason.
  */
 const itemsByBucket = weakMemoize((store: DimStore) =>
-  _.groupBy(store.items, (i) => i.location.hash)
+  Object.groupBy(store.items, (i) => i.location.hash)
 );
 
 /**

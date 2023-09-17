@@ -53,6 +53,20 @@ interface MeasureMemoryResult {
   }[];
 }
 
+interface ObjectConstructor {
+  groupBy<Item>(
+    items: Iterable<Item>,
+    keySelector: (item: Item, index: number) => string | number
+  ): Record<string, Item[]>;
+}
+
+interface MapConstructor {
+  groupBy<Item, Key>(
+    items: Iterable<Item>,
+    keySelector: (item: Item, index: number) => Key
+  ): Map<Key, Item[]>;
+}
+
 declare module '*/CHANGELOG.md' {
   const value: string;
   export default value;

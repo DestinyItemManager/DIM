@@ -10,7 +10,6 @@ import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import mutuallyExclusiveMods from 'data/d2/mutually-exclusive-mods.json';
 import { normalToReducedMod, reducedToNormalMod } from 'data/d2/reduced-cost-mod-mappings';
-import _ from 'lodash';
 import { knownModPlugCategoryHashes } from './known-values';
 
 export const plugCategoryHashToBucketHash: LookupTable<PlugCategoryHashes, BucketHashes> = {
@@ -96,7 +95,7 @@ export function createGetModRenderKey() {
  * e.g. "General Armor Mod", "Helmet Armor Mod", "Nightmare Mod"
  */
 export function groupModsByModType(plugs: PluggableInventoryItemDefinition[]) {
-  return _.groupBy(plugs, (plugDef) => plugDef.itemTypeDisplayName);
+  return Object.groupBy(plugs, (plugDef) => plugDef.itemTypeDisplayName);
 }
 
 /**

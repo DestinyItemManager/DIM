@@ -6,7 +6,6 @@ import { isArtifice } from 'app/item-triage/triage-utils';
 import { StatsSet } from 'app/loadout-builder/process-worker/stats-set';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { chainComparator, compareBy, reverseComparator } from '../../utils/comparators';
 import { DEFAULT_SHADER, armorStats } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
@@ -228,7 +227,7 @@ function computeStatDupeLower(allItems: DimItem[], relevantStatHashes: number[] 
 
   // Group by class and armor type. Also, compare exotics with each other, not the general pool.
   const grouped = Object.values(
-    _.groupBy(armor, (i) => `${i.bucket.hash}-${i.classType}-${i.isExotic ? i.hash : ''}`)
+    Object.groupBy(armor, (i) => `${i.bucket.hash}-${i.classType}-${i.isExotic ? i.hash : ''}`)
   );
 
   const dupes = new Set<string>();

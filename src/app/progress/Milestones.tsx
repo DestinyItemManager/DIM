@@ -53,7 +53,7 @@ export default function Milestones({
     (m) => m.milestoneHash
   ).flatMap((milestone) => milestoneToItems(milestone, defs, buckets, store));
 
-  const milestonesByPower = _.groupBy(milestoneItems, (m) => {
+  const milestonesByPower = Map.groupBy(milestoneItems, (m) => {
     for (const reward of m.pursuit?.rewards ?? []) {
       const powerBonus = getEngramPowerBonus(reward.itemHash, maxGearPower, m.hash);
       if (powerBonus !== undefined) {
@@ -62,9 +62,7 @@ export default function Milestones({
     }
   });
 
-  const sortPowerBonus = compareBy(
-    (powerBonus: string) => -(powerBonus === 'undefined' ? -1 : parseInt(powerBonus, 10))
-  );
+  const sortPowerBonus = compareBy((powerBonus: number | undefined) => -(powerBonus ?? -1));
 
   return (
     <>
@@ -85,22 +83,23 @@ export default function Milestones({
           <PowerCaps />
         </PursuitGrid>
       )}
-      {Object.keys(milestonesByPower)
-        .sort(sortPowerBonus)
-        .map((powerBonus) => (
-          <div key={powerBonus}>
-            <h2 className={styles.header}>
-              {powerBonus === 'undefined'
-                ? t('Progress.PowerBonusHeaderUndefined')
-                : t('Progress.PowerBonusHeader', { powerBonus })}
-            </h2>
-            <PursuitGrid>
-              {milestonesByPower[powerBonus].sort(sortPursuits).map((item) => (
+      {[...milestonesByPower.keys()].sort(sortPowerBonus).map((powerBonus) => (
+        <div key={powerBonus}>
+          <h2 className={styles.header}>
+            {powerBonus === undefined
+              ? t('Progress.PowerBonusHeaderUndefined')
+              : t('Progress.PowerBonusHeader', { powerBonus })}
+          </h2>
+          <PursuitGrid>
+            {milestonesByPower
+              .get(powerBonus)!
+              .sort(sortPursuits)
+              .map((item) => (
                 <Pursuit key={item.hash} item={item} />
               ))}
-            </PursuitGrid>
-          </div>
-        ))}
+          </PursuitGrid>
+        </div>
+      ))}
     </>
   );
 }

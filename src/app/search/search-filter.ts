@@ -7,7 +7,7 @@ import { Settings } from 'app/settings/initial-settings';
 import { errorLog } from 'app/utils/log';
 import { filterMap } from 'app/utils/util';
 import { WishListRoll } from 'app/wishlists/types';
-import _, { stubTrue } from 'lodash';
+import { stubTrue } from 'lodash';
 import { createSelector } from 'reselect';
 import { DimItem } from '../inventory/item-types';
 import {
@@ -66,7 +66,7 @@ function makeFilterContext(
   currentStore: DimStore | undefined,
   loadoutsByItem: LoadoutsByItem,
   wishListFunction: (item: DimItem) => InventoryWishListRoll | undefined,
-  wishListsByHash: _.Dictionary<WishListRoll[]>,
+  wishListsByHash: Map<number, WishListRoll[]>,
   newItems: Set<string>,
   getTag: (item: DimItem) => TagValue | undefined,
   getNotes: (item: DimItem) => string | undefined,

@@ -115,7 +115,10 @@ export default function LoadoutView({
 
   const [allMods, modDefinitions] = useLoadoutMods(loadout, store.id);
 
-  const categories = _.groupBy(items.concat(warnitems), (li) => li.item.bucket.sort);
+  const categories = Object.groupBy(
+    items.concat(warnitems),
+    (li) => li.item.bucket.sort ?? 'Unknown'
+  );
   const power = loadoutPower(store, categories);
 
   return (

@@ -117,19 +117,19 @@ function ApplyLoadoutProgressBody({
   // TODO: when we have per-item socket overrides this will probably need to be more subtle
   const socketOverrideStatesList = Object.values(socketOverrideStates);
 
-  const groupedItemErrors = _.groupBy(
-    itemStatesList.filter(({ error }) => error),
-    ({ error }) =>
-      (error instanceof DimError ? error.bungieErrorCode() ?? error.cause?.message : undefined) ??
-      error?.message
-  );
+  const groupErrors = <T extends { error?: Error }>(items: T[]) =>
+    Object.groupBy(
+      items.filter(({ error }) => error),
+      ({ error }) =>
+        (error instanceof DimError
+          ? error.bungieErrorCode()?.toString() ?? error.cause?.message
+          : undefined) ??
+        error?.message ??
+        'Unknown'
+    );
 
-  const groupedModErrors = _.groupBy(
-    modStates.filter(({ error }) => error),
-    ({ error }) =>
-      (error instanceof DimError ? error.bungieErrorCode() ?? error.cause?.message : undefined) ??
-      error?.message
-  );
+  const groupedItemErrors = groupErrors(itemStatesList);
+  const groupedModErrors = groupErrors(modStates);
 
   return (
     <>
@@ -178,7 +178,7 @@ function ApplyLoadoutProgressBody({
               <b>{t('Loadouts.ItemErrorSummary', { count: errorStates.length })}</b>{' '}
               {errorStates[0].error instanceof DimError && errorStates[0].error.cause
                 ? errorStates[0].error.cause.message
-                : errorStates[0].error!.message}
+                : errorStates[0].error?.message ?? 'Unknown'}
             </div>
           ))}
         </div>
@@ -228,7 +228,7 @@ function ApplyLoadoutProgressBody({
               <b>{t('Loadouts.ModErrorSummary', { count: errorStates.length })}</b>{' '}
               {errorStates[0].error instanceof DimError && errorStates[0].error.cause
                 ? errorStates[0].error.cause.message
-                : errorStates[0].error!.message}
+                : errorStates[0].error?.message ?? 'Unknown'}
             </div>
           ))}
         </div>

@@ -77,7 +77,7 @@ function WishlistRolls({
   realAvailablePlugHashes?: number[];
 }) {
   const defs = useD2Definitions()!;
-  const groupedWishlistRolls = _.groupBy(wishlistRolls, (r) => r.notes || t('Armory.NoNotes'));
+  const groupedWishlistRolls = Object.groupBy(wishlistRolls, (r) => r.notes || t('Armory.NoNotes'));
 
   const templateSockets = getCraftingTemplate(defs, item.hash)?.sockets?.socketEntries;
 
@@ -129,9 +129,9 @@ function WishlistRolls({
                 //   "3": [outlaw, enhanced outlaw]
                 //   "4": [rampage]
                 // }
-                const primariesGroupedByColumn = _.groupBy(
+                const primariesGroupedByColumn = Object.groupBy(
                   cr.commonPrimaryPerks,
-                  (h) => socketByPerkHash[h]?.socketIndex
+                  (h) => socketByPerkHash[h]?.socketIndex ?? 0
                 );
 
                 // turns the above into

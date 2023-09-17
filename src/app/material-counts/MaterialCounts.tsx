@@ -26,7 +26,7 @@ export function MaterialCounts({
   includeCurrencies?: boolean;
 }) {
   const allMats = useSelector(materialsSelector);
-  const materials = _.groupBy(allMats, (m) => m.hash);
+  const materials = Map.groupBy(allMats, (m) => m.hash);
 
   const currencies = useSelector(currenciesSelector);
   const transmogCurrencies = useSelector(transmogCurrenciesSelector);
@@ -37,7 +37,7 @@ export function MaterialCounts({
     ...[seasonal, goodMats, showMats].map((matgroup) => (
       <React.Fragment key={matgroup[0]}>
         {matgroup.map((h) => {
-          const items = materials[h];
+          const items = materials.get(h);
           if (!items) {
             return null;
           }

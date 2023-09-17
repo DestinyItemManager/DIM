@@ -286,17 +286,14 @@ function useAddSeasonHeaders(loadouts: Loadout[], loadoutSort: LoadoutSort) {
       (a, b) => b.seasonNumber - a.seasonNumber
     );
 
-    // TODO: Map.groupBy
-    const grouped = new Map<DestinySeasonDefinition, Loadout[]>();
-    for (const loadout of loadouts) {
-      const season = seasons.find(
-        (s) =>
-          new Date(s.startDate ?? Date.now()).getTime() <= (loadout.lastUpdatedAt ?? Date.now())
-      )!;
-      const list = grouped.get(season) ?? [];
-      list.push(loadout);
-      grouped.set(season, list);
-    }
+    const grouped = Map.groupBy(
+      loadouts,
+      (loadout) =>
+        seasons.find(
+          (s) =>
+            new Date(s.startDate ?? Date.now()).getTime() <= (loadout.lastUpdatedAt ?? Date.now())
+        )!
+    );
 
     loadoutRows = [...grouped.entries()].flatMap(([season, loadouts]) => [season, ...loadouts]);
   }

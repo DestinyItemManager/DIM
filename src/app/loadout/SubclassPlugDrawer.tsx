@@ -131,12 +131,12 @@ function getPlugsForSubclass(
     const sockets = getSocketsByCategoryHash(subclass.sockets, category.category.hash);
     // Group sockets by their plugSetHash so that we can figure out how many aspect or ability
     // choices the user will get
-    const socketsGroupedBySetHash = _.groupBy(
+    const socketsGroupedBySetHash = Map.groupBy(
       sockets,
       (socket) => socket.socketDefinition.reusablePlugSetHash
     );
 
-    for (const socketGroup of Object.values(socketsGroupedBySetHash)) {
+    for (const socketGroup of socketsGroupedBySetHash.values()) {
       if (socketGroup.length) {
         const firstSocket = socketGroup[0];
 

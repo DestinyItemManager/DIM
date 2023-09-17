@@ -644,7 +644,7 @@ function buildTalentGrid(
   }
 
   // This can be handy for visualization/debugging
-  // var columns = _.groupBy(gridNodes, 'column');
+  // var columns = Object.groupBy(gridNodes, 'column');
 
   const maxLevelRequired = _.maxBy(gridNodes, (n) => n.activatedAtGridLevel)!.activatedAtGridLevel;
   const totalXPRequired = xpToReachLevel(maxLevelRequired);

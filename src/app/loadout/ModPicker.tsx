@@ -85,15 +85,14 @@ function useUnlockedPlugSets(
 
       // Group the sockets by their reusablePlugSetHash, this lets us get a count of available mods for
       // each socket in the case of bucket specific mods/sockets
-      const socketsGroupedByPlugSetHash = _.groupBy(
+      const socketsGroupedByPlugSetHash = Map.groupBy(
         modSockets,
-        (socket) => socket.socketDefinition.reusablePlugSetHash
+        (socket) => socket.socketDefinition.reusablePlugSetHash ?? 0
       );
 
       // For each of the socket types on the item, figure out what plugs could go into it
       // and the maximum number of those sockets that can appear on a single item.
-      for (const [hashAsString, sockets] of Object.entries(socketsGroupedByPlugSetHash)) {
-        const plugSetHash = parseInt(hashAsString, 10);
+      for (const [plugSetHash, sockets] of socketsGroupedByPlugSetHash.entries()) {
         const unlockedPlugs = unlockedItemsForCharacterOrProfilePlugSet(
           profileResponse,
           sockets[0].plugSet!.hash,

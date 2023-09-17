@@ -462,7 +462,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
       'artifact',
       'ghost',
     ];
-    const items = _.groupBy(
+    const items = Object.groupBy(
       selectedCharacter!.items.filter(
         (item) =>
           itemCanBeInLoadout(item) &&

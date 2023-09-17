@@ -199,7 +199,7 @@ export async function getSetBucketsStep(
     }
   }
 
-  const tiers = _.groupBy(Array.from(tiersSet.keys()), (tierString: string) =>
+  const tiers = Object.groupBy(tiersSet.keys(), (tierString: string) =>
     _.sumBy(tierString.split('/'), (num) => parseInt(num, 10))
   );
   for (const tier of Object.values(tiers)) {

@@ -152,11 +152,13 @@ function allDesiredPerksExist(item: DimItem, wishListRoll: WishListRoll): boolea
 /** Get the InventoryWishListRoll for this item. */
 export function getInventoryWishListRoll(
   item: DimItem,
-  wishListRolls: { [itemHash: number]: WishListRoll[] }
+  wishListRolls: Map<number, WishListRoll[]>
 ): InventoryWishListRoll | undefined {
   // It could be under the item hash, the wildcard, or any of the item's categories
   for (const hash of [item.hash, DimWishList.WildcardItemId, ...item.itemCategoryHashes]) {
-    const matchingWishListRoll = wishListRolls[hash]?.find((cr) => allDesiredPerksExist(item, cr));
+    const matchingWishListRoll = wishListRolls
+      .get(hash)
+      ?.find((cr) => allDesiredPerksExist(item, cr));
     if (matchingWishListRoll) {
       return {
         wishListPerks: getWishListPlugs(item, matchingWishListRoll),
