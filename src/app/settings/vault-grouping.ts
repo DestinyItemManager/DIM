@@ -12,7 +12,7 @@ export const vaultGroupingDisplaySettingSelector = (state: RootState) =>
   settingsSelector(state).vaultGroupingDisplay;
 
 /**
- * Get a function that will sort items according to the user's preferences.
+ * Get a function that will group items according to the user's preferences.
  */
 export const vaultGroupingSelector = createSelector(
   vaultGroupingSettingSelector,

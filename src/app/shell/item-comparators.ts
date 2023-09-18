@@ -128,23 +128,16 @@ const GROUP_BY_VALUE_GETTERS: {
   ) => VaultGroupValue;
 } = {
   tag: (item, getTag) => getTag(item),
-  // A -> Z
   typeName: (item) => item.typeName,
-  // exotic -> common
   rarity: (item) => D2ItemTiers[item.tier],
-  // None -> Primary -> Special -> Heavy -> Unknown
   ammoType: (item) => item.ammoType,
-  // None -> Kinetic -> Arc -> Thermal -> Void -> Raid -> Stasis
   elementWeapon: (item) => {
     if (item.bucket.inWeapons) {
       return item.element?.enumValue ?? Number.MAX_SAFE_INTEGER;
     }
   },
-  // masterwork -> not masterwork
   masterworked: (item) => (item.masterwork ? 0 : 1),
-  // crafted -> not crafted
   crafted: (item) => (item.crafted ? 0 : 1),
-  // deepsight -> no deepsight
   deepsight: (item) => (item.deepsightInfo ? 1 : 2),
 };
 
