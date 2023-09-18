@@ -109,11 +109,23 @@ const TAG_ITEM_COMPARATORS: {
   archive: (getTag) => compareBy((item) => getTag(item) === 'archive'),
 };
 
+type VaultGroupValue = string | number | boolean | undefined;
+
+interface MutableVaultGroup {
+  value: VaultGroupValue;
+  items: DimItem[];
+}
+
+interface VaultGroup {
+  value: VaultGroupValue;
+  items: readonly DimItem[];
+}
+
 const GROUP_BY_VALUE_GETTERS: {
   [key: string]: (
     item: DimItem,
     getTag: (item: DimItem) => TagValue | undefined
-  ) => number | string | undefined | boolean;
+  ) => VaultGroupValue;
 } = {
   tag: (item, getTag) => getTag(item),
   // A -> Z
@@ -136,26 +148,43 @@ const GROUP_BY_VALUE_GETTERS: {
   deepsight: (item) => (item.deepsightInfo ? 1 : 2),
 };
 
-const valueProperty = (input: { value: string | number | boolean | undefined }) => input.value;
+const valueProperty = (input: VaultGroup) => input.value;
+
+const undefinedVaultGroupLast =
+  (comparator: Comparator<VaultGroup>) => (a: VaultGroup, b: VaultGroup) => {
+    if (typeof a.value === 'undefined') {
+      if (typeof b.value === 'undefined') {
+        return 0;
+      }
+
+      return 1;
+    }
+
+    if (typeof b.value === 'undefined') {
+      return -1;
+    }
+
+    return comparator(a, b);
+  };
 
 const GROUP_BY_COMPARATORS: {
-  [key: string]: Comparator<{ value: string | number | boolean | undefined }>;
+  [key: string]: Comparator<VaultGroup>;
 } = {
-  tag: compareBy(valueProperty),
+  tag: undefinedVaultGroupLast(compareBy(valueProperty)),
   // A -> Z
-  typeName: compareBy(valueProperty),
+  typeName: undefinedVaultGroupLast(compareBy(valueProperty)),
   // exotic -> common
-  rarity: reverseComparator(compareBy(valueProperty)),
+  rarity: undefinedVaultGroupLast(reverseComparator(compareBy(valueProperty))),
   // None -> Primary -> Special -> Heavy -> Unknown
-  ammoType: compareBy(valueProperty),
+  ammoType: undefinedVaultGroupLast(compareBy(valueProperty)),
   // None -> Kinetic -> Arc -> Thermal -> Void -> Raid -> Stasis
-  elementWeapon: compareBy(valueProperty),
+  elementWeapon: undefinedVaultGroupLast(compareBy(valueProperty)),
   // masterwork -> not masterwork
-  masterworked: compareBy(valueProperty),
+  masterworked: undefinedVaultGroupLast(compareBy(valueProperty)),
   // crafted -> not crafted
-  crafted: compareBy(valueProperty),
+  crafted: undefinedVaultGroupLast(compareBy(valueProperty)),
   // deepsight -> no deepsight
-  deepsight: compareBy(valueProperty),
+  deepsight: undefinedVaultGroupLast(compareBy(valueProperty)),
 };
 
 const ITEM_COMPARATORS: {
@@ -294,7 +323,7 @@ export function groupItems(
   items: readonly DimItem[],
   vaultGrouping: string,
   getTag: (item: DimItem) => TagValue | undefined
-): readonly { value: string | number | boolean | undefined; items: readonly DimItem[] }[] {
+): readonly VaultGroup[] {
   const getter = GROUP_BY_VALUE_GETTERS[vaultGrouping];
   const comparator = GROUP_BY_COMPARATORS[vaultGrouping];
 
@@ -302,7 +331,7 @@ export function groupItems(
     return [{ value: undefined, items }];
   }
 
-  const grouped: { value: string | number | boolean | undefined; items: DimItem[] }[] = [];
+  const grouped: MutableVaultGroup[] = [];
 
   for (const item of items) {
     const indexOfUngrouped = grouped.findIndex((g) => g.value === undefined);
@@ -342,5 +371,4 @@ export function groupItems(
   return grouped.sort(comparator);
 }
 
-export const vaultGroupingValueWithType = (value: string | number | boolean | undefined) =>
-  `${typeof value}-${value}`;
+export const vaultGroupingValueWithType = (value: VaultGroupValue) => `${typeof value}-${value}`;
