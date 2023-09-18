@@ -1,10 +1,8 @@
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import ItemPickerContainer from 'app/item-picker/ItemPickerContainer';
-import { isAndroid, isiOSBrowser } from 'app/utils/browsers';
 import { Portal } from 'app/utils/temp-container';
 import SingleVendorSheetContainer from 'app/vendors/single-vendor/SingleVendorSheetContainer';
-import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import clsx from 'clsx';
 import {
   PanInfo,
@@ -28,6 +26,7 @@ import { AppIcon, disabledIcon } from '../shell/icons';
 import { PressTipRoot } from './PressTip';
 import styles from './Sheet.m.scss';
 import './Sheet.scss';
+import { useFixOverscrollBehavior } from './useFixOverscrollBehavior';
 
 /**
  * Propagates a function for setting a sheet to disabled. This forms a chain as
@@ -141,8 +140,6 @@ export default function Sheet({
 }: Props) {
   const sheet = useRef<HTMLDivElement>(null);
   const sheetContents = useRef<HTMLDivElement | null>(null);
-  useLockSheetContents(sheetContents);
-  const dragHandle = useRef<HTMLDivElement>(null);
 
   const [frozenHeight, setFrozenHeight] = useState<number | undefined>(undefined);
   const [disabled, setParentDisabled] = useDisableParent(forceDisabled);
@@ -186,13 +183,8 @@ export default function Sheet({
   // are scrolled all the way to the top.
   const dragHandleDown = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
-      // prevent item-tag-selector dropdown from triggering drag (Safari)
-      if (isInside(e.target as HTMLElement, 'item-tag-selector')) {
-        return;
-      }
-
       if (
-        dragHandle.current?.contains(e.target as Node) ||
+        !sheetContents.current!.contains(e.target as Node) ||
         sheetContents.current!.scrollTop === 0
       ) {
         dragControls.start(e);
@@ -200,6 +192,8 @@ export default function Sheet({
     },
     [dragControls]
   );
+
+  useFixOverscrollBehavior(sheetContents);
 
   // When drag ends we determine if the sheet should be closed either via the final
   // drag velocity or if the sheet has been dragged halfway the down from its height.
@@ -278,7 +272,7 @@ export default function Sheet({
 
       <div className="sheet-container" onPointerDown={dragHandleDown}>
         {Boolean(header) && (
-          <div className="sheet-header" ref={dragHandle}>
+          <div className="sheet-header">
             {_.isFunction(header) ? header({ onClose: triggerClose }) : header}
           </div>
         )}
@@ -312,40 +306,4 @@ export default function Sheet({
       </SheetDisabledContext.Provider>
     </Portal>
   );
-}
-
-/**
- * Locks body scroll except for touches in the sheet contents.
- */
-function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivElement | null>) {
-  useEffect(() => {
-    const elem = sheetContents.current;
-
-    if (!elem || !(isiOSBrowser() || isAndroid())) {
-      return;
-    }
-
-    // This special style is needed because body-scroll-lock's styles cause the
-    // position: sticky header to move.
-    document.body.classList.add('body-scroll-lock');
-    disableBodyScroll(elem);
-
-    return () => {
-      // TODO: This relies on the sheetsOpen effect running first, maybe combine them
-      if (sheetsOpen === 0) {
-        document.body.classList.remove('body-scroll-lock');
-      }
-      enableBodyScroll(elem);
-    };
-  }, [sheetContents]);
-}
-
-function isInside(element: HTMLElement, className: string) {
-  while (element?.classList) {
-    if (element.classList.contains(className)) {
-      return true;
-    }
-    element = element.parentNode as HTMLElement;
-  }
-  return false;
 }

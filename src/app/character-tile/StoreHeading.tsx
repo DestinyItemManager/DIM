@@ -1,3 +1,4 @@
+import { useFixOverscrollBehavior } from 'app/dim-ui/useFixOverscrollBehavior';
 import { usePopper } from 'app/dim-ui/usePopper';
 import { t } from 'app/i18next-t';
 import { isD1Store } from 'app/inventory/stores-helpers';
@@ -93,6 +94,8 @@ export default function StoreHeading({
     fixed: true,
     padding: 0,
   });
+
+  useFixOverscrollBehavior(menuRef);
 
   // TODO: aria "open"
   return (
