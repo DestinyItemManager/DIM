@@ -328,10 +328,11 @@ export function randomSubclassConfiguration(
   randomizeSocketSeries(aspectSockets, aspectSockets.length);
 
   // Pick as many fragments as allowed
-  const fragmentCount = getLoadoutSubclassFragmentCapacity(defs, {
-    item: item,
+  const resolved = {
+    item,
     loadoutItem: { ...convertToLoadoutItem(item, false), socketOverrides },
-  });
+  };
+  const fragmentCount = getLoadoutSubclassFragmentCapacity(defs, resolved, true);
 
   const fragmentSockets = getSocketsByCategoryHashes(item.sockets, fragmentSocketCategoryHashes);
   randomizeSocketSeries(fragmentSockets, fragmentCount);
