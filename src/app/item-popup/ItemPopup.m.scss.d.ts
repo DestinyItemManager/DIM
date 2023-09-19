@@ -8,6 +8,8 @@ interface CssExports {
   'desktopPopupBody': string;
   'desktopPopupRoot': string;
   'exotic': string;
+  'failureReason': string;
+  'header': string;
   'itemPopup': string;
   'legendary': string;
   'mobileItemActions': string;

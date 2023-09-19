@@ -29,6 +29,7 @@ import ItemDescription from './ItemDescription';
 import styles from './ItemDetails.m.scss';
 import ItemExpiration from './ItemExpiration';
 import ItemPerks from './ItemPerks';
+import './ItemPopupBody.scss';
 import ItemSockets from './ItemSockets';
 import ItemStats from './ItemStats';
 import ItemTalentGrid from './ItemTalentGrid';
