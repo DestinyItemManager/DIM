@@ -1,7 +1,6 @@
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { doShowTriage, ItemTriage, TriageTabToggle } from 'app/item-triage/ItemTriage';
-import { percent } from 'app/shell/formatters';
 import clsx from 'clsx';
 import { DimItem } from '../inventory/item-types';
 import { ItemPopupExtraInfo } from './item-popup';
@@ -53,9 +52,6 @@ export default function ItemPopupBody({
   return (
     <div>
       {/* TODO: Should these be in the details? Or in the header? */}
-      {item.percentComplete !== 0 && !item.complete && (
-        <div className="item-xp-bar" style={{ width: percent(item.percentComplete) }} />
-      )}
       {failureStrings.map(
         (failureString) =>
           failureString.length > 0 && (
@@ -64,28 +60,26 @@ export default function ItemPopupBody({
             </div>
           )
       )}
-      <div className="move-popup-details">
-        {tabs.length > 1 ? (
-          <>
-            <div className={styles.movePopupTabs}>
-              {tabs.map((ta) => (
-                <span
-                  key={ta.tab}
-                  className={clsx(styles.movePopupTab, {
-                    [styles.selected]: tab === ta.tab,
-                  })}
-                  onClick={() => onTabChanged(ta.tab)}
-                >
-                  {ta.title}
-                </span>
-              ))}
-            </div>
-            <div>{tabs.find((t) => t.tab === tab)?.component}</div>
-          </>
-        ) : (
-          tabs[0].component
-        )}
-      </div>
+      {tabs.length > 1 ? (
+        <>
+          <div className={styles.movePopupTabs}>
+            {tabs.map((ta) => (
+              <span
+                key={ta.tab}
+                className={clsx(styles.movePopupTab, {
+                  [styles.selected]: tab === ta.tab,
+                })}
+                onClick={() => onTabChanged(ta.tab)}
+              >
+                {ta.title}
+              </span>
+            ))}
+          </div>
+          <div>{tabs.find((t) => t.tab === tab)?.component}</div>
+        </>
+      ) : (
+        tabs[0].component
+      )}
     </div>
   );
 }
