@@ -70,7 +70,7 @@
     "last 2 Opera versions"
   ],
   "resolutions": {
-    "@types/react": "18.2.21",
+    "@types/react": "18.2.22",
     "react-redux": "^8.0.1",
     "react-is": "^18.1.0"
   },
@@ -127,7 +127,7 @@
     "cssnano": "^6.0.1",
     "eslint": "^8.3.0",
     "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-array-func": "^3.1.7",
+    "eslint-plugin-array-func": "^4.0.0",
     "eslint-plugin-css-modules": "^2.11.0",
     "eslint-plugin-github": "^4.6.0",
     "eslint-plugin-jsx-a11y": "^6.3.1",
@@ -156,7 +156,7 @@
     "markdown-loader": "^8.0.0",
     "mini-css-extract-plugin": "^2.1.0",
     "mini-svg-data-uri": "^1.1.3",
-    "mkcert": "^1.2.0",
+    "mkcert": "^3.0.0",
     "nodemon": "^3.0.1",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.0.9",
@@ -173,7 +173,7 @@
     "style-loader": "^3.0.0",
     "stylelint": "^15.1.0",
     "stylelint-config-css-modules": "^4.1.0",
-    "stylelint-config-standard-scss": "^10.0.0",
+    "stylelint-config-standard-scss": "^11.0.0",
     "svgo": "^3.0.2",
     "svgo-loader": "^4.0.0",
     "terser-webpack-plugin": "^5.0.2",
