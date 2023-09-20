@@ -2,11 +2,13 @@ import webpack from 'webpack';
 
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import browserslist from 'browserslist';
+import { execSync } from 'child_process';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import CompressionPlugin from 'compression-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import ForkTsCheckerNotifierWebpackPlugin from 'fork-ts-checker-notifier-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+import fs from 'fs';
 import GenerateJsonPlugin from 'generate-json-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import _ from 'lodash';
@@ -51,6 +53,12 @@ export interface WebpackConfigurationGenerator {
 }
 
 export default (env: Env) => {
+  if (env.dev && env.WEBPACK_SERVE && (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem'))) {
+    console.log('Generating certificate');
+    execSync('mkcert create-ca --validity 825');
+    execSync('mkcert create-cert --validity 825 --key key.pem --cert cert.pem');
+  }
+
   env.name = Object.keys(env)[0] as Env['name'];
   (['release', 'beta', 'dev'] as const).forEach((e) => {
     // set booleans based on env
@@ -103,6 +111,10 @@ export default (env: Env) => {
           allowedHosts: 'all',
           server: {
             type: 'https',
+            options: {
+              key: fs.readFileSync('key.pem'), // Private keys in PEM format.
+              cert: fs.readFileSync('cert.pem'), // Cert chains in PEM format.
+            },
           },
           devMiddleware: {
             stats: 'errors-only',
