@@ -4323,10 +4323,10 @@ dnd-core@^16.0.1:
     "@react-dnd/invariant" "^4.0.1"
     redux "^4.2.0"
 
-dnd-multi-backend@8.0.1, dnd-multi-backend@^8.0.2:
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/dnd-multi-backend/-/dnd-multi-backend-8.0.1.tgz#118311b998c0e142013de3aea8fc9ed8e9e7108d"
-  integrity sha512-2HLUzxU32ol+COX8klzwy41mA3wOPuSH+08vGmN9WfyrlM3cMcRWFYRStUJkR3obGVUUuQxEtg0m50VxMCHafA==
+dnd-multi-backend@^8.0.2:
+  version "8.0.3"
+  resolved "https://registry.yarnpkg.com/dnd-multi-backend/-/dnd-multi-backend-8.0.3.tgz#2cc8121ad2b6e6164e3044be9ffdfe994ab6bdb0"
+  integrity sha512-yFFARotr+OEJk787Fsj+V52pi6j7+Pt/CRp3IR2Ai3fnxA/z6J54T7+gxkXzXu4cvxTNE7NiBzzAaJ2f7JjFTw==
 
 dns-equal@^1.0.0:
   version "1.0.0"
