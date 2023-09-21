@@ -4323,7 +4323,7 @@ dnd-core@^16.0.1:
     "@react-dnd/invariant" "^4.0.1"
     redux "^4.2.0"
 
-dnd-multi-backend@^8.0.2:
+dnd-multi-backend@^8.0.1:
   version "8.0.2"
   resolved "https://registry.yarnpkg.com/dnd-multi-backend/-/dnd-multi-backend-8.0.2.tgz#02cb8eddfd9c23e6f54646a0ef474443bc1b0c7e"
   integrity sha512-xkCRMMGPmti2zDZijmFN7pgbw+ews/plQ87H8Zug6gTmqBi9tjiIzbaRu3B6cExfki2pbOMXomF+EQeOnd8Z5Q==
@@ -8935,12 +8935,12 @@ react-dnd-html5-backend@^16.0.1:
   dependencies:
     dnd-core "^16.0.1"
 
-react-dnd-multi-backend@^8.0.0:
-  version "8.0.2"
-  resolved "https://registry.yarnpkg.com/react-dnd-multi-backend/-/react-dnd-multi-backend-8.0.2.tgz#d0bd16ca4cf86bf147edd55fe119a7c0fd3a1168"
-  integrity sha512-wETyP2OC8nT6YHK2gWeFWa5f4JR9/rkD5udIGtWvs1gZ9pzwVWRCwqwOf6T5BxKLYDZo80U4srLCZd7VU70+Vw==
+react-dnd-multi-backend@8.0.1:
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/react-dnd-multi-backend/-/react-dnd-multi-backend-8.0.1.tgz#99f29926faf7115baf4a493bc63dd124a0203b74"
+  integrity sha512-+/7mFkWk4HIpQsd4d8lKB8aStafv9wgpvbkQrPWF4JeTA1j2IPAdPTOiHI5bvpyoLA5BGD02u8cgxtY/gZQpjg==
   dependencies:
-    dnd-multi-backend "^8.0.2"
+    dnd-multi-backend "^8.0.1"
     react-dnd-preview "^8.0.1"
 
 react-dnd-preview@^8.0.1:
