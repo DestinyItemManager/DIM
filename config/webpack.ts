@@ -163,7 +163,7 @@ export default (env: Env) => {
       runtimeChunk: 'single',
       splitChunks: {
         chunks(chunk) {
-          return chunk.name !== 'browsercheck';
+          return chunk.name !== 'browsercheck' && chunk.name !== 'earlyErrorReport';
         },
         automaticNameDelimiter: '-',
       },
@@ -394,10 +394,9 @@ export default (env: Env) => {
     }),
 
     new HtmlWebpackPlugin({
-      inject: true,
+      inject: false,
       filename: 'index.html',
       template: 'src/index.html',
-      chunksSortMode: (a, b) => (a === 'earlyErrorReport' ? -1 : b === 'earlyErrorReport' ? 1 : 0),
       chunks: ['earlyErrorReport', 'main', 'browsercheck'],
       templateParameters: {
         version,
