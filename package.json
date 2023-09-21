@@ -72,7 +72,8 @@
   "resolutions": {
     "@types/react": "18.2.22",
     "react-redux": "^8.0.1",
-    "react-is": "^18.1.0"
+    "react-is": "^18.1.0",
+    "dnd-multi-backend": "8.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
