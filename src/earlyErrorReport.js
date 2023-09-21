@@ -1,9 +1,12 @@
-window.onerror = (e) => {
+window.onerror = (message, source, line, col, error) => {
+  const params = { message, source, line, col };
   // eslint-disable-next-line no-console
-  console.log(e);
-  const errorBox = document.querySelector('#errorreport');
+  console.log(params, error);
+  const errorBox = document.querySelector("#errorreport");
   if (errorBox) {
-    // eslint-disable-next-line @typescript-eslint/no-base-to-string
-    errorBox.value = e.toString();
+    errorBox.textContent = Object.entries(params)
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      .map(([k, v]) => `${k}:\n${v}`)
+      .join("\n");
   }
 };
