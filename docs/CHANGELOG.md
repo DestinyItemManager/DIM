@@ -7,6 +7,7 @@
 ## 7.85.0 <span class="changelog-date">(2023-09-10)</span>
 
 * Adding a subclass to a Loadout or selecting a subclass in Loadout Optimizer will now copy all currently equipped Aspects and Fragments too.
+* The sort order for loadout names has been changed to better respect different languages, and to understand numbers in names. It should now match the way you see files sorted in File Explorer / Finder.
 
 ## 7.84.1 <span class="changelog-date">(2023-09-06)</span>
 
