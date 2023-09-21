@@ -72,7 +72,8 @@
   "resolutions": {
     "@types/react": "18.2.22",
     "react-redux": "^8.0.1",
-    "react-is": "^18.1.0"
+    "react-is": "^18.1.0",
+    "dnd-multi-backend": "8.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
@@ -222,7 +223,7 @@
     "react": "^18.1.0",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
-    "react-dnd-multi-backend": "8.0.1",
+    "react-dnd-multi-backend": "^8.0.0",
     "react-dnd-touch-backend": "^16.0.1",
     "react-dom": "^18.1.0",
     "react-dropzone": "^14.2.0",
