@@ -304,8 +304,7 @@ function buildStat(
   const statDisplay = statDisplaysByStatHash[statHash];
   if (statDisplay) {
     const firstInterp = statDisplay.displayInterpolation[0];
-    const lastInterp =
-      statDisplay.displayInterpolation[statDisplay.displayInterpolation.length - 1];
+    const lastInterp = statDisplay.displayInterpolation.at(-1)!;
     smallerIsBetter = firstInterp.weight > lastInterp.weight;
     maximumValue = Math.max(statDisplay.maximumValue, firstInterp.weight, lastInterp.weight);
     bar = !statDisplay.displayAsNumeric;
@@ -431,7 +430,7 @@ function applyPlugsToStats(
   // We sort the sockets by length so that we count contributions from plugs with fewer options first.
   // This is because multiple plugs can contribute to the same stat, so we want to sink the non-changeable
   // stats in first.
-  const sortedSockets = [...createdItem.sockets.allSockets].sort(
+  const sortedSockets = createdItem.sockets.allSockets.toSorted(
     compareBy((s) => s.plugOptions.length)
   );
   for (const socket of sortedSockets) {

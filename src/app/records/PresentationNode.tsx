@@ -148,7 +148,7 @@ function useScrollNodeIntoView(path: number[], presentationNodeHash: number) {
   useEffect(() => {
     if (
       headerRef.current &&
-      path[path.length - 1] === presentationNodeHash &&
+      path.at(-1) === presentationNodeHash &&
       !deepEqual(lastPath.current, path)
     ) {
       const clientRect = headerRef.current.getBoundingClientRect();

@@ -43,7 +43,7 @@ export function timerDurationFromMsWithDecimal(milliseconds: number) {
   }
 
   const ms = duration.pop()!;
-  duration[duration.length - 1] = (duration[duration.length - 1] * 1000 + ms) / 1000;
+  duration[duration.length - 1] = (duration.at(-1)! * 1000 + ms) / 1000;
 
   return duration.map((u, i) => (i !== 0 && u < 10 ? `0${u}` : u)).join(':');
 }

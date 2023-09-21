@@ -33,7 +33,7 @@ export class SetTracker {
    * A short-circuit helper to check if inserting a set at this total tier could possibly be accepted.
    */
   couldInsert(totalTier: number) {
-    const lowestKnownTier = this.tiers.length ? this.tiers[this.tiers.length - 1].tier : 0;
+    const lowestKnownTier = this.tiers.length ? this.tiers.at(-1)!.tier : 0;
     return totalTier >= lowestKnownTier || this.totalSets < this.capacity;
   }
 
@@ -94,8 +94,8 @@ export class SetTracker {
       return true;
     }
 
-    const lowestTierSet = this.tiers[this.tiers.length - 1];
-    const worstMix = lowestTierSet.statMixes[lowestTierSet.statMixes.length - 1];
+    const lowestTierSet = this.tiers.at(-1)!;
+    const worstMix = lowestTierSet.statMixes.at(-1)!;
 
     worstMix.armorSets.pop();
 
