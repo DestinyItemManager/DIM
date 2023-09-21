@@ -1033,10 +1033,8 @@ function applySocketOverrides(
           if (aspectSocketCategoryHashes.includes(category.category.hash)) {
             handleShuffledSockets(category.socketIndexes);
           } else if (fragmentSocketCategoryHashes.includes(category.category.hash)) {
-            const fragmentCapacity = getLoadoutSubclassFragmentCapacity(defs, {
-              item: dimItem,
-              loadoutItem,
-            });
+            const resolved = { item: dimItem, loadoutItem };
+            const fragmentCapacity = getLoadoutSubclassFragmentCapacity(defs, resolved, true);
             handleShuffledSockets(category.socketIndexes.slice(0, fragmentCapacity));
           } else {
             const sockets = getSocketsByIndexes(dimItem.sockets!, category.socketIndexes);
