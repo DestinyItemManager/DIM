@@ -85,6 +85,7 @@ export default (env: Env) => {
     mode: env.dev ? ('development' as const) : ('production' as const),
 
     entry: {
+      earlyErrorReport: './src/earlyErrorReport.js',
       main: './src/Index.tsx',
       browsercheck: './src/browsercheck.js',
       authReturn: './src/authReturn.ts',
@@ -396,7 +397,8 @@ export default (env: Env) => {
       inject: true,
       filename: 'index.html',
       template: 'src/index.html',
-      chunks: ['main', 'browsercheck'],
+      chunksSortMode: (a, b) => (a === 'earlyErrorReport' ? -1 : b === 'earlyErrorReport' ? 1 : 0),
+      chunks: ['earlyErrorReport', 'main', 'browsercheck'],
       templateParameters: {
         version,
         date: new Date(buildTime).toString(),
