@@ -63,5 +63,6 @@
     "*.m.scss": "${capture}.m.scss.d.ts",
     "tsconfig.json": "tsconfig.*.json",
     "package.json": "package-lock.json, yarn.lock"
-  }
+  },
+  "eslint.lintTask.options": "src"
 }
