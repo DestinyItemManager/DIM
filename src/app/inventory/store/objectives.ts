@@ -80,17 +80,6 @@ export function isBooleanObjective(
   );
 }
 
-export function isPatternObjective(
-  objectiveDef: DestinyObjectiveDefinition | D1ObjectiveDefinition
-) {
-  const isD2Def = 'allowOvercompletion' in objectiveDef;
-  // Check if objective is for weapon pattern progress
-  const isPatternProgress =
-    isD2Def && objectiveDef.valueStyle === DestinyUnlockValueUIStyle.Automatic;
-
-  return isPatternProgress;
-}
-
 export function isTrialsPassage(itemHash: number) {
   return trialsHashes.passages.includes(itemHash);
 }
