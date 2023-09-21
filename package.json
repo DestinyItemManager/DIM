@@ -200,7 +200,7 @@
     "@react-hook/resize-observer": "^1.2.0",
     "@sentry/browser": "^7.0.0",
     "@sentry/react": "^7.0.0",
-    "@tanstack/react-virtual": "^3.0.0-beta.54",
+    "@tanstack/react-virtual": "=3.0.0-beta.54",
     "@textcomplete/core": "^0.1.9",
     "@textcomplete/textarea": "^0.1.9",
     "bungie-api-ts": "^5.0.0",
