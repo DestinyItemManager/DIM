@@ -76,6 +76,9 @@
         }
       }
     </style>
+    <%= htmlWebpackPlugin.files.js
+    .sort((a,b)=>a.includes("earlyErrorReport")?-1:b.includes("earlyErrorReport")?1:0)
+    .map((p)=>`<script${p.includes("earlyErrorReport")?"":" defer"} src="${p}"></script>`).join("\n    ") %>
   </head>
   <body>
     <div id="app">
