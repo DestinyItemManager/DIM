@@ -711,7 +711,7 @@ function getSubclass(
   for (const loadoutItem of loadoutItems) {
     const info = getResolutionInfo(defs, loadoutItem.hash);
     if (info?.bucketHash === BucketHashes.Subclass) {
-      const item = getUninstancedLoadoutItem(allItems, info.hash, storeId, !storeId); // with no store provided, loosely search for any copy
+      const item = getUninstancedLoadoutItem(allItems, info.hash, storeId, /* anyOk */ !storeId); // with no store provided, loosely search for any copy
       if (item) {
         return { item, loadoutItem };
       }
@@ -774,9 +774,16 @@ export function isMissingItems(
       if (!getInstancedLoadoutItem(allItems, loadoutItem)) {
         return true;
       }
-    } else if (storeId !== 'vault' && !getUninstancedLoadoutItem(allItems, info.hash, storeId)) {
-      // The vault can't really have uninstanced items like subclasses or emblems, so no point
-      // in reporting a missing item in that case.
+    } else if (
+      !getUninstancedLoadoutItem(
+        allItems,
+        info.hash,
+        storeId,
+        /* anyOk */ !storeId || storeId === 'vault'
+      )
+    ) {
+      // In case of the vault (which doesn't have emblems or subclasses) or for selectorized loadout problems
+      // (which currently don't use a storeId), find uninstanced items on any character
       return true;
     }
   }
