@@ -191,7 +191,7 @@ export function StoreCharacterStats({ store }: { store: DimStore }) {
   const subclass = equippedItems.find((i) => i.bucket.hash === BucketHashes.Subclass);
 
   // All equipped items
-  const equippedHashes = new Set([...equippedItems.map((i) => i.hash)]);
+  const equippedHashes = new Set(equippedItems.map((i) => i.hash));
   // Plus all subclass mods
   if (subclass?.sockets) {
     for (const socket of subclass.sockets.allSockets) {
@@ -226,7 +226,7 @@ export function LoadoutCharacterStats({
       .map((li) => ('loadoutItem' in li ? li.item : li)) ?? [];
 
   // All equipped items
-  const equippedHashes = new Set([...equippedItems.map((i) => i.hash)]);
+  const equippedHashes = new Set(equippedItems.map((i) => i.hash));
   // Plus all subclass mods
   if (subclass?.loadoutItem.socketOverrides) {
     for (const hash of Object.values(subclass?.loadoutItem.socketOverrides)) {

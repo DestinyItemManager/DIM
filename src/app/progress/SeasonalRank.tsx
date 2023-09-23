@@ -68,15 +68,18 @@ export default function SeasonalRank({
     rewardItems.push(fakeReward(prestigeRewardHash, prestigeRewardLevel));
   }
 
-  // Get the reward item for the next progression level
   const nextRewardItems = rewardItems
-    .filter((item) =>
-      prestigeMode
-        ? item.rewardedAtProgressionLevel === prestigeRewardLevel
-        : item.rewardedAtProgressionLevel === seasonalRank + 1
-    )
-    // Filter class-specific items
     .filter((item) => {
+      // Get the reward items for the next progression level
+      if (
+        prestigeMode
+          ? item.rewardedAtProgressionLevel !== prestigeRewardLevel
+          : item.rewardedAtProgressionLevel !== seasonalRank + 1
+      ) {
+        return false;
+      }
+
+      // Filter class-specific items
       const def = defs.InventoryItem.get(item.itemHash);
 
       if (!def) {

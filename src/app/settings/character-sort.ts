@@ -14,7 +14,7 @@ export const characterSortSelector = createSelector(
   (order, customCharacterSort) => {
     switch (order) {
       case 'mostRecent':
-        return (stores: DimStore[]) => _.sortBy(stores, (store) => store.lastPlayed).reverse();
+        return (stores: DimStore[]) => _.sortBy(stores, (store) => -store.lastPlayed.getTime());
 
       case 'mostRecentReverse':
         return (stores: DimStore[]) =>
@@ -52,7 +52,7 @@ export const characterSortImportanceSelector = createSelector(
     switch (order) {
       case 'mostRecent':
       case 'mostRecentReverse':
-        return (stores: DimStore[]) => _.sortBy(stores, (store) => store.lastPlayed).reverse();
+        return (stores: DimStore[]) => _.sortBy(stores, (store) => -store.lastPlayed.getTime());
 
       case 'custom': {
         const customSortOrder = customCharacterSort;
