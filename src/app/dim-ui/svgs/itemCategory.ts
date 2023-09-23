@@ -120,7 +120,7 @@ const bucketHashToItemCategoryHash: LookupTable<BucketHashes, ItemCategoryHashes
 export function getWeaponTypeSvgIcon(item: DimItem) {
   // reverse through the ICHs because most specific is last,
   // i.e. Weapon, Fusion Rifle, Linear Fusion Rifle
-  for (const ich of [...item.itemCategoryHashes].reverse()) {
+  for (const ich of item.itemCategoryHashes.toReversed()) {
     const svg = weaponTypeSvgByCategoryHash[ich as ItemCategoryHashes];
     if (svg) {
       return svg;
@@ -130,7 +130,7 @@ export function getWeaponTypeSvgIcon(item: DimItem) {
 
 /** an SVG of the weapon's slot, if possible */
 export function getWeaponSlotSvgIcon(item: DimItem) {
-  for (const ich of [...item.itemCategoryHashes].reverse()) {
+  for (const ich of item.itemCategoryHashes.toReversed()) {
     const svg = weaponSlotSvgByCategoryHash[ich as ItemCategoryHashes];
     if (svg) {
       return svg;
@@ -140,7 +140,7 @@ export function getWeaponSlotSvgIcon(item: DimItem) {
 
 /** an SVG of the armor's slot, if determinable */
 export function getArmorSlotSvgIcon(item: DimItem) {
-  for (const ich of [...item.itemCategoryHashes].reverse()) {
+  for (const ich of item.itemCategoryHashes.toReversed()) {
     const svg = armorSlotSvgByCategoryHash[ich as ItemCategoryHashes];
     if (svg) {
       return svg;

@@ -100,56 +100,6 @@ ErrorDocument 404 /404.html
 
 Options -MultiViews
 
-
-# ######################################################################
-# # INTERNET EXPLORER                                                  #
-# ######################################################################
-
-# ----------------------------------------------------------------------
-# | Document modes                                                     |
-# ----------------------------------------------------------------------
-
-# Force Internet Explorer 8/9/10 to render pages in the highest mode
-# available in the various cases when it may not.
-#
-# https://hsivonen.fi/doctype/#ie8
-#
-# (!) Starting with Internet Explorer 11, document modes are deprecated.
-# If your business still relies on older web apps and services that were
-# designed for older versions of Internet Explorer, you might want to
-# consider enabling `Enterprise Mode` throughout your company.
-#
-# https://msdn.microsoft.com/en-us/library/ie/bg182625.aspx#docmode
-# http://blogs.msdn.com/b/ie/archive/2014/04/02/stay-up-to-date-with-enterprise-mode-for-internet-explorer-11.aspx
-
-<IfModule mod_headers.c>
-
-    Header set X-UA-Compatible "IE=edge"
-
-    # `mod_headers` cannot match based on the content-type, however,
-    # the `X-UA-Compatible` response header should be send only for
-    # HTML documents and not for the other resources.
-
-    <FilesMatch "\.(appcache|atom|bbaw|bmp|crx|css|cur|eot|f4[abpv]|flv|geojson|gif|htc|ico|jpe?g|js|json(ld)?|m4[av]|manifest|map|mp4|oex|og[agv]|opus|otf|pdf|png|rdf|rss|safariextz|svgz?|swf|topojson|tt[cf]|txt|vcard|vcf|vtt|webapp|web[mp]|webmanifest|woff2?|xloc|xml|xpi)(\.(gz|br))?$">
-        Header unset X-UA-Compatible
-    </FilesMatch>
-
-</IfModule>
-
-# ----------------------------------------------------------------------
-# | Iframes cookies                                                    |
-# ----------------------------------------------------------------------
-
-# Allow cookies to be set from iframes in Internet Explorer.
-#
-# https://msdn.microsoft.com/en-us/library/ms537343.aspx
-# http://www.w3.org/TR/2000/CR-P3P-20001215/
-
-# <IfModule mod_headers.c>
-#     Header set P3P "policyref=\"/w3c/p3p.xml\", CP=\"IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT\""
-# </IfModule>
-
-
 # ######################################################################
 # # MEDIA TYPES AND CHARACTER ENCODINGS                                #
 # ######################################################################
@@ -277,129 +227,6 @@ AddDefaultCharset utf-8
                      .xloc \
                      .xml
 </IfModule>
-
-
-# ######################################################################
-# # REWRITES                                                           #
-# ######################################################################
-
-# ----------------------------------------------------------------------
-# | Rewrite engine                                                     |
-# ----------------------------------------------------------------------
-
-# (1) Turn on the rewrite engine (this is necessary in order for
-#     the `RewriteRule` directives to work).
-#
-#     https://httpd.apache.org/docs/current/mod/mod_rewrite.html#RewriteEngine
-#
-# (2) Enable the `FollowSymLinks` option if it isn't already.
-#
-#     https://httpd.apache.org/docs/current/mod/core.html#options
-#
-# (3) If your web host doesn't allow the `FollowSymlinks` option,
-#     you need to comment it out or remove it, and then uncomment
-#     the `Options +SymLinksIfOwnerMatch` line (4), but be aware
-#     of the performance impact.
-#
-#     https://httpd.apache.org/docs/current/misc/perf-tuning.html#symlinks
-#
-# (4) Some cloud hosting services will require you set `RewriteBase`.
-#
-#     https://www.rackspace.com/knowledge_center/frequently-asked-question/why-is-modrewrite-not-working-on-my-site
-#     https://httpd.apache.org/docs/current/mod/mod_rewrite.html#rewritebase
-#
-# (5) Depending on how your server is set up, you may also need to
-#     use the `RewriteOptions` directive to enable some options for
-#     the rewrite engine.
-#
-#     https://httpd.apache.org/docs/current/mod/mod_rewrite.html#rewriteoptions
-#
-# (6) Set %{ENV:PROTO} variable, to allow rewrites to redirect with the
-#     appropriate schema automatically (http or https).
-
-# <IfModule mod_rewrite.c>
-
-#     # (1)
-#     RewriteEngine On
-
-#     # (2)
-#     Options +FollowSymlinks
-
-#     # (3)
-#     # Options +SymLinksIfOwnerMatch
-
-#     # (4)
-#     # RewriteBase /
-
-#     # (5)
-#     # RewriteOptions <options>
-
-#     # (6)
-#     RewriteCond %{HTTPS} =on
-#     RewriteRule ^ - [env=proto:https]
-#     RewriteCond %{HTTPS} !=on
-#     RewriteRule ^ - [env=proto:http]
-
-# </IfModule>
-
-# ----------------------------------------------------------------------
-# | Forcing `https://`                                                 |
-# ----------------------------------------------------------------------
-
-# Redirect from the `http://` to the `https://` version of the URL.
-# https://wiki.apache.org/httpd/RewriteHTTPToHTTPS
-
-# <IfModule mod_rewrite.c>
-#    RewriteEngine On
-#    RewriteCond %{HTTPS} !=on
-#    RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
-# </IfModule>
-
-# ----------------------------------------------------------------------
-# | Suppressing / Forcing the `www.` at the beginning of URLs          |
-# ----------------------------------------------------------------------
-
-# The same content should never be available under two different
-# URLs, especially not with and without `www.` at the beginning.
-# This can cause SEO problems (duplicate content), and therefore,
-# you should choose one of the alternatives and redirect the other
-# one.
-#
-# By default `Option 1` (no `www.`) is activated.
-# http://no-www.org/faq.php?q=class_b
-#
-# If you would prefer to use `Option 2`, just comment out all the
-# lines from `Option 1` and uncomment the ones from `Option 2`.
-#
-# (!) NEVER USE BOTH RULES AT THE SAME TIME!
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-# Option 1: rewrite www.example.com → example.com
-
-# <IfModule mod_rewrite.c>
-#     RewriteEngine On
-#     RewriteCond %{HTTPS} !=on
-#     RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-#     RewriteRule ^ %{ENV:PROTO}://%1%{REQUEST_URI} [R=301,L]
-# </IfModule>
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-# Option 2: rewrite example.com → www.example.com
-#
-# Be aware that the following might not be a good idea if you use "real"
-# subdomains for certain parts of your website.
-
-# <IfModule mod_rewrite.c>
-#     RewriteEngine On
-#     RewriteCond %{HTTPS} !=on
-#     RewriteCond %{HTTP_HOST} !^www\. [NC]
-#     RewriteCond %{SERVER_ADDR} !=127.0.0.1
-#     RewriteCond %{SERVER_ADDR} !=::1
-#     RewriteRule ^ %{ENV:PROTO}://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
-# </IfModule>
-
 
 # ######################################################################
 # # SECURITY                                                           #
@@ -541,38 +368,6 @@ AddDefaultCharset utf-8
     RewriteRule "(^|/)\." - [F]
 </IfModule>
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-# Block access to files that can expose sensitive information.
-#
-# By default, block access to backup and source files that may be
-# left by some text editors and can pose a security risk when anyone
-# has access to them.
-#
-# http://feross.org/cmsploit/
-#
-# (!) Update the `<FilesMatch>` regular expression from below to
-# include any files that might end up on your production server and
-# can expose sensitive information about your website. These files may
-# include: configuration files, files that contain metadata about the
-# project (e.g.: project dependencies), build scripts, etc..
-
-# <FilesMatch "(^#.*#|\.(bak|conf|dist|fla|in[ci]|log|psd|sh|sql|sw[op])|~)$">
-
-#     # Apache < 2.3
-#     <IfModule !mod_authz_core.c>
-#         Order allow,deny
-#         Deny from all
-#         Satisfy All
-#     </IfModule>
-
-#     # Apache ≥ 2.3
-#     <IfModule mod_authz_core.c>
-#         Require all denied
-#     </IfModule>
-
-# </FilesMatch>
-
 # ----------------------------------------------------------------------
 # | HTTP Strict Transport Security (HSTS)                              |
 # ----------------------------------------------------------------------
@@ -595,9 +390,9 @@ AddDefaultCharset utf-8
 # https://tools.ietf.org/html/draft-ietf-websec-strict-transport-sec-14#section-6.1
 # http://blogs.msdn.com/b/ieinternals/archive/2014/08/18/hsts-strict-transport-security-attacks-mitigations-deployment-https.aspx
 
-# <IfModule mod_headers.c>
-#     Header always set Strict-Transport-Security "max-age=16070400; includeSubDomains"
-# </IfModule>
+<IfModule mod_headers.c>
+    Header always set Strict-Transport-Security "max-age=16070400; includeSubDomains"
+</IfModule>
 
 # ----------------------------------------------------------------------
 # | Reducing MIME type security risks                                  |
@@ -618,57 +413,6 @@ AddDefaultCharset utf-8
 <IfModule mod_headers.c>
     Header set X-Content-Type-Options "nosniff"
 </IfModule>
-
-# ----------------------------------------------------------------------
-# | Reflected Cross-Site Scripting (XSS) attacks                       |
-# ----------------------------------------------------------------------
-
-# (1) Try to re-enable the cross-site scripting (XSS) filter built
-#     into most web browsers.
-#
-#     The filter is usually enabled by default, but in some cases it
-#     may be disabled by the user. However, in Internet Explorer for
-#     example, it can be re-enabled just by sending the
-#     `X-XSS-Protection` header with the value of `1`.
-#
-# (2) Prevent web browsers from rendering the web page if a potential
-#     reflected (a.k.a non-persistent) XSS attack is detected by the
-#     filter.
-#
-#     By default, if the filter is enabled and browsers detect a
-#     reflected XSS attack, they will attempt to block the attack
-#     by making the smallest possible modifications to the returned
-#     web page.
-#
-#     Unfortunately, in some browsers (e.g.: Internet Explorer),
-#     this default behavior may allow the XSS filter to be exploited,
-#     thereby, it's better to inform browsers to prevent the rendering
-#     of the page altogether, instead of attempting to modify it.
-#
-#     https://hackademix.net/2009/11/21/ies-xss-filter-creates-xss-vulnerabilities
-#
-# (!) Do not rely on the XSS filter to prevent XSS attacks! Ensure that
-#     you are taking all possible measures to prevent XSS attacks, the
-#     most obvious being: validating and sanitizing your website's inputs.
-#
-# http://blogs.msdn.com/b/ie/archive/2008/07/02/ie8-security-part-iv-the-xss-filter.aspx
-# http://blogs.msdn.com/b/ieinternals/archive/2011/01/31/controlling-the-internet-explorer-xss-filter-with-the-x-xss-protection-http-header.aspx
-# https://www.owasp.org/index.php/Cross-site_Scripting_%28XSS%29
-
-# <IfModule mod_headers.c>
-
-#     #                           (1)    (2)
-#     Header set X-XSS-Protection "1; mode=block"
-
-#     # `mod_headers` cannot match based on the content-type, however,
-#     # the `X-XSS-Protection` response header should be send only for
-#     # HTML documents and not for the other resources.
-
-#     <FilesMatch "\.(appcache|atom|bbaw|bmp|crx|css|cur|eot|f4[abpv]|flv|geojson|gif|htc|ico|jpe?g|js|json(ld)?|m4[av]|manifest|map|mp4|oex|og[agv]|opus|otf|pdf|png|rdf|rss|safariextz|svgz?|swf|topojson|tt[cf]|txt|vcard|vcf|vtt|webapp|web[mp]|webmanifest|woff2?|xloc|xml|xpi)$">
-#         Header unset X-XSS-Protection
-#     </FilesMatch>
-
-# </IfModule>
 
 # ----------------------------------------------------------------------
 # | Server-side technology information                                 |
@@ -705,19 +449,6 @@ AddDefaultCharset utf-8
 # https://httpd.apache.org/docs/current/mod/core.html#serversignature
 
 ServerSignature Off
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-# Prevent Apache from sending in the `Server` response header its
-# exact version number, the description of the generic OS-type or
-# information about its compiled-in modules.
-#
-# (!) The `ServerTokens` directive will only work in the main server
-# configuration file, so don't try to enable it in the `.htaccess` file!
-#
-# https://httpd.apache.org/docs/current/mod/core.html#servertokens
-
-#ServerTokens Prod
 
 
 # ######################################################################
@@ -827,22 +558,6 @@ AddEncoding br .br
 </IfModule>
 
 # ----------------------------------------------------------------------
-# | ETags                                                              |
-# ----------------------------------------------------------------------
-
-# Remove `ETags` as resources are sent with far-future expires headers.
-#
-# https://developer.yahoo.com/performance/rules.html#etags
-# https://tools.ietf.org/html/rfc7232#section-2.3
-
-# `FileETag None` doesn't work in all cases.
-#<IfModule mod_headers.c>
-#    Header unset ETag
-#</IfModule>
-
-#FileETag None
-
-# ----------------------------------------------------------------------
 # | Expires headers                                                    |
 # ----------------------------------------------------------------------
 
@@ -943,38 +658,6 @@ AddEncoding br .br
     ExpiresByType text/x-cross-domain-policy            "access plus 1 week"
 
 </IfModule>
-
-# ----------------------------------------------------------------------
-# | File concatenation                                                 |
-# ----------------------------------------------------------------------
-
-# Allow concatenation from within specific files.
-#
-# e.g.:
-#
-#   If you have the following lines in a file called, for
-#   example, `main.combined.js`:
-#
-#       <!--#include file="js/jquery.js" -->
-#       <!--#include file="js/jquery.timer.js" -->
-#
-#   Apache will replace those lines with the content of the
-#   specified files.
-
-# <IfModule mod_include.c>
-#     <FilesMatch "\.combined\.js$">
-#         Options +Includes
-#         AddOutputFilterByType INCLUDES application/javascript \
-#                                        application/x-javascript \
-#                                        text/javascript
-#         SetOutputFilter INCLUDES
-#     </FilesMatch>
-#     <FilesMatch "\.combined\.css$">
-#         Options +Includes
-#         AddOutputFilterByType INCLUDES text/css
-#         SetOutputFilter INCLUDES
-#     </FilesMatch>
-# </IfModule>
 
 # ----------------------------------------------------------------------
 # | Cache-control: immutable                                           |

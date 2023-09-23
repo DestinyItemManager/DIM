@@ -15,6 +15,7 @@ import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
+import { loadoutsForClassTypeSelector } from 'app/loadout-drawer/loadouts-selector';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, addIcon, faCalculator, uploadIcon } from 'app/shell/icons';
@@ -31,11 +32,7 @@ import { InGameLoadoutDetails } from './ingame/InGameLoadoutDetailsSheet';
 import { InGameLoadoutStrip } from './ingame/InGameLoadoutStrip';
 import LoadoutImportSheet from './loadout-share/LoadoutImportSheet';
 import LoadoutShareSheet from './loadout-share/LoadoutShareSheet';
-import {
-  searchAndSortLoadoutsByQuery,
-  useLoadoutFilterPills,
-  useSavedLoadoutsForClassType,
-} from './loadout-ui/menu-hooks';
+import { searchAndSortLoadoutsByQuery, useLoadoutFilterPills } from './loadout-ui/menu-hooks';
 
 const sortOptions = [
   {
@@ -84,7 +81,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const language = useSelector(languageSelector);
   const apiPermissionGranted = useSelector(apiPermissionGrantedSelector);
 
-  const savedLoadouts = useSavedLoadoutsForClassType(classType);
+  const savedLoadouts = useSelector(loadoutsForClassTypeSelector(classType));
   const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
 
   const artifactUnlocks = useSelector(artifactUnlocksSelector(selectedStoreId));
@@ -113,8 +110,10 @@ function Loadouts({ account }: { account: DestinyAccount }) {
     }
   );
 
+  const filteringLoadouts = Boolean(query || hasSelectedFilters);
+
   const loadouts = searchAndSortLoadoutsByQuery(filteredLoadouts, query, language, loadoutSort);
-  if (!query && !hasSelectedFilters) {
+  if (!filteringLoadouts) {
     loadouts.unshift(currentLoadout);
   }
 
@@ -187,12 +186,14 @@ function Loadouts({ account }: { account: DestinyAccount }) {
             <AlertIcon /> {t('Storage.DimSyncNotEnabled')}
           </p>
         )}
-        <InGameLoadoutStrip
-          store={selectedStore}
-          onEdit={setEditingInGameLoadout}
-          onShare={setSharedLoadout}
-          onShowDetails={setViewingInGameLoadout}
-        />
+        {!filteringLoadouts && (
+          <InGameLoadoutStrip
+            store={selectedStore}
+            onEdit={setEditingInGameLoadout}
+            onShare={setSharedLoadout}
+            onShowDetails={setViewingInGameLoadout}
+          />
+        )}
         <h2>{t('Loadouts.DimLoadouts')}</h2>
         {filterPills}
         <WindowVirtualList

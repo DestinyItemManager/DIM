@@ -10,13 +10,17 @@ import { ClarityDescription, ClarityVersions } from './descriptionInterface';
 const CLARITY_BASE = 'https://database-clarity.github.io/';
 const urls = {
   descriptions: `${CLARITY_BASE}Live-Clarity-Database/descriptions/dim.json`,
-  characterStats: `${CLARITY_BASE}Character-Stats/CharacterStatInfo-NI.json`,
+  characterStats: (version: string) =>
+    `${CLARITY_BASE}Character-Stats/versions/${version}/CharacterStatInfo-NI.json`,
   version: `${CLARITY_BASE}Live-Clarity-Database/versions.json`,
   statsVersion: `${CLARITY_BASE}Character-Stats/update.json`,
 } as const;
 
-const fetchClarity = async <T>(type: keyof typeof urls) => {
-  const data = await fetch(urls[type]);
+const CLARITY_STATS_SUPPORTED_SCHEMA = '1.8';
+
+const fetchClarity = async <T>(type: keyof typeof urls, version?: string) => {
+  const url = urls[type];
+  const data = await fetch(typeof url === 'function' ? url(version!) : url);
   if (!data.ok) {
     throw new Error(`failed to fetch ${type}`);
   }
@@ -58,32 +62,53 @@ const loadClarityDescriptions = dedupePromise(async (loadFromIndexedDB: boolean)
   return undefined;
 });
 
-const fetchRemoteStats = async (version: number) => {
-  const descriptions = await fetchClarity<ClarityCharacterStats>('characterStats');
+const fetchRemoteStats = async (version: ClarityStatsVersion) => {
+  const descriptions = await fetchClarity<ClarityCharacterStats>(
+    'characterStats',
+    version.schemaVersion
+  );
   set('clarity-characterStats', descriptions);
-  localStorage.setItem('clarityStatsVersion', version.toString());
+  localStorage.setItem('clarityStatsVersion2', JSON.stringify(version));
   return descriptions;
 };
 
 const loadClarityStats = dedupePromise(async (loadFromIndexedDB: boolean) => {
-  const savedStatsVersion = Number(localStorage.getItem('clarityStatsVersion') ?? '0');
+  const savedStatsValue = localStorage.getItem('clarityStatsVersion2');
+  const savedStats =
+    savedStatsValue !== null ? (JSON.parse(savedStatsValue) as ClarityStatsVersion) : undefined;
   let liveStatsVersion: ClarityStatsVersion | undefined;
   try {
     liveStatsVersion = await fetchClarity<ClarityStatsVersion>('statsVersion');
-    if (savedStatsVersion !== liveStatsVersion.lastUpdate) {
-      return await fetchRemoteStats(liveStatsVersion.lastUpdate);
+    if (
+      liveStatsVersion.schemaVersion === CLARITY_STATS_SUPPORTED_SCHEMA &&
+      (!savedStats || savedStats.lastUpdate !== liveStatsVersion.lastUpdate)
+    ) {
+      // There's been a live update and we support the update's schema -- fetch it
+      return await fetchRemoteStats(liveStatsVersion);
     }
   } catch (e) {
     errorLog('clarity', 'failed to load remote character stats', e);
   }
 
   if (loadFromIndexedDB) {
-    const savedCharacterStats = await get<ClarityCharacterStats>('clarity-characterStats');
-    return (
-      savedCharacterStats ??
-      // If IDB doesn't have the data (e.g. after deleting IDB but not localStorage), fetch it
-      (liveStatsVersion && (await fetchRemoteStats(liveStatsVersion.lastUpdate)))
-    );
+    if (savedStats?.schemaVersion === CLARITY_STATS_SUPPORTED_SCHEMA) {
+      const savedCharacterStats = await get<ClarityCharacterStats>('clarity-characterStats');
+      if (savedCharacterStats) {
+        return savedCharacterStats;
+      }
+    }
+
+    // If IDB doesn't have the data (e.g. after deleting IDB but not localStorage),
+    // or our IDB data has an unsupported schema version, fetch whatever we need
+    const remoteToFetch =
+      liveStatsVersion?.schemaVersion === CLARITY_STATS_SUPPORTED_SCHEMA
+        ? liveStatsVersion
+        : // NB if we're an old app release and don't support the most recent schema,
+          // we don't get a useful `lastUpdate` value anyway, and we'll never
+          // use this `lastUpdate` to decide when to re-fetch -- outdated apps
+          // use whatever they have in IDB, only fetching if there's nothing useful in IDB
+          { schemaVersion: CLARITY_STATS_SUPPORTED_SCHEMA, lastUpdate: 0 };
+    return fetchRemoteStats(remoteToFetch);
   }
 
   return undefined;

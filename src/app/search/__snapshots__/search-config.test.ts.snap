@@ -55,6 +55,7 @@ exports[`buildSearchConfig generates a reasonable filter map: is filters 1`] = `
   "helmet",
   "hunter",
   "incurrentchar",
+  "indimloadout",
   "infusable",
   "infuse",
   "infusionfodder",

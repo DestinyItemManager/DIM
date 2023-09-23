@@ -141,6 +141,10 @@ const enhancedIntrinsics = new Set<number>([
   2826720951, // Together Forever
   1300107783, // Together Forever
   3513901081, // Together Forever
+  1886418605, // Rapid-Fire Frame
+  137876701, // Rapid-Fire Frame
+  802623077, // Rapid-Fire Frame
+  1027896051, // Rapid-Fire Frame
   762204274, // Häkke Precision Frame
   2409208302, // Häkke Precision Frame
   482158780, // Häkke Precision Frame
@@ -158,10 +162,6 @@ const enhancedIntrinsics = new Set<number>([
   2101490074, // Aggressive Frame
   1739861752, // Aggressive Frame
   1748364716, // Aggressive Frame
-  1886418605, // Rapid-Fire Frame
-  137876701, // Rapid-Fire Frame
-  802623077, // Rapid-Fire Frame
-  1027896051, // Rapid-Fire Frame
 ]);
 
 export default enhancedIntrinsics;

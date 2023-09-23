@@ -6,4 +6,5 @@ src/browsercheck.js
 *.test.ts
 *.test.tsx
 *.config.js
-Gruntfile.js
+src/build-browsercheck-utils.js
+src/testing/jest-setup.js

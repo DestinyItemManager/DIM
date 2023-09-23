@@ -1,7 +1,7 @@
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
-import { t } from 'app/i18next-t';
+import { t, tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
@@ -9,10 +9,11 @@ import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { Loadout, LoadoutItem, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
+import { loadoutIssuesSelector } from 'app/loadout-drawer/loadouts-selector';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
-import { count } from 'app/utils/util';
+import { count, filterMap } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -57,6 +58,13 @@ export function getItemsAndSubclassFromLoadout(
   return [items, subclass, warnitems];
 }
 
+const possibleLoadoutIssues = [
+  { prop: 'hasMissingItems', str: tl('Loadouts.MissingItemsWarning') },
+  { prop: 'hasDeprecatedMods', str: tl('Loadouts.DeprecatedMods') },
+  { prop: 'emptyFragmentSlots', str: tl('Loadouts.EmptyFragmentSlots') },
+  { prop: 'tooManyFragments', str: tl('Loadouts.TooManyFragments') },
+] as const;
+
 /**
  * A presentational component for a single loadout.
  *
@@ -79,8 +87,12 @@ export default function LoadoutView({
 }) {
   const allItems = useSelector(allItemsSelector);
   const itemCreationContext = useSelector(createItemContextSelector);
+  const loadoutIssues = useSelector(loadoutIssuesSelector)[loadout.id];
+
   const missingSockets =
     loadout.name === t('Loadouts.FromEquipped') && allItems.some((i) => i.missingSockets);
+
+  const loadoutHasIssue = possibleLoadoutIssues.some((i) => loadoutIssues?.[i.prop]);
   const isPhonePortrait = useIsPhonePortrait();
 
   // TODO: filter down by usable mods?
@@ -115,10 +127,12 @@ export default function LoadoutView({
           )}
           <ColorDestinySymbols text={loadout.name} />
         </h2>
-        {warnitems.length > 0 && (
+        {loadoutHasIssue && (
           <span className={styles.missingItems}>
             <AlertIcon />
-            {t('Loadouts.MissingItemsWarning')}
+            {filterMap(possibleLoadoutIssues, (i) =>
+              loadoutIssues![i.prop] ? t(i.str) : undefined
+            ).join(' / ')}
           </span>
         )}
         <div className={styles.actions}>{actionButtons}</div>

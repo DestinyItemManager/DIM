@@ -7,7 +7,6 @@ import { ReputationRank } from 'app/progress/ReputationRank';
 import { VENDORS } from 'app/search/d2-known-values';
 import { uniqBy } from 'app/utils/util';
 import { DestinyVendorProgressionType } from 'bungie-api-ts/destiny2';
-import deprecatedMods from 'data/d2/deprecated-mods.json';
 import focusingItemOutputs from 'data/d2/focusing-item-outputs.json';
 import rahoolMats from 'data/d2/spider-mats.json';
 import _ from 'lodash';
@@ -17,8 +16,7 @@ import styles from './VendorItems.m.scss';
 import { D2Vendor } from './d2-vendors';
 
 // ignore what i think is the loot pool preview on some tower vendors?
-// ignore the "reset artifact" button on artifact "vendor"
-const ignoreCategories = ['category_preview', 'category_reset'];
+const ignoreCategories = ['category_preview'];
 
 /**
  * Display the items for a single vendor, organized by category.
@@ -40,13 +38,6 @@ export default function VendorItems({
 
   if (!vendor.items.length) {
     return <div className={styles.vendorContents}>{t('Vendors.NoItems')}</div>;
-  }
-
-  // remove deprecated mods from seasonal artifact
-  if (vendor.def.hash === VENDORS.ARTIFACT) {
-    vendor.items = vendor.items.filter(
-      (i) => i.item?.hash && !deprecatedMods.includes(i.item.hash)
-    );
   }
 
   const itemsByCategory = _.groupBy(vendor.items, (item) => item?.displayCategoryIndex);

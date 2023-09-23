@@ -1,3 +1,5 @@
+import { useFixOverscrollBehavior } from 'app/dim-ui/useFixOverscrollBehavior';
+import { usePopper } from 'app/dim-ui/usePopper';
 import { t } from 'app/i18next-t';
 import { isD1Store } from 'app/inventory/stores-helpers';
 import LoadoutPopup from 'app/loadout/loadout-menu/LoadoutPopup';
@@ -78,17 +80,22 @@ export default function StoreHeading({
         extraRef={menuTrigger}
         className={styles.loadoutMenu}
       >
-        <LoadoutPopup
-          dimStore={store}
-          onClick={clickOutsideLoadoutMenu}
-          menuRef={menuRef}
-          positionRef={menuTrigger}
-        />
+        <LoadoutPopup dimStore={store} onClick={clickOutsideLoadoutMenu} />
       </ClickOutside>
     );
 
     loadoutMenu = <Portal>{menuContents}</Portal>;
   }
+
+  usePopper({
+    contents: menuRef,
+    reference: menuTrigger,
+    placement: 'bottom-start',
+    fixed: true,
+    padding: 0,
+  });
+
+  useFixOverscrollBehavior(menuRef);
 
   // TODO: aria "open"
   return (

@@ -5,7 +5,7 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "editor.formatOnSave": true,
   "jest.autoRun": "off",
-  "eslint.packageManager": "yarn",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
   "search.exclude": {
     "**/data/d1/manifests": true,
@@ -63,5 +63,6 @@
     "*.m.scss": "${capture}.m.scss.d.ts",
     "tsconfig.json": "tsconfig.*.json",
     "package.json": "package-lock.json, yarn.lock"
-  }
+  },
+  "eslint.lintTask.options": "src"
 }

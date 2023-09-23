@@ -5,36 +5,14 @@ import FilterPills, { Option } from 'app/dim-ui/FilterPills';
 import { DimLanguage } from 'app/i18n';
 import { t } from 'app/i18next-t';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
-import { isInGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
-import {
-  FragmentProblem,
-  getFragmentProblemsSelector,
-  isMissingItemsSelector,
-} from 'app/loadout-drawer/loadout-utils';
-import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
-import { plainString } from 'app/search/search-filters/freeform';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { loadoutIssuesSelector } from 'app/loadout-drawer/loadouts-selector';
+import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
-import { isClassCompatible } from 'app/utils/item-utils';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
-import deprecatedMods from 'data/d2/deprecated-mods.json';
+import { localizedIncludes, localizedSorter } from 'app/utils/intl';
 import _ from 'lodash';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-
-/**
- * Get the saved loadouts that apply to the given class type, out of all saved loadouts.
- */
-export function useSavedLoadoutsForClassType(classType: DestinyClass) {
-  const allSavedLoadouts = useSelector(loadoutsSelector);
-  return useMemo(
-    () => filterLoadoutsToClass(allSavedLoadouts, classType),
-    [allSavedLoadouts, classType]
-  );
-}
-
-export function filterLoadoutsToClass(loadouts: Loadout[], classType: DestinyClass) {
-  return loadouts.filter((loadout) => isClassCompatible(classType, loadout.classType));
-}
 
 /**
  * Set up the filter pills for loadouts - allowing for filtering by hashtag and some other special properties.
@@ -74,9 +52,13 @@ function useLoadoutFilterPillsInternal(
     extra?: React.ReactNode;
   } = {}
 ): [filteredLoadouts: Loadout[], filterPillsElement: React.ReactNode, hasSelectedFilters: boolean] {
-  const isMissingItems = useSelector(isMissingItemsSelector);
-  const getFragmentProblems = useSelector(getFragmentProblemsSelector);
-  const [selectedFilters, setSelectedFilters] = useState<Option[]>([]);
+  const loadoutIssues = useSelector(loadoutIssuesSelector);
+  const [selectedFilters, setSelectedFilters] = useState<Option[]>(emptyArray());
+
+  // Reset filters on character change
+  useEffect(() => {
+    setSelectedFilters(emptyArray());
+  }, [selectedStoreId]);
 
   const loadoutsByHashtag = useMemo(() => {
     const loadoutsByHashtag: { [hashtag: string]: Loadout[] } = {};
@@ -102,27 +84,18 @@ function useLoadoutFilterPillsInternal(
     (o) => o.key
   );
 
-  const loadoutsWithMissingItems = useMemo(
-    () => savedLoadouts.filter((loadout) => isMissingItems(selectedStoreId, loadout)),
-    [isMissingItems, savedLoadouts, selectedStoreId]
+  const loadoutsWithMissingItems = savedLoadouts.filter(
+    (l) => loadoutIssues[l.id]?.hasMissingItems
   );
-  const loadoutsWithDeprecatedMods = useMemo(
-    () =>
-      savedLoadouts.filter(
-        (loadout) => loadout.parameters?.mods?.some((modHash) => deprecatedMods.includes(modHash))
-      ),
-    [savedLoadouts]
+  const loadoutsWithDeprecatedMods = savedLoadouts.filter(
+    (l) => loadoutIssues[l.id]?.hasDeprecatedMods
   );
-
-  const [loadoutsWithEmptyFragmentSlots, loadoutsWithTooManyFragments] = useMemo(() => {
-    const problematicLoadouts = _.groupBy(savedLoadouts, (loadout) =>
-      getFragmentProblems(selectedStoreId, loadout)
-    );
-    return [
-      problematicLoadouts[FragmentProblem.EmptyFragmentSlots] ?? emptyArray(),
-      problematicLoadouts[FragmentProblem.TooManyFragments] ?? emptyArray(),
-    ] as const;
-  }, [getFragmentProblems, savedLoadouts, selectedStoreId]);
+  const loadoutsWithEmptyFragmentSlots = savedLoadouts.filter(
+    (l) => loadoutIssues[l.id]?.emptyFragmentSlots
+  );
+  const loadoutsWithTooManyFragments = savedLoadouts.filter(
+    (l) => loadoutIssues[l.id]?.tooManyFragments
+  );
 
   if (includeWarningPills) {
     if (loadoutsWithMissingItems.length) {
@@ -225,19 +198,19 @@ export function searchAndSortLoadoutsByQuery(
   language: DimLanguage,
   loadoutSort: LoadoutSort
 ) {
-  const loadoutQueryPlain = plainString(query, language);
-  return _.sortBy(
-    loadouts.filter(
-      (loadout) =>
-        !query ||
-        plainString(loadout.name, language).includes(loadoutQueryPlain) ||
-        (!isInGameLoadout(loadout) &&
-          loadout.notes &&
-          plainString(loadout.notes, language).includes(loadoutQueryPlain))
-    ),
-    (l) => (isInGameLoadout(l) ? 0 : 1),
+  let filteredLoadouts: Loadout[];
+  if (query.length) {
+    const includes = localizedIncludes(language, query);
+    filteredLoadouts = loadouts.filter(
+      (loadout) => includes(loadout.name) || (loadout.notes && includes(loadout.notes))
+    );
+  } else {
+    filteredLoadouts = [...loadouts];
+  }
+
+  return filteredLoadouts.sort(
     loadoutSort === LoadoutSort.ByEditTime
-      ? (l) => (isInGameLoadout(l) ? l.index : -(l.lastUpdatedAt ?? 0))
-      : (l) => (isInGameLoadout(l) ? l.index : l.name.toLocaleUpperCase())
+      ? compareBy((l) => -(l.lastUpdatedAt ?? 0))
+      : localizedSorter(language, (l) => l.name)
   );
 }

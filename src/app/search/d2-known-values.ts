@@ -85,6 +85,14 @@ export const killTrackerObjectivesByHash: HashLookup<'pvp' | 'pve' | 'gambit'> =
 export const killTrackerSocketTypeHash = 1282012138;
 
 export const weaponMasterworkY2SocketTypeHash = 2218962841;
+
+export const ghostActivitySocketTypeHashes = {
+  /* Available once the Ghost shell has been fully Masterworked. */
+  locked: 456763785, // SocketType "Activity Ghost Mod"
+  /* Activity mods provide additional currency and material rewards in various activities. */
+  unlocked: 2899644539, // SocketType "Activity Ghost Mod"
+};
+
 //
 // STATS KNOWN VALUES
 //
@@ -195,6 +203,9 @@ export const pinnacleSources = [
 
 /** The premium Eververse currency */
 export const silverItemHash = 3147280338; // InventoryItem "Silver"
+
+// Deepsight harmonizer currency for extracting weapon patterns
+export const DEEPSIGHT_HARMONIZER = 2228452164;
 
 // For loadout mods obliterated from the defs, we instead return this def
 export const deprecatedPlaceholderArmorModHash = 3947616002; // InventoryItem "Deprecated Armor Mod"

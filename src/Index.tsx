@@ -10,7 +10,6 @@ import store from 'app/store/store';
 import { lazyLoadStreamDeck, startStreamDeckConnection } from 'app/stream-deck/stream-deck';
 import { streamDeckEnabled } from 'app/stream-deck/util/local-storage';
 import { infoLog } from 'app/utils/log';
-import { scheduleMemoryMeasurement } from 'app/utils/measure-memory';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import idbReady from 'safari-14-idb-fix';
@@ -23,7 +22,6 @@ import registerServiceWorker from './app/register-service-worker';
 import { safariTouchFix } from './app/safari-touch-fix';
 import { watchLanguageChanges } from './app/settings/observers';
 import { saveWishListToIndexedDB } from './app/wishlists/observers';
-import { StrictMode } from 'react';
 infoLog(
   'app',
   `DIM v${$DIM_VERSION} (${$DIM_FLAVOR}) - Please report any errors to https://www.github.com/DestinyItemManager/DIM/issues`
@@ -37,7 +35,6 @@ if ($DIM_FLAVOR !== 'dev') {
 }
 
 setupRateLimiter();
-scheduleMemoryMeasurement();
 
 const i18nPromise = initi18n();
 
@@ -80,9 +77,5 @@ const i18nPromise = initi18n();
   // Settings depends on i18n
   watchLanguageChanges();
 
-  root.render(
-    <StrictMode>
-      <Root />
-    </StrictMode>
-  );
+  root.render(<Root />);
 })();

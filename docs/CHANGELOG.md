@@ -1,5 +1,23 @@
 ## Next
 
+* Fixed the "Any Class" Loadout toggle not removing class-specific items.
+
+## 7.86.0 <span class="changelog-date">(2023-09-17)</span>
+
+* Restored `is:dupelower` to prioritize power when choosing lower dupes.
+
+## 7.85.0 <span class="changelog-date">(2023-09-10)</span>
+
+* Adding a subclass to a Loadout or selecting a subclass in Loadout Optimizer will now copy all currently equipped Aspects and Fragments too.
+* The sort order for loadout names has been changed to better respect different languages, and to understand numbers in names. It should now match the way you see files sorted in File Explorer / Finder.
+
+## 7.84.1 <span class="changelog-date">(2023-09-06)</span>
+
+* Fixed the character menu scrolling the page to the top.
+* The "Sort triumphs by completion" toggle on the Records page now maintains the order of triumphs with identical completion progress.
+
+## 7.84.0 <span class="changelog-date">(2023-09-03)</span>
+
 * The order of vendor items should now much more accurately match the in-game order.
 * Filters and toggles on the Vendors page now consider focusing/decoding subvendors. E.g. the "Only show uncollected items" toggle will now show focusing subvendors if they allow focusing items you don't have collected.
 * Loadout editor menus now have a "Sync from equipped" option that replaces the loadout's items with your equipped items. The "Fill in using equipped" option is also disabled when there's no spaces to fill.

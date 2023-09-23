@@ -24,11 +24,13 @@ export default function Objective({
   suppressObjectiveDescription,
   isTrialsPassage,
   showHidden,
+  noCheckbox,
 }: {
   objective: DestinyObjectiveProgress | D1ObjectiveProgress;
   suppressObjectiveDescription?: boolean;
   isTrialsPassage?: boolean;
   showHidden?: boolean;
+  noCheckbox?: boolean;
 }) {
   const defs = useDefinitions()!;
   const objectiveDef = defs.Objective.get(objective.objectiveHash);
@@ -100,7 +102,7 @@ export default function Objective({
 
   return (
     <div className={classes}>
-      {!showAsCounter && !isDate && <div className="objective-checkbox" />}
+      {!noCheckbox && !showAsCounter && !isDate && <div className="objective-checkbox" />}
       <div className="objective-progress">
         {!isBoolean && !isDate && (
           <div className="objective-progress-bar" style={progressBarStyle} />

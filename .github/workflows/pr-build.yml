@@ -28,7 +28,7 @@ jobs:
 
       - name: get-npm-version
         id: package-version
-        uses: martinbeentjes/npm-get-version-action@v1.1.0
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
 
       - name: set beta
         run: |
@@ -53,6 +53,7 @@ jobs:
               - package.json
               - yarn.lock
               - config/webpack.ts
+              - babel.config.js
 
       - name: Send webpack stats to RelativeCI
         if: ${{ steps.filter.outputs.build-pipeline == 'true' }}

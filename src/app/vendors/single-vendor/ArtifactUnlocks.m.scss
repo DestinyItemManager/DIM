@@ -1,0 +1,26 @@
+.tiers {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 12px;
+}
+
+.tier {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 6px;
+}
+
+.item {
+  background-size: 100%;
+  border: 1px solid var(--theme-item-socket-border);
+  cursor: pointer;
+}
+
+.unlocked {
+  background-color: #0a3b40;
+}
+
+.locked {
+  background-color: #020808;
+  filter: brightness(0.6);
+}

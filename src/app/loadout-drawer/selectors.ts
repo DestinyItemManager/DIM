@@ -5,7 +5,6 @@ import { allInGameLoadoutsSelector } from 'app/loadout/ingame/selectors';
 import { manifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { isClassCompatible } from 'app/utils/item-utils';
-import _ from 'lodash';
 import { createSelector } from 'reselect';
 import { InGameLoadout, Loadout, LoadoutItem, isInGameLoadout } from './loadout-types';
 import {
@@ -119,7 +118,7 @@ export const previousLoadoutSelector =
   (storeId: string) =>
   (state: RootState): Loadout | undefined => {
     if (state.loadouts.previousLoadouts[storeId]) {
-      return _.last(state.loadouts.previousLoadouts[storeId]);
+      return state.loadouts.previousLoadouts[storeId].at(-1);
     }
     return undefined;
   };

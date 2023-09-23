@@ -11,6 +11,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   776191470, // Tommy's Matchbook
   814876685, // Trinity Ghoul
   940371471, // Wicked Implement
+  1034055198, // Necrochasm
   1234150730, // Trespasser
   1331482397, // MIDA Multi-Tool
   1345867570, // Sweet Business

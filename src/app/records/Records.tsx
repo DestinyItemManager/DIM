@@ -108,9 +108,6 @@ export default function Records({ account }: Props) {
       })),
   ];
 
-  const onToggleCompletedRecordsHidden = (checked: boolean) => setCompletedRecordsHidden(checked);
-  const onToggleRedactedRecordsRevealed = (checked: boolean) => setRedactedRecordsRevealed(checked);
-  const onToggleSortRecordProgression = (checked: boolean) => setSortRecordProgression(checked);
   return (
     <PageWithMenu className="d2-vendors">
       <PageWithMenu.Menu>
@@ -127,21 +124,21 @@ export default function Records({ account }: Props) {
           <CheckButton
             name="hide-completed"
             checked={completedRecordsHidden}
-            onChange={onToggleCompletedRecordsHidden}
+            onChange={setCompletedRecordsHidden}
           >
             {t('Triumphs.HideCompleted')}
           </CheckButton>
           <CheckButton
             name="reveal-redacted"
             checked={redactedRecordsRevealed}
-            onChange={onToggleRedactedRecordsRevealed}
+            onChange={setRedactedRecordsRevealed}
           >
             {t('Triumphs.RevealRedacted')}
           </CheckButton>
           <CheckButton
             name="sort-progression"
             checked={sortRecordProgression}
-            onChange={onToggleSortRecordProgression}
+            onChange={setSortRecordProgression}
           >
             {t('Triumphs.SortRecords')}
           </CheckButton>

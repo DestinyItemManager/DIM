@@ -52,7 +52,7 @@ import { LoadoutArtifactUnlocks, LoadoutMods } from 'app/loadout/loadout-ui/Load
 import { useD2Definitions } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { emptyObject } from 'app/utils/empty';
-import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
+import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -162,7 +162,7 @@ async function pickLoadoutItem(
   const item = await showItemPicker({
     filterItems: (item: DimItem) =>
       item.bucket.hash === bucket.hash &&
-      isClassCompatible(item.classType, loadout.classType) &&
+      isItemLoadoutCompatible(item.classType, loadout.classType) &&
       itemCanBeInLoadout(item) &&
       !loadoutHasItem(item) &&
       (!item.notransfer || item.owner === store.id),
@@ -214,7 +214,7 @@ export function LoadoutEditSubclassSection({
   };
 
   const handleApplySocketOverrides = useUpdater(applySocketOverrides);
-  const handleFillSubclassFromEquipped = useDefsStoreUpdater(setLoadoutSubclassFromEquipped);
+  const handleSyncSubclassFromEquipped = useDefsStoreUpdater(setLoadoutSubclassFromEquipped);
   const handleRandomizeSubclass = useDefsStoreUpdater(randomizeLoadoutSubclass);
   const handleClearSubclass = useDefsUpdater(clearSubclass);
 
@@ -224,7 +224,7 @@ export function LoadoutEditSubclassSection({
       title={t('Bucket.Class')}
       onClear={handleClearSubclass}
       onRandomize={handleRandomizeSubclass}
-      onFillFromEquipped={handleFillSubclassFromEquipped}
+      onSyncFromEquipped={handleSyncSubclassFromEquipped}
     >
       <LoadoutEditSubclass
         subclass={subclass}
@@ -311,7 +311,7 @@ function LoadoutEditCategorySection({
           ? item.bucket.hash === warnItem.bucket.hash
           : item.hash === warnItem.hash) &&
         itemCanBeInLoadout(item) &&
-        isClassCompatible(item.classType, loadout.classType),
+        isItemLoadoutCompatible(item.classType, loadout.classType),
       prompt: t('Loadouts.FindAnother', {
         name: warnItem.bucket.inArmor ? warnItem.bucket.name : warnItem.name,
       }),

@@ -231,13 +231,16 @@
     "Event": "Mostrar objetos en cuyo evento de Destiny 2 aparecieron.",
     "ExtraPerk": "Muestra tiradas aleatorias de armas legendarias con una ventaja adicional seleccionable.",
     "Filter": "Filtro",
+    "FilterWith": "Filtrar con:",
     "Focusable": "Muestra objetos que pueden ser concentrados en un comerciante",
     "Foundry": "Muestra objetos basados en la fundición que los creó.",
     "Glimmer": "Muestra objetos que son consumibles que están relacionados con la ganancia de lumen.",
+    "Harrowed": "\\(Sepulcral\\)",
     "HasNotes": "Muestra objetos que contengan notas.",
     "HasOrnament": "Muestra objeto que tengan el diseño aplicado.",
     "HasShader": "Mostrar objetos que tengan shader aplicado.",
     "HoldsMod": "Muestra armadura compatible con un tipo específico de Modificador de Temporada.",
+    "InDimLoadout": "is:indimloadout muestra objetos que están incluidos en cualquier equipación en DIM.",
     "InInGameLoadout": "is:iningameloadout muestra objetos que están incluidos en cualquier equipación en el juego.",
     "InLoadout": "is:inloadout muestra objetos que están incluidos en cualquier equipación. Buscando con inloadout: muestra objetos que están incluidos con títulos coincidentes. Cuando se usa con un hashtag, inloadout: muestra objetos cuyas equipaciones tienen el hashtag en el título o en las notas.",
     "Infusable": "Muestra objetos que pueden ser infundidos.",
@@ -298,7 +301,7 @@
     "StatLower": "Muestra armadura cuyas estadísticas son estríctamente más bajas que otra del mismo tipo de armadura.",
     "Stats": "Muestra objetos basados en un valor específico de estadística. $t(Filter.StatsExtras)",
     "StatsBase": "Filtra armadura basada en su valor de estadística base, sin incluir modificadores adjuntos u obras maestras. $t(Filter.StatsExtras)",
-    "StatsExtras": "Soporta la adición de estadísticas conectando múltiples nombres de estadísticas con el símbolo \"+\" o \"&\". También hay palabras clave especiales (highest, secondhighest, thirdhighest, etc.) que coincidan estadísticas basadas en su rango dentro de las estadísticas de un objeto.",
+    "StatsExtras": "Soporta la adición de estadísticas conectando múltiples nombres de estadísticas con el símbolo \"+\" o \"&\". También hay palabras clave especiales (highest, secondhighest, thirdhighest, etc.) que coinciden con estadísticas basadas en su nivel dentro de las estadísticas de un objeto. Cada estadística personalizada también tiene su propio término de búsqueda, mostrado en la configuración de Estadísticas Personalizadas.",
     "StatsLoadout": "Encuentra un conjunto de objetos para equipar por el valor máximo total de una estadística específica.",
     "StatsMax": "Encuentra armadura con el número más alto para una estadística específica. Incluye todos los objetos con la estadística más alta.",
     "Tags": {
@@ -325,6 +328,7 @@
   },
   "General": {
     "ClickForDetails": "Haga clic para detalles",
+    "Close": "Cerrar",
     "Confirm": "¿Confirmar?",
     "UserGuideLink": "Guía de usuario"
   },
@@ -760,7 +764,7 @@
       "NoName": "Esta equipación necesita un nombre."
     },
     "SaveLoadout": "Guardar Equipación",
-    "Season": "Season {{season}}",
+    "Season": "Temporada {{season}}",
     "Share": {
       "Copied": "Copiado enlace de la equipación al portapapeles",
       "CopyButton": "Copiar Enlace",
@@ -965,7 +969,7 @@
     "Items": "Objetos de aventuras",
     "Milestones": "Hazañas & Desafíos",
     "NoEventChallenges": "Has completado todos los desafíos del evento",
-    "NoTrackedTriumph": "No tienes triunfos seguidos. Sigue uno en el juego, o tantos como quieras en DIM.",
+    "NoTrackedTriumph": "No tienes triunfos seguidos. Sigue tantos como quieras en DIM.",
     "PercentPrestige": "{{pct}}% hacia el reinicio",
     "PowerBonusHeader": "+{{powerBonus}} Recompensas De Poder",
     "PowerBonusHeaderUndefined": "Otras Recompensas",
@@ -1278,7 +1282,7 @@
     "About": {
       "APIHistory": "Ver el historial de todas las acciones hechas por DIM (y otras apps de Destiny)",
       "BungieCopyright": "Todas las imágenes y el contenido son propiedad de Bungie.",
-      "CommunityInsight": "Información de la Comunidad de las Ventajas cortesía de {{clarityLink}}. Si observas inexactitudes o tienes preguntas, únete a {{clarityDiscordLink}}.",
+      "CommunityInsight": "Información de la Comunidad para las Ventajas y las Estadísticas de los Personajes cortesía de {{clarityLink}}. Si observas inexactitudes o tienes preguntas, únete al {{clarityDiscordLink}}.",
       "Discord": "Discord",
       "DiscordHelp": "Haz preguntas, da tu opinión y recibe soporte en nuestros canales de Discord.",
       "FAQ": "Preguntas Más Frecuentes",
@@ -1345,7 +1349,7 @@
     "UpdateExternalSource": "Actualizar Fuente de la Lista de Deseos",
     "Voltron": "voltron (por defecto)",
     "VoltronDescription": "voltron es una colección auto-actulizada de tiradas de listas de deseos de JcE y JcJ a través de la comunidad de Destiny. Elegimos esta por defecto.",
-    "WishListNotes": "Notas de la Lista de Deseos: {{notes}}",
+    "WishListNotes": "Notas de la Lista de Deseos:",
     "WorstRatedTip": "Esta ventaja coincide exactamente con una tirada de arma en tu lista de basura.",
     "WorstRatedTip_plural": "Estas ventajas coinciden exactamente con una tirada de arma en tu lista de basura."
   },

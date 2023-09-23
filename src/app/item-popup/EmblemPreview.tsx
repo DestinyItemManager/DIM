@@ -11,8 +11,7 @@ export default function EmblemPreview({ item }: { item: DimItem }) {
     item.metricObjective && item.metricHash !== undefined && defs.Metric.get(item.metricHash);
   const parentPresentationNode =
     metricDef && defs.PresentationNode.get(metricDef.parentNodeHashes[0]);
-  const trait =
-    metricDef && defs.Trait.get(metricDef.traitHashes[metricDef.traitHashes.length - 1]);
+  const trait = metricDef && defs.Trait.get(metricDef.traitHashes.at(-1)!);
 
   const objectiveHash = item.metricObjective?.objectiveHash;
   const objectiveDef = objectiveHash !== undefined && defs.Objective.get(objectiveHash);

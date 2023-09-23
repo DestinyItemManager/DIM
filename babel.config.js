@@ -1,3 +1,5 @@
+const coreJSPackage = require('core-js/package.json');
+
 module.exports = function (api) {
   const isProduction = api.env('production');
   const isTest = api.env('test');
@@ -47,13 +49,37 @@ module.exports = function (api) {
     plugins.push(['@babel/plugin-transform-typescript', { isTSX: true, optimizeConstEnums: true }]);
   }
 
+  const corejs = { version: coreJSPackage.version };
+
   const presetEnvOptions = {
     bugfixes: true,
     modules: false,
     loose: true,
     useBuiltIns: 'usage',
-    corejs: 3,
+    corejs,
     shippedProposals: true,
+    // Set to true and run `yarn build:beta` to see what plugins and polyfills are being used
+    debug: false,
+    // corejs includes a bunch of polyfills for behavior we don't use or bugs we don't care about
+    exclude: [
+      // Really edge-case bugfix for Array.prototype.push and friends
+      'es.array.push',
+      'es.array.unshift',
+      // Remove this if we start using proposed set methods like .intersection
+      /esnext\.set/,
+      // Not sure what exactly this is, but we have our own error-cause stuff
+      'es.error.cause',
+      // Only used when customizing JSON parsing w/ a "reviver"
+      'esnext.json.parse',
+      // Edge-case bugfixes for URLSearchParams.prototype.has, delete, and size
+      /web\.url-search-params/,
+      // Mis-detected array grouping proposal
+      'esnext.array.group',
+      // Unneeded mis-detected DOMException extension
+      'web.dom-exception.stack',
+      // Not needed in worker context
+      'web.self',
+    ],
   };
 
   if (isTest) {
@@ -66,7 +92,13 @@ module.exports = function (api) {
       ['@babel/preset-env', presetEnvOptions],
       [
         '@babel/preset-react',
-        { useBuiltIns: true, loose: true, corejs: 3, runtime: 'automatic', useSpread: true },
+        {
+          useBuiltIns: true,
+          loose: true,
+          corejs,
+          runtime: 'automatic',
+          useSpread: true,
+        },
       ],
     ],
     plugins,

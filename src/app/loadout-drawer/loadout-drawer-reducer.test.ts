@@ -15,13 +15,14 @@ import {
   fillLoadoutFromUnequipped,
   removeItem,
   removeMod,
+  setClassType,
   setLoadoutParameters,
   setLoadoutSubclassFromEquipped,
   toggleEquipped,
   updateMods,
 } from './loadout-drawer-reducer';
 import { Loadout } from './loadout-types';
-import { newLoadout } from './loadout-utils';
+import { filterLoadoutToAllowedItems, newLoadout } from './loadout-utils';
 
 let defs: D2ManifestDefinitions;
 let store: DimStore;
@@ -203,6 +204,27 @@ describe('addItem', () => {
     expect(invalidItem).toBeDefined();
 
     let loadout = addItem(defs, invalidItem)(emptyLoadout);
+
+    expect(loadout.items).toEqual([]);
+  });
+
+  it('does nothing when adding class-specific item to any-class loadout', () => {
+    const invalidItem = allItems.find((i) => i.classType === DestinyClass.Hunter)!;
+    expect(invalidItem).toBeDefined();
+
+    let loadout = setClassType(DestinyClass.Unknown)(emptyLoadout);
+    loadout = addItem(defs, invalidItem)(loadout);
+
+    expect(loadout.items).toEqual([]);
+  });
+
+  it('removes class-specific items when saving as "any class"', () => {
+    const hunterItem = allItems.find((i) => i.classType === DestinyClass.Hunter)!;
+    expect(hunterItem).toBeDefined();
+
+    let loadout = addItem(defs, hunterItem)(emptyLoadout);
+    loadout = setClassType(DestinyClass.Unknown)(loadout);
+    loadout = filterLoadoutToAllowedItems(defs, loadout);
 
     expect(loadout.items).toEqual([]);
   });

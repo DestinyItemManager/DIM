@@ -58,19 +58,20 @@ $control-color: rgba(255, 255, 255, 0.5);
 
   .sheet-contents {
     flex: 1;
-    overflow-y: auto;
-    overflow-x: hidden;
+    // This gets overridden to overflow-y: auto by a resize observer in the
+    // sheets code if the content actually overflows, as part of an elaborate
+    // workaround for browser bugs concerning overscroll-behavior
+    overflow: hidden;
     overscroll-behavior: none;
-    -webkit-overflow-scrolling: touch;
     box-sizing: border-box;
-    padding-bottom: env(safe-area-inset-bottom);
 
-    &.sheet-has-footer {
-      padding-bottom: 0;
+    &:last-child {
+      padding-bottom: env(safe-area-inset-bottom);
     }
   }
 
   .sheet-close {
+    all: initial;
     z-index: 1;
     position: absolute;
     right: 0;
@@ -86,11 +87,7 @@ $control-color: rgba(255, 255, 255, 0.5);
     &:active,
     &:hover,
     &:focus-visible {
-      color: rgba(255, 255, 255, 1);
-    }
-
-    &.sheet-no-header {
-      right: 8px;
+      color: var(--theme-accent-primary);
     }
   }
 }

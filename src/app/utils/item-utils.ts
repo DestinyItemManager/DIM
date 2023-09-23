@@ -381,3 +381,12 @@ export function isClassCompatible(firstClass: DestinyClass, secondClass: Destiny
     firstClass === secondClass
   );
 }
+
+/**
+ * Can a loadout of classType `loadoutClass` use an item of class `itemClass`?
+ * Global loadouts can only include items equippable by any class, so this is
+ * more restrictive than `isClassCompatible`
+ */
+export function isItemLoadoutCompatible(itemClass: DestinyClass, loadoutClass: DestinyClass) {
+  return itemClass === DestinyClass.Unknown || itemClass === loadoutClass;
+}

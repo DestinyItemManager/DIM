@@ -1,6 +1,6 @@
 import { Virtualizer, useVirtualizer, useWindowVirtualizer } from '@tanstack/react-virtual';
 import clsx from 'clsx';
-import { Key, forwardRef, useImperativeHandle, useLayoutEffect, useRef } from 'react';
+import { forwardRef, useImperativeHandle, useLayoutEffect, useRef } from 'react';
 import styles from './VirtualList.m.scss';
 
 interface VirtualListProps {
@@ -16,7 +16,7 @@ interface VirtualListProps {
    */
   overscan?: number;
   children: (index: number) => React.ReactNode;
-  getItemKey: (index: number) => Key;
+  getItemKey: (index: number) => string | number; // React.Key, but they added bigint while @tanstack/react-virtual used their own Key type
 }
 
 export interface VirtualListRef {

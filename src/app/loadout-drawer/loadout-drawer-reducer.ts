@@ -12,7 +12,7 @@ import { getModExclusionGroup, mapToNonReducedModCostVariant } from 'app/loadout
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { ItemFilter } from 'app/search/filter-types';
-import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
+import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { filterMap } from 'app/utils/util';
@@ -26,7 +26,6 @@ import { Loadout, LoadoutItem, ResolvedLoadoutItem, ResolvedLoadoutMod } from '.
 import {
   convertToLoadoutItem,
   createSocketOverridesFromEquipped,
-  createSubclassDefaultSocketOverrides,
   extractArmorModHashes,
   findItemForLoadout,
   findSameLoadoutItemIndex,
@@ -105,8 +104,7 @@ export function addItem(
       loadoutItem.socketOverrides = socketOverrides;
     }
     if (item.sockets && item.bucket.hash === BucketHashes.Subclass && !socketOverrides) {
-      // TODO: use createSocketOverridesFromEquipped?
-      loadoutItem.socketOverrides = createSubclassDefaultSocketOverrides(item);
+      loadoutItem.socketOverrides = createSocketOverridesFromEquipped(item);
     }
 
     // We only allow one subclass, and it must be equipped. Same with a couple other things.
@@ -118,7 +116,7 @@ export function addItem(
       return;
     }
 
-    if (!isClassCompatible(item.classType, draftLoadout.classType)) {
+    if (!isItemLoadoutCompatible(item.classType, draftLoadout.classType)) {
       showNotification({
         type: 'warning',
         title: t('Loadouts.ClassTypeMismatch', { className: item.classTypeNameLocalized }),
@@ -342,8 +340,7 @@ export function removeMod(mod: ResolvedLoadoutMod): LoadoutUpdateFunction {
     if (loadout.parameters?.mods) {
       const index = loadout.parameters?.mods.indexOf(mod.originalModHash);
       if (index !== -1) {
-        const mods = [...loadout.parameters.mods];
-        mods.splice(index, 1);
+        const mods = loadout.parameters.mods.toSpliced(index, 1);
         return setLoadoutParameters({ mods })(loadout);
       }
     }
@@ -366,12 +363,7 @@ export function setLoadoutSubclassFromEquipped(
       return loadout;
     }
 
-    return addItem(
-      defs,
-      newSubclass,
-      true,
-      createSocketOverridesFromEquipped(newSubclass)
-    )(loadout);
+    return addItem(defs, newSubclass, true)(loadout);
   };
 }
 

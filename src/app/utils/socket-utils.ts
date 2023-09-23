@@ -13,7 +13,6 @@ import {
   PlugCategoryHashes,
   SocketCategoryHashes,
 } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import { isArmor2Mod, isKillTrackerSocket } from './item-utils';
 import { filterMap } from './util';
 
@@ -136,7 +135,7 @@ export function getIntrinsicArmorPerkSocket(item: DimItem): DimSocket | undefine
     if (largePerkCategory) {
       const largePerkSocket = getSocketByIndex(
         item.sockets,
-        _.nth(largePerkCategory.socketIndexes, -1)!
+        largePerkCategory.socketIndexes.at(-1)!
       );
       if (largePerkSocket?.plugged?.plugDef.displayProperties.name) {
         return largePerkSocket;

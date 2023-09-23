@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { Reducer } from 'redux';
 import { ActionType, getType } from 'typesafe-actions';
 import * as actions from './actions';
@@ -23,7 +22,7 @@ export const loadouts: Reducer<LoadoutsState, LoadoutsAction> = (
     case getType(actions.savePreviousLoadout): {
       const { storeId, loadoutId, previousLoadout } = action.payload;
       let previousLoadouts = state.previousLoadouts[storeId] || [];
-      const lastPreviousLoadout = _.last(previousLoadouts);
+      const lastPreviousLoadout = previousLoadouts.at(-1);
       previousLoadouts =
         lastPreviousLoadout && loadoutId === lastPreviousLoadout.id
           ? // Pop the previous loadout since we're reapplying it

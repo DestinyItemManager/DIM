@@ -2,15 +2,18 @@
 
 .deepsightProgress {
   display: flex;
+  padding: 4px 10px;
   gap: 4px;
+  background: var(--theme-item-popup-panel-bg);
+  justify-content: center;
+  align-items: center;
+  align-content: stretch;
 
   :global(.objective-progress) {
     background: var(--theme-item-popup-progress-bar-bg);
   }
 }
 
-.deepsightProgressSection {
-  padding: 4px 10px 4px;
-  background: var(--theme-item-popup-panel-bg);
+.deepsightProgressBar {
   flex-grow: 1;
 }

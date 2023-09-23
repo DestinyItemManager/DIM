@@ -166,6 +166,8 @@ html,
 body {
   // Disable pull to refresh in Android
   overscroll-behavior: none;
+  // Adjust so the anchor we scroll to doesn't end up behind the header
+  scroll-padding-top: var(--header-height);
 
   @include phone-portrait {
     user-select: none;
@@ -206,20 +208,18 @@ h4 {
 input,
 select,
 option {
-  font-family: 'Open Sans', sans-serif, 'Destiny Symbols';
+  font-family: inherit;
 }
 
-input[type='text'] {
+input[type='text'],
+input[type='search'] {
+  color: var(--theme-text);
   caret-color: var(--theme-accent-primary);
+  background-color: var(--theme-input-bg);
 }
 
 input[type='search'] {
   appearance: textfield;
-}
-
-input[type='range'],
-input[type='radio'] {
-  accent-color: var(--theme-accent-primary);
 }
 
 textarea {
@@ -236,6 +236,11 @@ textarea {
   // Setting this makes yuku/textcomplete faster because it doesn't need to make a fake element to measure line height (incorrectly, too)
   line-height: calc(16 / 12);
   caret-color: var(--theme-accent-primary);
+
+  &:hover,
+  &:focus {
+    box-shadow: inset 0 0 0 1px var(--theme-search-dropdown-border);
+  }
 }
 
 select {
@@ -282,6 +287,15 @@ select {
     background: black;
     color: var(--theme-text);
   }
+}
+
+code {
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  padding: 0 4px;
+  bottom: 1px;
 }
 
 .horizontal-swipable {
