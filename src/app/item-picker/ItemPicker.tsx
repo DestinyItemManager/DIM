@@ -2,6 +2,7 @@ import ClassIcon from 'app/dim-ui/ClassIcon';
 import { t } from 'app/i18next-t';
 import SearchBar from 'app/search/SearchBar';
 import { uniqBy } from 'app/utils/util';
+import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useCallback, useDeferredValue, useMemo, useState } from 'react';
@@ -82,7 +83,7 @@ export default function ItemPicker({
       freezeInitialHeight={true}
     >
       {({ onClose }) => (
-        <div className="sub-bucket">
+        <div className={clsx('sub-bucket', 'item-picker-grid')}>
           {items.map((item) => (
             <ItemPickerItem
               key={item.index}

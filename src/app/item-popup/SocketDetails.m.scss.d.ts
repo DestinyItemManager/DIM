@@ -4,6 +4,7 @@ interface CssExports {
   'categoryIcon': string;
   'clickableMod': string;
   'energyElement': string;
+  'header': string;
   'modList': string;
   'notUnlocked': string;
   'selected': string;

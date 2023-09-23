@@ -273,7 +273,7 @@ export default function SocketDetails({
 
   const header = (
     <div>
-      <h1>
+      <h1 className={styles.header}>
         {socketIconDef && (
           <BungieImage
             className={styles.categoryIcon}
