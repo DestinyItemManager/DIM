@@ -9,7 +9,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { getModTypeTagByPlugCategoryHash } from 'app/utils/item-utils';
 import { infoLog } from 'app/utils/log';
-import { proxy, releaseProxy, wrap } from 'comlink';
+import { releaseProxy, wrap } from 'comlink';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -83,7 +83,6 @@ export function useProcess({
   anyExotic: boolean;
   autoStatMods: boolean;
 }) {
-  const [remainingTime, setRemainingTime] = useState(0);
   const [{ result, processing }, setState] = useState<ProcessState>({
     processing: false,
     resultStoreId: selectedStore.id,
@@ -117,7 +116,6 @@ export function useProcess({
     const { worker, cleanup } = createWorker();
     cleanupRef.current = cleanup;
 
-    setRemainingTime(0);
     setState((state) => ({
       processing: true,
       resultStoreId: selectedStore.id,
@@ -172,8 +170,7 @@ export function useProcess({
         resolvedStatConstraints,
         anyExotic,
         autoModsData,
-        autoStatMods,
-        proxy(setRemainingTime)
+        autoStatMods
       )
       .then(({ sets, combos, statRangesFiltered, processInfo }) => {
         infoLog(
@@ -220,7 +217,7 @@ export function useProcess({
     modStatChanges,
   ]);
 
-  return { result, processing, remainingTime };
+  return { result, processing };
 }
 
 function createWorker() {

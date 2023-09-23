@@ -22,35 +22,6 @@
   }
 }
 
-.processing {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: black;
-  font-size: 1.2em;
-  padding: 10px 10px;
-  position: fixed;
-  left: 50%;
-
-  @include below-header;
-
-  white-space: nowrap;
-  z-index: 10;
-
-  > div {
-    margin-right: 8px;
-  }
-
-  > span {
-    font-size: 1.4em;
-  }
-
-  @include phone-portrait {
-    left: 0;
-    width: 100%;
-  }
-}
-
 .toolbar {
   display: flex;
   flex-flow: row wrap;
@@ -91,10 +62,11 @@
 }
 
 .speedReport {
-  font-size: 11px;
   user-select: text;
-  display: inline;
   margin-left: 1em;
+  > :global(.app-icon) {
+    margin-right: 0.5em;
+  }
 }
 
 // Style for sections borrowed from LoadoutEdit
