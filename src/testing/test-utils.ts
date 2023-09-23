@@ -15,6 +15,7 @@ import {
 import { F_OK } from 'constants';
 import fs from 'fs/promises';
 import i18next from 'i18next';
+import fetchMock from 'jest-fetch-mock';
 import en from 'locale/en.json';
 import ja from 'locale/ja.json';
 import _ from 'lodash';
