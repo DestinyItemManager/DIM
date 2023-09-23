@@ -1,5 +1,3 @@
-import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { apiPermissionGrantedSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import CheckButton from 'app/dim-ui/CheckButton';
@@ -12,11 +10,9 @@ import { searchFilterSelector } from 'app/search/search-filter';
 import { AppIcon, addIcon, faRandom } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
-import { isClassCompatible } from 'app/utils/item-utils';
 import { infoLog, warnLog } from 'app/utils/log';
 import { useHistory } from 'app/utils/undo-redo-history';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { produce } from 'immer';
 import _ from 'lodash';
 import React, { useCallback, useRef } from 'react';
 import { useSelector } from 'react-redux';
@@ -48,6 +44,7 @@ import {
 } from './loadout-drawer-reducer';
 import { addItem$ } from './loadout-events';
 import { Loadout } from './loadout-types';
+import { filterLoadoutToAllowedItems } from './loadout-utils';
 import { loadoutsHashtagsSelector } from './selectors';
 
 /**
@@ -248,42 +245,4 @@ export default function LoadoutDrawer({
       </LoadoutDrawerDropTarget>
     </Sheet>
   );
-}
-
-/**
- * Remove items and settings that don't match the loadout's class type.
- */
-function filterLoadoutToAllowedItems(
-  defs: D2ManifestDefinitions | D1ManifestDefinitions,
-  loadoutToSave: Readonly<Loadout>
-): Readonly<Loadout> {
-  return produce(loadoutToSave, (loadout) => {
-    // Filter out items that don't fit the class type
-    loadout.items = loadout.items.filter((loadoutItem) => {
-      const classType = defs.InventoryItem.get(loadoutItem.hash)?.classType;
-      return classType !== undefined && isClassCompatible(classType, loadout.classType);
-    });
-
-    if (loadout.classType === DestinyClass.Unknown && loadout.parameters) {
-      // Remove fashion and non-mod loadout parameters from Any Class loadouts
-      // FIXME It's really easy to forget to consider properties of LoadoutParameters here,
-      // maybe some type voodoo can force us to make a decision for every property?
-      if (
-        loadout.parameters.mods?.length ||
-        loadout.parameters.clearMods ||
-        loadout.parameters.artifactUnlocks ||
-        // weapons but not armor since AnyClass loadouts can't have armor
-        loadout.parameters.clearWeapons
-      ) {
-        loadout.parameters = {
-          mods: loadout.parameters.mods,
-          clearMods: loadout.parameters.clearMods,
-          artifactUnlocks: loadout.parameters.artifactUnlocks,
-          clearWeapons: loadout.parameters.clearWeapons,
-        };
-      } else {
-        delete loadout.parameters;
-      }
-    }
-  });
 }

@@ -20,7 +20,11 @@ import { getTotalModStatChanges } from 'app/loadout/stats';
 import { manifestSelector } from 'app/manifest/selectors';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { armorStats, deprecatedPlaceholderArmorModHash } from 'app/search/d2-known-values';
-import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
+import {
+  isClassCompatible,
+  isItemLoadoutCompatible,
+  itemCanBeInLoadout,
+} from 'app/utils/item-utils';
 import {
   aspectSocketCategoryHashes,
   fragmentSocketCategoryHashes,
@@ -39,6 +43,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import deprecatedMods from 'data/d2/deprecated-mods.json';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import { produce } from 'immer';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
 import { v4 as uuidv4 } from 'uuid';
@@ -911,4 +916,42 @@ export function pickBackingStore(
   return requestedStore && isClassCompatible(classType, requestedStore.classType)
     ? requestedStore
     : stores.find((s) => !s.isVault && isClassCompatible(classType, s.classType));
+}
+
+/**
+ * Remove items and settings that don't match the loadout's class type.
+ */
+export function filterLoadoutToAllowedItems(
+  defs: D2ManifestDefinitions | D1ManifestDefinitions,
+  loadoutToSave: Readonly<Loadout>
+): Readonly<Loadout> {
+  return produce(loadoutToSave, (loadout) => {
+    // Filter out items that don't fit the class type
+    loadout.items = loadout.items.filter((loadoutItem) => {
+      const classType = defs.InventoryItem.get(loadoutItem.hash)?.classType;
+      return classType !== undefined && isItemLoadoutCompatible(classType, loadout.classType);
+    });
+
+    if (loadout.classType === DestinyClass.Unknown && loadout.parameters) {
+      // Remove fashion and non-mod loadout parameters from Any Class loadouts
+      // FIXME It's really easy to forget to consider properties of LoadoutParameters here,
+      // maybe some type voodoo can force us to make a decision for every property?
+      if (
+        loadout.parameters.mods?.length ||
+        loadout.parameters.clearMods ||
+        loadout.parameters.artifactUnlocks ||
+        // weapons but not armor since AnyClass loadouts can't have armor
+        loadout.parameters.clearWeapons
+      ) {
+        loadout.parameters = {
+          mods: loadout.parameters.mods,
+          clearMods: loadout.parameters.clearMods,
+          artifactUnlocks: loadout.parameters.artifactUnlocks,
+          clearWeapons: loadout.parameters.clearWeapons,
+        };
+      } else {
+        delete loadout.parameters;
+      }
+    }
+  });
 }
