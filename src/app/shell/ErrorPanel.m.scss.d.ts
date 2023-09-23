@@ -3,9 +3,9 @@
 interface CssExports {
   'errorCode': string;
   'errorPanel': string;
+  'links': string;
+  'socials': string;
   'timeline': string;
-  'twitterLinks': string;
-  'twitters': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

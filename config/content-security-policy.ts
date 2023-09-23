@@ -14,8 +14,6 @@ export default function csp(env: 'release' | 'beta' | 'dev', featureFlags: Featu
       SELF,
       'https://*.googletagmanager.com',
       'https://*.google-analytics.com',
-      // Twitter Widget
-      'https://platform.twitter.com',
       // OpenCollective backers
       'https://opencollective.com',
     ],
@@ -69,9 +67,6 @@ export default function csp(env: 'release' | 'beta' | 'dev', featureFlags: Featu
     ],
     childSrc: [SELF],
     frameSrc: [
-      // Twitter Widget
-      'https://syndication.twitter.com/',
-      'https://platform.twitter.com/',
       // OpenCollective backers
       'https://opencollective.com',
       // Mastodon feed
