@@ -1,5 +1,7 @@
 ## Next
 
+* Fixed the "Any Class" Loadout toggle not removing class-specific items.
+
 ## 7.86.0 <span class="changelog-date">(2023-09-17)</span>
 
 * Restored `is:dupelower` to prioritize power when choosing lower dupes.

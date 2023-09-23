@@ -1,6 +1,6 @@
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { emptyArray } from 'app/utils/empty';
-import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
+import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';
@@ -46,7 +46,7 @@ export default function LoadoutDrawerDropTarget({
         const result = monitor.getDropResult();
         onDroppedItem(item, result?.equipped);
       },
-      canDrop: (i) => itemCanBeInLoadout(i) && isClassCompatible(i.classType, classType),
+      canDrop: (i) => itemCanBeInLoadout(i) && isItemLoadoutCompatible(i.classType, classType),
       collect: (monitor) => ({ isOver: monitor.isOver() && monitor.canDrop() }),
     }),
     [bucketTypes, onDroppedItem]

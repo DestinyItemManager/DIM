@@ -12,7 +12,7 @@ import { getModExclusionGroup, mapToNonReducedModCostVariant } from 'app/loadout
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { ItemFilter } from 'app/search/filter-types';
-import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
+import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { filterMap } from 'app/utils/util';
@@ -116,7 +116,7 @@ export function addItem(
       return;
     }
 
-    if (!isClassCompatible(item.classType, draftLoadout.classType)) {
+    if (!isItemLoadoutCompatible(item.classType, draftLoadout.classType)) {
       showNotification({
         type: 'warning',
         title: t('Loadouts.ClassTypeMismatch', { className: item.classTypeNameLocalized }),

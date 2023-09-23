@@ -21,7 +21,7 @@ import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { useD1Definitions } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
-import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
+import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import React, { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import TextareaAutosize from 'react-textarea-autosize';
@@ -189,7 +189,7 @@ function LoadoutDrawerBody({
       filterItems: (item: DimItem) =>
         item.hash === warnItem.hash &&
         itemCanBeInLoadout(item) &&
-        (!loadout || isClassCompatible(item.classType, loadout.classType)),
+        (!loadout || isItemLoadoutCompatible(item.classType, loadout.classType)),
       prompt: t('Loadouts.FindAnother', { name: warnItem.name }),
     });
 
