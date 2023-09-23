@@ -85,6 +85,14 @@ export const killTrackerObjectivesByHash: HashLookup<'pvp' | 'pve' | 'gambit'> =
 export const killTrackerSocketTypeHash = 1282012138;
 
 export const weaponMasterworkY2SocketTypeHash = 2218962841;
+
+export const ghostActivitySocketTypeHashes = {
+  /* Available once the Ghost shell has been fully Masterworked. */
+  locked: 456763785, // SocketType "Activity Ghost Mod"
+  /* Activity mods provide additional currency and material rewards in various activities. */
+  unlocked: 2899644539, // SocketType "Activity Ghost Mod"
+};
+
 //
 // STATS KNOWN VALUES
 //
