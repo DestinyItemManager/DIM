@@ -124,10 +124,7 @@
 .mobileItemActions {
   padding: 5px 0;
   display: flex;
-  position: sticky;
-  top: 0;
   justify-content: space-between;
-  z-index: 1;
   background: #111;
   border-bottom: 1px solid #333;
   border-top: 1px solid #333;
@@ -160,4 +157,16 @@
       color: var(--theme-text);
     }
   }
+}
+
+.failureReason {
+  color: var(--theme-text);
+  background-color: #923c3c;
+  margin: 0;
+  padding: 2px 8px;
+}
+
+.header {
+  display: flex;
+  flex-flow: column nowrap;
 }

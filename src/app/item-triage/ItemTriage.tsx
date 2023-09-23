@@ -11,7 +11,6 @@ import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols'
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { I18nKey, t, tl } from 'app/i18next-t';
 import { allItemsSelector } from 'app/inventory/selectors';
-import { ItemPopupTab } from 'app/item-popup/ItemPopupBody';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { isInGameLoadout } from 'app/loadout-drawer/loadout-types';
@@ -58,7 +57,7 @@ export function doShowTriage(item: DimItem) {
  * when the triage pane ISN'T displayed, it will display
  * some at-a-glance info about what you'll find in the triage pane
  */
-export function TriageTabToggle({ currentTab, item }: { currentTab: ItemPopupTab; item: DimItem }) {
+export function TriageTabToggle({ tabActive, item }: { tabActive: boolean; item: DimItem }) {
   const wishlistRoll = useSelector(wishListSelector(item));
   const loadoutsByItem = useSelector(loadoutsByItemSelector);
   const isInLoadout = Boolean(loadoutsByItem[item.id]);
@@ -66,7 +65,7 @@ export function TriageTabToggle({ currentTab, item }: { currentTab: ItemPopupTab
   return (
     <span className={styles.popupTabTitle}>
       {t('MovePopup.TriageTab')}
-      {currentTab === ItemPopupTab.Overview && (
+      {!tabActive && (
         <>
           {wishlistRoll && (
             <WishListPerkThumb wishListRoll={wishlistRoll} className={styles.thumbsUp} />
