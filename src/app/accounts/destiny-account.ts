@@ -2,17 +2,11 @@ import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { D1Character } from 'app/destiny1/d1-manifest-types';
 import { t } from 'app/i18next-t';
-import {
-  battleNetIcon,
-  epicIcon,
-  faPlayStation,
-  faSteam,
-  faXbox,
-  stadiaIcon,
-} from 'app/shell/icons';
+import { epicIcon, faPlayStation, faSteam, faXbox } from 'app/shell/icons';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
+import { LookupTable } from 'app/utils/util-types';
 import {
   BungieMembershipType,
   DestinyLinkedProfilesResponse,
@@ -33,7 +27,7 @@ import { loggedOut } from './actions';
 /**
  * Platform types (membership types) in the Bungie API.
  */
-const PLATFORM_LABELS: Record<BungieMembershipType, string> = {
+export const PLATFORM_LABELS: Record<BungieMembershipType, string> = {
   [BungieMembershipType.None]: 'None',
   [BungieMembershipType.All]: 'All',
   [BungieMembershipType.TigerXbox]: 'Xbox',
@@ -46,17 +40,11 @@ const PLATFORM_LABELS: Record<BungieMembershipType, string> = {
   [BungieMembershipType.BungieNext]: 'Bungie.net',
 };
 
-export const PLATFORM_ICONS: Record<BungieMembershipType, string | IconDefinition> = {
-  [BungieMembershipType.None]: 'None',
-  [BungieMembershipType.All]: 'All',
+export const PLATFORM_ICONS: LookupTable<BungieMembershipType, string | IconDefinition> = {
   [BungieMembershipType.TigerXbox]: faXbox,
   [BungieMembershipType.TigerPsn]: faPlayStation,
-  [BungieMembershipType.TigerBlizzard]: battleNetIcon,
-  [BungieMembershipType.TigerDemon]: 'Demon',
   [BungieMembershipType.TigerSteam]: faSteam,
-  [BungieMembershipType.TigerStadia]: stadiaIcon,
   [BungieMembershipType.TigerEgs]: epicIcon,
-  [BungieMembershipType.BungieNext]: 'Bungie.net',
 };
 
 /** A specific Destiny account (one per platform and Destiny version) */
