@@ -21,6 +21,7 @@ import {
   ownedItemsSelector,
   profileResponseSelector,
 } from '../inventory/selectors';
+import { UNIVERSAL_ORNAMENTS_NODE } from '../search/d2-known-values';
 import PresentationNodeRoot from './PresentationNodeRoot';
 import styles from './Records.m.scss';
 import UniversalOrnaments from './universal-ornaments/UniversalOrnaments';
@@ -97,7 +98,7 @@ export default function Records({ account }: Props) {
     : [];
 
   const universalOrnamentsName =
-    defs.PresentationNode.get(3655910122)?.displayProperties.name ?? '???';
+    defs.PresentationNode.get(UNIVERSAL_ORNAMENTS_NODE)?.displayProperties.name ?? '???';
 
   // We put the hashes we know about from profile first
   const nodeHashes = [...new Set([...profileHashes, ...otherHashes])];
