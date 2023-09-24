@@ -1,6 +1,11 @@
 ## Next
 
 * Fixed the "Any Class" Loadout toggle not removing class-specific items.
+* The tabs (Overview/Triage) in the item popup no longer scroll with their contents.
+* Hide the duplicate activity socket on some ghosts.
+* Loadouts now show which problems they have (e.g. deprecated mods) on the loadout itself, not just in the filter pills.
+* Improved the drag-to-dismiss behavior of sheets on mobile. There's more work to do there though.
+* The pattern progress bar in the item popup now shows a harmonizer icon when a deepsight harmonizer could be used on that item to unlock pattern progress.
 
 ## 7.86.0 <span class="changelog-date">(2023-09-17)</span>
 
