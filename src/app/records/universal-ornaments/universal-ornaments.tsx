@@ -9,6 +9,7 @@ import { ItemFilter } from 'app/search/filter-types';
 import { filterMap } from 'app/utils/util';
 import { DestinyClass, DestinyPresentationNodeDefinition } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
+import auxOrnamentSets from 'data/d2/universal-ornament-aux-sets.json';
 import universalOrnamentPlugSetHashes from 'data/d2/universal-ornament-plugset-hashes.json';
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
@@ -221,7 +222,26 @@ export const buildSets = memoizeOne((defs: D2ManifestDefinitions): OrnamentsData
               ornaments: [],
             }).ornaments.push(item.hash);
           } else {
-            otherItems.push(item.hash);
+            const entry = Object.entries(auxOrnamentSets[classType]).find(([, set]) =>
+              set.some((hash) => hash === item.hash)
+            );
+            if (entry) {
+              // Otherwise, d2ai may have categorized this into its own armor set.
+              // Add it using the d2ai-generated set key.
+              const [key] = entry;
+              (data[classType].sets[key] ??= {
+                key,
+                name: '',
+                ornaments: [],
+              }).ornaments.push(item.hash);
+              if (item.inventory?.bucketTypeHash === BucketHashes.ClassArmor) {
+                // And use the class item as the set name as Bungie used this workaround
+                // too for the 2023 Solstice sets
+                data[classType].sets[key].name = item.displayProperties.name;
+              }
+            } else {
+              otherItems.push(item.hash);
+            }
           }
         }
       }
