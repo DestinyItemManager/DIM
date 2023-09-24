@@ -260,29 +260,40 @@ export const buildSets = memoizeOne((defs: D2ManifestDefinitions): OrnamentsData
 });
 
 /**
- * Turn our def-based ornament hashes into DimItems, filtering them down to
- * sets matching the search filter.
+ * Turn our def-based ornament hashes into DimItems based on live data.
  */
-export function filterOrnamentSets(
+export function instantiateOrnamentSets(
   data: OrnamentsData,
-  itemCreationContext: ItemCreationContext,
-  searchQuery: string,
-  searchFilter: ItemFilter
+  itemCreationContext: ItemCreationContext
 ): OrnamentsData<DimItem> {
   return _.mapValues(data, (classData) => ({
     ...classData,
     sets: Object.fromEntries(
       filterMap(Object.entries(classData.sets), ([key, set]) => {
         const items = filterMap(set.ornaments, (hash) => makeFakeItem(itemCreationContext, hash));
-        if (
+        return [key, { ...set, ornaments: items }];
+      })
+    ),
+  }));
+}
+
+/**
+ * Filter ornaments down to sets matching the search filter.
+ */
+export function filterOrnamentSets(
+  data: Readonly<OrnamentsData<DimItem>>,
+  searchQuery: string,
+  searchFilter: ItemFilter
+): OrnamentsData<DimItem> {
+  return _.mapValues(data, (classData) => ({
+    ...classData,
+    sets: Object.fromEntries(
+      Object.entries(classData.sets).filter(
+        ([_key, set]) =>
           !searchQuery ||
           set.name.toLowerCase().includes(searchQuery) ||
-          items.some(searchFilter)
-        ) {
-          return [key, { ...set, ornaments: items }];
-        }
-        return undefined;
-      })
+          set.ornaments.some(searchFilter)
+      )
     ),
   }));
 }

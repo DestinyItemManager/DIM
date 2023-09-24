@@ -15,6 +15,7 @@ import {
   OrnamentsSet,
   buildSets,
   filterOrnamentSets,
+  instantiateOrnamentSets,
   univeralOrnamentsVisibilitySelector,
 } from './universal-ornaments';
 
@@ -34,17 +35,22 @@ export default function UniversalOrnaments({
 
   const defData = defs && buildSets(defs);
   const populatedData = useMemo(
-    () => defData && filterOrnamentSets(defData, createItemContext, searchQuery, searchFilter),
-    [createItemContext, defData, searchFilter, searchQuery]
+    () => defData && instantiateOrnamentSets(defData, createItemContext),
+    [createItemContext, defData]
   );
 
-  if (!populatedData) {
+  const filteredData = useMemo(
+    () => populatedData && filterOrnamentSets(populatedData, searchQuery, searchFilter),
+    [populatedData, searchFilter, searchQuery]
+  );
+
+  if (!filteredData) {
     return null;
   }
 
   return (
     <div className={styles.classType}>
-      {objectValues(populatedData).flatMap((sets) => (
+      {objectValues(filteredData).flatMap((sets) => (
         <CollapsibleTitle
           key={sets.classType}
           title={

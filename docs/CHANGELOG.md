@@ -1,5 +1,7 @@
 ## Next
 
+* Added a Universal Ornaments section to the Records page showing which legendary armor pieces you have unlocked as Transmog ornaments and which ones you could turn into ornaments.
+
 ## 7.87.0 <span class="changelog-date">(2023-09-24)</span>
 
 * Fixed the "Any Class" Loadout toggle not removing class-specific items.
