@@ -1,3 +1,5 @@
+import { compareBy } from 'app/utils/comparators';
+import { BungieMembershipType } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { AppIcon } from '../shell/icons';
 import styles from './Account.m.scss';
@@ -21,13 +23,16 @@ export default function Account({
       role="menuitem"
     >
       Destiny {account.destinyVersion}
-      {account.platforms.map((platformType, index) => (
-        <AppIcon
-          key={platformType}
-          className={clsx({ [styles.first]: index === 0 })}
-          icon={PLATFORM_ICONS[platformType]}
-        />
-      ))}
+      {account.platforms
+        .filter((p) => account.platforms.length > 1 && p !== BungieMembershipType.TigerStadia)
+        .sort(compareBy((p) => account.originalPlatformType !== p))
+        .map((platformType, index) => (
+          <AppIcon
+            key={platformType}
+            className={clsx({ [styles.first]: index === 0 })}
+            icon={PLATFORM_ICONS[platformType]}
+          />
+        ))}
     </div>
   );
 }
