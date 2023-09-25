@@ -11,7 +11,7 @@
     "test": "cross-env NODE_ENV=test jest --verbose",
     "lint": "run-p lint:*",
     "lint:eslint": "eslint src --ext .js,.ts,.tsx",
-    "lint:prettier": "prettier \"src/**/*.{js,ts,tsx,scss,html}\" --check",
+    "lint:prettier": "prettier \"src/**/*.{js,ts,tsx,scss}\" --check",
     "lint:stylelint": "stylelint \"src/**/*.scss\"",
     "lintcached": "run-p lintcached:*",
     "lintcached:eslint": "yarn lint:eslint --cache --cache-location .eslintcache --cache-strategy content",

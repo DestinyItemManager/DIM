@@ -89,6 +89,7 @@ export default (env: Env) => {
     entry: {
       main: './src/Index.tsx',
       browsercheck: './src/browsercheck.js',
+      earlyErrorReport: './src/earlyErrorReport.js',
       authReturn: './src/authReturn.ts',
     },
 
@@ -164,7 +165,7 @@ export default (env: Env) => {
       runtimeChunk: 'single',
       splitChunks: {
         chunks(chunk) {
-          return chunk.name !== 'browsercheck';
+          return chunk.name !== 'browsercheck' && chunk.name !== 'earlyErrorReport';
         },
         automaticNameDelimiter: '-',
       },
@@ -388,10 +389,10 @@ export default (env: Env) => {
 
     // TODO: prerender?
     new HtmlWebpackPlugin({
-      inject: true,
+      inject: false,
       filename: 'index.html',
       template: 'src/index.html',
-      chunks: ['main', 'browsercheck'],
+      chunks: ['earlyErrorReport', 'main', 'browsercheck'],
       templateParameters: {
         version,
         date: new Date(buildTime).toString(),
