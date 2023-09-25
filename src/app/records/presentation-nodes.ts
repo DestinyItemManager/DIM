@@ -445,9 +445,12 @@ function toRecords(
 export function toRecord(
   defs: D2ManifestDefinitions,
   profileResponse: DestinyProfileResponse,
-  recordHash: number
+  recordHash: number,
+  mayBeMissing?: boolean
 ): DimRecord | undefined {
-  const recordDef = defs.Record.get(recordHash);
+  const recordDef = mayBeMissing
+    ? defs.Record.getOptional(recordHash)
+    : defs.Record.get(recordHash);
   if (!recordDef) {
     return undefined;
   }

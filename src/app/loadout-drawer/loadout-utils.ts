@@ -795,14 +795,6 @@ export function isMissingItems(
   return false;
 }
 
-export function hasDeprecatedMods(loadout: Loadout, defs: D2ManifestDefinitions): boolean {
-  return Boolean(
-    loadout.parameters?.mods?.some(
-      (modHash) => deprecatedMods.includes(modHash) || !defs.InventoryItem.get(modHash)
-    )
-  );
-}
-
 /**
  * Returns a flat list of mods as PluggableInventoryItemDefinitions in the Loadout, by default including auto stat mods.
  * This INCLUDES both locked and unlocked mods; `unlockedPlugs` is used to identify if the expensive or cheap copy of an
@@ -833,6 +825,17 @@ const oldToNewMod: HashLookup<number> = {
   3253038666: 4287799666, // InventoryItem "Strength Mod"
 };
 
+export function hasDeprecatedMods(loadout: Loadout, defs: D2ManifestDefinitions): boolean {
+  return Boolean(
+    loadout.parameters?.mods?.some((modHash) => {
+      const migratedModHash = oldToNewMod[modHash] ?? modHash;
+      return (
+        deprecatedMods.includes(migratedModHash) || !defs.InventoryItem.getOptional(migratedModHash)
+      );
+    })
+  );
+}
+
 /**
  * Convert a list of plug item hashes into ResolvedLoadoutMods, which may not be
  * the same as the original hashes as we try to be smart about what the user meant.
@@ -849,7 +852,7 @@ export function resolveLoadoutModHashes(
     for (const originalModHash of modHashes) {
       const migratedModHash = oldToNewMod[originalModHash] ?? originalModHash;
       const resolvedModHash = mapToAvailableModCostVariant(migratedModHash, unlockedPlugs);
-      const item = defs.InventoryItem.get(resolvedModHash);
+      const item = defs.InventoryItem.getOptional(resolvedModHash);
       if (isPluggableItem(item)) {
         mods.push({ originalModHash, resolvedMod: item });
       } else {
