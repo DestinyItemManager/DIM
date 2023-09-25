@@ -1,5 +1,7 @@
 ## Next
 
+## 7.87.0 <span class="changelog-date">(2023-09-24)</span>
+
 * Fixed the "Any Class" Loadout toggle not removing class-specific items.
 * The tabs (Overview/Triage) in the item popup no longer scroll with their contents.
 * Hide the duplicate activity socket on some ghosts.
