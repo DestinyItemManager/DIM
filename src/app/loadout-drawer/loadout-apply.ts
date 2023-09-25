@@ -994,10 +994,11 @@ function applySocketOverrides(
                   if (idx !== -1) {
                     const overrideIndex = neededOverrides[idx].loadoutSocketIndex;
                     neededOverrides.splice(idx, 1);
-                    const mod = defs.InventoryItem.get(
-                      socket.plugged.plugDef.hash
-                    ) as PluggableInventoryItemDefinition;
-                    modsForItem.push({ socketIndex: socket.socketIndex, mod, requested: true });
+                    modsForItem.push({
+                      socketIndex: socket.socketIndex,
+                      mod: socket.plugged.plugDef,
+                      requested: true,
+                    });
                     itemSocketToLoadoutOverrideSocket[socket.socketIndex] = overrideIndex;
                   } else {
                     excessSockets.push(socket);
