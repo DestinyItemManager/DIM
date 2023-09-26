@@ -34,7 +34,6 @@ import { isClassCompatible, itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { deepEqual } from 'fast-equals';
-import { AnimatePresence, Tween, Variants, motion } from 'framer-motion';
 import { Dispatch, memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import {
@@ -69,12 +68,6 @@ import {
   LockableBucketHashes,
   loDefaultArmorEnergyRules,
 } from './types';
-
-const processingAnimateVariants: Variants = {
-  hidden: { opacity: 0, y: -50 },
-  shown: { opacity: 1, y: 0 },
-};
-const processingAnimateTransition: Tween = { ease: 'easeInOut', duration: 0.5 };
 
 /**
  * The Loadout Optimizer screen
@@ -250,7 +243,7 @@ export default memo(function LoadoutBuilder({
   );
 
   // Run the actual loadout generation process in a web worker
-  const { result, processing, remainingTime } = useProcess({
+  const { result, processing } = useProcess({
     defs,
     selectedStore,
     filteredItems,
@@ -408,35 +401,26 @@ export default memo(function LoadoutBuilder({
       </PageWithMenu.Menu>
 
       <PageWithMenu.Contents>
-        <AnimatePresence>
-          {processing && (
-            <motion.div
-              className={styles.processing}
-              initial="hidden"
-              animate="shown"
-              exit="hidden"
-              variants={processingAnimateVariants}
-              transition={processingAnimateTransition}
-            >
-              <div>
-                {t('LoadoutBuilder.ProcessingSets', {
-                  character: selectedStore.name,
-                  remainingTime: remainingTime || '??',
-                })}
-              </div>
-              <AppIcon icon={refreshIcon} spinning={true} />
-            </motion.div>
-          )}
-        </AnimatePresence>
         <div className={styles.toolbar}>
           <UserGuideLink topic="Loadout-Optimizer" />
-          {result && (
-            <div className={styles.speedReport}>
-              {t('LoadoutBuilder.SpeedReport', {
-                combos: result.combos,
-                time: (result.processTime / 1000).toFixed(2),
-              })}
-            </div>
+          {processing ? (
+            <span className={styles.speedReport} role="status">
+              <AppIcon icon={refreshIcon} spinning={true} />
+              <span>
+                {t('LoadoutBuilder.ProcessingSets', {
+                  character: selectedStore.name,
+                })}
+              </span>
+            </span>
+          ) : (
+            result && (
+              <span className={styles.speedReport} role="status">
+                {t('LoadoutBuilder.SpeedReport', {
+                  combos: result.combos,
+                  time: (result.processTime / 1000).toFixed(2),
+                })}
+              </span>
+            )
           )}
         </div>
         {!isPhonePortrait && (
