@@ -128,7 +128,7 @@ export default (env: Env) => {
           liveReload: false,
           headers: (req) => {
             // This mirrors what's in .htaccess - headers for html paths, COEP for JS.
-            return req.baseUrl.match(/^[^.]+$/)
+            const headers: Record<string, string | string[]> = req.baseUrl.match(/^[^.]+$/)
               ? {
                   'Content-Security-Policy': contentSecurityPolicy,
                   // credentialless is only supported by chrome but require-corp blocks Bungie.net messages
@@ -142,6 +142,8 @@ export default (env: Env) => {
                   //'Cross-Origin-Embedder-Policy': 'require-corp',
                 }
               : {};
+
+            return headers;
           },
         }
       : undefined,
