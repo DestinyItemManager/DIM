@@ -338,6 +338,7 @@ export default function Header() {
                     </a>
                   ) : null}
                   {dimLinks}
+                  <hr />
                   <MenuAccounts closeDropdown={hideDropdown} />
                 </ClickOutside>
               </motion.div>
