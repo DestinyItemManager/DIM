@@ -10,13 +10,14 @@ interface CssExports {
   'exotic': string;
   'failureReason': string;
   'header': string;
-  'itemPopup': string;
   'legendary': string;
   'mobileItemActions': string;
   'mobileMoveLocations': string;
   'movePopupDialog': string;
   'popupBackground': string;
   'rare': string;
+  'sheetClose': string;
+  'sheetHeader': string;
   'uncommon': string;
 }
 export const cssExports: CssExports;
