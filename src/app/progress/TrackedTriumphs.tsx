@@ -19,7 +19,9 @@ export function TrackedTriumphs({ searchQuery }: { searchQuery?: string }) {
   const recordHashes = trackedRecordHash
     ? [...new Set([trackedRecordHash, ...trackedTriumphs])]
     : trackedTriumphs;
-  let records = filterMap(recordHashes, (h) => toRecord(defs, profileResponse, h));
+  let records = filterMap(recordHashes, (h) =>
+    toRecord(defs, profileResponse, h, /* mayBeMissing */ true)
+  );
 
   if (searchQuery) {
     records = records.filter((r) =>

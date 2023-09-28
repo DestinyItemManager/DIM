@@ -107,6 +107,8 @@ export interface DefinitionTable<T> {
    * `requestor` ideally a string/number, or a definition including a "hash" key
    */
   readonly get: (hash: number, requestor?: { hash: number } | string | number) => T;
+  /** for lookups that frequently may reasonably fail due to def data removal */
+  readonly getOptional: (hash: number) => T | undefined;
   readonly getAll: () => { [hash: number]: T };
 }
 
@@ -196,7 +198,7 @@ export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
     defs[tableShort] = {
       get(id: number, requestor?: { hash: number } | string | number) {
         const dbEntry = dbTable[id];
-        if (!dbEntry && tableShort !== 'Record') {
+        if (!dbEntry) {
           // there are valid negative hashes that we have added ourselves via enhanceDBWithFakeEntries,
           // but other than that they should be whole & reasonable sized numbers
           if (id < 1 || !Number.isSafeInteger(id)) {
@@ -212,6 +214,9 @@ export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
           }
         }
         return dbEntry;
+      },
+      getOptional(id: number) {
+        return dbTable[id];
       },
       getAll() {
         return dbTable;
