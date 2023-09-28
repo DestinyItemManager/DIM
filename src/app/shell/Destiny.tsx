@@ -177,8 +177,8 @@ export default function Destiny() {
               : t('Accounts.ErrorLoadInventory', { version: account.destinyVersion })
           }
           error={profileError}
-          showTwitters={true}
-          showReload={true}
+          showSocials
+          showReload
         />
       </div>
     );

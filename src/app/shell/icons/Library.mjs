@@ -54,7 +54,6 @@ export const faTimesCircle = 'fas fa-times-circle';
 export const faWindowClose = 'fas fa-window-close';
 export const disabledIcon = faTimesCircle;
 export const deleteIcon = 'far fa-trash-alt';
-export const twitterIcon = 'fab fa-twitter';
 export const mastodonIcon = 'fab fa-mastodon';
 export const undoIcon = 'fas fa-undo';
 export const redoIcon = 'fas fa-redo';

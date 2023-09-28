@@ -10,7 +10,7 @@ export function StorageBroken() {
       <ErrorPanel
         title={t('Help.NoStorage')}
         fallbackMessage={t('Help.NoStorageMessage')}
-        showTwitters={true}
+        showSocials
       />
     </div>
   );
