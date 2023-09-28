@@ -129,8 +129,11 @@ function farmD1(store: D1Store, cancelToken: CancelToken): ThunkResult {
 function farmItems(store: D1Store, cancelToken: CancelToken): ThunkResult {
   const toMove = store.items.filter(
     (i) =>
+      !i.equipped &&
       !i.notransfer &&
-      (i.isEngram || (i.equipment && i.tier === 'Uncommon') || supplies.includes(i.hash))
+      (i.isEngram ||
+        (i.equipment && i.bucket.hash !== BucketHashes.Emblems && i.tier === 'Uncommon') ||
+        supplies.includes(i.hash))
   );
 
   if (toMove.length === 0) {
