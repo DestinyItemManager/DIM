@@ -79,10 +79,12 @@ export default function Plug({
           unreliablePerkOption={unreliablePerkOption}
           notSelected={notSelected}
         />
-      ) : (
+      ) : !(item.isExotic && item.bucket.inArmor) ? (
         <PressTip tooltip={<DimPlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} />}>
           <DefItemIcon itemDef={plug.plugDef} />
         </PressTip>
+      ) : (
+        <DefItemIcon itemDef={plug.plugDef} />
       )}
     </div>
   );
