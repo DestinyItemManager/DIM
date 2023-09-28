@@ -547,6 +547,8 @@
     "Scaled": "Scaled",
     "SearchAMod": "Search for mod name or description",
     "SearchAnExotic": "Search for exotic name or description",
+    "SelectModsCount": "{{selected}}/{{maxSelectable}}",
+    "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Activity Mods",
     "SelectExotic": "Select exotic",
     "SelectMods": "Select Mods",
     "SelectSubclassOptions": "Customize subclass",

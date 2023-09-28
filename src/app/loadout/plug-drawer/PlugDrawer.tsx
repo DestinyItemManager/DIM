@@ -33,8 +33,8 @@ interface Props {
   initialQuery?: string;
   /** The label for the "accept" button in the footer. */
   acceptButtonText: string;
-  /** A function to determine if a given plug is currently selectable. */
-  isPlugSelectable: (
+  /** A function to further refine whether a given plug is currently selectable. */
+  isPlugSelectable?: (
     plug: PluggableInventoryItemDefinition,
     selected: PluggableInventoryItemDefinition[]
   ) => boolean;
@@ -77,6 +77,27 @@ export default function PlugDrawer({
       set.plugs.findIndex((p) => p.hash === plug.hash)
     );
   const isPhonePortrait = useIsPhonePortrait();
+
+  const allSelectedPlugs = useMemo(
+    () => internalPlugSets.flatMap((set) => set.selected),
+    [internalPlugSets]
+  );
+
+  const countsByPlugSetHash = useMemo(
+    () =>
+      Object.fromEntries(
+        internalPlugSets.map((set) => [
+          set.plugSetHash,
+          [
+            set.getNumSelected?.(allSelectedPlugs) ?? set.selected.length,
+            typeof set.maxSelectable === 'number'
+              ? set.maxSelectable
+              : set.maxSelectable(allSelectedPlugs),
+          ] as const,
+        ])
+      ),
+    [allSelectedPlugs, internalPlugSets]
+  );
 
   const handlePlugSelected = useCallback(
     (
@@ -144,7 +165,7 @@ export default function PlugDrawer({
 
   const onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
     e.preventDefault();
-    onAccept(internalPlugSets.flatMap((plugSet) => plugSet.selected));
+    onAccept(allSelectedPlugs);
     onClose();
   };
 
@@ -163,12 +184,8 @@ export default function PlugDrawer({
   }, [query, internalPlugSets, defs, language]);
 
   const handleIsPlugSelectable = useCallback(
-    (plug: PluggableInventoryItemDefinition) =>
-      isPlugSelectable(
-        plug,
-        internalPlugSets.flatMap((plugSet) => plugSet.selected)
-      ),
-    [internalPlugSets, isPlugSelectable]
+    (plug: PluggableInventoryItemDefinition) => isPlugSelectable?.(plug, allSelectedPlugs) ?? true,
+    [allSelectedPlugs, isPlugSelectable]
   );
 
   const footer = ({ onClose }: { onClose: () => void }) => (
@@ -212,6 +229,8 @@ export default function PlugDrawer({
           key={plugSet.plugSetHash}
           plugSet={plugSet}
           classType={classType}
+          numSelected={countsByPlugSetHash[plugSet.plugSetHash][0]}
+          maxSelectable={countsByPlugSetHash[plugSet.plugSetHash][1]}
           isPlugSelectable={handleIsPlugSelectable}
           onPlugSelected={handlePlugSelected}
           onPlugRemoved={handlePlugRemoved}
