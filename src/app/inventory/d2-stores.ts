@@ -125,8 +125,8 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
     // The first time we load, allow the data to be loaded from IDB. We then do a second
     // load to make sure that we immediately try to get remote data.
     if (firstTime) {
-      firstTime = false;
       await dispatch(loadStoresData(account, firstTime));
+      firstTime = false;
     }
     const stores = await dispatch(loadStoresData(account, firstTime));
     return stores;
