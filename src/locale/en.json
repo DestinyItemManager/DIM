@@ -993,7 +993,8 @@
     "RecordBooks": "Record Books"
   },
   "Records": {
-    "Title": "Records"
+    "Title": "Records",
+    "UniversalOrnamentSetOther": "Other"
   },
   "SearchHistory": {
     "Date": "Last Used",

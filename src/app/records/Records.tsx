@@ -21,8 +21,10 @@ import {
   ownedItemsSelector,
   profileResponseSelector,
 } from '../inventory/selectors';
+import { UNIVERSAL_ORNAMENTS_NODE } from '../search/d2-known-values';
 import PresentationNodeRoot from './PresentationNodeRoot';
 import styles from './Records.m.scss';
+import UniversalOrnaments from './universal-ornaments/UniversalOrnaments';
 
 interface Props {
   account: DestinyAccount;
@@ -95,6 +97,9 @@ export default function Records({ account }: Props) {
       )
     : [];
 
+  const universalOrnamentsName =
+    defs.PresentationNode.get(UNIVERSAL_ORNAMENTS_NODE)?.displayProperties.name ?? '???';
+
   // We put the hashes we know about from profile first
   const nodeHashes = [...new Set([...profileHashes, ...otherHashes])];
 
@@ -106,6 +111,7 @@ export default function Records({ account }: Props) {
         id: `p_${nodeDef.hash}`,
         title: overrideTitles[nodeDef.hash] || nodeDef.displayProperties.name,
       })),
+    { id: 'universalOrnaments', title: universalOrnamentsName },
   ];
 
   return (
@@ -178,6 +184,13 @@ export default function Records({ account }: Props) {
               </CollapsibleTitle>
             </section>
           ))}
+        <section id="universalOrnaments">
+          <CollapsibleTitle title={universalOrnamentsName} sectionId="universalOrnaments">
+            <ErrorBoundary name={universalOrnamentsName}>
+              <UniversalOrnaments searchQuery={searchQuery} searchFilter={searchFilter} />
+            </ErrorBoundary>
+          </CollapsibleTitle>
+        </section>
       </PageWithMenu.Contents>
     </PageWithMenu>
   );
