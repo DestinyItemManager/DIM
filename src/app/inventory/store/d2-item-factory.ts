@@ -1,6 +1,7 @@
 import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { t } from 'app/i18next-t';
+import { createCollectibleFinder } from 'app/records/collectible-matching';
 import {
   D2ItemTiers,
   THE_FORBIDDEN_BUCKET,
@@ -39,7 +40,6 @@ import extendedBreaker from 'data/d2/extended-breaker.json';
 import extendedFoundry from 'data/d2/extended-foundry.json';
 import extendedICH from 'data/d2/extended-ich.json';
 import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
-import extraItemCollectibles from 'data/d2/unreferenced-collections-items.json';
 import { Draft } from 'immer';
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
@@ -59,10 +59,6 @@ import { buildObjectives, isTrialsPassage, isWinsObjective } from './objectives'
 import { buildPatternInfo } from './patterns';
 import { buildSockets } from './sockets';
 import { buildStats } from './stats';
-
-const extraItemsToCollectibles = _.mapValues(_.invert(extraItemCollectibles), (val) =>
-  parseInt(val, 10)
-);
 
 const collectiblesByItemHash = memoizeOne(
   (Collectible: ReturnType<D2ManifestDefinitions['Collectible']['getAll']>) =>
@@ -396,7 +392,7 @@ export function makeItem(
     itemDef.iconWatermarkShelved ||
     undefined;
 
-  const collectibleHash = itemDef.collectibleHash ?? extraItemsToCollectibles[itemDef.hash];
+  const collectibleHash = createCollectibleFinder(defs)(itemDef);
   // Do we need this now?
   const source = collectibleHash
     ? defs.Collectible.get(collectibleHash, itemDef.hash)?.sourceHash

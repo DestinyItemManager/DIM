@@ -7,13 +7,14 @@ import { ItemCreationContext, makeFakeItem } from 'app/inventory/store/d2-item-f
 import { ARMOR_NODE, DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { filterMap } from 'app/utils/util';
-import { DestinyClass, DestinyPresentationNodeDefinition } from 'bungie-api-ts/destiny2';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import auxOrnamentSets from 'data/d2/universal-ornament-aux-sets.json';
 import universalOrnamentPlugSetHashes from 'data/d2/universal-ornament-plugset-hashes.json';
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
 import { createSelector } from 'reselect';
+import { createCollectibleFinder } from '../collectible-matching';
 
 export interface OrnamentsSet<T = number> {
   /** Name of the ornament set */
@@ -125,27 +126,21 @@ function identifyPlugSets(defs: D2ManifestDefinitions): { [classType: number]: n
  * using presentation node / collectible defs.
  */
 export const buildSets = memoizeOne((defs: D2ManifestDefinitions): OrnamentsData => {
-  const collectPresentationNodes = (
-    nodeHash: number,
-    list: DestinyPresentationNodeDefinition[]
-  ) => {
-    const def = defs.PresentationNode.get(nodeHash);
-    if (def && !def.redacted) {
-      if (def.children.collectibles.length) {
-        list.push(def);
-      }
-      for (const childNode of def.children.presentationNodes) {
-        collectPresentationNodes(childNode.presentationNodeHash, list);
-      }
-    }
-    return list;
-  };
-
   const plugSetHashes = identifyPlugSets(defs);
+  const collectibleFinder = createCollectibleFinder(defs);
   const data: OrnamentsData = {
     [DestinyClass.Titan]: { classType: DestinyClass.Titan, sets: {}, name: '', icon: '' },
     [DestinyClass.Hunter]: { classType: DestinyClass.Hunter, sets: {}, name: '', icon: '' },
     [DestinyClass.Warlock]: { classType: DestinyClass.Warlock, sets: {}, name: '', icon: '' },
+  };
+
+  const findCollectibleArmorParentNode = (collectibleHash: number | undefined) => {
+    if (collectibleHash) {
+      const collectible = defs.Collectible.get(collectibleHash);
+      return collectible.parentNodeHashes
+        ?.map((nodeHash) => defs.PresentationNode.get(nodeHash))
+        .find((node) => node.children.collectibles?.length <= 5);
+    }
   };
 
   // The Titan / Hunter / Warlock presentation nodes as children of the Armor node. NB hardcoded order here...
@@ -158,9 +153,9 @@ export const buildSets = memoizeOne((defs: D2ManifestDefinitions): OrnamentsData
     const relevantPlugSetHashes = plugSetHashes[classType];
     const classNode = classPresentationNodes[classType];
     const classNodeDef = defs.PresentationNode.get(classNode.presentationNodeHash);
-    const relevantPresentationNodes = collectPresentationNodes(classNode.presentationNodeHash, []);
     data[classType].name = classNodeDef.displayProperties.name;
     data[classType].icon = classNodeDef.displayProperties.icon;
+    const auxSets = Object.entries(auxOrnamentSets[classType]);
 
     const otherItems: number[] = [];
 
@@ -174,71 +169,37 @@ export const buildSets = memoizeOne((defs: D2ManifestDefinitions): OrnamentsData
           continue;
         }
         const item = defs.InventoryItem.get(entry.plugItemHash);
-        if (item && !item.redacted) {
-          // If the plugSetItem has a collectible as its collectibleHash,
-          // we have a certain match.
-          let node = relevantPresentationNodes.find((i) =>
-            i.children.collectibles.some(
-              (collectible) => collectible.collectibleHash === item.collectibleHash
-            )
-          );
-          if (!node) {
-            // Tons of reissued armor sets end up with an ornament set
-            // that is different from the set that actually has the collectible entries,
-            // so find a collectible that has the same name.
-            node = relevantPresentationNodes.find((i) =>
-              i.children.collectibles.some((collectible) => {
-                const collectibleDef = defs.Collectible.get(collectible.collectibleHash);
-                return collectibleDef?.displayProperties.name.startsWith(
-                  item.displayProperties.name
-                );
-              })
-            );
-          }
-          if (!node) {
-            // Y1 Trials / Prophecy: Bond Judgment vs. Judgement's Wrap
-            // The collectible icon will be different, but reference an item
-            // where the icon matches our icon
-            node = relevantPresentationNodes.find((i) =>
-              i.children.collectibles.some((collectible) => {
-                const collectibleDef = defs.Collectible.get(collectible.collectibleHash);
-                const reverseItemDef =
-                  collectibleDef && defs.InventoryItem.get(collectibleDef.itemHash);
-                return reverseItemDef?.displayProperties.icon === item.displayProperties.icon;
-              })
-            );
-          }
-          if (node) {
-            // Some sets will be mapped to the same presentation node - find things that are categorically different
-            // 1. whether the plug is a proper armor piece too, or just a modification
-            // 2. season (via iconWatermark)
-            // 3. whether the item has a collectibleHash
-            const setKey = `${node.hash}-${
-              item.inventory?.bucketTypeHash === BucketHashes.Modifications
-            }-${item.iconWatermark}-${Boolean(item.collectibleHash)}`;
-            (data[classType].sets[setKey] ??= {
-              key: setKey,
-              name: node.displayProperties.name,
+        if (item) {
+          // d2ai may have categorized this into its own armor set.
+          // Add it using the d2ai-generated set key.
+          const auxEntry = auxSets.find(([, set]) => set.some((hash) => hash === item.hash));
+          if (auxEntry) {
+            const [key] = auxEntry;
+            (data[classType].sets[key] ??= {
+              key,
+              name: '',
               ornaments: [],
             }).ornaments.push(item.hash);
+            if (item.inventory?.bucketTypeHash === BucketHashes.ClassArmor) {
+              // And use the class item as the set name as Bungie used this workaround
+              // too for the 2023 Solstice sets
+              data[classType].sets[key].name = item.displayProperties.name;
+            }
           } else {
-            const entry = Object.entries(auxOrnamentSets[classType]).find(([, set]) =>
-              set.some((hash) => hash === item.hash)
-            );
-            if (entry) {
-              // Otherwise, d2ai may have categorized this into its own armor set.
-              // Add it using the d2ai-generated set key.
-              const [key] = entry;
-              (data[classType].sets[key] ??= {
-                key,
-                name: '',
+            const node = findCollectibleArmorParentNode(collectibleFinder(item, classType));
+            if (node) {
+              // Some sets will be mapped to the same presentation node - find things that are categorically different
+              // 1. whether the plug is a proper armor piece too, or just a modification
+              // 2. season (via iconWatermark)
+              // 3. whether the item has a collectibleHash
+              const setKey = `${node.hash}-${
+                item.inventory?.bucketTypeHash === BucketHashes.Modifications
+              }-${item.iconWatermark}-${Boolean(item.collectibleHash)}`;
+              (data[classType].sets[setKey] ??= {
+                key: setKey,
+                name: node.displayProperties.name,
                 ornaments: [],
               }).ornaments.push(item.hash);
-              if (item.inventory?.bucketTypeHash === BucketHashes.ClassArmor) {
-                // And use the class item as the set name as Bungie used this workaround
-                // too for the 2023 Solstice sets
-                data[classType].sets[key].name = item.displayProperties.name;
-              }
             } else {
               otherItems.push(item.hash);
             }
