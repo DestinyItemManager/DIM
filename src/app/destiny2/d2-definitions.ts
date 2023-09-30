@@ -53,7 +53,14 @@ import { HashLookupFailure, ManifestDefinitions } from './definitions';
 
 type ManifestTablesShort = Exclude<keyof D2ManifestDefinitions, 'isDestiny1' | 'isDestiny2'>;
 
-const lazyTables: ManifestTablesShort[] = [
+export const allTables: ManifestTablesShort[] = [
+  'InventoryBucket',
+  'Class',
+  'Gender',
+  'Race',
+  'Faction',
+  'ItemTierType',
+  'ActivityMode',
   'InventoryItem',
   'Objective',
   'SandboxPerk',
@@ -83,23 +90,12 @@ const lazyTables: ManifestTablesShort[] = [
   'PowerCap',
   'BreakerType',
   'EventCard',
+  'LoadoutConstants',
   'LoadoutName',
   'LoadoutIcon',
   'LoadoutColor',
 ];
 
-const eagerTables: ManifestTablesShort[] = [
-  'InventoryBucket',
-  'Class',
-  'Gender',
-  'Race',
-  'Faction',
-  'ItemTierType',
-  'ActivityMode',
-  'LoadoutConstants',
-];
-
-/** These aren't really lazy */
 export interface DefinitionTable<T> {
   /**
    * for troubleshooting/questionable lookups, include second arg
@@ -113,6 +109,13 @@ export interface DefinitionTable<T> {
 }
 
 export interface D2ManifestDefinitions extends ManifestDefinitions {
+  InventoryBucket: DefinitionTable<DestinyInventoryBucketDefinition>;
+  Class: DefinitionTable<DestinyClassDefinition>;
+  Gender: DefinitionTable<DestinyGenderDefinition>;
+  Race: DefinitionTable<DestinyRaceDefinition>;
+  Faction: DefinitionTable<DestinyFactionDefinition>;
+  ItemTierType: DefinitionTable<DestinyItemTierTypeDefinition>;
+  ActivityMode: DefinitionTable<DestinyActivityModeDefinition>;
   InventoryItem: DefinitionTable<DestinyInventoryItemDefinition>;
   Objective: DefinitionTable<DestinyObjectiveDefinition>;
   SandboxPerk: DefinitionTable<DestinySandboxPerkDefinition>;
@@ -142,21 +145,11 @@ export interface D2ManifestDefinitions extends ManifestDefinitions {
   DamageType: DefinitionTable<DestinyDamageTypeDefinition>;
   Collectible: DefinitionTable<DestinyCollectibleDefinition>;
   EventCard: DefinitionTable<DestinyEventCardDefinition>;
+  LoadoutConstants: DefinitionTable<DestinyLoadoutConstantsDefinition>;
   LoadoutName: DefinitionTable<DestinyLoadoutNameDefinition>;
   LoadoutColor: DefinitionTable<DestinyLoadoutColorDefinition>;
   LoadoutIcon: DefinitionTable<DestinyLoadoutIconDefinition>;
-
-  InventoryBucket: { [hash: number]: DestinyInventoryBucketDefinition };
-  Class: { [hash: number]: DestinyClassDefinition };
-  Gender: { [hash: number]: DestinyGenderDefinition };
-  Race: { [hash: number]: DestinyRaceDefinition };
-  Faction: { [hash: number]: DestinyFactionDefinition };
-  ItemTierType: { [hash: number]: DestinyItemTierTypeDefinition };
-  ActivityMode: { [hash: number]: DestinyActivityModeDefinition };
-  LoadoutConstants: { [hash: number]: DestinyLoadoutConstantsDefinition };
 }
-
-export const allTables = [...eagerTables, ...lazyTables];
 
 /**
  * Manifest database definitions. This returns a promise for an
@@ -188,7 +181,7 @@ export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
     isDestiny2: () => true,
   };
 
-  for (const tableShort of lazyTables) {
+  for (const tableShort of allTables) {
     const table = `Destiny${tableShort}Definition` as const;
     const dbTable = db[table];
     if (!dbTable) {
@@ -222,11 +215,6 @@ export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
         return dbTable;
       },
     };
-  }
-  // Resources that need to be fully loaded (because they're iterated over)
-  for (const tableShort of eagerTables) {
-    const table = `Destiny${tableShort}Definition` as const;
-    defs[tableShort] = db[table];
   }
 
   return defs as D2ManifestDefinitions;

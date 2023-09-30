@@ -89,7 +89,7 @@ export function getBuckets(defs: D1ManifestDefinitions) {
       this.byCategory[this.unknown.sort!] = [this.unknown];
     },
   };
-  for (const def of Object.values(defs.InventoryBucket)) {
+  for (const def of Object.values(defs.InventoryBucket.getAll())) {
     if (def.enabled) {
       const type = bucketToType[def.hash];
       const sort = bucketHashToSort[def.hash] ?? vaultTypes[def.hash];
