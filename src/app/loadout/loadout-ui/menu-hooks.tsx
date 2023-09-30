@@ -1,18 +1,22 @@
 import { LoadoutSort } from '@destinyitemmanager/dim-api-types';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
-import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import FilterPills, { Option } from 'app/dim-ui/FilterPills';
+import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { DimLanguage } from 'app/i18n';
 import { t } from 'app/i18next-t';
+import { DimItem } from 'app/inventory/item-types';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { loadoutIssuesSelector } from 'app/loadout-drawer/loadouts-selector';
+import { ThingFilterFactory } from 'app/search/filter-types';
+import { plainString } from 'app/search/search-filters/freeform';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { localizedIncludes, localizedSorter } from 'app/utils/intl';
 import _ from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { FullyResolvedLoadout } from '../ingame/selectors';
 
 /**
  * Set up the filter pills for loadouts - allowing for filtering by hashtag and some other special properties.
@@ -194,23 +198,29 @@ function useLoadoutFilterPillsInternal(
  */
 export function searchAndSortLoadoutsByQuery(
   loadouts: Loadout[],
-  query: string,
+  fullyResolvedLoadouts: FullyResolvedLoadout[],
+  thingFilterFactory: ThingFilterFactory<DimItem>,
   language: DimLanguage,
   loadoutSort: LoadoutSort
-) {
-  let filteredLoadouts: Loadout[];
-  if (query.length) {
-    const includes = localizedIncludes(language, query);
-    filteredLoadouts = loadouts.filter(
-      (loadout) => includes(loadout.name) || (loadout.notes && includes(loadout.notes))
+): Loadout[] {
+  const frLoadoutsById = _.keyBy(fullyResolvedLoadouts, (l) => l.loadout.id);
+  const matchLoadout = (loadout: Loadout, keyword: string) => {
+    const includes = localizedIncludes(language, keyword);
+    return (
+      includes(plainString(loadout.name, language)) ||
+      Boolean(loadout.notes && includes(plainString(loadout.notes, language)))
     );
-  } else {
-    filteredLoadouts = [...loadouts];
-  }
+  };
 
-  return filteredLoadouts.sort(
-    loadoutSort === LoadoutSort.ByEditTime
-      ? compareBy((l) => -(l.lastUpdatedAt ?? 0))
-      : localizedSorter(language, (l) => l.name)
+  const filter = thingFilterFactory(
+    (l) => frLoadoutsById[l.id].resolvedLoadoutItems.map((l) => l.item),
+    matchLoadout
   );
+  return loadouts
+    .filter(filter)
+    .sort(
+      loadoutSort === LoadoutSort.ByEditTime
+        ? compareBy((l) => -(l.lastUpdatedAt ?? 0))
+        : localizedSorter(language, (l) => l.name)
+    );
 }

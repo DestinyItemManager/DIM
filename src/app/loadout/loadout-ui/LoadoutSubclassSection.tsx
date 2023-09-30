@@ -34,13 +34,14 @@ export default function LoadoutSubclassSection({
       >
         {subclass ? (
           <DraggableInventoryItem item={subclass.item}>
-            <ItemPopupTrigger item={subclass.item}>
+            <ItemPopupTrigger
+              item={subclass.item}
+              extraData={{ socketOverrides: subclass.loadoutItem.socketOverrides }}
+            >
               {(ref, onClick) => (
                 <ConnectedInventoryItem
                   innerRef={ref}
-                  // Disable the popup when plugs are available as we are showing
-                  // plugs in the loadout and they may be different to the popup
-                  onClick={plugs.length ? undefined : onClick}
+                  onClick={onClick}
                   item={subclass.item}
                   // don't show the selected Super ability because we are displaying the Super ability plug next
                   // to the subclass icon
