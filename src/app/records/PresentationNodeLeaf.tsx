@@ -19,13 +19,11 @@ import {
 export default function PresentationNodeLeaf({
   node,
   ownedItemHashes,
-  completedRecordsHidden,
   redactedRecordsRevealed,
   sortRecordProgression,
 }: {
   node: DimPresentationNodeLeaf;
   ownedItemHashes?: Set<number>;
-  completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
   sortRecordProgression: boolean;
 }) {
@@ -48,7 +46,6 @@ export default function PresentationNodeLeaf({
       {node.records && node.records.length > 0 && (
         <RecordGrid
           records={sortRecordProgression ? sortRecords(node.records) : node.records}
-          completedRecordsHidden={completedRecordsHidden}
           redactedRecordsRevealed={redactedRecordsRevealed}
         />
       )}

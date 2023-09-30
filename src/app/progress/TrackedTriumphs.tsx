@@ -54,7 +54,5 @@ export function TrackedTriumphs({ searchQuery }: { searchQuery?: string }) {
     );
   }
 
-  return (
-    <RecordGrid records={records} completedRecordsHidden={false} redactedRecordsRevealed={true} />
-  );
+  return <RecordGrid records={records} redactedRecordsRevealed={true} />;
 }

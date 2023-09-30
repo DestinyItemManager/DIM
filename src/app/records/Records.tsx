@@ -179,6 +179,7 @@ export default function Records({ account }: Props) {
                     overrideName={overrideTitles[nodeDef.hash]}
                     isTriumphs={nodeDef.hash === recordsRootHash}
                     showPlugSets={nodeDef.hash === collectionsRootHash}
+                    completedRecordsHidden={completedRecordsHidden}
                   />
                 </ErrorBoundary>
               </CollapsibleTitle>
