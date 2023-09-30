@@ -29,7 +29,7 @@ import {
 import { FilterDefinition } from '../filter-types';
 import { plainString } from './freeform';
 
-export const modslotFilter: FilterDefinition = {
+export const modslotFilter = {
   keywords: 'modslot',
   description: tl('Filter.ModSlot'),
   format: 'query',
@@ -58,7 +58,7 @@ export const modslotFilter: FilterDefinition = {
       getInterestingSocketMetadatas(item)?.map((m) => `modslot:${m.slotTag}`) ?? [];
     return modSocketTags.join(' ');
   },
-};
+} satisfies FilterDefinition;
 
 const socketFilters: FilterDefinition[] = [
   modslotFilter,
