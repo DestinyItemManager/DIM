@@ -229,7 +229,8 @@ export function filterToUnacquired(ownedItemHashes: Set<number>): VendorFilterFu
     !owned &&
     (collectibleState !== undefined
       ? (collectibleState & DestinyCollectibleState.NotAcquired) !== 0
-      : item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Mod) &&
+      : (item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Mod) ||
+          item.itemCategoryHashes.includes(ItemCategoryHashes.Shaders)) &&
         !ownedItemHashes.has(item.hash));
 }
 
