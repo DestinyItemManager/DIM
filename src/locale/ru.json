@@ -542,6 +542,8 @@
     "SearchAnExotic": "Поиск по имени экзота или описанию",
     "SelectExotic": "Выбрать экзот",
     "SelectMods": "Выбрать моды",
+    "SelectModsCount": "{{selected}}/{{maxSelectable}}",
+    "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Activity Mods",
     "SelectSubclassOptions": "Настройка подкласса",
     "ShowAllConfigs": "Показать все настройки",
     "ShowConfigs": "Показать настройки",
@@ -613,7 +615,7 @@
     "OptimizerExplanationSearch": "Используйте строку поиска, чтобы сузить выбор брони на рассмотрение. Если никакая броня в слоте не подходит под поиск, то вся броня в этом слоте будет рассмотрена.",
     "OptimizerExplanationStats": "Перетащите самые важные характеристики наверх, а всем не интересующим установите значение \"Не учитывать\".",
     "OptimizerSet": "Набор Оптимизатора",
-    "ProcessingSets": "Обрабатываем наборы для {{character}} ({{remainingTime}}сек)",
+    "ProcessingSets": "Finding highest tier sets...",
     "SaveAs": "Сохранить как",
     "SelectMax": "- Макс. -",
     "SelectMin": "- Мин. -",
@@ -991,7 +993,8 @@
     "RecordBooks": "Таблица Рекордов"
   },
   "Records": {
-    "Title": "Записи"
+    "Title": "Записи",
+    "UniversalOrnamentSetOther": "Other"
   },
   "SearchHistory": {
     "Date": "Дата последнего Поиска",

@@ -542,6 +542,8 @@
     "SearchAnExotic": "Buscar por nombre de exótico o descripción",
     "SelectExotic": "Selecciona exótico",
     "SelectMods": "Seleccione Modificadores",
+    "SelectModsCount": "{{selected}}/{{maxSelectable}}",
+    "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Modificadores de Actividad",
     "SelectSubclassOptions": "Personalizar subclase",
     "ShowAllConfigs": "Mostrar todas las configuraciones",
     "ShowConfigs": "Mostrar configuraciones",
@@ -613,7 +615,7 @@
     "OptimizerExplanationSearch": "Usa la barra de búsqueda para limitar la armadura a considerar. Si ninguna armadura coincide con la búsqueda en la ranura, toda la armadura en esa ranura será considerada.",
     "OptimizerExplanationStats": "Arrastra las estadísticas más importantes arriba, y el set de estadísticas que no te importen a Ignorar.",
     "OptimizerSet": "Set Optimizador",
-    "ProcessingSets": "Procesando equipaciones para {{character}} ({{remainingTime}}segundos)",
+    "ProcessingSets": "Buscando las equipaciones de nivel más altas...",
     "SaveAs": "Guardar como",
     "SelectMax": "- Máximo -",
     "SelectMin": "- Mínimo -",
@@ -991,7 +993,8 @@
     "RecordBooks": "Libros de hazañas"
   },
   "Records": {
-    "Title": "Hazañas"
+    "Title": "Hazañas",
+    "UniversalOrnamentSetOther": "Otro"
   },
   "SearchHistory": {
     "Date": "Último Usado",

@@ -542,6 +542,8 @@
     "SearchAnExotic": "Busca pelo nome ou descrição do exótico",
     "SelectExotic": "Selecionar exótico",
     "SelectMods": "Selecionar mods",
+    "SelectModsCount": "{{selected}}/{{maxSelectable}}",
+    "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Mods de Atividade",
     "SelectSubclassOptions": "Personalizar subclasse",
     "ShowAllConfigs": "Exibir todas as configurações",
     "ShowConfigs": "Exibir configurações",
@@ -613,7 +615,7 @@
     "OptimizerExplanationSearch": "Use a barra de pesquisa para restringir qual armadura deve ser considerada. Se nenhuma armadura corresponder à busca em um slot, todas as armaduras desse slot serão consideradas.",
     "OptimizerExplanationStats": "Arraste os atributos mais importantes para o topo, e escolha também os atributos que podem ser ignorados.",
     "OptimizerSet": "Set do Otimizador",
-    "ProcessingSets": "Processando sets para\n{{character}} ({{remainingTime}}s)",
+    "ProcessingSets": "Encontrando os sets de maior nível...",
     "SaveAs": "Salvar como",
     "SelectMax": "- Máx -",
     "SelectMin": "- Mín -",
@@ -991,7 +993,8 @@
     "RecordBooks": "Livro de Recordes"
   },
   "Records": {
-    "Title": "Registros"
+    "Title": "Registros",
+    "UniversalOrnamentSetOther": "Outros"
   },
   "SearchHistory": {
     "Date": "Último uso",

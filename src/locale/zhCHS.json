@@ -301,7 +301,7 @@
     "StatLower": "显示相比其他同类别护甲而言属性全面更低的护甲。",
     "Stats": "按某个属性值显示物品。$t(Filter.StatsExtras)",
     "StatsBase": "按基础属性值筛选护甲，不包含附加模组或大师杰作属性。$t(Filter.StatsExtras)",
-    "StatsExtras": "可使用 + 或 & 符号来筛选多种属性组合。也根据装备属性高低顺序使用关键字筛选最高(highest)、次高(secondhighest)、第三高(thirdhighest) 等。每个自选属性也有各自的搜索关键词，显示在自选属性设置中。",
+    "StatsExtras": "可使用 + 或 & 符号来筛选多种属性组合。也可根据装备属性高低顺序使用关键字筛选最高(highest)、次高(secondhighest)、第三高(thirdhighest) 等。每个自选属性也有各自的搜索关键词，在自选属性设置中显示。",
     "StatsLoadout": "针对特定属性, 筛选出最大化数值的一系列装备",
     "StatsMax": "针对特定属性, 筛选出最大化数值的一系列装备. 包括那些最高属性值物品",
     "Tags": {
@@ -542,6 +542,8 @@
     "SearchAnExotic": "搜索异域装备名称或描述",
     "SelectExotic": "选择异域装备",
     "SelectMods": "选择模组",
+    "SelectModsCount": "{{selected}}/{{maxSelectable}}",
+    "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} 个活动模组",
     "SelectSubclassOptions": "自定义子职业",
     "ShowAllConfigs": "显示所有配置",
     "ShowConfigs": "显示配置",
@@ -613,7 +615,7 @@
     "OptimizerExplanationSearch": "使用搜索栏来缩小护甲的考虑范围。如果未有护甲与搜索结果匹配，则该部位的所有护甲都将被考虑。",
     "OptimizerExplanationStats": "将最重要的属性拖动到顶部，并将你不在乎的属性设为忽略。",
     "OptimizerSet": "优化器组合",
-    "ProcessingSets": "正在处理{{character}}的组合（{{remainingTime}} s）",
+    "ProcessingSets": "寻找最高阶属性配装...",
     "SaveAs": "保存为",
     "SelectMax": "-最大-",
     "SelectMin": "-最小-",
@@ -991,7 +993,8 @@
     "RecordBooks": "记事本"
   },
   "Records": {
-    "Title": "记录"
+    "Title": "记录",
+    "UniversalOrnamentSetOther": "其他"
   },
   "SearchHistory": {
     "Date": "最近使用",
