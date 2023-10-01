@@ -39,7 +39,7 @@ $control-color: rgba(255, 255, 255, 0.5);
     flex: 1;
   }
 
-  h1 {
+  :where(h1) {
     @include destiny-header;
     font-size: 16px;
     margin: 0 0 8px 0;
