@@ -54,13 +54,6 @@ import { HashLookupFailure, ManifestDefinitions } from './definitions';
 type ManifestTablesShort = Exclude<keyof D2ManifestDefinitions, 'isDestiny1' | 'isDestiny2'>;
 
 export const allTables: ManifestTablesShort[] = [
-  'InventoryBucket',
-  'Class',
-  'Gender',
-  'Race',
-  'Faction',
-  'ItemTierType',
-  'ActivityMode',
   'InventoryItem',
   'Objective',
   'SandboxPerk',
@@ -90,10 +83,17 @@ export const allTables: ManifestTablesShort[] = [
   'PowerCap',
   'BreakerType',
   'EventCard',
-  'LoadoutConstants',
   'LoadoutName',
   'LoadoutIcon',
   'LoadoutColor',
+  'InventoryBucket',
+  'Class',
+  'Gender',
+  'Race',
+  'Faction',
+  'ItemTierType',
+  'ActivityMode',
+  'LoadoutConstants',
 ];
 
 export interface DefinitionTable<T> {
