@@ -1,5 +1,7 @@
 ## Next
 
+## 7.88.0 <span class="changelog-date">(2023-10-01)</span>
+
 * Added a Universal Ornaments section to the Records page showing which legendary armor pieces you have unlocked as Transmog ornaments and which ones you could turn into ornaments.
 * "Only show uncollected items" now correctly identifies some shaders that it missed before.
 * Removed Stadia from the list of accounts shown in the accounts list, and moved the Cross-Save primary platform to the front of the list.
