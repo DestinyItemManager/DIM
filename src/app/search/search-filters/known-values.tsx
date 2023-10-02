@@ -51,7 +51,7 @@ const itemCategoryHashesByName: { [key: string]: number } = {
   ...D2ItemCategoryHashesByName,
 };
 
-export const damageFilter: FilterDefinition = {
+export const damageFilter = {
   keywords: damageTypeNames,
   description: tl('Filter.DamageType'),
   filter:
@@ -59,9 +59,9 @@ export const damageFilter: FilterDefinition = {
     (item) =>
       getItemDamageShortName(item) === filterValue,
   fromItem: (item) => `is:${getItemDamageShortName(item)}`,
-};
+} satisfies FilterDefinition;
 
-export const classFilter: FilterDefinition = {
+export const classFilter = {
   keywords: ['titan', 'hunter', 'warlock'],
   description: tl('Filter.Class'),
   filter: ({ filterValue }) => {
@@ -70,9 +70,9 @@ export const classFilter: FilterDefinition = {
   },
   fromItem: (item) =>
     item.classType === DestinyClass.Unknown ? '' : `is:${classes[item.classType]}`,
-};
+} satisfies FilterDefinition;
 
-export const itemTypeFilter: FilterDefinition = {
+export const itemTypeFilter = {
   keywords: Object.values(D2Categories) // stuff like Engrams, Kinetic, Gauntlets, Emblems, Finishers, Modifications
     .flat()
     .map((v) => {
@@ -88,9 +88,9 @@ export const itemTypeFilter: FilterDefinition = {
     (item) =>
       item.type.toLowerCase() === filterValue,
   fromItem: (item) => `is:${item.type.toLowerCase()}`,
-};
+} satisfies FilterDefinition;
 
-export const itemCategoryFilter: FilterDefinition = {
+export const itemCategoryFilter = {
   keywords: [...Object.keys(itemCategoryHashesByName), 'grenadelauncher'],
   description: tl('Filter.WeaponType'),
   filter: ({ filterValue }) => {
@@ -123,7 +123,7 @@ export const itemCategoryFilter: FilterDefinition = {
     }
     return '';
   },
-};
+} satisfies FilterDefinition;
 
 const knownValuesFilters: FilterDefinition[] = [
   damageFilter,

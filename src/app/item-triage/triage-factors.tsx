@@ -49,7 +49,7 @@ const itemFactors: Record<string, Factor> = {
     render: () => null,
     // let's probably not show class icon for now. just invisibly include it in the considerations.
     // render: (item) => (<PressTip minimal elementType="span" tooltip={item.classTypeNameLocalized}><ClassIcon classType={item.classType} className={styles.classIcon} /></PressTip>),
-    filter: classFilter.fromItem!,
+    filter: classFilter.fromItem,
   },
   name: {
     id: 'name',
@@ -70,13 +70,13 @@ const itemFactors: Record<string, Factor> = {
         <ElementIcon className={clsx(styles.factorIcon)} element={item.element} />
       </PressTip>
     ),
-    filter: damageFilter.fromItem!,
+    filter: damageFilter.fromItem,
   },
   weaponType: {
     id: 'weaponType',
     runIf: (item) => item.bucket.inWeapons,
     render: (item) => <WeaponTypeIcon item={item} className={styles.inlineIcon2} />,
-    filter: itemCategoryFilter.fromItem!,
+    filter: itemCategoryFilter.fromItem,
   },
   specialtySocket: {
     id: 'specialtySocket',
@@ -120,7 +120,7 @@ const itemFactors: Record<string, Factor> = {
       const largePerkFilterString =
         intrinsicPerk &&
         `perkname:${quoteFilterString(intrinsicPerk.plugDef.displayProperties.name)}`;
-      const modSlotFilterString = modslotFilter.fromItem!(item);
+      const modSlotFilterString = modslotFilter.fromItem(item);
       return [largePerkFilterString, modSlotFilterString].filter(Boolean).join(' ');
     },
   },
@@ -130,7 +130,7 @@ const itemFactors: Record<string, Factor> = {
     render: (item) => (
       <ArmorSlotIcon item={item} className={clsx(styles.inlineIcon2, styles.factorIcon)} />
     ),
-    filter: itemTypeFilter.fromItem!,
+    filter: itemTypeFilter.fromItem,
   },
   archetype: {
     id: 'archetype',

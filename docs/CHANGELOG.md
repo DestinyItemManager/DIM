@@ -2,6 +2,7 @@
 
 * "Hide completed triumphs" on the Records page now also hides sections and seals where all triumphs have been completed, not only the triumphs themselves.
 * The Vendors page should now more reliably indicate whether armor sold by Ada-1 is unlocked in collections.
+* Comparing a legendary armor piece now starts the Compare view with similar armor based on intrinsic perk and activity mod slot.
 
 ## 7.88.0 <span class="changelog-date">(2023-10-01)</span>
 
