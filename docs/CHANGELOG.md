@@ -1,5 +1,7 @@
 ## Next
 
+* "Hide completed triumphs" on the Records page now also hides sections and seals where all triumphs have been completed, not only the triumphs themselves.
+
 ## 7.88.0 <span class="changelog-date">(2023-10-01)</span>
 
 * Added a Universal Ornaments section to the Records page showing which legendary armor pieces you have unlocked as Transmog ornaments and which ones you could turn into ornaments.
