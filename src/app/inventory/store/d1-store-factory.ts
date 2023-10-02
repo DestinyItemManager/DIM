@@ -31,8 +31,8 @@ export function makeCharacter(
   mostRecentLastPlayed: Date
 ) {
   const character = characterComponent.character;
-  const race = defs.Race[character.characterBase.raceHash];
-  const klass = defs.Class[character.characterBase.classHash];
+  const race = defs.Race.get(character.characterBase.raceHash);
+  const klass = defs.Class.get(character.characterBase.classHash);
   let genderRace = '';
   let className = '';
   let raceName = '';
@@ -61,7 +61,10 @@ export function makeCharacter(
       defs.Progression.get(prog.progressionHash),
       progressionMeta[prog.progressionHash]
     );
-    const faction = _.find(defs.Faction, (f) => f.progressionHash === prog.progressionHash);
+    const faction = _.find(
+      defs.Faction.getAll(),
+      (f) => f.progressionHash === prog.progressionHash
+    );
     if (faction) {
       prog.faction = faction;
     }

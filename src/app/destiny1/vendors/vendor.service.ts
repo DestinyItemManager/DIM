@@ -143,7 +143,7 @@ export function loadVendors(): ThunkResult<{ [vendorHash: number]: Vendor }> {
     const buckets = bucketsSelector(getState())!;
     const reloadPromise = (async () => {
       // Narrow down to only visible vendors (not packages and such)
-      const vendorList = Object.values(defs.Vendor).filter((v) => v.summary.visible);
+      const vendorList = Object.values(defs.Vendor.getAll()).filter((v) => v.summary.visible);
 
       const vendors = _.compact(
         await Promise.all(

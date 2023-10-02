@@ -257,7 +257,6 @@ function PillContent({
 }) {
   switch (type) {
     case 'ActivityMode':
-      return contentFromDisplayProperties(defs[type][value]);
     case 'Destination':
     case 'DamageType':
       return contentFromDisplayProperties(defs[type].get(value));

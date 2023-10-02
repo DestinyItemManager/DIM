@@ -191,7 +191,7 @@ export default function NoBuildsFoundExplainer({
         problems.push({
           id: `badBucket-${bucketHash}`,
           description: t('LoadoutBuilder.NoBuildsFoundExplainer.BadSlot', {
-            bucketName: defs.InventoryBucket[bucketHash].displayProperties.name,
+            bucketName: defs.InventoryBucket.get(bucketHash).displayProperties.name,
           }),
           suggestions,
         });

@@ -72,7 +72,7 @@ export function processItems(
       // an exception occurred while creating the item, or it has a definition but lacks a name
       // not all of these should cause the store to consider itself hadErrors.
       // dummies and invisible items are not a big deal
-      const bucketDef = defs.InventoryBucket[item.bucket];
+      const bucketDef = defs.InventoryBucket.get(item.bucket);
       // if it's a named, non-invisible bucket, it may be a problem that the item wasn't generated
       if (owner && bucketDef.category !== BucketCategory.Invisible && bucketDef.bucketName) {
         owner.hadErrors = true;
@@ -84,7 +84,7 @@ export function processItems(
 
 const getClassTypeNameLocalized = _.memoize(
   (type: DestinyClass, defs: D1ManifestDefinitions): string => {
-    const klass = Object.values(defs.Class).find((c) => c.classType === type);
+    const klass = Object.values(defs.Class.getAll()).find((c) => c.classType === type);
     if (klass) {
       return klass.className;
     } else {

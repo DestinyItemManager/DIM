@@ -1,4 +1,3 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { I18nKey, t, tl } from 'app/i18next-t';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { StringLookup } from 'app/utils/util-types';
@@ -16,19 +15,6 @@ const manualTranslations: { [key in TranslateManually]: I18nKey } = {
 };
 
 export type SymbolsMap = { glyph: string; name: string; fullName: string }[];
-
-const getTableLoc = (defs: D2ManifestDefinitions, tableName: string, hash: number) => {
-  switch (tableName) {
-    case 'Trait':
-      return defs.Trait.get(hash)?.displayProperties?.name;
-    case 'InventoryItem':
-      return defs.InventoryItem.get(hash)?.displayProperties?.name;
-    case 'SandboxPerk':
-      return defs.SandboxPerk.get(hash)?.displayProperties?.name;
-    case 'ActivityMode':
-      return defs.ActivityMode[hash]?.displayProperties?.name;
-  }
-};
 
 const simplifyName = (name: string) =>
   name
@@ -63,7 +49,7 @@ export const symbolsSelector = createSelector(
         continue;
       }
       if (source) {
-        const defName = getTableLoc(defs, source.tableName, source.hash);
+        const defName = defs[source.tableName].get(source.hash)?.displayProperties?.name;
         if (defName) {
           list.push({ glyph, fullName: defName, name: simplifyName(defName) });
           continue;

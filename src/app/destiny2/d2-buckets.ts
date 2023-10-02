@@ -84,7 +84,7 @@ export function getBuckets(defs: D2ManifestDefinitions) {
       this.byCategory[this.unknown.sort!] = [this.unknown];
     },
   };
-  for (const def of Object.values(defs.InventoryBucket)) {
+  for (const def of Object.values(defs.InventoryBucket.getAll())) {
     const type = bucketToType[def.hash];
     const sort = bucketHashToSort[def.hash];
     const bucket: InventoryBucket = {
