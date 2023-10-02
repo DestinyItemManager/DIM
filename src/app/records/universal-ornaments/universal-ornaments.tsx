@@ -7,7 +7,7 @@ import { ItemCreationContext, makeFakeItem } from 'app/inventory/store/d2-item-f
 import { ARMOR_NODE, DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { filterMap } from 'app/utils/util';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { DestinyClass, DestinyCollectibleDefinition } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import auxOrnamentSets from 'data/d2/universal-ornament-aux-sets.json';
 import universalOrnamentPlugSetHashes from 'data/d2/universal-ornament-plugset-hashes.json';
@@ -134,12 +134,13 @@ export const buildSets = memoizeOne((defs: D2ManifestDefinitions): OrnamentsData
     [DestinyClass.Warlock]: { classType: DestinyClass.Warlock, sets: {}, name: '', icon: '' },
   };
 
-  const findCollectibleArmorParentNode = (collectibleHash: number | undefined) => {
-    if (collectibleHash) {
-      const collectible = defs.Collectible.get(collectibleHash);
+  const findCollectibleArmorParentNode = (
+    collectible: DestinyCollectibleDefinition | undefined
+  ) => {
+    if (collectible) {
       return collectible.parentNodeHashes
         ?.map((nodeHash) => defs.PresentationNode.get(nodeHash))
-        .find((node) => node.children.collectibles?.length <= 5);
+        .find((node) => node?.children.collectibles?.length <= 5);
     }
   };
 

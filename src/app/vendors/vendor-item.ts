@@ -52,7 +52,7 @@ function getCollectibleState(
   characterId: string
 ) {
   const collectibleFinder = createCollectibleFinder(defs);
-  const collectibleHash = collectibleFinder(inventoryItem);
+  const collectibleHash = collectibleFinder(inventoryItem)?.hash;
   let collectibleState: DestinyCollectibleState | undefined;
   if (collectibleHash) {
     collectibleState =

@@ -392,11 +392,9 @@ export function makeItem(
     itemDef.iconWatermarkShelved ||
     undefined;
 
-  const collectibleHash = createCollectibleFinder(defs)(itemDef);
+  const collectible = createCollectibleFinder(defs)(itemDef);
   // Do we need this now?
-  const source = collectibleHash
-    ? defs.Collectible.get(collectibleHash, itemDef.hash)?.sourceHash
-    : undefined;
+  const source = collectible?.sourceHash;
 
   // items' appearance can be overridden at bungie's request
   let overrideStyleItem = item.overrideStyleItemHash
@@ -495,7 +493,7 @@ export function makeItem(
     previewVendor: itemDef.preview?.previewVendorHash,
     ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None,
     source,
-    collectibleHash,
+    collectibleHash: collectible?.hash,
     missingSockets: false,
     displaySource: itemDef.displaySource,
     plug: itemDef.plug && {

@@ -2,6 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { ARMOR_NODE } from 'app/search/d2-known-values';
 import {
   DestinyClass,
+  DestinyCollectibleDefinition,
   DestinyInventoryItemDefinition,
   DestinyPresentationNodeDefinition,
 } from 'bungie-api-ts/destiny2';
@@ -39,12 +40,12 @@ function collectPresentationNodes(
  * to be able to match armor ornaments that don't indicate a classType by themselves.
  */
 export const createCollectibleFinder = memoizeOne((defs: D2ManifestDefinitions) => {
-  const cache: { [itemHash: number]: number | null } = {};
-  // The Titan/Hunter/Warlock armor presentation nodes, in that order (matches enum order)
-  const classPresentationNodes = defs.PresentationNode.get(ARMOR_NODE).children.presentationNodes;
+  const cache: { [itemHash: number]: DestinyCollectibleDefinition | null } = {};
 
-  const armorCollectiblesByClassType = _.once(() =>
-    Object.fromEntries(
+  const armorCollectiblesByClassType = _.once(() => {
+    // The Titan/Hunter/Warlock armor presentation nodes, in that order (matches enum order)
+    const classPresentationNodes = defs.PresentationNode.get(ARMOR_NODE).children.presentationNodes;
+    return Object.fromEntries(
       [DestinyClass.Titan, DestinyClass.Hunter, DestinyClass.Warlock].map((classType) => {
         const classNode = classPresentationNodes[classType];
         const relevantPresentationNodes = collectPresentationNodes(
@@ -55,18 +56,29 @@ export const createCollectibleFinder = memoizeOne((defs: D2ManifestDefinitions) 
         const collectibles = relevantPresentationNodes
           .flatMap((node) => node.children?.collectibles ?? [])
           .map((c) => defs.Collectible.get(c.collectibleHash));
-        return [classType, collectibles] as const;
+        // Most of the time, collectibles will have the same name
+        const collectiblesByName = _.keyBy(collectibles, (c) => c.displayProperties.name);
+        // Sometimes the collectible name and icon will be different, but reference an item
+        // where the icon matches our icon (e.g. Y1 Trials / Prophecy: Bond Judgment vs. Judgement's Wrap)
+        const collectiblesByReverseItemIcon = _.keyBy(
+          collectibles,
+          (c) => defs.InventoryItem.get(c.itemHash)?.displayProperties.icon
+        );
+        return [classType, { collectiblesByName, collectiblesByReverseItemIcon }] as const;
       })
-    )
-  );
+    );
+  });
 
-  return (itemDef: DestinyInventoryItemDefinition, knownClassType?: DestinyClass) => {
+  return (
+    itemDef: DestinyInventoryItemDefinition,
+    knownClassType?: DestinyClass
+  ): DestinyCollectibleDefinition | undefined => {
     const cacheEntry = cache[itemDef.hash];
     if (cacheEntry !== undefined) {
       return cacheEntry ?? undefined;
     }
 
-    const collectibleHash = (() => {
+    const collectible = (() => {
       // If this is a fake focusing item, the item we're actually interested in is the output
       const itemHash = focusingItemOutputs[itemDef.hash] ?? itemDef.hash;
       const outputItemDef = defs.InventoryItem.get(itemHash);
@@ -75,12 +87,12 @@ export const createCollectibleFinder = memoizeOne((defs: D2ManifestDefinitions) 
       }
       // If this has a collectible hash, use that
       if (outputItemDef.collectibleHash) {
-        return outputItemDef.collectibleHash;
+        return defs.Collectible.get(outputItemDef.collectibleHash);
       }
 
       // For some items, d2ai knows what the collectible is
       if (extraItemsToCollectibles[itemHash]) {
-        return extraItemsToCollectibles[itemHash];
+        return defs.Collectible.get(extraItemsToCollectibles[itemHash]);
       }
 
       // Otherwise we try some fuzzy matching with the collectibles.
@@ -91,29 +103,16 @@ export const createCollectibleFinder = memoizeOne((defs: D2ManifestDefinitions) 
       // the ornaments themselves don't have a good ICH or classType
       const classType = knownClassType ?? outputItemDef.classType;
       if (!outputItemDef.redacted && classType !== DestinyClass.Unknown) {
-        // First, find a collectible with the same name
-        const collectibles = armorCollectiblesByClassType()[classType];
-        const sameName = collectibles.find(
-          (c) => c.displayProperties.name === outputItemDef.displayProperties.name
+        const { collectiblesByName, collectiblesByReverseItemIcon } =
+          armorCollectiblesByClassType()[classType];
+        return (
+          collectiblesByName[outputItemDef.displayProperties.name] ??
+          collectiblesByReverseItemIcon[outputItemDef.displayProperties.icon]
         );
-        if (sameName) {
-          return sameName.hash;
-        }
-
-        // Sometimes the collectible icon will be different, but reference an item
-        // where the icon matches our icon (e.g. Y1 Trials / Prophecy: Bond Judgment vs. Judgement's Wrap)
-        const reverseCollectibleMatch = collectibles.find((c) => {
-          const reverseItemDef = defs.InventoryItem.get(c.itemHash);
-          return reverseItemDef?.displayProperties.icon === outputItemDef.displayProperties.icon;
-        });
-        if (reverseCollectibleMatch) {
-          return reverseCollectibleMatch.hash;
-        }
-        return undefined;
       }
     })();
 
-    cache[itemDef.hash] = collectibleHash ?? null;
-    return collectibleHash;
+    cache[itemDef.hash] = collectible ?? null;
+    return collectible;
   };
 });
