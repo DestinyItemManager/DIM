@@ -32,8 +32,9 @@ export const buildArmoryIndex = memoizeOne((defs: D2ManifestDefinitions, languag
     if (
       // A good heuristic for "is this weapon not totally irrelevant" is the presence of
       // the exact hash in collections, but some reissues do not reference the latest version
-      // in the collections entry (and thus the latest item has ni `collectibleHash`).
-      // Use `additionalCollectibles` to patch those in.
+      // in the collections entry (and thus the latest item has no `collectibleHash`).
+      // Use `additionalCollectibles` to patch those in. Note that we do not use the
+      // `collectibleFinder` because not matching some old items is the entire point here.
       (i.collectibleHash || additionalCollectibles.includes(i.hash)) &&
       i.displayProperties &&
       (i.inventory?.bucketTypeHash === BucketHashes.KineticWeapons ||

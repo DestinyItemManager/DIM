@@ -1,6 +1,7 @@
 import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { t } from 'app/i18next-t';
+import { createCollectibleFinder } from 'app/records/collectible-matching';
 import {
   D2ItemTiers,
   THE_FORBIDDEN_BUCKET,
@@ -39,7 +40,6 @@ import extendedBreaker from 'data/d2/extended-breaker.json';
 import extendedFoundry from 'data/d2/extended-foundry.json';
 import extendedICH from 'data/d2/extended-ich.json';
 import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
-import extraItemCollectibles from 'data/d2/unreferenced-collections-items.json';
 import { Draft } from 'immer';
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
@@ -59,10 +59,6 @@ import { buildObjectives, isTrialsPassage, isWinsObjective } from './objectives'
 import { buildPatternInfo } from './patterns';
 import { buildSockets } from './sockets';
 import { buildStats } from './stats';
-
-const extraItemsToCollectibles = _.mapValues(_.invert(extraItemCollectibles), (val) =>
-  parseInt(val, 10)
-);
 
 const collectiblesByItemHash = memoizeOne(
   (Collectible: ReturnType<D2ManifestDefinitions['Collectible']['getAll']>) =>
@@ -102,7 +98,7 @@ export function processItems(
       // not all of these should cause the store to consider itself hadErrors.
       // dummies and invisible items are not a big deal
       const defs = context.defs;
-      const bucketDef = defs.InventoryBucket[item.bucketHash];
+      const bucketDef = defs.InventoryBucket.get(item.bucketHash);
       // if it's a named, non-invisible bucket, it may be a problem that the item wasn't generated
       if (
         bucketDef &&
@@ -128,7 +124,7 @@ export function processItems(
 
 export const getClassTypeNameLocalized = _.memoize(
   (type: DestinyClass, defs: D2ManifestDefinitions): string => {
-    const klass = Object.values(defs.Class).find((c) => c.classType === type);
+    const klass = Object.values(defs.Class.getAll()).find((c) => c.classType === type);
     if (klass) {
       return klass.displayProperties.name;
     } else {
@@ -396,11 +392,9 @@ export function makeItem(
     itemDef.iconWatermarkShelved ||
     undefined;
 
-  const collectibleHash = itemDef.collectibleHash ?? extraItemsToCollectibles[itemDef.hash];
+  const collectible = createCollectibleFinder(defs)(itemDef);
   // Do we need this now?
-  const source = collectibleHash
-    ? defs.Collectible.get(collectibleHash, itemDef.hash)?.sourceHash
-    : undefined;
+  const source = collectible?.sourceHash;
 
   // items' appearance can be overridden at bungie's request
   let overrideStyleItem = item.overrideStyleItemHash
@@ -499,7 +493,7 @@ export function makeItem(
     previewVendor: itemDef.preview?.previewVendorHash,
     ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None,
     source,
-    collectibleHash,
+    collectibleHash: collectible?.hash,
     missingSockets: false,
     displaySource: itemDef.displaySource,
     plug: itemDef.plug && {
@@ -707,7 +701,9 @@ export function makeItem(
   }
 
   // Infusion
-  const tier = itemDef.inventory ? defs.ItemTierType[itemDef.inventory.tierTypeHash] : null;
+  const tier = itemDef.inventory?.tierTypeHash
+    ? defs.ItemTierType.get(itemDef.inventory.tierTypeHash)
+    : null;
   createdItem.infusionFuel = Boolean(
     tier?.infusionProcess && itemDef.quality?.infusionCategoryHashes?.length
   );

@@ -73,8 +73,8 @@ export function getBetterWorseItems(
   // example DimItem MUST HAVE STATS but making the return type |undefined
   // just to do that check is annoying, so it's pre-checked in BetterItemsTriageSection
 
-  const itemTypeFilterString = itemTypeFilter.fromItem!(exampleItem);
-  const guardianClassFilterString = classFilter.fromItem!(exampleItem);
+  const itemTypeFilterString = itemTypeFilter.fromItem(exampleItem);
+  const guardianClassFilterString = classFilter.fromItem(exampleItem);
 
   // only compare exotics to exotics, and non- to non-                  don't compare old weird stuff
   const rarityFilter = exampleItem.isExotic ? 'is:exotic' : '(not:exotic not:green not:white)';

@@ -542,6 +542,8 @@
     "SearchAnExotic": "搜索異域裝備或描述",
     "SelectExotic": "選擇異域裝備",
     "SelectMods": "選擇模組",
+    "SelectModsCount": "{{selected}}/{{maxSelectable}}",
+    "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Activity Mods",
     "SelectSubclassOptions": "自定義子職業",
     "ShowAllConfigs": "顯示所有配置",
     "ShowConfigs": "顯示配置",
@@ -613,7 +615,7 @@
     "OptimizerExplanationSearch": "使用搜索欄來過濾配裝優化器使用的物品。如果對應位置沒有匹配搜索的防具，所有該位置的防具都將包含在考慮範圍之内。",
     "OptimizerExplanationStats": "將最重要的屬性拖動到頂部，並將你不在乎的屬性設為忽略。",
     "OptimizerSet": "優化器組合",
-    "ProcessingSets": "正在處理{{character}}的組合（{{remainingTime}} s）",
+    "ProcessingSets": "Finding highest tier sets...",
     "SaveAs": "保存為",
     "SelectMax": "-最大-",
     "SelectMin": "-最小-",
@@ -991,7 +993,8 @@
     "RecordBooks": "記事本"
   },
   "Records": {
-    "Title": "記錄"
+    "Title": "記錄",
+    "UniversalOrnamentSetOther": "Other"
   },
   "SearchHistory": {
     "Date": "最近使用",

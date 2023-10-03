@@ -2,7 +2,10 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { showNotification } from 'app/notifications/notifications';
 import { getSelectionTree } from 'app/organizer/ItemTypeSelector';
-import { ActionType, getType, Reducer } from 'typesafe-actions';
+import { quoteFilterString } from 'app/search/query-parser';
+import { getInterestingSocketMetadatas, isD1Item } from 'app/utils/item-utils';
+import { PlugCategoryHashes } from 'data/d2/generated-enums';
+import { ActionType, Reducer, getType } from 'typesafe-actions';
 import * as actions from './actions';
 import { compareNameQuery } from './compare-buttons';
 
@@ -137,7 +140,7 @@ function addCompareItem(state: CompareState, item: DimItem): CompareState {
     // Start a new session
     const itemCategoryHashes = getItemCategoryHashesFromExampleItem(item);
 
-    const itemNameQuery = compareNameQuery(item);
+    const itemNameQuery = initialCompareQuery(item);
 
     const vendorCharacterId = item.vendor?.characterId;
 
@@ -150,6 +153,32 @@ function addCompareItem(state: CompareState, item: DimItem): CompareState {
         vendorCharacterId,
       },
     };
+  }
+}
+
+function initialCompareQuery(item: DimItem) {
+  if (isD1Item(item) || !item.bucket.inArmor || item.isExotic) {
+    // D1 items, weapons, and exotic armor match by name
+    return compareNameQuery(item);
+  } else {
+    // For D2 armor, we match by rarity, intrinsic and interesting mod sockets
+    const factors = [`is:${item.tier.toLowerCase()}`];
+    const intrinsicSocket = item.sockets?.allSockets.find(
+      (socket) =>
+        socket.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics &&
+        socket.plugged.plugDef.displayProperties.name
+    );
+    if (intrinsicSocket) {
+      const intrinsicName = intrinsicSocket.plugged!.plugDef.displayProperties.name;
+      factors.push(`perkname:${quoteFilterString(intrinsicName)}`);
+    }
+    const modSlotMetadata = getInterestingSocketMetadatas(item);
+    if (modSlotMetadata) {
+      for (const m of modSlotMetadata) {
+        factors.push(`modslot:${m.slotTag}`);
+      }
+    }
+    return factors.join(' ');
   }
 }
 

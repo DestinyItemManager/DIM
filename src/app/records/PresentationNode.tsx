@@ -128,7 +128,6 @@ export default function PresentationNode({
         <PresentationNodeLeaf
           node={node}
           ownedItemHashes={ownedItemHashes}
-          completedRecordsHidden={completedRecordsHidden}
           redactedRecordsRevealed={redactedRecordsRevealed}
           sortRecordProgression={sortRecordProgression}
         />

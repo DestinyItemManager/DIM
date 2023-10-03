@@ -1107,9 +1107,9 @@
   integrity sha512-hBI9tfBtuPIi885ZsZ32IMEU/5nlZH/KOVYJCOh7gyMxaVLGmLedYqFN6Ui1LXkI8JlC8IsuC0rF0btcRZKd5g==
 
 "@destinyitemmanager/dim-api-types@^1.24.1":
-  version "1.28.0"
-  resolved "https://registry.yarnpkg.com/@destinyitemmanager/dim-api-types/-/dim-api-types-1.28.0.tgz#61cc598324779ce5ba20e15bc51b549f13c7c324"
-  integrity sha512-ryBJxUrvVF6I9puFnofGvYz+hHuaImYPILj62fpv7981Pvlxcw1pFaA4TJ+RguauuwOVEvmnVIX/S+UJAv0WmA==
+  version "1.29.0"
+  resolved "https://registry.yarnpkg.com/@destinyitemmanager/dim-api-types/-/dim-api-types-1.29.0.tgz#0167b67581445898e546cf1b193ebb481300138c"
+  integrity sha512-MRAtLjzXuE+3UrEqu8s01507vBHov97L6fTJUUWIKvTc1JDUg7geAEG+iraP/RgbK7Plpy8jeTwT44z1Jn8GPQ==
 
 "@discoveryjs/json-ext@^0.5.0":
   version "0.5.7"

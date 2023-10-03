@@ -59,7 +59,7 @@ export default function UniversalOrnaments({
               {sets.name}
             </>
           }
-          sectionId={`class-${sets.classType}`}
+          sectionId={`ornaments-class-${sets.classType}`}
           defaultCollapsed={true}
         >
           <div className={styles.records}>

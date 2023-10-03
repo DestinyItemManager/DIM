@@ -62,7 +62,7 @@ export default function GearPower() {
     (i) => i.classType === selectedStore.classType
   );
   const powerFloor = Math.floor(powerLevel.maxGearPower);
-  const classFilterString = exampleItem && classFilter.fromItem!(exampleItem);
+  const classFilterString = exampleItem && classFilter.fromItem(exampleItem);
   const maxItemsSearchString = classFilterString && `${classFilterString} is:maxpower`;
 
   return (

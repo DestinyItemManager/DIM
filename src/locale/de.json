@@ -542,6 +542,8 @@
     "SearchAnExotic": "Suche Namen oder Beschreibung von Exotischen",
     "SelectExotic": "Wähle Exotisches",
     "SelectMods": "Mods auswählen",
+    "SelectModsCount": "{{selected}}/{{maxSelectable}}",
+    "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Aktivitäts-Mods",
     "SelectSubclassOptions": "Fokus anpassen",
     "ShowAllConfigs": "Zeige alle Einstellungen",
     "ShowConfigs": "Zeige Einstellungen",
@@ -613,7 +615,7 @@
     "OptimizerExplanationSearch": "Benutze die Suchleiste, um die zu berücksichtigende Rüstung einzugrenzen. Wenn keine der Rüstungen in einem Slot der Suche entspricht, werden alle Rüstungen in diesem Slot berücksichtigt.",
     "OptimizerExplanationStats": "Ziehe die dir wichtigsten Werte nach oben, und setze andere, die dir nicht wichtig sind, auf ignorieren.",
     "OptimizerSet": "Optimierer-Set",
-    "ProcessingSets": "Verarbeite Sets für\n{{character}} ({{remainingTime}}s)",
+    "ProcessingSets": "Höchste Tier-Sets finden...",
     "SaveAs": "Speichern unter",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
@@ -991,7 +993,8 @@
     "RecordBooks": "Urkundenbücher"
   },
   "Records": {
-    "Title": "Sammlungen"
+    "Title": "Sammlungen",
+    "UniversalOrnamentSetOther": "Andere"
   },
   "SearchHistory": {
     "Date": "Zuletzt verwendet",

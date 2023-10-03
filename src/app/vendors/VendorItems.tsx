@@ -39,7 +39,7 @@ export default function VendorItems({
 
   const itemsByCategory = _.groupBy(vendor.items, (item) => item?.displayCategoryIndex);
 
-  const faction = vendor.def.factionHash ? defs.Faction[vendor.def.factionHash] : undefined;
+  const faction = vendor.def.factionHash ? defs.Faction.get(vendor.def.factionHash) : undefined;
   const factionProgress = vendor?.component?.progression;
 
   return (

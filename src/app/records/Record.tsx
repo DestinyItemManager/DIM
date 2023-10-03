@@ -41,11 +41,9 @@ const catalystIconsTable = catalystIcons as HashLookup<string>;
 
 export default function Record({
   record,
-  completedRecordsHidden,
   redactedRecordsRevealed,
 }: {
   record: DimRecord;
-  completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
 }) {
   const defs = useD2Definitions()!;
@@ -81,10 +79,6 @@ export default function Record({
     recordHash in catalystIconsTable
       ? catalystIconsTable[recordHash]
       : recordDef.displayProperties.icon;
-
-  if (completedRecordsHidden && acquired) {
-    return null;
-  }
 
   const intervals = getIntervals(recordDef, recordComponent);
   const intervalBarStyle = {
@@ -266,11 +260,9 @@ function getIntervals(
 /** A grid of records as seen in triumph presentation nodes or Tracked Triumphs. */
 export function RecordGrid({
   records,
-  completedRecordsHidden,
   redactedRecordsRevealed,
 }: {
   records: DimRecord[];
-  completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
 }) {
   // TODO: was there really a problem with duplicate records?
@@ -287,7 +279,6 @@ export function RecordGrid({
           <Record
             key={record.recordDef.hash}
             record={record}
-            completedRecordsHidden={completedRecordsHidden}
             redactedRecordsRevealed={redactedRecordsRevealed}
           />
         );

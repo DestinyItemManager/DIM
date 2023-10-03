@@ -231,7 +231,7 @@
     "Event": "Affiche les objets en fonction de l’événement de Destiny 2 pendant lequel ils sont apparu.",
     "ExtraPerk": "Affiche les armes légendaires obtenues avec des attributs aléatoires ayant un attribut sélectionnable supplémentaire.",
     "Filter": "Filtre",
-    "FilterWith": "Filter with:",
+    "FilterWith": "Filtrer avec :",
     "Focusable": "Affiche les objets qui peuvent être concentrés auprès d'un vendeur",
     "Foundry": "Affiche les objets en fonction de la fonderie qui les a créés.",
     "Glimmer": "Affiche les objets consommables qui ont un rapport avec l'obtention de lumen.",
@@ -301,7 +301,7 @@
     "StatLower": "Affiche les armures dont les statistiques sont strictement plus basses que celles d'une autre armure du même type.",
     "Stats": "Affiche les objets en fonction de la valeur d'une statistique spécifique. $t(Filter.StatsExtras)",
     "StatsBase": "Filtre les armures en fonction de la valeur de base de leurs statistiques, sans inclure les mods attachés ou les pièces maîtresses. $t(Filter.StatsExtras)",
-    "StatsExtras": "Supports stat addition by connecting multiple stat names with the + or & symbol.  There are also special keywords highest, secondhighest, thirdhighest, etc. which match stats based on their rank within an item's stats. Each custom stats also has its own search term, shown in the Custom Stats settings.",
+    "StatsExtras": "Permet l'addition de statistique en connectant plusieurs noms de statistiques avec le symbole + ou &. Il y a aussi des mots-clés spéciaux highest, secondhighest, thirdhighest, etc. qui cherchent les statistiques en fonction de leur rang au sein des statistiques d'un objet. Chaque statistique personnalisé a son propre terme de recherche, affiché dans les paramètres de statistiques personnalisées.",
     "StatsLoadout": "Recherche un ensemble d'objets à équiper pour obtenir la valeur totale maximale d'une statistique spécifique.",
     "StatsMax": "Recherche des armures avec le nombre le plus élevé pour une stat spécifique. Inclut tous les objets avec le nombre le plus élevé.",
     "Tags": {
@@ -542,6 +542,8 @@
     "SearchAnExotic": "Rechercher un nom ou une description d'exotique",
     "SelectExotic": "Sélectionner exotique",
     "SelectMods": "Sélectionner les Mods",
+    "SelectModsCount": "{{selected}}/{{maxSelectable}}",
+    "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Activity Mods",
     "SelectSubclassOptions": "Personnaliser la doctrine",
     "ShowAllConfigs": "Afficher toutes les configurations",
     "ShowConfigs": "Afficher les configurations",
@@ -613,7 +615,7 @@
     "OptimizerExplanationSearch": "Utilisez la barre de recherche pour choisir quelles armures envisager. Si aucune armure ne correspond à votre recherche dans un emplacement, toutes les armures de cet emplacement seront envisagées.",
     "OptimizerExplanationStats": "Déplacez les statistiques les plus importantes vers le haut, et mettez les statistiques qui ne vous intéressent pas sur Ignorer.",
     "OptimizerSet": "Ensemble de l'optimiseur",
-    "ProcessingSets": "Traitement des possibilités pour {{character}} ({{remainingTime}}s)",
+    "ProcessingSets": "Recherche des ensembles aux paliers les plus élevés...",
     "SaveAs": "Enregistrer sous",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
@@ -991,7 +993,8 @@
     "RecordBooks": "Carnet d'exploits"
   },
   "Records": {
-    "Title": "Archives"
+    "Title": "Archives",
+    "UniversalOrnamentSetOther": "Other"
   },
   "SearchHistory": {
     "Date": "Dernier Utilisé",
