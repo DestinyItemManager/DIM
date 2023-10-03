@@ -1,6 +1,5 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
-import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
@@ -26,6 +25,7 @@ import {
   clearSubclass,
   fillLoadoutFromEquipped,
   fillLoadoutFromUnequipped,
+  getLoadoutBucketHashesFromCategory,
   randomizeLoadoutItems,
   randomizeLoadoutMods,
   randomizeLoadoutSubclass,
@@ -348,7 +348,7 @@ function LoadoutEditCategorySection({
       onRandomize={() => handleRandomizeCategory(allItems, category, searchFilter)}
       hasRandomizeQuery={searchFilter !== _.stubTrue}
       onFillFromEquipped={() => handleFillCategoryFromEquipped(artifactUnlocks, category)}
-      fillFromEquippedDisabled={disableFillInForCategory(items, category)}
+      fillFromEquippedDisabled={disableFillInForCategory(defs, items, category)}
       onSyncFromEquipped={() => handleSyncCategoryFromEquipped(category)}
       fillFromInventoryCount={getUnequippedItemsForLoadout(store, category).length}
       onFillFromInventory={() => handleFillCategoryFromUnequipped(category)}
@@ -524,14 +524,13 @@ function LoadoutArtifactUnlocksSection({
 /**
  * Disable the "Fill in" menu item if it wouldn't do anything.
  */
-function disableFillInForCategory(items: ResolvedLoadoutItem[], category: D2BucketCategory) {
-  const currentItems = items?.length ?? 0;
-  let maxItems = D2Categories[category].length;
-
-  // Remove the subclass from General
-  if (category === 'General') {
-    maxItems = 4;
-  }
+function disableFillInForCategory(
+  defs: D2ManifestDefinitions,
+  items: ResolvedLoadoutItem[],
+  category: D2BucketCategory
+) {
+  const currentItems = items?.filter((i) => i.loadoutItem.equip).length ?? 0;
+  const maxItems = getLoadoutBucketHashesFromCategory(defs, category).length;
 
   return currentItems >= maxItems;
 }

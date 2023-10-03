@@ -434,27 +434,17 @@ export function syncLoadoutCategoryFromEquipped(
   category: D2BucketCategory
 ): LoadoutUpdateFunction {
   return (loadout) => {
-    let categoryHashes = D2Categories[category];
-    if (category === 'General') {
-      categoryHashes = [
-        BucketHashes.Ghost,
-        BucketHashes.Emblems,
-        BucketHashes.Ships,
-        BucketHashes.Vehicle,
-      ];
-    }
+    const bucketHashes = getLoadoutBucketHashesFromCategory(defs, category);
 
     // Remove equipped items from this bucket
     loadout = {
       ...loadout,
       items: loadout.items.filter(
-        (li) =>
-          !(li.equip && categoryHashes.includes(getBucketHashFromItemHash(defs, li.hash) ?? 0))
+        (li) => !(li.equip && bucketHashes.includes(getBucketHashFromItemHash(defs, li.hash) ?? 0))
       ),
     };
     const newEquippedItems = store.items.filter(
-      (item) =>
-        item.equipped && itemCanBeInLoadout(item) && categoryHashes.includes(item.bucket.hash)
+      (item) => item.equipped && itemCanBeInLoadout(item) && bucketHashes.includes(item.bucket.hash)
     );
     for (const item of newEquippedItems) {
       loadout = addItem(defs, item, true)(loadout);
@@ -558,16 +548,22 @@ export function syncModsFromEquipped(store: DimStore): LoadoutUpdateFunction {
   return updateMods(mods);
 }
 
+export function getLoadoutBucketHashesFromCategory(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  category: D2BucketCategory | D1BucketCategory
+) {
+  return defs.isDestiny2()
+    ? category === 'General'
+      ? [BucketHashes.Ghost, BucketHashes.Emblems, BucketHashes.Ships, BucketHashes.Vehicle]
+      : D2Categories[category as D2BucketCategory]
+    : D1Categories[category as D1BucketCategory];
+}
+
 export function clearBucketCategory(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   category: D2BucketCategory | D1BucketCategory
 ) {
-  return clearBuckets(
-    defs,
-    defs.isDestiny2()
-      ? D2Categories[category as D2BucketCategory]
-      : D1Categories[category as D1BucketCategory]
-  );
+  return clearBuckets(defs, getLoadoutBucketHashesFromCategory(defs, category));
 }
 
 /**
