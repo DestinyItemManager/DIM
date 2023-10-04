@@ -23,6 +23,8 @@ jobs:
           # Use the dim-release-bot token rather than the default
           token: ${{ secrets.GH_TOKEN }}
 
+      - uses: pnpm/action-setup@v2
+
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
