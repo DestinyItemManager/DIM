@@ -86,7 +86,8 @@ const filterNames = [
  * and produces the contents of the autocomplete list.
  */
 export default function createAutocompleter<I, FilterCtx, SuggestionsCtx>(
-  searchConfig: SearchConfig<I, FilterCtx, SuggestionsCtx>
+  searchConfig: SearchConfig<I, FilterCtx, SuggestionsCtx>,
+  armoryEntries: ArmoryEntry[] | undefined
 ) {
   const filterComplete = makeFilterComplete(searchConfig);
 
@@ -129,7 +130,7 @@ export default function createAutocompleter<I, FilterCtx, SuggestionsCtx>(
     };
 
     const armorySuggestions = includeArmory
-      ? getArmorySuggestions(searchConfig.armorySuggestions, query, searchConfig.language)
+      ? getArmorySuggestions(armoryEntries, query, searchConfig.language)
       : [];
 
     // mix them together
