@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
-          cache: yarn
+          cache: pnpm
 
       - name: Install SSH key
         uses: benoitchantre/setup-ssh-authentication-action@1.0.0
@@ -46,10 +46,10 @@ jobs:
           echo "VERSION=${{ steps.package-version.outputs.current-version }}.$(($RUN_NUM+1000000))" >> $GITHUB_ENV
 
       - name: Install
-        run: yarn install --frozen-lockfile --prefer-offline
+        run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: Build
-        run: yarn build:beta
+        run: pnpm build:beta
         env:
           NODE_OPTIONS: "--max_old_space_size=8192"
           WEB_API_KEY: ${{ secrets.WEB_API_KEY }}
@@ -66,7 +66,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check Syntax
-        run: yarn syntax
+        run: pnpm syntax
 
       - name: Rsync to Server
         run: ./build/rsync-deploy.sh

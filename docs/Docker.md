@@ -16,8 +16,8 @@ Install Dependencies, and start webpack, with Docker
 
 Run the following commands from the DIM cloned directory on your machine:
 
-* `docker-compose up` to build the dist and start yarn watcher
-* It will take a while for the dist files to build on the first startup while yarn installs dependencies
+* `docker-compose up` to build the dist and start pnpm watcher
+* It will take a while for the dist files to build on the first startup while pnpm installs dependencies
 * `ctrl+c` to stop
 * `docker-compose up -d` to start in detached mode
 * `docker-compose stop` to stop detached mode
@@ -57,7 +57,7 @@ This will install the `nano` editor. Another option is `vim`.
 
 ## Node modules
 
-If you need to install new node dependencies, you should run those commands from inside the container. Once inside, use `yarn add NameOfTheDependency` as normal.
+If you need to install new node dependencies, you should run those commands from inside the container. Once inside, use `pnpm add NameOfTheDependency` as normal.
 
 ## Container terminates unexpectedly
 

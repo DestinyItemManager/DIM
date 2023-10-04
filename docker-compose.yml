@@ -7,8 +7,8 @@ services:
       - '8080:8080'
     working_dir: /usr/src/app
     command: >
-      bash -c "yarn install &&
-               yarn start"
+      bash -c "pnpm install &&
+               pnpm start"
     environment:
       - NODE_ENV=dev
       - DOCKER=true
@@ -16,6 +16,6 @@ services:
     volumes:
       - .:/usr/src/app
       - node_modules:/usr/src/app/node_modules
-volumes: 
+volumes:
   node_modules:
 

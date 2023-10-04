@@ -27,7 +27,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
-          cache: yarn
+          cache: pnpm
 
       - name: Install SSH key
         uses: benoitchantre/setup-ssh-authentication-action@1.0.0
@@ -67,7 +67,7 @@ jobs:
           version: ${{ env.VERSION }}
 
       - name: Install
-        run: yarn install --frozen-lockfile --prefer-offline
+        run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: Build and deploy
         run: ./build/deploy-prod.sh

@@ -21,13 +21,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
-          cache: yarn
+          cache: pnpm
 
       - name: Install
-        run: yarn install --frozen-lockfile --prefer-offline
+        run: pnpm install --frozen-lockfile --prefer-offline
 
-      - name: yarn i18n
-        run: yarn i18n
+      - name: pnpm i18n
+        run: pnpm i18n
 
       - name: Commit files
         uses: stefanzweifel/git-auto-commit-action@v4
