@@ -48,3 +48,4 @@ Xur
 Zavala
 Русский
 Telesto
+Neomuna

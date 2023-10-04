@@ -16,6 +16,8 @@ equippable
 elgato
 favorited
 ICHs
+indimloadout
+iningameloadout
 inleftchar
 inloadout
 inloadouts
@@ -42,7 +44,6 @@ reimplemented
 Repurchasable
 reqs
 reusables
-shouldnt
 showxp
 stackable
 swappable
