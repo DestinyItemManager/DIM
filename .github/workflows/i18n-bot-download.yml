@@ -18,10 +18,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
-          cache: yarn
+          cache: npm
 
       - name: Install
-        run: yarn install --frozen-lockfile --prefer-offline
+        run: npm ci
 
       - name: Download updated i18n files
         uses: crowdin/github-action@1.4.7
@@ -46,7 +46,7 @@ jobs:
           done
 
       - name: build browsercheck utils
-        run: yarn bcu
+        run: npm run bcu
 
       - name: porcelain check
         uses: dorny/paths-filter@v2

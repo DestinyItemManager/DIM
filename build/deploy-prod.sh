@@ -17,8 +17,8 @@ git commit -m"$VERSION"
 git tag "v$VERSION"
 
 # build and check
-yarn build:release
-yarn syntax
+npm run build:release
+npm run syntax
 
 # rsync the files onto the remote host using SSH keys
 ./build/rsync-deploy.sh

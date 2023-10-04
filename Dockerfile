@@ -6,8 +6,8 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 # Install app dependencies
-COPY package.json yarn.lock /usr/src/app/
-RUN yarn install --frozen-lockfile --prefer-offline
+COPY package.json package-lock.json /usr/src/app/
+RUN npm ci
 
 # Bundle app source
 COPY . /usr/src/app

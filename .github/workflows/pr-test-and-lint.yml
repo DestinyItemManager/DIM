@@ -20,13 +20,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
-          cache: yarn
+          cache: npm
 
       - name: Install
-        run: yarn install --frozen-lockfile --prefer-offline
+        run: npm ci
 
       - name: Jest Test
-        run: yarn jest
+        run: npm run jest
 
       - uses: actions/upload-artifact@v3  # upload test results
         if: success() || failure()        # run this step even if previous step failed
@@ -43,7 +43,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
-          cache: yarn
+          cache: npm
 
       - name: Cache ESLint
         uses: actions/cache@v3
@@ -57,21 +57,21 @@ jobs:
             ${{ runner.os }}-${{ env.cache-name }}-
 
       - name: Install
-        run: yarn install --frozen-lockfile --prefer-offline
+        run: npm ci
 
       - name: Prettier
-        run: yarn lint:prettier
+        run: npm run lint:prettier
 
       - name: StyleLint
-        run: yarn lint:stylelint
+        run: npm run lint:stylelint
 
       - name: ESLint (Forked)
         if: github.event.pull_request.head.repo.full_name != github.repository
-        run: yarn lintcached
+        run: npm run lintcached
 
       - name: Save ESLint Report JSON (Non-Forked)
         if: github.event.pull_request.head.repo.full_name == github.repository
-        run: yarn lint-report:cached
+        run: npm run lint-report:cached
         continue-on-error: true
 
       - name: Annotate ESLint Results

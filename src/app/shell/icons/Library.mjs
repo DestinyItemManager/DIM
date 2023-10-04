@@ -1,6 +1,6 @@
 // https://fontawesome.com/v5/search
 
-// IMPORTANT: run `yarn fa-subset` after changing this file or new icons won't show up
+// IMPORTANT: run `npm run fa-subset` after changing this file or new icons won't show up
 
 export const archiveIcon = 'fas fa-archive';
 export const updateIcon = 'fas fa-arrow-circle-up';

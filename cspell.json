@@ -71,7 +71,7 @@
     "jest.config.js",
     "package.json",
     "tsconfig.json",
-    "yarn.lock",
+    "package-lock.json",
     ".gitignore",
     "webpack-stats.json",
     ".stylelintrc"
