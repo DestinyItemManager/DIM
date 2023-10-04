@@ -56,36 +56,51 @@ export default function StoreHeading({
   const [loadoutMenuOpen, setLoadoutMenuOpen] = useState(false);
   const menuTrigger = useRef<HTMLDivElement>(null);
 
-  const openLoadoutPopup = () => {
-    if (store !== selectedStore && onTapped) {
-      onTapped?.(store.id);
+  const handleCloseLoadoutMenu = useCallback(() => {
+    setLoadoutMenuOpen(false);
+  }, []);
+
+  const useOnTapped = store !== selectedStore && onTapped;
+  const openLoadoutPopup = useCallback(() => {
+    if (useOnTapped) {
+      onTapped(store.id);
       return;
     }
     setLoadoutMenuOpen((open) => !open);
-  };
+  }, [onTapped, store.id, useOnTapped]);
 
-  const clickOutsideLoadoutMenu = useCallback(() => {
-    if (loadoutMenuOpen) {
-      setLoadoutMenuOpen(false);
-    }
-  }, [loadoutMenuOpen]);
+  const loadoutMenu = loadoutMenuOpen && (
+    <Portal>
+      <LoadoutMenuContents
+        store={store}
+        onClose={handleCloseLoadoutMenu}
+        menuTrigger={menuTrigger}
+      />
+    </Portal>
+  );
 
+  // TODO: aria "open"
+  return (
+    <>
+      <CharacterHeader store={store} ref={menuTrigger} onClick={openLoadoutPopup} />
+      {loadoutMenu}
+    </>
+  );
+}
+
+// This is broken out into its own component so that useFixOverscrollBehavior can run *only* when the menu element exists.
+function LoadoutMenuContents({
+  store,
+  onClose,
+  menuTrigger,
+}: {
+  store: DimStore;
+  onClose: () => void;
+  menuTrigger: React.RefObject<HTMLDivElement>;
+}) {
   const menuRef = useRef<HTMLDivElement>(null);
-  let loadoutMenu: React.ReactNode | undefined;
-  if (loadoutMenuOpen) {
-    const menuContents = (
-      <ClickOutside
-        onClickOutside={clickOutsideLoadoutMenu}
-        ref={menuRef}
-        extraRef={menuTrigger}
-        className={styles.loadoutMenu}
-      >
-        <LoadoutPopup dimStore={store} onClick={clickOutsideLoadoutMenu} />
-      </ClickOutside>
-    );
 
-    loadoutMenu = <Portal>{menuContents}</Portal>;
-  }
+  useFixOverscrollBehavior(menuRef);
 
   usePopper({
     contents: menuRef,
@@ -95,13 +110,14 @@ export default function StoreHeading({
     padding: 0,
   });
 
-  useFixOverscrollBehavior(menuRef);
-
-  // TODO: aria "open"
   return (
-    <>
-      <CharacterHeader store={store} ref={menuTrigger} onClick={openLoadoutPopup} />
-      {loadoutMenu}
-    </>
+    <ClickOutside
+      onClickOutside={onClose}
+      ref={menuRef}
+      extraRef={menuTrigger}
+      className={styles.loadoutMenu}
+    >
+      <LoadoutPopup dimStore={store} onClick={onClose} />
+    </ClickOutside>
   );
 }
