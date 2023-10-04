@@ -366,11 +366,10 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
       errorLog('loadout optimizer', new Error('You need to have a name on the form input'));
     }
 
-    // https://github.com/Microsoft/TypeScript/issues/13948
     setState({
       [e.target.name as 'type' | 'scaleType']: e.target.value,
       progress: 0,
-    } as unknown as Pick<State, keyof State>);
+    });
   };
 
   const onActiveSetsChange: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
