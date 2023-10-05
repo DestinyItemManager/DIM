@@ -2,7 +2,7 @@ import { UNSET_PLUG_HASH } from 'app/loadout/known-values';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { ThunkResult } from 'app/store/types';
 import { reportException } from 'app/utils/exceptions';
-import { warnLogCollapsedStack } from 'app/utils/log';
+import { warnLog, warnLogCollapsedStack } from 'app/utils/log';
 import {
   AllDestinyManifestComponents,
   DestinyActivityDefinition,
@@ -47,6 +47,7 @@ import {
   DestinyVendorGroupDefinition,
 } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
+import { Draft } from 'immer';
 import { setD2Manifest } from '../manifest/actions';
 import { getManifest } from '../manifest/manifest-service-json';
 import { HashLookupFailure, ManifestDefinitions } from './definitions';
@@ -176,6 +177,7 @@ export function getDefinitions(): ThunkResult<D2ManifestDefinitions> {
 
 export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
   enhanceDBWithFakeEntries(db);
+  patchDBEntriesForVeryGoodReasonsOnly(db);
   const defs: ManifestDefinitions & { [table: string]: any } = {
     isDestiny1: () => false,
     isDestiny2: () => true,
@@ -218,6 +220,53 @@ export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
   }
 
   return defs as D2ManifestDefinitions;
+}
+
+/**
+ * Sometimes the defs just have data that DIM can't deal with for some reason. Patch
+ * a very limited subset of definitions here, with the intent of hopefully removing
+ * them later.
+ */
+function patchDBEntriesForVeryGoodReasonsOnly(db: AllDestinyManifestComponents) {
+  const enhancedBipodHash = 2282937672; // InventoryItem "Bipod"
+  const enhancedBipod = db.DestinyInventoryItemDefinition[enhancedBipodHash];
+  if (!enhancedBipod || enhancedBipod.investmentStats?.length !== 4) {
+    warnLog(
+      'db entry patches',
+      'enhanced bipod workaround does not apply anymore',
+      enhancedBipodHash
+    );
+  } else {
+    // Enhanced Bipod has [-25 blast radius, -15 reload speed, -30 blast radius, -20 reload speed]
+    // investment stats, all conditionally active. Only the lower stats should apply, the others
+    // are from the base perk and included in the defs for whatever reason. DIM really can't deal with that
+    // because we map investment stats to an object keyed by stat hash and dupes break this.
+    // https://github.com/DestinyItemManager/DIM/issues/9076 can fix this.
+    (enhancedBipod as Draft<DestinyInventoryItemDefinition>).investmentStats.splice(-2, 2);
+  }
+
+  const enhancedLastingImpressionHash = 1167468626; // InventoryItem "Lasting Impression"
+  const enhancedLastingImpression =
+    db.DestinyInventoryItemDefinition[enhancedLastingImpressionHash];
+  if (
+    !enhancedLastingImpression ||
+    enhancedLastingImpression.investmentStats?.length !== 2 ||
+    enhancedLastingImpression.investmentStats[0].statTypeHash !==
+      enhancedLastingImpression.investmentStats[1].statTypeHash
+  ) {
+    warnLog(
+      'db entry patches',
+      'enhanced lasting impression workaround does not apply anymore',
+      enhancedLastingImpressionHash
+    );
+  } else {
+    // Lasting Impression has two stats providing different values for the same stat that should just be added together.
+    // Difficult to support in DIM for similar reasons as above.
+    // https://github.com/DestinyItemManager/DIM/issues/9076 can fix this.
+    const draft = enhancedLastingImpression as Draft<DestinyInventoryItemDefinition>;
+    const value = draft.investmentStats.pop()!.value;
+    draft.investmentStats[0].value += value;
+  }
 }
 
 /** This adds fake entries to the DB for places where we've had to make stuff up. */
