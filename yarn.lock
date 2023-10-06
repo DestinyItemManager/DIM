@@ -1707,6 +1707,11 @@
   resolved "https://registry.yarnpkg.com/@sentry/types/-/types-7.69.0.tgz#012b8d90d270a473cc2a5cf58a56870542739292"
   integrity sha512-zPyCox0mzitzU6SIa1KIbNoJAInYDdUpdiA+PoUmMn2hFMH1llGU/cS7f4w/mAsssTlbtlBi72RMnWUCy578bw==
 
+"@sentry/types@^7.73.0":
+  version "7.73.0"
+  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-7.73.0.tgz#6d811bbe413d319df0a592a672d6d72a94a8e716"
+  integrity sha512-/v8++bly8jW7r4cP2wswYiiVpn7eLLcqwnfPUMeCQze4zj3F3nTRIKc9BGHzU0V+fhHa3RwRC2ksqTGq1oJMDg==
+
 "@sentry/utils@7.69.0":
   version "7.69.0"
   resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-7.69.0.tgz#b7594e4eb2a88b9b25298770b841dd3f81bd2aa4"
@@ -1818,7 +1823,7 @@
     textarea-caret "^3.1.0"
     undate "^0.3.0"
 
-"@textcomplete/utils@^0.1.11":
+"@textcomplete/utils@^0.1.11", "@textcomplete/utils@^0.1.12":
   version "0.1.12"
   resolved "https://registry.yarnpkg.com/@textcomplete/utils/-/utils-0.1.12.tgz#04811b4f680708579d78c60a8546c81a16440120"
   integrity sha512-llHhD1FAVwFaaHzs7PU0BZYTpNLDzTccDWbw+5cj0TiB2NOXZGjPm6l7PJrJwN/yUuPDxOHip/3I+kF6OBkBAg==
