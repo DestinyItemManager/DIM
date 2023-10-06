@@ -70,7 +70,6 @@
     "last 2 Opera versions"
   ],
   "resolutions": {
-    "@types/react": "18.2.22",
     "react-redux": "^8.0.1",
     "react-is": "^18.1.0"
   },
@@ -85,6 +84,7 @@
     "@babel/preset-typescript": "^7.21.0",
     "@babel/register": "^7.21.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.1",
+    "@sentry/types": "^7.73.0",
     "@sigmacomputing/babel-plugin-lodash": "^3.3.5",
     "@testing-library/react": "^14.0.0",
     "@types/dom-chromium-installation-events": "^101.0.0",
@@ -93,7 +93,6 @@
     "@types/jest": "^29.0.0",
     "@types/lodash": "^4.14.0",
     "@types/lodash-webpack-plugin": "^0.11.6",
-    "@types/marked": "^5.0.0",
     "@types/node": "^18.0.0",
     "@types/papaparse": "^5.0.0",
     "@types/prop-types": "^15.5.2",
@@ -203,12 +202,14 @@
     "@tanstack/react-virtual": "^3.0.0-beta.61",
     "@textcomplete/core": "^0.1.9",
     "@textcomplete/textarea": "^0.1.9",
+    "@textcomplete/utils": "^0.1.12",
     "bungie-api-ts": "^5.0.0",
     "caniuse-lite": ">=1.0.30000843",
     "clsx": "^2.0.0",
     "comlink": "^4.3.0",
     "core-js": "^3.6.0",
     "dialog-polyfill": "^0.5.6",
+    "dnd-core": "^16.0.1",
     "downshift": "^8.0.0",
     "fast-copy": "^3.0.0",
     "fast-equals": "^5.0.0",
@@ -248,5 +249,6 @@
   "lint-staged": {
     "*.{css,scss}": "stylelint --fix",
     "*.{js,jsx,ts,tsx,css,scss,md,html}": "prettier --write"
-  }
+  },
+  "packageManager": "yarn@1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447"
 }
