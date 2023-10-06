@@ -5,7 +5,6 @@ import { DimLanguage } from 'app/i18n';
 import { DimItem } from 'app/inventory/item-types';
 import memoizeOne from 'memoize-one';
 import { createSelector } from 'reselect';
-import { ArmoryEntry, buildArmoryIndex } from './armory-search';
 import {
   FilterContext,
   FilterDefinition,
@@ -75,7 +74,6 @@ export interface SearchConfig<I, FilterCtx, SuggestionsCtx> {
   filtersMap: FiltersMap<I, FilterCtx, SuggestionsCtx>;
   language: DimLanguage;
   suggestions: Suggestion[];
-  armorySuggestions?: ArmoryEntry[];
 }
 
 export const buildFiltersMap = memoizeOne(
@@ -134,9 +132,6 @@ export function buildSearchConfig(
     }
   }
 
-  const armorySuggestions =
-    suggestionsContext.d2Manifest && buildArmoryIndex(suggestionsContext.d2Manifest, language);
-
   return {
     filtersMap,
     suggestions: Array.from(suggestions, (rawText) => ({
@@ -144,6 +139,5 @@ export function buildSearchConfig(
       plainText: plainString(rawText, language),
     })),
     language,
-    armorySuggestions,
   };
 }
