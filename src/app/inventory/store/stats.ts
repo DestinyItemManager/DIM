@@ -165,14 +165,7 @@ export function buildStats(
     for (const armorStat of armorStats) {
       if (!existingStatHashes.includes(armorStat)) {
         investmentStats.push(
-          buildStat(
-            armorStat,
-            0,
-            false,
-            statGroup,
-            defs.Stat.get(armorStat),
-            statDisplaysByStatHash
-          )
+          buildStat(armorStat, 0, statGroup, defs.Stat.get(armorStat), statDisplaysByStatHash)
         );
       }
     }
@@ -269,14 +262,7 @@ function buildInvestmentStats(
     }
 
     ret.push(
-      buildStat(
-        itemStat.statTypeHash,
-        itemStat.value,
-        itemStat.isConditionallyActive,
-        statGroup,
-        def,
-        statDisplaysByStatHash
-      )
+      buildStat(itemStat.statTypeHash, itemStat.value, statGroup, def, statDisplaysByStatHash)
     );
   }
 
@@ -291,7 +277,6 @@ function buildInvestmentStats(
 function buildStat(
   statHash: number,
   value: number,
-  isConditionallyActive: boolean,
   statGroup: DestinyStatGroupDefinition,
   statDef: DestinyStatDefinition,
   statDisplaysByStatHash: StatDisplayLookup
@@ -326,7 +311,6 @@ function buildStat(
     additive:
       statDef.statCategory === DestinyStatCategory.Defense &&
       statDef.aggregationType === DestinyStatAggregationType.Character,
-    isConditionallyActive: isConditionallyActive,
   };
 }
 
@@ -384,7 +368,6 @@ function applyPlugsToStats(
           const newStat = buildStat(
             affectedStatHash,
             0,
-            pluggedInvestmentStat.isConditionallyActive,
             statGroup,
             statDef,
             statDisplaysByStatHash
