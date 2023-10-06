@@ -5,7 +5,7 @@ export const API_KEY =
     ? $DIM_WEB_API_KEY
     : localStorage.getItem('apiKey')!;
 
-export function bungieApiUpdate(path: string, data?: HttpQueryParams): HttpClientConfig {
+export function bungieApiUpdate(path: string, data?: Record<string, any>): HttpClientConfig {
   return {
     method: 'POST',
     url: `https://www.bungie.net${path}`,

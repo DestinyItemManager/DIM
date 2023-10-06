@@ -154,11 +154,11 @@ export async function transfer(
     return await authenticatedHttpClient<ServerResponse<number>>(
       bungieApiUpdate('/D1/Platform/Destiny/TransferItem/', {
         characterId: store.isVault ? item.owner : store.id,
-        membershipType: account.originalPlatformType.toString(),
+        membershipType: account.originalPlatformType,
         itemId: item.id,
-        itemReferenceHash: item.hash.toString(),
-        stackSize: (amount || item.amount).toString(),
-        transferToVault: store.isVault.toString(),
+        itemReferenceHash: item.hash,
+        stackSize: amount || item.amount,
+        transferToVault: store.isVault,
       })
     );
   } catch (e) {
@@ -170,7 +170,7 @@ export function equip(account: DestinyAccount, item: DimItem) {
   return authenticatedHttpClient<ServerResponse<number>>(
     bungieApiUpdate('/D1/Platform/Destiny/EquipItem/', {
       characterId: item.owner,
-      membershipType: account.originalPlatformType.toString(),
+      membershipType: account.originalPlatformType,
       itemId: item.id,
     })
   );
@@ -190,8 +190,8 @@ export async function equipItems(
   const response = await authenticatedHttpClient<ServerResponse<DestinyEquipItemResults>>(
     bungieApiUpdate('/D1/Platform/Destiny/EquipItems/', {
       characterId: store.id,
-      membershipType: account.originalPlatformType.toString(),
-      itemIds: items.map((i) => i.id).join(','),
+      membershipType: account.originalPlatformType,
+      itemIds: items.map((i) => i.id),
     })
   );
 
@@ -219,9 +219,9 @@ export function setItemState(
   return authenticatedHttpClient(
     bungieApiUpdate(`/D1/Platform/Destiny/${method}/`, {
       characterId: storeId,
-      membershipType: account.originalPlatformType.toString(),
+      membershipType: account.originalPlatformType,
       itemId: item.id,
-      state: lockState.toString(),
+      state: lockState,
     })
   );
 }
