@@ -111,6 +111,7 @@ $control-color: rgba(255, 255, 255, 0.5);
   inset: 0;
   display: none;
   transition: opacity 300ms linear;
+  z-index: 1;
   .sheetDisabled & {
     display: block;
     opacity: 0.6;
