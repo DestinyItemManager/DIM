@@ -118,7 +118,6 @@ function bind(id: string, hotkey: Hotkey) {
   } else {
     keys.push({ ...hotkey, id });
   }
-  console.log('bind', [...keys]);
 }
 
 function unbind(id: string, combo: string) {
@@ -131,7 +130,6 @@ function unbind(id: string, combo: string) {
   if (!hotkeysForCombo.length) {
     delete keyMap[normalizedCombo];
   }
-  console.log('unbind', [...hotkeysForCombo]);
 }
 
 const _MAP: { [code: number]: string } = {
