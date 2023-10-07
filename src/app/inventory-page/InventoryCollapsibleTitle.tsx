@@ -9,7 +9,7 @@ import {
 } from 'app/loadout-drawer/postmaster';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useId, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import '../dim-ui/CollapsibleTitle.scss';
 import { toggleCollapsedSection } from '../settings/actions';
@@ -51,6 +51,9 @@ export default function InventoryCollapsibleTitle({
     initialMount.current = false;
   }, [initialMount]);
 
+  const contentId = useId();
+  const headerId = useId();
+
   return (
     <>
       <div
@@ -81,12 +84,19 @@ export default function InventoryCollapsibleTitle({
                 })}
               >
                 {index === 0 ? (
-                  <span className="collapse-handle" onClick={toggle}>
+                  <button
+                    type="button"
+                    className="collapse-handle"
+                    onClick={toggle}
+                    aria-expanded={!collapsed}
+                    aria-controls={contentId}
+                  >
                     <AppIcon
                       className="collapse-icon"
                       icon={collapsed ? expandIcon : collapseIcon}
+                      ariaHidden
                     />{' '}
-                    <span>
+                    <span id={headerId}>
                       {showPostmasterFull ? text : title}
                       {checkPostmaster && (
                         <span className={styles.bucketSize}>
@@ -97,7 +107,7 @@ export default function InventoryCollapsibleTitle({
                         <span className={styles.clickToExpand}>{t('Inventory.ClickToExpand')}</span>
                       )}
                     </span>
-                  </span>
+                  </button>
                 ) : (
                   <>
                     {showPostmasterFull && text}
@@ -113,7 +123,9 @@ export default function InventoryCollapsibleTitle({
           })}
       </div>
 
-      <CollapsedSection collapsed={collapsed}>{children}</CollapsedSection>
+      <CollapsedSection collapsed={collapsed} headerId={headerId} contentId={contentId}>
+        {children}
+      </CollapsedSection>
     </>
   );
 }

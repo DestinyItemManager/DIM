@@ -1,6 +1,14 @@
 @use '../variables.scss' as *;
 
 .title {
+  text-align: center;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  margin: 0;
+  font-family: inherit;
+  width: 100%;
+
   padding: 0 16px;
   background-color: rgba(0, 0, 0, 0.2);
   color: var(--theme-text);
@@ -34,10 +42,6 @@
     }
   }
 
-  span[role='button'] {
-    cursor: pointer;
-    outline: none;
-  }
   .bucket-count {
     float: right;
   }
@@ -69,6 +73,15 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  font-family: inherit;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 14px;
 }
 
 .collapse-content {

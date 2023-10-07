@@ -2,7 +2,7 @@ import { collapsedSelector } from 'app/dim-api/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
 import { AnimatePresence, Spring, Variants, motion } from 'framer-motion';
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useId, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { toggleCollapsedSection } from '../settings/actions';
 import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
@@ -41,25 +41,37 @@ export default function CollapsibleTitle({
     [disabled, dispatch, sectionId],
   );
 
+  const contentId = useId();
+  const headerId = useId();
+
   return (
     <>
-      <div
+      <button
+        type="button"
         className={clsx(
           'title',
           className,
           { collapsed },
           disabled && collapsed && 'disabled-collapsed',
         )}
+        aria-expanded={!collapsed}
+        aria-controls={contentId}
         style={style}
         onClick={toggle}
       >
         <span className="collapse-handle">
-          <AppIcon className="collapse-icon" icon={collapsed ? expandIcon : collapseIcon} />{' '}
-          <span>{title}</span>
+          <AppIcon
+            className="collapse-icon"
+            icon={collapsed ? expandIcon : collapseIcon}
+            ariaHidden
+          />{' '}
+          <span id={headerId}>{title}</span>
         </span>
         {showExtraOnlyWhenCollapsed ? collapsed && extra : extra}
-      </div>
-      <CollapsedSection collapsed={collapsed}>{children}</CollapsedSection>
+      </button>
+      <CollapsedSection collapsed={collapsed} headerId={headerId} contentId={contentId}>
+        {children}
+      </CollapsedSection>
     </>
   );
 }
@@ -73,9 +85,13 @@ const collapsibleTitleAnimateTransition: Spring = { type: 'spring', duration: 0.
 export function CollapsedSection({
   collapsed,
   children,
+  headerId,
+  contentId,
 }: {
   collapsed: boolean;
   children: React.ReactNode;
+  headerId: string;
+  contentId: string;
 }) {
   const initialMount = useRef(true);
 
@@ -87,6 +103,8 @@ export function CollapsedSection({
     <AnimatePresence>
       {!collapsed && (
         <motion.div
+          id={contentId}
+          aria-labelledby={headerId}
           key="content"
           initial={initialMount.current ? false : 'collapsed'}
           animate="open"
