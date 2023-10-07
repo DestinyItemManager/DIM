@@ -543,7 +543,7 @@
     "SelectExotic": "使用するエキゾチックを選ぶ",
     "SelectMods": "Mod を選択",
     "SelectModsCount": "{{selected}}/{{maxSelectable}}",
-    "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Activity Mods",
+    "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} アクティビティMod",
     "SelectSubclassOptions": "サブクラスをカスタマイズ",
     "ShowAllConfigs": "全ての設定を表示する",
     "ShowConfigs": "設定を表示する",
