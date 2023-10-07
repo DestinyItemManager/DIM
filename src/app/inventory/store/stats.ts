@@ -1,7 +1,6 @@
 import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
-import { D1ItemCategoryHashes } from 'app/search/d1-known-values';
 import { armorStats, evenStatWeights, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
 import { isClassCompatible, isPlugStatActive } from 'app/utils/item-utils';
@@ -107,14 +106,6 @@ const statsNoBar = [
   ...statsMs,
 ];
 
-/** Show these stats in addition to any "natural" stats */
-const hiddenStatsAllowList = [
-  StatHashes.AimAssistance,
-  StatHashes.Zoom,
-  StatHashes.RecoilDirection,
-  StatHashes.AirborneEffectiveness,
-];
-
 /** a dictionary to look up StatDisplay info by statHash */
 interface StatDisplayLookup {
   [statHash: number]: DestinyStatDisplayDefinition | undefined;
@@ -211,13 +202,9 @@ function shouldShowStat(
     return false;
   }
 
-  // Swords shouldn't show any hidden stats
-  const includeHiddenStats = !itemDef.itemCategoryHashes?.includes(D1ItemCategoryHashes.sword);
-
   return Boolean(
-    // Must be on the list of interpolated stats, or included in the hardcoded hidden stats list
-    (statDisplaysByStatHash[statHash] ||
-      (includeHiddenStats && hiddenStatsAllowList.includes(statHash))) &&
+    // Must be on the list of interpolated stats
+    statDisplaysByStatHash[statHash] &&
       // Must be a stat we want to display
       isAllowedItemStat(statHash)
   );
