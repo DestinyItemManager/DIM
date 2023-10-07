@@ -17,7 +17,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
-import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import { Draft } from 'immer';
 import _ from 'lodash';
 import { socketContainsIntrinsicPlug } from '../../utils/socket-utils';
@@ -157,19 +157,7 @@ export function buildStats(
     buildInvestmentStats(itemDef, defs, statGroup, statDisplaysByStatHash) || [];
 
   // Include the contributions from perks and mods
-  applyPlugsToStats(itemDef, investmentStats, createdItem, defs, statGroup, statDisplaysByStatHash);
-
-  if (createdItem.bucket.hash === BucketHashes.Subclass || createdItem.bucket.inArmor) {
-    // one last check for missing stats on armor or subclasses
-    const existingStatHashes = investmentStats.map((s) => s.statHash);
-    for (const armorStat of armorStats) {
-      if (!existingStatHashes.includes(armorStat)) {
-        investmentStats.push(
-          buildStat(armorStat, 0, statGroup, defs.Stat.get(armorStat), statDisplaysByStatHash)
-        );
-      }
-    }
-  }
+  applyPlugsToStats(investmentStats, createdItem, statDisplaysByStatHash);
 
   if (createdItem.bucket.inArmor) {
     // synthesize the "Total" stat for armor
@@ -252,7 +240,7 @@ function buildInvestmentStats(
   const ret: DimStat[] = [];
   for (const itemStat of itemStats) {
     const statHash = itemStat.statTypeHash;
-    if (!itemStat || !shouldShowStat(itemDef, statHash, statDisplaysByStatHash)) {
+    if (!shouldShowStat(itemDef, statHash, statDisplaysByStatHash)) {
       continue;
     }
 
@@ -264,6 +252,22 @@ function buildInvestmentStats(
     ret.push(
       buildStat(itemStat.statTypeHash, itemStat.value, statGroup, def, statDisplaysByStatHash)
     );
+  }
+
+  for (const stat of statGroup.scaledStats) {
+    const statHash = stat.statHash;
+    if (!ret.some((s) => s.statHash === statHash)) {
+      if (!shouldShowStat(itemDef, statHash, statDisplaysByStatHash)) {
+        continue;
+      }
+
+      const def = defs.Stat.get(statHash);
+      if (!def) {
+        continue;
+      }
+
+      ret.push(buildStat(statHash, 0, statGroup, def, statDisplaysByStatHash));
+    }
   }
 
   return ret;
@@ -321,11 +325,8 @@ function buildStat(
  * also adds the projected stat changes to non-selected DimPlugs
  */
 function applyPlugsToStats(
-  itemDef: DestinyInventoryItemDefinition,
-  existingStats: DimStat[], // mutated
+  existingStats: DimStat[], // values in this array are mutated
   createdItem: DimItem,
-  defs: D2ManifestDefinitions,
-  statGroup: DestinyStatGroupDefinition,
   statDisplaysByStatHash: StatDisplayLookup
 ) {
   if (!createdItem.sockets?.allSockets.length) {
@@ -357,25 +358,10 @@ function applyPlugsToStats(
       for (const pluggedInvestmentStat of socket.plugged.plugDef.investmentStats) {
         const affectedStatHash = pluggedInvestmentStat.statTypeHash;
 
-        let existingStat = existingStatsByHash[affectedStatHash];
-        // in case this stat should appear but hasn't been built yet, create and attach it first
+        const existingStat = existingStatsByHash[affectedStatHash];
+        // all relevant stats have been added, so if the item doesn't have the stat, we should ignore this
         if (!existingStat) {
-          // If the stat is already in our list it's already passed this check. But most armor hits this.
-          if (!shouldShowStat(itemDef, affectedStatHash, statDisplaysByStatHash)) {
-            continue;
-          }
-          const statDef = defs.Stat.get(affectedStatHash);
-          const newStat = buildStat(
-            affectedStatHash,
-            0,
-            statGroup,
-            statDef,
-            statDisplaysByStatHash
-          );
-          // add the newly generated stat to our temporary dict, and to the item's stats
-          existingStatsByHash[affectedStatHash] = newStat;
-          existingStats.push(newStat);
-          existingStat = newStat;
+          continue;
         }
 
         // check special conditionals
