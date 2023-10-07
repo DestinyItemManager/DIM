@@ -16,6 +16,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: release
+      url: https://app.destinyitemmanager.com
     steps:
       - uses: actions/checkout@v3
         with:
@@ -73,10 +76,10 @@ jobs:
         run: ./build/deploy-prod.sh
         env:
           NODE_OPTIONS: "--max_old_space_size=8192"
-          WEB_API_KEY: ${{ secrets.PROD_API_KEY }}
-          WEB_OAUTH_CLIENT_ID: ${{ secrets.PROD_OAUTH_CLIENT_ID }}
-          WEB_OAUTH_CLIENT_SECRET: ${{ secrets.PROD_OAUTH_CLIENT_SECRET }}
-          DIM_API_KEY: ${{ secrets.PROD_DIM_API_KEY }}
+          WEB_API_KEY: ${{ secrets.BUNGIE_API_KEY }}
+          WEB_OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
+          WEB_OAUTH_CLIENT_SECRET: ${{ secrets.OAUTH_SECRET }}
+          DIM_API_KEY: ${{ secrets.DIM_API_KEY }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_PATH: app.destinyitemmanager.com
