@@ -124,6 +124,8 @@ export function InGameLoadoutDetails({
   );
 }
 
+const majorSubclassPlugSuffixes = ['.trinkets', '.totems', '.fragments', '.aspects', '.supers'];
+
 // Note that the item has already had socket overrides applied by useItemsFromInGameLoadout
 function InGameLoadoutItemDetail({
   resolvedItem: { item, loadoutItem },
@@ -148,13 +150,12 @@ function InGameLoadoutItemDetail({
   const [smallSockets, bigSockets] = _.partition(
     validSockets,
     (s) =>
-      // Shaders and ornaments
+      // Shaders and ornaments should be small
       cosmeticSockets.includes(s) ||
-      // Grenade, jump, etc
+      // subclass mods that aren't super/aspect/fragment should be small (Grenade, jump, etc)
       (s.plugged!.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.SubclassMods) &&
-        !(
-          s.plugged!.plugDef.plug.plugCategoryIdentifier.endsWith('.fragments') ||
-          s.plugged!.plugDef.plug.plugCategoryIdentifier.endsWith('.aspects')
+        !majorSubclassPlugSuffixes.some((ps) =>
+          s.plugged!.plugDef.plug.plugCategoryIdentifier.endsWith(ps)
         ))
   );
   return (
