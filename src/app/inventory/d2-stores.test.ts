@@ -1,6 +1,7 @@
 import { getWeaponArchetypeSocket } from 'app/utils/socket-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { getTestStores } from 'testing/test-utils';
+import { generateCSVExportData } from './spreadsheets';
 import { DimStore } from './store-types';
 
 describe('process stores', () => {
@@ -95,4 +96,15 @@ describe('process stores', () => {
     }
     throw new Error('Expected at least one item with a perk that cannot roll');
   });
+
+  test.each(['Weapons', 'Armor', 'Ghost'] as const)(
+    'generates a correct  %s CSV export',
+    (type) => {
+      const getTag = () => undefined;
+      const getNotes = () => undefined;
+      const loadoutsByItem = {};
+      const csvExport = generateCSVExportData(type, stores, getTag, getNotes, loadoutsByItem);
+      expect(csvExport).toMatchSnapshot();
+    }
+  );
 });
