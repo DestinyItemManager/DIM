@@ -158,7 +158,7 @@ function IntrinsicArmorPerk({
   const plugDescriptions = usePlugDescriptions(socket.plugged?.plugDef);
   return (
     <ArchetypeRow minimal={minimal}>
-      <ArchetypeSocket archetypeSocket={socket} item={item} onClick={onPlugClicked}>
+      <ArchetypeSocket archetypeSocket={socket} noTooltip item={item} onClick={onPlugClicked}>
         {!minimal && (
           <div className={styles.armorIntrinsicDescription}>
             {plugDescriptions.perks.map(
