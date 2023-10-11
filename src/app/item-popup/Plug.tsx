@@ -27,6 +27,7 @@ export default function Plug({
   socketInfo,
   wishlistRoll,
   hasMenu,
+  noTooltip,
   isMod,
   onClick,
   plugged,
@@ -40,6 +41,7 @@ export default function Plug({
   socketInfo: DimSocket;
   wishlistRoll?: InventoryWishListRoll;
   hasMenu: boolean;
+  noTooltip?: boolean;
   isMod?: boolean;
   onClick?: (plug: DimPlug) => void;
 } & PlugStatuses) {
@@ -79,6 +81,8 @@ export default function Plug({
           unreliablePerkOption={unreliablePerkOption}
           notSelected={notSelected}
         />
+      ) : noTooltip ? (
+        <DefItemIcon itemDef={plug.plugDef} />
       ) : (
         <PressTip tooltip={<DimPlugTooltip item={item} plug={plug} wishlistRoll={wishlistRoll} />}>
           <DefItemIcon itemDef={plug.plugDef} />

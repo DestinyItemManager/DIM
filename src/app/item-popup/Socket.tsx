@@ -10,12 +10,14 @@ import './Socket.scss';
 export default function Socket({
   item,
   socket,
+  noTooltip,
   wishlistRoll,
   onClick,
   pluggedOnly = false,
 }: {
   item: DimItem;
   socket: DimSocket;
+  noTooltip?: boolean;
   wishlistRoll?: InventoryWishListRoll;
   onClick?: PlugClickHandler;
   pluggedOnly?: boolean;
@@ -35,6 +37,7 @@ export default function Socket({
               plug={plug}
               item={item}
               socketInfo={socket}
+              noTooltip={noTooltip}
               wishlistRoll={wishlistRoll}
               hasMenu={hasMenu}
               isMod={socket.isMod}
