@@ -7,7 +7,6 @@ import { getItemYear } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import extraItemCollectibles from 'data/d2/unreferenced-collections-items.json';
 import _ from 'lodash';
-import memoizeOne from 'memoize-one';
 import { ArmorySearchItem, SearchItemType } from './autocomplete';
 import { plainString } from './search-filters/freeform';
 
@@ -22,7 +21,10 @@ export interface ArmoryEntry {
   year: number | undefined;
 }
 
-export const buildArmoryIndex = memoizeOne((defs: D2ManifestDefinitions, language: DimLanguage) => {
+export function buildArmoryIndex(defs: D2ManifestDefinitions | undefined, language: DimLanguage) {
+  if (!defs) {
+    return undefined;
+  }
   const results: ArmoryEntry[] = [];
   const invItemTable = defs.InventoryItem.getAll();
   const seasons = Object.values(defs.Season.getAll());
@@ -71,7 +73,7 @@ export const buildArmoryIndex = memoizeOne((defs: D2ManifestDefinitions, languag
     )
   );
   return results;
-});
+}
 
 export function getArmorySuggestions(
   armoryIndex: ArmoryEntry[] | undefined,

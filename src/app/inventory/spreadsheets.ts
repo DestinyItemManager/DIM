@@ -5,6 +5,7 @@ import { LoadoutsByItem, loadoutsByItemSelector } from 'app/loadout-drawer/selec
 import { D1_StatHashes } from 'app/search/d1-known-values';
 import { dimArmorStatHashByName } from 'app/search/search-filter-values';
 import { ThunkResult } from 'app/store/types';
+import { compareBy } from 'app/utils/comparators';
 import {
   getItemKillTrackerInfo,
   getItemYear,
@@ -24,6 +25,7 @@ import { setItemNote, setItemTagsBulk } from './actions';
 import { TagValue, tagConfig } from './dim-item-info';
 import { D1GridNode, DimItem, DimSockets } from './item-types';
 import { getNotesSelector, getTagSelector, storesSelector } from './selectors';
+import { DimStore } from './store-types';
 import { getEvent, getSeason } from './store/season';
 
 function getClass(type: DestinyClass) {
@@ -67,6 +69,55 @@ const FILTER_NODE_NAMES = [
 // ignore raid & calus sources in favor of more detailed sources
 const sourceKeys = Object.keys(D2Sources).filter((k) => !['raid', 'calus'].includes(k));
 
+export function generateCSVExportData(
+  type: 'Weapons' | 'Armor' | 'Ghost',
+  stores: DimStore[],
+  getTag: (item: DimItem) => TagValue | undefined,
+  getNotes: (item: DimItem) => string | undefined,
+  loadoutsByItem: LoadoutsByItem
+) {
+  const nameMap: { [storeId: string]: string } = {};
+  let allItems: DimItem[] = [];
+  for (const store of stores) {
+    allItems = allItems.concat(store.items);
+    nameMap[store.id] =
+      store.id === 'vault'
+        ? 'Vault'
+        : `${capitalizeFirstLetter(getClass(store.classType))}(${store.powerLevel})`;
+  }
+  allItems.sort(compareBy((item) => item.index));
+  const items: DimItem[] = [];
+  for (const item of allItems) {
+    if (!item.primaryStat && type !== 'Ghost') {
+      continue;
+    }
+
+    if (type === 'Weapons') {
+      if (
+        item.primaryStat?.statHash === D1_StatHashes.Attack ||
+        item.primaryStat?.statHash === StatHashes.Attack
+      ) {
+        items.push(item);
+      }
+    } else if (type === 'Armor') {
+      if (item.primaryStat?.statHash === StatHashes.Defense) {
+        items.push(item);
+      }
+    } else if (type === 'Ghost' && item.bucket.hash === BucketHashes.Ghost) {
+      items.push(item);
+    }
+  }
+
+  switch (type) {
+    case 'Weapons':
+      return downloadWeapons(items, nameMap, getTag, getNotes, loadoutsByItem);
+    case 'Armor':
+      return downloadArmor(items, nameMap, getTag, getNotes, loadoutsByItem);
+    case 'Ghost':
+      return downloadGhost(items, nameMap, getTag, getNotes, loadoutsByItem);
+  }
+}
+
 export function downloadCsvFiles(type: 'Weapons' | 'Armor' | 'Ghost'): ThunkResult {
   return async (_dispatch, getState) => {
     const stores = storesSelector(getState());
@@ -78,47 +129,8 @@ export function downloadCsvFiles(type: 'Weapons' | 'Armor' | 'Ghost'): ThunkResu
     if (stores.length === 0) {
       return;
     }
-    const nameMap: { [storeId: string]: string } = {};
-    let allItems: DimItem[] = [];
-    for (const store of stores) {
-      allItems = allItems.concat(store.items);
-      nameMap[store.id] =
-        store.id === 'vault'
-          ? 'Vault'
-          : `${capitalizeFirstLetter(getClass(store.classType))}(${store.powerLevel})`;
-    }
-    const items: DimItem[] = [];
-    for (const item of allItems) {
-      if (!item.primaryStat && type !== 'Ghost') {
-        continue;
-      }
-
-      if (type === 'Weapons') {
-        if (
-          item.primaryStat?.statHash === D1_StatHashes.Attack ||
-          item.primaryStat?.statHash === StatHashes.Attack
-        ) {
-          items.push(item);
-        }
-      } else if (type === 'Armor') {
-        if (item.primaryStat?.statHash === StatHashes.Defense) {
-          items.push(item);
-        }
-      } else if (type === 'Ghost' && item.bucket.hash === BucketHashes.Ghost) {
-        items.push(item);
-      }
-    }
-    switch (type) {
-      case 'Weapons':
-        downloadWeapons(items, nameMap, getTag, getNotes, loadoutsForItem);
-        break;
-      case 'Armor':
-        downloadArmor(items, nameMap, getTag, getNotes, loadoutsForItem);
-        break;
-      case 'Ghost':
-        downloadGhost(items, nameMap, getTag, getNotes, loadoutsForItem);
-        break;
-    }
+    const data = generateCSVExportData(type, stores, getTag, getNotes, loadoutsForItem);
+    downloadCsv(`destiny${type}`, Papa.unparse(data));
   };
 }
 
@@ -302,7 +314,7 @@ function downloadGhost(
     return row;
   });
 
-  downloadCsv('destinyGhosts', Papa.unparse(data));
+  return data;
 }
 
 function equippable(item: DimItem) {
@@ -424,7 +436,7 @@ function downloadArmor(
 
     return row;
   });
-  downloadCsv('destinyArmor', Papa.unparse(data));
+  return data;
 }
 
 function downloadWeapons(
@@ -620,5 +632,5 @@ function downloadWeapons(
     return row;
   });
 
-  downloadCsv('destinyWeapons', Papa.unparse(data));
+  return data;
 }

@@ -70,6 +70,5 @@ export function makeCustomStat(
     bar: false,
     smallerIsBetter: false,
     additive: false,
-    isConditionallyActive: false,
   };
 }

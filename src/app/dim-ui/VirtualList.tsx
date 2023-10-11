@@ -72,7 +72,7 @@ export const VirtualList = forwardRef(function VirtualList(
         <div
           className={styles.virtualArea}
           style={{
-            transform: `translateY(${items[0].start}px)`,
+            transform: `translateY(${items.length > 0 ? items[0].start : 0}px)`,
           }}
         >
           {items.map((virtualItem) => (
@@ -152,7 +152,9 @@ export const WindowVirtualList = forwardRef(function WindowVirtualList(
       <div
         className={styles.virtualArea}
         style={{
-          transform: `translateY(${items[0].start - virtualizer.options.scrollMargin}px)`,
+          transform: `translateY(${
+            items.length > 0 ? items[0].start - virtualizer.options.scrollMargin : 0
+          }px)`,
         }}
       >
         {items.map((virtualItem) => (

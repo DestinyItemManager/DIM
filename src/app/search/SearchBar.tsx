@@ -1,6 +1,6 @@
 import ArmorySheet from 'app/armory/ArmorySheet';
 import { saveSearch, searchDeleted, searchUsed } from 'app/dim-api/basic-actions';
-import { recentSearchesSelector } from 'app/dim-api/selectors';
+import { languageSelector, recentSearchesSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import KeyHelp from 'app/dim-ui/KeyHelp';
 import { Loading } from 'app/dim-ui/Loading';
@@ -8,6 +8,7 @@ import Sheet from 'app/dim-ui/Sheet';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { useFixOverscrollBehavior } from 'app/dim-ui/useFixOverscrollBehavior';
 import { t } from 'app/i18next-t';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { toggleSearchResults } from 'app/shell/actions';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -46,6 +47,7 @@ import {
 } from '../shell/icons';
 import HighlightedText from './HighlightedText';
 import styles from './SearchBar.m.scss';
+import { buildArmoryIndex } from './armory-search';
 import createAutocompleter, { SearchItem, SearchItemType } from './autocomplete';
 import { canonicalizeQuery, parseQuery } from './query-parser';
 import { searchConfigSelector } from './search-config';
@@ -66,7 +68,13 @@ const searchItemIcons: { [key in SearchItemType]: string } = {
   [SearchItemType.ArmoryEntry]: helpIcon,
 };
 
-const autoCompleterSelector = createSelector(searchConfigSelector, createAutocompleter);
+const armoryIndexSelector = createSelector(d2ManifestSelector, languageSelector, buildArmoryIndex);
+
+const autoCompleterSelector = createSelector(
+  searchConfigSelector,
+  armoryIndexSelector,
+  createAutocompleter
+);
 
 const LazyFilterHelp = lazy(() => import(/* webpackChunkName: "filter-help" */ './FilterHelp'));
 
@@ -258,7 +266,13 @@ function SearchBar(
 
   const caretPosition = inputElement.current?.selectionStart || liveQuery.length;
   const items = useMemo(
-    () => autocompleter(liveQuery, caretPosition, recentSearches, Boolean(mainSearchBar)),
+    () =>
+      autocompleter(
+        liveQuery,
+        caretPosition,
+        recentSearches,
+        /* includeArmory */ Boolean(mainSearchBar)
+      ),
     [autocompleter, caretPosition, liveQuery, mainSearchBar, recentSearches]
   );
 

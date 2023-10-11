@@ -67,6 +67,8 @@ module.exports = function (api) {
       'es.array.unshift',
       // Remove this if we start using proposed set methods like .intersection
       /esnext\.set/,
+      // Remove this if we start using iterator-helpers (which would be nice!)
+      /esnext\.iterator/,
       // Not sure what exactly this is, but we have our own error-cause stuff
       'es.error.cause',
       // Only used when customizing JSON parsing w/ a "reviver"
@@ -79,6 +81,8 @@ module.exports = function (api) {
       'web.dom-exception.stack',
       // Not needed in worker context
       'web.self',
+      // Mis-detected by usage of Array.prototype.at
+      'es.string.at-alternative',
     ],
   };
 
