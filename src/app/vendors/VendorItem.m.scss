@@ -4,7 +4,6 @@
   cursor: pointer;
   height: 54px;
   width: 123px;
-  margin-right: 4px;
 }
 
 .ownershipIcon {
@@ -40,12 +39,15 @@
 }
 
 .vendorItem {
-  display: flex;
-  flex-direction: column;
+  composes: flexColumn from '../dim-ui/common.m.scss';
   align-items: center;
   position: relative;
-  margin-right: var(--item-margin);
-  cursor: pointer;
+  width: min-content;
+  text-align: center;
+
+  :global(.item) {
+    cursor: pointer;
+  }
 
   :global(.item-img) {
     object-fit: cover;
@@ -56,11 +58,6 @@
   :global(.item) {
     opacity: 0.3;
   }
-}
-
-.vendorCosts {
-  margin-top: -4px;
-  margin-bottom: 4px;
 }
 
 .cost {
