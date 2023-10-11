@@ -6,7 +6,7 @@
     {
       "label": "start",
       "type": "shell",
-      "command": "yarn",
+      "command": "pnpm",
       "args": ["start"],
       "isBackground": true,
       "problemMatcher": ["$ts-checker-webpack", "$ts-checker-eslint-webpack"]

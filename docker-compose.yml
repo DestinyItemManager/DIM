@@ -8,7 +8,7 @@ services:
       - 8080:8080
     working_dir: /usr/src/app
     command: >
-      bash -c "git config --global --add safe.directory /usr/src/app && yarn install --frozen-lockfile --prefer-offline && yarn start"
+      bash -c "git config --global --add safe.directory /usr/src/app && corepack enable && pnpm install --frozen-lockfile --prefer-offline && pnpm start"
     environment:
       - NODE_ENV=development
       - DOCKER=true

@@ -58,7 +58,7 @@ module.exports = function (api) {
     useBuiltIns: 'usage',
     corejs,
     shippedProposals: true,
-    // Set to true and run `yarn build:beta` to see what plugins and polyfills are being used
+    // Set to true and run `pnpm build:beta` to see what plugins and polyfills are being used
     debug: false,
     // corejs includes a bunch of polyfills for behavior we don't use or bugs we don't care about
     exclude: [

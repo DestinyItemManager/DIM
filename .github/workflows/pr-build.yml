@@ -17,14 +17,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - uses: pnpm/action-setup@v2
+
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
-          cache: yarn
+          cache: pnpm
 
       - name: Install
-        run: yarn install --frozen-lockfile --prefer-offline
+        run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: get-npm-version
         id: package-version
@@ -39,7 +41,7 @@ jobs:
           echo "VERSION=${{ steps.package-version.outputs.current-version }}.${{ github.run_number }}" >> $GITHUB_ENV
 
       - name: Build beta
-        run: yarn build:beta
+        run: pnpm build:beta
         env:
           NODE_OPTIONS: "--max_old_space_size=8192"
           PR_BUILD: true
@@ -51,7 +53,7 @@ jobs:
           filters: |
             build-pipeline:
               - package.json
-              - yarn.lock
+              - pnpm.lock
               - config/webpack.ts
               - babel.config.js
 
