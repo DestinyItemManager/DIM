@@ -1,6 +1,6 @@
 import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd';
 import { t } from 'app/i18next-t';
-import { reorder } from 'app/utils/util';
+import { reorder } from 'app/utils/collections';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React, { memo } from 'react';

@@ -52,7 +52,8 @@ import { itemIncludesCategories } from './filtering-utils';
 import { compareSelectedItems } from 'app/compare/actions';
 
 import { useTableColumnSorts } from 'app/dim-ui/table-columns';
-import { errorMessage, filterMap } from 'app/utils/util';
+import { filterMap } from 'app/utils/collections';
+import { errorMessage } from 'app/utils/errors';
 import { createPortal } from 'react-dom';
 // eslint-disable-next-line css-modules/no-unused-class
 import styles from './ItemTable.m.scss';

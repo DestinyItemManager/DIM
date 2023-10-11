@@ -12,7 +12,7 @@ import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conver
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { filterMap } from 'app/utils/util';
+import { filterMap } from 'app/utils/collections';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useMemo } from 'react';

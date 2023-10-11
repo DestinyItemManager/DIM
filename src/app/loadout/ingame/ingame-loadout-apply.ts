@@ -19,7 +19,7 @@ import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { inGameLoadoutItemsFromEquipped } from 'app/loadout-drawer/loadout-utils';
 import { showNotification } from 'app/notifications/notifications';
 import { ThunkResult } from 'app/store/types';
-import { errorMessage } from 'app/utils/util';
+import { errorMessage } from 'app/utils/errors';
 import { inGameLoadoutDeleted, inGameLoadoutUpdated } from './actions';
 import { getItemsFromInGameLoadout } from './ingame-loadout-utils';
 

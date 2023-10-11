@@ -1,6 +1,6 @@
 import { D1BucketHashes, D1_StatHashes } from 'app/search/d1-known-values';
+import { uniqBy } from 'app/utils/collections';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
-import { uniqBy } from 'app/utils/util';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { D1Item } from '../../inventory/item-types';

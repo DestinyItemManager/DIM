@@ -13,8 +13,8 @@ import { d2ManifestSelector, manifestSelector } from 'app/manifest/selectors';
 import { get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
+import { convertToError, errorMessage } from 'app/utils/errors';
 import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
-import { convertToError, errorMessage } from 'app/utils/util';
 import { DestinyItemComponent, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { getCharacters as d1GetCharacters } from '../bungie-api/destiny1-api';
@@ -24,7 +24,7 @@ import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definition
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import { showNotification } from '../notifications/notifications';
 import { loadingTracker } from '../shell/loading-tracker';
-import { reportException } from '../utils/exceptions';
+import { reportException } from '../utils/sentry';
 import {
   CharacterInfo,
   charactersUpdated,

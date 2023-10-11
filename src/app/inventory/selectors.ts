@@ -9,7 +9,7 @@ import { d2ManifestSelector } from 'app/manifest/selectors';
 import { filterUnlockedPlugs } from 'app/records/plugset-helpers';
 import { RootState } from 'app/store/types';
 import { emptyArray, emptyObject, emptySet } from 'app/utils/empty';
-import { currySelector } from 'app/utils/selector-utils';
+import { currySelector } from 'app/utils/selectors';
 import { DestinyItemPlug, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';

@@ -43,7 +43,7 @@ import {
 } from 'app/stream-deck/interfaces';
 import { DeferredPromise } from 'app/stream-deck/util/deferred';
 import { clientIdentifier, streamDeckToken } from 'app/stream-deck/util/local-storage';
-import { delay } from 'app/utils/util';
+import { delay } from 'app/utils/promises';
 import { DamageType } from 'bungie-api-ts/destiny2';
 
 // Deferred promise used with selections notifications and actions

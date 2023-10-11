@@ -1,4 +1,4 @@
-import { filterMap, uniqBy } from 'app/utils/util';
+import { filterMap, uniqBy } from 'app/utils/collections';
 import _ from 'lodash';
 import { ItemInfos } from './dim-item-info';
 

@@ -1,5 +1,5 @@
 import { infoLog } from 'app/utils/log';
-import { delay } from 'app/utils/util';
+import { delay } from 'app/utils/promises';
 import disciplineIcon from 'images/discipline.png';
 import intellectIcon from 'images/intellect.png';
 import strengthIcon from 'images/strength.png';

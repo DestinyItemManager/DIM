@@ -1,5 +1,5 @@
 import { infoLog } from 'app/utils/log';
-import { dedupePromise } from 'app/utils/util';
+import { dedupePromise } from 'app/utils/promises';
 import { oauthClientId, oauthClientSecret } from './bungie-api-utils';
 import { toHttpStatusError } from './http-client';
 import { Token, Tokens, setToken } from './oauth-tokens';

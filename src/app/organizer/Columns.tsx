@@ -38,6 +38,7 @@ import {
   thumbsUpIcon,
 } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
+import { filterMap } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import {
   getInterestingSocketMetadatas,
@@ -57,7 +58,6 @@ import {
   isEnhancedPerk,
   isUsedArmorModSocket,
 } from 'app/utils/socket-utils';
-import { filterMap } from 'app/utils/util';
 import { LookupTable } from 'app/utils/util-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import clsx from 'clsx';

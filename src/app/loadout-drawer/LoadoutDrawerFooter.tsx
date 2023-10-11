@@ -5,7 +5,7 @@ import { t } from 'app/i18next-t';
 import { AppIcon, deleteIcon, redoIcon, undoIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { isClassCompatible } from 'app/utils/item-utils';
-import { currySelector } from 'app/utils/selector-utils';
+import { currySelector } from 'app/utils/selectors';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';

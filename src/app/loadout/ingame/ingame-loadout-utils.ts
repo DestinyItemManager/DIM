@@ -12,7 +12,7 @@ import {
   ResolvedLoadoutMod,
 } from 'app/loadout-drawer/loadout-types';
 import { potentialLoadoutItemsByItemId } from 'app/loadout-drawer/loadout-utils';
-import { filterMap } from 'app/utils/util';
+import { filterMap } from 'app/utils/collections';
 import { DestinyLoadoutItemComponent } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { useMemo } from 'react';

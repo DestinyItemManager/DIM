@@ -20,11 +20,13 @@ import { getTotalModStatChanges } from 'app/loadout/stats';
 import { manifestSelector } from 'app/manifest/selectors';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { armorStats, deprecatedPlaceholderArmorModHash } from 'app/search/d2-known-values';
+import { filterMap } from 'app/utils/collections';
 import {
   isClassCompatible,
   isItemLoadoutCompatible,
   itemCanBeInLoadout,
 } from 'app/utils/item-utils';
+import { weakMemoize } from 'app/utils/memoize';
 import {
   aspectSocketCategoryHashes,
   fragmentSocketCategoryHashes,
@@ -34,7 +36,6 @@ import {
   getSocketsByIndexes,
   plugFitsIntoSocket,
 } from 'app/utils/socket-utils';
-import { filterMap, weakMemoize } from 'app/utils/util';
 import { HashLookup, LookupTable } from 'app/utils/util-types';
 import {
   DestinyClass,

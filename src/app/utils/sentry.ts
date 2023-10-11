@@ -16,8 +16,6 @@ import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { DimError } from './dim-error';
 import { errorLog } from './log';
 
-// TODO: rename this file "sentry"
-
 /** Sentry.io exception reporting */
 export let reportException = (name: string, e: any, errorInfo?: Record<string, unknown>) => {
   errorLog(

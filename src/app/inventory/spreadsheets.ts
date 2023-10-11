@@ -5,7 +5,9 @@ import { LoadoutsByItem, loadoutsByItemSelector } from 'app/loadout-drawer/selec
 import { D1_StatHashes } from 'app/search/d1-known-values';
 import { dimArmorStatHashByName } from 'app/search/search-filter-values';
 import { ThunkResult } from 'app/store/types';
+import { filterMap } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
+import { download } from 'app/utils/download';
 import {
   getItemKillTrackerInfo,
   getItemYear,
@@ -13,7 +15,6 @@ import {
   getSpecialtySocketMetadatas,
   isD1Item,
 } from 'app/utils/item-utils';
-import { download, filterMap } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { D2EventInfo } from 'data/d2/d2-event-info';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
