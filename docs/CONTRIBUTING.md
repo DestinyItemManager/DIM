@@ -62,8 +62,8 @@ Once you have cloned the repository or a fork of the repository to your local ma
 
 * Run `pnpm install`
   * If `pnpm` isn't installed, run `corepack enable` and try again, or [install it manually](https://pnpm.io/installation).
+    * If `corepack enable` fails, try running it with Administrator privileges.
     * If you're using PowerShell on Windows, you may need to run `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted` to allow pnpm to run.
-  * Windows-based developers will need to install `windows-build-tools` (run `pnpm install -g windows-build-tools` in your terminal) globally prior to running `pnpm install`. Refer to issue #1439 for [details](https://github.com/DestinyItemManager/DIM/issues/1439).
   * Linux-based developers will need to install `build-essential` (`sudo apt-get install -y build-essential`) prior to running `pnpm install`.
 * Run `pnpm start`
 
