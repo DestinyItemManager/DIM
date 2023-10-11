@@ -8,6 +8,7 @@
     "node": ">=18",
     "pnpm": ">=8"
   },
+  "type": "module",
   "scripts": {
     "test": "cross-env NODE_ENV=test jest --verbose",
     "lint": "run-p lint:*",
@@ -27,18 +28,18 @@
     "build:release": "pnpm -s bundle --env=release --node-env=production",
     "build:beta": "pnpm -s bundle --env=beta --node-env=production",
     "build:dev": "pnpm -s bundle --env=dev",
-    "i18n": "i18next-scanner",
+    "i18n": "i18next-scanner --config ./i18next-scanner.config.cjs",
     "start": "run-p watch:i18n devserver",
     "devserver": "nodemon --delay 2 --watch config/webpack.ts --watch config/feature-flags.ts --watch config/content-security-policy.ts --watch pnpm-lock.yaml -e ts,js,json,lock --exec \"pnpm install --frozen-lockfile --prefer-offline && webpack serve --config ./config/webpack.ts --env=dev || pnpm touch\"",
     "touch": "node -e \"require('fs').utimes('config/webpack.ts', new Date(), new Date(), () => {})\"",
-    "watch:i18n": "nodemon --watch config/i18n.json --exec \"i18next-scanner\"",
+    "watch:i18n": "nodemon --watch config/i18n.json --exec \"pnpm i18n\"",
     "syntax": "find dist -name \"*.js\" | xargs -n 1 node --check",
     "install": "git submodule update --init --recursive",
     "dead-code": "ts-unused-exports tsconfig.json --allowUnusedTypes --allowUnusedEnums --showLineNumber | grep -v cssExports",
     "bcu": "run-s bcu:*",
     "bcu:build": "node src/build-browsercheck-utils.js",
     "bcu:pretty": "prettier --write src/browsercheck-utils.js",
-    "fa-subset": "node src/fa-subset.mjs",
+    "fa-subset": "node src/fa-subset.js",
     "prepare": "husky install"
   },
   "jest-junit": {

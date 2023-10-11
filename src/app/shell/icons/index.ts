@@ -1,7 +1,7 @@
 import AppIconComponent from './AppIcon';
 
 export const AppIcon = AppIconComponent;
-export * from './Library.mjs';
+export * from './Library.js';
 export { dimEngramIcon as engramIcon } from './custom/Engram';
 export { epicIcon } from './custom/Epic';
 export { dimHunterIcon as hunterIcon } from './custom/Hunter';
