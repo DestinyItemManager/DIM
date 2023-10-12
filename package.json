@@ -13,7 +13,7 @@
     "test": "cross-env NODE_ENV=test jest --verbose",
     "lint": "run-p lint:*",
     "lint:eslint": "eslint src --ext .js,.ts,.tsx",
-    "lint:prettier": "prettier \"src/**/*.{js,ts,tsx,scss}\" --check",
+    "lint:prettier": "prettier \"src/**/*.{js,ts,tsx,cjs,mjs,cts,mts,scss}\" --check",
     "lint:stylelint": "stylelint \"src/**/*.scss\"",
     "lintcached": "run-p lintcached:*",
     "lintcached:eslint": "pnpm lint:eslint --cache --cache-location .eslintcache --cache-strategy content",
@@ -252,7 +252,7 @@
   },
   "lint-staged": {
     "*.{css,scss}": "stylelint --fix",
-    "*.{js,jsx,ts,tsx,css,scss,md,html}": "prettier --write"
+    "*.{js,jsx,ts,tsx,cjs,mjs,cts,mts,css,scss,md,html}": "prettier --write"
   },
   "packageManager": "pnpm@8.8.0+sha256.d713a5750e41c3660d1e090608c7f607ad00d1dd5ba9b6552b5f390bf37924e9",
   "pnpm": {
