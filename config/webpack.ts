@@ -177,7 +177,15 @@ export default (env: Env) => {
           terserOptions: {
             ecma: 2020,
             module: true,
-            compress: { passes: 3, toplevel: true, unsafe: true, pure_funcs: ['JSON.parse'] },
+            compress: {
+              passes: 3,
+              toplevel: true,
+              unsafe: true,
+              unsafe_arrows: true,
+              unsafe_math: true,
+              unsafe_proto: true,
+              pure_funcs: ['JSON.parse'],
+            },
             mangle: { toplevel: true },
           },
         }),
