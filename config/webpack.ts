@@ -181,7 +181,6 @@ export default (env: Env) => {
               passes: 3,
               toplevel: true,
               unsafe: true,
-              unsafe_arrows: true,
               unsafe_math: true,
               unsafe_proto: true,
               pure_getters: true,
