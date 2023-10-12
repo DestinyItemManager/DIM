@@ -65,6 +65,12 @@ const animationVariants = {
 const dragConstraints = { top: 0, bottom: window.innerHeight } as const;
 
 const stopPropagation = (e: React.SyntheticEvent) => e.stopPropagation();
+const handleKeyDown = (e: React.KeyboardEvent) => {
+  // Allow "esc" to propagate which lets you escape focus on inputs.
+  if (e.key !== 'Escape') {
+    e.stopPropagation();
+  }
+};
 
 /**
  * Automatically disable the parent sheet while this sheet is shown. You must
@@ -170,15 +176,6 @@ export default function Sheet({
 
   // Handle global escape key
   useHotkey('esc', t('Hotkey.ClearDialog'), triggerClose);
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      // Allow "esc" to propagate which lets you escape focus on inputs.
-      if (e.key !== 'Escape') {
-        e.stopPropagation();
-      }
-    },
-    [triggerClose]
-  );
 
   // We need to call the onClose callback when then close animation is complete so that
   // the calling component can unmount the sheet
