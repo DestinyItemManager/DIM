@@ -172,7 +172,6 @@ export default function Sheet({
   useHotkey('esc', t('Hotkey.ClearDialog'), triggerClose);
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      console.log('eee', e.key);
       // Allow "esc" to propagate which lets you escape focus on inputs.
       if (e.key !== 'Escape') {
         e.stopPropagation();
