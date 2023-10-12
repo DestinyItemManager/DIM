@@ -118,6 +118,7 @@ export function getCharacterStatsData(
       value: rawStat.value,
       name: '',
       description: '',
+      icon: '',
     };
 
     switch (statId) {
