@@ -31,7 +31,7 @@ export default function Links({ item }: { item: DimItem }) {
       link: `https://www.light.gg/db/${language}/items/${item.hash}${buildLightGGSockets(item)}`,
     },
     item.bucket.inWeapons && {
-      name: 'Foundry',
+      name: 'D2Foundry',
       icon: foundry,
       link: `https://d2foundry.gg/w/${item.hash}${buildFoundrySockets(item)}`,
     },
