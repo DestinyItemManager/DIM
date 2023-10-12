@@ -2,9 +2,6 @@ import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D1Character, D1StatLabel } from 'app/destiny1/d1-manifest-types';
 import { warnLog } from 'app/utils/log';
 import { StatHashes } from 'data/d2/generated-enums';
-import disciplineIcon from 'images/discipline.png';
-import intellectIcon from 'images/intellect.png';
-import strengthIcon from 'images/strength.png';
 import { DimCharacterStat } from '../store-types';
 
 // Cooldowns
@@ -126,15 +123,15 @@ export function getCharacterStatsData(
     switch (statId) {
       case 'STAT_INTELLECT':
         stat.effect = 'Super';
-        stat.icon = intellectIcon;
+        stat.icon = defs.Stat.get(StatHashes.Intellect).icon;
         break;
       case 'STAT_DISCIPLINE':
         stat.effect = 'Grenade';
-        stat.icon = disciplineIcon;
+        stat.icon = defs.Stat.get(StatHashes.Discipline).icon;
         break;
       case 'STAT_STRENGTH':
         stat.effect = 'Melee';
-        stat.icon = strengthIcon;
+        stat.icon = defs.Stat.get(StatHashes.Strength).icon;
         break;
       default:
         break;

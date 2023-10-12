@@ -145,6 +145,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
           cancelled: false,
         };
         const result = await getSetBucketsStep(
+          defs,
           loadBucket(selectedCharacter, stores),
           loadVendorsBucket(selectedCharacter, state.vendors),
           state.lockeditems,
