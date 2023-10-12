@@ -75,6 +75,7 @@ export default (env: Env) => {
   }
 
   const buildTime = Date.now();
+  const publicPath = process.env.PUBLIC_PATH ?? '/';
 
   const featureFlags = makeFeatureFlags(env);
   const contentSecurityPolicy = csp(env.name, featureFlags);
@@ -98,7 +99,7 @@ export default (env: Env) => {
 
     output: {
       path: path.resolve('./dist'),
-      publicPath: '/',
+      publicPath,
       filename: jsFilenamePattern,
       chunkFilename: jsFilenamePattern,
       assetModuleFilename: ASSET_NAME_PATTERN,
@@ -408,6 +409,7 @@ export default (env: Env) => {
         date: new Date(buildTime).toString(),
         splash,
         analyticsProperty,
+        publicPath,
       },
       minify: env.dev
         ? false
@@ -473,6 +475,7 @@ export default (env: Env) => {
       $DIM_WEB_CLIENT_SECRET: JSON.stringify(process.env.WEB_OAUTH_CLIENT_SECRET),
       $DIM_API_KEY: JSON.stringify(process.env.DIM_API_KEY),
       $ANALYTICS_PROPERTY: JSON.stringify(analyticsProperty),
+      $PUBLIC_PATH: JSON.stringify(publicPath),
 
       $BROWSERS: JSON.stringify(browserslist(packageJson.browserslist)),
 
