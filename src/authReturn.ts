@@ -37,7 +37,7 @@ async function handleAuthReturn() {
   try {
     const token = await getAccessTokenFromCode(code);
     setToken(token);
-    window.location.href = '/';
+    window.location.href = $PUBLIC_PATH;
   } catch (error) {
     if (error instanceof TypeError || (error instanceof HttpStatusError && error.status === -1)) {
       setError(

@@ -13,6 +13,9 @@ concurrency:
 
 jobs:
   build:
+    environment:
+      name: pr
+      url: http://pr.destinyitemmanager.com/${{ github.event.number }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -40,11 +43,14 @@ jobs:
         run: |
           echo "VERSION=${{ steps.package-version.outputs.current-version }}.${{ github.run_number }}" >> $GITHUB_ENV
 
-      - name: Build beta
-        run: pnpm build:beta
+      - name: Build PR version
+        run: pnpm build:pr
         env:
           NODE_OPTIONS: "--max_old_space_size=8192"
-          PR_BUILD: true
+          WEB_API_KEY: ${{ secrets.BUNGIE_API_KEY }}
+          WEB_OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
+          WEB_OAUTH_CLIENT_SECRET: ${{ secrets.OAUTH_SECRET }}
+          DIM_API_KEY: ${{ secrets.DIM_API_KEY }}
 
       - name: Check for updates to build pipeline
         id: filter
@@ -64,3 +70,22 @@ jobs:
           webpackStatsFile: ./webpack-stats.json
           key: ${{ secrets.RELATIVE_CI_KEY }}
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install SSH key
+        uses: benoitchantre/setup-ssh-authentication-action@1.0.0
+        with:
+          private-key: ${{ secrets.SSH_KEY }}
+          private-key-name: dim.rsa
+          known-hosts: ${{ secrets.REMOTE_HOST }}
+
+      - name: Check Syntax
+        run: pnpm syntax
+
+      - name: Rsync to Server
+        run: ./build/rsync-deploy.sh
+        env:
+            SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+            SOURCE: "dist/"
+            REMOTE_USER: ${{ secrets.REMOTE_USER }}
+            REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+            REMOTE_PATH: pr.destinyitemmanager.com/${{ github.event.number }}

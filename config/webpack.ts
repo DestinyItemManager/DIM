@@ -45,7 +45,7 @@ interface Env extends EnvValues {
   release: boolean;
   beta: boolean;
   dev: boolean;
-  name: 'release' | 'beta' | 'dev';
+  name: 'release' | 'beta' | 'dev' | 'pr';
 }
 type Argv = Record<string, CLIValues>;
 export interface WebpackConfigurationGenerator {
@@ -254,10 +254,9 @@ export default (env: Env) => {
               loader: 'css-loader',
               options: {
                 modules: {
-                  localIdentName:
-                    env.dev || env.beta
-                      ? '[name]_[local]-[contenthash:base64:8]'
-                      : '[contenthash:base64:8]',
+                  localIdentName: !env.release
+                    ? '[name]_[local]-[contenthash:base64:8]'
+                    : '[contenthash:base64:8]',
                   exportLocalsConvention: 'camelCaseOnly',
                 },
                 importLoaders: 2,

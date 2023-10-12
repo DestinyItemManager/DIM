@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/method-signature-style */
 declare const $DIM_VERSION: string;
-declare const $DIM_FLAVOR: 'release' | 'beta' | 'dev' | 'test';
+declare const $DIM_FLAVOR: 'release' | 'beta' | 'dev' | 'test' | 'pr';
 declare const $DIM_BUILD_DATE: string;
 declare const $DIM_WEB_API_KEY: string;
 declare const $DIM_WEB_CLIENT_ID: string;

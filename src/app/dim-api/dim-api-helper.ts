@@ -6,10 +6,7 @@ import { dedupePromise } from 'app/utils/promises';
 import { HttpClientConfig } from 'bungie-api-ts/http';
 
 const DIM_API_HOST = 'https://api.destinyitemmanager.com';
-export const API_KEY =
-  $DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta' || $DIM_FLAVOR === 'test'
-    ? $DIM_API_KEY
-    : localStorage.getItem('dimApiKey')!;
+export const API_KEY = $DIM_FLAVOR !== 'dev' ? $DIM_API_KEY : localStorage.getItem('dimApiKey')!;
 
 const localStorageKey = 'dimApiToken';
 
@@ -170,7 +167,7 @@ const refreshToken = dedupePromise(async () => {
 
     return authToken;
   } catch (e) {
-    if (!($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta')) {
+    if ($DIM_FLAVOR === 'dev') {
       throw new FatalTokenError('DIM API Key Incorrect');
     }
     throw e;
