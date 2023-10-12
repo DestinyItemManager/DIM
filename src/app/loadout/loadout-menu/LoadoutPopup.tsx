@@ -28,7 +28,11 @@ import { previousLoadoutSelector } from 'app/loadout-drawer/selectors';
 import { manifestSelector, useDefinitions } from 'app/manifest/selectors';
 import { showMaterialCount } from 'app/material-counts/MaterialCountsWrappers';
 import { showNotification } from 'app/notifications/notifications';
-import { filteredItemsSelector, searchFilterSelector } from 'app/search/search-filter';
+import {
+  filteredItemsSelector,
+  onlyMatchKeywords,
+  searchFilterSelector,
+} from 'app/search/search-filter';
 import {
   AppIcon,
   addIcon,
@@ -57,7 +61,10 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { InGameLoadoutIconWithIndex } from '../ingame/InGameLoadoutIcon';
 import { applyInGameLoadout } from '../ingame/ingame-loadout-apply';
-import { inGameLoadoutsForCharacterSelector } from '../ingame/selectors';
+import {
+  fullyResolvedLoadoutsSelector,
+  inGameLoadoutsForCharacterSelector,
+} from '../ingame/selectors';
 import { searchAndSortLoadoutsByQuery, useLoadoutFilterPills } from '../loadout-ui/menu-hooks';
 import styles from './LoadoutPopup.m.scss';
 import { RandomLoadoutOptions, useRandomizeLoadout } from './LoadoutPopupRandomize';
@@ -133,9 +140,12 @@ export default function LoadoutPopup({
     dimStore.id,
     { className: styles.filterPills, darkBackground: true }
   );
+  const fullyResolvedLoadouts = useSelector(fullyResolvedLoadoutsSelector(dimStore.id));
+
   const filteredLoadouts = searchAndSortLoadoutsByQuery(
     pillFilteredLoadouts,
-    loadoutQuery,
+    fullyResolvedLoadouts.loadouts,
+    onlyMatchKeywords(loadoutQuery),
     language,
     loadoutSort
   );

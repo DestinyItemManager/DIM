@@ -17,6 +17,7 @@ import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsForClassTypeSelector } from 'app/loadout-drawer/loadouts-selector';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { thingFilterSelector } from 'app/search/search-filter';
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, addIcon, faCalculator, uploadIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
@@ -30,6 +31,7 @@ import LoadoutRow from './LoadoutsRow';
 import EditInGameLoadout from './ingame/EditInGameLoadout';
 import { InGameLoadoutDetails } from './ingame/InGameLoadoutDetailsSheet';
 import { InGameLoadoutStrip } from './ingame/InGameLoadoutStrip';
+import { fullyResolvedLoadoutsSelector } from './ingame/selectors';
 import LoadoutImportSheet from './loadout-share/LoadoutImportSheet';
 import LoadoutShareSheet from './loadout-share/LoadoutShareSheet';
 import { searchAndSortLoadoutsByQuery, useLoadoutFilterPills } from './loadout-ui/menu-hooks';
@@ -111,8 +113,16 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   );
 
   const filteringLoadouts = Boolean(query || hasSelectedFilters);
+  const thingFilterFactory = useSelector(thingFilterSelector);
+  const fullyResolvedLoadouts = useSelector(fullyResolvedLoadoutsSelector(selectedStoreId));
 
-  const loadouts = searchAndSortLoadoutsByQuery(filteredLoadouts, query, language, loadoutSort);
+  const loadouts = searchAndSortLoadoutsByQuery(
+    filteredLoadouts,
+    fullyResolvedLoadouts.loadouts,
+    thingFilterFactory,
+    language,
+    loadoutSort
+  );
   if (!filteringLoadouts) {
     loadouts.unshift(currentLoadout);
   }

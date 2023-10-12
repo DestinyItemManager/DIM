@@ -7,7 +7,7 @@ import { Settings } from 'app/settings/initial-settings';
 import { errorLog } from 'app/utils/log';
 import { filterMap } from 'app/utils/util';
 import { WishListRoll } from 'app/wishlists/types';
-import _, { stubTrue } from 'lodash';
+import _, { stubFalse, stubTrue } from 'lodash';
 import { createSelector } from 'reselect';
 import { DimItem } from '../inventory/item-types';
 import {
@@ -29,6 +29,8 @@ import {
   FilterDefinition,
   ItemFilter,
   SuggestionsContext,
+  ThingFilterFactory,
+  ValidFilterOutput,
   canonicalFilterFormats,
 } from './filter-types';
 import { QueryAST, parseQuery } from './query-parser';
@@ -96,16 +98,34 @@ function makeFilterContext(
  * and the filterContext (list of other stat information filters can use)
  * into a filter factory (for converting parsed strings into filter functions)
  */
-export const filterFactorySelector = createSelector(
+const rawFilterFactorySelector = createSelector(
   searchConfigSelector,
   filterContextSelector,
   makeSearchFilterFactory<DimItem, FilterContext, SuggestionsContext>
+);
+
+export const filterFactorySelector = createSelector(
+  searchConfigSelector,
+  filterContextSelector,
+  (...args) =>
+    (query: string) =>
+      makeSearchFilterFactory<DimItem, FilterContext, SuggestionsContext>(...args)(query)(
+        (i: DimItem) => [i],
+        stubFalse
+      )
 );
 
 /** A selector for a function for searching items, given the current search query. */
 export const searchFilterSelector = createSelector(
   querySelector,
   filterFactorySelector,
+  (query, filterFactory) => filterFactory(query)
+);
+
+/** A selector for a function for searching items, given the current search query. */
+export const thingFilterSelector = createSelector(
+  querySelector,
+  rawFilterFactorySelector,
   (query, filterFactory) => filterFactory(query)
 );
 
@@ -133,106 +153,157 @@ export const queryValidSelector = createSelector(
   (query, validateQuery) => validateQuery(query).valid
 );
 
+export const onlyMatchKeywords =
+  (query: string) =>
+  <L>(
+    _itemExtractor: (l: L) => DimItem[],
+    matchLoadout: (l: L, keyword: string) => ValidFilterOutput
+  ) =>
+  (l: L) =>
+    matchLoadout(l, query);
+
+/**
+ * Based on a search query, creates a function that can match Things (T).
+ * A filter term in the AST matches a Thing if:
+ * * The term is a keyword (bare keyword or keyword:) that `thingMatcher` matches
+ * * The term is a filter that matches one of the Items (I) produced for the Thing by `itemExtractor`
+ *
+ * In the default search case:
+ * * I = T = DimItem
+ * * itemExtractor = (i) => [i]
+ * * thingMatcher = () => false,
+ */
 function makeSearchFilterFactory<I, FilterCtx, SuggestionsCtx>(
   { filtersMap: { isFilters, kvFilters } }: SearchConfig<I, FilterCtx, SuggestionsCtx>,
   filterContext: FilterCtx
 ) {
-  return (query: string): ItemFilter<I> => {
-    query = query.trim().toLowerCase();
-    if (!query.length) {
-      // By default, show anything that doesn't have the archive tag
-      return stubTrue;
-    }
-
-    const parsedQuery = parseQuery(query);
-
-    // Transform our query syntax tree into a filter function by recursion.
-    const transformAST = (ast: QueryAST): ItemFilter<I> | undefined => {
-      switch (ast.op) {
-        case 'and': {
-          const fns = filterMap(ast.operands, transformAST);
-          // Propagate filter errors
-          return fns.length === ast.operands.length
-            ? (item) => {
-                for (const fn of fns) {
-                  if (!fn(item)) {
-                    return false;
-                  }
-                }
-                return true;
-              }
-            : undefined;
-        }
-        case 'or': {
-          const fns = filterMap(ast.operands, transformAST);
-          // Propagate filter errors
-          return fns.length === ast.operands.length
-            ? (item) => {
-                for (const fn of fns) {
-                  if (fn(item)) {
-                    return true;
-                  }
-                }
-                return false;
-              }
-            : undefined;
-        }
-        case 'not': {
-          const fn = transformAST(ast.operand);
-          return fn && ((item) => !fn(item));
-        }
-        case 'filter': {
-          const filterName = ast.type;
-          const filterValue = ast.args;
-
-          if (filterName === 'is') {
-            // "is:" filters are slightly special cased
-            const filterDef = isFilters[filterValue];
-            if (filterDef) {
-              try {
-                return filterDef.filter({ lhs: filterName, filterValue, ...filterContext });
-              } catch (e) {
-                // An `is` filter really shouldn't throw an error on filter construction...
-                errorLog(
-                  'search',
-                  'internal error: filter construction threw exception',
-                  filterName,
-                  filterValue,
-                  e
-                );
-              }
-            }
-            return undefined;
-          } else {
-            const filterDef = kvFilters[filterName];
-            const matchedFilter =
-              filterDef && matchFilter(filterDef, filterName, filterValue, filterContext);
-            if (matchedFilter) {
-              try {
-                return matchedFilter(filterContext);
-              } catch (e) {
-                // If this happens, a filter declares more syntax valid than it actually accepts, which
-                // is a bug in the filter declaration.
-                errorLog(
-                  'search',
-                  'internal error: filter construction threw exception',
-                  filterName,
-                  filterValue,
-                  e
-                );
-              }
-            }
-            return undefined;
-          }
-        }
-        case 'noop':
-          return undefined;
+  return (query: string) =>
+    <T>(
+      itemExtractor: (i: T) => I[],
+      thingMatcher: (thing: T, keyword: string) => ValidFilterOutput
+    ): ItemFilter<T> => {
+      query = query.trim().toLowerCase();
+      if (!query.length) {
+        // By default, show anything that doesn't have the archive tag
+        return stubTrue;
       }
-    };
 
-    // If our filter has any invalid parts, the search filter should match no items
-    return transformAST(parsedQuery) ?? (() => false);
-  };
+      const parsedQuery = parseQuery(query);
+
+      // Transform our query syntax tree into a filter function by recursion.
+      const transformAST = (ast: QueryAST): ThingFilterFactory<I> | undefined => {
+        switch (ast.op) {
+          case 'and': {
+            const fns = filterMap(ast.operands, transformAST);
+            // Propagate filter errors
+            return fns.length === ast.operands.length
+              ? (extractItems, thingMatcher) => {
+                  const itemFns = fns.map((fn) => fn(extractItems, thingMatcher));
+                  return (item) => {
+                    for (const fn of itemFns) {
+                      if (!fn(item)) {
+                        return false;
+                      }
+                    }
+                    return true;
+                  };
+                }
+              : undefined;
+          }
+          case 'or': {
+            const fns = filterMap(ast.operands, transformAST);
+            // Propagate filter errors
+            return fns.length === ast.operands.length
+              ? (extractItems, thingMatcher) => {
+                  const itemFns = fns.map((fn) => fn(extractItems, thingMatcher));
+                  return (item) => {
+                    for (const fn of itemFns) {
+                      if (fn(item)) {
+                        return true;
+                      }
+                    }
+                    return false;
+                  };
+                }
+              : undefined;
+          }
+          case 'not': {
+            const fn = transformAST(ast.operand);
+            return (
+              fn &&
+              ((extractItems, thingMatcher) => {
+                const itemFn = fn(extractItems, thingMatcher);
+                return (item) => !itemFn(item);
+              })
+            );
+          }
+          case 'filter': {
+            const filterName = ast.type;
+            const filterValue = ast.args;
+
+            if (filterName === 'is') {
+              // "is:" filters are slightly special cased
+              const filterDef = isFilters[filterValue];
+              if (filterDef) {
+                try {
+                  const filter = filterDef.filter({
+                    lhs: filterName,
+                    filterValue,
+                    ...filterContext,
+                  });
+                  return (extractItems, _thingMatcher) => (item) => {
+                    const items = extractItems(item);
+                    return items.some(filter);
+                  };
+                } catch (e) {
+                  // An `is` filter really shouldn't throw an error on filter construction...
+                  errorLog(
+                    'search',
+                    'internal error: filter construction threw exception',
+                    filterName,
+                    filterValue,
+                    e
+                  );
+                }
+              }
+              return undefined;
+            } else {
+              const filterDef = kvFilters[filterName];
+              const matchedFilter =
+                filterDef && matchFilter(filterDef, filterName, filterValue, filterContext);
+              if (matchedFilter) {
+                try {
+                  const filter = matchedFilter(filterContext);
+                  return (extractItems, thingMatcher) => (item) => {
+                    const items = extractItems(item);
+                    return (
+                      (filterName === 'keyword' && thingMatcher(item, filterValue)) ||
+                      items.some(filter)
+                    );
+                  };
+                } catch (e) {
+                  // If this happens, a filter declares more syntax valid than it actually accepts, which
+                  // is a bug in the filter declaration.
+                  errorLog(
+                    'search',
+                    'internal error: filter construction threw exception',
+                    filterName,
+                    filterValue,
+                    e
+                  );
+                }
+              }
+              return undefined;
+            }
+          }
+          case 'noop':
+            return undefined;
+        }
+      };
+
+      // If our filter has any invalid parts, the search filter should match no items
+      return transformAST(parsedQuery)?.(itemExtractor, thingMatcher) ?? (() => false);
+    };
 }
 
 /** Matches a non-`is` filter syntax and returns a way to actually create the matched filter function. */

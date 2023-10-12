@@ -25,6 +25,7 @@ import { loadoutsForClassTypeSelector } from 'app/loadout-drawer/loadouts-select
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
+import { currySelector } from 'app/utils/selector-utils';
 import { t } from 'i18next';
 import { createSelector } from 'reselect';
 import { implementsDimLoadout, itemCouldBeEquipped } from './ingame-loadout-utils';
@@ -38,36 +39,45 @@ export interface FullyResolvedLoadout {
 }
 
 /** All loadouts relevant to a specific storeId, resolved to actual mods, and actual items */
-export const fullyResolvedLoadoutsSelector = createSelector(
-  (_state: RootState, storeId: string) => storeId,
-  (state: RootState, storeId: string) => {
-    const stores = storesSelector(state);
-    const classType = getStore(stores, storeId)!.classType;
-    return loadoutsForClassTypeSelector(classType)(state);
-  },
-  storesSelector,
-  d2ManifestSelector,
-  createItemContextSelector,
-  allItemsSelector,
-  unlockedPlugSetItemsSelector.selector,
-  (storeId, savedLoadouts, stores, defs, itemCreationContext, allItems, unlockedPlugs) => {
-    const selectedStore = getStore(stores, storeId)!;
+export const fullyResolvedLoadoutsSelector = currySelector(
+  createSelector(
+    (_state: RootState, storeId: string) => storeId,
+    (state: RootState, storeId: string) => {
+      const stores = storesSelector(state);
+      const classType = getStore(stores, storeId)!.classType;
+      return loadoutsForClassTypeSelector(classType)(state);
+    },
+    storesSelector,
+    d2ManifestSelector,
+    createItemContextSelector,
+    allItemsSelector,
+    unlockedPlugSetItemsSelector.selector,
+    (storeId, savedLoadouts, stores, defs, itemCreationContext, allItems, unlockedPlugs) => {
+      const selectedStore = getStore(stores, storeId)!;
 
-    const loadouts = savedLoadouts
-      ? savedLoadouts.map((loadout) =>
-          fullyResolveLoadout(storeId, loadout, defs, unlockedPlugs, itemCreationContext, allItems)
-        )
-      : emptyArray<FullyResolvedLoadout>();
-    const currentLoadout = fullyResolveLoadout(
-      storeId,
-      newLoadoutFromEquipped(t('Loadouts.FromEquipped'), selectedStore, undefined),
-      defs,
-      unlockedPlugs,
-      itemCreationContext,
-      allItems
-    );
-    return { loadouts, currentLoadout };
-  }
+      const loadouts = savedLoadouts
+        ? savedLoadouts.map((loadout) =>
+            fullyResolveLoadout(
+              storeId,
+              loadout,
+              defs,
+              unlockedPlugs,
+              itemCreationContext,
+              allItems
+            )
+          )
+        : emptyArray<FullyResolvedLoadout>();
+      const currentLoadout = fullyResolveLoadout(
+        storeId,
+        newLoadoutFromEquipped(t('Loadouts.FromEquipped'), selectedStore, undefined),
+        defs,
+        unlockedPlugs,
+        itemCreationContext,
+        allItems
+      );
+      return { loadouts, currentLoadout };
+    }
+  )
 );
 
 function fullyResolveLoadout(
@@ -118,7 +128,7 @@ export const availableLoadoutSlotsSelector = createSelector(
 /** Loadouts supported directly by D2 (post-Lightfall), for a specific character */
 export const inGameLoadoutsWithMetadataSelector = createSelector(
   inGameLoadoutsForCharacterSelector,
-  fullyResolvedLoadoutsSelector,
+  fullyResolvedLoadoutsSelector.selector,
   allItemsSelector,
   storesSelector,
   d2ManifestSelector,

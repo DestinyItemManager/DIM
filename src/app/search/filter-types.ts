@@ -13,9 +13,14 @@ import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 type I18nInput = Parameters<typeof t>;
 
 // a filter can return various bool-ish values
-type ValidFilterOutput = boolean | null | undefined;
+export type ValidFilterOutput = boolean | null | undefined;
 
 export type ItemFilter<I = DimItem> = (item: I) => ValidFilterOutput;
+
+export type ThingFilterFactory<I> = <T>(
+  itemExtractor: (i: T) => I[],
+  thingMatcher: (thing: T, keyword: string) => ValidFilterOutput
+) => ItemFilter<T>;
 
 /**
  * A slice of data that could be used by filter functions to
