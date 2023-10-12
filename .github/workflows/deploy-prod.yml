@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: release
-      url: https://app.destinyitemmanager.com
+      url: https://app.dim.gg
     steps:
       - uses: actions/checkout@v3
         with:
