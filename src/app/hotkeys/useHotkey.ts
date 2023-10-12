@@ -36,7 +36,7 @@ export function useHotkey(
   }, [id, combo, description, callback, disabled]);
 
   // Remove the hotkey only once the component unmounts
-  useEffect(() => () => removeHotkeysById(id, combo), [id]);
+  useEffect(() => () => removeHotkeysById(id, combo), [combo, id]);
 }
 
 /**
@@ -48,7 +48,7 @@ export function useHotkey(
  */
 export function useHotkeys(hotkeyDefs: Hotkey[]) {
   const id = useId();
-  useEffect(() => registerHotkeys(id, hotkeyDefs), [hotkeyDefs]);
+  useEffect(() => registerHotkeys(id, hotkeyDefs), [hotkeyDefs, id]);
 
   // Remove the hotkeys only once the component unmounts
   useEffect(() => () => removeHotkeysById(id), [id]);
