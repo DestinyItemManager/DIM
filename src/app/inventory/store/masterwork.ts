@@ -71,7 +71,7 @@ function buildMasterworkInfo(
 
   for (const [statHash_, stat] of Object.entries(plugStats)) {
     const statHash = parseInt(statHash_, 10);
-    if (!createdItem.stats?.some((s) => s.statHash)) {
+    if (!createdItem.stats?.some((s) => s.statHash === statHash)) {
       continue;
     }
     stats.push({
