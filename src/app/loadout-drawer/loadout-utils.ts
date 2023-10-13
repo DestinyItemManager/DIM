@@ -300,7 +300,7 @@ export function getLoadoutStats(
       item.sockets && getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.ArmorTier);
     for (const hash of armorStats) {
       armorPiecesStats[hash] += itemStats[hash]?.[0].base ?? 0;
-      armorPiecesStats[hash] += energySocket?.plugged?.stats?.[hash] ?? 0;
+      armorPiecesStats[hash] += energySocket?.plugged?.stats?.[hash]?.value ?? 0;
     }
   }
 

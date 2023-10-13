@@ -8,6 +8,7 @@ import {
   DestinyDisplayPropertiesDefinition,
   DestinyInventoryItemDefinition,
   DestinyItemInstanceEnergy,
+  DestinyItemInvestmentStatDefinition,
   DestinyItemPerkEntryDefinition,
   DestinyItemPlugBase,
   DestinyItemQualityBlockDefinition,
@@ -381,6 +382,44 @@ export interface PluggableInventoryItemDefinition extends DestinyInventoryItemDe
   plug: NonNullable<DestinyInventoryItemDefinition['plug']>;
 }
 
+/** Describes the conditions under which a plug stat is active */
+export type PlugStatActivityRule =
+  | /** always active */ undefined
+  | {
+      /** never active */
+      rule: 'never';
+    }
+  | {
+      /** only active for a specific class */
+      rule: 'classType';
+      classType: DestinyClass;
+    }
+  | {
+      /** only active if the weapon is an adept weapon */
+      rule: 'adeptWeapon';
+    }
+  | {
+      /** only active if the weapon is masterworked */
+      rule: 'masterwork';
+    }
+  | {
+      /** Only active if the weapon is crafted and either adept or at level 20 */
+      rule: 'enhancedIntrinsic';
+    };
+
+/**
+ * A single investment stat from a plug, together with an activity rule that
+ * describes when the plug stat is active.
+ *
+ * The idea is that DestinyItemInvestmentStatDefinition[] is assignable to DimPlugInvestmentStat[].
+ * That way we can reuse the plug def's investmentStats array if it has no conditional stats or doesn't
+ * require fixup in general, and map to our own format with a PlugStatActivityRule if need be
+ */
+export interface DimPlugInvestmentStat
+  extends Omit<DestinyItemInvestmentStatDefinition, 'isConditionallyActive'> {
+  activityRule?: PlugStatActivityRule;
+}
+
 /**
  * DIM's view of a "Plug" - an item that can go into a socket.
  * In D2, both perk grids and mods/shaders are sockets with plugs.
@@ -394,9 +433,12 @@ export interface DimPlug {
   readonly enabled: boolean;
   /** If not enabled, this is the localized reasons why, as a single string. */
   readonly enableFailReasons: string;
-  /** Stats this plug modifies. If present, it's a map from the stat hash to the amount the stat is modified. */
+  /**
+   * Stats this plug modifies. Only present for dimPlugs attached to an item.
+   * If present, it's a map from the stat hash to the amount the stat is modified.
+   */
   readonly stats: {
-    [statHash: number]: number;
+    [statHash: number]: { value: number; investmentValue: number };
   } | null;
   /** This plug is one of the random roll options but the current version of this item cannot roll this perk. */
   readonly cannotCurrentlyRoll?: boolean;

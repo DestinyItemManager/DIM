@@ -3,37 +3,19 @@ import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimCharacterStatSource } from 'app/inventory/store-types';
 import { hashesToPluggableItems } from 'app/inventory/store/sockets';
+import {
+  isPlugStatActive,
+  mapAndFilterInvestmentStats,
+} from 'app/inventory/store/stats-conditional';
 import { ArmorStatHashes, ModStatChanges } from 'app/loadout-builder/types';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { mapToOtherModCostVariant } from 'app/loadout/mod-utils';
-import { armorStats, modsWithConditionalStats } from 'app/search/d2-known-values';
+import { armorStats } from 'app/search/d2-known-values';
 import { emptyArray } from 'app/utils/empty';
 import { HashLookup } from 'app/utils/util-types';
-import { DestinyClass, DestinyItemInvestmentStatDefinition } from 'bungie-api-ts/destiny2';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-
-export function isModStatActive(
-  characterClass: DestinyClass,
-  plugHash: number,
-  stat: DestinyItemInvestmentStatDefinition
-): boolean {
-  if (!stat.isConditionallyActive) {
-    return true;
-  } else if (
-    plugHash === modsWithConditionalStats.echoOfPersistence ||
-    plugHash === modsWithConditionalStats.sparkOfFocus
-  ) {
-    // "-10 to the stat that governs your class ability recharge"
-    return (
-      (characterClass === DestinyClass.Hunter && stat.statTypeHash === StatHashes.Mobility) ||
-      (characterClass === DestinyClass.Titan && stat.statTypeHash === StatHashes.Resilience) ||
-      (characterClass === DestinyClass.Warlock && stat.statTypeHash === StatHashes.Recovery)
-    );
-  } else {
-    return true;
-  }
-}
 
 /**
  * Font of X mods conditionally boost a single stat. This maps from
@@ -123,8 +105,11 @@ export function getTotalModStatChanges(
     for (const plugCopies of Object.values(grouped)) {
       const mod = plugCopies[0];
       const modCount = plugCopies.length;
-      for (const stat of mod.investmentStats) {
-        if (stat.statTypeHash in totals && isModStatActive(characterClass, mod.hash, stat)) {
+      for (const stat of mapAndFilterInvestmentStats(mod)) {
+        if (
+          stat.statTypeHash in totals &&
+          isPlugStatActive(stat.activityRule, undefined, characterClass)
+        ) {
           const value = stat.value * modCount;
           totals[stat.statTypeHash as ArmorStatHashes].value += value;
           totals[stat.statTypeHash as ArmorStatHashes].breakdown!.push({
