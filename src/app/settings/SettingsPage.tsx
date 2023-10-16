@@ -177,11 +177,6 @@ export default function SettingsPage() {
     setSetting('vaultGrouping', vaultGrouping);
   };
 
-  const changeVaultGroupingDisplay = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const vaultGroupingDispay = e.target.value;
-    setSetting('vaultGroupingDisplay', vaultGroupingDispay);
-  };
-
   const itemSortOrderChanged = (sortOrder: SortProperty[]) => {
     setSetting(
       'itemSortOrderCustom',
@@ -231,17 +226,6 @@ export default function SettingsPage() {
     crafted: t('Settings.SortByCrafted'),
     deepsight: t('Settings.SortByDeepsight'),
   });
-
-  const vaultGroupingDisplayOptions = [
-    {
-      name: t('Settings.VaultGroupingDisplayFit'),
-      value: 'fit',
-    },
-    {
-      name: t('Settings.VaultGroupingDisplaySeparated'),
-      value: 'separated',
-    },
-  ];
 
   const descriptionDisplayOptions = mapToOptions({
     both: t('Settings.BothDescriptions'),
@@ -409,18 +393,6 @@ export default function SettingsPage() {
                 onChange={changeVaultGrouping}
               />
             </div>
-
-            {Boolean(settings.vaultGrouping) && (
-              <div className="setting">
-                <Select
-                  label={t('Settings.SetVaultGroupingDisplay')}
-                  name="vaultGroupingDisplay"
-                  value={settings.vaultGroupingDisplay}
-                  options={vaultGroupingDisplayOptions}
-                  onChange={changeVaultGroupingDisplay}
-                />
-              </div>
-            )}
 
             <div className="setting">
               <label htmlFor="itemSort">{t('Settings.SetSort')}</label>

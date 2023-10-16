@@ -8,9 +8,6 @@ import { createSelector } from 'reselect';
 export const vaultGroupingSettingSelector = (state: RootState) =>
   settingsSelector(state).vaultGrouping;
 
-export const vaultGroupingDisplaySettingSelector = (state: RootState) =>
-  settingsSelector(state).vaultGroupingDisplay;
-
 /**
  * Get a function that will group items according to the user's preferences.
  */

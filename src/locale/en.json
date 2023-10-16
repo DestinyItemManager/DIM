@@ -1054,7 +1054,6 @@
     "ReverseSort": "Toggle forward/reverse sort",
     "SetSort": "Sort items by:",
     "SetVaultGrouping": "Group vault items by:",
-    "SetVaultGroupingDisplay": "Vault grouping display:",
     "Settings": "Settings",
     "ShowNewItems": "Show a red dot on new items",
     "SingleCharacter": "Single-Character View",
@@ -1079,8 +1078,6 @@
     "SpacesSize": "{{count}} space",
     "SpacesSize_plural": "{{count}} spaces",
     "Theme": "Theme",
-    "VaultGroupingDisplayFit": "Best Fit",
-    "VaultGroupingDisplaySeparated": "Separated",
     "VaultGroupingNone": "None"
   },
   "Sockets": {

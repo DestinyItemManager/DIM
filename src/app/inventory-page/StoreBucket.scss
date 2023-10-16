@@ -86,12 +86,9 @@
   align-items: flex-start;
   align-content: flex-start;
   gap: var(--item-margin);
-
-  &.separated {
-    width: 100%;
-    padding-bottom: var(--item-margin);
-    border-bottom: 1px solid rgba(150, 150, 150, 0.5);
-  }
+  width: 100%;
+  padding-bottom: var(--item-margin);
+  border-bottom: 1px solid rgba(150, 150, 150, 0.5);
 
   &:last-of-type {
     border-bottom: none;

@@ -14,11 +14,7 @@ import { findItemsByBucket } from 'app/inventory/stores-helpers';
 import { useItemPicker } from 'app/item-picker/item-picker';
 import { characterOrderSelector } from 'app/settings/character-sort';
 import { itemSorterSelector } from 'app/settings/item-sort';
-import {
-  vaultGroupingDisplaySettingSelector,
-  vaultGroupingSelector,
-  vaultGroupingSettingSelector,
-} from 'app/settings/vault-grouping';
+import { vaultGroupingSelector, vaultGroupingSettingSelector } from 'app/settings/vault-grouping';
 import { AppIcon, addIcon } from 'app/shell/icons';
 import { vaultGroupingValueWithType } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -80,7 +76,6 @@ const StoreBucketInner = memo(function StoreBucketInner({
   const sortItems = useSelector(itemSorterSelector);
   const groupItems = useSelector(vaultGroupingSelector);
   const vaultGroupingSetting = useSelector(vaultGroupingSettingSelector);
-  const vaultGroupingDisplaySetting = useSelector(vaultGroupingDisplaySettingSelector);
 
   const showItemPicker = useItemPicker();
   const pickEquipItem = useCallback(() => {
@@ -131,12 +126,7 @@ const StoreBucketInner = memo(function StoreBucketInner({
           'id' in groupOrItem ? (
             <StoreInventoryItem key={groupOrItem.index} item={groupOrItem} />
           ) : (
-            <div
-              className={clsx('vault-group', {
-                separated: vaultGroupingDisplaySetting === 'separated',
-              })}
-              key={vaultGroupingValueWithType(groupOrItem.value)}
-            >
+            <div className="vault-group" key={vaultGroupingValueWithType(groupOrItem.value)}>
               <div className="armor-class-icon" style={{ fontSize: 12 }}>
                 {groupOrItem.value}
               </div>
@@ -191,7 +181,6 @@ const VaultBucketDividedByClass = memo(function SingleCharacterVaultBucket({
   const sortItems = useSelector(itemSorterSelector);
   const groupItems = useSelector(vaultGroupingSelector);
   const vaultGroupingSetting = useSelector(vaultGroupingSettingSelector);
-  const vaultGroupingDisplaySetting = useSelector(vaultGroupingDisplaySettingSelector);
 
   // The vault divides armor by class
   const itemsByClass = _.groupBy(items, (item) => item.classType);
@@ -216,12 +205,7 @@ const VaultBucketDividedByClass = memo(function SingleCharacterVaultBucket({
             'id' in groupOrItem ? (
               <StoreInventoryItem key={groupOrItem.index} item={groupOrItem} />
             ) : (
-              <div
-                className={clsx('vault-group', {
-                  separated: vaultGroupingDisplaySetting === 'separated',
-                })}
-                key={vaultGroupingValueWithType(groupOrItem.value)}
-              >
+              <div className="vault-group" key={vaultGroupingValueWithType(groupOrItem.value)}>
                 <div className="armor-class-icon" style={{ fontSize: 12 }}>
                   {groupOrItem.value}
                 </div>
