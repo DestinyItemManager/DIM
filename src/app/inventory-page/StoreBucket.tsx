@@ -127,9 +127,6 @@ const StoreBucketInner = memo(function StoreBucketInner({
             <StoreInventoryItem key={groupOrItem.index} item={groupOrItem} />
           ) : (
             <div className="vault-group" key={vaultGroupingValueWithType(groupOrItem.value)}>
-              <div className="armor-class-icon" style={{ fontSize: 12 }}>
-                {groupOrItem.value}
-              </div>
               {groupOrItem.items.map((item) => (
                 <StoreInventoryItem key={item.index} item={item} />
               ))}
@@ -206,9 +203,6 @@ const VaultBucketDividedByClass = memo(function SingleCharacterVaultBucket({
               <StoreInventoryItem key={groupOrItem.index} item={groupOrItem} />
             ) : (
               <div className="vault-group" key={vaultGroupingValueWithType(groupOrItem.value)}>
-                <div className="armor-class-icon" style={{ fontSize: 12 }}>
-                  {groupOrItem.value}
-                </div>
                 {groupOrItem.items.map((item) => (
                   <StoreInventoryItem key={item.index} item={item} />
                 ))}
