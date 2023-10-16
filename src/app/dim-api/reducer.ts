@@ -19,7 +19,7 @@ import { FilterContext } from 'app/search/filter-types';
 import { buildFiltersMap } from 'app/search/search-config';
 import { parseAndValidateQuery } from 'app/search/search-utils';
 import { emptyArray } from 'app/utils/empty';
-import { errorLog, infoLog, timer } from 'app/utils/log';
+import { errorLog, timer } from 'app/utils/log';
 import { count, uniqBy } from 'app/utils/util';
 import { clearWishLists } from 'app/wishlists/actions';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -445,7 +445,7 @@ function migrateSettings(state: DimApiState) {
     state = changeSetting(
       state,
       'itemSortOrderCustom',
-      [...sortOrder].splice(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor')
+      sortOrder.toSpliced(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor')
     );
   }
 
@@ -453,7 +453,7 @@ function migrateSettings(state: DimApiState) {
     state = changeSetting(
       state,
       'itemSortReversals',
-      [...reversals].splice(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor')
+      reversals.toSpliced(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor')
     );
   }
 
@@ -802,30 +802,31 @@ function compactUpdate(
  * Record the result of an update call to the API
  */
 function applyFinishedUpdatesToQueue(state: DimApiState, results: ProfileUpdateResult[]) {
-  return produce(state, (draft) => {
-    const total = Math.min(state.updateInProgressWatermark, results?.length || 0);
+  const total = Math.min(state.updateInProgressWatermark, results?.length || 0);
 
-    for (let i = 0; i < total; i++) {
-      const update = state.updateQueue[i];
-      const result = results[i];
+  for (let i = 0; i < total; i++) {
+    const update = state.updateQueue[i];
+    const result = results[i];
 
-      if (!(result.status === 'Success' || result.status === 'NotFound')) {
-        errorLog(
-          'applyFinishedUpdatesToQueue',
-          'failed to update:',
-          result.status,
-          ':',
-          result.message,
-          update
-        );
-        reverseEffects(draft, update);
-      }
+    if (!(result.status === 'Success' || result.status === 'NotFound')) {
+      errorLog(
+        'applyFinishedUpdatesToQueue',
+        'failed to update:',
+        result.status,
+        ':',
+        result.message,
+        update
+      );
+      // TODO: reverse the effects of the update?
     }
+  }
 
+  return {
+    ...state,
     // There's currently no error that would leave them in the array
-    draft.updateQueue.splice(0, state.updateInProgressWatermark);
-    draft.updateInProgressWatermark = 0;
-  });
+    updateQueue: state.updateQueue.toSpliced(0, state.updateInProgressWatermark),
+    updateInProgressWatermark: 0,
+  };
 }
 
 /**
@@ -1162,7 +1163,7 @@ function searchUsed(draft: Draft<DimApiState>, account: DestinyAccount, query: s
   }
 
   if (searches.length > MAX_SEARCH_HISTORY) {
-    const sortedSearches = [...searches].sort(recentSearchComparator);
+    const sortedSearches = searches.toSorted(recentSearchComparator);
 
     const numBuiltinSearches = count(sortedSearches, (s) => s.usageCount <= 0);
 
@@ -1272,11 +1273,6 @@ function cleanupInvalidSearches(draft: Draft<DimApiState>, account: DestinyAccou
       deleteSearch(draft, account.destinyVersion, search.query);
     }
   }
-}
-
-function reverseEffects(draft: Draft<DimApiState>, update: ProfileUpdateWithRollback) {
-  // TODO: put things back the way they were
-  infoLog('reverseEffects', 'TODO: Reversing', draft, update);
 }
 
 export function parseProfileKey(profileKey: string): [string, DestinyVersion] {

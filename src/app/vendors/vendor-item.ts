@@ -1,4 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { createCollectibleFinder } from 'app/records/collectible-matching';
 import { THE_FORBIDDEN_BUCKET, VENDORS } from 'app/search/d2-known-values';
 import { emptyArray } from 'app/utils/empty';
 import {
@@ -12,7 +13,6 @@ import {
   DestinyVendorItemState,
   DestinyVendorSaleItemComponent,
 } from 'bungie-api-ts/destiny2';
-import focusingItemOutputs from 'data/d2/focusing-item-outputs.json';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { DimItem } from '../inventory/item-types';
 import { ItemCreationContext, makeFakeItem } from '../inventory/store/d2-item-factory';
@@ -51,15 +51,8 @@ function getCollectibleState(
   profileResponse: DestinyProfileResponse | undefined,
   characterId: string
 ) {
-  let collectibleHash = inventoryItem.collectibleHash;
-
-  if (!collectibleHash) {
-    // For fake focusing items, what we really care about is state of what the item produces
-    const focusedItem = focusingItemOutputs[inventoryItem.hash];
-    if (focusedItem) {
-      collectibleHash = defs.InventoryItem.get(focusedItem)?.collectibleHash;
-    }
-  }
+  const collectibleFinder = createCollectibleFinder(defs);
+  const collectibleHash = collectibleFinder(inventoryItem)?.hash;
   let collectibleState: DestinyCollectibleState | undefined;
   if (collectibleHash) {
     collectibleState =

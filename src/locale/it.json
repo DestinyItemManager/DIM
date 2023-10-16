@@ -542,6 +542,8 @@
     "SearchAnExotic": "Cerca una esotica per nome o descrizione",
     "SelectExotic": "Seleziona esotica",
     "SelectMods": "Seleziona Modifiche",
+    "SelectModsCount": "{{selected}}/{{maxSelectable}}",
+    "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Modifiche Attività",
     "SelectSubclassOptions": "Personalizza sottoclasse",
     "ShowAllConfigs": "Mostra tutte le configurazioni",
     "ShowConfigs": "Mostra configurazioni",
@@ -613,7 +615,7 @@
     "OptimizerExplanationSearch": "Utilizza la barra di ricerca per restringere il campo delle armature da considerare. Se nessuna armatura corrisponde alla ricerca in un alloggiamento, verranno considerate tutte le armature per quell'alloggiamento.",
     "OptimizerExplanationStats": "Trascina le statistiche più importanti in alto, e imposta quelle che non ti interessano su \"Ignora\".",
     "OptimizerSet": "Set Ottimizzatore",
-    "ProcessingSets": "Elaborazione set per\n{{character}} ({{remainingTime}}s)",
+    "ProcessingSets": "Ricerca dei set con gradi più alti...",
     "SaveAs": "Salva come",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
@@ -991,7 +993,8 @@
     "RecordBooks": "Registri"
   },
   "Records": {
-    "Title": "Record"
+    "Title": "Record",
+    "UniversalOrnamentSetOther": "Altro"
   },
   "SearchHistory": {
     "Date": "Recenti",

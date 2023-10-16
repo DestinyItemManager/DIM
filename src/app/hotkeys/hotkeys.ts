@@ -71,7 +71,7 @@ export function registerHotkeys(hotkeys: Hotkey[]) {
 export function getAllHotkeys() {
   const combos: { [combo: string]: string } = {};
   for (const hotkeyList of Object.values(keyMap)) {
-    const hotkey = hotkeyList[hotkeyList.length - 1];
+    const hotkey = hotkeyList.at(-1)!;
     const combo = symbolize(hotkey.combo);
     combos[combo] = hotkey.description;
   }
@@ -199,7 +199,7 @@ function trigger(comboStr: string, e: KeyboardEvent) {
   const callbacks = keyMap[comboStr];
   if (callbacks) {
     // Only call the last callback registered for this combo.
-    callbacks[callbacks.length - 1].callback(e);
+    callbacks.at(-1)?.callback(e);
     e.preventDefault();
     return true;
   }

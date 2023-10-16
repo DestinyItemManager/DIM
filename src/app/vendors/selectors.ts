@@ -166,7 +166,7 @@ export const vendorItemFilterSelector = currySelector(
         // But don't allow this if the item itself fails the silver check -- most eververse
         // bundles cost silver, but their contained items don't, but we still want to hide
         // the bundle if "hide silver" is on.
-        // Finally, prevent infinite recusion for subvendors because that can happen.
+        // Finally, prevent infinite recursion for subvendors because that can happen.
         const previewVendorHash = item.item?.previewVendor;
         if (
           previewVendorHash &&

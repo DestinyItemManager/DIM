@@ -3,7 +3,7 @@
   // for the documentation about the extensions.json format
   "recommendations": [
     // Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
-    "gamunu.vscode-yarn",
+    "Jacano.vscode-pnpm",
     "esbenp.prettier-vscode",
     "streetsidesoftware.code-spell-checker",
     "dbaeumer.vscode-eslint",

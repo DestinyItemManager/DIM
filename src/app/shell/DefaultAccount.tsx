@@ -88,8 +88,8 @@ export default function DefaultAccount() {
         error={accountsError}
         fallbackMessage={t('Accounts.NoCharacters')}
         title={t('Accounts.ErrorLoading')}
-        showTwitters={true}
-        showReload={true}
+        showSocials
+        showReload
       />
     </div>
   );

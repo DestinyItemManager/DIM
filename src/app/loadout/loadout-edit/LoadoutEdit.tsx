@@ -1,6 +1,5 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
-import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
@@ -26,6 +25,7 @@ import {
   clearSubclass,
   fillLoadoutFromEquipped,
   fillLoadoutFromUnequipped,
+  getLoadoutBucketHashesFromCategory,
   randomizeLoadoutItems,
   randomizeLoadoutMods,
   randomizeLoadoutSubclass,
@@ -52,7 +52,7 @@ import { LoadoutArtifactUnlocks, LoadoutMods } from 'app/loadout/loadout-ui/Load
 import { useD2Definitions } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { emptyObject } from 'app/utils/empty';
-import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
+import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -162,7 +162,7 @@ async function pickLoadoutItem(
   const item = await showItemPicker({
     filterItems: (item: DimItem) =>
       item.bucket.hash === bucket.hash &&
-      isClassCompatible(item.classType, loadout.classType) &&
+      isItemLoadoutCompatible(item.classType, loadout.classType) &&
       itemCanBeInLoadout(item) &&
       !loadoutHasItem(item) &&
       (!item.notransfer || item.owner === store.id),
@@ -311,7 +311,7 @@ function LoadoutEditCategorySection({
           ? item.bucket.hash === warnItem.bucket.hash
           : item.hash === warnItem.hash) &&
         itemCanBeInLoadout(item) &&
-        isClassCompatible(item.classType, loadout.classType),
+        isItemLoadoutCompatible(item.classType, loadout.classType),
       prompt: t('Loadouts.FindAnother', {
         name: warnItem.bucket.inArmor ? warnItem.bucket.name : warnItem.name,
       }),
@@ -348,7 +348,7 @@ function LoadoutEditCategorySection({
       onRandomize={() => handleRandomizeCategory(allItems, category, searchFilter)}
       hasRandomizeQuery={searchFilter !== _.stubTrue}
       onFillFromEquipped={() => handleFillCategoryFromEquipped(artifactUnlocks, category)}
-      fillFromEquippedDisabled={disableFillInForCategory(items, category)}
+      fillFromEquippedDisabled={disableFillInForCategory(defs, items, category)}
       onSyncFromEquipped={() => handleSyncCategoryFromEquipped(category)}
       fillFromInventoryCount={getUnequippedItemsForLoadout(store, category).length}
       onFillFromInventory={() => handleFillCategoryFromUnequipped(category)}
@@ -524,14 +524,13 @@ function LoadoutArtifactUnlocksSection({
 /**
  * Disable the "Fill in" menu item if it wouldn't do anything.
  */
-function disableFillInForCategory(items: ResolvedLoadoutItem[], category: D2BucketCategory) {
-  const currentItems = items?.length ?? 0;
-  let maxItems = D2Categories[category].length;
-
-  // Remove the subclass from General
-  if (category === 'General') {
-    maxItems = 4;
-  }
+function disableFillInForCategory(
+  defs: D2ManifestDefinitions,
+  items: ResolvedLoadoutItem[],
+  category: D2BucketCategory
+) {
+  const currentItems = items?.filter((i) => i.loadoutItem.equip).length ?? 0;
+  const maxItems = getLoadoutBucketHashesFromCategory(defs, category).length;
 
   return currentItems >= maxItems;
 }

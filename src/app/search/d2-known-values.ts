@@ -23,11 +23,12 @@ export const d2MissingIcon = '/img/misc/missing_icon_d2.png';
 //
 
 // shortcuts for power numbers
+const currentSeason = D2SeasonInfo[D2CalculatedSeason];
 export const powerLevelByKeyword = {
-  powerfloor: D2SeasonInfo[D2CalculatedSeason].powerFloor,
-  softcap: D2SeasonInfo[D2CalculatedSeason].softCap,
-  powerfulcap: D2SeasonInfo[D2CalculatedSeason].powerfulCap,
-  pinnaclecap: D2SeasonInfo[D2CalculatedSeason].pinnacleCap,
+  powerfloor: currentSeason.powerFloor,
+  softcap: currentSeason.softCap,
+  powerfulcap: currentSeason.powerfulCap,
+  pinnaclecap: currentSeason.pinnacleCap,
 };
 
 export const MAX_ARMOR_ENERGY_CAPACITY = 10;
@@ -85,6 +86,14 @@ export const killTrackerObjectivesByHash: HashLookup<'pvp' | 'pve' | 'gambit'> =
 export const killTrackerSocketTypeHash = 1282012138;
 
 export const weaponMasterworkY2SocketTypeHash = 2218962841;
+
+export const ghostActivitySocketTypeHashes = {
+  /* Available once the Ghost shell has been fully Masterworked. */
+  locked: 456763785, // SocketType "Activity Ghost Mod"
+  /* Activity mods provide additional currency and material rewards in various activities. */
+  unlocked: 2899644539, // SocketType "Activity Ghost Mod"
+};
+
 //
 // STATS KNOWN VALUES
 //
@@ -110,8 +119,8 @@ export const D2ArmorStatHashByName = {
 export const armorStats = Object.values(D2ArmorStatHashByName);
 
 // a set of base stat weights, all worth the same, "switched on"
-export const evenStatWeights = armorStats.reduce<CustomStatWeights>(
-  (o, statHash) => Object.assign(o, { [statHash]: 1 }),
+export const evenStatWeights = /* @__PURE__ */ armorStats.reduce<CustomStatWeights>(
+  (o, statHash) => ({ ...o, [statHash]: 1 }),
   {}
 );
 
@@ -237,6 +246,10 @@ export const uniqueEquipBuckets = [
 
 export const RAID_NODE = 4025982223; // PresentationNode "Raids"
 export const SHADER_NODE = 1516796296; // PresentationNode "Shaders"
+export const ARMOR_NODE = 1605042242; // PresentationNode "Armor"
+
+/** Just to grab the string Universal Ornaments */
+export const UNIVERSAL_ORNAMENTS_NODE = 3655910122; // PresentationNode "Universal Ornaments"
 
 //
 // MISC KNOWN HASHES / ENUMS

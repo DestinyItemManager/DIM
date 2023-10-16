@@ -124,10 +124,7 @@
 .mobileItemActions {
   padding: 5px 0;
   display: flex;
-  position: sticky;
-  top: 0;
   justify-content: space-between;
-  z-index: 1;
   background: #111;
   border-bottom: 1px solid #333;
   border-top: 1px solid #333;
@@ -142,22 +139,31 @@
   flex-wrap: wrap;
 }
 
-.itemPopup:global(.sheet) {
-  :global(.sheet-header) {
-    padding: 0;
-    border: none;
-  }
-  :global(.sheet-close) {
-    padding: 10px;
-    color: black;
-    opacity: 0.7;
-  }
+.sheetHeader {
+  padding: 0;
+  border: none;
+}
 
-  &.uncommon,
-  &.rare,
-  &.legendary {
-    :global(.sheet-close) {
-      color: var(--theme-text);
-    }
+.sheetClose {
+  padding: 10px;
+  color: black;
+  opacity: 0.7;
+
+  .uncommon &,
+  .rare &,
+  .legendary & {
+    color: var(--theme-text);
   }
+}
+
+.failureReason {
+  color: var(--theme-text);
+  background-color: #923c3c;
+  margin: 0;
+  padding: 2px 8px;
+}
+
+.header {
+  display: flex;
+  flex-flow: column nowrap;
 }

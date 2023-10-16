@@ -12,7 +12,7 @@ import { getModExclusionGroup, mapToNonReducedModCostVariant } from 'app/loadout
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { ItemFilter } from 'app/search/filter-types';
-import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
+import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { filterMap } from 'app/utils/util';
@@ -116,7 +116,7 @@ export function addItem(
       return;
     }
 
-    if (!isClassCompatible(item.classType, draftLoadout.classType)) {
+    if (!isItemLoadoutCompatible(item.classType, draftLoadout.classType)) {
       showNotification({
         type: 'warning',
         title: t('Loadouts.ClassTypeMismatch', { className: item.classTypeNameLocalized }),
@@ -327,7 +327,7 @@ export function clearSubclass(
 
     return {
       ...loadout,
-      items: [...loadout.items.filter((i) => !isSubclass(i))],
+      items: loadout.items.filter((i) => !isSubclass(i)),
     };
   };
 }
@@ -340,8 +340,7 @@ export function removeMod(mod: ResolvedLoadoutMod): LoadoutUpdateFunction {
     if (loadout.parameters?.mods) {
       const index = loadout.parameters?.mods.indexOf(mod.originalModHash);
       if (index !== -1) {
-        const mods = [...loadout.parameters.mods];
-        mods.splice(index, 1);
+        const mods = loadout.parameters.mods.toSpliced(index, 1);
         return setLoadoutParameters({ mods })(loadout);
       }
     }
@@ -435,27 +434,17 @@ export function syncLoadoutCategoryFromEquipped(
   category: D2BucketCategory
 ): LoadoutUpdateFunction {
   return (loadout) => {
-    let categoryHashes = D2Categories[category];
-    if (category === 'General') {
-      categoryHashes = [
-        BucketHashes.Ghost,
-        BucketHashes.Emblems,
-        BucketHashes.Ships,
-        BucketHashes.Vehicle,
-      ];
-    }
+    const bucketHashes = getLoadoutBucketHashesFromCategory(defs, category);
 
     // Remove equipped items from this bucket
     loadout = {
       ...loadout,
       items: loadout.items.filter(
-        (li) =>
-          !(li.equip && categoryHashes.includes(getBucketHashFromItemHash(defs, li.hash) ?? 0))
+        (li) => !(li.equip && bucketHashes.includes(getBucketHashFromItemHash(defs, li.hash) ?? 0))
       ),
     };
     const newEquippedItems = store.items.filter(
-      (item) =>
-        item.equipped && itemCanBeInLoadout(item) && categoryHashes.includes(item.bucket.hash)
+      (item) => item.equipped && itemCanBeInLoadout(item) && bucketHashes.includes(item.bucket.hash)
     );
     for (const item of newEquippedItems) {
       loadout = addItem(defs, item, true)(loadout);
@@ -559,16 +548,22 @@ export function syncModsFromEquipped(store: DimStore): LoadoutUpdateFunction {
   return updateMods(mods);
 }
 
+export function getLoadoutBucketHashesFromCategory(
+  defs: D1ManifestDefinitions | D2ManifestDefinitions,
+  category: D2BucketCategory | D1BucketCategory
+) {
+  return defs.isDestiny2()
+    ? category === 'General'
+      ? [BucketHashes.Ghost, BucketHashes.Emblems, BucketHashes.Ships, BucketHashes.Vehicle]
+      : D2Categories[category as D2BucketCategory]
+    : D1Categories[category as D1BucketCategory];
+}
+
 export function clearBucketCategory(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   category: D2BucketCategory | D1BucketCategory
 ) {
-  return clearBuckets(
-    defs,
-    defs.isDestiny2()
-      ? D2Categories[category as D2BucketCategory]
-      : D1Categories[category as D1BucketCategory]
-  );
+  return clearBuckets(defs, getLoadoutBucketHashesFromCategory(defs, category));
 }
 
 /**

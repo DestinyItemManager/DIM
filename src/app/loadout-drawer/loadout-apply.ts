@@ -715,18 +715,15 @@ function applyLoadoutItem(
       let amountNeeded = loadoutItem.amount - amountAlreadyHave;
       if (amountNeeded > 0) {
         const otherStores = stores.filter((otherStore) => store.id !== otherStore.id);
-        const storesByAmount = _.sortBy(
-          otherStores.map((store) => ({
-            store,
-            amount: amountOfItem(store, loadoutItem),
-          })),
-          (v) => v.amount
-        ).reverse();
+        const storesWithAmount = otherStores.map((store) => ({
+          store,
+          amount: amountOfItem(store, loadoutItem),
+        }));
 
         let totalAmount = amountAlreadyHave;
         // Keep moving from stacks until we get enough
         while (amountNeeded > 0) {
-          const source = _.maxBy(storesByAmount, (s) => s.amount)!;
+          const source = _.maxBy(storesWithAmount, (s) => s.amount)!;
           const amountToMove = Math.min(source.amount, amountNeeded);
           const sourceItem = source.store.items.find((i) => i.hash === loadoutItem.hash);
 
@@ -997,10 +994,11 @@ function applySocketOverrides(
                   if (idx !== -1) {
                     const overrideIndex = neededOverrides[idx].loadoutSocketIndex;
                     neededOverrides.splice(idx, 1);
-                    const mod = defs.InventoryItem.get(
-                      socket.plugged.plugDef.hash
-                    ) as PluggableInventoryItemDefinition;
-                    modsForItem.push({ socketIndex: socket.socketIndex, mod, requested: true });
+                    modsForItem.push({
+                      socketIndex: socket.socketIndex,
+                      mod: socket.plugged.plugDef,
+                      requested: true,
+                    });
                     itemSocketToLoadoutOverrideSocket[socket.socketIndex] = overrideIndex;
                   } else {
                     excessSockets.push(socket);
@@ -1033,10 +1031,8 @@ function applySocketOverrides(
           if (aspectSocketCategoryHashes.includes(category.category.hash)) {
             handleShuffledSockets(category.socketIndexes);
           } else if (fragmentSocketCategoryHashes.includes(category.category.hash)) {
-            const fragmentCapacity = getLoadoutSubclassFragmentCapacity(defs, {
-              item: dimItem,
-              loadoutItem,
-            });
+            const resolved = { item: dimItem, loadoutItem };
+            const fragmentCapacity = getLoadoutSubclassFragmentCapacity(defs, resolved, true);
             handleShuffledSockets(category.socketIndexes.slice(0, fragmentCapacity));
           } else {
             const sockets = getSocketsByIndexes(dimItem.sockets!, category.socketIndexes);

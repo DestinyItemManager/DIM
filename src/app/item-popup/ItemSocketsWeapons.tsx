@@ -74,7 +74,7 @@ export default function ItemSocketsWeapons({
   ];
 
   // Iterate in reverse category order so cosmetic mods are at the front
-  const mods = [...item.sockets.categories]
+  const mods = item.sockets.categories
     .filter((c) => !excludedSocketCategoryHashes.includes(c.category.hash))
     .reverse()
     .flatMap((c) =>

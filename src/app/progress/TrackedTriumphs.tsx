@@ -19,7 +19,9 @@ export function TrackedTriumphs({ searchQuery }: { searchQuery?: string }) {
   const recordHashes = trackedRecordHash
     ? [...new Set([trackedRecordHash, ...trackedTriumphs])]
     : trackedTriumphs;
-  let records = filterMap(recordHashes, (h) => toRecord(defs, profileResponse, h));
+  let records = filterMap(recordHashes, (h) =>
+    toRecord(defs, profileResponse, h, /* mayBeMissing */ true)
+  );
 
   if (searchQuery) {
     records = records.filter((r) =>
@@ -52,7 +54,5 @@ export function TrackedTriumphs({ searchQuery }: { searchQuery?: string }) {
     );
   }
 
-  return (
-    <RecordGrid records={records} completedRecordsHidden={false} redactedRecordsRevealed={true} />
-  );
+  return <RecordGrid records={records} redactedRecordsRevealed={true} />;
 }

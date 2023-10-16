@@ -62,7 +62,7 @@ export default function LoadoutBuilderContainer({ account }: { account: DestinyA
   if (disabledDueToMaintenance) {
     return (
       <div className="dim-page">
-        <ErrorPanel title={t('LoadoutBuilder.DisabledDueToMaintenance')} showTwitters />
+        <ErrorPanel title={t('LoadoutBuilder.DisabledDueToMaintenance')} showSocials />
       </div>
     );
   }

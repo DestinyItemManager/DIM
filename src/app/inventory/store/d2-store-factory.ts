@@ -30,10 +30,10 @@ export function makeCharacter(
   mostRecentLastPlayed: Date,
   profileRecords: DestinyProfileRecordsComponent | undefined
 ): DimStore {
-  const race = defs.Race[character.raceHash];
+  const race = defs.Race.get(character.raceHash);
   const raceLocalizedName = race.displayProperties.name;
-  const gender = defs.Gender[character.genderHash];
-  const classy = defs.Class[character.classHash];
+  const gender = defs.Gender.get(character.genderHash);
+  const classy = defs.Class.get(character.classHash);
   const genderRace = race.genderedRaceNamesByGenderHash[gender.hash];
   const className = classy.genderedClassNamesByGenderHash[gender.hash];
   const genderLocalizedName = gender.displayProperties.name;

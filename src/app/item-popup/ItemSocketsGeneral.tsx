@@ -1,7 +1,10 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { killTrackerSocketTypeHash } from 'app/search/d2-known-values';
+import {
+  ghostActivitySocketTypeHashes,
+  killTrackerSocketTypeHash,
+} from 'app/search/d2-known-values';
 import { usePlugDescriptions } from 'app/utils/plug-descriptions';
 import {
   getIntrinsicArmorPerkSocket,
@@ -10,7 +13,7 @@ import {
 } from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { SocketCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
 import { DimItem, DimSocket, DimSocketCategory } from '../inventory/item-types';
 import { wishListSelector } from '../wishlists/selectors';
@@ -78,7 +81,13 @@ export default function ItemSocketsGeneral({
         // don't include these weird little solstice stat rerolling mechanic sockets
         !isEventArmorRerollSocket(socketInfo) &&
         // don't include kill trackers
-        socketInfo.socketDefinition.socketTypeHash !== killTrackerSocketTypeHash
+        socketInfo.socketDefinition.socketTypeHash !== killTrackerSocketTypeHash &&
+        // Ghost shells unlock an activity mod slot when masterworked and hide the dummy locked slot
+        (item.bucket.hash !== BucketHashes.Ghost ||
+          socketInfo.socketDefinition.socketTypeHash !==
+            (item.masterwork
+              ? ghostActivitySocketTypeHashes.locked
+              : ghostActivitySocketTypeHashes.unlocked))
     );
     socketsByCategory.set(category, sockets);
   }
@@ -149,7 +158,13 @@ function IntrinsicArmorPerk({
   const plugDescriptions = usePlugDescriptions(socket.plugged?.plugDef);
   return (
     <ArchetypeRow minimal={minimal}>
-      <ArchetypeSocket archetypeSocket={socket} item={item} onClick={onPlugClicked}>
+      <ArchetypeSocket
+        archetypeSocket={socket}
+        /* entire description is shown when not minimal, so no tooltip needed then */
+        noTooltip={!minimal}
+        item={item}
+        onClick={onPlugClicked}
+      >
         {!minimal && (
           <div className={styles.armorIntrinsicDescription}>
             {plugDescriptions.perks.map(

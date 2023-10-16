@@ -1,3 +1,4 @@
+import { I18nKey } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 
 /**
@@ -14,7 +15,11 @@ export interface PlugSet {
   /** A list of plugs that are currently selected. */
   selected: PluggableInventoryItemDefinition[];
   /** The maximum number of plugs a user can select from this plug set. */
-  maxSelectable: number;
+  maxSelectable: number | ((allSelectedPlugs: PluggableInventoryItemDefinition[]) => number);
+  /** The number of plugs selected from this plug set - used for plug sets that share mod slots, e.g. activity mods. Falls back to `selected.length` */
+  getNumSelected?: (allSelectedPlugs: PluggableInventoryItemDefinition[]) => number;
+  /** Overrides the `selected`/`maxSelectable` localization shown in the plugSet header */
+  overrideSelectedAndMax?: I18nKey;
   /**
    * The select behavior of the plug set.
    * multi: how armour mods are selected in game, you need to manually remove ones that have been added.

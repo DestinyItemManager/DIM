@@ -37,6 +37,12 @@ export type DimLanguage = keyof typeof DIM_LANG_INFOS;
 
 export const DIM_LANGS = Object.keys(DIM_LANG_INFOS) as DimLanguage[];
 
+// Our locale names don't line up with the BCP 47 tags for Chinese
+export const browserLangToDimLang: Record<string, DimLanguage> = {
+  'zh-Hans': 'zh-chs',
+  'zh-Hant': 'zh-cht',
+};
+
 // Hot-reload translations in dev. You'll still need to get things to re-render when
 // translations change (unless we someday switch to react-i18next)
 if (module.hot) {
@@ -53,8 +59,14 @@ export function defaultLanguage(): DimLanguage {
   if (storedLanguage && DIM_LANGS.includes(storedLanguage)) {
     return storedLanguage;
   }
-  const browserLang = (window.navigator.language || 'en').toLowerCase();
-  return DIM_LANGS.find((lang) => browserLang.startsWith(lang)) || 'en';
+  const currentBrowserLang = window.navigator.language || 'en';
+  const overriddenLang = Object.entries(browserLangToDimLang).find(([browserLang]) =>
+    currentBrowserLang.startsWith(browserLang)
+  );
+  if (overriddenLang) {
+    return overriddenLang[1];
+  }
+  return DIM_LANGS.find((lang) => currentBrowserLang.toLowerCase().startsWith(lang)) || 'en';
 }
 
 export function initi18n(): Promise<unknown> {

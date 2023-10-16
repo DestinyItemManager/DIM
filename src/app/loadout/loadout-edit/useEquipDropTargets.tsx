@@ -1,6 +1,6 @@
 import { DimItem } from 'app/inventory/item-types';
 import { singularBucketHashes } from 'app/loadout-drawer/loadout-utils';
-import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
+import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { TargetType } from 'dnd-core';
 import { DropTargetHookSpec, useDrop } from 'react-dnd';
@@ -55,7 +55,7 @@ export function useEquipDropTargets(accept: TargetType, classType: DestinyClass)
       drop: () => ({ equipped: type === 'equipped' }),
       canDrop: (i) =>
         itemCanBeInLoadout(i) &&
-        isClassCompatible(i.classType, classType) &&
+        isItemLoadoutCompatible(i.classType, classType) &&
         (type === 'equipped' || !singularBucketHashes.includes(i.bucket.hash)),
       collect: (monitor) => ({
         isOver: monitor.isOver() && monitor.canDrop(),

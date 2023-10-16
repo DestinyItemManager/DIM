@@ -72,7 +72,7 @@ const getUniqueItemNamesFromManifest = memoizeOne(
   }
 );
 
-const nameFilter: FilterDefinition = {
+const nameFilter = {
   keywords: 'name',
   description: tl('Filter.PartialMatch'),
   format: 'freeform',
@@ -94,7 +94,7 @@ const nameFilter: FilterDefinition = {
     return (item) => plainString(item.name, language).includes(filterValue);
   },
   fromItem: (item) => `name:${quoteFilterString(item.name)}`,
-};
+} satisfies FilterDefinition;
 
 const freeformFilters: FilterDefinition[] = [
   nameFilter,

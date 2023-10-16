@@ -20,7 +20,11 @@ import { getTotalModStatChanges } from 'app/loadout/stats';
 import { manifestSelector } from 'app/manifest/selectors';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { armorStats, deprecatedPlaceholderArmorModHash } from 'app/search/d2-known-values';
-import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
+import {
+  isClassCompatible,
+  isItemLoadoutCompatible,
+  itemCanBeInLoadout,
+} from 'app/utils/item-utils';
 import {
   aspectSocketCategoryHashes,
   fragmentSocketCategoryHashes,
@@ -37,12 +41,14 @@ import {
   DestinyInventoryItemDefinition,
   DestinyLoadoutItemComponent,
 } from 'bungie-api-ts/destiny2';
+import deprecatedMods from 'data/d2/deprecated-mods.json';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import { produce } from 'immer';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
 import { v4 as uuidv4 } from 'uuid';
 import { D2Categories } from '../destiny2/d2-bucket-categories';
-import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
+import { DimItem, DimSocket, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import { Loadout, LoadoutItem, ResolvedLoadoutItem, ResolvedLoadoutMod } from './loadout-types';
 
 // We don't want to prepopulate the loadout with D1 cosmetics
@@ -627,19 +633,32 @@ export const potentialUninstancedLoadoutItemsByHash = weakMemoize((allItems: Dim
 export function getUninstancedLoadoutItem(
   allItems: DimItem[],
   hash: number,
-  storeId: string | undefined
+  storeId: string | undefined,
+  /** try to find a copy of this item, even if its location isn't ideal */
+  anyOk?: boolean
 ) {
   // This is mostly for subclasses - it finds all matching items by hash and then picks the one that's on the desired character
   const candidates = potentialUninstancedLoadoutItemsByHash(allItems)[hash] ?? [];
-  const onCurrent =
+  // the copy of this item being held by the specified store
+  const heldItem =
     storeId !== undefined ? candidates.find((item) => item.owner === storeId) : undefined;
-  return onCurrent ?? (candidates[0]?.notransfer ? undefined : candidates[0]);
+  return (
+    // preferably one on the right character
+    heldItem ??
+    // use any copy if asked
+    (anyOk
+      ? candidates[0]
+      : // finally, return a misplaced candidate IF it can be transferred
+      candidates[0]?.notransfer
+      ? undefined
+      : candidates[0])
+  );
 }
 
 export const isMissingItemsSelector = createSelector(
   manifestSelector,
   allItemsSelector,
-  (defs, allItems) => (storeId: string, loadout: Loadout) =>
+  (defs, allItems) => (storeId: string | undefined, loadout: Loadout) =>
     isMissingItems(defs!, allItems, storeId, loadout)
 );
 
@@ -651,19 +670,25 @@ export const enum FragmentProblem {
 export const getFragmentProblemsSelector = createSelector(
   manifestSelector,
   allItemsSelector,
-  (defs, allItems) => (storeId: string, loadout: Loadout) =>
+  (defs, allItems) => (storeId: string | undefined, loadout: Loadout) =>
     defs?.isDestiny2() ? getFragmentProblems(defs, allItems, storeId, loadout.items) : undefined
 );
 
 function getFragmentProblems(
   defs: D2ManifestDefinitions,
   allItems: DimItem[],
-  storeId: string,
+  // this store-specific functionality is vestigial right now,
+  // storeId will always be undefined where this is used.
+  // this function is CURRENTLY only used to evaluate Loadouts
+  // at rest, not check for problems while applying.
+  // the plug assignment algorithm would deal with problems applying.
+  storeId: string | undefined,
   loadoutItems: LoadoutItem[]
 ) {
   const subclass = getSubclass(defs, allItems, storeId, loadoutItems);
   if (subclass) {
-    const fragmentCapacity = getLoadoutSubclassFragmentCapacity(defs, subclass);
+    // this will be 0 if no aspects were provided in the loadout subclass config
+    const fragmentCapacity = getLoadoutSubclassFragmentCapacity(defs, subclass, false);
     const fragmentSockets = getSocketsByCategoryHashes(
       subclass.item.sockets,
       fragmentSocketCategoryHashes
@@ -673,7 +698,7 @@ function getFragmentProblems(
     ).length;
     return fragmentCapacity > loadoutFragments
       ? FragmentProblem.EmptyFragmentSlots
-      : fragmentCapacity < loadoutFragments
+      : fragmentCapacity && fragmentCapacity < loadoutFragments
       ? FragmentProblem.TooManyFragments
       : undefined;
   }
@@ -681,16 +706,17 @@ function getFragmentProblems(
   return undefined;
 }
 
+/** find the subclass inside a Loadout, and retrieve the real DimItem it should refer to */
 function getSubclass(
   defs: D2ManifestDefinitions,
   allItems: DimItem[],
-  storeId: string,
+  storeId: string | undefined,
   loadoutItems: LoadoutItem[]
 ): ResolvedLoadoutItem | undefined {
   for (const loadoutItem of loadoutItems) {
     const info = getResolutionInfo(defs, loadoutItem.hash);
     if (info?.bucketHash === BucketHashes.Subclass) {
-      const item = getUninstancedLoadoutItem(allItems, info.hash, storeId);
+      const item = getUninstancedLoadoutItem(allItems, info.hash, storeId, /* anyOk */ !storeId); // with no store provided, loosely search for any copy
       if (item) {
         return { item, loadoutItem };
       }
@@ -699,14 +725,19 @@ function getSubclass(
   return undefined;
 }
 
+/**
+ * Given a loadout, see how many Fragments can be plugged
+ *
+ * If the loadout supplies Aspects, we use them to calculate Fragment capacity.
+ *
+ * When *applying* a Loadout subclass configuration with no Aspects, we make no Aspect changes.
+ * Thus, `fallbackToCurrent` controls whether to use the subclass's current Aspect config.
+ */
 export function getLoadoutSubclassFragmentCapacity(
   defs: D2ManifestDefinitions,
-  item: ResolvedLoadoutItem
+  item: ResolvedLoadoutItem,
+  fallbackToCurrent: boolean
 ): number {
-  // For fragments, we first need to figure out how many sockets we have available.
-  // If the loadout specifies overrides for aspects, we use all override aspects to calculate
-  // fragment capacity, otherwise we look at the item itself because we don't unplug any aspects
-  // if the overrides don't list any.
   if (item.item.sockets) {
     const aspectSocketIndices = item.item.sockets.categories.find((c) =>
       aspectSocketCategoryHashes.includes(c.category.hash)
@@ -718,9 +749,13 @@ export function getLoadoutSubclassFragmentCapacity(
         return aspectHash ? defs.InventoryItem.get(aspectHash) : undefined;
       });
     if (aspectDefs?.length) {
-      return _.sumBy(aspectDefs, (aspectDef) => aspectDef.plug?.energyCapacity?.capacityValue || 0);
-    } else {
+      // the loadout provided some aspects. use those.
+      return sumAspectCapacity(aspectDefs);
+    } else if (fallbackToCurrent) {
+      // the loadout provided no aspects. assume the currently applied aspects.
       return getSubclassFragmentCapacity(item.item);
+    } else {
+      return 0;
     }
   }
   return 0;
@@ -729,7 +764,7 @@ export function getLoadoutSubclassFragmentCapacity(
 export function isMissingItems(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   allItems: DimItem[],
-  storeId: string,
+  storeId: string | undefined,
   loadout: Loadout
 ): boolean {
   for (const loadoutItem of loadout.items) {
@@ -744,9 +779,16 @@ export function isMissingItems(
       if (!getInstancedLoadoutItem(allItems, loadoutItem)) {
         return true;
       }
-    } else if (storeId !== 'vault' && !getUninstancedLoadoutItem(allItems, info.hash, storeId)) {
-      // The vault can't really have uninstanced items like subclasses or emblems, so no point
-      // in reporting a missing item in that case.
+    } else if (
+      !getUninstancedLoadoutItem(
+        allItems,
+        info.hash,
+        storeId,
+        /* anyOk */ !storeId || storeId === 'vault'
+      )
+    ) {
+      // In case of the vault (which doesn't have emblems or subclasses) or for selectorized loadout problems
+      // (which currently don't use a storeId), find uninstanced items on any character
       return true;
     }
   }
@@ -783,6 +825,17 @@ const oldToNewMod: HashLookup<number> = {
   3253038666: 4287799666, // InventoryItem "Strength Mod"
 };
 
+export function hasDeprecatedMods(loadout: Loadout, defs: D2ManifestDefinitions): boolean {
+  return Boolean(
+    loadout.parameters?.mods?.some((modHash) => {
+      const migratedModHash = oldToNewMod[modHash] ?? modHash;
+      return (
+        deprecatedMods.includes(migratedModHash) || !defs.InventoryItem.getOptional(migratedModHash)
+      );
+    })
+  );
+}
+
 /**
  * Convert a list of plug item hashes into ResolvedLoadoutMods, which may not be
  * the same as the original hashes as we try to be smart about what the user meant.
@@ -799,7 +852,7 @@ export function resolveLoadoutModHashes(
     for (const originalModHash of modHashes) {
       const migratedModHash = oldToNewMod[originalModHash] ?? originalModHash;
       const resolvedModHash = mapToAvailableModCostVariant(migratedModHash, unlockedPlugs);
-      const item = defs.InventoryItem.get(resolvedModHash);
+      const item = defs.InventoryItem.getOptional(resolvedModHash);
       if (isPluggableItem(item)) {
         mods.push({ originalModHash, resolvedMod: item });
       } else {
@@ -813,12 +866,23 @@ export function resolveLoadoutModHashes(
   return mods.sort((a, b) => sortMods(a.resolvedMod, b.resolvedMod));
 }
 
+/**
+ * given a real (or overridden) subclass item,
+ * determine how many Fragment slots are provided by its current Aspects
+ */
 function getSubclassFragmentCapacity(subclassItem: DimItem): number {
   const aspects = getSocketsByCategoryHashes(subclassItem.sockets, aspectSocketCategoryHashes);
-  return _.sumBy(
-    aspects,
-    (aspect) => aspect.plugged?.plugDef.plug.energyCapacity?.capacityValue || 0
-  );
+  return sumAspectCapacity(aspects.map((a) => a.plugged?.plugDef));
+}
+
+/** given some Aspects or Aspect sockets, see how many Fragment slots they'll provide */
+function sumAspectCapacity(
+  aspects: (DestinyInventoryItemDefinition | DimSocket | undefined)[] | undefined
+) {
+  return _.sumBy(aspects, (aspect) => {
+    const aspectDef = aspect && 'plugged' in aspect ? aspect.plugged?.plugDef : aspect;
+    return aspectDef?.plug?.energyCapacity?.capacityValue || 0;
+  });
 }
 
 /**
@@ -855,4 +919,42 @@ export function pickBackingStore(
   return requestedStore && isClassCompatible(classType, requestedStore.classType)
     ? requestedStore
     : stores.find((s) => !s.isVault && isClassCompatible(classType, s.classType));
+}
+
+/**
+ * Remove items and settings that don't match the loadout's class type.
+ */
+export function filterLoadoutToAllowedItems(
+  defs: D2ManifestDefinitions | D1ManifestDefinitions,
+  loadoutToSave: Readonly<Loadout>
+): Readonly<Loadout> {
+  return produce(loadoutToSave, (loadout) => {
+    // Filter out items that don't fit the class type
+    loadout.items = loadout.items.filter((loadoutItem) => {
+      const classType = defs.InventoryItem.get(loadoutItem.hash)?.classType;
+      return classType !== undefined && isItemLoadoutCompatible(classType, loadout.classType);
+    });
+
+    if (loadout.classType === DestinyClass.Unknown && loadout.parameters) {
+      // Remove fashion and non-mod loadout parameters from Any Class loadouts
+      // FIXME It's really easy to forget to consider properties of LoadoutParameters here,
+      // maybe some type voodoo can force us to make a decision for every property?
+      if (
+        loadout.parameters.mods?.length ||
+        loadout.parameters.clearMods ||
+        loadout.parameters.artifactUnlocks ||
+        // weapons but not armor since AnyClass loadouts can't have armor
+        loadout.parameters.clearWeapons
+      ) {
+        loadout.parameters = {
+          mods: loadout.parameters.mods,
+          clearMods: loadout.parameters.clearMods,
+          artifactUnlocks: loadout.parameters.artifactUnlocks,
+          clearWeapons: loadout.parameters.clearWeapons,
+        };
+      } else {
+        delete loadout.parameters;
+      }
+    }
+  });
 }

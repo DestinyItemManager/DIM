@@ -5,7 +5,6 @@ interface CssExports {
   'loadoutEditSection': string;
   'menuContent': string;
   'page': string;
-  'processing': string;
   'speedReport': string;
   'toolbar': string;
   'undoRedo': string;

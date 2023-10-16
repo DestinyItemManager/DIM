@@ -542,6 +542,8 @@
     "SearchAnExotic": "エキゾチック名または説明で検索",
     "SelectExotic": "使用するエキゾチックを選ぶ",
     "SelectMods": "Mod を選択",
+    "SelectModsCount": "{{selected}}/{{maxSelectable}}",
+    "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} アクティビティMod",
     "SelectSubclassOptions": "サブクラスをカスタマイズ",
     "ShowAllConfigs": "全ての設定を表示する",
     "ShowConfigs": "設定を表示する",
@@ -613,7 +615,7 @@
     "OptimizerExplanationSearch": "検索機能を使って最適な防具を絞り込みます。もし各防具(ヘルメットなど) が絞り込みに一致しない場合、各防具ごとに全てが候補として選出されます。",
     "OptimizerExplanationStats": "左ペインにある各ステータス優先度をドラッグして設定します。上ほど重要度は高く優先され、下になるほど後回しにされます。プルダウンから優先しないよう無視する設定もできます。",
     "OptimizerSet": "最適化セット",
-    "ProcessingSets": "{{character}} のセットを処理中 ({{remainingTime}}秒)",
+    "ProcessingSets": "最上位Tierのセットを検索しています...",
     "SaveAs": "名前をつけて保存",
     "SelectMax": "- 最大 -",
     "SelectMin": "- 最小 -",
@@ -991,7 +993,8 @@
     "RecordBooks": "記録ブック"
   },
   "Records": {
-    "Title": "レコード"
+    "Title": "レコード",
+    "UniversalOrnamentSetOther": "その他"
   },
   "SearchHistory": {
     "Date": "最後に使用した日付",

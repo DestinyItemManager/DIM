@@ -1,7 +1,9 @@
 import ClickOutside from 'app/dim-ui/ClickOutside';
 import { PressTipRoot } from 'app/dim-ui/PressTip';
 import Sheet from 'app/dim-ui/Sheet';
+import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { usePopper } from 'app/dim-ui/usePopper';
+import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { sortedStoresSelector } from 'app/inventory/selectors';
 import ItemAccessoryButtons from 'app/item-actions/ItemAccessoryButtons';
@@ -10,12 +12,12 @@ import type { ItemTierName } from 'app/search/d2-known-values';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import DesktopItemActions, { menuClassName } from './DesktopItemActions';
 import styles from './ItemPopup.m.scss';
-import ItemPopupBody, { ItemPopupTab } from './ItemPopupBody';
 import ItemPopupHeader from './ItemPopupHeader';
+import { useItemPopupTabs } from './ItemPopupTabs';
 import ItemTagHotkeys from './ItemTagHotkeys';
 import { ItemPopupExtraInfo } from './item-popup';
 import { buildItemActionsModel } from './item-popup-actions';
@@ -51,7 +53,7 @@ export default function ItemPopup({
   noLink?: boolean;
   onClose: () => void;
 }) {
-  const [tab, setTab] = useState(ItemPopupTab.Overview);
+  const { content, tabButtons } = useItemPopupTabs(item, extraInfo);
   const stores = useSelector(sortedStoresSelector);
   const isPhonePortrait = useIsPhonePortrait();
 
@@ -70,33 +72,23 @@ export default function ItemPopup({
     [item, stores]
   );
 
-  const body = (
-    <ItemPopupBody
-      item={item}
-      key={`body${item.index}`}
-      extraInfo={extraInfo}
-      tab={tab}
-      onTabChanged={setTab}
-    />
-  );
+  const failureStrings = Array.from(extraInfo?.failureStrings ?? []);
+  if (item.owner !== 'unknown' && !item.canPullFromPostmaster && item.location.inPostmaster) {
+    failureStrings.push(t('MovePopup.CantPullFromPostmaster'));
+  }
 
-  const header = <ItemPopupHeader item={item} key={`header${item.hash}`} noLink={noLink} />;
-
-  return isPhonePortrait ? (
-    <Sheet
-      onClose={onClose}
-      zIndex={zIndex}
-      header={header}
-      sheetClassName={clsx(styles.itemPopup, tierClasses[item.tier], styles.movePopupDialog)}
-      footer={
-        itemActionsModel.hasMoveControls && (
-          <div className={styles.mobileMoveLocations}>
-            <ItemMoveLocations key={item.index} item={item} actionsModel={itemActionsModel} />
-          </div>
-        )
-      }
-    >
-      {itemActionsModel.hasAccessoryControls && (
+  const header = (
+    <div className={styles.header}>
+      <ItemPopupHeader item={item} key={`header${item.hash}`} noLink={noLink} />
+      {failureStrings?.map(
+        (failureString) =>
+          failureString.length > 0 && (
+            <div className={styles.failureReason} key={failureString}>
+              <RichDestinyText text={failureString} ownerId={item.owner} />
+            </div>
+          )
+      )}
+      {isPhonePortrait && itemActionsModel.hasAccessoryControls && (
         <div className={styles.mobileItemActions}>
           <ItemAccessoryButtons
             item={item}
@@ -106,7 +98,27 @@ export default function ItemPopup({
           />
         </div>
       )}
-      <div className={styles.popupBackground}>{body}</div>
+      {tabButtons}
+    </div>
+  );
+
+  return isPhonePortrait ? (
+    <Sheet
+      onClose={onClose}
+      zIndex={zIndex}
+      header={header}
+      headerClassName={styles.sheetHeader}
+      closeButtonClassName={styles.sheetClose}
+      sheetClassName={clsx(tierClasses[item.tier], styles.movePopupDialog)}
+      footer={
+        itemActionsModel.hasMoveControls && (
+          <div className={styles.mobileMoveLocations}>
+            <ItemMoveLocations key={item.index} item={item} actionsModel={itemActionsModel} />
+          </div>
+        )
+      }
+    >
+      <div className={styles.popupBackground}>{content}</div>
     </Sheet>
   ) : (
     <Portal>
@@ -128,7 +140,7 @@ export default function ItemPopup({
             <div className={styles.desktopPopup}>
               <div className={clsx(styles.desktopPopupBody, styles.popupBackground)}>
                 {header}
-                {body}
+                {content}
               </div>
               {itemActionsModel.hasControls && (
                 <div className={clsx(styles.desktopActions)}>

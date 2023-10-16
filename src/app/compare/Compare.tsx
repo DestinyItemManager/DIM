@@ -169,7 +169,7 @@ export default function Compare({ session }: { session: CompareSession }) {
       allStats,
       session.initialItemId
     );
-    const sortedComparisonItems = Array.from(compareItems).sort(comparator);
+    const sortedComparisonItems = compareItems.toSorted(comparator);
     return (
       <CompareItems
         items={sortedComparisonItems}

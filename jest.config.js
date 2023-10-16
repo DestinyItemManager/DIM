@@ -18,7 +18,7 @@ module.exports = {
   },
   setupFiles: ['./src/testing/jest-setup.js'],
   // Babel transform is required to handle some es modules?
-  transformIgnorePatterns: ['node_modules/(?!bungie-api-ts|@popper|@react-hook)'],
+  transformIgnorePatterns: ['node_modules/.pnpm/(?!bungie-api-ts|@popper|@react-hook)'],
   globals: {
     $BROWSERS: [],
     $DIM_FLAVOR: 'test',

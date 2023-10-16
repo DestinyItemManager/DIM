@@ -80,6 +80,8 @@ export default (env: Env) => {
   const contentSecurityPolicy = csp(env.name, featureFlags);
 
   const analyticsProperty = env.release ? 'G-1PW23SGMHN' : 'G-MYWW38Z3LR';
+  const jsFilenamePattern = env.dev ? '[name]-[fullhash].js' : '[name]-[contenthash:8].js';
+  const cssFilenamePattern = env.dev ? '[name]-[fullhash].css' : '[name]-[contenthash:8].css';
 
   const config: webpack.Configuration = {
     mode: env.dev ? ('development' as const) : ('production' as const),
@@ -87,6 +89,7 @@ export default (env: Env) => {
     entry: {
       main: './src/Index.tsx',
       browsercheck: './src/browsercheck.js',
+      earlyErrorReport: './src/earlyErrorReport.js',
       authReturn: './src/authReturn.ts',
     },
 
@@ -96,8 +99,8 @@ export default (env: Env) => {
     output: {
       path: path.resolve('./dist'),
       publicPath: '/',
-      filename: env.dev ? '[name]-[fullhash].js' : '[name]-[contenthash:8].js',
-      chunkFilename: env.dev ? '[name]-[fullhash].js' : '[name]-[contenthash:8].js',
+      filename: jsFilenamePattern,
+      chunkFilename: jsFilenamePattern,
       assetModuleFilename: ASSET_NAME_PATTERN,
       hashFunction: 'xxhash64',
     },
@@ -125,7 +128,7 @@ export default (env: Env) => {
           liveReload: false,
           headers: (req) => {
             // This mirrors what's in .htaccess - headers for html paths, COEP for JS.
-            return req.baseUrl.match(/^[^.]+$/)
+            const headers: Record<string, string | string[]> = req.baseUrl.match(/^[^.]+$/)
               ? {
                   'Content-Security-Policy': contentSecurityPolicy,
                   // credentialless is only supported by chrome but require-corp blocks Bungie.net messages
@@ -139,6 +142,8 @@ export default (env: Env) => {
                   //'Cross-Origin-Embedder-Policy': 'require-corp',
                 }
               : {};
+
+            return headers;
           },
         }
       : undefined,
@@ -162,7 +167,7 @@ export default (env: Env) => {
       runtimeChunk: 'single',
       splitChunks: {
         chunks(chunk) {
-          return chunk.name !== 'browsercheck';
+          return chunk.name !== 'browsercheck' && chunk.name !== 'earlyErrorReport';
         },
         automaticNameDelimiter: '-',
       },
@@ -172,9 +177,16 @@ export default (env: Env) => {
           terserOptions: {
             ecma: 2020,
             module: true,
-            compress: { passes: 3, toplevel: true },
-            mangle: { safari10: true, toplevel: true },
-            output: { safari10: true },
+            compress: {
+              passes: 3,
+              toplevel: true,
+              unsafe: true,
+              unsafe_math: true,
+              unsafe_proto: true,
+              pure_getters: true,
+              pure_funcs: ['JSON.parse', 'Object.values', 'Object.keys'],
+            },
+            mangle: { toplevel: true },
           },
         }),
       ],
@@ -328,13 +340,6 @@ export default (env: Env) => {
             },
           ],
         },
-        // https://github.com/pmndrs/react-spring/issues/2097, remove after react-spring is gone
-        {
-          test: /react-spring/i,
-          resolve: {
-            fullySpecified: false,
-          },
-        },
       ],
 
       noParse: /manifests/,
@@ -366,8 +371,8 @@ export default (env: Env) => {
     new NotifyPlugin('DIM', !env.dev),
 
     new MiniCssExtractPlugin({
-      filename: env.dev ? '[name]-[contenthash].css' : '[name]-[contenthash:8].css',
-      chunkFilename: env.dev ? '[name]-[contenthash].css' : '[id]-[contenthash:8].css',
+      filename: cssFilenamePattern,
+      chunkFilename: cssFilenamePattern,
     }),
 
     // Compress CSS after bundling so we can optimize across rules
@@ -392,11 +397,12 @@ export default (env: Env) => {
       ],
     }),
 
+    // TODO: prerender?
     new HtmlWebpackPlugin({
-      inject: true,
+      inject: false,
       filename: 'index.html',
       template: 'src/index.html',
-      chunks: ['main', 'browsercheck'],
+      chunks: ['earlyErrorReport', 'main', 'browsercheck'],
       templateParameters: {
         version,
         date: new Date(buildTime).toString(),

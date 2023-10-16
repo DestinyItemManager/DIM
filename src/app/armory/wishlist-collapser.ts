@@ -238,8 +238,9 @@ export function consolidateSecondaryPerks(initialRolls: Roll[]) {
       newClusteredRolls = bundlesToLeaveAlone;
 
       // build a new bundle with the same other columns, but add together the perks in this column
-      const newPerkBundle = perkBundleToConsolidate.map((e, i) =>
-        i === index ? combineColumns(bundlesToCombine.map((b) => b[i])) : e
+      const newPerkBundle = perkBundleToConsolidate.with(
+        index,
+        combineColumns(bundlesToCombine.map((b) => b[index]))
       );
 
       newClusteredRolls.push(newPerkBundle);

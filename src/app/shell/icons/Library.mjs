@@ -1,6 +1,6 @@
 // https://fontawesome.com/v5/search
 
-// IMPORTANT: run `yarn fa-subset` after changing this file or new icons won't show up
+// IMPORTANT: run `pnpm fa-subset` after changing this file or new icons won't show up
 
 export const archiveIcon = 'fas fa-archive';
 export const updateIcon = 'fas fa-arrow-circle-up';
@@ -54,7 +54,6 @@ export const faTimesCircle = 'fas fa-times-circle';
 export const faWindowClose = 'fas fa-window-close';
 export const disabledIcon = faTimesCircle;
 export const deleteIcon = 'far fa-trash-alt';
-export const twitterIcon = 'fab fa-twitter';
 export const mastodonIcon = 'fab fa-mastodon';
 export const undoIcon = 'fas fa-undo';
 export const redoIcon = 'fas fa-redo';

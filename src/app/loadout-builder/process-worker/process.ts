@@ -45,8 +45,7 @@ export function process(
   /** Which artifice mods, large, and small stat mods are available */
   autoModOptions: AutoModData,
   /** Use stat mods to hit stat minimums */
-  autoStatMods: boolean,
-  onProgress: (remainingTime: number) => void
+  autoStatMods: boolean
 ): {
   sets: ProcessArmorSet[];
   combos: number;
@@ -144,8 +143,6 @@ export function process(
     numValidSets: 0,
     statistics: setStatistics,
   };
-
-  let elapsedSeconds = 0;
 
   for (const helm of helms) {
     for (const gaunt of gauntlets) {
@@ -372,17 +369,6 @@ export function process(
             setTracker.insert(totalTier + predictedExtraTiers, tiersString, armor, stats, statMods);
           }
         }
-      }
-
-      // Report speed every so often
-      const totalTime = performance.now() - pstart;
-      const newElapsedSeconds = Math.floor(totalTime / 500);
-
-      if (newElapsedSeconds > elapsedSeconds) {
-        elapsedSeconds = newElapsedSeconds;
-        const speed = (processStatistics.numProcessed * 1000) / totalTime;
-        const remaining = Math.round((combos - processStatistics.numProcessed) / speed);
-        onProgress(remaining);
       }
     }
   }

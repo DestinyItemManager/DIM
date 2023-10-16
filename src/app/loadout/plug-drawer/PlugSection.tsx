@@ -1,4 +1,5 @@
 import { TileGrid } from 'app/dim-ui/TileGrid';
+import { t, tl } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { useCallback } from 'react';
@@ -14,13 +15,17 @@ import { PlugSet } from './types';
 export default function PlugSection({
   plugSet,
   classType,
+  numSelected,
+  maxSelectable,
   isPlugSelectable,
   onPlugSelected,
   onPlugRemoved,
 }: {
   plugSet: PlugSet;
   classType: DestinyClass;
-  /** A function to determine if a given plug is currently selectable. */
+  numSelected: number;
+  maxSelectable: number;
+  /** A function to further refine whether a given plug is currently selectable. */
   isPlugSelectable: (plug: PluggableInventoryItemDefinition) => boolean;
   onPlugSelected: (
     plugSetHash: number,
@@ -29,7 +34,7 @@ export default function PlugSection({
   ) => void;
   onPlugRemoved: (plugSetHash: number, mod: PluggableInventoryItemDefinition) => void;
 }) {
-  const { plugs, maxSelectable, plugSetHash, headerSuffix, selectionType } = plugSet;
+  const { plugs, plugSetHash, headerSuffix, selectionType } = plugSet;
 
   const handlePlugSelected = useCallback(
     (plug: PluggableInventoryItemDefinition) => onPlugSelected(plugSetHash, plug, selectionType),
@@ -45,6 +50,8 @@ export default function PlugSection({
     return null;
   }
 
+  const multiSelect = selectionType === 'multi';
+
   // Here we split the section into further pieces so that each plug category has has its own title
   // This is important for combat mods, which would otherwise be grouped into one massive category
   const plugsGroupedByModType = groupModsByModType(plugs);
@@ -59,13 +66,21 @@ export default function PlugSection({
           header += ` (${headerSuffix})`;
         }
 
+        const key = header;
+
+        if (multiSelect) {
+          header += ` (${t(plugSet.overrideSelectedAndMax ?? tl('LB.SelectModsCount'), {
+            selected: numSelected,
+            maxSelectable,
+          })})`;
+        }
+
         return (
-          <TileGrid key={header} header={header} className={styles.section}>
+          <TileGrid key={key} header={header} className={styles.section}>
             {plugs.map((plug) => {
               const isSelected = plugSet.selected.some((s) => s.hash === plug.hash);
-              const multiSelect = selectionType === 'multi';
               const selectable = multiSelect
-                ? plugSet.selected.length < maxSelectable && isPlugSelectable(plug)
+                ? numSelected < maxSelectable && isPlugSelectable(plug)
                 : !isSelected && isPlugSelectable(plug);
               return (
                 <SelectablePlug

@@ -271,12 +271,12 @@ export function sortItems(
     if (itemSortSettings.sortOrder.includes('rarity')) {
       comparators.unshift(ITEM_COMPARATORS.rarity);
     }
-    return [...items].sort(chainComparator(...comparators));
+    return items.toSorted(chainComparator(...comparators));
   }
 
   // Re-sort consumables
   if (itemLocationId === BucketHashes.Consumables) {
-    return [...items].sort(
+    return items.toSorted(
       chainComparator(
         ITEM_COMPARATORS.typeName,
         ITEM_COMPARATORS.rarity,
@@ -288,7 +288,7 @@ export function sortItems(
 
   // Engrams and Postmaster always sort by recency, oldest to newest, like in game
   if (itemLocationId === BucketHashes.Engrams || itemLocationId === BucketHashes.LostItems) {
-    return [...items].sort(reverseComparator(acquisitionRecencyComparator));
+    return items.toSorted(reverseComparator(acquisitionRecencyComparator));
   }
 
   // always sort by archive first
@@ -309,7 +309,7 @@ export function sortItems(
         : comparator;
     })
   );
-  return [...items].sort(comparator);
+  return items.toSorted(comparator);
 }
 
 export function groupItems(

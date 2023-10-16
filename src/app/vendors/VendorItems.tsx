@@ -4,11 +4,8 @@ import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import FactionIcon from 'app/progress/FactionIcon';
 import { ReputationRank } from 'app/progress/ReputationRank';
-import { VENDORS } from 'app/search/d2-known-values';
-import { uniqBy } from 'app/utils/util';
 import { DestinyVendorProgressionType } from 'bungie-api-ts/destiny2';
 import focusingItemOutputs from 'data/d2/focusing-item-outputs.json';
-import rahoolMats from 'data/d2/spider-mats.json';
 import _ from 'lodash';
 import BungieImage from '../dim-ui/BungieImage';
 import VendorItemComponent from './VendorItemComponent';
@@ -42,24 +39,14 @@ export default function VendorItems({
 
   const itemsByCategory = _.groupBy(vendor.items, (item) => item?.displayCategoryIndex);
 
-  const faction = vendor.def.factionHash ? defs.Faction[vendor.def.factionHash] : undefined;
+  const faction = vendor.def.factionHash ? defs.Faction.get(vendor.def.factionHash) : undefined;
   const factionProgress = vendor?.component?.progression;
-
-  let currencies = vendor.currencies;
-
-  // add all traded planetmats if this vendor is the spider
-  if (vendor?.component?.vendorHash === VENDORS.RAHOOL) {
-    currencies = uniqBy(
-      [...rahoolMats.map((h) => defs.InventoryItem.get(h)), ...currencies],
-      (i) => i.hash
-    );
-  }
 
   return (
     <div className={styles.vendorContents}>
-      {currencies.length > 0 && (
+      {vendor.currencies.length > 0 && (
         <div className={styles.currencies}>
-          {currencies.map((currency) => (
+          {vendor.currencies.map((currency) => (
             <div className={styles.currency} key={currency.hash}>
               {(currencyLookups?.[currency.hash] || 0).toLocaleString()}{' '}
               <BungieImage

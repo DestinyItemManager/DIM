@@ -193,7 +193,7 @@ function expandStringCombinations(stringGroups: string[][]) {
   const results: string[][] = [];
   for (let i = 0; i < stringGroups.length; i++) {
     const stringGroup = stringGroups[i];
-    const stems = results.length ? results[results.length - 1] : undefined;
+    const stems = results.length ? results.at(-1)! : undefined;
     const newResults = stringGroup.flatMap((suffix) =>
       stems
         ? stems.map(

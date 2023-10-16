@@ -255,6 +255,46 @@ function buildPlugSetPresentationNode(
   return subnode;
 }
 
+function dropEmptyNodes(node: DimPresentationNode | undefined): DimPresentationNode | undefined {
+  if (!node) {
+    return undefined;
+  }
+  const children =
+    node.collectibles ??
+    node.craftables ??
+    node.records ??
+    node.metrics ??
+    node.plugs ??
+    node.childPresentationNodes;
+  if (children?.length) {
+    return node;
+  } else {
+    return undefined;
+  }
+}
+
+export function hideCompletedRecords(node: DimPresentationNode): DimPresentationNode {
+  if (node.childPresentationNodes) {
+    return {
+      ...node,
+      childPresentationNodes: filterMap(node.childPresentationNodes, (node) =>
+        dropEmptyNodes(hideCompletedRecords(node))
+      ),
+    };
+  }
+
+  if (node.records) {
+    return {
+      ...node,
+      records: node.records.filter(
+        (r) => !(r.recordComponent.state & DestinyRecordState.RecordRedeemed)
+      ),
+    };
+  }
+
+  return node;
+}
+
 // TODO: how to flatten this down to individual category trees
 // TODO: how to handle simple searches plus bigger queries
 // TODO: this uses the entire search field as one big string search. no "and". no fun.
@@ -262,7 +302,6 @@ export function filterPresentationNodesToSearch(
   node: DimPresentationNode,
   searchQuery: string,
   filterItems: ItemFilter,
-  completedRecordsHidden: boolean,
   path: DimPresentationNode[] = [],
   defs: D2ManifestDefinitions
 ): DimPresentationNodeSearchResult[] {
@@ -275,14 +314,7 @@ export function filterPresentationNodesToSearch(
   if (node.childPresentationNodes) {
     // TODO: build up the tree?
     return node.childPresentationNodes.flatMap((c) =>
-      filterPresentationNodesToSearch(
-        c,
-        searchQuery,
-        filterItems,
-        completedRecordsHidden,
-        [...path, node],
-        defs
-      )
+      filterPresentationNodesToSearch(c, searchQuery, filterItems, [...path, node], defs)
     );
   }
 
@@ -302,12 +334,8 @@ export function filterPresentationNodesToSearch(
   if (node.records) {
     const records = node.records.filter(
       (r) =>
-        !(
-          completedRecordsHidden &&
-          Boolean(r.recordComponent.state & DestinyRecordState.RecordRedeemed)
-        ) &&
-        (searchDisplayProperties(r.recordDef.displayProperties, searchQuery) ||
-          searchRewards(r.recordDef, searchQuery, defs))
+        searchDisplayProperties(r.recordDef.displayProperties, searchQuery) ||
+        searchRewards(r.recordDef, searchQuery, defs)
     );
 
     return records.length
@@ -445,9 +473,12 @@ function toRecords(
 export function toRecord(
   defs: D2ManifestDefinitions,
   profileResponse: DestinyProfileResponse,
-  recordHash: number
+  recordHash: number,
+  mayBeMissing?: boolean
 ): DimRecord | undefined {
-  const recordDef = defs.Record.get(recordHash);
+  const recordDef = mayBeMissing
+    ? defs.Record.getOptional(recordHash)
+    : defs.Record.get(recordHash);
   if (!recordDef) {
     return undefined;
   }

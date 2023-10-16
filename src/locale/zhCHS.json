@@ -1,6 +1,6 @@
 {
   "AWA": {
-    "ConfirmDescription": "请使用\"命运2同伴应用\"授予DIM修改您物品的许可权。",
+    "ConfirmDescription": "请使用\"命运2同伴应用\"授予DIM修改您物品的权限。",
     "ConfirmTitle": "确认操作",
     "Error": "更改模组或特性时出错",
     "ErrorMessage": "我们无法将{{plug}}装备到{{item}}。\n\n{{error}}",
@@ -15,7 +15,7 @@
     "MissingAccountWarning": "如果你的账户没有显示，你可能登录了错误的 Bungie.net 账户，或 Bungie.net 可能正在停机维护。",
     "MissingDescription": "你试图查看的账户并未连接到你的 Bungie.net 账户。",
     "MissingTitle": "找不到账户",
-    "NoCharacters": "没有找到与此Bungie.net帐号相关联的Destiny角色，登陆其它帐号试试看。",
+    "NoCharacters": "没有找到与此 Bungie.net 账号相关联的《命运》角色，登录其它账号试试看。",
     "SwitchAccounts": "你可以稍后在标题栏菜单里切换账户。",
     "Title": "账户"
   },
@@ -231,7 +231,7 @@
     "Event": "显示命运2中特定活动中的物品",
     "ExtraPerk": "显示带有额外可选特性的随机特性传说武器。",
     "Filter": "过滤器",
-    "FilterWith": "Filter with:",
+    "FilterWith": "筛选：",
     "Focusable": "显示可在商人处聚焦的物品",
     "Foundry": "按武器铸造厂显示物品。",
     "Glimmer": "显示与增加微光获取有关的消耗品。",
@@ -301,7 +301,7 @@
     "StatLower": "显示相比其他同类别护甲而言属性全面更低的护甲。",
     "Stats": "按某个属性值显示物品。$t(Filter.StatsExtras)",
     "StatsBase": "按基础属性值筛选护甲，不包含附加模组或大师杰作属性。$t(Filter.StatsExtras)",
-    "StatsExtras": "Supports stat addition by connecting multiple stat names with the + or & symbol.  There are also special keywords highest, secondhighest, thirdhighest, etc. which match stats based on their rank within an item's stats. Each custom stats also has its own search term, shown in the Custom Stats settings.",
+    "StatsExtras": "可使用 + 或 & 符号来筛选多种属性组合。也可根据装备属性高低顺序使用关键字筛选最高(highest)、次高(secondhighest)、第三高(thirdhighest) 等。每个自选属性也有各自的搜索关键词，在自选属性设置中显示。",
     "StatsLoadout": "针对特定属性, 筛选出最大化数值的一系列装备",
     "StatsMax": "针对特定属性, 筛选出最大化数值的一系列装备. 包括那些最高属性值物品",
     "Tags": {
@@ -464,8 +464,8 @@
       "Guardian_male": "您的{{store}} 上有太多 “{{itemtype}}” 的物品.",
       "Vault": "您的{{store}} 上有太多 “{{itemtype}}” 的物品."
     },
-    "Classified": "该物品已被分类并且现在无法被转移.",
-    "Classified2": "分类物品。Bungie尚未提供该物品的相关资讯。为该物品添加备注，以方便您使用搜索筛检程式找到它。",
+    "Classified": "该物品是加密的，现在无法被转移。",
+    "Classified2": "加密物品。Bungie尚未提供该物品的相关信息。为该物品添加备注，以方便您使用搜索过滤器找到它。",
     "Deequip": "无法找到另一个物品来卸下{{itemname}}",
     "ExoticError": "无法装备“{{itemname}}”，因为在{{slot}} 栏位中无法装备异域物品。（{{error}}）",
     "NotEnoughRoom": "我们无法在{{store}} 上移动物品, 来为{{itemname}} 腾出空间",
@@ -542,6 +542,8 @@
     "SearchAnExotic": "搜索异域装备名称或描述",
     "SelectExotic": "选择异域装备",
     "SelectMods": "选择模组",
+    "SelectModsCount": "{{selected}}/{{maxSelectable}}",
+    "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} 个活动模组",
     "SelectSubclassOptions": "自定义子职业",
     "ShowAllConfigs": "显示所有配置",
     "ShowConfigs": "显示配置",
@@ -610,10 +612,10 @@
     "None": "无",
     "OptimizerExplanationGuide": "用户指南里有更多信息和视频教程。",
     "OptimizerExplanationMods": "选择你想使用的异域装备和模组。配装优化器只会包括你选定的模组带来的属性加成——护甲上其他现存的模组都会被忽略。",
-    "OptimizerExplanationSearch": "使用搜索栏来缩小护甲的考虑范围。如果未能搜索到能与栏位匹配的护甲，则该栏位的所有护甲都将被考虑。",
+    "OptimizerExplanationSearch": "使用搜索栏来缩小护甲的考虑范围。如果未有护甲与搜索结果匹配，则该部位的所有护甲都将被考虑。",
     "OptimizerExplanationStats": "将最重要的属性拖动到顶部，并将你不在乎的属性设为忽略。",
     "OptimizerSet": "优化器组合",
-    "ProcessingSets": "正在处理{{character}}的组合（{{remainingTime}} s）",
+    "ProcessingSets": "寻找最高阶属性配装...",
     "SaveAs": "保存为",
     "SelectMax": "-最大-",
     "SelectMin": "-最小-",
@@ -749,7 +751,7 @@
     "Randomize": "随机配装",
     "RandomizeButton": "随机搭配",
     "RandomizeNew": "随机创建",
-    "RandomizeQueryHint": "提示：可通过搜索条件来限制随机物品池。",
+    "RandomizeQueryHint": "提示：请先搜索物品以限制随机物品池",
     "RandomizeSearch": "从搜索结果随机选取",
     "RandomizeSearchPrompt": "从“{{query}}”的搜索结果随机配装？",
     "Redo": "重做",
@@ -856,7 +858,7 @@
       "Unlock": "解锁{{itemType}}",
       "Unlocked": "已解锁"
     },
-    "MissingSockets": "当 bungie 正在更新其服务时, perk 和 mod 的详细信息不可用。当他们做完的时候, 它就会回来, 通常在几个小时后。",
+    "MissingSockets": "在 Bungie 维护其服务器时，无法查看特性和模组的详细信息，直到维护完成。这通常需要几个小时。",
     "Notes": "备注：",
     "OverviewTab": "概述",
     "Owned": "此物品在您的库存中。",
@@ -991,7 +993,8 @@
     "RecordBooks": "记事本"
   },
   "Records": {
-    "Title": "记录"
+    "Title": "记录",
+    "UniversalOrnamentSetOther": "其他"
   },
   "SearchHistory": {
     "Date": "最近使用",

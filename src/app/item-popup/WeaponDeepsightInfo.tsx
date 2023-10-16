@@ -25,7 +25,12 @@ export function WeaponDeepsightInfo({ item }: { item: DimItem }) {
           )}
           <div className={styles.deepsightProgressBar}>
             {relevantObjectives.map((objective) => (
-              <Objective key={objective.objectiveHash} objective={objective} showHidden />
+              <Objective
+                key={objective.objectiveHash}
+                objective={objective}
+                showHidden
+                noCheckbox
+              />
             ))}
           </div>
         </>

@@ -6,15 +6,10 @@ import { DimLanguage } from 'app/i18n';
 import { t } from 'app/i18next-t';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
-import {
-  FragmentProblem,
-  getFragmentProblemsSelector,
-  isMissingItemsSelector,
-} from 'app/loadout-drawer/loadout-utils';
+import { loadoutIssuesSelector } from 'app/loadout-drawer/loadouts-selector';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { localizedIncludes, localizedSorter } from 'app/utils/intl';
-import deprecatedMods from 'data/d2/deprecated-mods.json';
 import _ from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -57,8 +52,7 @@ function useLoadoutFilterPillsInternal(
     extra?: React.ReactNode;
   } = {}
 ): [filteredLoadouts: Loadout[], filterPillsElement: React.ReactNode, hasSelectedFilters: boolean] {
-  const isMissingItems = useSelector(isMissingItemsSelector);
-  const getFragmentProblems = useSelector(getFragmentProblemsSelector);
+  const loadoutIssues = useSelector(loadoutIssuesSelector);
   const [selectedFilters, setSelectedFilters] = useState<Option[]>(emptyArray());
 
   // Reset filters on character change
@@ -90,27 +84,18 @@ function useLoadoutFilterPillsInternal(
     (o) => o.key
   );
 
-  const loadoutsWithMissingItems = useMemo(
-    () => savedLoadouts.filter((loadout) => isMissingItems(selectedStoreId, loadout)),
-    [isMissingItems, savedLoadouts, selectedStoreId]
+  const loadoutsWithMissingItems = savedLoadouts.filter(
+    (l) => loadoutIssues[l.id]?.hasMissingItems
   );
-  const loadoutsWithDeprecatedMods = useMemo(
-    () =>
-      savedLoadouts.filter(
-        (loadout) => loadout.parameters?.mods?.some((modHash) => deprecatedMods.includes(modHash))
-      ),
-    [savedLoadouts]
+  const loadoutsWithDeprecatedMods = savedLoadouts.filter(
+    (l) => loadoutIssues[l.id]?.hasDeprecatedMods
   );
-
-  const [loadoutsWithEmptyFragmentSlots, loadoutsWithTooManyFragments] = useMemo(() => {
-    const problematicLoadouts = _.groupBy(savedLoadouts, (loadout) =>
-      getFragmentProblems(selectedStoreId, loadout)
-    );
-    return [
-      problematicLoadouts[FragmentProblem.EmptyFragmentSlots] ?? emptyArray(),
-      problematicLoadouts[FragmentProblem.TooManyFragments] ?? emptyArray(),
-    ] as const;
-  }, [getFragmentProblems, savedLoadouts, selectedStoreId]);
+  const loadoutsWithEmptyFragmentSlots = savedLoadouts.filter(
+    (l) => loadoutIssues[l.id]?.emptyFragmentSlots
+  );
+  const loadoutsWithTooManyFragments = savedLoadouts.filter(
+    (l) => loadoutIssues[l.id]?.tooManyFragments
+  );
 
   if (includeWarningPills) {
     if (loadoutsWithMissingItems.length) {

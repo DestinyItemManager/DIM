@@ -542,6 +542,8 @@
     "SearchAnExotic": "Search for exotic name or description",
     "SelectExotic": "Select exotic",
     "SelectMods": "Select Mods",
+    "SelectModsCount": "{{selected}}/{{maxSelectable}}",
+    "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Activity Mods",
     "SelectSubclassOptions": "Customize subclass",
     "ShowAllConfigs": "Show all configurations",
     "ShowConfigs": "Show configurations",
@@ -613,7 +615,7 @@
     "OptimizerExplanationSearch": "Use the search bar to narrow down which armor to consider. If no armor matches the search in a slot, all armor in that slot will be considered.",
     "OptimizerExplanationStats": "Drag the most important stats to the top, and set stats you don't care about to Ignore.",
     "OptimizerSet": "Optimizer Set",
-    "ProcessingSets": "Processing sets for\n{{character}} ({{remainingTime}}s)",
+    "ProcessingSets": "Finding highest tier sets...",
     "SaveAs": "Save as",
     "SelectMax": "- Max -",
     "SelectMin": "- Min -",
@@ -991,7 +993,8 @@
     "RecordBooks": "Record Books"
   },
   "Records": {
-    "Title": "Records"
+    "Title": "Records",
+    "UniversalOrnamentSetOther": "Other"
   },
   "SearchHistory": {
     "Date": "Last Used",

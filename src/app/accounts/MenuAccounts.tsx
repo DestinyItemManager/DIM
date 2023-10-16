@@ -35,8 +35,9 @@ export default function MenuAccounts({
 
   return (
     <div className={styles.accountSelect}>
-      <h3>{t('Accounts.Title')}</h3>
-      <div className={styles.accountName}>{bungieName}</div>
+      <h3>
+        {t('Accounts.Title')} <span className={styles.accountName}>{bungieName}</span>
+      </h3>
       {sortedAccounts.map((account) => (
         <Link
           key={`${account.membershipId}-${account.destinyVersion}`}

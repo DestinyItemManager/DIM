@@ -16,7 +16,6 @@ export default function PresentationNodeSearchResults({
   profileResponse: DestinyProfileResponse;
 }) {
   // TODO: make each node in path linkable
-  const completedRecordsHidden = useSelector(settingSelector('completedRecordsHidden'));
   const redactedRecordsRevealed = useSelector(settingSelector('redactedRecordsRevealed'));
   const sortRecordProgression = useSelector(settingSelector('sortRecordProgression'));
   return (
@@ -33,7 +32,7 @@ export default function PresentationNodeSearchResults({
               !sr.craftables &&
               !sr.plugs &&
               (() => {
-                const node = sr.path[sr.path.length - 1];
+                const node = sr.path.at(-1)!;
                 return node.childPresentationNodes ? (
                   <PresentationNodeRoot
                     presentationNodeHash={node.hash}
@@ -44,7 +43,6 @@ export default function PresentationNodeSearchResults({
                   <PresentationNodeLeaf
                     node={node}
                     ownedItemHashes={ownedItemHashes}
-                    completedRecordsHidden={completedRecordsHidden}
                     redactedRecordsRevealed={redactedRecordsRevealed}
                     sortRecordProgression={sortRecordProgression}
                   />
@@ -53,7 +51,6 @@ export default function PresentationNodeSearchResults({
             <PresentationNodeLeaf
               node={sr}
               ownedItemHashes={ownedItemHashes}
-              completedRecordsHidden={completedRecordsHidden}
               redactedRecordsRevealed={redactedRecordsRevealed}
               sortRecordProgression={sortRecordProgression}
             />

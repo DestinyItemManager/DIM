@@ -1,5 +1,37 @@
 ## Next
 
+## 7.90.0 <span class="changelog-date">(2023-10-15)</span>
+
+## 7.89.0 <span class="changelog-date">(2023-10-08)</span>
+
+* "Hide completed triumphs" on the Records page now also hides sections and seals where all triumphs have been completed, not only the triumphs themselves.
+* The Vendors page should now more reliably indicate whether armor sold by Ada-1 is unlocked in collections.
+* Comparing a legendary armor piece now starts the Compare view with similar armor based on intrinsic perk and activity mod slot.
+
+## 7.88.0 <span class="changelog-date">(2023-10-01)</span>
+
+* Added a Universal Ornaments section to the Records page showing which legendary armor pieces you have unlocked as Transmog ornaments and which ones you could turn into ornaments.
+* "Only show uncollected items" now correctly identifies some shaders that it missed before.
+* Removed Stadia from the list of accounts shown in the accounts list, and moved the Cross-Save primary platform to the front of the list.
+* Fixed a bug that prevented DIM from loading when offline.
+* Fix tooltips getting stuck open if you scroll in Compare while they're shown.
+* The mod selection menu now shows you how many of each type of mod you've chosen, and what the limit is.
+* Removed links to Twitter, and the Twitter embedded timelines, because Twitter no longer allows un-logged-in users from viewing feeds. BungieHelp info now comes from the unofficial mirror to Mastodon.
+* Fixed D1 Farming Mode to no longer try to move your equipped items, and to no longer move emblems at all.
+* Fixed the color of the title bar when DIM is installed to the dock from Safari in macOS Sonoma.
+* Cleaned up the list of materials shown on Rahool's vendor section.
+* Removed the loadout optimizer progress popup and replaced it with an inline progress indicator.
+* Added some debugging information in case DIM fails very early in its startup.
+
+## 7.87.0 <span class="changelog-date">(2023-09-24)</span>
+
+* Fixed the "Any Class" Loadout toggle not removing class-specific items.
+* The tabs (Overview/Triage) in the item popup no longer scroll with their contents.
+* Hide the duplicate activity socket on some ghosts.
+* Loadouts now show which problems they have (e.g. deprecated mods) on the loadout itself, not just in the filter pills.
+* Improved the drag-to-dismiss behavior of sheets on mobile. There's more work to do there though.
+* The pattern progress bar in the item popup now shows a harmonizer icon when a deepsight harmonizer could be used on that item to unlock pattern progress.
+
 ## 7.86.0 <span class="changelog-date">(2023-09-17)</span>
 
 * Restored `is:dupelower` to prioritize power when choosing lower dupes.
@@ -7,6 +39,7 @@
 ## 7.85.0 <span class="changelog-date">(2023-09-10)</span>
 
 * Adding a subclass to a Loadout or selecting a subclass in Loadout Optimizer will now copy all currently equipped Aspects and Fragments too.
+* The sort order for loadout names has been changed to better respect different languages, and to understand numbers in names. It should now match the way you see files sorted in File Explorer / Finder.
 
 ## 7.84.1 <span class="changelog-date">(2023-09-06)</span>
 

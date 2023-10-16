@@ -542,6 +542,8 @@
     "SearchAnExotic": "경이 이름이나 설명 검색",
     "SelectExotic": "경이 선택",
     "SelectMods": "개조 부품 선택",
+    "SelectModsCount": "{{selected}}/{{maxSelectable}}",
+    "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} 활동 개조 부품",
     "SelectSubclassOptions": "하위직업 사용자 정의",
     "ShowAllConfigs": "모든 설정 표시",
     "ShowConfigs": "설정 표시",
@@ -613,7 +615,7 @@
     "OptimizerExplanationSearch": "검색 창을 사용하여 검토할 방어구의 수를 줄이세요. 슬롯에 검색과 일치하는 방어구가 없으면 그 슬롯의 모든 방어구가 검토됩니다.",
     "OptimizerExplanationStats": "가장 중요한 능력치를 위로 끌어서 놓고, 필요 없는 능력치는 무시로 설정하세요.",
     "OptimizerSet": "최적화 조합",
-    "ProcessingSets": "{{character}}의 장비 조합 처리 중\n({{remainingTime}}초)",
+    "ProcessingSets": "가장 높은 등급의 조합 찾는 중...",
     "SaveAs": "다른 이름으로 저장",
     "SelectMax": "- 최대 -",
     "SelectMin": "- 최소 -",
@@ -991,7 +993,8 @@
     "RecordBooks": "기록 모음집"
   },
   "Records": {
-    "Title": "기록"
+    "Title": "기록",
+    "UniversalOrnamentSetOther": "기타"
   },
   "SearchHistory": {
     "Date": "최근 사용",
