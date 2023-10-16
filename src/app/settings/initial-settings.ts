@@ -10,7 +10,7 @@ export interface Settings extends DimApiSettings {
   theme: string;
   sortRecordProgression: boolean;
   vendorsHideSilverItems: boolean;
-  vaultGrouping: string;
+  vaultWeaponGrouping: string;
 }
 
 export const initialSettingsState: Settings = {
@@ -20,5 +20,5 @@ export const initialSettingsState: Settings = {
   theme: 'default',
   sortRecordProgression: false,
   vendorsHideSilverItems: false,
-  vaultGrouping: '',
+  vaultWeaponGrouping: '',
 };

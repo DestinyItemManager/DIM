@@ -172,9 +172,9 @@ export default function SettingsPage() {
     return false;
   };
 
-  const changeVaultGrouping = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const vaultGrouping = e.target.value;
-    setSetting('vaultGrouping', vaultGrouping);
+  const changeVaultWeaponGrouping = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const vaultWeaponGrouping = e.target.value;
+    setSetting('vaultWeaponGrouping', vaultWeaponGrouping);
   };
 
   const itemSortOrderChanged = (sortOrder: SortProperty[]) => {
@@ -215,7 +215,7 @@ export default function SettingsPage() {
     // archetype: 'Archetype'
   };
 
-  const vaultGroupingOptions = mapToOptions({
+  const vaultWeaponGroupingOptions = mapToOptions({
     '': t('Settings.VaultGroupingNone'),
     typeName: t('Settings.SortByType'),
     rarity: t('Settings.SortByRarity'),
@@ -386,11 +386,11 @@ export default function SettingsPage() {
 
             <div className="setting">
               <Select
-                label={t('Settings.SetVaultGrouping')}
-                name="vaultGrouping"
-                value={settings.vaultGrouping}
-                options={vaultGroupingOptions}
-                onChange={changeVaultGrouping}
+                label={t('Settings.SetVaultWeaponGrouping')}
+                name="vaultWeaponGrouping"
+                value={settings.vaultWeaponGrouping}
+                options={vaultWeaponGroupingOptions}
+                onChange={changeVaultWeaponGrouping}
               />
             </div>
 

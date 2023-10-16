@@ -1063,8 +1063,7 @@
     "ResetToDefault": "Reset",
     "ReverseSort": "Toggle forward/reverse sort",
     "SetSort": "Sort items by:",
-    "SetVaultGrouping": "Group vault items by:",
-    "SetVaultGroupingDisplay": "Vault grouping display:",
+    "SetVaultWeaponGrouping": "Group vault weapons by:",
     "Settings": "Settings",
     "ShowNewItems": "Show a red dot on new items",
     "ExpandSingleCharacter": "Show all characters",
@@ -1090,8 +1089,6 @@
     "SpacesSize": "{{count}} space",
     "SpacesSize_plural": "{{count}} spaces",
     "Theme": "Theme",
-    "VaultGroupingDisplayFit": "Best Fit",
-    "VaultGroupingDisplaySeparated": "Separated",
     "VaultGroupingNone": "None"
   },
   "Sockets": {

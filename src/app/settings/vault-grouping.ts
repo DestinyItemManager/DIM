@@ -5,20 +5,20 @@ import { groupItems } from 'app/shell/item-comparators';
 import { RootState } from 'app/store/types';
 import { createSelector } from 'reselect';
 
-export const vaultGroupingSettingSelector = (state: RootState) =>
-  settingsSelector(state).vaultGrouping;
+export const vaultWeaponGroupingSettingSelector = (state: RootState) =>
+  settingsSelector(state).vaultWeaponGrouping;
 
 /**
  * Get a function that will group items according to the user's preferences.
  */
-export const vaultGroupingSelector = createSelector(
-  vaultGroupingSettingSelector,
+export const vaultWeaponGroupingSelector = createSelector(
+  vaultWeaponGroupingSettingSelector,
   getTagSelector,
-  (vaultGrouping, getTag) => (items: readonly DimItem[]) => {
-    if (!vaultGrouping) {
+  (vaultWeaponGrouping, getTag) => (items: readonly DimItem[]) => {
+    if (!vaultWeaponGrouping) {
       return items;
     }
 
-    return groupItems(items, vaultGrouping, getTag);
+    return groupItems(items, vaultWeaponGrouping, getTag);
   }
 );
