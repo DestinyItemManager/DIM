@@ -320,6 +320,7 @@ export function groupItems(
   const getter = GROUP_BY_VALUE_GETTERS[vaultGrouping];
   const comparator = GROUP_BY_COMPARATORS[vaultGrouping];
 
+  // If there are no items, or the grouping is not suppored, return all items in a single group
   if (!items.length || !getter || !comparator) {
     return [{ value: undefined, items }];
   }
@@ -330,11 +331,13 @@ export function groupItems(
     const indexOfUngrouped = grouped.findIndex((g) => g.value === undefined);
 
     if (!getter) {
+      // If there is not an ungrouped group, create one
       if (indexOfUngrouped < 0) {
         grouped.push({ value: undefined, items: [item] });
         continue;
       }
 
+      // Add to existing ungrouped group
       grouped[indexOfUngrouped].items.push(item);
       continue;
     }
@@ -342,11 +345,13 @@ export function groupItems(
     const value = getter(item, getTag);
 
     if (typeof value === 'undefined') {
+      // If there is not an ungrouped group, create one
       if (indexOfUngrouped < 0) {
         grouped.push({ value: undefined, items: [item] });
         continue;
       }
 
+      // Add to existing ungrouped group
       grouped[indexOfUngrouped].items.push(item);
       continue;
     }
@@ -354,14 +359,18 @@ export function groupItems(
     const existingGroup = grouped.find((g) => g.value === value);
 
     if (existingGroup) {
+      // Add to existing group
       existingGroup.items.push(item);
       continue;
     }
 
+    // Create a new group if one doesn't exist for this value
     grouped.push({ value, items: [item] });
   }
 
+  // Sort groups by comparator
   return grouped.sort(comparator);
 }
 
+// Used to create string keys for vault grouping values
 export const vaultGroupingValueWithType = (value: VaultGroupValue) => `${typeof value}-${value}`;
