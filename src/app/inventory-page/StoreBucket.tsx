@@ -199,8 +199,8 @@ const VaultBucketDividedByClass = memo(function SingleCharacterVaultBucket({
       {classTypeOrder.map((classType) => (
         <React.Fragment key={classType}>
           <ClassIcon classType={classType} className="armor-class-icon" />
-          {sortItems(itemsByClass[classType]).map((groupOrItem) => (
-            <StoreInventoryItem key={groupOrItem.index} item={groupOrItem} />
+          {sortItems(itemsByClass[classType]).map((item) => (
+            <StoreInventoryItem key={item.index} item={item} />
           ))}
         </React.Fragment>
       ))}
