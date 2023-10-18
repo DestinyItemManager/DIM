@@ -34,6 +34,7 @@ export default function GeneratedSets({
   lbDispatch,
   armorEnergyRules,
   loadout,
+  autoStatMods,
   isEditingExistingLoadout,
 }: {
   selectedStore: DimStore;
@@ -47,6 +48,7 @@ export default function GeneratedSets({
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   armorEnergyRules: ArmorEnergyRules;
   loadout: Loadout;
+  autoStatMods: boolean;
   isEditingExistingLoadout: boolean;
 }) {
   const params = loadout.parameters!;
@@ -92,6 +94,7 @@ export default function GeneratedSets({
           armorEnergyRules={armorEnergyRules}
           originalLoadout={loadout}
           equippedHashes={equippedHashes}
+          autoStatMods={autoStatMods}
           isEditingExistingLoadout={isEditingExistingLoadout}
         />
       )}
