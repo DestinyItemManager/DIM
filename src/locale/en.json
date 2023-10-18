@@ -391,6 +391,7 @@
     "ClearDialog": "Dismiss dialog",
     "ClearNewItems": "Clear new items",
     "Enter": "ENTER",
+    "ItemPopupTab": "Switch item details tab",
     "LockUnlock": "Lock or unlock an item",
     "MarkItemAs": "Mark item as '{{tag}}'",
     "Menu": "Toggle menu",
@@ -875,6 +876,7 @@
       "QuestProgress": "Step {{questStepNum}} of {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
+    "TabList": "Item detail tabs",
     "ToggleSidecar": "Expand or collapse item actions",
     "TrackUntrack": {
       "Track": "Track {{itemType}}",
