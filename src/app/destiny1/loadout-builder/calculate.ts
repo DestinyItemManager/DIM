@@ -120,7 +120,7 @@ export async function getSetBucketsStep(
                       Ghost: ghost,
                     },
                     stats: {
-                      [144602215]: {
+                      144602215: {
                         hash: 144602215,
                         value: 0,
                         name: 'Intellect',
