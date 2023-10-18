@@ -698,12 +698,26 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  ghostsofthedeep: {
+    itemHashes: [],
+    sourceHashes: [
+      3288974535, // Source: "Ghosts of the Deep" Dungeon
+    ],
+    searchString: [],
+  },
   gos: {
     itemHashes: [
       4103414242, // Divinity
     ],
     sourceHashes: [
       1491707941, // Source: "Garden of Salvation" raid.
+    ],
+    searchString: [],
+  },
+  gotd: {
+    itemHashes: [],
+    sourceHashes: [
+      3288974535, // Source: "Ghosts of the Deep" Dungeon
     ],
     searchString: [],
   },
