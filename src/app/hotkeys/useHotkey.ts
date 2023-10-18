@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { Hotkey, registerHotkeys } from './hotkeys';
+import { useEffect, useId } from 'react';
+import { Hotkey, registerHotkeys, removeHotkeysById } from './hotkeys';
 
 /**
  * A hook for registering a single global hotkey that will appear in the hotkey
@@ -20,19 +20,23 @@ export function useHotkey(
   callback: (event: KeyboardEvent) => void,
   disabled?: boolean
 ) {
+  const id = useId();
   useEffect(() => {
     if (disabled) {
+      removeHotkeysById(id, combo);
       return;
     }
-    const keys: Hotkey[] = [
+    registerHotkeys(id, [
       {
         combo,
         description,
         callback,
       },
-    ];
-    return registerHotkeys(keys);
-  }, [combo, description, callback, disabled]);
+    ]);
+  }, [id, combo, description, callback, disabled]);
+
+  // Remove the hotkey only once the component unmounts
+  useEffect(() => () => removeHotkeysById(id, combo), [combo, id]);
 }
 
 /**
@@ -43,5 +47,9 @@ export function useHotkey(
  * @see {@link useHotkey}
  */
 export function useHotkeys(hotkeyDefs: Hotkey[]) {
-  useEffect(() => registerHotkeys(hotkeyDefs), [hotkeyDefs]);
+  const id = useId();
+  useEffect(() => registerHotkeys(id, hotkeyDefs), [hotkeyDefs, id]);
+
+  // Remove the hotkeys only once the component unmounts
+  useEffect(() => () => removeHotkeysById(id), [id]);
 }
