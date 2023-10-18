@@ -1,7 +1,6 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { BucketSortType } from 'app/inventory/inventory-buckets';
 import { allItemsSelector } from 'app/inventory/selectors';
@@ -20,11 +19,13 @@ import { getTotalModStatChanges } from 'app/loadout/stats';
 import { manifestSelector } from 'app/manifest/selectors';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { armorStats, deprecatedPlaceholderArmorModHash } from 'app/search/d2-known-values';
+import { filterMap } from 'app/utils/collections';
 import {
   isClassCompatible,
   isItemLoadoutCompatible,
   itemCanBeInLoadout,
 } from 'app/utils/item-utils';
+import { weakMemoize } from 'app/utils/memoize';
 import {
   aspectSocketCategoryHashes,
   fragmentSocketCategoryHashes,
@@ -34,7 +35,6 @@ import {
   getSocketsByIndexes,
   plugFitsIntoSocket,
 } from 'app/utils/socket-utils';
-import { filterMap, weakMemoize } from 'app/utils/util';
 import { HashLookup, LookupTable } from 'app/utils/util-types';
 import {
   DestinyClass,
@@ -289,7 +289,7 @@ export function getLoadoutStats(
     hash,
     displayProperties: { description, icon, name },
   } of statDefs) {
-    stats[hash] = { hash, description, icon: bungieNetPath(icon), name, value: 0, breakdown: [] };
+    stats[hash] = { hash, description, icon: icon, name, value: 0, breakdown: [] };
   }
 
   // Sum the items stats into the stats

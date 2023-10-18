@@ -1,4 +1,5 @@
-import { convertToError, delay } from 'app/utils/util';
+import { convertToError } from 'app/utils/errors';
+import { delay } from 'app/utils/promises';
 import { PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/destiny2';
 import { HttpClient, HttpClientConfig } from 'bungie-api-ts/http';
 

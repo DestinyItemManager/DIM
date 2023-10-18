@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: beta
-      url: https://beta.destinyitemmanager.com
+      url: https://beta.dim.gg
     steps:
       - uses: actions/checkout@v3
         with:

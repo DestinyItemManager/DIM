@@ -1,10 +1,9 @@
 import { infoLog } from 'app/utils/log';
-import { delay } from 'app/utils/util';
-import disciplineIcon from 'images/discipline.png';
-import intellectIcon from 'images/intellect.png';
-import strengthIcon from 'images/strength.png';
+import { delay } from 'app/utils/promises';
+import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { D1Item } from '../../inventory/item-types';
+import { D1ManifestDefinitions } from '../d1-definitions';
 import {
   ArmorSet,
   ArmorTypes,
@@ -16,6 +15,7 @@ import {
 import { calcArmorStats, genSetHash, getBestArmor, getBonusConfig } from './utils';
 
 export async function getSetBucketsStep(
+  defs: D1ManifestDefinitions,
   activeGuardianBucket: ItemBucket,
   vendorBucket: ItemBucket,
   lockeditems: { [armorType in ArmorTypes]: D1ItemWithNormalStats | null },
@@ -90,6 +90,9 @@ export async function getSetBucketsStep(
   }
 
   let processedCount = 0;
+  const intellectIcon = defs.Stat.get(StatHashes.Intellect).icon;
+  const strengthIcon = defs.Stat.get(StatHashes.Strength).icon;
+  const disciplineIcon = defs.Stat.get(StatHashes.Discipline).icon;
 
   for (const helm of helms) {
     for (const gauntlet of gauntlets) {

@@ -12,10 +12,10 @@ import { getModExclusionGroup, mapToNonReducedModCostVariant } from 'app/loadout
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { ItemFilter } from 'app/search/filter-types';
+import { filterMap } from 'app/utils/collections';
 import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
-import { filterMap } from 'app/utils/util';
 import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import { Draft, produce } from 'immer';

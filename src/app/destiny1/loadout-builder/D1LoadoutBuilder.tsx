@@ -9,9 +9,9 @@ import { useD1Definitions } from 'app/manifest/selectors';
 import { D1_StatHashes } from 'app/search/d1-known-values';
 import { getColor } from 'app/shell/formatters';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { uniqBy } from 'app/utils/collections';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
-import { uniqBy } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { produce } from 'immer';
@@ -145,6 +145,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
           cancelled: false,
         };
         const result = await getSetBucketsStep(
+          defs,
           loadBucket(selectedCharacter, stores),
           loadVendorsBucket(selectedCharacter, state.vendors),
           state.lockeditems,

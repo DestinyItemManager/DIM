@@ -23,11 +23,12 @@ export const d2MissingIcon = '/img/misc/missing_icon_d2.png';
 //
 
 // shortcuts for power numbers
+const currentSeason = D2SeasonInfo[D2CalculatedSeason];
 export const powerLevelByKeyword = {
-  powerfloor: D2SeasonInfo[D2CalculatedSeason].powerFloor,
-  softcap: D2SeasonInfo[D2CalculatedSeason].softCap,
-  powerfulcap: D2SeasonInfo[D2CalculatedSeason].powerfulCap,
-  pinnaclecap: D2SeasonInfo[D2CalculatedSeason].pinnacleCap,
+  powerfloor: currentSeason.powerFloor,
+  softcap: currentSeason.softCap,
+  powerfulcap: currentSeason.powerfulCap,
+  pinnaclecap: currentSeason.pinnacleCap,
 };
 
 export const MAX_ARMOR_ENERGY_CAPACITY = 10;
@@ -118,8 +119,8 @@ export const D2ArmorStatHashByName = {
 export const armorStats = Object.values(D2ArmorStatHashByName);
 
 // a set of base stat weights, all worth the same, "switched on"
-export const evenStatWeights = armorStats.reduce<CustomStatWeights>(
-  (o, statHash) => Object.assign(o, { [statHash]: 1 }),
+export const evenStatWeights = /* @__PURE__ */ armorStats.reduce<CustomStatWeights>(
+  (o, statHash) => ({ ...o, [statHash]: 1 }),
   {}
 );
 

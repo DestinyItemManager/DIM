@@ -2,7 +2,7 @@ import { currentAccountSelector } from 'app/accounts/selectors';
 import { DimItem } from 'app/inventory/item-types';
 import { VENDORS } from 'app/search/d2-known-values';
 import { emptyArray } from 'app/utils/empty';
-import { currySelector } from 'app/utils/selector-utils';
+import { currySelector } from 'app/utils/selectors';
 import { useLoadVendors } from 'app/vendors/hooks';
 import { characterVendorItemsSelector, vendorsByCharacterSelector } from 'app/vendors/selectors';
 import { useSelector } from 'react-redux';

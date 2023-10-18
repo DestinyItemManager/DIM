@@ -122,7 +122,7 @@ export function getCharacterStatsData(
       name: def.displayProperties.name,
       description: def.displayProperties.description,
       value,
-      icon: bungieNetPath(def.displayProperties.icon),
+      icon: def.displayProperties.icon,
     };
     ret[statHash] = stat;
   }

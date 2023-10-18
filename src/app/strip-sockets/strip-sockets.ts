@@ -6,7 +6,8 @@ import { isReducedModCostVariant } from 'app/loadout/mod-utils';
 import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { ThunkResult } from 'app/store/types';
 import { CancelToken } from 'app/utils/cancel';
-import { errorMessage, uniqBy } from 'app/utils/util';
+import { uniqBy } from 'app/utils/collections';
+import { errorMessage } from 'app/utils/errors';
 import { Destiny2CoreSettings } from 'bungie-api-ts/core';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 

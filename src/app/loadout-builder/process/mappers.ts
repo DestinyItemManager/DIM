@@ -7,8 +7,8 @@ import {
   knownModPlugCategoryHashes,
 } from 'app/loadout/known-values';
 import { MAX_ARMOR_ENERGY_CAPACITY, armorStats } from 'app/search/d2-known-values';
+import { filterMap } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
-import { filterMap } from 'app/utils/util';
 import _ from 'lodash';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import {

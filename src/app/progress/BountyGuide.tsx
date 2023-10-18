@@ -148,11 +148,14 @@ export default function BountyGuide({
           }
         }
       }
-      const traitHashes = defs.InventoryItem.get(i.hash)?.traitHashes;
-      if (traitHashes) {
-        for (const traitHash of traitHashes) {
-          if (pursuitCategoryTraitHashes.includes(traitHash)) {
-            (mapped.QuestTrait[traitHash] ??= []).push(i);
+      // Don't look up InventoryItem for "items" that were created from Records.
+      if (!i.pursuit?.recordHash) {
+        const traitHashes = defs.InventoryItem.get(i.hash)?.traitHashes;
+        if (traitHashes) {
+          for (const traitHash of traitHashes) {
+            if (pursuitCategoryTraitHashes.includes(traitHash)) {
+              (mapped.QuestTrait[traitHash] ??= []).push(i);
+            }
           }
         }
       }

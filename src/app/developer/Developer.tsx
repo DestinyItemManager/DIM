@@ -1,5 +1,5 @@
 import { registerApp } from 'app/dim-api/register-app';
-import { errorMessage } from 'app/utils/util';
+import { errorMessage } from 'app/utils/errors';
 import React, { useState } from 'react';
 
 const createAppUrl = 'https://www.bungie.net/en/Application/Create';

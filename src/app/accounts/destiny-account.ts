@@ -19,7 +19,7 @@ import { getCharacters } from '../bungie-api/destiny1-api';
 import { getLinkedAccounts } from '../bungie-api/destiny2-api';
 import { removeToken } from '../bungie-api/oauth-tokens';
 import { showNotification } from '../notifications/notifications';
-import { reportException } from '../utils/exceptions';
+import { reportException } from '../utils/sentry';
 import { loggedOut } from './actions';
 
 // See https://github.com/Bungie-net/api/wiki/FAQ:-Cross-Save-pre-launch-testing,-and-how-it-may-affect-you for more info

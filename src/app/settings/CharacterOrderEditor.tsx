@@ -1,5 +1,5 @@
 import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd';
-import { reorder } from 'app/utils/util';
+import { reorder } from 'app/utils/collections';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { sortedStoresSelector } from '../inventory/selectors';

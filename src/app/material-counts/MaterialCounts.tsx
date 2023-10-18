@@ -6,7 +6,7 @@ import {
   vendorCurrencyEngramsSelector,
 } from 'app/inventory/selectors';
 import { AccountCurrency } from 'app/inventory/store-types';
-import { addDividers } from 'app/utils/react-utils';
+import { addDividers } from 'app/utils/react';
 import clsx from 'clsx';
 import spiderMats from 'data/d2/spider-mats.json';
 import _ from 'lodash';

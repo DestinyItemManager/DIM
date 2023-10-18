@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import { wishListGuideLink } from 'app/shell/links';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { errorMessage } from 'app/utils/util';
+import { errorMessage } from 'app/utils/errors';
 import { fetchWishList, transformAndStoreWishList } from 'app/wishlists/wishlist-fetch';
 import { toWishList } from 'app/wishlists/wishlist-file';
 import React, { useEffect, useState } from 'react';

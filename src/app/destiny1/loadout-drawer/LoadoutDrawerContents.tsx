@@ -15,8 +15,8 @@ import { findSameLoadoutItemIndex, fromEquippedTypes } from 'app/loadout-drawer/
 import { useD1Definitions } from 'app/manifest/selectors';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { AppIcon, addIcon } from 'app/shell/icons';
+import { filterMap } from 'app/utils/collections';
 import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
-import { filterMap } from 'app/utils/util';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';

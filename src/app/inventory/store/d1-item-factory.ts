@@ -9,9 +9,9 @@ import {
 import { t } from 'app/i18next-t';
 import { D1BucketHashes, D1_StatHashes } from 'app/search/d1-known-values';
 import { lightStats } from 'app/search/search-filter-values';
+import { filterMap, uniqBy } from 'app/utils/collections';
 import { getItemYear } from 'app/utils/item-utils';
 import { errorLog, warnLog } from 'app/utils/log';
-import { filterMap, uniqBy } from 'app/utils/util';
 import {
   BucketCategory,
   DamageType,
@@ -30,7 +30,7 @@ import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-
 import _ from 'lodash';
 import { vaultTypes } from '../../destiny1/d1-buckets';
 import { D1ManifestDefinitions, DefinitionTable } from '../../destiny1/d1-definitions';
-import { reportException } from '../../utils/exceptions';
+import { reportException } from '../../utils/sentry';
 import { InventoryBuckets } from '../inventory-buckets';
 import { D1GridNode, D1Item, D1Stat, D1TalentGrid } from '../item-types';
 import { D1Store, DimStore } from '../store-types';

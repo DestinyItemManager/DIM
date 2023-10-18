@@ -11,9 +11,9 @@ import { Loadout, LoadoutItem, ResolvedLoadoutItem } from 'app/loadout-drawer/lo
 import { getLight } from 'app/loadout-drawer/loadout-utils';
 import { loadoutIssuesSelector } from 'app/loadout-drawer/loadouts-selector';
 import { useIsPhonePortrait } from 'app/shell/selectors';
+import { count, filterMap } from 'app/utils/collections';
 import { emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
-import { count, filterMap } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
