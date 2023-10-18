@@ -54,7 +54,7 @@ export default function ItemPopup({
   onClose: () => void;
 }) {
   const id = useId();
-  const { content, tabButtons } = useItemPopupTabs(item, extraInfo, id);
+  const { content, tabButtons } = useItemPopupTabs(item, extraInfo);
   const stores = useSelector(sortedStoresSelector);
   const isPhonePortrait = useIsPhonePortrait();
 
