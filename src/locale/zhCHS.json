@@ -1,6 +1,6 @@
 {
   "AWA": {
-    "ConfirmDescription": "请使用\"命运2同伴应用\"授予DIM修改您物品的许可权。",
+    "ConfirmDescription": "请使用\"命运2同伴应用\"授予DIM修改您物品的权限。",
     "ConfirmTitle": "确认操作",
     "Error": "更改模组或特性时出错",
     "ErrorMessage": "我们无法将{{plug}}装备到{{item}}。\n\n{{error}}",
@@ -15,7 +15,7 @@
     "MissingAccountWarning": "如果你的账户没有显示，你可能登录了错误的 Bungie.net 账户，或 Bungie.net 可能正在停机维护。",
     "MissingDescription": "你试图查看的账户并未连接到你的 Bungie.net 账户。",
     "MissingTitle": "找不到账户",
-    "NoCharacters": "没有找到与此Bungie.net帐号相关联的Destiny角色，登陆其它帐号试试看。",
+    "NoCharacters": "没有找到与此 Bungie.net 账号相关联的《命运》角色，登录其它账号试试看。",
     "SwitchAccounts": "你可以稍后在标题栏菜单里切换账户。",
     "Title": "账户"
   },
@@ -422,7 +422,7 @@
     "PrepareEquip": "准备配装",
     "Replace": "替换配装槽位 {{index}}",
     "Save": "更新配装",
-    "SnapshotFailed": "已装备配装简介创建失败"
+    "SnapshotFailed": "为已装备的配装创建快照时失败"
   },
   "Infusion": {
     "Filter": "过滤物品",
@@ -464,8 +464,8 @@
       "Guardian_male": "您的{{store}} 上有太多 “{{itemtype}}” 的物品.",
       "Vault": "您的{{store}} 上有太多 “{{itemtype}}” 的物品."
     },
-    "Classified": "该物品已被分类并且现在无法被转移.",
-    "Classified2": "分类物品。Bungie尚未提供该物品的相关资讯。为该物品添加备注，以方便您使用搜索筛检程式找到它。",
+    "Classified": "该物品是加密的，现在无法被转移。",
+    "Classified2": "加密物品。Bungie尚未提供该物品的相关信息。为该物品添加备注，以方便您使用搜索过滤器找到它。",
     "Deequip": "无法找到另一个物品来卸下{{itemname}}",
     "ExoticError": "无法装备“{{itemname}}”，因为在{{slot}} 栏位中无法装备异域物品。（{{error}}）",
     "NotEnoughRoom": "我们无法在{{store}} 上移动物品, 来为{{itemname}} 腾出空间",
@@ -858,7 +858,7 @@
       "Unlock": "解锁{{itemType}}",
       "Unlocked": "已解锁"
     },
-    "MissingSockets": "当 bungie 正在更新其服务时, perk 和 mod 的详细信息不可用。当他们做完的时候, 它就会回来, 通常在几个小时后。",
+    "MissingSockets": "在 Bungie 维护其服务器时，无法查看特性和模组的详细信息，直到维护完成。这通常需要几个小时。",
     "Notes": "备注：",
     "OverviewTab": "概述",
     "Owned": "此物品在您的库存中。",

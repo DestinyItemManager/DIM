@@ -8,7 +8,7 @@ import {
 } from 'app/inventory/store/objectives';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { percent } from 'app/shell/formatters';
-import { count } from 'app/utils/util';
+import { count } from 'app/utils/collections';
 import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import dimTrackedIcon from 'images/dimTrackedIcon.svg';

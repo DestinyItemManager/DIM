@@ -1,6 +1,6 @@
 import { settingsSelector } from 'app/dim-api/selectors';
 import { isPhonePortraitSelector } from './shell/selectors';
-import { observeStore } from './utils/redux-utils';
+import { observeStore } from './utils/redux';
 
 function setCSSVariable(property: string, value: { toString: () => string }) {
   if (value) {

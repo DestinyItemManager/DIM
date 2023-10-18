@@ -51,8 +51,10 @@ import { loadingTracker } from 'app/shell/loading-tracker';
 import { ThunkResult } from 'app/store/types';
 import { queueAction } from 'app/utils/action-queue';
 import { CancelToken, CanceledError, withCancel } from 'app/utils/cancel';
+import { count, filterMap } from 'app/utils/collections';
 import { DimError } from 'app/utils/dim-error';
 import { emptyArray } from 'app/utils/empty';
+import { convertToError, errorMessage } from 'app/utils/errors';
 import { isClassCompatible, itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
 import {
@@ -65,7 +67,6 @@ import {
   plugFitsIntoSocket,
   subclassAbilitySocketCategoryHashes,
 } from 'app/utils/socket-utils';
-import { convertToError, count, errorMessage, filterMap } from 'app/utils/util';
 import { HashLookup } from 'app/utils/util-types';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';

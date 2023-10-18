@@ -3,7 +3,7 @@
 import './app/main.scss';
 // Pull the sheet CSS up so it is at the top of the stylesheet and can be easily overridden.
 import './app/dim-ui/Sheet.m.scss';
-import './app/utils/exceptions';
+import './app/utils/sentry';
 import { saveAccountsToIndexedDB } from 'app/accounts/observers';
 import updateCSSVariables from 'app/css-variables';
 import { loadDimApiData } from 'app/dim-api/actions';

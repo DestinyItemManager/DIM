@@ -6,6 +6,7 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import PlugDrawer from 'app/loadout/plug-drawer/PlugDrawer';
 import { PlugSet } from 'app/loadout/plug-drawer/types';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { uniqBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import {
   aspectSocketCategoryHashes,
@@ -14,7 +15,6 @@ import {
   getSocketsByCategoryHash,
   subclassAbilitySocketCategoryHashes,
 } from 'app/utils/socket-utils';
-import { uniqBy } from 'app/utils/util';
 import { objectValues } from 'app/utils/util-types';
 import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';

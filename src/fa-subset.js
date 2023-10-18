@@ -1,6 +1,6 @@
 import { fontawesomeSubset } from 'fontawesome-subset';
 
-import * as icons from './app/shell/icons/Library.mjs';
+import * as icons from './app/shell/icons/Library.js';
 
 const subset = {};
 

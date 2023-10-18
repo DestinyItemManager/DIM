@@ -1,6 +1,6 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { ThunkResult } from 'app/store/types';
-import { convertToError } from 'app/utils/util';
+import { convertToError } from 'app/utils/errors';
 import { DestinyVendorsResponse } from 'bungie-api-ts/destiny2';
 import { createAction } from 'typesafe-actions';
 import { getVendors as getVendorsApi } from '../bungie-api/destiny2-api';

@@ -1,5 +1,7 @@
 ## Next
 
+## 7.90.0 <span class="changelog-date">(2023-10-15)</span>
+
 ## 7.89.0 <span class="changelog-date">(2023-10-08)</span>
 
 * "Hide completed triumphs" on the Records page now also hides sections and seals where all triumphs have been completed, not only the triumphs themselves.

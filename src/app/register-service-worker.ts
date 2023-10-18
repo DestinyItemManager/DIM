@@ -1,9 +1,9 @@
 import { getCurrentHub } from '@sentry/browser';
 import { toHttpStatusError } from './bungie-api/http-client';
-import { reportException } from './utils/exceptions';
 import { errorLog, infoLog, warnLog } from './utils/log';
 import { Observable } from './utils/observable';
-import { delay } from './utils/util';
+import { delay } from './utils/promises';
+import { reportException } from './utils/sentry';
 
 /**
  * A function that will attempt to update the service worker in place.

@@ -1,5 +1,5 @@
 import { ThunkResult } from 'app/store/types';
-import { reportException } from 'app/utils/exceptions';
+import { reportException } from 'app/utils/sentry';
 import { HashLookupFailure, ManifestDefinitions } from '../destiny2/definitions';
 import { setD1Manifest } from '../manifest/actions';
 import { getManifest } from '../manifest/d1-manifest-service';

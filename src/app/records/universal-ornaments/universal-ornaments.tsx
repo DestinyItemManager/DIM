@@ -6,7 +6,7 @@ import { profileResponseSelector } from 'app/inventory/selectors';
 import { ItemCreationContext, makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import { ARMOR_NODE, DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
-import { filterMap } from 'app/utils/util';
+import { filterMap } from 'app/utils/collections';
 import { DestinyClass, DestinyCollectibleDefinition } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import auxOrnamentSets from 'data/d2/universal-ornament-aux-sets.json';

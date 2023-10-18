@@ -177,7 +177,15 @@ export default (env: Env) => {
           terserOptions: {
             ecma: 2020,
             module: true,
-            compress: { passes: 3, toplevel: true },
+            compress: {
+              passes: 3,
+              toplevel: true,
+              unsafe: true,
+              unsafe_math: true,
+              unsafe_proto: true,
+              pure_getters: true,
+              pure_funcs: ['JSON.parse', 'Object.values', 'Object.keys'],
+            },
             mangle: { toplevel: true },
           },
         }),
@@ -489,7 +497,7 @@ export default (env: Env) => {
     // In dev we use babel to compile TS, and fork off a separate typechecker
     plugins.push(
       new ForkTsCheckerWebpackPlugin({
-        eslint: { files: './src/**/*.{ts,tsx,js,jsx}' },
+        eslint: { files: './src/**/*.{ts,tsx,cjs,mjs,cts,mts,js,jsx}' },
       })
     );
 

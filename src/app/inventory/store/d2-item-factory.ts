@@ -45,7 +45,7 @@ import _ from 'lodash';
 import memoizeOne from 'memoize-one';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { warnMissingDefinition } from '../../manifest/manifest-service-json';
-import { reportException } from '../../utils/exceptions';
+import { reportException } from '../../utils/sentry';
 import { InventoryBuckets } from '../inventory-buckets';
 import { DimItem } from '../item-types';
 import { DimStore } from '../store-types';

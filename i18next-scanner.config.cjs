@@ -3,7 +3,7 @@ const path = require('path');
 const typescript = require('typescript');
 
 module.exports = {
-  input: ['src/app/**/*.{js,jsx,ts,tsx}', 'src/browsercheck.js'],
+  input: ['src/app/**/*.{js,jsx,ts,tsx,cjs,mjs,cts,mts}', 'src/browsercheck.js'],
   output: './',
   options: {
     debug: false,

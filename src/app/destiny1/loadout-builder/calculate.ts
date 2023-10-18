@@ -1,5 +1,5 @@
 import { infoLog } from 'app/utils/log';
-import { delay } from 'app/utils/util';
+import { delay } from 'app/utils/promises';
 import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { D1Item } from '../../inventory/item-types';

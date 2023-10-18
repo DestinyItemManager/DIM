@@ -1,10 +1,11 @@
+import { count } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
-import { count, weakMemoize } from 'app/utils/util';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 /**
  * Generic helpers for working with whole stores (character inventories) or lists of stores.
  */
+import { weakMemoize } from 'app/utils/memoize';
 import { DimItem } from './item-types';
 import { D1Store, DimStore } from './store-types';
 

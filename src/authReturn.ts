@@ -1,9 +1,9 @@
 import { HttpStatusError } from 'app/bungie-api/http-client';
+import { errorMessage } from 'app/utils/errors';
 import { errorLog } from 'app/utils/log';
-import { errorMessage } from 'app/utils/util';
 import { getAccessTokenFromCode } from './app/bungie-api/oauth';
 import { setToken } from './app/bungie-api/oauth-tokens';
-import { reportException } from './app/utils/exceptions';
+import { reportException } from './app/utils/sentry';
 
 async function handleAuthReturn() {
   const queryParams = new URL(window.location.href).searchParams;

@@ -5,7 +5,7 @@ import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/sel
 import { showNotification } from 'app/notifications/notifications';
 import { AppIcon, faCheckCircle, refreshIcon, thumbsUpIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { errorMessage } from 'app/utils/util';
+import { errorMessage } from 'app/utils/errors';
 import { wishListSelector } from 'app/wishlists/selectors';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';

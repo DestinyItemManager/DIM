@@ -2,7 +2,7 @@ import {
   FatalTokenError,
   getActiveToken as getBungieToken,
 } from 'app/bungie-api/authenticated-fetch';
-import { dedupePromise } from 'app/utils/util';
+import { dedupePromise } from 'app/utils/promises';
 import { HttpClientConfig } from 'bungie-api-ts/http';
 
 const DIM_API_HOST = 'https://api.destinyitemmanager.com';

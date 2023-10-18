@@ -3,7 +3,7 @@ import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { isClassCompatible } from 'app/utils/item-utils';
-import { currySelector } from 'app/utils/selector-utils';
+import { currySelector } from 'app/utils/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { createSelector } from 'reselect';
 import { convertDimApiLoadoutToLoadout } from './loadout-type-converters';
