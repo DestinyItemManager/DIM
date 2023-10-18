@@ -12,7 +12,7 @@ import type { ItemTierName } from 'app/search/d2-known-values';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
-import { useId, useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import DesktopItemActions, { menuClassName } from './DesktopItemActions';
 import styles from './ItemPopup.m.scss';
@@ -53,7 +53,6 @@ export default function ItemPopup({
   noLink?: boolean;
   onClose: () => void;
 }) {
-  const id = useId();
   const { content, tabButtons } = useItemPopupTabs(item, extraInfo);
   const stores = useSelector(sortedStoresSelector);
   const isPhonePortrait = useIsPhonePortrait();
