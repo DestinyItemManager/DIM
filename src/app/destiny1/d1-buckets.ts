@@ -1,5 +1,5 @@
 import { D1BucketHashes } from 'app/search/d1-known-values';
-import { filterMap } from 'app/utils/util';
+import { filterMap } from 'app/utils/collections';
 import { HashLookup, StringLookup } from 'app/utils/util-types';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';

@@ -13,8 +13,8 @@ import {
   PlugCategoryHashes,
   SocketCategoryHashes,
 } from 'data/d2/generated-enums';
+import { filterMap } from './collections';
 import { isArmor2Mod, isKillTrackerSocket } from './item-utils';
-import { filterMap } from './util';
 
 type WithRequiredProperty<T, K extends keyof T> = T & {
   [P in K]-?: NonNullable<T[P]>;

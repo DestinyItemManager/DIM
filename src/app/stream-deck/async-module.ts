@@ -40,7 +40,7 @@ import {
 } from 'app/stream-deck/util/local-storage';
 import packager from 'app/stream-deck/util/packager';
 import { infoLog } from 'app/utils/log';
-import { observeStore } from 'app/utils/redux-utils';
+import { observeStore } from 'app/utils/redux';
 import { DamageType, DestinyClass, DestinyLoadoutItemComponent } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';

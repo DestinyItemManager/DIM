@@ -1,5 +1,5 @@
 import { VENDORS } from 'app/search/d2-known-values';
-import { filterMap } from 'app/utils/util';
+import { filterMap } from 'app/utils/collections';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import type {

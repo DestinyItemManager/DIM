@@ -27,9 +27,9 @@ import { findItemForLoadout, newLoadout, pickBackingStore } from 'app/loadout-dr
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
+import { reorder } from 'app/utils/collections';
 import { emptyObject } from 'app/utils/empty';
 import { useHistory } from 'app/utils/undo-redo-history';
-import { reorder } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';

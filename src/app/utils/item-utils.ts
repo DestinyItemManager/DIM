@@ -28,7 +28,7 @@ import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
 import { BucketHashes, PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json';
 import _ from 'lodash';
-import { filterMap, objectifyArray } from './util';
+import { filterMap, objectifyArray } from './collections';
 
 // damage is a mess!
 // this function supports turning a destiny DamageType into a known english name

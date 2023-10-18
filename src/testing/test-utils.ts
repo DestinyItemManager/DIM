@@ -4,7 +4,7 @@ import { DIM_LANG_INFOS } from 'app/i18n';
 import { buildStores } from 'app/inventory/d2-stores';
 import { downloadManifestComponents } from 'app/manifest/manifest-service-json';
 import { humanBytes } from 'app/storage/human-bytes';
-import { delay } from 'app/utils/util';
+import { delay } from 'app/utils/promises';
 import {
   AllDestinyManifestComponents,
   DestinyManifest,

@@ -1,7 +1,7 @@
 import ClickOutsideRoot from 'app/dim-ui/ClickOutsideRoot';
 import Sheet from 'app/dim-ui/Sheet';
 import { DimItem } from 'app/inventory/item-types';
-import { filterMap } from 'app/utils/util';
+import { filterMap } from 'app/utils/collections';
 import focusingItemOutputs from 'data/d2/focusing-item-outputs.json';
 import { useMemo } from 'react';
 import Armory from './Armory';

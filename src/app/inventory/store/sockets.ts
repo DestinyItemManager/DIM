@@ -1,6 +1,7 @@
 import { getCraftingTemplate } from 'app/armory/crafting-utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
+import { filterMap } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import {
@@ -8,7 +9,6 @@ import {
   isEnhancedPerk,
   subclassAbilitySocketCategoryHashes,
 } from 'app/utils/socket-utils';
-import { filterMap } from 'app/utils/util';
 import {
   DestinyInventoryItemDefinition,
   DestinyItemComponent,

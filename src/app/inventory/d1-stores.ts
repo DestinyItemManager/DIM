@@ -8,15 +8,15 @@ import {
   D1VaultInventory,
 } from 'app/destiny1/d1-manifest-types';
 import { ThunkResult } from 'app/store/types';
+import { convertToError, errorMessage } from 'app/utils/errors';
 import { errorLog, infoLog } from 'app/utils/log';
-import { convertToError, errorMessage } from 'app/utils/util';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import { getStores } from '../bungie-api/destiny1-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { D1ManifestDefinitions, getDefinitions } from '../destiny1/d1-definitions';
 import { showNotification } from '../notifications/notifications';
 import { loadingTracker } from '../shell/loading-tracker';
-import { reportException } from '../utils/exceptions';
+import { reportException } from '../utils/sentry';
 import { error, loadNewItems, update } from './actions';
 import { cleanInfos } from './dim-item-info';
 import { InventoryBuckets } from './inventory-buckets';
