@@ -53,12 +53,6 @@ export interface WebpackConfigurationGenerator {
 }
 
 export default (env: Env) => {
-  if (env.dev && env.WEBPACK_SERVE && (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem'))) {
-    console.log('Generating certificate');
-    execSync('mkcert create-ca --validity 825');
-    execSync('mkcert create-cert --validity 825 --key key.pem --cert cert.pem');
-  }
-
   env.name = Object.keys(env)[0] as Env['name'];
   (['release', 'beta', 'dev'] as const).forEach((e) => {
     // set booleans based on env
@@ -67,6 +61,12 @@ export default (env: Env) => {
       env.name = e;
     }
   });
+
+  if (env.dev && env.WEBPACK_SERVE && (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem'))) {
+    console.log('Generating certificate');
+    execSync('mkcert create-ca --validity 825');
+    execSync('mkcert create-cert --validity 825 --key key.pem --cert cert.pem');
+  }
 
   let version = env.dev ? packageJson.version.toString() : process.env.VERSION;
 

@@ -1,5 +1,5 @@
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
-import { bungieNetPath } from 'app/dim-ui/BungieImage';
+import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
 import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { showGearPower } from 'app/gear-power/gear-power';
@@ -174,7 +174,7 @@ function CharacterStats({
           tooltip={<StatTooltip stat={stat} equippedHashes={equippedHashes} />}
         >
           <div className="stat" aria-label={`${stat.name} ${stat.value}`} role="group">
-            <img src={stat.icon} alt={stat.name} />
+            <BungieImage src={stat.icon} alt={stat.name} />
             <div>{stat.value}</div>
           </div>
         </PressTip>

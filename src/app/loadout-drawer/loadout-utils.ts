@@ -1,7 +1,6 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { t } from 'app/i18next-t';
 import { BucketSortType } from 'app/inventory/inventory-buckets';
 import { allItemsSelector } from 'app/inventory/selectors';
@@ -290,7 +289,7 @@ export function getLoadoutStats(
     hash,
     displayProperties: { description, icon, name },
   } of statDefs) {
-    stats[hash] = { hash, description, icon: bungieNetPath(icon), name, value: 0, breakdown: [] };
+    stats[hash] = { hash, description, icon: icon, name, value: 0, breakdown: [] };
   }
 
   // Sum the items stats into the stats

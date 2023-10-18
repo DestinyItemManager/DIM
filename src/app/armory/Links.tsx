@@ -7,7 +7,6 @@ import { getSocketsWithStyle, isWeaponMasterworkSocket } from 'app/utils/socket-
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import destinysets from 'images/destinysets.svg';
-import destinytracker from 'images/destinytracker.png';
 import logo from 'images/dimlogo.svg';
 import foundry from 'images/foundry.png';
 import ishtarLogo from 'images/ishtar-collective.svg';
@@ -31,9 +30,8 @@ export default function Links({ item }: { item: DimItem }) {
       icon: lightgg,
       link: `https://www.light.gg/db/${language}/items/${item.hash}${buildLightGGSockets(item)}`,
     },
-    { name: 'DestinyTracker', icon: destinytracker, link: destinyDBLink(item) },
     item.bucket.inWeapons && {
-      name: 'Foundry',
+      name: 'D2Foundry',
       icon: foundry,
       link: `https://d2foundry.gg/w/${item.hash}${buildFoundrySockets(item)}`,
     },
@@ -61,21 +59,6 @@ export default function Links({ item }: { item: DimItem }) {
       ))}
     </ul>
   );
-}
-
-function destinyDBLink(item: DimItem) {
-  const DimItem = item;
-  let perkQueryString = '';
-
-  if (DimItem) {
-    const perkCsv = buildSocketParam(DimItem);
-    // to-do: if buildPerksCsv typing is correct, and can only return a string, lines 142-150 could be a single line
-    if (perkCsv?.length) {
-      perkQueryString = `?perks=${perkCsv}`;
-    }
-  }
-
-  return `https://destinytracker.com/destiny-2/db/items/${item.hash}${perkQueryString}`;
 }
 
 /**
