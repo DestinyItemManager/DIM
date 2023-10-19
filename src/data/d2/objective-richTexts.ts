@@ -30,7 +30,7 @@ const richTextManifestSourceData = {
   '[Shoot]': ['SandboxPerk', 2805448568],
   '[Shotgun]': ['Objective', 212380697],
   '[Sidearm]': ['Objective', 141911950],
-  '[Sniper Rifle]': ['Objective', 273389628],
+  '[Sniper Rifle]': ['Objective', 90309638],
   '[Solar]': ['Objective', 85535853],
   '[Special Grenade Launcher]': ['Objective', 1217177904],
   '[Sprint]': ['SandboxPerk', 1330059513],

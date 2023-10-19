@@ -1154,6 +1154,7 @@ export const enum TraitHashes {
   ItemQuestAnnualV600 = 929402123,
   ItemQuestAnnualV700 = 2976021378,
   ItemQuestCampaign = 2973844452,
+  ItemQuestEvent = 1056186694,
   ItemQuestOnramp = 170945933,
   ItemQuestSeasonalSeason20 = 3904180893,
   ItemQuestSeasonalSeason21 = 3904180892,

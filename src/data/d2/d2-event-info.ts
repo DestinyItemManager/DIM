@@ -30,7 +30,7 @@ export const D2EventInfo = {
     name: 'Festival of the Lost',
     shortname: 'fotl',
     sources: [1054169368, 1677921161, 1919933822, 3190938946, 3693722471, 4041583267],
-    engram: [1451959506],
+    engram: [1451959506, 1940401459],
   },
   5: {
     name: 'The Revelry',

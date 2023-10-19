@@ -24496,7 +24496,7 @@ exports[`process stores generates a correct  Weapons CSV export 1`] = `
     "Reload": 30,
     "Season": 18,
     "Shield Duration": 0,
-    "Source": "",
+    "Source": "events",
     "Stability": 35,
     "Swing Speed": 0,
     "Tag": undefined,
