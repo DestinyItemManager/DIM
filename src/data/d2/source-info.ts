@@ -1175,17 +1175,14 @@ const D2Sources: {
   },
   'ritual-weapon': {
     itemHashes: [
-      213264394, // Buzzard
       805677041, // Buzzard
       838556752, // Python
       847329160, // Edgewise
-      888872889, // Point of the Stag
       1179141605, // Felwinter's Lie
       1644680957, // Null Composure
       2060863616, // Salvager's Salvo
       2697058914, // Komodo-4FR
       3001205424, // Ecliptic Distaff
-      3292795429, // Randy's Throwing Knife
       3434944005, // Point of the Stag
       3535742959, // Randy's Throwing Knife
       4184808992, // Adored
