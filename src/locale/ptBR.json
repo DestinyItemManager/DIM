@@ -404,7 +404,6 @@
     "Vault": "Enviar item para o cofre"
   },
   "InGameLoadout": {
-    "Applying": "Equipando set...",
     "ClearSlot": "Limpar Slot {{index}}",
     "Create": "Criar Set",
     "CreateTitle": "Criar Set no Jogo a partir do Equipamento Atual",

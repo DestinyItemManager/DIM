@@ -404,7 +404,6 @@
     "Vault": "アイテムを保管庫に送る"
   },
   "InGameLoadout": {
-    "Applying": "ロードアウトを装備中",
     "ClearSlot": "スロット {{index}} を削除",
     "Create": "ロードアウトを作成",
     "CreateTitle": "現在の装備からゲーム内ロードアウトを作成",

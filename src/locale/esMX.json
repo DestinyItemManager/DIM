@@ -404,7 +404,6 @@
     "Vault": "Enviar objeto al depósito"
   },
   "InGameLoadout": {
-    "Applying": "Equipando equipamiento...",
     "ClearSlot": "Limpiar Ranura {{index}}",
     "Create": "Crear equipamiento",
     "CreateTitle": "Crear Equipamiento en el juego desde el equipo actual",
