@@ -37,7 +37,7 @@ export function WeaponCraftedInfo({ item, className }: { item: DimItem; classNam
   );
 }
 
-export function CraftedDataMedallion({ item }: { item: DimItem }) {
+function CraftedDataMedallion({ item }: { item: DimItem }) {
   const killTrackers = filterMap(
     item.sockets?.allSockets.find((s) => isKillTrackerSocket(s))?.plugOptions ?? [],
     (p) => plugToKillTracker(p)

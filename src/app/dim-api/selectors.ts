@@ -38,9 +38,6 @@ export const collapsedSelector =
   (state: RootState): boolean | undefined =>
     settingsSelector(state).collapsedSections[sectionId];
 
-export const oldCustomTotalSelector = (state: RootState) =>
-  settingsSelector(state).customTotalStatsByClass;
-
 export const customStatsSelector = (state: RootState) => settingsSelector(state).customStats;
 
 export const apiPermissionGrantedSelector = (state: RootState) =>

@@ -150,6 +150,6 @@ export function itemCouldBeEquipped(store: DimStore, item: DimItem, _stores: Dim
   );
 }
 
-export function isValidGameLoadoutPlug(hash: number) {
+function isValidGameLoadoutPlug(hash: number) {
   return hash && hash !== UNSET_PLUG_HASH;
 }

@@ -10,7 +10,7 @@ import { LookupTable } from './util-types';
 const dimLangToBrowserLang: LookupTable<DimLanguage, string> = _.invert(browserLangToDimLang);
 
 /** Map DIM's locale values to a [BCP 47 language tag](http://tools.ietf.org/html/rfc5646) */
-export function mapLocale(language: DimLanguage): Intl.BCP47LanguageTag {
+function mapLocale(language: DimLanguage): Intl.BCP47LanguageTag {
   return dimLangToBrowserLang[language] ?? language;
 }
 

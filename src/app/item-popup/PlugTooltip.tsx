@@ -296,7 +296,7 @@ export function PlugStats({ stats }: { stats: { statHash: number; value: number 
   );
 }
 
-export function StatValue({ value, statHash }: { value: number; statHash: number }) {
+function StatValue({ value, statHash }: { value: number; statHash: number }) {
   const defs = useD2Definitions()!;
   const statDef = defs.Stat.get(statHash);
   if (!statDef?.displayProperties.name) {

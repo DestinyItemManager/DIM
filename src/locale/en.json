@@ -404,7 +404,6 @@
     "Vault": "Send item to vault"
   },
   "InGameLoadout": {
-    "Applying": "Equipping loadout...",
     "ClearSlot": "Clear Slot {{index}}",
     "Create": "Create Loadout",
     "CreateTitle": "Create In-Game Loadout From Current Equipment",

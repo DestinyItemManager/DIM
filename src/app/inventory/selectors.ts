@@ -155,7 +155,7 @@ export const profileResponseSelector = (state: RootState) =>
   state.inventory.mockProfileData ?? state.inventory.profileResponse;
 
 /** Whether or not the user is currently playing Destiny 2 */
-export const userIsPlayingSelector = (state: RootState) =>
+const userIsPlayingSelector = (state: RootState) =>
   Boolean(state.inventory.profileResponse?.profileTransitoryData?.data);
 
 /** The time when the currently displayed profile was last refreshed from live game data */
@@ -378,7 +378,7 @@ export const itemInfosSelector = (state: RootState): ItemInfos =>
 /**
  * DIM tags which should be applied to matching item hashes (instead of per-instance)
  */
-export const itemHashTagsSelector = (state: RootState): { [itemHash: string]: ItemHashTag } =>
+const itemHashTagsSelector = (state: RootState): { [itemHash: string]: ItemHashTag } =>
   state.dimApi.itemHashTags;
 
 /* Returns a function that can be used to get the tag for a particular item. */

@@ -95,35 +95,6 @@ function throwBungieError<T>(serverResponse: T | undefined, request: Request) {
 //
 
 /**
- * returns a fetch-like that will abort the request after some time
- *
- * @param fetchFunction use this function to make the request
- * @param timeout abort request after this many milliseconds
- */
-export function createFetchWithTimeout(fetchFunction: typeof fetch, timeout: number): typeof fetch {
-  return async (...[input, init]: Parameters<typeof fetch>) => {
-    const controller = typeof AbortController === 'function' ? new AbortController() : null;
-    const signal = controller?.signal;
-    let timer: NodeJS.Timeout | undefined = undefined;
-
-    if (controller) {
-      timer = setTimeout(() => controller.abort(), timeout);
-      if (typeof input === 'string') {
-        input = new Request(input);
-      }
-      init = { ...init, signal };
-    }
-    try {
-      return await fetchFunction(input, init);
-    } finally {
-      if (timer !== undefined) {
-        clearTimeout(timer);
-      }
-    }
-  };
-}
-
-/**
  * returns a fetch-like that will run a function if the request is taking a long time,
  * e.g. generate a "still waiting!" notification
  *

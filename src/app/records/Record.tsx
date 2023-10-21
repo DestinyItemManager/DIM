@@ -39,7 +39,7 @@ interface RecordInterval {
 
 const catalystIconsTable = catalystIcons as HashLookup<string>;
 
-export default function Record({
+function Record({
   record,
   redactedRecordsRevealed,
 }: {

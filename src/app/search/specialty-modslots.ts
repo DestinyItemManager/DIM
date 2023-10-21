@@ -23,7 +23,7 @@ export interface ModSocketMetadata {
 const legacyCompatibleTags = ['nightmare', 'gardenofsalvation', 'lastwish'];
 
 /** The plug categories that will fit in "legacy" sockets */
-export const legacyCompatiblePlugCategoryHashes = [
+const legacyCompatiblePlugCategoryHashes = [
   PlugCategoryHashes.EnhancementsSeasonMaverick, // nightmare
   PlugCategoryHashes.EnhancementsSeasonOutlaw, // taken/lw
   PlugCategoryHashes.EnhancementsRaidGarden,

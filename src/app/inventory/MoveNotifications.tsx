@@ -298,21 +298,3 @@ function MoveItemNotificationIcon({ completion }: { completion: Promise<unknown>
     </div>
   );
 }
-
-/**
- * Generate JSX for applying an ingame loadout. This isn't a component.
- */
-// TODO: build something more like DIM's loadout notification?
-export function inGameLoadoutNotification(
-  loadout: InGameLoadout,
-  applyPromise: Promise<any>
-): NotifyInput {
-  return {
-    promise: applyPromise,
-    duration: lingerMs,
-    title: loadout.name,
-    icon: <InGameLoadoutIcon loadout={loadout} />,
-    trailer: <MoveItemNotificationIcon completion={applyPromise} />,
-    body: t('InGameLoadout.Applying'),
-  };
-}
