@@ -58,7 +58,7 @@ export const vendorGroupsForCharacterSelector = currySelector(
   )
 );
 
-export const subVendorsForCharacterSelector = currySelector(
+const subVendorsForCharacterSelector = currySelector(
   createSelector(
     createItemContextSelector,
     vendorsByCharacterSelector,

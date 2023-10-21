@@ -420,7 +420,6 @@
     "CreateTitle": "Create In-Game Loadout From Current Equipment",
     "CurrentlyEquipped": "Currently Equipped",
     "PrepareEquip": "Prepare Equip",
-    "Applying": "Equipping loadout...",
     "EditIdentifiers": "Edit Identifiers",
     "EditTitle": "Edit Loadout Name and Icon",
     "EditFailed": "Failed to update loadout",

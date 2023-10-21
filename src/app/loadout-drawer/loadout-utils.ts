@@ -70,7 +70,7 @@ export const fromEquippedTypes: (BucketHashes | D1BucketHashes)[] = [
 ];
 
 // Bucket hashes, in order, that are contained within ingame loadouts
-export const inGameLoadoutBuckets: BucketHashes[] = [
+const inGameLoadoutBuckets: BucketHashes[] = [
   BucketHashes.Subclass,
   BucketHashes.KineticWeapons,
   BucketHashes.EnergyWeapons,
@@ -600,7 +600,7 @@ export const potentialLoadoutItemsByItemId = weakMemoize((allItems: DimItem[]) =
  * Get a mapping from crafted date to item, for items that could be in loadouts. Used for
  * looking up items from loadouts.
  */
-export const potentialLoadoutItemsByCraftedDate = weakMemoize((allItems: DimItem[]) =>
+const potentialLoadoutItemsByCraftedDate = weakMemoize((allItems: DimItem[]) =>
   _.keyBy(
     allItems.filter((i) => i.id !== '0' && i.craftedInfo?.craftedDate && itemCanBeInLoadout(i)),
     (i) => i.craftedInfo!.craftedDate
@@ -623,7 +623,7 @@ export function getInstancedLoadoutItem(allItems: DimItem[], loadoutItem: Loadou
  * Get a mapping from item hash to item, for ininstanced items that could be in loadouts. Used for
  * looking up items from loadouts.
  */
-export const potentialUninstancedLoadoutItemsByHash = weakMemoize((allItems: DimItem[]) =>
+const potentialUninstancedLoadoutItemsByHash = weakMemoize((allItems: DimItem[]) =>
   _.groupBy(
     allItems.filter((i) => itemCanBeInLoadout(i)),
     (i) => i.hash

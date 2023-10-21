@@ -61,10 +61,6 @@ const specialtyModPlugCategoryHashes = modSocketMetadata.flatMap(
   (modMetadata) => modMetadata.compatiblePlugCategoryHashes
 );
 
-export const emptySpecialtySocketHashes = modSocketMetadata.map(
-  (modMetadata) => modMetadata.emptyModSocketHash
-);
-
 /** verifies an item is d2 armor and has one or more specialty mod sockets, which are returned */
 const getSpecialtySockets = (item?: DimItem): DimSocket[] | undefined => {
   if (item?.bucket.inArmor) {
