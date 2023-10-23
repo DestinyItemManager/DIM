@@ -51,18 +51,20 @@ import {
   isSunset,
 } from 'app/utils/item-utils';
 import {
+  getIntrinsicArmorPerkSocket,
+  getModSocketCategories,
+  getPerkSocketCategory,
   getSocketsByIndexes,
   getWeaponArchetype,
   getWeaponArchetypeSocket,
-  isEmptyArmorModSocket,
   isEnhancedPerk,
-  isUsedArmorModSocket,
+  isWeaponMasterworkSocket,
 } from 'app/utils/socket-utils';
 import { LookupTable } from 'app/utils/util-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info';
-import { StatHashes } from 'data/d2/generated-enums';
+import { PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import shapedOverlay from 'images/shapedOverlay.png';
 import _ from 'lodash';
 import React from 'react';
@@ -666,32 +668,44 @@ function PerksCell({
     return null;
   }
 
-  const legendaryWeaponArchetypePlugHash =
-    item.bucket.inWeapons && !item.isExotic
-      ? getWeaponArchetypeSocket(item)?.plugged?.plugDef?.hash
+  // First, the archetype (but not for legendary weapons, since there's an archetype column)
+  // TODO Why show for exotics? They also have that perk in the archetype column...
+  const archetype =
+    item.bucket.inWeapons && item.isExotic
+      ? getWeaponArchetypeSocket(item)
+      : item.bucket.inArmor
+      ? getIntrinsicArmorPerkSocket(item)
       : undefined;
-  let sockets = item.sockets.categories.flatMap((c) =>
-    getSocketsByIndexes(item.sockets!, c.socketIndexes).filter(
-      (s) =>
-        !isKillTrackerSocket(s) &&
-        !isEmptyArmorModSocket(s) &&
-        s.plugged?.plugDef.displayProperties.name && // ignore empty sockets and unnamed plugs
-        (s.plugged.plugDef.collectibleHash || // collectibleHash catches shaders and most mods
-          isUsedArmorModSocket(s) || // but we catch additional mods missing collectibleHash (arrivals)
-          (s.isPerk &&
-            // Filter out the archetype plug for legendary weapons
-            // as it's already in the archetype column
-            (!legendaryWeaponArchetypePlugHash ||
-              s.plugged.plugDef.hash !== legendaryWeaponArchetypePlugHash)))
-    )
-  );
+  let sockets: DimSocket[] = archetype ? [archetype] : [];
+
+  // Then, weapon perks
+  const perks = getPerkSocketCategory(item);
+  if (perks) {
+    sockets.push(
+      ...getSocketsByIndexes(item.sockets, perks.socketIndexes).filter(
+        (s) => !isKillTrackerSocket(s)
+      )
+    );
+  }
 
   if (traitsOnly) {
     sockets = sockets.filter(
       (s) =>
         s.plugged &&
-        (s.plugged.plugDef.plug.plugCategoryIdentifier === 'frames' ||
-          s.plugged.plugDef.plug.plugCategoryIdentifier === 'intrinsics')
+        (s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames ||
+          s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics)
+    );
+  } else {
+    const { categories, socketsByCategory } = getModSocketCategories(
+      item,
+      archetype?.socketIndex,
+      /* excludeEmptySockets */ true
+    )!;
+    sockets.push(
+      ...categories.flatMap(
+        // We have separate columns for masterwork stuff
+        (c) => socketsByCategory.get(c)?.filter((s) => !isWeaponMasterworkSocket(s)) ?? []
+      )
     );
   }
 
