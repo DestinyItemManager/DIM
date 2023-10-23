@@ -1,5 +1,7 @@
 ## Next
 
+## 7.91.0 <span class="changelog-date">(2023-10-22)</span>
+
 * Added `source:ghostsofthedeep` search term.
 * Fixed some cases where hitting "Esc" would not close a nested sheet.
 * In Loadout Optimizer, prevent opening an empty mod picker when clicking general mod slots when auto stat mods are enabled.
