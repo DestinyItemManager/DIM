@@ -404,7 +404,6 @@
     "Vault": "將物品存入保險庫"
   },
   "InGameLoadout": {
-    "Applying": "正在應用配裝...",
     "ClearSlot": "清空槽位 {{index}}",
     "Create": "創建配裝",
     "CreateTitle": "從當前已裝備創建游戲内配裝。",

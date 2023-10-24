@@ -425,10 +425,6 @@ function createNewStatHash(existingCustomStats: CustomStatDef[]) {
   return statHash;
 }
 
-export function normalizeStatLabel(s: string) {
-  return s.trim().slice(0, 30);
-}
-
 function warnInvalidCustomStat(errorMsg: string) {
   showNotification({
     type: 'warning',

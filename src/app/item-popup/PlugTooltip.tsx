@@ -4,7 +4,6 @@ import { EnergyCostIcon } from 'app/dim-ui/ElementIcon';
 import { Tooltip, useTooltipCustomization } from 'app/dim-ui/PressTip';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
-import { resonantElementObjectiveHashes } from 'app/inventory/store/deepsight';
 import { getValueStyle } from 'app/inventory/store/objectives';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { getDamageTypeForSubclassPlug } from 'app/inventory/subclass';
@@ -132,12 +131,11 @@ function PlugTooltip({
   const sourceString =
     defs && def.collectibleHash && defs.Collectible.get(def.collectibleHash).sourceString;
 
-  // filter out plug objectives related to Resonant Elements
+  // filter out hidden objectives
   const filteredPlugObjectives = plugObjectives?.filter(
     (o) =>
-      !resonantElementObjectiveHashes.includes(o.objectiveHash) &&
       getValueStyle(defs?.Objective.get(o.objectiveHash), o.progress ?? 0, o.completionValue) !==
-        DestinyUnlockValueUIStyle.Hidden
+      DestinyUnlockValueUIStyle.Hidden
   );
 
   const bungieDescription =
@@ -296,7 +294,7 @@ export function PlugStats({ stats }: { stats: { statHash: number; value: number 
   );
 }
 
-export function StatValue({ value, statHash }: { value: number; statHash: number }) {
+function StatValue({ value, statHash }: { value: number; statHash: number }) {
   const defs = useD2Definitions()!;
   const statDef = defs.Stat.get(statHash);
   if (!statDef?.displayProperties.name) {

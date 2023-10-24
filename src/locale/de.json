@@ -404,7 +404,6 @@
     "Vault": "Sende Gegenstand zum Tresor"
   },
   "InGameLoadout": {
-    "Applying": "Lege Loadout an...",
     "ClearSlot": "Slot {{index}} löschen",
     "Create": "Erstelle Loadout",
     "CreateTitle": "Erstelle In-Game-Loadout von aktueller Ausrüstung",

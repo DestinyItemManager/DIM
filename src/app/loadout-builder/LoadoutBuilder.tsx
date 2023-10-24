@@ -453,6 +453,7 @@ export default memo(function LoadoutBuilder({
             modStatChanges={result.modStatChanges}
             loadouts={loadouts}
             armorEnergyRules={result.armorEnergyRules}
+            autoStatMods={autoStatMods}
             isEditingExistingLoadout={isEditingExistingLoadout}
           />
         ) : (

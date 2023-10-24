@@ -168,13 +168,7 @@ function useScrollNodeIntoView(path: number[], presentationNodeHash: number) {
 /**
  * The little progress bar in the header of a presentation node that shows how much has been unlocked.
  */
-export function PresentationNodeProgress({
-  acquired,
-  visible,
-}: {
-  acquired: number;
-  visible: number;
-}) {
+function PresentationNodeProgress({ acquired, visible }: { acquired: number; visible: number }) {
   return (
     <div className={styles.nodeProgress}>
       <div className={styles.nodeProgressCount}>
@@ -190,7 +184,7 @@ export function PresentationNodeProgress({
   );
 }
 
-export function PresentationNodeTitle({
+function PresentationNodeTitle({
   displayProperties,
   overrideName,
 }: {

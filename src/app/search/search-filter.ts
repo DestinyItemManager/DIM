@@ -44,7 +44,7 @@ import { parseAndValidateQuery, rangeStringToComparator } from './search-utils';
  * depend on every bit of data a filter might need to run, so that we regenerate the filter
  * functions whenever any of them changes.
  */
-export const filterContextSelector = createSelector(
+const filterContextSelector = createSelector(
   sortedStoresSelector,
   allItemsSelector,
   currentStoreSelector,

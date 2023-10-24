@@ -404,7 +404,6 @@
     "Vault": "아이템을 창고로 이동"
   },
   "InGameLoadout": {
-    "Applying": "로드아웃을 장착하는 중...",
     "ClearSlot": "슬롯 {{index}} 초기화",
     "Create": "로드아웃 생성",
     "CreateTitle": "현재 장비에서 게임 내 로드아웃 생성",

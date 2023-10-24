@@ -18,7 +18,7 @@ const pinnacleCap = powerLevelByKeyword.pinnaclecap;
  *
  * This relies on a precalculated set generated from allItems, using getBucketsWithClassifiedItems.
  */
-export function hasAffectingClassified(
+function hasAffectingClassified(
   unrestrictedMaxLightGear: DimItem[],
   bucketsWithClassifieds: Set<number>
 ) {
@@ -32,7 +32,7 @@ export function hasAffectingClassified(
 }
 
 /** figures out which buckets contain classified items */
-export function getBucketsWithClassifiedItems(allItems: DimItem[]) {
+function getBucketsWithClassifiedItems(allItems: DimItem[]) {
   const bucketsWithClassifieds = new Set<number>();
   for (const i of allItems) {
     if (i.classified && !i.power && (i.location.inWeapons || i.location.inArmor)) {

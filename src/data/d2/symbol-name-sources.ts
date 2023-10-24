@@ -672,7 +672,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 273389628,
+      hash: 90309638,
       fromRichText: true,
     },
   },

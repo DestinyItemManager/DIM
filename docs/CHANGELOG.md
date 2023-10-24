@@ -1,6 +1,23 @@
 ## Next
 
+## 7.91.1 <span class="changelog-date">(2023-10-23)</span>
+
+* Fixed search menu showing behind items in some sheets.
+
+## 7.91.0 <span class="changelog-date">(2023-10-22)</span>
+
+* Added `source:ghostsofthedeep` search term.
+* Fixed some cases where hitting "Esc" would not close a nested sheet.
+* In Loadout Optimizer, prevent opening an empty mod picker when clicking general mod slots when auto stat mods are enabled.
+* Removed outdated reference to Google Drive in our privacy policy - DIM has not used Google Drive for storage for many years.
+* Fixed the search field in the character menu not having a background on the default theme.
+* If your language is set to Japanese, Korean, or Traditional Chinese, you may notice that fonts display smaller since upgrading to Chrome/Edge 118. [This is a change in Chrome](https://discord.com/channels/316217202766512130/1052623849197404241/1164636684646887434), and it makes the fonts in DIM (and everywhere else!) look the same as they do for other languages. Consider zooming the page or adjusting the item tile size if the fonts are now too small for you.
+* Fixed a bug where classified items would show "undefined" as their power level.
+* Removed link to Destiny Tracker from the Armory page.
+
 ## 7.90.0 <span class="changelog-date">(2023-10-15)</span>
+
+* Removed tooltip from the text portion of exotic perks / archetypes since the text already includes those details.
 
 ## 7.89.0 <span class="changelog-date">(2023-10-08)</span>
 
