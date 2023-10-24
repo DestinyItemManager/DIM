@@ -1,7 +1,6 @@
 import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip } from 'app/dim-ui/PressTip';
-import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import {
   AppIcon,
@@ -14,21 +13,17 @@ import {
 } from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
 import clsx from 'clsx';
+import { AnimatePresence } from 'framer-motion';
 import _ from 'lodash';
-import React, { Dispatch, memo } from 'react';
+import React, { Dispatch } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorStatHashes, MinMax, ResolvedStatConstraint, StatRanges } from '../types';
 import styles from './StatConstraintEditor.m.scss';
 
-const IGNORE = 'ignore';
-const INCLUDE = 'include';
-
-const MinMaxSelect = memo(MinMaxSelectInner);
-
 /**
  * A selector that allows for choosing minimum and maximum stat ranges, plus reordering the stat priority.
  */
-export default function TierSelect({
+export default function StatConstraintEditor({
   resolvedStatConstraints,
   statRangesFiltered,
   lbDispatch,
@@ -97,80 +92,75 @@ function StatRow({
   const statDef = defs.Stat.get(statHash);
 
   // TODO: enhance the tooltip w/ info about what the LO settings mean (locked, min/max, etc)
+  // TODO: enhance the tooltip w/ info about why the numbers are greyed
   // TODO: show max stat here
+  // TODO: populate tooltip equipped hashes
+  // TODO: actually implement the up and down buttons, lock icon
+  // TODO: button titles
+  // TODO: Maybe have an "auto choose best tier" mode?
+  // TODO: "Stat preference" heading?
 
   const name = (
-    <PressTip
-      elementType="span"
-      tooltip={
-        <StatTooltip
-          stat={{
-            hash: statHash,
-            value: statConstraint.minTier * 10,
-            name: statDef.displayProperties.name,
-            description: statDef.displayProperties.description,
-          }}
-          equippedHashes={new Set()}
-        />
-      }
-      className={clsx({ [styles.ignored]: c.ignored }, styles.statDisplayInfo)}
-    >
+    <span className={clsx({ [styles.ignored]: c.ignored }, styles.statDisplayInfo)}>
       <BungieImage className={styles.iconStat} src={statDef.displayProperties.icon} />
       <span className={styles.statName} title={statDef.displayProperties.name}>
         {statDef.displayProperties.name}
       </span>
-    </PressTip>
+    </span>
   );
   return (
     <DraggableItem id={statHash.toString()} index={index} className={styles.row} name={name}>
       <div className={styles.buttons}>
-        <button type="button" className="dim-button">
+        <button type="button" className={styles.rowControl}>
           <AppIcon icon={unlockedIcon} />
         </button>
-        <button type="button" className="dim-button">
+        <button type="button" className={styles.rowControl}>
           <AppIcon icon={moveUpIcon} />
         </button>
-        <button type="button" className="dim-button">
+        <button type="button" className={styles.rowControl}>
           <AppIcon icon={moveDownIcon} />
         </button>
         <button
           type="button"
-          className="dim-button"
+          className={styles.rowControl}
           onClick={() => onTierChange({ ...statConstraint, ignored: !statConstraint.ignored })}
         >
           <AppIcon icon={!statConstraint.ignored ? enabledIcon : unselectedCheckIcon} />
         </button>
       </div>
-      {!statConstraint.ignored && (
-        <div className={styles.statBar}>
-          {_.times(11, (tierNum) => (
-            <div
-              key={tierNum}
-              className={clsx(styles.statBarSegment, {
-                [styles.selectedStatBar]: statConstraint.minTier >= tierNum,
-                [styles.maxed]: tierNum > (statRange?.max ?? 100) / 10,
-              })}
-              onClick={() => onTierChange({ ...statConstraint, minTier: tierNum })}
-            >
-              <PressTip
-                tooltip={
-                  <StatTooltip
-                    stat={{
-                      hash: statHash,
-                      value: tierNum * 10,
-                      name: statDef.displayProperties.name,
-                      description: statDef.displayProperties.description,
-                    }}
-                    equippedHashes={new Set()}
-                  />
-                }
+      <AnimatePresence>
+        {!statConstraint.ignored && (
+          <div className={styles.statBar}>
+            {_.times(11, (tierNum) => (
+              <div
+                key={tierNum}
+                className={clsx(styles.statBarSegment, {
+                  [styles.selectedStatBar]: statConstraint.minTier >= tierNum,
+                  [styles.maxed]: tierNum > (statRange?.max ?? 100) / 10,
+                  [styles.locked]: tierNum >= statConstraint.maxTier,
+                })}
+                onClick={() => onTierChange({ ...statConstraint, minTier: tierNum })}
               >
-                {tierNum}
-              </PressTip>
-            </div>
-          ))}
-        </div>
-      )}
+                <PressTip
+                  tooltip={
+                    <StatTooltip
+                      stat={{
+                        hash: statHash,
+                        value: tierNum * 10,
+                        name: statDef.displayProperties.name,
+                        description: statDef.displayProperties.description,
+                      }}
+                      equippedHashes={new Set()}
+                    />
+                  }
+                >
+                  {tierNum}
+                </PressTip>
+              </div>
+            ))}
+          </div>
+        )}
+      </AnimatePresence>
     </DraggableItem>
   );
 }
@@ -207,86 +197,5 @@ function DraggableItem({
         </div>
       )}
     </Draggable>
-  );
-}
-
-function MinMaxSelectInner({
-  statHash,
-  type,
-  stat,
-  handleTierChange,
-}: {
-  statHash: number;
-  type: 'min' | 'max';
-  /** Filter config for a single stat */
-  stat: ResolvedStatConstraint;
-  handleTierChange: (changed: ResolvedStatConstraint) => void;
-}) {
-  const min = 0;
-  const max = 10;
-  const ignored = stat.ignored;
-
-  function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    let update: ResolvedStatConstraint;
-    if (e.target.value === IGNORE || e.target.value === INCLUDE) {
-      update = {
-        ...stat,
-        ignored: e.target.value === IGNORE,
-      };
-    } else {
-      const value = parseInt(e.target.value, 10);
-      // Bump the opposite tier to match this value if necessary, to avoid them
-      // becoming inverted
-      const minMax =
-        type === 'min'
-          ? {
-              minTier: value,
-              maxTier: Math.max(stat.maxTier, value),
-            }
-          : {
-              minTier: Math.min(stat.minTier, value),
-              maxTier: value,
-            };
-      update = {
-        ...minMax,
-        statHash,
-        ignored: false,
-      };
-    }
-
-    handleTierChange(update);
-  }
-
-  const value = type === 'min' ? Math.max(min, stat.minTier) : Math.min(max, stat.maxTier);
-  return (
-    <select
-      className={type === 'min' ? styles.minimum : styles.maximum}
-      value={ignored ? '-' : value}
-      onChange={handleChange}
-    >
-      <option disabled>
-        {type === 'min' ? t('LoadoutBuilder.SelectMin') : t('LoadoutBuilder.SelectMax')}
-      </option>
-      {!ignored &&
-        _.range(min, max + 1).map((tier) => (
-          <option key={tier} value={tier}>
-            {t('LoadoutBuilder.TierNumber', {
-              tier,
-            })}
-          </option>
-        ))}
-      <option key="-" value="-" disabled>
-        -
-      </option>
-      {ignored ? (
-        <option key={INCLUDE} value={INCLUDE}>
-          {t('LoadoutBuilder.StatTierIncludeOption')}
-        </option>
-      ) : (
-        <option key={IGNORE} value={IGNORE}>
-          {t('LoadoutBuilder.StatTierIgnoreOption')}
-        </option>
-      )}
-    </select>
   );
 }

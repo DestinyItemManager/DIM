@@ -32,6 +32,7 @@ import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyObject } from 'app/utils/empty';
 import { isClassCompatible, itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { deepEqual } from 'fast-equals';
 import { Dispatch, memo, useCallback, useEffect, useMemo, useRef } from 'react';
@@ -392,9 +393,13 @@ export default memo(function LoadoutBuilder({
     </>
   );
 
+  // TODO: replace character select with horizontal choice?
+
   return (
     <PageWithMenu className={styles.page}>
-      <PageWithMenu.Menu className={styles.menuContent}>
+      <PageWithMenu.Menu
+        className={clsx(styles.menuContent, { [styles.wide]: $featureFlags.statConstraintEditor })}
+      >
         <CharacterSelect
           selectedStore={selectedStore}
           stores={stores}

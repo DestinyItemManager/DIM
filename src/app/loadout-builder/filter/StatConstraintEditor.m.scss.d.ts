@@ -6,10 +6,8 @@ interface CssExports {
   'iconStat': string;
   'ignored': string;
   'maxed': string;
-  'maximum': string;
-  'minimum': string;
-  'range': string;
   'row': string;
+  'rowControl': string;
   'selectedStatBar': string;
   'statBar': string;
   'statBarSegment': string;

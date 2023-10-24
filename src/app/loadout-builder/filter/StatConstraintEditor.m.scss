@@ -15,20 +15,6 @@
   margin-right: 4px;
 }
 
-.range {
-  grid-area: buttons;
-  justify-self: flex-end;
-  font-size: 12px;
-}
-
-.minimum {
-  grid-area: buttons;
-}
-
-.maximum {
-  grid-area: buttons;
-}
-
 .ignored {
   opacity: 0.4;
 }
@@ -131,5 +117,10 @@
 
 .buttons {
   composes: flexRow from '../../dim-ui/common.m.scss';
-  gap: 2px;
+}
+
+.rowControl {
+  composes: resetButton from '../../dim-ui/common.m.scss';
+  padding: 4px 6px;
+  opacity: 0.9;
 }

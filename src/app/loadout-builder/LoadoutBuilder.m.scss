@@ -9,7 +9,6 @@
 }
 
 .menuContent {
-  --page-with-menu-menu-width: 320px;
   box-sizing: border-box;
 
   @include phone-portrait {
@@ -21,6 +20,10 @@
     flex-direction: column;
     gap: 4px;
   }
+}
+
+.wide {
+  --page-with-menu-menu-width: 320px;
 }
 
 .toolbar {
