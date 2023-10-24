@@ -30,7 +30,7 @@ describe('lo process mappers', () => {
       modsForSlot: [],
     });
 
-    expect(mappedItem.energy?.capacity).toBe(10);
+    expect(mappedItem.remainingEnergyCapacity).toBe(10);
   });
 
   test('mapped energy capacity is the items when assumed masterwork is not used', () => {
@@ -44,7 +44,7 @@ describe('lo process mappers', () => {
       modsForSlot: [],
     });
 
-    expect(mappedItem.energy?.capacity).toBe(modifiedItem.energy?.energyCapacity);
+    expect(mappedItem.remainingEnergyCapacity).toBe(modifiedItem.energy?.energyCapacity);
   });
 
   test('mapped energy capacity defaults to MIN_LO_ITEM_ENERGY when assumed masterwork is not used and the item energy is low', () => {
@@ -58,6 +58,6 @@ describe('lo process mappers', () => {
       modsForSlot: [],
     });
 
-    expect(mappedItem.energy?.capacity).toBe(MIN_LO_ITEM_ENERGY);
+    expect(mappedItem.remainingEnergyCapacity).toBe(MIN_LO_ITEM_ENERGY);
   });
 });

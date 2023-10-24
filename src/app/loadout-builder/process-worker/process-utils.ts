@@ -29,7 +29,7 @@ export function precalculateStructures(
   autoStatMods: boolean,
   statOrder: ArmorStatHashes[]
 ): LoSessionInfo {
-  const generalModCosts = generalMods.map((m) => m.energy?.val || 0).sort((a, b) => b - a);
+  const generalModCosts = generalMods.map((m) => m.energyCost).sort((a, b) => b - a);
   const numAvailableGeneralMods = autoStatMods ? 5 - generalModCosts.length : 0;
 
   return {
@@ -37,8 +37,7 @@ export function precalculateStructures(
     hasActivityMods: activityMods.length > 0,
     generalModCosts,
     numAvailableGeneralMods,
-    totalModEnergyCost:
-      _.sum(generalModCosts) + _.sumBy(activityMods, (act) => act.energy?.val ?? 0),
+    totalModEnergyCost: _.sum(generalModCosts) + _.sumBy(activityMods, (act) => act.energyCost),
     activityModPermutations: generateProcessModPermutations(activityMods),
     activityTagCounts: activityMods.reduce<{ [tag: string]: number }>((acc, mod) => {
       if (mod.tag) {
@@ -57,9 +56,7 @@ function getRemainingEnergiesPerAssignment(
 
   let setEnergy = 0;
   for (const item of items) {
-    if (item.energy) {
-      setEnergy += item.energy.capacity - item.energy.val;
-    }
+    setEnergy += item.remainingEnergyCapacity;
   }
 
   activityModLoop: for (const activityPermutation of info.activityModPermutations) {
@@ -71,8 +68,8 @@ function getRemainingEnergiesPerAssignment(
 
       const item = items[i];
       const tag = activityMod.tag!;
-      const energyCost = activityMod.energy?.val || 0;
-      const itemEnergy = (item.energy && item.energy.capacity - item.energy.val) || 0;
+      const energyCost = activityMod.energyCost;
+      const itemEnergy = item.remainingEnergyCapacity;
       if (energyCost >= itemEnergy) {
         continue;
       }
@@ -83,10 +80,7 @@ function getRemainingEnergiesPerAssignment(
     }
 
     const remainingEnergyCapacities = items.map(
-      (i, idx) =>
-        (i.energy?.capacity || 0) -
-        (i.energy?.val || 0) -
-        (activityPermutation[idx]?.energy?.val || 0)
+      (i, idx) => i.remainingEnergyCapacity - (activityPermutation[idx]?.energyCost || 0)
     );
     remainingEnergyCapacities.sort((a, b) => b - a);
     remainingEnergiesPerAssignment.push(remainingEnergyCapacities);
@@ -187,9 +181,7 @@ export function pickAndAssignSlotIndependentMods(
 
   let setEnergy = 0;
   for (const item of items) {
-    if (item.energy) {
-      setEnergy += item.energy.capacity - item.energy.val;
-    }
+    setEnergy += item.remainingEnergyCapacity;
   }
 
   if (setEnergy < info.totalModEnergyCost) {
@@ -232,11 +224,10 @@ export function pickAndAssignSlotIndependentMods(
 
       const item = items[i];
       const tag = activityMod.tag!;
-      const energyCost = activityMod.energy?.val || 0;
-      const itemEnergy = (item.energy && item.energy.capacity - item.energy.val) || 0;
+      const energyCost = activityMod.energyCost;
 
       // The activity mods wont fit in the item set so move on to the next set of mods
-      if (energyCost > itemEnergy || !item.compatibleModSeasons?.includes(tag)) {
+      if (energyCost > item.remainingEnergyCapacity || !item.compatibleModSeasons?.includes(tag)) {
         continue activityModLoop;
       }
     }
@@ -247,9 +238,7 @@ export function pickAndAssignSlotIndependentMods(
     for (let idx = 0; idx < items.length; idx++) {
       const item = items[idx];
       remainingEnergyCapacities[idx] =
-        (item.energy?.capacity || 0) -
-        (item.energy?.val || 0) -
-        (activityPermutation[idx]?.energy?.val || 0);
+        item.remainingEnergyCapacity - (activityPermutation[idx]?.energyCost || 0);
     }
     remainingEnergyCapacities.sort((a, b) => b - a);
 
@@ -505,13 +494,6 @@ export function generateProcessModPermutations(mods: (ProcessMod | null)[]) {
   // This works because we check to see if we have already recorded this string
   // in heaps algorithm before we add the permutation to the result.
   const createPermutationKey = (permutation: (ProcessMod | null)[]) =>
-    permutation
-      .map((mod) => {
-        if (mod) {
-          const energyCost = mod.energy?.val || 0;
-          return `${energyCost}${mod.tag}`;
-        }
-      })
-      .join(',');
+    permutation.map((mod) => (mod ? `${mod.energyCost}${mod.tag}` : undefined)).join(',');
   return generatePermutationsOfFive(mods, createPermutationKey);
 }
