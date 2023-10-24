@@ -5,6 +5,7 @@ interface CssExports {
   'grip': string;
   'iconStat': string;
   'ignored': string;
+  'locked': string;
   'maxed': string;
   'row': string;
   'rowControl': string;

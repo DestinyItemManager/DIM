@@ -631,7 +631,11 @@
     "MaxTier": "Max {{tier}}",
     "UnableToAddAllMods": "Unable to add all mods.",
     "UnableToAddAllModsBody": "There weren't enough mod slots available to fit {{mods}}.",
-    "UnlockItem": "Unpin Item"
+    "UnlockItem": "Unpin Item",
+    "LockStat": "Only include loadouts with exactly this stat tier",
+    "IncreaseStatPriority": "Increase stat priority",
+    "DecreaseStatPriority": "Decrease stat priority",
+    "IgnoreStat": "Ignore this stat - Loadout Optimizer will pretend this stat doesn't exist when building sets"
   },
   "Loadouts": {
     "Abilities": "Abilities",

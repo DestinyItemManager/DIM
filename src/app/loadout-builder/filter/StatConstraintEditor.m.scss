@@ -110,6 +110,10 @@
   background-color: grey;
 }
 
+.locked {
+  opacity: 0.2;
+}
+
 .selectedStatBar {
   background-color: var(--theme-accent-primary);
   color: var(--theme-text-invert);
@@ -123,4 +127,8 @@
   composes: resetButton from '../../dim-ui/common.m.scss';
   padding: 4px 6px;
   opacity: 0.9;
+
+  &:disabled {
+    opacity: 0.2;
+  }
 }
