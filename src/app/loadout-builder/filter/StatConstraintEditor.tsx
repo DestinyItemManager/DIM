@@ -37,11 +37,13 @@ import styles from './StatConstraintEditor.m.scss';
 export default function StatConstraintEditor({
   resolvedStatConstraints,
   statRangesFiltered,
+  equippedHashes,
   lbDispatch,
 }: {
   resolvedStatConstraints: ResolvedStatConstraint[];
   /** The ranges the stats could have gotten to INCLUDING stat filters and mod compatibility */
   statRangesFiltered?: Readonly<StatRanges>;
+  equippedHashes: Set<number>;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
   const handleTierChange = (constraint: ResolvedStatConstraint) =>
@@ -74,6 +76,7 @@ export default function StatConstraintEditor({
                   index={index}
                   statRange={statRangesFiltered?.[statHash]}
                   onTierChange={handleTierChange}
+                  equippedHashes={equippedHashes}
                 />
               );
             })}
@@ -91,11 +94,13 @@ function StatRow({
   statRange,
   index,
   onTierChange,
+  equippedHashes,
 }: {
   statConstraint: ResolvedStatConstraint;
   statRange?: MinMax;
   index: number;
   onTierChange: (constraint: ResolvedStatConstraint) => void;
+  equippedHashes: Set<number>;
 }) {
   const defs = useD2Definitions()!;
   const c = statConstraint;
@@ -107,11 +112,6 @@ function StatRow({
   // TODO: enhance the tooltip w/ info about what the LO settings mean (locked, min/max, etc)
   // TODO: enhance the tooltip w/ info about why the numbers are greyed
   // TODO: show max stat here
-  // TODO: populate tooltip equipped hashes
-  // TODO: actually implement the up and down buttons, lock icon
-  // TODO: button titles
-  // TODO: Maybe have an "auto choose best tier" mode?
-  // TODO: "Stat preference" heading?
 
   const statLocked = statConstraint.minTier === statConstraint.maxTier;
   const handleToggleLocked = () =>
@@ -255,7 +255,7 @@ function StatRow({
                         name: statDef.displayProperties.name,
                         description: statDef.displayProperties.description,
                       }}
-                      equippedHashes={new Set()}
+                      equippedHashes={equippedHashes}
                     />
                   }
                 >

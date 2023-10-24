@@ -70,6 +70,7 @@ import {
   LockableBucketHashes,
   loDefaultArmorEnergyRules,
 } from './types';
+import useEquippedHashes from './useEquippedHashes';
 
 /**
  * The Loadout Optimizer screen
@@ -290,6 +291,8 @@ export default memo(function LoadoutBuilder({
   const handleAutoStatModsChanged = (autoStatMods: boolean) =>
     lbDispatch({ type: 'autoStatModsChanged', autoStatMods });
 
+  const equippedHashes = useEquippedHashes(loadout.parameters!, subclass);
+
   // I don't think this can actually happen?
   if (!selectedStore) {
     return null;
@@ -310,6 +313,7 @@ export default memo(function LoadoutBuilder({
           resolvedStatConstraints={resolvedStatConstraints}
           statRangesFiltered={result?.statRangesFiltered}
           lbDispatch={lbDispatch}
+          equippedHashes={equippedHashes}
         />
       ) : (
         <TierSelect
@@ -469,6 +473,7 @@ export default memo(function LoadoutBuilder({
             armorEnergyRules={result.armorEnergyRules}
             autoStatMods={autoStatMods}
             isEditingExistingLoadout={isEditingExistingLoadout}
+            equippedHashes={equippedHashes}
           />
         ) : (
           !processing && (
