@@ -1,5 +1,7 @@
 ## Next
 
+## 7.91.1 <span class="changelog-date">(2023-10-23)</span>
+
 * Fixed search menu showing behind items in some sheets.
 
 ## 7.91.0 <span class="changelog-date">(2023-10-22)</span>
