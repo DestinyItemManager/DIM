@@ -80,15 +80,17 @@ let version: string | null = null;
  */
 export const warnMissingDefinition = _.debounce(
   async () => {
-    const data = await d2GetManifest();
-    // If none of the paths (for any language) matches what we downloaded...
-    if (version && !Object.values(data.jsonWorldContentPaths).includes(version)) {
-      // The manifest has updated!
-      showNotification({
-        type: 'warning',
-        title: t('Manifest.Outdated'),
-        body: t('Manifest.OutdatedExplanation'),
-      });
+    if ($DIM_FLAVOR !== 'test') {
+      const data = await d2GetManifest();
+      // If none of the paths (for any language) matches what we downloaded...
+      if (version && !Object.values(data.jsonWorldContentPaths).includes(version)) {
+        // The manifest has updated!
+        showNotification({
+          type: 'warning',
+          title: t('Manifest.Outdated'),
+          body: t('Manifest.OutdatedExplanation'),
+        });
+      }
     }
   },
   10000,
