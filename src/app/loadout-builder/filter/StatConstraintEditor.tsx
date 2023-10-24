@@ -1,4 +1,12 @@
-import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd';
+import {
+  DragDropContext,
+  Draggable,
+  Droppable,
+  DropResult,
+  PreDragActions,
+  SensorAPI,
+  SnapDragActions,
+} from '@hello-pangea/dnd';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
@@ -14,6 +22,7 @@ import {
   unselectedCheckIcon,
 } from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
+import { delay } from 'app/utils/promises';
 import clsx from 'clsx';
 import { AnimatePresence } from 'framer-motion';
 import _ from 'lodash';
@@ -51,17 +60,8 @@ export default function StatConstraintEditor({
     });
   };
 
-  const handleChangeStatPriority = (statHash: ArmorStatHashes, direction: number) => {
-    const sourceIndex = resolvedStatConstraints.findIndex((c) => c.statHash === statHash);
-    lbDispatch({
-      type: 'statOrderChanged',
-      sourceIndex,
-      destinationIndex: sourceIndex + direction,
-    });
-  };
-
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
+    <DragDropContext onDragEnd={onDragEnd} sensors={[useButtonSensor]}>
       <Droppable droppableId="droppable">
         {(provided) => (
           <div ref={provided.innerRef}>
@@ -74,7 +74,6 @@ export default function StatConstraintEditor({
                   index={index}
                   statRange={statRangesFiltered?.[statHash]}
                   onTierChange={handleTierChange}
-                  onChangeStatPriority={handleChangeStatPriority}
                 />
               );
             })}
@@ -91,13 +90,11 @@ function StatRow({
   statConstraint,
   statRange,
   index,
-  onChangeStatPriority,
   onTierChange,
 }: {
   statConstraint: ResolvedStatConstraint;
   statRange?: MinMax;
   index: number;
-  onChangeStatPriority: (statHash: ArmorStatHashes, direction: number) => void;
   onTierChange: (constraint: ResolvedStatConstraint) => void;
 }) {
   const defs = useD2Definitions()!;
@@ -121,9 +118,6 @@ function StatRow({
     onTierChange({ ...statConstraint, maxTier: statLocked ? 10 : statConstraint.minTier });
 
   const handleIgnore = () => onTierChange({ ...statConstraint, ignored: !statConstraint.ignored });
-
-  const handlePriorityUp = () => onChangeStatPriority(statHash, -1);
-  const handlePriorityDown = () => onChangeStatPriority(statHash, 1);
 
   // Support keyboard interaction
   const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -208,9 +202,10 @@ function StatRow({
           type="button"
           className={styles.rowControl}
           title={t('LoadoutBuilder.IncreaseStatPriority')}
-          onClick={handlePriorityUp}
           disabled={index === 0}
           tabIndex={-1 /* Better to use the react-dnd keyboard interactions than this button */}
+          data-direction="up"
+          data-draggable-id={statHash.toString()}
         >
           <AppIcon icon={moveUpIcon} />
         </button>
@@ -218,9 +213,10 @@ function StatRow({
           type="button"
           className={styles.rowControl}
           title={t('LoadoutBuilder.DecreaseStatPriority')}
-          onClick={handlePriorityDown}
           disabled={index === 5}
           tabIndex={-1 /* Better to use the react-dnd keyboard interactions than this button */}
+          data-direction="down"
+          data-draggable-id={statHash.toString()}
         >
           <AppIcon icon={moveDownIcon} />
         </button>
@@ -307,4 +303,52 @@ function DraggableItem({
       )}
     </Draggable>
   );
+}
+
+// Listen for button presses on the up and down buttons and turn it into lift+move+drop actions.
+function useButtonSensor(api: SensorAPI) {
+  useEffect(() => {
+    const onClick = (event: MouseEvent) => {
+      // Event already used
+      if (event.defaultPrevented) {
+        return;
+      }
+
+      const target = event.target as HTMLButtonElement;
+      if (
+        target.tagName !== 'BUTTON' ||
+        target.disabled ||
+        !target.dataset.direction ||
+        !target.dataset.draggableId
+      ) {
+        return;
+      }
+
+      const draggableId = target.dataset.draggableId;
+      if (!draggableId) {
+        return;
+      }
+
+      const preDrag: PreDragActions | null = api.tryGetLock(draggableId);
+      if (!preDrag) {
+        return;
+      }
+
+      // we are consuming the event
+      event.preventDefault();
+
+      (async () => {
+        const actions: SnapDragActions = preDrag.snapLift();
+        if (target.dataset.direction === 'down') {
+          actions.moveDown();
+        } else if (target.dataset.direction === 'up') {
+          actions.moveUp();
+        }
+        await delay(3000);
+        actions.drop();
+      })();
+    };
+    document.addEventListener('click', onClick);
+    return () => document.removeEventListener('click', onClick);
+  }, [api]);
 }
