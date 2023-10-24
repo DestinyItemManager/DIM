@@ -9,10 +9,12 @@ import {
   ResolvedStatConstraint,
   StatRanges,
 } from '../types';
+import { ModsPick } from './auto-stat-mod-utils';
 import {
   pickAndAssignSlotIndependentMods,
   pickOptimalStatMods,
   precalculateStructures,
+  updateMaxTiers,
 } from './process-utils';
 import { SetTracker } from './set-tracker';
 import {
@@ -233,6 +235,9 @@ export function process(
               const tier = tiers[index];
               const filter = resolvedStatConstraints[index];
               if (!filter.ignored) {
+                if (tier < statRangesFilteredInStatOrder[index].min) {
+                  statRangesFilteredInStatOrder[index].min = tier;
+                }
                 if (tier > filter.maxTier) {
                   statRangeExceeded = true;
                 }
@@ -247,16 +252,6 @@ export function process(
               Number(chest.isArtifice) +
               Number(leg.isArtifice) +
               Number(classItem.isArtifice);
-
-            // Drop this set if it could never make it
-            if (
-              !setTracker.couldInsert(
-                totalTier + numArtifice + precalculatedInfo.numAvailableGeneralMods
-              )
-            ) {
-              setStatistics.skipReasons.skippedLowTier++;
-              continue;
-            }
 
             setStatistics.upperBoundsExceeded.timesChecked++;
             if (statRangeExceeded) {
@@ -290,12 +285,12 @@ export function process(
               continue;
             }
 
-            let statMods: number[] = [];
+            let modsPick: ModsPick[] | undefined;
             // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
             // TODO: this isn't a big part of the overall cost of the loop, but we could consider trying to slot
             // mods at every level (e.g. just helmet, just helmet+arms) and skipping this if they already fit.
             if (hasMods || totalNeededStats > 0) {
-              const modsPick = pickAndAssignSlotIndependentMods(
+              modsPick = pickAndAssignSlotIndependentMods(
                 precalculatedInfo,
                 setStatistics.modsStatistics,
                 armor,
@@ -303,28 +298,40 @@ export function process(
                 numArtifice
               );
 
-              if (modsPick) {
-                statMods = modsPick.flatMap((pick) => pick.modHashes);
-              } else {
+              if (!modsPick) {
                 continue;
               }
             }
 
+            // We know this set satisfies all constraints.
+            // Update highest possible reachable tiers.
+            updateMaxTiers(
+              precalculatedInfo,
+              armor,
+              stats,
+              tiers,
+              resolvedStatConstraints,
+              statRangesFilteredInStatOrder
+            );
+
+            // Drop this set if it could never make it.
+            // We do this only after confirming that our stat mods fit and updating
+            // our max tiers so that the max available tier info stays accurate.
+            // First, pessimistically assume an artifice mod gives a whole tier.
+            if (
+              !setTracker.couldInsert(
+                totalTier + numArtifice + precalculatedInfo.numAvailableGeneralMods
+              )
+            ) {
+              setStatistics.skipReasons.skippedLowTier++;
+              continue;
+            }
+
             const pointsNeededForTiers: number[] = [];
 
-            // Calculate the "tiers string" here, since most sets don't make it this far
-            // A string version of the tier-level of each stat, must be lexically comparable
-            // TODO: It seems like constructing and comparing tiersString would be expensive but it's less so
-            // than comparing stat arrays element by element
-            let tiersString = '';
             for (let index = 0; index < 6; index++) {
-              const tier = tiers[index];
-              // Make each stat exactly one code unit so the string compares correctly
               const filter = resolvedStatConstraints[index];
               if (!filter.ignored) {
-                // using a power of 2 (16) instead of 11 is faster
-                tiersString += tier.toString(16);
-
                 if (stats[index] < filter.maxTier * 10) {
                   pointsNeededForTiers.push(
                     Math.ceil((10 - (stats[index] % 10)) / artificeStatBoost)
@@ -333,16 +340,6 @@ export function process(
                   // We really don't want to optimize this stat further...
                   pointsNeededForTiers.push(100);
                 }
-              }
-
-              // Track the stat ranges of sets that made it through all our filters
-              const range = statRangesFilteredInStatOrder[index];
-              const value = stats[index];
-              if (value > range.max) {
-                range.max = value;
-              }
-              if (value < range.min) {
-                range.min = value;
               }
             }
 
@@ -363,10 +360,37 @@ export function process(
                 return numTiers;
               }, 0) + precalculatedInfo.numAvailableGeneralMods;
 
+            // Now use our more accurate extra tiers prediction
+            if (!setTracker.couldInsert(totalTier + predictedExtraTiers)) {
+              setStatistics.skipReasons.skippedLowTier++;
+              continue;
+            }
+
+            // Calculate the "tiers string" here, since most sets don't make it this far
+            // A string version of the tier-level of each stat, must be lexically comparable
+            // TODO: It seems like constructing and comparing tiersString would be expensive but it's less so
+            // than comparing stat arrays element by element
+            let tiersString = '';
+            for (let index = 0; index < 6; index++) {
+              const tier = tiers[index];
+              // Make each stat exactly one code unit so the string compares correctly
+              const filter = resolvedStatConstraints[index];
+              if (!filter.ignored) {
+                // using a power of 2 (16) instead of 11 is faster
+                tiersString += tier.toString(16);
+              }
+            }
+
             processStatistics.numValidSets++;
             // And now insert our set using the predicted tier. The rest of the stats string still uses the unboosted tiers but the error should be small
             tiersString = totalTier.toString(16) + tiersString;
-            setTracker.insert(totalTier + predictedExtraTiers, tiersString, armor, stats, statMods);
+            setTracker.insert(
+              totalTier + predictedExtraTiers,
+              tiersString,
+              armor,
+              stats,
+              modsPick?.flatMap((p) => p.modHashes) ?? []
+            );
           }
         }
       }
@@ -394,15 +418,6 @@ export function process(
       fullStats[statHash] = value;
 
       armorOnlyStats[statHash] = stats[i] - modStatsInStatOrder[i];
-
-      // Track the stat ranges after our auto mods picks
-      const range = statRangesFilteredInStatOrder[i];
-      if (value > range.max) {
-        range.max = value;
-      }
-      if (value < range.min) {
-        range.min = value;
-      }
     }
 
     return {

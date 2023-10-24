@@ -1,6 +1,6 @@
 import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
 import _ from 'lodash';
-import { ArmorStatHashes, ResolvedStatConstraint } from '../types';
+import { ArmorStatHashes, MinMax, ResolvedStatConstraint } from '../types';
 import { AutoModsMap, ModsPick, buildAutoModsMap, chooseAutoMods } from './auto-stat-mod-utils';
 import { AutoModData, ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
 
@@ -47,6 +47,122 @@ export function precalculateStructures(
       return acc;
     }, {}),
   };
+}
+
+function getRemainingEnergiesPerAssignment(
+  info: LoSessionInfo,
+  items: ProcessItem[]
+): { setEnergy: number; remainingEnergiesPerAssignment: number[][] } {
+  const remainingEnergiesPerAssignment: number[][] = [];
+
+  let setEnergy = 0;
+  for (const item of items) {
+    if (item.energy) {
+      setEnergy += item.energy.capacity - item.energy.val;
+    }
+  }
+
+  activityModLoop: for (const activityPermutation of info.activityModPermutations) {
+    activityItemLoop: for (let i = 0; i < items.length; i++) {
+      const activityMod = activityPermutation[i];
+      if (!activityMod) {
+        continue activityItemLoop;
+      }
+
+      const item = items[i];
+      const tag = activityMod.tag!;
+      const energyCost = activityMod.energy?.val || 0;
+      const itemEnergy = (item.energy && item.energy.capacity - item.energy.val) || 0;
+      if (energyCost >= itemEnergy) {
+        continue;
+      }
+
+      if (!item.compatibleModSeasons?.includes(tag)) {
+        continue activityModLoop;
+      }
+    }
+
+    const remainingEnergyCapacities = items.map(
+      (i, idx) =>
+        (i.energy?.capacity || 0) -
+        (i.energy?.val || 0) -
+        (activityPermutation[idx]?.energy?.val || 0)
+    );
+    remainingEnergyCapacities.sort((a, b) => b - a);
+    remainingEnergiesPerAssignment.push(remainingEnergyCapacities);
+  }
+
+  return { setEnergy, remainingEnergiesPerAssignment };
+}
+
+/**
+ * Optimizes stats individually and updates max tiers.
+ */
+export function updateMaxTiers(
+  info: LoSessionInfo,
+  items: ProcessItem[],
+  setStats: number[],
+  setTiers: number[],
+  statFiltersInStatOrder: ResolvedStatConstraint[],
+  minMax: MinMax[] // mutated
+) {
+  const { remainingEnergiesPerAssignment, setEnergy } = getRemainingEnergiesPerAssignment(
+    info,
+    items
+  );
+
+  const requiredMinimumExtraStats = [0, 0, 0, 0, 0, 0];
+
+  // First, track absolutely required stats (and update existing maxes)
+  for (let statIndex = 0; statIndex < statFiltersInStatOrder.length; statIndex++) {
+    const value = setStats[statIndex];
+    const filter = statFiltersInStatOrder[statIndex];
+    if (!filter.ignored) {
+      const tier = setTiers[statIndex];
+      if (minMax[statIndex].max < tier) {
+        minMax[statIndex].max = tier;
+      }
+      const neededValue = filter.minTier * 10 - value;
+      if (neededValue > 0) {
+        // All sets need at least these extra stats to hit minimums
+        requiredMinimumExtraStats[statIndex] = neededValue;
+      }
+    }
+  }
+
+  const numArtificeMods = items.filter((i) => i.isArtifice).length;
+
+  // Then, for every non-ignored stat where we haven't shown that we can hit T10...
+  for (let statIndex = 0; statIndex < statFiltersInStatOrder.length; statIndex++) {
+    const setStat = setStats[statIndex];
+    if (statFiltersInStatOrder[statIndex].ignored || minMax[statIndex].max >= 10) {
+      continue;
+    }
+
+    // Since we calculate the maximum tier we can hit for a stat in isolation,
+    // require all other stats to hit their constrained minimums, but for this
+    // stat we start from the highest tier we've observed.
+    const explorationStats = [...requiredMinimumExtraStats];
+    explorationStats[statIndex] = minMax[statIndex].max * 10 - setStat;
+
+    while (minMax[statIndex].max < 10) {
+      const pointsToNextTier = explorationStats[statIndex] === 0 ? 10 - (setStat % 10) : 10;
+      explorationStats[statIndex] += pointsToNextTier;
+      const picks = chooseAutoMods(
+        info,
+        explorationStats,
+        numArtificeMods,
+        remainingEnergiesPerAssignment,
+        setEnergy
+      );
+      if (picks) {
+        const val = Math.floor((setStat + explorationStats[statIndex]) / 10);
+        minMax[statIndex].max = val;
+      } else {
+        break;
+      }
+    }
+  }
 }
 
 /**
@@ -128,7 +244,8 @@ export function pickAndAssignSlotIndependentMods(
     assignedModsAtLeastOnce = true;
 
     // This is a valid activity and combat mod assignment. See how much energy is left over per piece
-    for (const [idx, item] of items.entries()) {
+    for (let idx = 0; idx < items.length; idx++) {
+      const item = items[idx];
       remainingEnergyCapacities[idx] =
         (item.energy?.capacity || 0) -
         (item.energy?.val || 0) -
@@ -173,46 +290,11 @@ export function pickOptimalStatMods(
   setStats: number[],
   resolvedStatConstraints: ResolvedStatConstraint[]
 ): { mods: number[]; numBonusTiers: number; bonusStats: number[] } | undefined {
-  const remainingEnergiesPerAssignment: number[][] = [];
+  const { remainingEnergiesPerAssignment, setEnergy } = getRemainingEnergiesPerAssignment(
+    info,
+    items
+  );
 
-  let setEnergy = 0;
-  for (const item of items) {
-    if (item.energy) {
-      setEnergy += item.energy.capacity - item.energy.val;
-    }
-  }
-
-  // This loop is copy-pasted from above because we need to do the same thing as above
-  // We don't have to do any of the early exits though, since we know they succeed.
-  activityModLoop: for (const activityPermutation of info.activityModPermutations) {
-    activityItemLoop: for (let i = 0; i < items.length; i++) {
-      const activityMod = activityPermutation[i];
-      if (!activityMod) {
-        continue activityItemLoop;
-      }
-
-      const item = items[i];
-      const tag = activityMod.tag!;
-      const energyCost = activityMod.energy?.val || 0;
-      const itemEnergy = (item.energy && item.energy.capacity - item.energy.val) || 0;
-      if (energyCost >= itemEnergy) {
-        continue;
-      }
-
-      if (!item.compatibleModSeasons?.includes(tag)) {
-        continue activityModLoop;
-      }
-    }
-
-    const remainingEnergyCapacities = items.map(
-      (i, idx) =>
-        (i.energy?.capacity || 0) -
-        (i.energy?.val || 0) -
-        (activityPermutation[idx]?.energy?.val || 0)
-    );
-    remainingEnergyCapacities.sort((a, b) => b - a);
-    remainingEnergiesPerAssignment.push(remainingEnergyCapacities);
-  }
   // The amount of additional stat points after which stats don't give us a benefit anymore.
   const maxAddedStats = [0, 0, 0, 0, 0, 0];
   const explorationStats = [0, 0, 0, 0, 0, 0];
@@ -224,7 +306,7 @@ export function pickOptimalStatMods(
       if (filter.minTier > 0) {
         const neededValue = filter.minTier * 10 - value;
         if (neededValue > 0) {
-          // As per function preconditions, we know that we can hit these minimum stats
+          // All sets need at least these extra stats to hit minimums
           explorationStats[statIndex] = neededValue;
         }
       }
