@@ -351,7 +351,7 @@ function mapItemsToGroups(
     ].toString()}`;
   };
 
-  const energyGroups = _.groupBy(mappedItems, ({ processItem }) =>
+  const energyGroups = Object.groupBy(mappedItems, ({ processItem }) =>
     firstPassGroupingFn(processItem)
   );
 
@@ -405,9 +405,8 @@ function mapItemsToGroups(
       }
     }
 
-    const groupedByEverything = _.groupBy(keepSet, ({ dimItem }) => finalGroupingFn(dimItem));
-    const newGroups = Object.values(groupedByEverything);
-    for (const group of newGroups) {
+    const groupedByEverything = Map.groupBy(keepSet, ({ dimItem }) => finalGroupingFn(dimItem));
+    for (const group of groupedByEverything.values()) {
       group.sort(groupComparator(getUserItemTag));
       groups.push({
         canonicalProcessItem: group[0].processItem,

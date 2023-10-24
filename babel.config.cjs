@@ -75,8 +75,6 @@ module.exports = function (api) {
       'esnext.json.parse',
       // Edge-case bugfixes for URLSearchParams.prototype.has, delete, and size
       /web\.url-search-params/,
-      // Mis-detected array grouping proposal
-      'esnext.array.group',
       // Unneeded mis-detected DOMException extension
       'web.dom-exception.stack',
       // Not needed in worker context

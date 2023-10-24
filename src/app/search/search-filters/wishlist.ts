@@ -64,7 +64,7 @@ const wishlistFilters: FilterDefinition[] = [
     filter:
       ({ wishListsByHash }) =>
       (item) =>
-        !(item.hash in wishListsByHash),
+        !wishListsByHash.has(item.hash),
   },
 ];
 

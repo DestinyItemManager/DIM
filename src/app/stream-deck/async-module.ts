@@ -120,8 +120,8 @@ function findSubClassInGame(items: DestinyLoadoutItemComponent[], state: RootSta
   const allItems = allItemsSelector(state);
   const itemCreationContext = createItemContextSelector(state);
   const mappedItems = getItemsFromInGameLoadout(itemCreationContext, items, allItems);
-  const categories = _.groupBy(mappedItems, (li) => li.item.bucket.sort);
-  const subclassItem = categories.General?.[0];
+  const categories = Map.groupBy(mappedItems, (li) => li.item.bucket.sort);
+  const subclassItem = categories.get('General')?.[0];
   return subclassItem?.item.icon;
 }
 

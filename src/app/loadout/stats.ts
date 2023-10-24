@@ -119,8 +119,8 @@ export function getTotalModStatChanges(
     plugs: PluggableInventoryItemDefinition[],
     source: DimCharacterStatSource
   ) => {
-    const grouped = _.groupBy(plugs, (plug) => plug.hash);
-    for (const plugCopies of Object.values(grouped)) {
+    const grouped = Map.groupBy(plugs, (plug) => plug.hash);
+    for (const plugCopies of grouped.values()) {
       const mod = plugCopies[0];
       const modCount = plugCopies.length;
       for (const stat of mod.investmentStats) {

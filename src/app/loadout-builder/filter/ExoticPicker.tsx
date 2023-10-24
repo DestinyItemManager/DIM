@@ -124,12 +124,12 @@ function filterAndGroupExotics(
 
   // Group by bucketHash then preserve the initial ordering as they were already
   // ordered helmet, arms, chest, and legs
-  const groupedExotics = _.groupBy(
+  const groupedExotics = Map.groupBy(
     filteredExotics,
     (exotic) => exotic.def.inventory!.bucketTypeHash
   );
-  const orderedAndGroupedExotics = Object.values(groupedExotics).sort(
-    compareBy((exotics) => filteredExotics.indexOf(exotics[0]))
+  const orderedAndGroupedExotics = _.sortBy([...groupedExotics.values()], (exotics) =>
+    filteredExotics.indexOf(exotics[0])
   );
 
   // Sort each of the individual groups by name

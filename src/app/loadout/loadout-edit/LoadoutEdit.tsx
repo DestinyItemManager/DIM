@@ -98,7 +98,10 @@ export default function LoadoutEdit({
   );
 
   const [allMods, modDefinitions] = useLoadoutMods(loadout, store.id);
-  const categories = _.groupBy(items.concat(warnitems), (li) => li.item.bucket.sort);
+  const categories = Object.groupBy(
+    items.concat(warnitems),
+    (li) => li.item.bucket.sort ?? 'unknown'
+  );
   const power = loadoutPower(store, categories);
   const anyClass = loadout.classType === DestinyClass.Unknown;
 

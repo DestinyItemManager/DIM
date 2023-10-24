@@ -8,7 +8,7 @@ import { DimMetric } from './presentation-nodes';
 
 export default function Metrics({ metrics }: { metrics: DimMetric[] }) {
   const defs = useD2Definitions()!;
-  const groupedMetrics = _.groupBy(
+  const groupedMetrics = Object.groupBy(
     metrics,
     (metric) => metric.metricDef.traitHashes.filter((h) => h !== ALL_TRAIT)[0]
   );

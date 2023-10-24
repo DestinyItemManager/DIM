@@ -72,7 +72,7 @@ export function consolidateRollsForOneWeapon(
     };
   });
 
-  const rollsGroupedByPrimaryNormalizedPerks = _.groupBy(
+  const rollsGroupedByPrimaryNormalizedPerks = Object.groupBy(
     allRolls,
     (roll) => roll.primaryPerkIdentifierNormalized
   );
@@ -99,7 +99,10 @@ export function consolidateRollsForOneWeapon(
     } else {
       // this group needs enhancedness grouping
       // these rolls can be clumped into groups that have the same secondary perks
-      const rollsGroupedBySecondaryStuff = _.groupBy(rollGroup, (r) => r.secondaryPerkIdentifier);
+      const rollsGroupedBySecondaryStuff = Object.groupBy(
+        rollGroup,
+        (r) => r.secondaryPerkIdentifier
+      );
       for (const secondaryPerkKey in rollsGroupedBySecondaryStuff) {
         const rollsWithSameSecondaryPerks = rollsGroupedBySecondaryStuff[secondaryPerkKey];
 
@@ -131,7 +134,7 @@ export function consolidateRollsForOneWeapon(
 
         // otherwise, this is a unique set of rows. deliver them as-is, keyed by their non-grouped perks
         else {
-          const theseRollsGroupedByPrimaryPerks = _.groupBy(
+          const theseRollsGroupedByPrimaryPerks = Object.groupBy(
             allRolls,
             (roll) => roll.primaryPerkIdentifier
           );

@@ -77,7 +77,7 @@ export default function LoadoutDrawerContents({
   const doFillLoadOutFromUnequipped = () => setLoadout(fillLoadoutFromUnequipped(defs, dimStore));
 
   const availableTypes = filterMap(loadoutTypes, (h) => buckets.byHash[h]);
-  const itemsByBucket = _.groupBy(items, (li) => li.item.bucket.hash);
+  const itemsByBucket = Object.groupBy(items, (li) => li.item.bucket.hash);
 
   const [typesWithItems, typesWithoutItems] = _.partition(
     availableTypes,

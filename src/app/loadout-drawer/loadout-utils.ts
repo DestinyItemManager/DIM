@@ -295,7 +295,7 @@ export function getLoadoutStats(
   // Sum the items stats into the stats
   const armorPiecesStats = _.mapValues(stats, () => 0);
   for (const item of armor) {
-    const itemStats = _.groupBy(item.stats, (stat) => stat.statHash);
+    const itemStats = Object.groupBy(item.stats ?? [], (stat) => stat.statHash);
     const energySocket =
       item.sockets && getFirstSocketByCategoryHash(item.sockets, SocketCategoryHashes.ArmorTier);
     for (const hash of armorStats) {
@@ -339,7 +339,7 @@ export function optimalItemSet(
   applicableItems: DimItem[],
   bestItemFn: (item: DimItem) => number
 ): Record<'equippable' | 'unrestricted', DimItem[]> {
-  const itemsByType = _.groupBy(applicableItems, (i) => i.bucket.hash);
+  const itemsByType = Object.groupBy(applicableItems, (i) => i.bucket.hash);
 
   // Pick the best item
   let items = _.mapValues(itemsByType, (items) => _.maxBy(items, bestItemFn)!);
@@ -349,12 +349,9 @@ export function optimalItemSet(
   const getLabel = (i: DimItem) => i.equippingLabel;
   // All items that share an equipping label, grouped by label
 
-  const overlaps: { [label: string]: DimItem[] } = _.groupBy(
-    unrestricted.filter(getLabel),
-    getLabel
-  );
+  const overlaps = Map.groupBy(unrestricted.filter(getLabel), (i) => getLabel(i)!);
 
-  for (const overlappingItems of Object.values(overlaps)) {
+  for (const overlappingItems of overlaps.values()) {
     if (overlappingItems.length <= 1) {
       continue;
     }
@@ -620,11 +617,11 @@ export function getInstancedLoadoutItem(allItems: DimItem[], loadoutItem: Loadou
 }
 
 /**
- * Get a mapping from item hash to item, for ininstanced items that could be in loadouts. Used for
+ * Get a mapping from item hash to item, for uninstanced items that could be in loadouts. Used for
  * looking up items from loadouts.
  */
 const potentialUninstancedLoadoutItemsByHash = weakMemoize((allItems: DimItem[]) =>
-  _.groupBy(
+  Map.groupBy(
     allItems.filter((i) => itemCanBeInLoadout(i)),
     (i) => i.hash
   )
@@ -638,7 +635,7 @@ export function getUninstancedLoadoutItem(
   anyOk?: boolean
 ) {
   // This is mostly for subclasses - it finds all matching items by hash and then picks the one that's on the desired character
-  const candidates = potentialUninstancedLoadoutItemsByHash(allItems)[hash] ?? [];
+  const candidates = potentialUninstancedLoadoutItemsByHash(allItems).get(hash) ?? [];
   // the copy of this item being held by the specified store
   const heldItem =
     storeId !== undefined ? candidates.find((item) => item.owner === storeId) : undefined;

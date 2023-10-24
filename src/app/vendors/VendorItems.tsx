@@ -6,7 +6,6 @@ import FactionIcon from 'app/progress/FactionIcon';
 import { ReputationRank } from 'app/progress/ReputationRank';
 import { DestinyVendorProgressionType } from 'bungie-api-ts/destiny2';
 import focusingItemOutputs from 'data/d2/focusing-item-outputs.json';
-import _ from 'lodash';
 import BungieImage from '../dim-ui/BungieImage';
 import VendorItemComponent from './VendorItemComponent';
 import styles from './VendorItems.m.scss';
@@ -37,7 +36,8 @@ export default function VendorItems({
     return <div className={styles.vendorContents}>{t('Vendors.NoItems')}</div>;
   }
 
-  const itemsByCategory = _.groupBy(vendor.items, (item) => item?.displayCategoryIndex);
+  const itemsByCategory = Map.groupBy(vendor.items, (item) => item.displayCategoryIndex);
+  itemsByCategory.delete(undefined);
 
   const faction = vendor.def.factionHash ? defs.Faction.get(vendor.def.factionHash) : undefined;
   const factionProgress = vendor?.component?.progression;
@@ -84,9 +84,9 @@ export default function VendorItems({
             </div>
           </div>
         )}
-        {Object.entries(itemsByCategory).map(([categoryIndexStr, items]) => {
-          const categoryIndex = parseInt(categoryIndexStr, 10);
-          return (
+        {[...itemsByCategory.entries()].map(
+          ([categoryIndex, items]) =>
+            categoryIndex !== undefined &&
             vendor.def.displayCategories[categoryIndex] &&
             !ignoreCategories.includes(vendor.def.displayCategories[categoryIndex].identifier) && (
               <div className={styles.vendorRow} key={categoryIndex}>
@@ -119,8 +119,7 @@ export default function VendorItems({
                 </div>
               </div>
             )
-          );
-        })}
+        )}
       </div>
     </div>
   );

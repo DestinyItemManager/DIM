@@ -422,7 +422,7 @@ function doApplyLoadout(
       const moveSession = createMoveSession(cancelToken, involvedItems);
 
       // Group dequips per character
-      const dequips = Object.entries(_.groupBy(realItemsToDequip, (i) => i.owner)).map(
+      const dequips = Object.entries(Object.groupBy(realItemsToDequip, (i) => i.owner)).map(
         async ([owner, dequipItems]) => {
           // If there's only one item to remove, we don't need to bulk dequip, it'll be handled
           // automatically when we try to move the item.
@@ -787,7 +787,7 @@ function clearSpaceAfterLoadout(
   clearWeapons: boolean,
   clearArmor: boolean
 ): ThunkResult {
-  const itemsByType = _.groupBy(items, (i) => i.bucket.hash);
+  const itemsByType = Map.groupBy(items, (i) => i.bucket.hash);
 
   const reservations: MoveReservations = {
     // reserve one space in the active character
@@ -796,8 +796,7 @@ function clearSpaceAfterLoadout(
 
   const itemsToRemove: DimItem[] = [];
 
-  for (const [bucketId, loadoutItems] of Object.entries(itemsByType)) {
-    const bucketHash = parseInt(bucketId, 10);
+  for (const [bucketHash, loadoutItems] of itemsByType.entries()) {
     // Only clear the buckets that were selected by the user
     if (
       !(clearArmor && D2Categories.Armor.includes(bucketHash)) &&

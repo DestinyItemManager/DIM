@@ -746,7 +746,7 @@ function D1PerksCell({ item }: { item: D1Item }) {
     return null;
   }
   const sockets = Object.values(
-    _.groupBy(
+    Object.groupBy(
       item.talentGrid.nodes.filter((n) => n.column > 0),
       (n) => n.column
     )
