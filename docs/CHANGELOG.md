@@ -1,5 +1,7 @@
 ## Next
 
+* Fixed search menu showing behind items in some sheets.
+
 ## 7.91.0 <span class="changelog-date">(2023-10-22)</span>
 
 * Added `source:ghostsofthedeep` search term.
