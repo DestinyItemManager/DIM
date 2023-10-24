@@ -146,3 +146,15 @@ export function usePageTitle(title: string, active?: boolean) {
     }
   }, [active, title]);
 }
+
+// On first render, focus the first focusable element.
+export function useFocusFirstFocusableElement(ref: React.RefObject<HTMLElement>) {
+  useEffect(() => {
+    if (ref.current) {
+      const firstFocusable = ref.current.querySelector(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      (firstFocusable as HTMLElement)?.focus();
+    }
+  }, [ref]);
+}

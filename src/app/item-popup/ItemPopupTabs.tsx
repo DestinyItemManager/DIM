@@ -5,7 +5,7 @@ import { ItemTriage, TriageTabToggle, doShowTriage } from 'app/item-triage/ItemT
 import { useSetting } from 'app/settings/hooks';
 import { ItemPopupTab } from 'app/settings/initial-settings';
 import clsx from 'clsx';
-import { useCallback, useId } from 'react';
+import { useCallback, useEffect, useId, useRef } from 'react';
 import ItemDetails from './ItemDetails';
 import styles from './ItemPopupTabs.m.scss';
 import { ItemPopupExtraInfo } from './item-popup';
@@ -13,9 +13,10 @@ import { ItemPopupExtraInfo } from './item-popup';
 export function useItemPopupTabs(item: DimItem, extraInfo: ItemPopupExtraInfo | undefined) {
   const [tab, setTab] = useSetting('itemPopupTab');
   const id = useId();
+  const focusedTab = useRef<ItemPopupTab | undefined>(undefined);
+
   const detailsId = `${id}-details`;
   const triageId = `${id}-triage`;
-
   const tabs: {
     tab: ItemPopupTab;
     id: string;
@@ -42,17 +43,39 @@ export function useItemPopupTabs(item: DimItem, extraInfo: ItemPopupExtraInfo | 
   // The keyboard handling code would need to be modified if we ever have more than two tabs
 
   const toggleTab = useCallback(
-    () => setTab(tab === ItemPopupTab.Overview ? ItemPopupTab.Triage : ItemPopupTab.Overview),
+    (_e: Event | React.UIEvent, fromKeyboard = false) => {
+      const newTab = tab === ItemPopupTab.Overview ? ItemPopupTab.Triage : ItemPopupTab.Overview;
+      if (fromKeyboard) {
+        focusedTab.current = newTab;
+      }
+      setTab(newTab);
+    },
     [setTab, tab]
   );
 
+  // When toggling via arrow keys, move the focus to the new tab
+  useEffect(() => {
+    if (focusedTab.current !== undefined) {
+      const tabId = focusedTab.current === ItemPopupTab.Overview ? detailsId : triageId;
+      if (tabId) {
+        const element = document.getElementById(`${tabId}-tab`);
+        element?.focus();
+        focusedTab.current = undefined;
+      }
+    }
+    // no dependency array - we want to run this every render
+  });
+
   const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.repeat) {
+      return;
+    }
     switch (event.key) {
       case 'ArrowLeft':
       case 'ArrowRight':
       case 'Home':
       case 'End':
-        toggleTab();
+        toggleTab(event, true);
         event.stopPropagation();
         event.preventDefault();
         break;
@@ -70,10 +93,9 @@ export function useItemPopupTabs(item: DimItem, extraInfo: ItemPopupExtraInfo | 
     tabs.length > 1 ? (
       <div className={styles.movePopupTabs} role="tablist" aria-label={t('MovePopup.TabList')}>
         {tabs.map((ta) => (
-          <button
-            type="button"
+          <div
             role="tab"
-            id={`${id}-tab`}
+            id={`${ta.id}-tab`}
             aria-keyshortcuts="t"
             key={ta.tab}
             className={clsx(styles.movePopupTab, {
@@ -83,9 +105,10 @@ export function useItemPopupTabs(item: DimItem, extraInfo: ItemPopupExtraInfo | 
             aria-controls={ta.id}
             onClick={() => setTab(ta.tab)}
             onKeyDown={handleKeyDown}
+            tabIndex={tab === ta.tab ? 0 : -1}
           >
             {ta.title}
-          </button>
+          </div>
         ))}
       </div>
     ) : undefined;
