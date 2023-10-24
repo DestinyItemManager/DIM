@@ -17,7 +17,7 @@ import StatTooltip from 'app/store-stats/StatTooltip';
 import clsx from 'clsx';
 import { AnimatePresence } from 'framer-motion';
 import _ from 'lodash';
-import React, { Dispatch } from 'react';
+import React, { Dispatch, useEffect, useRef } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorStatHashes, MinMax, ResolvedStatConstraint, StatRanges } from '../types';
 import styles from './StatConstraintEditor.m.scss';
@@ -104,6 +104,8 @@ function StatRow({
   const c = statConstraint;
   const statHash = c.statHash as ArmorStatHashes;
   const statDef = defs.Stat.get(statHash);
+  const focused = useRef<number | undefined>(undefined);
+  const statBarRef = useRef<HTMLDivElement>(null);
 
   // TODO: enhance the tooltip w/ info about what the LO settings mean (locked, min/max, etc)
   // TODO: enhance the tooltip w/ info about why the numbers are greyed
@@ -123,6 +125,65 @@ function StatRow({
   const handlePriorityUp = () => onChangeStatPriority(statHash, -1);
   const handlePriorityDown = () => onChangeStatPriority(statHash, 1);
 
+  // Support keyboard interaction
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    const tierNum = statConstraint.minTier;
+    if (event.repeat) {
+      return;
+    }
+    switch (event.key) {
+      case '-':
+      case '_':
+      case 'ArrowLeft': {
+        if (tierNum > 0) {
+          onTierChange({ ...statConstraint, minTier: tierNum - 1 });
+        }
+        focused.current = tierNum - 1;
+        break;
+      }
+      case '=':
+      case '+':
+      case 'ArrowRight': {
+        if (tierNum < 10) {
+          onTierChange({ ...statConstraint, minTier: tierNum + 1 });
+        }
+        focused.current = tierNum + 1;
+        break;
+      }
+
+      case '1':
+      case '2':
+      case '3':
+      case '4':
+      case '5':
+      case '6':
+      case '7':
+      case '8':
+      case '9':
+      case '0': {
+        let num = parseInt(event.key, 10);
+        if (num === 0) {
+          num = 10;
+        }
+        onTierChange({ ...statConstraint, minTier: num });
+        focused.current = num;
+        break;
+      }
+
+      default:
+        break;
+    }
+  };
+
+  // When changing the value via keyboard, update focus
+  useEffect(() => {
+    if (focused.current) {
+      const segment = statBarRef.current?.querySelector(`[data-tier="${focused.current}"]`);
+      (segment as HTMLElement)?.focus();
+      focused.current = undefined;
+    }
+  });
+
   const name = (
     <span className={clsx({ [styles.ignored]: c.ignored }, styles.statDisplayInfo)}>
       <BungieImage className={styles.iconStat} src={statDef.displayProperties.icon} />
@@ -139,6 +200,7 @@ function StatRow({
           className={styles.rowControl}
           title={t('LoadoutBuilder.LockStat')}
           onClick={handleToggleLocked}
+          disabled={statConstraint.ignored}
         >
           <AppIcon icon={statLocked ? lockIcon : unlockedIcon} />
         </button>
@@ -148,6 +210,7 @@ function StatRow({
           title={t('LoadoutBuilder.IncreaseStatPriority')}
           onClick={handlePriorityUp}
           disabled={index === 0}
+          tabIndex={-1 /* Better to use the react-dnd keyboard interactions than this button */}
         >
           <AppIcon icon={moveUpIcon} />
         </button>
@@ -157,6 +220,7 @@ function StatRow({
           title={t('LoadoutBuilder.DecreaseStatPriority')}
           onClick={handlePriorityDown}
           disabled={index === 5}
+          tabIndex={-1 /* Better to use the react-dnd keyboard interactions than this button */}
         >
           <AppIcon icon={moveDownIcon} />
         </button>
@@ -171,9 +235,11 @@ function StatRow({
       </div>
       <AnimatePresence>
         {!statConstraint.ignored && (
-          <div className={styles.statBar}>
+          <div className={styles.statBar} role="group" ref={statBarRef}>
             {_.times(11, (tierNum) => (
               <div
+                role="button"
+                tabIndex={tierNum === statConstraint.minTier ? 0 : -1}
                 key={tierNum}
                 className={clsx(styles.statBarSegment, {
                   [styles.selectedStatBar]: statConstraint.minTier >= tierNum,
@@ -181,6 +247,8 @@ function StatRow({
                   [styles.locked]: tierNum > statConstraint.maxTier,
                 })}
                 onClick={() => onTierChange({ ...statConstraint, minTier: tierNum })}
+                onKeyDown={handleKeyDown}
+                data-tier={tierNum}
               >
                 <PressTip
                   tooltip={
