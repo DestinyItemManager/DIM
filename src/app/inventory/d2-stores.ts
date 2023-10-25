@@ -327,7 +327,11 @@ function loadStoresData(
           return;
         }
 
-        dispatch(cleanInfos(stores));
+        // First-time loads can come from IDB, which can be VERY outdated,
+        // so don't remove item tags/notes based on that
+        if (!firstTime) {
+          dispatch(cleanInfos(stores));
+        }
         dispatch(update({ stores, currencies }));
         dispatch(inGameLoadoutLoaded(loadouts));
 
