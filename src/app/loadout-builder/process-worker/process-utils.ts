@@ -1,4 +1,5 @@
 import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
+import { count } from 'app/utils/collections';
 import _ from 'lodash';
 import { ArmorStatHashes, MinMax, ResolvedStatConstraint } from '../types';
 import { AutoModsMap, ModsPick, buildAutoModsMap, chooseAutoMods } from './auto-stat-mod-utils';
@@ -97,8 +98,9 @@ export function updateMaxTiers(
   items: ProcessItem[],
   setStats: number[],
   setTiers: number[],
+  numArtificeMods: number,
   statFiltersInStatOrder: ResolvedStatConstraint[],
-  minMax: MinMax[] // mutated
+  minMaxesInStatOrder: MinMax[] // mutated
 ) {
   const { remainingEnergiesPerAssignment, setEnergy } = getRemainingEnergiesPerAssignment(
     info,
@@ -113,8 +115,9 @@ export function updateMaxTiers(
     const filter = statFiltersInStatOrder[statIndex];
     if (!filter.ignored) {
       const tier = setTiers[statIndex];
-      if (minMax[statIndex].max < tier) {
-        minMax[statIndex].max = tier;
+      const minMax = minMaxesInStatOrder[statIndex];
+      if (minMax.max < tier) {
+        minMax.max = tier;
       }
       const neededValue = filter.minTier * 10 - value;
       if (neededValue > 0) {
@@ -124,12 +127,11 @@ export function updateMaxTiers(
     }
   }
 
-  const numArtificeMods = items.filter((i) => i.isArtifice).length;
-
   // Then, for every non-ignored stat where we haven't shown that we can hit T10...
   for (let statIndex = 0; statIndex < statFiltersInStatOrder.length; statIndex++) {
     const setStat = setStats[statIndex];
-    if (statFiltersInStatOrder[statIndex].ignored || minMax[statIndex].max >= 10) {
+    const minMax = minMaxesInStatOrder[statIndex];
+    if (statFiltersInStatOrder[statIndex].ignored || minMax.max >= 10) {
       continue;
     }
 
@@ -137,9 +139,9 @@ export function updateMaxTiers(
     // require all other stats to hit their constrained minimums, but for this
     // stat we start from the highest tier we've observed.
     const explorationStats = requiredMinimumExtraStats.slice();
-    explorationStats[statIndex] = minMax[statIndex].max * 10 - setStat;
+    explorationStats[statIndex] = minMax.max * 10 - setStat;
 
-    while (minMax[statIndex].max < 10) {
+    while (minMax.max < 10) {
       const pointsToNextTier = explorationStats[statIndex] === 0 ? 10 - (setStat % 10) : 10;
       explorationStats[statIndex] += pointsToNextTier;
       const picks = chooseAutoMods(
@@ -151,7 +153,7 @@ export function updateMaxTiers(
       );
       if (picks) {
         const val = Math.floor((setStat + explorationStats[statIndex]) / 10);
-        minMax[statIndex].max = val;
+        minMax.max = val;
       } else {
         break;
       }
@@ -303,7 +305,7 @@ export function pickOptimalStatMods(
     }
   }
 
-  const numArtificeMods = items.filter((i) => i.isArtifice).length;
+  const numArtificeMods = count(items, (i) => i.isArtifice);
   const bestBoosts = exploreAutoModsSearchTree(
     info,
     items,

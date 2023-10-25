@@ -235,8 +235,9 @@ export function process(
               const tier = tiers[index];
               const filter = resolvedStatConstraints[index];
               if (!filter.ignored) {
-                if (tier < statRangesFilteredInStatOrder[index].min) {
-                  statRangesFilteredInStatOrder[index].min = tier;
+                const statRange = statRangesFilteredInStatOrder[index];
+                if (tier < statRange.min) {
+                  statRange.min = tier;
                 }
                 if (tier > filter.maxTier) {
                   statRangeExceeded = true;
@@ -244,14 +245,6 @@ export function process(
                 totalTier += tier;
               }
             }
-
-            const armor = [helm, gaunt, chest, leg, classItem];
-            const numArtifice =
-              Number(helm.isArtifice) +
-              Number(gaunt.isArtifice) +
-              Number(chest.isArtifice) +
-              Number(leg.isArtifice) +
-              Number(classItem.isArtifice);
 
             setStatistics.upperBoundsExceeded.timesChecked++;
             if (statRangeExceeded) {
@@ -275,6 +268,13 @@ export function process(
               }
             }
 
+            const numArtifice =
+              Number(helm.isArtifice) +
+              Number(gaunt.isArtifice) +
+              Number(chest.isArtifice) +
+              Number(leg.isArtifice) +
+              Number(classItem.isArtifice);
+
             setStatistics.lowerBoundsExceeded.timesChecked++;
             if (
               totalNeededStats >
@@ -284,6 +284,8 @@ export function process(
               setStatistics.lowerBoundsExceeded.timesFailed++;
               continue;
             }
+
+            const armor = [helm, gaunt, chest, leg, classItem];
 
             let modsPick: ModsPick[] | undefined;
             // For armour 2 mods we ignore slot specific mods as we prefilter items based on energy requirements
@@ -310,6 +312,7 @@ export function process(
               armor,
               stats,
               tiers,
+              numArtifice,
               resolvedStatConstraints,
               statRangesFilteredInStatOrder
             );
