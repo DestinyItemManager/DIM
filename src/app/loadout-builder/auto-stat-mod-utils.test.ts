@@ -16,11 +16,11 @@ describe('process-utils auto mod structure', () => {
   });
 
   const generalMods: ProcessMod[] = [
-    { hash: 7, energy: { val: 3 } },
-    { hash: 8, energy: { val: 5 } },
-    { hash: 9, energy: { val: 2 } },
-    { hash: 10, energy: { val: 1 } },
-    { hash: 11, energy: { val: 2 } },
+    { hash: 7, energyCost: 3 },
+    { hash: 8, energyCost: 5 },
+    { hash: 9, energyCost: 2 },
+    { hash: 10, energyCost: 1 },
+    { hash: 11, energyCost: 2 },
   ];
 
   test.each(['general', 'cheapgeneral'] as const)(

@@ -8,7 +8,6 @@ import _ from 'lodash';
 import React, { Dispatch, memo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorStatHashes, ResolvedStatConstraint, StatRanges } from '../types';
-import { statTierWithHalf } from '../utils';
 import styles from './TierSelect.m.scss';
 
 const IGNORE = 'ignore';
@@ -77,7 +76,7 @@ export default function TierSelect({
                     {statRangesFiltered
                       ? t('LoadoutBuilder.MaxTier', {
                           tier: t('LoadoutBuilder.TierNumber', {
-                            tier: statTierWithHalf(statRangesFiltered[statHash].max),
+                            tier: statRangesFiltered[statHash].max,
                           }),
                         })
                       : '-'}

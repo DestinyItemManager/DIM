@@ -6,15 +6,8 @@ export interface ProcessItem {
   name: string;
   isExotic: boolean;
   isArtifice: boolean;
-  energy?: {
-    /** The maximum energy capacity for the item, e.g. if masterworked this will be 10. */
-    capacity: number;
-    /**
-     * This is used to track the energy used by mods in a build. Using the name 'val' so that we can use the same sorting
-     * function for ProcessItems and ProcessMods.
-     */
-    val: number;
-  };
+  /** The remaining assumed energy capacity for this item, after assigning slot-specific mods */
+  remainingEnergyCapacity: number;
   power: number;
   stats: { [statHash: number]: number };
   compatibleModSeasons?: string[];
@@ -46,10 +39,8 @@ export interface IntermediateProcessArmorSet {
 
 export interface ProcessMod {
   hash: number;
-  energy?: {
-    /** The energy cost of the mod. */
-    val: number;
-  };
+  /** The energy cost of the mod. */
+  energyCost: number;
   /** This should only be available in legacy, combat and raid mods */
   tag?: string;
 }

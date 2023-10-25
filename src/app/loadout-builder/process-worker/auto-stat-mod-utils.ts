@@ -76,11 +76,17 @@ function doGeneralModsFit(
   remainingEnergyCapacities: number[][],
   pickedMods: ModsPick[]
 ) {
-  const generalModCosts = [
-    ...info.generalModCosts,
-    ...pickedMods.flatMap((m) => m.generalModsCosts),
-  ];
-  generalModCosts.sort((a, b) => b - a);
+  // These are already sorted
+  let generalModCosts = info.generalModCosts;
+  if (pickedMods.length) {
+    generalModCosts = generalModCosts.slice();
+    // Intentionally open-coded for performance
+    // eslint-disable-next-line @typescript-eslint/prefer-for-of
+    for (let i = 0; i < pickedMods.length; i++) {
+      generalModCosts.push(...pickedMods[i].generalModsCosts);
+    }
+    generalModCosts.sort((a, b) => b - a);
+  }
 
   return remainingEnergyCapacities.some((capacities) =>
     generalModCosts.every((cost, index) => cost <= capacities[index])

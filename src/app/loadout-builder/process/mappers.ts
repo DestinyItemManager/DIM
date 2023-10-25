@@ -31,9 +31,7 @@ import {
 export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition): ProcessMod {
   const processMod: ProcessMod = {
     hash: mod.hash,
-    energy: mod.plug.energyCost && {
-      val: mod.plug.energyCost.energyCost,
-    },
+    energyCost: mod.plug.energyCost?.energyCost ?? 0,
   };
 
   if (
@@ -60,7 +58,7 @@ export function mapDimItemToProcessItem({
   armorEnergyRules: ArmorEnergyRules;
   modsForSlot?: PluggableInventoryItemDefinition[];
 }): ProcessItem {
-  const { id, hash, name, isExotic, power, stats: dimItemStats, energy } = dimItem;
+  const { id, hash, name, isExotic, power, stats: dimItemStats } = dimItem;
 
   const statMap: { [statHash: number]: number } = {};
   const capacity = calculateAssumedItemEnergy(dimItem, armorEnergyRules);
@@ -88,12 +86,7 @@ export function mapDimItemToProcessItem({
     isArtifice: isArtifice(dimItem),
     power,
     stats: statMap,
-    energy: energy
-      ? {
-          capacity,
-          val: modsCost,
-        }
-      : undefined,
+    remainingEnergyCapacity: capacity - modsCost,
     compatibleModSeasons: modMetadatas?.flatMap((m) => m.compatibleModTags),
   };
 }
