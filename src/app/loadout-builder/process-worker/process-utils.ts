@@ -136,7 +136,7 @@ export function updateMaxTiers(
     // Since we calculate the maximum tier we can hit for a stat in isolation,
     // require all other stats to hit their constrained minimums, but for this
     // stat we start from the highest tier we've observed.
-    const explorationStats = [...requiredMinimumExtraStats];
+    const explorationStats = requiredMinimumExtraStats.slice();
     explorationStats[statIndex] = minMax[statIndex].max * 10 - setStat;
 
     while (minMax[statIndex].max < 10) {
