@@ -13,12 +13,12 @@ import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import {
   AppIcon,
+  equalIcon,
   faCheckSquare,
   faSquare,
-  lockIcon,
+  greaterThanEqualIcon,
   moveDownIcon,
   moveUpIcon,
-  unlockedIcon,
 } from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
 import { delay } from 'app/utils/promises';
@@ -162,7 +162,7 @@ function StatRow({
                 onClick={handleToggleLocked}
                 disabled={statConstraint.ignored}
               >
-                <AppIcon icon={statLocked ? lockIcon : unlockedIcon} />
+                {statLocked ? equalIcon : greaterThanEqualIcon}
               </button>
             )}
             <button
@@ -364,7 +364,7 @@ function useButtonSensor(api: SensorAPI) {
         } else if (target.dataset.direction === 'up') {
           actions.moveUp();
         }
-        await delay(3000);
+        await delay(300);
         actions.drop();
       })();
     };
