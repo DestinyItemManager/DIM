@@ -22,16 +22,7 @@
   align-items: center;
   padding: 4px 4px 4px 0;
 
-  @include phone-portrait {
-    grid-template-areas: 'name range minimum maximum';
-    grid-template-columns: 1fr min-content 45px 45px;
-  }
-
   > * {
-    @include phone-portrait {
-      margin-top: 8px;
-      margin-bottom: 8px;
-    }
     white-space: nowrap;
   }
 }
