@@ -265,8 +265,7 @@ function StatTierBar({
           key={tierNum}
           className={clsx(styles.statBarSegment, {
             [styles.selectedStatBar]: statConstraint.minTier >= tierNum,
-            [styles.maxed]: tierNum > (statRange?.max ?? 100) / 10,
-            [styles.locked]: tierNum > statConstraint.maxTier,
+            [styles.maxed]: tierNum > (statRange?.max ?? 10),
           })}
           onClick={() => onSelected(tierNum)}
           onKeyDown={handleKeyDown}

@@ -66,7 +66,7 @@ export function process(
     statOrder.map((h) => [
       h,
       {
-        min: 100,
+        min: 10,
         max: 0,
       },
     ])
