@@ -13,6 +13,7 @@ import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
 import styles from './CompareButtons.m.scss';
+import { compareNameQuery, stripAdept } from './compare-utils';
 
 /** A definition for a button on the top of the compare too, which can be clicked to show the given items. */
 interface CompareButton {
@@ -112,23 +113,6 @@ const getRpm = (i: DimItem) => {
   );
   return itemRpmStat?.value || -99999999;
 };
-
-/**
- * Strips the (Adept) (or (Timelost) or (Harrowed)) suffixes for the user's language
- * in order to include adept items in non-adept comparisons and vice versa.
- */
-export const stripAdept = (name: string) =>
-  name
-    .replace(new RegExp(t('Filter.Adept'), 'gi'), '')
-    .replace(new RegExp(t('Filter.Timelost'), 'gi'), '')
-    .replace(new RegExp(t('Filter.Harrowed'), 'gi'), '')
-    .trim();
-
-export function compareNameQuery(item: DimItem) {
-  return item.bucket.inWeapons
-    ? `name:${quoteFilterString(stripAdept(item.name))}`
-    : `name:${quoteFilterString(item.name)}`;
-}
 
 /**
  * Generate possible comparisons for weapons, given a reference item.
