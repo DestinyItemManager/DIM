@@ -329,7 +329,7 @@ function mapItemsToGroups(
       (c) => item.processItem.stats[c.statHash]
     );
     // Energy capacity affects mod assignment
-    const energyCapacity = item.processItem.energy?.capacity || 0;
+    const energyCapacity = item.processItem.remainingEnergyCapacity;
     // Supported mod tags affect mod assignment
     const relevantModSeasons =
       item.processItem.compatibleModSeasons?.filter((season) => requiredModTags.has(season)) ?? [];

@@ -222,6 +222,9 @@ export const deprecatedPlaceholderArmorModHash = 3947616002; // InventoryItem "D
  */
 export const THE_FORBIDDEN_BUCKET = 2422292810;
 
+/** FOTL shrouded pages end up in here, for some reason */
+export const SOME_OTHER_DUMMY_BUCKET = 3621873013;
+
 export const armorBuckets = {
   helmet: BucketHashes.Helmet,
   gauntlets: BucketHashes.Gauntlets,
