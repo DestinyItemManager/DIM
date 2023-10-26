@@ -352,3 +352,5 @@ export const modsWithConditionalStats = {
   enhancedElementalCapacitor: 711234314, // InventoryItem "Elemental Capacitor"
   sparkOfFocus: 1727069360, // InventoryItem "Spark of Focus"
 } as const;
+
+export const ARTIFICE_PERK_HASH = 3727270518; // InventoryItem "Artifice Armor"

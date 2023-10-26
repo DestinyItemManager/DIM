@@ -5,7 +5,7 @@ import { armorStats, CUSTOM_TOTAL_STAT_HASH, TOTAL_STAT_HASH } from 'app/search/
 import { ItemFilter } from 'app/search/filter-types';
 import { quoteFilterString } from 'app/search/query-parser';
 import { classFilter, itemTypeFilter } from 'app/search/search-filters/known-values';
-import { getInterestingSocketMetadatas, isClassCompatible } from 'app/utils/item-utils';
+import { getInterestingSocketMetadatas, isArtifice, isClassCompatible } from 'app/utils/item-utils';
 import { getIntrinsicArmorPerkSocket } from 'app/utils/socket-utils';
 import _ from 'lodash';
 import { Factor, factorComboCategories, FactorComboCategory, factorCombos } from './triage-factors';
@@ -358,10 +358,4 @@ export function compareBetterStats(
 
   return aWins ? statsA : bWins ? statsB : false;
   // this false fallback shouldn't crop up, but just in case, we make no judgement
-}
-
-export function isArtifice(item: DimItem) {
-  return Boolean(
-    item.sockets?.allSockets.some((socket) => socket.plugged?.plugDef.hash === 3727270518)
-  );
 }

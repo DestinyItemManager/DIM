@@ -1,7 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, DimSockets, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { getEnergyUpgradePlugs } from 'app/inventory/store/energy';
-import { isArtifice } from 'app/item-triage/triage-utils';
 import { ArmorEnergyRules } from 'app/loadout-builder/types';
 import { Assignment, PluggingAction } from 'app/loadout-drawer/loadout-types';
 import {
@@ -12,7 +11,11 @@ import {
 import { ModSocketMetadata } from 'app/search/specialty-modslots';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
-import { getModTypeTagByPlugCategoryHash, getSpecialtySocketMetadatas } from 'app/utils/item-utils';
+import {
+  getModTypeTagByPlugCategoryHash,
+  getSpecialtySocketMetadatas,
+  isArtifice,
+} from 'app/utils/item-utils';
 import { warnLog } from 'app/utils/log';
 import {
   getSocketByIndex,

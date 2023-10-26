@@ -1,6 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { isArtifice } from 'app/item-triage/triage-utils';
 import { calculateAssumedItemEnergy } from 'app/loadout/armor-upgrade-utils';
 import {
   activityModPlugCategoryHashes,
@@ -14,6 +13,7 @@ import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-
 import {
   getModTypeTagByPlugCategoryHash,
   getSpecialtySocketMetadatas,
+  isArtifice,
 } from '../../utils/item-utils';
 import { AutoModData, ProcessArmorSet, ProcessItem, ProcessMod } from '../process-worker/types';
 import {
