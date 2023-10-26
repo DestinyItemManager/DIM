@@ -26,6 +26,7 @@ import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { InGameLoadout, Loadout, isInGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { LoadoutsByItem } from 'app/loadout-drawer/selectors';
 import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
+import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import { quoteFilterString } from 'app/search/query-parser';
 import { statHashByName } from 'app/search/search-filter-values';
 import { getColor, percent } from 'app/shell/formatters';
@@ -51,14 +52,11 @@ import {
   isSunset,
 } from 'app/utils/item-utils';
 import {
-  getIntrinsicArmorPerkSocket,
-  getModSocketCategories,
-  getPerkSocketCategory,
+  getDisplayedItemSockets,
   getSocketsByIndexes,
   getWeaponArchetype,
   getWeaponArchetypeSocket,
   isEnhancedPerk,
-  isWeaponMasterworkSocket,
 } from 'app/utils/socket-utils';
 import { LookupTable } from 'app/utils/util-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
@@ -668,26 +666,16 @@ function PerksCell({
     return null;
   }
 
-  // First, the archetype (but not for legendary weapons, since there's an archetype column)
-  // TODO Why show for exotics? They also have that perk in the archetype column...
-  const archetype =
-    item.bucket.inWeapons && item.isExotic
-      ? getWeaponArchetypeSocket(item)
-      : item.bucket.inArmor
-      ? getIntrinsicArmorPerkSocket(item)
-      : undefined;
-  let sockets: DimSocket[] = archetype ? [archetype] : [];
+  let sockets = [];
+  // Don't extract intrinsic, since there's a separate column
+  const { modSocketCategories, modSocketsByCategory, perks } = getDisplayedItemSockets(
+    item,
+    /* excludeEmptySockets */ true
+  )!;
 
-  // Then, weapon perks
-  const perks = getPerkSocketCategory(item);
   if (perks) {
-    sockets.push(
-      ...getSocketsByIndexes(item.sockets, perks.socketIndexes).filter(
-        (s) => !isKillTrackerSocket(s)
-      )
-    );
+    sockets.push(...getSocketsByIndexes(item.sockets, perks.socketIndexes));
   }
-
   if (traitsOnly) {
     sockets = sockets.filter(
       (s) =>
@@ -696,18 +684,16 @@ function PerksCell({
           s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics)
     );
   } else {
-    const { categories, socketsByCategory } = getModSocketCategories(
-      item,
-      archetype?.socketIndex,
-      /* excludeEmptySockets */ true
-    )!;
-    sockets.push(
-      ...categories.flatMap(
-        // We have separate columns for masterwork stuff
-        (c) => socketsByCategory.get(c)?.filter((s) => !isWeaponMasterworkSocket(s)) ?? []
-      )
-    );
+    sockets.push(...modSocketCategories.flatMap((c) => modSocketsByCategory.get(c) ?? []));
   }
+
+  sockets = sockets.filter(
+    (s) =>
+      // we have a separate column for the kill tracker
+      !isKillTrackerSocket(s) &&
+      // and for the regular weapon masterworks
+      s.socketDefinition.socketTypeHash !== weaponMasterworkY2SocketTypeHash
+  );
 
   if (!sockets.length) {
     return null;

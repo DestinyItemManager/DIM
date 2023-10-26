@@ -22,7 +22,7 @@ import {
   SocketCategoryHashes,
 } from 'data/d2/generated-enums';
 import { filterMap } from './collections';
-import { isArmor2Mod, isKillTrackerSocket } from './item-utils';
+import { isKillTrackerSocket } from './item-utils';
 
 type WithRequiredProperty<T, K extends keyof T> = T & {
   [P in K]-?: NonNullable<T[P]>;
@@ -63,21 +63,6 @@ export function isWeaponMasterworkSocket(socket: DimSocket) {
       socket.plugged.plugDef.plug.plugCategoryIdentifier.includes('masterworks.stat') ||
       socket.plugged.plugDef.plug.plugCategoryIdentifier.endsWith('_masterwork'))
   );
-}
-
-/** whether a socket is an armor mod socket. i.e. those grey things. not perks, not reusables, not shaders */
-function isArmorModSocket(socket: DimSocket) {
-  return socket.plugged && isArmor2Mod(socket.plugged.plugDef);
-}
-
-/** isModSocket and contains its default plug */
-export function isEmptyArmorModSocket(socket: DimSocket) {
-  return isArmorModSocket(socket) && socket.emptyPlugItemHash === socket.plugged?.plugDef.hash;
-}
-
-/** isModSocket and contains something other than its default plug */
-export function isUsedArmorModSocket(socket: DimSocket) {
-  return isArmorModSocket(socket) && socket.emptyPlugItemHash !== socket.plugged?.plugDef.hash;
 }
 
 /** Given an item and a list of socketIndexes, find all the sockets that match those indices, in the order the indexes were provided */
@@ -264,6 +249,170 @@ export function isModCostVisible(plug: PluggableInventoryItemDefinition): boolea
 
 const ARMOR_STAT_CATEGORYSTYLE = 2251952357;
 
+function filterSocketCategories(
+  categories: DimSocketCategory[],
+  sockets: DimSockets,
+  allowCategory: (cat: DimSocketCategory) => boolean,
+  allowSocket: (socket: DimSocket) => boolean
+): { categories: DimSocketCategory[]; socketsByCategory: Map<DimSocketCategory, DimSocket[]> } {
+  // Pre-calculate the list of sockets we'll display for each category
+  const socketsByCategory = new Map<DimSocketCategory, DimSocket[]>();
+  for (const category of categories) {
+    if (!allowCategory(category)) {
+      continue;
+    }
+    const categorySockets = getSocketsByIndexes(sockets, category.socketIndexes).filter(
+      (socketInfo) => socketInfo.plugged?.plugDef.displayProperties.name && allowSocket(socketInfo)
+    );
+    if (categorySockets.length) {
+      socketsByCategory.set(category, categorySockets);
+    }
+  }
+
+  // Remove categories where all the sockets were filtered out.
+  categories = categories.filter((c) => socketsByCategory.get(c)?.length);
+
+  return { categories, socketsByCategory };
+}
+
+/**
+ * Should this socket be excluded when we filter out empty sockets?
+ * This shows empty catalyst sockets when the weapon has a catalyst
+ * because it is useful info...
+ */
+function isSocketEmpty(socket: DimSocket) {
+  return (
+    socket.plugged?.plugDef.hash === socket.emptyPlugItemHash &&
+    socket.plugged?.plugDef.plug.plugCategoryHash !== PlugCategoryHashes.V400EmptyExoticMasterwork
+  );
+}
+
+export function getDisplayedItemSockets(
+  item: DimItem,
+  excludeEmptySockets = false
+):
+  | {
+      intrinsicSocket?: DimSocket;
+      perks?: DimSocketCategory;
+      modSocketCategories: DimSocketCategory[];
+      modSocketsByCategory: Map<DimSocketCategory, DimSocket[]>;
+    }
+  | undefined {
+  if (item.bucket.inWeapons) {
+    return getWeaponSockets(item, excludeEmptySockets);
+  } else {
+    return getGeneralSockets(item, excludeEmptySockets);
+  }
+}
+
+export function getWeaponSockets(
+  item: DimItem,
+  excludeEmptySockets = false
+):
+  | {
+      intrinsicSocket: DimSocket | undefined;
+      perks: DimSocketCategory | undefined;
+      modSocketCategories: DimSocketCategory[];
+      modSocketsByCategory: Map<DimSocketCategory, DimSocket[]>;
+    }
+  | undefined {
+  if (!item.sockets) {
+    return undefined;
+  }
+
+  const archetypeSocket = getWeaponArchetypeSocket(item);
+  const perks = item.sockets.categories.find(
+    (c) =>
+      c.category.hash !== SocketCategoryHashes.IntrinsicTraits &&
+      c.socketIndexes.length &&
+      getSocketByIndex(item.sockets!, c.socketIndexes[0])?.isPerk
+  );
+
+  const excludedSocketCategoryHashes = [
+    craftedSocketCategoryHash,
+    !item.crafted && mementoSocketCategoryHash,
+  ];
+
+  const excludedPlugCategoryHashes = [
+    PlugCategoryHashes.GenericAllVfx,
+    PlugCategoryHashes.CraftingPlugsWeaponsModsExtractors,
+    // The weapon level socket is not interesting
+    PlugCategoryHashes.CraftingPlugsWeaponsModsTransfusersLevel,
+    // Hide catalyst socket for exotics with no known catalyst
+    !item.catalystInfo && PlugCategoryHashes.V400EmptyExoticMasterwork,
+  ];
+
+  const { categories, socketsByCategory } = filterSocketCategories(
+    item.sockets.categories.toReversed(),
+    item.sockets,
+    (category) =>
+      !excludedSocketCategoryHashes.includes(category.category.hash) && category !== perks,
+    (socket) =>
+      (!excludeEmptySockets || !isSocketEmpty(socket)) &&
+      socket.plugged !== null &&
+      !excludedPlugCategoryHashes.includes(socket.plugged.plugDef.hash) &&
+      socket !== archetypeSocket &&
+      !isDeepsightResonanceSocket(socket)
+  );
+
+  return {
+    intrinsicSocket: archetypeSocket,
+    perks,
+    modSocketCategories: categories,
+    modSocketsByCategory: socketsByCategory,
+  };
+}
+
+export function getGeneralSockets(
+  item: DimItem,
+  excludeEmptySockets = false
+):
+  | {
+      intrinsicSocket: DimSocket | undefined;
+      modSocketCategories: DimSocketCategory[];
+      modSocketsByCategory: Map<DimSocketCategory, DimSocket[]>;
+    }
+  | undefined {
+  if (!item.sockets) {
+    return undefined;
+  }
+
+  const intrinsicSocket = getIntrinsicArmorPerkSocket(item);
+
+  const isAllowedCategory = (c: DimSocketCategory) =>
+    // hide if this is the energy slot. it's already displayed in ItemDetails
+    c.category.categoryStyle !== DestinySocketCategoryStyle.EnergyMeter &&
+    // hide if this is the emote wheel because we show it separately
+    c.category.hash !== SocketCategoryHashes.Emotes &&
+    // Hidden sockets for intrinsic armor stats
+    c.category.uiCategoryStyle !== ARMOR_STAT_CATEGORYSTYLE;
+
+  const isAllowedSocket = (socketInfo: DimSocket) =>
+    socketInfo.socketIndex !== intrinsicSocket?.socketIndex &&
+    (!excludeEmptySockets || !isSocketEmpty(socketInfo)) &&
+    // don't include these weird little solstice stat rerolling mechanic sockets
+    !isEventArmorRerollSocket(socketInfo) &&
+    // Ghost shells unlock an activity mod slot when masterworked and hide the dummy locked slot
+    (item.bucket.hash !== BucketHashes.Ghost ||
+      socketInfo.socketDefinition.socketTypeHash !==
+        (item.masterwork
+          ? ghostActivitySocketTypeHashes.locked
+          : ghostActivitySocketTypeHashes.unlocked));
+
+  const { categories, socketsByCategory } = filterSocketCategories(
+    item.sockets.categories,
+    item.sockets,
+    isAllowedCategory,
+    isAllowedSocket
+  );
+
+  return {
+    intrinsicSocket,
+    modSocketCategories: categories,
+    modSocketsByCategory: socketsByCategory,
+  };
+}
+
 /**
  * Gets the socket category containing weapon perks (and kill trackers)
  */
@@ -283,8 +432,15 @@ export function getPerkSocketCategory(item: DimItem): DimSocketCategory | undefi
  */
 export function getModSocketCategories(
   item: DimItem,
-  intrinsicSocketIndexToExclude?: number | undefined,
-  excludeEmptySockets?: boolean
+  {
+    categoryHashToExclude,
+    intrinsicSocketIndexToExclude,
+    excludeEmptySockets,
+  }: {
+    categoryHashToExclude?: number;
+    intrinsicSocketIndexToExclude?: number;
+    excludeEmptySockets?: boolean;
+  }
 ):
   | {
       categories: DimSocketCategory[];
@@ -298,6 +454,7 @@ export function getModSocketCategories(
   const excludedSocketCategoryHashes = [
     craftedSocketCategoryHash,
     !item.crafted && mementoSocketCategoryHash,
+    categoryHashToExclude,
   ];
 
   const excludedPlugCategoryHashes = [
@@ -331,7 +488,6 @@ export function getModSocketCategories(
   for (const category of categories) {
     const sockets = getSocketsByIndexes(item.sockets, category.socketIndexes).filter(
       (socketInfo) =>
-        !socketInfo.isPerk &&
         socketInfo.plugged?.plugDef.displayProperties.name &&
         !isDeepsightResonanceSocket(socketInfo) &&
         !excludedPlugCategoryHashes.includes(socketInfo.plugged.plugDef.plug.plugCategoryHash) &&

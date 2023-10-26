@@ -16,13 +16,7 @@ import {
   isD1Item,
   isKillTrackerSocket,
 } from 'app/utils/item-utils';
-import {
-  getIntrinsicArmorPerkSocket,
-  getModSocketCategories,
-  getPerkSocketCategory,
-  getSocketsByIndexes,
-  getWeaponArchetypeSocket,
-} from 'app/utils/socket-utils';
+import { getDisplayedItemSockets, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { D2EventInfo } from 'data/d2/d2-event-info';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
@@ -233,20 +227,23 @@ function downloadCsv(filename: string, csv: string) {
 }
 
 function buildSocketNames(item: DimItem): string[] {
-  const intrinsic = getWeaponArchetypeSocket(item) ?? getIntrinsicArmorPerkSocket(item);
-  const sockets = intrinsic ? [intrinsic] : [];
-
-  const perks = getPerkSocketCategory(item);
-  if (perks) {
-    sockets.push(...getSocketsByIndexes(item.sockets!, perks.socketIndexes));
+  if (!item.sockets) {
+    return [];
   }
-  const { categories, socketsByCategory } = getModSocketCategories(
-    item,
-    intrinsic?.socketIndex,
-    /* excludeEmptySockets */ true
-  )!;
 
-  sockets.push(...categories.flatMap((c) => socketsByCategory.get(c) ?? []));
+  const sockets = [];
+  // Don't extract intrinsic, since there's a separate column
+  const { intrinsicSocket, modSocketCategories, modSocketsByCategory, perks } =
+    getDisplayedItemSockets(item, /* excludeEmptySockets */ true)!;
+
+  if (intrinsicSocket) {
+    sockets.push(intrinsicSocket);
+  }
+
+  if (perks) {
+    sockets.push(...getSocketsByIndexes(item.sockets, perks.socketIndexes));
+  }
+  sockets.push(...modSocketCategories.flatMap((c) => modSocketsByCategory.get(c)!));
 
   const socketItems = sockets.map(
     (s) =>

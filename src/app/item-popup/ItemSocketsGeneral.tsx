@@ -2,7 +2,7 @@ import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { usePlugDescriptions } from 'app/utils/plug-descriptions';
-import { getIntrinsicArmorPerkSocket, getModSocketCategories } from 'app/utils/socket-utils';
+import { getGeneralSockets } from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
@@ -33,19 +33,19 @@ export default function ItemSocketsGeneral({
     return null;
   }
 
-  const intrinsicArmorPerkSocket = getIntrinsicArmorPerkSocket(item);
+  const modSockets = getGeneralSockets(item)!;
+
   const emoteWheelCategory = item.sockets.categories.find(
     (c) => c.category.hash === SocketCategoryHashes.Emotes
   );
 
-  const modSockets = getModSocketCategories(item, intrinsicArmorPerkSocket?.socketIndex)!;
-  let { categories } = modSockets;
-  const { socketsByCategory } = modSockets;
+  let { modSocketCategories } = modSockets;
+  const { intrinsicSocket, modSocketsByCategory } = modSockets;
 
   if (minimal) {
     // Only show the first of each style of category
     const categoryStyles = new Set<DestinySocketCategoryStyle>();
-    categories = categories.filter((c) => {
+    modSocketCategories = modSocketCategories.filter((c) => {
       if (!categoryStyles.has(c.category.categoryStyle)) {
         categoryStyles.add(c.category.categoryStyle);
         return true;
@@ -54,10 +54,10 @@ export default function ItemSocketsGeneral({
     });
   }
 
-  const intrinsicRow = intrinsicArmorPerkSocket && (
+  const intrinsicRow = intrinsicSocket && (
     <IntrinsicArmorPerk
       item={item}
-      socket={intrinsicArmorPerkSocket}
+      socket={intrinsicSocket}
       minimal={minimal}
       onPlugClicked={onPlugClicked}
     />
@@ -75,7 +75,7 @@ export default function ItemSocketsGeneral({
             onClick={onPlugClicked}
           />
         )}
-        {categories.map((category) => (
+        {modSocketCategories.map((category) => (
           <div key={category.category.hash}>
             {!minimal && (
               <div className="item-socket-category-name">
@@ -83,7 +83,7 @@ export default function ItemSocketsGeneral({
               </div>
             )}
             <div className="item-sockets">
-              {socketsByCategory
+              {modSocketsByCategory
                 .get(category)
                 ?.map((socketInfo) => (
                   <Socket

@@ -3,12 +3,7 @@ import { statsMs } from 'app/inventory/store/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, faGrid, faList } from 'app/shell/icons';
-import {
-  getModSocketCategories,
-  getPerkSocketCategory,
-  getSocketsByIndexes,
-  getWeaponArchetypeSocket,
-} from 'app/utils/socket-utils';
+import { getSocketsByIndexes, getWeaponSockets } from 'app/utils/socket-utils';
 import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
 import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
@@ -45,12 +40,10 @@ export default function ItemSocketsWeapons({
   }
 
   // Separate out perks from sockets.
-  const archetypeSocket = getWeaponArchetypeSocket(item);
-  const perks = getPerkSocketCategory(item);
+  const { intrinsicSocket, perks, modSocketCategories, modSocketsByCategory } =
+    getWeaponSockets(item)!;
 
-  const { categories, socketsByCategory } = getModSocketCategories(item)!;
-
-  const mods = categories.flatMap((c) => socketsByCategory.get(c) ?? []);
+  const mods = modSocketCategories.flatMap((c) => modSocketsByCategory.get(c)!);
 
   const keyStats =
     item.stats &&
@@ -77,10 +70,10 @@ export default function ItemSocketsWeapons({
 
   return (
     <div className={clsx(styles.weaponSockets, { [styles.minimal]: minimal })}>
-      {(archetypeSocket?.plugged || (!minimal && mods.length > 0)) && (
+      {(intrinsicSocket?.plugged || (!minimal && mods.length > 0)) && (
         <ArchetypeRow minimal={minimal} isWeapons={true}>
-          {archetypeSocket?.plugged && (
-            <ArchetypeSocket archetypeSocket={archetypeSocket} item={item}>
+          {intrinsicSocket?.plugged && (
+            <ArchetypeSocket archetypeSocket={intrinsicSocket} item={item}>
               {!minimal && keyStats && keyStats.length > 0 && (
                 <div className={styles.stats}>
                   {keyStats
@@ -129,7 +122,7 @@ export default function ItemSocketsWeapons({
             )}
             <div className={clsx('item-sockets', styles.grid)}>
               {getSocketsByIndexes(item.sockets, perks.socketIndexes).map((socketInfo) => (
-                /* !isKillTrackerSocket(socketInfo) && */ <Socket
+                <Socket
                   key={socketInfo.socketIndex}
                   item={item}
                   socket={socketInfo}
