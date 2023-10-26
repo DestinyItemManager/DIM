@@ -587,7 +587,6 @@
     "Legendary": "Legendary",
     "LockEquipped": "Pin equipped",
     "LockItem": "Pin item",
-    "LockStat": "Only include loadouts with exactly this stat tier",
     "MaxTier": "Max {{tier}}",
     "MissingClass": "Build is for: {{className}}",
     "MissingClassDescription": "The build you're trying to view is for a character class you don't have.",

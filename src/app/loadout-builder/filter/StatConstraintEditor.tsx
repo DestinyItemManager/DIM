@@ -11,20 +11,12 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
-import {
-  AppIcon,
-  equalIcon,
-  faCheckSquare,
-  faSquare,
-  greaterThanEqualIcon,
-  moveDownIcon,
-  moveUpIcon,
-} from 'app/shell/icons';
+import { AppIcon, faCheckSquare, faSquare, moveDownIcon, moveUpIcon } from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
 import { delay } from 'app/utils/promises';
 import clsx from 'clsx';
 import _ from 'lodash';
-import React, { Dispatch, useEffect, useRef, useState } from 'react';
+import React, { Dispatch, useEffect, useRef } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorStatHashes, MinMax, ResolvedStatConstraint, StatRanges } from '../types';
 import styles from './StatConstraintEditor.m.scss';
@@ -103,22 +95,11 @@ function StatRow({
   const defs = useD2Definitions()!;
   const statHash = statConstraint.statHash as ArmorStatHashes;
   const statDef = defs.Stat.get(statHash);
-  const [statLocked, setStatLocked] = useState(
-    statConstraint.minTier === statConstraint.maxTier && statConstraint.minTier !== 10
-  );
-
-  const handleToggleLocked = () => {
-    onTierChange({ ...statConstraint, maxTier: statLocked ? 10 : statConstraint.minTier });
-    setStatLocked((statLocked) => !statLocked);
-  };
-
   const handleIgnore = () => onTierChange({ ...statConstraint, ignored: !statConstraint.ignored });
   const handleSelectTier = (tierNum: number) =>
     onTierChange({
       ...statConstraint,
       minTier: tierNum,
-      // Preserve locked-ness
-      maxTier: statLocked ? tierNum : statConstraint.maxTier,
     });
 
   return (
@@ -154,17 +135,6 @@ function StatRow({
             </div>
           </div>
           <div className={styles.buttons}>
-            {!statConstraint.ignored && (
-              <button
-                type="button"
-                className={styles.rowControl}
-                title={t('LoadoutBuilder.LockStat')}
-                onClick={handleToggleLocked}
-                disabled={statConstraint.ignored}
-              >
-                {statLocked ? equalIcon : greaterThanEqualIcon}
-              </button>
-            )}
             <button
               type="button"
               className={styles.rowControl}

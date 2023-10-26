@@ -92,12 +92,6 @@
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-// Tiers that *won't* be reached because they are above the selected maximum
-.locked:not(.selectedStatBar) {
-  color: #666;
-  background-color: transparent;
-}
-
 .selectedStatBar {
   background-color: var(--theme-accent-primary);
   color: var(--theme-text-invert);
