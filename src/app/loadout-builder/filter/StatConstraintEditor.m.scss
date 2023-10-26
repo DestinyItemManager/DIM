@@ -4,15 +4,6 @@
   display: inline-block;
   height: 17px;
   width: 17px;
-  background-size: 100%;
-  vertical-align: middle;
-  margin-right: 2px;
-}
-
-.grip {
-  opacity: 0.5;
-  font-size: 10px;
-  margin-right: 4px;
 }
 
 .ignored {
@@ -42,39 +33,27 @@
       margin-bottom: 8px;
     }
     white-space: nowrap;
-    &:first-child {
-      padding-left: 8px;
-    }
   }
+}
 
-  label {
-    grid-area: name;
-    height: 100%;
-    display: flex;
-    overflow: hidden;
+.name {
+  grid-area: name;
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  align-items: center;
+  gap: 2px;
+  padding-left: 6px;
+}
 
-    > span {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      white-space: nowrap;
-    }
-  }
-
-  .statDisplayInfo {
-    overflow: hidden;
-    .statName {
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  }
-
-  > select {
-    height: 18px;
-    padding: 0 4px;
-    background-position-x: calc(100% - 4px);
-    width: 45px;
-  }
+.label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  white-space: nowrap;
+  gap: 2px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  align-self: stretch;
+  width: 100%;
 }
 
 .statBar {
@@ -91,6 +70,7 @@
   color: var(--theme-button-text);
   font-size: 12px;
   height: 24px;
+  box-sizing: border-box;
 
   /* stylelint-disable-next-line no-descending-specificity */
   > * {
@@ -106,12 +86,16 @@
   }
 }
 
-.maxed {
-  background-color: grey;
+// Tiers that can't be reached given the currently selected minimums
+.maxed:not(.locked):not(.selectedStatBar) {
+  color: #666;
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
-.locked {
-  opacity: 0.2;
+// Tiers that *won't* be reached because they are above the selected maximum
+.locked:not(.selectedStatBar) {
+  color: #666;
+  background-color: transparent;
 }
 
 .selectedStatBar {
@@ -128,7 +112,14 @@
   padding: 4px 6px;
   opacity: 0.9;
 
+  &.ignored,
   &:disabled {
-    opacity: 0.2;
+    opacity: 0.9;
+    color: #555;
+  }
+
+  &:hover,
+  &:focus-visible {
+    color: var(--theme-accent-primary);
   }
 }

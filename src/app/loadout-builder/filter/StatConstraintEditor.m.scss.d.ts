@@ -2,18 +2,17 @@
 // Please do not change this file!
 interface CssExports {
   'buttons': string;
-  'grip': string;
   'iconStat': string;
   'ignored': string;
+  'label': string;
   'locked': string;
   'maxed': string;
+  'name': string;
   'row': string;
   'rowControl': string;
   'selectedStatBar': string;
   'statBar': string;
   'statBarSegment': string;
-  'statDisplayInfo': string;
-  'statName': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

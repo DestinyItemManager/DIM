@@ -462,7 +462,6 @@ export default memo(function LoadoutBuilder({
           <GeneratedSets
             loadout={loadout}
             sets={sortedSets}
-            subclass={subclass}
             lockedMods={result.mods}
             pinnedItems={pinnedItems}
             selectedStore={selectedStore}

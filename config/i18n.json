@@ -635,7 +635,8 @@
     "LockStat": "Only include loadouts with exactly this stat tier",
     "IncreaseStatPriority": "Increase stat priority",
     "DecreaseStatPriority": "Decrease stat priority",
-    "IgnoreStat": "Ignore this stat - Loadout Optimizer will pretend this stat doesn't exist when building sets"
+    "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
+    "TierSelect": "Select minimum stat tier"
   },
   "Loadouts": {
     "Abilities": "Abilities",

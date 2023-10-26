@@ -13,20 +13,18 @@ import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import {
   AppIcon,
-  dragHandleIcon,
-  enabledIcon,
+  faCheckSquare,
+  faSquare,
   lockIcon,
   moveDownIcon,
   moveUpIcon,
   unlockedIcon,
-  unselectedCheckIcon,
 } from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
 import { delay } from 'app/utils/promises';
 import clsx from 'clsx';
-import { AnimatePresence } from 'framer-motion';
 import _ from 'lodash';
-import React, { Dispatch, useEffect, useRef } from 'react';
+import React, { Dispatch, useEffect, useRef, useState } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorStatHashes, MinMax, ResolvedStatConstraint, StatRanges } from '../types';
 import styles from './StatConstraintEditor.m.scss';
@@ -103,21 +101,123 @@ function StatRow({
   equippedHashes: Set<number>;
 }) {
   const defs = useD2Definitions()!;
-  const c = statConstraint;
-  const statHash = c.statHash as ArmorStatHashes;
+  const statHash = statConstraint.statHash as ArmorStatHashes;
+  const statDef = defs.Stat.get(statHash);
+  const [statLocked, setStatLocked] = useState(
+    statConstraint.minTier === statConstraint.maxTier && statConstraint.minTier !== 10
+  );
+
+  const handleToggleLocked = () => {
+    onTierChange({ ...statConstraint, maxTier: statLocked ? 10 : statConstraint.minTier });
+    setStatLocked((statLocked) => !statLocked);
+  };
+
+  const handleIgnore = () => onTierChange({ ...statConstraint, ignored: !statConstraint.ignored });
+  const handleSelectTier = (tierNum: number) =>
+    onTierChange({
+      ...statConstraint,
+      minTier: tierNum,
+      // Preserve locked-ness
+      maxTier: statLocked ? tierNum : statConstraint.maxTier,
+    });
+
+  return (
+    <Draggable draggableId={statHash.toString()} index={index}>
+      {(provided) => (
+        <div
+          className={styles.row}
+          data-index={index}
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+        >
+          <div className={styles.name}>
+            <button
+              type="button"
+              role="checkbox"
+              aria-checked={!statConstraint.ignored}
+              className={clsx({ [styles.ignored]: statConstraint.ignored }, styles.rowControl)}
+              onClick={handleIgnore}
+              title={t('LoadoutBuilder.IgnoreStat')}
+            >
+              <AppIcon icon={statConstraint.ignored ? faSquare : faCheckSquare} />
+            </button>
+            <div
+              className={clsx({ [styles.ignored]: statConstraint.ignored }, styles.label)}
+              {...provided.dragHandleProps}
+            >
+              <BungieImage
+                className={styles.iconStat}
+                src={statDef.displayProperties.icon}
+                aria-hidden={true}
+              />
+              {statDef.displayProperties.name}
+            </div>
+          </div>
+          <div className={styles.buttons}>
+            {!statConstraint.ignored && (
+              <button
+                type="button"
+                className={styles.rowControl}
+                title={t('LoadoutBuilder.LockStat')}
+                onClick={handleToggleLocked}
+                disabled={statConstraint.ignored}
+              >
+                <AppIcon icon={statLocked ? lockIcon : unlockedIcon} />
+              </button>
+            )}
+            <button
+              type="button"
+              className={styles.rowControl}
+              title={t('LoadoutBuilder.IncreaseStatPriority')}
+              disabled={index === 0}
+              tabIndex={-1 /* Better to use the react-dnd keyboard interactions than this button */}
+              data-direction="up"
+              data-draggable-id={statHash.toString()}
+            >
+              <AppIcon icon={moveUpIcon} />
+            </button>
+            <button
+              type="button"
+              className={styles.rowControl}
+              title={t('LoadoutBuilder.DecreaseStatPriority')}
+              disabled={index === 5}
+              tabIndex={-1 /* Better to use the react-dnd keyboard interactions than this button */}
+              data-direction="down"
+              data-draggable-id={statHash.toString()}
+            >
+              <AppIcon icon={moveDownIcon} />
+            </button>
+          </div>
+          {!statConstraint.ignored && (
+            <StatTierBar
+              statConstraint={statConstraint}
+              statRange={statRange}
+              equippedHashes={equippedHashes}
+              onSelected={handleSelectTier}
+            />
+          )}
+        </div>
+      )}
+    </Draggable>
+  );
+}
+
+function StatTierBar({
+  statConstraint,
+  statRange,
+  onSelected,
+  equippedHashes,
+}: {
+  statConstraint: ResolvedStatConstraint;
+  statRange?: MinMax;
+  onSelected: (tierNum: number) => void;
+  equippedHashes: Set<number>;
+}) {
+  const defs = useD2Definitions()!;
+  const statHash = statConstraint.statHash as ArmorStatHashes;
   const statDef = defs.Stat.get(statHash);
   const focused = useRef<number | undefined>(undefined);
   const statBarRef = useRef<HTMLDivElement>(null);
-
-  // TODO: enhance the tooltip w/ info about what the LO settings mean (locked, min/max, etc)
-  // TODO: enhance the tooltip w/ info about why the numbers are greyed
-  // TODO: show max stat here
-
-  const statLocked = statConstraint.minTier === statConstraint.maxTier;
-  const handleToggleLocked = () =>
-    onTierChange({ ...statConstraint, maxTier: statLocked ? 10 : statConstraint.minTier });
-
-  const handleIgnore = () => onTierChange({ ...statConstraint, ignored: !statConstraint.ignored });
 
   // Support keyboard interaction
   const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -130,7 +230,7 @@ function StatRow({
       case '_':
       case 'ArrowLeft': {
         if (tierNum > 0) {
-          onTierChange({ ...statConstraint, minTier: tierNum - 1 });
+          onSelected(tierNum - 1);
         }
         focused.current = tierNum - 1;
         break;
@@ -139,7 +239,7 @@ function StatRow({
       case '+':
       case 'ArrowRight': {
         if (tierNum < 10) {
-          onTierChange({ ...statConstraint, minTier: tierNum + 1 });
+          onSelected(tierNum + 1);
         }
         focused.current = tierNum + 1;
         break;
@@ -159,7 +259,7 @@ function StatRow({
         if (num === 0) {
           num = 10;
         }
-        onTierChange({ ...statConstraint, minTier: num });
+        onSelected(num);
         focused.current = num;
         break;
       }
@@ -178,130 +278,50 @@ function StatRow({
     }
   });
 
-  const name = (
-    <span className={clsx({ [styles.ignored]: c.ignored }, styles.statDisplayInfo)}>
-      <BungieImage className={styles.iconStat} src={statDef.displayProperties.icon} />
-      <span className={styles.statName} title={statDef.displayProperties.name}>
-        {statDef.displayProperties.name}
-      </span>
-    </span>
-  );
-  return (
-    <DraggableItem id={statHash.toString()} index={index} className={styles.row} name={name}>
-      <div className={styles.buttons}>
-        <button
-          type="button"
-          className={styles.rowControl}
-          title={t('LoadoutBuilder.LockStat')}
-          onClick={handleToggleLocked}
-          disabled={statConstraint.ignored}
-        >
-          <AppIcon icon={statLocked ? lockIcon : unlockedIcon} />
-        </button>
-        <button
-          type="button"
-          className={styles.rowControl}
-          title={t('LoadoutBuilder.IncreaseStatPriority')}
-          disabled={index === 0}
-          tabIndex={-1 /* Better to use the react-dnd keyboard interactions than this button */}
-          data-direction="up"
-          data-draggable-id={statHash.toString()}
-        >
-          <AppIcon icon={moveUpIcon} />
-        </button>
-        <button
-          type="button"
-          className={styles.rowControl}
-          title={t('LoadoutBuilder.DecreaseStatPriority')}
-          disabled={index === 5}
-          tabIndex={-1 /* Better to use the react-dnd keyboard interactions than this button */}
-          data-direction="down"
-          data-draggable-id={statHash.toString()}
-        >
-          <AppIcon icon={moveDownIcon} />
-        </button>
-        <button
-          type="button"
-          className={styles.rowControl}
-          onClick={handleIgnore}
-          title={t('LoadoutBuilder.IgnoreStat')}
-        >
-          <AppIcon icon={statConstraint.ignored ? unselectedCheckIcon : enabledIcon} />
-        </button>
-      </div>
-      <AnimatePresence>
-        {!statConstraint.ignored && (
-          <div className={styles.statBar} role="group" ref={statBarRef}>
-            {_.times(11, (tierNum) => (
-              <div
-                role="button"
-                tabIndex={tierNum === statConstraint.minTier ? 0 : -1}
-                key={tierNum}
-                className={clsx(styles.statBarSegment, {
-                  [styles.selectedStatBar]: statConstraint.minTier >= tierNum,
-                  [styles.maxed]: tierNum > (statRange?.max ?? 100) / 10,
-                  [styles.locked]: tierNum > statConstraint.maxTier,
-                })}
-                onClick={() => onTierChange({ ...statConstraint, minTier: tierNum })}
-                onKeyDown={handleKeyDown}
-                data-tier={tierNum}
-              >
-                <PressTip
-                  tooltip={
-                    <StatTooltip
-                      stat={{
-                        hash: statHash,
-                        value: tierNum * 10,
-                        name: statDef.displayProperties.name,
-                        description: statDef.displayProperties.description,
-                      }}
-                      equippedHashes={equippedHashes}
-                    />
-                  }
-                >
-                  {tierNum}
-                </PressTip>
-              </div>
-            ))}
-          </div>
-        )}
-      </AnimatePresence>
-    </DraggableItem>
-  );
-}
+  // TODO: enhance the tooltip w/ info about what the LO settings mean (locked, min/max, etc)
+  // TODO: enhance the tooltip w/ info about why the numbers are greyed
 
-function DraggableItem({
-  id,
-  index,
-  name,
-  className,
-  children,
-}: {
-  id: string;
-  index: number;
-  className: string;
-  name: React.ReactNode;
-  children: React.ReactNode;
-}) {
   return (
-    <Draggable draggableId={id} index={index}>
-      {(provided) => (
+    <div
+      className={styles.statBar}
+      role="group"
+      ref={statBarRef}
+      aria-label={t('LoadoutBuilder.TierSelect')}
+    >
+      {_.times(11, (tierNum) => (
         <div
-          className={className}
-          data-index={index}
-          ref={provided.innerRef}
-          {...provided.draggableProps}
+          role="button"
+          tabIndex={tierNum === statConstraint.minTier ? 0 : -1}
+          key={tierNum}
+          className={clsx(styles.statBarSegment, {
+            [styles.selectedStatBar]: statConstraint.minTier >= tierNum,
+            [styles.maxed]: tierNum > (statRange?.max ?? 100) / 10,
+            [styles.locked]: tierNum > statConstraint.maxTier,
+          })}
+          onClick={() => onSelected(tierNum)}
+          onKeyDown={handleKeyDown}
+          data-tier={tierNum}
+          aria-label={t('LoadoutBuilder.TierNumber', { tier: tierNum })}
         >
-          <label {...provided.dragHandleProps}>
-            <span className={styles.grip}>
-              <AppIcon icon={dragHandleIcon} />
-            </span>
-            {name}
-          </label>
-          {children}
+          <PressTip
+            tooltip={
+              <StatTooltip
+                stat={{
+                  hash: statHash,
+                  value: tierNum * 10,
+                  name: statDef.displayProperties.name,
+                  description: statDef.displayProperties.description,
+                }}
+                equippedHashes={equippedHashes}
+              />
+            }
+            placement="bottom"
+          >
+            {tierNum}
+          </PressTip>
         </div>
-      )}
-    </Draggable>
+      ))}
+    </div>
   );
 }
 

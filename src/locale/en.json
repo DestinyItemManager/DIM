@@ -581,7 +581,7 @@
     "ExistingLoadout": "Existing Loadout",
     "ExoticSpecialCategory": "Special",
     "Filter": "Filters",
-    "IgnoreStat": "Ignore this stat - Loadout Optimizer will pretend this stat doesn't exist when building sets",
+    "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
     "IncludeVendorItems": "Include Vendor items",
     "IncreaseStatPriority": "Increase stat priority",
     "Legendary": "Legendary",
@@ -626,6 +626,7 @@
     "StatTierIgnoreOption": "Ignore",
     "StatTierIncludeOption": "Include",
     "TierNumber": "T{{tier}}",
+    "TierSelect": "Select minimum stat tier",
     "UnableToAddAllMods": "Unable to add all mods.",
     "UnableToAddAllModsBody": "There weren't enough mod slots available to fit {{mods}}.",
     "UnlockItem": "Unpin Item"
