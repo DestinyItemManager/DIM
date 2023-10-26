@@ -11,10 +11,8 @@ import { isDeepsightResonanceSocket } from 'app/inventory/store/deepsight';
 import {
   armor2PlugCategoryHashes,
   ghostActivitySocketTypeHashes,
-  killTrackerSocketTypeHash,
 } from 'app/search/d2-known-values';
 import { DestinySocketCategoryStyle, TierType } from 'bungie-api-ts/destiny2';
-import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import {
   BucketHashes,
   ItemCategoryHashes,
@@ -411,114 +409,6 @@ export function getGeneralSockets(
     modSocketCategories: categories,
     modSocketsByCategory: socketsByCategory,
   };
-}
-
-/**
- * Gets the socket category containing weapon perks (and kill trackers)
- */
-export function getPerkSocketCategory(item: DimItem): DimSocketCategory | undefined {
-  return item.sockets?.categories.find(
-    (c) =>
-      c.category.hash !== SocketCategoryHashes.IntrinsicTraits &&
-      c.socketIndexes.length &&
-      c.category.uiCategoryStyle !== ARMOR_STAT_CATEGORYSTYLE &&
-      getSocketByIndex(item.sockets!, c.socketIndexes[0])?.isPerk
-  );
-}
-
-/**
- * Gets the categories for the square mod sockets in items,
- * with all the irrelevant junk (and optionally the intrinsic) filtered out.
- */
-export function getModSocketCategories(
-  item: DimItem,
-  {
-    categoryHashToExclude,
-    intrinsicSocketIndexToExclude,
-    excludeEmptySockets,
-  }: {
-    categoryHashToExclude?: number;
-    intrinsicSocketIndexToExclude?: number;
-    excludeEmptySockets?: boolean;
-  }
-):
-  | {
-      categories: DimSocketCategory[];
-      socketsByCategory: Map<DimSocketCategory, DimSocket[]>;
-    }
-  | undefined {
-  if (!item.sockets) {
-    return undefined;
-  }
-
-  const excludedSocketCategoryHashes = [
-    craftedSocketCategoryHash,
-    !item.crafted && mementoSocketCategoryHash,
-    categoryHashToExclude,
-  ];
-
-  const excludedPlugCategoryHashes = [
-    PlugCategoryHashes.GenericAllVfx,
-    PlugCategoryHashes.CraftingPlugsWeaponsModsExtractors,
-    // The weapon level socket is not interesting
-    PlugCategoryHashes.CraftingPlugsWeaponsModsTransfusersLevel,
-    // Hide catalyst socket for exotics with no known catalyst
-    !item.catalystInfo && PlugCategoryHashes.V400EmptyExoticMasterwork,
-  ];
-
-  let categories = item.sockets.categories;
-  if (item.bucket.inWeapons) {
-    // Not sure if this is really needed but it used to be that way
-    categories = [...categories].reverse();
-  }
-
-  categories = categories.filter(
-    (c) =>
-      !excludedSocketCategoryHashes.includes(c.category.hash) &&
-      // hide if this is the energy slot. it's already displayed in ItemDetails
-      c.category.categoryStyle !== DestinySocketCategoryStyle.EnergyMeter &&
-      // hide if this is the emote wheel because we show it separately
-      c.category.hash !== SocketCategoryHashes.Emotes &&
-      // Hidden sockets for intrinsic armor stats
-      c.category.uiCategoryStyle !== ARMOR_STAT_CATEGORYSTYLE
-  );
-
-  // Pre-calculate the list of sockets we'll display for each category
-  const socketsByCategory = new Map<DimSocketCategory, DimSocket[]>();
-  for (const category of categories) {
-    const sockets = getSocketsByIndexes(item.sockets, category.socketIndexes).filter(
-      (socketInfo) =>
-        socketInfo.plugged?.plugDef.displayProperties.name &&
-        !isDeepsightResonanceSocket(socketInfo) &&
-        !excludedPlugCategoryHashes.includes(socketInfo.plugged.plugDef.plug.plugCategoryHash) &&
-        (!excludeEmptySockets ||
-          (socketInfo.plugged.plugDef.hash !== socketInfo.emptyPlugItemHash &&
-            !emptyPlugHashes.has(socketInfo.plugged.plugDef.hash) &&
-            // No "Loadout fallback mod"
-            socketInfo.plugged.plugDef.plug.plugCategoryHash !==
-              PlugCategoryHashes.IntermediatePlugThatWorksInEveryCategory)) &&
-        // don't include armor intrinsics in automated socket listings
-        socketInfo.socketIndex !== intrinsicSocketIndexToExclude &&
-        // don't include these weird little solstice stat rerolling mechanic sockets
-        !isEventArmorRerollSocket(socketInfo) &&
-        // don't include kill trackers
-        socketInfo.socketDefinition.socketTypeHash !== killTrackerSocketTypeHash &&
-        // Ghost shells unlock an activity mod slot when masterworked and hide the dummy locked slot
-        (item.bucket.hash !== BucketHashes.Ghost ||
-          socketInfo.socketDefinition.socketTypeHash !==
-            (item.masterwork
-              ? ghostActivitySocketTypeHashes.locked
-              : ghostActivitySocketTypeHashes.unlocked))
-    );
-    if (sockets.length) {
-      socketsByCategory.set(category, sockets);
-    }
-  }
-
-  // Remove categories where all the sockets were filtered out.
-  categories = categories.filter((c) => socketsByCategory.get(c)?.length);
-
-  return { categories, socketsByCategory };
 }
 
 /**
