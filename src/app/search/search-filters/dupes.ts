@@ -1,9 +1,9 @@
-import { stripAdept } from 'app/compare/compare-buttons';
+import { stripAdept } from 'app/compare/compare-utils';
 import { tl } from 'app/i18next-t';
 import { TagValue } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
-import { isArtifice } from 'app/item-triage/triage-utils';
 import { StatsSet } from 'app/loadout-builder/process-worker/stats-set';
+import { isArtifice } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { chainComparator, compareBy, reverseComparator } from '../../utils/comparators';

@@ -11,6 +11,7 @@ import {
 import { DimStore } from 'app/inventory/store-types';
 import { getSeason } from 'app/inventory/store/season';
 import {
+  ARTIFICE_PERK_HASH,
   EXOTIC_CATALYST_TRAIT,
   armor2PlugCategoryHashes,
   killTrackerObjectivesByHash,
@@ -363,6 +364,16 @@ export function getStatValuesByHash(item: DimItem, byWhichValue: 'base' | 'value
     output[stat.statHash] = stat[byWhichValue];
   }
   return output;
+}
+
+/**
+ * Does this item have access to the Artifice mod slot that allows
+ * the user to bump a stat by a small amount?
+ */
+export function isArtifice(item: DimItem) {
+  return Boolean(
+    item.sockets?.allSockets.some((socket) => socket.plugged?.plugDef.hash === ARTIFICE_PERK_HASH)
+  );
 }
 
 /**
