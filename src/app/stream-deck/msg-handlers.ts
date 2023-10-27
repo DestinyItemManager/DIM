@@ -215,19 +215,17 @@ function pullItemHandler({ msg, state, store }: HandlerArgs<PullItemAction>): Th
 
     const item = moveToVaultItem ?? selected[0];
 
-    await dispatch(
-      sendToStreamDeck({
-        action: 'dim:item-update',
-        data: {
-          equipped,
-          context: msg.context,
-          element:
-            item.element?.enumValue === DamageType.Kinetic
-              ? undefined
-              : item.element?.displayProperties?.icon,
-        },
-      })
-    );
+    await sendToStreamDeck({
+      action: 'dim:item-update',
+      data: {
+        equipped,
+        context: msg.context,
+        element:
+          item.element?.enumValue === DamageType.Kinetic
+            ? undefined
+            : item.element?.displayProperties?.icon,
+      },
+    });
   };
 }
 
