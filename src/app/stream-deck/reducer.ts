@@ -2,7 +2,12 @@ import { StreamDeckAction, StreamDeckState } from 'app/stream-deck/interfaces';
 import { Reducer } from 'redux';
 import { getType } from 'typesafe-actions';
 import * as actions from './actions';
-import { streamDeckInitialState } from './stream-deck';
+
+// initial stream deck store state
+export const streamDeckInitialState: StreamDeckState = {
+  connected: false,
+  updatePopupShowed: false,
+};
 
 export const streamDeck: Reducer<StreamDeckState, StreamDeckAction> = (
   state: StreamDeckState = streamDeckInitialState,

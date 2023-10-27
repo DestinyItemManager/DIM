@@ -1,7 +1,7 @@
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { ThunkResult } from 'app/store/types';
-import { LazyStreamDeck, LoadoutSelection, StreamDeckState } from 'app/stream-deck/interfaces';
+import { LazyStreamDeck, LoadoutSelection } from 'app/stream-deck/interfaces';
 import { removeClientIdentifier, removeStreamDeckToken } from 'app/stream-deck/util/local-storage';
 
 export const lazyStreamDeck: LazyStreamDeck = {};
@@ -36,10 +36,4 @@ export const lazyLoadStreamDeck = async () => {
     lazyStreamDeck.core = core;
     lazyStreamDeck.reducer = reducer;
   }
-};
-
-// initial stream deck store state
-export const streamDeckInitialState: StreamDeckState = {
-  connected: false,
-  updatePopupShowed: false,
 };
