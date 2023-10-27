@@ -23,7 +23,7 @@
   "editor.codeActionsOnSave": {
     "source.fixAll": true
   },
-  "jest.jestCommandLine": "pnpm test",
+  "jest.jestCommandLine": "pnpm test --",
   "[javascript]": {
     "editor.codeActionsOnSave": {
       "source.organizeImports": false
