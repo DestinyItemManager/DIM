@@ -482,7 +482,7 @@ AddEncoding br .br
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} !\.(json|wasm|js|css|png|jpg|map)(\.(gz|br))?$
-    RewriteRule (.*) index.html [QSA,L]
+    RewriteRule (.*) <%= publicPath %>index.html [QSA,L]
 </IfModule>
 
 # Our host seems to want to force the .gz files to be application/x-gzip

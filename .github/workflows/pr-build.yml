@@ -15,7 +15,7 @@ jobs:
   build:
     environment:
       name: pr
-      url: http://pr.dim.gg/${{ github.event.number }}
+      url: http://pr.dim.gg/${{ github.event.number }}/
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -51,7 +51,7 @@ jobs:
           WEB_OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
           WEB_OAUTH_CLIENT_SECRET: ${{ secrets.OAUTH_SECRET }}
           DIM_API_KEY: ${{ secrets.DIM_API_KEY }}
-          PUBLIC_PATH: /${{ github.event.number }}
+          PUBLIC_PATH: /${{ github.event.number }}/
 
       - name: Check for updates to build pipeline
         id: filter

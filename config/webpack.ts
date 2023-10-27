@@ -444,6 +444,7 @@ export default (env: Env) => {
       inject: false,
       minify: false,
       templateParameters: {
+        publicPath: publicPath.replace('/', ''),
         csp: contentSecurityPolicy,
       },
     }),
