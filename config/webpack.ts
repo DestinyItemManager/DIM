@@ -45,6 +45,7 @@ interface Env extends EnvValues {
   release: boolean;
   beta: boolean;
   dev: boolean;
+  pr: boolean;
   name: 'release' | 'beta' | 'dev' | 'pr';
 }
 type Argv = Record<string, CLIValues>;
@@ -54,7 +55,7 @@ export interface WebpackConfigurationGenerator {
 
 export default (env: Env) => {
   env.name = Object.keys(env)[0] as Env['name'];
-  (['release', 'beta', 'dev'] as const).forEach((e) => {
+  (['release', 'beta', 'dev', 'pr'] as const).forEach((e) => {
     // set booleans based on env
     env[e] = Boolean(env[e]);
     if (env[e]) {
