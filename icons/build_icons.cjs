@@ -1,4 +1,4 @@
-#!/usr/local/bin/node
+#!/usr/bin/env node
 
 const { execSync } = require('child_process');
 const rimraf = require('rimraf');
@@ -9,7 +9,7 @@ const CACHEBREAKER = '6-2018';
 
 // Generate all our icon images from SVG. Requires a mac (or a system w/ a shell and rsvg-convert installed).
 execSync('which rsvg-convert || brew install librsvg');
-for (const VERSION of ['release', 'beta', 'dev']) {
+for (const VERSION of ['release', 'beta', 'dev', 'pr']) {
   rimraf.sync(`./${VERSION}`);
   fs.mkdirSync(VERSION);
 
