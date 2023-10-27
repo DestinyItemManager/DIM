@@ -66,7 +66,7 @@ export function chooseAutoMods(
     numArtificeMods,
     remainingEnergyCapacities,
     remainingTotalEnergy,
-    []
+    undefined
   );
 }
 
@@ -74,11 +74,12 @@ function doGeneralModsFit(
   info: LoSessionInfo,
   /** variants of remaining energy capacities given our activity mod assignment, each sorted descending */
   remainingEnergyCapacities: number[][],
-  pickedMods: ModsPick[]
+  pickedMods: ModsPick[] | undefined
 ) {
   // These are already sorted
   let generalModCosts = info.generalModCosts;
-  if (pickedMods.length) {
+  // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
+  if (pickedMods !== undefined && pickedMods.length) {
     generalModCosts = generalModCosts.slice();
     // Intentionally open-coded for performance
     // eslint-disable-next-line @typescript-eslint/prefer-for-of
@@ -108,7 +109,7 @@ function recursivelyChooseMods(
   /** variants of remaining energy capacities given our activity mod assignment, each sorted descending */
   remainingEnergyCapacities: number[][],
   remainingTotalEnergy: number,
-  pickedMods: ModsPick[]
+  pickedMods: ModsPick[] | undefined
 ): ModsPick[] | undefined {
   while (statIndex < neededStats.length && neededStats[statIndex] === 0) {
     statIndex++;
@@ -117,7 +118,7 @@ function recursivelyChooseMods(
   if (statIndex === neededStats.length) {
     // We've hit the end of our needed stats, check if this is possible
     if (doGeneralModsFit(info, remainingEnergyCapacities, pickedMods)) {
-      return pickedMods;
+      return pickedMods ?? [];
     } else {
       return undefined;
     }
@@ -130,7 +131,7 @@ function recursivelyChooseMods(
   }
 
   // Create a new array we append the pick for this stat to.
-  const subArray = pickedMods.slice();
+  const subArray = pickedMods !== undefined ? pickedMods.slice() : [];
   // Dummy value just so we don't repeatedly push and pop.
   subArray.push(subArray[0]);
 

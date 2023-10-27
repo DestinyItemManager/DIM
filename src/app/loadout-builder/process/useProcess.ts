@@ -160,6 +160,17 @@ export function useProcess({
       }
     }
 
+    // NB this looks like a no-op but what's sorted here aren't the array entries but the object keys.
+    // Ensuring all array members have properties in the same order helps the JIT keep the code monomorphic...
+    const sortedResolvedStatConstraints: ResolvedStatConstraint[] = resolvedStatConstraints.map(
+      (c) => ({
+        minTier: c.minTier,
+        maxTier: c.maxTier,
+        statHash: c.statHash,
+        ignored: c.ignored,
+      })
+    );
+
     // TODO: could potentially partition the problem (split the largest item category maybe) to spread across more cores
     const workerStart = performance.now();
     worker
@@ -167,7 +178,7 @@ export function useProcess({
         processItems,
         _.mapValues(modStatChanges, (stat) => stat.value),
         lockedProcessMods,
-        resolvedStatConstraints,
+        sortedResolvedStatConstraints,
         anyExotic,
         autoModsData,
         autoStatMods

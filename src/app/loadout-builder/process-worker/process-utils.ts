@@ -1,6 +1,5 @@
 import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
 import { count } from 'app/utils/collections';
-import _ from 'lodash';
 import { ArmorStatHashes, MinMax, ResolvedStatConstraint } from '../types';
 import { AutoModsMap, ModsPick, buildAutoModsMap, chooseAutoMods } from './auto-stat-mod-utils';
 import { AutoModData, ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
@@ -38,7 +37,9 @@ export function precalculateStructures(
     hasActivityMods: activityMods.length > 0,
     generalModCosts,
     numAvailableGeneralMods,
-    totalModEnergyCost: _.sum(generalModCosts) + _.sumBy(activityMods, (act) => act.energyCost),
+    totalModEnergyCost:
+      generalModCosts.reduce((acc, cost) => acc + cost, 0) +
+      activityMods.reduce((acc, mod) => acc + mod.energyCost, 0),
     activityModPermutations: generateProcessModPermutations(activityMods),
     activityTagCounts: activityMods.reduce<{ [tag: string]: number }>((acc, mod) => {
       if (mod.tag) {
@@ -80,9 +81,11 @@ function getRemainingEnergiesPerAssignment(
       }
     }
 
-    const remainingEnergyCapacities = items.map(
-      (i, idx) => i.remainingEnergyCapacity - (activityPermutation[idx]?.energyCost || 0)
-    );
+    const remainingEnergyCapacities = [0, 0, 0, 0, 0];
+    for (let i = 0; i < items.length; i++) {
+      remainingEnergyCapacities[i] =
+        items[i].remainingEnergyCapacity - (activityPermutation[i]?.energyCost || 0);
+    }
     remainingEnergyCapacities.sort((a, b) => b - a);
     remainingEnergiesPerAssignment.push(remainingEnergyCapacities);
   }
@@ -149,7 +152,7 @@ export function updateMaxTiers(
         explorationStats,
         numArtificeMods,
         remainingEnergiesPerAssignment,
-        setEnergy
+        setEnergy - info.totalModEnergyCost
       );
       if (picks) {
         const val = Math.floor((setStat + explorationStats[statIndex]) / 10);
