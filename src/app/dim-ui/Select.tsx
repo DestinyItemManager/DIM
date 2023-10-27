@@ -1,4 +1,4 @@
-import { moveDownIcon, moveUpIcon } from 'app/shell/icons';
+import { expandDownIcon, expandUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import clsx from 'clsx';
 import { useSelect } from 'downshift';
@@ -131,7 +131,7 @@ export default function Select<T>({
         {children ?? (
           <>
             {selectedItem.content}{' '}
-            <AppIcon icon={isOpen ? moveUpIcon : moveDownIcon} className={styles.arrow} />
+            <AppIcon icon={isOpen ? expandUpIcon : expandDownIcon} className={styles.arrow} />
           </>
         )}
       </button>

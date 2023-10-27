@@ -11,7 +11,14 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { AppIcon, faCheckSquare, faSquare, moveDownIcon, moveUpIcon } from 'app/shell/icons';
+import {
+  AppIcon,
+  dragHandleIcon,
+  faCheckSquare,
+  faSquare,
+  moveDownIcon,
+  moveUpIcon,
+} from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
 import { delay } from 'app/utils/promises';
 import clsx from 'clsx';
@@ -104,14 +111,17 @@ function StatRow({
 
   return (
     <Draggable draggableId={statHash.toString()} index={index}>
-      {(provided) => (
+      {(provided, snapshot) => (
         <div
-          className={styles.row}
+          className={clsx(styles.row, { [styles.dragging]: snapshot.isDragging })}
           data-index={index}
           ref={provided.innerRef}
           {...provided.draggableProps}
         >
           <div className={styles.name}>
+            <span className={styles.grip} {...provided.dragHandleProps} tabIndex={-1}>
+              <AppIcon icon={dragHandleIcon} />
+            </span>
             <button
               type="button"
               role="checkbox"
