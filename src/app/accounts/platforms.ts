@@ -21,7 +21,10 @@ const loadAccountsFromIndexedDBAction: ThunkResult = dedupePromise(async (dispat
   dispatch(actions.loadFromIDB(accounts || []));
 });
 
-const getPlatformsAction: ThunkResult = dedupePromise(async (dispatch, getState) => {
+/**
+ * Load data about available accounts.
+ */
+export const getPlatforms: ThunkResult = dedupePromise(async (dispatch, getState) => {
   let realAccountsPromise: Promise<readonly DestinyAccount[]> | null = null;
   if (!getState().accounts.loaded) {
     // Kick off a load from bungie.net in the background
@@ -46,13 +49,6 @@ const getPlatformsAction: ThunkResult = dedupePromise(async (dispatch, getState)
     }
   }
 });
-
-/**
- * Load data about available accounts.
- */
-export function getPlatforms(): ThunkResult {
-  return getPlatformsAction;
-}
 
 const loadAccountsFromBungieNetAction: ThunkResult<readonly DestinyAccount[]> = dedupePromise(
   async (dispatch): Promise<readonly DestinyAccount[]> => {

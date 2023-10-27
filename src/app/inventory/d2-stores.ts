@@ -112,7 +112,7 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
     let account = currentAccountSelector(getState());
     if (!account) {
       // TODO: throw here?
-      await dispatch(getPlatforms());
+      await dispatch(getPlatforms);
       account = currentAccountSelector(getState());
       if (!account || account.destinyVersion !== 2) {
         return;
