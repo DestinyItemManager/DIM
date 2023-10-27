@@ -1,7 +1,7 @@
 import { getBuckets } from 'app/destiny2/d2-buckets';
 import { allTables, buildDefinitionsFromManifest } from 'app/destiny2/d2-definitions';
 import { DIM_LANG_INFOS } from 'app/i18n';
-import { buildStores } from 'app/inventory/d2-stores';
+import { buildStores } from 'app/inventory/store/d2-store-factory';
 import { downloadManifestComponents } from 'app/manifest/manifest-service-json';
 import { humanBytes } from 'app/storage/human-bytes';
 import { delay } from 'app/utils/promises';
