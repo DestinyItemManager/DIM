@@ -1,9 +1,9 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { uniqBy } from 'app/utils/collections';
 import { usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { getGeneralSockets } from 'app/utils/socket-utils';
-import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
@@ -33,26 +33,17 @@ export default function ItemSocketsGeneral({
     return null;
   }
 
-  const modSockets = getGeneralSockets(item)!;
+  const { intrinsicSocket, modSocketsByCategory } = getGeneralSockets(item)!;
 
   const emoteWheelCategory = item.sockets.categories.find(
     (c) => c.category.hash === SocketCategoryHashes.Emotes
   );
 
-  let { modSocketCategories } = modSockets;
-  const { intrinsicSocket, modSocketsByCategory } = modSockets;
-
-  if (minimal) {
-    // Only show the first of each style of category
-    const categoryStyles = new Set<DestinySocketCategoryStyle>();
-    modSocketCategories = modSocketCategories.filter((c) => {
-      if (!categoryStyles.has(c.category.categoryStyle)) {
-        categoryStyles.add(c.category.categoryStyle);
-        return true;
-      }
-      return false;
-    });
-  }
+  // Only show the first of each style of category when minimal
+  const modSocketCategories = minimal
+    ? uniqBy(modSocketsByCategory.entries(), ([category]) => category.category.categoryStyle)
+    : // This might not be necessary with iterator-helpers
+      [...modSocketsByCategory.entries()];
 
   const intrinsicRow = intrinsicSocket && (
     <IntrinsicArmorPerk
@@ -75,7 +66,7 @@ export default function ItemSocketsGeneral({
             onClick={onPlugClicked}
           />
         )}
-        {modSocketCategories.map((category) => (
+        {modSocketCategories.map(([category, sockets]) => (
           <div key={category.category.hash}>
             {!minimal && (
               <div className="item-socket-category-name">
@@ -83,17 +74,15 @@ export default function ItemSocketsGeneral({
               </div>
             )}
             <div className="item-sockets">
-              {modSocketsByCategory
-                .get(category)
-                ?.map((socketInfo) => (
-                  <Socket
-                    key={socketInfo.socketIndex}
-                    item={item}
-                    socket={socketInfo}
-                    wishlistRoll={wishlistRoll}
-                    onClick={onPlugClicked}
-                  />
-                ))}
+              {sockets.map((socketInfo) => (
+                <Socket
+                  key={socketInfo.socketIndex}
+                  item={item}
+                  socket={socketInfo}
+                  wishlistRoll={wishlistRoll}
+                  onClick={onPlugClicked}
+                />
+              ))}
             </div>
           </div>
         ))}

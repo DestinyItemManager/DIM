@@ -232,9 +232,10 @@ function buildSocketNames(item: DimItem): string[] {
   }
 
   const sockets = [];
-  // Don't extract intrinsic, since there's a separate column
-  const { intrinsicSocket, modSocketCategories, modSocketsByCategory, perks } =
-    getDisplayedItemSockets(item, /* excludeEmptySockets */ true)!;
+  const { intrinsicSocket, modSocketsByCategory, perks } = getDisplayedItemSockets(
+    item,
+    /* excludeEmptySockets */ true
+  )!;
 
   if (intrinsicSocket) {
     sockets.push(intrinsicSocket);
@@ -243,7 +244,8 @@ function buildSocketNames(item: DimItem): string[] {
   if (perks) {
     sockets.push(...getSocketsByIndexes(item.sockets, perks.socketIndexes));
   }
-  sockets.push(...modSocketCategories.flatMap((c) => modSocketsByCategory.get(c)!));
+  // Improve this when we use iterator-helpers
+  sockets.push(...[...modSocketsByCategory.values()].flat());
 
   const socketItems = sockets.map(
     (s) =>

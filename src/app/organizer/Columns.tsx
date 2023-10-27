@@ -668,7 +668,7 @@ function PerksCell({
 
   let sockets = [];
   // Don't extract intrinsic, since there's a separate column
-  const { modSocketCategories, modSocketsByCategory, perks } = getDisplayedItemSockets(
+  const { modSocketsByCategory, perks } = getDisplayedItemSockets(
     item,
     /* excludeEmptySockets */ true
   )!;
@@ -684,7 +684,8 @@ function PerksCell({
           s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics)
     );
   } else {
-    sockets.push(...modSocketCategories.flatMap((c) => modSocketsByCategory.get(c) ?? []));
+    // Improve this when we use iterator-helpers
+    sockets.push(...[...modSocketsByCategory.values()].flat());
   }
 
   sockets = sockets.filter(

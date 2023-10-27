@@ -252,7 +252,7 @@ function filterSocketCategories(
   sockets: DimSockets,
   allowCategory: (cat: DimSocketCategory) => boolean,
   allowSocket: (socket: DimSocket) => boolean
-): { categories: DimSocketCategory[]; socketsByCategory: Map<DimSocketCategory, DimSocket[]> } {
+): Map<DimSocketCategory, DimSocket[]> {
   // Pre-calculate the list of sockets we'll display for each category
   const socketsByCategory = new Map<DimSocketCategory, DimSocket[]>();
   for (const category of categories) {
@@ -267,10 +267,7 @@ function filterSocketCategories(
     }
   }
 
-  // Remove categories where all the sockets were filtered out.
-  categories = categories.filter((c) => socketsByCategory.get(c)?.length);
-
-  return { categories, socketsByCategory };
+  return socketsByCategory;
 }
 
 /**
@@ -285,17 +282,16 @@ function isSocketEmpty(socket: DimSocket) {
   );
 }
 
+export interface DisplayedSockets {
+  intrinsicSocket?: DimSocket;
+  perks?: DimSocketCategory;
+  modSocketsByCategory: Map<DimSocketCategory, DimSocket[]>;
+}
+
 export function getDisplayedItemSockets(
   item: DimItem,
   excludeEmptySockets = false
-):
-  | {
-      intrinsicSocket?: DimSocket;
-      perks?: DimSocketCategory;
-      modSocketCategories: DimSocketCategory[];
-      modSocketsByCategory: Map<DimSocketCategory, DimSocket[]>;
-    }
-  | undefined {
+): DisplayedSockets | undefined {
   if (item.bucket.inWeapons) {
     return getWeaponSockets(item, excludeEmptySockets);
   } else {
@@ -306,14 +302,7 @@ export function getDisplayedItemSockets(
 export function getWeaponSockets(
   item: DimItem,
   excludeEmptySockets = false
-):
-  | {
-      intrinsicSocket: DimSocket | undefined;
-      perks: DimSocketCategory | undefined;
-      modSocketCategories: DimSocketCategory[];
-      modSocketsByCategory: Map<DimSocketCategory, DimSocket[]>;
-    }
-  | undefined {
+): DisplayedSockets | undefined {
   if (!item.sockets) {
     return undefined;
   }
@@ -340,7 +329,7 @@ export function getWeaponSockets(
     !item.catalystInfo && PlugCategoryHashes.V400EmptyExoticMasterwork,
   ];
 
-  const { categories, socketsByCategory } = filterSocketCategories(
+  const modSocketsByCategory = filterSocketCategories(
     item.sockets.categories.toReversed(),
     item.sockets,
     (category) =>
@@ -348,7 +337,7 @@ export function getWeaponSockets(
     (socket) =>
       (!excludeEmptySockets || !isSocketEmpty(socket)) &&
       socket.plugged !== null &&
-      !excludedPlugCategoryHashes.includes(socket.plugged.plugDef.hash) &&
+      !excludedPlugCategoryHashes.includes(socket.plugged.plugDef.plug.plugCategoryHash) &&
       socket !== archetypeSocket &&
       !isDeepsightResonanceSocket(socket)
   );
@@ -356,21 +345,14 @@ export function getWeaponSockets(
   return {
     intrinsicSocket: archetypeSocket,
     perks,
-    modSocketCategories: categories,
-    modSocketsByCategory: socketsByCategory,
+    modSocketsByCategory,
   };
 }
 
 export function getGeneralSockets(
   item: DimItem,
   excludeEmptySockets = false
-):
-  | {
-      intrinsicSocket: DimSocket | undefined;
-      modSocketCategories: DimSocketCategory[];
-      modSocketsByCategory: Map<DimSocketCategory, DimSocket[]>;
-    }
-  | undefined {
+): Omit<DisplayedSockets, 'perks'> | undefined {
   if (!item.sockets) {
     return undefined;
   }
@@ -397,7 +379,7 @@ export function getGeneralSockets(
           ? ghostActivitySocketTypeHashes.locked
           : ghostActivitySocketTypeHashes.unlocked));
 
-  const { categories, socketsByCategory } = filterSocketCategories(
+  const modSocketsByCategory = filterSocketCategories(
     item.sockets.categories,
     item.sockets,
     isAllowedCategory,
@@ -406,8 +388,7 @@ export function getGeneralSockets(
 
   return {
     intrinsicSocket,
-    modSocketCategories: categories,
-    modSocketsByCategory: socketsByCategory,
+    modSocketsByCategory,
   };
 }
 
