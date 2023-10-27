@@ -14,7 +14,7 @@ import { LoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getItemsFromInGameLoadout } from 'app/loadout/ingame/ingame-loadout-utils';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
-import { DimThunkDispatch, RootState, ThunkResult } from 'app/store/types';
+import { RootState, ThunkResult } from 'app/store/types';
 import {
   streamDeckClearSelection,
   streamDeckConnected,
@@ -29,7 +29,6 @@ import {
   StreamDeckMessage,
 } from 'app/stream-deck/interfaces';
 import { handleStreamDeckMessage, notificationPromise } from 'app/stream-deck/msg-handlers';
-import { streamDeck } from 'app/stream-deck/reducer';
 import { streamDeckUpdatePopupSelector } from 'app/stream-deck/selectors';
 import {
   clientIdentifier,
@@ -56,16 +55,14 @@ function generateIdentifier() {
   }
 }
 
-export function sendToStreamDeck(msg: SendToStreamDeckArgs): ThunkResult {
-  return async () => {
-    if (streamDeckWebSocket?.readyState === WebSocket.OPEN) {
-      streamDeckWebSocket.send(
-        JSON.stringify({
-          ...msg,
-        })
-      );
-    }
-  };
+export async function sendToStreamDeck(msg: SendToStreamDeckArgs) {
+  if (streamDeckWebSocket?.readyState === WebSocket.OPEN) {
+    streamDeckWebSocket.send(
+      JSON.stringify({
+        ...msg,
+      })
+    );
+  }
 }
 
 // on click on InventoryItem send the selected item to the Stream Deck
@@ -80,27 +77,25 @@ function streamDeckSelectItem(item: DimItem): ThunkResult {
       // clear the selection state in the store
       dispatch(streamDeckClearSelection());
       // send selection to the Stream Deck
-      return dispatch(
-        sendToStreamDeck({
-          action: 'dim:selection',
-          data: {
-            selectionType: 'item',
-            selection: {
-              label: item.name,
-              subtitle: item.typeName,
-              item: item.index.replace(/-.*/, ''),
-              icon: item.icon,
-              overlay: item.iconOverlay,
-              isExotic: item.isExotic,
-              inventory: item.location.accountWide,
-              element:
-                item.element?.enumValue === DamageType.Kinetic
-                  ? undefined
-                  : item.element?.displayProperties?.icon,
-            },
+      return sendToStreamDeck({
+        action: 'dim:selection',
+        data: {
+          selectionType: 'item',
+          selection: {
+            label: item.name,
+            subtitle: item.typeName,
+            item: item.index.replace(/-.*/, ''),
+            icon: item.icon,
+            overlay: item.iconOverlay,
+            isExotic: item.isExotic,
+            inventory: item.location.accountWide,
+            element:
+              item.element?.enumValue === DamageType.Kinetic
+                ? undefined
+                : item.element?.displayProperties?.icon,
           },
-        })
-      );
+        },
+      });
     }
   };
 }
@@ -161,56 +156,50 @@ function streamDeckSelectLoadout(
           };
         }
       }
-      return dispatch(
-        sendToStreamDeck({
-          action: 'dim:selection',
-          data: {
-            selectionType: 'loadout',
-            selection,
-          },
-        })
-      );
+      return sendToStreamDeck({
+        action: 'dim:selection',
+        data: {
+          selectionType: 'loadout',
+          selection,
+        },
+      });
     }
   };
 }
 
-const installFarmingObserver = _.once((dispatch: DimThunkDispatch) => {
+const installFarmingObserver = _.once(() => {
   observeStore(
     (state) => state.farming.storeId,
     (_, newState) => {
-      dispatch(
-        sendToStreamDeck({
-          action: 'dim:update',
-          data: {
-            farmingMode: Boolean(newState),
-          },
-        })
-      );
+      sendToStreamDeck({
+        action: 'dim:update',
+        data: {
+          farmingMode: Boolean(newState),
+        },
+      });
     }
   );
 });
 
 // collect and send data to the stream deck
 function refreshStreamDeck(): ThunkResult {
-  return async (dispatch, getState) => {
+  return async (_dispatch, getState) => {
     const refreshAction = () => {
       const state = getState();
       const store = currentStoreSelector(getState());
       if (!store) {
         return;
       }
-      dispatch(
-        sendToStreamDeck({
-          action: 'dim:update',
-          data: {
-            postmaster: packager.postmaster(store),
-            maxPower: packager.maxPower(store, state),
-            vault: packager.vault(state),
-            metrics: packager.metrics(state),
-            equippedItems: packager.equippedItems(store),
-          },
-        })
-      );
+      sendToStreamDeck({
+        action: 'dim:update',
+        data: {
+          postmaster: packager.postmaster(store),
+          maxPower: packager.maxPower(store, state),
+          vault: packager.vault(state),
+          metrics: packager.metrics(state),
+          equippedItems: packager.equippedItems(store),
+        },
+      });
     };
     clearInterval(refreshInterval);
     refreshInterval = window.setInterval(refreshAction, 30000);
@@ -272,7 +261,7 @@ function startStreamDeckConnection(): ThunkResult {
         return;
       }
 
-      installFarmingObserver(dispatch);
+      installFarmingObserver();
 
       // close the existing websocket if connected
       if (streamDeckWebSocket && streamDeckWebSocket.readyState !== WebSocket.CLOSED) {
@@ -333,5 +322,4 @@ export default {
   streamDeckSelectItem,
   streamDeckSelectLoadout,
   resetIdentifierOnStreamDeck,
-  reducer: streamDeck,
 };
