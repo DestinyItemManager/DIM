@@ -15,7 +15,7 @@ jobs:
   build:
     environment:
       name: pr
-      url: http://pr.destinyitemmanager.com/${{ github.event.number }}
+      url: http://pr.dim.gg/${{ github.event.number }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
