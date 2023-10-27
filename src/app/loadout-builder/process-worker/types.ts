@@ -33,8 +33,6 @@ export interface IntermediateProcessArmorSet {
   stats: number[];
   /** The first (highest-power) valid set from this stat mix. */
   armor: ProcessItem[];
-  /** Which stat mods were added? */
-  statMods: number[];
 }
 
 export interface ProcessMod {
