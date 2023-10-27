@@ -79,6 +79,7 @@ export interface DimStore<Item = DimItem> {
 
 export interface DimTitle {
   title: string;
+  isCompleted: boolean;
   gildedNum: number;
   isGildedForCurrentSeason: boolean;
 }

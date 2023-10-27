@@ -130,7 +130,7 @@ export function getCharacterStatsData(
   return ret;
 }
 
-function getTitleInfo(
+export function getTitleInfo(
   titleRecordHash: number,
   defs: D2ManifestDefinitions,
   profileRecords: DestinyProfileRecordsComponent | undefined,
@@ -141,13 +141,17 @@ function getTitleInfo(
   if (!titleInfo) {
     return undefined;
   }
-  const title = titleInfo.titlesByGenderHash[genderHash];
+  const title = titleInfo.titlesByGenderHash?.[genderHash];
   if (!title) {
     return undefined;
   }
 
   let gildedNum = 0;
   let isGildedForCurrentSeason = false;
+
+  const isCompleted = Boolean(
+    (profileRecords?.records[titleRecordHash].state ?? 0) & DestinyRecordState.RecordRedeemed
+  );
 
   // Gilding information is stored per-profile, not per-character
   if (titleInfo.gildingTrackingRecordHash) {
@@ -162,5 +166,5 @@ function getTitleInfo(
     );
   }
 
-  return { title, gildedNum, isGildedForCurrentSeason };
+  return { title, isCompleted, gildedNum, isGildedForCurrentSeason };
 }
