@@ -183,7 +183,7 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
     }
 
     // Load accounts info - we can't load the profile-specific DIM API data without it.
-    const getPlatformsPromise = dispatch(getPlatforms()); // in parallel, we'll wait later
+    const getPlatformsPromise = dispatch(getPlatforms); // in parallel, we'll wait later
 
     await profileFromIDB;
     installObservers(dispatch); // idempotent

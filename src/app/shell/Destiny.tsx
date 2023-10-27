@@ -95,7 +95,7 @@ export default function Destiny() {
 
   useEffect(() => {
     if (!accountsLoaded) {
-      dispatch(getPlatforms());
+      dispatch(getPlatforms);
     }
   }, [dispatch, accountsLoaded]);
 
