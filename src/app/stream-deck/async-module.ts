@@ -29,7 +29,6 @@ import {
   StreamDeckMessage,
 } from 'app/stream-deck/interfaces';
 import { handleStreamDeckMessage, notificationPromise } from 'app/stream-deck/msg-handlers';
-import { streamDeck } from 'app/stream-deck/reducer';
 import { streamDeckUpdatePopupSelector } from 'app/stream-deck/selectors';
 import {
   clientIdentifier,
@@ -323,5 +322,4 @@ export default {
   streamDeckSelectItem,
   streamDeckSelectLoadout,
   resetIdentifierOnStreamDeck,
-  reducer: streamDeck,
 };
