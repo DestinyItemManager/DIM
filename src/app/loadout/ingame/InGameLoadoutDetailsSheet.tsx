@@ -12,7 +12,7 @@ import { streamDeckSelectionSelector } from 'app/stream-deck/selectors';
 import { streamDeckSelectLoadout } from 'app/stream-deck/stream-deck';
 import { isKillTrackerSocket } from 'app/utils/item-utils';
 import { getSocketsByCategoryHashes, socketContainsIntrinsicPlug } from 'app/utils/socket-utils';
-import { ItemCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -124,8 +124,6 @@ export function InGameLoadoutDetails({
   );
 }
 
-const majorSubclassPlugSuffixes = ['.trinkets', '.totems', '.fragments', '.aspects', '.supers'];
-
 // Note that the item has already had socket overrides applied by useItemsFromInGameLoadout
 function InGameLoadoutItemDetail({
   resolvedItem: { item, loadoutItem },
@@ -147,16 +145,19 @@ function InGameLoadoutItemDetail({
     SocketCategoryHashes.ArmorCosmetics,
     SocketCategoryHashes.WeaponCosmetics,
   ]);
+
+  const subclassAbilitySockets = getSocketsByCategoryHashes(item.sockets, [
+    SocketCategoryHashes.Abilities_Abilities,
+    SocketCategoryHashes.Abilities_Abilities_Ikora,
+  ]);
+
   const [smallSockets, bigSockets] = _.partition(
     validSockets,
     (s) =>
       // Shaders and ornaments should be small
       cosmeticSockets.includes(s) ||
       // subclass mods that aren't super/aspect/fragment should be small (Grenade, jump, etc)
-      (s.plugged!.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.SubclassMods) &&
-        !majorSubclassPlugSuffixes.some((ps) =>
-          s.plugged!.plugDef.plug.plugCategoryIdentifier.endsWith(ps)
-        ))
+      subclassAbilitySockets.includes(s)
   );
   return (
     <React.Fragment key={item.id}>
