@@ -15,10 +15,10 @@ import { createSelector } from 'reselect';
  * allow-list of vendors for now.
  */
 const allowedVendorHashes = [
-  VendorHashes.ADA_TRANSMOG,
-  VendorHashes.XUR,
-  VendorHashes.DEVRIM_KAY,
-  VendorHashes.FAILSAFE,
+  VendorHashes.AdaTransmog,
+  VendorHashes.Xur,
+  VendorHashes.DevrimKay,
+  VendorHashes.Failsafe,
 ];
 
 const loVendorItemsSelector = currySelector(

@@ -78,9 +78,9 @@ export const weaponMasterworkY2SocketTypeHash = 2218962841;
 
 export const enum GhostActivitySocketTypeHashes {
   /* Available once the Ghost shell has been fully Masterworked. */
-  locked = 456763785, // SocketType "Activity Ghost Mod"
+  Locked = 456763785, // SocketType "Activity Ghost Mod"
   /* Activity mods provide additional currency and material rewards in various activities. */
-  unlocked = 2899644539, // SocketType "Activity Ghost Mod"
+  Unlocked = 2899644539, // SocketType "Activity Ghost Mod"
 }
 
 //
@@ -228,18 +228,18 @@ export const RAID_MILESTONE_HASHES = [
 ];
 
 export const enum VendorHashes {
-  EVERVERSE = 3361454721,
-  BENEDICT = 1265988377,
-  BANSHEE = 672118013,
-  DRIFTER = 248695599,
-  ADA_FORGE = 2917531897,
-  ADA_TRANSMOG = 350061650,
+  Eververse = 3361454721,
+  Benedict = 1265988377,
+  Banshee = 672118013,
+  Drifter = 248695599,
+  AdaForge = 2917531897,
+  AdaTransmog = 350061650,
   /** rahool. we override how his vendor FakeItems are displayed */
-  RAHOOL = 2255782930,
-  VAULT = 1037843411,
-  XUR = 2190858386,
-  DEVRIM_KAY = 396892126,
-  FAILSAFE = 1576276905,
+  Rahool = 2255782930,
+  Vault = 1037843411,
+  Xur = 2190858386,
+  DevrimKay = 396892126,
+  Failsafe = 1576276905,
 }
 
 /** used to snag the icon for display */
@@ -289,10 +289,10 @@ export const breakerTypes = {
 };
 
 export const enum ModsWithConditionalStats {
-  elementalCapacitor = 3511092054, // InventoryItem "Elemental Capacitor"
-  echoOfPersistence = 2272984671, // InventoryItem "Echo of Persistence"
-  enhancedElementalCapacitor = 711234314, // InventoryItem "Elemental Capacitor"
-  sparkOfFocus = 1727069360, // InventoryItem "Spark of Focus"
+  ElementalCapacitor = 3511092054, // InventoryItem "Elemental Capacitor"
+  EchoOfPersistence = 2272984671, // InventoryItem "Echo of Persistence"
+  EnhancedElementalCapacitor = 711234314, // InventoryItem "Elemental Capacitor"
+  SparkOfFocus = 1727069360, // InventoryItem "Spark of Focus"
 }
 
 export const ARTIFICE_PERK_HASH = 3727270518; // InventoryItem "Artifice Armor"

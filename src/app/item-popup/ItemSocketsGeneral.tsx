@@ -86,8 +86,8 @@ export default function ItemSocketsGeneral({
         (item.bucket.hash !== BucketHashes.Ghost ||
           socketInfo.socketDefinition.socketTypeHash !==
             (item.masterwork
-              ? GhostActivitySocketTypeHashes.locked
-              : GhostActivitySocketTypeHashes.unlocked))
+              ? GhostActivitySocketTypeHashes.Locked
+              : GhostActivitySocketTypeHashes.Unlocked))
     );
     socketsByCategory.set(category, sockets);
   }

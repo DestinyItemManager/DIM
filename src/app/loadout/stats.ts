@@ -21,8 +21,8 @@ export function isModStatActive(
   if (!stat.isConditionallyActive) {
     return true;
   } else if (
-    plugHash === ModsWithConditionalStats.echoOfPersistence ||
-    plugHash === ModsWithConditionalStats.sparkOfFocus
+    plugHash === ModsWithConditionalStats.EchoOfPersistence ||
+    plugHash === ModsWithConditionalStats.SparkOfFocus
   ) {
     // "-10 to the stat that governs your class ability recharge"
     return (

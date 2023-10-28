@@ -131,7 +131,7 @@ function makeVendorItem(
   }
 
   // only apply for 2255782930, master rahool
-  if (vendorHash === VendorHashes.RAHOOL && saleItem?.overrideStyleItemHash && vendorItem.item) {
+  if (vendorHash === VendorHashes.Rahool && saleItem?.overrideStyleItemHash && vendorItem.item) {
     const itemDef = defs.InventoryItem.get(saleItem.overrideStyleItemHash);
     if (itemDef) {
       const display = itemDef.displayProperties;

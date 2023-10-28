@@ -32,7 +32,7 @@ export interface D2Vendor {
   currencies: DestinyInventoryItemDefinition[];
 }
 
-const vendorOrder = [VendorHashes.ADA_TRANSMOG, VendorHashes.BANSHEE, VendorHashes.EVERVERSE];
+const vendorOrder = [VendorHashes.AdaTransmog, VendorHashes.Banshee, VendorHashes.Eververse];
 
 export function toVendorGroups(
   context: ItemCreationContext,

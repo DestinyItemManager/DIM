@@ -313,15 +313,15 @@ export function isPlugStatActive(
 
   const plugHash = plug.hash;
   if (
-    plugHash === ModsWithConditionalStats.elementalCapacitor ||
-    plugHash === ModsWithConditionalStats.enhancedElementalCapacitor
+    plugHash === ModsWithConditionalStats.ElementalCapacitor ||
+    plugHash === ModsWithConditionalStats.EnhancedElementalCapacitor
   ) {
     return false;
   }
 
   if (
-    plugHash === ModsWithConditionalStats.echoOfPersistence ||
-    plugHash === ModsWithConditionalStats.sparkOfFocus
+    plugHash === ModsWithConditionalStats.EchoOfPersistence ||
+    plugHash === ModsWithConditionalStats.SparkOfFocus
   ) {
     // "-10 to the stat that governs your class ability recharge"
     return (

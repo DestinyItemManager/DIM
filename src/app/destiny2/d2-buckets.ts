@@ -105,7 +105,7 @@ export function getBuckets(defs: D2ManifestDefinitions) {
     buckets.byHash[bucket.hash] = bucket;
   }
   const vaultMappings: { [bucketHash: number]: number } = {};
-  for (const items of defs.Vendor.get(VendorHashes.VAULT).acceptedItems) {
+  for (const items of defs.Vendor.get(VendorHashes.Vault).acceptedItems) {
     vaultMappings[items.acceptedInventoryBucketHash] = items.destinationInventoryBucketHash;
   }
   for (const bucket of Object.values(buckets.byHash)) {
