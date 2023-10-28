@@ -14,7 +14,7 @@ import {
 import { interpolateStatValue } from 'app/inventory/store/stats';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
-import { DEFAULT_ORNAMENTS, EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
+import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { refreshIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -24,7 +24,12 @@ import { isPlugStatActive } from 'app/utils/item-utils';
 import { usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { DestinyItemSocketEntryDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { PlugCategoryHashes, SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import {
+  PlugCategoryHashes,
+  SocketCategoryHashes,
+  StatHashes,
+  TraitHashes,
+} from 'data/d2/generated-enums';
 import { motion } from 'framer-motion';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -230,7 +235,8 @@ export default function SocketDetailsSelectedPlug({
 
   // Only show Exotic catalyst requirements if the catalyst is incomplete. We assume
   // that an Exotic weapon can only be masterworked if its catalyst is complete.
-  const hideRequirements = plug.traitHashes?.includes(EXOTIC_CATALYST_TRAIT) && item.masterwork;
+  const hideRequirements =
+    plug.traitHashes?.includes(TraitHashes.ItemExoticCatalyst) && item.masterwork;
 
   return (
     <div className={clsx(styles.selectedPlug, { [styles.hasStats]: stats.length > 0 })}>

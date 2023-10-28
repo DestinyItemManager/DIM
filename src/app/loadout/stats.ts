@@ -6,7 +6,7 @@ import { hashesToPluggableItems } from 'app/inventory/store/sockets';
 import { ArmorStatHashes, ModStatChanges } from 'app/loadout-builder/types';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { mapToOtherModCostVariant } from 'app/loadout/mod-utils';
-import { armorStats, modsWithConditionalStats } from 'app/search/d2-known-values';
+import { ModsWithConditionalStats, armorStats } from 'app/search/d2-known-values';
 import { emptyArray } from 'app/utils/empty';
 import { HashLookup } from 'app/utils/util-types';
 import { DestinyClass, DestinyItemInvestmentStatDefinition } from 'bungie-api-ts/destiny2';
@@ -21,8 +21,8 @@ export function isModStatActive(
   if (!stat.isConditionallyActive) {
     return true;
   } else if (
-    plugHash === modsWithConditionalStats.echoOfPersistence ||
-    plugHash === modsWithConditionalStats.sparkOfFocus
+    plugHash === ModsWithConditionalStats.echoOfPersistence ||
+    plugHash === ModsWithConditionalStats.sparkOfFocus
   ) {
     // "-10 to the stat that governs your class ability recharge"
     return (

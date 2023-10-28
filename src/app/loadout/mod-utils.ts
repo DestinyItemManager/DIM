@@ -1,6 +1,6 @@
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-known-values';
+import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
 import { LookupTable } from 'app/utils/util-types';
@@ -13,11 +13,11 @@ import { normalToReducedMod, reducedToNormalMod } from 'data/d2/reduced-cost-mod
 import { knownModPlugCategoryHashes } from './known-values';
 
 export const plugCategoryHashToBucketHash: LookupTable<PlugCategoryHashes, BucketHashes> = {
-  [armor2PlugCategoryHashesByName.helmet]: armorBuckets.helmet,
-  [armor2PlugCategoryHashesByName.gauntlets]: armorBuckets.gauntlets,
-  [armor2PlugCategoryHashesByName.chest]: armorBuckets.chest,
-  [armor2PlugCategoryHashesByName.leg]: armorBuckets.leg,
-  [armor2PlugCategoryHashesByName.classitem]: armorBuckets.classitem,
+  [armor2PlugCategoryHashesByName.helmet]: BucketHashes.Helmet,
+  [armor2PlugCategoryHashesByName.gauntlets]: BucketHashes.Gauntlets,
+  [armor2PlugCategoryHashesByName.chest]: BucketHashes.ChestArmor,
+  [armor2PlugCategoryHashesByName.leg]: BucketHashes.LegArmor,
+  [armor2PlugCategoryHashesByName.classitem]: BucketHashes.ClassArmor,
 };
 
 /**

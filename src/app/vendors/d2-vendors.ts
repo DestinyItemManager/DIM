@@ -1,6 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
-import { VENDORS, silverItemHash } from 'app/search/d2-known-values';
+import { VendorHashes, silverItemHash } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
 import { filterMap } from 'app/utils/collections';
 import { chainComparator, compareBy } from 'app/utils/comparators';
@@ -32,7 +32,7 @@ export interface D2Vendor {
   currencies: DestinyInventoryItemDefinition[];
 }
 
-const vendorOrder = [VENDORS.SPIDER, VENDORS.ADA_TRANSMOG, VENDORS.BANSHEE, VENDORS.EVERVERSE];
+const vendorOrder = [VendorHashes.ADA_TRANSMOG, VendorHashes.BANSHEE, VendorHashes.EVERVERSE];
 
 export function toVendorGroups(
   context: ItemCreationContext,

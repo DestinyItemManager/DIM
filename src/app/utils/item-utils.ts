@@ -12,11 +12,10 @@ import { DimStore } from 'app/inventory/store-types';
 import { getSeason } from 'app/inventory/store/season';
 import {
   ARTIFICE_PERK_HASH,
-  EXOTIC_CATALYST_TRAIT,
+  ModsWithConditionalStats,
   armor2PlugCategoryHashes,
   killTrackerObjectivesByHash,
   killTrackerSocketTypeHash,
-  modsWithConditionalStats,
 } from 'app/search/d2-known-values';
 import { damageNamesByEnum } from 'app/search/search-filter-values';
 import modSocketMetadata, {
@@ -26,7 +25,7 @@ import modSocketMetadata, {
 import { DamageType, DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
-import { BucketHashes, PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes, PlugCategoryHashes, StatHashes, TraitHashes } from 'data/d2/generated-enums';
 import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json';
 import _ from 'lodash';
 import { filterMap, objectifyArray } from './collections';
@@ -298,7 +297,7 @@ export function isPlugStatActive(
   In these cases, the catalyst effects are only applied once the objectives are complete.
   We'll assume that the item can only be masterworked if its associated catalyst has been completed.
   */
-  if (plug.traitHashes?.includes(EXOTIC_CATALYST_TRAIT) && !item.masterwork) {
+  if (plug.traitHashes?.includes(TraitHashes.ItemExoticCatalyst) && !item.masterwork) {
     return false;
   }
 
@@ -314,15 +313,15 @@ export function isPlugStatActive(
 
   const plugHash = plug.hash;
   if (
-    plugHash === modsWithConditionalStats.elementalCapacitor ||
-    plugHash === modsWithConditionalStats.enhancedElementalCapacitor
+    plugHash === ModsWithConditionalStats.elementalCapacitor ||
+    plugHash === ModsWithConditionalStats.enhancedElementalCapacitor
   ) {
     return false;
   }
 
   if (
-    plugHash === modsWithConditionalStats.echoOfPersistence ||
-    plugHash === modsWithConditionalStats.sparkOfFocus
+    plugHash === ModsWithConditionalStats.echoOfPersistence ||
+    plugHash === ModsWithConditionalStats.sparkOfFocus
   ) {
     // "-10 to the stat that governs your class ability recharge"
     return (

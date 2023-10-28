@@ -1,4 +1,4 @@
-import { VENDORS } from 'app/search/d2-known-values';
+import { VendorHashes } from 'app/search/d2-known-values';
 import { filterMap } from 'app/utils/collections';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -105,7 +105,7 @@ export function getBuckets(defs: D2ManifestDefinitions) {
     buckets.byHash[bucket.hash] = bucket;
   }
   const vaultMappings: { [bucketHash: number]: number } = {};
-  for (const items of defs.Vendor.get(VENDORS.VAULT).acceptedItems) {
+  for (const items of defs.Vendor.get(VendorHashes.VAULT).acceptedItems) {
     vaultMappings[items.acceptedInventoryBucketHash] = items.destinationInventoryBucketHash;
   }
   for (const bucket of Object.values(buckets.byHash)) {

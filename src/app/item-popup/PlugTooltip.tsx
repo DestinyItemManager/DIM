@@ -8,7 +8,6 @@ import { getValueStyle } from 'app/inventory/store/objectives';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { getDamageTypeForSubclassPlug } from 'app/inventory/subclass';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
 import { getDimPlugStats, getPlugDefStats, usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { isEnhancedPerk, isModCostVisible } from 'app/utils/socket-utils';
 import WishListPerkThumb from 'app/wishlists/WishListPerkThumb';
@@ -23,6 +22,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
+import { TraitHashes } from 'data/d2/generated-enums';
 import { useCallback } from 'react';
 import { DimItem, DimPlug, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import Objective from '../progress/Objective';
@@ -51,7 +51,7 @@ export function DimPlugTooltip({
   // Only show Exotic catalyst requirements if the catalyst is incomplete. We assume
   // that an Exotic weapon can only be masterworked if its catalyst is complete.
   const hideRequirements =
-    plug.plugDef.traitHashes?.includes(EXOTIC_CATALYST_TRAIT) && item.masterwork;
+    plug.plugDef.traitHashes?.includes(TraitHashes.ItemExoticCatalyst) && item.masterwork;
 
   // The PlugTooltip does all the rendering and layout, we just process information here.
   return (

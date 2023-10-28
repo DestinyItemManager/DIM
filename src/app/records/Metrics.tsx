@@ -1,6 +1,6 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { ALL_TRAIT } from 'app/search/d2-known-values';
+import { TraitHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import Metric from './Metric';
 import styles from './Metrics.m.scss';
@@ -10,7 +10,7 @@ export default function Metrics({ metrics }: { metrics: DimMetric[] }) {
   const defs = useD2Definitions()!;
   const groupedMetrics = Object.groupBy(
     metrics,
-    (metric) => metric.metricDef.traitHashes.filter((h) => h !== ALL_TRAIT)[0]
+    (metric) => metric.metricDef.traitHashes.filter((h) => h !== TraitHashes.All)[0]
   );
 
   const traits = _.keyBy(

@@ -1,7 +1,7 @@
 import { useD2Definitions } from 'app/manifest/selectors';
-import { ALL_TRAIT } from 'app/search/d2-known-values';
 import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import { TraitHashes } from 'data/d2/generated-enums';
 import masterworkOverlay from 'images/masterwork-metric.png';
 import BungieImage from '../dim-ui/BungieImage';
 import styles from './MetricBanner.m.scss';
@@ -21,7 +21,7 @@ export default function MetricBanner({ metricHash, objectiveProgress, className 
   const metricIcon = metricDef.displayProperties.icon;
 
   const metricScope = metricDef.traitHashes
-    .filter((h) => h !== ALL_TRAIT)
+    .filter((h) => h !== TraitHashes.All)
     .map((h) => defs.Trait.get(h))[0];
   const parentNode = defs.PresentationNode.get(metricDef.parentNodeHashes[0]);
 

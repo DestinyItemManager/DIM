@@ -2,7 +2,7 @@ import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
 import {
-  ghostActivitySocketTypeHashes,
+  GhostActivitySocketTypeHashes,
   killTrackerSocketTypeHash,
 } from 'app/search/d2-known-values';
 import { usePlugDescriptions } from 'app/utils/plug-descriptions';
@@ -86,8 +86,8 @@ export default function ItemSocketsGeneral({
         (item.bucket.hash !== BucketHashes.Ghost ||
           socketInfo.socketDefinition.socketTypeHash !==
             (item.masterwork
-              ? ghostActivitySocketTypeHashes.locked
-              : ghostActivitySocketTypeHashes.unlocked))
+              ? GhostActivitySocketTypeHashes.locked
+              : GhostActivitySocketTypeHashes.unlocked))
     );
     socketsByCategory.set(category, sockets);
   }
