@@ -119,7 +119,12 @@ function StatRow({
           {...provided.draggableProps}
         >
           <div className={styles.name}>
-            <span className={styles.grip} {...provided.dragHandleProps} tabIndex={-1}>
+            <span
+              className={styles.grip}
+              {...provided.dragHandleProps}
+              tabIndex={-1}
+              aria-hidden={true}
+            >
               <AppIcon icon={dragHandleIcon} />
             </span>
             <button
@@ -140,6 +145,7 @@ function StatRow({
                 className={styles.iconStat}
                 src={statDef.displayProperties.icon}
                 aria-hidden={true}
+                alt=""
               />
               {statDef.displayProperties.name}
             </div>
