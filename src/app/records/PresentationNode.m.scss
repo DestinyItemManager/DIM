@@ -40,3 +40,22 @@
     background: $gold;
   }
 }
+
+.incompleteTitleIcon {
+  filter: grayscale(1);
+}
+
+.isGilded {
+  color: $sealtitle;
+  &.gildedThisSeason {
+    color: $gildedtitle;
+  }
+
+  .gildedNum {
+    font-size: 10px;
+    font-style: normal;
+    margin-left: 1px;
+    vertical-align: super;
+    line-height: 0;
+  }
+}
