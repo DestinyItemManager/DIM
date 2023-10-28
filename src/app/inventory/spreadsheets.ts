@@ -347,7 +347,7 @@ export function source(item: DimItem) {
         (src) =>
           (item.source && D2Sources[src].sourceHashes.includes(item.source)) ||
           D2Sources[src].itemHashes.includes(item.hash) ||
-          D2MissingSources[src].includes(item.hash)
+          D2MissingSources[src]?.includes(item.hash)
       ) || ''
     );
   }
