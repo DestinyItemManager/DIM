@@ -96,6 +96,13 @@ jobs:
             REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
             REMOTE_PATH: pr.destinyitemmanager.com/${{ github.event.number }}
 
+      - name: Purge CloudFlare cache
+        run: ./build/purge-cloudflare.sh
+        env:
+          CLOUDFLARE_KEY: ${{ secrets.CLOUDFLARE_KEY }}
+          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+          APP_DOMAIN: pr.destinyitemmanager.com/${{ github.event.number }}
+
       - name: Set preview deployment URL
         if: ${{github.event.pull_request.head.repo.full_name == github.repository}}
         id: deploy-url
