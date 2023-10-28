@@ -15,7 +15,7 @@ jobs:
   build:
     environment:
       name: pr
-      url: http://pr.dim.gg/${{ github.event.number }}/
+      url: ${{ steps.deploy-url.outputs.url }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -72,7 +72,10 @@ jobs:
           key: ${{ secrets.RELATIVE_CI_KEY }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      # Deploy a preview version of the server!
+
       - name: Install SSH key
+        if: ${{github.event.pull_request.head.repo.full_name == github.repository}}
         uses: benoitchantre/setup-ssh-authentication-action@1.0.0
         with:
           private-key: ${{ secrets.SSH_KEY }}
@@ -80,9 +83,11 @@ jobs:
           known-hosts: ${{ secrets.REMOTE_HOST }}
 
       - name: Check Syntax
+        if: ${{github.event.pull_request.head.repo.full_name == github.repository}}
         run: pnpm syntax
 
       - name: Rsync to Server
+        if: ${{github.event.pull_request.head.repo.full_name == github.repository}}
         run: ./build/rsync-deploy.sh
         env:
             SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
@@ -90,3 +95,9 @@ jobs:
             REMOTE_USER: ${{ secrets.REMOTE_USER }}
             REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
             REMOTE_PATH: pr.destinyitemmanager.com/${{ github.event.number }}
+
+      - name: Set preview deployment URL
+        if: ${{github.event.pull_request.head.repo.full_name == github.repository}}
+        id: deploy-url
+        run: |
+          echo "url=https://pr.dim.gg/${{ github.event.number }}/" >> $GITHUB_OUTPUT
