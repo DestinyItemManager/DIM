@@ -170,6 +170,36 @@ export default (env: Env) => {
           return chunk.name !== 'browsercheck' && chunk.name !== 'earlyErrorReport';
         },
         automaticNameDelimiter: '-',
+        minSize: 17000,
+        minRemainingSize: 0,
+        minChunks: 1,
+        maxAsyncRequests: 30,
+        maxInitialRequests: 30,
+
+        enforceSizeThreshold: 30000,
+        cacheGroups: {
+          common: {
+            test: /[\\/]node_modules[\\/]/,
+            priority: -5,
+            reuseExistingChunk: true,
+            chunks: 'initial',
+            name: 'common_app',
+            minSize: 0,
+          },
+          default: {
+            minChunks: 2,
+            priority: -20,
+            reuseExistingChunk: true,
+          },
+          // we are opting out of defaultVendors, so rest of the node modules will be part of default cacheGroup
+          defaultVendors: false,
+          reactPackage: {
+            test: /[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom)[\\/]/,
+            name: 'vendor_react',
+            chunks: 'all',
+            priority: 10,
+          },
+        },
       },
       minimizer: [
         new TerserPlugin({
