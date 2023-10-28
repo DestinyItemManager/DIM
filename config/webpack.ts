@@ -35,6 +35,7 @@ import NotifyPlugin from './notify-webpack-plugin';
 const ASSET_NAME_PATTERN = 'static/[name]-[contenthash:6][ext]';
 
 import packageJson from '../package.json';
+import createWebAppManifest from './manifest-webapp';
 
 import splash from '../icons/splash.json';
 
@@ -455,9 +456,11 @@ export default (env: Env) => {
       buildTime,
     }),
 
+    // The web app manifest controls how our app looks when installed.
+    new GenerateJsonPlugin('./manifest-webapp.json', createWebAppManifest(publicPath)),
+
     new CopyWebpackPlugin({
       patterns: [
-        { from: './src/manifest-webapp.json' },
         // Only copy the manifests out of the data folder. Everything else we import directly into the bundle.
         { from: './src/data/d1/manifests', to: 'data/d1/manifests' },
         { from: `./icons/${env.name}/` },

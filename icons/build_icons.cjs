@@ -19,6 +19,13 @@ for (const VERSION of ['release', 'beta', 'dev', 'pr']) {
     );
   }
 
+  const color = {
+    release: '#ee6d0d',
+    beta: '#5bb1ce',
+    dev: '#172025',
+    pr: '#FF64E7',
+  }[VERSION];
+
   execSync(
     `rsvg-convert -w 180 -h 180 -o "${VERSION}/apple-touch-icon.png" "apple-touch-icon-${VERSION}.svg"`
   );
@@ -31,11 +38,9 @@ for (const VERSION of ['release', 'beta', 'dev', 'pr']) {
   execSync(
     `rsvg-convert -w 512 -h 512 -o "${VERSION}/android-chrome-512x512-${CACHEBREAKER}.png" "android-icon-${VERSION}.svg"`
   );
-  if (VERSION === 'release') {
-    execSync(
-      `rsvg-convert -w 512 -h 512 -b "#ee6d0d" -o "${VERSION}/android-chrome-mask-512x512-${CACHEBREAKER}.png" "android-icon-${VERSION}.svg"`
-    );
-  }
+  execSync(
+    `rsvg-convert -w 512 -h 512 -b "${color}" -o "${VERSION}/android-chrome-mask-512x512-${CACHEBREAKER}.png" "android-icon-${VERSION}.svg"`
+  );
 }
 
 rimraf.sync('splash');
