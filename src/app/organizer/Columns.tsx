@@ -26,6 +26,7 @@ import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { InGameLoadout, Loadout, isInGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { LoadoutsByItem } from 'app/loadout-drawer/selectors';
 import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
+import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import { quoteFilterString } from 'app/search/query-parser';
 import { statHashByName } from 'app/search/search-filter-values';
 import { getColor, percent } from 'app/shell/formatters';
@@ -51,18 +52,17 @@ import {
   isSunset,
 } from 'app/utils/item-utils';
 import {
+  getDisplayedItemSockets,
   getSocketsByIndexes,
   getWeaponArchetype,
   getWeaponArchetypeSocket,
-  isEmptyArmorModSocket,
   isEnhancedPerk,
-  isUsedArmorModSocket,
 } from 'app/utils/socket-utils';
 import { LookupTable } from 'app/utils/util-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info';
-import { StatHashes } from 'data/d2/generated-enums';
+import { PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import shapedOverlay from 'images/shapedOverlay.png';
 import _ from 'lodash';
 import React from 'react';
@@ -666,34 +666,35 @@ function PerksCell({
     return null;
   }
 
-  const legendaryWeaponArchetypePlugHash =
-    item.bucket.inWeapons && !item.isExotic
-      ? getWeaponArchetypeSocket(item)?.plugged?.plugDef?.hash
-      : undefined;
-  let sockets = item.sockets.categories.flatMap((c) =>
-    getSocketsByIndexes(item.sockets!, c.socketIndexes).filter(
-      (s) =>
-        !isKillTrackerSocket(s) &&
-        !isEmptyArmorModSocket(s) &&
-        s.plugged?.plugDef.displayProperties.name && // ignore empty sockets and unnamed plugs
-        (s.plugged.plugDef.collectibleHash || // collectibleHash catches shaders and most mods
-          isUsedArmorModSocket(s) || // but we catch additional mods missing collectibleHash (arrivals)
-          (s.isPerk &&
-            // Filter out the archetype plug for legendary weapons
-            // as it's already in the archetype column
-            (!legendaryWeaponArchetypePlugHash ||
-              s.plugged.plugDef.hash !== legendaryWeaponArchetypePlugHash)))
-    )
-  );
+  let sockets = [];
+  // Don't extract intrinsic, since there's a separate column
+  const { modSocketsByCategory, perks } = getDisplayedItemSockets(
+    item,
+    /* excludeEmptySockets */ true
+  )!;
 
+  if (perks) {
+    sockets.push(...getSocketsByIndexes(item.sockets, perks.socketIndexes));
+  }
   if (traitsOnly) {
     sockets = sockets.filter(
       (s) =>
         s.plugged &&
-        (s.plugged.plugDef.plug.plugCategoryIdentifier === 'frames' ||
-          s.plugged.plugDef.plug.plugCategoryIdentifier === 'intrinsics')
+        (s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames ||
+          s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics)
     );
+  } else {
+    // Improve this when we use iterator-helpers
+    sockets.push(...[...modSocketsByCategory.values()].flat());
   }
+
+  sockets = sockets.filter(
+    (s) =>
+      // we have a separate column for the kill tracker
+      !isKillTrackerSocket(s) &&
+      // and for the regular weapon masterworks
+      s.socketDefinition.socketTypeHash !== weaponMasterworkY2SocketTypeHash
+  );
 
   if (!sockets.length) {
     return null;

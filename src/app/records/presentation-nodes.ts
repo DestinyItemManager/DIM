@@ -5,6 +5,8 @@ import { ItemFilter } from 'app/search/filter-types';
 import { count, filterMap } from 'app/utils/collections';
 import extraItemCollectibles from 'data/d2/unreferenced-collections-items.json';
 
+import { DimTitle } from 'app/inventory/store-types';
+import { getTitleInfo } from 'app/inventory/store/d2-store-factory';
 import {
   DestinyCollectibleDefinition,
   DestinyCollectibleState,
@@ -49,10 +51,9 @@ export interface DimPresentationNode extends DimPresentationNodeLeaf {
   acquired: number;
   childPresentationNodes?: DimPresentationNode[];
   /**
-   * The record containing the title for seal presentation nodes.
-   * Contains some searchable strings.
+   * For seals, the title info.
    */
-  completionRecord?: DestinyRecordDefinition;
+  titleInfo?: DimTitle;
 }
 
 export interface DimRecord {
@@ -110,25 +111,23 @@ export function toPresentationNodeTree(
     return null;
   }
 
-  // For titles, this is the record containing the actual title
-  const completionRecord = presentationNodeDef.completionRecordHash
-    ? defs.Record.get(presentationNodeDef.completionRecordHash)
-    : undefined;
-
-  // And the title is usually what people expect, not the seal presentation node name
-  // (which in some cases is extremely misleading/bad, e.g. "Raids" for Rivensbane)
-  const overrideName =
-    genderHash &&
-    completionRecord &&
-    completionRecord.titleInfo?.hasTitle &&
-    completionRecord.titleInfo?.titlesByGenderHash[genderHash];
+  // For titles, display the title, completion and gilding count
+  const titleInfo =
+    presentationNodeDef.completionRecordHash && genderHash
+      ? getTitleInfo(
+          presentationNodeDef.completionRecordHash,
+          defs,
+          itemCreationContext.profileResponse.profileRecords.data,
+          genderHash
+        )
+      : undefined;
 
   const commonNodeProperties = {
     nodeDef: presentationNodeDef,
     hash: presentationNodeDef.hash,
-    name: overrideName || presentationNodeDef.displayProperties.name,
+    name: titleInfo?.title || presentationNodeDef.displayProperties.name,
     icon: presentationNodeDef.displayProperties.icon,
-    completionRecord,
+    titleInfo,
   };
   if (presentationNodeDef.children.collectibles?.length) {
     const collectibles = toCollectibles(
@@ -394,12 +393,8 @@ export function filterPresentationNodesToSearch(
 
 function searchNode(node: DimPresentationNode, searchQuery: string) {
   return (
-    (node.nodeDef &&
-      (searchDisplayProperties(node.nodeDef.displayProperties, searchQuery) ||
-        // titleInfo can be missing for classified titles
-        Object.values(node.completionRecord?.titleInfo?.titlesByGenderHash ?? {}).some((title) =>
-          title.toLowerCase().includes(searchQuery)
-        ))) ||
+    (node.nodeDef && searchDisplayProperties(node.nodeDef.displayProperties, searchQuery)) ||
+    node.titleInfo?.title.toLowerCase().includes(searchQuery) ||
     node.name.toLowerCase().includes(searchQuery)
   );
 }

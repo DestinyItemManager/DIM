@@ -14,7 +14,9 @@ import {
   getMasterworkStatNames,
   getSpecialtySocketMetadatas,
   isD1Item,
+  isKillTrackerSocket,
 } from 'app/utils/item-utils';
+import { getDisplayedItemSockets, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { D2EventInfo } from 'data/d2/d2-event-info';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
@@ -24,7 +26,7 @@ import _ from 'lodash';
 import Papa from 'papaparse';
 import { setItemNote, setItemTagsBulk } from './actions';
 import { TagValue, tagConfig } from './dim-item-info';
-import { D1GridNode, DimItem, DimSockets } from './item-types';
+import { D1GridNode, DimItem } from './item-types';
 import { getNotesSelector, getTagSelector, storesSelector } from './selectors';
 import { DimStore } from './store-types';
 import { getEvent, getSeason } from './store/season';
@@ -61,10 +63,6 @@ const FILTER_NODE_NAMES = [
   'Solar Damage',
   'Arc Damage',
   'Void Damage',
-  'Default Shader',
-  'Default Ornament',
-  'Empty Mod Socket',
-  'No Projection',
 ];
 
 // ignore raid & calus sources in favor of more detailed sources
@@ -228,11 +226,31 @@ function downloadCsv(filename: string, csv: string) {
   download(csv, filenameWithExt, 'text/csv');
 }
 
-function buildSocketNames(sockets: DimSockets): string[] {
-  const socketItems = sockets.allSockets.map((s) =>
-    s.plugOptions
-      .filter((p) => !FILTER_NODE_NAMES.some((n) => n === p.plugDef.displayProperties.name))
-      .map((p) =>
+function buildSocketNames(item: DimItem): string[] {
+  if (!item.sockets) {
+    return [];
+  }
+
+  const sockets = [];
+  const { intrinsicSocket, modSocketsByCategory, perks } = getDisplayedItemSockets(
+    item,
+    /* excludeEmptySockets */ true
+  )!;
+
+  if (intrinsicSocket) {
+    sockets.push(intrinsicSocket);
+  }
+
+  if (perks) {
+    sockets.push(...getSocketsByIndexes(item.sockets, perks.socketIndexes));
+  }
+  // Improve this when we use iterator-helpers
+  sockets.push(...[...modSocketsByCategory.values()].flat());
+
+  const socketItems = sockets.map(
+    (s) =>
+      (isKillTrackerSocket(s) && s.plugged?.plugDef.displayProperties.name) ||
+      s.plugOptions.map((p) =>
         s.plugged?.plugDef.hash === p.plugDef.hash
           ? `${p.plugDef.displayProperties.name}*`
           : p.plugDef.displayProperties.name
@@ -260,7 +278,7 @@ function getMaxPerks(items: DimItem[]) {
           (isD1Item(item) && item.talentGrid
             ? buildNodeNames(item.talentGrid.nodes)
             : item.sockets
-            ? buildSocketNames(item.sockets)
+            ? buildSocketNames(item)
             : []
           ).length
       )
@@ -273,7 +291,7 @@ function addPerks(row: Record<string, unknown>, item: DimItem, maxPerks: number)
     isD1Item(item) && item.talentGrid
       ? buildNodeNames(item.talentGrid.nodes)
       : item.sockets
-      ? buildSocketNames(item.sockets)
+      ? buildSocketNames(item)
       : [];
 
   _.times(maxPerks, (index) => {

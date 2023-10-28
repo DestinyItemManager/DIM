@@ -1,9 +1,11 @@
 import { settingSelector } from 'app/dim-api/selectors';
 import { scrollToPosition } from 'app/dim-ui/scroll';
+import { DimTitle } from 'app/inventory/store-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { percent } from 'app/shell/formatters';
 import { DestinyPresentationScreenStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import { FontGlyphs } from 'data/d2/d2-font-glyphs';
 import { deepEqual } from 'fast-equals';
 import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
@@ -79,7 +81,13 @@ export default function PresentationNode({
   const childrenExpanded =
     isRootNode || onlyChild || path.includes(presentationNodeHash) || alwaysExpanded;
 
-  const title = <PresentationNodeTitle displayProperties={node} overrideName={overrideName} />;
+  const title = (
+    <PresentationNodeTitle
+      displayProperties={node}
+      overrideName={overrideName}
+      titleInfo={node.titleInfo}
+    />
+  );
 
   return (
     <div
@@ -187,14 +195,36 @@ function PresentationNodeProgress({ acquired, visible }: { acquired: number; vis
 function PresentationNodeTitle({
   displayProperties,
   overrideName,
+  titleInfo,
 }: {
   displayProperties: { name: string; icon: string };
   overrideName?: string;
+  titleInfo?: DimTitle;
 }) {
   return (
     <span className={styles.nodeName}>
-      {displayProperties.icon && <BungieImage src={displayProperties.icon} />}{' '}
+      {displayProperties.icon && (
+        <BungieImage
+          src={displayProperties.icon}
+          className={clsx({ [styles.incompleteTitleIcon]: titleInfo && !titleInfo.isCompleted })}
+        />
+      )}{' '}
       {overrideName || displayProperties.name}
+      {titleInfo && titleInfo.gildedNum > 0 && (
+        <>
+          {' '}
+          <span
+            className={clsx(styles.isGilded, {
+              [styles.gildedThisSeason]: titleInfo.isGildedForCurrentSeason,
+            })}
+          >
+            {String.fromCodePoint(FontGlyphs.gilded_title)}
+            {titleInfo.gildedNum > 1 && (
+              <span className={styles.gildedNum}>{titleInfo.gildedNum}</span>
+            )}
+          </span>
+        </>
+      )}
     </span>
   );
 }
