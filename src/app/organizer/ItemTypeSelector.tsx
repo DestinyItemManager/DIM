@@ -295,26 +295,19 @@ const d1SelectionTree: ItemCategoryTreeNode = {
       ],
     },
     {
-      id: 'armor',
-      itemCategoryHash: ItemCategoryHashes.Armor,
-
-      subCategories: [
-        {
-          id: 'hunter',
-          itemCategoryHash: ItemCategoryHashes.Hunter,
-          subCategories: d1ArmorCategories,
-        },
-        {
-          id: 'titan',
-          itemCategoryHash: ItemCategoryHashes.Titan,
-          subCategories: d1ArmorCategories,
-        },
-        {
-          id: 'warlock',
-          itemCategoryHash: ItemCategoryHashes.Warlock,
-          subCategories: d1ArmorCategories,
-        },
-      ],
+      id: 'hunter',
+      itemCategoryHash: ItemCategoryHashes.Hunter,
+      subCategories: d1ArmorCategories,
+    },
+    {
+      id: 'titan',
+      itemCategoryHash: ItemCategoryHashes.Titan,
+      subCategories: d1ArmorCategories,
+    },
+    {
+      id: 'warlock',
+      itemCategoryHash: ItemCategoryHashes.Warlock,
+      subCategories: d1ArmorCategories,
     },
     {
       id: 'ghosts',
