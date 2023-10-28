@@ -465,6 +465,7 @@ export default (env: Env) => {
         { from: './src/data/d1/manifests', to: 'data/d1/manifests' },
         { from: `./icons/${env.name}/` },
         { from: `./icons/splash`, to: 'splash/' },
+        { from: `./icons/screenshots`, to: 'screenshots/' },
         { from: './src/safari-pinned-tab.svg' },
       ],
     }),
@@ -542,6 +543,7 @@ export default (env: Env) => {
             /data\/d1\/manifests\/d1-manifest-..(-br)?.json(.br|.gz)?/,
             /^(?!en).+.json/,
             /webpack-stats.json/,
+            /screenshots\//,
           ],
         },
       }),
@@ -575,13 +577,13 @@ export default (env: Env) => {
         include: [/\.(html|js|css|woff2|json|wasm)$/, /static\/(?!fa-).*\.(png|gif|jpg|svg)$/],
         exclude: [
           /version\.json/,
-          /extension-dist/,
           /\.map$/,
           // Ignore both the webapp manifest and the d1-manifest files
           /data\/d1\/manifests/,
           /manifest-webapp/,
           // Android and iOS manifest
           /\.well-known/,
+          /screenshots\//,
         ],
         swSrc: './src/service-worker.ts',
         swDest: 'service-worker.js',
