@@ -16,7 +16,6 @@ const missingSources: { [key: string]: number[] } = {
     3871537958, // Descending Echo Helm
     4050474396, // Descending Echo Mark
   ],
-  ada: [],
   adventure: [
     11686457, // Unethical Experiments Cloak
     11686458, // Orobas Vectura Cloak
@@ -37,9 +36,6 @@ const missingSources: { [key: string]: number[] } = {
     3706457514, // Gearhead Grips
     3706457515, // Songbreaker Grips
   ],
-  banshee: [],
-  battlegrounds: [],
-  blackarmory: [],
   calus: [
     17280095, // Shadow's Strides
     30962015, // Boots of the Ace-Defiant
@@ -586,9 +582,6 @@ const missingSources: { [key: string]: number[] } = {
     4283953067, // Arc Reserves
     4288395850, // Cloak of Retelling
   ],
-  cayde6: [],
-  compass: [],
-  contact: [],
   cos: [
     17280095, // Shadow's Strides
     256904954, // Shadow's Grips
@@ -621,8 +614,6 @@ const missingSources: { [key: string]: number[] } = {
     3759659288, // Shadow's Plate
     4152814806, // Shadow's Greaves
   ],
-  crota: [],
-  crotasend: [],
   crownofsorrow: [
     17280095, // Shadow's Strides
     256904954, // Shadow's Grips
@@ -935,7 +926,6 @@ const missingSources: { [key: string]: number[] } = {
     4251770244, // Boots of the Ace-Defiant
     4251770245, // Boots of the Emperor's Agent
   ],
-  deepstonecrypt: [],
   deluxe: [
     1952218242, // Sequence Flourish
     2683682447, // Traitor's Fate
@@ -1051,7 +1041,6 @@ const missingSources: { [key: string]: number[] } = {
     4188366993, // Ancient Apocalypse Robes
     4255727106, // Ancient Apocalypse Hood
   ],
-  dsc: [],
   duality: [
     145651147, // Deep Explorer Vest
     420895300, // Deep Explorer Mark
@@ -1154,7 +1143,6 @@ const missingSources: { [key: string]: number[] } = {
     3973359167, // Wildwood Mask
     4051755349, // Wildwood Boots
   ],
-  enclave: [],
   eow: [
     239489770, // Bond of Sekris
     253344425, // Mask of Feltroc
@@ -1187,8 +1175,6 @@ const missingSources: { [key: string]: number[] } = {
     3964287245, // Wraps of Sekris
     4229161783, // Boots of Feltroc
   ],
-  ep: [],
-  europa: [],
   events: [
     116784191, // Solstice Boots (Renewed)
     140842223, // Solstice Mask (Drained)
@@ -1357,7 +1343,6 @@ const missingSources: { [key: string]: number[] } = {
     3947596543, // Green Dawning Lanterns
     4059030097, // Winterhart Mask
   ],
-  evidenceboard: [],
   fwc: [
     680327840, // Simulator Greaves
     807866445, // Simulator Gloves
@@ -1661,8 +1646,6 @@ const missingSources: { [key: string]: number[] } = {
     3871537958, // Descending Echo Helm
     4050474396, // Descending Echo Mark
   ],
-  gunsmith: [],
-  harbinger: [],
   haunted: [
     3864896927, // Nightmare Harvester
   ],
@@ -1920,8 +1903,6 @@ const missingSources: { [key: string]: number[] } = {
     4211068696, // Iron Truage Legs
     4248834293, // Iron Remembrance Vest
   ],
-  kf: [],
-  kingsfall: [],
   lastwish: [
     4968701, // Greaves of the Great Hunt
     16387641, // Mark of the Great Hunt
@@ -2315,8 +2296,6 @@ const missingSources: { [key: string]: number[] } = {
     1952218242, // Sequence Flourish
     2683682447, // Traitor's Fate
   ],
-  lost: [],
-  lostsectors: [],
   lw: [
     4968701, // Greaves of the Great Hunt
     16387641, // Mark of the Great Hunt
@@ -2372,9 +2351,6 @@ const missingSources: { [key: string]: number[] } = {
     3885259140, // Transfiguration
     4219088013, // Helm of the Great Hunt
   ],
-  mars: [],
-  menagerie: [],
-  mercury: [],
   moon: [
     193805725, // Dreambane Cloak
     272413517, // Dreambane Helm
@@ -2392,7 +2368,6 @@ const missingSources: { [key: string]: number[] } = {
     3571441640, // Dreambane Grips
     3692187003, // Dreambane Robes
   ],
-  neomuna: [],
   nessus: [
     11686457, // Unethical Experiments Cloak
     56157064, // Exodus Down Gauntlets
@@ -2475,7 +2450,6 @@ const missingSources: { [key: string]: number[] } = {
     4074251943, // Hung Jury SR4 (Adept)
     4281371574, // Hung Jury SR4
   ],
-  nightmare: [],
   nm: [
     25798127, // Sovereign Grips
     106359434, // Coronation Mark
@@ -2493,16 +2467,11 @@ const missingSources: { [key: string]: number[] } = {
     3323316553, // Sovereign Vest
     4083497488, // Sovereign Gloves
   ],
-  'pinnacle-weapon': [],
-  pit: [],
   plunder: [
     912150785, // Mindbender's Ambition (Adept)
     2378101424, // The Militia's Birthright (Adept)
     2871264750, // Skeleton Key
   ],
-  presage: [],
-  prestige: [],
-  prophecy: [],
   psiops: [
     3358687360, // Synaptic Spear
   ],
@@ -2747,10 +2716,6 @@ const missingSources: { [key: string]: number[] } = {
     1631448645, // Seraph Cipher
     4074251943, // Hung Jury SR4 (Adept)
   ],
-  'ritual-weapon': [],
-  ron: [],
-  root: [],
-  rootofnightmares: [],
   saint14: [
     3360014173, // The Lantern of Osiris
   ],
@@ -2803,7 +2768,6 @@ const missingSources: { [key: string]: number[] } = {
   servitor: [
     3380377210, // Paradrome Cube
   ],
-  shatteredthrone: [],
   shaxx: [
     85800627, // Ankaa Seeker IV
     98331691, // Binary Phoenix Mark
@@ -2911,7 +2875,6 @@ const missingSources: { [key: string]: number[] } = {
     4211218181, // Ankaa Seeker IV
     4264096388, // Wing Theorem
   ],
-  shipwright: [],
   sonar: [
     214247063, // Deep Dive Key
     2769671712, // Salvage Key
@@ -3112,7 +3075,6 @@ const missingSources: { [key: string]: number[] } = {
     4138296191, // The Shelter in Place
     4288492921, // Vigil of Heroes
   ],
-  sundial: [],
   tangled: [
     177829853, // Scatterhorn Bond
     218523139, // Scatterhorn Grasps
@@ -3158,7 +3120,6 @@ const missingSources: { [key: string]: number[] } = {
     4167605324, // Scatterhorn Robe
     4245441464, // Scorned Baron Robes
   ],
-  throneworld: [],
   titan: [
     1701005142, // Songbreaker Gloves
     2486041713, // Songbreaker Gauntlets
@@ -3207,14 +3168,6 @@ const missingSources: { [key: string]: number[] } = {
     4100217958, // Focusing Boots
     4177448932, // Focusing Wraps
   ],
-  umbral: [],
-  vaultofglass: [],
-  vexoffensive: [],
-  vog: [],
-  votd: [],
-  vow: [],
-  vowofthedisciple: [],
-  wartable: [],
   watcher: [
     436695703, // TM-Cogburn Custom Plate
     498918879, // TM-Earp Custom Grips
@@ -3232,8 +3185,6 @@ const missingSources: { [key: string]: number[] } = {
     4177293424, // TM-Cogburn Custom Cover
     4288623897, // TM-Earp Custom Vest
   ],
-  wellspring: [],
-  wrathborn: [],
   zavala: [
     24244626, // Mark of Shelter
     34846448, // Xenos Vale IV
