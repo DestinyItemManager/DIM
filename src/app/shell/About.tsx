@@ -91,7 +91,7 @@ export default function About() {
       {$DIM_FLAVOR === 'pr' && (
         <p>
           <a href={`https://github.com/DestinyItemManager/DIM/pull${$PUBLIC_PATH}`}>
-            Pull Request {$PUBLIC_PATH.replace('/', '#')}
+            Pull Request #{$PUBLIC_PATH.replaceAll('/', '')}
           </a>
         </p>
       )}
