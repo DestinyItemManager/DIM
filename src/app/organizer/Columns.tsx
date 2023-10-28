@@ -778,7 +778,10 @@ function D1PerksCell({ item }: { item: D1Item }) {
                   }
                 >
                   <div className={styles.modPerk} data-perk-name={p.name}>
-                    <BungieImage src={p.icon} /> {p.name}
+                    <div className={styles.miniPerkContainer}>
+                      <BungieImage src={p.icon} />
+                    </div>{' '}
+                    {p.name}
                     {(!p.unlocked || p.xp < p.xpRequired) && <> ({percent(p.xp / p.xpRequired)})</>}
                   </div>
                 </PressTip>
