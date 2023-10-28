@@ -10,6 +10,7 @@ import { D2EventEnum, D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import focusingOutputs from 'data/d2/focusing-item-outputs.json';
 import { BreakerTypeHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import missingSources from 'data/d2/missing-source-info';
+import powerfulSources from 'data/d2/powerful-rewards.json';
 import D2Sources from 'data/d2/source-info';
 import { D1ItemCategoryHashes } from '../d1-known-values';
 import {
@@ -17,7 +18,6 @@ import {
   ItemTierName,
   breakerTypes,
   pinnacleSources,
-  powerfulSources,
 } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
 import { cosmeticTypes, damageTypeNames } from '../search-filter-values';

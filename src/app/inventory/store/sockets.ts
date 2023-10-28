@@ -1,7 +1,7 @@
 import { getCraftingTemplate } from 'app/armory/crafting-utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import {
-  ghostActivitySocketTypeHashes,
+  GhostActivitySocketTypeHashes,
   weaponMasterworkY2SocketTypeHash,
 } from 'app/search/d2-known-values';
 import { filterMap } from 'app/utils/collections';
@@ -575,7 +575,7 @@ function findEmptyPlug(
   if (
     // Sockets that ONLY get their items from your inventory necessarily can't be emptied
     ((socket.plugSources & ~SocketPlugSources.InventorySourced) === 0 &&
-      socket.socketTypeHash !== ghostActivitySocketTypeHashes.locked) ||
+      socket.socketTypeHash !== GhostActivitySocketTypeHashes.Locked) ||
     // Y2+ weapon masterworks don't have an "empty" entry.
     socket.socketTypeHash === weaponMasterworkY2SocketTypeHash ||
     // Socket categories that have no empty plug

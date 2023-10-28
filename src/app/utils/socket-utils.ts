@@ -9,8 +9,8 @@ import {
 import { craftedSocketCategoryHash, mementoSocketCategoryHash } from 'app/inventory/store/crafted';
 import { isDeepsightResonanceSocket } from 'app/inventory/store/deepsight';
 import {
+  GhostActivitySocketTypeHashes,
   armor2PlugCategoryHashes,
-  ghostActivitySocketTypeHashes,
 } from 'app/search/d2-known-values';
 import { DestinySocketCategoryStyle, TierType } from 'bungie-api-ts/destiny2';
 import {
@@ -376,8 +376,8 @@ export function getGeneralSockets(
     (item.bucket.hash !== BucketHashes.Ghost ||
       socketInfo.socketDefinition.socketTypeHash !==
         (item.masterwork
-          ? ghostActivitySocketTypeHashes.locked
-          : ghostActivitySocketTypeHashes.unlocked));
+          ? GhostActivitySocketTypeHashes.Locked
+          : GhostActivitySocketTypeHashes.Unlocked));
 
   const modSocketsByCategory = filterSocketCategories(
     item.sockets.categories,
