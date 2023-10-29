@@ -5,7 +5,7 @@ import { ItemTriage, TriageTabToggle, doShowTriage } from 'app/item-triage/ItemT
 import { useSetting } from 'app/settings/hooks';
 import { ItemPopupTab } from 'app/settings/initial-settings';
 import clsx from 'clsx';
-import { useCallback, useEffect, useId, useRef } from 'react';
+import { useCallback, useId, useRef } from 'react';
 import ItemDetails from './ItemDetails';
 import styles from './ItemPopupTabs.m.scss';
 import { ItemPopupExtraInfo } from './item-popup';
@@ -54,17 +54,18 @@ export function useItemPopupTabs(item: DimItem, extraInfo: ItemPopupExtraInfo | 
   );
 
   // When toggling via arrow keys, move the focus to the new tab
-  useEffect(() => {
-    if (focusedTab.current !== undefined) {
-      const tabId = focusedTab.current === ItemPopupTab.Overview ? detailsId : triageId;
-      if (tabId) {
-        const element = document.getElementById(`${tabId}-tab`);
-        element?.focus();
-        focusedTab.current = undefined;
-      }
-    }
-    // no dependency array - we want to run this every render
-  });
+  // TODO: try this again when we switch to floating UI - otherwise this causes the page to jump up as the popup gets repositioned
+  // useEffect(() => {
+  //   if (focusedTab.current !== undefined) {
+  //     const tabId = focusedTab.current === ItemPopupTab.Overview ? detailsId : triageId;
+  //     if (tabId) {
+  //       const element = document.getElementById(`${tabId}-tab`);
+  //       element?.focus();
+  //       focusedTab.current = undefined;
+  //     }
+  //   }
+  //   // no dependency array - we want to run this every render
+  // });
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.repeat) {

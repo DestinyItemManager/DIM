@@ -10,7 +10,6 @@ import ItemAccessoryButtons from 'app/item-actions/ItemAccessoryButtons';
 import ItemMoveLocations from 'app/item-actions/ItemMoveLocations';
 import type { ItemTierName } from 'app/search/d2-known-values';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { useFocusFirstFocusableElement } from 'app/utils/hooks';
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import { useMemo, useRef } from 'react';
@@ -68,7 +67,8 @@ export default function ItemPopup({
     menuClassName: menuClassName,
   });
 
-  useFocusFirstFocusableElement(popupRef);
+  // TODO: we need this to fire after popper repositions the popup. Maybe try again when we switch to floatingui.
+  // useFocusFirstFocusableElement(popupRef);
 
   const itemActionsModel = useMemo(
     () => item && buildItemActionsModel(item, stores),
