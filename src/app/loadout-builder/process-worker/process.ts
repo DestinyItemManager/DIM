@@ -19,9 +19,9 @@ import { SetTracker } from './set-tracker';
 import {
   AutoModData,
   LockedProcessMods,
-  ProcessArmorSet,
   ProcessItem,
   ProcessItemsByBucket,
+  ProcessResult,
   ProcessStatistics,
 } from './types';
 
@@ -46,18 +46,17 @@ export function process(
   /** Which artifice mods, large, and small stat mods are available */
   autoModOptions: AutoModData,
   /** Use stat mods to hit stat minimums */
-  autoStatMods: boolean
-): {
-  sets: ProcessArmorSet[];
-  combos: number;
-  /** The stat ranges of all sets that matched our filters & mod selection. */
-  statRangesFiltered?: StatRanges;
-  processInfo?: ProcessStatistics;
-} {
+  autoStatMods: boolean,
+  exitOnFirst: boolean,
+  onlyStrictUpgrades: boolean
+): ProcessResult {
   const pstart = performance.now();
 
   const statOrder = resolvedStatConstraints.map(({ statHash }) => statHash as ArmorStatHashes);
   const modStatsInStatOrder = statOrder.map((h) => modStatTotals[h]);
+
+  const isOptimizingForSingleStrictUpgrade = exitOnFirst && onlyStrictUpgrades;
+  let foundAnyImprovement = false;
 
   // This stores the computed min and max value for each stat as we process all sets, so we
   // can display it on the stat filter dropdowns
@@ -145,7 +144,7 @@ export function process(
     statistics: setStatistics,
   };
 
-  for (const helm of helms) {
+  itemLoop: for (const helm of helms) {
     for (const gaunt of gauntlets) {
       // For each additional piece, skip the whole branch if we've managed to get 2 exotics
       if (gaunt.isExotic && helm.isExotic) {
@@ -308,7 +307,7 @@ export function process(
 
             // We know this set satisfies all constraints.
             // Update highest possible reachable tiers.
-            updateMaxTiers(
+            const anyUpgradeFound = updateMaxTiers(
               precalculatedInfo,
               armor,
               stats,
@@ -392,6 +391,17 @@ export function process(
             // And now insert our set using the predicted tier. The rest of the stats string still uses the unboosted tiers but the error should be small
             tiersString = totalTier.toString(16) + tiersString;
             setTracker.insert(totalTier + predictedExtraTiers, tiersString, armor, stats);
+
+            if (isOptimizingForSingleStrictUpgrade) {
+              if (anyUpgradeFound) {
+                foundAnyImprovement = true;
+                if (exitOnFirst) {
+                  break itemLoop;
+                }
+              }
+            } else if (exitOnFirst) {
+              break itemLoop;
+            }
           }
         }
       }
@@ -461,5 +471,6 @@ export function process(
     combos,
     statRangesFiltered,
     processInfo: processStatistics,
+    hasStrictUpgrade: isOptimizingForSingleStrictUpgrade ? foundAnyImprovement : undefined,
   };
 }
