@@ -1,5 +1,7 @@
 ## Next
 
+## 7.92.0 <span class="changelog-date">(2023-10-29)</span>
+
 * Fixed a bug that could delete recent tags/notes when loading DIM on a different device than the one where you set the notes.
 * Added a hotkey (T) to switch between the overview and triage tabs on the item popup.
 * The item popup remembers which tab you were last on.
