@@ -6,14 +6,19 @@
  * them from the app, or keep them in beta/dev for a longer time without
  * releasing to app.
  */
-export function makeFeatureFlags(env: { release: boolean; beta: boolean; dev: boolean }) {
+export function makeFeatureFlags(env: {
+  release: boolean;
+  beta: boolean;
+  dev: boolean;
+  pr: boolean;
+}) {
   return {
     // Print debug info to console about item moves
     debugMoves: !env.release,
     // Debug Service Worker
     debugSW: !env.release,
     // Send exception reports to Sentry.io on beta/prod only
-    sentry: !env.dev,
+    sentry: !env.dev && !env.pr,
     // Community-curated wish lists
     wishLists: true,
     // Show a banner for supporting a charitable cause

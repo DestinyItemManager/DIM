@@ -27,6 +27,7 @@
     "bundle": "webpack --config ./config/webpack.ts",
     "build:release": "pnpm -s bundle --env=release --node-env=production",
     "build:beta": "pnpm -s bundle --env=beta --node-env=production",
+    "build:pr": "pnpm -s bundle --env=pr --node-env=production",
     "build:dev": "pnpm -s bundle --env=dev",
     "i18n": "i18next-scanner --config ./i18next-scanner.config.cjs",
     "start": "run-p watch:i18n devserver",

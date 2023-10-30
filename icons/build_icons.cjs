@@ -1,4 +1,4 @@
-#!/usr/local/bin/node
+#!/usr/bin/env node
 
 const { execSync } = require('child_process');
 const rimraf = require('rimraf');
@@ -9,7 +9,7 @@ const CACHEBREAKER = '6-2018';
 
 // Generate all our icon images from SVG. Requires a mac (or a system w/ a shell and rsvg-convert installed).
 execSync('which rsvg-convert || brew install librsvg');
-for (const VERSION of ['release', 'beta', 'dev']) {
+for (const VERSION of ['release', 'beta', 'dev', 'pr']) {
   rimraf.sync(`./${VERSION}`);
   fs.mkdirSync(VERSION);
 
@@ -18,6 +18,13 @@ for (const VERSION of ['release', 'beta', 'dev']) {
       `rsvg-convert -w ${size} -h ${size} -o "${VERSION}/favicon-${size}x${size}.png" "favicon-${VERSION}.svg"`
     );
   }
+
+  const color = {
+    release: '#ee6d0d',
+    beta: '#5bb1ce',
+    dev: '#172025',
+    pr: '#FF64E7',
+  }[VERSION];
 
   execSync(
     `rsvg-convert -w 180 -h 180 -o "${VERSION}/apple-touch-icon.png" "apple-touch-icon-${VERSION}.svg"`
@@ -31,11 +38,9 @@ for (const VERSION of ['release', 'beta', 'dev']) {
   execSync(
     `rsvg-convert -w 512 -h 512 -o "${VERSION}/android-chrome-512x512-${CACHEBREAKER}.png" "android-icon-${VERSION}.svg"`
   );
-  if (VERSION === 'release') {
-    execSync(
-      `rsvg-convert -w 512 -h 512 -b "#ee6d0d" -o "${VERSION}/android-chrome-mask-512x512-${CACHEBREAKER}.png" "android-icon-${VERSION}.svg"`
-    );
-  }
+  execSync(
+    `rsvg-convert -w 512 -h 512 -b "${color}" -o "${VERSION}/android-chrome-mask-512x512-${CACHEBREAKER}.png" "android-icon-${VERSION}.svg"`
+  );
 }
 
 rimraf.sync('splash');

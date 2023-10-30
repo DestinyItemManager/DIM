@@ -43,6 +43,7 @@ const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
 const logoStyles = {
   beta: styles.beta,
   dev: styles.dev,
+  pr: styles.pr,
   release: undefined,
   test: undefined,
 } as const;

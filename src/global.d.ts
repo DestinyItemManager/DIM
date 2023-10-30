@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/method-signature-style */
 declare const $DIM_VERSION: string;
-declare const $DIM_FLAVOR: 'release' | 'beta' | 'dev' | 'test';
+declare const $DIM_FLAVOR: 'release' | 'beta' | 'dev' | 'test' | 'pr';
 declare const $DIM_BUILD_DATE: string;
 declare const $DIM_WEB_API_KEY: string;
 declare const $DIM_WEB_CLIENT_ID: string;
@@ -8,6 +8,7 @@ declare const $DIM_WEB_CLIENT_SECRET: string;
 declare const $DIM_API_KEY: string;
 declare const $BROWSERS: string[];
 declare const $ANALYTICS_PROPERTY: string;
+declare const $PUBLIC_PATH: string;
 
 declare const $featureFlags: ReturnType<typeof import('../config/feature-flags').makeFeatureFlags>;
 

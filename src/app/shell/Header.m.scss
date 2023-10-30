@@ -133,6 +133,9 @@ $header-height: 44px;
   &.beta {
     filter: hue-rotate(160deg) brightness(107%);
   }
+  &.pr {
+    filter: hue-rotate(280deg) brightness(107%);
+  }
 }
 
 .headerLinks {

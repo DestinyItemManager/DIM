@@ -112,7 +112,7 @@ export default function Privacy() {
               </ol>
             </li>
 
-            {$DIM_FLAVOR !== 'release' && (
+            {$featureFlags.sentry && (
               <li>
                 <strong>Sentry: Error reporting</strong>
                 <ol>

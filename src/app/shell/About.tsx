@@ -88,6 +88,13 @@ export default function About() {
       <p>{t('Views.About.HowItsMade')}</p>
       {$DIM_FLAVOR === 'release' && <p>{t(`Views.About.Schedule.release`)}</p>}
       {$DIM_FLAVOR === 'beta' && <p>{t(`Views.About.Schedule.beta`)}</p>}
+      {$DIM_FLAVOR === 'pr' && (
+        <p>
+          <a href={`https://github.com/DestinyItemManager/DIM/pull${$PUBLIC_PATH}`}>
+            Pull Request #{$PUBLIC_PATH.replaceAll('/', '')}
+          </a>
+        </p>
+      )}
       <ul>
         <li>{t('Views.About.BungieCopyright')}</li>
         <li>
