@@ -66,8 +66,7 @@
     .stat-row {
       display: flex;
       flex-direction: row;
-      justify-items: left;
-      align-items: center;
+      place-items: center left;
       &.powerFormula {
         margin-bottom: 3px;
         img {
