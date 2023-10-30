@@ -6,6 +6,7 @@ import {
   settingsSelector,
 } from 'app/dim-api/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
+import { createCollectibleFinder } from 'app/records/collectible-matching';
 import { filterUnlockedPlugs } from 'app/records/plugset-helpers';
 import { RootState } from 'app/store/types';
 import { emptyArray, emptyObject, emptySet } from 'app/utils/empty';
@@ -251,16 +252,17 @@ export const ownedUncollectiblePlugsSelector = createSelector(
     const storeSpecificOwned: { [storeId: string]: Set<number> } = {};
 
     if (defs && profileResponse) {
+      const collectibleFinder = createCollectibleFinder(defs);
       const processPlugSet = (
         plugs: { [key: number]: DestinyItemPlug[] },
         insertInto: Set<number>
       ) => {
-        for (const plugSet of Object.values(plugs)) {
-          for (const plug of plugSet) {
-            if (plug.enabled && !defs.InventoryItem.get(plug.plugItemHash)?.collectibleHash) {
-              insertInto.add(plug.plugItemHash);
-            }
-          }
+        for (const [plugSetHash_, plugSet] of Object.entries(plugs)) {
+          const plugSetHash = parseInt(plugSetHash_, 10);
+          filterUnlockedPlugs(plugSetHash, plugSet, insertInto, (plug) => {
+            const def = defs.InventoryItem.get(plug.plugItemHash);
+            return !def || !collectibleFinder(def);
+          });
         }
       };
 
