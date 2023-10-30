@@ -8,6 +8,7 @@ interface CssExports {
   'speedReport': string;
   'toolbar': string;
   'undoRedo': string;
+  'wide': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

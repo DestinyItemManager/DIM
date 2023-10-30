@@ -21,6 +21,7 @@
     "at-rule-no-unknown": null,
     "scss/at-rule-no-unknown": true,
     "media-feature-name-no-unknown": null,
+    "selector-not-notation": null,
     "selector-pseudo-class-no-unknown": [true, { "ignorePseudoClasses": ["horizontal", "global"] }],
     "hue-degree-notation": "number",
     "selector-id-pattern": "(^[a-z][a-zA-Z0-9]+$|^([a-z][a-z0-9]*)(-[a-z0-9]+)*$)",

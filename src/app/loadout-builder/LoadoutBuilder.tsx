@@ -32,6 +32,7 @@ import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyObject } from 'app/utils/empty';
 import { isClassCompatible, itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { deepEqual } from 'fast-equals';
 import { Dispatch, memo, useCallback, useEffect, useMemo, useRef } from 'react';
@@ -54,6 +55,7 @@ import {
   LoadoutOptimizerPinnedItems,
   loMenuSection,
 } from './filter/LoadoutOptimizerMenuItems';
+import StatConstraintEditor from './filter/StatConstraintEditor';
 import TierSelect from './filter/TierSelect';
 import CompareLoadoutsDrawer from './generated-sets/CompareLoadoutsDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
@@ -68,6 +70,7 @@ import {
   LockableBucketHashes,
   loDefaultArmorEnergyRules,
 } from './types';
+import useEquippedHashes from './useEquippedHashes';
 
 /**
  * The Loadout Optimizer screen
@@ -288,6 +291,8 @@ export default memo(function LoadoutBuilder({
   const handleAutoStatModsChanged = (autoStatMods: boolean) =>
     lbDispatch({ type: 'autoStatModsChanged', autoStatMods });
 
+  const equippedHashes = useEquippedHashes(loadout.parameters!, subclass);
+
   // I don't think this can actually happen?
   if (!selectedStore) {
     return null;
@@ -303,11 +308,20 @@ export default memo(function LoadoutBuilder({
         </div>
       )}
       <UndoRedoControls canRedo={canRedo} canUndo={canUndo} lbDispatch={lbDispatch} />
-      <TierSelect
-        resolvedStatConstraints={resolvedStatConstraints}
-        statRangesFiltered={result?.statRangesFiltered}
-        lbDispatch={lbDispatch}
-      />
+      {$featureFlags.statConstraintEditor ? (
+        <StatConstraintEditor
+          resolvedStatConstraints={resolvedStatConstraints}
+          statRangesFiltered={result?.statRangesFiltered}
+          lbDispatch={lbDispatch}
+          equippedHashes={equippedHashes}
+        />
+      ) : (
+        <TierSelect
+          resolvedStatConstraints={resolvedStatConstraints}
+          statRangesFiltered={result?.statRangesFiltered}
+          lbDispatch={lbDispatch}
+        />
+      )}
       <EnergyOptions assumeArmorMasterwork={assumeArmorMasterwork} lbDispatch={lbDispatch} />
       <div className={loMenuSection}>
         <CheckButton
@@ -383,9 +397,13 @@ export default memo(function LoadoutBuilder({
     </>
   );
 
+  // TODO: replace character select with horizontal choice?
+
   return (
     <PageWithMenu className={styles.page}>
-      <PageWithMenu.Menu className={styles.menuContent}>
+      <PageWithMenu.Menu
+        className={clsx(styles.menuContent, { [styles.wide]: $featureFlags.statConstraintEditor })}
+      >
         <CharacterSelect
           selectedStore={selectedStore}
           stores={stores}
@@ -444,7 +462,6 @@ export default memo(function LoadoutBuilder({
           <GeneratedSets
             loadout={loadout}
             sets={sortedSets}
-            subclass={subclass}
             lockedMods={result.mods}
             pinnedItems={pinnedItems}
             selectedStore={selectedStore}
@@ -455,6 +472,7 @@ export default memo(function LoadoutBuilder({
             armorEnergyRules={result.armorEnergyRules}
             autoStatMods={autoStatMods}
             isEditingExistingLoadout={isEditingExistingLoadout}
+            equippedHashes={equippedHashes}
           />
         ) : (
           !processing && (
