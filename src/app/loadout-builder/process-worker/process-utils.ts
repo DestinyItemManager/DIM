@@ -1,6 +1,5 @@
 import { generatePermutationsOfFive } from 'app/loadout/mod-permutations';
 import { count } from 'app/utils/collections';
-import { infoLog } from 'app/utils/log';
 import { ArmorStatHashes, MinMax, ResolvedStatConstraint } from '../types';
 import { AutoModsMap, ModsPick, buildAutoModsMap, chooseAutoMods } from './auto-stat-mod-utils';
 import { AutoModData, ModAssignmentStatistics, ProcessItem, ProcessMod } from './types';
@@ -167,18 +166,6 @@ export function updateMaxTiers(
       );
       if (picks) {
         const val = Math.floor((setStat + explorationStats[statIndex]) / 10);
-        if (val > statFilter.minTier) {
-          infoLog(
-            'loadout optimizer',
-            'bumping',
-            statIndex,
-            'to',
-            val,
-            'over min tier',
-            statFilter.minTier
-          );
-        }
-
         foundAnyImprovement ||= val > statFilter.minTier;
         minMax.max = val;
       } else {
