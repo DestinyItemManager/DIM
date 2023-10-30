@@ -9,7 +9,6 @@ export interface ProcessResult {
   statRangesFiltered?: StatRanges;
   /** Statistics about how many sets passed/failed the constraints, for error reporting */
   processInfo?: ProcessStatistics;
-  hasStrictUpgrade?: boolean;
 }
 
 export interface ProcessItem {

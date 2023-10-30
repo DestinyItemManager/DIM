@@ -74,7 +74,7 @@ export async function analyzeLoadout(
     findings.push(fragmentProblem);
   }
 
-  if (resolvedLoadout.resolvedLoadoutItems.some((i) => i.missing)) {
+  if (resolvedLoadout.failedResolvedLoadoutItems.length) {
     findings.push(LoadoutFinding.MissingItems);
   }
 
@@ -82,7 +82,7 @@ export async function analyzeLoadout(
   let needUpgrades = false;
 
   const loadoutArmor = resolvedLoadout.resolvedLoadoutItems
-    .filter((item) => !item.missing && item.loadoutItem.equip && item.item.bucket.inArmor)
+    .filter((item) => item.loadoutItem.equip && item.item.bucket.inArmor)
     .map(({ item }) => item);
 
   const { modMap, unassignedMods } = categorizeArmorMods(originalModDefs, allItems);
@@ -243,7 +243,7 @@ export async function analyzeLoadout(
               strictUpgrades: true,
             });
 
-            hasStrictUpgrade = Boolean((await resultPromise).hasStrictUpgrade);
+            hasStrictUpgrade = Boolean((await resultPromise).sets.length);
             if (hasStrictUpgrade) {
               findings.push(LoadoutFinding.BetterStatsAvailable);
             }

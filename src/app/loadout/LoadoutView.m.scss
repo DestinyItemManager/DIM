@@ -36,14 +36,20 @@
   }
 }
 
-.missingItems {
+.findings {
+  display: flex;
+  flex-flow: row wrap;
+  column-gap: 8px;
+}
+
+.finding {
   text-transform: none;
   font-size: 12px;
   letter-spacing: normal;
   color: #ccc;
 
   :global(.app-icon) {
-    margin-right: 0.5em;
+    margin-right: 0.2em;
   }
 }
 

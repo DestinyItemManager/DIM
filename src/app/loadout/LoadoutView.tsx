@@ -1,4 +1,3 @@
-import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { PressTip } from 'app/dim-ui/PressTip';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
@@ -9,7 +8,6 @@ import { DimStore } from 'app/inventory/store-types';
 import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import { findingDisplays } from 'app/loadout-analyzer/finding-display';
 import { useAnalyzeLoadout } from 'app/loadout-analyzer/hooks';
-import { LoadoutFinding } from 'app/loadout-analyzer/types';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { Loadout, LoadoutItem, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
@@ -127,26 +125,27 @@ export default function LoadoutView({
           )}
           <ColorDestinySymbols text={loadout.name} />
         </h2>
-        {Boolean(analysis?.result?.findings.length) &&
-          addDividers(
-            filterMap(analysis!.result.findings, (finding) => {
-              const display = findingDisplays[finding];
-              if (!display.icon) {
-                return undefined;
-              }
-              return (
-                <PressTip key={finding} tooltip={t(display.description)}>
-                  <AppIcon icon={display.icon} /> {t(display.name)}
-                </PressTip>
-              );
-            }),
-            <span>{' · '}</span>
-          )}
-        {analysis?.result?.findings.includes(LoadoutFinding.MissingItems) && (
-          <span className={styles.missingItems}>
-            <AlertIcon />
-            {JSON.stringify(analysis)}
-          </span>
+        {Boolean(analysis?.result?.findings.length) && (
+          <div className={styles.findings}>
+            {addDividers(
+              filterMap(analysis!.result.findings, (finding) => {
+                const display = findingDisplays[finding];
+                if (!display.icon) {
+                  return undefined;
+                }
+                return (
+                  <PressTip
+                    className={styles.finding}
+                    key={finding}
+                    tooltip={t(display.description)}
+                  >
+                    <AppIcon icon={display.icon} /> {t(display.name)}
+                  </PressTip>
+                );
+              }),
+              <span>{' · '}</span>
+            )}
+          </div>
         )}
         <div className={styles.actions}>{actionButtons}</div>
       </div>

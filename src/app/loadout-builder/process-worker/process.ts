@@ -1,3 +1,4 @@
+import { filterMap } from 'app/utils/collections';
 import { infoLog } from '../../utils/log';
 import {
   ArmorStatHashes,
@@ -47,16 +48,15 @@ export function process(
   autoModOptions: AutoModData,
   /** Use stat mods to hit stat minimums */
   autoStatMods: boolean,
-  exitOnFirst: boolean,
-  onlyStrictUpgrades: boolean
+  /** If set, only sets where at least one stat **exceeds** `resolvedStatConstraints` minimums will be returned */
+  strictUpgrades: boolean,
+  /** If set, LO will exit after finding at least one set that fits all constraints (and is a strict upgrade if `strictUpgrades` is set) */
+  stopOnFirstSet: boolean
 ): ProcessResult {
   const pstart = performance.now();
 
   const statOrder = resolvedStatConstraints.map(({ statHash }) => statHash as ArmorStatHashes);
   const modStatsInStatOrder = statOrder.map((h) => modStatTotals[h]);
-
-  const isOptimizingForSingleStrictUpgrade = exitOnFirst && onlyStrictUpgrades;
-  let foundAnyImprovement = false;
 
   // This stores the computed min and max value for each stat as we process all sets, so we
   // can display it on the stat filter dropdowns
@@ -307,7 +307,7 @@ export function process(
 
             // We know this set satisfies all constraints.
             // Update highest possible reachable tiers.
-            const anyUpgradeFound = updateMaxTiers(
+            const foundAnyImprovement = updateMaxTiers(
               precalculatedInfo,
               armor,
               stats,
@@ -392,15 +392,14 @@ export function process(
             tiersString = totalTier.toString(16) + tiersString;
             setTracker.insert(totalTier + predictedExtraTiers, tiersString, armor, stats);
 
-            if (isOptimizingForSingleStrictUpgrade) {
-              if (anyUpgradeFound) {
-                foundAnyImprovement = true;
-                if (exitOnFirst) {
+            if (stopOnFirstSet) {
+              if (strictUpgrades) {
+                if (foundAnyImprovement) {
                   break itemLoop;
                 }
+              } else {
+                break itemLoop;
               }
-            } else if (exitOnFirst) {
-              break itemLoop;
             }
           }
         }
@@ -410,7 +409,7 @@ export function process(
 
   const finalSets = setTracker.getArmorSets(RETURNED_ARMOR_SETS);
 
-  const sets = finalSets.map(({ armor, stats }) => {
+  const sets = filterMap(finalSets, ({ armor, stats }) => {
     // This only fails if minimum tier requirements cannot be hit, but we know they can because
     // we ensured it internally.
     const { mods, bonusStats } = pickOptimalStatMods(
@@ -423,12 +422,24 @@ export function process(
     const armorOnlyStats: Partial<ArmorStats> = {};
     const fullStats: Partial<ArmorStats> = {};
 
+    let hasStrictUpgrade = false;
+
     for (let i = 0; i < statOrder.length; i++) {
       const statHash = statOrder[i];
       const value = stats[i] + bonusStats[i];
       fullStats[statHash] = value;
 
+      if (strictUpgrades && !hasStrictUpgrade) {
+        const statFilter = resolvedStatConstraints[i];
+        const tier = Math.min(Math.max(Math.floor(value / 10), 0), 10);
+        hasStrictUpgrade ||= tier > statFilter.minTier;
+      }
+
       armorOnlyStats[statHash] = stats[i] - modStatsInStatOrder[i];
+    }
+
+    if (strictUpgrades && !hasStrictUpgrade) {
+      return undefined;
     }
 
     return {
@@ -471,6 +482,5 @@ export function process(
     combos,
     statRangesFiltered,
     processInfo: processStatistics,
-    hasStrictUpgrade: isOptimizingForSingleStrictUpgrade ? foundAnyImprovement : undefined,
   };
 }
