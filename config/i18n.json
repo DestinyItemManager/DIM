@@ -854,6 +854,10 @@
       "Name": "Unassigned Mods",
       "Description": "Armor in this loadout cannot accommodate all loadout mods, even if the armor was upgraded."
     },
+    "UsesSeasonalMods": {
+      "Name": "Uses Seasonal Mods",
+      "Description": "This loadout relies on mods that are only available in some seasons. When the season ends, some mods will be unavailable or exceed armor energy capacity."
+    },
     "DoesNotSatisfyStatConstraints": {
       "Name": "Wrong Stat Tiers",
       "Description": "Loadout Optimizer settings for this Loadout specify stat tiers, but the Loadout does not reach them."

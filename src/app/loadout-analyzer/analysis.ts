@@ -18,6 +18,7 @@ import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import {
   getLoadoutStats,
   getLoadoutSubclassFragmentCapacity,
+  resolveLoadoutModHashes,
 } from 'app/loadout-drawer/loadout-utils';
 import { fullyResolveLoadout } from 'app/loadout/ingame/selectors';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
@@ -133,10 +134,15 @@ export async function analyzeLoadout(
       assumeArmorMasterwork: loadoutParameters?.assumeArmorMasterwork ?? AssumeArmorMasterwork.None,
     };
 
+    // FIXME We recommend mod-only loadouts sometimes, it'd be good
+    // to run some of these also when the loadout has no armor...
     const modProblems = getModProblems(defs, loadoutArmor, modMap, armorEnergyRules);
-
+    needUpgrades ||= modProblems.needsUpgradesForMods;
     if (modProblems.cantFitMods) {
       findings.push(LoadoutFinding.ModsDontFit);
+    }
+    if (modProblems.usesSeasonalMods) {
+      findings.push(LoadoutFinding.UsesSeasonalMods);
     }
 
     // We just did some heavy mod assignment stuff, give the event loop a chance
@@ -145,8 +151,6 @@ export async function analyzeLoadout(
     if (loadoutParameters.query) {
       findings.push(LoadoutFinding.LoadoutHasSearchQuery);
     }
-
-    needUpgrades ||= modProblems.needsUpgradesForMods;
 
     if (loadoutArmor.length === 5) {
       const statProblems = getStatProblems(
@@ -166,84 +170,86 @@ export async function analyzeLoadout(
         findings.push(LoadoutFinding.DoesNotSatisfyStatConstraints);
       }
 
-      ineligibleForOptimization = findings.some((finding) =>
-        blockAnalysisFindings.includes(finding)
-      );
-      if (!ineligibleForOptimization) {
-        // Force auto stat mods to on if there are stat mods.
-        loadoutParameters.autoStatMods ||= originalLoadoutMods.some(
-          (mod) =>
-            mod.resolvedMod.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsV2General
+      if ($featureFlags.runLoInBackground) {
+        ineligibleForOptimization = findings.some((finding) =>
+          blockAnalysisFindings.includes(finding)
         );
+        if (!ineligibleForOptimization) {
+          // Force auto stat mods to on if there are stat mods.
+          loadoutParameters.autoStatMods ||= originalLoadoutMods.some(
+            (mod) =>
+              mod.resolvedMod.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsV2General
+          );
 
-        const modsToUse = originalLoadoutMods.filter(
-          (mod) =>
-            // drop artifice mods (always picked automatically per set)
-            mod.resolvedMod.plug.plugCategoryHash !== PlugCategoryHashes.EnhancementsArtifice &&
-            // drop general mods if picked automatically
-            (!loadoutParameters?.autoStatMods ||
-              mod.resolvedMod.plug.plugCategoryHash !== PlugCategoryHashes.EnhancementsV2General)
-        );
-        // Save back the actual mods for LO to use
-        const modDefs = modsToUse.map((mod) => mod.resolvedMod);
-        loadoutParameters.mods = modsToUse.map((mod) => mod.originalModHash);
-        const { modMap } = categorizeArmorMods(modDefs, loadoutArmor);
+          const modsToUse = originalLoadoutMods.filter(
+            (mod) =>
+              // drop artifice mods (always picked automatically per set)
+              mod.resolvedMod.plug.plugCategoryHash !== PlugCategoryHashes.EnhancementsArtifice &&
+              // drop general mods if picked automatically
+              (!loadoutParameters?.autoStatMods ||
+                mod.resolvedMod.plug.plugCategoryHash !== PlugCategoryHashes.EnhancementsV2General)
+          );
+          // Save back the actual mods for LO to use
+          const modDefs = modsToUse.map((mod) => mod.resolvedMod);
+          loadoutParameters.mods = modsToUse.map((mod) => mod.originalModHash);
+          const { modMap } = categorizeArmorMods(modDefs, loadoutArmor);
 
-        // TODO: Include vendor armor here?
-        const armorForThisClass = allItems.filter(
-          (item) => isLoadoutBuilderItem(item) && item.classType === classType
-        );
-        // We previously reject loadouts where mods can't fit, so no need to pass unassignedMods here.
-        // We also reject
-        const [filteredItems] = filterItems({
-          defs,
-          items: armorForThisClass,
-          pinnedItems: {},
-          excludedItems: {},
-          lockedModMap: modMap,
-          unassignedMods: [],
-          lockedExoticHash: loadoutParameters.exoticArmorHash,
-          armorEnergyRules,
-          searchFilter: () => true,
-        });
-
-        const modStatChanges = getTotalModStatChanges(
-          defs,
-          modDefs,
-          subclass,
-          classType,
-          /* includeRuntimeStatBenefits */ true
-        );
-
-        // Give the event loop a chance after we did a lot of item filtering
-        await delay(0);
-
-        const strictStatConstraints: ResolvedStatConstraint[] = statConstraints.map((c) => ({
-          ...c,
-          minTier: statTier(assumedLoadoutStats[c.statHash]!.value),
-        }));
-
-        loadoutParameters.statConstraints = strictStatConstraints;
-        try {
-          const { resultPromise } = runProcess({
-            anyExotic: loadoutParameters.exoticArmorHash === LOCKED_EXOTIC_ANY_EXOTIC,
-            armorEnergyRules,
-            autoModDefs,
-            autoStatMods: loadoutParameters.autoStatMods,
-            filteredItems,
+          // TODO: Include vendor armor here?
+          const armorForThisClass = allItems.filter(
+            (item) => isLoadoutBuilderItem(item) && item.classType === classType
+          );
+          // We previously reject loadouts where mods can't fit, so no need to pass unassignedMods here.
+          // We also reject
+          const [filteredItems] = filterItems({
+            defs,
+            items: armorForThisClass,
+            pinnedItems: {},
+            excludedItems: {},
             lockedModMap: modMap,
-            modStatChanges,
-            resolvedStatConstraints: strictStatConstraints,
-            stopOnFirstSet: true,
-            strictUpgrades: true,
+            unassignedMods: [],
+            lockedExoticHash: loadoutParameters.exoticArmorHash,
+            armorEnergyRules,
+            searchFilter: () => true,
           });
 
-          hasStrictUpgrade = Boolean((await resultPromise).hasStrictUpgrade);
-          if (hasStrictUpgrade) {
-            findings.push(LoadoutFinding.BetterStatsAvailable);
+          const modStatChanges = getTotalModStatChanges(
+            defs,
+            modDefs,
+            subclass,
+            classType,
+            /* includeRuntimeStatBenefits */ true
+          );
+
+          // Give the event loop a chance after we did a lot of item filtering
+          await delay(0);
+
+          const strictStatConstraints: ResolvedStatConstraint[] = statConstraints.map((c) => ({
+            ...c,
+            minTier: statTier(assumedLoadoutStats[c.statHash]!.value),
+          }));
+
+          loadoutParameters.statConstraints = strictStatConstraints;
+          try {
+            const { resultPromise } = runProcess({
+              anyExotic: loadoutParameters.exoticArmorHash === LOCKED_EXOTIC_ANY_EXOTIC,
+              armorEnergyRules,
+              autoModDefs,
+              autoStatMods: loadoutParameters.autoStatMods,
+              filteredItems,
+              lockedModMap: modMap,
+              modStatChanges,
+              resolvedStatConstraints: strictStatConstraints,
+              stopOnFirstSet: true,
+              strictUpgrades: true,
+            });
+
+            hasStrictUpgrade = Boolean((await resultPromise).hasStrictUpgrade);
+            if (hasStrictUpgrade) {
+              findings.push(LoadoutFinding.BetterStatsAvailable);
+            }
+          } catch (e) {
+            errorLog('loadout analyzer', 'internal error', e);
           }
-        } catch (e) {
-          errorLog('loadout analyzer', 'internal error', e);
         }
       }
     }
@@ -314,31 +320,53 @@ function getModProblems(
 ): {
   cantFitMods: boolean;
   needsUpgradesForMods: boolean;
+  usesSeasonalMods: boolean;
 } {
   const allValidMods = modMap.allMods;
   let cantFitMods = false;
   let needsUpgradesForMods = false;
+  // FIXME include Combo Siphon mods from D2AI
+  let usesSeasonalMods = false;
 
   if (loadoutArmor.length === 5) {
-    const canFitModsWithRules = (armorEnergyRules: ArmorEnergyRules) => {
+    const canFitModsWithRules = (
+      armorEnergyRules: ArmorEnergyRules,
+      mods: PluggableInventoryItemDefinition[]
+    ) => {
       const { unassignedMods, invalidMods: invalidModsForThisSet } = fitMostMods({
         defs,
         armorEnergyRules,
         items: loadoutArmor,
-        plannedMods: allValidMods,
+        plannedMods: mods,
       });
       return !invalidModsForThisSet.length && !unassignedMods.length;
     };
-    const canFitModsAsIs = canFitModsWithRules(inGameArmorEnergyRules);
-    const canFitModsWithUpgrades = canFitModsAsIs || canFitModsWithRules(loadoutArmorEnergyRules);
+    const canFitModsAsIs = canFitModsWithRules(inGameArmorEnergyRules, allValidMods);
+    const canFitModsWithUpgrades =
+      canFitModsAsIs || canFitModsWithRules(loadoutArmorEnergyRules, allValidMods);
 
     needsUpgradesForMods = !canFitModsAsIs && canFitModsWithUpgrades;
     cantFitMods = !canFitModsWithUpgrades;
+
+    // If we don't already know that we're using seasonal mods and we can currently fit mods,
+    // try assigning mods while assuming no cheaper mods are unlocked, so that we use the expensive variant
+    // of all mods. If that fails we know that the loadout relies on seasonal mods.
+    usesSeasonalMods ||=
+      canFitModsWithUpgrades &&
+      !canFitModsWithRules(
+        loadoutArmorEnergyRules,
+        resolveLoadoutModHashes(
+          defs,
+          allValidMods.map((mod) => mod.hash),
+          /* unlockedPlugs */ new Set()
+        ).map((mod) => mod.resolvedMod)
+      );
   }
 
   return {
     cantFitMods,
     needsUpgradesForMods,
+    usesSeasonalMods,
   };
 }
 

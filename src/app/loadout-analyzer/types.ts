@@ -42,6 +42,11 @@ export const enum LoadoutFinding {
   TooManyFragments,
   /** This loadout's armor needs to be upgraded to fit mods/hit target stats. */
   NeedsArmorUpgrades,
+  /**
+   * The loadout uses mods that are only available in some seasons,
+   * or might not fit all mods when the season ends and mods become more expensive.
+   */
+  UsesSeasonalMods,
   /** Picking different armor and/or mods can produce strictly better stats. */
   BetterStatsAvailable,
   /** The loadout has armor but not a full set of  5 equipped armor items, so we can't come up with stats to compare against. */

@@ -5,7 +5,7 @@ import { DimLanguage } from 'app/i18n';
 import { t } from 'app/i18next-t';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
 import { DimStore } from 'app/inventory/store-types';
-import { findingDisplays, iconsForFindingStyle } from 'app/loadout-analyzer/finding-display';
+import { findingDisplays } from 'app/loadout-analyzer/finding-display';
 import { useSummaryLoadoutsAnalysis } from 'app/loadout-analyzer/hooks';
 import { LoadoutAnalysisSummary, LoadoutFinding } from 'app/loadout-analyzer/types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
@@ -107,8 +107,7 @@ function useLoadoutFilterPillsInternal(
       if (affectedLoadouts.size > 0) {
         const finding = parseInt(finding_, 10) as LoadoutFinding;
         const display = findingDisplays[finding];
-        const icon = iconsForFindingStyle[display.style];
-        if (!icon) {
+        if (!display.icon) {
           continue;
         }
         filterOptions.push({
@@ -116,7 +115,7 @@ function useLoadoutFilterPillsInternal(
           value: { tag: 'finding', finding },
           content: (
             <>
-              <AppIcon icon={icon} />
+              <AppIcon icon={display.icon} />
               {t(display.name)}
               {` (${affectedLoadouts.size})`}
             </>

@@ -11,8 +11,8 @@ import {
   LoadoutFinding,
 } from './types';
 
-interface Subscription {
-  id: string;
+interface Request {
+  subscriptionId: string;
   storeId: string;
   classType: DestinyClass;
   callback: () => void;
@@ -28,7 +28,7 @@ interface Subscription {
       };
 }
 
-export type ResultsForDimStore = WeakMap<
+type ResultsForDimStore = WeakMap<
   Loadout,
   {
     result: LoadoutAnalysisResult;
@@ -37,9 +37,19 @@ export type ResultsForDimStore = WeakMap<
   }
 >;
 
+/**
+ * The context and results for a given DIM storeId.
+ * Since the context annoyingly contains character-specific things
+ * (mostly due to mod cost reductions), each store has its own copy
+ * of the context. The generationNumber is incremented
+ */
 interface AnalysisStore {
-  localGenerationNumber: number;
-  analysisContext: LoadoutAnalysisContext | undefined;
+  context:
+    | {
+        generationNumber: number;
+        analysisContext: LoadoutAnalysisContext;
+      }
+    | undefined;
   resultsMap: ResultsForDimStore;
 }
 
@@ -63,59 +73,76 @@ function withPoke(): [PokeToken, () => void] {
   ];
 }
 
-export class LoadoutAnalysisStore {
-  results: { [storeId: string]: AnalysisStore };
-  subscriptions: { [id: string]: Subscription } | undefined;
+export class LoadoutBackgroundAnalyzer {
+  stores: { [storeId: string]: AnalysisStore };
+  requests: { [id: string]: Request } | undefined;
   cancel: () => void;
   pokeWorker: () => void;
-  generationNumber: number;
 
   constructor() {
-    this.results = {};
-    this.subscriptions = {};
+    this.stores = {};
+    this.requests = {};
     const [cancelToken, cancel] = withCancel();
     const [pokeToken, poke] = withPoke();
     this.cancel = cancel;
     this.pokeWorker = poke;
-    this.generationNumber = 1;
     analysisTask(cancelToken, pokeToken, this);
   }
 
   destroy() {
     this.cancel();
-    this.subscriptions = undefined;
+    this.requests = undefined;
   }
 
   private checkStoreInit(storeId: string) {
-    this.results[storeId] ??= {
-      localGenerationNumber: this.generationNumber,
+    this.stores[storeId] ??= {
       resultsMap: new WeakMap(),
-      analysisContext: undefined,
+      context: undefined,
     };
   }
 
+  /**
+   * Inject the analysis context for loadouts. Since this object isn't managed
+   * by React or Redux, consumers of loadout analyis need to keep selecting
+   * the context for the storeId(s) the user is looking at and send the context here.
+   */
   updateAnalysisContext(storeId: string, analysisContext: LoadoutAnalysisContext) {
     this.checkStoreInit(storeId);
-    if (this.results[storeId].analysisContext !== analysisContext) {
-      this.generationNumber += 1;
-      this.results[storeId].localGenerationNumber = this.generationNumber;
-      this.results[storeId].analysisContext = analysisContext;
-      this.notifyAllSubscribers(storeId);
-      this.pokeWorker();
+    const store = this.stores[storeId];
+    if (store.context?.analysisContext === analysisContext) {
+      return;
+    } else if (!store.context) {
+      store.context = { analysisContext, generationNumber: 1 };
+    } else {
+      store.context.generationNumber += 1;
+      store.context.analysisContext = analysisContext;
     }
+    // We've updated the context, so results should be considered stale
+    // Tell subscribers and make the worker continue.
+    this.updateSummaries(storeId);
+    this.notifyAllSubscribers(storeId);
+    this.pokeWorker();
   }
 
+  /**
+   * Notifies all subscribers that things may have changed for the given storeId.
+   */
   private notifyAllSubscribers(storeId: string) {
-    if (!this.subscriptions) {
+    if (!this.requests) {
       return;
     }
-    for (const subscription of Object.values(this.subscriptions)) {
+    for (const subscription of Object.values(this.requests)) {
       if (subscription.storeId === storeId) {
         subscription.callback();
       }
     }
   }
 
+  /**
+   * Submit a bunch of loadouts for analyis with the given store and classType.
+   * Will call `callback` if there may be results, at which point
+   * you can call `getSummary` to get them.
+   */
   subscribeToSummary(
     id: string,
     storeId: string,
@@ -123,25 +150,54 @@ export class LoadoutAnalysisStore {
     loadouts: Loadout[],
     callback: () => void
   ): () => void {
-    if (!this.subscriptions) {
+    if (!this.requests) {
       return noop;
     }
-    this.subscriptions[id] = {
-      id,
+    this.requests[id] = {
+      subscriptionId: id,
       storeId,
       classType,
       callback,
       type: { tag: 'summary', loadouts, summary: undefined },
     };
-    const unsubscribe = () => delete this.subscriptions?.[id];
+    const unsubscribe = () => delete this.requests?.[id];
     this.checkStoreInit(storeId);
+    this.updateSummary(this.requests[id]);
     callback();
     this.pokeWorker();
     return unsubscribe;
   }
 
+  /**
+   * Submit a loadout for analyis with the given store and classType.
+   * Will call `callback` if there may be results, at which point
+   * you can call `getLoadoutResults` to get them.
+   */
+  subscribeToLoadoutResult(
+    id: string,
+    storeId: string,
+    classType: DestinyClass,
+    loadout: Loadout,
+    callback: () => void
+  ): () => void {
+    if (!this.requests) {
+      return noop;
+    }
+    this.requests[id] = {
+      subscriptionId: id,
+      storeId,
+      classType,
+      callback,
+      type: { tag: 'loadoutResults', loadout },
+    };
+    const unsubscribe = () => delete this.requests?.[id];
+    this.checkStoreInit(storeId);
+    this.pokeWorker();
+    return unsubscribe;
+  }
+
   getSummary(subscriptionId: string): LoadoutAnalysisSummary | undefined {
-    const subscription = this.subscriptions?.[subscriptionId];
+    const subscription = this.requests?.[subscriptionId];
     if (!subscription) {
       return undefined;
     }
@@ -150,12 +206,13 @@ export class LoadoutAnalysisStore {
 
   getLoadoutResults(storeId: string, loadout: Loadout) {
     this.checkStoreInit(storeId);
-    const storeResult = this.results[storeId];
-    const result = this.results[storeId].resultsMap.get(loadout);
+    const storeResult = this.stores[storeId];
+    const result = this.stores[storeId].resultsMap.get(loadout);
     if (!result) {
       return undefined;
     }
-    const isOutdated = result.generationNumber < storeResult.localGenerationNumber;
+    const isOutdated =
+      !storeResult.context || result.generationNumber < storeResult.context.generationNumber;
     // React uses referential identity to determine whether to re-render, so the return
     // value must be different if properties are different.
     if (
@@ -168,38 +225,18 @@ export class LoadoutAnalysisStore {
     return result.cachedReturnObject;
   }
 
-  subscribeToLoadoutResult(
-    id: string,
-    storeId: string,
-    classType: DestinyClass,
-    loadout: Loadout,
-    callback: () => void
-  ): () => void {
-    if (!this.subscriptions) {
-      return noop;
-    }
-    this.subscriptions[id] = {
-      id,
-      storeId,
-      classType,
-      callback,
-      type: { tag: 'loadoutResults', loadout },
-    };
-    const unsubscribe = () => delete this.subscriptions?.[id];
-    this.checkStoreInit(storeId);
-    callback();
-    this.pokeWorker();
-    return unsubscribe;
-  }
-
+  /**
+   * Callback from the worker task when results are there.
+   */
   setAnalysisResult(
     storeId: string,
     loadout: Loadout,
     generationNumber: number,
     results: LoadoutAnalysisResult
   ) {
-    const store = this.results[storeId];
+    const store = this.stores[storeId];
     const result = store.resultsMap.get(loadout);
+    // Only store the results if it's actually newer
     if (!result || result.generationNumber < generationNumber) {
       store.resultsMap.set(loadout, {
         result: results,
@@ -211,7 +248,7 @@ export class LoadoutAnalysisStore {
     this.notifyAllSubscribers(storeId);
   }
 
-  private updateSummary(subscription: Subscription) {
+  private updateSummary(subscription: Request) {
     if (subscription.type.tag === 'summary') {
       const summary: LoadoutAnalysisSummary = {
         analyzedLoadouts: 0,
@@ -226,17 +263,18 @@ export class LoadoutAnalysisStore {
           [LoadoutFinding.NotAFullArmorSet]: new Set(),
           [LoadoutFinding.DoesNotRespectExotic]: new Set(),
           [LoadoutFinding.ModsDontFit]: new Set(),
+          [LoadoutFinding.UsesSeasonalMods]: new Set(),
           [LoadoutFinding.DoesNotSatisfyStatConstraints]: new Set(),
           [LoadoutFinding.LoadoutHasSearchQuery]: new Set(),
         },
       };
 
-      const store = this.results[subscription.storeId];
+      const store = this.stores[subscription.storeId];
       for (const loadout of subscription.type.loadouts) {
         const result = store.resultsMap.get(loadout);
         if (result) {
           summary.analyzedLoadouts += 1;
-          if (result.generationNumber < store.localGenerationNumber) {
+          if (!store.context || result.generationNumber < store.context.generationNumber) {
             summary.outdated = true;
           }
           for (const finding of result.result.findings) {
@@ -252,8 +290,8 @@ export class LoadoutAnalysisStore {
   }
 
   private updateSummaries(storeId: string) {
-    if (this.subscriptions) {
-      for (const subscription of Object.values(this.subscriptions)) {
+    if (this.requests) {
+      for (const subscription of Object.values(this.requests)) {
         if (subscription.storeId === storeId && subscription.type.tag === 'summary') {
           this.updateSummary(subscription);
         }
@@ -262,13 +300,13 @@ export class LoadoutAnalysisStore {
   }
 
   getNextLoadoutToAnalyze() {
-    if (!this.subscriptions) {
+    if (!this.requests) {
       return undefined;
     }
 
-    const loadoutsAwaitingAnalysis = Object.values(this.subscriptions).flatMap((subscription) => {
-      const existingStore = this.results[subscription.storeId];
-      if (!existingStore.analysisContext) {
+    const loadoutsAwaitingAnalysis = Object.values(this.requests).flatMap((subscription) => {
+      const existingStore = this.stores[subscription.storeId];
+      if (!existingStore.context) {
         return [];
       }
       const loadouts =
@@ -279,17 +317,19 @@ export class LoadoutAnalysisStore {
         const existingResults = existingStore.resultsMap.get(loadout);
         const outOfDateNess = existingResults
           ? // This loadout has been analysed but we have some results - check how far out of date the result is
-            existingStore.localGenerationNumber - existingResults.generationNumber
+            existingStore.context!.generationNumber - existingResults.generationNumber
           : // This loadout has no results - prioritize it
             Number.MAX_SAFE_INTEGER;
 
         return {
           loadout,
-          outOfDateNess,
-          analysisContext: existingStore.analysisContext!,
+          outOfDateNess:
+            // Bump the priority of single analysis requests
+            subscription.type.tag === 'loadoutResults' ? outOfDateNess * 100 : outOfDateNess,
+          analysisContext: existingStore.context!.analysisContext,
           storeId: subscription.storeId,
           classType: subscription.classType,
-          generationNumber: existingStore.localGenerationNumber,
+          generationNumber: existingStore.context!.generationNumber,
         };
       });
     });
@@ -302,15 +342,15 @@ export class LoadoutAnalysisStore {
 export async function analysisTask(
   cancelToken: CancelToken,
   pokeToken: PokeToken,
-  store: LoadoutAnalysisStore
+  analyzer: LoadoutBackgroundAnalyzer
 ) {
   const sleepUntilUpdate = async () => {
     while (!pokeToken.checkPoked()) {
       await delay(0);
     }
   };
-  while (!cancelToken.canceled && store.subscriptions) {
-    const task = store.getNextLoadoutToAnalyze();
+  while (!cancelToken.canceled && analyzer.requests) {
+    const task = analyzer.getNextLoadoutToAnalyze();
 
     if (!task) {
       await sleepUntilUpdate();
@@ -323,6 +363,6 @@ export async function analysisTask(
       task.classType,
       task.loadout
     );
-    store.setAnalysisResult(task.storeId, task.loadout, task.generationNumber, result);
+    analyzer.setAnalysisResult(task.storeId, task.loadout, task.generationNumber, result);
   }
 }

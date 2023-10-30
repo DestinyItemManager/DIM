@@ -603,6 +603,10 @@
     "TooManyFragments": {
       "Description": "There are more fragments configured than granted by its aspects.",
       "Name": "Too Many Fragments"
+    },
+    "UsesSeasonalMods": {
+      "Description": "This loadout relies on mods that are only available in some seasons. When the season ends, some mods will be unavailable or exceed armor energy capacity.",
+      "Name": "Uses Seasonal Mods"
     }
   },
   "LoadoutBuilder": {

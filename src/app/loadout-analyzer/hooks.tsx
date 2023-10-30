@@ -8,7 +8,6 @@ import { DimStore } from 'app/inventory/store-types';
 import { getAutoMods } from 'app/loadout-builder/process/mappers';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { d2ManifestSelector } from 'app/manifest/selectors';
-import { RootState } from 'app/store/types';
 import { currySelector } from 'app/utils/selectors';
 import { noop } from 'lodash';
 import {
@@ -18,15 +17,15 @@ import {
   useContext,
   useEffect,
   useId,
-  useRef,
+  useState,
   useSyncExternalStore,
 } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
-import { LoadoutAnalysisStore } from './store';
+import { LoadoutBackgroundAnalyzer } from './store';
 import { LoadoutAnalysisContext, LoadoutAnalysisResult, LoadoutAnalysisSummary } from './types';
 
-const LoadoutAnalyzerReactContext = createContext<LoadoutAnalysisStore | null>(null);
+const LoadoutAnalyzerReactContext = createContext<LoadoutBackgroundAnalyzer | null>(null);
 
 const autoModSelector = createSelector(
   d2ManifestSelector,
@@ -34,22 +33,17 @@ const autoModSelector = createSelector(
   (defs, unlockedPlugSetItems) => defs && getAutoMods(defs, unlockedPlugSetItems)
 );
 
+// It'd be really neat if this one didn't depend on the storeId but
+// unlockedPlugSetItemsSelector and as a result, autoModSelector
+// do need it.
 const autoOptimizationContextSelector = currySelector(
   createSelector(
-    (_state: RootState, storeId: string) => storeId,
     createItemContextSelector,
     unlockedPlugSetItemsSelector.selector,
     allItemsSelector,
     savedLoadoutParametersSelector,
     autoModSelector,
-    (
-      _storeId,
-      itemCreationContext,
-      unlockedPlugs,
-      allItems,
-      savedLoLoadoutParameters,
-      autoModDefs
-    ) =>
+    (itemCreationContext, unlockedPlugs, allItems, savedLoLoadoutParameters, autoModDefs) =>
       itemCreationContext.defs &&
       autoModDefs &&
       ({
@@ -62,23 +56,34 @@ const autoOptimizationContextSelector = currySelector(
   )
 );
 
+/** Wrapper component that holds the analyzer task and results. */
 export function MakeLoadoutAnalysisAvailable({ children }: { children: ReactNode }) {
-  const analyzer = useRef(new LoadoutAnalysisStore());
+  const [analyzer, setAnalyzer] = useState<LoadoutBackgroundAnalyzer | null>(null);
+  useEffect(() => {
+    setAnalyzer(new LoadoutBackgroundAnalyzer());
+    return () => {
+      setAnalyzer((oldAnalyzer) => {
+        oldAnalyzer?.destroy();
+        return null;
+      });
+    };
+  }, []);
   return (
-    <LoadoutAnalyzerReactContext.Provider value={analyzer.current}>
+    <LoadoutAnalyzerReactContext.Provider value={analyzer}>
       {children}
     </LoadoutAnalyzerReactContext.Provider>
   );
 }
 
+/**
+ * Keep injecting an up-to-date loadout analysis context into the analyzer so that
+ * it can keep analyzing loadouts when the user changes items etc.
+ */
 export function useUpdateLoadoutAnalysisContext(storeId: string) {
   const analyzer = useContext(LoadoutAnalyzerReactContext);
-  if (!analyzer) {
-    throw new Error('Need an analysis context');
-  }
   const analysisContext = useSelector(autoOptimizationContextSelector(storeId));
   useEffect(
-    () => analysisContext && analyzer.updateAnalysisContext(storeId, analysisContext),
+    () => analysisContext && analyzer?.updateAnalysisContext(storeId, analysisContext),
     [analysisContext, analyzer, storeId]
   );
 }
@@ -96,23 +101,21 @@ export function useAnalyzeLoadout(
   | undefined {
   const id = useId();
   const analyzer = useContext(LoadoutAnalyzerReactContext);
-  if (active && !analyzer) {
-    throw new Error('Need an analysis context');
-  }
   const subscribe = useCallback(
     (callback: () => void) =>
-      active
-        ? analyzer!.subscribeToLoadoutResult(id, store.id, store.classType, loadout, callback)
+      active && analyzer
+        ? analyzer.subscribeToLoadoutResult(id, store.id, store.classType, loadout, callback)
         : noop,
     [active, analyzer, id, loadout, store.classType, store.id]
   );
   const getSnapshot = useCallback(
-    () => (active ? analyzer!.getLoadoutResults(store.id, loadout) : undefined),
+    () => (active ? analyzer?.getLoadoutResults(store.id, loadout) : undefined),
     [active, analyzer, loadout, store.id]
   );
   return useSyncExternalStore(subscribe, getSnapshot);
 }
 
+/** Bulk analyze loadouts, returning a summary with loadout IDs grouped by findings */
 export function useSummaryLoadoutsAnalysis(
   loadouts: Loadout[],
   store: DimStore,
@@ -120,18 +123,15 @@ export function useSummaryLoadoutsAnalysis(
 ): LoadoutAnalysisSummary | undefined {
   const id = useId();
   const analyzer = useContext(LoadoutAnalyzerReactContext);
-  if (!analyzer) {
-    throw new Error('Need an analysis context');
-  }
   const subscribe = useCallback(
     (callback: () => void) =>
-      active
-        ? analyzer.subscribeToSummary(id, store.id, store.classType, loadouts, callback)
+      active && analyzer
+        ? analyzer?.subscribeToSummary(id, store.id, store.classType, loadouts, callback)
         : noop,
     [active, analyzer, id, loadouts, store.classType, store.id]
   );
   const getSnapshot = useCallback(
-    () => (active ? analyzer.getSummary(id) : undefined),
+    () => (active ? analyzer?.getSummary(id) : undefined),
     [active, analyzer, id]
   );
   return useSyncExternalStore(subscribe, getSnapshot);

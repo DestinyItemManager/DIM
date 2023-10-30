@@ -7,7 +7,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
-import { findingDisplays, iconsForFindingStyle } from 'app/loadout-analyzer/finding-display';
+import { findingDisplays } from 'app/loadout-analyzer/finding-display';
 import { useAnalyzeLoadout } from 'app/loadout-analyzer/hooks';
 import { LoadoutFinding } from 'app/loadout-analyzer/types';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
@@ -131,13 +131,12 @@ export default function LoadoutView({
           addDividers(
             filterMap(analysis!.result.findings, (finding) => {
               const display = findingDisplays[finding];
-              const icon = iconsForFindingStyle[display.style];
-              if (!icon) {
+              if (!display.icon) {
                 return undefined;
               }
               return (
                 <PressTip key={finding} tooltip={t(display.description)}>
-                  <AppIcon icon={icon} /> {t(display.name)}
+                  <AppIcon icon={display.icon} /> {t(display.name)}
                 </PressTip>
               );
             }),

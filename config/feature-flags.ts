@@ -55,6 +55,8 @@ export function makeFeatureFlags(env: {
     themePicker: true,
     // New LO stat picker
     statConstraintEditor: !env.release,
+    // On the Loadouts page, run Loadout Optimizer to find better tiers for loadouts.
+    runLoInBackground: !env.release,
   };
 }
 
