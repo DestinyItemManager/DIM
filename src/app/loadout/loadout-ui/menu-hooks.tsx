@@ -1,6 +1,6 @@
 import { LoadoutSort } from '@destinyitemmanager/dim-api-types';
-import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import FilterPills, { Option } from 'app/dim-ui/FilterPills';
+import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { DimLanguage } from 'app/i18n';
 import { t } from 'app/i18next-t';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
@@ -9,13 +9,15 @@ import { findingDisplays } from 'app/loadout-analyzer/finding-display';
 import { useSummaryLoadoutsAnalysis } from 'app/loadout-analyzer/hooks';
 import { LoadoutAnalysisSummary, LoadoutFinding } from 'app/loadout-analyzer/types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { refreshIcon } from 'app/shell/icons';
+import { faCheckCircle, refreshIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { localizedIncludes, localizedSorter } from 'app/utils/intl';
+import clsx from 'clsx';
 import _ from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
+import styles from './menu-hooks.m.scss';
 
 /**
  * Set up the filter pills for loadouts - allowing for filtering by hashtag and some other special properties.
@@ -198,14 +200,17 @@ function AnalysisProgress({
   const busy = numAnalyzed < numLoadouts || summary?.outdated;
   // FIXME className is awkward
   return (
-    <div className={className}>
+    <div className={clsx(className, styles.analyzingText)}>
       {busy ? (
         <>
           <AppIcon icon={refreshIcon} spinning />
           {t('LoadoutAnalysis.Analyzing', { numAnalyzed, numLoadouts })}
         </>
       ) : (
-        t('LoadoutAnalysis.Analyzed', { numLoadouts })
+        <>
+          <AppIcon icon={faCheckCircle} />
+          {t('LoadoutAnalysis.Analyzed', { numLoadouts })}
+        </>
       )}
     </div>
   );
