@@ -97,6 +97,7 @@ jobs:
             REMOTE_PATH: pr.destinyitemmanager.com/${{ github.event.number }}
 
       - name: Purge CloudFlare cache
+        if: ${{github.event.pull_request.head.repo.full_name == github.repository}}
         run: ./build/purge-cloudflare.sh
         env:
           CLOUDFLARE_KEY: ${{ secrets.CLOUDFLARE_KEY }}
