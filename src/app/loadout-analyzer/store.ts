@@ -1,6 +1,5 @@
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { CancelToken, withCancel } from 'app/utils/cancel';
-import { delay } from 'app/utils/promises';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _, { noop } from 'lodash';
 import { analyzeLoadout } from './analysis';
@@ -55,26 +54,6 @@ interface AnalysisStore {
   resultsMap: ResultsForDimStore;
 }
 
-function createWakeupPromise(cancelToken: CancelToken): [AsyncIterator<undefined>, () => void] {
-  let isWoken = false;
-  return [
-    (async function* () {
-      try {
-        while (true) {
-          // eslint-disable-next-line no-unmodified-loop-condition
-          while (!isWoken) {
-            cancelToken.checkCanceled();
-            await delay(0);
-          }
-          isWoken = false;
-          yield;
-        }
-      } catch {}
-    })(),
-    () => (isWoken = true),
-  ];
-}
-
 export class LoadoutBackgroundAnalyzer {
   stores: { [storeId: string]: AnalysisStore };
   requests: { [id: string]: Request } | undefined;
@@ -85,15 +64,15 @@ export class LoadoutBackgroundAnalyzer {
     this.stores = {};
     this.requests = {};
     const [cancelToken, cancel] = withCancel();
-    const [wakeupPromise, wakeup] = createWakeupPromise(cancelToken);
     this.cancel = cancel;
-    this.wakeupWorker = wakeup;
-    analysisTask(cancelToken, wakeupPromise, this);
+    this.wakeupWorker = noop;
+    analysisTask(cancelToken, this);
   }
 
   destroy() {
     this.cancel();
     this.requests = undefined;
+    this.wakeupWorker();
   }
 
   private checkStoreInit(storeId: string) {
@@ -341,16 +320,20 @@ export class LoadoutBackgroundAnalyzer {
   }
 }
 
-async function analysisTask(
-  cancelToken: CancelToken,
-  wakeupPromise: AsyncIterator<undefined>,
-  analyzer: LoadoutBackgroundAnalyzer
-) {
+async function analysisTask(cancelToken: CancelToken, analyzer: LoadoutBackgroundAnalyzer) {
   while (!cancelToken.canceled && analyzer.requests) {
     const task = analyzer.getNextLoadoutToAnalyze();
 
     if (!task) {
-      await wakeupPromise.next();
+      // The main scenario to avoid here is a wakeupWorker call
+      // coming in after we find out there's nothing to do but before
+      // we set wakeupWorker for the next promise, which is prevented
+      // by the fact that there's no await before this and the Promise
+      // executor is called synchronously.
+      const promise = new Promise((resolve) => {
+        analyzer.wakeupWorker = () => resolve(null);
+      });
+      await promise;
       continue;
     }
 
