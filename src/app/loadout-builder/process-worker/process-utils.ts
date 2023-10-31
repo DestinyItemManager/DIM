@@ -95,6 +95,7 @@ function getRemainingEnergiesPerAssignment(
 
 /**
  * Optimizes stats individually and updates max tiers.
+ * Returns true if it's possible to bump at least one stat to higher than the stat's `min`.
  */
 export function updateMaxTiers(
   info: LoSessionInfo,
@@ -104,11 +105,13 @@ export function updateMaxTiers(
   numArtificeMods: number,
   statFiltersInStatOrder: ResolvedStatConstraint[],
   minMaxesInStatOrder: MinMax[] // mutated
-) {
+): boolean {
   const { remainingEnergiesPerAssignment, setEnergy } = getRemainingEnergiesPerAssignment(
     info,
     items
   );
+
+  let foundAnyImprovement = false;
 
   const requiredMinimumExtraStats = [0, 0, 0, 0, 0, 0];
 
@@ -117,9 +120,15 @@ export function updateMaxTiers(
     const value = setStats[statIndex];
     const filter = statFiltersInStatOrder[statIndex];
     if (!filter.ignored) {
-      const tier = setTiers[statIndex];
       const minMax = minMaxesInStatOrder[statIndex];
+      if (minMax.max < filter.minTier) {
+        // This is only called with sets that satisfy stat constraints,
+        // so optimistically bump these up
+        minMax.max = filter.minTier;
+      }
+      const tier = setTiers[statIndex];
       if (minMax.max < tier) {
+        foundAnyImprovement = true;
         minMax.max = tier;
       }
       const neededValue = filter.minTier * 10 - value;
@@ -134,7 +143,8 @@ export function updateMaxTiers(
   for (let statIndex = 0; statIndex < statFiltersInStatOrder.length; statIndex++) {
     const setStat = setStats[statIndex];
     const minMax = minMaxesInStatOrder[statIndex];
-    if (statFiltersInStatOrder[statIndex].ignored || minMax.max >= 10) {
+    const statFilter = statFiltersInStatOrder[statIndex];
+    if (statFilter.ignored || minMax.max >= 10) {
       continue;
     }
 
@@ -156,12 +166,15 @@ export function updateMaxTiers(
       );
       if (picks) {
         const val = Math.floor((setStat + explorationStats[statIndex]) / 10);
+        foundAnyImprovement ||= val > statFilter.minTier;
         minMax.max = val;
       } else {
         break;
       }
     }
   }
+
+  return foundAnyImprovement;
 }
 
 /**

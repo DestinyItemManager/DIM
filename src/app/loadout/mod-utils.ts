@@ -101,21 +101,20 @@ export function groupModsByModType(plugs: PluggableInventoryItemDefinition[]) {
 /**
  * Some mods have two copies, a regular version and a reduced-cost version.
  * Only some of them are seasonally available, depending on artifact mods/unlocks.
- * This maps to whichever version is available, otherwise returns plugHash unmodified.
+ * This maps to whichever version is available, otherwise returning the expensive versions.
  */
 export function mapToAvailableModCostVariant(plugHash: number, unlockedPlugs: Set<number>) {
-  const toReduced = normalToReducedMod[plugHash];
-  if (toReduced !== undefined && unlockedPlugs.has(toReduced)) {
-    return toReduced;
+  const reducedVersion = isReducedModCostVariant(plugHash)
+    ? plugHash
+    : normalToReducedMod[plugHash];
+  if (reducedVersion !== undefined && unlockedPlugs.has(reducedVersion)) {
+    return reducedVersion;
   }
   if (unlockedPlugs.has(plugHash)) {
     return plugHash;
   }
   const toNormal = reducedToNormalMod[plugHash];
-  if (toNormal !== undefined && unlockedPlugs.has(toNormal)) {
-    return toNormal;
-  }
-  return plugHash;
+  return toNormal ?? plugHash;
 }
 
 /**

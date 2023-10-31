@@ -557,6 +557,58 @@
     "Profile": "Loading Destiny profile...",
     "Vendors": "Loading Destiny vendors..."
   },
+  "LoadoutAnalysis": {
+    "Analyzed": "Analyzed {{numLoadouts}} Loadouts",
+    "Analyzing": "Analyzing {{numAnalyzed}}/{{numLoadouts}} Loadouts",
+    "BetterStatsAvailable": {
+      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stat tiers.",
+      "Name": "Better Stats Available"
+    },
+    "DoesNotRespectExotic": {
+      "Description": "This loadout's Loadout Optimizer settings specify an exotic choice, but the loadout does not match that exotic.",
+      "Name": "Wrong Exotic"
+    },
+    "DoesNotSatisfyStatConstraints": {
+      "Description": "Loadout Optimizer settings for this Loadout specify stat tiers, but the Loadout does not reach them.",
+      "Name": "Wrong Stat Tiers"
+    },
+    "EmptyFragmentSlots": {
+      "Description": "There are empty fragment slots in this subclass.",
+      "Name": "Empty Fragment Slots"
+    },
+    "InvalidMods": {
+      "Description": "Some mods in this loadout are deprecated or do not otherwise fit into any of your armor pieces.",
+      "Name": "Deprecated Mods"
+    },
+    "LoadoutHasSearchQuery": {
+      "Description": "This loadout was created with a search query in Loadout Optimizer.",
+      "Name": "Has Search Query"
+    },
+    "MissingItems": {
+      "Description": "Some of the items in this loadout are no longer in your inventory.",
+      "Name": "Missing Items"
+    },
+    "ModsDontFit": {
+      "Description": "Armor in this loadout cannot accommodate all loadout mods, even if the armor was upgraded.",
+      "Name": "Unassigned Mods"
+    },
+    "NeedsArmorUpgrades": {
+      "Description": "Armor in this loadout needs to be upgraded to accommodate all mods or reach specified stat tiers.",
+      "Name": "Needs Armor Upgrades"
+    },
+    "NotAFullArmorSet": {
+      "Description": "This loadout could not be analyzed further because it does not include a full set of armor.",
+      "Name": "Not A Full Armor Set"
+    },
+    "TooManyFragments": {
+      "Description": "There are more fragments configured on the subclass than granted by aspects.",
+      "Name": "Too Many Fragments"
+    },
+    "UsesSeasonalMods": {
+      "Description": "This loadout relies on mods that are only available in some seasons. When the season ends, some mods will be unavailable or exceed armor energy capacity.",
+      "Name": "Uses Seasonal Mods"
+    }
+  },
   "LoadoutBuilder": {
     "AddHalfTierMods": "Add +5 Mods",
     "All": "All",
@@ -665,11 +717,9 @@
     "CurrentlyEquipped": "Currently Equipped",
     "Deequip": "De-equipping items from other characters",
     "Delete": "Delete",
-    "DeprecatedMods": "Deprecated Mods",
     "DimLoadouts": "DIM Loadouts",
     "Edit": "Edit Loadout",
     "EditBrief": "Edit",
-    "EmptyFragmentSlots": "Empty Fragment Slots",
     "EquipInGameLoadout": "Equipping in-game loadout",
     "EquipItems": "Equipping items",
     "EquippableDifferent1": "Multiple Exotic items were used to calculate your Maximum Power, so the number shown may not be achievable when equipping your items in-game.",
@@ -713,7 +763,6 @@
     "MaximizeLight": "Max Light",
     "MaximizePower": "Max Power",
     "MaximizeStat": "Maximize Stat",
-    "MissingItems": "Missing Items",
     "MissingItemsWarning": "Some of the items in this loadout are no longer in your inventory.",
     "ModErrorSummary": "1 mod error:",
     "ModErrorSummary_plural": "{{count}} mod errors:",
@@ -798,7 +847,6 @@
     "SubclassOptionsSearch": "Search {{subclass}} options",
     "Succeeded": "Loadout succeeded",
     "SyncFromEquipped": "Sync from equipped",
-    "TooManyFragments": "Too Many Fragments",
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
     "UnassignedModError": "Mod didn't fit on your current armor",
     "Undo": "Undo",

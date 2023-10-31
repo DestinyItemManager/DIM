@@ -247,11 +247,9 @@ export default memo(function LoadoutBuilder({
 
   // Run the actual loadout generation process in a web worker
   const { result, processing } = useProcess({
-    defs,
     selectedStore,
     filteredItems,
     lockedModMap,
-    subclass,
     modStatChanges,
     armorEnergyRules,
     resolvedStatConstraints,

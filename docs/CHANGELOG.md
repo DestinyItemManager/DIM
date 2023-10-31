@@ -1,10 +1,13 @@
 ## Next
 
+* The Loadouts page will now analyze your Loadouts in more depth, show filter pills for analysis findings, and note them in individual Loadouts too.
+  * Examples are Loadouts where the mods don't fit on the armor, Loadouts that rely on seasonal mods, or Loadouts where armor needs to be upgraded to accommodate mods or reach target stats.
 * Fixed a case where vendor items could show as owned when they were not.
 
 ### Beta Only
 
 * A preview of a new stat constraint editing widget for Loadout Optimizer! Let us know how you like it and how it helps (or hurts) your ability to make top tier builds.
+* The Loadouts page will note "Better Stats Available" if we've found that a Loadout could use different armor or stat mods to reach strictly higher stat tiers.
 
 ## 7.92.0 <span class="changelog-date">(2023-10-29)</span>
 

@@ -70,7 +70,7 @@ const fullyResolvedLoadoutsSelector = createSelector(
   }
 );
 
-function fullyResolveLoadout(
+export function fullyResolveLoadout(
   storeId: string,
   loadout: Loadout,
   defs: D2ManifestDefinitions | undefined,
