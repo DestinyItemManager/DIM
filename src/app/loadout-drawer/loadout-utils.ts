@@ -19,6 +19,7 @@ import {
 import { getTotalModStatChanges } from 'app/loadout/stats';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import {
+  MASTERWORK_ARMOR_STAT_BONUS,
   MAX_ARMOR_ENERGY_CAPACITY,
   armorStats,
   deprecatedPlaceholderArmorModHash,
@@ -283,6 +284,7 @@ export function getLoadoutStats(
   subclass: ResolvedLoadoutItem | undefined,
   armor: DimItem[],
   mods: PluggableInventoryItemDefinition[],
+  /** Assume armor is masterworked according to these rules when calculating stats */
   armorEnergyRules?: ArmorEnergyRules
 ) {
   const statDefs = armorStats.map((hash) => defs.Stat.get(hash));
@@ -306,7 +308,9 @@ export function getLoadoutStats(
     for (const hash of armorStats) {
       armorPiecesStats[hash] += itemStats[hash]?.[0].base ?? 0;
       armorPiecesStats[hash] +=
-        itemEnergy === MAX_ARMOR_ENERGY_CAPACITY ? 2 : energySocket?.plugged?.stats?.[hash] ?? 0;
+        itemEnergy === MAX_ARMOR_ENERGY_CAPACITY
+          ? MASTERWORK_ARMOR_STAT_BONUS
+          : energySocket?.plugged?.stats?.[hash] ?? 0;
     }
   }
 

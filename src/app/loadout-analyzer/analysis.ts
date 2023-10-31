@@ -31,6 +31,7 @@ import { fragmentSocketCategoryHashes, getSocketsByCategoryHashes } from 'app/ut
 import { HashLookup } from 'app/utils/util-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
+import { stubTrue } from 'lodash';
 import {
   LoadoutAnalysisContext,
   LoadoutAnalysisResult,
@@ -158,7 +159,7 @@ export async function analyzeLoadout(
         classType,
         subclass,
         loadoutArmor,
-        originalLoadoutMods.map((mod) => mod.resolvedMod),
+        originalModDefs,
         armorEnergyRules,
         statConstraints
       );
@@ -196,20 +197,21 @@ export async function analyzeLoadout(
 
           // TODO: Include vendor armor here?
           const armorForThisClass = allItems.filter(
-            (item) => isLoadoutBuilderItem(item) && item.classType === classType
+            (item) =>
+              item.classType === classType && item.bucket.inArmor && isLoadoutBuilderItem(item)
           );
-          // We previously reject loadouts where mods can't fit, so no need to pass unassignedMods here.
-          // We also reject
           const [filteredItems] = filterItems({
             defs,
             items: armorForThisClass,
             pinnedItems: {},
             excludedItems: {},
+            // We previously reject loadouts where mods can't fit, so no need to pass unassignedMods here.
             lockedModMap: modMap,
             unassignedMods: [],
             lockedExoticHash: loadoutParameters.exoticArmorHash,
             armorEnergyRules,
-            searchFilter: () => true,
+            // We also reject loadouts with a search filter
+            searchFilter: stubTrue,
           });
 
           const modStatChanges = getTotalModStatChanges(

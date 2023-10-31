@@ -824,7 +824,7 @@
     },
     "InvalidMods": {
       "Name": "Deprecated Mods",
-      "Description": "Some mods in this loadout are deprecated or do otherwise not fit into any of your armor pieces."
+      "Description": "Some mods in this loadout are deprecated or do not otherwise fit into any of your armor pieces."
     },
     "EmptyFragmentSlots": {
       "Name": "Empty Fragment Slots",
@@ -832,11 +832,11 @@
     },
     "TooManyFragments": {
       "Name": "Too Many Fragments",
-      "Description": "There are more fragments configured than granted by its aspects."
+      "Description": "There are more fragments configured on the subclass than granted by aspects."
     },
     "NeedsArmorUpgrades": {
       "Name": "Needs Armor Upgrades",
-      "Description": "Armor in this loadout needs to be upgraded to acommodate all mods or reach specified stat tiers."
+      "Description": "Armor in this loadout needs to be upgraded to accommodate all mods or reach specified stat tiers."
     },
     "BetterStatsAvailable": {
       "Name": "Better Stats Available",

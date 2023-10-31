@@ -21,6 +21,7 @@ export const d2MissingIcon = '/img/misc/missing_icon_d2.png';
 //
 
 export const MAX_ARMOR_ENERGY_CAPACITY = 10;
+export const MASTERWORK_ARMOR_STAT_BONUS = 2;
 
 //
 // SOCKETS KNOWN VALUES

@@ -577,7 +577,7 @@
       "Name": "Empty Fragment Slots"
     },
     "InvalidMods": {
-      "Description": "Some mods in this loadout are deprecated or do otherwise not fit into any of your armor pieces.",
+      "Description": "Some mods in this loadout are deprecated or do not otherwise fit into any of your armor pieces.",
       "Name": "Deprecated Mods"
     },
     "LoadoutHasSearchQuery": {
@@ -593,7 +593,7 @@
       "Name": "Unassigned Mods"
     },
     "NeedsArmorUpgrades": {
-      "Description": "Armor in this loadout needs to be upgraded to acommodate all mods or reach specified stat tiers.",
+      "Description": "Armor in this loadout needs to be upgraded to accommodate all mods or reach specified stat tiers.",
       "Name": "Needs Armor Upgrades"
     },
     "NotAFullArmorSet": {
@@ -601,7 +601,7 @@
       "Name": "Not A Full Armor Set"
     },
     "TooManyFragments": {
-      "Description": "There are more fragments configured than granted by its aspects.",
+      "Description": "There are more fragments configured on the subclass than granted by aspects.",
       "Name": "Too Many Fragments"
     },
     "UsesSeasonalMods": {

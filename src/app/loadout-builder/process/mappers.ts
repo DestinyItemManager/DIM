@@ -5,7 +5,11 @@ import {
   activityModPlugCategoryHashes,
   knownModPlugCategoryHashes,
 } from 'app/loadout/known-values';
-import { MAX_ARMOR_ENERGY_CAPACITY, armorStats } from 'app/search/d2-known-values';
+import {
+  MASTERWORK_ARMOR_STAT_BONUS,
+  MAX_ARMOR_ENERGY_CAPACITY,
+  armorStats,
+} from 'app/search/d2-known-values';
 import { filterMap } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
@@ -67,7 +71,7 @@ export function mapDimItemToProcessItem({
     for (const { statHash, base } of dimItemStats) {
       let value = base;
       if (capacity === MAX_ARMOR_ENERGY_CAPACITY) {
-        value += 2;
+        value += MASTERWORK_ARMOR_STAT_BONUS;
       }
       statMap[statHash] = value;
     }

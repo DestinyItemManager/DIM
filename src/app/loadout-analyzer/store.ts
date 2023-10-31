@@ -41,7 +41,9 @@ type ResultsForDimStore = WeakMap<
  * The context and results for a given DIM storeId.
  * Since the context annoyingly contains character-specific things
  * (mostly due to mod cost reductions), each store has its own copy
- * of the context. The generationNumber is incremented
+ * of the context. The generationNumber is incremented whenever a
+ * referentially new analysisContext comes in, which triggers
+ * recomputing.
  */
 interface AnalysisStore {
   context:
@@ -53,23 +55,23 @@ interface AnalysisStore {
   resultsMap: ResultsForDimStore;
 }
 
-interface PokeToken {
-  checkPoked: () => boolean;
-}
-
-function withPoke(): [PokeToken, () => void] {
-  let isPoked = false;
+function createWakeupPromise(cancelToken: CancelToken): [AsyncIterator<undefined>, () => void] {
+  let isWoken = false;
   return [
-    {
-      checkPoked() {
-        if (isPoked) {
-          isPoked = false;
-          return true;
+    (async function* () {
+      try {
+        while (true) {
+          // eslint-disable-next-line no-unmodified-loop-condition
+          while (!isWoken) {
+            cancelToken.checkCanceled();
+            await delay(0);
+          }
+          isWoken = false;
+          yield;
         }
-        return false;
-      },
-    },
-    () => (isPoked = true),
+      } catch {}
+    })(),
+    () => (isWoken = true),
   ];
 }
 
@@ -77,16 +79,16 @@ export class LoadoutBackgroundAnalyzer {
   stores: { [storeId: string]: AnalysisStore };
   requests: { [id: string]: Request } | undefined;
   cancel: () => void;
-  pokeWorker: () => void;
+  wakeupWorker: () => void;
 
   constructor() {
     this.stores = {};
     this.requests = {};
     const [cancelToken, cancel] = withCancel();
-    const [pokeToken, poke] = withPoke();
+    const [wakeupPromise, wakeup] = createWakeupPromise(cancelToken);
     this.cancel = cancel;
-    this.pokeWorker = poke;
-    analysisTask(cancelToken, pokeToken, this);
+    this.wakeupWorker = wakeup;
+    analysisTask(cancelToken, wakeupPromise, this);
   }
 
   destroy() {
@@ -103,7 +105,7 @@ export class LoadoutBackgroundAnalyzer {
 
   /**
    * Inject the analysis context for loadouts. Since this object isn't managed
-   * by React or Redux, consumers of loadout analyis need to keep selecting
+   * by React or Redux, consumers of loadout analysis need to keep selecting
    * the context for the storeId(s) the user is looking at and send the context here.
    */
   updateAnalysisContext(storeId: string, analysisContext: LoadoutAnalysisContext) {
@@ -121,7 +123,7 @@ export class LoadoutBackgroundAnalyzer {
     // Tell subscribers and make the worker continue.
     this.updateSummaries(storeId);
     this.notifyAllSubscribers(storeId);
-    this.pokeWorker();
+    this.wakeupWorker();
   }
 
   /**
@@ -139,7 +141,7 @@ export class LoadoutBackgroundAnalyzer {
   }
 
   /**
-   * Submit a bunch of loadouts for analyis with the given store and classType.
+   * Submit a bunch of loadouts for analysis with the given store and classType.
    * Will call `callback` if there may be results, at which point
    * you can call `getSummary` to get them.
    */
@@ -164,12 +166,12 @@ export class LoadoutBackgroundAnalyzer {
     this.checkStoreInit(storeId);
     this.updateSummary(this.requests[id]);
     callback();
-    this.pokeWorker();
+    this.wakeupWorker();
     return unsubscribe;
   }
 
   /**
-   * Submit a loadout for analyis with the given store and classType.
+   * Submit a loadout for analysis with the given store and classType.
    * Will call `callback` if there may be results, at which point
    * you can call `getLoadoutResults` to get them.
    */
@@ -192,7 +194,7 @@ export class LoadoutBackgroundAnalyzer {
     };
     const unsubscribe = () => delete this.requests?.[id];
     this.checkStoreInit(storeId);
-    this.pokeWorker();
+    this.wakeupWorker();
     return unsubscribe;
   }
 
@@ -341,19 +343,14 @@ export class LoadoutBackgroundAnalyzer {
 
 export async function analysisTask(
   cancelToken: CancelToken,
-  pokeToken: PokeToken,
+  wakeupPromise: AsyncIterator<undefined>,
   analyzer: LoadoutBackgroundAnalyzer
 ) {
-  const sleepUntilUpdate = async () => {
-    while (!pokeToken.checkPoked()) {
-      await delay(0);
-    }
-  };
   while (!cancelToken.canceled && analyzer.requests) {
     const task = analyzer.getNextLoadoutToAnalyze();
 
     if (!task) {
-      await sleepUntilUpdate();
+      await wakeupPromise.next();
       continue;
     }
 

@@ -58,7 +58,7 @@ export const enum LoadoutFinding {
   /** The armor set does not match the saved stat constraints. */
   DoesNotSatisfyStatConstraints,
   /**
-   * The loadout's has a search query which we cannot deal with.
+   * The loadout has a search query which complicates analysis.
    * Maybe we could but it's difficult and probably a niche case.
    * But whether an item matches a query can change often (tags, or
    * imagine creating a Loadout from `-is:inloadout` items...)
@@ -66,13 +66,7 @@ export const enum LoadoutFinding {
   LoadoutHasSearchQuery,
 }
 
-/** Findings that are actually good things (possible improvements) */
-export const goodFindings: LoadoutFinding[] = [
-  LoadoutFinding.BetterStatsAvailable,
-  LoadoutFinding.EmptyFragmentSlots,
-];
-
-/** These aren't problems per se but they do block further analyis */
+/** These aren't problems per se but they do block further analysis */
 export const blockAnalysisFindings: LoadoutFinding[] = [
   LoadoutFinding.NotAFullArmorSet,
   LoadoutFinding.ModsDontFit,
@@ -81,7 +75,7 @@ export const blockAnalysisFindings: LoadoutFinding[] = [
 ];
 
 /**
- * The context for analysing a loadout. Results are considered stale
+ * The context for analyzing a loadout. Results are considered stale
  * and will be rebuilt when anything in here changes.
  */
 export interface LoadoutAnalysisContext {

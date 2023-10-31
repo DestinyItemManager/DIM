@@ -88,7 +88,7 @@ export function useUpdateLoadoutAnalysisContext(storeId: string) {
   );
 }
 
-/** Submit a single loadout to analyis. This will return undefined until results are available. */
+/** Submit a single loadout to analysis. This will return undefined until results are available. */
 export function useAnalyzeLoadout(
   loadout: Loadout,
   store: DimStore,
