@@ -28,7 +28,7 @@ const initialState: VendorsState = {
 export const vendors: Reducer<VendorsState, VendorsAction | AccountsAction> = (
   state: VendorsState = initialState,
   action: VendorsAction | AccountsAction
-) => {
+): VendorsState => {
   switch (action.type) {
     case getType(actions.loadedAll): {
       const { characterId, vendorsResponse } = action.payload;
