@@ -8,7 +8,7 @@ import {
 import { ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
-import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';
+import { MAX_SLOT_INDEPENDENT_MODS } from 'app/search/d2-known-values';
 import { count, uniqBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
@@ -21,6 +21,7 @@ import { produce } from 'immer';
 import _ from 'lodash';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import { getAvailableArmorSlotEnergyCapacities } from './getMaximumPotentiallyAvailableArmorSlotEnergyCapacities';
 import { isLoadoutBuilderItem } from './item-utils';
 import {
   activityModPlugCategoryHashes,
@@ -30,9 +31,6 @@ import {
 import { getModExclusionGroup, isInsertableArmor2Mod, sortModGroups } from './mod-utils';
 import PlugDrawer from './plug-drawer/PlugDrawer';
 import { PlugSelectionType, PlugSet } from './plug-drawer/types';
-
-/** Raid, combat and legacy mods can have up to 5 selected. */
-const MAX_SLOT_INDEPENDENT_MODS = 5;
 
 const sortModPickerPlugGroups = (a: PlugSet, b: PlugSet) => sortModGroups(a.plugs, b.plugs);
 
@@ -334,9 +332,6 @@ function isModSelectable(
   mod: PluggableInventoryItemDefinition,
   selected: PluggableInventoryItemDefinition[],
 ) {
-  const { plugCategoryHash, energyCost } = mod.plug;
-  const isSlotSpecificCategory = slotSpecificPlugCategoryHashes.includes(plugCategoryHash);
-
   // checks if the selected mod can stack with itself.
   if (selected.includes(mod) && unstackableModHashes.includes(mod.hash)) {
     return false;
@@ -348,21 +343,5 @@ function isModSelectable(
     return false;
   }
 
-  if (isSlotSpecificCategory) {
-    // General and slot-specific mods just match to the same category hash
-    const associatedLockedMods = selected.filter(
-      (mod) => mod.plug.plugCategoryHash === plugCategoryHash,
-    );
-    // Slot-specific mods (e.g. chest mods) can slot 3 per piece, so make sure the sum of energy doesn't
-    // exceed the maximum and that energy all aligns. This doesn't check other mods that could be on the
-    // item because we haven't assigned those to specific pieces.
-    const lockedModCost = isSlotSpecificCategory
-      ? _.sumBy(associatedLockedMods, (mod) => mod.plug.energyCost?.energyCost || 0)
-      : 0;
-    const modCost = energyCost?.energyCost || 0;
-
-    return lockedModCost + modCost <= MAX_ARMOR_ENERGY_CAPACITY;
-  }
-
-  return true;
+  return getAvailableArmorSlotEnergyCapacities([mod, ...selected]) !== null;
 }

@@ -3,7 +3,6 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
-import { LookupTable } from 'app/utils/util-types';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import deprecatedMods from 'data/d2/deprecated-mods.json';
 import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
@@ -12,12 +11,24 @@ import mutuallyExclusiveMods from 'data/d2/mutually-exclusive-mods.json';
 import { normalToReducedMod, reducedToNormalMod } from 'data/d2/reduced-cost-mod-mappings';
 import { knownModPlugCategoryHashes } from './known-values';
 
-export const plugCategoryHashToBucketHash: LookupTable<PlugCategoryHashes, BucketHashes> = {
+const armorPlugCategoryHashToBucketHash = {
   [armor2PlugCategoryHashesByName.helmet]: BucketHashes.Helmet,
   [armor2PlugCategoryHashesByName.gauntlets]: BucketHashes.Gauntlets,
   [armor2PlugCategoryHashesByName.chest]: BucketHashes.ChestArmor,
   [armor2PlugCategoryHashesByName.leg]: BucketHashes.LegArmor,
   [armor2PlugCategoryHashesByName.classitem]: BucketHashes.ClassArmor,
+};
+
+// A wrapper to make accessing plugCategoryHashToBucketHash easier and safer
+export const getBucketHashFromPlugCategoryHash = (
+  plugCategoryHash: PlugCategoryHashes,
+): BucketHashes | undefined => {
+  if (plugCategoryHash in armorPlugCategoryHashToBucketHash) {
+    return armorPlugCategoryHashToBucketHash[
+      plugCategoryHash as keyof typeof armorPlugCategoryHashToBucketHash
+    ];
+  }
+  return undefined;
 };
 
 /**

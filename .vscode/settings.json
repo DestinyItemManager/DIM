@@ -24,6 +24,7 @@
     "source.fixAll": "explicit"
   },
   "jest.jestCommandLine": "pnpm test --",
+  "jestrunner.jestCommand": "pnpm test --",
   "[javascript]": {
     "editor.codeActionsOnSave": {
       "source.organizeImports": false

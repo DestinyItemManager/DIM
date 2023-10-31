@@ -28,7 +28,7 @@ import memoizeOne from 'memoize-one';
 import { calculateAssumedItemEnergy } from './armor-upgrade-utils';
 import { activityModPlugCategoryHashes } from './known-values';
 import { generateModPermutations } from './mod-permutations';
-import { getModExclusionGroup, plugCategoryHashToBucketHash } from './mod-utils';
+import { getBucketHashFromPlugCategoryHash, getModExclusionGroup } from './mod-utils';
 
 /**
  * a temporary structure, keyed by item ID,
@@ -71,65 +71,76 @@ export interface ModMap {
  * to eagerly filter out mods that can't fit into any of these items (`unassignedMods`), this is typically
  * needed in order to exclude deprecated (artifact) mods.
  */
-export function categorizeArmorMods(
-  allMods: PluggableInventoryItemDefinition[],
-  referenceItems: DimItem[],
-): { modMap: ModMap; unassignedMods: PluggableInventoryItemDefinition[] } {
-  const generalMods: PluggableInventoryItemDefinition[] = [];
-  const activityMods: PluggableInventoryItemDefinition[] = [];
-  const artificeMods: PluggableInventoryItemDefinition[] = [];
-  const bucketSpecificMods: { [plugCategoryHash: number]: PluggableInventoryItemDefinition[] } = {};
 
-  const validMods: PluggableInventoryItemDefinition[] = [];
-  const unassignedMods: PluggableInventoryItemDefinition[] = [];
+export const categorizeArmorMods = memoizeOne(
+  (
+    allMods: PluggableInventoryItemDefinition[],
+    referenceItems?: DimItem[],
+  ): { modMap: ModMap; unassignedMods: PluggableInventoryItemDefinition[] } => {
+    const hasReferenceItems = Boolean(referenceItems?.length);
 
-  const allActiveModSockets = referenceItems
-    .flatMap((i) => getSocketsByCategoryHash(i.sockets, SocketCategoryHashes.ArmorMods))
-    .filter((socket) => socket.plugged);
+    const generalMods: PluggableInventoryItemDefinition[] = [];
+    const activityMods: PluggableInventoryItemDefinition[] = [];
+    const artificeMods: PluggableInventoryItemDefinition[] = [];
+    const bucketSpecificMods: { [plugCategoryHash: number]: PluggableInventoryItemDefinition[] } =
+      {};
 
-  // Divide up the locked mods into general, combat and activity mod arrays, and put
-  // bucket specific mods into a map keyed by bucket hash.
-  for (const plannedMod of allMods) {
-    const pch = plannedMod.plug.plugCategoryHash as PlugCategoryHashes;
-    if (!allActiveModSockets.some((s) => plugFitsIntoSocket(s, plannedMod.hash))) {
-      // Eagerly reject mods that can't possibly fit into any socket at all under
-      // any circumstances, such as deprecated (artifact) armor mods.
-      // Mod assignment code relies on manually curated socket/plug metadata, so
-      // it doesn't check whether a plug actually appears in the list of possible plugs.
-      // Deprecated combat style armor mods in particular are indistinguishable from
-      // non-deprecated ones by their definitions alone.
-      unassignedMods.push(plannedMod);
-    } else if (pch === armor2PlugCategoryHashesByName.general) {
-      generalMods.push(plannedMod);
-      validMods.push(plannedMod);
-    } else if (activityModPlugCategoryHashes.includes(pch)) {
-      activityMods.push(plannedMod);
-      validMods.push(plannedMod);
-    } else if (plannedMod.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice) {
-      artificeMods.push(plannedMod);
-      validMods.push(plannedMod);
-    } else {
-      const bucketHash = plugCategoryHashToBucketHash[pch];
-      if (bucketHash !== undefined) {
-        (bucketSpecificMods[bucketHash] ??= []).push(plannedMod);
+    const validMods: PluggableInventoryItemDefinition[] = [];
+    const unassignedMods: PluggableInventoryItemDefinition[] = [];
+
+    const allActiveModSockets = hasReferenceItems
+      ? referenceItems!
+          .flatMap((i) => getSocketsByCategoryHash(i.sockets, SocketCategoryHashes.ArmorMods))
+          .filter((socket) => socket.plugged)
+      : [];
+
+    // Divide up the locked mods into general, combat and activity mod arrays, and put
+    // bucket specific mods into a map keyed by bucket hash.
+    for (const plannedMod of allMods) {
+      const pch = plannedMod.plug.plugCategoryHash as PlugCategoryHashes;
+      if (
+        hasReferenceItems &&
+        !allActiveModSockets.some((s) => plugFitsIntoSocket(s, plannedMod.hash))
+      ) {
+        // Eagerly reject mods that can't possibly fit into any socket at all under
+        // any circumstances, such as deprecated (artifact) armor mods.
+        // Mod assignment code relies on manually curated socket/plug metadata, so
+        // it doesn't check whether a plug actually appears in the list of possible plugs.
+        // Deprecated combat style armor mods in particular are indistinguishable from
+        // non-deprecated ones by their definitions alone.
+        unassignedMods.push(plannedMod);
+      } else if (pch === armor2PlugCategoryHashesByName.general) {
+        generalMods.push(plannedMod);
+        validMods.push(plannedMod);
+      } else if (activityModPlugCategoryHashes.includes(pch)) {
+        activityMods.push(plannedMod);
+        validMods.push(plannedMod);
+      } else if (plannedMod.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice) {
+        artificeMods.push(plannedMod);
         validMods.push(plannedMod);
       } else {
-        unassignedMods.push(plannedMod);
+        const bucketHash = getBucketHashFromPlugCategoryHash(pch);
+        if (bucketHash !== undefined) {
+          (bucketSpecificMods[bucketHash] ??= []).push(plannedMod);
+          validMods.push(plannedMod);
+        } else {
+          unassignedMods.push(plannedMod);
+        }
       }
     }
-  }
 
-  return {
-    modMap: {
-      allMods: validMods,
-      generalMods,
-      activityMods,
-      artificeMods,
-      bucketSpecificMods,
-    },
-    unassignedMods,
-  };
-}
+    return {
+      modMap: {
+        allMods: validMods,
+        generalMods,
+        activityMods,
+        artificeMods,
+        bucketSpecificMods,
+      },
+      unassignedMods,
+    };
+  },
+);
 
 const materialsInRarityOrder = [
   4257549985, // InventoryItem "Ascendant Shard"
@@ -956,3 +967,6 @@ function countBucketIndependentModChangesForItem(
 
   return count;
 }
+
+export const getModCost = (mod: PluggableInventoryItemDefinition) =>
+  mod.plug.energyCost?.energyCost || 0;

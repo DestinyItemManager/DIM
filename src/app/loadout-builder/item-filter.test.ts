@@ -9,7 +9,12 @@ import { count } from 'app/utils/collections';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import _, { stubFalse, stubTrue } from 'lodash';
-import { elementalChargeModHash, stacksOnStacksModHash } from 'testing/test-item-utils';
+import {
+  elementalChargeModHash,
+  enhancedOperatorAugmentModHash,
+  recoveryModHash,
+  stacksOnStacksModHash,
+} from 'testing/test-item-utils';
 import { getTestDefinitions, getTestStores } from 'testing/test-utils';
 import { FilterInfo, filterItems } from './item-filter';
 import {
@@ -28,6 +33,8 @@ describe('loadout-builder item-filter', () => {
   let items: DimItem[];
   let stacksOnStacksMod: PluggableInventoryItemDefinition;
   let elementalChargeMod: PluggableInventoryItemDefinition;
+  let recoveryMod: PluggableInventoryItemDefinition;
+  let enhancedOperatorMod: PluggableInventoryItemDefinition;
 
   const defaultArgs = {
     lockedExoticHash: undefined,
@@ -62,6 +69,20 @@ describe('loadout-builder item-filter', () => {
     expect(isPluggableItem(elementalChargeMod)).toBe(true);
     expect(elementalChargeMod.plug.energyCost!.energyCost).toBe(3);
     expect(elementalChargeMod.plug.plugCategoryHash).toBe(PlugCategoryHashes.EnhancementsV2Legs);
+
+    recoveryMod = defs.InventoryItem.get(recoveryModHash) as PluggableInventoryItemDefinition;
+    expect(isPluggableItem(recoveryMod)).toBe(true);
+    expect(recoveryMod.plug.energyCost!.energyCost).toBe(4);
+    expect(recoveryMod.plug.plugCategoryHash).toBe(PlugCategoryHashes.EnhancementsV2General);
+
+    enhancedOperatorMod = defs.InventoryItem.get(
+      enhancedOperatorAugmentModHash,
+    ) as PluggableInventoryItemDefinition;
+    expect(isPluggableItem(enhancedOperatorMod)).toBe(true);
+    expect(enhancedOperatorMod.plug.energyCost!.energyCost).toBe(1);
+    expect(enhancedOperatorMod.plug.plugCategoryHash).toBe(
+      PlugCategoryHashes.EnhancementsRaidDescent,
+    );
   });
 
   function noPinInvariants(filteredItems: ItemsByBucket, filterInfo: FilterInfo) {
@@ -104,6 +125,75 @@ describe('loadout-builder item-filter', () => {
     });
 
     expect(Object.values(filteredItems).flat().length).toBe(items.length);
+  });
+
+  it('properly categorizes armor mods when the mods array is empty and no armor items are passed', () => {
+    const categorizedArmorMods = categorizeArmorMods([]);
+    expect(categorizedArmorMods).toEqual({
+      modMap: {
+        allMods: [],
+        generalMods: [],
+        activityMods: [],
+        artificeMods: [],
+        bucketSpecificMods: {},
+      },
+      unassignedMods: [],
+    });
+  });
+
+  it('properly categorizes armor mods when the mods array is empty and armor items are passed', () => {
+    const categorizedArmorMods = categorizeArmorMods([], items);
+    expect(categorizedArmorMods).toEqual({
+      modMap: {
+        allMods: [],
+        generalMods: [],
+        activityMods: [],
+        artificeMods: [],
+        bucketSpecificMods: {},
+      },
+      unassignedMods: [],
+    });
+  });
+
+  it('properly categorizes armor mods when the mods array is not empty and no armor items are passed', () => {
+    const categorizedArmorMods = categorizeArmorMods([
+      stacksOnStacksMod,
+      elementalChargeMod,
+      recoveryMod,
+      enhancedOperatorMod,
+    ]);
+    expect(categorizedArmorMods).toEqual({
+      modMap: {
+        allMods: [stacksOnStacksMod, elementalChargeMod, recoveryMod, enhancedOperatorMod],
+        generalMods: [recoveryMod],
+        activityMods: [enhancedOperatorMod],
+        artificeMods: [],
+        bucketSpecificMods: {
+          [BucketHashes.LegArmor]: [stacksOnStacksMod, elementalChargeMod],
+        },
+      },
+      unassignedMods: [],
+    });
+  });
+
+  it('properly categorizes armor mods when the mods array is not empty and armor items are passed', () => {
+    const categorizedArmorMods = categorizeArmorMods(
+      [stacksOnStacksMod, elementalChargeMod, recoveryMod, enhancedOperatorMod],
+      items,
+    );
+
+    expect(categorizedArmorMods).toEqual({
+      modMap: {
+        allMods: [stacksOnStacksMod, elementalChargeMod, recoveryMod, enhancedOperatorMod],
+        generalMods: [recoveryMod],
+        activityMods: [enhancedOperatorMod],
+        artificeMods: [],
+        bucketSpecificMods: {
+          [BucketHashes.LegArmor]: [stacksOnStacksMod, elementalChargeMod],
+        },
+      },
+      unassignedMods: [],
+    });
   });
 
   it('filters out items with insufficient energy capacity', () => {
