@@ -198,7 +198,6 @@ function AnalysisProgress({
 
   const numAnalyzed = summary?.analyzedLoadouts ?? 0;
   const busy = numAnalyzed < numLoadouts || summary?.outdated;
-  // FIXME className is awkward
   return (
     <div className={clsx(className, styles.analyzingText)}>
       {busy ? (

@@ -32,6 +32,7 @@ import { fragmentSocketCategoryHashes, getSocketsByCategoryHashes } from 'app/ut
 import { HashLookup } from 'app/utils/util-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
+import seasonalMods from 'data/d2/seasonal-armor-mods.json';
 import { stubTrue } from 'lodash';
 import {
   LoadoutAnalysisContext,
@@ -337,8 +338,7 @@ function getModProblems(
   const allValidMods = modMap.allMods;
   let cantFitMods = false;
   let needsUpgradesForMods = false;
-  // FIXME include Combo Siphon mods from D2AI
-  let usesSeasonalMods = false;
+  let usesSeasonalMods = allValidMods.some((mod) => seasonalMods.includes(mod.hash));
 
   if (loadoutArmor.length === 5) {
     const canFitModsWithRules = (
