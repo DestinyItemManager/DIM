@@ -1,5 +1,11 @@
 ## Next
 
+* Fixed a case where vendor items could show as owned when they were not.
+
+### Beta Only
+
+* A preview of a new stat constraint editing widget for Loadout Optimizer! Let us know how you like it and how it helps (or hurts) your ability to make top tier builds.
+
 ## 7.92.0 <span class="changelog-date">(2023-10-29)</span>
 
 * Fixed a bug that could delete recent tags/notes when loading DIM on a different device than the one where you set the notes.
