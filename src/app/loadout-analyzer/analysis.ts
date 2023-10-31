@@ -25,6 +25,7 @@ import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { ModMap, categorizeArmorMods, fitMostMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
 import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';
+import { count } from 'app/utils/collections';
 import { errorLog } from 'app/utils/log';
 import { delay } from 'app/utils/promises';
 import { fragmentSocketCategoryHashes, getSocketsByCategoryHashes } from 'app/utils/socket-utils';
@@ -51,7 +52,7 @@ export async function analyzeLoadout(
   classType: DestinyClass,
   loadout: Loadout
 ): Promise<LoadoutAnalysisResult> {
-  const findings: LoadoutFinding[] = [];
+  const findings = new Set<LoadoutFinding>();
   const defs = itemCreationContext.defs;
   const resolvedLoadout = fullyResolveLoadout(
     storeId,
@@ -72,11 +73,11 @@ export async function analyzeLoadout(
   );
   const fragmentProblem = subclass && getFragmentProblems(defs, subclass);
   if (fragmentProblem !== undefined) {
-    findings.push(fragmentProblem);
+    findings.add(fragmentProblem);
   }
 
   if (resolvedLoadout.failedResolvedLoadoutItems.length) {
-    findings.push(LoadoutFinding.MissingItems);
+    findings.add(LoadoutFinding.MissingItems);
   }
 
   const statConstraints = resolveStatConstraints(loadoutParameters.statConstraints ?? []);
@@ -88,21 +89,34 @@ export async function analyzeLoadout(
 
   const { modMap, unassignedMods } = categorizeArmorMods(originalModDefs, allItems);
   if (unassignedMods.length) {
-    findings.push(LoadoutFinding.InvalidMods);
+    findings.add(LoadoutFinding.InvalidMods);
+  }
+
+  // FIXME Run a trimmed down mod assignment algorithm here to find errors in mod-only loadouts?
+  // Reuse code from https://github.com/DestinyItemManager/DIM/pull/10017?
+  if (
+    modMap.artificeMods.length > 5 ||
+    modMap.activityMods.length > 5 ||
+    modMap.generalMods.length > 5
+  ) {
+    findings.add(LoadoutFinding.ModsDontFit);
   }
 
   let hasStrictUpgrade = false;
   let ineligibleForOptimization = false;
   if (loadoutArmor.length) {
     if (loadoutArmor.length < 5) {
-      findings.push(LoadoutFinding.NotAFullArmorSet);
+      findings.add(LoadoutFinding.NotAFullArmorSet);
     }
 
     // If the loadout has a given exotic, ensure we find similar loadouts with that same exotic.
-    const exotic = loadoutArmor.find((i) => i.isExotic);
+    const exotic =
+      loadoutArmor.find((i) => i.isExotic) ??
+      resolvedLoadout.failedResolvedLoadoutItems.find((i) => i.item.isExotic && i.loadoutItem.equip)
+        ?.item;
     const [valid, newHash] = matchesExoticArmorHash(loadoutParameters.exoticArmorHash, exotic);
     if (!valid) {
-      findings.push(LoadoutFinding.DoesNotRespectExotic);
+      findings.add(LoadoutFinding.DoesNotRespectExotic);
     }
     loadoutParameters.exoticArmorHash = newHash;
 
@@ -135,22 +149,20 @@ export async function analyzeLoadout(
       assumeArmorMasterwork: loadoutParameters?.assumeArmorMasterwork ?? AssumeArmorMasterwork.None,
     };
 
-    // FIXME We recommend mod-only loadouts sometimes, it'd be good
-    // to run some of these also when the loadout has no armor...
     const modProblems = getModProblems(defs, loadoutArmor, modMap, armorEnergyRules);
     needUpgrades ||= modProblems.needsUpgradesForMods;
     if (modProblems.cantFitMods) {
-      findings.push(LoadoutFinding.ModsDontFit);
+      findings.add(LoadoutFinding.ModsDontFit);
     }
     if (modProblems.usesSeasonalMods) {
-      findings.push(LoadoutFinding.UsesSeasonalMods);
+      findings.add(LoadoutFinding.UsesSeasonalMods);
     }
 
     // We just did some heavy mod assignment stuff, give the event loop a chance
     await delay(0);
 
     if (loadoutParameters.query) {
-      findings.push(LoadoutFinding.LoadoutHasSearchQuery);
+      findings.add(LoadoutFinding.LoadoutHasSearchQuery);
     }
 
     if (loadoutArmor.length === 5) {
@@ -168,13 +180,11 @@ export async function analyzeLoadout(
       needUpgrades ||= statProblems.needsUpgradesForStats;
 
       if (statProblems.cantHitStats) {
-        findings.push(LoadoutFinding.DoesNotSatisfyStatConstraints);
+        findings.add(LoadoutFinding.DoesNotSatisfyStatConstraints);
       }
 
       if ($featureFlags.runLoInBackground) {
-        ineligibleForOptimization = findings.some((finding) =>
-          blockAnalysisFindings.includes(finding)
-        );
+        ineligibleForOptimization = blockAnalysisFindings.some((finding) => findings.has(finding));
         if (!ineligibleForOptimization) {
           // Force auto stat mods to on if there are stat mods.
           loadoutParameters.autoStatMods ||= originalLoadoutMods.some(
@@ -247,7 +257,7 @@ export async function analyzeLoadout(
 
             hasStrictUpgrade = Boolean((await resultPromise).sets.length);
             if (hasStrictUpgrade) {
-              findings.push(LoadoutFinding.BetterStatsAvailable);
+              findings.add(LoadoutFinding.BetterStatsAvailable);
             }
           } catch (e) {
             errorLog('loadout analyzer', 'internal error', e);
@@ -258,11 +268,11 @@ export async function analyzeLoadout(
   }
 
   if (needUpgrades) {
-    findings.push(LoadoutFinding.NeedsArmorUpgrades);
+    findings.add(LoadoutFinding.NeedsArmorUpgrades);
   }
 
   return {
-    findings,
+    findings: [...findings],
     armorResults: ineligibleForOptimization
       ? { tag: 'ineligible' }
       : {
@@ -303,9 +313,9 @@ function getFragmentProblems(
     subclass.item.sockets,
     fragmentSocketCategoryHashes
   );
-  const loadoutFragments = fragmentSockets.filter(
-    (socket) => subclass.loadoutItem.socketOverrides?.[socket.socketIndex]
-  ).length;
+  const loadoutFragments = count(fragmentSockets, (socket) =>
+    Boolean(subclass.loadoutItem.socketOverrides?.[socket.socketIndex])
+  );
 
   return loadoutFragments < fragmentCapacity
     ? LoadoutFinding.EmptyFragmentSlots

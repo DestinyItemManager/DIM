@@ -341,7 +341,7 @@ export class LoadoutBackgroundAnalyzer {
   }
 }
 
-export async function analysisTask(
+async function analysisTask(
   cancelToken: CancelToken,
   wakeupPromise: AsyncIterator<undefined>,
   analyzer: LoadoutBackgroundAnalyzer
