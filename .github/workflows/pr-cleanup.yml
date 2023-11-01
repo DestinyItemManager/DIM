@@ -17,4 +17,4 @@ jobs:
           known-hosts: ${{ secrets.REMOTE_HOST }}
 
       - name: Delete preview build
-        run: REMOTE_SHELL="ssh -i ~/.ssh/dim.rsa -o StrictHostKeyChecking=no" ssh ${{secrets.REMOTE_USER}}@${{secrets.REMOTE_HOST}} "rm -rf pr.destinyitemmanager.com/${{ github.event.number }}"
+        run: ssh -i ~/.ssh/dim.rsa -o StrictHostKeyChecking=no ${{secrets.REMOTE_USER}}@${{secrets.REMOTE_HOST}} "rm -rf pr.destinyitemmanager.com/${{ github.event.number }}"
