@@ -429,8 +429,8 @@ export function process(
       const value = stats[i] + bonusStats[i];
       fullStats[statHash] = value;
 
-      if (strictUpgrades && !hasStrictUpgrade) {
-        const statFilter = resolvedStatConstraints[i];
+      const statFilter = resolvedStatConstraints[i];
+      if (!statFilter.ignored && strictUpgrades && !hasStrictUpgrade) {
         const tier = Math.min(Math.max(Math.floor(value / 10), 0), 10);
         hasStrictUpgrade ||= tier > statFilter.minTier;
       }
