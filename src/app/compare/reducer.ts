@@ -51,7 +51,7 @@ const initialState: CompareState = {};
 export const compare: Reducer<CompareState, CompareAction> = (
   state: CompareState = initialState,
   action: CompareAction
-) => {
+): CompareState => {
   switch (action.type) {
     case getType(actions.addCompareItem):
       return addCompareItem(state, action.payload);

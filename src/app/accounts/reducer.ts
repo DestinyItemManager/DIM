@@ -63,7 +63,7 @@ const initialState: AccountsState = {
 export const accounts: Reducer<AccountsState, AccountsAction> = (
   state: AccountsState = initialState,
   action: AccountsAction
-) => {
+): AccountsState => {
   switch (action.type) {
     case getType(actions.accountsLoaded):
       // TODO: Maybe merge them? if there's D1 but no D2...
