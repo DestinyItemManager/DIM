@@ -1,7 +1,6 @@
 import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { DimCharacterStat } from 'app/inventory/store-types';
 import { filterItems } from 'app/loadout-builder/item-filter';
 import { resolveStatConstraints } from 'app/loadout-builder/loadout-params';
 import { runProcess } from 'app/loadout-builder/process/process-wrapper';
@@ -29,7 +28,6 @@ import { count } from 'app/utils/collections';
 import { errorLog } from 'app/utils/log';
 import { delay } from 'app/utils/promises';
 import { fragmentSocketCategoryHashes, getSocketsByCategoryHashes } from 'app/utils/socket-utils';
-import { HashLookup } from 'app/utils/util-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import seasonalMods from 'data/d2/seasonal-armor-mods.json';
@@ -176,7 +174,6 @@ export async function analyzeLoadout(
         armorEnergyRules,
         statConstraints
       );
-      const assumedLoadoutStats = statProblems.stats;
 
       needUpgrades ||= statProblems.needsUpgradesForStats;
 
@@ -225,21 +222,38 @@ export async function analyzeLoadout(
             searchFilter: stubTrue,
           });
 
+          // Give the event loop a chance after we did a lot of item filtering
+          await delay(0);
+
+          // We actually do not consider Font mods here, because users may create Loadouts with e.g. a
+          // T8 stat and a font mod boosting it to T11 and if we considered them, LO would basically
+          // see one wasted tier and immediately assign this tier elsewhere, showing this
+          // "better stats available" note even when the user has no intention to reassign this tier elsewhere.
+          // And even for loadouts that reach exactly T10 in a stat with an active font mod, the additional tier
+          // is still an improvement for when the font mod is inactive.
+
+          // Build minimums for the "strict upgrades" filter
+          const assumedLoadoutStats = getLoadoutStats(
+            defs,
+            classType,
+            subclass,
+            loadoutArmor,
+            originalModDefs,
+            armorEnergyRules,
+            /* includeRuntimeStatBenefits */ false
+          );
+          const strictStatConstraints: ResolvedStatConstraint[] = statConstraints.map((c) => ({
+            ...c,
+            minTier: statTier(assumedLoadoutStats[c.statHash]!.value),
+          }));
+
           const modStatChanges = getTotalModStatChanges(
             defs,
             modDefs,
             subclass,
             classType,
-            /* includeRuntimeStatBenefits */ true
+            /* includeRuntimeStatBenefits */ false
           );
-
-          // Give the event loop a chance after we did a lot of item filtering
-          await delay(0);
-
-          const strictStatConstraints: ResolvedStatConstraint[] = statConstraints.map((c) => ({
-            ...c,
-            minTier: statTier(assumedLoadoutStats[c.statHash]!.value),
-          }));
 
           loadoutParameters.statConstraints = strictStatConstraints;
           try {
@@ -391,26 +405,20 @@ function getStatProblems(
   loadoutArmorEnergyRules: ArmorEnergyRules,
   resolvedStatConstraints: ResolvedStatConstraint[]
 ): {
-  stats: HashLookup<DimCharacterStat>;
   cantHitStats: boolean;
   needsUpgradesForStats: boolean;
 } {
   const canHitStatsWithRules = (armorEnergyRules: ArmorEnergyRules) => {
     const stats = getLoadoutStats(defs, classType, subclass, loadoutArmor, mods, armorEnergyRules);
-    return {
-      stats,
-      canHitStats: resolvedStatConstraints.every(
-        (c) => c.ignored || statTier(stats[c.statHash].value ?? 0) >= c.minTier
-      ),
-    };
+    return resolvedStatConstraints.every(
+      (c) => c.ignored || statTier(stats[c.statHash].value ?? 0) >= c.minTier
+    );
   };
 
-  const canHitStatsAsIs = canHitStatsWithRules(inGameArmorEnergyRules).canHitStats;
-  const { stats, canHitStats: canHitStatsWithUpgrades } =
-    canHitStatsWithRules(loadoutArmorEnergyRules);
+  const canHitStatsAsIs = canHitStatsWithRules(inGameArmorEnergyRules);
+  const canHitStatsWithUpgrades = canHitStatsWithRules(loadoutArmorEnergyRules);
 
   return {
-    stats,
     cantHitStats: !canHitStatsWithRules,
     needsUpgradesForStats: canHitStatsWithUpgrades && !canHitStatsAsIs,
   };

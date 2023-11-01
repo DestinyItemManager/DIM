@@ -285,7 +285,13 @@ export function getLoadoutStats(
   armor: DimItem[],
   mods: PluggableInventoryItemDefinition[],
   /** Assume armor is masterworked according to these rules when calculating stats */
-  armorEnergyRules?: ArmorEnergyRules
+  armorEnergyRules?: ArmorEnergyRules,
+  /**
+   * If set, this simulates the dynamically granted stat effects of certain mods
+   * that are active under specific conditions so that they don't have investmentStats,
+   * but are active often enough to be important for loadout building.
+   */
+  includeRuntimeStatBenefits = true
 ) {
   const statDefs = armorStats.map((hash) => defs.Stat.get(hash));
 
@@ -331,7 +337,7 @@ export function getLoadoutStats(
     mods,
     subclass,
     classType,
-    /* includeRuntimeStatBenefits */ true
+    includeRuntimeStatBenefits
   );
 
   for (const [statHash, value] of Object.entries(modStats)) {

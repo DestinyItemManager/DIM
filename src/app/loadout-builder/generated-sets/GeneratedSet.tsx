@@ -226,7 +226,7 @@ function getStatsBreakdown(
     autoMods,
     /* subclass */ undefined,
     classType,
-    /* includeRuntimeStatBenefits */ true
+    /* includeRuntimeStatBenefits */ true // auto mods have no dynamic behavior so that doesn't matter
   );
 
   // We have a bit of a problem where armor mods can come from both
