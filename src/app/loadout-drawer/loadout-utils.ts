@@ -689,7 +689,7 @@ export function getLoadoutSubclassFragmentCapacity(
 export function isMissingItems(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   allItems: DimItem[],
-  storeId: string | undefined,
+  storeId: string,
   loadout: Loadout
 ): boolean {
   for (const loadoutItem of loadout.items) {
@@ -704,9 +704,9 @@ export function isMissingItems(
       if (!getInstancedLoadoutItem(allItems, loadoutItem)) {
         return true;
       }
-    } else if (!getUninstancedLoadoutItem(allItems, info.hash, storeId)) {
-      // In case of the vault (which doesn't have emblems or subclasses) or for selectorized loadout problems
-      // (which currently don't use a storeId), find uninstanced items on any character
+    } else if (storeId !== 'vault' && !getUninstancedLoadoutItem(allItems, info.hash, storeId)) {
+      // The vault can't really have uninstanced items like subclasses or emblems, so no point
+      // in reporting a missing item in that case.
       return true;
     }
   }
