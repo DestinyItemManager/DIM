@@ -80,7 +80,7 @@ export default (env: Env) => {
   const publicPath = process.env.PUBLIC_PATH ?? '/';
 
   const featureFlags = makeFeatureFlags(env);
-  const contentSecurityPolicy = csp(env.name, featureFlags);
+  const contentSecurityPolicy = csp(env.name, featureFlags, version);
 
   const analyticsProperty = env.release ? 'G-1PW23SGMHN' : 'G-MYWW38Z3LR';
   const jsFilenamePattern = env.dev ? '[name]-[fullhash].js' : '[name]-[contenthash:8].js';
