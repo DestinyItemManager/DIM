@@ -5,7 +5,7 @@ import { profileResponseSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { toRecord } from 'app/records/presentation-nodes';
-import { filterMap } from 'app/utils/util';
+import { filterMap } from 'app/utils/collections';
 import {
   DestinyEventCardDefinition,
   DestinyPresentationNodeState,

@@ -61,7 +61,7 @@ export default function LoadoutEditBucket({
   children?: React.ReactNode;
 }) {
   const buckets = useSelector(bucketsSelector)!;
-  const itemsByBucket = _.groupBy(items, (li) => li.item.bucket.hash);
+  const itemsByBucket = Object.groupBy(items ?? [], (li) => li.item.bucket.hash);
   const bucketOrder =
     category === 'Weapons' || category === 'Armor'
       ? buckets.byCategory[category]

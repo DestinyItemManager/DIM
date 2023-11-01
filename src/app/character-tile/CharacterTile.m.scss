@@ -75,10 +75,9 @@
 // background
 .emblem {
   grid-area: emblem;
-  justify-self: center;
+  place-self: center;
   width: 32px;
   height: 32px;
-  align-self: center;
 
   .vault & {
     height: 40px;
@@ -139,14 +138,14 @@
 // The currently equipped title (from a seal)
 .title {
   font-style: italic;
-  color: #e1c2ec;
+  color: $sealtitle;
   text-shadow:
     1px 1px 1px rgba(0, 0, 0, 0.5),
     0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .gildedCurrentSeason {
-  color: rgb(249, 222, 184);
+  color: $gildedtitle;
   text-shadow:
     1px 1px 1px rgba(0, 0, 0, 0.5),
     0 0 10px rgba(0, 0, 0, 0.5);

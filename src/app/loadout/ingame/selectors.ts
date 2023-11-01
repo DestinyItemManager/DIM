@@ -38,7 +38,7 @@ export interface FullyResolvedLoadout {
 }
 
 /** All loadouts relevant to a specific storeId, resolved to actual mods, and actual items */
-export const fullyResolvedLoadoutsSelector = createSelector(
+const fullyResolvedLoadoutsSelector = createSelector(
   (_state: RootState, storeId: string) => storeId,
   (state: RootState, storeId: string) => {
     const stores = storesSelector(state);
@@ -70,7 +70,7 @@ export const fullyResolvedLoadoutsSelector = createSelector(
   }
 );
 
-function fullyResolveLoadout(
+export function fullyResolveLoadout(
   storeId: string,
   loadout: Loadout,
   defs: D2ManifestDefinitions | undefined,

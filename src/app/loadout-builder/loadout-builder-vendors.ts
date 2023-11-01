@@ -1,8 +1,8 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { DimItem } from 'app/inventory/item-types';
-import { VENDORS } from 'app/search/d2-known-values';
+import { VendorHashes } from 'app/search/d2-known-values';
 import { emptyArray } from 'app/utils/empty';
-import { currySelector } from 'app/utils/selector-utils';
+import { currySelector } from 'app/utils/selectors';
 import { useLoadVendors } from 'app/vendors/hooks';
 import { characterVendorItemsSelector, vendorsByCharacterSelector } from 'app/vendors/selectors';
 import { useSelector } from 'react-redux';
@@ -15,10 +15,10 @@ import { createSelector } from 'reselect';
  * allow-list of vendors for now.
  */
 const allowedVendorHashes = [
-  VENDORS.ADA_TRANSMOG,
-  VENDORS.XUR,
-  VENDORS.DEVRIM_KAY,
-  VENDORS.FAILSAFE,
+  VendorHashes.AdaTransmog,
+  VendorHashes.Xur,
+  VendorHashes.DevrimKay,
+  VendorHashes.Failsafe,
 ];
 
 const loVendorItemsSelector = currySelector(

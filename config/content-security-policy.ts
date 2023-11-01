@@ -7,7 +7,7 @@ const SELF = "'self'";
 /**
  * Generate a Content Security Policy directive for a particular DIM environment (beta, release)
  */
-export default function csp(env: 'release' | 'beta' | 'dev', featureFlags: FeatureFlags) {
+export default function csp(env: 'release' | 'beta' | 'dev' | 'pr', featureFlags: FeatureFlags) {
   const baseCSP: Record<string, string[] | string | boolean> = {
     defaultSrc: ["'none'"],
     scriptSrc: [

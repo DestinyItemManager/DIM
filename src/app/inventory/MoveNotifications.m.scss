@@ -9,8 +9,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  align-self: center;
-  justify-self: center;
+  place-self: center;
   :global(.app-icon) {
     height: calc(-4px + var(--item-size) / 2);
     width: calc(-4px + var(--item-size) / 2);

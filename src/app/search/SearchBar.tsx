@@ -36,10 +36,10 @@ import {
   AppIcon,
   closeIcon,
   disabledIcon,
+  expandDownIcon,
+  expandUpIcon,
   faClock,
   helpIcon,
-  moveDownIcon,
-  moveUpIcon,
   searchIcon,
   starIcon,
   starOutlineIcon,
@@ -539,7 +539,7 @@ function SearchBar(
                 'aria-label': 'toggle menu',
               })}
             >
-              <AppIcon icon={isOpen ? moveUpIcon : moveDownIcon} />
+              <AppIcon icon={isOpen ? expandUpIcon : expandDownIcon} />
             </motion.button>
           </AnimatePresence>
         </LayoutGroup>

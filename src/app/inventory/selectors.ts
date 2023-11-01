@@ -6,10 +6,11 @@ import {
   settingsSelector,
 } from 'app/dim-api/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
+import { createCollectibleFinder } from 'app/records/collectible-matching';
 import { filterUnlockedPlugs } from 'app/records/plugset-helpers';
 import { RootState } from 'app/store/types';
 import { emptyArray, emptyObject, emptySet } from 'app/utils/empty';
-import { currySelector } from 'app/utils/selector-utils';
+import { currySelector } from 'app/utils/selectors';
 import { DestinyItemPlug, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
@@ -155,7 +156,7 @@ export const profileResponseSelector = (state: RootState) =>
   state.inventory.mockProfileData ?? state.inventory.profileResponse;
 
 /** Whether or not the user is currently playing Destiny 2 */
-export const userIsPlayingSelector = (state: RootState) =>
+const userIsPlayingSelector = (state: RootState) =>
   Boolean(state.inventory.profileResponse?.profileTransitoryData?.data);
 
 /** The time when the currently displayed profile was last refreshed from live game data */
@@ -251,16 +252,17 @@ export const ownedUncollectiblePlugsSelector = createSelector(
     const storeSpecificOwned: { [storeId: string]: Set<number> } = {};
 
     if (defs && profileResponse) {
+      const collectibleFinder = createCollectibleFinder(defs);
       const processPlugSet = (
         plugs: { [key: number]: DestinyItemPlug[] },
         insertInto: Set<number>
       ) => {
-        for (const plugSet of Object.values(plugs)) {
-          for (const plug of plugSet) {
-            if (plug.enabled && !defs.InventoryItem.get(plug.plugItemHash)?.collectibleHash) {
-              insertInto.add(plug.plugItemHash);
-            }
-          }
+        for (const [plugSetHash_, plugSet] of Object.entries(plugs)) {
+          const plugSetHash = parseInt(plugSetHash_, 10);
+          filterUnlockedPlugs(plugSetHash, plugSet, insertInto, (plug) => {
+            const def = defs.InventoryItem.get(plug.plugItemHash);
+            return !def || !collectibleFinder(def);
+          });
         }
       };
 
@@ -378,7 +380,7 @@ export const itemInfosSelector = (state: RootState): ItemInfos =>
 /**
  * DIM tags which should be applied to matching item hashes (instead of per-instance)
  */
-export const itemHashTagsSelector = (state: RootState): { [itemHash: string]: ItemHashTag } =>
+const itemHashTagsSelector = (state: RootState): { [itemHash: string]: ItemHashTag } =>
   state.dimApi.itemHashTags;
 
 /* Returns a function that can be used to get the tag for a particular item. */

@@ -18,7 +18,7 @@
 <string> ::= WORD | "\"" WORD {" " WORD} "\"" | "'" WORD {" " WORD} "'\"'"
 */
 
-import { convertToError } from 'app/utils/util';
+import { convertToError } from 'app/utils/errors';
 
 /* **** Parser **** */
 

@@ -1,6 +1,5 @@
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
-import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { sendToStreamDeck } from 'app/stream-deck/async-module';
 import { notificationPromise } from 'app/stream-deck/msg-handlers';
 import { setStreamDeckToken } from 'app/stream-deck/util/local-storage';
@@ -13,7 +12,6 @@ interface StreamDeckChallengeProps {
 export const randomStringToken = () => Math.random().toString(36).slice(2);
 
 function StreamDeckChallenge({ code }: StreamDeckChallengeProps) {
-  const dispatch = useThunkDispatch();
   return (
     <div>
       <div className={styles.authorizationChallenge}>
@@ -27,14 +25,12 @@ function StreamDeckChallenge({ code }: StreamDeckChallengeProps) {
           onClick={async () => {
             const token = randomStringToken();
             setStreamDeckToken(token);
-            await dispatch(
-              sendToStreamDeck({
-                action: 'authorization:confirm',
-                data: {
-                  token,
-                },
-              })
-            );
+            await sendToStreamDeck({
+              action: 'authorization:confirm',
+              data: {
+                token,
+              },
+            });
           }}
         >
           {t('StreamDeck.Authorization.Yes')}

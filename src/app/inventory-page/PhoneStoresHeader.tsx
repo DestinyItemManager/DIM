@@ -1,6 +1,6 @@
 import { DimStore } from 'app/inventory/store-types';
 import { hideItemPopup } from 'app/item-popup/item-popup';
-import { wrap } from 'app/utils/util';
+import { wrap } from 'app/utils/collections';
 import { animate, motion, PanInfo, Spring, useMotionValue, useTransform } from 'framer-motion';
 import { useEffect, useRef } from 'react';
 import StoreHeading from '../character-tile/StoreHeading';

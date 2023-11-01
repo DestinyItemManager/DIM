@@ -12,6 +12,10 @@ import { t, tl } from 'app/i18next-t';
 import { artifactUnlocksSelector, sortedStoresSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
+import {
+  MakeLoadoutAnalysisAvailable,
+  useUpdateLoadoutAnalysisContext,
+} from 'app/loadout-analyzer/hooks';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
@@ -60,7 +64,12 @@ export default function LoadoutsContainer({ account }: { account: DestinyAccount
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
-  return <Loadouts account={account} />;
+  // TODO: how high in our tree do we want this analyzer?
+  return (
+    <MakeLoadoutAnalysisAvailable>
+      <Loadouts account={account} />
+    </MakeLoadoutAnalysisAvailable>
+  );
 }
 
 function Loadouts({ account }: { account: DestinyAccount }) {
@@ -91,6 +100,8 @@ function Loadouts({ account }: { account: DestinyAccount }) {
     [artifactUnlocks, selectedStore]
   );
 
+  useUpdateLoadoutAnalysisContext(selectedStoreId);
+
   const [showSnapshot, setShowSnapshot] = useState(false);
   const handleSnapshot = useCallback(() => setShowSnapshot(true), []);
   const handleSnapshotSheetClose = useCallback(() => setShowSnapshot(false), []);
@@ -103,7 +114,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
 
   const [filteredLoadouts, filterPills, hasSelectedFilters] = useLoadoutFilterPills(
     savedLoadouts,
-    selectedStoreId,
+    selectedStore,
     {
       includeWarningPills: true,
       extra: <span className={styles.hashtagTip}>{t('Loadouts.HashtagTip')}</span>,
@@ -286,17 +297,14 @@ function useAddSeasonHeaders(loadouts: Loadout[], loadoutSort: LoadoutSort) {
       (a, b) => b.seasonNumber - a.seasonNumber
     );
 
-    // TODO: Map.groupBy
-    const grouped = new Map<DestinySeasonDefinition, Loadout[]>();
-    for (const loadout of loadouts) {
-      const season = seasons.find(
-        (s) =>
-          new Date(s.startDate ?? Date.now()).getTime() <= (loadout.lastUpdatedAt ?? Date.now())
-      )!;
-      const list = grouped.get(season) ?? [];
-      list.push(loadout);
-      grouped.set(season, list);
-    }
+    const grouped = Map.groupBy(
+      loadouts,
+      (loadout) =>
+        seasons.find(
+          (s) =>
+            new Date(s.startDate ?? Date.now()).getTime() <= (loadout.lastUpdatedAt ?? Date.now())
+        )!
+    );
 
     loadoutRows = [...grouped.entries()].flatMap(([season, loadouts]) => [season, ...loadouts]);
   }

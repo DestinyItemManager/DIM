@@ -1,5 +1,5 @@
 import { Placement } from '@popperjs/core';
-import { kebabIcon, moveDownIcon } from 'app/shell/icons';
+import { expandDownIcon, kebabIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import clsx from 'clsx';
 import { useSelect } from 'downshift';
@@ -91,7 +91,7 @@ export default function Dropdown({
           <AppIcon icon={kebabIcon} />
         ) : (
           <>
-            {children} <AppIcon icon={moveDownIcon} className={styles.arrow} />
+            {children} <AppIcon icon={expandDownIcon} className={styles.arrow} />
           </>
         )}
       </button>

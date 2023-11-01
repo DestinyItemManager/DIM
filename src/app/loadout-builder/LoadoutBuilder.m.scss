@@ -22,6 +22,10 @@
   }
 }
 
+.wide {
+  --page-with-menu-menu-width: 320px;
+}
+
 .toolbar {
   display: flex;
   flex-flow: row wrap;

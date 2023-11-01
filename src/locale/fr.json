@@ -404,7 +404,6 @@
     "Vault": "Envoyer un objet au coffre"
   },
   "InGameLoadout": {
-    "Applying": "Équipement de l'équipement...",
     "ClearSlot": "Vider l'emplacement {{index}}",
     "Create": "Créer un équipement",
     "CreateTitle": "Créer un équipement en jeu à partir de l'équipement actuel",
@@ -543,7 +542,7 @@
     "SelectExotic": "Sélectionner exotique",
     "SelectMods": "Sélectionner les Mods",
     "SelectModsCount": "{{selected}}/{{maxSelectable}}",
-    "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Activity Mods",
+    "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Mods d'activité",
     "SelectSubclassOptions": "Personnaliser la doctrine",
     "ShowAllConfigs": "Afficher toutes les configurations",
     "ShowConfigs": "Afficher les configurations",
@@ -994,7 +993,7 @@
   },
   "Records": {
     "Title": "Archives",
-    "UniversalOrnamentSetOther": "Other"
+    "UniversalOrnamentSetOther": "Autre"
   },
   "SearchHistory": {
     "Date": "Dernier Utilisé",

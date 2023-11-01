@@ -1,6 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { createCollectibleFinder } from 'app/records/collectible-matching';
-import { THE_FORBIDDEN_BUCKET, VENDORS } from 'app/search/d2-known-values';
+import { THE_FORBIDDEN_BUCKET, VendorHashes } from 'app/search/d2-known-values';
 import { emptyArray } from 'app/utils/empty';
 import {
   DestinyCollectibleState,
@@ -131,7 +131,7 @@ function makeVendorItem(
   }
 
   // only apply for 2255782930, master rahool
-  if (vendorHash === VENDORS.RAHOOL && saleItem?.overrideStyleItemHash && vendorItem.item) {
+  if (vendorHash === VendorHashes.Rahool && saleItem?.overrideStyleItemHash && vendorItem.item) {
     const itemDef = defs.InventoryItem.get(saleItem.overrideStyleItemHash);
     if (itemDef) {
       const display = itemDef.displayProperties;

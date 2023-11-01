@@ -7,7 +7,7 @@ import { getInterestingSocketMetadatas, isD1Item } from 'app/utils/item-utils';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { ActionType, Reducer, getType } from 'typesafe-actions';
 import * as actions from './actions';
-import { compareNameQuery } from './compare-buttons';
+import { compareNameQuery } from './compare-utils';
 
 export interface CompareSession {
   /**
@@ -51,7 +51,7 @@ const initialState: CompareState = {};
 export const compare: Reducer<CompareState, CompareAction> = (
   state: CompareState = initialState,
   action: CompareAction
-) => {
+): CompareState => {
   switch (action.type) {
     case getType(actions.addCompareItem):
       return addCompareItem(state, action.payload);

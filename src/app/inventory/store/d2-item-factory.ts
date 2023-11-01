@@ -4,6 +4,7 @@ import { t } from 'app/i18next-t';
 import { createCollectibleFinder } from 'app/records/collectible-matching';
 import {
   D2ItemTiers,
+  SOME_OTHER_DUMMY_BUCKET,
   THE_FORBIDDEN_BUCKET,
   d2MissingIcon,
   uniqueEquipBuckets,
@@ -45,7 +46,7 @@ import _ from 'lodash';
 import memoizeOne from 'memoize-one';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { warnMissingDefinition } from '../../manifest/manifest-service-json';
-import { reportException } from '../../utils/exceptions';
+import { reportException } from '../../utils/sentry';
 import { InventoryBuckets } from '../inventory-buckets';
 import { DimItem } from '../item-types';
 import { DimStore } from '../store-types';
@@ -88,7 +89,8 @@ export function processItems(
       // we want to allow makeItem to generate dummy items. they're useful in vendors, as consumables, etc.
       // but processItems is for building stores, and we don't want dummy weapons or armor,
       // which can invisibly interfere with allItems calculations and measurements
-      createdItem.location.hash !== THE_FORBIDDEN_BUCKET
+      createdItem.location.hash !== THE_FORBIDDEN_BUCKET &&
+      createdItem.location.hash !== SOME_OTHER_DUMMY_BUCKET
     ) {
       createdItem.owner = owner.id;
       result.push(createdItem);

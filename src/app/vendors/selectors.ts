@@ -11,7 +11,7 @@ import { searchFilterSelector } from 'app/search/search-filter';
 import { querySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
-import { currySelector } from 'app/utils/selector-utils';
+import { currySelector } from 'app/utils/selectors';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
 import {
@@ -58,7 +58,7 @@ export const vendorGroupsForCharacterSelector = currySelector(
   )
 );
 
-export const subVendorsForCharacterSelector = currySelector(
+const subVendorsForCharacterSelector = currySelector(
   createSelector(
     createItemContextSelector,
     vendorsByCharacterSelector,

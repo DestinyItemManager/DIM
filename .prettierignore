@@ -1,5 +1,4 @@
 Gruntfile.js
-extension-dist/
 tools/
 dist/
 extension/

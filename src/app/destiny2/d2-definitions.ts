@@ -1,8 +1,8 @@
 import { UNSET_PLUG_HASH } from 'app/loadout/known-values';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { ThunkResult } from 'app/store/types';
-import { reportException } from 'app/utils/exceptions';
 import { warnLogCollapsedStack } from 'app/utils/log';
+import { reportException } from 'app/utils/sentry';
 import {
   AllDestinyManifestComponents,
   DestinyActivityDefinition,

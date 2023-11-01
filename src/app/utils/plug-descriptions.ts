@@ -8,9 +8,8 @@ import { getStatSortOrder, isAllowedItemStat, isAllowedPlugStat } from 'app/inve
 import { activityModPlugCategoryHashes } from 'app/loadout/known-values';
 import { isModStatActive } from 'app/loadout/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
 import { DestinyClass, ItemPerkVisibility } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, StatHashes, TraitHashes } from 'data/d2/generated-enums';
 import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
@@ -227,7 +226,7 @@ function getPerkDescriptions(
 
   Other plugs (e.g. Exotic catalysts) always use the description field to store their requirements.
   */
-  if (plug.traitHashes?.includes(EXOTIC_CATALYST_TRAIT)) {
+  if (plug.traitHashes?.includes(TraitHashes.ItemExoticCatalyst)) {
     addPerkDescriptions();
     addDescriptionAsRequirement();
   } else if (plug.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)) {

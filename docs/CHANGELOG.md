@@ -1,6 +1,48 @@
 ## Next
 
+* The Loadouts page will now analyze your Loadouts in more depth, show filter pills for analysis findings, and note them in individual Loadouts too.
+  * Examples are Loadouts where the mods don't fit on the armor, Loadouts that rely on seasonal mods, or Loadouts where armor needs to be upgraded to accommodate mods or reach target stats.
+* Fixed a case where vendor items could show as owned when they were not.
+
+### Beta Only
+
+* A preview of a new stat constraint editing widget for Loadout Optimizer! Let us know how you like it and how it helps (or hurts) your ability to make top tier builds.
+* The Loadouts page will note "Better Stats Available" if we've found that a Loadout could use different armor or stat mods to reach strictly higher stat tiers.
+
+## 7.92.0 <span class="changelog-date">(2023-10-29)</span>
+
+* Fixed a bug that could delete recent tags/notes when loading DIM on a different device than the one where you set the notes.
+* Added a hotkey (T) to switch between the overview and triage tabs on the item popup.
+* The item popup remembers which tab you were last on.
+* Incomplete seals are now shown greyed out on the Records page.
+* Gilded seals show their gilding count on the Records page.
+* The Loadout Optimizer is better at calculating the max possible tier given your chosen stat constraints.
+* Fix FotL pages sometimes being shown as all owned.
+* Fixed the D1 organizer page to display perks nicely.
+* Fixed the Organizer not showing the armor CSV download button.
+* Organizer will now show exotic catalysts and empty catalyst sockets if a catalyst exists.
+* Organizer will no longer duplicate the exotic perk between the archetype column and the traits column.
+* CSV export will no longer include all kill tracker options, as they're very unreliable.
+* CSV export will no longer include some junk like armor upgrade sockets
+
+## 7.91.1 <span class="changelog-date">(2023-10-23)</span>
+
+* Fixed search menu showing behind items in some sheets.
+
+## 7.91.0 <span class="changelog-date">(2023-10-22)</span>
+
+* Added `source:ghostsofthedeep` search term.
+* Fixed some cases where hitting "Esc" would not close a nested sheet.
+* In Loadout Optimizer, prevent opening an empty mod picker when clicking general mod slots when auto stat mods are enabled.
+* Removed outdated reference to Google Drive in our privacy policy - DIM has not used Google Drive for storage for many years.
+* Fixed the search field in the character menu not having a background on the default theme.
+* If your language is set to Japanese, Korean, or Traditional Chinese, you may notice that fonts display smaller since upgrading to Chrome/Edge 118. [This is a change in Chrome](https://discord.com/channels/316217202766512130/1052623849197404241/1164636684646887434), and it makes the fonts in DIM (and everywhere else!) look the same as they do for other languages. Consider zooming the page or adjusting the item tile size if the fonts are now too small for you.
+* Fixed a bug where classified items would show "undefined" as their power level.
+* Removed link to Destiny Tracker from the Armory page.
+
 ## 7.90.0 <span class="changelog-date">(2023-10-15)</span>
+
+* Removed tooltip from the text portion of exotic perks / archetypes since the text already includes those details.
 
 ## 7.89.0 <span class="changelog-date">(2023-10-08)</span>
 

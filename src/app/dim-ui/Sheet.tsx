@@ -65,6 +65,12 @@ const animationVariants = {
 const dragConstraints = { top: 0, bottom: window.innerHeight } as const;
 
 const stopPropagation = (e: React.SyntheticEvent) => e.stopPropagation();
+const handleKeyDown = (e: React.KeyboardEvent) => {
+  // Allow "esc" to propagate which lets you escape focus on inputs.
+  if (e.key !== 'Escape') {
+    e.stopPropagation();
+  }
+};
 
 /**
  * Automatically disable the parent sheet while this sheet is shown. You must
@@ -157,18 +163,15 @@ export default function Sheet({
 
   /**
    * Triggering close starts the animation. The onClose prop is called by the callback
-   * passed to the onAnimationComplete motion prop
+   * passed to the onAnimationComplete motion prop.
    */
   const triggerClose = useCallback(
     (e?: React.MouseEvent | KeyboardEvent) => {
-      if (disabled) {
-        return;
-      }
       e?.preventDefault();
       // Animate offscreen
       animationControls.start('close');
     },
-    [disabled, animationControls]
+    [animationControls]
   );
 
   // Handle global escape key
@@ -262,7 +265,7 @@ export default function Sheet({
       ref={sheet}
       role="dialog"
       aria-modal="false"
-      onKeyDown={stopPropagation}
+      onKeyDown={handleKeyDown}
       onKeyUp={stopPropagation}
       onKeyPress={stopPropagation}
       onClick={allowClickThrough ? undefined : stopPropagation}
@@ -298,7 +301,11 @@ export default function Sheet({
           </div>
         )}
       </div>
-      <div className={styles.disabledScreen} />
+      <div
+        className={styles.disabledScreen}
+        onClick={stopPropagation}
+        onPointerDown={stopPropagation}
+      />
     </motion.div>
   );
 

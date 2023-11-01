@@ -11,11 +11,11 @@ import {
 import { DimStore } from 'app/inventory/store-types';
 import { getSeason } from 'app/inventory/store/season';
 import {
-  EXOTIC_CATALYST_TRAIT,
+  ARTIFICE_PERK_HASH,
+  ModsWithConditionalStats,
   armor2PlugCategoryHashes,
   killTrackerObjectivesByHash,
   killTrackerSocketTypeHash,
-  modsWithConditionalStats,
 } from 'app/search/d2-known-values';
 import { damageNamesByEnum } from 'app/search/search-filter-values';
 import modSocketMetadata, {
@@ -25,10 +25,10 @@ import modSocketMetadata, {
 import { DamageType, DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
-import { BucketHashes, PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes, PlugCategoryHashes, StatHashes, TraitHashes } from 'data/d2/generated-enums';
 import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json';
 import _ from 'lodash';
-import { filterMap, objectifyArray } from './util';
+import { filterMap, objectifyArray } from './collections';
 
 // damage is a mess!
 // this function supports turning a destiny DamageType into a known english name
@@ -59,10 +59,6 @@ const specialtySocketTypeHashes = modSocketMetadata.flatMap(
 
 const specialtyModPlugCategoryHashes = modSocketMetadata.flatMap(
   (modMetadata) => modMetadata.compatiblePlugCategoryHashes
-);
-
-export const emptySpecialtySocketHashes = modSocketMetadata.map(
-  (modMetadata) => modMetadata.emptyModSocketHash
 );
 
 /** verifies an item is d2 armor and has one or more specialty mod sockets, which are returned */
@@ -301,7 +297,7 @@ export function isPlugStatActive(
   In these cases, the catalyst effects are only applied once the objectives are complete.
   We'll assume that the item can only be masterworked if its associated catalyst has been completed.
   */
-  if (plug.traitHashes?.includes(EXOTIC_CATALYST_TRAIT) && !item.masterwork) {
+  if (plug.traitHashes?.includes(TraitHashes.ItemExoticCatalyst) && !item.masterwork) {
     return false;
   }
 
@@ -317,15 +313,15 @@ export function isPlugStatActive(
 
   const plugHash = plug.hash;
   if (
-    plugHash === modsWithConditionalStats.elementalCapacitor ||
-    plugHash === modsWithConditionalStats.enhancedElementalCapacitor
+    plugHash === ModsWithConditionalStats.ElementalCapacitor ||
+    plugHash === ModsWithConditionalStats.EnhancedElementalCapacitor
   ) {
     return false;
   }
 
   if (
-    plugHash === modsWithConditionalStats.echoOfPersistence ||
-    plugHash === modsWithConditionalStats.sparkOfFocus
+    plugHash === ModsWithConditionalStats.EchoOfPersistence ||
+    plugHash === ModsWithConditionalStats.SparkOfFocus
   ) {
     // "-10 to the stat that governs your class ability recharge"
     return (
@@ -367,6 +363,16 @@ export function getStatValuesByHash(item: DimItem, byWhichValue: 'base' | 'value
     output[stat.statHash] = stat[byWhichValue];
   }
   return output;
+}
+
+/**
+ * Does this item have access to the Artifice mod slot that allows
+ * the user to bump a stat by a small amount?
+ */
+export function isArtifice(item: DimItem) {
+  return Boolean(
+    item.sockets?.allSockets.some((socket) => socket.plugged?.plugDef.hash === ARTIFICE_PERK_HASH)
+  );
 }
 
 /**

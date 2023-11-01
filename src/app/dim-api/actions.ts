@@ -11,8 +11,9 @@ import { readyResolve } from 'app/settings/settings';
 import { refresh$ } from 'app/shell/refresh-events';
 import { get, set } from 'app/storage/idb-keyval';
 import { RootState, ThunkResult } from 'app/store/types';
+import { convertToError, errorMessage } from 'app/utils/errors';
 import { errorLog, infoLog } from 'app/utils/log';
-import { convertToError, delay, errorMessage } from 'app/utils/util';
+import { delay } from 'app/utils/promises';
 import { deepEqual } from 'fast-equals';
 import _ from 'lodash';
 import { AnyAction } from 'redux';
@@ -24,7 +25,7 @@ import {
   getGlobalSettings,
   postUpdates,
 } from '../dim-api/dim-api';
-import { observeStore } from '../utils/redux-utils';
+import { observeStore } from '../utils/redux';
 import { promptForApiPermission } from './api-permission-prompt';
 import { ProfileUpdateWithRollback } from './api-types';
 import {
@@ -182,7 +183,7 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
     }
 
     // Load accounts info - we can't load the profile-specific DIM API data without it.
-    const getPlatformsPromise = dispatch(getPlatforms()); // in parallel, we'll wait later
+    const getPlatformsPromise = dispatch(getPlatforms); // in parallel, we'll wait later
 
     await profileFromIDB;
     installObservers(dispatch); // idempotent

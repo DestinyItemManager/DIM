@@ -1,7 +1,7 @@
 import { Search } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
+import { uniqBy } from 'app/utils/collections';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
-import { uniqBy } from 'app/utils/util';
 import _ from 'lodash';
 import { ArmoryEntry, getArmorySuggestions } from './armory-search';
 import { QueryLexerOpenQuotesError, lexer, makeCommentString, parseQuery } from './query-parser';

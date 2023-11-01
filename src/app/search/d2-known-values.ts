@@ -2,14 +2,12 @@ import { CustomStatWeights } from '@destinyitemmanager/dim-api-types';
 import { HashLookup } from 'app/utils/util-types';
 import { TierType } from 'bungie-api-ts/destiny2';
 
-import { D2CalculatedSeason, D2SeasonInfo } from 'data/d2/d2-season-info';
 import {
   BreakerTypeHashes,
   BucketHashes,
   ItemCategoryHashes,
   PlugCategoryHashes,
   StatHashes,
-  TraitHashes,
 } from 'data/d2/generated-enums';
 
 // ✨ magic values ✨
@@ -22,16 +20,8 @@ export const d2MissingIcon = '/img/misc/missing_icon_d2.png';
 // GAME MECHANICS KNOWN VALUES
 //
 
-// shortcuts for power numbers
-const currentSeason = D2SeasonInfo[D2CalculatedSeason];
-export const powerLevelByKeyword = {
-  powerfloor: currentSeason.powerFloor,
-  softcap: currentSeason.softCap,
-  powerfulcap: currentSeason.powerfulCap,
-  pinnaclecap: currentSeason.pinnacleCap,
-};
-
 export const MAX_ARMOR_ENERGY_CAPACITY = 10;
+export const MASTERWORK_ARMOR_STAT_BONUS = 2;
 
 //
 // SOCKETS KNOWN VALUES
@@ -87,12 +77,12 @@ export const killTrackerSocketTypeHash = 1282012138;
 
 export const weaponMasterworkY2SocketTypeHash = 2218962841;
 
-export const ghostActivitySocketTypeHashes = {
+export const enum GhostActivitySocketTypeHashes {
   /* Available once the Ghost shell has been fully Masterworked. */
-  locked: 456763785, // SocketType "Activity Ghost Mod"
+  Locked = 456763785, // SocketType "Activity Ghost Mod"
   /* Activity mods provide additional currency and material rewards in various activities. */
-  unlocked: 2899644539, // SocketType "Activity Ghost Mod"
-};
+  Unlocked = 2899644539, // SocketType "Activity Ghost Mod"
+}
 
 //
 // STATS KNOWN VALUES
@@ -175,29 +165,6 @@ export const D2ItemCategoryHashesByName = {
   reptoken: ItemCategoryHashes.ReputationTokens,
 };
 
-/** powerful rewards listed in quests or bounties */
-// TODO: generate in d2ai
-export const powerfulSources = [
-  993006552, // InventoryItem "Luminous Crucible Engram"
-  1204101093, // InventoryItem "Luminous Vanguard Engram"
-  1800172820, // InventoryItem "Luminous Vanguard Engram"
-  2481239683, // InventoryItem "Luminous Vanguard Engram"
-  2484791497, // InventoryItem "Luminous Planetary Engram"
-  2558839803, // InventoryItem "Luminous Planetary Engram"
-  2566956006, // InventoryItem "Luminous Crucible Engram"
-  2646629159, // InventoryItem "Luminous Engram"
-  2770239081, // InventoryItem "Luminous Crucible Engram"
-  3829523414, // InventoryItem "Luminous Planetary Engram"
-  4143344829, // InventoryItem "Luminous Engram"
-  4039143015, // InventoryItem "Powerful Gear"
-  4249081773, // InventoryItem "Powerful Armor"
-  73143230, // InventoryItem "Pinnacle Gear"
-  3114385605, // InventoryItem "Powerful Gear (Tier 1)"
-  4039143015, // InventoryItem "Powerful Gear"
-  3114385606, // InventoryItem "Powerful Gear (Tier 2)"
-  3114385607, // InventoryItem "Powerful Gear (Tier 3)"
-];
-
 export const pinnacleSources = [
   73143230, // InventoryItem "Pinnacle Gear"
 ];
@@ -222,13 +189,8 @@ export const deprecatedPlaceholderArmorModHash = 3947616002; // InventoryItem "D
  */
 export const THE_FORBIDDEN_BUCKET = 2422292810;
 
-export const armorBuckets = {
-  helmet: BucketHashes.Helmet,
-  gauntlets: BucketHashes.Gauntlets,
-  chest: BucketHashes.ChestArmor,
-  leg: BucketHashes.LegArmor,
-  classitem: BucketHashes.ClassArmor,
-};
+/** FOTL shrouded pages end up in here, for some reason */
+export const SOME_OTHER_DUMMY_BUCKET = 3621873013;
 
 // these aren't really normal equipment,
 // like you can have 1 equipped but it's glued to the character.
@@ -266,39 +228,23 @@ export const RAID_MILESTONE_HASHES = [
   2712317338, // Milestone "Garden of Salvation" has no associated activities to check for raid-ness
 ];
 
-export const VENDORS = {
-  /** "The Spider", from whom we calculate planetmat info */
-  SPIDER: 863940356,
-  EVERVERSE: 3361454721,
-  BENEDICT: 1265988377,
-  BANSHEE: 672118013,
-  DRIFTER: 248695599,
-  ADA_FORGE: 2917531897,
-  ADA_TRANSMOG: 350061650,
+export const enum VendorHashes {
+  Eververse = 3361454721,
+  Benedict = 1265988377,
+  Banshee = 672118013,
+  Drifter = 248695599,
+  AdaForge = 2917531897,
+  AdaTransmog = 350061650,
   /** rahool. we override how his vendor FakeItems are displayed */
-  RAHOOL: 2255782930,
-  VAULT: 1037843411,
-  XUR: 2190858386,
-  WAR_TABLE_UPGRADES_RISEN: 3950870173,
-  STAR_CHART_UPGRADES_PLUNDER: 3004285529,
-  /**
-   * this has always been named "The Gate Lord's Eye" from season 8,
-   * but every season this vendor is updated with the new contents
-   * of that season's artifact
-   */
-  ARTIFACT: 2894222926,
-  DEVRIM_KAY: 396892126,
-  FAILSAFE: 1576276905,
-};
+  Rahool = 2255782930,
+  Vault = 1037843411,
+  Xur = 2190858386,
+  DevrimKay = 396892126,
+  Failsafe = 1576276905,
+}
 
 /** used to snag the icon for display */
 export const WELL_RESTED_PERK = 2352765282; // SandboxPerk "Well-Rested"
-
-/** an "All" trait we want to filter out of trait lists */
-export const ALL_TRAIT = TraitHashes.All;
-
-/** the trait hash that is used to identify Exotic weapon catalyst plugs */
-export const EXOTIC_CATALYST_TRAIT = TraitHashes.ItemExoticCatalyst;
 
 /**
  * Maps TierType to tierTypeName in English and vice versa.
@@ -343,9 +289,11 @@ export const breakerTypes = {
   stagger: [BreakerTypeHashes.Stagger],
 };
 
-export const modsWithConditionalStats = {
-  elementalCapacitor: 3511092054, // InventoryItem "Elemental Capacitor"
-  echoOfPersistence: 2272984671, // InventoryItem "Echo of Persistence"
-  enhancedElementalCapacitor: 711234314, // InventoryItem "Elemental Capacitor"
-  sparkOfFocus: 1727069360, // InventoryItem "Spark of Focus"
-} as const;
+export const enum ModsWithConditionalStats {
+  ElementalCapacitor = 3511092054, // InventoryItem "Elemental Capacitor"
+  EchoOfPersistence = 2272984671, // InventoryItem "Echo of Persistence"
+  EnhancedElementalCapacitor = 711234314, // InventoryItem "Elemental Capacitor"
+  SparkOfFocus = 1727069360, // InventoryItem "Spark of Focus"
+}
+
+export const ARTIFICE_PERK_HASH = 3727270518; // InventoryItem "Artifice Armor"

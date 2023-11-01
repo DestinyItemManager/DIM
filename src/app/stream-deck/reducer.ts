@@ -1,8 +1,24 @@
-import { StreamDeckAction, StreamDeckState } from 'app/stream-deck/interfaces';
 import { Reducer } from 'redux';
-import { getType } from 'typesafe-actions';
+import { ActionType, getType } from 'typesafe-actions';
 import * as actions from './actions';
-import { streamDeckInitialState } from './stream-deck';
+
+// Redux Store Stream Deck State
+export interface StreamDeckState {
+  // WebSocket status
+  readonly connected: boolean;
+  // Update popup already showed
+  readonly updatePopupShowed: boolean;
+  // Selection type
+  readonly selection?: 'item' | 'loadout' | 'postmaster' | undefined;
+}
+
+type StreamDeckAction = ActionType<typeof actions>;
+
+// initial stream deck store state
+const streamDeckInitialState: StreamDeckState = {
+  connected: false,
+  updatePopupShowed: false,
+};
 
 export const streamDeck: Reducer<StreamDeckState, StreamDeckAction> = (
   state: StreamDeckState = streamDeckInitialState,

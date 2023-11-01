@@ -1,19 +1,23 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { isArtifice } from 'app/item-triage/triage-utils';
 import { calculateAssumedItemEnergy } from 'app/loadout/armor-upgrade-utils';
 import {
   activityModPlugCategoryHashes,
   knownModPlugCategoryHashes,
 } from 'app/loadout/known-values';
-import { MAX_ARMOR_ENERGY_CAPACITY, armorStats } from 'app/search/d2-known-values';
+import {
+  MASTERWORK_ARMOR_STAT_BONUS,
+  MAX_ARMOR_ENERGY_CAPACITY,
+  armorStats,
+} from 'app/search/d2-known-values';
+import { filterMap } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
-import { filterMap } from 'app/utils/util';
 import _ from 'lodash';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import {
   getModTypeTagByPlugCategoryHash,
   getSpecialtySocketMetadatas,
+  isArtifice,
 } from '../../utils/item-utils';
 import { AutoModData, ProcessArmorSet, ProcessItem, ProcessMod } from '../process-worker/types';
 import {
@@ -31,9 +35,7 @@ import {
 export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition): ProcessMod {
   const processMod: ProcessMod = {
     hash: mod.hash,
-    energy: mod.plug.energyCost && {
-      val: mod.plug.energyCost.energyCost,
-    },
+    energyCost: mod.plug.energyCost?.energyCost ?? 0,
   };
 
   if (
@@ -60,7 +62,7 @@ export function mapDimItemToProcessItem({
   armorEnergyRules: ArmorEnergyRules;
   modsForSlot?: PluggableInventoryItemDefinition[];
 }): ProcessItem {
-  const { id, hash, name, isExotic, power, stats: dimItemStats, energy } = dimItem;
+  const { id, hash, name, isExotic, power, stats: dimItemStats } = dimItem;
 
   const statMap: { [statHash: number]: number } = {};
   const capacity = calculateAssumedItemEnergy(dimItem, armorEnergyRules);
@@ -69,7 +71,7 @@ export function mapDimItemToProcessItem({
     for (const { statHash, base } of dimItemStats) {
       let value = base;
       if (capacity === MAX_ARMOR_ENERGY_CAPACITY) {
-        value += 2;
+        value += MASTERWORK_ARMOR_STAT_BONUS;
       }
       statMap[statHash] = value;
     }
@@ -88,12 +90,7 @@ export function mapDimItemToProcessItem({
     isArtifice: isArtifice(dimItem),
     power,
     stats: statMap,
-    energy: energy
-      ? {
-          capacity,
-          val: modsCost,
-        }
-      : undefined,
+    remainingEnergyCapacity: capacity - modsCost,
     compatibleModSeasons: modMetadatas?.flatMap((m) => m.compatibleModTags),
   };
 }

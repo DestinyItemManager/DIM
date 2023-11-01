@@ -48,7 +48,7 @@ export default function DefaultAccount() {
   useEffect(() => {
     // If currentAccountMembershipId is set we'll redirect immediately, we don't need to load accounts
     if (!accountsLoaded && !currentAccountMembershipId) {
-      dispatch(getPlatforms());
+      dispatch(getPlatforms);
     }
   }, [dispatch, accountsLoaded, currentAccountMembershipId]);
 

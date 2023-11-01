@@ -8,6 +8,7 @@ import NewItemIndicator from 'app/inventory/NewItemIndicator';
 import TagIcon from 'app/inventory/TagIcon';
 import { clearAllNewItems } from 'app/inventory/actions';
 import { itemTagList } from 'app/inventory/dim-item-info';
+import { allItemsSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import WishListSettings from 'app/settings/WishListSettings';
 import { useIsPhonePortrait } from 'app/shell/selectors';
@@ -18,13 +19,11 @@ import { clearAppBadge } from 'app/utils/app-badge';
 import { usePageTitle } from 'app/utils/hooks';
 import { errorLog } from 'app/utils/log';
 import i18next from 'i18next';
-import exampleWeaponImage from 'images/example-weapon.jpg';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import InventoryItem from '../inventory/InventoryItem';
-import { DimItem } from '../inventory/item-types';
 import { AppIcon, faGrid, faList, lockIcon, refreshIcon, unlockedIcon } from '../shell/icons';
 import CharacterOrderEditor from './CharacterOrderEditor';
 import Checkbox from './Checkbox';
@@ -39,30 +38,6 @@ import { useSetSetting } from './hooks';
 import { Settings } from './initial-settings';
 import { itemSortSettingsSelector } from './item-sort';
 import './settings.scss';
-
-const fakeWeapon = {
-  icon: `~${exampleWeaponImage}`,
-  element: {
-    displayProperties: {
-      icon: '/img/destiny_content/damage_types/destiny2/thermal.png',
-    },
-  },
-  isNew: true,
-  location: {
-    type: 'energy',
-  },
-  bucket: {
-    type: 'energy',
-  },
-  visible: true,
-  primaryStat: {
-    value: 1600,
-  },
-  itemCategoryHashes: [],
-  destinyVersion: 2,
-};
-
-const fakeWeaponMasterwork = { ...fakeWeapon, masterwork: true };
 
 const languageOptions = mapToOptions({
   de: 'Deutsch',
@@ -103,6 +78,16 @@ export default function SettingsPage() {
   const isPhonePortrait = useIsPhonePortrait();
   useLoadStores(currentAccount);
   const setSetting = useSetSetting();
+  const allItems = useSelector(allItemsSelector);
+
+  const exampleWeapon = allItems.find(
+    (i) => i.bucket.sort === 'Weapons' && !i.isExotic && !i.masterwork && !i.deepsightInfo
+  );
+  // Include a masterworked item because they look different in some themes
+  const exampleWeaponMasterworked = allItems.find(
+    (i) => i.bucket.sort === 'Weapons' && !i.isExotic && i.masterwork && !i.deepsightInfo
+  );
+  const exampleArmor = allItems.find((i) => i.bucket.sort === 'Armor' && !i.isExotic);
 
   const onCheckChange = (checked: boolean, name: keyof Settings) => {
     if (name.length === 0) {
@@ -327,23 +312,32 @@ export default function SettingsPage() {
 
           <section id="items">
             <h2>{t('Settings.Items')}</h2>
+
             <div className="sub-bucket">
-              <div className="examples">
+              {exampleWeapon && (
                 <InventoryItem
-                  item={fakeWeapon as unknown as DimItem}
-                  isNew={true}
+                  item={exampleWeapon}
+                  isNew={settings.showNewItems}
                   tag="favorite"
                   autoLockTagged={settings.autoLockTagged}
                 />
-              </div>
-              <div className="examples">
+              )}
+              {exampleWeaponMasterworked && (
                 <InventoryItem
-                  item={fakeWeaponMasterwork as unknown as DimItem}
-                  isNew={true}
-                  tag="favorite"
+                  item={exampleWeaponMasterworked}
+                  isNew={settings.showNewItems}
+                  tag="keep"
                   autoLockTagged={settings.autoLockTagged}
                 />
-              </div>
+              )}
+              {exampleArmor && (
+                <InventoryItem
+                  item={exampleArmor}
+                  isNew={settings.showNewItems}
+                  tag="keep"
+                  autoLockTagged={settings.autoLockTagged}
+                />
+              )}
             </div>
 
             {!isPhonePortrait && (

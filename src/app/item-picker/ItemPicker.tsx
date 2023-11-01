@@ -1,7 +1,7 @@
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { t } from 'app/i18next-t';
 import SearchBar from 'app/search/SearchBar';
-import { uniqBy } from 'app/utils/util';
+import { uniqBy } from 'app/utils/collections';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';

@@ -1,6 +1,11 @@
 import { defaultSettings, Settings as DimApiSettings } from '@destinyitemmanager/dim-api-types';
 import { defaultLanguage, DimLanguage } from 'app/i18n';
 
+export const enum ItemPopupTab {
+  Overview,
+  Triage,
+}
+
 /**
  * We extend the settings interface so we can try out new settings before committing them to dim-api-types
  */
@@ -11,6 +16,7 @@ export interface Settings extends DimApiSettings {
   sortRecordProgression: boolean;
   vendorsHideSilverItems: boolean;
   vaultWeaponGrouping: string;
+  itemPopupTab: ItemPopupTab;
 }
 
 export const initialSettingsState: Settings = {
@@ -21,4 +27,5 @@ export const initialSettingsState: Settings = {
   sortRecordProgression: false,
   vendorsHideSilverItems: false,
   vaultWeaponGrouping: '',
+  itemPopupTab: ItemPopupTab.Overview,
 };

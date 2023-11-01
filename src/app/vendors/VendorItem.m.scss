@@ -15,7 +15,6 @@
   border-radius: 50%;
   padding: 3px;
   box-sizing: border-box;
-  z-index: 3;
   position: absolute;
   top: calc(#{$item-border-width} - 4px - var(--item-size) / 4 + var(--item-size));
   right: $item-border-width + 2px;

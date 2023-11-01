@@ -15,8 +15,8 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { AppIcon, clearIcon, rightArrowIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
+import { filterMap } from 'app/utils/collections';
 import { getSocketsByCategoryHash, plugFitsIntoSocket } from 'app/utils/socket-utils';
-import { filterMap } from 'app/utils/util';
 import { HashLookup } from 'app/utils/util-types';
 import {
   DestinyCollectibleDefinition,
@@ -178,7 +178,7 @@ export default function FashionDrawer({
   const handleSyncShader = () => {
     const shaders = Object.values(modsByBucket).flat().filter(isShader);
 
-    const groupedShaders = _.groupBy(shaders, (h) => h);
+    const groupedShaders = Object.groupBy(shaders, (h) => h);
     const mostCommonShaders = _.maxBy(Object.values(groupedShaders), (shaders) => shaders.length);
     if (!mostCommonShaders) {
       return;
@@ -214,15 +214,15 @@ export default function FashionDrawer({
       return;
     }
 
-    const groupedOrnaments = _.groupBy(ornaments, (h) => {
+    const groupedOrnaments = Object.groupBy(ornaments, (h) => {
       const collectibleHash =
         defs.InventoryItem.get(h)?.collectibleHash ??
         // if the item has no collectible hash, try to find an "identical" item with one
         findOtherCopies(defs, h).find((i) => i.collectibleHash)?.collectibleHash;
 
-      return collectibleHash && defs.Collectible.get(collectibleHash)?.parentNodeHashes[0];
+      return (collectibleHash && defs.Collectible.get(collectibleHash)?.parentNodeHashes[0]) ?? -1;
     });
-    delete groupedOrnaments.undefined;
+    delete groupedOrnaments[-1];
     const mostCommonOrnamentSet = _.maxBy(
       Object.entries(groupedOrnaments),
       ([_presentationHash, ornaments]) => ornaments.length

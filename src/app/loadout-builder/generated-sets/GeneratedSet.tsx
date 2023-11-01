@@ -45,6 +45,7 @@ export default memo(function GeneratedSet({
   halfTierMods,
   armorEnergyRules,
   equippedHashes,
+  autoStatMods,
   isEditingExistingLoadout,
 }: {
   originalLoadout: Loadout;
@@ -59,6 +60,7 @@ export default memo(function GeneratedSet({
   halfTierMods: PluggableInventoryItemDefinition[];
   armorEnergyRules: ArmorEnergyRules;
   equippedHashes: Set<number>;
+  autoStatMods: boolean;
   isEditingExistingLoadout: boolean;
 }) {
   const defs = useD2Definitions()!;
@@ -169,6 +171,7 @@ export default memo(function GeneratedSet({
               pinned={pinnedItems[item.bucket.hash] === item}
               lbDispatch={lbDispatch}
               assignedMods={itemModAssignments[item.id]}
+              autoStatMods={autoStatMods}
               automaticallyPickedMods={autoModsPerItem[item.id]}
               energy={resultingItemEnergies[item.id]}
             />

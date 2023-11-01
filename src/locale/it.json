@@ -404,7 +404,6 @@
     "Vault": "Invia l'oggetto al deposito"
   },
   "InGameLoadout": {
-    "Applying": "Equipaggiamento dotazione...",
     "ClearSlot": "Cancella alloggiamento {{index}}",
     "Create": "Crea dotazione",
     "CreateTitle": "Crea dotazione in gioco dall'equipaggiamento attuale",

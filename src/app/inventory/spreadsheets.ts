@@ -5,15 +5,18 @@ import { LoadoutsByItem, loadoutsByItemSelector } from 'app/loadout-drawer/selec
 import { D1_StatHashes } from 'app/search/d1-known-values';
 import { dimArmorStatHashByName } from 'app/search/search-filter-values';
 import { ThunkResult } from 'app/store/types';
+import { filterMap } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
+import { download } from 'app/utils/download';
 import {
   getItemKillTrackerInfo,
   getItemYear,
   getMasterworkStatNames,
   getSpecialtySocketMetadatas,
   isD1Item,
+  isKillTrackerSocket,
 } from 'app/utils/item-utils';
-import { download, filterMap } from 'app/utils/util';
+import { getDisplayedItemSockets, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { D2EventInfo } from 'data/d2/d2-event-info';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
@@ -23,7 +26,7 @@ import _ from 'lodash';
 import Papa from 'papaparse';
 import { setItemNote, setItemTagsBulk } from './actions';
 import { TagValue, tagConfig } from './dim-item-info';
-import { D1GridNode, DimItem, DimSockets } from './item-types';
+import { D1GridNode, DimItem } from './item-types';
 import { getNotesSelector, getTagSelector, storesSelector } from './selectors';
 import { DimStore } from './store-types';
 import { getEvent, getSeason } from './store/season';
@@ -43,29 +46,23 @@ function getClass(type: DestinyClass) {
   }
 }
 
-// step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
-const FILTER_NODE_NAMES = [
-  'Upgrade Defense',
-  'Ascend',
-  'Infuse',
-  'Increase Intellect',
-  'Increase Discipline',
-  'Increase Strength',
-  'Twist Fate',
-  'The Life Exotic',
-  'Reforge Artifact',
-  'Reforge Shell',
-  'Deactivate Chroma',
-  'Kinetic Damage',
-  'Solar Damage',
-  'Arc Damage',
-  'Void Damage',
-  'Default Shader',
-  'Default Ornament',
-  'Empty Mod Socket',
-  'No Projection',
+const D1_FILTERED_NODE_HASHES = [
+  1920788875, // Ascend
+  1270552711, // Infuse
+  2133116599, // Deactivate Chroma
+  643689081, // Kinetic Damage
+  472357138, // Void Damage
+  1975859941, // Solar Damage
+  2688431654, // Arc Damage
+  1034209669, // Increase Intellect
+  1263323987, // Increase Discipline
+  913963685, // Reforge Shell
+  193091484, // Increase Strength
+  217480046, // Twist Fate
+  191086989, // Reforge Artifact
+  2086308543, // Upgrade Defense
+  4044819214, // The Life Exotic
 ];
-
 // ignore raid & calus sources in favor of more detailed sources
 const sourceKeys = Object.keys(D2Sources).filter((k) => !['raid', 'calus'].includes(k));
 
@@ -227,11 +224,31 @@ function downloadCsv(filename: string, csv: string) {
   download(csv, filenameWithExt, 'text/csv');
 }
 
-function buildSocketNames(sockets: DimSockets): string[] {
-  const socketItems = sockets.allSockets.map((s) =>
-    s.plugOptions
-      .filter((p) => !FILTER_NODE_NAMES.some((n) => n === p.plugDef.displayProperties.name))
-      .map((p) =>
+function buildSocketNames(item: DimItem): string[] {
+  if (!item.sockets) {
+    return [];
+  }
+
+  const sockets = [];
+  const { intrinsicSocket, modSocketsByCategory, perks } = getDisplayedItemSockets(
+    item,
+    /* excludeEmptySockets */ true
+  )!;
+
+  if (intrinsicSocket) {
+    sockets.push(intrinsicSocket);
+  }
+
+  if (perks) {
+    sockets.push(...getSocketsByIndexes(item.sockets, perks.socketIndexes));
+  }
+  // Improve this when we use iterator-helpers
+  sockets.push(...[...modSocketsByCategory.values()].flat());
+
+  const socketItems = sockets.map(
+    (s) =>
+      (isKillTrackerSocket(s) && s.plugged?.plugDef.displayProperties.name) ||
+      s.plugOptions.map((p) =>
         s.plugged?.plugDef.hash === p.plugDef.hash
           ? `${p.plugDef.displayProperties.name}*`
           : p.plugDef.displayProperties.name
@@ -243,7 +260,7 @@ function buildSocketNames(sockets: DimSockets): string[] {
 
 function buildNodeNames(nodes: D1GridNode[]): string[] {
   return filterMap(nodes, (node) => {
-    if (FILTER_NODE_NAMES.includes(node.name)) {
+    if (D1_FILTERED_NODE_HASHES.includes(node.hash)) {
       return;
     }
     return node.activated ? `${node.name}*` : node.name;
@@ -259,7 +276,7 @@ function getMaxPerks(items: DimItem[]) {
           (isD1Item(item) && item.talentGrid
             ? buildNodeNames(item.talentGrid.nodes)
             : item.sockets
-            ? buildSocketNames(item.sockets)
+            ? buildSocketNames(item)
             : []
           ).length
       )
@@ -272,7 +289,7 @@ function addPerks(row: Record<string, unknown>, item: DimItem, maxPerks: number)
     isD1Item(item) && item.talentGrid
       ? buildNodeNames(item.talentGrid.nodes)
       : item.sockets
-      ? buildSocketNames(item.sockets)
+      ? buildSocketNames(item)
       : [];
 
   _.times(maxPerks, (index) => {
@@ -328,7 +345,7 @@ export function source(item: DimItem) {
         (src) =>
           (item.source && D2Sources[src].sourceHashes.includes(item.source)) ||
           D2Sources[src].itemHashes.includes(item.hash) ||
-          D2MissingSources[src].includes(item.hash)
+          D2MissingSources[src]?.includes(item.hash)
       ) || ''
     );
   }

@@ -1,6 +1,6 @@
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-known-values';
+import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
 import { LookupTable } from 'app/utils/util-types';
@@ -10,15 +10,14 @@ import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import mutuallyExclusiveMods from 'data/d2/mutually-exclusive-mods.json';
 import { normalToReducedMod, reducedToNormalMod } from 'data/d2/reduced-cost-mod-mappings';
-import _ from 'lodash';
 import { knownModPlugCategoryHashes } from './known-values';
 
 export const plugCategoryHashToBucketHash: LookupTable<PlugCategoryHashes, BucketHashes> = {
-  [armor2PlugCategoryHashesByName.helmet]: armorBuckets.helmet,
-  [armor2PlugCategoryHashesByName.gauntlets]: armorBuckets.gauntlets,
-  [armor2PlugCategoryHashesByName.chest]: armorBuckets.chest,
-  [armor2PlugCategoryHashesByName.leg]: armorBuckets.leg,
-  [armor2PlugCategoryHashesByName.classitem]: armorBuckets.classitem,
+  [armor2PlugCategoryHashesByName.helmet]: BucketHashes.Helmet,
+  [armor2PlugCategoryHashesByName.gauntlets]: BucketHashes.Gauntlets,
+  [armor2PlugCategoryHashesByName.chest]: BucketHashes.ChestArmor,
+  [armor2PlugCategoryHashesByName.leg]: BucketHashes.LegArmor,
+  [armor2PlugCategoryHashesByName.classitem]: BucketHashes.ClassArmor,
 };
 
 /**
@@ -96,27 +95,26 @@ export function createGetModRenderKey() {
  * e.g. "General Armor Mod", "Helmet Armor Mod", "Nightmare Mod"
  */
 export function groupModsByModType(plugs: PluggableInventoryItemDefinition[]) {
-  return _.groupBy(plugs, (plugDef) => plugDef.itemTypeDisplayName);
+  return Object.groupBy(plugs, (plugDef) => plugDef.itemTypeDisplayName);
 }
 
 /**
  * Some mods have two copies, a regular version and a reduced-cost version.
  * Only some of them are seasonally available, depending on artifact mods/unlocks.
- * This maps to whichever version is available, otherwise returns plugHash unmodified.
+ * This maps to whichever version is available, otherwise returning the expensive versions.
  */
 export function mapToAvailableModCostVariant(plugHash: number, unlockedPlugs: Set<number>) {
-  const toReduced = normalToReducedMod[plugHash];
-  if (toReduced !== undefined && unlockedPlugs.has(toReduced)) {
-    return toReduced;
+  const reducedVersion = isReducedModCostVariant(plugHash)
+    ? plugHash
+    : normalToReducedMod[plugHash];
+  if (reducedVersion !== undefined && unlockedPlugs.has(reducedVersion)) {
+    return reducedVersion;
   }
   if (unlockedPlugs.has(plugHash)) {
     return plugHash;
   }
   const toNormal = reducedToNormalMod[plugHash];
-  if (toNormal !== undefined && unlockedPlugs.has(toNormal)) {
-    return toNormal;
-  }
-  return plugHash;
+  return toNormal ?? plugHash;
 }
 
 /**

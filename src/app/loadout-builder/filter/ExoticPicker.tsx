@@ -10,9 +10,9 @@ import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { SearchInput } from 'app/search/SearchInput';
 import { startWordRegexp } from 'app/search/search-filters/freeform';
+import { uniqBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { socketContainsPlugWithCategory } from 'app/utils/socket-utils';
-import { uniqBy } from 'app/utils/util';
 import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import anyExoticIcon from 'images/anyExotic.svg';
@@ -124,12 +124,12 @@ function filterAndGroupExotics(
 
   // Group by bucketHash then preserve the initial ordering as they were already
   // ordered helmet, arms, chest, and legs
-  const groupedExotics = _.groupBy(
+  const groupedExotics = Map.groupBy(
     filteredExotics,
     (exotic) => exotic.def.inventory!.bucketTypeHash
   );
-  const orderedAndGroupedExotics = Object.values(groupedExotics).sort(
-    compareBy((exotics) => filteredExotics.indexOf(exotics[0]))
+  const orderedAndGroupedExotics = _.sortBy([...groupedExotics.values()], (exotics) =>
+    filteredExotics.indexOf(exotics[0])
   );
 
   // Sort each of the individual groups by name

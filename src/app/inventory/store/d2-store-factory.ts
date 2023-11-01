@@ -1,17 +1,127 @@
+import { Transaction } from '@sentry/types';
 import { t } from 'app/i18next-t';
 import { armorStats } from 'app/search/d2-known-values';
+import { DimError } from 'app/utils/dim-error';
+import { errorLog } from 'app/utils/log';
 import {
   DestinyCharacterComponent,
   DestinyClass,
   DestinyGender,
+  DestinyItemComponent,
   DestinyProfileRecordsComponent,
+  DestinyProfileResponse,
   DestinyRecordState,
 } from 'bungie-api-ts/destiny2';
+import { BucketHashes } from 'data/d2/generated-enums';
 import vaultBackground from 'images/vault-background.svg';
 import vaultIcon from 'images/vault.svg';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { bungieNetPath } from '../../dim-ui/BungieImage';
 import { DimCharacterStat, DimStore, DimTitle } from '../store-types';
+import { ItemCreationContext, processItems } from './d2-item-factory';
+
+export function buildStores(
+  itemCreationContext: ItemCreationContext,
+  transaction?: Transaction
+): DimStore[] {
+  // TODO: components may be hidden (privacy)
+
+  const { profileResponse } = itemCreationContext;
+
+  if (
+    !profileResponse.profileInventory.data ||
+    !profileResponse.characterInventories.data ||
+    !profileResponse.characters.data
+  ) {
+    errorLog(
+      'd2-stores',
+      'Vault or character inventory was missing - bailing in order to avoid corruption'
+    );
+    throw new DimError('BungieService.MissingInventory');
+  }
+
+  const lastPlayedDate = findLastPlayedDate(profileResponse);
+
+  const processSpan = transaction?.startChild({
+    op: 'processItems',
+  });
+  const vault = processVault(itemCreationContext);
+
+  const characters = Object.keys(profileResponse.characters.data).map((characterId) =>
+    processCharacter(itemCreationContext, characterId, lastPlayedDate)
+  );
+  processSpan?.finish();
+
+  const stores = [...characters, vault];
+
+  return stores;
+}
+
+/**
+ * Process a single character from its raw form to a DIM store, with all the items.
+ */
+function processCharacter(
+  itemCreationContext: ItemCreationContext,
+  characterId: string,
+  lastPlayedDate: Date
+): DimStore {
+  const { defs, buckets, profileResponse } = itemCreationContext;
+  const character = profileResponse.characters.data![characterId];
+  const characterInventory = profileResponse.characterInventories.data?.[characterId]?.items || [];
+  const profileInventory = profileResponse.profileInventory.data?.items || [];
+  const characterEquipment = profileResponse.characterEquipment.data?.[characterId]?.items || [];
+  const profileRecords = profileResponse.profileRecords?.data;
+
+  const store = makeCharacter(defs, character, lastPlayedDate, profileRecords);
+
+  // We work around the weird account-wide buckets by assigning them to the current character
+  const items = characterInventory.concat(characterEquipment);
+
+  if (store.current) {
+    for (const i of profileInventory) {
+      const bucket = buckets.byHash[i.bucketHash];
+      // items that can be stored in a vault
+      if (bucket && (bucket.vaultBucket || bucket.hash === BucketHashes.SpecialOrders)) {
+        items.push(i);
+      }
+    }
+  }
+
+  store.items = processItems(itemCreationContext, store, items);
+  return store;
+}
+
+function processVault(itemCreationContext: ItemCreationContext): DimStore {
+  const { buckets, profileResponse } = itemCreationContext;
+  const profileInventory = profileResponse.profileInventory.data
+    ? profileResponse.profileInventory.data.items
+    : [];
+
+  const store = makeVault();
+
+  const items: DestinyItemComponent[] = [];
+  for (const i of profileInventory) {
+    const bucket = buckets.byHash[i.bucketHash];
+    // items that cannot be stored in the vault, and are therefore *in* a vault
+    if (bucket && !bucket.vaultBucket && bucket.hash !== BucketHashes.SpecialOrders) {
+      items.push(i);
+    }
+  }
+
+  store.items = processItems(itemCreationContext, store, items);
+  return store;
+}
+
+/**
+ * Find the date of the most recently played character.
+ */
+function findLastPlayedDate(profileInfo: DestinyProfileResponse) {
+  const dateLastPlayed = profileInfo.profile.data?.dateLastPlayed;
+  if (dateLastPlayed) {
+    return new Date(dateLastPlayed);
+  }
+  return new Date(0);
+}
 
 /**
  * A factory service for producing "stores" (characters or the vault).
@@ -122,7 +232,7 @@ export function getCharacterStatsData(
       name: def.displayProperties.name,
       description: def.displayProperties.description,
       value,
-      icon: bungieNetPath(def.displayProperties.icon),
+      icon: def.displayProperties.icon,
     };
     ret[statHash] = stat;
   }
@@ -130,7 +240,7 @@ export function getCharacterStatsData(
   return ret;
 }
 
-function getTitleInfo(
+export function getTitleInfo(
   titleRecordHash: number,
   defs: D2ManifestDefinitions,
   profileRecords: DestinyProfileRecordsComponent | undefined,
@@ -141,13 +251,17 @@ function getTitleInfo(
   if (!titleInfo) {
     return undefined;
   }
-  const title = titleInfo.titlesByGenderHash[genderHash];
+  const title = titleInfo.titlesByGenderHash?.[genderHash];
   if (!title) {
     return undefined;
   }
 
   let gildedNum = 0;
   let isGildedForCurrentSeason = false;
+
+  const isCompleted = Boolean(
+    (profileRecords?.records[titleRecordHash].state ?? 0) & DestinyRecordState.RecordRedeemed
+  );
 
   // Gilding information is stored per-profile, not per-character
   if (titleInfo.gildingTrackingRecordHash) {
@@ -162,5 +276,5 @@ function getTitleInfo(
     );
   }
 
-  return { title, gildedNum, isGildedForCurrentSeason };
+  return { title, isCompleted, gildedNum, isGildedForCurrentSeason };
 }

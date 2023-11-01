@@ -5,8 +5,9 @@ import { loadingEnd, loadingStart } from 'app/shell/actions';
 import { del, get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { emptyArray, emptyObject } from 'app/utils/empty';
+import { convertToError, errorMessage } from 'app/utils/errors';
 import { errorLog, infoLog, timer } from 'app/utils/log';
-import { convertToError, dedupePromise, errorMessage } from 'app/utils/util';
+import { dedupePromise } from 'app/utils/promises';
 import { LookupTable } from 'app/utils/util-types';
 import {
   AllDestinyManifestComponents,
@@ -22,7 +23,7 @@ import _ from 'lodash';
 import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
 import { showNotification } from '../notifications/notifications';
 import { settingsReady } from '../settings/settings';
-import { reportException } from '../utils/exceptions';
+import { reportException } from '../utils/sentry';
 
 // This file exports D2ManifestService at the bottom of the
 // file (TS wants us to declare classes before using them)!
@@ -79,15 +80,17 @@ let version: string | null = null;
  */
 export const warnMissingDefinition = _.debounce(
   async () => {
-    const data = await d2GetManifest();
-    // If none of the paths (for any language) matches what we downloaded...
-    if (version && !Object.values(data.jsonWorldContentPaths).includes(version)) {
-      // The manifest has updated!
-      showNotification({
-        type: 'warning',
-        title: t('Manifest.Outdated'),
-        body: t('Manifest.OutdatedExplanation'),
-      });
+    if ($DIM_FLAVOR !== 'test') {
+      const data = await d2GetManifest();
+      // If none of the paths (for any language) matches what we downloaded...
+      if (version && !Object.values(data.jsonWorldContentPaths).includes(version)) {
+        // The manifest has updated!
+        showNotification({
+          type: 'warning',
+          title: t('Manifest.Outdated'),
+          body: t('Manifest.OutdatedExplanation'),
+        });
+      }
     }
   },
   10000,

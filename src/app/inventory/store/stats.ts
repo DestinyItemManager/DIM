@@ -4,7 +4,7 @@ import { t } from 'app/i18next-t';
 import { armorStats, evenStatWeights, TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { compareBy } from 'app/utils/comparators';
 import { isClassCompatible, isPlugStatActive } from 'app/utils/item-utils';
-import { weakMemoize } from 'app/utils/util';
+import { weakMemoize } from 'app/utils/memoize';
 import {
   DestinyInventoryItemDefinition,
   DestinyItemInvestmentStatDefinition,

@@ -13,9 +13,9 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { NotificationError, NotifyInput } from 'app/notifications/notifications';
 import { AppIcon, faCheckCircle, faExclamationCircle, refreshIcon } from 'app/shell/icons';
 import { DimError } from 'app/utils/dim-error';
+import { errorMessage } from 'app/utils/errors';
 import { useThrottledSubscription } from 'app/utils/hooks';
 import { Observable } from 'app/utils/observable';
-import { errorMessage } from 'app/utils/util';
 import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
 import _ from 'lodash';
@@ -117,19 +117,19 @@ function ApplyLoadoutProgressBody({
   // TODO: when we have per-item socket overrides this will probably need to be more subtle
   const socketOverrideStatesList = Object.values(socketOverrideStates);
 
-  const groupedItemErrors = _.groupBy(
-    itemStatesList.filter(({ error }) => error),
-    ({ error }) =>
-      (error instanceof DimError ? error.bungieErrorCode() ?? error.cause?.message : undefined) ??
-      error?.message
-  );
+  const groupErrors = <T extends { error?: Error }>(items: T[]) =>
+    Object.groupBy(
+      items.filter(({ error }) => error),
+      ({ error }) =>
+        (error instanceof DimError
+          ? error.bungieErrorCode()?.toString() ?? error.cause?.message
+          : undefined) ??
+        error?.message ??
+        'Unknown'
+    );
 
-  const groupedModErrors = _.groupBy(
-    modStates.filter(({ error }) => error),
-    ({ error }) =>
-      (error instanceof DimError ? error.bungieErrorCode() ?? error.cause?.message : undefined) ??
-      error?.message
-  );
+  const groupedItemErrors = groupErrors(itemStatesList);
+  const groupedModErrors = groupErrors(modStates);
 
   return (
     <>
@@ -178,7 +178,7 @@ function ApplyLoadoutProgressBody({
               <b>{t('Loadouts.ItemErrorSummary', { count: errorStates.length })}</b>{' '}
               {errorStates[0].error instanceof DimError && errorStates[0].error.cause
                 ? errorStates[0].error.cause.message
-                : errorStates[0].error!.message}
+                : errorStates[0].error?.message ?? 'Unknown'}
             </div>
           ))}
         </div>
@@ -228,7 +228,7 @@ function ApplyLoadoutProgressBody({
               <b>{t('Loadouts.ModErrorSummary', { count: errorStates.length })}</b>{' '}
               {errorStates[0].error instanceof DimError && errorStates[0].error.cause
                 ? errorStates[0].error.cause.message
-                : errorStates[0].error!.message}
+                : errorStates[0].error?.message ?? 'Unknown'}
             </div>
           ))}
         </div>
@@ -297,22 +297,4 @@ function MoveItemNotificationIcon({ completion }: { completion: Promise<unknown>
       <AppIcon icon={progressIcon} spinning={inProgress === MoveState.InProgress} />
     </div>
   );
-}
-
-/**
- * Generate JSX for applying an ingame loadout. This isn't a component.
- */
-// TODO: build something more like DIM's loadout notification?
-export function inGameLoadoutNotification(
-  loadout: InGameLoadout,
-  applyPromise: Promise<any>
-): NotifyInput {
-  return {
-    promise: applyPromise,
-    duration: lingerMs,
-    title: loadout.name,
-    icon: <InGameLoadoutIcon loadout={loadout} />,
-    trailer: <MoveItemNotificationIcon completion={applyPromise} />,
-    body: t('InGameLoadout.Applying'),
-  };
 }

@@ -171,7 +171,7 @@ export function itemMoveLoadout(items: DimItem[], store: DimStore): Loadout {
   items = addUpStackables(items);
 
   const itemsByType = _.mapValues(
-    _.groupBy(items, (i) => i.bucket.hash),
+    Object.groupBy(items, (i) => i.bucket.hash),
     (items) => limitToBucketSize(items, store)
   );
 
@@ -212,7 +212,7 @@ function limitToBucketSize(items: DimItem[], store: DimStore) {
     [BucketLocation.AlreadyThereAndEquipped]: alreadyEquipped = [],
     [BucketLocation.AlreadyThereAndUnequipped]: alreadyUnequipped = [],
     [BucketLocation.NotThere]: otherItems = [],
-  } = _.groupBy(items, (item) =>
+  } = Object.groupBy(items, (item) =>
     item.owner === store.id
       ? item.equipped
         ? BucketLocation.AlreadyThereAndEquipped
@@ -234,7 +234,7 @@ function limitToBucketSize(items: DimItem[], store: DimStore) {
 // Add up stackable items so we don't have duplicates. This helps us actually move them, see
 // https://github.com/DestinyItemManager/DIM/issues/2691#issuecomment-373970255
 function addUpStackables(items: DimItem[]) {
-  return Object.values(_.groupBy(items, (t) => t.hash)).flatMap((items) => {
+  return Object.values(Object.groupBy(items, (t) => t.hash)).flatMap((items) => {
     if (items[0].maxStackSize > 1) {
       const item = { ...items[0], amount: _.sumBy(items, (i) => i.amount) };
       return [item];

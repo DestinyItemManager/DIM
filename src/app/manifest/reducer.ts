@@ -25,7 +25,7 @@ const initialState: ManifestState = {};
 export const manifest: Reducer<ManifestState, ManifestAction | AccountsAction> = (
   state: ManifestState = initialState,
   action: ManifestAction | AccountsAction
-) => {
+): ManifestState => {
   switch (action.type) {
     case getType(actions.setD1Manifest): {
       return {

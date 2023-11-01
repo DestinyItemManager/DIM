@@ -4,10 +4,10 @@ import { DimLanguage } from 'app/i18n';
 import { TagValue } from 'app/inventory/dim-item-info';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { Settings } from 'app/settings/initial-settings';
+import { filterMap } from 'app/utils/collections';
 import { errorLog } from 'app/utils/log';
-import { filterMap } from 'app/utils/util';
 import { WishListRoll } from 'app/wishlists/types';
-import _, { stubTrue } from 'lodash';
+import { stubTrue } from 'lodash';
 import { createSelector } from 'reselect';
 import { DimItem } from '../inventory/item-types';
 import {
@@ -44,7 +44,7 @@ import { parseAndValidateQuery, rangeStringToComparator } from './search-utils';
  * depend on every bit of data a filter might need to run, so that we regenerate the filter
  * functions whenever any of them changes.
  */
-export const filterContextSelector = createSelector(
+const filterContextSelector = createSelector(
   sortedStoresSelector,
   allItemsSelector,
   currentStoreSelector,
@@ -66,7 +66,7 @@ function makeFilterContext(
   currentStore: DimStore | undefined,
   loadoutsByItem: LoadoutsByItem,
   wishListFunction: (item: DimItem) => InventoryWishListRoll | undefined,
-  wishListsByHash: _.Dictionary<WishListRoll[]>,
+  wishListsByHash: Map<number, WishListRoll[]>,
   newItems: Set<string>,
   getTag: (item: DimItem) => TagValue | undefined,
   getNotes: (item: DimItem) => string | undefined,

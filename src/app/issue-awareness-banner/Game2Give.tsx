@@ -1,7 +1,8 @@
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { percent } from 'app/shell/formatters';
+
 import styles from './Game2Give.m.scss';
-import heroimage from './bungie-day-giving-festival.jpg';
+// import heroimage from './bungie-day-giving-festival.jpg';
 import useGame2GiveData from './useGame2GiveData';
 
 export default function Game2Give() {
@@ -51,7 +52,7 @@ export default function Game2Give() {
               <div className={styles.goal}>${game2GiveState.goal.toLocaleString()}</div>
             </div>
           </div>
-          <img src={heroimage} className={styles.hero} />
+          <img src="" className={styles.hero} />
           {/* {game2GiveState.error && <div>Error loading latest</div>} */}
         </div>
       )}

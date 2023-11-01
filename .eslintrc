@@ -137,6 +137,11 @@
         "object": "_",
         "property": "noop",
         "message": "Import noop directly instead of using it through _.noop, to satisfy the unbound-method lint"
+      },
+      {
+        "object": "_",
+        "property": "groupBy",
+        "message": "Use Object.groupBy or Map.groupBy instead."
       }
     ],
     "no-restricted-imports": [

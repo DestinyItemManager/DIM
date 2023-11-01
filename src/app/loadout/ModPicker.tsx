@@ -9,11 +9,11 @@ import { ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
 import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';
+import { count, uniqBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { isClassCompatible, modMetadataByPlugCategoryHash } from 'app/utils/item-utils';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
-import { count, uniqBy } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import { produce } from 'immer';
@@ -85,15 +85,14 @@ function useUnlockedPlugSets(
 
       // Group the sockets by their reusablePlugSetHash, this lets us get a count of available mods for
       // each socket in the case of bucket specific mods/sockets
-      const socketsGroupedByPlugSetHash = _.groupBy(
+      const socketsGroupedByPlugSetHash = Map.groupBy(
         modSockets,
-        (socket) => socket.socketDefinition.reusablePlugSetHash
+        (socket) => socket.socketDefinition.reusablePlugSetHash ?? 0
       );
 
       // For each of the socket types on the item, figure out what plugs could go into it
       // and the maximum number of those sockets that can appear on a single item.
-      for (const [hashAsString, sockets] of Object.entries(socketsGroupedByPlugSetHash)) {
-        const plugSetHash = parseInt(hashAsString, 10);
+      for (const [plugSetHash, sockets] of socketsGroupedByPlugSetHash.entries()) {
         const unlockedPlugs = unlockedItemsForCharacterOrProfilePlugSet(
           profileResponse,
           sockets[0].plugSet!.hash,

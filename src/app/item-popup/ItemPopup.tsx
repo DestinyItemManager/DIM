@@ -67,6 +67,9 @@ export default function ItemPopup({
     menuClassName: menuClassName,
   });
 
+  // TODO: we need this to fire after popper repositions the popup. Maybe try again when we switch to floatingui.
+  // useFocusFirstFocusableElement(popupRef);
+
   const itemActionsModel = useMemo(
     () => item && buildItemActionsModel(item, stores),
     [item, stores]

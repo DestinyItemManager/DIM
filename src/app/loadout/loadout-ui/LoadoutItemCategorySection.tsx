@@ -48,13 +48,13 @@ export default function LoadoutItemCategorySection({
   hideOptimizeArmor?: boolean;
 }) {
   const buckets = useSelector(bucketsSelector)!;
-  const itemsByBucket = _.groupBy(items, (li) => li.item.bucket.hash);
+  const itemsByBucket = Map.groupBy(items ?? [], (li) => li.item.bucket.hash);
   const isPhonePortrait = useIsPhonePortrait();
   const bucketOrder =
     category === 'Weapons' || category === 'Armor'
       ? buckets.byCategory[category]
       : _.sortBy(
-          Object.keys(itemsByBucket).map((bucketHash) => buckets.byHash[parseInt(bucketHash, 10)]),
+          Array.from(itemsByBucket.keys(), (bucketHash) => buckets.byHash[bucketHash]),
           (bucket) => buckets.byCategory[category].findIndex((b) => b.hash === bucket.hash)
         );
   const equippedItems =
@@ -76,7 +76,7 @@ export default function LoadoutItemCategorySection({
               key={bucket.hash}
               storeId={storeId}
               bucketHash={bucket.hash}
-              items={itemsByBucket[bucket.hash]}
+              items={itemsByBucket.get(bucket.hash)!}
               modsForBucket={modsByBucket[bucket.hash] ?? emptyArray()}
             />
           ))}

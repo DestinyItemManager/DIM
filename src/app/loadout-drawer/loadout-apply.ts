@@ -51,8 +51,10 @@ import { loadingTracker } from 'app/shell/loading-tracker';
 import { ThunkResult } from 'app/store/types';
 import { queueAction } from 'app/utils/action-queue';
 import { CancelToken, CanceledError, withCancel } from 'app/utils/cancel';
+import { count, filterMap } from 'app/utils/collections';
 import { DimError } from 'app/utils/dim-error';
 import { emptyArray } from 'app/utils/empty';
+import { convertToError, errorMessage } from 'app/utils/errors';
 import { isClassCompatible, itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
 import {
@@ -65,7 +67,6 @@ import {
   plugFitsIntoSocket,
   subclassAbilitySocketCategoryHashes,
 } from 'app/utils/socket-utils';
-import { convertToError, count, errorMessage, filterMap } from 'app/utils/util';
 import { HashLookup } from 'app/utils/util-types';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -421,7 +422,7 @@ function doApplyLoadout(
       const moveSession = createMoveSession(cancelToken, involvedItems);
 
       // Group dequips per character
-      const dequips = Object.entries(_.groupBy(realItemsToDequip, (i) => i.owner)).map(
+      const dequips = Object.entries(Object.groupBy(realItemsToDequip, (i) => i.owner)).map(
         async ([owner, dequipItems]) => {
           // If there's only one item to remove, we don't need to bulk dequip, it'll be handled
           // automatically when we try to move the item.
@@ -786,7 +787,7 @@ function clearSpaceAfterLoadout(
   clearWeapons: boolean,
   clearArmor: boolean
 ): ThunkResult {
-  const itemsByType = _.groupBy(items, (i) => i.bucket.hash);
+  const itemsByType = Map.groupBy(items, (i) => i.bucket.hash);
 
   const reservations: MoveReservations = {
     // reserve one space in the active character
@@ -795,8 +796,7 @@ function clearSpaceAfterLoadout(
 
   const itemsToRemove: DimItem[] = [];
 
-  for (const [bucketId, loadoutItems] of Object.entries(itemsByType)) {
-    const bucketHash = parseInt(bucketId, 10);
+  for (const [bucketHash, loadoutItems] of itemsByType.entries()) {
     // Only clear the buckets that were selected by the user
     if (
       !(clearArmor && D2Categories.Armor.includes(bucketHash)) &&

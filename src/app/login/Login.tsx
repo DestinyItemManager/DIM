@@ -29,7 +29,7 @@ export default function Login() {
   // Save the path we were originally on, so we can restore it after login in the DefaultAccount component.
   useEffect(() => {
     if (previousPath) {
-      localStorage.setItem('returnPath', previousPath);
+      localStorage.setItem('returnPath', $PUBLIC_PATH.replace(/\/$/, '') + previousPath);
     }
   }, [previousPath]);
 

@@ -1,24 +1,12 @@
 import { t } from 'app/i18next-t';
-import { craftedSocketCategoryHash, mementoSocketCategoryHash } from 'app/inventory/store/crafted';
-import { isDeepsightResonanceSocket } from 'app/inventory/store/deepsight';
 import { statsMs } from 'app/inventory/store/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, faGrid, faList } from 'app/shell/icons';
-import { isKillTrackerSocket } from 'app/utils/item-utils';
-import {
-  getSocketByIndex,
-  getSocketsByIndexes,
-  getWeaponArchetypeSocket,
-} from 'app/utils/socket-utils';
+import { getSocketsByIndexes, getWeaponSockets } from 'app/utils/socket-utils';
 import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
-import {
-  ItemCategoryHashes,
-  PlugCategoryHashes,
-  SocketCategoryHashes,
-  StatHashes,
-} from 'data/d2/generated-enums';
+import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { DimItem, DimSocket } from '../inventory/item-types';
@@ -51,43 +39,11 @@ export default function ItemSocketsWeapons({
     return null;
   }
 
-  // Separate out sockets. This gives us better display for things we know, but isn't as flexible to changes in how D2 works.
-  const archetypeSocket = getWeaponArchetypeSocket(item);
-  const perks = item.sockets.categories.find(
-    (c) =>
-      c.category.hash !== SocketCategoryHashes.IntrinsicTraits &&
-      c.socketIndexes.length &&
-      getSocketByIndex(item.sockets!, c.socketIndexes[0])?.isPerk
-  );
+  // Separate out perks from sockets.
+  const { intrinsicSocket, perks, modSocketsByCategory } = getWeaponSockets(item)!;
 
-  const excludedSocketCategoryHashes = [
-    craftedSocketCategoryHash,
-    !item.crafted && mementoSocketCategoryHash,
-  ];
-
-  const excludedPlugCategoryHashes = [
-    PlugCategoryHashes.GenericAllVfx,
-    PlugCategoryHashes.CraftingPlugsWeaponsModsExtractors,
-    // Not sure what this is - it says you can level weapons?
-    PlugCategoryHashes.CraftingPlugsWeaponsModsTransfusersLevel,
-    !item.catalystInfo && PlugCategoryHashes.V400EmptyExoticMasterwork,
-  ];
-
-  // Iterate in reverse category order so cosmetic mods are at the front
-  const mods = item.sockets.categories
-    .filter((c) => !excludedSocketCategoryHashes.includes(c.category.hash))
-    .reverse()
-    .flatMap((c) =>
-      getSocketsByIndexes(item.sockets!, c.socketIndexes).filter(
-        (s) => !s.isPerk && s !== archetypeSocket
-      )
-    )
-    .filter(
-      (socket) =>
-        socket.plugged?.plugDef.displayProperties.name &&
-        !isDeepsightResonanceSocket(socket) &&
-        !excludedPlugCategoryHashes.includes(socket.plugged.plugDef.plug.plugCategoryHash)
-    );
+  // Improve this when we use iterator-helpers
+  const mods = [...modSocketsByCategory.values()].flat();
 
   const keyStats =
     item.stats &&
@@ -114,10 +70,10 @@ export default function ItemSocketsWeapons({
 
   return (
     <div className={clsx(styles.weaponSockets, { [styles.minimal]: minimal })}>
-      {(archetypeSocket?.plugged || (!minimal && mods.length > 0)) && (
+      {(intrinsicSocket?.plugged || (!minimal && mods.length > 0)) && (
         <ArchetypeRow minimal={minimal} isWeapons={true}>
-          {archetypeSocket?.plugged && (
-            <ArchetypeSocket archetypeSocket={archetypeSocket} item={item}>
+          {intrinsicSocket?.plugged && (
+            <ArchetypeSocket archetypeSocket={intrinsicSocket} item={item}>
               {!minimal && keyStats && keyStats.length > 0 && (
                 <div className={styles.stats}>
                   {keyStats
@@ -165,18 +121,15 @@ export default function ItemSocketsWeapons({
               </button>
             )}
             <div className={clsx('item-sockets', styles.grid)}>
-              {getSocketsByIndexes(item.sockets, perks.socketIndexes).map(
-                (socketInfo) =>
-                  !isKillTrackerSocket(socketInfo) && (
-                    <Socket
-                      key={socketInfo.socketIndex}
-                      item={item}
-                      socket={socketInfo}
-                      wishlistRoll={wishlistRoll}
-                      onClick={onPlugClicked}
-                    />
-                  )
-              )}
+              {getSocketsByIndexes(item.sockets, perks.socketIndexes).map((socketInfo) => (
+                <Socket
+                  key={socketInfo.socketIndex}
+                  item={item}
+                  socket={socketInfo}
+                  wishlistRoll={wishlistRoll}
+                  onClick={onPlugClicked}
+                />
+              ))}
             </div>
           </div>
         ))}

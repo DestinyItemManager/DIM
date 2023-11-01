@@ -181,12 +181,11 @@ const VaultBucketDividedByClass = memo(function SingleCharacterVaultBucket({
   const sortItems = useSelector(itemSorterSelector);
 
   // The vault divides armor by class
-  const itemsByClass = _.groupBy(items, (item) => item.classType);
-  const classTypeOrder = _.sortBy(Object.keys(itemsByClass), (classType) => {
-    const classTypeNum = parseInt(classType, 10);
-    const index = storeClassList.findIndex((s) => s === classTypeNum);
+  const itemsByClass = Map.groupBy(items, (item) => item.classType);
+  const classTypeOrder = _.sortBy([...itemsByClass.keys()], (classType) => {
+    const index = storeClassList.findIndex((s) => s === classType);
     return index === -1 ? 999 : characterOrder === 'mostRecentReverse' ? -index : index;
-  }).map((c) => parseInt(c, 10) as DestinyClass);
+  });
 
   return (
     <StoreBucketDropTarget
@@ -199,7 +198,7 @@ const VaultBucketDividedByClass = memo(function SingleCharacterVaultBucket({
       {classTypeOrder.map((classType) => (
         <React.Fragment key={classType}>
           <ClassIcon classType={classType} className="armor-class-icon" />
-          {sortItems(itemsByClass[classType]).map((item) => (
+          {sortItems(itemsByClass.get(classType)!).map((item) => (
             <StoreInventoryItem key={item.index} item={item} />
           ))}
         </React.Fragment>

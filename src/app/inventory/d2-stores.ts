@@ -1,5 +1,4 @@
 import { getCurrentHub, startTransaction } from '@sentry/browser';
-import { Transaction } from '@sentry/types';
 import { handleAuthErrors } from 'app/accounts/actions';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms } from 'app/accounts/platforms';
@@ -12,11 +11,9 @@ import { loadCoreSettings } from 'app/manifest/actions';
 import { d2ManifestSelector, manifestSelector } from 'app/manifest/selectors';
 import { get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
-import { DimError } from 'app/utils/dim-error';
+import { convertToError, errorMessage } from 'app/utils/errors';
 import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
-import { convertToError, errorMessage } from 'app/utils/util';
-import { DestinyItemComponent, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import { BucketHashes } from 'data/d2/generated-enums';
+import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { getCharacters as d1GetCharacters } from '../bungie-api/destiny1-api';
 import { getCharacters, getStores } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
@@ -24,7 +21,7 @@ import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definition
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import { showNotification } from '../notifications/notifications';
 import { loadingTracker } from '../shell/loading-tracker';
-import { reportException } from '../utils/exceptions';
+import { reportException } from '../utils/sentry';
 import {
   CharacterInfo,
   charactersUpdated,
@@ -38,8 +35,7 @@ import { cleanInfos } from './dim-item-info';
 import { d2BucketsSelector, storesLoadedSelector, storesSelector } from './selectors';
 import { DimStore } from './store-types';
 import { getCharacterStatsData as getD1CharacterStatsData } from './store/character-utils';
-import { ItemCreationContext, processItems } from './store/d2-item-factory';
-import { getCharacterStatsData, makeCharacter, makeVault } from './store/d2-store-factory';
+import { buildStores, getCharacterStatsData } from './store/d2-store-factory';
 import { resetItemIndexGenerator } from './store/item-index';
 
 /**
@@ -112,7 +108,7 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
     let account = currentAccountSelector(getState());
     if (!account) {
       // TODO: throw here?
-      await dispatch(getPlatforms());
+      await dispatch(getPlatforms);
       account = currentAccountSelector(getState());
       if (!account || account.destinyVersion !== 2) {
         return;
@@ -310,7 +306,6 @@ function loadStoresData(
           }
         }
 
-        // TODO: we can start moving some of this stuff to selectors? characters too
         const currencies = processCurrencies(profileResponse, defs);
 
         const loadouts = processInGameLoadouts(profileResponse, defs);
@@ -327,7 +322,11 @@ function loadStoresData(
           return;
         }
 
-        dispatch(cleanInfos(stores));
+        // First-time loads can come from IDB, which can be VERY outdated,
+        // so don't remove item tags/notes based on that
+        if (!firstTime) {
+          dispatch(cleanInfos(stores));
+        }
         dispatch(update({ stores, currencies }));
         dispatch(inGameLoadoutLoaded(loadouts));
 
@@ -362,43 +361,6 @@ function loadStoresData(
   };
 }
 
-export function buildStores(
-  itemCreationContext: ItemCreationContext,
-  transaction?: Transaction
-): DimStore[] {
-  // TODO: components may be hidden (privacy)
-
-  const { profileResponse } = itemCreationContext;
-
-  if (
-    !profileResponse.profileInventory.data ||
-    !profileResponse.characterInventories.data ||
-    !profileResponse.characters.data
-  ) {
-    errorLog(
-      'd2-stores',
-      'Vault or character inventory was missing - bailing in order to avoid corruption'
-    );
-    throw new DimError('BungieService.MissingInventory');
-  }
-
-  const lastPlayedDate = findLastPlayedDate(profileResponse);
-
-  const processSpan = transaction?.startChild({
-    op: 'processItems',
-  });
-  const vault = processVault(itemCreationContext);
-
-  const characters = Object.keys(profileResponse.characters.data).map((characterId) =>
-    processCharacter(itemCreationContext, characterId, lastPlayedDate)
-  );
-  processSpan?.finish();
-
-  const stores = [...characters, vault];
-
-  return stores;
-}
-
 function processCurrencies(profileInfo: DestinyProfileResponse, defs: D2ManifestDefinitions) {
   const profileCurrencies = profileInfo.profileCurrencies.data
     ? profileInfo.profileCurrencies.data.items
@@ -412,70 +374,4 @@ function processCurrencies(profileInfo: DestinyProfileResponse, defs: D2Manifest
     },
   }));
   return currencies;
-}
-
-/**
- * Process a single character from its raw form to a DIM store, with all the items.
- */
-function processCharacter(
-  itemCreationContext: ItemCreationContext,
-  characterId: string,
-  lastPlayedDate: Date
-): DimStore {
-  const { defs, buckets, profileResponse } = itemCreationContext;
-  const character = profileResponse.characters.data![characterId];
-  const characterInventory = profileResponse.characterInventories.data?.[characterId]?.items || [];
-  const profileInventory = profileResponse.profileInventory.data?.items || [];
-  const characterEquipment = profileResponse.characterEquipment.data?.[characterId]?.items || [];
-  const profileRecords = profileResponse.profileRecords?.data;
-
-  const store = makeCharacter(defs, character, lastPlayedDate, profileRecords);
-
-  // We work around the weird account-wide buckets by assigning them to the current character
-  const items = characterInventory.concat(characterEquipment);
-
-  if (store.current) {
-    for (const i of profileInventory) {
-      const bucket = buckets.byHash[i.bucketHash];
-      // items that can be stored in a vault
-      if (bucket && (bucket.vaultBucket || bucket.hash === BucketHashes.SpecialOrders)) {
-        items.push(i);
-      }
-    }
-  }
-
-  store.items = processItems(itemCreationContext, store, items);
-  return store;
-}
-
-function processVault(itemCreationContext: ItemCreationContext): DimStore {
-  const { buckets, profileResponse } = itemCreationContext;
-  const profileInventory = profileResponse.profileInventory.data
-    ? profileResponse.profileInventory.data.items
-    : [];
-
-  const store = makeVault();
-
-  const items: DestinyItemComponent[] = [];
-  for (const i of profileInventory) {
-    const bucket = buckets.byHash[i.bucketHash];
-    // items that cannot be stored in the vault, and are therefore *in* a vault
-    if (bucket && !bucket.vaultBucket && bucket.hash !== BucketHashes.SpecialOrders) {
-      items.push(i);
-    }
-  }
-
-  store.items = processItems(itemCreationContext, store, items);
-  return store;
-}
-
-/**
- * Find the date of the most recently played character.
- */
-function findLastPlayedDate(profileInfo: DestinyProfileResponse) {
-  const dateLastPlayed = profileInfo.profile.data?.dateLastPlayed;
-  if (dateLastPlayed) {
-    return new Date(dateLastPlayed);
-  }
-  return new Date(0);
 }

@@ -1,0 +1,122 @@
+@use '../../variables' as *;
+
+.iconStat {
+  display: inline-block;
+  height: 17px;
+  width: 17px;
+}
+
+.grip {
+  opacity: 0.5;
+  font-size: 10px;
+  padding-left: 10px;
+  align-self: stretch;
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  align-items: center;
+}
+
+.ignored {
+  opacity: 0.4;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr min-content;
+  grid-template-areas:
+    'name buttons'
+    'bar bar';
+  gap: 4px 4px;
+  margin-bottom: 2px;
+  background-color: black;
+  align-items: center;
+  padding: 4px 4px 4px 0;
+
+  > * {
+    white-space: nowrap;
+  }
+}
+
+.name {
+  grid-area: name;
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  align-items: center;
+  gap: 2px;
+}
+
+.label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  white-space: nowrap;
+  gap: 2px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  align-self: stretch;
+  width: 100%;
+}
+
+.statBar {
+  grid-area: bar;
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  margin-left: 4px;
+  gap: 2px;
+}
+
+.statBarSegment {
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  flex: 1;
+  background-color: var(--theme-button-bg);
+  color: var(--theme-button-text);
+  font-size: 12px;
+  height: 24px;
+  box-sizing: border-box;
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  > * {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+  }
+
+  &:hover {
+    outline: 1px solid var(--theme-accent-primary);
+  }
+}
+
+// Tiers that can't be reached given the currently selected minimums
+.maxed:not(.locked):not(.selectedStatBar) {
+  color: #666;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.selectedStatBar {
+  background-color: var(--theme-accent-primary);
+  color: var(--theme-text-invert);
+}
+
+.buttons {
+  composes: flexRow from '../../dim-ui/common.m.scss';
+}
+
+.rowControl {
+  composes: resetButton from '../../dim-ui/common.m.scss';
+  padding: 4px 6px;
+  opacity: 0.9;
+
+  &.ignored,
+  &:disabled {
+    opacity: 0.9;
+    color: #555;
+  }
+
+  &:hover,
+  &:focus-visible {
+    color: var(--theme-accent-primary);
+  }
+}
+
+.dragging {
+  outline: 1px solid var(--theme-accent-primary);
+}

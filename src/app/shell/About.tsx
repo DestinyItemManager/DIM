@@ -4,10 +4,10 @@ import StaticPage from 'app/dim-ui/StaticPage';
 import { t } from 'app/i18next-t';
 import { isAppStoreVersion } from 'app/utils/browsers';
 import { usePageTitle } from 'app/utils/hooks';
+import logo from 'images/dimlogo.svg';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { UAParser } from 'ua-parser-js';
-import logo from '../../images/logo-light.svg';
 import ExternalLink from '../dim-ui/ExternalLink';
 import styles from './About.m.scss';
 import { AppIcon, faDiscord, faGithub, faTshirt, heartIcon, helpIcon, mastodonIcon } from './icons';
@@ -88,6 +88,13 @@ export default function About() {
       <p>{t('Views.About.HowItsMade')}</p>
       {$DIM_FLAVOR === 'release' && <p>{t(`Views.About.Schedule.release`)}</p>}
       {$DIM_FLAVOR === 'beta' && <p>{t(`Views.About.Schedule.beta`)}</p>}
+      {$DIM_FLAVOR === 'pr' && (
+        <p>
+          <a href={`https://github.com/DestinyItemManager/DIM/pull${$PUBLIC_PATH}`}>
+            Pull Request #{$PUBLIC_PATH.replaceAll('/', '')}
+          </a>
+        </p>
+      )}
       <ul>
         <li>{t('Views.About.BungieCopyright')}</li>
         <li>

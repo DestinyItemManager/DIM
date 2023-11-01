@@ -1,4 +1,4 @@
-import { compareNameQuery } from 'app/compare/compare-buttons';
+import { compareNameQuery } from 'app/compare/compare-utils';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { ArmorSlotIcon, WeaponTypeIcon } from 'app/dim-ui/ItemCategoryIcon';
