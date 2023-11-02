@@ -13,7 +13,7 @@ for (const VERSION of ['release', 'beta', 'dev', 'pr']) {
   rimraf.sync(`./${VERSION}`);
   fs.mkdirSync(VERSION);
 
-  for (const size of [16, 32, 96]) {
+  for (const size of [16, 32, 96, 48]) {
     execSync(
       `rsvg-convert -w ${size} -h ${size} -o "${VERSION}/favicon-${size}x${size}.png" "favicon-${VERSION}.svg"`
     );
@@ -41,6 +41,10 @@ for (const VERSION of ['release', 'beta', 'dev', 'pr']) {
   execSync(
     `rsvg-convert -w 512 -h 512 -b "${color}" -o "${VERSION}/android-chrome-mask-512x512-${CACHEBREAKER}.png" "android-icon-${VERSION}.svg"`
   );
+  execSync(
+    `convert ${VERSION}/favicon-48x48.png -define icon:auto-resize=48,32,16 ${VERSION}/favicon.ico`
+  );
+  rimraf.sync(`${VERSION}/favicon-48x48.png`);
 }
 
 rimraf.sync('splash');
