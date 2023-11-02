@@ -10,7 +10,7 @@ export const wishListsLastFetchedSelector = (state: RootState) =>
   wishListsSelector(state).lastFetched;
 
 export const wishListsByHashSelector = createSelector(wishListsSelector, (wls) =>
-  Map.groupBy(wls.wishListAndInfo.wishListRolls?.filter(Boolean), (r) => r.itemHash)
+  Map.groupBy(wls.wishListAndInfo.wishListRolls?.filter(Boolean), (r) => r.itemHash),
 );
 
 export const wishListRollsForItemHashSelector = (itemHash: number) => (state: RootState) =>
@@ -18,7 +18,7 @@ export const wishListRollsForItemHashSelector = (itemHash: number) => (state: Ro
 
 export const hasWishListSelector = createSelector(
   wishListsByHashSelector,
-  (wishlists) => wishlists.size > 0
+  (wishlists) => wishlists.size > 0,
 );
 
 /** Returns a memoized function to look up wishlist by item, which is reset when the wishlist changes. Prefer wishListSelector */
@@ -39,7 +39,7 @@ export const wishListFunctionSelector = createSelector(
       cache.set(item.id, roll ?? null);
       return roll;
     };
-  }
+  },
 );
 
 /**

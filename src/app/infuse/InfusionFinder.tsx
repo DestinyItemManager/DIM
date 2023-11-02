@@ -31,8 +31,8 @@ const itemComparator = chainComparator(
   compareBy((item: DimItem) =>
     isD1Item(item) && item.talentGrid
       ? (item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5
-      : 0
-  )
+      : 0,
+  ),
 );
 
 interface State {
@@ -136,7 +136,7 @@ export default function InfusionFinder() {
     {
       direction: lastInfusionDirection,
       filter: '',
-    }
+    },
   );
   const filter = useDeferredValue(liveFilter);
 
@@ -163,8 +163,8 @@ export default function InfusionFinder() {
         const hasFuel = allItems.some((i) => isInfusable(i, item));
         stateDispatch({ type: 'init', item, hasInfusables: hasInfusables, hasFuel });
       },
-      [allItems]
-    )
+      [allItems],
+    ),
   );
 
   // Close the sheet on navigation
@@ -188,7 +188,7 @@ export default function InfusionFinder() {
     (item) =>
       (direction === InfuseDirection.INFUSE
         ? isInfusable(query, item)
-        : isInfusable(item, query)) && filterFn(item)
+        : isInfusable(item, query)) && filterFn(item),
   );
 
   const dupes = items.filter((item) => item.hash === query.hash);
@@ -321,7 +321,7 @@ function isInfusable(target: DimItem, source: DimItem) {
     source.infusionQuality &&
     target.infusionQuality &&
     target.infusionQuality.infusionCategoryHashes.some((h) =>
-      source.infusionQuality!.infusionCategoryHashes.includes(h)
+      source.infusionQuality!.infusionCategoryHashes.includes(h),
     ) &&
     target.power < source.power
   );
@@ -332,7 +332,7 @@ async function transferItems(
   currentStore: DimStore,
   onClose: () => void,
   source: DimItem,
-  target: DimItem
+  target: DimItem,
 ) {
   if (!source || !target) {
     return;

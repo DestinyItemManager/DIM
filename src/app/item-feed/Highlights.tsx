@@ -17,7 +17,7 @@ export default function Highlights({ item }: { item: DimItem }) {
   if (item.bucket.sort === 'Weapons' && item.sockets) {
     // Don't ask me why Traits are called "Frames" but it does work.
     const perkSockets = item.sockets.allSockets.filter(
-      (s) => s.isPerk && socketContainsPlugWithCategory(s, PlugCategoryHashes.Frames)
+      (s) => s.isPerk && socketContainsPlugWithCategory(s, PlugCategoryHashes.Frames),
     );
     const archetype = !item.isExotic && getWeaponArchetype(item)?.displayProperties.name;
 

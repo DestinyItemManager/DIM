@@ -16,7 +16,7 @@ export const loadoutsSelector = createSelector(
   (loadouts) =>
     loadouts
       ? Object.values(loadouts).map((loadout) => convertDimApiLoadoutToLoadout(loadout))
-      : emptyArray<Loadout>()
+      : emptyArray<Loadout>(),
 );
 
 /** All loadouts for a particular class type */
@@ -25,6 +25,6 @@ export const loadoutsForClassTypeSelector = currySelector(
     loadoutsSelector,
     (_state: RootState, classType: DestinyClass) => classType,
     (loadouts, classType) =>
-      loadouts.filter((loadout) => isClassCompatible(classType, loadout.classType))
-  )
+      loadouts.filter((loadout) => isClassCompatible(classType, loadout.classType)),
+  ),
 );

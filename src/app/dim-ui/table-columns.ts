@@ -42,7 +42,7 @@ export function useTableColumnSorts(defaultSorts: ColumnSort[]) {
         return newColumnSorts;
       });
     },
-    []
+    [],
   );
 
   return [columnSorts, toggleColumnSort] as const;

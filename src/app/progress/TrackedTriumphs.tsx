@@ -20,12 +20,12 @@ export function TrackedTriumphs({ searchQuery }: { searchQuery?: string }) {
     ? [...new Set([trackedRecordHash, ...trackedTriumphs])]
     : trackedTriumphs;
   let records = filterMap(recordHashes, (h) =>
-    toRecord(defs, profileResponse, h, /* mayBeMissing */ true)
+    toRecord(defs, profileResponse, h, /* mayBeMissing */ true),
   );
 
   if (searchQuery) {
     records = records.filter((r) =>
-      searchDisplayProperties(r.recordDef.displayProperties, searchQuery)
+      searchDisplayProperties(r.recordDef.displayProperties, searchQuery),
     );
   }
 

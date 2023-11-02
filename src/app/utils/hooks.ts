@@ -10,7 +10,7 @@ import { EventBus, Observable } from './observable';
  */
 export function useEventBusListener<T>(
   eventBus: EventBus<T> | Observable<T>,
-  subscribeFn: (value: T) => void
+  subscribeFn: (value: T) => void,
 ) {
   useEffect(() => eventBus.subscribe(subscribeFn), [eventBus, subscribeFn]);
 }
@@ -44,7 +44,7 @@ export function useSetCSSVarToHeight(ref: React.RefObject<HTMLElement>, property
     (height: number) => {
       document.querySelector('html')!.style.setProperty(propertyName, `${height}px`);
     },
-    [propertyName]
+    [propertyName],
   );
   useLayoutEffect(() => {
     updateVar(ref.current!.offsetHeight);
@@ -57,7 +57,7 @@ export function useSetCSSVarToHeight(ref: React.RefObject<HTMLElement>, property
  */
 export function useLocalStorage<T>(
   key: string,
-  initialValue: T
+  initialValue: T,
 ): [T, (val: T | ((initial: T) => T)) => void] {
   const [storedValue, setStoredValue] = useState<T>((): T => {
     try {
@@ -93,7 +93,7 @@ export function useThrottledSubscription<T>(observable: Observable<T>, delay: nu
         };
       },
     }),
-    [observable, delay]
+    [observable, delay],
   );
   const value = useSubscription(throttledObservable);
   return value;
@@ -107,7 +107,7 @@ export function useHeightFromViewportBottom(
   elementRef: React.RefObject<HTMLElement>,
   setHeightFromViewportBottom: (value: number) => void,
   itemHeight: number | undefined,
-  withPadding: boolean
+  withPadding: boolean,
 ) {
   const padding = withPadding ? 10 : 0;
 
@@ -152,7 +152,7 @@ export function useFocusFirstFocusableElement(ref: React.RefObject<HTMLElement>)
   useEffect(() => {
     if (ref.current) {
       const firstFocusable = ref.current.querySelector(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
       );
       (firstFocusable as HTMLElement)?.focus();
     }

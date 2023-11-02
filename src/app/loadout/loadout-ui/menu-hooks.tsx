@@ -31,7 +31,7 @@ export function useLoadoutFilterPills(
     className?: string;
     darkBackground?: boolean;
     extra?: React.ReactNode;
-  } = {}
+  } = {},
 ): [filteredLoadouts: Loadout[], filterPillsElement: React.ReactNode, hasSelectedFilters: boolean] {
   if (!$featureFlags.loadoutFilterPills) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -62,13 +62,13 @@ function useLoadoutFilterPillsInternal(
     className?: string;
     darkBackground?: boolean;
     extra?: React.ReactNode;
-  } = {}
+  } = {},
 ): [filteredLoadouts: Loadout[], filterPillsElement: React.ReactNode, hasSelectedFilters: boolean] {
   const [selectedFilters, setSelectedFilters] = useState<Option<FilterPillType>[]>(emptyArray());
   const analysisSummary = useSummaryLoadoutsAnalysis(
     savedLoadouts,
     store,
-    Boolean(includeWarningPills)
+    Boolean(includeWarningPills),
   );
 
   // Reset filters on character change
@@ -101,7 +101,7 @@ function useLoadoutFilterPillsInternal(
         </>
       ),
     })),
-    (o) => o.key
+    (o) => o.key,
   );
 
   if (analysisSummary) {
@@ -143,10 +143,10 @@ function useLoadoutFilterPillsInternal(
                     : savedLoadouts;
                 }
               }
-            })
+            }),
           )
         : savedLoadouts,
-    [selectedFilters, savedLoadouts, loadoutsByHashtag, analysisSummary?.loadoutsByFindings]
+    [selectedFilters, savedLoadouts, loadoutsByHashtag, analysisSummary?.loadoutsByFindings],
   );
 
   const pills =
@@ -222,13 +222,13 @@ export function searchAndSortLoadoutsByQuery(
   loadouts: Loadout[],
   query: string,
   language: DimLanguage,
-  loadoutSort: LoadoutSort
+  loadoutSort: LoadoutSort,
 ) {
   let filteredLoadouts: Loadout[];
   if (query.length) {
     const includes = localizedIncludes(language, query);
     filteredLoadouts = loadouts.filter(
-      (loadout) => includes(loadout.name) || (loadout.notes && includes(loadout.notes))
+      (loadout) => includes(loadout.name) || (loadout.notes && includes(loadout.notes)),
     );
   } else {
     filteredLoadouts = [...loadouts];
@@ -237,6 +237,6 @@ export function searchAndSortLoadoutsByQuery(
   return filteredLoadouts.sort(
     loadoutSort === LoadoutSort.ByEditTime
       ? compareBy((l) => -(l.lastUpdatedAt ?? 0))
-      : localizedSorter(language, (l) => l.name)
+      : localizedSorter(language, (l) => l.name),
   );
 }

@@ -42,7 +42,7 @@ const getPerkNamesFromManifest = memoizeOne(
       })
       .map((i) => i.displayProperties.name.toLowerCase());
     return [...new Set(perkNames)];
-  }
+  },
 );
 
 // things that are sunset            1010        1060        1060        1260
@@ -69,7 +69,7 @@ const getUniqueItemNamesFromManifest = memoizeOne(
       })
       .map((i) => i.displayProperties.name.toLowerCase());
     return [...new Set(itemNames)];
-  }
+  },
 );
 
 const nameFilter = {
@@ -85,7 +85,7 @@ const nameFilter = {
       const allItemNames = getUniqueItemNamesFromManifest(d2Manifest.InventoryItem.getAll());
       return Array.from(
         new Set([...myItemNames, ...allItemNames]),
-        (s) => `name:${quoteFilterString(s)}`
+        (s) => `name:${quoteFilterString(s)}`,
       );
     }
   },
@@ -144,13 +144,13 @@ const freeformFilters: FilterDefinition[] = [
           .filter((i) => i.bucket.inWeapons || i.bucket.inArmor || i.bucket.inGeneral)
           .flatMap((i) => i.sockets?.allSockets.filter((s) => s.plugged && s.isPerk) ?? []);
         const myPerkNames = myPerks.map((s) =>
-          s.plugged!.plugDef.displayProperties.name.toLowerCase()
+          s.plugged!.plugDef.displayProperties.name.toLowerCase(),
         );
         const allPerkNames = getPerkNamesFromManifest(d2Manifest.InventoryItem.getAll());
         // favor items we actually own
         return Array.from(
           new Set([...myPerkNames, ...allPerkNames]),
-          (s) => `perkname:${quoteFilterString(s)}`
+          (s) => `perkname:${quoteFilterString(s)}`,
         );
       }
     },
@@ -197,7 +197,7 @@ export default freeformFilters;
 function testStringsFromDisplayProperties<T extends { name: string; description: string }>(
   test: (str: string) => boolean,
   displayProperties?: T,
-  includeDescription = true
+  includeDescription = true,
 ): boolean {
   if (!displayProperties) {
     return false;
@@ -205,7 +205,7 @@ function testStringsFromDisplayProperties<T extends { name: string; description:
 
   return Boolean(
     (displayProperties.name && test(displayProperties.name)) ||
-      (includeDescription && displayProperties.description && test(displayProperties.description))
+      (includeDescription && displayProperties.description && test(displayProperties.description)),
   );
 }
 
@@ -215,7 +215,7 @@ function testStringsFromDisplayProperties<T extends { name: string; description:
 function testStringsFromDisplayPropertiesMap<T extends { name: string; description: string }>(
   test: (str: string) => boolean,
   displayProperties?: T | T[] | null,
-  includeDescription = true
+  includeDescription = true,
 ): boolean {
   if (!displayProperties) {
     return false;
@@ -224,29 +224,29 @@ function testStringsFromDisplayPropertiesMap<T extends { name: string; descripti
     return testStringsFromDisplayProperties(test, displayProperties, includeDescription);
   }
   return displayProperties.some((d) =>
-    testStringsFromDisplayProperties(test, d, includeDescription)
+    testStringsFromDisplayProperties(test, d, includeDescription),
   );
 }
 
 function testStringsFromObjectives(
   test: (str: string) => boolean,
   defs: D2ManifestDefinitions,
-  objectives: DimItem['objectives']
+  objectives: DimItem['objectives'],
 ): boolean {
   return Boolean(
-    objectives?.some((o) => test(defs.Objective.get(o.objectiveHash)?.progressDescription ?? ''))
+    objectives?.some((o) => test(defs.Objective.get(o.objectiveHash)?.progressDescription ?? '')),
   );
 }
 
 function testStringsFromRewards(
   test: (str: string) => boolean,
   defs: D2ManifestDefinitions,
-  pursuitInfo: DimItem['pursuit']
+  pursuitInfo: DimItem['pursuit'],
 ): boolean {
   return Boolean(
     pursuitInfo?.rewards.some((r) =>
-      testStringsFromDisplayProperties(test, defs.InventoryItem.get(r.itemHash).displayProperties)
-    )
+      testStringsFromDisplayProperties(test, defs.InventoryItem.get(r.itemHash).displayProperties),
+    ),
   );
 }
 
@@ -255,7 +255,7 @@ function testStringsFromAllSockets(
   test: (str: string) => boolean,
   item: DimItem,
   defs: D2ManifestDefinitions | undefined,
-  includeDescription = true
+  includeDescription = true,
 ): boolean {
   if (!item.sockets) {
     return false;
@@ -266,12 +266,12 @@ function testStringsFromAllSockets(
         testStringsFromDisplayPropertiesMap(
           test,
           plug.plugDef.displayProperties,
-          includeDescription
+          includeDescription,
         ) ||
         test(plug.plugDef.itemTypeDisplayName) ||
         (defs &&
           getPlugPerks(plug, defs).some((perk) =>
-            testStringsFromDisplayPropertiesMap(test, perk.displayProperties, includeDescription)
+            testStringsFromDisplayPropertiesMap(test, perk.displayProperties, includeDescription),
           ))
       ) {
         return true;

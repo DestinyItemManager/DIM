@@ -36,7 +36,7 @@ export function moveItemNotification(
   item: DimItem,
   target: DimStore,
   movePromise: Promise<unknown>,
-  cancel: () => void
+  cancel: () => void,
 ): NotifyInput {
   return {
     promise: movePromise,
@@ -60,7 +60,7 @@ export function loadoutNotification(
   loadout: Loadout | InGameLoadout,
   stateObservable: Observable<LoadoutApplyState>,
   loadoutPromise: Promise<unknown>,
-  cancel: () => void
+  cancel: () => void,
 ): NotifyInput {
   return {
     promise: loadoutPromise.catch((e) => {
@@ -125,7 +125,7 @@ function ApplyLoadoutProgressBody({
           ? error.bungieErrorCode()?.toString() ?? error.cause?.message
           : undefined) ??
         error?.message ??
-        'Unknown'
+        'Unknown',
     );
 
   const groupedItemErrors = groupErrors(itemStatesList);
@@ -244,7 +244,7 @@ export function postmasterNotification(
   count: number,
   store: DimStore,
   promise: Promise<unknown>,
-  cancel: () => void
+  cancel: () => void,
 ): NotifyInput {
   // TODO: pass in a state updater that can communicate application state
 

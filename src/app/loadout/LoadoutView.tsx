@@ -35,7 +35,7 @@ export function getItemsAndSubclassFromLoadout(
   allItems: DimItem[],
   modsByBucket?: {
     [bucketHash: number]: number[] | undefined;
-  }
+  },
 ): [
   items: ResolvedLoadoutItem[],
   subclass: ResolvedLoadoutItem | undefined,
@@ -46,7 +46,7 @@ export function getItemsAndSubclassFromLoadout(
     loadoutItems,
     store.id,
     allItems,
-    modsByBucket
+    modsByBucket,
   );
   const subclass = items
     .concat(warnitems)
@@ -103,16 +103,16 @@ export default function LoadoutView({
         loadout.items,
         store,
         allItems,
-        modsByBucket
+        modsByBucket,
       ),
-    [itemCreationContext, loadout.items, store, allItems, modsByBucket]
+    [itemCreationContext, loadout.items, store, allItems, modsByBucket],
   );
 
   const [allMods, modDefinitions] = useLoadoutMods(loadout, store.id);
 
   const categories = Object.groupBy(
     items.concat(warnitems),
-    (li) => li.item.bucket.sort ?? 'Unknown'
+    (li) => li.item.bucket.sort ?? 'Unknown',
   );
   const power = loadoutPower(store, categories);
 
@@ -143,7 +143,7 @@ export default function LoadoutView({
                   </PressTip>
                 );
               }),
-              <span>{' · '}</span>
+              <span>{' · '}</span>,
             )}
           </div>
         )}
@@ -203,8 +203,8 @@ export function loadoutPower(store: DimStore, categories: _.Dictionary<ResolvedL
     ? Math.floor(
         getLight(
           store,
-          [...categories.Weapons, ...categories.Armor].map((li) => li.item)
-        )
+          [...categories.Weapons, ...categories.Armor].map((li) => li.item),
+        ),
       )
     : 0;
 

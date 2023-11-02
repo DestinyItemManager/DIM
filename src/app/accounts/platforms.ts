@@ -61,7 +61,7 @@ const loadAccountsFromBungieNetAction: ThunkResult<readonly DestinyAccount[]> = 
 
     const membershipId = bungieAccount.membershipId;
     return loadingTracker.addPromise(dispatch(loadPlatforms(membershipId)));
-  }
+  },
 );
 
 function loadAccountsFromBungieNet(): ThunkResult<readonly DestinyAccount[]> {
@@ -74,7 +74,7 @@ function loadAccountsFromBungieNet(): ThunkResult<readonly DestinyAccount[]> {
  * it next time. This should be called when switching accounts or navigating to an account-specific page.
  */
 export function setActivePlatform(
-  account: DestinyAccount | undefined
+  account: DestinyAccount | undefined,
 ): ThunkResult<DestinyAccount | undefined> {
   return async (dispatch, getState) => {
     if (account) {

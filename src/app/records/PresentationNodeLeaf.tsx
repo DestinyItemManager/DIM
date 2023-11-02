@@ -38,7 +38,7 @@ export default function PresentationNodeLeaf({
                 collectible={collectible}
                 owned={Boolean(ownedItemHashes?.has(collectible.item.hash))}
               />
-            )
+            ),
           )}
         </CollectiblesGrid>
       )}

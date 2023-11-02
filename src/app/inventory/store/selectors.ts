@@ -20,14 +20,14 @@ const pinnacleCap = powerLevelByKeyword.pinnaclecap;
  */
 function hasAffectingClassified(
   unrestrictedMaxLightGear: DimItem[],
-  bucketsWithClassifieds: Set<number>
+  bucketsWithClassifieds: Set<number>,
 ) {
   return unrestrictedMaxLightGear.some(
     (i) =>
       // isn't pinnacle cap
       i.power !== pinnacleCap &&
       // and shares a bucket with a classified item (which might be higher power)
-      bucketsWithClassifieds.has(i.bucket.hash)
+      bucketsWithClassifieds.has(i.bucket.hash),
   );
 }
 
@@ -85,7 +85,7 @@ const allPowerLevelsSelector = createSelector(
       // (maybe just because it's on a different class? who knows. can't test.)
       const dropPowerItemSet = maxLightItemSet(
         allItems.filter((i) => i.bucket.inWeapons || i.owner === 'vault' || i.owner === store.id),
-        store
+        store,
       ).unrestricted;
       const dropPowerLevel = getLight(store, dropPowerItemSet);
 
@@ -111,7 +111,7 @@ const allPowerLevelsSelector = createSelector(
     }
 
     return levels;
-  }
+  },
 );
 
 export const powerLevelSelector = (state: RootState, storeId: string | undefined) =>

@@ -30,13 +30,13 @@ export default function GeneratedSet({ setType, store, activesets, excludeItem }
 
   const makeLoadoutFromSet = (set: ArmorSet): Loadout => {
     const items = Object.values(
-      _.pick(set.armor, 'Helmet', 'Chest', 'Gauntlets', 'Leg', 'ClassItem', 'Ghost', 'Artifact')
+      _.pick(set.armor, 'Helmet', 'Chest', 'Gauntlets', 'Leg', 'ClassItem', 'Ghost', 'Artifact'),
     ).map((si) => si.item);
 
     const loadout = newLoadout(
       '',
       items.map((i) => convertToLoadoutItem(i, true)),
-      store.classType
+      store.classType,
     );
     return loadout;
   };
@@ -103,7 +103,7 @@ export default function GeneratedSet({ setType, store, activesets, excludeItem }
                         : t('Stats.NoBonus')}
                     </small>
                   </div>
-                )
+                ),
             )}
           </div>
         ))}

@@ -40,11 +40,11 @@ const popperOptions = (
   boundarySelector?: string,
   offset = arrowClassName ? popperArrowSize : 0,
   fixed = false,
-  padding?: Padding
+  padding?: Padding,
 ): Partial<Options> => {
   const headerHeight = parseInt(
     document.querySelector('html')!.style.getPropertyValue('--header-height')!,
-    10
+    10,
   );
   const boundaryElement = boundarySelector && document.querySelector(boundarySelector);
   padding ??= {
@@ -153,7 +153,7 @@ export function usePopper({
         boundarySelector,
         offset,
         fixed,
-        padding
+        padding,
       );
       popper.current = createPopper(reference.current, contents.current, options);
       popper.current.update();

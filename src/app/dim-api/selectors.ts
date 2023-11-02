@@ -25,7 +25,7 @@ export const settingSelector =
  */
 export const savedLoadoutParametersSelector = createSelector(
   (state: RootState) => settingsSelector(state).loParameters,
-  (loParams) => ({ ...defaultLoadoutParameters, ...loParams })
+  (loParams) => ({ ...defaultLoadoutParameters, ...loParams }),
 );
 
 export const savedLoStatConstraintsByClassSelector = (state: RootState) =>
@@ -54,7 +54,7 @@ export const currentProfileSelector = createSelector(
   currentAccountSelector,
   (state: RootState) => state.dimApi.profiles,
   (currentAccount, profiles) =>
-    currentAccount ? profiles[makeProfileKeyFromAccount(currentAccount)] : undefined
+    currentAccount ? profiles[makeProfileKeyFromAccount(currentAccount)] : undefined,
 );
 
 /**
@@ -67,7 +67,7 @@ export const recentSearchesSelector = (state: RootState) =>
 
 export const trackedTriumphsSelector = createSelector(
   currentProfileSelector,
-  (profile) => profile?.triumphs || []
+  (profile) => profile?.triumphs || [],
 );
 
 /** Server control over the issue/campaign banner */

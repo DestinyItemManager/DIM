@@ -28,10 +28,10 @@ type WithRequiredProperty<T, K extends keyof T> = T & {
 
 function getSocketHashesByCategoryStyle(
   sockets: DimSockets,
-  style: DestinySocketCategoryStyle
+  style: DestinySocketCategoryStyle,
 ): number[] {
   const socketCategory = sockets.categories.find(
-    (category) => category.category.categoryStyle === style
+    (category) => category.category.categoryStyle === style,
   );
 
   return (socketCategory && getPlugHashesFromCategory(sockets, socketCategory)) || [];
@@ -45,11 +45,11 @@ function getPlugHashesFromCategory(sockets: DimSockets, category: DimSocketCateg
 
 export function getSocketsWithStyle(
   sockets: DimSockets,
-  style: DestinySocketCategoryStyle
+  style: DestinySocketCategoryStyle,
 ): DimSocket[] {
   const socketHashes = getSocketHashesByCategoryStyle(sockets, style);
   return sockets.allSockets.filter(
-    (socket) => socket.plugged && socketHashes.includes(socket.plugged.plugDef.hash)
+    (socket) => socket.plugged && socketHashes.includes(socket.plugged.plugDef.hash),
   );
 }
 
@@ -76,7 +76,7 @@ export function getSocketByIndex(sockets: DimSockets, socketIndex: number) {
 /** Find all sockets on the item that belong to the given category hash */
 export function getSocketsByCategoryHash(
   sockets: DimSockets | null,
-  categoryHash: SocketCategoryHashes
+  categoryHash: SocketCategoryHashes,
 ) {
   const category = sockets?.categories.find((c) => c.category.hash === categoryHash);
   if (!category || !sockets) {
@@ -88,7 +88,7 @@ export function getSocketsByCategoryHash(
 /** Find all sockets on the item that belong to the given category hash */
 export function getSocketsByCategoryHashes(
   sockets: DimSockets | null,
-  categoryHashes: SocketCategoryHashes[]
+  categoryHashes: SocketCategoryHashes[],
 ) {
   return categoryHashes.flatMap((categoryHash) => getSocketsByCategoryHash(sockets, categoryHash));
 }
@@ -105,7 +105,8 @@ export function getFirstSocketByCategoryHash(sockets: DimSockets, categoryHash: 
 
 function getSocketsByPlugCategoryIdentifier(sockets: DimSockets, plugCategoryIdentifier: string) {
   return sockets.allSockets.find(
-    (socket) => socket.plugged?.plugDef.plug.plugCategoryIdentifier.includes(plugCategoryIdentifier)
+    (socket) =>
+      socket.plugged?.plugDef.plug.plugCategoryIdentifier.includes(plugCategoryIdentifier),
   );
 }
 
@@ -121,12 +122,12 @@ export const getWeaponArchetype = (item: DimItem): PluggableInventoryItemDefinit
 export function getIntrinsicArmorPerkSocket(item: DimItem): DimSocket | undefined {
   if (item.bucket.inArmor && item.sockets) {
     const largePerkCategory = item.sockets.categories.find(
-      (c) => c.category.hash === SocketCategoryHashes.ArmorPerks_LargePerk
+      (c) => c.category.hash === SocketCategoryHashes.ArmorPerks_LargePerk,
     );
     if (largePerkCategory) {
       const largePerkSocket = getSocketByIndex(
         item.sockets,
-        largePerkCategory.socketIndexes.at(-1)!
+        largePerkCategory.socketIndexes.at(-1)!,
       );
       if (largePerkSocket?.plugged?.plugDef.displayProperties.name) {
         return largePerkSocket;
@@ -138,7 +139,7 @@ export function getIntrinsicArmorPerkSocket(item: DimItem): DimSocket | undefine
 
 export function socketContainsPlugWithCategory(
   socket: DimSocket,
-  category: PlugCategoryHashes
+  category: PlugCategoryHashes,
 ): socket is WithRequiredProperty<DimSocket, 'plugged'> {
   // the above type predicate removes the need to null-check `plugged` after this call
   return socket.plugged?.plugDef.plug.plugCategoryHash === category;
@@ -152,7 +153,7 @@ export function socketContainsPlugWithCategory(
  * - the special invisible plugs that contribute to armor 2.0 stat rolls
  */
 export function socketContainsIntrinsicPlug(
-  socket: DimSocket
+  socket: DimSocket,
 ): socket is WithRequiredProperty<DimSocket, 'plugged'> {
   // the above type predicate removes the need to null-check `plugged` after this call
   return socketContainsPlugWithCategory(socket, PlugCategoryHashes.Intrinsics);
@@ -196,7 +197,7 @@ export const eventArmorRerollSocketIdentifiers: string[] = ['events.solstice.'];
  */
 export function isEventArmorRerollSocket(socket: DimSocket) {
   return eventArmorRerollSocketIdentifiers.some(
-    (i) => socket.plugged?.plugDef.plug.plugCategoryIdentifier.startsWith(i)
+    (i) => socket.plugged?.plugDef.plug.plugCategoryIdentifier.startsWith(i),
   );
 }
 
@@ -251,7 +252,7 @@ function filterSocketCategories(
   categories: DimSocketCategory[],
   sockets: DimSockets,
   allowCategory: (cat: DimSocketCategory) => boolean,
-  allowSocket: (socket: DimSocket) => boolean
+  allowSocket: (socket: DimSocket) => boolean,
 ): Map<DimSocketCategory, DimSocket[]> {
   // Pre-calculate the list of sockets we'll display for each category
   const socketsByCategory = new Map<DimSocketCategory, DimSocket[]>();
@@ -260,7 +261,7 @@ function filterSocketCategories(
       continue;
     }
     const categorySockets = getSocketsByIndexes(sockets, category.socketIndexes).filter(
-      (socketInfo) => socketInfo.plugged?.plugDef.displayProperties.name && allowSocket(socketInfo)
+      (socketInfo) => socketInfo.plugged?.plugDef.displayProperties.name && allowSocket(socketInfo),
     );
     if (categorySockets.length) {
       socketsByCategory.set(category, categorySockets);
@@ -290,7 +291,7 @@ export interface DisplayedSockets {
 
 export function getDisplayedItemSockets(
   item: DimItem,
-  excludeEmptySockets = false
+  excludeEmptySockets = false,
 ): DisplayedSockets | undefined {
   if (item.bucket.inWeapons) {
     return getWeaponSockets(item, excludeEmptySockets);
@@ -301,7 +302,7 @@ export function getDisplayedItemSockets(
 
 export function getWeaponSockets(
   item: DimItem,
-  excludeEmptySockets = false
+  excludeEmptySockets = false,
 ): DisplayedSockets | undefined {
   if (!item.sockets) {
     return undefined;
@@ -312,7 +313,7 @@ export function getWeaponSockets(
     (c) =>
       c.category.hash !== SocketCategoryHashes.IntrinsicTraits &&
       c.socketIndexes.length &&
-      getSocketByIndex(item.sockets!, c.socketIndexes[0])?.isPerk
+      getSocketByIndex(item.sockets!, c.socketIndexes[0])?.isPerk,
   );
 
   const excludedSocketCategoryHashes = [
@@ -339,7 +340,7 @@ export function getWeaponSockets(
       socket.plugged !== null &&
       !excludedPlugCategoryHashes.includes(socket.plugged.plugDef.plug.plugCategoryHash) &&
       socket !== archetypeSocket &&
-      !isDeepsightResonanceSocket(socket)
+      !isDeepsightResonanceSocket(socket),
   );
 
   return {
@@ -351,7 +352,7 @@ export function getWeaponSockets(
 
 export function getGeneralSockets(
   item: DimItem,
-  excludeEmptySockets = false
+  excludeEmptySockets = false,
 ): Omit<DisplayedSockets, 'perks'> | undefined {
   if (!item.sockets) {
     return undefined;
@@ -383,7 +384,7 @@ export function getGeneralSockets(
     item.sockets.categories,
     item.sockets,
     isAllowedCategory,
-    isAllowedSocket
+    isAllowedSocket,
   );
 
   return {
@@ -434,7 +435,7 @@ export function matchesCuratedRoll(defs: D2ManifestDefinitions, item: DimItem) {
     .every(
       ({ socket, curatedRoll }) =>
         curatedRoll!.length === socket.plugOptions.length &&
-        socket.plugOptions.every((option, idx) => option.plugDef.hash === curatedRoll![idx])
+        socket.plugOptions.every((option, idx) => option.plugDef.hash === curatedRoll![idx]),
     );
 
   return matchesCollectionsRoll;

@@ -56,7 +56,7 @@ export function loadStores(): ThunkResult<D1Store[] | undefined> {
 
         const stores = [
           ...characters.map((characterData) =>
-            processCharacter(characterData, defs, buckets, lastPlayedDate)
+            processCharacter(characterData, defs, buckets, lastPlayedDate),
           ),
           processVault(vaultInventory, defs, buckets),
         ];
@@ -128,7 +128,7 @@ function processCharacter(
   characterData: D1CharacterData,
   defs: D1ManifestDefinitions,
   buckets: InventoryBuckets,
-  lastPlayedDate: Date
+  lastPlayedDate: Date,
 ) {
   const store = makeCharacter(characterData, defs, lastPlayedDate);
 
@@ -153,7 +153,7 @@ function processCharacter(
 function processVault(
   vaultInventory: D1VaultInventory,
   defs: D1ManifestDefinitions,
-  buckets: InventoryBuckets
+  buckets: InventoryBuckets,
 ) {
   const store = makeVault();
 

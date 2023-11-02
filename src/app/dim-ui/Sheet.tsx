@@ -77,7 +77,7 @@ const handleKeyDown = (e: React.KeyboardEvent) => {
  * pass `setParentDisabled` to SheetDisabledContext.Provider.
  */
 function useDisableParent(
-  forceDisabled?: boolean
+  forceDisabled?: boolean,
 ): [disabled: boolean, setParentDisabled: React.Dispatch<React.SetStateAction<boolean>>] {
   const [disabledByChildSheet, setDisabledByChildSheet] = useState(false);
   const setParentDisabled = useContext(SheetDisabledContext);
@@ -171,7 +171,7 @@ export default function Sheet({
       // Animate offscreen
       animationControls.start('close');
     },
-    [animationControls]
+    [animationControls],
   );
 
   // Handle global escape key
@@ -186,7 +186,7 @@ export default function Sheet({
         onClose();
       }
     },
-    [onClose]
+    [onClose],
   );
 
   // Determine when to drag. Drags if the touch falls in the header, or if the contents
@@ -200,7 +200,7 @@ export default function Sheet({
         dragControls.start(e);
       }
     },
-    [dragControls]
+    [dragControls],
   );
 
   useFixOverscrollBehavior(sheetContents);
@@ -218,7 +218,7 @@ export default function Sheet({
       }
       animationControls.start('open');
     },
-    [animationControls, triggerClose]
+    [animationControls, triggerClose],
   );
 
   useLayoutEffect(() => {

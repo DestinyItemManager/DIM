@@ -51,7 +51,7 @@ export function process(
   /** If set, only sets where at least one stat **exceeds** `resolvedStatConstraints` minimums will be returned */
   strictUpgrades: boolean,
   /** If set, LO will exit after finding at least one set that fits all constraints (and is a strict upgrade if `strictUpgrades` is set) */
-  stopOnFirstSet: boolean
+  stopOnFirstSet: boolean,
 ): ProcessResult {
   const pstart = performance.now();
 
@@ -67,7 +67,7 @@ export function process(
         min: 10,
         max: 0,
       },
-    ])
+    ]),
   ) as StatRanges;
   const statRangesFilteredInStatOrder = statOrder.map((h) => statRangesFiltered[h]);
 
@@ -78,7 +78,7 @@ export function process(
   for (const item of LockableBucketHashes.flatMap((h) => filteredItems[h])) {
     statsCacheInStatOrder.set(
       item,
-      statOrder.map((statHash) => Math.max(item.stats[statHash], 0))
+      statOrder.map((statHash) => Math.max(item.stats[statHash], 0)),
     );
   }
 
@@ -116,7 +116,7 @@ export function process(
     generalMods,
     activityMods,
     autoStatMods,
-    statOrder
+    statOrder,
   );
   const hasMods = Boolean(activityMods.length || generalMods.length);
 
@@ -295,7 +295,7 @@ export function process(
                 setStatistics.modsStatistics,
                 armor,
                 totalNeededStats > 0 ? neededStats : undefined,
-                numArtifice
+                numArtifice,
               );
 
               if (!modsPick) {
@@ -314,7 +314,7 @@ export function process(
               tiers,
               numArtifice,
               resolvedStatConstraints,
-              statRangesFilteredInStatOrder
+              statRangesFilteredInStatOrder,
             );
 
             // Drop this set if it could never make it.
@@ -323,7 +323,7 @@ export function process(
             // First, pessimistically assume an artifice mod gives a whole tier.
             if (
               !setTracker.couldInsert(
-                totalTier + numArtifice + precalculatedInfo.numAvailableGeneralMods
+                totalTier + numArtifice + precalculatedInfo.numAvailableGeneralMods,
               )
             ) {
               setStatistics.skipReasons.skippedLowTier++;
@@ -342,7 +342,7 @@ export function process(
                   // E.g. stat is at 83 points, so we'd need ceil((10-3) / 3) = 3
                   // artifice mods
                   artificeModsNeededForTiers.push(
-                    Math.ceil((10 - (stats[index] % 10)) / artificeStatBoost)
+                    Math.ceil((10 - (stats[index] % 10)) / artificeStatBoost),
                   );
                 } else {
                   // We really don't want to optimize this stat further...
@@ -416,7 +416,7 @@ export function process(
       precalculatedInfo,
       armor,
       stats,
-      resolvedStatConstraints
+      resolvedStatConstraints,
     )!;
 
     const armorOnlyStats: Partial<ArmorStats> = {};
@@ -474,7 +474,7 @@ export function process(
     setStatistics.modsStatistics.earlyModsCheck,
     'auto mods pick:',
     setStatistics.modsStatistics.autoModsPick,
-    setStatistics.modsStatistics
+    setStatistics.modsStatistics,
   );
 
   return {

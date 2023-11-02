@@ -111,7 +111,7 @@ export default function ClarityCharacterStat({
         cooldowns={clarityStatData.TotalRegenTime.Array}
         tier={tier}
         unit="s"
-      />
+      />,
     );
   } else if ('WalkSpeed' in clarityStatData) {
     intrinsicCooldowns.push(
@@ -135,7 +135,7 @@ export default function ClarityCharacterStat({
         cooldowns={clarityStatData.CrouchSpeed.Array}
         tier={tier}
         unit={t('Stats.MetersPerSecond')}
-      />
+      />,
     );
   } else if ('TotalHP' in clarityStatData) {
     intrinsicCooldowns.push(
@@ -159,7 +159,7 @@ export default function ClarityCharacterStat({
         cooldowns={clarityStatData.FlinchResistance.Array}
         tier={tier}
         unit={t('Stats.Percentage')}
-      />
+      />,
     );
   }
 

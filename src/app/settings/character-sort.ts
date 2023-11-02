@@ -37,7 +37,7 @@ export const characterSortSelector = createSelector(
         // https://github.com/Bungie-net/api/issues/614
         return (stores: DimStore[]) => _.sortBy(stores, (s) => s.id);
     }
-  }
+  },
 );
 
 /**
@@ -65,5 +65,5 @@ export const characterSortImportanceSelector = createSelector(
         // https://github.com/Bungie-net/api/issues/614
         return (stores: DimStore[]) => _.sortBy(stores, (s) => s.id);
     }
-  }
+  },
 );

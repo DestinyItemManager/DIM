@@ -128,7 +128,7 @@ const statFilters: FilterDefinition[] = [
         Boolean(
           // items can be 0pl but king of their own little kingdom,
           // like halloween masks, so let's exclude 0pl
-          item.power && maxPowerPerBucket[maxPowerKey(item)] <= item.power
+          item.power && maxPowerPerBucket[maxPowerKey(item)] <= item.power,
         );
     },
   },
@@ -143,7 +143,7 @@ function statFilterFromString(
   statNames: string,
   compare: (value: number) => boolean,
   customStats: CustomStatDef[],
-  byBaseValue = false
+  byBaseValue = false,
 ): (item: DimItem) => boolean {
   // this will be used to index into the right property of a DimStat
   const byWhichValue = byBaseValue ? 'base' : 'value';
@@ -183,7 +183,7 @@ function statFilterFromString(
 function createStatCombiner(
   statString: string,
   byWhichValue: 'base' | 'value',
-  customStats: CustomStatDef[]
+  customStats: CustomStatDef[],
 ) {
   // an array of arrays of stat retrieval functions.
   // inner arrays are averaged, then outer array is totaled
@@ -194,7 +194,7 @@ function createStatCombiner(
         return (
           statValuesByHash: NodeJS.Dict<number>,
           sortStats: () => number[][],
-          item: DimItem
+          item: DimItem,
         ) => {
           if (!item.bucket.inArmor || !item.stats) {
             return 0;
@@ -221,7 +221,7 @@ function createStatCombiner(
       if (namedCustomStats.length) {
         return (statValuesByHash: NodeJS.Dict<number>, _: any, item: DimItem) => {
           const thisClassCustomStat = namedCustomStats.find((c) =>
-            isClassCompatible(c.class, item.classType)
+            isClassCompatible(c.class, item.classType),
           );
           // if this item's guardian class doesn't have a custom stat named statName
           // return false to not match
@@ -246,12 +246,12 @@ function createStatCombiner(
       (item.stats ?? [])
         .filter((s) => armorAnyStatHashes.includes(s.statHash))
         .map((s) => [s.statHash, s[byWhichValue]])
-        .sort((a, b) => b[1] - a[1])
+        .sort((a, b) => b[1] - a[1]),
     );
 
     return _.sumBy(nestedAddends, (averageGroup) => {
       const averaged = _.meanBy(averageGroup, (statFn) =>
-        statFn(statValuesByHash, sortStats, item)
+        statFn(statValuesByHash, sortStats, item),
       );
 
       return averaged;
@@ -264,7 +264,7 @@ function findMaxStatLoadout(stores: DimStore[], allItems: DimItem[], statName: s
   return stores.flatMap((store) =>
     // Accessing id is safe: maxStatLoadout only includes items with a power level,
     // i.e. only weapons and armor and those are instanced.
-    maxStatLoadout(maxStatHash, allItems, store).items.map((i) => i.id)
+    maxStatLoadout(maxStatHash, allItems, store).items.map((i) => i.id),
   );
 }
 
@@ -278,7 +278,7 @@ function checkIfStatMatchesMaxValue(
   maxStatValues: MaxValuesDict,
   item: DimItem,
   statName: string,
-  byBaseValue = false
+  byBaseValue = false,
 ) {
   // this must be armor with stats
   if (!item.bucket.inArmor || !item.stats) {
@@ -292,7 +292,7 @@ function checkIfStatMatchesMaxValue(
   const matchingStats = item.stats?.filter(
     (s) =>
       statHashes.includes(s.statHash) &&
-      s[byWhichValue] === maxStatsForSlot?.[s.statHash][byWhichValue]
+      s[byWhichValue] === maxStatsForSlot?.[s.statHash][byWhichValue],
   );
   return matchingStats && Boolean(matchingStats.length);
 }
@@ -338,8 +338,8 @@ function calculateMaxPowerPerBucket(allItems: DimItem[]) {
     Object.groupBy(
       // disregard no-class armor
       allItems.filter((i) => i.classType !== DestinyClass.Classified),
-      (i) => maxPowerKey(i)
+      (i) => maxPowerKey(i),
     ),
-    (items) => _.maxBy(items, (i) => i.power)?.power ?? 0
+    (items) => _.maxBy(items, (i) => i.power)?.power ?? 0,
   );
 }

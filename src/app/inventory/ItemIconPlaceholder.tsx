@@ -29,7 +29,7 @@ const observer =
           root: null,
           rootMargin: '16px',
           threshold: 0,
-        }
+        },
       )
     : {
         // eslint-disable-next-line @typescript-eslint/no-empty-function

@@ -69,7 +69,7 @@ const initialState: InventoryState = {
 
 export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction> = (
   state: InventoryState = initialState,
-  action: InventoryAction | AccountsAction
+  action: InventoryAction | AccountsAction,
 ): InventoryState => {
   switch (action.type) {
     case getType(actions.profileLoaded):
@@ -159,7 +159,7 @@ function updateInventory(
   }: {
     stores: DimStore[];
     currencies: AccountCurrency[];
-  }
+  },
 ) {
   // TODO: we really want to decompose these, drive out all deep mutation
   // TODO: mark DimItem, DimStore properties as Readonly
@@ -287,7 +287,7 @@ function itemMoved(
   sourceStoreId: string,
   targetStoreId: string,
   equip: boolean,
-  amount: number
+  amount: number,
 ): void {
   // Refresh all the items - they may have been reloaded!
   const stores = draft.stores;
@@ -299,7 +299,7 @@ function itemMoved(
   }
 
   item = source.items.find(
-    (i) => i.hash === item.hash && i.id === item.id && i.location.hash === item.location.hash
+    (i) => i.hash === item.hash && i.id === item.id && i.location.hash === item.location.hash,
   )!;
   if (!item) {
     warnLog('move', 'Moved item not found', item);
@@ -315,9 +315,9 @@ function itemMoved(
       ? // For stackables, pull from all the items as a pool
         _.sortBy(
           findItemsByBucket(source, item.location.hash).filter(
-            (i) => i.hash === item.hash && i.id === item.id
+            (i) => i.hash === item.hash && i.id === item.id,
           ),
-          (i) => i.amount
+          (i) => i.amount,
         )
       : // Otherwise we're moving the exact item we passed in
         [item];
@@ -331,9 +331,9 @@ function itemMoved(
               i.hash === item.hash &&
               i.id === item.id &&
               // Don't consider full stacks as targets
-              i.amount !== i.maxStackSize
+              i.amount !== i.maxStackSize,
           ),
-          (i) => i.amount
+          (i) => i.amount,
         )
       : [];
 
@@ -402,7 +402,7 @@ function itemLockStateChanged(
   draft: Draft<InventoryState>,
   item: DimItem,
   state: boolean,
-  type: 'lock' | 'track'
+  type: 'lock' | 'track',
 ) {
   const source = getStore(draft.stores, item.owner);
   if (!source) {
@@ -432,7 +432,7 @@ function awaItemChanged(
   draft: Draft<InventoryState>,
   changes: DestinyItemChangeResponse,
   item: DimItem | undefined,
-  itemCreationContext: ItemCreationContext
+  itemCreationContext: ItemCreationContext,
 ) {
   const { defs, buckets } = itemCreationContext;
 
@@ -478,7 +478,7 @@ function awaItemChanged(
     } else if (removedItemComponent.itemInstanceId) {
       for (const store of draft.stores) {
         const removedItemIndex = store.items.findIndex(
-          (i) => i.id === removedItemComponent.itemInstanceId
+          (i) => i.id === removedItemComponent.itemInstanceId,
         );
         if (removedItemIndex >= 0) {
           store.items.splice(removedItemIndex, 1);
@@ -490,7 +490,7 @@ function awaItemChanged(
       const source = getSource(removedItemComponent);
       const sourceItems = _.sortBy(
         source.items.filter((i) => i.hash === removedItemComponent.itemHash),
-        (i) => i.amount
+        (i) => i.amount,
       );
 
       // TODO: refactor!
@@ -535,7 +535,7 @@ function awaItemChanged(
       const target = getSource(addedItemComponent);
       const targetItems = _.sortBy(
         target.items.filter((i) => i.hash === addedItemComponent.itemHash),
-        (i) => i.amount
+        (i) => i.amount,
       );
       let addAmount = addedItemComponent.quantity;
       const addedItem = makeItem(itemCreationContext, addedItemComponent, target);

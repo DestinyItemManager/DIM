@@ -56,11 +56,11 @@ const isFirefox = isBrowser && (window as any).mozInnerScreenX !== null;
 
 export default function getCaretCoordinates(
   element: HTMLTextAreaElement | HTMLInputElement,
-  position: number
+  position: number,
 ) {
   if (!isBrowser) {
     throw new Error(
-      'textarea-caret-position#getCaretCoordinates should only be called in a browser'
+      'textarea-caret-position#getCaretCoordinates should only be called in a browser',
     );
   }
 

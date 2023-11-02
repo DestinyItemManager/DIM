@@ -11,7 +11,7 @@ const DAY = 1000 * 60 * 60 * 24;
 export default function AppInstallBanner({ onClick }: { onClick: React.MouseEventHandler }) {
   const [lastDismissed, setLastDismissed] = useLocalStorage<number>(
     'app-install-last-dismissed',
-    0
+    0,
   );
 
   // Hide if they've dismissed this in the last 2 weeks

@@ -71,21 +71,21 @@ export default memo(function LoadoutRow({
       actionButtons.push(
         <button key="apply" type="button" className="dim-button" onClick={handleApply}>
           {t('Loadouts.Apply')}
-        </button>
+        </button>,
       );
     }
 
     actionButtons.push(
       <button key="edit" type="button" className="dim-button" onClick={handleEdit}>
         {saved ? t('Loadouts.EditBrief') : t('Loadouts.SaveLoadout')}
-      </button>
+      </button>,
     );
 
     if (loadout.parameters && !_.isEmpty(loadout.parameters)) {
       actionButtons.push(
         <button key="share" type="button" className="dim-button" onClick={handleShare}>
           {t('Loadouts.ShareLoadout')}
-        </button>
+        </button>,
       );
     }
 
@@ -93,7 +93,7 @@ export default memo(function LoadoutRow({
       actionButtons.push(
         <ConfirmButton key="delete" danger onClick={handleDeleteClick}>
           <AppIcon icon={deleteIcon} title={t('Loadouts.Delete')} />
-        </ConfirmButton>
+        </ConfirmButton>,
       );
     } else {
       actionButtons.push(
@@ -104,7 +104,7 @@ export default memo(function LoadoutRow({
           onClick={onSnapshotInGameLoadout}
         >
           {t('Loadouts.Snapshot')}
-        </button>
+        </button>,
       );
     }
 

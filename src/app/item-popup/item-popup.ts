@@ -29,7 +29,7 @@ export interface ItemPopupExtraInfo {
 export function showItemPopup(
   item: DimItem,
   element?: HTMLElement,
-  extraInfo?: ItemPopupExtraInfo
+  extraInfo?: ItemPopupExtraInfo,
 ) {
   if (showItemPopup$.getCurrentValue()?.item === item) {
     hideItemPopup();

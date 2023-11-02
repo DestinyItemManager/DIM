@@ -36,12 +36,12 @@ export default function UniversalOrnaments({
   const defData = defs && buildSets(defs);
   const populatedData = useMemo(
     () => defData && instantiateOrnamentSets(defData, createItemContext),
-    [createItemContext, defData]
+    [createItemContext, defData],
   );
 
   const filteredData = useMemo(
     () => populatedData && filterOrnamentSets(populatedData, searchQuery, searchFilter),
-    [populatedData, searchFilter, searchQuery]
+    [populatedData, searchFilter, searchQuery],
   );
 
   if (!filteredData) {

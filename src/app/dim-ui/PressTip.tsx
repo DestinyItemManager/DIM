@@ -136,7 +136,7 @@ function Control({
             </div>
             <div className={styles.arrow} />
           </div>,
-          pressTipRoot.current || tempContainer
+          pressTipRoot.current || tempContainer,
         )}
     </Component>
   );

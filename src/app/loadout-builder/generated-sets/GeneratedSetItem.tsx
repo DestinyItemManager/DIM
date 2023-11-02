@@ -88,7 +88,7 @@ export default function GeneratedSetItem({
 
   const onSocketClick = (
     plugDef: PluggableInventoryItemDefinition,
-    plugCategoryHashWhitelist?: number[]
+    plugCategoryHashWhitelist?: number[],
   ) => {
     const { plugCategoryHash } = plugDef.plug;
 

@@ -60,7 +60,7 @@ export default function CompareStat({
 function statRange(
   stat: (MinimalStat & { qualityPercentage?: { min: number } }) | undefined,
   statInfo: StatInfo,
-  compareBaseStats = false
+  compareBaseStats = false,
 ) {
   if (!stat) {
     return -1;

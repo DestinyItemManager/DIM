@@ -76,7 +76,7 @@ export default function FilterHelp() {
 function FilterExplanation({ filter }: { filter: FilterDefinition }) {
   const dispatch = useDispatch();
   const suggestions = Array.from(
-    new Set([...generateGroupedSuggestionsForFilter(filter, true, {})])
+    new Set([...generateGroupedSuggestionsForFilter(filter, true, {})]),
   );
   const localDesc: string = Array.isArray(filter.description)
     ? t(...filter.description)

@@ -33,7 +33,7 @@ export default function LoadoutBuilderLocksDialog({
               'perk',
               lockedPerks[type][perk.hash]
                 ? `active-perk-${lockedPerks[type][perk.hash].lockType}`
-                : undefined
+                : undefined,
             )}
             onClick={(e) => onPerkLocked(perk, type, e)}
           >

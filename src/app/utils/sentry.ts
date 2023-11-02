@@ -24,7 +24,7 @@ export let reportException = (name: string, e: any, errorInfo?: Record<string, u
     e,
     errorInfo,
     e instanceof DimError && e.code,
-    e instanceof DimError && e.cause
+    e instanceof DimError && e.cause,
   );
 };
 

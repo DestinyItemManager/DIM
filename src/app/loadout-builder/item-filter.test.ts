@@ -93,7 +93,7 @@ describe('loadout-builder item-filter', () => {
 
   it('filters out items with insufficient energy capacity', () => {
     const fontOfWisdomMod = defs.InventoryItem.get(
-      fontOfWisdomModHash
+      fontOfWisdomModHash,
     ) as PluggableInventoryItemDefinition;
     expect(isPluggableItem(fontOfWisdomMod)).toBe(true);
     expect(fontOfWisdomMod.plug.energyCost!.energyCost).toBe(3);
@@ -101,7 +101,7 @@ describe('loadout-builder item-filter', () => {
 
     const { modMap, unassignedMods } = categorizeArmorMods(
       [fontOfWisdomMod, fontOfWisdomMod, fontOfWisdomMod],
-      items
+      items,
     );
 
     expect(unassignedMods.length).toBe(0);
@@ -217,7 +217,9 @@ describe('loadout-builder item-filter', () => {
     noPinInvariants(filteredItems, filterInfo);
     expect(filterInfo.searchQueryEffective).toBe(true);
     expect(
-      count(Object.values(filterInfo.perBucketStats), (stat) => Boolean(stat.removedBySearchFilter))
+      count(Object.values(filterInfo.perBucketStats), (stat) =>
+        Boolean(stat.removedBySearchFilter),
+      ),
     ).toBe(2);
   });
 
@@ -288,8 +290,8 @@ describe('loadout-builder item-filter', () => {
       (i) =>
         i.isExotic &&
         items.every(
-          (otherItem) => otherItem.hash !== i.hash || otherItem.energy!.energyCapacity < 9
-        )
+          (otherItem) => otherItem.hash !== i.hash || otherItem.energy!.energyCapacity < 9,
+        ),
     )!;
 
     const socket = exotic.sockets?.allSockets.find(
@@ -297,17 +299,17 @@ describe('loadout-builder item-filter', () => {
         i.plugged &&
         plugCategoryHashToBucketHash[
           i.plugged.plugDef.plug.plugCategoryHash as PlugCategoryHashes
-        ] === exotic.bucket.hash
+        ] === exotic.bucket.hash,
     )!;
     const mod = socket.plugSet!.plugs.find(
       (plug) =>
-        plug.plugDef.plug.energyCost?.energyCost && plug.plugDef.plug.energyCost.energyCost >= 3
+        plug.plugDef.plug.energyCost?.energyCost && plug.plugDef.plug.energyCost.energyCost >= 3,
     )!.plugDef;
 
     // 3 mods with at least 3 cost each
     const { modMap, unassignedMods } = categorizeArmorMods(
       new Array<PluggableInventoryItemDefinition>(3).fill(mod),
-      items
+      items,
     );
     expect(unassignedMods.length).toBe(0);
 

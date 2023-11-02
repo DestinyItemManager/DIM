@@ -55,7 +55,7 @@ export default function GeneratedSets({
   const halfTierMods = useHalfTierMods(
     selectedStore.id,
     Boolean(params.autoStatMods),
-    params.statConstraints!
+    params.statConstraints!,
   );
 
   return (
@@ -96,7 +96,7 @@ export default function GeneratedSets({
 function useHalfTierMods(
   selectedStoreId: string,
   autoStatMods: boolean,
-  statConstraints: StatConstraint[]
+  statConstraints: StatConstraint[],
 ): PluggableInventoryItemDefinition[] {
   // Info about stat mods
   const autoMods = useAutoMods(selectedStoreId);
@@ -107,8 +107,8 @@ function useHalfTierMods(
         ? emptyArray()
         : filterMap(
             statConstraints,
-            (s) => autoMods.generalMods[s.statHash as ArmorStatHashes]?.minorMod
+            (s) => autoMods.generalMods[s.statHash as ArmorStatHashes]?.minorMod,
           ),
-    [autoMods.generalMods, statConstraints, autoStatMods]
+    [autoMods.generalMods, statConstraints, autoStatMods],
   );
 }

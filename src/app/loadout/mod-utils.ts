@@ -34,7 +34,7 @@ export const sortMods = chainComparator<PluggableInventoryItemDefinition>(
   }),
   compareBy((mod) => mod.itemTypeDisplayName),
   compareBy((mod) => mod.plug.energyCost?.energyCost),
-  compareBy((mod) => mod.displayProperties.name)
+  compareBy((mod) => mod.displayProperties.name),
 );
 
 /**
@@ -53,13 +53,13 @@ export const sortModGroups = chainComparator(
     return knownIndex === -1 ? knownModPlugCategoryHashes.length : knownIndex;
   }),
   compareBy((mods: PluggableInventoryItemDefinition[]) =>
-    mods.length ? mods[0].itemTypeDisplayName : ''
-  )
+    mods.length ? mods[0].itemTypeDisplayName : '',
+  ),
 );
 
 /** Figures out if an item definition is an insertable armor 2.0 mod. */
 export function isInsertableArmor2Mod(
-  def: DestinyInventoryItemDefinition
+  def: DestinyInventoryItemDefinition,
 ): def is PluggableInventoryItemDefinition {
   return Boolean(
     // is the def pluggable (def.plug exists)
@@ -72,7 +72,7 @@ export function isInsertableArmor2Mod(
       // Exclude consumable mods
       def.inventory?.bucketTypeHash !== BucketHashes.Modifications &&
       // this rules out classified items
-      def.itemTypeDisplayName !== undefined
+      def.itemTypeDisplayName !== undefined,
   );
 }
 

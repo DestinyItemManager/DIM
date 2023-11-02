@@ -135,7 +135,7 @@ function PlugTooltip({
   const filteredPlugObjectives = plugObjectives?.filter(
     (o) =>
       getValueStyle(defs?.Objective.get(o.objectiveHash), o.progress ?? 0, o.completionValue) !==
-      DestinyUnlockValueUIStyle.Hidden
+      DestinyUnlockValueUIStyle.Hidden,
   );
 
   const bungieDescription =
@@ -177,7 +177,7 @@ function PlugTooltip({
           )}
         </div>
       ),
-      [def.itemTypeDisplayName, energyCost]
+      [def.itemTypeDisplayName, energyCost],
     ),
     className: clsx(styles.tooltip, {
       [styles.tooltipExotic]: def.inventory?.tierType === TierType.Exotic,

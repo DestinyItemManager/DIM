@@ -80,7 +80,7 @@ export function useProcess({
         cleanupRef.current = null;
       }
     },
-    []
+    [],
   );
 
   const autoModDefs = useAutoMods(selectedStore.id);

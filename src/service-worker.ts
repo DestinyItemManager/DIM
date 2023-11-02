@@ -27,7 +27,7 @@ registerRoute(
       new CacheableResponsePlugin({ statuses: [0, 200] }),
     ],
   }),
-  'GET'
+  'GET',
 );
 
 // Since we're a single page app, route all navigation to /index.html

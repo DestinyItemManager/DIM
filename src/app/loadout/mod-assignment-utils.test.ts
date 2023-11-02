@@ -19,7 +19,7 @@ import { getModExclusionGroup } from './mod-utils';
 function processAction(defs: D2ManifestDefinitions, originalItem: DimItem, action: PluggingAction) {
   return produce(originalItem, (item) => {
     const targetedSocket = item.sockets!.allSockets.find(
-      (socket) => socket.socketIndex === action.socketIndex
+      (socket) => socket.socketIndex === action.socketIndex,
     )!;
 
     // DIM internally ensures no-ops don't make it to Bungie.net,
@@ -39,7 +39,7 @@ function processAction(defs: D2ManifestDefinitions, originalItem: DimItem, actio
 
     if (existingExclusionGroup !== undefined && existingExclusionGroup === newExclusionGroup) {
       throw new Error(
-        'trying to replace mod with mutual exclusion behavior with new mod in same exclusion group'
+        'trying to replace mod with mutual exclusion behavior with new mod in same exclusion group',
       );
     }
 
@@ -47,11 +47,11 @@ function processAction(defs: D2ManifestDefinitions, originalItem: DimItem, actio
       newExclusionGroup !== undefined &&
       item.sockets!.allSockets.some(
         (socket) =>
-          socket.plugged && getModExclusionGroup(socket.plugged.plugDef) === newExclusionGroup
+          socket.plugged && getModExclusionGroup(socket.plugged.plugDef) === newExclusionGroup,
       )
     ) {
       throw new Error(
-        'trying to plug mod with mutual exclusion behavior while other mod in same exclusion group still plugged'
+        'trying to plug mod with mutual exclusion behavior while other mod in same exclusion group still plugged',
       );
     }
 
@@ -70,7 +70,7 @@ function processAction(defs: D2ManifestDefinitions, originalItem: DimItem, actio
 function processActions(
   defs: D2ManifestDefinitions,
   originalItem: DimItem,
-  actions: PluggingAction[]
+  actions: PluggingAction[],
 ) {
   let tempItem = originalItem;
   for (const action of actions) {
@@ -105,14 +105,14 @@ describe('mod-assignment-utils plugging strategy', () => {
     }
 
     empoweringFinishMod = defs.InventoryItem.get(
-      empoweringFinishModHash
+      empoweringFinishModHash,
     ) as PluggableInventoryItemDefinition;
     bulwarkFinishMod = defs.InventoryItem.get(
-      bulwarkFinishModHash
+      bulwarkFinishModHash,
     ) as PluggableInventoryItemDefinition;
     recoveryMod = defs.InventoryItem.get(recoveryModHash) as PluggableInventoryItemDefinition;
     distributionMod = defs.InventoryItem.get(
-      distributionModHash
+      distributionModHash,
     ) as PluggableInventoryItemDefinition;
 
     const exclusionGroup1 = getModExclusionGroup(empoweringFinishMod);
@@ -141,7 +141,7 @@ describe('mod-assignment-utils plugging strategy', () => {
   function applyMods(
     item: DimItem,
     mods: PluggableInventoryItemDefinition[],
-    assertNumRequiredActions?: number
+    assertNumRequiredActions?: number,
   ) {
     const positions = pickPlugPositions(defs, item, mods);
     const strategy = createPluggingStrategy(defs, item, positions);
@@ -178,13 +178,13 @@ describe('mod-assignment-utils plugging strategy', () => {
     // 4 used, 1 left (w/ mutex)
     const ourItem = applyMods(classItem, [distributionMod, empoweringFinishMod]);
     const empoweringIndex = ourItem.sockets!.allSockets.findIndex(
-      (socket) => socket.plugged?.plugDef.hash === empoweringFinishMod.hash
+      (socket) => socket.plugged?.plugDef.hash === empoweringFinishMod.hash,
     )!;
     expect(ourItem.energy?.energyUsed).toBe(4);
     // Apply a 1-cost mutex mod, this should replace the other 1-cost mod
     const newItem = applyMods(ourItem, [bulwarkFinishMod], 2);
     const bulwarkIndex = newItem.sockets!.allSockets.findIndex(
-      (socket) => socket.plugged?.plugDef.hash === bulwarkFinishMod.hash
+      (socket) => socket.plugged?.plugDef.hash === bulwarkFinishMod.hash,
     )!;
     expect(empoweringIndex).toBe(bulwarkIndex);
     expect(newItem.energy?.energyUsed).toBe(4);
@@ -201,7 +201,7 @@ describe('mod-assignment-utils plugging strategy', () => {
     const positions = pickPlugPositions(defs, ourItem, [bulwarkFinishMod]);
     const bulwarkPosition = positions.find((pos) => pos.mod === bulwarkFinishMod)!;
     const resetPosition = positions.find(
-      (pos) => pos.socketIndex === bulwarkPosition.socketIndex + 1 && !pos.requested
+      (pos) => pos.socketIndex === bulwarkPosition.socketIndex + 1 && !pos.requested,
     )!;
     bulwarkPosition.socketIndex += 1;
     resetPosition.socketIndex -= 1;

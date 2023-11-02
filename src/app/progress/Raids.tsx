@@ -31,7 +31,7 @@ export default function Raids({
       RAID_MILESTONE_HASHES.includes(milestone.milestoneHash) ||
       milestoneActivities?.some(
         (activity) =>
-          defs.Activity.get(activity.activityHash)?.activityTypeHash === RAID_ACTIVITY_TYPE_HASH
+          defs.Activity.get(activity.activityHash)?.activityTypeHash === RAID_ACTIVITY_TYPE_HASH,
         // prefer to use DestinyActivityModeType.Raid, but it appears inconsistently in activity defs
       )
     );

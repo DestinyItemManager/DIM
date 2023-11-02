@@ -24,7 +24,7 @@ const idbKey = 'd1-manifest';
 let version: string | null = null;
 
 const getManifestAction: ThunkResult<AllD1DestinyManifestComponents> = dedupePromise((dispatch) =>
-  dispatch(doGetManifest())
+  dispatch(doGetManifest()),
 );
 
 export function getManifest(): ThunkResult<AllD1DestinyManifestComponents> {
@@ -95,7 +95,7 @@ function loadManifest(): ThunkResult<AllD1DestinyManifestComponents> {
  */
 function loadManifestRemote(
   version: string,
-  path: string
+  path: string,
 ): ThunkResult<AllD1DestinyManifestComponents> {
   return async (dispatch) => {
     dispatch(loadingStart(t('Manifest.Download')));

@@ -46,7 +46,7 @@ export default function updateCSSVariables() {
     const settings = settingsSelector(state);
     setCSSVariable(
       '--tiles-per-char-column',
-      isPhonePortrait ? settings.charColMobile : settings.charCol
+      isPhonePortrait ? settings.charColMobile : settings.charCol,
     );
     syncThemeColor(isPhonePortrait);
   });
@@ -62,7 +62,7 @@ export default function updateCSSVariables() {
       // The amount the bottom of the visual viewport is offset from the layout viewport
       setCSSVariable(
         '--viewport-bottom-offset',
-        `${window.innerHeight - (viewportHeight + Math.round(viewport.offsetTop))}px`
+        `${window.innerHeight - (viewportHeight + Math.round(viewport.offsetTop))}px`,
       );
     };
     defineVH();

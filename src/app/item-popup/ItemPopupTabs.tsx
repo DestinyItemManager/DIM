@@ -50,7 +50,7 @@ export function useItemPopupTabs(item: DimItem, extraInfo: ItemPopupExtraInfo | 
       }
       setTab(newTab);
     },
-    [setTab, tab]
+    [setTab, tab],
   );
 
   // When toggling via arrow keys, move the focus to the new tab
