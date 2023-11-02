@@ -119,15 +119,17 @@
 
 .content {
   color: var(--theme-text);
+
+  // This is nested so its specificity is high enough to override the defaults
+  .filterPills {
+    margin-left: 8px;
+    margin-right: 8px;
+  }
 }
 
 .filterInput {
   composes: search-filter from global;
   min-width: unset;
-  margin: 8px;
-}
-
-.filterPills {
   margin: 8px;
 }
 
