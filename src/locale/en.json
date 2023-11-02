@@ -561,10 +561,10 @@
     "Analyzed": "Analyzed {{numLoadouts}} Loadouts",
     "Analyzing": "Analyzing {{numAnalyzed}}/{{numLoadouts}} Loadouts",
     "BetterStatsAvailable": {
-      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stat tiers.",
+      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stat tiers. Choose \"$t(Loadouts.OpenInOptimizer)\" to view better builds.",
       "Name": "Better Stats Available"
     },
-    "BetterStatsAvailableFontNote": "Note: This Loadout uses \"Font of ...\" mods that cause a stat tier to exceed T10. DIM may identify better stats by reducing the amount of excess tiers. If this is undesired, disable \"{{settingName}}\" in the Loadout.",
+    "BetterStatsAvailableFontNote": "Note: This Loadout uses \"Font of ...\" mods that cause a stat tier to exceed T10. DIM may identify better stats by reducing the amount of excess tiers. If this is undesired, disable \"$t(Loadouts.IncludeRuntimeStatBenefits)\" in the Loadout.",
     "DoesNotRespectExotic": {
       "Description": "This loadout's Loadout Optimizer settings specify an exotic choice, but the loadout does not match that exotic.",
       "Name": "Wrong Exotic"

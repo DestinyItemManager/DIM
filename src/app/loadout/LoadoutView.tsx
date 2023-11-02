@@ -139,9 +139,7 @@ export default function LoadoutView({
                   finding === LoadoutFinding.BetterStatsAvailable &&
                   analysis!.result.betterStatsAvailableFontNote
                 ) {
-                  description += `\n\n${t('LoadoutAnalysis.BetterStatsAvailableFontNote', {
-                    settingName: t('Loadouts.IncludeRuntimeStatBenefits'),
-                  })}`;
+                  description += `\n\n${t('LoadoutAnalysis.BetterStatsAvailableFontNote')}`;
                 }
                 return (
                   <PressTip className={styles.finding} key={finding} tooltip={description}>
@@ -169,7 +167,7 @@ export default function LoadoutView({
                 key={category}
                 category={category}
                 subclass={subclass}
-                storeId={store.id}
+                store={store}
                 items={categories[category]}
                 allMods={modDefinitions}
                 modsByBucket={modsByBucket}

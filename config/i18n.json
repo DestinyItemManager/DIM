@@ -820,7 +820,7 @@
   "LoadoutAnalysis": {
     "Analyzing": "Analyzing {{numAnalyzed}}/{{numLoadouts}} Loadouts",
     "Analyzed": "Analyzed {{numLoadouts}} Loadouts",
-    "BetterStatsAvailableFontNote": "Note: This Loadout uses \"Font of ...\" mods that cause a stat tier to exceed T10. DIM may identify better stats by reducing the amount of excess tiers. If this is undesired, disable \"{{settingName}}\" in the Loadout.",
+    "BetterStatsAvailableFontNote": "Note: This Loadout uses \"Font of ...\" mods that cause a stat tier to exceed T10. DIM may identify better stats by reducing the amount of excess tiers. If this is undesired, disable \"$t(Loadouts.IncludeRuntimeStatBenefits)\" in the Loadout.",
     "MissingItems": {
       "Name": "Missing Items",
       "Description": "Some of the items in this loadout are no longer in your inventory."
@@ -843,7 +843,7 @@
     },
     "BetterStatsAvailable": {
       "Name": "Better Stats Available",
-      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stat tiers."
+      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stat tiers. Choose \"$t(Loadouts.OpenInOptimizer)\" to view better builds."
     },
     "NotAFullArmorSet": {
       "Name": "Not A Full Armor Set",
