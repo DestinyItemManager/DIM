@@ -27,7 +27,14 @@ import { getTotalModStatChanges } from 'app/loadout/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { useSetSetting, useSetting } from 'app/settings/hooks';
-import { AppIcon, faExclamationTriangle, redoIcon, refreshIcon, undoIcon } from 'app/shell/icons';
+import {
+  AppIcon,
+  disabledIcon,
+  faExclamationTriangle,
+  redoIcon,
+  refreshIcon,
+  undoIcon,
+} from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyObject } from 'app/utils/empty';
 import { isClassCompatible, itemCanBeEquippedBy } from 'app/utils/item-utils';
@@ -59,6 +66,7 @@ import StatConstraintEditor from './filter/StatConstraintEditor';
 import TierSelect from './filter/TierSelect';
 import CompareLoadoutsDrawer from './generated-sets/CompareLoadoutsDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
+import { ReferenceTiers } from './generated-sets/SetStats';
 import { sortGeneratedSets } from './generated-sets/utils';
 import { filterItems } from './item-filter';
 import { LoadoutBuilderAction, useLbState } from './loadout-builder-reducer';
@@ -68,6 +76,7 @@ import {
   ArmorEnergyRules,
   LOCKED_EXOTIC_ANY_EXOTIC,
   LockableBucketHashes,
+  ResolvedStatConstraint,
   loDefaultArmorEnergyRules,
 } from './types';
 import useEquippedHashes from './useEquippedHashes';
@@ -77,6 +86,7 @@ import useEquippedHashes from './useEquippedHashes';
  */
 export default memo(function LoadoutBuilder({
   preloadedLoadout,
+  preloadedStrictStatConstraints,
   storeId,
 }: {
   /**
@@ -84,6 +94,7 @@ export default memo(function LoadoutBuilder({
    * page.
    */
   preloadedLoadout: Loadout | undefined;
+  preloadedStrictStatConstraints: ResolvedStatConstraint[] | undefined;
   /**
    *A preselected store ID, used when navigating from the Loadouts page.
    */
@@ -104,6 +115,7 @@ export default memo(function LoadoutBuilder({
     {
       loadout,
       resolvedStatConstraints,
+      strictUpgradesStatConstraints,
       isEditingExistingLoadout,
       pinnedItems,
       excludedItems,
@@ -114,7 +126,7 @@ export default memo(function LoadoutBuilder({
       canUndo,
     },
     lbDispatch,
-  ] = useLbState(stores, defs, preloadedLoadout, storeId);
+  ] = useLbState(stores, defs, preloadedLoadout, storeId, preloadedStrictStatConstraints);
   // For compatibility with LoadoutEdit components
   const setLoadout = (updateFn: LoadoutUpdateFunction) =>
     lbDispatch({ type: 'setLoadout', updateFn });
@@ -247,6 +259,22 @@ export default memo(function LoadoutBuilder({
     [classType, defs, includeRuntimeStatBenefits, modsToAssign, subclass],
   );
 
+  const effectiveStatConstraints = useMemo(
+    () =>
+      resolvedStatConstraints.map((constraint) => {
+        const strictUpgradeConstraint = strictUpgradesStatConstraints?.find(
+          (c) => c.statHash === constraint.statHash,
+        );
+        return strictUpgradeConstraint && !constraint.ignored
+          ? {
+              ...constraint,
+              minTier: Math.max(constraint.minTier, strictUpgradeConstraint.minTier),
+            }
+          : constraint;
+      }),
+    [resolvedStatConstraints, strictUpgradesStatConstraints],
+  );
+
   // Run the actual loadout generation process in a web worker
   const { result, processing } = useProcess({
     selectedStore,
@@ -254,9 +282,10 @@ export default memo(function LoadoutBuilder({
     lockedModMap,
     modStatChanges,
     armorEnergyRules,
-    resolvedStatConstraints,
+    resolvedStatConstraints: effectiveStatConstraints,
     anyExotic: lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC,
     autoStatMods,
+    strictUpgrades: Boolean(strictUpgradesStatConstraints),
   });
 
   const resultSets = result?.sets;
@@ -457,6 +486,12 @@ export default memo(function LoadoutBuilder({
               <b>{t('MovePopup.Notes')}</b> {preloadedLoadout?.notes}
             </p>
           </div>
+        )}
+        {strictUpgradesStatConstraints && (
+          <ExistingLoadoutStats
+            lbDispatch={lbDispatch}
+            statConstraints={strictUpgradesStatConstraints}
+          />
         )}
         {result && sortedSets?.length ? (
           <GeneratedSets
@@ -688,6 +723,32 @@ function UndoRedoControls({
         disabled={!canRedo}
       >
         <AppIcon icon={redoIcon} /> {t('Loadouts.Redo')}
+      </button>
+    </div>
+  );
+}
+
+function ExistingLoadoutStats({
+  lbDispatch,
+  statConstraints,
+}: {
+  lbDispatch: Dispatch<LoadoutBuilderAction>;
+  statConstraints: ResolvedStatConstraint[];
+}) {
+  return (
+    <div className={styles.referenceTiersInfo}>
+      <div className={styles.header}>
+        Existing Loadout Stats
+        <ReferenceTiers resolvedStatConstraints={statConstraints} />
+      </div>
+      Only showing builds with strictly better stats
+      <button
+        className={styles.dismissButton}
+        type="button"
+        onClick={() => lbDispatch({ type: 'dismissComparisonStats' })}
+        aria-label={t('General.Close')}
+      >
+        <AppIcon icon={disabledIcon} />
       </button>
     </div>
   );

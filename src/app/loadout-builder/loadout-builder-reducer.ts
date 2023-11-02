@@ -83,6 +83,12 @@ interface LoadoutBuilderConfiguration {
   isEditingExistingLoadout: boolean;
 
   /**
+   * If we are editing an existing loadout via the "better stats available"
+   * feature, this contains the stats we actually need to exceed.
+   */
+  strictUpgradesStatConstraints: ResolvedStatConstraint[] | undefined;
+
+  /**
    * A copy of `loadout.parameters.statConstraints`, but with ignored stats
    * included. This is more convenient to use than the raw `statConstraints` but
    * is kept in sync. Like `statConstraints` this is always in stat preference
@@ -127,6 +133,7 @@ const lbConfigInit = ({
   storeId,
   savedLoadoutBuilderParameters,
   savedStatConstraintsPerClass,
+  strictUpgradesStatConstraints,
 }: {
   stores: DimStore[];
   allItems: DimItem[];
@@ -140,6 +147,7 @@ const lbConfigInit = ({
   storeId: string | undefined;
   savedLoadoutBuilderParameters: LoadoutParameters;
   savedStatConstraintsPerClass: { [classType: number]: StatConstraint[] };
+  strictUpgradesStatConstraints: ResolvedStatConstraint[] | undefined;
 }): LoadoutBuilderConfiguration => {
   // Preloaded loadouts from the "Optimize Armor" button take priority
   const classTypeFromPreloadedLoadout = preloadedLoadout?.classType ?? DestinyClass.Unknown;
@@ -221,6 +229,7 @@ const lbConfigInit = ({
     loadout,
     isEditingExistingLoadout,
     resolvedStatConstraints: resolveStatConstraints(loadoutParameters.statConstraints!),
+    strictUpgradesStatConstraints,
     pinnedItems,
     excludedItems: emptyObject(),
     selectedStoreId,
@@ -268,6 +277,7 @@ type LoadoutBuilderConfigAction =
   | { type: 'addGeneralMods'; mods: PluggableInventoryItemDefinition[] }
   | { type: 'lockExotic'; lockedExoticHash: number }
   | { type: 'removeLockedExotic' }
+  | { type: 'dismissComparisonStats' }
   | { type: 'setSearchQuery'; query: string };
 
 type LoadoutBuilderUIAction =
@@ -478,6 +488,8 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
         return updateLoadout(state, setLoadoutParameters({ exoticArmorHash: undefined }));
       case 'autoStatModsChanged':
         return updateLoadout(state, setLoadoutParameters({ autoStatMods: action.autoStatMods }));
+      case 'dismissComparisonStats':
+        return { ...state, strictUpgradesStatConstraints: undefined };
       case 'setSearchQuery':
         return updateLoadout(state, setLoadoutParameters({ query: action.query || undefined }));
     }
@@ -509,6 +521,7 @@ export function useLbState(
   defs: D2ManifestDefinitions,
   preloadedLoadout: Loadout | undefined,
   storeId: string | undefined,
+  strictUpgradesStatConstraints: ResolvedStatConstraint[] | undefined,
 ) {
   const savedLoadoutBuilderParameters = useSelector(savedLoadoutParametersSelector);
   const savedStatConstraintsPerClass = useSelector(savedLoStatConstraintsByClassSelector);
@@ -530,6 +543,7 @@ export function useLbState(
       storeId,
       savedLoadoutBuilderParameters,
       savedStatConstraintsPerClass,
+      strictUpgradesStatConstraints,
     }),
   );
 

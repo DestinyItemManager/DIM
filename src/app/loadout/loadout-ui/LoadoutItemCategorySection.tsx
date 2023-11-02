@@ -128,6 +128,11 @@ export default function LoadoutItemCategorySection({
               loadout={optimizeLoadout}
               storeId={store.id}
               missingArmor={armorItemsMissing(items)}
+              strictUpgradeStatConstraints={
+                analysis?.result?.armorResults?.tag === 'done'
+                  ? analysis.result.armorResults.strictUpgradeStatConstraints
+                  : undefined
+              }
             />
           )}
         </>

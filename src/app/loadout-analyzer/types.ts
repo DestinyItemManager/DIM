@@ -1,7 +1,7 @@
 import { LoadoutParameters, Settings } from '@destinyitemmanager/dim-api-types';
 import { DimItem } from 'app/inventory/item-types';
 import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
-import { AutoModDefs } from 'app/loadout-builder/types';
+import { AutoModDefs, ResolvedStatConstraint } from 'app/loadout-builder/types';
 
 /** The analysis results for a single loadout. */
 export interface LoadoutAnalysisResult {
@@ -31,6 +31,8 @@ export type ArmorAnalysisResult =
       betterStatsAvailable: LoadoutFinding.BetterStatsAvailable | undefined;
       /** If one were to start Loadout Optimizer from here, use these settings. */
       loadoutParameters: LoadoutParameters;
+      /** And pass these to the Loadout Builder to show strict upgrades only */
+      strictUpgradeStatConstraints: ResolvedStatConstraint[] | undefined;
     };
 
 export const enum LoadoutFinding {

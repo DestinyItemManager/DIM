@@ -26,7 +26,7 @@ import { getPower } from '../utils';
 import styles from './GeneratedSet.m.scss';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
-import SetStats from './SetStats';
+import { SetStats } from './SetStats';
 
 /**
  * A single "stat mix" of builds. Each armor slot contains multiple possibilities,

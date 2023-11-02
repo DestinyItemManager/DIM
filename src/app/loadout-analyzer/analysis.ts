@@ -116,6 +116,7 @@ export async function analyzeLoadout(
   let hasStrictUpgrade = false;
   let ineligibleForOptimization = false;
   let betterStatsAvailableFontNote = false;
+  let existingLoadoutStatsAsStatConstraints: ResolvedStatConstraint[] | undefined;
   if (loadoutArmor.length) {
     if (loadoutArmor.length < 5) {
       findings.add(LoadoutFinding.NotAFullArmorSet);
@@ -257,12 +258,15 @@ export async function analyzeLoadout(
           // Give the event loop a chance after we did a lot of item filtering
           await delay(0);
 
+          existingLoadoutStatsAsStatConstraints = statConstraints.map((c) => ({
+            ...c,
+            minTier: statTier(assumedLoadoutStats[c.statHash]!.value),
+          }));
           const strictStatConstraints: ResolvedStatConstraint[] = statConstraints.map((c) => ({
             ...c,
             minTier: Math.max(c.minTier, statTier(assumedLoadoutStats[c.statHash]!.value)),
           }));
 
-          loadoutParameters.statConstraints = strictStatConstraints.filter((c) => !c.ignored);
           try {
             const { resultPromise } = runProcess({
               anyExotic: loadoutParameters.exoticArmorHash === LOCKED_EXOTIC_ANY_EXOTIC,
@@ -302,6 +306,9 @@ export async function analyzeLoadout(
           tag: 'done',
           betterStatsAvailable: hasStrictUpgrade ? LoadoutFinding.BetterStatsAvailable : undefined,
           loadoutParameters,
+          strictUpgradeStatConstraints: hasStrictUpgrade
+            ? existingLoadoutStatsAsStatConstraints
+            : undefined,
         },
   };
 }
