@@ -738,10 +738,10 @@ function ExistingLoadoutStats({
   return (
     <div className={styles.referenceTiersInfo}>
       <div className={styles.header}>
-        Existing Loadout Stats
+        {t('LB.ExistingBuildStats')}
         <ReferenceTiers resolvedStatConstraints={statConstraints} />
       </div>
-      Only showing builds with strictly better stats
+      {t('LB.ExistingBuildStatsNote')}
       <button
         className={styles.dismissButton}
         type="button"
