@@ -1,9 +1,19 @@
 /* Functions for dealing with the LoadoutParameters structure we save with loadouts and use to save and share LO settings. */
 
-import { StatConstraint, defaultLoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import {
+  LoadoutParameters,
+  StatConstraint,
+  defaultLoadoutParameters as dimApiDefaultLoadoutParameters,
+} from '@destinyitemmanager/dim-api-types';
 import { armorStats } from 'app/search/d2-known-values';
 import _ from 'lodash';
 import { ResolvedStatConstraint } from './types';
+
+// FIXME move to dim-api-types
+export const defaultLoadoutParameters: LoadoutParameters = {
+  ...dimApiDefaultLoadoutParameters,
+  includeRuntimeStatBenefits: true,
+};
 
 /**
  * Stat constraints are already in priority order, but they do not include

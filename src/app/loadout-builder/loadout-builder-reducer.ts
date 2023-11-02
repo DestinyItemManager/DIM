@@ -1,13 +1,12 @@
 import {
   AssumeArmorMasterwork,
-  defaultLoadoutParameters,
   LoadoutParameters,
   StatConstraint,
 } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import {
-  savedLoadoutParametersSelector,
   savedLoStatConstraintsByClassSelector,
+  savedLoadoutParametersSelector,
 } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
@@ -16,8 +15,8 @@ import { DimStore } from 'app/inventory/store-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import {
-  clearSubclass,
   LoadoutUpdateFunction,
+  clearSubclass,
   removeMod,
   setLoadoutParameters,
   updateMods,
@@ -35,7 +34,11 @@ import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useCallback, useMemo, useReducer } from 'react';
 import { useSelector } from 'react-redux';
-import { resolveStatConstraints, unresolveStatConstraints } from './loadout-params';
+import {
+  defaultLoadoutParameters,
+  resolveStatConstraints,
+  unresolveStatConstraints,
+} from './loadout-params';
 import {
   ArmorSet,
   ExcludedItems,

@@ -1,6 +1,7 @@
-import { defaultLoadoutParameters, DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { currentAccountSelector, destinyVersionSelector } from 'app/accounts/selectors';
+import { defaultLoadoutParameters } from 'app/loadout-builder/loadout-params';
 import { Settings } from 'app/settings/initial-settings';
 import { RootState } from 'app/store/types';
 import { createSelector } from 'reselect';

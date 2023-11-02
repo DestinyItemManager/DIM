@@ -86,6 +86,13 @@ function getFontMods(mods: PluggableInventoryItemDefinition[]) {
 }
 
 /**
+ * Does this list of mods have mods that dynamically grant stats, such as Font mods?
+ */
+export function includesRuntimeStatMods(modHashes: number[]) {
+  return modHashes.some((mod) => fontModHashToStatHash()[mod] !== undefined);
+}
+
+/**
  * This sums up the total stat contributions across mods passed in. These are then applied
  * to the loadouts after all the items' base stat values have been summed. This mimics how mods
  * affect stat values in game and allows us to do some preprocessing.

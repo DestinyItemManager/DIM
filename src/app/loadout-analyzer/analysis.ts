@@ -1,9 +1,12 @@
-import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
+import { AssumeArmorMasterwork, LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimCharacterStat } from 'app/inventory/store-types';
 import { filterItems } from 'app/loadout-builder/item-filter';
-import { resolveStatConstraints } from 'app/loadout-builder/loadout-params';
+import {
+  defaultLoadoutParameters,
+  resolveStatConstraints,
+} from 'app/loadout-builder/loadout-params';
 import { runProcess } from 'app/loadout-builder/process/process-wrapper';
 import {
   ArmorEnergyRules,
@@ -42,13 +45,7 @@ import {
 } from './types';
 
 export async function analyzeLoadout(
-  {
-    allItems,
-    autoModDefs,
-    itemCreationContext,
-    savedLoLoadoutParameters: savedLoadoutParameters,
-    unlockedPlugs,
-  }: LoadoutAnalysisContext,
+  { allItems, autoModDefs, itemCreationContext, unlockedPlugs }: LoadoutAnalysisContext,
   storeId: string,
   classType: DestinyClass,
   loadout: Loadout,
@@ -67,7 +64,12 @@ export async function analyzeLoadout(
   const originalLoadoutMods = resolvedLoadout.resolvedMods;
   const originalModDefs = originalLoadoutMods.map((mod) => mod.resolvedMod);
 
-  const loadoutParameters = { ...savedLoadoutParameters, ...loadout.parameters };
+  const loadoutParameters: LoadoutParameters = {
+    ...defaultLoadoutParameters,
+    ...loadout.parameters,
+  };
+
+  const includeRuntimeStatBenefits = loadoutParameters.includeRuntimeStatBenefits ?? false;
 
   const subclass = resolvedLoadout.resolvedLoadoutItems.find(
     (i) => i.item.bucket.hash === BucketHashes.Subclass,
@@ -105,6 +107,7 @@ export async function analyzeLoadout(
 
   let hasStrictUpgrade = false;
   let ineligibleForOptimization = false;
+  let betterStatsAvailableFontNote = false;
   if (loadoutArmor.length) {
     if (loadoutArmor.length < 5) {
       findings.add(LoadoutFinding.NotAFullArmorSet);
@@ -175,8 +178,18 @@ export async function analyzeLoadout(
         originalModDefs,
         armorEnergyRules,
         statConstraints,
+        includeRuntimeStatBenefits,
       );
       const assumedLoadoutStats = statProblems.stats;
+      // If Font mods cause a loadout stats to exceed T10, note this for later
+      if (
+        Object.values(assumedLoadoutStats).some(
+          (stat) =>
+            stat && stat.value >= 110 && stat.breakdown!.some((c) => c.source === 'runtimeEffect'),
+        )
+      ) {
+        betterStatsAvailableFontNote = true;
+      }
 
       needUpgrades ||= statProblems.needsUpgradesForStats;
 
@@ -230,7 +243,7 @@ export async function analyzeLoadout(
             modDefs,
             subclass,
             classType,
-            /* includeRuntimeStatBenefits */ true,
+            includeRuntimeStatBenefits,
           );
 
           // Give the event loop a chance after we did a lot of item filtering
@@ -274,6 +287,7 @@ export async function analyzeLoadout(
 
   return {
     findings: [...findings],
+    betterStatsAvailableFontNote: hasStrictUpgrade && betterStatsAvailableFontNote,
     armorResults: ineligibleForOptimization
       ? { tag: 'ineligible' }
       : {
@@ -390,13 +404,22 @@ function getStatProblems(
   mods: PluggableInventoryItemDefinition[],
   loadoutArmorEnergyRules: ArmorEnergyRules,
   resolvedStatConstraints: ResolvedStatConstraint[],
+  includeRuntimeStatBenefits: boolean,
 ): {
   stats: HashLookup<DimCharacterStat>;
   cantHitStats: boolean;
   needsUpgradesForStats: boolean;
 } {
   const canHitStatsWithRules = (armorEnergyRules: ArmorEnergyRules) => {
-    const stats = getLoadoutStats(defs, classType, subclass, loadoutArmor, mods, armorEnergyRules);
+    const stats = getLoadoutStats(
+      defs,
+      classType,
+      subclass,
+      loadoutArmor,
+      mods,
+      includeRuntimeStatBenefits,
+      armorEnergyRules,
+    );
     return {
       stats,
       canHitStats: resolvedStatConstraints.every(

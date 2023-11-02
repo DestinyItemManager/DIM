@@ -125,6 +125,7 @@ export default memo(function LoadoutBuilder({
   const lockedExoticHash = loadoutParameters.exoticArmorHash;
   const statConstraints = loadoutParameters.statConstraints!;
   const autoStatMods = Boolean(loadoutParameters.autoStatMods);
+  const includeRuntimeStatBenefits = loadoutParameters.includeRuntimeStatBenefits ?? true;
   const assumeArmorMasterwork = loadoutParameters.assumeArmorMasterwork;
   const classType = loadout.classType;
 
@@ -241,8 +242,9 @@ export default memo(function LoadoutBuilder({
   ]);
 
   const modStatChanges = useMemo(
-    () => getTotalModStatChanges(defs, modsToAssign, subclass, classType, true),
-    [classType, defs, modsToAssign, subclass],
+    () =>
+      getTotalModStatChanges(defs, modsToAssign, subclass, classType, includeRuntimeStatBenefits),
+    [classType, defs, includeRuntimeStatBenefits, modsToAssign, subclass],
   );
 
   // Run the actual loadout generation process in a web worker
@@ -609,12 +611,14 @@ function useSaveLoadoutParameters(
     setSetting('loParameters', {
       assumeArmorMasterwork: loadoutParameters.assumeArmorMasterwork,
       autoStatMods: loadoutParameters.autoStatMods,
+      includeRuntimeStatBenefits: loadoutParameters.includeRuntimeStatBenefits,
     });
   }, [
     setSetting,
     loadoutParameters.assumeArmorMasterwork,
     loadoutParameters.autoStatMods,
     hasPreloadedLoadout,
+    loadoutParameters.includeRuntimeStatBenefits,
   ]);
 }
 

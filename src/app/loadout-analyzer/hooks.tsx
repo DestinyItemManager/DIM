@@ -1,4 +1,3 @@
-import { savedLoadoutParametersSelector } from 'app/dim-api/selectors';
 import {
   allItemsSelector,
   createItemContextSelector,
@@ -41,15 +40,13 @@ const autoOptimizationContextSelector = currySelector(
     createItemContextSelector,
     unlockedPlugSetItemsSelector.selector,
     allItemsSelector,
-    savedLoadoutParametersSelector,
     autoModSelector,
-    (itemCreationContext, unlockedPlugs, allItems, savedLoLoadoutParameters, autoModDefs) =>
+    (itemCreationContext, unlockedPlugs, allItems, autoModDefs) =>
       itemCreationContext.defs &&
       autoModDefs &&
       ({
         itemCreationContext,
         unlockedPlugs,
-        savedLoLoadoutParameters,
         allItems,
         autoModDefs,
       } satisfies LoadoutAnalysisContext),

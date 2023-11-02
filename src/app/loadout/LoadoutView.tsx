@@ -8,6 +8,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import { findingDisplays } from 'app/loadout-analyzer/finding-display';
 import { useAnalyzeLoadout } from 'app/loadout-analyzer/hooks';
+import { LoadoutFinding } from 'app/loadout-analyzer/types';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { Loadout, LoadoutItem, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
@@ -133,12 +134,17 @@ export default function LoadoutView({
                 if (!display.icon) {
                   return undefined;
                 }
+                let description = t(display.description);
+                if (
+                  finding === LoadoutFinding.BetterStatsAvailable &&
+                  analysis!.result.betterStatsAvailableFontNote
+                ) {
+                  description += `\n\n${t('LoadoutAnalysis.BetterStatsAvailableFontNote', {
+                    settingName: t('Loadouts.IncludeRuntimeStatBenefits'),
+                  })}`;
+                }
                 return (
-                  <PressTip
-                    className={styles.finding}
-                    key={finding}
-                    tooltip={t(display.description)}
-                  >
+                  <PressTip className={styles.finding} key={finding} tooltip={description}>
                     <AppIcon icon={display.icon} /> {t(display.name)}
                   </PressTip>
                 );

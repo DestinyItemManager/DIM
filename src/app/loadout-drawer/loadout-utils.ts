@@ -284,6 +284,7 @@ export function getLoadoutStats(
   subclass: ResolvedLoadoutItem | undefined,
   armor: DimItem[],
   mods: PluggableInventoryItemDefinition[],
+  includeRuntimeStatBenefits: boolean,
   /** Assume armor is masterworked according to these rules when calculating stats */
   armorEnergyRules?: ArmorEnergyRules,
 ) {
@@ -331,7 +332,7 @@ export function getLoadoutStats(
     mods,
     subclass,
     classType,
-    /* includeRuntimeStatBenefits */ true,
+    includeRuntimeStatBenefits,
   );
 
   for (const [statHash, value] of Object.entries(modStats)) {

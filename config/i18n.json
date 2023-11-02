@@ -687,6 +687,8 @@
       "Error404": "This loadout doesn't exist.",
       "Error": "Error getting loadout:"
     },
+    "IncludeRuntimeStatBenefits": "Include Font mod stats",
+    "IncludeRuntimeStatBenefitsDesc": "\"Font of ...\" armor mods provide a flat boost to character stats while you have Armor Charges.\n\nWith this setting, DIM considers these mods active and adds their benefits to this Loadout's stats in calculations and optimizations.",
     "InGameLoadouts": "In-Game Loadouts",
     "ItemLeveling": "Item Leveling",
     "LoadoutName": "Loadout name",
@@ -818,6 +820,7 @@
   "LoadoutAnalysis": {
     "Analyzing": "Analyzing {{numAnalyzed}}/{{numLoadouts}} Loadouts",
     "Analyzed": "Analyzed {{numLoadouts}} Loadouts",
+    "BetterStatsAvailableFontNote": "Note: This Loadout uses \"Font of ...\" mods that cause a stat tier to exceed T10. DIM may identify better stats by reducing the amount of excess tiers. If this is undesired, disable \"{{settingName}}\" in the Loadout.",
     "MissingItems": {
       "Name": "Missing Items",
       "Description": "Some of the items in this loadout are no longer in your inventory."

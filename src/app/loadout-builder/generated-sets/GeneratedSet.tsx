@@ -226,7 +226,7 @@ function getStatsBreakdown(
     autoMods,
     /* subclass */ undefined,
     classType,
-    /* includeRuntimeStatBenefits */ true,
+    /* includeRuntimeStatBenefits */ false, // doesn't matter, auto mods have no runtime stats
   );
 
   // We have a bit of a problem where armor mods can come from both
