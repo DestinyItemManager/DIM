@@ -262,7 +262,7 @@ export async function analyzeLoadout(
             minTier: statTier(assumedLoadoutStats[c.statHash]!.value),
           }));
 
-          loadoutParameters.statConstraints = strictStatConstraints;
+          loadoutParameters.statConstraints = strictStatConstraints.filter((c) => !c.ignored);
           try {
             const { resultPromise } = runProcess({
               anyExotic: loadoutParameters.exoticArmorHash === LOCKED_EXOTIC_ANY_EXOTIC,
