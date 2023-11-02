@@ -23,7 +23,7 @@ export function Reward({
 }) {
   const defs = useD2Definitions()!;
   const maxGearPower = useSelector(
-    (state: RootState) => powerLevelSelector(state, store?.id)?.maxGearPower
+    (state: RootState) => powerLevelSelector(state, store?.id)?.maxGearPower,
   );
   const rewardItem = defs.InventoryItem.get(reward.itemHash);
   const rewardDisplay = rewardItem.displayProperties;

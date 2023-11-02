@@ -63,5 +63,5 @@ export const conversionTableSelector = createSelector(
     }
 
     return conversionTable;
-  }
+  },
 );

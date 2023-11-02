@@ -86,7 +86,7 @@ const SymbolsWindow = memo(function ({
                   >
                     {emoji.glyph}
                   </button>
-                )
+                ),
             )}
           </div>
         </div>
@@ -147,7 +147,7 @@ function SymbolsPickerButton<T extends HTMLTextAreaElement | HTMLInputElement>({
         setInsertionIndex(insIndex + symbol.length);
       }
     },
-    [input, insertionIndex, setValue]
+    [input, insertionIndex, setValue],
   );
 
   return (
@@ -168,7 +168,7 @@ function SymbolsPickerButton<T extends HTMLTextAreaElement | HTMLInputElement>({
               <SymbolsWindow onChooseGlyph={onChooseGlyph} />
             </ClickOutside>
           </div>,
-          pressTipRoot.current ?? tempContainer
+          pressTipRoot.current ?? tempContainer,
         )}
     </>
   );

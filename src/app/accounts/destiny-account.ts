@@ -79,7 +79,7 @@ export interface DestinyAccount {
  * @param bungieMembershipId Bungie.net membership ID
  */
 export function getDestinyAccountsForBungieAccount(
-  bungieMembershipId: string
+  bungieMembershipId: string,
 ): ThunkResult<DestinyAccount[]> {
   return async (dispatch) => {
     try {
@@ -125,7 +125,7 @@ function formatBungieName(destinyAccount: DestinyProfileUserInfoCard | UserInfoC
  * @param accounts raw Bungie API accounts response
  */
 export async function generatePlatforms(
-  accounts: DestinyLinkedProfilesResponse
+  accounts: DestinyLinkedProfilesResponse,
 ): Promise<DestinyAccount[]> {
   // accounts with errors could have had D1 characters!
   const accountPromises = accounts.profiles
@@ -175,7 +175,7 @@ export async function generatePlatforms(
             ? [account, findD1Characters(account)]
             : [account];
         }
-      })
+      }),
     );
 
   const allPromise = Promise.all(accountPromises);

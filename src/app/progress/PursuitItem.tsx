@@ -21,7 +21,7 @@ import styles from './PursuitItem.m.scss';
 
 function PursuitItem(
   { item, isNew }: { item: DimItem; isNew: boolean },
-  ref: React.Ref<HTMLDivElement>
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const defs = useD2Definitions()!;
   const expired = showPursuitAsExpired(item);
@@ -29,7 +29,7 @@ function PursuitItem(
   // Either there's a counter progress bar, or multiple checkboxes
   const showProgressBoolean = (objectives: DestinyObjectiveProgress[]) => {
     const numBooleans = count(objectives, (o) =>
-      isBooleanObjective(defs.Objective.get(o.objectiveHash), o.progress, o.completionValue)
+      isBooleanObjective(defs.Objective.get(o.objectiveHash), o.progress, o.completionValue),
     );
     return numBooleans > 1 || objectives.length !== numBooleans;
   };
@@ -45,7 +45,7 @@ function PursuitItem(
 
   const trackedInGame = item.tracked && (!item.pursuit?.recordHash || item.pursuit.trackedInGame);
   const trackedInDim = Boolean(
-    item.tracked && item.pursuit?.recordHash && !item.pursuit.trackedInGame
+    item.tracked && item.pursuit?.recordHash && !item.pursuit.trackedInGame,
   );
 
   const itemImageStyles = {

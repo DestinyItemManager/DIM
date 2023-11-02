@@ -27,7 +27,7 @@ export function getItemsFromLoadoutItems(
     [bucketHash: number]: number[] | undefined;
   },
   /** needs passing in if this is d1 mode */
-  d1Defs?: D1ManifestDefinitions
+  d1Defs?: D1ManifestDefinitions,
 ): [items: ResolvedLoadoutItem[], warnitems: ResolvedLoadoutItem[]] {
   if (!loadoutItems) {
     return [emptyArray(), emptyArray()];

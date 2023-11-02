@@ -81,11 +81,11 @@ export default function SettingsPage() {
   const allItems = useSelector(allItemsSelector);
 
   const exampleWeapon = allItems.find(
-    (i) => i.bucket.sort === 'Weapons' && !i.isExotic && !i.masterwork && !i.deepsightInfo
+    (i) => i.bucket.sort === 'Weapons' && !i.isExotic && !i.masterwork && !i.deepsightInfo,
   );
   // Include a masterworked item because they look different in some themes
   const exampleWeaponMasterworked = allItems.find(
-    (i) => i.bucket.sort === 'Weapons' && !i.isExotic && i.masterwork && !i.deepsightInfo
+    (i) => i.bucket.sort === 'Weapons' && !i.isExotic && i.masterwork && !i.deepsightInfo,
   );
   const exampleArmor = allItems.find((i) => i.bucket.sort === 'Armor' && !i.isExotic);
 
@@ -160,11 +160,11 @@ export default function SettingsPage() {
   const itemSortOrderChanged = (sortOrder: SortProperty[]) => {
     setSetting(
       'itemSortOrderCustom',
-      sortOrder.filter((o) => o.enabled).map((o) => o.id)
+      sortOrder.filter((o) => o.enabled).map((o) => o.id),
     );
     setSetting(
       'itemSortReversals',
-      sortOrder.filter((o) => o.reversed).map((o) => o.id)
+      sortOrder.filter((o) => o.reversed).map((o) => o.id),
     );
   };
 
@@ -224,12 +224,12 @@ export default function SettingsPage() {
         displayName,
         enabled: sortSettings.sortOrder.includes(id),
         reversed: sortSettings.sortReversals.includes(id),
-      })
+      }),
     ),
     (o) => {
       const index = sortSettings.sortOrder.indexOf(o.id);
       return index >= 0 ? index : 999;
-    }
+    },
   );
 
   const menuItems = _.compact([

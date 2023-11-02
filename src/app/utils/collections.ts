@@ -3,7 +3,7 @@
  */
 export function count<T>(
   list: readonly T[],
-  predicate: (value: T) => boolean | null | undefined
+  predicate: (value: T) => boolean | null | undefined,
 ): number {
   return list.reduce((total, item) => (predicate(item) ? total + 1 : total), 0);
 }
@@ -16,7 +16,7 @@ export function count<T>(
  */
 export function filterMap<In, Out>(
   list: readonly In[],
-  fn: (value: In, index: number) => Out | undefined
+  fn: (value: In, index: number) => Out | undefined,
 ): Out[] {
   const result: Out[] = [];
   for (let i = 0; i < list.length; i++) {

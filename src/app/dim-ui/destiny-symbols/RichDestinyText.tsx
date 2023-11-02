@@ -47,7 +47,7 @@ export default function RichDestinyText({
 function replaceWithIcon(
   textSegment: string,
   index: number,
-  conversionTable: RichTextConversionTable
+  conversionTable: RichTextConversionTable,
 ) {
   const replacementInfo = conversionTable[textSegment];
   return replacementInfo ? (

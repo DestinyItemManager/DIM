@@ -80,12 +80,12 @@ export function useHistory<S>(initialState: S): {
   const [{ state, undoStack, redoStack }, dispatch] = useReducer(
     historyReducer<S>,
     initialState,
-    initializer
+    initializer,
   );
 
   const setState = useCallback(
     (f: StateUpdateFunction<S>) => dispatch({ type: 'set', update: f }),
-    []
+    [],
   );
   const undo = useCallback(() => dispatch({ type: 'undo' }), []);
   const redo = useCallback(() => dispatch({ type: 'redo' }), []);

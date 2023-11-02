@@ -29,9 +29,9 @@ export const compareCategoryItemsSelector = createSelector(
       return emptyArray<DimItem>();
     }
     return [...allItems, ...vendorItems].filter((i) =>
-      itemCategoryHashes.every((h) => i.itemCategoryHashes.includes(h))
+      itemCategoryHashes.every((h) => i.itemCategoryHashes.includes(h)),
     );
-  }
+  },
 );
 
 /**
@@ -48,8 +48,8 @@ export const compareItemsSelector = currySelector(
       }
       const filterFunction = filterFactory(session.query);
       return categoryItems.filter(filterFunction);
-    }
-  )
+    },
+  ),
 );
 
 const organizerTypes = [
@@ -72,7 +72,7 @@ export const compareOrganizerLinkSelector = createSelector(
       return undefined;
     }
     return `${accountRoute(account)}/organizer?category=${session.itemCategoryHashes.join(
-      '~'
+      '~',
     )}&search=${encodeURIComponent(session.query)}`;
-  }
+  },
 );

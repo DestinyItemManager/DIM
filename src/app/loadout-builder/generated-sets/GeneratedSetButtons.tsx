@@ -62,7 +62,7 @@ export default function GeneratedSetButtons({
   const onQuickAddHalfTierMods = () => {
     // Note that half tier mods are already sorted in our desired stat order so we just keep their ordering.
     const mods = halfTierMods.filter((mod) =>
-      mod.investmentStats.some((stat) => statsWithPlus5.includes(stat.statTypeHash))
+      mod.investmentStats.some((stat) => statsWithPlus5.includes(stat.statTypeHash)),
     );
 
     lbDispatch({ type: 'addGeneralMods', mods });

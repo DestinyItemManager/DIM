@@ -45,7 +45,7 @@ export default function Footer({
               }
               forClassType={classType}
             />
-          ))
+          )),
         )}
       </SheetHorizontalScrollContainer>
     </div>

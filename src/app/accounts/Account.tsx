@@ -35,7 +35,7 @@ export default function Account({
             />
           ) : (
             PLATFORM_LABELS[platformType]
-          )
+          ),
         )}
     </div>
   );

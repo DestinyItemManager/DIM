@@ -136,7 +136,7 @@ const storeClassListSelector = createSelector(
   (stores) => stores.map((s) => s.classType).filter((c) => c !== DestinyClass.Unknown),
   // Use shallow equality on the returned array so it only changes when the
   // actual list of class types change
-  { memoizeOptions: { resultEqualityCheck: shallowEqual } }
+  { memoizeOptions: { resultEqualityCheck: shallowEqual } },
 );
 
 /**
@@ -218,7 +218,7 @@ export default function StoreBucket({
     items = items.filter(
       (i) =>
         i.classType === DestinyClass.Unknown ||
-        (currentStore && i.classType === currentStore.classType)
+        (currentStore && i.classType === currentStore.classType),
     );
   }
 

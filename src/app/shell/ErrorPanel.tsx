@@ -24,11 +24,11 @@ function Socials() {
               allowFullScreen
               sandbox="allow-top-navigation allow-scripts allow-popups allow-popups-to-escape-sandbox"
               src={`https://www.mastofeed.com/apiv2/feed?userurl=${encodeURIComponent(
-                account
+                account,
               )}&theme=dark&size=100&header=false&replies=false&boosts=true`}
             />
           </div>
-        )
+        ),
       )}
     </div>
   );

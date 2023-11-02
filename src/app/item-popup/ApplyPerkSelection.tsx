@@ -40,7 +40,7 @@ export default function ApplyPerkSelection({
       socket.plugOptions.length > 1
     ) {
       const wishlistPlug = socket.plugOptions.find((p) =>
-        wishlistRoll.wishListPerks.has(p.plugDef.hash)
+        wishlistRoll.wishListPerks.has(p.plugDef.hash),
       );
       if (
         wishlistPlug &&

@@ -38,7 +38,7 @@ export default function SetStats({
   const totalTier = calculateTotalTier(stats);
   const enabledTier = sumEnabledStats(
     stats,
-    resolvedStatConstraints.filter((c) => !c.ignored)
+    resolvedStatConstraints.filter((c) => !c.ignored),
   );
 
   return (

@@ -44,9 +44,9 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
       stores.length > 2 ||
       (currentStore &&
         stores.some((s) =>
-          s.items.some((i) => !isClassCompatible(i.classType, currentStore.classType))
+          s.items.some((i) => !isClassCompatible(i.classType, currentStore.classType)),
         )),
-    [stores, currentStore]
+    [stores, currentStore],
   );
 
   if (!stores.length || !buckets || !vault || !currentStore) {
@@ -86,7 +86,7 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
                   singleCharacter
                     ? t('Settings.ExpandSingleCharacter')
                     : `${t('Settings.SingleCharacter')}: ${t(
-                        'Settings.SingleCharacterExplanation'
+                        'Settings.SingleCharacterExplanation',
                       )}`
                 }
               >
@@ -116,7 +116,7 @@ function categoryHasItems(
   allBuckets: InventoryBuckets,
   category: string,
   stores: DimStore[],
-  currentStore: DimStore
+  currentStore: DimStore,
 ): boolean {
   const buckets = allBuckets.byCategory[category];
   return buckets.some((bucket) => {
@@ -172,7 +172,7 @@ function CollapsibleContainer({
 function StoresInventory(
   props: {
     hidePostmaster: boolean;
-  } & InventoryContainerProps
+  } & InventoryContainerProps,
 ) {
   const { buckets, stores } = props;
 

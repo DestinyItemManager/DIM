@@ -121,7 +121,7 @@ const memoTotalName = _.once((): string => t('Stats.Total'));
 const memoCustomDesc = _.once((): string => t('Stats.CustomDesc'));
 
 const memoStatDisplaysByStatHash = weakMemoize((statGroup: DestinyStatGroupDefinition) =>
-  keyByStatHash(statGroup.scaledStats)
+  keyByStatHash(statGroup.scaledStats),
 );
 
 /** Build the full list of stats for an item. If the item has no stats, this returns null. */
@@ -129,7 +129,7 @@ export function buildStats(
   defs: D2ManifestDefinitions,
   createdItem: DimItem,
   customStats: CustomStatDef[],
-  itemDef = defs.InventoryItem.get(createdItem.hash)
+  itemDef = defs.InventoryItem.get(createdItem.hash),
 ) {
   if (!itemDef.stats?.statGroupHash) {
     return null;
@@ -159,7 +159,7 @@ export function buildStats(
       TOTAL_STAT_HASH,
       memoTotalName(),
       '',
-      false
+      false,
     );
     investmentStats.push(tStat!);
 
@@ -173,7 +173,7 @@ export function buildStats(
             customStat.statHash,
             customStat.label,
             memoCustomDesc(),
-            true
+            true,
           );
           if (cStat) {
             investmentStats.push(cStat);
@@ -192,7 +192,7 @@ export function buildStats(
 function shouldShowStat(
   itemDef: DestinyInventoryItemDefinition,
   statHash: number,
-  statDisplaysByStatHash: StatDisplayLookup
+  statDisplaysByStatHash: StatDisplayLookup,
 ) {
   // Bows have a charge time stat that nobody asked for
   if (
@@ -206,7 +206,7 @@ function shouldShowStat(
     // Must be on the list of interpolated stats
     statDisplaysByStatHash[statHash] &&
       // Must be a stat we want to display
-      isAllowedItemStat(statHash)
+      isAllowedItemStat(statHash),
   );
 }
 
@@ -220,7 +220,7 @@ function buildInvestmentStats(
   itemDef: DestinyInventoryItemDefinition,
   defs: D2ManifestDefinitions,
   statGroup: DestinyStatGroupDefinition,
-  statDisplaysByStatHash: StatDisplayLookup
+  statDisplaysByStatHash: StatDisplayLookup,
 ): DimStat[] {
   const itemStats = itemDef.investmentStats || [];
 
@@ -237,7 +237,7 @@ function buildInvestmentStats(
     }
 
     ret.push(
-      buildStat(itemStat.statTypeHash, itemStat.value, statGroup, def, statDisplaysByStatHash)
+      buildStat(itemStat.statTypeHash, itemStat.value, statGroup, def, statDisplaysByStatHash),
     );
   }
 
@@ -270,7 +270,7 @@ function buildStat(
   value: number,
   statGroup: DestinyStatGroupDefinition,
   statDef: DestinyStatDefinition,
-  statDisplaysByStatHash: StatDisplayLookup
+  statDisplaysByStatHash: StatDisplayLookup,
 ): DimStat {
   value ||= 0;
   const investmentValue = value;
@@ -314,7 +314,7 @@ function buildStat(
 function applyPlugsToStats(
   existingStats: DimStat[], // values in this array are mutated
   createdItem: DimItem,
-  statDisplaysByStatHash: StatDisplayLookup
+  statDisplaysByStatHash: StatDisplayLookup,
 ) {
   if (!createdItem.sockets?.allSockets.length) {
     return;
@@ -326,7 +326,7 @@ function applyPlugsToStats(
   // we do those first and include them in the stat's base value
   const [intrinsicSockets, otherSockets] = _.partition(
     createdItem.sockets.allSockets,
-    socketContainsIntrinsicPlug
+    socketContainsIntrinsicPlug,
   );
 
   const socketLists = [
@@ -357,7 +357,7 @@ function applyPlugsToStats(
             createdItem,
             socket.plugged.plugDef,
             affectedStatHash,
-            pluggedInvestmentStat.isConditionallyActive
+            pluggedInvestmentStat.isConditionallyActive,
           )
         ) {
           continue;
@@ -367,7 +367,7 @@ function applyPlugsToStats(
         existingStat.investmentValue += getPlugStatValue(
           createdItem,
           socket.plugged.plugDef,
-          pluggedInvestmentStat
+          pluggedInvestmentStat,
         );
 
         // finally, re-interpolate the stat value
@@ -387,7 +387,7 @@ function applyPlugsToStats(
   // This is because multiple plugs can contribute to the same stat, so we want to sink the non-changeable
   // stats in first.
   const sortedSockets = createdItem.sockets.allSockets.toSorted(
-    compareBy((s) => s.plugOptions.length)
+    compareBy((s) => s.plugOptions.length),
   );
   for (const socket of sortedSockets) {
     attachPlugStats(createdItem, socket, existingStatsByHash, statDisplaysByStatHash);
@@ -405,7 +405,7 @@ function applyPlugsToStats(
 function getPlugStatValue(
   createdItem: DimItem,
   plug: PluggableInventoryItemDefinition,
-  stat: DestinyItemInvestmentStatDefinition
+  stat: DestinyItemInvestmentStatDefinition,
 ) {
   if (
     stat.isConditionallyActive &&
@@ -426,7 +426,7 @@ function attachPlugStats(
   createdItem: DimItem,
   socket: DimSocket,
   statsByHash: StatLookup,
-  statDisplaysByStatHash: StatDisplayLookup
+  statDisplaysByStatHash: StatDisplayLookup,
 ) {
   // The plug that is currently inserted into the socket
   const activePlug = socket.plugged;
@@ -499,7 +499,7 @@ function attachPlugStats(
           const valueWithoutPerk = interpolateStatValue(baseInvestmentStat, statDisplay);
           const valueWithPerk = interpolateStatValue(
             baseInvestmentStat + plugStatValue,
-            statDisplay
+            statDisplay,
           );
 
           plugStatValue = valueWithPerk - valueWithoutPerk;

@@ -36,7 +36,7 @@ interface Props {
   /** A function to further refine whether a given plug is currently selectable. */
   isPlugSelectable?: (
     plug: PluggableInventoryItemDefinition,
-    selected: PluggableInventoryItemDefinition[]
+    selected: PluggableInventoryItemDefinition[],
   ) => boolean;
   /** How plug groups (e.g. PlugSets) should be sorted in the display. */
   sortPlugGroups?: Comparator<PlugSet>;
@@ -70,17 +70,17 @@ export default function PlugDrawer({
   const [internalPlugSets, setInternalPlugSets] = useState(() =>
     plugSets
       .map((plugSet) => ({ ...plugSet, plugs: Array.from(plugSet.plugs) }))
-      .sort(sortPlugGroups)
+      .sort(sortPlugGroups),
   );
   const plugSetSort = (set: PlugSet) =>
     compareBy((plug: PluggableInventoryItemDefinition) =>
-      set.plugs.findIndex((p) => p.hash === plug.hash)
+      set.plugs.findIndex((p) => p.hash === plug.hash),
     );
   const isPhonePortrait = useIsPhonePortrait();
 
   const allSelectedPlugs = useMemo(
     () => internalPlugSets.flatMap((set) => set.selected),
-    [internalPlugSets]
+    [internalPlugSets],
   );
 
   const countsByPlugSetHash = useMemo(
@@ -94,16 +94,16 @@ export default function PlugDrawer({
               ? set.maxSelectable
               : set.maxSelectable(allSelectedPlugs),
           ] as const,
-        ])
+        ]),
       ),
-    [allSelectedPlugs, internalPlugSets]
+    [allSelectedPlugs, internalPlugSets],
   );
 
   const handlePlugSelected = useCallback(
     (
       plugSetHash: number,
       plug: PluggableInventoryItemDefinition,
-      selectionType: 'multi' | 'single'
+      selectionType: 'multi' | 'single',
     ) => {
       setInternalPlugSets(
         produce((draft) => {
@@ -119,10 +119,10 @@ export default function PlugDrawer({
           }
 
           draftPlugSet.selected.sort(plugSetSort(draftPlugSet));
-        })
+        }),
       );
     },
-    []
+    [],
   );
 
   const handlePlugRemoved = useCallback(
@@ -135,15 +135,15 @@ export default function PlugDrawer({
           }
 
           const firstIndex = draftPlugSet.selected.findIndex(
-            (selected) => selected.hash === plug.hash
+            (selected) => selected.hash === plug.hash,
           );
           if (firstIndex >= 0) {
             draftPlugSet.selected.splice(firstIndex, 1);
           }
-        })
+        }),
       );
     },
-    []
+    [],
   );
 
   const handlePlugRemovedFromFooter = useCallback((plug: PluggableInventoryItemDefinition) => {
@@ -152,14 +152,14 @@ export default function PlugDrawer({
         // Remove the first plug matching this hash that we find in any plug set
         for (const draftPlugSet of draft) {
           const firstIndex = draftPlugSet.selected.findIndex(
-            (selected) => selected.hash === plug.hash
+            (selected) => selected.hash === plug.hash,
           );
           if (firstIndex >= 0) {
             draftPlugSet.selected.splice(firstIndex, 1);
             return;
           }
         }
-      })
+      }),
     );
   }, []);
 
@@ -185,7 +185,7 @@ export default function PlugDrawer({
 
   const handleIsPlugSelectable = useCallback(
     (plug: PluggableInventoryItemDefinition) => isPlugSelectable?.(plug, allSelectedPlugs) ?? true,
-    [allSelectedPlugs, isPlugSelectable]
+    [allSelectedPlugs, isPlugSelectable],
   );
 
   const footer = ({ onClose }: { onClose: () => void }) => (

@@ -12,7 +12,7 @@ export const mementoSocketCategoryHash = 3201856887;
 
 export function buildCraftedInfo(
   item: DimItem,
-  defs: D2ManifestDefinitions
+  defs: D2ManifestDefinitions,
 ): DimCrafted | undefined {
   const craftedSocket = getCraftedSocket(item);
   if (!craftedSocket) {
@@ -36,7 +36,7 @@ export function getCraftedSocket(item: DimItem): DimSocket | undefined {
 
 function getCraftingInfo(
   defs: D2ManifestDefinitions,
-  objectives: DestinyObjectiveProgress[]
+  objectives: DestinyObjectiveProgress[],
 ): DimCrafted | undefined {
   let level: number | undefined;
   let progress: number | undefined;

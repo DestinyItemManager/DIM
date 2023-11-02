@@ -24,7 +24,7 @@ export function canSyncLockState(item: DimItem) {
  */
 function getNextItemToChangeLockState(
   allItems: DimItem[],
-  getTag: (item: DimItem) => TagValue | undefined
+  getTag: (item: DimItem) => TagValue | undefined,
 ): [item: DimItem, lock: boolean] | [] {
   for (const item of allItems) {
     if (canSyncLockState(item)) {
@@ -59,7 +59,7 @@ const getNextItemSelector = createSelector(
   getTagSelector,
   profileErrorSelector,
   (allItems, getTag, profileError) =>
-    profileError ? [] : getNextItemToChangeLockState(allItems, getTag)
+    profileError ? [] : getNextItemToChangeLockState(allItems, getTag),
 );
 
 // Some extra protection against locking the same thing twice in parallel - for example if you
@@ -83,7 +83,7 @@ export default memo(function SyncTagLock() {
           'autoLockTagged',
           lock ? 'Locking' : 'Unlocking',
           nextItem.name,
-          'to match its tag'
+          'to match its tag',
         );
         inProgressLocks.add(nextItem.id);
         try {
@@ -95,7 +95,7 @@ export default memo(function SyncTagLock() {
             lock ? 'lock' : 'unlock',
             nextItem.name,
             'to match its tag:',
-            e
+            e,
           );
         } finally {
           inProgressLocks.delete(nextItem.id);

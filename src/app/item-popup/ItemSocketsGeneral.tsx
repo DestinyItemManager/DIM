@@ -36,7 +36,7 @@ export default function ItemSocketsGeneral({
   const { intrinsicSocket, modSocketsByCategory } = getGeneralSockets(item)!;
 
   const emoteWheelCategory = item.sockets.categories.find(
-    (c) => c.category.hash === SocketCategoryHashes.Emotes
+    (c) => c.category.hash === SocketCategoryHashes.Emotes,
   );
 
   // Only show the first of each style of category when minimal
@@ -119,7 +119,7 @@ function IntrinsicArmorPerk({
               (perkDesc) =>
                 perkDesc.description && (
                   <RichDestinyText key={perkDesc.perkHash} text={perkDesc.description} />
-                )
+                ),
             )}
             {plugDescriptions.communityInsight && (
               <ClarityDescriptions

@@ -24,7 +24,7 @@ export function applySocketOverrides(
   // We don't need everything here but I'm assuming over time we'll want to plumb more stuff into stats calculations?
   { defs, customStats }: ItemCreationContext,
   item: DimItem,
-  socketOverrides: SocketOverrides | undefined
+  socketOverrides: SocketOverrides | undefined,
 ): DimItem {
   if (!socketOverrides || _.isEmpty(socketOverrides) || !item.sockets) {
     return item;
@@ -80,7 +80,7 @@ export function applySocketOverrides(
           'applySocketOverrides',
           "Tried to override to a socket that didn't exist in the options",
           override,
-          s.plugOptions
+          s.plugOptions,
         );
       }
     }
@@ -128,10 +128,10 @@ export function useSocketOverrides(): [
           } else {
             so[socket.socketIndex] = plugHash;
           }
-        })
+        }),
       );
     },
-    []
+    [],
   );
   const resetOverrides = useCallback(() => setSocketOverrides({}), []);
   return [socketOverrides, onPlugClicked, resetOverrides];
@@ -145,7 +145,7 @@ export interface SocketOverridesForItems {
  * A hook to manage socket overrides for multiple items.
  */
 export function useSocketOverridesForItems(
-  initialOverrides: SocketOverridesForItems = {}
+  initialOverrides: SocketOverridesForItems = {},
 ): [
   socketOverrides: SocketOverridesForItems,
   onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void,
@@ -171,10 +171,10 @@ export function useSocketOverridesForItems(
           if (_.isEmpty(so[item.id])) {
             delete so[item.id];
           }
-        })
+        }),
       );
     },
-    []
+    [],
   );
 
   return [socketOverrides, onPlugClicked];

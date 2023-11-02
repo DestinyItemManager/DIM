@@ -87,8 +87,8 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
             }
 
             return res.text();
-          })
-        )
+          }),
+        ),
       );
 
       // if this is a new wishlist, set the setting now that we know it's fetchable

@@ -119,7 +119,7 @@ export function getBuckets(defs: D1ManifestDefinitions) {
   for (const [category, bucketHashes] of Object.entries(D1Categories)) {
     buckets.byCategory[category] = filterMap(
       bucketHashes,
-      (bucketHash) => buckets.byHash[bucketHash]
+      (bucketHash) => buckets.byHash[bucketHash],
     );
   }
   return buckets;

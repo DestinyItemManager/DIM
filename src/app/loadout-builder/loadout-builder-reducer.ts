@@ -103,7 +103,7 @@ export type LoadoutBuilderState = LoadoutBuilderUI & LoadoutBuilderConfiguration
 
 export function warnMissingClass(classType: DestinyClass, defs: D2ManifestDefinitions) {
   const missingClassName = Object.values(defs.Class.getAll()).find(
-    (c) => c.classType === classType
+    (c) => c.classType === classType,
   )!.displayProperties.name;
 
   showNotification({
@@ -196,7 +196,7 @@ const lbConfigInit = ({
         .find(
           (i) =>
             Boolean(i?.equippingBlock?.uniqueLabel) &&
-            LockableBucketHashes.includes(i.inventory?.bucketTypeHash ?? 0)
+            LockableBucketHashes.includes(i.inventory?.bucketTypeHash ?? 0),
         );
 
       if (equippedExotic) {
@@ -301,7 +301,7 @@ function lbUIReducer(state: LoadoutBuilderUI, action: LoadoutBuilderUIAction) {
 function lbConfigReducer(defs: D2ManifestDefinitions) {
   return (
     state: LoadoutBuilderConfiguration,
-    action: LoadoutBuilderConfigAction
+    action: LoadoutBuilderConfigAction,
   ): LoadoutBuilderConfiguration => {
     switch (action.type) {
       case 'setLoadout': {
@@ -352,7 +352,7 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
       case 'statConstraintChanged': {
         const { constraint } = action;
         const newStatConstraints = state.resolvedStatConstraints.map((c) =>
-          c.statHash === constraint.statHash ? constraint : c
+          c.statHash === constraint.statHash ? constraint : c,
         );
         return updateStatConstraints(state, newStatConstraints);
       }
@@ -441,7 +441,7 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
           newMods.filter(
             (mod) =>
               defs.InventoryItem.get(mod)?.plug?.plugCategoryHash ===
-              armor2PlugCategoryHashesByName.general
+              armor2PlugCategoryHashesByName.general,
           ).length ?? 0;
 
         const failures: string[] = [];
@@ -490,7 +490,7 @@ function updateLoadout(state: LoadoutBuilderConfiguration, updateFn: LoadoutUpda
 
 function updateStatConstraints(
   state: LoadoutBuilderConfiguration,
-  resolvedStatConstraints: ResolvedStatConstraint[]
+  resolvedStatConstraints: ResolvedStatConstraint[],
 ): LoadoutBuilderConfiguration {
   return {
     ...state,
@@ -505,7 +505,7 @@ export function useLbState(
   stores: DimStore[],
   defs: D2ManifestDefinitions,
   preloadedLoadout: Loadout | undefined,
-  storeId: string | undefined
+  storeId: string | undefined,
 ) {
   const savedLoadoutBuilderParameters = useSelector(savedLoadoutParametersSelector);
   const savedStatConstraintsPerClass = useSelector(savedLoStatConstraintsByClassSelector);
@@ -527,7 +527,7 @@ export function useLbState(
       storeId,
       savedLoadoutBuilderParameters,
       savedStatConstraintsPerClass,
-    })
+    }),
   );
 
   const lbConfReducer = useMemo(() => lbConfigReducer(defs), [defs]);
@@ -561,7 +561,7 @@ export function useLbState(
           break;
       }
     },
-    [lbConfReducer, redo, setState, undo]
+    [lbConfReducer, redo, setState, undo],
   );
 
   return [

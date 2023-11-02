@@ -24,9 +24,9 @@ const clashingLoadoutSelector = currySelector(
     (_: RootState, loadout: Loadout) => loadout,
     (loadouts, loadout) =>
       loadouts.find(
-        (l) => loadout.name === l.name && isClassCompatible(l.classType, loadout.classType)
-      )
-  )
+        (l) => loadout.name === l.name && isClassCompatible(l.classType, loadout.classType),
+      ),
+  ),
 );
 
 export default function LoadoutDrawerFooter({

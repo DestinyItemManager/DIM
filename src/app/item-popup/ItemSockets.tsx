@@ -9,7 +9,7 @@ export type PlugClickHandler = (
   item: DimItem,
   socket: DimSocket,
   plug: DimPlug,
-  hasMenu: boolean
+  hasMenu: boolean,
 ) => void;
 
 export default memo(function ItemSockets({

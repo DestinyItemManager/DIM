@@ -15,7 +15,7 @@ const localStorageKey = 'dimApiToken';
  */
 export async function unauthenticatedApi<T>(
   config: HttpClientConfig,
-  noApiKey?: boolean
+  noApiKey?: boolean,
 ): Promise<T> {
   if (!noApiKey && !API_KEY) {
     throw new Error('No DIM API key configured');
@@ -40,7 +40,7 @@ export async function unauthenticatedApi<T>(
       method: config.method,
       body: config.body ? JSON.stringify(config.body) : undefined,
       headers,
-    })
+    }),
   );
 
   if (response.status === 401) {
@@ -92,7 +92,7 @@ export async function authenticatedApi<T>(config: HttpClientConfig): Promise<T> 
       method: config.method,
       body: config.body ? JSON.stringify(config.body) : undefined,
       headers,
-    })
+    }),
   );
 
   if (response.status === 401) {

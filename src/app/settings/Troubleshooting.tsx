@@ -28,7 +28,7 @@ export function TroubleshootingSettings() {
       download(
         JSON.stringify(await getStores(currentAccount), null, '\t'),
         'profile-data.json',
-        'application/json'
+        'application/json',
       );
     }
   };

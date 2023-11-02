@@ -19,7 +19,7 @@ export const loadoutsHashtagsSelector = createSelector(loadoutsSelector, (loadou
     loadouts.flatMap((loadout) => [
       ...getHashtagsFromNote(loadout.name),
       ...getHashtagsFromNote(loadout.notes),
-    ])
+    ]),
   ),
 ]);
 
@@ -48,7 +48,7 @@ export const loadoutsByItemSelector = createSelector(
     const recordLoadout = (
       itemId: string,
       loadout: Loadout | InGameLoadout,
-      loadoutItem: LoadoutItem
+      loadoutItem: LoadoutItem,
     ) => {
       const loadoutsForItem = (loadoutsForItems[itemId] ??= []);
       if (!loadoutsForItem.some((l) => l.loadout.id === loadout.id)) {
@@ -97,7 +97,7 @@ export const loadoutsByItemSelector = createSelector(
     }
 
     return loadoutsForItems;
-  }
+  },
 );
 
 /**
@@ -109,9 +109,9 @@ export const isInInGameLoadoutForSelector = createSelector(
   (loadoutsByItem) => (item: DimItem, ownerId: string) =>
     Boolean(
       loadoutsByItem[item.id]?.some(
-        (l) => isInGameLoadout(l.loadout) && l.loadout.characterId === ownerId
-      )
-    )
+        (l) => isInGameLoadout(l.loadout) && l.loadout.characterId === ownerId,
+      ),
+    ),
 );
 
 export const previousLoadoutSelector =

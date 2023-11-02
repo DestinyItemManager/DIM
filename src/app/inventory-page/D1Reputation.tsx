@@ -32,7 +32,7 @@ export default function D1Reputation({ store }: { store: D1Store }) {
                 />
               </div>
             </PressTip>
-          )
+          ),
       )}
     </div>
   );

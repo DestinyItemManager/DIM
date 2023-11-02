@@ -42,7 +42,7 @@ export function canInsertPlug(
   socket: DimSocket,
   plugItemHash: number,
   destiny2CoreSettings: Destiny2CoreSettings | undefined,
-  defs: D2ManifestDefinitions
+  defs: D2ManifestDefinitions,
 ) {
   return $featureFlags.awa || canInsertForFree(socket, plugItemHash, destiny2CoreSettings, defs);
 }
@@ -50,7 +50,7 @@ export function canInsertPlug(
 function hasInsertionCost(defs: D2ManifestDefinitions, plug: DestinyInventoryItemDefinition) {
   if (plug.plug?.insertionMaterialRequirementHash) {
     const requirements = defs.MaterialRequirementSet.get(
-      plug.plug?.insertionMaterialRequirementHash
+      plug.plug?.insertionMaterialRequirementHash,
     );
     // There are some items that explicitly point to a definition that says it costs 0 glimmer:
     return requirements.materials.some((m) => m.count !== 0);
@@ -62,16 +62,16 @@ function canInsertForFree(
   socket: DimSocket,
   plugItemHash: number,
   destiny2CoreSettings: Destiny2CoreSettings | undefined,
-  defs: D2ManifestDefinitions
+  defs: D2ManifestDefinitions,
 ) {
   const pluggedDef = (socket.actuallyPlugged || socket.plugged)?.plugDef;
   if (
     (pluggedDef &&
       (destiny2CoreSettings?.insertPlugFreeProtectedPlugItemHashes || []).includes(
-        pluggedDef.hash
+        pluggedDef.hash,
       )) ||
     (destiny2CoreSettings?.insertPlugFreeBlockedSocketTypeHashes || []).includes(
-      socket.socketDefinition.socketTypeHash
+      socket.socketDefinition.socketTypeHash,
     )
   ) {
     return false;
@@ -84,7 +84,7 @@ function canInsertForFree(
     Boolean(
       socket.socketDefinition.reusablePlugItems.length > 0 ||
         socket.socketDefinition.reusablePlugSetHash ||
-        socket.socketDefinition.randomizedPlugSetHash
+        socket.socketDefinition.randomizedPlugSetHash,
     ) &&
     // And have no cost to insert
     !hasInsertionCost(defs, plug) &&
@@ -105,7 +105,7 @@ function canInsertForFree(
 function checkIrreversiblePlugging(
   socket: DimSocket,
   storeId: string,
-  profileResponse?: DestinyProfileResponse
+  profileResponse?: DestinyProfileResponse,
 ) {
   const plugged = socket.actuallyPlugged || socket.plugged;
   if (
@@ -119,10 +119,10 @@ function checkIrreversiblePlugging(
       plugSetHash &&
       profileResponse &&
       unlockedItemsForCharacterOrProfilePlugSet(profileResponse, plugSetHash, storeId).has(
-        plugged.plugDef.hash
+        plugged.plugDef.hash,
       );
     const itemUnlocked = socket.reusablePlugItems?.some(
-      (p) => p.enabled && p.plugItemHash === plugged.plugDef.hash
+      (p) => p.enabled && p.plugItemHash === plugged.plugDef.hash,
     );
 
     if (!profileUnlocked && !itemUnlocked) {
@@ -165,14 +165,14 @@ export function insertPlug(item: DimItem, socket: DimSocket, plugItemHash: numbe
     const irreversiblePlugCheck = checkIrreversiblePlugging(
       socket,
       storeId,
-      profileResponseSelector(getState())
+      profileResponseSelector(getState()),
     );
     if (irreversiblePlugCheck.protected && irreversiblePlugCheck.plug) {
       throw new DimError(
         'AWA.IrreversiblePlugging',
         t('AWA.IrreversiblePlugging', {
           plug: irreversiblePlugCheck.plug.plugDef.displayProperties.name,
-        })
+        }),
       );
     }
 
@@ -190,7 +190,7 @@ async function awaInsertSocketPlugFree(
   storeId: string,
   item: DimItem,
   socket: DimSocket,
-  plugItemHash: number
+  plugItemHash: number,
 ) {
   return insertSocketPlugFree(authenticatedHttpClient, {
     itemId: item.id,
@@ -213,7 +213,7 @@ async function awaInsertSocketPlug(
   storeId: string,
   item: DimItem,
   socket: DimSocket,
-  plugItemHash: number
+  plugItemHash: number,
 ) {
   if (!$featureFlags.awa) {
     throw new Error('AWA.NotSupported');
@@ -251,7 +251,7 @@ function refreshItemAfterAWA(changes: DestinyItemChangeResponse): ThunkResult {
         item: newItem,
         changes,
         itemCreationContext: itemCreationContext,
-      })
+      }),
     );
   };
 }
@@ -268,7 +268,7 @@ async function getAwaToken(
   account: DestinyAccount,
   action: AwaType,
   storeId: string,
-  item?: DimItem
+  item?: DimItem,
 ): Promise<string> {
   if (!awaCache) {
     // load from cache first time

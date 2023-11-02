@@ -37,7 +37,7 @@ export function itemLevelingLoadout(allItems: DimItem[], store: DimStore): Loado
       i.hash !== 2168530918 && // Husk of the pit has a weirdo one-off xp mechanic
       i.hash !== 3783480580 &&
       i.hash !== 2576945954 &&
-      i.hash !== 1425539750
+      i.hash !== 1425539750,
   );
 
   const bestItemFn = (item: DimItem) => {
@@ -84,7 +84,7 @@ export function maxLightLoadout(allItems: DimItem[], store: DimStore): Loadout {
   const maxLightLoadout = newLoadout(
     store.destinyVersion === 2 ? t('Loadouts.MaximizePower') : t('Loadouts.MaximizeLight'),
     equippable.map((i) => convertToLoadoutItem(i, true)),
-    store.classType
+    store.classType,
   );
   return maxLightLoadout;
 }
@@ -94,7 +94,7 @@ export function maxLightLoadout(allItems: DimItem[], store: DimStore): Loadout {
  */
 export function maxLightItemSet(
   allItems: DimItem[],
-  store: DimStore
+  store: DimStore,
 ): ReturnType<typeof optimalItemSet> {
   const applicableItems: DimItem[] = [];
   for (const i of allItems) {
@@ -135,7 +135,7 @@ export function maxStatLoadout(statHash: number, allItems: DimItem[], store: Dim
     (i) =>
       i.power &&
       i.stats?.some((stat) => stat.statHash === statHash) && // contains our selected stat
-      itemCanBeEquippedBy(i, store, true)
+      itemCanBeEquippedBy(i, store, true),
   );
 
   const bestItemFn = (item: DimItem) => {
@@ -172,7 +172,7 @@ export function itemMoveLoadout(items: DimItem[], store: DimStore): Loadout {
 
   const itemsByType = _.mapValues(
     Object.groupBy(items, (i) => i.bucket.hash),
-    (items) => limitToBucketSize(items, store)
+    (items) => limitToBucketSize(items, store),
   );
 
   // Copy the items and mark them equipped and put them in arrays, so they look like a loadout
@@ -217,7 +217,7 @@ function limitToBucketSize(items: DimItem[], store: DimStore) {
       ? item.equipped
         ? BucketLocation.AlreadyThereAndEquipped
         : BucketLocation.AlreadyThereAndUnequipped
-      : BucketLocation.NotThere
+      : BucketLocation.NotThere,
   );
 
   // TODO: this doesn't take into account stacks that need to split
@@ -227,7 +227,7 @@ function limitToBucketSize(items: DimItem[], store: DimStore) {
     // If a matching item is already equipped we can take 10, otherwise we have
     // to subtract one for the equipped item because we don't want to displace
     // it
-    bucket.capacity - (item.equipment && !alreadyEquipped.length ? 1 : 0)
+    bucket.capacity - (item.equipment && !alreadyEquipped.length ? 1 : 0),
   );
 }
 
@@ -275,7 +275,7 @@ export function randomLoadout(store: DimStore, allItems: DimItem[], filter: Item
       randomLoadoutTypes.has(i.bucket.hash) &&
       itemCanBeEquippedBy(i, store) &&
       onAcceptableRandomizeStore(i) &&
-      filter(i)
+      filter(i),
   );
 
   // Use "random" as the value function
@@ -284,7 +284,7 @@ export function randomLoadout(store: DimStore, allItems: DimItem[], filter: Item
 
 export function randomSubclassConfiguration(
   defs: D2ManifestDefinitions,
-  item: DimItem
+  item: DimItem,
 ): SocketOverrides | undefined {
   if (!item.sockets) {
     return undefined;
@@ -294,7 +294,7 @@ export function randomSubclassConfiguration(
   // Pick abilities
   const abilityAndSuperSockets = getSocketsByCategoryHashes(
     item.sockets,
-    subclassAbilitySocketCategoryHashes
+    subclassAbilitySocketCategoryHashes,
   );
   for (const socket of abilityAndSuperSockets) {
     // Stasis has no super plugSet
@@ -312,7 +312,7 @@ export function randomSubclassConfiguration(
         }
         maxCount--;
         const chosenHash = _.sample(
-          socket.plugSet!.plugs.filter((plug) => !blockedPlugs.includes(plug.plugDef.hash))
+          socket.plugSet!.plugs.filter((plug) => !blockedPlugs.includes(plug.plugDef.hash)),
         )!.plugDef.hash;
         if (chosenHash === undefined) {
           break;

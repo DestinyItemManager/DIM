@@ -3,7 +3,7 @@
  * a version going, the existing promise will be returned instead of running it again.
  */
 export function dedupePromise<T extends unknown[], K>(
-  func: (...args: T) => Promise<K>
+  func: (...args: T) => Promise<K>,
 ): (...args: T) => Promise<K> {
   let promiseCache: Promise<K> | null = null;
   return async (...args: T) => {

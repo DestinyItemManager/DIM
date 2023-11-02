@@ -20,7 +20,7 @@ export default memo(function StoreInventoryItem({ item }: Props) {
   const dispatch = useThunkDispatch();
   const doubleClicked = useCallback(
     (e: React.MouseEvent) => dispatch(moveItemToCurrentStore(item, e)),
-    [dispatch, item]
+    [dispatch, item],
   );
 
   const selection = $featureFlags.elgatoStreamDeck

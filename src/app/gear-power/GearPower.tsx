@@ -59,7 +59,7 @@ export default function GearPower() {
   );
 
   const exampleItem = powerLevel.highestPowerItems.find(
-    (i) => i.classType === selectedStore.classType
+    (i) => i.classType === selectedStore.classType,
   );
   const powerFloor = Math.floor(powerLevel.maxGearPower);
   const classFilterString = exampleItem && classFilter.fromItem(exampleItem);

@@ -43,7 +43,7 @@ export default function Socket({
               isMod={socket.isMod}
               onClick={onClick && (() => onClick(item, socket, plug, hasMenu))}
             />
-          )
+          ),
       )}
     </div>
   );

@@ -43,7 +43,7 @@ function createWishListRollString(item: DimItem) {
     perkHashes = filterMap(sockets, (socket) =>
       isKillTrackerSocket(socket) || socket.plugOptions.length <= 1
         ? undefined
-        : socket.plugged?.plugDef.hash
+        : socket.plugged?.plugDef.hash,
     );
   }
 

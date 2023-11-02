@@ -19,7 +19,7 @@ export function makeCustomStat(
   customStatHash: number,
   customStatName: string,
   customStatDesc: string,
-  baseOnly: boolean
+  baseOnly: boolean,
 ): DimStat | undefined {
   // the following SEVERAL comment lines are regarding weighted stats, which are not enabled right now
 

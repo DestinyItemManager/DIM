@@ -111,7 +111,7 @@ export const armorStats = Object.values(D2ArmorStatHashByName);
 // a set of base stat weights, all worth the same, "switched on"
 export const evenStatWeights = /* @__PURE__ */ armorStats.reduce<CustomStatWeights>(
   (o, statHash) => ({ ...o, [statHash]: 1 }),
-  {}
+  {},
 );
 
 export const D2WeaponStatHashByName = {

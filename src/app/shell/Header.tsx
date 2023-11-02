@@ -414,7 +414,7 @@ function useClarityDetector(ref: React.RefObject<HTMLElement>) {
         if (
           mutation.type === 'childList' &&
           Array.from(mutation.addedNodes ?? []).some(
-            (n) => n instanceof HTMLElement && n.classList.contains('Clarity_menu_button')
+            (n) => n instanceof HTMLElement && n.classList.contains('Clarity_menu_button'),
           )
         ) {
           setClarityDetected(true);

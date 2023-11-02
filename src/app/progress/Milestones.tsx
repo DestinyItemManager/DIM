@@ -39,7 +39,7 @@ export default function Milestones({
   const profileMilestones = milestonesForProfile(defs, profileInfo, store.id);
   const characterProgressions = getCharacterProgressions(profileInfo, store.id);
   const maxGearPower = useSelector(
-    (state: RootState) => powerLevelSelector(state, store.id)?.maxGearPower
+    (state: RootState) => powerLevelSelector(state, store.id)?.maxGearPower,
   );
   const season = profileInfo.profile?.data?.currentSeasonHash
     ? defs.Season.get(profileInfo.profile.data.currentSeasonHash)
@@ -50,7 +50,7 @@ export default function Milestones({
 
   const milestoneItems = uniqBy(
     [...milestonesForCharacter(defs, profileInfo, store), ...profileMilestones],
-    (m) => m.milestoneHash
+    (m) => m.milestoneHash,
   ).flatMap((milestone) => milestoneToItems(milestone, defs, buckets, store));
 
   const milestonesByPower = Map.groupBy(milestoneItems, (m) => {
@@ -111,7 +111,7 @@ export default function Milestones({
 function milestonesForProfile(
   defs: D2ManifestDefinitions,
   profileInfo: DestinyProfileResponse,
-  characterId: string
+  characterId: string,
 ): DestinyMilestone[] {
   const profileMilestoneData = profileInfo.characterProgressions?.data?.[characterId]?.milestones;
   const allMilestones: DestinyMilestone[] = profileMilestoneData
@@ -123,7 +123,7 @@ function milestonesForProfile(
       !milestone.availableQuests &&
       !milestone.activities &&
       (!milestone.vendors || milestone.rewards) &&
-      defs.Milestone.get(milestone.milestoneHash)
+      defs.Milestone.get(milestone.milestoneHash),
   );
 
   return _.sortBy(filteredMilestones, (milestone) => milestone.order);
@@ -135,7 +135,7 @@ function milestonesForProfile(
 function milestonesForCharacter(
   defs: D2ManifestDefinitions,
   profileInfo: DestinyProfileResponse,
-  character: DimStore
+  character: DimStore,
 ): DestinyMilestone[] {
   const characterMilestoneData = getCharacterProgressions(profileInfo, character.id)?.milestones;
   const allMilestones: DestinyMilestone[] = characterMilestoneData
@@ -153,7 +153,7 @@ function milestonesForCharacter(
           (q) =>
             q.status.stepObjectives.length > 0 &&
             q.status.started &&
-            (!q.status.completed || !q.status.redeemed)
+            (!q.status.completed || !q.status.redeemed),
         ))
     );
   });

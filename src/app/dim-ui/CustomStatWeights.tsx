@@ -61,7 +61,7 @@ export function CustomStatWeightsDisplay({
             </span>
           );
         }),
-        <span className={styles.divider} />
+        <span className={styles.divider} />,
       )}
     </div>
   );

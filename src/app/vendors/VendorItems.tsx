@@ -110,15 +110,15 @@ export default function VendorItems({
                             ownedItemHashes?.has(vendorItem.item.hash) ||
                               vendorItem.owned ||
                               (vendorItem.item.hash in focusingItemOutputs &&
-                                ownedItemHashes?.has(focusingItemOutputs[vendorItem.item.hash]!))
+                                ownedItemHashes?.has(focusingItemOutputs[vendorItem.item.hash]!)),
                           )}
                           characterId={characterId}
                         />
-                      )
+                      ),
                   )}
                 </div>
               </div>
-            )
+            ),
         )}
       </div>
     </div>

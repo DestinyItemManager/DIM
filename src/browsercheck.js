@@ -72,7 +72,7 @@ export function isSupported(browsersSupported, userAgent) {
     var supportedBrowserVersion = browsersSupported[i].split(/[- ]/);
     minBrowserVersions[supportedBrowserVersion[0]] = Math.min(
       minBrowserVersions[supportedBrowserVersion[0]] || 999999,
-      parseFloat(supportedBrowserVersion[1])
+      parseFloat(supportedBrowserVersion[1]),
     );
   }
 
@@ -101,7 +101,7 @@ export function isSupported(browsersSupported, userAgent) {
   if (!supported) {
     console.warn(
       'Browser ' + browser + ' is not supported by DIM. Supported browsers:',
-      browsersSupported
+      browsersSupported,
     );
   }
   return supported;

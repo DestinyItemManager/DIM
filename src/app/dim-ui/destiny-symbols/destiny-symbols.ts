@@ -63,5 +63,5 @@ export const symbolsSelector = createSelector(
       });
     }
     return list;
-  }
+  },
 );

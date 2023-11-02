@@ -117,7 +117,7 @@ export function InGameLoadoutDetails({
                 );
               })}
             </div>
-          )
+          ),
         )}
       </div>
     </Sheet>
@@ -138,7 +138,7 @@ function InGameLoadoutItemDetail({
       (s.isPerk &&
         !socketContainsIntrinsicPlug(s) &&
         !isKillTrackerSocket(s) &&
-        s.plugged?.plugDef.displayProperties.name)
+        s.plugged?.plugDef.displayProperties.name),
   );
 
   const cosmeticSockets = getSocketsByCategoryHashes(item.sockets, [
@@ -157,7 +157,7 @@ function InGameLoadoutItemDetail({
       // Shaders and ornaments should be small
       cosmeticSockets.includes(s) ||
       // subclass mods that aren't super/aspect/fragment should be small (Grenade, jump, etc)
-      subclassAbilitySockets.includes(s)
+      subclassAbilitySockets.includes(s),
   );
   return (
     <React.Fragment key={item.id}>

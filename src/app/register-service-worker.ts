@@ -45,7 +45,7 @@ let currentVersion = $DIM_VERSION;
         errorLog('SW', 'Failed to check version.json', e);
       }
     },
-    15 * 60 * 1000
+    15 * 60 * 1000,
   );
 })();
 

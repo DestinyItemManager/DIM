@@ -23,7 +23,7 @@ export const bucketTypesSelector = createSelector(
             ...stores.flatMap((store) => `${store.id}-${bucket.hash}`),
           ]),
         ]
-      : emptyArray<string>()
+      : emptyArray<string>(),
 );
 
 export default function LoadoutDrawerDropTarget({
@@ -49,7 +49,7 @@ export default function LoadoutDrawerDropTarget({
       canDrop: (i) => itemCanBeInLoadout(i) && isItemLoadoutCompatible(i.classType, classType),
       collect: (monitor) => ({ isOver: monitor.isOver() && monitor.canDrop() }),
     }),
-    [bucketTypes, onDroppedItem]
+    [bucketTypes, onDroppedItem],
   );
 
   return (

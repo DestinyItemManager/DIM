@@ -162,7 +162,7 @@ export interface FilterDefinition<
    * This should only be necessary for freeform or custom formats.
    */
   suggestionsGenerator?: (
-    args: SuggestionsCtx
+    args: SuggestionsCtx,
   ) => string[] | { keyword: string; ops?: string[] }[] | undefined;
 
   /**

@@ -17,7 +17,7 @@ export default forwardRef(function CharacterTileButton(
     children?: React.ReactNode;
     className?: string;
   },
-  ref: React.Ref<HTMLDivElement>
+  ref: React.Ref<HTMLDivElement>,
 ) {
   const handleClick = onClick ? () => onClick(character.id) : undefined;
 

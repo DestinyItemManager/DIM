@@ -18,7 +18,7 @@ export default function SelectAccount({ path }: { path?: string }) {
   const sortedAccounts = _.sortBy(
     accounts,
     (a) => -a.destinyVersion,
-    (a) => -a.lastPlayed.getTime()
+    (a) => -a.lastPlayed.getTime(),
   );
 
   const bungieName = sortedAccounts[0].displayName;

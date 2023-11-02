@@ -37,7 +37,7 @@ const vendorOrder = [VendorHashes.AdaTransmog, VendorHashes.Banshee, VendorHashe
 export function toVendorGroups(
   context: ItemCreationContext,
   vendorsResponse: DestinyVendorsResponse,
-  characterId: string
+  characterId: string,
 ): D2VendorGroup[] {
   if (!vendorsResponse.vendorGroups.data) {
     return [];
@@ -59,18 +59,18 @@ export function toVendorGroups(
               vendorsResponse.vendors.data?.[vendorHash],
               characterId,
               vendorsResponse.sales.data?.[vendorHash]?.saleItems,
-              vendorsResponse
+              vendorsResponse,
             );
             return vendor?.items.length ? vendor : undefined;
           }),
           (v) => {
             const index = vendorOrder.indexOf(v.def.hash);
             return index >= 0 ? index : v.def.hash;
-          }
+          },
         ),
       };
     }),
-    (g) => g.def.order
+    (g) => g.def.order,
   );
 }
 
@@ -84,7 +84,7 @@ export function toVendor(
         [key: string]: DestinyVendorSaleItemComponent;
       }
     | undefined,
-  vendorsResponse: DestinyVendorsResponse | undefined
+  vendorsResponse: DestinyVendorsResponse | undefined,
 ): D2Vendor | undefined {
   const { defs } = context;
   const vendorDef = defs.Vendor.get(vendorHash);
@@ -99,10 +99,10 @@ export function toVendor(
       compareBy(
         (item) =>
           item.originalCategoryIndex !== undefined &&
-          vendorDef.originalCategories[item.originalCategoryIndex]?.sortValue
+          vendorDef.originalCategories[item.originalCategoryIndex]?.sortValue,
       ),
-      compareBy((item) => item.vendorItemIndex)
-    )
+      compareBy((item) => item.vendorItemIndex),
+    ),
   );
 
   const destinationDef =
@@ -117,8 +117,8 @@ export function toVendor(
     Array.from(vendorCurrencyHashes, (h) => defs.InventoryItem.get(h)).filter(
       (i) =>
         !i?.itemCategoryHashes?.includes(ItemCategoryHashes.Shaders) &&
-        !i?.itemCategoryHashes?.includes(ItemCategoryHashes.ShipModsTransmatEffects)
-    )
+        !i?.itemCategoryHashes?.includes(ItemCategoryHashes.ShipModsTransmatEffects),
+    ),
   );
   currencies.sort(compareBy((i) => i.inventory?.tierType));
 
@@ -147,7 +147,7 @@ function gatherVendorCurrencies(
     | undefined,
   vendorCurrencyHashes: Set<number>,
   // prevent infinite recursion just in case vendors have a cycle in their items' previewvendorHashes
-  seenVendors = new Set<number>()
+  seenVendors = new Set<number>(),
 ) {
   for (const sale of sales
     ? Object.values(sales).flatMap((saleItem) => saleItem.costs)
@@ -170,7 +170,7 @@ function gatherVendorCurrencies(
         vendorsResponse,
         vendorsResponse?.sales.data?.[subVendorHash]?.saleItems,
         vendorCurrencyHashes,
-        seenVendors
+        seenVendors,
       );
     }
   }
@@ -184,31 +184,31 @@ function getVendorItems(
     | {
         [key: string]: DestinyVendorSaleItemComponent;
       }
-    | undefined
+    | undefined,
 ): VendorItem[] {
   if (sales) {
     const components = Object.values(sales);
     return components.map((component) =>
-      vendorItemForSaleItem(context, vendorDef, component, characterId)
+      vendorItemForSaleItem(context, vendorDef, component, characterId),
     );
   } else if (vendorDef.returnWithVendorRequest) {
     // If the sales should come from the server, don't show anything until we have them
     return [];
   } else {
     return vendorDef.itemList.map((i, index) =>
-      vendorItemForDefinitionItem(context, i, characterId, index)
+      vendorItemForDefinitionItem(context, i, characterId, index),
     );
   }
 }
 
 export type VendorFilterFunction = (
   item: VendorItem,
-  vendor: D2Vendor
+  vendor: D2Vendor,
 ) => boolean | null | undefined;
 
 export function filterVendorGroups(
   vendorGroups: readonly D2VendorGroup[],
-  predicate: VendorFilterFunction
+  predicate: VendorFilterFunction,
 ) {
   return vendorGroups
     .map((group) => ({

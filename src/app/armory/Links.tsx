@@ -122,7 +122,7 @@ function buildFoundrySockets(item: DimItem) {
  * Gathers general socket information for link generation in D2Gunsmith and Light.gg.
  */
 function getWeaponSocketInfo(
-  item: DimItem
+  item: DimItem,
 ): null | { traits: number[]; originTrait: number; masterwork: number; weaponMod: number } {
   if (item.sockets && item.bucket?.inWeapons) {
     const traits: number[] = [0, 0, 0, 0];
@@ -137,7 +137,7 @@ function getWeaponSocketInfo(
 
     const origin = item.sockets.allSockets.find(
       (s) =>
-        s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsOriginTraits)
+        s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsOriginTraits),
     );
     const originTrait = origin?.plugged!.plugDef.hash ?? 0;
 
@@ -150,7 +150,7 @@ function getWeaponSocketInfo(
         : masterworkSocket?.plugged?.plugDef.hash ?? 0;
 
     const weaponModSocket = item.sockets.allSockets.find(
-      (s) => s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsDamage)
+      (s) => s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsDamage),
     );
     const weaponMod = weaponModSocket?.plugged!.plugDef.hash ?? 0;
 

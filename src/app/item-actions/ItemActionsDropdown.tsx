@@ -67,8 +67,8 @@ export default memo(function ItemActionsDropdown({
   const canStrip = filteredItems.some(
     (i) =>
       i.sockets?.allSockets.some(
-        (s) => s.emptyPlugItemHash && s.plugged?.plugDef.hash !== s.emptyPlugItemHash
-      )
+        (s) => s.emptyPlugItemHash && s.plugged?.plugDef.hash !== s.emptyPlugItemHash,
+      ),
   );
 
   const bulkTag = loadingTracker.trackPromise(async (selectedTag: TagCommand) => {
