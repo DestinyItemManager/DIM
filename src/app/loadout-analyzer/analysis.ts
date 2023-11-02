@@ -259,7 +259,7 @@ export async function analyzeLoadout(
 
           const strictStatConstraints: ResolvedStatConstraint[] = statConstraints.map((c) => ({
             ...c,
-            minTier: statTier(assumedLoadoutStats[c.statHash]!.value),
+            minTier: Math.max(c.minTier, statTier(assumedLoadoutStats[c.statHash]!.value)),
           }));
 
           loadoutParameters.statConstraints = strictStatConstraints.filter((c) => !c.ignored);
@@ -442,7 +442,7 @@ function getStatProblems(
 
   return {
     stats,
-    cantHitStats: !canHitStatsWithRules,
+    cantHitStats: !canHitStatsWithUpgrades,
     needsUpgradesForStats: canHitStatsWithUpgrades && !canHitStatsAsIs,
   };
 }
