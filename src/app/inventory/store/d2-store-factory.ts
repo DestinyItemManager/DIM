@@ -33,11 +33,18 @@ export function buildStores(
     !profileResponse.characterInventories.data ||
     !profileResponse.characters.data
   ) {
+    const additionalErrorMessage =
+      $DIM_FLAVOR === 'dev'
+        ? 'Vault or character inventory was missing - you likely forgot to select \
+the required application scopes when registering the app on Bungie.net. \
+Please carefully read the instructions in docs/CONTRIBUTING.md -> \
+"Get your own API key" and select the required scopes'
+        : undefined;
     errorLog(
       'd2-stores',
       'Vault or character inventory was missing - bailing in order to avoid corruption'
     );
-    throw new DimError('BungieService.MissingInventory');
+    throw new DimError('BungieService.MissingInventory', additionalErrorMessage);
   }
 
   const lastPlayedDate = findLastPlayedDate(profileResponse);
