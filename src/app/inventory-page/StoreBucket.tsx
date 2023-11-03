@@ -1,7 +1,7 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { t } from 'app/i18next-t';
-import { InventoryBucket } from 'app/inventory/inventory-buckets';
+import { DimBucketType, InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { pullItem } from 'app/inventory/move-item';
 import {
@@ -51,6 +51,8 @@ function useStableArray<T>(arr: T[]) {
   return lastItems.current;
 }
 
+const WEAPON_BUCKET_TYPES: readonly DimBucketType[] = ['KineticSlot', 'Energy', 'Power'];
+
 /**
  * A single bucket of items (for a single store). The arguments for this
  * component are the bare minimum needed, so that we can memoize it to avoid
@@ -86,9 +88,10 @@ const StoreBucketInner = memo(function StoreBucketInner({
   }, [bucket, dispatch, showItemPicker, storeId]);
 
   const equippedItem = isVault ? undefined : items.find((i) => i.equipped);
-  const unequippedItems = isVault
-    ? groupWeapons(sortItems(items))
-    : sortItems(items.filter((i) => !i.equipped));
+  const unequippedItems =
+    isVault && bucket.type && WEAPON_BUCKET_TYPES.includes(bucket.type)
+      ? groupWeapons(sortItems(items))
+      : sortItems(items.filter((i) => !i.equipped));
 
   return (
     <>
@@ -134,7 +137,7 @@ const StoreBucketInner = memo(function StoreBucketInner({
                 <StoreInventoryItem key={item.index} item={item} />
               ))}
             </div>
-          )
+          ),
         )}
         {destinyVersion === 2 &&
           bucket.hash === BucketHashes.Engrams && // Engrams. D1 uses this same bucket hash for "Missions"
