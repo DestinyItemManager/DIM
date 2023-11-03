@@ -7,7 +7,7 @@ import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { bucketsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { useAnalyzeLoadout } from 'app/loadout-analyzer/hooks';
-import { LockableBucketHashes } from 'app/loadout-builder/types';
+import { LockableBucketHashes, ResolvedStatConstraint } from 'app/loadout-builder/types';
 import {
   clearBucketCategory,
   setLoadoutParameters,
@@ -73,17 +73,23 @@ export default function LoadoutItemCategorySection({
   const isArmor = category === 'Armor';
   const hasFashion = isArmor && !_.isEmpty(modsByBucket);
 
-  const optimizeLoadout: Loadout = useMemo(
-    () =>
-      analysis?.result.armorResults?.tag === 'done' &&
-      analysis.result.armorResults.betterStatsAvailable
-        ? clearBucketCategory(
+  const [optimizeLoadout, constraints]: [Loadout, ResolvedStatConstraint[] | undefined] =
+    useMemo(() => {
+      if (
+        analysis?.result.armorResults?.tag === 'done' &&
+        analysis.result.armorResults.betterStatsAvailable
+      ) {
+        return [
+          clearBucketCategory(
             defs,
             'Armor',
-          )(setLoadoutParameters(analysis.result.armorResults.loadoutParameters)(loadout))
-        : loadout,
-    [defs, analysis?.result.armorResults, loadout],
-  );
+          )(setLoadoutParameters(analysis.result.armorResults.loadoutParameters)(loadout)),
+          analysis.result.armorResults.strictUpgradeStatConstraints,
+        ];
+      } else {
+        return [loadout, undefined];
+      }
+    }, [defs, analysis?.result.armorResults, loadout]);
 
   if (isPhonePortrait && !items && !hasFashion) {
     return null;
@@ -128,11 +134,7 @@ export default function LoadoutItemCategorySection({
               loadout={optimizeLoadout}
               storeId={store.id}
               missingArmor={armorItemsMissing(items)}
-              strictUpgradeStatConstraints={
-                analysis?.result?.armorResults?.tag === 'done'
-                  ? analysis.result.armorResults.strictUpgradeStatConstraints
-                  : undefined
-              }
+              strictUpgradeStatConstraints={constraints}
             />
           )}
         </>
