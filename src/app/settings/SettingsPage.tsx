@@ -207,9 +207,6 @@ export default function SettingsPage() {
     ammoType: t('Settings.SortByAmmoType'),
     tag: t('Settings.SortByTag', { taglist: tagListString }),
     elementWeapon: t('Settings.SortByWeaponElement'),
-    masterworked: t('Settings.Masterworked'),
-    crafted: t('Settings.SortByCrafted'),
-    deepsight: t('Settings.SortByDeepsight'),
   });
 
   const descriptionDisplayOptions = mapToOptions({
