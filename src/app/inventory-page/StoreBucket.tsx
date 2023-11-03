@@ -134,7 +134,10 @@ const StoreBucketInner = memo(function StoreBucketInner({
             <StoreInventoryItem key={groupOrItem.index} item={groupOrItem} />
           ) : (
             <div className="vault-group" key={vaultGroupingValueWithType(groupOrItem.value)}>
-              <WeaponGroupingIcon groupValue={groupOrItem.value} className="weapon-grouping-icon" />
+              <WeaponGroupingIcon
+                groupValue={groupOrItem.value}
+                className="weapon-grouping-icon-wrapper"
+              />
               {groupOrItem.items.map((item) => (
                 <StoreInventoryItem key={item.index} item={item} />
               ))}
