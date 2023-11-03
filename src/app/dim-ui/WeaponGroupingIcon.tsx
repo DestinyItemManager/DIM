@@ -68,6 +68,7 @@ export default function WeaponGroupingIcon({
   }
 
   if (vaultWeaponGroupingSetting === 'rarity') {
+    // Rarity is fairly obvious from the colors, so we don't need to show an icon
     return null;
   }
 
