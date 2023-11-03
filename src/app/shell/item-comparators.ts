@@ -124,7 +124,7 @@ interface VaultGroup {
 const GROUP_BY_VALUE_GETTERS: {
   [key: string]: (
     item: DimItem,
-    getTag: (item: DimItem) => TagValue | undefined
+    getTag: (item: DimItem) => TagValue | undefined,
   ) => VaultGroupValue;
 } = {
   tag: (item, getTag) => getTag(item),
@@ -136,9 +136,6 @@ const GROUP_BY_VALUE_GETTERS: {
       return item.element?.enumValue ?? Number.MAX_SAFE_INTEGER;
     }
   },
-  masterworked: (item) => (item.masterwork ? 0 : 1),
-  crafted: (item) => (item.crafted ? 0 : 1),
-  deepsight: (item) => (item.deepsightInfo ? 1 : 2),
 };
 
 const valueProperty = (input: VaultGroup) => input.value;
@@ -315,7 +312,7 @@ export function sortItems(
 export function groupItems(
   items: readonly DimItem[],
   vaultGrouping: string,
-  getTag: (item: DimItem) => TagValue | undefined
+  getTag: (item: DimItem) => TagValue | undefined,
 ): readonly VaultGroup[] {
   const getter = GROUP_BY_VALUE_GETTERS[vaultGrouping];
   const comparator = GROUP_BY_COMPARATORS[vaultGrouping];
