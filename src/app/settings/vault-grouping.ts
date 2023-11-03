@@ -20,5 +20,5 @@ export const vaultWeaponGroupingSelector = createSelector(
     }
 
     return groupItems(items, vaultWeaponGrouping, getTag);
-  }
+  },
 );

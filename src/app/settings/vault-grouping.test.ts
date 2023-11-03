@@ -18,7 +18,7 @@ describe('vaultWeaponGroupingSettingSelector', () => {
             vaultWeaponGrouping: 'typeName',
           },
         },
-      })
+      }),
     ).toBe('typeName');
   });
 });
