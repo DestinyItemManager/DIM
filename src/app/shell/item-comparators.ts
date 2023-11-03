@@ -109,7 +109,7 @@ const TAG_ITEM_COMPARATORS: {
   archive: (getTag) => compareBy((item) => getTag(item) === 'archive'),
 };
 
-type VaultGroupValue = string | number | boolean | undefined;
+export type VaultGroupValue = string | number | boolean | undefined;
 
 interface MutableVaultGroup {
   value: VaultGroupValue;

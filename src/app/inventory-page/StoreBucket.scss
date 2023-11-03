@@ -67,6 +67,17 @@
     padding: 8px;
     color: #999;
   }
+
+  .weapon-grouping-icon {
+    box-sizing: border-box !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--item-size);
+    height: calc((var(--item-size) + ((var(--item-size) / 5) + 4px) - 1px));
+    font-size: calc(var(--item-size) * 0.4);
+    color: #999;
+  }
 }
 
 .pull-item-button {

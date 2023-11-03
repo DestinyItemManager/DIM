@@ -1,5 +1,6 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import ClassIcon from 'app/dim-ui/ClassIcon';
+import WeaponGroupingIcon from 'app/dim-ui/WeaponGroupingIcon';
 import { t } from 'app/i18next-t';
 import { DimBucketType, InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
@@ -133,6 +134,7 @@ const StoreBucketInner = memo(function StoreBucketInner({
             <StoreInventoryItem key={groupOrItem.index} item={groupOrItem} />
           ) : (
             <div className="vault-group" key={vaultGroupingValueWithType(groupOrItem.value)}>
+              <WeaponGroupingIcon groupValue={groupOrItem.value} className="weapon-grouping-icon" />
               {groupOrItem.items.map((item) => (
                 <StoreInventoryItem key={item.index} item={item} />
               ))}
