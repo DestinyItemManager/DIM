@@ -138,6 +138,21 @@ const GROUP_BY_VALUE_GETTERS: {
   },
 };
 
+const TAG_ORDER = ['favorite', 'keep', 'junk', 'infuse', 'archive'];
+
+const propertyValueIndexInTagOrder = (input: VaultGroup) => {
+  if (typeof input.value !== 'string') {
+    return Infinity;
+  }
+
+  const index = TAG_ORDER.indexOf(input.value);
+
+  if (index < 0) {
+    return Infinity;
+  }
+
+  return index;
+};
 const valueProperty = (input: VaultGroup) => input.value;
 
 const undefinedVaultGroupLast =
@@ -160,7 +175,7 @@ const undefinedVaultGroupLast =
 const GROUP_BY_COMPARATORS: {
   [key: string]: Comparator<VaultGroup>;
 } = {
-  tag: undefinedVaultGroupLast(compareBy(valueProperty)),
+  tag: undefinedVaultGroupLast(compareBy(propertyValueIndexInTagOrder)),
   // A -> Z
   typeName: undefinedVaultGroupLast(compareBy(valueProperty)),
   // exotic -> common
