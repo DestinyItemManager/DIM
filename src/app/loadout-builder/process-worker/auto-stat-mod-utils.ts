@@ -56,7 +56,7 @@ export function chooseAutoMods(
   neededStats: number[],
   numArtificeMods: number,
   remainingEnergyCapacities: number[][],
-  remainingTotalEnergy: number
+  remainingTotalEnergy: number,
 ) {
   return recursivelyChooseMods(
     info,
@@ -66,7 +66,7 @@ export function chooseAutoMods(
     numArtificeMods,
     remainingEnergyCapacities,
     remainingTotalEnergy,
-    undefined
+    undefined,
   );
 }
 
@@ -74,7 +74,7 @@ function doGeneralModsFit(
   info: LoSessionInfo,
   /** variants of remaining energy capacities given our activity mod assignment, each sorted descending */
   remainingEnergyCapacities: number[][],
-  pickedMods: ModsPick[] | undefined
+  pickedMods: ModsPick[] | undefined,
 ) {
   // These are already sorted
   let generalModCosts = info.generalModCosts;
@@ -90,7 +90,7 @@ function doGeneralModsFit(
   }
 
   return remainingEnergyCapacities.some((capacities) =>
-    generalModCosts.every((cost, index) => cost <= capacities[index])
+    generalModCosts.every((cost, index) => cost <= capacities[index]),
   );
 }
 
@@ -109,7 +109,7 @@ function recursivelyChooseMods(
   /** variants of remaining energy capacities given our activity mod assignment, each sorted descending */
   remainingEnergyCapacities: number[][],
   remainingTotalEnergy: number,
-  pickedMods: ModsPick[] | undefined
+  pickedMods: ModsPick[] | undefined,
 ): ModsPick[] | undefined {
   while (statIndex < neededStats.length && neededStats[statIndex] === 0) {
     statIndex++;
@@ -152,7 +152,7 @@ function recursivelyChooseMods(
       remainingArtificeSlots - pick.numArtificeMods,
       remainingEnergyCapacities,
       remainingTotalEnergy - pick.modEnergyCost,
-      subArray
+      subArray,
     );
     if (solution) {
       return solution;
@@ -180,7 +180,7 @@ function buildCacheForStat(
   autoModOptions: AutoModData,
   statHash: ArmorStatHashes,
   statIndex: number,
-  availableGeneralStatMods: number
+  availableGeneralStatMods: number,
 ) {
   const cache: CacheForStat = { statMap: {} };
   // Note: All of these could be undefined for whatever reason.
@@ -261,7 +261,7 @@ function buildCacheForStat(
 function buildLessCostlyRelations(
   autoModOptions: AutoModData,
   availableGeneralStatMods: number,
-  statOrder: ArmorStatHashes[]
+  statOrder: ArmorStatHashes[],
 ) {
   return Object.fromEntries(
     statOrder.map((armorStat1, statIndex1) => {
@@ -297,26 +297,26 @@ function buildLessCostlyRelations(
       }
 
       return [statIndex1, betterStatIndices];
-    })
+    }),
   ) as AutoModsMap['cheaperStatRelations'];
 }
 
 export function buildAutoModsMap(
   autoModOptions: AutoModData,
   availableGeneralStatMods: number,
-  statOrder: ArmorStatHashes[]
+  statOrder: ArmorStatHashes[],
 ): AutoModsMap {
   return {
     statCaches: Object.fromEntries(
       statOrder.map((statHash, statIndex) => [
         statIndex,
         buildCacheForStat(autoModOptions, statHash, statIndex, availableGeneralStatMods),
-      ])
+      ]),
     ) as AutoModsMap['statCaches'],
     cheaperStatRelations: buildLessCostlyRelations(
       autoModOptions,
       availableGeneralStatMods,
-      statOrder
+      statOrder,
     ),
   };
 }

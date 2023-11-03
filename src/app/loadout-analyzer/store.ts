@@ -129,7 +129,7 @@ export class LoadoutBackgroundAnalyzer {
     storeId: string,
     classType: DestinyClass,
     loadouts: Loadout[],
-    callback: () => void
+    callback: () => void,
   ): () => void {
     if (!this.requests) {
       return noop;
@@ -159,7 +159,7 @@ export class LoadoutBackgroundAnalyzer {
     storeId: string,
     classType: DestinyClass,
     loadout: Loadout,
-    callback: () => void
+    callback: () => void,
   ): () => void {
     if (!this.requests) {
       return noop;
@@ -213,7 +213,7 @@ export class LoadoutBackgroundAnalyzer {
     storeId: string,
     loadout: Loadout,
     generationNumber: number,
-    results: LoadoutAnalysisResult
+    results: LoadoutAnalysisResult,
   ) {
     const store = this.stores[storeId];
     const result = store.resultsMap.get(loadout);
@@ -341,7 +341,7 @@ async function analysisTask(cancelToken: CancelToken, analyzer: LoadoutBackgroun
       task.analysisContext,
       task.storeId,
       task.classType,
-      task.loadout
+      task.loadout,
     );
     analyzer.setAnalysisResult(task.storeId, task.loadout, task.generationNumber, result);
   }

@@ -157,7 +157,7 @@ test.each(cases)('parse |%s|', (query) => {
         default:
           return [t.type];
       }
-    })
+    }),
   ).toMatchSnapshot('lexer');
 
   // Test the full parse tree

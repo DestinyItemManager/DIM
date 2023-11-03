@@ -62,7 +62,7 @@ const initialState: AccountsState = {
 
 export const accounts: Reducer<AccountsState, AccountsAction> = (
   state: AccountsState = initialState,
-  action: AccountsAction
+  action: AccountsAction,
 ): AccountsState => {
   switch (action.type) {
     case getType(actions.accountsLoaded):

@@ -52,7 +52,7 @@ interface VaultCounts {
 function computeVaultCounts(
   activeStore: DimStore | undefined,
   vault: DimStore | undefined,
-  buckets: InventoryBuckets | undefined
+  buckets: InventoryBuckets | undefined,
 ) {
   if (!activeStore || !vault || !buckets) {
     return emptyObject<VaultCounts>();
@@ -93,7 +93,7 @@ const vaultCountsSelector = createSelector(
   currentStoreSelector,
   vaultSelector,
   bucketsSelector,
-  computeVaultCounts
+  computeVaultCounts,
 );
 
 /** Current amounts and maximum capacities of the vault */
@@ -136,7 +136,7 @@ export default memo(function VaultCapacity() {
               </PressTip>
             </React.Fragment>
           );
-        }
+        },
       )}
     </>
   );

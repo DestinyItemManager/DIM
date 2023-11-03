@@ -73,7 +73,7 @@ const armoryIndexSelector = createSelector(d2ManifestSelector, languageSelector,
 const autoCompleterSelector = createSelector(
   searchConfigSelector,
   armoryIndexSelector,
-  createAutocompleter
+  createAutocompleter,
 );
 
 const LazyFilterHelp = lazy(() => import(/* webpackChunkName: "filter-help" */ './FilterHelp'));
@@ -162,7 +162,7 @@ const Row = memo(
         </button>
       )}
     </>
-  )
+  ),
 );
 
 // TODO: break filter autocomplete into its own object/helpers... with tests
@@ -214,7 +214,7 @@ function SearchBar(
     /** Fired whenever the query has been cleared */
     onClear?: () => void;
   },
-  ref: React.Ref<SearchFilterRef>
+  ref: React.Ref<SearchFilterRef>,
 ) {
   const dispatch = useThunkDispatch();
   const isPhonePortrait = useIsPhonePortrait();
@@ -238,7 +238,7 @@ function SearchBar(
       : _.debounce((query: string) => {
           onQueryChanged(query);
         }, 500),
-    [onQueryChanged]
+    [onQueryChanged],
   );
 
   const liveQuery = useDeferredValue(liveQueryLive);
@@ -271,9 +271,9 @@ function SearchBar(
         liveQuery,
         caretPosition,
         recentSearches,
-        /* includeArmory */ Boolean(mainSearchBar)
+        /* includeArmory */ Boolean(mainSearchBar),
       ),
-    [autocompleter, caretPosition, liveQuery, mainSearchBar, recentSearches]
+    [autocompleter, caretPosition, liveQuery, mainSearchBar, recentSearches],
   );
 
   // useCombobox from Downshift manages the state of the dropdown
@@ -306,7 +306,7 @@ function SearchBar(
   // special click handling for filter helper
   function stateReducer(
     state: UseComboboxState<SearchItem>,
-    actionAndChanges: UseComboboxStateChangeOptions<SearchItem>
+    actionAndChanges: UseComboboxStateChangeOptions<SearchItem>,
   ) {
     const { type, changes } = actionAndChanges;
     switch (type) {
@@ -366,7 +366,7 @@ function SearchBar(
       e.stopPropagation();
       dispatch(searchDeleted(item.query.fullText));
     },
-    [dispatch]
+    [dispatch],
   );
 
   // Add some methods for refs to use
@@ -378,7 +378,7 @@ function SearchBar(
       },
       clearFilter,
     }),
-    [clearFilter]
+    [clearFilter],
   );
 
   // Implement tab completion on the tab key. If the highlighted item is an autocomplete suggestion,
@@ -465,7 +465,7 @@ function SearchBar(
       items,
       tabAutocompleteItem,
       menuMaxHeight,
-    ]
+    ],
   );
 
   return (

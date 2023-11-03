@@ -57,11 +57,11 @@ export function StatTotalToggle({
                     readOnly={readOnly}
                   />
                 )),
-              <span className={styles.divider} />
+              <span className={styles.divider} />,
             )}
           </span>
         )),
-        <span className={styles.divider} />
+        <span className={styles.divider} />,
       )}
     </div>
   );

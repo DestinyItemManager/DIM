@@ -47,7 +47,7 @@ export default function Developer(this: never) {
 
   const onChange =
     (
-      setter: React.Dispatch<React.SetStateAction<string | undefined>>
+      setter: React.Dispatch<React.SetStateAction<string | undefined>>,
     ): React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> =>
     (e) => {
       setter(e.target.value);

@@ -7,7 +7,11 @@ const SELF = "'self'";
 /**
  * Generate a Content Security Policy directive for a particular DIM environment (beta, release)
  */
-export default function csp(env: 'release' | 'beta' | 'dev' | 'pr', featureFlags: FeatureFlags) {
+export default function csp(
+  env: 'release' | 'beta' | 'dev' | 'pr',
+  featureFlags: FeatureFlags,
+  version: string | undefined
+) {
   const baseCSP: Record<string, string[] | string | boolean> = {
     defaultSrc: ["'none'"],
     scriptSrc: [
@@ -79,9 +83,11 @@ export default function csp(env: 'release' | 'beta' | 'dev' | 'pr', featureFlags
   };
 
   // Turn on CSP reporting to sentry.io on beta only
-  if (env === 'beta') {
-    baseCSP.reportUri =
-      'https://sentry.io/api/279673/csp-report/?sentry_key=1367619d45da481b8148dd345c1a1330';
+  if (featureFlags.sentry && env === 'beta') {
+    baseCSP.reportUri = `https://sentry.io/api/279673/csp-report/?sentry_key=1367619d45da481b8148dd345c1a1330&sentry_environment=${env}`;
+    if (version) {
+      baseCSP.reportUri += `&sentry_release=${version}`;
+    }
   }
 
   return builder({

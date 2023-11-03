@@ -103,7 +103,7 @@ function randomizeHandler({ msg, state, store }: HandlerArgs<RandomizeAction>): 
     const loadout = randomLoadout(
       store,
       allItems,
-      msg.weaponsOnly ? (i) => i.bucket?.sort === 'Weapons' : () => true
+      msg.weaponsOnly ? (i) => i.bucket?.sort === 'Weapons' : () => true,
     );
     loadout && (await dispatch(applyLoadout(store, loadout, { allowUndo: true })));
   };

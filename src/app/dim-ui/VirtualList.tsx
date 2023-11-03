@@ -38,7 +38,7 @@ export const VirtualList = forwardRef(function VirtualList(
     children,
     getItemKey,
   }: VirtualListProps,
-  ref: React.ForwardedRef<VirtualListRef>
+  ref: React.ForwardedRef<VirtualListRef>,
 ) {
   // Dynamic-height element-based virtual list code based on https://tanstack.com/virtual/v3/docs/examples/react/dynamic
   const parentRef = useRef<HTMLDivElement>(null);
@@ -106,7 +106,7 @@ export const WindowVirtualList = forwardRef(function WindowVirtualList(
     overscan,
     getItemKey,
   }: VirtualListProps,
-  ref: React.ForwardedRef<VirtualListRef>
+  ref: React.ForwardedRef<VirtualListRef>,
 ) {
   // Dynamic-height window-based virtual list code based on https://tanstack.com/virtual/v3/docs/examples/react/dynamic
   const parentRef = useRef<HTMLDivElement>(null);
@@ -118,7 +118,7 @@ export const WindowVirtualList = forwardRef(function WindowVirtualList(
   useLayoutEffect(() => {
     headerHeightRef.current = parseInt(
       document.querySelector('html')!.style.getPropertyValue('--header-height'),
-      10
+      10,
     );
   }, []);
 

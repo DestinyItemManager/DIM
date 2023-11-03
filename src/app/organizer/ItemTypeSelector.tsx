@@ -392,7 +392,7 @@ export default function ItemTypeSelector({
                       (
                       {
                         filteredItems.filter(
-                          (i) => i.comparable && itemIncludesCategories(i, categoryHashList)
+                          (i) => i.comparable && itemIncludesCategories(i, categoryHashList),
                         ).length
                       }
                       )

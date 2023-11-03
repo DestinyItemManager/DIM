@@ -10,7 +10,7 @@ import { ResolvedStatConstraint } from './types';
  * ignored stats. This fills in the ignored stats as well, retaining stat order.
  */
 export function resolveStatConstraints(
-  statConstraints: StatConstraint[]
+  statConstraints: StatConstraint[],
 ): ResolvedStatConstraint[] {
   const statConstraintsByStatHash = _.keyBy(statConstraints, (c) => c.statHash);
   const resolvedStatConstraints: ResolvedStatConstraint[] = armorStats.map((statHash) => {
@@ -28,7 +28,7 @@ export function resolveStatConstraints(
 }
 
 export function unresolveStatConstraints(
-  resolvedStatConstraints: ResolvedStatConstraint[]
+  resolvedStatConstraints: ResolvedStatConstraint[],
 ): StatConstraint[] {
   return resolvedStatConstraints
     .filter((c) => !c.ignored)

@@ -33,7 +33,7 @@ const notifyTimeout = _.throttle(
     }
   },
   5 * 60 * 1000, // 5 minutes
-  { leading: true, trailing: false }
+  { leading: true, trailing: false },
 );
 
 const logThrottle = (timesThrottled: number, waitTime: number, url: string) =>
@@ -44,7 +44,7 @@ const logThrottle = (timesThrottled: number, waitTime: number, url: string) =>
     'times, waiting',
     waitTime,
     'ms before calling',
-    url
+    url,
   );
 
 // it would be really great if they implemented the pipeline operator soon
@@ -55,20 +55,20 @@ export const authenticatedHttpClient = dimErrorHandledHttpClient(
       createFetchWithNonStoppingTimeout(
         rateLimitedFetch(fetchWithBungieOAuth),
         TIMEOUT,
-        notifyTimeout
+        notifyTimeout,
       ),
-      API_KEY
+      API_KEY,
     ),
-    logThrottle
-  )
+    logThrottle,
+  ),
 );
 
 /** used to get manifest and global alerts */
 export const unauthenticatedHttpClient = dimErrorHandledHttpClient(
   responsivelyThrottleHttpClient(
     createHttpClient(createFetchWithNonStoppingTimeout(fetch, TIMEOUT, notifyTimeout), API_KEY),
-    logThrottle
-  )
+    logThrottle,
+  ),
 );
 
 /**
@@ -140,7 +140,7 @@ function handleErrors(error: unknown): never {
       t('BungieService.NetworkError', {
         status: error.status,
         statusText: error.message,
-      })
+      }),
     ).withError(error);
   }
 
@@ -185,7 +185,7 @@ function handleErrors(error: unknown): never {
       // These just need a custom error message because people ask questions all the time
       case PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation:
         throw new DimError('BungieService.DestinyCannotPerformActionAtThisLocation').withError(
-          error
+          error,
         );
       case PlatformErrorCodes.DestinyItemUnequippable:
         throw new DimError('BungieService.DestinyItemUnequippable').withError(error);
@@ -204,7 +204,7 @@ function handleErrors(error: unknown): never {
       default: {
         throw new DimError(
           'BungieService.UnknownError',
-          t('BungieService.UnknownError', { message: error.message })
+          t('BungieService.UnknownError', { message: error.message }),
         ).withError(error);
       }
     }
@@ -228,7 +228,7 @@ export function handleUniquenessViolation(error: unknown, item: DimItem, store: 
         type: item.type.toLowerCase(),
         character: store.name,
         context: store.genderName,
-      })
+      }),
     ).withError(error);
   }
   throw error;

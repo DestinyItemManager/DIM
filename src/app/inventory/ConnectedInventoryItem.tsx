@@ -79,6 +79,6 @@ export default function ConnectedInventoryItem({
       tag,
       wishlistRoll,
       autoLockTagged,
-    ]
+    ],
   );
 }

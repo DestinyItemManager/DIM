@@ -59,7 +59,7 @@ export class NotificationError extends Error {
       type?: NotificationType;
       icon?: React.ReactNode;
       trailer?: React.ReactNode;
-    }
+    },
   ) {
     super(message);
     this.name = 'NotificationError';

@@ -7,11 +7,11 @@ describe('triage armor comparison works', () => {
   const compare = (
     left: Stats,
     right: Stats,
-    leftArtifice: boolean
+    leftArtifice: boolean,
   ): 'left' | 'right' | undefined => {
     const statsToDict = (stats: Stats) =>
       Object.fromEntries(
-        armorStats.map((hash, index) => [hash, { base: stats[index] } as DimStat])
+        armorStats.map((hash, index) => [hash, { base: stats[index] } as DimStat]),
       );
     const leftStats = statsToDict(left);
     const rightStats = statsToDict(right);

@@ -40,10 +40,10 @@ export function WeaponCraftedInfo({ item, className }: { item: DimItem; classNam
 function CraftedDataMedallion({ item }: { item: DimItem }) {
   const killTrackers = filterMap(
     item.sockets?.allSockets.find((s) => isKillTrackerSocket(s))?.plugOptions ?? [],
-    (p) => plugToKillTracker(p)
+    (p) => plugToKillTracker(p),
   );
   const shapedDateObjective = getCraftedSocket(item)?.plugged?.plugObjectives.find(
-    (o) => o.progress === item.craftedInfo?.craftedDate
+    (o) => o.progress === item.craftedInfo?.craftedDate,
   );
 
   return (

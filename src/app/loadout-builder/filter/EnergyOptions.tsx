@@ -31,7 +31,7 @@ export default function EnergyOptions({
         value: AssumeArmorMasterwork.All,
       },
     ],
-    []
+    [],
   );
 
   const handleChange = useCallback(
@@ -41,7 +41,7 @@ export default function EnergyOptions({
         assumeArmorMasterwork,
       });
     },
-    [lbDispatch]
+    [lbDispatch],
   );
 
   return (

@@ -35,7 +35,7 @@ export const getAccessTokenFromRefreshToken = dedupePromise(
     } else {
       throw await toHttpStatusError(response);
     }
-  }
+  },
 );
 
 export async function getAccessTokenFromCode(code: string): Promise<Tokens> {

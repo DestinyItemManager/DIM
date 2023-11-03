@@ -57,14 +57,14 @@ export default function FashionDrawer({
   const [pickPlug, setPickPlug] = useState<PickPlugState>();
   const allItems = useSelector(allItemsSelector);
   const armor = items.filter(
-    (li) => li.loadoutItem.equip && LockableBucketHashes.includes(li.item.bucket.hash)
+    (li) => li.loadoutItem.equip && LockableBucketHashes.includes(li.item.bucket.hash),
   );
 
   const classType = loadout.classType;
 
   const armorItemsByBucketHash: HashLookup<ResolvedLoadoutItem> = _.keyBy(
     armor,
-    (li) => li.item.bucket.hash
+    (li) => li.item.bucket.hash,
   );
 
   // The items we'll use to determine what sockets are available on each item. Either the equipped item from
@@ -81,11 +81,11 @@ export default function FashionDrawer({
         armorItemsByBucketHash[bucketHash]?.item ??
         // Try to find a legendary example
         allItems.find(
-          (i) => i.tier === 'Legendary' && looksFashionable(i) && getFashionSockets(i).length > 1
+          (i) => i.tier === 'Legendary' && looksFashionable(i) && getFashionSockets(i).length > 1,
         ) ??
         // Fall back to any non-exotic example
         allItems.find(
-          (i) => !i.isExotic && looksFashionable(i) && getFashionSockets(i).length > 1
+          (i) => !i.isExotic && looksFashionable(i) && getFashionSockets(i).length > 1,
         ) ??
         // Finally, find something shaderable at least. This user must have only rudimentary armor.
         allItems.find(
@@ -93,10 +93,10 @@ export default function FashionDrawer({
             !i.isExotic &&
             i.bucket.hash === bucketHash &&
             i.classType === classType &&
-            getFashionSockets(i).length
+            getFashionSockets(i).length,
         );
       return [bucketHash, exampleItem];
-    })
+    }),
   );
 
   const [modsByBucket, setModsByBucket] = useState(loadout.parameters?.modsByBucket ?? {});
@@ -139,7 +139,7 @@ export default function FashionDrawer({
     setModsByBucket((modsByBucket) => {
       // Clear out existing selections for this socket.
       const existingMods = (modsByBucket[item.bucket.hash] ?? []).filter(
-        (mod) => !plugFitsIntoSocket(socket, mod)
+        (mod) => !plugFitsIntoSocket(socket, mod),
       );
 
       return {
@@ -160,7 +160,7 @@ export default function FashionDrawer({
             (i) =>
               i.bucket.hash === bucketHash &&
               i.equipped &&
-              (storeId ? i.owner === storeId : i.classType === classType)
+              (storeId ? i.owner === storeId : i.classType === classType),
           );
         const cosmeticSockets = item?.sockets
           ? getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics)
@@ -169,7 +169,7 @@ export default function FashionDrawer({
           bucketHash,
           filterMap(cosmeticSockets, (s) => (s.actuallyPlugged || s.plugged)?.plugDef.hash),
         ];
-      })
+      }),
     );
 
     setModsByBucket(newModsByBucket);
@@ -189,8 +189,8 @@ export default function FashionDrawer({
         LockableBucketHashes.map((bucketHash) => [
           bucketHash,
           [...(modsByBucket[bucketHash] ?? []).filter((h) => !isShader(h)), mostCommonShaders[0]],
-        ])
-      )
+        ]),
+      ),
     );
   };
 
@@ -208,8 +208,8 @@ export default function FashionDrawer({
           LockableBucketHashes.map((bucketHash) => [
             bucketHash,
             [...(modsByBucket[bucketHash] ?? []).filter((h) => isShader(h)), ornaments[0]],
-          ])
-        )
+          ]),
+        ),
       );
       return;
     }
@@ -225,7 +225,7 @@ export default function FashionDrawer({
     delete groupedOrnaments[-1];
     const mostCommonOrnamentSet = _.maxBy(
       Object.entries(groupedOrnaments),
-      ([_presentationHash, ornaments]) => ornaments.length
+      ([_presentationHash, ornaments]) => ornaments.length,
     );
     if (!mostCommonOrnamentSet) {
       return;
@@ -236,7 +236,7 @@ export default function FashionDrawer({
       defs.PresentationNode.get(mostCommon).children.collectibles,
       (c) =>
         defs.Collectible.get(c.collectibleHash)?.itemHash ??
-        manuallyFindItemForCollectible(defs, c.collectibleHash)?.hash
+        manuallyFindItemForCollectible(defs, c.collectibleHash)?.hash,
     );
 
     if (set.length !== 5) {
@@ -252,7 +252,7 @@ export default function FashionDrawer({
           // try to find an "identical" item that *is* an unlocked plug
           if (!unlockedPlugs.has(ornamentHash)) {
             const ornamentVersion = findOtherCopies(defs, ornamentHash).find((i) =>
-              unlockedPlugs.has(i.hash)
+              unlockedPlugs.has(i.hash),
             );
             ornamentHash = ornamentVersion?.hash ?? ornamentHash;
           }
@@ -264,8 +264,8 @@ export default function FashionDrawer({
           }
 
           return [bucketHash, modsByBucket[bucketHash] ?? []];
-        })
-      )
+        }),
+      ),
     );
   };
 
@@ -281,7 +281,7 @@ export default function FashionDrawer({
             modsByBucket[bucket] = modsWithoutShaders;
           }
         }
-      })
+      }),
     );
   };
 
@@ -438,11 +438,11 @@ function FashionItem({
   // the exotic Loreley Splendor helm has a dummy socket with nothing plugged)
   const isShaderSocket = (s: DimSocket) =>
     defs.SocketType.get(s.socketDefinition.socketTypeHash)?.plugWhitelist.some(
-      (pw) => pw.categoryHash === PlugCategoryHashes.Shader
+      (pw) => pw.categoryHash === PlugCategoryHashes.Shader,
     );
   const cosmeticSockets = getSocketsByCategoryHash(
     exampleItem.sockets,
-    SocketCategoryHashes.ArmorCosmetics
+    SocketCategoryHashes.ArmorCosmetics,
   ).filter((s) => s.plugged);
   const shaderSocket = cosmeticSockets.find(isShaderSocket);
   const ornamentSocket = cosmeticSockets.find((s) => !isShaderSocket(s));
@@ -504,19 +504,19 @@ function FashionSocket({
   const handleOrnamentClick = socket && (() => onPickPlug({ item: exampleItem, socket }));
 
   const unlockedPlugsWithoutTheDefault = Array.from(unlockedPlugSetItems).filter(
-    (plugHash) => plugHash !== defaultPlug.hash
+    (plugHash) => plugHash !== defaultPlug.hash,
   );
 
   const canSlotOrnament =
     (socket?.plugSet &&
       _.intersection(
         unlockedPlugsWithoutTheDefault,
-        socket.plugSet.plugs.map((plug) => plug.plugDef.hash)
+        socket.plugSet.plugs.map((plug) => plug.plugDef.hash),
       ).length > 0) ||
     (socket?.reusablePlugItems &&
       _.intersection(
         unlockedPlugsWithoutTheDefault,
-        socket.reusablePlugItems.filter((p) => p.enabled).map((p) => p.plugItemHash)
+        socket.reusablePlugItems.filter((p) => p.enabled).map((p) => p.plugItemHash),
       ).length > 0);
 
   return (
@@ -558,7 +558,7 @@ function FashionSocket({
 
 function findOtherCopies(
   defs: D2ManifestDefinitions,
-  item: DestinyInventoryItemDefinition | DimItem | number
+  item: DestinyInventoryItemDefinition | DimItem | number,
 ) {
   const itemDef = defs.InventoryItem.get(typeof item === 'number' ? item : item.hash);
   const results: DestinyInventoryItemDefinition[] = [];
@@ -577,7 +577,7 @@ function findOtherCopies(
 
 function manuallyFindItemForCollectible(
   defs: D2ManifestDefinitions,
-  collectible: DestinyCollectibleDefinition | number
+  collectible: DestinyCollectibleDefinition | number,
 ) {
   const collectibleHash = typeof collectible === 'number' ? collectible : collectible.hash;
   const invItemTable = defs.InventoryItem.getAll();

@@ -12,7 +12,7 @@ describe('dedupePromise', () => {
           outerResolve = resolve;
           outerReject = reject;
           promiseFunctionInvoked++;
-        })
+        }),
     );
 
     // Multiple calls before the promise resolves return the same promise

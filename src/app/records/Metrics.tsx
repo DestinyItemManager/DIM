@@ -10,12 +10,12 @@ export default function Metrics({ metrics }: { metrics: DimMetric[] }) {
   const defs = useD2Definitions()!;
   const groupedMetrics = Object.groupBy(
     metrics,
-    (metric) => metric.metricDef.traitHashes.filter((h) => h !== TraitHashes.All)[0]
+    (metric) => metric.metricDef.traitHashes.filter((h) => h !== TraitHashes.All)[0],
   );
 
   const traits = _.keyBy(
     Object.keys(groupedMetrics).map((th) => defs.Trait.get(Number(th))),
-    (t) => t.hash
+    (t) => t.hash,
   );
 
   return (

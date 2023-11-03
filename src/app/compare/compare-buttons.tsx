@@ -109,7 +109,7 @@ const bucketToSearch = {
 const getRpm = (i: DimItem) => {
   const itemRpmStat = i.stats?.find(
     (s) =>
-      s.statHash === (i.destinyVersion === 1 ? i.stats![0].statHash : StatHashes.RoundsPerMinute)
+      s.statHash === (i.destinyVersion === 1 ? i.stats![0].statHash : StatHashes.RoundsPerMinute),
   );
   return itemRpmStat?.value || -99999999;
 };

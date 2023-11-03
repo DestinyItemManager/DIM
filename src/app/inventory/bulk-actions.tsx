@@ -19,7 +19,7 @@ import { getTagSelector, tagSelector } from './selectors';
 export function bulkTagItems(
   itemsToBeTagged: DimItem[],
   selectedTag: TagCommand,
-  notification = true
+  notification = true,
 ): ThunkResult {
   return async (dispatch, getState) => {
     const getTag = getTagSelector(getState());
@@ -39,8 +39,8 @@ export function bulkTagItems(
             itemId: item.id,
             tag: selectedTag === 'clear' ? undefined : selectedTag,
             craftedDate: item.craftedInfo?.craftedDate,
-          }))
-        )
+          })),
+        ),
       );
     }
     for (const item of nonInstanced) {
@@ -48,7 +48,7 @@ export function bulkTagItems(
         setItemHashTag({
           itemHash: item.hash,
           tag: selectedTag === 'clear' ? undefined : selectedTag,
-        })
+        }),
       );
     }
     if (notification) {
@@ -75,8 +75,8 @@ export function bulkTagItems(
                         itemId: item.id,
                         tag: previousState.get(item),
                         craftedDate: item.craftedInfo?.craftedDate,
-                      }))
-                    )
+                      })),
+                    ),
                   );
                 }
                 if (nonInstanced.length) {
@@ -85,7 +85,7 @@ export function bulkTagItems(
                       setItemHashTag({
                         itemHash: item.hash,
                         tag: previousState.get(item),
-                      })
+                      }),
                     );
                   }
                 }

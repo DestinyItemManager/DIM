@@ -21,7 +21,7 @@ export default function CharacterOrderEditor({
     const order = reorder(
       characters.filter((c) => !c.isVault).map((c) => c.id),
       oldIndex,
-      newIndex
+      newIndex,
     );
     onSortOrderChanged(order);
   };
@@ -69,7 +69,7 @@ export default function CharacterOrderEditor({
                       </div>
                     )}
                   </Draggable>
-                )
+                ),
             )}
             {provided.placeholder}
           </div>

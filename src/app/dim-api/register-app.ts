@@ -12,7 +12,7 @@ export async function registerApp(dimAppName: string, bungieApiKey: string) {
         origin: window.location.origin,
       },
     },
-    true
+    true,
   );
 
   // Check if request failed for various possible reasons

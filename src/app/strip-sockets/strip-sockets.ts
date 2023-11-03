@@ -29,7 +29,7 @@ export type SocketKind =
 
 function identifySocket(
   socket: DimSocket,
-  plugDef: PluggableInventoryItemDefinition
+  plugDef: PluggableInventoryItemDefinition,
 ): SocketKind | undefined {
   if (plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.Shaders)) {
     return 'shaders';
@@ -52,7 +52,7 @@ function identifySocket(
 export function collectSocketsToStrip(
   filteredItems: DimItem[],
   destiny2CoreSettings: Destiny2CoreSettings | undefined,
-  defs: D2ManifestDefinitions
+  defs: D2ManifestDefinitions,
 ) {
   const socketsByKind: {
     [kind in SocketKind]: {
@@ -142,7 +142,7 @@ export function collectSocketsToStrip(
 export function doStripSockets(
   socketList: StripAction[],
   cancelToken: CancelToken,
-  progressCallback: (idx: number, errorMsg: string | undefined) => void
+  progressCallback: (idx: number, errorMsg: string | undefined) => void,
 ): ThunkResult {
   return async (dispatch) => {
     for (let i = 0; i < socketList.length; i++) {
@@ -152,7 +152,7 @@ export function doStripSockets(
 
       try {
         const socket = entry.item.sockets!.allSockets.find(
-          (i) => i.socketIndex === entry.socketIndex
+          (i) => i.socketIndex === entry.socketIndex,
         )!;
         await dispatch(insertPlug(entry.item, socket, socket.emptyPlugItemHash!));
         progressCallback(i, undefined);

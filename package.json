@@ -23,7 +23,7 @@
     "fix:eslint": "pnpm lint:eslint --fix",
     "fix:json": "jsonsort src/locale",
     "fix:stylelint": "pnpm lint:stylelint --fix",
-    "fix:prettier": "pnpm lint:prettier --write",
+    "fix:prettier": "prettier \"src/**/*.{js,ts,tsx,cjs,mjs,cts,mts,scss}\" --write",
     "bundle": "webpack --config ./config/webpack.ts",
     "build:release": "pnpm -s bundle --env=release --node-env=production",
     "build:beta": "pnpm -s bundle --env=beta --node-env=production",

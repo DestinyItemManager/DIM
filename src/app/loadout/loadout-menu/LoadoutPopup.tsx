@@ -83,14 +83,14 @@ export default function LoadoutPopup({
   const loadoutSort = useSelector(settingSelector('loadoutSort'));
   const dispatch = useThunkDispatch();
   const hasClassifiedAffectingMaxPower = useSelector(
-    (state: RootState) => powerLevelSelector(state, dimStore.id)?.problems.hasClassified
+    (state: RootState) => powerLevelSelector(state, dimStore.id)?.problems.hasClassified,
   );
 
   const loadouts = useSelector(loadoutsForClassTypeSelector(dimStore.classType));
   const inGameLoadouts = useSelector((state: RootState) =>
     dimStore.isVault
       ? emptyArray<InGameLoadout>()
-      : inGameLoadoutsForCharacterSelector(state, dimStore.id)
+      : inGameLoadoutsForCharacterSelector(state, dimStore.id),
   );
 
   const [loadoutQuery, setLoadoutQuery] = useState('');
@@ -131,13 +131,13 @@ export default function LoadoutPopup({
   const [pillFilteredLoadouts, filterPills, hasSelectedFilters] = useLoadoutFilterPills(
     loadouts,
     dimStore,
-    { className: styles.filterPills, darkBackground: true }
+    { className: styles.filterPills, darkBackground: true },
   );
   const filteredLoadouts = searchAndSortLoadoutsByQuery(
     pillFilteredLoadouts,
     loadoutQuery,
     language,
-    loadoutSort
+    loadoutSort,
   );
 
   const blockPropagation = (e: React.MouseEvent) => e.stopPropagation();

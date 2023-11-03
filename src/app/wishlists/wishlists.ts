@@ -10,7 +10,7 @@ export const enum UiWishListRoll {
 }
 
 export function toUiWishListRoll(
-  inventoryWishListRoll?: InventoryWishListRoll
+  inventoryWishListRoll?: InventoryWishListRoll,
 ): UiWishListRoll | undefined {
   if (!inventoryWishListRoll) {
     return undefined;
@@ -46,7 +46,7 @@ function isWeaponOrArmorOrGhostMod(plug: DimPlug): boolean {
       (ich) =>
         ich === ItemCategoryHashes.WeaponModsIntrinsic ||
         ich === ItemCategoryHashes.WeaponModsGameplay ||
-        ich === ItemCategoryHashes.ArmorModsGameplay
+        ich === ItemCategoryHashes.ArmorModsGameplay,
     )
   ) {
     return false;
@@ -66,7 +66,7 @@ function isWeaponOrArmorOrGhostMod(plug: DimPlug): boolean {
         ich === ItemCategoryHashes.WeaponMods ||
         ich === ItemCategoryHashes.ArmorMods ||
         ich === ItemCategoryHashes.BonusMods ||
-        ich === ItemCategoryHashes.GhostModsPerks
+        ich === ItemCategoryHashes.GhostModsPerks,
     ) ?? false
   ); // weapon, then armor, then bonus (found on armor perks), then ghost mod
 }
@@ -74,7 +74,7 @@ function isWeaponOrArmorOrGhostMod(plug: DimPlug): boolean {
 /** Is the plug's hash included in the recommended perks from the wish list roll? */
 export function isWishListPlug(
   plug: DimPlug,
-  wishListRoll?: WishListRoll | InventoryWishListRoll
+  wishListRoll?: WishListRoll | InventoryWishListRoll,
 ): boolean {
   const perks =
     wishListRoll &&
@@ -85,7 +85,7 @@ export function isWishListPlug(
     perks &&
       (perks.has(plug.plugDef.hash) || // if this perk was recommended
         // or this enhanced perk's base version was recommended
-        perks.has(enhancedToPerk[plug.plugDef.hash]))
+        perks.has(enhancedToPerk[plug.plugDef.hash])),
   );
 }
 
@@ -145,14 +145,14 @@ function allDesiredPerksExist(item: DimItem, wishListRoll: WishListRoll): boolea
     (s) =>
       !s.plugged ||
       !isWeaponOrArmorOrGhostMod(s.plugged) ||
-      s.plugOptions.some((dp) => isWishListPlug(dp, wishListRoll))
+      s.plugOptions.some((dp) => isWishListPlug(dp, wishListRoll)),
   );
 }
 
 /** Get the InventoryWishListRoll for this item. */
 export function getInventoryWishListRoll(
   item: DimItem,
-  wishListRolls: Map<number, WishListRoll[]>
+  wishListRolls: Map<number, WishListRoll[]>,
 ): InventoryWishListRoll | undefined {
   // It could be under the item hash, the wildcard, or any of the item's categories
   for (const hash of [item.hash, DimWishList.WildcardItemId, ...item.itemCategoryHashes]) {

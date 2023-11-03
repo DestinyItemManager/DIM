@@ -20,7 +20,7 @@ export default function CompareContainer({ destinyVersion }: { destinyVersion: D
     () => () => {
       dispatch(endCompareSession());
     },
-    [dispatch, pathname]
+    [dispatch, pathname],
   );
 
   useEffect(() => {

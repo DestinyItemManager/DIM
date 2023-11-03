@@ -97,7 +97,7 @@ const itemFactors: Record<string, Factor> = {
               itemDef={intrinsicArmorPerk.plugDef}
               borderless={true}
             />
-          </PressTip>
+          </PressTip>,
         );
       }
 

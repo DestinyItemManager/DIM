@@ -37,7 +37,7 @@ export default function ItemPicker({
       onItemSelected(item);
       onClose();
     },
-    [onItemSelected]
+    [onItemSelected],
   );
 
   const onSheetClosedFn = () => {
@@ -59,7 +59,7 @@ export default function ItemPicker({
   // All items, filtered by the pre-filter configured on the item picker
   const filteredItems = useMemo(
     () => (filterItems ? allItems.filter(filterItems) : allItems),
-    [allItems, filterItems]
+    [allItems, filterItems],
   );
   // Further filtered by the search bar in the item picker
   const items = useMemo(() => {
@@ -109,7 +109,7 @@ function ItemPickerItem({
 }) {
   const handleClick = useCallback(
     () => onItemSelectedFn(item, onClose),
-    [item, onClose, onItemSelectedFn]
+    [item, onClose, onItemSelectedFn],
   );
 
   return (

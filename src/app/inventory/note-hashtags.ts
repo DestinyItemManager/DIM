@@ -33,11 +33,11 @@ export function appendedToNote(originalNote: string | undefined, append: string)
   const originalSegmented = segmentHashtags(originalNote);
   const newSegmented = segmentHashtags(append);
   const existingHashtags = new Set(
-    filterMap(originalSegmented, (s) => (typeof s !== 'string' ? s.hashtag : undefined))
+    filterMap(originalSegmented, (s) => (typeof s !== 'string' ? s.hashtag : undefined)),
   );
   // Don't add hashtags that already exist again - remove them from the input
   const filteredAppendSegments = newSegmented.filter(
-    (s) => typeof s === 'string' || !existingHashtags.has(s.hashtag)
+    (s) => typeof s === 'string' || !existingHashtags.has(s.hashtag),
   );
   return _.compact([...originalSegmented, ' ', ...filteredAppendSegments])
     .map((s) => (typeof s === 'string' ? s : s.hashtag))
@@ -70,12 +70,12 @@ export function removedFromNote(originalNote: string | undefined, removed: strin
   }
   // Otherwise subtract out the literal string
   const hashtagSpans = filterMap(originalSegmented, (s) =>
-    typeof s === 'string' ? undefined : [s.index, s.index + s.hashtag.length]
+    typeof s === 'string' ? undefined : [s.index, s.index + s.hashtag.length],
   );
   return originalNote
     ?.replaceAll(removed.trim(), (original, index) =>
       // Refuse to cut a tag in half
-      hashtagSpans.some(([start, end]) => index > start && index < end) ? original : ''
+      hashtagSpans.some(([start, end]) => index > start && index < end) ? original : '',
     )
     .replaceAll(/\s+/g, ' ')
     .trim();
@@ -83,7 +83,7 @@ export function removedFromNote(originalNote: string | undefined, removed: strin
 
 /** Break up a string into normal-string bits and hashtags */
 function segmentHashtags(
-  note: string | undefined
+  note: string | undefined,
 ): (string | { hashtag: string; index: number })[] {
   if (!note) {
     return [];

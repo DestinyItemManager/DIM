@@ -11,6 +11,6 @@ export function saveWishListToIndexedDB() {
           lastFetched: nextState.lastFetched,
         });
       }
-    }
+    },
   );
 }

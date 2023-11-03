@@ -30,7 +30,7 @@ const LoadoutAnalyzerReactContext = createContext<LoadoutBackgroundAnalyzer | nu
 const autoModSelector = createSelector(
   d2ManifestSelector,
   unlockedPlugSetItemsSelector.selector,
-  (defs, unlockedPlugSetItems) => defs && getAutoMods(defs, unlockedPlugSetItems)
+  (defs, unlockedPlugSetItems) => defs && getAutoMods(defs, unlockedPlugSetItems),
 );
 
 // It'd be really neat if this one didn't depend on the storeId but
@@ -52,8 +52,8 @@ const autoOptimizationContextSelector = currySelector(
         savedLoLoadoutParameters,
         allItems,
         autoModDefs,
-      } satisfies LoadoutAnalysisContext)
-  )
+      } satisfies LoadoutAnalysisContext),
+  ),
 );
 
 /** Wrapper component that holds the analyzer task and results. */
@@ -84,7 +84,7 @@ export function useUpdateLoadoutAnalysisContext(storeId: string) {
   const analysisContext = useSelector(autoOptimizationContextSelector(storeId));
   useEffect(
     () => analysisContext && analyzer?.updateAnalysisContext(storeId, analysisContext),
-    [analysisContext, analyzer, storeId]
+    [analysisContext, analyzer, storeId],
   );
 }
 
@@ -92,7 +92,7 @@ export function useUpdateLoadoutAnalysisContext(storeId: string) {
 export function useAnalyzeLoadout(
   loadout: Loadout,
   store: DimStore,
-  active: boolean
+  active: boolean,
 ):
   | {
       outdated: boolean;
@@ -106,11 +106,11 @@ export function useAnalyzeLoadout(
       active && analyzer
         ? analyzer.subscribeToLoadoutResult(id, store.id, store.classType, loadout, callback)
         : noop,
-    [active, analyzer, id, loadout, store.classType, store.id]
+    [active, analyzer, id, loadout, store.classType, store.id],
   );
   const getSnapshot = useCallback(
     () => (active ? analyzer?.getLoadoutResults(store.id, loadout) : undefined),
-    [active, analyzer, loadout, store.id]
+    [active, analyzer, loadout, store.id],
   );
   return useSyncExternalStore(subscribe, getSnapshot);
 }
@@ -119,7 +119,7 @@ export function useAnalyzeLoadout(
 export function useSummaryLoadoutsAnalysis(
   loadouts: Loadout[],
   store: DimStore,
-  active: boolean
+  active: boolean,
 ): LoadoutAnalysisSummary | undefined {
   const id = useId();
   const analyzer = useContext(LoadoutAnalyzerReactContext);
@@ -128,11 +128,11 @@ export function useSummaryLoadoutsAnalysis(
       active && analyzer
         ? analyzer?.subscribeToSummary(id, store.id, store.classType, loadouts, callback)
         : noop,
-    [active, analyzer, id, loadouts, store.classType, store.id]
+    [active, analyzer, id, loadouts, store.classType, store.id],
   );
   const getSnapshot = useCallback(
     () => (active ? analyzer?.getSummary(id) : undefined),
-    [active, analyzer, id]
+    [active, analyzer, id],
   );
   return useSyncExternalStore(subscribe, getSnapshot);
 }

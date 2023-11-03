@@ -53,7 +53,7 @@ export default function StoreBucketDropTarget({
         return itemCanBeEquippedByStoreId(item, storeId, storeClassType);
       },
     }),
-    [storeId, bucket, storeClassType, equip]
+    [storeId, bucket, storeClassType, equip],
   );
 
   // TODO: I don't like that we're managing the classes for sub-bucket here

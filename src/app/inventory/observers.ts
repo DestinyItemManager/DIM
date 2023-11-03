@@ -24,6 +24,6 @@ export const saveItemInfosOnStateChange = _.once(() => {
           errorLog('new-items', "Couldn't save new items", e);
         }
       }
-    }, 1000)
+    }, 1000),
   );
 });

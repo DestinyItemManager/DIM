@@ -205,8 +205,8 @@ const ITEM_COMPARATORS: {
   season: reverseComparator(
     chainComparator(
       compareBy((item) => (item.destinyVersion === 2 ? getSeason(item) : 0)),
-      compareBy((item) => item.iconOverlay ?? '')
-    )
+      compareBy((item) => item.iconOverlay ?? ''),
+    ),
   ),
   // sunset -> not sunset
   sunset: compareBy(isSunset),
@@ -235,7 +235,7 @@ const ITEM_COMPARATORS: {
 export function sortItems(
   items: readonly DimItem[],
   itemSortSettings: ItemSortSettings,
-  getTag: (item: DimItem) => TagValue | undefined
+  getTag: (item: DimItem) => TagValue | undefined,
 ): readonly DimItem[] {
   if (!items.length) {
     return items;
@@ -281,8 +281,8 @@ export function sortItems(
         ITEM_COMPARATORS.typeName,
         ITEM_COMPARATORS.rarity,
         ITEM_COMPARATORS.name,
-        ITEM_COMPARATORS.amount
-      )
+        ITEM_COMPARATORS.amount,
+      ),
     );
   }
 
@@ -307,7 +307,7 @@ export function sortItems(
       return itemSortSettings.sortReversals.includes(comparatorName)
         ? reverseComparator(comparator)
         : comparator;
-    })
+    }),
   );
   return items.toSorted(comparator);
 }

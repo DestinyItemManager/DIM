@@ -10,7 +10,7 @@ import { DimCatalyst } from '../item-types';
 export function buildCatalystInfo(
   itemHash: number,
   profileRecords: DestinyProfileRecordsComponent | undefined,
-  characterRecords: { [key: string]: DestinyCharacterRecordsComponent } | undefined
+  characterRecords: { [key: string]: DestinyCharacterRecordsComponent } | undefined,
 ): DimCatalyst | undefined {
   if (!exoticsWithCatalysts.has(itemHash)) {
     return undefined;
@@ -31,7 +31,7 @@ export function buildCatalystInfo(
   // TODO: Can't tell the difference between unlocked and inserted for new-style catalysts?
   const complete = Boolean(
     !(record.state & DestinyRecordState.ObjectiveNotCompleted) ||
-      record.state & DestinyRecordState.RecordRedeemed
+      record.state & DestinyRecordState.RecordRedeemed,
   );
   // TODO: seasonal exotics (e.g. Ticuu's) are unlocked by default but still show as obscured - they're run by a quest instead of a record?
 

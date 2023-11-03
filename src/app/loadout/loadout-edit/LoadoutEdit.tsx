@@ -92,15 +92,15 @@ export default function LoadoutEdit({
         loadout.items,
         store,
         allItems,
-        modsByBucket
+        modsByBucket,
       ),
-    [itemCreationContext, loadout.items, store, allItems, modsByBucket]
+    [itemCreationContext, loadout.items, store, allItems, modsByBucket],
   );
 
   const [allMods, modDefinitions] = useLoadoutMods(loadout, store.id);
   const categories = Object.groupBy(
     items.concat(warnitems),
-    (li) => li.item.bucket.sort ?? 'unknown'
+    (li) => li.item.bucket.sort ?? 'unknown',
   );
   const power = loadoutPower(store, categories);
   const anyClass = loadout.classType === DestinyClass.Unknown;
@@ -157,7 +157,7 @@ async function pickLoadoutItem(
   loadout: Loadout,
   bucket: InventoryBucket,
   add: (item: DimItem) => void,
-  store: DimStore
+  store: DimStore,
 ) {
   const loadoutHasItem = (item: DimItem) =>
     findSameLoadoutItemIndex(defs, loadout.items, item) !== -1;
@@ -298,7 +298,7 @@ function LoadoutEditCategorySection({
       loadout,
       bucket,
       (item) => handleAddItem(item, equip),
-      store
+      store,
     );
   };
 
@@ -389,7 +389,7 @@ function LoadoutEditCategorySection({
             checked={Boolean(
               category === 'Armor'
                 ? loadout.parameters?.clearArmor
-                : loadout.parameters?.clearWeapons
+                : loadout.parameters?.clearWeapons,
             )}
             onChange={(clear) => handleSetClear(clear, category)}
           >
@@ -482,7 +482,7 @@ function LoadoutArtifactUnlocksSection({
 
   const handleSyncArtifactUnlocksFromEquipped = useCallback(
     () => setLoadout(syncArtifactUnlocksFromEquipped(unlockedArtifactMods)),
-    [setLoadout, unlockedArtifactMods]
+    [setLoadout, unlockedArtifactMods],
   );
   const handleClearArtifactUnlocks = useUpdater(clearArtifactUnlocks);
   const handleRemoveArtifactUnlock = useUpdater(removeArtifactUnlock);
@@ -496,7 +496,7 @@ function LoadoutArtifactUnlocksSection({
   // Don't show the artifact unlocks section unless there are artifact mods saved in this loadout
   // or there are unlocked artifact mods we could copy into this loadout.
   const showArtifactUnlocks = Boolean(
-    unlockedArtifactMods?.unlockedItemHashes.length || artifactUnlocks?.unlockedItemHashes.length
+    unlockedArtifactMods?.unlockedItemHashes.length || artifactUnlocks?.unlockedItemHashes.length,
   );
 
   return (
@@ -530,7 +530,7 @@ function LoadoutArtifactUnlocksSection({
 function disableFillInForCategory(
   defs: D2ManifestDefinitions,
   items: ResolvedLoadoutItem[],
-  category: D2BucketCategory
+  category: D2BucketCategory,
 ) {
   const currentItems = items?.filter((i) => i.loadoutItem.equip).length ?? 0;
   const maxItems = getLoadoutBucketHashesFromCategory(defs, category).length;

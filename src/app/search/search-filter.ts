@@ -57,7 +57,7 @@ const filterContextSelector = createSelector(
   languageSelector,
   customStatsSelector,
   d2ManifestSelector,
-  makeFilterContext
+  makeFilterContext,
 );
 
 function makeFilterContext(
@@ -72,7 +72,7 @@ function makeFilterContext(
   getNotes: (item: DimItem) => string | undefined,
   language: DimLanguage,
   customStats: Settings['customStats'],
-  d2Definitions: D2ManifestDefinitions | undefined
+  d2Definitions: D2ManifestDefinitions | undefined,
 ): FilterContext {
   return {
     stores,
@@ -99,14 +99,14 @@ function makeFilterContext(
 export const filterFactorySelector = createSelector(
   searchConfigSelector,
   filterContextSelector,
-  makeSearchFilterFactory<DimItem, FilterContext, SuggestionsContext>
+  makeSearchFilterFactory<DimItem, FilterContext, SuggestionsContext>,
 );
 
 /** A selector for a function for searching items, given the current search query. */
 export const searchFilterSelector = createSelector(
   querySelector,
   filterFactorySelector,
-  (query, filterFactory) => filterFactory(query)
+  (query, filterFactory) => filterFactory(query),
 );
 
 /** A selector for all items filtered by whatever's currently in the search box. */
@@ -115,7 +115,7 @@ export const filteredItemsSelector = createSelector(
   searchFilterSelector,
   displayableBucketHashesSelector,
   (allItems, searchFilter, displayableBuckets) =>
-    allItems.filter((i) => displayableBuckets.has(i.location.hash) && searchFilter(i))
+    allItems.filter((i) => displayableBuckets.has(i.location.hash) && searchFilter(i)),
 );
 
 /** A selector for a function for validating a query. */
@@ -123,19 +123,19 @@ export const validateQuerySelector = createSelector(
   searchConfigSelector,
   filterContextSelector,
   (searchConfig, filterContext) => (query: string) =>
-    parseAndValidateQuery(query, searchConfig.filtersMap, filterContext)
+    parseAndValidateQuery(query, searchConfig.filtersMap, filterContext),
 );
 
 /** Whether the current search query is valid. */
 export const queryValidSelector = createSelector(
   querySelector,
   validateQuerySelector,
-  (query, validateQuery) => validateQuery(query).valid
+  (query, validateQuery) => validateQuery(query).valid,
 );
 
 function makeSearchFilterFactory<I, FilterCtx, SuggestionsCtx>(
   { filtersMap: { isFilters, kvFilters } }: SearchConfig<I, FilterCtx, SuggestionsCtx>,
-  filterContext: FilterCtx
+  filterContext: FilterCtx,
 ) {
   return (query: string): ItemFilter<I> => {
     query = query.trim().toLowerCase();
@@ -198,7 +198,7 @@ function makeSearchFilterFactory<I, FilterCtx, SuggestionsCtx>(
                   'internal error: filter construction threw exception',
                   filterName,
                   filterValue,
-                  e
+                  e,
                 );
               }
             }
@@ -218,7 +218,7 @@ function makeSearchFilterFactory<I, FilterCtx, SuggestionsCtx>(
                   'internal error: filter construction threw exception',
                   filterName,
                   filterValue,
-                  e
+                  e,
                 );
               }
             }
@@ -240,7 +240,7 @@ export function matchFilter<I, FilterCtx, SuggestionsCtx>(
   filterDef: FilterDefinition<I, FilterCtx, SuggestionsCtx>,
   lhs: string,
   filterValue: string,
-  currentFilterContext?: FilterCtx
+  currentFilterContext?: FilterCtx,
 ): ((args: FilterCtx) => ItemFilter<I>) | undefined {
   for (const format of canonicalFilterFormats(filterDef.format)) {
     switch (format) {

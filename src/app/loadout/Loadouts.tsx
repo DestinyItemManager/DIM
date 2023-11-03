@@ -78,7 +78,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const stores = useSelector(sortedStoresSelector);
   const currentStore = getCurrentStore(stores)!;
   const [selectedStoreId, setSelectedStoreId] = useState(
-    locationStoreId && locationStoreId !== 'vault' ? locationStoreId : currentStore.id
+    locationStoreId && locationStoreId !== 'vault' ? locationStoreId : currentStore.id,
   );
   const [sharedLoadout, setSharedLoadout] = useState<Loadout>();
   const [loadoutImportOpen, setLoadoutImportOpen] = useState<boolean>(false);
@@ -97,7 +97,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
 
   const currentLoadout = useMemo(
     () => newLoadoutFromEquipped(t('Loadouts.FromEquipped'), selectedStore, artifactUnlocks),
-    [artifactUnlocks, selectedStore]
+    [artifactUnlocks, selectedStore],
   );
 
   useUpdateLoadoutAnalysisContext(selectedStoreId);
@@ -118,7 +118,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
     {
       includeWarningPills: true,
       extra: <span className={styles.hashtagTip}>{t('Loadouts.HashtagTip')}</span>,
-    }
+    },
   );
 
   const filteringLoadouts = Boolean(query || hasSelectedFilters);
@@ -144,7 +144,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
         virtualListRef.current?.scrollToIndex(index, { align: 'start' });
       }
     },
-    [loadouts]
+    [loadouts],
   );
 
   return (
@@ -294,7 +294,7 @@ function useAddSeasonHeaders(loadouts: Loadout[], loadoutSort: LoadoutSort) {
   let loadoutRows: (Loadout | DestinySeasonDefinition)[] = loadouts;
   if (loadoutSort === LoadoutSort.ByEditTime) {
     const seasons = Object.values(defs.Season.getAll()).sort(
-      (a, b) => b.seasonNumber - a.seasonNumber
+      (a, b) => b.seasonNumber - a.seasonNumber,
     );
 
     const grouped = Map.groupBy(
@@ -302,8 +302,8 @@ function useAddSeasonHeaders(loadouts: Loadout[], loadoutSort: LoadoutSort) {
       (loadout) =>
         seasons.find(
           (s) =>
-            new Date(s.startDate ?? Date.now()).getTime() <= (loadout.lastUpdatedAt ?? Date.now())
-        )!
+            new Date(s.startDate ?? Date.now()).getTime() <= (loadout.lastUpdatedAt ?? Date.now()),
+        )!,
     );
 
     loadoutRows = [...grouped.entries()].flatMap(([season, loadouts]) => [season, ...loadouts]);

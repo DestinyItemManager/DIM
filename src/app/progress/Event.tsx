@@ -63,7 +63,7 @@ export function Event({
   }
 
   const records = filterMap(classSpecificNode.children.records, (h) =>
-    toRecord(defs, profileResponse, h.recordHash)
+    toRecord(defs, profileResponse, h.recordHash),
   );
 
   const pursuits = records
@@ -79,8 +79,8 @@ export function Event({
         buckets,
         store,
         card.displayProperties.name,
-        trackedRecords.includes(r.recordDef.hash)
-      )
+        trackedRecords.includes(r.recordDef.hash),
+      ),
     );
 
   if (!pursuits.length) {

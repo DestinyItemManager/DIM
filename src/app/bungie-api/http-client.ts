@@ -36,7 +36,7 @@ export class BungieError extends Error {
   endpoint: string;
   constructor(
     response: Partial<Pick<ServerResponse<unknown>, 'Message' | 'ErrorCode' | 'ErrorStatus'>>,
-    request: Request
+    request: Request,
   ) {
     super(response.Message ?? 'Unknown Bungie Error');
     this.name = 'BungieError';
@@ -79,7 +79,7 @@ function throwBungieError<T>(serverResponse: T | undefined, request: Request) {
         ErrorCode: PlatformErrorCodes.DestinyUnexpectedError,
         ErrorStatus: eMessage,
       },
-      request
+      request,
     );
   }
 
@@ -105,7 +105,7 @@ function throwBungieError<T>(serverResponse: T | undefined, request: Request) {
 export function createFetchWithNonStoppingTimeout(
   fetchFunction: typeof fetch,
   timeout: number,
-  onTimeout: (startTime: number, timeout: number) => void
+  onTimeout: (startTime: number, timeout: number) => void,
 ): typeof fetch {
   return async (...[input, init]: Parameters<typeof fetch>) => {
     const startTime = Date.now();
@@ -149,7 +149,7 @@ export function createHttpClient(fetchFunction: typeof fetch, apiKey: string): H
           ErrorStatus: 'SystemDisabled',
           Message: 'This system is temporarily disabled for maintenance.',
         },
-        fetchOptions
+        fetchOptions,
       );
     }
 
@@ -184,7 +184,7 @@ let timesThrottled = 0;
  */
 export function responsivelyThrottleHttpClient(
   httpClient: HttpClient,
-  onThrottle: (timesThrottled: number, waitTime: number, url: string) => void
+  onThrottle: (timesThrottled: number, waitTime: number, url: string) => void,
 ): HttpClient {
   return async <T>(config: HttpClientConfig): Promise<T> => {
     if (timesThrottled > 0) {

@@ -8,6 +8,6 @@ export function saveAccountsToIndexedDB() {
       if (nextState.loaded && nextState.accounts !== currentState.accounts) {
         set('accounts', nextState.accounts);
       }
-    }
+    },
   );
 }

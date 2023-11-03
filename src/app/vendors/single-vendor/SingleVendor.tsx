@@ -107,7 +107,7 @@ export default function SingleVendor({
     const artifactDisplay = Object.values(defs.InventoryItem.getAll()).find(
       (i) =>
         // belongs to the current season,                         and looks like an artifact
-        i.seasonHash === seasonHash && /\.artifacts?\./.test(i.inventory!.stackUniqueLabel ?? '')
+        i.seasonHash === seasonHash && /\.artifacts?\./.test(i.inventory!.stackUniqueLabel ?? ''),
     )?.displayProperties;
     if (artifactDisplay) {
       displayName = artifactDisplay.name;
@@ -129,7 +129,7 @@ export default function SingleVendor({
       vendor,
       characterId,
       vendorResponse?.sales.data?.[vendorHash]?.saleItems,
-      vendorResponse
+      vendorResponse,
     );
     if (!d2Vendor) {
       return <ErrorPanel error={new Error(`No known vendor with hash ${vendorHash}`)} />;

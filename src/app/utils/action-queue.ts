@@ -34,7 +34,7 @@ export function queueAction<K>(fn: () => Promise<K>): Promise<K> {
     (e) => {
       _queue.shift();
       throw e;
-    }
+    },
   );
   _queue.push(wrappedPromise);
 
@@ -44,7 +44,7 @@ export function queueAction<K>(fn: () => Promise<K>): Promise<K> {
 // Wrap a function to produce a function that will be queued when invoked
 export function queuedAction<T extends unknown[], K>(
   fn: (...args: T) => Promise<K>,
-  context?: unknown
+  context?: unknown,
 ): (...args: T) => Promise<K> {
   return (...args: T) => queueAction(() => fn.apply(context, args));
 }

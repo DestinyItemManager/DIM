@@ -30,7 +30,7 @@ import { RootState } from 'app/store/types';
  * )
  */
 export function currySelector<K, R>(
-  selector: (state: RootState, props: K) => R
+  selector: (state: RootState, props: K) => R,
 ): ((props: K) => (state: RootState) => R) & { selector: (state: RootState, props: K) => R } {
   const fn = (props: K) => (state: RootState) => selector(state, props);
   fn.selector = selector;

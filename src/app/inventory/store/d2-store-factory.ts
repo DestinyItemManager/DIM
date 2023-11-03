@@ -22,7 +22,7 @@ import { ItemCreationContext, processItems } from './d2-item-factory';
 
 export function buildStores(
   itemCreationContext: ItemCreationContext,
-  transaction?: Transaction
+  transaction?: Transaction,
 ): DimStore[] {
   // TODO: components may be hidden (privacy)
 
@@ -33,11 +33,18 @@ export function buildStores(
     !profileResponse.characterInventories.data ||
     !profileResponse.characters.data
   ) {
+    const additionalErrorMessage =
+      $DIM_FLAVOR === 'dev'
+        ? 'Vault or character inventory was missing - you likely forgot to select \
+the required application scopes when registering the app on Bungie.net. \
+Please carefully read the instructions in docs/CONTRIBUTING.md -> \
+"Get your own API key" and select the required scopes'
+        : undefined;
     errorLog(
       'd2-stores',
-      'Vault or character inventory was missing - bailing in order to avoid corruption'
+      'Vault or character inventory was missing - bailing in order to avoid corruption',
     );
-    throw new DimError('BungieService.MissingInventory');
+    throw new DimError('BungieService.MissingInventory', additionalErrorMessage);
   }
 
   const lastPlayedDate = findLastPlayedDate(profileResponse);
@@ -48,7 +55,7 @@ export function buildStores(
   const vault = processVault(itemCreationContext);
 
   const characters = Object.keys(profileResponse.characters.data).map((characterId) =>
-    processCharacter(itemCreationContext, characterId, lastPlayedDate)
+    processCharacter(itemCreationContext, characterId, lastPlayedDate),
   );
   processSpan?.finish();
 
@@ -63,7 +70,7 @@ export function buildStores(
 function processCharacter(
   itemCreationContext: ItemCreationContext,
   characterId: string,
-  lastPlayedDate: Date
+  lastPlayedDate: Date,
 ): DimStore {
   const { defs, buckets, profileResponse } = itemCreationContext;
   const character = profileResponse.characters.data![characterId];
@@ -138,7 +145,7 @@ export function makeCharacter(
   defs: D2ManifestDefinitions,
   character: DestinyCharacterComponent,
   mostRecentLastPlayed: Date,
-  profileRecords: DestinyProfileRecordsComponent | undefined
+  profileRecords: DestinyProfileRecordsComponent | undefined,
 ): DimStore {
   const race = defs.Race.get(character.raceHash);
   const raceLocalizedName = race.displayProperties.name;
@@ -216,7 +223,7 @@ export function getCharacterStatsData(
   defs: D2ManifestDefinitions,
   stats: {
     [key: number]: number;
-  }
+  },
 ): { [hash: number]: DimCharacterStat } {
   const statAllowList = armorStats;
   const ret: { [hash: number]: DimCharacterStat } = {};
@@ -244,7 +251,7 @@ export function getTitleInfo(
   titleRecordHash: number,
   defs: D2ManifestDefinitions,
   profileRecords: DestinyProfileRecordsComponent | undefined,
-  genderHash: number
+  genderHash: number,
 ): DimTitle | undefined {
   // Titles can be classified, in which case `titleInfo` is missing
   const titleInfo = defs?.Record.get(titleRecordHash)?.titleInfo;
@@ -260,7 +267,7 @@ export function getTitleInfo(
   let isGildedForCurrentSeason = false;
 
   const isCompleted = Boolean(
-    (profileRecords?.records[titleRecordHash].state ?? 0) & DestinyRecordState.RecordRedeemed
+    (profileRecords?.records[titleRecordHash].state ?? 0) & DestinyRecordState.RecordRedeemed,
   );
 
   // Gilding information is stored per-profile, not per-character
@@ -272,7 +279,7 @@ export function getTitleInfo(
     }
 
     isGildedForCurrentSeason = Boolean(
-      gildedRecord && !(gildedRecord.state & DestinyRecordState.ObjectiveNotCompleted)
+      gildedRecord && !(gildedRecord.state & DestinyRecordState.ObjectiveNotCompleted),
     );
   }
 

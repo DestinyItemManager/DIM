@@ -165,11 +165,11 @@ export function createSocketOverridesFromEquipped(item: DimItem) {
 export function newLoadoutFromEquipped(
   name: string,
   dimStore: DimStore,
-  artifactUnlocks: LoadoutParameters['artifactUnlocks']
+  artifactUnlocks: LoadoutParameters['artifactUnlocks'],
 ) {
   const items = dimStore.items.filter(
     (item) =>
-      item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.bucket.hash)
+      item.equipped && itemCanBeInLoadout(item) && fromEquippedTypes.includes(item.bucket.hash),
   );
   const loadoutItems = items.map((i) => {
     const item = convertToLoadoutItem(i, true);
@@ -199,7 +199,7 @@ export function newLoadoutFromEquipped(
     const plugs = item.sockets
       ? filterMap(
           getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.ArmorCosmetics),
-          (s) => s.plugged?.plugDef.hash
+          (s) => s.plugged?.plugDef.hash,
         )
       : [];
     if (plugs.length) {
@@ -253,7 +253,7 @@ export function getLight(store: DimStore, items: DimItem[]): number {
         memo +
         (itemWeight[item.bucket.hash === BucketHashes.ClassArmor ? 'General' : item.bucket.sort!] ||
           0),
-      0
+      0,
     );
 
     const exactLight =
@@ -264,7 +264,7 @@ export function getLight(store: DimStore, items: DimItem[]): number {
             (itemWeight[
               item.bucket.hash === BucketHashes.ClassArmor ? 'General' : item.bucket.sort!
             ] || 1),
-        0
+        0,
       ) / itemWeightDenominator;
 
     return Math.floor(exactLight * 10) / 10;
@@ -285,7 +285,7 @@ export function getLoadoutStats(
   armor: DimItem[],
   mods: PluggableInventoryItemDefinition[],
   /** Assume armor is masterworked according to these rules when calculating stats */
-  armorEnergyRules?: ArmorEnergyRules
+  armorEnergyRules?: ArmorEnergyRules,
 ) {
   const statDefs = armorStats.map((hash) => defs.Stat.get(hash));
 
@@ -331,7 +331,7 @@ export function getLoadoutStats(
     mods,
     subclass,
     classType,
-    /* includeRuntimeStatBenefits */ true
+    /* includeRuntimeStatBenefits */ true,
   );
 
   for (const [statHash, value] of Object.entries(modStats)) {
@@ -347,7 +347,7 @@ export function getLoadoutStats(
 // Generate an optimized item set (loadout items) based on a filtered set of items and a value function
 export function optimalItemSet(
   applicableItems: DimItem[],
-  bestItemFn: (item: DimItem) => number
+  bestItemFn: (item: DimItem) => number,
 ): Record<'equippable' | 'unrestricted', DimItem[]> {
   const itemsByType = Object.groupBy(applicableItems, (i) => i.bucket.hash);
 
@@ -405,12 +405,12 @@ export function optimalItemSet(
 export function optimalLoadout(
   applicableItems: DimItem[],
   bestItemFn: (item: DimItem) => number,
-  name: string
+  name: string,
 ): Loadout {
   const { equippable } = optimalItemSet(applicableItems, bestItemFn);
   return newLoadout(
     name,
-    equippable.map((i) => convertToLoadoutItem(i, true))
+    equippable.map((i) => convertToLoadoutItem(i, true)),
   );
 }
 /**
@@ -419,7 +419,7 @@ export function optimalLoadout(
  */
 export function backupLoadout(store: DimStore, name: string): Loadout {
   const allItems = store.items.filter(
-    (item) => itemCanBeInLoadout(item) && !item.location.inPostmaster
+    (item) => itemCanBeInLoadout(item) && !item.location.inPostmaster,
   );
   const loadout = newLoadout(
     name,
@@ -429,7 +429,7 @@ export function backupLoadout(store: DimStore, name: string): Loadout {
         item.socketOverrides = createSocketOverridesFromEquipped(i);
       }
       return item;
-    })
+    }),
   );
   // Save mods too, so we put them back if you undo
   loadout.parameters = {
@@ -459,7 +459,7 @@ export function extractArmorModHashes(item: DimItem) {
   return filterMap(item.sockets.allSockets, (socket) =>
     socket.plugged && isInsertableArmor2Mod(socket.plugged.plugDef)
       ? socket.plugged.plugDef.hash
-      : undefined
+      : undefined,
   );
 }
 
@@ -508,7 +508,7 @@ const matchByHash = [
  */
 export function getResolutionInfo(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
-  loadoutItemHash: number
+  loadoutItemHash: number,
 ):
   | {
       hash: number;
@@ -536,7 +536,7 @@ export function getResolutionInfo(
   const instanced = Boolean(
     (def.instanced || def.inventory?.isInstanceItem) &&
       // Subclasses and some other types are technically instanced but should be matched by hash
-      !matchByHash.includes(bucketHash)
+      !matchByHash.includes(bucketHash),
   );
 
   return {
@@ -554,7 +554,7 @@ export function getResolutionInfo(
 export function findSameLoadoutItemIndex(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   loadoutItems: LoadoutItem[],
-  item: DimItem
+  item: DimItem,
 ) {
   const info = getResolutionInfo(defs, item.hash)!;
 
@@ -577,7 +577,7 @@ export function findItemForLoadout(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   allItems: DimItem[],
   storeId: string | undefined,
-  loadoutItem: LoadoutItem
+  loadoutItem: LoadoutItem,
 ): DimItem | undefined {
   const info = getResolutionInfo(defs, loadoutItem.hash);
 
@@ -599,8 +599,8 @@ export function findItemForLoadout(
 export const potentialLoadoutItemsByItemId = weakMemoize((allItems: DimItem[]) =>
   _.keyBy(
     allItems.filter((i) => i.id !== '0' && itemCanBeInLoadout(i)),
-    (i) => i.id
-  )
+    (i) => i.id,
+  ),
 );
 
 /**
@@ -610,8 +610,8 @@ export const potentialLoadoutItemsByItemId = weakMemoize((allItems: DimItem[]) =
 const potentialLoadoutItemsByCraftedDate = weakMemoize((allItems: DimItem[]) =>
   _.keyBy(
     allItems.filter((i) => i.id !== '0' && i.craftedInfo?.craftedDate && itemCanBeInLoadout(i)),
-    (i) => i.craftedInfo!.craftedDate
-  )
+    (i) => i.craftedInfo!.craftedDate,
+  ),
 );
 
 export function getInstancedLoadoutItem(allItems: DimItem[], loadoutItem: LoadoutItem) {
@@ -633,14 +633,14 @@ export function getInstancedLoadoutItem(allItems: DimItem[], loadoutItem: Loadou
 const potentialUninstancedLoadoutItemsByHash = weakMemoize((allItems: DimItem[]) =>
   Map.groupBy(
     allItems.filter((i) => itemCanBeInLoadout(i)),
-    (i) => i.hash
-  )
+    (i) => i.hash,
+  ),
 );
 
 export function getUninstancedLoadoutItem(
   allItems: DimItem[],
   hash: number,
-  storeId: string | undefined
+  storeId: string | undefined,
 ) {
   // This is mostly for subclasses - it finds all matching items by hash and then picks the one that's on the desired character
   const candidates = potentialUninstancedLoadoutItemsByHash(allItems).get(hash) ?? [];
@@ -661,11 +661,11 @@ export function getUninstancedLoadoutItem(
 export function getLoadoutSubclassFragmentCapacity(
   defs: D2ManifestDefinitions,
   item: ResolvedLoadoutItem,
-  fallbackToCurrent: boolean
+  fallbackToCurrent: boolean,
 ): number {
   if (item.item.sockets) {
     const aspectSocketIndices = item.item.sockets.categories.find((c) =>
-      aspectSocketCategoryHashes.includes(c.category.hash)
+      aspectSocketCategoryHashes.includes(c.category.hash),
     )!.socketIndexes;
     const aspectDefs =
       item.loadoutItem.socketOverrides &&
@@ -690,7 +690,7 @@ export function isMissingItems(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   allItems: DimItem[],
   storeId: string,
-  loadout: Loadout
+  loadout: Loadout,
 ): boolean {
   for (const loadoutItem of loadout.items) {
     const info = getResolutionInfo(defs, loadoutItem.hash);
@@ -721,7 +721,7 @@ export function isMissingItems(
 export function getModsFromLoadout(
   defs: D2ManifestDefinitions | undefined,
   loadout: Loadout,
-  unlockedPlugs: Set<number>
+  unlockedPlugs: Set<number>,
 ) {
   const internalModHashes = loadout.parameters?.mods ?? [];
 
@@ -750,7 +750,7 @@ export function hasDeprecatedMods(loadout: Loadout, defs: D2ManifestDefinitions)
       return (
         deprecatedMods.includes(migratedModHash) || !defs.InventoryItem.getOptional(migratedModHash)
       );
-    })
+    }),
   );
 }
 
@@ -763,7 +763,7 @@ export function hasDeprecatedMods(loadout: Loadout, defs: D2ManifestDefinitions)
 export function resolveLoadoutModHashes(
   defs: D2ManifestDefinitions | undefined,
   modHashes: number[] | undefined,
-  unlockedPlugs: Set<number>
+  unlockedPlugs: Set<number>,
 ) {
   const mods: ResolvedLoadoutMod[] = [];
   if (defs && modHashes) {
@@ -795,7 +795,7 @@ function getSubclassFragmentCapacity(subclassItem: DimItem): number {
 
 /** given some Aspects or Aspect sockets, see how many Fragment slots they'll provide */
 function sumAspectCapacity(
-  aspects: (DestinyInventoryItemDefinition | DimSocket | undefined)[] | undefined
+  aspects: (DestinyInventoryItemDefinition | DimSocket | undefined)[] | undefined,
 ) {
   return _.sumBy(aspects, (aspect) => {
     const aspectDef = aspect && 'plugged' in aspect ? aspect.plugged?.plugDef : aspect;
@@ -815,7 +815,7 @@ export function getUnequippedItemsForLoadout(dimStore: DimStore, category?: stri
       !singularBucketHashes.includes(item.bucket.hash) &&
       itemCanBeInLoadout(item) &&
       isClassCompatible(item.classType, dimStore.classType) &&
-      (category ? item.bucket.sort === category : fromEquippedTypes.includes(item.bucket.hash))
+      (category ? item.bucket.sort === category : fromEquippedTypes.includes(item.bucket.hash)),
   );
 }
 
@@ -827,7 +827,7 @@ export function getUnequippedItemsForLoadout(dimStore: DimStore, category?: stri
 export function pickBackingStore(
   stores: DimStore[],
   preferredStoreId: string | undefined,
-  classType: DestinyClass
+  classType: DestinyClass,
 ) {
   classType = classType === DestinyClass.Classified ? DestinyClass.Unknown : classType;
   const requestedStore =
@@ -844,7 +844,7 @@ export function pickBackingStore(
  */
 export function filterLoadoutToAllowedItems(
   defs: D2ManifestDefinitions | D1ManifestDefinitions,
-  loadoutToSave: Readonly<Loadout>
+  loadoutToSave: Readonly<Loadout>,
 ): Readonly<Loadout> {
   return produce(loadoutToSave, (loadout) => {
     // Filter out items that don't fit the class type

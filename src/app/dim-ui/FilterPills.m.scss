@@ -3,7 +3,8 @@
 .guide {
   composes: flexRow from '../dim-ui/common.m.scss';
   flex-wrap: wrap;
-  margin: 8px 0;
+  margin-top: 8px;
+  margin-bottom: 8px;
   gap: 4px;
 
   @include phone-portrait {

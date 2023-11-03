@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 
 export default function useEquippedHashes(
   params: LoadoutParameters,
-  subclass: ResolvedLoadoutItem | undefined
+  subclass: ResolvedLoadoutItem | undefined,
 ) {
   return useMemo(() => {
     const exoticArmorHash = params.exoticArmorHash;

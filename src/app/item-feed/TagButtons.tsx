@@ -13,7 +13,7 @@ export default function TagButtons({ item, tag }: { item: DimItem; tag: TagValue
   const dispatch = useThunkDispatch();
   const tagOptions = _.sortBy(
     Object.values(tagConfig).filter((t) => t.type !== 'archive'),
-    (t) => t.sortOrder
+    (t) => t.sortOrder,
   );
 
   const handleSetTag = (tag: TagValue) => {

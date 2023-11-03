@@ -51,7 +51,7 @@ describe('setItemTag', () => {
     const updatedState = dimApi(
       state,
       setItemTag({ itemId: '1234', tag: 'favorite' }),
-      currentAccount
+      currentAccount,
     );
 
     expect(updatedState.profiles[currentAccountKey].tags['1234'].tag).toBe('favorite');
@@ -74,13 +74,13 @@ describe('setItemTag', () => {
     let updatedState = dimApi(
       state,
       setItemTag({ itemId: '1234', tag: 'favorite' }),
-      currentAccount
+      currentAccount,
     );
 
     updatedState = dimApi(
       updatedState,
       setItemTag({ itemId: '1234', tag: undefined }),
-      currentAccount
+      currentAccount,
     );
 
     expect(updatedState.profiles[currentAccountKey].tags['1234']).toBeUndefined();
@@ -118,7 +118,7 @@ describe('setItemHashTag', () => {
     const updatedState = dimApi(
       state,
       setItemHashTag({ itemHash: 1234, tag: 'favorite' }),
-      currentAccount
+      currentAccount,
     );
 
     expect(updatedState.itemHashTags[1234].tag).toBe('favorite');
@@ -141,13 +141,13 @@ describe('setItemHashTag', () => {
     let updatedState = dimApi(
       state,
       setItemHashTag({ itemHash: 1234, tag: 'favorite' }),
-      currentAccount
+      currentAccount,
     );
 
     updatedState = dimApi(
       updatedState,
       setItemHashTag({ itemHash: 1234, tag: undefined }),
-      currentAccount
+      currentAccount,
     );
 
     expect(updatedState.itemHashTags[1234]).toBeUndefined();
@@ -628,7 +628,7 @@ describe('finishedUpdates', () => {
     };
     const updatedState = dimApi(
       state,
-      finishedUpdates([{ status: 'Success' }, { status: 'Success' }])
+      finishedUpdates([{ status: 'Success' }, { status: 'Success' }]),
     );
 
     expect(updatedState.updateInProgressWatermark).toBe(0);
@@ -644,7 +644,7 @@ describe('saveSearch', () => {
     const updatedState = dimApi(
       state,
       saveSearch({ query: '(is:masterwork) (is:weapon)', saved: true }),
-      currentAccount
+      currentAccount,
     );
 
     expect(updatedState.searches).toMatchObject({
@@ -660,13 +660,13 @@ describe('saveSearch', () => {
     let updatedState = dimApi(
       state,
       saveSearch({ query: '(is:masterwork) (is:weapon)', saved: true }),
-      currentAccount
+      currentAccount,
     );
 
     updatedState = dimApi(
       updatedState,
       saveSearch({ query: '(is:masterwork) (is:weapon)', saved: false }),
-      currentAccount
+      currentAccount,
     );
 
     expect(updatedState.searches).toMatchObject({
@@ -682,7 +682,7 @@ describe('saveSearch', () => {
     const updatedState = dimApi(
       state,
       saveSearch({ query: 'deepsight:incomplete', saved: true }),
-      currentAccount
+      currentAccount,
     );
     expect(updatedState.searches).toMatchObject({
       [1]: [],
@@ -701,7 +701,7 @@ describe('saveSearch', () => {
     const updatedState = dimApi(
       state,
       saveSearch({ query: 'deepsight:incomplete', saved: false }),
-      currentAccount
+      currentAccount,
     );
 
     // FIXME maybe delete this outright? It'll be cleaned up the next time DIM loads the remote profile anyway...

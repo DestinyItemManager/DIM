@@ -25,7 +25,7 @@ interface Props {
  */
 function drillToSelection(
   selectionTree: ItemCategoryTreeNode | undefined,
-  selectedItemCategoryHashes: number[]
+  selectedItemCategoryHashes: number[],
 ): ItemCategoryTreeNode[] {
   const selectedItemCategoryHash = selectedItemCategoryHashes[0];
 
@@ -79,7 +79,7 @@ export default function Organizer({ account }: Props) {
           ...location,
           search: params.toString(),
         },
-        { replace: true }
+        { replace: true },
       );
     } else if (params.has('search') && searchQuery !== params.get('search')) {
       dispatch(setSearchQuery(params.get('search')!));
@@ -99,14 +99,14 @@ export default function Organizer({ account }: Props) {
       selection
         .slice(1)
         .map((s) => s.itemCategoryHash)
-        .join('~')
+        .join('~'),
     );
     navigate(
       {
         ...location,
         search: params.toString(),
       },
-      { replace: true }
+      { replace: true },
     );
   };
 

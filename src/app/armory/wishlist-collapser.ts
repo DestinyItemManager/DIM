@@ -29,7 +29,7 @@ interface Roll {
 export function consolidateRollsForOneWeapon(
   defs: D2ManifestDefinitions,
   item: DimItem,
-  rolls: WishListRoll[]
+  rolls: WishListRoll[],
 ) {
   const socketIndexByPerkHash: Record<number, number> = {};
   if (item.sockets) {
@@ -45,7 +45,7 @@ export function consolidateRollsForOneWeapon(
   const allRolls: Roll[] = rolls.map((roll) => {
     const [primaryPerksList, secondaryPerksList] = _.partition(
       Array.from(roll.recommendedPerks),
-      (h) => isMajorPerk(defs.InventoryItem.get(h))
+      (h) => isMajorPerk(defs.InventoryItem.get(h)),
     );
 
     // important sorting to generate comparably join()ed strings
@@ -74,7 +74,7 @@ export function consolidateRollsForOneWeapon(
 
   const rollsGroupedByPrimaryNormalizedPerks = Object.groupBy(
     allRolls,
-    (roll) => roll.primaryPerkIdentifierNormalized
+    (roll) => roll.primaryPerkIdentifierNormalized,
   );
 
   const rollsGroupedByPrimaryPerks: Record<
@@ -101,14 +101,14 @@ export function consolidateRollsForOneWeapon(
       // these rolls can be clumped into groups that have the same secondary perks
       const rollsGroupedBySecondaryStuff = Object.groupBy(
         rollGroup,
-        (r) => r.secondaryPerkIdentifier
+        (r) => r.secondaryPerkIdentifier,
       );
       for (const secondaryPerkKey in rollsGroupedBySecondaryStuff) {
         const rollsWithSameSecondaryPerks = rollsGroupedBySecondaryStuff[secondaryPerkKey];
 
         const commonPrimaryPerks = _.sortBy(
           [...new Set(rollsWithSameSecondaryPerks.flatMap((r) => r.primaryPerksList))],
-          (h) => socketIndexByPerkHash[h]
+          (h) => socketIndexByPerkHash[h],
         );
 
         const commonPrimaryPerksKey = commonPrimaryPerks.join();
@@ -119,7 +119,7 @@ export function consolidateRollsForOneWeapon(
           // it's safe to combine,
           (rollsWithSameSecondaryPerks.length === 2 &&
             rollsWithSameSecondaryPerks[0].primaryPerksList.some(
-              (h, i) => h === rollsWithSameSecondaryPerks[1].primaryPerksList[i]
+              (h, i) => h === rollsWithSameSecondaryPerks[1].primaryPerksList[i],
             )) ||
           // if there's 4 separate rolls, this is a full permutation of base/base, base/enh, enh/base, enh/enh
           rollsWithSameSecondaryPerks.length === 4
@@ -136,7 +136,7 @@ export function consolidateRollsForOneWeapon(
         else {
           const theseRollsGroupedByPrimaryPerks = Object.groupBy(
             allRolls,
-            (roll) => roll.primaryPerkIdentifier
+            (roll) => roll.primaryPerkIdentifier,
           );
           for (const primaryPerkKey in theseRollsGroupedByPrimaryPerks) {
             const rollsWithSamePrimaryPerks = theseRollsGroupedByPrimaryPerks[primaryPerkKey];
@@ -163,7 +163,7 @@ export function consolidateRollsForOneWeapon(
           item.sockets?.allSockets.some(
             (s) =>
               s.socketIndex === socketIndex &&
-              s.plugOptions.some((p) => p.plugDef.hash === enhancedPerk)
+              s.plugOptions.some((p) => p.plugDef.hash === enhancedPerk),
           )
         ) {
           roll.commonPrimaryPerks.push(enhancedPerk);
@@ -199,7 +199,7 @@ function isMajorPerk(item?: DestinyInventoryItemDefinition) {
 export function consolidateSecondaryPerks(initialRolls: Roll[]) {
   // these are legit socketIndices according the item def. this might be like, [3, 4]
   const allSecondarySocketIndices = Array.from(
-    new Set(initialRolls.flatMap((r) => r.secondarySocketIndices))
+    new Set(initialRolls.flatMap((r) => r.secondarySocketIndices)),
   ).sort((a, b) => a - b);
 
   // newClusteredRolls collapses perks into an array with no blank spaces,
@@ -214,7 +214,7 @@ export function consolidateSecondaryPerks(initialRolls: Roll[]) {
       allSecondarySocketIndices.map((i) => {
         const perkHash = r.secondaryPerksMap[i];
         return perkHash ? { perks: [perkHash], key: `${perkHash}` } : { perks: [], key: `` };
-      })
+      }),
     );
 
   // we iterate through the perk columns, looking for stuff to collapse
@@ -225,8 +225,8 @@ export function consolidateSecondaryPerks(initialRolls: Roll[]) {
       // find a bundle that matches another bundle, in every column except our current one
       const perkBundleToConsolidate = newClusteredRolls.find((r1) =>
         newClusteredRolls.some(
-          (r2) => r1 !== r2 && rollIndices.every((i) => i === index || r1[i].key === r2[i].key)
-        )
+          (r2) => r1 !== r2 && rollIndices.every((i) => i === index || r1[i].key === r2[i].key),
+        ),
       );
       // if nothing's found, we've collapsed as much as we can
       if (!perkBundleToConsolidate) {
@@ -234,7 +234,7 @@ export function consolidateSecondaryPerks(initialRolls: Roll[]) {
       }
 
       const [bundlesToCombine, bundlesToLeaveAlone] = _.partition(newClusteredRolls, (r) =>
-        rollIndices.every((i) => i === index || perkBundleToConsolidate[i].key === r[i].key)
+        rollIndices.every((i) => i === index || perkBundleToConsolidate[i].key === r[i].key),
       );
 
       // set aside the uninvolved bundles
@@ -243,7 +243,7 @@ export function consolidateSecondaryPerks(initialRolls: Roll[]) {
       // build a new bundle with the same other columns, but add together the perks in this column
       const newPerkBundle = perkBundleToConsolidate.with(
         index,
-        combineColumns(bundlesToCombine.map((b) => b[index]))
+        combineColumns(bundlesToCombine.map((b) => b[index])),
       );
 
       newClusteredRolls.push(newPerkBundle);
@@ -286,7 +286,7 @@ function combineColumns(
   columns: {
     perks: number[];
     key: string;
-  }[]
+  }[],
 ) {
   const perks = [...new Set(columns.flatMap((c) => c.perks))].sort();
 

@@ -61,7 +61,7 @@ export function defaultLanguage(): DimLanguage {
   }
   const currentBrowserLang = window.navigator.language || 'en';
   const overriddenLang = Object.entries(browserLangToDimLang).find(([browserLang]) =>
-    currentBrowserLang.startsWith(browserLang)
+    currentBrowserLang.startsWith(browserLang),
   );
   if (overriddenLang) {
     return overriddenLang[1];
@@ -132,7 +132,7 @@ export function initi18n(): Promise<unknown> {
         } else {
           resolve(undefined);
         }
-      }
+      },
     );
     for (const otherLang of DIM_LANGS) {
       if (DIM_LANG_INFOS[otherLang]?.pluralOverride) {
@@ -140,7 +140,7 @@ export function initi18n(): Promise<unknown> {
         i18next.services.pluralResolver.addRule(
           otherLang,
           // eslint-disable-next-line
-          i18next.services.pluralResolver.getRule('en')
+          i18next.services.pluralResolver.getRule('en'),
         );
       }
     }

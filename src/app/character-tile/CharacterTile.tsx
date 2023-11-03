@@ -18,7 +18,7 @@ const gildedIcon = String.fromCodePoint(FontGlyphs.gilded_title);
  */
 export default memo(function CharacterTile({ store }: { store: DimStore }) {
   const maxTotalPower = useSelector(
-    (state: RootState) => powerLevelSelector(state, store.id)?.maxTotalPower
+    (state: RootState) => powerLevelSelector(state, store.id)?.maxTotalPower,
   );
   const floorTotalPower = Math.floor(maxTotalPower || store.powerLevel);
   const isPhonePortrait = useIsPhonePortrait();
@@ -33,7 +33,7 @@ export default memo(function CharacterTile({ store }: { store: DimStore }) {
         backgroundImage: `url("${store.background}")`,
         backgroundColor: store.color
           ? `rgb(${Math.round(store.color.red)}, ${Math.round(store.color.green)}, ${Math.round(
-              store.color.blue
+              store.color.blue,
             )}`
           : 'black',
       }}

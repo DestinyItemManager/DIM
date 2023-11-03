@@ -40,7 +40,7 @@ function Sockets({
     plugDef: PluggableInventoryItemDefinition,
     /** An allow-list of plug category hashes that can be inserted into this socket */
     // TODO: why not just pass the socketType hash or socket definition?
-    plugCategoryHashWhitelist: number[]
+    plugCategoryHashWhitelist: number[],
   ) => void;
 }) {
   const defs = useD2Definitions()!;
@@ -62,7 +62,7 @@ function Sockets({
   for (const socket of item.sockets?.allSockets || []) {
     const socketType = defs.SocketType.get(socket.socketDefinition.socketTypeHash);
     let toSave: DestinyInventoryItemDefinition | undefined = assignments.find(
-      (a) => a.socketIndex === socket.socketIndex
+      (a) => a.socketIndex === socket.socketIndex,
     )?.mod;
 
     const modIdx = (toSave && autoMods?.findIndex((m) => m === toSave!.hash)) ?? -1;

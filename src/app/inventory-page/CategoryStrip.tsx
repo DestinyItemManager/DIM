@@ -27,7 +27,7 @@ export default function CategoryStrip({
             >
               {t(`Bucket.${category as BucketSortType}`, { metadata: { keys: 'buckets' } })}
             </div>
-          )
+          ),
       )}
     </div>
   );

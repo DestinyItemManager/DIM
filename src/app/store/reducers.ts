@@ -39,7 +39,7 @@ const reducer: Reducer<RootState> = (state, action) => {
   const dimApiState = dimApi(
     intermediateState.dimApi,
     action,
-    currentAccountSelector(intermediateState)
+    currentAccountSelector(intermediateState),
   );
 
   if (intermediateState.dimApi !== dimApiState) {
