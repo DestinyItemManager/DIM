@@ -55,6 +55,7 @@ export async function analyzeLoadout(
   storeId: string,
   classType: DestinyClass,
   loadout: Loadout,
+  worker: typeof runProcess,
 ): Promise<LoadoutAnalysisResult> {
   const findings = new Set<LoadoutFinding>();
   const defs = itemCreationContext.defs;
@@ -268,7 +269,7 @@ export async function analyzeLoadout(
           }));
 
           try {
-            const { resultPromise } = runProcess({
+            const { resultPromise } = worker({
               anyExotic: loadoutParameters.exoticArmorHash === LOCKED_EXOTIC_ANY_EXOTIC,
               armorEnergyRules,
               autoModDefs,

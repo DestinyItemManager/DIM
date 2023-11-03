@@ -1,3 +1,4 @@
+import { runProcess } from 'app/loadout-builder/process/process-wrapper';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { CancelToken, withCancel } from 'app/utils/cancel';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -342,6 +343,7 @@ async function analysisTask(cancelToken: CancelToken, analyzer: LoadoutBackgroun
       task.storeId,
       task.classType,
       task.loadout,
+      runProcess,
     );
     analyzer.setAnalysisResult(task.storeId, task.loadout, task.generationNumber, result);
   }
