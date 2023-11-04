@@ -391,6 +391,7 @@
     "ClearDialog": "Fermer ce dialogue",
     "ClearNewItems": "Vider la liste de nouveaux objets",
     "Enter": "ENTRER",
+    "ItemPopupTab": "Changer d'onglet de détails de l'objet",
     "LockUnlock": "Verrouiller ou déverrouiller un objet",
     "MarkItemAs": "Marquer objet comme '{{tag}}'",
     "Menu": "Activer/Désactiver le menu",
@@ -556,6 +557,58 @@
     "Profile": "Chargement du profil Destiny...",
     "Vendors": "Chargement des marchands Destiny..."
   },
+  "LoadoutAnalysis": {
+    "Analyzed": "Analyzed {{numLoadouts}} Loadouts",
+    "Analyzing": "Analyzing {{numAnalyzed}}/{{numLoadouts}} Loadouts",
+    "BetterStatsAvailable": {
+      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stat tiers.",
+      "Name": "Better Stats Available"
+    },
+    "DoesNotRespectExotic": {
+      "Description": "This loadout's Loadout Optimizer settings specify an exotic choice, but the loadout does not match that exotic.",
+      "Name": "Wrong Exotic"
+    },
+    "DoesNotSatisfyStatConstraints": {
+      "Description": "Loadout Optimizer settings for this Loadout specify stat tiers, but the Loadout does not reach them.",
+      "Name": "Wrong Stat Tiers"
+    },
+    "EmptyFragmentSlots": {
+      "Description": "There are empty fragment slots in this subclass.",
+      "Name": "Empty Fragment Slots"
+    },
+    "InvalidMods": {
+      "Description": "Some mods in this loadout are deprecated or do not otherwise fit into any of your armor pieces.",
+      "Name": "Deprecated Mods"
+    },
+    "LoadoutHasSearchQuery": {
+      "Description": "This loadout was created with a search query in Loadout Optimizer.",
+      "Name": "Has Search Query"
+    },
+    "MissingItems": {
+      "Description": "Some of the items in this loadout are no longer in your inventory.",
+      "Name": "Missing Items"
+    },
+    "ModsDontFit": {
+      "Description": "Armor in this loadout cannot accommodate all loadout mods, even if the armor was upgraded.",
+      "Name": "Unassigned Mods"
+    },
+    "NeedsArmorUpgrades": {
+      "Description": "Armor in this loadout needs to be upgraded to accommodate all mods or reach specified stat tiers.",
+      "Name": "Needs Armor Upgrades"
+    },
+    "NotAFullArmorSet": {
+      "Description": "This loadout could not be analyzed further because it does not include a full set of armor.",
+      "Name": "Not A Full Armor Set"
+    },
+    "TooManyFragments": {
+      "Description": "There are more fragments configured on the subclass than granted by aspects.",
+      "Name": "Too Many Fragments"
+    },
+    "UsesSeasonalMods": {
+      "Description": "This loadout relies on mods that are only available in some seasons. When the season ends, some mods will be unavailable or exceed armor energy capacity.",
+      "Name": "Uses Seasonal Mods"
+    }
+  },
   "LoadoutBuilder": {
     "AddHalfTierMods": "Ajouter les mods +5",
     "All": "Tous",
@@ -573,6 +626,7 @@
     "CompareLoadout": "Comparer l'équipement",
     "ConfirmOverwrite": "Êtes-vous sûr de vouloir remplacer l'armure dans l'équipement \"{{name}}\" par ce nouvel ensemble d'armure ?",
     "CreateLoadout": "Sauvegarder l'équipement",
+    "DecreaseStatPriority": "Diminuer la priorité de la stat",
     "DisabledByAutoStatMods": "Les mods de stat sont choisis automatiquement par l'optimisateur d'équipement.",
     "DisabledDueToMaintenance": "L'optimiseur d'équipement est actuellement désactivé en raison d'une maintenance sur l'API Bungie.",
     "EquipItems": "Équiper",
@@ -580,7 +634,9 @@
     "ExistingLoadout": "Équipement existant",
     "ExoticSpecialCategory": "Spécial",
     "Filter": "Filtres",
+    "IgnoreStat": "Si décoché, l'optimiseur d'équipement prétendra que cette stat n'existe pas lors du calcul des ensembles",
     "IncludeVendorItems": "Inclure les objets des marchands",
+    "IncreaseStatPriority": "Augmenter la priorité de la stat",
     "Legendary": "Légendaire",
     "LockEquipped": "Inc. équipés",
     "LockItem": "Inclure objet",
@@ -622,6 +678,7 @@
     "StatTierIgnoreOption": "Ignorer",
     "StatTierIncludeOption": "Inclure",
     "TierNumber": "T{{tier}}",
+    "TierSelect": "Sélectionner le pallier de stat minimum",
     "UnableToAddAllMods": "Impossible d'ajouter tous les mods.",
     "UnableToAddAllModsBody": "Il n'y avait pas assez d'emplacements de mod disponibles pour placer {{mods}}.",
     "UnlockItem": "Désépingler Objet"
@@ -660,11 +717,9 @@
     "CurrentlyEquipped": "Actuellement équipé",
     "Deequip": "Dé-équipement des objets des autres personnages",
     "Delete": "Supprimer",
-    "DeprecatedMods": "Mods obsolètes",
     "DimLoadouts": "Équipements DIM",
     "Edit": "Modifier l'équipement",
     "EditBrief": "Éditer",
-    "EmptyFragmentSlots": "Emplacements de fragment vides",
     "EquipInGameLoadout": "Équipement de l'équipement en jeu",
     "EquipItems": "Équipement des objets",
     "EquippableDifferent1": "Plusieurs objets exotiques ont été utilisé pour calculer votre puissance maximale, le niveau affiché pourrait donc ne pas être obtenable en équipant vos objets en jeu.",
@@ -708,7 +763,6 @@
     "MaximizeLight": "Lumière maximale",
     "MaximizePower": "Puissance maximale",
     "MaximizeStat": "Maximiser la Stat",
-    "MissingItems": "Objets manquants",
     "MissingItemsWarning": "Certains des objets dans cet équipement ne sont plus dans votre inventaire.",
     "ModErrorSummary": "1 erreur de mod :",
     "ModErrorSummary_plural": "{{count}} erreurs de mod :",
@@ -793,7 +847,6 @@
     "SubclassOptionsSearch": "Rechercher dans les options de {{subclass}}",
     "Succeeded": "Équipement réussi",
     "SyncFromEquipped": "Synchroniser avec ceux équipés",
-    "TooManyFragments": "Trop de fragments",
     "TooManyRequested": "Vous avez {{total}} {{itemname}} mais votre équipement demande {{requested}}. Nous avons transféré tous ceux que vous possédiez.",
     "UnassignedModError": "Le mot n'a pas pu être équipé sur votre armure actuelle",
     "Undo": "Annuler",
@@ -874,6 +927,7 @@
       "QuestProgress": "Étape {{questStepNum}} sur {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
+    "TabList": "Onglet de détails de l'objet",
     "ToggleSidecar": "Développer ou réduire les actions d'objet",
     "TrackUntrack": {
       "Track": "Suivre {{itemType}}",

@@ -391,6 +391,7 @@
     "ClearDialog": "ダイアログを閉じる",
     "ClearNewItems": "新しいアイテムを既読済にする",
     "Enter": "入力する",
+    "ItemPopupTab": "アイテム詳細タブへ切り替え",
     "LockUnlock": "アイテムをロックまたはロック解除する",
     "MarkItemAs": "アイテムを '{{tag}}' とマークする",
     "Menu": "ゲームメニューを表示",
@@ -556,6 +557,58 @@
     "Profile": "Destinyのプロファイルをロードしています...",
     "Vendors": "Destinyのベンダー情報をロードしています..."
   },
+  "LoadoutAnalysis": {
+    "Analyzed": "{{numLoadouts}} 個のロードアウトを分析完了",
+    "Analyzing": "{{numAnalyzed}}/{{numLoadouts}} 個のロードアウトを分析中",
+    "BetterStatsAvailable": {
+      "Description": "このロードアウトは、異なるアーマー・Modの選択によりさらに高いステータスを実現できます。",
+      "Name": "より高いステータス値のビルドが作れます"
+    },
+    "DoesNotRespectExotic": {
+      "Description": "ロードアウト最適化で指定されているエキゾチックアーマーと、このロードアウトのエキゾチックアーマーが一致しません。",
+      "Name": "指定したエキゾチックアーマーと違います"
+    },
+    "DoesNotSatisfyStatConstraints": {
+      "Description": "ロードアウト最適化で指定のステータスに、このロードアウトのステータスは届いていません。",
+      "Name": "指定したTierに達していません"
+    },
+    "EmptyFragmentSlots": {
+      "Description": "このサブクラスには未使用のかけらスロットがあります。",
+      "Name": "サブクラスのかけらスロットに空きがあります"
+    },
+    "InvalidMods": {
+      "Description": "このロードアウト内にある一部のModが廃止されているか、アーマーに適用できないようです。",
+      "Name": "廃止済みMOD"
+    },
+    "LoadoutHasSearchQuery": {
+      "Description": "このロードアウトはロードアウト最適化の検索フィルターを使用して作成されました。",
+      "Name": "検索フィルター使用"
+    },
+    "MissingItems": {
+      "Description": "このロードアウトに含まれる装備の一部は所持品にありません。",
+      "Name": "アイテムが有りません"
+    },
+    "ModsDontFit": {
+      "Description": "このロードアウトのアーマーを強化しても、指定したMOD全てを装備できません。",
+      "Name": "割り当てられていないMODがあります"
+    },
+    "NeedsArmorUpgrades": {
+      "Description": "このロードアウトのアーマーは、指定された全Modの装備もしくはTier到達のためにアップグレードが必要です。",
+      "Name": "アーマーのアップグレードが必要"
+    },
+    "NotAFullArmorSet": {
+      "Description": "このロードアウトには全部位のアーマーが含まれていないため、解析できませんでした。",
+      "Name": "非全身アーマー"
+    },
+    "TooManyFragments": {
+      "Description": "サブクラス特性で利用可能のスロットより多くのかけらが指定されています。",
+      "Name": "サブクラスのかけらの数が多すぎます"
+    },
+    "UsesSeasonalMods": {
+      "Description": "このロードアウトはシーズン限定のMODを使用しています。シーズン終了後、これらのMODは使用できなくなるか、アーマーのエネルギー容量を超過します。",
+      "Name": "シーズンMODを使用"
+    }
+  },
   "LoadoutBuilder": {
     "AddHalfTierMods": "Mod を +5 追加",
     "All": "全て",
@@ -573,6 +626,7 @@
     "CompareLoadout": "ロードアウトを比較",
     "ConfirmOverwrite": "ロードアウト「{{name}}」のアーマーをこの新しいアーマーセットに置き換えてもよろしいですか？",
     "CreateLoadout": "ロードアウトを保存",
+    "DecreaseStatPriority": "ステータス優先度を下げる",
     "DisabledByAutoStatMods": "ステータス値に関するModはロードアウト最適化機能によって自動的に選択されています。",
     "DisabledDueToMaintenance": "現在、Bungie API のメンテナンスによりロードアウト最適化が利用出来ません。",
     "EquipItems": "装備",
@@ -580,7 +634,9 @@
     "ExistingLoadout": "既存のロードアウト",
     "ExoticSpecialCategory": "スペシャル",
     "Filter": "フィルター",
+    "IgnoreStat": "チェックを外すと、このステータスを無視してビルドを探索します。",
     "IncludeVendorItems": "ベンダーアイテムを含む",
+    "IncreaseStatPriority": "ステータス優先度を上げる",
     "Legendary": "レジェンダリー",
     "LockEquipped": "ピン留めされたアイテムを装備",
     "LockItem": "アイテムをピン留めする",
@@ -622,6 +678,7 @@
     "StatTierIgnoreOption": "無視",
     "StatTierIncludeOption": "含む",
     "TierNumber": "T{{tier}}",
+    "TierSelect": "ステータスTier最低値を選択",
     "UnableToAddAllMods": "全てのModを追加することはできません。",
     "UnableToAddAllModsBody": "{{mods}} を適用するのに十分なModスロットがありませんでした。",
     "UnlockItem": "アイテムのピン留めを解除"
@@ -660,11 +717,9 @@
     "CurrentlyEquipped": "現在装備中",
     "Deequip": "他のキャラクターからアイテムを外す",
     "Delete": "削除",
-    "DeprecatedMods": "非推奨 Mod",
     "DimLoadouts": "DIMロードアウト",
     "Edit": "ロードアウトを編集",
     "EditBrief": "編集",
-    "EmptyFragmentSlots": "空のかけらスロット",
     "EquipInGameLoadout": "ゲーム内ロードアウトを装備中",
     "EquipItems": "アイテムを装備",
     "EquippableDifferent1": "複数のエキゾチックアイテムを使用して最大パワーを計算しました。ゲーム内でアイテムを装備しようとしても、数値が計算通りにならない恐れがあります。",
@@ -708,7 +763,6 @@
     "MaximizeLight": "最大 Light",
     "MaximizePower": "最大パワー",
     "MaximizeStat": "統計を最大化する",
-    "MissingItems": "紛失したアイテム",
     "MissingItemsWarning": "このロードアウトに含まれるアイテムの一部は保管庫に存在しません。",
     "ModErrorSummary": "1個のmodエラー",
     "ModErrorSummary_plural": "{{count}} 個のmod エラー:",
@@ -793,7 +847,6 @@
     "SubclassOptionsSearch": "{{subclass}} オプションを検索",
     "Succeeded": "ロードアウトに成功",
     "SyncFromEquipped": "装備中から同期する",
-    "TooManyFragments": "かけらが多すぎます",
     "TooManyRequested": "あなたは{{total}} {{itemname}} を持っていますが、あなたのロードアウトは{{requested}} を要求します。あなたが持っていた物をすべてを転送しました。",
     "UnassignedModError": "Modが現在のアーマーに適用できませんでした",
     "Undo": "元に戻す",
@@ -874,6 +927,7 @@
       "QuestProgress": "{{questStepNum}} / {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
+    "TabList": "アイテム詳細タブ",
     "ToggleSidecar": "アイテムアクションを展開または折りたたむ",
     "TrackUntrack": {
       "Track": "{{itemType}} を追跡する",

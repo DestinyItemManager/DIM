@@ -391,6 +391,7 @@
     "ClearDialog": "Zamknij dialog",
     "ClearNewItems": "Wyczyść nowe przedmioty",
     "Enter": "ENTER",
+    "ItemPopupTab": "Switch item details tab",
     "LockUnlock": "Zablokuj lub odblokuj przedmiot",
     "MarkItemAs": "Oznacz przedmiot jako '{{tag}}'",
     "Menu": "Przełącz menu",
@@ -556,6 +557,58 @@
     "Profile": "Wczytywanie profilu Destiny...",
     "Vendors": "Wczytywanie sprzedawców Destiny..."
   },
+  "LoadoutAnalysis": {
+    "Analyzed": "Analyzed {{numLoadouts}} Loadouts",
+    "Analyzing": "Analyzing {{numAnalyzed}}/{{numLoadouts}} Loadouts",
+    "BetterStatsAvailable": {
+      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stat tiers.",
+      "Name": "Better Stats Available"
+    },
+    "DoesNotRespectExotic": {
+      "Description": "This loadout's Loadout Optimizer settings specify an exotic choice, but the loadout does not match that exotic.",
+      "Name": "Wrong Exotic"
+    },
+    "DoesNotSatisfyStatConstraints": {
+      "Description": "Loadout Optimizer settings for this Loadout specify stat tiers, but the Loadout does not reach them.",
+      "Name": "Wrong Stat Tiers"
+    },
+    "EmptyFragmentSlots": {
+      "Description": "There are empty fragment slots in this subclass.",
+      "Name": "Empty Fragment Slots"
+    },
+    "InvalidMods": {
+      "Description": "Some mods in this loadout are deprecated or do not otherwise fit into any of your armor pieces.",
+      "Name": "Deprecated Mods"
+    },
+    "LoadoutHasSearchQuery": {
+      "Description": "This loadout was created with a search query in Loadout Optimizer.",
+      "Name": "Has Search Query"
+    },
+    "MissingItems": {
+      "Description": "Some of the items in this loadout are no longer in your inventory.",
+      "Name": "Missing Items"
+    },
+    "ModsDontFit": {
+      "Description": "Armor in this loadout cannot accommodate all loadout mods, even if the armor was upgraded.",
+      "Name": "Unassigned Mods"
+    },
+    "NeedsArmorUpgrades": {
+      "Description": "Armor in this loadout needs to be upgraded to accommodate all mods or reach specified stat tiers.",
+      "Name": "Needs Armor Upgrades"
+    },
+    "NotAFullArmorSet": {
+      "Description": "This loadout could not be analyzed further because it does not include a full set of armor.",
+      "Name": "Not A Full Armor Set"
+    },
+    "TooManyFragments": {
+      "Description": "There are more fragments configured on the subclass than granted by aspects.",
+      "Name": "Too Many Fragments"
+    },
+    "UsesSeasonalMods": {
+      "Description": "This loadout relies on mods that are only available in some seasons. When the season ends, some mods will be unavailable or exceed armor energy capacity.",
+      "Name": "Uses Seasonal Mods"
+    }
+  },
   "LoadoutBuilder": {
     "AddHalfTierMods": "Dodaj modyfikacje +5",
     "All": "Wszystkie",
@@ -573,6 +626,7 @@
     "CompareLoadout": "Porównaj uzbrojenie",
     "ConfirmOverwrite": "Czy na pewno chcesz zastąpić pancerz w uzbrojeniu \"{{name}}\" tym nowym zestawem pancerza?",
     "CreateLoadout": "Zapisz Uzbrojenie",
+    "DecreaseStatPriority": "Decrease stat priority",
     "DisabledByAutoStatMods": "Stat mods are being chosen automatically by Loadout Optimizer.",
     "DisabledDueToMaintenance": "Optymalizator uzbrojenia jest obecnie wyłączony ze względu na prace konserwacyjne Bungie API.",
     "EquipItems": "Załóż",
@@ -580,7 +634,9 @@
     "ExistingLoadout": "Istniejące uzbrojenie",
     "ExoticSpecialCategory": "Specjalne",
     "Filter": "Filtry",
+    "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
     "IncludeVendorItems": "Include Vendor items",
+    "IncreaseStatPriority": "Increase stat priority",
     "Legendary": "Legendarny",
     "LockEquipped": "Przypnij założone",
     "LockItem": "Przypnij przedmiot",
@@ -622,6 +678,7 @@
     "StatTierIgnoreOption": "Zignoruj",
     "StatTierIncludeOption": "Dołącz",
     "TierNumber": "T{{tier}}",
+    "TierSelect": "Select minimum stat tier",
     "UnableToAddAllMods": "Nie można dodać wszystkich modyfikacji.",
     "UnableToAddAllModsBody": "Nie ma wystarczającej ilości miejsc na modyfikacje, aby założyć {{mods}}.",
     "UnlockItem": "Odepnij Przedmiot"
@@ -660,11 +717,9 @@
     "CurrentlyEquipped": "Aktualnie założone",
     "Deequip": "Rozbrojenie postaci z przedmiotów",
     "Delete": "Usuń",
-    "DeprecatedMods": "Wycofane Modyfikacje",
     "DimLoadouts": "DIM Loadouts",
     "Edit": "Edytuj Uzbrojenie",
     "EditBrief": "Edytuj",
-    "EmptyFragmentSlots": "Empty Fragment Slots",
     "EquipInGameLoadout": "Equipping in-game loadout",
     "EquipItems": "Wyposażanie przedmiotów",
     "EquippableDifferent1": "Wielokrotne przedmioty egzotyczne zostały użyte do obliczenia twojej maksymalnej mocy, więc pokazana liczba może nie być osiągalna podczas wyposażenia twoich przedmiotów w grze.",
@@ -708,7 +763,6 @@
     "MaximizeLight": "Maksymalizuj Światło",
     "MaximizePower": "Maksymalizuj Moc",
     "MaximizeStat": "Maksymalizuj statysktykę",
-    "MissingItems": "Brakujące przedmioty",
     "MissingItemsWarning": "Niektóre elementy w tym uzbrojeniu już nie są w twoim ekwipunku.",
     "ModErrorSummary": "1 błąd modyfikacji:",
     "ModErrorSummary_plural": "{{count}} błędów modyfikacji:",
@@ -793,7 +847,6 @@
     "SubclassOptionsSearch": "Szukaj opcje {{subclass}}",
     "Succeeded": "Uzbrojenie powiodło się",
     "SyncFromEquipped": "Synchronizuj z wyposażonych przedmiotów",
-    "TooManyFragments": "Too Many Fragments",
     "TooManyRequested": "Masz {{total}} {{itemname}}, ale Twoje wyposażenie wymaga {{requested}}. Przenieśliśmy wszystko, co miałeś.",
     "UnassignedModError": "Modyfikacja nie pasuję do twojej bieżącej zbroi",
     "Undo": "Cofnij",
@@ -874,6 +927,7 @@
       "QuestProgress": "Krok {{questStepNum}} z {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
+    "TabList": "Item detail tabs",
     "ToggleSidecar": "Rozwiń lub zwiń akcje przedmiotu",
     "TrackUntrack": {
       "Track": "Śledź {{itemType}}",
