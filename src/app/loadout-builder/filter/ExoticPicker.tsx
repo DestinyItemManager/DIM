@@ -12,11 +12,15 @@ import { SearchInput } from 'app/search/SearchInput';
 import { startWordRegexp } from 'app/search/search-filters/freeform';
 import { uniqBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
-import { socketContainsPlugWithCategory } from 'app/utils/socket-utils';
+import {
+  socketContainsIntrinsicPlug,
+  socketContainsPlugWithCategory,
+} from 'app/utils/socket-utils';
 import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import anyExoticIcon from 'images/anyExotic.svg';
 import noExoticIcon from 'images/noExotic.svg';
+import noExoticPreferenceIcon from 'images/noExoticPreference.svg';
 import _ from 'lodash';
 import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -24,17 +28,10 @@ import { LOCKED_EXOTIC_ANY_EXOTIC, LOCKED_EXOTIC_NO_EXOTIC, LockableBucketHashes
 import styles from './ExoticPicker.m.scss';
 import ExoticTile, { FakeExoticTile, LockedExoticWithPlugs } from './ExoticTile';
 
-interface Props {
-  lockedExoticHash?: number;
-  classType: DestinyClass;
-  onSelected: (lockedExoticHash: number) => void;
-  onClose: () => void;
-}
-
 /**
  * Find all exotic armor in this character's inventory that could be locked in LO.
  */
-function findLockableExotics(
+export function findLockableExotics(
   allItems: DimItem[],
   classType: DestinyClass,
   defs: D2ManifestDefinitions,
@@ -65,19 +62,7 @@ function findLockableExotics(
     const def = defs.InventoryItem.get(item.hash);
 
     if (def?.displayProperties.hasIcon) {
-      const exoticPerk = item.sockets?.allSockets.find(
-        (socket) =>
-          socketContainsPlugWithCategory(socket, PlugCategoryHashes.Intrinsics) &&
-          socket.plugged.plugDef.inventory?.tierType === TierType.Exotic,
-      )?.plugged?.plugDef;
-
-      const exoticMods =
-        item.sockets?.allSockets
-          .find((socket) =>
-            socketContainsPlugWithCategory(socket, PlugCategoryHashes.EnhancementsExoticAeonCult),
-          )
-          ?.plugSet?.plugs.map((dimPlug) => dimPlug.plugDef) || [];
-
+      const { exoticPerk, exoticMods } = resolveExoticInfo(item);
       rtn.push({
         def,
         exoticPerk,
@@ -88,6 +73,22 @@ function findLockableExotics(
   }
 
   return rtn;
+}
+
+export function resolveExoticInfo(item: DimItem) {
+  const exoticPerk = item.sockets?.allSockets.find(
+    (socket) =>
+      socketContainsIntrinsicPlug(socket) &&
+      socket.plugged.plugDef.inventory?.tierType === TierType.Exotic,
+  )?.plugged?.plugDef;
+
+  const exoticMods =
+    item.sockets?.allSockets
+      .find((socket) =>
+        socketContainsPlugWithCategory(socket, PlugCategoryHashes.EnhancementsExoticAeonCult),
+      )
+      ?.plugSet?.plugs.map((dimPlug) => dimPlug.plugDef) || [];
+  return { exoticPerk, exoticMods } as const;
 }
 
 /**
@@ -141,7 +142,17 @@ function filterAndGroupExotics(
 }
 
 /** A drawer to select an exotic for your build. */
-export default function ExoticPicker({ lockedExoticHash, classType, onSelected, onClose }: Props) {
+export default function ExoticPicker({
+  lockedExoticHash,
+  classType,
+  onSelected,
+  onClose,
+}: {
+  lockedExoticHash?: number;
+  classType: DestinyClass;
+  onSelected: (lockedExoticHash: number | undefined) => void;
+  onClose: () => void;
+}) {
   const defs = useD2Definitions()!;
   const language = useSelector(languageSelector);
   const [query, setQuery] = useState('');
@@ -196,6 +207,16 @@ export default function ExoticPicker({ lockedExoticHash, classType, onSelected, 
               icon={anyExoticIcon}
               onSelected={() => {
                 onSelected(LOCKED_EXOTIC_ANY_EXOTIC);
+                onClose();
+              }}
+            />
+            <FakeExoticTile
+              selected={lockedExoticHash === undefined}
+              title={t('LoadoutBuilder.NoExoticPreference')}
+              description={t('LoadoutBuilder.NoExoticPreferenceDescription')}
+              icon={noExoticPreferenceIcon}
+              onSelected={() => {
+                onSelected(undefined);
                 onClose();
               }}
             />
