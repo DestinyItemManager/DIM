@@ -252,7 +252,7 @@
   },
   "lint-staged": {
     "*.{css,scss}": "stylelint --fix",
-    "*.{js,jsx,ts,tsx,cjs,mjs,cts,mts,css,scss,md,html}": "prettier --write"
+    "*.{js,jsx,ts,tsx,cjs,mjs,cts,mts,css,scss,md}": "prettier --write"
   },
   "packageManager": "pnpm@8.8.0+sha256.d713a5750e41c3660d1e090608c7f607ad00d1dd5ba9b6552b5f390bf37924e9",
   "pnpm": {
