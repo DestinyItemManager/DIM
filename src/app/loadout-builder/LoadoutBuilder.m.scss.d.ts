@@ -6,6 +6,7 @@ interface CssExports {
   'menuContent': string;
   'page': string;
   'speedReport': string;
+  'subclassSection': string;
   'toolbar': string;
   'undoRedo': string;
   'wide': string;
