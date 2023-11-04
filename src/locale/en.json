@@ -614,10 +614,10 @@
     "All": "All",
     "AnyExotic": "Any Exotic",
     "AnyExoticDescription": "Sets must contain an exotic, but any exotic will do.",
-    "AssumeMasterwork": "Assume Masterwork",
+    "AssumeMasterwork": "Assume Masterworked Energy & Stats",
     "AssumeMasterworkOptions": {
       "All": "All armor will use masterworked stats and will have an energy level of 10.",
-      "Legendary": "Legendary armor will use masterworked stats and will have an energy level of 10.",
+      "Legendary": "Legendary armor will use masterworked stats and will have an energy level of 10. Exotic armor will use its current stats and will have a minimum energy level of {{minLoItemEnergy}}.",
       "None": "All armor will use its current stats and will have a minimum energy level of {{minLoItemEnergy}}."
     },
     "AutoStatMods": "Automatically add stat mods",

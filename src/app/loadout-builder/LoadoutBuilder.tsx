@@ -320,7 +320,11 @@ export default memo(function LoadoutBuilder({
           lbDispatch={lbDispatch}
         />
       )}
-      <EnergyOptions assumeArmorMasterwork={assumeArmorMasterwork} lbDispatch={lbDispatch} />
+      <EnergyOptions
+        assumeArmorMasterwork={assumeArmorMasterwork}
+        lbDispatch={lbDispatch}
+        className={styles.loadoutEditSection}
+      />
       <div className={loMenuSection}>
         <CheckButton
           onChange={setIncludeVendorItems}
