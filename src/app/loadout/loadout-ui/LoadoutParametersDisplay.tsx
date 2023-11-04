@@ -73,24 +73,32 @@ export function StatConstraintRange({
 }) {
   return s.minTier !== undefined && s.minTier !== 0 ? (
     <span className={className}>
-      {(s.maxTier === 10 || s.maxTier === undefined) && s.minTier !== 10
-        ? `${t('LoadoutBuilder.TierNumber', {
-            tier: s.minTier,
-          })}+`
-        : s.maxTier !== undefined && s.maxTier !== s.minTier
-        ? `${t('LoadoutBuilder.TierNumber', {
-            tier: s.minTier,
-          })}-${s.maxTier}`
-        : t('LoadoutBuilder.TierNumber', {
+      {(s.maxTier === 10 || s.maxTier === undefined) && s.minTier !== 10 ? (
+        <>
+          &ge;
+          {t('LoadoutBuilder.TierNumber', {
             tier: s.minTier,
           })}
+        </>
+      ) : s.maxTier !== undefined && s.maxTier !== s.minTier ? (
+        `${t('LoadoutBuilder.TierNumber', {
+          tier: s.minTier,
+        })}-${s.maxTier}`
+      ) : (
+        <>
+          &eq;
+          {t('LoadoutBuilder.TierNumber', {
+            tier: s.minTier,
+          })}
+        </>
+      )}
     </span>
   ) : (
     <span className={className}>
+      &le;
       {t('LoadoutBuilder.TierNumber', {
         tier: s.maxTier ?? 10,
       })}
-      -
     </span>
   );
 }
