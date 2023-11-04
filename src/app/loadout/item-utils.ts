@@ -47,7 +47,11 @@ export function getSubclassPlugs(
   defs: D2ManifestDefinitions,
   subclass: ResolvedLoadoutItem | undefined,
 ) {
-  const plugs: { plug: PluggableInventoryItemDefinition; canBeRemoved: boolean }[] = [];
+  const plugs: {
+    plug: PluggableInventoryItemDefinition;
+    canBeRemoved: boolean;
+    socketCategoryHash: number;
+  }[] = [];
 
   if (subclass?.item.sockets?.categories) {
     for (const category of subclass.item.sockets.categories) {
@@ -62,7 +66,7 @@ export function getSubclassPlugs(
         const hash = override || (!canBeRemoved && initial);
         const plug = hash && defs.InventoryItem.get(hash);
         if (plug && isPluggableItem(plug)) {
-          plugs.push({ plug, canBeRemoved });
+          plugs.push({ plug, canBeRemoved, socketCategoryHash: category.category.hash });
         }
       }
     }
