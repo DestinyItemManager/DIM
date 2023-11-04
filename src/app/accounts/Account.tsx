@@ -24,7 +24,7 @@ export default function Account({
     >
       Destiny {account.destinyVersion}
       {account.platforms
-        .filter((p) => account.platforms.length > 1 && p !== BungieMembershipType.TigerStadia)
+        .filter((p) => account.platforms.length === 1 || p !== BungieMembershipType.TigerStadia)
         .sort(compareBy((p) => account.originalPlatformType !== p))
         .map((platformType, index) =>
           platformType in PLATFORM_ICONS ? (
