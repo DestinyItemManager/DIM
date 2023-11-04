@@ -618,7 +618,7 @@
     "AssumeMasterworkOptions": {
       "All": "All armor will use masterworked stats and will have an energy level of 10.",
       "Legendary": "Legendary armor will use masterworked stats and will have an energy level of 10.",
-      "None": "All armor will use its current stats and will have a minimum energy level of 7."
+      "None": "All armor will use its current stats and will have a minimum energy level of {{minLoItemEnergy}}."
     },
     "AutoStatMods": "Automatically add stat mods",
     "AutomaticallyPicked": "This mod was added automatically to improve build stats.",
