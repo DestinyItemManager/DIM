@@ -391,6 +391,7 @@
     "ClearDialog": "關閉對話",
     "ClearNewItems": "清除新物品提示",
     "Enter": "回車",
+    "ItemPopupTab": "Switch item details tab",
     "LockUnlock": "鎖定或解鎖物品",
     "MarkItemAs": "將物品標記為 “{{tag}}”",
     "Menu": "切換菜單",
@@ -556,6 +557,58 @@
     "Profile": "正在加載命運檔案...",
     "Vendors": "正在加載命運商人..."
   },
+  "LoadoutAnalysis": {
+    "Analyzed": "Analyzed {{numLoadouts}} Loadouts",
+    "Analyzing": "Analyzing {{numAnalyzed}}/{{numLoadouts}} Loadouts",
+    "BetterStatsAvailable": {
+      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stat tiers.",
+      "Name": "Better Stats Available"
+    },
+    "DoesNotRespectExotic": {
+      "Description": "This loadout's Loadout Optimizer settings specify an exotic choice, but the loadout does not match that exotic.",
+      "Name": "Wrong Exotic"
+    },
+    "DoesNotSatisfyStatConstraints": {
+      "Description": "Loadout Optimizer settings for this Loadout specify stat tiers, but the Loadout does not reach them.",
+      "Name": "Wrong Stat Tiers"
+    },
+    "EmptyFragmentSlots": {
+      "Description": "There are empty fragment slots in this subclass.",
+      "Name": "Empty Fragment Slots"
+    },
+    "InvalidMods": {
+      "Description": "Some mods in this loadout are deprecated or do not otherwise fit into any of your armor pieces.",
+      "Name": "Deprecated Mods"
+    },
+    "LoadoutHasSearchQuery": {
+      "Description": "This loadout was created with a search query in Loadout Optimizer.",
+      "Name": "Has Search Query"
+    },
+    "MissingItems": {
+      "Description": "Some of the items in this loadout are no longer in your inventory.",
+      "Name": "Missing Items"
+    },
+    "ModsDontFit": {
+      "Description": "Armor in this loadout cannot accommodate all loadout mods, even if the armor was upgraded.",
+      "Name": "Unassigned Mods"
+    },
+    "NeedsArmorUpgrades": {
+      "Description": "Armor in this loadout needs to be upgraded to accommodate all mods or reach specified stat tiers.",
+      "Name": "Needs Armor Upgrades"
+    },
+    "NotAFullArmorSet": {
+      "Description": "This loadout could not be analyzed further because it does not include a full set of armor.",
+      "Name": "Not A Full Armor Set"
+    },
+    "TooManyFragments": {
+      "Description": "There are more fragments configured on the subclass than granted by aspects.",
+      "Name": "Too Many Fragments"
+    },
+    "UsesSeasonalMods": {
+      "Description": "This loadout relies on mods that are only available in some seasons. When the season ends, some mods will be unavailable or exceed armor energy capacity.",
+      "Name": "Uses Seasonal Mods"
+    }
+  },
   "LoadoutBuilder": {
     "AddHalfTierMods": "添加 +5 模組",
     "All": "全部",
@@ -573,6 +626,7 @@
     "CompareLoadout": "對比配裝",
     "ConfirmOverwrite": "你確定要用這套新的護甲來替換配裝「{{name}}」里的護甲嗎？",
     "CreateLoadout": "保存配裝",
+    "DecreaseStatPriority": "Decrease stat priority",
     "DisabledByAutoStatMods": "屬性模組由配裝優化器自動選取。",
     "DisabledDueToMaintenance": "由於 Bungie API 維護，配裝優化器目前不可用。",
     "EquipItems": "裝備",
@@ -580,7 +634,9 @@
     "ExistingLoadout": "已有配裝",
     "ExoticSpecialCategory": "特殊",
     "Filter": "過濾",
+    "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
     "IncludeVendorItems": "包括商販物品",
+    "IncreaseStatPriority": "Increase stat priority",
     "Legendary": "传说",
     "LockEquipped": "固定已裝備",
     "LockItem": "固定物品",
@@ -622,6 +678,7 @@
     "StatTierIgnoreOption": "忽略",
     "StatTierIncludeOption": "包含",
     "TierNumber": "T{{tier}}",
+    "TierSelect": "Select minimum stat tier",
     "UnableToAddAllMods": "無法添加所有模組。",
     "UnableToAddAllModsBody": "模組插槽不足，無法裝下 {{mods}}。",
     "UnlockItem": "取消固定物品"
@@ -660,11 +717,9 @@
     "CurrentlyEquipped": "當前裝備",
     "Deequip": "從其他角色取回物品",
     "Delete": "刪除",
-    "DeprecatedMods": "荒廢的模組",
     "DimLoadouts": "DIM 配裝",
     "Edit": "編輯配裝",
     "EditBrief": "編輯",
-    "EmptyFragmentSlots": "空碎片插槽",
     "EquipInGameLoadout": "正在裝備游戲内配裝",
     "EquipItems": "正在裝備物品",
     "EquippableDifferent1": "計算你的最大能量等級時使用了多件異域裝備，所以在遊戲內配裝時可能達不到這個數值。",
@@ -708,7 +763,6 @@
     "MaximizeLight": "最高光等",
     "MaximizePower": "最大能量等級",
     "MaximizeStat": "最高屬性",
-    "MissingItems": "遺失物品",
     "MissingItemsWarning": "此配裝中的某些項目不再在您的庫存中。",
     "ModErrorSummary": "1 個模組出錯：",
     "ModErrorSummary_plural": "{{count}} 個模組出錯：",
@@ -793,7 +847,6 @@
     "SubclassOptionsSearch": "搜索{{subclass}} 選項",
     "Succeeded": "配裝成功",
     "SyncFromEquipped": "同步已裝備物品",
-    "TooManyFragments": "碎片過多",
     "TooManyRequested": "你有{{total}} 個{{itemname}}, 但完成配裝需要{{requested}} 個. 我們已經處理所有已擁有的",
     "UnassignedModError": "模組不適合你當前的護甲",
     "Undo": "撤銷",
@@ -874,6 +927,7 @@
       "QuestProgress": "第 {{questStepNum}} / {{questStepsTotal}} 步",
       "Type": "{{classType}} {{typeName}}"
     },
+    "TabList": "Item detail tabs",
     "ToggleSidecar": "展開或摺疊物品操作",
     "TrackUntrack": {
       "Track": "跟蹤{{itemType}}",

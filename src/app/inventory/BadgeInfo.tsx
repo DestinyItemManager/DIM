@@ -30,7 +30,7 @@ export function shouldShowBadge(item: DimItem) {
       (item.isEngram && item.location.hash === BucketHashes.Engrams) ||
       (isBounty && (item.complete || item.hidePercentage)) ||
       (isStackable && item.amount === 1) ||
-      (isGeneric && !item.primaryStat?.value && !item.classified)
+      (isGeneric && !item.primaryStat?.value && !item.classified),
   );
 
   return !hideBadge;
@@ -52,7 +52,7 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
       (item.isEngram && item.location.hash === BucketHashes.Engrams) ||
       (isBounty && (item.complete || item.hidePercentage)) ||
       (isStackable && item.amount === 1) ||
-      (isGeneric && !item.primaryStat?.value && !item.classified)
+      (isGeneric && !item.primaryStat?.value && !item.classified),
   );
 
   if (hideBadge) {

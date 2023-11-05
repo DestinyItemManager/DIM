@@ -55,7 +55,7 @@ const fullyResolvedLoadoutsSelector = createSelector(
 
     const loadouts = savedLoadouts
       ? savedLoadouts.map((loadout) =>
-          fullyResolveLoadout(storeId, loadout, defs, unlockedPlugs, itemCreationContext, allItems)
+          fullyResolveLoadout(storeId, loadout, defs, unlockedPlugs, itemCreationContext, allItems),
         )
       : emptyArray<FullyResolvedLoadout>();
     const currentLoadout = fullyResolveLoadout(
@@ -64,26 +64,26 @@ const fullyResolvedLoadoutsSelector = createSelector(
       defs,
       unlockedPlugs,
       itemCreationContext,
-      allItems
+      allItems,
     );
     return { loadouts, currentLoadout };
-  }
+  },
 );
 
-function fullyResolveLoadout(
+export function fullyResolveLoadout(
   storeId: string,
   loadout: Loadout,
   defs: D2ManifestDefinitions | undefined,
   unlockedPlugs: Set<number>,
   itemCreationContext: ItemCreationContext,
-  allItems: DimItem[]
+  allItems: DimItem[],
 ): FullyResolvedLoadout {
   const resolvedMods = getModsFromLoadout(defs, loadout, unlockedPlugs);
   const [resolvedLoadoutItems, failedResolvedLoadoutItems] = getItemsFromLoadoutItems(
     itemCreationContext,
     loadout.items,
     storeId,
-    allItems
+    allItems,
   );
 
   return { loadout, resolvedMods, resolvedLoadoutItems, failedResolvedLoadoutItems };
@@ -96,14 +96,14 @@ const characterLoadoutsSelector = (state: RootState) =>
 /** All loadouts supported directly by D2 (post-Lightfall), on any character */
 export const allInGameLoadoutsSelector = createSelector(
   inGameLoadoutsSelector,
-  (loadouts): InGameLoadout[] => Object.values(loadouts).flat()
+  (loadouts): InGameLoadout[] => Object.values(loadouts).flat(),
 );
 
 /** Loadouts supported directly by D2 (post-Lightfall), for a specific character */
 export const inGameLoadoutsForCharacterSelector = createSelector(
   inGameLoadoutsSelector,
   (_state: RootState, characterId: string) => characterId,
-  (loadouts, characterId): InGameLoadout[] => loadouts[characterId] ?? emptyArray<InGameLoadout>()
+  (loadouts, characterId): InGameLoadout[] => loadouts[characterId] ?? emptyArray<InGameLoadout>(),
 );
 
 /**
@@ -112,7 +112,7 @@ export const inGameLoadoutsForCharacterSelector = createSelector(
  */
 export const availableLoadoutSlotsSelector = createSelector(
   characterLoadoutsSelector,
-  (loadouts) => (loadouts ? Object.values(loadouts)[0]?.loadouts.length ?? 0 : 0)
+  (loadouts) => (loadouts ? Object.values(loadouts)[0]?.loadouts.length ?? 0 : 0),
 );
 
 /** Loadouts supported directly by D2 (post-Lightfall), for a specific character */
@@ -131,7 +131,7 @@ export const inGameLoadoutsWithMetadataSelector = createSelector(
     stores,
     defs,
     availableLoadoutSlots,
-    storeId
+    storeId,
   ) => {
     const selectedStore = getStore(stores, storeId)!;
     if (!defs) {
@@ -154,7 +154,7 @@ export const inGameLoadoutsWithMetadataSelector = createSelector(
             defs,
             gameLoadout,
             currentLoadout.resolvedLoadoutItems,
-            currentLoadout.resolvedMods
+            currentLoadout.resolvedMods,
           );
 
           const matchingLoadouts = savedLoadouts.filter(
@@ -164,11 +164,11 @@ export const inGameLoadoutsWithMetadataSelector = createSelector(
                 defs,
                 gameLoadout,
                 dimLoadout.resolvedLoadoutItems,
-                dimLoadout.resolvedMods
-              )
+                dimLoadout.resolvedMods,
+              ),
           );
           return { gameLoadout, isEquippable, isEquipped, matchingLoadouts };
         })
     );
-  }
+  },
 );

@@ -75,10 +75,9 @@
 // background
 .emblem {
   grid-area: emblem;
-  justify-self: center;
+  place-self: center;
   width: 32px;
   height: 32px;
-  align-self: center;
 
   .vault & {
     height: 40px;

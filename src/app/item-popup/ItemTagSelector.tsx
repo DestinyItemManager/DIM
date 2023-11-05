@@ -34,9 +34,9 @@ export default function ItemTagSelector({ item, className, hideKeys, hideButtonL
             hotkey: 'shift+0',
             sortOrder: -1,
           }
-        : t
+        : t,
     ),
-    (t) => t.sortOrder
+    (t) => t.sortOrder,
   ).map((tagOption) => ({
     key: tagOption.type || 'none',
     content: <TagOption tagOption={tagOption} hideKeys={hideKeys} />,

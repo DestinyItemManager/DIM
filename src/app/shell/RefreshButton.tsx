@@ -29,7 +29,7 @@ export default function RefreshButton({ className }: { className?: string }) {
 
   const handleChanges = useCallback(
     () => setDisabled(!navigator.onLine || document.hidden || isDragging$.getCurrentValue()),
-    []
+    [],
   );
   const active = useSubscription(loadingTracker.active$);
   useEventBusListener(isDragging$, handleChanges);

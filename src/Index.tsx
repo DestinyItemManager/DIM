@@ -26,7 +26,7 @@ import { watchLanguageChanges } from './app/settings/observers';
 import { saveWishListToIndexedDB } from './app/wishlists/observers';
 infoLog(
   'app',
-  `DIM v${$DIM_VERSION} (${$DIM_FLAVOR}) - Please report any errors to https://www.github.com/DestinyItemManager/DIM/issues`
+  `DIM v${$DIM_VERSION} (${$DIM_FLAVOR}) - Please report any errors to https://www.github.com/DestinyItemManager/DIM/issues`,
 );
 
 initGoogleAnalytics();
@@ -53,7 +53,7 @@ const i18nPromise = initi18n();
     root.render(
       <Provider store={store}>
         <StorageBroken />
-      </Provider>
+      </Provider>,
     );
     return;
   }

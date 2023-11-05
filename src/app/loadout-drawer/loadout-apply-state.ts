@@ -162,7 +162,7 @@ export function setLoadoutApplyPhase(phase: LoadoutApplyPhase) {
 export function setModResult(result: LoadoutModResult, equipNotPossible?: boolean) {
   return produce<LoadoutApplyState>((state) => {
     const mod = state.modStates.find(
-      (m) => m.modHash === result.modHash && m.state === LoadoutModState.Pending
+      (m) => m.modHash === result.modHash && m.state === LoadoutModState.Pending,
     );
     if (mod) {
       mod.state = result.state;
@@ -179,7 +179,7 @@ export function setSocketOverrideResult(
   socketIndex: number,
   socketState: LoadoutSocketOverrideState,
   error?: Error,
-  equipNotPossible?: boolean
+  equipNotPossible?: boolean,
 ) {
   return produce<LoadoutApplyState>((state) => {
     const thisSocketResult = state.socketOverrideStates[item.index].results[socketIndex];
@@ -204,14 +204,14 @@ export function anyActionFailed(state: LoadoutApplyState) {
   }
   if (
     Object.values(state.itemStates).some(
-      (s) => s.state !== LoadoutItemState.Succeeded && s.state !== LoadoutItemState.AlreadyThere
+      (s) => s.state !== LoadoutItemState.Succeeded && s.state !== LoadoutItemState.AlreadyThere,
     )
   ) {
     return true;
   }
   if (
     Object.values(state.socketOverrideStates).some((s) =>
-      Object.values(s.results).some((r) => r.state !== LoadoutSocketOverrideState.Applied)
+      Object.values(s.results).some((r) => r.state !== LoadoutSocketOverrideState.Applied),
     )
   ) {
     return true;

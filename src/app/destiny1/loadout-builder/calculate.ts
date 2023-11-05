@@ -24,7 +24,7 @@ export async function getSetBucketsStep(
   scaleType: 'base' | 'scaled',
   includeVendors: boolean,
   fullMode: boolean,
-  cancelToken: { cancelled: boolean }
+  cancelToken: { cancelled: boolean },
 ): Promise<
   | {
       allSetTiers: string[];
@@ -41,7 +41,7 @@ export async function getSetBucketsStep(
     lockedperks,
     scaleType,
     includeVendors,
-    fullMode
+    fullMode,
   );
   const helms: {
     item: D1Item;
@@ -150,7 +150,7 @@ export async function getSetBucketsStep(
                   set.setHash = genSetHash(pieces);
                   calcArmorStats(pieces, set.stats, scaleType);
                   const tiersString = `${tierValue(set.stats[144602215].value)}/${tierValue(
-                    set.stats[1735777505].value
+                    set.stats[1735777505].value,
                   )}/${tierValue(set.stats[4244567218].value)}`;
 
                   tiersSet.add(tiersString);
@@ -160,7 +160,7 @@ export async function getSetBucketsStep(
                   if (setMap[set.setHash]) {
                     if (setMap[set.setHash].tiers[tiersString]) {
                       setMap[set.setHash].tiers[tiersString].configs.push(
-                        getBonusConfig(set.armor)
+                        getBonusConfig(set.armor),
                       );
                     } else {
                       setMap[set.setHash].tiers[tiersString] = {
@@ -189,7 +189,7 @@ export async function getSetBucketsStep(
                   infoLog(
                     'loadout optimizer',
                     processedCount,
-                    'combinations processed, still going...'
+                    'combinations processed, still going...',
                   );
                   // Allow the event loop to do other things before we resume
                   await delay(0);
@@ -203,7 +203,7 @@ export async function getSetBucketsStep(
   }
 
   const tiers = Object.groupBy(tiersSet.keys(), (tierString: string) =>
-    _.sumBy(tierString.split('/'), (num) => parseInt(num, 10))
+    _.sumBy(tierString.split('/'), (num) => parseInt(num, 10)),
   );
   for (const tier of Object.values(tiers)) {
     tier.sort().reverse();

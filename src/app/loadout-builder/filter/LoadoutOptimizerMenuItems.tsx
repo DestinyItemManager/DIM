@@ -18,7 +18,7 @@ import LockedItem from './LockedItem';
 
 export type ChooseItemFunction = (
   updateFunc: (item: DimItem) => void,
-  filter?: ((item: DimItem) => boolean) | undefined
+  filter?: ((item: DimItem) => boolean) | undefined,
 ) => (e: React.MouseEvent) => Promise<void>;
 
 export const LoadoutOptimizerExotic = memo(function LoadoutOptimizerExotic({
@@ -86,18 +86,18 @@ export const LoadoutOptimizerPinnedItems = memo(function LoadoutOptimizerPinnedI
 
   const pinItem = useCallback(
     (item: DimItem) => lbDispatch({ type: 'pinItem', item }),
-    [lbDispatch]
+    [lbDispatch],
   );
   const unpinItem = (item: DimItem) => lbDispatch({ type: 'unpinItem', item });
 
   const chooseLockItem = chooseItem(
     pinItem,
     // Exclude types that already have a locked item represented
-    (item) => Boolean(!pinnedItems[item.bucket.hash] && searchFilter(item))
+    (item) => Boolean(!pinnedItems[item.bucket.hash] && searchFilter(item)),
   );
 
   const allPinnedItems = _.sortBy(_.compact(objectValues(pinnedItems)), (i) =>
-    LockableBucketHashes.indexOf(i.bucket.hash)
+    LockableBucketHashes.indexOf(i.bucket.hash),
   );
 
   return (
@@ -134,14 +134,14 @@ export const LoadoutOptimizerExcludedItems = memo(function LoadoutOptimizerExclu
 }) {
   const excludeItem = useCallback(
     (item: DimItem) => lbDispatch({ type: 'excludeItem', item }),
-    [lbDispatch]
+    [lbDispatch],
   );
   const unExcludeItem = (item: DimItem) => lbDispatch({ type: 'unexcludeItem', item });
 
   const chooseExcludeItem = chooseItem(excludeItem, (item) => Boolean(searchFilter(item)));
 
   const allExcludedItems = _.sortBy(_.compact(objectValues(excludedItems)).flat(), (i) =>
-    LockableBucketHashes.indexOf(i.bucket.hash)
+    LockableBucketHashes.indexOf(i.bucket.hash),
   );
   return (
     <LoadoutBucketDropTarget className={styles.area} onItemLocked={excludeItem}>

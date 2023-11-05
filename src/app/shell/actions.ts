@@ -15,19 +15,19 @@ export const setSearchQuery = createAction(
   (query: string, updateVersion: boolean = true) => ({
     query,
     updateVersion,
-  })
+  }),
 )();
 
 /**
  * Toggle in or out a specific search query component from the existing search.
  */
 export const toggleSearchQueryComponent = createAction(
-  'shell/TOGGLE_SEARCH_QUERY_COMPONENT'
+  'shell/TOGGLE_SEARCH_QUERY_COMPONENT',
 )<string>();
 
 export const toggleSearchResults = createAction(
   'shell/TOGGLE_SEARCH_RESULTS',
-  (open?: boolean) => open
+  (open?: boolean) => open,
 )();
 
 /**
@@ -35,7 +35,7 @@ export const toggleSearchResults = createAction(
  */
 export const setRouterLocation = createAction(
   'shell/SET_ROUTER_LOCATION',
-  (location?: string) => location
+  (location?: string) => location,
 )();
 
 /**

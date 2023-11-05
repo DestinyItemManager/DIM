@@ -33,11 +33,11 @@ export default function MainSearchBarActions() {
   // Just suppress the count for now
   const showSearchResults = onInventory && !isPhonePortrait;
   const showSearchCount = Boolean(
-    queryValid && searchQuery && !onProgress && !onRecords && !onVendors
+    queryValid && searchQuery && !onProgress && !onRecords && !onVendors,
   );
   const handleCloseSearchResults = useCallback(
     () => dispatch(toggleSearchResults(false)),
-    [dispatch]
+    [dispatch],
   );
 
   return (

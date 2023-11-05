@@ -51,7 +51,7 @@ export default function ArtifactUnlocks({ characterId }: { characterId: string }
                     />
                   )}
                 </ItemPopupTrigger>
-              )
+              ),
           )}
         </div>
       ))}

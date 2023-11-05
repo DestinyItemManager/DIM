@@ -22,7 +22,7 @@ const classTypeOptionsSelector = createSelector(storesSelector, (stores) => {
     value: DestinyClass;
   }[] = uniqBy(
     stores.filter((s) => !s.isVault),
-    (store) => store.classType
+    (store) => store.classType,
   ).map((store) => ({ label: store.className, value: store.classType }));
   return [{ label: t('Loadouts.Any'), value: DestinyClass.Unknown }, ...classTypeValues];
 });
@@ -46,7 +46,7 @@ export default function LoadoutDrawerOptions({
 
   const handleSetClearSpace = (
     e: React.ChangeEvent<HTMLInputElement>,
-    category: 'Weapons' | 'Armor'
+    category: 'Weapons' | 'Armor',
   ) => setLoadout(setClearSpace(e.target.checked, category));
 
   const addNotes = () => setLoadout(setNotes(''));

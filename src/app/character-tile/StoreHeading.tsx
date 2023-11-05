@@ -21,7 +21,7 @@ const CharacterHeader = forwardRef(function CharacterHeader(
     store: DimStore;
     onClick: () => void;
   },
-  ref: React.Ref<HTMLDivElement>
+  ref: React.Ref<HTMLDivElement>,
 ) {
   return (
     <CharacterTileButton

@@ -21,7 +21,7 @@ export function getValueColors(value: number): [string, string] {
 export function getSimilarItems(
   exampleItem: DimItem,
   allItems: DimItem[],
-  filterFactory: (query: string) => ItemFilter
+  filterFactory: (query: string) => ItemFilter,
 ) {
   const results: {
     count: number;
@@ -68,7 +68,7 @@ export function getSimilarItems(
 export function getBetterWorseItems(
   exampleItem: DimItem,
   allItems: DimItem[],
-  filterFactory: (query: string) => ItemFilter
+  filterFactory: (query: string) => ItemFilter,
 ) {
   // example DimItem MUST HAVE STATS but making the return type |undefined
   // just to do that check is annoying, so it's pre-checked in BetterItemsTriageSection
@@ -160,14 +160,14 @@ export function getBetterWorseItems(
   const [betterItems, betterStatItems] = _.partition(rawBetterStatItems, betterFilter);
   const [artificeBetterItems, artificeBetterStatItems] = _.partition(
     rawArtificeBetterStatItems,
-    betterFilter
+    betterFilter,
   );
 
   const worseFilterParts: string[] = [];
   // a worse item must have the same intrinsic or none, to be worse than the example
   if (exampleItemIntrinsic) {
     worseFilterParts.push(
-      `(perk:${quoteFilterString(exampleItemIntrinsic.name)} or armorintrinsic:none)`
+      `(perk:${quoteFilterString(exampleItemIntrinsic.name)} or armorintrinsic:none)`,
     );
   }
   // a worse item's modslot can either be equal to the better item's, or missing
@@ -179,7 +179,7 @@ export function getBetterWorseItems(
   const [worseItems, worseStatItems] = _.partition(rawWorseStatItems, worseFilter);
   const [artificeWorseItems, artificeWorseStatItems] = _.partition(
     rawArtificeWorseStatItems,
-    worseFilter
+    worseFilter,
   );
 
   return {
@@ -201,7 +201,7 @@ export function getBetterWorseItems(
 function collectRelevantStatMaxes(
   exampleItem: DimItem,
   customStatTotalHashes: number[],
-  allItems: DimItem[]
+  allItems: DimItem[],
 ) {
   // highest values found in relevant items, keyed by stat hash
   const statMaxes: Record<number | string, number> = { custom: 0 };
@@ -247,7 +247,7 @@ const totalNotabilityThreshold = 0.9;
 export function getNotableStats(
   exampleItem: DimItem,
   customTotalStatsByClass: StatHashListsKeyedByDestinyClass,
-  allItems: DimItem[]
+  allItems: DimItem[],
 ) {
   const customStatTotalHashes = customTotalStatsByClass[exampleItem.classType] ?? [];
   const statMaxes = collectRelevantStatMaxes(exampleItem, customStatTotalHashes, allItems);
@@ -255,7 +255,7 @@ export function getNotableStats(
   const customTotal =
     exampleItem.stats?.reduce(
       (total, stat) => (customStatTotalHashes.includes(stat.statHash) ? total + stat.base : total),
-      0
+      0,
     ) ?? 0;
   const customRatio = customTotal / statMaxes.custom || 0;
   return {
@@ -311,7 +311,7 @@ export function compareBetterStats(
   statsA: StatLookup,
   statsB: StatLookup,
   aIsArtifice: boolean,
-  whichStatHashes = armorStats // default to all 6 armor stats
+  whichStatHashes = armorStats, // default to all 6 armor stats
 ): StatLookup | false {
   let aWins = 0;
   let bWins = 0;
@@ -321,7 +321,7 @@ export function compareBetterStats(
   // The differences in considered stats A - B, sorted descending so that the artifice token
   // is spent on a stat where A *can* be better than B
   const statDifferences = whichStatHashes.map(
-    (statHash) => (statsA[statHash]?.base ?? 0) - (statsB[statHash]?.base ?? 0)
+    (statHash) => (statsA[statHash]?.base ?? 0) - (statsB[statHash]?.base ?? 0),
   );
   statDifferences.sort((a, b) => b - a);
   for (let diff of statDifferences) {

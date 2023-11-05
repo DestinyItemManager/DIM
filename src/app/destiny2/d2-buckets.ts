@@ -116,7 +116,7 @@ export function getBuckets(defs: D2ManifestDefinitions) {
   for (const [category, bucketHashes] of Object.entries(D2Categories)) {
     buckets.byCategory[category] = filterMap(
       bucketHashes,
-      (bucketHash) => buckets.byHash[bucketHash]
+      (bucketHash) => buckets.byHash[bucketHash],
     );
   }
   return buckets;

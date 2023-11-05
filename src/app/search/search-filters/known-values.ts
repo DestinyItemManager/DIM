@@ -115,7 +115,7 @@ export const itemCategoryFilter = {
     for (let i = item.itemCategoryHashes.length - 1; i >= 0; i--) {
       const itemCategoryHash = item.itemCategoryHashes[i];
       const typeTag = Object.entries(itemCategoryHashesByName).find(
-        ([_tag, ich]) => ich === itemCategoryHash
+        ([_tag, ich]) => ich === itemCategoryHash,
       )?.[0];
       if (typeTag) {
         return `is:${typeTag}`;

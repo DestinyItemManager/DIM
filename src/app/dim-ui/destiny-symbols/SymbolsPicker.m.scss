@@ -43,8 +43,7 @@
 }
 
 .symbolsBody {
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden auto;
 
   flex: 1;
 }

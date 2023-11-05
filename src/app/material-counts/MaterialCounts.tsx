@@ -70,7 +70,7 @@ export function MaterialCounts({
         _.compact(content),
         <span className={styles.spanGrid}>
           <hr />
-        </span>
+        </span>,
       )}
     </div>
   );

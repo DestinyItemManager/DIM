@@ -26,7 +26,7 @@ import { UNSET_PLUG_HASH } from '../known-values';
 export function getItemsFromInGameLoadout(
   itemCreationContext: ItemCreationContext,
   loadoutItems: DestinyLoadoutItemComponent[],
-  allItems: DimItem[]
+  allItems: DimItem[],
 ): ResolvedLoadoutItem[] {
   return filterMap(loadoutItems, (li) => {
     const realItem =
@@ -60,7 +60,7 @@ export function useItemsFromInGameLoadout(loadout: InGameLoadout) {
   const itemCreationContext = useSelector(createItemContextSelector);
   return useMemo(
     () => getItemsFromInGameLoadout(itemCreationContext, loadout.items, allItems),
-    [itemCreationContext, loadout.items, allItems]
+    [itemCreationContext, loadout.items, allItems],
   );
 }
 
@@ -80,7 +80,7 @@ export function implementsDimLoadout(
   defs: D2ManifestDefinitions,
   inGameLoadout: InGameLoadout,
   dimResolvedLoadoutItems: ResolvedLoadoutItem[],
-  resolvedMods: ResolvedLoadoutMod[]
+  resolvedMods: ResolvedLoadoutMod[],
 ) {
   const equippedDimItems = dimResolvedLoadoutItems
     .filter((rli) => {
@@ -114,12 +114,12 @@ export function implementsDimLoadout(
   // Ensure that the dimsubclass abilities, aspect and fragments are accounted for
   // so that builds using the same subclass but different setups are identified.
   const dimSubclass = dimResolvedLoadoutItems.find(
-    (rli) => rli.item.bucket.hash === BucketHashes.Subclass
+    (rli) => rli.item.bucket.hash === BucketHashes.Subclass,
   );
   if (dimSubclass?.loadoutItem?.socketOverrides) {
     // This was checked as part of item matching.
     const inGameSubclass = inGameLoadout.items.find(
-      (item) => item.itemInstanceId === dimSubclass.item.id
+      (item) => item.itemInstanceId === dimSubclass.item.id,
     )!;
 
     const dimSubclassPlugs = getSubclassPlugs(defs, dimSubclass);

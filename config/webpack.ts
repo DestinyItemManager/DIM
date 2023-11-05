@@ -35,6 +35,7 @@ import NotifyPlugin from './notify-webpack-plugin';
 const ASSET_NAME_PATTERN = 'static/[name]-[contenthash:6][ext]';
 
 import packageJson from '../package.json';
+import createWebAppManifest from './manifest-webapp';
 
 import splash from '../icons/splash.json';
 
@@ -45,7 +46,8 @@ interface Env extends EnvValues {
   release: boolean;
   beta: boolean;
   dev: boolean;
-  name: 'release' | 'beta' | 'dev';
+  pr: boolean;
+  name: 'release' | 'beta' | 'dev' | 'pr';
 }
 type Argv = Record<string, CLIValues>;
 export interface WebpackConfigurationGenerator {
@@ -54,7 +56,7 @@ export interface WebpackConfigurationGenerator {
 
 export default (env: Env) => {
   env.name = Object.keys(env)[0] as Env['name'];
-  (['release', 'beta', 'dev'] as const).forEach((e) => {
+  (['release', 'beta', 'dev', 'pr'] as const).forEach((e) => {
     // set booleans based on env
     env[e] = Boolean(env[e]);
     if (env[e]) {
@@ -75,9 +77,10 @@ export default (env: Env) => {
   }
 
   const buildTime = Date.now();
+  const publicPath = process.env.PUBLIC_PATH ?? '/';
 
   const featureFlags = makeFeatureFlags(env);
-  const contentSecurityPolicy = csp(env.name, featureFlags);
+  const contentSecurityPolicy = csp(env.name, featureFlags, version);
 
   const analyticsProperty = env.release ? 'G-1PW23SGMHN' : 'G-MYWW38Z3LR';
   const jsFilenamePattern = env.dev ? '[name]-[fullhash].js' : '[name]-[contenthash:8].js';
@@ -98,7 +101,7 @@ export default (env: Env) => {
 
     output: {
       path: path.resolve('./dist'),
-      publicPath: '/',
+      publicPath,
       filename: jsFilenamePattern,
       chunkFilename: jsFilenamePattern,
       assetModuleFilename: ASSET_NAME_PATTERN,
@@ -283,10 +286,9 @@ export default (env: Env) => {
               loader: 'css-loader',
               options: {
                 modules: {
-                  localIdentName:
-                    env.dev || env.beta
-                      ? '[name]_[local]-[contenthash:base64:8]'
-                      : '[contenthash:base64:8]',
+                  localIdentName: !env.release
+                    ? '[name]_[local]-[contenthash:base64:8]'
+                    : '[contenthash:base64:8]',
                   exportLocalsConvention: 'camelCaseOnly',
                 },
                 importLoaders: 2,
@@ -438,6 +440,7 @@ export default (env: Env) => {
         date: new Date(buildTime).toString(),
         splash,
         analyticsProperty,
+        publicPath,
       },
       minify: env.dev
         ? false
@@ -472,6 +475,7 @@ export default (env: Env) => {
       inject: false,
       minify: false,
       templateParameters: {
+        publicPath: publicPath.replace('/', ''),
         csp: contentSecurityPolicy,
       },
     }),
@@ -482,14 +486,18 @@ export default (env: Env) => {
       buildTime,
     }),
 
+    // The web app manifest controls how our app looks when installed.
+    new GenerateJsonPlugin('./manifest-webapp.json', createWebAppManifest(publicPath)),
+
     new CopyWebpackPlugin({
       patterns: [
-        { from: './src/manifest-webapp.json' },
         // Only copy the manifests out of the data folder. Everything else we import directly into the bundle.
         { from: './src/data/d1/manifests', to: 'data/d1/manifests' },
         { from: `./icons/${env.name}/` },
         { from: `./icons/splash`, to: 'splash/' },
+        { from: `./icons/screenshots`, to: 'screenshots/' },
         { from: './src/safari-pinned-tab.svg' },
+        { from: './src/robots.txt' },
       ],
     }),
 
@@ -503,6 +511,7 @@ export default (env: Env) => {
       $DIM_WEB_CLIENT_SECRET: JSON.stringify(process.env.WEB_OAUTH_CLIENT_SECRET),
       $DIM_API_KEY: JSON.stringify(process.env.DIM_API_KEY),
       $ANALYTICS_PROPERTY: JSON.stringify(analyticsProperty),
+      $PUBLIC_PATH: JSON.stringify(publicPath),
 
       $BROWSERS: JSON.stringify(browserslist(packageJson.browserslist)),
 
@@ -565,6 +574,7 @@ export default (env: Env) => {
             /data\/d1\/manifests\/d1-manifest-..(-br)?.json(.br|.gz)?/,
             /^(?!en).+.json/,
             /webpack-stats.json/,
+            /screenshots\//,
           ],
         },
       }),
@@ -598,13 +608,12 @@ export default (env: Env) => {
         include: [/\.(html|js|css|woff2|json|wasm)$/, /static\/(?!fa-).*\.(png|gif|jpg|svg)$/],
         exclude: [
           /version\.json/,
-          /extension-dist/,
-          /\.map$/,
           // Ignore both the webapp manifest and the d1-manifest files
           /data\/d1\/manifests/,
           /manifest-webapp/,
           // Android and iOS manifest
           /\.well-known/,
+          /screenshots\//,
         ],
         swSrc: './src/service-worker.ts',
         swDest: 'service-worker.js',

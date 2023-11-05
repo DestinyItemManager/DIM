@@ -136,7 +136,7 @@ function Control({
             </div>
             <div className={styles.arrow} />
           </div>,
-          pressTipRoot.current || tempContainer
+          pressTipRoot.current || tempContainer,
         )}
     </Component>
   );
@@ -290,6 +290,10 @@ export function PressTip(props: Props) {
 
   // Fires on both pointerenter and pointerdown - does double duty for handling both hover tips and press tips
   const hover = useCallback((e: React.PointerEvent) => {
+    if (e.type === 'pointerenter' && e.buttons !== 0) {
+      // Ignore hover events when the mouse is down
+      return;
+    }
     e.preventDefault();
     // If we're already hovering, don't start hovering again
     if (

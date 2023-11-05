@@ -20,15 +20,15 @@ export function isLoadoutBuilderItem(item: DimItem) {
     item.bucket.inArmor &&
       item.energy &&
       armorStats.every(
-        (statHash) => item.stats?.some((dimStat) => dimStat.statHash === statHash)
+        (statHash) => item.stats?.some((dimStat) => dimStat.statHash === statHash),
       ) &&
-      !isSunset(item)
+      !isSunset(item),
   );
 }
 
 export async function pickSubclass(
   showItemPicker: ShowItemPickerFn,
-  filterItems: (item: DimItem) => boolean
+  filterItems: (item: DimItem) => boolean,
 ) {
   const item = await showItemPicker({
     filterItems: (item: DimItem) => item.bucket.hash === BucketHashes.Subclass && filterItems(item),
@@ -45,7 +45,7 @@ export async function pickSubclass(
 
 export function getSubclassPlugs(
   defs: D2ManifestDefinitions,
-  subclass: ResolvedLoadoutItem | undefined
+  subclass: ResolvedLoadoutItem | undefined,
 ) {
   const plugs: { plug: PluggableInventoryItemDefinition; canBeRemoved: boolean }[] = [];
 

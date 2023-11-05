@@ -12,6 +12,10 @@ import { t, tl } from 'app/i18next-t';
 import { artifactUnlocksSelector, sortedStoresSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
+import {
+  MakeLoadoutAnalysisAvailable,
+  useUpdateLoadoutAnalysisContext,
+} from 'app/loadout-analyzer/hooks';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
@@ -60,7 +64,12 @@ export default function LoadoutsContainer({ account }: { account: DestinyAccount
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
-  return <Loadouts account={account} />;
+  // TODO: how high in our tree do we want this analyzer?
+  return (
+    <MakeLoadoutAnalysisAvailable>
+      <Loadouts account={account} />
+    </MakeLoadoutAnalysisAvailable>
+  );
 }
 
 function Loadouts({ account }: { account: DestinyAccount }) {
@@ -69,7 +78,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const stores = useSelector(sortedStoresSelector);
   const currentStore = getCurrentStore(stores)!;
   const [selectedStoreId, setSelectedStoreId] = useState(
-    locationStoreId && locationStoreId !== 'vault' ? locationStoreId : currentStore.id
+    locationStoreId && locationStoreId !== 'vault' ? locationStoreId : currentStore.id,
   );
   const [sharedLoadout, setSharedLoadout] = useState<Loadout>();
   const [loadoutImportOpen, setLoadoutImportOpen] = useState<boolean>(false);
@@ -88,8 +97,10 @@ function Loadouts({ account }: { account: DestinyAccount }) {
 
   const currentLoadout = useMemo(
     () => newLoadoutFromEquipped(t('Loadouts.FromEquipped'), selectedStore, artifactUnlocks),
-    [artifactUnlocks, selectedStore]
+    [artifactUnlocks, selectedStore],
   );
+
+  useUpdateLoadoutAnalysisContext(selectedStoreId);
 
   const [showSnapshot, setShowSnapshot] = useState(false);
   const handleSnapshot = useCallback(() => setShowSnapshot(true), []);
@@ -103,11 +114,11 @@ function Loadouts({ account }: { account: DestinyAccount }) {
 
   const [filteredLoadouts, filterPills, hasSelectedFilters] = useLoadoutFilterPills(
     savedLoadouts,
-    selectedStoreId,
+    selectedStore,
     {
       includeWarningPills: true,
       extra: <span className={styles.hashtagTip}>{t('Loadouts.HashtagTip')}</span>,
-    }
+    },
   );
 
   const filteringLoadouts = Boolean(query || hasSelectedFilters);
@@ -133,7 +144,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
         virtualListRef.current?.scrollToIndex(index, { align: 'start' });
       }
     },
-    [loadouts]
+    [loadouts],
   );
 
   return (
@@ -283,7 +294,7 @@ function useAddSeasonHeaders(loadouts: Loadout[], loadoutSort: LoadoutSort) {
   let loadoutRows: (Loadout | DestinySeasonDefinition)[] = loadouts;
   if (loadoutSort === LoadoutSort.ByEditTime) {
     const seasons = Object.values(defs.Season.getAll()).sort(
-      (a, b) => b.seasonNumber - a.seasonNumber
+      (a, b) => b.seasonNumber - a.seasonNumber,
     );
 
     const grouped = Map.groupBy(
@@ -291,8 +302,8 @@ function useAddSeasonHeaders(loadouts: Loadout[], loadoutSort: LoadoutSort) {
       (loadout) =>
         seasons.find(
           (s) =>
-            new Date(s.startDate ?? Date.now()).getTime() <= (loadout.lastUpdatedAt ?? Date.now())
-        )!
+            new Date(s.startDate ?? Date.now()).getTime() <= (loadout.lastUpdatedAt ?? Date.now()),
+        )!,
     );
 
     loadoutRows = [...grouped.entries()].flatMap(([season, loadouts]) => [season, ...loadouts]);

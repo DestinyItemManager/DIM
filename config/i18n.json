@@ -392,6 +392,7 @@
     "ClearDialog": "Dismiss dialog",
     "ClearNewItems": "Clear new items",
     "Enter": "ENTER",
+    "ItemPopupTab": "Switch item details tab",
     "LockUnlock": "Lock or unlock an item",
     "MarkItemAs": "Mark item as '{{tag}}'",
     "Menu": "Toggle menu",
@@ -575,7 +576,7 @@
     "AssumeMasterworkOptions": {
       "All": "All armor will use masterworked stats and will have an energy level of 10.",
       "Legendary": "Legendary armor will use masterworked stats and will have an energy level of 10.",
-      "None": "All armor will use its current stats and will have a minimum energy level of 7."
+      "None": "All armor will use its current stats and will have a minimum energy level of {{minLoItemEnergy}}."
     },
     "ChooseAlternateTitle": "Choose another item",
     "CompareLoadout": "Compare Loadout",
@@ -631,7 +632,11 @@
     "MaxTier": "Max {{tier}}",
     "UnableToAddAllMods": "Unable to add all mods.",
     "UnableToAddAllModsBody": "There weren't enough mod slots available to fit {{mods}}.",
-    "UnlockItem": "Unpin Item"
+    "UnlockItem": "Unpin Item",
+    "IncreaseStatPriority": "Increase stat priority",
+    "DecreaseStatPriority": "Decrease stat priority",
+    "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
+    "TierSelect": "Select minimum stat tier"
   },
   "Loadouts": {
     "Abilities": "Abilities",
@@ -662,11 +667,9 @@
     "Create": "Create Loadout",
     "CurrentlyEquipped": "Currently Equipped",
     "Delete": "Delete",
-    "DeprecatedMods": "Deprecated Mods",
     "DimLoadouts": "DIM Loadouts",
     "Edit": "Edit Loadout",
     "EditBrief": "Edit",
-    "EmptyFragmentSlots": "Empty Fragment Slots",
     "EquippableDifferent1": "Multiple Exotic items were used to calculate your Maximum Power, so the number shown may not be achievable when equipping your items in-game.",
     "EquippableDifferent2": "Maximum Power isn't limited by the \"One Exotic\" rule when determining the Power of your drops, powerful, and pinnacle rewards.",
     "Equipped": "Equipped",
@@ -792,7 +795,6 @@
     "SyncFromEquipped": "Sync from equipped",
     "FillFromEquipped": "Fill in using equipped",
     "FillFromInventory": "Fill in using non-equipped",
-    "TooManyFragments": "Too Many Fragments",
     "TooManyRequested": "You have {{total}} {{itemname}} but your loadout asks for {{requested}}. We transferred all you had.",
     "UnassignedModError": "Mod didn't fit on your current armor",
     "Undo": "Undo",
@@ -812,6 +814,58 @@
     "Failed": "Loadout failed to apply completely",
     "Update": "Save Changes",
     "CancelEditing": "Cancel Editing"
+  },
+  "LoadoutAnalysis": {
+    "Analyzing": "Analyzing {{numAnalyzed}}/{{numLoadouts}} Loadouts",
+    "Analyzed": "Analyzed {{numLoadouts}} Loadouts",
+    "MissingItems": {
+      "Name": "Missing Items",
+      "Description": "Some of the items in this loadout are no longer in your inventory."
+    },
+    "InvalidMods": {
+      "Name": "Deprecated Mods",
+      "Description": "Some mods in this loadout are deprecated or do not otherwise fit into any of your armor pieces."
+    },
+    "EmptyFragmentSlots": {
+      "Name": "Empty Fragment Slots",
+      "Description": "There are empty fragment slots in this subclass."
+    },
+    "TooManyFragments": {
+      "Name": "Too Many Fragments",
+      "Description": "There are more fragments configured on the subclass than granted by aspects."
+    },
+    "NeedsArmorUpgrades": {
+      "Name": "Needs Armor Upgrades",
+      "Description": "Armor in this loadout needs to be upgraded to accommodate all mods or reach specified stat tiers."
+    },
+    "BetterStatsAvailable": {
+      "Name": "Better Stats Available",
+      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stat tiers."
+    },
+    "NotAFullArmorSet": {
+      "Name": "Not A Full Armor Set",
+      "Description": "This loadout could not be analyzed further because it does not include a full set of armor."
+    },
+    "DoesNotRespectExotic": {
+      "Name": "Wrong Exotic",
+      "Description": "This loadout's Loadout Optimizer settings specify an exotic choice, but the loadout does not match that exotic."
+    },
+    "ModsDontFit": {
+      "Name": "Unassigned Mods",
+      "Description": "Armor in this loadout cannot accommodate all loadout mods, even if the armor was upgraded."
+    },
+    "UsesSeasonalMods": {
+      "Name": "Uses Seasonal Mods",
+      "Description": "This loadout relies on mods that are only available in some seasons. When the season ends, some mods will be unavailable or exceed armor energy capacity."
+    },
+    "DoesNotSatisfyStatConstraints": {
+      "Name": "Wrong Stat Tiers",
+      "Description": "Loadout Optimizer settings for this Loadout specify stat tiers, but the Loadout does not reach them."
+    },
+    "LoadoutHasSearchQuery": {
+      "Name": "Has Search Query",
+      "Description": "This loadout was created with a search query in Loadout Optimizer."
+    }
   },
   "Manifest": {
     "Download": "Downloading latest Destiny info database from Bungie...",
@@ -887,6 +941,7 @@
       "Type": "{{classType}} {{typeName}}",
       "QuestProgress": "Step {{questStepNum}} of {{questStepsTotal}}"
     },
+    "TabList": "Item detail tabs",
     "ToggleSidecar": "Expand or collapse item actions",
     "TrackUntrack": {
       "Track": "Track {{itemType}}",

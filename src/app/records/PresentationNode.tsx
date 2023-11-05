@@ -62,7 +62,7 @@ export default function PresentationNode({
   const aParentIsCategorySetStyle = thisAndParents.some(
     (p) =>
       p > 0 &&
-      defs.PresentationNode.get(p)?.screenStyle === DestinyPresentationScreenStyle.CategorySets
+      defs.PresentationNode.get(p)?.screenStyle === DestinyPresentationScreenStyle.CategorySets,
   );
 
   const alwaysExpanded =

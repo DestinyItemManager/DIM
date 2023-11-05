@@ -30,7 +30,7 @@ export default function PlugSection({
   onPlugSelected: (
     plugSetHash: number,
     mod: PluggableInventoryItemDefinition,
-    selectionType: 'multi' | 'single'
+    selectionType: 'multi' | 'single',
   ) => void;
   onPlugRemoved: (plugSetHash: number, mod: PluggableInventoryItemDefinition) => void;
 }) {
@@ -38,12 +38,12 @@ export default function PlugSection({
 
   const handlePlugSelected = useCallback(
     (plug: PluggableInventoryItemDefinition) => onPlugSelected(plugSetHash, plug, selectionType),
-    [onPlugSelected, plugSetHash, selectionType]
+    [onPlugSelected, plugSetHash, selectionType],
   );
 
   const handlePlugRemoved = useCallback(
     (plug: PluggableInventoryItemDefinition) => onPlugRemoved(plugSetHash, plug),
-    [onPlugRemoved, plugSetHash]
+    [onPlugRemoved, plugSetHash],
   );
 
   if (!plugs.length) {

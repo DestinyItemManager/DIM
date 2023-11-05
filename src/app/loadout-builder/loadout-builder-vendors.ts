@@ -23,8 +23,8 @@ const allowedVendorHashes = [
 
 const loVendorItemsSelector = currySelector(
   createSelector(characterVendorItemsSelector, (allVendorItems) =>
-    allVendorItems.filter((item) => allowedVendorHashes.includes(item.vendor?.vendorHash ?? -1))
-  )
+    allVendorItems.filter((item) => allowedVendorHashes.includes(item.vendor?.vendorHash ?? -1)),
+  ),
 );
 
 export function useLoVendorItems(selectedStoreId: string, includeVendorItems: boolean) {

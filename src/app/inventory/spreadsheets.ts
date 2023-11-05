@@ -46,25 +46,23 @@ function getClass(type: DestinyClass) {
   }
 }
 
-// step node names we'll hide, we'll leave "* Chroma" for now though, since we don't otherwise indicate Chroma
-const FILTER_NODE_NAMES = [
-  'Upgrade Defense',
-  'Ascend',
-  'Infuse',
-  'Increase Intellect',
-  'Increase Discipline',
-  'Increase Strength',
-  'Twist Fate',
-  'The Life Exotic',
-  'Reforge Artifact',
-  'Reforge Shell',
-  'Deactivate Chroma',
-  'Kinetic Damage',
-  'Solar Damage',
-  'Arc Damage',
-  'Void Damage',
+const D1_FILTERED_NODE_HASHES = [
+  1920788875, // Ascend
+  1270552711, // Infuse
+  2133116599, // Deactivate Chroma
+  643689081, // Kinetic Damage
+  472357138, // Void Damage
+  1975859941, // Solar Damage
+  2688431654, // Arc Damage
+  1034209669, // Increase Intellect
+  1263323987, // Increase Discipline
+  913963685, // Reforge Shell
+  193091484, // Increase Strength
+  217480046, // Twist Fate
+  191086989, // Reforge Artifact
+  2086308543, // Upgrade Defense
+  4044819214, // The Life Exotic
 ];
-
 // ignore raid & calus sources in favor of more detailed sources
 const sourceKeys = Object.keys(D2Sources).filter((k) => !['raid', 'calus'].includes(k));
 
@@ -73,7 +71,7 @@ export function generateCSVExportData(
   stores: DimStore[],
   getTag: (item: DimItem) => TagValue | undefined,
   getNotes: (item: DimItem) => string | undefined,
-  loadoutsByItem: LoadoutsByItem
+  loadoutsByItem: LoadoutsByItem,
 ) {
   const nameMap: { [storeId: string]: string } = {};
   let allItems: DimItem[] = [];
@@ -156,7 +154,7 @@ export function importTagsNotesFromCsv(files: File[]): ThunkResult<number | unde
           header: true,
           complete: resolve,
           error: reject,
-        })
+        }),
       );
       if (
         results.errors?.length &&
@@ -186,8 +184,8 @@ export function importTagsNotesFromCsv(files: File[]): ThunkResult<number | unde
                 itemId: row.Id,
               };
             }
-          })
-        )
+          }),
+        ),
       );
 
       for (const row of contents) {
@@ -198,7 +196,7 @@ export function importTagsNotesFromCsv(files: File[]): ThunkResult<number | unde
             setItemNote({
               note: row.Notes,
               itemId: row.Id,
-            })
+            }),
           );
         }
       }
@@ -234,7 +232,7 @@ function buildSocketNames(item: DimItem): string[] {
   const sockets = [];
   const { intrinsicSocket, modSocketsByCategory, perks } = getDisplayedItemSockets(
     item,
-    /* excludeEmptySockets */ true
+    /* excludeEmptySockets */ true,
   )!;
 
   if (intrinsicSocket) {
@@ -253,8 +251,8 @@ function buildSocketNames(item: DimItem): string[] {
       s.plugOptions.map((p) =>
         s.plugged?.plugDef.hash === p.plugDef.hash
           ? `${p.plugDef.displayProperties.name}*`
-          : p.plugDef.displayProperties.name
-      )
+          : p.plugDef.displayProperties.name,
+      ),
   );
 
   return socketItems.flat();
@@ -262,7 +260,7 @@ function buildSocketNames(item: DimItem): string[] {
 
 function buildNodeNames(nodes: D1GridNode[]): string[] {
   return filterMap(nodes, (node) => {
-    if (FILTER_NODE_NAMES.includes(node.name)) {
+    if (D1_FILTERED_NODE_HASHES.includes(node.hash)) {
       return;
     }
     return node.activated ? `${node.name}*` : node.name;
@@ -280,8 +278,8 @@ function getMaxPerks(items: DimItem[]) {
             : item.sockets
             ? buildSocketNames(item)
             : []
-          ).length
-      )
+          ).length,
+      ),
     ) || 0
   );
 }
@@ -308,7 +306,7 @@ function downloadGhost(
   nameMap: { [key: string]: string },
   getTag: (item: DimItem) => TagValue | undefined,
   getNotes: (item: DimItem) => string | undefined,
-  loadouts: LoadoutsByItem
+  loadouts: LoadoutsByItem,
 ) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
@@ -347,7 +345,7 @@ export function source(item: DimItem) {
         (src) =>
           (item.source && D2Sources[src].sourceHashes.includes(item.source)) ||
           D2Sources[src].itemHashes.includes(item.hash) ||
-          D2MissingSources[src]?.includes(item.hash)
+          D2MissingSources[src]?.includes(item.hash),
       ) || ''
     );
   }
@@ -358,7 +356,7 @@ function downloadArmor(
   nameMap: { [key: string]: string },
   getTag: (item: DimItem) => TagValue | undefined,
   getNotes: (item: DimItem) => string | undefined,
-  loadouts: LoadoutsByItem
+  loadouts: LoadoutsByItem,
 ) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
@@ -463,7 +461,7 @@ function downloadWeapons(
   nameMap: { [key: string]: string },
   getTag: (item: DimItem) => TagValue | undefined,
   getNotes: (item: DimItem) => string | undefined,
-  loadouts: LoadoutsByItem
+  loadouts: LoadoutsByItem,
 ) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);

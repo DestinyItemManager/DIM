@@ -60,7 +60,7 @@ export async function sendToStreamDeck(msg: SendToStreamDeckArgs) {
     streamDeckWebSocket.send(
       JSON.stringify({
         ...msg,
-      })
+      }),
     );
   }
 }
@@ -123,7 +123,7 @@ function findSubClassInGame(items: DestinyLoadoutItemComponent[], state: RootSta
 // on click on LoadoutView send the selected loadout and the related character identifier to the Stream Deck
 function streamDeckSelectLoadout(
   { type, loadout }: LoadoutSelection,
-  store: DimStore
+  store: DimStore,
 ): ThunkResult {
   return async (dispatch, getState) => {
     let selection: NonNullable<SelectionArgs['data']>['selection'];
@@ -177,7 +177,7 @@ const installFarmingObserver = _.once(() => {
           farmingMode: Boolean(newState),
         },
       });
-    }
+    },
   );
 });
 

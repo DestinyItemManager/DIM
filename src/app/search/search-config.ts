@@ -48,7 +48,7 @@ export const searchConfigSelector = createSelector(
   destinyVersionSelector,
   languageSelector,
   suggestionsContextSelector,
-  buildSearchConfig
+  buildSearchConfig,
 );
 
 //
@@ -93,7 +93,7 @@ export const buildFiltersMap = memoizeOne(
           if (hasSimple) {
             if ($DIM_FLAVOR === 'test' && isFilters[keyword]) {
               throw new Error(
-                `Conflicting is:${keyword} filter -- only the last inserted filter will work.`
+                `Conflicting is:${keyword} filter -- only the last inserted filter will work.`,
               );
             }
             isFilters[keyword] = filter;
@@ -101,7 +101,7 @@ export const buildFiltersMap = memoizeOne(
           if (hasKv) {
             if ($DIM_FLAVOR === 'test' && kvFilters[keyword]) {
               throw new Error(
-                `Conflicting ${keyword}:value filter -- only the last inserted filter will work.`
+                `Conflicting ${keyword}:value filter -- only the last inserted filter will work.`,
               );
             }
             kvFilters[keyword] = filter;
@@ -115,14 +115,14 @@ export const buildFiltersMap = memoizeOne(
       kvFilters,
       allFilters: allApplicableFilters,
     };
-  }
+  },
 );
 
 /** Builds an object that describes the available search keywords and filter definitions. */
 export function buildSearchConfig(
   destinyVersion: DestinyVersion,
   language: DimLanguage,
-  suggestionsContext: SuggestionsContext = {}
+  suggestionsContext: SuggestionsContext = {},
 ): SearchConfig<DimItem, FilterContext, SuggestionsContext> {
   const suggestions = new Set<string>();
   const filtersMap = buildFiltersMap(destinyVersion);

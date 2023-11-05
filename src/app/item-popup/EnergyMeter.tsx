@@ -139,7 +139,7 @@ function EnergyUpgradePreview({
   const energyModHashes = getEnergyUpgradeHashes(item, previewCapacity);
   const costs = sumModCosts(
     defs,
-    energyModHashes.map((h) => defs.InventoryItem.get(h))
+    energyModHashes.map((h) => defs.InventoryItem.get(h)),
   );
 
   return (

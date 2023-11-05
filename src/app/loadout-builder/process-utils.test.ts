@@ -154,10 +154,10 @@ describe('process-utils mod assignment', () => {
     }
 
     generalMod = mapArmor2ModToProcessMod(
-      defs.InventoryItem.get(recoveryModHash) as PluggableInventoryItemDefinition
+      defs.InventoryItem.get(recoveryModHash) as PluggableInventoryItemDefinition,
     );
     activityMod = mapArmor2ModToProcessMod(
-      defs.InventoryItem.get(enhancedOperatorAugmentModHash) as PluggableInventoryItemDefinition
+      defs.InventoryItem.get(enhancedOperatorAugmentModHash) as PluggableInventoryItemDefinition,
     );
 
     items = [helmet, arms, chest, legs, classItem];
@@ -168,7 +168,7 @@ describe('process-utils mod assignment', () => {
   const canTakeSlotIndependentMods = (
     generalMods: ProcessMod[],
     activityMods: ProcessMod[],
-    items: ProcessItem[]
+    items: ProcessItem[],
   ) => {
     const autoMods = { generalMods: {}, artificeMods: {} };
     const neededStats = [0, 0, 0, 0, 0, 0];
@@ -177,7 +177,7 @@ describe('process-utils mod assignment', () => {
       generalMods,
       activityMods,
       false,
-      armorStats
+      armorStats,
     );
 
     return (
@@ -207,7 +207,7 @@ describe('process-utils mod assignment', () => {
 
   it('can fit five general mods', () => {
     const modifiedItems = items.map((item) =>
-      modifyItem({ item, remainingEnergyCapacity: generalMod.energyCost })
+      modifyItem({ item, remainingEnergyCapacity: generalMod.energyCost }),
     );
     expect(canTakeSlotIndependentMods(generalMods, [], modifiedItems)).toBe(true);
   });
@@ -219,10 +219,10 @@ describe('process-utils mod assignment', () => {
         modifyItem({
           item,
           remainingEnergyCapacity: itemIndex === i ? generalMod.energyCost : 0,
-        })
+        }),
       );
       expect(canTakeSlotIndependentMods([], [], modifiedItems)).toBe(true);
-    }
+    },
   );
 
   test.each([
@@ -234,7 +234,7 @@ describe('process-utils mod assignment', () => {
         item,
         remainingEnergyCapacity: activityMod.energyCost,
         compatibleModSeasons: [tag],
-      })
+      }),
     );
     // sanity check
     expect(canTakeSlotIndependentMods([], activityMods, modifiedItems)).toBe(canFit === 'can');
@@ -248,10 +248,10 @@ describe('process-utils mod assignment', () => {
           item,
           remainingEnergyCapacity: 2,
           compatibleModSeasons: i === itemIndex ? [activityMod.tag!] : [],
-        })
+        }),
       );
       expect(canTakeSlotIndependentMods([], [activityMod], modifiedItems)).toBe(true);
-    }
+    },
   );
 
   it('can fit general, activity, and combat mods if there is enough energy', () => {
@@ -272,7 +272,7 @@ describe('process-utils mod assignment', () => {
     });
 
     expect(
-      canTakeSlotIndependentMods([modifiedGeneralMod], [modifiedActivityMod], modifiedItems)
+      canTakeSlotIndependentMods([modifiedGeneralMod], [modifiedActivityMod], modifiedItems),
     ).toBe(true);
   });
 
@@ -294,7 +294,7 @@ describe('process-utils mod assignment', () => {
     });
 
     expect(
-      canTakeSlotIndependentMods([modifiedGeneralMod], [modifiedActivityMod], modifiedItems)
+      canTakeSlotIndependentMods([modifiedGeneralMod], [modifiedActivityMod], modifiedItems),
     ).toBe(false);
   });
 
@@ -318,9 +318,9 @@ describe('process-utils mod assignment', () => {
       });
 
       expect(
-        canTakeSlotIndependentMods([modifiedGeneralMod], [modifiedActivityMod], modifiedItems)
+        canTakeSlotIndependentMods([modifiedGeneralMod], [modifiedActivityMod], modifiedItems),
       ).toBe(false);
-    }
+    },
   );
 });
 
@@ -364,7 +364,7 @@ describe('process-utils auto mods', () => {
       artifice: boolean,
       index: number,
       energyCapacity: number,
-      seasons: string[]
+      seasons: string[],
     ) => ({
       hash: index,
       id: index.toString(),
@@ -382,12 +382,12 @@ describe('process-utils auto mods', () => {
     legs = makeItem(true, 4, 3, ['deepstonecrypt']);
     classItem = makeItem(true, 5, 4, []);
     generalMod = mapArmor2ModToProcessMod(
-      defs.InventoryItem.get(recoveryModHash) as PluggableInventoryItemDefinition
+      defs.InventoryItem.get(recoveryModHash) as PluggableInventoryItemDefinition,
     );
     generalMod.energyCost = 4;
     generalModCopy = { ...generalMod, energyCost: 3 };
     activityMod = mapArmor2ModToProcessMod(
-      defs.InventoryItem.get(enhancedOperatorAugmentModHash) as PluggableInventoryItemDefinition
+      defs.InventoryItem.get(enhancedOperatorAugmentModHash) as PluggableInventoryItemDefinition,
     );
     activityMod.energyCost = 1;
 
@@ -401,7 +401,7 @@ describe('process-utils auto mods', () => {
       generalMods,
       activityMods,
       true,
-      armorStats
+      armorStats,
     );
     neededStats = [4, 0, 10, 12, 4, 0];
   });
@@ -412,7 +412,7 @@ describe('process-utils auto mods', () => {
       modStatistics,
       items,
       neededStats,
-      4
+      4,
     );
     expect(solution).not.toBe(undefined);
     expect(solution).toMatchSnapshot();
@@ -423,14 +423,14 @@ describe('process-utils auto mods', () => {
       const newNeededStats = [...neededStats];
       newNeededStats[i] += 2;
       expect(
-        pickAndAssignSlotIndependentMods(loSessionInfo, modStatistics, items, newNeededStats, 4)
+        pickAndAssignSlotIndependentMods(loSessionInfo, modStatistics, items, newNeededStats, 4),
       ).toBe(undefined);
     }
   });
 
   it('we need all artifice mod slots', () => {
     expect(
-      pickAndAssignSlotIndependentMods(loSessionInfo, modStatistics, items, neededStats, 3)
+      pickAndAssignSlotIndependentMods(loSessionInfo, modStatistics, items, neededStats, 3),
     ).toBe(undefined);
   });
 
@@ -438,7 +438,7 @@ describe('process-utils auto mods', () => {
     const ourItems = [...items];
     ourItems[1] = modifyItem({ item: items[1], remainingEnergyCapacity: 3 });
     expect(
-      pickAndAssignSlotIndependentMods(loSessionInfo, modStatistics, ourItems, neededStats, 4)
+      pickAndAssignSlotIndependentMods(loSessionInfo, modStatistics, ourItems, neededStats, 4),
     ).toBe(undefined);
   });
 
@@ -446,7 +446,7 @@ describe('process-utils auto mods', () => {
     const ourItems = [...items];
     ourItems[1] = modifyItem({ item: items[3], compatibleModSeasons: [] });
     expect(
-      pickAndAssignSlotIndependentMods(loSessionInfo, modStatistics, ourItems, neededStats, 4)
+      pickAndAssignSlotIndependentMods(loSessionInfo, modStatistics, ourItems, neededStats, 4),
     ).toBe(undefined);
   });
 });
@@ -533,7 +533,7 @@ describe('process-utils optimal mods', () => {
       loSessionInfo,
       ourItems,
       setStats,
-      resolvedStatConstraints
+      resolvedStatConstraints,
     )!;
     const finalStats = [...setStats];
     for (let i = 0; i < armorStats.length; i++) {
@@ -547,7 +547,7 @@ describe('process-utils optimal mods', () => {
     (setStats, remainingEnergy, numArtifice, expectedTiers) => {
       const finalStats = pickMods(setStats, remainingEnergy, numArtifice);
       expect(finalStats.map(statTier)).toStrictEqual(expectedTiers);
-    }
+    },
   );
 
   // Tests that our algorithm, and thus the worker accurately reports the resulting stats
@@ -569,6 +569,6 @@ describe('process-utils optimal mods', () => {
     (setStats, remainingEnergy, numArtifice, expectedStats) => {
       const finalStats = pickMods(setStats, remainingEnergy, numArtifice);
       expect(finalStats).toStrictEqual(expectedStats);
-    }
+    },
   );
 });

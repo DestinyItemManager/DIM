@@ -67,9 +67,12 @@ export default function ItemPopup({
     menuClassName: menuClassName,
   });
 
+  // TODO: we need this to fire after popper repositions the popup. Maybe try again when we switch to floatingui.
+  // useFocusFirstFocusableElement(popupRef);
+
   const itemActionsModel = useMemo(
     () => item && buildItemActionsModel(item, stores),
-    [item, stores]
+    [item, stores],
   );
 
   const failureStrings = Array.from(extraInfo?.failureStrings ?? []);
@@ -86,7 +89,7 @@ export default function ItemPopup({
             <div className={styles.failureReason} key={failureString}>
               <RichDestinyText text={failureString} ownerId={item.owner} />
             </div>
-          )
+          ),
       )}
       {isPhonePortrait && itemActionsModel.hasAccessoryControls && (
         <div className={styles.mobileItemActions}>
@@ -127,7 +130,7 @@ export default function ItemPopup({
           'item-popup',
           styles.movePopupDialog,
           tierClasses[item.tier],
-          styles.desktopPopupRoot
+          styles.desktopPopupRoot,
         )}
         style={{ zIndex }}
         ref={popupRef}

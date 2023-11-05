@@ -53,7 +53,7 @@ const installApiPermissionObserver = _.once(() => {
         // Save the permission preference to local storage
         localStorage.setItem('dim-api-enabled', apiPermissionGranted ? 'true' : 'false');
       }
-    }
+    },
   );
 });
 
@@ -88,7 +88,7 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, undefined, A
         infoLog('dim sync', 'Saving profile data to IDB');
         set('dim-api-profile', savedState);
       }
-    }, 1000)
+    }, 1000),
   );
 
   // Watch the update queue and flush updates
@@ -98,7 +98,7 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, undefined, A
       if (queue.length) {
         dispatch(flushUpdates());
       }
-    }, 1000)
+    }, 1000),
   );
 
   // Every time data is refreshed, maybe load DIM API data too
@@ -319,7 +319,7 @@ function flushUpdates(): ThunkResult {
       const results = await postUpdates(
         firstWithAccount.platformMembershipId,
         firstWithAccount.destinyVersion,
-        updates
+        updates,
       );
       infoLog('flushUpdates', 'got results', updates, results);
 
@@ -406,12 +406,12 @@ export function deleteAllApiData(): ThunkResult<DeleteAllResponse['deleted']> {
 
 function showProfileLoadErrorNotification(e: unknown) {
   showNotification(
-    dimErrorToaster(t('Storage.ProfileErrorTitle'), t('Storage.ProfileErrorBody'), errorMessage(e))
+    dimErrorToaster(t('Storage.ProfileErrorTitle'), t('Storage.ProfileErrorBody'), errorMessage(e)),
   );
 }
 
 function showUpdateErrorNotification(e: unknown) {
   showNotification(
-    dimErrorToaster(t('Storage.UpdateErrorTitle'), t('Storage.UpdateErrorBody'), errorMessage(e))
+    dimErrorToaster(t('Storage.UpdateErrorTitle'), t('Storage.UpdateErrorBody'), errorMessage(e)),
   );
 }

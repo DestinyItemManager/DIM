@@ -48,6 +48,7 @@ export function initGoogleAnalytics() {
     ga('config', $ANALYTICS_PROPERTY, {
       store_gac: false,
       allow_ad_personalization_signals: false,
+      send_page_view: false,
     });
   };
   script.src = `https://www.googletagmanager.com/gtag/js?id=${$ANALYTICS_PROPERTY}`;

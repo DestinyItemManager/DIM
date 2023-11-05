@@ -55,8 +55,8 @@ export default function PhoneStores({ stores, buckets, singleCharacter }: Props)
           itemPop(item);
         }
       },
-      [currentStore?.id, selectedStoreId, singleCharacter]
-    )
+      [currentStore?.id, selectedStoreId, singleCharacter],
+    ),
   );
 
   if (!stores.length || !buckets || !vault || !currentStore) {

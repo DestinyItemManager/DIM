@@ -87,7 +87,7 @@ const filterNames = [
  */
 export default function createAutocompleter<I, FilterCtx, SuggestionsCtx>(
   searchConfig: SearchConfig<I, FilterCtx, SuggestionsCtx>,
-  armoryEntries: ArmoryEntry[] | undefined
+  armoryEntries: ArmoryEntry[] | undefined,
 ) {
   const filterComplete = makeFilterComplete(searchConfig);
 
@@ -95,7 +95,7 @@ export default function createAutocompleter<I, FilterCtx, SuggestionsCtx>(
     query: string,
     caretIndex: number,
     recentSearches: Search[],
-    includeArmory?: boolean
+    includeArmory?: boolean,
   ): SearchItem[] => {
     // If there's a query, it's always the first entry
     const queryItem: SearchItem | undefined = query
@@ -112,7 +112,7 @@ export default function createAutocompleter<I, FilterCtx, SuggestionsCtx>(
       query,
       caretIndex,
       filterComplete,
-      searchConfig
+      searchConfig,
     );
 
     // Recent/saved searches
@@ -138,9 +138,9 @@ export default function createAutocompleter<I, FilterCtx, SuggestionsCtx>(
       ..._.take(
         uniqBy(
           _.compact([queryItem, ...filterSuggestions, ...recentSearchItems]),
-          (i) => i.query.fullText
+          (i) => i.query.fullText,
         ),
-        7
+        7,
       ),
       ...armorySuggestions,
       helpItem,
@@ -155,8 +155,8 @@ export const recentSearchComparator = reverseComparator(
   chainComparator<Search>(
     // Saved searches before recents
     compareBy((s) => s.saved),
-    compareBy((s) => frecency(s.usageCount, s.lastUsage))
-  )
+    compareBy((s) => frecency(s.usageCount, s.lastUsage)),
+  ),
 );
 
 /**
@@ -299,7 +299,7 @@ export function autocompleteTermSuggestions<I, FilterCtx, SuggestionsCtx>(
   query: string,
   caretIndex: number,
   filterComplete: (term: string) => string[],
-  searchConfig: SearchConfig<I, FilterCtx, SuggestionsCtx>
+  searchConfig: SearchConfig<I, FilterCtx, SuggestionsCtx>,
 ): SearchItem[] {
   if (!query) {
     return [];
@@ -351,7 +351,7 @@ export function autocompleteTermSuggestions<I, FilterCtx, SuggestionsCtx>(
 
 function findFilter<I, FilterCtx, SuggestionsCtx>(
   term: string,
-  filtersMap: FiltersMap<I, FilterCtx, SuggestionsCtx>
+  filtersMap: FiltersMap<I, FilterCtx, SuggestionsCtx>,
 ) {
   const parts = term.split(':');
   const filterName = parts[0];
@@ -369,7 +369,7 @@ const freeformTerms = freeformFilters.flatMap((f) => f.keywords).map((s) => `${s
  * offer autocomplete suggestions for a partially typed term.
  */
 export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
-  searchConfig: SearchConfig<I, FilterCtx, SuggestionsCtx>
+  searchConfig: SearchConfig<I, FilterCtx, SuggestionsCtx>,
 ) {
   // TODO: also search filter descriptions
   return (typed: string): string[] => {
@@ -407,7 +407,7 @@ export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
 
     let suggestions = searchConfig.suggestions
       .filter(
-        (word) => word.plainText.startsWith(mustStartWith) && word.plainText[matchType](typedPlain)
+        (word) => word.plainText.startsWith(mustStartWith) && word.plainText[matchType](typedPlain),
       )
       .filter(filterLowPrioritySuggestions);
 
@@ -431,7 +431,7 @@ export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
               : word.plainText.startsWith(typedPlain) ||
                 word.plainText.indexOf(typedPlain) === word.plainText.indexOf(':') + 1
               ? -1 // first if it's a term start or segment start
-              : 0 // mid otherwise
+              : 0, // mid otherwise
         ),
 
         // for is/not, prioritize words with less left to type,
@@ -464,7 +464,7 @@ export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
           (word) =>
             word.plainText.startsWith('not:') ||
             word.plainText.includes(':<=') ||
-            word.plainText.includes(':>=')
+            word.plainText.includes(':>='),
         ),
 
         // sort more-basic incomplete terms (fewer colons) to the front
@@ -473,8 +473,8 @@ export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
 
         // (within the math operators that weren't shoved to the far bottom,)
         // push math operators to the front for things like "masterwork:"
-        compareBy((word) => !mathCheck.test(word.plainText))
-      )
+        compareBy((word) => !mathCheck.test(word.plainText)),
+      ),
     );
     if (filterNames.includes(typedPlain.split(':')[0])) {
       return suggestions.map((suggestion) => suggestion.rawText);

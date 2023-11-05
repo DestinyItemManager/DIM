@@ -16,7 +16,7 @@ import _ from 'lodash';
 export function isModStatActive(
   characterClass: DestinyClass,
   plugHash: number,
-  stat: DestinyItemInvestmentStatDefinition
+  stat: DestinyItemInvestmentStatDefinition,
 ): boolean {
   if (!stat.isConditionallyActive) {
     return true;
@@ -53,7 +53,7 @@ const fontModHashToStatHash = _.once(() => {
     ...baseFontModHashToStatHash,
     ..._.mapKeys(
       baseFontModHashToStatHash,
-      (_val, hash) => mapToOtherModCostVariant(parseInt(hash, 10))!
+      (_val, hash) => mapToOtherModCostVariant(parseInt(hash, 10))!,
     ),
   };
 });
@@ -100,7 +100,7 @@ export function getTotalModStatChanges(
    * that are active under specific conditions so that they don't have investmentStats,
    * but are active often enough to be important for loadout building.
    */
-  includeRuntimeStatBenefits: boolean
+  includeRuntimeStatBenefits: boolean,
 ) {
   const subclassPlugs = subclass?.loadoutItem.socketOverrides
     ? hashesToPluggableItems(defs, Object.values(subclass.loadoutItem.socketOverrides))
@@ -117,7 +117,7 @@ export function getTotalModStatChanges(
 
   const processPlugs = (
     plugs: PluggableInventoryItemDefinition[],
-    source: DimCharacterStatSource
+    source: DimCharacterStatSource,
   ) => {
     const grouped = Map.groupBy(plugs, (plug) => plug.hash);
     for (const plugCopies of grouped.values()) {

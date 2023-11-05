@@ -20,15 +20,15 @@ export default function ArmorySheet({
       item?.sockets
         ? Object.fromEntries(
             filterMap(item.sockets.allSockets, (s) =>
-              s.plugged ? [s.socketIndex, s.plugged.plugDef.hash] : undefined
-            )
+              s.plugged ? [s.socketIndex, s.plugged.plugDef.hash] : undefined,
+            ),
           )
         : {},
-    [item?.sockets]
+    [item?.sockets],
   );
   const realAvailablePlugHashes = useMemo(
     () => item?.sockets?.allSockets.flatMap((s) => s.plugOptions.map((p) => p.plugDef.hash)) ?? [],
-    [item?.sockets]
+    [item?.sockets],
   );
 
   // If we're opening a dummy weapon from a Vendor (like for item focusing),

@@ -2,7 +2,7 @@ import { StatConstraint } from '@destinyitemmanager/dim-api-types';
 import { WindowVirtualList } from 'app/dim-ui/VirtualList';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
-import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { filterMap } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
 import { identity } from 'lodash';
@@ -27,7 +27,7 @@ export default function GeneratedSets({
   pinnedItems,
   selectedStore,
   sets,
-  subclass,
+  equippedHashes,
   resolvedStatConstraints,
   modStatChanges,
   loadouts,
@@ -39,7 +39,7 @@ export default function GeneratedSets({
 }: {
   selectedStore: DimStore;
   sets: readonly ArmorSet[];
-  subclass: ResolvedLoadoutItem | undefined;
+  equippedHashes: Set<number>;
   lockedMods: PluggableInventoryItemDefinition[];
   pinnedItems: PinnedItems;
   resolvedStatConstraints: ResolvedStatConstraint[];
@@ -55,23 +55,8 @@ export default function GeneratedSets({
   const halfTierMods = useHalfTierMods(
     selectedStore.id,
     Boolean(params.autoStatMods),
-    params.statConstraints!
+    params.statConstraints!,
   );
-
-  const equippedHashes = useMemo(() => {
-    const exoticArmorHash = params.exoticArmorHash;
-    // Fill in info about selected items / subclass options for Clarity character stats
-    const equippedHashes = new Set<number>();
-    if (exoticArmorHash) {
-      equippedHashes.add(exoticArmorHash);
-    }
-    if (subclass?.loadoutItem.socketOverrides) {
-      for (const hash of Object.values(subclass.loadoutItem.socketOverrides)) {
-        equippedHashes.add(hash);
-      }
-    }
-    return equippedHashes;
-  }, [params.exoticArmorHash, subclass?.loadoutItem.socketOverrides]);
 
   return (
     <WindowVirtualList
@@ -111,7 +96,7 @@ export default function GeneratedSets({
 function useHalfTierMods(
   selectedStoreId: string,
   autoStatMods: boolean,
-  statConstraints: StatConstraint[]
+  statConstraints: StatConstraint[],
 ): PluggableInventoryItemDefinition[] {
   // Info about stat mods
   const autoMods = useAutoMods(selectedStoreId);
@@ -122,8 +107,8 @@ function useHalfTierMods(
         ? emptyArray()
         : filterMap(
             statConstraints,
-            (s) => autoMods.generalMods[s.statHash as ArmorStatHashes]?.minorMod
+            (s) => autoMods.generalMods[s.statHash as ArmorStatHashes]?.minorMod,
           ),
-    [autoMods.generalMods, statConstraints, autoStatMods]
+    [autoMods.generalMods, statConstraints, autoStatMods],
   );
 }

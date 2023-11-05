@@ -19,7 +19,7 @@ export default forwardRef(function SearchFilter(
   }: {
     onClear?: () => void;
   },
-  ref: React.Ref<SearchFilterRef>
+  ref: React.Ref<SearchFilterRef>,
 ) {
   const searchQuery = useSelector(querySelector);
   const searchQueryVersion = useSelector(searchQueryVersionSelector);
@@ -33,7 +33,7 @@ export default forwardRef(function SearchFilter(
   const dispatch = useThunkDispatch();
   const onQueryChanged = useCallback(
     (query: string) => dispatch(setSearchQuery(query, false)),
-    [dispatch]
+    [dispatch],
   );
 
   // We don't have access to the selected store so we'd match multiple characters' worth.
@@ -56,7 +56,7 @@ export default forwardRef(function SearchFilter(
         : isPhonePortrait
         ? t('Header.FilterHelpBrief')
         : t('Header.FilterHelp', { example: 'is:dupe, is:maxpower, -is:blue' }),
-    [isPhonePortrait, onRecords, onProgress, onOptimizer, onLoadouts]
+    [isPhonePortrait, onRecords, onProgress, onOptimizer, onLoadouts],
   );
 
   const extras = useMemo(() => <MainSearchBarActions key="actions" />, []);

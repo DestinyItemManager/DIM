@@ -71,7 +71,7 @@ export default function Vendors({ account }: { account: DestinyAccount }) {
     () => () => {
       dispatch(setShowUnacquiredOnly(false));
     },
-    [dispatch]
+    [dispatch],
   );
 
   const handleSwipe = (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {

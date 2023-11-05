@@ -161,7 +161,7 @@ export const dimApi = (
   state: DimApiState = initialState,
   action: DimApiAction,
   // This is a specially-handled reducer (see reducers.ts) which gets the current account (based on incoming state) passed along
-  account?: DestinyAccount
+  account?: DestinyAccount,
 ): DimApiState => {
   switch (action.type) {
     case getType(actions.globalSettingsLoaded):
@@ -328,7 +328,7 @@ export const dimApi = (
         state,
         'customCharacterSort',
         // The order includes characters from multiple profiles, so we can't just replace it
-        state.settings.customCharacterSort.filter((id) => !order.includes(id)).concat(order)
+        state.settings.customCharacterSort.filter((id) => !order.includes(id)).concat(order),
       );
     }
 
@@ -425,7 +425,7 @@ function migrateSettings(state: DimApiState) {
     state = changeSetting(
       state,
       'inventoryClearSpaces',
-      parseInt(state.settings.inventoryClearSpaces, 10)
+      parseInt(state.settings.inventoryClearSpaces, 10),
     );
   }
   if (typeof state.settings.itemSize === 'string') {
@@ -445,7 +445,7 @@ function migrateSettings(state: DimApiState) {
     state = changeSetting(
       state,
       'itemSortOrderCustom',
-      sortOrder.toSpliced(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor')
+      sortOrder.toSpliced(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor'),
     );
   }
 
@@ -453,7 +453,7 @@ function migrateSettings(state: DimApiState) {
     state = changeSetting(
       state,
       'itemSortReversals',
-      reversals.toSpliced(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor')
+      reversals.toSpliced(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor'),
     );
   }
 
@@ -600,7 +600,7 @@ function compactUpdate(
   compacted: {
     [key: string]: ProfileUpdateWithRollback;
   },
-  update: ProfileUpdateWithRollback
+  update: ProfileUpdateWithRollback,
 ) {
   // Figure out the ID of the object being acted on
   let key: string;
@@ -815,7 +815,7 @@ function applyFinishedUpdatesToQueue(state: DimApiState, results: ProfileUpdateR
         result.status,
         ':',
         result.message,
-        update
+        update,
       );
       // TODO: reverse the effects of the update?
     }
@@ -895,7 +895,7 @@ function setTag(
   itemId: string,
   tag: TagValue | undefined,
   craftedDate: number | undefined,
-  account: DestinyAccount
+  account: DestinyAccount,
 ) {
   if (!itemId || itemId === '0') {
     errorLog('setTag', 'Cannot tag a non-instanced item. Use setItemHashTag instead');
@@ -948,7 +948,7 @@ function setItemHashTag(
   draft: Draft<DimApiState>,
   itemHash: number,
   tag: TagValue | undefined,
-  account: DestinyAccount
+  account: DestinyAccount,
 ) {
   const tags = draft.itemHashTags;
   const existingTag = tags[itemHash];
@@ -988,7 +988,7 @@ function setNote(
   itemId: string,
   notes: string | undefined,
   craftedDate: number | undefined,
-  account: DestinyAccount
+  account: DestinyAccount,
 ) {
   if (!itemId || itemId === '0') {
     errorLog('setNote', 'Cannot note a non-instanced item. Use setItemHashNote instead');
@@ -1035,7 +1035,7 @@ function setItemHashNote(
   draft: Draft<DimApiState>,
   itemHash: number,
   notes: string | undefined,
-  account: DestinyAccount
+  account: DestinyAccount,
 ) {
   const tags = draft.itemHashTags;
   const existingTag = tags[itemHash];
@@ -1096,7 +1096,7 @@ function trackTriumph(
   draft: Draft<DimApiState>,
   account: DestinyAccount,
   recordHash: number,
-  tracked: boolean
+  tracked: boolean,
 ) {
   const profileKey = makeProfileKeyFromAccount(account);
   const profile = ensureProfile(draft, profileKey);
@@ -1184,7 +1184,7 @@ function saveSearch(
   account: DestinyAccount,
   draft: Draft<DimApiState>,
   query: string,
-  saved: boolean
+  saved: boolean,
 ) {
   const destinyVersion = account.destinyVersion;
   // Note: memoized
@@ -1252,7 +1252,7 @@ function deleteSearch(draft: Draft<DimApiState>, destinyVersion: DestinyVersion,
 function cleanupInvalidSearches(draft: Draft<DimApiState>, account: DestinyAccount) {
   // Filter out saved and builtin searches
   const searches = draft.searches[account.destinyVersion].filter(
-    (s) => !s.saved && s.usageCount > 0
+    (s) => !s.saved && s.usageCount > 0,
   );
 
   if (!searches.length) {

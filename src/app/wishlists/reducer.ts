@@ -19,8 +19,8 @@ const initialState: WishListsState = {
 
 export const wishLists: Reducer<WishListsState, WishListAction> = (
   state: WishListsState = initialState,
-  action: WishListAction
-) => {
+  action: WishListAction,
+): WishListsState => {
   switch (action.type) {
     case getType(actions.loadWishLists):
       return {
@@ -38,7 +38,6 @@ export const wishLists: Reducer<WishListsState, WishListAction> = (
           source: '',
         },
         lastFetched: undefined,
-        wishListSource: undefined,
         loaded: true,
       };
     }

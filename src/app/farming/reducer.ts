@@ -17,8 +17,8 @@ const initialState: FarmingState = {
 
 export const farming: Reducer<FarmingState, FarmingAction> = (
   state: FarmingState = initialState,
-  action: FarmingAction
-) => {
+  action: FarmingAction,
+): FarmingState => {
   switch (action.type) {
     case getType(actions.start):
       return {

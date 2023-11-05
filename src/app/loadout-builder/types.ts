@@ -137,7 +137,7 @@ export const LOCKED_EXOTIC_ANY_EXOTIC = -2;
 /**
  * The minimum armour energy value used in the LO Builder
  */
-export const MIN_LO_ITEM_ENERGY = 7;
+export const MIN_LO_ITEM_ENERGY = 9;
 /**
  * The armor energy rules that Loadout Optimizer uses by default.
  * Requires a reasonable and inexpensive amount of upgrade materials.

@@ -70,7 +70,7 @@ const socketFilters: FilterDefinition[] = [
       Boolean(item.bucket.inArmor && item.energy) ||
       (!item.crafted &&
         item.sockets?.allSockets.some(
-          (s) => s.isPerk && s.plugOptions.length > 0 && s.hasRandomizedPlugItems
+          (s) => s.isPerk && s.plugOptions.length > 0 && s.hasRandomizedPlugItems,
         )),
   },
   {
@@ -95,7 +95,7 @@ const socketFilters: FilterDefinition[] = [
         .filter(
           (socket) =>
             socket.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames &&
-            socket.hasRandomizedPlugItems
+            socket.hasRandomizedPlugItems,
         )
         .some((socket) => socket.plugOptions.length > 1);
     },
@@ -109,8 +109,8 @@ const socketFilters: FilterDefinition[] = [
         Boolean(
           socket.plugged &&
             socket.plugged.plugDef.itemSubType === DestinyItemSubType.Shader &&
-            socket.plugged.plugDef.hash !== DEFAULT_SHADER
-        )
+            socket.plugged.plugDef.hash !== DEFAULT_SHADER,
+        ),
       ),
   },
   {
@@ -123,14 +123,14 @@ const socketFilters: FilterDefinition[] = [
           socket.plugged &&
             (socket.plugged.plugDef.itemSubType === DestinyItemSubType.Ornament ||
               socket.plugged.plugDef.plug.plugCategoryIdentifier.match(
-                /armor_skins_(titan|warlock|hunter)_(head|arms|chest|legs|class)/
+                /armor_skins_(titan|warlock|hunter)_(head|arms|chest|legs|class)/,
               )) &&
             socket.plugged.plugDef.hash !== DEFAULT_GLOW &&
             !DEFAULT_ORNAMENTS.includes(socket.plugged.plugDef.hash) &&
             !socket.plugged.plugDef.itemCategoryHashes?.includes(
-              ItemCategoryHashes.ArmorModsGlowEffects
-            )
-        )
+              ItemCategoryHashes.ArmorModsGlowEffects,
+            ),
+        ),
       ),
   },
   {
@@ -143,13 +143,13 @@ const socketFilters: FilterDefinition[] = [
           socket.plugged &&
             !emptySocketHashes.includes(socket.plugged.plugDef.hash) &&
             socket.plugged.plugDef.plug?.plugCategoryIdentifier.match(
-              /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
+              /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/,
             ) &&
             // enforce that this provides a perk (excludes empty slots)
             socket.plugged.plugDef.perks.length &&
             // enforce that this doesn't have an energy cost (y3 reusables)
-            !socket.plugged.plugDef.plug.energyCost
-        )
+            !socket.plugged.plugDef.plug.energyCost,
+        ),
       ),
   },
   {
@@ -164,11 +164,11 @@ const socketFilters: FilterDefinition[] = [
           socket.plugged &&
             !emptySocketHashes.includes(socket.plugged.plugDef.hash) &&
             socket.plugged.plugDef.plug?.plugCategoryIdentifier.match(
-              /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/
+              /(v400.weapon.mod_(guns|damage|magazine)|enhancements.)/,
             ) &&
             // enforce that this provides a perk (excludes empty slots)
-            socket.plugged.plugDef.perks.length
-        )
+            socket.plugged.plugDef.perks.length,
+        ),
       ),
   },
   {
@@ -202,7 +202,7 @@ const socketFilters: FilterDefinition[] = [
       ({ filterValue }) =>
       (item) => {
         const compatibleModTags = getSpecialtySocketMetadatas(item)?.flatMap(
-          (m) => m.compatibleModTags
+          (m) => m.compatibleModTags,
         );
         return (
           (filterValue === 'none' && !compatibleModTags) ||
@@ -224,13 +224,13 @@ const socketFilters: FilterDefinition[] = [
               item.sockets?.allSockets.some(
                 (s) =>
                   s.plugged?.plugDef.plug.plugCategoryHash ===
-                    PlugCategoryHashes.CraftingPlugsWeaponsModsExtractors && s.visibleInGame
-              )
+                    PlugCategoryHashes.CraftingPlugsWeaponsModsExtractors && s.visibleInGame,
+              ),
             )
           : Boolean(
               item.deepsightInfo &&
                 item.patternUnlockRecord &&
-                item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted
+                item.patternUnlockRecord.state & DestinyRecordState.ObjectiveNotCompleted,
             ),
   },
   {
@@ -250,7 +250,7 @@ const socketFilters: FilterDefinition[] = [
             (filterValue === 'none' &&
               item.crafted &&
               s.plugged?.plugDef.plug.plugCategoryHash ===
-                PlugCategoryHashes.CraftingRecipesEmptySocket)
+                PlugCategoryHashes.CraftingRecipesEmptySocket),
         );
     },
   },
@@ -299,7 +299,7 @@ const socketFilters: FilterDefinition[] = [
       }
 
       return getSocketsByCategoryHash(item.sockets, SocketCategoryHashes.WeaponPerks_Reusable).some(
-        (socket) => socket.plugOptions.some((p) => p.cannotCurrentlyRoll)
+        (socket) => socket.plugOptions.some((p) => p.cannotCurrentlyRoll),
       );
     },
   },

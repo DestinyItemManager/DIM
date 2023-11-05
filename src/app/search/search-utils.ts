@@ -9,7 +9,7 @@ const overloadedRangeStringRegex = /^([<=>]{0,2})(\w+)$/;
 // the produced function returns false if it was fed undefined
 export function rangeStringToComparator(
   rangeString?: string,
-  overloads?: { [key: string]: number }
+  overloads?: { [key: string]: number },
 ) {
   if (!rangeString) {
     throw new Error('Missing range comparison');
@@ -50,7 +50,7 @@ function extractOpAndValue(rangeString: string, overloads?: { [key: string]: num
 export function parseAndValidateQuery<I, FilterCtx, SuggestionsCtx>(
   query: string,
   filtersMap: FiltersMap<I, FilterCtx, SuggestionsCtx>,
-  filterContext?: FilterCtx
+  filterContext?: FilterCtx,
 ): {
   /** Is the query valid at all? */
   valid: boolean;
@@ -99,7 +99,7 @@ export function parseAndValidateQuery<I, FilterCtx, SuggestionsCtx>(
 function validateQuery<I, FilterCtx, SuggestionsCtx>(
   query: QueryAST,
   filtersMap: FiltersMap<I, FilterCtx, SuggestionsCtx>,
-  filterContext?: FilterCtx
+  filterContext?: FilterCtx,
 ): boolean {
   if (query.error) {
     return false;

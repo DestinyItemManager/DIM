@@ -171,7 +171,7 @@ export function setTag(item: DimItem, tag: TagCommand | undefined): ThunkResult 
         : setItemHashTag({
             itemHash: item.hash,
             tag: tag === 'clear' ? undefined : tag,
-          })
+          }),
     );
   };
 }
@@ -198,7 +198,7 @@ export function setNote(item: DimItem, note: string | undefined): ThunkResult {
         : setItemHashNote({
             itemHash: item.hash,
             note,
-          })
+          }),
     );
   };
 }

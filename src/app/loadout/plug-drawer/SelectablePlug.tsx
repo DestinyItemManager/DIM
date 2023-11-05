@@ -41,7 +41,7 @@ export default function SelectablePlug({
   // Memoize the meat of the component as it doesn't need to re-render every time
   const plugDetails = useMemo(
     () => <SelectablePlugDetails plug={plug} classType={classType} />,
-    [plug, classType]
+    [plug, classType],
   );
 
   return (

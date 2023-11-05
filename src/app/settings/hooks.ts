@@ -9,7 +9,7 @@ export function useSetSetting() {
   const dispatch = useDispatch();
   return useCallback(
     (...args: Parameters<typeof setSettingAction>) => dispatch(setSettingAction(...args)),
-    [dispatch]
+    [dispatch],
   );
 }
 
@@ -21,13 +21,13 @@ export function useSetSetting() {
  * const [showNewItems, setShowNewItems] = useSetting('showNewItems');
  */
 export function useSetting<K extends keyof Settings>(
-  settingName: K
+  settingName: K,
 ): [Setting: Settings[K], setSetting: (arg: Settings[K]) => void] {
   const dispatch = useDispatch();
   const settingValue = useSelector(settingSelector(settingName));
   const setter = useCallback(
     (value: Settings[K]) => dispatch(setSettingAction(settingName, value)),
-    [dispatch, settingName]
+    [dispatch, settingName],
   );
   return [settingValue, setter];
 }

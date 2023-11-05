@@ -94,7 +94,7 @@ const d1Filters: D1FilterDefinition[] = [
       ({ filterValue }) =>
       (item) =>
         item.stats?.some((s) =>
-          Boolean(s.displayProperties.name.toLowerCase() === filterValue && s.value > 0)
+          Boolean(s.displayProperties.name.toLowerCase() === filterValue && s.value > 0),
         ),
   },
   {
@@ -210,15 +210,15 @@ const d1Filters: D1FilterDefinition[] = [
         } else if (D1ActivityHashes.restricted[filterValue]) {
           return (
             D1ActivityHashes.required[filterValue]?.some((sourceHash: number) =>
-              item.sourceHashes.includes(sourceHash)
+              item.sourceHashes.includes(sourceHash),
             ) &&
             !D1ActivityHashes.restricted[filterValue]?.some((sourceHash: number) =>
-              item.sourceHashes.includes(sourceHash)
+              item.sourceHashes.includes(sourceHash),
             )
           );
         } else {
           return D1ActivityHashes.required[filterValue]?.some((sourceHash: number) =>
-            item.sourceHashes.includes(sourceHash)
+            item.sourceHashes.includes(sourceHash),
           );
         }
       },

@@ -49,7 +49,7 @@ export default memo(function CompareSuggestions({
     if (
       compareButton.items.length === nextCompareButton?.items.length &&
       compareButton.items.every(
-        (setItem) => nextCompareButton?.items.some((nextSetItem) => nextSetItem === setItem)
+        (setItem) => nextCompareButton?.items.some((nextSetItem) => nextSetItem === setItem),
       )
     ) {
       // do include this button, if the next button is the "includes sunset items" button.

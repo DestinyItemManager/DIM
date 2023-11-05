@@ -1,4 +1,15 @@
-import { ArmorStatHashes, ArmorStats, LockableBucketHash } from '../types';
+import { ArmorStatHashes, ArmorStats, LockableBucketHash, StatRanges } from '../types';
+
+export interface ProcessResult {
+  /** A small number of the best sets, depending on operation mode. */
+  sets: ProcessArmorSet[];
+  /** The total number of combinations considered. */
+  combos: number;
+  /** The stat ranges of all sets that matched our filters & mod selection. */
+  statRangesFiltered?: StatRanges;
+  /** Statistics about how many sets passed/failed the constraints, for error reporting */
+  processInfo?: ProcessStatistics;
+}
 
 export interface ProcessItem {
   id: string;
@@ -33,8 +44,6 @@ export interface IntermediateProcessArmorSet {
   stats: number[];
   /** The first (highest-power) valid set from this stat mix. */
   armor: ProcessItem[];
-  /** Which stat mods were added? */
-  statMods: number[];
 }
 
 export interface ProcessMod {
@@ -48,7 +57,6 @@ export interface ProcessMod {
 /**
  * Data describing the mods that can be automatically picked.
  */
-
 export interface AutoModData {
   generalMods: {
     [key in ArmorStatHashes]?: {

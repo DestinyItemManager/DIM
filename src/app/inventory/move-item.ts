@@ -47,7 +47,7 @@ export function moveItemToCurrentStore(item: DimItem, e?: React.MouseEvent): Thu
 export function pullItem(
   storeId: string,
   bucket: InventoryBucket,
-  showItemPicker: ShowItemPickerFn
+  showItemPicker: ShowItemPickerFn,
 ): ThunkResult {
   return async (dispatch, getState) => {
     const store = getStore(storesSelector(getState()), storeId)!;
@@ -83,7 +83,7 @@ export function moveItemTo(
   item: DimItem,
   store: DimStore,
   equip = false,
-  amount: number = item.amount
+  amount: number = item.amount,
 ): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
     const currentStore = currentStoreSelector(getState())!;
@@ -125,7 +125,7 @@ export function moveItemTo(
           'to',
           store.name,
           'from',
-          getStore(stores, item.owner)!.name
+          getStore(stores, item.owner)!.name,
         );
       }
 
@@ -140,11 +140,11 @@ export function moveItemTo(
         loadingTracker.addPromise(
           (async () => {
             const result = await dispatch(
-              executeMoveItem(item, store, { equip, amount: moveAmount }, moveSession)
+              executeMoveItem(item, store, { equip, amount: moveAmount }, moveSession),
             );
             return result;
-          })()
-        )
+          })(),
+        ),
       );
       showNotification(moveItemNotification(item, store, movePromise, cancel));
 
@@ -198,7 +198,9 @@ export function consolidate(actionableItem: DimItem, store: DimStore): ThunkResu
               // First move everything into the vault
               const item = s.items.find(
                 (i) =>
-                  store.id !== i.owner && i.hash === actionableItem.hash && !i.location.inPostmaster
+                  store.id !== i.owner &&
+                  i.hash === actionableItem.hash &&
+                  !i.location.inPostmaster,
               );
               if (item) {
                 const amount = amountOfItem(s, actionableItem);
@@ -210,7 +212,7 @@ export function consolidate(actionableItem: DimItem, store: DimStore): ThunkResu
             if (!store.isVault) {
               const vault = getVault(storesSelector(getState()))!;
               const item = vault.items.find(
-                (i) => i.hash === actionableItem.hash && !i.location.inPostmaster
+                (i) => i.hash === actionableItem.hash && !i.location.inPostmaster,
               );
               if (item) {
                 const amount = amountOfItem(vault, actionableItem);
@@ -230,8 +232,8 @@ export function consolidate(actionableItem: DimItem, store: DimStore): ThunkResu
             showNotification({ type: 'error', title: actionableItem.name, body: errorMessage(e) });
             errorLog('move', 'error consolidating', actionableItem, e);
           }
-        })()
-      )
+        })(),
+      ),
     );
 }
 
@@ -303,8 +305,8 @@ export function distribute(actionableItem: DimItem): ThunkResult {
                   item,
                   move.target,
                   { equip: false, amount: move.amount },
-                  moveSession
-                )
+                  moveSession,
+                ),
               );
             }
           }
@@ -320,7 +322,7 @@ export function distribute(actionableItem: DimItem): ThunkResult {
             showNotification({ type: 'error', title: actionableItem.name, body: errorMessage(e) });
             errorLog('move', 'error distributing', actionableItem, e);
           }
-        })()
-      )
+        })(),
+      ),
     );
 }

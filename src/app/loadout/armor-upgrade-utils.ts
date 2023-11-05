@@ -9,7 +9,7 @@ import { ArmorEnergyRules } from 'app/loadout-builder/types';
  */
 export function calculateAssumedItemEnergy(
   item: DimItem,
-  { assumeArmorMasterwork, minItemEnergy }: ArmorEnergyRules
+  { assumeArmorMasterwork, minItemEnergy }: ArmorEnergyRules,
 ) {
   if (!item.energy) {
     return 0;

@@ -57,7 +57,7 @@ export class RateLimiterQueue {
     if (!this.timer) {
       const nextTryIn = Math.max(
         0,
-        this.timeLimit - (window.performance.now() - this.lastRequestTime)
+        this.timeLimit - (window.performance.now() - this.lastRequestTime),
       );
       this.timer = window.setTimeout(() => {
         this.timer = undefined;

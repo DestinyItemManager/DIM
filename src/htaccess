@@ -470,19 +470,19 @@ AddEncoding br .br
 
     # Serve pre-brotli stuff if we got it
     RewriteCond %{HTTP:Accept-encoding} br
-    RewriteCond %{REQUEST_FILENAME}.br -f
-    RewriteRule ^(.*)$ $1.br [QSA,L]
+    RewriteCond %{REQUEST_FILENAME}\.br -f
+    RewriteRule ^(.*)$ <%= publicPath %>$1.br [QSA,L]
 
     # Serve pre-gzipped stuff if we got it
     RewriteCond %{HTTP:Accept-encoding} gzip
-    RewriteCond %{REQUEST_FILENAME}.gz -f
-    RewriteRule ^(.*)$ $1.gz [QSA,L]
+    RewriteCond %{REQUEST_FILENAME}\.gz -f
+    RewriteRule ^(.*)$ <%= publicPath %>$1.gz [QSA,L]
 
     # Redirect unknown paths to index.html
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} !\.(json|wasm|js|css|png|jpg|map)(\.(gz|br))?$
-    RewriteRule (.*) index.html [QSA,L]
+    RewriteRule (.*) <%= publicPath %>index.html [QSA,L]
 </IfModule>
 
 # Our host seems to want to force the .gz files to be application/x-gzip

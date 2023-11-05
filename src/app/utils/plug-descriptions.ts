@@ -50,7 +50,7 @@ export function usePlugDescriptions(
    * If set, returns Bungie descriptions even when the descriptions setting is on Community only.
    * Consumers set this if they can't display community descriptions.
    */
-  forceUseBungieDescriptions?: boolean
+  forceUseBungieDescriptions?: boolean,
 ): DimPlugDescriptions {
   const defs = useD2Definitions();
   const allClarityDescriptions = useSelector(clarityDescriptionsSelector);
@@ -84,7 +84,7 @@ export function usePlugDescriptions(
       const statDef = defs.Stat.get(stat.statHash);
       if (statDef) {
         const statNames = [statDef.displayProperties.name].concat(
-          statNameAliases[stat.statHash as StatHashes] ?? []
+          statNameAliases[stat.statHash as StatHashes] ?? [],
         );
         for (const statName of statNames) {
           if (stat.value < 0) {
@@ -130,7 +130,7 @@ export function usePlugDescriptions(
 function getPerkDescriptions(
   plug: PluggableInventoryItemDefinition,
   defs: D2ManifestDefinitions,
-  usedStrings: Set<string>
+  usedStrings: Set<string>,
 ): DimPlugPerkDescription[] {
   const results: DimPlugPerkDescription[] = [];
 
@@ -290,13 +290,13 @@ function getPerkDescriptions(
 
 export function getPlugDefStats(
   plugDef: PluggableInventoryItemDefinition,
-  classType: DestinyClass | undefined
+  classType: DestinyClass | undefined,
 ) {
   return plugDef.investmentStats
     .filter(
       (stat) =>
         (isAllowedItemStat(stat.statTypeHash) || isAllowedPlugStat(stat.statTypeHash)) &&
-        (classType === undefined || isModStatActive(classType, plugDef.hash, stat))
+        (classType === undefined || isModStatActive(classType, plugDef.hash, stat)),
     )
     .map((stat) => ({
       statHash: stat.statTypeHash,
@@ -324,9 +324,9 @@ export function getDimPlugStats(item: DimItem, plug: DimPlug) {
             stat.statHash,
             Boolean(
               plug.plugDef.investmentStats.find((s) => s.statTypeHash === stat.statHash)
-                ?.isConditionallyActive
-            )
-          )
+                ?.isConditionallyActive,
+            ),
+          ),
       )
       .sort(compareBy((stat) => getStatSortOrder(stat.statHash)));
   }

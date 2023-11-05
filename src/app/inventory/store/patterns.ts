@@ -30,7 +30,7 @@ export function buildPatternInfo(
   item: DimItem,
   itemDef: DestinyInventoryItemDefinition,
   defs: D2ManifestDefinitions,
-  profileRecords: DestinyProfileRecordsComponent | undefined
+  profileRecords: DestinyProfileRecordsComponent | undefined,
 ) {
   // Craftable items will have a reference to their recipe item
   const recipeItemHash = itemDef.inventory?.recipeItemHash;

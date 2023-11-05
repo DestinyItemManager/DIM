@@ -89,7 +89,7 @@ export class StatsSet<T> {
 function betterStatsHelper<T>(
   nodes: StatNode<T>[],
   stats: number[],
-  statIndex: number
+  statIndex: number,
 ): BetterStatsResult {
   const stat = stats[statIndex];
   // Iterate all nodes in descending value until the value is lower than our stat

@@ -165,7 +165,7 @@ function SwipableCharacterSelect({
 
   // Transform the segment-relative offset back into pixels
   const offsetPercent = useTransform(offset, (o) =>
-    trackRef.current ? (trackRef.current.clientWidth / numSegments) * -o : 0
+    trackRef.current ? (trackRef.current.clientWidth / numSegments) * -o : 0,
   );
 
   return (

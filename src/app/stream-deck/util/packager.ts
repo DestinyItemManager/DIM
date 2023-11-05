@@ -69,7 +69,7 @@ function streamDeckVaultUpdate(state: RootState): VaultArgs | undefined {
 // seasonal hash from src/app/progress/Milestones.tsx
 function getCurrentSeason(
   state: RootState,
-  profile: DestinyProfileResponse | undefined
+  profile: DestinyProfileResponse | undefined,
 ): [number?, number?, string?] {
   const defs = d2ManifestSelector(state);
   const season = profile?.profile?.data?.currentSeasonHash

@@ -21,7 +21,7 @@ export const itemSortSettingsSelector = createSelector(
   (itemSortOrderCustom, itemSortReversals) => ({
     sortOrder: itemSortOrderCustom || ['primStat', 'name'],
     sortReversals: itemSortReversals || [],
-  })
+  }),
 );
 
 /**
@@ -30,5 +30,5 @@ export const itemSortSettingsSelector = createSelector(
 export const itemSorterSelector = createSelector(
   itemSortSettingsSelector,
   getTagSelector,
-  (sortSettings, getTag) => (items: readonly DimItem[]) => sortItems(items, sortSettings, getTag)
+  (sortSettings, getTag) => (items: readonly DimItem[]) => sortItems(items, sortSettings, getTag),
 );

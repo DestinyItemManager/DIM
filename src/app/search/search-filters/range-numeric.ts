@@ -45,7 +45,7 @@ const simpleRangeFilters: FilterDefinition[] = [
         return Boolean(
           killTrackerInfo &&
             (!filterValue.length || filterValue === killTrackerInfo.type) &&
-            compare!(killTrackerInfo.count)
+            compare!(killTrackerInfo.count),
         );
       },
   },

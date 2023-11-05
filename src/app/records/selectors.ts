@@ -24,11 +24,11 @@ export const collectionsVisibleShadersSelector = createSelector(
         })
         .map((c) => c.itemHash);
       const visibleChildCollectibles = node.children.presentationNodes.flatMap((childNode) =>
-        getVisibleCollectibles(defs.PresentationNode.get(childNode.presentationNodeHash))
+        getVisibleCollectibles(defs.PresentationNode.get(childNode.presentationNodeHash)),
       );
       return _.concat(visibleChildCollectibles, visibleCollectibles);
     };
 
     return new Set(getVisibleCollectibles(defs.PresentationNode.get(SHADER_NODE)));
-  }
+  },
 );

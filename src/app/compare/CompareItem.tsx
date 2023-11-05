@@ -90,7 +90,7 @@ export default memo(function CompareItem({
         </ItemPopupTrigger>
       </div>
     ),
-    [isInitialItem, item, itemClick, pullItem, remove, itemNotes, isFindable]
+    [isInitialItem, item, itemClick, pullItem, remove, itemNotes, isFindable],
   );
 
   return (

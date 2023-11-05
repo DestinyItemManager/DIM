@@ -83,8 +83,8 @@ export default function LoadoutShareSheet({
       (loadout.parameters.query ||
         loadout.parameters.exoticArmorHash ||
         loadout.parameters.statConstraints?.some(
-          (s) => s.maxTier !== undefined || s.minTier !== undefined
-        ))
+          (s) => s.maxTier !== undefined || s.minTier !== undefined,
+        )),
   );
 
   return (

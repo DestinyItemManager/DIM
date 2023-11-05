@@ -37,11 +37,12 @@ async function handleAuthReturn() {
   try {
     const token = await getAccessTokenFromCode(code);
     setToken(token);
-    window.location.href = '/';
+    // If we have a stored path from before we logged in (e.g. a loadout or armory link), send them back to that
+    window.location.href = localStorage.getItem('returnPath') ?? $PUBLIC_PATH;
   } catch (error) {
     if (error instanceof TypeError || (error instanceof HttpStatusError && error.status === -1)) {
       setError(
-        'A content blocker is interfering with either DIM or Bungie.net, or you are not connected to the internet.'
+        'A content blocker is interfering with either DIM or Bungie.net, or you are not connected to the internet.',
       );
       return;
     }

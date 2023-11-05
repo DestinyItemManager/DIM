@@ -6,10 +6,7 @@ import { dedupePromise } from 'app/utils/promises';
 import { HttpClientConfig } from 'bungie-api-ts/http';
 
 const DIM_API_HOST = 'https://api.destinyitemmanager.com';
-export const API_KEY =
-  $DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta' || $DIM_FLAVOR === 'test'
-    ? $DIM_API_KEY
-    : localStorage.getItem('dimApiKey')!;
+export const API_KEY = $DIM_FLAVOR !== 'dev' ? $DIM_API_KEY : localStorage.getItem('dimApiKey')!;
 
 const localStorageKey = 'dimApiToken';
 
@@ -18,7 +15,7 @@ const localStorageKey = 'dimApiToken';
  */
 export async function unauthenticatedApi<T>(
   config: HttpClientConfig,
-  noApiKey?: boolean
+  noApiKey?: boolean,
 ): Promise<T> {
   if (!noApiKey && !API_KEY) {
     throw new Error('No DIM API key configured');
@@ -43,7 +40,7 @@ export async function unauthenticatedApi<T>(
       method: config.method,
       body: config.body ? JSON.stringify(config.body) : undefined,
       headers,
-    })
+    }),
   );
 
   if (response.status === 401) {
@@ -95,7 +92,7 @@ export async function authenticatedApi<T>(config: HttpClientConfig): Promise<T> 
       method: config.method,
       body: config.body ? JSON.stringify(config.body) : undefined,
       headers,
-    })
+    }),
   );
 
   if (response.status === 401) {
@@ -170,7 +167,7 @@ const refreshToken = dedupePromise(async () => {
 
     return authToken;
   } catch (e) {
-    if (!($DIM_FLAVOR === 'release' || $DIM_FLAVOR === 'beta')) {
+    if ($DIM_FLAVOR === 'dev') {
       throw new FatalTokenError('DIM API Key Incorrect');
     }
     throw e;

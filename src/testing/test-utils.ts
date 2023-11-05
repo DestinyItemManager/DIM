@@ -65,7 +65,7 @@ export async function getTestManifestJson() {
 
     const manifestDb = await downloadManifestComponents(
       manifest.jsonWorldComponentContentPaths.en,
-      allTables
+      allTables,
     );
     await fs.writeFile(filename, JSON.stringify(manifestDb), 'utf-8');
     return manifestDb;
@@ -149,7 +149,7 @@ export function setupi18n() {
       i18next.services.pluralResolver.addRule(
         otherLang,
         // eslint-disable-next-line
-        i18next.services.pluralResolver.getRule('en')
+        i18next.services.pluralResolver.getRule('en'),
       );
     }
   }

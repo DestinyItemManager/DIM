@@ -27,11 +27,11 @@ registerRoute(
       new CacheableResponsePlugin({ statuses: [0, 200] }),
     ],
   }),
-  'GET'
+  'GET',
 );
 
 // Since we're a single page app, route all navigation to /index.html
-const handler = createHandlerBoundToURL('/index.html');
+const handler = createHandlerBoundToURL(`${$PUBLIC_PATH}index.html`);
 const navigationRoute = new NavigationRoute(handler, {
   // These have their own pages (return.html)
   // This regex matches on query string too, so no anchors!

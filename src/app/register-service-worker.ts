@@ -45,7 +45,7 @@ let currentVersion = $DIM_VERSION;
         errorLog('SW', 'Failed to check version.json', e);
       }
     },
-    15 * 60 * 1000
+    15 * 60 * 1000,
   );
 })();
 
@@ -59,7 +59,7 @@ export default function registerServiceWorker() {
 
   window.addEventListener('load', () => {
     navigator.serviceWorker
-      .register('/service-worker.js')
+      .register(`${$PUBLIC_PATH}service-worker.js`, { scope: $PUBLIC_PATH })
       .then((registration) => {
         // TODO: save off a handler that can call registration.update() to force update on refresh?
         registration.onupdatefound = () => {

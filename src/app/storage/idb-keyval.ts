@@ -7,7 +7,7 @@ export class Store {
 
   constructor(
     dbName = 'keyval-store',
-    readonly storeName = 'keyval'
+    readonly storeName = 'keyval',
   ) {
     this._dbName = dbName;
     this._storeName = storeName;
@@ -37,7 +37,7 @@ export class Store {
 
   _withIDBStore(
     type: IDBTransactionMode,
-    callback: (store: IDBObjectStore) => void
+    callback: (store: IDBObjectStore) => void,
   ): Promise<void> {
     this._init();
     return this._dbp!.then(
@@ -48,7 +48,7 @@ export class Store {
           transaction.onerror = (e) => reject((e.target as IDBTransaction).error);
           transaction.onabort = () => reject(transaction.error);
           callback(transaction.objectStore(this.storeName));
-        })
+        }),
     );
   }
 

@@ -60,7 +60,7 @@ function Record({
     !acquired &&
     Boolean(state & DestinyRecordState.Obscured);
   const trackedInDim = useSelector((state: RootState) =>
-    trackedTriumphsSelector(state).includes(recordHash)
+    trackedTriumphsSelector(state).includes(recordHash),
   );
   const loreLink =
     !obscured &&
@@ -120,7 +120,7 @@ function Record({
   if (intervals.length > 1) {
     const currentScore = _.sumBy(
       _.take(intervals, recordComponent.intervalsRedeemedCount),
-      (i) => i.score
+      (i) => i.score,
     );
     const totalScore = _.sumBy(intervals, (i) => i.score);
     scoreValue = (
@@ -150,7 +150,7 @@ function Record({
         !isBooleanObjective(
           defs.Objective.get(objectives[0].objectiveHash),
           objectives[0].progress ?? 0,
-          objectives[0].completionValue
+          objectives[0].completionValue,
         )));
 
   // TODO: show track badge greyed out / on hover
@@ -218,7 +218,7 @@ function Record({
 
 function getIntervals(
   definition: DestinyRecordDefinition,
-  record: DestinyRecordComponent
+  record: DestinyRecordComponent,
 ): RecordInterval[] {
   const intervalDefinitions = definition?.intervalInfo?.intervalObjectives || [];
   const intervalObjectives = record?.intervalObjectives || [];
@@ -244,7 +244,7 @@ function getIntervals(
           : Math.max(
               0,
               ((data.progress || 0) - prevIntervalProgress) /
-                (data.completionValue - prevIntervalProgress)
+                (data.completionValue - prevIntervalProgress),
             )
         : 0,
       isRedeemed: record.intervalsRedeemedCount >= i + 1,

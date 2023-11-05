@@ -225,12 +225,12 @@ export const LoadoutArtifactUnlocks = memo(function LoadoutArtifactUnlocks({
         originalModHash: def.hash,
         resolvedMod: def,
       })) ?? [],
-    [defs, artifactUnlocks?.unlockedItemHashes]
+    [defs, artifactUnlocks?.unlockedItemHashes],
   );
 
   const handleRemoveMod = useCallback(
     (mod: ResolvedLoadoutMod) => onRemoveMod!(mod.originalModHash),
-    [onRemoveMod]
+    [onRemoveMod],
   );
   const artifactTitle = artifactUnlocks
     ? t('Loadouts.ArtifactUnlocksWithSeason', {
@@ -250,7 +250,7 @@ export const LoadoutArtifactUnlocks = memo(function LoadoutArtifactUnlocks({
           <div className={styles.modsGrid}>
             {loadoutArtifactMods.map((mod) => {
               const unlocked = unlockedArtifactMods?.unlockedItemHashes.includes(
-                mod.resolvedMod.hash
+                mod.resolvedMod.hash,
               );
               return (
                 <LoadoutModMemo

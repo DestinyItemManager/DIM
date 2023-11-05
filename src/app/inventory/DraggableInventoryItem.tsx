@@ -45,7 +45,7 @@ export default function DraggableInventoryItem({ children, item }: Props) {
       },
       canDrag,
     }),
-    [item]
+    [item],
   );
 
   return (

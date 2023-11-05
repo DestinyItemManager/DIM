@@ -40,7 +40,7 @@ function useUnlockedPlugSets(
   owner: string,
   plugCategoryHashWhitelist: number[] | undefined,
   plugCategoryHashDenyList: number[] | undefined,
-  lockedMods: ResolvedLoadoutMod[]
+  lockedMods: ResolvedLoadoutMod[],
 ) {
   const profileResponse = useSelector(profileResponseSelector);
   const allItems = useSelector(allItemsSelector);
@@ -80,14 +80,14 @@ function useUnlockedPlugSets(
       // are considered disabled by the API
       const modSockets = getSocketsByCategoryHash(
         item.sockets,
-        SocketCategoryHashes.ArmorMods
+        SocketCategoryHashes.ArmorMods,
       ).filter((socket) => socket.socketDefinition.reusablePlugSetHash && socket.plugged);
 
       // Group the sockets by their reusablePlugSetHash, this lets us get a count of available mods for
       // each socket in the case of bucket specific mods/sockets
       const socketsGroupedByPlugSetHash = Map.groupBy(
         modSockets,
-        (socket) => socket.socketDefinition.reusablePlugSetHash ?? 0
+        (socket) => socket.socketDefinition.reusablePlugSetHash ?? 0,
       );
 
       // For each of the socket types on the item, figure out what plugs could go into it
@@ -97,11 +97,11 @@ function useUnlockedPlugSets(
           profileResponse,
           sockets[0].plugSet!.hash,
           // TODO: For vaulted items, union all the unlocks and then be smart about picking the right store
-          owner ?? currentStore!.id
+          owner ?? currentStore!.id,
         );
 
         const isArtificePlugSet = sockets[0].plugSet!.plugs.some(
-          (p) => p?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice
+          (p) => p?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice,
         );
 
         const dimPlugs = sockets[0].plugSet!.plugs.filter((p) => unlockedPlugs.has(p.plugDef.hash));
@@ -125,7 +125,7 @@ function useUnlockedPlugSets(
         // Combat, general and raid mods are restricted across items so we need to manually
         // set the max selectable
         const maxSelectable = plugs.some((p) =>
-          slotSpecificPlugCategoryHashes.includes(p.plug.plugCategoryHash)
+          slotSpecificPlugCategoryHashes.includes(p.plug.plugCategoryHash),
         )
           ? sockets.length
           : MAX_SLOT_INDEPENDENT_MODS;
@@ -136,7 +136,7 @@ function useUnlockedPlugSets(
           const isActivityMod = plugs.some(
             (p) =>
               activityModPlugCategoryHashes.includes(p.plug.plugCategoryHash) ||
-              p.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice
+              p.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice,
           );
 
           plugSetsByHash[plugSetHash] = {
@@ -156,7 +156,7 @@ function useUnlockedPlugSets(
                 allSelectedPlugs,
                 (mod) =>
                   activityModPlugCategoryHashes.includes(mod.plug.plugCategoryHash) ||
-                  mod.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice
+                  mod.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice,
               );
           } else if (
             !plugs.some((p) => knownModPlugCategoryHashes.includes(p.plug.plugCategoryHash))
@@ -164,7 +164,7 @@ function useUnlockedPlugSets(
             plugSetsByHash[plugSetHash].getNumSelected = (allSelectedPlugs) =>
               count(
                 allSelectedPlugs,
-                (mod) => !knownModPlugCategoryHashes.includes(mod.plug.plugCategoryHash)
+                (mod) => !knownModPlugCategoryHashes.includes(mod.plug.plugCategoryHash),
               );
           }
 
@@ -215,14 +215,14 @@ function useUnlockedPlugSets(
     // essentially the same logic that actual mod assignment uses.
     const orderedMods = _.sortBy(
       lockedMods,
-      (mod) => plugSets.filter((s) => s.plugs.some((p) => p.hash === mod.resolvedMod.hash)).length
+      (mod) => plugSets.filter((s) => s.plugs.some((p) => p.hash === mod.resolvedMod.hash)).length,
     );
 
     // Now we populate the plugsets with their corresponding plugs.
     return produce(plugSets, (draft) => {
       for (const initiallySelected of orderedMods) {
         const possiblePlugSets = draft.filter((set) =>
-          set.plugs.some((plug) => plug.hash === initiallySelected.resolvedMod.hash)
+          set.plugs.some((plug) => plug.hash === initiallySelected.resolvedMod.hash),
         );
 
         for (const possiblePlugSet of possiblePlugSets) {
@@ -276,7 +276,7 @@ export default function ModPicker({
     owner,
     plugCategoryHashWhitelist,
     plugCategoryHashDenyList,
-    lockedMods
+    lockedMods,
   );
 
   const onAcceptWithHiddenSelectedMods = useCallback(
@@ -287,8 +287,8 @@ export default function ModPicker({
       const hiddenSelectedMods = lockedMods.filter(
         (mod) =>
           !plugSets.some((plugSet) =>
-            plugSet.plugs.some((plug) => plug.hash === mod.resolvedMod.hash)
-          )
+            plugSet.plugs.some((plug) => plug.hash === mod.resolvedMod.hash),
+          ),
       );
 
       onAccept([
@@ -296,7 +296,7 @@ export default function ModPicker({
         ...newLockedMods.map((mod) => mod.hash),
       ]);
     },
-    [lockedMods, onAccept, plugSets]
+    [lockedMods, onAccept, plugSets],
   );
 
   // Ensure the plug drawer is reset when selecting a different
@@ -331,7 +331,7 @@ export default function ModPicker({
  */
 function isModSelectable(
   mod: PluggableInventoryItemDefinition,
-  selected: PluggableInventoryItemDefinition[]
+  selected: PluggableInventoryItemDefinition[],
 ) {
   const { plugCategoryHash, energyCost } = mod.plug;
   const isSlotSpecificCategory = slotSpecificPlugCategoryHashes.includes(plugCategoryHash);
@@ -345,7 +345,7 @@ function isModSelectable(
   if (isSlotSpecificCategory) {
     // General and slot-specific mods just match to the same category hash
     const associatedLockedMods = selected.filter(
-      (mod) => mod.plug.plugCategoryHash === plugCategoryHash
+      (mod) => mod.plug.plugCategoryHash === plugCategoryHash,
     );
     // Slot-specific mods (e.g. chest mods) can slot 3 per piece, so make sure the sum of energy doesn't
     // exceed the maximum and that energy all aligns. This doesn't check other mods that could be on the

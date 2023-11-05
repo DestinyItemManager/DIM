@@ -43,6 +43,7 @@ const bugReport = 'https://github.com/DestinyItemManager/DIM/issues';
 const logoStyles = {
   beta: styles.beta,
   dev: styles.dev,
+  pr: styles.pr,
   release: undefined,
   test: undefined,
 } as const;
@@ -413,7 +414,7 @@ function useClarityDetector(ref: React.RefObject<HTMLElement>) {
         if (
           mutation.type === 'childList' &&
           Array.from(mutation.addedNodes ?? []).some(
-            (n) => n instanceof HTMLElement && n.classList.contains('Clarity_menu_button')
+            (n) => n instanceof HTMLElement && n.classList.contains('Clarity_menu_button'),
           )
         ) {
           setClarityDetected(true);

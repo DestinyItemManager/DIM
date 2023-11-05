@@ -1,5 +1,34 @@
 ## Next
 
+* The Loadouts page will now analyze your Loadouts in more depth, show filter pills for analysis findings, and note them in individual Loadouts too.
+  * Examples are Loadouts where the mods don't fit on the armor, Loadouts that rely on seasonal mods, or Loadouts where armor needs to be upgraded to accommodate mods or reach target stats.
+* Loadout optimizer will now use an effective energy of 9 for items that it is not assuming masterworked stats for. Before, it used an effective energy of 7, but enhancement prisms are easier to come by these days.
+* Fixed a case where vendor items could show as owned when they were not.
+* Fixed the platform icon not showing for Destiny accounts that were only associated with a single platform.
+* Fixed accidentally showing the kill tracker perk column on the item popup.
+* Fixed subclass mod sockets size on the in-game loadout details popup.
+
+### Beta Only
+
+* A preview of a new stat constraint editing widget for Loadout Optimizer! Let us know how you like it and how it helps (or hurts) your ability to make top tier builds.
+* The Loadouts page will note "Better Stats Available" if we've found that a Loadout could use different armor or stat mods to reach strictly higher stat tiers.
+
+## 7.92.0 <span class="changelog-date">(2023-10-29)</span>
+
+* Fixed a bug that could delete recent tags/notes when loading DIM on a different device than the one where you set the notes.
+* Added a hotkey (T) to switch between the overview and triage tabs on the item popup.
+* The item popup remembers which tab you were last on.
+* Incomplete seals are now shown greyed out on the Records page.
+* Gilded seals show their gilding count on the Records page.
+* The Loadout Optimizer is better at calculating the max possible tier given your chosen stat constraints.
+* Fix FotL pages sometimes being shown as all owned.
+* Fixed the D1 organizer page to display perks nicely.
+* Fixed the Organizer not showing the armor CSV download button.
+* Organizer will now show exotic catalysts and empty catalyst sockets if a catalyst exists.
+* Organizer will no longer duplicate the exotic perk between the archetype column and the traits column.
+* CSV export will no longer include all kill tracker options, as they're very unreliable.
+* CSV export will no longer include some junk like armor upgrade sockets
+
 ## 7.91.1 <span class="changelog-date">(2023-10-23)</span>
 
 * Fixed search menu showing behind items in some sheets.

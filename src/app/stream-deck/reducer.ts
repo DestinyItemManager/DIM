@@ -22,7 +22,7 @@ const streamDeckInitialState: StreamDeckState = {
 
 export const streamDeck: Reducer<StreamDeckState, StreamDeckAction> = (
   state: StreamDeckState = streamDeckInitialState,
-  action: StreamDeckAction
+  action: StreamDeckAction,
 ): StreamDeckState => {
   switch (action.type) {
     case getType(actions.streamDeckConnected):

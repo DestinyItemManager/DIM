@@ -66,7 +66,7 @@ export default function LoadoutEditBucket({
     category === 'Weapons' || category === 'Armor'
       ? buckets.byCategory[category]
       : [BucketHashes.Ghost, BucketHashes.Emblems, BucketHashes.Ships, BucketHashes.Vehicle].map(
-          (h) => buckets.byHash[h]
+          (h) => buckets.byHash[h],
         );
   const isArmor = category === 'Armor';
 
@@ -169,7 +169,7 @@ function ItemBucket({
   const stores = useSelector(storesSelector);
   const acceptTarget = useMemo(
     () => [bucket.hash.toString(), ...stores.flatMap((store) => `${store.id}-${bucket.hash}`)],
-    [bucket, stores]
+    [bucket, stores],
   );
   const {
     equippedRef,

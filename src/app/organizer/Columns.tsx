@@ -108,7 +108,7 @@ export function getColumns(
   loadoutsByItem: LoadoutsByItem,
   newItems: Set<string>,
   destinyVersion: DestinyVersion,
-  onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void
+  onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void,
 ): ColumnDefinition[] {
   const customStatHashes = customStatDefs.map((c) => c.statHash);
   const statsGroup: ColumnGroup = {
@@ -168,7 +168,7 @@ export function getColumns(
         },
       };
     }),
-    (s) => getStatSortOrder(s.statHash)
+    (s) => getStatSortOrder(s.statHash),
   );
 
   const isGhost = itemsType === 'ghost';
@@ -227,7 +227,7 @@ export function getColumns(
               },
             };
           }),
-          (s) => getStatSortOrder(s.statHash)
+          (s) => getStatSortOrder(s.statHash),
         )
       : [];
 
@@ -584,7 +584,7 @@ export function getColumns(
             <LoadoutsCell
               loadouts={_.sortBy(
                 inloadouts.map((l) => l.loadout),
-                (l) => l.name
+                (l) => l.name,
               )}
               owner={item.owner}
             />
@@ -670,7 +670,7 @@ function PerksCell({
   // Don't extract intrinsic, since there's a separate column
   const { modSocketsByCategory, perks } = getDisplayedItemSockets(
     item,
-    /* excludeEmptySockets */ true
+    /* excludeEmptySockets */ true,
   )!;
 
   if (perks) {
@@ -681,7 +681,7 @@ function PerksCell({
       (s) =>
         s.plugged &&
         (s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames ||
-          s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics)
+          s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics),
     );
   } else {
     // Improve this when we use iterator-helpers
@@ -693,7 +693,7 @@ function PerksCell({
       // we have a separate column for the kill tracker
       !isKillTrackerSocket(s) &&
       // and for the regular weapon masterworks
-      s.socketDefinition.socketTypeHash !== weaponMasterworkY2SocketTypeHash
+      s.socketDefinition.socketTypeHash !== weaponMasterworkY2SocketTypeHash,
   );
 
   if (!sockets.length) {
@@ -749,8 +749,8 @@ function D1PerksCell({ item }: { item: D1Item }) {
   const sockets = Object.values(
     Object.groupBy(
       item.talentGrid.nodes.filter((n) => n.column > 0),
-      (n) => n.column
-    )
+      (n) => n.column,
+    ),
   );
 
   if (!sockets.length) {
@@ -778,11 +778,14 @@ function D1PerksCell({ item }: { item: D1Item }) {
                   }
                 >
                   <div className={styles.modPerk} data-perk-name={p.name}>
-                    <BungieImage src={p.icon} /> {p.name}
+                    <div className={styles.miniPerkContainer}>
+                      <BungieImage src={p.icon} />
+                    </div>{' '}
+                    {p.name}
                     {(!p.unlocked || p.xp < p.xpRequired) && <> ({percent(p.xp / p.xpRequired)})</>}
                   </div>
                 </PressTip>
-              )
+              ),
           )}
         </div>
       ))}

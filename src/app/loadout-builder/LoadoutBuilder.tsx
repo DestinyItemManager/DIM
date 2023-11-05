@@ -32,6 +32,7 @@ import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyObject } from 'app/utils/empty';
 import { isClassCompatible, itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { deepEqual } from 'fast-equals';
 import { Dispatch, memo, useCallback, useEffect, useMemo, useRef } from 'react';
@@ -54,6 +55,7 @@ import {
   LoadoutOptimizerPinnedItems,
   loMenuSection,
 } from './filter/LoadoutOptimizerMenuItems';
+import StatConstraintEditor from './filter/StatConstraintEditor';
 import TierSelect from './filter/TierSelect';
 import CompareLoadoutsDrawer from './generated-sets/CompareLoadoutsDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
@@ -68,6 +70,7 @@ import {
   LockableBucketHashes,
   loDefaultArmorEnergyRules,
 } from './types';
+import useEquippedHashes from './useEquippedHashes';
 
 /**
  * The Loadout Optimizer screen
@@ -144,9 +147,9 @@ export default memo(function LoadoutBuilder({
         loadout.items,
         selectedStore,
         allItems,
-        modsByBucket
+        modsByBucket,
       ),
-    [itemCreationContext, loadout.items, selectedStore, allItems, modsByBucket]
+    [itemCreationContext, loadout.items, selectedStore, allItems, modsByBucket],
   );
 
   // The list of mod items that need to be assigned to armor items
@@ -159,10 +162,10 @@ export default memo(function LoadoutBuilder({
             !(
               autoStatMods &&
               mod.resolvedMod.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsV2General
-            )
+            ),
         )
         .map((mod) => mod.resolvedMod),
-    [resolvedMods, autoStatMods]
+    [resolvedMods, autoStatMods],
   );
 
   const {
@@ -174,7 +177,7 @@ export default memo(function LoadoutBuilder({
 
   const { modMap: lockedModMap, unassignedMods } = useMemo(
     () => categorizeArmorMods(modsToAssign, armorItems),
-    [armorItems, modsToAssign]
+    [armorItems, modsToAssign],
   );
 
   const hasPreloadedLoadout = Boolean(preloadedLoadout);
@@ -184,7 +187,7 @@ export default memo(function LoadoutBuilder({
     hasPreloadedLoadout,
     statConstraints,
     savedStatConstraintsByClass,
-    classType
+    classType,
   );
 
   const onCharacterChanged = useCallback(
@@ -194,7 +197,7 @@ export default memo(function LoadoutBuilder({
         store: getStore(stores, storeId)!,
         savedStatConstraintsByClass,
       }),
-    [lbDispatch, savedStatConstraintsByClass, stores]
+    [lbDispatch, savedStatConstraintsByClass, stores],
   );
 
   // Write the search query into the loadout
@@ -239,16 +242,14 @@ export default memo(function LoadoutBuilder({
 
   const modStatChanges = useMemo(
     () => getTotalModStatChanges(defs, modsToAssign, subclass, classType, true),
-    [classType, defs, modsToAssign, subclass]
+    [classType, defs, modsToAssign, subclass],
   );
 
   // Run the actual loadout generation process in a web worker
   const { result, processing } = useProcess({
-    defs,
     selectedStore,
     filteredItems,
     lockedModMap,
-    subclass,
     modStatChanges,
     armorEnergyRules,
     resolvedStatConstraints,
@@ -260,7 +261,7 @@ export default memo(function LoadoutBuilder({
 
   const sortedSets = useMemo(
     () => resultSets && sortGeneratedSets(resultSets, statConstraints),
-    [statConstraints, resultSets]
+    [statConstraints, resultSets],
   );
 
   useEffect(() => hideItemPicker(), [hideItemPicker, selectedStore.classType]);
@@ -282,11 +283,13 @@ export default memo(function LoadoutBuilder({
           updateFunc(item);
         }
       },
-    [selectedStore, showItemPicker]
+    [selectedStore, showItemPicker],
   );
 
   const handleAutoStatModsChanged = (autoStatMods: boolean) =>
     lbDispatch({ type: 'autoStatModsChanged', autoStatMods });
+
+  const equippedHashes = useEquippedHashes(loadout.parameters!, subclass);
 
   // I don't think this can actually happen?
   if (!selectedStore) {
@@ -303,11 +306,20 @@ export default memo(function LoadoutBuilder({
         </div>
       )}
       <UndoRedoControls canRedo={canRedo} canUndo={canUndo} lbDispatch={lbDispatch} />
-      <TierSelect
-        resolvedStatConstraints={resolvedStatConstraints}
-        statRangesFiltered={result?.statRangesFiltered}
-        lbDispatch={lbDispatch}
-      />
+      {$featureFlags.statConstraintEditor ? (
+        <StatConstraintEditor
+          resolvedStatConstraints={resolvedStatConstraints}
+          statRangesFiltered={result?.statRangesFiltered}
+          lbDispatch={lbDispatch}
+          equippedHashes={equippedHashes}
+        />
+      ) : (
+        <TierSelect
+          resolvedStatConstraints={resolvedStatConstraints}
+          statRangesFiltered={result?.statRangesFiltered}
+          lbDispatch={lbDispatch}
+        />
+      )}
       <EnergyOptions assumeArmorMasterwork={assumeArmorMasterwork} lbDispatch={lbDispatch} />
       <div className={loMenuSection}>
         <CheckButton
@@ -383,9 +395,13 @@ export default memo(function LoadoutBuilder({
     </>
   );
 
+  // TODO: replace character select with horizontal choice?
+
   return (
     <PageWithMenu className={styles.page}>
-      <PageWithMenu.Menu className={styles.menuContent}>
+      <PageWithMenu.Menu
+        className={clsx(styles.menuContent, { [styles.wide]: $featureFlags.statConstraintEditor })}
+      >
         <CharacterSelect
           selectedStore={selectedStore}
           stores={stores}
@@ -444,7 +460,6 @@ export default memo(function LoadoutBuilder({
           <GeneratedSets
             loadout={loadout}
             sets={sortedSets}
-            subclass={subclass}
             lockedMods={result.mods}
             pinnedItems={pinnedItems}
             selectedStore={selectedStore}
@@ -455,6 +470,7 @@ export default memo(function LoadoutBuilder({
             armorEnergyRules={result.armorEnergyRules}
             autoStatMods={autoStatMods}
             isEditingExistingLoadout={isEditingExistingLoadout}
+            equippedHashes={equippedHashes}
           />
         ) : (
           !processing && (
@@ -526,7 +542,7 @@ function useRelevantLoadouts(selectedStore: DimStore) {
     const equippedLoadout = newLoadoutFromEquipped(
       t('Loadouts.CurrentlyEquipped'),
       selectedStore,
-      artifactUnlocks
+      artifactUnlocks,
     );
     return [...classLoadouts, equippedLoadout];
   }, [allSavedLoadouts, selectedStore, artifactUnlocks]);
@@ -541,12 +557,12 @@ function useRelevantLoadouts(selectedStore: DimStore) {
 function useResolvedMods(
   defs: D2ManifestDefinitions,
   modHashes: number[] | undefined,
-  selectedStoreId: string | undefined
+  selectedStoreId: string | undefined,
 ) {
   const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(selectedStoreId));
   return useMemo(
     () => resolveLoadoutModHashes(defs, modHashes, unlockedPlugs),
-    [defs, modHashes, unlockedPlugs]
+    [defs, modHashes, unlockedPlugs],
   );
 }
 
@@ -560,9 +576,9 @@ function useArmorItems(classType: DestinyClass, vendorItems: DimItem[]): DimItem
       allItems
         .concat(vendorItems)
         .filter(
-          (item) => isClassCompatible(item.classType, classType) && isLoadoutBuilderItem(item)
+          (item) => isClassCompatible(item.classType, classType) && isLoadoutBuilderItem(item),
         ),
-    [allItems, vendorItems, classType]
+    [allItems, vendorItems, classType],
   );
 }
 
@@ -571,7 +587,7 @@ function useArmorItems(classType: DestinyClass, vendorItems: DimItem[]): DimItem
  */
 function useSaveLoadoutParameters(
   hasPreloadedLoadout: boolean,
-  loadoutParameters: LoadoutParameters
+  loadoutParameters: LoadoutParameters,
 ) {
   const setSetting = useSetSetting();
   const firstRun = useRef(true);
@@ -611,7 +627,7 @@ function useSaveStatConstraints(
   savedStatConstraintsByClass: {
     [key: number]: StatConstraint[];
   },
-  classType: DestinyClass
+  classType: DestinyClass,
 ) {
   const setSetting = useSetSetting();
   const firstRun = useRef(true);

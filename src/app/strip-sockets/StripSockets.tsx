@@ -146,15 +146,15 @@ export default function StripSockets() {
       try {
         await dispatch(
           doStripSockets(selectedSockets, cancelToken, (idx, error) =>
-            stripDispatch({ tag: 'notify_progress', idx, error })
-          )
+            stripDispatch({ tag: 'notify_progress', idx, error }),
+          ),
         );
         stripDispatch({ tag: 'notify_done', success: true });
       } catch {
         stripDispatch({ tag: 'notify_done', success: false });
       }
     },
-    [dispatch, isChoosing]
+    [dispatch, isChoosing],
   );
 
   if (!query) {
@@ -306,7 +306,7 @@ function StripSocketsChoose({
     reportSockets(
       socketKinds
         ?.filter((k) => k.items && activeKinds.includes(k.kind))
-        .flatMap((k) => k.items!) || []
+        .flatMap((k) => k.items!) || [],
     );
   }, [reportSockets, socketKinds, activeKinds]);
 
@@ -387,7 +387,7 @@ function SocketKindButton({
                 <img src={icon} className={styles.itemTypeIcon} /> {num}
                 <br />
               </React.Fragment>
-            )
+            ),
         )}
       </div>
     </div>

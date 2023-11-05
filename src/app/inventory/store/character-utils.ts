@@ -104,7 +104,7 @@ const stats: D1StatLabel[] = [
  */
 export function getCharacterStatsData(
   defs: D1ManifestDefinitions,
-  data: D1Character['characterBase']
+  data: D1Character['characterBase'],
 ) {
   const ret: { [statHash: string]: DimCharacterStat } = {};
   for (const statId of stats) {
