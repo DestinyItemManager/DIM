@@ -170,7 +170,7 @@ export default (env: Env) => {
           return chunk.name !== 'browsercheck' && chunk.name !== 'earlyErrorReport';
         },
         automaticNameDelimiter: '-',
-        minSize: 17000,
+        minSize: 18000,
         minRemainingSize: 0,
         minChunks: 1,
         maxAsyncRequests: 30,
@@ -183,11 +183,11 @@ export default (env: Env) => {
             priority: -5,
             reuseExistingChunk: true,
             chunks: 'initial',
-            name: 'common_app',
+            name: 'common-app',
             minSize: 0,
           },
           default: {
-            minChunks: 2,
+            // minChunks: 2,
             priority: -20,
             reuseExistingChunk: true,
           },
@@ -195,7 +195,7 @@ export default (env: Env) => {
           defaultVendors: false,
           reactPackage: {
             test: /[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom)[\\/]/,
-            name: 'vendor_react',
+            name: 'vendor-react',
             chunks: 'all',
             priority: 10,
           },
