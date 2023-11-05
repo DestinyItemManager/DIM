@@ -197,7 +197,7 @@ export default (env: Env) => {
           // we are opting out of defaultVendors, so rest of the node modules will be part of default cacheGroup
           defaultVendors: false,
           reactPackage: {
-            test: /[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom|react-dnd)[\\/]/,
+            test: /[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom|react-dnd|core-js)[\\/]/,
             name: 'vendor-react',
             chunks: 'all',
             priority: 10,
