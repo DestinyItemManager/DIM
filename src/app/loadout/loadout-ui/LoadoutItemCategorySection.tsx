@@ -132,7 +132,7 @@ function ItemBucket({
   // TODO: should these be draggable? so you can drag them into other loadouts?
 
   return (
-    <div className={clsx(styles.itemBucket)}>
+    <div className={styles.itemBucket}>
       {[equipped, unequipped].map((items, index) =>
         items.length > 0 ? (
           <div

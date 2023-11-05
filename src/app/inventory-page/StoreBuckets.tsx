@@ -84,7 +84,7 @@ export function StoreBuckets({
       className={clsx('store-row', `bucket-${bucket.hash}`, { 'account-wide': bucket.accountWide })}
     >
       {labels && (
-        <div className={clsx(styles.bucketLabel)}>
+        <div className={styles.bucketLabel}>
           {bucket.name}
           {checkPostmaster && (
             <span>

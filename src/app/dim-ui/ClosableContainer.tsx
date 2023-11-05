@@ -26,7 +26,7 @@ export default function ClosableContainer({
     >
       {children}
       {Boolean(onClose) && (
-        <div className={clsx(styles.close)} onClick={onClose} role="button" tabIndex={0} />
+        <div className={styles.close} onClick={onClose} role="button" tabIndex={0} />
       )}
     </div>
   );

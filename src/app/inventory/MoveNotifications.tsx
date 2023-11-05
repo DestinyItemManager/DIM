@@ -133,7 +133,7 @@ function ApplyLoadoutProgressBody({
 
   return (
     <>
-      <div className={clsx(styles.loadoutDetails)}>
+      <div className={styles.loadoutDetails}>
         <AppIcon icon={progressIcon} spinning={progressIcon === refreshIcon} />
         {t(messageByPhase[phase])}
       </div>
