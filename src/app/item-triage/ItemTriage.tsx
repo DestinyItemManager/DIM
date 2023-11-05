@@ -372,7 +372,7 @@ function ArmorStatsTriageSection({ item }: { item: DimItem }) {
                 {(stat.displayProperties.icon && (
                   <BungieImage
                     key={stat.statHash}
-                    className={clsx(styles.factorIcon)}
+                    className={styles.factorIcon}
                     src={stat.displayProperties.icon}
                   />
                 )) ||

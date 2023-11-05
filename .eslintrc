@@ -162,6 +162,10 @@
         "message": "Please use `filterMap` instead"
       },
       {
+        "selector": "CallExpression[callee.name='clsx'][arguments.length=1][arguments.0.object.name='styles'],CallExpression[callee.name='clsx'][arguments.length=1][arguments.0.type='Literal']",
+        "message": "Unnecessary clsx"
+      },
+      {
         "selector": "TSEnumDeclaration:not([const=true])",
         "message": "Please only use `const enum`s."
       }

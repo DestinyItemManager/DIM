@@ -363,7 +363,7 @@ export default function Header() {
                 <SearchFilter onClear={hideSearch} ref={searchFilter} />
               </span>
             )}
-            <RefreshButton className={clsx(styles.menuItem)} />
+            <RefreshButton className={styles.menuItem} />
             {!isPhonePortrait && (
               <Link className={styles.menuItem} to="/settings" title={t('Settings.Settings')}>
                 <AppIcon icon={settingsIcon} />

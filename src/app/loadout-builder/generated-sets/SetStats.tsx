@@ -44,7 +44,7 @@ export default function SetStats({
   return (
     <div className={clsx(styles.container, className)}>
       <div className={styles.tierLightContainer}>
-        <span className={clsx(styles.tier)}>
+        <span className={styles.tier}>
           {t('LoadoutBuilder.TierNumber', {
             tier: enabledTier,
           })}
@@ -118,7 +118,7 @@ function Stat({
         [styles.nonActiveStat]: !isActive,
       })}
     >
-      <BungieImage className={clsx(styles.statIcon)} src={stat.displayProperties.icon} />
+      <BungieImage className={styles.statIcon} src={stat.displayProperties.icon} />
       <span
         className={clsx(styles.tier, {
           [styles.halfTierValue]: isHalfTier,

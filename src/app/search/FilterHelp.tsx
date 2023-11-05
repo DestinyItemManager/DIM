@@ -1,7 +1,6 @@
 import StaticPage from 'app/dim-ui/StaticPage';
 import { t } from 'app/i18next-t';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
-import clsx from 'clsx';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './FilterHelp.m.scss';
@@ -47,7 +46,7 @@ export default function FilterHelp() {
           {t('Filter.Negate', { notexample: '-is:tagged', notexample2: 'not is:tagged' })}{' '}
           <a href="/search-history">{t('SearchHistory.Link')}</a>
         </p>
-        <div className={clsx(styles.search)}>
+        <div className={styles.search}>
           <SearchInput
             query={search}
             onQueryChanged={setSearch}
@@ -91,7 +90,7 @@ function FilterExplanation({ filter }: { filter: FilterDefinition }) {
     <tr>
       <td>
         {suggestions.map((k, i) => (
-          <div key={i} className={clsx(styles.entry)}>
+          <div key={i} className={styles.entry}>
             <a href="." onClick={(e) => applySuggestion(e, k.keyword)}>
               {k.ops ? `${k.keyword}` : k.keyword}
             </a>
@@ -99,7 +98,7 @@ function FilterExplanation({ filter }: { filter: FilterDefinition }) {
               const x = `${k.keyword}${op}`;
               return (
                 <div key={j}>
-                  <span className={clsx(styles.separator)}>| </span>
+                  <span className={styles.separator}>| </span>
                   <a href="." onClick={(e) => applySuggestion(e, x)}>
                     {op}
                   </a>
