@@ -197,7 +197,7 @@ export default (env: Env) => {
           // we are opting out of defaultVendors, so rest of the node modules will be part of default cacheGroup
           defaultVendors: false,
           reactPackage: {
-            test: /[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom)[\\/]/,
+            test: /[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom|react-dnd)[\\/]/,
             name: 'vendor-react',
             chunks: 'all',
             priority: 10,
@@ -520,7 +520,7 @@ export default (env: Env) => {
         Object.entries(featureFlags).map(([key, value]) => [
           `$featureFlags.${key}`,
           JSON.stringify(value),
-        ])
+        ]),
       ),
     }),
 
@@ -537,7 +537,7 @@ export default (env: Env) => {
     plugins.push(
       new ForkTsCheckerWebpackPlugin({
         eslint: { files: './src/**/*.{ts,tsx,cjs,mjs,cts,mts,js,jsx}' },
-      })
+      }),
     );
 
     if (process.env.SNORETOAST_DISABLE) {
@@ -549,13 +549,13 @@ export default (env: Env) => {
           excludeWarnings: false,
           alwaysNotify: true,
           contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png'),
-        })
+        }),
       );
       plugins.push(
         new ForkTsCheckerNotifierWebpackPlugin({
           title: 'DIM TypeScript',
           excludeWarnings: false,
-        })
+        }),
       );
     }
 
@@ -617,7 +617,7 @@ export default (env: Env) => {
         ],
         swSrc: './src/service-worker.ts',
         swDest: 'service-worker.js',
-      })
+      }),
     );
 
     // Skip brotli compression for PR builds
@@ -634,7 +634,7 @@ export default (env: Env) => {
             [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
           },
           minRatio: Infinity,
-        })
+        }),
       );
     }
   }
