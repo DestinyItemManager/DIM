@@ -23,16 +23,12 @@ export type ChooseItemFunction = (
 
 export const LoadoutOptimizerExotic = memo(function LoadoutOptimizerExotic({
   classType,
-  className,
-  storeId,
-  includeVendorItems,
+  vendorItems,
   lockedExoticHash,
   lbDispatch,
 }: {
   classType: DestinyClass;
-  storeId: string;
-  className?: string;
-  includeVendorItems: boolean;
+  vendorItems: DimItem[];
   lockedExoticHash: number | undefined;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
@@ -58,9 +54,8 @@ export const LoadoutOptimizerExotic = memo(function LoadoutOptimizerExotic({
       {showExoticPicker && (
         <ExoticPicker
           lockedExoticHash={lockedExoticHash}
-          storeId={storeId}
           classType={classType}
-          includeVendorItems={includeVendorItems}
+          vendorItems={vendorItems}
           onSelected={(exotic) => lbDispatch({ type: 'lockExotic', lockedExoticHash: exotic })}
           onClose={() => setShowExoticPicker(false)}
         />

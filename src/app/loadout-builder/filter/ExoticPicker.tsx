@@ -135,16 +135,24 @@ function filterAndGroupExotics(
 }
 
 /** A drawer to select an exotic for your build. */
-export default function ExoticPicker({ lockedExoticHash, classType, onSelected, onClose }: Props) {
+export default function ExoticPicker({
+  lockedExoticHash,
+  classType,
+  vendorItems,
+  onSelected,
+  onClose,
+}: {
+  lockedExoticHash?: number;
   classType: DestinyClass;
+  vendorItems: DimItem[];
+  onSelected: (lockedExoticHash: number) => void;
+  onClose: () => void;
+}) {
   const defs = useD2Definitions()!;
   const language = useSelector(languageSelector);
   const [query, setQuery] = useState('');
 
   const allItems = useSelector(allItemsSelector);
-  const vendorItems = useSelector((state: RootState) =>
-    includeVendorItems ? characterVendorItemsSelector(state, storeId) : emptyArray<DimItem>(),
-  );
 
   const lockableExotics = useMemo(
     () => findLockableExotics(allItems, vendorItems, classType, defs),

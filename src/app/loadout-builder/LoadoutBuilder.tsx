@@ -358,9 +358,7 @@ export default memo(function LoadoutBuilder({
       <LoadoutOptimizerExotic
         lockedExoticHash={lockedExoticHash}
         classType={selectedStore.classType}
-        className={styles.loadoutEditSection}
-        storeId={selectedStore.id}
-        includeVendorItems={includeVendorItems}
+        vendorItems={vendorItems}
         lbDispatch={lbDispatch}
       />
       <LoadoutEditModsSection
