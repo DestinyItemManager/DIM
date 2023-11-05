@@ -2,17 +2,18 @@ import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
-import { storesSelector } from 'app/inventory/selectors';
+import { DimItem } from 'app/inventory/item-types';
+import { allItemsSelector, storesSelector } from 'app/inventory/selectors';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
+import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { getSubclassPlugs } from '../item-utils';
-import EmptySubclass from '../loadout-ui/EmptySubclass';
 import PlugDef from '../loadout-ui/PlugDef';
 import { createGetModRenderKey } from '../mod-utils';
 import styles from './LoadoutEditSubclass.m.scss';
@@ -22,18 +23,29 @@ import { useEquipDropTargets } from './useEquipDropTargets';
 export default function LoadoutEditSubclass({
   subclass,
   classType,
+  storeId,
   power,
   onRemove,
   onPick,
 }: {
   subclass?: ResolvedLoadoutItem;
   classType: DestinyClass;
+  storeId: string;
   power: number;
   onRemove: () => void;
-  onPick: () => void;
+  onPick: (item: DimItem) => void;
 }) {
   const defs = useD2Definitions()!;
   const stores = useSelector(storesSelector);
+  const allItems = useSelector(allItemsSelector);
+
+  const subclassItemFilter = (item: DimItem) =>
+    item.bucket.hash === BucketHashes.Subclass &&
+    item.classType === classType &&
+    item.owner === storeId &&
+    itemCanBeInLoadout(item);
+
+  const subclassItems = allItems.filter(subclassItemFilter);
 
   const getModRenderKey = createGetModRenderKey();
   const plugs = useMemo(() => getSubclassPlugs(defs, subclass), [subclass, defs]);
@@ -58,8 +70,23 @@ export default function LoadoutEditSubclass({
         [styles.canDrop]: canDropEquipped,
       })}
     >
-      <div className={styles.subclass}>
-        {subclass ? (
+      {!subclass && subclassItems.length > 0 && (
+        <>
+          {subclassItems.map((item) => (
+            <button
+              key={item.index}
+              className={styles.classButton}
+              type="button"
+              onClick={() => onPick(item)}
+              title={t('Loadouts.ChooseItem', { name: t('Bucket.Class') })}
+            >
+              <ConnectedInventoryItem item={item} hideSelectedSuper />
+            </button>
+          ))}
+        </>
+      )}
+      {subclass && (
+        <div className={styles.subclass}>
           <ClosableContainer
             onClose={onRemove}
             showCloseIconOnHover
@@ -82,31 +109,28 @@ export default function LoadoutEditSubclass({
               )}
             </ItemPopupTrigger>
           </ClosableContainer>
-        ) : (
-          <button className={styles.classButton} type="button" onClick={onPick}>
-            <EmptySubclass border />
-          </button>
-        )}
-        {power !== 0 && (
-          <div className={styles.power}>
-            <AppIcon icon={powerActionIcon} />
-            <span>{power}</span>
-          </div>
-        )}
-      </div>
-      {plugs.length ? (
-        <div className={styles.subclassMods}>
-          {plugs?.map((plug) => (
-            <PlugDef
-              key={getModRenderKey(plug.plug)}
-              plug={plug.plug}
-              forClassType={subclass?.item.classType}
-            />
-          ))}
+          {power !== 0 && (
+            <div className={styles.power}>
+              <AppIcon icon={powerActionIcon} />
+              <span>{power}</span>
+            </div>
+          )}
         </div>
-      ) : (
-        <div className={styles.modsPlaceholder}>{t('Loadouts.Abilities')}</div>
       )}
+      {subclass &&
+        (plugs.length ? (
+          <div className={styles.subclassMods}>
+            {plugs?.map((plug) => (
+              <PlugDef
+                key={getModRenderKey(plug.plug)}
+                plug={plug.plug}
+                forClassType={subclass?.item.classType}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className={styles.modsPlaceholder}>{t('Loadouts.Abilities')}</div>
+        ))}
     </div>
   );
 }
