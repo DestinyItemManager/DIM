@@ -84,6 +84,9 @@ $search-bar-height: 28px;
 $emblem-width: 237px;
 $emblem-height: 48px;
 
+// The z-index for our "temp container" where all temporary items get placed.
+$tempContainerZindex: 1000;
+
 // A mixin that allows targeting styles only when in phone-portrait display mode
 @mixin phone-portrait {
   // This seems like a good breakpoint for portrait based on https://material.io/devices/

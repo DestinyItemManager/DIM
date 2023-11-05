@@ -13,7 +13,7 @@ $header-height: 44px;
   position: fixed;
   // Above the tempContainer. This is pretty much entirely so the search
   // autocomplete menu displays above the search results sheet on mobile.
-  z-index: 1001;
+  z-index: $tempContainerZindex + 2;
   top: 0;
   left: 0;
   right: 0;
