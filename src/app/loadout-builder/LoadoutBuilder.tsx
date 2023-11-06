@@ -172,7 +172,10 @@ export default memo(function LoadoutBuilder({
     vendorItems,
     vendorItemsLoading,
     error: vendorError,
-  } = useLoVendorItems(selectedStoreId, includeVendorItems);
+  } = useLoVendorItems(
+    selectedStoreId,
+    $featureFlags.statConstraintEditor ? true : includeVendorItems,
+  );
   const armorItems = useArmorItems(classType, vendorItems);
 
   const { modMap: lockedModMap, unassignedMods } = useMemo(
@@ -321,28 +324,30 @@ export default memo(function LoadoutBuilder({
         />
       )}
       <EnergyOptions assumeArmorMasterwork={assumeArmorMasterwork} lbDispatch={lbDispatch} />
-      <div className={loMenuSection}>
-        <CheckButton
-          onChange={setIncludeVendorItems}
-          name="includeVendorItems"
-          checked={includeVendorItems}
-        >
-          {vendorError ? (
-            <PressTip tooltip={vendorError.message}>
-              <span>
-                <AppIcon icon={faExclamationTriangle} />
-              </span>
-            </PressTip>
-          ) : (
-            vendorItemsLoading && (
-              <span>
-                <AppIcon icon={refreshIcon} spinning={true} />
-              </span>
-            )
-          )}{' '}
-          {t('LoadoutBuilder.IncludeVendorItems')}
-        </CheckButton>
-      </div>
+      {!$featureFlags.statConstraintEditor && (
+        <div className={loMenuSection}>
+          <CheckButton
+            onChange={setIncludeVendorItems}
+            name="includeVendorItems"
+            checked={includeVendorItems}
+          >
+            {vendorError ? (
+              <PressTip tooltip={vendorError.message}>
+                <span>
+                  <AppIcon icon={faExclamationTriangle} />
+                </span>
+              </PressTip>
+            ) : (
+              vendorItemsLoading && (
+                <span>
+                  <AppIcon icon={refreshIcon} spinning={true} />
+                </span>
+              )
+            )}{' '}
+            {t('LoadoutBuilder.IncludeVendorItems')}
+          </CheckButton>
+        </div>
+      )}
       {isPhonePortrait && (
         <div className={styles.guide}>
           <ol start={2}>
@@ -353,6 +358,7 @@ export default memo(function LoadoutBuilder({
       <LoadoutOptimizerExotic
         lockedExoticHash={lockedExoticHash}
         classType={selectedStore.classType}
+        vendorItems={vendorItems}
         lbDispatch={lbDispatch}
       />
       <LoadoutEditModsSection

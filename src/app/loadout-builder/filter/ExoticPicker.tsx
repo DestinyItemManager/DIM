@@ -24,23 +24,17 @@ import { LOCKED_EXOTIC_ANY_EXOTIC, LOCKED_EXOTIC_NO_EXOTIC, LockableBucketHashes
 import styles from './ExoticPicker.m.scss';
 import ExoticTile, { FakeExoticTile, LockedExoticWithPlugs } from './ExoticTile';
 
-interface Props {
-  lockedExoticHash?: number;
-  classType: DestinyClass;
-  onSelected: (lockedExoticHash: number) => void;
-  onClose: () => void;
-}
-
 /**
  * Find all exotic armor in this character's inventory that could be locked in LO.
  */
 function findLockableExotics(
   allItems: DimItem[],
+  vendorItems: DimItem[],
   classType: DestinyClass,
   defs: D2ManifestDefinitions,
 ) {
   // Find all the armor 2 exotics.
-  const exotics = allItems.filter(
+  const exotics = [...allItems, ...vendorItems].filter(
     (item) => item.isExotic && item.classType === classType && isLoadoutBuilderItem(item),
   );
   const orderedExotics = _.sortBy(exotics, (item) =>
@@ -141,7 +135,19 @@ function filterAndGroupExotics(
 }
 
 /** A drawer to select an exotic for your build. */
-export default function ExoticPicker({ lockedExoticHash, classType, onSelected, onClose }: Props) {
+export default function ExoticPicker({
+  lockedExoticHash,
+  classType,
+  vendorItems,
+  onSelected,
+  onClose,
+}: {
+  lockedExoticHash?: number;
+  classType: DestinyClass;
+  vendorItems: DimItem[];
+  onSelected: (lockedExoticHash: number) => void;
+  onClose: () => void;
+}) {
   const defs = useD2Definitions()!;
   const language = useSelector(languageSelector);
   const [query, setQuery] = useState('');
@@ -149,8 +155,8 @@ export default function ExoticPicker({ lockedExoticHash, classType, onSelected, 
   const allItems = useSelector(allItemsSelector);
 
   const lockableExotics = useMemo(
-    () => findLockableExotics(allItems, classType, defs),
-    [allItems, classType, defs],
+    () => findLockableExotics(allItems, vendorItems, classType, defs),
+    [allItems, vendorItems, classType, defs],
   );
 
   const filteredOrderedAndGroupedExotics = useMemo(
