@@ -391,6 +391,7 @@
     "ClearDialog": "Chiudi",
     "ClearNewItems": "Pulisci nuovi oggetti",
     "Enter": "INVIO",
+    "ItemPopupTab": "Cambia scheda dettagli oggetto",
     "LockUnlock": "Blocca o sblocca un oggetto",
     "MarkItemAs": "Contrassegna oggetto come '{{tag}}'",
     "Menu": "Attiva/Disattiva menù",
@@ -556,6 +557,58 @@
     "Profile": "Caricamento del profilo di Destiny...",
     "Vendors": "Caricamento dei mercanti di Destiny..."
   },
+  "LoadoutAnalysis": {
+    "Analyzed": "Analizzate {{numLoadouts}} dotazioni",
+    "Analyzing": "Analizzate {{numAnalyzed}}/{{numLoadouts}} dotazioni",
+    "BetterStatsAvailable": {
+      "Description": "Scegliere armature diverse o modifiche per questa dotazione consentirà di raggiungere gradi di statistiche più elevati.",
+      "Name": "Migliori statistiche ottenibili"
+    },
+    "DoesNotRespectExotic": {
+      "Description": "Le impostazioni dell'Ottimizzatore di Dotazioni per questa dotazione specifica la scelta di un'esotica, ma la dotazione non corrisponde con quell'esotica.",
+      "Name": "Esotica errata"
+    },
+    "DoesNotSatisfyStatConstraints": {
+      "Description": "Le impostazioni dell'Ottimizzatore di Dotazioni per questa dotazione specificano dei gradi di statistiche, ma la dotazione non le raggiunge.",
+      "Name": "Gradi statistiche errati"
+    },
+    "EmptyFragmentSlots": {
+      "Description": "Ci sono alloggiamenti vuoti per frammenti in questa sottoclasse.",
+      "Name": "Alloggiamenti frammenti vuoti"
+    },
+    "InvalidMods": {
+      "Description": "Alcune modifiche in questa dotazione sono obsolete o non possono adattarsi in nessun pezzo della tua armatura.",
+      "Name": "Modifiche obsolete"
+    },
+    "LoadoutHasSearchQuery": {
+      "Description": "Questa dotazione è stata creata con una query di ricerca nell'Ottimizzatore di Dotazioni.",
+      "Name": "Provenienza da query ricerca"
+    },
+    "MissingItems": {
+      "Description": "Alcuni degli oggetti in questa dotazione non sono più nel tuo inventario.",
+      "Name": "Oggetti mancanti"
+    },
+    "ModsDontFit": {
+      "Description": "L'armatura in questa dotazione non può ospitare tutte le modifiche della dotazione, anche se l'armatura fosse stata potenziata.",
+      "Name": "Modifiche non assegnate"
+    },
+    "NeedsArmorUpgrades": {
+      "Description": "L'armatura in questa dotazione deve essere potenziata per poter alloggiare tutte le modifiche o raggiungere dei gradi di statistiche specifici.",
+      "Name": "Richiede potenziamento armatura"
+    },
+    "NotAFullArmorSet": {
+      "Description": "Questa dotazione non può essere analizzata ulteriormente perché non include un set completo di armature.",
+      "Name": "Set armature incompleto"
+    },
+    "TooManyFragments": {
+      "Description": "Ci sono più frammenti configurati nella sottoclasse che quelli consentiti dagli aspetti.",
+      "Name": "Troppi frammenti"
+    },
+    "UsesSeasonalMods": {
+      "Description": "Questa dotazione si basa su modifiche che sono disponibili solo in alcune stagioni. Quando la stagione finisce, alcune modifiche non saranno disponibili o supereranno la capacità energetica dell'armatura.",
+      "Name": "Utilizza modifiche stagionali"
+    }
+  },
   "LoadoutBuilder": {
     "AddHalfTierMods": "Aggiungi Modifiche +5",
     "All": "Tutto",
@@ -573,6 +626,7 @@
     "CompareLoadout": "Confronta dotazioni",
     "ConfirmOverwrite": "Sei sicuro di voler sostituire l'armatura nella dotazione \"{{name}}\" con questo nuovo set di armature?",
     "CreateLoadout": "Salva dotazione",
+    "DecreaseStatPriority": "Diminuisci la priorità della statistica",
     "DisabledByAutoStatMods": "Le Modifiche alle statistiche vengono scelte automaticamente dall'Ottimizzatore di Dotazioni.",
     "DisabledDueToMaintenance": "L'Ottimizzatore di Dotazioni è al momento disabilitato a causa della manutenzione delle API di Bungie.",
     "EquipItems": "Equipaggia",
@@ -580,7 +634,9 @@
     "ExistingLoadout": "Dotazione Esistente",
     "ExoticSpecialCategory": "Speciale",
     "Filter": "Filtri",
+    "IgnoreStat": "Se non selezionata, L'Ottimizzatore di Dotazioni farà finta che questa statistica non esista quando genererà i set",
     "IncludeVendorItems": "Includi oggetti dei mercanti",
+    "IncreaseStatPriority": "Aumenta la priorità della statistica",
     "Legendary": "Leggendaria",
     "LockEquipped": "Blocca equipaggiato",
     "LockItem": "Blocca oggetto",
@@ -622,6 +678,7 @@
     "StatTierIgnoreOption": "Ignora",
     "StatTierIncludeOption": "Includi",
     "TierNumber": "T{{tier}}",
+    "TierSelect": "Seleziona il grado minimo della statistica",
     "UnableToAddAllMods": "Impossibile aggiungere tutte le Modifiche.",
     "UnableToAddAllModsBody": "Non c'erano abbastanza spazi disponibili per installare {{mods}}.",
     "UnlockItem": "Sblocca oggetto"
@@ -660,11 +717,9 @@
     "CurrentlyEquipped": "Attualmente Equipaggiato",
     "Deequip": "Togliendo oggetti dagli altri personaggi",
     "Delete": "Elimina",
-    "DeprecatedMods": "Modifiche Obsolete",
     "DimLoadouts": "Dotazioni DIM",
     "Edit": "Modifica dotazione",
     "EditBrief": "Modifica",
-    "EmptyFragmentSlots": "Alloggiamenti per frammenti vuoti",
     "EquipInGameLoadout": "Equipaggiamento dotazione in gioco",
     "EquipItems": "Equipaggiando oggetti",
     "EquippableDifferent1": "Sono stati utilizzati più esotici per calcolare il tuo Potere massimo, quindi il numero mostrato potrebbe non essere raggiungibile equipaggiando gli oggetti in gioco.",
@@ -708,7 +763,6 @@
     "MaximizeLight": "Potere Max",
     "MaximizePower": "Potere Max",
     "MaximizeStat": "Massimizza Statistica",
-    "MissingItems": "Oggetti Mancanti",
     "MissingItemsWarning": "Alcuni degli oggetti in questa dotazione non sono più nel tuo inventario.",
     "ModErrorSummary": "1 errore Modifica:",
     "ModErrorSummary_plural": "{{count}} errori Modifiche:",
@@ -793,7 +847,6 @@
     "SubclassOptionsSearch": "Cerca {{subclass}} opzioni",
     "Succeeded": "Dotazione applicata correttamente",
     "SyncFromEquipped": "Sincronizza da equipaggiati",
-    "TooManyFragments": "Troppi frammenti",
     "TooManyRequested": "Hai un totale di {{total}} {{itemname}} ma la tua dotazione ne richiede {{requested}}. Abbiamo trasferito tutti quelli che avevi.",
     "UnassignedModError": "La Modifica non è adatta alla tua armatura attuale",
     "Undo": "Annulla",
@@ -874,6 +927,7 @@
       "QuestProgress": "Fase {{questStepNum}} di {{questStepsTotal}}",
       "Type": "{{typeName}} {{classType}}"
     },
+    "TabList": "Schede dettagli oggetto",
     "ToggleSidecar": "Espandi o comprimi le azioni per l'oggetto",
     "TrackUntrack": {
       "Track": "Segui {{itemType}}",

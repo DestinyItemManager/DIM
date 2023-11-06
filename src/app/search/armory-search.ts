@@ -69,8 +69,8 @@ export function buildArmoryIndex(defs: D2ManifestDefinitions | undefined, langua
   results.sort(
     chainComparator(
       compareBy((entry) => -entry.season),
-      compareBy((entry) => entry.name)
-    )
+      compareBy((entry) => entry.name),
+    ),
   );
   return results;
 }
@@ -78,7 +78,7 @@ export function buildArmoryIndex(defs: D2ManifestDefinitions | undefined, langua
 export function getArmorySuggestions(
   armoryIndex: ArmoryEntry[] | undefined,
   query: string,
-  language: DimLanguage
+  language: DimLanguage,
 ): ArmorySearchItem[] {
   const plainQuery = plainString(query, language);
   const armoryEntries = query.length

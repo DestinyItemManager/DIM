@@ -13,7 +13,7 @@ import { loadAllVendors } from './actions';
 export function useLoadVendors(
   account: DestinyAccount,
   storeId: string | undefined,
-  active = true
+  active = true,
 ) {
   const dispatch = useThunkDispatch();
   useEffect(() => {
@@ -30,7 +30,7 @@ export function useLoadVendors(
           loadingTracker.addPromise(dispatch(loadAllVendors(account, storeId, true)));
         }
       },
-      [account, active, dispatch, storeId]
-    )
+      [account, active, dispatch, storeId],
+    ),
   );
 }

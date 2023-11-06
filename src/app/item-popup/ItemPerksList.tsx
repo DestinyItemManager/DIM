@@ -58,7 +58,7 @@ export default function ItemPerksList({
               selectedPerk={selectedPerk}
               onPerkSelected={onPerkSelected}
             />
-          )
+          ),
       )}
     </div>
   );

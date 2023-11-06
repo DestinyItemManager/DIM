@@ -30,7 +30,7 @@ import { createSelector } from 'reselect';
 // TODO: Why are these in the same selector? Why isn't it memoized?
 export function useEquippedLoadoutArmorAndSubclass(
   loadout: Loadout,
-  storeId: string | undefined
+  storeId: string | undefined,
 ): { armor: DimItem[]; subclass: ResolvedLoadoutItem | undefined } {
   const loadoutItemSelector = useMemo(
     () =>
@@ -43,7 +43,7 @@ export function useEquippedLoadoutArmorAndSubclass(
           stores,
           currentStore,
           allItems,
-          itemCreationContext
+          itemCreationContext,
         ): { armor: DimItem[]; subclass: ResolvedLoadoutItem | undefined } => {
           const storeToHydrateFrom = storeId
             ? getStore(stores, storeId)
@@ -60,12 +60,12 @@ export function useEquippedLoadoutArmorAndSubclass(
             loadout.items.filter((i) => i.equip),
             storeId,
             allItems,
-            modsByBucket
+            modsByBucket,
           );
 
           const loadoutItemsByBucket = _.keyBy(
             loadoutItems.filter((i) => i.item.classType === classType),
-            (i) => i.item.bucket.hash
+            (i) => i.item.bucket.hash,
           );
 
           const subclass = loadoutItemsByBucket[BucketHashes.Subclass];
@@ -73,13 +73,13 @@ export function useEquippedLoadoutArmorAndSubclass(
             LockableBucketHashes,
             (bucketHash) =>
               loadoutItemsByBucket[bucketHash]?.item ??
-              currentlyEquippedArmor.find((item) => item.bucket.hash === bucketHash)
+              currentlyEquippedArmor.find((item) => item.bucket.hash === bucketHash),
           );
 
           return { armor, subclass };
-        }
+        },
       ),
-    [loadout, storeId]
+    [loadout, storeId],
   );
 
   return useSelector(loadoutItemSelector, shallowEqual);

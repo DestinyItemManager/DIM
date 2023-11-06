@@ -52,8 +52,8 @@ const Item = memo(function Item({ item, tag }: { item: DimItem; tag: TagValue | 
 const filteredItemsSelector = createSelector(allItemsSelector, (allItems) =>
   _.sortBy(
     allItems.filter((i) => i.equipment && i.power > 0 && i.taggable),
-    getItemRecencyKey
-  ).reverse()
+    getItemRecencyKey,
+  ).reverse(),
 );
 
 const estimatedSize = 120;

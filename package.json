@@ -1,6 +1,6 @@
 {
   "name": "dim",
-  "version": "7.92.0",
+  "version": "7.93.0",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "private": true,
@@ -23,7 +23,7 @@
     "fix:eslint": "pnpm lint:eslint --fix",
     "fix:json": "jsonsort src/locale",
     "fix:stylelint": "pnpm lint:stylelint --fix",
-    "fix:prettier": "pnpm lint:prettier --write",
+    "fix:prettier": "prettier \"src/**/*.{js,ts,tsx,cjs,mjs,cts,mts,scss}\" --write",
     "bundle": "webpack --config ./config/webpack.ts",
     "build:release": "pnpm -s bundle --env=release --node-env=production",
     "build:beta": "pnpm -s bundle --env=beta --node-env=production",
@@ -252,7 +252,7 @@
   },
   "lint-staged": {
     "*.{css,scss}": "stylelint --fix",
-    "*.{js,jsx,ts,tsx,cjs,mjs,cts,mts,css,scss,md,html}": "prettier --write"
+    "*.{js,jsx,ts,tsx,cjs,mjs,cts,mts,css,scss,md}": "prettier --write"
   },
   "packageManager": "pnpm@8.8.0+sha256.d713a5750e41c3660d1e090608c7f607ad00d1dd5ba9b6552b5f390bf37924e9",
   "pnpm": {

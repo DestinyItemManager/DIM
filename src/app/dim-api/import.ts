@@ -64,7 +64,7 @@ export function importDataBackup(data: ExportResponse, silent = false): ThunkRes
           errorLog(
             'importLegacyData',
             'Error importing legacy data into DIM - no data found in import file. (no settings upgrade/API upload attempted. DIM Sync is turned off)',
-            data
+            data,
           );
           showImportFailedNotification(t('Storage.ImportNotification.NoData'));
         }
@@ -135,14 +135,14 @@ export function importDataBackup(data: ExportResponse, silent = false): ThunkRes
           itemHashTags: _.keyBy(itemHashTags, (t) => t.hash),
           searches,
           updateQueue: [],
-        })
+        }),
       );
       showImportSuccessNotification(
         {
           loadouts: loadouts.length,
           tags: tags.length,
         },
-        false
+        false,
       );
     }
   };
@@ -158,14 +158,14 @@ function waitForProfileLoad() {
           unsubscribe();
           resolve(undefined);
         }
-      }
+      },
     );
   });
 }
 
 function showImportSuccessNotification(
   result: { loadouts: number; tags: number },
-  dimSync: boolean
+  dimSync: boolean,
 ) {
   showNotification({
     type: 'success',

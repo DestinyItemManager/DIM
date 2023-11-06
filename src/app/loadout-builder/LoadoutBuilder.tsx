@@ -147,9 +147,9 @@ export default memo(function LoadoutBuilder({
         loadout.items,
         selectedStore,
         allItems,
-        modsByBucket
+        modsByBucket,
       ),
-    [itemCreationContext, loadout.items, selectedStore, allItems, modsByBucket]
+    [itemCreationContext, loadout.items, selectedStore, allItems, modsByBucket],
   );
 
   // The list of mod items that need to be assigned to armor items
@@ -162,10 +162,10 @@ export default memo(function LoadoutBuilder({
             !(
               autoStatMods &&
               mod.resolvedMod.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsV2General
-            )
+            ),
         )
         .map((mod) => mod.resolvedMod),
-    [resolvedMods, autoStatMods]
+    [resolvedMods, autoStatMods],
   );
 
   const {
@@ -177,7 +177,7 @@ export default memo(function LoadoutBuilder({
 
   const { modMap: lockedModMap, unassignedMods } = useMemo(
     () => categorizeArmorMods(modsToAssign, armorItems),
-    [armorItems, modsToAssign]
+    [armorItems, modsToAssign],
   );
 
   const hasPreloadedLoadout = Boolean(preloadedLoadout);
@@ -187,7 +187,7 @@ export default memo(function LoadoutBuilder({
     hasPreloadedLoadout,
     statConstraints,
     savedStatConstraintsByClass,
-    classType
+    classType,
   );
 
   const onCharacterChanged = useCallback(
@@ -197,7 +197,7 @@ export default memo(function LoadoutBuilder({
         store: getStore(stores, storeId)!,
         savedStatConstraintsByClass,
       }),
-    [lbDispatch, savedStatConstraintsByClass, stores]
+    [lbDispatch, savedStatConstraintsByClass, stores],
   );
 
   // Write the search query into the loadout
@@ -242,7 +242,7 @@ export default memo(function LoadoutBuilder({
 
   const modStatChanges = useMemo(
     () => getTotalModStatChanges(defs, modsToAssign, subclass, classType, true),
-    [classType, defs, modsToAssign, subclass]
+    [classType, defs, modsToAssign, subclass],
   );
 
   // Run the actual loadout generation process in a web worker
@@ -261,7 +261,7 @@ export default memo(function LoadoutBuilder({
 
   const sortedSets = useMemo(
     () => resultSets && sortGeneratedSets(resultSets, statConstraints),
-    [statConstraints, resultSets]
+    [statConstraints, resultSets],
   );
 
   useEffect(() => hideItemPicker(), [hideItemPicker, selectedStore.classType]);
@@ -283,7 +283,7 @@ export default memo(function LoadoutBuilder({
           updateFunc(item);
         }
       },
-    [selectedStore, showItemPicker]
+    [selectedStore, showItemPicker],
   );
 
   const handleAutoStatModsChanged = (autoStatMods: boolean) =>
@@ -542,7 +542,7 @@ function useRelevantLoadouts(selectedStore: DimStore) {
     const equippedLoadout = newLoadoutFromEquipped(
       t('Loadouts.CurrentlyEquipped'),
       selectedStore,
-      artifactUnlocks
+      artifactUnlocks,
     );
     return [...classLoadouts, equippedLoadout];
   }, [allSavedLoadouts, selectedStore, artifactUnlocks]);
@@ -557,12 +557,12 @@ function useRelevantLoadouts(selectedStore: DimStore) {
 function useResolvedMods(
   defs: D2ManifestDefinitions,
   modHashes: number[] | undefined,
-  selectedStoreId: string | undefined
+  selectedStoreId: string | undefined,
 ) {
   const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(selectedStoreId));
   return useMemo(
     () => resolveLoadoutModHashes(defs, modHashes, unlockedPlugs),
-    [defs, modHashes, unlockedPlugs]
+    [defs, modHashes, unlockedPlugs],
   );
 }
 
@@ -576,9 +576,9 @@ function useArmorItems(classType: DestinyClass, vendorItems: DimItem[]): DimItem
       allItems
         .concat(vendorItems)
         .filter(
-          (item) => isClassCompatible(item.classType, classType) && isLoadoutBuilderItem(item)
+          (item) => isClassCompatible(item.classType, classType) && isLoadoutBuilderItem(item),
         ),
-    [allItems, vendorItems, classType]
+    [allItems, vendorItems, classType],
   );
 }
 
@@ -587,7 +587,7 @@ function useArmorItems(classType: DestinyClass, vendorItems: DimItem[]): DimItem
  */
 function useSaveLoadoutParameters(
   hasPreloadedLoadout: boolean,
-  loadoutParameters: LoadoutParameters
+  loadoutParameters: LoadoutParameters,
 ) {
   const setSetting = useSetSetting();
   const firstRun = useRef(true);
@@ -627,7 +627,7 @@ function useSaveStatConstraints(
   savedStatConstraintsByClass: {
     [key: number]: StatConstraint[];
   },
-  classType: DestinyClass
+  classType: DestinyClass,
 ) {
   const setSetting = useSetSetting();
   const firstRun = useRef(true);

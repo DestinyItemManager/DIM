@@ -32,7 +32,7 @@ export default function Pursuit({
   const defs = useD2Definitions()!;
   const isNew = useSelector(isNewSelector(item));
   const searchHidden = useSelector(
-    (state: RootState) => alreadySearchHidden || !searchFilterSelector(state)(item)
+    (state: RootState) => alreadySearchHidden || !searchFilterSelector(state)(item),
   );
   const expired = showPursuitAsExpired(item);
 

@@ -17,7 +17,7 @@ import LoadoutBuilder from './LoadoutBuilder';
 
 const disabledDueToMaintenanceSelector = createSelector(
   allItemsSelector,
-  (items) => items.length > 0 && items.every((item) => item.missingSockets || !item.sockets)
+  (items) => items.length > 0 && items.every((item) => item.missingSockets || !item.sockets),
 );
 
 /**

@@ -81,7 +81,7 @@ export default function LoadoutDrawerContents({
 
   const [typesWithItems, typesWithoutItems] = _.partition(
     availableTypes,
-    (bucket) => bucket.hash && itemsByBucket[bucket.hash]?.length
+    (bucket) => bucket.hash && itemsByBucket[bucket.hash]?.length,
   );
 
   const showFillFromEquipped = typesWithoutItems.some((b) => fromEquippedTypes.includes(b.hash));
@@ -140,7 +140,7 @@ async function pickLoadoutItem(
   loadout: Loadout,
   bucket: InventoryBucket,
   add: (item: DimItem) => void,
-  showItemPicker: ShowItemPickerFn
+  showItemPicker: ShowItemPickerFn,
 ) {
   const loadoutHasItem = (item: DimItem) =>
     findSameLoadoutItemIndex(defs, loadout.items, item) !== -1;

@@ -75,7 +75,7 @@ export default function Select<T>({
   const buttonRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const [dropdownWidth, setDropdownWidth] = useState<number | undefined>(() =>
-    typeof maxDropdownWidth === 'number' ? maxDropdownWidth : undefined
+    typeof maxDropdownWidth === 'number' ? maxDropdownWidth : undefined,
   );
   const [dropdownHeight, setDropdownHeight] = useState<number | undefined>();
 
@@ -156,7 +156,7 @@ export default function Select<T>({
                   >
                     {item.content}
                   </div>
-                )
+                ),
             )}
         </div>
       </div>

@@ -86,7 +86,7 @@ export default memo(function GeneratedSet({
   // Automatically added stat/artifice mods
   const autoMods = useMemo(
     () => set.statMods.map((d) => defs.InventoryItem.get(d) as PluggableInventoryItemDefinition),
-    [defs.InventoryItem, set.statMods]
+    [defs.InventoryItem, set.statMods],
   );
 
   // Assign the chosen mods to items so we can display them as if they were slotted
@@ -107,7 +107,7 @@ export default memo(function GeneratedSet({
         'loadout optimizer',
         'internal error: set rendering was unable to fit some mods that the worker thought were possible',
         unassignedMods,
-        invalidMods
+        invalidMods,
       );
     }
 
@@ -119,7 +119,7 @@ export default memo(function GeneratedSet({
   // the memoized function since this component itself is memoized and the dependency array would
   // include most props).
   const getStatsBreakdownOnce = _.once(() =>
-    getStatsBreakdown(defs, selectedStore.classType, set, autoMods, modStatChanges)
+    getStatsBreakdown(defs, selectedStore.classType, set, autoMods, modStatChanges),
   );
 
   const boostedStats = useMemo(
@@ -127,10 +127,10 @@ export default memo(function GeneratedSet({
       new Set(
         armorStats.filter(
           (hash) =>
-            modStatChanges[hash].breakdown?.some((change) => change.source === 'runtimeEffect')
-        )
+            modStatChanges[hash].breakdown?.some((change) => change.source === 'runtimeEffect'),
+        ),
       ),
-    [modStatChanges]
+    [modStatChanges],
   );
 
   // Distribute our automatically picked mods across the items so that item components
@@ -210,7 +210,7 @@ function getStatsBreakdown(
   classType: DestinyClass,
   set: ArmorSet,
   autoMods: PluggableInventoryItemDefinition[],
-  modStatChanges: ModStatChanges
+  modStatChanges: ModStatChanges,
 ) {
   const totals: ModStatChanges = {
     [StatHashes.Mobility]: { value: 0, breakdown: [] },
@@ -226,7 +226,7 @@ function getStatsBreakdown(
     autoMods,
     /* subclass */ undefined,
     classType,
-    /* includeRuntimeStatBenefits */ true
+    /* includeRuntimeStatBenefits */ true,
   );
 
   // We have a bit of a problem where armor mods can come from both
@@ -235,14 +235,14 @@ function getStatsBreakdown(
   // hashes and adding counts/values
   const mergeContributions = (
     contributions: ModStatChanges[ArmorStatHashes],
-    hash: ArmorStatHashes
+    hash: ArmorStatHashes,
   ) => {
     totals[hash].value += contributions.value;
     if (contributions.breakdown) {
       const existingBreakdown = totals[hash].breakdown!;
       for (const part of contributions.breakdown) {
         const existingIndex = existingBreakdown.findIndex(
-          (change) => change.source === part.source && change.hash === part.hash
+          (change) => change.source === part.source && change.hash === part.hash,
         );
         if (existingIndex === -1) {
           existingBreakdown.push(part);
@@ -282,7 +282,7 @@ function getStatsBreakdown(
         'loadout optimizer',
         'internal error: set rendering came up with different build stats from what the worker said',
         totals,
-        set.stats
+        set.stats,
       );
     }
   }

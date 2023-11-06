@@ -57,14 +57,14 @@ interface MeasureMemoryResult {
 interface ObjectConstructor {
   groupBy<Item>(
     items: Iterable<Item>,
-    keySelector: (item: Item, index: number) => string | number
+    keySelector: (item: Item, index: number) => string | number,
   ): Record<string, Item[]>;
 }
 
 interface MapConstructor {
   groupBy<Item, Key>(
     items: Iterable<Item>,
-    keySelector: (item: Item, index: number) => Key
+    keySelector: (item: Item, index: number) => Key,
   ): Map<Key, Item[]>;
 }
 

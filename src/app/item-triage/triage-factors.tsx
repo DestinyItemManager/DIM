@@ -67,7 +67,7 @@ const itemFactors: Record<string, Factor> = {
     runIf: (item) => item.element && item.bucket.inWeapons,
     render: (item) => (
       <PressTip minimal elementType="span" tooltip={item.element?.displayProperties.name}>
-        <ElementIcon className={clsx(styles.factorIcon)} element={item.element} />
+        <ElementIcon className={styles.factorIcon} element={item.element} />
       </PressTip>
     ),
     filter: damageFilter.fromItem,
@@ -97,7 +97,7 @@ const itemFactors: Record<string, Factor> = {
               itemDef={intrinsicArmorPerk.plugDef}
               borderless={true}
             />
-          </PressTip>
+          </PressTip>,
         );
       }
 

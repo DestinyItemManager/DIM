@@ -65,7 +65,7 @@ const loadClarityDescriptions = dedupePromise(async (loadFromIndexedDB: boolean)
 const fetchRemoteStats = async (version: ClarityStatsVersion) => {
   const descriptions = await fetchClarity<ClarityCharacterStats>(
     'characterStats',
-    version.schemaVersion
+    version.schemaVersion,
   );
   set('clarity-characterStats', descriptions);
   localStorage.setItem('clarityStatsVersion2', JSON.stringify(version));

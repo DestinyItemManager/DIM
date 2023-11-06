@@ -55,7 +55,7 @@ export default function LoadoutItemCategorySection({
       ? buckets.byCategory[category]
       : _.sortBy(
           Array.from(itemsByBucket.keys(), (bucketHash) => buckets.byHash[bucketHash]),
-          (bucket) => buckets.byCategory[category].findIndex((b) => b.hash === bucket.hash)
+          (bucket) => buckets.byCategory[category].findIndex((b) => b.hash === bucket.hash),
         );
   const equippedItems =
     items?.filter((li) => li.loadoutItem.equip && !li.missing).map((li) => li.item) ?? [];
@@ -132,7 +132,7 @@ function ItemBucket({
   // TODO: should these be draggable? so you can drag them into other loadouts?
 
   return (
-    <div className={clsx(styles.itemBucket)}>
+    <div className={styles.itemBucket}>
       {[equipped, unequipped].map((items, index) =>
         items.length > 0 ? (
           <div
@@ -172,7 +172,7 @@ function ItemBucket({
               {showFashion && <FashionMods modsForBucket={modsForBucket} storeId={storeId} />}
             </div>
           )
-        )
+        ),
       )}
     </div>
   );

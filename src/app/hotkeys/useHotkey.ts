@@ -18,7 +18,7 @@ export function useHotkey(
   combo: string,
   description: string,
   callback: (event: KeyboardEvent) => void,
-  disabled?: boolean
+  disabled?: boolean,
 ) {
   const id = useId();
   useEffect(() => {

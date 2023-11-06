@@ -16,7 +16,7 @@ export function PullFromPostmaster({ store }: { store: DimStore }) {
   const dispatch = useThunkDispatch();
   const hidePullFromPostmaster = useSelector(settingSelector('hidePullFromPostmaster'));
   const numPullablePostmasterItems = useSelector(
-    (state: RootState) => pullablePostmasterItems(store, storesSelector(state)).length
+    (state: RootState) => pullablePostmasterItems(store, storesSelector(state)).length,
   );
   if (hidePullFromPostmaster || numPullablePostmasterItems === 0) {
     return null;

@@ -391,6 +391,7 @@
     "ClearDialog": "Descartar diálogo",
     "ClearNewItems": "Despejar objetos nuevos",
     "Enter": "ENTER",
+    "ItemPopupTab": "Cambiar a pestaña de detalles de objeto",
     "LockUnlock": "Bloquear o desbloquear un objeto",
     "MarkItemAs": "Marcar objeto como '{{tag}}'",
     "Menu": "Alternar menú",
@@ -556,6 +557,58 @@
     "Profile": "Cargando perfil de Destiny...",
     "Vendors": "Cargando comerciantes de Destiny..."
   },
+  "LoadoutAnalysis": {
+    "Analyzed": "Analizadas {{numLoadouts}} Equipaciones",
+    "Analyzing": "Analizando {{numAnalyzed}}/{{numLoadouts}} Equipaciones",
+    "BetterStatsAvailable": {
+      "Description": "Elegir armaduras diferentes o modificadores para esta equipación permitirá alcanzar niveles de estadísticas más altos.",
+      "Name": "Mejores Estadísticas Disponibles"
+    },
+    "DoesNotRespectExotic": {
+      "Description": "Esta configuración de equipación del Optimizador de Equipaciones especifica una elección de exótico, pero la equipación no coincide con ese exótico.",
+      "Name": "Exótico Incorrecto"
+    },
+    "DoesNotSatisfyStatConstraints": {
+      "Description": "La configuración para esta Equipación del Optimizador de Equipaciones especifica niveles de estadísticas, pero la Equipación no los alcanza.",
+      "Name": "Nivel de Estadísticas Incorrecto"
+    },
+    "EmptyFragmentSlots": {
+      "Description": "Hay ranuras de fragmentos vacías en esta subclase.",
+      "Name": "Ranuras de Fragmentos Vacías"
+    },
+    "InvalidMods": {
+      "Description": "Algunos modificadores de esta equipación están obsoletos o no encajan de otra manera en cualquiera de tus piezas de armadura.",
+      "Name": "Modificadores Obsoletos"
+    },
+    "LoadoutHasSearchQuery": {
+      "Description": "Esta equipación fue creada con una consulta de búsqueda en el Optimizador de Equipaciones.",
+      "Name": "Tiene una Consulta de Búsqueda"
+    },
+    "MissingItems": {
+      "Description": "Algunos de los objetos en esta equipación ya no están en tu inventario.",
+      "Name": "Faltan Objetos"
+    },
+    "ModsDontFit": {
+      "Description": "La armadura en esta equipación no se puede acomodar a todos los modificadores de la equipación, incluso si la armadura fue mejorada.",
+      "Name": "Modificadores Sin Asignar"
+    },
+    "NeedsArmorUpgrades": {
+      "Description": "La armadura en esta equipación necesita ser actualizada para acomodar todos los modificadores o alcanzar lo niveles de estadísticas especificadas.",
+      "Name": "Necesita Mejoras de Armadura"
+    },
+    "NotAFullArmorSet": {
+      "Description": "Esta equipación no pudo ser analizada a fondo porque no incluía un conjunto completo de armadura.",
+      "Name": "No Es Un Set De Armadura Completo"
+    },
+    "TooManyFragments": {
+      "Description": "Hay más fragmentos configurados en la subclase que los otorgados por los aspectos.",
+      "Name": "Demasiados Fragmentos"
+    },
+    "UsesSeasonalMods": {
+      "Description": "Esta equipación se basa en modificadores que sólo están disponibles en algunas temporadas. Cuando la temporada termina, algunos modificadores no estarán disponibles o excederán la capacidad de energía de la armadura.",
+      "Name": "Usa Modificadores de Temporada"
+    }
+  },
   "LoadoutBuilder": {
     "AddHalfTierMods": "Añadir modificadores +5",
     "All": "Todas",
@@ -573,6 +626,7 @@
     "CompareLoadout": "Comparar Equipación",
     "ConfirmOverwrite": "¿Estás seguro de que quieres reemplazar la armadura en la equipación \"{{name}}\" con este nuevo set de armadura?",
     "CreateLoadout": "Guardar Equipación",
+    "DecreaseStatPriority": "Reducir prioridad a las estadísticas",
     "DisabledByAutoStatMods": "Los modificadores de estadísticas están siendo elegidos automáticamente por el Optimizador de Equipaciones.",
     "DisabledDueToMaintenance": "El Optimizador de Equipaciones está actualmente desactivado debido al mantenimiento con la API de Bungie.",
     "EquipItems": "Equipar",
@@ -580,7 +634,9 @@
     "ExistingLoadout": "Equipación Existente",
     "ExoticSpecialCategory": "Especial",
     "Filter": "Filtros",
+    "IgnoreStat": "Si está desmarcado, el Optimizador de Equipaciones fingirá que esta estadística no exista cuando se fabriquen equipaciones",
     "IncludeVendorItems": "Incluir objetos de Comerciantes",
+    "IncreaseStatPriority": "Incrementar prioridad a las estadísticas",
     "Legendary": "Legendarias",
     "LockEquipped": "Equipar anclados",
     "LockItem": "Anclar objeto",
@@ -622,6 +678,7 @@
     "StatTierIgnoreOption": "Ignorar",
     "StatTierIncludeOption": "Incluir",
     "TierNumber": "N{{tier}}",
+    "TierSelect": "Seleccionar nivel mínimo de las estadísticas",
     "UnableToAddAllMods": "No se pudieron añadir todos los modificadores.",
     "UnableToAddAllModsBody": "No habían suficientes ranuras disponibles para modificadores que encajaran {{mods}}.",
     "UnlockItem": "Desanclar objeto"
@@ -660,11 +717,9 @@
     "CurrentlyEquipped": "Actualmente Equipado",
     "Deequip": "Desequipando objetos de otros personajes",
     "Delete": "Borrar",
-    "DeprecatedMods": "Modificadores Obsoletos",
     "DimLoadouts": "Equipaciones DIM",
     "Edit": "Editar equipación",
     "EditBrief": "Editar",
-    "EmptyFragmentSlots": "Ranuras de Fragmentos Vacías",
     "EquipInGameLoadout": "Equipando tu equipación en el juego",
     "EquipItems": "Equipando objetos",
     "EquippableDifferent1": "Múltiples objetos Exóticos fueron usados para calcular tu Poder Máximo, por lo que el número mostrado podría no alcanzarse cuando equipes tus objetos dentro del juego.",
@@ -708,7 +763,6 @@
     "MaximizeLight": "Luz Máxima",
     "MaximizePower": "Poder Máximo",
     "MaximizeStat": "Maximizar Estadística",
-    "MissingItems": "Faltan Objetos",
     "MissingItemsWarning": "Algunos de los objetos en esta equipación ya no están en tu inventario.",
     "ModErrorSummary": "1 error de modificador:",
     "ModErrorSummary_plural": "{{count}} errores de modificadores:",
@@ -793,7 +847,6 @@
     "SubclassOptionsSearch": "Buscar opciones de {{subclass}}",
     "Succeeded": "Equipación exitosa",
     "SyncFromEquipped": "Sincronizar desde equipados",
-    "TooManyFragments": "Demasiados Fragmentos",
     "TooManyRequested": "Tienes {{total}}{{itemname}} pero tu equipación pregunta por {{requested}}. Transferimos todo lo que tenías.",
     "UnassignedModError": "El modificador no encajó en tu armadura actual",
     "Undo": "Deshacer",
@@ -874,6 +927,7 @@
       "QuestProgress": "Paso {{questStepNum}} de {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
+    "TabList": "Pestañas de detalles de objetos",
     "ToggleSidecar": "Expandir o colapsar acciones de objeto",
     "TrackUntrack": {
       "Track": "Seguir {{itemType}}",

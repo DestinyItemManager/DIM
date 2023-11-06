@@ -20,7 +20,7 @@ export const setShowUnacquiredOnly = createAction('vendors/SHOW_UNCOLLECTED_ONLY
 export function loadAllVendors(
   account: DestinyAccount,
   characterId: string,
-  force = false
+  force = false,
 ): ThunkResult {
   return async (dispatch, getState) => {
     // Only load at most once per 30 seconds

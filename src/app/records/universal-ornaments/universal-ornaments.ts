@@ -88,7 +88,7 @@ export const univeralOrnamentsVisibilitySelector = createSelector(
       }
     }
     return unlockedPlugs;
-  }
+  },
 );
 
 /**
@@ -135,7 +135,7 @@ export const buildSets = memoizeOne((defs: D2ManifestDefinitions): OrnamentsData
   };
 
   const findCollectibleArmorParentNode = (
-    collectible: DestinyCollectibleDefinition | undefined
+    collectible: DestinyCollectibleDefinition | undefined,
   ) => {
     if (collectible) {
       return collectible.parentNodeHashes
@@ -226,7 +226,7 @@ export const buildSets = memoizeOne((defs: D2ManifestDefinitions): OrnamentsData
  */
 export function instantiateOrnamentSets(
   data: OrnamentsData,
-  itemCreationContext: ItemCreationContext
+  itemCreationContext: ItemCreationContext,
 ): OrnamentsData<DimItem> {
   return _.mapValues(data, (classData) => ({
     ...classData,
@@ -234,7 +234,7 @@ export function instantiateOrnamentSets(
       filterMap(Object.entries(classData.sets), ([key, set]) => {
         const items = filterMap(set.ornaments, (hash) => makeFakeItem(itemCreationContext, hash));
         return [key, { ...set, ornaments: items }];
-      })
+      }),
     ),
   }));
 }
@@ -245,7 +245,7 @@ export function instantiateOrnamentSets(
 export function filterOrnamentSets(
   data: Readonly<OrnamentsData<DimItem>>,
   searchQuery: string,
-  searchFilter: ItemFilter
+  searchFilter: ItemFilter,
 ): OrnamentsData<DimItem> {
   return _.mapValues(data, (classData) => ({
     ...classData,
@@ -254,8 +254,8 @@ export function filterOrnamentSets(
         ([_key, set]) =>
           !searchQuery ||
           set.name.toLowerCase().includes(searchQuery) ||
-          set.ornaments.some(searchFilter)
-      )
+          set.ornaments.some(searchFilter),
+      ),
     ),
   }));
 }

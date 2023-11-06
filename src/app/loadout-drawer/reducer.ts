@@ -16,7 +16,7 @@ const initialState: LoadoutsState = {
 
 export const loadouts: Reducer<LoadoutsState, LoadoutsAction> = (
   state: LoadoutsState = initialState,
-  action: LoadoutsAction
+  action: LoadoutsAction,
 ): LoadoutsState => {
   switch (action.type) {
     case getType(actions.savePreviousLoadout): {

@@ -82,7 +82,7 @@ function uiCategorizeSocket(defs: D2ManifestDefinitions, socket: DestinyItemSock
         (p) =>
           whitelistPlugCategoryToLocKey[
             p.categoryHash as keyof typeof whitelistPlugCategoryToLocKey
-          ]
+          ],
       );
       if (plug) {
         return whitelistPlugCategoryToLocKey[
@@ -147,7 +147,7 @@ export default function SocketDetailsSelectedPlug({
     }
 
     const statGroupDef = defs.StatGroup.get(
-      defs.InventoryItem.get(item.hash).stats!.statGroupHash!
+      defs.InventoryItem.get(item.hash).stats!.statGroupHash!,
     );
 
     const statDisplay = statGroupDef?.scaledStats.find((s) => s.statHash === stat.statTypeHash);
@@ -230,7 +230,7 @@ export default function SocketDetailsSelectedPlug({
 
   const plugDescriptions = usePlugDescriptions(
     plug,
-    stats.map((stat) => ({ value: stat.modValue, statHash: stat.dimStat.statHash }))
+    stats.map((stat) => ({ value: stat.modValue, statHash: stat.dimStat.statHash })),
   );
 
   // Only show Exotic catalyst requirements if the catalyst is incomplete. We assume

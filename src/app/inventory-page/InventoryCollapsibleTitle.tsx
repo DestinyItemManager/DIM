@@ -36,7 +36,7 @@ export default function InventoryCollapsibleTitle({
   const collapsed = Boolean(useSelector(collapsedSelector(sectionId)));
   const toggle = useCallback(
     () => dispatch(toggleCollapsedSection(sectionId)),
-    [dispatch, sectionId]
+    [dispatch, sectionId],
   );
 
   const checkPostmaster = sectionId === 'Postmaster';

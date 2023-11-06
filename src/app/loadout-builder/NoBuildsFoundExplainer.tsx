@@ -387,7 +387,7 @@ export default function NoBuildsFoundExplainer({
               </>
             ),
           },
-          unpinItemsSuggestion()
+          unpinItemsSuggestion(),
         );
       }
 
@@ -409,7 +409,7 @@ export default function NoBuildsFoundExplainer({
             id: 'decreaseLowerBounds',
             contents: t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeDecreaseLowerBounds'),
           },
-          unpinItemsSuggestion()
+          unpinItemsSuggestion(),
         );
       }
 
@@ -429,7 +429,7 @@ export default function NoBuildsFoundExplainer({
             id: 'decreaseLowerBounds',
             contents: t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeDecreaseLowerBounds'),
           },
-          unpinItemsSuggestion()
+          unpinItemsSuggestion(),
         );
       }
       problems.push({

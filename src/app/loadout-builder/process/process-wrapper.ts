@@ -27,7 +27,7 @@ import {
 
 function createWorker() {
   const instance = new Worker(
-    /* webpackChunkName: "lo-worker" */ new URL('../process-worker/ProcessWorker', import.meta.url)
+    /* webpackChunkName: "lo-worker" */ new URL('../process-worker/ProcessWorker', import.meta.url),
   );
 
   const worker = wrap<import('../process-worker/ProcessWorker').ProcessWorker>(instance);
@@ -104,7 +104,7 @@ export function runProcess({
       armorEnergyRules,
       activityMods,
       bucketSpecificMods[bucketHash] || [],
-      getUserItemTag
+      getUserItemTag,
     );
 
     for (const group of groupedItems) {
@@ -121,7 +121,7 @@ export function runProcess({
       maxTier: c.maxTier,
       statHash: c.statHash,
       ignored: c.ignored,
-    })
+    }),
   );
 
   // TODO: could potentially partition the problem (split the largest item category maybe) to spread across more cores
@@ -140,12 +140,12 @@ export function runProcess({
           autoModsData,
           autoStatMods,
           strictUpgrades,
-          stopOnFirstSet
+          stopOnFirstSet,
         )
         .then((result) => {
           infoLog(
             'loadout optimizer',
-            `useProcess: worker time ${performance.now() - workerStart}ms`
+            `useProcess: worker time ${performance.now() - workerStart}ms`,
           );
           const hydratedSets = result.sets.map((set) => hydrateArmorSet(set, itemsById));
           const processTime = performance.now() - processStart;
@@ -177,7 +177,7 @@ const groupComparator = (getTag?: (item: DimItem) => TagValue | undefined) =>
     // Prefer items with higher power
     compareBy(({ dimItem }: MappedItem) => -dimItem.power),
     // Prefer items that are equipped
-    compareBy(({ dimItem }: MappedItem) => (dimItem.equipped ? 0 : 1))
+    compareBy(({ dimItem }: MappedItem) => (dimItem.equipped ? 0 : 1)),
   );
 
 /**
@@ -211,7 +211,7 @@ function mapItemsToGroups(
   armorEnergyRules: ArmorEnergyRules,
   activityMods: PluggableInventoryItemDefinition[],
   modsForSlot: PluggableInventoryItemDefinition[],
-  getUserItemTag?: (item: DimItem) => TagValue | undefined
+  getUserItemTag?: (item: DimItem) => TagValue | undefined,
 ): ItemGroup[] {
   // Figure out all the interesting mod slots required by mods are.
   // This includes combat mod tags because blue-quality items don't have them
@@ -251,7 +251,7 @@ function mapItemsToGroups(
 
     // Item stats are important for the stat results of a full set
     const statValues: number[] = resolvedStatConstraints.map(
-      (c) => item.processItem.stats[c.statHash]
+      (c) => item.processItem.stats[c.statHash],
     );
     // Energy capacity affects mod assignment
     const energyCapacity = item.processItem.remainingEnergyCapacity;
@@ -277,7 +277,7 @@ function mapItemsToGroups(
   };
 
   const energyGroups = Object.groupBy(mappedItems, ({ processItem }) =>
-    firstPassGroupingFn(processItem)
+    firstPassGroupingFn(processItem),
   );
 
   // Final grouping by everything relevant

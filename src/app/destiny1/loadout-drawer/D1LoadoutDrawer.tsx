@@ -58,7 +58,7 @@ export default function D1LoadoutDrawer({
   const onSaveLoadout = (
     e: React.FormEvent,
     loadoutToSave: Readonly<Loadout> | undefined = loadout,
-    close: () => void
+    close: () => void,
   ) => {
     e.preventDefault();
     if (!loadoutToSave) {
@@ -160,14 +160,14 @@ function LoadoutDrawerBody({
         storeId,
         allItems,
         undefined,
-        defs
+        defs,
       ),
-    [itemCreationContext, loadoutItems, storeId, allItems, defs]
+    [itemCreationContext, loadoutItems, storeId, allItems, defs],
   );
 
   const onAddItem = useCallback(
     (item: DimItem, equip?: boolean) => setLoadout(addItem(defs, item, equip)),
-    [defs, setLoadout]
+    [defs, setLoadout],
   );
 
   // If an item comes in on the addItem$ observable, add it.

@@ -18,13 +18,13 @@ import { Loadout } from './loadout-types';
 import { convertToLoadoutItem, newLoadout, pickBackingStore } from './loadout-utils';
 
 const LoadoutDrawer = lazy(
-  () => import(/* webpackChunkName: "loadout-drawer" */ './LoadoutDrawer')
+  () => import(/* webpackChunkName: "loadout-drawer" */ './LoadoutDrawer'),
 );
 const D1LoadoutDrawer = lazy(
   () =>
     import(
       /* webpackChunkName: "d1-loadout-drawer" */ 'app/destiny1/loadout-drawer/D1LoadoutDrawer'
-    )
+    ),
 );
 
 /**
@@ -80,8 +80,8 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
           isNew: Boolean(isNew),
         });
       },
-      [stores, defs]
-    )
+      [stores, defs],
+    ),
   );
 
   const hasInitialLoadout = Boolean(initialLoadout);
@@ -116,8 +116,8 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
           });
         }
       },
-      [hasInitialLoadout, stores]
-    )
+      [hasInitialLoadout, stores],
+    ),
   );
 
   // Load in a full loadout specified in the URL

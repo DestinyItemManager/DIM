@@ -96,7 +96,7 @@ export function filterItems({
       .flat()
       .some(
         (item) =>
-          item.isExotic && lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC && searchFilter(item)
+          item.isExotic && lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC && searchFilter(item),
       );
 
   // Group by bucket
@@ -109,7 +109,7 @@ export function filterItems({
     // a single item is pinned
     const pinnedItem = pinnedItems[bucket];
     const exotics = (itemsByBucket.get(bucket) ?? []).filter(
-      (item) => item.hash === lockedExoticHash
+      (item) => item.hash === lockedExoticHash,
     );
 
     // We prefer most specific filtering since there can be competing conditions.
@@ -139,13 +139,13 @@ export function filterItems({
         'loadout optimizer',
         'no items for bucket',
         bucket,
-        'does this happen enough to be worth reporting in some way?'
+        'does this happen enough to be worth reporting in some way?',
       );
     }
 
     // Remove manually excluded items
     const withoutExcluded = firstPassFilteredItems.filter(
-      (item) => !excludedItems[bucket]?.some((excluded) => item.id === excluded.id)
+      (item) => !excludedItems[bucket]?.some((excluded) => item.id === excluded.id),
     );
 
     // Remove armor that can't fit all the chosen bucket-specifics mods.
@@ -154,11 +154,11 @@ export function filterItems({
     const itemsThatFitMods = withoutExcluded.filter(
       (item) =>
         assignBucketSpecificMods(armorEnergyRules, item, lockedModsForPlugCategoryHash).unassigned
-          .length === 0
+          .length === 0,
     );
 
     const searchFilteredItems = itemsThatFitMods.filter(
-      (item) => (item.isExotic && excludeExoticsFromFilter) || searchFilter(item)
+      (item) => (item.isExotic && excludeExoticsFromFilter) || searchFilter(item),
     );
 
     // If a search filters out all the possible items for a bucket, we ignore

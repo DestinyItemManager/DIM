@@ -38,7 +38,7 @@ export default function CollapsibleTitle({
 
   const toggle = useCallback(
     () => disabled || dispatch(toggleCollapsedSection(sectionId)),
-    [disabled, dispatch, sectionId]
+    [disabled, dispatch, sectionId],
   );
 
   return (
@@ -48,7 +48,7 @@ export default function CollapsibleTitle({
           'title',
           className,
           { collapsed },
-          disabled && collapsed && 'disabled-collapsed'
+          disabled && collapsed && 'disabled-collapsed',
         )}
         style={style}
         onClick={toggle}

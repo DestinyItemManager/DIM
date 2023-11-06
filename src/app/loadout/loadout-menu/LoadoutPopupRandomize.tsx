@@ -117,7 +117,7 @@ function RandomizeLoadoutDialog({
                 </div>
                 <br />
               </React.Fragment>
-            )
+            ),
         )}
         {description}
       </Body>

@@ -27,7 +27,7 @@ export function precalculateStructures(
   generalMods: ProcessMod[],
   activityMods: ProcessMod[],
   autoStatMods: boolean,
-  statOrder: ArmorStatHashes[]
+  statOrder: ArmorStatHashes[],
 ): LoSessionInfo {
   const generalModCosts = generalMods.map((m) => m.energyCost).sort((a, b) => b - a);
   const numAvailableGeneralMods = autoStatMods ? 5 - generalModCosts.length : 0;
@@ -52,7 +52,7 @@ export function precalculateStructures(
 
 function getRemainingEnergiesPerAssignment(
   info: LoSessionInfo,
-  items: ProcessItem[]
+  items: ProcessItem[],
 ): { setEnergy: number; remainingEnergiesPerAssignment: number[][] } {
   const remainingEnergiesPerAssignment: number[][] = [];
 
@@ -104,11 +104,11 @@ export function updateMaxTiers(
   setTiers: number[],
   numArtificeMods: number,
   statFiltersInStatOrder: ResolvedStatConstraint[],
-  minMaxesInStatOrder: MinMax[] // mutated
+  minMaxesInStatOrder: MinMax[], // mutated
 ): boolean {
   const { remainingEnergiesPerAssignment, setEnergy } = getRemainingEnergiesPerAssignment(
     info,
-    items
+    items,
   );
 
   let foundAnyImprovement = false;
@@ -162,7 +162,7 @@ export function updateMaxTiers(
         explorationStats,
         numArtificeMods,
         remainingEnergiesPerAssignment,
-        setEnergy - info.totalModEnergyCost
+        setEnergy - info.totalModEnergyCost,
       );
       if (picks) {
         const val = Math.floor((setStat + explorationStats[statIndex]) / 10);
@@ -193,7 +193,7 @@ export function pickAndAssignSlotIndependentMods(
   modStatistics: ModAssignmentStatistics,
   items: ProcessItem[],
   neededStats: number[] | undefined,
-  numArtifice: number
+  numArtifice: number,
 ): ModsPick[] | undefined {
   modStatistics.earlyModsCheck.timesChecked++;
 
@@ -266,7 +266,7 @@ export function pickAndAssignSlotIndependentMods(
         neededStats,
         numArtifice,
         [remainingEnergyCapacities],
-        setEnergy - info.totalModEnergyCost
+        setEnergy - info.totalModEnergyCost,
       );
 
       if (result) {
@@ -295,11 +295,11 @@ export function pickOptimalStatMods(
   info: LoSessionInfo,
   items: ProcessItem[],
   setStats: number[],
-  resolvedStatConstraints: ResolvedStatConstraint[]
+  resolvedStatConstraints: ResolvedStatConstraint[],
 ): { mods: number[]; numBonusTiers: number; bonusStats: number[] } | undefined {
   const { remainingEnergiesPerAssignment, setEnergy } = getRemainingEnergiesPerAssignment(
     info,
-    items
+    items,
   );
 
   // The amount of additional stat points after which stats don't give us a benefit anymore.
@@ -332,7 +332,7 @@ export function pickOptimalStatMods(
     remainingEnergiesPerAssignment,
     setEnergy - info.totalModEnergyCost,
     0,
-    0
+    0,
   );
 
   if (bestBoosts) {
@@ -430,14 +430,14 @@ function exploreAutoModsSearchTree(
   /** The stat index this branch of the search tree starts at */
   statIndex: number,
   /** How many boosts we have chosen before in explorationStats */
-  depth: number
+  depth: number,
 ): SearchResult | undefined {
   const picks = chooseAutoMods(
     info,
     explorationStats,
     numArtificeMods,
     remainingEnergyCapacities,
-    totalModEnergyCapacity
+    totalModEnergyCapacity,
   );
   if (!picks) {
     return undefined;
@@ -470,7 +470,7 @@ function exploreAutoModsSearchTree(
       previousCosts.some(
         (previousSubtree) =>
           info.autoModOptions.cheaperStatRelations[statIndex].includes(previousSubtree.statIndex) &&
-          previousSubtree.pointsMissing <= pointsMissing
+          previousSubtree.pointsMissing <= pointsMissing,
       )
     ) {
       continue;
@@ -489,7 +489,7 @@ function exploreAutoModsSearchTree(
       remainingEnergyCapacities,
       totalModEnergyCapacity,
       statIndex,
-      depth + 1
+      depth + 1,
     );
     // Is this a better solution than what we already have?
     if (explorationResult && bestResult.depth < explorationResult.depth) {

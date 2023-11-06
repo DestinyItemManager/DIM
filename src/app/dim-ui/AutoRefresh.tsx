@@ -95,7 +95,7 @@ function useAutoRefresh() {
         // If we didn't refresh because of any of the conditions above, restart the timer to try again next time
         startTimer();
       }
-    }, [onOptimizerPage, throttledRefresh, startTimer])
+    }, [onOptimizerPage, throttledRefresh, startTimer]),
   );
 }
 
@@ -118,7 +118,7 @@ function useScheduledAutoRefresh() {
     if (autoRefresh) {
       refreshAccountDataInterval.current = window.setTimeout(
         triggerTryRefresh,
-        destinyProfileRefreshInterval * 1000
+        destinyProfileRefreshInterval * 1000,
       );
     }
   }, [autoRefresh, destinyProfileRefreshInterval]);

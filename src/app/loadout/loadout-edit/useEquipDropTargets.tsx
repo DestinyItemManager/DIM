@@ -65,12 +65,12 @@ export function useEquipDropTargets(accept: TargetType, classType: DestinyClass)
 
   const [{ isOver: isOverEquipped, canDrop: canDropEquipped }, equippedRef] = useDrop(
     dropSpec('equipped'),
-    [accept, classType]
+    [accept, classType],
   );
 
   const [{ isOver: isOverUnequipped, canDrop: canDropUnequipped }, unequippedRef] = useDrop(
     dropSpec('unequipped'),
-    [accept, classType]
+    [accept, classType],
   );
 
   return {

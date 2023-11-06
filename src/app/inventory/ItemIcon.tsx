@@ -134,7 +134,7 @@ export function DefItemIcon({
     },
     !borderless &&
       !itemDef.plug &&
-      itemDef.inventory && [itemTierStyles[D2ItemTiers[itemDef.inventory.tierType]]]
+      itemDef.inventory && [itemTierStyles[D2ItemTiers[itemDef.inventory.tierType]]],
   );
   const energyCost = getModCostInfo(itemDef);
 

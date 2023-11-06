@@ -97,7 +97,7 @@ export default function Debug() {
   );
 
   const weirdWishlistRoll = wishList?.wishListAndInfo?.wishListRolls.find(
-    (r) => r.recommendedPerks && !(r.recommendedPerks instanceof Set)
+    (r) => r.recommendedPerks && !(r.recommendedPerks instanceof Set),
   );
 
   // TODO: If these tiles get too complicated, they could be broken out into components

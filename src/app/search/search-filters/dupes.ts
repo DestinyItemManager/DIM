@@ -33,7 +33,7 @@ const sortDupes = (
   dupes: {
     [dupeID: string]: DimItem[];
   },
-  getTag: (item: DimItem) => TagValue | undefined
+  getTag: (item: DimItem) => TagValue | undefined,
 ) => {
   // The comparator for sorting dupes - the first item will be the "best" and all others are "dupelower".
   const dupeComparator = reverseComparator(
@@ -46,8 +46,8 @@ const sortDupes = (
       }),
       compareBy((item) => item.masterwork),
       compareBy((item) => item.locked),
-      compareBy((i) => i.id) // tiebreak by ID
-    )
+      compareBy((i) => i.id), // tiebreak by ID
+    ),
   );
 
   for (const dupeList of Object.values(dupes)) {
@@ -128,7 +128,7 @@ const dupeFilters: FilterDefinition[] = [
     filter: ({ allItems }) => {
       const duplicates = computeDupesByIdFn(
         allItems.filter((i) => i.infusionFuel),
-        (i) => i.hash.toString()
+        (i) => i.hash.toString(),
       );
       return (item) => {
         if (!item.infusionFuel) {
@@ -175,7 +175,7 @@ const dupeFilters: FilterDefinition[] = [
           }
         }
         (duplicateSetsByClass[customStat.class] ||= []).push(
-          computeStatDupeLower(allItems, relevantStatHashes)
+          computeStatDupeLower(allItems, relevantStatHashes),
         );
       }
 
@@ -212,7 +212,7 @@ export function checkIfIsDupe(
     [dupeID: string]: DimItem[];
   },
   dupeId: string,
-  item: DimItem
+  item: DimItem,
 ) {
   return (
     duplicates[dupeId]?.length > 1 &&
@@ -227,7 +227,7 @@ function computeStatDupeLower(allItems: DimItem[], relevantStatHashes: number[] 
 
   // Group by class and armor type. Also, compare exotics with each other, not the general pool.
   const grouped = Object.values(
-    Object.groupBy(armor, (i) => `${i.bucket.hash}-${i.classType}-${i.isExotic ? i.hash : ''}`)
+    Object.groupBy(armor, (i) => `${i.bucket.hash}-${i.classType}-${i.isExotic ? i.hash : ''}`),
   );
 
   const dupes = new Set<string>();
@@ -252,7 +252,7 @@ function computeStatDupeLower(allItems: DimItem[], relevantStatHashes: number[] 
             // One stat gets +3
             modifiedStats[i] += 3;
             return modifiedStats;
-          })
+          }),
         );
       } else {
         statsCache.set(item, [statValues]);

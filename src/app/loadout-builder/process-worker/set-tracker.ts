@@ -140,7 +140,7 @@ function insertStatMix(
   }[],
   statMix: string,
   armor: ProcessItem[],
-  stats: number[]
+  stats: number[],
 ): boolean {
   // This is a binary search insertion strategy, since these lists may grow large
   let start = 0;
@@ -177,7 +177,7 @@ function insertStatMix(
 function insertArmorSet(
   armor: ProcessItem[],
   stats: number[],
-  armorSets: IntermediateProcessArmorSet[]
+  armorSets: IntermediateProcessArmorSet[],
 ) {
   // These lists don't tend to grow large, so it's back to insertion sort
   const armorSetPower = getPower(armor);

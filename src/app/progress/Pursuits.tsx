@@ -22,7 +22,7 @@ export const sortPursuits = chainComparator(
   compareBy((item) => (item.pursuit?.expirationDate || defaultExpirationDate).getTime()),
   compareBy((item) => item.typeName),
   compareBy((item) => item.icon),
-  compareBy((item) => item.name)
+  compareBy((item) => item.name),
 );
 
 const pursuitsOrder = ['Bounties', 'Quests', 'Items'] as const;
@@ -65,7 +65,7 @@ export default function Pursuits({ store }: { store: DimStore }) {
                 <PursuitsGroup defs={defs} pursuits={pursuits[group]} store={store} />
               </CollapsibleTitle>
             </section>
-          )
+          ),
       )}
     </>
   );

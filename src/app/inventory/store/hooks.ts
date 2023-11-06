@@ -37,7 +37,7 @@ export function useLoadStores(account: DestinyAccount | undefined) {
           return dispatch(d1LoadStores());
         }
       }
-    }, [account, dispatch])
+    }, [account, dispatch]),
   );
 
   return loaded;

@@ -39,7 +39,7 @@ export default function Notification({ notification, onClose, ...animation }: Pr
       notification.promise
         .then(() => setSuccess(true))
         .catch((e) =>
-          e instanceof CanceledError ? setSuccess(true) : setError(convertToError(e))
+          e instanceof CanceledError ? setSuccess(true) : setError(convertToError(e)),
         );
     } else if (notification.duration || error) {
       timer.current = window.setTimeout(
@@ -48,7 +48,7 @@ export default function Notification({ notification, onClose, ...animation }: Pr
             onClose(notification);
           }
         },
-        error ? Math.max(notification.duration, showErrorDuration) : notification.duration
+        error ? Math.max(notification.duration, showErrorDuration) : notification.duration,
       );
     } else {
       window.setTimeout(() => onClose(notification), 0);
@@ -117,7 +117,7 @@ export default function Notification({ notification, onClose, ...animation }: Pr
       <div
         className={clsx(
           styles.inner,
-          error ? styles.error : success ? styles.success : typeStyles[notification.type]
+          error ? styles.error : success ? styles.success : typeStyles[notification.type],
         )}
       >
         <div className={styles.contents}>

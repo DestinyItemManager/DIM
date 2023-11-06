@@ -51,7 +51,7 @@ export async function analyzeLoadout(
   }: LoadoutAnalysisContext,
   storeId: string,
   classType: DestinyClass,
-  loadout: Loadout
+  loadout: Loadout,
 ): Promise<LoadoutAnalysisResult> {
   const findings = new Set<LoadoutFinding>();
   const defs = itemCreationContext.defs;
@@ -61,7 +61,7 @@ export async function analyzeLoadout(
     defs,
     unlockedPlugs,
     itemCreationContext,
-    allItems
+    allItems,
   );
 
   const originalLoadoutMods = resolvedLoadout.resolvedMods;
@@ -70,7 +70,7 @@ export async function analyzeLoadout(
   const loadoutParameters = { ...savedLoadoutParameters, ...loadout.parameters };
 
   const subclass = resolvedLoadout.resolvedLoadoutItems.find(
-    (i) => i.item.bucket.hash === BucketHashes.Subclass
+    (i) => i.item.bucket.hash === BucketHashes.Subclass,
   );
   const fragmentProblem = subclass && getFragmentProblems(defs, subclass);
   if (fragmentProblem !== undefined) {
@@ -174,7 +174,7 @@ export async function analyzeLoadout(
         loadoutArmor,
         originalModDefs,
         armorEnergyRules,
-        statConstraints
+        statConstraints,
       );
       const assumedLoadoutStats = statProblems.stats;
 
@@ -190,7 +190,7 @@ export async function analyzeLoadout(
           // Force auto stat mods to on if there are stat mods.
           loadoutParameters.autoStatMods ||= originalLoadoutMods.some(
             (mod) =>
-              mod.resolvedMod.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsV2General
+              mod.resolvedMod.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsV2General,
           );
 
           const modsToUse = originalLoadoutMods.filter(
@@ -199,7 +199,7 @@ export async function analyzeLoadout(
               mod.resolvedMod.plug.plugCategoryHash !== PlugCategoryHashes.EnhancementsArtifice &&
               // drop general mods if picked automatically
               (!loadoutParameters?.autoStatMods ||
-                mod.resolvedMod.plug.plugCategoryHash !== PlugCategoryHashes.EnhancementsV2General)
+                mod.resolvedMod.plug.plugCategoryHash !== PlugCategoryHashes.EnhancementsV2General),
           );
           // Save back the actual mods for LO to use
           const modDefs = modsToUse.map((mod) => mod.resolvedMod);
@@ -209,7 +209,7 @@ export async function analyzeLoadout(
           // TODO: Include vendor armor here?
           const armorForThisClass = allItems.filter(
             (item) =>
-              item.classType === classType && item.bucket.inArmor && isLoadoutBuilderItem(item)
+              item.classType === classType && item.bucket.inArmor && isLoadoutBuilderItem(item),
           );
           const [filteredItems] = filterItems({
             defs,
@@ -230,7 +230,7 @@ export async function analyzeLoadout(
             modDefs,
             subclass,
             classType,
-            /* includeRuntimeStatBenefits */ true
+            /* includeRuntimeStatBenefits */ true,
           );
 
           // Give the event loop a chance after we did a lot of item filtering
@@ -291,7 +291,7 @@ export async function analyzeLoadout(
  */
 function matchesExoticArmorHash(
   exoticArmorHash: number | undefined,
-  exotic: DimItem | undefined
+  exotic: DimItem | undefined,
 ): [valid: boolean, exoticArmorHash: number | undefined] {
   if (exoticArmorHash === LOCKED_EXOTIC_NO_EXOTIC) {
     return [!exotic, exoticArmorHash];
@@ -306,16 +306,16 @@ function matchesExoticArmorHash(
 
 function getFragmentProblems(
   defs: D2ManifestDefinitions,
-  subclass: ResolvedLoadoutItem
+  subclass: ResolvedLoadoutItem,
 ): LoadoutFinding.TooManyFragments | LoadoutFinding.EmptyFragmentSlots | undefined {
   // this will be 0 if no aspects were provided in the loadout subclass config
   const fragmentCapacity = getLoadoutSubclassFragmentCapacity(defs, subclass, false);
   const fragmentSockets = getSocketsByCategoryHashes(
     subclass.item.sockets,
-    fragmentSocketCategoryHashes
+    fragmentSocketCategoryHashes,
   );
   const loadoutFragments = count(fragmentSockets, (socket) =>
-    Boolean(subclass.loadoutItem.socketOverrides?.[socket.socketIndex])
+    Boolean(subclass.loadoutItem.socketOverrides?.[socket.socketIndex]),
   );
 
   return loadoutFragments < fragmentCapacity
@@ -329,7 +329,7 @@ function getModProblems(
   defs: D2ManifestDefinitions,
   loadoutArmor: DimItem[],
   modMap: ModMap,
-  loadoutArmorEnergyRules: ArmorEnergyRules
+  loadoutArmorEnergyRules: ArmorEnergyRules,
 ): {
   cantFitMods: boolean;
   needsUpgradesForMods: boolean;
@@ -343,7 +343,7 @@ function getModProblems(
   if (loadoutArmor.length === 5) {
     const canFitModsWithRules = (
       armorEnergyRules: ArmorEnergyRules,
-      mods: PluggableInventoryItemDefinition[]
+      mods: PluggableInventoryItemDefinition[],
     ) => {
       const { unassignedMods, invalidMods: invalidModsForThisSet } = fitMostMods({
         defs,
@@ -370,8 +370,8 @@ function getModProblems(
         resolveLoadoutModHashes(
           defs,
           allValidMods.map((mod) => mod.hash),
-          /* unlockedPlugs */ new Set()
-        ).map((mod) => mod.resolvedMod)
+          /* unlockedPlugs */ new Set(),
+        ).map((mod) => mod.resolvedMod),
       );
   }
 
@@ -389,7 +389,7 @@ function getStatProblems(
   loadoutArmor: DimItem[],
   mods: PluggableInventoryItemDefinition[],
   loadoutArmorEnergyRules: ArmorEnergyRules,
-  resolvedStatConstraints: ResolvedStatConstraint[]
+  resolvedStatConstraints: ResolvedStatConstraint[],
 ): {
   stats: HashLookup<DimCharacterStat>;
   cantHitStats: boolean;
@@ -400,7 +400,7 @@ function getStatProblems(
     return {
       stats,
       canHitStats: resolvedStatConstraints.every(
-        (c) => c.ignored || statTier(stats[c.statHash].value ?? 0) >= c.minTier
+        (c) => c.ignored || statTier(stats[c.statHash].value ?? 0) >= c.minTier,
       ),
     };
   };

@@ -11,7 +11,7 @@ import styles from './text-complete.m.scss';
 
 function createTagsCompleter(
   textArea: React.RefObject<HTMLTextAreaElement | HTMLInputElement>,
-  tags: string[]
+  tags: string[],
 ): StrategyProps {
   return {
     match: /#(\w*)$/,
@@ -76,7 +76,7 @@ function createSymbolsAutocompleter(symbols: SymbolsMap): StrategyProps {
 export function useAutocomplete(
   textArea: React.RefObject<HTMLTextAreaElement | HTMLInputElement>,
   tags: string[],
-  parent?: React.RefObject<HTMLElement>
+  parent?: React.RefObject<HTMLElement>,
 ) {
   const symbols = useSelector(symbolsSelector);
   useEffect(() => {
@@ -93,7 +93,7 @@ export function useAutocomplete(
             className: clsx(styles.dropdownMenu, 'textcomplete-dropdown'),
             parent: parent?.current ?? tempContainer,
           },
-        }
+        },
       );
       return () => {
         textcomplete.destroy();

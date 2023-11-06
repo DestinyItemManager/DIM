@@ -3,6 +3,7 @@ import RadioButtons, { Option } from 'app/dim-ui/RadioButtons';
 import { t } from 'app/i18next-t';
 import { Dispatch, useCallback, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
+import { loDefaultArmorEnergyRules } from '../types';
 import styles from './EnergyOptions.m.scss';
 import { loMenuSection } from './LoadoutOptimizerMenuItems';
 
@@ -17,7 +18,9 @@ export default function EnergyOptions({
     () => [
       {
         label: t('LoadoutBuilder.None'),
-        tooltip: t('LoadoutBuilder.AssumeMasterworkOptions.None'),
+        tooltip: t('LoadoutBuilder.AssumeMasterworkOptions.None', {
+          minLoItemEnergy: loDefaultArmorEnergyRules.minItemEnergy,
+        }),
         value: AssumeArmorMasterwork.None,
       },
       {
@@ -31,7 +34,7 @@ export default function EnergyOptions({
         value: AssumeArmorMasterwork.All,
       },
     ],
-    []
+    [],
   );
 
   const handleChange = useCallback(
@@ -41,7 +44,7 @@ export default function EnergyOptions({
         assumeArmorMasterwork,
       });
     },
-    [lbDispatch]
+    [lbDispatch],
   );
 
   return (

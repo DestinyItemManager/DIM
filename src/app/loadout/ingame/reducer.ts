@@ -21,7 +21,7 @@ const initialState: InGameLoadoutState = {
 
 export const inGameLoadouts: Reducer<InGameLoadoutState, InGameLoadoutAction> = (
   state: InGameLoadoutState = initialState,
-  action
+  action,
 ): InGameLoadoutState => {
   switch (action.type) {
     case getType(actions.inGameLoadoutLoaded):

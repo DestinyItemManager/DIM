@@ -159,7 +159,7 @@ export function cleanInfos(stores: DimStore[]): ThunkResult {
                   itemId: item.id,
                   tag: craftedInfo.tag,
                   craftedDate: item.craftedInfo.craftedDate,
-                })
+                }),
               );
             }
             if (craftedInfo.notes) {
@@ -168,7 +168,7 @@ export function cleanInfos(stores: DimStore[]): ThunkResult {
                   itemId: item.id,
                   note: craftedInfo.notes,
                   craftedDate: item.craftedInfo.craftedDate,
-                })
+                }),
               );
             }
           }
@@ -187,7 +187,7 @@ export function getTag(
   itemInfos: ItemInfos,
   itemHashTags?: {
     [itemHash: string]: ItemHashTag;
-  }
+  },
 ): TagValue | undefined {
   return item.taggable
     ? (item.instanced ? itemInfos[item.id]?.tag : itemHashTags?.[item.hash]?.tag) || undefined
@@ -199,7 +199,7 @@ export function getNotes(
   itemInfos: ItemInfos,
   itemHashTags?: {
     [itemHash: string]: ItemHashTag;
-  }
+  },
 ): string | undefined {
   return item.taggable
     ? (item.instanced ? itemInfos[item.id]?.notes : itemHashTags?.[item.hash]?.notes) || undefined

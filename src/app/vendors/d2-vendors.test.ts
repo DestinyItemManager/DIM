@@ -17,7 +17,7 @@ async function getTestVendorGroups() {
       customStats: [],
     },
     vendorsResponse,
-    characterId
+    characterId,
   );
 }
 

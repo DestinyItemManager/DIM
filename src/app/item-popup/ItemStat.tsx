@@ -237,7 +237,7 @@ export function ItemStatValue({
     [styles.masterworked]: isMasterworkedStat,
     [styles.modded]: Boolean(moddedStatValue && moddedStatValue > 0 && stat.value !== stat.base),
     [styles.negativeModded]: Boolean(
-      moddedStatValue && moddedStatValue < 0 && stat.value !== stat.base
+      moddedStatValue && moddedStatValue < 0 && stat.value !== stat.base,
     ),
   };
 
@@ -287,7 +287,7 @@ function getNonReuseableModSockets(item: DimItem) {
       !s.isPerk &&
       !socketContainsIntrinsicPlug(s) &&
       !s.plugged?.plugDef.plug.plugCategoryIdentifier.includes('masterwork') &&
-      _.intersection(s.plugged?.plugDef.itemCategoryHashes || [], modItemCategoryHashes).length > 0
+      _.intersection(s.plugged?.plugDef.itemCategoryHashes || [], modItemCategoryHashes).length > 0,
   );
 }
 
@@ -346,14 +346,14 @@ function getPlugEffects(sockets: DimSocket[], statHashes: number[], item: DimIte
 
       const isConditionallyActive = Boolean(
         socket.plugged.plugDef.investmentStats.find((s) => s.statTypeHash === statHash)
-          ?.isConditionallyActive
+          ?.isConditionallyActive,
       );
 
       const considerActive = isPlugStatActive(
         item,
         socket.plugged.plugDef,
         statHash,
-        isConditionallyActive
+        isConditionallyActive,
       );
       if (considerActive) {
         modEffects.push([modificationAmount, socket.plugged.plugDef.displayProperties.name]);
@@ -366,7 +366,7 @@ function getPlugEffects(sockets: DimSocket[], statHashes: number[], item: DimIte
 function breakDownTotalValue(
   baseTotalValue: number,
   item: DimItem,
-  masterworkSockets: DimSocket[]
+  masterworkSockets: DimSocket[],
 ) {
   const modSockets = getNonReuseableModSockets(item);
 

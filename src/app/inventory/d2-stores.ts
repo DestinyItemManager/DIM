@@ -136,7 +136,7 @@ let minimumCacheAge = Number.MAX_SAFE_INTEGER;
 
 function loadProfile(
   account: DestinyAccount,
-  firstTime: boolean
+  firstTime: boolean,
 ): ThunkResult<DestinyProfileResponse | undefined> {
   return async (dispatch, getState) => {
     const mockProfileData = getState().inventory.mockProfileData;
@@ -177,14 +177,14 @@ function loadProfile(
         warnLog(
           'd2-stores',
           'Cached profile is within Bungie.net cache time, skipping remote load.',
-          profileAge
+          profileAge,
         );
         return profileResponse;
       } else {
         warnLog(
           'd2-stores',
           'Cached profile is older than Bungie.net cache time, proceeding.',
-          profileAge
+          profileAge,
         );
       }
     }
@@ -200,7 +200,7 @@ function loadProfile(
             'd2-stores',
             'Profile from Bungie.net was not newer than cached profile, discarding.',
             remoteProfileMintedDate,
-            cachedProfileMintedDate
+            cachedProfileMintedDate,
           );
           // Clear the error since we did load correctly
           dispatch(profileError(undefined));
@@ -209,7 +209,7 @@ function loadProfile(
         } else {
           minimumCacheAge = Math.min(
             minimumCacheAge,
-            remoteProfileMintedDate.getTime() - cachedProfileMintedDate.getTime()
+            remoteProfileMintedDate.getTime() - cachedProfileMintedDate.getTime(),
           );
           infoLog(
             'd2-stores',
@@ -217,7 +217,7 @@ function loadProfile(
             remoteProfileMintedDate.getTime() - cachedProfileMintedDate.getTime(),
             minimumCacheAge,
             remoteProfileMintedDate,
-            cachedProfileMintedDate
+            cachedProfileMintedDate,
           );
         }
       }
@@ -233,7 +233,7 @@ function loadProfile(
         errorLog(
           'd2-stores',
           'Error loading profile from Bungie.net, falling back to cached profile',
-          e
+          e,
         );
         // undefined means skip processing, in case we already have computed stores
         return storesLoadedSelector(getState()) ? undefined : profileResponse;
@@ -246,7 +246,7 @@ function loadProfile(
 
 function loadStoresData(
   account: DestinyAccount,
-  firstTime: boolean
+  firstTime: boolean,
 ): ThunkResult<DimStore[] | undefined> {
   return async (dispatch, getState) => {
     const promise = (async () => {
@@ -291,7 +291,7 @@ function loadStoresData(
             customStats,
             profileResponse,
           },
-          transaction
+          transaction,
         );
 
         if (readOnly) {

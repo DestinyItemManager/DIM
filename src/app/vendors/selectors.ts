@@ -54,8 +54,8 @@ export const vendorGroupsForCharacterSelector = currySelector(
       return vendorsResponse && vendorData && selectedStoreId
         ? toVendorGroups(context, vendorsResponse, selectedStoreId)
         : emptyArray<D2VendorGroup>();
-    }
-  )
+    },
+  ),
 );
 
 const subVendorsForCharacterSelector = currySelector(
@@ -88,7 +88,7 @@ const subVendorsForCharacterSelector = currySelector(
               vendorsResponse.vendors.data?.[vendorHash],
               selectedStoreId,
               vendorsResponse.sales.data?.[vendorHash]?.saleItems,
-              vendorsResponse
+              vendorsResponse,
             );
             if (vendor) {
               subvendors[vendorHash] = vendor;
@@ -98,8 +98,8 @@ const subVendorsForCharacterSelector = currySelector(
         }
       }
       return subvendors;
-    }
-  )
+    },
+  ),
 );
 
 export const showUnacquiredVendorItemsOnlySelector = (state: RootState) =>
@@ -116,9 +116,9 @@ export const characterVendorItemsSelector = createSelector(
       return emptyArray<DimItem>();
     }
     return _.compact(
-      vendorGroups.flatMap((vg) => vg.vendors.flatMap((vs) => vs.items.map((vi) => vi.item)))
+      vendorGroups.flatMap((vg) => vg.vendors.flatMap((vs) => vs.items.map((vi) => vi.item))),
     );
-  }
+  },
 );
 
 export const ownedVendorItemsSelector = currySelector(
@@ -132,8 +132,8 @@ export const ownedVendorItemsSelector = currySelector(
         ...ownedPlugs.accountWideOwned,
         ...((storeId && ownedItems.storeSpecificOwned[storeId]) || []),
         ...((storeId && ownedPlugs.storeSpecificOwned[storeId]) || []),
-      ])
-  )
+      ]),
+  ),
 );
 
 export const vendorItemFilterSelector = currySelector(
@@ -176,13 +176,13 @@ export const vendorItemFilterSelector = currySelector(
           const subVendorData = subVendors[previewVendorHash];
           if (subVendorData) {
             return subVendorData.items.some((subItem) =>
-              filterItem(subItem, subVendorData, [...seenVendors, previewVendorHash])
+              filterItem(subItem, subVendorData, [...seenVendors, previewVendorHash]),
             );
           }
         }
         return false;
       }
       return (item: VendorItem, vendor: D2Vendor) => filterItem(item, vendor, []);
-    }
-  )
+    },
+  ),
 );

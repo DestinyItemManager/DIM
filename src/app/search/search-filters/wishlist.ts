@@ -6,7 +6,7 @@ import { checkIfIsDupe, computeDupes, makeDupeID } from './dupes';
 
 const checkIfIsWishlist = (
   item: DimItem,
-  wishListFunction: (item: DimItem) => InventoryWishListRoll | undefined
+  wishListFunction: (item: DimItem) => InventoryWishListRoll | undefined,
 ) => {
   const roll = wishListFunction(item);
   return roll && !roll.isUndesirable;

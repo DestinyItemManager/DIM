@@ -35,7 +35,7 @@ export function useItemPicker(): ShowItemPickerFn {
       new Promise((resolve) => {
         setOptions({ ...options, onItemSelected: resolve });
       }),
-    [setOptions]
+    [setOptions],
   );
 }
 

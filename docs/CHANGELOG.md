@@ -1,8 +1,14 @@
 ## Next
 
+## 7.93.0 <span class="changelog-date">(2023-11-05)</span>
+
 * The Loadouts page will now analyze your Loadouts in more depth, show filter pills for analysis findings, and note them in individual Loadouts too.
   * Examples are Loadouts where the mods don't fit on the armor, Loadouts that rely on seasonal mods, or Loadouts where armor needs to be upgraded to accommodate mods or reach target stats.
+* Loadout optimizer will now use an effective energy of 9 for items that it is not assuming masterworked stats for. Before, it used an effective energy of 7, but enhancement prisms are easier to come by these days.
 * Fixed a case where vendor items could show as owned when they were not.
+* Fixed the platform icon not showing for Destiny accounts that were only associated with a single platform.
+* Fixed accidentally showing the kill tracker perk column on the item popup.
+* Fixed subclass mod sockets size on the in-game loadout details popup.
 
 ### Beta Only
 

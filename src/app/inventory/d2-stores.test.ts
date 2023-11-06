@@ -24,7 +24,7 @@ describe('process stores', () => {
               // the plugged socket must appear in the list of plugOptions
               if (!socket.plugOptions.includes(socket.plugged)) {
                 throw new Error(
-                  `"${item.name}" - ${socket.plugged.plugDef.displayProperties.name} is not in the list of plugOptions`
+                  `"${item.name}" - ${socket.plugged.plugDef.displayProperties.name} is not in the list of plugOptions`,
                 );
               }
             }
@@ -105,6 +105,6 @@ describe('process stores', () => {
       const loadoutsByItem = {};
       const csvExport = generateCSVExportData(type, stores, getTag, getNotes, loadoutsByItem);
       expect(csvExport).toMatchSnapshot();
-    }
+    },
   );
 });

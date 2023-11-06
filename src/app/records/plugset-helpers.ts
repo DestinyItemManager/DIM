@@ -9,10 +9,10 @@ import { stubTrue } from 'lodash';
 function itemsForCharacterOrProfilePlugSet(
   profileResponse: DestinyProfileResponse,
   plugSetHash: number,
-  characterId: string
+  characterId: string,
 ) {
   return (profileResponse.profilePlugSets.data?.plugs[plugSetHash] ?? []).concat(
-    profileResponse.characterPlugSets.data?.[characterId]?.plugs[plugSetHash] ?? []
+    profileResponse.characterPlugSets.data?.[characterId]?.plugs[plugSetHash] ?? [],
   );
 }
 
@@ -22,7 +22,7 @@ export function filterUnlockedPlugs(
   plugSetHash: number,
   plugSetItems: DestinyItemPlug[],
   outUnlockedPlugs: Set<number>,
-  predicate: (plug: DestinyItemPlug) => boolean = stubTrue
+  predicate: (plug: DestinyItemPlug) => boolean = stubTrue,
 ) {
   const useCanInsert = universalOrnamentPlugSetHashes.includes(plugSetHash);
   for (const plugSetItem of plugSetItems) {
@@ -48,7 +48,7 @@ export function filterUnlockedPlugs(
 export function unlockedItemsForCharacterOrProfilePlugSet(
   profileResponse: DestinyProfileResponse,
   plugSetHash: number,
-  characterId: string
+  characterId: string,
 ): Set<number> {
   const unlockedPlugs = new Set<number>();
 

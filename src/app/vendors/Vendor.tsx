@@ -33,9 +33,9 @@ export default function Vendor({
   const placeString = Array.from(
     new Set(
       [vendor.destination?.displayProperties.name, vendor.place?.displayProperties.name].filter(
-        (n) => n?.length
-      )
-    )
+        (n) => n?.length,
+      ),
+    ),
   ).join(', ');
 
   let refreshTime = vendor.component && new Date(vendor.component.nextRefreshDate);

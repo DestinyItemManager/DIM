@@ -7,10 +7,10 @@ export const setSettingAction = createAction(
   <V extends keyof Settings>(property: V, value: Settings[V]) => ({
     property,
     value,
-  })
+  }),
 )() as <V extends keyof Settings>(
   property: V,
-  value: Settings[V]
+  value: Settings[V],
 ) => PayloadAction<'settings/SET', { property: V; value: Settings[V] }>;
 
 /** Update a collapsible section */

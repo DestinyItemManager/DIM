@@ -21,7 +21,7 @@ export default function LoadoutBucketDropTarget({ bucketHash, children, onItemLo
       drop: onItemLocked,
       canDrop: (item) => item.bucket.hash === bucketHash,
     }),
-    [bucketHash, onItemLocked]
+    [bucketHash, onItemLocked],
   );
   return (
     <div

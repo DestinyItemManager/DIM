@@ -363,7 +363,7 @@ export default function Header() {
                 <SearchFilter onClear={hideSearch} ref={searchFilter} />
               </span>
             )}
-            <RefreshButton className={clsx(styles.menuItem)} />
+            <RefreshButton className={styles.menuItem} />
             {!isPhonePortrait && (
               <Link className={styles.menuItem} to="/settings" title={t('Settings.Settings')}>
                 <AppIcon icon={settingsIcon} />
@@ -414,7 +414,7 @@ function useClarityDetector(ref: React.RefObject<HTMLElement>) {
         if (
           mutation.type === 'childList' &&
           Array.from(mutation.addedNodes ?? []).some(
-            (n) => n instanceof HTMLElement && n.classList.contains('Clarity_menu_button')
+            (n) => n instanceof HTMLElement && n.classList.contains('Clarity_menu_button'),
           )
         ) {
           setClarityDetected(true);

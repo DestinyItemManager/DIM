@@ -58,7 +58,7 @@ export default function useBulkNote(): [
         }
       }
     },
-    [dispatch, showDialog]
+    [dispatch, showDialog],
   );
 
   return [dialog, bulkNote];

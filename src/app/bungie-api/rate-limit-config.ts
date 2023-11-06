@@ -6,57 +6,63 @@ export default function setupRateLimiter() {
 
   // Destiny 2 has a faster rate limit!
   addLimiter(
-    new RateLimiterQueue(/www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/TransferItem/, 100)
+    new RateLimiterQueue(/www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/TransferItem/, 100),
   );
   addLimiter(
     new RateLimiterQueue(
       /www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/PullFromPostmaster/,
-      100
-    )
+      100,
+    ),
   );
   addLimiter(
-    new RateLimiterQueue(/www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/EquipItem/, 100)
+    new RateLimiterQueue(/www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/EquipItem/, 100),
   );
   addLimiter(
-    new RateLimiterQueue(/www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/EquipItems/, 100)
+    new RateLimiterQueue(/www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/EquipItems/, 100),
   );
   addLimiter(
     new RateLimiterQueue(
       /www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/InsertSocketPlugFree/,
-      500
-    )
+      500,
+    ),
   );
   addLimiter(
     new RateLimiterQueue(
       /www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/InsertSocketPlug/,
-      500
-    )
+      500,
+    ),
   );
   addLimiter(
-    new RateLimiterQueue(/www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/SetLockState/, 100)
+    new RateLimiterQueue(/www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/SetLockState/, 100),
   );
   addLimiter(
     new RateLimiterQueue(
       /www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/SetTrackedState/,
-      1000
-    )
+      1000,
+    ),
   );
   addLimiter(
-    new RateLimiterQueue(/www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/EquipLoadout/, 1000)
+    new RateLimiterQueue(
+      /www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/EquipLoadout/,
+      1000,
+    ),
   );
   addLimiter(
     new RateLimiterQueue(
       /www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/SnapshotLoadout/,
-      1000
-    )
+      1000,
+    ),
   );
   addLimiter(
     new RateLimiterQueue(
       /www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/UpdateLoadoutIdentifiers/,
-      1000
-    )
+      1000,
+    ),
   );
   addLimiter(
-    new RateLimiterQueue(/www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/ClearLoadout/, 1000)
+    new RateLimiterQueue(
+      /www\.bungie\.net\/Platform\/Destiny2\/Actions\/Items\/ClearLoadout/,
+      1000,
+    ),
   );
 }

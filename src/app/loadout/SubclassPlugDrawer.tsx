@@ -51,7 +51,7 @@ export default function SubclassPlugDrawer({
     // This ensures the plug groups are ordered by the socket order in the item def.
     // The order in the item def matches the order displayed in the game.
     const sortPlugGroups = compareBy(
-      (group: PlugSet) => group.plugs.length && flatPlugs.indexOf(group.plugs[0])
+      (group: PlugSet) => group.plugs.length && flatPlugs.indexOf(group.plugs[0]),
     );
     return {
       plugSets,
@@ -85,7 +85,7 @@ export default function SubclassPlugDrawer({
       }
       onAccept(newOverrides);
     },
-    [onAccept, subclass.sockets]
+    [onAccept, subclass.sockets],
   );
 
   return (
@@ -109,7 +109,7 @@ export default function SubclassPlugDrawer({
 function getPlugsForSubclass(
   defs: D2ManifestDefinitions | undefined,
   subclass: DimItem,
-  initiallySelected: PluggableInventoryItemDefinition[]
+  initiallySelected: PluggableInventoryItemDefinition[],
 ) {
   const plugSets: PlugSetWithDefaultPlug[] = [];
   const aspects = new Set<PluggableInventoryItemDefinition>();
@@ -124,7 +124,7 @@ function getPlugsForSubclass(
       allSelectedPlugs.filter((p) => aspects.has(p)),
       (aspect) =>
         aspect.investmentStats.find((stat) => stat.statTypeHash === StatHashes.AspectEnergyCapacity)
-          ?.value || 0
+          ?.value || 0,
     );
 
   for (const category of subclass.sockets.categories) {
@@ -133,7 +133,7 @@ function getPlugsForSubclass(
     // choices the user will get
     const socketsGroupedBySetHash = Map.groupBy(
       sockets,
-      (socket) => socket.socketDefinition.reusablePlugSetHash
+      (socket) => socket.socketDefinition.reusablePlugSetHash,
     );
 
     for (const socketGroup of socketsGroupedBySetHash.values()) {
@@ -141,7 +141,7 @@ function getPlugsForSubclass(
         const firstSocket = socketGroup[0];
 
         const isAbilityLikeSocket = subclassAbilitySocketCategoryHashes.includes(
-          category.category.hash
+          category.category.hash,
         );
 
         const isAspect = aspectSocketCategoryHashes.includes(category.category.hash);
@@ -204,7 +204,7 @@ function getPlugsForSubclass(
   // Populate the initial plugs of each set
   for (const initialPlug of initiallySelected) {
     const plugSet = plugSets.find((set) =>
-      set.plugs.some((plug) => plug.hash === initialPlug.hash)
+      set.plugs.some((plug) => plug.hash === initialPlug.hash),
     );
     if (!plugSet) {
       continue;

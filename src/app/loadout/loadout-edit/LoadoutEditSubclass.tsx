@@ -43,11 +43,11 @@ export default function LoadoutEditSubclass({
       BucketHashes.Subclass.toString(),
       ...stores.flatMap((store) => `${store.id}-${BucketHashes.Subclass}`),
     ],
-    [stores]
+    [stores],
   );
   const { equippedRef, isOverEquipped, canDropEquipped } = useEquipDropTargets(
     acceptTarget,
-    classType
+    classType,
   );
 
   return (

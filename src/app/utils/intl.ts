@@ -21,12 +21,12 @@ const cachedSortCollator = memoizeOne(
       numeric: true,
       usage: 'sort',
       sensitivity: 'accent',
-    })
+    }),
 );
 
 const cachedSearchCollator = memoizeOne(
   (language: DimLanguage) =>
-    new Intl.Collator(mapLocale(language), { usage: 'search', sensitivity: 'base' })
+    new Intl.Collator(mapLocale(language), { usage: 'search', sensitivity: 'base' }),
 );
 
 /**

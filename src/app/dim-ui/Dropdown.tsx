@@ -121,7 +121,7 @@ export default function Dropdown({
               >
                 {item.content}
               </div>
-            )
+            ),
           )}
       </div>
     </div>

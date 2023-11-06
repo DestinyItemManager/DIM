@@ -93,7 +93,7 @@ export default function Records({ account }: Props) {
     ? filterMap(Object.entries(destiny2CoreSettings), ([key, value]) =>
         key.includes('RootNode') && key !== 'craftingRootNodeHash' && typeof value === 'number'
           ? value
-          : undefined
+          : undefined,
       )
     : [];
 

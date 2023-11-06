@@ -51,7 +51,7 @@ export default function ItemSocketsWeapons({
     !item.itemCategoryHashes.includes(ItemCategoryHashes.Sword) &&
     !item.itemCategoryHashes.includes(ItemCategoryHashes.LinearFusionRifles) &&
     _.take(item.stats, 2).filter(
-      (s) => !statsMs.includes(s.statHash) && s.statHash !== StatHashes.BlastRadius
+      (s) => !statsMs.includes(s.statHash) && s.statHash !== StatHashes.BlastRadius,
     );
 
   // Some stat labels are long. This lets us replace them with i18n
@@ -82,7 +82,7 @@ export default function ItemSocketsWeapons({
                       (s) =>
                         `${s.value} ${(
                           statLabels[s.statHash as StatHashes] || s.displayProperties.name
-                        ).toLowerCase()}`
+                        ).toLowerCase()}`,
                     )
                     ?.join(' / ')}
                 </div>
@@ -132,7 +132,7 @@ export default function ItemSocketsWeapons({
                       wishlistRoll={wishlistRoll}
                       onClick={onPlugClicked}
                     />
-                  )
+                  ),
               )}
             </div>
           </div>

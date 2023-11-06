@@ -45,7 +45,7 @@ const loadoutFilters: FilterDefinition[] = [
               !isInGameLoadout(loadout) &&
               getHashtagsFromNote(loadout.notes)
                 .map((t) => t.toLowerCase())
-                .includes(filterValue))
+                .includes(filterValue)),
         );
     },
   },
