@@ -1,12 +1,13 @@
-import { AssumeArmorMasterwork, LoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import {
+  AssumeArmorMasterwork,
+  LoadoutParameters,
+  defaultLoadoutParameters,
+} from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimCharacterStat } from 'app/inventory/store-types';
 import { filterItems } from 'app/loadout-builder/item-filter';
-import {
-  defaultLoadoutParameters,
-  resolveStatConstraints,
-} from 'app/loadout-builder/loadout-params';
+import { resolveStatConstraints } from 'app/loadout-builder/loadout-params';
 import { runProcess } from 'app/loadout-builder/process/process-wrapper';
 import {
   ArmorEnergyRules,

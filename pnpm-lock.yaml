@@ -15,7 +15,7 @@ dependencies:
     version: 7.23.2
   '@destinyitemmanager/dim-api-types':
     specifier: ^1.29.0
-    version: 1.29.0
+    version: 1.30.0
   '@fortawesome/fontawesome-free':
     specifier: ^5.15.4
     version: 5.15.4
@@ -1914,8 +1914,8 @@ packages:
       postcss-selector-parser: 6.0.13
     dev: true
 
-  /@destinyitemmanager/dim-api-types@1.29.0:
-    resolution: {integrity: sha512-MRAtLjzXuE+3UrEqu8s01507vBHov97L6fTJUUWIKvTc1JDUg7geAEG+iraP/RgbK7Plpy8jeTwT44z1Jn8GPQ==}
+  /@destinyitemmanager/dim-api-types@1.30.0:
+    resolution: {integrity: sha512-EMDDUHGHqhYRYpdRh1NZDGy0h3p/EyF5hUWPzIR12PwgOJO0ywY7WDKZ9MPiE/DFjTkrZ+tUgSQsorLrWeouvw==}
     dev: false
 
   /@discoveryjs/json-ext@0.5.7:

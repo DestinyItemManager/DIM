@@ -2,6 +2,7 @@ import {
   AssumeArmorMasterwork,
   LoadoutParameters,
   StatConstraint,
+  defaultLoadoutParameters,
 } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import {
@@ -34,11 +35,7 @@ import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useCallback, useMemo, useReducer } from 'react';
 import { useSelector } from 'react-redux';
-import {
-  defaultLoadoutParameters,
-  resolveStatConstraints,
-  unresolveStatConstraints,
-} from './loadout-params';
+import { resolveStatConstraints, unresolveStatConstraints } from './loadout-params';
 import {
   ArmorSet,
   ExcludedItems,
