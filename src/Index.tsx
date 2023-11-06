@@ -32,7 +32,7 @@ infoLog(
 initGoogleAnalytics();
 safariTouchFix();
 
-if ($DIM_FLAVOR !== 'dev') {
+if ($featureFlags.serviceWorker) {
   registerServiceWorker();
 }
 
