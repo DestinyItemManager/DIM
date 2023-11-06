@@ -284,6 +284,7 @@ export function getLoadoutStats(
   subclass: ResolvedLoadoutItem | undefined,
   armor: DimItem[],
   mods: PluggableInventoryItemDefinition[],
+  includeRuntimeStatBenefits: boolean,
   /** Assume armor is masterworked according to these rules when calculating stats */
   armorEnergyRules?: ArmorEnergyRules,
 ) {
@@ -308,7 +309,7 @@ export function getLoadoutStats(
     for (const hash of armorStats) {
       armorPiecesStats[hash] += itemStats[hash]?.[0].base ?? 0;
       armorPiecesStats[hash] +=
-        itemEnergy === MAX_ARMOR_ENERGY_CAPACITY
+        itemEnergy === MAX_ARMOR_ENERGY_CAPACITY && item.energy
           ? MASTERWORK_ARMOR_STAT_BONUS
           : energySocket?.plugged?.stats?.[hash] ?? 0;
     }
@@ -331,7 +332,7 @@ export function getLoadoutStats(
     mods,
     subclass,
     classType,
-    /* includeRuntimeStatBenefits */ true,
+    includeRuntimeStatBenefits,
   );
 
   for (const [statHash, value] of Object.entries(modStats)) {

@@ -26,7 +26,7 @@ import { getPower } from '../utils';
 import styles from './GeneratedSet.m.scss';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
-import SetStats from './SetStats';
+import { SetStats } from './SetStats';
 
 /**
  * A single "stat mix" of builds. Each armor slot contains multiple possibilities,
@@ -226,7 +226,7 @@ function getStatsBreakdown(
     autoMods,
     /* subclass */ undefined,
     classType,
-    /* includeRuntimeStatBenefits */ true,
+    /* includeRuntimeStatBenefits */ false, // doesn't matter, auto mods have no runtime stats
   );
 
   // We have a bit of a problem where armor mods can come from both

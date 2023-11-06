@@ -5,6 +5,7 @@ import { t } from 'app/i18next-t';
 import ExoticArmorChoice, { getLockedExotic } from 'app/loadout-builder/filter/ExoticArmorChoice';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, searchIcon } from 'app/shell/icons';
+import { includesRuntimeStatMods } from '../stats';
 import styles from './LoadoutParametersDisplay.m.scss';
 
 export function hasVisibleLoadoutParameters(params: LoadoutParameters | undefined) {
@@ -12,7 +13,10 @@ export function hasVisibleLoadoutParameters(params: LoadoutParameters | undefine
     params &&
     (params.query ||
       params.exoticArmorHash ||
-      params.statConstraints?.some((s) => s.maxTier !== undefined || s.minTier !== undefined))
+      params.statConstraints?.some((s) => s.maxTier !== undefined || s.minTier !== undefined) ||
+      (params.mods &&
+        includesRuntimeStatMods(params.mods) &&
+        (params.includeRuntimeStatBenefits ?? true)))
   );
 }
 
@@ -47,6 +51,13 @@ export default function LoadoutParametersDisplay({ params }: { params: LoadoutPa
           <ExoticArmorChoice lockedExoticHash={exoticArmorHash} />
         </PressTip>
       )}
+      {params.mods &&
+        includesRuntimeStatMods(params.mods) &&
+        (params.includeRuntimeStatBenefits ?? true) && (
+          <PressTip tooltip={t('Loadouts.IncludeRuntimeStatBenefitsDesc')}>
+            {t('Loadouts.IncludeRuntimeStatBenefits')}
+          </PressTip>
+        )}
       {statConstraints && (
         <PressTip
           className={styles.loStats}
