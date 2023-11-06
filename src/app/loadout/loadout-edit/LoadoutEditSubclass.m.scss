@@ -52,6 +52,22 @@
   composes: resetButton from '../../dim-ui/common.m.scss';
   height: 100%;
   width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  > * {
+    position: absolute;
+  }
+
+  color: #999;
+  &:hover,
+  &:focus-visible {
+    color: white;
+    rect {
+      stroke: var(--theme-accent-primary);
+    }
+  }
 }
 
 .missingItem {

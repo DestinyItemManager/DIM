@@ -79,7 +79,13 @@
   background-color: rgba(0, 0, 0, 0.4);
   padding: 8px;
   gap: 0;
-  // Fit 5 mods across, regardless of what the user's item size is
-  --item-size: 47px;
-  --loadout-edit-subclass-columns: 4;
+  // Fit 7 mods across, regardless of what the user's item size is
+  --item-size: 50px;
+  --loadout-edit-subclass-columns: 7;
+}
+
+.subclassSection {
+  composes: loadoutEditSection;
+  // Adjust these down a bit
+  --item-size: 48px;
 }

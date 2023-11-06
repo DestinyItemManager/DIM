@@ -375,7 +375,7 @@ export default memo(function LoadoutBuilder({
         store={selectedStore}
         subclass={subclass}
         setLoadout={setLoadout}
-        className={styles.loadoutEditSection}
+        className={styles.subclassSection}
       />
       <LoadoutOptimizerPinnedItems
         chooseItem={chooseItem}
