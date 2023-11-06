@@ -8,7 +8,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { BucketHashes } from 'data/d2/generated-enums';
+import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { getSubclassPlugs } from '../item-utils';
@@ -75,9 +75,6 @@ export default function LoadoutEditSubclass({
                   // plugs in the loadout and they may be different to the popup
                   onClick={plugs.length ? undefined : onClick}
                   item={subclass.item}
-                  // don't show the selected Super ability because we are displaying the Super ability plug next
-                  // to the subclass icon
-                  hideSelectedSuper
                 />
               )}
             </ItemPopupTrigger>
@@ -96,13 +93,16 @@ export default function LoadoutEditSubclass({
       </div>
       {plugs.length ? (
         <div className={styles.subclassMods}>
-          {plugs?.map((plug) => (
-            <PlugDef
-              key={getModRenderKey(plug.plug)}
-              plug={plug.plug}
-              forClassType={subclass?.item.classType}
-            />
-          ))}
+          {plugs?.map(
+            (plug) =>
+              plug.socketCategoryHash !== SocketCategoryHashes.Super && (
+                <PlugDef
+                  key={getModRenderKey(plug.plug)}
+                  plug={plug.plug}
+                  forClassType={subclass?.item.classType}
+                />
+              ),
+          )}
         </div>
       ) : (
         <div className={styles.modsPlaceholder}>{t('Loadouts.Abilities')}</div>
