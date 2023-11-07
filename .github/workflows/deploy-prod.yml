@@ -57,7 +57,7 @@ jobs:
 
       - name: Bump release version
         id: bump_version
-        uses: christian-draeger/increment-semantic-version@1.0.3
+        uses: christian-draeger/increment-semantic-version@1.1.0
         with:
           current-version: ${{ steps.package-version.outputs.current-version }}
           version-fragment: ${{ env.build_level }}
