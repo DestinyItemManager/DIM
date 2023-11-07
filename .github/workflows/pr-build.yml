@@ -76,7 +76,7 @@ jobs:
 
       - name: Install SSH key
         if: ${{github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]'}}
-        uses: benoitchantre/setup-ssh-authentication-action@1.0.0
+        uses: benoitchantre/setup-ssh-authentication-action@1.0.1
         with:
           private-key: ${{ secrets.SSH_KEY }}
           private-key-name: dim.rsa
