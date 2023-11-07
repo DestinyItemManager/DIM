@@ -230,7 +230,6 @@ export async function analyzeLoadout(
           loadoutParameters.mods = modsToUse.map((mod) => mod.originalModHash);
           const { modMap } = categorizeArmorMods(modDefs, loadoutArmor);
 
-          // TODO: Include vendor armor here?
           const armorForThisClass = allItems.filter(
             (item) =>
               item.classType === classType && item.bucket.inArmor && isLoadoutBuilderItem(item),

@@ -5,9 +5,11 @@ import {
   unlockedPlugSetItemsSelector,
 } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
+import { useLoVendorItems } from 'app/loadout-builder/loadout-builder-vendors';
 import { getAutoMods } from 'app/loadout-builder/process/mappers';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { d2ManifestSelector } from 'app/manifest/selectors';
+import { useSetting } from 'app/settings/hooks';
 import { currySelector } from 'app/utils/selectors';
 import { noop } from 'lodash';
 import {
@@ -17,6 +19,7 @@ import {
   useContext,
   useEffect,
   useId,
+  useMemo,
   useState,
   useSyncExternalStore,
 } from 'react';
@@ -41,18 +44,16 @@ const autoOptimizationContextSelector = currySelector(
     createItemContextSelector,
     unlockedPlugSetItemsSelector.selector,
     savedLoStatConstraintsByClassSelector,
-    allItemsSelector,
     autoModSelector,
-    (itemCreationContext, unlockedPlugs, savedLoStatConstraintsByClass, allItems, autoModDefs) =>
+    (itemCreationContext, unlockedPlugs, savedLoStatConstraintsByClass, autoModDefs) =>
       itemCreationContext.defs &&
       autoModDefs &&
       ({
         itemCreationContext,
         unlockedPlugs,
         savedLoStatConstraintsByClass,
-        allItems,
         autoModDefs,
-      } satisfies LoadoutAnalysisContext),
+      } satisfies Omit<LoadoutAnalysisContext, 'allItems'>),
   ),
 );
 
@@ -81,7 +82,22 @@ export function MakeLoadoutAnalysisAvailable({ children }: { children: ReactNode
  */
 export function useUpdateLoadoutAnalysisContext(storeId: string) {
   const analyzer = useContext(LoadoutAnalyzerReactContext);
-  const analysisContext = useSelector(autoOptimizationContextSelector(storeId));
+  const partialAnalysisContext = useSelector(autoOptimizationContextSelector(storeId));
+  const [includeVendorItems_] = useSetting('loIncludeVendorItems');
+  const includeVendorItems = $featureFlags.statConstraintEditor || includeVendorItems_;
+
+  const allItems = useSelector(allItemsSelector);
+  const { vendorItems } = useLoVendorItems(storeId, includeVendorItems);
+
+  const analysisContext: LoadoutAnalysisContext | undefined = useMemo(
+    () =>
+      partialAnalysisContext && {
+        ...partialAnalysisContext,
+        allItems: allItems.concat(vendorItems),
+      },
+    [allItems, partialAnalysisContext, vendorItems],
+  );
+
   useEffect(
     () => analysisContext && analyzer?.updateAnalysisContext(storeId, analysisContext),
     [analysisContext, analyzer, storeId],
