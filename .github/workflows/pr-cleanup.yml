@@ -8,7 +8,7 @@ jobs:
   cleanup:
     runs-on: ubuntu-latest
     environment: pr
-    if: ${{github.event.pull_request.head.repo.full_name == github.repository}}
+    if: ${{github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]'}}
     steps:
       - name: Install SSH key
         uses: benoitchantre/setup-ssh-authentication-action@1.0.0
