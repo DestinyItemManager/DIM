@@ -20,7 +20,7 @@ jobs:
       name: release
       url: https://app.dim.gg
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 2 # So sentry can get the previous commit
           # Use the dim-release-bot token rather than the default
