@@ -41,7 +41,10 @@
     "bcu:build": "node src/build-browsercheck-utils.js",
     "bcu:pretty": "prettier --write src/browsercheck-utils.js",
     "fa-subset": "node src/fa-subset.js",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "deps:stale": "pnpm outdated --long",
+    "deps:update": "pnpm up -i --latest",
+    "deps:pnpm": "corepack use 'pnpm@*'"
   },
   "jest-junit": {
     "outputName": "junit.xml",
