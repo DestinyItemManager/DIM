@@ -4,6 +4,7 @@ import { D1BucketHashes } from 'app/search/d1-known-values';
 import { D2ItemTiers } from 'app/search/d2-known-values';
 import { ItemSortSettings } from 'app/settings/item-sort';
 import { isD1Item, isSunset } from 'app/utils/item-utils';
+import { DestinyAmmunitionType, DestinyDamageTypeDefinition } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { TagValue, tagConfig } from '../inventory/dim-item-info';
@@ -112,16 +113,18 @@ const TAG_ITEM_COMPARATORS: {
 export type VaultGroupValue = string | number | boolean | undefined;
 
 interface MutableVaultGroup {
-  value: VaultGroupValue;
+  groupingValue: VaultGroupValue;
+  iconValue?: VaultGroupIconValue;
   items: DimItem[];
 }
 
 interface VaultGroup {
-  value: VaultGroupValue;
+  groupingValue: VaultGroupValue;
+  iconValue?: VaultGroupIconValue;
   items: readonly DimItem[];
 }
 
-const GROUP_BY_VALUE_GETTERS: {
+const GROUPING_VALUE_GETTERS: {
   [key: string]: (
     item: DimItem,
     getTag: (item: DimItem) => TagValue | undefined,
@@ -138,14 +141,37 @@ const GROUP_BY_VALUE_GETTERS: {
   },
 };
 
+export type VaultGroupIconValue =
+  | TagValue
+  | DestinyDamageTypeDefinition
+  | DestinyAmmunitionType
+  | number[]
+  | undefined
+  | null;
+
+const ICON_VALUE_GETTERS: Record<
+  keyof typeof GROUPING_VALUE_GETTERS,
+  (item: DimItem, getTag: (item: DimItem) => TagValue | undefined) => VaultGroupIconValue
+> = {
+  tag: (item, getTag) => getTag(item),
+  typeName: (item) => item.itemCategoryHashes,
+  rarity: () => null,
+  ammoType: (item) => item.ammoType,
+  elementWeapon: (item) => {
+    if (item.bucket.inWeapons) {
+      return item.element;
+    }
+  },
+};
+
 const TAG_ORDER = ['favorite', 'keep', 'junk', 'infuse', 'archive'];
 
-const propertyValueIndexInTagOrder = (input: VaultGroup) => {
-  if (typeof input.value !== 'string') {
+const groupingValueIndexInTagOrder = (input: VaultGroup) => {
+  if (typeof input.groupingValue !== 'string') {
     return Infinity;
   }
 
-  const index = TAG_ORDER.indexOf(input.value);
+  const index = TAG_ORDER.indexOf(input.groupingValue);
 
   if (index < 0) {
     return Infinity;
@@ -153,19 +179,19 @@ const propertyValueIndexInTagOrder = (input: VaultGroup) => {
 
   return index;
 };
-const valueProperty = (input: VaultGroup) => input.value;
+const groupingValueProperty = (input: VaultGroup) => input.groupingValue;
 
 const undefinedVaultGroupLast =
   (comparator: Comparator<VaultGroup>) => (a: VaultGroup, b: VaultGroup) => {
-    if (typeof a.value === 'undefined') {
-      if (typeof b.value === 'undefined') {
+    if (typeof a.groupingValue === 'undefined') {
+      if (typeof b.groupingValue === 'undefined') {
         return 0;
       }
 
       return 1;
     }
 
-    if (typeof b.value === 'undefined') {
+    if (typeof b.groupingValue === 'undefined') {
       return -1;
     }
 
@@ -175,21 +201,21 @@ const undefinedVaultGroupLast =
 const GROUP_BY_COMPARATORS: {
   [key: string]: Comparator<VaultGroup>;
 } = {
-  tag: undefinedVaultGroupLast(compareBy(propertyValueIndexInTagOrder)),
+  tag: undefinedVaultGroupLast(compareBy(groupingValueIndexInTagOrder)),
   // A -> Z
-  typeName: undefinedVaultGroupLast(compareBy(valueProperty)),
+  typeName: undefinedVaultGroupLast(compareBy(groupingValueProperty)),
   // exotic -> common
-  rarity: undefinedVaultGroupLast(reverseComparator(compareBy(valueProperty))),
+  rarity: undefinedVaultGroupLast(reverseComparator(compareBy(groupingValueProperty))),
   // None -> Primary -> Special -> Heavy -> Unknown
-  ammoType: undefinedVaultGroupLast(compareBy(valueProperty)),
+  ammoType: undefinedVaultGroupLast(compareBy(groupingValueProperty)),
   // None -> Kinetic -> Arc -> Thermal -> Void -> Raid -> Stasis
-  elementWeapon: undefinedVaultGroupLast(compareBy(valueProperty)),
+  elementWeapon: undefinedVaultGroupLast(compareBy(groupingValueProperty)),
   // masterwork -> not masterwork
-  masterworked: undefinedVaultGroupLast(compareBy(valueProperty)),
+  masterworked: undefinedVaultGroupLast(compareBy(groupingValueProperty)),
   // crafted -> not crafted
-  crafted: undefinedVaultGroupLast(compareBy(valueProperty)),
+  crafted: undefinedVaultGroupLast(compareBy(groupingValueProperty)),
   // deepsight -> no deepsight
-  deepsight: undefinedVaultGroupLast(compareBy(valueProperty)),
+  deepsight: undefinedVaultGroupLast(compareBy(groupingValueProperty)),
 };
 
 const ITEM_COMPARATORS: {
@@ -329,23 +355,24 @@ export function groupItems(
   vaultGrouping: string,
   getTag: (item: DimItem) => TagValue | undefined,
 ): readonly VaultGroup[] {
-  const getter = GROUP_BY_VALUE_GETTERS[vaultGrouping];
+  const groupingValueGetter = GROUPING_VALUE_GETTERS[vaultGrouping];
+  const iconValueGetter = ICON_VALUE_GETTERS[vaultGrouping];
   const comparator = GROUP_BY_COMPARATORS[vaultGrouping];
 
   // If there are no items, or the grouping is not suppored, return all items in a single group
-  if (!items.length || !getter || !comparator) {
-    return [{ value: undefined, items }];
+  if (!items.length || !groupingValueGetter || !comparator) {
+    return [{ groupingValue: undefined, items }];
   }
 
   const grouped: MutableVaultGroup[] = [];
 
   for (const item of items) {
-    const indexOfUngrouped = grouped.findIndex((g) => g.value === undefined);
+    const indexOfUngrouped = grouped.findIndex((g) => g.groupingValue === undefined);
 
-    if (!getter) {
+    if (!groupingValueGetter) {
       // If there is not an ungrouped group, create one
       if (indexOfUngrouped < 0) {
-        grouped.push({ value: undefined, items: [item] });
+        grouped.push({ groupingValue: undefined, items: [item] });
         continue;
       }
 
@@ -354,12 +381,12 @@ export function groupItems(
       continue;
     }
 
-    const value = getter(item, getTag);
+    const groupingValue = groupingValueGetter(item, getTag);
 
-    if (typeof value === 'undefined') {
+    if (typeof groupingValue === 'undefined') {
       // If there is not an ungrouped group, create one
       if (indexOfUngrouped < 0) {
-        grouped.push({ value: undefined, items: [item] });
+        grouped.push({ groupingValue: undefined, items: [item] });
         continue;
       }
 
@@ -368,7 +395,7 @@ export function groupItems(
       continue;
     }
 
-    const existingGroup = grouped.find((g) => g.value === value);
+    const existingGroup = grouped.find((g) => g.groupingValue === groupingValue);
 
     if (existingGroup) {
       // Add to existing group
@@ -376,8 +403,10 @@ export function groupItems(
       continue;
     }
 
+    const iconValue = iconValueGetter?.(item, getTag);
+
     // Create a new group if one doesn't exist for this value
-    grouped.push({ value, items: [item] });
+    grouped.push({ groupingValue, iconValue, items: [item] });
   }
 
   // Sort groups by comparator

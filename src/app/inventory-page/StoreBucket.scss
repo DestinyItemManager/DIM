@@ -84,6 +84,12 @@
       padding-bottom: 40%;
       margin: 0;
     }
+
+    .weapon-type-icon {
+      width: 100%;
+      height: auto;
+      filter: invert(1) !important;
+    }
   }
 }
 

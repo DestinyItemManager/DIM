@@ -1,18 +1,12 @@
 import { TagValue } from '@destinyitemmanager/dim-api-types';
-import { D1DamageTypeDefinition } from 'app/destiny1/d1-manifest-types';
 import TagIcon from 'app/inventory/TagIcon';
-import { toD2DamageType } from 'app/inventory/store/d1-item-factory';
 import { AmmoIcon } from 'app/item-popup/ItemPopupHeader';
-import { useDefinitions } from 'app/manifest/selectors';
 import { vaultWeaponGroupingSettingSelector } from 'app/settings/vault-grouping';
-import { VaultGroupValue } from 'app/shell/item-comparators';
-import {
-  DamageType,
-  DestinyAmmunitionType,
-  DestinyDamageTypeDefinition,
-} from 'bungie-api-ts/destiny2';
+import { VaultGroupIconValue } from 'app/shell/item-comparators';
+import { DestinyAmmunitionType } from 'bungie-api-ts/destiny2';
 import { useSelector } from 'react-redux';
 import ElementIcon from './ElementIcon';
+import { getWeaponTypeSvgIconFromCategoryHashes } from './svgs/itemCategory';
 
 const VALID_AMMO_TYPES: Record<DestinyAmmunitionType, boolean> = {
   [DestinyAmmunitionType.None]: true,
@@ -30,41 +24,37 @@ const VALID_TAGS: Record<TagValue, boolean> = {
   junk: true,
 };
 
-const VALID_ELEMENTS: Record<DamageType, boolean> = {
-  [DamageType.None]: true,
-  [DamageType.Kinetic]: true,
-  [DamageType.Arc]: true,
-  [DamageType.Thermal]: true,
-  [DamageType.Void]: true,
-  [DamageType.Raid]: true,
-  [DamageType.Stasis]: true,
-  [DamageType.Strand]: true,
-};
-
-const toInitials = (input: string) =>
-  input
-    .replace(/\W+/gi, ' ')
-    .trim()
-    .split(/\s+/)
-    .map((word) => word.charAt(0).toLocaleUpperCase())
-    .join('');
-
 export default function WeaponGroupingIcon({
-  groupValue,
+  iconValue,
   className,
 }: {
-  groupValue: VaultGroupValue;
+  iconValue: VaultGroupIconValue;
   className?: string;
 }) {
-  const defs = useDefinitions();
   const vaultWeaponGroupingSetting = useSelector(vaultWeaponGroupingSettingSelector);
 
-  if (!vaultWeaponGroupingSetting || typeof groupValue === 'undefined') {
+  if (!vaultWeaponGroupingSetting || typeof iconValue === 'undefined') {
     return null;
   }
 
-  if (vaultWeaponGroupingSetting === 'typeName' && typeof groupValue === 'string') {
-    return <div className={className}>{toInitials(groupValue)}</div>;
+  if (
+    vaultWeaponGroupingSetting === 'typeName' &&
+    typeof iconValue === 'object' &&
+    // eslint-disable-next-line no-implicit-coercion
+    !!iconValue &&
+    !('hash' in iconValue)
+  ) {
+    const icon = getWeaponTypeSvgIconFromCategoryHashes(iconValue);
+
+    if (!icon) {
+      return null;
+    }
+
+    return (
+      <div className={className}>
+        <img src={icon.svg} className="weapon-type-icon" />
+      </div>
+    );
   }
 
   if (vaultWeaponGroupingSetting === 'rarity') {
@@ -74,49 +64,40 @@ export default function WeaponGroupingIcon({
 
   if (
     vaultWeaponGroupingSetting === 'ammoType' &&
-    typeof groupValue === 'number' &&
-    groupValue in VALID_AMMO_TYPES
+    typeof iconValue === 'number' &&
+    iconValue in VALID_AMMO_TYPES
   ) {
     return (
       <div className={className}>
-        <AmmoIcon type={groupValue} />
+        <AmmoIcon type={iconValue} />
       </div>
     );
   }
 
   if (
     vaultWeaponGroupingSetting === 'tag' &&
-    typeof groupValue === 'string' &&
-    groupValue in VALID_TAGS
+    typeof iconValue === 'string' &&
+    iconValue in VALID_TAGS
   ) {
     return (
       <div className={className}>
-        <TagIcon tag={groupValue as TagValue} />
+        <TagIcon tag={iconValue} />
       </div>
     );
   }
 
   if (
     vaultWeaponGroupingSetting === 'elementWeapon' &&
-    typeof groupValue === 'number' &&
-    groupValue in VALID_ELEMENTS
+    typeof iconValue === 'object' &&
+    // eslint-disable-next-line no-implicit-coercion
+    !!iconValue &&
+    'hash' in iconValue
   ) {
-    const manifestDamageTypeMapping: Record<
-      number,
-      D1DamageTypeDefinition | DestinyDamageTypeDefinition
-    > = defs?.DamageType.getAll() ?? {};
-    const elementTypeDefs = Object.values(manifestDamageTypeMapping);
-    const element = elementTypeDefs.find((def) => def.enumValue === groupValue);
-    const convertedElement =
-      element && 'damageTypeHash' in element ? toD2DamageType(element) : element;
-
-    if (convertedElement) {
-      return (
-        <div className={className}>
-          <ElementIcon className="element-icon" element={convertedElement} />
-        </div>
-      );
-    }
+    return (
+      <div className={className}>
+        <ElementIcon className="element-icon" element={iconValue} />
+      </div>
+    );
   }
 
   return null;
