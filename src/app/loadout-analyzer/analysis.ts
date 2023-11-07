@@ -1,4 +1,8 @@
-import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
+import {
+  AssumeArmorMasterwork,
+  LoadoutParameters,
+  defaultLoadoutParameters,
+} from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimCharacterStat } from 'app/inventory/store-types';
@@ -45,13 +49,14 @@ export async function analyzeLoadout(
   {
     allItems,
     autoModDefs,
+    savedLoStatConstraintsByClass,
     itemCreationContext,
-    savedLoLoadoutParameters: savedLoadoutParameters,
     unlockedPlugs,
   }: LoadoutAnalysisContext,
   storeId: string,
   classType: DestinyClass,
   loadout: Loadout,
+  worker: typeof runProcess,
 ): Promise<LoadoutAnalysisResult> {
   const findings = new Set<LoadoutFinding>();
   const defs = itemCreationContext.defs;
@@ -67,7 +72,14 @@ export async function analyzeLoadout(
   const originalLoadoutMods = resolvedLoadout.resolvedMods;
   const originalModDefs = originalLoadoutMods.map((mod) => mod.resolvedMod);
 
-  const loadoutParameters = { ...savedLoadoutParameters, ...loadout.parameters };
+  const statOrderForClass = savedLoStatConstraintsByClass[classType];
+  const loadoutParameters: LoadoutParameters = {
+    ...defaultLoadoutParameters,
+    ...(statOrderForClass && { statConstraints: statOrderForClass }),
+    ...loadout.parameters,
+  };
+
+  const includeRuntimeStatBenefits = loadoutParameters.includeRuntimeStatBenefits ?? false;
 
   const subclass = resolvedLoadout.resolvedLoadoutItems.find(
     (i) => i.item.bucket.hash === BucketHashes.Subclass,
@@ -105,6 +117,8 @@ export async function analyzeLoadout(
 
   let hasStrictUpgrade = false;
   let ineligibleForOptimization = false;
+  let betterStatsAvailableFontNote = false;
+  let existingLoadoutStatsAsStatConstraints: ResolvedStatConstraint[] | undefined;
   if (loadoutArmor.length) {
     if (loadoutArmor.length < 5) {
       findings.add(LoadoutFinding.NotAFullArmorSet);
@@ -175,8 +189,18 @@ export async function analyzeLoadout(
         originalModDefs,
         armorEnergyRules,
         statConstraints,
+        includeRuntimeStatBenefits,
       );
       const assumedLoadoutStats = statProblems.stats;
+      // If Font mods cause a loadout stats to exceed T10, note this for later
+      if (
+        Object.values(assumedLoadoutStats).some(
+          (stat) =>
+            stat && stat.value >= 110 && stat.breakdown!.some((c) => c.source === 'runtimeEffect'),
+        )
+      ) {
+        betterStatsAvailableFontNote = true;
+      }
 
       needUpgrades ||= statProblems.needsUpgradesForStats;
 
@@ -230,20 +254,23 @@ export async function analyzeLoadout(
             modDefs,
             subclass,
             classType,
-            /* includeRuntimeStatBenefits */ true,
+            includeRuntimeStatBenefits,
           );
 
           // Give the event loop a chance after we did a lot of item filtering
           await delay(0);
 
-          const strictStatConstraints: ResolvedStatConstraint[] = statConstraints.map((c) => ({
+          existingLoadoutStatsAsStatConstraints = statConstraints.map((c) => ({
             ...c,
             minTier: statTier(assumedLoadoutStats[c.statHash]!.value),
           }));
+          const strictStatConstraints: ResolvedStatConstraint[] = statConstraints.map((c) => ({
+            ...c,
+            minTier: Math.max(c.minTier, statTier(assumedLoadoutStats[c.statHash]!.value)),
+          }));
 
-          loadoutParameters.statConstraints = strictStatConstraints;
           try {
-            const { resultPromise } = runProcess({
+            const { resultPromise } = worker({
               anyExotic: loadoutParameters.exoticArmorHash === LOCKED_EXOTIC_ANY_EXOTIC,
               armorEnergyRules,
               autoModDefs,
@@ -274,12 +301,16 @@ export async function analyzeLoadout(
 
   return {
     findings: [...findings],
+    betterStatsAvailableFontNote: hasStrictUpgrade && betterStatsAvailableFontNote,
     armorResults: ineligibleForOptimization
       ? { tag: 'ineligible' }
       : {
           tag: 'done',
           betterStatsAvailable: hasStrictUpgrade ? LoadoutFinding.BetterStatsAvailable : undefined,
           loadoutParameters,
+          strictUpgradeStatConstraints: hasStrictUpgrade
+            ? existingLoadoutStatsAsStatConstraints
+            : undefined,
         },
   };
 }
@@ -390,13 +421,22 @@ function getStatProblems(
   mods: PluggableInventoryItemDefinition[],
   loadoutArmorEnergyRules: ArmorEnergyRules,
   resolvedStatConstraints: ResolvedStatConstraint[],
+  includeRuntimeStatBenefits: boolean,
 ): {
   stats: HashLookup<DimCharacterStat>;
   cantHitStats: boolean;
   needsUpgradesForStats: boolean;
 } {
   const canHitStatsWithRules = (armorEnergyRules: ArmorEnergyRules) => {
-    const stats = getLoadoutStats(defs, classType, subclass, loadoutArmor, mods, armorEnergyRules);
+    const stats = getLoadoutStats(
+      defs,
+      classType,
+      subclass,
+      loadoutArmor,
+      mods,
+      includeRuntimeStatBenefits,
+      armorEnergyRules,
+    );
     return {
       stats,
       canHitStats: resolvedStatConstraints.every(
@@ -411,7 +451,7 @@ function getStatProblems(
 
   return {
     stats,
-    cantHitStats: !canHitStatsWithRules,
+    cantHitStats: !canHitStatsWithUpgrades,
     needsUpgradesForStats: canHitStatsWithUpgrades && !canHitStatsAsIs,
   };
 }

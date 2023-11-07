@@ -467,6 +467,8 @@ export default (env: Env) => {
         { from: `./icons/splash`, to: 'splash/' },
         { from: `./icons/screenshots`, to: 'screenshots/' },
         { from: './src/safari-pinned-tab.svg' },
+        { from: './src/nuke.php' },
+        { from: './src/robots.txt' },
       ],
     }),
 
@@ -577,7 +579,6 @@ export default (env: Env) => {
         include: [/\.(html|js|css|woff2|json|wasm)$/, /static\/(?!fa-).*\.(png|gif|jpg|svg)$/],
         exclude: [
           /version\.json/,
-          /\.map$/,
           // Ignore both the webapp manifest and the d1-manifest files
           /data\/d1\/manifests/,
           /manifest-webapp/,

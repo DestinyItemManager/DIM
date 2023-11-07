@@ -1,5 +1,4 @@
 import { symbolize } from 'app/hotkeys/hotkeys';
-import clsx from 'clsx';
 import React from 'react';
 import styles from './ActionButton.m.scss';
 
@@ -21,7 +20,7 @@ export default function ActionButton({
   return (
     <button
       type="button"
-      className={clsx(styles.actionButton)}
+      className={styles.actionButton}
       onClick={onClick}
       title={
         title || hotkeyDescription

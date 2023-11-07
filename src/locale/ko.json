@@ -391,6 +391,7 @@
     "ClearDialog": "대화 상자 숨기기",
     "ClearNewItems": "새 아이템 초기화",
     "Enter": "엔터",
+    "ItemPopupTab": "아이템 세부정보 탭 전환",
     "LockUnlock": "아이템 잠금 또는 잠금 해제",
     "MarkItemAs": "아이템을 '{{tag}}'로 표시하기",
     "Menu": "메뉴 표시 전환",
@@ -556,6 +557,58 @@
     "Profile": "데스티니 프로필 불러오는 중...",
     "Vendors": "데스티니 상인 불러오는 중..."
   },
+  "LoadoutAnalysis": {
+    "Analyzed": "{{numLoadouts}}개의 로드아웃 분석됨",
+    "Analyzing": "{{numAnalyzed}}/{{numLoadouts}} 로드아웃 분석하는 중",
+    "BetterStatsAvailable": {
+      "Description": "이 로드아웃에 다른 방어구나 개조 부품을 선택하면 능력치 등급을 더 높일 수 있습니다.",
+      "Name": "더 좋은 능력치 사용 가능"
+    },
+    "DoesNotRespectExotic": {
+      "Description": "이 로드아웃의 로드아웃 최적화 설정은 특정 경이 아이템을 지정하고 있지만, 로드아웃에 일치하는 경이 아이템이 없습니다.",
+      "Name": "잘못된 경이 아이템"
+    },
+    "DoesNotSatisfyStatConstraints": {
+      "Description": "이 로드아웃의 로드아웃 최적화 설정은 특정 능력치 등급을 지정하고 있지만, 로드아웃이 그 등급을 달성하지 않습니다.",
+      "Name": "잘못된 능력치 등급"
+    },
+    "EmptyFragmentSlots": {
+      "Description": "하위직업에 빈 조각 슬롯이 있습니다.",
+      "Name": "빈 조각 슬롯"
+    },
+    "InvalidMods": {
+      "Description": "이 로드아웃의 일부 개조 부품이 만료되었거나 어떤 방어구에도 장착할 수 없습니다.",
+      "Name": "만료된 개조 부품"
+    },
+    "LoadoutHasSearchQuery": {
+      "Description": "이 로드아웃은 로드아웃 최적화에서 검색어를 사용하여 생성되었습니다.",
+      "Name": "검색어 사용됨"
+    },
+    "MissingItems": {
+      "Description": "이 로드아웃의 일부 아이템이 더 이상 소지품에 없습니다.",
+      "Name": "누락된 아이템"
+    },
+    "ModsDontFit": {
+      "Description": "방어구를 업그레이드하여도 로드아웃의 모든 개조 부품을 장착할 수 없습니다.",
+      "Name": "할당되지 않은 개조 부품"
+    },
+    "NeedsArmorUpgrades": {
+      "Description": "이 로드아웃의 방어구를 업그레이드해야 모든 개조 부품이나 특정 능력치 등급을 달성할 수 있습니다.",
+      "Name": "방어구 업그레이드 필요"
+    },
+    "NotAFullArmorSet": {
+      "Description": "이 로드아웃은 모든 방어구를 포함하지 않아 더 이상 분석할 수 없습니다.",
+      "Name": "전체 방어구 세트 아님"
+    },
+    "TooManyFragments": {
+      "Description": "하위직업의 상에서 제공한 조각의 수를 초과하였습니다.",
+      "Name": "조각이 너무 많음"
+    },
+    "UsesSeasonalMods": {
+      "Description": "이 로드아웃은 특정 시즌에서만 사용 가능한 개조 부품에 의존합니다. 시즌이 종료되면 일부 개조 부품을 사용할 수 없거나 방어구 에너지 수용량을 초과할 수 있습니다.",
+      "Name": "시즌 개조 부품 사용"
+    }
+  },
   "LoadoutBuilder": {
     "AddHalfTierMods": "+5 개조 부품 추가",
     "All": "전체",
@@ -573,6 +626,7 @@
     "CompareLoadout": "로드아웃 비교",
     "ConfirmOverwrite": "로드아웃 \"{{name}}\"의 방어구를 새로운 방어구 조합으로 변경하시겠습니까?",
     "CreateLoadout": "로드아웃 저장",
+    "DecreaseStatPriority": "능력치 우선도 감소",
     "DisabledByAutoStatMods": "능력치 개조 부품은 로드아웃 최적화에서 자동으로 선택됩니다.",
     "DisabledDueToMaintenance": "Bungie API 점검으로 인하여 로드아웃 최적화가 비활성화되었습니다.",
     "EquipItems": "장착",
@@ -580,7 +634,9 @@
     "ExistingLoadout": "기존 로드아웃",
     "ExoticSpecialCategory": "특수",
     "Filter": "필터",
+    "IgnoreStat": "체크가 해제된 경우 로드아웃 최적화가 장비 조합을 구성할 때 이 능력치를 무시합니다.",
     "IncludeVendorItems": "상인 아이템 포함",
+    "IncreaseStatPriority": "능력치 우선도 증가",
     "Legendary": "전설",
     "LockEquipped": "장착된 아이템 고정",
     "LockItem": "아이템 잠금",
@@ -622,6 +678,7 @@
     "StatTierIgnoreOption": "무시",
     "StatTierIncludeOption": "포함",
     "TierNumber": "T{{tier}}",
+    "TierSelect": "최소 능력치 등급 선택",
     "UnableToAddAllMods": "모든 개조 부품을 추가할 수 없습니다.",
     "UnableToAddAllModsBody": "{{mods}}개의 개조 부품을 장착할 수 있는 공간이 없습니다.",
     "UnlockItem": "아이템 고정 해제"
@@ -660,11 +717,9 @@
     "CurrentlyEquipped": "현재 장착됨",
     "Deequip": "다른 캐릭터의 아이템 장착 해제 중",
     "Delete": "삭제",
-    "DeprecatedMods": "만료된 개조 부품",
     "DimLoadouts": "DIM 로드아웃",
     "Edit": "로드아웃 편집",
     "EditBrief": "수정",
-    "EmptyFragmentSlots": "조각 슬롯이 비어있음",
     "EquipInGameLoadout": "게임 내 로드아웃 장착",
     "EquipItems": "장비 장착 중",
     "EquippableDifferent1": "최대 전투력을 계산할 때 여러 개의 경이 아이템이 사용되었으므로, 게임 내 아이템을 장착할 때 표시된 숫자를 달성하지 못할 수 있습니다.",
@@ -693,7 +748,7 @@
     "LoadoutParameters": "로드아웃 최적화 설정",
     "LoadoutParametersExotic": "로드아웃이 이 경이 아이템을 포함해야 함: {{exoticName}}",
     "LoadoutParametersQuery": "아이템이 이 검색 필터와 일치해야 함",
-    "LoadoutParametersStats": "능력치 선호도와 최소/최대 능력치 티어",
+    "LoadoutParametersStats": "능력치 선호도와 최소/최대 능력치 등급",
     "Loadouts": "로드아웃",
     "MakeRoom": "우편 담당자를 위한 공간 생성",
     "MakeRoomDone": "{{store}}에서 1개의 아이템을 옮김으로써 우편 담당자 아이템 1개를 위한 공간을 만들었습니다.",
@@ -708,7 +763,6 @@
     "MaximizeLight": "최대 전투력",
     "MaximizePower": "최대 전투력",
     "MaximizeStat": "능력치 최대화",
-    "MissingItems": "누락된 아이템",
     "MissingItemsWarning": "이 로드아웃의 일부 아이템이 더 이상 소지품에 없습니다.",
     "ModErrorSummary": "1개의 개조 부품 오류:",
     "ModErrorSummary_plural": "{{count}}개의 개조 부품 오류:",
@@ -793,7 +847,6 @@
     "SubclassOptionsSearch": "{{subclass}} 옵션 검색",
     "Succeeded": "로드아웃 성공",
     "SyncFromEquipped": "장착한 아이템 동기화",
-    "TooManyFragments": "조각이 너무 많음",
     "TooManyRequested": "{{total}}개의 {{itemname}}을(를) 가지고 있으나 로드아웃이 {{requested}}개를 필요로 합니다. 가지고 있는 모든 것을 옮겼습니다.",
     "UnassignedModError": "개조 부품이 현재 방어구에 맞지 않음",
     "Undo": "되돌리기",
@@ -874,6 +927,7 @@
       "QuestProgress": "{{questStepNum}} / {{questStepsTotal}} 단계",
       "Type": "{{classType}} {{typeName}}"
     },
+    "TabList": "아이템 세부정보 탭",
     "ToggleSidecar": "아이템 액션 확장 또는 축소",
     "TrackUntrack": {
       "Track": "{{itemType}} 추적",
