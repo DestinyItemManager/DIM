@@ -35,26 +35,32 @@ describe('vaultWeaponGroupingSelector', () => {
       {
         ...firstItem,
         typeName: 'Scout Rifle',
+        itemCategoryHashes: [1],
       },
       {
         ...firstItem,
         typeName: 'Auto Rifle',
+        itemCategoryHashes: [2],
       },
       {
         ...firstItem,
         typeName: undefined as any,
+        itemCategoryHashes: [0],
       },
       {
         ...firstItem,
         typeName: 'Scout Rifle',
+        itemCategoryHashes: [1],
       },
       {
         ...firstItem,
         typeName: 'Hand Cannon',
+        itemCategoryHashes: [3],
       },
       {
         ...firstItem,
         typeName: 'Auto Rifle',
+        itemCategoryHashes: [2],
       },
     ];
   });
@@ -79,46 +85,55 @@ describe('vaultWeaponGroupingSelector', () => {
 
     expect(result).toEqual([
       {
-        value: 'Auto Rifle',
+        groupingValue: 'Auto Rifle',
+        iconValue: [2],
         items: [
           {
             ...firstItem,
             typeName: 'Auto Rifle',
+            itemCategoryHashes: [2],
           },
           {
             ...firstItem,
             typeName: 'Auto Rifle',
+            itemCategoryHashes: [2],
           },
         ],
       },
       {
-        value: 'Hand Cannon',
+        groupingValue: 'Hand Cannon',
+        iconValue: [3],
         items: [
           {
             ...firstItem,
             typeName: 'Hand Cannon',
+            itemCategoryHashes: [3],
           },
         ],
       },
       {
-        value: 'Scout Rifle',
+        groupingValue: 'Scout Rifle',
+        iconValue: [1],
         items: [
           {
             ...firstItem,
             typeName: 'Scout Rifle',
+            itemCategoryHashes: [1],
           },
           {
             ...firstItem,
             typeName: 'Scout Rifle',
+            itemCategoryHashes: [1],
           },
         ],
       },
       {
-        value: undefined,
+        groupingValue: undefined,
         items: [
           {
             ...firstItem,
             typeName: undefined,
+            itemCategoryHashes: [0],
           },
         ],
       },
