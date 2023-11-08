@@ -13,13 +13,13 @@ import {
   ServerResponse,
 } from 'bungie-api-ts/destiny2';
 import { F_OK } from 'constants';
-import fs from 'fs/promises';
 import i18next from 'i18next';
 import fetchMock from 'jest-fetch-mock';
 import en from 'locale/en.json';
 import ja from 'locale/ja.json';
 import _ from 'lodash';
-import path from 'path';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 import { getManifest as d2GetManifest } from '../app/bungie-api/destiny2-api';
 import profile from './data/profile-2023-08-31.json';
 import vendors from './data/vendors-2023-05-24.json';
@@ -27,7 +27,6 @@ import vendors from './data/vendors-2023-05-24.json';
 /**
  * Get the current manifest as JSON. Downloads the manifest if not cached.
  */
-// TODO: better to make the trimmed/parallel version
 // TODO: maybe use the fake indexeddb and just insert it from a file on startup??
 // fake indexeddb + mock server (msw or jest-mock-fetch) to simulate the API??
 export async function getTestManifestJson() {
@@ -35,6 +34,25 @@ export async function getTestManifestJson() {
   try {
     // download and parse manifest
     const cacheDir = path.resolve(__dirname, '..', '..', 'manifest-cache');
+
+    // In this mode we assume the last-written file in the manifest-cache directory is the one we want
+    if (process.env.LOCAL_MANIFEST) {
+      const files = (await fs.readdir(cacheDir)).filter((f) => path.extname(f) === '.json');
+      if (files.length) {
+        const mtimes = await Promise.all(
+          files.map(async (f) => ({
+            filename: f,
+            mtime: (await fs.stat(path.join(cacheDir, f))).mtime.getTime(),
+          })),
+        );
+
+        const filename = path.resolve(cacheDir, _.maxBy(mtimes, (f) => f.mtime)!.filename);
+        return [
+          JSON.parse(await fs.readFile(filename, 'utf-8')) as AllDestinyManifestComponents,
+          filename,
+        ] as const;
+      }
+    }
 
     let manifest: DestinyManifest;
     for (let i = 0; ; i++) {
@@ -58,7 +76,10 @@ export async function getTestManifestJson() {
       .catch(() => false);
 
     if (fileExists) {
-      return JSON.parse(await fs.readFile(filename, 'utf-8')) as AllDestinyManifestComponents;
+      return [
+        JSON.parse(await fs.readFile(filename, 'utf-8')) as AllDestinyManifestComponents,
+        filename,
+      ] as const;
     }
 
     await fs.mkdir(cacheDir, { recursive: true });
@@ -68,14 +89,14 @@ export async function getTestManifestJson() {
       allTables,
     );
     await fs.writeFile(filename, JSON.stringify(manifestDb), 'utf-8');
-    return manifestDb;
+    return [manifestDb, filename] as const;
   } finally {
     fetchMock.dontMock();
   }
 }
 
 export const getTestDefinitions = _.once(async () => {
-  const manifestJson = await getTestManifestJson();
+  const [manifestJson] = await getTestManifestJson();
   return buildDefinitionsFromManifest(manifestJson);
 });
 
