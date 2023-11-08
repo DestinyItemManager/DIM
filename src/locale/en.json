@@ -663,9 +663,9 @@
       "UpperBoundsFailed": "Many sets did not meet maximum stat tier requirements"
     },
     "NoExotic": "No Exotic",
-    "NoExoticDescription": "Equivalent to searching \"not:exotic\" in the search bar - no exotic armor will be included in sets.",
-    "NoExoticPreference": "No Preference",
-    "NoExoticPreferenceDescription": "Sets will include exotic armor if it improves stats.",
+    "NoExoticDescription": "Equivalent to searching \"not:exotic\" in the search bar - sets will not use any exotic armor.",
+    "NoExoticPreference": "No Exotic Selected",
+    "NoExoticPreferenceDescription": "Exotic armor will be used if it maximizes stats.",
     "NoLoadoutsToCompare": "No loadouts to compare",
     "None": "None",
     "OptimizerExplanationGuide": "Read the User Guide for more info and a video tutorial.",

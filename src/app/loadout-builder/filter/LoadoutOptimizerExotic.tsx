@@ -40,7 +40,7 @@ const LoadoutOptimizerExotic = memo(function LoadoutOptimizerExotic({
 
   const handleSyncFromEquipped = () => {
     const equippedExotic = allItems.find(
-      (i) => i.equipped && i.isExotic && i.bucket.inArmor && i.owner === storeId,
+      (i) => i.equipped && i.isExotic && i.bucket.inArmor && i.owner === storeId && i.energy,
     );
     lbDispatch({ type: 'lockExotic', lockedExoticHash: equippedExotic?.hash });
   };

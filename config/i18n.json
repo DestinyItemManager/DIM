@@ -614,9 +614,9 @@
       "AllowAutoStatMods": "Allow DIM to automatically include additional stat mods"
     },
     "NoExotic": "No Exotic",
-    "NoExoticDescription": "Equivalent to searching \"not:exotic\" in the search bar - no exotic armor will be included in sets.",
-    "NoExoticPreference": "No Preference",
-    "NoExoticPreferenceDescription": "Sets will include exotic armor if it improves stats.",
+    "NoExoticDescription": "Equivalent to searching \"not:exotic\" in the search bar - sets will not use any exotic armor.",
+    "NoExoticPreference": "No Exotic Selected",
+    "NoExoticPreferenceDescription": "Exotic armor will be used if it maximizes stats.",
     "NoLoadoutsToCompare": "No loadouts to compare",
     "None": "None",
     "OptimizerExplanationStats": "Drag the most important stats to the top, and set stats you don't care about to Ignore.",
