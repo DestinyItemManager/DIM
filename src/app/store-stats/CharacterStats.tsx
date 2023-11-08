@@ -234,7 +234,14 @@ export function LoadoutCharacterStats({
     }
   }
 
-  const stats = getLoadoutStats(defs, loadout.classType, subclass, equippedItems, allMods);
+  const stats = getLoadoutStats(
+    defs,
+    loadout.classType,
+    subclass,
+    equippedItems,
+    allMods,
+    loadout.parameters?.includeRuntimeStatBenefits ?? true,
+  );
 
   return <CharacterStats showTier stats={stats} equippedHashes={equippedHashes} />;
 }

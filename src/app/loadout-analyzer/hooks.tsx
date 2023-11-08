@@ -1,14 +1,18 @@
-import { savedLoadoutParametersSelector } from 'app/dim-api/selectors';
+import { currentAccountSelector } from 'app/accounts/selectors';
+import { savedLoStatConstraintsByClassSelector, settingSelector } from 'app/dim-api/selectors';
 import {
   allItemsSelector,
   createItemContextSelector,
   unlockedPlugSetItemsSelector,
 } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
+import { loVendorItemsSelector } from 'app/loadout-builder/loadout-builder-vendors';
 import { getAutoMods } from 'app/loadout-builder/process/mappers';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { d2ManifestSelector } from 'app/manifest/selectors';
+import { useSetting } from 'app/settings/hooks';
 import { currySelector } from 'app/utils/selectors';
+import { useLoadVendors } from 'app/vendors/hooks';
 import { noop } from 'lodash';
 import {
   ReactNode,
@@ -40,19 +44,34 @@ const autoOptimizationContextSelector = currySelector(
   createSelector(
     createItemContextSelector,
     unlockedPlugSetItemsSelector.selector,
-    allItemsSelector,
-    savedLoadoutParametersSelector,
+    savedLoStatConstraintsByClassSelector,
     autoModSelector,
-    (itemCreationContext, unlockedPlugs, allItems, savedLoLoadoutParameters, autoModDefs) =>
-      itemCreationContext.defs &&
-      autoModDefs &&
-      ({
-        itemCreationContext,
-        unlockedPlugs,
-        savedLoLoadoutParameters,
-        allItems,
-        autoModDefs,
-      } satisfies LoadoutAnalysisContext),
+    allItemsSelector,
+    loVendorItemsSelector.selector,
+    settingSelector<'loIncludeVendorItems'>('loIncludeVendorItems'),
+    (
+      itemCreationContext,
+      unlockedPlugs,
+      savedLoStatConstraintsByClass,
+      autoModDefs,
+      inventoryItems,
+      vendorItems,
+      loIncludeVendorItems,
+    ) => {
+      const includeVendorItems = $featureFlags.statConstraintEditor || loIncludeVendorItems;
+      const allItems = includeVendorItems ? inventoryItems.concat(vendorItems) : inventoryItems;
+      return (
+        itemCreationContext.defs &&
+        autoModDefs &&
+        ({
+          itemCreationContext,
+          unlockedPlugs,
+          savedLoStatConstraintsByClass,
+          autoModDefs,
+          allItems,
+        } satisfies LoadoutAnalysisContext)
+      );
+    },
   ),
 );
 
@@ -80,8 +99,14 @@ export function MakeLoadoutAnalysisAvailable({ children }: { children: ReactNode
  * it can keep analyzing loadouts when the user changes items etc.
  */
 export function useUpdateLoadoutAnalysisContext(storeId: string) {
+  const account = useSelector(currentAccountSelector)!;
   const analyzer = useContext(LoadoutAnalyzerReactContext);
   const analysisContext = useSelector(autoOptimizationContextSelector(storeId));
+  const [includeVendorItems_] = useSetting('loIncludeVendorItems');
+  const includeVendorItems = $featureFlags.statConstraintEditor || includeVendorItems_;
+
+  useLoadVendors(account, storeId, includeVendorItems);
+
   useEffect(
     () => analysisContext && analyzer?.updateAnalysisContext(storeId, analysisContext),
     [analysisContext, analyzer, storeId],

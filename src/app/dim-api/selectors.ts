@@ -1,4 +1,4 @@
-import { defaultLoadoutParameters, DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { DestinyVersion, defaultLoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { currentAccountSelector, destinyVersionSelector } from 'app/accounts/selectors';
 import { Settings } from 'app/settings/initial-settings';

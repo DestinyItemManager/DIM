@@ -33,11 +33,12 @@ import ExoticTile, { FakeExoticTile, LockedExoticWithPlugs } from './ExoticTile'
  */
 export function findLockableExotics(
   allItems: DimItem[],
+  vendorItems: DimItem[],
   classType: DestinyClass,
   defs: D2ManifestDefinitions,
 ) {
   // Find all the armor 2 exotics.
-  const exotics = allItems.filter(
+  const exotics = [...allItems, ...vendorItems].filter(
     (item) => item.isExotic && item.classType === classType && isLoadoutBuilderItem(item),
   );
   const orderedExotics = _.sortBy(exotics, (item) =>
@@ -145,11 +146,13 @@ function filterAndGroupExotics(
 export default function ExoticPicker({
   lockedExoticHash,
   classType,
+  vendorItems,
   onSelected,
   onClose,
 }: {
   lockedExoticHash?: number;
   classType: DestinyClass;
+  vendorItems: DimItem[];
   onSelected: (lockedExoticHash: number | undefined) => void;
   onClose: () => void;
 }) {
@@ -160,8 +163,8 @@ export default function ExoticPicker({
   const allItems = useSelector(allItemsSelector);
 
   const lockableExotics = useMemo(
-    () => findLockableExotics(allItems, classType, defs),
-    [allItems, classType, defs],
+    () => findLockableExotics(allItems, vendorItems, classType, defs),
+    [allItems, vendorItems, classType, defs],
   );
 
   const filteredOrderedAndGroupedExotics = useMemo(

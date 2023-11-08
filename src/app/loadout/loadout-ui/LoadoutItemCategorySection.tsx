@@ -5,14 +5,22 @@ import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { D2BucketCategory } from 'app/inventory/inventory-buckets';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { bucketsSelector } from 'app/inventory/selectors';
-import { LockableBucketHashes } from 'app/loadout-builder/types';
+import { DimStore } from 'app/inventory/store-types';
+import { useAnalyzeLoadout } from 'app/loadout-analyzer/hooks';
+import { LockableBucketHashes, ResolvedStatConstraint } from 'app/loadout-builder/types';
+import {
+  clearBucketCategory,
+  setLoadoutParameters,
+} from 'app/loadout-drawer/loadout-drawer-reducer';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { LoadoutCharacterStats } from 'app/store-stats/CharacterStats';
 import { emptyArray } from 'app/utils/empty';
 import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
 import _ from 'lodash';
+import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { BucketPlaceholder } from './BucketPlaceholder';
 import { FashionMods } from './FashionMods';
@@ -29,7 +37,7 @@ const categoryStyles: LookupTable<D2BucketCategory, string> = {
 export default function LoadoutItemCategorySection({
   category,
   subclass,
-  storeId,
+  store,
   items,
   allMods,
   modsByBucket,
@@ -38,7 +46,7 @@ export default function LoadoutItemCategorySection({
 }: {
   category: D2BucketCategory;
   subclass?: ResolvedLoadoutItem;
-  storeId: string;
+  store: DimStore;
   items?: ResolvedLoadoutItem[];
   allMods: PluggableInventoryItemDefinition[];
   modsByBucket: {
@@ -47,7 +55,9 @@ export default function LoadoutItemCategorySection({
   loadout: Loadout;
   hideOptimizeArmor?: boolean;
 }) {
+  const defs = useD2Definitions()!;
   const buckets = useSelector(bucketsSelector)!;
+  const analysis = useAnalyzeLoadout(loadout, store, /* active */ !hideOptimizeArmor);
   const itemsByBucket = Map.groupBy(items ?? [], (li) => li.item.bucket.hash);
   const isPhonePortrait = useIsPhonePortrait();
   const bucketOrder =
@@ -63,6 +73,24 @@ export default function LoadoutItemCategorySection({
   const isArmor = category === 'Armor';
   const hasFashion = isArmor && !_.isEmpty(modsByBucket);
 
+  const [optimizeLoadout, constraints]: [Loadout, ResolvedStatConstraint[] | undefined] =
+    useMemo(() => {
+      if (
+        analysis?.result.armorResults?.tag === 'done' &&
+        analysis.result.armorResults.betterStatsAvailable
+      ) {
+        return [
+          clearBucketCategory(
+            defs,
+            'Armor',
+          )(setLoadoutParameters(analysis.result.armorResults.loadoutParameters)(loadout)),
+          analysis.result.armorResults.strictUpgradeStatConstraints,
+        ];
+      } else {
+        return [loadout, undefined];
+      }
+    }, [defs, analysis?.result.armorResults, loadout]);
+
   if (isPhonePortrait && !items && !hasFashion) {
     return null;
   }
@@ -74,7 +102,7 @@ export default function LoadoutItemCategorySection({
           {bucketOrder.map((bucket) => (
             <ItemBucket
               key={bucket.hash}
-              storeId={storeId}
+              storeId={store.id}
               bucketHash={bucket.hash}
               items={itemsByBucket.get(bucket.hash)!}
               modsForBucket={modsByBucket[bucket.hash] ?? emptyArray()}
@@ -103,9 +131,10 @@ export default function LoadoutItemCategorySection({
           {loadout.parameters && <LoadoutParametersDisplay params={loadout.parameters} />}
           {!hideOptimizeArmor && (
             <OptimizerButton
-              loadout={loadout}
-              storeId={storeId}
+              loadout={optimizeLoadout}
+              storeId={store.id}
               missingArmor={armorItemsMissing(items)}
+              strictUpgradeStatConstraints={constraints}
             />
           )}
         </>

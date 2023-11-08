@@ -1,5 +1,6 @@
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
+import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
 import { makeFakeItem } from 'app/inventory/store/d2-item-factory';
 import LoadoutEditSection from 'app/loadout/loadout-edit/LoadoutEditSection';
@@ -22,12 +23,14 @@ const LoadoutOptimizerExotic = memo(function LoadoutOptimizerExotic({
   className,
   storeId,
   lockedExoticHash,
+  vendorItems,
   lbDispatch,
 }: {
   classType: DestinyClass;
   storeId: string;
   className?: string;
   lockedExoticHash: number | undefined;
+  vendorItems: DimItem[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
   const [showExoticPicker, setShowExoticPicker] = useState(false);
@@ -46,7 +49,7 @@ const LoadoutOptimizerExotic = memo(function LoadoutOptimizerExotic({
   };
 
   const handleRandomize = () => {
-    const exotics = findLockableExotics(allItems, classType, defs);
+    const exotics = findLockableExotics(allItems, vendorItems, classType, defs);
     if (exotics.length > 0) {
       const randomExotic = _.sample(exotics)!;
       lbDispatch({ type: 'lockExotic', lockedExoticHash: randomExotic.def.hash });
@@ -68,6 +71,7 @@ const LoadoutOptimizerExotic = memo(function LoadoutOptimizerExotic({
       {showExoticPicker && (
         <ExoticPicker
           lockedExoticHash={lockedExoticHash}
+          vendorItems={vendorItems}
           classType={classType}
           onSelected={(exotic) => lbDispatch({ type: 'lockExotic', lockedExoticHash: exotic })}
           onClose={() => setShowExoticPicker(false)}

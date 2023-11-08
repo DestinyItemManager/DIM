@@ -503,6 +503,8 @@
     "Equip": "Equip on {{character}}",
     "Exclude": "Excluded Items",
     "ExcludeHelp": "Shift + click an item (or drag and drop into this bucket) to build sets without specific gear.",
+    "ExistingBuildStats": "Existing Build Stats",
+    "ExistingBuildStatsNote": "Only showing builds with strictly higher stat tiers.",
     "FilterSets": "Filter sets",
     "Help": {
       "And": "Armor with all of these perks will be used (\"and\")",
@@ -574,9 +576,11 @@
     "AnyExoticDescription": "Sets must contain an exotic, but any exotic will do.",
     "AssumeMasterwork": "Assume Masterwork",
     "AssumeMasterworkOptions": {
-      "All": "All armor will use masterworked stats and will have an energy level of 10.",
-      "Legendary": "Legendary armor will use masterworked stats and will have an energy level of 10.",
-      "None": "All armor will use its current stats and will have a minimum energy level of {{minLoItemEnergy}}."
+      "All": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "Legendary": "Legendary: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotic: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
+      "None": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
+      "Current": "Current stats, assumed energy level at least {{minLoItemEnergy}}.",
+      "Masterworked": "+2 in each stat, assumed energy level 10."
     },
     "ChooseAlternateTitle": "Choose another item",
     "CompareLoadout": "Compare Loadout",
@@ -690,6 +694,8 @@
       "Error404": "This loadout doesn't exist.",
       "Error": "Error getting loadout:"
     },
+    "IncludeRuntimeStatBenefits": "Include Font mod stats",
+    "IncludeRuntimeStatBenefitsDesc": "\"Font of ...\" armor mods provide a flat boost to character stats while you have Armor Charges.\n\nWith this setting, DIM considers these mods active and adds their benefits to this Loadout's stats in calculations and optimizations.",
     "InGameLoadouts": "In-Game Loadouts",
     "ItemLeveling": "Item Leveling",
     "LoadoutName": "Loadout name",
@@ -821,6 +827,7 @@
   "LoadoutAnalysis": {
     "Analyzing": "Analyzing {{numAnalyzed}}/{{numLoadouts}} Loadouts",
     "Analyzed": "Analyzed {{numLoadouts}} Loadouts",
+    "BetterStatsAvailableFontNote": "Note: This Loadout uses \"Font of ...\" mods that cause a stat tier to exceed T10. DIM may identify better stats by reducing the amount of excess tiers. If this is undesired, disable \"$t(Loadouts.IncludeRuntimeStatBenefits)\" in the Loadout.",
     "MissingItems": {
       "Name": "Missing Items",
       "Description": "Some of the items in this loadout are no longer in your inventory."
@@ -843,7 +850,7 @@
     },
     "BetterStatsAvailable": {
       "Name": "Better Stats Available",
-      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stat tiers."
+      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stat tiers. Choose \"$t(Loadouts.OpenInOptimizer)\" to view better builds."
     },
     "NotAFullArmorSet": {
       "Name": "Not A Full Armor Set",

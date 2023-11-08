@@ -20,7 +20,7 @@ jobs:
       name: release
       url: https://app.dim.gg
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 2 # So sentry can get the previous commit
           # Use the dim-release-bot token rather than the default
@@ -29,13 +29,13 @@ jobs:
       - uses: pnpm/action-setup@v2
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18.x
           cache: pnpm
 
       - name: Install SSH key
-        uses: benoitchantre/setup-ssh-authentication-action@1.0.0
+        uses: benoitchantre/setup-ssh-authentication-action@1.0.1
         with:
           private-key: ${{ secrets.SSH_KEY }}
           private-key-name: dim.rsa
@@ -57,7 +57,7 @@ jobs:
 
       - name: Bump release version
         id: bump_version
-        uses: christian-draeger/increment-semantic-version@1.0.3
+        uses: christian-draeger/increment-semantic-version@1.1.0
         with:
           current-version: ${{ steps.package-version.outputs.current-version }}
           version-fragment: ${{ env.build_level }}
