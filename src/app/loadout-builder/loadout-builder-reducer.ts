@@ -272,7 +272,7 @@ type LoadoutBuilderConfigAction =
   | { type: 'removeLockedMod'; mod: ResolvedLoadoutMod }
   /** For adding "half tier mods" */
   | { type: 'addGeneralMods'; mods: PluggableInventoryItemDefinition[] }
-  | { type: 'lockExotic'; lockedExoticHash: number }
+  | { type: 'lockExotic'; lockedExoticHash: number | undefined }
   | { type: 'removeLockedExotic' }
   | { type: 'dismissComparisonStats' }
   | { type: 'setSearchQuery'; query: string };

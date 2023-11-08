@@ -635,6 +635,7 @@
     "EquipItems": "Equip",
     "ExcludeItem": "Exclude Item",
     "ExistingLoadout": "Existing Loadout",
+    "Exotic": "Exotic Armor",
     "ExoticSpecialCategory": "Special",
     "Filter": "Filters",
     "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
@@ -665,7 +666,9 @@
       "UpperBoundsFailed": "Many sets did not meet maximum stat tier requirements"
     },
     "NoExotic": "No Exotic",
-    "NoExoticDescription": "Equivalent to searching \"not:exotic\" in the search bar - no exotic armor will be included in sets.",
+    "NoExoticDescription": "Equivalent to searching \"not:exotic\" in the search bar - sets will not use any exotic armor.",
+    "NoExoticPreference": "No Exotic Selected",
+    "NoExoticPreferenceDescription": "Exotic armor will be used if it maximizes stats.",
     "NoLoadoutsToCompare": "No loadouts to compare",
     "None": "None",
     "OptimizerExplanationGuide": "Read the User Guide for more info and a video tutorial.",

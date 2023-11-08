@@ -5,14 +5,11 @@ import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { ItemFilter } from 'app/search/filter-types';
 import { AppIcon, faTimesCircle, pinIcon } from 'app/shell/icons';
 import { objectValues } from 'app/utils/util-types';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import React, { Dispatch, memo, useCallback, useState } from 'react';
+import React, { Dispatch, memo, useCallback } from 'react';
 import LoadoutBucketDropTarget from '../LoadoutBucketDropTarget';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ExcludedItems, LockableBucketHashes, PinnedItems } from '../types';
-import ExoticArmorChoice from './ExoticArmorChoice';
-import ExoticPicker from './ExoticPicker';
 import styles from './LoadoutOptimizerMenuItems.m.scss';
 import LockedItem from './LockedItem';
 
@@ -20,49 +17,6 @@ export type ChooseItemFunction = (
   updateFunc: (item: DimItem) => void,
   filter?: ((item: DimItem) => boolean) | undefined,
 ) => (e: React.MouseEvent) => Promise<void>;
-
-export const LoadoutOptimizerExotic = memo(function LoadoutOptimizerExotic({
-  classType,
-  vendorItems,
-  lockedExoticHash,
-  lbDispatch,
-}: {
-  classType: DestinyClass;
-  vendorItems: DimItem[];
-  lockedExoticHash: number | undefined;
-  lbDispatch: Dispatch<LoadoutBuilderAction>;
-}) {
-  const [showExoticPicker, setShowExoticPicker] = useState(false);
-
-  return (
-    <>
-      <div className={styles.area}>
-        {lockedExoticHash !== undefined && (
-          <div className={styles.notItemGrid}>
-            <ExoticArmorChoice
-              lockedExoticHash={lockedExoticHash}
-              onClose={() => lbDispatch({ type: 'removeLockedExotic' })}
-            />
-          </div>
-        )}
-        <div className={styles.buttons}>
-          <button type="button" className="dim-button" onClick={() => setShowExoticPicker(true)}>
-            {t('LB.SelectExotic')}
-          </button>
-        </div>
-      </div>
-      {showExoticPicker && (
-        <ExoticPicker
-          lockedExoticHash={lockedExoticHash}
-          classType={classType}
-          vendorItems={vendorItems}
-          onSelected={(exotic) => lbDispatch({ type: 'lockExotic', lockedExoticHash: exotic })}
-          onClose={() => setShowExoticPicker(false)}
-        />
-      )}
-    </>
-  );
-});
 
 export const LoadoutOptimizerPinnedItems = memo(function LoadoutOptimizerPinnedItems({
   chooseItem,

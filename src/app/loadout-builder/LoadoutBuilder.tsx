@@ -56,9 +56,9 @@ import { isLoadoutBuilderItem } from '../loadout/item-utils';
 import styles from './LoadoutBuilder.m.scss';
 import NoBuildsFoundExplainer from './NoBuildsFoundExplainer';
 import EnergyOptions from './filter/EnergyOptions';
+import LoadoutOptimizerExotic from './filter/LoadoutOptimizerExotic';
 import {
   LoadoutOptimizerExcludedItems,
-  LoadoutOptimizerExotic,
   LoadoutOptimizerPinnedItems,
   loMenuSection,
 } from './filter/LoadoutOptimizerMenuItems';
@@ -395,6 +395,8 @@ export default memo(function LoadoutBuilder({
         classType={selectedStore.classType}
         vendorItems={vendorItems}
         lbDispatch={lbDispatch}
+        storeId={selectedStore.id}
+        className={styles.loadoutEditSection}
       />
       <LoadoutEditModsSection
         loadout={loadout}
