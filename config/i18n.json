@@ -572,11 +572,13 @@
     "All": "All",
     "AnyExotic": "Any Exotic",
     "AnyExoticDescription": "Sets must contain an exotic, but any exotic will do.",
-    "AssumeMasterwork": "Assume Masterworked Energy & Stats",
+    "AssumeMasterwork": "Assume Masterwork",
     "AssumeMasterworkOptions": {
-      "All": "All armor will use masterworked stats and will have an energy level of 10.",
-      "Legendary": "Legendary armor will use masterworked stats and will have an energy level of 10. Exotic armor will use its current stats and will have a minimum energy level of {{minLoItemEnergy}}.",
-      "None": "All armor will use its current stats and will have a minimum energy level of {{minLoItemEnergy}}."
+      "All": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "Legendary": "Legendary: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotic: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
+      "None": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
+      "Current": "Current stats, assumed energy level at least {{minLoItemEnergy}}.",
+      "Masterworked": "+2 in each stat, assumed energy level 10."
     },
     "ChooseAlternateTitle": "Choose another item",
     "CompareLoadout": "Compare Loadout",
