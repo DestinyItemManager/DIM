@@ -1,5 +1,10 @@
 @use '../../variables' as *;
 
 .title {
-  margin: 0;
+  margin: 0 0 8px 0;
+}
+
+.tooltip {
+  text-wrap: pretty;
+  margin-top: 4px;
 }

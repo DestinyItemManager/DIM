@@ -354,7 +354,11 @@ export default memo(function LoadoutBuilder({
           lbDispatch={lbDispatch}
         />
       )}
-      <EnergyOptions assumeArmorMasterwork={assumeArmorMasterwork} lbDispatch={lbDispatch} />
+      <EnergyOptions
+        assumeArmorMasterwork={assumeArmorMasterwork}
+        lbDispatch={lbDispatch}
+        className={styles.loadoutEditSection}
+      />
       {!$featureFlags.statConstraintEditor && (
         <div className={loMenuSection}>
           <CheckButton
