@@ -7,24 +7,22 @@
 }
 
 .grip {
+  grid-area: grip;
   opacity: 0.5;
   font-size: 10px;
   padding-left: 10px;
+  padding-top: 8px;
   align-self: stretch;
   composes: flexRow from '../../dim-ui/common.m.scss';
-  align-items: center;
-}
-
-.ignored {
-  opacity: 0.4;
+  align-items: flex-start;
 }
 
 .row {
   display: grid;
-  grid-template-columns: 1fr min-content;
+  grid-template-columns: min-content 1fr min-content;
   grid-template-areas:
-    'name buttons'
-    'bar bar';
+    'grip name buttons'
+    'grip bar bar';
   gap: 4px 4px;
   margin-bottom: 2px;
   background-color: black;
@@ -33,6 +31,10 @@
 
   > * {
     white-space: nowrap;
+  }
+
+  &.ignored {
+    grid-template-areas: 'grip name buttons';
   }
 }
 
@@ -53,6 +55,10 @@
   overflow: hidden;
   align-self: stretch;
   width: 100%;
+
+  .ignored & {
+    opacity: 0.4;
+  }
 }
 
 .statBar {
@@ -68,7 +74,7 @@
   background-color: var(--theme-button-bg);
   color: var(--theme-button-text);
   font-size: 12px;
-  height: 24px;
+  height: 20px;
   box-sizing: border-box;
 
   /* stylelint-disable-next-line no-descending-specificity */
@@ -105,7 +111,7 @@
   padding: 4px 6px;
   opacity: 0.9;
 
-  &.ignored,
+  .ignored &,
   &:disabled {
     opacity: 0.9;
     color: #555;
@@ -113,7 +119,9 @@
 
   &:hover,
   &:focus-visible {
-    color: var(--theme-accent-primary);
+    &:not(:disabled) {
+      color: var(--theme-accent-primary);
+    }
   }
 }
 

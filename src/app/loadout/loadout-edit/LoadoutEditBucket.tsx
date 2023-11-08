@@ -212,7 +212,7 @@ function ItemBucket({
   );
 
   return (
-    <div className={clsx(styles.itemBucket)}>
+    <div className={styles.itemBucket}>
       <div
         ref={equippedRef}
         className={clsx({

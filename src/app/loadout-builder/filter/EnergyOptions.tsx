@@ -5,14 +5,15 @@ import { Dispatch, useCallback, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { loDefaultArmorEnergyRules } from '../types';
 import styles from './EnergyOptions.m.scss';
-import { loMenuSection } from './LoadoutOptimizerMenuItems';
 
 export default function EnergyOptions({
   assumeArmorMasterwork,
   lbDispatch,
+  className,
 }: {
   assumeArmorMasterwork: AssumeArmorMasterwork | undefined;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
+  className?: string;
 }) {
   const assumeMasterworkOptions: Option<AssumeArmorMasterwork>[] = useMemo(
     () => [
@@ -25,7 +26,9 @@ export default function EnergyOptions({
       },
       {
         label: t('LoadoutBuilder.Legendary'),
-        tooltip: t('LoadoutBuilder.AssumeMasterworkOptions.Legendary'),
+        tooltip: t('LoadoutBuilder.AssumeMasterworkOptions.Legendary', {
+          minLoItemEnergy: loDefaultArmorEnergyRules.minItemEnergy,
+        }),
         value: AssumeArmorMasterwork.Legendary,
       },
       {
@@ -47,14 +50,19 @@ export default function EnergyOptions({
     [lbDispatch],
   );
 
+  const selected = assumeMasterworkOptions.find(
+    (o) => o.value === (assumeArmorMasterwork ?? AssumeArmorMasterwork.None),
+  )!;
+
   return (
-    <div className={loMenuSection}>
+    <div className={className}>
       <h3 className={styles.title}>{t('LoadoutBuilder.AssumeMasterwork')}</h3>
       <RadioButtons
         value={assumeArmorMasterwork ?? AssumeArmorMasterwork.None}
         onChange={handleChange}
         options={assumeMasterworkOptions}
       />
+      <div className={styles.tooltip}>{selected.tooltip}</div>
     </div>
   );
 }

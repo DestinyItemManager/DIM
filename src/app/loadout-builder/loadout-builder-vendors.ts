@@ -21,7 +21,7 @@ const allowedVendorHashes = [
   VendorHashes.Failsafe,
 ];
 
-const loVendorItemsSelector = currySelector(
+export const loVendorItemsSelector = currySelector(
   createSelector(characterVendorItemsSelector, (allVendorItems) =>
     allVendorItems.filter((item) => allowedVendorHashes.includes(item.vendor?.vendorHash ?? -1)),
   ),

@@ -114,34 +114,34 @@ function StatRow({
     <Draggable draggableId={statHash.toString()} index={index}>
       {(provided, snapshot) => (
         <div
-          className={clsx(styles.row, { [styles.dragging]: snapshot.isDragging })}
+          className={clsx(styles.row, {
+            [styles.dragging]: snapshot.isDragging,
+            [styles.ignored]: statConstraint.ignored,
+          })}
           data-index={index}
           ref={provided.innerRef}
           {...provided.draggableProps}
         >
+          <span
+            className={styles.grip}
+            {...provided.dragHandleProps}
+            tabIndex={-1}
+            aria-hidden={true}
+          >
+            <AppIcon icon={dragHandleIcon} />
+          </span>
           <div className={styles.name}>
-            <span
-              className={styles.grip}
-              {...provided.dragHandleProps}
-              tabIndex={-1}
-              aria-hidden={true}
-            >
-              <AppIcon icon={dragHandleIcon} />
-            </span>
             <button
               type="button"
               role="checkbox"
               aria-checked={!statConstraint.ignored}
-              className={clsx({ [styles.ignored]: statConstraint.ignored }, styles.rowControl)}
+              className={styles.rowControl}
               onClick={handleIgnore}
               title={t('LoadoutBuilder.IgnoreStat')}
             >
               <AppIcon icon={statConstraint.ignored ? faSquare : faCheckSquare} />
             </button>
-            <div
-              className={clsx({ [styles.ignored]: statConstraint.ignored }, styles.label)}
-              {...provided.dragHandleProps}
-            >
+            <div className={styles.label} {...provided.dragHandleProps}>
               <BungieImage
                 className={styles.iconStat}
                 src={statDef.displayProperties.icon}

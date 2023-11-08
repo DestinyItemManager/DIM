@@ -18,6 +18,7 @@ import {
   addItem,
   applySocketOverrides,
   changeClearMods,
+  changeIncludeRuntimeStats,
   clearArtifactUnlocks,
   clearBucketCategory,
   clearLoadoutOptimizerParameters,
@@ -55,14 +56,13 @@ import { emptyObject } from 'app/utils/empty';
 import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import SubclassPlugDrawer from '../SubclassPlugDrawer';
-import { pickSubclass } from '../item-utils';
 import { hasVisibleLoadoutParameters } from '../loadout-ui/LoadoutParametersDisplay';
 import { useLoadoutMods } from '../mod-assignment-drawer/selectors';
+import { includesRuntimeStatMods } from '../stats';
 import styles from './LoadoutEdit.m.scss';
 import LoadoutEditBucket, { ArmorExtras } from './LoadoutEditBucket';
 import LoadoutEditSection from './LoadoutEditSection';
@@ -192,29 +192,11 @@ export function LoadoutEditSubclassSection({
   subclass: ResolvedLoadoutItem | undefined;
   className?: string;
 }) {
-  const showItemPicker = useItemPicker();
   const [plugDrawerOpen, setPlugDrawerOpen] = useState(false);
 
   const { useUpdater, useDefsUpdater, useDefsStoreUpdater } = useLoadoutUpdaters(store, setLoadout);
 
   const handleAddItem = useDefsUpdater(addItem);
-
-  const handleClickSubclass = async () => {
-    const loadoutClassType = loadout.classType;
-    const loadoutHasItem = (item: DimItem) => loadout.items.some((i) => i.hash === item.hash);
-
-    const subclassItemFilter = (item: DimItem) =>
-      item.bucket.hash === BucketHashes.Subclass &&
-      item.classType === loadoutClassType &&
-      item.owner === store.id &&
-      itemCanBeInLoadout(item) &&
-      !loadoutHasItem(item);
-
-    const item = await pickSubclass(showItemPicker, subclassItemFilter);
-    if (item) {
-      handleAddItem(item);
-    }
-  };
 
   const handleApplySocketOverrides = useUpdater(applySocketOverrides);
   const handleSyncSubclassFromEquipped = useDefsStoreUpdater(setLoadoutSubclassFromEquipped);
@@ -232,9 +214,10 @@ export function LoadoutEditSubclassSection({
       <LoadoutEditSubclass
         subclass={subclass}
         classType={loadout.classType}
+        storeId={store.id}
         power={power}
         onRemove={handleClearSubclass}
-        onPick={handleClickSubclass}
+        onPick={handleAddItem}
       />
       {subclass && (
         <div className={styles.buttons}>
@@ -429,12 +412,14 @@ export function LoadoutEditModsSection({
 
   const { useUpdater, useDefsStoreUpdater } = useLoadoutUpdaters(store, setLoadout);
   const clearUnsetMods = loadout.parameters?.clearMods;
+  const includeRuntimeStats = loadout.parameters?.includeRuntimeStatBenefits ?? true;
 
   const handleUpdateMods = useUpdater(updateMods);
   const handleRemoveMod = useUpdater(removeMod);
   const handleClearUnsetModsChanged = useUpdater(changeClearMods);
   const handleRandomizeMods = useDefsStoreUpdater(randomizeLoadoutMods);
   const handleClearMods = useUpdater(clearMods);
+  const handleIncludeRuntimeStats = useUpdater(changeIncludeRuntimeStats);
   const handleSyncModsFromEquipped = () => setLoadout(syncModsFromEquipped(store));
 
   return (
@@ -458,6 +443,12 @@ export function LoadoutEditModsSection({
         hideShowModPlacements={!showModPlacementsButton}
         autoStatMods={autoStatMods}
         onAutoStatModsChanged={onAutoStatModsChanged}
+        includeRuntimeStats={includeRuntimeStats}
+        onIncludeRuntimeStatsChanged={
+          loadout.parameters?.mods && includesRuntimeStatMods(loadout.parameters.mods)
+            ? handleIncludeRuntimeStats
+            : undefined
+        }
       />
     </LoadoutEditSection>
   );
