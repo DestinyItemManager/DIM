@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout DIM
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.I18N_PAT }}
@@ -17,7 +17,7 @@ jobs:
       - uses: pnpm/action-setup@v2
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18.x
           cache: pnpm
@@ -61,7 +61,7 @@ jobs:
 
       - name: Commit files
         if: steps.filter.outputs.changed
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: i18n
           commit_user_name: DIM i18n Bot

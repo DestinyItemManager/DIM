@@ -27,6 +27,7 @@ export default {
     $DIM_VERSION: '1.0.0',
     $featureFlags: {
       dimApi: true,
+      runLoInBackground: true,
     },
   },
 };

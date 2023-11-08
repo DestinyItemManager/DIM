@@ -467,6 +467,7 @@ export default (env: Env) => {
         { from: `./icons/splash`, to: 'splash/' },
         { from: `./icons/screenshots`, to: 'screenshots/' },
         { from: './src/safari-pinned-tab.svg' },
+        { from: './src/nuke.php' },
         { from: './src/robots.txt' },
       ],
     }),
@@ -490,7 +491,7 @@ export default (env: Env) => {
         Object.entries(featureFlags).map(([key, value]) => [
           `$featureFlags.${key}`,
           JSON.stringify(value),
-        ])
+        ]),
       ),
     }),
 
@@ -507,7 +508,7 @@ export default (env: Env) => {
     plugins.push(
       new ForkTsCheckerWebpackPlugin({
         eslint: { files: './src/**/*.{ts,tsx,cjs,mjs,cts,mts,js,jsx}' },
-      })
+      }),
     );
 
     if (process.env.SNORETOAST_DISABLE) {
@@ -519,13 +520,13 @@ export default (env: Env) => {
           excludeWarnings: false,
           alwaysNotify: true,
           contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png'),
-        })
+        }),
       );
       plugins.push(
         new ForkTsCheckerNotifierWebpackPlugin({
           title: 'DIM TypeScript',
           excludeWarnings: false,
-        })
+        }),
       );
     }
 
@@ -587,7 +588,7 @@ export default (env: Env) => {
         ],
         swSrc: './src/service-worker.ts',
         swDest: 'service-worker.js',
-      })
+      }),
     );
 
     // Skip brotli compression for PR builds
@@ -604,7 +605,7 @@ export default (env: Env) => {
             [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
           },
           minRatio: Infinity,
-        })
+        }),
       );
     }
   }
