@@ -602,6 +602,12 @@ export function changeClearMods(enabled: boolean): LoadoutUpdateFunction {
   });
 }
 
+export function changeIncludeRuntimeStats(enabled: boolean): LoadoutUpdateFunction {
+  return setLoadoutParameters({
+    includeRuntimeStatBenefits: enabled,
+  });
+}
+
 export function updateMods(mods: number[]): LoadoutUpdateFunction {
   return setLoadoutParameters({
     mods: mods.map(mapToNonReducedModCostVariant),

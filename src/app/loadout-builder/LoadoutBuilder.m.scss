@@ -79,7 +79,42 @@
   background-color: rgba(0, 0, 0, 0.4);
   padding: 8px;
   gap: 0;
-  // Fit 5 mods across, regardless of what the user's item size is
+  // Fit 7 mods across, regardless of what the user's item size is
+  --item-size: 50px;
+}
+
+.subclassSection {
+  composes: loadoutEditSection;
+  // Adjust these down a bit
   --item-size: 47px;
-  --loadout-edit-subclass-columns: 4;
+  --loadout-edit-subclass-columns: 6;
+}
+
+.referenceTiersInfo {
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 10px;
+  position: relative;
+  max-width: 800px;
+
+  .header {
+    display: flex;
+    flex-flow: row wrap;
+    font-size: 14px;
+    column-gap: 20px;
+  }
+}
+
+.dismissButton {
+  composes: resetButton from '../dim-ui/common.m.scss';
+  padding: 12px 12px 12px 12px;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  > :global(.app-icon) {
+    height: 24px;
+    width: 24px;
+    font-size: 24px;
+  }
+  position: absolute;
+  right: 0;
+  top: 0;
 }

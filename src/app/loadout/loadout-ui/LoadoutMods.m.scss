@@ -36,11 +36,9 @@
   height: var(--item-icon-size);
   width: var(--item-icon-size);
 
-  &:focus {
+  &:hover,
+  &:focus-visible {
     border-color: var(--theme-accent-primary);
-  }
-
-  &:hover {
     color: white;
   }
 }
