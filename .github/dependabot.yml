@@ -20,7 +20,8 @@ updates:
     schedule:
       interval: "weekly"
 
-  - directory: /
-    package-ecosystem: "docker"
-    schedule:
-      interval: "weekly"
+  # Dependabot doesn't support docker-compose yet
+  # - directory: /
+  #   package-ecosystem: "docker"
+  #   schedule:
+  #     interval: "weekly"
