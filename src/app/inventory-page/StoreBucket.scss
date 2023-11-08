@@ -78,10 +78,15 @@
     font-size: calc(var(--item-size) * 0.4);
     color: #999;
 
+    .ammo-icon {
+      width: 28px;
+      height: 20px;
+    }
+
     .element-icon {
-      width: 40%;
+      width: 50%;
       height: 0;
-      padding-bottom: 40%;
+      padding-bottom: 50%;
       margin: 0;
     }
 

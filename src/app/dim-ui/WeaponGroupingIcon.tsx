@@ -69,7 +69,7 @@ export default function WeaponGroupingIcon({
   ) {
     return (
       <div className={className}>
-        <AmmoIcon type={iconValue} />
+        <AmmoIcon type={iconValue} className="ammo-icon" />
       </div>
     );
   }
