@@ -37,20 +37,9 @@ export async function getTestManifestJson() {
 
     // In this mode we assume the last-written file in the manifest-cache directory is the one we want
     if (process.env.LOCAL_MANIFEST) {
-      const files = (await fs.readdir(cacheDir)).filter((f) => path.extname(f) === '.json');
-      if (files.length) {
-        const mtimes = await Promise.all(
-          files.map(async (f) => ({
-            filename: f,
-            mtime: (await fs.stat(path.join(cacheDir, f))).mtime.getTime(),
-          })),
-        );
-
-        const filename = path.resolve(cacheDir, _.maxBy(mtimes, (f) => f.mtime)!.filename);
-        return [
-          JSON.parse(await fs.readFile(filename, 'utf-8')) as AllDestinyManifestComponents,
-          filename,
-        ] as const;
+      const result = await getLocalManifest(cacheDir);
+      if (result) {
+        return result;
       }
     }
 
@@ -61,6 +50,11 @@ export async function getTestManifestJson() {
         break;
       } catch (e) {
         if (i === 4) {
+          // Fall back on local manifest when Bungie.net is down
+          const result = await getLocalManifest(cacheDir);
+          if (result) {
+            return result;
+          }
           throw e;
         }
         await delay(1000);
@@ -92,6 +86,25 @@ export async function getTestManifestJson() {
     return [manifestDb, filename] as const;
   } finally {
     fetchMock.dontMock();
+  }
+}
+
+// This gets the local manifest by finding the most recently modified json file in the cache directory.
+async function getLocalManifest(cacheDir: string) {
+  const files = (await fs.readdir(cacheDir)).filter((f) => path.extname(f) === '.json');
+  if (files.length) {
+    const mtimes = await Promise.all(
+      files.map(async (f) => ({
+        filename: f,
+        mtime: (await fs.stat(path.join(cacheDir, f))).mtime.getTime(),
+      })),
+    );
+
+    const filename = path.resolve(cacheDir, _.maxBy(mtimes, (f) => f.mtime)!.filename);
+    return [
+      JSON.parse(await fs.readFile(filename, 'utf-8')) as AllDestinyManifestComponents,
+      filename,
+    ] as const;
   }
 }
 
