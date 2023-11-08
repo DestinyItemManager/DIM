@@ -10,7 +10,7 @@
   },
   "type": "module",
   "scripts": {
-    "test": "cross-env NODE_ENV=test jest --verbose",
+    "test": "NODE_ENV=test jest --verbose",
     "lint": "pnpm run '/^lint:.*/'",
     "lint:eslint": "eslint src --ext .js,.ts,.tsx",
     "lint:prettier": "prettier \"src/**/*.{js,ts,tsx,cjs,mjs,cts,mts,scss}\" --check",
@@ -124,7 +124,6 @@
     "compression-webpack-plugin": "^10.0.0",
     "content-security-policy-builder": "^2.1.1",
     "copy-webpack-plugin": "^11.0.0",
-    "cross-env": "^7.0.3",
     "css-loader": "^6.8.1",
     "css-modules-typescript-loader": "^4.0.1",
     "cssnano": "^6.0.1",
