@@ -17,11 +17,11 @@
   align-items: center;
   font-weight: bold;
   font-size: 11px;
+  gap: (2 / 11) * 1em;
 
   img {
     height: 14px;
     width: 14px;
-    margin-right: 2px;
   }
 }
 
@@ -46,5 +46,14 @@
   :global(.app-icon) {
     margin-left: 3px;
     margin-right: 6px;
+  }
+}
+
+.constraintRange {
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  align-items: center;
+  gap: (2 / 11) * 1em;
+  :global(.app-icon) {
+    font-size: 0.7em;
   }
 }

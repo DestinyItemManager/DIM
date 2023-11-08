@@ -4,7 +4,8 @@ import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import ExoticArmorChoice, { getLockedExotic } from 'app/loadout-builder/filter/ExoticArmorChoice';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { AppIcon, searchIcon } from 'app/shell/icons';
+import { AppIcon, equalsIcon, greaterThanIcon, searchIcon } from 'app/shell/icons';
+import clsx from 'clsx';
 import { includesRuntimeStatMods } from '../stats';
 import styles from './LoadoutParametersDisplay.m.scss';
 
@@ -82,11 +83,12 @@ export function StatConstraintRange({
   statConstraint: StatConstraint;
   className?: string;
 }) {
+  className = clsx(className, styles.constraintRange);
   return s.minTier !== undefined && s.minTier !== 0 ? (
     <span className={className}>
       {(s.maxTier === 10 || s.maxTier === undefined) && s.minTier !== 10 ? (
         <>
-          &ge;
+          <AppIcon icon={greaterThanIcon} />
           {t('LoadoutBuilder.TierNumber', {
             tier: s.minTier,
           })}
@@ -97,7 +99,7 @@ export function StatConstraintRange({
         })}-${s.maxTier}`
       ) : (
         <>
-          &eq;
+          <AppIcon icon={equalsIcon} />
           {t('LoadoutBuilder.TierNumber', {
             tier: s.minTier,
           })}
@@ -106,9 +108,9 @@ export function StatConstraintRange({
     </span>
   ) : (
     <span className={className}>
-      &le;
+      <AppIcon icon={greaterThanIcon} />
       {t('LoadoutBuilder.TierNumber', {
-        tier: s.maxTier ?? 10,
+        tier: 0,
       })}
     </span>
   );
