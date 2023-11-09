@@ -10,7 +10,7 @@
   },
   "type": "module",
   "scripts": {
-    "test": "cross-env NODE_ENV=test jest --verbose",
+    "test": "jest -i src/testing/precache-manifest.test.ts && cross-env NODE_ENV=test LOCAL_MANIFEST=true jest --verbose",
     "lint": "run-p lint:*",
     "lint:eslint": "eslint src --ext .js,.ts,.tsx",
     "lint:prettier": "prettier \"src/**/*.{js,ts,tsx,cjs,mjs,cts,mts,scss}\" --check",
