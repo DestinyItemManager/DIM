@@ -158,7 +158,8 @@ const freeformFilters: FilterDefinition[] = [
       const normalized = plainString(filterValue, language);
       let test = (s: string) => normalized === plainString(s, language);
       if (lhs === 'perkname') {
-        test = (s: string) => normalized === plainString(s, language);
+        const startWord = startWordRegexp(normalized, language);
+        test = (s: string) => startWord.test(plainString(s, language));
       }
       return (item) =>
         (isD1Item(item) &&
