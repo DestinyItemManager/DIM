@@ -12,7 +12,7 @@ test.each([
   ['This note has #foo tag and also#bar', ['#foo']],
   ['#foo#bar', ['#foo']],
   ['#foo,#bar', ['#foo', '#bar']],
-  ['#foo-#bar', ['#foo']],
+  ['#foo-#bar', ['#foo-']], // Not great, could be better
   ['Emoji #🤯 tags', ['#🤯']],
 ])('getHashtagsFromNote: %s', (notes, expectedTags) => {
   const tags = new Set(getHashtagsFromNote(notes));

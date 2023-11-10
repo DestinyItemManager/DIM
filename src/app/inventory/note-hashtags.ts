@@ -18,10 +18,10 @@ export function collectNotesHashtags(itemInfos: ItemInfos) {
   return uniqBy(hashTags, (t) => t.toLowerCase());
 }
 
-const hashtagRegex = /(?:^|[\s,])(#[\p{L}\p{N}_\p{Private_Use}\p{Other_Symbol}:-^#]+)/gu;
+const hashtagRegex = /(^|[\s,])(#[\p{L}\p{N}\p{Private_Use}\p{Other_Symbol}_:-]+)/gu;
 
 export function getHashtagsFromNote(note?: string | null) {
-  return Array.from(note?.matchAll(hashtagRegex) ?? [], (m) => m[1]);
+  return Array.from(note?.matchAll(hashtagRegex) ?? [], (m) => m[2]);
 }
 
 // TODO: am I really gonna need to write a parser again
@@ -46,7 +46,8 @@ export function appendedToNote(originalNote: string | undefined, append: string)
     .trim();
 }
 
-const allHashtagsRegex = /^(\s*)((#[\p{L}\p{N}_\p{Private_Use}\p{Other_Symbol}:-]+)\s*)+$/u;
+const allHashtagsRegex =
+  /^(\s*)((?:^|[\s,])(#[\p{L}\p{N}\p{Private_Use}\p{Other_Symbol}_:-]+)\s*)+$/u;
 
 /**
  * Add notes to an existing note. This is hashtag-aware, so it will not remove
@@ -93,12 +94,13 @@ function segmentHashtags(
   let lastIndex = 0;
   let match: RegExpExecArray | null;
   while ((match = hashtagRegex.exec(note))) {
-    if (match.index > lastIndex) {
-      const segment = note.substring(lastIndex, match.index);
+    const matchIndex = match.index + match[1].length;
+    if (matchIndex > lastIndex) {
+      const segment = note.substring(lastIndex, matchIndex);
       result.push(segment);
     }
-    result.push({ hashtag: match[0], index: match.index });
-    lastIndex = match.index + match[0].length;
+    result.push({ hashtag: match[2], index: matchIndex });
+    lastIndex = matchIndex + match[2].length;
   }
   if (lastIndex < note.length) {
     result.push(note.substring(lastIndex, note.length));
