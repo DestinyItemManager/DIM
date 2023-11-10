@@ -629,14 +629,15 @@ export function getInstancedLoadoutItem(allItems: DimItem[], loadoutItem: Loadou
 }
 
 /**
- * Get a mapping from item hash to item, for uninstanced items that could be in
- * loadouts. Used for looking up items from loadouts. This used to be restricted
- * to only items that could be in loadouts, but we need it to be all items to
- * make search-based loadout transfers work.
+ * Get a mapping from item hash to item for uninstanced items and subclasses.
+ * Used for looking up items from loadouts. This used to be restricted to only
+ * items that could be in loadouts, but we need it to be all items to make
+ * search-based loadout transfers work.
  */
 const uninstancedItemsByHash = weakMemoize((allItems: DimItem[]) =>
   Map.groupBy(
-    allItems.filter((i) => !i.instanced),
+    // We include subclasses as if they were uninstanced because loadouts resolve them based on hash
+    allItems.filter((i) => !i.instanced || i.bucket.hash === BucketHashes.Subclass),
     (i) => i.hash,
   ),
 );
