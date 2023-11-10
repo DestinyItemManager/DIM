@@ -1,4 +1,5 @@
 import { settingSelector } from 'app/dim-api/selectors';
+import { CollapsedSection } from 'app/dim-ui/CollapsibleTitle';
 import { scrollToPosition } from 'app/dim-ui/scroll';
 import { DimTitle } from 'app/inventory/store-types';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -130,20 +131,19 @@ export default function PresentationNode({
           </button>
         </h3>
       )}
-      <div id={contentId}>
-        {childrenExpanded &&
-          node.childPresentationNodes?.map((subNode) => (
-            <PresentationNode
-              key={subNode.hash}
-              node={subNode}
-              ownedItemHashes={ownedItemHashes}
-              path={path}
-              parents={thisAndParents}
-              onNodePathSelected={onNodePathSelected}
-              isInTriumphs={isInTriumphs}
-            />
-          ))}
-        {childrenExpanded && visible > 0 && (
+      <CollapsedSection collapsed={!childrenExpanded} headerId={headerId} contentId={contentId}>
+        {node.childPresentationNodes?.map((subNode) => (
+          <PresentationNode
+            key={subNode.hash}
+            node={subNode}
+            ownedItemHashes={ownedItemHashes}
+            path={path}
+            parents={thisAndParents}
+            onNodePathSelected={onNodePathSelected}
+            isInTriumphs={isInTriumphs}
+          />
+        ))}
+        {visible > 0 && (
           <PresentationNodeLeaf
             node={node}
             ownedItemHashes={ownedItemHashes}
@@ -151,7 +151,7 @@ export default function PresentationNode({
             sortRecordProgression={sortRecordProgression}
           />
         )}
-      </div>
+      </CollapsedSection>
     </div>
   );
 }

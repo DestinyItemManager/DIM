@@ -80,11 +80,15 @@ export default function CollapsibleTitle({
   );
 }
 
-const collapsibleTitleAnimateVariants: Variants = {
+export const collapsibleTitleAnimateVariants: Variants = {
   open: { height: 'auto' },
   collapsed: { height: 0 },
 };
-const collapsibleTitleAnimateTransition: Spring = { type: 'spring', duration: 0.5, bounce: 0 };
+export const collapsibleTitleAnimateTransition: Spring = {
+  type: 'spring',
+  duration: 0.5,
+  bounce: 0,
+};
 
 export function CollapsedSection({
   collapsed,
