@@ -46,29 +46,32 @@ export default function CollapsibleTitle({
 
   return (
     <>
-      <button
-        type="button"
+      <h3
         className={clsx(
           'title',
           className,
           { collapsed },
           disabled && collapsed && 'disabled-collapsed',
         )}
-        aria-expanded={!collapsed}
-        aria-controls={contentId}
-        style={style}
-        onClick={toggle}
       >
-        <span className="collapse-handle">
-          <AppIcon
-            className="collapse-icon"
-            icon={collapsed ? expandIcon : collapseIcon}
-            ariaHidden
-          />{' '}
-          <span id={headerId}>{title}</span>
-        </span>
-        {showExtraOnlyWhenCollapsed ? collapsed && extra : extra}
-      </button>
+        <button
+          type="button"
+          aria-expanded={!collapsed}
+          aria-controls={contentId}
+          style={style}
+          onClick={toggle}
+        >
+          <span className="collapse-handle">
+            <AppIcon
+              className="collapse-icon"
+              icon={collapsed ? expandIcon : collapseIcon}
+              ariaHidden
+            />{' '}
+            <span id={headerId}>{title}</span>
+          </span>
+          {showExtraOnlyWhenCollapsed ? collapsed && extra : extra}
+        </button>
+      </h3>
       <CollapsedSection collapsed={collapsed} headerId={headerId} contentId={contentId}>
         {children}
       </CollapsedSection>

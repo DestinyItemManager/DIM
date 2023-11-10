@@ -75,7 +75,7 @@ export default function InventoryCollapsibleTitle({
                 : t('ItemService.PostmasterFull');
 
             return (
-              <div
+              <h3
                 key={store.id}
                 className={clsx('title', 'store-cell', className, {
                   collapsed,
@@ -86,26 +86,29 @@ export default function InventoryCollapsibleTitle({
                 {index === 0 ? (
                   <button
                     type="button"
-                    className="collapse-handle"
                     onClick={toggle}
                     aria-expanded={!collapsed}
                     aria-controls={contentId}
                   >
-                    <AppIcon
-                      className="collapse-icon"
-                      icon={collapsed ? expandIcon : collapseIcon}
-                      ariaHidden
-                    />{' '}
-                    <span id={headerId}>
-                      {showPostmasterFull ? text : title}
-                      {checkPostmaster && (
-                        <span className={styles.bucketSize}>
-                          ({postMasterSpaceUsed}/{POSTMASTER_SIZE})
-                        </span>
-                      )}
-                      {collapsed && !checkPostmaster && (
-                        <span className={styles.clickToExpand}>{t('Inventory.ClickToExpand')}</span>
-                      )}
+                    <span className="collapse-handle">
+                      <AppIcon
+                        className="collapse-icon"
+                        icon={collapsed ? expandIcon : collapseIcon}
+                        ariaHidden
+                      />{' '}
+                      <span id={headerId}>
+                        {showPostmasterFull ? text : title}
+                        {checkPostmaster && (
+                          <span className={styles.bucketSize}>
+                            ({postMasterSpaceUsed}/{POSTMASTER_SIZE})
+                          </span>
+                        )}
+                        {collapsed && !checkPostmaster && (
+                          <span className={styles.clickToExpand}>
+                            {t('Inventory.ClickToExpand')}
+                          </span>
+                        )}
+                      </span>
                     </span>
                   </button>
                 ) : (
@@ -118,7 +121,7 @@ export default function InventoryCollapsibleTitle({
                     )}
                   </>
                 )}
-              </div>
+              </h3>
             );
           })}
       </div>
