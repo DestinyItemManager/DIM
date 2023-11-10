@@ -268,7 +268,7 @@ function LoadoutEditCategorySection({
   const { useUpdater, useDefsUpdater, useDefsStoreUpdater } = useLoadoutUpdaters(store, setLoadout);
 
   const handleAddItem = useDefsUpdater(addItem);
-  const handleReplaceItem = useDefsUpdater(replaceItem);
+  const handleReplaceItem = useUpdater(replaceItem);
 
   const handleClickPlaceholder = ({
     bucket,

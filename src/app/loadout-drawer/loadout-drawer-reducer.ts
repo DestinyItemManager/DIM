@@ -225,7 +225,6 @@ export function removeItem(
  * item. It should inherit equipped-ness from the original item.
  */
 export function replaceItem(
-  defs: D1ManifestDefinitions | D2ManifestDefinitions,
   { loadoutItem }: ResolvedLoadoutItem,
   newItem: DimItem,
 ): LoadoutUpdateFunction {
