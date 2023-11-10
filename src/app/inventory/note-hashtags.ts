@@ -18,10 +18,10 @@ export function collectNotesHashtags(itemInfos: ItemInfos) {
   return uniqBy(hashTags, (t) => t.toLowerCase());
 }
 
-const hashtagRegex = /#[\p{L}\p{N}_\p{Private_Use}\p{Other_Symbol}:-]+/gu;
+const hashtagRegex = /(?:^|[\s,])(#[\p{L}\p{N}_\p{Private_Use}\p{Other_Symbol}:-^#]+)/gu;
 
 export function getHashtagsFromNote(note?: string | null) {
-  return Array.from(note?.matchAll(hashtagRegex) ?? [], (m) => m[0]);
+  return Array.from(note?.matchAll(hashtagRegex) ?? [], (m) => m[1]);
 }
 
 // TODO: am I really gonna need to write a parser again
