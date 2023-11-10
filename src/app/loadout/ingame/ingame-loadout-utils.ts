@@ -93,6 +93,10 @@ export function implementsDimLoadout(
     .map((i) => i.item.id);
   const equippedGameItems = inGameLoadout.items.map((i) => i.itemInstanceId);
 
+  if (equippedDimItems.length < 4) {
+    return false;
+  }
+
   // try the faster quit
   if (!equippedDimItems.every((i) => equippedGameItems.includes(i))) {
     return false;
