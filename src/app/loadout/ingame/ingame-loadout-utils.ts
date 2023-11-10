@@ -11,7 +11,7 @@ import {
   ResolvedLoadoutItem,
   ResolvedLoadoutMod,
 } from 'app/loadout-drawer/loadout-types';
-import { potentialLoadoutItemsByItemId } from 'app/loadout-drawer/loadout-utils';
+import { itemsByItemId } from 'app/loadout-drawer/loadout-utils';
 import { filterMap } from 'app/utils/collections';
 import { DestinyLoadoutItemComponent } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -30,9 +30,7 @@ export function getItemsFromInGameLoadout(
 ): ResolvedLoadoutItem[] {
   return filterMap(loadoutItems, (li) => {
     const realItem =
-      li.itemInstanceId !== '0'
-        ? potentialLoadoutItemsByItemId(allItems)[li.itemInstanceId]
-        : undefined;
+      li.itemInstanceId !== '0' ? itemsByItemId(allItems)[li.itemInstanceId] : undefined;
     if (!realItem) {
       // We just skip missing items entirely - we can't find anything about them
       return undefined;
