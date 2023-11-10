@@ -13,23 +13,25 @@ export default forwardRef(function CharacterTileButton(
     className,
   }: {
     character: DimStore;
-    onClick?: (id: string) => void;
+    onClick: (id: string) => void;
     children?: React.ReactNode;
     className?: string;
   },
-  ref: React.Ref<HTMLDivElement>,
+  ref: React.Ref<HTMLButtonElement>,
 ) {
   const handleClick = onClick ? () => onClick(character.id) : undefined;
 
+  // TODO: these should really be radio buttons (one exclusive choice among several) and be navigable with arrow keys.
+
   return (
-    <div
-      role={onClick ? 'button' : undefined}
+    <button
+      type="button"
       onClick={handleClick}
       className={clsx(styles.character, className)}
       ref={ref}
     >
       <CharacterTile store={character} />
       {children}
-    </div>
+    </button>
   );
 });
