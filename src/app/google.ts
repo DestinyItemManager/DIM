@@ -7,7 +7,7 @@ declare global {
 }
 
 export function ga(...args: unknown[]) {
-  window.dataLayer?.push(args);
+  (window.dataLayer ??= []).push(args);
 }
 
 export function gaPageView(path: string, title?: string) {
@@ -44,6 +44,7 @@ export function initGoogleAnalytics() {
     ga('config', $ANALYTICS_PROPERTY, {
       store_gac: false,
       allow_ad_personalization_signals: false,
+      allow_google_signals: false,
       send_page_view: false,
       dim_version: $DIM_VERSION,
       dim_flavor: $DIM_FLAVOR,
