@@ -629,26 +629,20 @@ export function getInstancedLoadoutItem(allItems: DimItem[], loadoutItem: Loadou
 }
 
 /**
- * Get a mapping from item hash to item for uninstanced items and subclasses.
- * Used for looking up items from loadouts. This used to be restricted to only
- * items that could be in loadouts, but we need it to be all items to make
- * search-based loadout transfers work.
+ * Get a mapping from item hash to item. Used for looking up items from
+ * loadouts. This used to be restricted to only items that could be in loadouts,
+ * but we need it to be all items to make search-based loadout transfers work.
  */
-const uninstancedItemsByHash = weakMemoize((allItems: DimItem[]) =>
-  Map.groupBy(
-    // We include subclasses as if they were uninstanced because loadouts resolve them based on hash
-    allItems.filter((i) => !i.instanced || i.bucket.hash === BucketHashes.Subclass),
-    (i) => i.hash,
-  ),
-);
+const itemsByHash = weakMemoize((allItems: DimItem[]) => Map.groupBy(allItems, (i) => i.hash));
 
 export function getUninstancedLoadoutItem(
   allItems: DimItem[],
   hash: number,
   storeId: string | undefined,
 ) {
-  // This is mostly for subclasses - it finds all matching items by hash and then picks the one that's on the desired character
-  const candidates = uninstancedItemsByHash(allItems).get(hash) ?? [];
+  // This is for subclasses and emblems - it finds all matching items by hash and then picks the one that's on the desired character
+  // It's also used for moving consumables in search loadouts
+  const candidates = itemsByHash(allItems).get(hash) ?? [];
   // the copy of this item being held by the specified store
   const heldItem =
     storeId !== undefined ? candidates.find((item) => item.owner === storeId) : undefined;
