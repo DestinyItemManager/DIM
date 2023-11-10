@@ -14,6 +14,9 @@ export function gaPageView(path: string, title?: string) {
   ga('event', 'page_view', {
     page_title: title,
     page_location: window.location.origin + path,
+    page_path: path,
+    dim_version: $DIM_VERSION,
+    dim_flavor: $DIM_FLAVOR,
   });
 }
 
@@ -33,22 +36,22 @@ export function initGoogleAnalytics() {
       event: 'gtm.js',
       'gtm.start': new Date().getTime(),
       'gtm.uniqueEventId': 0,
-    });
-    ga('js', new Date());
-    ga('set', {
       dim_version: $DIM_VERSION,
       dim_flavor: $DIM_FLAVOR,
     });
-
+    ga('js', new Date());
     const token = getToken();
-    if (token?.bungieMembershipId) {
-      ga('set', { user_id: token.bungieMembershipId });
-    }
-
     ga('config', $ANALYTICS_PROPERTY, {
       store_gac: false,
       allow_ad_personalization_signals: false,
       send_page_view: false,
+      dim_version: $DIM_VERSION,
+      dim_flavor: $DIM_FLAVOR,
+      user_id: token?.bungieMembershipId,
+    });
+    ga('set', {
+      dim_version: $DIM_VERSION,
+      dim_flavor: $DIM_FLAVOR,
     });
   };
   script.src = `https://www.googletagmanager.com/gtag/js?id=${$ANALYTICS_PROPERTY}`;
