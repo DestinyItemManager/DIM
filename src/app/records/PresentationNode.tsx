@@ -7,7 +7,7 @@ import { DestinyPresentationScreenStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { FontGlyphs } from 'data/d2/d2-font-glyphs';
 import { deepEqual } from 'fast-equals';
-import { useEffect, useRef } from 'react';
+import { useEffect, useId, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import BungieImage from '../dim-ui/BungieImage';
 import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
@@ -50,6 +50,10 @@ export default function PresentationNode({
 
   const { visible, acquired } = node;
   const completed = Boolean(acquired >= visible);
+
+  const id = useId();
+  const contentId = `content-${id}`;
+  const headerId = `header-${id}`;
 
   if (!visible) {
     return null;
@@ -97,49 +101,57 @@ export default function PresentationNode({
       })}
     >
       {!onlyChild && !isRootNode && (
-        <div
+        <h3
           className={clsx('title', {
             collapsed: !childrenExpanded,
             'hide-complete': completedRecordsHidden,
             completed,
           })}
-          onClick={expandChildren}
           ref={headerRef}
         >
-          {alwaysExpanded ? (
-            title
-          ) : (
-            <span className="collapse-handle">
-              <AppIcon
-                className="collapse-icon"
-                icon={childrenExpanded ? collapseIcon : expandIcon}
-              />{' '}
-              {title}
-            </span>
-          )}
-          <PresentationNodeProgress acquired={acquired} visible={visible} />
-        </div>
+          <button
+            type="button"
+            aria-expanded={childrenExpanded}
+            aria-controls={contentId}
+            onClick={expandChildren}
+          >
+            {alwaysExpanded ? (
+              title
+            ) : (
+              <span className="collapse-handle">
+                <AppIcon
+                  className="collapse-icon"
+                  icon={childrenExpanded ? collapseIcon : expandIcon}
+                />{' '}
+                {title}
+              </span>
+            )}
+            <PresentationNodeProgress acquired={acquired} visible={visible} />
+          </button>
+        </h3>
       )}
-      {childrenExpanded &&
-        node.childPresentationNodes?.map((subNode) => (
-          <PresentationNode
-            key={subNode.hash}
-            node={subNode}
+      <div id={contentId}>
+        {childrenExpanded &&
+          node.childPresentationNodes?.map((subNode) => (
+            <PresentationNode
+              key={subNode.hash}
+              node={subNode}
+              ownedItemHashes={ownedItemHashes}
+              path={path}
+              parents={thisAndParents}
+              onNodePathSelected={onNodePathSelected}
+              isInTriumphs={isInTriumphs}
+            />
+          ))}
+        {childrenExpanded && visible > 0 && (
+          <PresentationNodeLeaf
+            node={node}
             ownedItemHashes={ownedItemHashes}
-            path={path}
-            parents={thisAndParents}
-            onNodePathSelected={onNodePathSelected}
-            isInTriumphs={isInTriumphs}
+            redactedRecordsRevealed={redactedRecordsRevealed}
+            sortRecordProgression={sortRecordProgression}
           />
-        ))}
-      {childrenExpanded && visible > 0 && (
-        <PresentationNodeLeaf
-          node={node}
-          ownedItemHashes={ownedItemHashes}
-          redactedRecordsRevealed={redactedRecordsRevealed}
-          sortRecordProgression={sortRecordProgression}
-        />
-      )}
+        )}
+      </div>
     </div>
   );
 }

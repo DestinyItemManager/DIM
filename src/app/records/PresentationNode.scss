@@ -6,7 +6,7 @@
   }
 
   /* indent child nodes more than their parent */
-  > .presentation-node {
+  > * > .presentation-node {
     margin-left: 10px;
 
     > .title {
@@ -32,7 +32,7 @@
   }
   /* unless they are top children of locked-open top nodes */
   /* stylelint-disable-next-line no-descending-specificity */
-  &.always-expanded > .presentation-node {
+  &.always-expanded > * > .presentation-node {
     margin-left: 0;
     > .title {
       background-color: rgba(0, 0, 0, 0.2);

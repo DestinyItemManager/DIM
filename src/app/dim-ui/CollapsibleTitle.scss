@@ -5,13 +5,19 @@
   appearance: none;
   background: transparent;
   border: 0;
-  margin: 0;
+  margin-top: 0;
+  margin-bottom: 0;
   font-family: inherit;
-  width: 100%;
 
   > button {
     all: initial;
     font-family: inherit;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1;
   }
 
   padding: 0 16px;

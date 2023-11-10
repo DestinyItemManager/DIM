@@ -51,8 +51,9 @@ export default function InventoryCollapsibleTitle({
     initialMount.current = false;
   }, [initialMount]);
 
-  const contentId = useId();
-  const headerId = useId();
+  const id = useId();
+  const contentId = `content-${id}`;
+  const headerId = `header-${id}`;
 
   return (
     <>

@@ -41,8 +41,9 @@ export default function CollapsibleTitle({
     [disabled, dispatch, sectionId],
   );
 
-  const contentId = useId();
-  const headerId = useId();
+  const id = useId();
+  const contentId = `content-${id}`;
+  const headerId = `header-${id}`;
 
   return (
     <>
