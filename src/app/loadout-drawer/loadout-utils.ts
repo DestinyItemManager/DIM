@@ -594,10 +594,11 @@ export function findItemForLoadout(
 }
 
 /**
- * Get a mapping from item id to item, for items that could be in loadouts. Used for
- * looking up items from loadouts.
+ * Get a mapping from item id to item. Used for looking up items from loadouts.
+ * This used to be restricted to only items that could be in loadouts, but we
+ * need it to be all items to make search-based loadout transfers work.
  */
-export const potentialLoadoutItemsByItemId = weakMemoize((allItems: DimItem[]) =>
+export const itemsByItemId = weakMemoize((allItems: DimItem[]) =>
   _.keyBy(
     allItems.filter((i) => i.id !== '0' && itemCanBeInLoadout(i)),
     (i) => i.id,
@@ -608,32 +609,34 @@ export const potentialLoadoutItemsByItemId = weakMemoize((allItems: DimItem[]) =
  * Get a mapping from crafted date to item, for items that could be in loadouts. Used for
  * looking up items from loadouts.
  */
-const potentialLoadoutItemsByCraftedDate = weakMemoize((allItems: DimItem[]) =>
+const itemsByCraftedDate = weakMemoize((allItems: DimItem[]) =>
   _.keyBy(
-    allItems.filter((i) => i.id !== '0' && i.craftedInfo?.craftedDate && itemCanBeInLoadout(i)),
+    allItems.filter((i) => i.instanced && i.craftedInfo?.craftedDate),
     (i) => i.craftedInfo!.craftedDate,
   ),
 );
 
 export function getInstancedLoadoutItem(allItems: DimItem[], loadoutItem: LoadoutItem) {
-  const result = potentialLoadoutItemsByItemId(allItems)[loadoutItem.id];
+  const result = itemsByItemId(allItems)[loadoutItem.id];
   if (result) {
     return result;
   }
 
   // Crafted items get new IDs, but keep their crafted date, so we can match on that
   if (loadoutItem.craftedDate) {
-    return potentialLoadoutItemsByCraftedDate(allItems)[loadoutItem.craftedDate];
+    return itemsByCraftedDate(allItems)[loadoutItem.craftedDate];
   }
 }
 
 /**
- * Get a mapping from item hash to item, for uninstanced items that could be in loadouts. Used for
- * looking up items from loadouts.
+ * Get a mapping from item hash to item, for uninstanced items that could be in
+ * loadouts. Used for looking up items from loadouts. This used to be restricted
+ * to only items that could be in loadouts, but we need it to be all items to
+ * make search-based loadout transfers work.
  */
-const potentialUninstancedLoadoutItemsByHash = weakMemoize((allItems: DimItem[]) =>
+const uninstancedItemsByHash = weakMemoize((allItems: DimItem[]) =>
   Map.groupBy(
-    allItems.filter((i) => itemCanBeInLoadout(i)),
+    allItems.filter((i) => !i.instanced),
     (i) => i.hash,
   ),
 );
@@ -644,7 +647,7 @@ export function getUninstancedLoadoutItem(
   storeId: string | undefined,
 ) {
   // This is mostly for subclasses - it finds all matching items by hash and then picks the one that's on the desired character
-  const candidates = potentialUninstancedLoadoutItemsByHash(allItems).get(hash) ?? [];
+  const candidates = uninstancedItemsByHash(allItems).get(hash) ?? [];
   // the copy of this item being held by the specified store
   const heldItem =
     storeId !== undefined ? candidates.find((item) => item.owner === storeId) : undefined;
