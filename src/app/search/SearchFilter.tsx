@@ -50,7 +50,7 @@ export default forwardRef(function SearchFilter(
         : onProgress
         ? t('Header.FilterHelpProgress')
         : onOptimizer
-        ? t('Header.FilterHelpOptimizer', { example: '-is:exotic, perkname:"iron lord\'s pride"' })
+        ? t('Header.FilterHelpOptimizer', { example: '-is:exotic, exactperk:"iron lord\'s pride"' })
         : onLoadouts
         ? t('Header.FilterHelpLoadouts')
         : isPhonePortrait
