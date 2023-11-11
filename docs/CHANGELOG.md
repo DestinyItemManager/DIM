@@ -1,6 +1,7 @@
 ## Next
 
 * There is now an option in settings to group items in your vault by Item Type, Rarity, Ammo Type, Tag, or Damage Type.
+* On the Loadouts page, DIM now runs the Loadout Optimizer in the background to find out which of your loadouts could have better stats by swapping armor.
 * In the loadout editor, replacing a missing item works even if you have 10 items in that slot.
 * Links in notes can no longer result in spurious hashtags.
 * Moving items from a search can once again move consumables/materials.
