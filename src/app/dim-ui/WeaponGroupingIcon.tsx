@@ -11,51 +11,45 @@ export default function WeaponGroupingIcon({
   icon: VaultGroupIcon;
   className?: string;
 }) {
-  if (icon.type === 'none') {
-    return null;
-  }
-
-  if (icon.type === 'typeName') {
-    const typeIcon = getWeaponTypeSvgIconFromCategoryHashes(icon.itemCategoryHashes);
-
-    if (!typeIcon) {
-      return null;
+  switch (icon.type) {
+    case 'typeName': {
+      const typeIcon = getWeaponTypeSvgIconFromCategoryHashes(icon.itemCategoryHashes);
+      return (
+        typeIcon && (
+          <div className={className}>
+            <img src={typeIcon.svg} className="weapon-type-icon" />
+          </div>
+        )
+      );
     }
 
-    return (
-      <div className={className}>
-        <img src={typeIcon.svg} className="weapon-type-icon" />
-      </div>
-    );
-  }
-
-  if (icon.type === 'ammoType') {
-    return (
-      <div className={className}>
-        <AmmoIcon type={icon.ammoType} className="ammo-icon" />
-      </div>
-    );
-  }
-
-  if (icon.type === 'tag') {
-    if (icon.tag === undefined) {
-      return null;
+    case 'ammoType': {
+      return (
+        <div className={className}>
+          <AmmoIcon type={icon.ammoType} className="ammo-icon" />
+        </div>
+      );
     }
 
-    return (
-      <div className={className}>
-        <TagIcon tag={icon.tag} />
-      </div>
-    );
-  }
+    case 'tag': {
+      return (
+        icon.tag && (
+          <div className={className}>
+            <TagIcon tag={icon.tag} />
+          </div>
+        )
+      );
+    }
 
-  if (icon.type === 'elementWeapon') {
-    return (
-      <div className={className}>
-        <ElementIcon className="element-icon" element={icon.element} />
-      </div>
-    );
-  }
+    case 'elementWeapon': {
+      return (
+        <div className={className}>
+          <ElementIcon className="element-icon" element={icon.element} />
+        </div>
+      );
+    }
 
-  return null;
+    case 'none':
+      return null;
+  }
 }

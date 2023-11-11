@@ -2,7 +2,7 @@ import { ItemAnnotation, ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { I18nKey, tl } from 'app/i18next-t';
 import { ThunkResult } from 'app/store/types';
-import { isDefined } from 'app/utils/guards';
+import { filterMap } from 'app/utils/collections';
 import _ from 'lodash';
 import { archiveIcon, banIcon, boltIcon, heartIcon, tagIcon } from '../shell/icons';
 import { setItemNote, setItemTag, tagCleanup } from './actions';
@@ -116,7 +116,7 @@ export interface TagInfo {
 // populate tag list from tag config info
 export const itemTagList: TagInfo[] = Object.values(tagConfig);
 
-export const vaultGroupTagOrder = itemTagList.map((tag) => tag.type).filter(isDefined);
+export const vaultGroupTagOrder = filterMap(itemTagList, (tag) => tag.type);
 
 export const itemTagSelectorList: TagInfo[] = [
   { label: tl('Tags.TagItem') },
