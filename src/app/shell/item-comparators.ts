@@ -112,16 +112,10 @@ const TAG_ITEM_COMPARATORS: {
 
 export type VaultGroupValue = string | number | boolean | undefined;
 
-interface MutableVaultGroup {
-  groupingValue: VaultGroupValue;
-  iconValue?: VaultGroupIconValue;
-  items: DimItem[];
-}
-
 interface VaultGroup {
   groupingValue: VaultGroupValue;
   iconValue?: VaultGroupIconValue;
-  items: readonly DimItem[];
+  items: DimItem[];
 }
 
 const GROUPING_VALUE_GETTERS: {
@@ -351,7 +345,7 @@ export function sortItems(
 }
 
 export function groupItems(
-  items: readonly DimItem[],
+  items: DimItem[],
   vaultGrouping: string,
   getTag: (item: DimItem) => TagValue | undefined,
 ): readonly VaultGroup[] {
@@ -364,7 +358,7 @@ export function groupItems(
     return [{ groupingValue: undefined, items }];
   }
 
-  const grouped: MutableVaultGroup[] = [];
+  const grouped: VaultGroup[] = [];
 
   for (const item of items) {
     const indexOfUngrouped = grouped.findIndex((g) => g.groupingValue === undefined);
