@@ -2,7 +2,7 @@ import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import WeaponGroupingIcon from 'app/dim-ui/WeaponGroupingIcon';
 import { t } from 'app/i18next-t';
-import { DimBucketType, InventoryBucket } from 'app/inventory/inventory-buckets';
+import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { pullItem } from 'app/inventory/move-item';
 import {
@@ -52,8 +52,6 @@ function useStableArray<T>(arr: T[]) {
   return lastItems.current;
 }
 
-const WEAPON_BUCKET_TYPES: readonly DimBucketType[] = ['KineticSlot', 'Energy', 'Power'];
-
 /**
  * A single bucket of items (for a single store). The arguments for this
  * component are the bare minimum needed, so that we can memoize it to avoid
@@ -90,7 +88,7 @@ const StoreBucketInner = memo(function StoreBucketInner({
 
   const equippedItem = isVault ? undefined : items.find((i) => i.equipped);
   const unequippedItems =
-    isVault && bucket.type && WEAPON_BUCKET_TYPES.includes(bucket.type)
+    isVault && bucket.inWeapons
       ? groupWeapons(sortItems(items))
       : sortItems(items.filter((i) => !i.equipped));
 
