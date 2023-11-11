@@ -1,101 +1,58 @@
-import { TagValue } from '@destinyitemmanager/dim-api-types';
 import TagIcon from 'app/inventory/TagIcon';
 import { AmmoIcon } from 'app/item-popup/ItemPopupHeader';
-import { vaultWeaponGroupingSettingSelector } from 'app/settings/vault-grouping';
-import { VaultGroupIconValue } from 'app/shell/item-comparators';
-import { DestinyAmmunitionType } from 'bungie-api-ts/destiny2';
-import { useSelector } from 'react-redux';
+import { VaultGroupIcon } from 'app/shell/item-comparators';
 import ElementIcon from './ElementIcon';
 import { getWeaponTypeSvgIconFromCategoryHashes } from './svgs/itemCategory';
 
-const VALID_AMMO_TYPES: Record<DestinyAmmunitionType, boolean> = {
-  [DestinyAmmunitionType.None]: true,
-  [DestinyAmmunitionType.Primary]: true,
-  [DestinyAmmunitionType.Special]: true,
-  [DestinyAmmunitionType.Heavy]: true,
-  [DestinyAmmunitionType.Unknown]: true,
-};
-
-const VALID_TAGS: Record<TagValue, boolean> = {
-  favorite: true,
-  keep: true,
-  infuse: true,
-  archive: true,
-  junk: true,
-};
-
 export default function WeaponGroupingIcon({
-  iconValue,
+  icon,
   className,
 }: {
-  iconValue: VaultGroupIconValue;
+  icon: VaultGroupIcon;
   className?: string;
 }) {
-  const vaultWeaponGroupingSetting = useSelector(vaultWeaponGroupingSettingSelector);
-
-  if (!vaultWeaponGroupingSetting || typeof iconValue === 'undefined') {
+  if (icon.type === 'none') {
     return null;
   }
 
-  if (
-    vaultWeaponGroupingSetting === 'typeName' &&
-    typeof iconValue === 'object' &&
-    // eslint-disable-next-line no-implicit-coercion
-    !!iconValue &&
-    !('hash' in iconValue)
-  ) {
-    const icon = getWeaponTypeSvgIconFromCategoryHashes(iconValue);
+  if (icon.type === 'typeName') {
+    const typeIcon = getWeaponTypeSvgIconFromCategoryHashes(icon.itemCategoryHashes);
 
-    if (!icon) {
+    if (!typeIcon) {
       return null;
     }
 
     return (
       <div className={className}>
-        <img src={icon.svg} className="weapon-type-icon" />
+        <img src={typeIcon.svg} className="weapon-type-icon" />
       </div>
     );
   }
 
-  if (vaultWeaponGroupingSetting === 'rarity') {
-    // Rarity is fairly obvious from the colors, so we don't need to show an icon
-    return null;
-  }
-
-  if (
-    vaultWeaponGroupingSetting === 'ammoType' &&
-    typeof iconValue === 'number' &&
-    iconValue in VALID_AMMO_TYPES
-  ) {
+  if (icon.type === 'ammoType') {
     return (
       <div className={className}>
-        <AmmoIcon type={iconValue} className="ammo-icon" />
+        <AmmoIcon type={icon.ammoType} className="ammo-icon" />
       </div>
     );
   }
 
-  if (
-    vaultWeaponGroupingSetting === 'tag' &&
-    typeof iconValue === 'string' &&
-    iconValue in VALID_TAGS
-  ) {
+  if (icon.type === 'tag') {
+    if (icon.tag === undefined) {
+      return null;
+    }
+
     return (
       <div className={className}>
-        <TagIcon tag={iconValue} />
+        <TagIcon tag={icon.tag} />
       </div>
     );
   }
 
-  if (
-    vaultWeaponGroupingSetting === 'elementWeapon' &&
-    typeof iconValue === 'object' &&
-    // eslint-disable-next-line no-implicit-coercion
-    !!iconValue &&
-    'hash' in iconValue
-  ) {
+  if (icon.type === 'elementWeapon') {
     return (
       <div className={className}>
-        <ElementIcon className="element-icon" element={iconValue} />
+        <ElementIcon className="element-icon" element={icon.element} />
       </div>
     );
   }

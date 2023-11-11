@@ -86,7 +86,10 @@ describe('vaultWeaponGroupingSelector', () => {
     expect(result).toEqual([
       {
         groupingValue: 'Auto Rifle',
-        iconValue: [2],
+        icon: {
+          type: 'typeName',
+          itemCategoryHashes: [2],
+        },
         items: [
           {
             ...firstItem,
@@ -102,7 +105,10 @@ describe('vaultWeaponGroupingSelector', () => {
       },
       {
         groupingValue: 'Hand Cannon',
-        iconValue: [3],
+        icon: {
+          type: 'typeName',
+          itemCategoryHashes: [3],
+        },
         items: [
           {
             ...firstItem,
@@ -113,7 +119,10 @@ describe('vaultWeaponGroupingSelector', () => {
       },
       {
         groupingValue: 'Scout Rifle',
-        iconValue: [1],
+        icon: {
+          type: 'typeName',
+          itemCategoryHashes: [1],
+        },
         items: [
           {
             ...firstItem,
@@ -129,6 +138,9 @@ describe('vaultWeaponGroupingSelector', () => {
       },
       {
         groupingValue: undefined,
+        icon: {
+          type: 'none',
+        },
         items: [
           {
             ...firstItem,

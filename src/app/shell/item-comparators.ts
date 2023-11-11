@@ -112,51 +112,42 @@ const TAG_ITEM_COMPARATORS: {
 
 export type VaultGroupValue = string | number | boolean | undefined;
 
-interface VaultGroup {
-  groupingValue: VaultGroupValue;
-  iconValue?: VaultGroupIconValue;
-  items: DimItem[];
+interface VaultGroupIconNone {
+  type: 'none';
 }
 
-const GROUPING_VALUE_GETTERS: {
-  [key: string]: (
-    item: DimItem,
-    getTag: (item: DimItem) => TagValue | undefined,
-  ) => VaultGroupValue;
-} = {
-  tag: (item, getTag) => getTag(item),
-  typeName: (item) => item.typeName,
-  rarity: (item) => D2ItemTiers[item.tier],
-  ammoType: (item) => item.ammoType,
-  elementWeapon: (item) => {
-    if (item.bucket.inWeapons) {
-      return item.element?.enumValue ?? Number.MAX_SAFE_INTEGER;
-    }
-  },
-};
+interface VaultGroupIconTag {
+  type: 'tag';
+  tag: TagValue | undefined;
+}
 
-export type VaultGroupIconValue =
-  | TagValue
-  | DestinyDamageTypeDefinition
-  | DestinyAmmunitionType
-  | number[]
-  | undefined
-  | null;
+interface VaultGroupIconTypeName {
+  type: 'typeName';
+  itemCategoryHashes: number[];
+}
 
-const ICON_VALUE_GETTERS: Record<
-  keyof typeof GROUPING_VALUE_GETTERS,
-  (item: DimItem, getTag: (item: DimItem) => TagValue | undefined) => VaultGroupIconValue
-> = {
-  tag: (item, getTag) => getTag(item),
-  typeName: (item) => item.itemCategoryHashes,
-  rarity: () => null,
-  ammoType: (item) => item.ammoType,
-  elementWeapon: (item) => {
-    if (item.bucket.inWeapons) {
-      return item.element;
-    }
-  },
-};
+interface VaultGroupIconAmmoType {
+  type: 'ammoType';
+  ammoType: DestinyAmmunitionType;
+}
+
+interface VaultGroupIconElementWeapon {
+  type: 'elementWeapon';
+  element: DestinyDamageTypeDefinition | null;
+}
+
+export type VaultGroupIcon =
+  | VaultGroupIconNone
+  | VaultGroupIconTag
+  | VaultGroupIconTypeName
+  | VaultGroupIconAmmoType
+  | VaultGroupIconElementWeapon;
+
+interface VaultGroup {
+  groupingValue: VaultGroupValue;
+  icon: VaultGroupIcon;
+  items: DimItem[];
+}
 
 const groupingValueIndexInTagOrder = (input: VaultGroup) => {
   if (typeof input.groupingValue !== 'string') {
@@ -190,24 +181,61 @@ const undefinedVaultGroupLast =
     return comparator(a, b);
   };
 
-const GROUP_BY_COMPARATORS: {
-  [key: string]: Comparator<VaultGroup>;
+const GROUP_BY_GETTERS_AND_COMPARATORS: {
+  [key: string]: {
+    comparator: Comparator<VaultGroup>;
+    getValue: (item: DimItem, getTag: (item: DimItem) => TagValue | undefined) => VaultGroupValue;
+    getIconValue: (
+      item: DimItem,
+      getTag: (item: DimItem) => TagValue | undefined,
+    ) => VaultGroupIcon;
+  };
 } = {
-  tag: undefinedVaultGroupLast(compareBy(groupingValueIndexInTagOrder)),
+  tag: {
+    comparator: undefinedVaultGroupLast(compareBy(groupingValueIndexInTagOrder)),
+    getValue: (item, getTag) => getTag(item),
+    getIconValue: (item, getTag) => ({ type: 'tag', tag: getTag(item) }),
+  },
   // A -> Z
-  typeName: undefinedVaultGroupLast(compareBy(groupingValueProperty)),
+  typeName: {
+    comparator: undefinedVaultGroupLast(compareBy(groupingValueProperty)),
+    getValue: (item) => item.typeName,
+    getIconValue: (item) => ({ type: 'typeName', itemCategoryHashes: item.itemCategoryHashes }),
+  },
   // exotic -> common
-  rarity: undefinedVaultGroupLast(reverseComparator(compareBy(groupingValueProperty))),
+  rarity: {
+    comparator: undefinedVaultGroupLast(reverseComparator(compareBy(groupingValueProperty))),
+    getValue: (item) => D2ItemTiers[item.tier],
+    getIconValue: () => ({ type: 'none' }),
+  },
   // None -> Primary -> Special -> Heavy -> Unknown
-  ammoType: undefinedVaultGroupLast(compareBy(groupingValueProperty)),
+  ammoType: {
+    comparator: undefinedVaultGroupLast(compareBy(groupingValueProperty)),
+    getValue: (item) => item.ammoType,
+
+    getIconValue: (item) => ({ type: 'ammoType', ammoType: item.ammoType }),
+  },
   // None -> Kinetic -> Arc -> Thermal -> Void -> Raid -> Stasis
-  elementWeapon: undefinedVaultGroupLast(compareBy(groupingValueProperty)),
-  // masterwork -> not masterwork
-  masterworked: undefinedVaultGroupLast(compareBy(groupingValueProperty)),
-  // crafted -> not crafted
-  crafted: undefinedVaultGroupLast(compareBy(groupingValueProperty)),
-  // deepsight -> no deepsight
-  deepsight: undefinedVaultGroupLast(compareBy(groupingValueProperty)),
+  elementWeapon: {
+    comparator: undefinedVaultGroupLast(compareBy(groupingValueProperty)),
+    getValue: (item) => {
+      if (item.bucket.inWeapons) {
+        return item.element?.enumValue ?? Number.MAX_SAFE_INTEGER;
+      }
+    },
+    getIconValue: (item) => {
+      if (item.bucket.inWeapons) {
+        return {
+          type: 'elementWeapon',
+          element: item.element,
+        };
+      }
+
+      return {
+        type: 'none',
+      };
+    },
+  },
 };
 
 const ITEM_COMPARATORS: {
@@ -347,38 +375,26 @@ export function groupItems(
   vaultGrouping: string,
   getTag: (item: DimItem) => TagValue | undefined,
 ): readonly VaultGroup[] {
-  const groupingValueGetter = GROUPING_VALUE_GETTERS[vaultGrouping];
-  const iconValueGetter = ICON_VALUE_GETTERS[vaultGrouping];
-  const comparator = GROUP_BY_COMPARATORS[vaultGrouping];
+  const comparatorsAndGetters = GROUP_BY_GETTERS_AND_COMPARATORS[vaultGrouping];
 
   // If there are no items, or the grouping is not suppored, return all items in a single group
-  if (!items.length || !groupingValueGetter || !comparator) {
-    return [{ groupingValue: undefined, items: [...items] }];
+  if (!items.length || !comparatorsAndGetters) {
+    return [{ groupingValue: undefined, icon: { type: 'none' }, items: [...items] }];
   }
+
+  const { getValue, getIconValue, comparator } = comparatorsAndGetters;
 
   const grouped: VaultGroup[] = [];
 
   for (const item of items) {
     const indexOfUngrouped = grouped.findIndex((g) => g.groupingValue === undefined);
 
-    if (!groupingValueGetter) {
-      // If there is not an ungrouped group, create one
-      if (indexOfUngrouped < 0) {
-        grouped.push({ groupingValue: undefined, items: [item] });
-        continue;
-      }
-
-      // Add to existing ungrouped group
-      grouped[indexOfUngrouped].items.push(item);
-      continue;
-    }
-
-    const groupingValue = groupingValueGetter(item, getTag);
+    const groupingValue = getValue(item, getTag);
 
     if (groupingValue === undefined) {
       // If there is not an ungrouped group, create one
       if (indexOfUngrouped < 0) {
-        grouped.push({ groupingValue: undefined, items: [item] });
+        grouped.push({ groupingValue: undefined, icon: { type: 'none' }, items: [item] });
         continue;
       }
 
@@ -395,10 +411,10 @@ export function groupItems(
       continue;
     }
 
-    const iconValue = iconValueGetter?.(item, getTag);
+    const iconValue = getIconValue(item, getTag);
 
     // Create a new group if one doesn't exist for this value
-    grouped.push({ groupingValue, iconValue, items: [item] });
+    grouped.push({ groupingValue, icon: iconValue, items: [item] });
   }
 
   // Sort groups by comparator
