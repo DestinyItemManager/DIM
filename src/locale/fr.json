@@ -496,6 +496,8 @@
     "Equip": "Équiper sur {{character}}",
     "Exclude": "Objets exclus",
     "ExcludeHelp": "Shift + cliquez un objet (ou glissez-déposez dans cet espace) pour construire des sets sans équipement spécifique.",
+    "ExistingBuildStats": "Stats du Build existant",
+    "ExistingBuildStatsNote": "Ne montrer que les builds avec des niveaux de stats strictement plus élevés.",
     "FilterSets": "Filtrer les sets",
     "Help": {
       "And": "L'armure avec tout ces attributs sera utilisé (\"et\")",
@@ -558,55 +560,56 @@
     "Vendors": "Chargement des marchands Destiny..."
   },
   "LoadoutAnalysis": {
-    "Analyzed": "Analyzed {{numLoadouts}} Loadouts",
-    "Analyzing": "Analyzing {{numAnalyzed}}/{{numLoadouts}} Loadouts",
+    "Analyzed": "{{numLoadouts}} équipements analysés",
+    "Analyzing": "Analyse de {{numAnalyzed}}/{{numLoadouts}} équipements",
     "BetterStatsAvailable": {
-      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stat tiers.",
-      "Name": "Better Stats Available"
+      "Description": "Choisir des armures ou des mods différents pour cet arsenal permettra d'atteindre des niveaux de caractéristiques plus élevés. Choisissez \"$t(Loadouts.OpenInOptimizer)\" pour voir de meilleurs builds.",
+      "Name": "Amélioration de stats possibles"
     },
+    "BetterStatsAvailableFontNote": "Note: This Loadout uses \"Font of ...\" mods that cause a stat tier to exceed T10. DIM may identify better stats by reducing the amount of excess tiers. If this is undesired, disable \"$t(Loadouts.IncludeRuntimeStatBenefits)\" in the Loadout.",
     "DoesNotRespectExotic": {
-      "Description": "This loadout's Loadout Optimizer settings specify an exotic choice, but the loadout does not match that exotic.",
-      "Name": "Wrong Exotic"
+      "Description": "Les paramètres d'optimiseur de cet équipement spécifient un choix d'exotique, mais cet équipement ne contient pas cet exotique.",
+      "Name": "Mauvais exotique"
     },
     "DoesNotSatisfyStatConstraints": {
-      "Description": "Loadout Optimizer settings for this Loadout specify stat tiers, but the Loadout does not reach them.",
-      "Name": "Wrong Stat Tiers"
+      "Description": "Les paramètres d'optimiseur de cet équipement spécifient des paliers de stat, mais cet équipement ne les atteint pas.",
+      "Name": "Mauvais paliers de stat"
     },
     "EmptyFragmentSlots": {
-      "Description": "There are empty fragment slots in this subclass.",
-      "Name": "Empty Fragment Slots"
+      "Description": "Il y a des emplacements de fragment vides dans cette doctrine.",
+      "Name": "Emplacements de fragment vides"
     },
     "InvalidMods": {
-      "Description": "Some mods in this loadout are deprecated or do not otherwise fit into any of your armor pieces.",
-      "Name": "Deprecated Mods"
+      "Description": "Certains mods de cet équipement sont obsolètes ou ne sont pas adaptés à l'une de vos pièces d'armures.",
+      "Name": "Mods obsolètes"
     },
     "LoadoutHasSearchQuery": {
-      "Description": "This loadout was created with a search query in Loadout Optimizer.",
-      "Name": "Has Search Query"
+      "Description": "Cet équipement a été créé avec une recherche dans l'optimiseur d'équipement.",
+      "Name": "A une recherche"
     },
     "MissingItems": {
-      "Description": "Some of the items in this loadout are no longer in your inventory.",
-      "Name": "Missing Items"
+      "Description": "Certains objets de cet équipement ne sont plus dans votre inventaire.",
+      "Name": "Objets manquants"
     },
     "ModsDontFit": {
-      "Description": "Armor in this loadout cannot accommodate all loadout mods, even if the armor was upgraded.",
-      "Name": "Unassigned Mods"
+      "Description": "Les armures de cet équipement ne peuvent pas accueillir tous les mods de l'équipement, même si les armures étaient améliorées.",
+      "Name": "Mods non assignés"
     },
     "NeedsArmorUpgrades": {
-      "Description": "Armor in this loadout needs to be upgraded to accommodate all mods or reach specified stat tiers.",
-      "Name": "Needs Armor Upgrades"
+      "Description": "Les armures de cet équipement doivent être améliorées pour pouvoir accueillir tous les mods ou atteindre les paliers de stat spécifiés.",
+      "Name": "Amélioration d'armure nécessaire"
     },
     "NotAFullArmorSet": {
-      "Description": "This loadout could not be analyzed further because it does not include a full set of armor.",
-      "Name": "Not A Full Armor Set"
+      "Description": "Cet arsenal n'a pas pu être complétement analysé, car il n'inclut pas un ensemble complet d'armures.",
+      "Name": "Pas un ensemble d'armure complet"
     },
     "TooManyFragments": {
-      "Description": "There are more fragments configured on the subclass than granted by aspects.",
-      "Name": "Too Many Fragments"
+      "Description": "Il y a plus de fragments configurés pour cette doctrine qu'elle n'en a grâce aux aspects.",
+      "Name": "Trop de fragments"
     },
     "UsesSeasonalMods": {
-      "Description": "This loadout relies on mods that are only available in some seasons. When the season ends, some mods will be unavailable or exceed armor energy capacity.",
-      "Name": "Uses Seasonal Mods"
+      "Description": "Cet équipement dépend de mods qui ne sont disponibles que certaines saisons. Quand la saison se termine, certains mods seront indisponible ou dépasseront la capacité en énergie de l'armure.",
+      "Name": "Utilise des mods saisonniers"
     }
   },
   "LoadoutBuilder": {
@@ -616,9 +619,11 @@
     "AnyExoticDescription": "Le build doit contenir un exotique, mais n'importe quel exotique fera l'affaire.",
     "AssumeMasterwork": "Considérer pièce maîtresse",
     "AssumeMasterworkOptions": {
-      "All": "Toutes les armures utiliseront leurs stats de pièce maîtresse et auront un niveau d'énergie de 10.",
-      "Legendary": "Les armures légendaires utiliseront leurs stats de pièce maîtresse et auront un niveau d'énergie de 10.",
-      "None": "Toutes les armures utiliseront leurs stats actuelles et auront un niveau d'énergie minimum de 7."
+      "All": "Toutes les armures : $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "Current": "Current stats, assumed energy level at least {{minLoItemEnergy}}.",
+      "Legendary": "Légendaire : $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotique: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
+      "Masterworked": "+2 in each stat, assumed energy level 10.",
+      "None": "Toutes les armures : $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "Ajouter automatiquement les mods de statistiques",
     "AutomaticallyPicked": "Ce mod a été ajouté automatiquement pour améliorer les statistiques de l'équipement.",
@@ -632,6 +637,7 @@
     "EquipItems": "Équiper",
     "ExcludeItem": "Exclure un objet",
     "ExistingLoadout": "Équipement existant",
+    "Exotic": "Armure exotique",
     "ExoticSpecialCategory": "Spécial",
     "Filter": "Filtres",
     "IgnoreStat": "Si décoché, l'optimiseur d'équipement prétendra que cette stat n'existe pas lors du calcul des ensembles",
@@ -662,7 +668,9 @@
       "UpperBoundsFailed": "De nombreux ensembles ne remplissaient pas les conditions de palier de stat maximum"
     },
     "NoExotic": "Pas d'exotique",
-    "NoExoticDescription": "Équivalent à la recherche \"not:exotic\" - aucune armure exotique ne sera incluse dans les résultats.",
+    "NoExoticDescription": "Équivalent à la recherche \"not:exotic\" dans la barre de recherche - les ensembles n'utiliseront aucune armure exotique.",
+    "NoExoticPreference": "Aucun Exotique sélectionné",
+    "NoExoticPreferenceDescription": "Une armure exotique sera utilisée si elle maximise les stats.",
     "NoLoadoutsToCompare": "Aucun équipement à comparer",
     "None": "Aucun",
     "OptimizerExplanationGuide": "Lisez le guide utilisateur pour plus d'informations et un tutoriel vidéo.",
@@ -741,6 +749,8 @@
     },
     "ImportLoadout": "Importer équipement",
     "InGameLoadouts": "Équipements en jeu",
+    "IncludeRuntimeStatBenefits": "Include Font mod stats",
+    "IncludeRuntimeStatBenefitsDesc": "\"Font of ...\" armor mods provide a flat boost to character stats while you have Armor Charges.\n\nWith this setting, DIM considers these mods active and adds their benefits to this Loadout's stats in calculations and optimizations.",
     "ItemErrorSummary": "1 erreur d'objet :",
     "ItemErrorSummary_plural": "{{count}} erreurs d'objet :",
     "ItemLeveling": "Infusion d'objet",

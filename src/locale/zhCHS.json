@@ -496,6 +496,8 @@
     "Equip": "装备在{{character}}",
     "Exclude": "已排除的物品",
     "ExcludeHelp": "Shift + 单击一个物品(或直接拖动)用以创建一个不包括特定装备的套装组.",
+    "ExistingBuildStats": "现有配装属性",
+    "ExistingBuildStatsNote": "仅显示更高属性阶的配装。",
     "FilterSets": "组合过滤",
     "Help": {
       "And": "装备了所有这些特性(Perk) 的防具将被使用(\"and\")",
@@ -561,9 +563,10 @@
     "Analyzed": "已分析 {{numLoadouts}} 个配装",
     "Analyzing": "正在分析配装 {{numAnalyzed}}/{{numLoadouts}}",
     "BetterStatsAvailable": {
-      "Description": "选用不同的护甲或模组来处理此配装将能达到更高的属性阶级。",
+      "Description": "为此配装选用不同的护甲或模组将能达到更高的属性阶级。选择“$t(Loadouts.OpenInOptimizer)”来查看更优的配装。",
       "Name": "更优属性可用"
     },
+    "BetterStatsAvailableFontNote": "提示：此配装使用了属性洗礼模组，导致属性溢出10阶。DIM 可降低多出的基础属性阶以优化。若不需要，请在配装界面中禁用“$t(Loadouts.IncludeRuntimeStatBenefits)”。",
     "DoesNotRespectExotic": {
       "Description": "此配装由配装优化器指定了一件异域装备，但在该配装中未找到它。",
       "Name": "异域装备错误"
@@ -589,11 +592,11 @@
       "Name": "物品缺失"
     },
     "ModsDontFit": {
-      "Description": "即使升级该配装中护甲，也无法插入全部模组。",
+      "Description": "即使升级该配装中的护甲，也无法插入全部模组。",
       "Name": "未分配的模组"
     },
     "NeedsArmorUpgrades": {
-      "Description": "该配装中护甲需要升级以插入全部所需模组或可达到指定属性阶",
+      "Description": "该配装中的护甲需要升级以插入全部所需模组或达到指定属性阶级。",
       "Name": "需要升级护甲"
     },
     "NotAFullArmorSet": {
@@ -601,7 +604,7 @@
       "Name": "非整套护甲"
     },
     "TooManyFragments": {
-      "Description": "指定的分支碎片数量超过星象限制",
+      "Description": "指定的分支职业碎片数量超过星相限制。",
       "Name": "太多分支职业碎片"
     },
     "UsesSeasonalMods": {
@@ -616,9 +619,11 @@
     "AnyExoticDescription": "组合里必须有任意异域装备。",
     "AssumeMasterwork": "假定大师之作",
     "AssumeMasterworkOptions": {
-      "All": "所有护甲会使用大师之作属性和 10 点能量等级。",
-      "Legendary": "传说护甲会使用大师之作属性和 10 点能量等级。",
-      "None": "所有护甲会使用当前的属性和至少 7 点能量等级。"
+      "All": "所有护甲：$t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "Current": "当前属性，假定能量等级至少为 {{minLoItemEnergy}}。",
+      "Legendary": "传说：$t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\n异域：$t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
+      "Masterworked": "每项属性值 +2，假定能量等级为 10。",
+      "None": "所有护甲：$t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "自动添加属性模组",
     "AutomaticallyPicked": "此模组已被自动添加以优化配装属性。",
@@ -632,6 +637,7 @@
     "EquipItems": "装备",
     "ExcludeItem": "排除项目",
     "ExistingLoadout": "已有配装",
+    "Exotic": "异域护甲",
     "ExoticSpecialCategory": "特殊",
     "Filter": "过滤",
     "IgnoreStat": "若未选中，则配装优化器将会在配装组合中无视此属性。",
@@ -662,7 +668,9 @@
       "UpperBoundsFailed": "很多配装的属性等级高于属性等级上限"
     },
     "NoExotic": "非异域",
-    "NoExoticDescription": "等同于搜索“not:exotic” - 组合不会包含异域护甲。",
+    "NoExoticDescription": "等同于在搜索栏中搜索“not:exotic” ，即配装将不含任何异域护甲。",
+    "NoExoticPreference": "未选择异域装备",
+    "NoExoticPreferenceDescription": "如果异域护甲可大幅提高属性，则选取异域护甲。",
     "NoLoadoutsToCompare": "没有要对比的配装",
     "None": "无",
     "OptimizerExplanationGuide": "用户指南里有更多信息和视频教程。",
@@ -741,6 +749,8 @@
     },
     "ImportLoadout": "导入配装",
     "InGameLoadouts": "游戏内配装",
+    "IncludeRuntimeStatBenefits": "包括属性洗礼模组提供的额外属性",
+    "IncludeRuntimeStatBenefitsDesc": "属性洗礼护甲模组会在你拥有护甲充能时提供固定的属性增益。\n在该设置下，DIM 将视此类模组为生效状态，并将其增益用于配装属性的计算和优化。",
     "ItemErrorSummary": "1 个物品出错：",
     "ItemErrorSummary_plural": "{{count}} 个物品出错：",
     "ItemLeveling": "物品等级",

@@ -496,6 +496,8 @@
     "Equip": "{{character}}に装備する",
     "Exclude": "省かれたアイテム",
     "ExcludeHelp": "特定のギアを持たずにセットを構築するには、アイテムをShift +クリック(またはこのバケットにドラッグアンドドロップ) します。",
+    "ExistingBuildStats": "現在のビルドステータス",
+    "ExistingBuildStatsNote": "高Tierのビルドのみ表示します。",
     "FilterSets": "フィルターセット",
     "Help": {
       "And": "これのパークをすべて装備した防具が使用されます (\"and\")",
@@ -561,9 +563,10 @@
     "Analyzed": "{{numLoadouts}} 個のロードアウトを分析完了",
     "Analyzing": "{{numAnalyzed}}/{{numLoadouts}} 個のロードアウトを分析中",
     "BetterStatsAvailable": {
-      "Description": "このロードアウトは、異なるアーマー・Modの選択によりさらに高いステータスを実現できます。",
+      "Description": "別のアーマーやModを選択すれば、より高いステータスに変更できます。\"$t(Loadouts.OpenInOptimizer)\" を選択して結果を確認します。",
       "Name": "より高いステータス値のビルドが作れます"
     },
+    "BetterStatsAvailableFontNote": "注：このロードアウトは Mod「～の泉」を使用しTier10以上になっています。DIMは不要なTier上限突破を減らすことで、より良いステータスを検索できる可能性が上がります。敢えて使用する場合は、ロードアウトの\"$t(Loadouts.IncludeRuntimeStatBenefits) \"を無効にしてください。",
     "DoesNotRespectExotic": {
       "Description": "ロードアウト最適化で指定されているエキゾチックアーマーと、このロードアウトのエキゾチックアーマーが一致しません。",
       "Name": "指定したエキゾチックアーマーと違います"
@@ -616,9 +619,11 @@
     "AnyExoticDescription": "指定なしで何らかのエキゾチックが必ず入るようになります。",
     "AssumeMasterwork": "マスターワーク済みと仮定",
     "AssumeMasterworkOptions": {
-      "All": "全てのアーマーはマスターワーク済みのステータスを使用し、エネルギーレベルは 10 になります。",
-      "Legendary": "レジェンダリーアーマーはマスターワーク済みのステータスを使用し、エネルギーレベルが 10 になります。",
-      "None": "全てのアーマーは現在のステータスを使用し、最低エネルギーレベルは 7 になります。"
+      "All": "全アーマー: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "Current": "現在のステータス、エネルギーレベルは少なくとも {{minLoItemEnergy}} と仮定。",
+      "Legendary": "レジェンダリー: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nエキゾチック: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
+      "Masterworked": "各ステータス +2、エネルギーレベル 10 を想定。",
+      "None": "すべてのアーマー: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "自動的にステータス mod を追加する",
     "AutomaticallyPicked": "この mod はビルドのステータス値を改善するため自動的に追加されました。",
@@ -632,6 +637,7 @@
     "EquipItems": "装備",
     "ExcludeItem": "組み合わせから外すアイテムを指定",
     "ExistingLoadout": "既存のロードアウト",
+    "Exotic": "エキゾチックアーマー",
     "ExoticSpecialCategory": "スペシャル",
     "Filter": "フィルター",
     "IgnoreStat": "チェックを外すと、このステータスを無視してビルドを探索します。",
@@ -663,6 +669,8 @@
     },
     "NoExotic": "エキゾチックなし",
     "NoExoticDescription": "検索バーで \"not:exotic\" を検索するのと同じです。エキゾチックアーマーを意図的に組み合わせから排除します。",
+    "NoExoticPreference": "エキゾチックが選択されていません",
+    "NoExoticPreferenceDescription": "最大ステータスにできる時だけエキゾチックアーマーを選択します。",
     "NoLoadoutsToCompare": "比較するロードアウトはありません。",
     "None": "なし",
     "OptimizerExplanationGuide": "詳細については、ユーザーガイドまたはビデオチュートリアルをご覧ください。",
@@ -741,6 +749,8 @@
     },
     "ImportLoadout": "ロードアウトをインポート",
     "InGameLoadouts": "ゲーム内ロードアウト",
+    "IncludeRuntimeStatBenefits": "Mod「～の泉」の反映後の数値としてカウントする",
+    "IncludeRuntimeStatBenefitsDesc": "アーマーMod「～の泉」は、アーマーチャージの間はキャラクターのステータスを一律に上昇させます。\nこの設定を有効にすると、DIMはこれらのModがアクティブの状態での数値を、ロードアウト最適化のステータス値として計算し反映させます。",
     "ItemErrorSummary": "1 つのアイテムエラー:",
     "ItemErrorSummary_plural": "{{count}} 個のアイテムでエラー:",
     "ItemLeveling": "アイテムのレベルアップ",

@@ -496,6 +496,8 @@
     "Equip": "Equipaggia su {{character}}",
     "Exclude": "Oggetti esclusi",
     "ExcludeHelp": "Shift + click su un oggetto (o trascina e rilascia in questo riquadro) per creare dei set senza delle specifiche armature.",
+    "ExistingBuildStats": "Statistiche build esistenti",
+    "ExistingBuildStatsNote": "Mostra solo le build con valori rigorosamente più alti.",
     "FilterSets": "Filtra i set",
     "Help": {
       "And": "Verranno utilizzate armature, che presentano tutti i perk selezionati",
@@ -561,9 +563,10 @@
     "Analyzed": "Analizzate {{numLoadouts}} dotazioni",
     "Analyzing": "Analizzate {{numAnalyzed}}/{{numLoadouts}} dotazioni",
     "BetterStatsAvailable": {
-      "Description": "Scegliere armature diverse o modifiche per questa dotazione consentirà di raggiungere gradi di statistiche più elevati.",
+      "Description": "Scegliere diverse armature o modifiche per questa dotazione consentirà di raggiungere gradi di statistiche più alti. Scegli \"$t(Loadouts.OpenInOptimizer)\" per vedere build migliori.",
       "Name": "Migliori statistiche ottenibili"
     },
+    "BetterStatsAvailableFontNote": "Nota: Questa dotazione utilizza modifiche \"Fonte di...\" che inducono il superamento del grado 10 di una statistica. DIM può identificare statistiche migliori riducendo il numero di gradi in eccesso. Se questo fosse indesiderato, disattiva \"$t(Loadouts.IncludeRuntimeStatBenefits)\" nella dotazione.",
     "DoesNotRespectExotic": {
       "Description": "Le impostazioni dell'Ottimizzatore di Dotazioni per questa dotazione specifica la scelta di un'esotica, ma la dotazione non corrisponde con quell'esotica.",
       "Name": "Esotica errata"
@@ -616,9 +619,11 @@
     "AnyExoticDescription": "I set devono contenere una esotica, ma qualunque esotica va bene.",
     "AssumeMasterwork": "Presupponi Prodigiosi",
     "AssumeMasterworkOptions": {
-      "All": "Tutte le armature utilizzeranno statistiche prodigiose e avranno un livello di energia 10.",
-      "Legendary": "Le armature leggendarie utilizzeranno statistiche prodigiose e avranno un livello energia 10.",
-      "None": "Tutte le armature utilizzeranno le loro statistiche attuali ed avranno un livello minimo di energia 7."
+      "All": "Tutte le armature:\n$t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "Current": "Statistiche attuali, livello energetico presunto almeno {{minLoItemEnergy}}.",
+      "Legendary": "Leggendarie:\n$t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nEsotiche:\n$t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
+      "Masterworked": "+2 in ogni statistica, presunto livello 10 di energia.",
+      "None": "Tutte le armature:\n$t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "Aggiungi Modifiche statistiche automaticamente",
     "AutomaticallyPicked": "Questa Modifica è stata aggiunta automaticamente per migliorare le statistiche della build.",
@@ -632,6 +637,7 @@
     "EquipItems": "Equipaggia",
     "ExcludeItem": "Escludi Oggetto",
     "ExistingLoadout": "Dotazione Esistente",
+    "Exotic": "Armatura Esotica",
     "ExoticSpecialCategory": "Speciale",
     "Filter": "Filtri",
     "IgnoreStat": "Se non selezionata, L'Ottimizzatore di Dotazioni farà finta che questa statistica non esista quando genererà i set",
@@ -662,7 +668,9 @@
       "UpperBoundsFailed": "Molti set non soddisfacevano i requisiti massimi delle statistiche"
     },
     "NoExotic": "Nessuna Esotica",
-    "NoExoticDescription": "Equivale alla ricerca \"not:exotic\" nella barra di ricerca - nessuna esotica verrà inclusa nei set.",
+    "NoExoticDescription": "Equivale a cercare \"not:exotic\" nella barra di ricerca - i set non useranno armature esotiche.",
+    "NoExoticPreference": "Nessuna esotica selezionata",
+    "NoExoticPreferenceDescription": "Le armature esotiche saranno utilizzate se massimizzeranno le statistiche.",
     "NoLoadoutsToCompare": "Nessuna dotazione da confrontare",
     "None": "Nessuno",
     "OptimizerExplanationGuide": "Leggi la Guida Utente per maggiori informazioni e un video tutorial.",
@@ -741,6 +749,8 @@
     },
     "ImportLoadout": "Importa dotazione",
     "InGameLoadouts": "Dotazioni in gioco",
+    "IncludeRuntimeStatBenefits": "Includi statistiche modifiche Fonte",
+    "IncludeRuntimeStatBenefitsDesc": "Le modifiche \"Fonte di...\" forniscono un aumento fisso delle statistiche del personaggio mentre possiedi cariche di armatura.\nCon questa impostazione, DIM considera queste modifiche attive e aggiunge i loro benefici alle statistiche di questa dotazione nei calcoli e nelle ottimizzazioni.",
     "ItemErrorSummary": "1 errore oggetto:",
     "ItemErrorSummary_plural": "{{count}} errori oggetti:",
     "ItemLeveling": "Elementi da Livellare",
