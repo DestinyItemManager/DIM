@@ -8,6 +8,11 @@ import { createSelector } from 'reselect';
 export const vaultWeaponGroupingSettingSelector = (state: RootState) =>
   settingsSelector(state).vaultWeaponGrouping;
 
+export const vaultWeaponGroupingEnabledSelector = createSelector(
+  vaultWeaponGroupingSettingSelector,
+  (state) => Boolean(state),
+);
+
 /**
  * Get a function that will group items according to the user's preferences.
  */

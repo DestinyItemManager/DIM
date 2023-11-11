@@ -16,8 +16,8 @@ import { useItemPicker } from 'app/item-picker/item-picker';
 import { characterOrderSelector } from 'app/settings/character-sort';
 import { itemSorterSelector } from 'app/settings/item-sort';
 import {
+  vaultWeaponGroupingEnabledSelector,
   vaultWeaponGroupingSelector,
-  vaultWeaponGroupingSettingSelector,
 } from 'app/settings/vault-grouping';
 import { AppIcon, addIcon } from 'app/shell/icons';
 import { vaultGroupingValueWithType } from 'app/shell/item-comparators';
@@ -79,7 +79,7 @@ const StoreBucketInner = memo(function StoreBucketInner({
   const dispatch = useThunkDispatch();
   const sortItems = useSelector(itemSorterSelector);
   const groupWeapons = useSelector(vaultWeaponGroupingSelector);
-  const vaultWeaponGroupingSetting = useSelector(vaultWeaponGroupingSettingSelector);
+  const vaultWeaponGroupingEnabled = useSelector(vaultWeaponGroupingEnabledSelector);
 
   const showItemPicker = useItemPicker();
   const pickEquipItem = useCallback(() => {
@@ -120,7 +120,7 @@ const StoreBucketInner = memo(function StoreBucketInner({
         </StoreBucketDropTarget>
       )}
       <StoreBucketDropTarget
-        grouped={isVault && Boolean(vaultWeaponGroupingSetting)}
+        grouped={isVault && vaultWeaponGroupingEnabled}
         equip={false}
         bucket={bucket}
         storeId={storeId}
