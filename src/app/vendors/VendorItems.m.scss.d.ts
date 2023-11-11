@@ -3,11 +3,10 @@
 interface CssExports {
   'categoryTitle': string;
   'currencies': string;
-  'currency': string;
+  'currencyIcon': string;
   'itemCategories': string;
   'vendorContents': string;
   'vendorItems': string;
-  'vendorRow': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
