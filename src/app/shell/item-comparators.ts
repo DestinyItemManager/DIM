@@ -175,15 +175,15 @@ const groupingValueProperty = (input: VaultGroup) => input.groupingValue;
 
 const undefinedVaultGroupLast =
   (comparator: Comparator<VaultGroup>) => (a: VaultGroup, b: VaultGroup) => {
-    if (typeof a.groupingValue === 'undefined') {
-      if (typeof b.groupingValue === 'undefined') {
+    if (a.groupingValue === undefined) {
+      if (b.groupingValue === undefined) {
         return 0;
       }
 
       return 1;
     }
 
-    if (typeof b.groupingValue === 'undefined') {
+    if (b.groupingValue === undefined) {
       return -1;
     }
 
@@ -375,7 +375,7 @@ export function groupItems(
 
     const groupingValue = groupingValueGetter(item, getTag);
 
-    if (typeof groupingValue === 'undefined') {
+    if (groupingValue === undefined) {
       // If there is not an ungrouped group, create one
       if (indexOfUngrouped < 0) {
         grouped.push({ groupingValue: undefined, items: [item] });
