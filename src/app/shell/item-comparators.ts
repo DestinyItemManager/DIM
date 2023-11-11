@@ -7,7 +7,7 @@ import { isD1Item, isSunset } from 'app/utils/item-utils';
 import { DestinyAmmunitionType, DestinyDamageTypeDefinition } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { TagValue, tagConfig } from '../inventory/dim-item-info';
+import { TagValue, tagConfig, vaultGroupTagOrder } from '../inventory/dim-item-info';
 import { Comparator, chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 
 const INSTANCEID_PADDING = 20;
@@ -158,14 +158,12 @@ const ICON_VALUE_GETTERS: Record<
   },
 };
 
-const TAG_ORDER = ['favorite', 'keep', 'junk', 'infuse', 'archive'];
-
 const groupingValueIndexInTagOrder = (input: VaultGroup) => {
   if (typeof input.groupingValue !== 'string') {
     return Infinity;
   }
 
-  const index = TAG_ORDER.indexOf(input.groupingValue);
+  const index = vaultGroupTagOrder.indexOf(input.groupingValue as TagValue);
 
   if (index < 0) {
     return Infinity;
