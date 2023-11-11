@@ -343,7 +343,7 @@ export function sortItems(
 }
 
 export function groupItems(
-  items: DimItem[],
+  items: readonly DimItem[],
   vaultGrouping: string,
   getTag: (item: DimItem) => TagValue | undefined,
 ): readonly VaultGroup[] {
@@ -353,7 +353,7 @@ export function groupItems(
 
   // If there are no items, or the grouping is not suppored, return all items in a single group
   if (!items.length || !groupingValueGetter || !comparator) {
-    return [{ groupingValue: undefined, items }];
+    return [{ groupingValue: undefined, items: [...items] }];
   }
 
   const grouped: VaultGroup[] = [];
