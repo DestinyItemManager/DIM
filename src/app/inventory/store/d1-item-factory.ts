@@ -96,7 +96,7 @@ const getClassTypeNameLocalized = _.memoize(
 /**
  * Convert a D1DamageType to the D2 definition, so we don't have to maintain both codepaths
  */
-const toD2DamageType = _.memoize(
+export const toD2DamageType = _.memoize(
   (damageType: D1DamageTypeDefinition | undefined): DestinyDamageTypeDefinition | undefined =>
     damageType && {
       displayProperties: {

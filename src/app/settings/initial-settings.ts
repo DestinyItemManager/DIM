@@ -15,6 +15,7 @@ export interface Settings extends DimApiSettings {
   theme: string;
   sortRecordProgression: boolean;
   vendorsHideSilverItems: boolean;
+  vaultWeaponGrouping: string;
   itemPopupTab: ItemPopupTab;
 }
 
@@ -25,5 +26,6 @@ export const initialSettingsState: Settings = {
   theme: 'default',
   sortRecordProgression: false,
   vendorsHideSilverItems: false,
+  vaultWeaponGrouping: '',
   itemPopupTab: ItemPopupTab.Overview,
 };

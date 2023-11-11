@@ -1130,6 +1130,7 @@
     "ResetToDefault": "Reset",
     "ReverseSort": "Toggle forward/reverse sort",
     "SetSort": "Sort items by:",
+    "SetVaultWeaponGrouping": "Group vault weapons by:",
     "Settings": "Settings",
     "ShowNewItems": "Show a red dot on new items",
     "ExpandSingleCharacter": "Show all characters",
@@ -1154,7 +1155,8 @@
     "SortName": "Name",
     "SpacesSize": "{{count}} space",
     "SpacesSize_plural": "{{count}} spaces",
-    "Theme": "Theme"
+    "Theme": "Theme",
+    "VaultGroupingNone": "None"
   },
   "Sockets": {
     "ApplyPerks": "Apply Perks",
