@@ -641,7 +641,6 @@
     "ExoticSpecialCategory": "Special",
     "Filter": "Filters",
     "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
-    "IncludeVendorItems": "Include Vendor items",
     "IncreaseStatPriority": "Increase stat priority",
     "Legendary": "Legendary",
     "LockEquipped": "Pin equipped",

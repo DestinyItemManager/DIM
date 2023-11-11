@@ -2,10 +2,8 @@ import { LoadoutParameters, StatConstraint } from '@destinyitemmanager/dim-api-t
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { savedLoStatConstraintsByClassSelector } from 'app/dim-api/selectors';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
-import CheckButton from 'app/dim-ui/CheckButton';
 import CollapsibleTitle from 'app/dim-ui/CollapsibleTitle';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
-import { PressTip } from 'app/dim-ui/PressTip';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
@@ -26,15 +24,8 @@ import { categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/search-filter';
-import { useSetSetting, useSetting } from 'app/settings/hooks';
-import {
-  AppIcon,
-  disabledIcon,
-  faExclamationTriangle,
-  redoIcon,
-  refreshIcon,
-  undoIcon,
-} from 'app/shell/icons';
+import { useSetSetting } from 'app/settings/hooks';
+import { AppIcon, disabledIcon, redoIcon, refreshIcon, undoIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyObject } from 'app/utils/empty';
 import { isClassCompatible, itemCanBeEquippedBy } from 'app/utils/item-utils';
@@ -60,7 +51,6 @@ import LoadoutOptimizerExotic from './filter/LoadoutOptimizerExotic';
 import {
   LoadoutOptimizerExcludedItems,
   LoadoutOptimizerPinnedItems,
-  loMenuSection,
 } from './filter/LoadoutOptimizerMenuItems';
 import StatConstraintEditor from './filter/StatConstraintEditor';
 import TierSelect from './filter/TierSelect';
@@ -108,7 +98,6 @@ export default memo(function LoadoutBuilder({
   const searchFilter = useSelector(searchFilterSelector);
   const searchQuery = useSelector(querySelector);
   const savedStatConstraintsByClass = useSelector(savedLoStatConstraintsByClassSelector);
-  const [includeVendorItems, setIncludeVendorItems] = useSetting('loIncludeVendorItems');
 
   // All Loadout Optimizer state is managed via this hook/reducer
   const [
@@ -181,14 +170,7 @@ export default memo(function LoadoutBuilder({
     [resolvedMods, autoStatMods],
   );
 
-  const {
-    vendorItems,
-    vendorItemsLoading,
-    error: vendorError,
-  } = useLoVendorItems(
-    selectedStoreId,
-    $featureFlags.statConstraintEditor ? true : includeVendorItems,
-  );
+  const { vendorItems } = useLoVendorItems(selectedStoreId);
   const armorItems = useArmorItems(classType, vendorItems);
 
   const { modMap: lockedModMap, unassignedMods } = useMemo(
@@ -359,30 +341,6 @@ export default memo(function LoadoutBuilder({
         lbDispatch={lbDispatch}
         className={styles.loadoutEditSection}
       />
-      {!$featureFlags.statConstraintEditor && (
-        <div className={loMenuSection}>
-          <CheckButton
-            onChange={setIncludeVendorItems}
-            name="includeVendorItems"
-            checked={includeVendorItems}
-          >
-            {vendorError ? (
-              <PressTip tooltip={vendorError.message}>
-                <span>
-                  <AppIcon icon={faExclamationTriangle} />
-                </span>
-              </PressTip>
-            ) : (
-              vendorItemsLoading && (
-                <span>
-                  <AppIcon icon={refreshIcon} spinning={true} />
-                </span>
-              )
-            )}{' '}
-            {t('LoadoutBuilder.IncludeVendorItems')}
-          </CheckButton>
-        </div>
-      )}
       {isPhonePortrait && (
         <div className={styles.guide}>
           <ol start={2}>

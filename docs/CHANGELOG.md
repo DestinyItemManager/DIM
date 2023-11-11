@@ -7,6 +7,7 @@
 * In Loadout Optimizer and the Loadout Editor, you can now choose a subclass with a single click.
 * Revamped the Exotic Armor selector in Loadout Optimizer.
 * Added an inline explanation of the Assume Masterwork option in Loadout Optimizer.
+* Vendor items are always included in Loadout Optimizer - the setting has been removed.
 * There is now a per-loadout option to include the effects of "Font of ..." mods' stats as if they were active or not. This helps the Loadout Optimzier make the right choices.
 * In Loadout Optimizer and the Loadout Editor, the selected subclass' super is now folded into the subclass icon rather than being shown separately.
 
