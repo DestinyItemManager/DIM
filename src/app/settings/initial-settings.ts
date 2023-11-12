@@ -11,7 +11,6 @@ export const enum ItemPopupTab {
  */
 export interface Settings extends DimApiSettings {
   language: DimLanguage;
-  loIncludeVendorItems: boolean;
   theme: string;
   sortRecordProgression: boolean;
   vendorsHideSilverItems: boolean;
@@ -21,7 +20,6 @@ export interface Settings extends DimApiSettings {
 
 export const initialSettingsState: Settings = {
   ...defaultSettings,
-  loIncludeVendorItems: false,
   language: defaultLanguage(),
   theme: 'default',
   sortRecordProgression: false,
