@@ -5,8 +5,8 @@ import { AnimatePresence, Spring, Variants, motion } from 'framer-motion';
 import React, { useCallback, useEffect, useId, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { toggleCollapsedSection } from '../settings/actions';
-import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
-import './CollapsibleTitle.scss';
+import { AppIcon, collapseIcon } from '../shell/icons';
+import styles from './CollapsibleTitle.m.scss';
 
 export default function CollapsibleTitle({
   title,
@@ -37,8 +37,8 @@ export default function CollapsibleTitle({
   const collapsed = Boolean(disabled) || (collapsedSetting ?? Boolean(defaultCollapsed));
 
   const toggle = useCallback(
-    () => disabled || dispatch(toggleCollapsedSection(sectionId)),
-    [disabled, dispatch, sectionId],
+    () => dispatch(toggleCollapsedSection(sectionId)),
+    [dispatch, sectionId],
   );
 
   const id = useId();
@@ -47,36 +47,82 @@ export default function CollapsibleTitle({
 
   return (
     <>
-      <h3
-        className={clsx(
-          'title',
-          className,
-          { collapsed },
-          disabled && collapsed && 'disabled-collapsed',
-        )}
-      >
-        <button
-          type="button"
-          aria-expanded={!collapsed}
-          aria-controls={contentId}
-          style={style}
-          onClick={toggle}
-        >
-          <span className="collapse-handle">
-            <AppIcon
-              className="collapse-icon"
-              icon={collapsed ? expandIcon : collapseIcon}
-              ariaHidden
-            />{' '}
-            <span id={headerId}>{title}</span>
-          </span>
-          {showExtraOnlyWhenCollapsed ? collapsed && extra : extra}
-        </button>
-      </h3>
+      <Title
+        title={title}
+        collapsed={collapsed}
+        extra={extra}
+        showExtraOnlyWhenCollapsed={showExtraOnlyWhenCollapsed}
+        className={className}
+        disabled={disabled}
+        style={style}
+        headerId={headerId}
+        contentId={contentId}
+        onClick={toggle}
+      />
       <CollapsedSection collapsed={collapsed} headerId={headerId} contentId={contentId}>
         {children}
       </CollapsedSection>
     </>
+  );
+}
+
+export function Title({
+  title,
+  collapsed,
+  extra,
+  showExtraOnlyWhenCollapsed,
+  className,
+  disabled,
+  style,
+  headerId,
+  contentId,
+  onClick,
+}: {
+  headerId: string;
+  contentId: string;
+  collapsed: boolean;
+  title: React.ReactNode;
+  /** right-aligned content that's in the title bar, but isn't the title */
+  extra?: React.ReactNode;
+  /** if true, the `extra` content shows up only when this section is collapsed */
+  showExtraOnlyWhenCollapsed?: boolean;
+  /** if true, this section is forced closed and ignores clicks */
+  disabled?: boolean;
+  style?: React.CSSProperties;
+  className?: string;
+  onClick: () => void;
+}) {
+  return (
+    <h3
+      className={clsx(styles.title, className, {
+        [styles.collapsed]: collapsed,
+        [styles.disabled]: disabled,
+      })}
+      style={style}
+    >
+      <button
+        type="button"
+        aria-expanded={!collapsed}
+        aria-controls={contentId}
+        onClick={onClick}
+        disabled={disabled}
+        id={headerId}
+      >
+        {!disabled && <CollapseIcon collapsed={collapsed} />}
+        {title}
+      </button>
+      {showExtraOnlyWhenCollapsed ? collapsed && extra : extra}
+    </h3>
+  );
+}
+
+export function CollapseIcon({ collapsed }: { collapsed: boolean }) {
+  return (
+    <AppIcon
+      className={clsx(styles.collapseIcon, { [styles.iconCollapsed]: collapsed })}
+      icon={collapseIcon}
+      ariaHidden
+    />
   );
 }
 
@@ -119,7 +165,7 @@ export function CollapsedSection({
           exit="collapsed"
           variants={collapsibleTitleAnimateVariants}
           transition={collapsibleTitleAnimateTransition}
-          className="collapse-content"
+          className={styles.content}
         >
           {children}
         </motion.div>

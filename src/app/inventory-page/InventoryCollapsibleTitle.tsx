@@ -1,5 +1,5 @@
 import { collapsedSelector } from 'app/dim-api/selectors';
-import { CollapsedSection } from 'app/dim-ui/CollapsibleTitle';
+import { CollapseIcon, CollapsedSection } from 'app/dim-ui/CollapsibleTitle';
 import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
 import {
@@ -11,9 +11,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useId, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import '../dim-ui/CollapsibleTitle.scss';
 import { toggleCollapsedSection } from '../settings/actions';
-import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
 import styles from './InventoryCollapsibleTitle.m.scss';
 import './InventoryCollapsibleTitle.scss';
 
@@ -91,25 +89,17 @@ export default function InventoryCollapsibleTitle({
                     aria-expanded={!collapsed}
                     aria-controls={contentId}
                   >
-                    <span className="collapse-handle">
-                      <AppIcon
-                        className="collapse-icon"
-                        icon={collapsed ? expandIcon : collapseIcon}
-                        ariaHidden
-                      />{' '}
-                      <span id={headerId}>
-                        {showPostmasterFull ? text : title}
-                        {checkPostmaster && (
-                          <span className={styles.bucketSize}>
-                            ({postMasterSpaceUsed}/{POSTMASTER_SIZE})
-                          </span>
-                        )}
-                        {collapsed && !checkPostmaster && (
-                          <span className={styles.clickToExpand}>
-                            {t('Inventory.ClickToExpand')}
-                          </span>
-                        )}
-                      </span>
+                    <CollapseIcon collapsed={collapsed} />
+                    <span id={headerId}>
+                      {showPostmasterFull ? text : title}
+                      {checkPostmaster && (
+                        <span className={styles.bucketSize}>
+                          ({postMasterSpaceUsed}/{POSTMASTER_SIZE})
+                        </span>
+                      )}
+                      {collapsed && !checkPostmaster && (
+                        <span className={styles.clickToExpand}>{t('Inventory.ClickToExpand')}</span>
+                      )}
                     </span>
                   </button>
                 ) : (

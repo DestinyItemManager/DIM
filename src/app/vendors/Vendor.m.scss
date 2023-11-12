@@ -3,8 +3,6 @@
 .icon {
   width: 30px;
   height: 30px;
-  vertical-align: middle;
-  margin: 5px 8px 5px 0;
 }
 
 .location {
@@ -24,10 +22,7 @@
 }
 
 .countdown {
-  font-size: 11px;
-  text-align: right;
-  flex: 1;
-  margin-left: 8px;
+  font-size: 12px;
   white-space: nowrap;
 }
 
@@ -35,18 +30,13 @@
   display: flex;
   flex-flow: row wrap;
   align-items: center;
+  gap: 0 6px;
 
   @include phone-portrait {
     flex-direction: column;
     align-items: flex-start;
     margin: 4px 0;
   }
-  > div:first-child {
-    margin-right: 6px;
-  }
-}
-.vendorIconWrapper {
-  position: relative;
 }
 
 @keyframes glow {

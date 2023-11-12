@@ -45,16 +45,16 @@
 
   /* always expanded (weapon icons & some top level parents(collections)) */
   /* stylelint-disable-next-line no-descending-specificity */
-  &.always-expanded > .title {
-    background-color: rgba(0, 0, 0, 0);
+  &.always-expanded > h4 {
+    background-color: transparent;
     cursor: default;
     padding-left: 0;
   }
   /* always expanded, non-top-level nodes (weapon icons) */
   & .presentation-node.always-expanded {
     /* stylelint-disable-next-line no-descending-specificity */
-    > .title {
-      background-color: rgba(0, 0, 0, 0);
+    > h4 {
+      background-color: transparent;
       opacity: 1;
       display: flex;
     }
