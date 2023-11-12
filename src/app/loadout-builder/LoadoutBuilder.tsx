@@ -63,7 +63,6 @@ import {
   loMenuSection,
 } from './filter/LoadoutOptimizerMenuItems';
 import StatConstraintEditor from './filter/StatConstraintEditor';
-import TierSelect from './filter/TierSelect';
 import CompareLoadoutsDrawer from './generated-sets/CompareLoadoutsDrawer';
 import GeneratedSets from './generated-sets/GeneratedSets';
 import { ReferenceTiers } from './generated-sets/SetStats';
@@ -340,20 +339,12 @@ export default memo(function LoadoutBuilder({
         </div>
       )}
       <UndoRedoControls canRedo={canRedo} canUndo={canUndo} lbDispatch={lbDispatch} />
-      {$featureFlags.statConstraintEditor ? (
-        <StatConstraintEditor
-          resolvedStatConstraints={resolvedStatConstraints}
-          statRangesFiltered={result?.statRangesFiltered}
-          lbDispatch={lbDispatch}
-          equippedHashes={equippedHashes}
-        />
-      ) : (
-        <TierSelect
-          resolvedStatConstraints={resolvedStatConstraints}
-          statRangesFiltered={result?.statRangesFiltered}
-          lbDispatch={lbDispatch}
-        />
-      )}
+      <StatConstraintEditor
+        resolvedStatConstraints={resolvedStatConstraints}
+        statRangesFiltered={result?.statRangesFiltered}
+        lbDispatch={lbDispatch}
+        equippedHashes={equippedHashes}
+      />
       <EnergyOptions
         assumeArmorMasterwork={assumeArmorMasterwork}
         lbDispatch={lbDispatch}
