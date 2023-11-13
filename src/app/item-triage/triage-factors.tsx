@@ -119,7 +119,7 @@ const itemFactors: Record<string, Factor> = {
       const intrinsicPerk = getIntrinsicArmorPerkSocket(item)?.plugged;
       const largePerkFilterString =
         intrinsicPerk &&
-        `perkname:${quoteFilterString(intrinsicPerk.plugDef.displayProperties.name)}`;
+        `exactperk:${quoteFilterString(intrinsicPerk.plugDef.displayProperties.name)}`;
       const modSlotFilterString = modslotFilter.fromItem(item);
       return [largePerkFilterString, modSlotFilterString].filter(Boolean).join(' ');
     },
@@ -150,7 +150,7 @@ const itemFactors: Record<string, Factor> = {
       ) : null;
     },
     filter: (item) =>
-      `perkname:${quoteFilterString(getWeaponArchetype(item)!.displayProperties.name)}`,
+      `exactperk:${quoteFilterString(getWeaponArchetype(item)!.displayProperties.name)}`,
   },
 };
 
