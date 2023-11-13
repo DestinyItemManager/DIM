@@ -1,5 +1,7 @@
 ## Next
 
+## 7.94.0 <span class="changelog-date">(2023-11-12)</span>
+
 * There is now an option in settings to group items in your vault by Item Type, Rarity, Ammo Type, Tag, or Damage Type.
 * On the Loadouts page, DIM now runs the Loadout Optimizer in the background to find out which of your loadouts could have better stats by swapping armor.
 * Loadout optimizer has a new stat tier editor which allows you to set your minimum stat tiers more intuitively.
