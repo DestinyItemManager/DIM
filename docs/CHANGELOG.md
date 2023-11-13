@@ -1,5 +1,7 @@
 ## Next
 
+## 7.94.1 <span class="changelog-date">(2023-11-13)</span>
+
 * Fixed an edge case where Loadout Optimizer's "Strict Upgrades Only" mode from clicking Optimize Armor on the Loadouts page could result in too few sets.
 
 ## 7.94.0 <span class="changelog-date">(2023-11-12)</span>
