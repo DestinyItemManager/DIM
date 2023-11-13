@@ -1,5 +1,7 @@
 ## Next
 
+* Fixed an edge case where Loadout Optimizer's "Strict Upgrades Only" mode from clicking Optimize Armor on the Loadouts page could result in too few sets.
+
 ## 7.94.0 <span class="changelog-date">(2023-11-12)</span>
 
 * There is now an option in settings to group items in your vault by Item Type, Rarity, Ammo Type, Tag, or Damage Type.

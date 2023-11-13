@@ -243,21 +243,31 @@ export default memo(function LoadoutBuilder({
     [classType, defs, includeRuntimeStatBenefits, modsToAssign, subclass],
   );
 
-  const effectiveStatConstraints = useMemo(
-    () =>
-      resolvedStatConstraints.map((constraint) => {
-        const strictUpgradeConstraint = strictUpgradesStatConstraints?.find(
-          (c) => c.statHash === constraint.statHash,
-        );
-        return strictUpgradeConstraint && !constraint.ignored
-          ? {
-              ...constraint,
-              minTier: Math.max(constraint.minTier, strictUpgradeConstraint.minTier),
-            }
-          : constraint;
-      }),
-    [resolvedStatConstraints, strictUpgradesStatConstraints],
-  );
+  // If we're in "strict upgrades only" mode from hitting the "Optimize Armor" mode,
+  // our effective stat constraints are the union of loadout/selected stat constraints
+  // and existing armor set constraints (element-wise max of min tiers).
+  // If a user-selected stat tier ends up higher than the corresponding existing loadout tier,
+  // then every valid process set already is a strict upgrade (since effective stat constraints
+  // are always >= existing constraints and there's one constraint that's higher than
+  // the existing tier, satisfying the definition of "strict upgrade") and we don't need
+  // to ask the process worker to return strict upgrades on top of that, as it'd exclude valid sets.
+  const [effectiveStatConstraints, effectiveStatConstraintsImplyStrictUpgrade] = useMemo(() => {
+    let impliesStrictUpgrade = false;
+    const constraints = resolvedStatConstraints.map((constraint) => {
+      const strictUpgradeConstraint = strictUpgradesStatConstraints?.find(
+        (c) => c.statHash === constraint.statHash,
+      );
+      if (strictUpgradeConstraint && !constraint.ignored) {
+        impliesStrictUpgrade ||= constraint.minTier > strictUpgradeConstraint.minTier;
+        return {
+          ...constraint,
+          minTier: Math.max(constraint.minTier, strictUpgradeConstraint.minTier),
+        };
+      }
+      return constraint;
+    });
+    return [constraints, impliesStrictUpgrade];
+  }, [resolvedStatConstraints, strictUpgradesStatConstraints]);
 
   // Run the actual loadout generation process in a web worker
   const { result, processing } = useProcess({
@@ -269,7 +279,9 @@ export default memo(function LoadoutBuilder({
     resolvedStatConstraints: effectiveStatConstraints,
     anyExotic: lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC,
     autoStatMods,
-    strictUpgrades: Boolean(strictUpgradesStatConstraints),
+    strictUpgrades: Boolean(
+      strictUpgradesStatConstraints && !effectiveStatConstraintsImplyStrictUpgrade,
+    ),
   });
 
   const resultSets = result?.sets;
