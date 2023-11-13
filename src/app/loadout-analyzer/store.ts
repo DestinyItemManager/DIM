@@ -1,6 +1,8 @@
 import { runProcess } from 'app/loadout-builder/process/process-wrapper';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { CancelToken, withCancel } from 'app/utils/cancel';
+import { errorLog } from 'app/utils/log';
+import { reportException } from 'app/utils/sentry';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _, { noop } from 'lodash';
 import { analyzeLoadout } from './analysis';
@@ -338,13 +340,26 @@ async function analysisTask(cancelToken: CancelToken, analyzer: LoadoutBackgroun
       continue;
     }
 
-    const result = await analyzeLoadout(
-      task.analysisContext,
-      task.storeId,
-      task.classType,
-      task.loadout,
-      runProcess,
-    );
+    let result: LoadoutAnalysisResult;
+    try {
+      result = await analyzeLoadout(
+        task.analysisContext,
+        task.storeId,
+        task.classType,
+        task.loadout,
+        runProcess,
+      );
+    } catch (e) {
+      // Report to sentry, but still set a dummy result so that we don't end up
+      // showing a "busy" spinner or try this and crash over and over again.
+      errorLog('loadout analysis', 'internal error', e);
+      reportException('loadout analysis', e);
+      result = {
+        findings: [],
+        armorResults: undefined,
+        betterStatsAvailableFontNote: false,
+      };
+    }
     analyzer.setAnalysisResult(task.storeId, task.loadout, task.generationNumber, result);
   }
 }

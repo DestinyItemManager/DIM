@@ -141,7 +141,7 @@ export async function analyzeLoadout(
     let allLegendariesMasterworked = true;
     let exoticNotMasterworked = false;
     for (const armorItem of loadoutArmor) {
-      if (armorItem.energy!.energyCapacity < MAX_ARMOR_ENERGY_CAPACITY) {
+      if (armorItem.energy && armorItem.energy.energyCapacity < MAX_ARMOR_ENERGY_CAPACITY) {
         if (armorItem.isExotic) {
           exoticNotMasterworked = true;
         } else {
