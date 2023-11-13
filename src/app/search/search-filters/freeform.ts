@@ -79,7 +79,10 @@ const nameFilter = {
   suggestionsGenerator: ({ d2Manifest, allItems }) => {
     if (d2Manifest && allItems) {
       const myItemNames = allItems
-        .filter((i) => i.bucket.inWeapons || i.bucket.inArmor || i.bucket.inGeneral)
+        .filter(
+          (i) =>
+            i.bucket.inWeapons || i.bucket.inArmor || i.bucket.inGeneral || i.bucket.inInventory,
+        )
         .map((i) => i.name.toLowerCase());
       // favor items we actually own
       const allItemNames = getUniqueItemNamesFromManifest(d2Manifest.InventoryItem.getAll());
