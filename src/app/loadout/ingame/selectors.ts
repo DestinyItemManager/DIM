@@ -157,15 +157,13 @@ export const inGameLoadoutsWithMetadataSelector = createSelector(
             currentLoadout.resolvedMods,
           );
 
-          const matchingLoadouts = savedLoadouts.filter(
-            (dimLoadout) =>
-              dimLoadout.loadout.items.length > 4 &&
-              implementsDimLoadout(
-                defs,
-                gameLoadout,
-                dimLoadout.resolvedLoadoutItems,
-                dimLoadout.resolvedMods,
-              ),
+          const matchingLoadouts = savedLoadouts.filter((dimLoadout) =>
+            implementsDimLoadout(
+              defs,
+              gameLoadout,
+              dimLoadout.resolvedLoadoutItems,
+              dimLoadout.resolvedMods,
+            ),
           );
           return { gameLoadout, isEquippable, isEquipped, matchingLoadouts };
         })
