@@ -1,5 +1,8 @@
 ## Next
 
+* Added an "exactperk:" search that matches a perk name exactly. No more mixing up "Frenzy" with "Feeding Frenzy".
+* Fixed a bug where in-game loadouts would be marked as matching a DIM loadout incorrectly.
+
 ## 7.94.1 <span class="changelog-date">(2023-11-13)</span>
 
 * Fixed an edge case where Loadout Optimizer's "Strict Upgrades Only" mode from clicking Optimize Armor on the Loadouts page could result in too few sets.
