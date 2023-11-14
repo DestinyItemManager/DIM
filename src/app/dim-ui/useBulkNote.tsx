@@ -111,8 +111,8 @@ function BulkNoteDialog({
     appendMode === 'replace'
       ? note
       : appendMode === 'append'
-      ? appendedToNote(originalNote, note)
-      : removedFromNote(originalNote, note);
+        ? appendedToNote(originalNote, note)
+        : removedFromNote(originalNote, note);
 
   return (
     <>

@@ -22,8 +22,8 @@ export default memo(function CompareSuggestions({
   const compareButtons = exampleItem.bucket.inArmor
     ? findSimilarArmors(exampleItem)
     : exampleItem.bucket.inWeapons
-    ? findSimilarWeapons(exampleItem)
-    : defaultComparisons(exampleItem);
+      ? findSimilarWeapons(exampleItem)
+      : defaultComparisons(exampleItem);
 
   // Fill in the items that match each query
   const compareButtonsWithItems = compareButtons.map((button) => ({

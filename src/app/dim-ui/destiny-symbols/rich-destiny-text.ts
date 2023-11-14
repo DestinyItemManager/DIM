@@ -44,8 +44,8 @@ export const conversionTableSelector = createSelector(
         tableName === 'Objective'
           ? defs.Objective.get(hash)?.progressDescription
           : tableName === 'SandboxPerk'
-          ? defs.SandboxPerk.get(hash)?.displayProperties.description
-          : undefined;
+            ? defs.SandboxPerk.get(hash)?.displayProperties.description
+            : undefined;
 
       // find just the text segment that says "[Rocket Launcher]" in current language
       const progressDescriptionMatch = localizedString?.match(iconPlaceholder)?.[0];

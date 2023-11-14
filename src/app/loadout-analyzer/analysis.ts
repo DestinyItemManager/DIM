@@ -351,8 +351,8 @@ function getFragmentProblems(
   return loadoutFragments < fragmentCapacity
     ? LoadoutFinding.EmptyFragmentSlots
     : loadoutFragments > fragmentCapacity
-    ? LoadoutFinding.TooManyFragments
-    : undefined;
+      ? LoadoutFinding.TooManyFragments
+      : undefined;
 }
 
 function getModProblems(

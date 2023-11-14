@@ -48,8 +48,8 @@ export function useEquippedLoadoutArmorAndSubclass(
           const storeToHydrateFrom = storeId
             ? getStore(stores, storeId)
             : currentStore!.classType === loadout.classType
-            ? currentStore
-            : stores.find((store) => store.classType === loadout.classType);
+              ? currentStore
+              : stores.find((store) => store.classType === loadout.classType);
           const currentlyEquippedArmor =
             storeToHydrateFrom?.items.filter((item) => item.equipped && item.bucket.inArmor) ?? [];
           const classType = storeToHydrateFrom?.classType ?? loadout.classType;

@@ -126,8 +126,8 @@ export function getBetterWorseItems(
               ? rawArtificeWorseStatItems
               : rawWorseStatItems
             : resultDueToArtifice
-            ? rawArtificeBetterStatItems
-            : rawBetterStatItems;
+              ? rawArtificeBetterStatItems
+              : rawBetterStatItems;
 
         insertInto.push(thisItem);
       }

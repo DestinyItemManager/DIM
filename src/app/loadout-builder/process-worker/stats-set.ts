@@ -105,8 +105,8 @@ function betterStatsHelper<T>(
       return node.value > stat
         ? BetterStatsResult.BETTER_STATS_EXIST
         : node.value === stat
-        ? BetterStatsResult.SAME
-        : BetterStatsResult.HIGHER_STAT;
+          ? BetterStatsResult.SAME
+          : BetterStatsResult.HIGHER_STAT;
     }
 
     // Evaluate the subtree from this node
