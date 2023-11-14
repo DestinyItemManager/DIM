@@ -170,7 +170,7 @@ function initialCompareQuery(item: DimItem) {
     );
     if (intrinsicSocket) {
       const intrinsicName = intrinsicSocket.plugged!.plugDef.displayProperties.name;
-      factors.push(`perkname:${quoteFilterString(intrinsicName)}`);
+      factors.push(`exactperk:${quoteFilterString(intrinsicName)}`);
     }
     const modSlotMetadata = getInterestingSocketMetadatas(item);
     if (modSlotMetadata) {

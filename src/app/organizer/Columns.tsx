@@ -460,7 +460,7 @@ export function getColumns(
             )
           );
         },
-        filter: (value) => (value ? `perkname:${quoteFilterString(value)}` : undefined),
+        filter: (value) => (value ? `exactperk:${quoteFilterString(value)}` : undefined),
       }),
     (destinyVersion === 2 || isWeapon) &&
       c({
@@ -490,7 +490,7 @@ export function getColumns(
       noSort: true,
       gridWidth: 'minmax(324px,max-content)',
       filter: (value) =>
-        typeof value === 'string' ? `perkname:${quoteFilterString(value)}` : undefined,
+        typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
     }),
     destinyVersion === 2 &&
       isWeapon &&
@@ -504,7 +504,7 @@ export function getColumns(
         noSort: true,
         gridWidth: 'minmax(180px,max-content)',
         filter: (value) =>
-          typeof value === 'string' ? `perkname:${quoteFilterString(value)}` : undefined,
+          typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
       }),
     ...statColumns,
     ...baseStatColumns,
