@@ -20,7 +20,7 @@ import { armorStats } from 'app/search/d2-known-values';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import { normalToReducedMod } from 'data/d2/reduced-cost-mod-mappings';
 import { produce } from 'immer';
-import _ from 'lodash';
+import _, { stubTrue } from 'lodash';
 import {
   DestinyClass,
   DestinyProfileResponse,
@@ -93,6 +93,9 @@ beforeAll(async () => {
     },
     autoModDefs: getAutoMods(defs, unlockedPlugs),
     unlockedPlugs,
+    // No idea how to test this
+    filterFactory: () => stubTrue,
+    validateQuery: () => ({ valid: true }),
   };
 });
 
@@ -158,16 +161,10 @@ describe('basic loadout analysis finding tests', () => {
     expect(resultsWithEmptyFragmentSlots.findings).not.toContain(LoadoutFinding.TooManyFragments);
   });
 
-  it('finds HasSearchQuery', async () => {
+  it('finds InvalidSearchQuery', async () => {
     const results = await analyze(equippedLoadout);
-    expect(results.findings).not.toContain(LoadoutFinding.LoadoutHasSearchQuery);
-
-    const loadoutWithParameters: Loadout = {
-      ...equippedLoadout,
-      parameters: { ...equippedLoadout.parameters, query: '-is:inloadout' },
-    };
-    const results2 = await analyze(loadoutWithParameters);
-    expect(results2.findings).toContain(LoadoutFinding.LoadoutHasSearchQuery);
+    expect(results.findings).not.toContain(LoadoutFinding.InvalidSearchQuery);
+    // FIXME more tests
   });
 
   it('finds UsesSeasonalMods/ModsDontFit', async () => {

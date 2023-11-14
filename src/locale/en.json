@@ -583,9 +583,9 @@
       "Description": "Some mods in this loadout are deprecated or do not otherwise fit into any of your armor pieces.",
       "Name": "Deprecated Mods"
     },
-    "LoadoutHasSearchQuery": {
-      "Description": "This loadout was created with a search query in Loadout Optimizer.",
-      "Name": "Has Search Query"
+    "InvalidSearchQuery": {
+      "Description": "This loadout was created with a search query in Loadout Optimizer that is no longer valid, or does not include the armor in this loadout.",
+      "Name": "Invalid Search Query"
     },
     "MissingItems": {
       "Description": "Some of the items in this loadout are no longer in your inventory.",
