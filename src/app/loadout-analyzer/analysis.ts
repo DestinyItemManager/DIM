@@ -261,7 +261,9 @@ export async function analyzeLoadout(
           await delay(0);
 
           existingLoadoutStatsAsStatConstraints = statConstraints.map((c) => ({
-            ...c,
+            statHash: c.statHash,
+            ignored: c.ignored,
+            maxTier: 10,
             minTier: statTier(assumedLoadoutStats[c.statHash]!.value),
           }));
           const { mergedConstraints, mergedConstraintsImplyStrictUpgrade } =

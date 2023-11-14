@@ -21,14 +21,15 @@ export function mergeStrictUpgradeStatConstraints(
   // the existing tier, satisfying the definition of "strict upgrade").
   let mergedConstraintsImplyStrictUpgrade = false;
   const mergedConstraints = parameterStatConstraints.map((constraint) => {
-    const strictUpgradeConstraint = existingLoadoutStatsAsStatConstraints?.find(
+    const existingLoadoutTier = existingLoadoutStatsAsStatConstraints?.find(
       (c) => c.statHash === constraint.statHash,
     );
-    if (strictUpgradeConstraint && !constraint.ignored) {
-      mergedConstraintsImplyStrictUpgrade ||= constraint.minTier > strictUpgradeConstraint.minTier;
+    if (existingLoadoutTier && !constraint.ignored) {
+      const effectiveLoadoutTier = Math.min(constraint.maxTier, existingLoadoutTier.minTier);
+      mergedConstraintsImplyStrictUpgrade ||= constraint.minTier > effectiveLoadoutTier;
       return {
         ...constraint,
-        minTier: Math.max(constraint.minTier, strictUpgradeConstraint.minTier),
+        minTier: Math.max(constraint.minTier, effectiveLoadoutTier),
       };
     }
     return constraint;
