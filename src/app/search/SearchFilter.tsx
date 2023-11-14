@@ -48,14 +48,16 @@ export default forwardRef(function SearchFilter(
       onRecords
         ? t('Header.FilterHelpRecords')
         : onProgress
-        ? t('Header.FilterHelpProgress')
-        : onOptimizer
-        ? t('Header.FilterHelpOptimizer', { example: '-is:exotic, exactperk:"iron lord\'s pride"' })
-        : onLoadouts
-        ? t('Header.FilterHelpLoadouts')
-        : isPhonePortrait
-        ? t('Header.FilterHelpBrief')
-        : t('Header.FilterHelp', { example: 'is:dupe, is:maxpower, -is:blue' }),
+          ? t('Header.FilterHelpProgress')
+          : onOptimizer
+            ? t('Header.FilterHelpOptimizer', {
+                example: '-is:exotic, perkname:"iron lord\'s pride"',
+              })
+            : onLoadouts
+              ? t('Header.FilterHelpLoadouts')
+              : isPhonePortrait
+                ? t('Header.FilterHelpBrief')
+                : t('Header.FilterHelp', { example: 'is:dupe, is:maxpower, -is:blue' }),
     [isPhonePortrait, onRecords, onProgress, onOptimizer, onLoadouts],
   );
 

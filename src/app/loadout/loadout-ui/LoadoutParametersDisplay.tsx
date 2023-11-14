@@ -74,8 +74,8 @@ export default function LoadoutParametersDisplay({ params }: { params: LoadoutPa
                   {(s.maxTier === 10 || s.maxTier === undefined) && s.minTier !== 10
                     ? '+'
                     : s.maxTier !== undefined && s.maxTier !== s.minTier
-                    ? `-${s.maxTier}`
-                    : ''}
+                      ? `-${s.maxTier}`
+                      : ''}
                 </span>
               ) : s.maxTier !== undefined ? (
                 <span>T{s.maxTier}-</span>

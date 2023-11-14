@@ -203,8 +203,8 @@ export function filterSortRecentSearches(query: string, recentSearches: Search[]
       type: s.saved
         ? SearchItemType.Saved
         : s.usageCount > 0
-        ? SearchItemType.Recent
-        : SearchItemType.Suggested,
+          ? SearchItemType.Recent
+          : SearchItemType.Suggested,
       query: {
         fullText: s.query,
         header: ast.comment,
@@ -429,9 +429,9 @@ export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
             colonCount(word.plainText) > 1
               ? 1 // last if it's a big one like 'stat:rpm:'
               : word.plainText.startsWith(typedPlain) ||
-                word.plainText.indexOf(typedPlain) === word.plainText.indexOf(':') + 1
-              ? -1 // first if it's a term start or segment start
-              : 0, // mid otherwise
+                  word.plainText.indexOf(typedPlain) === word.plainText.indexOf(':') + 1
+                ? -1 // first if it's a term start or segment start
+                : 0, // mid otherwise
         ),
 
         // for is/not, prioritize words with less left to type,

@@ -322,8 +322,8 @@ function ErrorInfo({ error }: { error: Error | DimError }) {
     error instanceof DimError || error instanceof BungieError
       ? error.code
       : error instanceof HttpStatusError
-      ? `HTTP ${error.status}`
-      : undefined;
+        ? `HTTP ${error.status}`
+        : undefined;
 
   const name = error.name;
   const message = error.message || 'No message';

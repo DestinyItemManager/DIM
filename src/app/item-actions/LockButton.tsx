@@ -63,8 +63,8 @@ export default function LockButton({
         ? lockIcon
         : unlockedIcon
       : item.tracked
-      ? trackedIcon
-      : unTrackedIcon;
+        ? trackedIcon
+        : unTrackedIcon;
 
   const iconElem = <AppIcon className={clsx({ [styles.inProgress]: locking })} icon={icon} />;
 
@@ -97,6 +97,6 @@ function lockButtonTitle(item: DimItem, type: 'lock' | 'track') {
       ? t('MovePopup.LockUnlock.Lock', data)
       : t('MovePopup.LockUnlock.Unlock', data)
     : !item.tracked
-    ? t('MovePopup.TrackUntrack.Track', data)
-    : t('MovePopup.TrackUntrack.Untrack', data);
+      ? t('MovePopup.TrackUntrack.Track', data)
+      : t('MovePopup.TrackUntrack.Untrack', data);
 }
