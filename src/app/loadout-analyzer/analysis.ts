@@ -44,6 +44,7 @@ import {
   LoadoutFinding,
   blockAnalysisFindings,
 } from './types';
+import { mergeStrictUpgradeStatConstraints } from './utils';
 
 export async function analyzeLoadout(
   {
@@ -263,10 +264,11 @@ export async function analyzeLoadout(
             ...c,
             minTier: statTier(assumedLoadoutStats[c.statHash]!.value),
           }));
-          const strictStatConstraints: ResolvedStatConstraint[] = statConstraints.map((c) => ({
-            ...c,
-            minTier: Math.max(c.minTier, statTier(assumedLoadoutStats[c.statHash]!.value)),
-          }));
+          const { mergedConstraints, mergedConstraintsImplyStrictUpgrade } =
+            mergeStrictUpgradeStatConstraints(
+              existingLoadoutStatsAsStatConstraints,
+              statConstraints,
+            );
 
           try {
             const { resultPromise } = worker({
@@ -277,9 +279,9 @@ export async function analyzeLoadout(
               filteredItems,
               lockedModMap: modMap,
               modStatChanges,
-              resolvedStatConstraints: strictStatConstraints,
+              resolvedStatConstraints: mergedConstraints,
               stopOnFirstSet: true,
-              strictUpgrades: true,
+              strictUpgrades: !mergedConstraintsImplyStrictUpgrade,
             });
 
             hasStrictUpgrade = Boolean((await resultPromise).sets.length);
