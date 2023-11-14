@@ -384,8 +384,10 @@ export function process(
               if (!filter.ignored) {
                 // Predict the tier boost from general mods.
                 const boostAmount = Math.min(filter.maxTier - tier, numGeneralMods);
-                tier += boostAmount;
-                numGeneralMods -= boostAmount;
+                if (boostAmount > 0) {
+                  tier += boostAmount;
+                  numGeneralMods -= boostAmount;
+                }
                 // using a power of 2 (16) instead of 11 is faster
                 tiersString += tier.toString(16);
               }
