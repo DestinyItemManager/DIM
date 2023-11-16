@@ -25,7 +25,8 @@ export function mergeStrictUpgradeStatConstraints(
       (c) => c.statHash === constraint.statHash,
     );
     if (existingLoadoutTier && !constraint.ignored) {
-      const effectiveLoadoutTier = Math.min(constraint.maxTier, existingLoadoutTier.minTier);
+      const existingTierValue = existingLoadoutTier.ignored ? 0 : existingLoadoutTier.minTier;
+      const effectiveLoadoutTier = Math.min(constraint.maxTier, existingTierValue);
       mergedConstraintsImplyStrictUpgrade ||= constraint.minTier > effectiveLoadoutTier;
       return {
         ...constraint,
