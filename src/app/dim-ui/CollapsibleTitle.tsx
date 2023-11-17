@@ -2,11 +2,65 @@ import { collapsedSelector } from 'app/dim-api/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
 import { AnimatePresence, Spring, Variants, motion } from 'framer-motion';
-import React, { useCallback, useEffect, useId, useRef } from 'react';
+import React, { forwardRef, useCallback, useEffect, useId, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { toggleCollapsedSection } from '../settings/actions';
 import { AppIcon, collapseIcon } from '../shell/icons';
 import styles from './CollapsibleTitle.m.scss';
+
+export const Title = forwardRef(function Title(
+  {
+    title,
+    collapsed,
+    extra,
+    showExtraOnlyWhenCollapsed,
+    className,
+    disabled,
+    style,
+    headerId,
+    contentId,
+    onClick,
+  }: {
+    headerId: string;
+    contentId: string;
+    collapsed: boolean;
+    title: React.ReactNode;
+    /** right-aligned content that's in the title bar, but isn't the title */
+    extra?: React.ReactNode;
+    /** if true, the `extra` content shows up only when this section is collapsed */
+    showExtraOnlyWhenCollapsed?: boolean;
+    /** if true, this section is forced closed and ignores clicks */
+    disabled?: boolean;
+    style?: React.CSSProperties;
+    className?: string;
+    onClick: () => void;
+  },
+  ref: React.Ref<HTMLHeadingElement>,
+) {
+  return (
+    <h3
+      className={clsx(styles.title, className, {
+        [styles.collapsed]: collapsed,
+        [styles.disabled]: disabled,
+      })}
+      style={style}
+      ref={ref}
+    >
+      <button
+        type="button"
+        aria-expanded={!collapsed}
+        aria-controls={contentId}
+        onClick={onClick}
+        disabled={disabled}
+        id={headerId}
+      >
+        {!disabled && <CollapseIcon collapsed={collapsed} />}
+        {title}
+      </button>
+      {showExtraOnlyWhenCollapsed ? collapsed && extra : extra}
+    </h3>
+  );
+});
 
 export default function CollapsibleTitle({
   title,
@@ -63,56 +117,6 @@ export default function CollapsibleTitle({
         {children}
       </CollapsedSection>
     </>
-  );
-}
-
-export function Title({
-  title,
-  collapsed,
-  extra,
-  showExtraOnlyWhenCollapsed,
-  className,
-  disabled,
-  style,
-  headerId,
-  contentId,
-  onClick,
-}: {
-  headerId: string;
-  contentId: string;
-  collapsed: boolean;
-  title: React.ReactNode;
-  /** right-aligned content that's in the title bar, but isn't the title */
-  extra?: React.ReactNode;
-  /** if true, the `extra` content shows up only when this section is collapsed */
-  showExtraOnlyWhenCollapsed?: boolean;
-  /** if true, this section is forced closed and ignores clicks */
-  disabled?: boolean;
-  style?: React.CSSProperties;
-  className?: string;
-  onClick: () => void;
-}) {
-  return (
-    <h3
-      className={clsx(styles.title, className, {
-        [styles.collapsed]: collapsed,
-        [styles.disabled]: disabled,
-      })}
-      style={style}
-    >
-      <button
-        type="button"
-        aria-expanded={!collapsed}
-        aria-controls={contentId}
-        onClick={onClick}
-        disabled={disabled}
-        id={headerId}
-      >
-        {!disabled && <CollapseIcon collapsed={collapsed} />}
-        {title}
-      </button>
-      {showExtraOnlyWhenCollapsed ? collapsed && extra : extra}
-    </h3>
   );
 }
 
