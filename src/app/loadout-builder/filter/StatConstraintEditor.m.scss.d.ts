@@ -10,6 +10,7 @@ interface CssExports {
   'locked': string;
   'maxed': string;
   'name': string;
+  'range': string;
   'row': string;
   'rowControl': string;
   'selectedStatBar': string;
