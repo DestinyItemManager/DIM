@@ -110,21 +110,25 @@
   align-items: center;
   margin-bottom: 4px;
   min-height: 24px;
+  gap: 4px;
 
-  @media (hover: hover) {
-    &:hover {
+  @include phone-portrait {
+    padding: 6px 10px;
+    font-size: 16px;
+  }
+
+  &:hover,
+  &:focus-visible {
+    color: var(--theme-accent-primary);
+
+    :global(.app-icon) {
       color: var(--theme-accent-primary);
-
-      :global(.app-icon) {
-        color: var(--theme-accent-primary);
-      }
     }
   }
 
   img {
     height: 24px;
     width: 24px;
-    margin-right: 4px;
   }
   > span:not(:global(.app-icon)) {
     flex: 1;

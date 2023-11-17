@@ -117,15 +117,11 @@ export default function Records({ account }: Props) {
   return (
     <PageWithMenu className="d2-vendors">
       <PageWithMenu.Menu>
-        {!isPhonePortrait && (
-          <>
-            {menuItems.map((menuItem) => (
-              <PageWithMenu.MenuButton key={menuItem.id} anchor={menuItem.id}>
-                <span>{menuItem.title}</span>
-              </PageWithMenu.MenuButton>
-            ))}
-          </>
-        )}
+        {menuItems.map((menuItem) => (
+          <PageWithMenu.MenuButton key={menuItem.id} anchor={menuItem.id}>
+            <span>{menuItem.title}</span>
+          </PageWithMenu.MenuButton>
+        ))}
         <div className={styles.presentationNodeOptions}>
           <CheckButton
             name="hide-completed"
