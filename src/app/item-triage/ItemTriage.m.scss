@@ -2,26 +2,27 @@
 
 .itemTriagePane {
   margin: 5px 0;
-  :global(.title) {
-    background-color: transparent;
-    padding: 0 13px;
-    min-height: 28px;
+}
 
-    &:hover {
-      background-color: #2224;
+/* Customize the collapsible titles */
+.collapseTitle {
+  background-color: transparent !important;
+  > button {
+    min-height: 28px;
+    padding: 0 10px;
+
+    @include phone-portrait {
+      // on phone, undo how small we shrunk title bars
+      min-height: 34px;
     }
   }
-  :global(.collapse-content) {
-    margin: 0 15px 20px;
+
+  & + div {
+    margin: 0 10px 10px;
   }
 }
 
 @include phone-portrait {
-  // on phone, undo how small we shrunk title bars
-  :global(.title) {
-    min-height: 34px;
-  }
-
   // and make the compare/search buttons bigger
   .controls {
     align-items: stretch !important;
@@ -175,10 +176,8 @@
   position: relative;
   display: inline-block;
   margin: -3px 0;
-}
-:global(.title) {
-  .inLoadout {
-    margin-left: -2px;
+
+  .collapseTitle & {
     margin-right: -2px;
     filter: invert(0.5);
   }

@@ -62,9 +62,10 @@
   }
 
   &.disabled {
+    color: #888;
     > button {
+      color: #888 !important;
       cursor: default;
-      color: #888;
     }
   }
 }

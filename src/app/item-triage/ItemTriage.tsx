@@ -107,6 +107,7 @@ function WishlistTriageSection({ item }: { item: DimItem }) {
       title={t('WishListRoll.Header')}
       sectionId="triage-wishlist"
       defaultCollapsed={false}
+      className={styles.collapseTitle}
       extra={wishlistItem ? <WishListPerkThumb wishListRoll={wishlistItem} /> : '–'}
       disabled={disabled}
     >
@@ -132,6 +133,7 @@ function LoadoutsTriageSection({ item }: { item: DimItem }) {
       title={t('Triage.InLoadouts')}
       sectionId="triage-loadout"
       defaultCollapsed={true}
+      className={styles.collapseTitle}
       extra={
         <span className={styles.factorCollapsedValue}>
           {inLoadouts.length}
@@ -202,6 +204,7 @@ function SimilarItemsTriageSection({ item }: { item: DimItem }) {
       title={t('Triage.SimilarItems')}
       sectionId={sectionId}
       defaultCollapsed={false}
+      className={styles.collapseTitle}
       extra={<span className={styles.factorCollapsedValue}>{fewestSimilar}</span>}
       showExtraOnlyWhenCollapsed
     >
@@ -288,6 +291,7 @@ function BetterItemsTriageSection({ item }: { item: DimItem }) {
       title={t('Triage.BetterWorseArmor')}
       sectionId="better-worse-armor"
       defaultCollapsed={false}
+      className={styles.collapseTitle}
       extra={<span className={styles.factorCollapsedValue}>!!</span>}
       showExtraOnlyWhenCollapsed
     >
@@ -397,6 +401,7 @@ function ArmorStatsTriageSection({ item }: { item: DimItem }) {
       defaultCollapsed={false}
       showExtraOnlyWhenCollapsed
       disabled={highStats === null}
+      className={styles.collapseTitle}
       extra={extra}
     >
       {highStats}
