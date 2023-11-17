@@ -1,5 +1,5 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
-import { savedLoStatConstraintsByClassSelector, settingSelector } from 'app/dim-api/selectors';
+import { savedLoStatConstraintsByClassSelector } from 'app/dim-api/selectors';
 import {
   allItemsSelector,
   createItemContextSelector,
@@ -10,7 +10,7 @@ import { loVendorItemsSelector } from 'app/loadout-builder/loadout-builder-vendo
 import { getAutoMods } from 'app/loadout-builder/process/mappers';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { d2ManifestSelector } from 'app/manifest/selectors';
-import { useSetting } from 'app/settings/hooks';
+import { filterFactorySelector, validateQuerySelector } from 'app/search/search-filter';
 import { currySelector } from 'app/utils/selectors';
 import { useLoadVendors } from 'app/vendors/hooks';
 import { noop } from 'lodash';
@@ -48,7 +48,8 @@ const autoOptimizationContextSelector = currySelector(
     autoModSelector,
     allItemsSelector,
     loVendorItemsSelector.selector,
-    settingSelector<'loIncludeVendorItems'>('loIncludeVendorItems'),
+    filterFactorySelector,
+    validateQuerySelector,
     (
       itemCreationContext,
       unlockedPlugs,
@@ -56,10 +57,10 @@ const autoOptimizationContextSelector = currySelector(
       autoModDefs,
       inventoryItems,
       vendorItems,
-      loIncludeVendorItems,
+      filterFactory,
+      validateQuery,
     ) => {
-      const includeVendorItems = $featureFlags.statConstraintEditor || loIncludeVendorItems;
-      const allItems = includeVendorItems ? inventoryItems.concat(vendorItems) : inventoryItems;
+      const allItems = inventoryItems.concat(vendorItems);
       return (
         itemCreationContext.defs &&
         autoModDefs &&
@@ -69,6 +70,8 @@ const autoOptimizationContextSelector = currySelector(
           savedLoStatConstraintsByClass,
           autoModDefs,
           allItems,
+          filterFactory,
+          validateQuery,
         } satisfies LoadoutAnalysisContext)
       );
     },
@@ -102,10 +105,8 @@ export function useUpdateLoadoutAnalysisContext(storeId: string) {
   const account = useSelector(currentAccountSelector)!;
   const analyzer = useContext(LoadoutAnalyzerReactContext);
   const analysisContext = useSelector(autoOptimizationContextSelector(storeId));
-  const [includeVendorItems_] = useSetting('loIncludeVendorItems');
-  const includeVendorItems = $featureFlags.statConstraintEditor || includeVendorItems_;
 
-  useLoadVendors(account, storeId, includeVendorItems);
+  useLoadVendors(account, storeId);
 
   useEffect(
     () => analysisContext && analyzer?.updateAnalysisContext(storeId, analysisContext),

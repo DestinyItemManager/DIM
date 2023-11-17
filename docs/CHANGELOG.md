@@ -1,5 +1,27 @@
 ## Next
 
+* Added an "exactperk:" search that matches a perk name exactly. No more mixing up "Frenzy" with "Feeding Frenzy".
+* Fixed a bug where in-game loadouts would be marked as matching a DIM loadout incorrectly.
+
+## 7.94.1 <span class="changelog-date">(2023-11-13)</span>
+
+* Fixed an edge case where Loadout Optimizer's "Strict Upgrades Only" mode from clicking Optimize Armor on the Loadouts page could result in too few sets.
+
+## 7.94.0 <span class="changelog-date">(2023-11-12)</span>
+
+* There is now an option in settings to group items in your vault by Item Type, Rarity, Ammo Type, Tag, or Damage Type.
+* On the Loadouts page, DIM now runs the Loadout Optimizer in the background to find out which of your loadouts could have better stats by swapping armor.
+* Loadout optimizer has a new stat tier editor which allows you to set your minimum stat tiers more intuitively. It is no longer possible to explicitly set maximum stat tiers - make sure you've added your subclass and mod configuration, set stat order, and ignore stats you don't want DIM to optimize, and you'll get the best possible sets.
+* In the loadout editor, replacing a missing item works even if you have 10 items in that slot.
+* Links in notes can no longer result in spurious hashtags.
+* Moving items from a search can once again move consumables/materials.
+* In Loadout Optimizer and the Loadout Editor, you can now choose a subclass with a single click.
+* Revamped the Exotic Armor selector in Loadout Optimizer.
+* Added an inline explanation of the Assume Masterwork option in Loadout Optimizer.
+* Vendor items are always included in Loadout Optimizer - the setting has been removed.
+* There is now a per-loadout option to include the effects of "Font of ..." mods' stats as if they were active or not. This helps the Loadout Optimzier make the right choices.
+* In Loadout Optimizer and the Loadout Editor, the selected subclass' super is now folded into the subclass icon rather than being shown separately.
+
 ## 7.93.0 <span class="changelog-date">(2023-11-05)</span>
 
 * The Loadouts page will now analyze your Loadouts in more depth, show filter pills for analysis findings, and note them in individual Loadouts too.

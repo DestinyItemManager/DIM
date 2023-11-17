@@ -276,8 +276,8 @@ function getMaxPerks(items: DimItem[]) {
           (isD1Item(item) && item.talentGrid
             ? buildNodeNames(item.talentGrid.nodes)
             : item.sockets
-            ? buildSocketNames(item)
-            : []
+              ? buildSocketNames(item)
+              : []
           ).length,
       ),
     ) || 0
@@ -289,8 +289,8 @@ function addPerks(row: Record<string, unknown>, item: DimItem, maxPerks: number)
     isD1Item(item) && item.talentGrid
       ? buildNodeNames(item.talentGrid.nodes)
       : item.sockets
-      ? buildSocketNames(item)
-      : [];
+        ? buildSocketNames(item)
+        : [];
 
   _.times(maxPerks, (index) => {
     row[`Perks ${index}`] = perks[index];

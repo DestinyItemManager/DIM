@@ -537,8 +537,8 @@ function FashionSocket({
               {canSlotOrnament
                 ? t('FashionDrawer.NoPreference')
                 : bucketHash === BucketHashes.Shaders
-                ? t('FashionDrawer.CannotFitShader')
-                : t('FashionDrawer.CannotFitOrnament')}
+                  ? t('FashionDrawer.CannotFitShader')
+                  : t('FashionDrawer.CannotFitOrnament')}
             </div>
           }
         >

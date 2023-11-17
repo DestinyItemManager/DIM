@@ -33,7 +33,7 @@ export class DimError extends Error {
     return this.cause instanceof BungieError
       ? this.cause.code
       : this.cause instanceof DimError
-      ? this.cause.bungieErrorCode()
-      : undefined;
+        ? this.cause.bungieErrorCode()
+        : undefined;
   }
 }

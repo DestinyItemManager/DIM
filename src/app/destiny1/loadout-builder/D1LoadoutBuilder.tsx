@@ -401,8 +401,8 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
         ? 'none'
         : 'and'
       : lockedPerk?.lockType === 'or'
-      ? 'none'
-      : 'or';
+        ? 'none'
+        : 'or';
 
     const newLockedPerks = produce(lockedperks, (lockedperks) => {
       if (activeType === 'none') {

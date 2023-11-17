@@ -79,10 +79,10 @@ export default function Activities({ account }: Props) {
       tier.activityData.recommendedLight === 390
         ? '390'
         : tier.tierDisplayName
-        ? t(`Activities.${tier.tierDisplayName}`, {
-            metadata: { keys: 'difficulty' },
-          })
-        : tierDef.activityName;
+          ? t(`Activities.${tier.tierDisplayName}`, {
+              metadata: { keys: 'difficulty' },
+            })
+          : tierDef.activityName;
 
     const characters =
       activityId === 'heroicstrike'
@@ -131,8 +131,8 @@ export default function Activities({ account }: Props) {
         rawActivity.identifier === 'nightfall'
           ? t('Activities.Nightfall')
           : rawActivity.identifier === 'heroicstrike'
-          ? t('Activities.WeeklyHeroic')
-          : defs.ActivityType.get(def.activityTypeHash).activityTypeName,
+            ? t('Activities.WeeklyHeroic')
+            : defs.ActivityType.get(def.activityTypeHash).activityTypeName,
       skulls: null as Skull[] | null,
       tiers: [] as ActivityTier[],
     };

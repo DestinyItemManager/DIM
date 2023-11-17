@@ -1,7 +1,5 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
-import { DimItem } from 'app/inventory/item-types';
 import { VendorHashes } from 'app/search/d2-known-values';
-import { emptyArray } from 'app/utils/empty';
 import { currySelector } from 'app/utils/selectors';
 import { useLoadVendors } from 'app/vendors/hooks';
 import { characterVendorItemsSelector, vendorsByCharacterSelector } from 'app/vendors/selectors';
@@ -27,16 +25,16 @@ export const loVendorItemsSelector = currySelector(
   ),
 );
 
-export function useLoVendorItems(selectedStoreId: string, includeVendorItems: boolean) {
+export function useLoVendorItems(selectedStoreId: string) {
   const account = useSelector(currentAccountSelector)!;
   const vendorItems = useSelector(loVendorItemsSelector(selectedStoreId));
   const vendors = useSelector(vendorsByCharacterSelector);
 
-  useLoadVendors(account, selectedStoreId, /* active */ includeVendorItems);
+  useLoadVendors(account, selectedStoreId);
 
   return {
-    vendorItemsLoading: includeVendorItems && !vendors[selectedStoreId]?.vendorsResponse,
-    vendorItems: includeVendorItems ? vendorItems : emptyArray<DimItem>(),
-    error: (includeVendorItems && vendors[selectedStoreId]?.error) || undefined,
+    vendorItemsLoading: !vendors[selectedStoreId]?.vendorsResponse,
+    vendorItems,
+    error: vendors[selectedStoreId]?.error,
   };
 }

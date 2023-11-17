@@ -4,7 +4,6 @@ interface CssExports {
   'cost': string;
   'currency': string;
   'notEnough': string;
-  'vendorCosts': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

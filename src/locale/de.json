@@ -496,6 +496,8 @@
     "Equip": "Anlegen an {{character}}",
     "Exclude": "Ignorierte Gegenstände",
     "ExcludeHelp": "Benutze Shift + Klick bei einem Gegenstand (oder ziehe ihn in dieses Feld), um Sets ohne diesen Gegenstand zu generieren.",
+    "ExistingBuildStats": "Existierende Build-Werte",
+    "ExistingBuildStatsNote": "Nur Builds mit höheren Tier-Werten werden anzeigt.",
     "FilterSets": "Sets filtern",
     "Help": {
       "And": "Rüstung mit all diesen Perks wird benutzt (\"und\")",
@@ -561,9 +563,10 @@
     "Analyzed": "{{numLoadouts}} Loadouts analysiert",
     "Analyzing": "Analysiere {{numAnalyzed}}/{{numLoadouts}} Loadouts",
     "BetterStatsAvailable": {
-      "Description": "Das Wählen anderer Rüstungen oder Mods für dieses Loadout, ermöglicht das Erreichen höherer Tier-Werte.",
+      "Description": "Das Auswählen anderer Rüstungen oder Mods für dieses Loadout, ermöglichen höhere Tier-Werte zu erreichen. Wähle \"$t(Loadouts.OpenInOptimizer)\", um bessere Builds anzuzeigen.",
       "Name": "Bessere Werte verfügbar"
     },
+    "BetterStatsAvailableFontNote": "Hinweis: Dieses Loadout benutzt \"Quelle der ...\"-Mods, welche einen Tier-Wert über T10 erzeugen. DIM kann evtl. bessere Werte identifizieren, indem die überschüssigen Werte verringert werden. Wenn dies unerwünscht ist, deaktiviere \"$t(Loadouts.IncludeRuntimeStatBenefits)\" im Loadout.",
     "DoesNotRespectExotic": {
       "Description": "Die Loadout-Optimierer-Einstellungen dieses Loadouts legen eine Exotic-Auswahl fest, aber das Loadout entspricht nicht diesem Exotic.",
       "Name": "Falsches Exotic"
@@ -616,9 +619,11 @@
     "AnyExoticDescription": "Sets müssen einen exotischen Gegenstand beinhalten, es ist aber egal welchen.",
     "AssumeMasterwork": "Als Meisterwerk ansehen",
     "AssumeMasterworkOptions": {
-      "All": "Alle Rüstungen verwenden gemeisterwerkte Werte und haben ein Energielevel von 10.",
-      "Legendary": "Legendäre Rüstungen verwenden gemeisterwerkte Werte und haben ein Energielevel von 10.",
-      "None": "Alle Rüstungen verwenden ihre aktuellen Werte und haben mindestens ein Energielevel von 7."
+      "All": "Alle Rüstungen: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "Current": "Aktuelle Werte gehen von einer Energiekapazität von mindestens {{minLoItemEnergy}} aus.",
+      "Legendary": "Legendär: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotisch: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
+      "Masterworked": "+2 für jeden Wert, bei einer Energiekapazität von 10.",
+      "None": "Alle Rüstungen: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "Stat-Mods automatisch hinzufügen",
     "AutomaticallyPicked": "Dieser Mod wurde automatisch hinzugefügt, um Build-Stats zu verbessern.",
@@ -632,6 +637,7 @@
     "EquipItems": "Ausrüsten",
     "ExcludeItem": "Gegenstand ausschließen",
     "ExistingLoadout": "Bestehendes Loadout",
+    "Exotic": "Exotische Rüstung",
     "ExoticSpecialCategory": "Spezial",
     "Filter": "Filter",
     "IgnoreStat": "Wenn nicht ausgewählt, wird der Loadout-Optimierer diesen Wert beim Zusammenstellen von Sets nicht beachten",
@@ -662,7 +668,9 @@
       "UpperBoundsFailed": "Viele Sets erfüllten nicht die Maximalanforderungen für Tier-Stufen"
     },
     "NoExotic": "Kein Exotisches",
-    "NoExoticDescription": "Äquivalent zur Suche \"not:exotic\" in der Suchleiste - keine exotische Rüstung wird in Sets verwendet.",
+    "NoExoticDescription": "Äquivalent zur Suche \"not:exotic\" in der Suchleiste - Sets werden keine exotischen Rüstungen verwenden.",
+    "NoExoticPreference": "Kein Exotik gewählt",
+    "NoExoticPreferenceDescription": "Exotische Rüstung wird verwendet, wenn sie die Werte maximiert.",
     "NoLoadoutsToCompare": "Keine Loadouts für Vergleich",
     "None": "Keine",
     "OptimizerExplanationGuide": "Lies das Benutzerhandbuch für weitere Informationen und ein Video-Tutorial.",
@@ -741,6 +749,8 @@
     },
     "ImportLoadout": "Importiere Loadout",
     "InGameLoadouts": "In-Game-Loadouts",
+    "IncludeRuntimeStatBenefits": "\"Quelle der\"-Mod-Werte einbeziehen",
+    "IncludeRuntimeStatBenefitsDesc": "\"Quelle der ...\"-Rüstungsmods erhöhen die Charakter-Werte während du Rüstungsladungen hast.\n\nMit dieser Einstellung bezieht DIM diese Mods aktiv ein und fügt deren Nutzen in Berechnungen und Optimierungen zu den Werten dieses Loadouts hinzu.",
     "ItemErrorSummary": "1 Gegenstands-Fehler:",
     "ItemErrorSummary_plural": "{{count}} Gegenstands-Fehler:",
     "ItemLeveling": "Gegenstand aufwerten",

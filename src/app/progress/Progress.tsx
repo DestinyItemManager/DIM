@@ -19,7 +19,6 @@ import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
-import '../records/PresentationNode.scss';
 import { Event } from './Event';
 import Milestones from './Milestones';
 import styles from './Progress.m.scss';

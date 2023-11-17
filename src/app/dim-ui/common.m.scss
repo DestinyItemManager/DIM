@@ -24,6 +24,7 @@
   cursor: pointer;
   font-size: inherit;
   font-family: inherit;
+  user-select: none;
   &:disabled {
     cursor: default;
   }

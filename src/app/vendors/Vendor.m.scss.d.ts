@@ -7,7 +7,6 @@ interface CssExports {
   'location': string;
   'title': string;
   'titleDetails': string;
-  'vendorIconWrapper': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

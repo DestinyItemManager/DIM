@@ -1,8 +1,10 @@
 @use '../../variables.scss' as *;
 
 .loParams {
+  composes: flexColumn from '../../dim-ui/common.m.scss';
   max-width: 100%;
   gap: 4px;
+  align-items: center;
 }
 
 .loStats {

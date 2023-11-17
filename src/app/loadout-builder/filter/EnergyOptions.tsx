@@ -15,6 +15,12 @@ export default function EnergyOptions({
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   className?: string;
 }) {
+  // Note: These are only referenced via nesting in the tooltips below,
+  // so i18next-scanner would otherwise drop them if they didn't appear
+  // in the code.
+  // t('LoadoutBuilder.AssumeMasterworkOptions.Current')
+  // t('LoadoutBuilder.AssumeMasterworkOptions.Masterworked')
+
   const assumeMasterworkOptions: Option<AssumeArmorMasterwork>[] = useMemo(
     () => [
       {

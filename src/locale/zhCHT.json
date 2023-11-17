@@ -496,6 +496,8 @@
     "Equip": "裝備在{{character}}",
     "Exclude": "已排除的物品",
     "ExcludeHelp": "Shift + 按一下一個物品(或直接拖動)用以創建一個不包括特定裝備的套裝組.",
+    "ExistingBuildStats": "Existing Build Stats",
+    "ExistingBuildStatsNote": "Only showing builds with strictly higher stat tiers.",
     "FilterSets": "組合過濾",
     "Help": {
       "And": "裝備了所有這些特性(Perk) 的防具將被使用(\"and\")",
@@ -561,9 +563,10 @@
     "Analyzed": "Analyzed {{numLoadouts}} Loadouts",
     "Analyzing": "Analyzing {{numAnalyzed}}/{{numLoadouts}} Loadouts",
     "BetterStatsAvailable": {
-      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stat tiers.",
+      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stat tiers. Choose \"$t(Loadouts.OpenInOptimizer)\" to view better builds.",
       "Name": "Better Stats Available"
     },
+    "BetterStatsAvailableFontNote": "Note: This Loadout uses \"Font of ...\" mods that cause a stat tier to exceed T10. DIM may identify better stats by reducing the amount of excess tiers. If this is undesired, disable \"$t(Loadouts.IncludeRuntimeStatBenefits)\" in the Loadout.",
     "DoesNotRespectExotic": {
       "Description": "This loadout's Loadout Optimizer settings specify an exotic choice, but the loadout does not match that exotic.",
       "Name": "Wrong Exotic"
@@ -616,9 +619,11 @@
     "AnyExoticDescription": "組合里必須有任意異域裝備。",
     "AssumeMasterwork": "假定大師傑作",
     "AssumeMasterworkOptions": {
-      "All": "所有護甲會使用大師之作内容和10點能量等級。",
-      "Legendary": "傳說護甲會使用大師杰作内容和10點能量等級。",
-      "None": "所有護甲會使用大師之作內容和10點能量等級。"
+      "All": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "Current": "Current stats, assumed energy level at least {{minLoItemEnergy}}.",
+      "Legendary": "Legendary: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotic: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
+      "Masterworked": "+2 in each stat, assumed energy level 10.",
+      "None": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "自動添加屬性模組",
     "AutomaticallyPicked": "此模組已被自動添加以優化配裝屬性。",
@@ -632,6 +637,7 @@
     "EquipItems": "裝備",
     "ExcludeItem": "排除項目",
     "ExistingLoadout": "已有配裝",
+    "Exotic": "Exotic Armor",
     "ExoticSpecialCategory": "特殊",
     "Filter": "過濾",
     "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
@@ -662,7 +668,9 @@
       "UpperBoundsFailed": "多個配裝的屬性等級高於屬性等級上限"
     },
     "NoExotic": "非異域",
-    "NoExoticDescription": "等同於搜索「not:exotic」 - 組合不會包含異域護甲。",
+    "NoExoticDescription": "Equivalent to searching \"not:exotic\" in the search bar - sets will not use any exotic armor.",
+    "NoExoticPreference": "No Exotic Selected",
+    "NoExoticPreferenceDescription": "Exotic armor will be used if it maximizes stats.",
     "NoLoadoutsToCompare": "沒有要對比的配裝",
     "None": "無",
     "OptimizerExplanationGuide": "用戶指南里有更多信息和視頻教程。",
@@ -741,6 +749,8 @@
     },
     "ImportLoadout": "導入配裝",
     "InGameLoadouts": "游戲内配裝",
+    "IncludeRuntimeStatBenefits": "Include Font mod stats",
+    "IncludeRuntimeStatBenefitsDesc": "\"Font of ...\" armor mods provide a flat boost to character stats while you have Armor Charges.\n\nWith this setting, DIM considers these mods active and adds their benefits to this Loadout's stats in calculations and optimizations.",
     "ItemErrorSummary": "1 個物品出錯：",
     "ItemErrorSummary_plural": "{{count}} 個物品出錯：",
     "ItemLeveling": "物品等級",

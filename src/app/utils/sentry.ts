@@ -71,8 +71,8 @@ if ($featureFlags.sentry) {
         underlyingError instanceof BungieError
           ? underlyingError.code
           : e instanceof DimError
-          ? e.code
-          : undefined;
+            ? e.code
+            : undefined;
       if (code && ignoreDimErrors.includes(code)) {
         return null; // drop report
       }

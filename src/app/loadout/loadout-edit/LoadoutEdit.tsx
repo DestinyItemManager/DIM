@@ -33,6 +33,7 @@ import {
   removeArtifactUnlock,
   removeItem,
   removeMod,
+  replaceItem,
   setClearSpace,
   setLoadoutSubclassFromEquipped,
   syncArtifactUnlocksFromEquipped,
@@ -267,6 +268,7 @@ function LoadoutEditCategorySection({
   const { useUpdater, useDefsUpdater, useDefsStoreUpdater } = useLoadoutUpdaters(store, setLoadout);
 
   const handleAddItem = useDefsUpdater(addItem);
+  const handleReplaceItem = useUpdater(replaceItem);
 
   const handleClickPlaceholder = ({
     bucket,
@@ -285,8 +287,6 @@ function LoadoutEditCategorySection({
     );
   };
 
-  const handleRemoveItem = useDefsUpdater(removeItem);
-
   /** Prompt the user to select a replacement for a missing item. */
   const fixWarnItem = async (li: ResolvedLoadoutItem) => {
     const warnItem = li.item;
@@ -304,8 +304,7 @@ function LoadoutEditCategorySection({
     });
 
     if (item) {
-      handleAddItem(item);
-      handleRemoveItem(li);
+      handleReplaceItem(li, item);
     }
   };
 

@@ -110,8 +110,8 @@ function ApplyLoadoutProgressBody({
     phase === LoadoutApplyPhase.Succeeded
       ? faCheckCircle
       : phase === LoadoutApplyPhase.Failed
-      ? faExclamationCircle
-      : refreshIcon;
+        ? faExclamationCircle
+        : refreshIcon;
 
   const itemStatesList = Object.values(itemStates);
   // TODO: when we have per-item socket overrides this will probably need to be more subtle
@@ -289,8 +289,8 @@ function MoveItemNotificationIcon({ completion }: { completion: Promise<unknown>
     inProgress === MoveState.InProgress
       ? refreshIcon
       : inProgress === MoveState.Succeeded
-      ? faCheckCircle
-      : faExclamationCircle;
+        ? faCheckCircle
+        : faExclamationCircle;
 
   return (
     <div className={clsx(styles.progressIcon, moveStateClasses[inProgress])}>

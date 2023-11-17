@@ -18,10 +18,10 @@ export function getLockedExotic(defs: D2ManifestDefinitions, lockedExoticHash: n
     lockedExoticHash === LOCKED_EXOTIC_NO_EXOTIC
       ? t('LoadoutBuilder.NoExotic')
       : lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC
-      ? t('LoadoutBuilder.AnyExotic')
-      : exoticArmor
-      ? exoticArmor.displayProperties.name
-      : null;
+        ? t('LoadoutBuilder.AnyExotic')
+        : exoticArmor
+          ? exoticArmor.displayProperties.name
+          : null;
 
   return [exoticArmor, name] as const;
 }

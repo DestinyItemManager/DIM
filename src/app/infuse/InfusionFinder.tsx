@@ -78,8 +78,8 @@ function stateReducer(state: State, action: Action): State {
             ? InfuseDirection.INFUSE
             : InfuseDirection.FUEL
           : action.hasFuel
-          ? InfuseDirection.FUEL
-          : InfuseDirection.INFUSE;
+            ? InfuseDirection.FUEL
+            : InfuseDirection.INFUSE;
 
       return {
         ...state,
