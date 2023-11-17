@@ -21,10 +21,6 @@
   box-sizing: border-box;
   max-width: $emblem-width;
 
-  @include phone-portrait {
-    max-width: $emblem-width !important;
-  }
-
   // Display an outline when hovering characters
   @media (hover: hover) {
     &:hover,
