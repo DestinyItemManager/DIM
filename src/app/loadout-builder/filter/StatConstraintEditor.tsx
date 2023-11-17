@@ -10,7 +10,6 @@ import {
 import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
-import { StatConstraintRange } from 'app/loadout/loadout-ui/LoadoutParametersDisplay';
 import { useD2Definitions } from 'app/manifest/selectors';
 import {
   AppIcon,
@@ -149,9 +148,6 @@ function StatRow({
                 alt=""
               />
               {statDef.displayProperties.name}
-              {!statConstraint.ignored && (
-                <StatConstraintRange statConstraint={statConstraint} className={styles.range} />
-              )}
             </div>
           </div>
           <div className={styles.buttons}>
