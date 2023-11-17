@@ -147,6 +147,7 @@ const StoreBucketInner = memo(function StoreBucketInner({
         )}
         {destinyVersion === 2 &&
           bucket.hash === BucketHashes.Engrams && // Engrams. D1 uses this same bucket hash for "Missions"
+          !isVault &&
           // lower bound of 0, in case this bucket becomes overfilled
           _.times(Math.max(0, bucket.capacity - unequippedItems.length), (index) => (
             <img src={emptyEngram} className="empty-engram" aria-hidden="true" key={index} />
