@@ -64,9 +64,9 @@ export const findingDisplays: Record<LoadoutFinding, FindingDisplay> = {
     description: tl('LoadoutAnalysis.DoesNotSatisfyStatConstraints.Description'),
     icon: infoIcon,
   },
-  [LoadoutFinding.LoadoutHasSearchQuery]: {
-    name: tl('LoadoutAnalysis.LoadoutHasSearchQuery.Name'),
-    description: tl('LoadoutAnalysis.LoadoutHasSearchQuery.Description'),
-    icon: undefined,
+  [LoadoutFinding.InvalidSearchQuery]: {
+    name: tl('LoadoutAnalysis.InvalidSearchQuery.Name'),
+    description: tl('LoadoutAnalysis.InvalidSearchQuery.Description'),
+    icon: faExclamationTriangle,
   },
 };

@@ -2,6 +2,7 @@ import { LoadoutParameters, Settings } from '@destinyitemmanager/dim-api-types';
 import { DimItem } from 'app/inventory/item-types';
 import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import { AutoModDefs, ResolvedStatConstraint } from 'app/loadout-builder/types';
+import { ItemFilter } from 'app/search/filter-types';
 
 /** The analysis results for a single loadout. */
 export interface LoadoutAnalysisResult {
@@ -61,13 +62,8 @@ export const enum LoadoutFinding {
   ModsDontFit,
   /** The armor set does not match the saved stat constraints. */
   DoesNotSatisfyStatConstraints,
-  /**
-   * The loadout has a search query which complicates analysis.
-   * Maybe we could but it's difficult and probably a niche case.
-   * But whether an item matches a query can change often (tags, or
-   * imagine creating a Loadout from `-is:inloadout` items...)
-   */
-  LoadoutHasSearchQuery,
+  /** The loadout parameters search query is invalid or the items don't match them */
+  InvalidSearchQuery,
 }
 
 /** These aren't problems per se but they do block further analysis */
@@ -75,7 +71,6 @@ export const blockAnalysisFindings: LoadoutFinding[] = [
   LoadoutFinding.NotAFullArmorSet,
   LoadoutFinding.ModsDontFit,
   LoadoutFinding.DoesNotRespectExotic,
-  LoadoutFinding.LoadoutHasSearchQuery,
 ];
 
 /**
@@ -88,4 +83,6 @@ export interface LoadoutAnalysisContext {
   savedLoStatConstraintsByClass: Settings['loStatConstraintsByClass'];
   allItems: DimItem[];
   autoModDefs: AutoModDefs;
+  validateQuery: (query: string) => { valid: boolean };
+  filterFactory: (query: string) => ItemFilter;
 }

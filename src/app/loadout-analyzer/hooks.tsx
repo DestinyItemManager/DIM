@@ -10,6 +10,7 @@ import { loVendorItemsSelector } from 'app/loadout-builder/loadout-builder-vendo
 import { getAutoMods } from 'app/loadout-builder/process/mappers';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { d2ManifestSelector } from 'app/manifest/selectors';
+import { filterFactorySelector, validateQuerySelector } from 'app/search/search-filter';
 import { currySelector } from 'app/utils/selectors';
 import { useLoadVendors } from 'app/vendors/hooks';
 import { noop } from 'lodash';
@@ -47,6 +48,8 @@ const autoOptimizationContextSelector = currySelector(
     autoModSelector,
     allItemsSelector,
     loVendorItemsSelector.selector,
+    filterFactorySelector,
+    validateQuerySelector,
     (
       itemCreationContext,
       unlockedPlugs,
@@ -54,6 +57,8 @@ const autoOptimizationContextSelector = currySelector(
       autoModDefs,
       inventoryItems,
       vendorItems,
+      filterFactory,
+      validateQuery,
     ) => {
       const allItems = inventoryItems.concat(vendorItems);
       return (
@@ -65,6 +70,8 @@ const autoOptimizationContextSelector = currySelector(
           savedLoStatConstraintsByClass,
           autoModDefs,
           allItems,
+          filterFactory,
+          validateQuery,
         } satisfies LoadoutAnalysisContext)
       );
     },
