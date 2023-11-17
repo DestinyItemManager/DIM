@@ -1,5 +1,12 @@
+/* The bucket label shown on mobile only */
 .bucketLabel {
-  composes: title from global;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 14px;
+  min-height: 34px;
   opacity: 0.8;
   margin: 0;
   padding: 0 var(--inventory-column-padding);
