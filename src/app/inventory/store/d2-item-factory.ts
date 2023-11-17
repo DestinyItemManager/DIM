@@ -303,8 +303,8 @@ export function makeItem(
   const normalBucketHash = needsShaderFix
     ? BucketHashes.Consumables
     : needsModsFix
-    ? BucketHashes.Modifications
-    : itemDef.inventory!.bucketTypeHash;
+      ? BucketHashes.Modifications
+      : itemDef.inventory!.bucketTypeHash;
   let normalBucket = buckets.byHash[normalBucketHash];
 
   // this is where the item IS, right now.

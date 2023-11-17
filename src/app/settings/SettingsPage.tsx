@@ -157,6 +157,11 @@ export default function SettingsPage() {
     return false;
   };
 
+  const changeVaultWeaponGrouping = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const vaultWeaponGrouping = e.target.value;
+    setSetting('vaultWeaponGrouping', vaultWeaponGrouping);
+  };
+
   const itemSortOrderChanged = (sortOrder: SortProperty[]) => {
     setSetting(
       'itemSortOrderCustom',
@@ -194,6 +199,15 @@ export default function SettingsPage() {
     deepsight: t('Settings.SortByDeepsight'),
     // archetype: 'Archetype'
   };
+
+  const vaultWeaponGroupingOptions = mapToOptions({
+    '': t('Settings.VaultGroupingNone'),
+    typeName: t('Settings.SortByType'),
+    rarity: t('Settings.SortByRarity'),
+    ammoType: t('Settings.SortByAmmoType'),
+    tag: t('Settings.SortByTag', { taglist: tagListString }),
+    elementWeapon: t('Settings.SortByWeaponElement'),
+  });
 
   const descriptionDisplayOptions = mapToOptions({
     both: t('Settings.BothDescriptions'),
@@ -359,6 +373,16 @@ export default function SettingsPage() {
                   <NewItemIndicator className="new-item" /> <span>{t('Hotkey.ClearNewItems')}</span>
                 </button>
               </div>
+            </div>
+
+            <div className="setting">
+              <Select
+                label={t('Settings.SetVaultWeaponGrouping')}
+                name="vaultWeaponGrouping"
+                value={settings.vaultWeaponGrouping}
+                options={vaultWeaponGroupingOptions}
+                onChange={changeVaultWeaponGrouping}
+              />
             </div>
 
             <div className="setting">

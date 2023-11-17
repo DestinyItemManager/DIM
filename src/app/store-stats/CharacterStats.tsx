@@ -17,6 +17,11 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
 import { armorStats } from 'app/search/d2-known-values';
 import { RootState } from 'app/store/types';
+import {
+  getDefaultAbilityChoiceHash,
+  getSocketsByCategoryHash,
+  subclassAbilitySocketCategoryHashes,
+} from 'app/utils/socket-utils';
 import clsx from 'clsx';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -228,9 +233,20 @@ export function LoadoutCharacterStats({
   // All equipped items
   const equippedHashes = new Set(equippedItems.map((i) => i.hash));
   // Plus all subclass mods
-  if (subclass?.loadoutItem.socketOverrides) {
-    for (const hash of Object.values(subclass?.loadoutItem.socketOverrides)) {
-      equippedHashes.add(hash);
+  if (subclass?.item.sockets) {
+    for (const category of subclass.item.sockets.categories) {
+      const sockets = getSocketsByCategoryHash(subclass.item.sockets, category.category.hash);
+      const isAbilityLikeSocket = subclassAbilitySocketCategoryHashes.includes(
+        category.category.hash,
+      );
+      for (const socket of sockets) {
+        const override = subclass.loadoutItem.socketOverrides?.[socket.socketIndex];
+        if (override) {
+          equippedHashes.add(override);
+        } else if (isAbilityLikeSocket) {
+          equippedHashes.add(getDefaultAbilityChoiceHash(socket));
+        }
+      }
     }
   }
 

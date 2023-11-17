@@ -11,6 +11,7 @@
   font-size: 12px;
   flex: 1;
   opacity: 0.6;
+  text-align: left;
 }
 
 .title {
@@ -23,6 +24,8 @@
 
 .countdown {
   font-size: 12px;
+  text-align: right;
+  margin-left: 8px;
   white-space: nowrap;
 }
 

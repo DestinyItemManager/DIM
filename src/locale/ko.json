@@ -496,6 +496,8 @@
     "Equip": "{{character}}에게 장착",
     "Exclude": "제외된 아이템",
     "ExcludeHelp": "아이템을 쉬프트 + 클릭(또는 이 바구니에 끌어서 놓기)하여 특정 장비를 제외한 세트를 만듭니다.",
+    "ExistingBuildStats": "기존 빌드 능력치",
+    "ExistingBuildStatsNote": "엄격하게 더 높은 능력치 등급을 가진 빌드만 표시합니다.",
     "FilterSets": "장비 조합 필터",
     "Help": {
       "And": "이 특성을 가진 모든 방어구들은 (\"그리고\") 를 사용 할 것입니다",
@@ -561,9 +563,10 @@
     "Analyzed": "{{numLoadouts}}개의 로드아웃 분석됨",
     "Analyzing": "{{numAnalyzed}}/{{numLoadouts}} 로드아웃 분석하는 중",
     "BetterStatsAvailable": {
-      "Description": "이 로드아웃에 다른 방어구나 개조 부품을 선택하면 능력치 등급을 더 높일 수 있습니다.",
+      "Description": "이 로드아웃에서 다른 방어구나 개조 부품을 선택하면 더 높은 능력치 등급에 도달할 수 있습니다. 더 나은 빌드를 보려면 \"$t(Loadouts.OpenInOptimizer)\"를 선택하세요.",
       "Name": "더 좋은 능력치 사용 가능"
     },
+    "BetterStatsAvailableFontNote": "메모: 이 로드아웃은 \"... 샘\" 개조 부품을 사용하며 능력치 등급이 T10을 넘길 수 있습니다. DIM이 초과되는 등급을 줄여서 더 나은 능력치를 찾을 수 있습니다. 이러한 과정을 무시하려면 로드아웃에서 \"$t(Loadouts.IncludeRuntimeStatBenefits)\"을 비활성화합니다.",
     "DoesNotRespectExotic": {
       "Description": "이 로드아웃의 로드아웃 최적화 설정은 특정 경이 아이템을 지정하고 있지만, 로드아웃에 일치하는 경이 아이템이 없습니다.",
       "Name": "잘못된 경이 아이템"
@@ -616,9 +619,11 @@
     "AnyExoticDescription": "경이 아이템이 세트에 반드시 포함되어야 하지만, 어떤 경이 아이템이라도 상관없습니다.",
     "AssumeMasterwork": "걸작 가정",
     "AssumeMasterworkOptions": {
-      "All": "모든 방어구의 걸작 능력치를 사용하며 10의 에너지 수용량을 가집니다.",
-      "Legendary": "전설 방어구의 걸작 능력치를 사용하며 10의 에너지 수용량을 가집니다.",
-      "None": "모든 방어구의 현재 능력치를 사용하며 최소 7의 에너지 수용량을 가집니다."
+      "All": "모든 방어구: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "Current": "현재 능력치, 최소 에너지 레벨 {{minLoItemEnergy}} 가정",
+      "Legendary": "전설: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\n경이: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
+      "Masterworked": "각 능력치 +2, 에너지 레벨 10 가정",
+      "None": "모든 방어구: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "능력치 개조 부품 자동 추가",
     "AutomaticallyPicked": "이 개조 부품은 빌드의 능력치를 향상시키기 위해 자동으로 추가되었습니다.",
@@ -632,6 +637,7 @@
     "EquipItems": "장착",
     "ExcludeItem": "아이템 제외",
     "ExistingLoadout": "기존 로드아웃",
+    "Exotic": "경이 방어구",
     "ExoticSpecialCategory": "특수",
     "Filter": "필터",
     "IgnoreStat": "체크가 해제된 경우 로드아웃 최적화가 장비 조합을 구성할 때 이 능력치를 무시합니다.",
@@ -662,7 +668,9 @@
       "UpperBoundsFailed": "대부분의 조합이 최대 능력치 단계를 만족하지 않음"
     },
     "NoExotic": "경이 없음",
-    "NoExoticDescription": "검색 창에 \"not:exotic\"을 검색하는 것과 동일합니다 - 세트에 경이 방어구가 포함되지 않습니다.",
+    "NoExoticDescription": "검색 창에서 \"not:exotic\"를 검색하는 것과 동일함 - 장비 조합이 경이 방어구를 사용하지 않음.",
+    "NoExoticPreference": "경이 장비가 선택되지 않음",
+    "NoExoticPreferenceDescription": "경이 방어구가 능력치를 최대화하는 경우 선택됩니다.",
     "NoLoadoutsToCompare": "비교할 로드아웃 없음",
     "None": "없음",
     "OptimizerExplanationGuide": "사용 설명서에서 더 자세한 정보나 비디오 튜토리얼을 찾을 수 있습니다.",
@@ -741,6 +749,8 @@
     },
     "ImportLoadout": "로드아웃 가져오기",
     "InGameLoadouts": "게임 내 로드아웃",
+    "IncludeRuntimeStatBenefits": "샘 개조 부품 능력치 포함",
+    "IncludeRuntimeStatBenefitsDesc": "\"... 샘\" 방어구 개조 부품은 방어구 충전이 있는 동안 캐릭터 능력치를 일정하게 향상시킵니다.\n\n이 설정이 켜진 경우, DIM은 이 개조 부품이 활성화된 것으로 간주하고 로드아웃의 능력치 계산과 최적화에 사용합니다.",
     "ItemErrorSummary": "1개의 아이템 오류:",
     "ItemErrorSummary_plural": "{{count}}개의 아이템 오류:",
     "ItemLeveling": "아이템 레벨 올리기",

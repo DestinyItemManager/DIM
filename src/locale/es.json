@@ -496,6 +496,8 @@
     "Equip": "Equipar al {{character}}",
     "Exclude": "Objetos excluidos",
     "ExcludeHelp": "SHIFT+CLICK en un objeto (o arrástralo y suéltalo en esta caja) para crear equipaciones sin equipo específico.",
+    "ExistingBuildStats": "Estadísticas de Equipación Existentes",
+    "ExistingBuildStatsNote": "Mostrando sólo equipaciones con niveles de estadísticas más altas estrictamente.",
     "FilterSets": "Conjuntos de filtros",
     "Help": {
       "And": "Armaduras con todas éstas ventajas serán usadas (\"y\")",
@@ -561,9 +563,10 @@
     "Analyzed": "Analizadas {{numLoadouts}} Equipaciones",
     "Analyzing": "Analizando {{numAnalyzed}}/{{numLoadouts}} Equipaciones",
     "BetterStatsAvailable": {
-      "Description": "Elegir armaduras diferentes o modificadores para esta equipación permitirá alcanzar niveles de estadísticas más altos.",
+      "Description": "Elegir diferentes armaduras o modificadores para esta equipación permitirá alcanzar niveles de estadísticas más altos. Elige \"$t(Loadouts.OpenInOptimizer)\" para ver mejores equipaciones.",
       "Name": "Mejores Estadísticas Disponibles"
     },
+    "BetterStatsAvailableFontNote": "Nota: Esta Equipación usa modificadores de \"Manantial de ...\" que causa que un nivel de estadísticas exceda el N10. DIM podría identificar mejores estadísticas reduciendo la cantidad de niveles de exceso. Si no se desea esto, desactiva \"$t(Loadouts.IncludeRuntimeStatBenefits)\" en la Equipación.",
     "DoesNotRespectExotic": {
       "Description": "Esta configuración de equipación del Optimizador de Equipaciones especifica una elección de exótico, pero la equipación no coincide con ese exótico.",
       "Name": "Exótico Incorrecto"
@@ -616,9 +619,11 @@
     "AnyExoticDescription": "Las equipaciones deben contener un exótico, pero cualquier exótico servirá.",
     "AssumeMasterwork": "Asumir Obra Maestra",
     "AssumeMasterworkOptions": {
-      "All": "Todas las armaduras usarán las estadísticas de obras maestras completas y tendrán un nivel de energía de 10.",
-      "Legendary": "Las armaduras legendarias usarán estadísticas de obras maestras completas y tendrán un nivel de energía de 10.",
-      "None": "Todas las armaduras usarán sus estadísticas actuales y tendrán un nivel de energía mínimo de 7."
+      "All": "Todas las armaduras: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "Current": "Estadísticas actuales, asumiendo nivel de energía de al menos {{minLoItemEnergy}}.",
+      "Legendary": "Legendarias: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExóticas: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
+      "Masterworked": "+2 en cada estadística, asumiendo nivel de energía 10.",
+      "None": "Todas las armaduras: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "Añadir automáticamente modificadores de estadísticas",
     "AutomaticallyPicked": "Este modificador fue añadido automáticamente para mejorar las estadísticas de la equipación.",
@@ -632,6 +637,7 @@
     "EquipItems": "Equipar",
     "ExcludeItem": "Excluir objeto",
     "ExistingLoadout": "Equipación Existente",
+    "Exotic": "Armadura Exótica",
     "ExoticSpecialCategory": "Especial",
     "Filter": "Filtros",
     "IgnoreStat": "Si está desmarcado, el Optimizador de Equipaciones fingirá que esta estadística no exista cuando se fabriquen equipaciones",
@@ -662,7 +668,9 @@
       "UpperBoundsFailed": "Muchas equipaciones no cumplieron los requisitos de nivel máximos de estadística"
     },
     "NoExotic": "No Exótico",
-    "NoExoticDescription": "El equivalente a buscar \"not:exotic\" en la barra de búsqueda (también excluirá los exóticos en los sets).",
+    "NoExoticDescription": "Equivalente a buscar \"not:exotic\" en la barra de búsqueda (los conjuntos no usarán ninguna armadura exótica).",
+    "NoExoticPreference": "Sin Exóticos Seleccionados",
+    "NoExoticPreferenceDescription": "Armadura exótica será usada si maximiza las estadísticas.",
     "NoLoadoutsToCompare": "No hay equipaciones para comparar",
     "None": "Ninguna",
     "OptimizerExplanationGuide": "Lea la Guía de Usuario para más información y un vídeo tutorial.",
@@ -741,6 +749,8 @@
     },
     "ImportLoadout": "Importar Equipación",
     "InGameLoadouts": "Equipaciones En El Juego",
+    "IncludeRuntimeStatBenefits": "Incluir estadísticas de modificador Manantial",
+    "IncludeRuntimeStatBenefitsDesc": "Los modificadores de armadura de \"Manantial de ...\" proveen una mejora lineal a las estadísticas del personaje mientras tengas Cargas de Armadura.\n\nCon esta configuración, DIM considera estos modificadores activos y añade estos beneficios a las estadísticas de esta Equipación en cálculos y optimizaciones.",
     "ItemErrorSummary": "1 error de objeto:",
     "ItemErrorSummary_plural": "{{count}} errores de objetos:",
     "ItemLeveling": "Nivel de objetos",

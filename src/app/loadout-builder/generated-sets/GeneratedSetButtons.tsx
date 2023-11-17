@@ -45,7 +45,7 @@ export default function GeneratedSetButtons({
   const openLoadout = () =>
     editLoadout(loadout(), store.id, {
       showClass: false,
-      isNew: !isEditingExistingLoadout,
+      isNew: !isEditingExistingLoadout || originalLoadout.id === 'equipped',
     });
 
   // Automatically equip items for this generated set to the active store

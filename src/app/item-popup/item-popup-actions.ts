@@ -84,8 +84,8 @@ export function buildItemActionsModel(item: DimItem, stores: DimStore[]): ItemAc
   const maximumMoveAmount = inPostmaster
     ? pullAmount
     : !itemOwner || item.maxStackSize <= 1 || item.notransfer || item.uniqueStack
-    ? 1
-    : amountOfItem(itemOwner, item);
+      ? 1
+      : amountOfItem(itemOwner, item);
   const showAmounts = !inPostmaster && maximumMoveAmount > 1;
   const canEquip = itemOwner ? stores.filter((store) => itemCanBeEquippedBy(item, store)) : [];
   const canStore = itemOwner ? stores.filter((store) => canShowStore(store, itemOwner, item)) : [];

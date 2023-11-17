@@ -71,8 +71,8 @@ export function LockActionButton({
         ? t('MovePopup.LockUnlock.Locked')
         : t('MovePopup.LockUnlock.Unlocked')
       : item.tracked
-      ? t('MovePopup.TrackUntrack.Tracked')
-      : t('MovePopup.TrackUntrack.Untracked');
+        ? t('MovePopup.TrackUntrack.Tracked')
+        : t('MovePopup.TrackUntrack.Untracked');
 
   return (
     <LockButton item={item} type={type} disabled={disabled} noHotkey={noHotkey}>

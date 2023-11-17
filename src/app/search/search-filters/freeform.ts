@@ -79,7 +79,10 @@ const nameFilter = {
   suggestionsGenerator: ({ d2Manifest, allItems }) => {
     if (d2Manifest && allItems) {
       const myItemNames = allItems
-        .filter((i) => i.bucket.inWeapons || i.bucket.inArmor || i.bucket.inGeneral)
+        .filter(
+          (i) =>
+            i.bucket.inWeapons || i.bucket.inArmor || i.bucket.inGeneral || i.bucket.inInventory,
+        )
         .map((i) => i.name.toLowerCase());
       // favor items we actually own
       const allItemNames = getUniqueItemNamesFromManifest(d2Manifest.InventoryItem.getAll());
@@ -135,7 +138,7 @@ const freeformFilters: FilterDefinition[] = [
     },
   },
   {
-    keywords: 'perkname',
+    keywords: ['perkname', 'exactperk'],
     description: tl('Filter.PerkName'),
     format: 'freeform',
     suggestionsGenerator: ({ d2Manifest, allItems }) => {
@@ -150,17 +153,21 @@ const freeformFilters: FilterDefinition[] = [
         // favor items we actually own
         return Array.from(
           new Set([...myPerkNames, ...allPerkNames]),
-          (s) => `perkname:${quoteFilterString(s)}`,
+          (s) => `exactperk:${quoteFilterString(s)}`,
         );
       }
     },
-    filter: ({ filterValue, language, d2Definitions }) => {
-      const startWord = startWordRegexp(plainString(filterValue, language), language);
-      const test = (s: string) => startWord.test(plainString(s, language));
+    filter: ({ lhs, filterValue, language, d2Definitions }) => {
+      const normalized = plainString(filterValue, language);
+      let test = (s: string) => normalized === plainString(s, language);
+      if (lhs === 'perkname') {
+        const startWord = startWordRegexp(normalized, language);
+        test = (s: string) => startWord.test(plainString(s, language));
+      }
       return (item) =>
         (isD1Item(item) &&
           testStringsFromDisplayPropertiesMap(test, item.talentGrid?.nodes, false)) ||
-        testStringsFromAllSockets(test, item, d2Definitions, false);
+        testStringsFromAllSockets(test, item, d2Definitions, /* includeDescription */ false);
     },
   },
   {

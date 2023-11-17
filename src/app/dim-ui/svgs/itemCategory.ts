@@ -117,15 +117,20 @@ const bucketHashToItemCategoryHash: LookupTable<BucketHashes, ItemCategoryHashes
 } as const;
 
 /** an SVG of the weapon's type, if determinable */
-export function getWeaponTypeSvgIcon(item: DimItem) {
+export function getWeaponTypeSvgIconFromCategoryHashes(itemCategoryHashes: number[]) {
   // reverse through the ICHs because most specific is last,
   // i.e. Weapon, Fusion Rifle, Linear Fusion Rifle
-  for (const ich of item.itemCategoryHashes.toReversed()) {
+  for (const ich of itemCategoryHashes.toReversed()) {
     const svg = weaponTypeSvgByCategoryHash[ich as ItemCategoryHashes];
     if (svg) {
       return svg;
     }
   }
+}
+
+/** an SVG of the weapon's type, if determinable */
+export function getWeaponTypeSvgIcon(item: DimItem) {
+  return getWeaponTypeSvgIconFromCategoryHashes(item.itemCategoryHashes);
 }
 
 /** an SVG of the weapon's slot, if possible */

@@ -21,7 +21,7 @@ export default function D1VendorItem({ saleItem, owned, totalCoins }: Props) {
       extraData={{ failureStrings: [saleItem.failureStrings] }}
     >
       {saleItem.costs.length > 0 && (
-        <div className={styles.vendorCosts}>
+        <div>
           {saleItem.costs.map((cost) => (
             <D1VendorItemCost key={cost.currency.itemHash} cost={cost} totalCoins={totalCoins} />
           ))}

@@ -496,6 +496,8 @@
     "Equip": "Equipar al {{character}}",
     "Exclude": "Objetos excluidos",
     "ExcludeHelp": "Shift + click en un objeto (o arrástralo y suéltalo en este espacio) para crear un conjunto sin equipo específico.",
+    "ExistingBuildStats": "Estadísticas de Equipación Existentes",
+    "ExistingBuildStatsNote": "Mostrando sólo equipaciones con niveles de estadísticas más altas estrictamente.",
     "FilterSets": "Filtro de conjuntos",
     "Help": {
       "And": "Armadura con todas éstas mejoras será usada (\"y\")",
@@ -561,9 +563,10 @@
     "Analyzed": "{{numLoadouts}} Equipaciones Analizadas",
     "Analyzing": "Analizando {{numAnalyzed}}/{{numLoadouts}} Equipaciones",
     "BetterStatsAvailable": {
-      "Description": "Elegir armaduras diferentes o mods para esta equipación permitirá alcanzar niveles de estadísticas más altos.",
+      "Description": "Elegir diferentes armaduras o mods para esta equipación permitirá alcanzar niveles de estadísticas más altos. Elige \"$t(Loadouts.OpenInOptimizer)\" para ver mejores equipaciones.",
       "Name": "Mejores Estadísticas Disponibles"
     },
+    "BetterStatsAvailableFontNote": "Nota: Esta Equipación usa mods de \"Fontana de ...\" que causa que un nivel de estadísticas exceda el N10. DIM podría identificar mejores estadísticas reduciendo la cantidad de niveles de exceso. Si no se desea esto, desactiva \"$t(Loadouts.IncludeRuntimeStatBenefits)\" en la Equipación.",
     "DoesNotRespectExotic": {
       "Description": "Esta configuración de equipación del Optimizador de Equipaciones especifica una elección de exótico, pero la equipación no coincide con ese exótico.",
       "Name": "Exótico Incorrecto"
@@ -616,9 +619,11 @@
     "AnyExoticDescription": "Los conjuntos deben contener un excepcional, pero cualquier excepcional sirve.",
     "AssumeMasterwork": "Asumir Obra Maestra",
     "AssumeMasterworkOptions": {
-      "All": "Todas las armaduras usarán las estadísticas de obra maestra completa y tendrán un nivel de energía de 10.",
-      "Legendary": "Las armaduras legendarias usarán estadísticas de obra maestra completa y tendrán un nivel de energía de 10.",
-      "None": "Todas las armaduras usarán sus estadísticas actuales y tendrán un nivel de energía mínimo de 7."
+      "All": "Todas las armaduras: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "Current": "Estadísticas actuales, asumiendo nivel de energía de al menos {{minLoItemEnergy}}.",
+      "Legendary": "Legendarias: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExóticas: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
+      "Masterworked": "+2 en cada estadística, asumiendo nivel de energía 10.",
+      "None": "Todas las armaduras: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "Añadir automáticamente mods de estadísticas",
     "AutomaticallyPicked": "Este mod fue añadido automáticamente para mejorar las estadísticas de la equipación.",
@@ -632,6 +637,7 @@
     "EquipItems": "Equipar",
     "ExcludeItem": "Excluir objeto",
     "ExistingLoadout": "Equipamiento Existente",
+    "Exotic": "Armadura Exótica",
     "ExoticSpecialCategory": "Especial",
     "Filter": "Filtros",
     "IgnoreStat": "Si está desmarcado, el Optimizador de Equipaciones fingirá que esta estadística no exista cuando se creen equipaciones",
@@ -662,7 +668,9 @@
       "UpperBoundsFailed": "Muchas equipaciones no cumplieron los requisitos de nivel máximos de estadística"
     },
     "NoExotic": "Sin Excepcional",
-    "NoExoticDescription": "Equivalente a la búsqueda \"no:exotic\" en la barra de búsqueda - ninguna armadura excepcional será incluida en los conjuntos.",
+    "NoExoticDescription": "Equivalente a buscar \"not:exotic\" en la barra de búsqueda - los conjuntos no usarán ninguna armadura exótica.",
+    "NoExoticPreference": "Sin Exóticos Seleccionados",
+    "NoExoticPreferenceDescription": "La armadura exótica será usada si maximizas las estadísticas.",
     "NoLoadoutsToCompare": "No hay equipamientos para comparar",
     "None": "Ninguna",
     "OptimizerExplanationGuide": "Lea la Guía de Usuario para más información y un vídeo tutorial.",
@@ -741,6 +749,8 @@
     },
     "ImportLoadout": "Importar Equipamiento",
     "InGameLoadouts": "Equipamientos En El Juego",
+    "IncludeRuntimeStatBenefits": "Incluir estadísticas de modificador Fontana",
+    "IncludeRuntimeStatBenefitsDesc": "Los mods de armadura de \"Fontana de ...\" proveen una mejora lineal a las estadísticas del personaje mientras tengas Cargas de Armadura.\n\nCon esta configuración, DIM considera estos modificadores activos y añade estos beneficios a las estadísticas de esta Equipación en cálculos y optimizaciones.",
     "ItemErrorSummary": "1 objeto con error:",
     "ItemErrorSummary_plural": "{{count}} objetos con errores:",
     "ItemLeveling": "Nivelación de objeto",

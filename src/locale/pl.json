@@ -496,6 +496,8 @@
     "Equip": "Załóż na {{character}}",
     "Exclude": "Wykluczone przedmioty",
     "ExcludeHelp": "Shift + kliknij na przedmiot (lub przeciągnij i upuść do tego wiaderka) aby tworzyć zestawy bez konkretnego sprzętu.",
+    "ExistingBuildStats": "Existing Build Stats",
+    "ExistingBuildStatsNote": "Only showing builds with strictly higher stat tiers.",
     "FilterSets": "Zestawy filtrów",
     "Help": {
       "And": "Pancerz z każdym z tych atutów będzie użyty (\"and\")",
@@ -561,9 +563,10 @@
     "Analyzed": "Analyzed {{numLoadouts}} Loadouts",
     "Analyzing": "Analyzing {{numAnalyzed}}/{{numLoadouts}} Loadouts",
     "BetterStatsAvailable": {
-      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stat tiers.",
+      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stat tiers. Choose \"$t(Loadouts.OpenInOptimizer)\" to view better builds.",
       "Name": "Better Stats Available"
     },
+    "BetterStatsAvailableFontNote": "Note: This Loadout uses \"Font of ...\" mods that cause a stat tier to exceed T10. DIM may identify better stats by reducing the amount of excess tiers. If this is undesired, disable \"$t(Loadouts.IncludeRuntimeStatBenefits)\" in the Loadout.",
     "DoesNotRespectExotic": {
       "Description": "This loadout's Loadout Optimizer settings specify an exotic choice, but the loadout does not match that exotic.",
       "Name": "Wrong Exotic"
@@ -616,9 +619,11 @@
     "AnyExoticDescription": "Zestawy muszą zawierać egzotyk, ale każdy egzotyk będzie działać.",
     "AssumeMasterwork": "Załóżmy, że Mistrzowskie",
     "AssumeMasterworkOptions": {
-      "All": "Wszystkie zbroje wykorzystają mistrzowskie statystyki i będą miały 10 energii.",
-      "Legendary": "Legendarna zbroja będzie używała mistrzowskich statystyk i będzie miała poziom energii 10.",
-      "None": "Wszystkie zbroje wykorzystają swoje obecne statystyki i będą miały minimalny poziom wynoszący 7 energii."
+      "All": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "Current": "Current stats, assumed energy level at least {{minLoItemEnergy}}.",
+      "Legendary": "Legendary: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotic: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
+      "Masterworked": "+2 in each stat, assumed energy level 10.",
+      "None": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "Automatycznie dodaj modyfikacje statystyk",
     "AutomaticallyPicked": "This mod was added automatically to improve build stats.",
@@ -632,6 +637,7 @@
     "EquipItems": "Załóż",
     "ExcludeItem": "Wyklucz Przedmiot",
     "ExistingLoadout": "Istniejące uzbrojenie",
+    "Exotic": "Exotic Armor",
     "ExoticSpecialCategory": "Specjalne",
     "Filter": "Filtry",
     "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
@@ -662,7 +668,9 @@
       "UpperBoundsFailed": "Wiele zestawów nie spełniło maksymalnych wymogów dotyczących poziomu statystyk"
     },
     "NoExotic": "Brak egzotyku",
-    "NoExoticDescription": "Równoważne wyszukiwaniu \"not:exotic\" na pasku wyszukiwania - żaden egzotyczny pancerz nie będzie uwzględniony w zestawach.",
+    "NoExoticDescription": "Equivalent to searching \"not:exotic\" in the search bar - sets will not use any exotic armor.",
+    "NoExoticPreference": "No Exotic Selected",
+    "NoExoticPreferenceDescription": "Exotic armor will be used if it maximizes stats.",
     "NoLoadoutsToCompare": "Brak uzbrojeń do porównania",
     "None": "Brak",
     "OptimizerExplanationGuide": "Przeczytaj przewodnik użytkownika, aby uzyskać więcej informacji i poradnik wideo.",
@@ -741,6 +749,8 @@
     },
     "ImportLoadout": "Importuj Uzbrojenie",
     "InGameLoadouts": "In-Game Loadouts",
+    "IncludeRuntimeStatBenefits": "Include Font mod stats",
+    "IncludeRuntimeStatBenefitsDesc": "\"Font of ...\" armor mods provide a flat boost to character stats while you have Armor Charges.\n\nWith this setting, DIM considers these mods active and adds their benefits to this Loadout's stats in calculations and optimizations.",
     "ItemErrorSummary": "1 błąd przedmiotu:",
     "ItemErrorSummary_plural": "{{count}} błędów przedmiotu:",
     "ItemLeveling": "Levelowanie Przedmiotów",

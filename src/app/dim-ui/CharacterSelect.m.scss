@@ -1,10 +1,5 @@
 @use '../variables.scss' as *;
 
-.select {
-  display: flex;
-  justify-content: space-between;
-}
-
 .tile {
   height: $emblem-height;
   > * {
@@ -21,21 +16,14 @@
 }
 
 .vertical {
-  composes: select;
-  flex-direction: column;
-  align-items: center;
+  composes: flexColumn from './common.m.scss';
+  gap: 8px;
+}
 
-  .tile {
-    width: 100%;
-    margin-bottom: 8px;
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-  .unselected > div > div {
-    filter: grayscale(0.6);
-    opacity: 0.4;
-  }
+// The > * > * is so we don't dim out the hover border
+.unselected > * > * {
+  filter: grayscale(0.6);
+  opacity: 0.4;
 }
 
 .frame {

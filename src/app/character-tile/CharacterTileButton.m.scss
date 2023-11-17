@@ -1,29 +1,41 @@
 @use '../variables.scss' as *;
 
+@mixin selected-highlight {
+  &::after {
+    content: '';
+    display: block;
+    position: absolute;
+    inset: -4px;
+    border: 1px solid white;
+    pointer-events: none;
+  }
+}
+
 .character {
+  composes: resetButton from '../dim-ui/common.m.scss';
   composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: stretch;
+  width: 100%;
   position: relative;
   white-space: nowrap;
   box-sizing: border-box;
   max-width: $emblem-width;
 
   @include phone-portrait {
-    width: auto;
+    max-width: $emblem-width !important;
   }
 
   // Display an outline when hovering characters
   @media (hover: hover) {
     &:hover,
     &:active {
-      position: relative;
-      &::after {
-        content: '';
-        display: block;
-        position: absolute;
-        inset: -4px;
-        border: 1px solid white;
-        pointer-events: none;
-      }
+      @include selected-highlight;
     }
+  }
+
+  &:focus-visible {
+    outline: none;
+
+    @include selected-highlight;
   }
 }

@@ -11,19 +11,19 @@ export const enum ItemPopupTab {
  */
 export interface Settings extends DimApiSettings {
   language: DimLanguage;
-  loIncludeVendorItems: boolean;
   theme: string;
   sortRecordProgression: boolean;
   vendorsHideSilverItems: boolean;
+  vaultWeaponGrouping: string;
   itemPopupTab: ItemPopupTab;
 }
 
 export const initialSettingsState: Settings = {
   ...defaultSettings,
-  loIncludeVendorItems: false,
   language: defaultLanguage(),
   theme: 'default',
   sortRecordProgression: false,
   vendorsHideSilverItems: false,
+  vaultWeaponGrouping: '',
   itemPopupTab: ItemPopupTab.Overview,
 };
