@@ -279,7 +279,7 @@
     "PartialMatch": "Affiche les objets dont le nom, la description, n'importe quel attribut, ou n'importe quel mod contient une partie du texte filtré. Rechercher des phrases entières en utilisant des guillemets. le filtre \"perk:\" cherche uniquement dans les attributs.",
     "PatternUnlocked": "Affiche les objets qui ont un modèle de façonnage débloqué, même si l'objet lui-même n'a pas été façonné.",
     "Perk": "Affiche les objets dont la description ou le nom d'au moins un de ses mods et attributs contient une partie du texte filtré. Rechercher des phrases entières en utilisant des guillemets.",
-    "PerkName": "Affiche les objets dont le nom d'au moins un de ses mods et attributs contient une partie du texte filtré. Rechercher des phrases entières en utilisant des guillemets.",
+    "PerkName": "Shows items with a perk or mod whose name matches (exactperk:) or partially matches (perkname:) the filter text. Search for entire phrases using quotes.",
     "PinnacleReward": "Affiche les poursuites qui produisent une récompense de prestige.",
     "Postmaster": "Objets actuellement au commis des postes.",
     "PowerKeywords": "Utilisez les mots-clés pinnaclecap ou softcap à la place de nombres pour utiliser les limites de puissance de la saison actuelle.",
@@ -583,9 +583,9 @@
       "Description": "Certains mods de cet équipement sont obsolètes ou ne sont pas adaptés à l'une de vos pièces d'armures.",
       "Name": "Mods obsolètes"
     },
-    "LoadoutHasSearchQuery": {
-      "Description": "Cet équipement a été créé avec une recherche dans l'optimiseur d'équipement.",
-      "Name": "A une recherche"
+    "InvalidSearchQuery": {
+      "Description": "This loadout was created with a search query in Loadout Optimizer that is no longer valid, or does not include the armor in this loadout.",
+      "Name": "Invalid Search Query"
     },
     "MissingItems": {
       "Description": "Certains objets de cet équipement ne sont plus dans votre inventaire.",
@@ -641,12 +641,10 @@
     "ExoticSpecialCategory": "Spécial",
     "Filter": "Filtres",
     "IgnoreStat": "Si décoché, l'optimiseur d'équipement prétendra que cette stat n'existe pas lors du calcul des ensembles",
-    "IncludeVendorItems": "Inclure les objets des marchands",
     "IncreaseStatPriority": "Augmenter la priorité de la stat",
     "Legendary": "Légendaire",
     "LockEquipped": "Inc. équipés",
     "LockItem": "Inclure objet",
-    "MaxTier": "Max {{tier}}",
     "MissingClass": "Build pour: {{className}}",
     "MissingClassDescription": "Le build que vous essayez de voir est fait pour une classe que vous n'avez pas.",
     "NoBuildsFoundExplainer": {
@@ -680,11 +678,7 @@
     "OptimizerSet": "Ensemble de l'optimiseur",
     "ProcessingSets": "Recherche des ensembles aux paliers les plus élevés...",
     "SaveAs": "Enregistrer sous",
-    "SelectMax": "- Max -",
-    "SelectMin": "- Min -",
     "SpeedReport": "{{combos, number}} combinaisons générées en {{time}} secondes",
-    "StatTierIgnoreOption": "Ignorer",
-    "StatTierIncludeOption": "Inclure",
     "TierNumber": "T{{tier}}",
     "TierSelect": "Sélectionner le pallier de stat minimum",
     "UnableToAddAllMods": "Impossible d'ajouter tous les mods.",
@@ -1119,6 +1113,7 @@
     "ResetToDefault": "Réinitialiser",
     "ReverseSort": "Activer/désactiver le tri normal/inversé",
     "SetSort": "Trier les objets par :",
+    "SetVaultWeaponGrouping": "Group vault weapons by:",
     "Settings": "Paramètres",
     "ShowNewItems": "Afficher un point rouge sur les nouveaux objets",
     "SingleCharacter": "Vue à un seul personnage",
@@ -1142,7 +1137,8 @@
     "SortName": "Nom",
     "SpacesSize": "{{count}} espace",
     "SpacesSize_plural": "{{count}} espaces",
-    "Theme": "Thème"
+    "Theme": "Thème",
+    "VaultGroupingNone": "None"
   },
   "Sockets": {
     "ApplyPerks": "Appliquer les attributs",

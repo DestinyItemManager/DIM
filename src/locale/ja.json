@@ -279,7 +279,7 @@
     "PartialMatch": "アイテムの名前、説明、パーク、Mod のいずれにて部分的でも一致したものを表示します。複数の単語で絞り込む場合は引用符を使って検索できます。'perk:'フィルタは、パークにて該当するワードだけを絞り込みます。",
     "PatternUnlocked": "形成したことがなくても、パターンを所持しているアイテムを表示します。",
     "Perk": "アイテムの名前や説明に含まれるフィルターのテキストに、パークやmodが部分的に一致しているアイテムを表示します。引用符を使ってフレーズ全体を検索します。",
-    "PerkName": "アイテムのパーク、Mod のいずれにて部分的でも一致したものを表示します。複数の単語で絞り込む場合は引用符を使って検索できます。",
+    "PerkName": "パークまたはModの名前が一致(exactperk:) または一部該当 (perkname:) のアイテムを表示します。引用符を使用してフレーズ全体を検索します。",
     "PinnacleReward": "強力な報酬を得られる追跡を表示",
     "Postmaster": "現在ポストマスターにあるアイテム",
     "PowerKeywords": "現在のシーズンのパワー制限を参照するには、数値の代わりにハードキャップまたはソフトキャップキーワードを使用してください。",
@@ -583,9 +583,9 @@
       "Description": "このロードアウト内にある一部のModが廃止されているか、アーマーに適用できないようです。",
       "Name": "廃止済みMOD"
     },
-    "LoadoutHasSearchQuery": {
-      "Description": "このロードアウトはロードアウト最適化の検索フィルターを使用して作成されました。",
-      "Name": "検索フィルター使用"
+    "InvalidSearchQuery": {
+      "Description": "このロードアウトは、アーマーを含まないもしくは無効な検索フィルターを使用して作成されました。",
+      "Name": "無効な検索フィルター"
     },
     "MissingItems": {
       "Description": "このロードアウトに含まれる装備の一部は所持品にありません。",
@@ -641,12 +641,10 @@
     "ExoticSpecialCategory": "スペシャル",
     "Filter": "フィルター",
     "IgnoreStat": "チェックを外すと、このステータスを無視してビルドを探索します。",
-    "IncludeVendorItems": "ベンダーアイテムを含む",
     "IncreaseStatPriority": "ステータス優先度を上げる",
     "Legendary": "レジェンダリー",
     "LockEquipped": "ピン留めされたアイテムを装備",
     "LockItem": "アイテムをピン留めする",
-    "MaxTier": "最大 {{tier}}",
     "MissingClass": "ビルド: {{className}}",
     "MissingClassDescription": "表示しようとしているビルドは、あなたが持っていないキャラクタークラス向けです。",
     "NoBuildsFoundExplainer": {
@@ -680,11 +678,7 @@
     "OptimizerSet": "最適化セット",
     "ProcessingSets": "最上位Tierのセットを検索しています...",
     "SaveAs": "名前をつけて保存",
-    "SelectMax": "- 最大 -",
-    "SelectMin": "- 最小 -",
     "SpeedReport": "{{time}} 秒で生成された {{combos, number}} の組み合わせ",
-    "StatTierIgnoreOption": "無視",
-    "StatTierIncludeOption": "含む",
     "TierNumber": "T{{tier}}",
     "TierSelect": "ステータスTier最低値を選択",
     "UnableToAddAllMods": "全てのModを追加することはできません。",
@@ -1119,6 +1113,7 @@
     "ResetToDefault": "リセット",
     "ReverseSort": "前方 / 逆ソートの切り替え",
     "SetSort": "アイテムを並べ替える：",
+    "SetVaultWeaponGrouping": "保管庫の武器を次の縛りでグループ化する:",
     "Settings": "設定",
     "ShowNewItems": "新しいアイテムに赤い点を表示する",
     "SingleCharacter": "キャラクター単体表示",
@@ -1142,7 +1137,8 @@
     "SortName": "名前",
     "SpacesSize": "{{count}} スペース",
     "SpacesSize_plural": "{{count}} スペース",
-    "Theme": "テーマ"
+    "Theme": "テーマ",
+    "VaultGroupingNone": "無し"
   },
   "Sockets": {
     "ApplyPerks": "パークを適用",

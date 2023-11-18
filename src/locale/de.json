@@ -279,7 +279,7 @@
     "PartialMatch": "Zeigt Gegenstände, deren Name, Beschreibung, jeglicher Perk, oder Mod eine teilweise Übereinstimmung zum Suchtext haben. Suche nach ganzen Phrasen mittels Anführungszeichen. Der 'perk:' Filter durchsucht nur Perks.",
     "PatternUnlocked": "Zeigt Gegenstände, dessen Bauplan freigeschaltet ist, auch wenn der Gegenstand an sich nicht geformt wurde.",
     "Perk": "Zeigt Gegenstände, bei denen einer der Perks oder Mods den Suchtext im Namen oder in der Beschreibung enthält. Suche nach ganzen Phrasen mit Anführungszeichen.",
-    "PerkName": "Zeigt Gegenstände an, bei denen einer der Perks oder Mods den Suchtext nur im Namen enthält. Suche nach ganzen Phrasen mit Anführungszeichen.",
+    "PerkName": "Zeigt Gegenstände mit einem Perk oder Mod an, deren Name exakt (exactperk:) oder partiell (perkname:) mit dem Filtertext übereinstimmt. Suche nach ganzen Phrasen mit Hilfe von Anführungszeichen.",
     "PinnacleReward": "Zeigt Aktivitäten, welche eine Spitzenbelohnung hervorbringen.",
     "Postmaster": "Gegenstände, die derzeit bei der Poststelle sind.",
     "PowerKeywords": "Verwende statt einer Zahl die Schlüsselwörter \"pinnaclecap\" oder \"softcap\", um auf das Powerlevel der aktuellen Saison zu verweisen.",
@@ -583,9 +583,9 @@
       "Description": "Einige Mods in diesem Loadout sind veraltet oder passen aus anderen Gründen nicht auf deine Rüstungen.",
       "Name": "Veraltete Mods"
     },
-    "LoadoutHasSearchQuery": {
-      "Description": "Dieses Loadout wurde mit einer Suchanfrage im Loadout-Optimierer erstellt.",
-      "Name": "Hat Suchanfrage"
+    "InvalidSearchQuery": {
+      "Description": "Dieses Loadout wurde mit einer Suchanfrage im Loadout-Optimierer erzeugt, die nicht mehr gültig ist oder die Rüstung in diesem Loadout nicht enthält.",
+      "Name": "Ungültige Suchanfrage"
     },
     "MissingItems": {
       "Description": "Einige der Gegenstände in diesem Loadout befinden sich nicht mehr in deinem Inventar.",
@@ -641,12 +641,10 @@
     "ExoticSpecialCategory": "Spezial",
     "Filter": "Filter",
     "IgnoreStat": "Wenn nicht ausgewählt, wird der Loadout-Optimierer diesen Wert beim Zusammenstellen von Sets nicht beachten",
-    "IncludeVendorItems": "Gegenstände von Händlern einbeziehen",
     "IncreaseStatPriority": "Erhöhe Wert-Priorität",
     "Legendary": "Legendär",
     "LockEquipped": "ausgerüstete Gegenstände anpinnen",
     "LockItem": "Gegenstand anpinnen",
-    "MaxTier": "Max. {{tier}}",
     "MissingClass": "Build ist für: {{className}}",
     "MissingClassDescription": "Der Build, den du sehen möchtest, ist für eine Charakterklasse gedacht, die du nicht hast.",
     "NoBuildsFoundExplainer": {
@@ -680,11 +678,7 @@
     "OptimizerSet": "Optimierer-Set",
     "ProcessingSets": "Höchste Tier-Sets finden...",
     "SaveAs": "Speichern unter",
-    "SelectMax": "- Max -",
-    "SelectMin": "- Min -",
     "SpeedReport": "{{combos, number}} Kombinationen in {{time}} Sekunden erstellt",
-    "StatTierIgnoreOption": "Ignorieren",
-    "StatTierIncludeOption": "Einschließen",
     "TierNumber": "T{{tier}}",
     "TierSelect": "Wähle minimalen Wert-Tier",
     "UnableToAddAllMods": "Nicht in der Lage, alle Mods hinzuzufügen.",
@@ -1119,6 +1113,7 @@
     "ResetToDefault": "Zurücksetzen",
     "ReverseSort": "Sortierung umschalten",
     "SetSort": "Sortiere Gegenstände nach:",
+    "SetVaultWeaponGrouping": "Gruppiere Waffen im Tresor nach:",
     "Settings": "Einstellungen",
     "ShowNewItems": "Einen roten Punkt bei neuen Gegenständen anzeigen",
     "SingleCharacter": "Einzel-Charakter-Ansicht",
@@ -1142,7 +1137,8 @@
     "SortName": "Name",
     "SpacesSize": "{{count}} Platz",
     "SpacesSize_plural": "{{count}} Plätze",
-    "Theme": "Aussehen"
+    "Theme": "Aussehen",
+    "VaultGroupingNone": "Keine"
   },
   "Sockets": {
     "ApplyPerks": "Perks anwenden",
