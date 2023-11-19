@@ -27,6 +27,10 @@
   align-items: center;
   gap: 4px;
 
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 14px;
+
   // The interactive button within
   > button {
     // Reset button
@@ -38,10 +42,6 @@
     align-items: center;
     min-height: 24px;
     gap: 6px;
-
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-size: 14px;
 
     &:hover,
     &:focus-visible {
