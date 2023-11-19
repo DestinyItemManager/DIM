@@ -37,10 +37,7 @@ export function SetStats({
 }) {
   const defs = useD2Definitions()!;
   const totalTier = calculateTotalTier(stats);
-  const enabledTier = sumEnabledStats(
-    stats,
-    resolvedStatConstraints.filter((c) => !c.ignored),
-  );
+  const enabledTier = sumEnabledStats(stats, resolvedStatConstraints);
 
   return (
     <div className={clsx(styles.container, className)}>

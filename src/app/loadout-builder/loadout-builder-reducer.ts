@@ -363,10 +363,16 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
         };
       }
       case 'statConstraintChanged': {
-        const { constraint } = action;
-        const newStatConstraints = state.resolvedStatConstraints.map((c) =>
-          c.statHash === constraint.statHash ? constraint : c,
-        );
+        const { constraint: newConstraint } = action;
+        const newStatConstraints = state.resolvedStatConstraints.map((c) => {
+          if (c.statHash === newConstraint.statHash) {
+            // Previously ignored stats' maxes need to be bumped up to T10 again
+            const maxTier = newConstraint.ignored ? 0 : c.ignored ? 10 : c.maxTier;
+            return { ...newConstraint, maxTier };
+          } else {
+            return c;
+          }
+        });
         return updateStatConstraints(state, newStatConstraints);
       }
       case 'statConstraintReset': {

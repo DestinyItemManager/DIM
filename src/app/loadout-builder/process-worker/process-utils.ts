@@ -119,32 +119,30 @@ export function updateMaxTiers(
   for (let statIndex = 0; statIndex < statFiltersInStatOrder.length; statIndex++) {
     const value = setStats[statIndex];
     const filter = statFiltersInStatOrder[statIndex];
-    if (!filter.ignored) {
-      const minMax = minMaxesInStatOrder[statIndex];
-      if (minMax.max < filter.minTier) {
-        // This is only called with sets that satisfy stat constraints,
-        // so optimistically bump these up
-        minMax.max = filter.minTier;
-      }
-      const tier = setTiers[statIndex];
-      if (minMax.max < tier) {
-        foundAnyImprovement = true;
-        minMax.max = tier;
-      }
-      const neededValue = filter.minTier * 10 - value;
-      if (neededValue > 0) {
-        // All sets need at least these extra stats to hit minimums
-        requiredMinimumExtraStats[statIndex] = neededValue;
-      }
+    const minMax = minMaxesInStatOrder[statIndex];
+    if (minMax.max < filter.minTier) {
+      // This is only called with sets that satisfy stat constraints,
+      // so optimistically bump these up
+      minMax.max = filter.minTier;
+    }
+    const tier = setTiers[statIndex];
+    if (tier > minMax.max) {
+      foundAnyImprovement ||= filter.minTier < filter.maxTier;
+      minMax.max = tier;
+    }
+    const neededValue = filter.minTier * 10 - value;
+    if (neededValue > 0) {
+      // All sets need at least these extra stats to hit minimums
+      requiredMinimumExtraStats[statIndex] = neededValue;
     }
   }
 
-  // Then, for every non-ignored stat where we haven't shown that we can hit T10...
+  // Then, for every stat where we haven't shown that we can hit T10...
   for (let statIndex = 0; statIndex < statFiltersInStatOrder.length; statIndex++) {
     const setStat = setStats[statIndex];
     const minMax = minMaxesInStatOrder[statIndex];
     const statFilter = statFiltersInStatOrder[statIndex];
-    if (statFilter.ignored || minMax.max >= 10) {
+    if (minMax.max >= 10) {
       continue;
     }
 
@@ -165,9 +163,12 @@ export function updateMaxTiers(
         setEnergy - info.totalModEnergyCost,
       );
       if (picks) {
-        const val = Math.floor((setStat + explorationStats[statIndex]) / 10);
-        foundAnyImprovement ||= val > statFilter.minTier;
-        minMax.max = val;
+        const tierVal = Math.floor((setStat + explorationStats[statIndex]) / 10);
+        // An improvement is only actually an improvement if the tier wouldn't end up
+        // ignored due to max.
+        foundAnyImprovement ||=
+          tierVal > statFilter.minTier && statFilter.minTier < statFilter.maxTier;
+        minMax.max = tierVal;
       } else {
         break;
       }

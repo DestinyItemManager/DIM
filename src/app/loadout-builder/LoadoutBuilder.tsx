@@ -265,8 +265,8 @@ export default memo(function LoadoutBuilder({
   const resultSets = result?.sets;
 
   const sortedSets = useMemo(
-    () => resultSets && sortGeneratedSets(resultSets, statConstraints),
-    [statConstraints, resultSets],
+    () => resultSets && sortGeneratedSets(resultSets, mergedConstraints),
+    [mergedConstraints, resultSets],
   );
 
   useEffect(() => hideItemPicker(), [hideItemPicker, selectedStore.classType]);

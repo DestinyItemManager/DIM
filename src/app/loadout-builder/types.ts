@@ -14,6 +14,10 @@ export interface MinMax {
  * version still exists but has an ignored flag. Also, values cannot be undefined.
  */
 export interface ResolvedStatConstraint extends Required<StatConstraint> {
+  /**
+   * An ignored stat has an effective maximum tier of 0, so that any
+   * stat tiers in excess of T0 are deemed worthless.
+   */
   ignored: boolean;
 }
 

@@ -56,6 +56,9 @@ export function process(
   const pstart = performance.now();
 
   const statOrder = resolvedStatConstraints.map(({ statHash }) => statHash as ArmorStatHashes);
+  const maxTierConstraints = resolvedStatConstraints.map(({ ignored, maxTier }) =>
+    ignored ? 0 : maxTier,
+  );
   const modStatsInStatOrder = statOrder.map((h) => modStatTotals[h]);
 
   // This stores the computed min and max value for each stat as we process all sets, so we
@@ -218,17 +221,19 @@ export function process(
 
             // TODO: avoid min/max?
             const tiers = [
-              Math.min(Math.max(Math.floor(stats[0] / 10), 0), 10),
-              Math.min(Math.max(Math.floor(stats[1] / 10), 0), 10),
-              Math.min(Math.max(Math.floor(stats[2] / 10), 0), 10),
-              Math.min(Math.max(Math.floor(stats[3] / 10), 0), 10),
-              Math.min(Math.max(Math.floor(stats[4] / 10), 0), 10),
-              Math.min(Math.max(Math.floor(stats[5] / 10), 0), 10),
+              Math.min(Math.max(Math.floor(stats[0] / 10), 0), maxTierConstraints[0]),
+              Math.min(Math.max(Math.floor(stats[1] / 10), 0), maxTierConstraints[1]),
+              Math.min(Math.max(Math.floor(stats[2] / 10), 0), maxTierConstraints[2]),
+              Math.min(Math.max(Math.floor(stats[3] / 10), 0), maxTierConstraints[3]),
+              Math.min(Math.max(Math.floor(stats[4] / 10), 0), maxTierConstraints[4]),
+              Math.min(Math.max(Math.floor(stats[5] / 10), 0), maxTierConstraints[5]),
             ];
 
-            // Check whether the set exceeds our stat constraints
+            const neededStats = [0, 0, 0, 0, 0, 0];
+            let totalNeededStats = 0;
+
+            // Check in which stats we're lacking
             let totalTier = 0;
-            let statRangeExceeded = false;
             for (let index = 0; index < 6; index++) {
               const tier = tiers[index];
               const filter = resolvedStatConstraints[index];
@@ -237,31 +242,14 @@ export function process(
                 if (tier < statRange.min) {
                   statRange.min = tier;
                 }
-                if (tier > filter.maxTier) {
-                  statRangeExceeded = true;
-                }
                 totalTier += tier;
-              }
-            }
-
-            setStatistics.upperBoundsExceeded.timesChecked++;
-            if (statRangeExceeded) {
-              setStatistics.upperBoundsExceeded.timesFailed++;
-              continue;
-            }
-
-            const neededStats = [0, 0, 0, 0, 0, 0];
-            let totalNeededStats = 0;
-
-            // Check in which stats we're lacking
-            for (let index = 0; index < 6; index++) {
-              const filter = resolvedStatConstraints[index];
-              if (!filter.ignored && filter.minTier > 0) {
-                const value = stats[index];
-                const neededValue = filter.minTier * 10 - value;
-                if (neededValue > 0) {
-                  totalNeededStats += neededValue;
-                  neededStats[index] = neededValue;
+                if (filter.minTier > 0) {
+                  const value = stats[index];
+                  const neededValue = filter.minTier * 10 - value;
+                  if (neededValue > 0) {
+                    totalNeededStats += neededValue;
+                    neededStats[index] = neededValue;
+                  }
                 }
               }
             }
@@ -435,7 +423,12 @@ export function process(
       fullStats[statHash] = value;
 
       const statFilter = resolvedStatConstraints[i];
-      if (!statFilter.ignored && strictUpgrades && !hasStrictUpgrade) {
+      if (
+        !statFilter.ignored &&
+        strictUpgrades &&
+        statFilter.minTier < statFilter.maxTier &&
+        !hasStrictUpgrade
+      ) {
         const tier = Math.min(Math.max(Math.floor(value / 10), 0), 10);
         hasStrictUpgrade ||= tier > statFilter.minTier;
       }
