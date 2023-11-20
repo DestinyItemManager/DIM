@@ -69,6 +69,7 @@ export function SetStats({
               isBoosted={boostedStats.has(statHash)}
               stat={statDef}
               value={value}
+              effectiveValue={Math.min(value, c.maxTier * 10)}
             />
           </PressTip>
         );
@@ -92,17 +93,32 @@ function Stat({
   isActive,
   isBoosted,
   value,
+  effectiveValue,
 }: {
   stat: DestinyStatDefinition;
   isActive: boolean;
   isBoosted: boolean;
   value: number;
+  effectiveValue: number;
 }) {
-  const isHalfTier = isActive && remEuclid(value, 10) >= 5;
+  let shownValue: number;
+  let ignoredExcess: number | undefined;
+  if (effectiveValue !== value) {
+    if (effectiveValue === 0 || effectiveValue >= 100) {
+      shownValue = value;
+    } else {
+      shownValue = effectiveValue;
+      ignoredExcess = value - effectiveValue;
+    }
+  } else {
+    shownValue = value;
+  }
+  const showIgnoredExcess = ignoredExcess !== undefined && ignoredExcess >= 5;
+  const isHalfTier = isActive && remEuclid(shownValue, 10) >= 5;
   return (
     <span
       className={clsx(styles.statSegment, {
-        [styles.nonActiveStat]: !isActive,
+        [styles.nonActiveStat]: !showIgnoredExcess && !isActive,
       })}
     >
       <BungieImage className={styles.statIcon} src={stat.displayProperties.icon} />
@@ -113,8 +129,11 @@ function Stat({
         })}
       >
         {t('LoadoutBuilder.TierNumber', {
-          tier: statTierWithHalf(value),
+          tier: statTierWithHalf(shownValue),
         })}
+        {showIgnoredExcess && (
+          <span className={styles.nonActiveStat}>+{statTierWithHalf(ignoredExcess!)}</span>
+        )}
       </span>
     </span>
   );

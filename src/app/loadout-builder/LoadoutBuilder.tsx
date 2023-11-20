@@ -454,7 +454,7 @@ export default memo(function LoadoutBuilder({
             pinnedItems={pinnedItems}
             selectedStore={selectedStore}
             lbDispatch={lbDispatch}
-            resolvedStatConstraints={resolvedStatConstraints}
+            resolvedStatConstraints={mergedConstraints}
             modStatChanges={result.modStatChanges}
             loadouts={loadouts}
             armorEnergyRules={result.armorEnergyRules}
