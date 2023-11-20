@@ -1,5 +1,7 @@
 ## Next
 
+## 7.95.0 <span class="changelog-date">(2023-11-19)</span>
+
 * Added an "exactperk:" search that matches a perk name exactly. No more mixing up "Frenzy" with "Feeding Frenzy".
 * Fixed a bug where in-game loadouts would be marked as matching a DIM loadout incorrectly.
 
