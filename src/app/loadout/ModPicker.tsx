@@ -335,6 +335,13 @@ function isModSelectable(
 ) {
   const { plugCategoryHash, energyCost } = mod.plug;
   const isSlotSpecificCategory = slotSpecificPlugCategoryHashes.includes(plugCategoryHash);
+  console.log(selected);
+
+  for (const x of selected) {
+    if (x === mod && x.displayProperties.name === 'Outreach') {
+      return false;
+    }
+  }
 
   // If there's an already selected mod that excludes this mod, we can't select this one
   const exclusionGroup = getModExclusionGroup(mod);
