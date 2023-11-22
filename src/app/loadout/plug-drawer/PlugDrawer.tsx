@@ -103,7 +103,7 @@ export default function PlugDrawer({
     (
       plugSetHash: number,
       plug: PluggableInventoryItemDefinition,
-      selectionType: 'multi' | 'single',
+      selectionType: 'multi' | 'unique' | 'single',
     ) => {
       setInternalPlugSets(
         produce((draft) => {
