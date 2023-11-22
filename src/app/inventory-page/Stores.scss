@@ -94,7 +94,7 @@
 
     .sub-bucket {
       min-height: 0;
-      grid-template-columns: repeat(10, 1fr);
+      grid-template-columns: repeat(auto-fill, var(--engram-size));
       gap: 0;
       padding: 4px 0 0 0;
 
