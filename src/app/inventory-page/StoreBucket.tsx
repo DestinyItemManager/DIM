@@ -236,7 +236,7 @@ export default function StoreBucket({
 
   // Single character mode collapses all items from other characters into "the
   // vault" (but only those items that could be used by the current character)
-  if (singleCharacter && store.isVault && bucket.vaultBucket) {
+  if (singleCharacter && store.isVault && (bucket.vaultBucket || bucket.inPostmaster)) {
     for (const otherStore of stores) {
       if (!otherStore.current && !otherStore.isVault) {
         items = [...items, ...findItemsByBucket(otherStore, bucket.hash)];
