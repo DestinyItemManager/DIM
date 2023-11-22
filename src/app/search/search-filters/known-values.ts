@@ -54,7 +54,8 @@ const itemCategoryHashesByName: { [key: string]: number } = {
 // Some common aliases for item categories
 const itemCategoryAliases: LookupTable<string, string> = {
   lfr: 'linearfusionrifle',
-  hmg: 'machinegun',
+  lmg: 'machinegun',
+  smg: 'submachinegun',
 } as const;
 
 export const damageFilter = {
