@@ -90,6 +90,12 @@ const simpleFilters: FilterDefinition[] = [
     description: tl('Filter.IsCrafted'),
     filter: () => (item) => item.crafted,
   },
+  {
+    keywords: ['vendor'],
+    destinyVersion: 2,
+    description: tl('Filter.VendorItem'),
+    filter: () => (item) => Boolean(item.vendor),
+  },
 ];
 
 export default simpleFilters;
