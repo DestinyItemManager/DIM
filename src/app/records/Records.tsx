@@ -8,7 +8,7 @@ import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/sel
 import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { useSetting } from 'app/settings/hooks';
-import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
+import { querySelector } from 'app/shell/selectors';
 import { filterMap } from 'app/utils/collections';
 import { usePageTitle } from 'app/utils/hooks';
 import _ from 'lodash';
@@ -34,7 +34,6 @@ interface Props {
  * The records screen shows account-wide things like Triumphs and Collections.
  */
 export default function Records({ account }: Props) {
-  const isPhonePortrait = useIsPhonePortrait();
   useLoadStores(account);
   const [searchParams] = useSearchParams();
   usePageTitle(t('Records.Title'));
