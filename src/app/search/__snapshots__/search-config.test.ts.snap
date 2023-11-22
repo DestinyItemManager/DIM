@@ -127,6 +127,7 @@ exports[`buildSearchConfig generates a reasonable filter map: is filters 1`] = `
   "uncommon",
   "unlocked",
   "vehicle",
+  "vendor",
   "void",
   "warlock",
   "weapon",

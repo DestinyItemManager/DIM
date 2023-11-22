@@ -1,8 +1,10 @@
 ## Next
 
+* Added `is:vendor` search that is useful for excluding vendor items from Loadout Optimizer (enter `-is:vendor` in the search box).
+
 ## 7.95.0 <span class="changelog-date">(2023-11-19)</span>
 
-* Added an "exactperk:" search that matches a perk name exactly. No more mixing up "Frenzy" with "Feeding Frenzy".
+* Added an `exactperk:` search that matches a perk name exactly. No more mixing up "Frenzy" with "Feeding Frenzy".
 * Fixed a bug where in-game loadouts would be marked as matching a DIM loadout incorrectly.
 
 ## 7.94.1 <span class="changelog-date">(2023-11-13)</span>

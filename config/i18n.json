@@ -319,6 +319,7 @@
     "UnlockAllFailed": "Failed to unlock items",
     "UnlockAllSuccess": "Unlocked {{num}} items",
     "Vendor": "Item is available from a specific vendor.",
+    "VendorItem": "Item is from a vendor, not in your inventory. Useful for excluding vendor items from Loadout Optimizer.",
     "WeaponType": "Shows weapons based on their weapon type.",
     "WeaponLevel": "Shows weapons based on their Weapon Level.",
     "Wishlist": "Shows items that match your wish list.",
