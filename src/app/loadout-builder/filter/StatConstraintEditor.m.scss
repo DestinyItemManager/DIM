@@ -1,5 +1,11 @@
 @use '../../variables' as *;
 
+.editor {
+  composes: flexColumn from '../../dim-ui/common.m.scss';
+  margin: 0 -4px -4px -4px;
+  gap: 2px;
+}
+
 .iconStat {
   display: inline-block;
   height: 17px;
@@ -24,10 +30,10 @@
     'grip name buttons'
     'grip bar bar';
   gap: 4px 4px;
-  margin-bottom: 2px;
   background-color: black;
   align-items: center;
   padding: 4px 4px 4px 0;
+  font-size: 14px;
 
   > * {
     white-space: nowrap;
@@ -127,8 +133,4 @@
 
 .dragging {
   outline: 1px solid var(--theme-accent-primary);
-}
-
-.range {
-  margin-left: auto;
 }

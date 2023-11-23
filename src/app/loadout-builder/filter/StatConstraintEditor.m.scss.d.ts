@@ -3,6 +3,7 @@
 interface CssExports {
   'buttons': string;
   'dragging': string;
+  'editor': string;
   'grip': string;
   'iconStat': string;
   'ignored': string;
@@ -10,7 +11,6 @@ interface CssExports {
   'locked': string;
   'maxed': string;
   'name': string;
-  'range': string;
   'row': string;
   'rowControl': string;
   'selectedStatBar': string;

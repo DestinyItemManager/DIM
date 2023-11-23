@@ -680,6 +680,7 @@
     "ProcessingSets": "Finding highest tier sets...",
     "SaveAs": "Save as",
     "SpeedReport": "Generated {{combos, number}} combinations in {{time}} seconds",
+    "StatConstraints": "Stat Tier Priorities & Ranges",
     "TierNumber": "T{{tier}}",
     "TierSelect": "Select minimum stat tier",
     "UnableToAddAllMods": "Unable to add all mods.",
