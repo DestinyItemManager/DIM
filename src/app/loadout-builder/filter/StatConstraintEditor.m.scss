@@ -29,8 +29,8 @@
   grid-template-areas:
     'grip name buttons'
     'grip bar bar';
-  gap: 4px 4px;
-  background-color: black;
+  gap: 0 4px;
+  background-color: rgba(0, 0, 0, 0.6);
   align-items: center;
   padding: 4px 4px 4px 0;
   font-size: 14px;
@@ -41,6 +41,7 @@
 
   &.ignored {
     grid-template-areas: 'grip name buttons';
+    background-color: rgba(0, 0, 0, 0.3);
   }
 }
 

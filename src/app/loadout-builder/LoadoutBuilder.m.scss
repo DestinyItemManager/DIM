@@ -11,14 +11,19 @@
 .menuContent {
   box-sizing: border-box;
 
-  @include phone-portrait {
-    padding: 0 10px;
-  }
-
   > div {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 8px;
+  }
+
+  @include phone-portrait {
+    > div > div {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 0 10px;
+    }
   }
 }
 
@@ -31,11 +36,11 @@
   flex-flow: row wrap;
   align-items: center;
   box-sizing: border-box;
+  gap: 4px 1em;
 
   @include phone-portrait {
     padding: 0 10px;
   }
-  gap: 4px;
 }
 
 .guide {
@@ -58,16 +63,16 @@
   display: flex;
   flex-direction: row;
   margin: 6px 0;
+  gap: 4px;
 
   > * {
     flex: 1;
   }
-  gap: 4px;
 }
 
 .speedReport {
   user-select: text;
-  margin-left: 1em;
+  flex: 1;
   > :global(.app-icon) {
     margin-right: 0.5em;
   }
@@ -76,7 +81,7 @@
 // Style for sections borrowed from LoadoutEdit
 .loadoutEditSection {
   font-size: 12px; // reset from where PageWithMenu sets it to 14px
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.3);
   padding: 8px;
   gap: 0;
   // Fit 7 mods across, regardless of what the user's item size is
