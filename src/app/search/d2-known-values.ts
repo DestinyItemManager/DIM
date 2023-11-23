@@ -213,6 +213,9 @@ export const ARMOR_NODE = 1605042242; // PresentationNode "Armor"
 /** Just to grab the string Universal Ornaments */
 export const UNIVERSAL_ORNAMENTS_NODE = 3655910122; // PresentationNode "Universal Ornaments"
 
+/** The emblem metrics Account parent node, used as a fallback for orphaned metrics */
+export const METRICS_ACCOUNT_NODE = 2875839731; // PresentationNode "Account"
+
 //
 // MISC KNOWN HASHES / ENUMS
 //
