@@ -23,6 +23,7 @@ $horizontal-padding: 11px;
   white-space: pre-wrap;
   box-sizing: border-box;
   user-select: none;
+  pointer-events: none;
 
   // The top 'ribbon' in tooltips that's tinted in different contexts (exotic perks, sub-class details)
   // Note: We don't use border-top-color or 'box-shadow: inset' to color the ribbon
