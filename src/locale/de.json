@@ -317,6 +317,7 @@
     "UnlockAllFailed": "Konnte Gegenstände nicht entsperren",
     "UnlockAllSuccess": "{{num}} Gegenstände entsperrt",
     "Vendor": "Artikel ist bei einem bestimmten Händler erhältlich.",
+    "VendorItem": "Gegenstände von einem Händler, die nicht in deinem Inventar sind. Nützlich, um Händlergegenstände vom Loadout-Optimierer auszuschließen.",
     "Weapon": "Zeigt Gegenstände, die Waffen sind.",
     "WeaponLevel": "Zeigt Waffen basierend auf ihrem Waffen-Level an.",
     "WeaponType": "Zeigt Waffen basierend auf ihrem Waffentyp an.",

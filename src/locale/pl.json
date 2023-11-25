@@ -317,6 +317,7 @@
     "UnlockAllFailed": "Nie udało się odblokować przedmiotów",
     "UnlockAllSuccess": "Odblokowano {{num}} przedmiotów",
     "Vendor": "Przedmiot jest dostępny od określonego sprzedawcy.",
+    "VendorItem": "Item is from a vendor, not in your inventory. Useful for excluding vendor items from Loadout Optimizer.",
     "Weapon": "Pokazuje przedmioty, które są bronią.",
     "WeaponLevel": "Pokazuje bronie na podstawie ich Poziomu Broni.",
     "WeaponType": "Pokazuje bronie na podstawie rodzaju broni.",

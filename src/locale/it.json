@@ -317,6 +317,7 @@
     "UnlockAllFailed": "Impossibile sbloccare oggetti",
     "UnlockAllSuccess": "Sbloccati {{num}} oggetti",
     "Vendor": "Articolo disponibile da un mercante specifico.",
+    "VendorItem": "L'oggetto proviene da un mercante, non dal tuo inventario. Utile per escludere gli oggetti dei mercanti dall'Ottimizzatore di Dotazioni.",
     "Weapon": "Mostra gli oggetti che sono armi.",
     "WeaponLevel": "Mostra le armi in base al loro Livello Arma.",
     "WeaponType": "Mostra le armi basandosi sul tipo di arma.",

@@ -317,6 +317,7 @@
     "UnlockAllFailed": "アイテムのアンロックに失敗しました",
     "UnlockAllSuccess": "{{num}} 個のアイテムのロックを解除しました",
     "Vendor": "アイテムは特定のベンダーから入手できます。",
+    "VendorItem": "アイテムは非所持かつベンダーで販売されている物だけを表示します。ロードアウト最適化にてベンダーアイテムを除外するのに便利です。",
     "Weapon": "武器であるアイテムを表示。",
     "WeaponLevel": "武器レベルに基づいて武器を表示",
     "WeaponType": "指定した武器タイプを表示します",
@@ -564,7 +565,7 @@
     "Analyzing": "{{numAnalyzed}}/{{numLoadouts}} 個のロードアウトを分析中",
     "BetterStatsAvailable": {
       "Description": "別のアーマーやModを選択すれば、より高いステータスに変更できます。\"$t(Loadouts.OpenInOptimizer)\" を選択して結果を確認します。",
-      "Name": "より高いステータス値のビルドが作れます"
+      "Name": "より高いステータス値のビルドが作成可能"
     },
     "BetterStatsAvailableFontNote": "注：このロードアウトは Mod「～の泉」を使用しTier10以上になっています。DIMは不要なTier上限突破を減らすことで、より良いステータスを検索できる可能性が上がります。敢えて使用する場合は、ロードアウトの\"$t(Loadouts.IncludeRuntimeStatBenefits) \"を無効にしてください。",
     "DoesNotRespectExotic": {
@@ -573,7 +574,7 @@
     },
     "DoesNotSatisfyStatConstraints": {
       "Description": "ロードアウト最適化で指定のステータスに、このロードアウトのステータスは届いていません。",
-      "Name": "指定したTierに達していません"
+      "Name": "指定したTierに到達不可"
     },
     "EmptyFragmentSlots": {
       "Description": "このサブクラスには未使用のかけらスロットがあります。",
@@ -589,7 +590,7 @@
     },
     "MissingItems": {
       "Description": "このロードアウトに含まれる装備の一部は所持品にありません。",
-      "Name": "アイテムが有りません"
+      "Name": "アイテム不足"
     },
     "ModsDontFit": {
       "Description": "このロードアウトのアーマーを強化しても、指定したMOD全てを装備できません。",
@@ -667,7 +668,7 @@
     },
     "NoExotic": "エキゾチックなし",
     "NoExoticDescription": "検索バーで \"not:exotic\" を検索するのと同じです。エキゾチックアーマーを意図的に組み合わせから排除します。",
-    "NoExoticPreference": "エキゾチックが選択されていません",
+    "NoExoticPreference": "必要な時だけエキゾチックを装備",
     "NoExoticPreferenceDescription": "最大ステータスにできる時だけエキゾチックアーマーを選択します。",
     "NoLoadoutsToCompare": "比較するロードアウトはありません。",
     "None": "なし",

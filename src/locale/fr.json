@@ -279,7 +279,7 @@
     "PartialMatch": "Affiche les objets dont le nom, la description, n'importe quel attribut, ou n'importe quel mod contient une partie du texte filtré. Rechercher des phrases entières en utilisant des guillemets. le filtre \"perk:\" cherche uniquement dans les attributs.",
     "PatternUnlocked": "Affiche les objets qui ont un modèle de façonnage débloqué, même si l'objet lui-même n'a pas été façonné.",
     "Perk": "Affiche les objets dont la description ou le nom d'au moins un de ses mods et attributs contient une partie du texte filtré. Rechercher des phrases entières en utilisant des guillemets.",
-    "PerkName": "Shows items with a perk or mod whose name matches (exactperk:) or partially matches (perkname:) the filter text. Search for entire phrases using quotes.",
+    "PerkName": "Affiche les objets avec un attribut ou un nom correspondant totalement (exactperk:) ou partiellement (perkname:) au filtre. Recherchez des phrases entières en utilisant des guillemets.",
     "PinnacleReward": "Affiche les poursuites qui produisent une récompense de prestige.",
     "Postmaster": "Objets actuellement au commis des postes.",
     "PowerKeywords": "Utilisez les mots-clés pinnaclecap ou softcap à la place de nombres pour utiliser les limites de puissance de la saison actuelle.",
@@ -317,6 +317,7 @@
     "UnlockAllFailed": "Déverouillage des objets échoué",
     "UnlockAllSuccess": "{{num}} objets déverrouillés",
     "Vendor": "L'objet est disponible auprès d'un marchand spécifique.",
+    "VendorItem": "Item is from a vendor, not in your inventory. Useful for excluding vendor items from Loadout Optimizer.",
     "Weapon": "Affiche les objets étant des armes.",
     "WeaponLevel": "Affiche les armes en fonction de leur niveau d'arme.",
     "WeaponType": "Affiche les armes selon leur type d'arme.",
@@ -496,8 +497,8 @@
     "Equip": "Équiper sur {{character}}",
     "Exclude": "Objets exclus",
     "ExcludeHelp": "Shift + cliquez un objet (ou glissez-déposez dans cet espace) pour construire des sets sans équipement spécifique.",
-    "ExistingBuildStats": "Stats du Build existant",
-    "ExistingBuildStatsNote": "Ne montrer que les builds avec des niveaux de stats strictement plus élevés.",
+    "ExistingBuildStats": "Stats de l'équipement existant",
+    "ExistingBuildStatsNote": "Ne montre que les équipements avec des paliers de stats strictement supérieurs.",
     "FilterSets": "Filtrer les sets",
     "Help": {
       "And": "L'armure avec tout ces attributs sera utilisé (\"et\")",
@@ -563,10 +564,10 @@
     "Analyzed": "{{numLoadouts}} équipements analysés",
     "Analyzing": "Analyse de {{numAnalyzed}}/{{numLoadouts}} équipements",
     "BetterStatsAvailable": {
-      "Description": "Choisir des armures ou des mods différents pour cet arsenal permettra d'atteindre des niveaux de caractéristiques plus élevés. Choisissez \"$t(Loadouts.OpenInOptimizer)\" pour voir de meilleurs builds.",
+      "Description": "Choisir des armures ou des mods différents pour cet équipement permettra d'atteindre des paliers de stat supérieurs. Choisissez \"$t(Loadouts.OpenInOptimizer)\" pour voir de meilleurs équipements.",
       "Name": "Amélioration de stats possibles"
     },
-    "BetterStatsAvailableFontNote": "Note: This Loadout uses \"Font of ...\" mods that cause a stat tier to exceed T10. DIM may identify better stats by reducing the amount of excess tiers. If this is undesired, disable \"$t(Loadouts.IncludeRuntimeStatBenefits)\" in the Loadout.",
+    "BetterStatsAvailableFontNote": "Note : cet équipement utilise des mods \"Puit de ...\", ce qui monte une stat au dessus du pallier 10. DIM pourrait identifier des meilleurs stats en réduisant la quantité de paliers en trop. Si ce n'est pas souhaité, désactivez \"$t(Loadouts.IncludeRuntimeStatBenefits)\" dans l'équipement.",
     "DoesNotRespectExotic": {
       "Description": "Les paramètres d'optimiseur de cet équipement spécifient un choix d'exotique, mais cet équipement ne contient pas cet exotique.",
       "Name": "Mauvais exotique"
@@ -584,8 +585,8 @@
       "Name": "Mods obsolètes"
     },
     "InvalidSearchQuery": {
-      "Description": "This loadout was created with a search query in Loadout Optimizer that is no longer valid, or does not include the armor in this loadout.",
-      "Name": "Invalid Search Query"
+      "Description": "Cet équipement a été créé avec une recherche, dans l'optimiseur d'équipement, qui n'est plus valide, ou qui ne contient pas les armures de cet équipement.",
+      "Name": "Recherche invalide"
     },
     "MissingItems": {
       "Description": "Certains objets de cet équipement ne sont plus dans votre inventaire.",
@@ -620,9 +621,9 @@
     "AssumeMasterwork": "Considérer pièce maîtresse",
     "AssumeMasterworkOptions": {
       "All": "Toutes les armures : $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
-      "Current": "Current stats, assumed energy level at least {{minLoItemEnergy}}.",
-      "Legendary": "Légendaire : $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotique: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
-      "Masterworked": "+2 in each stat, assumed energy level 10.",
+      "Current": "Stats actuelles, considère un niveau d'énergie d'au moins {{minLoItemEnergy}}.",
+      "Legendary": "Légendaire : $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotique : $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
+      "Masterworked": "+2 dans toutes les stats, a considéré un niveau d'énergie à 10.",
       "None": "Toutes les armures : $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "Ajouter automatiquement les mods de statistiques",
@@ -666,8 +667,8 @@
       "UpperBoundsFailed": "De nombreux ensembles ne remplissaient pas les conditions de palier de stat maximum"
     },
     "NoExotic": "Pas d'exotique",
-    "NoExoticDescription": "Équivalent à la recherche \"not:exotic\" dans la barre de recherche - les ensembles n'utiliseront aucune armure exotique.",
-    "NoExoticPreference": "Aucun Exotique sélectionné",
+    "NoExoticDescription": "Équivalent à rechrcher \"not:exotic\" dans la barre de recherche - les ensembles n'utiliseront aucune armure exotique.",
+    "NoExoticPreference": "Aucun exotique sélectionné",
     "NoExoticPreferenceDescription": "Une armure exotique sera utilisée si elle maximise les stats.",
     "NoLoadoutsToCompare": "Aucun équipement à comparer",
     "None": "Aucun",
@@ -743,8 +744,8 @@
     },
     "ImportLoadout": "Importer équipement",
     "InGameLoadouts": "Équipements en jeu",
-    "IncludeRuntimeStatBenefits": "Include Font mod stats",
-    "IncludeRuntimeStatBenefitsDesc": "\"Font of ...\" armor mods provide a flat boost to character stats while you have Armor Charges.\n\nWith this setting, DIM considers these mods active and adds their benefits to this Loadout's stats in calculations and optimizations.",
+    "IncludeRuntimeStatBenefits": "Inclure les stats des mods Puit",
+    "IncludeRuntimeStatBenefitsDesc": "Les mods d'armure \"Puit de...\" fournissent un bonus fixe de stats de personnage lorsque vous avez des charges d'armure.\n\nAvec ce paramètre, DIM considère ces mods actifs et ajoute leurs bénéfices aux stats de cet équipement dans les calculs et les optimisations.",
     "ItemErrorSummary": "1 erreur d'objet :",
     "ItemErrorSummary_plural": "{{count}} erreurs d'objet :",
     "ItemLeveling": "Infusion d'objet",
@@ -1113,7 +1114,7 @@
     "ResetToDefault": "Réinitialiser",
     "ReverseSort": "Activer/désactiver le tri normal/inversé",
     "SetSort": "Trier les objets par :",
-    "SetVaultWeaponGrouping": "Group vault weapons by:",
+    "SetVaultWeaponGrouping": "Grouper les armes du coffre par :",
     "Settings": "Paramètres",
     "ShowNewItems": "Afficher un point rouge sur les nouveaux objets",
     "SingleCharacter": "Vue à un seul personnage",
@@ -1138,7 +1139,7 @@
     "SpacesSize": "{{count}} espace",
     "SpacesSize_plural": "{{count}} espaces",
     "Theme": "Thème",
-    "VaultGroupingNone": "None"
+    "VaultGroupingNone": "Aucun"
   },
   "Sockets": {
     "ApplyPerks": "Appliquer les attributs",
