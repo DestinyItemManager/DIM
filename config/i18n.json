@@ -319,6 +319,7 @@
     "UnlockAllFailed": "Failed to unlock items",
     "UnlockAllSuccess": "Unlocked {{num}} items",
     "Vendor": "Item is available from a specific vendor.",
+    "VendorItem": "Item is from a vendor, not in your inventory. Useful for excluding vendor items from Loadout Optimizer.",
     "WeaponType": "Shows weapons based on their weapon type.",
     "WeaponLevel": "Shows weapons based on their Weapon Level.",
     "Wishlist": "Shows items that match your wish list.",
@@ -866,9 +867,9 @@
       "Name": "Wrong Stat Tiers",
       "Description": "Loadout Optimizer settings for this Loadout specify stat tiers, but the Loadout does not reach them."
     },
-    "LoadoutHasSearchQuery": {
-      "Name": "Has Search Query",
-      "Description": "This loadout was created with a search query in Loadout Optimizer."
+    "InvalidSearchQuery": {
+      "Name": "Invalid Search Query",
+      "Description": "This loadout was created with a search query in Loadout Optimizer that is no longer valid, or does not include the armor in this loadout."
     }
   },
   "Manifest": {

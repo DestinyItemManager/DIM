@@ -2,9 +2,6 @@
 
 .tile {
   height: $emblem-height;
-  > * {
-    max-width: Min(var(--page-with-menu-menu-width), $emblem-width);
-  }
 
   @include phone-portrait {
     min-width: $emblem-width;

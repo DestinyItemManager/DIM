@@ -41,7 +41,7 @@ export default function Footer({
               key={getModRenderKey(plug)}
               plug={plug}
               onClose={
-                plugSet.selectionType === 'multi' ? () => handlePlugSelected(plug) : undefined
+                plugSet.selectionType !== 'single' ? () => handlePlugSelected(plug) : undefined
               }
               forClassType={classType}
             />

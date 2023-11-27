@@ -1,6 +1,16 @@
 ## Next
 
-* Added an "exactperk:" search that matches a perk name exactly. No more mixing up "Frenzy" with "Feeding Frenzy".
+## 7.96.0 <span class="changelog-date">(2023-11-26)</span>
+
+* Added `is:vendor` search that is useful for excluding vendor items from Loadout Optimizer (enter `-is:vendor` in the search box).
+* You are now prevented from selecting multiple copies of fragments or aspects in the subclass selector.
+* Slightly improved Loadout Optimizer's algorithm for finding optimal sets.
+* Single-character mode now shows the postmaster items and unclaimed engrams from other characters.
+* The records page has a menu on the mobile version for easily jumping to the right section.
+
+## 7.95.0 <span class="changelog-date">(2023-11-19)</span>
+
+* Added an `exactperk:` search that matches a perk name exactly. No more mixing up "Frenzy" with "Feeding Frenzy".
 * Fixed a bug where in-game loadouts would be marked as matching a DIM loadout incorrectly.
 
 ## 7.94.1 <span class="changelog-date">(2023-11-13)</span>

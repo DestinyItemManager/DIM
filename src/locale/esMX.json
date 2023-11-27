@@ -279,7 +279,7 @@
     "PartialMatch": "Muestra objetos donde su nombre, descripción, cualquier ventaja, o cualquier modificador tiene una coincidencia parcial al texto filtrado. Busca por frases enteras usando comillas. El filtro \"perk:\" sólo buscará ventajas.",
     "PatternUnlocked": "Muestra objetos que tienen un patrón de fabricación desbloqueado, incluso si el objeto no está fabricado.",
     "Perk": "Muestra objetos donde una de sus ventajas o modificadores tiene una coincidencia parcial al texto filtrado en su nombre o descripción. Busca por frases enteras usando comillas.",
-    "PerkName": "Muestra objetos donde una de sus ventajas o modificadores tiene una coincidencia parcial al texto filtrado sólo en su nombre. Busca por frases enteras usando comillas.",
+    "PerkName": "Muestra objetos con un perk o mod cuyo nombre coincida exactamente (exactperk:) o parcialmente (perkname:) con el texto filtrado. Busca frases completas usando comillas.",
     "PinnacleReward": "Muestra aventuras que produzcan una recompensa hito.",
     "Postmaster": "Objetos que están actualmente en la administración.",
     "PowerKeywords": "Usa la palabra clave \"pinnaclecap\" o \"softcap\" en vez de un número para referirte a los límites de poder de la temporada actual.",
@@ -317,6 +317,7 @@
     "UnlockAllFailed": "Error al desbloquear objetos",
     "UnlockAllSuccess": "{{num}} objetos desbloqueados",
     "Vendor": "El objeto está disponible desde un vendedor específico.",
+    "VendorItem": "El objeto es de un comerciante, no está en tu inventario. Útil para excluir los objetos de un comerciante desde el Optimizador de Equipaciones.",
     "Weapon": "Muestra objetos que sean armas.",
     "WeaponLevel": "Muestra armas basadas en su Nivel de Arma.",
     "WeaponType": "Muestra armas basadas en su tipo de arma.",
@@ -583,9 +584,9 @@
       "Description": "Algunos mods de esta equipación están obsoletos o no encajan de otra manera en cualquiera de tus piezas de armadura.",
       "Name": "Mods Obsoletos"
     },
-    "LoadoutHasSearchQuery": {
-      "Description": "Esta equipación fue creada con una consulta de búsqueda en el Optimizador de Equipaciones.",
-      "Name": "Tiene una Consulta de Búsqueda"
+    "InvalidSearchQuery": {
+      "Description": "Esta equipación fue creada con una consulta de búsqueda en el Optimizador de Equipaciones que ya no es válida, o no incluye la armadura en esta equipación.",
+      "Name": "Consulta Inválida"
     },
     "MissingItems": {
       "Description": "Algunos de los objetos en esta equipación ya no están en tu inventario.",
@@ -641,12 +642,10 @@
     "ExoticSpecialCategory": "Especial",
     "Filter": "Filtros",
     "IgnoreStat": "Si está desmarcado, el Optimizador de Equipaciones fingirá que esta estadística no exista cuando se creen equipaciones",
-    "IncludeVendorItems": "Incluir objetos de Vendedores",
     "IncreaseStatPriority": "Incrementar prioridad a la estadística",
     "Legendary": "Legendarias",
     "LockEquipped": "Equipar anclados",
     "LockItem": "Anclar objeto",
-    "MaxTier": "Máximo {{tier}}",
     "MissingClass": "El equipamiento es para: {{className}}",
     "MissingClassDescription": "El equipamiento que estás intentando visualizar es para una clase de personaje que no tienes.",
     "NoBuildsFoundExplainer": {
@@ -680,11 +679,7 @@
     "OptimizerSet": "Set Optimizador",
     "ProcessingSets": "Buscando las equipaciones de niveles más altos...",
     "SaveAs": "Guardar como",
-    "SelectMax": "- Máximo -",
-    "SelectMin": "- Mínimo -",
     "SpeedReport": "Se generaron {{combos, number}} combinaciones en {{time}} segundos",
-    "StatTierIgnoreOption": "Ignorar",
-    "StatTierIncludeOption": "Incluir",
     "TierNumber": "T{{tier}}",
     "TierSelect": "Seleccionar nivel mínimo de la estadística",
     "UnableToAddAllMods": "No se pueden agregar todos los mods.",
@@ -1119,6 +1114,7 @@
     "ResetToDefault": "Reiniciar",
     "ReverseSort": "Alternar orden normal/inverso",
     "SetSort": "Ordenar objetos por:",
+    "SetVaultWeaponGrouping": "Agrupar armas del depósito por:",
     "Settings": "Configuración",
     "ShowNewItems": "Mostrar un punto rojo en objetos nuevos",
     "SingleCharacter": "Vista de Personaje Único",
@@ -1142,7 +1138,8 @@
     "SortName": "Nombre",
     "SpacesSize": "{{count}} espacio",
     "SpacesSize_plural": "{{count}} espacios",
-    "Theme": "Tema"
+    "Theme": "Tema",
+    "VaultGroupingNone": "Ninguna"
   },
   "Sockets": {
     "ApplyPerks": "Aplicar Perks",

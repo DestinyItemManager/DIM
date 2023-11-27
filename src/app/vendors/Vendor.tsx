@@ -49,15 +49,13 @@ export default function Vendor({
         className={styles.title}
         title={
           <>
-            <span className={styles.vendorIconWrapper}>
-              <BungieImage
-                src={
-                  vendor.def.displayProperties.smallTransparentIcon ||
-                  vendor.def.displayProperties.icon
-                }
-                className={styles.icon}
-              />
-            </span>
+            <BungieImage
+              src={
+                vendor.def.displayProperties.smallTransparentIcon ||
+                vendor.def.displayProperties.icon
+              }
+              className={styles.icon}
+            />
             <div className={styles.titleDetails}>
               <div>{vendor.def.displayProperties.name}</div>
               <VendorLocation>{placeString}</VendorLocation>

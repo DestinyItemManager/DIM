@@ -279,7 +279,7 @@
     "PartialMatch": "显示名称/描述/特性/模组与筛选器部分匹配的物品。使用引号来搜索包含空格的文本。使用 'perk:' 过滤器便可仅搜索特性。",
     "PatternUnlocked": "显示制作样式已解锁的武器，即使该武器并非制造而来。",
     "Perk": "显示带有特性或模组的名称或描述与筛选器部分匹配的物品。使用引号来搜索带有空格的文本。",
-    "PerkName": "显示带有特性或模组的名称与筛选器部分匹配的物品。使用引号来搜索带有空格的文本。",
+    "PerkName": "使用 (exactperk:) 精确搜索某特性或模组的物品，或使用 (perkname:) 搜索部分匹配某特性或模组的物品。使用引号搜索整个词条。",
     "PinnacleReward": "显示提供巅峰奖励的追猎目标。",
     "Postmaster": "目前在邮政官处的物品.",
     "PowerKeywords": "使用 pinnaclecap 或 softcap 关键字而不是数字来表达当前赛季的光等限制。",
@@ -317,6 +317,7 @@
     "UnlockAllFailed": "锁定物品失败",
     "UnlockAllSuccess": "已经解锁{{num}} 物品",
     "Vendor": "物品可从特定的商贩获得。",
+    "VendorItem": "物品由商贩售卖，不在你的背包中。用于在配装优化器中排除商贩物品",
     "Weapon": "显示武器物品。",
     "WeaponLevel": "按武器等级显示武器。",
     "WeaponType": "按照武器类型显示.",
@@ -583,9 +584,9 @@
       "Description": "配装中的某些模组已被弃用或不适合你的护甲。",
       "Name": "已弃用的模组"
     },
-    "LoadoutHasSearchQuery": {
-      "Description": "此配装通过配装优化器中的搜索查询创建。",
-      "Name": "包括查询结果"
+    "InvalidSearchQuery": {
+      "Description": "该配装由配装优化器的搜索条件生成，但该搜索条件已不再有效，或不包括该配装中的护甲。",
+      "Name": "搜索条件无效"
     },
     "MissingItems": {
       "Description": "该配装中部分物品已不在你的背包中。",
@@ -641,12 +642,10 @@
     "ExoticSpecialCategory": "特殊",
     "Filter": "过滤",
     "IgnoreStat": "若未选中，则配装优化器将会在配装组合中无视此属性。",
-    "IncludeVendorItems": "包括商贩物品",
     "IncreaseStatPriority": "提高属性优先级",
     "Legendary": "传说",
     "LockEquipped": "固定已装备",
     "LockItem": "固定物品",
-    "MaxTier": "最大 {{tier}}",
     "MissingClass": "配装适用于：{{className}}",
     "MissingClassDescription": "你正试图查看的配装适用于一个你未拥有的角色职业。",
     "NoBuildsFoundExplainer": {
@@ -680,13 +679,9 @@
     "OptimizerSet": "优化器组合",
     "ProcessingSets": "寻找最高阶属性配装...",
     "SaveAs": "保存为",
-    "SelectMax": "-最大-",
-    "SelectMin": "-最小-",
     "SpeedReport": "在 {{time}} 秒内生成了 {{combos, number}} 个组合",
-    "StatTierIgnoreOption": "忽略",
-    "StatTierIncludeOption": "包含",
     "TierNumber": "T{{tier}}",
-    "TierSelect": "选择最低属性阶",
+    "TierSelect": "选择最低属性阶级",
     "UnableToAddAllMods": "无法添加所有模组。",
     "UnableToAddAllModsBody": "模组插槽不足，无法装下 {{mods}}。",
     "UnlockItem": "取消固定物品"
@@ -749,7 +744,7 @@
     },
     "ImportLoadout": "导入配装",
     "InGameLoadouts": "游戏内配装",
-    "IncludeRuntimeStatBenefits": "包括属性洗礼模组提供的额外属性",
+    "IncludeRuntimeStatBenefits": "包括洗礼属性加成",
     "IncludeRuntimeStatBenefitsDesc": "属性洗礼护甲模组会在你拥有护甲充能时提供固定的属性增益。\n在该设置下，DIM 将视此类模组为生效状态，并将其增益用于配装属性的计算和优化。",
     "ItemErrorSummary": "1 个物品出错：",
     "ItemErrorSummary_plural": "{{count}} 个物品出错：",
@@ -1119,6 +1114,7 @@
     "ResetToDefault": "重置",
     "ReverseSort": "切换正向/反向排序",
     "SetSort": "物品排序方式:",
+    "SetVaultWeaponGrouping": "保险库武器分组方式：",
     "Settings": "设置",
     "ShowNewItems": "在新物品上显示红点",
     "SingleCharacter": "单角色视图",
@@ -1142,7 +1138,8 @@
     "SortName": "名称",
     "SpacesSize": "{{count}} 个空位",
     "SpacesSize_plural": "{{count}} 个空位",
-    "Theme": "主题"
+    "Theme": "主题",
+    "VaultGroupingNone": "无"
   },
   "Sockets": {
     "ApplyPerks": "应用特性",

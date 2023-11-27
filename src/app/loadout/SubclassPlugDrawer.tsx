@@ -158,7 +158,7 @@ function getPlugsForSubclass(
             plugSetHash: firstSocket.plugSet.hash,
             maxSelectable: isFragment ? getFragmentCapacity : socketGroup.length,
             defaultPlug,
-            selectionType: isAbilityLikeSocket ? 'single' : 'multi',
+            selectionType: isAbilityLikeSocket ? 'single' : 'unique',
           };
 
           // In theory, subclass plugs are present in the profile response with

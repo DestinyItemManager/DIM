@@ -249,7 +249,7 @@ export class LoadoutBackgroundAnalyzer {
           [LoadoutFinding.ModsDontFit]: new Set(),
           [LoadoutFinding.UsesSeasonalMods]: new Set(),
           [LoadoutFinding.DoesNotSatisfyStatConstraints]: new Set(),
-          [LoadoutFinding.LoadoutHasSearchQuery]: new Set(),
+          [LoadoutFinding.InvalidSearchQuery]: new Set(),
         },
       };
 

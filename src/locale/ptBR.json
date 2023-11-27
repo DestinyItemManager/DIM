@@ -279,7 +279,7 @@
     "PartialMatch": "Exibe itens onde seu nome, descrição, seus perks ou mods tenham uma correspondência parcial com o filtro indicado. Pesquise por frases inteiras usando aspas. O filtro 'perk:' buscará apenas por perks.",
     "PatternUnlocked": "Mostra itens que possuem um padrão desbloqueado, mesmo que o item em si não tenha sido criado.",
     "Perk": "Exibe itens onde um de seus perks ou mods tem uma correspondência parcial com seu nome ou descrição. Pesquise por frases inteiras usando aspas.",
-    "PerkName": "Exibe itens onde um de seus perks ou mods tem uma correspondência parcial com seu nome. Pesquise por frases inteiras usando aspas.",
+    "PerkName": "Exibe itens com um perk ou mod cujo nome corresponda exatamente (exactperk:) ou parcialmente (perkname:) com o texto do filtro. Procure por frases inteiras usando aspas.",
     "PinnacleReward": "Exibe empreitadas que recompensam equipamentos pináculos.",
     "Postmaster": "Itens que estão no Chefe dos Correios atualmente.",
     "PowerKeywords": "Use o filtro \"pinnaclecap\" ou \"softcap\", ao invés de um número, para referir-se ao limite de poder da temporada atual.",
@@ -317,6 +317,7 @@
     "UnlockAllFailed": "Falha ao destravar itens",
     "UnlockAllSuccess": "{{num}} itens destravados",
     "Vendor": "Itens que estão disponíveis através de um vendedor específico.",
+    "VendorItem": "O item é de um vendedor, não está em seu inventário. Útil para excluir itens do fornecedor do Otimizador de Sets.",
     "Weapon": "Exibe itens que são armas.",
     "WeaponLevel": "Exibe armas baseando-se no seu nível de poder.",
     "WeaponType": "Exibir armas baseado no seu tipo de arma.",
@@ -496,8 +497,8 @@
     "Equip": "Equipar em {{character}}",
     "Exclude": "Itens ignorados",
     "ExcludeHelp": "SHIFT+Clique em um item (ou arraste e solte no quadro abaixo) para construir sets ignorando itens específicos.",
-    "ExistingBuildStats": "Existing Build Stats",
-    "ExistingBuildStatsNote": "Only showing builds with strictly higher stat tiers.",
+    "ExistingBuildStats": "Atributos de Sets Existentes",
+    "ExistingBuildStatsNote": "Mostrando somente sets com níveis estritatemten mais altos.",
     "FilterSets": "Filtrar atributos",
     "Help": {
       "And": "Armadura com todos esses perks será usada (\"e\")",
@@ -560,56 +561,56 @@
     "Vendors": "Carregando vendedores do Destiny..."
   },
   "LoadoutAnalysis": {
-    "Analyzed": "Analyzed {{numLoadouts}} Loadouts",
-    "Analyzing": "Analyzing {{numAnalyzed}}/{{numLoadouts}} Loadouts",
+    "Analyzed": "{{numLoadouts}} Sets Analisados",
+    "Analyzing": "Analisando {{numAnalyzed}}/{{numLoadouts}} Sets",
     "BetterStatsAvailable": {
-      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stat tiers. Choose \"$t(Loadouts.OpenInOptimizer)\" to view better builds.",
-      "Name": "Better Stats Available"
+      "Description": "Escolher diferentes armaduras ou mods para este set permitirá alcançar maiores níveis de atributos. Escolha \"$t(Loadouts.OpenInOptimizer)\" para ver sets melhores.",
+      "Name": "Melhores Atributos Disponíveis"
     },
-    "BetterStatsAvailableFontNote": "Note: This Loadout uses \"Font of ...\" mods that cause a stat tier to exceed T10. DIM may identify better stats by reducing the amount of excess tiers. If this is undesired, disable \"$t(Loadouts.IncludeRuntimeStatBenefits)\" in the Loadout.",
+    "BetterStatsAvailableFontNote": "Nota: Este Set usa mods de \"Fonte de...\" que fazem com que um nível de atributo exceda o T10. DIM pode identificar atributos melhores reduzindo a quantidade de níveis excedentes. Se isso não for desejado, desabilite \"$t(Loadouts.IncludeRuntimeStatBenefits)\" no Set.",
     "DoesNotRespectExotic": {
-      "Description": "This loadout's Loadout Optimizer settings specify an exotic choice, but the loadout does not match that exotic.",
-      "Name": "Wrong Exotic"
+      "Description": "As configurações do Otimizador de Set deste set especificam uma escolha de exótica, mas o set não corresponde a esta exótica.",
+      "Name": "Exótico Errado"
     },
     "DoesNotSatisfyStatConstraints": {
-      "Description": "Loadout Optimizer settings for this Loadout specify stat tiers, but the Loadout does not reach them.",
-      "Name": "Wrong Stat Tiers"
+      "Description": "As configurações do Otimizador de Set deste set especificam níveis específicos de atributos, mas este Set não os alcança.",
+      "Name": "Níveis de Atributos Errados"
     },
     "EmptyFragmentSlots": {
-      "Description": "There are empty fragment slots in this subclass.",
-      "Name": "Empty Fragment Slots"
+      "Description": "Há slots de fragmento vazios nesta subclasse.",
+      "Name": "Slots de Fragmento Vazios"
     },
     "InvalidMods": {
-      "Description": "Some mods in this loadout are deprecated or do not otherwise fit into any of your armor pieces.",
-      "Name": "Deprecated Mods"
+      "Description": "Alguns mods neste set estão descontinuados ou não se encaixam em nenhuma das suas armaduras.",
+      "Name": "Mods Descontinuados"
     },
-    "LoadoutHasSearchQuery": {
-      "Description": "This loadout was created with a search query in Loadout Optimizer.",
-      "Name": "Has Search Query"
+    "InvalidSearchQuery": {
+      "Description": "Este set foi criado com uma pesquisa no Otimizador de Set que não é mais válida, ou que não inclui as armaduras deste set.",
+      "Name": "Pesquisa Inválida"
     },
     "MissingItems": {
-      "Description": "Some of the items in this loadout are no longer in your inventory.",
-      "Name": "Missing Items"
+      "Description": "Alguns itens deste set não estão mais em seu inventário.",
+      "Name": "Itens Faltando"
     },
     "ModsDontFit": {
-      "Description": "Armor in this loadout cannot accommodate all loadout mods, even if the armor was upgraded.",
-      "Name": "Unassigned Mods"
+      "Description": "Armaduras neste set não conseguem acomodar todos os mods de set, mesmo se a armadura fosse melhorada.",
+      "Name": "Mods não Atribuídos"
     },
     "NeedsArmorUpgrades": {
-      "Description": "Armor in this loadout needs to be upgraded to accommodate all mods or reach specified stat tiers.",
-      "Name": "Needs Armor Upgrades"
+      "Description": "Armaduras neste set não precisam ser melhorados para acomodar todos os mods ou alcançar os niveis de atributo especificados.",
+      "Name": "Precisa de Melhorias na Armadura"
     },
     "NotAFullArmorSet": {
-      "Description": "This loadout could not be analyzed further because it does not include a full set of armor.",
-      "Name": "Not A Full Armor Set"
+      "Description": "Esse set não pode ser mais analisado, pois não inclui um conjunto completo de armadura.",
+      "Name": "Não é uma Armadura Completa"
     },
     "TooManyFragments": {
-      "Description": "There are more fragments configured on the subclass than granted by aspects.",
-      "Name": "Too Many Fragments"
+      "Description": "Há mais fragmentos configurados na subclasse do que concedidos pelos aspectos.",
+      "Name": "Muitos Fragmentos"
     },
     "UsesSeasonalMods": {
-      "Description": "This loadout relies on mods that are only available in some seasons. When the season ends, some mods will be unavailable or exceed armor energy capacity.",
-      "Name": "Uses Seasonal Mods"
+      "Description": "Esse set depende de mods que só estão disponíveis em algumas temporadas. Quando a temporada terminar, alguns mods estarão indisponíveis ou excederão a capacidade de energia da armadura.",
+      "Name": "Usa Mods de Temporada"
     }
   },
   "LoadoutBuilder": {
@@ -619,11 +620,11 @@
     "AnyExoticDescription": "O set deverá conter um exótico, mas qualquer exótico servirá.",
     "AssumeMasterwork": "Assumir Obra-prima",
     "AssumeMasterworkOptions": {
-      "All": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
-      "Current": "Current stats, assumed energy level at least {{minLoItemEnergy}}.",
-      "Legendary": "Legendary: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotic: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
-      "Masterworked": "+2 in each stat, assumed energy level 10.",
-      "None": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
+      "All": "Todas as armaduras: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "Current": "Atributos atuais, nível de energia assumido de pelo menos {{minLoItemEnergy}}.",
+      "Legendary": "Lendárias: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExóticas: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
+      "Masterworked": "+2 em cada atributo, assumido nível 10 de energia.",
+      "None": "Todas as Armaduras: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "Adiciona mods de atributo automaticamente",
     "AutomaticallyPicked": "Este mod foi adicionado automaticamente para melhorar os atributos do set.",
@@ -631,22 +632,20 @@
     "CompareLoadout": "Comparar Sets",
     "ConfirmOverwrite": "Você tem certeza que deseja substituir a armadura do set \"{{name}}\" com este novo conjunto de armaduras?",
     "CreateLoadout": "Salvar set",
-    "DecreaseStatPriority": "Decrease stat priority",
+    "DecreaseStatPriority": "Reduz prioridade de atributo",
     "DisabledByAutoStatMods": "Mods de atributos estão sendo escolhidos automaticamente pelo Otimizador de Set.",
     "DisabledDueToMaintenance": "O Otimizador de Set está indisponível temporariamente devido à manutenção da API da Bungie.",
     "EquipItems": "Equipar",
     "ExcludeItem": "Ignorar item",
     "ExistingLoadout": "Set Existente",
-    "Exotic": "Exotic Armor",
+    "Exotic": "Armadura Exótica",
     "ExoticSpecialCategory": "Especial",
     "Filter": "Filtros",
-    "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
-    "IncludeVendorItems": "Incluir itens de Vendedores",
-    "IncreaseStatPriority": "Increase stat priority",
+    "IgnoreStat": "Se desmarcado, o Otimizador de Sets vai fingir que este atributo não existe quando construir os sets",
+    "IncreaseStatPriority": "Aumenta prioridade de atributo",
     "Legendary": "Lendária",
     "LockEquipped": "Fixar equipado",
     "LockItem": "Fixar item",
-    "MaxTier": "Máx. {{tier}}",
     "MissingClass": "Configuração é para: {{className}}",
     "MissingClassDescription": "A configuração que você está tentando ver é para uma classe de personagem que você não possui.",
     "NoBuildsFoundExplainer": {
@@ -668,9 +667,9 @@
       "UpperBoundsFailed": "Vários sets não estão de acordo com o nível de atributo máximo exigido"
     },
     "NoExotic": "Nenhum exótico",
-    "NoExoticDescription": "Equivalent to searching \"not:exotic\" in the search bar - sets will not use any exotic armor.",
-    "NoExoticPreference": "No Exotic Selected",
-    "NoExoticPreferenceDescription": "Exotic armor will be used if it maximizes stats.",
+    "NoExoticDescription": "Equivalente à busca \"not:exotic\" na barra de pesquisa - sets não usarão nenhuma armadura exótica.",
+    "NoExoticPreference": "Nenhum Exótico Selecionado",
+    "NoExoticPreferenceDescription": "Armadura exótica será usada se maximizar os atributos.",
     "NoLoadoutsToCompare": "Nenhum Set para comparar",
     "None": "Nenhuma",
     "OptimizerExplanationGuide": "Leia o Guia de Usuário para mais informações e um vídeo tutorial.",
@@ -680,13 +679,9 @@
     "OptimizerSet": "Set do Otimizador",
     "ProcessingSets": "Encontrando os sets de maior nível...",
     "SaveAs": "Salvar como",
-    "SelectMax": "- Máx -",
-    "SelectMin": "- Mín -",
     "SpeedReport": "Gerou {{combos, number}} combinações em {{time}} segundos",
-    "StatTierIgnoreOption": "Ignorar",
-    "StatTierIncludeOption": "Incluir",
     "TierNumber": "N{{tier}}",
-    "TierSelect": "Select minimum stat tier",
+    "TierSelect": "Selecionar nível mínimo de atributo",
     "UnableToAddAllMods": "Não foi possível adicionar todos os mods.",
     "UnableToAddAllModsBody": "Não havia espaços de mods suficientes para caber {{mods}}.",
     "UnlockItem": "Desfixar item"
@@ -749,8 +744,8 @@
     },
     "ImportLoadout": "Importar Set",
     "InGameLoadouts": "Sets no Jogo",
-    "IncludeRuntimeStatBenefits": "Include Font mod stats",
-    "IncludeRuntimeStatBenefitsDesc": "\"Font of ...\" armor mods provide a flat boost to character stats while you have Armor Charges.\n\nWith this setting, DIM considers these mods active and adds their benefits to this Loadout's stats in calculations and optimizations.",
+    "IncludeRuntimeStatBenefits": "Incluir atributos de mods de Fonte",
+    "IncludeRuntimeStatBenefitsDesc": "\"Fonte de ...\" mods de armadura fornecem um bônus base para atributos do personagem enquanto você tem Cargas de Armadura.\n\nCom essa configuração, o DIM considera esses mods ativos e adiciona seus benefícios aos atributos desse Set em cálculos e otimizações.",
     "ItemErrorSummary": "1 erro no item:",
     "ItemErrorSummary_plural": "{{count}} erros no item:",
     "ItemLeveling": "Nivelamento de itens",
@@ -1119,6 +1114,7 @@
     "ResetToDefault": "Resetar",
     "ReverseSort": "Alterar ordem para frente/trás",
     "SetSort": "Ordenar itens por:",
+    "SetVaultWeaponGrouping": "Agrupar armas no cofre por:",
     "Settings": "Configurações",
     "ShowNewItems": "Exibe um ponto vermelho nos itens novos",
     "SingleCharacter": "Visão de Personagem-Ativo",
@@ -1142,7 +1138,8 @@
     "SortName": "Nome",
     "SpacesSize": "{{count}} espaço",
     "SpacesSize_plural": "{{count}} espaços",
-    "Theme": "Tema"
+    "Theme": "Tema",
+    "VaultGroupingNone": "Nenhuma"
   },
   "Sockets": {
     "ApplyPerks": "Aplicar perks",

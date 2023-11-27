@@ -279,7 +279,7 @@
     "PartialMatch": "이름, 설명, 특성이나 개조 부품이 필터와 부분적으로 일치하는 아이템을 표시합니다. 전체 구문을 검색하시려면 따옴표를 사용하세요. 'perk:' 필터는 특성만 검색합니다.",
     "PatternUnlocked": "형성 여부에 관계없이 무기 형성 패턴이 잠금 해제된 아이템을 표시합니다.",
     "Perk": "특성이나 개조 부품의 이름이나 설명이 필터와 부분적으로 일치하는 아이템을 표시합니다. 전체 구문을 검색하시려면 따옴표를 사용하세요.",
-    "PerkName": "특성이나 개조 부품의 이름이 필터와 부분적으로 일치하는 아이템을 표시합니다. 전체 구문을 검색하시려면 따옴표를 사용하세요.",
+    "PerkName": "특성이나 개조 부품의 이름이 필터와 일치(exactperk:)하거나 부분적으로 일치(perkname:)하는 아이템을 표시합니다. 따옴표를 사용하여 전체 문구를 검색합니다.",
     "PinnacleReward": "최고급 보상을 주는 이정표를 표시합니다.",
     "Postmaster": "우편 담당자가 소지하고 있는 아이템",
     "PowerKeywords": "현재 시즌의 전투력 제한 값 대신 pinnaclecap이나 softcap 단어를 사용합니다.",
@@ -317,6 +317,7 @@
     "UnlockAllFailed": "아이템 잠금 해제 실패",
     "UnlockAllSuccess": "아이템 {{num}}개 잠금 해제됨",
     "Vendor": "특정 상인에게서 얻을 수 있는 아이템",
+    "VendorItem": "소지품이 아닌 상인에게서 가져온 아이템입니다. 로드아웃 최적화에서 상인 아이템을 제외하는데 유용하게 쓰입니다.",
     "Weapon": "무기인 아이템을 표시합니다.",
     "WeaponLevel": "무기의 전투력을 기준으로 표시합니다.",
     "WeaponType": "무기의 공격 속성을 기준으로 표시합니다.",
@@ -347,7 +348,7 @@
     "AutoRefresh": "플레이하는 동안 DIM을 자동으로 새로고침합니다.",
     "BulkTag": "아이템 대량으로 태그하기",
     "BungieNetAlert": "Bungie 알림",
-    "Clarity": "Clarity 확장 프로그램은 개발자에 의해 더 이상 지원되지 않으며, DIM에서 시스템 과부하와 같은 문제를 일으킬 수 있습니다.",
+    "Clarity": "Clarity 확장 프로그램은 개발자에 의해 더 이상 지원되지 않으며, DIM에서 시스템 과부하와 같은 문제를 일으킬 수 있습니다. 제거해 주시길 바랍니다.",
     "Clear": "검색 필터 초기화",
     "CompareMatching": "아이템 비교",
     "DeleteSearch": "검색 삭제",
@@ -583,9 +584,9 @@
       "Description": "이 로드아웃의 일부 개조 부품이 만료되었거나 어떤 방어구에도 장착할 수 없습니다.",
       "Name": "만료된 개조 부품"
     },
-    "LoadoutHasSearchQuery": {
-      "Description": "이 로드아웃은 로드아웃 최적화에서 검색어를 사용하여 생성되었습니다.",
-      "Name": "검색어 사용됨"
+    "InvalidSearchQuery": {
+      "Description": "이 로드아웃은 로드아웃 최적화에서 더 이상 유효하지 않거나, 방어구를 포함하지 않는 검색어로 생성되었습니다.",
+      "Name": "잘못된 검색어"
     },
     "MissingItems": {
       "Description": "이 로드아웃의 일부 아이템이 더 이상 소지품에 없습니다.",
@@ -641,12 +642,10 @@
     "ExoticSpecialCategory": "특수",
     "Filter": "필터",
     "IgnoreStat": "체크가 해제된 경우 로드아웃 최적화가 장비 조합을 구성할 때 이 능력치를 무시합니다.",
-    "IncludeVendorItems": "상인 아이템 포함",
     "IncreaseStatPriority": "능력치 우선도 증가",
     "Legendary": "전설",
     "LockEquipped": "장착된 아이템 고정",
     "LockItem": "아이템 잠금",
-    "MaxTier": "최대 {{tier}}",
     "MissingClass": "빌드 대상: {{className}}",
     "MissingClassDescription": "소지하지 않은 직업의 빌드입니다.",
     "NoBuildsFoundExplainer": {
@@ -680,11 +679,7 @@
     "OptimizerSet": "최적화 조합",
     "ProcessingSets": "가장 높은 등급의 조합 찾는 중...",
     "SaveAs": "다른 이름으로 저장",
-    "SelectMax": "- 최대 -",
-    "SelectMin": "- 최소 -",
     "SpeedReport": "{{time}}초 만에 {{combos, number}}개의 조합 생성됨",
-    "StatTierIgnoreOption": "무시",
-    "StatTierIncludeOption": "포함",
     "TierNumber": "T{{tier}}",
     "TierSelect": "최소 능력치 등급 선택",
     "UnableToAddAllMods": "모든 개조 부품을 추가할 수 없습니다.",
@@ -1119,6 +1114,7 @@
     "ResetToDefault": "초기화",
     "ReverseSort": "오름차순/내림차순 정렬 전환",
     "SetSort": "아이템 정렬 방법:",
+    "SetVaultWeaponGrouping": "창고 무기 정렬 방법:",
     "Settings": "설정",
     "ShowNewItems": "새 아이템에 빨간색 점 표시",
     "SingleCharacter": "단일 캐릭터 보기",
@@ -1142,7 +1138,8 @@
     "SortName": "이름",
     "SpacesSize": "{{count}}개의 공간",
     "SpacesSize_plural": "{{count}}개의 공간",
-    "Theme": "테마"
+    "Theme": "테마",
+    "VaultGroupingNone": "없음"
   },
   "Sockets": {
     "ApplyPerks": "특성 적용",

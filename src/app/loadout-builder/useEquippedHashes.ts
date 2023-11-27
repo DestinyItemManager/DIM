@@ -1,5 +1,6 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { getSubclassPlugHashes } from 'app/loadout/item-utils';
 import { useMemo } from 'react';
 
 export default function useEquippedHashes(
@@ -13,11 +14,9 @@ export default function useEquippedHashes(
     if (exoticArmorHash) {
       equippedHashes.add(exoticArmorHash);
     }
-    if (subclass?.loadoutItem.socketOverrides) {
-      for (const hash of Object.values(subclass.loadoutItem.socketOverrides)) {
-        equippedHashes.add(hash);
-      }
+    for (const { plugHash } of getSubclassPlugHashes(subclass)) {
+      equippedHashes.add(plugHash);
     }
     return equippedHashes;
-  }, [params.exoticArmorHash, subclass?.loadoutItem.socketOverrides]);
+  }, [params.exoticArmorHash, subclass]);
 }

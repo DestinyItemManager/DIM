@@ -1,10 +1,11 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { ShowItemPickerFn } from 'app/item-picker/item-picker';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { armorStats } from 'app/search/d2-known-values';
+import { filterMap } from 'app/utils/collections';
 import { isSunset } from 'app/utils/item-utils';
 import {
   aspectSocketCategoryHashes,
@@ -43,12 +44,9 @@ export async function pickSubclass(
   return item;
 }
 
-export function getSubclassPlugs(
-  defs: D2ManifestDefinitions,
-  subclass: ResolvedLoadoutItem | undefined,
-) {
+export function getSubclassPlugHashes(subclass: ResolvedLoadoutItem | undefined) {
   const plugs: {
-    plug: PluggableInventoryItemDefinition;
+    plugHash: number;
     canBeRemoved: boolean;
     socketCategoryHash: number;
   }[] = [];
@@ -62,15 +60,25 @@ export function getSubclassPlugs(
 
       for (const socket of sockets) {
         const override = subclass.loadoutItem.socketOverrides?.[socket.socketIndex];
-        const initial = getDefaultAbilityChoiceHash(socket);
-        const hash = override || (!canBeRemoved && initial);
-        const plug = hash && defs.InventoryItem.get(hash);
-        if (plug && isPluggableItem(plug)) {
-          plugs.push({ plug, canBeRemoved, socketCategoryHash: category.category.hash });
+        const plugHash = override || (!canBeRemoved && getDefaultAbilityChoiceHash(socket));
+        if (plugHash) {
+          plugs.push({ plugHash, canBeRemoved, socketCategoryHash: category.category.hash });
         }
       }
     }
   }
 
   return plugs;
+}
+
+export function getSubclassPlugs(
+  defs: D2ManifestDefinitions,
+  subclass: ResolvedLoadoutItem | undefined,
+) {
+  return filterMap(getSubclassPlugHashes(subclass), (entry) => {
+    const plug = defs.InventoryItem.get(entry.plugHash);
+    return isPluggableItem(plug)
+      ? { plug, canBeRemoved: entry.canBeRemoved, socketCategoryHash: entry.socketCategoryHash }
+      : undefined;
+  });
 }

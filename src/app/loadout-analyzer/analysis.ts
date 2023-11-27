@@ -29,6 +29,7 @@ import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { ModMap, categorizeArmorMods, fitMostMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
 import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';
+import { ItemFilter } from 'app/search/filter-types';
 import { count } from 'app/utils/collections';
 import { errorLog } from 'app/utils/log';
 import { delay } from 'app/utils/promises';
@@ -44,6 +45,7 @@ import {
   LoadoutFinding,
   blockAnalysisFindings,
 } from './types';
+import { mergeStrictUpgradeStatConstraints } from './utils';
 
 export async function analyzeLoadout(
   {
@@ -52,6 +54,8 @@ export async function analyzeLoadout(
     savedLoStatConstraintsByClass,
     itemCreationContext,
     unlockedPlugs,
+    validateQuery,
+    filterFactory,
   }: LoadoutAnalysisContext,
   storeId: string,
   classType: DestinyClass,
@@ -176,9 +180,15 @@ export async function analyzeLoadout(
     // We just did some heavy mod assignment stuff, give the event loop a chance
     await delay(0);
 
+    let itemFilter: ItemFilter;
     if (loadoutParameters.query) {
-      findings.add(LoadoutFinding.LoadoutHasSearchQuery);
+      if (validateQuery(loadoutParameters.query).valid) {
+        itemFilter = filterFactory(loadoutParameters.query);
+      } else {
+        findings.add(LoadoutFinding.InvalidSearchQuery);
+      }
     }
+    itemFilter ??= stubTrue;
 
     if (loadoutArmor.length === 5) {
       const statProblems = getStatProblems(
@@ -244,9 +254,23 @@ export async function analyzeLoadout(
             unassignedMods: [],
             lockedExoticHash: loadoutParameters.exoticArmorHash,
             armorEnergyRules,
-            // We also reject loadouts with a search filter
-            searchFilter: stubTrue,
+            searchFilter: itemFilter,
           });
+          // If the item filter loadout armor that was previously included,
+          // this is due to the search filter since we've previously established
+          // that mods fit and the exotic matches.
+          if (
+            loadoutParameters.query &&
+            loadoutArmor.some(
+              (item) =>
+                armorForThisClass.some((allItem) => allItem === item) &&
+                !Object.values(filteredItems)
+                  .flat()
+                  .some((filteredItem) => filteredItem === item),
+            )
+          ) {
+            findings.add(LoadoutFinding.InvalidSearchQuery);
+          }
 
           const modStatChanges = getTotalModStatChanges(
             defs,
@@ -260,13 +284,16 @@ export async function analyzeLoadout(
           await delay(0);
 
           existingLoadoutStatsAsStatConstraints = statConstraints.map((c) => ({
-            ...c,
+            statHash: c.statHash,
+            ignored: c.ignored,
+            maxTier: 10,
             minTier: statTier(assumedLoadoutStats[c.statHash]!.value),
           }));
-          const strictStatConstraints: ResolvedStatConstraint[] = statConstraints.map((c) => ({
-            ...c,
-            minTier: Math.max(c.minTier, statTier(assumedLoadoutStats[c.statHash]!.value)),
-          }));
+          const { mergedConstraints, mergedConstraintsImplyStrictUpgrade } =
+            mergeStrictUpgradeStatConstraints(
+              existingLoadoutStatsAsStatConstraints,
+              statConstraints,
+            );
 
           try {
             const { resultPromise } = worker({
@@ -277,9 +304,9 @@ export async function analyzeLoadout(
               filteredItems,
               lockedModMap: modMap,
               modStatChanges,
-              resolvedStatConstraints: strictStatConstraints,
+              resolvedStatConstraints: mergedConstraints,
               stopOnFirstSet: true,
-              strictUpgrades: true,
+              strictUpgrades: !mergedConstraintsImplyStrictUpgrade,
             });
 
             hasStrictUpgrade = Boolean((await resultPromise).sets.length);

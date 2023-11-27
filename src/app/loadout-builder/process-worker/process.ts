@@ -333,34 +333,33 @@ export function process(
             // We want to figure out the best tiers for this set. We can't do that for every
             // set because it'd be too expensive, but realistically, artifice mods are
             // where sets can really get some more tiers compared to other sets.
-            const artificeModsNeededForTiers: number[] = [];
+            const statPointsNeededForTiers: { index: number; pointsToNext: number }[] = [];
 
             for (let index = 0; index < 6; index++) {
               const filter = resolvedStatConstraints[index];
-              if (!filter.ignored) {
-                if (stats[index] < filter.maxTier * 10) {
-                  // E.g. stat is at 83 points, so we'd need ceil((10-3) / 3) = 3
-                  // artifice mods
-                  artificeModsNeededForTiers.push(
-                    Math.ceil((10 - (stats[index] % 10)) / artificeStatBoost),
-                  );
-                } else {
-                  // We really don't want to optimize this stat further...
-                  artificeModsNeededForTiers.push(100);
-                }
+              if (!filter.ignored && stats[index] < filter.maxTier * 10) {
+                statPointsNeededForTiers.push({
+                  index,
+                  pointsToNext: 10 - (stats[index] % 10),
+                });
               }
             }
+
+            // Starting from here, we end up mutating our tiers array a bit
+            // to make sorting more accurate.
 
             // Then spend artifice mods to boost tiers, from cheapest to most-expensive.
             // TODO: It'd be neat to also spend small (+5) general mods, right now we
             // add `numAvailableGeneralMods` tiers (assume each item can hold a +10)
             // mod but this isn't always true.
             let modsAvailable = numArtifice;
-            artificeModsNeededForTiers.sort((a, b) => a - b);
+            statPointsNeededForTiers.sort((a, b) => a.pointsToNext - b.pointsToNext);
             const predictedExtraTiers =
-              artificeModsNeededForTiers.reduce((numTiers, modsNeeded) => {
-                if (modsNeeded <= modsAvailable) {
-                  modsAvailable -= modsNeeded;
+              statPointsNeededForTiers.reduce((numTiers, stat) => {
+                const numModsUsed = Math.ceil(stat.pointsToNext / artificeStatBoost);
+                if (numModsUsed <= modsAvailable) {
+                  tiers[stat.index] += 1;
+                  modsAvailable -= numModsUsed;
                   return numTiers + 1;
                 }
                 return numTiers;
@@ -377,19 +376,25 @@ export function process(
             // It seems like constructing and comparing tiersString would be expensive but it's less so
             // than comparing stat arrays element by element
             let tiersString = '';
+            let numGeneralMods = precalculatedInfo.numAvailableGeneralMods;
             for (let index = 0; index < 6; index++) {
-              const tier = tiers[index];
+              let tier = tiers[index];
               // Make each stat exactly one code unit so the string compares correctly
               const filter = resolvedStatConstraints[index];
               if (!filter.ignored) {
+                // Predict the tier boost from general mods.
+                const boostAmount = Math.min(filter.maxTier - tier, numGeneralMods);
+                if (boostAmount > 0) {
+                  tier += boostAmount;
+                  numGeneralMods -= boostAmount;
+                }
                 // using a power of 2 (16) instead of 11 is faster
                 tiersString += tier.toString(16);
               }
             }
 
             processStatistics.numValidSets++;
-            // And now insert our set using the predicted tier. The rest of the stats string still uses the unboosted tiers but the error should be small
-            tiersString = totalTier.toString(16) + tiersString;
+            // And now insert our set using the predicted total tier and boosted stat tiers.
             setTracker.insert(totalTier + predictedExtraTiers, tiersString, armor, stats);
 
             if (stopOnFirstSet) {

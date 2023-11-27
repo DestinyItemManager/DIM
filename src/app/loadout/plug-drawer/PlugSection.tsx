@@ -30,7 +30,7 @@ export default function PlugSection({
   onPlugSelected: (
     plugSetHash: number,
     mod: PluggableInventoryItemDefinition,
-    selectionType: 'multi' | 'single',
+    selectionType: 'multi' | 'unique' | 'single',
   ) => void;
   onPlugRemoved: (plugSetHash: number, mod: PluggableInventoryItemDefinition) => void;
 }) {
@@ -50,7 +50,7 @@ export default function PlugSection({
     return null;
   }
 
-  const multiSelect = selectionType === 'multi';
+  const multiSelect = selectionType !== 'single';
 
   // Here we split the section into further pieces so that each plug category has has its own title
   // This is important for combat mods, which would otherwise be grouped into one massive category
@@ -80,7 +80,9 @@ export default function PlugSection({
             {plugs.map((plug) => {
               const isSelected = plugSet.selected.some((s) => s.hash === plug.hash);
               const selectable = multiSelect
-                ? numSelected < maxSelectable && isPlugSelectable(plug)
+                ? (selectionType !== 'unique' || !isSelected) &&
+                  numSelected < maxSelectable &&
+                  isPlugSelectable(plug)
                 : !isSelected && isPlugSelectable(plug);
               return (
                 <SelectablePlug

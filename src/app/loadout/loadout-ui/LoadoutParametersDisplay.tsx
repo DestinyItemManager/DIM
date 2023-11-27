@@ -1,10 +1,11 @@
-import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import { LoadoutParameters, StatConstraint } from '@destinyitemmanager/dim-api-types';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import ExoticArmorChoice, { getLockedExotic } from 'app/loadout-builder/filter/ExoticArmorChoice';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { AppIcon, searchIcon } from 'app/shell/icons';
+import { AppIcon, equalsIcon, greaterThanIcon, searchIcon } from 'app/shell/icons';
+import clsx from 'clsx';
 import { includesRuntimeStatMods } from '../stats';
 import styles from './LoadoutParametersDisplay.m.scss';
 
@@ -66,28 +67,51 @@ export default function LoadoutParametersDisplay({ params }: { params: LoadoutPa
           {statConstraints.map((s) => (
             <div key={s.statHash} className={styles.loStat}>
               <BungieImage src={defs.Stat.get(s.statHash).displayProperties.icon} />
-              {s.minTier !== undefined && s.minTier !== 0 ? (
-                <span>
-                  {t('LoadoutBuilder.TierNumber', {
-                    tier: s.minTier,
-                  })}
-                  {(s.maxTier === 10 || s.maxTier === undefined) && s.minTier !== 10
-                    ? '+'
-                    : s.maxTier !== undefined && s.maxTier !== s.minTier
-                      ? `-${s.maxTier}`
-                      : ''}
-                </span>
-              ) : s.maxTier !== undefined ? (
-                <span>T{s.maxTier}-</span>
-              ) : (
-                `${t('LoadoutBuilder.TierNumber', {
-                  tier: 10,
-                })}-`
-              )}
+              <StatConstraintRange statConstraint={s} />
             </div>
           ))}
         </PressTip>
       )}
     </div>
+  );
+}
+
+export function StatConstraintRange({
+  statConstraint: s,
+  className,
+}: {
+  statConstraint: StatConstraint;
+  className?: string;
+}) {
+  className = clsx(className, styles.constraintRange);
+  return s.minTier !== undefined && s.minTier !== 0 ? (
+    <span className={className}>
+      {(s.maxTier === 10 || s.maxTier === undefined) && s.minTier !== 10 ? (
+        <>
+          <AppIcon icon={greaterThanIcon} />
+          {t('LoadoutBuilder.TierNumber', {
+            tier: s.minTier,
+          })}
+        </>
+      ) : s.maxTier !== undefined && s.maxTier !== s.minTier ? (
+        `${t('LoadoutBuilder.TierNumber', {
+          tier: s.minTier,
+        })}-${s.maxTier}`
+      ) : (
+        <>
+          <AppIcon icon={equalsIcon} />
+          {t('LoadoutBuilder.TierNumber', {
+            tier: s.minTier,
+          })}
+        </>
+      )}
+    </span>
+  ) : (
+    <span className={className}>
+      <AppIcon icon={greaterThanIcon} />
+      {t('LoadoutBuilder.TierNumber', {
+        tier: 0,
+      })}
+    </span>
   );
 }

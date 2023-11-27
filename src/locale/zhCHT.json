@@ -279,7 +279,7 @@
     "PartialMatch": "顯示名稱/描述/特性/模組與篩選器部分匹配的物品。使用引號來搜索包含空格的文本。使用 'perk:' 過濾器便可僅搜索特性。",
     "PatternUnlocked": "顯示製作樣式已解鎖的武器，即使該武器并非製造而來。",
     "Perk": "顯示帶有特性或模組的名稱或描述與篩選器部分匹配的物品。使用引號來搜索帶有空格的文本。",
-    "PerkName": "顯示帶有特性或模組的名稱與篩選器部分匹配的物品。使用引號來搜索帶有空格的文本。",
+    "PerkName": "Shows items with a perk or mod whose name matches (exactperk:) or partially matches (perkname:) the filter text. Search for entire phrases using quotes.",
     "PinnacleReward": "顯示提供巔峰獎勵的追獵目標。",
     "Postmaster": "目前在郵政官處的物品.",
     "PowerKeywords": "使用 pinnaclecap 或 softcap 關鍵字而不是數字來表達當前賽季的光等限制。",
@@ -317,6 +317,7 @@
     "UnlockAllFailed": "鎖定物品失敗",
     "UnlockAllSuccess": "已經解鎖{{num}} 物品",
     "Vendor": "物品可從特定的商販獲得。",
+    "VendorItem": "Item is from a vendor, not in your inventory. Useful for excluding vendor items from Loadout Optimizer.",
     "Weapon": "顯示武器物品。",
     "WeaponLevel": "按武器等級顯示武器。",
     "WeaponType": "按照武器類型顯示.",
@@ -583,9 +584,9 @@
       "Description": "Some mods in this loadout are deprecated or do not otherwise fit into any of your armor pieces.",
       "Name": "Deprecated Mods"
     },
-    "LoadoutHasSearchQuery": {
-      "Description": "This loadout was created with a search query in Loadout Optimizer.",
-      "Name": "Has Search Query"
+    "InvalidSearchQuery": {
+      "Description": "This loadout was created with a search query in Loadout Optimizer that is no longer valid, or does not include the armor in this loadout.",
+      "Name": "Invalid Search Query"
     },
     "MissingItems": {
       "Description": "Some of the items in this loadout are no longer in your inventory.",
@@ -641,12 +642,10 @@
     "ExoticSpecialCategory": "特殊",
     "Filter": "過濾",
     "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
-    "IncludeVendorItems": "包括商販物品",
     "IncreaseStatPriority": "Increase stat priority",
     "Legendary": "传说",
     "LockEquipped": "固定已裝備",
     "LockItem": "固定物品",
-    "MaxTier": "最大 {{tier}}",
     "MissingClass": "配裝適用於：{{className}}",
     "MissingClassDescription": "你正試圖查看的配裝適用於一個你未擁有的角色職業。",
     "NoBuildsFoundExplainer": {
@@ -680,11 +679,7 @@
     "OptimizerSet": "優化器組合",
     "ProcessingSets": "Finding highest tier sets...",
     "SaveAs": "保存為",
-    "SelectMax": "-最大-",
-    "SelectMin": "-最小-",
     "SpeedReport": "在 {{time}} 秒内生成了 {{combos, number}} 個組合。",
-    "StatTierIgnoreOption": "忽略",
-    "StatTierIncludeOption": "包含",
     "TierNumber": "T{{tier}}",
     "TierSelect": "Select minimum stat tier",
     "UnableToAddAllMods": "無法添加所有模組。",
@@ -1119,6 +1114,7 @@
     "ResetToDefault": "重置",
     "ReverseSort": "切換正向/反向排序",
     "SetSort": "物品排序方式:",
+    "SetVaultWeaponGrouping": "Group vault weapons by:",
     "Settings": "設置",
     "ShowNewItems": "在新物品上顯示紅點",
     "SingleCharacter": "單角色視圖",
@@ -1142,7 +1138,8 @@
     "SortName": "名稱",
     "SpacesSize": "{{count}} 個空位",
     "SpacesSize_plural": "{{count}} 個空位",
-    "Theme": "主題"
+    "Theme": "主題",
+    "VaultGroupingNone": "None"
   },
   "Sockets": {
     "ApplyPerks": "應用特性",

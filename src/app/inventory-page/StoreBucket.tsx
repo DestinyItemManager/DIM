@@ -147,6 +147,7 @@ const StoreBucketInner = memo(function StoreBucketInner({
         )}
         {destinyVersion === 2 &&
           bucket.hash === BucketHashes.Engrams && // Engrams. D1 uses this same bucket hash for "Missions"
+          !isVault &&
           // lower bound of 0, in case this bucket becomes overfilled
           _.times(Math.max(0, bucket.capacity - unequippedItems.length), (index) => (
             <img src={emptyEngram} className="empty-engram" aria-hidden="true" key={index} />
@@ -235,7 +236,7 @@ export default function StoreBucket({
 
   // Single character mode collapses all items from other characters into "the
   // vault" (but only those items that could be used by the current character)
-  if (singleCharacter && store.isVault && bucket.vaultBucket) {
+  if (singleCharacter && store.isVault && (bucket.vaultBucket || bucket.inPostmaster)) {
     for (const otherStore of stores) {
       if (!otherStore.current && !otherStore.isVault) {
         items = [...items, ...findItemsByBucket(otherStore, bucket.hash)];

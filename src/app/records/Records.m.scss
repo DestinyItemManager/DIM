@@ -10,6 +10,6 @@
   gap: 8px;
 
   @include phone-portrait {
-    padding: 8px var(--inventory-column-padding);
+    padding: 8px 10px;
   }
 }

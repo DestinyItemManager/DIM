@@ -23,9 +23,10 @@ export interface PlugSet {
   /**
    * The select behavior of the plug set.
    * multi: how armour mods are selected in game, you need to manually remove ones that have been added.
+   * unique: how aspects/fragments are selected - similar to 'multi' except no dupes are allowed
    * single: how abilities in subclasses are selected, selecting an option replaces the current one.
    */
-  selectionType: 'multi' | 'single';
+  selectionType: 'multi' | 'unique' | 'single';
   /** A bit of text to add on to the header. This is currently used to distinguish Artificer slot-specific sockets. */
   headerSuffix?: string;
 }

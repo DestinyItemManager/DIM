@@ -279,7 +279,7 @@
     "PartialMatch": "Mostra gli oggetti nei quali nome, descrizione, qualsiasi perk, o modifica, hanno un riscontro parziale con il testo del filtro. Cerca intere frasi usando le virgolette. Il filtro 'perk:' filtrerà solo i perks.",
     "PatternUnlocked": "Mostra gli oggetti che hanno un modello di forgiatura sbloccato, anche se l'oggetto non è stato forgiato.",
     "Perk": "Mostra gli oggetti in cui uno dei perk o modifiche ha una corrispondenza parziale con il testo del filtro nel nome o descrizione. Cerca intere frasi usando le virgolette.",
-    "PerkName": "Mostra gli oggetti in cui un perk o modifiche ha una corrispondenza parziale con il testo del filtro solo nel nome. Cerca intere frasi usando le virgolette.",
+    "PerkName": "Mostra gli oggetti con un perk o una modifica il cui nome corrisponde (exactperk:) o corrisponde in parte (perkname:) al testo del filtro. Cerca intere frasi utilizzando apostrofi.",
     "PinnacleReward": "Mostra gli incarichi che portano ad una ricompensa di punta.",
     "Postmaster": "Oggetti che sono dall'Amministratrice.",
     "PowerKeywords": "Utilizza le parole chiave \"pinnaclecap\" o \"softcap\" invece di un numero per riferirti al livelli limite di Potere della stagione attuale.",
@@ -317,6 +317,7 @@
     "UnlockAllFailed": "Impossibile sbloccare oggetti",
     "UnlockAllSuccess": "Sbloccati {{num}} oggetti",
     "Vendor": "Articolo disponibile da un mercante specifico.",
+    "VendorItem": "L'oggetto proviene da un mercante, non dal tuo inventario. Utile per escludere gli oggetti dei mercanti dall'Ottimizzatore di Dotazioni.",
     "Weapon": "Mostra gli oggetti che sono armi.",
     "WeaponLevel": "Mostra le armi in base al loro Livello Arma.",
     "WeaponType": "Mostra le armi basandosi sul tipo di arma.",
@@ -583,9 +584,9 @@
       "Description": "Alcune modifiche in questa dotazione sono obsolete o non possono adattarsi in nessun pezzo della tua armatura.",
       "Name": "Modifiche obsolete"
     },
-    "LoadoutHasSearchQuery": {
-      "Description": "Questa dotazione è stata creata con una query di ricerca nell'Ottimizzatore di Dotazioni.",
-      "Name": "Provenienza da query ricerca"
+    "InvalidSearchQuery": {
+      "Description": "Questa dotazione è stata creata con una query di ricerca nell'Ottimizzatore di Dotazioni che non è più valida o non include l'armatura in questa dotazione.",
+      "Name": "Query di ricerca non valida"
     },
     "MissingItems": {
       "Description": "Alcuni degli oggetti in questa dotazione non sono più nel tuo inventario.",
@@ -641,12 +642,10 @@
     "ExoticSpecialCategory": "Speciale",
     "Filter": "Filtri",
     "IgnoreStat": "Se non selezionata, L'Ottimizzatore di Dotazioni farà finta che questa statistica non esista quando genererà i set",
-    "IncludeVendorItems": "Includi oggetti dei mercanti",
     "IncreaseStatPriority": "Aumenta la priorità della statistica",
     "Legendary": "Leggendaria",
     "LockEquipped": "Blocca equipaggiato",
     "LockItem": "Blocca oggetto",
-    "MaxTier": "Max {{tier}}",
     "MissingClass": "Build per: {{className}}",
     "MissingClassDescription": "La build che stai cercando di visualizzare è per una classe di personaggio che non hai.",
     "NoBuildsFoundExplainer": {
@@ -680,11 +679,7 @@
     "OptimizerSet": "Set Ottimizzatore",
     "ProcessingSets": "Ricerca dei set con gradi più alti...",
     "SaveAs": "Salva come",
-    "SelectMax": "- Max -",
-    "SelectMin": "- Min -",
     "SpeedReport": "Generate {{combos, number}} combinazioni in {{time}} secondi",
-    "StatTierIgnoreOption": "Ignora",
-    "StatTierIncludeOption": "Includi",
     "TierNumber": "T{{tier}}",
     "TierSelect": "Seleziona il grado minimo della statistica",
     "UnableToAddAllMods": "Impossibile aggiungere tutte le Modifiche.",
@@ -1119,6 +1114,7 @@
     "ResetToDefault": "Ripristina",
     "ReverseSort": "Ordinamento normale/inverso",
     "SetSort": "Ordina gli oggetti per:",
+    "SetVaultWeaponGrouping": "Raggruppa le armi nel Deposito per:",
     "Settings": "Impostazioni",
     "ShowNewItems": "Mostra un punto rosso sui nuovi oggetti",
     "SingleCharacter": "Visualizzazione singolo personaggio",
@@ -1142,7 +1138,8 @@
     "SortName": "Nome",
     "SpacesSize": "{{count}} spazio",
     "SpacesSize_plural": "{{count}} spazi",
-    "Theme": "Tema"
+    "Theme": "Tema",
+    "VaultGroupingNone": "Non raggruppare"
   },
   "Sockets": {
     "ApplyPerks": "Applica Perk",
