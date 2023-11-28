@@ -1,4 +1,5 @@
 const exoticWeaponHashesWithCatalyst = new Set<number>([
+  17096506, // Dragon's Breath
   19024058, // Prometheus Lens
   46524085, // Osteo Striga
   204878059, // Malfeasance
@@ -47,6 +48,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   2856683562, // SUROS Regime
   2907129556, // Sturm
   2907129557, // Sunshot
+  2910326942, // Wish-Keeper
   3089417789, // Riskrunner
   3118061005, // Vexcalibur
   3141979346, // D.A.R.C.I.
@@ -76,6 +78,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   3844694310, // The Jade Rabbit
   3856705927, // Hawkmoon
   3899270607, // The Colony
+  3973202132, // Thorn
   4017959782, // Symmetry
   4036115577, // Sleeper Simulant
   4068264807, // Monte Carlo
