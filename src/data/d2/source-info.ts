@@ -73,6 +73,15 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  avalon: {
+    itemHashes: [],
+    sourceHashes: [
+      709680645, // Source: "Truly Satisfactory" Triumph
+      1476475066, // Source: "Firmware Update" Triumph
+      1730197643, // Source: //node.ovrd.AVALON// Exotic Quest
+    ],
+    searchString: [],
+  },
   banshee: {
     itemHashes: [],
     sourceHashes: [
@@ -476,6 +485,7 @@ const D2Sources: {
       3422985544, // Source: Associated Gambit Quest
       3494247523, // Source: Complete the "Season 8: Keepin' On" quest.
       3522070610, // Source: Gambit
+      3942778906, // Source: Drifter Rank Up Reputation
     ],
     searchString: [],
   },
@@ -665,6 +675,7 @@ const D2Sources: {
       3422985544, // Source: Associated Gambit Quest
       3494247523, // Source: Complete the "Season 8: Keepin' On" quest.
       3522070610, // Source: Gambit
+      3942778906, // Source: Drifter Rank Up Reputation
     ],
     searchString: [],
   },
@@ -1498,6 +1509,7 @@ const D2Sources: {
       3390015730, // Source: Trials of Osiris Challenges
       3471208558, // Source: Trials of Osiris Wins
       3543690049, // Source: Complete a flawless Trials ticket.
+      3564069447, // Source: Flawless Win with a "Flight of the Pigeon" Medal
     ],
     searchString: [],
   },
@@ -1609,6 +1621,13 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       1007078046, // Source: "Vow of the Disciple" Raid
+    ],
+    searchString: [],
+  },
+  warlordsruin: {
+    itemHashes: [],
+    sourceHashes: [
+      613435025, // Source: "Warlord's Ruin" Dungeon
     ],
     searchString: [],
   },
