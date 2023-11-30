@@ -12,7 +12,7 @@ export const D2EventInfo = {
     name: 'The Dawning',
     shortname: 'dawning',
     sources: [464727567, 547767158, 629617846, 2364515524, 3092212681, 3952847349, 4054646289],
-    engram: [1170720694, 3151770741],
+    engram: [1170720694, 2648089539, 3151770741, 3488374611],
   },
   2: {
     name: 'Crimson Days',
@@ -30,7 +30,7 @@ export const D2EventInfo = {
     name: 'Festival of the Lost',
     shortname: 'fotl',
     sources: [1054169368, 1677921161, 1919933822, 3190938946, 3693722471, 4041583267],
-    engram: [1451959506, 1940401459],
+    engram: [1451959506],
   },
   5: {
     name: 'The Revelry',

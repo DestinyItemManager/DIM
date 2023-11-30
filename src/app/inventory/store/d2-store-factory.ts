@@ -267,7 +267,7 @@ export function getTitleInfo(
   let isGildedForCurrentSeason = false;
 
   const isCompleted = Boolean(
-    (profileRecords?.records[titleRecordHash].state ?? 0) & DestinyRecordState.RecordRedeemed,
+    (profileRecords?.records[titleRecordHash]?.state ?? 0) & DestinyRecordState.RecordRedeemed,
   );
 
   // Gilding information is stored per-profile, not per-character
