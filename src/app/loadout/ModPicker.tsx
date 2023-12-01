@@ -16,6 +16,7 @@ import { isClassCompatible, modMetadataByPlugCategoryHash } from 'app/utils/item
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import unstackableModHashes from 'data/d2/unstackable-mods.json';
 import { produce } from 'immer';
 import _ from 'lodash';
 import { useCallback, useMemo } from 'react';
@@ -335,10 +336,10 @@ function isModSelectable(
 ) {
   const { plugCategoryHash, energyCost } = mod.plug;
   const isSlotSpecificCategory = slotSpecificPlugCategoryHashes.includes(plugCategoryHash);
-  console.log(selected);
 
+  // Check for wheather the selected mod stacks with itself.
   for (const x of selected) {
-    if (x === mod && x.displayProperties.name === 'Outreach') {
+    if (x === mod && unstackableModHashes.includes(x.hash)) {
       return false;
     }
   }
