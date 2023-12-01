@@ -1,5 +1,7 @@
 ## Next
 
+## 7.96.0 <span class="changelog-date">(2023-11-26)</span>
+
 * Added `is:vendor` search that is useful for excluding vendor items from Loadout Optimizer (enter `-is:vendor` in the search box).
 * You are now prevented from selecting multiple copies of fragments or aspects in the subclass selector.
 * Slightly improved Loadout Optimizer's algorithm for finding optimal sets.

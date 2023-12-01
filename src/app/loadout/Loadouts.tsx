@@ -293,16 +293,15 @@ function useAddSeasonHeaders(loadouts: Loadout[], loadoutSort: LoadoutSort) {
   const defs = useD2Definitions()!;
   let loadoutRows: (Loadout | DestinySeasonDefinition)[] = loadouts;
   if (loadoutSort === LoadoutSort.ByEditTime) {
-    const seasons = Object.values(defs.Season.getAll()).sort(
-      (a, b) => b.seasonNumber - a.seasonNumber,
-    );
+    const seasons = Object.values(defs.Season.getAll())
+      .sort((a, b) => b.seasonNumber - a.seasonNumber)
+      .filter((s) => s.startDate);
 
     const grouped = Map.groupBy(
       loadouts,
       (loadout) =>
         seasons.find(
-          (s) =>
-            new Date(s.startDate ?? Date.now()).getTime() <= (loadout.lastUpdatedAt ?? Date.now()),
+          (s) => new Date(s.startDate!).getTime() <= (loadout.lastUpdatedAt ?? Date.now()),
         )!,
     );
 

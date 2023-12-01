@@ -22,7 +22,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { getManifest as d2GetManifest } from '../app/bungie-api/destiny2-api';
 import profile from './data/profile-2023-08-31.json';
-import vendors from './data/vendors-2023-05-24.json';
+import vendors from './data/vendors-2023-11-28.json';
 
 /**
  * Get the current manifest as JSON. Downloads the manifest if not cached.

@@ -317,6 +317,7 @@
     "UnlockAllFailed": "Error al desbloquear objetos",
     "UnlockAllSuccess": "Desbloqueados {{num}} objetos",
     "Vendor": "El objeto está disponible desde un comerciante específico.",
+    "VendorItem": "El objeto es de un comerciante, no está en tu inventario. Útil para excluir los objetos de un comerciante desde el Optimizador de Equipaciones.",
     "Weapon": "Muestra objetos que sean armas.",
     "WeaponLevel": "Muestra armas basadas en su Nivel de Arma.",
     "WeaponType": "Muestra las armas basadas en su tipo de arma.",

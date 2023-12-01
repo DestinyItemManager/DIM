@@ -1,5 +1,4 @@
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
@@ -17,7 +16,7 @@ import { DestinyLoadoutItemComponent } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { getSubclassPlugs } from '../item-utils';
+import { getSubclassPlugHashes } from '../item-utils';
 import { UNSET_PLUG_HASH } from '../known-values';
 
 /**
@@ -75,7 +74,6 @@ export const gameLoadoutCompatibleBuckets = [
  * and represent a full application of the DIM loadout's required mods?
  */
 export function implementsDimLoadout(
-  defs: D2ManifestDefinitions,
   inGameLoadout: InGameLoadout,
   dimResolvedLoadoutItems: ResolvedLoadoutItem[],
   resolvedMods: ResolvedLoadoutMod[],
@@ -124,11 +122,11 @@ export function implementsDimLoadout(
       (item) => item.itemInstanceId === dimSubclass.item.id,
     )!;
 
-    const dimSubclassPlugs = getSubclassPlugs(defs, dimSubclass);
-    for (const plug of dimSubclassPlugs) {
+    const dimSubclassPlugs = getSubclassPlugHashes(dimSubclass);
+    for (const { plugHash } of dimSubclassPlugs) {
       // We only check one direction as DIM subclasses can be partially complete by
       // design.
-      if (!inGameSubclass.plugItemHashes.includes(plug.plug.hash)) {
+      if (!inGameSubclass.plugItemHashes.includes(plugHash)) {
         return false;
       }
     }

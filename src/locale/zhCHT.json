@@ -317,6 +317,7 @@
     "UnlockAllFailed": "鎖定物品失敗",
     "UnlockAllSuccess": "已經解鎖{{num}} 物品",
     "Vendor": "物品可從特定的商販獲得。",
+    "VendorItem": "Item is from a vendor, not in your inventory. Useful for excluding vendor items from Loadout Optimizer.",
     "Weapon": "顯示武器物品。",
     "WeaponLevel": "按武器等級顯示武器。",
     "WeaponType": "按照武器類型顯示.",
