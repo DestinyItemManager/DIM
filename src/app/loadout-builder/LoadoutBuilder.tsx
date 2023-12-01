@@ -316,6 +316,8 @@ export default memo(function LoadoutBuilder({
         statRangesFiltered={result?.statRangesFiltered}
         lbDispatch={lbDispatch}
         equippedHashes={equippedHashes}
+        store={selectedStore}
+        className={styles.loadoutEditSection}
       />
       <EnergyOptions
         assumeArmorMasterwork={assumeArmorMasterwork}

@@ -10,6 +10,8 @@ import {
 import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
+import { DimStore } from 'app/inventory/store-types';
+import LoadoutEditSection from 'app/loadout/loadout-edit/LoadoutEditSection';
 import { useD2Definitions } from 'app/manifest/selectors';
 import {
   AppIcon,
@@ -26,25 +28,46 @@ import _ from 'lodash';
 import React, { Dispatch, useEffect, useRef } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorStatHashes, MinMax, ResolvedStatConstraint, StatRanges } from '../types';
+import { statTier } from '../utils';
 import styles from './StatConstraintEditor.m.scss';
 
 /**
  * A selector that allows for choosing minimum and maximum stat ranges, plus reordering the stat priority.
  */
 export default function StatConstraintEditor({
+  store,
   resolvedStatConstraints,
   statRangesFiltered,
   equippedHashes,
+  className,
   lbDispatch,
 }: {
+  store: DimStore;
   resolvedStatConstraints: ResolvedStatConstraint[];
   /** The ranges the stats could have gotten to INCLUDING stat filters and mod compatibility */
   statRangesFiltered?: Readonly<StatRanges>;
   equippedHashes: Set<number>;
+  className?: string;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
   const handleTierChange = (constraint: ResolvedStatConstraint) =>
     lbDispatch({ type: 'statConstraintChanged', constraint });
+
+  const handleClear = () => lbDispatch({ type: 'statConstraintReset' });
+
+  const handleRandomize = () => lbDispatch({ type: 'statConstraintRandomize' });
+
+  const handleSyncFromEquipped = () => {
+    const constraints = Object.values(store.stats).map(
+      (s): ResolvedStatConstraint => ({
+        statHash: s.hash,
+        ignored: false,
+        maxTier: 10,
+        minTier: statTier(s.value),
+      }),
+    );
+    lbDispatch({ type: 'setStatConstraints', constraints });
+  };
 
   const onDragEnd = (result: DropResult) => {
     // dropped outside the list
@@ -60,29 +83,37 @@ export default function StatConstraintEditor({
   };
 
   return (
-    <DragDropContext onDragEnd={onDragEnd} sensors={[useButtonSensor]}>
-      <Droppable droppableId="droppable">
-        {(provided) => (
-          <div ref={provided.innerRef}>
-            {resolvedStatConstraints.map((c, index) => {
-              const statHash = c.statHash as ArmorStatHashes;
-              return (
-                <StatRow
-                  key={statHash}
-                  statConstraint={c}
-                  index={index}
-                  statRange={statRangesFiltered?.[statHash]}
-                  onTierChange={handleTierChange}
-                  equippedHashes={equippedHashes}
-                />
-              );
-            })}
+    <LoadoutEditSection
+      title={t('LoadoutBuilder.StatConstraints')}
+      className={className}
+      onClear={handleClear}
+      onSyncFromEquipped={handleSyncFromEquipped}
+      onRandomize={handleRandomize}
+    >
+      <DragDropContext onDragEnd={onDragEnd} sensors={[useButtonSensor]}>
+        <Droppable droppableId="droppable">
+          {(provided) => (
+            <div ref={provided.innerRef} className={styles.editor}>
+              {resolvedStatConstraints.map((c, index) => {
+                const statHash = c.statHash as ArmorStatHashes;
+                return (
+                  <StatRow
+                    key={statHash}
+                    statConstraint={c}
+                    index={index}
+                    statRange={statRangesFiltered?.[statHash]}
+                    onTierChange={handleTierChange}
+                    equippedHashes={equippedHashes}
+                  />
+                );
+              })}
 
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-    </DragDropContext>
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+    </LoadoutEditSection>
   );
 }
 
