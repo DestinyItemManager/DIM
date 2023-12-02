@@ -337,7 +337,7 @@ function isModSelectable(
   const { plugCategoryHash, energyCost } = mod.plug;
   const isSlotSpecificCategory = slotSpecificPlugCategoryHashes.includes(plugCategoryHash);
 
-  // Check for wheather the selected mod stacks with itself.
+  // checks if the selected mod can stack with itself.
   for (const x of selected) {
     if (x === mod && unstackableModHashes.includes(x.hash)) {
       return false;
