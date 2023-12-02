@@ -1,5 +1,11 @@
 @use '../../variables' as *;
 
+.editor {
+  composes: flexColumn from '../../dim-ui/common.m.scss';
+  margin: 0 -4px -4px -4px;
+  gap: 2px;
+}
+
 .iconStat {
   display: inline-block;
   height: 17px;
@@ -11,7 +17,7 @@
   opacity: 0.5;
   font-size: 10px;
   padding-left: 10px;
-  padding-top: 8px;
+  padding-top: 4px;
   align-self: stretch;
   composes: flexRow from '../../dim-ui/common.m.scss';
   align-items: flex-start;
@@ -23,11 +29,11 @@
   grid-template-areas:
     'grip name buttons'
     'grip bar bar';
-  gap: 4px 4px;
-  margin-bottom: 2px;
-  background-color: black;
+  gap: 0 4px;
+  background-color: rgba(0, 0, 0, 0.6);
   align-items: center;
   padding: 4px 4px 4px 0;
+  font-size: 14px;
 
   > * {
     white-space: nowrap;
@@ -35,6 +41,7 @@
 
   &.ignored {
     grid-template-areas: 'grip name buttons';
+    background-color: rgba(0, 0, 0, 0.3);
   }
 }
 
@@ -64,7 +71,7 @@
 .statBar {
   grid-area: bar;
   composes: flexRow from '../../dim-ui/common.m.scss';
-  margin-left: 4px;
+  margin: 4px 0 2px 4px;
   gap: 2px;
 }
 
@@ -108,7 +115,7 @@
 
 .rowControl {
   composes: resetButton from '../../dim-ui/common.m.scss';
-  padding: 4px 6px;
+  padding: 0 6px;
   opacity: 0.9;
 
   .ignored &,

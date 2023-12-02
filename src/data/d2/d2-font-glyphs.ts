@@ -1,5 +1,4 @@
 export const enum FontGlyphs {
-  NULL = 0,
   CR = 13,
   space = 32,
   superscript_r = 876,
