@@ -866,7 +866,7 @@ export const symbolData: {
   },
 ];
 const translateManually = [57618, 57665, 57495, 57654, 57671] as const;
-export type TranslateManually = typeof translateManually[number];
+export type TranslateManually = (typeof translateManually)[number];
 
 /*
  * Could not find a source for (did the definitions disappear?):
