@@ -338,10 +338,8 @@ function isModSelectable(
   const isSlotSpecificCategory = slotSpecificPlugCategoryHashes.includes(plugCategoryHash);
 
   // checks if the selected mod can stack with itself.
-  for (const x of selected) {
-    if (x === mod && unstackableModHashes.includes(x.hash)) {
-      return false;
-    }
+  if (selected.includes(mod) && unstackableModHashes.includes(mod.hash)) {
+    return false;
   }
 
   // If there's an already selected mod that excludes this mod, we can't select this one
