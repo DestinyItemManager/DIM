@@ -112,5 +112,5 @@ export const normalToReducedMod: { [normalModHash: number]: number } = {
 };
 
 export const reducedToNormalMod: { [reducedModHash: number]: number } = Object.fromEntries(
-  Object.entries(normalToReducedMod).map(([normal, reduced]) => [reduced, parseInt(normal, 10)])
+  Object.entries(normalToReducedMod).map(([normal, reduced]) => [reduced, parseInt(normal, 10)]),
 );
