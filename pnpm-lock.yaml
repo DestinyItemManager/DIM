@@ -44,8 +44,8 @@ dependencies:
     specifier: ^7.84.0
     version: 7.84.0
   '@tanstack/react-virtual':
-    specifier: 3.0.0-beta.68
-    version: 3.0.0-beta.68(react-dom@18.2.0)(react@18.2.0)
+    specifier: 3.0.0
+    version: 3.0.0(react-dom@18.2.0)(react@18.2.0)
   '@textcomplete/core':
     specifier: ^0.1.12
     version: 0.1.12
@@ -2717,19 +2717,19 @@ packages:
       defer-to-connect: 2.0.1
     dev: true
 
-  /@tanstack/react-virtual@3.0.0-beta.68(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-YEFNCf+N3ZlNou2r4qnh+GscMe24foYEjTL05RS0ZHvah2RoUDPGuhnuedTv0z66dO2vIq6+Bl4TXatht5T7GQ==}
+  /@tanstack/react-virtual@3.0.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-QfZ1AUrF4AcFFFNrrQZmb8I8CuuK7GMLlLSFnz6FbM78LpauxfTi46E8dH5YhMge/Kc6D/h1zXacsIxZfWvSZA==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      '@tanstack/virtual-core': 3.0.0-beta.68
+      '@tanstack/virtual-core': 3.0.0
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /@tanstack/virtual-core@3.0.0-beta.68:
-    resolution: {integrity: sha512-CnvsEJWK7cugigckt13AeY80FMzH+OMdEP0j0bS3/zjs44NiRe49x8FZC6R9suRXGMVMXtUHet0zbTp/Ec9Wfg==}
+  /@tanstack/virtual-core@3.0.0:
+    resolution: {integrity: sha512-SYXOBTjJb05rXa2vl55TTwO40A6wKu0R5i1qQwhJYNDIqaIGF7D0HsLw+pJAyi2OvntlEIVusx3xtbbgSUi6zg==}
     dev: false
 
   /@testing-library/dom@9.3.3:
