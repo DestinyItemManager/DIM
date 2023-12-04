@@ -56,7 +56,7 @@ function CharacterPower({ stats }: { stats: PowerStat[] }) {
           )}
         >
           <div
-            className={clsx('stat', { pointerCursor: stat.onClick })}
+            className="stat"
             aria-label={`${stat.name} ${stat.value}`}
             role={stat.onClick ? 'button' : 'group'}
             onClick={stat.onClick}
@@ -174,7 +174,13 @@ function CharacterStats({
           key={stat.hash}
           tooltip={<StatTooltip stat={stat} equippedHashes={equippedHashes} />}
         >
-          <div className="stat" aria-label={`${stat.name} ${stat.value}`} role="group">
+          <div
+            className={clsx('stat', {
+              boostedValue: stat.breakdown?.some((change) => change.source === 'runtimeEffect'),
+            })}
+            aria-label={`${stat.name} ${stat.value}`}
+            role="group"
+          >
             <BungieImage src={stat.icon} alt={stat.name} />
             <div>{stat.value}</div>
           </div>
