@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import { powerLevelByKeyword } from 'app/search/d2-known-values';
+import { powerLevelByKeyword } from 'app/search/power-levels';
 import clsx from 'clsx';
 import styles from './powercaps.m.scss';
 

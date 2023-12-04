@@ -1,88 +1,64 @@
 import { languageSelector } from 'app/dim-api/selectors';
 import ExternalLink from 'app/dim-ui/ExternalLink';
+import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import { LoreLink } from 'app/item-popup/ItemDescription';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { getSocketsWithStyle, isWeaponMasterworkSocket } from 'app/utils/socket-utils';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import destinysets from 'images/destinysets.svg';
-import destinytracker from 'images/destinytracker.png';
 import logo from 'images/dimlogo.svg';
 import foundry from 'images/foundry.png';
+import ishtarLogo from 'images/ishtar-collective.svg';
 import lightgg from 'images/lightgg.png';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import styles from './Links.m.scss';
 
-// TODO: permalink for sharing
-const links = [
-  {
-    name: 'DIM',
-    icon: logo,
-    link: (item: DimItem) => `/armory/${item.hash}?perks=${buildSocketParam(item)}`,
-  },
-  {
-    name: 'Light.gg',
-    icon: lightgg,
-    link: (item: DimItem, language: string) =>
-      `https://www.light.gg/db/${language}/items/${item.hash}${buildLightGGSockets(item)}`,
-  },
-  { name: 'DestinyTracker', icon: destinytracker, link: destinyDBLink },
-  {
-    name: 'Foundry',
-    icon: foundry,
-    link: (item: DimItem) => `https://d2foundry.gg/w/${item.hash}${buildFoundrySockets(item)}`,
-    weaponsOnly: true,
-  },
-  {
-    name: 'data.destinysets.com',
-    icon: destinysets,
-    link: (item: DimItem, language: string) =>
-      `https://data.destinysets.com/i/InventoryItem:${item.hash}?lang=${language}`,
-    hideOnPhone: true,
-  },
-];
-
 export default function Links({ item }: { item: DimItem }) {
   const language = useSelector(languageSelector);
   const isPhonePortrait = useIsPhonePortrait();
+
+  const links = [
+    {
+      name: 'DIM',
+      icon: logo,
+      link: `/armory/${item.hash}?perks=${buildSocketParam(item)}`,
+    },
+    {
+      name: 'Light.gg',
+      icon: lightgg,
+      link: `https://www.light.gg/db/${language}/items/${item.hash}${buildLightGGSockets(item)}`,
+    },
+    item.bucket.inWeapons && {
+      name: 'D2Foundry',
+      icon: foundry,
+      link: `https://d2foundry.gg/w/${item.hash}${buildFoundrySockets(item)}`,
+    },
+    !isPhonePortrait && {
+      name: 'data.destinysets.com',
+      icon: destinysets,
+      link: `https://data.destinysets.com/i/InventoryItem:${item.hash}?lang=${language}`,
+    },
+    item.loreHash && {
+      name: t('MovePopup.ReadLoreLink'),
+      icon: ishtarLogo,
+      link: `http://www.ishtar-collective.net/entries/${item.loreHash}`,
+    },
+  ];
+
   return (
     <ul className={styles.links}>
-      {links.map(
-        ({ link, name, icon, hideOnPhone, weaponsOnly }) =>
-          (!weaponsOnly || item.bucket.inWeapons) &&
-          !(isPhonePortrait && hideOnPhone) && (
-            <li key={name}>
-              <ExternalLink href={link(item, language)}>
-                <img src={icon} height={16} width={16} />
-                {name}
-              </ExternalLink>
-            </li>
-          )
-      )}
-      {item.loreHash !== undefined && (
-        <li>
-          <LoreLink loreHash={item.loreHash} />
+      {_.compact(links).map(({ link, name, icon }) => (
+        <li key={name}>
+          <ExternalLink href={link}>
+            <img src={icon} height={16} width={16} />
+            {name}
+          </ExternalLink>
         </li>
-      )}
+      ))}
     </ul>
   );
-}
-
-function destinyDBLink(item: DimItem) {
-  const DimItem = item;
-  let perkQueryString = '';
-
-  if (DimItem) {
-    const perkCsv = buildSocketParam(DimItem);
-    // to-do: if buildPerksCsv typing is correct, and can only return a string, lines 142-150 could be a single line
-    if (perkCsv?.length) {
-      perkQueryString = `?perks=${perkCsv}`;
-    }
-  }
-
-  return `https://destinytracker.com/destiny-2/db/items/${item.hash}${perkQueryString}`;
 }
 
 /**
@@ -146,7 +122,7 @@ function buildFoundrySockets(item: DimItem) {
  * Gathers general socket information for link generation in D2Gunsmith and Light.gg.
  */
 function getWeaponSocketInfo(
-  item: DimItem
+  item: DimItem,
 ): null | { traits: number[]; originTrait: number; masterwork: number; weaponMod: number } {
   if (item.sockets && item.bucket?.inWeapons) {
     const traits: number[] = [0, 0, 0, 0];
@@ -161,7 +137,7 @@ function getWeaponSocketInfo(
 
     const origin = item.sockets.allSockets.find(
       (s) =>
-        s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsOriginTraits)
+        s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsOriginTraits),
     );
     const originTrait = origin?.plugged!.plugDef.hash ?? 0;
 
@@ -174,7 +150,7 @@ function getWeaponSocketInfo(
         : masterworkSocket?.plugged?.plugDef.hash ?? 0;
 
     const weaponModSocket = item.sockets.allSockets.find(
-      (s) => s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsDamage)
+      (s) => s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsDamage),
     );
     const weaponMod = weaponModSocket?.plugged!.plugDef.hash ?? 0;
 

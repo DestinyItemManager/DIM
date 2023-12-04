@@ -41,37 +41,58 @@ export function symbolize(combo: string) {
 }
 
 export interface Hotkey {
+  /** The actual hotkey combo, like "shift+p" */
   combo: string;
+  /** A description that'll be shown on the hotkey help screen. */
   description: string;
+  /** What to do when the hotkey is triggered. */
   callback: (event: KeyboardEvent) => void;
 }
 
 // Each key combo can have many hotkey implementations bound to it, but only the
 // last one in the array gets triggered.
-const keyMap: { [combo: string]: Hotkey[] } = {};
+const keyMap: { [combo: string]: (Hotkey & { id: string })[] } = {};
+
+export function clearAllHotkeysForTest() {
+  for (const key of Object.keys(keyMap)) {
+    delete keyMap[key];
+  }
+}
 
 /**
- * Add a new set of hotkeys. Returns an unregister function that can be used to
- * remove these bindings.
+ * Add a new set of hotkeys. The id parameter allows us to preserve this hotkey
+ * in the stack of bindings for the hotkey even when repeatedly registered - use
+ * the useId hook to generate a stable ID for a component to use for this. Call
+ * removeHotkeysById when a component is unmounted or the hotkey is disabled.
  */
-export function registerHotkeys(hotkeys: Hotkey[]) {
+export function registerHotkeys(id: string, hotkeys: Hotkey[]) {
   if (!hotkeys?.length) {
     return noop;
   }
   for (const hotkey of hotkeys) {
-    bind(hotkey);
+    bind(id, hotkey);
   }
-  return () => {
-    for (const hotkey of hotkeys) {
-      unbind(hotkey);
+}
+
+/**
+ * Remove bound hotkeys from the stack by id. This should be the same ID the
+ * hotkey was registered under. Pass combo if you know it to speed up removal.
+ */
+export function removeHotkeysById(id: string, combo?: string) {
+  if (combo) {
+    unbind(id, combo);
+  } else {
+    // Look for the ID in every combo
+    for (const combo of Object.keys(keyMap)) {
+      unbind(id, combo);
     }
-  };
+  }
 }
 
 export function getAllHotkeys() {
   const combos: { [combo: string]: string } = {};
   for (const hotkeyList of Object.values(keyMap)) {
-    const hotkey = hotkeyList[hotkeyList.length - 1];
+    const hotkey = hotkeyList.at(-1)!;
     const combo = symbolize(hotkey.combo);
     combos[combo] = hotkey.description;
   }
@@ -87,14 +108,22 @@ function normalizeCombo(combo: string) {
     .join('+');
 }
 
-function bind(hotkey: Hotkey) {
-  (keyMap[normalizeCombo(hotkey.combo)] ??= []).push(hotkey);
+function bind(id: string, hotkey: Hotkey) {
+  const keys = (keyMap[normalizeCombo(hotkey.combo)] ??= []);
+  // Replace existing hotkeys in the same place in the stack, so re-renders
+  // don't pop the hotkey to the top.
+  const existingIndex = keys.findIndex((h) => h.id === id);
+  if (existingIndex >= 0) {
+    keys[existingIndex] = { ...hotkey, id };
+  } else {
+    keys.push({ ...hotkey, id });
+  }
 }
 
-function unbind(hotkey: Hotkey) {
-  const normalizedCombo = normalizeCombo(hotkey.combo);
+function unbind(id: string, combo: string) {
+  const normalizedCombo = normalizeCombo(combo);
   const hotkeysForCombo = keyMap[normalizedCombo];
-  const existingIndex = hotkeysForCombo.indexOf(hotkey);
+  const existingIndex = hotkeysForCombo.findIndex((h) => h.id === id);
   if (existingIndex >= 0) {
     hotkeysForCombo.splice(existingIndex, 1);
   }
@@ -199,7 +228,7 @@ function trigger(comboStr: string, e: KeyboardEvent) {
   const callbacks = keyMap[comboStr];
   if (callbacks) {
     // Only call the last callback registered for this combo.
-    callbacks[callbacks.length - 1].callback(e);
+    callbacks.at(-1)?.callback(e);
     e.preventDefault();
     return true;
   }

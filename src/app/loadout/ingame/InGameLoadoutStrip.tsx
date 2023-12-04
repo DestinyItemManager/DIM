@@ -32,7 +32,7 @@ export function InGameLoadoutStrip({
 }) {
   const selectedStoreId = store.id;
   const inGameLoadoutInfos = useSelector((state: RootState) =>
-    inGameLoadoutsWithMetadataSelector(state, selectedStoreId)
+    inGameLoadoutsWithMetadataSelector(state, selectedStoreId),
   );
 
   if (!inGameLoadoutInfos.length) {
@@ -146,7 +146,7 @@ function InGameLoadoutTile({
             </li>
           ))}
         </ul>
-      </React.Fragment>
+      </React.Fragment>,
     );
   }
   if (isEquipped) {
@@ -155,7 +155,7 @@ function InGameLoadoutTile({
         {tooltipContent.length > 1 && <hr />}
         <AppIcon icon={faCheckCircle} className={clsx(styles.statusAppIcon, styles.equipAlready)} />
         <span> {t('InGameLoadout.CurrentlyEquipped')}</span>
-      </React.Fragment>
+      </React.Fragment>,
     );
   } else {
     tooltipContent.push(
@@ -169,7 +169,7 @@ function InGameLoadoutTile({
           {' '}
           {isEquippable ? t('InGameLoadout.EquipReady') : t('InGameLoadout.EquipNotReady')}
         </span>
-      </React.Fragment>
+      </React.Fragment>,
     );
   }
 
@@ -191,7 +191,7 @@ function InGameLoadoutTile({
             icon={isEquipped || isEquippable ? faCheckCircle : faExclamationCircle}
             className={clsx(
               styles.statusAppIcon,
-              isEquipped ? styles.equipAlready : isEquippable ? styles.equipOk : styles.equipNok
+              isEquipped ? styles.equipAlready : isEquippable ? styles.equipOk : styles.equipNok,
             )}
           />
           {matchingLoadouts.length > 0 && (

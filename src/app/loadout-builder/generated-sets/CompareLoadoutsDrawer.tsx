@@ -20,7 +20,7 @@ import styles from './CompareLoadoutsDrawer.m.scss';
 function chooseInitialLoadout(
   setItems: DimItem[],
   useableLoadouts: Loadout[],
-  initialLoadoutId?: string
+  initialLoadoutId?: string,
 ) {
   // Most of all, try to find the loadout we started with
   const loadoutFromInitialId = useableLoadouts.find((lo) => lo.id === initialLoadoutId);
@@ -62,13 +62,13 @@ export default function CompareLoadoutsDrawer({
   const { set, items } = compareSet;
 
   const [selectedLoadout, setSelectedLoadout] = useState(() =>
-    chooseInitialLoadout(items, loadouts, loadout.id)
+    chooseInitialLoadout(items, loadouts, loadout.id),
   );
 
   // This probably isn't needed but I am being cautious as it iterates over the stores.
   const generatedLoadout = useMemo(
     () => mergeLoadout(defs, selectedLoadout, loadout, set, items, lockedMods),
-    [defs, selectedLoadout, loadout, set, items, lockedMods]
+    [defs, selectedLoadout, loadout, set, items, lockedMods],
   );
 
   const [confirmDialog, confirm] = useConfirm();
@@ -99,7 +99,7 @@ export default function CompareLoadoutsDrawer({
         value: l,
         content: l.name,
       })),
-    [loadouts]
+    [loadouts],
   );
 
   // This is likely never to happen but since it is disconnected to the button its here for safety.

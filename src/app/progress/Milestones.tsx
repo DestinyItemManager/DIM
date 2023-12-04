@@ -5,8 +5,8 @@ import { DimStore } from 'app/inventory/store-types';
 import { powerLevelSelector } from 'app/inventory/store/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
+import { uniqBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
-import { uniqBy } from 'app/utils/util';
 import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
@@ -39,7 +39,7 @@ export default function Milestones({
   const profileMilestones = milestonesForProfile(defs, profileInfo, store.id);
   const characterProgressions = getCharacterProgressions(profileInfo, store.id);
   const maxGearPower = useSelector(
-    (state: RootState) => powerLevelSelector(state, store.id)?.maxGearPower
+    (state: RootState) => powerLevelSelector(state, store.id)?.maxGearPower,
   );
   const season = profileInfo.profile?.data?.currentSeasonHash
     ? defs.Season.get(profileInfo.profile.data.currentSeasonHash)
@@ -50,10 +50,10 @@ export default function Milestones({
 
   const milestoneItems = uniqBy(
     [...milestonesForCharacter(defs, profileInfo, store), ...profileMilestones],
-    (m) => m.milestoneHash
+    (m) => m.milestoneHash,
   ).flatMap((milestone) => milestoneToItems(milestone, defs, buckets, store));
 
-  const milestonesByPower = _.groupBy(milestoneItems, (m) => {
+  const milestonesByPower = Map.groupBy(milestoneItems, (m) => {
     for (const reward of m.pursuit?.rewards ?? []) {
       const powerBonus = getEngramPowerBonus(reward.itemHash, maxGearPower, m.hash);
       if (powerBonus !== undefined) {
@@ -62,9 +62,7 @@ export default function Milestones({
     }
   });
 
-  const sortPowerBonus = compareBy(
-    (powerBonus: string) => -(powerBonus === 'undefined' ? -1 : parseInt(powerBonus, 10))
-  );
+  const sortPowerBonus = compareBy((powerBonus: number | undefined) => -(powerBonus ?? -1));
 
   return (
     <>
@@ -85,22 +83,23 @@ export default function Milestones({
           <PowerCaps />
         </PursuitGrid>
       )}
-      {Object.keys(milestonesByPower)
-        .sort(sortPowerBonus)
-        .map((powerBonus) => (
-          <div key={powerBonus}>
-            <h2 className={styles.header}>
-              {powerBonus === 'undefined'
-                ? t('Progress.PowerBonusHeaderUndefined')
-                : t('Progress.PowerBonusHeader', { powerBonus })}
-            </h2>
-            <PursuitGrid>
-              {milestonesByPower[powerBonus].sort(sortPursuits).map((item) => (
+      {[...milestonesByPower.keys()].sort(sortPowerBonus).map((powerBonus) => (
+        <div key={powerBonus}>
+          <h2 className={styles.header}>
+            {powerBonus === undefined
+              ? t('Progress.PowerBonusHeaderUndefined')
+              : t('Progress.PowerBonusHeader', { powerBonus })}
+          </h2>
+          <PursuitGrid>
+            {milestonesByPower
+              .get(powerBonus)!
+              .sort(sortPursuits)
+              .map((item) => (
                 <Pursuit key={item.hash} item={item} />
               ))}
-            </PursuitGrid>
-          </div>
-        ))}
+          </PursuitGrid>
+        </div>
+      ))}
     </>
   );
 }
@@ -112,7 +111,7 @@ export default function Milestones({
 function milestonesForProfile(
   defs: D2ManifestDefinitions,
   profileInfo: DestinyProfileResponse,
-  characterId: string
+  characterId: string,
 ): DestinyMilestone[] {
   const profileMilestoneData = profileInfo.characterProgressions?.data?.[characterId]?.milestones;
   const allMilestones: DestinyMilestone[] = profileMilestoneData
@@ -124,7 +123,7 @@ function milestonesForProfile(
       !milestone.availableQuests &&
       !milestone.activities &&
       (!milestone.vendors || milestone.rewards) &&
-      defs.Milestone.get(milestone.milestoneHash)
+      defs.Milestone.get(milestone.milestoneHash),
   );
 
   return _.sortBy(filteredMilestones, (milestone) => milestone.order);
@@ -136,7 +135,7 @@ function milestonesForProfile(
 function milestonesForCharacter(
   defs: D2ManifestDefinitions,
   profileInfo: DestinyProfileResponse,
-  character: DimStore
+  character: DimStore,
 ): DestinyMilestone[] {
   const characterMilestoneData = getCharacterProgressions(profileInfo, character.id)?.milestones;
   const allMilestones: DestinyMilestone[] = characterMilestoneData
@@ -154,7 +153,7 @@ function milestonesForCharacter(
           (q) =>
             q.status.stepObjectives.length > 0 &&
             q.status.started &&
-            (!q.status.completed || !q.status.redeemed)
+            (!q.status.completed || !q.status.redeemed),
         ))
     );
   });

@@ -2,9 +2,6 @@ import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D1Character, D1StatLabel } from 'app/destiny1/d1-manifest-types';
 import { warnLog } from 'app/utils/log';
 import { StatHashes } from 'data/d2/generated-enums';
-import disciplineIcon from 'images/discipline.png';
-import intellectIcon from 'images/intellect.png';
-import strengthIcon from 'images/strength.png';
 import { DimCharacterStat } from '../store-types';
 
 // Cooldowns
@@ -28,27 +25,27 @@ export function getBonus(light: number, type: string): number {
       return light < 287
         ? 20
         : light < 300
-        ? 21
-        : light < 310
-        ? 22
-        : light < 319
-        ? 23
-        : light < 328
-        ? 24
-        : 25;
+          ? 21
+          : light < 310
+            ? 22
+            : light < 319
+              ? 23
+              : light < 328
+                ? 24
+                : 25;
     case 'leg':
     case 'leg armor':
       return light < 284
         ? 18
         : light < 298
-        ? 19
-        : light < 309
-        ? 20
-        : light < 319
-        ? 21
-        : light < 329
-        ? 22
-        : 23;
+          ? 19
+          : light < 309
+            ? 20
+            : light < 319
+              ? 21
+              : light < 329
+                ? 22
+                : 23;
     case 'classitem':
     case 'class items':
     case 'ghost':
@@ -59,22 +56,22 @@ export function getBonus(light: number, type: string): number {
       return light < 287
         ? 34
         : light < 295
-        ? 35
-        : light < 302
-        ? 36
-        : light < 308
-        ? 37
-        : light < 314
-        ? 38
-        : light < 319
-        ? 39
-        : light < 325
-        ? 40
-        : light < 330
-        ? 41
-        : light < 336
-        ? 42
-        : 43;
+          ? 35
+          : light < 302
+            ? 36
+            : light < 308
+              ? 37
+              : light < 314
+                ? 38
+                : light < 319
+                  ? 39
+                  : light < 325
+                    ? 40
+                    : light < 330
+                      ? 41
+                      : light < 336
+                        ? 42
+                        : 43;
   }
   warnLog('getBonus', 'item bonus not found', type);
   return 0;
@@ -107,7 +104,7 @@ const stats: D1StatLabel[] = [
  */
 export function getCharacterStatsData(
   defs: D1ManifestDefinitions,
-  data: D1Character['characterBase']
+  data: D1Character['characterBase'],
 ) {
   const ret: { [statHash: string]: DimCharacterStat } = {};
   for (const statId of stats) {
@@ -121,20 +118,21 @@ export function getCharacterStatsData(
       value: rawStat.value,
       name: '',
       description: '',
+      icon: '',
     };
 
     switch (statId) {
       case 'STAT_INTELLECT':
         stat.effect = 'Super';
-        stat.icon = intellectIcon;
+        stat.icon = defs.Stat.get(StatHashes.Intellect).icon;
         break;
       case 'STAT_DISCIPLINE':
         stat.effect = 'Grenade';
-        stat.icon = disciplineIcon;
+        stat.icon = defs.Stat.get(StatHashes.Discipline).icon;
         break;
       case 'STAT_STRENGTH':
         stat.effect = 'Melee';
-        stat.icon = strengthIcon;
+        stat.icon = defs.Stat.get(StatHashes.Strength).icon;
         break;
       default:
         break;

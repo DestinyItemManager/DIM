@@ -67,7 +67,7 @@ export function StoreBuckets({
             postmasterAlmostFull(store),
         })}
       >
-        {(!store.isVault || bucket.vaultBucket) && (
+        {(!store.isVault || bucket.vaultBucket || bucket.inPostmaster) && (
           <StoreBucket bucket={bucket} store={store} singleCharacter={singleCharacter} />
         )}
         {bucket.hash === BucketHashes.LostItems &&
@@ -84,7 +84,7 @@ export function StoreBuckets({
       className={clsx('store-row', `bucket-${bucket.hash}`, { 'account-wide': bucket.accountWide })}
     >
       {labels && (
-        <div className={clsx(styles.bucketLabel)}>
+        <div className={styles.bucketLabel}>
           {bucket.name}
           {checkPostmaster && (
             <span>

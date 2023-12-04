@@ -3,12 +3,13 @@
 // These classes are used in item-picker, mod-picker, exotic-picker and search results
 
 .item-picker {
-  .sheet-contents > div {
-    padding: 8px;
-  }
   .item {
     cursor: pointer;
   }
+}
+
+.item-picker-grid {
+  padding: 8px;
 }
 
 .item-picker-item {

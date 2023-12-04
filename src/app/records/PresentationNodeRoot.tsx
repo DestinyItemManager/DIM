@@ -7,7 +7,11 @@ import { useSelector } from 'react-redux';
 import PresentationNode from './PresentationNode';
 import styles from './PresentationNodeRoot.m.scss';
 import PresentationNodeSearchResults from './PresentationNodeSearchResults';
-import { filterPresentationNodesToSearch, toPresentationNodeTree } from './presentation-nodes';
+import {
+  filterPresentationNodesToSearch,
+  hideCompletedRecords,
+  toPresentationNodeTree,
+} from './presentation-nodes';
 
 interface Props {
   presentationNodeHash: number;
@@ -65,15 +69,23 @@ export default function PresentationNodeRoot({
 
   const currentStore = useSelector(currentStoreSelector);
 
-  const nodeTree = useMemo(
+  const unfilteredNodeTree = useMemo(
     () =>
       toPresentationNodeTree(
         itemCreationContext,
         presentationNodeHash,
         showPlugSets ? plugSetCollections : [],
-        currentStore?.genderHash
+        currentStore?.genderHash,
       ),
-    [itemCreationContext, presentationNodeHash, showPlugSets, currentStore?.genderHash]
+    [itemCreationContext, presentationNodeHash, showPlugSets, currentStore?.genderHash],
+  );
+
+  const nodeTree = useMemo(
+    () =>
+      unfilteredNodeTree && completedRecordsHidden
+        ? hideCompletedRecords(unfilteredNodeTree)
+        : unfilteredNodeTree,
+    [completedRecordsHidden, unfilteredNodeTree],
   );
 
   if (!nodeTree) {
@@ -85,9 +97,8 @@ export default function PresentationNodeRoot({
       nodeTree,
       searchQuery.toLowerCase(),
       searchFilter,
-      Boolean(completedRecordsHidden),
       undefined,
-      defs
+      defs,
     );
 
     return (

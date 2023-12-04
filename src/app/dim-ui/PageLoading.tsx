@@ -1,13 +1,12 @@
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
 import { Orchestration, Tween, Variants, motion } from 'framer-motion';
-import _ from 'lodash';
 import { useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { Loading } from './Loading';
 import styles from './PageLoading.m.scss';
 
-const messageSelector = (state: RootState) => _.last(state.shell.loadingMessages);
+const messageSelector = (state: RootState) => state.shell.loadingMessages.at(-1);
 
 const animateVariants: Variants = {
   initial: { opacity: 0 },

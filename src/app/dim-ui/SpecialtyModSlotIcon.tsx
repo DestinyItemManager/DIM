@@ -48,7 +48,7 @@ export function SpecialtyModSlotIcon({
               style={bungieBackgroundStyleAdvanced(
                 emptySlotItem.displayProperties.icon,
                 'linear-gradient(#000b, #000b)', // forced dark background to help w/ visibility
-                2
+                2,
               )}
             />
           </PressTip>

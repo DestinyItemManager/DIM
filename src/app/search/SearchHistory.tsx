@@ -73,8 +73,8 @@ export default function SearchHistory() {
     ...columnSorts.map((sort) =>
       sort.sort === SortDirection.DESC
         ? reverseComparator(comparatorFor(sort.columnId))
-        : comparatorFor(sort.columnId)
-    )
+        : comparatorFor(sort.columnId),
+    ),
   );
 
   return (

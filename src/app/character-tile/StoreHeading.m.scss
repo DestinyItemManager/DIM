@@ -9,27 +9,26 @@
 }
 
 .loadoutMenu {
-  position: absolute;
+  composes: visibleScrollbars from '../dim-ui/common.m.scss';
+  position: fixed;
+  inset: 0 auto auto 0;
+  margin: 0;
   width: 300px;
   box-sizing: border-box;
   max-height: calc(var(--viewport-height) - var(--header-height) - #{62px + 16px});
-  overflow: auto;
-  z-index: 2;
+  overflow: hidden;
   color: rgba(245, 245, 245, 0.6);
   overscroll-behavior: contain;
   background-color: var(--theme-dropdown-menu-bg);
-
-  @include visible-scrollbars;
+  will-change: transform;
 
   [role='button'] {
     outline: none;
   }
 
   // The phone layout version
-  :global(.detached) & {
+  @include phone-portrait {
     position: fixed;
-    top: calc(54px + var(--header-height));
-    z-index: 1000;
     width: 100vw;
     padding: 0;
     max-height: calc(

@@ -67,7 +67,20 @@ export default function ClarityCharacterStat({
 
     // Apply cooldown overrides based on equipped items.
     for (const o of applicableOverrides) {
-      const abilityIndex = o.Requirements.indexOf(a.Hash);
+      const abilityIndex = (() => {
+        const abilityIndex = o.Requirements.indexOf(a.Hash);
+        if (abilityIndex !== -1) {
+          return abilityIndex;
+        }
+        const subclassIdx = o.Requirements.findIndex((r) => r < 0 && equippedHashes.has(-r));
+        if (subclassIdx !== -1) {
+          return subclassIdx;
+        }
+        if (o.Requirements.length === 1 && o.Requirements[0] === 0) {
+          return 0;
+        }
+        return -1;
+      })();
       if (abilityIndex !== -1) {
         if (o.CooldownOverride?.some((v) => v > 0)) {
           cooldowns = o.CooldownOverride;
@@ -90,69 +103,63 @@ export default function ClarityCharacterStat({
 
   // Cooldowns that are not about some specific ability
   const intrinsicCooldowns: JSX.Element[] = [];
-  const regenArray =
-    'TimeToFullHP' in clarityStatData
-      ? clarityStatData.TimeToFullHP
-      : 'TotalRegenTime' in clarityStatData
-      ? clarityStatData.TotalRegenTime
-      : undefined;
-  if (regenArray !== undefined) {
+  if ('TotalRegenTime' in clarityStatData) {
     intrinsicCooldowns.push(
       <StatTableRow
         key="TimeToFullHP"
         name={t('Stats.TimeToFullHP')}
-        cooldowns={regenArray}
+        cooldowns={clarityStatData.TotalRegenTime.Array}
         tier={tier}
         unit="s"
-      />
+      />,
     );
-  } else if ('WalkingSpeed' in clarityStatData) {
+  } else if ('WalkSpeed' in clarityStatData) {
     intrinsicCooldowns.push(
       <StatTableRow
         key="WalkingSpeed"
         name={t('Stats.WalkingSpeed')}
-        cooldowns={clarityStatData.WalkingSpeed}
+        cooldowns={clarityStatData.WalkSpeed.Array}
         tier={tier}
         unit={t('Stats.MetersPerSecond')}
       />,
       <StatTableRow
         key="StrafingSpeed"
         name={t('Stats.StrafingSpeed')}
-        cooldowns={clarityStatData.StrafeSpeed}
+        cooldowns={clarityStatData.StrafeSpeed.Array}
         tier={tier}
         unit={t('Stats.MetersPerSecond')}
       />,
       <StatTableRow
         key="CrouchingSpeed"
         name={t('Stats.CrouchingSpeed')}
-        cooldowns={clarityStatData.CrouchSpeed}
+        cooldowns={clarityStatData.CrouchSpeed.Array}
         tier={tier}
         unit={t('Stats.MetersPerSecond')}
-      />
+      />,
     );
   } else if ('TotalHP' in clarityStatData) {
     intrinsicCooldowns.push(
       <StatTableRow
         key="TotalHP"
         name={t('Stats.TotalHP')}
-        cooldowns={clarityStatData.TotalHP}
+        cooldowns={clarityStatData.TotalHP.Array}
         tier={tier}
         unit={t('Stats.HP')}
       />,
       <StatTableRow
         key="DamageResistance"
         name={t('Stats.DamageResistance')}
-        cooldowns={clarityStatData.DamageResistance}
+        cooldowns={clarityStatData.PvEDamageResistance.Array}
         tier={tier}
         unit={t('Stats.Percentage')}
       />,
       <StatTableRow
         key="FlinchResistance"
         name={t('Stats.FlinchResistance')}
-        cooldowns={clarityStatData.FlinchResistance}
+        cooldowns={clarityStatData.FlinchResistance.Array}
         tier={tier}
         unit={t('Stats.Percentage')}
-      />
+      />,
     );
   }
 

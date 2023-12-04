@@ -1,0 +1,14 @@
+@use '../variables.scss' as *;
+
+.deepsightHarmonizerIcon {
+  flex-grow: 1;
+  max-width: fit-content;
+
+  img {
+    display: block;
+    width: 15px;
+    height: 15px;
+    border: 1px solid #999;
+    margin-right: 4px;
+  }
+}

@@ -1,0 +1,43 @@
+.classType {
+  margin-left: 10px;
+}
+
+.classIcon {
+  height: 24px;
+  vertical-align: middle;
+}
+
+.records {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.record {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  box-sizing: border-box;
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #666;
+
+  > h3 {
+    margin: 0 0 5px 0;
+  }
+}
+
+.ornaments {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.redeemed {
+  border-color: var(--theme-record-redeemed);
+  background: transparent;
+  > h3 {
+    color: var(--theme-record-redeemed);
+  }
+}

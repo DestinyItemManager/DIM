@@ -1,6 +1,5 @@
 import { AssumeArmorMasterwork, StatConstraint } from '@destinyitemmanager/dim-api-types';
 import { DimCharacterStat } from 'app/inventory/store-types';
-import { armorBuckets } from 'app/search/d2-known-values';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import { ProcessItem } from './process-worker/types';
@@ -72,12 +71,12 @@ export type ItemGroup = Readonly<{
 /**
  * Bucket lookup, also used for ordering of the buckets.
  */
-export const LockableBuckets = armorBuckets as {
-  helmet: LockableBucketHash;
-  gauntlets: LockableBucketHash;
-  chest: LockableBucketHash;
-  leg: LockableBucketHash;
-  classitem: LockableBucketHash;
+export const LockableBuckets = {
+  helmet: BucketHashes.Helmet as LockableBucketHash,
+  gauntlets: BucketHashes.Gauntlets as LockableBucketHash,
+  chest: BucketHashes.ChestArmor as LockableBucketHash,
+  leg: BucketHashes.LegArmor as LockableBucketHash,
+  classitem: BucketHashes.ClassArmor as LockableBucketHash,
 };
 
 export type LockableBucketHash =
@@ -138,7 +137,7 @@ export const LOCKED_EXOTIC_ANY_EXOTIC = -2;
 /**
  * The minimum armour energy value used in the LO Builder
  */
-export const MIN_LO_ITEM_ENERGY = 7;
+export const MIN_LO_ITEM_ENERGY = 9;
 /**
  * The armor energy rules that Loadout Optimizer uses by default.
  * Requires a reasonable and inexpensive amount of upgrade materials.

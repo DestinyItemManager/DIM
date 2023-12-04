@@ -19,13 +19,11 @@ import {
 export default function PresentationNodeLeaf({
   node,
   ownedItemHashes,
-  completedRecordsHidden,
   redactedRecordsRevealed,
   sortRecordProgression,
 }: {
   node: DimPresentationNodeLeaf;
   ownedItemHashes?: Set<number>;
-  completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
   sortRecordProgression: boolean;
 }) {
@@ -40,7 +38,7 @@ export default function PresentationNodeLeaf({
                 collectible={collectible}
                 owned={Boolean(ownedItemHashes?.has(collectible.item.hash))}
               />
-            )
+            ),
           )}
         </CollectiblesGrid>
       )}
@@ -48,7 +46,6 @@ export default function PresentationNodeLeaf({
       {node.records && node.records.length > 0 && (
         <RecordGrid
           records={sortRecordProgression ? sortRecords(node.records) : node.records}
-          completedRecordsHidden={completedRecordsHidden}
           redactedRecordsRevealed={redactedRecordsRevealed}
         />
       )}
@@ -84,7 +81,7 @@ function sortRecords(records: DimRecord[]): DimRecord[] {
       record.recordComponent.state & DestinyRecordState.CanEquipTitle ||
       !record.recordComponent.state
     ) {
-      return -1;
+      return 1;
     }
 
     // check which key is used to track progress
@@ -103,8 +100,8 @@ function sortRecords(records: DimRecord[]): DimRecord[] {
     for (const x of objectives) {
       totalProgress += Math.min(1, x.progress! / x.completionValue);
     }
-    return totalProgress / objectives.length;
-  }).reverse();
+    return -(totalProgress / objectives.length);
+  });
 }
 
 function sortCollectibles(collectibles: DimCollectible[]): DimCollectible[] {
@@ -120,8 +117,8 @@ function sortMetrics(metrics: DimMetric[]): DimMetric[] {
   return sortBy(metrics, (metric) => {
     const objectives = metric.metricComponent.objectiveProgress;
     if (objectives.complete) {
-      return -1;
+      return 1;
     }
-    return objectives.progress! / objectives.completionValue;
-  }).reverse();
+    return -(objectives.progress! / objectives.completionValue);
+  });
 }

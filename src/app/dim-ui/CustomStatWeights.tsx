@@ -3,8 +3,8 @@ import { customStatsSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
-import { addDividers } from 'app/utils/react-utils';
-import { filterMap } from 'app/utils/util';
+import { filterMap } from 'app/utils/collections';
+import { addDividers } from 'app/utils/react';
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 import styles from './CustomStatWeights.m.scss';
@@ -61,7 +61,7 @@ export function CustomStatWeightsDisplay({
             </span>
           );
         }),
-        <span className={styles.divider} />
+        <span className={styles.divider} />,
       )}
     </div>
   );

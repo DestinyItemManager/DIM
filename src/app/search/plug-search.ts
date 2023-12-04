@@ -6,7 +6,7 @@ import { startWordRegexp } from './search-filters/freeform';
 export function createPlugSearchPredicate(
   query: string,
   language: DimLanguage,
-  defs: D2ManifestDefinitions
+  defs: D2ManifestDefinitions,
 ) {
   if (!query.length) {
     return (_plug: PluggableInventoryItemDefinition) => true;

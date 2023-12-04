@@ -11,44 +11,24 @@
 .menuContent {
   box-sizing: border-box;
 
-  @include phone-portrait {
-    padding: 0 10px;
-  }
-
   > div {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-  }
-}
-
-.processing {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: black;
-  font-size: 1.2em;
-  padding: 10px 10px;
-  position: fixed;
-  left: 50%;
-
-  @include below-header;
-
-  white-space: nowrap;
-  z-index: 10;
-
-  > div {
-    margin-right: 8px;
-  }
-
-  > span {
-    font-size: 1.4em;
+    gap: 8px;
   }
 
   @include phone-portrait {
-    left: 0;
-    width: 100%;
+    > div > div {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 0 10px;
+    }
   }
+}
+
+.wide {
+  --page-with-menu-menu-width: 320px !important;
 }
 
 .toolbar {
@@ -56,11 +36,11 @@
   flex-flow: row wrap;
   align-items: center;
   box-sizing: border-box;
+  gap: 4px 1em;
 
   @include phone-portrait {
     padding: 0 10px;
   }
-  gap: 4px;
 }
 
 .guide {
@@ -83,16 +63,63 @@
   display: flex;
   flex-direction: row;
   margin: 6px 0;
+  gap: 4px;
 
   > * {
     flex: 1;
   }
-  gap: 4px;
 }
 
 .speedReport {
-  font-size: 11px;
   user-select: text;
-  display: inline;
-  margin-left: 1em;
+  flex: 1;
+  > :global(.app-icon) {
+    margin-right: 0.5em;
+  }
+}
+
+// Style for sections borrowed from LoadoutEdit
+.loadoutEditSection {
+  font-size: 12px; // reset from where PageWithMenu sets it to 14px
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 8px;
+  gap: 0;
+  // Fit 7 mods across, regardless of what the user's item size is
+  --item-size: 50px;
+}
+
+.subclassSection {
+  composes: loadoutEditSection;
+  // Adjust these down a bit
+  --item-size: 47px;
+  --loadout-edit-subclass-columns: 6;
+}
+
+.referenceTiersInfo {
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 10px;
+  position: relative;
+  max-width: 800px;
+
+  .header {
+    display: flex;
+    flex-flow: row wrap;
+    font-size: 14px;
+    column-gap: 20px;
+  }
+}
+
+.dismissButton {
+  composes: resetButton from '../dim-ui/common.m.scss';
+  padding: 12px 12px 12px 12px;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  > :global(.app-icon) {
+    height: 24px;
+    width: 24px;
+    font-size: 24px;
+  }
+  position: absolute;
+  right: 0;
+  top: 0;
 }

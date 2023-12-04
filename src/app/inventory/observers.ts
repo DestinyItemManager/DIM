@@ -2,7 +2,7 @@ import { currentAccountSelector } from 'app/accounts/selectors';
 import { set } from 'app/storage/idb-keyval';
 import { RootState } from 'app/store/types';
 import { errorLog } from 'app/utils/log';
-import { observeStore } from 'app/utils/redux-utils';
+import { observeStore } from 'app/utils/redux';
 import _ from 'lodash';
 import { newItemsSelector } from './selectors';
 
@@ -24,6 +24,6 @@ export const saveItemInfosOnStateChange = _.once(() => {
           errorLog('new-items', "Couldn't save new items", e);
         }
       }
-    }, 1000)
+    }, 1000),
   );
 });

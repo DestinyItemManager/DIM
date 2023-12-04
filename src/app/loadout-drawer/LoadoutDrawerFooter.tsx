@@ -5,7 +5,7 @@ import { t } from 'app/i18next-t';
 import { AppIcon, deleteIcon, redoIcon, undoIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { isClassCompatible } from 'app/utils/item-utils';
-import { currySelector } from 'app/utils/selector-utils';
+import { currySelector } from 'app/utils/selectors';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -24,9 +24,9 @@ const clashingLoadoutSelector = currySelector(
     (_: RootState, loadout: Loadout) => loadout,
     (loadouts, loadout) =>
       loadouts.find(
-        (l) => loadout.name === l.name && isClassCompatible(l.classType, loadout.classType)
-      )
-  )
+        (l) => loadout.name === l.name && isClassCompatible(l.classType, loadout.classType),
+      ),
+  ),
 );
 
 export default function LoadoutDrawerFooter({
@@ -102,8 +102,8 @@ export default function LoadoutDrawerFooter({
               clashingLoadout
                 ? t('Loadouts.SaveDisabled.AlreadyExists')
                 : saveDisabled
-                ? saveDisabledReasons.join('\n')
-                : undefined
+                  ? saveDisabledReasons.join('\n')
+                  : undefined
             }
           >
             <button

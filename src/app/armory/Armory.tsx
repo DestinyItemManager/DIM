@@ -100,7 +100,7 @@ export default function Armory({
         screenshot && !isPhonePortrait
           ? {
               backgroundImage: `linear-gradient(180deg, rgba(0,0,0,.75) 0px, rgba(0,0,0,0) 200px), linear-gradient(180deg, rgba(0,0,0,0) 400px, #0b0c0f 500px), url("${bungieNetPath(
-                screenshot
+                screenshot,
               )}")`,
             }
           : undefined

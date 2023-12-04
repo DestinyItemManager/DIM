@@ -1,7 +1,7 @@
 import { BungieError } from 'app/bungie-api/http-client';
 import { I18nKey, t } from 'app/i18next-t';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
-import { convertToError } from './util';
+import { convertToError } from './errors';
 
 /**
  * An internal error that captures more error info for reporting.
@@ -33,7 +33,7 @@ export class DimError extends Error {
     return this.cause instanceof BungieError
       ? this.cause.code
       : this.cause instanceof DimError
-      ? this.cause.bungieErrorCode()
-      : undefined;
+        ? this.cause.bungieErrorCode()
+        : undefined;
   }
 }

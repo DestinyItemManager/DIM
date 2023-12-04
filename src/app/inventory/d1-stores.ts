@@ -8,15 +8,15 @@ import {
   D1VaultInventory,
 } from 'app/destiny1/d1-manifest-types';
 import { ThunkResult } from 'app/store/types';
+import { convertToError, errorMessage } from 'app/utils/errors';
 import { errorLog, infoLog } from 'app/utils/log';
-import { convertToError, errorMessage } from 'app/utils/util';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import { getStores } from '../bungie-api/destiny1-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { D1ManifestDefinitions, getDefinitions } from '../destiny1/d1-definitions';
 import { showNotification } from '../notifications/notifications';
 import { loadingTracker } from '../shell/loading-tracker';
-import { reportException } from '../utils/exceptions';
+import { reportException } from '../utils/sentry';
 import { error, loadNewItems, update } from './actions';
 import { cleanInfos } from './dim-item-info';
 import { InventoryBuckets } from './inventory-buckets';
@@ -35,7 +35,7 @@ export function loadStores(): ThunkResult<D1Store[] | undefined> {
     const promise = (async () => {
       let account = currentAccountSelector(getState());
       if (!account) {
-        await dispatch(getPlatforms());
+        await dispatch(getPlatforms);
         account = currentAccountSelector(getState());
         if (!account || account.destinyVersion !== 1) {
           return;
@@ -46,7 +46,7 @@ export function loadStores(): ThunkResult<D1Store[] | undefined> {
         resetItemIndexGenerator();
 
         const [defs, , { characters, profileInventory, vaultInventory }] = await Promise.all([
-          dispatch(getDefinitions()) as any as Promise<D1ManifestDefinitions>,
+          dispatch(getDefinitions()),
           dispatch(loadNewItems(account)),
           getStores(account),
         ]);
@@ -56,7 +56,7 @@ export function loadStores(): ThunkResult<D1Store[] | undefined> {
 
         const stores = [
           ...characters.map((characterData) =>
-            processCharacter(characterData, defs, buckets, lastPlayedDate)
+            processCharacter(characterData, defs, buckets, lastPlayedDate),
           ),
           processVault(vaultInventory, defs, buckets),
         ];
@@ -128,7 +128,7 @@ function processCharacter(
   characterData: D1CharacterData,
   defs: D1ManifestDefinitions,
   buckets: InventoryBuckets,
-  lastPlayedDate: Date
+  lastPlayedDate: Date,
 ) {
   const store = makeCharacter(characterData, defs, lastPlayedDate);
 
@@ -153,7 +153,7 @@ function processCharacter(
 function processVault(
   vaultInventory: D1VaultInventory,
   defs: D1ManifestDefinitions,
-  buckets: InventoryBuckets
+  buckets: InventoryBuckets,
 ) {
   const store = makeVault();
 

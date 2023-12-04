@@ -23,7 +23,7 @@ export function editLoadout(
     showClass = true,
     isNew = true,
     fromExternal = false,
-  }: { showClass?: boolean; isNew?: boolean; fromExternal?: boolean } = {}
+  }: { showClass?: boolean; isNew?: boolean; fromExternal?: boolean } = {},
 ) {
   editLoadout$.next({
     storeId,

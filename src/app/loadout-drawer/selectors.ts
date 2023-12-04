@@ -5,7 +5,6 @@ import { allInGameLoadoutsSelector } from 'app/loadout/ingame/selectors';
 import { manifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { isClassCompatible } from 'app/utils/item-utils';
-import _ from 'lodash';
 import { createSelector } from 'reselect';
 import { InGameLoadout, Loadout, LoadoutItem, isInGameLoadout } from './loadout-types';
 import {
@@ -20,7 +19,7 @@ export const loadoutsHashtagsSelector = createSelector(loadoutsSelector, (loadou
     loadouts.flatMap((loadout) => [
       ...getHashtagsFromNote(loadout.name),
       ...getHashtagsFromNote(loadout.notes),
-    ])
+    ]),
   ),
 ]);
 
@@ -49,7 +48,7 @@ export const loadoutsByItemSelector = createSelector(
     const recordLoadout = (
       itemId: string,
       loadout: Loadout | InGameLoadout,
-      loadoutItem: LoadoutItem
+      loadoutItem: LoadoutItem,
     ) => {
       const loadoutsForItem = (loadoutsForItems[itemId] ??= []);
       if (!loadoutsForItem.some((l) => l.loadout.id === loadout.id)) {
@@ -98,7 +97,7 @@ export const loadoutsByItemSelector = createSelector(
     }
 
     return loadoutsForItems;
-  }
+  },
 );
 
 /**
@@ -110,16 +109,16 @@ export const isInInGameLoadoutForSelector = createSelector(
   (loadoutsByItem) => (item: DimItem, ownerId: string) =>
     Boolean(
       loadoutsByItem[item.id]?.some(
-        (l) => isInGameLoadout(l.loadout) && l.loadout.characterId === ownerId
-      )
-    )
+        (l) => isInGameLoadout(l.loadout) && l.loadout.characterId === ownerId,
+      ),
+    ),
 );
 
 export const previousLoadoutSelector =
   (storeId: string) =>
   (state: RootState): Loadout | undefined => {
     if (state.loadouts.previousLoadouts[storeId]) {
-      return _.last(state.loadouts.previousLoadouts[storeId]);
+      return state.loadouts.previousLoadouts[storeId].at(-1);
     }
     return undefined;
   };

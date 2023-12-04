@@ -86,16 +86,16 @@ export default function Compare({ session }: { session: CompareSession }) {
     if (doAssumeWeaponMasterworks) {
       items = items.map((i) => {
         const y2MasterworkSocket = i.sockets?.allSockets.find(
-          (socket) => socket.socketDefinition.socketTypeHash === weaponMasterworkY2SocketTypeHash
+          (socket) => socket.socketDefinition.socketTypeHash === weaponMasterworkY2SocketTypeHash,
         );
         const plugSet = y2MasterworkSocket?.plugSet;
         const plugged = y2MasterworkSocket?.plugged;
         if (plugSet && plugged) {
           const fullMasterworkPlug = _.maxBy(
             plugSet.plugs.filter(
-              (p) => p.plugDef.plug.plugCategoryHash === plugged.plugDef.plug.plugCategoryHash
+              (p) => p.plugDef.plug.plugCategoryHash === plugged.plugDef.plug.plugCategoryHash,
             ),
-            (plugOption) => plugOption.plugDef.investmentStats[0]?.value
+            (plugOption) => plugOption.plugDef.investmentStats[0]?.value,
           );
           if (fullMasterworkPlug) {
             return applySocketOverrides(itemCreationContext, i, {
@@ -126,14 +126,14 @@ export default function Compare({ session }: { session: CompareSession }) {
   // Memoize computing the list of stats
   const allStats = useMemo(
     () => getAllStats(compareItems, compareBaseStats),
-    [compareItems, compareBaseStats]
+    [compareItems, compareBaseStats],
   );
 
   const updateQuery = useCallback(
     (newQuery: string) => {
       dispatch(updateCompareQuery(newQuery));
     },
-    [dispatch]
+    [dispatch],
   );
 
   const remove = useCallback(
@@ -144,7 +144,7 @@ export default function Compare({ session }: { session: CompareSession }) {
         dispatch(removeCompareItem(item));
       }
     },
-    [cancel, compareItems.length, dispatch]
+    [cancel, compareItems.length, dispatch],
   );
 
   const changeSort = (newSortedHash?: string | number) => {
@@ -167,9 +167,9 @@ export default function Compare({ session }: { session: CompareSession }) {
       sortBetterFirst,
       doCompareBaseStats,
       allStats,
-      session.initialItemId
+      session.initialItemId,
     );
-    const sortedComparisonItems = Array.from(compareItems).sort(comparator);
+    const sortedComparisonItems = compareItems.toSorted(comparator);
     return (
       <CompareItems
         items={sortedComparisonItems}
@@ -297,12 +297,12 @@ function sortCompareItemsComparator(
   sortBetterFirst: boolean,
   compareBaseStats: boolean,
   allStats: StatInfo[],
-  initialItemId?: string
+  initialItemId?: string,
 ) {
   if (!sortedHash) {
     return chainComparator(
       compareBy((item) => item.id !== initialItemId),
-      acquisitionRecencyComparator
+      acquisitionRecencyComparator,
     );
   }
 
@@ -328,8 +328,8 @@ function sortCompareItemsComparator(
         return shouldReverse ? -statValue : statValue;
       }),
       compareBy((i) => i.index),
-      compareBy((i) => i.name)
-    )
+      compareBy((i) => i.name),
+    ),
   );
 }
 
@@ -347,8 +347,8 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
       makeFakeStat(
         firstComparison.primaryStat.statHash,
         firstComparison.primaryStatDisplayProperties!,
-        (item: DimItem) => item.primaryStat || undefined
-      )
+        (item: DimItem) => item.primaryStat || undefined,
+      ),
     );
   }
 
@@ -364,8 +364,8 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
           }) ||
           undefined,
         10,
-        false
-      )
+        false,
+      ),
     );
   }
 
@@ -406,11 +406,11 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
       if (itemStat) {
         stat.min = Math.min(
           stat.min,
-          (compareBaseStats ? itemStat.base ?? itemStat.value : itemStat.value) || 0
+          (compareBaseStats ? itemStat.base ?? itemStat.value : itemStat.value) || 0,
         );
         stat.max = Math.max(
           stat.max,
-          (compareBaseStats ? itemStat.base ?? itemStat.value : itemStat.value) || 0
+          (compareBaseStats ? itemStat.base ?? itemStat.value : itemStat.value) || 0,
         );
         stat.enabled = stat.min !== stat.max;
       }
@@ -426,7 +426,7 @@ function makeFakeStat(
   getStat: StatGetter,
   statMaximumValue = 0,
   bar = false,
-  lowerBetter = false
+  lowerBetter = false,
 ): StatInfo {
   if (typeof displayProperties === 'string') {
     displayProperties = { name: displayProperties } as DestinyDisplayPropertiesDefinition;

@@ -7,15 +7,17 @@ const SELF = "'self'";
 /**
  * Generate a Content Security Policy directive for a particular DIM environment (beta, release)
  */
-export default function csp(env: 'release' | 'beta' | 'dev', featureFlags: FeatureFlags) {
+export default function csp(
+  env: 'release' | 'beta' | 'dev' | 'pr',
+  featureFlags: FeatureFlags,
+  version: string | undefined,
+) {
   const baseCSP: Record<string, string[] | string | boolean> = {
     defaultSrc: ["'none'"],
     scriptSrc: [
       SELF,
       'https://*.googletagmanager.com',
       'https://*.google-analytics.com',
-      // Twitter Widget
-      'https://platform.twitter.com',
       // OpenCollective backers
       'https://opencollective.com',
     ],
@@ -69,9 +71,6 @@ export default function csp(env: 'release' | 'beta' | 'dev', featureFlags: Featu
     ],
     childSrc: [SELF],
     frameSrc: [
-      // Twitter Widget
-      'https://syndication.twitter.com/',
-      'https://platform.twitter.com/',
       // OpenCollective backers
       'https://opencollective.com',
       // Mastodon feed
@@ -84,9 +83,11 @@ export default function csp(env: 'release' | 'beta' | 'dev', featureFlags: Featu
   };
 
   // Turn on CSP reporting to sentry.io on beta only
-  if (env === 'beta') {
-    baseCSP.reportUri =
-      'https://sentry.io/api/279673/csp-report/?sentry_key=1367619d45da481b8148dd345c1a1330';
+  if (featureFlags.sentry && env === 'beta') {
+    baseCSP.reportUri = `https://sentry.io/api/279673/csp-report/?sentry_key=1367619d45da481b8148dd345c1a1330&sentry_environment=${env}`;
+    if (version) {
+      baseCSP.reportUri += `&sentry_release=${version}`;
+    }
   }
 
   return builder({

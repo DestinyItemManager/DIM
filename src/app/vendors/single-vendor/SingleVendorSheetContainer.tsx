@@ -25,7 +25,7 @@ export default function SingleVendorSheetContainer({ children }: { children: Rea
     hideVendorSheet$,
     useCallback(() => {
       setCurrentVendorHash({});
-    }, [])
+    }, []),
   );
 
   return (

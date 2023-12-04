@@ -1,8 +1,8 @@
 import { DimStore } from 'app/inventory/store-types';
 import { hideItemPopup } from 'app/item-popup/item-popup';
-import { wrap } from 'app/utils/util';
+import { wrap } from 'app/utils/collections';
 import { animate, motion, PanInfo, Spring, useMotionValue, useTransform } from 'framer-motion';
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import StoreHeading from '../character-tile/StoreHeading';
 import styles from './PhoneStoresHeader.m.scss';
 
@@ -23,13 +23,11 @@ export default function PhoneStoresHeader({
   stores,
   setSelectedStoreId,
   direction,
-  loadoutMenuRef,
 }: {
   selectedStore: DimStore;
   stores: DimStore[];
   // The direction we changed stores in - positive for an increasing index, negative for decreasing
   direction: number;
-  loadoutMenuRef: React.RefObject<HTMLElement>;
   setSelectedStoreId: (id: string, direction: number) => void;
 }) {
   const onIndexChanged = (index: number, dir: number) => {
@@ -139,7 +137,6 @@ export default function PhoneStoresHeader({
               store={store}
               selectedStore={selectedStore}
               onTapped={(id) => setSelectedStoreId(id, index - 2)}
-              loadoutMenuRef={loadoutMenuRef}
             />
           </div>
         ))}

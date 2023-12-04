@@ -43,10 +43,10 @@ describe('autocompleteTermSuggestions', () => {
         query,
         caretIndex,
         () => [`name:"${mockCandidate}"`],
-        searchConfig
+        searchConfig,
       );
       expect(candidates).toMatchSnapshot();
-    }
+    },
   );
 
   test.each(cases)(
@@ -57,10 +57,10 @@ describe('autocompleteTermSuggestions', () => {
         query,
         caretIndex,
         filterComplete,
-        searchConfig
+        searchConfig,
       );
       expect(candidates[0]?.query.body ?? 'Expected failure').toBe(expected);
-    }
+    },
   );
 
   const multiWordCases: [query: string, expected: string][] = [
@@ -130,10 +130,10 @@ describe('autocompleteTermSuggestions', () => {
         query,
         caretIndex,
         filterCompleteMock,
-        searchConfig
+        searchConfig,
       );
       expect(candidates[0]?.query.body).toBe(expected);
-    }
+    },
   );
 });
 

@@ -6,6 +6,7 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import PlugDrawer from 'app/loadout/plug-drawer/PlugDrawer';
 import { PlugSet } from 'app/loadout/plug-drawer/types';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { uniqBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import {
   aspectSocketCategoryHashes,
@@ -14,7 +15,6 @@ import {
   getSocketsByCategoryHash,
   subclassAbilitySocketCategoryHashes,
 } from 'app/utils/socket-utils';
-import { uniqBy } from 'app/utils/util';
 import { objectValues } from 'app/utils/util-types';
 import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -38,12 +38,12 @@ export default function SubclassPlugDrawer({
 }) {
   const defs = useD2Definitions()!;
 
-  const { plugSets, aspects, fragments, sortPlugGroups } = useMemo(() => {
+  const { plugSets, sortPlugGroups } = useMemo(() => {
     const initiallySelected = objectValues(socketOverrides)
       .map((hash) => defs.InventoryItem.get(hash))
       .filter(isPluggableItem);
 
-    const { plugSets, aspects, fragments } = getPlugsForSubclass(defs, subclass, initiallySelected);
+    const { plugSets } = getPlugsForSubclass(defs, subclass, initiallySelected);
 
     // A flat list of possible subclass plugs we use this to figure out how to sort plugs
     // and the different sections in the plug picker
@@ -51,12 +51,10 @@ export default function SubclassPlugDrawer({
     // This ensures the plug groups are ordered by the socket order in the item def.
     // The order in the item def matches the order displayed in the game.
     const sortPlugGroups = compareBy(
-      (group: PlugSet) => group.plugs.length && flatPlugs.indexOf(group.plugs[0])
+      (group: PlugSet) => group.plugs.length && flatPlugs.indexOf(group.plugs[0]),
     );
     return {
       plugSets,
-      aspects,
-      fragments,
       sortPlugGroups,
     };
   }, [defs, socketOverrides, subclass]);
@@ -87,37 +85,7 @@ export default function SubclassPlugDrawer({
       }
       onAccept(newOverrides);
     },
-    [onAccept, subclass.sockets]
-  );
-
-  // Determines whether an ability, aspect or fragment is currently selectable
-  // - Any: only a single instace can be selected at a time
-  // - Ability: Only a single ability can be selected at a time.
-  // - Fragments: the energy level of the aspects determines the number that can be selected
-  // - Aspects: A maximum of 2 can be selected.
-  const isPlugSelectable = useCallback(
-    (plug: PluggableInventoryItemDefinition, selected: PluggableInventoryItemDefinition[]) => {
-      if (selected.some((s) => s.hash === plug.hash)) {
-        return false;
-      }
-
-      // Fragments handling
-      const selectedAspects = selected.filter((plugDef) => aspects.has(plugDef));
-      const selectedFragments = selected.filter((plugDef) => fragments.has(plugDef));
-      const allowedFragments = _.sumBy(
-        selectedAspects,
-        (aspect) =>
-          aspect.investmentStats.find(
-            (stat) => stat.statTypeHash === StatHashes.AspectEnergyCapacity
-          )?.value || 0
-      );
-      if (fragments.has(plug)) {
-        return selectedFragments.length < allowedFragments;
-      }
-
-      return true;
-    },
-    [aspects, fragments]
+    [onAccept, subclass.sockets],
   );
 
   return (
@@ -129,7 +97,6 @@ export default function SubclassPlugDrawer({
       classType={subclass.classType}
       onAccept={handleAccept}
       onClose={onClose}
-      isPlugSelectable={isPlugSelectable}
       sortPlugGroups={sortPlugGroups}
     />
   );
@@ -142,7 +109,7 @@ export default function SubclassPlugDrawer({
 function getPlugsForSubclass(
   defs: D2ManifestDefinitions | undefined,
   subclass: DimItem,
-  initiallySelected: PluggableInventoryItemDefinition[]
+  initiallySelected: PluggableInventoryItemDefinition[],
 ) {
   const plugSets: PlugSetWithDefaultPlug[] = [];
   const aspects = new Set<PluggableInventoryItemDefinition>();
@@ -152,22 +119,33 @@ function getPlugsForSubclass(
     return { plugSets, aspects, fragments };
   }
 
+  const getFragmentCapacity = (allSelectedPlugs: PluggableInventoryItemDefinition[]) =>
+    _.sumBy(
+      allSelectedPlugs.filter((p) => aspects.has(p)),
+      (aspect) =>
+        aspect.investmentStats.find((stat) => stat.statTypeHash === StatHashes.AspectEnergyCapacity)
+          ?.value || 0,
+    );
+
   for (const category of subclass.sockets.categories) {
     const sockets = getSocketsByCategoryHash(subclass.sockets, category.category.hash);
     // Group sockets by their plugSetHash so that we can figure out how many aspect or ability
     // choices the user will get
-    const socketsGroupedBySetHash = _.groupBy(
+    const socketsGroupedBySetHash = Map.groupBy(
       sockets,
-      (socket) => socket.socketDefinition.reusablePlugSetHash
+      (socket) => socket.socketDefinition.reusablePlugSetHash,
     );
 
-    for (const socketGroup of Object.values(socketsGroupedBySetHash)) {
+    for (const socketGroup of socketsGroupedBySetHash.values()) {
       if (socketGroup.length) {
         const firstSocket = socketGroup[0];
 
         const isAbilityLikeSocket = subclassAbilitySocketCategoryHashes.includes(
-          category.category.hash
+          category.category.hash,
         );
+
+        const isAspect = aspectSocketCategoryHashes.includes(category.category.hash);
+        const isFragment = fragmentSocketCategoryHashes.includes(category.category.hash);
 
         const defaultPlugHash = isAbilityLikeSocket
           ? getDefaultAbilityChoiceHash(firstSocket)
@@ -178,9 +156,9 @@ function getPlugsForSubclass(
             plugs: [],
             selected: [],
             plugSetHash: firstSocket.plugSet.hash,
-            maxSelectable: socketGroup.length,
+            maxSelectable: isFragment ? getFragmentCapacity : socketGroup.length,
             defaultPlug,
-            selectionType: isAbilityLikeSocket ? 'single' : 'multi',
+            selectionType: isAbilityLikeSocket ? 'single' : 'unique',
           };
 
           // In theory, subclass plugs are present in the profile response with
@@ -202,8 +180,6 @@ function getPlugsForSubclass(
           // is why we just take the raw data from the plugSet and there's no kind of unlock check here.
           // See https://github.com/Bungie-net/api/issues/1572
           for (const dimPlug of firstSocket.plugSet.plugs) {
-            const isAspect = aspectSocketCategoryHashes.includes(category.category.hash);
-            const isFragment = fragmentSocketCategoryHashes.includes(category.category.hash);
             const isEmptySocket =
               (isAspect || isFragment) && dimPlug.plugDef.hash === defaultPlugHash;
 
@@ -228,7 +204,7 @@ function getPlugsForSubclass(
   // Populate the initial plugs of each set
   for (const initialPlug of initiallySelected) {
     const plugSet = plugSets.find((set) =>
-      set.plugs.some((plug) => plug.hash === initialPlug.hash)
+      set.plugs.some((plug) => plug.hash === initialPlug.hash),
     );
     if (!plugSet) {
       continue;
@@ -243,5 +219,5 @@ function getPlugsForSubclass(
     }
   }
 
-  return { plugSets, aspects, fragments };
+  return { plugSets };
 }

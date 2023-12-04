@@ -1,6 +1,6 @@
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { ThunkResult } from 'app/store/types';
-import { convertToError } from 'app/utils/util';
+import { convertToError } from 'app/utils/errors';
 import { DestinyVendorsResponse } from 'bungie-api-ts/destiny2';
 import { createAction } from 'typesafe-actions';
 import { getVendors as getVendorsApi } from '../bungie-api/destiny2-api';
@@ -20,7 +20,7 @@ export const setShowUnacquiredOnly = createAction('vendors/SHOW_UNCOLLECTED_ONLY
 export function loadAllVendors(
   account: DestinyAccount,
   characterId: string,
-  force = false
+  force = false,
 ): ThunkResult {
   return async (dispatch, getState) => {
     // Only load at most once per 30 seconds

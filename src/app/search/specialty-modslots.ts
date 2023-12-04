@@ -23,7 +23,7 @@ export interface ModSocketMetadata {
 const legacyCompatibleTags = ['nightmare', 'gardenofsalvation', 'lastwish'];
 
 /** The plug categories that will fit in "legacy" sockets */
-export const legacyCompatiblePlugCategoryHashes = [
+const legacyCompatiblePlugCategoryHashes = [
   PlugCategoryHashes.EnhancementsSeasonMaverick, // nightmare
   PlugCategoryHashes.EnhancementsSeasonOutlaw, // taken/lw
   PlugCategoryHashes.EnhancementsRaidGarden,
@@ -41,6 +41,7 @@ export const modTypeTagByPlugCategoryHash: LookupTable<PlugCategoryHashes, strin
   [PlugCategoryHashes.EnhancementsRaidV620]: 'kingsfall',
   [PlugCategoryHashes.EnhancementsArtifice]: 'artifice',
   [PlugCategoryHashes.EnhancementsRaidV700]: 'rootofnightmares',
+  [PlugCategoryHashes.EnhancementsRaidV720]: 'crotasend',
 };
 
 // FIXME(Lightfall) what about legacy?
@@ -112,6 +113,13 @@ const modSocketMetadata: ModSocketMetadata[] = [
     socketTypeHashes: [1956816524],
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidV700],
     emptyModSocketHash: 4144354978,
+  },
+  {
+    slotTag: 'crotasend',
+    compatibleModTags: ['crotasend'],
+    socketTypeHashes: [2804745000],
+    compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidV720],
+    emptyModSocketHash: 717667840,
   },
   {
     slotTag: 'nightmare',

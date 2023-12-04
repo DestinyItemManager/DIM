@@ -14,10 +14,11 @@ import { createSelector } from 'reselect';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { allItemsSelector } from '../inventory/selectors';
 import LoadoutBuilder from './LoadoutBuilder';
+import { ResolvedStatConstraint } from './types';
 
 const disabledDueToMaintenanceSelector = createSelector(
   allItemsSelector,
-  (items) => items.length > 0 && items.every((item) => item.missingSockets || !item.sockets)
+  (items) => items.length > 0 && items.every((item) => item.missingSockets || !item.sockets),
 );
 
 /**
@@ -38,7 +39,11 @@ export default function LoadoutBuilderContainer({ account }: { account: DestinyA
 
   // Get an entire loadout from state - this is used when optimizing a loadout from within DIM.
   const locationState = location.state as
-    | { loadout: Loadout | undefined; storeId: string | undefined }
+    | {
+        loadout: Loadout | undefined;
+        storeId: string | undefined;
+        strictUpgradeStatConstraints: ResolvedStatConstraint[] | undefined;
+      }
     | undefined;
   const preloadedLoadout = locationState?.loadout;
   if (preloadedLoadout?.parameters?.query) {
@@ -62,7 +67,7 @@ export default function LoadoutBuilderContainer({ account }: { account: DestinyA
   if (disabledDueToMaintenance) {
     return (
       <div className="dim-page">
-        <ErrorPanel title={t('LoadoutBuilder.DisabledDueToMaintenance')} showTwitters />
+        <ErrorPanel title={t('LoadoutBuilder.DisabledDueToMaintenance')} showSocials />
       </div>
     );
   }
@@ -71,6 +76,7 @@ export default function LoadoutBuilderContainer({ account }: { account: DestinyA
     <LoadoutBuilder
       key={preloadedLoadout?.id ?? storeId ?? 'lo'}
       preloadedLoadout={preloadedLoadout}
+      preloadedStrictStatConstraints={locationState?.strictUpgradeStatConstraints}
       storeId={storeId}
     />
   );

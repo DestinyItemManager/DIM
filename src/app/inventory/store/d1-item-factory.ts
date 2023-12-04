@@ -9,9 +9,9 @@ import {
 import { t } from 'app/i18next-t';
 import { D1BucketHashes, D1_StatHashes } from 'app/search/d1-known-values';
 import { lightStats } from 'app/search/search-filter-values';
+import { filterMap, uniqBy } from 'app/utils/collections';
 import { getItemYear } from 'app/utils/item-utils';
 import { errorLog, warnLog } from 'app/utils/log';
-import { filterMap, uniqBy } from 'app/utils/util';
 import {
   BucketCategory,
   DamageType,
@@ -30,7 +30,7 @@ import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-
 import _ from 'lodash';
 import { vaultTypes } from '../../destiny1/d1-buckets';
 import { D1ManifestDefinitions, DefinitionTable } from '../../destiny1/d1-definitions';
-import { reportException } from '../../utils/exceptions';
+import { reportException } from '../../utils/sentry';
 import { InventoryBuckets } from '../inventory-buckets';
 import { D1GridNode, D1Item, D1Stat, D1TalentGrid } from '../item-types';
 import { D1Store, DimStore } from '../store-types';
@@ -51,7 +51,7 @@ export function processItems(
   owner: D1Store | undefined,
   items: D1ItemComponent[],
   defs: D1ManifestDefinitions,
-  buckets: InventoryBuckets
+  buckets: InventoryBuckets,
 ): D1Item[] {
   const result: D1Item[] = [];
   for (const item of items) {
@@ -72,7 +72,7 @@ export function processItems(
       // an exception occurred while creating the item, or it has a definition but lacks a name
       // not all of these should cause the store to consider itself hadErrors.
       // dummies and invisible items are not a big deal
-      const bucketDef = defs.InventoryBucket[item.bucket];
+      const bucketDef = defs.InventoryBucket.get(item.bucket);
       // if it's a named, non-invisible bucket, it may be a problem that the item wasn't generated
       if (owner && bucketDef.category !== BucketCategory.Invisible && bucketDef.bucketName) {
         owner.hadErrors = true;
@@ -84,19 +84,19 @@ export function processItems(
 
 const getClassTypeNameLocalized = _.memoize(
   (type: DestinyClass, defs: D1ManifestDefinitions): string => {
-    const klass = Object.values(defs.Class).find((c) => c.classType === type);
+    const klass = Object.values(defs.Class.getAll()).find((c) => c.classType === type);
     if (klass) {
       return klass.className;
     } else {
       return t('Loadouts.Any');
     }
-  }
+  },
 );
 
 /**
  * Convert a D1DamageType to the D2 definition, so we don't have to maintain both codepaths
  */
-const toD2DamageType = _.memoize(
+export const toD2DamageType = _.memoize(
   (damageType: D1DamageTypeDefinition | undefined): DestinyDamageTypeDefinition | undefined =>
     damageType && {
       displayProperties: {
@@ -119,14 +119,14 @@ const toD2DamageType = _.memoize(
         blue: 0,
         alpha: 0,
       },
-    }
+    },
 );
 
 export function makeFakeItem(
   defs: D1ManifestDefinitions,
   buckets: InventoryBuckets,
   itemHash: number,
-  itemInstanceId = '0'
+  itemInstanceId = '0',
 ) {
   return makeItem(
     defs,
@@ -162,7 +162,7 @@ export function makeFakeItem(
       objectives: [],
       bucket: 0,
     },
-    undefined
+    undefined,
   );
 }
 
@@ -179,7 +179,7 @@ function makeItem(
   defs: D1ManifestDefinitions,
   buckets: InventoryBuckets,
   item: D1ItemComponent,
-  owner: DimStore | undefined
+  owner: DimStore | undefined,
 ) {
   const itemDef = defs.InventoryItem.get(item.itemHash);
   // Missing definition?
@@ -205,7 +205,7 @@ function makeItem(
       'd1-stores',
       'Missing Item Definition:\n\n',
       item,
-      '\n\nThis item is not in the current manifest and will be added at a later time by Bungie.'
+      '\n\nThis item is not in the current manifest and will be added at a later time by Bungie.',
     );
   }
 
@@ -218,7 +218,7 @@ function makeItem(
   // fix itemDef for defense items with missing nodes
   if (item.primaryStat?.statHash === D1_StatHashes.Defense && numStats > 0 && numStats !== 5) {
     const defaultMinMax = _.find(itemDef.stats, (stat) =>
-      [StatHashes.Intellect, StatHashes.Discipline, StatHashes.Strength].includes(stat.statHash)
+      [StatHashes.Intellect, StatHashes.Discipline, StatHashes.Strength].includes(stat.statHash),
     );
 
     if (defaultMinMax) {
@@ -301,7 +301,7 @@ function makeItem(
       currentBucket.inPostmaster ||
         itemDef.nonTransferrable ||
         !itemDef.allowActions ||
-        itemDef.redacted
+        itemDef.redacted,
     ),
     id: item.itemInstanceId,
     instanced: item.itemInstanceId !== '0',
@@ -330,7 +330,7 @@ function makeItem(
     trackable: Boolean(
       currentBucket.inProgress &&
         (currentBucket.hash === D1BucketHashes.Bounties ||
-          currentBucket.hash === D1BucketHashes.Quests)
+          currentBucket.hash === D1BucketHashes.Quests),
     ),
     tracked: item.state === 2,
     locked: item.locked,
@@ -401,7 +401,7 @@ function makeItem(
 
   // An item can be used as infusion fuel if it is equipment, and has a primary stat that isn't Speed
   createdItem.infusionFuel = Boolean(
-    createdItem.equipment && createdItem.primaryStat?.statHash !== StatHashes.Speed
+    createdItem.equipment && createdItem.primaryStat?.statHash !== StatHashes.Speed,
   );
 
   try {
@@ -434,7 +434,7 @@ function makeItem(
         `Error building quality rating for ${createdItem.name}`,
         item,
         itemDef,
-        e
+        e,
       );
     }
   }
@@ -457,7 +457,7 @@ function makeItem(
   } else if (createdItem.talentGrid) {
     createdItem.percentComplete = Math.min(
       1,
-      createdItem.talentGrid.totalXP / createdItem.talentGrid.totalXPRequired
+      createdItem.talentGrid.totalXP / createdItem.talentGrid.totalXPRequired,
     );
     createdItem.complete =
       getItemYear(createdItem) === 1
@@ -495,7 +495,7 @@ function getAmmoType(itemType: string) {
 function buildTalentGrid(
   item: D1ItemComponent,
   talentDefs: DefinitionTable<D1TalentGridDefinition>,
-  progressDefs: DefinitionTable<D1ProgressionDefinition>
+  progressDefs: DefinitionTable<D1ProgressionDefinition>,
 ): D1TalentGrid | null {
   const talentGridDef = item.talentGridHash && talentDefs.get(item.talentGridHash);
   if (
@@ -556,7 +556,7 @@ function buildTalentGrid(
       (exclusiveInColumn &&
         _.some(
           talentNodeGroup.exlusiveWithNodes,
-          (nodeIndex: number) => item.nodes[nodeIndex].isActivated
+          (nodeIndex: number) => item.nodes[nodeIndex].isActivated,
         ));
 
     // Calculate relative XP for just this node
@@ -644,7 +644,7 @@ function buildTalentGrid(
   }
 
   // This can be handy for visualization/debugging
-  // var columns = _.groupBy(gridNodes, 'column');
+  // var columns = Object.groupBy(gridNodes, 'column');
 
   const maxLevelRequired = _.maxBy(gridNodes, (n) => n.activatedAtGridLevel)!.activatedAtGridLevel;
   const totalXPRequired = xpToReachLevel(maxLevelRequired);
@@ -654,7 +654,7 @@ function buildTalentGrid(
   // Fix for stuff that has nothing in early columns
   const minColumn = _.minBy(
     _.reject(gridNodes, (n) => n.hidden),
-    (n) => n.column
+    (n) => n.column,
   )!.column;
   if (minColumn > 0) {
     for (const node of gridNodes) {
@@ -682,7 +682,7 @@ function buildStats(
   itemDef: D1InventoryItemDefinition | D1ItemComponent,
   statDefs: DefinitionTable<D1StatDefinition>,
   grid: D1TalentGrid | null,
-  type: string
+  type: string,
 ): D1Stat[] | null {
   if (!item.stats?.length || !itemDef.stats) {
     return null;
@@ -692,7 +692,7 @@ function buildStats(
   let activeArmorNode: D1GridNode | { hash: number };
   if (grid?.nodes && item.primaryStat?.statHash === D1_StatHashes.Defense) {
     armorNodes = grid.nodes.filter(
-      (node) => [1034209669, 1263323987, 193091484].includes(node.hash) // ['Increase Intellect', 'Increase Discipline', 'Increase Strength']
+      (node) => [1034209669, 1263323987, 193091484].includes(node.hash), // ['Increase Intellect', 'Increase Discipline', 'Increase Strength']
     );
     if (armorNodes) {
       activeArmorNode = armorNodes.find((n) => n.activated) || { hash: 0 };
@@ -780,6 +780,6 @@ function buildStats(
         isConditionallyActive: false,
       };
     }),
-    (s) => s.sort
+    (s) => s.sort,
   );
 }

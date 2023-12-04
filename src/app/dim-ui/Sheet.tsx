@@ -1,10 +1,8 @@
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import ItemPickerContainer from 'app/item-picker/ItemPickerContainer';
-import { isAndroid, isiOSBrowser } from 'app/utils/browsers';
 import { Portal } from 'app/utils/temp-container';
 import SingleVendorSheetContainer from 'app/vendors/single-vendor/SingleVendorSheetContainer';
-import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import clsx from 'clsx';
 import {
   PanInfo,
@@ -27,7 +25,7 @@ import React, {
 import { AppIcon, disabledIcon } from '../shell/icons';
 import { PressTipRoot } from './PressTip';
 import styles from './Sheet.m.scss';
-import './Sheet.scss';
+import { useFixOverscrollBehavior } from './useFixOverscrollBehavior';
 
 /**
  * Propagates a function for setting a sheet to disabled. This forms a chain as
@@ -44,36 +42,6 @@ const SheetDisabledContext = createContext<(shown: boolean) => void>(() => {
  * the sheet ensures that it will animate away rather than simply disappearing.
  */
 export type SheetContent = React.ReactNode | ((args: { onClose: () => void }) => React.ReactNode);
-
-interface Props {
-  /** A static, non-scrollable header shown in line with the close button. */
-  header?: SheetContent;
-  /** A static, non-scrollable footer shown at the bottom of the sheet. Good for buttons. */
-  footer?: SheetContent;
-  /** Scrollable contents for the sheet. */
-  children?: SheetContent;
-  /**
-   * Disable the sheet (no clicking, dragging, or close-on-esc). The sheet will
-   * automatically disable itself if another sheet is shown as a child, so no
-   * need to set this explicitly most of the time - pretty much just if you need
-   * to communicate that some "global" sheet like the item picker is up.
-   */
-  disabled?: boolean;
-  /** Override the z-index of the sheet. Useful when stacking sheets on top of other sheets or on top of the item popup. */
-  zIndex?: number;
-  /** A custom class name to add to the sheet container. */
-  sheetClassName?: string;
-  /** If set, the sheet will always be whatever height it was when first rendered, even if the contents change size. */
-  freezeInitialHeight?: boolean;
-  /**
-   * Allow clicks to escape this sheet. This allows for things like the popups
-   * in the Compare sheet being closed by clicking in the Compare sheet. By
-   * default we block clicks so that clicks in sheets spawned from within an
-   * item popup don't close the popup they were spawned from!
-   */
-  allowClickThrough?: boolean;
-  onClose: () => void;
-}
 
 // The sheet is dismissed if it's flicked at a velocity above dismissVelocity,
 // or dragged down more than dismissAmount times the height of the sheet.
@@ -97,13 +65,19 @@ const animationVariants = {
 const dragConstraints = { top: 0, bottom: window.innerHeight } as const;
 
 const stopPropagation = (e: React.SyntheticEvent) => e.stopPropagation();
+const handleKeyDown = (e: React.KeyboardEvent) => {
+  // Allow "esc" to propagate which lets you escape focus on inputs.
+  if (e.key !== 'Escape') {
+    e.stopPropagation();
+  }
+};
 
 /**
  * Automatically disable the parent sheet while this sheet is shown. You must
  * pass `setParentDisabled` to SheetDisabledContext.Provider.
  */
 function useDisableParent(
-  forceDisabled?: boolean
+  forceDisabled?: boolean,
 ): [disabled: boolean, setParentDisabled: React.Dispatch<React.SetStateAction<boolean>>] {
   const [disabledByChildSheet, setDisabledByChildSheet] = useState(false);
   const setParentDisabled = useContext(SheetDisabledContext);
@@ -133,16 +107,52 @@ export default function Sheet({
   footer,
   children,
   sheetClassName,
+  closeButtonClassName,
+  headerClassName,
   disabled: forceDisabled,
   zIndex,
   freezeInitialHeight,
   allowClickThrough,
   onClose,
-}: Props) {
+}: {
+  /** A static, non-scrollable header shown in line with the close button. */
+  header?: SheetContent;
+  /** A static, non-scrollable footer shown at the bottom of the sheet. Good for buttons. */
+  footer?: SheetContent;
+  /** Scrollable contents for the sheet. */
+  children?: SheetContent;
+  /**
+   * Disable the sheet (no clicking, dragging, or close-on-esc). The sheet will
+   * automatically disable itself if another sheet is shown as a child, so no
+   * need to set this explicitly most of the time - pretty much just if you need
+   * to communicate that some "global" sheet like the item picker is up.
+   */
+  disabled?: boolean;
+  // TODO: remove
+  /** Override the z-index of the sheet. Useful when stacking sheets on top of other sheets or on top of the item popup. */
+  zIndex?: number;
+  /** A custom class name to add to the sheet container. */
+  sheetClassName?: string;
+  /** A custom class name to add to the sheet close button. */
+  closeButtonClassName?: string;
+  /** A custom class name to add to the sheet header. */
+  headerClassName?: string;
+  // TODO: remove
+  /** If set, the sheet will always be whatever height it was when first rendered, even if the contents change size. */
+  freezeInitialHeight?: boolean;
+  // TODO: remove by getting a recursive item popup host
+  /**
+   * Allow clicks to escape this sheet. This allows for things like the popups
+   * in the Compare sheet being closed by clicking in the Compare sheet. By
+   * default we block clicks so that clicks in sheets spawned from within an
+   * item popup don't close the popup they were spawned from!
+   */
+  allowClickThrough?: boolean;
+  onClose: () => void;
+  // TODO: "skinny" sheet option
+}) {
   const sheet = useRef<HTMLDivElement>(null);
   const sheetContents = useRef<HTMLDivElement | null>(null);
-  useLockSheetContents(sheetContents);
-  const dragHandle = useRef<HTMLDivElement>(null);
 
   const [frozenHeight, setFrozenHeight] = useState<number | undefined>(undefined);
   const [disabled, setParentDisabled] = useDisableParent(forceDisabled);
@@ -153,18 +163,15 @@ export default function Sheet({
 
   /**
    * Triggering close starts the animation. The onClose prop is called by the callback
-   * passed to the onAnimationComplete motion prop
+   * passed to the onAnimationComplete motion prop.
    */
   const triggerClose = useCallback(
     (e?: React.MouseEvent | KeyboardEvent) => {
-      if (disabled) {
-        return;
-      }
       e?.preventDefault();
       // Animate offscreen
       animationControls.start('close');
     },
-    [disabled, animationControls]
+    [animationControls],
   );
 
   // Handle global escape key
@@ -179,27 +186,24 @@ export default function Sheet({
         onClose();
       }
     },
-    [onClose]
+    [onClose],
   );
 
   // Determine when to drag. Drags if the touch falls in the header, or if the contents
   // are scrolled all the way to the top.
   const dragHandleDown = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
-      // prevent item-tag-selector dropdown from triggering drag (Safari)
-      if (isInside(e.target as HTMLElement, 'item-tag-selector')) {
-        return;
-      }
-
       if (
-        dragHandle.current?.contains(e.target as Node) ||
+        !sheetContents.current!.contains(e.target as Node) ||
         sheetContents.current!.scrollTop === 0
       ) {
         dragControls.start(e);
       }
     },
-    [dragControls]
+    [dragControls],
   );
+
+  useFixOverscrollBehavior(sheetContents);
 
   // When drag ends we determine if the sheet should be closed either via the final
   // drag velocity or if the sheet has been dragged halfway the down from its height.
@@ -214,7 +218,7 @@ export default function Sheet({
       }
       animationControls.start('open');
     },
-    [animationControls, triggerClose]
+    [animationControls, triggerClose],
   );
 
   useLayoutEffect(() => {
@@ -257,34 +261,34 @@ export default function Sheet({
       onDragEnd={handleDragEnd}
       // regular props
       style={{ zIndex }}
-      className={clsx('sheet', sheetClassName, { [styles.sheetDisabled]: disabled })}
+      className={clsx(styles.sheet, sheetClassName, { [styles.sheetDisabled]: disabled })}
       ref={sheet}
       role="dialog"
       aria-modal="false"
-      onKeyDown={stopPropagation}
+      onKeyDown={handleKeyDown}
       onKeyUp={stopPropagation}
       onKeyPress={stopPropagation}
       onClick={allowClickThrough ? undefined : stopPropagation}
     >
-      <a
-        href="#"
-        className={clsx('sheet-close', { 'sheet-no-header': !header })}
+      <button
+        type="button"
+        className={clsx(styles.close, closeButtonClassName, { [styles.noHeader]: !header })}
         onClick={triggerClose}
+        aria-keyshortcuts="esc"
+        aria-label={t('General.Close')}
       >
         <AppIcon icon={disabledIcon} />
-      </a>
+      </button>
 
-      <div className="sheet-container" onPointerDown={dragHandleDown}>
+      <div className={styles.container} onPointerDown={dragHandleDown}>
         {Boolean(header) && (
-          <div className="sheet-header" ref={dragHandle}>
+          <div className={clsx(styles.header, headerClassName)}>
             {_.isFunction(header) ? header({ onClose: triggerClose }) : header}
           </div>
         )}
 
         <div
-          className={clsx('sheet-contents', {
-            'sheet-has-footer': footer,
-          })}
+          className={styles.contents}
           style={frozenHeight ? { flexBasis: frozenHeight } : undefined}
           ref={sheetContents}
         >
@@ -292,12 +296,16 @@ export default function Sheet({
         </div>
 
         {Boolean(footer) && (
-          <div className="sheet-footer">
+          <div className={styles.footer}>
             {_.isFunction(footer) ? footer({ onClose: triggerClose }) : footer}
           </div>
         )}
       </div>
-      <div className={styles.disabledScreen} />
+      <div
+        className={styles.disabledScreen}
+        onClick={stopPropagation}
+        onPointerDown={stopPropagation}
+      />
     </motion.div>
   );
 
@@ -312,40 +320,4 @@ export default function Sheet({
       </SheetDisabledContext.Provider>
     </Portal>
   );
-}
-
-/**
- * Locks body scroll except for touches in the sheet contents.
- */
-function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivElement | null>) {
-  useEffect(() => {
-    const elem = sheetContents.current;
-
-    if (!elem || !(isiOSBrowser() || isAndroid())) {
-      return;
-    }
-
-    // This special style is needed because body-scroll-lock's styles cause the
-    // position: sticky header to move.
-    document.body.classList.add('body-scroll-lock');
-    disableBodyScroll(elem);
-
-    return () => {
-      // TODO: This relies on the sheetsOpen effect running first, maybe combine them
-      if (sheetsOpen === 0) {
-        document.body.classList.remove('body-scroll-lock');
-      }
-      enableBodyScroll(elem);
-    };
-  }, [sheetContents]);
-}
-
-function isInside(element: HTMLElement, className: string) {
-  while (element?.classList) {
-    if (element.classList.contains(className)) {
-      return true;
-    }
-    element = element.parentNode as HTMLElement;
-  }
-  return false;
 }

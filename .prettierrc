@@ -1,11 +1,5 @@
 {
   "printWidth": 100,
   "singleQuote": true,
-  "trailingComma": "es5",
-  "overrides": [
-    {
-      "files": "*.html"
-    }
-  ],
   "plugins": ["prettier-plugin-organize-imports"]
 }

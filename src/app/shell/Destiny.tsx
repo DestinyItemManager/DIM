@@ -39,18 +39,18 @@ import ErrorPanel from './ErrorPanel';
 
 // TODO: Could be slightly better to group these a bit, but for now we break them each into a separate chunk.
 const Inventory = lazy(
-  () => import(/* webpackChunkName: "inventory" */ 'app/inventory-page/Inventory')
+  () => import(/* webpackChunkName: "inventory" */ 'app/inventory-page/Inventory'),
 );
 const Progress = lazy(() => import(/* webpackChunkName: "progress" */ 'app/progress/Progress'));
 const LoadoutBuilderContainer = lazy(
   () =>
-    import(/* webpackChunkName: "loadoutBuilder" */ 'app/loadout-builder/LoadoutBuilderContainer')
+    import(/* webpackChunkName: "loadoutBuilder" */ 'app/loadout-builder/LoadoutBuilderContainer'),
 );
 const D1LoadoutBuilder = lazy(
   () =>
     import(
       /* webpackChunkName: "d1LoadoutBuilder" */ 'app/destiny1/loadout-builder/D1LoadoutBuilder'
-    )
+    ),
 );
 const Vendors = lazy(async () => ({
   default: (await import(/* webpackChunkName: "vendors" */ 'app/vendors/components')).Vendors,
@@ -60,14 +60,14 @@ const SingleVendorPage = lazy(async () => ({
     .SingleVendorPage,
 }));
 const D1Vendors = lazy(
-  () => import(/* webpackChunkName: "d1vendors" */ 'app/destiny1/vendors/D1Vendors')
+  () => import(/* webpackChunkName: "d1vendors" */ 'app/destiny1/vendors/D1Vendors'),
 );
 const RecordBooks = lazy(
-  () => import(/* webpackChunkName: "recordbooks" */ 'app/destiny1/record-books/RecordBooks')
+  () => import(/* webpackChunkName: "recordbooks" */ 'app/destiny1/record-books/RecordBooks'),
 );
 const Organizer = lazy(() => import(/* webpackChunkName: "organizer" */ 'app/organizer/Organizer'));
 const Activities = lazy(
-  () => import(/* webpackChunkName: "activities" */ 'app/destiny1/activities/Activities')
+  () => import(/* webpackChunkName: "activities" */ 'app/destiny1/activities/Activities'),
 );
 const Records = lazy(() => import(/* webpackChunkName: "records" */ 'app/records/Records'));
 const Loadouts = lazy(() => import(/* webpackChunkName: "loadouts" */ 'app/loadout/Loadouts'));
@@ -80,22 +80,22 @@ export default function Destiny() {
   const { destinyVersion: destinyVersionString, membershipId: platformMembershipId } = useParams();
   const destinyVersion = parseInt(
     (destinyVersionString || 'd2').replace('d', ''),
-    10
+    10,
   ) as DestinyVersion;
   const accountsLoaded = useSelector(accountsLoadedSelector);
   const currentAccount = useSelector(currentAccountSelector);
   const account = useSelector((state: RootState) =>
     accountsSelector(state).find(
       (account) =>
-        account.membershipId === platformMembershipId && account.destinyVersion === destinyVersion
-    )
+        account.membershipId === platformMembershipId && account.destinyVersion === destinyVersion,
+    ),
   );
   const profileError = useSelector(blockingProfileErrorSelector);
   const autoLockTagged = useSelector(settingSelector('autoLockTagged'));
 
   useEffect(() => {
     if (!accountsLoaded) {
-      dispatch(getPlatforms());
+      dispatch(getPlatforms);
     }
   }, [dispatch, accountsLoaded]);
 
@@ -177,8 +177,8 @@ export default function Destiny() {
               : t('Accounts.ErrorLoadInventory', { version: account.destinyVersion })
           }
           error={profileError}
-          showTwitters={true}
-          showReload={true}
+          showSocials
+          showReload
         />
       </div>
     );

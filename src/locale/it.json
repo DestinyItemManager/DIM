@@ -231,13 +231,16 @@
     "Event": "Mostra oggetti in base a quale evento di Destiny 2 sono comparsi.",
     "ExtraPerk": "Mostra le armi leggendarie con roll casuali con un perk selezionabile aggiuntivo.",
     "Filter": "Filtro",
+    "FilterWith": "Filtra con:",
     "Focusable": "Mostra gli oggetti che possono essere concentrati da un mercante",
     "Foundry": "Mostra gli oggetti in base alla fonderia che li ha creati.",
     "Glimmer": "Mostra gli oggetti consumabili che sono relativi al guadagno di Lumen.",
+    "Harrowed": "\\(Tormentata\\)",
     "HasNotes": "Mostra gli oggetti che hanno delle note.",
     "HasOrnament": "Mostra gli oggetti sui quali è applicato un decoro.",
     "HasShader": "Mostra oggetti che hanno uno shader applicato.",
     "HoldsMod": "Mostra armature compatibili con uno tipo specifico di Modifica stagionale.",
+    "InDimLoadout": "is:indimloadout mostra gli oggetti che sono inclusi in qualsiasi dotazione su DIM.",
     "InInGameLoadout": "is:iningameloadout mostra gli oggetti che sono in qualsiasi dotazione in gioco.",
     "InLoadout": "is:inloadout mostra gli oggetti che sono inclusi in qualsiasi dotazione. Cercare con inloadout: mostra gli oggetti che sono inclusi in dotazioni con titoli corrispondenti. Quando usato con un hashtag, inloadout: mostra gli oggetti le quali dotazioni hanno l'hashtag nel titolo o nelle note.",
     "Infusable": "Mostra gli oggetti che possono essere infusi.",
@@ -276,7 +279,7 @@
     "PartialMatch": "Mostra gli oggetti nei quali nome, descrizione, qualsiasi perk, o modifica, hanno un riscontro parziale con il testo del filtro. Cerca intere frasi usando le virgolette. Il filtro 'perk:' filtrerà solo i perks.",
     "PatternUnlocked": "Mostra gli oggetti che hanno un modello di forgiatura sbloccato, anche se l'oggetto non è stato forgiato.",
     "Perk": "Mostra gli oggetti in cui uno dei perk o modifiche ha una corrispondenza parziale con il testo del filtro nel nome o descrizione. Cerca intere frasi usando le virgolette.",
-    "PerkName": "Mostra gli oggetti in cui un perk o modifiche ha una corrispondenza parziale con il testo del filtro solo nel nome. Cerca intere frasi usando le virgolette.",
+    "PerkName": "Mostra gli oggetti con un perk o una modifica il cui nome corrisponde (exactperk:) o corrisponde in parte (perkname:) al testo del filtro. Cerca intere frasi utilizzando apostrofi.",
     "PinnacleReward": "Mostra gli incarichi che portano ad una ricompensa di punta.",
     "Postmaster": "Oggetti che sono dall'Amministratrice.",
     "PowerKeywords": "Utilizza le parole chiave \"pinnaclecap\" o \"softcap\" invece di un numero per riferirti al livelli limite di Potere della stagione attuale.",
@@ -292,14 +295,13 @@
     "RetiredPerk": "Mostra le armi con perk non più ottenibili.",
     "SearchPrompt": "Cerca tra comandi per filtri disponibili",
     "Season": "Mostra oggetti in base a quale stagione di Destiny 2 sono comparsi.",
-    "SeasonalDupe": "Mostra gli oggetti duplicati, senza contare quelli ri-emessi in una stagione diversa come stesso oggetto.",
     "StackFull": "Mostra gli oggetti che sono alla massima capacità delle loro pile. (Nuclei ottimizzanti, Strane Monete, Materiali dell'Armaiolo ecc)",
     "StackLevel": "Mostra gli oggetti basandosi sulla quantità delle loro pile.",
     "Stackable": "Mostra gli oggetti accumulabili (sintesi munizioni, strane monete, ecc)",
     "StatLower": "Mostra le armature le cui statistiche sono rigorosamente più basse di un'altra dello stesso tipo.",
     "Stats": "Mostra gli oggetti basandosi su un valore di statistica specifico. $t(Filter.StatsExtras)",
     "StatsBase": "Filtra le armature basandosi sul loro valore di statistiche di base, senza contare le modifiche inserite o Prodigio. $t(Filter.StatsExtras)",
-    "StatsExtras": "Supporta l'aggiunta di statistiche connettendo nomi di statistiche multipli con il simbolo \"+\" o \"&\". Ci sono anche parole chiave speciali \"highest\", \"secondhighest\", \"thirdhighest\" ecc con corrispondenza basata sul loro rango all'interno delle statistiche di un oggetto.",
+    "StatsExtras": "Supporta l'aggiunta di statistiche connettendo più nomi di statistiche con i simboli + e &. Ci sono anche le parole chiave speciali highest, second highest, thirdhighest, ecc con corrispondenza alle statistiche basandosi sul loro grado all'interno delle statistiche di un oggetto. Ogni statistica personalizzata ha anche il suo termine di ricerca specifico, mostrato nella sezione delle impostazioni Etichette personalizzate.",
     "StatsLoadout": "Trova una serie di oggetti da equipaggiare per massimizzare il valore di una statistica in particolare.",
     "StatsMax": "Trova armature con i valori più alti per una statistica specifica. Include tutti gli oggetti con il valore più alto.",
     "Tags": {
@@ -315,6 +317,7 @@
     "UnlockAllFailed": "Impossibile sbloccare oggetti",
     "UnlockAllSuccess": "Sbloccati {{num}} oggetti",
     "Vendor": "Articolo disponibile da un mercante specifico.",
+    "VendorItem": "L'oggetto proviene da un mercante, non dal tuo inventario. Utile per escludere gli oggetti dei mercanti dall'Ottimizzatore di Dotazioni.",
     "Weapon": "Mostra gli oggetti che sono armi.",
     "WeaponLevel": "Mostra le armi in base al loro Livello Arma.",
     "WeaponType": "Mostra le armi basandosi sul tipo di arma.",
@@ -326,6 +329,7 @@
   },
   "General": {
     "ClickForDetails": "Clicca per dettagli",
+    "Close": "Chiudi",
     "Confirm": "Confermi?",
     "UserGuideLink": "Guida utente"
   },
@@ -388,6 +392,7 @@
     "ClearDialog": "Chiudi",
     "ClearNewItems": "Pulisci nuovi oggetti",
     "Enter": "INVIO",
+    "ItemPopupTab": "Cambia scheda dettagli oggetto",
     "LockUnlock": "Blocca o sblocca un oggetto",
     "MarkItemAs": "Contrassegna oggetto come '{{tag}}'",
     "Menu": "Attiva/Disattiva menù",
@@ -401,7 +406,6 @@
     "Vault": "Invia l'oggetto al deposito"
   },
   "InGameLoadout": {
-    "Applying": "Equipaggiamento dotazione...",
     "ClearSlot": "Cancella alloggiamento {{index}}",
     "Create": "Crea dotazione",
     "CreateTitle": "Crea dotazione in gioco dall'equipaggiamento attuale",
@@ -493,6 +497,8 @@
     "Equip": "Equipaggia su {{character}}",
     "Exclude": "Oggetti esclusi",
     "ExcludeHelp": "Shift + click su un oggetto (o trascina e rilascia in questo riquadro) per creare dei set senza delle specifiche armature.",
+    "ExistingBuildStats": "Statistiche build esistenti",
+    "ExistingBuildStatsNote": "Mostra solo le build con valori rigorosamente più alti.",
     "FilterSets": "Filtra i set",
     "Help": {
       "And": "Verranno utilizzate armature, che presentano tutti i perk selezionati",
@@ -527,7 +533,6 @@
     "Locked": "Oggetti Bloccati",
     "LockedHelp": "Trascina e rilascia un qualsiasi oggetto nel suo riquadro per costruire un set con quella specifica armatura. Shift + click per escludere oggetti.",
     "Missing2": "Manca un raro, un leggendario o un esotico per costruire un set completo!",
-    "ModLockButton": "Seleziona Modifiche",
     "ProcessingMode": {
       "Fast": "Veloce",
       "Full": "Completa",
@@ -540,7 +545,8 @@
     "SearchAnExotic": "Cerca una esotica per nome o descrizione",
     "SelectExotic": "Seleziona esotica",
     "SelectMods": "Seleziona Modifiche",
-    "SelectSubclass": "Seleziona Sottoclasse",
+    "SelectModsCount": "{{selected}}/{{maxSelectable}}",
+    "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Modifiche Attività",
     "SelectSubclassOptions": "Personalizza sottoclasse",
     "ShowAllConfigs": "Mostra tutte le configurazioni",
     "ShowConfigs": "Mostra configurazioni",
@@ -554,6 +560,59 @@
     "Profile": "Caricamento del profilo di Destiny...",
     "Vendors": "Caricamento dei mercanti di Destiny..."
   },
+  "LoadoutAnalysis": {
+    "Analyzed": "Analizzate {{numLoadouts}} dotazioni",
+    "Analyzing": "Analizzate {{numAnalyzed}}/{{numLoadouts}} dotazioni",
+    "BetterStatsAvailable": {
+      "Description": "Scegliere diverse armature o modifiche per questa dotazione consentirà di raggiungere gradi di statistiche più alti. Scegli \"$t(Loadouts.OpenInOptimizer)\" per vedere build migliori.",
+      "Name": "Migliori statistiche ottenibili"
+    },
+    "BetterStatsAvailableFontNote": "Nota: Questa dotazione utilizza modifiche \"Fonte di...\" che inducono il superamento del grado 10 di una statistica. DIM può identificare statistiche migliori riducendo il numero di gradi in eccesso. Se questo fosse indesiderato, disattiva \"$t(Loadouts.IncludeRuntimeStatBenefits)\" nella dotazione.",
+    "DoesNotRespectExotic": {
+      "Description": "Le impostazioni dell'Ottimizzatore di Dotazioni per questa dotazione specifica la scelta di un'esotica, ma la dotazione non corrisponde con quell'esotica.",
+      "Name": "Esotica errata"
+    },
+    "DoesNotSatisfyStatConstraints": {
+      "Description": "Le impostazioni dell'Ottimizzatore di Dotazioni per questa dotazione specificano dei gradi di statistiche, ma la dotazione non le raggiunge.",
+      "Name": "Gradi statistiche errati"
+    },
+    "EmptyFragmentSlots": {
+      "Description": "Ci sono alloggiamenti vuoti per frammenti in questa sottoclasse.",
+      "Name": "Alloggiamenti frammenti vuoti"
+    },
+    "InvalidMods": {
+      "Description": "Alcune modifiche in questa dotazione sono obsolete o non possono adattarsi in nessun pezzo della tua armatura.",
+      "Name": "Modifiche obsolete"
+    },
+    "InvalidSearchQuery": {
+      "Description": "Questa dotazione è stata creata con una query di ricerca nell'Ottimizzatore di Dotazioni che non è più valida o non include l'armatura in questa dotazione.",
+      "Name": "Query di ricerca non valida"
+    },
+    "MissingItems": {
+      "Description": "Alcuni degli oggetti in questa dotazione non sono più nel tuo inventario.",
+      "Name": "Oggetti mancanti"
+    },
+    "ModsDontFit": {
+      "Description": "L'armatura in questa dotazione non può ospitare tutte le modifiche della dotazione, anche se l'armatura fosse stata potenziata.",
+      "Name": "Modifiche non assegnate"
+    },
+    "NeedsArmorUpgrades": {
+      "Description": "L'armatura in questa dotazione deve essere potenziata per poter alloggiare tutte le modifiche o raggiungere dei gradi di statistiche specifici.",
+      "Name": "Richiede potenziamento armatura"
+    },
+    "NotAFullArmorSet": {
+      "Description": "Questa dotazione non può essere analizzata ulteriormente perché non include un set completo di armature.",
+      "Name": "Set armature incompleto"
+    },
+    "TooManyFragments": {
+      "Description": "Ci sono più frammenti configurati nella sottoclasse che quelli consentiti dagli aspetti.",
+      "Name": "Troppi frammenti"
+    },
+    "UsesSeasonalMods": {
+      "Description": "Questa dotazione si basa su modifiche che sono disponibili solo in alcune stagioni. Quando la stagione finisce, alcune modifiche non saranno disponibili o supereranno la capacità energetica dell'armatura.",
+      "Name": "Utilizza modifiche stagionali"
+    }
+  },
   "LoadoutBuilder": {
     "AddHalfTierMods": "Aggiungi Modifiche +5",
     "All": "Tutto",
@@ -561,9 +620,11 @@
     "AnyExoticDescription": "I set devono contenere una esotica, ma qualunque esotica va bene.",
     "AssumeMasterwork": "Presupponi Prodigiosi",
     "AssumeMasterworkOptions": {
-      "All": "Tutte le armature utilizzeranno statistiche prodigiose e avranno un livello di energia 10.",
-      "Legendary": "Le armature leggendarie utilizzeranno statistiche prodigiose e avranno un livello energia 10.",
-      "None": "Tutte le armature utilizzeranno le loro statistiche attuali ed avranno un livello minimo di energia 7."
+      "All": "Tutte le armature:\n$t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "Current": "Statistiche attuali, livello energetico presunto almeno {{minLoItemEnergy}}.",
+      "Legendary": "Leggendarie:\n$t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nEsotiche:\n$t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
+      "Masterworked": "+2 in ogni statistica, presunto livello 10 di energia.",
+      "None": "Tutte le armature:\n$t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "Aggiungi Modifiche statistiche automaticamente",
     "AutomaticallyPicked": "Questa Modifica è stata aggiunta automaticamente per migliorare le statistiche della build.",
@@ -571,18 +632,20 @@
     "CompareLoadout": "Confronta dotazioni",
     "ConfirmOverwrite": "Sei sicuro di voler sostituire l'armatura nella dotazione \"{{name}}\" con questo nuovo set di armature?",
     "CreateLoadout": "Salva dotazione",
+    "DecreaseStatPriority": "Diminuisci la priorità della statistica",
     "DisabledByAutoStatMods": "Le Modifiche alle statistiche vengono scelte automaticamente dall'Ottimizzatore di Dotazioni.",
     "DisabledDueToMaintenance": "L'Ottimizzatore di Dotazioni è al momento disabilitato a causa della manutenzione delle API di Bungie.",
     "EquipItems": "Equipaggia",
     "ExcludeItem": "Escludi Oggetto",
     "ExistingLoadout": "Dotazione Esistente",
+    "Exotic": "Armatura Esotica",
     "ExoticSpecialCategory": "Speciale",
     "Filter": "Filtri",
-    "IncludeVendorItems": "Includi oggetti dei mercanti",
+    "IgnoreStat": "Se non selezionata, L'Ottimizzatore di Dotazioni farà finta che questa statistica non esista quando genererà i set",
+    "IncreaseStatPriority": "Aumenta la priorità della statistica",
     "Legendary": "Leggendaria",
     "LockEquipped": "Blocca equipaggiato",
     "LockItem": "Blocca oggetto",
-    "MaxTier": "Max {{tier}}",
     "MissingClass": "Build per: {{className}}",
     "MissingClassDescription": "La build che stai cercando di visualizzare è per una classe di personaggio che non hai.",
     "NoBuildsFoundExplainer": {
@@ -604,22 +667,22 @@
       "UpperBoundsFailed": "Molti set non soddisfacevano i requisiti massimi delle statistiche"
     },
     "NoExotic": "Nessuna Esotica",
-    "NoExoticDescription": "Equivale alla ricerca \"not:exotic\" nella barra di ricerca - nessuna esotica verrà inclusa nei set.",
+    "NoExoticDescription": "Equivale a cercare \"not:exotic\" nella barra di ricerca - i set non useranno armature esotiche.",
+    "NoExoticPreference": "Nessuna esotica selezionata",
+    "NoExoticPreferenceDescription": "Le armature esotiche saranno utilizzate se massimizzeranno le statistiche.",
     "NoLoadoutsToCompare": "Nessuna dotazione da confrontare",
     "None": "Nessuno",
     "OptimizerExplanationGuide": "Leggi la Guida Utente per maggiori informazioni e un video tutorial.",
-    "OptimizerExplanationMods": "Scegli una Esotica e le Modifiche che vuoi usare. L'Ottimizzatore di Dotazioni include solo i bonus statistiche delle Modifiche che scegli - tutte quelle già sull'armatura vengono ignorate.",
+    "OptimizerExplanationMods": "Scegli un'esotica, modifiche e una sottoclasse. L'Ottimizzatore di Loadout include solo bonus alle statistiche dalle modifiche e le opzioni di sottoclasse che scegli - tutte le modifiche già nell'armatura vengono ignorate.",
     "OptimizerExplanationSearch": "Utilizza la barra di ricerca per restringere il campo delle armature da considerare. Se nessuna armatura corrisponde alla ricerca in un alloggiamento, verranno considerate tutte le armature per quell'alloggiamento.",
-    "OptimizerExplanationStats": "Trascina le statistiche più importanti in alto, e imposta quelle che non ti interessano su \"Ignora\".",
+    "OptimizerExplanationStats": "Trascina le statistiche più importanti in alto, e disabilita quelle che non vuoi ottimizzare.",
     "OptimizerSet": "Set Ottimizzatore",
-    "ProcessingSets": "Elaborazione set per\n{{character}} ({{remainingTime}}s)",
+    "ProcessingSets": "Ricerca dei set con gradi più alti...",
     "SaveAs": "Salva come",
-    "SelectMax": "- Max -",
-    "SelectMin": "- Min -",
     "SpeedReport": "Generate {{combos, number}} combinazioni in {{time}} secondi",
-    "StatTierIgnoreOption": "Ignora",
-    "StatTierIncludeOption": "Includi",
+    "StatConstraints": "Priorità e limiti gradi statistiche",
     "TierNumber": "T{{tier}}",
+    "TierSelect": "Seleziona il grado minimo della statistica",
     "UnableToAddAllMods": "Impossibile aggiungere tutte le Modifiche.",
     "UnableToAddAllModsBody": "Non c'erano abbastanza spazi disponibili per installare {{mods}}.",
     "UnlockItem": "Sblocca oggetto"
@@ -658,11 +721,9 @@
     "CurrentlyEquipped": "Attualmente Equipaggiato",
     "Deequip": "Togliendo oggetti dagli altri personaggi",
     "Delete": "Elimina",
-    "DeprecatedMods": "Modifiche Obsolete",
     "DimLoadouts": "Dotazioni DIM",
     "Edit": "Modifica dotazione",
     "EditBrief": "Modifica",
-    "EmptyFragmentSlots": "Alloggiamenti per frammenti vuoti",
     "EquipInGameLoadout": "Equipaggiamento dotazione in gioco",
     "EquipItems": "Equipaggiando oggetti",
     "EquippableDifferent1": "Sono stati utilizzati più esotici per calcolare il tuo Potere massimo, quindi il numero mostrato potrebbe non essere raggiungibile equipaggiando gli oggetti in gioco.",
@@ -684,6 +745,8 @@
     },
     "ImportLoadout": "Importa dotazione",
     "InGameLoadouts": "Dotazioni in gioco",
+    "IncludeRuntimeStatBenefits": "Includi statistiche modifiche Fonte",
+    "IncludeRuntimeStatBenefitsDesc": "Le modifiche \"Fonte di...\" forniscono un aumento fisso delle statistiche del personaggio mentre possiedi cariche di armatura.\nCon questa impostazione, DIM considera queste modifiche attive e aggiunge i loro benefici alle statistiche di questa dotazione nei calcoli e nelle ottimizzazioni.",
     "ItemErrorSummary": "1 errore oggetto:",
     "ItemErrorSummary_plural": "{{count}} errori oggetti:",
     "ItemLeveling": "Elementi da Livellare",
@@ -706,7 +769,6 @@
     "MaximizeLight": "Potere Max",
     "MaximizePower": "Potere Max",
     "MaximizeStat": "Massimizza Statistica",
-    "MissingItems": "Oggetti Mancanti",
     "MissingItemsWarning": "Alcuni degli oggetti in questa dotazione non sono più nel tuo inventario.",
     "ModErrorSummary": "1 errore Modifica:",
     "ModErrorSummary_plural": "{{count}} errori Modifiche:",
@@ -763,6 +825,7 @@
       "NoName": "La dotazione ha bisogno di un nome."
     },
     "SaveLoadout": "Salva dotazione",
+    "Season": "Stagione {{season}}",
     "Share": {
       "Copied": "Collegamento alla dotazione copiato negli appunti",
       "CopyButton": "Copia Collegamento",
@@ -790,7 +853,6 @@
     "SubclassOptionsSearch": "Cerca {{subclass}} opzioni",
     "Succeeded": "Dotazione applicata correttamente",
     "SyncFromEquipped": "Sincronizza da equipaggiati",
-    "TooManyFragments": "Troppi frammenti",
     "TooManyRequested": "Hai un totale di {{total}} {{itemname}} ma la tua dotazione ne richiede {{requested}}. Abbiamo trasferito tutti quelli che avevi.",
     "UnassignedModError": "La Modifica non è adatta alla tua armatura attuale",
     "Undo": "Annulla",
@@ -871,6 +933,7 @@
       "QuestProgress": "Fase {{questStepNum}} di {{questStepsTotal}}",
       "Type": "{{typeName}} {{classType}}"
     },
+    "TabList": "Schede dettagli oggetto",
     "ToggleSidecar": "Espandi o comprimi le azioni per l'oggetto",
     "TrackUntrack": {
       "Track": "Segui {{itemType}}",
@@ -967,7 +1030,7 @@
     "Items": "Oggetti Imprese",
     "Milestones": "Pietre miliari & Sfide",
     "NoEventChallenges": "Hai completato tutte le sfide dell'evento",
-    "NoTrackedTriumph": "Non stai seguendo nessun trionfo. Seguine uno in gioco, oppure tutti quelli che vuoi su DIM.",
+    "NoTrackedTriumph": "Non stai seguendo alcun Trionfo. Segui tutti quelli che vuoi su DIM.",
     "PercentPrestige": "{{pct}}% al reset",
     "PowerBonusHeader": "Ricompense +{{powerBonus}} Potere",
     "PowerBonusHeaderUndefined": "Altre Ricompense",
@@ -989,7 +1052,8 @@
     "RecordBooks": "Registri"
   },
   "Records": {
-    "Title": "Record"
+    "Title": "Record",
+    "UniversalOrnamentSetOther": "Altro"
   },
   "SearchHistory": {
     "Date": "Recenti",
@@ -1051,6 +1115,7 @@
     "ResetToDefault": "Ripristina",
     "ReverseSort": "Ordinamento normale/inverso",
     "SetSort": "Ordina gli oggetti per:",
+    "SetVaultWeaponGrouping": "Raggruppa le armi nel Deposito per:",
     "Settings": "Impostazioni",
     "ShowNewItems": "Mostra un punto rosso sui nuovi oggetti",
     "SingleCharacter": "Visualizzazione singolo personaggio",
@@ -1074,7 +1139,8 @@
     "SortName": "Nome",
     "SpacesSize": "{{count}} spazio",
     "SpacesSize_plural": "{{count}} spazi",
-    "Theme": "Tema"
+    "Theme": "Tema",
+    "VaultGroupingNone": "Non raggruppare"
   },
   "Sockets": {
     "ApplyPerks": "Applica Perk",
@@ -1280,7 +1346,7 @@
     "About": {
       "APIHistory": "Mostra lo storico di tutte le operazioni fatte da DIM (e altre app per Destiny)",
       "BungieCopyright": "Tutte le immagini ed i contenuti sono proprietà di Bungie.",
-      "CommunityInsight": "Spiegazione dei perk della community a cura di {{clarityLink}}. Se noti delle imprecisioni o hai delle domande, entra su {{clarityDiscordLink}}.",
+      "CommunityInsight": "Spiegazione dei perk e statistiche personaggio a cura di {{clarityLink}}. Se noti delle imprecisioni o hai delle domande, entra su {{clarityDiscordLink}}.",
       "Discord": "Discord",
       "DiscordHelp": "Fai domande, valuta, e ricevi supporto nei nostri canali Discord.",
       "FAQ": "Domande frequenti",
@@ -1347,7 +1413,7 @@
     "UpdateExternalSource": "Aggiorna la fonte della Lista Desideri",
     "Voltron": "voltron (default)",
     "VoltronDescription": "voltron è una collezione auto-aggiornata di roll Lista Desideri per PvE e PvP da tutta la comunità di Destiny. La utilizziamo come default.",
-    "WishListNotes": "Note della Lista Desideri: {{notes}}",
+    "WishListNotes": "Note della Lista Desideri:",
     "WorstRatedTip": "Questo perk corrisponde esattamente ad un roll della tua lista degli scarti.",
     "WorstRatedTip_plural": "Questi perk corrispondono esattamente ad un roll della tua lista degli scarti."
   },

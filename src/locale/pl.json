@@ -231,13 +231,16 @@
     "Event": "Pokazuje przedmioty na podstawie którego zdarzenia z Destiny 2 pochodzą.",
     "ExtraPerk": "Pokazuje losowo wylosowane legendarne bronie z dodatkowym, wybieralną cechą.",
     "Filter": "Filtr",
+    "FilterWith": "Filter with:",
     "Focusable": "Shows items that can be focused at a vendor",
     "Foundry": "Pokazuje przedmioty na podstawie koncernów, które je utworzyły.",
     "Glimmer": "Pokazuje przedmioty konsumpcyjne, które są powiązane ze zyskiwaniem migotu.",
+    "Harrowed": "\\(Harrowed\\)",
     "HasNotes": "Pokaż przedmioty z notatkami.",
     "HasOrnament": "Pokazuje przedmioty, które mają zastosowaną ozdobę.",
     "HasShader": "Pokaż przedmioty z nałożoną barwą.",
     "HoldsMod": "Pokazuje zbroję kompatybilną z określonym typem Modyfikacji Sezonowej.",
+    "InDimLoadout": "is:indimloadout shows items that are included in any DIM loadout.",
     "InInGameLoadout": "is:iningameloadout shows items that are included in any in-game loadout.",
     "InLoadout": "is:inloadout pokazuje przedmioty, które są zawarte w dowolnym Uzbrojeniu. Wyszukiwanie z inloadout: pokazuje elementy, które są zawarte w Uzbroajeniach z pasującymi tytułami. Gdy używany jest z hashtagiem, inloadout: pokazuje elementy, których wyposażenie ma hashtag w tytule lub notatkach.",
     "Infusable": "Pokaż przedmioty, które można nasycić.",
@@ -276,7 +279,7 @@
     "PartialMatch": "Pokazuje elementy, w których ich nazwa, opis, dowolny atut lub dowolne modyfikacje są częściowo dopasowane do tekstu filtra. Wyszukaj całe frazy za pomocą cytatów. Filtr 'perk:' będzie tylko wyszukiwać atuty.",
     "PatternUnlocked": "Pokazuje przedmioty, które mają odblokowane wzorce, nawet jeśli nie są stworzone.",
     "Perk": "Pokazuje przedmioty, w których jeden z ich atutów lub modyfikacji jest częściowo dopasowany do tekstu filtra w ich nazwie lub opisie. Wyszukaj całe frazy używając cytatów.",
-    "PerkName": "Pokazuje przedmioty, w których jeden z ich atutów lub modyfikacji jest częściowo dopasowany do tekstu filtra tylko w ich nazwie. Wyszukaj całe frazy używając cytatów.",
+    "PerkName": "Shows items with a perk or mod whose name matches (exactperk:) or partially matches (perkname:) the filter text. Search for entire phrases using quotes.",
     "PinnacleReward": "Pokazuje zadania, które dają szczytowe nagrody.",
     "Postmaster": "Przedmioty znajdujące się u Kuriera.",
     "PowerKeywords": "Użyj słowa kluczowego pinnaclecap lub softcap, zamiast liczby, aby odnieść się do limitów mocy bieżącego sezonu.",
@@ -292,14 +295,13 @@
     "RetiredPerk": "Pokazuje broń z atutami, które nie są już dostępne.",
     "SearchPrompt": "Wyszukaj dostępne komendy filtrujące",
     "Season": "Pokazuje przedmioty na podstawie którego sezonu z Destiny 2 pochodzą.",
-    "SeasonalDupe": "Pokazuje zduplikowane przedmioty, nie licząc powtórzeń z innego sezonu jako tego samego przedmiotu.",
     "StackFull": "Pokaż, które przedmioty są wypełnione dla ich stosu (rdzenie wzmacniające, dziwne monety, materiały rusznikarza itp.)",
     "StackLevel": "Pokazuje przedmioty na podstawie ilości przedmiotów w ich stosie.",
     "Stackable": "Pokazuje przedmioty, które można stertować (syntezatory amunicji, dziwne monety, itd)",
     "StatLower": "Pokazuje zbroję, której statystyki są niższe niż inna tego samego typu zbroi.",
     "Stats": "Pokazuje przedmioty na podstawie określonej wartości statystyki. $t(Filter.StatsExtras)",
     "StatsBase": "Filtruje pancerz w oparciu o jego podstawową wartość statyczną, nie licząc dołączonych modyfikacji lub mistrzostwa $t(Filter.StatsExtras)",
-    "StatsExtras": "Wspiera dodawanie statystyk przez połączenie wielu nazw statystyk symbolami + lub &. Istnieją również specjalne słowa kluczowe highest, secondhighest, thirdhighest, itp., które pasują do statystyk opartych na ich rankingu w statystykach elementu.",
+    "StatsExtras": "Supports stat addition by connecting multiple stat names with the + or & symbol.  There are also special keywords highest, secondhighest, thirdhighest, etc. which match stats based on their rank within an item's stats. Each custom stats also has its own search term, shown in the Custom Stats settings.",
     "StatsLoadout": "Znajduje zestaw przedmiotów do wyposażenia aby maksymalizować całkowitą wartość określonej statystyki.",
     "StatsMax": "Znajduje pancerz o najwyższym numerze dla określonej statystyki. Obejmuje wszystkie przedmioty z najwyższą statystyką.",
     "Tags": {
@@ -315,6 +317,7 @@
     "UnlockAllFailed": "Nie udało się odblokować przedmiotów",
     "UnlockAllSuccess": "Odblokowano {{num}} przedmiotów",
     "Vendor": "Przedmiot jest dostępny od określonego sprzedawcy.",
+    "VendorItem": "Item is from a vendor, not in your inventory. Useful for excluding vendor items from Loadout Optimizer.",
     "Weapon": "Pokazuje przedmioty, które są bronią.",
     "WeaponLevel": "Pokazuje bronie na podstawie ich Poziomu Broni.",
     "WeaponType": "Pokazuje bronie na podstawie rodzaju broni.",
@@ -326,6 +329,7 @@
   },
   "General": {
     "ClickForDetails": "Kliknij po szczegóły",
+    "Close": "Close",
     "Confirm": "Potwierdzić?",
     "UserGuideLink": "Przewodnik użytkownika"
   },
@@ -388,6 +392,7 @@
     "ClearDialog": "Zamknij dialog",
     "ClearNewItems": "Wyczyść nowe przedmioty",
     "Enter": "ENTER",
+    "ItemPopupTab": "Switch item details tab",
     "LockUnlock": "Zablokuj lub odblokuj przedmiot",
     "MarkItemAs": "Oznacz przedmiot jako '{{tag}}'",
     "Menu": "Przełącz menu",
@@ -401,7 +406,6 @@
     "Vault": "Wyślij przedmiot do schowka"
   },
   "InGameLoadout": {
-    "Applying": "Zakładnie Uzbrojenia...",
     "ClearSlot": "Clear Slot {{index}}",
     "Create": "Create Loadout",
     "CreateTitle": "Create In-Game Loadout From Current Equipment",
@@ -493,6 +497,8 @@
     "Equip": "Załóż na {{character}}",
     "Exclude": "Wykluczone przedmioty",
     "ExcludeHelp": "Shift + kliknij na przedmiot (lub przeciągnij i upuść do tego wiaderka) aby tworzyć zestawy bez konkretnego sprzętu.",
+    "ExistingBuildStats": "Existing Build Stats",
+    "ExistingBuildStatsNote": "Only showing builds with strictly higher stat tiers.",
     "FilterSets": "Zestawy filtrów",
     "Help": {
       "And": "Pancerz z każdym z tych atutów będzie użyty (\"and\")",
@@ -527,7 +533,6 @@
     "Locked": "Zablokowane Przedmioty",
     "LockedHelp": "Przeciągnij i upuść dowolny przedmiot do jego wiaderka aby tworzyć zestaw z tym konkretnym sprzętem. Shift + kliknij aby wykluczyć przedmioty.",
     "Missing2": "Brakuje rzadkich, legendarnych lub egzotycznych części aby stworzyć pełny zestaw!",
-    "ModLockButton": "Wybierz modyfikacje",
     "ProcessingMode": {
       "Fast": "Szybki",
       "Full": "Pełny",
@@ -540,7 +545,8 @@
     "SearchAnExotic": "Search for exotic name or description",
     "SelectExotic": "Wybierz egzotyk",
     "SelectMods": "Wybierz modyfikacje",
-    "SelectSubclass": "Wybierz podklasę",
+    "SelectModsCount": "{{selected}}/{{maxSelectable}}",
+    "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Activity Mods",
     "SelectSubclassOptions": "Dostostuj podklasę",
     "ShowAllConfigs": "Pokaż wszystkie konfiguracje",
     "ShowConfigs": "Pokaż konfiguracje",
@@ -554,6 +560,59 @@
     "Profile": "Wczytywanie profilu Destiny...",
     "Vendors": "Wczytywanie sprzedawców Destiny..."
   },
+  "LoadoutAnalysis": {
+    "Analyzed": "Analyzed {{numLoadouts}} Loadouts",
+    "Analyzing": "Analyzing {{numAnalyzed}}/{{numLoadouts}} Loadouts",
+    "BetterStatsAvailable": {
+      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stat tiers. Choose \"$t(Loadouts.OpenInOptimizer)\" to view better builds.",
+      "Name": "Better Stats Available"
+    },
+    "BetterStatsAvailableFontNote": "Note: This Loadout uses \"Font of ...\" mods that cause a stat tier to exceed T10. DIM may identify better stats by reducing the amount of excess tiers. If this is undesired, disable \"$t(Loadouts.IncludeRuntimeStatBenefits)\" in the Loadout.",
+    "DoesNotRespectExotic": {
+      "Description": "This loadout's Loadout Optimizer settings specify an exotic choice, but the loadout does not match that exotic.",
+      "Name": "Wrong Exotic"
+    },
+    "DoesNotSatisfyStatConstraints": {
+      "Description": "Loadout Optimizer settings for this Loadout specify stat tiers, but the Loadout does not reach them.",
+      "Name": "Wrong Stat Tiers"
+    },
+    "EmptyFragmentSlots": {
+      "Description": "There are empty fragment slots in this subclass.",
+      "Name": "Empty Fragment Slots"
+    },
+    "InvalidMods": {
+      "Description": "Some mods in this loadout are deprecated or do not otherwise fit into any of your armor pieces.",
+      "Name": "Deprecated Mods"
+    },
+    "InvalidSearchQuery": {
+      "Description": "This loadout was created with a search query in Loadout Optimizer that is no longer valid, or does not include the armor in this loadout.",
+      "Name": "Invalid Search Query"
+    },
+    "MissingItems": {
+      "Description": "Some of the items in this loadout are no longer in your inventory.",
+      "Name": "Missing Items"
+    },
+    "ModsDontFit": {
+      "Description": "Armor in this loadout cannot accommodate all loadout mods, even if the armor was upgraded.",
+      "Name": "Unassigned Mods"
+    },
+    "NeedsArmorUpgrades": {
+      "Description": "Armor in this loadout needs to be upgraded to accommodate all mods or reach specified stat tiers.",
+      "Name": "Needs Armor Upgrades"
+    },
+    "NotAFullArmorSet": {
+      "Description": "This loadout could not be analyzed further because it does not include a full set of armor.",
+      "Name": "Not A Full Armor Set"
+    },
+    "TooManyFragments": {
+      "Description": "There are more fragments configured on the subclass than granted by aspects.",
+      "Name": "Too Many Fragments"
+    },
+    "UsesSeasonalMods": {
+      "Description": "This loadout relies on mods that are only available in some seasons. When the season ends, some mods will be unavailable or exceed armor energy capacity.",
+      "Name": "Uses Seasonal Mods"
+    }
+  },
   "LoadoutBuilder": {
     "AddHalfTierMods": "Dodaj modyfikacje +5",
     "All": "Wszystkie",
@@ -561,9 +620,11 @@
     "AnyExoticDescription": "Zestawy muszą zawierać egzotyk, ale każdy egzotyk będzie działać.",
     "AssumeMasterwork": "Załóżmy, że Mistrzowskie",
     "AssumeMasterworkOptions": {
-      "All": "Wszystkie zbroje wykorzystają mistrzowskie statystyki i będą miały 10 energii.",
-      "Legendary": "Legendarna zbroja będzie używała mistrzowskich statystyk i będzie miała poziom energii 10.",
-      "None": "Wszystkie zbroje wykorzystają swoje obecne statystyki i będą miały minimalny poziom wynoszący 7 energii."
+      "All": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "Current": "Current stats, assumed energy level at least {{minLoItemEnergy}}.",
+      "Legendary": "Legendary: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotic: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
+      "Masterworked": "+2 in each stat, assumed energy level 10.",
+      "None": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "Automatycznie dodaj modyfikacje statystyk",
     "AutomaticallyPicked": "This mod was added automatically to improve build stats.",
@@ -571,18 +632,20 @@
     "CompareLoadout": "Porównaj uzbrojenie",
     "ConfirmOverwrite": "Czy na pewno chcesz zastąpić pancerz w uzbrojeniu \"{{name}}\" tym nowym zestawem pancerza?",
     "CreateLoadout": "Zapisz Uzbrojenie",
+    "DecreaseStatPriority": "Decrease stat priority",
     "DisabledByAutoStatMods": "Stat mods are being chosen automatically by Loadout Optimizer.",
     "DisabledDueToMaintenance": "Optymalizator uzbrojenia jest obecnie wyłączony ze względu na prace konserwacyjne Bungie API.",
     "EquipItems": "Załóż",
     "ExcludeItem": "Wyklucz Przedmiot",
     "ExistingLoadout": "Istniejące uzbrojenie",
+    "Exotic": "Exotic Armor",
     "ExoticSpecialCategory": "Specjalne",
     "Filter": "Filtry",
-    "IncludeVendorItems": "Include Vendor items",
+    "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
+    "IncreaseStatPriority": "Increase stat priority",
     "Legendary": "Legendarny",
     "LockEquipped": "Przypnij założone",
     "LockItem": "Przypnij przedmiot",
-    "MaxTier": "Max {{tier}}",
     "MissingClass": "Zestaw jest dla: {{className}}",
     "MissingClassDescription": "Zestaw który chcesz zobaczyć dotyczy klasy której nie posiadasz.",
     "NoBuildsFoundExplainer": {
@@ -604,22 +667,22 @@
       "UpperBoundsFailed": "Wiele zestawów nie spełniło maksymalnych wymogów dotyczących poziomu statystyk"
     },
     "NoExotic": "Brak egzotyku",
-    "NoExoticDescription": "Równoważne wyszukiwaniu \"not:exotic\" na pasku wyszukiwania - żaden egzotyczny pancerz nie będzie uwzględniony w zestawach.",
+    "NoExoticDescription": "Equivalent to searching \"not:exotic\" in the search bar - sets will not use any exotic armor.",
+    "NoExoticPreference": "No Exotic Selected",
+    "NoExoticPreferenceDescription": "Exotic armor will be used if it maximizes stats.",
     "NoLoadoutsToCompare": "Brak uzbrojeń do porównania",
     "None": "Brak",
     "OptimizerExplanationGuide": "Przeczytaj przewodnik użytkownika, aby uzyskać więcej informacji i poradnik wideo.",
-    "OptimizerExplanationMods": "Wybierz egzotyk i dowolne modyfikacje, których chcesz użyć. Optymalizator uzbrojenia uwzględnia premie statystyk tylko z wybranych modyfikacji - wszystkie modyfikacje już założone na zbroi są ignorowane.",
+    "OptimizerExplanationMods": "Choose an exotic, mods, and a subclass. Loadout Optimizer only includes stat bonuses from mods and subclass options you choose - all mods already on the armor are ignored.",
     "OptimizerExplanationSearch": "Use the search bar to narrow down which armor to consider. If no armor matches the search in a slot, all armor in that slot will be considered.",
-    "OptimizerExplanationStats": "Przeciągnij najważniejsze statystyki na górę i ustaw Ignoruj na statystykach które Cię nie obchodzą.",
+    "OptimizerExplanationStats": "Drag the most important stats to the top, and disable stats you don't want to optimize for.",
     "OptimizerSet": "Zestaw optymalizatora",
-    "ProcessingSets": "Przetwarzanie zestawów dla\n{{character}} ({{remainingTime}}s)",
+    "ProcessingSets": "Finding highest tier sets...",
     "SaveAs": "Zapisz jako",
-    "SelectMax": "- Maks. -",
-    "SelectMin": "- Min. -",
     "SpeedReport": "Wygenerowano {{combos, number}} kombinacje w {{time}} sekund",
-    "StatTierIgnoreOption": "Zignoruj",
-    "StatTierIncludeOption": "Dołącz",
+    "StatConstraints": "Stat Tier Priorities & Ranges",
     "TierNumber": "T{{tier}}",
+    "TierSelect": "Select minimum stat tier",
     "UnableToAddAllMods": "Nie można dodać wszystkich modyfikacji.",
     "UnableToAddAllModsBody": "Nie ma wystarczającej ilości miejsc na modyfikacje, aby założyć {{mods}}.",
     "UnlockItem": "Odepnij Przedmiot"
@@ -658,11 +721,9 @@
     "CurrentlyEquipped": "Aktualnie założone",
     "Deequip": "Rozbrojenie postaci z przedmiotów",
     "Delete": "Usuń",
-    "DeprecatedMods": "Wycofane Modyfikacje",
     "DimLoadouts": "DIM Loadouts",
     "Edit": "Edytuj Uzbrojenie",
     "EditBrief": "Edytuj",
-    "EmptyFragmentSlots": "Empty Fragment Slots",
     "EquipInGameLoadout": "Equipping in-game loadout",
     "EquipItems": "Wyposażanie przedmiotów",
     "EquippableDifferent1": "Wielokrotne przedmioty egzotyczne zostały użyte do obliczenia twojej maksymalnej mocy, więc pokazana liczba może nie być osiągalna podczas wyposażenia twoich przedmiotów w grze.",
@@ -684,6 +745,8 @@
     },
     "ImportLoadout": "Importuj Uzbrojenie",
     "InGameLoadouts": "In-Game Loadouts",
+    "IncludeRuntimeStatBenefits": "Include Font mod stats",
+    "IncludeRuntimeStatBenefitsDesc": "\"Font of ...\" armor mods provide a flat boost to character stats while you have Armor Charges.\n\nWith this setting, DIM considers these mods active and adds their benefits to this Loadout's stats in calculations and optimizations.",
     "ItemErrorSummary": "1 błąd przedmiotu:",
     "ItemErrorSummary_plural": "{{count}} błędów przedmiotu:",
     "ItemLeveling": "Levelowanie Przedmiotów",
@@ -706,7 +769,6 @@
     "MaximizeLight": "Maksymalizuj Światło",
     "MaximizePower": "Maksymalizuj Moc",
     "MaximizeStat": "Maksymalizuj statysktykę",
-    "MissingItems": "Brakujące przedmioty",
     "MissingItemsWarning": "Niektóre elementy w tym uzbrojeniu już nie są w twoim ekwipunku.",
     "ModErrorSummary": "1 błąd modyfikacji:",
     "ModErrorSummary_plural": "{{count}} błędów modyfikacji:",
@@ -763,6 +825,7 @@
       "NoName": "Uzbrojenie wymaga nazwy."
     },
     "SaveLoadout": "Zapisz Uzbrojenie",
+    "Season": "Season {{season}}",
     "Share": {
       "Copied": "Skopiowano link uzbrojenia do schowka",
       "CopyButton": "Kopiuj link",
@@ -790,7 +853,6 @@
     "SubclassOptionsSearch": "Szukaj opcje {{subclass}}",
     "Succeeded": "Uzbrojenie powiodło się",
     "SyncFromEquipped": "Synchronizuj z wyposażonych przedmiotów",
-    "TooManyFragments": "Too Many Fragments",
     "TooManyRequested": "Masz {{total}} {{itemname}}, ale Twoje wyposażenie wymaga {{requested}}. Przenieśliśmy wszystko, co miałeś.",
     "UnassignedModError": "Modyfikacja nie pasuję do twojej bieżącej zbroi",
     "Undo": "Cofnij",
@@ -871,6 +933,7 @@
       "QuestProgress": "Krok {{questStepNum}} z {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
+    "TabList": "Item detail tabs",
     "ToggleSidecar": "Rozwiń lub zwiń akcje przedmiotu",
     "TrackUntrack": {
       "Track": "Śledź {{itemType}}",
@@ -967,7 +1030,7 @@
     "Items": "Przedmioty zadań",
     "Milestones": "Kamienie milowe i wyzwania",
     "NoEventChallenges": "Ukończyłeś wszystkie wyzwania wydarzenia",
-    "NoTrackedTriumph": "Nie masz żadnych śledzonych triumfów. Śledź jednego w grze lub tyle, ile chcesz w DIM.",
+    "NoTrackedTriumph": "You have no tracked triumphs. Track as many as you like in DIM.",
     "PercentPrestige": "{{pct}}% do resetu",
     "PowerBonusHeader": "Nagrody o Mocy +{{powerBonus}}",
     "PowerBonusHeaderUndefined": "Inne nagrody",
@@ -989,7 +1052,8 @@
     "RecordBooks": "Księga Rekordów"
   },
   "Records": {
-    "Title": "Rekordy"
+    "Title": "Rekordy",
+    "UniversalOrnamentSetOther": "Other"
   },
   "SearchHistory": {
     "Date": "Ostatnio używane",
@@ -1051,6 +1115,7 @@
     "ResetToDefault": "Resetuj",
     "ReverseSort": "Przełącz sortowanie do przodu/do tyłu",
     "SetSort": "Sortuj produkty według:",
+    "SetVaultWeaponGrouping": "Group vault weapons by:",
     "Settings": "Ustawienia",
     "ShowNewItems": "Pokaż czerwoną kropkę na nowych przedmiotach",
     "SingleCharacter": "Widok pojedynczej postaci",
@@ -1074,7 +1139,8 @@
     "SortName": "Nazwa",
     "SpacesSize": "{{count}} miejsce",
     "SpacesSize_plural": "{{count}} miejsc",
-    "Theme": "Theme"
+    "Theme": "Theme",
+    "VaultGroupingNone": "None"
   },
   "Sockets": {
     "ApplyPerks": "Zastosuj perki",
@@ -1280,7 +1346,7 @@
     "About": {
       "APIHistory": "Zobacz historię wszystkich działań podejmowanych przez DIM (i inne aplikacje Destiny)",
       "BungieCopyright": "Wszystkie obrazy i zawartość jest własnością Bungie.",
-      "CommunityInsight": "Spostrzeżenia Społeczności dotyczące Cech dzięki uprzejmości {{clarityLink}}. Jeśli zauważysz nieścisłości lub masz pytania, dołącz do {{clarityDiscordLink}}.",
+      "CommunityInsight": "Community Insights for Perks and Character Stats courtesy of {{clarityLink}}. If you notice inaccuracies or have questions, join the {{clarityDiscordLink}}.",
       "Discord": "Discord",
       "DiscordHelp": "Zadawaj pytania, wyrażaj opinie i uzyskaj wsparcie na naszych kanałach Discord.",
       "FAQ": "Często Zadawane Pytania (FAQ)",
@@ -1347,7 +1413,7 @@
     "UpdateExternalSource": "Aktualizuj źródło listy życzeń",
     "Voltron": "voltron (domyślna)",
     "VoltronDescription": "voltron to automatycznie aktualizowana kolekcja rolli z listy życzeń PvE i PvP od całej społeczności Destiny. Dostarczamy je domyślnie.",
-    "WishListNotes": "Notatki z listy życzeń: {{notes}}",
+    "WishListNotes": "Wish List Notes:",
     "WorstRatedTip": "This perk exactly matches a weapon roll on your trashlist.",
     "WorstRatedTip_plural": "These perks exactly match a weapon roll on your trashlist."
   },

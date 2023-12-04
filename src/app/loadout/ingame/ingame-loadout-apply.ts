@@ -19,7 +19,7 @@ import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { inGameLoadoutItemsFromEquipped } from 'app/loadout-drawer/loadout-utils';
 import { showNotification } from 'app/notifications/notifications';
 import { ThunkResult } from 'app/store/types';
-import { errorMessage } from 'app/utils/util';
+import { errorMessage } from 'app/utils/errors';
 import { inGameLoadoutDeleted, inGameLoadoutUpdated } from './actions';
 import { getItemsFromInGameLoadout } from './ingame-loadout-utils';
 
@@ -37,10 +37,10 @@ export function applyInGameLoadout(loadout: InGameLoadout, apply = true): ThunkR
 
       const moveLoadout = itemMoveLoadout(
         loadoutItems.map((i) => i.item),
-        targetStore
+        targetStore,
       );
       return await dispatch(
-        applyLoadout(targetStore, moveLoadout, apply ? { inGameLoadout: loadout } : {})
+        applyLoadout(targetStore, moveLoadout, apply ? { inGameLoadout: loadout } : {}),
       );
     } catch (e) {}
   };
@@ -55,7 +55,7 @@ export function updateAfterInGameLoadoutApply(loadout: InGameLoadout): ThunkResu
     const items = getItemsFromInGameLoadout(
       itemCreationContext,
       loadout.items,
-      allItemsSelector(getState())
+      allItemsSelector(getState()),
     );
 
     for (const { item } of items) {

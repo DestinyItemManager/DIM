@@ -38,7 +38,7 @@ export default function EditInGameLoadout({
   const defaultIcon = icons[0].hash;
 
   const loadouts = useSelector((state: RootState) =>
-    inGameLoadoutsForCharacterSelector(state, characterId!)
+    inGameLoadoutsForCharacterSelector(state, characterId!),
   );
   const numSlots = useSelector(availableLoadoutSlotsSelector);
   let firstAvailableSlot = 0;
@@ -54,13 +54,13 @@ export default function EditInGameLoadout({
   const wouldOverwrite = Boolean(overwrittenLoadout);
 
   const [nameHash, setNameHash] = useState(
-    loadout?.nameHash ?? overwrittenLoadout?.nameHash ?? defaultName
+    loadout?.nameHash ?? overwrittenLoadout?.nameHash ?? defaultName,
   );
   const [colorHash, setColorHash] = useState(
-    loadout?.colorHash ?? overwrittenLoadout?.colorHash ?? defaultColor
+    loadout?.colorHash ?? overwrittenLoadout?.colorHash ?? defaultColor,
   );
   const [iconHash, setIconHash] = useState(
-    loadout?.iconHash ?? overwrittenLoadout?.iconHash ?? defaultIcon
+    loadout?.iconHash ?? overwrittenLoadout?.iconHash ?? defaultIcon,
   );
 
   const handleSetSlot = (newSlotNum: number) => {
@@ -106,11 +106,11 @@ export default function EditInGameLoadout({
             characterId: characterId!,
             items: [],
             id: `ingame-${characterId}-${slot}`,
-          })
+          }),
         );
       } else {
         await dispatch(
-          editInGameLoadout({ ...loadout, nameHash, name, colorHash, colorIcon, iconHash, icon })
+          editInGameLoadout({ ...loadout, nameHash, name, colorHash, colorIcon, iconHash, icon }),
         );
       }
     } finally {

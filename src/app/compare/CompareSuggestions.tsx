@@ -22,8 +22,8 @@ export default memo(function CompareSuggestions({
   const compareButtons = exampleItem.bucket.inArmor
     ? findSimilarArmors(exampleItem)
     : exampleItem.bucket.inWeapons
-    ? findSimilarWeapons(exampleItem)
-    : defaultComparisons(exampleItem);
+      ? findSimilarWeapons(exampleItem)
+      : defaultComparisons(exampleItem);
 
   // Fill in the items that match each query
   const compareButtonsWithItems = compareButtons.map((button) => ({
@@ -49,7 +49,7 @@ export default memo(function CompareSuggestions({
     if (
       compareButton.items.length === nextCompareButton?.items.length &&
       compareButton.items.every(
-        (setItem) => nextCompareButton?.items.some((nextSetItem) => nextSetItem === setItem)
+        (setItem) => nextCompareButton?.items.some((nextSetItem) => nextSetItem === setItem),
       )
     ) {
       // do include this button, if the next button is the "includes sunset items" button.

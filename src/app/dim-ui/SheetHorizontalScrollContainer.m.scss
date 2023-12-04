@@ -1,12 +1,10 @@
 .horizontalScrollContainer {
   flex: 1;
   white-space: nowrap;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: auto hidden;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  -webkit-overflow-scrolling: touch;
   contain: content;
   touch-action: none;
 }

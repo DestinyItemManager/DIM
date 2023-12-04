@@ -8,9 +8,9 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { UNSET_PLUG_HASH } from 'app/loadout/known-values';
+import { filterMap } from 'app/utils/collections';
 import { emptyObject } from 'app/utils/empty';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
-import { filterMap } from 'app/utils/util';
 import {
   DestinyClass,
   DestinyLoadoutComponent,
@@ -24,7 +24,7 @@ import {
   LoadoutItem as DimLoadoutItem,
   InGameLoadout,
 } from './loadout-types';
-import { convertToLoadoutItem, newLoadout, potentialLoadoutItemsByItemId } from './loadout-utils';
+import { convertToLoadoutItem, itemsByItemId, newLoadout } from './loadout-utils';
 
 /**
  * DIM API stores loadouts in a new format, but the app still uses the old format everywhere. These functions convert
@@ -71,7 +71,7 @@ function convertDimLoadoutItemToLoadoutItem(item: DimLoadoutItem): LoadoutItem {
 
 function migrateLoadoutParameters(
   parameters: DimLoadout['parameters'],
-  clearSpace: boolean
+  clearSpace: boolean,
 ): DimLoadout['parameters'] {
   // Migrate the single "clear" parameter into separate armor/weapons parameters
   if (
@@ -107,7 +107,7 @@ export function convertDimApiLoadoutToLoadout(loadout: Loadout): DimLoadout {
  */
 function convertDimApiLoadoutItemToLoadoutItem(
   item: LoadoutItem,
-  equipped: boolean
+  equipped: boolean,
 ): DimLoadoutItem {
   return {
     ...item,
@@ -119,14 +119,14 @@ function convertDimApiLoadoutItemToLoadoutItem(
 
 export const processInGameLoadouts = (
   profileResponse: DestinyProfileResponse,
-  defs: D2ManifestDefinitions
+  defs: D2ManifestDefinitions,
 ): { [characterId: string]: InGameLoadout[] } => {
   const characterLoadouts = profileResponse?.characterLoadouts?.data;
   if (characterLoadouts) {
     return _.mapValues(characterLoadouts, (c, characterId) =>
       filterMap(c.loadouts, (l, i) =>
-        convertDestinyLoadoutComponentToInGameLoadout(l, i, characterId, defs)
-      )
+        convertDestinyLoadoutComponentToInGameLoadout(l, i, characterId, defs),
+      ),
     );
   }
   return emptyObject();
@@ -139,7 +139,7 @@ function convertDestinyLoadoutComponentToInGameLoadout(
   loadoutComponent: DestinyLoadoutComponent,
   index: number,
   characterId: string,
-  defs: D2ManifestDefinitions
+  defs: D2ManifestDefinitions,
 ): InGameLoadout | undefined {
   const resolvedIdentifiers = resolveInGameLoadoutIdentifiers(defs, loadoutComponent);
 
@@ -162,7 +162,7 @@ function convertDestinyLoadoutComponentToInGameLoadout(
 
 export function resolveInGameLoadoutIdentifiers(
   defs: D2ManifestDefinitions,
-  { nameHash, colorHash, iconHash }: InGameLoadoutIdentifiers
+  { nameHash, colorHash, iconHash }: InGameLoadoutIdentifiers,
 ) {
   const name = defs.LoadoutName.get(nameHash)?.name ?? 'Unknown';
   const colorIcon = defs.LoadoutColor.get(colorHash)?.colorImagePath ?? '';
@@ -173,7 +173,7 @@ export function resolveInGameLoadoutIdentifiers(
 export function convertInGameLoadoutToDimLoadout(
   inGameLoadout: InGameLoadout,
   classType: DestinyClass,
-  allItems: DimItem[]
+  allItems: DimItem[],
 ) {
   const armorMods: number[] = [];
   const modsByBucket: LoadoutParameters['modsByBucket'] = {};
@@ -183,7 +183,7 @@ export function convertInGameLoadoutToDimLoadout(
       return;
     }
 
-    const matchingItem = potentialLoadoutItemsByItemId(allItems)[inGameItem.itemInstanceId];
+    const matchingItem = itemsByItemId(allItems)[inGameItem.itemInstanceId];
     if (!matchingItem) {
       return;
     }
@@ -191,11 +191,11 @@ export function convertInGameLoadoutToDimLoadout(
     if (matchingItem.bucket.inArmor) {
       const armorModSockets = getSocketsByCategoryHash(
         matchingItem.sockets,
-        SocketCategoryHashes.ArmorMods
+        SocketCategoryHashes.ArmorMods,
       );
       const fashionModSockets = getSocketsByCategoryHash(
         matchingItem.sockets,
-        SocketCategoryHashes.ArmorCosmetics
+        SocketCategoryHashes.ArmorCosmetics,
       );
       for (let i = 0; i < inGameItem.plugItemHashes.length; i++) {
         const plugHash = inGameItem.plugItemHashes[i];
@@ -243,11 +243,11 @@ export function convertInGameLoadoutToDimLoadout(
  * format, but it does matter for displaying them.
  */
 export function convertInGameLoadoutPlugItemHashesToSocketOverrides(
-  plugItemHashes: number[]
+  plugItemHashes: number[],
 ): SocketOverrides {
   return Object.fromEntries(
     filterMap(plugItemHashes, (plugHash, i) =>
-      plugHash !== UNSET_PLUG_HASH ? [i, plugHash] : undefined
-    )
+      plugHash !== UNSET_PLUG_HASH ? [i, plugHash] : undefined,
+    ),
   );
 }

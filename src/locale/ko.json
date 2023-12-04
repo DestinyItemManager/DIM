@@ -231,13 +231,16 @@
     "Event": "데스티니 2의 특정 이벤트에서 나온 아이템을 표시합니다.",
     "ExtraPerk": "추가로 선택 가능한 특성이 있는 무작위 특성의 전설 무기를 표시합니다.",
     "Filter": "필터",
+    "FilterWith": "필터 조건:",
     "Focusable": "상인에게서 집중 가능한 아이템 표시",
     "Foundry": "제조사에 따라 아이템을 표시합니다.",
     "Glimmer": "미광체 수급에 관련된 소모품을 표시합니다.",
+    "Harrowed": "\\(고뇌\\)",
     "HasNotes": "메모가 추가된 아이템 표시",
     "HasOrnament": "장식이 적용된 아이템을 표시합니다.",
     "HasShader": "안료가 적용된 아이템을 표시합니다.",
     "HoldsMod": "특정 시즌의 개조 부품과 호환되는 방어구를 표시합니다.",
+    "InDimLoadout": "is:indimloadout은 DIM 로드아웃에 포함된 아이템을 표시합니다.",
     "InInGameLoadout": "is:iningameloadout은 게임 내 로드아웃에 포함된 아이템을 표시합니다.",
     "InLoadout": "\"is:inloadout\"은 로드아웃에 포함된 아이템을 표시합니다. \"inloadout:\"을 사용하여 검색하면 이름이 일치하는 로드아웃의 아이템을 표시합니다. \"inloadout:\"이 해시태그와 같이 사용되는 경우, 이름이나 메모에 해시태그가 포함된 로드아웃의 아이템을 표시합니다.",
     "Infusable": "주입할 수 있는 아이템을 표시합니다.",
@@ -276,7 +279,7 @@
     "PartialMatch": "이름, 설명, 특성이나 개조 부품이 필터와 부분적으로 일치하는 아이템을 표시합니다. 전체 구문을 검색하시려면 따옴표를 사용하세요. 'perk:' 필터는 특성만 검색합니다.",
     "PatternUnlocked": "형성 여부에 관계없이 무기 형성 패턴이 잠금 해제된 아이템을 표시합니다.",
     "Perk": "특성이나 개조 부품의 이름이나 설명이 필터와 부분적으로 일치하는 아이템을 표시합니다. 전체 구문을 검색하시려면 따옴표를 사용하세요.",
-    "PerkName": "특성이나 개조 부품의 이름이 필터와 부분적으로 일치하는 아이템을 표시합니다. 전체 구문을 검색하시려면 따옴표를 사용하세요.",
+    "PerkName": "특성이나 개조 부품의 이름이 필터와 일치(exactperk:)하거나 부분적으로 일치(perkname:)하는 아이템을 표시합니다. 따옴표를 사용하여 전체 문구를 검색합니다.",
     "PinnacleReward": "최고급 보상을 주는 이정표를 표시합니다.",
     "Postmaster": "우편 담당자가 소지하고 있는 아이템",
     "PowerKeywords": "현재 시즌의 전투력 제한 값 대신 pinnaclecap이나 softcap 단어를 사용합니다.",
@@ -292,14 +295,13 @@
     "RetiredPerk": "더 이상 얻을 수 없는 특성이 포함된 아이템을 표시합니다.",
     "SearchPrompt": "사용 가능한 필터 명령어 검색",
     "Season": "데스티니 2의 특정 시즌에서 나온 아이템을 표시합니다.",
-    "SeasonalDupe": "중복된 아이템을 표시합니다, 다른 시즌의 재출시된 아이템은 같은 아이템으로 취급하지 않습니다.",
     "StackFull": "스택 당 최대 소지 제한에 도달한 아이템 표시 (강화 코어, 이상한 동전, 총기 제작 재료 등)",
     "StackLevel": "아이템의 개수를 기준으로 표시합니다.",
     "Stackable": "한 칸에 중첩 가능한 아이템(탄약 신스, 이상한 동전 등)을 표시합니다.",
     "StatLower": "동일한 종류의 다른 방어구보다 능력치가 확실하게 낮은 방어구를 표시합니다.",
     "Stats": "특정 능력치의 값에 따라 아이템을 표시합니다. $t(Filter.StatsExtras)",
     "StatsBase": "방어구를 장착된 개조 부품과 걸작을 제외한 기본 능력치 값으로 필터링. $t(Filter.StatsExtras)",
-    "StatsExtras": "여러 능력치 이름을 +, & 기호로 연결하여 능력치를 더할 수 있습니다. highest, secondhighest, thirdhighest 등의 특수 키워드가 있으며, 아이템의 능력치 순위를 기준으로 합니다.",
+    "StatsExtras": "여러 능력치 이름을 +, & 기호로 연결하여 능력치를 더할 수 있습니다. highest, secondhighest, thirdhighest 등의 특수 키워드가 있으며, 아이템의 능력치 순위를 기준으로 합니다. 사용자 정의 능력치 또한 검색어가 있으며, 사용자 정의 능력치 설정에서 확인할 수 있습니다.",
     "StatsLoadout": "특정 능력치를 최대한 올릴 수 있는 아이템 조합을 찾습니다.",
     "StatsMax": "특정 능력치가 가장 높은 방어구를 찾습니다. 최대치를 가진 모든 방어구가 포함됩니다.",
     "Tags": {
@@ -315,6 +317,7 @@
     "UnlockAllFailed": "아이템 잠금 해제 실패",
     "UnlockAllSuccess": "아이템 {{num}}개 잠금 해제됨",
     "Vendor": "특정 상인에게서 얻을 수 있는 아이템",
+    "VendorItem": "소지품이 아닌 상인에게서 가져온 아이템입니다. 로드아웃 최적화에서 상인 아이템을 제외하는데 유용하게 쓰입니다.",
     "Weapon": "무기인 아이템을 표시합니다.",
     "WeaponLevel": "무기의 전투력을 기준으로 표시합니다.",
     "WeaponType": "무기의 공격 속성을 기준으로 표시합니다.",
@@ -326,6 +329,7 @@
   },
   "General": {
     "ClickForDetails": "자세한 내용은 클릭",
+    "Close": "닫기",
     "Confirm": "확인?",
     "UserGuideLink": "사용 설명서"
   },
@@ -344,7 +348,7 @@
     "AutoRefresh": "플레이하는 동안 DIM을 자동으로 새로고침합니다.",
     "BulkTag": "아이템 대량으로 태그하기",
     "BungieNetAlert": "Bungie 알림",
-    "Clarity": "Clarity 확장 프로그램은 개발자에 의해 더 이상 지원되지 않으며, DIM에서 시스템 과부하와 같은 문제를 일으킬 수 있습니다.",
+    "Clarity": "Clarity 확장 프로그램은 개발자에 의해 더 이상 지원되지 않으며, DIM에서 시스템 과부하와 같은 문제를 일으킬 수 있습니다. 제거해 주시길 바랍니다.",
     "Clear": "검색 필터 초기화",
     "CompareMatching": "아이템 비교",
     "DeleteSearch": "검색 삭제",
@@ -388,6 +392,7 @@
     "ClearDialog": "대화 상자 숨기기",
     "ClearNewItems": "새 아이템 초기화",
     "Enter": "엔터",
+    "ItemPopupTab": "아이템 세부정보 탭 전환",
     "LockUnlock": "아이템 잠금 또는 잠금 해제",
     "MarkItemAs": "아이템을 '{{tag}}'로 표시하기",
     "Menu": "메뉴 표시 전환",
@@ -401,7 +406,6 @@
     "Vault": "아이템을 창고로 이동"
   },
   "InGameLoadout": {
-    "Applying": "로드아웃을 장착하는 중...",
     "ClearSlot": "슬롯 {{index}} 초기화",
     "Create": "로드아웃 생성",
     "CreateTitle": "현재 장비에서 게임 내 로드아웃 생성",
@@ -493,6 +497,8 @@
     "Equip": "{{character}}에게 장착",
     "Exclude": "제외된 아이템",
     "ExcludeHelp": "아이템을 쉬프트 + 클릭(또는 이 바구니에 끌어서 놓기)하여 특정 장비를 제외한 세트를 만듭니다.",
+    "ExistingBuildStats": "기존 빌드 능력치",
+    "ExistingBuildStatsNote": "엄격하게 더 높은 능력치 등급을 가진 빌드만 표시합니다.",
     "FilterSets": "장비 조합 필터",
     "Help": {
       "And": "이 특성을 가진 모든 방어구들은 (\"그리고\") 를 사용 할 것입니다",
@@ -527,7 +533,6 @@
     "Locked": "잠긴 아이템",
     "LockedHelp": "바구니에 아이템을 끌어다 놓아 해당 장비가 포함된 조합을 만드세요. 아이템을 제외하려면 쉬프트 + 클릭하세요.",
     "Missing2": "완전한 세트를 만들기 위해 필요한 희귀, 전설, 경이 등급의 장비가 부족합니다!",
-    "ModLockButton": "개조 부품 선택",
     "ProcessingMode": {
       "Fast": "빠름",
       "Full": "최대",
@@ -540,7 +545,8 @@
     "SearchAnExotic": "경이 이름이나 설명 검색",
     "SelectExotic": "경이 선택",
     "SelectMods": "개조 부품 선택",
-    "SelectSubclass": "하위직업 선택",
+    "SelectModsCount": "{{selected}}/{{maxSelectable}}",
+    "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} 활동 개조 부품",
     "SelectSubclassOptions": "하위직업 사용자 정의",
     "ShowAllConfigs": "모든 설정 표시",
     "ShowConfigs": "설정 표시",
@@ -554,6 +560,59 @@
     "Profile": "데스티니 프로필 불러오는 중...",
     "Vendors": "데스티니 상인 불러오는 중..."
   },
+  "LoadoutAnalysis": {
+    "Analyzed": "{{numLoadouts}}개의 로드아웃 분석됨",
+    "Analyzing": "{{numAnalyzed}}/{{numLoadouts}} 로드아웃 분석하는 중",
+    "BetterStatsAvailable": {
+      "Description": "이 로드아웃에서 다른 방어구나 개조 부품을 선택하면 더 높은 능력치 등급에 도달할 수 있습니다. 더 나은 빌드를 보려면 \"$t(Loadouts.OpenInOptimizer)\"를 선택하세요.",
+      "Name": "더 좋은 능력치 사용 가능"
+    },
+    "BetterStatsAvailableFontNote": "메모: 이 로드아웃은 \"... 샘\" 개조 부품을 사용하며 능력치 등급이 T10을 넘길 수 있습니다. DIM이 초과되는 등급을 줄여서 더 나은 능력치를 찾을 수 있습니다. 이러한 과정을 무시하려면 로드아웃에서 \"$t(Loadouts.IncludeRuntimeStatBenefits)\"을 비활성화합니다.",
+    "DoesNotRespectExotic": {
+      "Description": "이 로드아웃의 로드아웃 최적화 설정은 특정 경이 아이템을 지정하고 있지만, 로드아웃에 일치하는 경이 아이템이 없습니다.",
+      "Name": "잘못된 경이 아이템"
+    },
+    "DoesNotSatisfyStatConstraints": {
+      "Description": "이 로드아웃의 로드아웃 최적화 설정은 특정 능력치 등급을 지정하고 있지만, 로드아웃이 그 등급을 달성하지 않습니다.",
+      "Name": "잘못된 능력치 등급"
+    },
+    "EmptyFragmentSlots": {
+      "Description": "하위직업에 빈 조각 슬롯이 있습니다.",
+      "Name": "빈 조각 슬롯"
+    },
+    "InvalidMods": {
+      "Description": "이 로드아웃의 일부 개조 부품이 만료되었거나 어떤 방어구에도 장착할 수 없습니다.",
+      "Name": "만료된 개조 부품"
+    },
+    "InvalidSearchQuery": {
+      "Description": "이 로드아웃은 로드아웃 최적화에서 더 이상 유효하지 않거나, 방어구를 포함하지 않는 검색어로 생성되었습니다.",
+      "Name": "잘못된 검색어"
+    },
+    "MissingItems": {
+      "Description": "이 로드아웃의 일부 아이템이 더 이상 소지품에 없습니다.",
+      "Name": "누락된 아이템"
+    },
+    "ModsDontFit": {
+      "Description": "방어구를 업그레이드하여도 로드아웃의 모든 개조 부품을 장착할 수 없습니다.",
+      "Name": "할당되지 않은 개조 부품"
+    },
+    "NeedsArmorUpgrades": {
+      "Description": "이 로드아웃의 방어구를 업그레이드해야 모든 개조 부품이나 특정 능력치 등급을 달성할 수 있습니다.",
+      "Name": "방어구 업그레이드 필요"
+    },
+    "NotAFullArmorSet": {
+      "Description": "이 로드아웃은 모든 방어구를 포함하지 않아 더 이상 분석할 수 없습니다.",
+      "Name": "전체 방어구 세트 아님"
+    },
+    "TooManyFragments": {
+      "Description": "하위직업의 상에서 제공한 조각의 수를 초과하였습니다.",
+      "Name": "조각이 너무 많음"
+    },
+    "UsesSeasonalMods": {
+      "Description": "이 로드아웃은 특정 시즌에서만 사용 가능한 개조 부품에 의존합니다. 시즌이 종료되면 일부 개조 부품을 사용할 수 없거나 방어구 에너지 수용량을 초과할 수 있습니다.",
+      "Name": "시즌 개조 부품 사용"
+    }
+  },
   "LoadoutBuilder": {
     "AddHalfTierMods": "+5 개조 부품 추가",
     "All": "전체",
@@ -561,9 +620,11 @@
     "AnyExoticDescription": "경이 아이템이 세트에 반드시 포함되어야 하지만, 어떤 경이 아이템이라도 상관없습니다.",
     "AssumeMasterwork": "걸작 가정",
     "AssumeMasterworkOptions": {
-      "All": "모든 방어구의 걸작 능력치를 사용하며 10의 에너지 수용량을 가집니다.",
-      "Legendary": "전설 방어구의 걸작 능력치를 사용하며 10의 에너지 수용량을 가집니다.",
-      "None": "모든 방어구의 현재 능력치를 사용하며 최소 7의 에너지 수용량을 가집니다."
+      "All": "모든 방어구: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "Current": "현재 능력치, 최소 에너지 레벨 {{minLoItemEnergy}} 가정",
+      "Legendary": "전설: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\n경이: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
+      "Masterworked": "각 능력치 +2, 에너지 레벨 10 가정",
+      "None": "모든 방어구: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "능력치 개조 부품 자동 추가",
     "AutomaticallyPicked": "이 개조 부품은 빌드의 능력치를 향상시키기 위해 자동으로 추가되었습니다.",
@@ -571,18 +632,20 @@
     "CompareLoadout": "로드아웃 비교",
     "ConfirmOverwrite": "로드아웃 \"{{name}}\"의 방어구를 새로운 방어구 조합으로 변경하시겠습니까?",
     "CreateLoadout": "로드아웃 저장",
+    "DecreaseStatPriority": "능력치 우선도 감소",
     "DisabledByAutoStatMods": "능력치 개조 부품은 로드아웃 최적화에서 자동으로 선택됩니다.",
     "DisabledDueToMaintenance": "Bungie API 점검으로 인하여 로드아웃 최적화가 비활성화되었습니다.",
     "EquipItems": "장착",
     "ExcludeItem": "아이템 제외",
     "ExistingLoadout": "기존 로드아웃",
+    "Exotic": "경이 방어구",
     "ExoticSpecialCategory": "특수",
     "Filter": "필터",
-    "IncludeVendorItems": "상인 아이템 포함",
+    "IgnoreStat": "체크가 해제된 경우 로드아웃 최적화가 장비 조합을 구성할 때 이 능력치를 무시합니다.",
+    "IncreaseStatPriority": "능력치 우선도 증가",
     "Legendary": "전설",
     "LockEquipped": "장착된 아이템 고정",
     "LockItem": "아이템 잠금",
-    "MaxTier": "최대 {{tier}}",
     "MissingClass": "빌드 대상: {{className}}",
     "MissingClassDescription": "소지하지 않은 직업의 빌드입니다.",
     "NoBuildsFoundExplainer": {
@@ -604,22 +667,22 @@
       "UpperBoundsFailed": "대부분의 조합이 최대 능력치 단계를 만족하지 않음"
     },
     "NoExotic": "경이 없음",
-    "NoExoticDescription": "검색 창에 \"not:exotic\"을 검색하는 것과 동일합니다 - 세트에 경이 방어구가 포함되지 않습니다.",
+    "NoExoticDescription": "검색 창에서 \"not:exotic\"를 검색하는 것과 동일함 - 장비 조합이 경이 방어구를 사용하지 않음.",
+    "NoExoticPreference": "경이 장비가 선택되지 않음",
+    "NoExoticPreferenceDescription": "경이 방어구가 능력치를 최대화하는 경우 선택됩니다.",
     "NoLoadoutsToCompare": "비교할 로드아웃 없음",
     "None": "없음",
     "OptimizerExplanationGuide": "사용 설명서에서 더 자세한 정보나 비디오 튜토리얼을 찾을 수 있습니다.",
-    "OptimizerExplanationMods": "사용하고 싶은 경이 아이템과 개조 부품을 선택하세요. 로드아웃 최적화는 선택된 개조 부품의 능력치 증가량만 반영하며 이미 방어구에 장착된 개조 부품은 무시합니다.",
+    "OptimizerExplanationMods": "Choose an exotic, mods, and a subclass. Loadout Optimizer only includes stat bonuses from mods and subclass options you choose - all mods already on the armor are ignored.",
     "OptimizerExplanationSearch": "검색 창을 사용하여 검토할 방어구의 수를 줄이세요. 슬롯에 검색과 일치하는 방어구가 없으면 그 슬롯의 모든 방어구가 검토됩니다.",
-    "OptimizerExplanationStats": "가장 중요한 능력치를 위로 끌어서 놓고, 필요 없는 능력치는 무시로 설정하세요.",
+    "OptimizerExplanationStats": "Drag the most important stats to the top, and disable stats you don't want to optimize for.",
     "OptimizerSet": "최적화 조합",
-    "ProcessingSets": "{{character}}의 장비 조합 처리 중\n({{remainingTime}}초)",
+    "ProcessingSets": "가장 높은 등급의 조합 찾는 중...",
     "SaveAs": "다른 이름으로 저장",
-    "SelectMax": "- 최대 -",
-    "SelectMin": "- 최소 -",
     "SpeedReport": "{{time}}초 만에 {{combos, number}}개의 조합 생성됨",
-    "StatTierIgnoreOption": "무시",
-    "StatTierIncludeOption": "포함",
+    "StatConstraints": "Stat Tier Priorities & Ranges",
     "TierNumber": "T{{tier}}",
+    "TierSelect": "최소 능력치 등급 선택",
     "UnableToAddAllMods": "모든 개조 부품을 추가할 수 없습니다.",
     "UnableToAddAllModsBody": "{{mods}}개의 개조 부품을 장착할 수 있는 공간이 없습니다.",
     "UnlockItem": "아이템 고정 해제"
@@ -658,11 +721,9 @@
     "CurrentlyEquipped": "현재 장착됨",
     "Deequip": "다른 캐릭터의 아이템 장착 해제 중",
     "Delete": "삭제",
-    "DeprecatedMods": "만료된 개조 부품",
     "DimLoadouts": "DIM 로드아웃",
     "Edit": "로드아웃 편집",
     "EditBrief": "수정",
-    "EmptyFragmentSlots": "조각 슬롯이 비어있음",
     "EquipInGameLoadout": "게임 내 로드아웃 장착",
     "EquipItems": "장비 장착 중",
     "EquippableDifferent1": "최대 전투력을 계산할 때 여러 개의 경이 아이템이 사용되었으므로, 게임 내 아이템을 장착할 때 표시된 숫자를 달성하지 못할 수 있습니다.",
@@ -684,6 +745,8 @@
     },
     "ImportLoadout": "로드아웃 가져오기",
     "InGameLoadouts": "게임 내 로드아웃",
+    "IncludeRuntimeStatBenefits": "샘 개조 부품 능력치 포함",
+    "IncludeRuntimeStatBenefitsDesc": "\"... 샘\" 방어구 개조 부품은 방어구 충전이 있는 동안 캐릭터 능력치를 일정하게 향상시킵니다.\n\n이 설정이 켜진 경우, DIM은 이 개조 부품이 활성화된 것으로 간주하고 로드아웃의 능력치 계산과 최적화에 사용합니다.",
     "ItemErrorSummary": "1개의 아이템 오류:",
     "ItemErrorSummary_plural": "{{count}}개의 아이템 오류:",
     "ItemLeveling": "아이템 레벨 올리기",
@@ -691,7 +754,7 @@
     "LoadoutParameters": "로드아웃 최적화 설정",
     "LoadoutParametersExotic": "로드아웃이 이 경이 아이템을 포함해야 함: {{exoticName}}",
     "LoadoutParametersQuery": "아이템이 이 검색 필터와 일치해야 함",
-    "LoadoutParametersStats": "능력치 선호도와 최소/최대 능력치 티어",
+    "LoadoutParametersStats": "능력치 선호도와 최소/최대 능력치 등급",
     "Loadouts": "로드아웃",
     "MakeRoom": "우편 담당자를 위한 공간 생성",
     "MakeRoomDone": "{{store}}에서 1개의 아이템을 옮김으로써 우편 담당자 아이템 1개를 위한 공간을 만들었습니다.",
@@ -706,7 +769,6 @@
     "MaximizeLight": "최대 전투력",
     "MaximizePower": "최대 전투력",
     "MaximizeStat": "능력치 최대화",
-    "MissingItems": "누락된 아이템",
     "MissingItemsWarning": "이 로드아웃의 일부 아이템이 더 이상 소지품에 없습니다.",
     "ModErrorSummary": "1개의 개조 부품 오류:",
     "ModErrorSummary_plural": "{{count}}개의 개조 부품 오류:",
@@ -763,6 +825,7 @@
       "NoName": "로드아웃의 이름이 필요합니다."
     },
     "SaveLoadout": "로드아웃 저장",
+    "Season": "시즌 {{season}}",
     "Share": {
       "Copied": "클립보드로 로드아웃 주소가 복사됨",
       "CopyButton": "주소 복사",
@@ -790,7 +853,6 @@
     "SubclassOptionsSearch": "{{subclass}} 옵션 검색",
     "Succeeded": "로드아웃 성공",
     "SyncFromEquipped": "장착한 아이템 동기화",
-    "TooManyFragments": "조각이 너무 많음",
     "TooManyRequested": "{{total}}개의 {{itemname}}을(를) 가지고 있으나 로드아웃이 {{requested}}개를 필요로 합니다. 가지고 있는 모든 것을 옮겼습니다.",
     "UnassignedModError": "개조 부품이 현재 방어구에 맞지 않음",
     "Undo": "되돌리기",
@@ -871,6 +933,7 @@
       "QuestProgress": "{{questStepNum}} / {{questStepsTotal}} 단계",
       "Type": "{{classType}} {{typeName}}"
     },
+    "TabList": "아이템 세부정보 탭",
     "ToggleSidecar": "아이템 액션 확장 또는 축소",
     "TrackUntrack": {
       "Track": "{{itemType}} 추적",
@@ -967,7 +1030,7 @@
     "Items": "퀘스트 아이템",
     "Milestones": "이정표 & 도전",
     "NoEventChallenges": "모든 이벤트 도전 완료",
-    "NoTrackedTriumph": "추적 중인 업적이 없습니다. 게임 내에서 하나를 추적하거나 DIM에서 원하는 만큼 추적하세요.",
+    "NoTrackedTriumph": "추적 중인 업적이 없습니다. DIM에서 원하는 만큼 추적하세요.",
     "PercentPrestige": "초기화까지 {{pct}}%",
     "PowerBonusHeader": "+{{powerBonus}} 전투력 보상",
     "PowerBonusHeaderUndefined": "다른 보상",
@@ -989,7 +1052,8 @@
     "RecordBooks": "기록 모음집"
   },
   "Records": {
-    "Title": "기록"
+    "Title": "기록",
+    "UniversalOrnamentSetOther": "기타"
   },
   "SearchHistory": {
     "Date": "최근 사용",
@@ -1051,6 +1115,7 @@
     "ResetToDefault": "초기화",
     "ReverseSort": "오름차순/내림차순 정렬 전환",
     "SetSort": "아이템 정렬 방법:",
+    "SetVaultWeaponGrouping": "창고 무기 정렬 방법:",
     "Settings": "설정",
     "ShowNewItems": "새 아이템에 빨간색 점 표시",
     "SingleCharacter": "단일 캐릭터 보기",
@@ -1074,7 +1139,8 @@
     "SortName": "이름",
     "SpacesSize": "{{count}}개의 공간",
     "SpacesSize_plural": "{{count}}개의 공간",
-    "Theme": "테마"
+    "Theme": "테마",
+    "VaultGroupingNone": "없음"
   },
   "Sockets": {
     "ApplyPerks": "특성 적용",
@@ -1280,7 +1346,7 @@
     "About": {
       "APIHistory": "DIM과 다른 데스티니 앱에서 수행된 모든 작업의 기록 보기",
       "BungieCopyright": "모든 이미지와 컨텐츠는 Bungie의 자산입니다.",
-      "CommunityInsight": "커뮤니티 특성 인사이트는 {{clarityLink}}에서 제공됩니다. 부정확한 정보를 발견하거나 질문이 있는 경우 {{clarityDiscordLink}}에 방문하세요.",
+      "CommunityInsight": "특성과 캐릭터 능력치에 대한 커뮤니티 인사이트는 {{clarityLink}}에서 제공됩니다. 부정확한 정보를 발견하거나 질문이 있는 경우 {{clarityDiscordLink}}에 방문하세요.",
       "Discord": "Discord",
       "DiscordHelp": "저희의 디스코드 채널에서 질문하고, 피드백을 주고, 도움을 받으세요.",
       "FAQ": "자주 묻는 질문",
@@ -1347,7 +1413,7 @@
     "UpdateExternalSource": "희망 아이템 목록 업데이트",
     "Voltron": "voltron (기본값)",
     "VoltronDescription": "voltron은 데스티니 커뮤니티가 작성한 자동으로 업데이트되는 PvE와 PvP 희망 아이템 목록입니다. DIM에 기본으로 포함되어 있습니다.",
-    "WishListNotes": "희망 아이템 메모: {{notes}}",
+    "WishListNotes": "희망 아이템 목록 메모:",
     "WorstRatedTip": "쓰레기 아이템 목록에 있는 무기의 특성 조합과 일치하는 특성입니다.",
     "WorstRatedTip_plural": "쓰레기 아이템 목록에 있는 무기의 특성 조합과 일치합니다."
   },

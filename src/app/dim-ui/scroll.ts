@@ -14,34 +14,6 @@ export function scrollToPosition(options: ScrollToOptions) {
 }
 
 /**
- * Scroll a particular element to the top of the view.
- */
-export function scrollToElement(elem: Element | null) {
-  if (elem) {
-    const headerHeight = parseInt(
-      document.querySelector('html')!.style.getPropertyValue('--header-height'),
-      10
-    );
-    const rect = elem.getBoundingClientRect();
-    scrollToPosition({
-      top: window.scrollY + rect.top - (headerHeight + 6),
-      left: 0,
-      behavior: 'smooth',
-    });
-  }
-}
-
-/**
- * An event handler for link (a) elements which scrolls the window until the element whose ID matches
- * the hash of the link is in view.
- */
-export function scrollToHref(e: React.MouseEvent) {
-  e.preventDefault();
-  const elem = document.getElementById((e.currentTarget as HTMLAnchorElement).hash.slice(1));
-  scrollToElement(elem);
-}
-
-/**
  * Scroll to an item tile and make it briefly zoom/wobble for attention
  */
 export const itemPop = (item: DimItem) => {
@@ -55,7 +27,7 @@ export const itemPop = (item: DimItem) => {
   const headerHeight = parseInt(html.style.getPropertyValue('--header-height'), 10);
   const storeHeaderHeight = parseInt(html.style.getPropertyValue('--store-header-height'), 10);
   const absoluteElementTop = elementRect.top + window.pageYOffset;
-  scrollToPosition({ left: 0, top: absoluteElementTop - (headerHeight + storeHeaderHeight + 24) });
+  scrollToPosition({ left: 0, top: absoluteElementTop - (headerHeight + storeHeaderHeight + 12) });
   element.classList.add(styles.itemPop);
 
   const removePop = () => {

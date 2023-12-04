@@ -5,8 +5,9 @@ import { loadingEnd, loadingStart } from 'app/shell/actions';
 import { del, get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { emptyArray, emptyObject } from 'app/utils/empty';
+import { convertToError, errorMessage } from 'app/utils/errors';
 import { errorLog, infoLog, timer } from 'app/utils/log';
-import { convertToError, dedupePromise, errorMessage } from 'app/utils/util';
+import { dedupePromise } from 'app/utils/promises';
 import { LookupTable } from 'app/utils/util-types';
 import {
   AllDestinyManifestComponents,
@@ -22,7 +23,7 @@ import _ from 'lodash';
 import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
 import { showNotification } from '../notifications/notifications';
 import { settingsReady } from '../settings/settings';
-import { reportException } from '../utils/exceptions';
+import { reportException } from '../utils/sentry';
 
 // This file exports D2ManifestService at the bottom of the
 // file (TS wants us to declare classes before using them)!
@@ -79,27 +80,29 @@ let version: string | null = null;
  */
 export const warnMissingDefinition = _.debounce(
   async () => {
-    const data = await d2GetManifest();
-    // If none of the paths (for any language) matches what we downloaded...
-    if (version && !Object.values(data.jsonWorldContentPaths).includes(version)) {
-      // The manifest has updated!
-      showNotification({
-        type: 'warning',
-        title: t('Manifest.Outdated'),
-        body: t('Manifest.OutdatedExplanation'),
-      });
+    if ($DIM_FLAVOR !== 'test') {
+      const data = await d2GetManifest();
+      // If none of the paths (for any language) matches what we downloaded...
+      if (version && !Object.values(data.jsonWorldContentPaths).includes(version)) {
+        // The manifest has updated!
+        showNotification({
+          type: 'warning',
+          title: t('Manifest.Outdated'),
+          body: t('Manifest.OutdatedExplanation'),
+        });
+      }
     }
   },
   10000,
   {
     leading: true,
     trailing: false,
-  }
+  },
 );
 
 const getManifestAction = _.once(
   (tableAllowList: string[]): ThunkResult<AllDestinyManifestComponents> =>
-    dedupePromise((dispatch) => dispatch(doGetManifest(tableAllowList)))
+    dedupePromise((dispatch) => dispatch(doGetManifest(tableAllowList))),
 );
 
 export function getManifest(tableAllowList: string[]): ThunkResult<AllDestinyManifestComponents> {
@@ -192,7 +195,7 @@ function loadManifestRemote(
   components: {
     [key: string]: string;
   },
-  tableAllowList: string[]
+  tableAllowList: string[],
 ): ThunkResult<AllDestinyManifestComponents> {
   return async (dispatch) => {
     dispatch(loadingStart(t('Manifest.Download')));
@@ -212,7 +215,7 @@ export async function downloadManifestComponents(
   components: {
     [key: string]: string;
   },
-  tableAllowList: string[]
+  tableAllowList: string[],
 ) {
   // Adding a cache buster to work around bad cached CloudFlare data: https://github.com/DestinyItemManager/DIM/issues/5101
   // try canonical component URL which should likely be already cached,
@@ -266,7 +269,7 @@ export async function downloadManifestComponents(
 async function saveManifestToIndexedDB(
   typedArray: object,
   version: string,
-  tableAllowList: string[]
+  tableAllowList: string[],
 ) {
   try {
     await set(idbKey, typedArray);
@@ -294,7 +297,7 @@ function deleteManifestFile() {
  */
 async function loadManifestFromCache(
   version: string,
-  tableAllowList: string[]
+  tableAllowList: string[],
 ): Promise<AllDestinyManifestComponents> {
   if (alwaysLoadRemote) {
     throw new Error('Testing - always load remote');
@@ -302,7 +305,7 @@ async function loadManifestFromCache(
 
   const currentManifestVersion = localStorage.getItem(localStorageKey);
   const currentAllowList = JSON.parse(
-    localStorage.getItem(`${localStorageKey}-whitelist`) || '[]'
+    localStorage.getItem(`${localStorageKey}-whitelist`) || '[]',
   ) as string[];
   if (currentManifestVersion === version && deepEqual(currentAllowList, tableAllowList)) {
     const manifest = await get<AllDestinyManifestComponents>(idbKey);

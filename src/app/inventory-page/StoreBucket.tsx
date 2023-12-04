@@ -1,5 +1,6 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import ClassIcon from 'app/dim-ui/ClassIcon';
+import WeaponGroupingIcon from 'app/dim-ui/WeaponGroupingIcon';
 import { t } from 'app/i18next-t';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
@@ -14,7 +15,12 @@ import { findItemsByBucket } from 'app/inventory/stores-helpers';
 import { useItemPicker } from 'app/item-picker/item-picker';
 import { characterOrderSelector } from 'app/settings/character-sort';
 import { itemSorterSelector } from 'app/settings/item-sort';
+import {
+  vaultWeaponGroupingEnabledSelector,
+  vaultWeaponGroupingSelector,
+} from 'app/settings/vault-grouping';
 import { AppIcon, addIcon } from 'app/shell/icons';
+import { vaultGroupingValueWithType } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -72,6 +78,8 @@ const StoreBucketInner = memo(function StoreBucketInner({
 }) {
   const dispatch = useThunkDispatch();
   const sortItems = useSelector(itemSorterSelector);
+  const groupWeapons = useSelector(vaultWeaponGroupingSelector);
+  const vaultWeaponGroupingEnabled = useSelector(vaultWeaponGroupingEnabledSelector);
 
   const showItemPicker = useItemPicker();
   const pickEquipItem = useCallback(() => {
@@ -79,12 +87,16 @@ const StoreBucketInner = memo(function StoreBucketInner({
   }, [bucket, dispatch, showItemPicker, storeId]);
 
   const equippedItem = isVault ? undefined : items.find((i) => i.equipped);
-  const unequippedItems = isVault ? sortItems(items) : sortItems(items.filter((i) => !i.equipped));
+  const unequippedItems =
+    isVault && bucket.inWeapons
+      ? groupWeapons(sortItems(items))
+      : sortItems(items.filter((i) => !i.equipped));
 
   return (
     <>
       {equippedItem && (
         <StoreBucketDropTarget
+          grouped={false}
           equip={true}
           bucket={bucket}
           storeId={storeId}
@@ -108,17 +120,34 @@ const StoreBucketInner = memo(function StoreBucketInner({
         </StoreBucketDropTarget>
       )}
       <StoreBucketDropTarget
+        grouped={isVault && vaultWeaponGroupingEnabled}
         equip={false}
         bucket={bucket}
         storeId={storeId}
         storeClassType={storeClassType}
         className={clsx({ 'not-equippable': !isVault && !equippedItem })}
       >
-        {unequippedItems.map((item) => (
-          <StoreInventoryItem key={item.index} item={item} />
-        ))}
+        {unequippedItems.map((groupOrItem) =>
+          'id' in groupOrItem ? (
+            <StoreInventoryItem key={groupOrItem.index} item={groupOrItem} />
+          ) : (
+            <div
+              className="vault-group"
+              key={vaultGroupingValueWithType(groupOrItem.groupingValue)}
+            >
+              <WeaponGroupingIcon
+                icon={groupOrItem.icon}
+                className="weapon-grouping-icon-wrapper"
+              />
+              {groupOrItem.items.map((item) => (
+                <StoreInventoryItem key={item.index} item={item} />
+              ))}
+            </div>
+          ),
+        )}
         {destinyVersion === 2 &&
           bucket.hash === BucketHashes.Engrams && // Engrams. D1 uses this same bucket hash for "Missions"
+          !isVault &&
           // lower bound of 0, in case this bucket becomes overfilled
           _.times(Math.max(0, bucket.capacity - unequippedItems.length), (index) => (
             <img src={emptyEngram} className="empty-engram" aria-hidden="true" key={index} />
@@ -136,7 +165,7 @@ const storeClassListSelector = createSelector(
   (stores) => stores.map((s) => s.classType).filter((c) => c !== DestinyClass.Unknown),
   // Use shallow equality on the returned array so it only changes when the
   // actual list of class types change
-  { memoizeOptions: { resultEqualityCheck: shallowEqual } }
+  { memoizeOptions: { resultEqualityCheck: shallowEqual } },
 );
 
 /**
@@ -162,15 +191,15 @@ const VaultBucketDividedByClass = memo(function SingleCharacterVaultBucket({
   const sortItems = useSelector(itemSorterSelector);
 
   // The vault divides armor by class
-  const itemsByClass = _.groupBy(items, (item) => item.classType);
-  const classTypeOrder = _.sortBy(Object.keys(itemsByClass), (classType) => {
-    const classTypeNum = parseInt(classType, 10);
-    const index = storeClassList.findIndex((s) => s === classTypeNum);
+  const itemsByClass = Map.groupBy(items, (item) => item.classType);
+  const classTypeOrder = _.sortBy([...itemsByClass.keys()], (classType) => {
+    const index = storeClassList.findIndex((s) => s === classType);
     return index === -1 ? 999 : characterOrder === 'mostRecentReverse' ? -index : index;
-  }).map((c) => parseInt(c, 10) as DestinyClass);
+  });
 
   return (
     <StoreBucketDropTarget
+      grouped={false}
       equip={false}
       bucket={bucket}
       storeId={storeId}
@@ -179,7 +208,7 @@ const VaultBucketDividedByClass = memo(function SingleCharacterVaultBucket({
       {classTypeOrder.map((classType) => (
         <React.Fragment key={classType}>
           <ClassIcon classType={classType} className="armor-class-icon" />
-          {sortItems(itemsByClass[classType]).map((item) => (
+          {sortItems(itemsByClass.get(classType)!).map((item) => (
             <StoreInventoryItem key={item.index} item={item} />
           ))}
         </React.Fragment>
@@ -207,7 +236,7 @@ export default function StoreBucket({
 
   // Single character mode collapses all items from other characters into "the
   // vault" (but only those items that could be used by the current character)
-  if (singleCharacter && store.isVault && bucket.vaultBucket) {
+  if (singleCharacter && store.isVault && (bucket.vaultBucket || bucket.inPostmaster)) {
     for (const otherStore of stores) {
       if (!otherStore.current && !otherStore.isVault) {
         items = [...items, ...findItemsByBucket(otherStore, bucket.hash)];
@@ -219,7 +248,7 @@ export default function StoreBucket({
     items = items.filter(
       (i) =>
         i.classType === DestinyClass.Unknown ||
-        (currentStore && i.classType === currentStore.classType)
+        (currentStore && i.classType === currentStore.classType),
     );
   }
 

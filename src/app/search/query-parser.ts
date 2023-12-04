@@ -18,7 +18,7 @@
 <string> ::= WORD | "\"" WORD {" " WORD} "\"" | "'" WORD {" " WORD} "'\"'"
 */
 
-import { convertToError } from 'app/utils/util';
+import { convertToError } from 'app/utils/errors';
 
 /* **** Parser **** */
 
@@ -220,7 +220,7 @@ export function parseQuery(query: string): QueryAST {
       }
       default:
         throw new Error(
-          `Unexpected token type, looking for an atom: ${JSON.stringify(token)}, ${query}`
+          `Unexpected token type, looking for an atom: ${JSON.stringify(token)}, ${query}`,
         );
     }
   }
@@ -417,7 +417,7 @@ export function* lexer(query: string): Generator<Token> {
             throw new QueryLexerError(
               `Unrecognized escape sequence \\${escaped}`,
               escapeStart,
-              i - escapeStart
+              i - escapeStart,
             );
           }
         } else {
@@ -433,7 +433,7 @@ export function* lexer(query: string): Generator<Token> {
     throw new QueryLexerOpenQuotesError(
       `Unterminated quotes: |${query.slice(initial)}| ${initial}`,
       initial,
-      i - initial
+      i - initial,
     );
   };
 
@@ -494,7 +494,7 @@ export function* lexer(query: string): Generator<Token> {
         throw new QueryLexerError(
           `missing keyword arguments for ${keyword}`,
           startIndex,
-          query.length - startIndex
+          query.length - startIndex,
         );
       }
 
@@ -524,7 +524,7 @@ export function* lexer(query: string): Generator<Token> {
       throw new QueryLexerError(
         `unrecognized tokens: |${query.slice(i)}| ${i}`,
         startIndex,
-        query.length - startIndex
+        query.length - startIndex,
       );
     }
 
@@ -577,7 +577,7 @@ export function canonicalizeQuery(query: QueryAST, depth = 0): string {
             query.op === 'and' &&
               !query.operands.some((op) => op.op === 'filter' && op.type === 'keyword')
               ? ' '
-              : ` ${query.op} `
+              : ` ${query.op} `,
           );
         return depth === 0 ? joinedOperands : `(${joinedOperands})`;
       }

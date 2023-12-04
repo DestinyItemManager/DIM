@@ -1,7 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, DimSockets, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { getEnergyUpgradePlugs } from 'app/inventory/store/energy';
-import { isArtifice } from 'app/item-triage/triage-utils';
 import { ArmorEnergyRules } from 'app/loadout-builder/types';
 import { Assignment, PluggingAction } from 'app/loadout-drawer/loadout-types';
 import {
@@ -12,7 +11,11 @@ import {
 import { ModSocketMetadata } from 'app/search/specialty-modslots';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
-import { getModTypeTagByPlugCategoryHash, getSpecialtySocketMetadatas } from 'app/utils/item-utils';
+import {
+  getModTypeTagByPlugCategoryHash,
+  getSpecialtySocketMetadatas,
+  isArtifice,
+} from 'app/utils/item-utils';
 import { warnLog } from 'app/utils/log';
 import {
   getSocketByIndex,
@@ -70,7 +73,7 @@ export interface ModMap {
  */
 export function categorizeArmorMods(
   allMods: PluggableInventoryItemDefinition[],
-  referenceItems: DimItem[]
+  referenceItems: DimItem[],
 ): { modMap: ModMap; unassignedMods: PluggableInventoryItemDefinition[] } {
   const generalMods: PluggableInventoryItemDefinition[] = [];
   const activityMods: PluggableInventoryItemDefinition[] = [];
@@ -149,7 +152,7 @@ function getUpgradeCost(
   model: EnergyUpgradeCostModel,
   item: ItemEnergy,
   dimItem: DimItem,
-  newEnergy: number
+  newEnergy: number,
 ) {
   if (!model.byRarity[item.rarity]) {
     const plugs = getEnergyUpgradePlugs(dimItem);
@@ -164,7 +167,7 @@ function getUpgradeCost(
         continue;
       }
       const materials = model.defs.MaterialRequirementSet.get(
-        plug.plug.insertionMaterialRequirementHash
+        plug.plug.insertionMaterialRequirementHash,
       );
       for (const material of materials.materials) {
         const idx = materialsInRarityOrder.findIndex((mat) => mat === material.itemHash);
@@ -199,7 +202,7 @@ const createUpgradeCostModel = memoizeOne(
   (defs: D2ManifestDefinitions): EnergyUpgradeCostModel => ({
     defs,
     byRarity: {},
-  })
+  }),
 );
 
 /**
@@ -260,7 +263,7 @@ export function fitMostMods({
   // just an arbitrarily large number
   // The total cost to upgrade armor to assign all the mods to a set
   let assignmentUpgradeCost: number[] = Array<number>(materialsInRarityOrder.length).fill(
-    Number.MAX_SAFE_INTEGER
+    Number.MAX_SAFE_INTEGER,
   );
   // The total number of mods that couldn't be assigned to the items
   let assignmentUnassignedModCount = Number.MAX_SAFE_INTEGER;
@@ -278,7 +281,7 @@ export function fitMostMods({
   // combat and activity mods can be slotted into an item.
   const itemSocketMetadata = _.mapValues(
     _.keyBy(items, (item) => item.id),
-    (item) => getSpecialtySocketMetadatas(item)
+    (item) => getSpecialtySocketMetadatas(item),
   );
 
   const {
@@ -296,7 +299,7 @@ export function fitMostMods({
       bucketSpecificAssignments[targetItem.id] = assignBucketSpecificMods(
         armorEnergyRules,
         targetItem,
-        modsToAssign
+        modsToAssign,
       );
     } else {
       unassignedMods.push(...modsToAssign);
@@ -308,7 +311,9 @@ export function fitMostMods({
   for (const artificeMod of artificeMods) {
     let targetItemIndex = artificeItems.findIndex(
       (item) =>
-        item.sockets?.allSockets.some((socket) => socket.plugged?.plugDef.hash === artificeMod.hash)
+        item.sockets?.allSockets.some(
+          (socket) => socket.plugged?.plugDef.hash === artificeMod.hash,
+        ),
     );
     if (targetItemIndex === -1) {
       targetItemIndex = artificeItems.length ? 0 : -1;
@@ -332,7 +337,7 @@ export function fitMostMods({
         item,
         assignedMods: bucketSpecificAssignments[item.id].assigned,
         armorEnergyRules,
-      })
+      }),
   );
 
   const generalModPermutations = generateModPermutations(generalMods);
@@ -383,7 +388,7 @@ export function fitMostMods({
         items,
         itemEnergies,
         assignments,
-        upgradeCostModel
+        upgradeCostModel,
       );
       const upgradeCostsResult = compareCosts(energyUpgradeCost, assignmentUpgradeCost);
 
@@ -396,7 +401,7 @@ export function fitMostMods({
       for (const item of items) {
         modChangeCount += countBucketIndependentModChangesForItem(
           item,
-          assignments[item.id].assigned
+          assignments[item.id].assigned,
         );
       }
 
@@ -468,7 +473,7 @@ export function fitMostMods({
  */
 function getArmorSocketsAndMods(
   sockets: DimSockets | null,
-  mods: PluggableInventoryItemDefinition[]
+  mods: PluggableInventoryItemDefinition[],
 ) {
   const orderedSockets = getSocketsByCategoryHash(sockets, SocketCategoryHashes.ArmorMods)
     // If a socket is not plugged (even with an empty socket) we consider it disabled
@@ -491,7 +496,7 @@ function getArmorSocketsAndMods(
   // we must assign the regular resist mod first.
   const orderedMods = _.sortBy(
     mods,
-    (mod) => orderedSockets.filter((s) => plugFitsIntoSocket(s, mod.hash)).length
+    (mod) => orderedSockets.filter((s) => plugFitsIntoSocket(s, mod.hash)).length,
   );
 
   return { orderedSockets, orderedMods };
@@ -507,7 +512,7 @@ function getArmorSocketsAndMods(
 export function assignBucketSpecificMods(
   armorEnergyRules: ArmorEnergyRules,
   item: DimItem,
-  modsToAssign: PluggableInventoryItemDefinition[]
+  modsToAssign: PluggableInventoryItemDefinition[],
 ): {
   assigned: PluggableInventoryItemDefinition[];
   unassigned: PluggableInventoryItemDefinition[];
@@ -575,7 +580,7 @@ export function pickPlugPositions(
   item: DimItem,
   modsToInsert: PluggableInventoryItemDefinition[],
   /** if an item has mods applied, this will "clear" all other sockets to empty/their default */
-  clearUnassignedSocketsPerItem = false
+  clearUnassignedSocketsPerItem = false,
 ): Assignment[] {
   const assignments: Assignment[] = [];
 
@@ -588,7 +593,7 @@ export function pickPlugPositions(
   for (const modToInsert of orderedMods) {
     // If this mod is already plugged somewhere, that's the slot we want to keep it in
     let destinationSocketIndex = orderedSockets.findIndex(
-      (socket) => socket.plugged!.plugDef.hash === modToInsert.hash
+      (socket) => socket.plugged!.plugDef.hash === modToInsert.hash,
     );
 
     // If what the game calls a "similar" mod is plugged somewhere, choose to replace that
@@ -597,21 +602,21 @@ export function pickPlugPositions(
       destinationSocketIndex = orderedSockets.findIndex(
         (socket) =>
           plugFitsIntoSocket(socket, modToInsert.hash) &&
-          getModExclusionGroup(socket.plugged!.plugDef) === toPlugExclusionGroup
+          getModExclusionGroup(socket.plugged!.plugDef) === toPlugExclusionGroup,
       );
     }
 
     // If it wasn't found already plugged, find the first socket with a matching PCH
     if (destinationSocketIndex === -1) {
       destinationSocketIndex = orderedSockets.findIndex((socket) =>
-        plugFitsIntoSocket(socket, modToInsert.hash)
+        plugFitsIntoSocket(socket, modToInsert.hash),
       );
     }
 
     // If a destination socket couldn't be found for this plug, something is seriously? wrong
     if (destinationSocketIndex === -1) {
       throw new Error(
-        `We couldn't find anywhere to plug the mod ${modToInsert.displayProperties.name} (${modToInsert.hash})`
+        `We couldn't find anywhere to plug the mod ${modToInsert.displayProperties.name} (${modToInsert.hash})`,
       );
     }
 
@@ -664,7 +669,7 @@ export function pickPlugPositions(
 export function createPluggingStrategy(
   defs: D2ManifestDefinitions,
   item: DimItem,
-  assignments: Assignment[]
+  assignments: Assignment[],
 ): PluggingAction[] {
   // stuff we need to apply, that only ever frees up energy and exclusion groups.
   // can and will be unconditionally applied first, so must have no dependencies
@@ -691,7 +696,7 @@ export function createPluggingStrategy(
     if (!destinationSocket.plugged) {
       warnLog(
         'loadout mods',
-        `${item.name} socket #${assignment.socketIndex} was found to be null, indicating it might not exist at all in practice. attempting to create a plugging plan for it, but it might not work`
+        `${item.name} socket #${assignment.socketIndex} was found to be null, indicating it might not exist at all in practice. attempting to create a plugging plan for it, but it might not work`,
       );
     }
     const existingModCost = destinationSocket.plugged?.plugDef.plug.energyCost?.energyCost || 0;
@@ -754,7 +759,7 @@ export function createPluggingStrategy(
         // so it's as if this mod never existed
         exclusionGroupReleased: existingExclusionGroup,
         mod: defs.InventoryItem.get(
-          destinationSocket.emptyPlugItemHash!
+          destinationSocket.emptyPlugItemHash!,
         ) as PluggableInventoryItemDefinition,
         socketIndex: assignment.socketIndex,
         requested: false,
@@ -774,7 +779,7 @@ export function createPluggingStrategy(
   // sort lower gains first, but put zero gains at the end. Otherwise the zero
   // gains will be used as part of "adding up" to make the energy needed
   optionalRegains.sort(
-    compareBy((res) => (res.energySpend < 0 ? -res.energySpend : Number.MAX_VALUE))
+    compareBy((res) => (res.energySpend < 0 ? -res.energySpend : Number.MAX_VALUE)),
   );
 
   const itemTotalEnergy = item.energy.energyCapacity;
@@ -793,12 +798,12 @@ export function createPluggingStrategy(
       itemCurrentUsedEnergy + spendOperation.energySpend > itemTotalEnergy ||
       (spendOperation.exclusionGroupAdded &&
         optionalRegains.some(
-          (regain) => regain.exclusionGroupReleased === spendOperation.exclusionGroupAdded
+          (regain) => regain.exclusionGroupReleased === spendOperation.exclusionGroupAdded,
         ))
     ) {
       if (!optionalRegains.length) {
         throw new Error(
-          `there's not enough energy to assign ${spendOperation.mod.displayProperties.name} to ${item.name}, but no more energy can be freed up`
+          `there's not enough energy to assign ${spendOperation.mod.displayProperties.name} to ${item.name}, but no more energy can be freed up`,
         );
       }
       // we'll apply optional energy regains to make space
@@ -808,7 +813,7 @@ export function createPluggingStrategy(
       const whichRegainToUse =
         (spendOperation.exclusionGroupAdded !== undefined &&
           optionalRegains.find(
-            (regain) => regain.exclusionGroupReleased === spendOperation.exclusionGroupAdded
+            (regain) => regain.exclusionGroupReleased === spendOperation.exclusionGroupAdded,
           )) ||
         (optionalRegains.find((r) => -r.energySpend >= extraEnergyNeeded) ?? optionalRegains[0]);
 
@@ -836,7 +841,7 @@ export function createPluggingStrategy(
 function isActivityModValid(
   activityMod: PluggableInventoryItemDefinition,
   itemSocketMetadata: ModSocketMetadata[] | undefined,
-  itemEnergy: ItemEnergy
+  itemEnergy: ItemEnergy,
 ) {
   const modTag = getModTypeTagByPlugCategoryHash(activityMod.plug.plugCategoryHash);
 
@@ -851,7 +856,7 @@ function calculateUpgradeCost(
   items: DimItem[],
   itemEnergies: { [itemId: string]: ItemEnergy },
   assignments: ModAssignments,
-  upgradeCostModel: EnergyUpgradeCostModel
+  upgradeCostModel: EnergyUpgradeCostModel,
 ) {
   return items.reduce((existingCost: number[] | undefined, item: DimItem) => {
     const itemEnergy = itemEnergies[item.id];
@@ -921,7 +926,7 @@ function isAssigningToDefault(item: DimItem, assignment: Assignment) {
       assignment.socketIndex,
       'not exist on',
       item.name,
-      item.hash
+      item.hash,
     );
   }
   return socket && assignment.mod.hash === socket.emptyPlugItemHash;
@@ -936,14 +941,14 @@ function isAssigningToDefault(item: DimItem, assignment: Assignment) {
  */
 function countBucketIndependentModChangesForItem(
   item: DimItem,
-  bucketIndependentAssignmentsForItem: PluggableInventoryItemDefinition[]
+  bucketIndependentAssignmentsForItem: PluggableInventoryItemDefinition[],
 ) {
   let count = 0;
 
   for (const mod of bucketIndependentAssignmentsForItem) {
     const socketsThatWillFitMod = getSocketsByCategoryHash(
       item.sockets,
-      SocketCategoryHashes.ArmorMods
+      SocketCategoryHashes.ArmorMods,
     );
     if (socketsThatWillFitMod.some((socket) => socket.plugged?.plugDef.hash === mod.hash)) {
       continue;

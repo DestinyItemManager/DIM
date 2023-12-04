@@ -1,10 +1,9 @@
 import { infoLog } from 'app/utils/log';
-import { delay } from 'app/utils/util';
-import disciplineIcon from 'images/discipline.png';
-import intellectIcon from 'images/intellect.png';
-import strengthIcon from 'images/strength.png';
+import { delay } from 'app/utils/promises';
+import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { D1Item } from '../../inventory/item-types';
+import { D1ManifestDefinitions } from '../d1-definitions';
 import {
   ArmorSet,
   ArmorTypes,
@@ -16,6 +15,7 @@ import {
 import { calcArmorStats, genSetHash, getBestArmor, getBonusConfig } from './utils';
 
 export async function getSetBucketsStep(
+  defs: D1ManifestDefinitions,
   activeGuardianBucket: ItemBucket,
   vendorBucket: ItemBucket,
   lockeditems: { [armorType in ArmorTypes]: D1ItemWithNormalStats | null },
@@ -24,7 +24,7 @@ export async function getSetBucketsStep(
   scaleType: 'base' | 'scaled',
   includeVendors: boolean,
   fullMode: boolean,
-  cancelToken: { cancelled: boolean }
+  cancelToken: { cancelled: boolean },
 ): Promise<
   | {
       allSetTiers: string[];
@@ -41,7 +41,7 @@ export async function getSetBucketsStep(
     lockedperks,
     scaleType,
     includeVendors,
-    fullMode
+    fullMode,
   );
   const helms: {
     item: D1Item;
@@ -90,6 +90,9 @@ export async function getSetBucketsStep(
   }
 
   let processedCount = 0;
+  const intellectIcon = defs.Stat.get(StatHashes.Intellect).icon;
+  const strengthIcon = defs.Stat.get(StatHashes.Strength).icon;
+  const disciplineIcon = defs.Stat.get(StatHashes.Discipline).icon;
 
   for (const helm of helms) {
     for (const gauntlet of gauntlets) {
@@ -147,7 +150,7 @@ export async function getSetBucketsStep(
                   set.setHash = genSetHash(pieces);
                   calcArmorStats(pieces, set.stats, scaleType);
                   const tiersString = `${tierValue(set.stats[144602215].value)}/${tierValue(
-                    set.stats[1735777505].value
+                    set.stats[1735777505].value,
                   )}/${tierValue(set.stats[4244567218].value)}`;
 
                   tiersSet.add(tiersString);
@@ -157,7 +160,7 @@ export async function getSetBucketsStep(
                   if (setMap[set.setHash]) {
                     if (setMap[set.setHash].tiers[tiersString]) {
                       setMap[set.setHash].tiers[tiersString].configs.push(
-                        getBonusConfig(set.armor)
+                        getBonusConfig(set.armor),
                       );
                     } else {
                       setMap[set.setHash].tiers[tiersString] = {
@@ -186,7 +189,7 @@ export async function getSetBucketsStep(
                   infoLog(
                     'loadout optimizer',
                     processedCount,
-                    'combinations processed, still going...'
+                    'combinations processed, still going...',
                   );
                   // Allow the event loop to do other things before we resume
                   await delay(0);
@@ -199,8 +202,8 @@ export async function getSetBucketsStep(
     }
   }
 
-  const tiers = _.groupBy(Array.from(tiersSet.keys()), (tierString: string) =>
-    _.sumBy(tierString.split('/'), (num) => parseInt(num, 10))
+  const tiers = Object.groupBy(tiersSet.keys(), (tierString: string) =>
+    _.sumBy(tierString.split('/'), (num) => parseInt(num, 10)),
   );
   for (const tier of Object.values(tiers)) {
     tier.sort().reverse();

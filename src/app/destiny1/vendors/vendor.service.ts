@@ -5,8 +5,8 @@ import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { amountOfItem } from 'app/inventory/stores-helpers';
 import { get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
+import { filterMap } from 'app/utils/collections';
 import { errorLog } from 'app/utils/log';
-import { filterMap } from 'app/utils/util';
 import copy from 'fast-copy';
 import _ from 'lodash';
 import { DestinyAccount } from '../../accounts/destiny-account';
@@ -143,14 +143,14 @@ export function loadVendors(): ThunkResult<{ [vendorHash: number]: Vendor }> {
     const buckets = bucketsSelector(getState())!;
     const reloadPromise = (async () => {
       // Narrow down to only visible vendors (not packages and such)
-      const vendorList = Object.values(defs.Vendor).filter((v) => v.summary.visible);
+      const vendorList = Object.values(defs.Vendor.getAll()).filter((v) => v.summary.visible);
 
       const vendors = _.compact(
         await Promise.all(
           vendorList.flatMap((vendorDef) =>
-            fetchVendor(vendorDef, characters, account, defs, buckets)
-          )
-        )
+            fetchVendor(vendorDef, characters, account, defs, buckets),
+          ),
+        ),
       );
       return _.keyBy(vendors, (v) => v.hash);
     })();
@@ -165,14 +165,14 @@ async function fetchVendor(
   characters: D1Store[],
   account: DestinyAccount,
   defs: D1ManifestDefinitions,
-  buckets: InventoryBuckets
+  buckets: InventoryBuckets,
 ): Promise<Vendor | null> {
   if (vendorDenyList.includes(vendorDef.hash)) {
     return null;
   }
 
   const vendorsForCharacters = await Promise.all(
-    characters.map((store) => loadVendorForCharacter(account, store, vendorDef, defs, buckets))
+    characters.map((store) => loadVendorForCharacter(account, store, vendorDef, defs, buckets)),
   );
   const nonNullVendors = _.compact(vendorsForCharacters);
   if (nonNullVendors.length) {
@@ -213,7 +213,7 @@ function mergeCategory(
     index: number;
     title: string;
     saleItems: VendorSaleItem[];
-  }
+  },
 ) {
   for (const saleItem of otherCategory.saleItems) {
     const existingSaleItem = mergedCategory.saleItems.find((i) => i.index === saleItem.index);
@@ -233,7 +233,7 @@ async function loadVendorForCharacter(
   store: D1Store,
   vendorDef: D1VendorDefinition,
   defs: D1ManifestDefinitions,
-  buckets: InventoryBuckets
+  buckets: InventoryBuckets,
 ) {
   try {
     return await loadVendor(account, store, vendorDef, defs, buckets);
@@ -243,7 +243,7 @@ async function loadVendorForCharacter(
       errorLog(
         'vendors',
         `Failed to load vendor ${vendorDef.summary.vendorName} for ${store.name}`,
-        e
+        e,
       );
     }
     return null;
@@ -277,7 +277,7 @@ function loadVendor(
   store: D1Store,
   vendorDef: D1VendorDefinition,
   defs: D1ManifestDefinitions,
-  buckets: InventoryBuckets
+  buckets: InventoryBuckets,
 ) {
   const vendorHash = vendorDef.hash;
 
@@ -355,7 +355,7 @@ async function processVendor(
   vendorDef: D1VendorDefinition,
   defs: D1ManifestDefinitions,
   store: D1Store,
-  buckets: InventoryBuckets
+  buckets: InventoryBuckets,
 ) {
   const def = vendorDef.summary;
   const createdVendor: Vendor = {
@@ -394,7 +394,7 @@ async function processVendor(
     undefined,
     saleItems.map((i) => i.item),
     defs,
-    buckets
+    buckets,
   );
   const itemsById = _.keyBy(items, (i) => i.id);
   const categories = filterMap(Object.values(vendor.saleItemCategories), (category) => {
@@ -446,7 +446,7 @@ function isSaleItemUnlocked(saleItem: { unlockStatuses: { isSet: boolean }[] }) 
 export function countCurrencies(
   stores: D1Store[],
   vendors: { [vendorHash: number]: Vendor },
-  currencies: AccountCurrency[]
+  currencies: AccountCurrency[],
 ) {
   if (!stores || !vendors || !stores.length || _.isEmpty(vendors)) {
     return {};
@@ -469,7 +469,7 @@ export function countCurrencies(
         break;
       default:
         totalCoins[currencyHash] = _.sumBy(stores, (store) =>
-          amountOfItem(store, { hash: currencyHash })
+          amountOfItem(store, { hash: currencyHash }),
         );
         break;
     }

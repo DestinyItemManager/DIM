@@ -29,7 +29,7 @@ export interface FilterContext {
   currentStore: DimStore;
   loadoutsByItem: LoadoutsByItem;
   wishListFunction: (item: DimItem) => InventoryWishListRoll | undefined;
-  wishListsByHash: _.Dictionary<WishListRoll[]>;
+  wishListsByHash: Map<number, WishListRoll[]>;
   newItems: Set<string>;
   getTag: (item: DimItem) => TagValue | undefined;
   getNotes: (item: DimItem) => string | undefined;
@@ -162,7 +162,7 @@ export interface FilterDefinition<
    * This should only be necessary for freeform or custom formats.
    */
   suggestionsGenerator?: (
-    args: SuggestionsCtx
+    args: SuggestionsCtx,
   ) => string[] | { keyword: string; ops?: string[] }[] | undefined;
 
   /**

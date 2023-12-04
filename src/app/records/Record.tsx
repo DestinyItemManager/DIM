@@ -39,13 +39,11 @@ interface RecordInterval {
 
 const catalystIconsTable = catalystIcons as HashLookup<string>;
 
-export default function Record({
+function Record({
   record,
-  completedRecordsHidden,
   redactedRecordsRevealed,
 }: {
   record: DimRecord;
-  completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
 }) {
   const defs = useD2Definitions()!;
@@ -62,7 +60,7 @@ export default function Record({
     !acquired &&
     Boolean(state & DestinyRecordState.Obscured);
   const trackedInDim = useSelector((state: RootState) =>
-    trackedTriumphsSelector(state).includes(recordHash)
+    trackedTriumphsSelector(state).includes(recordHash),
   );
   const loreLink =
     !obscured &&
@@ -81,10 +79,6 @@ export default function Record({
     recordHash in catalystIconsTable
       ? catalystIconsTable[recordHash]
       : recordDef.displayProperties.icon;
-
-  if (completedRecordsHidden && acquired) {
-    return null;
-  }
 
   const intervals = getIntervals(recordDef, recordComponent);
   const intervalBarStyle = {
@@ -126,7 +120,7 @@ export default function Record({
   if (intervals.length > 1) {
     const currentScore = _.sumBy(
       _.take(intervals, recordComponent.intervalsRedeemedCount),
-      (i) => i.score
+      (i) => i.score,
     );
     const totalScore = _.sumBy(intervals, (i) => i.score);
     scoreValue = (
@@ -156,7 +150,7 @@ export default function Record({
         !isBooleanObjective(
           defs.Objective.get(objectives[0].objectiveHash),
           objectives[0].progress ?? 0,
-          objectives[0].completionValue
+          objectives[0].completionValue,
         )));
 
   // TODO: show track badge greyed out / on hover
@@ -224,7 +218,7 @@ export default function Record({
 
 function getIntervals(
   definition: DestinyRecordDefinition,
-  record: DestinyRecordComponent
+  record: DestinyRecordComponent,
 ): RecordInterval[] {
   const intervalDefinitions = definition?.intervalInfo?.intervalObjectives || [];
   const intervalObjectives = record?.intervalObjectives || [];
@@ -250,7 +244,7 @@ function getIntervals(
           : Math.max(
               0,
               ((data.progress || 0) - prevIntervalProgress) /
-                (data.completionValue - prevIntervalProgress)
+                (data.completionValue - prevIntervalProgress),
             )
         : 0,
       isRedeemed: record.intervalsRedeemedCount >= i + 1,
@@ -266,11 +260,9 @@ function getIntervals(
 /** A grid of records as seen in triumph presentation nodes or Tracked Triumphs. */
 export function RecordGrid({
   records,
-  completedRecordsHidden,
   redactedRecordsRevealed,
 }: {
   records: DimRecord[];
-  completedRecordsHidden: boolean;
   redactedRecordsRevealed: boolean;
 }) {
   // TODO: was there really a problem with duplicate records?
@@ -287,7 +279,6 @@ export function RecordGrid({
           <Record
             key={record.recordDef.hash}
             record={record}
-            completedRecordsHidden={completedRecordsHidden}
             redactedRecordsRevealed={redactedRecordsRevealed}
           />
         );

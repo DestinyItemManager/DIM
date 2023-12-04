@@ -6,10 +6,11 @@ import { isInInGameLoadoutForSelector } from 'app/loadout-drawer/selectors';
 import type { ItemTierName } from 'app/search/d2-known-values';
 import { RootState, ThunkResult } from 'app/store/types';
 import { CancelToken } from 'app/utils/cancel';
+import { count, filterMap } from 'app/utils/collections';
 import { DimError } from 'app/utils/dim-error';
+import { errorMessage } from 'app/utils/errors';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
-import { count, errorMessage, filterMap } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -73,7 +74,7 @@ export interface MoveSession {
 export function createMoveSession(
   cancelToken: CancelToken,
   /** Items explicitly involved in the move. */
-  items: DimItem[]
+  items: DimItem[],
 ): MoveSession {
   const involvedItems = new Set<string | number>();
   for (const item of items) {
@@ -109,7 +110,7 @@ export interface Exclusion {
 export function setItemLockState(
   item: DimItem,
   state: boolean,
-  type: 'lock' | 'track' = 'lock'
+  type: 'lock' | 'track' = 'lock',
 ): ThunkResult {
   return async (dispatch, getState) => {
     const account = currentAccountSelector(getState())!;
@@ -152,7 +153,7 @@ function updateItemModel(
   source: DimStore,
   target: DimStore,
   equip: boolean,
-  amount: number = item.amount
+  amount: number = item.amount,
 ): ThunkAction<DimItem, RootState, undefined, AnyAction> {
   return (dispatch, getState) => {
     const transaction = getCurrentHub()?.getScope()?.getTransaction();
@@ -179,7 +180,7 @@ function updateItemModel(
  */
 function getItemAcrossStores<Item extends DimItem, Store extends DimStore<Item>>(
   stores: Store[],
-  params: DimItem
+  params: DimItem,
 ) {
   for (const store of stores) {
     for (const item of store.items) {
@@ -210,7 +211,7 @@ export function getSimilarItem(
     exclusions?: readonly Exclusion[];
     /** Don't pick an exotic to equip in this item's place (because we're specifically trying to dequip an exotic) */
     excludeExotic?: boolean;
-  } = {}
+  } = {},
 ): DimItem | undefined {
   const target = getStore(stores, item.owner)!;
 
@@ -247,7 +248,7 @@ export function equipItems(
   items: DimItem[],
   /** A list of items to not consider equipping in order to de-equip an exotic */
   exclusions: readonly Exclusion[],
-  session: MoveSession
+  session: MoveSession,
 ): ThunkResult<{ [itemInstanceId: string]: PlatformErrorCodes }> {
   return async (dispatch, getState) => {
     const getStores = () => storesSelector(getState());
@@ -266,8 +267,8 @@ export function equipItems(
             return Promise.reject(
               new DimError(
                 'ItemService.Deequip',
-                t('ItemService.Deequip', { itemname: otherExotic.name })
-              )
+                t('ItemService.Deequip', { itemname: otherExotic.name }),
+              ),
             );
           }
           const target = getStore(getStores(), similarItem.owner)!;
@@ -277,7 +278,7 @@ export function equipItems(
           } else {
             // If we need to get the similar item from elsewhere, do that first
             return dispatch(executeMoveItem(similarItem, store, { equip: true }, session)).then(
-              () => similarItem
+              () => similarItem,
             );
           }
         }
@@ -310,7 +311,7 @@ export function equipItems(
       const results = await equipItemsApi(items[0])(
         currentAccountSelector(getState())!,
         store,
-        items
+        items,
       );
       // Update our view of each successful item
       for (const [itemInstanceId, resultCode] of Object.entries(results)) {
@@ -355,7 +356,7 @@ function dequipItem(
   }: {
     /** Don't pick an exotic to equip in this item's place (because we're specifically trying to dequip an exotic) */
     excludeExotic?: boolean;
-  } = { excludeExotic: false }
+  } = { excludeExotic: false },
 ): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
     const stores = storesSelector(getState());
@@ -380,7 +381,7 @@ function moveToStore(
   store: DimStore,
   equip: boolean,
   amount: number,
-  session: MoveSession
+  session: MoveSession,
 ): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
     const getStores = () => storesSelector(getState());
@@ -398,7 +399,7 @@ function moveToStore(
             'to',
             store.name,
             'from',
-            ownerStore.name
+            ownerStore.name,
           );
     }
 
@@ -446,7 +447,7 @@ function moveToStore(
           overrideLockState,
           'when moving to',
           store.name,
-          'to work around Bungie.net lock state bug'
+          'to work around Bungie.net lock state bug',
         );
         try {
           await dispatch(setItemLockState(item, overrideLockState));
@@ -469,7 +470,7 @@ function moveToStore(
 function canEquipExotic(
   item: DimItem,
   store: DimStore,
-  session: MoveSession
+  session: MoveSession,
 ): ThunkResult<boolean> {
   return async (dispatch) => {
     const otherExotic = getOtherExoticThatNeedsDequipping(item, store);
@@ -483,7 +484,7 @@ function canEquipExotic(
             itemname: item.name,
             slot: otherExotic.type,
             error: errorMessage(e),
-          })
+          }),
         );
       }
     } else {
@@ -504,7 +505,7 @@ function getOtherExoticThatNeedsDequipping(item: DimItem, store: DimStore): DimI
   // Find an item that's not in the slot we're equipping, but has a matching equipping label
   return store.items.find(
     (i) =>
-      i.equipped && i.equippingLabel === item.equippingLabel && i.bucket.hash !== item.bucket.hash
+      i.equipped && i.equippingLabel === item.equippingLabel && i.bucket.hash !== item.bucket.hash,
   );
 }
 
@@ -536,7 +537,7 @@ function chooseMoveAsideItem(
   getState: () => RootState,
   target: DimStore,
   item: DimItem,
-  moveContext: MoveContext
+  moveContext: MoveContext,
 ): {
   item: DimItem;
   target: DimStore;
@@ -561,7 +562,7 @@ function chooseMoveAsideItem(
           (i) =>
             i.bucket.vaultBucket &&
             item.bucket.vaultBucket &&
-            i.bucket.vaultBucket.hash === item.bucket.vaultBucket.hash
+            i.bucket.vaultBucket.hash === item.bucket.vaultBucket.hash,
         )
       : findItemsByBucket(target, item.bucket.hash);
   } catch (e) {
@@ -570,13 +571,13 @@ function chooseMoveAsideItem(
         'move',
         'Item',
         item.name,
-        "has no vault bucket, but we're trying to move aside room in the vault for it"
+        "has no vault bucket, but we're trying to move aside room in the vault for it",
       );
     } else if (target.items.some((i) => !i.bucket.vaultBucket)) {
       errorLog(
         'move',
         'The vault has items with no vault bucket: ',
-        target.items.filter((i) => !i.bucket.vaultBucket).map((i) => i.name)
+        target.items.filter((i) => !i.bucket.vaultBucket).map((i) => i.name),
       );
     }
     throw e;
@@ -587,7 +588,7 @@ function chooseMoveAsideItem(
   if (moveAsideCandidates.length === 0) {
     throw new DimError(
       'no-space',
-      t('ItemService.NotEnoughRoom', { store: target.name, itemname: item.name })
+      t('ItemService.NotEnoughRoom', { store: target.name, itemname: item.name }),
     ).withError(new DimError('ItemService.NotEnoughRoomGeneral'));
   }
 
@@ -604,8 +605,8 @@ function chooseMoveAsideItem(
             otherItem.hash === i.hash &&
             !otherItem.location.inPostmaster &&
             // Enough space to absorb this stack
-            i.maxStackSize - otherItem.amount >= i.amount
-        )
+            i.maxStackSize - otherItem.amount >= i.amount,
+        ),
       );
     }
     return Boolean(otherStore);
@@ -630,7 +631,7 @@ function chooseMoveAsideItem(
       } else {
         return store.id + item.type;
       }
-    }
+    },
   );
 
   let moveAsideCandidate:
@@ -648,7 +649,7 @@ function chooseMoveAsideItem(
 
   _.sortBy(
     otherStores.filter((s) => !s.isVault),
-    (s) => s.lastPlayed.getTime()
+    (s) => s.lastPlayed.getTime(),
   ).find((targetStore) =>
     sortMoveAsideCandidatesForStore(
       moveAsideCandidates,
@@ -656,7 +657,7 @@ function chooseMoveAsideItem(
       targetStore,
       getTag,
       isInInGameLoadoutFor,
-      item
+      item,
     ).find((candidate) => {
       const spaceLeft = cachedSpaceLeft(targetStore, candidate);
 
@@ -680,7 +681,7 @@ function chooseMoveAsideItem(
         const openVaultSlotsBeforeMove = Math.floor(openVaultAmount / candidate.maxStackSize);
         const openVaultSlotsAfterMove = Math.max(
           0,
-          Math.floor((openVaultAmount - candidate.amount) / candidate.maxStackSize)
+          Math.floor((openVaultAmount - candidate.amount) / candidate.maxStackSize),
         );
         if (openVaultSlotsBeforeMove === 1 && openVaultSlotsAfterMove === 0 && spaceLeft) {
           moveAsideCandidate = {
@@ -692,7 +693,7 @@ function chooseMoveAsideItem(
       }
 
       return false;
-    })
+    }),
   );
 
   // If we're moving off a character (into the vault) and we couldn't find a better match,
@@ -707,7 +708,7 @@ function chooseMoveAsideItem(
   if (!moveAsideCandidate) {
     throw new DimError(
       'no-space',
-      t('ItemService.NotEnoughRoom', { store: target.name, itemname: item.name })
+      t('ItemService.NotEnoughRoom', { store: target.name, itemname: item.name }),
     ).withError(new DimError('ItemService.NotEnoughRoomGeneral'));
   }
 
@@ -739,7 +740,7 @@ function ensureCanMoveToStore(
     reservations: Immutable<MoveReservations>;
     numRetries?: number;
   },
-  session: MoveSession
+  session: MoveSession,
 ): ThunkResult<boolean> {
   return async (dispatch, getState) => {
     const { excludes = [], reservations = {}, numRetries = 0 } = options;
@@ -795,7 +796,7 @@ function ensureCanMoveToStore(
       if (storeReservations[s.id]) {
         movesNeeded[s.id] = Math.max(
           0,
-          storeReservations[s.id] - spaceLeftWithReservations(s, item)
+          storeReservations[s.id] - spaceLeftWithReservations(s, item),
         );
       }
     }
@@ -818,15 +819,15 @@ function ensureCanMoveToStore(
       };
 
       // Move starting from the vault (which is always last)
-      const [sourceStoreId] = Object.entries(movesNeeded)
-        .reverse()
-        .find(([_storeId, moveAmount]) => moveAmount > 0)!;
+      const [sourceStoreId] = Object.entries(movesNeeded).findLast(
+        ([_storeId, moveAmount]) => moveAmount > 0,
+      )!;
       const moveAsideSource = getStore(stores, sourceStoreId)!;
       const { item: moveAsideItem, target: moveAsideTarget } = chooseMoveAsideItem(
         getState,
         moveAsideSource,
         item,
-        moveContext
+        moveContext,
       );
 
       if (
@@ -850,7 +851,7 @@ function ensureCanMoveToStore(
                 itemtype,
                 store: moveAsideTarget.name,
                 context: moveAsideTarget.genderName,
-              })
+              }),
         );
       } else {
         // Make one move and start over!
@@ -872,7 +873,7 @@ function ensureCanMoveToStore(
             errorLog(
               'move',
               `Unable to move aside ${moveAsideItem.name} to ${moveAsideTarget.name}. Trying again.`,
-              e
+              e,
             );
             return dispatch(ensureCanMoveToStore(item, store, amount, options, session));
           } else {
@@ -920,7 +921,7 @@ function ensureValidTransfer(
   amount: number,
   excludes: Exclusion[],
   reservations: Immutable<MoveReservations>,
-  session: MoveSession
+  session: MoveSession,
 ): ThunkResult<boolean> {
   return async (dispatch) => {
     if (equip) {
@@ -962,7 +963,7 @@ export function executeMoveItem(
     excludes?: Exclusion[];
     reservations?: Immutable<MoveReservations>;
   },
-  session: MoveSession
+  session: MoveSession,
 ): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
     const getStores = () => storesSelector(getState());
@@ -1005,7 +1006,7 @@ export function executeMoveItem(
             item.name,
             'to',
             target.name,
-            'but the bucket is really full'
+            'but the bucket is really full',
           );
           session.bucketsFullOnCurrentStore.add(item.bucket.hash);
         } else {
@@ -1015,7 +1016,7 @@ export function executeMoveItem(
     }
 
     await dispatch(
-      ensureValidTransfer(equip, target, item, amount, excludes, reservations, session)
+      ensureValidTransfer(equip, target, item, amount, excludes, reservations, session),
     );
 
     // Replace the target store - ensureValidTransfer may have reloaded it
@@ -1028,7 +1029,7 @@ export function executeMoveItem(
         item = await dispatch(moveToStore(item, target, equip, amount, session));
       } else {
         item = await dispatch(
-          executeMoveItem(item, source, { equip, amount, excludes, reservations }, session)
+          executeMoveItem(item, source, { equip, amount, excludes, reservations }, session),
         );
         target = getStore(getStores(), target.id)!;
         source = getStore(getStores(), item.owner)!;
@@ -1087,7 +1088,7 @@ export function sortMoveAsideCandidatesForStore(
   getTag: (item: DimItem) => TagValue | undefined,
   isInInGameLoadoutFor: (item: DimItem, ownerId: string) => boolean,
   /** The item we're trying to make space for. May be missing. */
-  displacer?: DimItem
+  displacer?: DimItem,
 ) {
   // A sort for items to use for ranking *which item to move*
   // aside. The highest ranked items are the most likely to be moved.
@@ -1102,7 +1103,7 @@ export function sortMoveAsideCandidatesForStore(
       // prefer same bucket over everything, because that makes space in the correct "pocket"
       compareBy(
         (displaced) =>
-          !fromStore.isVault && displacer && displaced.bucket.hash === displacer.bucket.hash
+          !fromStore.isVault && displacer && displaced.bucket.hash === displacer.bucket.hash,
       ),
 
       // TODO: Prefer moving from vault into Inventory (consumables)
@@ -1122,11 +1123,11 @@ export function sortMoveAsideCandidatesForStore(
 
       // Prefer displacing on-char items that AREN'T in their owner's in-game loadouts
       compareBy(
-        (displaced) => !fromStore.isVault && !isInInGameLoadoutFor(displaced, fromStore.id)
+        (displaced) => !fromStore.isVault && !isInInGameLoadoutFor(displaced, fromStore.id),
       ),
       // prefer displacing a vaulted item to a char with the item in a loadout
       compareBy(
-        (displaced) => !targetStore.isVault && isInInGameLoadoutFor(displaced, targetStore.id)
+        (displaced) => !targetStore.isVault && isInInGameLoadoutFor(displaced, targetStore.id),
       ),
       // Prefer moving an item if the owner can't use it
       compareBy((displaced) => !fromStore.isVault && !itemCanBeEquippedBy(displaced, fromStore)),
@@ -1139,19 +1140,19 @@ export function sortMoveAsideCandidatesForStore(
       compareBy((displaced) => {
         const tag = getTag(displaced);
         return -(fromStore.isVault ? vaultDisplacePriority : characterDisplacePriority).indexOf(
-          tag || 'none'
+          tag || 'none',
         );
       }),
       // Prefer moving lower-tier into the vault and higher tier out
       compareBy((i) =>
-        fromStore.isVault ? moveAsideWeighting[i.tier] : -moveAsideWeighting[i.tier]
+        fromStore.isVault ? moveAsideWeighting[i.tier] : -moveAsideWeighting[i.tier],
       ),
       // Prefer keeping higher-stat items on characters
       compareBy(
         (i) =>
-          (i.primaryStat && (fromStore.isVault ? i.primaryStat.value : -i.primaryStat.value)) || 0
-      )
-    )
+          (i.primaryStat && (fromStore.isVault ? i.primaryStat.value : -i.primaryStat.value)) || 0,
+      ),
+    ),
   );
 
   // Sort all candidates
@@ -1171,7 +1172,7 @@ function searchForSimilarItem(
   store: DimStore,
   exclusions: readonly Exclusion[] = [],
   target: DimStore,
-  excludeExotic: boolean
+  excludeExotic: boolean,
 ): DimItem | undefined {
   const candidates = store.items.filter(
     (i) =>
@@ -1182,7 +1183,7 @@ function searchForSimilarItem(
       itemCanBeEquippedBy(i, target) &&
       // Not on the exclusion list
       !exclusions.some((item) => item.id === i.id && item.hash === i.hash) &&
-      (!excludeExotic || i.equippingLabel !== item.equippingLabel)
+      (!excludeExotic || i.equippingLabel !== item.equippingLabel),
   );
 
   if (!candidates.length) {
@@ -1209,8 +1210,8 @@ function searchForSimilarItem(
       // Prefer higher-tier items
       compareBy((i) => moveAsideWeighting[i.tier]),
       // Prefer higher-stat items
-      compareBy((i) => i.primaryStat?.value ?? 0)
-    )
+      compareBy((i) => i.primaryStat?.value ?? 0),
+    ),
   );
 
   const sortedCandidates = candidates.sort(itemValueComparator);

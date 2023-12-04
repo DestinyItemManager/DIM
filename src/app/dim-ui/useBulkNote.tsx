@@ -58,7 +58,7 @@ export default function useBulkNote(): [
         }
       }
     },
-    [dispatch, showDialog]
+    [dispatch, showDialog],
   );
 
   return [dialog, bulkNote];
@@ -111,8 +111,8 @@ function BulkNoteDialog({
     appendMode === 'replace'
       ? note
       : appendMode === 'append'
-      ? appendedToNote(originalNote, note)
-      : removedFromNote(originalNote, note);
+        ? appendedToNote(originalNote, note)
+        : removedFromNote(originalNote, note);
 
   return (
     <>

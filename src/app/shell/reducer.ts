@@ -45,7 +45,7 @@ const initialState: ShellState = {
 
 export const shell: Reducer<ShellState, ShellAction> = (
   state: ShellState = initialState,
-  action: ShellAction
+  action: ShellAction,
 ): ShellState => {
   switch (action.type) {
     case getType(actions.setPhonePortrait):

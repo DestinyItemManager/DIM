@@ -14,7 +14,7 @@ import { D1Stat } from '../item-types';
 export function getQualityRating(
   stats: D1Stat[] | null,
   light: { value: number },
-  type: string
+  type: string,
 ): {
   min: number;
   max: number;

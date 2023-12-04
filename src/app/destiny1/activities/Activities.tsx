@@ -71,7 +71,7 @@ export default function Activities({ account }: Props) {
     activityId: string,
     stores: D1Store[],
     tier: D1ActivityTier,
-    index: number
+    index: number,
   ): ActivityTier => {
     const tierDef = defs.Activity.get(tier.activityHash);
 
@@ -79,10 +79,10 @@ export default function Activities({ account }: Props) {
       tier.activityData.recommendedLight === 390
         ? '390'
         : tier.tierDisplayName
-        ? t(`Activities.${tier.tierDisplayName}`, {
-            metadata: { keys: 'difficulty' },
-          })
-        : tierDef.activityName;
+          ? t(`Activities.${tier.tierDisplayName}`, {
+              metadata: { keys: 'difficulty' },
+            })
+          : tierDef.activityName;
 
     const characters =
       activityId === 'heroicstrike'
@@ -119,7 +119,7 @@ export default function Activities({ account }: Props) {
   const processActivities = (
     defs: D1ManifestDefinitions,
     stores: D1Store[],
-    rawActivity: D1ActivityComponent
+    rawActivity: D1ActivityComponent,
   ): Activity => {
     const def = defs.Activity.get(rawActivity.display.activityHash);
     const activity = {
@@ -131,8 +131,8 @@ export default function Activities({ account }: Props) {
         rawActivity.identifier === 'nightfall'
           ? t('Activities.Nightfall')
           : rawActivity.identifier === 'heroicstrike'
-          ? t('Activities.WeeklyHeroic')
-          : defs.ActivityType.get(def.activityTypeHash).activityTypeName,
+            ? t('Activities.WeeklyHeroic')
+            : defs.ActivityType.get(def.activityTypeHash).activityTypeName,
       skulls: null as Skull[] | null,
       tiers: [] as ActivityTier[],
     };
@@ -155,7 +155,7 @@ export default function Activities({ account }: Props) {
       activity.skulls = activity.skulls.flat();
     }
     activity.tiers = rawActivity.activityTiers.map((r, i) =>
-      processActivity(defs, rawActivity.identifier, stores, r, i)
+      processActivity(defs, rawActivity.identifier, stores, r, i),
     );
 
     return activity;
@@ -173,7 +173,7 @@ export default function Activities({ account }: Props) {
     ];
 
     const rawActivities = Object.values(stores[0].advisors.activities).filter(
-      (a) => a.activityTiers && allowList.includes(a.identifier)
+      (a) => a.activityTiers && allowList.includes(a.identifier),
     );
     const activities = _.sortBy(rawActivities, (a) => {
       const ix = allowList.indexOf(a.identifier);
@@ -229,7 +229,7 @@ export default function Activities({ account }: Props) {
                   {activity.tiers.length > 1 && <div className="tier-title">{tier.name}</div>}
                   <div className="tier-characters">
                     {_.sortBy(tier.characters, (c) =>
-                      characters.findIndex((s) => s.id === c.id)
+                      characters.findIndex((s) => s.id === c.id),
                     ).map((character) => (
                       <div key={character.id} className="tier-row">
                         {character.objectives.length === 0 &&

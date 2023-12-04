@@ -5,7 +5,7 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "editor.formatOnSave": true,
   "jest.autoRun": "off",
-  "eslint.packageManager": "yarn",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
   "search.exclude": {
     "**/data/d1/manifests": true,
@@ -23,7 +23,7 @@
   "editor.codeActionsOnSave": {
     "source.fixAll": true
   },
-  "jest.jestCommandLine": "yarn test",
+  "jest.jestCommandLine": "pnpm test --",
   "[javascript]": {
     "editor.codeActionsOnSave": {
       "source.organizeImports": false
@@ -62,6 +62,7 @@
     "*.tsx": "${capture}.ts, ${capture}.test.ts",
     "*.m.scss": "${capture}.m.scss.d.ts",
     "tsconfig.json": "tsconfig.*.json",
-    "package.json": "package-lock.json, yarn.lock"
-  }
+    "package.json": "package-lock.json, pnpm-lock.yaml"
+  },
+  "eslint.lintTask.options": "src"
 }

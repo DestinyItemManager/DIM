@@ -21,7 +21,7 @@ import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { useD1Definitions } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
-import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
+import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import React, { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import TextareaAutosize from 'react-textarea-autosize';
@@ -58,7 +58,7 @@ export default function D1LoadoutDrawer({
   const onSaveLoadout = (
     e: React.FormEvent,
     loadoutToSave: Readonly<Loadout> | undefined = loadout,
-    close: () => void
+    close: () => void,
   ) => {
     e.preventDefault();
     if (!loadoutToSave) {
@@ -160,14 +160,14 @@ function LoadoutDrawerBody({
         storeId,
         allItems,
         undefined,
-        defs
+        defs,
       ),
-    [itemCreationContext, loadoutItems, storeId, allItems, defs]
+    [itemCreationContext, loadoutItems, storeId, allItems, defs],
   );
 
   const onAddItem = useCallback(
     (item: DimItem, equip?: boolean) => setLoadout(addItem(defs, item, equip)),
-    [defs, setLoadout]
+    [defs, setLoadout],
   );
 
   // If an item comes in on the addItem$ observable, add it.
@@ -189,7 +189,7 @@ function LoadoutDrawerBody({
       filterItems: (item: DimItem) =>
         item.hash === warnItem.hash &&
         itemCanBeInLoadout(item) &&
-        (!loadout || isClassCompatible(item.classType, loadout.classType)),
+        (!loadout || isItemLoadoutCompatible(item.classType, loadout.classType)),
       prompt: t('Loadouts.FindAnother', { name: warnItem.name }),
     });
 

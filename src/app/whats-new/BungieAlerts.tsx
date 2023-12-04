@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import { bungieHelpLink, bungieTwitterAccount } from 'app/shell/links';
+import { bungieHelpAccount, bungieHelpLink } from 'app/shell/links';
 import { bungieAlertsSelector } from 'app/shell/selectors';
 import { GlobalAlertLevel } from 'bungie-api-ts/core';
 import { useSelector } from 'react-redux';
@@ -35,7 +35,7 @@ export default function BungieAlerts() {
           <p dangerouslySetInnerHTML={{ __html: alert.AlertHtml }} />
           <div>
             {t('BungieService.Twitter')}{' '}
-            <ExternalLink href={bungieHelpLink}>{bungieTwitterAccount} Twitter</ExternalLink>
+            <ExternalLink href={bungieHelpLink}>{bungieHelpAccount}</ExternalLink>
           </div>
         </div>
       ))}

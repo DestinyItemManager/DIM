@@ -1,6 +1,6 @@
 import { Virtualizer, useVirtualizer, useWindowVirtualizer } from '@tanstack/react-virtual';
 import clsx from 'clsx';
-import { Key, forwardRef, useImperativeHandle, useLayoutEffect, useRef } from 'react';
+import { forwardRef, useImperativeHandle, useLayoutEffect, useRef } from 'react';
 import styles from './VirtualList.m.scss';
 
 interface VirtualListProps {
@@ -16,7 +16,7 @@ interface VirtualListProps {
    */
   overscan?: number;
   children: (index: number) => React.ReactNode;
-  getItemKey: (index: number) => Key;
+  getItemKey: (index: number) => string | number; // React.Key, but they added bigint while @tanstack/react-virtual used their own Key type
 }
 
 export interface VirtualListRef {
@@ -38,7 +38,7 @@ export const VirtualList = forwardRef(function VirtualList(
     children,
     getItemKey,
   }: VirtualListProps,
-  ref: React.ForwardedRef<VirtualListRef>
+  ref: React.ForwardedRef<VirtualListRef>,
 ) {
   // Dynamic-height element-based virtual list code based on https://tanstack.com/virtual/v3/docs/examples/react/dynamic
   const parentRef = useRef<HTMLDivElement>(null);
@@ -72,7 +72,7 @@ export const VirtualList = forwardRef(function VirtualList(
         <div
           className={styles.virtualArea}
           style={{
-            transform: `translateY(${items[0].start}px)`,
+            transform: `translateY(${items.length > 0 ? items[0].start : 0}px)`,
           }}
         >
           {items.map((virtualItem) => (
@@ -106,7 +106,7 @@ export const WindowVirtualList = forwardRef(function WindowVirtualList(
     overscan,
     getItemKey,
   }: VirtualListProps,
-  ref: React.ForwardedRef<VirtualListRef>
+  ref: React.ForwardedRef<VirtualListRef>,
 ) {
   // Dynamic-height window-based virtual list code based on https://tanstack.com/virtual/v3/docs/examples/react/dynamic
   const parentRef = useRef<HTMLDivElement>(null);
@@ -118,7 +118,7 @@ export const WindowVirtualList = forwardRef(function WindowVirtualList(
   useLayoutEffect(() => {
     headerHeightRef.current = parseInt(
       document.querySelector('html')!.style.getPropertyValue('--header-height'),
-      10
+      10,
     );
   }, []);
 
@@ -152,7 +152,9 @@ export const WindowVirtualList = forwardRef(function WindowVirtualList(
       <div
         className={styles.virtualArea}
         style={{
-          transform: `translateY(${items[0].start - virtualizer.options.scrollMargin}px)`,
+          transform: `translateY(${
+            items.length > 0 ? items[0].start - virtualizer.options.scrollMargin : 0
+          }px)`,
         }}
       >
         {items.map((virtualItem) => (

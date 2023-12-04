@@ -1,7 +1,6 @@
 import { t } from 'app/i18next-t';
 import { accountRoute } from 'app/routes';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -29,14 +28,15 @@ export default function MenuAccounts({
   const sortedAccounts = _.sortBy(
     accounts,
     (a) => -a.destinyVersion,
-    (a) => -a.lastPlayed.getTime()
+    (a) => -a.lastPlayed.getTime(),
   );
   const bungieName = sortedAccounts[0]?.displayName;
 
   return (
     <div className={styles.accountSelect}>
-      <h3>{t('Accounts.Title')}</h3>
-      <div className={styles.accountName}>{bungieName}</div>
+      <h3>
+        {t('Accounts.Title')} <span className={styles.accountName}>{bungieName}</span>
+      </h3>
       {sortedAccounts.map((account) => (
         <Link
           key={`${account.membershipId}-${account.destinyVersion}`}
@@ -46,7 +46,7 @@ export default function MenuAccounts({
           <Account account={account} selected={account === currentAccount} />
         </Link>
       ))}
-      <button type="button" className={clsx(styles.logout)} onClick={onLogOut}>
+      <button type="button" className={styles.logout} onClick={onLogOut}>
         <AppIcon icon={signOutIcon} />
         &nbsp;
         {t('Settings.LogOut')}

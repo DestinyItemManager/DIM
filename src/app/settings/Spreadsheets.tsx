@@ -5,7 +5,7 @@ import { storesLoadedSelector } from 'app/inventory/selectors';
 import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
 import { showNotification } from 'app/notifications/notifications';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { errorMessage } from 'app/utils/util';
+import { errorMessage } from 'app/utils/errors';
 import { DropzoneOptions } from 'react-dropzone';
 import { useSelector } from 'react-redux';
 import { AppIcon, spreadsheetIcon } from '../shell/icons';

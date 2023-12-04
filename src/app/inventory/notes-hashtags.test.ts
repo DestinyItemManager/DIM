@@ -9,7 +9,10 @@ import {
 test.each([
   ['#foo #bar', ['#foo', '#bar']],
   ['#foo, #bar', ['#foo', '#bar']],
-  ['This note has #foo tag and also#bar', ['#foo', '#bar']],
+  ['This note has #foo tag and also#bar', ['#foo']],
+  ['#foo#bar', ['#foo']],
+  ['#foo,#bar', ['#foo', '#bar']],
+  ['#foo-#bar', ['#foo-']], // Not great, could be better
   ['Emoji #🤯 tags', ['#🤯']],
 ])('getHashtagsFromNote: %s', (notes, expectedTags) => {
   const tags = new Set(getHashtagsFromNote(notes));
@@ -23,7 +26,7 @@ test('collectNotesHashtags should get a unique set of hashtags from multiple not
   };
 
   expect(new Set(collectNotesHashtags(itemInfos))).toEqual(
-    new Set(['#three', '#hash', '#tags', '#🤯'])
+    new Set(['#three', '#hash', '#tags', '#🤯']),
   );
 });
 

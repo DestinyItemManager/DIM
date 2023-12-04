@@ -11,11 +11,11 @@ import {
 import { DimStore } from 'app/inventory/store-types';
 import { getSeason } from 'app/inventory/store/season';
 import {
-  EXOTIC_CATALYST_TRAIT,
+  ARTIFICE_PERK_HASH,
+  ModsWithConditionalStats,
   armor2PlugCategoryHashes,
   killTrackerObjectivesByHash,
   killTrackerSocketTypeHash,
-  modsWithConditionalStats,
 } from 'app/search/d2-known-values';
 import { damageNamesByEnum } from 'app/search/search-filter-values';
 import modSocketMetadata, {
@@ -25,10 +25,10 @@ import modSocketMetadata, {
 import { DamageType, DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
-import { BucketHashes, PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { BucketHashes, PlugCategoryHashes, StatHashes, TraitHashes } from 'data/d2/generated-enums';
 import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json';
 import _ from 'lodash';
-import { filterMap, objectifyArray } from './util';
+import { filterMap, objectifyArray } from './collections';
 
 // damage is a mess!
 // this function supports turning a destiny DamageType into a known english name
@@ -45,7 +45,7 @@ const modMetadataBySocketTypeHash = objectifyArray(modSocketMetadata, 'socketTyp
 // it can be used to find what mod metadata a plugged item belongs to
 export const modMetadataByPlugCategoryHash = objectifyArray(
   modSocketMetadata,
-  'compatiblePlugCategoryHashes'
+  'compatiblePlugCategoryHashes',
 );
 
 /** i.e. ['outlaw', 'forge', 'opulent', etc] */
@@ -54,15 +54,11 @@ export const modTypeTags = [...new Set(modSocketMetadata.flatMap((m) => m.compat
 
 // kind of silly but we are using a list of known mod hashes to identify specialty mod slots below
 const specialtySocketTypeHashes = modSocketMetadata.flatMap(
-  (modMetadata) => modMetadata.socketTypeHashes
+  (modMetadata) => modMetadata.socketTypeHashes,
 );
 
 const specialtyModPlugCategoryHashes = modSocketMetadata.flatMap(
-  (modMetadata) => modMetadata.compatiblePlugCategoryHashes
-);
-
-export const emptySpecialtySocketHashes = modSocketMetadata.map(
-  (modMetadata) => modMetadata.emptyModSocketHash
+  (modMetadata) => modMetadata.compatiblePlugCategoryHashes,
 );
 
 /** verifies an item is d2 armor and has one or more specialty mod sockets, which are returned */
@@ -71,7 +67,8 @@ const getSpecialtySockets = (item?: DimItem): DimSocket[] | undefined => {
     const specialtySockets = item.sockets?.allSockets.filter(
       (socket) =>
         // check plugged -- non-artifice GoA armor still has the socket but nothing in it
-        socket.plugged && specialtySocketTypeHashes.includes(socket.socketDefinition.socketTypeHash)
+        socket.plugged &&
+        specialtySocketTypeHashes.includes(socket.socketDefinition.socketTypeHash),
     );
     if (specialtySockets?.length) {
       return specialtySockets;
@@ -83,7 +80,7 @@ const getSpecialtySockets = (item?: DimItem): DimSocket[] | undefined => {
 export const getSpecialtySocketMetadatas = (item?: DimItem): ModSocketMetadata[] | undefined => {
   const metadatas = filterMap(
     getSpecialtySockets(item) ?? [],
-    (s) => modMetadataBySocketTypeHash[s.socketDefinition.socketTypeHash]
+    (s) => modMetadataBySocketTypeHash[s.socketDefinition.socketTypeHash],
   );
   if (metadatas?.length) {
     return metadatas;
@@ -136,7 +133,7 @@ export function isSunset(item: DimItem): boolean {
 export function itemCanBeEquippedBy(
   item: DimItem,
   store: DimStore,
-  allowPostmaster = false
+  allowPostmaster = false,
 ): boolean {
   if (store.isVault) {
     return false;
@@ -153,7 +150,7 @@ export function itemCanBeEquippedByStoreId(
   item: DimItem,
   storeId: string,
   storeClassType: DestinyClass,
-  allowPostmaster = false
+  allowPostmaster = false,
 ): boolean {
   return Boolean(
     item.equipment &&
@@ -167,7 +164,7 @@ export function itemCanBeEquippedByStoreId(
           isClassCompatible(item.classType, storeClassType)) &&
       // can be moved or is already here
       (!item.notransfer || item.owner === storeId) &&
-      (allowPostmaster || !item.location.inPostmaster)
+      (allowPostmaster || !item.location.inPostmaster),
   );
 }
 
@@ -207,7 +204,7 @@ export interface KillTracker {
 
 /** returns a socket's kill tracker info */
 const getSocketKillTrackerInfo = (
-  socket: DimSocket | undefined
+  socket: DimSocket | undefined,
 ): KillTracker | null | undefined => {
   const killTrackerPlug = socket?.plugged;
   return killTrackerPlug && plugToKillTracker(killTrackerPlug);
@@ -241,7 +238,7 @@ const d1YearSourceHashes = {
  */
 export function getItemYear(
   item: DimItem | DestinyInventoryItemDefinition,
-  defs?: D2ManifestDefinitions
+  defs?: D2ManifestDefinitions,
 ) {
   if (('destinyVersion' in item && item.destinyVersion === 2) || 'displayProperties' in item) {
     const season = getSeason(item, defs);
@@ -294,14 +291,14 @@ export function isPlugStatActive(
   item: DimItem,
   plug: DestinyInventoryItemDefinition,
   statHash: number,
-  isConditionallyActive: boolean
+  isConditionallyActive: boolean,
 ): boolean {
   /*
   Some Exotic weapon catalysts can be inserted even though the catalyst objectives are incomplete.
   In these cases, the catalyst effects are only applied once the objectives are complete.
   We'll assume that the item can only be masterworked if its associated catalyst has been completed.
   */
-  if (plug.traitHashes?.includes(EXOTIC_CATALYST_TRAIT) && !item.masterwork) {
+  if (plug.traitHashes?.includes(TraitHashes.ItemExoticCatalyst) && !item.masterwork) {
     return false;
   }
 
@@ -317,15 +314,15 @@ export function isPlugStatActive(
 
   const plugHash = plug.hash;
   if (
-    plugHash === modsWithConditionalStats.elementalCapacitor ||
-    plugHash === modsWithConditionalStats.enhancedElementalCapacitor
+    plugHash === ModsWithConditionalStats.ElementalCapacitor ||
+    plugHash === ModsWithConditionalStats.EnhancedElementalCapacitor
   ) {
     return false;
   }
 
   if (
-    plugHash === modsWithConditionalStats.echoOfPersistence ||
-    plugHash === modsWithConditionalStats.sparkOfFocus
+    plugHash === ModsWithConditionalStats.EchoOfPersistence ||
+    plugHash === ModsWithConditionalStats.SparkOfFocus
   ) {
     // "-10 to the stat that governs your class ability recharge"
     return (
@@ -370,6 +367,16 @@ export function getStatValuesByHash(item: DimItem, byWhichValue: 'base' | 'value
 }
 
 /**
+ * Does this item have access to the Artifice mod slot that allows
+ * the user to bump a stat by a small amount?
+ */
+export function isArtifice(item: DimItem) {
+  return Boolean(
+    item.sockets?.allSockets.some((socket) => socket.plugged?.plugDef.hash === ARTIFICE_PERK_HASH),
+  );
+}
+
+/**
  * Are two Destiny classes compatible? e.g. can an item (firstClass) be equipped
  * by a character (secondClass)? True if they're the same class or one is the
  * wildcard class.
@@ -380,4 +387,13 @@ export function isClassCompatible(firstClass: DestinyClass, secondClass: Destiny
     secondClass === DestinyClass.Unknown ||
     firstClass === secondClass
   );
+}
+
+/**
+ * Can a loadout of classType `loadoutClass` use an item of class `itemClass`?
+ * Global loadouts can only include items equippable by any class, so this is
+ * more restrictive than `isClassCompatible`
+ */
+export function isItemLoadoutCompatible(itemClass: DestinyClass, loadoutClass: DestinyClass) {
+  return itemClass === DestinyClass.Unknown || itemClass === loadoutClass;
 }

@@ -34,26 +34,24 @@ export default function CompareStat({
           <span style={{ width: percent(statValue / stat.statMaximumValue) }} />
         </span>
       )}
-      <span className={styles.value}>
-        {stat.id === 'EnergyCapacity' && itemStat && item.energy && <EnergyCostIcon />}
-        {itemStat?.value !== undefined ? (
-          itemStat.statHash === StatHashes.RecoilDirection ? (
-            <span className={styles.recoil}>
-              <span>{statValue}</span>
-              <RecoilStat value={statValue} />
-            </span>
-          ) : (
-            <AnimatedNumber value={statValue} />
-          )
+      {stat.id === 'EnergyCapacity' && itemStat && item.energy && <EnergyCostIcon />}
+      {itemStat?.value !== undefined ? (
+        itemStat.statHash === StatHashes.RecoilDirection ? (
+          <span className={styles.recoil}>
+            <span>{statValue}</span>
+            <RecoilStat value={statValue} />
+          </span>
         ) : (
-          t('Stats.NotApplicable')
+          <AnimatedNumber value={statValue} />
+        )
+      ) : (
+        t('Stats.NotApplicable')
+      )}
+      {Boolean(itemStat?.value) &&
+        (itemStat as D1Stat).qualityPercentage &&
+        Boolean((itemStat as D1Stat).qualityPercentage!.range) && (
+          <span className={styles.range}>({(itemStat as D1Stat).qualityPercentage!.range})</span>
         )}
-        {Boolean(itemStat?.value) &&
-          (itemStat as D1Stat).qualityPercentage &&
-          Boolean((itemStat as D1Stat).qualityPercentage!.range) && (
-            <span className={styles.range}>({(itemStat as D1Stat).qualityPercentage!.range})</span>
-          )}
-      </span>
     </div>
   );
 }
@@ -62,7 +60,7 @@ export default function CompareStat({
 function statRange(
   stat: (MinimalStat & { qualityPercentage?: { min: number } }) | undefined,
   statInfo: StatInfo,
-  compareBaseStats = false
+  compareBaseStats = false,
 ) {
   if (!stat) {
     return -1;

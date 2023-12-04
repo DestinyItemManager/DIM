@@ -56,7 +56,7 @@ export function chooseAutoMods(
   neededStats: number[],
   numArtificeMods: number,
   remainingEnergyCapacities: number[][],
-  remainingTotalEnergy: number
+  remainingTotalEnergy: number,
 ) {
   return recursivelyChooseMods(
     info,
@@ -66,7 +66,7 @@ export function chooseAutoMods(
     numArtificeMods,
     remainingEnergyCapacities,
     remainingTotalEnergy,
-    []
+    undefined,
   );
 }
 
@@ -74,16 +74,23 @@ function doGeneralModsFit(
   info: LoSessionInfo,
   /** variants of remaining energy capacities given our activity mod assignment, each sorted descending */
   remainingEnergyCapacities: number[][],
-  pickedMods: ModsPick[]
+  pickedMods: ModsPick[] | undefined,
 ) {
-  const generalModCosts = [
-    ...info.generalModCosts,
-    ...pickedMods.flatMap((m) => m.generalModsCosts),
-  ];
-  generalModCosts.sort((a, b) => b - a);
+  // These are already sorted
+  let generalModCosts = info.generalModCosts;
+  // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
+  if (pickedMods !== undefined && pickedMods.length) {
+    generalModCosts = generalModCosts.slice();
+    // Intentionally open-coded for performance
+    // eslint-disable-next-line @typescript-eslint/prefer-for-of
+    for (let i = 0; i < pickedMods.length; i++) {
+      generalModCosts.push(...pickedMods[i].generalModsCosts);
+    }
+    generalModCosts.sort((a, b) => b - a);
+  }
 
   return remainingEnergyCapacities.some((capacities) =>
-    generalModCosts.every((cost, index) => cost <= capacities[index])
+    generalModCosts.every((cost, index) => cost <= capacities[index]),
   );
 }
 
@@ -102,7 +109,7 @@ function recursivelyChooseMods(
   /** variants of remaining energy capacities given our activity mod assignment, each sorted descending */
   remainingEnergyCapacities: number[][],
   remainingTotalEnergy: number,
-  pickedMods: ModsPick[]
+  pickedMods: ModsPick[] | undefined,
 ): ModsPick[] | undefined {
   while (statIndex < neededStats.length && neededStats[statIndex] === 0) {
     statIndex++;
@@ -111,7 +118,7 @@ function recursivelyChooseMods(
   if (statIndex === neededStats.length) {
     // We've hit the end of our needed stats, check if this is possible
     if (doGeneralModsFit(info, remainingEnergyCapacities, pickedMods)) {
-      return pickedMods;
+      return pickedMods ?? [];
     } else {
       return undefined;
     }
@@ -124,7 +131,7 @@ function recursivelyChooseMods(
   }
 
   // Create a new array we append the pick for this stat to.
-  const subArray = pickedMods.slice();
+  const subArray = pickedMods !== undefined ? pickedMods.slice() : [];
   // Dummy value just so we don't repeatedly push and pop.
   subArray.push(subArray[0]);
 
@@ -145,7 +152,7 @@ function recursivelyChooseMods(
       remainingArtificeSlots - pick.numArtificeMods,
       remainingEnergyCapacities,
       remainingTotalEnergy - pick.modEnergyCost,
-      subArray
+      subArray,
     );
     if (solution) {
       return solution;
@@ -173,7 +180,7 @@ function buildCacheForStat(
   autoModOptions: AutoModData,
   statHash: ArmorStatHashes,
   statIndex: number,
-  availableGeneralStatMods: number
+  availableGeneralStatMods: number,
 ) {
   const cache: CacheForStat = { statMap: {} };
   // Note: All of these could be undefined for whatever reason.
@@ -254,7 +261,7 @@ function buildCacheForStat(
 function buildLessCostlyRelations(
   autoModOptions: AutoModData,
   availableGeneralStatMods: number,
-  statOrder: ArmorStatHashes[]
+  statOrder: ArmorStatHashes[],
 ) {
   return Object.fromEntries(
     statOrder.map((armorStat1, statIndex1) => {
@@ -290,26 +297,26 @@ function buildLessCostlyRelations(
       }
 
       return [statIndex1, betterStatIndices];
-    })
+    }),
   ) as AutoModsMap['cheaperStatRelations'];
 }
 
 export function buildAutoModsMap(
   autoModOptions: AutoModData,
   availableGeneralStatMods: number,
-  statOrder: ArmorStatHashes[]
+  statOrder: ArmorStatHashes[],
 ): AutoModsMap {
   return {
     statCaches: Object.fromEntries(
       statOrder.map((statHash, statIndex) => [
         statIndex,
         buildCacheForStat(autoModOptions, statHash, statIndex, availableGeneralStatMods),
-      ])
+      ]),
     ) as AutoModsMap['statCaches'],
     cheaperStatRelations: buildLessCostlyRelations(
       autoModOptions,
       availableGeneralStatMods,
-      statOrder
+      statOrder,
     ),
   };
 }

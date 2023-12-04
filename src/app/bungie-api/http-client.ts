@@ -1,4 +1,5 @@
-import { convertToError, delay } from 'app/utils/util';
+import { convertToError } from 'app/utils/errors';
+import { delay } from 'app/utils/promises';
 import { PlatformErrorCodes, ServerResponse } from 'bungie-api-ts/destiny2';
 import { HttpClient, HttpClientConfig } from 'bungie-api-ts/http';
 
@@ -35,7 +36,7 @@ export class BungieError extends Error {
   endpoint: string;
   constructor(
     response: Partial<Pick<ServerResponse<unknown>, 'Message' | 'ErrorCode' | 'ErrorStatus'>>,
-    request: Request
+    request: Request,
   ) {
     super(response.Message ?? 'Unknown Bungie Error');
     this.name = 'BungieError';
@@ -78,7 +79,7 @@ function throwBungieError<T>(serverResponse: T | undefined, request: Request) {
         ErrorCode: PlatformErrorCodes.DestinyUnexpectedError,
         ErrorStatus: eMessage,
       },
-      request
+      request,
     );
   }
 
@@ -94,35 +95,6 @@ function throwBungieError<T>(serverResponse: T | undefined, request: Request) {
 //
 
 /**
- * returns a fetch-like that will abort the request after some time
- *
- * @param fetchFunction use this function to make the request
- * @param timeout abort request after this many milliseconds
- */
-export function createFetchWithTimeout(fetchFunction: typeof fetch, timeout: number): typeof fetch {
-  return async (...[input, init]: Parameters<typeof fetch>) => {
-    const controller = typeof AbortController === 'function' ? new AbortController() : null;
-    const signal = controller?.signal;
-    let timer: NodeJS.Timeout | undefined = undefined;
-
-    if (controller) {
-      timer = setTimeout(() => controller.abort(), timeout);
-      if (typeof input === 'string') {
-        input = new Request(input);
-      }
-      init = { ...init, signal };
-    }
-    try {
-      return await fetchFunction(input, init);
-    } finally {
-      if (timer !== undefined) {
-        clearTimeout(timer);
-      }
-    }
-  };
-}
-
-/**
  * returns a fetch-like that will run a function if the request is taking a long time,
  * e.g. generate a "still waiting!" notification
  *
@@ -133,7 +105,7 @@ export function createFetchWithTimeout(fetchFunction: typeof fetch, timeout: num
 export function createFetchWithNonStoppingTimeout(
   fetchFunction: typeof fetch,
   timeout: number,
-  onTimeout: (startTime: number, timeout: number) => void
+  onTimeout: (startTime: number, timeout: number) => void,
 ): typeof fetch {
   return async (...[input, init]: Parameters<typeof fetch>) => {
     const startTime = Date.now();
@@ -177,7 +149,7 @@ export function createHttpClient(fetchFunction: typeof fetch, apiKey: string): H
           ErrorStatus: 'SystemDisabled',
           Message: 'This system is temporarily disabled for maintenance.',
         },
-        fetchOptions
+        fetchOptions,
       );
     }
 
@@ -212,7 +184,7 @@ let timesThrottled = 0;
  */
 export function responsivelyThrottleHttpClient(
   httpClient: HttpClient,
-  onThrottle: (timesThrottled: number, waitTime: number, url: string) => void
+  onThrottle: (timesThrottled: number, waitTime: number, url: string) => void,
 ): HttpClient {
   return async <T>(config: HttpClientConfig): Promise<T> => {
     if (timesThrottled > 0) {

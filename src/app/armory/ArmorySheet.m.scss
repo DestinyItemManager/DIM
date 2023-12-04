@@ -1,8 +1,4 @@
-.sheet:global(.sheet) {
+.sheet {
   max-width: 900px;
   margin: 0 auto;
-
-  :global(.sheet-close) {
-    right: 16px;
-  }
 }

@@ -1,5 +1,5 @@
 import { registerApp } from 'app/dim-api/register-app';
-import { errorMessage } from 'app/utils/util';
+import { errorMessage } from 'app/utils/errors';
 import React, { useState } from 'react';
 
 const createAppUrl = 'https://www.bungie.net/en/Application/Create';
@@ -47,7 +47,7 @@ export default function Developer(this: never) {
 
   const onChange =
     (
-      setter: React.Dispatch<React.SetStateAction<string | undefined>>
+      setter: React.Dispatch<React.SetStateAction<string | undefined>>,
     ): React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> =>
     (e) => {
       setter(e.target.value);

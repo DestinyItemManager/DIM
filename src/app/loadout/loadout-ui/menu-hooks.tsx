@@ -1,40 +1,23 @@
 import { LoadoutSort } from '@destinyitemmanager/dim-api-types';
-import { AlertIcon } from 'app/dim-ui/AlertIcon';
-import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import FilterPills, { Option } from 'app/dim-ui/FilterPills';
+import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { DimLanguage } from 'app/i18n';
 import { t } from 'app/i18next-t';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
-import { isInGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
-import {
-  FragmentProblem,
-  getFragmentProblemsSelector,
-  isMissingItemsSelector,
-} from 'app/loadout-drawer/loadout-utils';
-import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
-import { plainString } from 'app/search/search-filters/freeform';
+import { DimStore } from 'app/inventory/store-types';
+import { findingDisplays } from 'app/loadout-analyzer/finding-display';
+import { useSummaryLoadoutsAnalysis } from 'app/loadout-analyzer/hooks';
+import { LoadoutAnalysisSummary, LoadoutFinding } from 'app/loadout-analyzer/types';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { faCheckCircle, refreshIcon } from 'app/shell/icons';
+import AppIcon from 'app/shell/icons/AppIcon';
+import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
-import { isClassCompatible } from 'app/utils/item-utils';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
-import deprecatedMods from 'data/d2/deprecated-mods.json';
+import { localizedIncludes, localizedSorter } from 'app/utils/intl';
+import clsx from 'clsx';
 import _ from 'lodash';
-import { useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
-
-/**
- * Get the saved loadouts that apply to the given class type, out of all saved loadouts.
- */
-export function useSavedLoadoutsForClassType(classType: DestinyClass) {
-  const allSavedLoadouts = useSelector(loadoutsSelector);
-  return useMemo(
-    () => filterLoadoutsToClass(allSavedLoadouts, classType),
-    [allSavedLoadouts, classType]
-  );
-}
-
-export function filterLoadoutsToClass(loadouts: Loadout[], classType: DestinyClass) {
-  return loadouts.filter((loadout) => isClassCompatible(classType, loadout.classType));
-}
+import { useEffect, useMemo, useState } from 'react';
+import styles from './menu-hooks.m.scss';
 
 /**
  * Set up the filter pills for loadouts - allowing for filtering by hashtag and some other special properties.
@@ -42,13 +25,13 @@ export function filterLoadoutsToClass(loadouts: Loadout[], classType: DestinyCla
  */
 export function useLoadoutFilterPills(
   savedLoadouts: Loadout[],
-  selectedStoreId: string,
+  store: DimStore,
   options: {
     includeWarningPills?: boolean;
     className?: string;
     darkBackground?: boolean;
     extra?: React.ReactNode;
-  } = {}
+  } = {},
 ): [filteredLoadouts: Loadout[], filterPillsElement: React.ReactNode, hasSelectedFilters: boolean] {
   if (!$featureFlags.loadoutFilterPills) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -56,12 +39,19 @@ export function useLoadoutFilterPills(
   }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useLoadoutFilterPillsInternal(savedLoadouts, selectedStoreId, options);
+  return useLoadoutFilterPillsInternal(savedLoadouts, store, options);
 }
+
+type FilterPillType =
+  | {
+      tag: 'hashtag';
+      hashtag: string;
+    }
+  | { tag: 'finding'; finding: LoadoutFinding };
 
 function useLoadoutFilterPillsInternal(
   savedLoadouts: Loadout[],
-  selectedStoreId: string,
+  store: DimStore,
   {
     includeWarningPills,
     className,
@@ -72,11 +62,19 @@ function useLoadoutFilterPillsInternal(
     className?: string;
     darkBackground?: boolean;
     extra?: React.ReactNode;
-  } = {}
+  } = {},
 ): [filteredLoadouts: Loadout[], filterPillsElement: React.ReactNode, hasSelectedFilters: boolean] {
-  const isMissingItems = useSelector(isMissingItemsSelector);
-  const getFragmentProblems = useSelector(getFragmentProblemsSelector);
-  const [selectedFilters, setSelectedFilters] = useState<Option[]>([]);
+  const [selectedFilters, setSelectedFilters] = useState<Option<FilterPillType>[]>(emptyArray());
+  const analysisSummary = useSummaryLoadoutsAnalysis(
+    savedLoadouts,
+    store,
+    Boolean(includeWarningPills),
+  );
+
+  // Reset filters on character change
+  useEffect(() => {
+    setSelectedFilters(emptyArray());
+  }, [store.id]);
 
   const loadoutsByHashtag = useMemo(() => {
     const loadoutsByHashtag: { [hashtag: string]: Loadout[] } = {};
@@ -92,80 +90,40 @@ function useLoadoutFilterPillsInternal(
     return loadoutsByHashtag;
   }, [savedLoadouts]);
 
-  const filterOptions = _.sortBy(
-    Object.keys(loadoutsByHashtag).map(
-      (hashtag): Option => ({
-        key: hashtag,
-        content: <ColorDestinySymbols text={hashtag} />,
-      })
-    ),
-    (o) => o.key
-  );
-
-  const loadoutsWithMissingItems = useMemo(
-    () => savedLoadouts.filter((loadout) => isMissingItems(selectedStoreId, loadout)),
-    [isMissingItems, savedLoadouts, selectedStoreId]
-  );
-  const loadoutsWithDeprecatedMods = useMemo(
-    () =>
-      savedLoadouts.filter(
-        (loadout) => loadout.parameters?.mods?.some((modHash) => deprecatedMods.includes(modHash))
+  const filterOptions: Option<FilterPillType>[] = _.sortBy(
+    Object.entries(loadoutsByHashtag).map(([hashtag, loadouts]) => ({
+      key: hashtag,
+      value: { tag: 'hashtag', hashtag },
+      content: (
+        <>
+          <ColorDestinySymbols text={hashtag} />
+          {` (${loadouts.length})`}
+        </>
       ),
-    [savedLoadouts]
+    })),
+    (o) => o.key,
   );
 
-  const [loadoutsWithEmptyFragmentSlots, loadoutsWithTooManyFragments] = useMemo(() => {
-    const problematicLoadouts = _.groupBy(savedLoadouts, (loadout) =>
-      getFragmentProblems(selectedStoreId, loadout)
-    );
-    return [
-      problematicLoadouts[FragmentProblem.EmptyFragmentSlots] ?? emptyArray(),
-      problematicLoadouts[FragmentProblem.TooManyFragments] ?? emptyArray(),
-    ] as const;
-  }, [getFragmentProblems, savedLoadouts, selectedStoreId]);
-
-  if (includeWarningPills) {
-    if (loadoutsWithMissingItems.length) {
-      filterOptions.push({
-        key: 'missingitems',
-        content: (
-          <>
-            <AlertIcon /> {t('Loadouts.MissingItems')}
-          </>
-        ),
-      });
-    }
-
-    if (loadoutsWithDeprecatedMods.length) {
-      filterOptions.push({
-        key: 'deprecated',
-        content: (
-          <>
-            <AlertIcon /> {t('Loadouts.DeprecatedMods')}
-          </>
-        ),
-      });
-    }
-
-    if (loadoutsWithEmptyFragmentSlots.length) {
-      filterOptions.push({
-        key: 'emptyFragmentSlots',
-        content: (
-          <>
-            <AlertIcon /> {t('Loadouts.EmptyFragmentSlots')}
-          </>
-        ),
-      });
-    }
-    if (loadoutsWithTooManyFragments.length) {
-      filterOptions.push({
-        key: 'tooManyFragments',
-        content: (
-          <>
-            <AlertIcon /> {t('Loadouts.TooManyFragments')}
-          </>
-        ),
-      });
+  if (analysisSummary) {
+    for (const [finding_, affectedLoadouts] of Object.entries(analysisSummary.loadoutsByFindings)) {
+      if (affectedLoadouts.size > 0) {
+        const finding = parseInt(finding_, 10) as LoadoutFinding;
+        const display = findingDisplays[finding];
+        if (!display.icon) {
+          continue;
+        }
+        filterOptions.push({
+          key: `finding-${finding_}`,
+          value: { tag: 'finding', finding },
+          content: (
+            <>
+              <AppIcon icon={display.icon} />
+              {t(display.name)}
+              {` (${affectedLoadouts.size})`}
+            </>
+          ),
+        });
+      }
     }
   }
 
@@ -174,34 +132,24 @@ function useLoadoutFilterPillsInternal(
       selectedFilters.length > 0
         ? _.intersection(
             ...selectedFilters.map((f) => {
-              switch (f.key) {
-                case 'deprecated':
-                  return loadoutsWithDeprecatedMods;
-                case 'missingitems':
-                  return loadoutsWithMissingItems;
-                case 'emptyFragmentSlots':
-                  return loadoutsWithEmptyFragmentSlots;
-                case 'tooManyFragments':
-                  return loadoutsWithTooManyFragments;
-                default:
-                  return loadoutsByHashtag[f.key] ?? [];
+              switch (f.value.tag) {
+                case 'hashtag': {
+                  return loadoutsByHashtag[f.value.hashtag] ?? [];
+                }
+                case 'finding': {
+                  const loadouts = analysisSummary?.loadoutsByFindings[f.value.finding];
+                  return loadouts?.size
+                    ? [...savedLoadouts].filter((loadout) => loadouts?.has(loadout.id))
+                    : savedLoadouts;
+                }
               }
-            })
+            }),
           )
         : savedLoadouts,
-    [
-      selectedFilters,
-      savedLoadouts,
-      loadoutsWithDeprecatedMods,
-      loadoutsWithMissingItems,
-      loadoutsWithEmptyFragmentSlots,
-      loadoutsWithTooManyFragments,
-      loadoutsByHashtag,
-    ]
+    [selectedFilters, savedLoadouts, loadoutsByHashtag, analysisSummary?.loadoutsByFindings],
   );
 
-  return [
-    filteredLoadouts,
+  const pills =
     filterOptions.length > 0 ? (
       <FilterPills
         options={filterOptions}
@@ -211,9 +159,60 @@ function useLoadoutFilterPillsInternal(
         darkBackground={darkBackground}
         extra={_.isEmpty(loadoutsByHashtag) ? extra : undefined}
       />
-    ) : null,
+    ) : null;
+
+  const analysisProgress = (
+    <AnalysisProgress
+      active={includeWarningPills}
+      numLoadouts={savedLoadouts.length}
+      summary={analysisSummary}
+      className={className}
+    />
+  );
+
+  return [
+    filteredLoadouts,
+    // eslint-disable-next-line react/jsx-key
+    <>
+      {pills}
+      {analysisProgress}
+    </>,
     selectedFilters.length > 0,
   ];
+}
+
+function AnalysisProgress({
+  active,
+  numLoadouts,
+  summary,
+  className,
+}: {
+  active: boolean | undefined;
+  numLoadouts: number;
+  summary: LoadoutAnalysisSummary | undefined;
+  className?: string;
+}) {
+  if (!active) {
+    return null;
+  }
+
+  const numAnalyzed = summary?.analyzedLoadouts ?? 0;
+  const busy = numAnalyzed < numLoadouts || summary?.outdated;
+  return (
+    <div className={clsx(className, styles.analyzingText)}>
+      {busy ? (
+        <>
+          <AppIcon icon={refreshIcon} spinning />
+          {t('LoadoutAnalysis.Analyzing', { numAnalyzed, numLoadouts })}
+        </>
+      ) : (
+        <>
+          <AppIcon icon={faCheckCircle} />
+          {t('LoadoutAnalysis.Analyzed', { numLoadouts })}
+        </>
+      )}
+    </div>
+  );
 }
 
 /**
@@ -223,21 +222,21 @@ export function searchAndSortLoadoutsByQuery(
   loadouts: Loadout[],
   query: string,
   language: DimLanguage,
-  loadoutSort: LoadoutSort
+  loadoutSort: LoadoutSort,
 ) {
-  const loadoutQueryPlain = plainString(query, language);
-  return _.sortBy(
-    loadouts.filter(
-      (loadout) =>
-        !query ||
-        plainString(loadout.name, language).includes(loadoutQueryPlain) ||
-        (!isInGameLoadout(loadout) &&
-          loadout.notes &&
-          plainString(loadout.notes, language).includes(loadoutQueryPlain))
-    ),
-    (l) => (isInGameLoadout(l) ? 0 : 1),
+  let filteredLoadouts: Loadout[];
+  if (query.length) {
+    const includes = localizedIncludes(language, query);
+    filteredLoadouts = loadouts.filter(
+      (loadout) => includes(loadout.name) || (loadout.notes && includes(loadout.notes)),
+    );
+  } else {
+    filteredLoadouts = [...loadouts];
+  }
+
+  return filteredLoadouts.sort(
     loadoutSort === LoadoutSort.ByEditTime
-      ? (l) => (isInGameLoadout(l) ? l.index : -(l.lastUpdatedAt ?? 0))
-      : (l) => (isInGameLoadout(l) ? l.index : l.name.toLocaleUpperCase())
+      ? compareBy((l) => -(l.lastUpdatedAt ?? 0))
+      : localizedSorter(language, (l) => l.name),
   );
 }

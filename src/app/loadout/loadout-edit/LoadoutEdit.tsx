@@ -3,7 +3,7 @@ import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import CheckButton from 'app/dim-ui/CheckButton';
 import { t } from 'app/i18next-t';
-import { InventoryBucket } from 'app/inventory/inventory-buckets';
+import { D2BucketCategory, InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import {
   allItemsSelector,
@@ -18,6 +18,7 @@ import {
   addItem,
   applySocketOverrides,
   changeClearMods,
+  changeIncludeRuntimeStats,
   clearArtifactUnlocks,
   clearBucketCategory,
   clearLoadoutOptimizerParameters,
@@ -25,15 +26,18 @@ import {
   clearSubclass,
   fillLoadoutFromEquipped,
   fillLoadoutFromUnequipped,
+  getLoadoutBucketHashesFromCategory,
   randomizeLoadoutItems,
   randomizeLoadoutMods,
   randomizeLoadoutSubclass,
   removeArtifactUnlock,
   removeItem,
   removeMod,
+  replaceItem,
   setClearSpace,
   setLoadoutSubclassFromEquipped,
   syncArtifactUnlocksFromEquipped,
+  syncLoadoutCategoryFromEquipped,
   syncModsFromEquipped,
   toggleEquipped,
   updateMods,
@@ -50,17 +54,16 @@ import { LoadoutArtifactUnlocks, LoadoutMods } from 'app/loadout/loadout-ui/Load
 import { useD2Definitions } from 'app/manifest/selectors';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { emptyObject } from 'app/utils/empty';
-import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
+import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import SubclassPlugDrawer from '../SubclassPlugDrawer';
-import { pickSubclass } from '../item-utils';
 import { hasVisibleLoadoutParameters } from '../loadout-ui/LoadoutParametersDisplay';
 import { useLoadoutMods } from '../mod-assignment-drawer/selectors';
+import { includesRuntimeStatMods } from '../stats';
 import styles from './LoadoutEdit.m.scss';
 import LoadoutEditBucket, { ArmorExtras } from './LoadoutEditBucket';
 import LoadoutEditSection from './LoadoutEditSection';
@@ -90,13 +93,16 @@ export default function LoadoutEdit({
         loadout.items,
         store,
         allItems,
-        modsByBucket
+        modsByBucket,
       ),
-    [itemCreationContext, loadout.items, store, allItems, modsByBucket]
+    [itemCreationContext, loadout.items, store, allItems, modsByBucket],
   );
 
   const [allMods, modDefinitions] = useLoadoutMods(loadout, store.id);
-  const categories = _.groupBy(items.concat(warnitems), (li) => li.item.bucket.sort);
+  const categories = Object.groupBy(
+    items.concat(warnitems),
+    (li) => li.item.bucket.sort ?? 'unknown',
+  );
   const power = loadoutPower(store, categories);
   const anyClass = loadout.classType === DestinyClass.Unknown;
 
@@ -109,6 +115,7 @@ export default function LoadoutEdit({
           setLoadout={setLoadout}
           power={power}
           subclass={subclass}
+          className={styles.section}
         />
       )}
       {(anyClass
@@ -131,6 +138,9 @@ export default function LoadoutEdit({
         store={store}
         setLoadout={setLoadout}
         allMods={allMods}
+        className={clsx(styles.section, styles.mods)}
+        showClearUnsetModsSetting
+        showModPlacementsButton
       />
       <LoadoutArtifactUnlocksSection
         artifactUnlocks={loadout.parameters?.artifactUnlocks}
@@ -148,7 +158,7 @@ async function pickLoadoutItem(
   loadout: Loadout,
   bucket: InventoryBucket,
   add: (item: DimItem) => void,
-  store: DimStore
+  store: DimStore,
 ) {
   const loadoutHasItem = (item: DimItem) =>
     findSameLoadoutItemIndex(defs, loadout.items, item) !== -1;
@@ -156,7 +166,7 @@ async function pickLoadoutItem(
   const item = await showItemPicker({
     filterItems: (item: DimItem) =>
       item.bucket.hash === bucket.hash &&
-      isClassCompatible(item.classType, loadout.classType) &&
+      isItemLoadoutCompatible(item.classType, loadout.classType) &&
       itemCanBeInLoadout(item) &&
       !loadoutHasItem(item) &&
       (!item.notransfer || item.owner === store.id),
@@ -168,62 +178,47 @@ async function pickLoadoutItem(
   }
 }
 
-function LoadoutEditSubclassSection({
+export function LoadoutEditSubclassSection({
   loadout,
   store,
   setLoadout,
   power = 0,
   subclass,
+  className,
 }: {
   loadout: Loadout;
   store: DimStore;
   setLoadout: (updater: LoadoutUpdateFunction) => void;
   power?: number;
   subclass: ResolvedLoadoutItem | undefined;
+  className?: string;
 }) {
-  const showItemPicker = useItemPicker();
   const [plugDrawerOpen, setPlugDrawerOpen] = useState(false);
 
   const { useUpdater, useDefsUpdater, useDefsStoreUpdater } = useLoadoutUpdaters(store, setLoadout);
 
   const handleAddItem = useDefsUpdater(addItem);
 
-  const handleClickSubclass = async () => {
-    const loadoutClassType = loadout.classType;
-    const loadoutHasItem = (item: DimItem) => loadout.items.some((i) => i.hash === item.hash);
-
-    const subclassItemFilter = (item: DimItem) =>
-      item.bucket.hash === BucketHashes.Subclass &&
-      item.classType === loadoutClassType &&
-      item.owner === store.id &&
-      itemCanBeInLoadout(item) &&
-      !loadoutHasItem(item);
-
-    const item = await pickSubclass(showItemPicker, subclassItemFilter);
-    if (item) {
-      handleAddItem(item);
-    }
-  };
-
   const handleApplySocketOverrides = useUpdater(applySocketOverrides);
-  const handleFillSubclassFromEquipped = useDefsStoreUpdater(setLoadoutSubclassFromEquipped);
+  const handleSyncSubclassFromEquipped = useDefsStoreUpdater(setLoadoutSubclassFromEquipped);
   const handleRandomizeSubclass = useDefsStoreUpdater(randomizeLoadoutSubclass);
   const handleClearSubclass = useDefsUpdater(clearSubclass);
 
   return (
     <LoadoutEditSection
-      className={styles.section}
+      className={className}
       title={t('Bucket.Class')}
       onClear={handleClearSubclass}
       onRandomize={handleRandomizeSubclass}
-      onFillFromEquipped={handleFillSubclassFromEquipped}
+      onSyncFromEquipped={handleSyncSubclassFromEquipped}
     >
       <LoadoutEditSubclass
         subclass={subclass}
         classType={loadout.classType}
+        storeId={store.id}
         power={power}
         onRemove={handleClearSubclass}
-        onPick={handleClickSubclass}
+        onPick={handleAddItem}
       />
       {subclass && (
         <div className={styles.buttons}>
@@ -273,6 +268,7 @@ function LoadoutEditCategorySection({
   const { useUpdater, useDefsUpdater, useDefsStoreUpdater } = useLoadoutUpdaters(store, setLoadout);
 
   const handleAddItem = useDefsUpdater(addItem);
+  const handleReplaceItem = useUpdater(replaceItem);
 
   const handleClickPlaceholder = ({
     bucket,
@@ -287,11 +283,9 @@ function LoadoutEditCategorySection({
       loadout,
       bucket,
       (item) => handleAddItem(item, equip),
-      store
+      store,
     );
   };
-
-  const handleRemoveItem = useDefsUpdater(removeItem);
 
   /** Prompt the user to select a replacement for a missing item. */
   const fixWarnItem = async (li: ResolvedLoadoutItem) => {
@@ -303,15 +297,14 @@ function LoadoutEditCategorySection({
           ? item.bucket.hash === warnItem.bucket.hash
           : item.hash === warnItem.hash) &&
         itemCanBeInLoadout(item) &&
-        isClassCompatible(item.classType, loadout.classType),
+        isItemLoadoutCompatible(item.classType, loadout.classType),
       prompt: t('Loadouts.FindAnother', {
         name: warnItem.bucket.inArmor ? warnItem.bucket.name : warnItem.name,
       }),
     });
 
     if (item) {
-      handleAddItem(item);
-      handleRemoveItem(li);
+      handleReplaceItem(li, item);
     }
   };
 
@@ -327,6 +320,7 @@ function LoadoutEditCategorySection({
   const handleClearLoadoutParameters = useUpdater(clearLoadoutOptimizerParameters);
   const handleFillCategoryFromUnequipped = useDefsStoreUpdater(fillLoadoutFromUnequipped);
   const handleFillCategoryFromEquipped = useDefsStoreUpdater(fillLoadoutFromEquipped);
+  const handleSyncCategoryFromEquipped = useDefsStoreUpdater(syncLoadoutCategoryFromEquipped);
   const handleRandomizeCategory = useDefsStoreUpdater(randomizeLoadoutItems);
   const onRemoveItem = useDefsUpdater(removeItem);
   const handleSetClear = useUpdater(setClearSpace);
@@ -339,6 +333,8 @@ function LoadoutEditCategorySection({
       onRandomize={() => handleRandomizeCategory(allItems, category, searchFilter)}
       hasRandomizeQuery={searchFilter !== _.stubTrue}
       onFillFromEquipped={() => handleFillCategoryFromEquipped(artifactUnlocks, category)}
+      fillFromEquippedDisabled={disableFillInForCategory(defs, items, category)}
+      onSyncFromEquipped={() => handleSyncCategoryFromEquipped(category)}
       fillFromInventoryCount={getUnequippedItemsForLoadout(store, category).length}
       onFillFromInventory={() => handleFillCategoryFromUnequipped(category)}
       onClearLoadoutParameters={
@@ -375,7 +371,7 @@ function LoadoutEditCategorySection({
             checked={Boolean(
               category === 'Armor'
                 ? loadout.parameters?.clearArmor
-                : loadout.parameters?.clearWeapons
+                : loadout.parameters?.clearWeapons,
             )}
             onChange={(clear) => handleSetClear(clear, category)}
           >
@@ -387,16 +383,27 @@ function LoadoutEditCategorySection({
   );
 }
 
-function LoadoutEditModsSection({
+export function LoadoutEditModsSection({
   loadout,
   store,
+  autoStatMods,
   setLoadout,
   allMods,
+  className,
+  showClearUnsetModsSetting,
+  showModPlacementsButton,
+  onAutoStatModsChanged,
 }: {
   loadout: Loadout;
   store: DimStore;
+  autoStatMods?: boolean;
   setLoadout: (updater: LoadoutUpdateFunction) => void;
   allMods: ResolvedLoadoutMod[];
+  className?: string;
+  showModPlacementsButton?: boolean;
+  showClearUnsetModsSetting?: boolean;
+  /** Show the auto stat mods checkbox if this is defined */
+  onAutoStatModsChanged?: (checked: boolean) => void;
 }) {
   const allItems = useSelector(allItemsSelector);
   const missingSockets = allItems.some((i) => i.missingSockets);
@@ -404,18 +411,20 @@ function LoadoutEditModsSection({
 
   const { useUpdater, useDefsStoreUpdater } = useLoadoutUpdaters(store, setLoadout);
   const clearUnsetMods = loadout.parameters?.clearMods;
+  const includeRuntimeStats = loadout.parameters?.includeRuntimeStatBenefits ?? true;
 
   const handleUpdateMods = useUpdater(updateMods);
   const handleRemoveMod = useUpdater(removeMod);
   const handleClearUnsetModsChanged = useUpdater(changeClearMods);
   const handleRandomizeMods = useDefsStoreUpdater(randomizeLoadoutMods);
   const handleClearMods = useUpdater(clearMods);
+  const handleIncludeRuntimeStats = useUpdater(changeIncludeRuntimeStats);
   const handleSyncModsFromEquipped = () => setLoadout(syncModsFromEquipped(store));
 
   return (
     <LoadoutEditSection
       title={t('Loadouts.Mods')}
-      className={clsx(styles.section, styles.mods)}
+      className={className}
       onClear={handleClearMods}
       onRandomize={() => handleRandomizeMods(allItems, unlockedPlugs)}
       onSyncFromEquipped={missingSockets ? undefined : handleSyncModsFromEquipped}
@@ -427,7 +436,18 @@ function LoadoutEditModsSection({
         onUpdateMods={handleUpdateMods}
         onRemoveMod={handleRemoveMod}
         clearUnsetMods={clearUnsetMods}
-        onClearUnsetModsChanged={handleClearUnsetModsChanged}
+        onClearUnsetModsChanged={
+          showClearUnsetModsSetting ? handleClearUnsetModsChanged : undefined
+        }
+        hideShowModPlacements={!showModPlacementsButton}
+        autoStatMods={autoStatMods}
+        onAutoStatModsChanged={onAutoStatModsChanged}
+        includeRuntimeStats={includeRuntimeStats}
+        onIncludeRuntimeStatsChanged={
+          loadout.parameters?.mods && includesRuntimeStatMods(loadout.parameters.mods)
+            ? handleIncludeRuntimeStats
+            : undefined
+        }
       />
     </LoadoutEditSection>
   );
@@ -452,7 +472,7 @@ function LoadoutArtifactUnlocksSection({
 
   const handleSyncArtifactUnlocksFromEquipped = useCallback(
     () => setLoadout(syncArtifactUnlocksFromEquipped(unlockedArtifactMods)),
-    [setLoadout, unlockedArtifactMods]
+    [setLoadout, unlockedArtifactMods],
   );
   const handleClearArtifactUnlocks = useUpdater(clearArtifactUnlocks);
   const handleRemoveArtifactUnlock = useUpdater(removeArtifactUnlock);
@@ -466,7 +486,7 @@ function LoadoutArtifactUnlocksSection({
   // Don't show the artifact unlocks section unless there are artifact mods saved in this loadout
   // or there are unlocked artifact mods we could copy into this loadout.
   const showArtifactUnlocks = Boolean(
-    unlockedArtifactMods?.unlockedItemHashes.length || artifactUnlocks?.unlockedItemHashes.length
+    unlockedArtifactMods?.unlockedItemHashes.length || artifactUnlocks?.unlockedItemHashes.length,
   );
 
   return (
@@ -492,4 +512,18 @@ function LoadoutArtifactUnlocksSection({
       </LoadoutEditSection>
     )
   );
+}
+
+/**
+ * Disable the "Fill in" menu item if it wouldn't do anything.
+ */
+function disableFillInForCategory(
+  defs: D2ManifestDefinitions,
+  items: ResolvedLoadoutItem[],
+  category: D2BucketCategory,
+) {
+  const currentItems = items?.filter((i) => i.loadoutItem.equip).length ?? 0;
+  const maxItems = getLoadoutBucketHashesFromCategory(defs, category).length;
+
+  return currentItems >= maxItems;
 }

@@ -1,13 +1,13 @@
 import {
   AssumeArmorMasterwork,
-  defaultLoadoutParameters,
   LoadoutParameters,
   StatConstraint,
+  defaultLoadoutParameters,
 } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import {
-  savedLoadoutParametersSelector,
   savedLoStatConstraintsByClassSelector,
+  savedLoadoutParametersSelector,
 } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
@@ -16,27 +16,20 @@ import { DimStore } from 'app/inventory/store-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import {
-  addItem,
-  applySocketOverrides,
-  clearSubclass,
   LoadoutUpdateFunction,
+  clearSubclass,
   removeMod,
   setLoadoutParameters,
   updateMods,
 } from 'app/loadout-drawer/loadout-drawer-reducer';
-import { Loadout, ResolvedLoadoutItem, ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
+import { Loadout, ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
 import { findItemForLoadout, newLoadout, pickBackingStore } from 'app/loadout-drawer/loadout-utils';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { showNotification } from 'app/notifications/notifications';
-import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
+import { armor2PlugCategoryHashesByName, armorStats } from 'app/search/d2-known-values';
+import { reorder } from 'app/utils/collections';
 import { emptyObject } from 'app/utils/empty';
-import { errorLog } from 'app/utils/log';
-import {
-  getSocketsByCategoryHashes,
-  subclassAbilitySocketCategoryHashes,
-} from 'app/utils/socket-utils';
 import { useHistory } from 'app/utils/undo-redo-history';
-import { reorder } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -87,6 +80,12 @@ interface LoadoutBuilderConfiguration {
   isEditingExistingLoadout: boolean;
 
   /**
+   * If we are editing an existing loadout via the "better stats available"
+   * feature, this contains the stats we actually need to exceed.
+   */
+  strictUpgradesStatConstraints: ResolvedStatConstraint[] | undefined;
+
+  /**
    * A copy of `loadout.parameters.statConstraints`, but with ignored stats
    * included. This is more convenient to use than the raw `statConstraints` but
    * is kept in sync. Like `statConstraints` this is always in stat preference
@@ -109,8 +108,9 @@ interface LoadoutBuilderConfiguration {
 export type LoadoutBuilderState = LoadoutBuilderUI & LoadoutBuilderConfiguration;
 
 export function warnMissingClass(classType: DestinyClass, defs: D2ManifestDefinitions) {
-  const missingClassName = Object.values(defs.Class).find((c) => c.classType === classType)!
-    .displayProperties.name;
+  const missingClassName = Object.values(defs.Class.getAll()).find(
+    (c) => c.classType === classType,
+  )!.displayProperties.name;
 
   showNotification({
     type: 'error',
@@ -130,6 +130,7 @@ const lbConfigInit = ({
   storeId,
   savedLoadoutBuilderParameters,
   savedStatConstraintsPerClass,
+  strictUpgradesStatConstraints,
 }: {
   stores: DimStore[];
   allItems: DimItem[];
@@ -143,6 +144,7 @@ const lbConfigInit = ({
   storeId: string | undefined;
   savedLoadoutBuilderParameters: LoadoutParameters;
   savedStatConstraintsPerClass: { [classType: number]: StatConstraint[] };
+  strictUpgradesStatConstraints: ResolvedStatConstraint[] | undefined;
 }): LoadoutBuilderConfiguration => {
   // Preloaded loadouts from the "Optimize Armor" button take priority
   const classTypeFromPreloadedLoadout = preloadedLoadout?.classType ?? DestinyClass.Unknown;
@@ -202,7 +204,7 @@ const lbConfigInit = ({
         .find(
           (i) =>
             Boolean(i?.equippingBlock?.uniqueLabel) &&
-            LockableBucketHashes.includes(i.inventory?.bucketTypeHash ?? 0)
+            LockableBucketHashes.includes(i.inventory?.bucketTypeHash ?? 0),
         );
 
       if (equippedExotic) {
@@ -215,14 +217,7 @@ const lbConfigInit = ({
   // per set. In contrast we remove stat mods dynamically depending on the auto
   // stat mods setting.
   if (loadoutParameters.mods) {
-    loadoutParameters.mods = loadoutParameters.mods.filter((modHash) => {
-      const def = defs.InventoryItem.get(modHash);
-      return (
-        !def ||
-        !isPluggableItem(def) ||
-        def.plug.plugCategoryHash !== PlugCategoryHashes.EnhancementsArtifice
-      );
-    });
+    loadoutParameters.mods = stripArtificeMods(defs, loadoutParameters.mods);
   }
 
   loadout = { ...loadout, parameters: loadoutParameters };
@@ -231,19 +226,40 @@ const lbConfigInit = ({
     loadout,
     isEditingExistingLoadout,
     resolvedStatConstraints: resolveStatConstraints(loadoutParameters.statConstraints!),
+    strictUpgradesStatConstraints,
     pinnedItems,
     excludedItems: emptyObject(),
     selectedStoreId,
   };
 };
 
+/**
+ * We never want to include artifice mods in the list of mods for a loadout
+ * being edited by LO - they should be chosen by LO itself, and only re-added
+ * when the loadout is saved.
+ */
+function stripArtificeMods(defs: D2ManifestDefinitions, mods: number[]) {
+  return mods.filter((modHash) => {
+    const def = defs.InventoryItem.get(modHash);
+    return (
+      !def ||
+      !isPluggableItem(def) ||
+      def.plug.plugCategoryHash !== PlugCategoryHashes.EnhancementsArtifice
+    );
+  });
+}
+
 type LoadoutBuilderConfigAction =
+  | { type: 'setLoadout'; updateFn: LoadoutUpdateFunction }
   | {
       type: 'changeCharacter';
       store: DimStore;
       savedStatConstraintsByClass: { [classType: number]: StatConstraint[] };
     }
   | { type: 'statConstraintChanged'; constraint: ResolvedStatConstraint }
+  | { type: 'statConstraintReset' }
+  | { type: 'statConstraintRandomize' }
+  | { type: 'setStatConstraints'; constraints: ResolvedStatConstraint[] }
   | { type: 'statOrderChanged'; sourceIndex: number; destinationIndex: number }
   | {
       type: 'assumeArmorMasterworkChanged';
@@ -259,20 +275,9 @@ type LoadoutBuilderConfigAction =
   | { type: 'removeLockedMod'; mod: ResolvedLoadoutMod }
   /** For adding "half tier mods" */
   | { type: 'addGeneralMods'; mods: PluggableInventoryItemDefinition[] }
-  | { type: 'updateSubclass'; item: DimItem }
-  | { type: 'removeSubclass' }
-  | {
-      type: 'updateSubclassSocketOverrides';
-      socketOverrides: { [socketIndex: number]: number };
-      subclass: ResolvedLoadoutItem;
-    }
-  | {
-      type: 'removeSingleSubclassSocketOverride';
-      plug: PluggableInventoryItemDefinition;
-      subclass: ResolvedLoadoutItem;
-    }
-  | { type: 'lockExotic'; lockedExoticHash: number }
+  | { type: 'lockExotic'; lockedExoticHash: number | undefined }
   | { type: 'removeLockedExotic' }
+  | { type: 'dismissComparisonStats' }
   | { type: 'setSearchQuery'; query: string };
 
 type LoadoutBuilderUIAction =
@@ -309,9 +314,22 @@ function lbUIReducer(state: LoadoutBuilderUI, action: LoadoutBuilderUIAction) {
 function lbConfigReducer(defs: D2ManifestDefinitions) {
   return (
     state: LoadoutBuilderConfiguration,
-    action: LoadoutBuilderConfigAction
+    action: LoadoutBuilderConfigAction,
   ): LoadoutBuilderConfiguration => {
     switch (action.type) {
+      case 'setLoadout': {
+        return updateLoadout(state, (loadout) => {
+          const updatedLoadout = action.updateFn(loadout);
+
+          // Always check to make sure Artifice mods haven't snuck in - if they have, remove them
+          const originalMods = updatedLoadout.parameters?.mods ?? [];
+          const strippedMods = stripArtificeMods(defs, originalMods);
+          if (strippedMods.length !== originalMods.length) {
+            return updateMods(strippedMods)(updatedLoadout);
+          }
+          return updatedLoadout;
+        });
+      }
       case 'changeCharacter': {
         const { store } = action;
         const originalLoadout = state.loadout;
@@ -347,9 +365,32 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
       case 'statConstraintChanged': {
         const { constraint } = action;
         const newStatConstraints = state.resolvedStatConstraints.map((c) =>
-          c.statHash === constraint.statHash ? constraint : c
+          c.statHash === constraint.statHash ? constraint : c,
         );
         return updateStatConstraints(state, newStatConstraints);
+      }
+      case 'statConstraintReset': {
+        return updateStatConstraints(
+          state,
+          armorStats.map((s) => ({ statHash: s, minTier: 0, maxTier: 10, ignored: false })),
+        );
+      }
+      case 'statConstraintRandomize': {
+        return updateStatConstraints(
+          state,
+          _.shuffle(
+            armorStats.map((s) => ({
+              statHash: s,
+              minTier: Math.floor(Math.random() * 10),
+              maxTier: 10,
+              ignored: false,
+            })),
+          ),
+        );
+      }
+      case 'setStatConstraints': {
+        const { constraints } = action;
+        return updateStatConstraints(state, constraints);
       }
       case 'statOrderChanged': {
         const { sourceIndex, destinationIndex } = action;
@@ -436,7 +477,7 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
           newMods.filter(
             (mod) =>
               defs.InventoryItem.get(mod)?.plug?.plugCategoryHash ===
-              armor2PlugCategoryHashesByName.general
+              armor2PlugCategoryHashesByName.general,
           ).length ?? 0;
 
         const failures: string[] = [];
@@ -462,55 +503,6 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
       }
       case 'removeLockedMod':
         return updateLoadout(state, removeMod(action.mod));
-      case 'updateSubclass':
-        return updateLoadout(state, addItem(defs, action.item));
-      case 'removeSubclass':
-        return updateLoadout(state, clearSubclass(defs));
-      case 'updateSubclassSocketOverrides': {
-        const { socketOverrides, subclass } = action;
-        return updateLoadout(state, applySocketOverrides(subclass, socketOverrides));
-      }
-      case 'removeSingleSubclassSocketOverride': {
-        const { plug, subclass } = action;
-        const abilityAndSuperSockets = getSocketsByCategoryHashes(
-          subclass.item.sockets,
-          subclassAbilitySocketCategoryHashes
-        );
-        const newSocketOverrides = { ...subclass?.loadoutItem.socketOverrides };
-        let socketIndexToRemove: number | undefined;
-
-        // Find the socket index to remove the plug from.
-        for (const socketIndexString of Object.keys(newSocketOverrides)) {
-          const socketIndex = parseInt(socketIndexString, 10);
-          const overridePlugHash = newSocketOverrides[socketIndex];
-          if (overridePlugHash === plug.hash) {
-            socketIndexToRemove = socketIndex;
-            break;
-          }
-        }
-
-        const isAbilitySocket = abilityAndSuperSockets.find(
-          (socket) => socket.socketIndex === socketIndexToRemove
-        );
-
-        if (isAbilitySocket) {
-          errorLog('loadout builder', 'cannot remove ability');
-          return state;
-        }
-
-        if (socketIndexToRemove !== undefined) {
-          // If its not an ability we just remove it from the overrides
-          delete newSocketOverrides[socketIndexToRemove];
-        }
-
-        return updateLoadout(
-          state,
-          applySocketOverrides(
-            subclass,
-            Object.keys(newSocketOverrides).length ? newSocketOverrides : undefined
-          )
-        );
-      }
       case 'lockExotic': {
         const { lockedExoticHash } = action;
         return updateLoadout(state, setLoadoutParameters({ exoticArmorHash: lockedExoticHash }));
@@ -519,6 +511,8 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
         return updateLoadout(state, setLoadoutParameters({ exoticArmorHash: undefined }));
       case 'autoStatModsChanged':
         return updateLoadout(state, setLoadoutParameters({ autoStatMods: action.autoStatMods }));
+      case 'dismissComparisonStats':
+        return { ...state, strictUpgradesStatConstraints: undefined };
       case 'setSearchQuery':
         return updateLoadout(state, setLoadoutParameters({ query: action.query || undefined }));
     }
@@ -534,7 +528,7 @@ function updateLoadout(state: LoadoutBuilderConfiguration, updateFn: LoadoutUpda
 
 function updateStatConstraints(
   state: LoadoutBuilderConfiguration,
-  resolvedStatConstraints: ResolvedStatConstraint[]
+  resolvedStatConstraints: ResolvedStatConstraint[],
 ): LoadoutBuilderConfiguration {
   return {
     ...state,
@@ -549,7 +543,8 @@ export function useLbState(
   stores: DimStore[],
   defs: D2ManifestDefinitions,
   preloadedLoadout: Loadout | undefined,
-  storeId: string | undefined
+  storeId: string | undefined,
+  strictUpgradesStatConstraints: ResolvedStatConstraint[] | undefined,
 ) {
   const savedLoadoutBuilderParameters = useSelector(savedLoadoutParametersSelector);
   const savedStatConstraintsPerClass = useSelector(savedLoStatConstraintsByClassSelector);
@@ -571,7 +566,8 @@ export function useLbState(
       storeId,
       savedLoadoutBuilderParameters,
       savedStatConstraintsPerClass,
-    })
+      strictUpgradesStatConstraints,
+    }),
   );
 
   const lbConfReducer = useMemo(() => lbConfigReducer(defs), [defs]);
@@ -605,7 +601,7 @@ export function useLbState(
           break;
       }
     },
-    [lbConfReducer, redo, setState, undo]
+    [lbConfReducer, redo, setState, undo],
   );
 
   return [

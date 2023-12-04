@@ -1,5 +1,5 @@
 import { set } from 'app/storage/idb-keyval';
-import { observeStore } from 'app/utils/redux-utils';
+import { observeStore } from 'app/utils/redux';
 
 export function saveAccountsToIndexedDB() {
   return observeStore(
@@ -8,6 +8,6 @@ export function saveAccountsToIndexedDB() {
       if (nextState.loaded && nextState.accounts !== currentState.accounts) {
         set('accounts', nextState.accounts);
       }
-    }
+    },
   );
 }

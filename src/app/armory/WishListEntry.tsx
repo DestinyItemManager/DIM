@@ -3,9 +3,9 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { showNotification } from 'app/notifications/notifications';
 import { wishListGuideLink } from 'app/shell/links';
+import { filterMap } from 'app/utils/collections';
 import { isKillTrackerSocket } from 'app/utils/item-utils';
 import { getSocketsWithStyle } from 'app/utils/socket-utils';
-import { copyString, filterMap } from 'app/utils/util';
 import { DestinySocketCategoryStyle } from 'bungie-api-ts/destiny2';
 import styles from './WishListEntry.m.scss';
 
@@ -17,7 +17,7 @@ export default function WishListEntry({ item }: { item: DimItem }) {
   const handleFocusWishlist = (e: React.FocusEvent<HTMLInputElement>) => e.target.select();
 
   const handleButtonClick = () => {
-    copyString(wishlistLine);
+    navigator.clipboard.writeText(wishlistLine);
     showNotification({
       type: 'success',
       title: t('WishListRoll.CopiedLine'),
@@ -43,7 +43,7 @@ function createWishListRollString(item: DimItem) {
     perkHashes = filterMap(sockets, (socket) =>
       isKillTrackerSocket(socket) || socket.plugOptions.length <= 1
         ? undefined
-        : socket.plugged?.plugDef.hash
+        : socket.plugged?.plugDef.hash,
     );
   }
 

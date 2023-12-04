@@ -21,7 +21,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
 
 const store = createStore<RootState, any, {}, {}>(
   allReducers,
-  composeEnhancers(applyMiddleware(thunk))
+  composeEnhancers(applyMiddleware(thunk)),
 );
 
 // Allow hot-reloading reducers

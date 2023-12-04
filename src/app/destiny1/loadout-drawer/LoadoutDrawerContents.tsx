@@ -15,8 +15,8 @@ import { findSameLoadoutItemIndex, fromEquippedTypes } from 'app/loadout-drawer/
 import { useD1Definitions } from 'app/manifest/selectors';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import { AppIcon, addIcon } from 'app/shell/icons';
-import { isClassCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
-import { filterMap } from 'app/utils/util';
+import { filterMap } from 'app/utils/collections';
+import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
@@ -77,11 +77,11 @@ export default function LoadoutDrawerContents({
   const doFillLoadOutFromUnequipped = () => setLoadout(fillLoadoutFromUnequipped(defs, dimStore));
 
   const availableTypes = filterMap(loadoutTypes, (h) => buckets.byHash[h]);
-  const itemsByBucket = _.groupBy(items, (li) => li.item.bucket.hash);
+  const itemsByBucket = Object.groupBy(items, (li) => li.item.bucket.hash);
 
   const [typesWithItems, typesWithoutItems] = _.partition(
     availableTypes,
-    (bucket) => bucket.hash && itemsByBucket[bucket.hash]?.length
+    (bucket) => bucket.hash && itemsByBucket[bucket.hash]?.length,
   );
 
   const showFillFromEquipped = typesWithoutItems.some((b) => fromEquippedTypes.includes(b.hash));
@@ -140,7 +140,7 @@ async function pickLoadoutItem(
   loadout: Loadout,
   bucket: InventoryBucket,
   add: (item: DimItem) => void,
-  showItemPicker: ShowItemPickerFn
+  showItemPicker: ShowItemPickerFn,
 ) {
   const loadoutHasItem = (item: DimItem) =>
     findSameLoadoutItemIndex(defs, loadout.items, item) !== -1;
@@ -148,7 +148,7 @@ async function pickLoadoutItem(
   const item = await showItemPicker({
     filterItems: (item: DimItem) =>
       item.bucket.hash === bucket.hash &&
-      isClassCompatible(item.classType, loadout.classType) &&
+      isItemLoadoutCompatible(item.classType, loadout.classType) &&
       itemCanBeInLoadout(item) &&
       !loadoutHasItem(item),
     prompt: t('Loadouts.ChooseItem', { name: bucket.name }),

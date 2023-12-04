@@ -27,7 +27,7 @@ export default function SelectablePlug({
   classType: DestinyClass;
   selected: boolean;
   selectable: boolean;
-  selectionType: 'multi' | 'single';
+  selectionType: 'multi' | 'unique' | 'single';
   removable: boolean;
   onPlugSelected: (plug: PluggableInventoryItemDefinition) => void;
   onPlugRemoved: (plug: PluggableInventoryItemDefinition) => void;
@@ -41,14 +41,14 @@ export default function SelectablePlug({
   // Memoize the meat of the component as it doesn't need to re-render every time
   const plugDetails = useMemo(
     () => <SelectablePlugDetails plug={plug} classType={classType} />,
-    [plug, classType]
+    [plug, classType],
   );
 
   return (
     <ClosableContainer onClose={selected && removable ? onClose : undefined}>
       <TileGridTile
         selected={selected}
-        disabled={selectionType === 'multi' && !selectable}
+        disabled={selectionType !== 'single' && !selectable}
         title={plug.displayProperties.name}
         icon={
           <div className="item" title={plug.displayProperties.name}>

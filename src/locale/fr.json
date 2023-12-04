@@ -231,13 +231,16 @@
     "Event": "Affiche les objets en fonction de l’événement de Destiny 2 pendant lequel ils sont apparu.",
     "ExtraPerk": "Affiche les armes légendaires obtenues avec des attributs aléatoires ayant un attribut sélectionnable supplémentaire.",
     "Filter": "Filtre",
+    "FilterWith": "Filtrer avec :",
     "Focusable": "Affiche les objets qui peuvent être concentrés auprès d'un vendeur",
     "Foundry": "Affiche les objets en fonction de la fonderie qui les a créés.",
     "Glimmer": "Affiche les objets consommables qui ont un rapport avec l'obtention de lumen.",
+    "Harrowed": "\\(Tourmenté\\)",
     "HasNotes": "Afficher les objets ayant des notes.",
     "HasOrnament": "Affiche les objets ayant un ornement appliqué.",
     "HasShader": "Affiche les objets qui ont un revêtement appliqué.",
     "HoldsMod": "Affiche les armures compatible avec un type de Mod Saisonnier spécifique.",
+    "InDimLoadout": "is:indimloadout affiche les objets présents dans un équipement DIM.",
     "InInGameLoadout": "is:ingameloadout affiche les objets qui sont inclus dans l'un de vos équipement en jeu.",
     "InLoadout": "is:inloadout affiche les objets inclus dans un équipement. Rechercher avec inloadout: affiche les objets inclus dans les équipements au titre correspondant. Lorsque utilisé avec un hashtag, inloadout: affiche les objets dont les équipements possèdent l'hashtag dans leur titre ou leurs notes.",
     "Infusable": "Affiche les objets qui peuvent être infusés.",
@@ -276,7 +279,7 @@
     "PartialMatch": "Affiche les objets dont le nom, la description, n'importe quel attribut, ou n'importe quel mod contient une partie du texte filtré. Rechercher des phrases entières en utilisant des guillemets. le filtre \"perk:\" cherche uniquement dans les attributs.",
     "PatternUnlocked": "Affiche les objets qui ont un modèle de façonnage débloqué, même si l'objet lui-même n'a pas été façonné.",
     "Perk": "Affiche les objets dont la description ou le nom d'au moins un de ses mods et attributs contient une partie du texte filtré. Rechercher des phrases entières en utilisant des guillemets.",
-    "PerkName": "Affiche les objets dont le nom d'au moins un de ses mods et attributs contient une partie du texte filtré. Rechercher des phrases entières en utilisant des guillemets.",
+    "PerkName": "Affiche les objets avec un attribut ou un nom correspondant totalement (exactperk:) ou partiellement (perkname:) au filtre. Recherchez des phrases entières en utilisant des guillemets.",
     "PinnacleReward": "Affiche les poursuites qui produisent une récompense de prestige.",
     "Postmaster": "Objets actuellement au commis des postes.",
     "PowerKeywords": "Utilisez les mots-clés pinnaclecap ou softcap à la place de nombres pour utiliser les limites de puissance de la saison actuelle.",
@@ -292,14 +295,13 @@
     "RetiredPerk": "Affiche les armes avec des attributs qui ne sont plus obtenable.",
     "SearchPrompt": "Rechercher les commandes de filtre disponibles",
     "Season": "Affiche les objets en fonction de la saison de Destiny 2 pendant lequel ils sont apparu.",
-    "SeasonalDupe": "Affiche les doublons, en ne comptant pas les rééditions d'une saison différente comme le même objet.",
     "StackFull": "Affiche les objets qui sont dans une pile pleine (Prismes d’amélioration, pièces étranges, matériaux des armuriers etc)",
     "StackLevel": "Affiche les objets en fonction de la quantité de ces mêmes objets.",
     "Stackable": "Affiche les objets qui peuvent être empilés (cartouches de munition, pièces étranges, etc)",
     "StatLower": "Affiche les armures dont les statistiques sont strictement plus basses que celles d'une autre armure du même type.",
     "Stats": "Affiche les objets en fonction de la valeur d'une statistique spécifique. $t(Filter.StatsExtras)",
     "StatsBase": "Filtre les armures en fonction de la valeur de base de leurs statistiques, sans inclure les mods attachés ou les pièces maîtresses. $t(Filter.StatsExtras)",
-    "StatsExtras": "Supporte l'ajout de statistique en connectant plusieurs noms de statistiques avec le symbole + ou &. Il y a aussi des mots-clés spéciaux highest, secondhighest, thirdhighest, etc. qui cherchent les statistiques en fonction de leur rang au sein des statistiques d'un objet.",
+    "StatsExtras": "Permet l'addition de statistique en connectant plusieurs noms de statistiques avec le symbole + ou &. Il y a aussi des mots-clés spéciaux highest, secondhighest, thirdhighest, etc. qui cherchent les statistiques en fonction de leur rang au sein des statistiques d'un objet. Chaque statistique personnalisé a son propre terme de recherche, affiché dans les paramètres de statistiques personnalisées.",
     "StatsLoadout": "Recherche un ensemble d'objets à équiper pour obtenir la valeur totale maximale d'une statistique spécifique.",
     "StatsMax": "Recherche des armures avec le nombre le plus élevé pour une stat spécifique. Inclut tous les objets avec le nombre le plus élevé.",
     "Tags": {
@@ -315,6 +317,7 @@
     "UnlockAllFailed": "Déverouillage des objets échoué",
     "UnlockAllSuccess": "{{num}} objets déverrouillés",
     "Vendor": "L'objet est disponible auprès d'un marchand spécifique.",
+    "VendorItem": "Item is from a vendor, not in your inventory. Useful for excluding vendor items from Loadout Optimizer.",
     "Weapon": "Affiche les objets étant des armes.",
     "WeaponLevel": "Affiche les armes en fonction de leur niveau d'arme.",
     "WeaponType": "Affiche les armes selon leur type d'arme.",
@@ -326,6 +329,7 @@
   },
   "General": {
     "ClickForDetails": "Cliquer pour détails",
+    "Close": "Fermer",
     "Confirm": "Confirmer ?",
     "UserGuideLink": "Mode d'emploi"
   },
@@ -388,6 +392,7 @@
     "ClearDialog": "Fermer ce dialogue",
     "ClearNewItems": "Vider la liste de nouveaux objets",
     "Enter": "ENTRER",
+    "ItemPopupTab": "Changer d'onglet de détails de l'objet",
     "LockUnlock": "Verrouiller ou déverrouiller un objet",
     "MarkItemAs": "Marquer objet comme '{{tag}}'",
     "Menu": "Activer/Désactiver le menu",
@@ -401,7 +406,6 @@
     "Vault": "Envoyer un objet au coffre"
   },
   "InGameLoadout": {
-    "Applying": "Équipement de l'équipement...",
     "ClearSlot": "Vider l'emplacement {{index}}",
     "Create": "Créer un équipement",
     "CreateTitle": "Créer un équipement en jeu à partir de l'équipement actuel",
@@ -412,7 +416,7 @@
     "EditFailed": "Échec de la modification de l'équipement",
     "EditIdentifiers": "Changer l'apparence",
     "EditTitle": "Modifier le nom et l'icône de l'équipement",
-    "EquipNotReady": "Prêt pour l'équipement en jeu",
+    "EquipNotReady": "Pas prêt pour l'équipement en jeu",
     "EquipReady": "Prêt pour l'équipement en jeu",
     "LoadoutDetails": "Détails de l'équipement",
     "MatchingLoadouts": "Équipements correspondants :",
@@ -493,6 +497,8 @@
     "Equip": "Équiper sur {{character}}",
     "Exclude": "Objets exclus",
     "ExcludeHelp": "Shift + cliquez un objet (ou glissez-déposez dans cet espace) pour construire des sets sans équipement spécifique.",
+    "ExistingBuildStats": "Stats de l'équipement existant",
+    "ExistingBuildStatsNote": "Ne montre que les équipements avec des paliers de stats strictement supérieurs.",
     "FilterSets": "Filtrer les sets",
     "Help": {
       "And": "L'armure avec tout ces attributs sera utilisé (\"et\")",
@@ -527,7 +533,6 @@
     "Locked": "Objets verrouillés",
     "LockedHelp": "Glissez et déplacez un objet dans cet espace pour construire votre set avec cet équipement. Shift + clique pour exclure les objets.",
     "Missing2": "Pièces rares, légendaires ou exotiques manquantes pour construire un set complet!",
-    "ModLockButton": "Sélectionner les mods",
     "ProcessingMode": {
       "Fast": "Rapide",
       "Full": "Complet",
@@ -540,7 +545,8 @@
     "SearchAnExotic": "Rechercher un nom ou une description d'exotique",
     "SelectExotic": "Sélectionner exotique",
     "SelectMods": "Sélectionner les Mods",
-    "SelectSubclass": "Sélectionner une doctrine",
+    "SelectModsCount": "{{selected}}/{{maxSelectable}}",
+    "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Mods d'activité",
     "SelectSubclassOptions": "Personnaliser la doctrine",
     "ShowAllConfigs": "Afficher toutes les configurations",
     "ShowConfigs": "Afficher les configurations",
@@ -554,6 +560,59 @@
     "Profile": "Chargement du profil Destiny...",
     "Vendors": "Chargement des marchands Destiny..."
   },
+  "LoadoutAnalysis": {
+    "Analyzed": "{{numLoadouts}} équipements analysés",
+    "Analyzing": "Analyse de {{numAnalyzed}}/{{numLoadouts}} équipements",
+    "BetterStatsAvailable": {
+      "Description": "Choisir des armures ou des mods différents pour cet équipement permettra d'atteindre des paliers de stat supérieurs. Choisissez \"$t(Loadouts.OpenInOptimizer)\" pour voir de meilleurs équipements.",
+      "Name": "Amélioration de stats possibles"
+    },
+    "BetterStatsAvailableFontNote": "Note : cet équipement utilise des mods \"Puit de ...\", ce qui monte une stat au dessus du pallier 10. DIM pourrait identifier des meilleurs stats en réduisant la quantité de paliers en trop. Si ce n'est pas souhaité, désactivez \"$t(Loadouts.IncludeRuntimeStatBenefits)\" dans l'équipement.",
+    "DoesNotRespectExotic": {
+      "Description": "Les paramètres d'optimiseur de cet équipement spécifient un choix d'exotique, mais cet équipement ne contient pas cet exotique.",
+      "Name": "Mauvais exotique"
+    },
+    "DoesNotSatisfyStatConstraints": {
+      "Description": "Les paramètres d'optimiseur de cet équipement spécifient des paliers de stat, mais cet équipement ne les atteint pas.",
+      "Name": "Mauvais paliers de stat"
+    },
+    "EmptyFragmentSlots": {
+      "Description": "Il y a des emplacements de fragment vides dans cette doctrine.",
+      "Name": "Emplacements de fragment vides"
+    },
+    "InvalidMods": {
+      "Description": "Certains mods de cet équipement sont obsolètes ou ne sont pas adaptés à l'une de vos pièces d'armures.",
+      "Name": "Mods obsolètes"
+    },
+    "InvalidSearchQuery": {
+      "Description": "Cet équipement a été créé avec une recherche, dans l'optimiseur d'équipement, qui n'est plus valide, ou qui ne contient pas les armures de cet équipement.",
+      "Name": "Recherche invalide"
+    },
+    "MissingItems": {
+      "Description": "Certains objets de cet équipement ne sont plus dans votre inventaire.",
+      "Name": "Objets manquants"
+    },
+    "ModsDontFit": {
+      "Description": "Les armures de cet équipement ne peuvent pas accueillir tous les mods de l'équipement, même si les armures étaient améliorées.",
+      "Name": "Mods non assignés"
+    },
+    "NeedsArmorUpgrades": {
+      "Description": "Les armures de cet équipement doivent être améliorées pour pouvoir accueillir tous les mods ou atteindre les paliers de stat spécifiés.",
+      "Name": "Amélioration d'armure nécessaire"
+    },
+    "NotAFullArmorSet": {
+      "Description": "Cet arsenal n'a pas pu être complétement analysé, car il n'inclut pas un ensemble complet d'armures.",
+      "Name": "Pas un ensemble d'armure complet"
+    },
+    "TooManyFragments": {
+      "Description": "Il y a plus de fragments configurés pour cette doctrine qu'elle n'en a grâce aux aspects.",
+      "Name": "Trop de fragments"
+    },
+    "UsesSeasonalMods": {
+      "Description": "Cet équipement dépend de mods qui ne sont disponibles que certaines saisons. Quand la saison se termine, certains mods seront indisponible ou dépasseront la capacité en énergie de l'armure.",
+      "Name": "Utilise des mods saisonniers"
+    }
+  },
   "LoadoutBuilder": {
     "AddHalfTierMods": "Ajouter les mods +5",
     "All": "Tous",
@@ -561,9 +620,11 @@
     "AnyExoticDescription": "Le build doit contenir un exotique, mais n'importe quel exotique fera l'affaire.",
     "AssumeMasterwork": "Considérer pièce maîtresse",
     "AssumeMasterworkOptions": {
-      "All": "Toutes les armures utiliseront leurs stats de pièce maîtresse et auront un niveau d'énergie de 10.",
-      "Legendary": "Les armures légendaires utiliseront leurs stats de pièce maîtresse et auront un niveau d'énergie de 10.",
-      "None": "Toutes les armures utiliseront leurs stats actuelles et auront un niveau d'énergie minimum de 7."
+      "All": "Toutes les armures : $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "Current": "Stats actuelles, considère un niveau d'énergie d'au moins {{minLoItemEnergy}}.",
+      "Legendary": "Légendaire : $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotique : $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
+      "Masterworked": "+2 dans toutes les stats, a considéré un niveau d'énergie à 10.",
+      "None": "Toutes les armures : $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "Ajouter automatiquement les mods de statistiques",
     "AutomaticallyPicked": "Ce mod a été ajouté automatiquement pour améliorer les statistiques de l'équipement.",
@@ -571,18 +632,20 @@
     "CompareLoadout": "Comparer l'équipement",
     "ConfirmOverwrite": "Êtes-vous sûr de vouloir remplacer l'armure dans l'équipement \"{{name}}\" par ce nouvel ensemble d'armure ?",
     "CreateLoadout": "Sauvegarder l'équipement",
+    "DecreaseStatPriority": "Diminuer la priorité de la stat",
     "DisabledByAutoStatMods": "Les mods de stat sont choisis automatiquement par l'optimisateur d'équipement.",
     "DisabledDueToMaintenance": "L'optimiseur d'équipement est actuellement désactivé en raison d'une maintenance sur l'API Bungie.",
     "EquipItems": "Équiper",
     "ExcludeItem": "Exclure un objet",
     "ExistingLoadout": "Équipement existant",
+    "Exotic": "Armure exotique",
     "ExoticSpecialCategory": "Spécial",
     "Filter": "Filtres",
-    "IncludeVendorItems": "Inclure les objets des marchands",
+    "IgnoreStat": "Si décoché, l'optimiseur d'équipement prétendra que cette stat n'existe pas lors du calcul des ensembles",
+    "IncreaseStatPriority": "Augmenter la priorité de la stat",
     "Legendary": "Légendaire",
     "LockEquipped": "Inc. équipés",
     "LockItem": "Inclure objet",
-    "MaxTier": "Max {{tier}}",
     "MissingClass": "Build pour: {{className}}",
     "MissingClassDescription": "Le build que vous essayez de voir est fait pour une classe que vous n'avez pas.",
     "NoBuildsFoundExplainer": {
@@ -604,22 +667,22 @@
       "UpperBoundsFailed": "De nombreux ensembles ne remplissaient pas les conditions de palier de stat maximum"
     },
     "NoExotic": "Pas d'exotique",
-    "NoExoticDescription": "Équivalent à la recherche \"not:exotic\" - aucune armure exotique ne sera incluse dans les résultats.",
+    "NoExoticDescription": "Équivalent à rechrcher \"not:exotic\" dans la barre de recherche - les ensembles n'utiliseront aucune armure exotique.",
+    "NoExoticPreference": "Aucun exotique sélectionné",
+    "NoExoticPreferenceDescription": "Une armure exotique sera utilisée si elle maximise les stats.",
     "NoLoadoutsToCompare": "Aucun équipement à comparer",
     "None": "Aucun",
     "OptimizerExplanationGuide": "Lisez le guide utilisateur pour plus d'informations et un tutoriel vidéo.",
-    "OptimizerExplanationMods": "Choisissez un exotique et les mods que vous souhaitez utiliser. L'optimiseur n'inclus que les bonus de statistiques des mods que vous choisissez - les mods déjà présents sur l'armure sont ignorés.",
+    "OptimizerExplanationMods": "Choose an exotic, mods, and a subclass. Loadout Optimizer only includes stat bonuses from mods and subclass options you choose - all mods already on the armor are ignored.",
     "OptimizerExplanationSearch": "Utilisez la barre de recherche pour choisir quelles armures envisager. Si aucune armure ne correspond à votre recherche dans un emplacement, toutes les armures de cet emplacement seront envisagées.",
-    "OptimizerExplanationStats": "Déplacez les statistiques les plus importantes vers le haut, et mettez les statistiques qui ne vous intéressent pas sur Ignorer.",
+    "OptimizerExplanationStats": "Drag the most important stats to the top, and disable stats you don't want to optimize for.",
     "OptimizerSet": "Ensemble de l'optimiseur",
-    "ProcessingSets": "Traitement des possibilités pour {{character}} ({{remainingTime}}s)",
+    "ProcessingSets": "Recherche des ensembles aux paliers les plus élevés...",
     "SaveAs": "Enregistrer sous",
-    "SelectMax": "- Max -",
-    "SelectMin": "- Min -",
     "SpeedReport": "{{combos, number}} combinaisons générées en {{time}} secondes",
-    "StatTierIgnoreOption": "Ignorer",
-    "StatTierIncludeOption": "Inclure",
+    "StatConstraints": "Stat Tier Priorities & Ranges",
     "TierNumber": "T{{tier}}",
+    "TierSelect": "Sélectionner le pallier de stat minimum",
     "UnableToAddAllMods": "Impossible d'ajouter tous les mods.",
     "UnableToAddAllModsBody": "Il n'y avait pas assez d'emplacements de mod disponibles pour placer {{mods}}.",
     "UnlockItem": "Désépingler Objet"
@@ -658,11 +721,9 @@
     "CurrentlyEquipped": "Actuellement équipé",
     "Deequip": "Dé-équipement des objets des autres personnages",
     "Delete": "Supprimer",
-    "DeprecatedMods": "Mods obsolètes",
     "DimLoadouts": "Équipements DIM",
     "Edit": "Modifier l'équipement",
     "EditBrief": "Éditer",
-    "EmptyFragmentSlots": "Vider les emplacements de fragment",
     "EquipInGameLoadout": "Équipement de l'équipement en jeu",
     "EquipItems": "Équipement des objets",
     "EquippableDifferent1": "Plusieurs objets exotiques ont été utilisé pour calculer votre puissance maximale, le niveau affiché pourrait donc ne pas être obtenable en équipant vos objets en jeu.",
@@ -684,6 +745,8 @@
     },
     "ImportLoadout": "Importer équipement",
     "InGameLoadouts": "Équipements en jeu",
+    "IncludeRuntimeStatBenefits": "Inclure les stats des mods Puit",
+    "IncludeRuntimeStatBenefitsDesc": "Les mods d'armure \"Puit de...\" fournissent un bonus fixe de stats de personnage lorsque vous avez des charges d'armure.\n\nAvec ce paramètre, DIM considère ces mods actifs et ajoute leurs bénéfices aux stats de cet équipement dans les calculs et les optimisations.",
     "ItemErrorSummary": "1 erreur d'objet :",
     "ItemErrorSummary_plural": "{{count}} erreurs d'objet :",
     "ItemLeveling": "Infusion d'objet",
@@ -706,7 +769,6 @@
     "MaximizeLight": "Lumière maximale",
     "MaximizePower": "Puissance maximale",
     "MaximizeStat": "Maximiser la Stat",
-    "MissingItems": "Objets manquants",
     "MissingItemsWarning": "Certains des objets dans cet équipement ne sont plus dans votre inventaire.",
     "ModErrorSummary": "1 erreur de mod :",
     "ModErrorSummary_plural": "{{count}} erreurs de mod :",
@@ -763,6 +825,7 @@
       "NoName": "L'équipement a besoin d'un nom."
     },
     "SaveLoadout": "Sauvegarder l'équipement",
+    "Season": "Saison {{season}}",
     "Share": {
       "Copied": "Lien de l'équipement copié dans le presse-papiers",
       "CopyButton": "Copier le lien",
@@ -790,7 +853,6 @@
     "SubclassOptionsSearch": "Rechercher dans les options de {{subclass}}",
     "Succeeded": "Équipement réussi",
     "SyncFromEquipped": "Synchroniser avec ceux équipés",
-    "TooManyFragments": "Trop de fragments",
     "TooManyRequested": "Vous avez {{total}} {{itemname}} mais votre équipement demande {{requested}}. Nous avons transféré tous ceux que vous possédiez.",
     "UnassignedModError": "Le mot n'a pas pu être équipé sur votre armure actuelle",
     "Undo": "Annuler",
@@ -871,6 +933,7 @@
       "QuestProgress": "Étape {{questStepNum}} sur {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
+    "TabList": "Onglet de détails de l'objet",
     "ToggleSidecar": "Développer ou réduire les actions d'objet",
     "TrackUntrack": {
       "Track": "Suivre {{itemType}}",
@@ -967,7 +1030,7 @@
     "Items": "Objets de quête",
     "Milestones": "Jalons & Défis",
     "NoEventChallenges": "Vous avez terminé tous les défis d'événement",
-    "NoTrackedTriumph": "Vous ne suivez pas de triomphes. Suivez en un dans le jeu, ou autant que vous voulez sur DIM.",
+    "NoTrackedTriumph": "Vous n'avez aucun triomphe suivi. Suivez en autant que vous voulez sur DIM.",
     "PercentPrestige": "{{pct}}% du rang maximum",
     "PowerBonusHeader": "Récompenses +{{powerBonus}} puissance",
     "PowerBonusHeaderUndefined": "Autres récompenses",
@@ -989,7 +1052,8 @@
     "RecordBooks": "Carnet d'exploits"
   },
   "Records": {
-    "Title": "Archives"
+    "Title": "Archives",
+    "UniversalOrnamentSetOther": "Autre"
   },
   "SearchHistory": {
     "Date": "Dernier Utilisé",
@@ -1051,6 +1115,7 @@
     "ResetToDefault": "Réinitialiser",
     "ReverseSort": "Activer/désactiver le tri normal/inversé",
     "SetSort": "Trier les objets par :",
+    "SetVaultWeaponGrouping": "Grouper les armes du coffre par :",
     "Settings": "Paramètres",
     "ShowNewItems": "Afficher un point rouge sur les nouveaux objets",
     "SingleCharacter": "Vue à un seul personnage",
@@ -1060,21 +1125,22 @@
     "SortByAmount": "Taille de la pile",
     "SortByClassType": "Classe requise",
     "SortByCrafted": "Façonné (D2)",
-    "SortByDeepsight": "Résonnance (D2)",
+    "SortByDeepsight": "Souvenance (D2)",
     "SortByPrimary": "Niveau de puissance",
     "SortByRarity": "Rareté",
     "SortByRating": "Qualité de l'Armure (D1)",
     "SortByRecent": "Acquis récemment (D2)",
     "SortBySeason": "Saison (D2)",
     "SortBySunset": "Limite de puissance (D2)",
-    "SortByTag": "Tag ({{taglist}})",
+    "SortByTag": "Étiquette ({{taglist}})",
     "SortByType": "Type",
     "SortByWeaponElement": "Type de dégâts",
     "SortCustom": "Tri personnalisé",
     "SortName": "Nom",
     "SpacesSize": "{{count}} espace",
     "SpacesSize_plural": "{{count}} espaces",
-    "Theme": "Thème"
+    "Theme": "Thème",
+    "VaultGroupingNone": "Aucun"
   },
   "Sockets": {
     "ApplyPerks": "Appliquer les attributs",
@@ -1280,7 +1346,7 @@
     "About": {
       "APIHistory": "Voir l'historique de toutes les actions effectués par DIM (et d'autre applications liées à Destiny)",
       "BungieCopyright": "Toutes les images et le contenu sont la propriété de Bungie.",
-      "CommunityInsight": "Informations de la communauté sur les attributs, fournis par {{clarityLink}}. Si vous remarquez des imprécisions ou si vous avez des questions, rejoignez {{clarityDiscordLink}}.",
+      "CommunityInsight": "Informations de la communauté sur les attributs et les statistiques, fournis par {{clarityLink}}. Si vous remarquez des imprécisions ou si vous avez des questions, rejoignez {{clarityDiscordLink}}.",
       "Discord": "Discord",
       "DiscordHelp": "Posez des questions, donnez des retours, et obtenez du support sur notre Discord.",
       "FAQ": "Questions fréquemment posés",
@@ -1347,7 +1413,7 @@
     "UpdateExternalSource": "Mettre à jour la source de la liste de souhaits",
     "Voltron": "voltron (par défaut)",
     "VoltronDescription": "voltron est une liste de souhaits JcE et JcJ de la communauté Destiny mise à jour automatiquement. Elle est activée par défaut.",
-    "WishListNotes": "Notes de liste de souhaits: {{notes}}",
+    "WishListNotes": "Notes de la liste de souhaits :",
     "WorstRatedTip": "Cet attribut correspond exactement à une arme de votre liste d'indésirables.",
     "WorstRatedTip_plural": "Ces attributs correspondent exactement à une arme de votre liste d'indésirables."
   },

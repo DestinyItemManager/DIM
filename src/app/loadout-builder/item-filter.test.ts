@@ -5,12 +5,11 @@ import { DimStore } from 'app/inventory/store-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { ModMap, categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
-import { plugCategoryHashToBucketHash } from 'app/loadout/mod-utils';
+import { count } from 'app/utils/collections';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
-import { count } from 'app/utils/util';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import _, { stubFalse, stubTrue } from 'lodash';
-import { fontOfWisdomModHash } from 'testing/test-item-utils';
+import { elementalChargeModHash, stacksOnStacksModHash } from 'testing/test-item-utils';
 import { getTestDefinitions, getTestStores } from 'testing/test-utils';
 import { FilterInfo, filterItems } from './item-filter';
 import {
@@ -27,6 +26,8 @@ describe('loadout-builder item-filter', () => {
   let defs: D2ManifestDefinitions;
   let store: DimStore;
   let items: DimItem[];
+  let stacksOnStacksMod: PluggableInventoryItemDefinition;
+  let elementalChargeMod: PluggableInventoryItemDefinition;
 
   const defaultArgs = {
     lockedExoticHash: undefined,
@@ -47,6 +48,20 @@ describe('loadout-builder item-filter', () => {
     store = _.maxBy(stores, (store) => count(allItems, (item) => isValidItem(store, item)))!;
     items = allItems.filter((item) => isValidItem(store, item));
     noMods = categorizeArmorMods([], items);
+
+    stacksOnStacksMod = defs.InventoryItem.get(
+      stacksOnStacksModHash,
+    ) as PluggableInventoryItemDefinition;
+    expect(isPluggableItem(stacksOnStacksMod)).toBe(true);
+    expect(stacksOnStacksMod.plug.energyCost!.energyCost).toBe(4);
+    expect(stacksOnStacksMod.plug.plugCategoryHash).toBe(PlugCategoryHashes.EnhancementsV2Legs);
+
+    elementalChargeMod = defs.InventoryItem.get(
+      elementalChargeModHash,
+    ) as PluggableInventoryItemDefinition;
+    expect(isPluggableItem(elementalChargeMod)).toBe(true);
+    expect(elementalChargeMod.plug.energyCost!.energyCost).toBe(3);
+    expect(elementalChargeMod.plug.plugCategoryHash).toBe(PlugCategoryHashes.EnhancementsV2Legs);
   });
 
   function noPinInvariants(filteredItems: ItemsByBucket, filterInfo: FilterInfo) {
@@ -92,16 +107,10 @@ describe('loadout-builder item-filter', () => {
   });
 
   it('filters out items with insufficient energy capacity', () => {
-    const fontOfWisdomMod = defs.InventoryItem.get(
-      fontOfWisdomModHash
-    ) as PluggableInventoryItemDefinition;
-    expect(isPluggableItem(fontOfWisdomMod)).toBe(true);
-    expect(fontOfWisdomMod.plug.energyCost!.energyCost).toBe(3);
-    expect(fontOfWisdomMod.plug.plugCategoryHash).toBe(PlugCategoryHashes.EnhancementsV2Head);
-
     const { modMap, unassignedMods } = categorizeArmorMods(
-      [fontOfWisdomMod, fontOfWisdomMod, fontOfWisdomMod],
-      items
+      // 10 cost
+      [stacksOnStacksMod, elementalChargeMod, elementalChargeMod],
+      items,
     );
 
     expect(unassignedMods.length).toBe(0);
@@ -130,7 +139,7 @@ describe('loadout-builder item-filter', () => {
       for (const bucketHash of LockableBucketHashes) {
         const removedNum = filterInfo.perBucketStats[bucketHash].cantFitMods;
 
-        if (bucketHash === BucketHashes.Helmet) {
+        if (bucketHash === BucketHashes.LegArmor) {
           if (expectAllItemsFit) {
             expect(removedNum).toBe(0);
           } else {
@@ -217,7 +226,9 @@ describe('loadout-builder item-filter', () => {
     noPinInvariants(filteredItems, filterInfo);
     expect(filterInfo.searchQueryEffective).toBe(true);
     expect(
-      count(Object.values(filterInfo.perBucketStats), (stat) => Boolean(stat.removedBySearchFilter))
+      count(Object.values(filterInfo.perBucketStats), (stat) =>
+        Boolean(stat.removedBySearchFilter),
+      ),
     ).toBe(2);
   });
 
@@ -283,31 +294,20 @@ describe('loadout-builder item-filter', () => {
   });
 
   it('mod assignment may cause exotic slot to not have options', () => {
-    // Find an exotic where every copy has less than 4 energy
+    // Find a leg armor exotic where every copy does not have 10 energy
     const exotic = items.find(
       (i) =>
         i.isExotic &&
+        i.bucket.hash === BucketHashes.LegArmor &&
         items.every(
-          (otherItem) => otherItem.hash !== i.hash || otherItem.energy!.energyCapacity < 9
-        )
+          (otherItem) => otherItem.hash !== i.hash || otherItem.energy!.energyCapacity < 10,
+        ),
     )!;
 
-    const socket = exotic.sockets?.allSockets.find(
-      (i) =>
-        i.plugged &&
-        plugCategoryHashToBucketHash[
-          i.plugged.plugDef.plug.plugCategoryHash as PlugCategoryHashes
-        ] === exotic.bucket.hash
-    )!;
-    const mod = socket.plugSet!.plugs.find(
-      (plug) =>
-        plug.plugDef.plug.energyCost?.energyCost && plug.plugDef.plug.energyCost.energyCost >= 3
-    )!.plugDef;
-
-    // 3 mods with at least 3 cost each
     const { modMap, unassignedMods } = categorizeArmorMods(
-      new Array<PluggableInventoryItemDefinition>(3).fill(mod),
-      items
+      // 10 cost
+      [stacksOnStacksMod, elementalChargeMod, elementalChargeMod],
+      items,
     );
     expect(unassignedMods.length).toBe(0);
 

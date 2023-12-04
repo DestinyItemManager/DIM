@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'artificeExplanation': string;
+  'collapseTitle': string;
   'controls': string;
   'count': string;
   'dimmed': string;

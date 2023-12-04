@@ -1,38 +1,47 @@
 @use '../variables.scss' as *;
 
 .dimInput {
-  padding-left: 5px;
+  composes: flexRow from '../dim-ui/common.m.scss';
+  padding: 2px 25px 2px 5px;
   height: 23px;
   background: var(--theme-input-bg);
   border: none;
-  border-bottom: 1px solid #555;
   color: var(--theme-text);
   width: 100%;
   font-size: 18px;
   max-width: 50em;
-
-  display: flex;
-  flex-direction: row;
+  box-sizing: border-box;
 
   @include phone-portrait {
     height: 32px;
   }
 
+  ::placeholder {
+    color: #999;
+  }
+
   &:hover,
-  &:focus {
-    background: black;
+  &:focus-within {
     outline: none;
-    border-bottom: 1px solid var(--theme-accent-primary);
+    box-shadow: inset 0 0 0 1px var(--theme-search-dropdown-border);
   }
 
   > input {
-    border: none;
-    background: transparent;
+    all: initial;
     outline: none;
     flex: 1;
-    padding: 0 0;
-    font-size: 18px;
+    font: inherit;
+    color: inherit;
+    caret-color: var(--theme-accent-primary);
     // because our fake input is higher and this is used by textcomplete
     line-height: 1.5;
+  }
+
+  // Vertically center the symbol picker
+  > *:last-child {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 }

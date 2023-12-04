@@ -14,13 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout DIM
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Sort en.json
         run: dimJSON="$(jq -S . src/locale/en.json)" && echo "${dimJSON}" > src/locale/en.json
 
       - name: Upload updated en.json to crowdin
-        uses: crowdin/github-action@1.4.7
+        uses: crowdin/github-action@v1.15.2
         with:
           upload_sources: true
           upload_translations: false

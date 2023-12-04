@@ -7,8 +7,8 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { AppIcon, disabledIcon, enabledIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { errorMessage } from 'app/utils/errors';
 import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
-import { errorMessage } from 'app/utils/util';
 import Cost from 'app/vendors/Cost';
 import clsx from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
@@ -139,7 +139,7 @@ function EnergyUpgradePreview({
   const energyModHashes = getEnergyUpgradeHashes(item, previewCapacity);
   const costs = sumModCosts(
     defs,
-    energyModHashes.map((h) => defs.InventoryItem.get(h))
+    energyModHashes.map((h) => defs.InventoryItem.get(h)),
   );
 
   return (

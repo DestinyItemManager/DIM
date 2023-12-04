@@ -2,7 +2,6 @@ import useResizeObserver from '@react-hook/resize-observer';
 import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
 import styles from './PageWithMenu.m.scss';
-import { scrollToHref } from './scroll';
 
 function PageWithMenu({ children, className }: { children: React.ReactNode; className?: string }) {
   return <div className={clsx(className, styles.page)}>{children}</div>;
@@ -82,7 +81,7 @@ PageWithMenu.MenuButton = function MenuButton({
 } & React.AnchorHTMLAttributes<HTMLAnchorElement>) {
   const classes = clsx(className, styles.menuButton);
   return anchor ? (
-    <a className={classes} href={`#${anchor}`} onClick={scrollToHref} {...otherProps}>
+    <a className={classes} href={`#${anchor}`} {...otherProps}>
       {children}
     </a>
   ) : (

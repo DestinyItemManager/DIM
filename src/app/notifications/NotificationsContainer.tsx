@@ -20,7 +20,7 @@ export default function NotificationsContainer() {
     notifications$,
     useCallback((notification: Notify) => {
       setNotifications((notifications) => [...notifications, notification]);
-    }, [])
+    }, []),
   );
 
   const onNotificationClosed = (notification: Notify) =>

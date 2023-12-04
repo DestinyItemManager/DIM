@@ -1,5 +1,5 @@
-import { VENDORS } from 'app/search/d2-known-values';
-import { filterMap } from 'app/utils/util';
+import { VendorHashes } from 'app/search/d2-known-values';
+import { filterMap } from 'app/utils/collections';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import type {
@@ -84,7 +84,7 @@ export function getBuckets(defs: D2ManifestDefinitions) {
       this.byCategory[this.unknown.sort!] = [this.unknown];
     },
   };
-  for (const def of Object.values(defs.InventoryBucket)) {
+  for (const def of Object.values(defs.InventoryBucket.getAll())) {
     const type = bucketToType[def.hash];
     const sort = bucketHashToSort[def.hash];
     const bucket: InventoryBucket = {
@@ -105,7 +105,7 @@ export function getBuckets(defs: D2ManifestDefinitions) {
     buckets.byHash[bucket.hash] = bucket;
   }
   const vaultMappings: { [bucketHash: number]: number } = {};
-  for (const items of defs.Vendor.get(VENDORS.VAULT).acceptedItems) {
+  for (const items of defs.Vendor.get(VendorHashes.Vault).acceptedItems) {
     vaultMappings[items.acceptedInventoryBucketHash] = items.destinationInventoryBucketHash;
   }
   for (const bucket of Object.values(buckets.byHash)) {
@@ -116,7 +116,7 @@ export function getBuckets(defs: D2ManifestDefinitions) {
   for (const [category, bucketHashes] of Object.entries(D2Categories)) {
     buckets.byCategory[category] = filterMap(
       bucketHashes,
-      (bucketHash) => buckets.byHash[bucketHash]
+      (bucketHash) => buckets.byHash[bucketHash],
     );
   }
   return buckets;

@@ -1,4 +1,4 @@
-src/postcss.config.js
+src/postcss.config.cjs
 config/webpack.ts
 src/app/google.js
 src/browsercheck.js
@@ -6,4 +6,6 @@ src/browsercheck.js
 *.test.ts
 *.test.tsx
 *.config.js
-Gruntfile.js
+src/build-browsercheck-utils.js
+src/testing/jest-setup.cjs
+src/fa-subset.js

@@ -79,7 +79,7 @@ export function decodeUrlLoadout(search: string): Loadout | undefined {
   const loadoutJSON = searchParams.get('loadout');
   if (loadoutJSON) {
     return preprocessReceivedLoadout(
-      convertDimApiLoadoutToLoadout(JSON.parse(loadoutJSON) as DimApiLoadout)
+      convertDimApiLoadoutToLoadout(JSON.parse(loadoutJSON) as DimApiLoadout),
     );
   }
 }

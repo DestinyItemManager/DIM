@@ -1,4 +1,15 @@
-import { ArmorStatHashes, ArmorStats, LockableBucketHash } from '../types';
+import { ArmorStatHashes, ArmorStats, LockableBucketHash, StatRanges } from '../types';
+
+export interface ProcessResult {
+  /** A small number of the best sets, depending on operation mode. */
+  sets: ProcessArmorSet[];
+  /** The total number of combinations considered. */
+  combos: number;
+  /** The stat ranges of all sets that matched our filters & mod selection. */
+  statRangesFiltered?: StatRanges;
+  /** Statistics about how many sets passed/failed the constraints, for error reporting */
+  processInfo?: ProcessStatistics;
+}
 
 export interface ProcessItem {
   id: string;
@@ -6,15 +17,8 @@ export interface ProcessItem {
   name: string;
   isExotic: boolean;
   isArtifice: boolean;
-  energy?: {
-    /** The maximum energy capacity for the item, e.g. if masterworked this will be 10. */
-    capacity: number;
-    /**
-     * This is used to track the energy used by mods in a build. Using the name 'val' so that we can use the same sorting
-     * function for ProcessItems and ProcessMods.
-     */
-    val: number;
-  };
+  /** The remaining assumed energy capacity for this item, after assigning slot-specific mods */
+  remainingEnergyCapacity: number;
   power: number;
   stats: { [statHash: number]: number };
   compatibleModSeasons?: string[];
@@ -40,16 +44,12 @@ export interface IntermediateProcessArmorSet {
   stats: number[];
   /** The first (highest-power) valid set from this stat mix. */
   armor: ProcessItem[];
-  /** Which stat mods were added? */
-  statMods: number[];
 }
 
 export interface ProcessMod {
   hash: number;
-  energy?: {
-    /** The energy cost of the mod. */
-    val: number;
-  };
+  /** The energy cost of the mod. */
+  energyCost: number;
   /** This should only be available in legacy, combat and raid mods */
   tag?: string;
 }
@@ -57,7 +57,6 @@ export interface ProcessMod {
 /**
  * Data describing the mods that can be automatically picked.
  */
-
 export interface AutoModData {
   generalMods: {
     [key in ArmorStatHashes]?: {

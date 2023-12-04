@@ -26,7 +26,7 @@ export default function SeasonalChallenges({
   const itemCreationContext = useSelector(createItemContextSelector);
   const nodeTree = toPresentationNodeTree(
     itemCreationContext,
-    seasonalChallengesPresentationNode.hash
+    seasonalChallengesPresentationNode.hash,
   );
 
   const allRecords = nodeTree ? flattenRecords(nodeTree) : [];
@@ -46,8 +46,8 @@ export default function SeasonalChallenges({
         itemCreationContext.buckets,
         store,
         seasonalChallengesPresentationNode.displayProperties.name,
-        trackedRecords.includes(r.recordDef.hash)
-      )
+        trackedRecords.includes(r.recordDef.hash),
+      ),
     );
 
   return (

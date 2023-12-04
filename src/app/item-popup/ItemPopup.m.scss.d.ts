@@ -8,13 +8,16 @@ interface CssExports {
   'desktopPopupBody': string;
   'desktopPopupRoot': string;
   'exotic': string;
-  'itemPopup': string;
+  'failureReason': string;
+  'header': string;
   'legendary': string;
   'mobileItemActions': string;
   'mobileMoveLocations': string;
   'movePopupDialog': string;
   'popupBackground': string;
   'rare': string;
+  'sheetClose': string;
+  'sheetHeader': string;
   'uncommon': string;
 }
 export const cssExports: CssExports;

@@ -13,6 +13,7 @@ import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
 import styles from './CompareButtons.m.scss';
+import { compareNameQuery, stripAdept } from './compare-utils';
 
 /** A definition for a button on the top of the compare too, which can be clicked to show the given items. */
 interface CompareButton {
@@ -108,27 +109,10 @@ const bucketToSearch = {
 const getRpm = (i: DimItem) => {
   const itemRpmStat = i.stats?.find(
     (s) =>
-      s.statHash === (i.destinyVersion === 1 ? i.stats![0].statHash : StatHashes.RoundsPerMinute)
+      s.statHash === (i.destinyVersion === 1 ? i.stats![0].statHash : StatHashes.RoundsPerMinute),
   );
   return itemRpmStat?.value || -99999999;
 };
-
-/**
- * Strips the (Timelost) or (Adept) suffixes for the user's language
- * in order to include adept items in non-adept comparisons and vice versa.
- */
-export const stripAdept = (name: string) =>
-  name
-    .replace(new RegExp(t('Filter.Adept'), 'gi'), '')
-    .trim()
-    .replace(new RegExp(t('Filter.Timelost'), 'gi'), '')
-    .trim();
-
-export function compareNameQuery(item: DimItem) {
-  return item.bucket.inWeapons
-    ? `name:${quoteFilterString(stripAdept(item.name))}`
-    : `name:${quoteFilterString(item.name)}`;
-}
 
 /**
  * Generate possible comparisons for weapons, given a reference item.
@@ -165,8 +149,7 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
       ],
       query: `(${bucketToSearch[exampleItem.bucket.hash as keyof typeof bucketToSearch]} ${
         exampleItem.destinyVersion === 2 && intrinsic
-          ? // TODO: add a search by perk hash? It'd be slightly different than searching by name
-            `perkname:${quoteFilterString(intrinsic.displayProperties.name)}`
+          ? `exactperk:${quoteFilterString(intrinsic.displayProperties.name)}`
           : `stat:rpm:${getRpm(exampleItem)}`
       })`,
     },
