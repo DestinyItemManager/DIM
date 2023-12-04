@@ -23,12 +23,29 @@ function durationFromMs(ms: number) {
  *
  * negative durations are treated as 0
  */
-export function timerDurationFromMs(milliseconds: number) {
+export function timerDurationFromMs(milliseconds: number, minSegments = 3) {
   const duration = durationFromMs(milliseconds).slice(0, -1);
-  while (duration[0] === 0 && duration.length > 3) {
+  while (duration[0] === 0 && duration.length > minSegments) {
     duration.shift();
   }
   return duration.map((u, i) => `${u}`.padStart(i === 0 ? 0 : 2, '0')).join(':');
+}
+
+/**
+ * print a number of milliseconds as m:s.ms
+ *
+ * negative durations are treated as 0
+ */
+export function timerDurationFromMsWithDecimal(milliseconds: number) {
+  const duration = durationFromMs(milliseconds);
+  while (duration[0] === 0 && duration.length > 3) {
+    duration.shift();
+  }
+
+  const ms = duration.pop()!;
+  duration[duration.length - 1] = (duration.at(-1)! * 1000 + ms) / 1000;
+
+  return duration.map((u, i) => (i !== 0 && u < 10 ? `0${u}` : u)).join(':');
 }
 
 /**

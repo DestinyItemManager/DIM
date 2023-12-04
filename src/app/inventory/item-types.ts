@@ -59,7 +59,7 @@ export interface DimItem {
   /** Is this an Exotic item? */
   isExotic: boolean;
   /** If this came from a vendor (instead of character inventory), this houses enough information to re-identify the item. */
-  vendor?: { vendorHash: number; saleIndex: number; characterId: string };
+  vendor?: { vendorHash: number; vendorItemIndex: number; characterId: string };
   /** Localized name of the item. */
   name: string;
   /** Localized description of the item. */
@@ -227,8 +227,6 @@ export interface DimItem {
   foundry?: string;
   /** Extra tooltips to show in the item popup */
   tooltipNotifications?: DestinyItemTooltipNotification[];
-  /** Index assigned to item by Bungie */
-  bungieIndex: number;
 }
 
 /**
@@ -267,11 +265,11 @@ export interface DimMasterwork {
 
 export interface DimCrafted {
   /** The level of this crafted weapon */
-  level?: number;
+  level: number;
   /** 0-1 progress to the next level */
-  progress?: number;
+  progress: number;
   /** when this weapon was crafted, UTC epoch seconds timestamp */
-  craftedDate?: number;
+  craftedDate: number;
 }
 
 export interface DimCatalyst {
@@ -310,10 +308,6 @@ export interface DimStat {
    * This is true of armor stats.
    */
   additive: boolean;
-  /**
-   * Whether the stat is always active or certain conditions need to be met before it is.
-   */
-  isConditionallyActive: boolean;
 }
 
 export interface D1Stat extends DimStat {
@@ -501,8 +495,14 @@ export interface DimSocket {
    * This might be widely synonymous with isReusable, but seems like it's being used for things other than display style logic.
    */
   isPerk: boolean;
+  /**
+   * Is this socket a mod socket - these are displayed as squares with a border.
+   */
+  isMod: boolean;
   /** Is this socket reusable? This is a notably different behavior and UI in Destiny, displayed in circles rather than squares. */
   isReusable: boolean;
+  /** Is this socket visible in-game? DIM mostly ignores this, but for some known sockets this controls item behavior / filter matching */
+  visibleInGame?: boolean;
   /** Deep information about this socket, including what types of things can be inserted into it. TODO: do we need all of this? */
   socketDefinition: DestinyItemSocketEntryDefinition;
 }

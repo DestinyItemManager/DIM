@@ -3,22 +3,12 @@
 .factionInfo {
   display: flex;
   flex-direction: column;
-
-  @include phone-portrait {
-    align-items: center;
-    text-align: center;
-  }
 }
 
 .activityRank {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-
-  @include phone-portrait {
-    align-items: center;
-    flex-direction: column;
-  }
 }
 
 .factionName {
@@ -32,9 +22,21 @@
   display: inline-block;
   width: 64px;
   height: 64px;
+}
 
+.gridLayout {
   @include phone-portrait {
-    margin: 0;
+    .factionInfo {
+      align-items: center;
+      text-align: center;
+    }
+    &.activityRank {
+      align-items: center;
+      flex-direction: column;
+    }
+    .crucibleRankIcon {
+      margin: 0;
+    }
   }
 }
 
@@ -43,12 +45,12 @@
 }
 
 .crucibleRankTotalProgress {
-  stroke: $blue;
+  stroke: var(--theme-accent-secondary);
   fill: none;
 }
 
 .factionLevel {
-  color: #a1a2a2;
+  color: var(--theme-text-secondary);
 }
 
 .rankIcon {

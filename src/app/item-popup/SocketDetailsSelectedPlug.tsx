@@ -1,6 +1,7 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage from 'app/dim-ui/BungieImage';
+import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { canInsertPlug, insertPlug } from 'app/inventory/advanced-write-actions';
 import {
@@ -13,22 +14,27 @@ import {
 import { interpolateStatValue } from 'app/inventory/store/stats';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
-import { DEFAULT_ORNAMENTS, EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
+import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { refreshIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { filterMap } from 'app/utils/collections';
+import { errorMessage } from 'app/utils/errors';
 import { isPlugStatActive } from 'app/utils/item-utils';
 import { usePlugDescriptions } from 'app/utils/plug-descriptions';
-import { LookupTable } from 'app/utils/util-types';
 import { DestinyItemSocketEntryDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { PlugCategoryHashes, SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import {
+  PlugCategoryHashes,
+  SocketCategoryHashes,
+  StatHashes,
+  TraitHashes,
+} from 'data/d2/generated-enums';
 import { motion } from 'framer-motion';
-import _ from 'lodash';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import ItemStats from './ItemStats';
-import { StatValue } from './PlugTooltip';
+import { PlugStats } from './PlugTooltip';
 import { SocketDetailsMod } from './SocketDetails';
 import styles from './SocketDetailsSelectedPlug.m.scss';
 
@@ -39,13 +45,13 @@ const costStatHashes = [
   StatHashes.ArcCost,
 ];
 
-const whitelistPlugCategoryToLocKey: LookupTable<PlugCategoryHashes, string> = {
+const whitelistPlugCategoryToLocKey = {
   [PlugCategoryHashes.Shader]: 'Shader',
   [PlugCategoryHashes.ShipSpawnfx]: 'Transmat',
   [PlugCategoryHashes.Hologram]: 'Projection',
-};
+} as const;
 
-const socketCategoryToLocKey: LookupTable<SocketCategoryHashes, string> = {
+const socketCategoryToLocKey = {
   [SocketCategoryHashes.Super]: 'Super',
   [SocketCategoryHashes.Abilities_Abilities]: 'Ability',
   [SocketCategoryHashes.Abilities_Abilities_Ikora]: 'Ability',
@@ -55,23 +61,33 @@ const socketCategoryToLocKey: LookupTable<SocketCategoryHashes, string> = {
   [SocketCategoryHashes.Fragments_Abilities_Ikora]: 'Fragment',
   [SocketCategoryHashes.Fragments_Abilities_Neomuna]: 'Fragment',
   [SocketCategoryHashes.Fragments_Abilities_Stranger]: 'Fragment',
-};
+} as const;
 
-/** Figures out what kind of socket this is so that the "Apply" button can name the correct thing
- * instead of generically saying "Select/Insert Mod".
- * Note that these are used as part of the localization key.
+/**
+ * Figures out what kind of socket this is so that the "Apply" button can name
+ * the correct thing instead of generically saying "Select/Insert Mod". Note
+ * that these are used as part of the localization key. We're using keyof typeof
+ * here so that we automatically type the return value to the possible
+ * localization keys.
  */
 function uiCategorizeSocket(defs: D2ManifestDefinitions, socket: DestinyItemSocketEntryDefinition) {
   const socketTypeDef = socket.socketTypeHash && defs.SocketType.get(socket.socketTypeHash);
   if (socketTypeDef) {
-    if (socketCategoryToLocKey[socketTypeDef.socketCategoryHash as SocketCategoryHashes]) {
-      return socketCategoryToLocKey[socketTypeDef.socketCategoryHash as SocketCategoryHashes];
+    const socketCategoryHash =
+      socketTypeDef.socketCategoryHash as keyof typeof socketCategoryToLocKey;
+    if (socketCategoryToLocKey[socketCategoryHash]) {
+      return socketCategoryToLocKey[socketCategoryHash];
     } else {
       const plug = socketTypeDef.plugWhitelist.find(
-        (p) => whitelistPlugCategoryToLocKey[p.categoryHash as PlugCategoryHashes]
+        (p) =>
+          whitelistPlugCategoryToLocKey[
+            p.categoryHash as keyof typeof whitelistPlugCategoryToLocKey
+          ],
       );
       if (plug) {
-        return whitelistPlugCategoryToLocKey[plug.categoryHash as PlugCategoryHashes];
+        return whitelistPlugCategoryToLocKey[
+          plug.categoryHash as keyof typeof whitelistPlugCategoryToLocKey
+        ];
       }
     }
   }
@@ -117,48 +133,46 @@ export default function SocketDetailsSelectedPlug({
     ? defs.Collectible.get(plug.collectibleHash)?.sourceString
     : undefined;
 
-  const stats = _.compact(
-    plug.investmentStats.map((stat) => {
-      if (costStatHashes.includes(stat.statTypeHash)) {
-        return null;
-      }
-      const itemStat = item.stats?.find((s) => s.statHash === stat.statTypeHash);
-      if (!itemStat) {
-        return null;
-      }
+  const stats = filterMap(plug.investmentStats, (stat) => {
+    if (costStatHashes.includes(stat.statTypeHash)) {
+      return undefined;
+    }
+    const itemStat = item.stats?.find((s) => s.statHash === stat.statTypeHash);
+    if (!itemStat) {
+      return undefined;
+    }
 
-      if (!isPlugStatActive(item, plug, stat.statTypeHash, stat.isConditionallyActive)) {
-        return null;
-      }
+    if (!isPlugStatActive(item, plug, stat.statTypeHash, stat.isConditionallyActive)) {
+      return undefined;
+    }
 
-      const statGroupDef = defs.StatGroup.get(
-        defs.InventoryItem.get(item.hash).stats!.statGroupHash!
-      );
+    const statGroupDef = defs.StatGroup.get(
+      defs.InventoryItem.get(item.hash).stats!.statGroupHash!,
+    );
 
-      const statDisplay = statGroupDef?.scaledStats.find((s) => s.statHash === stat.statTypeHash);
-      const currentModValue =
-        currentPlug?.plugDef.investmentStats.find((s) => s.statTypeHash === stat.statTypeHash)
-          ?.value || 0;
+    const statDisplay = statGroupDef?.scaledStats.find((s) => s.statHash === stat.statTypeHash);
+    const currentModValue =
+      currentPlug?.plugDef.investmentStats.find((s) => s.statTypeHash === stat.statTypeHash)
+        ?.value || 0;
 
-      let modValue = stat.value;
-      const updatedInvestmentValue = itemStat.investmentValue + modValue - currentModValue;
-      let itemStatValue = updatedInvestmentValue;
+    let modValue = stat.value;
+    const updatedInvestmentValue = itemStat.investmentValue + modValue - currentModValue;
+    let itemStatValue = updatedInvestmentValue;
 
-      if (statDisplay) {
-        itemStatValue = interpolateStatValue(updatedInvestmentValue, statDisplay);
-        modValue =
-          itemStatValue - interpolateStatValue(updatedInvestmentValue - modValue, statDisplay);
-      }
+    if (statDisplay) {
+      itemStatValue = interpolateStatValue(updatedInvestmentValue, statDisplay);
+      modValue =
+        itemStatValue - interpolateStatValue(updatedInvestmentValue - modValue, statDisplay);
+    }
 
-      return {
-        modValue,
-        dimStat: {
-          ...itemStat,
-          value: itemStatValue,
-        } as DimStat,
-      };
-    })
-  );
+    return {
+      modValue,
+      dimStat: {
+        ...itemStat,
+        value: itemStatValue,
+      } as DimStat,
+    };
+  });
 
   // Can we actually insert this mod instead of just previewing it?
   const canDoAWA =
@@ -185,7 +199,7 @@ export default function SocketDetailsSelectedPlug({
         showNotification({
           type: 'error',
           title: t('AWA.Error'),
-          body: t('AWA.ErrorMessage', { error: e.message, item: item.name, plug: plugName }),
+          body: t('AWA.ErrorMessage', { error: errorMessage(e), item: item.name, plug: plugName }),
         });
       } finally {
         setInsertInProgress(false);
@@ -205,6 +219,7 @@ export default function SocketDetailsSelectedPlug({
         <div className={styles.material} key={material.itemHash}>
           {material.count.toLocaleString()}
           <BungieImage
+            className="dontInvert"
             src={materialDef.displayProperties.icon}
             title={materialDef.displayProperties.name}
           />
@@ -215,12 +230,13 @@ export default function SocketDetailsSelectedPlug({
 
   const plugDescriptions = usePlugDescriptions(
     plug,
-    stats.map((stat) => ({ value: stat.modValue, statHash: stat.dimStat.statHash }))
+    stats.map((stat) => ({ value: stat.modValue, statHash: stat.dimStat.statHash })),
   );
 
   // Only show Exotic catalyst requirements if the catalyst is incomplete. We assume
   // that an Exotic weapon can only be masterworked if its catalyst is complete.
-  const hideRequirements = plug.traitHashes?.includes(EXOTIC_CATALYST_TRAIT) && item.masterwork;
+  const hideRequirements =
+    plug.traitHashes?.includes(TraitHashes.ItemExoticCatalyst) && item.masterwork;
 
   return (
     <div className={clsx(styles.selectedPlug, { [styles.hasStats]: stats.length > 0 })}>
@@ -234,9 +250,15 @@ export default function SocketDetailsSelectedPlug({
         </h3>
         {plugDescriptions.perks.map((perkDesc) => (
           <React.Fragment key={perkDesc.perkHash}>
-            {perkDesc.description && <div>{perkDesc.description}</div>}
+            {perkDesc.description && (
+              <div>
+                <RichDestinyText text={perkDesc.description} />
+              </div>
+            )}
             {!hideRequirements && perkDesc.requirement && (
-              <div className={styles.modRequirement}>{perkDesc.requirement}</div>
+              <div className={styles.modRequirement}>
+                <RichDestinyText text={perkDesc.requirement} />
+              </div>
             )}
           </React.Fragment>
         ))}
@@ -244,11 +266,9 @@ export default function SocketDetailsSelectedPlug({
 
       {stats.length > 0 && (
         <div className={styles.modStats}>
-          {stats.map((stat) => (
-            <div className="plug-stats" key={stat.dimStat.statHash}>
-              <StatValue value={stat.modValue} statHash={stat.dimStat.statHash} />
-            </div>
-          ))}
+          <PlugStats
+            stats={stats.map((stat) => ({ statHash: stat.dimStat.statHash, value: stat.modValue }))}
+          />
         </div>
       )}
       {stats.length > 0 && (

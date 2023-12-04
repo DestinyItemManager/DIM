@@ -1,6 +1,7 @@
-@import '../variables';
+@use '../variables' as *;
 .buttons {
   composes: flexRow from '../dim-ui/common.m.scss';
+  gap: 4px;
 }
 
 .button {
@@ -9,16 +10,6 @@
 }
 
 .selected {
+  composes: selected from global;
   cursor: default;
-  position: relative;
-  &::after {
-    content: '';
-    display: block;
-    position: absolute;
-    background-color: $orange;
-    height: 2px;
-    bottom: -1px;
-    left: -1px;
-    right: -1px;
-  }
 }

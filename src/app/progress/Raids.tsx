@@ -3,6 +3,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { RAID_ACTIVITY_TYPE_HASH, RAID_MILESTONE_HASHES } from 'app/search/d2-known-values';
 import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
+import PursuitGrid from './PursuitGrid';
 import { Raid } from './Raid';
 import { getCharacterProgressions } from './selectors';
 
@@ -30,7 +31,7 @@ export default function Raids({
       RAID_MILESTONE_HASHES.includes(milestone.milestoneHash) ||
       milestoneActivities?.some(
         (activity) =>
-          defs.Activity.get(activity.activityHash)?.activityTypeHash === RAID_ACTIVITY_TYPE_HASH
+          defs.Activity.get(activity.activityHash)?.activityTypeHash === RAID_ACTIVITY_TYPE_HASH,
         // prefer to use DestinyActivityModeType.Raid, but it appears inconsistently in activity defs
       )
     );
@@ -39,10 +40,10 @@ export default function Raids({
   const raids = _.sortBy(filteredMilestones, (f) => f.order);
 
   return (
-    <div className="progress-for-character" key={store.id}>
+    <PursuitGrid>
       {raids.map((raid) => (
         <Raid raid={raid} key={raid.milestoneHash} />
       ))}
-    </div>
+    </PursuitGrid>
   );
 }

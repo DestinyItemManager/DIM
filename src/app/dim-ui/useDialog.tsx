@@ -5,11 +5,12 @@ import styles from './useDialog.m.scss';
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import ClickOutsideRoot from './ClickOutsideRoot';
 
 // Redecalare forwardRef
 declare module 'react' {
   function forwardRef<T, P = {}>(
-    render: (props: P, ref: Ref<T>) => ReactElement | null
+    render: (props: P, ref: Ref<T>) => ReactElement | null,
   ): (props: P & RefAttributes<T>) => ReactElement | null;
 }
 
@@ -33,7 +34,7 @@ const Dialog = forwardRef(function Dialog<Args = [], Result = void>(
   }: {
     children: (args: Args, close: (result: Result) => void) => React.ReactNode;
   },
-  ref: React.ForwardedRef<DialogRef<Args, Result>>
+  ref: React.ForwardedRef<DialogRef<Args, Result>>,
 ) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [dialogState, setDialogState] = useState<{
@@ -78,7 +79,7 @@ const Dialog = forwardRef(function Dialog<Args = [], Result = void>(
       dialogRef.current!.showModal();
       return promise;
     },
-    [dialogState]
+    [dialogState],
   );
 
   useImperativeHandle(ref, () => ({ showDialog }), [showDialog]);
@@ -101,7 +102,7 @@ const Dialog = forwardRef(function Dialog<Args = [], Result = void>(
         onClose={handleCloseEvent}
         onClick={(e) => e.stopPropagation()}
       >
-        {dialogState && children(dialogState.args, close)}
+        <ClickOutsideRoot>{dialogState && children(dialogState.args, close)}</ClickOutsideRoot>
       </dialog>
     </Portal>
   );
@@ -117,7 +118,7 @@ const Dialog = forwardRef(function Dialog<Args = [], Result = void>(
  * from `showDialog`.
  */
 export default function useDialog<Args = [], Result = void>(
-  children: (args: Args, close: (result: Result) => void) => React.ReactNode
+  children: (args: Args, close: (result: Result) => void) => React.ReactNode,
 ): [element: React.ReactNode, showDialog: (args: Args) => Promise<Result>] {
   const dialogRef = useRef<DialogRef<Args, Result>>(null);
   const showDialog = useCallback((args: Args) => dialogRef.current!.showDialog(args), []);

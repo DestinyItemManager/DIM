@@ -1,4 +1,4 @@
-import { Destiny2CoreSettings } from 'bungie-api-ts/core/interfaces';
+import { Destiny2CoreSettings } from 'bungie-api-ts/core';
 import { Reducer } from 'redux';
 import { ActionType, getType } from 'typesafe-actions';
 import type { AccountsAction } from '../accounts/reducer';
@@ -24,8 +24,8 @@ const initialState: ManifestState = {};
 
 export const manifest: Reducer<ManifestState, ManifestAction | AccountsAction> = (
   state: ManifestState = initialState,
-  action: ManifestAction | AccountsAction
-) => {
+  action: ManifestAction | AccountsAction,
+): ManifestState => {
   switch (action.type) {
     case getType(actions.setD1Manifest): {
       return {

@@ -1,21 +1,17 @@
+import { StatConstraint } from '@destinyitemmanager/dim-api-types';
 import { armorStats } from 'app/search/d2-known-values';
 import { chainComparator, Comparator, compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
 import { ArmorSet, ArmorStatHashes, ArmorStats } from '../types';
 import { statTier } from '../utils';
 
-function getComparatorsForMatchedSetSorting(
-  statOrder: ArmorStatHashes[],
-  enabledStats: Set<number>
-) {
+function getComparatorsForMatchedSetSorting(statConstraints: StatConstraint[]) {
   const comparators: Comparator<ArmorSet>[] = [
-    compareBy((s: ArmorSet) => -sumEnabledStats(s.stats, enabledStats)),
+    compareBy((s) => -sumEnabledStats(s.stats, statConstraints)),
   ];
 
-  for (const statHash of statOrder) {
-    if (enabledStats.has(statHash)) {
-      comparators.push(compareBy((s: ArmorSet) => -statTier(s.stats[statHash])));
-    }
+  for (const constraint of statConstraints) {
+    comparators.push(compareBy((s) => -statTier(s.stats[constraint.statHash as ArmorStatHashes])));
   }
   return comparators;
 }
@@ -25,12 +21,8 @@ function getComparatorsForMatchedSetSorting(
  * but it may do a final pass over the returned sets to add more stat mods and that requires us
  * to sort again. So just do that here.
  */
-export function sortGeneratedSets(
-  sets: ArmorSet[],
-  statOrder: ArmorStatHashes[],
-  enabledStats: Set<number>
-): ArmorSet[] {
-  return sets.sort(chainComparator(...getComparatorsForMatchedSetSorting(statOrder, enabledStats)));
+export function sortGeneratedSets(sets: ArmorSet[], statConstraints: StatConstraint[]): ArmorSet[] {
+  return sets.sort(chainComparator(...getComparatorsForMatchedSetSorting(statConstraints)));
 }
 
 /**
@@ -41,8 +33,8 @@ export function calculateTotalTier(stats: ArmorStats) {
   return _.sum(Object.values(stats).map(statTier));
 }
 
-export function sumEnabledStats(stats: ArmorStats, enabledStats: Set<number>) {
+export function sumEnabledStats(stats: ArmorStats, statConstraints: StatConstraint[]) {
   return _.sumBy(armorStats, (statHash) =>
-    enabledStats.has(statHash) ? statTier(stats[statHash]) : 0
+    statConstraints.some((s) => s.statHash === statHash) ? statTier(stats[statHash]) : 0,
   );
 }

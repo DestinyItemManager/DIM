@@ -9,6 +9,7 @@
   justify-content: space-around;
   margin-top: 8px;
   opacity: 1;
+  gap: 4px;
 
   > div {
     flex: 1;
@@ -62,11 +63,12 @@
 
   &.destiny2 {
     flex-direction: column;
+    gap: 0;
+
     .stat-row {
       display: flex;
       flex-direction: row;
-      justify-items: left;
-      align-items: center;
+      place-items: center left;
       &.powerFormula {
         margin-bottom: 3px;
         img {
@@ -86,17 +88,16 @@
           &::before,
           &::after {
             font-size: 13px;
-            color: #aaa;
+            color: var(--theme-header-characters-txt);
+            margin-left: 4px;
+            margin-right: 4px;
+            text-decoration: none !important;
           }
           &::before {
             content: '=';
-            margin-left: 4px;
-            margin-right: 4px;
           }
           &::after {
             content: '+';
-            margin-left: 4px;
-            margin-right: 4px;
           }
         }
       }
@@ -107,12 +108,9 @@
     .stat {
       flex: 0;
       font-size: 11px;
-      color: #ccc;
+      color: var(--theme-header-characters-txt);
       &.boostedValue {
-        color: $blue;
-      }
-      &.pointerCursor {
-        cursor: pointer;
+        color: $stat-modded;
       }
       .phone-portrait & {
         font-size: 12px;

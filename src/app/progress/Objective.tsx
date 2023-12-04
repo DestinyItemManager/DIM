@@ -24,11 +24,13 @@ export default function Objective({
   suppressObjectiveDescription,
   isTrialsPassage,
   showHidden,
+  noCheckbox,
 }: {
   objective: DestinyObjectiveProgress | D1ObjectiveProgress;
   suppressObjectiveDescription?: boolean;
   isTrialsPassage?: boolean;
   showHidden?: boolean;
+  noCheckbox?: boolean;
 }) {
   const defs = useDefinitions()!;
   const objectiveDef = defs.Objective.get(objective.objectiveHash);
@@ -100,7 +102,7 @@ export default function Objective({
 
   return (
     <div className={classes}>
-      {!showAsCounter && !isDate && <div className="objective-checkbox" />}
+      {!noCheckbox && !showAsCounter && !isDate && <div className="objective-checkbox" />}
       <div className="objective-progress">
         {!isBoolean && !isDate && (
           <div className="objective-progress-bar" style={progressBarStyle} />
@@ -147,11 +149,11 @@ export function ObjectiveValue({
       }
       break;
     case DestinyUnlockValueUIStyle.ExplicitPercentage:
-      return <>{progress + '%'}</>;
+      return <>{`${progress}%`}</>;
     case DestinyUnlockValueUIStyle.FractionFloat:
       return <>{percent(progress * completionValue)}</>;
     case DestinyUnlockValueUIStyle.Multiplier:
-      return <>{progress.toLocaleString() + '𝗑'}</>;
+      return <>{`${progress.toLocaleString()}𝗑`}</>;
     case DestinyUnlockValueUIStyle.RawFloat:
       return <>{(progress / 100).toLocaleString()}</>;
     case DestinyUnlockValueUIStyle.TimeDuration:

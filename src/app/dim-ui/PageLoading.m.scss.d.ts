@@ -2,10 +2,6 @@
 // Please do not change this file!
 interface CssExports {
   'pageLoading': string;
-  'pageLoadingEnter': string;
-  'pageLoadingEnterActive': string;
-  'pageLoadingExit': string;
-  'pageLoadingExitActive': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

@@ -1,7 +1,9 @@
 import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
+import { wishListGuideLink } from 'app/shell/links';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { errorMessage } from 'app/utils/errors';
 import { fetchWishList, transformAndStoreWishList } from 'app/wishlists/wishlist-fetch';
 import { toWishList } from 'app/wishlists/wishlist-file';
 import React, { useEffect, useState } from 'react';
@@ -51,12 +53,11 @@ export default function WishListSettings() {
   const reloadWishList = async (reloadWishListSource: string | undefined) => {
     try {
       await dispatch(fetchWishList(reloadWishListSource));
-      ga('send', 'event', 'WishList', 'From URL');
     } catch (e) {
       showNotification({
         type: 'error',
         title: t('WishListRoll.Header'),
-        body: t('WishListRoll.ImportError', { error: e.message }),
+        body: t('WishListRoll.ImportError', { error: errorMessage(e) }),
       });
     }
   };
@@ -75,7 +76,6 @@ export default function WishListSettings() {
       if (reader.result && typeof reader.result === 'string') {
         const wishListAndInfo = toWishList(reader.result);
         dispatch(transformAndStoreWishList(wishListAndInfo));
-        ga('send', 'event', 'WishList', 'From File');
       }
     };
 
@@ -89,18 +89,15 @@ export default function WishListSettings() {
   };
 
   const clearWishListEvent = () => {
-    ga('send', 'event', 'WishList', 'Clear');
     dispatch(clearWishLists());
   };
 
   const resetToChoosyVoltron = () => {
-    ga('send', 'event', 'WishList', 'Reset to choosy voltron');
     setLiveWishListSource(choosyVoltronLocation);
     reloadWishList(choosyVoltronLocation);
   };
 
   const resetToVoltron = () => {
-    ga('send', 'event', 'WishList', 'Reset to voltron');
     setLiveWishListSource(voltronLocation);
     reloadWishList(voltronLocation);
   };
@@ -114,7 +111,7 @@ export default function WishListSettings() {
     <section id="wishlist">
       <h2>
         {t('WishListRoll.Header')}
-        <HelpLink helpLink="https://github.com/DestinyItemManager/DIM/blob/master/docs/COMMUNITY_CURATIONS.md" />
+        <HelpLink helpLink={wishListGuideLink} />
       </h2>
       <div className="setting">
         <FileUpload onDrop={loadWishList} title={t('WishListRoll.Import')} />

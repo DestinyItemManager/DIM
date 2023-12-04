@@ -29,7 +29,7 @@ export const damageNamesByEnum: { [key in DamageType]: string | undefined } = {
 
 // typescript doesn't understand array.filter
 export const damageTypeNames = Object.values(damageNamesByEnum).filter(
-  (d) => d && d !== 'raid'
+  (d) => d && d !== 'raid',
 ) as string[];
 
 /**

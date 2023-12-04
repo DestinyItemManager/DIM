@@ -1,7 +1,7 @@
 import { t } from 'app/i18next-t';
 import { querySelector, searchQueryVersionSelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import React, { useCallback, useMemo } from 'react';
+import React, { forwardRef, useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { setSearchQuery } from '../shell/actions';
@@ -13,13 +13,13 @@ import { SearchInput } from './SearchInput';
 /**
  * The main search filter that's in the header.
  */
-export default React.forwardRef(function SearchFilter(
+export default forwardRef(function SearchFilter(
   {
     onClear,
   }: {
     onClear?: () => void;
   },
-  ref: React.Ref<SearchFilterRef>
+  ref: React.Ref<SearchFilterRef>,
 ) {
   const searchQuery = useSelector(querySelector);
   const searchQueryVersion = useSelector(searchQueryVersionSelector);
@@ -33,7 +33,7 @@ export default React.forwardRef(function SearchFilter(
   const dispatch = useThunkDispatch();
   const onQueryChanged = useCallback(
     (query: string) => dispatch(setSearchQuery(query, false)),
-    [dispatch]
+    [dispatch],
   );
 
   // We don't have access to the selected store so we'd match multiple characters' worth.
@@ -48,15 +48,17 @@ export default React.forwardRef(function SearchFilter(
       onRecords
         ? t('Header.FilterHelpRecords')
         : onProgress
-        ? t('Header.FilterHelpProgress')
-        : onOptimizer
-        ? t('Header.FilterHelpOptimizer', { example: '-is:exotic, modslot:nightmare' })
-        : onLoadouts
-        ? t('Header.FilterHelpLoadouts')
-        : isPhonePortrait
-        ? t('Header.FilterHelpBrief')
-        : t('Header.FilterHelp', { example: 'is:dupe, is:maxpower, -is:blue' }),
-    [isPhonePortrait, onRecords, onProgress, onOptimizer, onLoadouts]
+          ? t('Header.FilterHelpProgress')
+          : onOptimizer
+            ? t('Header.FilterHelpOptimizer', {
+                example: '-is:exotic, perkname:"iron lord\'s pride"',
+              })
+            : onLoadouts
+              ? t('Header.FilterHelpLoadouts')
+              : isPhonePortrait
+                ? t('Header.FilterHelpBrief')
+                : t('Header.FilterHelp', { example: 'is:dupe, is:maxpower, -is:blue' }),
+    [isPhonePortrait, onRecords, onProgress, onOptimizer, onLoadouts],
   );
 
   const extras = useMemo(() => <MainSearchBarActions key="actions" />, []);

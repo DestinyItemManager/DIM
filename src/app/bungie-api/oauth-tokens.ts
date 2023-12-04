@@ -34,7 +34,7 @@ const localStorageKey = 'authorization';
  */
 export function getToken(): Tokens | null {
   const tokenString = localStorage.getItem(localStorageKey);
-  return tokenString ? JSON.parse(tokenString) : null;
+  return tokenString ? (JSON.parse(tokenString) as Tokens) : null;
 }
 
 /**
@@ -62,10 +62,7 @@ export function hasValidAuthTokens() {
 
   // Get a new token from refresh token
   const refreshTokenIsValid = token && !hasTokenExpired(token.refreshToken);
-  if (!refreshTokenIsValid) {
-    return false;
-  }
-  return true;
+  return refreshTokenIsValid;
 }
 
 /**

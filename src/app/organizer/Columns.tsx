@@ -3,10 +3,9 @@ import { StoreIcon } from 'app/character-tile/StoreIcon';
 import { StatInfo } from 'app/compare/Compare';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
-import { KillTrackerInfo } from 'app/dim-ui/KillTracker';
 import { PressTip, Tooltip } from 'app/dim-ui/PressTip';
 import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
-import { t, tl } from 'app/i18next-t';
+import { I18nKey, t, tl } from 'app/i18next-t';
 import ItemIcon, { DefItemIcon } from 'app/inventory/ItemIcon';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
@@ -19,6 +18,7 @@ import { getEvent, getSeason } from 'app/inventory/store/season';
 import { getStatSortOrder } from 'app/inventory/store/stats';
 import { getStore } from 'app/inventory/stores-helpers';
 import { ItemStatValue } from 'app/item-popup/ItemStat';
+import { KillTrackerInfo } from 'app/item-popup/KillTracker';
 import NotesArea from 'app/item-popup/NotesArea';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import { recoilValue } from 'app/item-popup/RecoilStat';
@@ -26,6 +26,7 @@ import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { InGameLoadout, Loadout, isInGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { LoadoutsByItem } from 'app/loadout-drawer/selectors';
 import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
+import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import { quoteFilterString } from 'app/search/query-parser';
 import { statHashByName } from 'app/search/search-filter-values';
 import { getColor, percent } from 'app/shell/formatters';
@@ -38,6 +39,7 @@ import {
   thumbsUpIcon,
 } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
+import { filterMap } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import {
   getInterestingSocketMetadatas,
@@ -50,18 +52,17 @@ import {
   isSunset,
 } from 'app/utils/item-utils';
 import {
+  getDisplayedItemSockets,
   getSocketsByIndexes,
   getWeaponArchetype,
   getWeaponArchetypeSocket,
-  isEmptyArmorModSocket,
   isEnhancedPerk,
-  isUsedArmorModSocket,
 } from 'app/utils/socket-utils';
 import { LookupTable } from 'app/utils/util-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info';
-import { StatHashes } from 'data/d2/generated-enums';
+import { PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import shapedOverlay from 'images/shapedOverlay.png';
 import _ from 'lodash';
 import React from 'react';
@@ -79,7 +80,7 @@ export function getColumnSelectionId(column: ColumnDefinition) {
 }
 
 // Some stat labels are long. This lets us replace them with i18n
-export const statLabels: LookupTable<StatHashes, string> = {
+export const statLabels: LookupTable<StatHashes, I18nKey> = {
   [StatHashes.RoundsPerMinute]: tl('Organizer.Stats.RPM'),
   [StatHashes.ReloadSpeed]: tl('Organizer.Stats.Reload'),
   [StatHashes.AimAssistance]: tl('Organizer.Stats.Aim'),
@@ -107,7 +108,7 @@ export function getColumns(
   loadoutsByItem: LoadoutsByItem,
   newItems: Set<string>,
   destinyVersion: DestinyVersion,
-  onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void
+  onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void,
 ): ColumnDefinition[] {
   const customStatHashes = customStatDefs.map((c) => c.statHash);
   const statsGroup: ColumnGroup = {
@@ -125,51 +126,49 @@ export function getColumns(
 
   type ColumnWithStat = ColumnDefinition & { statHash: number };
   const statColumns: ColumnWithStat[] = _.sortBy(
-    _.compact(
-      Object.entries(statHashes).map(([statHashStr, statInfo]): ColumnWithStat | undefined => {
-        const statHash = parseInt(statHashStr, 10) as StatHashes;
-        if (customStatHashes.includes(statHash)) {
-          // Exclude custom total, it has its own column
-          return undefined;
-        }
-        const statLabel = statLabels[statHash];
+    filterMap(Object.entries(statHashes), ([statHashStr, statInfo]): ColumnWithStat | undefined => {
+      const statHash = parseInt(statHashStr, 10) as StatHashes;
+      if (customStatHashes.includes(statHash)) {
+        // Exclude custom total, it has its own column
+        return undefined;
+      }
+      const statLabel = statLabels[statHash];
 
-        return {
-          id: `stat${statHash}`,
-          header: statInfo.displayProperties.hasIcon ? (
-            <span title={statInfo.displayProperties.name}>
-              <BungieImage src={statInfo.displayProperties.icon} />
-            </span>
-          ) : statLabel ? (
-            t(statLabel)
-          ) : (
-            statInfo.displayProperties.name
-          ),
-          statHash,
-          columnGroup: statsGroup,
-          value: (item: DimItem) => {
-            const stat = item.stats?.find((s) => s.statHash === statHash);
-            if (stat?.statHash === StatHashes.RecoilDirection) {
-              return recoilValue(stat.value);
-            }
-            return stat?.value || 0;
-          },
-          cell: (_val, item: DimItem) => {
-            const stat = item.stats?.find((s) => s.statHash === statHash);
-            if (!stat) {
-              return null;
-            }
-            return <ItemStatValue stat={stat} item={item} />;
-          },
-          defaultSort: statInfo.lowerBetter ? SortDirection.ASC : SortDirection.DESC,
-          filter: (value) => {
-            const statName = _.invert(statHashByName)[statHash];
-            return `stat:${statName}:${statName === 'rof' ? '=' : '>='}${value}`;
-          },
-        };
-      })
-    ),
-    (s) => getStatSortOrder(s.statHash)
+      return {
+        id: `stat${statHash}`,
+        header: statInfo.displayProperties.hasIcon ? (
+          <span title={statInfo.displayProperties.name}>
+            <BungieImage src={statInfo.displayProperties.icon} />
+          </span>
+        ) : statLabel ? (
+          t(statLabel)
+        ) : (
+          statInfo.displayProperties.name
+        ),
+        statHash,
+        columnGroup: statsGroup,
+        value: (item: DimItem) => {
+          const stat = item.stats?.find((s) => s.statHash === statHash);
+          if (stat?.statHash === StatHashes.RecoilDirection) {
+            return recoilValue(stat.value);
+          }
+          return stat?.value || 0;
+        },
+        cell: (_val, item: DimItem) => {
+          const stat = item.stats?.find((s) => s.statHash === statHash);
+          if (!stat) {
+            return null;
+          }
+          return <ItemStatValue stat={stat} item={item} />;
+        },
+        defaultSort: statInfo.lowerBetter ? SortDirection.ASC : SortDirection.DESC,
+        filter: (value) => {
+          const statName = _.invert(statHashByName)[statHash];
+          return `stat:${statName}:${statName === 'rof' ? '=' : '>='}${value}`;
+        },
+      };
+    }),
+    (s) => getStatSortOrder(s.statHash),
   );
 
   const isGhost = itemsType === 'ghost';
@@ -228,7 +227,7 @@ export function getColumns(
               },
             };
           }),
-          (s) => getStatSortOrder(s.statHash)
+          (s) => getStatSortOrder(s.statHash),
         )
       : [];
 
@@ -254,7 +253,7 @@ export function getColumns(
         <ItemPopupTrigger item={item}>
           {(ref, onClick) => (
             <div ref={ref} onClick={onClick} className="item">
-              <ItemIcon item={item} className={styles.itemIcon} />
+              <ItemIcon item={item} />
               {item.crafted && <img src={shapedOverlay} className={styles.shapedIconOverlay} />}
             </div>
           )}
@@ -286,7 +285,7 @@ export function getColumns(
         value: isSunset,
         defaultSort: SortDirection.ASC,
         cell: (value) => (value ? <AppIcon icon={faCheck} /> : undefined),
-        filter: (value) => (value ? '' : '-') + 'is:sunset',
+        filter: (value) => `${value ? '' : '-'}is:sunset`,
       }),
     !isGhost &&
       (destinyVersion === 2 || isWeapon) &&
@@ -313,7 +312,7 @@ export function getColumns(
       value: (i) => i.locked,
       cell: (value) => (value ? <AppIcon icon={lockIcon} /> : undefined),
       defaultSort: SortDirection.DESC,
-      filter: (value) => (value ? '' : '-') + 'is:locked',
+      filter: (value) => `${value ? '' : '-'}is:locked`,
     }),
     c({
       id: 'tag',
@@ -329,7 +328,7 @@ export function getColumns(
       value: (item) => newItems.has(item.id),
       cell: (value) => (value ? <NewItemIndicator /> : undefined),
       defaultSort: SortDirection.DESC,
-      filter: (value) => (value ? '' : '-') + 'is:new',
+      filter: (value) => `${value ? '' : '-'}is:new`,
     }),
     destinyVersion === 2 &&
       c({
@@ -339,7 +338,7 @@ export function getColumns(
         cell: (craftedDate) =>
           craftedDate ? <>{new Date(craftedDate * 1000).toLocaleString()}</> : undefined,
         defaultSort: SortDirection.DESC,
-        filter: (value) => (value ? '' : '-') + 'is:crafted',
+        filter: (value) => `${value ? '' : '-'}is:crafted`,
       }),
     c({
       id: 'recency',
@@ -354,7 +353,7 @@ export function getColumns(
         header: t('Organizer.Columns.WishList'),
         value: (item) => {
           const roll = wishList(item);
-          return roll ? (roll.isUndesirable ? false : true) : undefined;
+          return roll ? !roll.isUndesirable : undefined;
         },
         cell: (value) =>
           value !== undefined ? (
@@ -461,7 +460,7 @@ export function getColumns(
             )
           );
         },
-        filter: (value) => (value ? `perkname:${quoteFilterString(value)}` : undefined),
+        filter: (value) => (value ? `exactperk:${quoteFilterString(value)}` : undefined),
       }),
     (destinyVersion === 2 || isWeapon) &&
       c({
@@ -491,7 +490,7 @@ export function getColumns(
       noSort: true,
       gridWidth: 'minmax(324px,max-content)',
       filter: (value) =>
-        typeof value === 'string' ? `perkname:${quoteFilterString(value)}` : undefined,
+        typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
     }),
     destinyVersion === 2 &&
       isWeapon &&
@@ -505,7 +504,7 @@ export function getColumns(
         noSort: true,
         gridWidth: 'minmax(180px,max-content)',
         filter: (value) =>
-          typeof value === 'string' ? `perkname:${quoteFilterString(value)}` : undefined,
+          typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
       }),
     ...statColumns,
     ...baseStatColumns,
@@ -564,11 +563,19 @@ export function getColumns(
     c({
       id: 'loadouts',
       header: t('Organizer.Columns.Loadouts'),
-      value: (item) =>
-        loadoutsByItem[item.id]
-          ?.map((l) => l.loadout.name)
-          .sort()
-          .join(','),
+      value: (item) => {
+        const loadouts = loadoutsByItem[item.id];
+        // The raw comparison value compares by number of loadouts first,
+        // then by first loadout name
+        return (
+          loadouts &&
+          // 99999 loadouts ought to be enough for anyone
+          `${loadouts.length.toString().padStart(5, '0')}:${loadouts
+            .map((l) => l.loadout.name)
+            .sort()
+            .join(',')}`
+        );
+      },
       cell: (_val, item) => {
         const inloadouts = loadoutsByItem[item.id];
         return (
@@ -577,7 +584,7 @@ export function getColumns(
             <LoadoutsCell
               loadouts={_.sortBy(
                 inloadouts.map((l) => l.loadout),
-                (l) => l.name
+                (l) => l.name,
               )}
               owner={item.owner}
             />
@@ -659,34 +666,35 @@ function PerksCell({
     return null;
   }
 
-  const legendaryWeaponArchetypePlugHash =
-    item.bucket.inWeapons && !item.isExotic
-      ? getWeaponArchetypeSocket(item)?.plugged?.plugDef?.hash
-      : undefined;
-  let sockets = item.sockets.categories.flatMap((c) =>
-    getSocketsByIndexes(item.sockets!, c.socketIndexes).filter(
-      (s) =>
-        !isKillTrackerSocket(s) &&
-        !isEmptyArmorModSocket(s) &&
-        s.plugged?.plugDef.displayProperties.name && // ignore empty sockets and unnamed plugs
-        (s.plugged.plugDef.collectibleHash || // collectibleHash catches shaders and most mods
-          isUsedArmorModSocket(s) || // but we catch additional mods missing collectibleHash (arrivals)
-          (s.isPerk &&
-            // Filter out the archetype plug for legendary weapons
-            // as it's already in the archetype column
-            (!legendaryWeaponArchetypePlugHash ||
-              s.plugged.plugDef.hash !== legendaryWeaponArchetypePlugHash)))
-    )
-  );
+  let sockets = [];
+  // Don't extract intrinsic, since there's a separate column
+  const { modSocketsByCategory, perks } = getDisplayedItemSockets(
+    item,
+    /* excludeEmptySockets */ true,
+  )!;
 
+  if (perks) {
+    sockets.push(...getSocketsByIndexes(item.sockets, perks.socketIndexes));
+  }
   if (traitsOnly) {
     sockets = sockets.filter(
       (s) =>
         s.plugged &&
-        (s.plugged.plugDef.plug.plugCategoryIdentifier === 'frames' ||
-          s.plugged.plugDef.plug.plugCategoryIdentifier === 'intrinsics')
+        (s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames ||
+          s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics),
     );
+  } else {
+    // Improve this when we use iterator-helpers
+    sockets.push(...[...modSocketsByCategory.values()].flat());
   }
+
+  sockets = sockets.filter(
+    (s) =>
+      // we have a separate column for the kill tracker
+      !isKillTrackerSocket(s) &&
+      // and for the regular weapon masterworks
+      s.socketDefinition.socketTypeHash !== weaponMasterworkY2SocketTypeHash,
+  );
 
   if (!sockets.length) {
     return null;
@@ -739,10 +747,10 @@ function D1PerksCell({ item }: { item: D1Item }) {
     return null;
   }
   const sockets = Object.values(
-    _.groupBy(
+    Object.groupBy(
       item.talentGrid.nodes.filter((n) => n.column > 0),
-      (n) => n.column
-    )
+      (n) => n.column,
+    ),
   );
 
   if (!sockets.length) {
@@ -770,11 +778,14 @@ function D1PerksCell({ item }: { item: D1Item }) {
                   }
                 >
                   <div className={styles.modPerk} data-perk-name={p.name}>
-                    <BungieImage src={p.icon} /> {p.name}
+                    <div className={styles.miniPerkContainer}>
+                      <BungieImage src={p.icon} />
+                    </div>{' '}
+                    {p.name}
                     {(!p.unlocked || p.xp < p.xpRequired) && <> ({percent(p.xp / p.xpRequired)})</>}
                   </div>
                 </PressTip>
-              )
+              ),
           )}
         </div>
       ))}

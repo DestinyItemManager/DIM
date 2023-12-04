@@ -3,12 +3,12 @@ import { toggleSearchResults } from 'app/shell/actions';
 import { AppIcon, faList } from 'app/shell/icons';
 import { querySelector, searchResultsOpenSelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { emptyArray } from 'app/utils/empty';
-import { Portal } from 'app/utils/temp-container';
 import { motion } from 'framer-motion';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import styles from './MainSearchBarActions.m.scss';
+import { searchButtonAnimateVariants } from './SearchBar';
 import SearchResults from './SearchResults';
 import { filteredItemsSelector, queryValidSelector } from './search-filter';
 
@@ -33,11 +33,11 @@ export default function MainSearchBarActions() {
   // Just suppress the count for now
   const showSearchResults = onInventory && !isPhonePortrait;
   const showSearchCount = Boolean(
-    queryValid && searchQuery && !onProgress && !onRecords && !onVendors
+    queryValid && searchQuery && !onProgress && !onRecords && !onVendors,
   );
   const handleCloseSearchResults = useCallback(
     () => dispatch(toggleSearchResults(false)),
-    [dispatch]
+    [dispatch],
   );
 
   return (
@@ -45,10 +45,10 @@ export default function MainSearchBarActions() {
       {showSearchCount && (
         <motion.div
           key="count"
-          layout
-          exit={{ scale: 0 }}
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
+          variants={searchButtonAnimateVariants}
+          exit="hidden"
+          initial="hidden"
+          animate="shown"
         >
           {showSearchResults ? (
             <button
@@ -71,12 +71,10 @@ export default function MainSearchBarActions() {
       )}
 
       {searchResultsOpen && (
-        <Portal>
-          <SearchResults
-            items={queryValid ? filteredItems : emptyArray()}
-            onClose={handleCloseSearchResults}
-          />
-        </Portal>
+        <SearchResults
+          items={queryValid ? filteredItems : emptyArray()}
+          onClose={handleCloseSearchResults}
+        />
       )}
     </>
   );

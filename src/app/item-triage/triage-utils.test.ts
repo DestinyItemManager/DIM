@@ -1,5 +1,5 @@
 import { DimStat } from 'app/inventory/item-types';
-import { armorStatHashes } from 'app/search/search-filter-values';
+import { armorStats } from 'app/search/d2-known-values';
 import { compareBetterStats } from './triage-utils';
 
 describe('triage armor comparison works', () => {
@@ -7,15 +7,15 @@ describe('triage armor comparison works', () => {
   const compare = (
     left: Stats,
     right: Stats,
-    leftArtifice: boolean
+    leftArtifice: boolean,
   ): 'left' | 'right' | undefined => {
     const statsToDict = (stats: Stats) =>
       Object.fromEntries(
-        armorStatHashes.map((hash, index) => [hash, { base: stats[index] } as DimStat])
+        armorStats.map((hash, index) => [hash, { base: stats[index] } as DimStat]),
       );
     const leftStats = statsToDict(left);
     const rightStats = statsToDict(right);
-    const result = compareBetterStats(leftStats, rightStats, leftArtifice, armorStatHashes);
+    const result = compareBetterStats(leftStats, rightStats, leftArtifice, armorStats);
     return result === leftStats ? 'left' : result === rightStats ? 'right' : undefined;
   };
 

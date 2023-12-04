@@ -3,7 +3,8 @@
 .guide {
   composes: flexRow from '../dim-ui/common.m.scss';
   flex-wrap: wrap;
-  margin: 8px 0;
+  margin-top: 8px;
+  margin-bottom: 8px;
   gap: 4px;
 
   @include phone-portrait {
@@ -20,7 +21,6 @@
   padding: 2px 8px;
   color: white;
   border: 1px solid transparent;
-  cursor: pointer;
   transition: border-color 150ms;
   white-space: nowrap;
   gap: 4px;
@@ -42,6 +42,6 @@
 }
 
 .selected {
-  border-color: $orange !important;
+  border-color: var(--theme-accent-primary) !important;
   background: rgba(0, 0, 0, 0.6);
 }

@@ -402,7 +402,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Trait',
-      hash: 2650036230,
+      hash: 4105407564,
       fromRichText: false,
     },
   },
@@ -411,7 +411,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Trait',
-      hash: 2228690371,
+      hash: 3221118171,
       fromRichText: false,
     },
   },
@@ -447,7 +447,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Trait',
-      hash: 4272830254,
+      hash: 37938188,
       fromRichText: false,
     },
   },
@@ -456,7 +456,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Trait',
-      hash: 4272830254,
+      hash: 37938188,
       fromRichText: false,
     },
   },
@@ -465,7 +465,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Trait',
-      hash: 2147987161,
+      hash: 2724747993,
       fromRichText: false,
     },
   },
@@ -474,7 +474,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Trait',
-      hash: 910120115,
+      hash: 2519102437,
       fromRichText: false,
     },
   },
@@ -483,7 +483,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Trait',
-      hash: 3214358168,
+      hash: 1577394840,
       fromRichText: false,
     },
   },
@@ -533,6 +533,15 @@ export const symbolData: {
     },
   },
   {
+    codepoint: 61230,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 988980155,
+      fromRichText: false,
+    },
+  },
+  {
     codepoint: 61190,
     glyph: '',
     source: {
@@ -551,11 +560,38 @@ export const symbolData: {
     },
   },
   {
+    codepoint: 61229,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 4249729125,
+      fromRichText: false,
+    },
+  },
+  {
+    codepoint: 61232,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 4249729124,
+      fromRichText: false,
+    },
+  },
+  {
     codepoint: 61192,
     glyph: '',
     source: {
       tableName: 'InventoryItem',
       hash: 2307689415,
+      fromRichText: false,
+    },
+  },
+  {
+    codepoint: 61228,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 262821319,
       fromRichText: false,
     },
   },
@@ -636,7 +672,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 273389628,
+      hash: 90309638,
       fromRichText: true,
     },
   },
@@ -672,7 +708,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 704693244,
+      hash: 1047174894,
       fromRichText: true,
     },
   },
@@ -708,7 +744,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 1250089450,
+      hash: 298568270,
       fromRichText: true,
     },
   },
@@ -717,7 +753,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 606807407,
+      hash: 1588957719,
       fromRichText: true,
     },
   },
@@ -739,7 +775,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 19991929,
+      hash: 85535852,
       fromRichText: true,
     },
   },
@@ -775,7 +811,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'SandboxPerk',
-      hash: 501809574,
+      hash: 381243875,
       fromRichText: true,
     },
   },
@@ -830,7 +866,7 @@ export const symbolData: {
   },
 ];
 const translateManually = [57618, 57665, 57495, 57654, 57671] as const;
-export type TranslateManually = typeof translateManually[number];
+export type TranslateManually = (typeof translateManually)[number];
 
 /*
  * Could not find a source for (did the definitions disappear?):
@@ -846,12 +882,11 @@ export type TranslateManually = typeof translateManually[number];
  * [Alternate Weapon Action]
  * [Light Attack]
  * [Heavy Attack]
+ * [Air Dodge]
  * [Super]
  * [Sprint]
- * [Light Level]
  * [Block]
  * [Shoot]
  * [Boost]
- * [Air Move]
  * [Brake]
  */

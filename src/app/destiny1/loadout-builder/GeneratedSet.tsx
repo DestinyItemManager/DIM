@@ -30,13 +30,13 @@ export default function GeneratedSet({ setType, store, activesets, excludeItem }
 
   const makeLoadoutFromSet = (set: ArmorSet): Loadout => {
     const items = Object.values(
-      _.pick(set.armor, 'Helmet', 'Chest', 'Gauntlets', 'Leg', 'ClassItem', 'Ghost', 'Artifact')
+      _.pick(set.armor, 'Helmet', 'Chest', 'Gauntlets', 'Leg', 'ClassItem', 'Ghost', 'Artifact'),
     ).map((si) => si.item);
 
     const loadout = newLoadout(
       '',
       items.map((i) => convertToLoadoutItem(i, true)),
-      store.classType
+      store.classType,
     );
     return loadout;
   };
@@ -80,12 +80,12 @@ export default function GeneratedSet({ setType, store, activesets, excludeItem }
                 {setType.tiers[activesets].configs[0][armorpiece.item.type as ArmorTypes] === 'int'
                   ? t('Stats.Intellect')
                   : setType.tiers[activesets].configs[0][armorpiece.item.type as ArmorTypes] ===
-                    'dis'
-                  ? t('Stats.Discipline')
-                  : setType.tiers[activesets].configs[0][armorpiece.item.type as ArmorTypes] ===
-                    'str'
-                  ? t('Stats.Strength')
-                  : t('Stats.NoBonus')}
+                      'dis'
+                    ? t('Stats.Discipline')
+                    : setType.tiers[activesets].configs[0][armorpiece.item.type as ArmorTypes] ===
+                        'str'
+                      ? t('Stats.Strength')
+                      : t('Stats.NoBonus')}
               </small>
             </div>
             {setType.tiers[activesets].configs.map(
@@ -97,13 +97,13 @@ export default function GeneratedSet({ setType, store, activesets, excludeItem }
                       {config[armorpiece.item.type as ArmorTypes] === 'int'
                         ? t('Stats.Intellect')
                         : config[armorpiece.item.type as ArmorTypes] === 'dis'
-                        ? t('Stats.Discipline')
-                        : config[armorpiece.item.type as ArmorTypes] === 'str'
-                        ? t('Stats.Strength')
-                        : t('Stats.NoBonus')}
+                          ? t('Stats.Discipline')
+                          : config[armorpiece.item.type as ArmorTypes] === 'str'
+                            ? t('Stats.Strength')
+                            : t('Stats.NoBonus')}
                     </small>
                   </div>
-                )
+                ),
             )}
           </div>
         ))}

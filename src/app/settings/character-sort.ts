@@ -14,7 +14,7 @@ export const characterSortSelector = createSelector(
   (order, customCharacterSort) => {
     switch (order) {
       case 'mostRecent':
-        return (stores: DimStore[]) => _.sortBy(stores, (store) => store.lastPlayed).reverse();
+        return (stores: DimStore[]) => _.sortBy(stores, (store) => -store.lastPlayed.getTime());
 
       case 'mostRecentReverse':
         return (stores: DimStore[]) =>
@@ -37,7 +37,7 @@ export const characterSortSelector = createSelector(
         // https://github.com/Bungie-net/api/issues/614
         return (stores: DimStore[]) => _.sortBy(stores, (s) => s.id);
     }
-  }
+  },
 );
 
 /**
@@ -52,7 +52,7 @@ export const characterSortImportanceSelector = createSelector(
     switch (order) {
       case 'mostRecent':
       case 'mostRecentReverse':
-        return (stores: DimStore[]) => _.sortBy(stores, (store) => store.lastPlayed).reverse();
+        return (stores: DimStore[]) => _.sortBy(stores, (store) => -store.lastPlayed.getTime());
 
       case 'custom': {
         const customSortOrder = customCharacterSort;
@@ -65,5 +65,5 @@ export const characterSortImportanceSelector = createSelector(
         // https://github.com/Bungie-net/api/issues/614
         return (stores: DimStore[]) => _.sortBy(stores, (s) => s.id);
     }
-  }
+  },
 );

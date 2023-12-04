@@ -1,25 +1,48 @@
 import { Search } from '@destinyitemmanager/dim-api-types';
 import { saveSearch, searchDeleted } from 'app/dim-api/basic-actions';
 import { recentSearchesSelector } from 'app/dim-api/selectors';
+import { ColumnSort, SortDirection, useTableColumnSorts } from 'app/dim-ui/table-columns';
 import { t } from 'app/i18next-t';
-import { AppIcon, closeIcon, starIcon, starOutlineIcon } from 'app/shell/icons';
+import {
+  AppIcon,
+  closeIcon,
+  faCaretDown,
+  faCaretUp,
+  starIcon,
+  starOutlineIcon,
+} from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
+import { Comparator, chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
+import { useShiftHeld } from 'app/utils/hooks';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import styles from './SearchHistory.m.scss';
 
-const searchComparator = reverseComparator(
-  chainComparator<Search>(
-    // Saved searches before recents
-    compareBy((s) => s.saved),
-    compareBy((s) => s.lastUsage)
-  )
-);
+function comparatorFor(id: string): Comparator<Search> {
+  switch (id) {
+    case 'last_used':
+      return compareBy((s) => s.lastUsage);
+    case 'starred':
+      return compareBy((s) => s.saved);
+    case 'times_used':
+      return compareBy((s) => s.usageCount);
+    case 'query':
+      return compareBy((s) => s.query);
+    default:
+      throw new Error(`internal error, unhandled column ${id}`);
+  }
+}
 
 export default function SearchHistory() {
   const dispatch = useThunkDispatch();
   const recentSearches = useSelector(recentSearchesSelector);
+
+  const [columnSorts, toggleColumnSort] = useTableColumnSorts([
+    { columnId: 'starred', sort: SortDirection.DESC },
+    { columnId: 'last_used', sort: SortDirection.DESC },
+  ]);
+
+  const shiftHeld = useShiftHeld();
 
   const deleteSearch = (e: React.MouseEvent, item: Search) => {
     e.stopPropagation();
@@ -36,6 +59,24 @@ export default function SearchHistory() {
     }
   };
 
+  const onToggleSort = (columnId: string, defaultDirection: SortDirection) =>
+    toggleColumnSort(columnId, shiftHeld, defaultDirection);
+
+  const headers: [string, React.ReactNode, SortDirection][] = [
+    ['last_used', t('SearchHistory.Date'), SortDirection.DESC],
+    ['times_used', t('SearchHistory.UsageCount'), SortDirection.DESC],
+    ['starred', <AppIcon key="star" icon={starIcon} />, SortDirection.DESC],
+    ['query', t('SearchHistory.Query'), SortDirection.ASC],
+  ];
+
+  const searchComparator = chainComparator(
+    ...columnSorts.map((sort) =>
+      sort.sort === SortDirection.DESC
+        ? reverseComparator(comparatorFor(sort.columnId))
+        : comparatorFor(sort.columnId),
+    ),
+  );
+
   return (
     <div className={styles.searchHistory}>
       <p className={styles.instructions}>
@@ -48,10 +89,17 @@ export default function SearchHistory() {
         <thead>
           <tr>
             <th />
-            <th>{t('SearchHistory.Date')}</th>
-            <th>{t('SearchHistory.UsageCount')}</th>
-            <th />
-            <th>{t('SearchHistory.Query')}</th>
+            {headers.map(([id, contents, defaultDirection]) => (
+              <ColumnHeader
+                columnSorts={columnSorts}
+                defaultDirection={defaultDirection}
+                toggleColumnSort={onToggleSort}
+                columnId={id}
+                key={id}
+              >
+                {contents}
+              </ColumnHeader>
+            ))}
           </tr>
         </thead>
         <tbody>
@@ -88,5 +136,32 @@ export default function SearchHistory() {
         </tbody>
       </table>
     </div>
+  );
+}
+
+function ColumnHeader({
+  columnId,
+  children,
+  defaultDirection,
+  columnSorts,
+  toggleColumnSort,
+}: {
+  columnId: string;
+  children: React.ReactNode;
+  defaultDirection: SortDirection;
+  columnSorts: ColumnSort[];
+  toggleColumnSort: (columnId: string, direction: SortDirection) => () => void;
+}) {
+  const sort = columnSorts.find((c) => c.columnId === columnId);
+  return (
+    <th onClick={toggleColumnSort(columnId, defaultDirection)}>
+      {children}
+      {sort && (
+        <AppIcon
+          className={styles.sorter}
+          icon={sort.sort === SortDirection.DESC ? faCaretDown : faCaretUp}
+        />
+      )}
+    </th>
   );
 }

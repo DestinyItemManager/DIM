@@ -10,10 +10,11 @@ import { t } from 'app/i18next-t';
 import { getClassTypeNameLocalized } from 'app/inventory/store/d2-item-factory';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
-import { armorStats, CUSTOM_TOTAL_STAT_HASH, evenStatWeights } from 'app/search/d2-known-values';
+import { CUSTOM_TOTAL_STAT_HASH, armorStats, evenStatWeights } from 'app/search/d2-known-values';
 import { allAtomicStats } from 'app/search/search-filter-values';
-import { addIcon, AppIcon, banIcon, deleteIcon, editIcon, saveIcon } from 'app/shell/icons';
+import { AppIcon, addIcon, banIcon, deleteIcon, editIcon, saveIcon } from 'app/shell/icons';
 import { chainComparator, compareBy } from 'app/utils/comparators';
+import { isClassCompatible } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
@@ -100,7 +101,7 @@ export function CustomStatsSettings() {
           />
         ) : (
           <CustomStatView setEditing={setEditing} statDef={c} key={c.statHash} />
-        )
+        ),
       )}
     </div>
   );
@@ -181,7 +182,7 @@ function CustomStatEditor({
 
           const className = weight ? 'stat-icon' : styles.zero;
           return (
-            <label className={styles.inputlike} key={statHash} title={stat.displayProperties.name}>
+            <label className={styles.statOption} key={statHash} title={stat.displayProperties.name}>
               <BungieImage className={className} src={stat.displayProperties.icon} />
               {weightsMode ? (
                 <input
@@ -259,7 +260,7 @@ function useStatWeightsEditor(w: CustomStatWeights) {
   return [
     weights,
     (statHash: number, value: string) =>
-      setWeights((old) => ({ ...old, [statHash]: parseInt(value) || 0 })),
+      setWeights((old) => ({ ...old, [statHash]: parseInt(value, 10) || 0 })),
   ] as const;
 }
 
@@ -302,7 +303,7 @@ function CustomStatView({
 // so let's neatly sort them as we commit them to settings.
 const customStatSort = chainComparator(
   compareBy((customStat: CustomStatDef) => customStat.class),
-  compareBy((customStat: CustomStatDef) => customStat.label)
+  compareBy((customStat: CustomStatDef) => customStat.label),
 );
 
 function useSaveStat() {
@@ -316,7 +317,7 @@ function useSaveStat() {
     const weightValues = Object.values(newStat.weights);
 
     const everyValueValid = weightValues.every(
-      (v) => v !== undefined && Number.isInteger(v) && v >= 0
+      (v) => v !== undefined && Number.isInteger(v) && v >= 0,
     );
     if (
       // if there's any invalid values
@@ -334,11 +335,7 @@ function useSaveStat() {
       !newStat.shortLabel ||
       // or there's an existing stat with an overlapping label & class
       allOtherStats.some(
-        (s) =>
-          s.shortLabel === newStat.shortLabel &&
-          (s.class === newStat.class ||
-            s.class === DestinyClass.Unknown ||
-            newStat.class === DestinyClass.Unknown)
+        (s) => s.shortLabel === newStat.shortLabel && isClassCompatible(s.class, newStat.class),
       ) ||
       // or this shortLabel conflicts with a real stat.
       // don't name your custom stat discipline!!
@@ -356,7 +353,7 @@ function useSaveStat() {
     // commit this new stat to settings
     setSetting(
       'customStats',
-      [...allOtherStats.filter((s) => s.statHash), newStat].sort(customStatSort)
+      [...allOtherStats.filter((s) => s.statHash), newStat].sort(customStatSort),
     );
 
     return true;
@@ -376,7 +373,7 @@ function useRemoveStat() {
     ) {
       setSetting(
         'customStats',
-        customStatList.filter((s) => s.statHash !== stat.statHash).sort(customStatSort)
+        customStatList.filter((s) => s.statHash !== stat.statHash).sort(customStatSort),
       );
       return true;
     }
@@ -426,10 +423,6 @@ function createNewStatHash(existingCustomStats: CustomStatDef[]) {
     statHash--;
   }
   return statHash;
-}
-
-export function normalizeStatLabel(s: string) {
-  return s.trim().slice(0, 30);
 }
 
 function warnInvalidCustomStat(errorMsg: string) {

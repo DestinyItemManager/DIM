@@ -7,14 +7,21 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { AppIcon, disabledIcon, enabledIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { errorMessage } from 'app/utils/errors';
 import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
 import Cost from 'app/vendors/Cost';
 import clsx from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, Tween, Variants, motion } from 'framer-motion';
 import _ from 'lodash';
 import { useState } from 'react';
 import styles from './EnergyMeter.m.scss';
+
+const upgradeAnimateVariants: Variants = {
+  shown: { height: 'auto', opacity: 1 },
+  hidden: { height: 0, opacity: 0 },
+};
+const upgradeAnimateTransition: Tween = { duration: 0.3 };
 
 export default function EnergyMeter({ item }: { item: DimItem }) {
   const defs = useD2Definitions()!;
@@ -64,7 +71,7 @@ export default function EnergyMeter({ item }: { item: DimItem }) {
 
       // TODO: show confirmation, hide preview, update item
     } catch (e) {
-      showNotification({ type: 'error', title: 'Error', body: e.message });
+      showNotification({ type: 'error', title: 'Error', body: errorMessage(e) });
     }
   };
 
@@ -72,9 +79,7 @@ export default function EnergyMeter({ item }: { item: DimItem }) {
     defs && (
       <div className={styles.energyMeter}>
         <div className="item-socket-category-name">
-          <div>
-            <b>{Math.max(minCapacity, previewCapacity)}</b> <span>{t('EnergyMeter.Energy')}</span>
-          </div>
+          <b>{Math.max(minCapacity, previewCapacity)}</b> <span>{t('EnergyMeter.Energy')}</span>
         </div>
         <div className={clsx('energyMeterIncrements', 'medium')}>
           {meterIncrements.map((incrementStyle, i) => (
@@ -93,14 +98,11 @@ export default function EnergyMeter({ item }: { item: DimItem }) {
           {previewCapacity > minCapacity && (
             <motion.div
               className={styles.upgradePreview}
-              initial="collapsed"
-              animate="open"
-              exit="collapsed"
-              variants={{
-                open: { height: 'auto', opacity: 1 },
-                collapsed: { height: 0, opacity: 0 },
-              }}
-              transition={{ duration: 0.3 }}
+              initial="hidden"
+              animate="shown"
+              exit="hidden"
+              variants={upgradeAnimateVariants}
+              transition={upgradeAnimateTransition}
             >
               <EnergyUpgradePreview
                 item={item}
@@ -137,7 +139,7 @@ function EnergyUpgradePreview({
   const energyModHashes = getEnergyUpgradeHashes(item, previewCapacity);
   const costs = sumModCosts(
     defs,
-    energyModHashes.map((h) => defs.InventoryItem.get(h))
+    energyModHashes.map((h) => defs.InventoryItem.get(h)),
   );
 
   return (

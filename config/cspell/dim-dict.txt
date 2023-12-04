@@ -16,6 +16,8 @@ equippable
 elgato
 favorited
 ICHs
+indimloadout
+iningameloadout
 inleftchar
 inloadout
 inloadouts
@@ -37,13 +39,11 @@ onwrongclass
 reacquirable
 recalc
 recents
-Reddit
 regen
 reimplemented
 Repurchasable
 reqs
 reusables
-shouldnt
 showxp
 stackable
 swappable

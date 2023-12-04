@@ -1,5 +1,5 @@
 import { Placement } from '@popperjs/core';
-import { kebabIcon, moveDownIcon } from 'app/shell/icons';
+import { expandDownIcon, kebabIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import clsx from 'clsx';
 import { useSelect } from 'downshift';
@@ -66,10 +66,11 @@ export default function Dropdown({
         // Unselect to reset the state
         reset();
       },
+      isItemDisabled: (item) => (isDropdownOption(item) ? Boolean(item.disabled) : true),
     });
 
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const menuRef = useRef<HTMLElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   usePopper({
     contents: menuRef,
@@ -90,11 +91,11 @@ export default function Dropdown({
           <AppIcon icon={kebabIcon} />
         ) : (
           <>
-            {children} <AppIcon icon={moveDownIcon} className={styles.arrow} />
+            {children} <AppIcon icon={expandDownIcon} className={styles.arrow} />
           </>
         )}
       </button>
-      <div {...getMenuProps({ ref: menuRef })} className={styles.menu}>
+      <div {...getMenuProps({ ref: menuRef, className: styles.menu })}>
         {isOpen &&
           items.map((item, index) =>
             !isDropdownOption(item) ? (
@@ -104,7 +105,6 @@ export default function Dropdown({
                 {...getItemProps({
                   item,
                   index,
-                  disabled: true,
                 })}
               />
             ) : (
@@ -117,12 +117,11 @@ export default function Dropdown({
                 {...getItemProps({
                   item,
                   index,
-                  disabled: item.disabled,
                 })}
               >
                 {item.content}
               </div>
-            )
+            ),
           )}
       </div>
     </div>

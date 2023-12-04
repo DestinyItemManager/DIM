@@ -1,5 +1,6 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createPortal } from 'react-dom';
+import './temp-container.scss';
 
 /**
  * A guaranteed-present element for attaching temporary elements to instead of
@@ -12,5 +13,5 @@ export const tempContainer = document.getElementById('temp-container')!;
  * Render the given children near the root of the page instead of in their existing component hierarchy.
  */
 export function Portal({ children }: { children: React.ReactNode }) {
-  return ReactDOM.createPortal(children, tempContainer);
+  return createPortal(children, tempContainer);
 }

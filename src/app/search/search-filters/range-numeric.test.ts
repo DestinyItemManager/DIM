@@ -22,7 +22,7 @@ describe('rangeStringToComparator', () => {
     (input: string, reference: number, result: boolean) => {
       const fn = rangeStringToComparator(input);
       expect(fn(reference)).toBe(result);
-    }
+    },
   );
 });
 
@@ -46,6 +46,6 @@ describe('rangeStringToComparatorWithOverloads', () => {
     (input: string, reference: number, result: boolean) => {
       const fn = rangeStringToComparator(input, overloads);
       expect(fn(reference)).toBe(result);
-    }
+    },
   );
 });

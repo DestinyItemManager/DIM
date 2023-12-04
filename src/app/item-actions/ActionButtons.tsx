@@ -16,7 +16,6 @@ import { addItemToLoadout } from 'app/loadout-drawer/loadout-events';
 import { AppIcon, addIcon, compareIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
-import { BucketHashes } from 'data/d2/generated-enums';
 import { useDispatch, useSelector } from 'react-redux';
 import arrowsIn from '../../images/arrows-in.png';
 import arrowsOut from '../../images/arrows-out.png';
@@ -63,18 +62,17 @@ export function LockActionButton({
   const disabled = autoLockTagged && tag !== undefined && canSyncLockState(item);
 
   const type = item.lockable ? 'lock' : 'track';
+  // Let's keep these translations around?
+  // t('MovePopup.FavoriteUnFavorite.Favorited')
+  // t('MovePopup.FavoriteUnFavorite.Unfavorited')
   const title =
     type === 'lock'
       ? item.locked
-        ? item.bucket.hash === BucketHashes.Finishers
-          ? t('MovePopup.FavoriteUnFavorite.Favorited')
-          : t('MovePopup.LockUnlock.Locked')
-        : item.bucket.hash === BucketHashes.Finishers
-        ? t('MovePopup.FavoriteUnFavorite.Unfavorited')
+        ? t('MovePopup.LockUnlock.Locked')
         : t('MovePopup.LockUnlock.Unlocked')
       : item.tracked
-      ? t('MovePopup.TrackUntrack.Tracked')
-      : t('MovePopup.TrackUntrack.Untracked');
+        ? t('MovePopup.TrackUntrack.Tracked')
+        : t('MovePopup.TrackUntrack.Untracked');
 
   return (
     <LockButton item={item} type={type} disabled={disabled} noHotkey={noHotkey}>

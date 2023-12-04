@@ -8,7 +8,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
-import { itemTagSelectorList, TagInfo, TagValue } from '../inventory/dim-item-info';
+import { TagInfo, TagValue, itemTagSelectorList } from '../inventory/dim-item-info';
 import { DimItem } from '../inventory/item-types';
 import styles from './ItemTagSelector.m.scss';
 
@@ -34,9 +34,9 @@ export default function ItemTagSelector({ item, className, hideKeys, hideButtonL
             hotkey: 'shift+0',
             sortOrder: -1,
           }
-        : t
+        : t,
     ),
-    (t) => t.sortOrder
+    (t) => t.sortOrder,
   ).map((tagOption) => ({
     key: tagOption.type || 'none',
     content: <TagOption tagOption={tagOption} hideKeys={hideKeys} />,

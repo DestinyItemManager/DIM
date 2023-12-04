@@ -1,10 +1,11 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { DimItem } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { showItemPicker } from 'app/item-picker/item-picker';
+import { ShowItemPickerFn } from 'app/item-picker/item-picker';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { armorStats } from 'app/search/d2-known-values';
+import { filterMap } from 'app/utils/collections';
 import { isSunset } from 'app/utils/item-utils';
 import {
   aspectSocketCategoryHashes,
@@ -19,54 +20,65 @@ export function isLoadoutBuilderItem(item: DimItem) {
   return Boolean(
     item.bucket.inArmor &&
       item.energy &&
-      armorStats.every((statHash) =>
-        item.stats?.some((dimStat) => dimStat.statHash === statHash)
+      armorStats.every(
+        (statHash) => item.stats?.some((dimStat) => dimStat.statHash === statHash),
       ) &&
-      !isSunset(item)
+      !isSunset(item),
   );
 }
 
-export async function pickSubclass(filterItems: (item: DimItem) => boolean) {
-  try {
-    const { item } = await showItemPicker({
-      filterItems: (item: DimItem) =>
-        item.bucket.hash === BucketHashes.Subclass && filterItems(item),
-      // We can only sort so that the classes are grouped and stasis comes first
-      sortBy: (item) => `${item.classType}-${item.energy?.energyType}`,
-      // We only want to show a single instance of a given subclass, we reconcile them by their hash from
-      // the appropriate store at render time
-      uniqueBy: (item) => item.hash,
-      prompt: t('Loadouts.ChooseItem', { name: t('Bucket.Class') }),
-    });
+export async function pickSubclass(
+  showItemPicker: ShowItemPickerFn,
+  filterItems: (item: DimItem) => boolean,
+) {
+  const item = await showItemPicker({
+    filterItems: (item: DimItem) => item.bucket.hash === BucketHashes.Subclass && filterItems(item),
+    // We can only sort so that the classes are grouped and stasis comes first
+    sortBy: (item) => `${item.classType}-${item.energy?.energyType}`,
+    // We only want to show a single instance of a given subclass, we reconcile them by their hash from
+    // the appropriate store at render time
+    uniqueBy: (item) => item.hash,
+    prompt: t('Loadouts.ChooseItem', { name: t('Bucket.Class') }),
+  });
 
-    return item;
-  } catch (e) {}
+  return item;
 }
 
-export function getSubclassPlugs(
-  defs: D2ManifestDefinitions,
-  subclass: ResolvedLoadoutItem | undefined
-) {
-  const plugs: PluggableInventoryItemDefinition[] = [];
+export function getSubclassPlugHashes(subclass: ResolvedLoadoutItem | undefined) {
+  const plugs: {
+    plugHash: number;
+    canBeRemoved: boolean;
+    socketCategoryHash: number;
+  }[] = [];
 
   if (subclass?.item.sockets?.categories) {
     for (const category of subclass.item.sockets.categories) {
-      const showInitial =
-        !aspectSocketCategoryHashes.includes(category.category.hash) &&
-        !fragmentSocketCategoryHashes.includes(category.category.hash);
+      const canBeRemoved =
+        aspectSocketCategoryHashes.includes(category.category.hash) ||
+        fragmentSocketCategoryHashes.includes(category.category.hash);
       const sockets = getSocketsByIndexes(subclass.item.sockets, category.socketIndexes);
 
       for (const socket of sockets) {
         const override = subclass.loadoutItem.socketOverrides?.[socket.socketIndex];
-        const initial = getDefaultAbilityChoiceHash(socket);
-        const hash = override || (showInitial && initial);
-        const plug = hash && defs.InventoryItem.get(hash);
-        if (plug && isPluggableItem(plug)) {
-          plugs.push(plug);
+        const plugHash = override || (!canBeRemoved && getDefaultAbilityChoiceHash(socket));
+        if (plugHash) {
+          plugs.push({ plugHash, canBeRemoved, socketCategoryHash: category.category.hash });
         }
       }
     }
   }
 
   return plugs;
+}
+
+export function getSubclassPlugs(
+  defs: D2ManifestDefinitions,
+  subclass: ResolvedLoadoutItem | undefined,
+) {
+  return filterMap(getSubclassPlugHashes(subclass), (entry) => {
+    const plug = defs.InventoryItem.get(entry.plugHash);
+    return isPluggableItem(plug)
+      ? { plug, canBeRemoved: entry.canBeRemoved, socketCategoryHash: entry.socketCategoryHash }
+      : undefined;
+  });
 }

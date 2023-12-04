@@ -1,11 +1,12 @@
 import { getCurrentHub, startTransaction } from '@sentry/browser';
 import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
-import { showItemPicker } from 'app/item-picker/item-picker';
+import { ShowItemPickerFn } from 'app/item-picker/item-picker';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { ThunkResult } from 'app/store/types';
 import { CanceledError, neverCanceled, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
+import { errorMessage } from 'app/utils/errors';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog } from 'app/utils/log';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
@@ -13,13 +14,13 @@ import _ from 'lodash';
 import { showNotification } from '../notifications/notifications';
 import { loadingTracker } from '../shell/loading-tracker';
 import { queueAction } from '../utils/action-queue';
-import { reportException } from '../utils/exceptions';
+import { reportException } from '../utils/sentry';
+import { moveItemNotification } from './MoveNotifications';
 import { updateCharacters } from './d2-stores';
 import { InventoryBucket } from './inventory-buckets';
 import { createMoveSession, executeMoveItem } from './item-move-service';
 import { DimItem } from './item-types';
 import { updateManualMoveTimestamp } from './manual-moves';
-import { moveItemNotification } from './MoveNotifications';
 import { currentStoreSelector, storesSelector } from './selectors';
 import { DimStore } from './store-types';
 import { amountOfItem, getCurrentStore, getStore, getVault } from './stores-helpers';
@@ -43,20 +44,25 @@ export function moveItemToCurrentStore(item: DimItem, e?: React.MouseEvent): Thu
 /**
  * Show an item picker dialog, and then pull the selected item to the current store.
  */
-export function pullItem(storeId: string, bucket: InventoryBucket): ThunkResult {
+export function pullItem(
+  storeId: string,
+  bucket: InventoryBucket,
+  showItemPicker: ShowItemPickerFn,
+): ThunkResult {
   return async (dispatch, getState) => {
     const store = getStore(storesSelector(getState()), storeId)!;
-    try {
-      const { item } = await showItemPicker({
-        filterItems: (item) => item.bucket.hash === bucket.hash && itemCanBeEquippedBy(item, store),
-        prompt: t('MovePopup.PullItem', {
-          bucket: bucket.name,
-          store: store.name,
-        }),
-      });
 
+    const item = await showItemPicker({
+      filterItems: (item) => item.bucket.hash === bucket.hash && itemCanBeEquippedBy(item, store),
+      prompt: t('MovePopup.PullItem', {
+        bucket: bucket.name,
+        store: store.name,
+      }),
+    });
+
+    if (item) {
       await dispatch(moveItemTo(item, store));
-    } catch (e) {}
+    }
   };
 }
 
@@ -77,7 +83,7 @@ export function moveItemTo(
   item: DimItem,
   store: DimStore,
   equip = false,
-  amount: number = item.amount
+  amount: number = item.amount,
 ): ThunkResult<DimItem> {
   return async (dispatch, getState) => {
     const currentStore = currentStoreSelector(getState())!;
@@ -119,7 +125,7 @@ export function moveItemTo(
           'to',
           store.name,
           'from',
-          getStore(stores, item.owner)!.name
+          getStore(stores, item.owner)!.name,
         );
       }
 
@@ -134,11 +140,11 @@ export function moveItemTo(
         loadingTracker.addPromise(
           (async () => {
             const result = await dispatch(
-              executeMoveItem(item, store, { equip, amount: moveAmount }, moveSession)
+              executeMoveItem(item, store, { equip, amount: moveAmount }, moveSession),
             );
             return result;
-          })()
-        )
+          })(),
+        ),
       );
       showNotification(moveItemNotification(item, store, movePromise, cancel));
 
@@ -192,7 +198,9 @@ export function consolidate(actionableItem: DimItem, store: DimStore): ThunkResu
               // First move everything into the vault
               const item = s.items.find(
                 (i) =>
-                  store.id !== i.owner && i.hash === actionableItem.hash && !i.location.inPostmaster
+                  store.id !== i.owner &&
+                  i.hash === actionableItem.hash &&
+                  !i.location.inPostmaster,
               );
               if (item) {
                 const amount = amountOfItem(s, actionableItem);
@@ -204,7 +212,7 @@ export function consolidate(actionableItem: DimItem, store: DimStore): ThunkResu
             if (!store.isVault) {
               const vault = getVault(storesSelector(getState()))!;
               const item = vault.items.find(
-                (i) => i.hash === actionableItem.hash && !i.location.inPostmaster
+                (i) => i.hash === actionableItem.hash && !i.location.inPostmaster,
               );
               if (item) {
                 const amount = amountOfItem(vault, actionableItem);
@@ -220,12 +228,12 @@ export function consolidate(actionableItem: DimItem, store: DimStore): ThunkResu
               title: t('ItemMove.Consolidate', data),
               body: message,
             });
-          } catch (a) {
-            showNotification({ type: 'error', title: actionableItem.name, body: a.message });
-            errorLog('move', 'error consolidating', actionableItem, a);
+          } catch (e) {
+            showNotification({ type: 'error', title: actionableItem.name, body: errorMessage(e) });
+            errorLog('move', 'error consolidating', actionableItem, e);
           }
-        })()
-      )
+        })(),
+      ),
     );
 }
 
@@ -272,8 +280,7 @@ export function distribute(actionableItem: DimItem): ThunkResult {
           const vaultIndex = stores.length - 1;
           const vault = stores[vaultIndex];
 
-          // eslint-disable-next-line github/array-foreach
-          deltas.forEach((delta, index) => {
+          for (const [index, delta] of deltas.entries()) {
             if (delta < 0 && index !== vaultIndex) {
               vaultMoves.push({
                 source: stores[index],
@@ -287,7 +294,7 @@ export function distribute(actionableItem: DimItem): ThunkResult {
                 amount: delta,
               });
             }
-          });
+          }
 
           // All moves to vault in parallel, then all moves to targets in parallel
           async function applyMoves(moves: Move[]) {
@@ -298,8 +305,8 @@ export function distribute(actionableItem: DimItem): ThunkResult {
                   item,
                   move.target,
                   { equip: false, amount: move.amount },
-                  moveSession
-                )
+                  moveSession,
+                ),
               );
             }
           }
@@ -311,11 +318,11 @@ export function distribute(actionableItem: DimItem): ThunkResult {
               type: 'success',
               title: t('ItemMove.Distributed', { name: actionableItem.name }),
             });
-          } catch (a) {
-            showNotification({ type: 'error', title: actionableItem.name, body: a.message });
-            errorLog('move', 'error distributing', actionableItem, a);
+          } catch (e) {
+            showNotification({ type: 'error', title: actionableItem.name, body: errorMessage(e) });
+            errorLog('move', 'error distributing', actionableItem, e);
           }
-        })()
-      )
+        })(),
+      ),
     );
 }

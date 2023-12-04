@@ -6,6 +6,14 @@
 // Prefer CSS modules, or at least stylesheets that are imported directly by the components that need them, to putting things here.
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 @use 'variables.scss' as *;
+@use 'themes/theme';
+@use 'themes/theme-dimdark';
+@use 'themes/theme-pyramid';
+@use 'themes/theme-classic';
+@use 'themes/theme-neomuna';
+@use 'themes/theme-throneworld';
+@use 'themes/theme-vexnet';
+@use 'themes/theme-europa';
 
 @font-face {
   font-family: 'Destiny Symbols';
@@ -143,7 +151,7 @@ label {
 }
 
 a {
-  color: #ddd;
+  color: var(--theme-text);
   cursor: pointer;
   text-decoration: underline;
 }
@@ -158,6 +166,8 @@ html,
 body {
   // Disable pull to refresh in Android
   overscroll-behavior: none;
+  // Adjust so the anchor we scroll to doesn't end up behind the header
+  scroll-padding-top: var(--header-height);
 
   @include phone-portrait {
     user-select: none;
@@ -166,12 +176,12 @@ body {
 
 body {
   margin: 0 auto;
-  background-color: #313233;
-  color: white;
+  background-color: var(--theme-pwa-background);
+  color: var(--theme-text);
   font-family: 'Open Sans', sans-serif, 'Destiny Symbols';
   font-size: 12px;
   line-height: calc(16 / 12);
-  accent-color: $orange;
+  accent-color: var(--theme-accent-primary);
   // Disable drag and drop so we can use our polyfill
   -webkit-user-drag: none;
   // Don't let iOS Safari mess with font sizes
@@ -198,7 +208,14 @@ h4 {
 input,
 select,
 option {
-  font-family: 'Open Sans', sans-serif, 'Destiny Symbols';
+  font-family: inherit;
+}
+
+input[type='text'],
+input[type='search'] {
+  color: var(--theme-text);
+  caret-color: var(--theme-accent-primary);
+  background-color: var(--theme-input-bg);
 }
 
 input[type='search'] {
@@ -208,16 +225,22 @@ input[type='search'] {
 textarea {
   width: 100%;
   height: 30px;
-  background-color: #333;
+  background-color: var(--theme-input-bg);
   padding: 4px 8px;
   border: none;
   outline: none;
-  color: white;
+  color: var(--theme-text);
   box-sizing: border-box;
   font-family: monospace, 'Destiny Symbols';
   font-size: inherit;
   // Setting this makes yuku/textcomplete faster because it doesn't need to make a fake element to measure line height (incorrectly, too)
   line-height: calc(16 / 12);
+  caret-color: var(--theme-accent-primary);
+
+  &:hover,
+  &:focus {
+    box-shadow: inset 0 0 0 1px var(--theme-search-dropdown-border);
+  }
 }
 
 select {
@@ -228,12 +251,12 @@ select {
   background-position: calc(100% - 10px) center;
   background-repeat: no-repeat;
   border-radius: 0;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: var(--theme-button-bg);
   padding: 2px 28px 2px 10px;
   height: 27px;
   font-size: 12px;
   line-height: calc(16 / 12);
-  color: white;
+  color: var(--theme-text);
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
   border: 1px solid transparent;
 
@@ -246,13 +269,13 @@ select {
 
   &:hover,
   &:active {
-    background-color: $orange;
-    color: black;
+    background-color: var(--theme-accent-primary);
+    color: var(--theme-text-invert);
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="black" d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z"></path></svg>');
   }
   // Set focus styles
   &:focus {
-    border-color: $orange;
+    border-color: var(--theme-accent-primary);
     outline: none;
   }
   // For browsers that support :focus-visible, remove focus styles when focus-visible would be unset
@@ -262,8 +285,17 @@ select {
 
   option {
     background: black;
-    color: white;
+    color: var(--theme-text);
   }
+}
+
+code {
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  padding: 0 4px;
+  bottom: 1px;
 }
 
 .horizontal-swipable {

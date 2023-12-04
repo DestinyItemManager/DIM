@@ -1,6 +1,6 @@
 {
   "AWA": {
-    "ConfirmDescription": "请使用\"命运2同伴应用\"授予DIM修改您物品的许可权。",
+    "ConfirmDescription": "请使用\"命运2同伴应用\"授予DIM修改您物品的权限。",
     "ConfirmTitle": "确认操作",
     "Error": "更改模组或特性时出错",
     "ErrorMessage": "我们无法将{{plug}}装备到{{item}}。\n\n{{error}}",
@@ -15,7 +15,7 @@
     "MissingAccountWarning": "如果你的账户没有显示，你可能登录了错误的 Bungie.net 账户，或 Bungie.net 可能正在停机维护。",
     "MissingDescription": "你试图查看的账户并未连接到你的 Bungie.net 账户。",
     "MissingTitle": "找不到账户",
-    "NoCharacters": "没有找到与此Bungie.net帐号相关联的Destiny角色，登陆其它帐号试试看。",
+    "NoCharacters": "没有找到与此 Bungie.net 账号相关联的《命运》角色，登录其它账号试试看。",
     "SwitchAccounts": "你可以稍后在标题栏菜单里切换账户。",
     "Title": "账户"
   },
@@ -27,6 +27,7 @@
     "WeeklyHeroic": "每周英雄突击"
   },
   "Armory": {
+    "Armory": "军械库",
     "NoNotes": "无注释",
     "OpenInArmory": "查看武器详情",
     "Season": "年 {{year}}，第 {{season}} 赛季",
@@ -140,8 +141,7 @@
   },
   "ErrorPanel": {
     "Description": "请尝试在命运同伴 App 中加载你的物品栏，以检测是否 Bungie.net 出现了问题。",
-    "EmblemError": "你可以通过在游戏中更换所有角色的徽标以修复这个问题。",
-    "EmblemErrorLink": "阅读更多关于如何修复该问题的信息。",
+    "ReadTheGuide": "阅读我们的用户指南（链接位于菜单中）以了解故障排除步骤。",
     "SystemDown": "这一问题影响所有命运应用程序，DIM团队也无法修复或绕过。",
     "Troubleshooting": "故障排除指南"
   },
@@ -213,12 +213,12 @@
     "ContributePower": "显示拥有光等的物品.",
     "Cosmetic": "显示饰品或装饰物品。",
     "Craftable": "显示可制作的物品。",
-    "CraftedDupe": "",
+    "CraftedDupe": "显示包括至少一件锻造武器在内的重复武器。",
     "Curated": "显示拥有指定特性的物品。",
     "CurrentClass": "显示当前登录的守护者可装备的物品。",
     "CustomStatLower": "显示相比其他同类别护甲而言属性全面更低的护甲，但只考虑对应职业的自定义属性总和里的属性。",
     "DamageType": "按照伤害类型显示.",
-    "Deepsight": "显示带有深视共振的武器，可用于提取模式。",
+    "Deepsight": "显示可提取模式或可通过深视协调器激活深视共振的武器。",
     "Description": "描述",
     "Dupe": "显示重复的物品，包含不同赛季版本",
     "DupeCount": "拥有指定重复数量的物品。",
@@ -231,16 +231,21 @@
     "Event": "显示命运2中特定活动中的物品",
     "ExtraPerk": "显示带有额外可选特性的随机特性传说武器。",
     "Filter": "过滤器",
+    "FilterWith": "筛选：",
+    "Focusable": "显示可在商人处聚焦的物品",
     "Foundry": "按武器铸造厂显示物品。",
     "Glimmer": "显示与增加微光获取有关的消耗品。",
-    "HasMemento": "显示通过制作获得并装有纪念物的武器。",
+    "Harrowed": "\\(痛苦\\)",
     "HasNotes": "显示已有备注的物品",
     "HasOrnament": "显示已应用皮肤的物品。",
     "HasShader": "显示已应用着色器的物品",
     "HoldsMod": "显示与某种赛季模组相兼容的护甲。",
-    "InLoadout": "is:inloadout 显示在任意配装中所包含的物品。使用 inloadout: 搜索在配装中的指定物品。当使用标签时，inloadout: 显示在名称或注释中包含指定标签物品的配装。",
+    "InDimLoadout": "is:indimgameloadout 指令会显示全部DIM配装中的物品。",
+    "InInGameLoadout": "is:iningameloadout 指令会显示任何游戏内配装系统保存的物品。",
+    "InLoadout": "is:inloadout 指令显示在全部配装中包含的物品。在 inloadout: 指令下搜索可显示所有配装中的与搜索名称相符的物品。在inloadout: 指令后使用#标签可显示配装中有含有该标签的物品或注释。",
     "Infusable": "显示可以灌注的物品.",
     "InfusionFodder": "显示可用于灌注同类物品且只消耗微光的物品。",
+    "IsAdept": "显示可安装专家模组的武器。",
     "IsCrafted": "显示制作获取的武器。",
     "IsSunset": "显示已退环境且不能再被灌注到光等上限的物品。",
     "ItemHash": "显示具有给定物品 hash 的物品。此为高级用户选项。",
@@ -260,6 +265,7 @@
     "MasterworkKills": "按大师杰作击杀追踪器显示物品。",
     "MaxPower": "显示每个槽位最高光等的物品。",
     "MaxPowerLoadout": "显示每个职业中能最大化光等的配装物品。",
+    "Memento": "显示包含纪念物插槽的武器。",
     "ModSlot": "显示有某种赛季模组插槽的护甲。",
     "Mods": {
       "Y2": "显示带有年2模组的物品",
@@ -273,7 +279,7 @@
     "PartialMatch": "显示名称/描述/特性/模组与筛选器部分匹配的物品。使用引号来搜索包含空格的文本。使用 'perk:' 过滤器便可仅搜索特性。",
     "PatternUnlocked": "显示制作样式已解锁的武器，即使该武器并非制造而来。",
     "Perk": "显示带有特性或模组的名称或描述与筛选器部分匹配的物品。使用引号来搜索带有空格的文本。",
-    "PerkName": "显示带有特性或模组的名称与筛选器部分匹配的物品。使用引号来搜索带有空格的文本。",
+    "PerkName": "使用 (exactperk:) 精确搜索某特性或模组的物品，或使用 (perkname:) 搜索部分匹配某特性或模组的物品。使用引号搜索整个词条。",
     "PinnacleReward": "显示提供巅峰奖励的追猎目标。",
     "Postmaster": "目前在邮政官处的物品.",
     "PowerKeywords": "使用 pinnaclecap 或 softcap 关键字而不是数字来表达当前赛季的光等限制。",
@@ -289,14 +295,13 @@
     "RetiredPerk": "显示带有已无法获取特性的武器",
     "SearchPrompt": "搜索可用的过滤器命令",
     "Season": "按照物品推出季度显示.",
-    "SeasonalDupe": "显示重复物品，不包括同一物品在不同赛季的版本。",
     "StackFull": "显示堆叠已满的物品（强化核心、奇异硬币、枪匠材料等）",
     "StackLevel": "根据堆叠数量来显示物品.",
     "Stackable": "显示可以堆叠的物品(合成弹药,奇怪硬币等)",
     "StatLower": "显示相比其他同类别护甲而言属性全面更低的护甲。",
     "Stats": "按某个属性值显示物品。$t(Filter.StatsExtras)",
     "StatsBase": "按基础属性值筛选护甲，不包含附加模组或大师杰作属性。$t(Filter.StatsExtras)",
-    "StatsExtras": "要想相加多个属性，可用 + 或 & 号连接属性名称。要想按某一属性在物品整体属性中的排名来匹配，可使用 highest，secondhighest，thirdhighest 等特殊关键字。",
+    "StatsExtras": "可使用 + 或 & 符号来筛选多种属性组合。也可根据装备属性高低顺序使用关键字筛选最高(highest)、次高(secondhighest)、第三高(thirdhighest) 等。每个自选属性也有各自的搜索关键词，在自选属性设置中显示。",
     "StatsLoadout": "针对特定属性, 筛选出最大化数值的一系列装备",
     "StatsMax": "针对特定属性, 筛选出最大化数值的一系列装备. 包括那些最高属性值物品",
     "Tags": {
@@ -312,6 +317,7 @@
     "UnlockAllFailed": "锁定物品失败",
     "UnlockAllSuccess": "已经解锁{{num}} 物品",
     "Vendor": "物品可从特定的商贩获得。",
+    "VendorItem": "物品由商贩售卖，不在你的背包中。用于在配装优化器中排除商贩物品",
     "Weapon": "显示武器物品。",
     "WeaponLevel": "按武器等级显示武器。",
     "WeaponType": "按照武器类型显示.",
@@ -323,6 +329,7 @@
   },
   "General": {
     "ClickForDetails": "点击查看详情",
+    "Close": "关闭",
     "Confirm": "确认？",
     "UserGuideLink": "用户指南"
   },
@@ -341,6 +348,7 @@
     "AutoRefresh": "只要你仍在游戏，DIM 就会自动刷新。",
     "BulkTag": "批量标记物品",
     "BungieNetAlert": "Bungie提示您",
+    "Clarity": "Clarity插件开发者已终止对其支持，此插件可能会导致DIM出现故障，如系统占用率过高。请卸载此插件。",
     "Clear": "清除蒐索筛选器",
     "CompareMatching": "对比物品",
     "DeleteSearch": "删除搜索",
@@ -348,7 +356,7 @@
     "FilterHelpBrief": "搜索物品",
     "FilterHelpLoadouts": "搜索配装名称和备注",
     "FilterHelpMenuItem": "过滤器帮助...",
-    "FilterHelpOptimizer": "从配装里过滤护甲：{{example}}",
+    "FilterHelpOptimizer": "选择用于配装的护甲: {{example}}",
     "FilterHelpProgress": "搜索里程碑和悬赏",
     "FilterHelpRecords": "搜索成就和收藏品",
     "FilterMatchCount": "1个物品",
@@ -384,11 +392,11 @@
     "ClearDialog": "关闭对话",
     "ClearNewItems": "清除新物品提示",
     "Enter": "回车",
+    "ItemPopupTab": "切换至物品细节页面",
     "LockUnlock": "锁定或解锁物品",
     "MarkItemAs": "将物品标记为 “{{tag}}”",
     "Menu": "切换菜单",
     "Note": "添加备注",
-    "Notes": "",
     "Pull": "为当前角色取回物品",
     "RefreshInventory": "刷新背包",
     "ShowHotkeys": "显示键盘快速键",
@@ -398,7 +406,6 @@
     "Vault": "将物品存入保险库"
   },
   "InGameLoadout": {
-    "Applying": "正在装备配装...",
     "ClearSlot": "清空槽位 {{index}}",
     "Create": "创建配装",
     "CreateTitle": "从当前装备创建游戏内配装",
@@ -458,8 +465,8 @@
       "Guardian_male": "您的{{store}} 上有太多 “{{itemtype}}” 的物品.",
       "Vault": "您的{{store}} 上有太多 “{{itemtype}}” 的物品."
     },
-    "Classified": "该物品已被分类并且现在无法被转移.",
-    "Classified2": "分类物品。Bungie尚未提供该物品的相关资讯。为该物品添加备注，以方便您使用搜索筛检程式找到它。",
+    "Classified": "该物品是加密的，现在无法被转移。",
+    "Classified2": "加密物品。Bungie尚未提供该物品的相关信息。为该物品添加备注，以方便您使用搜索过滤器找到它。",
     "Deequip": "无法找到另一个物品来卸下{{itemname}}",
     "ExoticError": "无法装备“{{itemname}}”，因为在{{slot}} 栏位中无法装备异域物品。（{{error}}）",
     "NotEnoughRoom": "我们无法在{{store}} 上移动物品, 来为{{itemname}} 腾出空间",
@@ -490,6 +497,8 @@
     "Equip": "装备在{{character}}",
     "Exclude": "已排除的物品",
     "ExcludeHelp": "Shift + 单击一个物品(或直接拖动)用以创建一个不包括特定装备的套装组.",
+    "ExistingBuildStats": "现有配装属性",
+    "ExistingBuildStatsNote": "仅显示更高属性阶的配装。",
     "FilterSets": "组合过滤",
     "Help": {
       "And": "装备了所有这些特性(Perk) 的防具将被使用(\"and\")",
@@ -524,7 +533,6 @@
     "Locked": "锁定的物品",
     "LockedHelp": "拖放物品到选择框中用以创建一个套装组.使用Shift +单击可移除物品.",
     "Missing2": "缺少稀有,传奇,或异域物品用来打造套装!",
-    "ModLockButton": "选择模组",
     "ProcessingMode": {
       "Fast": "快速",
       "Full": "完全",
@@ -533,11 +541,12 @@
       "ProcessingMode": "处理模式"
     },
     "Scaled": "缩放",
-    "SearchAMod": "搜索模组或描述",
-    "SearchAnExotic": "搜索异域装备或描述",
+    "SearchAMod": "搜索模组名称或描述",
+    "SearchAnExotic": "搜索异域装备名称或描述",
     "SelectExotic": "选择异域装备",
     "SelectMods": "选择模组",
-    "SelectSubclass": "选择子职业",
+    "SelectModsCount": "{{selected}}/{{maxSelectable}}",
+    "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} 个活动模组",
     "SelectSubclassOptions": "自定义子职业",
     "ShowAllConfigs": "显示所有配置",
     "ShowConfigs": "显示配置",
@@ -551,6 +560,59 @@
     "Profile": "正在加载命运档案...",
     "Vendors": "正在加载命运商人..."
   },
+  "LoadoutAnalysis": {
+    "Analyzed": "已分析 {{numLoadouts}} 个配装",
+    "Analyzing": "正在分析配装 {{numAnalyzed}}/{{numLoadouts}}",
+    "BetterStatsAvailable": {
+      "Description": "为此配装选用不同的护甲或模组将能达到更高的属性阶级。选择“$t(Loadouts.OpenInOptimizer)”来查看更优的配装。",
+      "Name": "更优属性可用"
+    },
+    "BetterStatsAvailableFontNote": "提示：此配装使用了属性洗礼模组，导致属性溢出10阶。DIM 可降低多出的基础属性阶以优化。若不需要，请在配装界面中禁用“$t(Loadouts.IncludeRuntimeStatBenefits)”。",
+    "DoesNotRespectExotic": {
+      "Description": "此配装由配装优化器指定了一件异域装备，但在该配装中未找到它。",
+      "Name": "异域装备错误"
+    },
+    "DoesNotSatisfyStatConstraints": {
+      "Description": "此配装由配装优化器指定了属性阶级，但在该配装中未能达到。",
+      "Name": "错误的属性阶级"
+    },
+    "EmptyFragmentSlots": {
+      "Description": "分支职业中有空的碎片插槽。",
+      "Name": "空碎片插槽"
+    },
+    "InvalidMods": {
+      "Description": "配装中的某些模组已被弃用或不适合你的护甲。",
+      "Name": "已弃用的模组"
+    },
+    "InvalidSearchQuery": {
+      "Description": "该配装由配装优化器的搜索条件生成，但该搜索条件已不再有效，或不包括该配装中的护甲。",
+      "Name": "搜索条件无效"
+    },
+    "MissingItems": {
+      "Description": "该配装中部分物品已不在你的背包中。",
+      "Name": "物品缺失"
+    },
+    "ModsDontFit": {
+      "Description": "即使升级该配装中的护甲，也无法插入全部模组。",
+      "Name": "未分配的模组"
+    },
+    "NeedsArmorUpgrades": {
+      "Description": "该配装中的护甲需要升级以插入全部所需模组或达到指定属性阶级。",
+      "Name": "需要升级护甲"
+    },
+    "NotAFullArmorSet": {
+      "Description": "由于该配装未使用整套护甲，故无法进一步分析。",
+      "Name": "非整套护甲"
+    },
+    "TooManyFragments": {
+      "Description": "指定的分支职业碎片数量超过星相限制。",
+      "Name": "太多分支职业碎片"
+    },
+    "UsesSeasonalMods": {
+      "Description": "该配装依赖于某些赛季特定的模组。当赛季结束后，一些模组将不可用或超出护甲能量上限。",
+      "Name": "使用赛季模组"
+    }
+  },
   "LoadoutBuilder": {
     "AddHalfTierMods": "添加 +5 模组",
     "All": "全部",
@@ -558,27 +620,32 @@
     "AnyExoticDescription": "组合里必须有任意异域装备。",
     "AssumeMasterwork": "假定大师之作",
     "AssumeMasterworkOptions": {
-      "All": "所有护甲会使用大师之作属性和 10 点能量等级。",
-      "Legendary": "传说护甲会使用大师之作属性和 10 点能量等级。",
-      "None": "所有护甲会使用当前的属性和至少 7 点能量等级。"
+      "All": "所有护甲：$t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "Current": "当前属性，假定能量等级至少为 {{minLoItemEnergy}}。",
+      "Legendary": "传说：$t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\n异域：$t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
+      "Masterworked": "每项属性值 +2，假定能量等级为 10。",
+      "None": "所有护甲：$t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "自动添加属性模组",
     "AutomaticallyPicked": "此模组已被自动添加以优化配装属性。",
     "ChooseAlternateTitle": "选择另一个物品",
     "CompareLoadout": "对比配装",
     "ConfirmOverwrite": "你确定要用这套新的护甲来替换配装“{{name}}”里的护甲吗？",
-    "CopiedBuild": "已将配装设置 URL 复制到剪贴板",
     "CreateLoadout": "保存配装",
+    "DecreaseStatPriority": "降低属性优先级",
+    "DisabledByAutoStatMods": "配装优化器正在自动选择属性模组。",
     "DisabledDueToMaintenance": "由于 Bungie API 维护，配装优化器目前不可用。",
     "EquipItems": "装备",
     "ExcludeItem": "排除项目",
     "ExistingLoadout": "已有配装",
+    "Exotic": "异域护甲",
     "ExoticSpecialCategory": "特殊",
     "Filter": "过滤",
+    "IgnoreStat": "若未选中，则配装优化器将会在配装组合中无视此属性。",
+    "IncreaseStatPriority": "提高属性优先级",
     "Legendary": "传说",
     "LockEquipped": "固定已装备",
     "LockItem": "固定物品",
-    "MaxTier": "最大 {{tier}}",
     "MissingClass": "配装适用于：{{className}}",
     "MissingClassDescription": "你正试图查看的配装适用于一个你未拥有的角色职业。",
     "NoBuildsFoundExplainer": {
@@ -600,26 +667,22 @@
       "UpperBoundsFailed": "很多配装的属性等级高于属性等级上限"
     },
     "NoExotic": "非异域",
-    "NoExoticDescription": "等同于搜索“not:exotic” - 组合不会包含异域护甲。",
+    "NoExoticDescription": "等同于在搜索栏中搜索“not:exotic” ，即配装将不含任何异域护甲。",
+    "NoExoticPreference": "未选择异域装备",
+    "NoExoticPreferenceDescription": "如果异域护甲可大幅提高属性，则选取异域护甲。",
     "NoLoadoutsToCompare": "没有要对比的配装",
     "None": "无",
     "OptimizerExplanationGuide": "用户指南里有更多信息和视频教程。",
-    "OptimizerExplanationMods": "选择你想使用的异域装备和模组。配装优化器只会包括你选定的模组带来的属性加成——护甲上其他现存的模组都会被忽略。",
-    "OptimizerExplanationSearch": "使用搜索栏来过滤配装优化器使用的物品。",
-    "OptimizerExplanationStats": "将最重要的属性拖动到顶部，并将你不在乎的属性设为忽略。",
-    "OptimizerExplanationUpgrades": "选择允许配装优化器花费材料的护甲升级。它可能建议用大师杰作来提升属性，或用能量升级来装下你想要的模组。",
+    "OptimizerExplanationMods": "选择你想使用的异域装备、模组和分支职业。配装优化器只会包括你选定的模组和分支职业选项带来的属性加成——护甲上其他现存的模组都会被忽略。",
+    "OptimizerExplanationSearch": "使用搜索栏来缩小护甲的考虑范围。如果未有护甲与搜索结果匹配，则该部位的所有护甲都将被考虑。",
+    "OptimizerExplanationStats": "将最重要的属性拖动到顶部，并将你不在乎的属性禁用。",
     "OptimizerSet": "优化器组合",
-    "ProcessingSets": "正在处理{{character}}的组合（{{remainingTime}} s）",
+    "ProcessingSets": "寻找最高阶属性配装...",
     "SaveAs": "保存为",
-    "SelectMax": "-最大-",
-    "SelectMin": "-最小-",
-    "ShareBuild": "分享配装设置",
-    "ShareBuildTitle": "配装优化器设置",
-    "ShareBuildWithNotes": "带备注分享",
     "SpeedReport": "在 {{time}} 秒内生成了 {{combos, number}} 个组合",
-    "StatTierIgnoreOption": "忽略",
-    "StatTierIncludeOption": "包含",
+    "StatConstraints": "属性阶级优先级和范围",
     "TierNumber": "T{{tier}}",
+    "TierSelect": "选择最低属性阶级",
     "UnableToAddAllMods": "无法添加所有模组。",
     "UnableToAddAllModsBody": "模组插槽不足，无法装下 {{mods}}。",
     "UnlockItem": "取消固定物品"
@@ -649,14 +712,15 @@
     "Classified": "你的某些物品是隐藏的，因此不能用于到最大光等的计算之中。",
     "ClearLoadoutParameters": "清除配装优化器设置",
     "ClearSection": "清除所有",
-    "ClearSpace": "移除其他装备",
+    "ClearSpace": "移除其他物品",
+    "ClearSpaceArmor": "移除其他护甲",
+    "ClearSpaceWeapons": "移除其他武器",
     "ClearUnsetMods": "移除其他模组",
     "ClearingSpace": "正在移走其他物品",
     "Create": "创建配装",
     "CurrentlyEquipped": "当前装备",
     "Deequip": "正在从其他角色取回物品",
     "Delete": "删除",
-    "DeprecatedMods": "已废弃的模组",
     "DimLoadouts": "DIM 配装",
     "Edit": "编辑配装",
     "EditBrief": "编辑",
@@ -664,7 +728,6 @@
     "EquipItems": "正在装备物品",
     "EquippableDifferent1": "计算你的最大能量等级时使用了多件异域装备，所以在游戏内配装时可能达不到这个数值。",
     "EquippableDifferent2": "在计算你的掉落、强力、巅峰装备能量等级时，最大能量等级不受“一件异域装备”规则的限制。",
-    "Equipped": "已装备",
     "Failed": "配装未能完全应用",
     "Fashion": "选择外貌",
     "FillFromEquipped": "填入已装备物品",
@@ -682,13 +745,15 @@
     },
     "ImportLoadout": "导入配装",
     "InGameLoadouts": "游戏内配装",
+    "IncludeRuntimeStatBenefits": "包括洗礼属性加成",
+    "IncludeRuntimeStatBenefitsDesc": "属性洗礼护甲模组会在你拥有护甲充能时提供固定的属性增益。\n在该设置下，DIM 将视此类模组为生效状态，并将其增益用于配装属性的计算和优化。",
     "ItemErrorSummary": "1 个物品出错：",
     "ItemErrorSummary_plural": "{{count}} 个物品出错：",
     "ItemLeveling": "物品等级",
     "LoadoutName": "配装名称",
     "LoadoutParameters": "配装优化器设置",
     "LoadoutParametersExotic": "配装必须包含此异域装备：{{exoticName}}",
-    "LoadoutParametersQuery": "物品必须匹配搜索过滤器",
+    "LoadoutParametersQuery": "物品必须匹配搜索筛选结果",
     "LoadoutParametersStats": "属性优先级和最低/最高属性阶级",
     "Loadouts": "配装",
     "MakeRoom": "为邮政官腾出空间",
@@ -704,17 +769,16 @@
     "MaximizeLight": "最大光等",
     "MaximizePower": "最大能量等级",
     "MaximizeStat": "最高属性",
-    "MissingItems": "缺少物品",
     "MissingItemsWarning": "此配装里的一些物品不在库存里了。",
     "ModErrorSummary": "1 个模组出错：",
     "ModErrorSummary_plural": "{{count}} 个模组出错：",
     "ModPlacement": {
       "InvalidMods": "无效模组",
-      "InvalidModsDesc": "1 个模组不能插入任何护甲。",
-      "InvalidModsDesc_plural": "{{count}} 个模组不能插入任何护甲。",
+      "InvalidModsDesc": "有 1 个模组不能安装到任何护甲上。",
+      "InvalidModsDesc_plural": "有 {{count}} 个模组不能安装到任何护甲上。",
       "ModPlacement": "模组位置",
       "UnassignedMods": "未分配的模组",
-      "UnassignedModsDesc": "由于能量容量或模组插槽不足，一个模组无法安装。即便为所选护甲升级能量也是如此。",
+      "UnassignedModsDesc": "由于能量容量或模组插槽不足，一个模组无法安装。即便为所选护甲升级能量也无法修正此问题。",
       "UnassignedModsDesc_plural": "由于能量容量或模组插槽不足，{{count}} 个模组无法安装。即便为所选护甲升级能量也是如此。",
       "UpgradeCosts": "升级消耗成本",
       "UpgradeCostsDesc": "有些护甲需要能量容量升级才能装下所选的模组。升级总共会花费："
@@ -730,6 +794,7 @@
     "OnWrongCharacterWarning": "当前角色光等最高的护甲在其他角色上。要使强力装备和巅峰装备掉落时的光等达到最高，这些护甲必须存储在当前角色上或是保险库中。",
     "OnlyItems": "只有可装备物品,材料和消耗品才可以加载.",
     "OpenInOptimizer": "优化护甲",
+    "PickArmor": "选择护甲",
     "PickMods": "添加护甲模组",
     "PullFromPostmaster": "从邮政官处取回物品",
     "PullFromPostmasterError": "无法从邮政官处取回物品:{{error}}.",
@@ -744,11 +809,10 @@
     "Random": "随机",
     "Randomize": "随机配装",
     "RandomizeButton": "随机搭配",
-    "RandomizePrompt": "确定要将你的武器、护甲和机灵随机搭配吗？",
-    "RandomizeQueryHint": "提示：可通过搜索条件来限制随机物品池。",
+    "RandomizeNew": "随机创建",
+    "RandomizeQueryHint": "提示：请先搜索物品以限制随机物品池",
     "RandomizeSearch": "从搜索结果随机选取",
     "RandomizeSearchPrompt": "从“{{query}}”的搜索结果随机配装？",
-    "RandomizeWeapons": "确定要将你的武器随机搭配吗？",
     "Redo": "重做",
     "RestoreAllItems": "所有物品",
     "Save": "保存",
@@ -761,6 +825,7 @@
       "NoName": "配装需要名称。"
     },
     "SaveLoadout": "保存配装",
+    "Season": "第 {{season}} 赛季",
     "Share": {
       "Copied": "已复制配装链接到剪贴板",
       "CopyButton": "复制链接",
@@ -780,7 +845,7 @@
     },
     "ShareLoadout": "分享配装",
     "ShowModPlacement": "显示模组位置",
-    "Snapshot": "作为游戏内配装保存",
+    "Snapshot": "保存为游戏内配装",
     "SocketOverrides": "正在更改子职业选项",
     "SortByEditTime": "按最后编辑时间排序",
     "SortByName": "按名称排序",
@@ -791,10 +856,8 @@
     "TooManyRequested": "你有{{total}} 个{{itemname}}, 但完成配装需要{{requested}} 个. 我们已经处理所有已拥有的",
     "UnassignedModError": "模组不适合你当前的护甲",
     "Undo": "撤销",
-    "Unequipped": "未装备",
     "Update": "保存更改",
-    "VendorsCannotEquip": "您没有这些项目。点击来选择一个替换或点击 X 来删除：",
-    "WeaponsOnly": "仅限武器"
+    "VendorsCannotEquip": "您没有这些项目。点击来选择一个替换或点击 X 来删除："
   },
   "Manifest": {
     "Download": "正在从 Bungie 下载最新的命运信息数据库...",
@@ -817,6 +880,9 @@
     "Unknown": "挑战",
     "Weekly": "每周挑战"
   },
+  "Mods": {
+    "HarmonicModDescription": "根据所使用的职业分支不同，该模组生效所需更少的护甲能量，并会改变元素类型。"
+  },
   "MoveAmount": {
     "Amount": "数量："
   },
@@ -828,7 +894,7 @@
     "AddToLoadoutTitle": "添加此物品到配装",
     "All": "全部",
     "CannotCurrentlyRoll": "此特性不会出现在此物品的当前版本上。",
-    "CantPullFromPostmaster": "你必须到高塔去取回这件物品。",
+    "CantPullFromPostmaster": "你必须去邮政官处取回此物品。",
     "CatalystProgress": "催化剂进度",
     "CommunityData": "社区见解",
     "Consolidate": "合并",
@@ -850,7 +916,7 @@
       "Unlock": "解锁{{itemType}}",
       "Unlocked": "已解锁"
     },
-    "MissingSockets": "当 bungie 正在更新其服务时, perk 和 mod 的详细信息不可用。当他们做完的时候, 它就会回来, 通常在几个小时后。",
+    "MissingSockets": "在 Bungie 维护其服务器时，无法查看特性和模组的详细信息，直到维护完成。这通常需要几个小时。",
     "Notes": "备注：",
     "OverviewTab": "概述",
     "Owned": "此物品在您的库存中。",
@@ -867,6 +933,7 @@
       "QuestProgress": "第 {{questStepNum}} / {{questStepsTotal}} 步",
       "Type": "{{classType}} {{typeName}}"
     },
+    "TabList": "物品细节页面",
     "ToggleSidecar": "展开或折叠物品操作",
     "TrackUntrack": {
       "Track": "跟踪{{itemType}}",
@@ -963,7 +1030,7 @@
     "Items": "任务物品",
     "Milestones": "里程碑和挑战",
     "NoEventChallenges": "你已经完成了所有活动挑战",
-    "NoTrackedTriumph": "你没有正在跟踪的成就。在游戏中跟踪一个，或在 DIM 中跟踪任意数目。",
+    "NoTrackedTriumph": "你还没有追踪称号进度，您可以在 DIM 中追踪任意数量的称号。",
     "PercentPrestige": "重置百分比{{pct}}%",
     "PowerBonusHeader": "+{{powerBonus}} 光等奖励",
     "PowerBonusHeaderUndefined": "其他奖励",
@@ -985,7 +1052,8 @@
     "RecordBooks": "记事本"
   },
   "Records": {
-    "Title": "记录"
+    "Title": "记录",
+    "UniversalOrnamentSetOther": "其他"
   },
   "SearchHistory": {
     "Date": "最近使用",
@@ -1047,6 +1115,7 @@
     "ResetToDefault": "重置",
     "ReverseSort": "切换正向/反向排序",
     "SetSort": "物品排序方式:",
+    "SetVaultWeaponGrouping": "保险库武器分组方式：",
     "Settings": "设置",
     "ShowNewItems": "在新物品上显示红点",
     "SingleCharacter": "单角色视图",
@@ -1069,7 +1138,9 @@
     "SortCustom": "自订排序",
     "SortName": "名称",
     "SpacesSize": "{{count}} 个空位",
-    "SpacesSize_plural": "{{count}} 个空位"
+    "SpacesSize_plural": "{{count}} 个空位",
+    "Theme": "主题",
+    "VaultGroupingNone": "无"
   },
   "Sockets": {
     "ApplyPerks": "应用特性",
@@ -1101,27 +1172,37 @@
     "SelectWishlistPerks": "预览愿望单特性"
   },
   "Stats": {
+    "CrouchingSpeed": "蹲伏移动速度",
     "Custom": "自定义总和",
     "CustomDesc": "所选基础属性的自定义总和，未计入模组或大师杰作。可在设置里配置自定义总和所包含的属性。",
+    "DamageResistance": "PvE伤害减免",
     "Discipline": "训练",
+    "FlinchResistance": "退缩抗性",
+    "HP": "生命值",
     "Intellect": "智力",
     "MaxGearPower": "当前装备最大光等",
     "MaxGearPowerAll": "所有装备最高光等",
     "MaxTotalPower": "最大光等",
+    "MetersPerSecond": "米/秒",
     "Milliseconds": "毫秒",
     "NoBonus": "无加成",
     "NotApplicable": "不可用",
     "OfMaxRoll": "最大下拉范围{{range}}",
     "PercentHelp": "点击获取更多关于品质属性的信息.",
+    "Percentage": "%",
     "PowerModifier": "季节神器提升光等",
     "Prestige": "威望等级: {{level}}\n{{exp}}xp 于5明亮之尘之前.",
     "Quality": "品质",
+    "StrafingSpeed": "侧向移动速度",
     "Strength": "力量",
     "Sunset": "退环境",
     "Tier": "{{tier}} 阶",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 于 T{{nextTier}})",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)",
-    "Total": "总计"
+    "TimeToFullHP": "恢复满生命值耗时",
+    "Total": "总计",
+    "TotalHP": "总生命值",
+    "WalkingSpeed": "步行移动速度"
   },
   "Storage": {
     "ApiPermissionPrompt": {
@@ -1200,6 +1281,7 @@
     "Button": "清空 {{numSockets}} 个插槽",
     "Cancel": "取消",
     "Choose": "选择要清空的插槽",
+    "DiscountedMods": "{{count}} 个已享受折扣的模组",
     "Done": "已清空的插槽",
     "NoSockets": "无插槽可清空",
     "Ok": "确定",
@@ -1248,12 +1330,14 @@
   "Triumphs": {
     "GildingTriumph": "镀金成就",
     "HideCompleted": "隐藏已完成的成就",
-    "RevealRedacted": "显示隐藏的成就"
+    "RevealRedacted": "显示隐藏的成就",
+    "SortRecords": "优先显示未完成成就"
   },
   "Vendors": {
     "Collections": "收藏品",
-    "Engram": "奖励记忆水晶",
+    "Engram": "等级",
     "FilterToUnacquired": "仅显示未收集物品",
+    "HideSilverItems": "隐藏银币物品",
     "NoItems": "此商人目前没有提供任何物品。",
     "RefreshTime": "库存刷新倒计时：",
     "Vendors": "商贩"
@@ -1262,7 +1346,7 @@
     "About": {
       "APIHistory": "查看DIM（及其他命运2app）的历史记录",
       "BungieCopyright": "所有图像和内容都归Bungie所有。",
-      "CommunityInsight": "社区特性见解取自 {{clarityLink}}。如果你发现了问题或有疑问，可加入 {{clarityDiscordLink}}。",
+      "CommunityInsight": "特性社区见解及角色属性数据由 {{clarityLink}} 贡献。如果你发现不准确之处或有疑问，欢迎加入 {{clarityDiscordLink}}。",
       "Discord": "Discord",
       "DiscordHelp": "报告问题,回馈建议,或在Discord频道中获得支援。",
       "FAQ": "常见问题",
@@ -1280,8 +1364,6 @@
       "GitHubHelp": "如果您有兴趣为该项目做出一份贡献，请访问我们在{{link}} 上的项目地址！",
       "Header": "DIM (命运物品管理器)",
       "HowItsMade": "DIM是一个由社区开发者在Bungie.net和Destiny Companion 应用程序使用的同类服务基础上开发的免费、开源的应用",
-      "Reddit": "Reddit",
-      "RedditHelp": "如果您有任何意见,疑问或者建议，请在Reddit上留下评论，务必让我们知晓。",
       "Schedule": {
         "beta": "每当我们更改代码时这个测试版的DIM就会自动应用更新 - 它将应用最新的功能和修复补丁，当然咯 也会有最新的Bug哦~",
         "release": "此版本的DIM将于太平洋时间的每周日午夜进行例行版本更新。"
@@ -1290,14 +1372,11 @@
       "TranslationText": "我们使用{{link}} 工具来使得翻译工作更加简便。 如果您希望为DIM的任意语言翻译语言出一份力，那么请加入我们的翻译小组吧( • ̀ω•́)✧！",
       "TwitterHelp": "请务必关注我们，以便了解我们的最新动向和即时状态更新资讯。",
       "Version": "当前版本Ver{{version}}({{flavor}})，编译于：{{date}}",
-      "Wiki": "DIM 用户指南百科",
-      "WikiHelp": "学习如何使用 DIM，并帮助建设我们的社区用户指南。",
-      "YouTube": "YouTube",
-      "YouTubeHelp": "在我们的 youtube 频道上了解如何使用 dim。"
+      "Wiki": "DIM 用户指南",
+      "WikiHelp": "了解 DIM 各项功能的使用方法。"
     },
     "Login": {
       "Auth": "用Bungie.Net授权",
-      "DisabledDimSyncWarning": "",
       "EnableDimSyncWarning": "你曾禁用过 DIM 同步，仅使用本地数据存储。启用 DIM 同步将用 DIM 同步数据替换本地数据。在启用 DIM 同步前，应该备份你的数据。你可以在设置中恢复备份。",
       "Explanation": "允许DIM查看并修改您的命运角色，保险库和进度。",
       "LearnMore": "了解账户与登录",
@@ -1334,8 +1413,10 @@
     "UpdateExternalSource": "更新愿望清单来源",
     "Voltron": "voltron（默认）",
     "VoltronDescription": "voltron 是来自《命运》社区的 PvE 和 PvP 愿望清单特性表，并会自动更新。这是我们的默认列表。",
-    "WishListNotes": "愿望清单备注:{{notes}}"
+    "WishListNotes": "愿望清单备注：",
+    "WorstRatedTip": "这个特性与您垃圾清单上的某个武器完全匹配。",
+    "WorstRatedTip_plural": "这些特性与您垃圾清单上的某个武器完全匹配。"
   },
-  "no-space": "",
-  "wrong-level": ""
+  "no-space": "空间不足",
+  "wrong-level": "等级错误"
 }

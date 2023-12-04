@@ -1,4 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { warnLog } from 'app/utils/log';
 import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyObjectiveProgress, DestinyObjectiveUiStyle } from 'bungie-api-ts/destiny2';
 import { DimCrafted, DimItem, DimSocket } from '../item-types';
@@ -11,7 +12,7 @@ export const mementoSocketCategoryHash = 3201856887;
 
 export function buildCraftedInfo(
   item: DimItem,
-  defs: D2ManifestDefinitions
+  defs: D2ManifestDefinitions,
 ): DimCrafted | undefined {
   const craftedSocket = getCraftedSocket(item);
   if (!craftedSocket) {
@@ -35,26 +36,32 @@ export function getCraftedSocket(item: DimItem): DimSocket | undefined {
 
 function getCraftingInfo(
   defs: D2ManifestDefinitions,
-  objectives: DestinyObjectiveProgress[]
-): DimCrafted {
-  let level;
-  let progress;
-  let craftedDate;
+  objectives: DestinyObjectiveProgress[],
+): DimCrafted | undefined {
+  let level: number | undefined;
+  let progress: number | undefined;
+  let craftedDate: number | undefined;
 
   for (const objective of objectives) {
     const def = defs.Objective.get(objective.objectiveHash);
     if (def) {
       if (def.uiStyle === DestinyObjectiveUiStyle.CraftingWeaponLevel) {
-        level = objective.progress;
+        level = objective.progress!;
       } else if (def.uiStyle === DestinyObjectiveUiStyle.CraftingWeaponLevelProgress) {
-        progress =
-          objective.progress !== undefined && objective.completionValue > 0
-            ? objective.progress / objective.completionValue
-            : undefined;
+        progress = objective.progress! / objective.completionValue;
       } else if (def.uiStyle === DestinyObjectiveUiStyle.CraftingWeaponTimestamp) {
-        craftedDate = objective.progress;
+        craftedDate = objective.progress!;
       }
     }
+  }
+
+  if (level === undefined || progress === undefined || craftedDate === undefined) {
+    warnLog('Item is missing one of level, progress, craftedDate', {
+      level,
+      progress,
+      craftedDate,
+    });
+    return undefined;
   }
 
   return { level, progress, craftedDate };

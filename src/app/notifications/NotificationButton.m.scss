@@ -5,13 +5,13 @@
   padding: 6px;
   border-radius: 4px;
   text-align: center;
-  color: white;
+  color: var(--theme-text);
   background-color: #222;
   display: block;
   width: 30%;
   cursor: pointer;
   &:hover {
-    background-color: $blue;
+    background-color: var(--theme-accent-secondary);
     color: #222;
   }
   & > svg {

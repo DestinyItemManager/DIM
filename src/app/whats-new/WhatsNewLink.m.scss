@@ -1,14 +1,14 @@
 @use '../variables.scss' as *;
 
 .upgrade {
-  color: $orange !important;
+  color: $upgrade-notification-dot !important;
   font-size: 18px !important;
   margin-right: 4px;
 }
 
 .badgeNew {
   display: inline-block;
-  background-color: $orange;
+  background-color: $new-notification-dot;
   border-radius: 50%;
   height: 8px;
   width: 8px;

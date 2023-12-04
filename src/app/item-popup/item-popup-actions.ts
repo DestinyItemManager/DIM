@@ -84,8 +84,8 @@ export function buildItemActionsModel(item: DimItem, stores: DimStore[]): ItemAc
   const maximumMoveAmount = inPostmaster
     ? pullAmount
     : !itemOwner || item.maxStackSize <= 1 || item.notransfer || item.uniqueStack
-    ? 1
-    : amountOfItem(itemOwner, item);
+      ? 1
+      : amountOfItem(itemOwner, item);
   const showAmounts = !inPostmaster && maximumMoveAmount > 1;
   const canEquip = itemOwner ? stores.filter((store) => itemCanBeEquippedBy(item, store)) : [];
   const canStore = itemOwner ? stores.filter((store) => canShowStore(store, itemOwner, item)) : [];
@@ -97,7 +97,7 @@ export function buildItemActionsModel(item: DimItem, stores: DimStore[]): ItemAc
   const store = canStore.map((s) => ({ store: s, enabled: !disableStore(s) }));
 
   const hasMoveControls = Boolean(
-    (inPostmaster && pullFromPostmaster) || equip.length || store.length
+    (inPostmaster && pullFromPostmaster) || equip.length || store.length,
   );
   const hasAccessoryControls = Boolean(
     taggable ||
@@ -106,7 +106,7 @@ export function buildItemActionsModel(item: DimItem, stores: DimStore[]): ItemAc
       infusable ||
       loadoutable ||
       canConsolidate ||
-      canDistribute
+      canDistribute,
   );
   const hasControls = hasAccessoryControls || hasMoveControls;
 
@@ -147,7 +147,7 @@ function canTransferToVault(itemOwnerStore: DimStore, item: DimItem): boolean {
 function storeButtonEnabled(
   buttonStore: DimStore,
   itemOwnerStore: DimStore,
-  item: DimItem
+  item: DimItem,
 ): boolean {
   const store = itemOwnerStore;
 

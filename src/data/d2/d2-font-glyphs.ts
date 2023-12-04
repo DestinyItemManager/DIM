@@ -1,5 +1,4 @@
 export const enum FontGlyphs {
-  NULL = 0,
   CR = 13,
   space = 32,
   superscript_r = 876,
@@ -424,5 +423,10 @@ export const enum FontGlyphs {
   strand_titan_berserker_super = 61196,
   strand_warlock_minion_super = 61197,
   strand_kill = 61198,
+  strand_warlock_suspend_tangle = 61228,
+  strand_hunter_clone = 61229,
+  strand_titan_slide_melee = 61230,
+  region_chest = 61231,
+  strand_hunter_buzzsaw = 61232,
   UniFFFD = 65533,
 }

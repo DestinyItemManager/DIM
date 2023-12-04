@@ -1,15 +1,10 @@
 @use '../variables.scss' as *;
 
-.select {
-  display: flex;
-  justify-content: space-between;
-}
-
 .tile {
-  height: 46px;
+  height: $emblem-height;
 
   @include phone-portrait {
-    min-width: 260px;
+    min-width: $emblem-width;
 
     > div {
       margin: 0 5px;
@@ -18,24 +13,19 @@
 }
 
 .vertical {
-  composes: select;
-  flex-direction: column;
-  align-items: center;
+  composes: flexColumn from './common.m.scss';
+  gap: 8px;
+}
 
-  .tile {
-    width: 100%;
-    margin-bottom: 8px;
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-  .unselected > div > div {
-    opacity: 0.4;
-  }
+// The > * > * is so we don't dim out the hover border
+.unselected > * > * {
+  filter: grayscale(0.6);
+  opacity: 0.4;
 }
 
 .frame {
   max-width: 250px;
+
   @include phone-portrait {
     max-width: 260px;
   }

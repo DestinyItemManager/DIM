@@ -1,7 +1,8 @@
 import { ItemAnnotation, ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { tl } from 'app/i18next-t';
+import { I18nKey, tl } from 'app/i18next-t';
 import { ThunkResult } from 'app/store/types';
+import { filterMap } from 'app/utils/collections';
 import _ from 'lodash';
 import { archiveIcon, banIcon, boltIcon, heartIcon, tagIcon } from '../shell/icons';
 import { setItemNote, setItemTag, tagCleanup } from './actions';
@@ -105,7 +106,7 @@ export interface ItemInfos {
 
 export interface TagInfo {
   type?: TagValue;
-  label: string;
+  label: I18nKey;
   sortOrder?: number;
   displacePriority?: number;
   hotkey?: string;
@@ -114,6 +115,8 @@ export interface TagInfo {
 
 // populate tag list from tag config info
 export const itemTagList: TagInfo[] = Object.values(tagConfig);
+
+export const vaultGroupTagOrder = filterMap(itemTagList, (tag) => tag.type);
 
 export const itemTagSelectorList: TagInfo[] = [
   { label: tl('Tags.TagItem') },
@@ -148,30 +151,28 @@ export function cleanInfos(stores: DimStore[]): ThunkResult {
         const info = infos[item.id];
         if (info && (info.tag !== undefined || info.notes?.length)) {
           cleanupIds.delete(item.id);
-        } else {
+        } else if (item.craftedInfo?.craftedDate) {
           // Double-check crafted items - we may have them under a different ID. If so,
           // patch up the data by re-tagging them under the new ID.
-          if (item.craftedInfo?.craftedDate) {
-            const craftedInfo = infosByCraftedDate[item.craftedInfo.craftedDate];
-            if (craftedInfo) {
-              if (craftedInfo.tag) {
-                dispatch(
-                  setItemTag({
-                    itemId: item.id,
-                    tag: craftedInfo.tag,
-                    craftedDate: item.craftedInfo.craftedDate,
-                  })
-                );
-              }
-              if (craftedInfo.notes) {
-                dispatch(
-                  setItemNote({
-                    itemId: item.id,
-                    note: craftedInfo.notes,
-                    craftedDate: item.craftedInfo.craftedDate,
-                  })
-                );
-              }
+          const craftedInfo = infosByCraftedDate[item.craftedInfo.craftedDate];
+          if (craftedInfo) {
+            if (craftedInfo.tag) {
+              dispatch(
+                setItemTag({
+                  itemId: item.id,
+                  tag: craftedInfo.tag,
+                  craftedDate: item.craftedInfo.craftedDate,
+                }),
+              );
+            }
+            if (craftedInfo.notes) {
+              dispatch(
+                setItemNote({
+                  itemId: item.id,
+                  note: craftedInfo.notes,
+                  craftedDate: item.craftedInfo.craftedDate,
+                }),
+              );
             }
           }
         }
@@ -189,7 +190,7 @@ export function getTag(
   itemInfos: ItemInfos,
   itemHashTags?: {
     [itemHash: string]: ItemHashTag;
-  }
+  },
 ): TagValue | undefined {
   return item.taggable
     ? (item.instanced ? itemInfos[item.id]?.tag : itemHashTags?.[item.hash]?.tag) || undefined
@@ -201,7 +202,7 @@ export function getNotes(
   itemInfos: ItemInfos,
   itemHashTags?: {
     [itemHash: string]: ItemHashTag;
-  }
+  },
 ): string | undefined {
   return item.taggable
     ? (item.instanced ? itemInfos[item.id]?.notes : itemHashTags?.[item.hash]?.notes) || undefined

@@ -1,6 +1,8 @@
 const exoticWeaponHashesWithCatalyst = new Set<number>([
+  17096506, // Dragon's Breath
   19024058, // Prometheus Lens
   46524085, // Osteo Striga
+  204878059, // Malfeasance
   219145368, // The Manticore
   347366834, // Ace of Spades
   374573733, // Delicate Tomb
@@ -9,12 +11,15 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   603721696, // Cryosthesia 77K
   776191470, // Tommy's Matchbook
   814876685, // Trinity Ghoul
+  940371471, // Wicked Implement
+  1034055198, // Necrochasm
   1234150730, // Trespasser
   1331482397, // MIDA Multi-Tool
   1345867570, // Sweet Business
   1345867571, // Coldheart
   1363238943, // Ruinous Effigy
   1363886209, // Gjallarhorn
+  1441805468, // The Navigator
   1473821207, // Revision Zero
   1508896098, // The Wardcliff Coil
   1541131350, // Cerberus+1
@@ -26,6 +31,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   1853180924, // Traveler's Chosen
   1864563948, // Worldline Zero
   1891561814, // Whisper of the Worm
+  1912669214, // Centrifuse
   2084878005, // Heir Apparent
   2130065553, // Arbalest
   2179048386, // Forerunner
@@ -42,7 +48,9 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   2856683562, // SUROS Regime
   2907129556, // Sturm
   2907129557, // Sunshot
+  2910326942, // Wish-Keeper
   3089417789, // Riskrunner
+  3118061005, // Vexcalibur
   3141979346, // D.A.R.C.I.
   3141979347, // Borealis
   3211806999, // Izanagi's Burden
@@ -66,11 +74,14 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   3664831848, // Heartshadow
   3761898871, // Lorentz Driver
   3766045777, // Black Talon
+  3821409356, // Ex Diris
   3844694310, // The Jade Rabbit
   3856705927, // Hawkmoon
   3899270607, // The Colony
+  3973202132, // Thorn
   4017959782, // Symmetry
   4036115577, // Sleeper Simulant
+  4068264807, // Monte Carlo
   4124984448, // Hard Light
   4174431791, // Hierarchy of Needs
   4190156464, // Merciless

@@ -5,10 +5,10 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { ColumnDefinition, SortDirection } from './table-types';
 
 export function createCustomStatColumns(
-  customStatDefs: CustomStatDef[]
+  customStatDefs: CustomStatDef[],
 ): (ColumnDefinition | undefined)[] {
   return customStatDefs.map((c) => ({
-    id: 'customstat_' + c.shortLabel + c.statHash,
+    id: `customstat_${c.shortLabel}${c.statHash}`,
     header: (
       <>
         {c.label}

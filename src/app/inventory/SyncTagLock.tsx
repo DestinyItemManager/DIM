@@ -1,7 +1,6 @@
 import { TagValue } from '@destinyitemmanager/dim-api-types';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { errorLog, infoLog } from 'app/utils/log';
-import { BucketHashes } from 'data/d2/generated-enums';
 import { memo, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -15,9 +14,7 @@ export function canSyncLockState(item: DimItem) {
     item.lockable &&
     item.taggable &&
     // don't auto-lock crafted items because they must be unlocked to reshape and DIM shouldn't re-lock an item while the user is choosing new perks
-    !item.crafted &&
-    // locking means something very different for finishers
-    item.bucket.hash !== BucketHashes.Finishers
+    !item.crafted
   );
 }
 
@@ -27,7 +24,7 @@ export function canSyncLockState(item: DimItem) {
  */
 function getNextItemToChangeLockState(
   allItems: DimItem[],
-  getTag: (item: DimItem) => TagValue | undefined
+  getTag: (item: DimItem) => TagValue | undefined,
 ): [item: DimItem, lock: boolean] | [] {
   for (const item of allItems) {
     if (canSyncLockState(item)) {
@@ -62,7 +59,7 @@ const getNextItemSelector = createSelector(
   getTagSelector,
   profileErrorSelector,
   (allItems, getTag, profileError) =>
-    profileError ? [] : getNextItemToChangeLockState(allItems, getTag)
+    profileError ? [] : getNextItemToChangeLockState(allItems, getTag),
 );
 
 // Some extra protection against locking the same thing twice in parallel - for example if you
@@ -86,7 +83,7 @@ export default memo(function SyncTagLock() {
           'autoLockTagged',
           lock ? 'Locking' : 'Unlocking',
           nextItem.name,
-          'to match its tag'
+          'to match its tag',
         );
         inProgressLocks.add(nextItem.id);
         try {
@@ -98,7 +95,7 @@ export default memo(function SyncTagLock() {
             lock ? 'lock' : 'unlock',
             nextItem.name,
             'to match its tag:',
-            e
+            e,
           );
         } finally {
           inProgressLocks.delete(nextItem.id);

@@ -2,23 +2,8 @@ import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { RootState, ThunkResult } from 'app/store/types';
-import * as actions from 'app/stream-deck/actions';
-import { Reducer } from 'redux';
-import { ActionType } from 'typesafe-actions';
 
 export type StreamDeckSelectionType = 'loadout' | 'item';
-
-// Redux Store Stream Deck State
-export interface StreamDeckState {
-  // WebSocket status
-  readonly connected: boolean;
-  // Update popup already showed
-  readonly updatePopupShowed: boolean;
-  // Selection type
-  readonly selection?: 'item' | 'loadout' | 'postmaster' | undefined;
-}
-
-export type StreamDeckAction = ActionType<typeof actions>;
 
 // trigger a pre-written search
 // choose a specific page (inventory, vendors, records, etc..)
@@ -219,7 +204,6 @@ export type SendToStreamDeckArgs =
   | SendAuthorizationResetArgs;
 
 export interface LazyStreamDeck {
-  reducer?: Reducer<StreamDeckState, StreamDeckAction>;
   core?: {
     startStreamDeckConnection: () => ThunkResult;
     stopStreamDeckConnection: () => ThunkResult;

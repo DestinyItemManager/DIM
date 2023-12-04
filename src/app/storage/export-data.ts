@@ -1,7 +1,7 @@
 import { DestinyVersion, ExportResponse } from '@destinyitemmanager/dim-api-types';
 import { parseProfileKey } from 'app/dim-api/reducer';
 import { ThunkResult } from 'app/store/types';
-import { download } from 'app/utils/util';
+import { download } from 'app/utils/download';
 
 /**
  * Export the local IDB data to a format the DIM API could import.
@@ -63,8 +63,6 @@ export function exportLocalData(): ThunkResult<ExportResponse> {
 /**
  * Export the data backup as a file
  */
-export function exportBackupData(data: any) {
-  // Don't save the `importedToDimApi` flag
-  const { importedToDimApi, ...otherData } = data;
-  download(JSON.stringify(otherData), 'dim-data.json', 'application/json');
+export function exportBackupData(data: ExportResponse) {
+  download(JSON.stringify(data), 'dim-data.json', 'application/json');
 }

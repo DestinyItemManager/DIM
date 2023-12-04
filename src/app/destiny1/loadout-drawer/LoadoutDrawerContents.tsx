@@ -4,19 +4,19 @@ import type { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { getStore } from 'app/inventory/stores-helpers';
-import { showItemPicker } from 'app/item-picker/item-picker';
+import { ShowItemPickerFn, useItemPicker } from 'app/item-picker/item-picker';
 import {
+  LoadoutUpdateFunction,
   fillLoadoutFromEquipped,
   fillLoadoutFromUnequipped,
-  LoadoutUpdateFunction,
 } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { findSameLoadoutItemIndex, fromEquippedTypes } from 'app/loadout-drawer/loadout-utils';
 import { useD1Definitions } from 'app/manifest/selectors';
 import { D1BucketHashes } from 'app/search/d1-known-values';
-import { addIcon, AppIcon } from 'app/shell/icons';
-import { itemCanBeInLoadout } from 'app/utils/item-utils';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { AppIcon, addIcon } from 'app/shell/icons';
+import { filterMap } from 'app/utils/collections';
+import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
@@ -55,7 +55,6 @@ export default function LoadoutDrawerContents({
   remove,
   add,
   setLoadout,
-  onShowItemPicker,
 }: {
   storeId: string;
   loadout: Loadout;
@@ -64,7 +63,6 @@ export default function LoadoutDrawerContents({
   equip: (resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent) => void;
   remove: (resolvedItem: ResolvedLoadoutItem, e: React.MouseEvent) => void;
   add: (item: DimItem, equip?: boolean) => void;
-  onShowItemPicker: (shown: boolean) => void;
 }) {
   const defs = useD1Definitions()!;
   const buckets = useSelector(bucketsSelector)!;
@@ -73,19 +71,21 @@ export default function LoadoutDrawerContents({
   // The store to use for "fill from equipped/unequipped"
   const dimStore = getStore(stores, storeId)!;
 
-  const doFillLoadoutFromEquipped = () => setLoadout(fillLoadoutFromEquipped(defs, dimStore));
+  const doFillLoadoutFromEquipped = () =>
+    setLoadout(fillLoadoutFromEquipped(defs, dimStore, undefined));
 
   const doFillLoadOutFromUnequipped = () => setLoadout(fillLoadoutFromUnequipped(defs, dimStore));
 
-  const availableTypes = _.compact(loadoutTypes.map((h) => buckets.byHash[h]));
-  const itemsByBucket = _.groupBy(items, (li) => li.item.bucket.hash);
+  const availableTypes = filterMap(loadoutTypes, (h) => buckets.byHash[h]);
+  const itemsByBucket = Object.groupBy(items, (li) => li.item.bucket.hash);
 
   const [typesWithItems, typesWithoutItems] = _.partition(
     availableTypes,
-    (bucket) => bucket.hash && itemsByBucket[bucket.hash]?.length
+    (bucket) => bucket.hash && itemsByBucket[bucket.hash]?.length,
   );
 
   const showFillFromEquipped = typesWithoutItems.some((b) => fromEquippedTypes.includes(b.hash));
+  const showItemPicker = useItemPicker();
 
   return (
     <>
@@ -110,7 +110,7 @@ export default function LoadoutDrawerContents({
           typesWithoutItems.map((bucket) => (
             <a
               key={bucket.hash}
-              onClick={() => pickLoadoutItem(defs, loadout, bucket, add, onShowItemPicker)}
+              onClick={() => pickLoadoutItem(defs, loadout, bucket, add, showItemPicker)}
               className="dim-button loadout-add"
             >
               <AppIcon icon={addIcon} /> {bucket.name}
@@ -124,7 +124,7 @@ export default function LoadoutDrawerContents({
             bucket={bucket}
             items={itemsByBucket[bucket.hash] || []}
             pickLoadoutItem={(bucket) =>
-              pickLoadoutItem(defs, loadout, bucket, add, onShowItemPicker)
+              pickLoadoutItem(defs, loadout, bucket, add, showItemPicker)
             }
             equip={equip}
             remove={remove}
@@ -140,29 +140,21 @@ async function pickLoadoutItem(
   loadout: Loadout,
   bucket: InventoryBucket,
   add: (item: DimItem) => void,
-  onShowItemPicker: (shown: boolean) => void
+  showItemPicker: ShowItemPickerFn,
 ) {
-  const loadoutClassType = loadout?.classType;
   const loadoutHasItem = (item: DimItem) =>
     findSameLoadoutItemIndex(defs, loadout.items, item) !== -1;
 
-  onShowItemPicker(true);
-  try {
-    const { item } = await showItemPicker({
-      filterItems: (item: DimItem) =>
-        item.bucket.hash === bucket.hash &&
-        (!loadout ||
-          loadout.classType === DestinyClass.Unknown ||
-          item.classType === loadoutClassType ||
-          item.classType === DestinyClass.Unknown) &&
-        itemCanBeInLoadout(item) &&
-        !loadoutHasItem(item),
-      prompt: t('Loadouts.ChooseItem', { name: bucket.name }),
-    });
+  const item = await showItemPicker({
+    filterItems: (item: DimItem) =>
+      item.bucket.hash === bucket.hash &&
+      isItemLoadoutCompatible(item.classType, loadout.classType) &&
+      itemCanBeInLoadout(item) &&
+      !loadoutHasItem(item),
+    prompt: t('Loadouts.ChooseItem', { name: bucket.name }),
+  });
 
+  if (item) {
     add(item);
-  } catch (e) {
-  } finally {
-    onShowItemPicker(false);
   }
 }

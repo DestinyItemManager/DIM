@@ -1,11 +1,16 @@
 import { dimNeedsUpdate$ } from 'app/register-service-worker';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { useEventBusListener } from 'app/utils/hooks';
 import { GlobalAlertLevelsToToastLevels } from 'app/whats-new/BungieAlerts';
 import { DimVersions } from 'app/whats-new/versions';
 import clsx from 'clsx';
+import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useSubscription } from 'use-subscription';
-import { AppIcon, updateIcon } from './icons';
 import styles from './MenuBadge.m.scss';
+import { pollForBungieAlerts } from './alerts';
+import { AppIcon, updateIcon } from './icons';
+import { refresh$ } from './refresh-events';
 import { bungieAlertsSelector } from './selectors';
 
 /**
@@ -18,6 +23,13 @@ export default function MenuBadge() {
   const showChangelog = useSubscription(DimVersions.showChangelog$);
   const alerts = useSelector(bungieAlertsSelector);
   const dimNeedsUpdate = useSubscription(dimNeedsUpdate$);
+  const dispatch = useThunkDispatch();
+
+  const getAlerts = useCallback(() => dispatch(pollForBungieAlerts()), [dispatch]);
+  useEventBusListener(refresh$, getAlerts);
+  useEffect(() => {
+    getAlerts();
+  }, [getAlerts]);
 
   if (dimNeedsUpdate) {
     return <AppIcon className={styles.upgrade} icon={updateIcon} />;
@@ -28,7 +40,7 @@ export default function MenuBadge() {
       <span
         className={clsx(
           styles.badgeNew,
-          `bungie-alert-${GlobalAlertLevelsToToastLevels[alerts[0].AlertLevel]}`
+          `bungie-alert-${GlobalAlertLevelsToToastLevels[alerts[0].AlertLevel]}`,
         )}
       />
     );

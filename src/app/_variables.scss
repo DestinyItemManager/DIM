@@ -1,17 +1,13 @@
 @use 'sass:color';
 
 // Variables and mixins that can be used from any SCSS file
-
-// DIM orange and blue, accent colors
-$orange: #e8a534;
-$blue: #68a0b7;
+$dim-brand: #e8a534;
 $red: #ff3232; // For warnings/errors
 $green: #51a351; // For success statuses or positive deltas
-$gradient: radial-gradient(
-  circle at 50% 70px,
-  hsl(240, 20%, 28%) 0%,
-  hsl(240, 27%, 12%) 100%
-); // new background gradient
+$stat-modded: #68a0b7; // For highlighting the difference in modded item stats
+$stat-masterworked: #e8a534;
+$new-notification-dot: #cf0707;
+$upgrade-notification-dot: #e8a534;
 
 // Blue used to denote community-provided data
 $communityBlue: #0d7fad;
@@ -39,9 +35,16 @@ $xp: #5ea16a;
 $gold: #f5dc56;
 $power: $gold;
 
+// The in-game color for the shaped weapon icon
+$shaped: #d25336;
+
+// Colors for the titles below guardians' names
+$sealtitle: #e1c2ec;
+$gildedtitle: #f9deb8;
+
 // Color of the item border for masterworks
 $masterwork-border-color: #eade8b;
-$deepsight-border-color: #d25336;
+$deepsight-border-color: $shaped;
 $gilded-triumph-border-color: #a78355;
 
 // Yellow used for enhanced weapon perks
@@ -67,6 +70,23 @@ $easeInCubic: cubic-bezier(0.55, 0.055, 0.675, 0.19);
 $easeOutCubic: cubic-bezier(0.215, 0.61, 0.355, 1);
 $easeInOutCubic: cubic-bezier(0.645, 0.045, 0.355, 1);
 
+// Theme style properties that remain consistent across all themes
+// Tooltips and arrows
+$theme-tooltip-arrow-size: 8px; // Ensure this stays in sync with 'popperArrowSize' in 'usePopper.ts'
+$theme-tooltip-arrow-size-mini: 5px;
+$theme-tooltip-corner-radius: 6px;
+
+// Search
+$theme-corner-radius-search: 6px;
+$search-bar-height: 28px;
+
+// Character Tile emblem native size - beyond this the emblem gets distorted
+$emblem-width: 237px;
+$emblem-height: 48px;
+
+// The z-index for our "temp container" where all temporary items get placed.
+$tempContainerZindex: 1000;
+
 // A mixin that allows targeting styles only when in phone-portrait display mode
 @mixin phone-portrait {
   // This seems like a good breakpoint for portrait based on https://material.io/devices/
@@ -81,11 +101,6 @@ $easeInOutCubic: cubic-bezier(0.645, 0.045, 0.355, 1);
   top: var(--header-height);
 }
 
-// The tallest a "full screen" sheet should be
-@mixin max-sheet-height {
-  max-height: calc(var(--viewport-height) - var(--header-height) - 92px);
-}
-
 // A header for items or perks that matches the in-game display
 @mixin destiny-header {
   text-transform: uppercase;
@@ -94,49 +109,22 @@ $easeInOutCubic: cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
 @mixin draggable-hover-border {
-  outline: 1px solid #ddd;
+  outline: 1px solid var(--theme-item-polaroid-hover-border);
 
   @include phone-portrait {
     outline: none;
   }
 }
 
-// Show visible scrollbars when scrollable, even if the OS (e.g. macOS) prefers hidden scrollbars.
-@mixin visible-scrollbars {
-  &::-webkit-scrollbar-track {
-    background: #555;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #e4e4e4;
-    border-radius: 3px;
-  }
-
-  &::-webkit-scrollbar {
-    width: 10px;
-
-    &:horizontal {
-      height: 10px;
-    }
-  }
-}
-
-/*
-Utility functions to allow for augmenting a hex color value with an alpha component.
-
-e.g.
-
-  --my-base-color-rgb: #{dim-hex-to-rgb-values(#ff7b00)};
-  background-color: dim-rgb-values-to-rgba(var(--my-base-color-rgb));
-  border-color: dim-rgb-values-to-rgba(var(--my-base-color-rgb), $alpha: 0.75);
-
-produces
-
-  --my-base-color-rgb: 255, 128, 0;
-  background-color: rgba(255, 128, 0, 1);
-  border-color: rgba(255, 128, 0, 0.75);
-
-*/
+// Utility functions to allow for augmenting a hex color value with an alpha component.
+// e.g.
+//   --my-base-color-rgb: #{dim-hex-to-rgb-values(#ff7b00)};
+//   background-color: dim-rgb-values-to-rgba(var(--my-base-color-rgb));
+//   border-color: dim-rgb-values-to-rgba(var(--my-base-color-rgb), $alpha: 0.75);
+// produces
+//   --my-base-color-rgb: 255, 128, 0;
+//   background-color: rgba(255, 128, 0, 1);
+//   border-color: rgba(255, 128, 0, 0.75);
 
 // Converts a 6-character hex color into a comma-separated list of RGB values, to use within the 'rgba' function.
 @function dim-hex-to-rgb-values($hex) {

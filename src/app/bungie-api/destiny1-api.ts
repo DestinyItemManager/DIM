@@ -9,6 +9,14 @@ import {
 } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account';
+import {
+  D1GetAccountResponse,
+  D1GetAdvisorsResponse,
+  D1GetInventoryResponse,
+  D1GetProgressionResponse,
+  D1GetVaultInventoryResponse,
+  D1StoresData,
+} from '../destiny1/d1-manifest-types';
 import { DimItem } from '../inventory/item-types';
 import { D1Store, DimStore } from '../inventory/store-types';
 import { bungieApiQuery, bungieApiUpdate } from './bungie-api-utils';
@@ -20,123 +28,118 @@ import { authenticatedHttpClient, handleUniquenessViolation } from './bungie-ser
  * DestinyService at https://destinydevs.github.io/BungieNetPlatform/docs/Endpoints
  */
 
-export async function getCharacters(platform: DestinyAccount) {
-  const response = await authenticatedHttpClient(
+export async function getCharacters(account: DestinyAccount) {
+  const response = await authenticatedHttpClient<ServerResponse<D1GetAccountResponse>>(
     bungieApiQuery(
-      `/D1/Platform/Destiny/${platform.originalPlatformType}/Account/${platform.membershipId}/`
-    )
+      `/D1/Platform/Destiny/${account.originalPlatformType}/Account/${account.membershipId}/`,
+    ),
   );
   if (!response || Object.keys(response.Response).length === 0) {
     throw new DimError(
       'BungieService.NoAccountForPlatform',
       t('BungieService.NoAccountForPlatform', {
-        platform: platform.platformLabel,
-      })
+        account: account.platformLabel,
+      }),
     );
   }
-  return Object.values(response.Response.data.characters).map((c: any) => {
-    c.inventory = response.Response.data.inventory;
-    return {
-      id: c.characterBase.characterId,
-      base: c,
-      dateLastPlayed: c.characterBase.dateLastPlayed,
-    };
-  });
+
+  return response.Response.data;
 }
 
-export async function getStores(platform: DestinyAccount): Promise<any[]> {
-  const characters = await getCharacters(platform);
-  const data = await Promise.all([
-    getDestinyInventories(platform, characters),
-    getDestinyProgression(platform, characters)
-      // Don't let failure of progression fail other requests.
-      .catch((e) => errorLog('bungie api', 'Failed to load character progression', e)),
-    getDestinyAdvisors(platform, characters)
-      // Don't let failure of advisors fail other requests.
-      .catch((e) => errorLog('bungie api', 'Failed to load advisors', e)),
-  ]);
-  return data[0];
+export async function getStores(account: DestinyAccount): Promise<D1StoresData> {
+  const { characters, inventory: profileInventory } = await getCharacters(account);
+
+  const characterIds = characters.map((c) => c.characterBase.characterId);
+
+  const [vaultInventory, characterInventories, characterProgressions, characterAdvisors] =
+    await Promise.all([
+      getVaultInventory(account),
+      getDestinyInventories(account, characterIds),
+      getDestinyProgression(account, characterIds)
+        // Don't let failure of progression fail other requests.
+        .catch((e) => {
+          errorLog('bungie api', 'Failed to load character progression', e);
+          return [];
+        }),
+      getDestinyAdvisors(account, characterIds)
+        // Don't let failure of advisors fail other requests.
+        .catch((e) => {
+          errorLog('bungie api', 'Failed to load advisors', e);
+          return [];
+        }),
+    ] as const);
+
+  return {
+    characters: characters.map((c, i) => ({
+      id: characterIds[i],
+      character: c,
+      inventory: characterInventories[i],
+      progression: characterProgressions[i],
+      advisors: characterAdvisors[i],
+    })),
+    profileInventory,
+    vaultInventory,
+  };
 }
 
-function processInventoryResponse(character: any, response: ServerResponse<any>) {
-  const payload = response.Response;
-
-  payload.id = character.id;
-  payload.character = character;
-
-  return payload;
-}
-
-function getDestinyInventories(platform: DestinyAccount, characters: any[]) {
+function getDestinyInventories(account: DestinyAccount, characterIds: string[]) {
   // Guardians
-  const promises = characters.map((character) =>
-    authenticatedHttpClient(
+  const promises = characterIds.map(async (characterId) => {
+    const response = await authenticatedHttpClient<ServerResponse<D1GetInventoryResponse>>(
       bungieApiQuery(
-        `/D1/Platform/Destiny/${platform.originalPlatformType}/Account/${platform.membershipId}/Character/${character.id}/Inventory/`
-      )
-    ).then((response) => processInventoryResponse(character, response))
+        `/D1/Platform/Destiny/${account.originalPlatformType}/Account/${account.membershipId}/Character/${characterId}/Inventory/`,
+      ),
+    );
+
+    return response.Response.data;
+  });
+
+  return Promise.all(promises);
+}
+
+async function getVaultInventory(account: DestinyAccount) {
+  const response = await authenticatedHttpClient<ServerResponse<D1GetVaultInventoryResponse>>(
+    bungieApiQuery(`/D1/Platform/Destiny/${account.originalPlatformType}/MyAccount/Vault/`),
   );
 
-  // Vault
-  const vault = {
-    id: 'vault',
-    base: null,
-  };
+  return response.Response.data;
+}
 
-  const vaultPromise = authenticatedHttpClient(
-    bungieApiQuery(`/D1/Platform/Destiny/${platform.originalPlatformType}/MyAccount/Vault/`)
-  ).then((response) => processInventoryResponse(vault, response));
-
-  promises.push(vaultPromise);
+async function getDestinyProgression(account: DestinyAccount, characterIds: string[]) {
+  const promises = characterIds.map(async (characterId) => {
+    const response = await authenticatedHttpClient<ServerResponse<D1GetProgressionResponse>>(
+      bungieApiQuery(
+        `/D1/Platform/Destiny/${account.originalPlatformType}/Account/${account.membershipId}/Character/${characterId}/Progression/`,
+      ),
+    );
+    return response.Response.data;
+  });
 
   return Promise.all(promises);
 }
 
-function getDestinyProgression(platform: DestinyAccount, characters: any[]) {
-  const promises = characters.map(async (character) => {
-    const response = await authenticatedHttpClient(
+async function getDestinyAdvisors(account: DestinyAccount, characterIds: string[]) {
+  const promises = characterIds.map(async (characterId) => {
+    const response = await authenticatedHttpClient<ServerResponse<D1GetAdvisorsResponse>>(
       bungieApiQuery(
-        `/D1/Platform/Destiny/${platform.originalPlatformType}/Account/${platform.membershipId}/Character/${character.id}/Progression/`
-      )
+        `/D1/Platform/Destiny/${account.originalPlatformType}/Account/${account.membershipId}/Character/${characterId}/Advisors/V2/`,
+      ),
     );
-    return processProgressionResponse(character, response);
-  });
-
-  function processProgressionResponse(character: any, response: ServerResponse<any>) {
-    character.progression = response.Response.data;
-    return character;
-  }
-
-  return Promise.all(promises);
-}
-
-function getDestinyAdvisors(platform: DestinyAccount, characters: any[]) {
-  const promises = characters.map(async (character) => {
-    const response = await authenticatedHttpClient(
-      bungieApiQuery(
-        `/D1/Platform/Destiny/${platform.originalPlatformType}/Account/${platform.membershipId}/Character/${character.id}/Advisors/V2/`
-      )
-    );
-    return processAdvisorsResponse(character, response);
+    return response.Response.data;
   });
 
   return Promise.all(promises);
-
-  function processAdvisorsResponse(character: any, response: ServerResponse<any>) {
-    character.advisors = response.Response.data;
-    return character;
-  }
 }
 
 export async function getVendorForCharacter(
   account: DestinyAccount,
   character: D1Store,
-  vendorHash: number
+  vendorHash: number,
 ): Promise<Vendor> {
-  const response = await authenticatedHttpClient(
+  const response = await authenticatedHttpClient<ServerResponse<{ data: Vendor }>>(
     bungieApiQuery(
-      `/D1/Platform/Destiny/${account.originalPlatformType}/MyAccount/Character/${character.id}/Vendor/${vendorHash}/`
-    )
+      `/D1/Platform/Destiny/${account.originalPlatformType}/MyAccount/Character/${character.id}/Vendor/${vendorHash}/`,
+    ),
   );
   return response.Response.data;
 }
@@ -145,10 +148,10 @@ export async function transfer(
   account: DestinyAccount,
   item: DimItem,
   store: DimStore,
-  amount: number
+  amount: number,
 ) {
   try {
-    return await authenticatedHttpClient(
+    return await authenticatedHttpClient<ServerResponse<number>>(
       bungieApiUpdate('/D1/Platform/Destiny/TransferItem/', {
         characterId: store.isVault ? item.owner : store.id,
         membershipType: account.originalPlatformType,
@@ -156,7 +159,7 @@ export async function transfer(
         itemReferenceHash: item.hash,
         stackSize: amount || item.amount,
         transferToVault: store.isVault,
-      })
+      }),
     );
   } catch (e) {
     return handleUniquenessViolation(e, item, store);
@@ -164,12 +167,12 @@ export async function transfer(
 }
 
 export function equip(account: DestinyAccount, item: DimItem) {
-  return authenticatedHttpClient(
+  return authenticatedHttpClient<ServerResponse<number>>(
     bungieApiUpdate('/D1/Platform/Destiny/EquipItem/', {
       characterId: item.owner,
       membershipType: account.originalPlatformType,
       itemId: item.id,
-    })
+    }),
   );
 }
 
@@ -179,20 +182,20 @@ export function equip(account: DestinyAccount, item: DimItem) {
 export async function equipItems(
   account: DestinyAccount,
   store: DimStore,
-  items: DimItem[]
+  items: DimItem[],
 ): Promise<{ [itemInstanceId: string]: PlatformErrorCodes }> {
   // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
   items = _.sortBy(items, (i) => (i.isExotic ? 1 : 0));
 
-  const response = await authenticatedHttpClient(
+  const response = await authenticatedHttpClient<ServerResponse<DestinyEquipItemResults>>(
     bungieApiUpdate('/D1/Platform/Destiny/EquipItems/', {
       characterId: store.id,
       membershipType: account.originalPlatformType,
       itemIds: items.map((i) => i.id),
-    })
+    }),
   );
 
-  const data = response.Response as DestinyEquipItemResults;
+  const data = response.Response;
   return Object.fromEntries(data.equipResults.map((r) => [r.itemInstanceId, r.equipStatus]));
 }
 
@@ -201,7 +204,7 @@ export function setItemState(
   item: DimItem,
   storeId: string,
   lockState: boolean,
-  type: 'lock' | 'track'
+  type: 'lock' | 'track',
 ) {
   let method;
   switch (type) {
@@ -219,6 +222,6 @@ export function setItemState(
       membershipType: account.originalPlatformType,
       itemId: item.id,
       state: lockState,
-    })
+    }),
   );
 }

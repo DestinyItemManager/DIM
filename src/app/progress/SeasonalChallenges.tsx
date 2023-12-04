@@ -10,8 +10,8 @@ import {
 import { DestinyPresentationNodeDefinition, DestinyRecordState } from 'bungie-api-ts/destiny2';
 import seasonalChallengesInfo from 'data/d2/seasonal-challenges.json';
 import { useSelector } from 'react-redux';
-import { recordToPursuitItem } from './milestone-items';
 import { PursuitsGroup } from './Pursuits';
+import { recordToPursuitItem } from './milestone-items';
 
 /**
  * List out all the seasonal challenges for the character, grouped out in a useful way.
@@ -26,7 +26,7 @@ export default function SeasonalChallenges({
   const itemCreationContext = useSelector(createItemContextSelector);
   const nodeTree = toPresentationNodeTree(
     itemCreationContext,
-    seasonalChallengesPresentationNode.hash
+    seasonalChallengesPresentationNode.hash,
   );
 
   const allRecords = nodeTree ? flattenRecords(nodeTree) : [];
@@ -46,8 +46,8 @@ export default function SeasonalChallenges({
         itemCreationContext.buckets,
         store,
         seasonalChallengesPresentationNode.displayProperties.name,
-        trackedRecords.includes(r.recordDef.hash)
-      )
+        trackedRecords.includes(r.recordDef.hash),
+      ),
     );
 
   return (
@@ -56,7 +56,12 @@ export default function SeasonalChallenges({
         title={seasonalChallengesPresentationNode.displayProperties.name}
         sectionId="seasonal-challenges"
       >
-        <PursuitsGroup pursuits={pursuits} store={store} pursuitsInfo={seasonalChallengesInfo} />
+        <PursuitsGroup
+          defs={itemCreationContext.defs}
+          pursuits={pursuits}
+          store={store}
+          pursuitsInfo={seasonalChallengesInfo}
+        />
       </CollapsibleTitle>
     </section>
   );

@@ -1,4 +1,3 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { EnergyIncrementsWithPresstip } from 'app/dim-ui/EnergyIncrements';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
@@ -6,10 +5,8 @@ import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { permissiveArmorEnergyRules } from 'app/loadout-builder/types';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { LoadoutStats } from 'app/store-stats/CharacterStats';
-import { Portal } from 'app/utils/temp-container';
+import { LoadoutCharacterStats } from 'app/store-stats/CharacterStats';
 import Cost from 'app/vendors/Cost';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -23,33 +20,38 @@ import styles from './ModAssignmentDrawer.m.scss';
 import { useEquippedLoadoutArmorAndSubclass, useLoadoutMods } from './selectors';
 
 function Header({
-  defs,
   loadout,
   subclass,
   armor,
   mods,
 }: {
-  defs: D2ManifestDefinitions;
   loadout: Loadout;
   subclass: ResolvedLoadoutItem | undefined;
   armor: DimItem[];
   mods: PluggableInventoryItemDefinition[];
 }) {
-  const stats = getLoadoutStats(defs, loadout.classType, subclass, armor, mods);
-
   return (
     <div>
       <h1>{t('Loadouts.ModPlacement.ModPlacement')}</h1>
       <div className={styles.headerInfo}>
         <div className={styles.headerName}>{loadout.name}</div>
         <div className={styles.headerStats}>
-          <LoadoutStats stats={stats} />
+          <LoadoutCharacterStats
+            loadout={loadout}
+            subclass={subclass}
+            allMods={mods}
+            items={armor}
+          />
         </div>
       </div>
     </div>
   );
 }
 
+/**
+ * A sheet that shows what mods will go where on a loadout, given its current
+ * state, and what energy upgrades need to be done to make those mods fit.
+ */
 export default function ModAssignmentDrawer({
   loadout,
   storeId,
@@ -80,7 +82,7 @@ export default function ModAssignmentDrawer({
           // ensure to use as few materials as possible
           armorEnergyRules: permissiveArmorEnergyRules,
         }),
-      [armor, defs, modDefinitions]
+      [armor, defs, modDefinitions],
     );
 
   const onSocketClick = useCallback(
@@ -93,7 +95,7 @@ export default function ModAssignmentDrawer({
         setPlugCategoryHashWhitelist(plugCategoryHashWhitelist);
       }
     },
-    []
+    [],
   );
 
   const flatAssigned = _.compact(Object.values(itemModAssignments).flat());
@@ -108,15 +110,7 @@ export default function ModAssignmentDrawer({
   return (
     <>
       <Sheet
-        header={
-          <Header
-            defs={defs}
-            loadout={loadout}
-            subclass={subclass}
-            armor={armor}
-            mods={flatAssigned}
-          />
-        }
+        header={<Header loadout={loadout} subclass={subclass} armor={armor} mods={flatAssigned} />}
         disabled={Boolean(onUpdateMods && plugCategoryHashWhitelist)}
         onClose={onClose}
       >
@@ -200,16 +194,14 @@ export default function ModAssignmentDrawer({
         </div>
       </Sheet>
       {onUpdateMods && plugCategoryHashWhitelist && (
-        <Portal>
-          <ModPicker
-            classType={loadout.classType}
-            owner={storeId}
-            lockedMods={resolvedMods}
-            plugCategoryHashWhitelist={plugCategoryHashWhitelist}
-            onAccept={onUpdateMods}
-            onClose={() => setPlugCategoryHashWhitelist(undefined)}
-          />
-        </Portal>
+        <ModPicker
+          classType={loadout.classType}
+          owner={storeId}
+          lockedMods={resolvedMods}
+          plugCategoryHashWhitelist={plugCategoryHashWhitelist}
+          onAccept={onUpdateMods}
+          onClose={() => setPlugCategoryHashWhitelist(undefined)}
+        />
       )}
     </>
   );

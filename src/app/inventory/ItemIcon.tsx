@@ -7,9 +7,10 @@ import { isModCostVisible } from 'app/utils/socket-utils';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes, ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
-import pursuitComplete from 'images/highlightedObjective.svg';
+import pursuitComplete from 'images/pursuitComplete.svg';
 import { DimItem } from './item-types';
 import styles from './ItemIcon.m.scss';
+import { isPluggableItem } from './store/sockets';
 
 const itemTierStyles: Record<ItemTierName, string> = {
   Legendary: styles.legendary,
@@ -133,7 +134,7 @@ export function DefItemIcon({
     },
     !borderless &&
       !itemDef.plug &&
-      itemDef.inventory && [itemTierStyles[D2ItemTiers[itemDef.inventory.tierType]]]
+      itemDef.inventory && [itemTierStyles[D2ItemTiers[itemDef.inventory.tierType]]],
   );
   const energyCost = getModCostInfo(itemDef);
 
@@ -161,8 +162,8 @@ export function DefItemIcon({
  * given a mod definition or hash, returns its energy cost if it should be shown
  */
 function getModCostInfo(mod: DestinyInventoryItemDefinition) {
-  if (mod?.plug && isModCostVisible(mod.plug)) {
-    return mod.plug.energyCost.energyCost;
+  if (isPluggableItem(mod) && isModCostVisible(mod)) {
+    return mod.plug.energyCost!.energyCost;
   }
 
   return undefined;

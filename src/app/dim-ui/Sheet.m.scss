@@ -1,4 +1,102 @@
-@import '../variables';
+@use '../variables' as *;
+
+// These styles need to be early in the stylesheet so that they can be easily
+// overridden by components.
+// TODO: When we stop supporting Chrome <99 and Safari <15.4, we can use @layer
+// here to fix these cascade issues once and for all.
+
+$control-color: rgba(255, 255, 255, 0.5);
+
+.sheet {
+  max-height: calc(var(--viewport-height) - var(--header-height) - 8px);
+  left: 0;
+  right: 0;
+  position: fixed;
+  backface-visibility: hidden;
+  bottom: 0;
+  // Pin the sheet to just over the keyboard
+  bottom: var(--viewport-bottom-offset);
+  background-color: var(--theme-item-sheet-bg);
+  color: #e0e0e0;
+  box-shadow: 0 -1px 24px 0 #222;
+  user-select: none;
+}
+
+.header {
+  box-sizing: border-box;
+  padding: 11px 48px 10px 10px;
+  border-bottom: 1px solid #333;
+  border-top: 5px solid $control-color;
+  cursor: grab;
+  // without a min-height, the border-bottom sticks through the close sheet button
+  min-height: 56px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  > *:first-child {
+    flex: 1;
+  }
+
+  :where(h1) {
+    @include destiny-header;
+    font-size: 16px;
+    margin: 0 0 8px 0;
+    display: block;
+  }
+}
+
+.footer {
+  border-top: 1px solid #333;
+  padding: 8px 10px;
+  padding-bottom: Max(8px, env(safe-area-inset-bottom));
+  flex-shrink: 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  max-height: calc(var(--viewport-height) - var(--header-height) - 8px);
+  touch-action: none;
+}
+
+.contents {
+  flex: 1;
+  -webkit-overflow-scrolling: touch;
+  box-sizing: border-box;
+  // This gets overridden to overflow-y: auto by a resize observer in the
+  // sheets code if the content actually overflows, as part of an elaborate
+  // workaround for browser bugs concerning overscroll-behavior
+  overflow: hidden;
+  overscroll-behavior: none;
+
+  &:last-child {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+.close {
+  all: initial;
+  z-index: 1;
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 18px 12px 12px 12px;
+  color: $control-color;
+  cursor: pointer;
+  > :global(.app-icon) {
+    height: 24px;
+    width: 24px;
+    font-size: 24px;
+  }
+  &:active,
+  &:hover,
+  &:focus-visible {
+    color: var(--theme-accent-primary);
+  }
+}
 
 .sheetDisabled {
   transform-origin: center bottom;
@@ -10,11 +108,16 @@
 .disabledScreen {
   background-color: black;
   position: absolute;
-  inset: 0 0 0 0;
+  inset: 0;
   display: none;
   transition: opacity 300ms linear;
+  z-index: 1;
   .sheetDisabled & {
     display: block;
     opacity: 0.6;
   }
+}
+
+.noHeader {
+  right: 16px !important;
 }

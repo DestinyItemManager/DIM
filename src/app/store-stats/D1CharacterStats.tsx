@@ -1,3 +1,4 @@
+import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import type { DimStore } from 'app/inventory/store-types';
@@ -26,7 +27,7 @@ export default function D1CharacterStats({ stats }: Props) {
 
       let cooldown = stat.cooldown || '';
       if (cooldown) {
-        cooldown = t(`Cooldown.${stat.effect}`, {
+        cooldown = t(`Cooldown.${stat.effect!}`, {
           cooldown,
           metadata: { keys: 'cooldowns' },
         });
@@ -40,7 +41,7 @@ export default function D1CharacterStats({ stats }: Props) {
       {statList.map((stat, index) => (
         <PressTip key={stat.hash} tooltip={tooltips[index]}>
           <div className="stat">
-            <img src={stat.icon} alt={stat.name} />
+            <BungieImage src={stat.icon} alt={stat.name} />
             {getD1CharacterStatTiers(stat).map((n, index) => (
               <div key={index} className="bar">
                 <div

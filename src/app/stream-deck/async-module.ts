@@ -22,9 +22,13 @@ import {
   streamDeckUpdatePopupShowed,
 } from 'app/stream-deck/actions';
 import { randomStringToken } from 'app/stream-deck/AuthorizationNotification/AuthorizationNotification';
-import { LoadoutSelection, SelectionArgs, SendToStreamDeckArgs } from 'app/stream-deck/interfaces';
+import {
+  LoadoutSelection,
+  SelectionArgs,
+  SendToStreamDeckArgs,
+  StreamDeckMessage,
+} from 'app/stream-deck/interfaces';
 import { handleStreamDeckMessage, notificationPromise } from 'app/stream-deck/msg-handlers';
-import { streamDeck } from 'app/stream-deck/reducer';
 import { streamDeckUpdatePopupSelector } from 'app/stream-deck/selectors';
 import {
   clientIdentifier,
@@ -35,9 +39,8 @@ import {
 } from 'app/stream-deck/util/local-storage';
 import packager from 'app/stream-deck/util/packager';
 import { infoLog } from 'app/utils/log';
-import { observeStore } from 'app/utils/redux-utils';
-import { DamageType, DestinyClass } from 'bungie-api-ts/destiny2';
-import { DestinyLoadoutItemComponent } from 'bungie-api-ts/destiny2/interfaces';
+import { observeStore } from 'app/utils/redux';
+import { DamageType, DestinyClass, DestinyLoadoutItemComponent } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 
@@ -52,16 +55,14 @@ function generateIdentifier() {
   }
 }
 
-export function sendToStreamDeck(msg: SendToStreamDeckArgs): ThunkResult {
-  return async () => {
-    if (streamDeckWebSocket?.readyState === WebSocket.OPEN) {
-      streamDeckWebSocket.send(
-        JSON.stringify({
-          ...msg,
-        })
-      );
-    }
-  };
+export async function sendToStreamDeck(msg: SendToStreamDeckArgs) {
+  if (streamDeckWebSocket?.readyState === WebSocket.OPEN) {
+    streamDeckWebSocket.send(
+      JSON.stringify({
+        ...msg,
+      }),
+    );
+  }
 }
 
 // on click on InventoryItem send the selected item to the Stream Deck
@@ -76,27 +77,25 @@ function streamDeckSelectItem(item: DimItem): ThunkResult {
       // clear the selection state in the store
       dispatch(streamDeckClearSelection());
       // send selection to the Stream Deck
-      return dispatch(
-        sendToStreamDeck({
-          action: 'dim:selection',
-          data: {
-            selectionType: 'item',
-            selection: {
-              label: item.name,
-              subtitle: item.typeName,
-              item: item.index.replace(/-.*/, ''),
-              icon: item.icon,
-              overlay: item.iconOverlay,
-              isExotic: item.isExotic,
-              inventory: item.location.accountWide,
-              element:
-                item.element?.enumValue === DamageType.Kinetic
-                  ? undefined
-                  : item.element?.displayProperties?.icon,
-            },
+      return sendToStreamDeck({
+        action: 'dim:selection',
+        data: {
+          selectionType: 'item',
+          selection: {
+            label: item.name,
+            subtitle: item.typeName,
+            item: item.index.replace(/-.*/, ''),
+            icon: item.icon,
+            overlay: item.iconOverlay,
+            isExotic: item.isExotic,
+            inventory: item.location.accountWide,
+            element:
+              item.element?.enumValue === DamageType.Kinetic
+                ? undefined
+                : item.element?.displayProperties?.icon,
           },
-        })
-      );
+        },
+      });
     }
   };
 }
@@ -116,15 +115,15 @@ function findSubClassInGame(items: DestinyLoadoutItemComponent[], state: RootSta
   const allItems = allItemsSelector(state);
   const itemCreationContext = createItemContextSelector(state);
   const mappedItems = getItemsFromInGameLoadout(itemCreationContext, items, allItems);
-  const categories = _.groupBy(mappedItems, (li) => li.item.bucket.sort);
-  const subclassItem = categories['General']?.[0];
+  const categories = Map.groupBy(mappedItems, (li) => li.item.bucket.sort);
+  const subclassItem = categories.get('General')?.[0];
   return subclassItem?.item.icon;
 }
 
 // on click on LoadoutView send the selected loadout and the related character identifier to the Stream Deck
 function streamDeckSelectLoadout(
   { type, loadout }: LoadoutSelection,
-  store: DimStore
+  store: DimStore,
 ): ThunkResult {
   return async (dispatch, getState) => {
     let selection: NonNullable<SelectionArgs['data']>['selection'];
@@ -157,56 +156,50 @@ function streamDeckSelectLoadout(
           };
         }
       }
-      return dispatch(
-        sendToStreamDeck({
-          action: 'dim:selection',
-          data: {
-            selectionType: 'loadout',
-            selection,
-          },
-        })
-      );
+      return sendToStreamDeck({
+        action: 'dim:selection',
+        data: {
+          selectionType: 'loadout',
+          selection,
+        },
+      });
     }
   };
 }
 
-const installFarmingObserver = _.once((dispatch) => {
+const installFarmingObserver = _.once(() => {
   observeStore(
     (state) => state.farming.storeId,
     (_, newState) => {
-      dispatch(
-        sendToStreamDeck({
-          action: 'dim:update',
-          data: {
-            farmingMode: Boolean(newState),
-          },
-        })
-      );
-    }
+      sendToStreamDeck({
+        action: 'dim:update',
+        data: {
+          farmingMode: Boolean(newState),
+        },
+      });
+    },
   );
 });
 
 // collect and send data to the stream deck
 function refreshStreamDeck(): ThunkResult {
-  return async (dispatch, getState) => {
+  return async (_dispatch, getState) => {
     const refreshAction = () => {
       const state = getState();
       const store = currentStoreSelector(getState());
       if (!store) {
         return;
       }
-      dispatch(
-        sendToStreamDeck({
-          action: 'dim:update',
-          data: {
-            postmaster: packager.postmaster(store),
-            maxPower: packager.maxPower(store, state),
-            vault: packager.vault(state),
-            metrics: packager.metrics(state),
-            equippedItems: packager.equippedItems(store),
-          },
-        })
-      );
+      sendToStreamDeck({
+        action: 'dim:update',
+        data: {
+          postmaster: packager.postmaster(store),
+          maxPower: packager.maxPower(store, state),
+          vault: packager.vault(state),
+          metrics: packager.metrics(state),
+          equippedItems: packager.equippedItems(store),
+        },
+      });
     };
     clearInterval(refreshInterval);
     refreshInterval = window.setInterval(refreshAction, 30000);
@@ -236,7 +229,7 @@ function checkPluginUpdate(): ThunkResult {
         body: t('StreamDeck.Authorization.Update'),
         type: 'error',
         duration: 200,
-        onClick: notificationPromise.resolve,
+        onClick: () => notificationPromise.resolve(),
         promise: notificationPromise.promise,
       });
     }
@@ -268,7 +261,7 @@ function startStreamDeckConnection(): ThunkResult {
         return;
       }
 
-      installFarmingObserver(dispatch);
+      installFarmingObserver();
 
       // close the existing websocket if connected
       if (streamDeckWebSocket && streamDeckWebSocket.readyState !== WebSocket.CLOSED) {
@@ -301,7 +294,7 @@ function startStreamDeckConnection(): ThunkResult {
       };
 
       streamDeckWebSocket.onmessage = function ({ data }) {
-        dispatch(handleStreamDeckMessage(JSON.parse(data)));
+        dispatch(handleStreamDeckMessage(JSON.parse(data as string) as StreamDeckMessage));
       };
 
       streamDeckWebSocket.onerror = function () {
@@ -329,5 +322,4 @@ export default {
   streamDeckSelectItem,
   streamDeckSelectLoadout,
   resetIdentifierOnStreamDeck,
-  reducer: streamDeck,
 };

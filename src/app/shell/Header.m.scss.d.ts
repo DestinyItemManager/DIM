@@ -6,10 +6,6 @@ interface CssExports {
   'container': string;
   'dev': string;
   'dropdown': string;
-  'dropdownEnter': string;
-  'dropdownEnterActive': string;
-  'dropdownExit': string;
-  'dropdownExitActive': string;
   'header': string;
   'headerLinks': string;
   'headerRight': string;
@@ -18,6 +14,7 @@ interface CssExports {
   'logoLink': string;
   'menu': string;
   'menuItem': string;
+  'pr': string;
   'pwaPrompt': string;
   'searchButton': string;
   'searchLink': string;

@@ -5,30 +5,27 @@ import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
-import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { getLoadoutStats, singularBucketHashes } from 'app/loadout-drawer/loadout-utils';
-import { useD2Definitions } from 'app/manifest/selectors';
+import { singularBucketHashes } from 'app/loadout-drawer/loadout-utils';
 import { AppIcon, addIcon, faTshirt } from 'app/shell/icons';
-import { LoadoutStats } from 'app/store-stats/CharacterStats';
+import { LoadoutCharacterStats } from 'app/store-stats/CharacterStats';
 import { emptyArray } from 'app/utils/empty';
-import { itemCanBeInLoadout } from 'app/utils/item-utils';
-import { Portal } from 'app/utils/temp-container';
 import { LookupTable } from 'app/utils/util-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React, { useState } from 'react';
-import { DropTargetHookSpec, useDrop } from 'react-dnd';
+import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import FashionDrawer from '../fashion/FashionDrawer';
 import { BucketPlaceholder } from '../loadout-ui/BucketPlaceholder';
 import { FashionMods } from '../loadout-ui/FashionMods';
 import LoadoutParametersDisplay from '../loadout-ui/LoadoutParametersDisplay';
-import { OptimizerButton } from '../loadout-ui/OptimizerButton';
+import { OptimizerButton, armorItemsMissing } from '../loadout-ui/OptimizerButton';
 import styles from './LoadoutEditBucket.m.scss';
+import { useEquipDropTargets } from './useEquipDropTargets';
 
 export type EditableCategories = 'Weapons' | 'Armor' | 'General';
 
@@ -64,12 +61,12 @@ export default function LoadoutEditBucket({
   children?: React.ReactNode;
 }) {
   const buckets = useSelector(bucketsSelector)!;
-  const itemsByBucket = _.groupBy(items, (li) => li.item.bucket.hash);
+  const itemsByBucket = Object.groupBy(items ?? [], (li) => li.item.bucket.hash);
   const bucketOrder =
     category === 'Weapons' || category === 'Armor'
       ? buckets.byCategory[category]
       : [BucketHashes.Ghost, BucketHashes.Emblems, BucketHashes.Ships, BucketHashes.Vehicle].map(
-          (h) => buckets.byHash[h]
+          (h) => buckets.byHash[h],
         );
   const isArmor = category === 'Armor';
 
@@ -80,7 +77,6 @@ export default function LoadoutEditBucket({
           <ItemBucket
             key={bucket.hash}
             bucket={bucket}
-            category={category}
             classType={classType}
             items={itemsByBucket[bucket.hash]}
             onClickPlaceholder={onClickPlaceholder}
@@ -118,17 +114,19 @@ export function ArmorExtras({
   items?: ResolvedLoadoutItem[];
   onModsByBucketUpdated: (modsByBucket: LoadoutParameters['modsByBucket']) => void;
 }) {
-  const defs = useD2Definitions()!;
   const equippedItems =
     items?.filter((li) => li.loadoutItem.equip && !li.missing).map((li) => li.item) ?? [];
+  const anyMissing = armorItemsMissing(items);
 
   return (
     <>
       {equippedItems.length === 5 && (
         <div className="stat-bars destiny2">
-          <LoadoutStats
-            showTier
-            stats={getLoadoutStats(defs, loadout.classType, subclass, equippedItems, allMods)}
+          <LoadoutCharacterStats
+            loadout={loadout}
+            subclass={subclass}
+            allMods={allMods}
+            items={items}
           />
         </div>
       )}
@@ -140,7 +138,7 @@ export function ArmorExtras({
           storeId={storeId}
           onModsByBucketUpdated={onModsByBucketUpdated}
         />
-        <OptimizerButton loadout={loadout} />
+        <OptimizerButton loadout={loadout} storeId={storeId} missingArmor={anyMissing} />
       </div>
     </>
   );
@@ -149,7 +147,6 @@ export function ArmorExtras({
 function ItemBucket({
   bucket,
   classType,
-  category,
   items,
   equippedContent,
   onClickPlaceholder,
@@ -159,7 +156,6 @@ function ItemBucket({
 }: {
   bucket: InventoryBucket;
   classType: DestinyClass;
-  category: EditableCategories;
   items: ResolvedLoadoutItem[];
   equippedContent?: React.ReactNode;
   onClickPlaceholder: (params: { bucket: InventoryBucket; equip: boolean }) => void;
@@ -171,36 +167,18 @@ function ItemBucket({
   const [equipped, unequipped] = _.partition(items, (li) => li.loadoutItem.equip);
 
   const stores = useSelector(storesSelector);
-  const buckets = useSelector(bucketsSelector)!;
-
-  const dropSpec =
-    (type: 'equipped' | 'unequipped') =>
-    (): DropTargetHookSpec<
-      DimItem,
-      { equipped: boolean },
-      { isOver: boolean; canDrop: boolean }
-    > => ({
-      accept: [bucket.hash.toString(), ...stores.flatMap((store) => `${store.id}-${bucket.hash}`)],
-      drop: () => ({ equipped: type === 'equipped' }),
-      canDrop: (i) =>
-        itemCanBeInLoadout(i) &&
-        (i.classType === DestinyClass.Unknown || classType === i.classType) &&
-        (type === 'equipped' || !singularBucketHashes.includes(i.bucket.hash)),
-      collect: (monitor) => ({
-        isOver: monitor.isOver() && monitor.canDrop(),
-        canDrop: monitor.canDrop(),
-      }),
-    });
-
-  const [{ isOver: isOverEquipped, canDrop: canDropEquipped }, equippedRef] = useDrop(
-    dropSpec('equipped'),
-    [category, stores, buckets]
+  const acceptTarget = useMemo(
+    () => [bucket.hash.toString(), ...stores.flatMap((store) => `${store.id}-${bucket.hash}`)],
+    [bucket, stores],
   );
-
-  const [{ isOver: isOverUnequipped, canDrop: canDropUnequipped }, unequippedRef] = useDrop(
-    dropSpec('unequipped'),
-    [category, stores, buckets]
-  );
+  const {
+    equippedRef,
+    unequippedRef,
+    isOverEquipped,
+    isOverUnequipped,
+    canDropEquipped,
+    canDropUnequipped,
+  } = useEquipDropTargets(acceptTarget, classType);
 
   const handlePlaceholderClick = (equip: boolean) => onClickPlaceholder({ bucket, equip });
 
@@ -234,7 +212,7 @@ function ItemBucket({
   );
 
   return (
-    <div className={clsx(styles.itemBucket)}>
+    <div className={styles.itemBucket}>
       <div
         ref={equippedRef}
         className={clsx({
@@ -334,23 +312,17 @@ function FashionButton({
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setShowFashionDrawer(true)}
-        className="dim-button loadout-add"
-      >
+      <button type="button" onClick={() => setShowFashionDrawer(true)} className="dim-button">
         <AppIcon icon={faTshirt} /> {t('Loadouts.Fashion')}
       </button>
       {showFashionDrawer && (
-        <Portal>
-          <FashionDrawer
-            loadout={loadout}
-            items={items}
-            storeId={storeId}
-            onModsByBucketUpdated={onModsByBucketUpdated}
-            onClose={() => setShowFashionDrawer(false)}
-          />
-        </Portal>
+        <FashionDrawer
+          loadout={loadout}
+          items={items}
+          storeId={storeId}
+          onModsByBucketUpdated={onModsByBucketUpdated}
+          onClose={() => setShowFashionDrawer(false)}
+        />
       )}
     </>
   );

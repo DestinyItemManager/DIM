@@ -56,14 +56,14 @@ export function getEnergyUpgradeHashes(item: DimItem, newEnergyCapacity: number)
     .filter(
       (plug) =>
         plug.plug.energyCapacity!.capacityValue <= newEnergyCapacity &&
-        plug.plug.energyCapacity!.capacityValue > oldEnergyCapacity
+        plug.plug.energyCapacity!.capacityValue > oldEnergyCapacity,
     )
     .map((p) => p.hash);
 }
 
 export function sumModCosts(
   defs: D2ManifestDefinitions,
-  mods: DestinyInventoryItemDefinition[]
+  mods: DestinyInventoryItemDefinition[],
 ): DestinyItemQuantity[] {
   const costs: { [itemHash: number]: number } = {};
   for (const mod of mods) {

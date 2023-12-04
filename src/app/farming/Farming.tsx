@@ -3,12 +3,18 @@ import { t } from 'app/i18next-t';
 import { useSetting } from 'app/settings/hooks';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
+import { AnimatePresence, Spring, Variants, motion } from 'framer-motion';
 import React, { useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { stopFarming } from './actions';
 import './farming.scss';
 import { farmingStoreSelector } from './selectors';
+
+const animateVariants: Variants = {
+  shown: { y: 0, x: '-50%' },
+  hidden: { y: 60, x: '-50%' },
+};
+const animateTransition: Spring = { type: 'spring', duration: 0.3, bounce: 0 };
 
 export default function Farming() {
   const dispatch = useThunkDispatch();
@@ -24,61 +30,64 @@ export default function Farming() {
   const onStopClicked = () => dispatch(stopFarming());
 
   return (
-    <TransitionGroup component={null}>
+    <AnimatePresence>
       {store && (
-        <CSSTransition nodeRef={nodeRef} classNames="farming" timeout={{ enter: 500, exit: 500 }}>
-          <div
-            ref={nodeRef}
-            id="item-farming"
-            className={clsx({ 'd2-farming': store.destinyVersion === 2 })}
-          >
-            {store.destinyVersion === 2 ? (
-              <div>
-                <p>
-                  {t('FarmingMode.D2Desc', {
-                    store: store.name,
-                    context: store.genderName,
-                    count: inventoryClearSpaces,
-                  })}{' '}
-                  {t('FarmingMode.Vault')}
-                </p>
-              </div>
-            ) : (
-              <div>
-                <p>
-                  {makeRoomForItems
-                    ? t('FarmingMode.Desc', {
-                        store: store.name,
-                        context: store.genderName,
-                        count: inventoryClearSpaces,
-                      })
-                    : t('FarmingMode.MakeRoom.Desc', {
-                        store: store.name,
-                        context: store.genderName,
-                      })}
-                </p>
-                <p>
-                  <input
-                    name="make-room-for-items"
-                    type="checkbox"
-                    checked={makeRoomForItems}
-                    onChange={makeRoomForItemsChanged}
-                  />
-                  <label htmlFor="make-room-for-items" title={t('FarmingMode.MakeRoom.Tooltip')}>
-                    {t('FarmingMode.MakeRoom.MakeRoom')}
-                  </label>
-                </p>
-              </div>
-            )}
-
+        <motion.div
+          ref={nodeRef}
+          id="item-farming"
+          className={clsx({ 'd2-farming': store.destinyVersion === 2 })}
+          initial="hidden"
+          animate="shown"
+          exit="hidden"
+          variants={animateVariants}
+          transition={animateTransition}
+        >
+          {store.destinyVersion === 2 ? (
             <div>
-              <button type="button" onClick={onStopClicked}>
-                {t('FarmingMode.Stop')}
-              </button>
+              <p>
+                {t('FarmingMode.D2Desc', {
+                  store: store.name,
+                  context: store.genderName,
+                  count: inventoryClearSpaces,
+                })}{' '}
+                {t('FarmingMode.Vault')}
+              </p>
             </div>
+          ) : (
+            <div>
+              <p>
+                {makeRoomForItems
+                  ? t('FarmingMode.Desc', {
+                      store: store.name,
+                      context: store.genderName,
+                      count: inventoryClearSpaces,
+                    })
+                  : t('FarmingMode.MakeRoom.Desc', {
+                      store: store.name,
+                      context: store.genderName,
+                    })}
+              </p>
+              <p>
+                <input
+                  name="make-room-for-items"
+                  type="checkbox"
+                  checked={makeRoomForItems}
+                  onChange={makeRoomForItemsChanged}
+                />
+                <label htmlFor="make-room-for-items" title={t('FarmingMode.MakeRoom.Tooltip')}>
+                  {t('FarmingMode.MakeRoom.MakeRoom')}
+                </label>
+              </p>
+            </div>
+          )}
+
+          <div>
+            <button type="button" onClick={onStopClicked}>
+              {t('FarmingMode.Stop')}
+            </button>
           </div>
-        </CSSTransition>
+        </motion.div>
       )}
-    </TransitionGroup>
+    </AnimatePresence>
   );
 }

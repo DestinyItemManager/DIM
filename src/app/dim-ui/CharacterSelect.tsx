@@ -140,9 +140,12 @@ function SwipableCharacterSelect({
   };
 
   const onPanEnd = (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    if (!trackRef.current) {
+      return;
+    }
     // Animate to one of the settled whole-number indexes
     let newIndex = _.clamp(Math.round(offset.get()), 0, numSegments - 1);
-    const scale = trackRef.current!.clientWidth / numSegments;
+    const scale = trackRef.current.clientWidth / numSegments;
 
     if (index === newIndex) {
       const swipe = (info.velocity.x * info.offset.x) / (scale * scale);
@@ -162,7 +165,7 @@ function SwipableCharacterSelect({
 
   // Transform the segment-relative offset back into pixels
   const offsetPercent = useTransform(offset, (o) =>
-    trackRef.current ? (trackRef.current.clientWidth / numSegments) * -o : 0
+    trackRef.current ? (trackRef.current.clientWidth / numSegments) * -o : 0,
   );
 
   return (

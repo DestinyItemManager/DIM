@@ -5,8 +5,9 @@ import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/sel
 import { showNotification } from 'app/notifications/notifications';
 import { AppIcon, faCheckCircle, refreshIcon, thumbsUpIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { errorMessage } from 'app/utils/errors';
 import { wishListSelector } from 'app/wishlists/selectors';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './ApplyPerkSelection.m.scss';
 
@@ -39,7 +40,7 @@ export default function ApplyPerkSelection({
       socket.plugOptions.length > 1
     ) {
       const wishlistPlug = socket.plugOptions.find((p) =>
-        wishlistRoll.wishListPerks.has(p.plugDef.hash)
+        wishlistRoll.wishListPerks.has(p.plugDef.hash),
       );
       if (
         wishlistPlug &&
@@ -75,7 +76,11 @@ export default function ApplyPerkSelection({
           showNotification({
             type: 'error',
             title: t('AWA.Error'),
-            body: t('AWA.ErrorMessage', { error: e.message, item: item.name, plug: plugName }),
+            body: t('AWA.ErrorMessage', {
+              error: errorMessage(e),
+              item: item.name,
+              plug: plugName,
+            }),
           });
           return; // bail out without calling onApplied
         }

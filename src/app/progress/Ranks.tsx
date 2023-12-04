@@ -3,6 +3,7 @@ import { LookupTable } from 'app/utils/util-types';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { ProgressionHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
+import PursuitGrid from './PursuitGrid';
 import { ReputationRank } from './ReputationRank';
 import { getCharacterProgressions } from './selectors';
 
@@ -49,7 +50,7 @@ export default function Ranks({ profileInfo }: { profileInfo: DestinyProfileResp
   const progressionHashes = useSelector(rankProgressionHashesSelector);
 
   return (
-    <div className="progress-for-character ranks-for-character">
+    <PursuitGrid ranks>
       {progressionHashes.map(
         (progressionHash: ProgressionHashes) =>
           firstCharacterProgression[progressionHash] && (
@@ -59,10 +60,10 @@ export default function Ranks({ profileInfo }: { profileInfo: DestinyProfileResp
               streak={
                 firstCharacterProgression[rankProgressionToStreakProgression[progressionHash] ?? 0]
               }
-              resetCount={firstCharacterProgression[progressionHash]?.currentResetCount}
+              isProgressRanks
             />
-          )
+          ),
       )}
-    </div>
+    </PursuitGrid>
   );
 }

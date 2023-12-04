@@ -1,18 +1,23 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { isArtifice } from 'app/item-triage/triage-utils';
 import { calculateAssumedItemEnergy } from 'app/loadout/armor-upgrade-utils';
 import {
   activityModPlugCategoryHashes,
   knownModPlugCategoryHashes,
 } from 'app/loadout/known-values';
-import { MAX_ARMOR_ENERGY_CAPACITY, armorStats } from 'app/search/d2-known-values';
+import {
+  MASTERWORK_ARMOR_STAT_BONUS,
+  MAX_ARMOR_ENERGY_CAPACITY,
+  armorStats,
+} from 'app/search/d2-known-values';
+import { filterMap } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import {
   getModTypeTagByPlugCategoryHash,
   getSpecialtySocketMetadatas,
+  isArtifice,
 } from '../../utils/item-utils';
 import { AutoModData, ProcessArmorSet, ProcessItem, ProcessMod } from '../process-worker/types';
 import {
@@ -30,9 +35,7 @@ import {
 export function mapArmor2ModToProcessMod(mod: PluggableInventoryItemDefinition): ProcessMod {
   const processMod: ProcessMod = {
     hash: mod.hash,
-    energy: mod.plug.energyCost && {
-      val: mod.plug.energyCost.energyCost,
-    },
+    energyCost: mod.plug.energyCost?.energyCost ?? 0,
   };
 
   if (
@@ -59,7 +62,7 @@ export function mapDimItemToProcessItem({
   armorEnergyRules: ArmorEnergyRules;
   modsForSlot?: PluggableInventoryItemDefinition[];
 }): ProcessItem {
-  const { id, hash, name, isExotic, power, stats: dimItemStats, energy } = dimItem;
+  const { id, hash, name, isExotic, power, stats: dimItemStats } = dimItem;
 
   const statMap: { [statHash: number]: number } = {};
   const capacity = calculateAssumedItemEnergy(dimItem, armorEnergyRules);
@@ -68,7 +71,7 @@ export function mapDimItemToProcessItem({
     for (const { statHash, base } of dimItemStats) {
       let value = base;
       if (capacity === MAX_ARMOR_ENERGY_CAPACITY) {
-        value += 2;
+        value += MASTERWORK_ARMOR_STAT_BONUS;
       }
       statMap[statHash] = value;
     }
@@ -87,19 +90,14 @@ export function mapDimItemToProcessItem({
     isArtifice: isArtifice(dimItem),
     power,
     stats: statMap,
-    energy: energy
-      ? {
-          capacity,
-          val: modsCost,
-        }
-      : undefined,
+    remainingEnergyCapacity: capacity - modsCost,
     compatibleModSeasons: modMetadatas?.flatMap((m) => m.compatibleModTags),
   };
 }
 
 export function hydrateArmorSet(
   processed: ProcessArmorSet,
-  itemsById: Map<string, ItemGroup>
+  itemsById: Map<string, ItemGroup>,
 ): ArmorSet {
   const armor: DimItem[][] = [];
 
@@ -126,7 +124,7 @@ export function mapAutoMods(defs: AutoModDefs): AutoModData {
   return {
     artificeMods: _.mapValues(defs.artificeMods, defToArtificeMod),
     generalMods: _.mapValues(defs.generalMods, (modsForStat) =>
-      _.mapValues(modsForStat, defToAutoMod)
+      _.mapValues(modsForStat, defToAutoMod),
     ),
   };
 }
@@ -141,12 +139,10 @@ export function getAutoMods(defs: D2ManifestDefinitions, allUnlockedPlugs: Set<n
   const autoMods: AutoModDefs = { generalMods: {}, artificeMods: {} };
   // Only consider plugs that give stats
   const mapPlugSet = (plugSetHash: number) =>
-    _.compact(
-      defs.PlugSet.get(plugSetHash)?.reusablePlugItems.map((plugEntry) => {
-        const def = defs.InventoryItem.get(plugEntry.plugItemHash);
-        return isPluggableItem(def) && def.investmentStats?.length && def;
-      }) ?? []
-    );
+    filterMap(defs.PlugSet.get(plugSetHash)?.reusablePlugItems ?? [], (plugEntry) => {
+      const def = defs.InventoryItem.get(plugEntry.plugItemHash);
+      return isPluggableItem(def) && def.investmentStats?.length ? def : undefined;
+    });
   const generalPlugSet = mapPlugSet(generalSocketReusablePlugSetHash);
   const artificePlugSet = mapPlugSet(artificeSocketReusablePlugSetHash);
 
@@ -154,8 +150,8 @@ export function getAutoMods(defs: D2ManifestDefinitions, allUnlockedPlugs: Set<n
     // Artifice mods give a small boost in a single stat, so find the mod for that stat
     const artificeMod = artificePlugSet.find((modDef) =>
       modDef.investmentStats.some(
-        (stat) => stat.statTypeHash === statHash && stat.value === artificeStatBoost
-      )
+        (stat) => stat.statTypeHash === statHash && stat.value === artificeStatBoost,
+      ),
     );
     if (
       artificeMod &&
@@ -166,7 +162,7 @@ export function getAutoMods(defs: D2ManifestDefinitions, allUnlockedPlugs: Set<n
 
     const findUnlockedModByValue = (value: number) => {
       const relevantMods = generalPlugSet.filter((def) =>
-        def.investmentStats.find((stat) => stat.statTypeHash === statHash && stat.value === value)
+        def.investmentStats.find((stat) => stat.statTypeHash === statHash && stat.value === value),
       );
       relevantMods.sort(compareBy((def) => -(def.plug.energyCost?.energyCost ?? 0)));
       const [largeMod, smallMod] = relevantMods;

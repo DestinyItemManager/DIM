@@ -33,8 +33,8 @@
   &:hover,
   &:active,
   &.checked {
-    background-color: $orange;
-    color: black;
+    background-color: var(--theme-accent-primary);
+    color: var(--theme-text-invert);
     > img {
       filter: none !important;
     }
@@ -46,7 +46,7 @@
     &:hover,
     &:active,
     &.checked {
-      color: white !important;
+      color: var(--theme-text) !important;
     }
   }
 }

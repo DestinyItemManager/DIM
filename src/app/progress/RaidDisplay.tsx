@@ -70,7 +70,7 @@ export function RaidActivity({
           (modifierHash) =>
             modifierHash !== ARMSMASTER_ACTIVITY_MODIFIER && (
               <ActivityModifier key={modifierHash} modifierHash={modifierHash} small />
-            )
+            ),
         )}
       </div>
       {activity.phases && activity.phases.length > 0 && (

@@ -5,8 +5,8 @@ import { chainComparator, compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { getItemYear } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
+import extraItemCollectibles from 'data/d2/unreferenced-collections-items.json';
 import _ from 'lodash';
-import memoizeOne from 'memoize-one';
 import { ArmorySearchItem, SearchItemType } from './autocomplete';
 import { plainString } from './search-filters/freeform';
 
@@ -21,14 +21,23 @@ export interface ArmoryEntry {
   year: number | undefined;
 }
 
-export const buildArmoryIndex = memoizeOne((defs: D2ManifestDefinitions, language: DimLanguage) => {
+export function buildArmoryIndex(defs: D2ManifestDefinitions | undefined, language: DimLanguage) {
+  if (!defs) {
+    return undefined;
+  }
   const results: ArmoryEntry[] = [];
   const invItemTable = defs.InventoryItem.getAll();
   const seasons = Object.values(defs.Season.getAll());
+  const additionalCollectibles = Object.values(extraItemCollectibles);
   for (const h in invItemTable) {
     const i = invItemTable[h];
     if (
-      i.collectibleHash &&
+      // A good heuristic for "is this weapon not totally irrelevant" is the presence of
+      // the exact hash in collections, but some reissues do not reference the latest version
+      // in the collections entry (and thus the latest item has no `collectibleHash`).
+      // Use `additionalCollectibles` to patch those in. Note that we do not use the
+      // `collectibleFinder` because not matching some old items is the entire point here.
+      (i.collectibleHash || additionalCollectibles.includes(i.hash)) &&
       i.displayProperties &&
       (i.inventory?.bucketTypeHash === BucketHashes.KineticWeapons ||
         i.inventory?.bucketTypeHash === BucketHashes.EnergyWeapons ||
@@ -60,16 +69,16 @@ export const buildArmoryIndex = memoizeOne((defs: D2ManifestDefinitions, languag
   results.sort(
     chainComparator(
       compareBy((entry) => -entry.season),
-      compareBy((entry) => entry.name)
-    )
+      compareBy((entry) => entry.name),
+    ),
   );
   return results;
-});
+}
 
 export function getArmorySuggestions(
   armoryIndex: ArmoryEntry[] | undefined,
   query: string,
-  language: DimLanguage
+  language: DimLanguage,
 ): ArmorySearchItem[] {
   const plainQuery = plainString(query, language);
   const armoryEntries = query.length

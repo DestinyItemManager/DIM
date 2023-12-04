@@ -1,6 +1,6 @@
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
-import { powerLevelByKeyword } from 'app/search/d2-known-values';
+import { powerLevelByKeyword } from 'app/search/power-levels';
 import { RootState } from 'app/store/types';
 import { createSelector } from 'reselect';
 import { DimItem } from '../item-types';
@@ -18,21 +18,21 @@ const pinnacleCap = powerLevelByKeyword.pinnaclecap;
  *
  * This relies on a precalculated set generated from allItems, using getBucketsWithClassifiedItems.
  */
-export function hasAffectingClassified(
+function hasAffectingClassified(
   unrestrictedMaxLightGear: DimItem[],
-  bucketsWithClassifieds: Set<number>
+  bucketsWithClassifieds: Set<number>,
 ) {
   return unrestrictedMaxLightGear.some(
     (i) =>
       // isn't pinnacle cap
       i.power !== pinnacleCap &&
       // and shares a bucket with a classified item (which might be higher power)
-      bucketsWithClassifieds.has(i.bucket.hash)
+      bucketsWithClassifieds.has(i.bucket.hash),
   );
 }
 
 /** figures out which buckets contain classified items */
-export function getBucketsWithClassifiedItems(allItems: DimItem[]) {
+function getBucketsWithClassifiedItems(allItems: DimItem[]) {
   const bucketsWithClassifieds = new Set<number>();
   for (const i of allItems) {
     if (i.classified && !i.power && (i.location.inWeapons || i.location.inArmor)) {
@@ -85,7 +85,7 @@ const allPowerLevelsSelector = createSelector(
       // (maybe just because it's on a different class? who knows. can't test.)
       const dropPowerItemSet = maxLightItemSet(
         allItems.filter((i) => i.bucket.inWeapons || i.owner === 'vault' || i.owner === store.id),
-        store
+        store,
       ).unrestricted;
       const dropPowerLevel = getLight(store, dropPowerItemSet);
 
@@ -111,7 +111,7 @@ const allPowerLevelsSelector = createSelector(
     }
 
     return levels;
-  }
+  },
 );
 
 export const powerLevelSelector = (state: RootState, storeId: string | undefined) =>

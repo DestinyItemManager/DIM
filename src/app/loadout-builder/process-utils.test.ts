@@ -27,7 +27,7 @@ import {
   mapAutoMods,
   mapDimItemToProcessItem,
 } from './process/mappers';
-import { MIN_LO_ITEM_ENERGY, MinMaxIgnored } from './types';
+import { MIN_LO_ITEM_ENERGY, ResolvedStatConstraint } from './types';
 import { statTier } from './utils';
 
 // We don't really pay attention to this in the tests but the parameter is needed
@@ -43,17 +43,17 @@ const modStatistics: ModAssignmentStatistics = {
 
 function modifyMod({
   mod,
-  energyVal,
+  energyCost,
   tag,
 }: {
   mod: ProcessMod;
-  energyVal?: number;
+  energyCost?: number;
   tag?: string | null;
 }) {
   const newMod = _.cloneDeep(mod);
 
-  if (energyVal !== undefined) {
-    newMod.energy!.val = energyVal;
+  if (energyCost !== undefined) {
+    newMod.energyCost = energyCost;
   }
 
   if (tag !== undefined) {
@@ -65,19 +65,19 @@ function modifyMod({
 
 function modifyItem({
   item,
-  energyVal,
+  remainingEnergyCapacity,
   compatibleModSeasons,
   isArtifice,
 }: {
   item: ProcessItem;
-  energyVal?: number;
+  remainingEnergyCapacity?: number;
   compatibleModSeasons?: string[];
   isArtifice?: boolean;
 }) {
   const newItem = _.cloneDeep(item);
 
-  if (energyVal !== undefined) {
-    newItem.energy!.val = energyVal;
+  if (remainingEnergyCapacity !== undefined) {
+    newItem.remainingEnergyCapacity = remainingEnergyCapacity;
   }
 
   if (compatibleModSeasons !== undefined) {
@@ -154,10 +154,10 @@ describe('process-utils mod assignment', () => {
     }
 
     generalMod = mapArmor2ModToProcessMod(
-      defs.InventoryItem.get(recoveryModHash) as PluggableInventoryItemDefinition
+      defs.InventoryItem.get(recoveryModHash) as PluggableInventoryItemDefinition,
     );
     activityMod = mapArmor2ModToProcessMod(
-      defs.InventoryItem.get(enhancedOperatorAugmentModHash) as PluggableInventoryItemDefinition
+      defs.InventoryItem.get(enhancedOperatorAugmentModHash) as PluggableInventoryItemDefinition,
     );
 
     items = [helmet, arms, chest, legs, classItem];
@@ -168,7 +168,7 @@ describe('process-utils mod assignment', () => {
   const canTakeSlotIndependentMods = (
     generalMods: ProcessMod[],
     activityMods: ProcessMod[],
-    items: ProcessItem[]
+    items: ProcessItem[],
   ) => {
     const autoMods = { generalMods: {}, artificeMods: {} };
     const neededStats = [0, 0, 0, 0, 0, 0];
@@ -177,7 +177,7 @@ describe('process-utils mod assignment', () => {
       generalMods,
       activityMods,
       false,
-      armorStats
+      armorStats,
     );
 
     return (
@@ -197,7 +197,7 @@ describe('process-utils mod assignment', () => {
     [4, 60],
     [5, 120],
   ])('generates the correct number of permutations for %i unique mods', (n, result) => {
-    const mods = generalMods.map((mod, i) => modifyMod({ mod, energyVal: i % n }));
+    const mods = generalMods.map((mod, i) => modifyMod({ mod, energyCost: i % n }));
     expect(generateProcessModPermutations(mods)).toHaveLength(result);
   });
 
@@ -207,7 +207,7 @@ describe('process-utils mod assignment', () => {
 
   it('can fit five general mods', () => {
     const modifiedItems = items.map((item) =>
-      modifyItem({ item, energyVal: item.energy!.capacity - generalMod.energy!.val })
+      modifyItem({ item, remainingEnergyCapacity: generalMod.energyCost }),
     );
     expect(canTakeSlotIndependentMods(generalMods, [], modifiedItems)).toBe(true);
   });
@@ -218,14 +218,11 @@ describe('process-utils mod assignment', () => {
       const modifiedItems = items.map((item, i) =>
         modifyItem({
           item,
-          energyVal:
-            itemIndex === i
-              ? item.energy!.capacity - generalMod.energy!.val
-              : item.energy!.capacity,
-        })
+          remainingEnergyCapacity: itemIndex === i ? generalMod.energyCost : 0,
+        }),
       );
       expect(canTakeSlotIndependentMods([], [], modifiedItems)).toBe(true);
-    }
+    },
   );
 
   test.each([
@@ -235,9 +232,9 @@ describe('process-utils mod assignment', () => {
     const modifiedItems = items.map((item) =>
       modifyItem({
         item,
-        energyVal: item.energy!.capacity - activityMod.energy!.val,
+        remainingEnergyCapacity: activityMod.energyCost,
         compatibleModSeasons: [tag],
-      })
+      }),
     );
     // sanity check
     expect(canTakeSlotIndependentMods([], activityMods, modifiedItems)).toBe(canFit === 'can');
@@ -249,55 +246,55 @@ describe('process-utils mod assignment', () => {
       const modifiedItems = items.map((item, i) =>
         modifyItem({
           item,
-          energyVal: item.energy!.capacity - 2,
+          remainingEnergyCapacity: 2,
           compatibleModSeasons: i === itemIndex ? [activityMod.tag!] : [],
-        })
+        }),
       );
       expect(canTakeSlotIndependentMods([], [activityMod], modifiedItems)).toBe(true);
-    }
+    },
   );
 
   it('can fit general, activity, and combat mods if there is enough energy', () => {
     const modifiedItems: ProcessItem[] = [...items];
     modifiedItems[4] = modifyItem({
       item: modifiedItems[4],
-      energyVal: 4,
+      remainingEnergyCapacity: 6,
       compatibleModSeasons: [activityMod.tag!],
     });
 
     const modifiedGeneralMod = modifyMod({
       mod: generalMod,
-      energyVal: 3,
+      energyCost: 3,
     });
     const modifiedActivityMod = modifyMod({
       mod: activityMod,
-      energyVal: 3,
+      energyCost: 3,
     });
 
     expect(
-      canTakeSlotIndependentMods([modifiedGeneralMod], [modifiedActivityMod], modifiedItems)
+      canTakeSlotIndependentMods([modifiedGeneralMod], [modifiedActivityMod], modifiedItems),
     ).toBe(true);
   });
 
-  it("can't fit general, activity, and combat mods if there is enough energy", () => {
+  it("can't fit general, activity, and combat mods if there isn't enough energy", () => {
     const modifiedItems: ProcessItem[] = [...items];
     modifiedItems[4] = modifyItem({
       item: modifiedItems[4],
-      energyVal: 9,
+      remainingEnergyCapacity: 1,
       compatibleModSeasons: [activityMod.tag!],
     });
 
     const modifiedGeneralMod = modifyMod({
       mod: generalMod,
-      energyVal: 3,
+      energyCost: 3,
     });
     const modifiedActivityMod = modifyMod({
       mod: activityMod,
-      energyVal: 3,
+      energyCost: 3,
     });
 
     expect(
-      canTakeSlotIndependentMods([modifiedGeneralMod], [modifiedActivityMod], modifiedItems)
+      canTakeSlotIndependentMods([modifiedGeneralMod], [modifiedActivityMod], modifiedItems),
     ).toBe(false);
   });
 
@@ -307,23 +304,23 @@ describe('process-utils mod assignment', () => {
       const modifiedItems: ProcessItem[] = [...items];
       modifiedItems[4] = modifyItem({
         item: modifiedItems[4],
-        energyVal: 9,
+        remainingEnergyCapacity: 1,
         compatibleModSeasons: [activityMod.tag!],
       });
 
       const modifiedGeneralMod = modifyMod({
         mod: generalMod,
-        energyVal: modType === 'general' ? 6 : 5,
+        energyCost: modType === 'general' ? 6 : 5,
       });
       const modifiedActivityMod = modifyMod({
         mod: activityMod,
-        energyVal: modType === 'activity' ? 6 : 5,
+        energyCost: modType === 'activity' ? 6 : 5,
       });
 
       expect(
-        canTakeSlotIndependentMods([modifiedGeneralMod], [modifiedActivityMod], modifiedItems)
+        canTakeSlotIndependentMods([modifiedGeneralMod], [modifiedActivityMod], modifiedItems),
       ).toBe(false);
-    }
+    },
   );
 });
 
@@ -367,7 +364,7 @@ describe('process-utils auto mods', () => {
       artifice: boolean,
       index: number,
       energyCapacity: number,
-      seasons: string[]
+      seasons: string[],
     ) => ({
       hash: index,
       id: index.toString(),
@@ -377,7 +374,7 @@ describe('process-utils auto mods', () => {
       power: 1500,
       stats: [0, 0, 0, 0, 0, 0],
       compatibleModSeasons: seasons,
-      energy: { capacity: 10, val: 10 - energyCapacity },
+      remainingEnergyCapacity: energyCapacity,
     });
     helmet = makeItem(true, 1, 3, []);
     arms = makeItem(true, 2, 4, ['deepstonecrypt']);
@@ -385,14 +382,14 @@ describe('process-utils auto mods', () => {
     legs = makeItem(true, 4, 3, ['deepstonecrypt']);
     classItem = makeItem(true, 5, 4, []);
     generalMod = mapArmor2ModToProcessMod(
-      defs.InventoryItem.get(recoveryModHash) as PluggableInventoryItemDefinition
+      defs.InventoryItem.get(recoveryModHash) as PluggableInventoryItemDefinition,
     );
-    generalMod.energy!.val = 4;
-    generalModCopy = { ...generalMod, energy: { ...generalMod.energy!, val: 3 } };
+    generalMod.energyCost = 4;
+    generalModCopy = { ...generalMod, energyCost: 3 };
     activityMod = mapArmor2ModToProcessMod(
-      defs.InventoryItem.get(enhancedOperatorAugmentModHash) as PluggableInventoryItemDefinition
+      defs.InventoryItem.get(enhancedOperatorAugmentModHash) as PluggableInventoryItemDefinition,
     );
-    activityMod.energy!.val = 1;
+    activityMod.energyCost = 1;
 
     items = [helmet, arms, chest, legs, classItem];
     generalMods = [generalModCopy, generalMod];
@@ -404,7 +401,7 @@ describe('process-utils auto mods', () => {
       generalMods,
       activityMods,
       true,
-      armorStats
+      armorStats,
     );
     neededStats = [4, 0, 10, 12, 4, 0];
   });
@@ -415,7 +412,7 @@ describe('process-utils auto mods', () => {
       modStatistics,
       items,
       neededStats,
-      4
+      4,
     );
     expect(solution).not.toBe(undefined);
     expect(solution).toMatchSnapshot();
@@ -426,22 +423,22 @@ describe('process-utils auto mods', () => {
       const newNeededStats = [...neededStats];
       newNeededStats[i] += 2;
       expect(
-        pickAndAssignSlotIndependentMods(loSessionInfo, modStatistics, items, newNeededStats, 4)
+        pickAndAssignSlotIndependentMods(loSessionInfo, modStatistics, items, newNeededStats, 4),
       ).toBe(undefined);
     }
   });
 
   it('we need all artifice mod slots', () => {
     expect(
-      pickAndAssignSlotIndependentMods(loSessionInfo, modStatistics, items, neededStats, 3)
+      pickAndAssignSlotIndependentMods(loSessionInfo, modStatistics, items, neededStats, 3),
     ).toBe(undefined);
   });
 
   it('we need all the energy capacity in all general mod slots', () => {
     const ourItems = [...items];
-    ourItems[1] = modifyItem({ item: items[1], energyVal: 10 - 3 });
+    ourItems[1] = modifyItem({ item: items[1], remainingEnergyCapacity: 3 });
     expect(
-      pickAndAssignSlotIndependentMods(loSessionInfo, modStatistics, ourItems, neededStats, 4)
+      pickAndAssignSlotIndependentMods(loSessionInfo, modStatistics, ourItems, neededStats, 4),
     ).toBe(undefined);
   });
 
@@ -449,7 +446,7 @@ describe('process-utils auto mods', () => {
     const ourItems = [...items];
     ourItems[1] = modifyItem({ item: items[3], compatibleModSeasons: [] });
     expect(
-      pickAndAssignSlotIndependentMods(loSessionInfo, modStatistics, ourItems, neededStats, 4)
+      pickAndAssignSlotIndependentMods(loSessionInfo, modStatistics, ourItems, neededStats, 4),
     ).toBe(undefined);
   });
 });
@@ -467,7 +464,7 @@ describe('process-utils optimal mods', () => {
 
   // use these for testing as they are reset after each test
   let items: ProcessItem[];
-  let statFilters: MinMaxIgnored[];
+  let resolvedStatConstraints: ResolvedStatConstraint[];
   let loSessionInfo: LoSessionInfo;
 
   beforeAll(async () => {
@@ -481,7 +478,7 @@ describe('process-utils optimal mods', () => {
       power: 1500,
       stats: [0, 0, 0, 0, 0, 0],
       compatibleModSeasons: [],
-      energy: { capacity: 10, val: 0 },
+      remainingEnergyCapacity: 10,
     });
     helmet = makeItem(1);
     arms = makeItem(2);
@@ -494,10 +491,11 @@ describe('process-utils optimal mods', () => {
     const autoModData = mapAutoMods(getAutoMods(defs, emptySet()));
     loSessionInfo = precalculateStructures(autoModData, [], [], true, armorStats);
 
-    statFilters = armorStats.map(() => ({
+    resolvedStatConstraints = armorStats.map((statHash) => ({
+      statHash,
       ignored: false,
-      max: 8,
-      min: 3,
+      maxTier: 8,
+      minTier: 3,
     }));
   });
 
@@ -505,7 +503,7 @@ describe('process-utils optimal mods', () => {
     setStats: number[],
     remainingEnergy: number[],
     numArtifice: number,
-    expectedTiers: number[]
+    expectedTiers: number[],
   ][] = [
     // the trick here is that we can use two small mods to boost resilience by a tier,
     // but it's better to use two large mods to boost discipline (cheaper mods...)
@@ -518,6 +516,8 @@ describe('process-utils optimal mods', () => {
     [[68, 66, 30, 30, 30, 30], [0, 0, 0, 0, 0], 4, [8, 6, 3, 3, 3, 3]],
     // do everything we can to hit min bounds
     [[68, 66, 30, 30, 11, 30], [2, 2, 0, 0, 0], 4, [7, 6, 3, 3, 3, 3]],
+    // ensure that negative stat amounts aren't clamped too early
+    [[30, 61, 30, 30, 30, -14], [5, 5, 5, 5, 5], 5, [5, 6, 3, 3, 3, 3]],
   ];
 
   const pickMods = (setStats: number[], remainingEnergy: number[], numArtifice: number) => {
@@ -525,11 +525,16 @@ describe('process-utils optimal mods', () => {
     for (let i = 0; i < ourItems.length; i++) {
       ourItems[i] = modifyItem({
         item: ourItems[i],
-        energyVal: 10 - remainingEnergy[i],
+        remainingEnergyCapacity: remainingEnergy[i],
         isArtifice: i < numArtifice,
       });
     }
-    const statMods = pickOptimalStatMods(loSessionInfo, ourItems, setStats, statFilters)!;
+    const statMods = pickOptimalStatMods(
+      loSessionInfo,
+      ourItems,
+      setStats,
+      resolvedStatConstraints,
+    )!;
     const finalStats = [...setStats];
     for (let i = 0; i < armorStats.length; i++) {
       finalStats[i] += statMods.bonusStats[i];
@@ -542,7 +547,7 @@ describe('process-utils optimal mods', () => {
     (setStats, remainingEnergy, numArtifice, expectedTiers) => {
       const finalStats = pickMods(setStats, remainingEnergy, numArtifice);
       expect(finalStats.map(statTier)).toStrictEqual(expectedTiers);
-    }
+    },
   );
 
   // Tests that our algorithm, and thus the worker accurately reports the resulting stats
@@ -550,7 +555,7 @@ describe('process-utils optimal mods', () => {
     setStats: number[],
     remainingEnergy: number[],
     numArtifice: number,
-    expectedStats: number[]
+    expectedStats: number[],
   ][] = [
     // Nice
     [[18, 80, 80, 26, 80, 30], [0, 0, 0, 3, 0], 4, [30, 80, 80, 31, 80, 30]],
@@ -564,6 +569,6 @@ describe('process-utils optimal mods', () => {
     (setStats, remainingEnergy, numArtifice, expectedStats) => {
       const finalStats = pickMods(setStats, remainingEnergy, numArtifice);
       expect(finalStats).toStrictEqual(expectedStats);
-    }
+    },
   );
 });

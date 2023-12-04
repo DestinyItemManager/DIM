@@ -2,22 +2,31 @@ import { LoadoutSort } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { apiPermissionGrantedSelector, languageSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
+import BungieImage from 'app/dim-ui/BungieImage';
 import CharacterSelect from 'app/dim-ui/CharacterSelect';
 import PageWithMenu from 'app/dim-ui/PageWithMenu';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { VirtualListRef, WindowVirtualList } from 'app/dim-ui/VirtualList';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { t, tl } from 'app/i18next-t';
 import { artifactUnlocksSelector, sortedStoresSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
+import {
+  MakeLoadoutAnalysisAvailable,
+  useUpdateLoadoutAnalysisContext,
+} from 'app/loadout-analyzer/hooks';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
+import { loadoutsForClassTypeSelector } from 'app/loadout-drawer/loadouts-selector';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, addIcon, faCalculator, uploadIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
-import { Portal } from 'app/utils/temp-container';
-import { useCallback, useMemo, useState } from 'react';
+import { usePageTitle } from 'app/utils/hooks';
+import { DestinySeasonDefinition } from 'bungie-api-ts/destiny2';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import styles from './Loadouts.m.scss';
@@ -27,11 +36,7 @@ import { InGameLoadoutDetails } from './ingame/InGameLoadoutDetailsSheet';
 import { InGameLoadoutStrip } from './ingame/InGameLoadoutStrip';
 import LoadoutImportSheet from './loadout-share/LoadoutImportSheet';
 import LoadoutShareSheet from './loadout-share/LoadoutShareSheet';
-import {
-  searchAndSortLoadoutsByQuery,
-  useLoadoutFilterPills,
-  useSavedLoadoutsForClassType,
-} from './loadout-ui/menu-hooks';
+import { searchAndSortLoadoutsByQuery, useLoadoutFilterPills } from './loadout-ui/menu-hooks';
 
 const sortOptions = [
   {
@@ -53,12 +58,18 @@ const sortOptions = [
  */
 export default function LoadoutsContainer({ account }: { account: DestinyAccount }) {
   const storesLoaded = useLoadStores(account);
+  usePageTitle(t('Loadouts.Loadouts'));
 
   if (!storesLoaded) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
-  return <Loadouts account={account} />;
+  // TODO: how high in our tree do we want this analyzer?
+  return (
+    <MakeLoadoutAnalysisAvailable>
+      <Loadouts account={account} />
+    </MakeLoadoutAnalysisAvailable>
+  );
 }
 
 function Loadouts({ account }: { account: DestinyAccount }) {
@@ -67,7 +78,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const stores = useSelector(sortedStoresSelector);
   const currentStore = getCurrentStore(stores)!;
   const [selectedStoreId, setSelectedStoreId] = useState(
-    locationStoreId && locationStoreId !== 'vault' ? locationStoreId : currentStore.id
+    locationStoreId && locationStoreId !== 'vault' ? locationStoreId : currentStore.id,
   );
   const [sharedLoadout, setSharedLoadout] = useState<Loadout>();
   const [loadoutImportOpen, setLoadoutImportOpen] = useState<boolean>(false);
@@ -79,15 +90,17 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const language = useSelector(languageSelector);
   const apiPermissionGranted = useSelector(apiPermissionGrantedSelector);
 
-  const savedLoadouts = useSavedLoadoutsForClassType(classType);
+  const savedLoadouts = useSelector(loadoutsForClassTypeSelector(classType));
   const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
 
   const artifactUnlocks = useSelector(artifactUnlocksSelector(selectedStoreId));
 
   const currentLoadout = useMemo(
     () => newLoadoutFromEquipped(t('Loadouts.FromEquipped'), selectedStore, artifactUnlocks),
-    [artifactUnlocks, selectedStore]
+    [artifactUnlocks, selectedStore],
   );
+
+  useUpdateLoadoutAnalysisContext(selectedStoreId);
 
   const [showSnapshot, setShowSnapshot] = useState(false);
   const handleSnapshot = useCallback(() => setShowSnapshot(true), []);
@@ -101,15 +114,17 @@ function Loadouts({ account }: { account: DestinyAccount }) {
 
   const [filteredLoadouts, filterPills, hasSelectedFilters] = useLoadoutFilterPills(
     savedLoadouts,
-    selectedStoreId,
+    selectedStore,
     {
       includeWarningPills: true,
       extra: <span className={styles.hashtagTip}>{t('Loadouts.HashtagTip')}</span>,
-    }
+    },
   );
 
+  const filteringLoadouts = Boolean(query || hasSelectedFilters);
+
   const loadouts = searchAndSortLoadoutsByQuery(filteredLoadouts, query, language, loadoutSort);
-  if (!query && !hasSelectedFilters) {
+  if (!filteringLoadouts) {
     loadouts.unshift(currentLoadout);
   }
 
@@ -117,6 +132,20 @@ function Loadouts({ account }: { account: DestinyAccount }) {
     const loadout = newLoadout('', [], selectedStore.classType);
     editLoadout(loadout, selectedStore.id, { isNew: true });
   };
+
+  // Insert season headers if we're sorting by edit time
+  const loadoutRows = useAddSeasonHeaders(loadouts, loadoutSort);
+
+  const virtualListRef = useRef<VirtualListRef>(null);
+  const scrollToLoadout = useCallback(
+    (id: string) => {
+      const index = loadouts.findIndex((l) => l.id === id);
+      if (index >= 0) {
+        virtualListRef.current?.scrollToIndex(index, { align: 'start' });
+      }
+    },
+    [loadouts],
+  );
 
   return (
     <PageWithMenu>
@@ -147,83 +176,136 @@ function Loadouts({ account }: { account: DestinyAccount }) {
           >
             <AppIcon icon={uploadIcon} /> <span>{t('Loadouts.ImportLoadout')}</span>
           </button>
-          <Link className={styles.menuButton} to={`../optimizer?class=${selectedStore.classType}`}>
+          <Link
+            className={styles.menuButton}
+            to="../optimizer"
+            state={{ storeId: selectedStore.id }}
+          >
             <AppIcon icon={faCalculator} /> {t('LB.LB')}
           </Link>
         </div>
         {!isPhonePortrait &&
           loadouts.map((loadout) => (
-            <PageWithMenu.MenuButton anchor={loadout.id} key={loadout.id}>
+            <PageWithMenu.MenuButton onClick={() => scrollToLoadout(loadout.id)} key={loadout.id}>
               <ColorDestinySymbols text={loadout.name} />
             </PageWithMenu.MenuButton>
           ))}
       </PageWithMenu.Menu>
-      <PageWithMenu.Contents className={styles.page}>
+      <PageWithMenu.Contents>
         {$featureFlags.warnNoSync && !apiPermissionGranted && (
           <p>
             <AlertIcon /> {t('Storage.DimSyncNotEnabled')}
           </p>
         )}
-        <h2>{t('Loadouts.InGameLoadouts')}</h2>
-        <InGameLoadoutStrip
-          store={selectedStore}
-          onEdit={setEditingInGameLoadout}
-          onShare={setSharedLoadout}
-          onShowDetails={setViewingInGameLoadout}
-        />
+        {!filteringLoadouts && (
+          <InGameLoadoutStrip
+            store={selectedStore}
+            onEdit={setEditingInGameLoadout}
+            onShare={setSharedLoadout}
+            onShowDetails={setViewingInGameLoadout}
+          />
+        )}
         <h2>{t('Loadouts.DimLoadouts')}</h2>
         {filterPills}
-        {loadouts.map((loadout) => (
-          <LoadoutRow
-            key={loadout.id}
-            loadout={loadout}
-            store={selectedStore}
-            saved={savedLoadoutIds.has(loadout.id)}
-            equippable={loadout !== currentLoadout}
-            onShare={setSharedLoadout}
-            onSnapshotInGameLoadout={handleSnapshot}
-          />
-        ))}
+        <WindowVirtualList
+          ref={virtualListRef}
+          numElements={loadoutRows.length}
+          itemContainerClassName={styles.loadoutRow}
+          estimatedSize={270}
+          getItemKey={(index) => {
+            const loadoutOrSeason = loadoutRows[index];
+            return 'id' in loadoutOrSeason ? loadoutOrSeason.id : loadoutOrSeason.startDate!;
+          }}
+        >
+          {(index) => {
+            const loadoutOrSeason = loadoutRows[index];
+            if ('id' in loadoutOrSeason) {
+              const loadout = loadoutOrSeason;
+              return (
+                <LoadoutRow
+                  loadout={loadout}
+                  store={selectedStore}
+                  saved={savedLoadoutIds.has(loadout.id)}
+                  equippable={loadout !== currentLoadout}
+                  onShare={setSharedLoadout}
+                  onSnapshotInGameLoadout={handleSnapshot}
+                />
+              );
+            } else {
+              const season = loadoutOrSeason;
+              return (
+                <h3 className={styles.seasonHeader}>
+                  {season.displayProperties.hasIcon && (
+                    <BungieImage height={24} width={24} src={season.displayProperties.icon} />
+                  )}{' '}
+                  {season.displayProperties.name} -{' '}
+                  {t('Loadouts.Season', {
+                    season: season.seasonNumber,
+                  })}
+                </h3>
+              );
+            }
+          }}
+        </WindowVirtualList>
         {loadouts.length === 0 && <p>{t('Loadouts.NoneMatch', { query })}</p>}
       </PageWithMenu.Contents>
       {sharedLoadout && (
-        <Portal>
-          <LoadoutShareSheet
-            account={account}
-            loadout={sharedLoadout}
-            onClose={() => setSharedLoadout(undefined)}
-          />
-        </Portal>
+        <LoadoutShareSheet
+          account={account}
+          loadout={sharedLoadout}
+          onClose={() => setSharedLoadout(undefined)}
+        />
       )}
       {loadoutImportOpen && (
-        <Portal>
-          <LoadoutImportSheet
-            currentStoreId={selectedStoreId}
-            onClose={() => setLoadoutImportOpen(false)}
-          />
-        </Portal>
+        <LoadoutImportSheet
+          currentStoreId={selectedStoreId}
+          onClose={() => setLoadoutImportOpen(false)}
+        />
       )}
       {viewingInGameLoadout && (
-        <Portal>
-          <InGameLoadoutDetails
-            store={selectedStore}
-            loadout={viewingInGameLoadout}
-            onEdit={setEditingInGameLoadout}
-            onShare={setSharedLoadout}
-            onClose={handleViewingSheetClose}
-          />
-        </Portal>
+        <InGameLoadoutDetails
+          store={selectedStore}
+          loadout={viewingInGameLoadout}
+          onEdit={setEditingInGameLoadout}
+          onShare={setSharedLoadout}
+          onClose={handleViewingSheetClose}
+        />
       )}
       {showSnapshot && (
-        <Portal>
-          <EditInGameLoadout characterId={selectedStoreId} onClose={handleSnapshotSheetClose} />
-        </Portal>
+        <EditInGameLoadout
+          key="snapshot"
+          characterId={selectedStoreId}
+          onClose={handleSnapshotSheetClose}
+        />
       )}
       {editingInGameLoadout && (
-        <Portal key="editsheet">
-          <EditInGameLoadout loadout={editingInGameLoadout} onClose={handleEditSheetClose} />
-        </Portal>
+        <EditInGameLoadout
+          key="editsheet"
+          loadout={editingInGameLoadout}
+          onClose={handleEditSheetClose}
+        />
       )}
     </PageWithMenu>
   );
+}
+
+function useAddSeasonHeaders(loadouts: Loadout[], loadoutSort: LoadoutSort) {
+  const defs = useD2Definitions()!;
+  let loadoutRows: (Loadout | DestinySeasonDefinition)[] = loadouts;
+  if (loadoutSort === LoadoutSort.ByEditTime) {
+    const seasons = Object.values(defs.Season.getAll())
+      .sort((a, b) => b.seasonNumber - a.seasonNumber)
+      .filter((s) => s.startDate);
+
+    const grouped = Map.groupBy(
+      loadouts,
+      (loadout) =>
+        seasons.find(
+          (s) => new Date(s.startDate!).getTime() <= (loadout.lastUpdatedAt ?? Date.now()),
+        )!,
+    );
+
+    loadoutRows = [...grouped.entries()].flatMap(([season, loadouts]) => [season, ...loadouts]);
+  }
+  return loadoutRows;
 }

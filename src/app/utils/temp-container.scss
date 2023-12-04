@@ -1,0 +1,13 @@
+@use '../variables.scss' as *;
+
+#temp-container {
+  // Position this at the very top of the screen. Most things won't care
+  // (they're absolutely positioned themselves, but @textcomplete doesn't know
+  // how to position itself within a positioning context that isn't the
+  // document.
+  position: absolute;
+  top: 0;
+  width: 100%;
+  // Make sure things in the temp container display above others
+  z-index: $tempContainerZindex;
+}

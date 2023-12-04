@@ -2,8 +2,8 @@ import { hideItemPopup } from 'app/item-popup/item-popup';
 import clsx from 'clsx';
 import React from 'react';
 import { useDrag } from 'react-dnd';
-import { isDragging$ } from './drag-events';
 import styles from './DraggableInventoryItem.m.scss';
+import { isDragging$ } from './drag-events';
 import { DimItem } from './item-types';
 
 interface Props {
@@ -24,8 +24,8 @@ export default function DraggableInventoryItem({ children, item }: Props) {
       type: item.location.inPostmaster
         ? 'postmaster'
         : item.notransfer
-        ? `${item.owner}-${item.bucket.hash}`
-        : item.bucket.hash.toString(),
+          ? `${item.owner}-${item.bucket.hash}`
+          : item.bucket.hash.toString(),
       item: () => {
         hideItemPopup();
 
@@ -45,7 +45,7 @@ export default function DraggableInventoryItem({ children, item }: Props) {
       },
       canDrag,
     }),
-    [item]
+    [item],
   );
 
   return (

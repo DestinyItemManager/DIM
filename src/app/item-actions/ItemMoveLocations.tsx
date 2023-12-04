@@ -13,7 +13,7 @@ import { ItemActionsModel, StoreButtonInfo } from 'app/item-popup/item-popup-act
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
+import { noop } from 'lodash';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './ItemMoveLocations.m.scss';
@@ -140,17 +140,18 @@ function MoveLocations({
   }
 
   function moveLocation({ store, enabled }: StoreButtonInfo) {
-    const handleMove = enabled ? () => submitMoveTo(store, equip) : _.noop;
+    const handleMove = enabled ? () => submitMoveTo(store, equip) : noop;
     const title =
       type === 'equip'
         ? t('MovePopup.EquipWithName', { character: store.name })
         : t('MovePopup.StoreWithName', { character: store.name });
+    const shortcutHelp = shortcutKey && store.current ? ` [${symbolize(shortcutKey)}]` : '';
 
     const button = (
       <button
         type="button"
         className={styles.move}
-        title={`${title}${shortcutKey && store.current ? ` [${symbolize(shortcutKey)}]` : ''}`}
+        title={`${title}${shortcutHelp}`}
         onClick={handleMove}
         aria-keyshortcuts={store.current ? shortcutKey : undefined}
         disabled={!enabled}

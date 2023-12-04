@@ -6,14 +6,14 @@ import {
   settingsSelector,
 } from 'app/dim-api/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
+import { createCollectibleFinder } from 'app/records/collectible-matching';
+import { filterUnlockedPlugs } from 'app/records/plugset-helpers';
 import { RootState } from 'app/store/types';
-import { emptyObject, emptySet } from 'app/utils/empty';
-import { currySelector } from 'app/utils/selector-utils';
+import { emptyArray, emptyObject, emptySet } from 'app/utils/empty';
+import { currySelector } from 'app/utils/selectors';
 import { DestinyItemPlug, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import { resonantMaterialStringVarHashes } from 'data/d2/crafting-resonant-elements';
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
 import { BucketHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
-import universalOrnamentPlugSetHashes from 'data/d2/universal-ornament-plugset-hashes.json';
 import { createSelector } from 'reselect';
 import { getBuckets as getBucketsD1 } from '../destiny1/d1-buckets';
 import { getBuckets as getBucketsD2 } from '../destiny2/d2-buckets';
@@ -21,6 +21,7 @@ import { characterSortImportanceSelector, characterSortSelector } from '../setti
 import { ItemInfos, getNotes, getTag } from './dim-item-info';
 import { DimItem } from './item-types';
 import { collectNotesHashtags } from './note-hashtags';
+import { AccountCurrency } from './store-types';
 import { ItemCreationContext } from './store/d2-item-factory';
 import { getCurrentStore, getVault } from './stores-helpers';
 
@@ -29,47 +30,47 @@ export const storesSelector = (state: RootState) => state.inventory.stores;
 
 export const d2BucketsSelector = createSelector(
   (state: RootState) => state.manifest.d2Manifest,
-  (d2Manifest) => d2Manifest && getBucketsD2(d2Manifest)
+  (d2Manifest) => d2Manifest && getBucketsD2(d2Manifest),
 );
 
 export const d1BucketsSelector = createSelector(
   (state: RootState) => state.manifest.d1Manifest,
-  (d1Manifest) => d1Manifest && getBucketsD1(d1Manifest)
+  (d1Manifest) => d1Manifest && getBucketsD1(d1Manifest),
 );
 
 export const bucketsSelector = createSelector(
   destinyVersionSelector,
   d1BucketsSelector,
   d2BucketsSelector,
-  (destinyVersion, d1Buckets, d2Buckets) => (destinyVersion === 2 ? d2Buckets : d1Buckets)
+  (destinyVersion, d1Buckets, d2Buckets) => (destinyVersion === 2 ? d2Buckets : d1Buckets),
 );
 
 /** Bucket hashes for buckets that we actually show on the inventory page. */
 export const displayableBucketHashesSelector = createSelector(bucketsSelector, (buckets) =>
   buckets
     ? new Set(Object.values(buckets.byCategory).flatMap((buckets) => buckets.map((b) => b.hash)))
-    : emptySet<number>()
+    : emptySet<number>(),
 );
 
 /** All stores, sorted according to user preference. */
 export const sortedStoresSelector = createSelector(
   storesSelector,
   characterSortSelector,
-  (stores, sortStores) => sortStores(stores)
+  (stores, sortStores) => sortStores(stores),
 );
 
 /** Sorted by "importance" which handles reversed sorting a bit better - for menus only */
 export const storesSortedByImportanceSelector = createSelector(
   characterSortImportanceSelector,
   storesSelector,
-  (sort, stores) => sort(stores)
+  (sort, stores) => sort(stores),
 );
 
 /**
  * Get a flat list of all items.
  */
 export const allItemsSelector = createSelector(storesSelector, (stores) =>
-  stores.flatMap((s) => s.items)
+  stores.flatMap((s) => s.items),
 );
 
 /** Have stores been loaded? */
@@ -99,7 +100,7 @@ const visibleCurrencies = [
 /** Account wide currencies */
 export const currenciesSelector = createSelector(
   (state: RootState) => state.inventory.currencies,
-  (currencies) => currencies.filter((c) => visibleCurrencies.includes(c.itemHash))
+  (currencies) => currencies.filter((c) => visibleCurrencies.includes(c.itemHash)),
 );
 
 const transmogCurrencies = [
@@ -112,31 +113,56 @@ const transmogCurrencies = [
 /** Synthweave {Template, Bolt, Plate, Strap} currencies */
 export const transmogCurrenciesSelector = createSelector(
   (state: RootState) => state.inventory.currencies,
-  (currencies) => currencies.filter((c) => transmogCurrencies.includes(c.itemHash))
+  (currencies) => currencies.filter((c) => transmogCurrencies.includes(c.itemHash)),
 );
 
+/** Vendor engrams you can decrypt at a vendor or use for item focusing */
+export const vendorCurrencyEngramsSelector = createSelector(
+  d2ManifestSelector,
+  (state: RootState) => state.inventory.currencies,
+  (defs, currencies) => {
+    if (!defs) {
+      return emptyArray<AccountCurrency>();
+    }
+    // silver has no stackUniqueLabel
+    return currencies.filter(
+      (curr) =>
+        defs.InventoryItem.get(curr.itemHash).inventory!.stackUniqueLabel?.match(
+          /virtual_engram|\.virtual$/,
+        ),
+    );
+  },
+);
+
+const materialsWithMissingICH = [
+  3702027555, // InventoryItem "Spoils of Conquest"
+  2329379380, // InventoryItem "Salvage Key"
+  2329379381, // InventoryItem "Deep Dive Key",
+  1289622079, // InventoryItem "Strand Meditations"
+];
+
 /** materials/currencies that aren't top level stuff */
-export const materialsSelector = (state: RootState) =>
-  allItemsSelector(state).filter(
+export const materialsSelector = createSelector(allItemsSelector, (allItems) =>
+  allItems.filter(
     (i) =>
       i.itemCategoryHashes.includes(ItemCategoryHashes.Materials) ||
       i.itemCategoryHashes.includes(ItemCategoryHashes.ReputationTokens) ||
-      i.hash === 3702027555 || // Spoils of Conquest do not have item category hashes
-      i.hash === 1289622079 // neither do Strand Meditations
-  );
+      materialsWithMissingICH.includes(i.hash),
+  ),
+);
 
 /** The actual raw profile response from the Bungie.net profile API */
 export const profileResponseSelector = (state: RootState) =>
   state.inventory.mockProfileData ?? state.inventory.profileResponse;
 
 /** Whether or not the user is currently playing Destiny 2 */
-export const userIsPlayingSelector = (state: RootState) =>
+const userIsPlayingSelector = (state: RootState) =>
   Boolean(state.inventory.profileResponse?.profileTransitoryData?.data);
 
 /** The time when the currently displayed profile was last refreshed from live game data */
 export const profileMintedSelector = createSelector(
   profileResponseSelector,
-  (profileResponse) => new Date(profileResponse?.responseMintedTimestamp ?? 0)
+  (profileResponse) => new Date(profileResponse?.responseMintedTimestamp ?? 0),
 );
 
 export const profileErrorSelector = (state: RootState) => state.inventory.profileError;
@@ -148,31 +174,6 @@ export const blockingProfileErrorSelector = (state: RootState) =>
 /** Whether DIM will automatically refresh on a schedule */
 export const autoRefreshEnabledSelector = (state: RootState) =>
   userIsPlayingSelector(state) && state.dimApi.globalSettings.autoRefresh;
-
-/** returns name/icon/amount for a hard-coded list of crafting materials */
-export const craftingMaterialCountsSelector = createSelector(
-  d2ManifestSelector,
-  profileResponseSelector,
-  (defs, profileResponse) => {
-    const numbersLookup = profileResponse?.profileStringVariables?.data?.integerValuesByHash;
-    const results: [name: string, icon: string, count: number][] = [];
-
-    if (defs && numbersLookup) {
-      for (const { materialHash, currentCountHash } of resonantMaterialStringVarHashes) {
-        const def = defs.InventoryItem.get(materialHash);
-
-        if (def) {
-          const { icon, name } = def.displayProperties;
-          const count = numbersLookup[currentCountHash];
-          if (icon && name && count !== undefined) {
-            results.push([name, icon, count]);
-          }
-        }
-      }
-    }
-    return results;
-  }
-);
 
 /**
  * All the dependencies for item creation. Don't use this before profile is loaded...
@@ -187,7 +188,7 @@ export const createItemContextSelector = createSelector(
     buckets: buckets!,
     profileResponse: profileResponse!,
     customStats,
-  })
+  }),
 );
 
 const STORE_SPECIFIC_OWNERSHIP_BUCKETS = [
@@ -251,16 +252,17 @@ export const ownedUncollectiblePlugsSelector = createSelector(
     const storeSpecificOwned: { [storeId: string]: Set<number> } = {};
 
     if (defs && profileResponse) {
+      const collectibleFinder = createCollectibleFinder(defs);
       const processPlugSet = (
         plugs: { [key: number]: DestinyItemPlug[] },
-        insertInto: Set<number>
+        insertInto: Set<number>,
       ) => {
-        for (const plugSet of Object.values(plugs)) {
-          for (const plug of plugSet) {
-            if (plug.enabled && !defs.InventoryItem.get(plug.plugItemHash)?.collectibleHash) {
-              insertInto.add(plug.plugItemHash);
-            }
-          }
+        for (const [plugSetHash_, plugSet] of Object.entries(plugs)) {
+          const plugSetHash = parseInt(plugSetHash_, 10);
+          filterUnlockedPlugs(plugSetHash, plugSet, insertInto, (plug) => {
+            const def = defs.InventoryItem.get(plug.plugItemHash);
+            return !def || !collectibleFinder(def);
+          });
         }
       };
 
@@ -270,7 +272,7 @@ export const ownedUncollectiblePlugsSelector = createSelector(
 
       if (profileResponse.characterPlugSets?.data) {
         for (const [storeId, plugSetData] of Object.entries(
-          profileResponse.characterPlugSets.data
+          profileResponse.characterPlugSets.data,
         )) {
           if (!storeSpecificOwned[storeId]) {
             storeSpecificOwned[storeId] = new Set();
@@ -281,7 +283,7 @@ export const ownedUncollectiblePlugsSelector = createSelector(
     }
 
     return { accountWideOwned, storeSpecificOwned };
-  }
+  },
 );
 
 /** A set containing all the hashes of unlocked PlugSet items (mods, shaders, ornaments, etc) for the given character. */
@@ -290,45 +292,34 @@ export const unlockedPlugSetItemsSelector = currySelector(
   createSelector(
     (_state: RootState, characterId?: string) => characterId,
     profileResponseSelector,
-    gatherUnlockedPlugSetItems
-  )
+    gatherUnlockedPlugSetItems,
+  ),
 );
 
-export function gatherUnlockedPlugSetItems(
+function gatherUnlockedPlugSetItems(
   characterId: string | undefined,
-  profileResponse: DestinyProfileResponse | undefined
+  profileResponse: DestinyProfileResponse | undefined,
 ) {
   const unlockedPlugs = new Set<number>();
   if (profileResponse?.profilePlugSets.data?.plugs) {
     for (const plugSetHashStr in profileResponse.profilePlugSets.data.plugs) {
       const plugSetHash = parseInt(plugSetHashStr, 10);
       const plugs = profileResponse.profilePlugSets.data.plugs[plugSetHash];
-      for (const plugSetItem of plugs) {
-        const useCanInsert = universalOrnamentPlugSetHashes.includes(plugSetHash);
-        if (useCanInsert ? plugSetItem.canInsert : plugSetItem.enabled) {
-          unlockedPlugs.add(plugSetItem.plugItemHash);
-        }
-      }
+      filterUnlockedPlugs(plugSetHash, plugs, unlockedPlugs);
     }
   }
   if (characterId && profileResponse?.characterPlugSets.data?.[characterId]?.plugs) {
     for (const plugSetHashStr in profileResponse.characterPlugSets.data[characterId].plugs) {
       const plugSetHash = parseInt(plugSetHashStr, 10);
       const plugs = profileResponse.characterPlugSets.data[characterId].plugs[plugSetHash];
-      for (const plugSetItem of plugs) {
-        const useCanInsert = universalOrnamentPlugSetHashes.includes(plugSetHash);
-        if (useCanInsert ? plugSetItem.canInsert : plugSetItem.enabled) {
-          unlockedPlugs.add(plugSetItem.plugItemHash);
-        }
-      }
+      filterUnlockedPlugs(plugSetHash, plugs, unlockedPlugs);
     }
   }
   return unlockedPlugs;
 }
 
 /** gets all the dynamic strings from a profile response */
-export const dynamicStringsSelector = (state: RootState) => {
-  const profileResp = profileResponseSelector(state);
+export const dynamicStringsSelector = createSelector(profileResponseSelector, (profileResp) => {
   if (profileResp) {
     const { profileStringVariables, characterStringVariables } = profileResp;
     const allProfile: {
@@ -349,21 +340,22 @@ export const dynamicStringsSelector = (state: RootState) => {
       byCharacter,
     };
   }
-};
+});
 
+/** A flat list of all currently active artifact unlocks. */
 export const artifactUnlocksSelector = currySelector(
   createSelector(
     profileResponseSelector,
     (_state: RootState, characterId: string) => characterId,
     (profileResponse: DestinyProfileResponse | undefined, characterId: string) =>
-      profileResponse && getArtifactUnlocks(profileResponse, characterId)
-  )
+      profileResponse && getArtifactUnlocks(profileResponse, characterId),
+  ),
 );
 
 /** A flat list of all currently active artifact unlocks. */
-export function getArtifactUnlocks(
+function getArtifactUnlocks(
   profileResponse: DestinyProfileResponse,
-  characterId: string
+  characterId: string,
 ): LoadoutParameters['artifactUnlocks'] {
   // Lots of optional chaining because apparently this can be missing sometimes?
   const artifactData = profileResponse?.characterProgressions.data?.[characterId]?.seasonalArtifact;
@@ -373,7 +365,7 @@ export function getArtifactUnlocks(
   const unlockedItemHashes =
     artifactData.tiers
       ?.flatMap((tier) => tier.items)
-      .filter((item) => item.isActive)
+      .filter((item) => item.isVisible && item.isActive)
       .map((item) => item.itemHash) || [];
   return {
     unlockedItemHashes,
@@ -388,21 +380,21 @@ export const itemInfosSelector = (state: RootState): ItemInfos =>
 /**
  * DIM tags which should be applied to matching item hashes (instead of per-instance)
  */
-export const itemHashTagsSelector = (state: RootState): { [itemHash: string]: ItemHashTag } =>
+const itemHashTagsSelector = (state: RootState): { [itemHash: string]: ItemHashTag } =>
   state.dimApi.itemHashTags;
 
 /* Returns a function that can be used to get the tag for a particular item. */
 export const getTagSelector = createSelector(
   itemInfosSelector,
   itemHashTagsSelector,
-  (itemInfos, itemHashTags) => (item: DimItem) => getTag(item, itemInfos, itemHashTags)
+  (itemInfos, itemHashTags) => (item: DimItem) => getTag(item, itemInfos, itemHashTags),
 );
 
 /* Returns a function that can be used to get the notes for a particular item. */
 export const getNotesSelector = createSelector(
   itemInfosSelector,
   itemHashTagsSelector,
-  (itemInfos, itemHashTags) => (item: DimItem) => getNotes(item, itemInfos, itemHashTags)
+  (itemInfos, itemHashTags) => (item: DimItem) => getNotes(item, itemInfos, itemHashTags),
 );
 
 /** Get a specific item's tag */

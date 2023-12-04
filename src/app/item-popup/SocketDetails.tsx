@@ -9,7 +9,7 @@ import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { allItemsSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { isValidMasterworkStat } from 'app/inventory/store/masterwork';
-import { isPluggableItem } from 'app/inventory/store/sockets';
+import { hashesToPluggableItems, isPluggableItem } from 'app/inventory/store/sockets';
 import { mapToOtherModCostVariant } from 'app/loadout/mod-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
@@ -34,7 +34,7 @@ import SocketDetailsSelectedPlug from './SocketDetailsSelectedPlug';
 function buildUnlockedPlugs(
   profileResponse: DestinyProfileResponse | undefined,
   owner: string,
-  socket: DimSocket
+  socket: DimSocket,
 ) {
   const plugSetHash =
     socket.socketDefinition.reusablePlugSetHash || socket.socketDefinition.randomizedPlugSetHash;
@@ -52,7 +52,7 @@ function buildUnlockedPlugs(
 function buildShownLockedPlugs(
   defs: D2ManifestDefinitions | undefined,
   visibleShaders: Set<number> | undefined,
-  socket: DimSocket
+  socket: DimSocket,
 ) {
   const socketType = defs?.SocketType.get(socket.socketDefinition.socketTypeHash);
   if (socketType?.plugWhitelist.some((p) => p.categoryHash === PlugCategoryHashes.Shader)) {
@@ -114,7 +114,7 @@ export const SocketDetailsMod = memo(
         <DefItemIcon itemDef={itemDef} />
       </div>
     );
-  }
+  },
 );
 
 export default function SocketDetails({
@@ -135,7 +135,7 @@ export default function SocketDetails({
   const plugged = socket.plugged?.plugDef;
   const actuallyPlugged = (socket.actuallyPlugged || socket.plugged)?.plugDef;
   const [selectedPlug, setSelectedPlug] = useState<PluggableInventoryItemDefinition | null>(
-    plugged || null
+    plugged || null,
   );
   const [query, setQuery] = useState('');
   const language = useSelector(languageSelector);
@@ -146,19 +146,19 @@ export default function SocketDetails({
   const allItems = useSelector(allItemsSelector);
   const inventoryPlugs = useMemo(
     () => buildInventoryPlugs(allItems, socket, defs),
-    [allItems, defs, socket]
+    [allItems, defs, socket],
   );
 
   const visibleShaders = useSelector(collectionsVisibleShadersSelector);
   const shownLockedPlugs = useMemo(
     () => buildShownLockedPlugs(defs, visibleShaders, socket),
-    [defs, socket, visibleShaders]
+    [defs, socket, visibleShaders],
   );
 
   const profileResponse = useSelector(profileResponseSelector);
   const unlockedPlugs = useMemo(
     () => buildUnlockedPlugs(profileResponse, item.owner, socket),
-    [item.owner, profileResponse, socket]
+    [item.owner, profileResponse, socket],
   );
 
   // Start with the inventory plugs
@@ -198,7 +198,7 @@ export default function SocketDetails({
 
   const searchFilter = createPlugSearchPredicate(query, language, defs);
 
-  let mods = Array.from(modHashes, (h) => defs.InventoryItem.get(h)).filter(isPluggableItem);
+  let mods = hashesToPluggableItems(defs, Array.from(modHashes));
 
   if (socket.socketDefinition.socketTypeHash === weaponMasterworkY2SocketTypeHash) {
     const matchesMasterwork = (plugOption: PluggableInventoryItemDefinition) => {
@@ -208,7 +208,7 @@ export default function SocketDetails({
         isValidMasterworkStat(
           defs,
           defs.InventoryItem.get(item.hash),
-          plugOption.investmentStats[0]?.statTypeHash
+          plugOption.investmentStats[0]?.statTypeHash,
         )
       ) {
         return true;
@@ -233,7 +233,7 @@ export default function SocketDetails({
         (shownLockedPlugs
           ? shownLockedPlugs.has(i.hash)
           : // hide the regular-cost copies if the reduced is available, and vice versa
-            !unlocked(mapToOtherModCostVariant(i.hash)))
+            !unlocked(mapToOtherModCostVariant(i.hash))),
     )
     .sort(
       chainComparator(
@@ -247,9 +247,9 @@ export default function SocketDetails({
             // mods that cost something in PlugSet order
             (i.plug?.energyCost?.energyCost ?? 0) > 0 ||
             // everything else by name
-            i.displayProperties.name
-        )
-      )
+            i.displayProperties.name,
+        ),
+      ),
     );
 
   if (socket.socketDefinition.socketTypeHash === weaponMasterworkY2SocketTypeHash) {
@@ -257,8 +257,8 @@ export default function SocketDetails({
     mods = mods.sort(
       chainComparator(
         compareBy((i) => i.plug.plugCategoryHash !== actuallyPlugged?.plug.plugCategoryHash),
-        compareBy((i) => i.investmentStats[0]?.value)
-      )
+        compareBy((i) => i.investmentStats[0]?.value),
+      ),
     );
   }
 
@@ -273,7 +273,7 @@ export default function SocketDetails({
 
   const header = (
     <div>
-      <h1>
+      <h1 className={styles.header}>
         {socketIconDef && (
           <BungieImage
             className={styles.categoryIcon}

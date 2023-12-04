@@ -1,3 +1,5 @@
+@use '../../variables.scss' as *;
+
 .activities {
   width: calc(
     (40px + var(--item-size) + (3 * (var(--item-size) + 8px))) * var(--num-characters) +
@@ -14,12 +16,13 @@
 
   .activities-character {
     flex-shrink: 0;
+    width: $emblem-width;
     display: flex;
     margin-right: 12px;
 
     .character {
-      height: 46px;
-      width: 220px;
+      height: $emblem-height;
+      width: $emblem-width;
     }
 
     &:last-child {
@@ -127,6 +130,6 @@
   }
 
   .weak {
-    color: #aaa;
+    color: var(--theme-text-secondary);
   }
 }

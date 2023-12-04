@@ -7,7 +7,7 @@ describe('generateSuggestionsForFilter', () => {
     format: FilterDefinition['format'],
     keywords: FilterDefinition['keywords'],
     suggestions: FilterDefinition['suggestions'],
-    overload: { [key: string]: number } | undefined
+    overload: { [key: string]: number } | undefined,
   ][] = [
     [undefined, ['a', 'b', 'c'], undefined, undefined],
     ['query', 'a', ['b', 'c'], undefined],
@@ -28,7 +28,7 @@ describe('generateSuggestionsForFilter', () => {
       format: FilterDefinition['format'],
       keywords: string | string[],
       suggestions?: string[],
-      overload?: { [key: string]: number } | undefined
+      overload?: { [key: string]: number } | undefined,
     ) => {
       const candidates = generateSuggestionsForFilter({
         format,
@@ -37,6 +37,6 @@ describe('generateSuggestionsForFilter', () => {
         overload,
       });
       expect(candidates).toMatchSnapshot();
-    }
+    },
   );
 });

@@ -17,7 +17,7 @@ import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { stripSockets } from 'app/strip-sockets/strip-sockets-actions';
 import _ from 'lodash';
-import React from 'react';
+import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { TagCommand, itemTagSelectorList } from '../inventory/dim-item-info';
@@ -40,7 +40,7 @@ import styles from './ItemActionsDropdown.m.scss';
 /**
  * Various actions that can be performed on an item
  */
-export default React.memo(function ItemActionsDropdown({
+export default memo(function ItemActionsDropdown({
   searchActive,
   filteredItems,
   searchQuery,
@@ -64,10 +64,11 @@ export default React.memo(function ItemActionsDropdown({
     isComparable = filteredItems.every((i) => i.typeName === type);
   }
 
-  const canStrip = filteredItems.some((i) =>
-    i.sockets?.allSockets.some(
-      (s) => s.emptyPlugItemHash && s.plugged?.plugDef.hash !== s.emptyPlugItemHash
-    )
+  const canStrip = filteredItems.some(
+    (i) =>
+      i.sockets?.allSockets.some(
+        (s) => s.emptyPlugItemHash && s.plugged?.plugDef.hash !== s.emptyPlugItemHash,
+      ),
   );
 
   const bulkTag = loadingTracker.trackPromise(async (selectedTag: TagCommand) => {
@@ -84,7 +85,7 @@ export default React.memo(function ItemActionsDropdown({
   });
 
   const compareMatching = () => {
-    dispatch(compareFilteredItems(searchQuery, filteredItems));
+    dispatch(compareFilteredItems(searchQuery, filteredItems, undefined));
   };
 
   // Move items matching the current search. Max 9 per type.
@@ -93,7 +94,7 @@ export default React.memo(function ItemActionsDropdown({
     dispatch(applyLoadout(store, loadout, { allowUndo: true }));
   };
 
-  const bulkItemTags: TagCommandInfo[] = itemTagSelectorList
+  const bulkItemTags: (Omit<TagCommandInfo, 'label'> & { label: string })[] = itemTagSelectorList
     .filter((t) => t.type)
     .map((tag) => ({
       ...tag,

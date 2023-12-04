@@ -11,7 +11,7 @@ import styles from './text-complete.m.scss';
 
 function createTagsCompleter(
   textArea: React.RefObject<HTMLTextAreaElement | HTMLInputElement>,
-  tags: string[]
+  tags: string[],
 ): StrategyProps {
   return {
     match: /#(\w*)$/,
@@ -28,7 +28,7 @@ function createTagsCompleter(
           continue;
         }
         // favor startswith
-        if (tagLower.startsWith('#' + termLower)) {
+        if (tagLower.startsWith(`#${termLower}`)) {
           possibleTags.unshift(t);
           // over full text search
         } else if (tagLower.includes(termLower)) {
@@ -76,7 +76,7 @@ function createSymbolsAutocompleter(symbols: SymbolsMap): StrategyProps {
 export function useAutocomplete(
   textArea: React.RefObject<HTMLTextAreaElement | HTMLInputElement>,
   tags: string[],
-  parent?: HTMLElement
+  parent?: React.RefObject<HTMLElement>,
 ) {
   const symbols = useSelector(symbolsSelector);
   useEffect(() => {
@@ -91,9 +91,9 @@ export function useAutocomplete(
         {
           dropdown: {
             className: clsx(styles.dropdownMenu, 'textcomplete-dropdown'),
-            parent: parent ?? tempContainer,
+            parent: parent?.current ?? tempContainer,
           },
-        }
+        },
       );
       return () => {
         textcomplete.destroy();

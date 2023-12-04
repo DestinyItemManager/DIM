@@ -1,6 +1,6 @@
 import { D1BucketHashes, D1_StatHashes } from 'app/search/d1-known-values';
+import { uniqBy } from 'app/utils/collections';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
-import { uniqBy } from 'app/utils/util';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { D1Item } from '../../inventory/item-types';
@@ -36,7 +36,7 @@ function getBestItem(
   stats: number[],
   type: string,
   scaleTypeArg: 'base' | 'scaled',
-  nonExotic = false
+  nonExotic = false,
 ): ItemWithBonus {
   // for specific armor (Helmet), look at stats (int/dis), return best one.
   return {
@@ -63,7 +63,7 @@ function getBestItem(
 export function calcArmorStats(
   pieces: ItemWithBonus[],
   stats: ArmorSet['stats'],
-  scaleTypeArg: 'base' | 'scaled'
+  scaleTypeArg: 'base' | 'scaled',
 ) {
   for (const armor of pieces) {
     const int = armor.item.normalStats![144602215];
@@ -76,7 +76,7 @@ export function calcArmorStats(
     // that do not scale correctly as the scaling is currently implemented.
     // See https://github.com/DestinyItemManager/DIM/issues/5191 for details
     if ([2820418554, 2122538507, 2300914892].includes(armor.item.hash)) {
-      stats[144602215].value += int['base'];
+      stats[144602215].value += int.base;
     } else {
       stats[144602215].value += int[scaleType];
       stats[1735777505].value += dis[scaleType];
@@ -125,7 +125,7 @@ export function getBestArmor(
   lockedPerks: { [armorType in ArmorTypes]: LockedPerkHash },
   scaleTypeArg: 'base' | 'scaled',
   includeVendors = false,
-  fullMode = false
+  fullMode = false,
 ) {
   const statHashes = [
     { stats: [144602215, 1735777505], type: 'intdis' },
@@ -173,20 +173,19 @@ export function getBestArmor(
           }
           return Boolean(
             (orPerkHashes.length && orPerkHashes.some(matchNode)) ||
-              (andPerkHashes.length && andPerkHashes.every(matchNode))
+              (andPerkHashes.length && andPerkHashes.every(matchNode)),
           );
         };
       }
 
       // Filter out excluded and non-wanted perks
       const filtered = combined.filter(
-        (item) => !excludedIndices.has(item.index) && hasPerks(item) // Not excluded and has the correct locked perks
+        (item) => !excludedIndices.has(item.index) && hasPerks(item), // Not excluded and has the correct locked perks
       );
 
-      // eslint-disable-next-line github/array-foreach
-      statHashes.forEach((hash, index) => {
+      for (const [index, hash] of statHashes.entries()) {
         if (!fullMode && index > 2) {
-          return;
+          continue;
         }
 
         curbest = getBestItem(filtered, hash.stats, hash.type, scaleTypeArg);
@@ -195,7 +194,7 @@ export function getBestArmor(
         if (curbest.item.isExotic && armortype !== 'ClassItem') {
           best.push(getBestItem(filtered, hash.stats, hash.type, scaleTypeArg, true));
         }
-      });
+      }
     }
 
     bestCombs = [];
@@ -221,7 +220,7 @@ export function getBestArmor(
 
 export function getActiveHighestSets(
   setMap: { [setHash: number]: SetType },
-  activeSets: string
+  activeSets: string,
 ): SetType[] {
   let count = 0;
   const topSets: SetType[] = [];
@@ -240,7 +239,7 @@ export function getActiveHighestSets(
 
 export function mergeBuckets<T extends any[]>(
   bucket1: { [armorType in ArmorTypes]: T },
-  bucket2: { [armorType in ArmorTypes]: T }
+  bucket2: { [armorType in ArmorTypes]: T },
 ) {
   const merged: Partial<{ [armorType in ArmorTypes]: T }> = {};
   for (const [type, bucket] of Object.entries(bucket1)) {
@@ -252,7 +251,7 @@ export function mergeBuckets<T extends any[]>(
 export function getActiveBuckets<T extends any[]>(
   bucket1: { [armorType in ArmorTypes]: T },
   bucket2: { [armorType in ArmorTypes]: T },
-  merge: boolean
+  merge: boolean,
 ): { [armorType in ArmorTypes]: T } {
   // Merge both buckets or return bucket1 if merge is false
   return merge ? mergeBuckets(bucket1, bucket2) : bucket1;
@@ -262,7 +261,7 @@ export function loadVendorsBucket(
   currentStore: DimStore,
   vendors?: {
     [vendorHash: number]: Vendor;
-  }
+  },
 ): ItemBucket {
   if (!vendors) {
     return {
@@ -283,10 +282,10 @@ export function loadVendorsBucket(
             (i) =>
               i.item.stats &&
               i.item.primaryStat?.statHash === D1_StatHashes.Defense &&
-              itemCanBeEquippedBy(i.item, currentStore)
+              itemCanBeEquippedBy(i.item, currentStore),
           )
-          .map((i) => i.item)
-      )
+          .map((i) => i.item),
+      ),
     )
     .reduce(mergeBuckets);
 }
@@ -299,9 +298,9 @@ export function loadBucket(currentStore: DimStore, stores: D1Store[]): ItemBucke
           (i) =>
             i.stats &&
             i.primaryStat?.statHash === D1_StatHashes.Defense &&
-            itemCanBeEquippedBy(i, currentStore)
-        )
-      )
+            itemCanBeEquippedBy(i, currentStore),
+        ),
+      ),
     )
     .reduce(mergeBuckets);
 }

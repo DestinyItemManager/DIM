@@ -1,6 +1,6 @@
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-known-values';
+import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
 import { LookupTable } from 'app/utils/util-types';
@@ -8,16 +8,16 @@ import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import deprecatedMods from 'data/d2/deprecated-mods.json';
 import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
+import mutuallyExclusiveMods from 'data/d2/mutually-exclusive-mods.json';
 import { normalToReducedMod, reducedToNormalMod } from 'data/d2/reduced-cost-mod-mappings';
-import _ from 'lodash';
 import { knownModPlugCategoryHashes } from './known-values';
 
 export const plugCategoryHashToBucketHash: LookupTable<PlugCategoryHashes, BucketHashes> = {
-  [armor2PlugCategoryHashesByName.helmet]: armorBuckets.helmet,
-  [armor2PlugCategoryHashesByName.gauntlets]: armorBuckets.gauntlets,
-  [armor2PlugCategoryHashesByName.chest]: armorBuckets.chest,
-  [armor2PlugCategoryHashesByName.leg]: armorBuckets.leg,
-  [armor2PlugCategoryHashesByName.classitem]: armorBuckets.classitem,
+  [armor2PlugCategoryHashesByName.helmet]: BucketHashes.Helmet,
+  [armor2PlugCategoryHashesByName.gauntlets]: BucketHashes.Gauntlets,
+  [armor2PlugCategoryHashesByName.chest]: BucketHashes.ChestArmor,
+  [armor2PlugCategoryHashesByName.leg]: BucketHashes.LegArmor,
+  [armor2PlugCategoryHashesByName.classitem]: BucketHashes.ClassArmor,
 };
 
 /**
@@ -25,7 +25,7 @@ export const plugCategoryHashToBucketHash: LookupTable<PlugCategoryHashes, Bucke
  * 1. The known plug category hashes, see ./types#knownModPlugCategoryHashes for ordering
  * 2. itemTypeDisplayName, so that legacy and combat mods are ordered alphabetically by their category name
  * 4. by energy cost, so cheaper mods come before more expensive mods
- * 5. by mod name, so mods in the same category with the same energy type and cost are alphabetical
+ * 5. by mod name, so mods in the same category with the same energy cost are alphabetical
  */
 export const sortMods = chainComparator<PluggableInventoryItemDefinition>(
   compareBy((mod) => {
@@ -34,7 +34,7 @@ export const sortMods = chainComparator<PluggableInventoryItemDefinition>(
   }),
   compareBy((mod) => mod.itemTypeDisplayName),
   compareBy((mod) => mod.plug.energyCost?.energyCost),
-  compareBy((mod) => mod.displayProperties.name)
+  compareBy((mod) => mod.displayProperties.name),
 );
 
 /**
@@ -53,13 +53,13 @@ export const sortModGroups = chainComparator(
     return knownIndex === -1 ? knownModPlugCategoryHashes.length : knownIndex;
   }),
   compareBy((mods: PluggableInventoryItemDefinition[]) =>
-    mods.length ? mods[0].itemTypeDisplayName : ''
-  )
+    mods.length ? mods[0].itemTypeDisplayName : '',
+  ),
 );
 
 /** Figures out if an item definition is an insertable armor 2.0 mod. */
 export function isInsertableArmor2Mod(
-  def: DestinyInventoryItemDefinition
+  def: DestinyInventoryItemDefinition,
 ): def is PluggableInventoryItemDefinition {
   return Boolean(
     // is the def pluggable (def.plug exists)
@@ -72,7 +72,7 @@ export function isInsertableArmor2Mod(
       // Exclude consumable mods
       def.inventory?.bucketTypeHash !== BucketHashes.Modifications &&
       // this rules out classified items
-      def.itemTypeDisplayName !== undefined
+      def.itemTypeDisplayName !== undefined,
   );
 }
 
@@ -95,27 +95,26 @@ export function createGetModRenderKey() {
  * e.g. "General Armor Mod", "Helmet Armor Mod", "Nightmare Mod"
  */
 export function groupModsByModType(plugs: PluggableInventoryItemDefinition[]) {
-  return _.groupBy(plugs, (plugDef) => plugDef.itemTypeDisplayName);
+  return Object.groupBy(plugs, (plugDef) => plugDef.itemTypeDisplayName);
 }
 
 /**
  * Some mods have two copies, a regular version and a reduced-cost version.
  * Only some of them are seasonally available, depending on artifact mods/unlocks.
- * This maps to whichever version is available, otherwise returns plugHash unmodified.
+ * This maps to whichever version is available, otherwise returning the expensive versions.
  */
 export function mapToAvailableModCostVariant(plugHash: number, unlockedPlugs: Set<number>) {
-  const toReduced = normalToReducedMod[plugHash];
-  if (toReduced !== undefined && unlockedPlugs.has(toReduced)) {
-    return toReduced;
+  const reducedVersion = isReducedModCostVariant(plugHash)
+    ? plugHash
+    : normalToReducedMod[plugHash];
+  if (reducedVersion !== undefined && unlockedPlugs.has(reducedVersion)) {
+    return reducedVersion;
   }
   if (unlockedPlugs.has(plugHash)) {
     return plugHash;
   }
   const toNormal = reducedToNormalMod[plugHash];
-  if (toNormal !== undefined && unlockedPlugs.has(toNormal)) {
-    return toNormal;
-  }
-  return plugHash;
+  return toNormal ?? plugHash;
 }
 
 /**
@@ -125,9 +124,22 @@ export function mapToNonReducedModCostVariant(plugHash: number): number {
   return reducedToNormalMod[plugHash] ?? plugHash;
 }
 
+export function isReducedModCostVariant(plugHash: number): boolean {
+  return reducedToNormalMod[plugHash] !== undefined;
+}
+
 /**
  * Find the complementary cost variant.
  */
 export function mapToOtherModCostVariant(plugHash: number): number | undefined {
   return reducedToNormalMod[plugHash] ?? normalToReducedMod[plugHash];
+}
+
+/**
+ * Some mods form a group of which only one mod can be equipped,
+ * which is enforced by game servers. DIM must respect this when building
+ * loadouts or applying mods.
+ */
+export function getModExclusionGroup(mod: PluggableInventoryItemDefinition): string | undefined {
+  return mutuallyExclusiveMods[mod.hash];
 }

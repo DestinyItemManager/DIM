@@ -12,7 +12,7 @@
     text-transform: none !important;
   }
   :global(.dim-button) {
-    color: white;
+    color: var(--theme-text);
     font-size: 12px;
   }
   p {
@@ -20,7 +20,7 @@
   }
 }
 
-.twitterLinks {
+.links {
   composes: flexRow from '../dim-ui/common.m.scss';
   flex-wrap: wrap;
   gap: 8px;
@@ -33,7 +33,7 @@
   float: right;
 }
 
-.twitters {
+.socials {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
@@ -50,10 +50,13 @@
   position: relative;
   border: 4px solid rgba(255, 255, 255, 0.3);
 
-  [twdiv='yes'] {
+  iframe {
+    width: 100%;
     overflow: auto;
     height: 400px;
     background-color: black;
+    border: none;
+
     @include phone-portrait {
       height: 300px;
     }

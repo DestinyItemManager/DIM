@@ -8,8 +8,9 @@ import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/sel
 import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
 import { searchFilterSelector } from 'app/search/search-filter';
 import { useSetting } from 'app/settings/hooks';
-import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
-import { objectKeys } from 'app/utils/util-types';
+import { querySelector } from 'app/shell/selectors';
+import { filterMap } from 'app/utils/collections';
+import { usePageTitle } from 'app/utils/hooks';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
@@ -20,8 +21,10 @@ import {
   ownedItemsSelector,
   profileResponseSelector,
 } from '../inventory/selectors';
+import { UNIVERSAL_ORNAMENTS_NODE } from '../search/d2-known-values';
 import PresentationNodeRoot from './PresentationNodeRoot';
 import styles from './Records.m.scss';
+import UniversalOrnaments from './universal-ornaments/UniversalOrnaments';
 
 interface Props {
   account: DestinyAccount;
@@ -31,9 +34,9 @@ interface Props {
  * The records screen shows account-wide things like Triumphs and Collections.
  */
 export default function Records({ account }: Props) {
-  const isPhonePortrait = useIsPhonePortrait();
   useLoadStores(account);
   const [searchParams] = useSearchParams();
+  usePageTitle(t('Records.Title'));
 
   const presentationNodeHash = searchParams.has('presentationNodeHash')
     ? parseInt(searchParams.get('presentationNodeHash')!, 10)
@@ -47,6 +50,7 @@ export default function Records({ account }: Props) {
   const [completedRecordsHidden, setCompletedRecordsHidden] = useSetting('completedRecordsHidden');
   const [redactedRecordsRevealed, setRedactedRecordsRevealed] =
     useSetting('redactedRecordsRevealed');
+  const [sortRecordProgression, setSortRecordProgression] = useSetting('sortRecordProgression');
 
   const defs = useD2Definitions();
 
@@ -85,10 +89,15 @@ export default function Records({ account }: Props) {
 
   // We discover the rest of the root nodes from the Bungie.net core settings
   const otherHashes = destiny2CoreSettings
-    ? objectKeys(destiny2CoreSettings)
-        .filter((k) => k.includes('RootNode') && k !== 'craftingRootNodeHash')
-        .map((k) => destiny2CoreSettings[k] as number)
+    ? filterMap(Object.entries(destiny2CoreSettings), ([key, value]) =>
+        key.includes('RootNode') && key !== 'craftingRootNodeHash' && typeof value === 'number'
+          ? value
+          : undefined,
+      )
     : [];
+
+  const universalOrnamentsName =
+    defs.PresentationNode.get(UNIVERSAL_ORNAMENTS_NODE)?.displayProperties.name ?? '???';
 
   // We put the hashes we know about from profile first
   const nodeHashes = [...new Set([...profileHashes, ...otherHashes])];
@@ -101,37 +110,38 @@ export default function Records({ account }: Props) {
         id: `p_${nodeDef.hash}`,
         title: overrideTitles[nodeDef.hash] || nodeDef.displayProperties.name,
       })),
+    { id: 'universalOrnaments', title: universalOrnamentsName },
   ];
-
-  const onToggleCompletedRecordsHidden = (checked: boolean) => setCompletedRecordsHidden(checked);
-  const onToggleRedactedRecordsRevealed = (checked: boolean) => setRedactedRecordsRevealed(checked);
 
   return (
     <PageWithMenu className="d2-vendors">
       <PageWithMenu.Menu>
-        {!isPhonePortrait && (
-          <div className="progress-menu">
-            {menuItems.map((menuItem) => (
-              <PageWithMenu.MenuButton key={menuItem.id} anchor={menuItem.id}>
-                <span>{menuItem.title}</span>
-              </PageWithMenu.MenuButton>
-            ))}
-          </div>
-        )}
+        {menuItems.map((menuItem) => (
+          <PageWithMenu.MenuButton key={menuItem.id} anchor={menuItem.id}>
+            <span>{menuItem.title}</span>
+          </PageWithMenu.MenuButton>
+        ))}
         <div className={styles.presentationNodeOptions}>
           <CheckButton
             name="hide-completed"
             checked={completedRecordsHidden}
-            onChange={onToggleCompletedRecordsHidden}
+            onChange={setCompletedRecordsHidden}
           >
             {t('Triumphs.HideCompleted')}
           </CheckButton>
           <CheckButton
             name="reveal-redacted"
             checked={redactedRecordsRevealed}
-            onChange={onToggleRedactedRecordsRevealed}
+            onChange={setRedactedRecordsRevealed}
           >
             {t('Triumphs.RevealRedacted')}
+          </CheckButton>
+          <CheckButton
+            name="sort-progression"
+            checked={sortRecordProgression}
+            onChange={setSortRecordProgression}
+          >
+            {t('Triumphs.SortRecords')}
           </CheckButton>
         </div>
       </PageWithMenu.Menu>
@@ -157,7 +167,6 @@ export default function Records({ account }: Props) {
                   <PresentationNodeRoot
                     presentationNodeHash={nodeDef.hash}
                     profileResponse={profileResponse}
-                    buckets={buckets}
                     ownedItemHashes={ownedItemHashes.accountWideOwned}
                     openedPresentationHash={presentationNodeHash}
                     searchQuery={searchQuery}
@@ -165,11 +174,19 @@ export default function Records({ account }: Props) {
                     overrideName={overrideTitles[nodeDef.hash]}
                     isTriumphs={nodeDef.hash === recordsRootHash}
                     showPlugSets={nodeDef.hash === collectionsRootHash}
+                    completedRecordsHidden={completedRecordsHidden}
                   />
                 </ErrorBoundary>
               </CollapsibleTitle>
             </section>
           ))}
+        <section id="universalOrnaments">
+          <CollapsibleTitle title={universalOrnamentsName} sectionId="universalOrnaments">
+            <ErrorBoundary name={universalOrnamentsName}>
+              <UniversalOrnaments searchQuery={searchQuery} searchFilter={searchFilter} />
+            </ErrorBoundary>
+          </CollapsibleTitle>
+        </section>
       </PageWithMenu.Contents>
     </PageWithMenu>
   );

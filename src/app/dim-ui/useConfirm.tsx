@@ -1,7 +1,7 @@
 import { isWindows } from 'app/utils/browsers';
 import { t } from 'i18next';
 import { useCallback } from 'react';
-import { Buttons, Title, default as useDialog } from './useDialog';
+import useDialog, { Buttons, Title } from './useDialog';
 
 export interface ConfirmOpts {
   okLabel?: React.ReactNode;
@@ -14,7 +14,7 @@ export interface ConfirmOpts {
  */
 export default function useConfirm(): [
   element: React.ReactNode,
-  confirm: (message: React.ReactNode, opts?: ConfirmOpts) => Promise<boolean>
+  confirm: (message: React.ReactNode, opts?: ConfirmOpts) => Promise<boolean>,
 ] {
   const [dialog, showDialog] = useDialog<
     ConfirmOpts & {

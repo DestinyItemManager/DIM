@@ -33,10 +33,10 @@ interface Props {
   initialQuery?: string;
   /** The label for the "accept" button in the footer. */
   acceptButtonText: string;
-  /** A function to determine if a given plug is currently selectable. */
-  isPlugSelectable: (
+  /** A function to further refine whether a given plug is currently selectable. */
+  isPlugSelectable?: (
     plug: PluggableInventoryItemDefinition,
-    selected: PluggableInventoryItemDefinition[]
+    selected: PluggableInventoryItemDefinition[],
   ) => boolean;
   /** How plug groups (e.g. PlugSets) should be sorted in the display. */
   sortPlugGroups?: Comparator<PlugSet>;
@@ -70,19 +70,40 @@ export default function PlugDrawer({
   const [internalPlugSets, setInternalPlugSets] = useState(() =>
     plugSets
       .map((plugSet) => ({ ...plugSet, plugs: Array.from(plugSet.plugs) }))
-      .sort(sortPlugGroups)
+      .sort(sortPlugGroups),
   );
   const plugSetSort = (set: PlugSet) =>
     compareBy((plug: PluggableInventoryItemDefinition) =>
-      set.plugs.findIndex((p) => p.hash === plug.hash)
+      set.plugs.findIndex((p) => p.hash === plug.hash),
     );
   const isPhonePortrait = useIsPhonePortrait();
+
+  const allSelectedPlugs = useMemo(
+    () => internalPlugSets.flatMap((set) => set.selected),
+    [internalPlugSets],
+  );
+
+  const countsByPlugSetHash = useMemo(
+    () =>
+      Object.fromEntries(
+        internalPlugSets.map((set) => [
+          set.plugSetHash,
+          [
+            set.getNumSelected?.(allSelectedPlugs) ?? set.selected.length,
+            typeof set.maxSelectable === 'number'
+              ? set.maxSelectable
+              : set.maxSelectable(allSelectedPlugs),
+          ] as const,
+        ]),
+      ),
+    [allSelectedPlugs, internalPlugSets],
+  );
 
   const handlePlugSelected = useCallback(
     (
       plugSetHash: number,
       plug: PluggableInventoryItemDefinition,
-      selectionType: 'multi' | 'single'
+      selectionType: 'multi' | 'unique' | 'single',
     ) => {
       setInternalPlugSets(
         produce((draft) => {
@@ -98,10 +119,10 @@ export default function PlugDrawer({
           }
 
           draftPlugSet.selected.sort(plugSetSort(draftPlugSet));
-        })
+        }),
       );
     },
-    []
+    [],
   );
 
   const handlePlugRemoved = useCallback(
@@ -114,15 +135,15 @@ export default function PlugDrawer({
           }
 
           const firstIndex = draftPlugSet.selected.findIndex(
-            (selected) => selected.hash === plug.hash
+            (selected) => selected.hash === plug.hash,
           );
           if (firstIndex >= 0) {
             draftPlugSet.selected.splice(firstIndex, 1);
           }
-        })
+        }),
       );
     },
-    []
+    [],
   );
 
   const handlePlugRemovedFromFooter = useCallback((plug: PluggableInventoryItemDefinition) => {
@@ -131,20 +152,20 @@ export default function PlugDrawer({
         // Remove the first plug matching this hash that we find in any plug set
         for (const draftPlugSet of draft) {
           const firstIndex = draftPlugSet.selected.findIndex(
-            (selected) => selected.hash === plug.hash
+            (selected) => selected.hash === plug.hash,
           );
           if (firstIndex >= 0) {
             draftPlugSet.selected.splice(firstIndex, 1);
             return;
           }
         }
-      })
+      }),
     );
   }, []);
 
   const onSubmit = (e: React.FormEvent | KeyboardEvent, onClose: () => void) => {
     e.preventDefault();
-    onAccept(internalPlugSets.flatMap((plugSet) => plugSet.selected));
+    onAccept(allSelectedPlugs);
     onClose();
   };
 
@@ -163,12 +184,8 @@ export default function PlugDrawer({
   }, [query, internalPlugSets, defs, language]);
 
   const handleIsPlugSelectable = useCallback(
-    (plug: PluggableInventoryItemDefinition) =>
-      isPlugSelectable(
-        plug,
-        internalPlugSets.flatMap((plugSet) => plugSet.selected)
-      ),
-    [internalPlugSets, isPlugSelectable]
+    (plug: PluggableInventoryItemDefinition) => isPlugSelectable?.(plug, allSelectedPlugs) ?? true,
+    [allSelectedPlugs, isPlugSelectable],
   );
 
   const footer = ({ onClose }: { onClose: () => void }) => (
@@ -212,6 +229,8 @@ export default function PlugDrawer({
           key={plugSet.plugSetHash}
           plugSet={plugSet}
           classType={classType}
+          numSelected={countsByPlugSetHash[plugSet.plugSetHash][0]}
+          maxSelectable={countsByPlugSetHash[plugSet.plugSetHash][1]}
           isPlugSelectable={handleIsPlugSelectable}
           onPlugSelected={handlePlugSelected}
           onPlugRemoved={handlePlugRemoved}

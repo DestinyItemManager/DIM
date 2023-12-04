@@ -1,6 +1,6 @@
 import { t } from 'app/i18next-t';
 import clsx from 'clsx';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './ConfirmButton.m.scss';
 
 /**
@@ -30,8 +30,8 @@ export function ConfirmButton({
   const [contentHeight, setContentHeight] = useState(0);
   const [containerHeight, setContainerHeight] = useState(0);
 
-  const containerRef = React.useRef<HTMLButtonElement>(null);
-  const childrenRef = React.useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLButtonElement>(null);
+  const childrenRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setContentHeight(childrenRef.current?.offsetHeight || 0);

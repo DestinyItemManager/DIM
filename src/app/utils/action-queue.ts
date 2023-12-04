@@ -5,9 +5,7 @@ const _queue: Promise<unknown>[] = [];
 // A global queue of functions that will execute one after the other. The function must return a promise.
 // fn is either a blocking function or a function that returns a promise
 export function queueAction<K>(fn: () => Promise<K>): Promise<K> {
-  const headPromise: Promise<unknown> = _queue.length
-    ? _queue[_queue.length - 1]
-    : Promise.resolve();
+  const headPromise: Promise<unknown> = _queue.length ? _queue.at(-1)! : Promise.resolve();
 
   // If available, run this task under a wake lock so the device doesn't sleep while the operation is running.
   const runPromise = async () => {
@@ -36,7 +34,7 @@ export function queueAction<K>(fn: () => Promise<K>): Promise<K> {
     (e) => {
       _queue.shift();
       throw e;
-    }
+    },
   );
   _queue.push(wrappedPromise);
 
@@ -46,7 +44,7 @@ export function queueAction<K>(fn: () => Promise<K>): Promise<K> {
 // Wrap a function to produce a function that will be queued when invoked
 export function queuedAction<T extends unknown[], K>(
   fn: (...args: T) => Promise<K>,
-  context?: unknown
+  context?: unknown,
 ): (...args: T) => Promise<K> {
   return (...args: T) => queueAction(() => fn.apply(context, args));
 }

@@ -2,20 +2,22 @@ import { DimItem } from 'app/inventory/item-types';
 import {
   allItemsSelector,
   createItemContextSelector,
+  currentStoreSelector,
   sortedStoresSelector,
   unlockedPlugSetItemsSelector,
 } from 'app/inventory/selectors';
-import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
+import { getStore } from 'app/inventory/stores-helpers';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { RootState } from 'app/store/types';
+import { filterMap } from 'app/utils/collections';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
+import { createSelector } from 'reselect';
 
 /**
  * Returns two bits of information:
@@ -28,49 +30,56 @@ import { shallowEqual, useSelector } from 'react-redux';
 // TODO: Why are these in the same selector? Why isn't it memoized?
 export function useEquippedLoadoutArmorAndSubclass(
   loadout: Loadout,
-  storeId: string | undefined
+  storeId: string | undefined,
 ): { armor: DimItem[]; subclass: ResolvedLoadoutItem | undefined } {
-  const loadoutItemSelector = useCallback(
-    (state: RootState): { armor: DimItem[]; subclass: ResolvedLoadoutItem | undefined } => {
-      const stores = sortedStoresSelector(state);
-      const currentStore = getCurrentStore(stores)!;
-      const storeToHydrateFrom = storeId
-        ? getStore(stores, storeId)
-        : currentStore.classType === loadout.classType
-        ? currentStore
-        : stores.find((store) => store.classType === loadout.classType);
-      const currentlyEquippedArmor =
-        storeToHydrateFrom?.items.filter((item) => item.equipped && item.bucket.inArmor) ?? [];
-      const classType = storeToHydrateFrom?.classType ?? loadout.classType;
-      const allItems = allItemsSelector(state);
-      const itemCreationContext = createItemContextSelector(state);
-      const modsByBucket = loadout.parameters?.modsByBucket;
+  const loadoutItemSelector = useMemo(
+    () =>
+      createSelector(
+        sortedStoresSelector,
+        currentStoreSelector,
+        allItemsSelector,
+        createItemContextSelector,
+        (
+          stores,
+          currentStore,
+          allItems,
+          itemCreationContext,
+        ): { armor: DimItem[]; subclass: ResolvedLoadoutItem | undefined } => {
+          const storeToHydrateFrom = storeId
+            ? getStore(stores, storeId)
+            : currentStore!.classType === loadout.classType
+              ? currentStore
+              : stores.find((store) => store.classType === loadout.classType);
+          const currentlyEquippedArmor =
+            storeToHydrateFrom?.items.filter((item) => item.equipped && item.bucket.inArmor) ?? [];
+          const classType = storeToHydrateFrom?.classType ?? loadout.classType;
+          const modsByBucket = loadout.parameters?.modsByBucket;
 
-      const [loadoutItems] = getItemsFromLoadoutItems(
-        itemCreationContext,
-        loadout.items.filter((i) => i.equip),
-        storeId,
-        allItems,
-        modsByBucket
-      );
+          const [loadoutItems] = getItemsFromLoadoutItems(
+            itemCreationContext,
+            loadout.items.filter((i) => i.equip),
+            storeId,
+            allItems,
+            modsByBucket,
+          );
 
-      const loadoutItemsByBucket = _.keyBy(
-        loadoutItems.filter((i) => i.item.classType === classType),
-        (i) => i.item.bucket.hash
-      );
+          const loadoutItemsByBucket = _.keyBy(
+            loadoutItems.filter((i) => i.item.classType === classType),
+            (i) => i.item.bucket.hash,
+          );
 
-      const subclass = loadoutItemsByBucket[BucketHashes.Subclass];
-      const armor = _.compact(
-        LockableBucketHashes.map(
-          (bucketHash) =>
-            loadoutItemsByBucket[bucketHash]?.item ??
-            currentlyEquippedArmor.find((item) => item.bucket.hash === bucketHash)
-        )
-      );
+          const subclass = loadoutItemsByBucket[BucketHashes.Subclass];
+          const armor = filterMap(
+            LockableBucketHashes,
+            (bucketHash) =>
+              loadoutItemsByBucket[bucketHash]?.item ??
+              currentlyEquippedArmor.find((item) => item.bucket.hash === bucketHash),
+          );
 
-      return { armor, subclass };
-    },
-    [loadout, storeId]
+          return { armor, subclass };
+        },
+      ),
+    [loadout, storeId],
   );
 
   return useSelector(loadoutItemSelector, shallowEqual);
@@ -82,13 +91,13 @@ export function useEquippedLoadoutArmorAndSubclass(
  * Loadout mod resolution may choose different versions of mods depending on artifact unlocks
  * and may replace defs that no longer exist with a placeholder deprecated mod.
  */
-export function useLoadoutMods(loadout: Loadout, storeId: string, includeAutoMods?: boolean) {
+export function useLoadoutMods(loadout: Loadout, storeId: string) {
   const defs = useD2Definitions();
   const unlockedPlugs = useSelector(unlockedPlugSetItemsSelector(storeId));
 
   return useMemo(() => {
-    const allMods = getModsFromLoadout(defs, loadout, unlockedPlugs, includeAutoMods);
+    const allMods = getModsFromLoadout(defs, loadout, unlockedPlugs);
     const modDefinitions = allMods.map((mod) => mod.resolvedMod);
     return [allMods, modDefinitions] as const;
-  }, [defs, includeAutoMods, loadout, unlockedPlugs]);
+  }, [defs, loadout, unlockedPlugs]);
 }

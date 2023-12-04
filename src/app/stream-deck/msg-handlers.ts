@@ -43,6 +43,7 @@ import {
 } from 'app/stream-deck/interfaces';
 import { DeferredPromise } from 'app/stream-deck/util/deferred';
 import { clientIdentifier, streamDeckToken } from 'app/stream-deck/util/local-storage';
+import { delay } from 'app/utils/promises';
 import { DamageType } from 'bungie-api-ts/destiny2';
 
 // Deferred promise used with selections notifications and actions
@@ -76,8 +77,6 @@ function refreshHandler(): ThunkResult {
   };
 }
 
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
 function searchHandler({ msg, state, store }: HandlerArgs<SearchAction>): ThunkResult {
   return async (dispatch, getState) => {
     if (!window.location.pathname.endsWith(msg.page)) {
@@ -104,7 +103,7 @@ function randomizeHandler({ msg, state, store }: HandlerArgs<RandomizeAction>): 
     const loadout = randomLoadout(
       store,
       allItems,
-      msg.weaponsOnly ? (i) => i.bucket?.sort === 'Weapons' : () => true
+      msg.weaponsOnly ? (i) => i.bucket?.sort === 'Weapons' : () => true,
     );
     loadout && (await dispatch(applyLoadout(store, loadout, { allowUndo: true })));
   };
@@ -216,19 +215,17 @@ function pullItemHandler({ msg, state, store }: HandlerArgs<PullItemAction>): Th
 
     const item = moveToVaultItem ?? selected[0];
 
-    await dispatch(
-      sendToStreamDeck({
-        action: 'dim:item-update',
-        data: {
-          equipped,
-          context: msg.context,
-          element:
-            item.element?.enumValue === DamageType.Kinetic
-              ? undefined
-              : item.element?.displayProperties?.icon,
-        },
-      })
-    );
+    await sendToStreamDeck({
+      action: 'dim:item-update',
+      data: {
+        equipped,
+        context: msg.context,
+        element:
+          item.element?.enumValue === DamageType.Kinetic
+            ? undefined
+            : item.element?.displayProperties?.icon,
+      },
+    });
   };
 }
 

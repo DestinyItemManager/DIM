@@ -1,11 +1,16 @@
 import { useEventBusListener } from 'app/utils/hooks';
-import { AnimatePresence, Spring } from 'framer-motion';
-import React, { useCallback, useState } from 'react';
+import { AnimatePresence, Spring, Variants } from 'framer-motion';
+import { useCallback, useState } from 'react';
 import Notification from './Notification';
-import { notifications$, Notify } from './notifications';
 import styles from './NotificationsContainer.m.scss';
+import { Notify, notifications$ } from './notifications';
 
 const spring: Spring = { type: 'spring', bounce: 0, duration: 0.3 };
+
+const animateVariants: Variants = {
+  hidden: { opacity: 0, height: 0 },
+  shown: { height: 'auto', opacity: 1 },
+};
 
 /** This is the root element that displays popup notifications. */
 export default function NotificationsContainer() {
@@ -15,7 +20,7 @@ export default function NotificationsContainer() {
     notifications$,
     useCallback((notification: Notify) => {
       setNotifications((notifications) => [...notifications, notification]);
-    }, [])
+    }, []),
   );
 
   const onNotificationClosed = (notification: Notify) =>
@@ -28,9 +33,10 @@ export default function NotificationsContainer() {
           <Notification
             key={item.id}
             transition={spring}
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ opacity: 0, height: 0 }}
+            initial="hidden"
+            animate="shown"
+            exit="hidden"
+            variants={animateVariants}
             notification={item}
             onClose={onNotificationClosed}
           />

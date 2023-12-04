@@ -16,11 +16,11 @@ describe('process-utils auto mod structure', () => {
   });
 
   const generalMods: ProcessMod[] = [
-    { hash: 7, energy: { val: 3 } },
-    { hash: 8, energy: { val: 5 } },
-    { hash: 9, energy: { val: 2 } },
-    { hash: 10, energy: { val: 1 } },
-    { hash: 11, energy: { val: 2 } },
+    { hash: 7, energyCost: 3 },
+    { hash: 8, energyCost: 5 },
+    { hash: 9, energyCost: 2 },
+    { hash: 10, energyCost: 1 },
+    { hash: 11, energyCost: 2 },
   ];
 
   test.each(['general', 'cheapgeneral'] as const)(
@@ -30,7 +30,7 @@ describe('process-utils auto mod structure', () => {
         n === 'cheapgeneral'
           ? new Set([
               ...defs.PlugSet.get(generalSocketReusablePlugSetHash).reusablePlugItems.map(
-                (entry) => entry.plugItemHash
+                (entry) => entry.plugItemHash,
               ),
             ])
           : emptySet<number>();
@@ -38,7 +38,7 @@ describe('process-utils auto mod structure', () => {
       expect(autoModData).toMatchSnapshot();
       const sessionInfo = precalculateStructures(autoModData, [], [], true, armorStats);
       expect(sessionInfo.autoModOptions.cheaperStatRelations).toMatchSnapshot();
-    }
+    },
   );
 
   test.each([
@@ -60,15 +60,15 @@ describe('process-utils auto mod structure', () => {
         generalMods.slice(0, 5 - numGeneralMods),
         [],
         true,
-        armorStats
+        armorStats,
       );
       const waysOfHittingStat = _.mapValues(
         sessionInfo.autoModOptions.statCaches[3].statMap,
-        (y) => y?.length
+        (y) => y?.length,
       );
       // Things to watch out for in the snapshot: Keys are contiguous, values first ascend
       // to around the halfway point before descending in a vaguely binomial coefficient-like fashion
       expect(waysOfHittingStat).toMatchSnapshot();
-    }
+    },
   );
 });

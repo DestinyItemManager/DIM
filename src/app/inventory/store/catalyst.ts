@@ -1,18 +1,29 @@
-import { DestinyProfileRecordsComponent, DestinyRecordState } from 'bungie-api-ts/destiny2';
+import {
+  DestinyCharacterRecordsComponent,
+  DestinyProfileRecordsComponent,
+  DestinyRecordState,
+} from 'bungie-api-ts/destiny2';
 import exoticToCatalystRecordHash from 'data/d2/exotic-to-catalyst-record.json';
 import exoticsWithCatalysts from 'data/d2/exotics-with-catalysts';
 import { DimCatalyst } from '../item-types';
 
 export function buildCatalystInfo(
   itemHash: number,
-  profileRecords: DestinyProfileRecordsComponent | undefined
+  profileRecords: DestinyProfileRecordsComponent | undefined,
+  characterRecords: { [key: string]: DestinyCharacterRecordsComponent } | undefined,
 ): DimCatalyst | undefined {
   if (!exoticsWithCatalysts.has(itemHash)) {
     return undefined;
   }
 
   const recordHash = exoticToCatalystRecordHash[itemHash];
-  const record = recordHash && profileRecords?.records[recordHash];
+  const record =
+    recordHash &&
+    (profileRecords?.records[recordHash] ??
+      (characterRecords &&
+        Object.values(characterRecords).find((records) => records.records[recordHash])?.records[
+          recordHash
+        ]));
   if (!record) {
     return undefined;
   }
@@ -20,7 +31,7 @@ export function buildCatalystInfo(
   // TODO: Can't tell the difference between unlocked and inserted for new-style catalysts?
   const complete = Boolean(
     !(record.state & DestinyRecordState.ObjectiveNotCompleted) ||
-      record.state & DestinyRecordState.RecordRedeemed
+      record.state & DestinyRecordState.RecordRedeemed,
   );
   // TODO: seasonal exotics (e.g. Ticuu's) are unlocked by default but still show as obscured - they're run by a quest instead of a record?
 

@@ -2,18 +2,18 @@ import { t } from 'app/i18next-t';
 import { PullFromPostmaster } from 'app/inventory/PullFromPostmaster';
 import { currentStoreSelector } from 'app/inventory/selectors';
 import {
+  POSTMASTER_SIZE,
   postmasterAlmostFull,
   postmasterSpaceUsed,
-  POSTMASTER_SIZE,
 } from 'app/loadout-drawer/postmaster';
-import React from 'react';
+import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
-import styles from './PostmasterWarningBanner.m.scss';
+import HeaderWarningBanner from './HeaderWarningBanner';
 import { useIsPhonePortrait } from './selectors';
 
 /** Shows a warning anywhere in the app if your active character's postmaster is low. */
-export default React.memo(function PostmasterWarningBanner() {
+export default memo(function PostmasterWarningBanner() {
   // if postmaster low on most recent character
   // and we're not on the inventory screen || isPhonePortrait
   // show collect button
@@ -50,9 +50,9 @@ export default React.memo(function PostmasterWarningBanner() {
       : t('PostmasterWarningBanner.PostmasterFull', data);
 
   return (
-    <div className={styles.banner}>
+    <HeaderWarningBanner>
       <PullFromPostmaster store={store} />
       <span>{text}</span>
-    </div>
+    </HeaderWarningBanner>
   );
 });

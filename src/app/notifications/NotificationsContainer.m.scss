@@ -2,9 +2,10 @@
 
 .container {
   position: fixed;
+
   @include below-header;
   right: 0;
-  z-index: 1000;
+  z-index: $tempContainerZindex + 1;
   padding: 8px;
   box-sizing: border-box;
   width: 100%;

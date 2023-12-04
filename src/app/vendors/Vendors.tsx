@@ -5,49 +5,47 @@ import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { searchFilterSelector } from 'app/search/search-filter';
+import { useSetting } from 'app/settings/hooks';
 import ErrorPanel from 'app/shell/ErrorPanel';
-import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
+import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { useEventBusListener } from 'app/utils/hooks';
+import { usePageTitle } from 'app/utils/hooks';
 import { DestinyCurrenciesComponent } from 'bungie-api-ts/destiny2';
-import { motion, PanInfo } from 'framer-motion';
-import { useCallback, useEffect, useState } from 'react';
+import { PanInfo, motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
 import CharacterSelect from '../dim-ui/CharacterSelect';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { sortedStoresSelector } from '../inventory/selectors';
-import { loadingTracker } from '../shell/loading-tracker';
-import { refresh$ } from '../shell/refresh-events';
-import { loadAllVendors } from './actions';
-import {
-  D2VendorGroup,
-  filterVendorGroupsToSearch,
-  filterVendorGroupsToUnacquired,
-} from './d2-vendors';
-import {
-  ownedVendorItemsSelector,
-  vendorGroupsForCharacterSelector,
-  vendorsByCharacterSelector,
-} from './selectors';
 import Vendor from './Vendor';
 import styles from './Vendors.m.scss';
 import VendorsMenu from './VendorsMenu';
+import { setShowUnacquiredOnly } from './actions';
+import { D2VendorGroup, filterVendorGroups } from './d2-vendors';
+import { useLoadVendors } from './hooks';
+import {
+  ownedVendorItemsSelector,
+  showUnacquiredVendorItemsOnlySelector,
+  vendorGroupsForCharacterSelector,
+  vendorItemFilterSelector,
+  vendorsByCharacterSelector,
+} from './selectors';
+import { hideVendorSheet } from './single-vendor/single-vendor-sheet';
 
 /**
  * The "All Vendors" page for D2 that shows all the rotating vendors.
  */
 export default function Vendors({ account }: { account: DestinyAccount }) {
   const defs = useD2Definitions();
+  const dispatch = useThunkDispatch();
   const isPhonePortrait = useIsPhonePortrait();
   const stores = useSelector(sortedStoresSelector);
-  const searchQuery = useSelector(querySelector);
-  const filterItems = useSelector(searchFilterSelector);
   const vendors = useSelector(vendorsByCharacterSelector);
-  const dispatch = useThunkDispatch();
+  usePageTitle(t('Vendors.Vendors'));
 
-  const [filterToUnacquired, setFilterToUnacquired] = useState(false);
+  const shouldFilterToUnacquired = useSelector(showUnacquiredVendorItemsOnlySelector);
+  const [hideSilverItems, setHideSilverItems] = useSetting('vendorsHideSilverItems');
 
   // once the page is loaded, user can select this
   const [userSelectedStoreId, setUserSelectedStoreId] = useState<string>();
@@ -57,24 +55,23 @@ export default function Vendors({ account }: { account: DestinyAccount }) {
   let vendorGroups = useSelector(vendorGroupsForCharacterSelector(storeId));
   const ownedItemHashes = useSelector(ownedVendorItemsSelector(storeId));
 
+  const vendorFilter = useSelector(vendorItemFilterSelector(storeId));
+
   useLoadStores(account);
+  useLoadVendors(account, storeId);
 
+  // Hide the vendor sheets when switching characters
   useEffect(() => {
-    if (storeId) {
-      dispatch(loadAllVendors(account, storeId));
-    }
-  }, [account, storeId, dispatch]);
+    hideVendorSheet();
+  }, [storeId]);
 
-  useEventBusListener(
-    refresh$,
-    useCallback(
-      () => () => {
-        if (storeId) {
-          loadingTracker.addPromise(dispatch(loadAllVendors(account, storeId, true)));
-        }
-      },
-      [account, dispatch, storeId]
-    )
+  // Turn off "show unacquired only" when leaving Vendors page
+  // to prevent it from applying to artifact on the Inventory page
+  useEffect(
+    () => () => {
+      dispatch(setShowUnacquiredOnly(false));
+    },
+    [dispatch],
   );
 
   const handleSwipe = (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
@@ -120,12 +117,7 @@ export default function Vendors({ account }: { account: DestinyAccount }) {
   const selectedStore = stores.find((s) => s.id === storeId)!;
   const currencyLookups = vendorsResponse?.currencyLookups.data?.itemQuantities;
 
-  if (vendorGroups && filterToUnacquired) {
-    vendorGroups = filterVendorGroupsToUnacquired(vendorGroups, ownedItemHashes);
-  }
-  if (vendorGroups && searchQuery.length) {
-    vendorGroups = filterVendorGroupsToSearch(vendorGroups, searchQuery, filterItems);
-  }
+  vendorGroups = filterVendorGroups(vendorGroups, vendorFilter);
 
   return (
     <PageWithMenu>
@@ -141,10 +133,17 @@ export default function Vendors({ account }: { account: DestinyAccount }) {
           <div className={styles.buttons}>
             <CheckButton
               name="filter-to-unacquired"
-              checked={filterToUnacquired}
-              onChange={setFilterToUnacquired}
+              checked={shouldFilterToUnacquired}
+              onChange={(val) => dispatch(setShowUnacquiredOnly(val))}
             >
               {t('Vendors.FilterToUnacquired')}
+            </CheckButton>
+            <CheckButton
+              name="vendorsHideSilverItems"
+              checked={hideSilverItems}
+              onChange={setHideSilverItems}
+            >
+              {t('Vendors.HideSilverItems')}
             </CheckButton>
           </div>
         )}
@@ -159,7 +158,6 @@ export default function Vendors({ account }: { account: DestinyAccount }) {
                 group={group}
                 ownedItemHashes={ownedItemHashes}
                 currencyLookups={currencyLookups}
-                filtering={filterToUnacquired || searchQuery.length > 0}
                 characterId={selectedStore.id}
               />
             ))
@@ -176,13 +174,11 @@ function VendorGroup({
   group,
   ownedItemHashes,
   currencyLookups,
-  filtering,
   characterId,
 }: {
   group: D2VendorGroup;
   ownedItemHashes?: Set<number>;
   currencyLookups: DestinyCurrenciesComponent['itemQuantities'];
-  filtering: boolean;
   characterId: string;
 }) {
   return (
@@ -194,7 +190,6 @@ function VendorGroup({
             vendor={vendor}
             ownedItemHashes={ownedItemHashes}
             currencyLookups={currencyLookups}
-            filtering={filtering}
             characterId={characterId}
           />
         </ErrorBoundary>

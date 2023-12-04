@@ -4,8 +4,8 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { ThunkResult } from 'app/store/types';
 import React, { useCallback, useEffect, useRef } from 'react';
 import {
-  hideItemPopup,
   ItemPopupExtraInfo,
+  hideItemPopup,
   showItemPopup,
   showItemPopup$,
 } from '../item-popup/item-popup';
@@ -19,7 +19,7 @@ interface Props {
   noCompare?: boolean;
   children: (
     ref: React.Ref<HTMLDivElement>,
-    onClick: (e: React.MouseEvent) => void
+    onClick: (e: React.MouseEvent) => void,
   ) => React.ReactNode;
 }
 
@@ -40,19 +40,17 @@ export default function ItemPopupTrigger({
       e.stopPropagation();
       dispatch(itemPopupTriggerClicked(item, ref, extraData, noCompare));
     },
-    [dispatch, extraData, item, noCompare]
+    [dispatch, extraData, item, noCompare],
   );
 
   // Close the popup if this component is unmounted
   useEffect(
     () => () => {
-      if (showItemPopup$.getCurrentValue()?.item === item) {
+      if (showItemPopup$.getCurrentValue()?.item?.index === item.index) {
         hideItemPopup();
       }
     },
-    // We really only want to do this on unmount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [item.index],
   );
 
   return children(ref, clicked) as JSX.Element;
@@ -62,7 +60,7 @@ function itemPopupTriggerClicked(
   item: DimItem,
   ref: React.RefObject<HTMLDivElement>,
   extraData?: ItemPopupExtraInfo,
-  noCompare?: boolean
+  noCompare?: boolean,
 ): ThunkResult {
   return async (dispatch, getState) => {
     dispatch(clearNewItem(item.id));

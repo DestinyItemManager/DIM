@@ -1,5 +1,8 @@
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
+import ItemPickerContainer from 'app/item-picker/ItemPickerContainer';
+import { Portal } from 'app/utils/temp-container';
+import SingleVendorSheetContainer from 'app/vendors/single-vendor/SingleVendorSheetContainer';
 import clsx from 'clsx';
 import {
   PanInfo,
@@ -19,11 +22,10 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { unlock as disableBodyScroll, lock as enableBodyScroll } from 'tua-body-scroll-lock';
 import { AppIcon, disabledIcon } from '../shell/icons';
 import { PressTipRoot } from './PressTip';
 import styles from './Sheet.m.scss';
-import './Sheet.scss';
+import { useFixOverscrollBehavior } from './useFixOverscrollBehavior';
 
 /**
  * Propagates a function for setting a sheet to disabled. This forms a chain as
@@ -40,36 +42,6 @@ const SheetDisabledContext = createContext<(shown: boolean) => void>(() => {
  * the sheet ensures that it will animate away rather than simply disappearing.
  */
 type SheetContent = React.ReactNode | ((args: { onClose: () => void }) => React.ReactNode);
-
-interface Props {
-  /** A static, non-scrollable header shown in line with the close button. */
-  header?: SheetContent;
-  /** A static, non-scrollable footer shown at the bottom of the sheet. Good for buttons. */
-  footer?: SheetContent;
-  /** Scrollable contents for the sheet. */
-  children?: SheetContent;
-  /**
-   * Disable the sheet (no clicking, dragging, or close-on-esc). The sheet will
-   * automatically disable itself if another sheet is shown as a child, so no
-   * need to set this explicitly most of the time - pretty much just if you need
-   * to communicate that some "global" sheet like the item picker is up.
-   */
-  disabled?: boolean;
-  /** Override the z-index of the sheet. Useful when stacking sheets on top of other sheets or on top of the item popup. */
-  zIndex?: number;
-  /** A custom class name to add to the sheet container. */
-  sheetClassName?: string;
-  /** If set, the sheet will always be whatever height it was when first rendered, even if the contents change size. */
-  freezeInitialHeight?: boolean;
-  /**
-   * Allow clicks to escape this sheet. This allows for things like the popups
-   * in the Compare sheet being closed by clicking in the Compare sheet. By
-   * default we block clicks so that clicks in sheets spawned from within an
-   * item popup don't close the popup they were spawned from!
-   */
-  allowClickThrough?: boolean;
-  onClose: () => void;
-}
 
 // The sheet is dismissed if it's flicked at a velocity above dismissVelocity,
 // or dragged down more than dismissAmount times the height of the sheet.
@@ -93,13 +65,19 @@ const animationVariants = {
 const dragConstraints = { top: 0, bottom: window.innerHeight } as const;
 
 const stopPropagation = (e: React.SyntheticEvent) => e.stopPropagation();
+const handleKeyDown = (e: React.KeyboardEvent) => {
+  // Allow "esc" to propagate which lets you escape focus on inputs.
+  if (e.key !== 'Escape') {
+    e.stopPropagation();
+  }
+};
 
 /**
  * Automatically disable the parent sheet while this sheet is shown. You must
  * pass `setParentDisabled` to SheetDisabledContext.Provider.
  */
 function useDisableParent(
-  forceDisabled?: boolean
+  forceDisabled?: boolean,
 ): [disabled: boolean, setParentDisabled: React.Dispatch<React.SetStateAction<boolean>>] {
   const [disabledByChildSheet, setDisabledByChildSheet] = useState(false);
   const setParentDisabled = useContext(SheetDisabledContext);
@@ -115,6 +93,12 @@ function useDisableParent(
 }
 
 /**
+ * The total number of sheets that are open. Used by the sneaky updates code to
+ * determine if the user is in the middle of something.
+ */
+export let sheetsOpen = 0;
+
+/**
  * A Sheet is a UI element that comes up from the bottom of the screen,
  * and can be dragged downward to dismiss
  */
@@ -123,16 +107,52 @@ export default function Sheet({
   footer,
   children,
   sheetClassName,
+  closeButtonClassName,
+  headerClassName,
   disabled: forceDisabled,
   zIndex,
   freezeInitialHeight,
   allowClickThrough,
   onClose,
-}: Props) {
+}: {
+  /** A static, non-scrollable header shown in line with the close button. */
+  header?: SheetContent;
+  /** A static, non-scrollable footer shown at the bottom of the sheet. Good for buttons. */
+  footer?: SheetContent;
+  /** Scrollable contents for the sheet. */
+  children?: SheetContent;
+  /**
+   * Disable the sheet (no clicking, dragging, or close-on-esc). The sheet will
+   * automatically disable itself if another sheet is shown as a child, so no
+   * need to set this explicitly most of the time - pretty much just if you need
+   * to communicate that some "global" sheet like the item picker is up.
+   */
+  disabled?: boolean;
+  // TODO: remove
+  /** Override the z-index of the sheet. Useful when stacking sheets on top of other sheets or on top of the item popup. */
+  zIndex?: number;
+  /** A custom class name to add to the sheet container. */
+  sheetClassName?: string;
+  /** A custom class name to add to the sheet close button. */
+  closeButtonClassName?: string;
+  /** A custom class name to add to the sheet header. */
+  headerClassName?: string;
+  // TODO: remove
+  /** If set, the sheet will always be whatever height it was when first rendered, even if the contents change size. */
+  freezeInitialHeight?: boolean;
+  // TODO: remove by getting a recursive item popup host
+  /**
+   * Allow clicks to escape this sheet. This allows for things like the popups
+   * in the Compare sheet being closed by clicking in the Compare sheet. By
+   * default we block clicks so that clicks in sheets spawned from within an
+   * item popup don't close the popup they were spawned from!
+   */
+  allowClickThrough?: boolean;
+  onClose: () => void;
+  // TODO: "skinny" sheet option
+}) {
   const sheet = useRef<HTMLDivElement>(null);
   const sheetContents = useRef<HTMLDivElement | null>(null);
-  useLockSheetContents(sheetContents);
-  const dragHandle = useRef<HTMLDivElement>(null);
 
   const [frozenHeight, setFrozenHeight] = useState<number | undefined>(undefined);
   const [disabled, setParentDisabled] = useDisableParent(forceDisabled);
@@ -143,18 +163,15 @@ export default function Sheet({
 
   /**
    * Triggering close starts the animation. The onClose prop is called by the callback
-   * passed to the onAnimationComplete motion prop
+   * passed to the onAnimationComplete motion prop.
    */
   const triggerClose = useCallback(
     (e?: React.MouseEvent | KeyboardEvent) => {
-      if (disabled) {
-        return;
-      }
       e?.preventDefault();
       // Animate offscreen
       animationControls.start('close');
     },
-    [disabled, animationControls]
+    [animationControls],
   );
 
   // Handle global escape key
@@ -169,27 +186,24 @@ export default function Sheet({
         onClose();
       }
     },
-    [onClose]
+    [onClose],
   );
 
   // Determine when to drag. Drags if the touch falls in the header, or if the contents
   // are scrolled all the way to the top.
   const dragHandleDown = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
-      // prevent item-tag-selector dropdown from triggering drag (Safari)
-      if (isInside(e.target as HTMLElement, 'item-tag-selector')) {
-        return;
-      }
-
       if (
-        dragHandle.current?.contains(e.target as Node) ||
+        !sheetContents.current!.contains(e.target as Node) ||
         sheetContents.current!.scrollTop === 0
       ) {
         dragControls.start(e);
       }
     },
-    [dragControls]
+    [dragControls],
   );
+
+  useFixOverscrollBehavior(sheetContents);
 
   // When drag ends we determine if the sheet should be closed either via the final
   // drag velocity or if the sheet has been dragged halfway the down from its height.
@@ -204,7 +218,7 @@ export default function Sheet({
       }
       animationControls.start('open');
     },
-    [animationControls, triggerClose]
+    [animationControls, triggerClose],
   );
 
   useLayoutEffect(() => {
@@ -223,104 +237,87 @@ export default function Sheet({
     animationControls.start('open');
   }, [animationControls]);
 
-  return (
-    <SheetDisabledContext.Provider value={setParentDisabled}>
-      <PressTipRoot.Provider value={sheet}>
-        <motion.div
-          // motion props
-          initial="close"
-          transition={reducedMotion ? reducedMotionTween : spring}
-          animate={animationControls}
-          variants={animationVariants}
-          onAnimationComplete={handleAnimationComplete}
-          drag="y"
-          dragControls={dragControls}
-          dragListener={false}
-          dragConstraints={dragConstraints}
-          dragElastic={0}
-          onDragEnd={handleDragEnd}
-          // regular props
-          style={{ zIndex }}
-          className={clsx('sheet', sheetClassName, { [styles.sheetDisabled]: disabled })}
-          ref={sheet}
-          role="dialog"
-          aria-modal="false"
-          onKeyDown={stopPropagation}
-          onKeyUp={stopPropagation}
-          onKeyPress={stopPropagation}
-          onClick={allowClickThrough ? undefined : stopPropagation}
-        >
-          <a
-            href="#"
-            className={clsx('sheet-close', { 'sheet-no-header': !header })}
-            onClick={triggerClose}
-          >
-            <AppIcon icon={disabledIcon} />
-          </a>
+  // Track the total number of sheets that are open (to help prevent reloads while users are doing things)
+  useEffect(() => {
+    sheetsOpen++;
+    return () => {
+      sheetsOpen--;
+    };
+  }, []);
 
-          <div className="sheet-container" onPointerDown={dragHandleDown}>
-            {Boolean(header) && (
-              <div className="sheet-header" ref={dragHandle}>
-                {_.isFunction(header) ? header({ onClose: triggerClose }) : header}
-              </div>
-            )}
+  const sheetBody = (
+    <motion.div
+      // motion props
+      initial="close"
+      transition={reducedMotion ? reducedMotionTween : spring}
+      animate={animationControls}
+      variants={animationVariants}
+      onAnimationComplete={handleAnimationComplete}
+      drag="y"
+      dragControls={dragControls}
+      dragListener={false}
+      dragConstraints={dragConstraints}
+      dragElastic={0}
+      onDragEnd={handleDragEnd}
+      // regular props
+      style={{ zIndex }}
+      className={clsx(styles.sheet, sheetClassName, { [styles.sheetDisabled]: disabled })}
+      ref={sheet}
+      role="dialog"
+      aria-modal="false"
+      onKeyDown={handleKeyDown}
+      onKeyUp={stopPropagation}
+      onKeyPress={stopPropagation}
+      onClick={allowClickThrough ? undefined : stopPropagation}
+    >
+      <button
+        type="button"
+        className={clsx(styles.close, closeButtonClassName, { [styles.noHeader]: !header })}
+        onClick={triggerClose}
+        aria-keyshortcuts="esc"
+        aria-label={t('General.Close')}
+      >
+        <AppIcon icon={disabledIcon} />
+      </button>
 
-            <div
-              className={clsx('sheet-contents', {
-                'sheet-has-footer': footer,
-              })}
-              style={frozenHeight ? { flexBasis: frozenHeight } : undefined}
-              ref={sheetContents}
-            >
-              {_.isFunction(children) ? children({ onClose: triggerClose }) : children}
-            </div>
-
-            {Boolean(footer) && (
-              <div className="sheet-footer">
-                {_.isFunction(footer) ? footer({ onClose: triggerClose }) : footer}
-              </div>
-            )}
+      <div className={styles.container} onPointerDown={dragHandleDown}>
+        {Boolean(header) && (
+          <div className={clsx(styles.header, headerClassName)}>
+            {_.isFunction(header) ? header({ onClose: triggerClose }) : header}
           </div>
-          <div className={styles.disabledScreen} />
-        </motion.div>
-      </PressTipRoot.Provider>
-    </SheetDisabledContext.Provider>
+        )}
+
+        <div
+          className={styles.contents}
+          style={frozenHeight ? { flexBasis: frozenHeight } : undefined}
+          ref={sheetContents}
+        >
+          {_.isFunction(children) ? children({ onClose: triggerClose }) : children}
+        </div>
+
+        {Boolean(footer) && (
+          <div className={styles.footer}>
+            {_.isFunction(footer) ? footer({ onClose: triggerClose }) : footer}
+          </div>
+        )}
+      </div>
+      <div
+        className={styles.disabledScreen}
+        onClick={stopPropagation}
+        onPointerDown={stopPropagation}
+      />
+    </motion.div>
   );
-}
 
-/** Check whether this browser supports overscroll-behavior. Supported pretty much everywhere except iOS <16 */
-const supportsOverscrollBehavior = CSS.supports('overscroll-behavior: none');
-
-/**
- * Locks body scroll except for touches in the sheet contents.
- */
-function useLockSheetContents(sheetContents: React.MutableRefObject<HTMLDivElement | null>) {
-  useLayoutEffect(() => {
-    const current = sheetContents.current;
-    if (current) {
-      if (!supportsOverscrollBehavior) {
-        document.body.classList.add('body-scroll-lock');
-        enableBodyScroll(current);
-        disableBodyScroll(current);
-      }
-      return () => {
-        if (!supportsOverscrollBehavior) {
-          setTimeout(() => {
-            document.body.classList.remove('body-scroll-lock');
-          }, 0);
-          enableBodyScroll(current);
-        }
-      };
-    }
-  }, [sheetContents]);
-}
-
-function isInside(element: HTMLElement, className: string) {
-  while (element?.classList) {
-    if (element.classList.contains(className)) {
-      return true;
-    }
-    element = element.parentNode as HTMLElement;
-  }
-  return false;
+  return (
+    <Portal>
+      <SheetDisabledContext.Provider value={setParentDisabled}>
+        <PressTipRoot.Provider value={sheet}>
+          <ItemPickerContainer>
+            <SingleVendorSheetContainer>{sheetBody}</SingleVendorSheetContainer>
+          </ItemPickerContainer>
+        </PressTipRoot.Provider>
+      </SheetDisabledContext.Provider>
+    </Portal>
+  );
 }

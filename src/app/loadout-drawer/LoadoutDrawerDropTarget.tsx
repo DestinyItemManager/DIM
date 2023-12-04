@@ -1,6 +1,6 @@
 import { bucketsSelector, storesSelector } from 'app/inventory/selectors';
 import { emptyArray } from 'app/utils/empty';
-import { itemCanBeInLoadout } from 'app/utils/item-utils';
+import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';
@@ -23,7 +23,7 @@ export const bucketTypesSelector = createSelector(
             ...stores.flatMap((store) => `${store.id}-${bucket.hash}`),
           ]),
         ]
-      : emptyArray<string>()
+      : emptyArray<string>(),
 );
 
 export default function LoadoutDrawerDropTarget({
@@ -46,12 +46,10 @@ export default function LoadoutDrawerDropTarget({
         const result = monitor.getDropResult();
         onDroppedItem(item, result?.equipped);
       },
-      canDrop: (i) =>
-        itemCanBeInLoadout(i) &&
-        (i.classType === DestinyClass.Unknown || classType === i.classType),
+      canDrop: (i) => itemCanBeInLoadout(i) && isItemLoadoutCompatible(i.classType, classType),
       collect: (monitor) => ({ isOver: monitor.isOver() && monitor.canDrop() }),
     }),
-    [bucketTypes, onDroppedItem]
+    [bucketTypes, onDroppedItem],
   );
 
   return (

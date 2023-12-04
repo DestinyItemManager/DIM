@@ -16,7 +16,7 @@ import vaultIcon from 'destiny-icons/armor_types/helmet.svg';
 import consumablesIcon from 'destiny-icons/general/consumables.svg';
 import modificationsIcon from 'destiny-icons/general/modifications.svg';
 import _ from 'lodash';
-import React from 'react';
+import React, { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import styles from './VaultCapacity.m.scss';
@@ -52,7 +52,7 @@ interface VaultCounts {
 function computeVaultCounts(
   activeStore: DimStore | undefined,
   vault: DimStore | undefined,
-  buckets: InventoryBuckets | undefined
+  buckets: InventoryBuckets | undefined,
 ) {
   if (!activeStore || !vault || !buckets) {
     return emptyObject<VaultCounts>();
@@ -93,11 +93,11 @@ const vaultCountsSelector = createSelector(
   currentStoreSelector,
   vaultSelector,
   bucketsSelector,
-  computeVaultCounts
+  computeVaultCounts,
 );
 
 /** Current amounts and maximum capacities of the vault */
-export default React.memo(function VaultCapacity() {
+export default memo(function VaultCapacity() {
   const vaultCounts = useSelector(vaultCountsSelector);
   const mats = <MaterialCountsTooltip />;
   const isPhonePortrait = useIsPhonePortrait();
@@ -136,7 +136,7 @@ export default React.memo(function VaultCapacity() {
               </PressTip>
             </React.Fragment>
           );
-        }
+        },
       )}
     </>
   );

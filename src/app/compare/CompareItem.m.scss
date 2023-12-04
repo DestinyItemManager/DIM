@@ -1,5 +1,40 @@
 @use '../variables.scss' as *;
 
+.compareItem {
+  composes: flexColumn from '../dim-ui/common.m.scss';
+  border-left: 1px solid rgba(245, 245, 245, 0.25);
+  position: relative;
+  // Make sure even if there are no stats that there's enough room to not clip
+  // the icon (e.g. for ghosts)
+  min-height: calc(var(--item-size) + 60px);
+  padding-bottom: 8px;
+
+  > * {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+
+  // TODO push these into sockets component?
+  :global(.plug) {
+    --item-size-mod: calc(26 / 50 * var(--item-size));
+
+    @include phone-portrait {
+      --item-size-mod: 26px;
+    }
+    // This relies on the fact that only mods are img - perks are svg
+    img {
+      --item-size: var(--item-size-mod) !important;
+    }
+  }
+
+  // D1 talent grids are like sockets
+  :global(.talent-grid) {
+    padding: 4px 2px 0 2px;
+    max-width: 150px;
+    height: auto;
+  }
+}
+
 .header {
   display: flex;
   flex-direction: row;
@@ -18,7 +53,7 @@
 }
 
 .initialItem {
-  color: $orange;
+  color: var(--theme-accent-primary);
   font-weight: bold;
 }
 
@@ -42,11 +77,11 @@
   position: absolute;
   padding: 0;
   right: 4px;
-  z-index: 10;
   cursor: pointer;
 }
 
 .close {
+  composes: resetButton from '../dim-ui/common.m.scss';
   width: 32px;
   height: 32px;
   background-size: 16px;
@@ -54,6 +89,6 @@
   background-position: center;
   background-repeat: no-repeat;
   &:hover {
-    background-color: $orange;
+    background-color: var(--theme-accent-primary);
   }
 }

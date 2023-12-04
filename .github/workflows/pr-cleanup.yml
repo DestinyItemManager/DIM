@@ -1,0 +1,21 @@
+name: PR Cleanup
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  # Remove the preview build directory
+  cleanup:
+    runs-on: ubuntu-latest
+    environment: pr
+    if: ${{github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]'}}
+    steps:
+      - name: Install SSH key
+        uses: benoitchantre/setup-ssh-authentication-action@1.0.1
+        with:
+          private-key: ${{ secrets.SSH_KEY }}
+          private-key-name: dim.rsa
+          known-hosts: ${{ secrets.REMOTE_HOST }}
+
+      - name: Delete preview build
+        run: ssh -i ~/.ssh/dim.rsa -o StrictHostKeyChecking=no ${{secrets.REMOTE_USER}}@${{secrets.REMOTE_HOST}} "rm -rf pr.destinyitemmanager.com/${{ github.event.number }}"

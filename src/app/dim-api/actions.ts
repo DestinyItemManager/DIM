@@ -3,6 +3,7 @@ import { needsDeveloper } from 'app/accounts/actions';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { accountsSelector, currentAccountSelector } from 'app/accounts/selectors';
 import { dimErrorToaster } from 'app/bungie-api/error-toaster';
+import { getToken } from 'app/bungie-api/oauth-tokens';
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import { Settings, initialSettingsState } from 'app/settings/initial-settings';
@@ -10,8 +11,9 @@ import { readyResolve } from 'app/settings/settings';
 import { refresh$ } from 'app/shell/refresh-events';
 import { get, set } from 'app/storage/idb-keyval';
 import { RootState, ThunkResult } from 'app/store/types';
+import { convertToError, errorMessage } from 'app/utils/errors';
 import { errorLog, infoLog } from 'app/utils/log';
-import { delay } from 'app/utils/util';
+import { delay } from 'app/utils/promises';
 import { deepEqual } from 'fast-equals';
 import _ from 'lodash';
 import { AnyAction } from 'redux';
@@ -23,7 +25,7 @@ import {
   getGlobalSettings,
   postUpdates,
 } from '../dim-api/dim-api';
-import { observeStore } from '../utils/redux-utils';
+import { observeStore } from '../utils/redux';
 import { promptForApiPermission } from './api-permission-prompt';
 import { ProfileUpdateWithRollback } from './api-types';
 import {
@@ -51,7 +53,7 @@ const installApiPermissionObserver = _.once(() => {
         // Save the permission preference to local storage
         localStorage.setItem('dim-api-enabled', apiPermissionGranted ? 'true' : 'false');
       }
-    }
+    },
   );
 });
 
@@ -86,7 +88,7 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, undefined, A
         infoLog('dim sync', 'Saving profile data to IDB');
         set('dim-api-profile', savedState);
       }
-    }, 1000)
+    }, 1000),
   );
 
   // Watch the update queue and flush updates
@@ -96,7 +98,7 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, undefined, A
       if (queue.length) {
         dispatch(flushUpdates());
       }
-    }, 1000)
+    }, 1000),
   );
 
   // Every time data is refreshed, maybe load DIM API data too
@@ -154,13 +156,14 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
   return async (dispatch, getState) => {
     installApiPermissionObserver();
 
+    // Load from indexedDB if needed
+    const profileFromIDB = dispatch(loadProfileFromIndexedDB());
+
     // Load global settings first. This fails open (we fall back to defaults)
     // but loading it first gives us a chance to find out if the API is disabled
     // and what the current refresh rate is, which gives us important
     // operational controls in case the API is knocked over.
-    if (!getState().dimApi.globalSettingsLoaded) {
-      await dispatch(loadGlobalSettings());
-    }
+    const globalSettingsLoad = dispatch(loadGlobalSettings());
 
     // Don't let actions pile up blocked on the approval UI
     if (waitingForApiPermission) {
@@ -168,7 +171,8 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
     }
 
     // Show a prompt if the user has not said one way or another whether they want to use the API
-    if (getState().dimApi.apiPermissionGranted === null) {
+    const hasBungieToken = Boolean(getToken());
+    if (getState().dimApi.apiPermissionGranted === null && hasBungieToken) {
       waitingForApiPermission = true;
       try {
         const useApi = await promptForApiPermission();
@@ -179,11 +183,12 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
     }
 
     // Load accounts info - we can't load the profile-specific DIM API data without it.
-    const getPlatformsPromise = dispatch(getPlatforms()); // in parallel, we'll wait later
+    const getPlatformsPromise = dispatch(getPlatforms); // in parallel, we'll wait later
 
-    // Load from indexedDB if needed
-    await dispatch(loadProfileFromIndexedDB());
+    await profileFromIDB;
     installObservers(dispatch); // idempotent
+
+    await globalSettingsLoad;
 
     // They don't want to sync from the server, or the API is disabled - stick with local data
     if (
@@ -222,11 +227,14 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
 
         // Quickly heal from being failure backoff
         getProfileBackoff = Math.floor(getProfileBackoff / 2);
-      } catch (e) {
+      } catch (err) {
         // Only notify error once
         if (!getState().dimApi.profileLoadedError) {
-          showProfileLoadErrorNotification(e);
+          showProfileLoadErrorNotification(err);
         }
+
+        const e = convertToError(err);
+
         dispatch(profileLoadError(e));
 
         errorLog('loadDimApiData', 'Unable to get profile from DIM API', e);
@@ -311,7 +319,7 @@ function flushUpdates(): ThunkResult {
       const results = await postUpdates(
         firstWithAccount.platformMembershipId,
         firstWithAccount.destinyVersion,
-        updates
+        updates,
       );
       infoLog('flushUpdates', 'got results', updates, results);
 
@@ -396,12 +404,14 @@ export function deleteAllApiData(): ThunkResult<DeleteAllResponse['deleted']> {
   };
 }
 
-function showProfileLoadErrorNotification(e: Error) {
+function showProfileLoadErrorNotification(e: unknown) {
   showNotification(
-    dimErrorToaster(t('Storage.ProfileErrorTitle'), t('Storage.ProfileErrorBody'), e)
+    dimErrorToaster(t('Storage.ProfileErrorTitle'), t('Storage.ProfileErrorBody'), errorMessage(e)),
   );
 }
 
-function showUpdateErrorNotification(e: Error) {
-  showNotification(dimErrorToaster(t('Storage.UpdateErrorTitle'), t('Storage.UpdateErrorBody'), e));
+function showUpdateErrorNotification(e: unknown) {
+  showNotification(
+    dimErrorToaster(t('Storage.UpdateErrorTitle'), t('Storage.UpdateErrorBody'), errorMessage(e)),
+  );
 }

@@ -1,7 +1,7 @@
 @use '../variables.scss' as *;
 
 .accountSelect {
-  color: white;
+  color: var(--theme-text);
   height: auto;
   flex: 1 0 auto;
   display: flex;
@@ -13,12 +13,11 @@
     text-decoration: none;
     > div {
       padding: 10px 2rem 10px 1rem;
-      color: #aaa;
 
       &:hover,
       &:focus {
-        color: black;
-        background-color: $orange;
+        color: var(--theme-text-invert);
+        background-color: var(--theme-accent-primary);
       }
     }
   }
@@ -36,5 +35,8 @@
 }
 
 .accountName {
-  padding: 2px 2rem 4px 1rem;
+  all: initial;
+  font: inherit;
+  font-size: 12px;
+  color: var(--theme-text-secondary);
 }

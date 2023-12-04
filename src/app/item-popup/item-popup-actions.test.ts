@@ -27,7 +27,7 @@ function getTestActions(itemPredicate: (item: DimItem) => boolean): [DimItem, It
 it('handles an equipped item', async () => {
   // Grab the equipped kinetic weapon
   const [_item, actions] = getTestActions(
-    (i) => i.equipped && i.location.hash === BucketHashes.KineticWeapons
+    (i) => i.equipped && i.location.hash === BucketHashes.KineticWeapons,
   );
 
   expect(actions.hasMoveControls).toBe(true);

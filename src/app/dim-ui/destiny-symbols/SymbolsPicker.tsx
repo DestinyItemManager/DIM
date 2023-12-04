@@ -3,8 +3,16 @@ import { SearchInput } from 'app/search/SearchInput';
 import { tempContainer } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import { FontGlyphs } from 'data/d2/d2-font-glyphs';
-import React, { HTMLProps, useCallback, useContext, useEffect, useRef, useState } from 'react';
-import ReactDOM from 'react-dom';
+import React, {
+  HTMLProps,
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import { createPortal } from 'react-dom';
 import { useSelector } from 'react-redux';
 import ClickOutside from '../ClickOutside';
 import { PressTipRoot } from '../PressTip';
@@ -42,7 +50,7 @@ export function WithSymbolsPicker<T extends HTMLTextAreaElement | HTMLInputEleme
   );
 }
 
-const SymbolsWindow = React.memo(function ({
+const SymbolsWindow = memo(function ({
   onChooseGlyph,
 }: {
   onChooseGlyph: (unicode: string) => void;
@@ -63,22 +71,23 @@ const SymbolsWindow = React.memo(function ({
         </div>
         <div className={styles.symbolsBody}>
           <div className={styles.symbolsContainer}>
-            {allSymbols
-              .filter((e) => e.fullName.includes(query) || e.name.includes(query))
-              .map((emoji) => (
-                <button
-                  className={styles.emojiButton}
-                  type="button"
-                  key={emoji.glyph}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onChooseGlyph(emoji.glyph);
-                  }}
-                  onPointerEnter={() => setPreview(emoji)}
-                >
-                  {emoji.glyph}
-                </button>
-              ))}
+            {allSymbols.map(
+              (emoji) =>
+                (emoji.fullName.includes(query) || emoji.name.includes(query)) && (
+                  <button
+                    className={styles.emojiButton}
+                    type="button"
+                    key={emoji.glyph}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onChooseGlyph(emoji.glyph);
+                    }}
+                    onPointerEnter={() => setPreview(emoji)}
+                  >
+                    {emoji.glyph}
+                  </button>
+                ),
+            )}
           </div>
         </div>
         <div className={styles.symbolsFooter}>
@@ -138,7 +147,7 @@ function SymbolsPickerButton<T extends HTMLTextAreaElement | HTMLInputElement>({
         setInsertionIndex(insIndex + symbol.length);
       }
     },
-    [input, insertionIndex, setValue]
+    [input, insertionIndex, setValue],
   );
 
   return (
@@ -153,13 +162,13 @@ function SymbolsPickerButton<T extends HTMLTextAreaElement | HTMLInputElement>({
         <span>{symbolsIcon}</span>
       </button>
       {open &&
-        ReactDOM.createPortal(
-          <div ref={tooltipContents} style={{ zIndex: 20 }}>
+        createPortal(
+          <div ref={tooltipContents}>
             <ClickOutside onClickOutside={() => setOpen(false)}>
               <SymbolsWindow onChooseGlyph={onChooseGlyph} />
             </ClickOutside>
           </div>,
-          pressTipRoot.current || tempContainer
+          pressTipRoot.current ?? tempContainer,
         )}
     </>
   );

@@ -13,13 +13,14 @@ import { showNotification } from 'app/notifications/notifications';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { errorMessage } from 'app/utils/errors';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styles from './DimApiSettings.m.scss';
-import { exportBackupData, exportLocalData } from './export-data';
 import ImportExport from './ImportExport';
 import LocalStorageInfo from './LocalStorageInfo';
+import { exportBackupData, exportLocalData } from './export-data';
 
 export default function DimApiSettings() {
   const dispatch = useThunkDispatch();
@@ -53,7 +54,7 @@ export default function DimApiSettings() {
         showNotification({
           type: 'error',
           title: t('Storage.ExportError'),
-          body: t('Storage.ExportErrorBody', { error: e.message }),
+          body: t('Storage.ExportErrorBody', { error: errorMessage(e) }),
           duration: 15000,
         });
         data = await dispatch(exportLocalData());

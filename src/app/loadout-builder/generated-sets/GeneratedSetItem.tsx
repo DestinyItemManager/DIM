@@ -1,6 +1,6 @@
 import { EnergyIncrementsWithPresstip } from 'app/dim-ui/EnergyIncrements';
 import { t } from 'app/i18next-t';
-import { showItemPicker } from 'app/item-picker/item-picker';
+import { useItemPicker } from 'app/item-picker/item-picker';
 import Sockets from 'app/loadout/loadout-ui/Sockets';
 import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';
 import { AppIcon, faRandom, lockIcon } from 'app/shell/icons';
@@ -55,6 +55,7 @@ export default function GeneratedSetItem({
   pinned,
   itemOptions,
   assignedMods,
+  autoStatMods,
   automaticallyPickedMods,
   energy,
   lbDispatch,
@@ -63,29 +64,31 @@ export default function GeneratedSetItem({
   pinned: boolean;
   itemOptions: DimItem[];
   assignedMods?: PluggableInventoryItemDefinition[];
+  autoStatMods: boolean;
   automaticallyPickedMods?: number[];
   energy: { energyCapacity: number; energyUsed: number };
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
   const pinItem = (item: DimItem) => lbDispatch({ type: 'pinItem', item });
   const unpinItem = () => lbDispatch({ type: 'unpinItem', item });
+  const showItemPicker = useItemPicker();
 
   const chooseReplacement = async () => {
     const ids = new Set(itemOptions.map((i) => i.id));
 
-    try {
-      const { item } = await showItemPicker({
-        prompt: t('LoadoutBuilder.ChooseAlternateTitle'),
-        filterItems: (item: DimItem) => ids.has(item.id),
-      });
+    const item = await showItemPicker({
+      prompt: t('LoadoutBuilder.ChooseAlternateTitle'),
+      filterItems: (item: DimItem) => ids.has(item.id),
+    });
 
+    if (item) {
       pinItem(item);
-    } catch (e) {}
+    }
   };
 
   const onSocketClick = (
     plugDef: PluggableInventoryItemDefinition,
-    plugCategoryHashWhitelist?: number[]
+    plugCategoryHashWhitelist?: number[],
   ) => {
     const { plugCategoryHash } = plugDef.plug;
 
@@ -96,7 +99,10 @@ export default function GeneratedSetItem({
       if (item.isExotic) {
         lbDispatch({ type: 'lockExotic', lockedExoticHash: item.hash });
       }
-    } else if (plugCategoryHash !== PlugCategoryHashes.EnhancementsArtifice) {
+    } else if (
+      plugCategoryHash !== PlugCategoryHashes.EnhancementsArtifice &&
+      (!autoStatMods || plugCategoryHash !== PlugCategoryHashes.EnhancementsV2General)
+    ) {
       lbDispatch({
         type: 'openModPicker',
         plugCategoryHashWhitelist,

@@ -8,8 +8,9 @@ import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import { Settings, initialSettingsState } from 'app/settings/initial-settings';
 import { ThunkResult } from 'app/store/types';
+import { errorMessage } from 'app/utils/errors';
 import { errorLog, infoLog } from 'app/utils/log';
-import { observeStore } from 'app/utils/redux-utils';
+import { observeStore } from 'app/utils/redux';
 import _ from 'lodash';
 import { loadDimApiData } from './actions';
 import { profileLoadedFromIDB } from './basic-actions';
@@ -45,7 +46,7 @@ export function importDataBackup(data: ExportResponse, silent = false): ThunkRes
       } catch (e) {
         if (!silent) {
           errorLog('importLegacyData', 'Error importing legacy data into DIM API', e);
-          showImportFailedNotification(e);
+          showImportFailedNotification(errorMessage(e));
         }
         return;
       }
@@ -63,9 +64,9 @@ export function importDataBackup(data: ExportResponse, silent = false): ThunkRes
           errorLog(
             'importLegacyData',
             'Error importing legacy data into DIM - no data found in import file. (no settings upgrade/API upload attempted. DIM Sync is turned off)',
-            data
+            data,
           );
-          showImportFailedNotification(new Error(t('Storage.ImportNotification.NoData')));
+          showImportFailedNotification(t('Storage.ImportNotification.NoData'));
         }
         return;
       }
@@ -134,14 +135,14 @@ export function importDataBackup(data: ExportResponse, silent = false): ThunkRes
           itemHashTags: _.keyBy(itemHashTags, (t) => t.hash),
           searches,
           updateQueue: [],
-        })
+        }),
       );
       showImportSuccessNotification(
         {
           loadouts: loadouts.length,
           tags: tags.length,
         },
-        false
+        false,
       );
     }
   };
@@ -157,14 +158,14 @@ function waitForProfileLoad() {
           unsubscribe();
           resolve(undefined);
         }
-      }
+      },
     );
   });
 }
 
 function showImportSuccessNotification(
   result: { loadouts: number; tags: number },
-  dimSync: boolean
+  dimSync: boolean,
 ) {
   showNotification({
     type: 'success',
@@ -176,11 +177,11 @@ function showImportSuccessNotification(
   });
 }
 
-function showImportFailedNotification(e: Error) {
+function showImportFailedNotification(message: string) {
   showNotification({
     type: 'error',
     title: t('Storage.ImportNotification.FailedTitle'),
-    body: t('Storage.ImportNotification.FailedBody', { error: e.message }),
+    body: t('Storage.ImportNotification.FailedBody', { error: message }),
     duration: 15000,
   });
 }

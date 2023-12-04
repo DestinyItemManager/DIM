@@ -4,8 +4,8 @@ import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
 import { AppIcon, deleteIcon, redoIcon, undoIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
-import { currySelector } from 'app/utils/selector-utils';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { isClassCompatible } from 'app/utils/item-utils';
+import { currySelector } from 'app/utils/selectors';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -24,13 +24,9 @@ const clashingLoadoutSelector = currySelector(
     (_: RootState, loadout: Loadout) => loadout,
     (loadouts, loadout) =>
       loadouts.find(
-        (l) =>
-          loadout.name === l.name &&
-          (loadout.classType === l.classType ||
-            l.classType === DestinyClass.Unknown ||
-            loadout.classType === DestinyClass.Unknown)
-      )
-  )
+        (l) => loadout.name === l.name && isClassCompatible(l.classType, loadout.classType),
+      ),
+  ),
 );
 
 export default function LoadoutDrawerFooter({
@@ -106,8 +102,8 @@ export default function LoadoutDrawerFooter({
               clashingLoadout
                 ? t('Loadouts.SaveDisabled.AlreadyExists')
                 : saveDisabled
-                ? saveDisabledReasons.join('\n')
-                : undefined
+                  ? saveDisabledReasons.join('\n')
+                  : undefined
             }
           >
             <button

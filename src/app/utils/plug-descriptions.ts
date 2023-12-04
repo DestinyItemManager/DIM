@@ -2,17 +2,18 @@ import { Perk } from 'app/clarity/descriptions/descriptionInterface';
 import { clarityDescriptionsSelector } from 'app/clarity/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { settingSelector } from 'app/dim-api/selectors';
+import { t } from 'app/i18next-t';
 import { DimItem, DimPlug, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { getStatSortOrder, isAllowedItemStat, isAllowedPlugStat } from 'app/inventory/store/stats';
 import { activityModPlugCategoryHashes } from 'app/loadout/known-values';
 import { isModStatActive } from 'app/loadout/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
 import { DestinyClass, ItemPerkVisibility } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, StatHashes, TraitHashes } from 'data/d2/generated-enums';
 import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
+import modsWithoutDescription from '../../data/d2/mods-with-bad-descriptions.json';
 import { compareBy } from './comparators';
 import { isPlugStatActive } from './item-utils';
 import { LookupTable } from './util-types';
@@ -49,7 +50,7 @@ export function usePlugDescriptions(
    * If set, returns Bungie descriptions even when the descriptions setting is on Community only.
    * Consumers set this if they can't display community descriptions.
    */
-  forceUseBungieDescriptions?: boolean
+  forceUseBungieDescriptions?: boolean,
 ): DimPlugDescriptions {
   const defs = useD2Definitions();
   const allClarityDescriptions = useSelector(clarityDescriptionsSelector);
@@ -83,7 +84,7 @@ export function usePlugDescriptions(
       const statDef = defs.Stat.get(stat.statHash);
       if (statDef) {
         const statNames = [statDef.displayProperties.name].concat(
-          statNameAliases[stat.statHash as StatHashes] ?? []
+          statNameAliases[stat.statHash as StatHashes] ?? [],
         );
         for (const statName of statNames) {
           if (stat.value < 0) {
@@ -129,7 +130,7 @@ export function usePlugDescriptions(
 function getPerkDescriptions(
   plug: PluggableInventoryItemDefinition,
   defs: D2ManifestDefinitions,
-  usedStrings: Set<string>
+  usedStrings: Set<string>,
 ): DimPlugPerkDescription[] {
   const results: DimPlugPerkDescription[] = [];
 
@@ -204,6 +205,17 @@ function getPerkDescriptions(
       usedStrings.add(notif);
     }
   }
+  function addCustomDescriptionAsFunctionality() {
+    for (const mod of modsWithoutDescription.Harmonic) {
+      if (plug.hash === mod) {
+        results.push({
+          perkHash: -usedStrings.size,
+          description: t('Mods.HarmonicModDescription'),
+        });
+        usedStrings.add(t('Mods.HarmonicModDescription'));
+      }
+    }
+  }
 
   /*
   Most plugs use the description field to describe their functionality.
@@ -214,7 +226,7 @@ function getPerkDescriptions(
 
   Other plugs (e.g. Exotic catalysts) always use the description field to store their requirements.
   */
-  if (plug.traitHashes?.includes(EXOTIC_CATALYST_TRAIT)) {
+  if (plug.traitHashes?.includes(TraitHashes.ItemExoticCatalyst)) {
     addPerkDescriptions();
     addDescriptionAsRequirement();
   } else if (plug.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)) {
@@ -227,14 +239,14 @@ function getPerkDescriptions(
     } else {
       addDescriptionAsFunctionality();
     }
-    addTooltipNotifsAsRequirement();
+  } else if (plugDescription) {
+    addDescriptionAsFunctionality();
   } else {
-    if (plugDescription) {
-      addDescriptionAsFunctionality();
-    } else {
-      addPerkDescriptions();
-    }
+    addPerkDescriptions();
   }
+
+  // Add custom descriptions created for mods who's description is hard to access or an accurate description isn't present
+  addCustomDescriptionAsFunctionality();
 
   // a fallback: if we still don't have any perk descriptions, at least keep the first perk for display.
   // there are mods like this (e.g. Elemental Armaments): no description, and annoyingly all perks are set
@@ -268,18 +280,23 @@ function getPerkDescriptions(
     }
   }
 
+  // Needs to be last added otherwise we can break the above statement causing a description to not be added
+  if (plug.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)) {
+    addTooltipNotifsAsRequirement();
+  }
+
   return results;
 }
 
 export function getPlugDefStats(
   plugDef: PluggableInventoryItemDefinition,
-  classType: DestinyClass | undefined
+  classType: DestinyClass | undefined,
 ) {
   return plugDef.investmentStats
     .filter(
       (stat) =>
         (isAllowedItemStat(stat.statTypeHash) || isAllowedPlugStat(stat.statTypeHash)) &&
-        (classType === undefined || isModStatActive(classType, plugDef.hash, stat))
+        (classType === undefined || isModStatActive(classType, plugDef.hash, stat)),
     )
     .map((stat) => ({
       statHash: stat.statTypeHash,
@@ -307,9 +324,9 @@ export function getDimPlugStats(item: DimItem, plug: DimPlug) {
             stat.statHash,
             Boolean(
               plug.plugDef.investmentStats.find((s) => s.statTypeHash === stat.statHash)
-                ?.isConditionallyActive
-            )
-          )
+                ?.isConditionallyActive,
+            ),
+          ),
       )
       .sort(compareBy((stat) => getStatSortOrder(stat.statHash)));
   }

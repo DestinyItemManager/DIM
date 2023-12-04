@@ -1,0 +1,12 @@
+.hint {
+  opacity: 0.6;
+  margin: 8px 0 0 0;
+}
+
+.checkboxRow {
+  display: inline-block;
+
+  > * {
+    vertical-align: middle;
+  }
+}

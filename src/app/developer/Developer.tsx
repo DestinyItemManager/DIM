@@ -1,4 +1,5 @@
 import { registerApp } from 'app/dim-api/register-app';
+import { errorMessage } from 'app/utils/errors';
 import React, { useState } from 'react';
 
 const createAppUrl = 'https://www.bungie.net/en/Application/Create';
@@ -46,7 +47,7 @@ export default function Developer(this: never) {
 
   const onChange =
     (
-      setter: React.Dispatch<React.SetStateAction<string | undefined>>
+      setter: React.Dispatch<React.SetStateAction<string | undefined>>,
     ): React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> =>
     (e) => {
       setter(e.target.value);
@@ -62,7 +63,7 @@ export default function Developer(this: never) {
       setDimApiKey(app.dimApiKey);
     } catch (e) {
       // eslint-disable-next-line no-alert
-      alert(e.message);
+      alert(errorMessage(e));
     }
   };
 
@@ -159,7 +160,7 @@ export default function Developer(this: never) {
                 type="button"
                 className="dim-button"
                 onClick={getDimApiKey}
-                disabled={!apiKey || !dimAppName || !dimAppName.match(/^[a-z0-9-]{3,}$/)}
+                disabled={!apiKey || !dimAppName?.match(/^[a-z0-9-]{3,}$/)}
               >
                 Get API Key
               </button>

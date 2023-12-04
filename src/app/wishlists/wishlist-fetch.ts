@@ -87,8 +87,8 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
             }
 
             return res.text();
-          })
-        )
+          }),
+        ),
       );
 
       // if this is a new wishlist, set the setting now that we know it's fetchable
@@ -116,7 +116,7 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
       existingWishLists?.wishListAndInfo?.wishListRolls?.length !==
       wishListAndInfo.wishListRolls.length
     ) {
-      dispatch(transformAndStoreWishList(wishListAndInfo));
+      await dispatch(transformAndStoreWishList(wishListAndInfo));
     } else {
       infoLog('wishlist', 'Refreshed wishlist, but it matched the one we already have');
       dispatch(touchWishLists());
@@ -144,14 +144,18 @@ function loadWishListAndInfoFromIndexedDB(): ThunkResult {
       return;
     }
 
-    const wishListState = await get<WishListsState>('wishlist');
+    try {
+      const wishListState = await get<WishListsState>('wishlist');
 
-    if (getState().wishLists.loaded) {
-      return;
-    }
+      if (getState().wishLists.loaded) {
+        return;
+      }
 
-    if (wishListState?.wishListAndInfo?.wishListRolls?.length) {
-      dispatch(loadWishLists(wishListState));
+      if (wishListState?.wishListAndInfo?.wishListRolls?.length) {
+        dispatch(loadWishLists(wishListState));
+      }
+    } catch (e) {
+      errorLog('wishlist', 'unable to load wishlists from IDB', e);
     }
   };
 }

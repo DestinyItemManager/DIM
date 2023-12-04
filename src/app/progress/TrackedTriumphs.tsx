@@ -2,21 +2,15 @@ import { trackedTriumphsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { profileResponseSelector } from 'app/inventory/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { RecordGrid } from 'app/records/Record';
 import { searchDisplayProperties, toRecord } from 'app/records/presentation-nodes';
-import Record from 'app/records/Record';
+import { filterMap } from 'app/utils/collections';
 import { DestinyPresentationNodeDefinition, DestinyRecordDefinition } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
-import React from 'react';
 import { useSelector } from 'react-redux';
 import styles from './TrackedTriumphs.m.scss';
 
-export function TrackedTriumphs({
-  searchQuery,
-  hideRecordIcon,
-}: {
-  searchQuery?: string;
-  hideRecordIcon?: boolean;
-}) {
+export function TrackedTriumphs({ searchQuery }: { searchQuery?: string }) {
   const defs = useD2Definitions()!;
   const profileResponse = useSelector(profileResponseSelector)!;
   const trackedTriumphs = useSelector(trackedTriumphsSelector);
@@ -25,11 +19,13 @@ export function TrackedTriumphs({
   const recordHashes = trackedRecordHash
     ? [...new Set([trackedRecordHash, ...trackedTriumphs])]
     : trackedTriumphs;
-  let records = _.compact(recordHashes.map((h) => toRecord(defs, profileResponse, h)));
+  let records = filterMap(recordHashes, (h) =>
+    toRecord(defs, profileResponse, h, /* mayBeMissing */ true),
+  );
 
   if (searchQuery) {
     records = records.filter((r) =>
-      searchDisplayProperties(r.recordDef.displayProperties, searchQuery)
+      searchDisplayProperties(r.recordDef.displayProperties, searchQuery),
     );
   }
 
@@ -58,17 +54,5 @@ export function TrackedTriumphs({
     );
   }
 
-  return (
-    <div className="records">
-      {records.map((record) => (
-        <Record
-          key={record.recordDef.hash}
-          record={record}
-          hideRecordIcon={hideRecordIcon}
-          completedRecordsHidden={false}
-          redactedRecordsRevealed={true}
-        />
-      ))}
-    </div>
-  );
+  return <RecordGrid records={records} redactedRecordsRevealed={true} />;
 }

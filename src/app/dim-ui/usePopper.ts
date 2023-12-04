@@ -16,8 +16,8 @@ import computeSidecarPosition from 'app/item-popup/sidecar-popper-modifier';
 import _ from 'lodash';
 import React, { useLayoutEffect, useRef } from 'react';
 
-// ensure this stays in sync with 'arrow-size' in 'PressTip.m.scss'
-const popperArrowSize = 15;
+// ensure this stays in sync with '$theme-tooltip-arrow-size' in '_variables.scss'
+const popperArrowSize = 8;
 
 /** Makes a custom popper that doesn't have the event listeners modifier */
 const createPopper = popperGenerator({
@@ -38,15 +38,16 @@ const popperOptions = (
   arrowClassName?: string,
   menuClassName?: string,
   boundarySelector?: string,
-  offset = arrowClassName ? popperArrowSize / 2 : 0,
-  fixed = false
+  offset = arrowClassName ? popperArrowSize : 0,
+  fixed = false,
+  padding?: Padding,
 ): Partial<Options> => {
   const headerHeight = parseInt(
     document.querySelector('html')!.style.getPropertyValue('--header-height')!,
-    10
+    10,
   );
   const boundaryElement = boundarySelector && document.querySelector(boundarySelector);
-  const padding: Padding = {
+  padding ??= {
     left: 10,
     top: headerHeight + (boundaryElement ? boundaryElement.clientHeight : 0) + 5,
     right: 10,
@@ -83,13 +84,13 @@ const popperOptions = (
       hasArrow && {
         name: 'arrow',
         options: {
-          element: '.' + arrowClassName,
+          element: `.${arrowClassName}`,
         },
       },
       hasMenu && {
         name: 'computeSidecarPosition',
         options: {
-          element: '.' + menuClassName,
+          element: `.${menuClassName}`,
         },
       },
     ]),
@@ -105,6 +106,7 @@ export function usePopper({
   placement,
   offset,
   fixed,
+  padding,
 }: {
   /** A ref to the rendered contents of a popper-positioned item */
   contents: React.RefObject<HTMLElement>;
@@ -122,6 +124,7 @@ export function usePopper({
   offset?: number;
   /** Is this placed on a fixed item? Workaround for https://github.com/popperjs/popper-core/issues/1156. TODO: make a "positioning context" context value for this */
   fixed?: boolean;
+  padding?: Padding;
 }) {
   const popper = useRef<Instance | undefined>();
 
@@ -140,21 +143,20 @@ export function usePopper({
     // Reposition the popup as it is shown or if its size changes
     if (!contents.current || !reference.current) {
       return destroy();
+    } else if (popper.current) {
+      popper.current.update();
     } else {
-      if (popper.current) {
-        popper.current.update();
-      } else {
-        const options = popperOptions(
-          placement,
-          arrowClassName,
-          menuClassName,
-          boundarySelector,
-          offset,
-          fixed
-        );
-        popper.current = createPopper(reference.current, contents.current, options);
-        popper.current.update();
-      }
+      const options = popperOptions(
+        placement,
+        arrowClassName,
+        menuClassName,
+        boundarySelector,
+        offset,
+        fixed,
+        padding,
+      );
+      popper.current = createPopper(reference.current, contents.current, options);
+      popper.current.update();
     }
 
     return destroy;

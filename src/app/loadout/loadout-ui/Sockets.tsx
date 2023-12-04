@@ -1,11 +1,14 @@
+import { PressTip } from 'app/dim-ui/PressTip';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { modTypeTagByPlugCategoryHash } from 'app/search/specialty-modslots';
+import { AppIcon, shoppingCart } from 'app/shell/icons';
 import { isEventArmorRerollSocket } from 'app/utils/socket-utils';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
+import { t } from 'i18next';
 import { pickPlugPositions } from '../mod-assignment-utils';
 import PlugDef from './PlugDef';
 import styles from './Sockets.m.scss';
@@ -19,7 +22,16 @@ const undesirablePlugs = [
   PlugCategoryHashes.V460PlugsArmorMasterworksStatResistance4,
 ];
 
-interface Props {
+/**
+ * Show sockets (mod slots) for a loadout armor item with the specified locked mods slotted into it.
+ */
+function Sockets({
+  item,
+  lockedMods,
+  size,
+  onSocketClick,
+  automaticallyPickedMods,
+}: {
   item: DimItem;
   lockedMods?: PluggableInventoryItemDefinition[];
   automaticallyPickedMods?: number[];
@@ -28,14 +40,9 @@ interface Props {
     plugDef: PluggableInventoryItemDefinition,
     /** An allow-list of plug category hashes that can be inserted into this socket */
     // TODO: why not just pass the socketType hash or socket definition?
-    plugCategoryHashWhitelist: number[]
+    plugCategoryHashWhitelist: number[],
   ) => void;
-}
-
-/**
- * Show sockets (mod slots) for a loadout armor item with the specified locked mods slotted into it.
- */
-function Sockets({ item, lockedMods, size, onSocketClick, automaticallyPickedMods }: Props) {
+}) {
   const defs = useD2Definitions()!;
   if (!item.sockets) {
     return null;
@@ -55,7 +62,7 @@ function Sockets({ item, lockedMods, size, onSocketClick, automaticallyPickedMod
   for (const socket of item.sockets?.allSockets || []) {
     const socketType = defs.SocketType.get(socket.socketDefinition.socketTypeHash);
     let toSave: DestinyInventoryItemDefinition | undefined = assignments.find(
-      (a) => a.socketIndex === socket.socketIndex
+      (a) => a.socketIndex === socket.socketIndex,
     )?.mod;
 
     const modIdx = (toSave && autoMods?.findIndex((m) => m === toSave!.hash)) ?? -1;
@@ -106,7 +113,31 @@ function Sockets({ item, lockedMods, size, onSocketClick, automaticallyPickedMod
           forClassType={item.classType}
         />
       ))}
+      {item.vendor && <VendorItemPlug item={item} />}
     </div>
+  );
+}
+
+function VendorItemPlug({ item }: { item: DimItem }) {
+  const defs = useD2Definitions()!;
+  return (
+    <PressTip
+      elementType="span"
+      tooltip={() => {
+        const vendorName = defs.Vendor.get(item.vendor!.vendorHash).displayProperties.name;
+        return (
+          <>
+            {t('Compare.IsVendorItem')}
+            <br />
+            {t('Compare.SoldBy', { vendorName })}
+          </>
+        );
+      }}
+    >
+      <div className={clsx('item', styles.vendorItem)}>
+        <AppIcon icon={shoppingCart} />
+      </div>
+    </PressTip>
   );
 }
 

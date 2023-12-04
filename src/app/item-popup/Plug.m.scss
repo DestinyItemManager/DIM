@@ -1,5 +1,50 @@
 @use '../variables.scss' as *;
 
+.perkCircle {
+  display: block;
+  -webkit-touch-callout: none;
+  height: var(--item-size);
+  width: var(--item-size);
+  border: none;
+
+  &:hover .perkOutline {
+    stroke: var(--theme-accent-primary);
+    stroke-width: 6px;
+  }
+}
+
+// A global class because some things still tweak the size of the plug image.
+// TODO: customize with CSS vars instead
+:global(.plug) {
+  position: relative; // to position the thumbs-up correctly
+  display: flex;
+  flex-direction: row;
+  --item-size-adjusted: calc(32 / 50 * var(--item-size));
+
+  @include phone-portrait {
+    --item-size-adjusted: 32px;
+  }
+
+  img,
+  .perkCircle {
+    --item-size: var(--item-size-adjusted);
+  }
+}
+
+// In game, mods have a border around them that isn't part of the icon
+.mod {
+  :global(.item-img) {
+    border-color: var(--theme-item-socket-border);
+  }
+}
+
+// In game, mods have a border around them that isn't part of the icon
+.masterwork {
+  :global(.item-img) {
+    border-color: var(--theme-item-polaroid-masterwork) !important;
+  }
+}
+
 .none {
   fill: transparent;
 }
@@ -14,7 +59,7 @@
 }
 // This has been selected by the user but isn't the original plugged item
 .selected {
-  fill: $orange;
+  fill: var(--theme-accent-primary);
 }
 
 .cannotRoll {
@@ -26,5 +71,25 @@
 
   &.selected {
     fill: #ba5948;
+  }
+}
+
+.disabled {
+  opacity: 0.4;
+}
+
+.selectable {
+  cursor: pointer;
+}
+
+.hasMenu {
+  cursor: pointer;
+  &:hover,
+  &:focus-visible {
+    outline: 1px solid var(--theme-accent-primary);
+  }
+
+  :global(.item-img) {
+    border-color: var(--theme-item-socket-border);
   }
 }

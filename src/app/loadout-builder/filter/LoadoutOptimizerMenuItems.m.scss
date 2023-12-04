@@ -1,0 +1,28 @@
+@use '../../variables' as *;
+
+.itemGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--item-size));
+  grid-template-rows: repeat(auto-fill, minmax(var(--item-size), 1fr));
+  margin-bottom: 3px;
+  gap: 4px;
+
+  :global(.item-drag-container) {
+    margin: 0;
+  }
+}
+
+.area {
+  composes: flexColumn from '../../dim-ui/common.m.scss';
+  gap: 4px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  > * {
+    flex: 1;
+  }
+
+  gap: 4px;
+}

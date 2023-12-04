@@ -1,10 +1,10 @@
 @use '../variables' as *;
 
 .armorIntrinsicDescription {
-  color: #aaa;
+  color: var(--theme-text-secondary);
   white-space: pre-line;
   h3 {
-    color: white;
+    color: var(--theme-text);
   }
 }
 .clarityDescription {
@@ -17,7 +17,11 @@
 }
 .generalSockets {
   margin: 10px;
+  display: flex;
+  flex-flow: row wrap;
+  gap: 4px 16px;
+
   &.minimalSockets {
-    margin: 0;
+    margin: 4px 0;
   }
 }

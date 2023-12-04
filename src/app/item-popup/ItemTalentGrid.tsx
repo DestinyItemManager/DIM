@@ -6,17 +6,16 @@ import { PressTip, Tooltip } from '../dim-ui/PressTip';
 import { D1GridNode, D1Item } from '../inventory/item-types';
 import './ItemTalentGrid.scss';
 
-interface ProvidedProps {
-  item: D1Item;
-  perksOnly?: boolean;
-}
-
-type Props = ProvidedProps;
-
 /**
  * The talent grid was the grid of perks for D1 items. It is not used for any D2 item.
  */
-export default memo(function ItemTalentGrid({ item, perksOnly }: Props) {
+export default memo(function ItemTalentGrid({
+  item,
+  perksOnly,
+}: {
+  item: D1Item;
+  perksOnly?: boolean;
+}) {
   const talentGrid = item.talentGrid;
 
   if (!talentGrid) {

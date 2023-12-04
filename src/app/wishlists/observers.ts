@@ -1,5 +1,5 @@
 import { set } from 'app/storage/idb-keyval';
-import { observeStore } from 'app/utils/redux-utils';
+import { observeStore } from 'app/utils/redux';
 
 export function saveWishListToIndexedDB() {
   return observeStore(
@@ -11,6 +11,6 @@ export function saveWishListToIndexedDB() {
           lastFetched: nextState.lastFetched,
         });
       }
-    }
+    },
   );
 }

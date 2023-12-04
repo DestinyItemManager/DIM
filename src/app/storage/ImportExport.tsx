@@ -3,6 +3,7 @@ import FileUpload from 'app/dim-ui/FileUpload';
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import { AppIcon, downloadIcon } from 'app/shell/icons';
+import { errorMessage } from 'app/utils/errors';
 import React from 'react';
 import { DropzoneOptions } from 'react-dropzone';
 import './storage.scss';
@@ -34,7 +35,7 @@ export default function ImportExport({
         } catch (e) {
           showNotification({
             type: 'error',
-            title: t('Storage.ImportFailed', { error: e.message }),
+            title: t('Storage.ImportFailed', { error: errorMessage(e) }),
           });
         }
       }

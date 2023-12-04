@@ -1,12 +1,21 @@
 import { DimItem } from 'app/inventory/item-types';
 import { BucketHashes } from 'data/d2/generated-enums';
 
-/** any general mod */
-export const recoveryModHash = 4204488676;
+/** a general mod, 4 energy */
+export const recoveryModHash = 4204488676; // InventoryItem "Recovery Mod"
 /** raid mod, dsc mod */
-export const enhancedOperatorAugmentModHash = 817361141;
-/** class item mod */
-export const distributionModHash = 4039026690;
+export const enhancedOperatorAugmentModHash = 817361141; // InventoryItem "Enhanced Operator Augment"
+/** class item mod, 3 energy */
+export const distributionModHash = 4039026690; // InventoryItem "Distribution"
+/** legs mod, 4 energy */
+export const stacksOnStacksModHash = 3994043492; // InventoryItem "Stacks on Stacks"
+/** legs mod, 3 energy */
+export const elementalChargeModHash = 3712696020; // InventoryItem "Elemental Charge"
+
+/** 1st class item mod with mutual exclusion behavior, 1 energy */
+export const empoweringFinishModHash = 84503918; // InventoryItem "Empowered Finish"
+/** 2nd class item mod with mutual exclusion behavior, 1 energy */
+export const bulwarkFinishModHash = 4004774874; // InventoryItem "Bulwark Finisher"
 
 function isArmor2Item(item: DimItem) {
   return item.energy && item.bucket.inArmor && !item.equippingLabel && item.tier === 'Legendary';

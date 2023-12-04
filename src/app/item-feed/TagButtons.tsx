@@ -1,5 +1,5 @@
 import { clearNewItem, setTag } from 'app/inventory/actions';
-import { tagConfig, TagValue } from 'app/inventory/dim-item-info';
+import { TagValue, tagConfig } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { AppIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -13,7 +13,7 @@ export default function TagButtons({ item, tag }: { item: DimItem; tag: TagValue
   const dispatch = useThunkDispatch();
   const tagOptions = _.sortBy(
     Object.values(tagConfig).filter((t) => t.type !== 'archive'),
-    (t) => t.sortOrder
+    (t) => t.sortOrder,
   );
 
   const handleSetTag = (tag: TagValue) => {

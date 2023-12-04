@@ -1,4 +1,4 @@
-@import '../../variables';
+@use '../../variables' as *;
 
 .subclassContainer {
   --item-icon-size: calc(0.8 * var(--item-size));
@@ -38,6 +38,9 @@
   align-items: flex-start;
   :global(.item) {
     --item-size: var(--item-icon-size);
+  }
+  :global(.item-img) {
+    border-color: var(--theme-item-socket-border);
   }
 }
 

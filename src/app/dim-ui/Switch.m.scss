@@ -44,7 +44,9 @@ $touchPadding: 2px; // A bit of extra hit area
       height: $dotSize - 4px;
       border-radius: 50%;
       background-color: white;
-      transition: left $duration ease-out, background-color $duration ease-out;
+      transition:
+        left $duration ease-out,
+        background-color $duration ease-out;
       top: $touchPadding;
       left: $touchPadding;
       border: 2px solid transparent;
@@ -59,12 +61,13 @@ $touchPadding: 2px; // A bit of extra hit area
     &:checked {
       & + label {
         &::before {
-          background-color: change-color($orange, $alpha: 0.5);
+          background-color: var(--theme-accent-primary);
+          opacity: 0.5;
         }
         // The dot
         &::after {
           left: $touchPadding + $barWidth - $barHeight;
-          background-color: $orange;
+          background-color: var(--theme-accent-primary);
         }
       }
     }

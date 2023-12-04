@@ -1,4 +1,5 @@
 import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd';
+import { reorder } from 'app/utils/collections';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { sortedStoresSelector } from '../inventory/selectors';
@@ -20,7 +21,7 @@ export default function CharacterOrderEditor({
     const order = reorder(
       characters.filter((c) => !c.isVault).map((c) => c.id),
       oldIndex,
-      newIndex
+      newIndex,
     );
     onSortOrderChanged(order);
   };
@@ -47,41 +48,33 @@ export default function CharacterOrderEditor({
       <Droppable droppableId="characters" direction="horizontal">
         {(provided) => (
           <div className={styles.editor} ref={provided.innerRef}>
-            {characters
-              .filter((c) => !c.isVault)
-              .map((character, index) => (
-                <Draggable draggableId={character.id} index={index} key={character.id}>
-                  {(provided) => (
-                    <div
-                      className={styles.item}
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                    >
-                      <div className={styles.character}>
-                        <img src={character.icon} />
-                        <div>
-                          <span className={styles.powerLevel}>{character.powerLevel}</span>{' '}
-                          {character.className}
+            {characters.map(
+              (character, index) =>
+                !character.isVault && (
+                  <Draggable draggableId={character.id} index={index} key={character.id}>
+                    {(provided) => (
+                      <div
+                        className={styles.item}
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        <div className={styles.character}>
+                          <img src={character.icon} />
+                          <div>
+                            <span className={styles.powerLevel}>{character.powerLevel}</span>{' '}
+                            {character.className}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
-                </Draggable>
-              ))}
+                    )}
+                  </Draggable>
+                ),
+            )}
             {provided.placeholder}
           </div>
         )}
       </Droppable>
     </DragDropContext>
   );
-}
-
-// a little function to help us with reordering the result
-function reorder<T>(list: T[], startIndex: number, endIndex: number): T[] {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-
-  return result;
 }

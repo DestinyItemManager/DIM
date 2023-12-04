@@ -3,7 +3,8 @@ import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { useD1Definitions } from 'app/manifest/selectors';
 import { useSetting } from 'app/settings/hooks';
-import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
+import { count } from 'app/utils/collections';
+import { usePageTitle } from 'app/utils/hooks';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
@@ -14,9 +15,8 @@ import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
 import { storesSelector } from '../../inventory/selectors';
 import { D1Store } from '../../inventory/store-types';
 import Objective from '../../progress/Objective';
-import { count } from '../../utils/util';
 import { D1ManifestDefinitions } from '../d1-definitions';
-import { D1RecordBook, D1RecordComponent } from '../d1-manifest-types';
+import { D1ObjectiveProgress, D1RecordBook, D1RecordComponent } from '../d1-manifest-types';
 import './record-books.scss';
 
 interface Props {
@@ -48,19 +48,20 @@ interface RecordBookPage {
     icon: string;
     name: string;
     description: string;
-    objectives: DestinyObjectiveProgress[];
+    objectives: D1ObjectiveProgress[];
   }[];
   complete: boolean;
   completedCount: number;
 }
 
 export default function RecordBooks({ account }: Props) {
+  usePageTitle(t('RecordBooks.RecordBooks'));
   const defs = useD1Definitions();
   const stores = useSelector(storesSelector) as D1Store[];
   const [hideCompletedRecords, setHideCompletedRecords] = useSetting('hideCompletedRecords');
 
-  useLoadStores(account);
-  if (!defs || !stores.length) {
+  const storesLoaded = useLoadStores(account);
+  if (!defs || !storesLoaded) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
   const hideCompletedRecordsChanged = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -74,7 +75,7 @@ export default function RecordBooks({ account }: Props) {
 
   const processRecordBook = (
     defs: D1ManifestDefinitions,
-    rawRecordBook: D1RecordBook
+    rawRecordBook: D1RecordBook,
   ): RecordBook => {
     // TODO: rewards are in "spotlights"
     // TODO: rank
@@ -102,7 +103,7 @@ export default function RecordBooks({ account }: Props) {
         description: recordDef.description,
         name: recordDef.displayName,
         objectives: record.objectives,
-        complete: record.objectives.every((o: any) => o.isComplete),
+        complete: record.objectives.every((o) => o.isComplete),
       };
     };
 
@@ -110,13 +111,13 @@ export default function RecordBooks({ account }: Props) {
     const recordByHash = _.keyBy(records, (r) => r.hash);
 
     let i = 0;
-    recordBook.pages = recordBookDef.pages.map((page: any) => {
+    recordBook.pages = recordBookDef.pages.map((page) => {
       const createdPage: RecordBookPage = {
         id: `${recordBook.hash}-${i++}`,
         name: page.displayName,
         description: page.displayDescription,
         rewardsPage: page.displayStyle === 1,
-        records: page.records.map((r: any) => recordByHash[r.recordHash]),
+        records: page.records.map((r) => recordByHash[r.recordHash]),
         // rewards - map to items!
         // ItemFactory.processItems({ id: null }
         // may have to extract store service bits...
@@ -138,7 +139,7 @@ export default function RecordBooks({ account }: Props) {
       rawRecordBook.progress = rawRecordBook.progression;
       rawRecordBook.percentComplete =
         rawRecordBook.progress.currentProgress /
-        _.sumBy(rawRecordBook.progress.steps, (s: any) => s.progressTotal);
+        _.sumBy(rawRecordBook.progress.steps, (s) => s.progressTotal);
     } else {
       recordBook.percentComplete = count(records, (r) => r.complete) / records.length;
     }
@@ -151,7 +152,7 @@ export default function RecordBooks({ account }: Props) {
   const rawRecordBooks = stores[0].advisors.recordBooks;
   const recordBooks = _.sortBy(
     Object.values(rawRecordBooks ?? {}).map((rb) => processRecordBook(defs, rb)),
-    (rb) => [rb.complete, new Date(rb.startDate).getTime()]
+    (rb) => [rb.complete, new Date(rb.startDate).getTime()],
   );
 
   return (
@@ -176,7 +177,7 @@ export default function RecordBooks({ account }: Props) {
       {recordBooks.map((book) => (
         <CollapsibleTitle
           key={book.hash}
-          sectionId={'rb-' + book.hash}
+          sectionId={`rb-${book.hash}`}
           title={
             <>
               <BungieImage src={book.icon} className="book-icon" /> {book.name}
@@ -197,7 +198,7 @@ export default function RecordBooks({ account }: Props) {
                     className={clsx('record-book-page', { complete: page.complete })}
                   >
                     <CollapsibleTitle
-                      sectionId={'rbpage-' + page.id}
+                      sectionId={`rbpage-${page.id}`}
                       title={<span className="record-book-page-title">{page.name}</span>}
                       extra={
                         <span className="record-book-completion">
@@ -231,7 +232,7 @@ export default function RecordBooks({ account }: Props) {
                       )}
                     </CollapsibleTitle>
                   </div>
-                )
+                ),
             )}
           </div>
         </CollapsibleTitle>

@@ -30,7 +30,7 @@ export interface BulkNoteResult {
 
 export default function useBulkNote(): [
   element: React.ReactNode,
-  bulkNote: (items: DimItem[]) => Promise<void>
+  bulkNote: (items: DimItem[]) => Promise<void>,
 ] {
   const [dialog, showDialog] = useDialog<DimItem[], BulkNoteResult | null>((args, close) => (
     <BulkNoteDialog close={close} items={args} />
@@ -58,7 +58,7 @@ export default function useBulkNote(): [
         }
       }
     },
-    [dispatch, showDialog]
+    [dispatch, showDialog],
   );
 
   return [dialog, bulkNote];
@@ -111,8 +111,8 @@ function BulkNoteDialog({
     appendMode === 'replace'
       ? note
       : appendMode === 'append'
-      ? appendedToNote(originalNote, note)
-      : removedFromNote(originalNote, note);
+        ? appendedToNote(originalNote, note)
+        : removedFromNote(originalNote, note);
 
   return (
     <>
@@ -173,7 +173,7 @@ function NotesEditor({
   const isPhonePortrait = useIsPhonePortrait();
 
   const tags = useSelector(allNotesHashtagsSelector);
-  useAutocomplete(textArea, tags, form.current ?? undefined);
+  useAutocomplete(textArea, tags, form);
 
   // On iOS at least, focusing the keyboard pushes the content off the screen
   const nativeAutoFocus = !isPhonePortrait && !isiOSBrowser();
@@ -192,8 +192,8 @@ function NotesEditor({
     const offsets = calculateElementOffset(form.current);
     const dropdown = form.current.querySelector('.textcomplete-dropdown');
     if (dropdown && dropdown instanceof HTMLElement && dropdown.style.left) {
-      dropdown.style.left = parseInt(dropdown.style.left, 10) - offsets.left + 'px';
-      dropdown.style.top = parseInt(dropdown.style.top, 10) - offsets.top + 'px';
+      dropdown.style.left = `${parseInt(dropdown.style.left, 10) - offsets.left}px`;
+      dropdown.style.top = `${parseInt(dropdown.style.top, 10) - offsets.top}px`;
     }
   }, [notes]);
 

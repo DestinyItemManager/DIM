@@ -11,7 +11,9 @@ $header-height: 44px;
 
 .container {
   position: fixed;
-  z-index: 1001;
+  // Above the tempContainer. This is pretty much entirely so the search
+  // autocomplete menu displays above the search results sheet on mobile.
+  z-index: $tempContainerZindex + 2;
   top: 0;
   left: 0;
   right: 0;
@@ -21,25 +23,32 @@ $header-height: 44px;
 .header {
   width: 100%;
   box-sizing: border-box;
-  padding-left: env(safe-area-inset-left, 2px);
-  padding-right: env(safe-area-inset-right);
-  padding-top: env(safe-area-inset-top);
-  height: $header-height;
-  height: calc(#{$header-height} + env(safe-area-inset-top));
+  padding-left: env(titlebar-area-x, env(safe-area-inset-left, 2px));
+  padding-right: calc(
+    100% - env(titlebar-area-width, 100%) - env(titlebar-area-x, 0) + env(safe-area-inset-right)
+  );
+  padding-top: env(titlebar-area-y, env(safe-area-inset-top));
+  height: calc(env(titlebar-area-height, #{$header-height}) + env(safe-area-inset-top));
   display: flex;
   flex-direction: row;
   align-items: center;
-  background: $gradient;
+  background: var(--theme-header-nav-bg);
   background-position: center top;
   background-repeat: no-repeat;
   background-size: 100vw 100vh;
+  -webkit-app-region: drag;
+
+  // Use the size of this element for the container query in .headerLinks. This
+  // is needed for the PWA mode where the header is narrower than the page.
+  container-type: inline-size;
 
   @include phone-portrait {
-    background: #000;
+    background: var(--theme-mobile-background);
   }
 
   button,
   a {
+    -webkit-app-region: no-drag;
     > :global(.app-icon) {
       font-size: 1.33em;
 
@@ -47,7 +56,7 @@ $header-height: 44px;
         font-size: 24px;
       }
       &:hover {
-        color: $orange;
+        color: var(--theme-accent-primary);
         cursor: pointer;
         transition: color 0.2s linear;
       }
@@ -78,17 +87,18 @@ $header-height: 44px;
     margin: 0 12px;
   }
 
-  color: white;
+  color: var(--theme-text);
   cursor: pointer;
 
   &:hover,
   &.active {
-    color: $orange;
+    color: var(--theme-accent-primary);
     transition: color 0.2s linear;
   }
 }
 
 .headerRight {
+  -webkit-app-region: no-drag;
   cursor: default;
   display: flex;
   flex: 1;
@@ -113,7 +123,7 @@ $header-height: 44px;
     height: 24px * 1.2;
     width: 68px * 1.2;
   }
-  color: $orange !important;
+  color: var(--theme-accent-primary) !important;
   font-size: 16px !important;
   font-weight: bold;
   font-weight: 400;
@@ -122,6 +132,9 @@ $header-height: 44px;
   }
   &.beta {
     filter: hue-rotate(160deg) brightness(107%);
+  }
+  &.pr {
+    filter: hue-rotate(280deg) brightness(107%);
   }
 }
 
@@ -137,7 +150,13 @@ $header-height: 44px;
     display: none;
   }
 
+  // Hide the links if the page is too small
   @media (max-width: 1200px) {
+    display: none;
+  }
+
+  // Only the newest browsers support container queries
+  @container (max-width: 1200px) {
     display: none;
   }
 
@@ -149,7 +168,7 @@ $header-height: 44px;
     box-sizing: border-box;
 
     &.active {
-      border-bottom: 2px solid $orange;
+      border-bottom: 2px solid var(--theme-accent-primary);
     }
   }
 }
@@ -165,22 +184,22 @@ $header-height: 44px;
   margin: 0;
   padding: 0;
   min-width: 150px;
-  background-color: black;
+  background-color: var(--theme-header-nav-slideout-menu-bg);
   padding-left: env(safe-area-inset-left);
   padding-bottom: Max(4px, env(safe-area-inset-bottom));
   flex-direction: column;
-  z-index: 1000;
 
   hr {
-    margin: 4px 0 2px 0;
+    margin: 8px 0 6px 0;
     border: none;
     border-top: 1px solid #333;
   }
 
   h3 {
-    margin: 16px 2rem 0 1rem;
+    margin: 8px 2rem 0 1rem;
     text-transform: uppercase;
     letter-spacing: 1px;
+    max-width: 13em;
   }
 
   .menuItem {
@@ -191,8 +210,8 @@ $header-height: 44px;
     transition: none;
 
     &.active {
-      color: white;
-      border-left: 4px solid $orange;
+      color: var(--theme-text);
+      border-left: 4px solid var(--theme-accent-primary);
       padding-left: calc(1rem - 4px);
     }
 
@@ -204,8 +223,8 @@ $header-height: 44px;
 
     &:hover,
     &:focus {
-      background-color: $orange;
-      color: black;
+      background-color: var(--theme-accent-primary);
+      color: var(--theme-text-invert);
     }
 
     .launchSeparateIcon {
@@ -213,23 +232,6 @@ $header-height: 44px;
       color: #888;
     }
   }
-}
-.dropdownEnter {
-  transform: translateX(-250px);
-}
-
-.dropdownEnter.dropdownEnterActive {
-  transform: translateX(0);
-  transition: transform 200ms $easeOutCubic;
-}
-
-.dropdownExit {
-  transform: translateX(0);
-}
-
-.dropdownExit.dropdownExitActive {
-  transform: translateX(-250px);
-  transition: transform 200ms $easeInCubic;
 }
 
 .pwaPrompt {
@@ -247,7 +249,7 @@ $header-height: 44px;
   }
 
   :global(.search-filter) {
-    background: rgba(0, 0, 0, 0.4);
+    background: var(--theme-search-bg);
   }
 }
 

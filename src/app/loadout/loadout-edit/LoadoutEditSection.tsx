@@ -1,7 +1,14 @@
 import Dropdown, { Option } from 'app/dim-ui/Dropdown';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
-import { AppIcon, clearIcon, disabledIcon, downloadIcon, helpIcon } from 'app/shell/icons';
+import {
+  AppIcon,
+  clearIcon,
+  disabledIcon,
+  downloadIcon,
+  faRandom,
+  helpIcon,
+} from 'app/shell/icons';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
@@ -14,7 +21,10 @@ export default function LoadoutEditSection({
   className,
   onClear,
   onFillFromEquipped,
+  fillFromEquippedDisabled,
   onSyncFromEquipped,
+  onRandomize,
+  hasRandomizeQuery,
   fillFromInventoryCount,
   onFillFromInventory,
   onClearLoadoutParameters,
@@ -25,7 +35,10 @@ export default function LoadoutEditSection({
   className?: string;
   onClear: () => void;
   onFillFromEquipped?: () => void;
+  fillFromEquippedDisabled?: boolean;
   onSyncFromEquipped?: () => void;
+  onRandomize?: () => void;
+  hasRandomizeQuery?: boolean;
   fillFromInventoryCount?: number;
   onFillFromInventory?: () => void;
   onClearLoadoutParameters?: () => void;
@@ -35,6 +48,7 @@ export default function LoadoutEditSection({
       ? {
           key: 'fillFromEquipped',
           onSelected: onFillFromEquipped,
+          disabled: fillFromEquippedDisabled,
           content: (
             <>
               <AppIcon icon={downloadIcon} /> {t('Loadouts.FillFromEquipped')}
@@ -61,6 +75,18 @@ export default function LoadoutEditSection({
             <>
               <AppIcon icon={downloadIcon} /> {t('Loadouts.FillFromInventory')}
               {fillFromInventoryCount !== undefined && ` (${fillFromInventoryCount})`}
+            </>
+          ),
+        }
+      : undefined,
+    onRandomize
+      ? {
+          key: 'randomize',
+          onSelected: onRandomize,
+          content: (
+            <>
+              <AppIcon icon={faRandom} />{' '}
+              {!hasRandomizeQuery ? t('Loadouts.RandomizeButton') : t('Loadouts.RandomizeSearch')}
             </>
           ),
         }

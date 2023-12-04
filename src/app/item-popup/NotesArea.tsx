@@ -30,10 +30,9 @@ export default function NotesArea({
   const [notesOpen, setNotesOpen] = useState(false);
   const openNotes = useCallback(() => {
     setNotesOpen(true);
-    ga('send', 'event', 'Item Popup', 'Edit Notes');
   }, []);
 
-  useHotkey('n', t('Hotkey.Notes'), openNotes);
+  useHotkey('n', t('Hotkey.Note'), openNotes);
 
   // nothing to do if it can't be tagged (/noted)
   if (!item.taggable) {

@@ -1,0 +1,7 @@
+.vendorSheet {
+  composes: sheet from 'app/armory/ArmorySheet.m.scss';
+}
+
+.sheetContents {
+  padding: 16px;
+}

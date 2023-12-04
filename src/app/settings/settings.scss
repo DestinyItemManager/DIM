@@ -23,7 +23,7 @@
 
   .fineprint {
     font-size: 0.85em;
-    color: #aaa;
+    color: var(--theme-text-secondary);
   }
 
   .setting {
@@ -74,13 +74,6 @@
     margin-right: 0.5em;
   }
 
-  .examples {
-    margin: 0 0 4px 0;
-    display: flex;
-    flex-direction: row;
-    gap: 4px;
-  }
-
   .radioOptions {
     margin: 8px 0 0 4px;
     display: flex;
@@ -108,15 +101,9 @@
 
   .wish-list-text {
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-    margin-bottom: 10px;
-    color: #999;
-    border-radius: 4px;
+    margin: 10px 0;
     height: 30px;
     border: none;
-    ::placeholder {
-      color: #999;
-    }
   }
 
   .customStats {

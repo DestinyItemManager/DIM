@@ -31,7 +31,6 @@ import styles from './Compare.m.scss';
 import CompareItem from './CompareItem';
 import CompareSuggestions from './CompareSuggestions';
 import { endCompareSession, removeCompareItem, updateCompareQuery } from './actions';
-import './compare.scss';
 import { CompareSession } from './reducer';
 import { compareItemsSelector, compareOrganizerLinkSelector } from './selectors';
 
@@ -87,16 +86,16 @@ export default function Compare({ session }: { session: CompareSession }) {
     if (doAssumeWeaponMasterworks) {
       items = items.map((i) => {
         const y2MasterworkSocket = i.sockets?.allSockets.find(
-          (socket) => socket.socketDefinition.socketTypeHash === weaponMasterworkY2SocketTypeHash
+          (socket) => socket.socketDefinition.socketTypeHash === weaponMasterworkY2SocketTypeHash,
         );
         const plugSet = y2MasterworkSocket?.plugSet;
         const plugged = y2MasterworkSocket?.plugged;
         if (plugSet && plugged) {
           const fullMasterworkPlug = _.maxBy(
             plugSet.plugs.filter(
-              (p) => p.plugDef.plug.plugCategoryHash === plugged.plugDef.plug.plugCategoryHash
+              (p) => p.plugDef.plug.plugCategoryHash === plugged.plugDef.plug.plugCategoryHash,
             ),
-            (plugOption) => plugOption.plugDef.investmentStats[0]?.value
+            (plugOption) => plugOption.plugDef.investmentStats[0]?.value,
           );
           if (fullMasterworkPlug) {
             return applySocketOverrides(itemCreationContext, i, {
@@ -124,19 +123,17 @@ export default function Compare({ session }: { session: CompareSession }) {
     }
   }, [cancel, hasItems]);
 
-  // TODO: make a function that takes items and perk overrides and produces new items!
-
   // Memoize computing the list of stats
   const allStats = useMemo(
     () => getAllStats(compareItems, compareBaseStats),
-    [compareItems, compareBaseStats]
+    [compareItems, compareBaseStats],
   );
 
   const updateQuery = useCallback(
     (newQuery: string) => {
       dispatch(updateCompareQuery(newQuery));
     },
-    [dispatch]
+    [dispatch],
   );
 
   const remove = useCallback(
@@ -147,7 +144,7 @@ export default function Compare({ session }: { session: CompareSession }) {
         dispatch(removeCompareItem(item));
       }
     },
-    [cancel, compareItems.length, dispatch]
+    [cancel, compareItems.length, dispatch],
   );
 
   const changeSort = (newSortedHash?: string | number) => {
@@ -170,9 +167,9 @@ export default function Compare({ session }: { session: CompareSession }) {
       sortBetterFirst,
       doCompareBaseStats,
       allStats,
-      session.initialItemId
+      session.initialItemId,
     );
-    const sortedComparisonItems = Array.from(compareItems).sort(comparator);
+    const sortedComparisonItems = compareItems.toSorted(comparator);
     return (
       <CompareItems
         items={sortedComparisonItems}
@@ -225,36 +222,35 @@ export default function Compare({ session }: { session: CompareSession }) {
 
   return (
     <Sheet onClose={cancel} header={header} allowClickThrough>
-      <div className="loadout-drawer compare">
-        <div className={styles.bucket} onPointerLeave={() => setHighlight(undefined)}>
-          <div className={clsx('compare-item', styles.fixedLeft)}>
-            <div className={styles.spacer} />
-            {allStats.map((stat) => (
-              <div
-                key={stat.id}
-                className={clsx(styles.statLabel, {
-                  [styles.sorted]: stat.id === sortedHash,
-                })}
-                onPointerEnter={() => setHighlight(stat.id)}
-                onClick={() => changeSort(stat.id)}
-              >
-                {stat.displayProperties.hasIcon && (
-                  <span title={stat.displayProperties.name}>
-                    <BungieImage src={stat.displayProperties.icon} />
-                  </span>
-                )}
-                {stat.id in statLabels
-                  ? t(statLabels[stat.id as StatHashes]!)
-                  : stat.displayProperties.name}{' '}
-                {stat.id === sortedHash && (
-                  <AppIcon icon={sortBetterFirst ? faAngleRight : faAngleLeft} />
-                )}
-                {stat.id === highlight && <div className={styles.highlightBar} />}
-              </div>
-            ))}
-          </div>
-          {items}
+      <div className={styles.bucket} onPointerLeave={() => setHighlight(undefined)}>
+        <div className={styles.statList}>
+          <div className={styles.spacer} />
+          {allStats.map((stat) => (
+            <div
+              key={stat.id}
+              className={clsx(styles.statLabel, {
+                [styles.sortDesc]: stat.id === sortedHash && sortBetterFirst,
+                [styles.sortAsc]: stat.id === sortedHash && !sortBetterFirst,
+              })}
+              onPointerEnter={() => setHighlight(stat.id)}
+              onClick={() => changeSort(stat.id)}
+            >
+              {stat.displayProperties.hasIcon && (
+                <span title={stat.displayProperties.name}>
+                  <BungieImage src={stat.displayProperties.icon} />
+                </span>
+              )}
+              {stat.id in statLabels
+                ? t(statLabels[stat.id as StatHashes]!)
+                : stat.displayProperties.name}{' '}
+              {stat.id === sortedHash && (
+                <AppIcon icon={sortBetterFirst ? faAngleRight : faAngleLeft} />
+              )}
+              {stat.id === highlight && <div className={styles.highlightBar} />}
+            </div>
+          ))}
         </div>
+        {items}
       </div>
     </Sheet>
   );
@@ -301,12 +297,12 @@ function sortCompareItemsComparator(
   sortBetterFirst: boolean,
   compareBaseStats: boolean,
   allStats: StatInfo[],
-  initialItemId?: string
+  initialItemId?: string,
 ) {
   if (!sortedHash) {
     return chainComparator(
       compareBy((item) => item.id !== initialItemId),
-      acquisitionRecencyComparator
+      acquisitionRecencyComparator,
     );
   }
 
@@ -332,8 +328,8 @@ function sortCompareItemsComparator(
         return shouldReverse ? -statValue : statValue;
       }),
       compareBy((i) => i.index),
-      compareBy((i) => i.name)
-    )
+      compareBy((i) => i.name),
+    ),
   );
 }
 
@@ -351,8 +347,8 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
       makeFakeStat(
         firstComparison.primaryStat.statHash,
         firstComparison.primaryStatDisplayProperties!,
-        (item: DimItem) => item.primaryStat || undefined
-      )
+        (item: DimItem) => item.primaryStat || undefined,
+      ),
     );
   }
 
@@ -368,8 +364,8 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
           }) ||
           undefined,
         10,
-        false
-      )
+        false,
+      ),
     );
   }
 
@@ -410,11 +406,11 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
       if (itemStat) {
         stat.min = Math.min(
           stat.min,
-          (compareBaseStats ? itemStat.base ?? itemStat.value : itemStat.value) || 0
+          (compareBaseStats ? itemStat.base ?? itemStat.value : itemStat.value) || 0,
         );
         stat.max = Math.max(
           stat.max,
-          (compareBaseStats ? itemStat.base ?? itemStat.value : itemStat.value) || 0
+          (compareBaseStats ? itemStat.base ?? itemStat.value : itemStat.value) || 0,
         );
         stat.enabled = stat.min !== stat.max;
       }
@@ -430,7 +426,7 @@ function makeFakeStat(
   getStat: StatGetter,
   statMaximumValue = 0,
   bar = false,
-  lowerBetter = false
+  lowerBetter = false,
 ): StatInfo {
   if (typeof displayProperties === 'string') {
     displayProperties = { name: displayProperties } as DestinyDisplayPropertiesDefinition;

@@ -3,11 +3,11 @@
 interface CssExports {
   'acquiredIcon': string;
   'cost': string;
+  'lockedIcon': string;
   'ownedIcon': string;
   'ownershipIcon': string;
   'tile': string;
   'unavailable': string;
-  'vendorCosts': string;
   'vendorItem': string;
 }
 export const cssExports: CssExports;

@@ -4,49 +4,32 @@ import { t } from 'app/i18next-t';
 import { DimError } from 'app/utils/dim-error';
 import BungieAlerts from 'app/whats-new/BungieAlerts';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
-import React, { useState } from 'react';
-import { AppIcon, helpIcon, mastodonIcon, refreshIcon, twitterIcon } from '../shell/icons';
+import { AppIcon, helpIcon, mastodonIcon, refreshIcon } from '../shell/icons';
 import styles from './ErrorPanel.m.scss';
+import {
+  bungieHelpAccount,
+  bungieHelpLink,
+  dimHelpMastodonLink,
+  dimMastodonAccount,
+  troubleshootingLink,
+} from './links';
 
-const bungieHelpLink = 'http://twitter.com/BungieHelp';
-const dimHelpLink = 'http://twitter.com/ThisIsDIM';
-const dimHelpMastodonLink = 'http://mstdn.games/@ThisIsDIM';
-const troubleshootingLink = 'https://github.com/DestinyItemManager/DIM/wiki/Troubleshooting';
-const Timeline = React.lazy(async () => {
-  const m = await import(/* webpackChunkName: "twitter" */ 'react-twitter-widgets');
-  return { default: m.Timeline };
-});
-const error1618LinkDirect = 'https://github.com/DestinyItemManager/DIM/wiki/BungieError-1618';
-
-function Twitters() {
-  const [error, setError] = useState(false);
-  // If the user has blocked twitter just don't show them
-  if (error) {
-    return null;
-  }
+function Socials() {
   return (
-    <div className={styles.twitters}>
-      <React.Suspense fallback={null}>
-        {['BungieHelp', 'ThisIsDIM'].map((account) => (
+    <div className={styles.socials}>
+      {['https://mastodon.social/users/bungiehelp', 'https://mstdn.games/users/ThisIsDIM'].map(
+        (account) => (
           <div key={account} className={styles.timeline}>
-            <Timeline
-              dataSource={{
-                sourceType: 'profile',
-                screenName: account,
-              }}
-              options={{
-                dnt: true,
-                theme: 'dark',
-                chrome: 'noheader nofooter noborders',
-              }}
-              renderError={() => {
-                setError(true);
-                return null;
-              }}
+            <iframe
+              allowFullScreen
+              sandbox="allow-top-navigation allow-scripts allow-popups allow-popups-to-escape-sandbox"
+              src={`https://www.mastofeed.com/apiv2/feed?userurl=${encodeURIComponent(
+                account,
+              )}&theme=dark&size=100&header=false&replies=false&boosts=true`}
             />
           </div>
-        ))}
-      </React.Suspense>
+        ),
+      )}
     </div>
   );
 }
@@ -55,15 +38,16 @@ export default function ErrorPanel({
   title,
   error,
   fallbackMessage,
-  showTwitters,
+  showSocials,
   showReload,
   frameless,
 }: {
   title?: string;
   error?: Error | DimError;
   fallbackMessage?: string;
-  showTwitters?: boolean;
+  showSocials?: boolean;
   showReload?: boolean;
+  /** Suitable for showing in a tooltip */
   frameless?: boolean;
 }) {
   const underlyingError = error instanceof DimError ? error.cause : undefined;
@@ -107,38 +91,29 @@ export default function ErrorPanel({
               : t('ErrorPanel.Description')}
           </span>
         )}
-        {underlyingError instanceof BungieError &&
-          underlyingError.code === PlatformErrorCodes.DestinyUnexpectedError && (
-            <span>
-              {' '}
-              {t('ErrorPanel.EmblemError')}{' '}
-              <ExternalLink href={error1618LinkDirect}>
-                {t('ErrorPanel.EmblemErrorLink')}
-              </ExternalLink>
-            </span>
-          )}
       </p>
-      <div className={styles.twitterLinks}>
-        {!ourFault && (
-          <ExternalLink href={bungieHelpLink} className="dim-button">
-            <AppIcon icon={twitterIcon} /> @BungieHelp
+      {frameless ? (
+        <p>{t('ErrorPanel.ReadTheGuide')}</p>
+      ) : (
+        <div className={styles.links}>
+          {!ourFault && (
+            <ExternalLink href={bungieHelpLink} className="dim-button">
+              <AppIcon icon={mastodonIcon} /> {bungieHelpAccount}
+            </ExternalLink>
+          )}
+          <ExternalLink href={dimHelpMastodonLink} className="dim-button">
+            <AppIcon icon={mastodonIcon} /> {dimMastodonAccount}
           </ExternalLink>
-        )}
-        <ExternalLink href={dimHelpLink} className="dim-button">
-          <AppIcon icon={twitterIcon} /> @ThisIsDim
-        </ExternalLink>
-        <ExternalLink href={dimHelpMastodonLink} className="dim-button">
-          <AppIcon icon={mastodonIcon} /> @ThisIsDim@mstdn.games
-        </ExternalLink>
-        <ExternalLink href={troubleshootingLink} className="dim-button">
-          <AppIcon icon={helpIcon} /> {t('ErrorPanel.Troubleshooting')}
-        </ExternalLink>
-        {showReload && (
-          <div className="dim-button" onClick={() => window.location.reload()}>
-            <AppIcon icon={refreshIcon} /> Reload
-          </div>
-        )}
-      </div>
+          <ExternalLink href={troubleshootingLink} className="dim-button">
+            <AppIcon icon={helpIcon} /> {t('ErrorPanel.Troubleshooting')}
+          </ExternalLink>
+          {showReload && (
+            <div className="dim-button" onClick={() => window.location.reload()}>
+              <AppIcon icon={refreshIcon} /> Reload
+            </div>
+          )}
+        </div>
+      )}
     </>
   );
 
@@ -149,8 +124,8 @@ export default function ErrorPanel({
   return (
     <div>
       <div className={styles.errorPanel}>{content}</div>
-      {showTwitters && <BungieAlerts />}
-      {showTwitters && <Twitters />}
+      {showSocials && <BungieAlerts />}
+      {showSocials && <Socials />}
     </div>
   );
 }

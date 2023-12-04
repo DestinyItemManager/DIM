@@ -33,7 +33,7 @@ export const suggestionsContextSelector = createSelector(
   getNotesSelector,
   allNotesHashtagsSelector,
   customStatsSelector,
-  makeSuggestionsContext
+  makeSuggestionsContext,
 );
 
 function makeSuggestionsContext(
@@ -43,7 +43,7 @@ function makeSuggestionsContext(
   getTag: (item: DimItem) => TagValue | undefined,
   getNotes: (item: DimItem) => string | undefined,
   allNotesHashtags: string[],
-  customStats: CustomStatDef[]
+  customStats: CustomStatDef[],
 ): SuggestionsContext {
   return {
     allItems,
@@ -69,7 +69,7 @@ export function generateSuggestionsForFilter(
     FilterDefinition,
     'keywords' | 'suggestions' | 'format' | 'overload' | 'deprecated' | 'suggestionsGenerator'
   >,
-  suggestionsContext: SuggestionsContext = {}
+  suggestionsContext: SuggestionsContext = {},
 ) {
   return generateGroupedSuggestionsForFilter(filterDefinition, false, suggestionsContext).flatMap(
     ({ keyword, ops }) => {
@@ -78,7 +78,7 @@ export function generateSuggestionsForFilter(
       } else {
         return [keyword];
       }
-    }
+    },
   );
 }
 
@@ -88,7 +88,7 @@ export function generateGroupedSuggestionsForFilter(
     'keywords' | 'suggestions' | 'format' | 'overload' | 'deprecated' | 'suggestionsGenerator'
   >,
   forHelp?: boolean,
-  suggestionsContext: SuggestionsContext = {}
+  suggestionsContext: SuggestionsContext = {},
 ): { keyword: string; ops?: string[] }[] {
   if (filterDefinition.deprecated) {
     return [];
@@ -125,13 +125,13 @@ export function generateGroupedSuggestionsForFilter(
       case 'simple':
         // Pass minDepth 1 to not generate "is:" and "not:" suggestions. Only generate `is:` for filters help
         allSuggestions.push(
-          ...expandFlat([forHelp ? ['is'] : ['is', 'not'], thisFilterKeywords], 1)
+          ...expandFlat([forHelp ? ['is'] : ['is', 'not'], thisFilterKeywords], 1),
         );
         break;
       case 'query':
         // `query` is exhaustive, so only include keyword: for autocompletion, not filters help
         allSuggestions.push(
-          ...expandFlat([thisFilterKeywords, filterSuggestions], forHelp ? 1 : 0)
+          ...expandFlat([thisFilterKeywords, filterSuggestions], forHelp ? 1 : 0),
         );
         break;
       case 'freeform':
@@ -150,11 +150,11 @@ export function generateGroupedSuggestionsForFilter(
                 [
                   thisFilterKeywords,
                   operators.flatMap((op) =>
-                    overloadNames.map((overloadName) => `${op}${overloadName}`)
+                    overloadNames.map((overloadName) => `${op}${overloadName}`),
                   ),
                 ],
-                1
-              )
+                1,
+              ),
             );
           }
         }
@@ -193,14 +193,14 @@ function expandStringCombinations(stringGroups: string[][]) {
   const results: string[][] = [];
   for (let i = 0; i < stringGroups.length; i++) {
     const stringGroup = stringGroups[i];
-    const stems = results.length ? results[results.length - 1] : undefined;
+    const stems = results.length ? results.at(-1)! : undefined;
     const newResults = stringGroup.flatMap((suffix) =>
       stems
         ? stems.map(
             (stem) =>
-              (stem ? `${stem}${suffix}` : suffix) + (i === stringGroups.length - 1 ? '' : ':')
+              (stem ? `${stem}${suffix}` : suffix) + (i === stringGroups.length - 1 ? '' : ':'),
           )
-        : [`${suffix}:`]
+        : [`${suffix}:`],
     );
     results.push(newResults);
   }

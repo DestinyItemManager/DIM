@@ -5,7 +5,10 @@ export class Store {
   private readonly _storeName: string;
   private _dbp: Promise<IDBDatabase> | undefined;
 
-  constructor(dbName = 'keyval-store', readonly storeName = 'keyval') {
+  constructor(
+    dbName = 'keyval-store',
+    readonly storeName = 'keyval',
+  ) {
     this._dbName = dbName;
     this._storeName = storeName;
   }
@@ -34,7 +37,7 @@ export class Store {
 
   _withIDBStore(
     type: IDBTransactionMode,
-    callback: (store: IDBObjectStore) => void
+    callback: (store: IDBObjectStore) => void,
   ): Promise<void> {
     this._init();
     return this._dbp!.then(
@@ -42,9 +45,10 @@ export class Store {
         new Promise<void>((resolve, reject) => {
           const transaction = db.transaction(this.storeName, type);
           transaction.oncomplete = () => resolve();
-          transaction.onabort = transaction.onerror = () => reject(transaction.error);
+          transaction.onerror = (e) => reject((e.target as IDBTransaction).error);
+          transaction.onabort = () => reject(transaction.error);
           callback(transaction.objectStore(this.storeName));
-        })
+        }),
     );
   }
 
@@ -76,10 +80,10 @@ function getDefaultStore() {
 }
 
 export function get<Type>(key: IDBValidKey, store = getDefaultStore()): Promise<Type> {
-  let req: IDBRequest;
+  let req: IDBRequest<Type>;
   return store
     ._withIDBStore('readonly', (store) => {
-      req = store.get(key);
+      req = store.get(key) as IDBRequest<Type>;
     })
     .then(() => req.result);
 }

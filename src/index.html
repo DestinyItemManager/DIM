@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="">
   <!-- DIM v<%= version %>, built <%= date %> -->
 
@@ -6,29 +6,37 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>DIM</title>
-    <meta name="description" content="" />
+    <meta
+      name="description"
+      content="Swap items, check stats, and build the loadout to Become Legend with Destiny Item Manager."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Destiny Item Manager" />
+    <meta property="og:image" content="https://destinyitemmanager.com/images/inventory.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
     />
-    <meta name="twitter:widgets:csp" content="on" />
-
     <link href="https://fonts.googleapis.com" rel="preconnect" crossorigin />
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
     <link href="https://www.bungie.net" rel="preconnect" crossorigin />
     <link href="https://api.destinyitemmanager.com" rel="preconnect" crossorigin />
 
     <link
-      href="https://fonts.googleapis.com/css?family=Open+Sans:200,400,700"
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@200;400;700&display=swap"
       rel="stylesheet"
       type="text/css"
     />
 
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-6-2018.png" />
-    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32" />
-    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16" />
-    <link rel="manifest" href="/manifest-webapp.json" />
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#434444" />
-    <meta name="theme-color" content="black" />
+    <link rel="apple-touch-icon" sizes="180x180" href="<%= publicPath %>apple-touch-icon-6-2018.png" />
+    <link rel="icon" type="image/png" href="<%= publicPath %>favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="<%= publicPath %>favicon-16x16.png" sizes="16x16" />
+    <link rel="shortcut icon" href="<%= publicPath %>favicon.ico">
+    <link rel="manifest" href="<%= publicPath %>manifest-webapp.json" />
+    <link rel="mask-icon" href="<%= publicPath %>safari-pinned-tab.svg" color="#434444" />
+    <meta name="theme-color" content="#202034" />
     <meta name="color-scheme" content="dark" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -38,7 +46,7 @@
     <link
       rel="apple-touch-startup-image"
       media="screen and (device-width: <%= dw %>px) and (device-height: <%= dh %>px) and (-webkit-device-pixel-ratio: <%= dpr %>) and (orientation: <%= or %>)"
-      href="/splash/splash-<%= w %>x<%= h %>.png"
+      href="<%= publicPath %>splash/splash-<%= w %>x<%= h %>.png"
     />
     <% }) %>
     <style>
@@ -68,8 +76,12 @@
         }
       }
     </style>
+    <%= htmlWebpackPlugin.files.js
+    .sort((a,b)=>a.includes("earlyErrorReport")?-1:b.includes("earlyErrorReport")?1:0)
+    .map((p)=>`<script${p.includes("earlyErrorReport")?"":" defer"} src="${p}"></script>`).join("\n    ") %>
+    <%= htmlWebpackPlugin.files.css
+    .map((p)=>`<link href="${p}" rel="stylesheet">`).join("\n    ") %>
   </head>
-
   <body>
     <div id="app">
       <div class="notloaded">
@@ -80,6 +92,7 @@
           >
           to find a solution, and contact us if those steps don't work.
         </p>
+        <pre id="errorreport"></pre>
       </div>
     </div>
     <div id="temp-container"></div>

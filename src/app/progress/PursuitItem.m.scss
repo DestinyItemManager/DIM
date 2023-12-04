@@ -4,7 +4,9 @@
   position: relative;
   width: var(--item-size);
   height: var(--item-size);
-  transition: opacity 0.2s, transform 0.2s;
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
   box-sizing: border-box;
   cursor: pointer;
 

@@ -1,4 +1,4 @@
-@import '../variables';
+@use '../variables' as *;
 
 // stacking rules
 
@@ -20,7 +20,7 @@ $content-cells: 5;
   > div {
     padding: 4px 8px;
     padding-top: calc(var(--item-size) * 0.75 * 0.5 - 4px);
-    background-color: #27263a;
+    background-color: var(--theme-organizer-row-odd-bg);
   }
 }
 
@@ -160,6 +160,10 @@ $content-cells: 5;
   > :global(.item) {
     --item-size: var(--icon-item-size) !important;
     height: var(--item-size);
+    &:hover {
+      outline: 1px solid var(--theme-item-polaroid-hover-border);
+      cursor: pointer;
+    }
   }
 }
 
@@ -197,7 +201,8 @@ $content-cells: 5;
 
 .modPerks {
   break-inside: avoid;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 4px;
   padding-left: 5px;
 }
@@ -232,6 +237,10 @@ $content-cells: 5;
   margin-right: 3px;
   margin-left: -1px;
   flex-shrink: 0;
+  > img {
+    height: var(--item-size);
+    width: var(--item-size);
+  }
 }
 .perkSelected {
   font-weight: bold;
@@ -298,7 +307,7 @@ $modslotSize: 30px;
 .shiftHeld {
   .hasFilter {
     &:hover {
-      background-color: #999 !important;
+      background-color: var(--theme-accent-primary) !important;
       cursor: pointer;
     }
   }
@@ -308,10 +317,6 @@ $modslotSize: 30px;
   text-align: center;
   grid-column: 1 / -1;
   padding: 2em !important;
-}
-
-.itemIcon {
-  cursor: pointer;
 }
 
 // The numeric value of the stat

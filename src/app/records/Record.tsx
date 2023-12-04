@@ -29,13 +29,6 @@ import Objective from '../progress/Objective';
 import styles from './Record.m.scss';
 import { DimRecord } from './presentation-nodes';
 
-interface Props {
-  record: DimRecord;
-  completedRecordsHidden: boolean;
-  redactedRecordsRevealed: boolean;
-  hideRecordIcon?: boolean;
-}
-
 interface RecordInterval {
   objective: DestinyObjectiveProgress;
   score: number;
@@ -46,12 +39,13 @@ interface RecordInterval {
 
 const catalystIconsTable = catalystIcons as HashLookup<string>;
 
-export default function Record({
+function Record({
   record,
-  completedRecordsHidden,
   redactedRecordsRevealed,
-  hideRecordIcon,
-}: Props) {
+}: {
+  record: DimRecord;
+  redactedRecordsRevealed: boolean;
+}) {
   const defs = useD2Definitions()!;
   const { recordDef, trackedInGame, recordComponent } = record;
   const state = recordComponent.state;
@@ -66,7 +60,7 @@ export default function Record({
     !acquired &&
     Boolean(state & DestinyRecordState.Obscured);
   const trackedInDim = useSelector((state: RootState) =>
-    trackedTriumphsSelector(state).includes(recordHash)
+    trackedTriumphsSelector(state).includes(recordHash),
   );
   const loreLink =
     !obscured &&
@@ -85,10 +79,6 @@ export default function Record({
     recordHash in catalystIconsTable
       ? catalystIconsTable[recordHash]
       : recordDef.displayProperties.icon;
-
-  if (completedRecordsHidden && acquired) {
-    return null;
-  }
 
   const intervals = getIntervals(recordDef, recordComponent);
   const intervalBarStyle = {
@@ -130,7 +120,7 @@ export default function Record({
   if (intervals.length > 1) {
     const currentScore = _.sumBy(
       _.take(intervals, recordComponent.intervalsRedeemedCount),
-      (i) => i.score
+      (i) => i.score,
     );
     const totalScore = _.sumBy(intervals, (i) => i.score);
     scoreValue = (
@@ -160,7 +150,7 @@ export default function Record({
         !isBooleanObjective(
           defs.Objective.get(objectives[0].objectiveHash),
           objectives[0].progress ?? 0,
-          objectives[0].completionValue
+          objectives[0].completionValue,
         )));
 
   // TODO: show track badge greyed out / on hover
@@ -183,7 +173,7 @@ export default function Record({
       })}
     >
       {recordShouldGlow && <div className={styles.glow} />}
-      {!hideRecordIcon && recordIcon && <BungieImage className={styles.icon} src={recordIcon} />}
+      {recordIcon && <BungieImage className={styles.icon} src={recordIcon} />}
       <div className={styles.info}>
         {!obscured && recordDef.completionInfo && <div className={styles.score}>{scoreValue}</div>}
         <h3>{name}</h3>
@@ -228,7 +218,7 @@ export default function Record({
 
 function getIntervals(
   definition: DestinyRecordDefinition,
-  record: DestinyRecordComponent
+  record: DestinyRecordComponent,
 ): RecordInterval[] {
   const intervalDefinitions = definition?.intervalInfo?.intervalObjectives || [];
   const intervalObjectives = record?.intervalObjectives || [];
@@ -254,7 +244,7 @@ function getIntervals(
           : Math.max(
               0,
               ((data.progress || 0) - prevIntervalProgress) /
-                (data.completionValue - prevIntervalProgress)
+                (data.completionValue - prevIntervalProgress),
             )
         : 0,
       isRedeemed: record.intervalsRedeemedCount >= i + 1,
@@ -265,4 +255,34 @@ function getIntervals(
     prevIntervalProgress = data.completionValue;
   }
   return intervals;
+}
+
+/** A grid of records as seen in triumph presentation nodes or Tracked Triumphs. */
+export function RecordGrid({
+  records,
+  redactedRecordsRevealed,
+}: {
+  records: DimRecord[];
+  redactedRecordsRevealed: boolean;
+}) {
+  // TODO: was there really a problem with duplicate records?
+  const seenRecords = new Set<number>();
+
+  return (
+    <div className={styles.recordsGrid}>
+      {records.map((record) => {
+        if (seenRecords.has(record.recordDef.hash)) {
+          return null;
+        }
+        seenRecords.add(record.recordDef.hash);
+        return (
+          <Record
+            key={record.recordDef.hash}
+            record={record}
+            redactedRecordsRevealed={redactedRecordsRevealed}
+          />
+        );
+      })}
+    </div>
+  );
 }

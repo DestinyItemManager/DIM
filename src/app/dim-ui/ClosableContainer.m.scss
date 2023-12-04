@@ -1,4 +1,4 @@
-@import '../variables';
+@use '../variables' as *;
 
 .container {
   position: relative;
@@ -15,11 +15,10 @@
   right: 2px;
   background-image: url('images/close.png');
   background-color: rgba(100, 100, 100, 0.8);
-  &:hover {
-    background-color: $orange;
-  }
-  &:focus {
-    outline: 1px solid $blue;
+  &:hover,
+  &:focus-visible {
+    background-color: var(--theme-accent-primary);
+    outline: none;
   }
 }
 

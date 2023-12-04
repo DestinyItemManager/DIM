@@ -15,18 +15,20 @@ export interface VendorsState {
       error?: Error;
     };
   };
+  showUnacquiredOnly: boolean;
 }
 
 export type VendorsAction = ActionType<typeof actions>;
 
 const initialState: VendorsState = {
   vendorsByCharacter: {},
+  showUnacquiredOnly: false,
 };
 
 export const vendors: Reducer<VendorsState, VendorsAction | AccountsAction> = (
   state: VendorsState = initialState,
-  action: VendorsAction | AccountsAction
-) => {
+  action: VendorsAction | AccountsAction,
+): VendorsState => {
   switch (action.type) {
     case getType(actions.loadedAll): {
       const { characterId, vendorsResponse } = action.payload;
@@ -55,6 +57,10 @@ export const vendors: Reducer<VendorsState, VendorsAction | AccountsAction> = (
           },
         },
       };
+    }
+
+    case getType(actions.setShowUnacquiredOnly): {
+      return { ...state, showUnacquiredOnly: action.payload };
     }
 
     case getType(setCurrentAccount):

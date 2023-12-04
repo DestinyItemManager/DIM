@@ -16,7 +16,7 @@ export const addItem$ = new EventBus<DimItem>();
 export function editLoadout(
   loadout: Loadout,
   storeId: string,
-  { showClass = true, isNew = true }: { showClass?: boolean; isNew?: boolean } = {}
+  { showClass = true, isNew = true }: { showClass?: boolean; isNew?: boolean } = {},
 ) {
   editLoadout$.next({
     storeId,

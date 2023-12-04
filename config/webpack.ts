@@ -17,6 +17,7 @@ import marked from 'marked';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import svgToMiniDataURI from 'mini-svg-data-uri';
 import path from 'path';
+import PostCSSAssetsPlugin from 'postcss-assets-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
 import 'webpack-dev-server';
 import WebpackNotifierPlugin from 'webpack-notifier';
@@ -26,12 +27,15 @@ import csp from './content-security-policy';
 import { makeFeatureFlags } from './feature-flags';
 const renderer = new marked.Renderer();
 
+import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
+
 import { StatsWriterPlugin } from 'webpack-stats-plugin';
 import NotifyPlugin from './notify-webpack-plugin';
 
 const ASSET_NAME_PATTERN = 'static/[name]-[contenthash:6][ext]';
 
 import packageJson from '../package.json';
+import createWebAppManifest from './manifest-webapp';
 
 import splash from '../icons/splash.json';
 
@@ -42,7 +46,8 @@ interface Env extends EnvValues {
   release: boolean;
   beta: boolean;
   dev: boolean;
-  name: 'release' | 'beta' | 'dev';
+  pr: boolean;
+  name: 'release' | 'beta' | 'dev' | 'pr';
 }
 type Argv = Record<string, CLIValues>;
 export interface WebpackConfigurationGenerator {
@@ -50,20 +55,20 @@ export interface WebpackConfigurationGenerator {
 }
 
 export default (env: Env) => {
-  if (env.dev && env.WEBPACK_SERVE && (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem'))) {
-    console.log('Generating certificate');
-    execSync('mkcert create-ca --validity 825');
-    execSync('mkcert create-cert --validity 825 --key key.pem --cert cert.pem');
-  }
-
   env.name = Object.keys(env)[0] as Env['name'];
-  (['release', 'beta', 'dev'] as const).forEach((e) => {
+  (['release', 'beta', 'dev', 'pr'] as const).forEach((e) => {
     // set booleans based on env
     env[e] = Boolean(env[e]);
     if (env[e]) {
       env.name = e;
     }
   });
+
+  if (env.dev && env.WEBPACK_SERVE && (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem'))) {
+    console.log('Generating certificate');
+    execSync('mkcert create-ca --validity 825');
+    execSync('mkcert create-cert --validity 825 --key key.pem --cert cert.pem');
+  }
 
   let version = env.dev ? packageJson.version.toString() : process.env.VERSION;
 
@@ -72,8 +77,14 @@ export default (env: Env) => {
   }
 
   const buildTime = Date.now();
+  const publicPath = process.env.PUBLIC_PATH ?? '/';
 
-  const contentSecurityPolicy = csp(env.name);
+  const featureFlags = makeFeatureFlags(env);
+  const contentSecurityPolicy = csp(env.name, featureFlags, version);
+
+  const analyticsProperty = env.release ? 'G-1PW23SGMHN' : 'G-MYWW38Z3LR';
+  const jsFilenamePattern = env.dev ? '[name]-[fullhash].js' : '[name]-[contenthash:8].js';
+  const cssFilenamePattern = env.dev ? '[name]-[fullhash].css' : '[name]-[contenthash:8].css';
 
   const config: webpack.Configuration = {
     mode: env.dev ? ('development' as const) : ('production' as const),
@@ -81,6 +92,7 @@ export default (env: Env) => {
     entry: {
       main: './src/Index.tsx',
       browsercheck: './src/browsercheck.js',
+      earlyErrorReport: './src/earlyErrorReport.js',
       authReturn: './src/authReturn.ts',
     },
 
@@ -89,9 +101,9 @@ export default (env: Env) => {
 
     output: {
       path: path.resolve('./dist'),
-      publicPath: '/',
-      filename: env.dev ? '[name]-[fullhash].js' : '[name]-[contenthash:8].js',
-      chunkFilename: env.dev ? '[name]-[fullhash].js' : '[name]-[contenthash:8].js',
+      publicPath,
+      filename: jsFilenamePattern,
+      chunkFilename: jsFilenamePattern,
       assetModuleFilename: ASSET_NAME_PATTERN,
       hashFunction: 'xxhash64',
     },
@@ -119,7 +131,7 @@ export default (env: Env) => {
           liveReload: false,
           headers: (req) => {
             // This mirrors what's in .htaccess - headers for html paths, COEP for JS.
-            return req.baseUrl.match(/^[^.]+$/)
+            const headers: Record<string, string | string[]> = req.baseUrl.match(/^[^.]+$/)
               ? {
                   'Content-Security-Policy': contentSecurityPolicy,
                   // credentialless is only supported by chrome but require-corp blocks Bungie.net messages
@@ -133,6 +145,8 @@ export default (env: Env) => {
                   //'Cross-Origin-Embedder-Policy': 'require-corp',
                 }
               : {};
+
+            return headers;
           },
         }
       : undefined,
@@ -156,7 +170,7 @@ export default (env: Env) => {
       runtimeChunk: 'single',
       splitChunks: {
         chunks(chunk) {
-          return chunk.name !== 'browsercheck';
+          return chunk.name !== 'browsercheck' && chunk.name !== 'earlyErrorReport';
         },
         automaticNameDelimiter: '-',
       },
@@ -166,9 +180,16 @@ export default (env: Env) => {
           terserOptions: {
             ecma: 2020,
             module: true,
-            compress: { passes: 3, toplevel: true },
-            mangle: { safari10: true, toplevel: true },
-            output: { safari10: true },
+            compress: {
+              passes: 3,
+              toplevel: true,
+              unsafe: true,
+              unsafe_math: true,
+              unsafe_proto: true,
+              pure_getters: true,
+              pure_funcs: ['JSON.parse', 'Object.values', 'Object.keys'],
+            },
+            mangle: { toplevel: true },
           },
         }),
       ],
@@ -235,13 +256,11 @@ export default (env: Env) => {
               loader: 'css-loader',
               options: {
                 modules: {
-                  localIdentName:
-                    env.dev || env.beta
-                      ? '[name]_[local]-[contenthash:base64:8]'
-                      : '[contenthash:base64:8]',
+                  localIdentName: !env.release
+                    ? '[name]_[local]-[contenthash:base64:8]'
+                    : '[contenthash:base64:8]',
                   exportLocalsConvention: 'camelCaseOnly',
                 },
-                sourceMap: true,
                 importLoaders: 2,
               },
             },
@@ -255,19 +274,18 @@ export default (env: Env) => {
           exclude: /\.m\.scss$/,
           use: [
             env.dev ? 'style-loader' : MiniCssExtractPlugin.loader,
-            {
-              loader: 'css-loader',
-              options: {
-                sourceMap: true,
-              },
-            },
+            'css-loader',
             'postcss-loader',
             { loader: 'sass-loader', options: { sassOptions: { quietDeps: true } } },
           ],
         },
         {
           test: /\.css$/,
-          use: [env.dev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader'],
+          use: [
+            env.dev ? 'style-loader' : MiniCssExtractPlugin.loader,
+            'css-loader',
+            'postcss-loader',
+          ],
         },
         // All files with a '.ts' or '.tsx' extension will be handled by 'babel-loader'.
         {
@@ -295,7 +313,7 @@ export default (env: Env) => {
         },
         {
           test: /\.json/,
-          include: /src(\/|\\)locale/,
+          include: /(src(\/|\\)locale)|(i18n\.json)/,
           type: 'asset/resource',
           generator: {
             filename: '[name]-[contenthash:8][ext]',
@@ -324,13 +342,6 @@ export default (env: Env) => {
             },
           ],
         },
-        // https://github.com/pmndrs/react-spring/issues/2097, remove after react-spring is gone
-        {
-          test: /react-spring/i,
-          resolve: {
-            fullySpecified: false,
-          },
-        },
       ],
 
       noParse: /manifests/,
@@ -339,15 +350,11 @@ export default (env: Env) => {
     resolve: {
       extensions: ['.js', '.json', '.ts', '.tsx', '.jsx'],
 
+      plugins: [new TsconfigPathsPlugin()],
+
       alias: {
-        app: path.resolve('./src/app/'),
-        data: path.resolve('./src/data/'),
-        images: path.resolve('./src/images/'),
-        locale: path.resolve('./src/locale/'),
-        testing: path.resolve('./src/testing/'),
-        docs: path.resolve('./docs/'),
-        'destiny-icons': path.resolve('./destiny-icons/'),
         'textarea-caret': path.resolve('./src/app/utils/textarea-caret'),
+        lodash: 'lodash-es',
       },
 
       fallback: {
@@ -366,19 +373,44 @@ export default (env: Env) => {
     new NotifyPlugin('DIM', !env.dev),
 
     new MiniCssExtractPlugin({
-      filename: env.dev ? '[name]-[contenthash].css' : '[name]-[contenthash:8].css',
-      chunkFilename: env.dev ? '[name]-[contenthash].css' : '[id]-[contenthash:8].css',
+      filename: cssFilenamePattern,
+      chunkFilename: cssFilenamePattern,
     }),
 
+    // Compress CSS after bundling so we can optimize across rules
+    new PostCSSAssetsPlugin({
+      test: /\.css$/,
+      log: false,
+      plugins: [
+        // Sort media queries so they can be merged by cssnano
+        require('postcss-sort-media-queries')({
+          sort: 'desktop-first',
+        }),
+        require('cssnano')({
+          preset: [
+            'default',
+            {
+              autoprefixer: false,
+              // We've already run svgo on all images
+              svgo: false,
+            },
+          ],
+        }),
+      ],
+    }),
+
+    // TODO: prerender?
     new HtmlWebpackPlugin({
-      inject: true,
+      inject: false,
       filename: 'index.html',
       template: 'src/index.html',
-      chunks: ['main', 'browsercheck'],
+      chunks: ['earlyErrorReport', 'main', 'browsercheck'],
       templateParameters: {
         version,
         date: new Date(buildTime).toString(),
         splash,
+        analyticsProperty,
+        publicPath,
       },
       minify: env.dev
         ? false
@@ -413,6 +445,7 @@ export default (env: Env) => {
       inject: false,
       minify: false,
       templateParameters: {
+        publicPath: publicPath.replace('/', ''),
         csp: contentSecurityPolicy,
       },
     }),
@@ -423,14 +456,19 @@ export default (env: Env) => {
       buildTime,
     }),
 
+    // The web app manifest controls how our app looks when installed.
+    new GenerateJsonPlugin('./manifest-webapp.json', createWebAppManifest(publicPath)),
+
     new CopyWebpackPlugin({
       patterns: [
-        { from: './src/manifest-webapp.json' },
         // Only copy the manifests out of the data folder. Everything else we import directly into the bundle.
         { from: './src/data/d1/manifests', to: 'data/d1/manifests' },
         { from: `./icons/${env.name}/` },
         { from: `./icons/splash`, to: 'splash/' },
+        { from: `./icons/screenshots`, to: 'screenshots/' },
         { from: './src/safari-pinned-tab.svg' },
+        { from: './src/nuke.php' },
+        { from: './src/robots.txt' },
       ],
     }),
 
@@ -443,15 +481,17 @@ export default (env: Env) => {
       $DIM_WEB_CLIENT_ID: JSON.stringify(process.env.WEB_OAUTH_CLIENT_ID),
       $DIM_WEB_CLIENT_SECRET: JSON.stringify(process.env.WEB_OAUTH_CLIENT_SECRET),
       $DIM_API_KEY: JSON.stringify(process.env.DIM_API_KEY),
+      $ANALYTICS_PROPERTY: JSON.stringify(analyticsProperty),
+      $PUBLIC_PATH: JSON.stringify(publicPath),
 
       $BROWSERS: JSON.stringify(browserslist(packageJson.browserslist)),
 
       // Feature flags!
       ...Object.fromEntries(
-        Object.entries(makeFeatureFlags(env)).map(([key, value]) => [
+        Object.entries(featureFlags).map(([key, value]) => [
           `$featureFlags.${key}`,
           JSON.stringify(value),
-        ])
+        ]),
       ),
     }),
 
@@ -467,8 +507,8 @@ export default (env: Env) => {
     // In dev we use babel to compile TS, and fork off a separate typechecker
     plugins.push(
       new ForkTsCheckerWebpackPlugin({
-        eslint: { files: './src/**/*.{ts,tsx,js,jsx}' },
-      })
+        eslint: { files: './src/**/*.{ts,tsx,cjs,mjs,cts,mts,js,jsx}' },
+      }),
     );
 
     if (process.env.SNORETOAST_DISABLE) {
@@ -480,13 +520,13 @@ export default (env: Env) => {
           excludeWarnings: false,
           alwaysNotify: true,
           contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png'),
-        })
+        }),
       );
       plugins.push(
         new ForkTsCheckerNotifierWebpackPlugin({
           title: 'DIM TypeScript',
           excludeWarnings: false,
-        })
+        }),
       );
     }
 
@@ -505,6 +545,7 @@ export default (env: Env) => {
             /data\/d1\/manifests\/d1-manifest-..(-br)?.json(.br|.gz)?/,
             /^(?!en).+.json/,
             /webpack-stats.json/,
+            /screenshots\//,
           ],
         },
       }),
@@ -538,17 +579,16 @@ export default (env: Env) => {
         include: [/\.(html|js|css|woff2|json|wasm)$/, /static\/(?!fa-).*\.(png|gif|jpg|svg)$/],
         exclude: [
           /version\.json/,
-          /extension-dist/,
-          /\.map$/,
           // Ignore both the webapp manifest and the d1-manifest files
           /data\/d1\/manifests/,
           /manifest-webapp/,
           // Android and iOS manifest
           /\.well-known/,
+          /screenshots\//,
         ],
         swSrc: './src/service-worker.ts',
         swDest: 'service-worker.js',
-      })
+      }),
     );
 
     // Skip brotli compression for PR builds
@@ -565,7 +605,7 @@ export default (env: Env) => {
             [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
           },
           minRatio: Infinity,
-        })
+        }),
       );
     }
   }

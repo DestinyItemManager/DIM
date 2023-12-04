@@ -10,7 +10,7 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useSetCSSVarToHeight } from 'app/utils/hooks';
 import { isD1Item } from 'app/utils/item-utils';
 import clsx from 'clsx';
-import _ from 'lodash';
+import { noop } from 'lodash';
 import { memo, useCallback, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
@@ -67,7 +67,7 @@ export default memo(function CompareItem({
           )}
           {item.lockable ? <LockActionButton item={item} noHotkey /> : <div />}
           {item.taggable ? <TagActionButton item={item} label={false} hideKeys={true} /> : <div />}
-          <div className={styles.close} onClick={() => remove(item)} role="button" tabIndex={0} />
+          <button type="button" className={styles.close} onClick={() => remove(item)} />
         </div>
         <div
           className={clsx(styles.itemName, {
@@ -82,7 +82,7 @@ export default memo(function CompareItem({
         <ItemPopupTrigger item={item} noCompare={true}>
           {(ref, onClick) => (
             <div className={styles.itemAside} ref={ref} onClick={onClick}>
-              <PressTip minimal className={styles.itemAside} tooltip={itemNotes}>
+              <PressTip minimal tooltip={itemNotes}>
                 <ConnectedInventoryItem item={item} />
               </PressTip>
             </div>
@@ -90,11 +90,11 @@ export default memo(function CompareItem({
         </ItemPopupTrigger>
       </div>
     ),
-    [isInitialItem, item, itemClick, pullItem, remove, itemNotes, isFindable]
+    [isInitialItem, item, itemClick, pullItem, remove, itemNotes, isFindable],
   );
 
   return (
-    <div className="compare-item">
+    <div className={styles.compareItem}>
       {itemHeader}
       {stats.map((stat) => (
         <CompareStat
@@ -109,7 +109,7 @@ export default memo(function CompareItem({
       {item.missingSockets && isInitialItem && (
         <div className="item-details warning">{t('MovePopup.MissingSockets')}</div>
       )}
-      {item.sockets && <ItemSockets item={item} minimal={true} onPlugClicked={onPlugClicked} />}
+      {item.sockets && <ItemSockets item={item} minimal onPlugClicked={onPlugClicked} />}
     </div>
   );
 });
@@ -130,7 +130,7 @@ function VendorItemWarning({ item }: { item: DimItem }) {
         );
       }}
     >
-      <ActionButton onClick={_.noop} disabled>
+      <ActionButton onClick={noop} disabled>
         <AppIcon icon={shoppingCart} />
       </ActionButton>
     </PressTip>

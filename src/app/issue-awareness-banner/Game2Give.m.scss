@@ -1,0 +1,85 @@
+@import '../variables.scss';
+
+.issueAwarenessBanner {
+  width: 573px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+  transition: opacity 0.5s ease-in-out;
+  margin-top: 16px;
+}
+
+.item {
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: row;
+}
+
+.hero {
+  display: block;
+  width: 45%;
+  object-fit: contain;
+  padding: 0.25rem;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: flex-start;
+  padding: 0.25rem;
+  flex-grow: 1;
+}
+
+.cta {
+  margin: 0;
+  text-align: center;
+  flex-grow: 1;
+}
+
+.buttons {
+  display: flex;
+  padding: 0.25rem 0;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.thermo {
+  background-color: dimgrey;
+  display: flex;
+}
+
+.track {
+  width: unset;
+  flex-grow: 1;
+}
+
+.mercury {
+  width: unset;
+  background-color: #e8a534;
+  padding: 0.125rem 0.25rem;
+  word-wrap: normal;
+  background-image: linear-gradient(
+      -45deg,
+      transparent 33%,
+      rgba(0, 0, 0, 0.1) 33%,
+      rgba(0, 0, 0, 0.1) 66%,
+      transparent 66%
+    ),
+    linear-gradient(to top, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0.25)),
+    linear-gradient(to left, #ac7b28, #e8a534);
+  border-radius: 2px;
+  background-size:
+    35px 100%,
+    100% 100%,
+    100% 100%;
+}
+
+.goal {
+  flex-shrink: 0;
+  width: unset;
+  padding: 0.125rem 0.25rem;
+  background: darkslategrey;
+}

@@ -15,6 +15,7 @@ export const showItemPopup$ = new Observable<
 // Extra optional info for Vendors/Collectibles.
 export interface ItemPopupExtraInfo {
   failureStrings?: string[];
+  characterId?: string;
   owned?: boolean;
   acquired?: boolean;
   mod?: boolean;
@@ -28,7 +29,7 @@ export interface ItemPopupExtraInfo {
 export function showItemPopup(
   item: DimItem,
   element?: HTMLElement,
-  extraInfo?: ItemPopupExtraInfo
+  extraInfo?: ItemPopupExtraInfo,
 ) {
   if (showItemPopup$.getCurrentValue()?.item === item) {
     hideItemPopup();

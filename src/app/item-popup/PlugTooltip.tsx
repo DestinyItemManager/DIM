@@ -4,45 +4,31 @@ import { EnergyCostIcon } from 'app/dim-ui/ElementIcon';
 import { Tooltip, useTooltipCustomization } from 'app/dim-ui/PressTip';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
-import { resonantElementObjectiveHashes } from 'app/inventory/store/deepsight';
+import { getValueStyle } from 'app/inventory/store/objectives';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { getDamageTypeForSubclassPlug } from 'app/inventory/subclass';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
-import { thumbsUpIcon } from 'app/shell/icons';
-import AppIcon from 'app/shell/icons/AppIcon';
 import { getDimPlugStats, getPlugDefStats, usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { isEnhancedPerk, isModCostVisible } from 'app/utils/socket-utils';
+import WishListPerkThumb from 'app/wishlists/WishListPerkThumb';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import {
   DamageType,
   DestinyClass,
   DestinyObjectiveProgress,
   DestinyPlugItemCraftingRequirements,
+  DestinyUnlockValueUIStyle,
   TierType,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
+import { TraitHashes } from 'data/d2/generated-enums';
 import { useCallback } from 'react';
 import { DimItem, DimPlug, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import Objective from '../progress/Objective';
 import './ItemSockets.scss';
 import styles from './PlugTooltip.m.scss';
 
-interface PlugTooltipProps {
-  def: PluggableInventoryItemDefinition;
-  stats?: { statHash: number; value: number }[];
-  plugObjectives?: DestinyObjectiveProgress[];
-  enableFailReasons?: string;
-  cannotCurrentlyRoll?: boolean;
-  unreliablePerkOption?: boolean;
-  wishListTip?: string;
-  automaticallyPicked?: boolean;
-  hideRequirements?: boolean;
-  craftingData?: DestinyPlugItemCraftingRequirements;
-}
-
-// TODO: Connect this to redux
 export function DimPlugTooltip({
   item,
   plug,
@@ -56,16 +42,16 @@ export function DimPlugTooltip({
 }) {
   // TODO: show insertion costs
 
-  const wishListTip = wishlistRoll?.wishListPerks.has(plug.plugDef.hash)
-    ? t('WishListRoll.BestRatedTip', { count: wishlistRoll.wishListPerks.size })
-    : undefined;
+  const wishListTip = wishlistRoll?.wishListPerks.has(plug.plugDef.hash) ? (
+    <WishListPerkThumb wishListRoll={wishlistRoll} legend />
+  ) : undefined;
 
   const stats = getDimPlugStats(item, plug);
 
   // Only show Exotic catalyst requirements if the catalyst is incomplete. We assume
   // that an Exotic weapon can only be masterworked if its catalyst is complete.
   const hideRequirements =
-    plug.plugDef.traitHashes?.includes(EXOTIC_CATALYST_TRAIT) && item.masterwork;
+    plug.plugDef.traitHashes?.includes(TraitHashes.ItemExoticCatalyst) && item.masterwork;
 
   // The PlugTooltip does all the rendering and layout, we just process information here.
   return (
@@ -90,13 +76,22 @@ export function PlugDefTooltip({
   def,
   classType,
   automaticallyPicked,
+  disabledByAutoStatMods,
 }: {
   def: PluggableInventoryItemDefinition;
   classType?: DestinyClass;
   automaticallyPicked?: boolean;
+  disabledByAutoStatMods?: boolean;
 }) {
   const stats = getPlugDefStats(def, classType);
-  return <PlugTooltip def={def} stats={stats} automaticallyPicked={automaticallyPicked} />;
+  return (
+    <PlugTooltip
+      def={def}
+      stats={stats}
+      automaticallyPicked={automaticallyPicked}
+      disabledByAutoStatMods={disabledByAutoStatMods}
+    />
+  );
 }
 
 /**
@@ -114,18 +109,33 @@ function PlugTooltip({
   unreliablePerkOption,
   wishListTip,
   automaticallyPicked,
+  disabledByAutoStatMods,
   hideRequirements,
   craftingData,
-}: PlugTooltipProps) {
+}: {
+  def: PluggableInventoryItemDefinition;
+  stats?: { statHash: number; value: number }[];
+  plugObjectives?: DestinyObjectiveProgress[];
+  enableFailReasons?: string;
+  cannotCurrentlyRoll?: boolean;
+  unreliablePerkOption?: boolean;
+  wishListTip?: React.ReactNode;
+  automaticallyPicked?: boolean;
+  disabledByAutoStatMods?: boolean;
+  hideRequirements?: boolean;
+  craftingData?: DestinyPlugItemCraftingRequirements;
+}) {
   const defs = useD2Definitions();
   const statsArray = stats || [];
   const plugDescriptions = usePlugDescriptions(def, statsArray);
   const sourceString =
     defs && def.collectibleHash && defs.Collectible.get(def.collectibleHash).sourceString;
 
-  // filter out plug objectives related to Resonant Elements
+  // filter out hidden objectives
   const filteredPlugObjectives = plugObjectives?.filter(
-    (o) => !resonantElementObjectiveHashes.includes(o.objectiveHash)
+    (o) =>
+      getValueStyle(defs?.Objective.get(o.objectiveHash), o.progress ?? 0, o.completionValue) !==
+      DestinyUnlockValueUIStyle.Hidden,
   );
 
   const bungieDescription =
@@ -147,16 +157,10 @@ function PlugTooltip({
       />
     </Tooltip.Section>
   );
-  const renderedStats = statsArray.length > 0 && (
-    <div className="plug-stats">
-      {statsArray.map((stat) => (
-        <StatValue key={stat.statHash} statHash={stat.statHash} value={stat.value} />
-      ))}
-    </div>
-  );
+  const renderedStats = statsArray.length > 0 && <PlugStats stats={statsArray} />;
 
   const isPluggable = isPluggableItem(def);
-  const energyCost = isPluggable && isModCostVisible(def.plug) ? def.plug.energyCost : null;
+  const energyCost = isPluggable && isModCostVisible(def) ? def.plug.energyCost : null;
   const subclassDamageType = isPluggable && getDamageTypeForSubclassPlug(def);
 
   const isInTooltip = useTooltipCustomization({
@@ -173,7 +177,7 @@ function PlugTooltip({
           )}
         </div>
       ),
-      [def.itemTypeDisplayName, energyCost]
+      [def.itemTypeDisplayName, energyCost],
     ),
     className: clsx(styles.tooltip, {
       [styles.tooltipExotic]: def.inventory?.tierType === TierType.Exotic,
@@ -266,18 +270,31 @@ function PlugTooltip({
           <p>{t('LoadoutBuilder.AutomaticallyPicked')}</p>
         </Tooltip.Section>
       )}
-      {wishListTip && (
+      {disabledByAutoStatMods && (
+        <Tooltip.Section className={styles.automaticallyPickedSection}>
+          <p>{t('LoadoutBuilder.DisabledByAutoStatMods')}</p>
+        </Tooltip.Section>
+      )}
+      {Boolean(wishListTip) && (
         <Tooltip.Section>
-          <p>
-            <AppIcon className="thumbs-up" icon={thumbsUpIcon} /> = {wishListTip}
-          </p>
+          <p>{wishListTip}</p>
         </Tooltip.Section>
       )}
     </>
   );
 }
 
-export function StatValue({ value, statHash }: { value: number; statHash: number }) {
+export function PlugStats({ stats }: { stats: { statHash: number; value: number }[] }) {
+  return (
+    <div className={styles.plugStats}>
+      {stats.map((stat) => (
+        <StatValue key={stat.statHash} statHash={stat.statHash} value={stat.value} />
+      ))}
+    </div>
+  );
+}
+
+function StatValue({ value, statHash }: { value: number; statHash: number }) {
   const defs = useD2Definitions()!;
   const statDef = defs.Stat.get(statHash);
   if (!statDef?.displayProperties.name) {

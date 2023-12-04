@@ -1,10 +1,12 @@
-import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import { LoadoutParameters, StatConstraint } from '@destinyitemmanager/dim-api-types';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import ExoticArmorChoice, { getLockedExotic } from 'app/loadout-builder/filter/ExoticArmorChoice';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { AppIcon, searchIcon } from 'app/shell/icons';
+import { AppIcon, equalsIcon, greaterThanIcon, searchIcon } from 'app/shell/icons';
+import clsx from 'clsx';
+import { includesRuntimeStatMods } from '../stats';
 import styles from './LoadoutParametersDisplay.m.scss';
 
 export function hasVisibleLoadoutParameters(params: LoadoutParameters | undefined) {
@@ -12,7 +14,10 @@ export function hasVisibleLoadoutParameters(params: LoadoutParameters | undefine
     params &&
     (params.query ||
       params.exoticArmorHash ||
-      params.statConstraints?.some((s) => s.maxTier !== undefined || s.minTier !== undefined))
+      params.statConstraints?.some((s) => s.maxTier !== undefined || s.minTier !== undefined) ||
+      (params.mods &&
+        includesRuntimeStatMods(params.mods) &&
+        (params.includeRuntimeStatBenefits ?? true)))
   );
 }
 
@@ -23,7 +28,7 @@ export default function LoadoutParametersDisplay({ params }: { params: LoadoutPa
   if (!show) {
     return null;
   }
-  const lbParamDesc = (str: string) => t('Loadouts.LoadoutParameters') + ' – ' + str;
+  const lbParamDesc = (str: string) => `${t('Loadouts.LoadoutParameters')} – ${str}`;
 
   return (
     <div className={styles.loParams}>
@@ -41,12 +46,19 @@ export default function LoadoutParametersDisplay({ params }: { params: LoadoutPa
           className={styles.loExotic}
           tooltip={() => {
             const [, exoticName] = getLockedExotic(defs, exoticArmorHash);
-            return lbParamDesc(t('Loadouts.LoadoutParametersExotic', { exoticName }));
+            return lbParamDesc(t('Loadouts.LoadoutParametersExotic', { exoticName: exoticName! }));
           }}
         >
           <ExoticArmorChoice lockedExoticHash={exoticArmorHash} />
         </PressTip>
       )}
+      {params.mods &&
+        includesRuntimeStatMods(params.mods) &&
+        (params.includeRuntimeStatBenefits ?? true) && (
+          <PressTip tooltip={t('Loadouts.IncludeRuntimeStatBenefitsDesc')}>
+            {t('Loadouts.IncludeRuntimeStatBenefits')}
+          </PressTip>
+        )}
       {statConstraints && (
         <PressTip
           className={styles.loStats}
@@ -55,28 +67,51 @@ export default function LoadoutParametersDisplay({ params }: { params: LoadoutPa
           {statConstraints.map((s) => (
             <div key={s.statHash} className={styles.loStat}>
               <BungieImage src={defs.Stat.get(s.statHash).displayProperties.icon} />
-              {s.minTier !== undefined && s.minTier !== 0 ? (
-                <span>
-                  {t('LoadoutBuilder.TierNumber', {
-                    tier: s.minTier,
-                  })}
-                  {(s.maxTier === 10 || s.maxTier === undefined) && s.minTier !== 10
-                    ? '+'
-                    : s.maxTier !== undefined && s.maxTier !== s.minTier
-                    ? `-${s.maxTier}`
-                    : ''}
-                </span>
-              ) : s.maxTier !== undefined ? (
-                <span>T{s.maxTier}-</span>
-              ) : (
-                t('LoadoutBuilder.TierNumber', {
-                  tier: 10,
-                }) + '-'
-              )}
+              <StatConstraintRange statConstraint={s} />
             </div>
           ))}
         </PressTip>
       )}
     </div>
+  );
+}
+
+export function StatConstraintRange({
+  statConstraint: s,
+  className,
+}: {
+  statConstraint: StatConstraint;
+  className?: string;
+}) {
+  className = clsx(className, styles.constraintRange);
+  return s.minTier !== undefined && s.minTier !== 0 ? (
+    <span className={className}>
+      {(s.maxTier === 10 || s.maxTier === undefined) && s.minTier !== 10 ? (
+        <>
+          <AppIcon icon={greaterThanIcon} />
+          {t('LoadoutBuilder.TierNumber', {
+            tier: s.minTier,
+          })}
+        </>
+      ) : s.maxTier !== undefined && s.maxTier !== s.minTier ? (
+        `${t('LoadoutBuilder.TierNumber', {
+          tier: s.minTier,
+        })}-${s.maxTier}`
+      ) : (
+        <>
+          <AppIcon icon={equalsIcon} />
+          {t('LoadoutBuilder.TierNumber', {
+            tier: s.minTier,
+          })}
+        </>
+      )}
+    </span>
+  ) : (
+    <span className={className}>
+      <AppIcon icon={greaterThanIcon} />
+      {t('LoadoutBuilder.TierNumber', {
+        tier: 0,
+      })}
+    </span>
   );
 }

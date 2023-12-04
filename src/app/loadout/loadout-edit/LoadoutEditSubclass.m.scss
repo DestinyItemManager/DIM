@@ -1,8 +1,14 @@
-@import '../../variables';
+@use '../../variables' as *;
 
 .subclassContainer {
   --item-icon-size: calc(0.8 * var(--item-size));
   composes: flexRow from '../../dim-ui/common.m.scss';
+  flex-wrap: wrap;
+  max-width: calc(
+    var(--item-size) + var(--item-margin) + var(--loadout-edit-subclass-columns, 3) *
+      var(--item-icon-size) + (var(--loadout-edit-subclass-columns, 3) - 1) * 4px
+  );
+  gap: var(--item-margin);
 }
 
 .subclass {
@@ -11,7 +17,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-right: var(--item-margin);
   gap: var(--item-margin);
 }
 
@@ -29,8 +34,10 @@
 
 .subclassMods {
   --item-icon-size: calc(0.8 * var(--item-size));
-  width: calc(3 * var(--item-icon-size) + 2 * var(--item-margin));
-  margin-right: calc(-1 * var(--item-margin) + #{$item-border-width});
+  width: calc(
+    var(--loadout-edit-subclass-columns, 3) * var(--item-icon-size) +
+      (var(--loadout-edit-subclass-columns, 3) - 1) * 4px
+  );
   display: grid;
   grid-template-columns: repeat(auto-fill, var(--item-icon-size));
   gap: 4px;
@@ -48,10 +55,34 @@
 
 .classButton {
   composes: resetButton from '../../dim-ui/common.m.scss';
-  height: 100%;
-  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.5;
+  // Smaller items to try and make it clearer that these aren't selected.
+  --item-size: 32px;
+
+  color: #999;
+  &:hover,
+  &:focus-visible {
+    color: white;
+    opacity: 1;
+    rect {
+      stroke: var(--theme-accent-primary);
+    }
+  }
 }
 
 .missingItem {
   opacity: 0.3;
+}
+
+.canDrop {
+  filter: invert(20%);
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.isOver {
+  filter: invert(40%);
+  background-color: rgba(255, 255, 255, 0.4);
 }

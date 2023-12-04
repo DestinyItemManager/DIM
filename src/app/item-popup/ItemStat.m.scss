@@ -6,6 +6,7 @@
   text-align: right;
   margin-right: 8px;
   max-width: 130px;
+
   @include phone-portrait {
     max-width: 40vw;
   }
@@ -79,27 +80,29 @@
 
 // Colors for the stat bars
 .masterworkStatBar {
-  background-color: $orange;
+  background-color: $stat-masterworked;
 }
 .moddedStatBar {
-  background-color: $blue;
+  background-color: $stat-modded;
   & + .moddedStatBar {
-    background-color: color.adjust($blue, $lightness: -10%);
+    background-color: $stat-modded;
+    opacity: 0.8;
     & + .moddedStatBar {
-      background-color: color.adjust($blue, $lightness: -20%);
+      background-color: $stat-modded;
+      opacity: 0.6;
     }
   }
 }
 
 .masterworked {
-  color: $orange;
+  color: $stat-masterworked;
   .statName {
     font-weight: bold;
   }
 }
 
 .modded {
-  color: $blue;
+  color: $stat-modded;
   .statName {
     font-weight: bold;
   }
@@ -126,7 +129,7 @@
 }
 
 .totalStatModded {
-  color: $blue;
+  color: $stat-modded;
 }
 
 .totalStatNegativeModded {
@@ -134,7 +137,7 @@
 }
 
 .totalStatMasterwork {
-  color: $orange;
+  color: $stat-masterworked;
 }
 
 .customTotal {

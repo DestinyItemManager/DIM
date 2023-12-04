@@ -32,8 +32,10 @@ export function isIn<O extends Record<string | number, any>>(key: keyof O, obj: 
   return key in obj;
 }
 
-/** performs `Object.keys()` but properly narrows `key` */
+/** performs `Object.values()` but properly types the values when the input object has number keys. */
 /*@__INLINE__*/
-export function objectKeys<O extends Record<string | number, any>>(obj: O) {
-  return Object.keys(obj) as (keyof O)[];
+export function objectValues<T>(
+  obj: { [key: string]: T } | { [key: number]: T } | ArrayLike<T>,
+): T[] {
+  return Object.values(obj);
 }

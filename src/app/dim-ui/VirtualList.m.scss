@@ -1,0 +1,27 @@
+.scrollContainer {
+  height: 100%;
+  width: 100%;
+  overflow: hidden auto;
+  contain: strict;
+  box-sizing: border-box;
+}
+
+.contentsPlaceholder {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.virtualArea {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+
+  > * {
+    // Prevent the margins of elements inside the item containers from escaping
+    // this container. Otherwise the height measurements will be wrong for the
+    // virtual list.
+    overflow: hidden;
+  }
+}

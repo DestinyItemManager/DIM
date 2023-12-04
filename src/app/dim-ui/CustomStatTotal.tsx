@@ -2,9 +2,9 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
 import { useSetting } from 'app/settings/hooks';
+import { addDividers } from 'app/utils/react';
 import { DestinyClass, DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import React, { ReactElement, ReactNode } from 'react';
 import styles from './CustomStatTotal.m.scss';
 
 export type StatHashListsKeyedByDestinyClass = Record<number, number[]>;
@@ -57,11 +57,11 @@ export function StatTotalToggle({
                     readOnly={readOnly}
                   />
                 )),
-              <span className={styles.divider} />
+              <span className={styles.divider} />,
             )}
           </span>
         )),
-        <span className={styles.divider} />
+        <span className={styles.divider} />,
       )}
     </div>
   );
@@ -106,11 +106,4 @@ function StatToggleButton({
 /** adds missing, or removes existing, element in arr */
 function toggleArrayElement<T>(element: T, arr: T[]) {
   return arr.includes(element) ? arr.filter((v) => v !== element) : arr.concat(element);
-}
-
-/** places a divider between each element of arr */
-function addDividers<T extends React.ReactNode>(arr: T[], divider: ReactElement): ReactNode[] {
-  return arr
-    .flatMap((e, index) => [e, React.cloneElement(divider, { key: `divider-${index}` })])
-    .slice(0, -1);
 }

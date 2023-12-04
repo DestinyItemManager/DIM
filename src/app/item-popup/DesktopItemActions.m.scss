@@ -4,8 +4,11 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: black;
+  background-color: var(--theme-item-popup-actions-bg);
   user-select: none;
+  box-shadow:
+    0 0 0 1px var(--theme-item-popup-border),
+    var(--theme-drop-shadow);
 }
 
 .collapseButton {
@@ -22,13 +25,13 @@
   }
 
   &:hover :global(.app-icon) {
-    color: $orange;
+    color: var(--theme-accent-primary);
   }
 
   .collapsed & {
     padding: 5px 0 15px;
     justify-content: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--theme-item-popup-border);
   }
 
   [data-popper-placement^='left'] & {

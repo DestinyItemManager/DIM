@@ -1,7 +1,9 @@
-import { moveDownIcon, moveUpIcon } from 'app/shell/icons';
+import { expandDownIcon, expandUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import clsx from 'clsx';
 import { useSelect } from 'downshift';
+
+import { useHeightFromViewportBottom } from 'app/utils/hooks';
 import { CSSProperties, ReactNode, useEffect, useRef, useState } from 'react';
 import styles from './Select.m.scss';
 import { usePopper } from './usePopper';
@@ -67,13 +69,15 @@ export default function Select<T>({
     selectedItem: items.find((o) => o.value === value),
     itemToString: (i) => i?.key || 'none',
     onSelectedItemChange: ({ selectedItem }) => onChange(selectedItem?.value),
+    isItemDisabled: (item) => Boolean(item.disabled),
   });
 
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const menuRef = useRef<HTMLElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const [dropdownWidth, setDropdownWidth] = useState<number | undefined>(() =>
-    typeof maxDropdownWidth === 'number' ? maxDropdownWidth : undefined
+    typeof maxDropdownWidth === 'number' ? maxDropdownWidth : undefined,
   );
+  const [dropdownHeight, setDropdownHeight] = useState<number | undefined>();
 
   usePopper({
     contents: menuRef,
@@ -97,18 +101,19 @@ export default function Select<T>({
     }
   }, [dropdownWidth, maxButtonWidth, maxDropdownWidth]);
 
+  useHeightFromViewportBottom(buttonRef, setDropdownHeight, 28, true);
+
   let buttonStyle: CSSProperties | undefined;
-  let dropdownStyle: CSSProperties | undefined;
+
+  const dropdownStyle: CSSProperties = {
+    overflowY: 'auto',
+    overscrollBehaviorY: 'contain',
+    maxHeight: dropdownHeight,
+  };
 
   if (maxButtonWidth !== undefined) {
     buttonStyle = {
       maxWidth: maxButtonWidth,
-    };
-  }
-
-  if (dropdownWidth !== undefined) {
-    dropdownStyle = {
-      maxWidth: dropdownWidth,
     };
   }
 
@@ -117,7 +122,7 @@ export default function Select<T>({
       <button
         type="button"
         style={buttonStyle}
-        className={children ? undefined : styles.button}
+        className={styles.button}
         {...getToggleButtonProps({
           ref: buttonRef,
           disabled,
@@ -126,13 +131,12 @@ export default function Select<T>({
         {children ?? (
           <>
             {selectedItem.content}{' '}
-            <AppIcon icon={isOpen ? moveUpIcon : moveDownIcon} className={styles.arrow} />
+            <AppIcon icon={isOpen ? expandUpIcon : expandDownIcon} className={styles.arrow} />
           </>
         )}
       </button>
       <div
-        {...getMenuProps({ ref: menuRef })}
-        className={clsx(styles.menu, { [styles.open]: isOpen })}
+        {...getMenuProps({ ref: menuRef, className: clsx(styles.menu, { [styles.open]: isOpen }) })}
       >
         <div style={dropdownStyle}>
           {isOpen &&
@@ -148,12 +152,11 @@ export default function Select<T>({
                     {...getItemProps({
                       item,
                       index,
-                      disabled: item.disabled,
                     })}
                   >
                     {item.content}
                   </div>
-                )
+                ),
             )}
         </div>
       </div>

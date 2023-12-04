@@ -1,5 +1,17 @@
 @use '../variables.scss' as *;
 
+.recordsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 8px;
+  margin: 8px 0;
+
+  @include phone-portrait {
+    margin: 8px;
+    grid-template-columns: none;
+  }
+}
+
 .triumphRecord {
   position: relative;
   background: rgba(255, 255, 255, 0.05);
@@ -9,6 +21,7 @@
   flex-direction: row;
   align-items: flex-start;
   box-sizing: border-box;
+  user-select: text;
 
   @include phone-portrait {
     width: 100%;
@@ -22,13 +35,13 @@
 
   p {
     margin: 0 0 8px 0;
-    color: #a1a2a2;
+    color: var(--theme-text-secondary);
     white-space: pre-wrap;
   }
 
   p.gildingText {
     margin: 8px 0 0 0;
-    color: white;
+    color: var(--theme-text);
   }
 
   p + p.gildingText {
@@ -59,11 +72,13 @@
 }
 
 .redeemed {
-  border-color: #c4b578;
-  color: #c4b578;
+  border-color: var(--theme-record-redeemed);
+  color: var(--theme-record-redeemed);
   background: transparent;
-  p {
-    color: scale-color(#c4b578, $lightness: -40%);
+  p,
+  span {
+    color: var(--theme-record-redeemed);
+    opacity: 0.8;
   }
 }
 
@@ -97,7 +112,9 @@
   // at the 0 point, which prevents that one point from being
   // more saturated than the rest of the lines.
   // There is no visible gap.
-  background-position: 0 0, 0 2px;
+  background-position:
+    0 0,
+    0 2px;
   background-repeat: repeat-x;
 }
 
@@ -128,10 +145,7 @@
 
 .trackedInDim .glow {
   display: block;
-  background: linear-gradient(
-    scale-color($orange, $alpha: -100%) 0%,
-    scale-color($orange, $alpha: -80%) 100%
-  );
+  background: linear-gradient(transparent 0%, var(--theme-accent-primary) 500%);
 }
 
 .redeemed.gildingTriumph .glow {
@@ -165,6 +179,7 @@
     width: calc(var(--item-size) / 3.1) !important;
     height: auto !important;
   }
+
   @media (hover: none) {
     display: block;
     opacity: 0.7;
@@ -185,6 +200,7 @@
   height: auto;
   flex-shrink: 0;
   margin-right: 8px;
+  background: var(--theme-icon-tile);
 }
 
 .info {
@@ -205,14 +221,14 @@
 
 .score {
   float: right;
-  color: #a1a2a2;
+  color: var(--theme-text-secondary);
   margin-left: 4px;
   :global(.catalysts) & {
     display: none;
   }
 
   .currentScore {
-    color: white;
+    color: var(--theme-text);
     font-weight: bold;
   }
 
@@ -255,6 +271,6 @@
   }
 
   .redeemed & {
-    background-color: scale-color(#c4b578, $lightness: -20%) !important;
+    background-color: var(--theme-record-redeemed) !important;
   }
 }

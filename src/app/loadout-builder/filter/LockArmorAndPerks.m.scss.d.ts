@@ -3,7 +3,6 @@
 interface CssExports {
   'area': string;
   'buttons': string;
-  'guide': string;
   'itemGrid': string;
   'notItemGrid': string;
 }

@@ -1,14 +1,9 @@
-import {
-  AssumeArmorMasterwork,
-  Loadout,
-  LoadoutItem,
-  LoadoutParameters,
-  UpgradeSpendTier,
-} from '@destinyitemmanager/dim-api-types';
+import { Loadout, LoadoutItem, LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { UNSET_PLUG_HASH } from 'app/loadout/known-values';
+import { filterMap } from 'app/utils/collections';
 import { emptyObject } from 'app/utils/empty';
 import { getSocketsByCategoryHash } from 'app/utils/socket-utils';
 import {
@@ -24,24 +19,24 @@ import {
   LoadoutItem as DimLoadoutItem,
   InGameLoadout,
 } from './loadout-types';
-import { newLoadout, potentialLoadoutItemsByItemId } from './loadout-utils';
+import { convertToLoadoutItem, itemsByItemId, newLoadout } from './loadout-utils';
 
 /**
  * DIM API stores loadouts in a new format, but the app still uses the old format everywhere. These functions convert
  * back and forth.
  */
 export function convertDimLoadoutToApiLoadout(dimLoadout: DimLoadout): Loadout {
-  const { items, name, clearSpace, parameters, ...rest } = dimLoadout;
+  const { items, name, parameters, ...rest } = dimLoadout;
   const equipped = items.filter((i) => i.equip).map(convertDimLoadoutItemToLoadoutItem);
   const unequipped = items.filter((i) => !i.equip).map(convertDimLoadoutItemToLoadoutItem);
 
   const loadout: Loadout = {
     ...rest,
     name: name.trim(),
-    clearSpace: clearSpace || false,
-    parameters: migrateUpgradeSpendTierAndLockItemEnergy(parameters),
     equipped,
     unequipped,
+    parameters,
+    clearSpace: Boolean(parameters?.clearArmor && parameters?.clearWeapons),
     lastUpdatedAt: Date.now(),
   };
   if (!loadout.notes) {
@@ -69,43 +64,20 @@ function convertDimLoadoutItemToLoadoutItem(item: DimLoadoutItem): LoadoutItem {
   return result;
 }
 
-function migrateUpgradeSpendTierAndLockItemEnergy(
-  parameters: DimLoadout['parameters']
+function migrateLoadoutParameters(
+  parameters: DimLoadout['parameters'],
+  clearSpace: boolean,
 ): DimLoadout['parameters'] {
-  const migrated = { ...parameters };
-  const { upgradeSpendTier, assumeArmorMasterwork, lockArmorEnergyType } = migrated;
-
-  delete migrated.upgradeSpendTier;
-  delete migrated.lockItemEnergyType;
-  delete migrated.lockArmorEnergyType;
-  delete migrated.assumeMasterworked;
-
-  if (assumeArmorMasterwork || lockArmorEnergyType) {
-    return migrated;
+  // Migrate the single "clear" parameter into separate armor/weapons parameters
+  if (
+    clearSpace &&
+    parameters?.clearArmor === undefined &&
+    parameters?.clearWeapons === undefined
+  ) {
+    return { ...parameters, clearArmor: true, clearWeapons: true };
   }
 
-  switch (upgradeSpendTier) {
-    case UpgradeSpendTier.AscendantShards:
-      return {
-        ...migrated,
-        assumeArmorMasterwork: AssumeArmorMasterwork.All,
-      };
-    case UpgradeSpendTier.AscendantShardsNotExotic:
-    case UpgradeSpendTier.AscendantShardsNotMasterworked:
-      return {
-        ...migrated,
-        assumeArmorMasterwork: AssumeArmorMasterwork.Legendary,
-      };
-    case UpgradeSpendTier.AscendantShardsLockEnergyType:
-    case UpgradeSpendTier.EnhancementPrisms:
-    case UpgradeSpendTier.LegendaryShards:
-    case UpgradeSpendTier.Nothing:
-    default:
-      return {
-        ...migrated,
-        assumeArmorMasterwork: AssumeArmorMasterwork.None,
-      };
-  }
+  return parameters;
 }
 
 /**
@@ -116,8 +88,8 @@ export function convertDimApiLoadoutToLoadout(loadout: Loadout): DimLoadout {
   const { equipped = [], unequipped = [], clearSpace, parameters, ...rest } = loadout;
   return {
     ...rest,
-    parameters: migrateUpgradeSpendTierAndLockItemEnergy(parameters),
-    clearSpace: clearSpace || false,
+    parameters: migrateLoadoutParameters(parameters, clearSpace ?? false),
+    clearSpace: clearSpace ?? false,
     items: [
       ...equipped.map((i) => convertDimApiLoadoutItemToLoadoutItem(i, true)),
       ...unequipped.map((i) => convertDimApiLoadoutItemToLoadoutItem(i, false)),
@@ -130,7 +102,7 @@ export function convertDimApiLoadoutToLoadout(loadout: Loadout): DimLoadout {
  */
 function convertDimApiLoadoutItemToLoadoutItem(
   item: LoadoutItem,
-  equipped: boolean
+  equipped: boolean,
 ): DimLoadoutItem {
   return {
     ...item,
@@ -142,16 +114,14 @@ function convertDimApiLoadoutItemToLoadoutItem(
 
 export const processInGameLoadouts = (
   profileResponse: DestinyProfileResponse,
-  defs: D2ManifestDefinitions
+  defs: D2ManifestDefinitions,
 ): { [characterId: string]: InGameLoadout[] } => {
   const characterLoadouts = profileResponse?.characterLoadouts?.data;
   if (characterLoadouts) {
     return _.mapValues(characterLoadouts, (c, characterId) =>
-      _.compact(
-        c.loadouts.map((l, i) =>
-          convertDestinyLoadoutComponentToInGameLoadout(l, i, characterId, defs)
-        )
-      )
+      filterMap(c.loadouts, (l, i) =>
+        convertDestinyLoadoutComponentToInGameLoadout(l, i, characterId, defs),
+      ),
     );
   }
   return emptyObject();
@@ -164,7 +134,7 @@ function convertDestinyLoadoutComponentToInGameLoadout(
   loadoutComponent: DestinyLoadoutComponent,
   index: number,
   characterId: string,
-  defs: D2ManifestDefinitions
+  defs: D2ManifestDefinitions,
 ): InGameLoadout | undefined {
   const name = defs.LoadoutName.get(loadoutComponent.nameHash)?.name ?? 'Unknown';
   const colorIcon = defs.LoadoutColor.get(loadoutComponent.colorHash)?.colorImagePath ?? '';
@@ -192,62 +162,57 @@ function convertDestinyLoadoutComponentToInGameLoadout(
 export function convertInGameLoadoutToDimLoadout(
   inGameLoadout: InGameLoadout,
   classType: DestinyClass,
-  allItems: DimItem[]
+  allItems: DimItem[],
 ) {
   const armorMods: number[] = [];
   const modsByBucket: LoadoutParameters['modsByBucket'] = {};
 
-  const loadoutItems = _.compact(
-    inGameLoadout.items.map((inGameItem) => {
-      if (inGameItem.itemInstanceId === '0') {
-        return;
-      }
+  const loadoutItems = filterMap(inGameLoadout.items, (inGameItem) => {
+    if (inGameItem.itemInstanceId === '0') {
+      return;
+    }
 
-      const matchingItem = potentialLoadoutItemsByItemId(allItems)[inGameItem.itemInstanceId];
-      if (!matchingItem) {
-        return;
-      }
+    const matchingItem = itemsByItemId(allItems)[inGameItem.itemInstanceId];
+    if (!matchingItem) {
+      return;
+    }
 
-      if (matchingItem.bucket.inArmor) {
-        const armorModSockets = getSocketsByCategoryHash(
-          matchingItem.sockets,
-          SocketCategoryHashes.ArmorMods
-        );
-        const fashionModSockets = getSocketsByCategoryHash(
-          matchingItem.sockets,
-          SocketCategoryHashes.ArmorCosmetics
-        );
-        for (let i = 0; i < inGameItem.plugItemHashes.length; i++) {
-          const plugHash = inGameItem.plugItemHashes[i];
-          if (plugHash === UNSET_PLUG_HASH) {
-            continue;
-          }
-          if (!emptyPlugHashes.has(plugHash) && armorModSockets.some((s) => s.socketIndex === i)) {
-            armorMods.push(plugHash);
-          } else if (fashionModSockets.some((s) => s.socketIndex === i)) {
-            // For fashion, we do record the emply plug hashes
-            (modsByBucket[matchingItem.bucket.hash] ||= []).push(plugHash);
-          }
+    if (matchingItem.bucket.inArmor) {
+      const armorModSockets = getSocketsByCategoryHash(
+        matchingItem.sockets,
+        SocketCategoryHashes.ArmorMods,
+      );
+      const fashionModSockets = getSocketsByCategoryHash(
+        matchingItem.sockets,
+        SocketCategoryHashes.ArmorCosmetics,
+      );
+      for (let i = 0; i < inGameItem.plugItemHashes.length; i++) {
+        const plugHash = inGameItem.plugItemHashes[i];
+        if (plugHash === UNSET_PLUG_HASH) {
+          continue;
+        }
+        if (!emptyPlugHashes.has(plugHash) && armorModSockets.some((s) => s.socketIndex === i)) {
+          armorMods.push(plugHash);
+        } else if (fashionModSockets.some((s) => s.socketIndex === i)) {
+          // For fashion, we do record the emply plug hashes
+          (modsByBucket[matchingItem.bucket.hash] ||= []).push(plugHash);
         }
       }
+    }
 
-      const socketOverrides =
-        // TODO: Pretty soon we can capture all the socket overrides, but for now only copy over subclass config.
-        matchingItem.bucket.hash === BucketHashes.Subclass
-          ? convertInGameLoadoutPlugItemHashesToSocketOverrides(inGameItem.plugItemHashes)
-          : undefined;
+    const socketOverrides =
+      // TODO: Pretty soon we can capture all the socket overrides, but for now only copy over subclass config.
+      matchingItem.bucket.hash === BucketHashes.Subclass
+        ? convertInGameLoadoutPlugItemHashesToSocketOverrides(inGameItem.plugItemHashes)
+        : undefined;
 
-      const loadoutItem: DimLoadoutItem = {
-        id: inGameItem.itemInstanceId,
-        hash: matchingItem.hash,
-        socketOverrides,
-        equip: true,
-        amount: 1,
-      };
+    const loadoutItem: DimLoadoutItem = {
+      ...convertToLoadoutItem(matchingItem, true),
+      socketOverrides,
+    };
 
-      return loadoutItem;
-    })
-  );
+    return loadoutItem;
+  });
 
   const loadout = newLoadout(inGameLoadout.name, loadoutItems, classType);
   loadout.parameters = {
@@ -267,13 +232,11 @@ export function convertInGameLoadoutToDimLoadout(
  * format, but it does matter for displaying them.
  */
 export function convertInGameLoadoutPlugItemHashesToSocketOverrides(
-  plugItemHashes: number[]
+  plugItemHashes: number[],
 ): SocketOverrides {
   return Object.fromEntries(
-    _.compact(
-      plugItemHashes.map((plugHash, i) =>
-        plugHash !== UNSET_PLUG_HASH ? [i, plugHash] : undefined
-      )
-    )
+    filterMap(plugItemHashes, (plugHash, i) =>
+      plugHash !== UNSET_PLUG_HASH ? [i, plugHash] : undefined,
+    ),
   );
 }

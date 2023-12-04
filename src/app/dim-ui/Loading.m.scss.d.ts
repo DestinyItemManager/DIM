@@ -8,10 +8,6 @@ interface CssExports {
   'square': string;
   'text': string;
   'textContainer': string;
-  'textEnter': string;
-  'textEnterActive': string;
-  'textExit': string;
-  'textExitActive': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

@@ -24,7 +24,7 @@ import {
   unlockedPlugSetItemsSelector,
 } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
-import { isPluggableItem } from 'app/inventory/store/sockets';
+import { hashesToPluggableItems, isPluggableItem } from 'app/inventory/store/sockets';
 import {
   amountOfItem,
   findItemsByBucket,
@@ -51,9 +51,11 @@ import { loadingTracker } from 'app/shell/loading-tracker';
 import { ThunkResult } from 'app/store/types';
 import { queueAction } from 'app/utils/action-queue';
 import { CancelToken, CanceledError, withCancel } from 'app/utils/cancel';
+import { count, filterMap } from 'app/utils/collections';
 import { DimError } from 'app/utils/dim-error';
 import { emptyArray } from 'app/utils/empty';
-import { itemCanBeEquippedBy } from 'app/utils/item-utils';
+import { convertToError, errorMessage } from 'app/utils/errors';
+import { isClassCompatible, itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
 import {
   aspectSocketCategoryHashes,
@@ -65,11 +67,10 @@ import {
   plugFitsIntoSocket,
   subclassAbilitySocketCategoryHashes,
 } from 'app/utils/socket-utils';
-import { count } from 'app/utils/util';
 import { HashLookup } from 'app/utils/util-types';
-import { DestinyClass, PlatformErrorCodes } from 'bungie-api-ts/destiny2';
+import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
-import produce, { Draft } from 'immer';
+import { Draft, produce } from 'immer';
 import _ from 'lodash';
 import { savePreviousLoadout } from './actions';
 import {
@@ -86,11 +87,16 @@ import {
   setSocketOverrideResult,
 } from './loadout-apply-state';
 import { Assignment, InGameLoadout, Loadout, LoadoutItem } from './loadout-types';
-import { backupLoadout, findItemForLoadout, getModsFromLoadout } from './loadout-utils';
+import {
+  backupLoadout,
+  findItemForLoadout,
+  getLoadoutSubclassFragmentCapacity,
+  getModsFromLoadout,
+} from './loadout-utils';
 
 // TODO: move this whole file to "loadouts" folder
 
-const outOfSpaceWarning = _.throttle((store) => {
+const outOfSpaceWarning = _.throttle((store: DimStore) => {
   showNotification({
     type: 'info',
     title: t('FarmingMode.OutOfRoomTitle'),
@@ -131,7 +137,7 @@ export function applyLoadout(
     onlyMatchingClass?: boolean;
     /** Apply this ingame loadout at the end. This also replaces the name/icon of the notification. */
     inGameLoadout?: InGameLoadout;
-  } = {}
+  } = {},
 ): ThunkResult {
   return async (dispatch) => {
     if (!store) {
@@ -158,15 +164,15 @@ export function applyLoadout(
           onlyMatchingClass,
           cancelToken,
           allowUndo,
-          inGameLoadout
-        )
-      )
+          inGameLoadout,
+        ),
+      ),
     );
     loadingTracker.addPromise(loadoutPromise);
 
     // Start a notification that will show as long as the loadout is equipping
     showNotification(
-      loadoutNotification(inGameLoadout ?? loadout, stateObservable, loadoutPromise, cancel)
+      loadoutNotification(inGameLoadout ?? loadout, stateObservable, loadoutPromise, cancel),
     );
 
     try {
@@ -192,7 +198,7 @@ function doApplyLoadout(
   onlyMatchingClass: boolean,
   cancelToken: CancelToken,
   allowUndo = false,
-  inGameLoadout?: InGameLoadout
+  inGameLoadout?: InGameLoadout,
 ): ThunkResult {
   return async (dispatch, getState) => {
     const defs = manifestSelector(getState())!;
@@ -219,27 +225,25 @@ function doApplyLoadout(
             storeId: store.id,
             loadoutId: loadout.id,
             previousLoadout: backupLoadout(store, t('Loadouts.Before', { name: loadout.name })),
-          })
+          }),
         );
       }
 
       // TODO: would be great to avoid all these getLoadoutItems?
 
-      let resolvedItems = _.compact(
-        loadout.items.map((loadoutItem) => {
-          const item = getLoadoutItem(loadoutItem);
-          if (item) {
-            return {
-              loadoutItem,
-              item,
-            };
-          }
-        })
-      );
+      let resolvedItems = filterMap(loadout.items, (loadoutItem) => {
+        const item = getLoadoutItem(loadoutItem);
+        if (item) {
+          return {
+            loadoutItem,
+            item,
+          };
+        }
+      });
       if (onlyMatchingClass && !store.isVault) {
         // Trim down the list of items to only those that could be equipped by the store we're sending to.
         resolvedItems = resolvedItems.filter(
-          ({ item }) => !item.equipment || itemCanBeEquippedBy(item, store)
+          ({ item }) => !item.equipment || itemCanBeEquippedBy(item, store),
         );
       }
 
@@ -251,37 +255,35 @@ function doApplyLoadout(
 
       // Figure out which items have specific socket overrides that will need to be applied.
       // TODO: remove socket-overrides from the mods to apply list!
-      const itemsWithOverrides = _.compact(
-        loadout.items.map((loadoutItem) => {
-          const item = getLoadoutItem(loadoutItem);
-          if (
-            !loadoutItem.socketOverrides ||
-            !item ||
-            // Don't apply perks/mods/subclass configs when moving items to the vault
-            store.isVault ||
-            // Only apply perks/mods/subclass configs if the item is usable by the store we're applying to
-            (item.classType !== DestinyClass.Unknown && item.classType !== store.classType)
-          ) {
-            return undefined;
-          } else if (item.bucket.hash === BucketHashes.Subclass) {
-            // Subclass ability sockets can be missing from socketOverrides, but show and
-            // should thus apply the result of `getDefaultAbilityChoiceHash`, so patch those in here.
-            const abilityAndSuperSockets = getSocketsByCategoryHashes(
-              item.sockets,
-              subclassAbilitySocketCategoryHashes
-            );
-            const newOverrides = { ...loadoutItem.socketOverrides };
-            for (const socket of abilityAndSuperSockets) {
-              if (newOverrides[socket.socketIndex] === undefined) {
-                newOverrides[socket.socketIndex] = getDefaultAbilityChoiceHash(socket);
-              }
+      const itemsWithOverrides = filterMap(loadout.items, (loadoutItem) => {
+        const item = getLoadoutItem(loadoutItem);
+        if (
+          !loadoutItem.socketOverrides ||
+          !item ||
+          // Don't apply perks/mods/subclass configs when moving items to the vault
+          store.isVault ||
+          // Only apply perks/mods/subclass configs if the item is usable by the store we're applying to
+          !isClassCompatible(item.classType, store.classType)
+        ) {
+          return undefined;
+        } else if (item.bucket.hash === BucketHashes.Subclass) {
+          // Subclass ability sockets can be missing from socketOverrides, but show and
+          // should thus apply the result of `getDefaultAbilityChoiceHash`, so patch those in here.
+          const abilityAndSuperSockets = getSocketsByCategoryHashes(
+            item.sockets,
+            subclassAbilitySocketCategoryHashes,
+          );
+          const newOverrides = { ...loadoutItem.socketOverrides };
+          for (const socket of abilityAndSuperSockets) {
+            if (newOverrides[socket.socketIndex] === undefined) {
+              newOverrides[socket.socketIndex] = getDefaultAbilityChoiceHash(socket);
             }
-            return { ...loadoutItem, socketOverrides: newOverrides };
-          } else {
-            return loadoutItem;
           }
-        })
-      );
+          return { ...loadoutItem, socketOverrides: newOverrides };
+        } else {
+          return loadoutItem;
+        }
+      });
 
       // Filter out mods that no longer exist or that aren't unlocked on this character
       const unlockedPlugSetItems = _.once(() => unlockedPlugSetItemsSelector(store.id)(getState()));
@@ -298,7 +300,7 @@ function doApplyLoadout(
         (defs.isDestiny2() &&
           !store.isVault &&
           getModsFromLoadout(defs, loadout, unlockedPlugSetItems()).map(
-            (mod) => mod.resolvedMod.hash
+            (mod) => mod.resolvedMod.hash,
           )) ||
         []
       ).filter(checkMod);
@@ -355,9 +357,9 @@ function doApplyLoadout(
                 .map((modHash) => ({
                   modHash,
                   state: LoadoutModState.Pending,
-                }))
+                })),
             );
-        })
+        }),
       );
 
       // Filter out items that don't need to move
@@ -381,14 +383,14 @@ function doApplyLoadout(
             setLoadoutState(
               produce((state) => {
                 state.itemStates[item.index].state = LoadoutItemState.AlreadyThere;
-              })
+              }),
             );
           }
 
           return requiresAction;
         }),
         // Shallow copy all LoadoutItems so we can mutate the equipped flag later
-        (i) => ({ ...i })
+        (i) => ({ ...i }),
       );
 
       // The vault can't equip items, so set equipped to false
@@ -414,13 +416,13 @@ function doApplyLoadout(
         return item?.equipped && item.owner !== store.id;
       });
 
-      const realItemsToDequip = _.compact(itemsToDequip.map((i) => getLoadoutItem(i)));
+      const realItemsToDequip = filterMap(itemsToDequip, getLoadoutItem);
 
-      const involvedItems = [..._.compact(itemsToEquip.map(getLoadoutItem)), ...realItemsToDequip];
+      const involvedItems = [...filterMap(itemsToEquip, getLoadoutItem), ...realItemsToDequip];
       const moveSession = createMoveSession(cancelToken, involvedItems);
 
       // Group dequips per character
-      const dequips = Object.entries(_.groupBy(realItemsToDequip, (i) => i.owner)).map(
+      const dequips = Object.entries(Object.groupBy(realItemsToDequip, (i) => i.owner)).map(
         async ([owner, dequipItems]) => {
           // If there's only one item to remove, we don't need to bulk dequip, it'll be handled
           // automatically when we try to move the item.
@@ -429,13 +431,11 @@ function doApplyLoadout(
           }
           // You can't directly dequip things, you have to equip something
           // else - so choose an appropriate replacement for each item.
-          const itemsToEquip = _.compact(
-            dequipItems.map((i) =>
-              getSimilarItem(getState, getStores(), i, {
-                exclusions: applicableLoadoutItems,
-                excludeExotic: i.isExotic,
-              })
-            )
+          const itemsToEquip = filterMap(dequipItems, (i) =>
+            getSimilarItem(getState, getStores(), i, {
+              exclusions: applicableLoadoutItems,
+              excludeExotic: i.isExotic,
+            }),
           );
           try {
             const result = await dispatch(
@@ -443,8 +443,8 @@ function doApplyLoadout(
                 getStore(getStores(), owner)!,
                 itemsToEquip,
                 applicableLoadoutItems,
-                moveSession
-              )
+                moveSession,
+              ),
             );
             // Bulk equip can partially fail
             setLoadoutState(
@@ -459,9 +459,10 @@ function doApplyLoadout(
                   // TODO how to set the error code here?
                   // state.itemStates[item.index].error = new DimError().withCause(BungieError(errorCode))
                 }
-              })
+              }),
             );
-          } catch (e) {
+          } catch (err) {
+            const e = convertToError(err);
             if (e instanceof CanceledError) {
               throw e;
             }
@@ -472,10 +473,10 @@ function doApplyLoadout(
                   state.itemStates[item.index].state = LoadoutItemState.FailedDequip;
                   state.itemStates[item.index].error = e;
                 }
-              })
+              }),
             );
           }
-        }
+        },
       );
       // Run each character's bulk dequip in parallel
       await Promise.all(dequips);
@@ -493,8 +494,8 @@ function doApplyLoadout(
               loadoutItem,
               getLoadoutItem,
               applicableLoadoutItems,
-              moveSession
-            )
+              moveSession,
+            ),
           );
           const updatedItem = getLoadoutItem(loadoutItem);
           if (updatedItem) {
@@ -508,10 +509,11 @@ function doApplyLoadout(
                       ? LoadoutItemState.MovedPendingEquip
                       : LoadoutItemState.Succeeded;
                 }
-              })
+              }),
             );
           }
-        } catch (e) {
+        } catch (err) {
+          const e = convertToError(err);
           if (e instanceof CanceledError) {
             throw e;
           }
@@ -530,7 +532,7 @@ function doApplyLoadout(
                   isOnCorrectStore &&
                   e instanceof DimError &&
                   checkEquipNotPossible(e.bungieErrorCode());
-              })
+              }),
             );
           }
         }
@@ -542,13 +544,13 @@ function doApplyLoadout(
       if (itemsToEquip.length > 1) {
         const store = getTargetStore();
         const successfulItems = Object.values(getLoadoutState().itemStates).filter(
-          (s) => s.equip && s.state === LoadoutItemState.MovedPendingEquip
+          (s) => s.equip && s.state === LoadoutItemState.MovedPendingEquip,
         );
         // Use the bulk equipAll API to equip all at once.
         itemsToEquip = itemsToEquip.filter((i) =>
-          successfulItems.some((si) => si.item.id === getLoadoutItem(i)?.id)
+          successfulItems.some((si) => si.item.id === getLoadoutItem(i)?.id),
         );
-        const realItemsToEquip = _.compact(itemsToEquip.map((i) => getLoadoutItem(i)));
+        const realItemsToEquip = filterMap(itemsToEquip, getLoadoutItem);
         try {
           const result = await dispatch(equipItems(store, realItemsToEquip, [], moveSession));
           // Bulk equip can partially fail
@@ -566,9 +568,10 @@ function doApplyLoadout(
 
                 state.equipNotPossible ||= checkEquipNotPossible(errorCode);
               }
-            })
+            }),
           );
-        } catch (e) {
+        } catch (err) {
+          const e = convertToError(err);
           if (e instanceof CanceledError) {
             throw e;
           }
@@ -579,7 +582,7 @@ function doApplyLoadout(
                 state.itemStates[item.index].state = LoadoutItemState.FailedEquip;
                 state.itemStates[item.index].error = e;
               }
-            })
+            }),
           );
         }
       }
@@ -590,20 +593,20 @@ function doApplyLoadout(
 
         infoLog('loadout socket overrides', 'Socket overrides to apply', itemsWithOverrides);
         await dispatch(
-          applySocketOverrides(itemsWithOverrides, setLoadoutState, getLoadoutItem, cancelToken)
+          applySocketOverrides(itemsWithOverrides, setLoadoutState, getLoadoutItem, cancelToken),
         );
         const overrideResults = Object.values(getLoadoutState().socketOverrideStates).flatMap((r) =>
-          Object.values(r.results)
+          Object.values(r.results),
         );
         const successfulItemOverrides = count(
           overrideResults,
-          (r) => r.state === LoadoutSocketOverrideState.Applied
+          (r) => r.state === LoadoutSocketOverrideState.Applied,
         );
         infoLog(
           'loadout socket overrides',
           'Socket overrides applied',
           successfulItemOverrides,
-          overrideResults.length
+          overrideResults.length,
         );
       }
 
@@ -621,28 +624,30 @@ function doApplyLoadout(
             setLoadoutState,
             getLoadoutItem,
             cancelToken,
-            Boolean(loadout.parameters?.clearMods)
-          )
+            Boolean(loadout.parameters?.clearMods),
+          ),
         );
         const { modStates } = getLoadoutState();
         infoLog(
           'loadout mods',
           'Mods applied',
           count(modStates, (s) => s.state === LoadoutModState.Applied),
-          modStates.length
+          modStates.length,
         );
       }
 
       // If this is marked to clear space (and we're not applying it to the vault), move items not
       // in the loadout off the character
-      if (loadout.clearSpace && !store.isVault) {
+      if ((loadout.parameters?.clearWeapons || loadout.parameters?.clearArmor) && !store.isVault) {
         setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.ClearSpace));
         await dispatch(
           clearSpaceAfterLoadout(
             getTargetStore(),
             applicableLoadoutItems.map((i) => getLoadoutItem(i)!),
-            moveSession
-          )
+            moveSession,
+            loadout.parameters.clearWeapons ?? false,
+            loadout.parameters.clearArmor ?? false,
+          ),
         );
       }
 
@@ -659,7 +664,7 @@ function doApplyLoadout(
             setLoadoutState(
               produce((state) => {
                 state.inGameLoadoutInActivity = true;
-              })
+              }),
             );
           } else {
             throw e;
@@ -689,7 +694,7 @@ function applyLoadoutItem(
   loadoutItem: LoadoutItem,
   getLoadoutItem: (loadoutItem: LoadoutItem) => DimItem | undefined,
   excludes: Exclusion[],
-  moveSession: MoveSession
+  moveSession: MoveSession,
 ): ThunkResult {
   return async (dispatch, getState) => {
     // The store and its items may change as we move things - make sure we're always looking at the latest version
@@ -711,18 +716,15 @@ function applyLoadoutItem(
       let amountNeeded = loadoutItem.amount - amountAlreadyHave;
       if (amountNeeded > 0) {
         const otherStores = stores.filter((otherStore) => store.id !== otherStore.id);
-        const storesByAmount = _.sortBy(
-          otherStores.map((store) => ({
-            store,
-            amount: amountOfItem(store, loadoutItem),
-          })),
-          (v) => v.amount
-        ).reverse();
+        const storesWithAmount = otherStores.map((store) => ({
+          store,
+          amount: amountOfItem(store, loadoutItem),
+        }));
 
         let totalAmount = amountAlreadyHave;
         // Keep moving from stacks until we get enough
         while (amountNeeded > 0) {
-          const source = _.maxBy(storesByAmount, (s) => s.amount)!;
+          const source = _.maxBy(storesWithAmount, (s) => s.amount)!;
           const amountToMove = Math.min(source.amount, amountNeeded);
           const sourceItem = source.store.items.find((i) => i.hash === loadoutItem.hash);
 
@@ -733,7 +735,7 @@ function applyLoadoutItem(
                 total: totalAmount,
                 itemname: item.name,
                 requested: loadoutItem.amount,
-              })
+              }),
             );
             error.level = 'warn';
             throw error;
@@ -752,8 +754,8 @@ function applyLoadoutItem(
                 amount: amountToMove,
                 excludes,
               },
-              moveSession
-            )
+              moveSession,
+            ),
           );
         }
       }
@@ -768,8 +770,8 @@ function applyLoadoutItem(
             amount: item.amount,
             excludes,
           },
-          moveSession
-        )
+          moveSession,
+        ),
       );
     }
   };
@@ -781,9 +783,11 @@ function applyLoadoutItem(
 function clearSpaceAfterLoadout(
   store: DimStore,
   items: DimItem[],
-  moveSession: MoveSession
+  moveSession: MoveSession,
+  clearWeapons: boolean,
+  clearArmor: boolean,
 ): ThunkResult {
-  const itemsByType = _.groupBy(items, (i) => i.bucket.hash);
+  const itemsByType = Map.groupBy(items, (i) => i.bucket.hash);
 
   const reservations: MoveReservations = {
     // reserve one space in the active character
@@ -792,21 +796,16 @@ function clearSpaceAfterLoadout(
 
   const itemsToRemove: DimItem[] = [];
 
-  for (const [bucketId, loadoutItems] of Object.entries(itemsByType)) {
-    // Exclude a handful of buckets from being cleared out
+  for (const [bucketHash, loadoutItems] of itemsByType.entries()) {
+    // Only clear the buckets that were selected by the user
     if (
-      [
-        BucketHashes.Consumables,
-        BucketHashes.Materials,
-        BucketHashes.Ghost,
-        BucketHashes.Ships,
-        BucketHashes.Vehicle,
-      ].includes(loadoutItems[0].bucket.hash)
+      !(clearArmor && D2Categories.Armor.includes(bucketHash)) &&
+      !(clearWeapons && D2Categories.Weapons.includes(bucketHash))
     ) {
       continue;
     }
+
     let numUnequippedLoadoutItems = 0;
-    const bucketHash = parseInt(bucketId, 10);
     for (const existingItem of findItemsByBucket(store, bucketHash)) {
       if (existingItem.equipped) {
         // ignore equipped items
@@ -819,13 +818,13 @@ function clearSpaceAfterLoadout(
           (i) =>
             i.id === existingItem.id &&
             i.hash === existingItem.hash &&
-            i.amount <= existingItem.amount
+            i.amount <= existingItem.amount,
         )
       ) {
         // This was one of our loadout items (or it can't be moved)
         numUnequippedLoadoutItems++;
       } else {
-        // Otherwise ee should move it to the vault
+        // Otherwise we should move it to the vault
         itemsToRemove.push(existingItem);
       }
     }
@@ -847,7 +846,7 @@ export function clearItemsOffCharacter(
   store: DimStore,
   items: DimItem[],
   moveSession: MoveSession,
-  reservations: MoveReservations
+  reservations: MoveReservations,
 ): ThunkResult {
   return async (dispatch, getState) => {
     const getStores = () => storesSelector(getState());
@@ -861,7 +860,7 @@ export function clearItemsOffCharacter(
           // If we're down to one space, try putting it on other characters
           const otherStores = stores.filter((s) => !s.isVault && s.id !== store.id);
           const otherStoresWithSpace = otherStores.filter((store) =>
-            spaceLeftForItem(store, item, stores)
+            spaceLeftForItem(store, item, stores),
           );
 
           if (otherStoresWithSpace.length) {
@@ -875,7 +874,7 @@ export function clearItemsOffCharacter(
                 'to',
                 otherStoresWithSpace[0].name,
                 'from',
-                getStore(stores, item.owner)!.name
+                getStore(stores, item.owner)!.name,
               );
             }
             await dispatch(
@@ -888,8 +887,8 @@ export function clearItemsOffCharacter(
                   excludes: items,
                   reservations,
                 },
-                moveSession
-              )
+                moveSession,
+              ),
             );
             continue;
           } else if (vaultSpaceLeft === 0) {
@@ -907,7 +906,7 @@ export function clearItemsOffCharacter(
             'to',
             vault.name,
             'from',
-            getStore(stores, item.owner)!.name
+            getStore(stores, item.owner)!.name,
           );
         }
         await dispatch(
@@ -920,10 +919,11 @@ export function clearItemsOffCharacter(
               excludes: items,
               reservations,
             },
-            moveSession
-          )
+            moveSession,
+          ),
         );
-      } catch (e) {
+      } catch (err) {
+        const e = convertToError(err);
         if (e instanceof CanceledError) {
           throw e;
         }
@@ -948,7 +948,7 @@ function applySocketOverrides(
   itemsWithOverrides: LoadoutItem[],
   setLoadoutState: LoadoutStateUpdater,
   getLoadoutItem: (loadoutItem: LoadoutItem) => DimItem | undefined,
-  cancelToken: CancelToken
+  cancelToken: CancelToken,
 ): ThunkResult {
   return async (dispatch, getState) => {
     const defs = d2ManifestSelector(getState())!;
@@ -979,27 +979,26 @@ function applySocketOverrides(
           // in an earlier, active socket.
           const handleShuffledSockets = (socketIndices: number[]) => {
             const sockets = getSocketsByIndexes(dimItem.sockets!, socketIndices);
-            const neededOverrides = _.compact(
-              socketIndices.map((socketIndex) => {
-                const hash = loadoutItem.socketOverrides![socketIndex];
-                return hash && { hash, loadoutSocketIndex: socketIndex };
-              })
-            );
+            const neededOverrides = filterMap(socketIndices, (socketIndex) => {
+              const hash = loadoutItem.socketOverrides![socketIndex];
+              return hash ? { hash, loadoutSocketIndex: socketIndex } : undefined;
+            });
             const excessSockets = [];
             // If the loadout doesn't specify aspects/fragments, don't touch them because that's how it worked for a long time.
             if (neededOverrides.length) {
               for (const socket of sockets) {
                 if (socket.plugged) {
                   const idx = neededOverrides.findIndex(
-                    ({ hash }) => hash === socket.plugged!.plugDef.hash
+                    ({ hash }) => hash === socket.plugged!.plugDef.hash,
                   );
                   if (idx !== -1) {
                     const overrideIndex = neededOverrides[idx].loadoutSocketIndex;
                     neededOverrides.splice(idx, 1);
-                    const mod = defs.InventoryItem.get(
-                      socket.plugged.plugDef.hash
-                    ) as PluggableInventoryItemDefinition;
-                    modsForItem.push({ socketIndex: socket.socketIndex, mod, requested: true });
+                    modsForItem.push({
+                      socketIndex: socket.socketIndex,
+                      mod: socket.plugged.plugDef,
+                      requested: true,
+                    });
                     itemSocketToLoadoutOverrideSocket[socket.socketIndex] = overrideIndex;
                   } else {
                     excessSockets.push(socket);
@@ -1021,7 +1020,7 @@ function applySocketOverrides(
                   requested = false;
                 }
                 const mod = defs.InventoryItem.get(
-                  override.hash
+                  override.hash,
                 ) as PluggableInventoryItemDefinition;
                 modsForItem.push({ socketIndex: socket.socketIndex, mod, requested });
                 itemSocketToLoadoutOverrideSocket[socket.socketIndex] = override.loadoutSocketIndex;
@@ -1032,30 +1031,8 @@ function applySocketOverrides(
           if (aspectSocketCategoryHashes.includes(category.category.hash)) {
             handleShuffledSockets(category.socketIndexes);
           } else if (fragmentSocketCategoryHashes.includes(category.category.hash)) {
-            // For fragments, we first need to figure out how many sockets we have available.
-            // If the loadout specifies overrides for aspects, we use all override aspects to calculate
-            // fragment capacity, otherwise we look at the item itself because we don't unplug any aspects
-            // if the overrides don't list any.
-            const aspectSocketIndices = dimItem.sockets!.categories.find((c) =>
-              aspectSocketCategoryHashes.includes(c.category.hash)
-            )!.socketIndexes;
-            let aspectDefs = _.compact(
-              aspectSocketIndices.map((aspectSocketIndex) => {
-                const aspectHash = loadoutItem.socketOverrides![aspectSocketIndex];
-                return aspectHash && defs.InventoryItem.get(aspectHash);
-              })
-            );
-            if (!aspectDefs.length) {
-              aspectDefs = _.compact(
-                getSocketsByIndexes(dimItem.sockets!, aspectSocketIndices).map(
-                  (socket) => socket.plugged?.plugDef
-                )
-              );
-            }
-            const fragmentCapacity = _.sumBy(
-              aspectDefs,
-              (aspectDef) => aspectDef.plug?.energyCapacity?.capacityValue || 0
-            );
+            const resolved = { item: dimItem, loadoutItem };
+            const fragmentCapacity = getLoadoutSubclassFragmentCapacity(defs, resolved, true);
             handleShuffledSockets(category.socketIndexes.slice(0, fragmentCapacity));
           } else {
             const sockets = getSocketsByIndexes(dimItem.sockets!, category.socketIndexes);
@@ -1077,14 +1054,14 @@ function applySocketOverrides(
               setSocketOverrideResult(
                 dimItem,
                 itemSocketToLoadoutOverrideSocket[socketIndex] ?? socketIndex,
-                LoadoutSocketOverrideState.Applied
-              )
+                LoadoutSocketOverrideState.Applied,
+              ),
             );
         };
         const handleFailure = (
           { socketIndex, requested }: Assignment,
           error?: Error,
-          equipNotPossible?: boolean
+          equipNotPossible?: boolean,
         ) =>
           requested
             ? setLoadoutState(
@@ -1093,8 +1070,8 @@ function applySocketOverrides(
                   itemSocketToLoadoutOverrideSocket[socketIndex] ?? socketIndex,
                   LoadoutSocketOverrideState.Failed,
                   error,
-                  equipNotPossible
-                )
+                  equipNotPossible,
+                ),
               )
             : setLoadoutState((state) => ({
                 ...state,
@@ -1102,7 +1079,7 @@ function applySocketOverrides(
               }));
 
         await dispatch(
-          equipModsToItem(dimItem, modsForItem, handleSuccess, handleFailure, cancelToken)
+          equipModsToItem(dimItem, modsForItem, handleSuccess, handleFailure, cancelToken),
         );
       }
     }
@@ -1129,7 +1106,7 @@ function applyLoadoutMods(
   getLoadoutItem: (loadoutItem: LoadoutItem) => DimItem | undefined,
   cancelToken: CancelToken,
   /** if an item has mods applied, this will "clear" all other sockets to empty/their default */
-  clearUnassignedSocketsPerItem = false
+  clearUnassignedSocketsPerItem = false,
 ): ThunkResult {
   return async (dispatch, getState) => {
     const defs = d2ManifestSelector(getState())!;
@@ -1148,15 +1125,14 @@ function applyLoadoutMods(
         loadoutDimItems.push(item);
       }
     }
-    const armor = _.compact(
-      LockableBucketHashes.map(
-        (bucketHash) =>
-          loadoutDimItems.find((item) => item.bucket.hash === bucketHash) ||
-          currentEquippedArmor.find((item) => item.bucket.hash === bucketHash)
-      )
+    const armor = filterMap(
+      LockableBucketHashes,
+      (bucketHash) =>
+        loadoutDimItems.find((item) => item.bucket.hash === bucketHash) ||
+        currentEquippedArmor.find((item) => item.bucket.hash === bucketHash),
     );
 
-    const mods = modHashes.map((h) => defs.InventoryItem.get(h)).filter(isPluggableItem);
+    const mods = hashesToPluggableItems(defs, modHashes);
 
     // Early exit - if all the mods are already there, nothing to do
     if (
@@ -1187,7 +1163,7 @@ function applyLoadoutMods(
           modHash: mod.hash,
           state: LoadoutModState.Unassigned,
           error: new DimError('Loadouts.UnassignedModError'),
-        })
+        }),
       );
     }
 
@@ -1199,14 +1175,14 @@ function applyLoadoutMods(
     const handleFailure = (
       { mod, requested }: Assignment,
       error?: Error,
-      equipNotPossible?: boolean
+      equipNotPossible?: boolean,
     ) =>
       requested
         ? setLoadoutState(
             setModResult(
               { modHash: mod.hash, state: LoadoutModState.Failed, error },
-              equipNotPossible
-            )
+              equipNotPossible,
+            ),
           )
         : setLoadoutState((state) => ({
             ...state,
@@ -1218,7 +1194,7 @@ function applyLoadoutMods(
         defs,
         item,
         itemModAssignments[item.id],
-        clearUnassignedSocketsPerItem
+        clearUnassignedSocketsPerItem,
       );
 
       // Patch in assignments for mods by bucket (shaders/ornaments)
@@ -1234,19 +1210,19 @@ function applyLoadoutMods(
               modHash: modHash,
               state: LoadoutModState.Unassigned,
               error: new DimError('Loadouts.UnassignedModError'),
-            })
+            }),
           );
         }
       }
 
-      const pluggingSteps = createPluggingStrategy(item, assignments);
+      const pluggingSteps = createPluggingStrategy(defs, item, assignments);
       const assignmentSequence = pluggingSteps.filter((assignment) => assignment.required);
       infoLog('loadout mods', 'Applying', assignmentSequence, 'to', item.name);
       if (assignmentSequence) {
         applyModsPromises.push(
           dispatch(
-            equipModsToItem(item, assignmentSequence, handleSuccess, handleFailure, cancelToken)
-          )
+            equipModsToItem(item, assignmentSequence, handleSuccess, handleFailure, cancelToken),
+          ),
         );
       }
     }
@@ -1263,7 +1239,7 @@ function allModsAreAlreadyApplied(
   modHashes: number[],
   modsByBucket: {
     [bucketHash: number]: number[];
-  }
+  },
 ) {
   // Copy this - we'll be deleting from it
   modsByBucket = { ...modsByBucket };
@@ -1316,7 +1292,7 @@ function equipModsToItem(
   onSuccess: (assignment: Assignment) => void,
   /** Callback for state reporting while applying. Mods are applied in parallel so we want to report ASAP. */
   onFailure: (assignment: Assignment, error?: Error, equipNotPossible?: boolean) => void,
-  cancelToken: CancelToken
+  cancelToken: CancelToken,
 ): ThunkResult {
   return async (dispatch, getState) => {
     const defs = d2ManifestSelector(getState())!;
@@ -1364,7 +1340,7 @@ function equipModsToItem(
           item.name,
           'socket',
           defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
-            socket.socketIndex
+            socket.socketIndex,
         );
 
         // TODO: short circuit if equipping is not possible
@@ -1372,7 +1348,8 @@ function equipModsToItem(
         try {
           await dispatch(applyMod(item, socket, mod));
           onSuccess(assignment);
-        } catch (e) {
+        } catch (err) {
+          const e = convertToError(err);
           const equipNotPossible =
             e instanceof DimError && checkEquipNotPossible(e.bungieErrorCode());
           onFailure(assignment, e, equipNotPossible);
@@ -1386,7 +1363,7 @@ function equipModsToItem(
           item.name,
           'socket',
           defs.SocketType.get(socket.socketDefinition.socketTypeHash)?.displayProperties.name ||
-            socket.socketIndex
+            socket.socketIndex,
         );
         // TODO: error here explaining why
         onFailure(assignment);
@@ -1398,7 +1375,7 @@ function equipModsToItem(
 function applyMod(
   item: DimItem,
   socket: DimSocket,
-  mod: PluggableInventoryItemDefinition
+  mod: PluggableInventoryItemDefinition,
 ): ThunkResult {
   return async (dispatch) => {
     try {
@@ -1412,16 +1389,16 @@ function applyMod(
         item.name,
         'socket',
         socket.socketIndex,
-        e
+        e,
       );
       const plugName = mod.displayProperties.name ?? 'Unknown Plug';
       throw new DimError(
         'AWA.ErrorMessage',
         t('AWA.ErrorMessage', {
-          error: e.message,
+          error: errorMessage(e),
           item: item.name,
           plug: plugName,
-        })
+        }),
       ).withError(e);
     }
   };

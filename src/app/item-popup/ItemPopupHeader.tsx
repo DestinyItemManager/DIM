@@ -6,7 +6,6 @@ import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { D1BucketHashes } from 'app/search/d1-known-values';
 import type { ItemTierName } from 'app/search/d2-known-values';
-import { Portal } from 'app/utils/temp-container';
 import { LookupTable } from 'app/utils/util-types';
 import { DestinyAmmunitionType, DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -82,16 +81,14 @@ export default function ItemPopupHeader({
             <div className={styles.itemType}>
               {t('MovePopup.Subtitle.QuestProgress', {
                 questStepNum: item.pursuit.questStepNum,
-                questStepsTotal: item.pursuit.questStepsTotal,
+                questStepsTotal: item.pursuit.questStepsTotal ?? '?',
               })}
             </div>
           )}
         </div>
       </div>
       {showArmory && linkToArmory && (
-        <Portal>
-          <ArmorySheet onClose={() => setShowArmory(false)} item={item} />
-        </Portal>
+        <ArmorySheet onClose={() => setShowArmory(false)} item={item} />
       )}
     </button>
   );
@@ -103,12 +100,16 @@ const ammoIcons: LookupTable<DestinyAmmunitionType, string> = {
   [DestinyAmmunitionType.Heavy]: heavy,
 };
 
-export function AmmoIcon({ type }: { type: DestinyAmmunitionType }) {
+export function AmmoIcon({ type, className }: { type: DestinyAmmunitionType; className?: string }) {
   return (
     <img
-      className={clsx(styles.ammoIcon, {
-        [styles.primary]: type === DestinyAmmunitionType.Primary,
-      })}
+      className={clsx(
+        styles.ammoIcon,
+        {
+          [styles.primary]: type === DestinyAmmunitionType.Primary,
+        },
+        className,
+      )}
       src={ammoIcons[type]}
     />
   );

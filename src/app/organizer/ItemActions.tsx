@@ -2,7 +2,7 @@ import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import Dropdown, { Option } from 'app/dim-ui/Dropdown';
 import KeyHelp from 'app/dim-ui/KeyHelp';
 import { useHotkey, useHotkeys } from 'app/hotkeys/useHotkey';
-import { t } from 'app/i18next-t';
+import { I18nKey, t } from 'app/i18next-t';
 import { TagCommand, itemTagList } from 'app/inventory/dim-item-info';
 import { DimStore } from 'app/inventory/store-types';
 import { getCurrentStore, getVault } from 'app/inventory/stores-helpers';
@@ -21,7 +21,7 @@ import styles from './ItemActions.m.scss';
 
 export interface TagCommandInfo {
   type?: TagCommand;
-  label: string;
+  label: I18nKey;
   sortOrder?: number;
   displacePriority?: number;
   hotkey?: string;
@@ -87,7 +87,7 @@ function ItemActions({
       if (tag.hotkey) {
         hotkeys.push({
           combo: tag.hotkey,
-          description: t('Hotkey.MarkItemAs', { tag: tag.type }),
+          description: t('Hotkey.MarkItemAs', { tag: tag.type! }),
           callback: () => onTagSelectedItems(tag),
         });
       }
@@ -103,12 +103,12 @@ function ItemActions({
   useHotkey(
     'p',
     t('Hotkey.Pull'),
-    useCallback(() => onMoveSelectedItems(currentStore), [currentStore, onMoveSelectedItems])
+    useCallback(() => onMoveSelectedItems(currentStore), [currentStore, onMoveSelectedItems]),
   );
   useHotkey(
     'v',
     t('Hotkey.Vault'),
-    useCallback(() => onMoveSelectedItems(vault), [vault, onMoveSelectedItems])
+    useCallback(() => onMoveSelectedItems(vault), [vault, onMoveSelectedItems]),
   );
 
   return (
@@ -147,7 +147,7 @@ function ItemActions({
         disabled={!itemsAreSelected}
         name="note"
         onClick={onNote}
-        title={t('Organizer.Note') + ' [N]'}
+        title={`${t('Organizer.Note')} [N]`}
         aria-keyshortcuts="n"
       >
         <AppIcon icon={stickyNoteIcon} />
@@ -159,7 +159,7 @@ function ItemActions({
         disabled={!itemsAreSelected}
         name="compare"
         onClick={onCompareSelectedItems}
-        title={t('Compare.Button') + ' [C]'}
+        title={`${t('Compare.Button')} [C]`}
         aria-keyshortcuts="c"
       >
         <AppIcon icon={compareIcon} />

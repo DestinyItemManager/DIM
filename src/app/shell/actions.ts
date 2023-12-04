@@ -10,19 +10,24 @@ export const setPhonePortrait = createAction('shell/PHONE_PORTRAIT')<boolean>();
  */
 export const setSearchQuery = createAction(
   'shell/SEARCH_QUERY',
-  (query: string, updateVersion = true) => ({ query, updateVersion })
+  // Another lint auto-fixes this by removing :boolean, then thinks `updateVersion` is `any`
+  // eslint-disable-next-line
+  (query: string, updateVersion: boolean = true) => ({
+    query,
+    updateVersion,
+  }),
 )();
 
 /**
  * Toggle in or out a specific search query component from the existing search.
  */
 export const toggleSearchQueryComponent = createAction(
-  'shell/TOGGLE_SEARCH_QUERY_COMPONENT'
+  'shell/TOGGLE_SEARCH_QUERY_COMPONENT',
 )<string>();
 
 export const toggleSearchResults = createAction(
   'shell/TOGGLE_SEARCH_RESULTS',
-  (open?: boolean) => open
+  (open?: boolean) => open,
 )();
 
 /**
@@ -30,7 +35,7 @@ export const toggleSearchResults = createAction(
  */
 export const setRouterLocation = createAction(
   'shell/SET_ROUTER_LOCATION',
-  (location?: string) => location
+  (location?: string) => location,
 )();
 
 /**

@@ -1,6 +1,6 @@
 import { settingsSelector } from 'app/dim-api/selectors';
 import { isPhonePortraitSelector } from './shell/selectors';
-import { observeStore } from './utils/redux-utils';
+import { observeStore } from './utils/redux';
 
 function setCSSVariable(property: string, value: { toString: () => string }) {
   if (value) {
@@ -31,6 +31,13 @@ export default function updateCSSVariables() {
     ) {
       setCSSVariable('--tiles-per-char-column', nextState.charColMobile);
     }
+
+    // Set a class on the body to control the theme. This must be applied on the body for syncThemeColor to work.
+    if ($featureFlags.themePicker && currentState.theme !== nextState.theme) {
+      const themeClass = `theme-${nextState.theme}`;
+      document.body.className = themeClass;
+      syncThemeColor(isPhonePortraitSelector(state));
+    }
   });
 
   // a subscribe on isPhonePortrait is needed when the user on mobile changes from portrait to landscape
@@ -39,8 +46,9 @@ export default function updateCSSVariables() {
     const settings = settingsSelector(state);
     setCSSVariable(
       '--tiles-per-char-column',
-      isPhonePortrait ? settings.charColMobile : settings.charCol
+      isPhonePortrait ? settings.charColMobile : settings.charCol,
     );
+    syncThemeColor(isPhonePortrait);
   });
 
   // Set a CSS var for the true viewport height. This changes when the keyboard appears/disappears.
@@ -54,7 +62,7 @@ export default function updateCSSVariables() {
       // The amount the bottom of the visual viewport is offset from the layout viewport
       setCSSVariable(
         '--viewport-bottom-offset',
-        `${window.innerHeight - (viewportHeight + Math.round(viewport.offsetTop))}px`
+        `${window.innerHeight - (viewportHeight + Math.round(viewport.offsetTop))}px`,
       );
     };
     defineVH();
@@ -66,5 +74,24 @@ export default function updateCSSVariables() {
     };
     defineVH();
     window.addEventListener('resize', defineVH);
+  }
+}
+
+/**
+ * Read the --theme-pwa-background CSS variable and use it to set the meta theme-color element.
+ */
+function syncThemeColor(isPhonePortrait: boolean) {
+  let background = getComputedStyle(document.body).getPropertyValue('--theme-pwa-background');
+
+  // Extract tint from mobile header on mobile devices to match notch/dynamic island fill
+  if (isPhonePortrait) {
+    background = getComputedStyle(document.body).getPropertyValue('--theme-mobile-background');
+  }
+
+  if (background) {
+    const metaElem = document.querySelector("meta[name='theme-color']");
+    if (metaElem) {
+      metaElem.setAttribute('content', background);
+    }
   }
 }

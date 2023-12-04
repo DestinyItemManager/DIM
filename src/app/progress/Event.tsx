@@ -5,17 +5,18 @@ import { profileResponseSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { toRecord } from 'app/records/presentation-nodes';
+import { filterMap } from 'app/utils/collections';
 import {
   DestinyEventCardDefinition,
   DestinyPresentationNodeState,
   DestinyRecordState,
 } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import styles from './Event.m.scss';
-import { recordToPursuitItem } from './milestone-items';
 import Pursuit from './Pursuit';
+import PursuitGrid from './PursuitGrid';
 import { sortPursuits } from './Pursuits';
+import { recordToPursuitItem } from './milestone-items';
 
 /**
  * A component for showing objectives of seasonal events v2,
@@ -61,8 +62,8 @@ export function Event({
     return null;
   }
 
-  const records = _.compact(
-    classSpecificNode.children.records.map((h) => toRecord(defs, profileResponse, h.recordHash))
+  const records = filterMap(classSpecificNode.children.records, (h) =>
+    toRecord(defs, profileResponse, h.recordHash),
   );
 
   const pursuits = records
@@ -78,8 +79,8 @@ export function Event({
         buckets,
         store,
         card.displayProperties.name,
-        trackedRecords.includes(r.recordDef.hash)
-      )
+        trackedRecords.includes(r.recordDef.hash),
+      ),
     );
 
   if (!pursuits.length) {
@@ -87,10 +88,10 @@ export function Event({
   }
 
   return (
-    <div className="progress-for-character">
+    <PursuitGrid>
       {pursuits.sort(sortPursuits).map((item) => (
         <Pursuit item={item} key={item.index} />
       ))}
-    </div>
+    </PursuitGrid>
   );
 }

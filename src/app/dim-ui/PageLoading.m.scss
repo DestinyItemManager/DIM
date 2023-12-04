@@ -2,17 +2,3 @@
   position: relative;
   pointer-events: none;
 }
-
-.pageLoadingEnter {
-  opacity: 0;
-}
-.pageLoadingEnter.pageLoadingEnterActive {
-  opacity: 1;
-  transition: opacity 100ms ease-in 500ms;
-}
-
-.pageLoadingExit.pageLoadingExitActive {
-  > section {
-    opacity: 0;
-  }
-}

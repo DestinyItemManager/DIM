@@ -4,7 +4,6 @@
   cursor: pointer;
   height: 54px;
   width: 123px;
-  margin-right: 4px;
 }
 
 .ownershipIcon {
@@ -15,11 +14,12 @@
   border-radius: 50%;
   padding: 3px;
   box-sizing: border-box;
-  z-index: 3;
   position: absolute;
   top: calc(#{$item-border-width} - 4px - var(--item-size) / 4 + var(--item-size));
   right: $item-border-width + 2px;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
 }
 
 .acquiredIcon {
@@ -32,13 +32,22 @@
   background: $acquiredGreen;
 }
 
+.lockedIcon {
+  composes: ownershipIcon;
+  background: grey;
+  align-items: center;
+}
+
 .vendorItem {
-  display: flex;
-  flex-direction: column;
+  composes: flexColumn from '../dim-ui/common.m.scss';
   align-items: center;
   position: relative;
-  margin-right: var(--item-margin);
-  cursor: pointer;
+  width: min-content;
+  text-align: center;
+
+  :global(.item) {
+    cursor: pointer;
+  }
 
   :global(.item-img) {
     object-fit: cover;
@@ -49,11 +58,6 @@
   :global(.item) {
     opacity: 0.3;
   }
-}
-
-.vendorCosts {
-  margin-top: -4px;
-  margin-bottom: 4px;
 }
 
 .cost {

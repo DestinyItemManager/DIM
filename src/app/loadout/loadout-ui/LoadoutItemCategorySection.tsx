@@ -5,22 +5,28 @@ import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { D2BucketCategory } from 'app/inventory/inventory-buckets';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { bucketsSelector } from 'app/inventory/selectors';
-import { LockableBucketHashes } from 'app/loadout-builder/types';
+import { DimStore } from 'app/inventory/store-types';
+import { useAnalyzeLoadout } from 'app/loadout-analyzer/hooks';
+import { LockableBucketHashes, ResolvedStatConstraint } from 'app/loadout-builder/types';
+import {
+  clearBucketCategory,
+  setLoadoutParameters,
+} from 'app/loadout-drawer/loadout-drawer-reducer';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { LoadoutStats } from 'app/store-stats/CharacterStats';
+import { LoadoutCharacterStats } from 'app/store-stats/CharacterStats';
 import { emptyArray } from 'app/utils/empty';
 import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
 import _ from 'lodash';
+import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { BucketPlaceholder } from './BucketPlaceholder';
 import { FashionMods } from './FashionMods';
 import styles from './LoadoutItemCategorySection.m.scss';
 import LoadoutParametersDisplay from './LoadoutParametersDisplay';
-import { OptimizerButton } from './OptimizerButton';
+import { OptimizerButton, armorItemsMissing } from './OptimizerButton';
 
 const categoryStyles: LookupTable<D2BucketCategory, string> = {
   Weapons: styles.categoryWeapons,
@@ -31,7 +37,7 @@ const categoryStyles: LookupTable<D2BucketCategory, string> = {
 export default function LoadoutItemCategorySection({
   category,
   subclass,
-  storeId,
+  store,
   items,
   allMods,
   modsByBucket,
@@ -40,7 +46,7 @@ export default function LoadoutItemCategorySection({
 }: {
   category: D2BucketCategory;
   subclass?: ResolvedLoadoutItem;
-  storeId: string;
+  store: DimStore;
   items?: ResolvedLoadoutItem[];
   allMods: PluggableInventoryItemDefinition[];
   modsByBucket: {
@@ -51,20 +57,39 @@ export default function LoadoutItemCategorySection({
 }) {
   const defs = useD2Definitions()!;
   const buckets = useSelector(bucketsSelector)!;
-  const itemsByBucket = _.groupBy(items, (li) => li.item.bucket.hash);
+  const analysis = useAnalyzeLoadout(loadout, store, /* active */ !hideOptimizeArmor);
+  const itemsByBucket = Map.groupBy(items ?? [], (li) => li.item.bucket.hash);
   const isPhonePortrait = useIsPhonePortrait();
   const bucketOrder =
     category === 'Weapons' || category === 'Armor'
       ? buckets.byCategory[category]
       : _.sortBy(
-          Object.keys(itemsByBucket).map((bucketHash) => buckets.byHash[parseInt(bucketHash, 10)]),
-          (bucket) => buckets.byCategory[category].findIndex((b) => b.hash === bucket.hash)
+          Array.from(itemsByBucket.keys(), (bucketHash) => buckets.byHash[bucketHash]),
+          (bucket) => buckets.byCategory[category].findIndex((b) => b.hash === bucket.hash),
         );
   const equippedItems =
     items?.filter((li) => li.loadoutItem.equip && !li.missing).map((li) => li.item) ?? [];
 
   const isArmor = category === 'Armor';
   const hasFashion = isArmor && !_.isEmpty(modsByBucket);
+
+  const [optimizeLoadout, constraints]: [Loadout, ResolvedStatConstraint[] | undefined] =
+    useMemo(() => {
+      if (
+        analysis?.result.armorResults?.tag === 'done' &&
+        analysis.result.armorResults.betterStatsAvailable
+      ) {
+        return [
+          clearBucketCategory(
+            defs,
+            'Armor',
+          )(setLoadoutParameters(analysis.result.armorResults.loadoutParameters)(loadout)),
+          analysis.result.armorResults.strictUpgradeStatConstraints,
+        ];
+      } else {
+        return [loadout, undefined];
+      }
+    }, [defs, analysis?.result.armorResults, loadout]);
 
   if (isPhonePortrait && !items && !hasFashion) {
     return null;
@@ -77,9 +102,9 @@ export default function LoadoutItemCategorySection({
           {bucketOrder.map((bucket) => (
             <ItemBucket
               key={bucket.hash}
-              storeId={storeId}
+              storeId={store.id}
               bucketHash={bucket.hash}
-              items={itemsByBucket[bucket.hash]}
+              items={itemsByBucket.get(bucket.hash)!}
               modsForBucket={modsByBucket[bucket.hash] ?? emptyArray()}
             />
           ))}
@@ -95,14 +120,23 @@ export default function LoadoutItemCategorySection({
         <>
           {equippedItems.length === 5 && (
             <div className="stat-bars destiny2">
-              <LoadoutStats
-                showTier
-                stats={getLoadoutStats(defs, loadout.classType, subclass, equippedItems, allMods)}
+              <LoadoutCharacterStats
+                loadout={loadout}
+                subclass={subclass}
+                allMods={allMods}
+                items={items}
               />
             </div>
           )}
           {loadout.parameters && <LoadoutParametersDisplay params={loadout.parameters} />}
-          {!hideOptimizeArmor && <OptimizerButton loadout={loadout} />}
+          {!hideOptimizeArmor && (
+            <OptimizerButton
+              loadout={optimizeLoadout}
+              storeId={store.id}
+              missingArmor={armorItemsMissing(items)}
+              strictUpgradeStatConstraints={constraints}
+            />
+          )}
         </>
       )}
     </div>
@@ -127,7 +161,7 @@ function ItemBucket({
   // TODO: should these be draggable? so you can drag them into other loadouts?
 
   return (
-    <div className={clsx(styles.itemBucket)}>
+    <div className={styles.itemBucket}>
       {[equipped, unequipped].map((items, index) =>
         items.length > 0 ? (
           <div
@@ -167,7 +201,7 @@ function ItemBucket({
               {showFashion && <FashionMods modsForBucket={modsForBucket} storeId={storeId} />}
             </div>
           )
-        )
+        ),
       )}
     </div>
   );

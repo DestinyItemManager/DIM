@@ -8,6 +8,7 @@ import NewItemIndicator from 'app/inventory/NewItemIndicator';
 import TagIcon from 'app/inventory/TagIcon';
 import { clearAllNewItems } from 'app/inventory/actions';
 import { itemTagList } from 'app/inventory/dim-item-info';
+import { allItemsSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import WishListSettings from 'app/settings/WishListSettings';
 import { useIsPhonePortrait } from 'app/shell/selectors';
@@ -15,15 +16,14 @@ import DimApiSettings from 'app/storage/DimApiSettings';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import StreamDeckSettings from 'app/stream-deck/StreamDeckSettings/StreamDeckSettings';
 import { clearAppBadge } from 'app/utils/app-badge';
+import { usePageTitle } from 'app/utils/hooks';
 import { errorLog } from 'app/utils/log';
 import i18next from 'i18next';
-import exampleWeaponImage from 'images/example-weapon.jpg';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import InventoryItem from '../inventory/InventoryItem';
-import { DimItem } from '../inventory/item-types';
 import { AppIcon, faGrid, faList, lockIcon, refreshIcon, unlockedIcon } from '../shell/icons';
 import CharacterOrderEditor from './CharacterOrderEditor';
 import Checkbox from './Checkbox';
@@ -38,28 +38,6 @@ import { useSetSetting } from './hooks';
 import { Settings } from './initial-settings';
 import { itemSortSettingsSelector } from './item-sort';
 import './settings.scss';
-
-const fakeWeapon = {
-  icon: `~${exampleWeaponImage}`,
-  element: {
-    displayProperties: {
-      icon: '/img/destiny_content/damage_types/destiny2/thermal.png',
-    },
-  },
-  isNew: true,
-  location: {
-    type: 'energy',
-  },
-  bucket: {
-    type: 'energy',
-  },
-  visible: true,
-  primaryStat: {
-    value: 300,
-  },
-  itemCategoryHashes: [],
-  destinyVersion: 2,
-};
 
 const languageOptions = mapToOptions({
   de: 'Deutsch',
@@ -80,7 +58,19 @@ const languageOptions = mapToOptions({
 // This state is outside the settings page because the settings loses its
 let languageChanged = false;
 
+const themeOptions = mapToOptions({
+  default: 'Default (Beyond Light)',
+  classic: 'DIM Classic',
+  dimdark: 'DIM Dark Mode',
+  europa: 'Europa',
+  neomuna: 'Neomuna',
+  pyramid: 'Pyramid Fleet',
+  throneworld: 'Throne World',
+  vexnet: 'Vex Network',
+});
+
 export default function SettingsPage() {
+  usePageTitle(t('Settings.Settings'));
   const dispatch = useThunkDispatch();
   const settings = useSelector(settingsSelector);
   const currentAccount = useSelector(currentAccountSelector);
@@ -88,6 +78,16 @@ export default function SettingsPage() {
   const isPhonePortrait = useIsPhonePortrait();
   useLoadStores(currentAccount);
   const setSetting = useSetSetting();
+  const allItems = useSelector(allItemsSelector);
+
+  const exampleWeapon = allItems.find(
+    (i) => i.bucket.sort === 'Weapons' && !i.isExotic && !i.masterwork && !i.deepsightInfo,
+  );
+  // Include a masterworked item because they look different in some themes
+  const exampleWeaponMasterworked = allItems.find(
+    (i) => i.bucket.sort === 'Weapons' && !i.isExotic && i.masterwork && !i.deepsightInfo,
+  );
+  const exampleArmor = allItems.find((i) => i.bucket.sort === 'Armor' && !i.isExotic);
 
   const onCheckChange = (checked: boolean, name: keyof Settings) => {
     if (name.length === 0) {
@@ -136,6 +136,11 @@ export default function SettingsPage() {
     });
   };
 
+  const changeTheme = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const theme = e.target.value;
+    setSetting('theme', theme);
+  };
+
   const changeDescriptionDisplay = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSetting('descriptionsToDisplay', e.target.value);
   };
@@ -152,14 +157,19 @@ export default function SettingsPage() {
     return false;
   };
 
+  const changeVaultWeaponGrouping = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const vaultWeaponGrouping = e.target.value;
+    setSetting('vaultWeaponGrouping', vaultWeaponGrouping);
+  };
+
   const itemSortOrderChanged = (sortOrder: SortProperty[]) => {
     setSetting(
       'itemSortOrderCustom',
-      sortOrder.filter((o) => o.enabled).map((o) => o.id)
+      sortOrder.filter((o) => o.enabled).map((o) => o.id),
     );
     setSetting(
       'itemSortReversals',
-      sortOrder.filter((o) => o.reversed).map((o) => o.id)
+      sortOrder.filter((o) => o.reversed).map((o) => o.id),
     );
   };
 
@@ -190,6 +200,15 @@ export default function SettingsPage() {
     // archetype: 'Archetype'
   };
 
+  const vaultWeaponGroupingOptions = mapToOptions({
+    '': t('Settings.VaultGroupingNone'),
+    typeName: t('Settings.SortByType'),
+    rarity: t('Settings.SortByRarity'),
+    ammoType: t('Settings.SortByAmmoType'),
+    tag: t('Settings.SortByTag', { taglist: tagListString }),
+    elementWeapon: t('Settings.SortByWeaponElement'),
+  });
+
   const descriptionDisplayOptions = mapToOptions({
     both: t('Settings.BothDescriptions'),
     bungie: t('Settings.BungieDescriptionOnly'),
@@ -219,16 +238,17 @@ export default function SettingsPage() {
         displayName,
         enabled: sortSettings.sortOrder.includes(id),
         reversed: sortSettings.sortReversals.includes(id),
-      })
+      }),
     ),
     (o) => {
       const index = sortSettings.sortOrder.indexOf(o.id);
       return index >= 0 ? index : 999;
-    }
+    },
   );
 
   const menuItems = _.compact([
     { id: 'general', title: t('Settings.Language') },
+    $featureFlags.themePicker ? { id: 'theme', title: t('Settings.Theme') } : undefined,
     { id: 'items', title: t('Settings.Items') },
     { id: 'inventory', title: t('Settings.Inventory') },
     $featureFlags.wishLists ? { id: 'wishlist', title: t('WishListRoll.Header') } : undefined,
@@ -272,15 +292,49 @@ export default function SettingsPage() {
             </div>
           </section>
 
+          {$featureFlags.themePicker && (
+            <section id="theme">
+              <h2>{t('Settings.Theme')}</h2>
+              <div className="setting">
+                <Select
+                  label={t('Settings.Theme')}
+                  name="theme"
+                  value={settings.theme}
+                  options={themeOptions}
+                  onChange={changeTheme}
+                />
+              </div>
+            </section>
+          )}
+
           <section id="items">
             <h2>{t('Settings.Items')}</h2>
-            <div className="examples">
-              <InventoryItem
-                item={fakeWeapon as unknown as DimItem}
-                isNew={true}
-                tag="favorite"
-                autoLockTagged={settings.autoLockTagged}
-              />
+
+            <div className="sub-bucket">
+              {exampleWeapon && (
+                <InventoryItem
+                  item={exampleWeapon}
+                  isNew={settings.showNewItems}
+                  tag="favorite"
+                  autoLockTagged={settings.autoLockTagged}
+                />
+              )}
+              {exampleWeaponMasterworked && (
+                <InventoryItem
+                  item={exampleWeaponMasterworked}
+                  isNew={settings.showNewItems}
+                  tag="keep"
+                  autoLockTagged={settings.autoLockTagged}
+                />
+              )}
+              {exampleArmor && (
+                <InventoryItem
+                  item={exampleArmor}
+                  isNew={settings.showNewItems}
+                  tag="keep"
+                  autoLockTagged={settings.autoLockTagged}
+                />
+              )}
             </div>
 
             {!isPhonePortrait && (
@@ -319,6 +373,16 @@ export default function SettingsPage() {
                   <NewItemIndicator className="new-item" /> <span>{t('Hotkey.ClearNewItems')}</span>
                 </button>
               </div>
+            </div>
+
+            <div className="setting">
+              <Select
+                label={t('Settings.SetVaultWeaponGrouping')}
+                name="vaultWeaponGrouping"
+                value={settings.vaultWeaponGrouping}
+                options={vaultWeaponGroupingOptions}
+                onChange={changeVaultWeaponGrouping}
+              />
             </div>
 
             <div className="setting">

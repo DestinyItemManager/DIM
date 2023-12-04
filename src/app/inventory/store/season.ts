@@ -18,7 +18,7 @@ const SourceToD2Season: Record<number, number> = D2SeasonFromSource.sources;
 
 export function getSeason(
   item: DimItem | DestinyInventoryItemDefinition,
-  defs?: D2ManifestDefinitions
+  defs?: D2ManifestDefinitions,
 ): number {
   const asDimItem = ('destinyVersion' in item && item) || undefined;
   const asDef = ('displayProperties' in item && item) || undefined;
@@ -50,7 +50,7 @@ export function getSeason(
     return getSeasonFromOverlayAndSource(
       asDimItem.iconOverlay || asDimItem.hiddenOverlay,
       asDimItem.source,
-      asDimItem.hash
+      asDimItem.hash,
     );
   } else {
     return D2CalculatedSeason;
@@ -60,7 +60,7 @@ export function getSeason(
 function getSeasonFromOverlayAndSource(
   overlay: string | undefined,
   source: number | undefined,
-  hash: number
+  hash: number,
 ) {
   if (source && SourceToD2Season[source] && !overlay) {
     return SourceToD2Season[source];

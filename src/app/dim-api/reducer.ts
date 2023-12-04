@@ -18,13 +18,13 @@ import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { FilterContext } from 'app/search/filter-types';
 import { buildFiltersMap } from 'app/search/search-config';
 import { parseAndValidateQuery } from 'app/search/search-utils';
+import { count, uniqBy } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
-import { errorLog, infoLog, timer } from 'app/utils/log';
-import { count, uniqBy } from 'app/utils/util';
+import { errorLog, timer } from 'app/utils/log';
 import { clearWishLists } from 'app/wishlists/actions';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { deepEqual } from 'fast-equals';
-import produce, { Draft } from 'immer';
+import { Draft, produce } from 'immer';
 import _ from 'lodash';
 import { ActionType, getType } from 'typesafe-actions';
 import * as inventoryActions from '../inventory/actions';
@@ -161,7 +161,7 @@ export const dimApi = (
   state: DimApiState = initialState,
   action: DimApiAction,
   // This is a specially-handled reducer (see reducers.ts) which gets the current account (based on incoming state) passed along
-  account?: DestinyAccount
+  account?: DestinyAccount,
 ): DimApiState => {
   switch (action.type) {
     case getType(actions.globalSettingsLoaded):
@@ -328,7 +328,7 @@ export const dimApi = (
         state,
         'customCharacterSort',
         // The order includes characters from multiple profiles, so we can't just replace it
-        state.settings.customCharacterSort.filter((id) => !order.includes(id)).concat(order)
+        state.settings.customCharacterSort.filter((id) => !order.includes(id)).concat(order),
       );
     }
 
@@ -425,7 +425,7 @@ function migrateSettings(state: DimApiState) {
     state = changeSetting(
       state,
       'inventoryClearSpaces',
-      parseInt(state.settings.inventoryClearSpaces, 10)
+      parseInt(state.settings.inventoryClearSpaces, 10),
     );
   }
   if (typeof state.settings.itemSize === 'string') {
@@ -445,7 +445,7 @@ function migrateSettings(state: DimApiState) {
     state = changeSetting(
       state,
       'itemSortOrderCustom',
-      [...sortOrder].splice(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor')
+      sortOrder.toSpliced(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor'),
     );
   }
 
@@ -453,7 +453,7 @@ function migrateSettings(state: DimApiState) {
     state = changeSetting(
       state,
       'itemSortReversals',
-      [...reversals].splice(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor')
+      reversals.toSpliced(sortOrder.indexOf('element'), 1, 'elementWeapon', 'elementArmor'),
     );
   }
 
@@ -465,7 +465,7 @@ function migrateSettings(state: DimApiState) {
     const customStats = [...state.settings.customStats];
 
     for (const classEnumString in oldCustomStats) {
-      const classEnum: DestinyClass = parseInt(classEnumString);
+      const classEnum: DestinyClass = parseInt(classEnumString, 10);
       const statHashList = oldCustomStats[classEnum];
 
       if (classEnum !== DestinyClass.Unknown && statHashList?.length > 0) {
@@ -600,7 +600,7 @@ function compactUpdate(
   compacted: {
     [key: string]: ProfileUpdateWithRollback;
   },
-  update: ProfileUpdateWithRollback
+  update: ProfileUpdateWithRollback,
 ) {
   // Figure out the ID of the object being acted on
   let key: string;
@@ -802,30 +802,31 @@ function compactUpdate(
  * Record the result of an update call to the API
  */
 function applyFinishedUpdatesToQueue(state: DimApiState, results: ProfileUpdateResult[]) {
-  return produce(state, (draft) => {
-    const total = Math.min(state.updateInProgressWatermark, results?.length || 0);
+  const total = Math.min(state.updateInProgressWatermark, results?.length || 0);
 
-    for (let i = 0; i < total; i++) {
-      const update = state.updateQueue[i];
-      const result = results[i];
+  for (let i = 0; i < total; i++) {
+    const update = state.updateQueue[i];
+    const result = results[i];
 
-      if (!(result.status === 'Success' || result.status === 'NotFound')) {
-        errorLog(
-          'applyFinishedUpdatesToQueue',
-          'failed to update:',
-          result.status,
-          ':',
-          result.message,
-          update
-        );
-        reverseEffects(draft, update);
-      }
+    if (!(result.status === 'Success' || result.status === 'NotFound')) {
+      errorLog(
+        'applyFinishedUpdatesToQueue',
+        'failed to update:',
+        result.status,
+        ':',
+        result.message,
+        update,
+      );
+      // TODO: reverse the effects of the update?
     }
+  }
 
+  return {
+    ...state,
     // There's currently no error that would leave them in the array
-    draft.updateQueue.splice(0, state.updateInProgressWatermark);
-    draft.updateInProgressWatermark = 0;
-  });
+    updateQueue: state.updateQueue.toSpliced(0, state.updateInProgressWatermark),
+    updateInProgressWatermark: 0,
+  };
 }
 
 /**
@@ -894,7 +895,7 @@ function setTag(
   itemId: string,
   tag: TagValue | undefined,
   craftedDate: number | undefined,
-  account: DestinyAccount
+  account: DestinyAccount,
 ) {
   if (!itemId || itemId === '0') {
     errorLog('setTag', 'Cannot tag a non-instanced item. Use setItemHashTag instead');
@@ -931,15 +932,13 @@ function setTag(
         craftedDate,
       };
     }
-  } else {
-    if (existingTag?.tag) {
-      delete existingTag.tag;
-      if (!existingTag.notes) {
-        delete tags[itemId];
-      }
-    } else {
-      return; // nothing to do
+  } else if (existingTag?.tag) {
+    delete existingTag.tag;
+    if (!existingTag.notes) {
+      delete tags[itemId];
     }
+  } else {
+    return; // nothing to do
   }
 
   draft.updateQueue.push(updateAction);
@@ -949,7 +948,7 @@ function setItemHashTag(
   draft: Draft<DimApiState>,
   itemHash: number,
   tag: TagValue | undefined,
-  account: DestinyAccount
+  account: DestinyAccount,
 ) {
   const tags = draft.itemHashTags;
   const existingTag = tags[itemHash];
@@ -989,7 +988,7 @@ function setNote(
   itemId: string,
   notes: string | undefined,
   craftedDate: number | undefined,
-  account: DestinyAccount
+  account: DestinyAccount,
 ) {
   if (!itemId || itemId === '0') {
     errorLog('setNote', 'Cannot note a non-instanced item. Use setItemHashNote instead');
@@ -1036,7 +1035,7 @@ function setItemHashNote(
   draft: Draft<DimApiState>,
   itemHash: number,
   notes: string | undefined,
-  account: DestinyAccount
+  account: DestinyAccount,
 ) {
   const tags = draft.itemHashTags;
   const existingTag = tags[itemHash];
@@ -1097,7 +1096,7 @@ function trackTriumph(
   draft: Draft<DimApiState>,
   account: DestinyAccount,
   recordHash: number,
-  tracked: boolean
+  tracked: boolean,
 ) {
   const profileKey = makeProfileKeyFromAccount(account);
   const profile = ensureProfile(draft, profileKey);
@@ -1164,7 +1163,7 @@ function searchUsed(draft: Draft<DimApiState>, account: DestinyAccount, query: s
   }
 
   if (searches.length > MAX_SEARCH_HISTORY) {
-    const sortedSearches = [...searches].sort(recentSearchComparator);
+    const sortedSearches = searches.toSorted(recentSearchComparator);
 
     const numBuiltinSearches = count(sortedSearches, (s) => s.usageCount <= 0);
 
@@ -1185,7 +1184,7 @@ function saveSearch(
   account: DestinyAccount,
   draft: Draft<DimApiState>,
   query: string,
-  saved: boolean
+  saved: boolean,
 ) {
   const destinyVersion = account.destinyVersion;
   // Note: memoized
@@ -1195,7 +1194,7 @@ function saveSearch(
   const { canonical, saveable } = parseAndValidateQuery(query, filtersMap, {
     customStats: draft.settings.customStats ?? [],
   } as FilterContext);
-  if (!saveable) {
+  if (!saveable && saved) {
     errorLog('searchUsed', 'Query not eligible to be saved', query);
     return;
   }
@@ -1253,7 +1252,7 @@ function deleteSearch(draft: Draft<DimApiState>, destinyVersion: DestinyVersion,
 function cleanupInvalidSearches(draft: Draft<DimApiState>, account: DestinyAccount) {
   // Filter out saved and builtin searches
   const searches = draft.searches[account.destinyVersion].filter(
-    (s) => !s.saved && s.usageCount > 0
+    (s) => !s.saved && s.usageCount > 0,
   );
 
   if (!searches.length) {
@@ -1274,11 +1273,6 @@ function cleanupInvalidSearches(draft: Draft<DimApiState>, account: DestinyAccou
       deleteSearch(draft, account.destinyVersion, search.query);
     }
   }
-}
-
-function reverseEffects(draft: Draft<DimApiState>, update: ProfileUpdateWithRollback) {
-  // TODO: put things back the way they were
-  infoLog('reverseEffects', 'TODO: Reversing', draft, update);
 }
 
 export function parseProfileKey(profileKey: string): [string, DestinyVersion] {

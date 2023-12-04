@@ -27,7 +27,7 @@ export function getItemsFromLoadoutItems(
     [bucketHash: number]: number[] | undefined;
   },
   /** needs passing in if this is d1 mode */
-  d1Defs?: D1ManifestDefinitions
+  d1Defs?: D1ManifestDefinitions,
 ): [items: ResolvedLoadoutItem[], warnitems: ResolvedLoadoutItem[]] {
   if (!loadoutItems) {
     return [emptyArray(), emptyArray()];
@@ -68,7 +68,7 @@ export function getItemsFromLoadoutItems(
             : { ...loadoutItem, socketOverrides: overrides },
       });
     } else {
-      const fakeItem: DimItem | null = useTheseDefs.isDestiny2()
+      const fakeItem = useTheseDefs.isDestiny2()
         ? makeFakeItem(itemCreationContext, loadoutItem.hash)
         : makeFakeD1Item(useTheseDefs, buckets, loadoutItem.hash);
       if (fakeItem) {

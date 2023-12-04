@@ -100,7 +100,7 @@ export default function Armory({
         screenshot && !isPhonePortrait
           ? {
               backgroundImage: `linear-gradient(180deg, rgba(0,0,0,.75) 0px, rgba(0,0,0,0) 200px), linear-gradient(180deg, rgba(0,0,0,0) 400px, #0b0c0f 500px), url("${bungieNetPath(
-                screenshot
+                screenshot,
               )}")`,
             }
           : undefined
@@ -124,7 +124,7 @@ export default function Armory({
               <div>
                 {t('MovePopup.Subtitle.QuestProgress', {
                   questStepNum: item.pursuit.questStepNum,
-                  questStepsTotal: item.pursuit.questStepsTotal,
+                  questStepsTotal: item.pursuit.questStepsTotal ?? '?',
                 })}
               </div>
             )}
@@ -134,8 +134,11 @@ export default function Armory({
                   <BungieImage height={15} width={15} src={season.displayProperties.icon} />
                 )}{' '}
                 {season.displayProperties.name} (
-                {t('Armory.Season', { season: season.seasonNumber, year: getItemYear(item) })})
-                {event && <span> - {D2EventInfo[getEvent(item)].name}</span>}
+                {t('Armory.Season', {
+                  season: season.seasonNumber,
+                  year: getItemYear(item) ?? '?',
+                })}
+                ){event && <span> - {D2EventInfo[getEvent(item)].name}</span>}
               </div>
             )}
           </div>

@@ -1,7 +1,7 @@
 import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimLanguage } from 'app/i18n';
-import { t } from 'app/i18next-t';
+import { I18nKey, t } from 'app/i18next-t';
 import { TagValue } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
@@ -29,7 +29,7 @@ export interface FilterContext {
   currentStore: DimStore;
   loadoutsByItem: LoadoutsByItem;
   wishListFunction: (item: DimItem) => InventoryWishListRoll | undefined;
-  wishListsByHash: _.Dictionary<WishListRoll[]>;
+  wishListsByHash: Map<number, WishListRoll[]>;
   newItems: Set<string>;
   getTag: (item: DimItem) => TagValue | undefined;
   getNotes: (item: DimItem) => string | undefined;
@@ -97,7 +97,11 @@ export interface FilterArgs {
  * filter expression itself. We can also use it to drive filter help and filter
  * editor.
  */
-export interface FilterDefinition<I extends DimItem = DimItem> {
+export interface FilterDefinition<
+  I = DimItem,
+  FilterCtx = FilterContext,
+  SuggestionsCtx = SuggestionsContext,
+> {
   /**
    * One or more keywords which trigger the filter when typed into search bar.
    * What this means depends on what "format" this filter is.
@@ -108,7 +112,7 @@ export interface FilterDefinition<I extends DimItem = DimItem> {
    * A t()-compatible arg tuple or i18n key pointing to a full description of
    * the filter, to show in filter help
    */
-  description: string | I18nInput;
+  description: I18nKey | I18nInput;
 
   /**
    * What kind of query this is, used to help generate suggestions.
@@ -136,7 +140,7 @@ export interface FilterDefinition<I extends DimItem = DimItem> {
    * filter function will be generated once, at the point where the overall
    * query is parsed.
    */
-  filter: (args: FilterArgs & FilterContext) => ItemFilter<I>;
+  filter: (args: FilterArgs & FilterCtx) => ItemFilter<I>;
 
   /**
    * A list of suggested keywords, for `query` and `stat` formats.
@@ -151,20 +155,20 @@ export interface FilterDefinition<I extends DimItem = DimItem> {
   /**
    * For stat filters, check whether this is a valid stat name or combination.
    */
-  validateStat?: (filterContext?: FilterContext) => (stat: string) => boolean;
+  validateStat?: (filterContext?: FilterCtx) => (stat: string) => boolean;
 
   /**
    * A custom function used to generate (additional) suggestions.
    * This should only be necessary for freeform or custom formats.
    */
   suggestionsGenerator?: (
-    args: SuggestionsContext
+    args: SuggestionsCtx,
   ) => string[] | { keyword: string; ops?: string[] }[] | undefined;
 
   /**
    * given an item, this generates a filter that should match that item
    */
-  fromItem?: (item: DimItem) => string;
+  fromItem?: (item: I) => string;
 }
 
 export const enum FilterDeprecation {

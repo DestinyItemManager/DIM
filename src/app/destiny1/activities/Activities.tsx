@@ -1,14 +1,15 @@
+import CharacterTile from 'app/character-tile/CharacterTile';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { useD1Definitions } from 'app/manifest/selectors';
 import Objective from 'app/progress/Objective';
+import { usePageTitle } from 'app/utils/hooks';
 import { StringLookup } from 'app/utils/util-types';
 import clsx from 'clsx';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../../accounts/destiny-account';
-import CharacterTileButton from '../../character-tile/CharacterTileButton';
 import BungieImage, { bungieBackgroundStyle } from '../../dim-ui/BungieImage';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
 import { sortedStoresSelector } from '../../inventory/selectors';
@@ -55,12 +56,13 @@ interface Props {
 }
 
 export default function Activities({ account }: Props) {
-  useLoadStores(account);
+  usePageTitle(t('Activities.Activities'));
+  const storesLoaded = useLoadStores(account);
   const stores = useSelector(sortedStoresSelector);
 
   const defs = useD1Definitions();
 
-  if (!defs || !stores.length) {
+  if (!defs || !storesLoaded) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 
@@ -69,7 +71,7 @@ export default function Activities({ account }: Props) {
     activityId: string,
     stores: D1Store[],
     tier: D1ActivityTier,
-    index: number
+    index: number,
   ): ActivityTier => {
     const tierDef = defs.Activity.get(tier.activityHash);
 
@@ -77,16 +79,16 @@ export default function Activities({ account }: Props) {
       tier.activityData.recommendedLight === 390
         ? '390'
         : tier.tierDisplayName
-        ? t(`Activities.${tier.tierDisplayName}`, {
-            metadata: { keys: 'difficulty' },
-          })
-        : tierDef.activityName;
+          ? t(`Activities.${tier.tierDisplayName}`, {
+              metadata: { keys: 'difficulty' },
+            })
+          : tierDef.activityName;
 
     const characters =
       activityId === 'heroicstrike'
         ? []
         : stores.map((store) => {
-            const activity = store.advisors.activities![activityId];
+            const activity = store.advisors.activities[activityId];
             let steps = activity.activityTiers[index].steps;
 
             if (!steps) {
@@ -117,7 +119,7 @@ export default function Activities({ account }: Props) {
   const processActivities = (
     defs: D1ManifestDefinitions,
     stores: D1Store[],
-    rawActivity: D1ActivityComponent
+    rawActivity: D1ActivityComponent,
   ): Activity => {
     const def = defs.Activity.get(rawActivity.display.activityHash);
     const activity = {
@@ -129,8 +131,8 @@ export default function Activities({ account }: Props) {
         rawActivity.identifier === 'nightfall'
           ? t('Activities.Nightfall')
           : rawActivity.identifier === 'heroicstrike'
-          ? t('Activities.WeeklyHeroic')
-          : defs.ActivityType.get(def.activityTypeHash).activityTypeName,
+            ? t('Activities.WeeklyHeroic')
+            : defs.ActivityType.get(def.activityTypeHash).activityTypeName,
       skulls: null as Skull[] | null,
       tiers: [] as ActivityTier[],
     };
@@ -153,7 +155,7 @@ export default function Activities({ account }: Props) {
       activity.skulls = activity.skulls.flat();
     }
     activity.tiers = rawActivity.activityTiers.map((r, i) =>
-      processActivity(defs, rawActivity.identifier, stores, r, i)
+      processActivity(defs, rawActivity.identifier, stores, r, i),
     );
 
     return activity;
@@ -170,17 +172,17 @@ export default function Activities({ account }: Props) {
       'elderchallenge',
     ];
 
-    const rawActivities = Object.values(stores[0].advisors.activities!).filter(
-      (a: any) => a.activityTiers && allowList.includes(a.identifier)
+    const rawActivities = Object.values(stores[0].advisors.activities).filter(
+      (a) => a.activityTiers && allowList.includes(a.identifier),
     );
-    const activities = _.sortBy(rawActivities, (a: any) => {
+    const activities = _.sortBy(rawActivities, (a) => {
       const ix = allowList.indexOf(a.identifier);
       return ix === -1 ? 999 : ix;
     }).map((a) => processActivities(defs, stores, a));
 
     for (const a of activities) {
       for (const t of a.tiers) {
-        if (t.hash === stores[0].advisors.activities!.weeklyfeaturedraid.display.activityHash) {
+        if (t.hash === stores[0].advisors.activities.weeklyfeaturedraid.display.activityHash) {
           a.featured = true;
           t.name = t.hash === 1387993552 ? '390' : t.name;
         }
@@ -199,7 +201,7 @@ export default function Activities({ account }: Props) {
       <div className="activities-characters">
         {characters.map((store) => (
           <div key={store.id} className="activities-character">
-            <CharacterTileButton character={store} />
+            <CharacterTile store={store} />
           </div>
         ))}
       </div>
@@ -227,7 +229,7 @@ export default function Activities({ account }: Props) {
                   {activity.tiers.length > 1 && <div className="tier-title">{tier.name}</div>}
                   <div className="tier-characters">
                     {_.sortBy(tier.characters, (c) =>
-                      characters.findIndex((s) => s.id === c.id)
+                      characters.findIndex((s) => s.id === c.id),
                     ).map((character) => (
                       <div key={character.id} className="tier-row">
                         {character.objectives.length === 0 &&

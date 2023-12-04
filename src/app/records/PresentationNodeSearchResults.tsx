@@ -1,11 +1,10 @@
 import { settingSelector } from 'app/dim-api/selectors';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import React from 'react';
 import { useSelector } from 'react-redux';
-import { DimPresentationNodeSearchResult } from './presentation-nodes';
 import PresentationNodeLeaf from './PresentationNodeLeaf';
 import PresentationNodeRoot from './PresentationNodeRoot';
 import styles from './PresentationNodeSearchResults.m.scss';
+import { DimPresentationNodeSearchResult } from './presentation-nodes';
 
 export default function PresentationNodeSearchResults({
   searchResults,
@@ -17,29 +16,26 @@ export default function PresentationNodeSearchResults({
   profileResponse: DestinyProfileResponse;
 }) {
   // TODO: make each node in path linkable
-  const completedRecordsHidden = useSelector(settingSelector('completedRecordsHidden'));
   const redactedRecordsRevealed = useSelector(settingSelector('redactedRecordsRevealed'));
-
+  const sortRecordProgression = useSelector(settingSelector('sortRecordProgression'));
   return (
     <div>
       {searchResults.map((sr) => (
-        <div key={sr.path.map((p) => p.nodeDef.hash).join('.')}>
+        <div key={sr.path.map((p) => p.hash).join('.')}>
           <ul className={styles.path}>
-            {sr.path.map(
-              (p, index) =>
-                index > 0 && <li key={p.nodeDef.hash}>{p.nodeDef.displayProperties.name}</li>
-            )}
+            {sr.path.map((p, index) => index > 0 && <li key={p.hash}>{p.name}</li>)}
           </ul>
           <div>
             {!sr.collectibles &&
               !sr.records &&
               !sr.metrics &&
               !sr.craftables &&
+              !sr.plugs &&
               (() => {
-                const node = sr.path[sr.path.length - 1];
+                const node = sr.path.at(-1)!;
                 return node.childPresentationNodes ? (
                   <PresentationNodeRoot
-                    presentationNodeHash={node.nodeDef.hash}
+                    presentationNodeHash={node.hash}
                     ownedItemHashes={ownedItemHashes}
                     profileResponse={profileResponse}
                   />
@@ -47,16 +43,16 @@ export default function PresentationNodeSearchResults({
                   <PresentationNodeLeaf
                     node={node}
                     ownedItemHashes={ownedItemHashes}
-                    completedRecordsHidden={completedRecordsHidden}
                     redactedRecordsRevealed={redactedRecordsRevealed}
+                    sortRecordProgression={sortRecordProgression}
                   />
                 );
               })()}
             <PresentationNodeLeaf
               node={sr}
               ownedItemHashes={ownedItemHashes}
-              completedRecordsHidden={completedRecordsHidden}
               redactedRecordsRevealed={redactedRecordsRevealed}
+              sortRecordProgression={sortRecordProgression}
             />
           </div>
         </div>

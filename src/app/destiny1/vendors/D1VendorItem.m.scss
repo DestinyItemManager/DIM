@@ -9,13 +9,11 @@
   vertical-align: text-bottom;
 }
 
-.vendorCosts {
-  margin-top: -4px;
-  margin-bottom: 4px;
-}
-
 .cost {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
   font-size: 10px;
   margin-top: 1px;
-  text-align: center;
 }

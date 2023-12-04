@@ -1,8 +1,11 @@
-@import '../variables';
+@use '../variables' as *;
 
 .buttons {
-  display: flex;
-  flex-direction: column;
+  composes: flexColumn from '../dim-ui/common.m.scss';
   margin: 8px 0;
   gap: 8px;
+
+  @include phone-portrait {
+    padding: 0 10px;
+  }
 }

@@ -1,5 +1,5 @@
-import { getPlatforms } from 'app/accounts/platforms';
 import SelectAccount from 'app/accounts/SelectAccount';
+import { getPlatforms } from 'app/accounts/platforms';
 import {
   accountsLoadedSelector,
   accountsSelector,
@@ -48,7 +48,7 @@ export default function DefaultAccount() {
   useEffect(() => {
     // If currentAccountMembershipId is set we'll redirect immediately, we don't need to load accounts
     if (!accountsLoaded && !currentAccountMembershipId) {
-      dispatch(getPlatforms());
+      dispatch(getPlatforms);
     }
   }, [dispatch, accountsLoaded, currentAccountMembershipId]);
 
@@ -88,8 +88,8 @@ export default function DefaultAccount() {
         error={accountsError}
         fallbackMessage={t('Accounts.NoCharacters')}
         title={t('Accounts.ErrorLoading')}
-        showTwitters={true}
-        showReload={true}
+        showSocials
+        showReload
       />
     </div>
   );

@@ -2,6 +2,7 @@ import Countdown from 'app/dim-ui/Countdown';
 import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { isClassCompatible } from 'app/utils/item-utils';
 import {
   DestinyCharacterProgressionComponent,
   DestinyClass,
@@ -11,7 +12,6 @@ import {
   DestinySeasonPassDefinition,
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import { ProgressBar, StackAmount } from './PursuitItem';
 import styles from './SeasonalRank.m.scss';
@@ -68,15 +68,18 @@ export default function SeasonalRank({
     rewardItems.push(fakeReward(prestigeRewardHash, prestigeRewardLevel));
   }
 
-  // Get the reward item for the next progression level
   const nextRewardItems = rewardItems
-    .filter((item) =>
-      prestigeMode
-        ? item.rewardedAtProgressionLevel === prestigeRewardLevel
-        : item.rewardedAtProgressionLevel === seasonalRank + 1
-    )
-    // Filter class-specific items
     .filter((item) => {
+      // Get the reward items for the next progression level
+      if (
+        prestigeMode
+          ? item.rewardedAtProgressionLevel !== prestigeRewardLevel
+          : item.rewardedAtProgressionLevel !== seasonalRank + 1
+      ) {
+        return false;
+      }
+
+      // Filter class-specific items
       const def = defs.InventoryItem.get(item.itemHash);
 
       if (!def) {
@@ -96,7 +99,7 @@ export default function SeasonalRank({
         }
       }
 
-      return def.classType === DestinyClass.Unknown || def.classType === store.classType;
+      return isClassCompatible(def.classType, store.classType);
     })
     // Premium reward first to match companion
     .reverse();

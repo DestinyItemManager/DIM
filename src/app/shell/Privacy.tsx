@@ -1,6 +1,5 @@
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import StaticPage from 'app/dim-ui/StaticPage';
-import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './Privacy.m.scss';
 
@@ -113,31 +112,7 @@ export default function Privacy() {
               </ol>
             </li>
 
-            <li>
-              <strong>Google Drive: Settings (preferences), loadouts, tags and notes.</strong>
-              <ol>
-                <li>
-                  DIM allows you to link your Google Account in order to store some information in
-                  your personal Google Drive account. This information is only accessible to you.
-                  Information stored in Google Drive includes your DIM preferences and settings,
-                  loadouts, and any per-item item tags and notes. Information about your Google
-                  Account is only stored locally on your device.
-                </li>
-                <li>
-                  Use of Google Drive is governed by the Google{' '}
-                  <ExternalLink href="https://policies.google.com/terms">
-                    Terms of Service
-                  </ExternalLink>{' '}
-                  and{' '}
-                  <ExternalLink href="https://policies.google.com/privacy">
-                    Privacy Policy
-                  </ExternalLink>{' '}
-                  .
-                </li>
-              </ol>
-            </li>
-
-            {$DIM_FLAVOR !== 'release' && (
+            {$featureFlags.sentry && (
               <li>
                 <strong>Sentry: Error reporting</strong>
                 <ol>

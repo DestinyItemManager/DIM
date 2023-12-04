@@ -1,8 +1,9 @@
 import { getCurrentHub } from '@sentry/browser';
-import { reportException } from './utils/exceptions';
+import { toHttpStatusError } from './bungie-api/http-client';
 import { errorLog, infoLog, warnLog } from './utils/log';
 import { Observable } from './utils/observable';
-import { delay } from './utils/util';
+import { delay } from './utils/promises';
+import { reportException } from './utils/sentry';
 
 /**
  * A function that will attempt to update the service worker in place.
@@ -29,20 +30,23 @@ let currentVersion = $DIM_VERSION;
 
 (async () => {
   await delay(10 * 1000);
-  setInterval(async () => {
-    try {
-      const serverVersion = await getServerVersion();
-      if (isNewVersion(serverVersion, currentVersion)) {
-        const updated = await updateServiceWorker();
-        if (updated) {
-          currentVersion = serverVersion;
-          dimNeedsUpdate$.next(true);
+  setInterval(
+    async () => {
+      try {
+        const serverVersion = await getServerVersion();
+        if (isNewVersion(serverVersion, currentVersion)) {
+          const updated = await updateServiceWorker();
+          if (updated) {
+            currentVersion = serverVersion;
+            dimNeedsUpdate$.next(true);
+          }
         }
+      } catch (e) {
+        errorLog('SW', 'Failed to check version.json', e);
       }
-    } catch (e) {
-      errorLog('SW', 'Failed to check version.json', e);
-    }
-  }, 15 * 60 * 1000);
+    },
+    15 * 60 * 1000,
+  );
 })();
 
 /**
@@ -55,7 +59,7 @@ export default function registerServiceWorker() {
 
   window.addEventListener('load', () => {
     navigator.serviceWorker
-      .register('/service-worker.js')
+      .register(`${$PUBLIC_PATH}service-worker.js`, { scope: $PUBLIC_PATH })
       .then((registration) => {
         // TODO: save off a handler that can call registration.update() to force update on refresh?
         registration.onupdatefound = () => {
@@ -85,18 +89,14 @@ export default function registerServiceWorker() {
                   preventDevToolsReloadLoop = true;
                   window.location.reload();
                 });
-              } else {
+              } else if ($featureFlags.debugSW) {
                 // At this point, everything has been precached.
                 // It's the perfect time to display a
                 // "Content is cached for offline use." message.
-                if ($featureFlags.debugSW) {
-                  infoLog('SW', 'Content is cached for offline use.');
-                }
+                infoLog('SW', 'Content is cached for offline use.');
               }
-            } else {
-              if ($featureFlags.debugSW) {
-                infoLog('SW', 'New Service Worker state: ', installingWorker.state);
-              }
+            } else if ($featureFlags.debugSW) {
+              infoLog('SW', 'New Service Worker state: ', installingWorker.state);
             }
           };
         };
@@ -143,13 +143,13 @@ export default function registerServiceWorker() {
 async function getServerVersion() {
   const response = await fetch('/version.json');
   if (response.ok) {
-    const data = await response.json();
+    const data = (await response.json()) as { version?: string };
     if (!data.version) {
       throw new Error('No version property');
     }
-    return data.version as string;
+    return data.version;
   } else {
-    throw response;
+    throw await toHttpStatusError(response);
   }
 }
 

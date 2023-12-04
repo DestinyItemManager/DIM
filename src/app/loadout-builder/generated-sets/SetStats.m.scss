@@ -1,25 +1,39 @@
-@import '../../variables';
+@use '../../variables' as *;
 
 .container {
+  color: #ddd;
   font-size: 14px;
-  flex-wrap: wrap;
+  display: flex;
+  flex-flow: row wrap;
+  gap: 4px 8px;
+  align-items: center;
+
+  @include phone-portrait {
+    display: grid;
+    grid-template-columns: repeat(7, min-content);
+
+    > *:nth-child(n + 9) {
+      grid-column: span 6;
+    }
+  }
 }
 
 .statIcon {
   vertical-align: middle;
   height: 16px;
   width: 16px;
+  font-size: 16px;
+  margin-right: 1px;
 }
 
 .light {
   color: $gold;
-  margin-right: 14px;
   white-space: nowrap;
 
   :global(.app-icon) {
-    font-size: 10px;
-    vertical-align: -0.125em;
-    margin-right: 0;
+    vertical-align: 3px;
+    font-size: 8px;
+    margin-right: 1px;
   }
 }
 
@@ -28,21 +42,21 @@
 }
 
 .tierLightContainer {
-  margin-bottom: 5px;
   align-items: center;
   display: flex;
+  margin-right: 0.5em;
 
   .nonActiveStat {
-    margin-right: 5px;
+    margin-left: 0.25em;
+  }
+
+  @include phone-portrait {
+    margin-right: 0;
   }
 }
 
 .tier {
   font-weight: bold;
-}
-
-.tierLightSegment {
-  margin-right: 5px;
 }
 
 .existingLoadout {
@@ -55,30 +69,16 @@
   font-weight: bold;
 }
 
-.statSegmentContainer {
-  display: flex;
-  flex-flow: row wrap;
-
-  @include phone-portrait {
-    justify-content: space-around;
-  }
-
-  // Prevents odd number of columns messing up the layout
-  @media (max-width: 1079px) {
-    max-width: 500px;
-  }
-}
-
 .statSegment {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
   white-space: nowrap;
-  min-width: calc(var(--item-size) + ((0.59 * var(--item-size)) * 2) + 10px);
+  min-width: 48px;
 
   @include phone-portrait {
-    min-width: 120px;
+    min-width: 0;
   }
 }
 
@@ -87,5 +87,5 @@
 }
 
 .boostedValue {
-  color: $blue;
+  color: $stat-modded;
 }

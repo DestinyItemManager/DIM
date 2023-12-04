@@ -2,9 +2,9 @@
 
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
-import { DimItem } from './item-types';
 import { getItemImageStyles } from './ItemIcon';
 import styles from './ItemIconPlaceholder.m.scss';
+import { DimItem } from './item-types';
 
 // We'll use a single intersection observer instead of one per item, roughly following the strategy
 // from https://github.com/thebuilder/react-intersection-observer/blob/master/src/observe.ts
@@ -29,7 +29,7 @@ const observer =
           root: null,
           rootMargin: '16px',
           threshold: 0,
-        }
+        },
       )
     : {
         // eslint-disable-next-line @typescript-eslint/no-empty-function

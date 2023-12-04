@@ -1,6 +1,5 @@
 import { t } from 'app/i18next-t';
 import { useLocalStorage } from 'app/utils/hooks';
-import clsx from 'clsx';
 import React from 'react';
 import styles from './AppInstallBanner.m.scss';
 import { AppIcon, closeIcon } from './icons';
@@ -11,7 +10,7 @@ const DAY = 1000 * 60 * 60 * 24;
 export default function AppInstallBanner({ onClick }: { onClick: React.MouseEventHandler }) {
   const [lastDismissed, setLastDismissed] = useLocalStorage<number>(
     'app-install-last-dismissed',
-    0
+    0,
   );
 
   // Hide if they've dismissed this in the last 2 weeks
@@ -25,7 +24,7 @@ export default function AppInstallBanner({ onClick }: { onClick: React.MouseEven
   };
 
   return (
-    <a className={clsx(styles.banner)} onClick={onClick}>
+    <a className={styles.banner} onClick={onClick}>
       <span>{t('Header.InstallDIMBanner')}</span>
       <button type="button" className={styles.hideButton} onClick={hide}>
         <AppIcon icon={closeIcon} />

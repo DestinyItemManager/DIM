@@ -10,7 +10,7 @@ import { EventBus, Observable } from './observable';
  */
 export function useEventBusListener<T>(
   eventBus: EventBus<T> | Observable<T>,
-  subscribeFn: (value: T) => void
+  subscribeFn: (value: T) => void,
 ) {
   useEffect(() => eventBus.subscribe(subscribeFn), [eventBus, subscribeFn]);
 }
@@ -42,9 +42,9 @@ export function useShiftHeld() {
 export function useSetCSSVarToHeight(ref: React.RefObject<HTMLElement>, propertyName: string) {
   const updateVar = useCallback(
     (height: number) => {
-      document.querySelector('html')!.style.setProperty(propertyName, height + 'px');
+      document.querySelector('html')!.style.setProperty(propertyName, `${height}px`);
     },
-    [propertyName]
+    [propertyName],
   );
   useLayoutEffect(() => {
     updateVar(ref.current!.offsetHeight);
@@ -57,7 +57,7 @@ export function useSetCSSVarToHeight(ref: React.RefObject<HTMLElement>, property
  */
 export function useLocalStorage<T>(
   key: string,
-  initialValue: T
+  initialValue: T,
 ): [T, (val: T | ((initial: T) => T)) => void] {
   const [storedValue, setStoredValue] = useState<T>((): T => {
     try {
@@ -93,8 +93,68 @@ export function useThrottledSubscription<T>(observable: Observable<T>, delay: nu
         };
       },
     }),
-    [observable, delay]
+    [observable, delay],
   );
   const value = useSubscription(throttledObservable);
   return value;
+}
+
+/**
+ * Determine a height for a given element based on its height and position
+ * relative to the bottom of the viewport.
+ */
+export function useHeightFromViewportBottom(
+  elementRef: React.RefObject<HTMLElement>,
+  setHeightFromViewportBottom: (value: number) => void,
+  itemHeight: number | undefined,
+  withPadding: boolean,
+) {
+  const padding = withPadding ? 10 : 0;
+
+  useEffect(() => {
+    if (!window.visualViewport || !elementRef.current) {
+      return;
+    }
+    const updateHeight = () => {
+      const rect = elementRef.current!.getBoundingClientRect();
+      const { y, height } = rect;
+      const { height: viewportHeight } = window.visualViewport!;
+      // pixels remaining in viewport minus offset minus padding
+      const pxAvailable = viewportHeight - y - height - padding;
+      const heightFromBottom =
+        itemHeight !== undefined
+          ? Math.floor(pxAvailable / itemHeight) * itemHeight
+          : Math.floor(pxAvailable);
+
+      setHeightFromViewportBottom(heightFromBottom);
+    };
+
+    updateHeight();
+    window.visualViewport.addEventListener('resize', updateHeight);
+    return () => window.visualViewport!.removeEventListener('resize', updateHeight);
+  }, [setHeightFromViewportBottom, elementRef, itemHeight, padding]);
+}
+
+export function usePageTitle(title: string, active?: boolean) {
+  useEffect(() => {
+    if (active !== false) {
+      const titleElem = document.getElementsByTagName('title')[0]!;
+      titleElem.textContent = `DIM - ${title}`;
+      return () => {
+        titleElem.textContent = `DIM`;
+      };
+    }
+  }, [active, title]);
+}
+
+// On first render, focus the first focusable element.
+export function useFocusFirstFocusableElement(ref: React.RefObject<HTMLElement>) {
+  useEffect(() => {
+    if (ref.current) {
+      const firstFocusable = ref.current.querySelector(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      );
+      (firstFocusable as HTMLElement)?.focus();
+    }
+  }, [ref]);
 }

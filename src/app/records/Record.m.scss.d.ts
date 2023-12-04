@@ -17,6 +17,7 @@ interface CssExports {
   'objectives': string;
   'obscured': string;
   'recordLore': string;
+  'recordsGrid': string;
   'redeemed': string;
   'score': string;
   'tracked': string;

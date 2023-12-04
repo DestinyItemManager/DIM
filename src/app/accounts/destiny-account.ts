@@ -1,17 +1,12 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { D1Character } from 'app/destiny1/d1-manifest-types';
 import { t } from 'app/i18next-t';
-import {
-  battleNetIcon,
-  epicIcon,
-  faPlayStation,
-  faSteam,
-  faXbox,
-  stadiaIcon,
-} from 'app/shell/icons';
+import { epicIcon, faPlayStation, faSteam, faXbox } from 'app/shell/icons';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
+import { LookupTable } from 'app/utils/util-types';
 import {
   BungieMembershipType,
   DestinyLinkedProfilesResponse,
@@ -24,7 +19,7 @@ import { getCharacters } from '../bungie-api/destiny1-api';
 import { getLinkedAccounts } from '../bungie-api/destiny2-api';
 import { removeToken } from '../bungie-api/oauth-tokens';
 import { showNotification } from '../notifications/notifications';
-import { reportException } from '../utils/exceptions';
+import { reportException } from '../utils/sentry';
 import { loggedOut } from './actions';
 
 // See https://github.com/Bungie-net/api/wiki/FAQ:-Cross-Save-pre-launch-testing,-and-how-it-may-affect-you for more info
@@ -32,7 +27,7 @@ import { loggedOut } from './actions';
 /**
  * Platform types (membership types) in the Bungie API.
  */
-const PLATFORM_LABELS: Record<BungieMembershipType, string> = {
+export const PLATFORM_LABELS: Record<BungieMembershipType, string> = {
   [BungieMembershipType.None]: 'None',
   [BungieMembershipType.All]: 'All',
   [BungieMembershipType.TigerXbox]: 'Xbox',
@@ -45,17 +40,11 @@ const PLATFORM_LABELS: Record<BungieMembershipType, string> = {
   [BungieMembershipType.BungieNext]: 'Bungie.net',
 };
 
-export const PLATFORM_ICONS: Record<BungieMembershipType, string | IconDefinition> = {
-  [BungieMembershipType.None]: 'None',
-  [BungieMembershipType.All]: 'All',
+export const PLATFORM_ICONS: LookupTable<BungieMembershipType, string | IconDefinition> = {
   [BungieMembershipType.TigerXbox]: faXbox,
   [BungieMembershipType.TigerPsn]: faPlayStation,
-  [BungieMembershipType.TigerBlizzard]: battleNetIcon,
-  [BungieMembershipType.TigerDemon]: 'Demon',
   [BungieMembershipType.TigerSteam]: faSteam,
-  [BungieMembershipType.TigerStadia]: stadiaIcon,
   [BungieMembershipType.TigerEgs]: epicIcon,
-  [BungieMembershipType.BungieNext]: 'Bungie.net',
 };
 
 /** A specific Destiny account (one per platform and Destiny version) */
@@ -90,7 +79,7 @@ export interface DestinyAccount {
  * @param bungieMembershipId Bungie.net membership ID
  */
 export function getDestinyAccountsForBungieAccount(
-  bungieMembershipId: string
+  bungieMembershipId: string,
 ): ThunkResult<DestinyAccount[]> {
   return async (dispatch) => {
     try {
@@ -136,7 +125,7 @@ function formatBungieName(destinyAccount: DestinyProfileUserInfoCard | UserInfoC
  * @param accounts raw Bungie API accounts response
  */
 export async function generatePlatforms(
-  accounts: DestinyLinkedProfilesResponse
+  accounts: DestinyLinkedProfilesResponse,
 ): Promise<DestinyAccount[]> {
   // accounts with errors could have had D1 characters!
   const accountPromises = accounts.profiles
@@ -186,7 +175,7 @@ export async function generatePlatforms(
             ? [account, findD1Characters(account)]
             : [account];
         }
-      })
+      }),
     );
 
   const allPromise = Promise.all(accountPromises);
@@ -195,14 +184,14 @@ export async function generatePlatforms(
 
 async function findD1Characters(account: DestinyAccount): Promise<DestinyAccount | null> {
   try {
-    const response = await getCharacters(account);
-    if (response?.length) {
+    const { characters } = await getCharacters(account);
+    if (characters?.length) {
       return {
         ...account,
         destinyVersion: 1,
         // D1 didn't support cross-save!
         platforms: [account.originalPlatformType],
-        lastPlayed: getLastPlayedD1Character(response),
+        lastPlayed: getLastPlayedD1Character(characters),
       };
     }
     return null;
@@ -231,13 +220,9 @@ async function findD1Characters(account: DestinyAccount): Promise<DestinyAccount
 /**
  * Find the date of the most recently played character.
  */
-function getLastPlayedD1Character(response: { id: string; dateLastPlayed: string }[]): Date {
-  return response.reduce((memo, rawStore) => {
-    if (rawStore.id === 'vault') {
-      return memo;
-    }
-
-    const d1 = new Date(rawStore.dateLastPlayed);
+function getLastPlayedD1Character(characters: D1Character[]): Date {
+  return characters.reduce((memo, character) => {
+    const d1 = new Date(character.characterBase.dateLastPlayed ?? 0);
 
     return memo ? (d1 >= memo ? d1 : memo) : d1;
   }, new Date(0));

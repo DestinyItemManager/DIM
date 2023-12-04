@@ -2,11 +2,11 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { bungieNetPath } from 'app/dim-ui/BungieImage';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimCharacterStatSource } from 'app/inventory/store-types';
-import { isPluggableItem } from 'app/inventory/store/sockets';
+import { hashesToPluggableItems } from 'app/inventory/store/sockets';
 import { ArmorStatHashes, ModStatChanges } from 'app/loadout-builder/types';
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { mapToOtherModCostVariant } from 'app/loadout/mod-utils';
-import { armorStats, modsWithConditionalStats } from 'app/search/d2-known-values';
+import { ModsWithConditionalStats, armorStats } from 'app/search/d2-known-values';
 import { emptyArray } from 'app/utils/empty';
 import { HashLookup } from 'app/utils/util-types';
 import { DestinyClass, DestinyItemInvestmentStatDefinition } from 'bungie-api-ts/destiny2';
@@ -16,13 +16,13 @@ import _ from 'lodash';
 export function isModStatActive(
   characterClass: DestinyClass,
   plugHash: number,
-  stat: DestinyItemInvestmentStatDefinition
+  stat: DestinyItemInvestmentStatDefinition,
 ): boolean {
   if (!stat.isConditionallyActive) {
     return true;
   } else if (
-    plugHash === modsWithConditionalStats.echoOfPersistence ||
-    plugHash === modsWithConditionalStats.sparkOfFocus
+    plugHash === ModsWithConditionalStats.EchoOfPersistence ||
+    plugHash === ModsWithConditionalStats.SparkOfFocus
   ) {
     // "-10 to the stat that governs your class ability recharge"
     return (
@@ -53,7 +53,7 @@ const fontModHashToStatHash = _.once(() => {
     ...baseFontModHashToStatHash,
     ..._.mapKeys(
       baseFontModHashToStatHash,
-      (_val, hash) => mapToOtherModCostVariant(parseInt(hash, 10))!
+      (_val, hash) => mapToOtherModCostVariant(parseInt(hash, 10))!,
     ),
   };
 });
@@ -81,14 +81,21 @@ function getFontMods(mods: PluggableInventoryItemDefinition[]) {
 
   return _.mapValues(boosts, (boost) => ({
     ...boost!,
-    value: boostForNumFontStacks[boost!.count] ?? _.last(boostForNumFontStacks),
+    value: boostForNumFontStacks[boost!.count] ?? boostForNumFontStacks.at(-1),
   }));
 }
 
 /**
+ * Does this list of mods have mods that dynamically grant stats, such as Font mods?
+ */
+export function includesRuntimeStatMods(modHashes: number[]) {
+  return modHashes.some((mod) => fontModHashToStatHash()[mod] !== undefined);
+}
+
+/**
  * This sums up the total stat contributions across mods passed in. These are then applied
- * to the loadouts after all the items base values have been summed. This mimics how mods
- * effect stat values in game and allows us to do some preprocessing.
+ * to the loadouts after all the items' base stat values have been summed. This mimics how mods
+ * affect stat values in game and allows us to do some preprocessing.
  */
 export function getTotalModStatChanges(
   defs: D2ManifestDefinitions,
@@ -100,12 +107,10 @@ export function getTotalModStatChanges(
    * that are active under specific conditions so that they don't have investmentStats,
    * but are active often enough to be important for loadout building.
    */
-  includeRuntimeStatBenefits: boolean
+  includeRuntimeStatBenefits: boolean,
 ) {
   const subclassPlugs = subclass?.loadoutItem.socketOverrides
-    ? Object.values(subclass.loadoutItem.socketOverrides)
-        .map((hash) => defs.InventoryItem.get(hash))
-        .filter(isPluggableItem)
+    ? hashesToPluggableItems(defs, Object.values(subclass.loadoutItem.socketOverrides))
     : emptyArray<PluggableInventoryItemDefinition>();
 
   const totals: ModStatChanges = {
@@ -119,10 +124,10 @@ export function getTotalModStatChanges(
 
   const processPlugs = (
     plugs: PluggableInventoryItemDefinition[],
-    source: DimCharacterStatSource
+    source: DimCharacterStatSource,
   ) => {
-    const grouped = _.groupBy(plugs, (plug) => plug.hash);
-    for (const plugCopies of Object.values(grouped)) {
+    const grouped = Map.groupBy(plugs, (plug) => plug.hash);
+    for (const plugCopies of grouped.values()) {
       const mod = plugCopies[0];
       const modCount = plugCopies.length;
       for (const stat of mod.investmentStats) {

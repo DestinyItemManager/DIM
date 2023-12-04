@@ -1,14 +1,10 @@
-@import '../../variables';
-
-.energyOptions {
-  margin: 8px 0;
-}
-
-.settingGroup {
-  background-color: black;
-  padding: 8px;
-}
+@use '../../variables' as *;
 
 .title {
-  margin-bottom: 4px;
+  margin: 0 0 8px 0;
+}
+
+.tooltip {
+  text-wrap: pretty;
+  margin-top: 4px;
 }

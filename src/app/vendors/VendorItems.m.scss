@@ -1,52 +1,45 @@
 @use '../variables.scss' as *;
 
 .currencies {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 4px 10px;
   font-size: 12px;
   margin-top: 4px;
-  margin-bottom: 4px;
-  display: flex;
-  flex-direction: row;
   justify-content: flex-end;
+  float: right;
+
   @include phone-portrait {
     margin-right: var(--item-margin);
   }
 }
 
-.currency {
-  margin-left: 10px;
-  &:first-child {
-    margin-left: 0;
-  }
-  img {
-    vertical-align: bottom;
-    height: 16px;
-    width: 16px;
-  }
+.currencyIcon {
+  vertical-align: bottom;
+  height: 16px;
+  width: 16px;
 }
 
 .itemCategories {
-  display: flex;
-  flex-flow: row wrap;
+  composes: flexWrap from '../dim-ui/common.m.scss';
   margin-bottom: 1.5em;
+  gap: 4px 32px;
+  float: left;
+  margin-top: 8px;
 
   @include phone-portrait {
-    display: block;
-  }
-  :global(.seasonalArtifact) & {
-    @include phone-portrait {
-      display: flex;
-      flex-wrap: nowrap;
-    }
+    flex-flow: column nowrap;
+    gap: 8px 0;
   }
 }
 
 .categoryTitle {
   margin-top: 10px;
-  margin-left: 2px;
   text-transform: uppercase;
   font-size: 12px;
   color: #ccc;
   margin-bottom: 4px;
+
   &:first-child {
     margin-top: 0;
   }
@@ -54,33 +47,12 @@
 
 .vendorItems {
   composes: flexWrap from '../dim-ui/common.m.scss';
-
-  :global(.item) {
-    cursor: pointer;
-    margin-bottom: 4px;
-  }
-
-  :global(.seasonalArtifact) & {
-    display: flex;
-    flex-flow: column wrap;
-  }
+  gap: var(--item-margin);
 }
 
 .vendorContents {
   @include phone-portrait {
     margin-left: var(--inventory-column-padding);
     margin-right: calc(var(--inventory-column-padding) - var(--item-margin));
-  }
-}
-
-.vendorRow {
-  margin-bottom: 4px;
-  margin-right: 32px;
-  @include phone-portrait {
-    margin-right: 0;
-  }
-  :global(.seasonalArtifact) & {
-    margin-right: 0;
-    text-align: center;
   }
 }

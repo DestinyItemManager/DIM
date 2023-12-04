@@ -1,9 +1,5 @@
 @use '../variables.scss' as *;
 
-.page {
-  margin-top: 10px;
-}
-
 .menu {
   :global(.dim-button),
   select {
@@ -31,4 +27,17 @@
 .hashtagTip {
   display: flex;
   align-items: center;
+}
+
+.loadoutRow {
+  padding-bottom: 10px;
+}
+
+.seasonHeader {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  gap: 0.25em;
+  margin: 16px 0 0 0;
+  border-bottom: 1px solid var(--theme-text);
+  font-size: 16px;
 }

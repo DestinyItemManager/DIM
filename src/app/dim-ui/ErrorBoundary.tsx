@@ -1,7 +1,7 @@
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { errorLog } from 'app/utils/log';
-import React from 'react';
-import { reportException } from '../utils/exceptions';
+import React, { Component } from 'react';
+import { reportException } from '../utils/sentry';
 
 interface Props {
   name: string;
@@ -12,13 +12,13 @@ interface State {
   error?: Error;
 }
 
-export default class ErrorBoundary extends React.Component<Props, State> {
+export default class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {};
   }
 
-  componentDidCatch(error: Error, errorInfo: any) {
+  componentDidCatch(error: Error, errorInfo: { componentStack: string }) {
     const { name } = this.props;
 
     this.setState({ error });

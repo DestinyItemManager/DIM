@@ -1,16 +1,18 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { assignBucketSpecificMods, ModMap } from 'app/loadout/mod-assignment-utils';
+import { ModMap, assignBucketSpecificMods } from 'app/loadout/mod-assignment-utils';
 import { ItemFilter } from 'app/search/filter-types';
 import { warnLog } from 'app/utils/log';
 import { BucketHashes } from 'data/d2/generated-enums';
+import { Draft } from 'immer';
 import {
   ArmorEnergyRules,
   ExcludedItems,
   ItemsByBucket,
+  LOCKED_EXOTIC_ANY_EXOTIC,
+  LOCKED_EXOTIC_NO_EXOTIC,
   LockableBucketHash,
   LockableBucketHashes,
-  LOCKED_EXOTIC_NO_EXOTIC,
   PinnedItems,
 } from './types';
 
@@ -18,18 +20,22 @@ import {
  * Contains information about whether items got filtered out for various reasons.
  */
 export interface FilterInfo {
+  /** Did the search query limit items for any bucket? */
   searchQueryEffective: boolean;
   perBucketStats: {
     [key in LockableBucketHash]: {
       totalConsidered: number;
       cantFitMods: number;
       finalValid: number;
+      removedBySearchFilter: number;
     };
   };
 }
 
 /**
- * Filter the items map down given the locking and filtering configs.
+ * Filter the `items` map down given the locking and filtering configs and some
+ * basic logic about what could go together in a loadout. The goal here is to
+ * remove as many items as possible from consideration without expensive logic.
  */
 export function filterItems({
   defs,
@@ -43,7 +49,7 @@ export function filterItems({
   searchFilter,
 }: {
   defs: D2ManifestDefinitions | undefined;
-  items: ItemsByBucket | undefined;
+  items: DimItem[];
   pinnedItems: PinnedItems;
   excludedItems: ExcludedItems;
   lockedModMap: ModMap;
@@ -52,9 +58,7 @@ export function filterItems({
   armorEnergyRules: ArmorEnergyRules;
   searchFilter: ItemFilter;
 }): [ItemsByBucket, FilterInfo] {
-  const filteredItems: {
-    [bucketHash in LockableBucketHash]: readonly DimItem[];
-  } = {
+  const filteredItems: Draft<ItemsByBucket> = {
     [BucketHashes.Helmet]: [],
     [BucketHashes.Gauntlets]: [],
     [BucketHashes.ChestArmor]: [],
@@ -66,6 +70,7 @@ export function filterItems({
     totalConsidered: 0,
     cantFitMods: 0,
     finalValid: 0,
+    removedBySearchFilter: 0,
   };
 
   const filterInfo: FilterInfo = {
@@ -79,79 +84,98 @@ export function filterItems({
     },
   };
 
-  if (!items || !defs || unassignedMods.length) {
+  if (!items.length || !defs || unassignedMods.length) {
     return [filteredItems, filterInfo];
   }
+
+  // Usability hack: If the user requests any exotic but none of the exotics match the search filter, ignore the search filter for exotics.
+  // This allows things like `modslot:xyz` to apply to legendary armor without removing all exotics.
+  const excludeExoticsFromFilter =
+    lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC &&
+    !Object.values(items)
+      .flat()
+      .some(
+        (item) =>
+          item.isExotic && lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC && searchFilter(item),
+      );
+
+  // Group by bucket
+  const itemsByBucket = Map.groupBy(items, (item) => item.bucket.hash as LockableBucketHash);
 
   for (const bucket of LockableBucketHashes) {
     const lockedModsForPlugCategoryHash = lockedModMap.bucketSpecificMods[bucket] || [];
 
-    if (items[bucket]) {
-      // There can only be one pinned item as we hide items from the item picker once
-      // a single item is pinned
-      const pinnedItem = pinnedItems[bucket];
-      const exotics = items[bucket].filter((item) => item.hash === lockedExoticHash);
+    // There can only be one pinned item as we hide items from the item picker once
+    // a single item is pinned
+    const pinnedItem = pinnedItems[bucket];
+    const exotics = (itemsByBucket.get(bucket) ?? []).filter(
+      (item) => item.hash === lockedExoticHash,
+    );
 
-      // We prefer most specific filtering since there can be competing conditions.
-      // This means locked item and then exotic
-      let firstPassFilteredItems = items[bucket];
+    // We prefer most specific filtering since there can be competing conditions.
+    // This means locked item and then exotic
+    let firstPassFilteredItems = itemsByBucket.get(bucket) ?? [];
 
-      if (pinnedItem) {
-        firstPassFilteredItems = [pinnedItem];
-      } else if (exotics.length) {
-        firstPassFilteredItems = exotics;
-      } else if (lockedExoticHash === LOCKED_EXOTIC_NO_EXOTIC) {
+    if (pinnedItem) {
+      // If the user pinned an item, that's what they get
+      firstPassFilteredItems = [pinnedItem];
+    } else if (exotics.length) {
+      // If the user chose an exotic, only include items matching that exotic
+      firstPassFilteredItems = exotics;
+    } else if (lockedExoticHash === LOCKED_EXOTIC_NO_EXOTIC) {
+      // The user chose to exclude all exotics
+      firstPassFilteredItems = firstPassFilteredItems.filter((i) => !i.isExotic);
+    } else if (lockedExoticHash !== undefined && lockedExoticHash > 0) {
+      const def = defs.InventoryItem.get(lockedExoticHash);
+      if (def.inventory?.bucketTypeHash !== bucket) {
+        // The locked exotic is in a different bucket, so we can remove all
+        // exotics from this bucket
         firstPassFilteredItems = firstPassFilteredItems.filter((i) => !i.isExotic);
-      } else if (lockedExoticHash !== undefined && lockedExoticHash > 0) {
-        const def = defs.InventoryItem.get(lockedExoticHash);
-        if (def.inventory?.bucketTypeHash !== bucket) {
-          // The locked exotic is in a different bucket, so we can remove all
-          // exotics from this bucket
-          firstPassFilteredItems = firstPassFilteredItems.filter((i) => !i.isExotic);
-        }
       }
-
-      if (!firstPassFilteredItems.length) {
-        warnLog(
-          'loadout optimizer',
-          'no items for bucket',
-          bucket,
-          'does this happen enough to be worth reporting in some way?'
-        );
-      }
-
-      // Use only Armor 2.0 items that aren't excluded and can take the bucket specific locked
-      // mods energy type and cost.
-      // Filtering the cost is necessary because process only checks mod energy
-      // for combinations of bucket independent mods, and we might not pick those.
-      const withoutExcluded = firstPassFilteredItems.filter(
-        (item) => !excludedItems[bucket]?.some((excluded) => item.id === excluded.id)
-      );
-      const excludedAndModsFilteredItems = withoutExcluded.filter(
-        (item) =>
-          assignBucketSpecificMods({
-            item,
-            armorEnergyRules,
-            modsToAssign: lockedModsForPlugCategoryHash,
-          }).unassigned.length === 0
-      );
-
-      const searchFilteredItems = excludedAndModsFilteredItems.filter(searchFilter);
-
-      filteredItems[bucket] = searchFilteredItems.length
-        ? searchFilteredItems
-        : excludedAndModsFilteredItems;
-
-      filterInfo.searchQueryEffective ||=
-        searchFilteredItems.length > 0 &&
-        searchFilteredItems.length !== excludedAndModsFilteredItems.length;
-
-      filterInfo.perBucketStats[bucket] = {
-        totalConsidered: firstPassFilteredItems.length,
-        cantFitMods: withoutExcluded.length - excludedAndModsFilteredItems.length,
-        finalValid: filteredItems[bucket].length,
-      };
     }
+
+    if (!firstPassFilteredItems.length) {
+      warnLog(
+        'loadout optimizer',
+        'no items for bucket',
+        bucket,
+        'does this happen enough to be worth reporting in some way?',
+      );
+    }
+
+    // Remove manually excluded items
+    const withoutExcluded = firstPassFilteredItems.filter(
+      (item) => !excludedItems[bucket]?.some((excluded) => item.id === excluded.id),
+    );
+
+    // Remove armor that can't fit all the chosen bucket-specifics mods.
+    // Filtering on energy cost is necessary because set generation only checks
+    // mod energy for combinations of bucket independent mods.
+    const itemsThatFitMods = withoutExcluded.filter(
+      (item) =>
+        assignBucketSpecificMods(armorEnergyRules, item, lockedModsForPlugCategoryHash).unassigned
+          .length === 0,
+    );
+
+    const searchFilteredItems = itemsThatFitMods.filter(
+      (item) => (item.isExotic && excludeExoticsFromFilter) || searchFilter(item),
+    );
+
+    // If a search filters out all the possible items for a bucket, we ignore
+    // the search. This allows users to filter some buckets without getting
+    // stuck making no sets.
+    filteredItems[bucket] = searchFilteredItems.length ? searchFilteredItems : itemsThatFitMods;
+    const removedBySearchFilter = searchFilteredItems.length
+      ? itemsThatFitMods.length - searchFilteredItems.length
+      : 0;
+    filterInfo.searchQueryEffective ||= removedBySearchFilter > 0;
+
+    filterInfo.perBucketStats[bucket] = {
+      totalConsidered: firstPassFilteredItems.length,
+      cantFitMods: withoutExcluded.length - itemsThatFitMods.length,
+      removedBySearchFilter,
+      finalValid: filteredItems[bucket].length,
+    };
   }
 
   return [filteredItems, filterInfo];

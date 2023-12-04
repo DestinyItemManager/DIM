@@ -2,16 +2,16 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
-import { storesSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { setSearchQuery } from 'app/shell/actions';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { usePageTitle } from 'app/utils/hooks';
 import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 import ItemTable from './ItemTable';
-import ItemTypeSelector, { getSelectionTree, ItemCategoryTreeNode } from './ItemTypeSelector';
+import ItemTypeSelector, { ItemCategoryTreeNode, getSelectionTree } from './ItemTypeSelector';
 import styles from './Organizer.m.scss';
 
 interface Props {
@@ -25,7 +25,7 @@ interface Props {
  */
 function drillToSelection(
   selectionTree: ItemCategoryTreeNode | undefined,
-  selectedItemCategoryHashes: number[]
+  selectedItemCategoryHashes: number[],
 ): ItemCategoryTreeNode[] {
   const selectedItemCategoryHash = selectedItemCategoryHashes[0];
 
@@ -50,11 +50,11 @@ function drillToSelection(
 }
 
 export default function Organizer({ account }: Props) {
+  usePageTitle(t('Organizer.Organizer'));
   const dispatch = useThunkDispatch();
   const isPhonePortrait = useIsPhonePortrait();
-  const stores = useSelector(storesSelector);
   const searchQuery = useSelector(querySelector);
-  useLoadStores(account);
+  const storesLoaded = useLoadStores(account);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -79,7 +79,7 @@ export default function Organizer({ account }: Props) {
           ...location,
           search: params.toString(),
         },
-        { replace: true }
+        { replace: true },
       );
     } else if (params.has('search') && searchQuery !== params.get('search')) {
       dispatch(setSearchQuery(params.get('search')!));
@@ -99,14 +99,14 @@ export default function Organizer({ account }: Props) {
       selection
         .slice(1)
         .map((s) => s.itemCategoryHash)
-        .join('~')
+        .join('~'),
     );
     navigate(
       {
         ...location,
         search: params.toString(),
       },
-      { replace: true }
+      { replace: true },
     );
   };
 
@@ -114,7 +114,7 @@ export default function Organizer({ account }: Props) {
     return <div className={styles.noMobile}>{t('Organizer.NoMobile')}</div>;
   }
 
-  if (!stores.length) {
+  if (!storesLoaded) {
     return <ShowPageLoading message={t('Loading.Profile')} />;
   }
 

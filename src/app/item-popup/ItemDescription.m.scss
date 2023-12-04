@@ -5,27 +5,10 @@
   white-space: pre-wrap;
 }
 
-.officialDescription {
-  composes: description;
-  overflow: auto;
-}
-
-.flavorText {
-  composes: description;
-  font-style: italic;
-  overflow: auto;
-}
-
-.wishListLabel {
+.label {
   font-weight: bold;
 }
-.wishListTextContent {
+
+.secondaryText {
   font-style: italic;
-}
-.loreLink {
-  white-space: nowrap;
-  img {
-    vertical-align: text-bottom;
-    margin-right: 0.2em;
-  }
 }

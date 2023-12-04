@@ -142,9 +142,21 @@ const d2SelectionTree: ItemCategoryTreeNode = {
           terminal: true,
         },
         {
+          id: 'specialgrenadelauncher',
+          itemCategoryHash: -ItemCategoryHashes.GrenadeLaunchers,
+          subCategories: [kinetic, energy],
+          terminal: true,
+        },
+        {
           id: 'tracerifle',
           itemCategoryHash: ItemCategoryHashes.TraceRifles,
           subCategories: [kinetic, energy],
+          terminal: true,
+        },
+        {
+          id: 'glaive',
+          itemCategoryHash: ItemCategoryHashes.Glaives,
+          subCategories: [energy, power],
           terminal: true,
         },
         {
@@ -158,9 +170,9 @@ const d2SelectionTree: ItemCategoryTreeNode = {
           terminal: true,
         },
         {
-          id: 'grenadelauncher',
+          id: 'heavygrenadelauncher',
           itemCategoryHash: ItemCategoryHashes.GrenadeLaunchers,
-          subCategories: [kinetic, energy, power],
+          subCategories: [power],
           terminal: true,
         },
         {
@@ -172,12 +184,6 @@ const d2SelectionTree: ItemCategoryTreeNode = {
           id: 'linearfusionrifle',
           itemCategoryHash: ItemCategoryHashes.LinearFusionRifles,
           subCategories: [kinetic, energy, power],
-          terminal: true,
-        },
-        {
-          id: 'glaive',
-          itemCategoryHash: ItemCategoryHashes.Glaives,
-          subCategories: [energy, power],
           terminal: true,
         },
       ],
@@ -289,26 +295,19 @@ const d1SelectionTree: ItemCategoryTreeNode = {
       ],
     },
     {
-      id: 'armor',
-      itemCategoryHash: ItemCategoryHashes.Armor,
-
-      subCategories: [
-        {
-          id: 'hunter',
-          itemCategoryHash: ItemCategoryHashes.Hunter,
-          subCategories: d1ArmorCategories,
-        },
-        {
-          id: 'titan',
-          itemCategoryHash: ItemCategoryHashes.Titan,
-          subCategories: d1ArmorCategories,
-        },
-        {
-          id: 'warlock',
-          itemCategoryHash: ItemCategoryHashes.Warlock,
-          subCategories: d1ArmorCategories,
-        },
-      ],
+      id: 'hunter',
+      itemCategoryHash: ItemCategoryHashes.Hunter,
+      subCategories: d1ArmorCategories,
+    },
+    {
+      id: 'titan',
+      itemCategoryHash: ItemCategoryHashes.Titan,
+      subCategories: d1ArmorCategories,
+    },
+    {
+      id: 'warlock',
+      itemCategoryHash: ItemCategoryHashes.Warlock,
+      subCategories: d1ArmorCategories,
     },
     {
       id: 'ghosts',
@@ -393,7 +392,7 @@ export default function ItemTypeSelector({
                       (
                       {
                         filteredItems.filter(
-                          (i) => i.comparable && itemIncludesCategories(i, categoryHashList)
+                          (i) => i.comparable && itemIncludesCategories(i, categoryHashList),
                         ).length
                       }
                       )

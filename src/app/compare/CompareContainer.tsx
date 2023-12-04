@@ -1,6 +1,7 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { gaPageView } from 'app/google';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { lazy, Suspense, useEffect } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { endCompareSession } from './actions';
@@ -19,12 +20,12 @@ export default function CompareContainer({ destinyVersion }: { destinyVersion: D
     () => () => {
       dispatch(endCompareSession());
     },
-    [dispatch, pathname]
+    [dispatch, pathname],
   );
 
   useEffect(() => {
     if (show && destinyVersion !== undefined) {
-      ga('send', 'pageview', `/profileMembershipId/d${destinyVersion}/compare`);
+      gaPageView(`/profileMembershipId/d${destinyVersion}/compare`);
     }
   }, [destinyVersion, show]);
 

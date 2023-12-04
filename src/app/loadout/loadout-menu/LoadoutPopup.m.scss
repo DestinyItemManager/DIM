@@ -1,40 +1,13 @@
 @use '../../variables.scss' as *;
 
-// Used in StoreHeading.tsx
-:global(.loadout-menu) {
-  position: absolute;
-  width: 300px;
-  box-sizing: border-box;
-  max-height: calc(var(--viewport-height) - var(--header-height) - #{62px + 16px});
-  overflow: auto;
-  z-index: 2;
-  color: rgba(245, 245, 245, 0.6);
-  overscroll-behavior: contain;
-  background-color: black;
-
-  @include visible-scrollbars;
-
-  [role='button'] {
-    outline: none;
-  }
-
-  // The phone layout version
-  :global(.detached) & {
-    position: fixed;
-    top: calc(54px + var(--header-height));
-    z-index: 1000;
-    width: 100vw;
-    padding: 0;
-    max-height: calc(
-      var(--viewport-height) - 54px - var(--header-height) - env(safe-area-inset-bottom)
-    );
-  }
-}
-
 .list {
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.note {
+  color: var(--theme-text-secondary);
 }
 
 .menuItem {
@@ -89,29 +62,19 @@
     }
   }
 
-  input[type='text'] {
-    border: none;
-    color: white;
-    outline: none;
-    flex: 1;
-    width: 0;
-    padding: 7px;
-    margin-left: 4px;
-    background: #313233;
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-size: inherit;
-  }
-
   &:hover,
   a:hover {
-    background-color: $orange;
-    color: black !important;
+    background-color: var(--theme-accent-primary);
+    color: var(--theme-text-invert) !important;
     > span:first-child > :global(.app-icon) {
-      color: black !important;
+      color: var(--theme-text-invert) !important;
     }
     > span:first-child > img:first-child {
       filter: none;
+    }
+
+    .note {
+      color: var(--theme-text-invert);
     }
   }
 
@@ -141,13 +104,13 @@
     }
   }
   &:hover {
-    background-color: $blue;
+    background-color: var(--theme-accent-secondary);
     color: #222;
   }
 }
 
 .loadoutTypeIcon {
-  color: #999;
+  color: var(--theme-text);
 }
 
 .warningIcon {
@@ -155,31 +118,19 @@
 }
 
 .content {
-  background-color: black;
-  color: #e4e4e4;
-}
+  color: var(--theme-text);
 
-.note {
-  color: #888;
-}
-
-.filterInput {
-  margin: 8px 0;
-  &:hover,
-  a:hover {
-    background-color: black;
-    color: white !important;
-    cursor: default;
+  // This is nested so its specificity is high enough to override the defaults
+  .filterPills {
+    margin-left: 8px;
+    margin-right: 8px;
   }
 }
 
-.filterPills {
+.filterInput {
+  composes: search-filter from global;
+  min-width: unset;
   margin: 8px;
-}
-
-.hint {
-  opacity: 0.6;
-  margin: 8px 0 0 0;
 }
 
 .inGameLoadouts {
@@ -200,7 +151,7 @@
   composes: resetButton from '../../dim-ui/common.m.scss';
   &:hover,
   &:focus-visible {
-    outline: 2px solid $orange;
+    outline: 2px solid var(--theme-accent-primary);
   }
   display: block;
 }

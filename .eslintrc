@@ -8,17 +8,16 @@
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-type-checked",
+    "plugin:@typescript-eslint/stylistic-type-checked",
     "prettier",
     "plugin:array-func/all",
     "plugin:css-modules/recommended",
-    "plugin:radar/recommended"
+    "plugin:sonarjs/recommended"
   ],
   "globals": {
-    "Atomics": "readonly",
-    "SharedArrayBuffer": "readonly",
     "$featureFlags": "readonly",
-    "ga": true,
+    "ga": "readonly",
     "$DIM_FLAVOR": "readonly",
     "$DIM_VERSION": "readonly",
     "$DIM_BUILD_DATE": "readonly",
@@ -27,16 +26,16 @@
     "$DIM_WEB_CLIENT_SECRET": "readonly",
     "$DIM_API_KEY": "readonly",
     "$BROWSERS": "readonly",
-    "workbox": true,
-    "React": true,
-    "require": true,
+    "workbox": "readonly",
+    "React": "readonly",
+    "require": "readonly",
     "module": "readonly"
   },
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
     },
-    "ecmaVersion": 2018,
+    "ecmaVersion": "latest",
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
@@ -59,7 +58,7 @@
     "array-func",
     "react-redux",
     "css-modules",
-    "radar",
+    "sonarjs",
     "jsx-expressions",
     "github"
   ],
@@ -133,6 +132,16 @@
         "object": "_",
         "property": "forIn",
         "message": "Please use Object.values or Object.entries instead"
+      },
+      {
+        "object": "_",
+        "property": "noop",
+        "message": "Import noop directly instead of using it through _.noop, to satisfy the unbound-method lint"
+      },
+      {
+        "object": "_",
+        "property": "groupBy",
+        "message": "Use Object.groupBy or Map.groupBy instead."
       }
     ],
     "no-restricted-imports": [
@@ -144,6 +153,21 @@
             "message": "You cannot use test helpers in regular code."
           }
         ]
+      }
+    ],
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "CallExpression[callee.property.name='compact'][callee.object.name='_'][arguments.0.callee.property.name='map']",
+        "message": "Please use `filterMap` instead"
+      },
+      {
+        "selector": "CallExpression[callee.name='clsx'][arguments.length=1][arguments.0.object.name='styles'],CallExpression[callee.name='clsx'][arguments.length=1][arguments.0.type='Literal']",
+        "message": "Unnecessary clsx"
+      },
+      {
+        "selector": "TSEnumDeclaration:not([const=true])",
+        "message": "Please only use `const enum`s."
       }
     ],
     "spaced-comment": [
@@ -158,8 +182,21 @@
     "@typescript-eslint/return-await": ["error", "in-try-catch"],
     "prefer-regex-literals": "error",
     "prefer-promise-reject-errors": "error",
-    "require-atomic-updates": "off",
+    "prefer-spread": "error",
+    "radix": "error",
+    "yoda": "error",
+    "prefer-template": "error",
     "class-methods-use-this": ["error", { "exceptMethods": ["render"] }],
+    "no-unmodified-loop-condition": "error",
+    "no-unreachable-loop": "error",
+    "no-unused-private-class-members": "error",
+    "func-name-matching": "error",
+    "logical-assignment-operators": "error",
+    "no-lonely-if": "error",
+    "no-unneeded-ternary": "error",
+    "no-useless-call": "error",
+    "no-useless-concat": "error",
+    "no-useless-rename": "error",
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off",
     "react/no-unescaped-entities": "off",
@@ -236,16 +273,7 @@
         "checksVoidReturn": false
       }
     ],
-    "@typescript-eslint/ban-types": [
-      "error",
-      {
-        "types": {
-          "BigInt": "BigInt isn't supported in old versions (pre-14) of Safari",
-          "bigint": "BigInt isn't supported in old versions (pre-14) of Safari"
-        },
-        "extendDefaults": false
-      }
-    ],
+    "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/explicit-member-accessibility": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
@@ -279,6 +307,7 @@
     "@typescript-eslint/consistent-type-definitions": "error",
     "@typescript-eslint/consistent-generic-constructors": "error",
     "@typescript-eslint/no-duplicate-enum-values": "error",
+    "@typescript-eslint/no-throw-literal": "error",
     "@typescript-eslint/no-unused-vars": [
       "error",
       {
@@ -288,6 +317,29 @@
       }
     ],
     "@typescript-eslint/no-for-in-array": "error",
+    "@typescript-eslint/consistent-indexed-object-style": "off",
+    "@typescript-eslint/no-floating-promises": "off",
+    "@typescript-eslint/require-await": "off",
+    "@typescript-eslint/no-unsafe-enum-comparison": "off",
+    "@typescript-eslint/prefer-nullish-coalescing": [
+      "off",
+      {
+        "ignoreConditionalTests": true,
+        "ignoreTernaryTests": false,
+        "ignoreMixedLogicalExpressions": true,
+        "ignorePrimitives": {
+          "boolean": true,
+          "number": false,
+          "string": true
+        }
+      }
+    ],
+    "@typescript-eslint/no-unsafe-argument": "error",
+    "@typescript-eslint/no-unsafe-assignment": "error",
+    "@typescript-eslint/no-unsafe-call": "error",
+    "@typescript-eslint/no-unsafe-member-access": "error",
+    "@typescript-eslint/no-unsafe-return": "error",
+    "@typescript-eslint/no-redundant-type-constituents": "off",
     "no-implied-eval": "off",
     "@typescript-eslint/no-implied-eval": "error",
     "array-func/prefer-array-from": "off",
@@ -295,10 +347,12 @@
     "react-redux/no-unused-prop-types": "error",
     "react/no-unused-prop-types": "off",
     "css-modules/no-undef-class": "off",
-    "radar/cognitive-complexity": "off",
-    "radar/no-small-switch": "off",
-    "radar/no-duplicate-string": "off",
-    "radar/prefer-immediate-return": "off",
+    "sonarjs/cognitive-complexity": "off",
+    "sonarjs/no-small-switch": "off",
+    "sonarjs/no-duplicate-string": "off",
+    "sonarjs/prefer-immediate-return": "off",
+    "sonarjs/no-nested-switch": "off",
+    "sonarjs/no-nested-template-literals": "off",
     "jsx-expressions/strict-logical-expressions": ["error", { "allowString": true }],
     "github/array-foreach": "error",
     "github/async-currenttarget": "error",

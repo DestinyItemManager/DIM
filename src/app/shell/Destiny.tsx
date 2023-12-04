@@ -13,6 +13,7 @@ import Farming from 'app/farming/Farming';
 import { useHotkey, useHotkeys } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import InfusionFinder from 'app/infuse/InfusionFinder';
+import { ItemDragPreview } from 'app/inventory/ItemDragPreview';
 import SyncTagLock from 'app/inventory/SyncTagLock';
 import { blockingProfileErrorSelector, storesSelector } from 'app/inventory/selectors';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
@@ -23,9 +24,10 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
 import StripSockets from 'app/strip-sockets/StripSockets';
 import { setAppBadge } from 'app/utils/app-badge';
+import SingleVendorSheetContainer from 'app/vendors/single-vendor/SingleVendorSheetContainer';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
-import _ from 'lodash';
-import React, { useEffect, useMemo } from 'react';
+import { noop } from 'lodash';
+import { lazy, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes, useLocation, useParams } from 'react-router';
 import { Hotkey } from '../hotkeys/hotkeys';
@@ -36,44 +38,39 @@ import styles from './Destiny.m.scss';
 import ErrorPanel from './ErrorPanel';
 
 // TODO: Could be slightly better to group these a bit, but for now we break them each into a separate chunk.
-const Inventory = React.lazy(
-  () => import(/* webpackChunkName: "inventory" */ 'app/inventory-page/Inventory')
+const Inventory = lazy(
+  () => import(/* webpackChunkName: "inventory" */ 'app/inventory-page/Inventory'),
 );
-const Progress = React.lazy(
-  () => import(/* webpackChunkName: "progress" */ 'app/progress/Progress')
-);
-const LoadoutBuilderContainer = React.lazy(
+const Progress = lazy(() => import(/* webpackChunkName: "progress" */ 'app/progress/Progress'));
+const LoadoutBuilderContainer = lazy(
   () =>
-    import(/* webpackChunkName: "loadoutBuilder" */ 'app/loadout-builder/LoadoutBuilderContainer')
+    import(/* webpackChunkName: "loadoutBuilder" */ 'app/loadout-builder/LoadoutBuilderContainer'),
 );
-const D1LoadoutBuilder = React.lazy(
+const D1LoadoutBuilder = lazy(
   () =>
     import(
       /* webpackChunkName: "d1LoadoutBuilder" */ 'app/destiny1/loadout-builder/D1LoadoutBuilder'
-    )
+    ),
 );
-const Vendors = React.lazy(async () => ({
+const Vendors = lazy(async () => ({
   default: (await import(/* webpackChunkName: "vendors" */ 'app/vendors/components')).Vendors,
 }));
-const SingleVendor = React.lazy(async () => ({
-  default: (await import(/* webpackChunkName: "vendors" */ 'app/vendors/components')).SingleVendor,
+const SingleVendorPage = lazy(async () => ({
+  default: (await import(/* webpackChunkName: "vendors" */ 'app/vendors/components'))
+    .SingleVendorPage,
 }));
-const D1Vendors = React.lazy(
-  () => import(/* webpackChunkName: "d1vendors" */ 'app/destiny1/vendors/D1Vendors')
+const D1Vendors = lazy(
+  () => import(/* webpackChunkName: "d1vendors" */ 'app/destiny1/vendors/D1Vendors'),
 );
-const RecordBooks = React.lazy(
-  () => import(/* webpackChunkName: "recordbooks" */ 'app/destiny1/record-books/RecordBooks')
+const RecordBooks = lazy(
+  () => import(/* webpackChunkName: "recordbooks" */ 'app/destiny1/record-books/RecordBooks'),
 );
-const Organizer = React.lazy(
-  () => import(/* webpackChunkName: "organizer" */ 'app/organizer/Organizer')
+const Organizer = lazy(() => import(/* webpackChunkName: "organizer" */ 'app/organizer/Organizer'));
+const Activities = lazy(
+  () => import(/* webpackChunkName: "activities" */ 'app/destiny1/activities/Activities'),
 );
-const Activities = React.lazy(
-  () => import(/* webpackChunkName: "activities" */ 'app/destiny1/activities/Activities')
-);
-const Records = React.lazy(() => import(/* webpackChunkName: "records" */ 'app/records/Records'));
-const Loadouts = React.lazy(
-  () => import(/* webpackChunkName: "loadouts" */ 'app/loadout/Loadouts')
-);
+const Records = lazy(() => import(/* webpackChunkName: "records" */ 'app/records/Records'));
+const Loadouts = lazy(() => import(/* webpackChunkName: "loadouts" */ 'app/loadout/Loadouts'));
 
 /**
  * Base view for pages that show Destiny content.
@@ -83,22 +80,22 @@ export default function Destiny() {
   const { destinyVersion: destinyVersionString, membershipId: platformMembershipId } = useParams();
   const destinyVersion = parseInt(
     (destinyVersionString || 'd2').replace('d', ''),
-    10
+    10,
   ) as DestinyVersion;
   const accountsLoaded = useSelector(accountsLoadedSelector);
   const currentAccount = useSelector(currentAccountSelector);
   const account = useSelector((state: RootState) =>
     accountsSelector(state).find(
       (account) =>
-        account.membershipId === platformMembershipId && account.destinyVersion === destinyVersion
-    )
+        account.membershipId === platformMembershipId && account.destinyVersion === destinyVersion,
+    ),
   );
   const profileError = useSelector(blockingProfileErrorSelector);
   const autoLockTagged = useSelector(settingSelector('autoLockTagged'));
 
   useEffect(() => {
     if (!accountsLoaded) {
-      dispatch(getPlatforms());
+      dispatch(getPlatforms);
     }
   }, [dispatch, accountsLoaded]);
 
@@ -118,14 +115,14 @@ export default function Destiny() {
   const { pathname, search } = useLocation();
 
   // Define some hotkeys without implementation, so they show up in the help
-  useHotkey('c', t('Compare.ButtonHelp'), _.noop);
-  useHotkey('l', t('Hotkey.LockUnlock'), _.noop);
-  useHotkey('k', t('MovePopup.ToggleSidecar'), _.noop);
-  useHotkey('v', t('Hotkey.Vault'), _.noop);
-  useHotkey('p', t('Hotkey.Pull'), _.noop);
-  useHotkey('i', t('MovePopup.InfuseTitle'), _.noop);
-  useHotkey('a', t('Hotkey.Armory'), _.noop);
-  useHotkey('shift+0', t('Tags.ClearTag'), _.noop);
+  useHotkey('c', t('Compare.ButtonHelp'), noop);
+  useHotkey('l', t('Hotkey.LockUnlock'), noop);
+  useHotkey('k', t('MovePopup.ToggleSidecar'), noop);
+  useHotkey('v', t('Hotkey.Vault'), noop);
+  useHotkey('p', t('Hotkey.Pull'), noop);
+  useHotkey('i', t('MovePopup.InfuseTitle'), noop);
+  useHotkey('a', t('Hotkey.Armory'), noop);
+  useHotkey('shift+0', t('Tags.ClearTag'), noop);
 
   const hotkeys = useMemo(() => {
     const hotkeys: Hotkey[] = [];
@@ -180,76 +177,78 @@ export default function Destiny() {
               : t('Accounts.ErrorLoadInventory', { version: account.destinyVersion })
           }
           error={profileError}
-          showTwitters={true}
-          showReload={true}
+          showSocials
+          showReload
         />
       </div>
     );
   }
 
   return (
-    <>
-      <div className={styles.content}>
-        <Routes>
-          <Route path="inventory" element={<Inventory account={account} />} />
-          {account.destinyVersion === 2 && (
-            <Route path="progress" element={<Progress account={account} />} />
-          )}
-          {account.destinyVersion === 2 && (
-            <Route path="records" element={<Records account={account} />} />
-          )}
-          <Route
-            path="optimizer"
-            element={
-              account.destinyVersion === 2 ? (
-                <LoadoutBuilderContainer account={account} />
-              ) : (
-                <D1LoadoutBuilder />
-              )
-            }
-          />
-          {account.destinyVersion === 2 && (
-            <Route path="loadouts" element={<Loadouts account={account} />} />
-          )}
-          <Route path="organizer" element={<Organizer account={account} />} />
-          {account.destinyVersion === 2 && (
-            <Route path="vendors/:vendorHash" element={<SingleVendor account={account} />} />
-          )}
-          <Route
-            path="vendors"
-            element={
-              account.destinyVersion === 2 ? (
-                <Vendors account={account} />
-              ) : (
-                <D1Vendors account={account} />
-              )
-            }
-          />
-          {account.destinyVersion === 2 && (
-            <Route path="armory/:itemHash" element={<ArmoryPage account={account} />} />
-          )}
-          {account.destinyVersion === 2 && (
-            <Route path="item-feed" element={<ItemFeedPage account={account} />} />
-          )}
-          {account.destinyVersion === 1 && (
-            <Route path="record-books" element={<RecordBooks account={account} />} />
-          )}
-          {account.destinyVersion === 1 && (
-            <Route path="activities" element={<Activities account={account} />} />
-          )}
-          <Route path="*" element={<Navigate to="inventory" />} />
-        </Routes>
-      </div>
-      <LoadoutDrawerContainer account={account} />
-      <CompareContainer destinyVersion={account.destinyVersion} />
-      {account.destinyVersion === 2 && <StripSockets />}
-      <Farming />
-      <InfusionFinder />
-      <ItemPopupContainer boundarySelector=".store-header" />
-      <ItemPickerContainer />
-      <GlobalEffects />
-      {autoLockTagged && <SyncTagLock />}
-    </>
+    <ItemPickerContainer>
+      <SingleVendorSheetContainer>
+        <div className={styles.content}>
+          <Routes>
+            <Route path="inventory" element={<Inventory account={account} />} />
+            {account.destinyVersion === 2 && (
+              <Route path="progress" element={<Progress account={account} />} />
+            )}
+            {account.destinyVersion === 2 && (
+              <Route path="records" element={<Records account={account} />} />
+            )}
+            <Route
+              path="optimizer"
+              element={
+                account.destinyVersion === 2 ? (
+                  <LoadoutBuilderContainer account={account} />
+                ) : (
+                  <D1LoadoutBuilder account={account} />
+                )
+              }
+            />
+            {account.destinyVersion === 2 && (
+              <Route path="loadouts" element={<Loadouts account={account} />} />
+            )}
+            <Route path="organizer" element={<Organizer account={account} />} />
+            {account.destinyVersion === 2 && (
+              <Route path="vendors/:vendorHash" element={<SingleVendorPage account={account} />} />
+            )}
+            <Route
+              path="vendors"
+              element={
+                account.destinyVersion === 2 ? (
+                  <Vendors account={account} />
+                ) : (
+                  <D1Vendors account={account} />
+                )
+              }
+            />
+            {account.destinyVersion === 2 && (
+              <Route path="armory/:itemHash" element={<ArmoryPage account={account} />} />
+            )}
+            {account.destinyVersion === 2 && (
+              <Route path="item-feed" element={<ItemFeedPage account={account} />} />
+            )}
+            {account.destinyVersion === 1 && (
+              <Route path="record-books" element={<RecordBooks account={account} />} />
+            )}
+            {account.destinyVersion === 1 && (
+              <Route path="activities" element={<Activities account={account} />} />
+            )}
+            <Route path="*" element={<Navigate to="inventory" />} />
+          </Routes>
+        </div>
+        <LoadoutDrawerContainer account={account} />
+        <CompareContainer destinyVersion={account.destinyVersion} />
+        {account.destinyVersion === 2 && <StripSockets />}
+        <Farming />
+        <InfusionFinder />
+        <ItemPopupContainer boundarySelector=".store-header" />
+        <GlobalEffects />
+        {Boolean(autoLockTagged) && <SyncTagLock />}
+        <ItemDragPreview />
+      </SingleVendorSheetContainer>
+    </ItemPickerContainer>
   );
 }
 

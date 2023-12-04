@@ -1,7 +1,6 @@
 .icon {
   filter: invert(1) !important;
-}
-
-.colorized {
-  filter: none !important;
+  &:global(.dontInvert) {
+    filter: none !important;
+  }
 }

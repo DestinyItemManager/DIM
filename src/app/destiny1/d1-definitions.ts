@@ -1,6 +1,5 @@
 import { ThunkResult } from 'app/store/types';
-import { reportException } from 'app/utils/exceptions';
-import { DestinyManifestComponentName } from 'bungie-api-ts/destiny2';
+import { reportException } from 'app/utils/sentry';
 import { HashLookupFailure, ManifestDefinitions } from '../destiny2/definitions';
 import { setD1Manifest } from '../manifest/actions';
 import { getManifest } from '../manifest/d1-manifest-service';
@@ -24,7 +23,12 @@ import {
   D1VendorDefinition,
 } from './d1-manifest-types';
 
-const lazyTables = [
+const allTables = [
+  'InventoryBucket',
+  'Class',
+  'Race',
+  'Faction',
+  'Vendor',
   'InventoryItem',
   'Objective',
   'Stat',
@@ -37,16 +41,19 @@ const lazyTables = [
   'Activity',
   'ActivityType',
   'DamageType',
-];
-
-const eagerTables = ['InventoryBucket', 'Class', 'Race', 'Faction', 'Vendor'];
+] as const;
 
 export interface DefinitionTable<T> {
   readonly get: (hash: number) => T;
+  readonly getAll: () => { [hash: number]: T };
 }
 
-// D1 types don't exist yet
 export interface D1ManifestDefinitions extends ManifestDefinitions {
+  InventoryBucket: DefinitionTable<D1InventoryBucketDefinition>;
+  Class: DefinitionTable<D1ClassDefinition>;
+  Race: DefinitionTable<D1RaceDefinition>;
+  Faction: DefinitionTable<D1FactionDefinition>;
+  Vendor: DefinitionTable<D1VendorDefinition>;
   InventoryItem: DefinitionTable<D1InventoryItemDefinition>;
   Objective: DefinitionTable<D1ObjectiveDefinition>;
   Stat: DefinitionTable<D1StatDefinition>;
@@ -59,12 +66,6 @@ export interface D1ManifestDefinitions extends ManifestDefinitions {
   Activity: DefinitionTable<D1ActivityDefinition>;
   ActivityType: DefinitionTable<D1ActivityTypeDefinition>;
   DamageType: DefinitionTable<D1DamageTypeDefinition>;
-
-  InventoryBucket: { [hash: number]: D1InventoryBucketDefinition };
-  Class: { [hash: number]: D1ClassDefinition };
-  Race: { [hash: number]: D1RaceDefinition };
-  Faction: { [hash: number]: D1FactionDefinition };
-  Vendor: { [hash: number]: D1VendorDefinition };
 }
 
 /**
@@ -83,16 +84,15 @@ export function getDefinitions(): ThunkResult<D1ManifestDefinitions> {
     if (existingManifest) {
       return existingManifest;
     }
-    const defs: any = {
+    const defs: ManifestDefinitions & { [table: string]: any } = {
       isDestiny1: () => true,
       isDestiny2: () => false,
     };
-    // Load objects that lazily load their properties from the sqlite DB.
-    for (const tableShort of lazyTables) {
-      const table = `Destiny${tableShort}Definition` as DestinyManifestComponentName;
+    for (const tableShort of allTables) {
+      const table = `Destiny${tableShort}Definition` as const;
+      const dbTable = db[table];
       defs[tableShort] = {
-        get(id: number, requestor?: any) {
-          const dbTable = db[table];
+        get(id: number, requestor?: { hash: number } | string | number) {
           if (!dbTable) {
             throw new Error(`Table ${table} does not exist in the manifest`);
           }
@@ -108,12 +108,10 @@ export function getDefinitions(): ThunkResult<D1ManifestDefinitions> {
           }
           return dbEntry;
         },
+        getAll() {
+          return dbTable;
+        },
       };
-    }
-    // Resources that need to be fully loaded (because they're iterated over)
-    for (const tableShort of eagerTables) {
-      const table = `Destiny${tableShort}Definition` as DestinyManifestComponentName;
-      defs[tableShort] = db[table];
     }
     dispatch(setD1Manifest(defs as D1ManifestDefinitions));
     return defs as D1ManifestDefinitions;

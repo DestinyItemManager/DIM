@@ -1,4 +1,5 @@
 import { collapsedSelector } from 'app/dim-api/selectors';
+import { CollapseIcon, CollapsedSection } from 'app/dim-ui/CollapsibleTitle';
 import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
 import {
@@ -8,35 +9,27 @@ import {
 } from 'app/loadout-drawer/postmaster';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
-import { AnimatePresence, motion } from 'framer-motion';
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useId, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import '../dim-ui/CollapsibleTitle.scss';
 import { toggleCollapsedSection } from '../settings/actions';
-import { AppIcon, collapseIcon, expandIcon } from '../shell/icons';
 import styles from './InventoryCollapsibleTitle.m.scss';
-import './InventoryCollapsibleTitle.scss';
-
-interface Props {
-  sectionId: string;
-  title: React.ReactNode;
-  children?: React.ReactNode;
-  className?: string;
-  stores: DimStore[];
-}
 
 export default function InventoryCollapsibleTitle({
   sectionId,
   title,
   children,
-  className,
   stores,
-}: Props) {
+}: {
+  sectionId: string;
+  title: React.ReactNode;
+  children?: React.ReactNode;
+  stores: DimStore[];
+}) {
   const dispatch = useThunkDispatch();
   const collapsed = Boolean(useSelector(collapsedSelector(sectionId)));
   const toggle = useCallback(
     () => dispatch(toggleCollapsedSection(sectionId)),
-    [dispatch, sectionId]
+    [dispatch, sectionId],
   );
 
   const checkPostmaster = sectionId === 'Postmaster';
@@ -51,10 +44,14 @@ export default function InventoryCollapsibleTitle({
     initialMount.current = false;
   }, [initialMount]);
 
+  const id = useId();
+  const contentId = `content-${id}`;
+  const headerId = `header-${id}`;
+
   return (
     <>
       <div
-        className={clsx('store-row', 'inventory-title', {
+        className={clsx('store-row', {
           collapsed,
         })}
       >
@@ -72,22 +69,27 @@ export default function InventoryCollapsibleTitle({
                 : t('ItemService.PostmasterFull');
 
             return (
-              <div
+              <h3
                 key={store.id}
-                className={clsx('title', 'store-cell', className, {
-                  collapsed,
+                className={clsx(styles.title, 'store-cell', {
+                  [styles.collapsed]: collapsed,
                   [styles.postmasterFull]: showPostmasterFull,
                   [styles.spanColumns]: !checkPostmaster,
                 })}
               >
                 {index === 0 ? (
-                  <span className="collapse-handle" onClick={toggle}>
-                    <AppIcon
-                      className="collapse-icon"
-                      icon={collapsed ? expandIcon : collapseIcon}
-                    />{' '}
-                    <span>
+                  <>
+                    <button
+                      type="button"
+                      onClick={toggle}
+                      aria-expanded={!collapsed}
+                      aria-controls={contentId}
+                      id={headerId}
+                    >
+                      <CollapseIcon collapsed={collapsed} />
                       {showPostmasterFull ? text : title}
+                    </button>
+                    <span>
                       {checkPostmaster && (
                         <span className={styles.bucketSize}>
                           ({postMasterSpaceUsed}/{POSTMASTER_SIZE})
@@ -97,7 +99,7 @@ export default function InventoryCollapsibleTitle({
                         <span className={styles.clickToExpand}>{t('Inventory.ClickToExpand')}</span>
                       )}
                     </span>
-                  </span>
+                  </>
                 ) : (
                   <>
                     {showPostmasterFull && text}
@@ -108,29 +110,14 @@ export default function InventoryCollapsibleTitle({
                     )}
                   </>
                 )}
-              </div>
+              </h3>
             );
           })}
       </div>
 
-      <AnimatePresence>
-        {!collapsed && (
-          <motion.div
-            key="content"
-            initial={initialMount.current ? false : 'collapsed'}
-            animate="open"
-            exit="collapsed"
-            variants={{
-              open: { height: 'auto' },
-              collapsed: { height: 0 },
-            }}
-            transition={{ duration: 0.3 }}
-            className="collapse-content"
-          >
-            {children}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <CollapsedSection collapsed={collapsed} headerId={headerId} contentId={contentId}>
+        {children}
+      </CollapsedSection>
     </>
   );
 }

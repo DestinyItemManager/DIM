@@ -1,6 +1,6 @@
-@import '../../variables';
+@use '../../variables' as *;
 
-$or-color: $orange;
+$or-color: var(--theme-accent-primary);
 $and-color: #814bcf;
 
 .loadout-builder {
@@ -8,6 +8,7 @@ $and-color: #814bcf;
 
   .section {
     margin-bottom: 16px;
+
     @include phone-portrait {
       margin-left: 16px;
       margin-right: 16px;
@@ -97,7 +98,7 @@ $and-color: #814bcf;
   }
 
   .expand-configs:hover {
-    color: $orange;
+    color: var(--theme-accent-primary);
     cursor: pointer;
   }
 
@@ -297,6 +298,7 @@ $and-color: #814bcf;
   .dim-stats {
     display: inline-block;
     margin-left: 22px;
+
     @media (max-width: 680px) {
       margin-left: 4px;
     }
@@ -304,6 +306,7 @@ $and-color: #814bcf;
     .stat-bars {
       width: 375px;
       margin-top: 0;
+
       @media (max-width: 680px) {
         width: 150px;
         display: inline-block;

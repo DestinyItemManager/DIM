@@ -1,4 +1,4 @@
-@import '../variables';
+@use '../variables' as *;
 
 .selector {
   background-color: rgba(0, 0, 0, 0);
@@ -26,8 +26,8 @@
   &:hover,
   &:active,
   &.checked {
-    background-color: $orange;
-    color: black;
+    background-color: var(--theme-accent-primary);
+    color: var(--theme-text-invert);
     > img {
       filter: none !important;
     }

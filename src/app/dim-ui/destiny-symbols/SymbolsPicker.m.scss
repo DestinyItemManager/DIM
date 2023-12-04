@@ -4,11 +4,11 @@
 .symbolsWindow {
   width: 300px;
   height: 350px;
-  background-color: black;
+  background-color: var(--theme-dropdown-menu-bg);
   display: flex;
   flex-flow: column;
-
-  box-shadow: 0 0 24px 6px #080811;
+  box-shadow: var(--theme-drop-shadow);
+  pointer-events: auto;
 }
 
 .symbolsButton {
@@ -20,7 +20,7 @@
   }
   &:hover {
     color: black;
-    background-color: $orange;
+    background-color: var(--theme-accent-primary);
   }
 }
 
@@ -43,8 +43,7 @@
 }
 
 .symbolsBody {
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden auto;
 
   flex: 1;
 }
@@ -68,13 +67,13 @@
   font-family: unset;
   text-align: center;
   font-size: 18px;
-  color: white;
+  color: var(--theme-text);
 
   padding: 2px;
 
   &:hover {
-    color: black;
-    background-color: $orange;
+    color: var(--theme-text-invert);
+    background-color: var(--theme-accent-primary);
   }
 }
 

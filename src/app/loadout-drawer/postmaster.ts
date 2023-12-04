@@ -10,16 +10,17 @@ import {
 } from 'app/inventory/stores-helpers';
 import type { ItemTierName } from 'app/search/d2-known-values';
 import { ThunkResult } from 'app/store/types';
-import { CanceledError, CancelToken, withCancel } from 'app/utils/cancel';
+import { CancelToken, CanceledError, withCancel } from 'app/utils/cancel';
 import { DimError } from 'app/utils/dim-error';
+import { convertToError, errorMessage } from 'app/utils/errors';
 import { errorLog } from 'app/utils/log';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { InventoryBuckets } from '../inventory/inventory-buckets';
 import {
+  MoveReservations,
   createMoveSession,
   executeMoveItem,
-  MoveReservations,
 } from '../inventory/item-move-service';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
@@ -39,7 +40,7 @@ const moveAsideWeighting: Record<ItemTierName, number> = {
 export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets): ThunkResult {
   return async (dispatch) => {
     const postmasterItems: DimItem[] = buckets.byCategory.Postmaster.flatMap((bucket) =>
-      findItemsByBucket(store, bucket.hash)
+      findItemsByBucket(store, bucket.hash),
     );
     const postmasterItemCountsByType = _.countBy(postmasterItems, (i) => i.bucket.hash);
 
@@ -62,7 +63,7 @@ export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets
               // And low-stat
               value += i.power / 1000;
               return value;
-            }
+            },
           );
           itemsToMove.push(..._.take(candidates, numNeededToMove));
         }
@@ -86,7 +87,7 @@ export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets
         showNotification({
           type: 'error',
           title: t('Loadouts.MakeRoom'),
-          body: t('Loadouts.MakeRoomError', { error: e.message }),
+          body: t('Loadouts.MakeRoomError', { error: errorMessage(e) }),
         });
         throw e;
       }
@@ -97,7 +98,7 @@ export function makeRoomForPostmaster(store: DimStore, buckets: InventoryBuckets
 // D2 only
 export function pullablePostmasterItems(store: DimStore, stores: DimStore[]) {
   return (findItemsByBucket(store, BucketHashes.LostItems) || []).filter(
-    (i) => pullFromPostmasterAmount(i, store, stores) > 0
+    (i) => pullFromPostmasterAmount(i, store, stores) > 0,
   );
 }
 
@@ -148,7 +149,7 @@ const showNoSpaceError = _.throttle(
       body: t('Loadouts.NoSpace', { error: e.message }),
     }),
   1000,
-  { leading: true, trailing: false }
+  { leading: true, trailing: false },
 );
 
 // D2 only
@@ -188,7 +189,8 @@ export function pullFromPostmaster(store: DimStore): ThunkResult {
         try {
           await dispatch(executeMoveItem(item, store, { equip: false, amount }, moveSession));
           succeeded++;
-        } catch (e) {
+        } catch (err) {
+          const e = convertToError(err);
           if (e instanceof CanceledError) {
             return false;
           }
@@ -202,14 +204,15 @@ export function pullFromPostmaster(store: DimStore): ThunkResult {
               // Show the error separately and continue
               showNoSpaceError(e);
             }
+          } else if (items.length === 1) {
+            // Transform the notification into an error
+            throw new DimError(
+              'Loadouts.PullFromPostmasterError',
+              t('Loadouts.PullFromPostmasterError', { error: e.message }),
+            );
           } else {
-            if (items.length === 1) {
-              // Transform the notification into an error
-              throw new Error(t('Loadouts.PullFromPostmasterError', { error: e.message }));
-            } else {
-              // Show the error separately and continue
-              errorNotification(e.message);
-            }
+            // Show the error separately and continue
+            errorNotification(e.message);
           }
         }
       }
@@ -229,7 +232,7 @@ export function pullFromPostmaster(store: DimStore): ThunkResult {
 function moveItemsToVault(
   store: DimStore,
   items: DimItem[],
-  cancelToken: CancelToken
+  cancelToken: CancelToken,
 ): ThunkResult {
   return async (dispatch, getState) => {
     const reservations: MoveReservations = {
@@ -247,7 +250,7 @@ function moveItemsToVault(
         // If we're down to one space, try putting it on other characters
         const otherStores = stores.filter((s) => !s.isVault && s.id !== store.id);
         const otherStoresWithSpace = otherStores.filter((store) =>
-          spaceLeftForItem(store, item, stores)
+          spaceLeftForItem(store, item, stores),
         );
 
         if (otherStoresWithSpace.length) {
@@ -261,8 +264,8 @@ function moveItemsToVault(
                 excludes: items,
                 reservations,
               },
-              moveSession
-            )
+              moveSession,
+            ),
           );
           continue;
         }
@@ -277,8 +280,8 @@ function moveItemsToVault(
             excludes: items,
             reservations,
           },
-          moveSession
-        )
+          moveSession,
+        ),
       );
     }
   };

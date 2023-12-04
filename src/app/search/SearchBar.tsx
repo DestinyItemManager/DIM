@@ -1,25 +1,27 @@
-import { Search } from '@destinyitemmanager/dim-api-types';
-import Armory from 'app/armory/Armory';
+import ArmorySheet from 'app/armory/ArmorySheet';
 import { saveSearch, searchDeleted, searchUsed } from 'app/dim-api/basic-actions';
-import { recentSearchesSelector } from 'app/dim-api/selectors';
+import { languageSelector, recentSearchesSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
-import ClickOutsideRoot from 'app/dim-ui/ClickOutsideRoot';
 import KeyHelp from 'app/dim-ui/KeyHelp';
 import { Loading } from 'app/dim-ui/Loading';
 import Sheet from 'app/dim-ui/Sheet';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
+import { useFixOverscrollBehavior } from 'app/dim-ui/useFixOverscrollBehavior';
 import { t } from 'app/i18next-t';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { toggleSearchResults } from 'app/shell/actions';
 import { useIsPhonePortrait } from 'app/shell/selectors';
-import { RootState, ThunkDispatchProp } from 'app/store/types';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isiOSBrowser } from 'app/utils/browsers';
-import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import { UseComboboxState, UseComboboxStateChangeOptions, useCombobox } from 'downshift';
-import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
+import { AnimatePresence, LayoutGroup, Variants, motion } from 'framer-motion';
 import _ from 'lodash';
 import React, {
   Suspense,
+  forwardRef,
+  lazy,
+  memo,
   useCallback,
   useDeferredValue,
   useEffect,
@@ -28,16 +30,16 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import {
   AppIcon,
   closeIcon,
   disabledIcon,
+  expandDownIcon,
+  expandUpIcon,
   faClock,
   helpIcon,
-  moveDownIcon,
-  moveUpIcon,
   searchIcon,
   starIcon,
   starOutlineIcon,
@@ -45,11 +47,17 @@ import {
 } from '../shell/icons';
 import HighlightedText from './HighlightedText';
 import styles from './SearchBar.m.scss';
+import { buildArmoryIndex } from './armory-search';
 import createAutocompleter, { SearchItem, SearchItemType } from './autocomplete';
 import { canonicalizeQuery, parseQuery } from './query-parser';
 import { searchConfigSelector } from './search-config';
 import { validateQuerySelector } from './search-filter';
 import './search-filter.scss';
+
+export const searchButtonAnimateVariants: Variants = {
+  hidden: { scale: 0 },
+  shown: { scale: 1 },
+};
 
 const searchItemIcons: { [key in SearchItemType]: string } = {
   [SearchItemType.Recent]: faClock,
@@ -60,76 +68,17 @@ const searchItemIcons: { [key in SearchItemType]: string } = {
   [SearchItemType.ArmoryEntry]: helpIcon,
 };
 
-interface ProvidedProps {
-  /** Placeholder text when nothing has been typed */
-  placeholder: string;
-  /** Is this the main search bar in the header? It behaves somewhat differently. */
-  mainSearchBar?: boolean;
-  /** A fake property that can be used to force the "live" query to be replaced with the one from props */
-  searchQueryVersion?: number;
-  /** The search query to fill in the input. This is used only initially, or when searchQueryVersion changes */
-  searchQuery?: string;
-  /** Children are used as optional extra action buttons only when there is a query. */
-  children?: React.ReactNode;
-  /** An optional menu of actions that can be executed on the search. Always shown. */
-  menu?: React.ReactNode;
-  instant?: boolean;
-  className?: string;
-  /** Fired whenever the query changes (already debounced) */
-  onQueryChanged: (query: string) => void;
-  /** Fired whenever the query has been cleared */
-  onClear?: () => void;
-}
+const armoryIndexSelector = createSelector(d2ManifestSelector, languageSelector, buildArmoryIndex);
 
-interface StoreProps {
-  recentSearches: Search[];
-  validateQuery: ReturnType<typeof validateQuerySelector>;
-  autocompleter: (
-    query: string,
-    caretIndex: number,
-    recentSearches: Search[],
-    includeArmory: boolean
-  ) => SearchItem[];
-}
-
-type Props = ProvidedProps & StoreProps & ThunkDispatchProp;
-
-const autoCompleterSelector = createSelector(searchConfigSelector, createAutocompleter);
-
-function mapStateToProps() {
-  let prevSearchQueryVersion: number | undefined;
-  let prevSearchQuery: string | undefined;
-
-  return (
-    state: RootState,
-    { searchQuery, searchQueryVersion }: ProvidedProps
-  ): StoreProps & { searchQuery?: string } => {
-    // This is a hack that prevents `searchQuery` from changing if `searchQueryVersion`
-    // doesn't change, so we don't trigger an update.
-    let manipulatedSearchQuery = prevSearchQuery;
-    if (searchQueryVersion === undefined) {
-      // OK, they didn't even provide searchQueryVersion, just pass through the original query
-      manipulatedSearchQuery = searchQuery;
-    } else if (searchQueryVersion !== prevSearchQueryVersion) {
-      manipulatedSearchQuery = searchQuery;
-      prevSearchQuery = searchQuery;
-      prevSearchQueryVersion = searchQueryVersion;
-    }
-
-    return {
-      recentSearches: recentSearchesSelector(state),
-      autocompleter: autoCompleterSelector(state),
-      validateQuery: validateQuerySelector(state),
-      searchQuery: manipulatedSearchQuery,
-    };
-  };
-}
-
-const LazyFilterHelp = React.lazy(
-  () => import(/* webpackChunkName: "filter-help" */ './FilterHelp')
+const autoCompleterSelector = createSelector(
+  searchConfigSelector,
+  armoryIndexSelector,
+  createAutocompleter,
 );
 
-const RowContents = React.memo(({ item }: { item: SearchItem }) => {
+const LazyFilterHelp = lazy(() => import(/* webpackChunkName: "filter-help" */ './FilterHelp'));
+
+const RowContents = memo(({ item }: { item: SearchItem }) => {
   function highlight(text: string, section: string) {
     return item.highlightRange?.section === section ? (
       <HighlightedText
@@ -154,7 +103,7 @@ const RowContents = React.memo(({ item }: { item: SearchItem }) => {
           <span className={styles.namedQueryBody}>
             {`${item.armoryItem.seasonName} (${t('Armory.Season', {
               season: item.armoryItem.season,
-              year: item.armoryItem.year,
+              year: item.armoryItem.year ?? '?',
             })})`}
           </span>
         </>
@@ -175,7 +124,7 @@ const RowContents = React.memo(({ item }: { item: SearchItem }) => {
   }
 });
 
-const Row = React.memo(
+const Row = memo(
   ({
     highlighted,
     item,
@@ -213,7 +162,7 @@ const Row = React.memo(
         </button>
       )}
     </>
-  )
+  ),
 );
 
 // TODO: break filter autocomplete into its own object/helpers... with tests
@@ -224,18 +173,6 @@ export interface SearchFilterRef {
   focusFilterInput: () => void;
   /** Clear the filter field */
   clearFilter: () => void;
-}
-
-function ArmorySheet({ itemHash, onClose }: { itemHash: number; onClose: () => void }) {
-  return (
-    <Portal>
-      <Sheet onClose={onClose} sheetClassName={styles.armorySheet}>
-        <ClickOutsideRoot>
-          <Armory itemHash={itemHash} />
-        </ClickOutsideRoot>
-      </Sheet>
-    </Portal>
-  );
 }
 
 /**
@@ -255,16 +192,35 @@ function SearchBar(
     onQueryChanged,
     instant,
     onClear,
-    dispatch,
-    validateQuery,
-    autocompleter,
-    recentSearches,
     className,
     menu,
-  }: Props,
-  ref: React.Ref<SearchFilterRef>
+  }: {
+    /** Placeholder text when nothing has been typed */
+    placeholder: string;
+    /** Is this the main search bar in the header? It behaves somewhat differently. */
+    mainSearchBar?: boolean;
+    /** A fake property that can be used to force the "live" query to be replaced with the one from props */
+    searchQueryVersion?: number;
+    /** The search query to fill in the input. This is used only initially, or when searchQueryVersion changes */
+    searchQuery?: string;
+    /** Children are used as optional extra action buttons only when there is a query. */
+    children?: React.ReactNode;
+    /** An optional menu of actions that can be executed on the search. Always shown. */
+    menu?: React.ReactNode;
+    instant?: boolean;
+    className?: string;
+    /** Fired whenever the query changes (already debounced) */
+    onQueryChanged: (query: string) => void;
+    /** Fired whenever the query has been cleared */
+    onClear?: () => void;
+  },
+  ref: React.Ref<SearchFilterRef>,
 ) {
+  const dispatch = useThunkDispatch();
   const isPhonePortrait = useIsPhonePortrait();
+  const recentSearches = useSelector(recentSearchesSelector);
+  const autocompleter = useSelector(autoCompleterSelector);
+  const validateQuery = useSelector(validateQuerySelector);
 
   // On iOS at least, focusing the keyboard pushes the content off the screen
   const autoFocus = !mainSearchBar && !isPhonePortrait && !isiOSBrowser();
@@ -282,7 +238,7 @@ function SearchBar(
       : _.debounce((query: string) => {
           onQueryChanged(query);
         }, 500),
-    [onQueryChanged]
+    [onQueryChanged],
   );
 
   const liveQuery = useDeferredValue(liveQueryLive);
@@ -310,8 +266,14 @@ function SearchBar(
 
   const caretPosition = inputElement.current?.selectionStart || liveQuery.length;
   const items = useMemo(
-    () => autocompleter(liveQuery, caretPosition, recentSearches, Boolean(mainSearchBar)),
-    [autocompleter, caretPosition, liveQuery, mainSearchBar, recentSearches]
+    () =>
+      autocompleter(
+        liveQuery,
+        caretPosition,
+        recentSearches,
+        /* includeArmory */ Boolean(mainSearchBar),
+      ),
+    [autocompleter, caretPosition, liveQuery, mainSearchBar, recentSearches],
   );
 
   // useCombobox from Downshift manages the state of the dropdown
@@ -325,7 +287,6 @@ function SearchBar(
     getItemProps,
     setInputValue,
     reset: clearFilter,
-    openMenu,
   } = useCombobox<SearchItem>({
     items,
     stateReducer,
@@ -345,16 +306,10 @@ function SearchBar(
   // special click handling for filter helper
   function stateReducer(
     state: UseComboboxState<SearchItem>,
-    actionAndChanges: UseComboboxStateChangeOptions<SearchItem>
+    actionAndChanges: UseComboboxStateChangeOptions<SearchItem>,
   ) {
     const { type, changes } = actionAndChanges;
     switch (type) {
-      // FIXME: Do not act on focus because it interacts badly with autofocus
-      // Downshift will likely switch away from using focus because too
-      // https://github.com/downshift-js/downshift/issues/1439
-      // (Also see onFocus below)
-      case useCombobox.stateChangeTypes.InputFocus:
-        return state;
       case useCombobox.stateChangeTypes.ItemClick:
       case useCombobox.stateChangeTypes.InputKeyDownEnter:
         if (!changes.selectedItem) {
@@ -382,14 +337,6 @@ function SearchBar(
         return changes; // no handling for other types
     }
   }
-
-  // FIXME: Maybe follow suit when Downshift changes opening behavior to
-  // just use clicks and not focus (see stateReducer above)
-  const onFocus = () => {
-    if (!liveQuery && !isOpen && !autoFocus) {
-      openMenu();
-    }
-  };
 
   // Reset live query when search version changes
   useEffect(() => {
@@ -419,7 +366,7 @@ function SearchBar(
       e.stopPropagation();
       dispatch(searchDeleted(item.query.fullText));
     },
-    [dispatch]
+    [dispatch],
   );
 
   // Add some methods for refs to use
@@ -431,7 +378,7 @@ function SearchBar(
       },
       clearFilter,
     }),
-    [clearFilter]
+    [clearFilter],
   );
 
   // Implement tab completion on the tab key. If the highlighted item is an autocomplete suggestion,
@@ -457,6 +404,7 @@ function SearchBar(
     } else if (e.key === 'Home' || e.key === 'End') {
       // Disable the use of Home/End to select items in the menu
       // https://github.com/downshift-js/downshift/issues/1162
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       (e.nativeEvent as any).preventDownshiftDefault = true;
     } else if (
       (e.key === 'Delete' || e.key === 'Backspace') &&
@@ -473,10 +421,13 @@ function SearchBar(
     }
   };
 
+  const menuRef = useRef<HTMLUListElement>(null);
+  useFixOverscrollBehavior(menuRef);
+
   const autocompleteMenu = useMemo(
     () => (
       <ul
-        {...getMenuProps()}
+        {...getMenuProps({ ref: menuRef })}
         className={styles.menu}
         style={{
           maxHeight: menuMaxHeight,
@@ -514,7 +465,7 @@ function SearchBar(
       items,
       tabAutocompleteItem,
       menuMaxHeight,
-    ]
+    ],
   );
 
   return (
@@ -523,11 +474,10 @@ function SearchBar(
         className={clsx(className, 'search-filter', styles.searchBar, { [styles.open]: isOpen })}
         role="search"
       >
-        <AppIcon icon={searchIcon} className="search-bar-icon" {...getLabelProps()} />
+        <AppIcon {...getLabelProps({ icon: searchIcon, className: 'search-bar-icon' })} />
         <input
           {...getInputProps({
             onBlur,
-            onFocus,
             onKeyDown,
             ref: inputElement,
             className: clsx({ [styles.invalid]: !valid }),
@@ -548,10 +498,10 @@ function SearchBar(
 
             {liveQuery.length > 0 && (saveable || saved) && !isPhonePortrait && (
               <motion.button
-                layout
-                exit={{ scale: 0 }}
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
+                variants={searchButtonAnimateVariants}
+                exit="hidden"
+                initial="hidden"
+                animate="shown"
                 key="save"
                 type="button"
                 className={clsx(styles.filterBarButton, styles.saveSearchButton)}
@@ -564,10 +514,10 @@ function SearchBar(
 
             {(liveQuery.length > 0 || (isPhonePortrait && mainSearchBar)) && (
               <motion.button
-                layout
-                exit={{ scale: 0 }}
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
+                variants={searchButtonAnimateVariants}
+                exit="hidden"
+                initial="hidden"
+                animate="shown"
                 key="clear"
                 type="button"
                 className={styles.filterBarButton}
@@ -583,34 +533,33 @@ function SearchBar(
             <motion.button
               layout
               key="menu"
-              type="button"
-              className={clsx(styles.filterBarButton, styles.openButton)}
-              {...getToggleButtonProps()}
-              aria-label="toggle menu"
+              {...getToggleButtonProps({
+                type: 'button',
+                className: clsx(styles.filterBarButton, styles.openButton),
+                'aria-label': 'toggle menu',
+              })}
             >
-              <AppIcon icon={isOpen ? moveUpIcon : moveDownIcon} />
+              <AppIcon icon={isOpen ? expandUpIcon : expandDownIcon} />
             </motion.button>
           </AnimatePresence>
         </LayoutGroup>
 
         {filterHelpOpen && (
-          <Portal>
-            <Sheet
-              onClose={() => setFilterHelpOpen(false)}
-              header={
-                <>
-                  <h1>{t('Header.Filters')}</h1>
-                  <UserGuideLink topic="Item-Search" />
-                </>
-              }
-              freezeInitialHeight
-              sheetClassName={styles.filterHelp}
-            >
-              <Suspense fallback={<Loading message={t('Loading.FilterHelp')} />}>
-                <LazyFilterHelp />
-              </Suspense>
-            </Sheet>
-          </Portal>
+          <Sheet
+            onClose={() => setFilterHelpOpen(false)}
+            header={
+              <>
+                <h1>{t('Header.Filters')}</h1>
+                <UserGuideLink topic="Item-Search" />
+              </>
+            }
+            freezeInitialHeight
+            sheetClassName={styles.filterHelp}
+          >
+            <Suspense fallback={<Loading message={t('Loading.FilterHelp')} />}>
+              <LazyFilterHelp />
+            </Suspense>
+          </Sheet>
         )}
 
         {autocompleteMenu}
@@ -622,6 +571,4 @@ function SearchBar(
   );
 }
 
-export default connect(mapStateToProps, null, null, { forwardRef: true })(
-  React.forwardRef(SearchBar)
-);
+export default memo(forwardRef(SearchBar));

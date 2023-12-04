@@ -2,7 +2,6 @@
 
 .loadout {
   composes: flexColumn from '../dim-ui/common.m.scss';
-  margin-bottom: 10px;
   padding: 15px;
   background: rgba(0, 0, 0, 0.25);
 }
@@ -10,9 +9,10 @@
 .title {
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
+  user-select: text;
+  gap: 1em;
 
   h2 {
-    flex: 1;
     display: block;
     margin: 0 !important;
     font-size: 16px;
@@ -28,6 +28,7 @@
   composes: flexRow from '../dim-ui/common.m.scss';
   flex-flow: row wrap;
   gap: 4px;
+  margin-left: auto;
 
   @include phone-portrait {
     margin-top: 16px;
@@ -35,15 +36,30 @@
   }
 }
 
-.missingItems {
+.findings {
+  display: flex;
+  flex-flow: row wrap;
+  column-gap: 8px;
+  > * {
+    opacity: 0;
+    animation: 0.2s linear 0s forwards fade-in;
+  }
+}
+
+@keyframes fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+.finding {
   text-transform: none;
   font-size: 12px;
   letter-spacing: normal;
-  margin-left: 1em;
   color: #ccc;
 
   :global(.app-icon) {
-    margin-right: 0.5em;
+    margin-right: 0.2em;
   }
 }
 

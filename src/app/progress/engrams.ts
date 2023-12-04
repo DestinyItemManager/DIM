@@ -24,6 +24,11 @@ const engrams: HashLookup<{ cap: PowerCap; bonus: number }> = {
     cap: PowerCap.Powerful,
     bonus: 3,
   },
+  // Tier 1 Exotic
+  2643364263: {
+    cap: PowerCap.Powerful,
+    bonus: 3,
+  },
   // Powerful
   4039143015: {
     cap: PowerCap.Powerful,

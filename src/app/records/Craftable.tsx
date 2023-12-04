@@ -1,12 +1,7 @@
 import { VendorItemDisplay } from 'app/vendors/VendorItemComponent';
-import React from 'react';
 import { DimCraftable } from './presentation-nodes';
 
-interface Props {
-  craftable: DimCraftable;
-}
-
-export default function Craftable({ craftable }: Props) {
+export default function Craftable({ craftable }: { craftable: DimCraftable }) {
   const { item, canCraftAllPlugs, canCraftThis } = craftable;
 
   return (

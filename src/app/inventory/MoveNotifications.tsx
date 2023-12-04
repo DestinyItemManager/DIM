@@ -1,5 +1,5 @@
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
-import { t, tl } from 'app/i18next-t';
+import { I18nKey, t, tl } from 'app/i18next-t';
 import {
   LoadoutApplyPhase,
   LoadoutApplyState,
@@ -13,6 +13,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { NotificationError, NotifyInput } from 'app/notifications/notifications';
 import { AppIcon, faCheckCircle, faExclamationCircle, refreshIcon } from 'app/shell/icons';
 import { DimError } from 'app/utils/dim-error';
+import { errorMessage } from 'app/utils/errors';
 import { useThrottledSubscription } from 'app/utils/hooks';
 import { Observable } from 'app/utils/observable';
 import { LookupTable } from 'app/utils/util-types';
@@ -35,7 +36,7 @@ export function moveItemNotification(
   item: DimItem,
   target: DimStore,
   movePromise: Promise<unknown>,
-  cancel: () => void
+  cancel: () => void,
 ): NotifyInput {
   return {
     promise: movePromise,
@@ -59,11 +60,11 @@ export function loadoutNotification(
   loadout: Loadout | InGameLoadout,
   stateObservable: Observable<LoadoutApplyState>,
   loadoutPromise: Promise<unknown>,
-  cancel: () => void
+  cancel: () => void,
 ): NotifyInput {
   return {
     promise: loadoutPromise.catch((e) => {
-      throw new NotificationError(e.message, {
+      throw new NotificationError(errorMessage(e), {
         body: <ApplyLoadoutProgressBody stateObservable={stateObservable} />,
         type: stateObservable.getCurrentValue().inGameLoadoutInActivity ? 'warning' : 'error',
       });
@@ -76,7 +77,7 @@ export function loadoutNotification(
   };
 }
 
-const messageByPhase: { [phase in LoadoutApplyPhase]: string } = {
+const messageByPhase: { [phase in LoadoutApplyPhase]: I18nKey } = {
   [LoadoutApplyPhase.NotStarted]: tl('Loadouts.NotStarted'),
   [LoadoutApplyPhase.Deequip]: tl('Loadouts.Deequip'),
   [LoadoutApplyPhase.MoveItems]: tl('Loadouts.MoveItems'),
@@ -109,30 +110,30 @@ function ApplyLoadoutProgressBody({
     phase === LoadoutApplyPhase.Succeeded
       ? faCheckCircle
       : phase === LoadoutApplyPhase.Failed
-      ? faExclamationCircle
-      : refreshIcon;
+        ? faExclamationCircle
+        : refreshIcon;
 
   const itemStatesList = Object.values(itemStates);
   // TODO: when we have per-item socket overrides this will probably need to be more subtle
   const socketOverrideStatesList = Object.values(socketOverrideStates);
 
-  const groupedItemErrors = _.groupBy(
-    itemStatesList.filter(({ error }) => error),
-    ({ error }) =>
-      (error instanceof DimError ? error.bungieErrorCode() ?? error.cause?.message : undefined) ??
-      error?.message
-  );
+  const groupErrors = <T extends { error?: Error }>(items: T[]) =>
+    Object.groupBy(
+      items.filter(({ error }) => error),
+      ({ error }) =>
+        (error instanceof DimError
+          ? error.bungieErrorCode()?.toString() ?? error.cause?.message
+          : undefined) ??
+        error?.message ??
+        'Unknown',
+    );
 
-  const groupedModErrors = _.groupBy(
-    modStates.filter(({ error }) => error),
-    ({ error }) =>
-      (error instanceof DimError ? error.bungieErrorCode() ?? error.cause?.message : undefined) ??
-      error?.message
-  );
+  const groupedItemErrors = groupErrors(itemStatesList);
+  const groupedModErrors = groupErrors(modStates);
 
   return (
     <>
-      <div className={clsx(styles.loadoutDetails)}>
+      <div className={styles.loadoutDetails}>
         <AppIcon icon={progressIcon} spinning={progressIcon === refreshIcon} />
         {t(messageByPhase[phase])}
       </div>
@@ -177,7 +178,7 @@ function ApplyLoadoutProgressBody({
               <b>{t('Loadouts.ItemErrorSummary', { count: errorStates.length })}</b>{' '}
               {errorStates[0].error instanceof DimError && errorStates[0].error.cause
                 ? errorStates[0].error.cause.message
-                : errorStates[0].error!.message}
+                : errorStates[0].error?.message ?? 'Unknown'}
             </div>
           ))}
         </div>
@@ -227,7 +228,7 @@ function ApplyLoadoutProgressBody({
               <b>{t('Loadouts.ModErrorSummary', { count: errorStates.length })}</b>{' '}
               {errorStates[0].error instanceof DimError && errorStates[0].error.cause
                 ? errorStates[0].error.cause.message
-                : errorStates[0].error!.message}
+                : errorStates[0].error?.message ?? 'Unknown'}
             </div>
           ))}
         </div>
@@ -243,7 +244,7 @@ export function postmasterNotification(
   count: number,
   store: DimStore,
   promise: Promise<unknown>,
-  cancel: () => void
+  cancel: () => void,
 ): NotifyInput {
   // TODO: pass in a state updater that can communicate application state
 
@@ -288,30 +289,12 @@ function MoveItemNotificationIcon({ completion }: { completion: Promise<unknown>
     inProgress === MoveState.InProgress
       ? refreshIcon
       : inProgress === MoveState.Succeeded
-      ? faCheckCircle
-      : faExclamationCircle;
+        ? faCheckCircle
+        : faExclamationCircle;
 
   return (
     <div className={clsx(styles.progressIcon, moveStateClasses[inProgress])}>
       <AppIcon icon={progressIcon} spinning={inProgress === MoveState.InProgress} />
     </div>
   );
-}
-
-/**
- * Generate JSX for applying an ingame loadout. This isn't a component.
- */
-// TODO: build something more like DIM's loadout notification?
-export function inGameLoadoutNotification(
-  loadout: InGameLoadout,
-  applyPromise: Promise<any>
-): NotifyInput {
-  return {
-    promise: applyPromise,
-    duration: lingerMs,
-    title: loadout.name,
-    icon: <InGameLoadoutIcon loadout={loadout} />,
-    trailer: <MoveItemNotificationIcon completion={applyPromise} />,
-    body: t('InGameLoadout.Applying'),
-  };
 }

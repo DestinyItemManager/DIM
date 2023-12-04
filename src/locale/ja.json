@@ -9,7 +9,7 @@
   },
   "Accounts": {
     "Choose": "{{bungieName}} のプロファイル",
-    "ErrorLoadInventory": "Destiny {{version}} のキャラクターとインベントリをロードできません",
+    "ErrorLoadInventory": "Destiny {{version}} のキャラクターと所持アイテムの情報をロードできません",
     "ErrorLoadManifest": "BungieからDestinyの情報データベースをロードできません",
     "ErrorLoading": "Bungie.netからDestinyのアカウント情報をロードできません",
     "MissingAccountWarning": "ここに自分のアカウントが表示されない場合は、正しい Bungie.net アカウントにログインしていないか、 Bungie.net がメンテナンスでダウンしている可能性があります。",
@@ -27,6 +27,7 @@
     "WeeklyHeroic": "週間英雄ストライク"
   },
   "Armory": {
+    "Armory": "武器庫",
     "NoNotes": "メモなし",
     "OpenInArmory": "アーマリーで見る",
     "Season": "{{year}} 年目、シーズン {{season}}",
@@ -38,7 +39,7 @@
     "YourItems": "あなたのアイテム"
   },
   "Browsercheck": {
-    "Steam": "Steam ブラウザにこのページが読み込まれているようです。 機能やリソースが限られているため、予期しないまたは断続的に DIM の実行に失敗する可能性があります。サポートを提供できません。",
+    "Steam": "Steam ブラウザでこのページを開いていると検出しました。このブラウザは機能が限られていて予期しない不具合が突然起きる可能性があります。それらの不具合に対してサポート外となります。",
     "Unsupported": "DIM チームはこのブラウザの利用をサポートしていません。DIM の一部または全ての機能が動作しない可能性があります。"
   },
   "Bucket": {
@@ -76,7 +77,7 @@
     "ItemUniquenessExplanation": "1個しか持てないアイテム '{{name}}' {{type}} を {{character}} に転送しようとしましたが、すでに同じアイテムを所持しているため転送できませんでした。",
     "ItemUniquenessExplanation_female": "1個しか持てないアイテム '{{name}}' {{type}} を {{character}} に転送しようとしましたが、すでに同じアイテムを所持しているため転送できませんでした。",
     "ItemUniquenessExplanation_male": "1個しか持てないアイテム '{{name}}' {{type}} を {{character}} に転送しようとしましたが、すでに同じアイテムを所持しているため転送できませんでした。",
-    "Maintenance": "Bungie.netサーバーはメンテナンス中です。",
+    "Maintenance": "Bungie.netのサーバーがメンテナンスによってダウンしています。",
     "MissingInventory": "Bungie.netから所持品データをロードできませんでした。ブラウザのプライバシー設定などにより、ロードできない場合があります。一度ログアウトしてから、再度ログインしてみてください。",
     "NetworkError": "ネットワークエラー。{{status}} {{statusText}}",
     "NoAccount": "Destiny のアカウントが見つかりません。正しいプラットフォームが選択されているかご確認ください。",
@@ -88,7 +89,7 @@
     "SlowDetails": "Bungie.netは現在、問い合わせの返答に時間がかかっています。多くのプレイヤーが同時にサーバー接続している場合や、Bungie.netに問題がある場合にこのような事態が発生することがあります。また、利用されているインターネット接続に問題がある可能性もあります。引き続き、サーバーからの返答をお待ちください。",
     "SlowResponse": "Bungie.netのサーバーからの応答時間が非常に遅く、返答がありません。",
     "Throttled": "Bungie.netは、DIMが作成できるリクエストの数を制限しています。",
-    "Twitter": "最新情報に更新します。:",
+    "Twitter": "最新情報はこちらから:",
     "UnknownError": "Bungie.netからのメッセージ: {{message}}",
     "VendorNotFound": "ベンダー情報が取得できません。"
   },
@@ -111,10 +112,10 @@
     "Super": "スーパースキルのクールダウン: {{cooldown}}"
   },
   "Countdown": {
-    "Days": "１日",
-    "Days_compact": "{{count}}d",
-    "Days_compact_plural": "{{count}} 日",
-    "Days_plural": "{{count}} 日間"
+    "Days": "1日",
+    "Days_compact": "{{count}}日",
+    "Days_compact_plural": "{{count}}日間",
+    "Days_plural": "{{count}}日間"
   },
   "Csv": {
     "EmptyFile": "ファイルにラインがありませんでした。",
@@ -136,13 +137,12 @@
     "Used": "使用中"
   },
   "ErrorBoundary": {
-    "Title": "何か問題が発生したようです"
+    "Title": "エラー発生"
   },
   "ErrorPanel": {
     "Description": "Destiny 2のコンパニオンアプリで保管庫データにアクセスして、 Bungie.net がダウンしているかどうか試してみてください。",
-    "EmblemError": "ゲーム内で全キャラクターのエンブレムを入れ替えると直るかもしれません。",
-    "EmblemErrorLink": "修正方法の詳細を読む",
-    "SystemDown": "これはすべての Destiny アプリに影響し、 DIM チームで修正したり回避ができません。",
+    "ReadTheGuide": "トラブルシューティングの手順については、ユーザーガイド(メニュー内のリンク) をご覧ください。",
+    "SystemDown": "Destinyに関連するすべてのアプリに影響する内容で、 DIM チームにて修正したり回避ができない内容です。",
     "Troubleshooting": "トラブルシューティングガイド"
   },
   "FarmingMode": {
@@ -213,12 +213,12 @@
     "ContributePower": "パワー値があり、合計パワーレベルの変動要素となるアイテムを表示します。",
     "Cosmetic": "フレアや装飾アイテムのみに絞り込みます。",
     "Craftable": "クラフト可能なアイテムを表示",
-    "CraftedDupe": "",
+    "CraftedDupe": "重複している武器のうち、少なくとも1つは形成されたものを表示します。",
     "Curated": "キュレートされたロールのアイテムを表示。",
     "CurrentClass": "現在ログインしているガーディアンが装備可能なアイテムを表示します。",
     "CustomStatLower": "カスタム後のステータス合計値のみを考慮して、同じサブクラス防具でも厳密に低いステータス値を持つ防具を表示します。",
     "DamageType": "ダメージタイプ別にアイテムを表示",
-    "Deepsight": "パターンを抽出可能な、ディープサイト共振成分のある武器を表示。",
+    "Deepsight": "ディープサイトの共振を抽出できる武器を表示します。ディープサイトの共振は武器パターンを抽出したり、一部の対象武器はディープサイト・ハーモナイザーを使用してディープサイトの発動を付与できます。",
     "Description": "説明",
     "Dupe": "再登場版も含む、重複アイテムを表示します。",
     "DupeCount": "指定された数の重複があるアイテム。",
@@ -231,16 +231,21 @@
     "Event": "任意のイベントから登場したアイテムを絞り込めます。",
     "ExtraPerk": "選択可能なパークが追加されたレジェンダリーウェポンをランダムに表示",
     "Filter": "フィルター",
+    "FilterWith": "フィルター絞込:",
+    "Focusable": "現時点でベンダーから入手できるアイテムを表示",
     "Foundry": "指定した武器メーカー製のアイテムを表示する",
     "Glimmer": "グリマーの増加に関連する消耗品のアイテムを表示しています。",
-    "HasMemento": "記憶ソケットを挿入している形成武器を表示する",
+    "Harrowed": "\\(苦悩\\)",
     "HasNotes": "メモが適用されているアイテムを表示します。",
     "HasOrnament": "装飾品が施されているアイテムが表示されます。",
     "HasShader": "シェーダが適用されている項目を表示します。",
     "HoldsMod": "特定のタイプの季節MODに対応した防具が表示されます。",
+    "InDimLoadout": "is:ininingameloadoutはゲーム内ロードアウトで使用しているアイテムを強調表示します。",
+    "InInGameLoadout": "is:ininingameloadoutはゲーム内ロードアウトで使用するアイテムを表示します。",
     "InLoadout": "is:inloadout は、任意のロードアウトに含まれるアイテムを表示します。inloadout: で検索すると、タイトルが一致するロードアウトに含まれるアイテムが表示されます。ハッシュタグと一緒に使うと、inloadout:  はタイトルやノートにハッシュタグが含まれるロードアウトを持つアイテムを表示します。",
     "Infusable": "融合可能なアイテムを表示",
     "InfusionFodder": "高パワーの同じアイテムとグリマーだけで融合できる、低パワーのアイテムを表示します。",
+    "IsAdept": "熟練Modが利用できる武器を表示",
     "IsCrafted": "クラフトされた武器を表示",
     "IsSunset": "退役済みで、最大パワー上限に到達してしまったアイテムを表示する",
     "ItemHash": "与えられた保管庫アイテムハッシュを持つアイテムを表示。上級ユーザー向け。",
@@ -254,12 +259,13 @@
     },
     "Location": "アプリケーション内の位置に基づいて項目が表示されます。left/middle/rightはcharの視覚的な位置です。inleftcharは常に動作しますが、残りの2つはユーザの文字数に基づいています。currentは最後/現在のログ文字です(黄色い三角形で示されています)。",
     "LockAllFailed": "アイテムのロックに失敗しました",
-    "LockAllSuccess": "ロックした {{num}} アイテム",
+    "LockAllSuccess": "{{num}} 個のアイテムをロックしました",
     "Locked": "アイテムの固定有無を基に表示",
     "Masterwork": "マスターワークのステータスまたはマスターワークレベルに基づいてアイテムを表示。",
     "MasterworkKills": "マスターワークキルトラッカー数に基づいてアイテムを表示",
     "MaxPower": "スロット毎の最大出力でアイテムを表示します。",
     "MaxPowerLoadout": "各キャラクタークラスのパワーレベルを最大化するアイテムのロードアウトを表示します。",
+    "Memento": "記憶を装着したクラフト武器を表示",
     "ModSlot": "特定のシーズンMODスロットを持つ防具を表示します。",
     "Mods": {
       "Y2": "2年目のMODが装備されたアイテムを表示します。",
@@ -273,7 +279,7 @@
     "PartialMatch": "アイテムの名前、説明、パーク、Mod のいずれにて部分的でも一致したものを表示します。複数の単語で絞り込む場合は引用符を使って検索できます。'perk:'フィルタは、パークにて該当するワードだけを絞り込みます。",
     "PatternUnlocked": "形成したことがなくても、パターンを所持しているアイテムを表示します。",
     "Perk": "アイテムの名前や説明に含まれるフィルターのテキストに、パークやmodが部分的に一致しているアイテムを表示します。引用符を使ってフレーズ全体を検索します。",
-    "PerkName": "アイテムのパーク、Mod のいずれにて部分的でも一致したものを表示します。複数の単語で絞り込む場合は引用符を使って検索できます。",
+    "PerkName": "パークまたはModの名前が一致(exactperk:) または一部該当 (perkname:) のアイテムを表示します。引用符を使用してフレーズ全体を検索します。",
     "PinnacleReward": "強力な報酬を得られる追跡を表示",
     "Postmaster": "現在ポストマスターにあるアイテム",
     "PowerKeywords": "現在のシーズンのパワー制限を参照するには、数値の代わりにハードキャップまたはソフトキャップキーワードを使用してください。",
@@ -289,14 +295,13 @@
     "RetiredPerk": "入手不可のパークが付与された武器を表示します",
     "SearchPrompt": "利用可能なフィルタコマンドを検索",
     "Season": "Destiny 2のシーズンに登場したアイテムを表示します。",
-    "SeasonalDupe": "同シーズンの重複アイテムのみ表示します。異なるシーズンの同アイテムは別物としてカウントします。",
     "StackFull": "スタックに余裕があるアイテムを表示(強化のコア、奇妙なコイン、銃器技師の材料など)",
     "StackLevel": "スタック内のアイテムの量に基づいてアイテムを表示します。",
     "Stackable": "一纏め可能なアイテム(弾合成アイテム、奇妙なコインなど) を表示",
     "StatLower": "同じ種類の防具の中で、他のアーマーよりも厳密にステータスが低い防具を表示します。",
     "Stats": "特定のステータス値に基づいてアイテムを表示します。 $t(Filter.StatsExtras)",
     "StatsBase": "装備済のModやマスターワークの増量分を含まず、基礎のステータス値に基づいてアーマーをフィルタリングします。$t(Filter.StatsExtras)",
-    "StatsExtras": "複数のステータス名を＋マークでつなぐことで、ステータスの追加に対応しています。  また、アイテムのステータスの中での順位に基づいてステータスを一致させる特別なキーワード、highest、secondhighest、thirdhighestなどがあります。",
+    "StatsExtras": "複数のアーマーステータスの数値を＋や&記号でつなぐ、高度な絞り込みを実装しました。  また、アーマーのステータス値の中での順位で数値を絞り込むための専用キーワード、highest、secondhighest、thirdhighestなどがあります。各カスタムステータス値にて使用する専用の検索ワードもあります。",
     "StatsLoadout": "特定の統計の最大合計値を装備するアイテムのセットを検索します。",
     "StatsMax": "特定の統計情報で最も高い数のアーマーを見つけます。 最高の統計を持つすべてのアイテムが含まれます。",
     "Tags": {
@@ -310,8 +315,9 @@
     "Unascended": "上昇していない上昇ノードを持つアイテムを表示。",
     "Undo": "元に戻す",
     "UnlockAllFailed": "アイテムのアンロックに失敗しました",
-    "UnlockAllSuccess": "アンロックした {{num}} アイテム",
+    "UnlockAllSuccess": "{{num}} 個のアイテムのロックを解除しました",
     "Vendor": "アイテムは特定のベンダーから入手できます。",
+    "VendorItem": "アイテムは非所持かつベンダーで販売されている物だけを表示します。ロードアウト最適化にてベンダーアイテムを除外するのに便利です。",
     "Weapon": "武器であるアイテムを表示。",
     "WeaponLevel": "武器レベルに基づいて武器を表示",
     "WeaponType": "指定した武器タイプを表示します",
@@ -323,6 +329,7 @@
   },
   "General": {
     "ClickForDetails": "クリックして詳細表示",
+    "Close": "閉じる",
     "Confirm": "本当に消しますか?",
     "UserGuideLink": "ユーザーガイド"
   },
@@ -339,8 +346,9 @@
   "Header": {
     "About": "DIMについて",
     "AutoRefresh": "プレイ中ならば DIM は自動的に再読み込みされます。",
-    "BulkTag": "バルクタグアイテム",
+    "BulkTag": "選択したアイテムにタグを付けています",
     "BungieNetAlert": "Bungie Alert",
+    "Clarity": "Clarity拡張機能は開発者によるサポートは終了しています。CPU使用率異常利用など、DIM使用時に障害を引き起こす可能性があります。アンインストールしてください。",
     "Clear": "フィルターをクリア",
     "CompareMatching": "アイテムを比較",
     "DeleteSearch": "検索の削除",
@@ -348,7 +356,7 @@
     "FilterHelpBrief": "商品の検索",
     "FilterHelpLoadouts": "ロードアウトの名前やノートを検索",
     "FilterHelpMenuItem": "フィルターヘルプ",
-    "FilterHelpOptimizer": "ロードアウトから防具を絞り込みます : {{example}}",
+    "FilterHelpOptimizer": "ロードアウトに使いたい防具をフィルターで絞り込みます: {{example}}",
     "FilterHelpProgress": "マイルストーンとバウンティーを検索",
     "FilterHelpRecords": "勝利の道のりとコレクションを検索する",
     "FilterMatchCount": "1つのアイテム",
@@ -363,7 +371,7 @@
     "MaterialCounts": "素材数",
     "Menu": "メニュー",
     "ProfileAge": "Destinyサーバーが最後にデータ更新したのは {{age}} (時/分/秒)前です。\nDIM から更新できるかもしれませんが、 Bungie.net は過去の情報を繰り返し送信しているだけのおそれがあります。",
-    "Refresh": "Destiny データ [R] を更新",
+    "Refresh": "更新する [R] キー",
     "ReloadApp": "アプリの再読み込み",
     "ReportBug": "バグの報告",
     "SaveSearch": "検索を保存",
@@ -384,11 +392,11 @@
     "ClearDialog": "ダイアログを閉じる",
     "ClearNewItems": "新しいアイテムを既読済にする",
     "Enter": "入力する",
+    "ItemPopupTab": "アイテム詳細タブへ切り替え",
     "LockUnlock": "アイテムをロックまたはロック解除する",
     "MarkItemAs": "アイテムを '{{tag}}' とマークする",
     "Menu": "ゲームメニューを表示",
     "Note": "メモを入力",
-    "Notes": "",
     "Pull": "アイテムを使用中キャラに持たせる",
     "RefreshInventory": "所持品を更新",
     "ShowHotkeys": "キーボードショートカットを表示",
@@ -398,7 +406,6 @@
     "Vault": "アイテムを保管庫に送る"
   },
   "InGameLoadout": {
-    "Applying": "ロードアウトを装備中",
     "ClearSlot": "スロット {{index}} を削除",
     "Create": "ロードアウトを作成",
     "CreateTitle": "現在の装備からゲーム内ロードアウトを作成",
@@ -469,7 +476,7 @@
     "PostmasterAlmostFull": "ほぼ満杯!",
     "PostmasterFull": "満杯!",
     "PreviewVendor": "{{type}} コンテンツのプレビュー",
-    "StackFull": "既に{{name}} の完全なスタックがあります",
+    "StackFull": "{{name}} はすでに上限数まで持っているのでこれ以上取得できません。",
     "StoreName": "{{genderRace}} {{className}}"
   },
   "KillType": {
@@ -490,6 +497,8 @@
     "Equip": "{{character}}に装備する",
     "Exclude": "省かれたアイテム",
     "ExcludeHelp": "特定のギアを持たずにセットを構築するには、アイテムをShift +クリック(またはこのバケットにドラッグアンドドロップ) します。",
+    "ExistingBuildStats": "現在のビルドステータス",
+    "ExistingBuildStatsNote": "高Tierのビルドのみ表示します。",
     "FilterSets": "フィルターセット",
     "Help": {
       "And": "これのパークをすべて装備した防具が使用されます (\"and\")",
@@ -524,7 +533,6 @@
     "Locked": "ロックされたアイテム",
     "LockedHelp": "アイテムをドラッグ＆ドロップすることでそれを固定でセット作成できます。排除するには Shift + クリック.",
     "Missing2": "フルセットを作るためのレア、レジェンダリー、エキゾチックの部位が足りません！",
-    "ModLockButton": "Modを選択",
     "ProcessingMode": {
       "Fast": "最速",
       "Full": "すべて",
@@ -533,11 +541,12 @@
       "ProcessingMode": "処理モード"
     },
     "Scaled": "縮尺",
-    "SearchAMod": "改造パーツ名や説明で検索する",
-    "SearchAnExotic": "エキゾチックまたは説明を検索",
+    "SearchAMod": "Mod名または説明で検索",
+    "SearchAnExotic": "エキゾチック名または説明で検索",
     "SelectExotic": "使用するエキゾチックを選ぶ",
     "SelectMods": "Mod を選択",
-    "SelectSubclass": "サブクラスを選択",
+    "SelectModsCount": "{{selected}}/{{maxSelectable}}",
+    "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} アクティビティMod",
     "SelectSubclassOptions": "サブクラスをカスタマイズ",
     "ShowAllConfigs": "全ての設定を表示する",
     "ShowConfigs": "設定を表示する",
@@ -551,6 +560,59 @@
     "Profile": "Destinyのプロファイルをロードしています...",
     "Vendors": "Destinyのベンダー情報をロードしています..."
   },
+  "LoadoutAnalysis": {
+    "Analyzed": "{{numLoadouts}} 個のロードアウトを分析完了",
+    "Analyzing": "{{numAnalyzed}}/{{numLoadouts}} 個のロードアウトを分析中",
+    "BetterStatsAvailable": {
+      "Description": "別のアーマーやModを選択すれば、より高いステータスに変更できます。\"$t(Loadouts.OpenInOptimizer)\" を選択して結果を確認します。",
+      "Name": "より高いステータス値のビルドが作成可能"
+    },
+    "BetterStatsAvailableFontNote": "注：このロードアウトは Mod「～の泉」を使用しTier10以上になっています。DIMは不要なTier上限突破を減らすことで、より良いステータスを検索できる可能性が上がります。敢えて使用する場合は、ロードアウトの\"$t(Loadouts.IncludeRuntimeStatBenefits) \"を無効にしてください。",
+    "DoesNotRespectExotic": {
+      "Description": "ロードアウト最適化で指定されているエキゾチックアーマーと、このロードアウトのエキゾチックアーマーが一致しません。",
+      "Name": "指定したエキゾチックアーマーと違います"
+    },
+    "DoesNotSatisfyStatConstraints": {
+      "Description": "ロードアウト最適化で指定のステータスに、このロードアウトのステータスは届いていません。",
+      "Name": "指定したTierに到達不可"
+    },
+    "EmptyFragmentSlots": {
+      "Description": "このサブクラスには未使用のかけらスロットがあります。",
+      "Name": "サブクラスのかけらスロットに空きがあります"
+    },
+    "InvalidMods": {
+      "Description": "このロードアウト内にある一部のModが廃止されているか、アーマーに適用できないようです。",
+      "Name": "廃止済みMOD"
+    },
+    "InvalidSearchQuery": {
+      "Description": "このロードアウトは、アーマーを含まないもしくは無効な検索フィルターを使用して作成されました。",
+      "Name": "無効な検索フィルター"
+    },
+    "MissingItems": {
+      "Description": "このロードアウトに含まれる装備の一部は所持品にありません。",
+      "Name": "アイテム不足"
+    },
+    "ModsDontFit": {
+      "Description": "このロードアウトのアーマーを強化しても、指定したMOD全てを装備できません。",
+      "Name": "割り当てられていないMODがあります"
+    },
+    "NeedsArmorUpgrades": {
+      "Description": "このロードアウトのアーマーは、指定された全Modの装備もしくはTier到達のためにアップグレードが必要です。",
+      "Name": "アーマーのアップグレードが必要"
+    },
+    "NotAFullArmorSet": {
+      "Description": "このロードアウトには全部位のアーマーが含まれていないため、解析できませんでした。",
+      "Name": "非全身アーマー"
+    },
+    "TooManyFragments": {
+      "Description": "サブクラス特性で利用可能のスロットより多くのかけらが指定されています。",
+      "Name": "サブクラスのかけらの数が多すぎます"
+    },
+    "UsesSeasonalMods": {
+      "Description": "このロードアウトはシーズン限定のMODを使用しています。シーズン終了後、これらのMODは使用できなくなるか、アーマーのエネルギー容量を超過します。",
+      "Name": "シーズンMODを使用"
+    }
+  },
   "LoadoutBuilder": {
     "AddHalfTierMods": "Mod を +5 追加",
     "All": "全て",
@@ -558,27 +620,32 @@
     "AnyExoticDescription": "指定なしで何らかのエキゾチックが必ず入るようになります。",
     "AssumeMasterwork": "マスターワーク済みと仮定",
     "AssumeMasterworkOptions": {
-      "All": "全てのアーマーはマスターワーク済みのステータスを使用し、エネルギーレベルは 10 になります。",
-      "Legendary": "レジェンダリーアーマーはマスターワーク済みのステータスを使用し、エネルギーレベルが 10 になります。",
-      "None": "全てのアーマーは現在のステータスを使用し、最低エネルギーレベルは 7 になります。"
+      "All": "全アーマー: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "Current": "現在のステータス、エネルギーレベルは少なくとも {{minLoItemEnergy}} と仮定。",
+      "Legendary": "レジェンダリー: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nエキゾチック: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
+      "Masterworked": "各ステータス +2、エネルギーレベル 10 を想定。",
+      "None": "すべてのアーマー: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "自動的にステータス mod を追加する",
     "AutomaticallyPicked": "この mod はビルドのステータス値を改善するため自動的に追加されました。",
     "ChooseAlternateTitle": "別アイテムを選択",
     "CompareLoadout": "ロードアウトを比較",
     "ConfirmOverwrite": "ロードアウト「{{name}}」のアーマーをこの新しいアーマーセットに置き換えてもよろしいですか？",
-    "CopiedBuild": "ビルド設定の URL をクリップボードにコピーしました",
     "CreateLoadout": "ロードアウトを保存",
+    "DecreaseStatPriority": "ステータス優先度を下げる",
+    "DisabledByAutoStatMods": "ステータス値に関するModはロードアウト最適化機能によって自動的に選択されています。",
     "DisabledDueToMaintenance": "現在、Bungie API のメンテナンスによりロードアウト最適化が利用出来ません。",
     "EquipItems": "装備",
     "ExcludeItem": "組み合わせから外すアイテムを指定",
     "ExistingLoadout": "既存のロードアウト",
+    "Exotic": "エキゾチックアーマー",
     "ExoticSpecialCategory": "スペシャル",
     "Filter": "フィルター",
+    "IgnoreStat": "チェックを外すと、このステータスを無視してビルドを探索します。",
+    "IncreaseStatPriority": "ステータス優先度を上げる",
     "Legendary": "レジェンダリー",
     "LockEquipped": "ピン留めされたアイテムを装備",
     "LockItem": "アイテムをピン留めする",
-    "MaxTier": "最大 {{tier}}",
     "MissingClass": "ビルド: {{className}}",
     "MissingClassDescription": "表示しようとしているビルドは、あなたが持っていないキャラクタークラス向けです。",
     "NoBuildsFoundExplainer": {
@@ -589,37 +656,33 @@
       "AssumptionsRestricted": "DIM は防具のエネルギー変更を推奨できません :",
       "BadSlot": "{{bucketName}} スロットでは、許可されたアイテムのいずれもこれらの mod に対応できません :",
       "Header": "ビルドが見つかりませんでした。 DIM がビルドを見つけられなかった理由は次のとおりです :",
-      "LowerBoundsFailed": "多くのセットが最小ステータスティアの要件を満たしませんでした",
+      "LowerBoundsFailed": "どの所持アイテムを組み合わせても設定した最小ステータスTierに届きませんでした",
       "MaybeAllowMoreItems": "他のアイテムを許可することを検討してください :",
       "MaybeDecreaseLowerBounds": "最小のステータス要件を減らすことを検討してください",
       "MaybeIncreaseUpperBounds": "最大のステータス要件を増やすことを検討してください",
       "MaybeRemoveMods": "mod を削除することを検討してください :",
       "MaybeRemoveSearchQuery": "検索バーでフィルターをクリアまたは変更することを検討してください",
-      "ModAssignmentFailed": "多くのセットはすべての要求された mod に対応できませんでした",
+      "ModAssignmentFailed": "どの所持アイテムを組み合わせても指定したModを装着できませんでした",
       "RemoveMods": "これらの mod を削除",
-      "UpperBoundsFailed": "多くのセットは最大のステータス要件を満たしていません"
+      "UpperBoundsFailed": "どの所持アイテムを組み合わせても設定した最大ステータスTierを満たせませんでした"
     },
     "NoExotic": "エキゾチックなし",
     "NoExoticDescription": "検索バーで \"not:exotic\" を検索するのと同じです。エキゾチックアーマーを意図的に組み合わせから排除します。",
+    "NoExoticPreference": "必要な時だけエキゾチックを装備",
+    "NoExoticPreferenceDescription": "最大ステータスにできる時だけエキゾチックアーマーを選択します。",
     "NoLoadoutsToCompare": "比較するロードアウトはありません。",
     "None": "なし",
     "OptimizerExplanationGuide": "詳細については、ユーザーガイドまたはビデオチュートリアルをご覧ください。",
-    "OptimizerExplanationMods": "エキゾチック防具と使用するmodを選択してください。 ロードアウト最適化機能では、選択したmodボーナスだけでステータス値が計算されます。装備に固定されている特殊modはすべて無視されます。",
-    "OptimizerExplanationSearch": "検索バーを使用して、ロードアウト最適化機能で使用したいアイテムを組み合わせ候補をフィルタリングします。",
-    "OptimizerExplanationStats": "左ペインにある各ステータス優先度をドラッグして設定します。上ほど重要度は高く優先され、下になるほど後回しにされます。プルダウンから優先しないよう無視する設定もできます。",
-    "OptimizerExplanationUpgrades": "ロードアウト最適化機能が素材を消費できるアーマーアップグレードを選択します。ステータスを向上させるマスターワークや、要求された mod に適合するエネルギーアップグレードが提案されるかもしれません。",
+    "OptimizerExplanationMods": "使用したいエキゾチックアーマーや、Mod、サブクラスを選択します。 ロードアウト最適化では、選択したModやサブクラスのオプションからのステータスボーナスだけで計算します。すでにアーマーに付けられているModはすべて無視してTierを算出します。",
+    "OptimizerExplanationSearch": "検索機能を使って最適な防具を絞り込みます。もし各防具(ヘルメットなど) が絞り込みに一致しない場合、各防具ごとに全てが候補として選出されます。",
+    "OptimizerExplanationStats": "ドラッグで上から最も優先したい順にステータスを並び替え、ビルドに不要なステータスは無効にしましょう",
     "OptimizerSet": "最適化セット",
-    "ProcessingSets": "{{character}} のセットを処理中 ({{remainingTime}}秒)",
+    "ProcessingSets": "最上位Tierのセットを検索しています...",
     "SaveAs": "名前をつけて保存",
-    "SelectMax": "- 最大 -",
-    "SelectMin": "- 最小 -",
-    "ShareBuild": "ビルド設定を共有",
-    "ShareBuildTitle": "ロードアウト最適化の設定",
-    "ShareBuildWithNotes": "メモで共有する",
     "SpeedReport": "{{time}} 秒で生成された {{combos, number}} の組み合わせ",
-    "StatTierIgnoreOption": "無視",
-    "StatTierIncludeOption": "含む",
+    "StatConstraints": "ステータスTierの優先度と範囲",
     "TierNumber": "T{{tier}}",
+    "TierSelect": "ステータスTier最低値を選択",
     "UnableToAddAllMods": "全てのModを追加することはできません。",
     "UnableToAddAllModsBody": "{{mods}} を適用するのに十分なModスロットがありませんでした。",
     "UnlockItem": "アイテムのピン留めを解除"
@@ -649,14 +712,15 @@
     "Classified": "一部のアイテムは分類されており、最大出力の計算に含めることはできません。",
     "ClearLoadoutParameters": "ロードアウトの設定を削除",
     "ClearSection": "すべて削除",
-    "ClearSpace": "他のアイテムを移動する",
+    "ClearSpace": "他を移動する",
+    "ClearSpaceArmor": "他の防具を移動する",
+    "ClearSpaceWeapons": "他の武器を移動する",
     "ClearUnsetMods": "他の MOD を削除",
     "ClearingSpace": "他のアイテムを移動する",
     "Create": "ロードアウトを作成",
     "CurrentlyEquipped": "現在装備中",
     "Deequip": "他のキャラクターからアイテムを外す",
     "Delete": "削除",
-    "DeprecatedMods": "非推奨 Mod",
     "DimLoadouts": "DIMロードアウト",
     "Edit": "ロードアウトを編集",
     "EditBrief": "編集",
@@ -664,7 +728,6 @@
     "EquipItems": "アイテムを装備",
     "EquippableDifferent1": "複数のエキゾチックアイテムを使用して最大パワーを計算しました。ゲーム内でアイテムを装備しようとしても、数値が計算通りにならない恐れがあります。",
     "EquippableDifferent2": "ドロップ/強力/最高峰の報酬で最大パワーを決定する際、最大パワーは通称「1つのエキゾチック」ルールによって制限されません。",
-    "Equipped": "装備済み",
     "Failed": "ロードアウトを完全に適用できませんでした",
     "Fashion": "ファッションを選択",
     "FillFromEquipped": "装備中のアイテムで埋める",
@@ -682,6 +745,8 @@
     },
     "ImportLoadout": "ロードアウトをインポート",
     "InGameLoadouts": "ゲーム内ロードアウト",
+    "IncludeRuntimeStatBenefits": "Mod「～の泉」の反映後の数値としてカウントする",
+    "IncludeRuntimeStatBenefitsDesc": "アーマーMod「～の泉」は、アーマーチャージの間はキャラクターのステータスを一律に上昇させます。\nこの設定を有効にすると、DIMはこれらのModがアクティブの状態での数値を、ロードアウト最適化のステータス値として計算し反映させます。",
     "ItemErrorSummary": "1 つのアイテムエラー:",
     "ItemErrorSummary_plural": "{{count}} 個のアイテムでエラー:",
     "ItemLeveling": "アイテムのレベルアップ",
@@ -704,7 +769,6 @@
     "MaximizeLight": "最大 Light",
     "MaximizePower": "最大パワー",
     "MaximizeStat": "統計を最大化する",
-    "MissingItems": "紛失したアイテム",
     "MissingItemsWarning": "このロードアウトに含まれるアイテムの一部は保管庫に存在しません。",
     "ModErrorSummary": "1個のmodエラー",
     "ModErrorSummary_plural": "{{count}} 個のmod エラー:",
@@ -730,6 +794,7 @@
     "OnWrongCharacterWarning": "このキャラクターの最も強力なアーマーは、別のキャラクターが所持しています。 パワーのドロップ、強力、最高峰の報酬にカウントするには、アーマーはこのキャラクターか保管庫に存在しなければなりません。",
     "OnlyItems": "装備可能なアイテム、マテリアル、消耗品のみをロードアウトに追加することができます。",
     "OpenInOptimizer": "防具の最適化",
+    "PickArmor": "アーマーを選択",
     "PickMods": "アーマー mod を追加",
     "PullFromPostmaster": "ポストマスターからアイテムを取得する",
     "PullFromPostmasterError": "ポストマスターから転送できません：{{error}}",
@@ -744,11 +809,10 @@
     "Random": "ランダム",
     "Randomize": "ロードアウトのランダム化",
     "RandomizeButton": "ランダム化",
-    "RandomizePrompt": "装備した武器、アーマー、ゴーストをランダム化しますか?",
+    "RandomizeNew": "ランダムに作成",
     "RandomizeQueryHint": "ヒント : 最初にアイテムを検索し、ランダムに選択できるアイテムを制限する。",
     "RandomizeSearch": "ランダム検索",
     "RandomizeSearchPrompt": "検索検\"{{query}}\"から装備アイテムをランダム化しますか？",
-    "RandomizeWeapons": "装備した武器をランダム化しますか?",
     "Redo": "やり直す",
     "RestoreAllItems": "全アイテム",
     "Save": "保存",
@@ -761,6 +825,7 @@
       "NoName": "ロードアウトには名前が必要です。"
     },
     "SaveLoadout": "ロードアウトを保存",
+    "Season": "シーズン{{season}}",
     "Share": {
       "Copied": "ロードアウトのリンクをクリップボードにコピーしました",
       "CopyButton": "リンクをコピーする",
@@ -791,10 +856,8 @@
     "TooManyRequested": "あなたは{{total}} {{itemname}} を持っていますが、あなたのロードアウトは{{requested}} を要求します。あなたが持っていた物をすべてを転送しました。",
     "UnassignedModError": "Modが現在のアーマーに適用できませんでした",
     "Undo": "元に戻す",
-    "Unequipped": "装備解除中",
     "Update": "変更を保存",
-    "VendorsCannotEquip": "これらのアイテムはありません。タップして交換を選択するか、Xをクリックして削除します。",
-    "WeaponsOnly": "武器のみ"
+    "VendorsCannotEquip": "これらのアイテムはありません。タップして交換を選択するか、Xをクリックして削除します。"
   },
   "Manifest": {
     "Download": "最新のDestiny情報をBungieからダウンロードしています...",
@@ -817,6 +880,9 @@
     "Unknown": "チャレン(挑戦)",
     "Weekly": "ウィークチャレンジ(週間の挑戦)"
   },
+  "Mods": {
+    "HarmonicModDescription": "このModはコストを軽減し、装備するサブクラスで効果を変化します。"
+  },
   "MoveAmount": {
     "Amount": "量 : "
   },
@@ -828,9 +894,9 @@
     "AddToLoadoutTitle": "これをロードアウトに追加",
     "All": "全て",
     "CannotCurrentlyRoll": "このアイテムの現在のバージョンでは、このパークをロールできません。",
-    "CantPullFromPostmaster": "このアイテムを取得するには、タワーに行く必要があります。",
+    "CantPullFromPostmaster": "このアイテムを取得するには、ゲーム内のポストマスターにアクセスする必要があります。",
     "CatalystProgress": "媒体の進行",
-    "CommunityData": "コミュニティの評価",
+    "CommunityData": "コミュニティでの調査結果",
     "Consolidate": "統合する",
     "DistributeEvenly": "均等に割り当てる。",
     "Equip": "装備先:",
@@ -867,6 +933,7 @@
       "QuestProgress": "{{questStepNum}} / {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
+    "TabList": "アイテム詳細タブ",
     "ToggleSidecar": "アイテムアクションを展開または折りたたむ",
     "TrackUntrack": {
       "Track": "{{itemType}} を追跡する",
@@ -874,8 +941,8 @@
       "Untrack": "{{itemType}} を追跡しない",
       "Untracked": "追跡をやめる"
     },
-    "TriageTab": "トリアージ",
-    "UnreliablePerkOption": "このパークは、コレクション ビューにのみ表示されます。 このアイテムではランダムにロールしない場合があります。",
+    "TriageTab": "厳選",
+    "UnreliablePerkOption": "このパークは、コレクションビューにのみ表示されます。ランダムアイテムには付かない可能性があります。",
     "Vault": "保管庫",
     "WeaponLevel": "武器レベル {{level}}"
   },
@@ -885,7 +952,7 @@
   },
   "Notification": {
     "Cancel": "キャンセル",
-    "OK": "やめる"
+    "OK": "キャンセル"
   },
   "Objectives": {
     "Complete": "完成",
@@ -897,9 +964,9 @@
     "BulkTag": "タグ",
     "Columns": {
       "Archetype": "内在特性",
-      "BaseStats": "基本データ",
+      "BaseStats": "基本ステータス値",
       "Breaker": "ブレイカー",
-      "Crafted": "構成された日付",
+      "Crafted": "形成日",
       "CustomTotal": "カスタム合計",
       "Damage": "ダメージ",
       "Energy": "エネルギー",
@@ -907,10 +974,10 @@
       "Icon": "アイコン",
       "KillTracker": "キルトラッカー",
       "Loadouts": "ロードアウト",
-      "Location": "場所",
+      "Location": "保管場所",
       "Locked": "ロック中",
-      "MasterworkStat": "マスターワークの種類",
-      "MasterworkTier": "マスターワークの等級",
+      "MasterworkStat": "MWの種類",
+      "MasterworkTier": "MWの等級",
       "ModSlot": "Modスロット",
       "Name": "名前",
       "New": "New",
@@ -922,14 +989,14 @@
       "Quality": "クオリティ %",
       "Recency": "直近",
       "Season": "シーズン",
-      "Source": "ソース",
+      "Source": "入手先",
       "StatQuality": "Statsクオリティ",
       "StatQualityStat": "{{stat}}%",
-      "Stats": "統計データ",
+      "Stats": "補正後ステータス値",
       "Tag": "タグ",
-      "Tier": "等級",
-      "Traits": "固定パーク",
-      "WishList": "ウィッシュリスト",
+      "Tier": "レア度",
+      "Traits": "武器パーク",
+      "WishList": "推奨アイテム",
       "WishListNotes": "ウィッシュリストのメモ",
       "Year": "年"
     },
@@ -963,7 +1030,7 @@
     "Items": "クエストアイテム",
     "Milestones": "マイルストーンと挑戦",
     "NoEventChallenges": "すべてのイベントの挑戦を完了しました。",
-    "NoTrackedTriumph": "追跡中の勝利の道のりはありませんでした。ゲーム内で1つを追跡するか、DIMで好きなだけ追跡してください。",
+    "NoTrackedTriumph": "追跡中の勝利の道のりはありません。DIM で好きなだけ追跡してください。",
     "PercentPrestige": "リセットまで{{pct}}％達成",
     "PowerBonusHeader": "+{{powerBonus}} パワーボーナス",
     "PowerBonusHeaderUndefined": "その他の報酬",
@@ -985,16 +1052,17 @@
     "RecordBooks": "記録ブック"
   },
   "Records": {
-    "Title": "レコード"
+    "Title": "レコード",
+    "UniversalOrnamentSetOther": "その他"
   },
   "SearchHistory": {
-    "Date": "最後の使用",
+    "Date": "最後に使用した日付",
     "DeleteAll": "星を付けていない検索を全て削除",
-    "Description": "これらは過去の検索と保存された検索です。ここから削除することができます。",
+    "Description": "これまでに使われてきたフィルターワードの履歴一覧です。ここで履歴を削除できます。",
     "Link": "検索履歴を表示・編集",
-    "Query": "検索",
+    "Query": "フィルターで使用した検索ワード",
     "Title": "検索履歴",
-    "UsageCount": "# 使用"
+    "UsageCount": "# これまでの使用回数"
   },
   "Settings": {
     "AutoLockTagged": "アイテムのロック状態とタグを同期",
@@ -1047,6 +1115,7 @@
     "ResetToDefault": "リセット",
     "ReverseSort": "前方 / 逆ソートの切り替え",
     "SetSort": "アイテムを並べ替える：",
+    "SetVaultWeaponGrouping": "保管庫の武器を次の縛りでグループ化する:",
     "Settings": "設定",
     "ShowNewItems": "新しいアイテムに赤い点を表示する",
     "SingleCharacter": "キャラクター単体表示",
@@ -1069,7 +1138,9 @@
     "SortCustom": "カスタムソート",
     "SortName": "名前",
     "SpacesSize": "{{count}} スペース",
-    "SpacesSize_plural": "{{count}} スペース"
+    "SpacesSize_plural": "{{count}} スペース",
+    "Theme": "テーマ",
+    "VaultGroupingNone": "無し"
   },
   "Sockets": {
     "ApplyPerks": "パークを適用",
@@ -1101,27 +1172,37 @@
     "SelectWishlistPerks": "ウィッシュリスト推奨パークをプレビュー"
   },
   "Stats": {
+    "CrouchingSpeed": "しゃがみ歩き",
     "Custom": "カスタム合計",
     "CustomDesc": "Modやマスターワークを無視して、選択された基本ステータスの合計値を表示します。どのステータスが含まれているか確認するには、設定で参照してください。",
+    "DamageResistance": "PvE ダメージ耐性",
     "Discipline": "鍛錬",
+    "FlinchResistance": "ひるみ耐性",
+    "HP": "HP",
     "Intellect": "知性",
     "MaxGearPower": "装備可能なギアの最大出力",
     "MaxGearPowerAll": "各装備の最大パワー",
     "MaxTotalPower": "最大総合パワー",
+    "MetersPerSecond": "m/s",
     "Milliseconds": "ミリ秒",
     "NoBonus": "ボーナスなし。",
     "NotApplicable": "N/A",
     "OfMaxRoll": "統計量の {{range}}",
     "PercentHelp": "品質の詳細については、ここをクリックしてください。",
-    "PowerModifier": "シーズンの進行状況で得たパワーボーナス",
+    "Percentage": "%",
+    "PowerModifier": "パワーボーナスと経験値",
     "Prestige": "評判レベル： {{level}}\n光の欠片5個までは後 {{exp}}xp",
     "Quality": "品質",
+    "StrafingSpeed": "左右後方歩行速度",
     "Strength": "腕力",
-    "Sunset": "退役済み",
+    "Sunset": "退役",
     "Tier": "レベル {{tier}}",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 の T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",
-    "Total": "合計"
+    "TimeToFullHP": "HP 全回復までの時間",
+    "Total": "合計",
+    "TotalHP": "最大HP",
+    "WalkingSpeed": "通常歩行速度"
   },
   "Storage": {
     "ApiPermissionPrompt": {
@@ -1200,6 +1281,7 @@
     "Button": "{{numSockets}} 個のアイテムを外す",
     "Cancel": "キャンセル",
     "Choose": "取り外すアイテムを選択してください",
+    "DiscountedMods": "{{count}}個のアイテムにコストが軽減されたModが適用されています",
     "Done": "ソケットから対象アイテムを外しました",
     "NoSockets": "外せるアイテムがありません",
     "Ok": "Ok",
@@ -1238,7 +1320,7 @@
     "StatBetterArmorDesc": "すべてのステータスが同等以上で、かつ少なくとも1つが優れている。",
     "StatNotPerkArmorDesc": "ステータスのみテストします。下位のピースでも、特別な mod スロットや固有パークを持つ場合があります。",
     "StatWorseArmorDesc": "より良ステータスは無く、少なくとも1つは悪いステータス。",
-    "ThisItem": "このアイテム",
+    "ThisItem": "アイテム特徴から比較",
     "WorseArmor": "厳密に悪い防具",
     "WorseArtificeArmor": "悪いアーティフィスアーマー以外",
     "WorseStatArmor": "悪いステータスの防具",
@@ -1248,21 +1330,23 @@
   "Triumphs": {
     "GildingTriumph": "金の勝利",
     "HideCompleted": "完了した勝利の道のりを隠す",
-    "RevealRedacted": "改定された勝利の道のりを表示する"
+    "RevealRedacted": "改定された勝利の道のりを表示する",
+    "SortRecords": "完了順に勝利の道のりを並べ替える"
   },
   "Vendors": {
     "Collections": "コレクション",
-    "Engram": "報酬エングラム",
+    "Engram": "ランク",
     "FilterToUnacquired": "未収集アイテムのみ表示",
+    "HideSilverItems": "シルバーでの販売アイテムを隠す",
     "NoItems": "このベンダーは現在、アイテムを提供していません。",
-    "RefreshTime": "でインベントリがリフレッシュされます。",
+    "RefreshTime": "ベンダーアイテムがリセットされるまで残り:",
     "Vendors": "ベンダー"
   },
   "Views": {
     "About": {
       "APIHistory": "DIM (またはその他のDestinyアプリ) で実行されたアクション履歴を表示する",
       "BungieCopyright": "すべての画像とコンテンツはBungieの所有物です。",
-      "CommunityInsight": "コミュニティのパーク評価は {{clarityLink}} の提供によるものです。不正確な情報に気づいたり、質問がある場合は、 {{clarityDiscordLink}} に参加してください。",
+      "CommunityInsight": "コミュニティのパーク調査結果は {{clarityLink}} の提供によるものです。不正確な情報に気づいたり、質問がある場合は、 {{clarityDiscordLink}} に参加してください。",
       "Discord": "Discord",
       "DiscordHelp": "Discordチャネルで質問をしたり、フィードバックをするとサポートを受けられます。",
       "FAQ": "よくある質問",
@@ -1280,8 +1364,6 @@
       "GitHubHelp": "もし、このプロジェクトに協力していただけるなら、このリンクから{{link}} へ。",
       "Header": "DIM (Destiny Item Manager)",
       "HowItsMade": "DIMは、Bungie.netやDestiny Companion Appで使用されているものと同じサービスをベースに、コミュニティ開発者によって作られた無料のオープンソースアプリケーションです。",
-      "Reddit": "Reddit",
-      "RedditHelp": "質問、コメント、提案があれば私たちに教えてください！",
       "Schedule": {
         "beta": "DIMのベータ版はコードを変える度にアップデートされます。ー最新の更新、改良がされるとともに新しい不具合も導入されます！",
         "release": "DIMのバージョンは週に1度、日本時間で日曜日のPM 17: 00 頃に更新されます。"
@@ -1290,14 +1372,11 @@
       "TranslationText": "簡単に翻訳をするため {{link}} を使用しています。DIM の翻訳を改善したい場合は、チームに参加してください。",
       "TwitterHelp": "ツイッターで最新情報やアプリのリアルタイムステータスなどが確かめられます。フォローよろしくお願いします。",
       "Version": "バージョン {{version}} ({{flavor}}), built on {{date}}",
-      "Wiki": "DIMユーザーガイドWiki",
-      "WikiHelp": "DIMの使い方を学び、コミュニティ主導のユーザーガイドに貢献しましょう。",
-      "YouTube": "YouTube",
-      "YouTubeHelp": "YouTubeチャンネルでもDIMの使用方法をご確認いただけます。"
+      "Wiki": "DIMユーザーガイド",
+      "WikiHelp": "DIMの使い方を学びましょう。"
     },
     "Login": {
       "Auth": "Bungie.net で認証する",
-      "DisabledDimSyncWarning": "",
       "EnableDimSyncWarning": "以前、 DIM Sync を無効にして、ローカルデータストレージのみを使用していました。DIM Sync を有効にすると、ローカルデータが DIM Sync のデータで置き換えられます。DIM Sync を有効にする前に、データをバックアップしておく必要があります。”設定” のバックアップから復元することができます。",
       "Explanation": "DIMでDestinyのキャラクター、保管庫、進捗状況などを閲覧や編集するには権限が必要です。",
       "LearnMore": "アカウントとログインについての詳細",
@@ -1314,7 +1393,7 @@
   },
   "WishListRoll": {
     "BestRatedTip": "このパークは、正確に希望の武器ロールと一致しています。",
-    "BestRatedTip_plural": "これらのパークは、正確に希望の武器ロールと一致しています。",
+    "BestRatedTip_plural": "ウィッシュリストにある推奨ロールと完全一致しています。",
     "ChoosyVoltron": "choosy_voltron",
     "ChoosyVoltronDescription": "choosey_voltronは、Mercules904とpandapaxyによるPvEとPvPウィッシュリストロールの自動更新されたコレクションで、いくつかのゴミリストロールもあります。",
     "Clear": "ウィッシュリストをクリア",
@@ -1334,8 +1413,10 @@
     "UpdateExternalSource": "ウィッシュリストのソースをアップデート",
     "Voltron": "voltron (標準)",
     "VoltronDescription": "voltronとはMercules904とpandapaxyによって作成されたPvEとPvPウィッシュリストロールを自動で更新する機能です。デフォルトで使用しています。",
-    "WishListNotes": "ウィッシュリスト メモ: {{notes}}"
+    "WishListNotes": "ウィッシュリストのメモ:",
+    "WorstRatedTip": "ごみリストにある非推奨パークと完全一致しています。",
+    "WorstRatedTip_plural": "ごみリストにある非推奨パークと完全一致しています。"
   },
-  "no-space": "",
-  "wrong-level": ""
+  "no-space": "空きスペースなし",
+  "wrong-level": "レベル不正"
 }

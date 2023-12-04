@@ -1,0 +1,12 @@
+.collectibles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--item-size));
+  grid-template-rows: min-content;
+  gap: 4px;
+  margin: 6px 10px 8px;
+
+  /* Collections leaf nodes need less padding */
+  :global(.always-expanded) & {
+    margin: 2px 0 8px;
+  }
+}

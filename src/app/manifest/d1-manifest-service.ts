@@ -1,14 +1,16 @@
+import { HttpStatusError, toHttpStatusError } from 'app/bungie-api/http-client';
+import { AllD1DestinyManifestComponents } from 'app/destiny1/d1-manifest-types';
 import { settingsSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { loadingEnd, loadingStart } from 'app/shell/actions';
 import { del, get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
+import { convertToError } from 'app/utils/errors';
 import { errorLog, infoLog } from 'app/utils/log';
-import { dedupePromise } from 'app/utils/util';
-import { AllDestinyManifestComponents } from 'bungie-api-ts/destiny2';
+import { dedupePromise } from 'app/utils/promises';
+import { reportException } from 'app/utils/sentry';
 import { showNotification } from '../notifications/notifications';
 import { settingsReady } from '../settings/settings';
-import { reportException } from '../utils/exceptions';
 
 // This file exports D1ManifestService at the bottom of the
 // file (TS wants us to declare classes before using them)!
@@ -21,15 +23,15 @@ const localStorageKey = 'd1-manifest-version';
 const idbKey = 'd1-manifest';
 let version: string | null = null;
 
-const getManifestAction: ThunkResult<AllDestinyManifestComponents> = dedupePromise((dispatch) =>
-  dispatch(doGetManifest())
+const getManifestAction: ThunkResult<AllD1DestinyManifestComponents> = dedupePromise((dispatch) =>
+  dispatch(doGetManifest()),
 );
 
-export function getManifest(): ThunkResult<AllDestinyManifestComponents> {
+export function getManifest(): ThunkResult<AllD1DestinyManifestComponents> {
   return getManifestAction;
 }
 
-function doGetManifest(): ThunkResult<AllDestinyManifestComponents> {
+function doGetManifest(): ThunkResult<AllD1DestinyManifestComponents> {
   return async (dispatch) => {
     dispatch(loadingStart(t('Manifest.Load')));
     try {
@@ -38,20 +40,23 @@ function doGetManifest(): ThunkResult<AllDestinyManifestComponents> {
         throw new Error('Manifest corrupted, please reload');
       }
       return manifest;
-    } catch (e) {
-      let message = e.message || e;
+    } catch (err) {
+      const e = convertToError(err);
+      let message = e.message;
 
-      if (e instanceof TypeError || e.status === -1) {
+      if (e instanceof TypeError || (e instanceof HttpStatusError && e.status === -1)) {
         message = navigator.onLine
           ? t('BungieService.NotConnectedOrBlocked')
           : t('BungieService.NotConnected');
-      } else if (e.status === 503 || e.status === 522 /* cloudflare */) {
-        message = t('BungieService.Difficulties');
-      } else if (e.status < 200 || e.status >= 400) {
-        message = t('BungieService.NetworkError', {
-          status: e.status,
-          statusText: e.statusText,
-        });
+      } else if (e instanceof HttpStatusError) {
+        if (e.status === 503 || e.status === 522 /* cloudflare */) {
+          message = t('BungieService.Difficulties');
+        } else if (e.status < 200 || e.status >= 400) {
+          message = t('BungieService.NetworkError', {
+            status: e.status,
+            statusText: e.message,
+          });
+        }
       } else {
         // Something may be wrong with the manifest
         deleteManifestFile();
@@ -67,7 +72,7 @@ function doGetManifest(): ThunkResult<AllDestinyManifestComponents> {
   };
 }
 
-function loadManifest(): ThunkResult<any> {
+function loadManifest(): ThunkResult<AllD1DestinyManifestComponents> {
   return async (dispatch, getState) => {
     await settingsReady; // wait for settings to be ready
     const language = settingsSelector(getState()).language;
@@ -88,13 +93,18 @@ function loadManifest(): ThunkResult<any> {
 /**
  * Returns a promise for the manifest data as a Uint8Array. Will cache it on success.
  */
-function loadManifestRemote(version: string, path: string): ThunkResult<object> {
+function loadManifestRemote(
+  version: string,
+  path: string,
+): ThunkResult<AllD1DestinyManifestComponents> {
   return async (dispatch) => {
     dispatch(loadingStart(t('Manifest.Download')));
 
     try {
       const response = await fetch(path);
-      const manifest = await (response.ok ? response.json() : Promise.reject(response));
+      const manifest = await (response.ok
+        ? (response.json() as Promise<AllD1DestinyManifestComponents>)
+        : Promise.reject(await toHttpStatusError(response)));
 
       // We intentionally don't wait on this promise
       saveManifestToIndexedDB(manifest, version);
@@ -106,7 +116,7 @@ function loadManifestRemote(version: string, path: string): ThunkResult<object> 
   };
 }
 
-async function saveManifestToIndexedDB(typedArray: object, version: string) {
+async function saveManifestToIndexedDB(typedArray: unknown, version: string) {
   try {
     await set(idbKey, typedArray);
     infoLog('manifest', `Successfully stored manifest file.`);
@@ -130,14 +140,14 @@ function deleteManifestFile() {
  * Returns a promise for the cached manifest of the specified
  * version as a Uint8Array, or rejects.
  */
-async function loadManifestFromCache(version: string): Promise<object> {
+async function loadManifestFromCache(version: string): Promise<AllD1DestinyManifestComponents> {
   if (alwaysLoadRemote) {
     throw new Error('Testing - always load remote');
   }
 
   const currentManifestVersion = localStorage.getItem(localStorageKey);
   if (currentManifestVersion === version) {
-    const manifest = await get<object>(idbKey);
+    const manifest = await get<AllD1DestinyManifestComponents>(idbKey);
     if (!manifest) {
       throw new Error('Empty cached manifest file');
     }

@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { noop } from 'lodash';
 
 /**
  * A rate limiter queue applies when the path of a request matches its regex. It will implement the semantics of
@@ -33,8 +33,8 @@ export class RateLimiterQueue {
 
   // Add a request to the queue, acting on it immediately if possible
   add<T>(fetcher: typeof fetch, request: RequestInfo | URL, options?: RequestInit): Promise<T> {
-    let resolver: (value?: any) => void = _.noop;
-    let rejecter: (value?: any) => void = _.noop;
+    let resolver: (value?: any) => void = noop;
+    let rejecter: (value?: any) => void = noop;
     const promise = new Promise<T>((resolve, reject) => {
       resolver = resolve;
       rejecter = reject;
@@ -57,7 +57,7 @@ export class RateLimiterQueue {
     if (!this.timer) {
       const nextTryIn = Math.max(
         0,
-        this.timeLimit - (window.performance.now() - this.lastRequestTime)
+        this.timeLimit - (window.performance.now() - this.lastRequestTime),
       );
       this.timer = window.setTimeout(() => {
         this.timer = undefined;

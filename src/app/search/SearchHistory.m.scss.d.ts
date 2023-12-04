@@ -5,6 +5,7 @@ interface CssExports {
   'iconButton': string;
   'instructions': string;
   'searchHistory': string;
+  'sorter': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

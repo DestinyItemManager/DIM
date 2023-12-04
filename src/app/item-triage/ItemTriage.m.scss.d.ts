@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'artificeExplanation': string;
+  'collapseTitle': string;
   'controls': string;
   'count': string;
   'dimmed': string;
@@ -16,6 +17,7 @@ interface CssExports {
   'loadoutList': string;
   'loadoutName': string;
   'loadoutRow': string;
+  'popupTabTitle': string;
   'similarItemsTable': string;
   'statTable': string;
   'statValue': string;

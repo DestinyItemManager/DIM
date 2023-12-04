@@ -7,6 +7,7 @@
   flex-direction: column;
   align-items: center;
   gap: var(--item-margin);
+  flex: 1;
 
   :global(.stat-row) {
     justify-content: space-between;
@@ -85,7 +86,6 @@
 .buttons {
   display: flex;
   flex-flow: row wrap;
-  margin: 4px 0;
   gap: 4px;
   justify-content: center;
 }

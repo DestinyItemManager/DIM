@@ -1,4 +1,4 @@
-import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
+import { AssumeArmorMasterwork, LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import { t } from 'app/i18next-t';
@@ -7,7 +7,7 @@ import { ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
 import { AppIcon, banIcon } from 'app/shell/icons';
-import { uniqBy } from 'app/utils/util';
+import { filterMap, uniqBy } from 'app/utils/collections';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { Dispatch } from 'react';
@@ -17,7 +17,7 @@ import LockedItem from './filter/LockedItem';
 import { FilterInfo } from './item-filter';
 import { LoadoutBuilderAction } from './loadout-builder-reducer';
 import { ProcessStatistics, RejectionRate } from './process-worker/types';
-import { ArmorEnergyRules, LockableBucketHashes, PinnedItems, StatFilters } from './types';
+import { ArmorEnergyRules, LockableBucketHashes, PinnedItems } from './types';
 
 interface ActionableSuggestion {
   id: string;
@@ -46,28 +46,24 @@ export default function NoBuildsFoundExplainer({
   defs,
   dispatch,
   classType,
-  autoAssignStatMods,
+  params,
   resolvedMods,
   lockedModMap,
   alwaysInvalidMods,
   armorEnergyRules,
-  statFilters,
   pinnedItems,
-  lockedExoticHash,
   filterInfo,
   processInfo,
 }: {
   defs: D2ManifestDefinitions;
   dispatch: Dispatch<LoadoutBuilderAction>;
   classType: DestinyClass;
-  autoAssignStatMods: boolean;
+  params: LoadoutParameters;
   resolvedMods: ResolvedLoadoutMod[];
   lockedModMap: ModMap;
   alwaysInvalidMods: PluggableInventoryItemDefinition[];
   armorEnergyRules: ArmorEnergyRules;
-  statFilters: StatFilters;
   pinnedItems: PinnedItems;
-  lockedExoticHash: number | undefined;
   filterInfo?: FilterInfo;
   processInfo?: ProcessStatistics;
 }) {
@@ -136,6 +132,7 @@ export default function NoBuildsFoundExplainer({
   // then we should consider removing some item restrictions (such as unpinning/unrestricting items)
   // or removing mods.
   if (filterInfo) {
+    const lockedExoticHash = params.exoticArmorHash;
     const lockedExoticBucketHash =
       lockedExoticHash !== undefined &&
       lockedExoticHash > 0 &&
@@ -194,7 +191,7 @@ export default function NoBuildsFoundExplainer({
         problems.push({
           id: `badBucket-${bucketHash}`,
           description: t('LoadoutBuilder.NoBuildsFoundExplainer.BadSlot', {
-            bucketName: defs.InventoryBucket[bucketHash].displayProperties.name,
+            bucketName: defs.InventoryBucket.get(bucketHash).displayProperties.name,
           }),
           suggestions,
         });
@@ -207,7 +204,7 @@ export default function NoBuildsFoundExplainer({
   // two non-solar combat mods, mod assignment is trivially infeasible and we
   // can point that out directly?
 
-  const anyStatMinimums = Object.values(statFilters).some((f) => !f.ignored && f.min > 0);
+  const anyStatMinimums = params.statConstraints!.some((f) => Boolean(f.minTier));
 
   const bucketIndependentMods = [...lockedModMap.generalMods, ...lockedModMap.activityMods];
 
@@ -224,8 +221,8 @@ export default function NoBuildsFoundExplainer({
     problems.push({
       id: 'armorEnergyRestrictions',
       description: t('LoadoutBuilder.NoBuildsFoundExplainer.AssumptionsRestricted'),
-      suggestions: _.compact([
-        capacityMayCauseProblems && {
+      suggestions: [
+        {
           id: 'assumeMasterworked',
           contents: (
             <button
@@ -243,7 +240,7 @@ export default function NoBuildsFoundExplainer({
             </button>
           ),
         },
-      ]),
+      ],
     });
   }
 
@@ -263,7 +260,7 @@ export default function NoBuildsFoundExplainer({
       });
     }
 
-    const allPinnedItems = _.compact(LockableBucketHashes.map((hash) => pinnedItems[hash]));
+    const allPinnedItems = filterMap(LockableBucketHashes, (hash) => pinnedItems[hash]);
     let usedUnpinSuggestion = false;
     const unpinItemsSuggestion = () => {
       if (usedUnpinSuggestion) {
@@ -335,7 +332,7 @@ export default function NoBuildsFoundExplainer({
         id: 'lowerBoundsExceeded',
         description: t('LoadoutBuilder.NoBuildsFoundExplainer.LowerBoundsFailed'),
         suggestions: _.compact([
-          !autoAssignStatMods &&
+          !params.autoStatMods &&
             $featureFlags.loAutoStatMods && {
               id: 'hint1',
               contents: (
@@ -354,7 +351,7 @@ export default function NoBuildsFoundExplainer({
                 </button>
               ),
             },
-          autoAssignStatMods &&
+          params.autoStatMods &&
             lockedModMap.generalMods.length > 0 && {
               id: 'removeGeneralMods',
               contents: (
@@ -390,7 +387,7 @@ export default function NoBuildsFoundExplainer({
               </>
             ),
           },
-          unpinItemsSuggestion()
+          unpinItemsSuggestion(),
         );
       }
 
@@ -412,7 +409,7 @@ export default function NoBuildsFoundExplainer({
             id: 'decreaseLowerBounds',
             contents: t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeDecreaseLowerBounds'),
           },
-          unpinItemsSuggestion()
+          unpinItemsSuggestion(),
         );
       }
 
@@ -432,7 +429,7 @@ export default function NoBuildsFoundExplainer({
             id: 'decreaseLowerBounds',
             contents: t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeDecreaseLowerBounds'),
           },
-          unpinItemsSuggestion()
+          unpinItemsSuggestion(),
         );
       }
       problems.push({

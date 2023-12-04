@@ -1,5 +1,8 @@
+@use '../variables.scss' as *;
+
 .frame {
-  max-width: calc(100% - 100px);
+  // Emblem plus loadout button plus margin
+  max-width: $emblem-width + 16px + 10px;
   margin: 0 auto;
   overflow: visible !important;
   position: relative;
@@ -16,4 +19,8 @@
   padding: 8px 0;
   box-sizing: border-box;
   vertical-align: top;
+
+  > * {
+    margin: 0 5px;
+  }
 }

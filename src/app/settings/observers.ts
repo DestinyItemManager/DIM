@@ -1,5 +1,5 @@
 import { languageSelector } from 'app/dim-api/selectors';
-import { observeStore } from 'app/utils/redux-utils';
+import { observeStore } from 'app/utils/redux';
 import i18next from 'i18next';
 
 export function watchLanguageChanges() {

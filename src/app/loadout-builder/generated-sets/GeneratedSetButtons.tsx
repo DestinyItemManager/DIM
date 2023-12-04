@@ -1,57 +1,55 @@
-import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
-import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { convertToLoadoutItem, newLoadout } from 'app/loadout-drawer/loadout-utils';
+import { editLoadout } from 'app/loadout-drawer/loadout-events';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
 import { Dispatch } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
 import { ArmorSet } from '../types';
-import { statTier } from '../utils';
+import { updateLoadoutWithArmorSet } from '../updated-loadout';
 import styles from './GeneratedSetButtons.m.scss';
 
 /**
  * Renders the Create Loadout and Equip Items buttons for each generated set
  */
 export default function GeneratedSetButtons({
+  originalLoadout,
   store,
   set,
   items,
-  subclass,
-  notes,
-  params,
+  isEditingExistingLoadout,
+  lockedMods,
   canCompareLoadouts,
   halfTierMods,
-  onLoadoutSet,
   lbDispatch,
 }: {
+  originalLoadout: Loadout;
   store: DimStore;
   set: ArmorSet;
+  /** The list of items to use - these are chosen from the set's options and match what's displayed. */
   items: DimItem[];
-  subclass: ResolvedLoadoutItem | undefined;
-  notes?: string;
-  params: LoadoutParameters;
+  lockedMods: PluggableInventoryItemDefinition[];
+  isEditingExistingLoadout: boolean;
   canCompareLoadouts: boolean;
   halfTierMods: PluggableInventoryItemDefinition[];
-  onLoadoutSet: (loadout: Loadout) => void;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
+  const defs = useD2Definitions()!;
   const dispatch = useThunkDispatch();
+  const loadout = () => updateLoadoutWithArmorSet(defs, originalLoadout, set, items, lockedMods);
 
   // Opens the loadout menu for the generated set
-  const openLoadout = () => {
-    onLoadoutSet(createLoadout(store.classType, set, items, subclass, params, notes));
-  };
+  const openLoadout = () =>
+    editLoadout(loadout(), store.id, {
+      showClass: false,
+      isNew: !isEditingExistingLoadout || originalLoadout.id === 'equipped',
+    });
 
   // Automatically equip items for this generated set to the active store
-  const equipItems = () => {
-    const loadout = createLoadout(store.classType, set, items, subclass, params, notes);
-    return dispatch(applyLoadout(store, loadout, { allowUndo: true }));
-  };
+  const equipItems = () => dispatch(applyLoadout(store, loadout(), { allowUndo: true }));
 
   const statsWithPlus5: number[] = [];
 
@@ -64,7 +62,7 @@ export default function GeneratedSetButtons({
   const onQuickAddHalfTierMods = () => {
     // Note that half tier mods are already sorted in our desired stat order so we just keep their ordering.
     const mods = halfTierMods.filter((mod) =>
-      mod.investmentStats.some((stat) => statsWithPlus5.includes(stat.statTypeHash))
+      mod.investmentStats.some((stat) => statsWithPlus5.includes(stat.statTypeHash)),
     );
 
     lbDispatch({ type: 'addGeneralMods', mods });
@@ -79,7 +77,7 @@ export default function GeneratedSetButtons({
         <button
           type="button"
           className="dim-button"
-          onClick={() => lbDispatch({ type: 'openCompareDrawer', set })}
+          onClick={() => lbDispatch({ type: 'openCompareDrawer', set, items })}
         >
           {t('LoadoutBuilder.CompareLoadout')}
         </button>
@@ -94,33 +92,4 @@ export default function GeneratedSetButtons({
       )}
     </div>
   );
-}
-
-/**
- * Create a Loadout object, used for equipping or creating a new saved loadout
- */
-function createLoadout(
-  classType: DestinyClass,
-  set: ArmorSet,
-  items: DimItem[],
-  subclass: ResolvedLoadoutItem | undefined,
-  params: LoadoutParameters,
-  notes?: string
-): Loadout {
-  const data = {
-    tier: _.sumBy(Object.values(set.stats), statTier),
-  };
-  const loadoutItems = items.map((item) => convertToLoadoutItem(item, true));
-
-  if (subclass) {
-    loadoutItems.push(subclass.loadoutItem);
-  }
-
-  const loadout = newLoadout(t('Loadouts.Generated', data), loadoutItems, classType);
-  loadout.notes = notes;
-  // FIXME(#8733) add auto mods to autoStatMods instead of adding them to regular mods
-  const allMods = [...(params.mods ?? []), ...set.statMods];
-  loadout.parameters = { ...params, mods: allMods.length ? allMods : undefined };
-  // loadout.autoStatMods = set.statMods.length ? set.statMods : undefined;
-  return loadout;
 }

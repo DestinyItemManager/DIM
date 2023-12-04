@@ -1,12 +1,12 @@
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { streamDeckSelectionSelector } from 'app/stream-deck/selectors';
 import { streamDeckSelectItem } from 'app/stream-deck/stream-deck';
-import React, { useCallback } from 'react';
+import React, { memo, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from '../inventory/DraggableInventoryItem';
-import { DimItem } from '../inventory/item-types';
 import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
+import { DimItem } from '../inventory/item-types';
 import { moveItemToCurrentStore } from '../inventory/move-item';
 
 interface Props {
@@ -16,17 +16,17 @@ interface Props {
 /**
  * The "full" inventory item, which can be dragged around and which pops up a move popup when clicked.
  */
-export default function StoreInventoryItem({ item }: Props) {
+export default memo(function StoreInventoryItem({ item }: Props) {
   const dispatch = useThunkDispatch();
   const doubleClicked = useCallback(
     (e: React.MouseEvent) => dispatch(moveItemToCurrentStore(item, e)),
-    [dispatch, item]
+    [dispatch, item],
   );
 
   const selection = $featureFlags.elgatoStreamDeck
     ? // eslint-disable-next-line
       useSelector(streamDeckSelectionSelector)
-    : null;
+    : undefined;
 
   return (
     <DraggableInventoryItem item={item}>
@@ -47,4 +47,4 @@ export default function StoreInventoryItem({ item }: Props) {
       </ItemPopupTrigger>
     </DraggableInventoryItem>
   );
-}
+});
