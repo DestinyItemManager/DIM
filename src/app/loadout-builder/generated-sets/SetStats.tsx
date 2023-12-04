@@ -8,7 +8,7 @@ import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
 import { ArmorStatHashes, ArmorStats, ModStatChanges, ResolvedStatConstraint } from '../types';
-import { remEuclid, statTierWithHalf } from '../utils';
+import { remEuclid, statTier, statTierWithHalf } from '../utils';
 import styles from './SetStats.m.scss';
 import { calculateTotalTier, sumEnabledStats } from './utils';
 
@@ -25,6 +25,7 @@ export function SetStats({
   className,
   existingLoadoutName,
   equippedHashes,
+  autoStatMods,
 }: {
   stats: ArmorStats;
   getStatsBreakdown: () => ModStatChanges;
@@ -34,6 +35,7 @@ export function SetStats({
   className?: string;
   existingLoadoutName?: string;
   equippedHashes: Set<number>;
+  autoStatMods: boolean;
 }) {
   const defs = useD2Definitions()!;
   const totalTier = calculateTotalTier(stats);
@@ -72,6 +74,7 @@ export function SetStats({
               isBoosted={boostedStats.has(statHash)}
               stat={statDef}
               value={value}
+              showHalfStat={!autoStatMods}
             />
           </PressTip>
         );
@@ -95,13 +98,15 @@ function Stat({
   isActive,
   isBoosted,
   value,
+  showHalfStat,
 }: {
   stat: DestinyStatDefinition;
   isActive: boolean;
   isBoosted: boolean;
   value: number;
+  showHalfStat: boolean;
 }) {
-  const isHalfTier = isActive && remEuclid(value, 10) >= 5;
+  const isHalfTier = showHalfStat && isActive && remEuclid(value, 10) >= 5;
   return (
     <span
       className={clsx(styles.statSegment, {
@@ -116,7 +121,7 @@ function Stat({
         })}
       >
         {t('LoadoutBuilder.TierNumber', {
-          tier: statTierWithHalf(value),
+          tier: showHalfStat ? statTierWithHalf(value) : statTier(value),
         })}
       </span>
     </span>

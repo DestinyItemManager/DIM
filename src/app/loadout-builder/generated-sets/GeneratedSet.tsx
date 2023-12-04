@@ -160,6 +160,7 @@ export default memo(function GeneratedSet({
         boostedStats={boostedStats}
         existingLoadoutName={overlappingLoadout?.name}
         equippedHashes={equippedHashes}
+        autoStatMods={autoStatMods}
       />
       <div className={styles.build}>
         <div className={styles.items}>
