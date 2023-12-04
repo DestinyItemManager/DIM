@@ -1,5 +1,11 @@
 ## Next
 
+* Fixed error showing titles after Season of the Wish launched.
+* Updated data for new season.
+* Loadout optimizer stat constraints now have a clear button, randomize option, and sync from equipped option.
+* Tooltips will reliably disappear when you move your mouse off their triggering element, even if you move the mouse onto the tooltip.
+* Fixed the `is:smg` search.
+
 ## 7.96.0 <span class="changelog-date">(2023-11-26)</span>
 
 * Added `is:vendor` search that is useful for excluding vendor items from Loadout Optimizer (enter `-is:vendor` in the search box).
