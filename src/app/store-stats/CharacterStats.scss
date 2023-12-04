@@ -1,3 +1,5 @@
+@import '../variables';
+
 /* INT/DIS/STR bars */
 .stat-bars {
   width: 100%;
@@ -107,8 +109,10 @@
       flex: 0;
       font-size: 11px;
       color: var(--theme-header-characters-txt);
-      &.pointerCursor {
-        cursor: pointer;
+      &.boostedValue {
+        color: $stat-modded;
+        font-weight: bold;
+        text-shadow: rgba(0, 0, 0, 0.5) 0 0 2px;
       }
       .phone-portrait & {
         font-size: 12px;
