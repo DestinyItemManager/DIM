@@ -775,6 +775,7 @@ export const enum PlugCategoryHashes {
   V720RepackageAutoRifle0Masterwork = 282796296,
   V720RepackageAutoRifle0Skins = 3113397682,
   V730NewBow0Skins = 3480541086,
+  V730NewSidearm0Masterwork = 4103783549,
   V730PursuitSword0Skins = 4166989435,
   V730RepackageRocketLauncher0Masterwork = 3867121356,
   V730RepackageRocketLauncher0Skins = 3831742870,
