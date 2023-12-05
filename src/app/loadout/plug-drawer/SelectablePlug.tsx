@@ -1,11 +1,13 @@
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { TileGridTile } from 'app/dim-ui/TileGrid';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
+import { t } from 'app/i18next-t';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { PlugStats } from 'app/item-popup/PlugTooltip';
 import { getPlugDefStats, usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import unstackableModHashes from 'data/d2/unstackable-mods.json';
 import React, { useCallback, useMemo } from 'react';
 import styles from './SelectablePlug.m.scss';
 
@@ -71,15 +73,25 @@ function SelectablePlugDetails({
   classType: DestinyClass;
 }) {
   const stats = getPlugDefStats(plug, classType);
-
+  // <div className={styles.requirement}>{t('Loadouts.ModPlacement.UnstackableMod')}</div>
   // We don't show Clarity descriptions here due to layout concerns, see #9318 / #8641
   const plugDescriptions = usePlugDescriptions(plug, stats, /* forceUseBungieDescriptions */ true);
+  console.log(plug.displayProperties.name, ' ', plugDescriptions);
   return (
     <>
       {plugDescriptions.perks.map((perkDesc) => (
         <React.Fragment key={perkDesc.perkHash}>
           {perkDesc.description && <RichDestinyText text={perkDesc.description} />}
-          {perkDesc.requirement && <div className={styles.requirement}>{perkDesc.requirement}</div>}
+          {perkDesc.requirement && !(perkDesc.perkHash < 0) && (
+            <div className={styles.requirement}>{perkDesc.requirement}</div>
+          )}
+          {perkDesc.perkHash === -1 && (
+            <div className={styles.requirement}>
+              {unstackableModHashes.includes(perkDesc.perkHash)
+                ? t('Loadouts.ModPlacement.UnstackableMod')
+                : t('Loadouts.ModPlacement.StackableMod')}
+            </div>
+          )}
         </React.Fragment>
       ))}
       {stats.length > 0 && <PlugStats stats={stats} />}

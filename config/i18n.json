@@ -722,7 +722,9 @@
       "UnassignedModsDesc": "1 mod did not fit due to insufficient energy capacity or mod slots. Energy upgrades to the selected armor will not fix the issue.",
       "UnassignedModsDesc_plural": "{{count}} mods did not fit due to insufficient energy capacity or mod slots. Energy upgrades to the selected armor will not fix the issue.",
       "UpgradeCosts": "Upgrade Costs",
-      "UpgradeCostsDesc": "Some armor needs energy capacity upgrades to fit the requested mods. In total, these upgrades cost:"
+      "UpgradeCostsDesc": "Some armor needs energy capacity upgrades to fit the requested mods. In total, these upgrades cost:",
+      "UnstackableMod": "Unstackable",
+      "StackableMod": "Stackable"
     },
     "MissingItemsWarning": "Some of the items in this loadout are no longer in your inventory.",
     "MissingItems": "Missing Items",
