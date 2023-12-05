@@ -77,6 +77,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   3821409356, // Ex Diris
   3844694310, // The Jade Rabbit
   3856705927, // Hawkmoon
+  3886719505, // Buried Bloodline
   3899270607, // The Colony
   3973202132, // Thorn
   4017959782, // Symmetry
