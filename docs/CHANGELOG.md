@@ -1,5 +1,11 @@
 ## Next
 
+## 7.97.1 <span class="changelog-date">(2023-12-04)</span>
+
+* Fixed infinite reload / "Operation is insecure" issue introduced in the last release.
+
+## 7.97.0 <span class="changelog-date">(2023-12-03)</span>
+
 * Fixed error showing titles after Season of the Wish launched.
 * Updated data for new season.
 * Loadout optimizer stat constraints now have a clear button, randomize option, and sync from equipped option.
