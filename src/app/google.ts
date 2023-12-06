@@ -1,4 +1,5 @@
 import { getToken } from 'app/bungie-api/oauth-tokens';
+import { browserName, browserVersion } from './utils/system-info';
 
 declare global {
   interface Window {
@@ -36,6 +37,8 @@ export function initGoogleAnalytics() {
     user_id: token?.bungieMembershipId,
     dim_version: $DIM_VERSION,
     dim_flavor: $DIM_FLAVOR,
+    browser_name: browserName,
+    browser_version: browserVersion,
   });
 
   const script = document.createElement('script');
