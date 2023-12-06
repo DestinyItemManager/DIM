@@ -8,7 +8,7 @@ import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
 import { ArmorStatHashes, ArmorStats, ModStatChanges, ResolvedStatConstraint } from '../types';
-import { remEuclid, statTier, statTierWithHalf } from '../utils';
+import { remEuclid, statTierWithHalf } from '../utils';
 import styles from './SetStats.m.scss';
 import { calculateTotalTier, sumEnabledStats } from './utils';
 
@@ -121,7 +121,7 @@ function Stat({
         })}
       >
         {t('LoadoutBuilder.TierNumber', {
-          tier: showHalfStat ? statTierWithHalf(value) : statTier(value),
+          tier: statTierWithHalf(value),
         })}
       </span>
     </span>
