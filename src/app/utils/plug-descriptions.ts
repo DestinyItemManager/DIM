@@ -20,6 +20,7 @@ import { LookupTable } from './util-types';
 
 interface DimPlugPerkDescription {
   perkHash: number;
+  hash: number;
   name?: string;
   description?: string;
   requirement?: string;
@@ -164,10 +165,11 @@ function getPerkDescriptions(
           usedStrings.add(perkRequirement);
         }
       }
-
+      // console.log(plug.hash);
       if (perkDescription || perkRequirement) {
         results.push({
           perkHash: perk.perkHash,
+          hash: plug.hash,
           name: perkName && perkName !== plug.displayProperties.name ? perkName : undefined,
           description: perkDescription,
           requirement: perkRequirement,
@@ -179,6 +181,7 @@ function getPerkDescriptions(
     if (plugDescription && !usedStrings.has(plugDescription)) {
       results.push({
         perkHash: -usedStrings.size,
+        hash: plug.hash,
         requirement: plugDescription,
       });
       usedStrings.add(plugDescription);
@@ -188,6 +191,7 @@ function getPerkDescriptions(
     if (plugDescription && !usedStrings.has(plugDescription)) {
       results.push({
         perkHash: -usedStrings.size,
+        hash: plug.hash,
         description: plugDescription,
       });
       usedStrings.add(plugDescription);
@@ -200,6 +204,7 @@ function getPerkDescriptions(
     for (const notif of notifs) {
       results.push({
         perkHash: -usedStrings.size,
+        hash: plug.hash,
         requirement: notif,
       });
       usedStrings.add(notif);
@@ -210,6 +215,7 @@ function getPerkDescriptions(
       if (plug.hash === mod) {
         results.push({
           perkHash: -usedStrings.size,
+          hash: plug.hash,
           description: t('Mods.HarmonicModDescription'),
         });
         usedStrings.add(t('Mods.HarmonicModDescription'));
