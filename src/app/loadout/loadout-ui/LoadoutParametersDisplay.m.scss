@@ -1,3 +1,4 @@
+@use 'sass:math';
 @use '../../variables.scss' as *;
 
 .loParams {
@@ -19,7 +20,7 @@
   align-items: center;
   font-weight: bold;
   font-size: 11px;
-  gap: (2 / 11) * 1em;
+  gap: math.div(2, 11) * 1em;
 
   img {
     height: 14px;
@@ -54,7 +55,7 @@
 .constraintRange {
   composes: flexRow from '../../dim-ui/common.m.scss';
   align-items: center;
-  gap: (2 / 11) * 1em;
+  gap: math.div(2, 11) * 1em;
   :global(.app-icon) {
     font-size: 0.7em;
   }
