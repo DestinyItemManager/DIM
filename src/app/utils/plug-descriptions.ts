@@ -263,6 +263,7 @@ function getPerkDescriptions(
     const perkName = sandboxPerk.displayProperties.name;
     const perkDesc: DimPlugPerkDescription = {
       perkHash: firstPerk.perkHash,
+      hash: plug.hash,
       name: perkName && perkName !== plug.displayProperties.name ? perkName : undefined,
     };
 

@@ -76,7 +76,7 @@ function SelectablePlugDetails({
   // <div className={styles.requirement}>{t('Loadouts.ModPlacement.UnstackableMod')}</div>
   // We don't show Clarity descriptions here due to layout concerns, see #9318 / #8641
   const plugDescriptions = usePlugDescriptions(plug, stats, /* forceUseBungieDescriptions */ true);
-  // console.log(plug.displayProperties.name, ' ', plug);
+  console.log(plug.displayProperties.name, ' ', plugDescriptions);
   return (
     <>
       {plugDescriptions.perks.map((perkDesc) => (
@@ -85,7 +85,7 @@ function SelectablePlugDetails({
           {perkDesc.requirement && !(perkDesc.perkHash < 0) && (
             <div className={styles.requirement}>{perkDesc.requirement}</div>
           )}
-          {perkDesc.perkHash === -1 && (
+          {perkDesc.perkHash < 0 && perkDesc.requirement && (
             <div className={styles.requirement}>
               {unstackableModHashes.includes(perkDesc.hash)
                 ? t('Loadouts.ModPlacement.UnstackableMod')
