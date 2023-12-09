@@ -63,7 +63,7 @@ export default function StoreBucketDropTarget({
       className={clsx('sub-bucket', className, equip ? 'equipped' : 'unequipped', {
         [styles.over]: canDrop && isOver,
         [styles.canDrop]: canDrop,
-        grouped,
+        [styles.grouped]: grouped,
       })}
       onClick={onClick}
       aria-label={bucket.name}

@@ -35,7 +35,7 @@ import Spreadsheets from './Spreadsheets';
 import { TroubleshootingSettings } from './Troubleshooting';
 import { setCharacterOrder } from './actions';
 import { useSetSetting } from './hooks';
-import { Settings } from './initial-settings';
+import { Settings, VaultWeaponGroupingStyle } from './initial-settings';
 import { itemSortSettingsSelector } from './item-sort';
 import './settings.scss';
 
@@ -383,6 +383,19 @@ export default function SettingsPage() {
                 options={vaultWeaponGroupingOptions}
                 onChange={changeVaultWeaponGrouping}
               />
+              {settings.vaultWeaponGrouping && (
+                <Checkbox
+                  label={t('Settings.VaultWeaponGroupingStyle')}
+                  name="vaultWeaponGroupingStyle"
+                  value={settings.vaultWeaponGroupingStyle !== VaultWeaponGroupingStyle.Inline}
+                  onChange={(checked, setting) =>
+                    setSetting(
+                      setting,
+                      checked ? VaultWeaponGroupingStyle.Lines : VaultWeaponGroupingStyle.Inline,
+                    )
+                  }
+                />
+              )}
             </div>
 
             <div className="setting">
@@ -633,8 +646,4 @@ export default function SettingsPage() {
       </PageWithMenu.Contents>
     </PageWithMenu>
   );
-}
-
-function isInputElement(element: HTMLElement): element is HTMLInputElement {
-  return element.nodeName === 'INPUT';
 }

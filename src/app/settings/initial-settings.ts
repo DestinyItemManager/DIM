@@ -6,6 +6,11 @@ export const enum ItemPopupTab {
   Triage,
 }
 
+export const enum VaultWeaponGroupingStyle {
+  Lines,
+  Inline,
+}
+
 /**
  * We extend the settings interface so we can try out new settings before committing them to dim-api-types
  */
@@ -15,6 +20,7 @@ export interface Settings extends DimApiSettings {
   sortRecordProgression: boolean;
   vendorsHideSilverItems: boolean;
   vaultWeaponGrouping: string;
+  vaultWeaponGroupingStyle: VaultWeaponGroupingStyle;
   itemPopupTab: ItemPopupTab;
 }
 
@@ -25,5 +31,6 @@ export const initialSettingsState: Settings = {
   sortRecordProgression: false,
   vendorsHideSilverItems: false,
   vaultWeaponGrouping: '',
+  vaultWeaponGroupingStyle: VaultWeaponGroupingStyle.Lines,
   itemPopupTab: ItemPopupTab.Overview,
 };
