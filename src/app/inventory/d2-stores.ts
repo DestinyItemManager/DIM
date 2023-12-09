@@ -20,7 +20,6 @@ import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions';
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import { showNotification } from '../notifications/notifications';
-import { loadingTracker } from '../shell/loading-tracker';
 import { reportException } from '../utils/sentry';
 import {
   CharacterInfo,
@@ -255,9 +254,7 @@ function loadStoresData(
         return;
       }
 
-      const transaction = $featureFlags.sentry
-        ? startTransaction({ name: 'loadStoresD2' })
-        : undefined;
+      const transaction = startTransaction({ name: 'loadStoresD2' });
       // set the transaction on the scope so it picks up any errors
       getCurrentHub()?.configureScope((scope) => scope.setSpan(transaction));
 
@@ -356,8 +353,6 @@ function loadStoresData(
         transaction?.finish();
       }
     })();
-    loadingTracker.addPromise(promise);
-    return promise;
   };
 }
 
