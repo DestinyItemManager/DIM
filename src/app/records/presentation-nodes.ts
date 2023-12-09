@@ -303,6 +303,7 @@ export function filterPresentationNodesToSearch(
   filterItems: ItemFilter,
   path: DimPresentationNode[] = [],
   defs: D2ManifestDefinitions,
+  catalystItemsByRecordHash: Map<number, DimItem>,
 ): DimPresentationNodeSearchResult[] {
   // If the node itself matches
   if (searchNode(node, searchQuery)) {
@@ -313,7 +314,14 @@ export function filterPresentationNodesToSearch(
   if (node.childPresentationNodes) {
     // TODO: build up the tree?
     return node.childPresentationNodes.flatMap((c) =>
-      filterPresentationNodesToSearch(c, searchQuery, filterItems, [...path, node], defs),
+      filterPresentationNodesToSearch(
+        c,
+        searchQuery,
+        filterItems,
+        [...path, node],
+        defs,
+        catalystItemsByRecordHash,
+      ),
     );
   }
 
@@ -334,7 +342,8 @@ export function filterPresentationNodesToSearch(
     const records = node.records.filter(
       (r) =>
         searchDisplayProperties(r.recordDef.displayProperties, searchQuery) ||
-        searchRewards(r.recordDef, searchQuery, defs),
+        searchRewards(r.recordDef, searchQuery, defs) ||
+        searchCatalysts(r.recordDef.hash, filterItems, catalystItemsByRecordHash),
     );
 
     return records.length
@@ -593,4 +602,13 @@ function getMetricComponent(
   profileResponse: DestinyProfileResponse,
 ): DestinyMetricComponent | undefined {
   return profileResponse.metrics?.data?.metrics[metricDef.hash];
+}
+
+function searchCatalysts(
+  recordHash: number,
+  filterItems: ItemFilter,
+  catalystItemsByRecordHash: Map<number, DimItem>,
+): unknown {
+  const exoticForCatalyst = catalystItemsByRecordHash.get(recordHash);
+  return exoticForCatalyst && filterItems(exoticForCatalyst);
 }
