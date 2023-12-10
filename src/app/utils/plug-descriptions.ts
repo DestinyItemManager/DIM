@@ -153,6 +153,12 @@ function getPerkDescriptions(
           perkDescription = undefined;
         } else {
           usedStrings.add(perkDescription);
+          results.push({
+            perkHash: perk.perkHash,
+            hash: plug.hash,
+            name: perkName && perkName !== plug.displayProperties.name ? perkName : undefined,
+            description: perkDescription,
+          });
         }
       }
 
@@ -164,14 +170,10 @@ function getPerkDescriptions(
         } else {
           usedStrings.add(perkRequirement);
         }
-      }
-      // console.log(plug.hash);
-      if (perkDescription || perkRequirement) {
         results.push({
-          perkHash: perk.perkHash,
+          perkHash: -usedStrings.size,
           hash: plug.hash,
           name: perkName && perkName !== plug.displayProperties.name ? perkName : undefined,
-          description: perkDescription,
           requirement: perkRequirement,
         });
       }
