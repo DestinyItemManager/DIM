@@ -171,7 +171,7 @@ function getPerkDescriptions(
           usedStrings.add(perkRequirement);
         }
         results.push({
-          perkHash: -usedStrings.size,
+          perkHash: -results.length,
           hash: plug.hash,
           name: perkName && perkName !== plug.displayProperties.name ? perkName : undefined,
           requirement: perkRequirement,
