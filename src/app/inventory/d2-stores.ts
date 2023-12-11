@@ -9,6 +9,7 @@ import { processInGameLoadouts } from 'app/loadout-drawer/loadout-type-converter
 import { inGameLoadoutLoaded } from 'app/loadout/ingame/actions';
 import { loadCoreSettings } from 'app/manifest/actions';
 import { d2ManifestSelector, manifestSelector } from 'app/manifest/selectors';
+import { loadingTracker } from 'app/shell/loading-tracker';
 import { get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { convertToError, errorMessage } from 'app/utils/errors';
@@ -353,6 +354,8 @@ function loadStoresData(
         transaction?.finish();
       }
     })();
+    loadingTracker.addPromise(promise);
+    return promise;
   };
 }
 
