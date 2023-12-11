@@ -675,7 +675,7 @@
     "OptimizerExplanationGuide": "用户指南里有更多信息和视频教程。",
     "OptimizerExplanationMods": "选择你想使用的异域装备、模组和分支职业。配装优化器只会包括你选定的模组和分支职业选项带来的属性加成——护甲上其他现存的模组都会被忽略。",
     "OptimizerExplanationSearch": "使用搜索栏来缩小护甲的考虑范围。如果未有护甲与搜索结果匹配，则该部位的所有护甲都将被考虑。",
-    "OptimizerExplanationStats": "将最重要的属性拖动到顶部，并将你不在乎的属性禁用。",
+    "OptimizerExplanationStats": "将最重要的属性拖动到顶部，并将不需优化属性禁用。",
     "OptimizerSet": "优化器组合",
     "ProcessingSets": "寻找最高阶属性配装...",
     "SaveAs": "保存为",
