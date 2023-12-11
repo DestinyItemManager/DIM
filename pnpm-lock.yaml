@@ -414,6 +414,9 @@ devDependencies:
   markdown-loader:
     specifier: ^8.0.0
     version: 8.0.0(webpack@5.89.0)
+  marked:
+    specifier: ^11.0.1
+    version: 11.0.1
   mini-css-extract-plugin:
     specifier: ^2.7.6
     version: 2.7.6(webpack@5.89.0)
@@ -8758,6 +8761,12 @@ packages:
     dependencies:
       marked: 4.3.0
       webpack: 5.89.0(webpack-cli@5.1.4)
+    dev: true
+
+  /marked@11.0.1:
+    resolution: {integrity: sha512-P4kDhFEMlvLePBPRwOcMOv6+lYUbhfbSxJFs3Jb4Qx7v6K7l+k8Dxh9CEGfRvK71tL+qIFz5y7Pe4uzt4+/A3A==}
+    engines: {node: '>= 18'}
+    hasBin: true
     dev: true
 
   /marked@4.3.0:

@@ -156,6 +156,7 @@
     "lint-staged": "^15.2.0",
     "lodash-webpack-plugin": "^0.11.6",
     "markdown-loader": "^8.0.0",
+    "marked": "^11.0.1",
     "mini-css-extract-plugin": "^2.7.6",
     "mini-svg-data-uri": "^1.4.4",
     "mkcert": "^3.2.0",
