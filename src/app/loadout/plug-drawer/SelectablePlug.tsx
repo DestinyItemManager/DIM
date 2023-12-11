@@ -73,25 +73,24 @@ function SelectablePlugDetails({
   classType: DestinyClass;
 }) {
   const stats = getPlugDefStats(plug, classType);
-  // <div className={styles.requirement}>{t('Loadouts.ModPlacement.UnstackableMod')}</div>
+
   // We don't show Clarity descriptions here due to layout concerns, see #9318 / #8641
   const plugDescriptions = usePlugDescriptions(plug, stats, /* forceUseBungieDescriptions */ true);
-  console.log(plug.displayProperties.name, ' ', plugDescriptions);
+
   // addDescriptionAsRequirement addPerkDescriptions GARDEM USES THESE
   return (
     <>
       {plugDescriptions.perks.map((perkDesc, index) => (
         <React.Fragment key={perkDesc.perkHash}>
           {perkDesc.description && <RichDestinyText text={perkDesc.description} />}
-          {perkDesc.requirement && !(index === plugDescriptions.perks.length - 1) && (
-            <div className={styles.requirement}>{perkDesc.requirement}</div>
-          )}
-          {perkDesc.requirement && index === plugDescriptions.perks.length - 1 && (
+          {perkDesc.requirement && index === plugDescriptions.perks.length - 1 ? (
             <div className={styles.requirement}>
               {unstackableModHashes.includes(perkDesc.hash)
                 ? t('Loadouts.ModPlacement.UnstackableMod')
                 : t('Loadouts.ModPlacement.StackableMod')}
             </div>
+          ) : (
+            <div className={styles.requirement}>{perkDesc.requirement}</div>
           )}
         </React.Fragment>
       ))}
