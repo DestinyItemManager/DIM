@@ -1,5 +1,7 @@
 ## Next
 
+## 7.98.0 <span class="changelog-date">(2023-12-10)</span>
+
 * You can no longer select multiple copies of mods that are unstackable (they do not provide a benefit when there are multiple copies of them).
 
 ## 7.97.1 <span class="changelog-date">(2023-12-04)</span>
