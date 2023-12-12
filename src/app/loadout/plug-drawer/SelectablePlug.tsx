@@ -77,7 +77,6 @@ function SelectablePlugDetails({
   // We don't show Clarity descriptions here due to layout concerns, see #9318 / #8641
   const plugDescriptions = usePlugDescriptions(plug, stats, /* forceUseBungieDescriptions */ true);
 
-  // addDescriptionAsRequirement addPerkDescriptions GARDEM USES THESE
   return (
     <>
       {plugDescriptions.perks.map((perkDesc, index) => (
