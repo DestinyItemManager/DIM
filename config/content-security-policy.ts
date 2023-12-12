@@ -10,7 +10,7 @@ const SELF = "'self'";
 export default function csp(
   env: 'release' | 'beta' | 'dev' | 'pr',
   featureFlags: FeatureFlags,
-  version: string | undefined
+  version: string | undefined,
 ) {
   const baseCSP: Record<string, string[] | string | boolean> = {
     defaultSrc: ["'none'"],
