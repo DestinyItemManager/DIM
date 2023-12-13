@@ -647,3 +647,7 @@ export default function SettingsPage() {
     </PageWithMenu>
   );
 }
+
+function isInputElement(element: HTMLElement): element is HTMLInputElement {
+  return element.nodeName === 'INPUT';
+}
