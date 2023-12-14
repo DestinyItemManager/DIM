@@ -19,6 +19,7 @@ export function updateLoadoutWithArmorSet(
   set: ArmorSet,
   items: DimItem[],
   lockedMods: PluggableInventoryItemDefinition[],
+  loadoutParameters = loadout.parameters,
 ): Loadout {
   const data = {
     tier: _.sumBy(Object.values(set.stats), statTier),
@@ -47,7 +48,7 @@ export function updateLoadoutWithArmorSet(
   return {
     ...loadout,
     parameters: {
-      ...loadout.parameters,
+      ...loadoutParameters,
       mods: allMods.length ? allMods : undefined,
     },
     items: [...existingItemsWithoutArmor, ...loadoutItems],
@@ -74,7 +75,13 @@ export function mergeLoadout(
     set,
     items,
     lockedMods,
+    newLoadout.parameters,
   );
+
+  loadoutWithArmorSet.parameters = {
+    ...newLoadout.parameters,
+    mods: loadoutWithArmorSet.parameters?.mods,
+  };
 
   const newSubclass = newLoadout.items.find(
     (li) => defs.InventoryItem.get(li.hash)?.inventory?.bucketTypeHash === BucketHashes.Subclass,
