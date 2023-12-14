@@ -84,7 +84,7 @@ function SelectablePlugDetails({
           {perkDesc.description && <RichDestinyText text={perkDesc.description} />}
           {perkDesc.requirement && index === plugDescriptions.perks.length - 1 ? (
             <div className={styles.requirement}>
-              {unstackableModHashes.includes(perkDesc.hash)
+              {unstackableModHashes.includes(plug.hash)
                 ? t('Loadouts.ModPlacement.UnstackableMod')
                 : t('Loadouts.ModPlacement.StackableMod')}
             </div>
