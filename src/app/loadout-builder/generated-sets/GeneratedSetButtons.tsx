@@ -71,7 +71,7 @@ export default function GeneratedSetButtons({
   return (
     <div className={styles.buttons}>
       <button type="button" className="dim-button" onClick={openLoadout}>
-        {t('LoadoutBuilder.CreateLoadout')}
+        {isEditingExistingLoadout ? t('Loadouts.UpdateLoadout') : t('Loadouts.SaveLoadout')}
       </button>
       {canCompareLoadouts && (
         <button

@@ -270,6 +270,7 @@ type LoadoutBuilderConfigAction =
   | { type: 'unpinItem'; item: DimItem }
   | { type: 'excludeItem'; item: DimItem }
   | { type: 'unexcludeItem'; item: DimItem }
+  | { type: 'clearExcludedItems' }
   | { type: 'autoStatModsChanged'; autoStatMods: boolean }
   | { type: 'lockedModsChanged'; lockedMods: number[] }
   | { type: 'removeLockedMod'; mod: ResolvedLoadoutMod }
@@ -465,6 +466,11 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
           },
         };
       }
+      case 'clearExcludedItems':
+        return {
+          ...state,
+          excludedItems: {},
+        };
       case 'lockedModsChanged':
         return updateLoadout(state, updateMods(action.lockedMods));
       case 'assumeArmorMasterworkChanged': {
