@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import PresentationNode from './PresentationNode';
 import styles from './PresentationNodeRoot.m.scss';
 import PresentationNodeSearchResults from './PresentationNodeSearchResults';
+import { makeItemsForCatalystRecords } from './catalysts';
 import {
   filterPresentationNodesToSearch,
   hideCompletedRecords,
@@ -93,12 +94,15 @@ export default function PresentationNodeRoot({
   }
 
   if (searchQuery && searchFilter) {
+    const catalystItemsByRecordHash = makeItemsForCatalystRecords(itemCreationContext);
+
     const searchResults = filterPresentationNodesToSearch(
       nodeTree,
       searchQuery.toLowerCase(),
       searchFilter,
       undefined,
       defs,
+      catalystItemsByRecordHash,
     );
 
     return (
