@@ -1127,6 +1127,7 @@
     "ReverseSort": "Toggle forward/reverse sort",
     "SetSort": "Sort items by:",
     "SetVaultWeaponGrouping": "Group vault weapons by:",
+    "VaultWeaponGroupingStyle": "Separate groups on different lines",
     "Settings": "Settings",
     "ShowNewItems": "Show a red dot on new items",
     "ExpandSingleCharacter": "Show all characters",
