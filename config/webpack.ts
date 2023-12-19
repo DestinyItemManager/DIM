@@ -140,11 +140,11 @@ export default (env: Env) => {
                   //'Cross-Origin-Opener-Policy': 'same-origin',
                 }
               : req.baseUrl.match(/\.js$/)
-              ? {
-                  // credentialless is only supported by chrome but require-corp blocks Bungie.net messages
-                  //'Cross-Origin-Embedder-Policy': 'require-corp',
-                }
-              : {};
+                ? {
+                    // credentialless is only supported by chrome but require-corp blocks Bungie.net messages
+                    //'Cross-Origin-Embedder-Policy': 'require-corp',
+                  }
+                : {};
 
             return headers;
           },
