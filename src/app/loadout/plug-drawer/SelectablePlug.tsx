@@ -1,11 +1,13 @@
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { TileGridTile } from 'app/dim-ui/TileGrid';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
+import { t } from 'app/i18next-t';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { PlugStats } from 'app/item-popup/PlugTooltip';
 import { getPlugDefStats, usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import unstackableModHashes from 'data/d2/unstackable-mods.json';
 import React, { useCallback, useMemo } from 'react';
 import styles from './SelectablePlug.m.scss';
 
@@ -74,12 +76,21 @@ function SelectablePlugDetails({
 
   // We don't show Clarity descriptions here due to layout concerns, see #9318 / #8641
   const plugDescriptions = usePlugDescriptions(plug, stats, /* forceUseBungieDescriptions */ true);
+
   return (
     <>
-      {plugDescriptions.perks.map((perkDesc) => (
+      {plugDescriptions.perks.map((perkDesc, index) => (
         <React.Fragment key={perkDesc.perkHash}>
           {perkDesc.description && <RichDestinyText text={perkDesc.description} />}
-          {perkDesc.requirement && <div className={styles.requirement}>{perkDesc.requirement}</div>}
+          {perkDesc.requirement && index === plugDescriptions.perks.length - 1 ? (
+            <div className={styles.requirement}>
+              {unstackableModHashes.includes(plug.hash)
+                ? t('Loadouts.ModPlacement.UnstackableMod')
+                : t('Loadouts.ModPlacement.StackableMod')}
+            </div>
+          ) : (
+            <div className={styles.requirement}>{perkDesc.requirement}</div>
+          )}
         </React.Fragment>
       ))}
       {stats.length > 0 && <PlugStats stats={stats} />}
