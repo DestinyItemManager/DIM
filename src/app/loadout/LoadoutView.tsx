@@ -1,19 +1,23 @@
-import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClassIcon from 'app/dim-ui/ClassIcon';
+import { PressTip } from 'app/dim-ui/PressTip';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
-import { t, tl } from 'app/i18next-t';
+import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
+import { findingDisplays } from 'app/loadout-analyzer/finding-display';
+import { useAnalyzeLoadout } from 'app/loadout-analyzer/hooks';
+import { LoadoutFinding } from 'app/loadout-analyzer/types';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { Loadout, LoadoutItem, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
-import { loadoutIssuesSelector } from 'app/loadout-drawer/loadouts-selector';
+import AppIcon from 'app/shell/icons/AppIcon';
 import { useIsPhonePortrait } from 'app/shell/selectors';
+import { count, filterMap } from 'app/utils/collections';
 import { emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
-import { count, filterMap } from 'app/utils/util';
+import { addDividers } from 'app/utils/react';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -32,7 +36,7 @@ export function getItemsAndSubclassFromLoadout(
   allItems: DimItem[],
   modsByBucket?: {
     [bucketHash: number]: number[] | undefined;
-  }
+  },
 ): [
   items: ResolvedLoadoutItem[],
   subclass: ResolvedLoadoutItem | undefined,
@@ -43,7 +47,7 @@ export function getItemsAndSubclassFromLoadout(
     loadoutItems,
     store.id,
     allItems,
-    modsByBucket
+    modsByBucket,
   );
   const subclass = items
     .concat(warnitems)
@@ -57,13 +61,6 @@ export function getItemsAndSubclassFromLoadout(
 
   return [items, subclass, warnitems];
 }
-
-const possibleLoadoutIssues = [
-  { prop: 'hasMissingItems', str: tl('Loadouts.MissingItemsWarning') },
-  { prop: 'hasDeprecatedMods', str: tl('Loadouts.DeprecatedMods') },
-  { prop: 'emptyFragmentSlots', str: tl('Loadouts.EmptyFragmentSlots') },
-  { prop: 'tooManyFragments', str: tl('Loadouts.TooManyFragments') },
-] as const;
 
 /**
  * A presentational component for a single loadout.
@@ -87,12 +84,11 @@ export default function LoadoutView({
 }) {
   const allItems = useSelector(allItemsSelector);
   const itemCreationContext = useSelector(createItemContextSelector);
-  const loadoutIssues = useSelector(loadoutIssuesSelector)[loadout.id];
+  const analysis = useAnalyzeLoadout(loadout, store, !hideOptimizeArmor);
 
   const missingSockets =
     loadout.name === t('Loadouts.FromEquipped') && allItems.some((i) => i.missingSockets);
 
-  const loadoutHasIssue = possibleLoadoutIssues.some((i) => loadoutIssues?.[i.prop]);
   const isPhonePortrait = useIsPhonePortrait();
 
   // TODO: filter down by usable mods?
@@ -108,14 +104,17 @@ export default function LoadoutView({
         loadout.items,
         store,
         allItems,
-        modsByBucket
+        modsByBucket,
       ),
-    [itemCreationContext, loadout.items, store, allItems, modsByBucket]
+    [itemCreationContext, loadout.items, store, allItems, modsByBucket],
   );
 
   const [allMods, modDefinitions] = useLoadoutMods(loadout, store.id);
 
-  const categories = _.groupBy(items.concat(warnitems), (li) => li.item.bucket.sort);
+  const categories = Object.groupBy(
+    items.concat(warnitems),
+    (li) => li.item.bucket.sort ?? 'Unknown',
+  );
   const power = loadoutPower(store, categories);
 
   return (
@@ -127,13 +126,30 @@ export default function LoadoutView({
           )}
           <ColorDestinySymbols text={loadout.name} />
         </h2>
-        {loadoutHasIssue && (
-          <span className={styles.missingItems}>
-            <AlertIcon />
-            {filterMap(possibleLoadoutIssues, (i) =>
-              loadoutIssues![i.prop] ? t(i.str) : undefined
-            ).join(' / ')}
-          </span>
+        {Boolean(analysis?.result?.findings.length) && (
+          <div className={styles.findings}>
+            {addDividers(
+              filterMap(analysis!.result.findings, (finding) => {
+                const display = findingDisplays[finding];
+                if (!display.icon) {
+                  return undefined;
+                }
+                let description = t(display.description);
+                if (
+                  finding === LoadoutFinding.BetterStatsAvailable &&
+                  analysis!.result.betterStatsAvailableFontNote
+                ) {
+                  description += `\n\n${t('LoadoutAnalysis.BetterStatsAvailableFontNote')}`;
+                }
+                return (
+                  <PressTip className={styles.finding} key={finding} tooltip={description}>
+                    <AppIcon icon={display.icon} /> {t(display.name)}
+                  </PressTip>
+                );
+              }),
+              <span>{' · '}</span>,
+            )}
+          </div>
         )}
         <div className={styles.actions}>{actionButtons}</div>
       </div>
@@ -151,7 +167,7 @@ export default function LoadoutView({
                 key={category}
                 category={category}
                 subclass={subclass}
-                storeId={store.id}
+                store={store}
                 items={categories[category]}
                 allMods={modDefinitions}
                 modsByBucket={modsByBucket}
@@ -191,8 +207,8 @@ export function loadoutPower(store: DimStore, categories: _.Dictionary<ResolvedL
     ? Math.floor(
         getLight(
           store,
-          [...categories.Weapons, ...categories.Armor].map((li) => li.item)
-        )
+          [...categories.Weapons, ...categories.Armor].map((li) => li.item),
+        ),
       )
     : 0;
 

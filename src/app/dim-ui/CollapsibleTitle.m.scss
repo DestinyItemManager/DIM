@@ -1,0 +1,85 @@
+@use '../variables.scss' as *;
+
+// The wrapping H3 element
+.title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0;
+  margin-bottom: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding-right: 16px;
+  gap: 8px;
+
+  // The interactive button within
+  > button {
+    // Reset button
+    color: inherit;
+    appearance: none;
+    background: transparent;
+    border: 0;
+    margin: 0;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: left;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex: 1;
+    padding: 0 0 0 12px;
+    min-height: 34px;
+    gap: 6px;
+
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 14px;
+
+    &:hover,
+    &:focus-visible {
+      color: var(--theme-accent-primary);
+
+      @include phone-portrait {
+        color: var(--theme-text);
+        background-color: transparent;
+      }
+    }
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  &.collapsed {
+    background-color: rgba(0, 0, 0, 0.4);
+
+    @include phone-portrait {
+      color: var(--theme-text);
+    }
+  }
+
+  &:hover,
+  &:focus-within {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  &.disabled {
+    color: #888;
+    > button {
+      color: #888 !important;
+      cursor: default;
+    }
+  }
+}
+
+.collapseIcon {
+  font-size: 16px;
+  width: 10px;
+  transition: transform 0.1s ease-in-out;
+  line-height: 8px;
+  &.iconCollapsed {
+    transform: rotate(-90deg);
+  }
+}
+
+.content {
+  overflow: hidden;
+}

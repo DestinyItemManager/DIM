@@ -9,19 +9,18 @@
 }
 
 .loadoutMenu {
+  composes: visibleScrollbars from '../dim-ui/common.m.scss';
   position: fixed;
   inset: 0 auto auto 0;
   margin: 0;
   width: 300px;
   box-sizing: border-box;
   max-height: calc(var(--viewport-height) - var(--header-height) - #{62px + 16px});
-  overflow: auto;
+  overflow: hidden;
   color: rgba(245, 245, 245, 0.6);
   overscroll-behavior: contain;
   background-color: var(--theme-dropdown-menu-bg);
   will-change: transform;
-
-  @include visible-scrollbars;
 
   [role='button'] {
     outline: none;

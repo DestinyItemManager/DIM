@@ -116,7 +116,7 @@ test('should throw an error if there is no room in the destination', async () =>
       stackSize: 7,
     })) as any;
   }).rejects.toMatchInlineSnapshot(
-    `[BungieError: There are no item slots available to transfer this item.]`
+    `[BungieError: There are no item slots available to transfer this item.]`,
   );
 });
 
@@ -131,6 +131,6 @@ test('should throw an error if API is down for maintenance', async () => {
       stackSize: 7,
     })) as any;
   }).rejects.toMatchInlineSnapshot(
-    `[BungieError: This system is temporarily disabled for maintenance.]`
+    `[BungieError: This system is temporarily disabled for maintenance.]`,
   );
 });

@@ -24,8 +24,8 @@ export default function DraggableInventoryItem({ children, item }: Props) {
       type: item.location.inPostmaster
         ? 'postmaster'
         : item.notransfer
-        ? `${item.owner}-${item.bucket.hash}`
-        : item.bucket.hash.toString(),
+          ? `${item.owner}-${item.bucket.hash}`
+          : item.bucket.hash.toString(),
       item: () => {
         hideItemPopup();
 
@@ -45,7 +45,7 @@ export default function DraggableInventoryItem({ children, item }: Props) {
       },
       canDrag,
     }),
-    [item]
+    [item],
   );
 
   return (

@@ -7,7 +7,7 @@ import { showNotification } from 'app/notifications/notifications';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
 import { wishListGuideLink } from 'app/shell/links';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { errorMessage } from 'app/utils/util';
+import { errorMessage } from 'app/utils/errors';
 import { builtInWishlists, validateWishListURLs, wishListAllowedHosts } from 'app/wishlists/utils';
 import { fetchWishList, transformAndStoreWishList } from 'app/wishlists/wishlist-fetch';
 import { toWishList } from 'app/wishlists/wishlist-file';

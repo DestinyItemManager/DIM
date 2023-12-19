@@ -29,6 +29,7 @@ import ItemDescription from './ItemDescription';
 import styles from './ItemDetails.m.scss';
 import ItemExpiration from './ItemExpiration';
 import ItemPerks from './ItemPerks';
+import './ItemPopupBody.scss';
 import ItemSockets from './ItemSockets';
 import ItemStats from './ItemStats';
 import ItemTalentGrid from './ItemTalentGrid';
@@ -41,9 +42,11 @@ import { ItemPopupExtraInfo } from './item-popup';
 // TODO: probably need to load manifest. We can take a lot of properties off the item if we just load the definition here.
 export default function ItemDetails({
   item: originalItem,
+  id,
   extraInfo = {},
 }: {
   item: DimItem;
+  id: string;
   extraInfo?: ItemPopupExtraInfo;
 }) {
   const defs = useDefinitions()!;
@@ -63,7 +66,7 @@ export default function ItemDetails({
   const showVendor = useContext(SingleVendorSheetContext);
 
   return (
-    <div className={styles.itemDetailsBody}>
+    <div id={id} role="tabpanel" aria-labelledby={`${id}-tab`} className={styles.itemDetailsBody}>
       {item.itemCategoryHashes.includes(ItemCategoryHashes.Shaders) && (
         <BungieImage className={styles.itemShader} src={item.icon} width="96" height="96" />
       )}

@@ -33,9 +33,9 @@ export default function Vendor({
   const placeString = Array.from(
     new Set(
       [vendor.destination?.displayProperties.name, vendor.place?.displayProperties.name].filter(
-        (n) => n?.length
-      )
-    )
+        (n) => n?.length,
+      ),
+    ),
   ).join(', ');
 
   let refreshTime = vendor.component && new Date(vendor.component.nextRefreshDate);
@@ -49,15 +49,13 @@ export default function Vendor({
         className={styles.title}
         title={
           <>
-            <span className={styles.vendorIconWrapper}>
-              <BungieImage
-                src={
-                  vendor.def.displayProperties.smallTransparentIcon ||
-                  vendor.def.displayProperties.icon
-                }
-                className={styles.icon}
-              />
-            </span>
+            <BungieImage
+              src={
+                vendor.def.displayProperties.smallTransparentIcon ||
+                vendor.def.displayProperties.icon
+              }
+              className={styles.icon}
+            />
             <div className={styles.titleDetails}>
               <div>{vendor.def.displayProperties.name}</div>
               <VendorLocation>{placeString}</VendorLocation>

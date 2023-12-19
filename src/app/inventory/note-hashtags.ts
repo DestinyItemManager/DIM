@@ -1,4 +1,4 @@
-import { filterMap, uniqBy } from 'app/utils/util';
+import { filterMap, uniqBy } from 'app/utils/collections';
 import _ from 'lodash';
 import { ItemInfos } from './dim-item-info';
 
@@ -18,10 +18,10 @@ export function collectNotesHashtags(itemInfos: ItemInfos) {
   return uniqBy(hashTags, (t) => t.toLowerCase());
 }
 
-const hashtagRegex = /#[\p{L}\p{N}_\p{Private_Use}\p{Other_Symbol}:-]+/gu;
+const hashtagRegex = /(^|[\s,])(#[\p{L}\p{N}\p{Private_Use}\p{Other_Symbol}_:-]+)/gu;
 
 export function getHashtagsFromNote(note?: string | null) {
-  return Array.from(note?.matchAll(hashtagRegex) ?? [], (m) => m[0]);
+  return Array.from(note?.matchAll(hashtagRegex) ?? [], (m) => m[2]);
 }
 
 // TODO: am I really gonna need to write a parser again
@@ -33,11 +33,11 @@ export function appendedToNote(originalNote: string | undefined, append: string)
   const originalSegmented = segmentHashtags(originalNote);
   const newSegmented = segmentHashtags(append);
   const existingHashtags = new Set(
-    filterMap(originalSegmented, (s) => (typeof s !== 'string' ? s.hashtag : undefined))
+    filterMap(originalSegmented, (s) => (typeof s !== 'string' ? s.hashtag : undefined)),
   );
   // Don't add hashtags that already exist again - remove them from the input
   const filteredAppendSegments = newSegmented.filter(
-    (s) => typeof s === 'string' || !existingHashtags.has(s.hashtag)
+    (s) => typeof s === 'string' || !existingHashtags.has(s.hashtag),
   );
   return _.compact([...originalSegmented, ' ', ...filteredAppendSegments])
     .map((s) => (typeof s === 'string' ? s : s.hashtag))
@@ -46,7 +46,8 @@ export function appendedToNote(originalNote: string | undefined, append: string)
     .trim();
 }
 
-const allHashtagsRegex = /^(\s*)((#[\p{L}\p{N}_\p{Private_Use}\p{Other_Symbol}:-]+)\s*)+$/u;
+const allHashtagsRegex =
+  /^(\s*)((?:^|[\s,])(#[\p{L}\p{N}\p{Private_Use}\p{Other_Symbol}_:-]+)\s*)+$/u;
 
 /**
  * Add notes to an existing note. This is hashtag-aware, so it will not remove
@@ -70,12 +71,12 @@ export function removedFromNote(originalNote: string | undefined, removed: strin
   }
   // Otherwise subtract out the literal string
   const hashtagSpans = filterMap(originalSegmented, (s) =>
-    typeof s === 'string' ? undefined : [s.index, s.index + s.hashtag.length]
+    typeof s === 'string' ? undefined : [s.index, s.index + s.hashtag.length],
   );
   return originalNote
     ?.replaceAll(removed.trim(), (original, index) =>
       // Refuse to cut a tag in half
-      hashtagSpans.some(([start, end]) => index > start && index < end) ? original : ''
+      hashtagSpans.some(([start, end]) => index > start && index < end) ? original : '',
     )
     .replaceAll(/\s+/g, ' ')
     .trim();
@@ -83,7 +84,7 @@ export function removedFromNote(originalNote: string | undefined, removed: strin
 
 /** Break up a string into normal-string bits and hashtags */
 function segmentHashtags(
-  note: string | undefined
+  note: string | undefined,
 ): (string | { hashtag: string; index: number })[] {
   if (!note) {
     return [];
@@ -93,12 +94,13 @@ function segmentHashtags(
   let lastIndex = 0;
   let match: RegExpExecArray | null;
   while ((match = hashtagRegex.exec(note))) {
-    if (match.index > lastIndex) {
-      const segment = note.substring(lastIndex, match.index);
+    const matchIndex = match.index + match[1].length;
+    if (matchIndex > lastIndex) {
+      const segment = note.substring(lastIndex, matchIndex);
       result.push(segment);
     }
-    result.push({ hashtag: match[0], index: match.index });
-    lastIndex = match.index + match[0].length;
+    result.push({ hashtag: match[2], index: matchIndex });
+    lastIndex = matchIndex + match[2].length;
   }
   if (lastIndex < note.length) {
     result.push(note.substring(lastIndex, note.length));

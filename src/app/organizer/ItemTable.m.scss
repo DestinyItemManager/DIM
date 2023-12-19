@@ -237,6 +237,10 @@ $content-cells: 5;
   margin-right: 3px;
   margin-left: -1px;
   flex-shrink: 0;
+  > img {
+    height: var(--item-size);
+    width: var(--item-size);
+  }
 }
 .perkSelected {
   font-weight: bold;

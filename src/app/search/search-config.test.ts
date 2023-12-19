@@ -30,7 +30,7 @@ describe('buildSearchConfig', () => {
       }
 
       formats = formats.filter(
-        (f) => f === 'query' || f === 'freeform' || (f === 'range' && filter.overload)
+        (f) => f === 'query' || f === 'freeform' || (f === 'range' && filter.overload),
       );
       if (formats.length > 1) {
         throw new Error(`filter ${filter.keywords} specifies ambiguous formats ${formats}`);
@@ -55,7 +55,7 @@ describe('validateQuery', () => {
   ];
 
   test.each(simpleCases)('is: filter %s - validity %s', (filterString, valid) =>
-    expect(parseAndValidateQuery(filterString, searchConfig).valid).toBe(valid)
+    expect(parseAndValidateQuery(filterString, searchConfig).valid).toBe(valid),
   );
 
   const queryCases: [filterString: string, valid: boolean][] = [
@@ -68,7 +68,7 @@ describe('validateQuery', () => {
   ];
 
   test.each(queryCases)('query filter %s - validity %s', (filterString, valid) =>
-    expect(parseAndValidateQuery(filterString, searchConfig).valid).toBe(valid)
+    expect(parseAndValidateQuery(filterString, searchConfig).valid).toBe(valid),
   );
 
   const freeformCases: [filterString: string, valid: boolean][] = [
@@ -80,7 +80,7 @@ describe('validateQuery', () => {
   ];
 
   test.each(freeformCases)('freeform filter %s - validity %s', (filterString, valid) =>
-    expect(parseAndValidateQuery(filterString, searchConfig).valid).toBe(valid)
+    expect(parseAndValidateQuery(filterString, searchConfig).valid).toBe(valid),
   );
 
   // `masterwork` is a complicated filter with three different formats
@@ -96,7 +96,7 @@ describe('validateQuery', () => {
   ];
 
   test.each(mixedCases)('mixed filter %s - validity %s', (filterString, valid) =>
-    expect(parseAndValidateQuery(filterString, searchConfig).valid).toBe(valid)
+    expect(parseAndValidateQuery(filterString, searchConfig).valid).toBe(valid),
   );
 
   const statCases: [filterString: string, valid: boolean][] = [
@@ -116,7 +116,7 @@ describe('validateQuery', () => {
   ];
 
   test.each(statCases)('stat filter %s - validity %s', (filterString, valid) =>
-    expect(parseAndValidateQuery(filterString, searchConfig).valid).toBe(valid)
+    expect(parseAndValidateQuery(filterString, searchConfig).valid).toBe(valid),
   );
 
   const rangeCases: [filterString: string, valid: boolean][] = [
@@ -133,7 +133,7 @@ describe('validateQuery', () => {
   ];
 
   test.each(rangeCases)('search string %s - validity %s', (filterString, valid) =>
-    expect(parseAndValidateQuery(filterString, searchConfig).valid).toBe(valid)
+    expect(parseAndValidateQuery(filterString, searchConfig).valid).toBe(valid),
   );
 
   const overloadRangeCases: [filterString: string, valid: boolean][] = [
@@ -154,6 +154,6 @@ describe('validateQuery', () => {
   ];
 
   test.each(overloadRangeCases)('search string %s - validity %s', (filterString, valid) =>
-    expect(parseAndValidateQuery(filterString, searchConfig).valid).toBe(valid)
+    expect(parseAndValidateQuery(filterString, searchConfig).valid).toBe(valid),
   );
 });

@@ -16,21 +16,26 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: release
+      url: https://app.dim.gg
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 2 # So sentry can get the previous commit
           # Use the dim-release-bot token rather than the default
           token: ${{ secrets.GH_TOKEN }}
 
+      - uses: pnpm/action-setup@v2
+
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18.x
-          cache: yarn
+          cache: pnpm
 
       - name: Install SSH key
-        uses: benoitchantre/setup-ssh-authentication-action@1.0.0
+        uses: benoitchantre/setup-ssh-authentication-action@1.0.1
         with:
           private-key: ${{ secrets.SSH_KEY }}
           private-key-name: dim.rsa
@@ -52,7 +57,7 @@ jobs:
 
       - name: Bump release version
         id: bump_version
-        uses: christian-draeger/increment-semantic-version@1.0.3
+        uses: christian-draeger/increment-semantic-version@1.1.0
         with:
           current-version: ${{ steps.package-version.outputs.current-version }}
           version-fragment: ${{ env.build_level }}
@@ -67,16 +72,16 @@ jobs:
           version: ${{ env.VERSION }}
 
       - name: Install
-        run: yarn install --frozen-lockfile --prefer-offline
+        run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: Build and deploy
         run: ./build/deploy-prod.sh
         env:
           NODE_OPTIONS: "--max_old_space_size=8192"
-          WEB_API_KEY: ${{ secrets.PROD_API_KEY }}
-          WEB_OAUTH_CLIENT_ID: ${{ secrets.PROD_OAUTH_CLIENT_ID }}
-          WEB_OAUTH_CLIENT_SECRET: ${{ secrets.PROD_OAUTH_CLIENT_SECRET }}
-          DIM_API_KEY: ${{ secrets.PROD_DIM_API_KEY }}
+          WEB_API_KEY: ${{ secrets.BUNGIE_API_KEY }}
+          WEB_OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
+          WEB_OAUTH_CLIENT_SECRET: ${{ secrets.OAUTH_SECRET }}
+          DIM_API_KEY: ${{ secrets.DIM_API_KEY }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_PATH: app.destinyitemmanager.com

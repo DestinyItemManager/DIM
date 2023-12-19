@@ -24,7 +24,7 @@ export async function getGlobalSettings() {
       url: `/platform_info?flavor=${$DIM_FLAVOR === 'release' ? 'app' : $DIM_FLAVOR}`,
       method: 'GET',
     },
-    true
+    true,
   );
   return response.settings;
 }
@@ -56,7 +56,7 @@ export async function importData(data: ExportResponse) {
 export async function postUpdates(
   platformMembershipId: string | undefined,
   destinyVersion: DestinyVersion | undefined,
-  updates: ProfileUpdate[]
+  updates: ProfileUpdate[],
 ) {
   // Strip properties
   updates = updates.map((u) => ({ action: u.action, payload: u.payload })) as ProfileUpdate[];

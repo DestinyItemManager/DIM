@@ -1,7 +1,9 @@
 // organize-imports-ignore
 // We want our main CSS to load before all other CSS.
 import './app/main.scss';
-import './app/utils/exceptions';
+// Pull the sheet CSS up so it is at the top of the stylesheet and can be easily overridden.
+import './app/dim-ui/Sheet.m.scss';
+import './app/utils/sentry';
 import { saveAccountsToIndexedDB } from 'app/accounts/observers';
 import updateCSSVariables from 'app/css-variables';
 import { loadDimApiData } from 'app/dim-api/actions';
@@ -24,7 +26,7 @@ import { watchLanguageChanges } from './app/settings/observers';
 import { saveWishListToIndexedDB } from './app/wishlists/observers';
 infoLog(
   'app',
-  `DIM v${$DIM_VERSION} (${$DIM_FLAVOR}) - Please report any errors to https://www.github.com/DestinyItemManager/DIM/issues`
+  `DIM v${$DIM_VERSION} (${$DIM_FLAVOR}) - Please report any errors to https://www.github.com/DestinyItemManager/DIM/issues`,
 );
 
 initGoogleAnalytics();
@@ -51,7 +53,7 @@ const i18nPromise = initi18n();
     root.render(
       <Provider store={store}>
         <StorageBroken />
-      </Provider>
+      </Provider>,
     );
     return;
   }

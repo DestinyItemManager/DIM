@@ -176,7 +176,7 @@ body {
 
 body {
   margin: 0 auto;
-  background-color: #313233;
+  background-color: var(--theme-pwa-background);
   color: var(--theme-text);
   font-family: 'Open Sans', sans-serif, 'Destiny Symbols';
   font-size: 12px;

@@ -40,7 +40,7 @@ async function performMeasurement() {
     result.breakdown
       .filter((b) => b.bytes)
       .map((b) => `${b.types.join('/')}: ${humanBytes(b.bytes)}`)
-      .join(', ')
+      .join(', '),
   );
   // 3. Schedule the next measurement.
   scheduleMemoryMeasurement();

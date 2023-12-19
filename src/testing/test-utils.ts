@@ -1,10 +1,10 @@
 import { getBuckets } from 'app/destiny2/d2-buckets';
 import { allTables, buildDefinitionsFromManifest } from 'app/destiny2/d2-definitions';
 import { DIM_LANG_INFOS } from 'app/i18n';
-import { buildStores } from 'app/inventory/d2-stores';
+import { buildStores } from 'app/inventory/store/d2-store-factory';
 import { downloadManifestComponents } from 'app/manifest/manifest-service-json';
 import { humanBytes } from 'app/storage/human-bytes';
-import { delay } from 'app/utils/util';
+import { delay } from 'app/utils/promises';
 import {
   AllDestinyManifestComponents,
   DestinyManifest,
@@ -13,21 +13,20 @@ import {
   ServerResponse,
 } from 'bungie-api-ts/destiny2';
 import { F_OK } from 'constants';
-import fs from 'fs/promises';
 import i18next from 'i18next';
 import fetchMock from 'jest-fetch-mock';
 import en from 'locale/en.json';
 import ja from 'locale/ja.json';
 import _ from 'lodash';
-import path from 'path';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 import { getManifest as d2GetManifest } from '../app/bungie-api/destiny2-api';
 import profile from './data/profile-2023-08-31.json';
-import vendors from './data/vendors-2023-05-24.json';
+import vendors from './data/vendors-2023-11-28.json';
 
 /**
  * Get the current manifest as JSON. Downloads the manifest if not cached.
  */
-// TODO: better to make the trimmed/parallel version
 // TODO: maybe use the fake indexeddb and just insert it from a file on startup??
 // fake indexeddb + mock server (msw or jest-mock-fetch) to simulate the API??
 export async function getTestManifestJson() {
@@ -36,6 +35,14 @@ export async function getTestManifestJson() {
     // download and parse manifest
     const cacheDir = path.resolve(__dirname, '..', '..', 'manifest-cache');
 
+    // In this mode we assume the last-written file in the manifest-cache directory is the one we want
+    if (process.env.LOCAL_MANIFEST) {
+      const result = await getLocalManifest(cacheDir);
+      if (result) {
+        return result;
+      }
+    }
+
     let manifest: DestinyManifest;
     for (let i = 0; ; i++) {
       try {
@@ -43,6 +50,11 @@ export async function getTestManifestJson() {
         break;
       } catch (e) {
         if (i === 4) {
+          // Fall back on local manifest when Bungie.net is down
+          const result = await getLocalManifest(cacheDir);
+          if (result) {
+            return result;
+          }
           throw e;
         }
         await delay(1000);
@@ -58,24 +70,46 @@ export async function getTestManifestJson() {
       .catch(() => false);
 
     if (fileExists) {
-      return JSON.parse(await fs.readFile(filename, 'utf-8')) as AllDestinyManifestComponents;
+      return [
+        JSON.parse(await fs.readFile(filename, 'utf-8')) as AllDestinyManifestComponents,
+        filename,
+      ] as const;
     }
 
     await fs.mkdir(cacheDir, { recursive: true });
 
     const manifestDb = await downloadManifestComponents(
       manifest.jsonWorldComponentContentPaths.en,
-      allTables
+      allTables,
     );
     await fs.writeFile(filename, JSON.stringify(manifestDb), 'utf-8');
-    return manifestDb;
+    return [manifestDb, filename] as const;
   } finally {
     fetchMock.dontMock();
   }
 }
 
+// This gets the local manifest by finding the most recently modified json file in the cache directory.
+async function getLocalManifest(cacheDir: string) {
+  const files = (await fs.readdir(cacheDir)).filter((f) => path.extname(f) === '.json');
+  if (files.length) {
+    const mtimes = await Promise.all(
+      files.map(async (f) => ({
+        filename: f,
+        mtime: (await fs.stat(path.join(cacheDir, f))).mtime.getTime(),
+      })),
+    );
+
+    const filename = path.resolve(cacheDir, _.maxBy(mtimes, (f) => f.mtime)!.filename);
+    return [
+      JSON.parse(await fs.readFile(filename, 'utf-8')) as AllDestinyManifestComponents,
+      filename,
+    ] as const;
+  }
+}
+
 export const getTestDefinitions = _.once(async () => {
-  const manifestJson = await getTestManifestJson();
+  const [manifestJson] = await getTestManifestJson();
   return buildDefinitionsFromManifest(manifestJson);
 });
 
@@ -149,7 +183,7 @@ export function setupi18n() {
       i18next.services.pluralResolver.addRule(
         otherLang,
         // eslint-disable-next-line
-        i18next.services.pluralResolver.getRule('en')
+        i18next.services.pluralResolver.getRule('en'),
       );
     }
   }

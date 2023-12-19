@@ -17,12 +17,12 @@ export function compareBy<T>(fn: (arg: T) => number | string | undefined | boole
     return aVal === bVal
       ? 0 // neither goes first
       : bVal === undefined
-      ? 1 // b goes first
-      : aVal === undefined || aVal < bVal
-      ? -1 // a goes first
-      : aVal > bVal
-      ? 1 // b goes first
-      : 0; // a fallback that would catch only invalid inputs
+        ? 1 // b goes first
+        : aVal === undefined || aVal < bVal
+          ? -1 // a goes first
+          : aVal > bVal
+            ? 1 // b goes first
+            : 0; // a fallback that would catch only invalid inputs
   };
 }
 

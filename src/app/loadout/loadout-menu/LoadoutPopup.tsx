@@ -48,7 +48,7 @@ import { RootState, ThunkResult } from 'app/store/types';
 import { queueAction } from 'app/utils/action-queue';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { emptyArray } from 'app/utils/empty';
-import { errorMessage } from 'app/utils/util';
+import { errorMessage } from 'app/utils/errors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import consumablesIcon from 'destiny-icons/general/consumables.svg';
@@ -83,14 +83,14 @@ export default function LoadoutPopup({
   const loadoutSort = useSelector(settingSelector('loadoutSort'));
   const dispatch = useThunkDispatch();
   const hasClassifiedAffectingMaxPower = useSelector(
-    (state: RootState) => powerLevelSelector(state, dimStore.id)?.problems.hasClassified
+    (state: RootState) => powerLevelSelector(state, dimStore.id)?.problems.hasClassified,
   );
 
   const loadouts = useSelector(loadoutsForClassTypeSelector(dimStore.classType));
   const inGameLoadouts = useSelector((state: RootState) =>
     dimStore.isVault
       ? emptyArray<InGameLoadout>()
-      : inGameLoadoutsForCharacterSelector(state, dimStore.id)
+      : inGameLoadoutsForCharacterSelector(state, dimStore.id),
   );
 
   const [loadoutQuery, setLoadoutQuery] = useState('');
@@ -130,14 +130,14 @@ export default function LoadoutPopup({
 
   const [pillFilteredLoadouts, filterPills, hasSelectedFilters] = useLoadoutFilterPills(
     loadouts,
-    dimStore.id,
-    { className: styles.filterPills, darkBackground: true }
+    dimStore,
+    { className: styles.filterPills, darkBackground: true },
   );
   const filteredLoadouts = searchAndSortLoadoutsByQuery(
     pillFilteredLoadouts,
     loadoutQuery,
     language,
-    loadoutSort
+    loadoutSort,
   );
 
   const blockPropagation = (e: React.MouseEvent) => e.stopPropagation();

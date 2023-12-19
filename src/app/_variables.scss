@@ -38,6 +38,10 @@ $power: $gold;
 // The in-game color for the shaped weapon icon
 $shaped: #d25336;
 
+// Colors for the titles below guardians' names
+$sealtitle: #e1c2ec;
+$gildedtitle: #f9deb8;
+
 // Color of the item border for masterworks
 $masterwork-border-color: #eade8b;
 $deepsight-border-color: $shaped;
@@ -80,6 +84,9 @@ $search-bar-height: 28px;
 $emblem-width: 237px;
 $emblem-height: 48px;
 
+// The z-index for our "temp container" where all temporary items get placed.
+$tempContainerZindex: 1000;
+
 // A mixin that allows targeting styles only when in phone-portrait display mode
 @mixin phone-portrait {
   // This seems like a good breakpoint for portrait based on https://material.io/devices/
@@ -109,42 +116,15 @@ $emblem-height: 48px;
   }
 }
 
-// Show visible scrollbars when scrollable, even if the OS (e.g. macOS) prefers hidden scrollbars.
-@mixin visible-scrollbars {
-  &::-webkit-scrollbar-track {
-    background: #555;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #e4e4e4;
-    border-radius: 3px;
-  }
-
-  &::-webkit-scrollbar {
-    width: 10px;
-
-    &:horizontal {
-      height: 10px;
-    }
-  }
-}
-
-/*
-Utility functions to allow for augmenting a hex color value with an alpha component.
-
-e.g.
-
-  --my-base-color-rgb: #{dim-hex-to-rgb-values(#ff7b00)};
-  background-color: dim-rgb-values-to-rgba(var(--my-base-color-rgb));
-  border-color: dim-rgb-values-to-rgba(var(--my-base-color-rgb), $alpha: 0.75);
-
-produces
-
-  --my-base-color-rgb: 255, 128, 0;
-  background-color: rgba(255, 128, 0, 1);
-  border-color: rgba(255, 128, 0, 0.75);
-
-*/
+// Utility functions to allow for augmenting a hex color value with an alpha component.
+// e.g.
+//   --my-base-color-rgb: #{dim-hex-to-rgb-values(#ff7b00)};
+//   background-color: dim-rgb-values-to-rgba(var(--my-base-color-rgb));
+//   border-color: dim-rgb-values-to-rgba(var(--my-base-color-rgb), $alpha: 0.75);
+// produces
+//   --my-base-color-rgb: 255, 128, 0;
+//   background-color: rgba(255, 128, 0, 1);
+//   border-color: rgba(255, 128, 0, 0.75);
 
 // Converts a 6-character hex color into a comma-separated list of RGB values, to use within the 'rgba' function.
 @function dim-hex-to-rgb-values($hex) {

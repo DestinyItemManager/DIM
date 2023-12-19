@@ -27,7 +27,7 @@ export default function useGame2GiveData() {
       loaded: syncLoaded,
       error: syncError,
     }),
-    [fundraisingState, syncLoaded, syncError]
+    [fundraisingState, syncLoaded, syncError],
   );
 
   const getData = useCallback(async () => {

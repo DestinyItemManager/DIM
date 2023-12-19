@@ -34,7 +34,7 @@ import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
-import { reportException } from '../utils/exceptions';
+import { reportException } from '../utils/sentry';
 import {
   authenticatedHttpClient,
   handleUniquenessViolation,
@@ -56,7 +56,7 @@ export async function getManifest(): Promise<DestinyManifest> {
 }
 
 export async function getLinkedAccounts(
-  bungieMembershipId: string
+  bungieMembershipId: string,
 ): Promise<DestinyLinkedProfilesResponse> {
   const response = await getLinkedProfiles(authenticatedHttpClient, {
     membershipId: bungieMembershipId,
@@ -132,7 +132,7 @@ async function getProfile(
       'BungieService.NoAccountForPlatform',
       t('BungieService.NoAccountForPlatform', {
         platform: platform.platformLabel,
-      })
+      }),
     );
   }
   return response.Response;
@@ -140,7 +140,7 @@ async function getProfile(
 
 export async function getVendors(
   account: DestinyAccount,
-  characterId: string
+  characterId: string,
 ): Promise<DestinyVendorsResponse> {
   const response = await getVendorsApi(authenticatedHttpClient, {
     characterId,
@@ -170,7 +170,7 @@ export async function transfer(
   account: DestinyAccount,
   item: DimItem,
   store: DimStore,
-  amount: number
+  amount: number,
 ): Promise<ServerResponse<number>> {
   const request = {
     characterId: store.isVault || item.location.inPostmaster ? item.owner : store.id,
@@ -212,7 +212,7 @@ export function equip(account: DestinyAccount, item: DimItem): Promise<ServerRes
 export async function equipItems(
   account: DestinyAccount,
   store: DimStore,
-  items: DimItem[]
+  items: DimItem[],
 ): Promise<{ [itemInstanceId: string]: PlatformErrorCodes }> {
   // TODO: test if this is still broken in D2
   // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
@@ -224,7 +224,7 @@ export async function equipItems(
     itemIds: items.map((i) => i.id),
   });
   return Object.fromEntries(
-    response.Response.equipResults.map((r) => [r.itemInstanceId, r.equipStatus])
+    response.Response.equipResults.map((r) => [r.itemInstanceId, r.equipStatus]),
   );
 }
 
@@ -235,7 +235,7 @@ export function setLockState(
   account: DestinyAccount,
   storeId: string,
   item: DimItem,
-  lockState: boolean
+  lockState: boolean,
 ): Promise<ServerResponse<number>> {
   return setItemLockState(authenticatedHttpClient, {
     characterId: storeId,
@@ -252,7 +252,7 @@ export function setTrackedState(
   account: DestinyAccount,
   storeId: string,
   item: DimItem,
-  trackedState: boolean
+  trackedState: boolean,
 ): Promise<ServerResponse<number>> {
   if (!item.trackable) {
     throw new Error("Can't track non-trackable items");
@@ -270,7 +270,7 @@ export async function requestAdvancedWriteActionToken(
   account: DestinyAccount,
   action: AwaType,
   storeId: string,
-  item?: DimItem
+  item?: DimItem,
 ): Promise<AwaAuthorizationResult> {
   const awaInitResult = await awaInitializeRequest(authenticatedHttpClient, {
     type: action,

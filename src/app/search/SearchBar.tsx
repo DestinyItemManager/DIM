@@ -1,6 +1,6 @@
 import ArmorySheet from 'app/armory/ArmorySheet';
 import { saveSearch, searchDeleted, searchUsed } from 'app/dim-api/basic-actions';
-import { recentSearchesSelector } from 'app/dim-api/selectors';
+import { languageSelector, recentSearchesSelector } from 'app/dim-api/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import KeyHelp from 'app/dim-ui/KeyHelp';
 import { Loading } from 'app/dim-ui/Loading';
@@ -8,6 +8,7 @@ import Sheet from 'app/dim-ui/Sheet';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { useFixOverscrollBehavior } from 'app/dim-ui/useFixOverscrollBehavior';
 import { t } from 'app/i18next-t';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { toggleSearchResults } from 'app/shell/actions';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -35,10 +36,10 @@ import {
   AppIcon,
   closeIcon,
   disabledIcon,
+  expandDownIcon,
+  expandUpIcon,
   faClock,
   helpIcon,
-  moveDownIcon,
-  moveUpIcon,
   searchIcon,
   starIcon,
   starOutlineIcon,
@@ -46,6 +47,7 @@ import {
 } from '../shell/icons';
 import HighlightedText from './HighlightedText';
 import styles from './SearchBar.m.scss';
+import { buildArmoryIndex } from './armory-search';
 import createAutocompleter, { SearchItem, SearchItemType } from './autocomplete';
 import { canonicalizeQuery, parseQuery } from './query-parser';
 import { searchConfigSelector } from './search-config';
@@ -66,7 +68,13 @@ const searchItemIcons: { [key in SearchItemType]: string } = {
   [SearchItemType.ArmoryEntry]: helpIcon,
 };
 
-const autoCompleterSelector = createSelector(searchConfigSelector, createAutocompleter);
+const armoryIndexSelector = createSelector(d2ManifestSelector, languageSelector, buildArmoryIndex);
+
+const autoCompleterSelector = createSelector(
+  searchConfigSelector,
+  armoryIndexSelector,
+  createAutocompleter,
+);
 
 const LazyFilterHelp = lazy(() => import(/* webpackChunkName: "filter-help" */ './FilterHelp'));
 
@@ -154,7 +162,7 @@ const Row = memo(
         </button>
       )}
     </>
-  )
+  ),
 );
 
 // TODO: break filter autocomplete into its own object/helpers... with tests
@@ -206,7 +214,7 @@ function SearchBar(
     /** Fired whenever the query has been cleared */
     onClear?: () => void;
   },
-  ref: React.Ref<SearchFilterRef>
+  ref: React.Ref<SearchFilterRef>,
 ) {
   const dispatch = useThunkDispatch();
   const isPhonePortrait = useIsPhonePortrait();
@@ -230,7 +238,7 @@ function SearchBar(
       : _.debounce((query: string) => {
           onQueryChanged(query);
         }, 500),
-    [onQueryChanged]
+    [onQueryChanged],
   );
 
   const liveQuery = useDeferredValue(liveQueryLive);
@@ -258,8 +266,14 @@ function SearchBar(
 
   const caretPosition = inputElement.current?.selectionStart || liveQuery.length;
   const items = useMemo(
-    () => autocompleter(liveQuery, caretPosition, recentSearches, Boolean(mainSearchBar)),
-    [autocompleter, caretPosition, liveQuery, mainSearchBar, recentSearches]
+    () =>
+      autocompleter(
+        liveQuery,
+        caretPosition,
+        recentSearches,
+        /* includeArmory */ Boolean(mainSearchBar),
+      ),
+    [autocompleter, caretPosition, liveQuery, mainSearchBar, recentSearches],
   );
 
   // useCombobox from Downshift manages the state of the dropdown
@@ -292,7 +306,7 @@ function SearchBar(
   // special click handling for filter helper
   function stateReducer(
     state: UseComboboxState<SearchItem>,
-    actionAndChanges: UseComboboxStateChangeOptions<SearchItem>
+    actionAndChanges: UseComboboxStateChangeOptions<SearchItem>,
   ) {
     const { type, changes } = actionAndChanges;
     switch (type) {
@@ -352,7 +366,7 @@ function SearchBar(
       e.stopPropagation();
       dispatch(searchDeleted(item.query.fullText));
     },
-    [dispatch]
+    [dispatch],
   );
 
   // Add some methods for refs to use
@@ -364,7 +378,7 @@ function SearchBar(
       },
       clearFilter,
     }),
-    [clearFilter]
+    [clearFilter],
   );
 
   // Implement tab completion on the tab key. If the highlighted item is an autocomplete suggestion,
@@ -451,7 +465,7 @@ function SearchBar(
       items,
       tabAutocompleteItem,
       menuMaxHeight,
-    ]
+    ],
   );
 
   return (
@@ -525,7 +539,7 @@ function SearchBar(
                 'aria-label': 'toggle menu',
               })}
             >
-              <AppIcon icon={isOpen ? moveUpIcon : moveDownIcon} />
+              <AppIcon icon={isOpen ? expandUpIcon : expandDownIcon} />
             </motion.button>
           </AnimatePresence>
         </LayoutGroup>

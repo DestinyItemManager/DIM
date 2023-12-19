@@ -1,5 +1,5 @@
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
-import { bungieNetPath } from 'app/dim-ui/BungieImage';
+import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
 import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { showGearPower } from 'app/gear-power/gear-power';
@@ -13,6 +13,7 @@ import { StorePowerLevel, powerLevelSelector } from 'app/inventory/store/selecto
 import { statTier } from 'app/loadout-builder/utils';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
+import { getSubclassPlugHashes } from 'app/loadout/item-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
 import { armorStats } from 'app/search/d2-known-values';
@@ -55,7 +56,7 @@ function CharacterPower({ stats }: { stats: PowerStat[] }) {
           )}
         >
           <div
-            className={clsx('stat', { pointerCursor: stat.onClick })}
+            className="stat"
             aria-label={`${stat.name} ${stat.value}`}
             role={stat.onClick ? 'button' : 'group'}
             onClick={stat.onClick}
@@ -173,8 +174,14 @@ function CharacterStats({
           key={stat.hash}
           tooltip={<StatTooltip stat={stat} equippedHashes={equippedHashes} />}
         >
-          <div className="stat" aria-label={`${stat.name} ${stat.value}`} role="group">
-            <img src={stat.icon} alt={stat.name} />
+          <div
+            className={clsx('stat', {
+              boostedValue: stat.breakdown?.some((change) => change.source === 'runtimeEffect'),
+            })}
+            aria-label={`${stat.name} ${stat.value}`}
+            role="group"
+          >
+            <BungieImage src={stat.icon} alt={stat.name} />
             <div>{stat.value}</div>
           </div>
         </PressTip>
@@ -191,7 +198,7 @@ export function StoreCharacterStats({ store }: { store: DimStore }) {
   const subclass = equippedItems.find((i) => i.bucket.hash === BucketHashes.Subclass);
 
   // All equipped items
-  const equippedHashes = new Set([...equippedItems.map((i) => i.hash)]);
+  const equippedHashes = new Set(equippedItems.map((i) => i.hash));
   // Plus all subclass mods
   if (subclass?.sockets) {
     for (const socket of subclass.sockets.allSockets) {
@@ -226,15 +233,20 @@ export function LoadoutCharacterStats({
       .map((li) => ('loadoutItem' in li ? li.item : li)) ?? [];
 
   // All equipped items
-  const equippedHashes = new Set([...equippedItems.map((i) => i.hash)]);
+  const equippedHashes = new Set(equippedItems.map((i) => i.hash));
   // Plus all subclass mods
-  if (subclass?.loadoutItem.socketOverrides) {
-    for (const hash of Object.values(subclass?.loadoutItem.socketOverrides)) {
-      equippedHashes.add(hash);
-    }
+  for (const { plugHash } of getSubclassPlugHashes(subclass)) {
+    equippedHashes.add(plugHash);
   }
 
-  const stats = getLoadoutStats(defs, loadout.classType, subclass, equippedItems, allMods);
+  const stats = getLoadoutStats(
+    defs,
+    loadout.classType,
+    subclass,
+    equippedItems,
+    allMods,
+    loadout.parameters?.includeRuntimeStatBenefits ?? true,
+  );
 
   return <CharacterStats showTier stats={stats} equippedHashes={equippedHashes} />;
 }

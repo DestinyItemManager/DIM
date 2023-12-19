@@ -6,7 +6,8 @@ import { isReducedModCostVariant } from 'app/loadout/mod-utils';
 import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { ThunkResult } from 'app/store/types';
 import { CancelToken } from 'app/utils/cancel';
-import { errorMessage, uniqBy } from 'app/utils/util';
+import { uniqBy } from 'app/utils/collections';
+import { errorMessage } from 'app/utils/errors';
 import { Destiny2CoreSettings } from 'bungie-api-ts/core';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 
@@ -28,7 +29,7 @@ export type SocketKind =
 
 function identifySocket(
   socket: DimSocket,
-  plugDef: PluggableInventoryItemDefinition
+  plugDef: PluggableInventoryItemDefinition,
 ): SocketKind | undefined {
   if (plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.Shaders)) {
     return 'shaders';
@@ -51,7 +52,7 @@ function identifySocket(
 export function collectSocketsToStrip(
   filteredItems: DimItem[],
   destiny2CoreSettings: Destiny2CoreSettings | undefined,
-  defs: D2ManifestDefinitions
+  defs: D2ManifestDefinitions,
 ) {
   const socketsByKind: {
     [kind in SocketKind]: {
@@ -141,7 +142,7 @@ export function collectSocketsToStrip(
 export function doStripSockets(
   socketList: StripAction[],
   cancelToken: CancelToken,
-  progressCallback: (idx: number, errorMsg: string | undefined) => void
+  progressCallback: (idx: number, errorMsg: string | undefined) => void,
 ): ThunkResult {
   return async (dispatch) => {
     for (let i = 0; i < socketList.length; i++) {
@@ -151,7 +152,7 @@ export function doStripSockets(
 
       try {
         const socket = entry.item.sockets!.allSockets.find(
-          (i) => i.socketIndex === entry.socketIndex
+          (i) => i.socketIndex === entry.socketIndex,
         )!;
         await dispatch(insertPlug(entry.item, socket, socket.emptyPlugItemHash!));
         progressCallback(i, undefined);

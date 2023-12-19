@@ -308,10 +308,6 @@ export interface DimStat {
    * This is true of armor stats.
    */
   additive: boolean;
-  /**
-   * Whether the stat is always active or certain conditions need to be met before it is.
-   */
-  isConditionallyActive: boolean;
 }
 
 export interface D1Stat extends DimStat {

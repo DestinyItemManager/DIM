@@ -1,8 +1,8 @@
 import { t } from 'app/i18next-t';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { deleteDatabase, get, set } from 'app/storage/idb-keyval';
-import { reportException } from 'app/utils/exceptions';
 import { errorLog } from 'app/utils/log';
+import { reportException } from 'app/utils/sentry';
 
 export function StorageBroken() {
   return (
@@ -10,7 +10,7 @@ export function StorageBroken() {
       <ErrorPanel
         title={t('Help.NoStorage')}
         fallbackMessage={t('Help.NoStorageMessage')}
-        showTwitters={true}
+        showSocials
       />
     </div>
   );

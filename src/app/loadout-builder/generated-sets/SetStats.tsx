@@ -6,6 +6,7 @@ import { AppIcon, powerIndicatorIcon } from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import _ from 'lodash';
 import { ArmorStatHashes, ArmorStats, ModStatChanges, ResolvedStatConstraint } from '../types';
 import { remEuclid, statTierWithHalf } from '../utils';
 import styles from './SetStats.m.scss';
@@ -15,7 +16,7 @@ import { calculateTotalTier, sumEnabledStats } from './utils';
  * Displays the overall tier and per-stat tier of a generated loadout set.
  */
 // TODO: would be a lot easier if this was just passed a Loadout or FullyResolvedLoadout...
-export default function SetStats({
+export function SetStats({
   stats,
   getStatsBreakdown,
   maxPower,
@@ -24,6 +25,7 @@ export default function SetStats({
   className,
   existingLoadoutName,
   equippedHashes,
+  autoStatMods,
 }: {
   stats: ArmorStats;
   getStatsBreakdown: () => ModStatChanges;
@@ -33,29 +35,19 @@ export default function SetStats({
   className?: string;
   existingLoadoutName?: string;
   equippedHashes: Set<number>;
+  autoStatMods: boolean;
 }) {
   const defs = useD2Definitions()!;
   const totalTier = calculateTotalTier(stats);
   const enabledTier = sumEnabledStats(
     stats,
-    resolvedStatConstraints.filter((c) => !c.ignored)
+    resolvedStatConstraints.filter((c) => !c.ignored),
   );
 
   return (
     <div className={clsx(styles.container, className)}>
       <div className={styles.tierLightContainer}>
-        <span className={clsx(styles.tier)}>
-          {t('LoadoutBuilder.TierNumber', {
-            tier: enabledTier,
-          })}
-        </span>
-        {enabledTier !== totalTier && (
-          <span className={clsx(styles.tier, styles.nonActiveStat)}>
-            {` (${t('LoadoutBuilder.TierNumber', {
-              tier: totalTier,
-            })})`}
-          </span>
-        )}
+        <TotalTier enabledTier={enabledTier} totalTier={totalTier} />
       </div>
       {resolvedStatConstraints.map((c) => {
         const statHash = c.statHash as ArmorStatHashes;
@@ -82,6 +74,7 @@ export default function SetStats({
               isBoosted={boostedStats.has(statHash)}
               stat={statDef}
               value={value}
+              showHalfStat={!autoStatMods}
             />
           </PressTip>
         );
@@ -105,20 +98,22 @@ function Stat({
   isActive,
   isBoosted,
   value,
+  showHalfStat,
 }: {
   stat: DestinyStatDefinition;
   isActive: boolean;
   isBoosted: boolean;
   value: number;
+  showHalfStat: boolean;
 }) {
-  const isHalfTier = isActive && remEuclid(value, 10) >= 5;
+  const isHalfTier = showHalfStat && isActive && remEuclid(value, 10) >= 5;
   return (
     <span
       className={clsx(styles.statSegment, {
         [styles.nonActiveStat]: !isActive,
       })}
     >
-      <BungieImage className={clsx(styles.statIcon)} src={stat.displayProperties.icon} />
+      <BungieImage className={styles.statIcon} src={stat.displayProperties.icon} />
       <span
         className={clsx(styles.tier, {
           [styles.halfTierValue]: isHalfTier,
@@ -130,5 +125,60 @@ function Stat({
         })}
       </span>
     </span>
+  );
+}
+
+function TotalTier({ totalTier, enabledTier }: { totalTier: number; enabledTier: number }) {
+  return (
+    <>
+      <span className={styles.tier}>
+        {t('LoadoutBuilder.TierNumber', {
+          tier: enabledTier,
+        })}
+      </span>
+      {enabledTier !== totalTier && (
+        <span className={clsx(styles.tier, styles.nonActiveStat)}>
+          {` (${t('LoadoutBuilder.TierNumber', {
+            tier: totalTier,
+          })})`}
+        </span>
+      )}
+    </>
+  );
+}
+
+export function ReferenceTiers({
+  resolvedStatConstraints,
+}: {
+  resolvedStatConstraints: ResolvedStatConstraint[];
+}) {
+  const defs = useD2Definitions()!;
+  const totalTier = _.sumBy(resolvedStatConstraints, (c) => c.minTier);
+  const enabledTier = _.sumBy(resolvedStatConstraints, (c) => (c.ignored ? 0 : c.minTier));
+
+  return (
+    <div className={styles.container}>
+      <TotalTier enabledTier={enabledTier} totalTier={totalTier} />
+      {resolvedStatConstraints.map((c) => {
+        const statHash = c.statHash as ArmorStatHashes;
+        const statDef = defs.Stat.get(statHash);
+        const tier = c.minTier;
+        return (
+          <span
+            key={statHash}
+            className={clsx(styles.statSegment, {
+              [styles.nonActiveStat]: c.ignored,
+            })}
+          >
+            <BungieImage className={styles.statIcon} src={statDef.displayProperties.icon} />
+            <span className={styles.tier}>
+              {t('LoadoutBuilder.TierNumber', {
+                tier,
+              })}
+            </span>
+          </span>
+        );
+      })}
+    </div>
   );
 }

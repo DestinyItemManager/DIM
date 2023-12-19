@@ -9,7 +9,7 @@ export const t = (
     | { count?: number; context?: string; metadata?: { context?: string[]; keys?: string } }
     | {
         [arg: string]: number | string;
-      }
+      },
 ): string => originalT(key, opts);
 
 /**

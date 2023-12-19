@@ -8,7 +8,7 @@ import {
   setNotes,
 } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { uniqBy } from 'app/utils/util';
+import { uniqBy } from 'app/utils/collections';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React from 'react';
@@ -22,7 +22,7 @@ const classTypeOptionsSelector = createSelector(storesSelector, (stores) => {
     value: DestinyClass;
   }[] = uniqBy(
     stores.filter((s) => !s.isVault),
-    (store) => store.classType
+    (store) => store.classType,
   ).map((store) => ({ label: store.className, value: store.classType }));
   return [{ label: t('Loadouts.Any'), value: DestinyClass.Unknown }, ...classTypeValues];
 });
@@ -46,7 +46,7 @@ export default function LoadoutDrawerOptions({
 
   const handleSetClearSpace = (
     e: React.ChangeEvent<HTMLInputElement>,
-    category: 'Weapons' | 'Armor'
+    category: 'Weapons' | 'Armor',
   ) => setLoadout(setClearSpace(e.target.checked, category));
 
   const addNotes = () => setLoadout(setNotes(''));

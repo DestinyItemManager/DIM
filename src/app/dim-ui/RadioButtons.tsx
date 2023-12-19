@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 import { memo, useMemo } from 'react';
-import { PressTip } from './PressTip';
 import styles from './RadioButtons.m.scss';
 
 export interface Option<T extends string | number> {
@@ -42,7 +41,7 @@ function RadioButtons<T extends string | number>({
 }
 
 function RadioButton<T extends string | number>({
-  option: { tooltip, label, value },
+  option: { label, value },
   name,
   selected,
   onChange,
@@ -53,16 +52,14 @@ function RadioButton<T extends string | number>({
   onChange: (value: T) => void;
 }) {
   return (
-    <PressTip
-      tooltip={tooltip}
-      elementType="label"
+    <label
       className={clsx(styles.button, {
         [styles.selected]: selected,
       })}
     >
       <input type="radio" name={name} checked={selected} onChange={() => onChange(value)} />
       {label}
-    </PressTip>
+    </label>
   );
 }
 

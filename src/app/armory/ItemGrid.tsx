@@ -52,7 +52,7 @@ function BasicItemTrigger({
   onShowPopup: (state: PopupState) => void;
   children: (
     ref: React.Ref<HTMLDivElement>,
-    showPopup: (e: React.MouseEvent) => void
+    showPopup: (e: React.MouseEvent) => void,
   ) => React.ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -62,7 +62,7 @@ function BasicItemTrigger({
       e.stopPropagation();
       onShowPopup({ item, element: ref.current! });
     },
-    [item, onShowPopup]
+    [item, onShowPopup],
   );
 
   return children(ref, clicked) as JSX.Element;

@@ -53,11 +53,11 @@ test.each(sortCases)('localizedSorter: %s', (language, input, output) => {
         localizedSorter(
           language,
           // un-map the objects into their sort key
-          (o) => o.name
-        )
+          (o) => o.name,
+        ),
       )
       // Map back to strings to make the matcher easier
-      .map((o) => o.name)
+      .map((o) => o.name),
   ).toStrictEqual(output);
 });
 
@@ -92,5 +92,5 @@ test.each(includeCases)(
   'localizedIncludes("%s", "%s")("%s") === %s',
   (language, query, input, matches) => {
     expect(localizedIncludes(language, query)(input)).toBe(matches);
-  }
+  },
 );

@@ -3,8 +3,8 @@ import { t } from 'app/i18next-t';
 import { locateItem$ } from 'app/inventory/locate-item';
 import { DimStore } from 'app/inventory/store-types';
 import StoreStats from 'app/store-stats/StoreStats';
+import { wrap } from 'app/utils/collections';
 import { useEventBusListener } from 'app/utils/hooks';
-import { wrap } from 'app/utils/util';
 import { PanInfo, motion } from 'framer-motion';
 import { useCallback, useState } from 'react';
 import { InventoryBucket, InventoryBuckets } from '../inventory/inventory-buckets';
@@ -55,8 +55,8 @@ export default function PhoneStores({ stores, buckets, singleCharacter }: Props)
           itemPop(item);
         }
       },
-      [currentStore?.id, selectedStoreId, singleCharacter]
-    )
+      [currentStore?.id, selectedStoreId, singleCharacter],
+    ),
   );
 
   if (!stores.length || !buckets || !vault || !currentStore) {

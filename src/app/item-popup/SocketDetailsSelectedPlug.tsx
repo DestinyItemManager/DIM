@@ -14,16 +14,22 @@ import {
 import { interpolateStatValue } from 'app/inventory/store/stats';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
-import { DEFAULT_ORNAMENTS, EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
+import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { refreshIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { filterMap } from 'app/utils/collections';
+import { errorMessage } from 'app/utils/errors';
 import { isPlugStatActive } from 'app/utils/item-utils';
 import { usePlugDescriptions } from 'app/utils/plug-descriptions';
-import { errorMessage, filterMap } from 'app/utils/util';
 import { DestinyItemSocketEntryDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { PlugCategoryHashes, SocketCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import {
+  PlugCategoryHashes,
+  SocketCategoryHashes,
+  StatHashes,
+  TraitHashes,
+} from 'data/d2/generated-enums';
 import { motion } from 'framer-motion';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -76,7 +82,7 @@ function uiCategorizeSocket(defs: D2ManifestDefinitions, socket: DestinyItemSock
         (p) =>
           whitelistPlugCategoryToLocKey[
             p.categoryHash as keyof typeof whitelistPlugCategoryToLocKey
-          ]
+          ],
       );
       if (plug) {
         return whitelistPlugCategoryToLocKey[
@@ -141,7 +147,7 @@ export default function SocketDetailsSelectedPlug({
     }
 
     const statGroupDef = defs.StatGroup.get(
-      defs.InventoryItem.get(item.hash).stats!.statGroupHash!
+      defs.InventoryItem.get(item.hash).stats!.statGroupHash!,
     );
 
     const statDisplay = statGroupDef?.scaledStats.find((s) => s.statHash === stat.statTypeHash);
@@ -224,12 +230,13 @@ export default function SocketDetailsSelectedPlug({
 
   const plugDescriptions = usePlugDescriptions(
     plug,
-    stats.map((stat) => ({ value: stat.modValue, statHash: stat.dimStat.statHash }))
+    stats.map((stat) => ({ value: stat.modValue, statHash: stat.dimStat.statHash })),
   );
 
   // Only show Exotic catalyst requirements if the catalyst is incomplete. We assume
   // that an Exotic weapon can only be masterworked if its catalyst is complete.
-  const hideRequirements = plug.traitHashes?.includes(EXOTIC_CATALYST_TRAIT) && item.masterwork;
+  const hideRequirements =
+    plug.traitHashes?.includes(TraitHashes.ItemExoticCatalyst) && item.masterwork;
 
   return (
     <div className={clsx(styles.selectedPlug, { [styles.hasStats]: stats.length > 0 })}>

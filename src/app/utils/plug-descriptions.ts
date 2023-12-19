@@ -8,9 +8,8 @@ import { getStatSortOrder, isAllowedItemStat, isAllowedPlugStat } from 'app/inve
 import { activityModPlugCategoryHashes } from 'app/loadout/known-values';
 import { isModStatActive } from 'app/loadout/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
 import { DestinyClass, ItemPerkVisibility } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, StatHashes, TraitHashes } from 'data/d2/generated-enums';
 import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
@@ -51,7 +50,7 @@ export function usePlugDescriptions(
    * If set, returns Bungie descriptions even when the descriptions setting is on Community only.
    * Consumers set this if they can't display community descriptions.
    */
-  forceUseBungieDescriptions?: boolean
+  forceUseBungieDescriptions?: boolean,
 ): DimPlugDescriptions {
   const defs = useD2Definitions();
   const allClarityDescriptions = useSelector(clarityDescriptionsSelector);
@@ -85,7 +84,7 @@ export function usePlugDescriptions(
       const statDef = defs.Stat.get(stat.statHash);
       if (statDef) {
         const statNames = [statDef.displayProperties.name].concat(
-          statNameAliases[stat.statHash as StatHashes] ?? []
+          statNameAliases[stat.statHash as StatHashes] ?? [],
         );
         for (const statName of statNames) {
           if (stat.value < 0) {
@@ -131,7 +130,7 @@ export function usePlugDescriptions(
 function getPerkDescriptions(
   plug: PluggableInventoryItemDefinition,
   defs: D2ManifestDefinitions,
-  usedStrings: Set<string>
+  usedStrings: Set<string>,
 ): DimPlugPerkDescription[] {
   const results: DimPlugPerkDescription[] = [];
 
@@ -227,7 +226,7 @@ function getPerkDescriptions(
 
   Other plugs (e.g. Exotic catalysts) always use the description field to store their requirements.
   */
-  if (plug.traitHashes?.includes(EXOTIC_CATALYST_TRAIT)) {
+  if (plug.traitHashes?.includes(TraitHashes.ItemExoticCatalyst)) {
     addPerkDescriptions();
     addDescriptionAsRequirement();
   } else if (plug.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)) {
@@ -291,13 +290,13 @@ function getPerkDescriptions(
 
 export function getPlugDefStats(
   plugDef: PluggableInventoryItemDefinition,
-  classType: DestinyClass | undefined
+  classType: DestinyClass | undefined,
 ) {
   return plugDef.investmentStats
     .filter(
       (stat) =>
         (isAllowedItemStat(stat.statTypeHash) || isAllowedPlugStat(stat.statTypeHash)) &&
-        (classType === undefined || isModStatActive(classType, plugDef.hash, stat))
+        (classType === undefined || isModStatActive(classType, plugDef.hash, stat)),
     )
     .map((stat) => ({
       statHash: stat.statTypeHash,
@@ -325,9 +324,9 @@ export function getDimPlugStats(item: DimItem, plug: DimPlug) {
             stat.statHash,
             Boolean(
               plug.plugDef.investmentStats.find((s) => s.statTypeHash === stat.statHash)
-                ?.isConditionallyActive
-            )
-          )
+                ?.isConditionallyActive,
+            ),
+          ),
       )
       .sort(compareBy((stat) => getStatSortOrder(stat.statHash)));
   }

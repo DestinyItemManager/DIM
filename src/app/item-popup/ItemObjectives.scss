@@ -98,7 +98,7 @@
   background-color: transparent;
 }
 .objective-description {
-  position: relative;
+  position: relative; // so it z-stacks over the progress bar
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -108,7 +108,7 @@
 }
 
 .objective-text {
-  z-index: 2;
+  position: relative; // so it z-stacks over the progress bar
   margin-right: 4px;
   backface-visibility: hidden;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);

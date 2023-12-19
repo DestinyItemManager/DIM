@@ -16,7 +16,6 @@ const missingSources: { [key: string]: number[] } = {
     3871537958, // Descending Echo Helm
     4050474396, // Descending Echo Mark
   ],
-  ada: [],
   adventure: [
     11686457, // Unethical Experiments Cloak
     11686458, // Orobas Vectura Cloak
@@ -37,9 +36,6 @@ const missingSources: { [key: string]: number[] } = {
     3706457514, // Gearhead Grips
     3706457515, // Songbreaker Grips
   ],
-  banshee: [],
-  battlegrounds: [],
-  blackarmory: [],
   calus: [
     17280095, // Shadow's Strides
     30962015, // Boots of the Ace-Defiant
@@ -586,9 +582,6 @@ const missingSources: { [key: string]: number[] } = {
     4283953067, // Arc Reserves
     4288395850, // Cloak of Retelling
   ],
-  cayde6: [],
-  compass: [],
-  contact: [],
   cos: [
     17280095, // Shadow's Strides
     256904954, // Shadow's Grips
@@ -621,8 +614,6 @@ const missingSources: { [key: string]: number[] } = {
     3759659288, // Shadow's Plate
     4152814806, // Shadow's Greaves
   ],
-  crota: [],
-  crotasend: [],
   crownofsorrow: [
     17280095, // Shadow's Strides
     256904954, // Shadow's Grips
@@ -935,10 +926,10 @@ const missingSources: { [key: string]: number[] } = {
     4251770244, // Boots of the Ace-Defiant
     4251770245, // Boots of the Emperor's Agent
   ],
-  deepstonecrypt: [],
   deluxe: [
     1952218242, // Sequence Flourish
     2683682447, // Traitor's Fate
+    3320175784, // Adventurous Spirit
   ],
   do: [
     66235782, // Anti-Extinction Grasps
@@ -961,16 +952,22 @@ const missingSources: { [key: string]: number[] } = {
     99549082, // Reverie Dawn Helm
     185695659, // Reverie Dawn Hood
     188778964, // Reverie Dawn Boots
+    250721843, // Abide the Return
     344548395, // Reverie Dawn Strides
+    355922321, // Vouchsafe
+    871900124, // Retold Tale
     934704429, // Reverie Dawn Plate
     998096007, // Reverie Dawn Hood
     1452333832, // Reverie Dawn Boots
     1593474975, // Reverie Dawn Hauberk
     1705856569, // Reverie Dawn Grasps
+    1874424704, // Twilight Oath
     1903023095, // Reverie Dawn Grasps
     1928769139, // Reverie Dawn Bond
     1980768298, // Reverie Dawn Mark
+    2140635451, // Sleepless
     2336820707, // Reverie Dawn Gauntlets
+    2465372924, // Tigerspite
     2467635521, // Reverie Dawn Hauberk
     2503434573, // Reverie Dawn Gauntlets
     2704876322, // Reverie Dawn Tabard
@@ -985,6 +982,7 @@ const missingSources: { [key: string]: number[] } = {
     3343583008, // Reverie Dawn Mark
     3602032567, // Reverie Dawn Bond
     3711557785, // Reverie Dawn Strides
+    3723679465, // Waking Vigil
     4070309619, // Reverie Dawn Plate
     4097166900, // Reverie Dawn Helm
     4257800469, // Reverie Dawn Greaves
@@ -1051,7 +1049,6 @@ const missingSources: { [key: string]: number[] } = {
     4188366993, // Ancient Apocalypse Robes
     4255727106, // Ancient Apocalypse Hood
   ],
-  dsc: [],
   duality: [
     145651147, // Deep Explorer Vest
     420895300, // Deep Explorer Mark
@@ -1077,49 +1074,63 @@ const missingSources: { [key: string]: number[] } = {
     420895300, // Deep Explorer Mark
     436695703, // TM-Cogburn Custom Plate
     498918879, // TM-Earp Custom Grips
+    557092665, // Dark Age Cloak
     587312237, // Twisting Echo Grips
+    632989816, // Dark Age Gauntlets
     638836294, // Plate of the Taken King
     708921139, // TM-Cogburn Custom Legguards
     767306222, // Grasps of the Taken King
+    806004493, // Dark Age Gloves
     833653807, // Twisting Echo Strides
     837865641, // Vestment of the Taken King
+    851401651, // Dark Age Overcoat
     956827695, // Mark of the Taken King
     1148597205, // Deep Explorer Grasps
     1349399252, // TM-Earp Custom Cloaked Stetson
+    1476803535, // Dark Age Legbraces
     1664757090, // Gauntlets of the Taken King
     1756483796, // Twisting Echo Mask
     1913823311, // Gloves of the Taken King
+    1933599476, // Dark Age Visor
     1951355667, // Twisting Echo Vest
     2057955626, // Deep Explorer Vestments
     2244604734, // Corrupting Echo Gloves
     2341879253, // TM-Moss Custom Bond
+    2426502022, // Dark Age Strides
     2488323569, // Boots of the Taken King
     2499351855, // Deep Explorer Gauntlets
     2565015142, // TM-Cogburn Custom Mark
     2618168932, // Bond of the Taken King
     2643850526, // Hood of the Taken King
     2649394513, // Deep Explorer Greaves
+    2662590925, // Dark Age Mark
     2663987096, // Corrupting Echo Boots
     2694773307, // Deep Explorer Bond
     2724719415, // Deep Explorer Strides
+    2771011469, // Dark Age Mask
     2797334754, // Deep Explorer Cloak
     2819810688, // Deep Explorer Boots
     2820604007, // Mask of the Taken King
     2850384360, // Strides of the Taken King
     2885497847, // Descending Echo Gauntlets
     2935559305, // Deep Explorer Plate
+    2963224754, // Dark Age Sabatons
     3048458482, // Corrupting Echo Robes
+    3056827626, // Dark Age Bond
     3171090615, // Corrupting Echo Cover
     3260781446, // Deep Explorer Gloves
     3267969345, // Descending Echo Cage
     3270955774, // Deep Explorer Helmet
     3326914239, // Deep Explorer Hood
     3344225390, // TM-Earp Custom Hood
+    3423574140, // Dark Age Grips
     3511740432, // TM-Moss Custom Gloves
     3570749779, // Cloak of the Taken King
+    3683772388, // Dark Age Harness
     3685276035, // Corrupting Echo Bond
     3708902812, // Greaves of the Taken King
     3715136417, // TM-Earp Custom Chaps
+    3735435664, // Dark Age Chestrig
     3870375786, // TM-Moss Custom Pants
     3871537958, // Descending Echo Helm
     3933500353, // TM-Cogburn Custom Gauntlets
@@ -1127,6 +1138,7 @@ const missingSources: { [key: string]: number[] } = {
     4039955353, // TM-Moss Custom Hat
     4047213660, // Deep Explorer Mask
     4050474396, // Descending Echo Mark
+    4090037601, // Dark Age Helm
     4130276947, // Helm of the Taken King
     4177293424, // TM-Cogburn Custom Cover
     4288623897, // TM-Earp Custom Vest
@@ -1154,7 +1166,6 @@ const missingSources: { [key: string]: number[] } = {
     3973359167, // Wildwood Mask
     4051755349, // Wildwood Boots
   ],
-  enclave: [],
   eow: [
     239489770, // Bond of Sekris
     253344425, // Mask of Feltroc
@@ -1187,17 +1198,13 @@ const missingSources: { [key: string]: number[] } = {
     3964287245, // Wraps of Sekris
     4229161783, // Boots of Feltroc
   ],
-  ep: [],
-  europa: [],
   events: [
     116784191, // Solstice Boots (Renewed)
     140842223, // Solstice Mask (Drained)
     143299650, // Solstice Plate (Renewed)
     153144587, // Solstice Cloak (Drained)
-    177568179, // Horror Story
     226436555, // Solstice Mask (Renewed)
     231432261, // Solstice Bond (Resplendent)
-    233896077, // Compass Rose
     234970842, // Solstice Boots (Resplendent)
     250513201, // Solstice Greaves (Resplendent)
     335763433, // Solstice Plate (Resplendent)
@@ -1206,6 +1213,7 @@ const missingSources: { [key: string]: number[] } = {
     419435523, // Inaugural Revelry Grips
     450844637, // Solstice Robes (Majestic)
     492834021, // Inaugural Revelry Hood
+    495940989, // Avalanche
     518930465, // Solstice Grasps (Rekindled)
     531005896, // Solstice Cloak (Resplendent)
     540653483, // Solstice Vest (Scorched)
@@ -1222,6 +1230,7 @@ const missingSources: { [key: string]: number[] } = {
     1141639721, // Solstice Gauntlets (Scorched)
     1229961870, // Solstice Vest (Renewed)
     1273510836, // Inaugural Revelry Wraps
+    1280894514, // Mechabre
     1288683596, // Solstice Plate (Majestic)
     1341471164, // Solstice Mask (Scorched)
     1361620030, // Solstice Mark (Scorched)
@@ -1251,6 +1260,7 @@ const missingSources: { [key: string]: number[] } = {
     2150778206, // Solstice Gloves (Scorched)
     2155928170, // Solstice Mark (Rekindled)
     2156817213, // Solstice Cloak (Majestic)
+    2261046232, // Jurassic Green
     2287277682, // Solstice Robes (Rekindled)
     2291082292, // Solstice Gauntlets (Majestic)
     2328435454, // Inaugural Revelry Helm
@@ -1270,6 +1280,8 @@ const missingSources: { [key: string]: number[] } = {
     2770157746, // Solstice Mask (Resplendent)
     2777913564, // Warm Winter Cloak
     2805101184, // Solstice Vest (Majestic)
+    2812100428, // Stay Frosty
+    2814093983, // Cold Front
     2824302184, // Solstice Robes (Resplendent)
     2837295684, // Inaugural Revelry Mark
     2877046370, // Solstice Strides (Majestic)
@@ -1280,17 +1292,18 @@ const missingSources: { [key: string]: number[] } = {
     3015197581, // Solstice Gauntlets (Rekindled)
     3039687635, // Solstice Helm (Drained)
     3077367255, // Solstice Hood (Scorched)
-    3103255595, // Jurassic Green
     3104384024, // Solstice Boots (Rekindled)
     3159052337, // Solstice Mask (Majestic)
     3192336962, // Solstice Cloak (Scorched)
     3236510875, // Solstice Grasps (Resplendent)
     3240434620, // Something New
+    3400256755, // Zephyr
     3559361670, // The Title
+    3573686365, // Glacioclasm
     3611487543, // Solstice Hood (Rekindled)
     3685996623, // Solstice Greaves (Rekindled)
     3748622249, // Solstice Hood (Resplendent)
-    3871226707, // Mechabre
+    3829285960, // Horror Story
     3892841518, // Solstice Gauntlets (Renewed)
     3929403535, // Solstice Gauntlets (Resplendent)
     3932814032, // Solstice Strides (Drained)
@@ -1357,7 +1370,6 @@ const missingSources: { [key: string]: number[] } = {
     3947596543, // Green Dawning Lanterns
     4059030097, // Winterhart Mask
   ],
-  evidenceboard: [],
   fwc: [
     680327840, // Simulator Greaves
     807866445, // Simulator Gloves
@@ -1593,6 +1605,23 @@ const missingSources: { [key: string]: number[] } = {
     3939809874, // Plate of Transcendence
     4177973942, // Vest of Transcendence
   ],
+  ghostsofthedeep: [
+    51786498, // Vest of the Taken King
+    638836294, // Plate of the Taken King
+    767306222, // Grasps of the Taken King
+    837865641, // Vestment of the Taken King
+    956827695, // Mark of the Taken King
+    1664757090, // Gauntlets of the Taken King
+    1913823311, // Gloves of the Taken King
+    2488323569, // Boots of the Taken King
+    2618168932, // Bond of the Taken King
+    2643850526, // Hood of the Taken King
+    2820604007, // Mask of the Taken King
+    2850384360, // Strides of the Taken King
+    3570749779, // Cloak of the Taken King
+    3708902812, // Greaves of the Taken King
+    4130276947, // Helm of the Taken King
+  ],
   gos: [
     11974904, // Greaves of Ascendancy
     281660259, // Temptation's Mark
@@ -1609,6 +1638,23 @@ const missingSources: { [key: string]: number[] } = {
     3887559710, // Gauntlets of Exaltation
     3939809874, // Plate of Transcendence
     4177973942, // Vest of Transcendence
+  ],
+  gotd: [
+    51786498, // Vest of the Taken King
+    638836294, // Plate of the Taken King
+    767306222, // Grasps of the Taken King
+    837865641, // Vestment of the Taken King
+    956827695, // Mark of the Taken King
+    1664757090, // Gauntlets of the Taken King
+    1913823311, // Gloves of the Taken King
+    2488323569, // Boots of the Taken King
+    2618168932, // Bond of the Taken King
+    2643850526, // Hood of the Taken King
+    2820604007, // Mask of the Taken King
+    2850384360, // Strides of the Taken King
+    3570749779, // Cloak of the Taken King
+    3708902812, // Greaves of the Taken King
+    4130276947, // Helm of the Taken King
   ],
   grasp: [
     286271818, // Twisting Echo Cloak
@@ -1627,8 +1673,6 @@ const missingSources: { [key: string]: number[] } = {
     3871537958, // Descending Echo Helm
     4050474396, // Descending Echo Mark
   ],
-  gunsmith: [],
-  harbinger: [],
   haunted: [
     3864896927, // Nightmare Harvester
   ],
@@ -1886,8 +1930,6 @@ const missingSources: { [key: string]: number[] } = {
     4211068696, // Iron Truage Legs
     4248834293, // Iron Remembrance Vest
   ],
-  kf: [],
-  kingsfall: [],
   lastwish: [
     4968701, // Greaves of the Great Hunt
     16387641, // Mark of the Great Hunt
@@ -2280,9 +2322,8 @@ const missingSources: { [key: string]: number[] } = {
   limited: [
     1952218242, // Sequence Flourish
     2683682447, // Traitor's Fate
+    3320175784, // Adventurous Spirit
   ],
-  lost: [],
-  lostsectors: [],
   lw: [
     4968701, // Greaves of the Great Hunt
     16387641, // Mark of the Great Hunt
@@ -2338,9 +2379,6 @@ const missingSources: { [key: string]: number[] } = {
     3885259140, // Transfiguration
     4219088013, // Helm of the Great Hunt
   ],
-  mars: [],
-  menagerie: [],
-  mercury: [],
   moon: [
     193805725, // Dreambane Cloak
     272413517, // Dreambane Helm
@@ -2358,7 +2396,6 @@ const missingSources: { [key: string]: number[] } = {
     3571441640, // Dreambane Grips
     3692187003, // Dreambane Robes
   ],
-  neomuna: [],
   nessus: [
     11686457, // Unethical Experiments Cloak
     56157064, // Exodus Down Gauntlets
@@ -2433,15 +2470,16 @@ const missingSources: { [key: string]: number[] } = {
     555148853, // Wendigo GL3 (Adept)
     681067419, // Hung Jury SR4 (Adept)
     772231794, // Hung Jury SR4
+    852228780, // Uzume RR4 (Adept)
     912150785, // Mindbender's Ambition (Adept)
     1094005544, // Mindbender's Ambition
+    2065081837, // Uzume RR4
     2378101424, // The Militia's Birthright (Adept)
     3183283212, // Wendigo GL3
     3836861464, // THE SWARM (Adept)
     4074251943, // Hung Jury SR4 (Adept)
     4281371574, // Hung Jury SR4
   ],
-  nightmare: [],
   nm: [
     25798127, // Sovereign Grips
     106359434, // Coronation Mark
@@ -2459,16 +2497,11 @@ const missingSources: { [key: string]: number[] } = {
     3323316553, // Sovereign Vest
     4083497488, // Sovereign Gloves
   ],
-  'pinnacle-weapon': [],
-  pit: [],
   plunder: [
     912150785, // Mindbender's Ambition (Adept)
     2378101424, // The Militia's Birthright (Adept)
     2871264750, // Skeleton Key
   ],
-  presage: [],
-  prestige: [],
-  prophecy: [],
   psiops: [
     3358687360, // Synaptic Spear
   ],
@@ -2713,10 +2746,6 @@ const missingSources: { [key: string]: number[] } = {
     1631448645, // Seraph Cipher
     4074251943, // Hung Jury SR4 (Adept)
   ],
-  'ritual-weapon': [],
-  ron: [],
-  root: [],
-  rootofnightmares: [],
   saint14: [
     3360014173, // The Lantern of Osiris
   ],
@@ -2769,7 +2798,6 @@ const missingSources: { [key: string]: number[] } = {
   servitor: [
     3380377210, // Paradrome Cube
   ],
-  shatteredthrone: [],
   shaxx: [
     85800627, // Ankaa Seeker IV
     98331691, // Binary Phoenix Mark
@@ -2877,7 +2905,6 @@ const missingSources: { [key: string]: number[] } = {
     4211218181, // Ankaa Seeker IV
     4264096388, // Wing Theorem
   ],
-  shipwright: [],
   sonar: [
     214247063, // Deep Dive Key
     2769671712, // Salvage Key
@@ -3078,7 +3105,6 @@ const missingSources: { [key: string]: number[] } = {
     4138296191, // The Shelter in Place
     4288492921, // Vigil of Heroes
   ],
-  sundial: [],
   tangled: [
     177829853, // Scatterhorn Bond
     218523139, // Scatterhorn Grasps
@@ -3124,7 +3150,6 @@ const missingSources: { [key: string]: number[] } = {
     4167605324, // Scatterhorn Robe
     4245441464, // Scorned Baron Robes
   ],
-  throneworld: [],
   titan: [
     1701005142, // Songbreaker Gloves
     2486041713, // Songbreaker Gauntlets
@@ -3173,14 +3198,23 @@ const missingSources: { [key: string]: number[] } = {
     4100217958, // Focusing Boots
     4177448932, // Focusing Wraps
   ],
-  umbral: [],
-  vaultofglass: [],
-  vexoffensive: [],
-  vog: [],
-  votd: [],
-  vow: [],
-  vowofthedisciple: [],
-  wartable: [],
+  warlordsruin: [
+    557092665, // Dark Age Cloak
+    632989816, // Dark Age Gauntlets
+    806004493, // Dark Age Gloves
+    851401651, // Dark Age Overcoat
+    1476803535, // Dark Age Legbraces
+    1933599476, // Dark Age Visor
+    2426502022, // Dark Age Strides
+    2662590925, // Dark Age Mark
+    2771011469, // Dark Age Mask
+    2963224754, // Dark Age Sabatons
+    3056827626, // Dark Age Bond
+    3423574140, // Dark Age Grips
+    3683772388, // Dark Age Harness
+    3735435664, // Dark Age Chestrig
+    4090037601, // Dark Age Helm
+  ],
   watcher: [
     436695703, // TM-Cogburn Custom Plate
     498918879, // TM-Earp Custom Grips
@@ -3198,8 +3232,6 @@ const missingSources: { [key: string]: number[] } = {
     4177293424, // TM-Cogburn Custom Cover
     4288623897, // TM-Earp Custom Vest
   ],
-  wellspring: [],
-  wrathborn: [],
   zavala: [
     24244626, // Mark of Shelter
     34846448, // Xenos Vale IV

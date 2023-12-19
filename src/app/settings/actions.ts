@@ -1,19 +1,16 @@
 import { createAction, PayloadAction } from 'typesafe-actions';
 import type { Settings } from './initial-settings';
 
-/** Bulk update settings after they've been loaded. */
-export const loaded = createAction('settings/LOADED')<Partial<Settings>>();
-
 /** This one seems a bit like cheating, but it lets us set a specific property. */
 export const setSettingAction = createAction(
   'settings/SET',
   <V extends keyof Settings>(property: V, value: Settings[V]) => ({
     property,
     value,
-  })
+  }),
 )() as <V extends keyof Settings>(
   property: V,
-  value: Settings[V]
+  value: Settings[V],
 ) => PayloadAction<'settings/SET', { property: V; value: Settings[V] }>;
 
 /** Update a collapsible section */

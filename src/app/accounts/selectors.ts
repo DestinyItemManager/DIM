@@ -12,7 +12,7 @@ export const currentAccountSelector = (state: RootState) =>
     ? accountsSelector(state).find(
         (a) =>
           a.membershipId === state.accounts.currentAccountMembershipId &&
-          a.destinyVersion === state.accounts.currentAccountDestinyVersion
+          a.destinyVersion === state.accounts.currentAccountDestinyVersion,
       )
     : undefined;
 

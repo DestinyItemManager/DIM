@@ -11,7 +11,6 @@ import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols'
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { I18nKey, t, tl } from 'app/i18next-t';
 import { allItemsSelector } from 'app/inventory/selectors';
-import { ItemPopupTab } from 'app/item-popup/ItemPopupBody';
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { isInGameLoadout } from 'app/loadout-drawer/loadout-types';
@@ -58,7 +57,7 @@ export function doShowTriage(item: DimItem) {
  * when the triage pane ISN'T displayed, it will display
  * some at-a-glance info about what you'll find in the triage pane
  */
-export function TriageTabToggle({ currentTab, item }: { currentTab: ItemPopupTab; item: DimItem }) {
+export function TriageTabToggle({ tabActive, item }: { tabActive: boolean; item: DimItem }) {
   const wishlistRoll = useSelector(wishListSelector(item));
   const loadoutsByItem = useSelector(loadoutsByItemSelector);
   const isInLoadout = Boolean(loadoutsByItem[item.id]);
@@ -66,7 +65,7 @@ export function TriageTabToggle({ currentTab, item }: { currentTab: ItemPopupTab
   return (
     <span className={styles.popupTabTitle}>
       {t('MovePopup.TriageTab')}
-      {currentTab === ItemPopupTab.Overview && (
+      {!tabActive && (
         <>
           {wishlistRoll && (
             <WishListPerkThumb wishListRoll={wishlistRoll} className={styles.thumbsUp} />
@@ -80,9 +79,9 @@ export function TriageTabToggle({ currentTab, item }: { currentTab: ItemPopupTab
   );
 }
 
-export function ItemTriage({ item }: { item: DimItem }) {
+export function ItemTriage({ item, id }: { item: DimItem; id: string }) {
   return (
-    <div className={styles.itemTriagePane}>
+    <div id={id} role="tabpanel" aria-labelledby={`${id}-tab`} className={styles.itemTriagePane}>
       {item.bucket.inWeapons && <WishlistTriageSection item={item} />}
       <LoadoutsTriageSection item={item} />
       <SimilarItemsTriageSection item={item} />
@@ -108,6 +107,7 @@ function WishlistTriageSection({ item }: { item: DimItem }) {
       title={t('WishListRoll.Header')}
       sectionId="triage-wishlist"
       defaultCollapsed={false}
+      className={styles.collapseTitle}
       extra={wishlistItem ? <WishListPerkThumb wishListRoll={wishlistItem} /> : '–'}
       disabled={disabled}
     >
@@ -133,6 +133,7 @@ function LoadoutsTriageSection({ item }: { item: DimItem }) {
       title={t('Triage.InLoadouts')}
       sectionId="triage-loadout"
       defaultCollapsed={true}
+      className={styles.collapseTitle}
       extra={
         <span className={styles.factorCollapsedValue}>
           {inLoadouts.length}
@@ -203,6 +204,7 @@ function SimilarItemsTriageSection({ item }: { item: DimItem }) {
       title={t('Triage.SimilarItems')}
       sectionId={sectionId}
       defaultCollapsed={false}
+      className={styles.collapseTitle}
       extra={<span className={styles.factorCollapsedValue}>{fewestSimilar}</span>}
       showExtraOnlyWhenCollapsed
     >
@@ -289,6 +291,7 @@ function BetterItemsTriageSection({ item }: { item: DimItem }) {
       title={t('Triage.BetterWorseArmor')}
       sectionId="better-worse-armor"
       defaultCollapsed={false}
+      className={styles.collapseTitle}
       extra={<span className={styles.factorCollapsedValue}>!!</span>}
       showExtraOnlyWhenCollapsed
     >
@@ -373,7 +376,7 @@ function ArmorStatsTriageSection({ item }: { item: DimItem }) {
                 {(stat.displayProperties.icon && (
                   <BungieImage
                     key={stat.statHash}
-                    className={clsx(styles.factorIcon)}
+                    className={styles.factorIcon}
                     src={stat.displayProperties.icon}
                   />
                 )) ||
@@ -398,6 +401,7 @@ function ArmorStatsTriageSection({ item }: { item: DimItem }) {
       defaultCollapsed={false}
       showExtraOnlyWhenCollapsed
       disabled={highStats === null}
+      className={styles.collapseTitle}
       extra={extra}
     >
       {highStats}

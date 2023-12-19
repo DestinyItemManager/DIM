@@ -2,6 +2,7 @@ import { ItemAnnotation, ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { I18nKey, tl } from 'app/i18next-t';
 import { ThunkResult } from 'app/store/types';
+import { filterMap } from 'app/utils/collections';
 import _ from 'lodash';
 import { archiveIcon, banIcon, boltIcon, heartIcon, tagIcon } from '../shell/icons';
 import { setItemNote, setItemTag, tagCleanup } from './actions';
@@ -115,6 +116,8 @@ export interface TagInfo {
 // populate tag list from tag config info
 export const itemTagList: TagInfo[] = Object.values(tagConfig);
 
+export const vaultGroupTagOrder = filterMap(itemTagList, (tag) => tag.type);
+
 export const itemTagSelectorList: TagInfo[] = [
   { label: tl('Tags.TagItem') },
   ...Object.values(tagConfig),
@@ -159,7 +162,7 @@ export function cleanInfos(stores: DimStore[]): ThunkResult {
                   itemId: item.id,
                   tag: craftedInfo.tag,
                   craftedDate: item.craftedInfo.craftedDate,
-                })
+                }),
               );
             }
             if (craftedInfo.notes) {
@@ -168,7 +171,7 @@ export function cleanInfos(stores: DimStore[]): ThunkResult {
                   itemId: item.id,
                   note: craftedInfo.notes,
                   craftedDate: item.craftedInfo.craftedDate,
-                })
+                }),
               );
             }
           }
@@ -187,7 +190,7 @@ export function getTag(
   itemInfos: ItemInfos,
   itemHashTags?: {
     [itemHash: string]: ItemHashTag;
-  }
+  },
 ): TagValue | undefined {
   return item.taggable
     ? (item.instanced ? itemInfos[item.id]?.tag : itemHashTags?.[item.hash]?.tag) || undefined
@@ -199,7 +202,7 @@ export function getNotes(
   itemInfos: ItemInfos,
   itemHashTags?: {
     [itemHash: string]: ItemHashTag;
-  }
+  },
 ): string | undefined {
   return item.taggable
     ? (item.instanced ? itemInfos[item.id]?.notes : itemHashTags?.[item.hash]?.notes) || undefined

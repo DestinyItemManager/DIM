@@ -5,7 +5,7 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       443340273, // Source: Xûr's Treasure Hoard in Eternity
-      642326476, // Source: Complete Dares of Eternity in Eternity.
+      642326476, // Source: Dares of Eternity in Eternity
       675740011, // Source: "Grasp of Avarice" Dungeon
       1102533392, // Source: Xûr (Eternity)
       1394793197, // Source: "Magnum Opus" Quest
@@ -51,35 +51,44 @@ const D2Sources: {
   adventure: {
     itemHashes: [],
     sourceHashes: [
-      194661944, // Source: Adventure "Siren Song" on Saturn's moon, Titan.
-      482012099, // Source: Adventure "Thief of Thieves" on Saturn's Moon, Titan.
-      636474187, // Source: Adventure "Deathless" on Saturn's Moon, Titan.
-      783399508, // Source: Adventure "Supply and Demand" in the European Dead Zone.
-      790433146, // Source: Adventure "Dark Alliance" in the European Dead Zone.
-      1067250718, // Source: Adventure "Arecibo" on Io.
-      1186140085, // Source: Adventure "Unbreakable" on Nessus.
-      1289998337, // Source: Adventure "Hack the Planet" on Nessus.
-      1527887247, // Source: Adventure "Red Legion, Black Oil" in the European Dead Zone.
-      1736997121, // Source: Adventure "Stop and Go" in the European Dead Zone.
-      1861838843, // Source: Adventure "A Frame Job" in the European Dead Zone.
-      2040548068, // Source: Adventure "Release" on Nessus.
-      2096915131, // Source: Adventure "Poor Reception" in the European Dead Zone.
-      2345202459, // Source: Adventure "Invitation from the Emperor" on Nessus.
-      2392127416, // Source: Adventure "Cliffhanger" on Io.
-      2553369674, // Source: Adventure "Exodus Siege" on Nessus.
-      3427537854, // Source: Adventure "Road Rage" on Io.
-      3754173885, // Source: Adventure "Getting Your Hands Dirty" in the European Dead Zone.
-      4214471686, // Source: Adventure "Unsafe at Any Speed" in the European Dead Zone.
+      194661944, // Source: Adventure "Siren Song" on Saturn's Moon, Titan
+      482012099, // Source: Adventure "Thief of Thieves" on Saturn's Moon, Titan
+      636474187, // Source: Adventure "Deathless" on Saturn's Moon, Titan
+      783399508, // Source: Adventure "Supply and Demand" in the European Dead Zone
+      790433146, // Source: Adventure "Dark Alliance" in the European Dead Zone
+      1067250718, // Source: Adventure "Arecibo" on Io
+      1186140085, // Source: Adventure "Unbreakable" on Nessus
+      1289998337, // Source: Adventure "Hack the Planet" on Nessus
+      1527887247, // Source: Adventure "Red Legion, Black Oil" in the European Dead Zone
+      1736997121, // Source: Adventure "Stop and Go" in the European Dead Zone
+      1861838843, // Source: Adventure "A Frame Job" in the European Dead Zone
+      2040548068, // Source: Adventure "Release" on Nessus
+      2096915131, // Source: Adventure "Poor Reception" in the European Dead Zone
+      2345202459, // Source: Adventure "Invitation from the Emperor" on Nessus
+      2392127416, // Source: Adventure "Cliffhanger" on Io
+      2553369674, // Source: Adventure "Exodus Siege" on Nessus
+      3427537854, // Source: Adventure "Road Rage" on Io
+      3754173885, // Source: Adventure "Getting Your Hands Dirty" in the European Dead Zone
+      4214471686, // Source: Adventure "Unsafe at Any Speed" in the European Dead Zone
+    ],
+    searchString: [],
+  },
+  avalon: {
+    itemHashes: [],
+    sourceHashes: [
+      709680645, // Source: "Truly Satisfactory" Triumph
+      1476475066, // Source: "Firmware Update" Triumph
+      1730197643, // Source: //node.ovrd.AVALON// Exotic Quest
     ],
     searchString: [],
   },
   banshee: {
     itemHashes: [],
     sourceHashes: [
-      1459595344, // Source: Purchase from Banshee-44 or Ada-1.
+      1459595344, // Source: Purchase from Banshee-44 or Ada-1
       1788267693, // Source: Earn rank-up packages from Banshee-44.
       2986841134, // Source: Salvager's Salvo Armament Quest
-      3512613235, // Source: A Sacred Fusion Quest
+      3512613235, // Source: "A Sacred Fusion" Quest
     ],
     searchString: [],
   },
@@ -152,21 +161,21 @@ const D2Sources: {
   campaign: {
     itemHashes: [],
     sourceHashes: [
-      13912404, // Source: Unlock your Arc subclass.
+      13912404, // Source: Unlock Your Arc Subclass
       100617404, // Requires Titan Class
-      286427063, // Source: Fallen Empire campaign.
-      409652252, // Source: The Witch Queen campaign
+      286427063, // Source: Fallen Empire Campaign
+      409652252, // Source: The Witch Queen Campaign
       460742691, // Requires Guardian Rank 6: Masterwork Weapons
-      569214265, // Source: Earned over the course of the Red War campaign.
+      569214265, // Source: Red War Campaign
       677167936, // Source: Complete the campaign as a Warlock.
-      736336644, // Source: "A Spark of Hope" quest.
+      736336644, // Source: "A Spark of Hope" Quest
       901482731, // Source: Lightfall Campaign
-      918840100, // Source: Complete the Shadowkeep campaign.
+      918840100, // Source: Shadowkeep Campaign
       923708784, // Requires Guardian Rank 7: Threats and Surges
       1076222895, // Source: Defeat bosses in Flashpoints.
       1103518848, // Source: Earned over the course of the Warmind campaign.
       1118966764, // Source: Dismantle an item with this shader applied to it.
-      1281387702, // Source: Unlock your Void subclass.
+      1281387702, // Source: Unlock Your Void Subclass
       1701477406, // Source: Flashpoint milestones; Legendary engrams.
       2242939082, // Requires Hunter Class
       2278847330, // Requires Guardian Rank 5
@@ -175,14 +184,14 @@ const D2Sources: {
       2744321951, // Source: Complete a heroic Public Event.
       2892963218, // Source: Earned while leveling.
       2895784523, // Source: Pledge to all factions on a single character.
-      2929562373, // Source: Unlock your Solar subclass.
+      2929562373, // Source: Unlock Your Solar Subclass
       2988465950, // Source: Planetary faction chests.
       3099553329, // Source: Complete the campaign as a Titan.
       3126774631, // Requires 1,000 Hunter Kills
       3174947771, // Requires Guardian Rank 6: Powerful Rewards
       3431853656, // Achieved a Grimoire score of over 5000 in Destiny.
-      3532642391, // Source: Earned over the course of the Forsaken campaign.
-      3704442923, // Source: Earned over the course of the Curse of Osiris campaign.
+      3532642391, // Source: Forsaken Campaign
+      3704442923, // Source: Curse of Osiris Campaign
       3936473457, // Requires Warlock Class
       4288102251, // Requires 1,000 Titan Kills
       4290499613, // Source: Complete the campaign as a Hunter.
@@ -200,14 +209,14 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       164083100, // Source: Display of Supremacy, Weekly Challenge
-      3100439379, // Source: Mission Exorcism
+      3100439379, // Source: Mission "Exorcism"
     ],
     searchString: [],
   },
   contact: {
     itemHashes: [],
     sourceHashes: [
-      2039343154, // Source: Contact public event.
+      2039343154, // Source: Contact Public Event
     ],
     searchString: [],
   },
@@ -227,14 +236,14 @@ const D2Sources: {
   crota: {
     itemHashes: [],
     sourceHashes: [
-      1897187034, // Source: Crota's End Raid
+      1897187034, // Source: "Crota's End" Raid
     ],
     searchString: [],
   },
   crotasend: {
     itemHashes: [],
     sourceHashes: [
-      1897187034, // Source: Crota's End Raid
+      1897187034, // Source: "Crota's End" Raid
     ],
     searchString: [],
   },
@@ -267,28 +276,28 @@ const D2Sources: {
       4060882456, // Rubicund Wrap (Ornament)
     ],
     sourceHashes: [
-      454115234, // Source: Complete this weapon's associated Crucible quest.
+      454115234, // Source: Associated Crucible Quest
       598662729, // Source: Reach Glory Rank "Legend" in the Crucible.
-      745186842, // Source: Complete this reward's associated Crucible quest.
+      745186842, // Source: Associated Crucible Quest
       897576623, // Source: Complete Crucible matches and earn rank-up packages from Lord Shaxx.
       929025440, // Acquired by competing in the Crucible during the Prismatic Inferno.
-      1217831333, // Source: Complete this reward's associated Crucible quest.
+      1217831333, // Source: Associated Crucible Quest
       1223492644, // Source: Complete the "Reconnaissance by Fire" quest.
-      1494513645, // Source: Complete Glory matches in Crucible.
+      1494513645, // Source: Glory Matches in Crucible
       2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory Rank "Mythic."
-      2537301256, // Source: Reach a Glory Rank of "Fabled" in the Crucible.
-      2558941813, // Source: Place Silver III division or higher in ranked Crucible playlists.
-      2622122683, // Source: Rank up reputation with Lord Shaxx.
-      2641169841, // Source: Purchased from Lord Shaxx.
+      2537301256, // Source: Glory Rank of "Fabled" in Crucible
+      2558941813, // Source: Place Silver III Division or Higher in Ranked Crucible Playlists
+      2622122683, // Source: Lord Shaxx Rank Up Reputation
+      2641169841, // Source: Purchase from Lord Shaxx
       2658055900, // Source: Complete the "Season 8: Battle Drills" quest.
-      2669524419, // Source: Crucible.
+      2669524419, // Source: Crucible
       2821852478, // Source: Complete this weapon's associated Crucible quest.
       2915991372, // Source: Crucible
       3020288414, // Source: Crucible
       3226099405, // Source: Crucible Seasonal Ritual Rank Reward
-      3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit playlists.
-      3348906688, // Source: Earn ranks in Vanguard strikes, Crucible, or Gambit.
-      3466789677, // Source: Place Ascendant III Division or higher in ranked Crucible playlists.
+      3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit Playlists
+      3348906688, // Source: Ranks in Vanguard Strikes, Crucible, or Gambit
+      3466789677, // Source: Place Ascendant III Division or Higher in Ranked Crucible Playlists
       3656787928, // Source: Crucible Salvager's Salvo Armament
     ],
     searchString: [],
@@ -323,18 +332,18 @@ const D2Sources: {
     ],
     sourceHashes: [
       148542898, // Source: Equip the full Mercury destination set on a Warlock.
-      194661944, // Source: Adventure "Siren Song" on Saturn's moon, Titan.
+      194661944, // Source: Adventure "Siren Song" on Saturn's Moon, Titan
       266896577, // Source: Solve the Norse glyph puzzle.
       315474873, // Source: Complete activities and earn rank-up packages on Io.
       354493557, // Source: Complete Nightfall strike "Savathûn's Song."
       439994003, // Source: Complete the "Master Smith" Triumph.
-      482012099, // Source: Adventure "Thief of Thieves" on Saturn's Moon, Titan.
-      636474187, // Source: Adventure "Deathless" on Saturn's Moon, Titan.
+      482012099, // Source: Adventure "Thief of Thieves" on Saturn's Moon, Titan
+      636474187, // Source: Adventure "Deathless" on Saturn's Moon, Titan
       925197669, // Source: Complete a Bergusia Forge ignition.
       948753311, // Source: Found by completing Volundr Forge ignitions.
       976328308, // Source: The Derelict Leviathan
       1036506031, // Source: Complete activities and earn rank-up packages on Mars.
-      1067250718, // Source: Adventure "Arecibo" on Io.
+      1067250718, // Source: Adventure "Arecibo" on Io
       1175566043, // Source: Complete Nightfall strike "A Garden World."
       1286332045, // Source: Found by completing Izanami Forge ignitions.
       1299614150, // Source: [REDACTED] on Mars.
@@ -345,7 +354,7 @@ const D2Sources: {
       1483048674, // Source: Complete the "Scourge of the Past" raid.
       1581680964, // Source: Complete Nightfall strike "Tree of Probabilities."
       1596507419, // Source: Complete a Gofannon Forge ignition.
-      1618754228, // Source: Acquired from the Sundial activity on Mercury.
+      1618754228, // Source: Sundial Activity on Mercury
       1654120320, // Source: Complete activities and earn rank-up packages on Mercury.
       1675483099, // Source: Leviathan, Spire of Stars raid lair.
       1832642406, // Source: World Quest "Dynasty" on Io.
@@ -354,7 +363,7 @@ const D2Sources: {
       2085016678, // Source: Complete the "Scourge of the Past" raid within the first 24 hours after its launch.
       2310754348, // Source: World Quest "Data Recovery" on Mars.
       2384327872, // Source: Solve the French glyph puzzle.
-      2392127416, // Source: Adventure "Cliffhanger" on Io.
+      2392127416, // Source: Adventure "Cliffhanger" on Io
       2399751101, // Acquired from the raid "Crown of Sorrow."
       2487203690, // Source: Complete Nightfall strike "Tree of Probabilities."
       2511152325, // Acquired from the Menagerie aboard the Leviathan.
@@ -371,7 +380,7 @@ const D2Sources: {
       3147603678, // Acquired from the raid "Crown of Sorrow."
       3257722699, // Source: Complete the "Clean Up on Aisle Five" Triumph.
       3390164851, // Source: Found by turning in Black Armory bounties.
-      3427537854, // Source: Adventure "Road Rage" on Io.
+      3427537854, // Source: Adventure "Road Rage" on Io
       3534706087, // Source: Complete activities and earn rank-up packages on Saturn's Moon, Titan.
       3764925750, // Source: Complete an Izanami Forge ignition.
       3964663093, // Source: Rare drop from high-scoring Nightfall strikes on Mercury.
@@ -402,9 +411,9 @@ const D2Sources: {
   deepstonecrypt: {
     itemHashes: [],
     sourceHashes: [
-      866530798, // Source: Not a Scratch.
-      1405897559, // Source: "Deep Stone Crypt" raid.
-      1692165595, // Source: Rock Bottom.
+      866530798, // Source: "Not a Scratch" Triumph
+      1405897559, // Source: "Deep Stone Crypt" Raid
+      1692165595, // Source: "Rock Bottom" Triumph
     ],
     searchString: [],
   },
@@ -418,7 +427,7 @@ const D2Sources: {
       1866448829, // Source: Deluxe Edition Bonus
       2968206374, // Source: Earned as a Deluxe Edition bonus.
       2985242208, // Source: Earned from a charity promotion.
-      3173463761, // Source: Earned as a pre-order bonus.
+      3173463761, // Source: Pre-order Bonus
       3212282221, // Source: Forsaken Annual Pass
       3672287903, // Source: The Witch Queen Digital Deluxe Edition
       4069355515, // Source: Handed out at US events in 2019.
@@ -461,37 +470,38 @@ const D2Sources: {
     ],
     sourceHashes: [
       186854335, // Source: Gambit
-      571102497, // Source: Complete this weapon's associated Gambit quest.
+      571102497, // Source: Associated Gambit Quest
       594786771, // Source: Complete this weapon's associated Gambit quest.
       887452441, // Source: Gambit Salvager's Salvo Armament
-      1127923611, // Source: Reset your Gambit Rank 3 times in a single Season.
+      1127923611, // Source: 3 Gambit Rank Resets in a Season
       1162859311, // Source: Complete the "Clean Getaway" quest.
       2170269026, // Source: Complete Gambit matches and earn rank-up packages from the Drifter.
       2364933290, // Source: Gambit Seasonal Ritual Rank Reward
-      2601524261, // Source: Complete this reward's associated Gambit quest.
+      2601524261, // Source: Associated Gambit Quest
       2843045413, // Source: Gambit
       2883838366, // Source: Complete the "Breakneck" quest from the Drifter.
-      3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit playlists.
-      3348906688, // Source: Earn ranks in Vanguard strikes, Crucible, or Gambit.
-      3422985544, // Source: Complete this reward's associated Gambit quest.
+      3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit Playlists
+      3348906688, // Source: Ranks in Vanguard Strikes, Crucible, or Gambit
+      3422985544, // Source: Associated Gambit Quest
       3494247523, // Source: Complete the "Season 8: Keepin' On" quest.
-      3522070610, // Source: Gambit.
+      3522070610, // Source: Gambit
+      3942778906, // Source: Drifter Rank Up Reputation
     ],
     searchString: [],
   },
   dsc: {
     itemHashes: [],
     sourceHashes: [
-      866530798, // Source: Not a Scratch.
-      1405897559, // Source: "Deep Stone Crypt" raid.
-      1692165595, // Source: Rock Bottom.
+      866530798, // Source: "Not a Scratch" Triumph
+      1405897559, // Source: "Deep Stone Crypt" Raid
+      1692165595, // Source: "Rock Bottom" Triumph
     ],
     searchString: [],
   },
   duality: {
     itemHashes: [],
     sourceHashes: [
-      1282207663, // Source: Dungeon Duality
+      1282207663, // Source: Dungeon "Duality"
     ],
     searchString: [],
   },
@@ -502,31 +512,32 @@ const D2Sources: {
       2844014413, // Pallas Galliot
     ],
     sourceHashes: [
-      210885364, // Source: Flawless completion of Presage Exotic Quest on Master difficulty.
-      506073192, // Source: Season of Arrivals dungeon.
+      210885364, // Source: Flawless "Presage" Exotic Quest on Master Difficulty
+      506073192, // Source: "Prophecy" Dungeon
+      613435025, // Source: "Warlord's Ruin" Dungeon
       675740011, // Source: "Grasp of Avarice" Dungeon
-      1282207663, // Source: Dungeon Duality
+      1282207663, // Source: Dungeon "Duality"
       1597738585, // Source: "Spire of the Watcher" Dungeon
-      1745960977, // Source: Pit of Heresy
-      2745272818, // Source: Presage Exotic Quest
-      2856954949, // Source: "Let Loose Thy Talons" Exotic quest.
+      1745960977, // Source: "Pit of Heresy" Dungeon
+      2745272818, // Source: "Presage" Exotic Quest
+      2856954949, // Source: "Let Loose Thy Talons" Exotic Quest
       3288974535, // Source: "Ghosts of the Deep" Dungeon
-      3597879858, // Source: Presage Exotic Quest
+      3597879858, // Source: "Presage" Exotic Quest
     ],
     searchString: ['shatteredthrone', 'pit', 'prophecy', 'presage', 'harbinger'],
   },
   edz: {
     itemHashes: [],
     sourceHashes: [
-      783399508, // Source: Adventure "Supply and Demand" in the European Dead Zone.
-      790433146, // Source: Adventure "Dark Alliance" in the European Dead Zone.
+      783399508, // Source: Adventure "Supply and Demand" in the European Dead Zone
+      790433146, // Source: Adventure "Dark Alliance" in the European Dead Zone
       1373723300, // Source: Complete activities and earn rank-up packages in the EDZ.
-      1527887247, // Source: Adventure "Red Legion, Black Oil" in the European Dead Zone.
-      1736997121, // Source: Adventure "Stop and Go" in the European Dead Zone.
-      1861838843, // Source: Adventure "A Frame Job" in the European Dead Zone.
-      2096915131, // Source: Adventure "Poor Reception" in the European Dead Zone.
-      3754173885, // Source: Adventure "Getting Your Hands Dirty" in the European Dead Zone.
-      4214471686, // Source: Adventure "Unsafe at Any Speed" in the European Dead Zone.
+      1527887247, // Source: Adventure "Red Legion, Black Oil" in the European Dead Zone
+      1736997121, // Source: Adventure "Stop and Go" in the European Dead Zone
+      1861838843, // Source: Adventure "A Frame Job" in the European Dead Zone
+      2096915131, // Source: Adventure "Poor Reception" in the European Dead Zone
+      3754173885, // Source: Adventure "Getting Your Hands Dirty" in the European Dead Zone
+      4214471686, // Source: Adventure "Unsafe at Any Speed" in the European Dead Zone
       4292996207, // Source: World Quest "Enhance!" in the European Dead Zone.
     ],
     searchString: [],
@@ -534,8 +545,8 @@ const D2Sources: {
   enclave: {
     itemHashes: [],
     sourceHashes: [
-      1309588429, // Source: Complete the "Chief Investigator" Triumph
-      2055289873, // Source: "The Evidence Board" Exotic quest
+      1309588429, // Source: "Chief Investigator" Triumph
+      2055289873, // Source: "The Evidence Board" Exotic Quest
     ],
     searchString: [],
   },
@@ -557,48 +568,49 @@ const D2Sources: {
   europa: {
     itemHashes: [],
     sourceHashes: [
-      286427063, // Source: Fallen Empire campaign.
-      1148859274, // Source: Found exploring Europa.
-      1492981395, // Source: "The Stasis Prototype" quest.
-      2171520631, // Source: "Lost Lament" Exotic quest.
-      3125456997, // Source: Europan Tour.
-      3965815470, // Source: Rare drop from higher difficulty Empire Hunts.
+      286427063, // Source: Fallen Empire Campaign
+      1148859274, // Source: Exploring Europa
+      1492981395, // Source: "The Stasis Prototype" Quest
+      2171520631, // Source: "Lost Lament" Exotic Quest
+      3125456997, // Source: Europan Tour
+      3965815470, // Source: Higher Difficulty Empire Hunts
     ],
     searchString: [],
   },
   events: {
     itemHashes: [],
     sourceHashes: [
-      32323943, // Source: Moments of Triumph.
+      32323943, // Source: Moments of Triumph
       151416041, // Source: Solstice
-      464727567, // Source: Earned during the 2021 Dawning event
+      464727567, // Source: Dawning 2021
       547767158, // Source: Dawning 2018
-      611838069, // Source: Earned during the seasonal Guardian Games event.
-      629617846, // Source: Earned during the 2020 Dawning event
-      641018908, // Source: Earned during the 2018 Solstice event.
+      611838069, // Source: Guardian Games
+      629617846, // Source: Dawning 2020
+      641018908, // Source: Solstice 2018
       772619302, // Completed all 8 Moments of Triumph in Destiny's second year.
       923678151, // Source: Upgraded Event Card Reward
-      1054169368, // Source: Festival of the Lost 2021.
+      1054169368, // Source: Festival of the Lost 2021
       1225476079, // Source: Moments of Triumph 2022
       1360005982, // Completed a Moment of Triumph in Destiny's second year.
       1397119901, // Completed a Moment of Triumph in Destiny's first year.
+      1416471099, // Source: Moments of Triumph 2023
       1462687159, // Reached level 5 in the Ages of Triumph record book.
       1666677522, // Source: Solstice
       1677921161, // Source: Festival of the Lost 2018.
-      1919933822, // Source: Festival of the Lost 2020.
+      1919933822, // Source: Festival of the Lost 2020
       2006303146, // Source: Guardian Games 2022
       2011810450, // Source: Season 13 Guardian Games
       2187511136, // Source: Earned during the seasonal Revelry event.
-      2364515524, // Source: Earned during the 2022 Dawning event
+      2364515524, // Source: Dawning 2022
       2473294025, // Source: Guardian Games 2023
       2502262376, // Source: Earned during the seasonal Crimson Days event.
       2797674516, // Source: Moments of Triumph 2021
       3092212681, // Source: Dawning 2019
       3112857249, // Completed all 10 Moments of Triumph in Destiny's first year.
-      3190938946, // Source: Festival of the Lost 2019.
-      3388021959, // Source: Earned during the Guardian Games event.
-      3693722471, // Source: Festival of the Lost 2020.
-      3724111213, // Source: Earned during the 2019 Solstice event.
+      3190938946, // Source: Festival of the Lost 2019
+      3388021959, // Source: Guardian Games
+      3693722471, // Source: Festival of the Lost 2020
+      3724111213, // Source: Solstice 2019
       3736521079, // Reached level 1 in the Ages of Triumph record book.
       3952847349, // Source: The Dawning.
       4041583267, // Source: Festival of the Lost
@@ -609,18 +621,18 @@ const D2Sources: {
   eververse: {
     itemHashes: [],
     sourceHashes: [
-      269962496, // Source: Eververse package.
+      269962496, // Source: Eververse
       860688654, // Source: Eververse
       2882367429, // Source: Eververse\nComplete the "Vault of Glass" raid to unlock this in Eververse.
-      4036739795, // Source: Bright Engrams.
+      4036739795, // Source: Bright Engrams
     ],
     searchString: [],
   },
   evidenceboard: {
     itemHashes: [],
     sourceHashes: [
-      1309588429, // Source: Complete the "Chief Investigator" Triumph
-      2055289873, // Source: "The Evidence Board" Exotic quest
+      1309588429, // Source: "Chief Investigator" Triumph
+      2055289873, // Source: "The Evidence Board" Exotic Quest
     ],
     searchString: [],
   },
@@ -648,21 +660,22 @@ const D2Sources: {
     ],
     sourceHashes: [
       186854335, // Source: Gambit
-      571102497, // Source: Complete this weapon's associated Gambit quest.
+      571102497, // Source: Associated Gambit Quest
       594786771, // Source: Complete this weapon's associated Gambit quest.
       887452441, // Source: Gambit Salvager's Salvo Armament
-      1127923611, // Source: Reset your Gambit Rank 3 times in a single Season.
+      1127923611, // Source: 3 Gambit Rank Resets in a Season
       1162859311, // Source: Complete the "Clean Getaway" quest.
       2170269026, // Source: Complete Gambit matches and earn rank-up packages from the Drifter.
       2364933290, // Source: Gambit Seasonal Ritual Rank Reward
-      2601524261, // Source: Complete this reward's associated Gambit quest.
+      2601524261, // Source: Associated Gambit Quest
       2843045413, // Source: Gambit
       2883838366, // Source: Complete the "Breakneck" quest from the Drifter.
-      3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit playlists.
-      3348906688, // Source: Earn ranks in Vanguard strikes, Crucible, or Gambit.
-      3422985544, // Source: Complete this reward's associated Gambit quest.
+      3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit Playlists
+      3348906688, // Source: Ranks in Vanguard Strikes, Crucible, or Gambit
+      3422985544, // Source: Associated Gambit Quest
       3494247523, // Source: Complete the "Season 8: Keepin' On" quest.
-      3522070610, // Source: Gambit.
+      3522070610, // Source: Gambit
+      3942778906, // Source: Drifter Rank Up Reputation
     ],
     searchString: [],
   },
@@ -685,7 +698,7 @@ const D2Sources: {
       4103414242, // Divinity
     ],
     sourceHashes: [
-      1491707941, // Source: "Garden of Salvation" raid.
+      1491707941, // Source: "Garden of Salvation" Raid
     ],
     searchString: [],
   },
@@ -694,7 +707,14 @@ const D2Sources: {
       4103414242, // Divinity
     ],
     sourceHashes: [
-      1491707941, // Source: "Garden of Salvation" raid.
+      1491707941, // Source: "Garden of Salvation" Raid
+    ],
+    searchString: [],
+  },
+  ghostsofthedeep: {
+    itemHashes: [],
+    sourceHashes: [
+      3288974535, // Source: "Ghosts of the Deep" Dungeon
     ],
     searchString: [],
   },
@@ -703,7 +723,14 @@ const D2Sources: {
       4103414242, // Divinity
     ],
     sourceHashes: [
-      1491707941, // Source: "Garden of Salvation" raid.
+      1491707941, // Source: "Garden of Salvation" Raid
+    ],
+    searchString: [],
+  },
+  gotd: {
+    itemHashes: [],
+    sourceHashes: [
+      3288974535, // Source: "Ghosts of the Deep" Dungeon
     ],
     searchString: [],
   },
@@ -717,17 +744,17 @@ const D2Sources: {
   gunsmith: {
     itemHashes: [],
     sourceHashes: [
-      1459595344, // Source: Purchase from Banshee-44 or Ada-1.
+      1459595344, // Source: Purchase from Banshee-44 or Ada-1
       1788267693, // Source: Earn rank-up packages from Banshee-44.
       2986841134, // Source: Salvager's Salvo Armament Quest
-      3512613235, // Source: A Sacred Fusion Quest
+      3512613235, // Source: "A Sacred Fusion" Quest
     ],
     searchString: [],
   },
   harbinger: {
     itemHashes: [],
     sourceHashes: [
-      2856954949, // Source: "Let Loose Thy Talons" Exotic quest.
+      2856954949, // Source: "Let Loose Thy Talons" Exotic Quest
     ],
     searchString: [],
   },
@@ -756,11 +783,11 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       315474873, // Source: Complete activities and earn rank-up packages on Io.
-      1067250718, // Source: Adventure "Arecibo" on Io.
+      1067250718, // Source: Adventure "Arecibo" on Io
       1832642406, // Source: World Quest "Dynasty" on Io.
-      2392127416, // Source: Adventure "Cliffhanger" on Io.
+      2392127416, // Source: Adventure "Cliffhanger" on Io
       2717017239, // Source: Complete Nightfall strike "The Pyramidion."
-      3427537854, // Source: Adventure "Road Rage" on Io.
+      3427537854, // Source: Adventure "Road Rage" on Io
     ],
     searchString: [],
   },
@@ -776,14 +803,14 @@ const D2Sources: {
     ],
     sourceHashes: [
       561111210, // Source: Iron Banner Salvager's Salvo Armament
-      1027607603, // Source: Complete this reward's associated Iron Banner quest.
-      1312894505, // Source: Iron Banner.
+      1027607603, // Source: Associated Iron Banner Quest
+      1312894505, // Source: Iron Banner
       1828622510, // Source: Chance to acquire when you win Iron Banner matches.
-      1926923633, // Source: Rank up reputation with Lord Saladin.
+      1926923633, // Source: Lord Saladin Rank Up Reputation
       2520862847, // Source: Iron Banner Iron-Handed Diplomacy
       2648408612, // Acquired by competing in the Iron Banner when the wolves were loud.
       3072862693, // Source: Complete Iron Banner matches and earn rank-up packages from Lord Saladin.
-      3966667255, // Source: Complete Iron Banner's Season 9 Seasonal Pursuit.
+      3966667255, // Source: Iron Banner's Season 9 Seasonal Quest
     ],
     searchString: [],
   },
@@ -838,7 +865,7 @@ const D2Sources: {
       1866448829, // Source: Deluxe Edition Bonus
       2968206374, // Source: Earned as a Deluxe Edition bonus.
       2985242208, // Source: Earned from a charity promotion.
-      3173463761, // Source: Earned as a pre-order bonus.
+      3173463761, // Source: Pre-order Bonus
       3212282221, // Source: Forsaken Annual Pass
       3672287903, // Source: The Witch Queen Digital Deluxe Edition
       4069355515, // Source: Handed out at US events in 2019.
@@ -850,7 +877,7 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       164083100, // Source: Display of Supremacy, Weekly Challenge
-      3094114967, // Source: Season of the Lost ritual playlists
+      3094114967, // Source: Season of the Lost Ritual Playlists
     ],
     searchString: [],
   },
@@ -906,7 +933,7 @@ const D2Sources: {
       1400219831, // Source: Equip the full Mercury destination set on a Hunter.
       1411886787, // Source: Equip the full Mercury destination set on a Titan.
       1581680964, // Source: Complete Nightfall strike "Tree of Probabilities."
-      1618754228, // Source: Acquired from the Sundial activity on Mercury.
+      1618754228, // Source: Sundial Activity on Mercury
       1654120320, // Source: Complete activities and earn rank-up packages on Mercury.
       2487203690, // Source: Complete Nightfall strike "Tree of Probabilities."
       3079246067, // Source: Complete Osiris' Lost Prophecies for Brother Vance on Mercury.
@@ -919,7 +946,7 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       1253026984, // Source: Among the lost Ghosts of the Moon.
-      1999000205, // Source: Found by exploring the Moon.
+      1999000205, // Source: Exploring the Moon
       3589340943, // Source: Altars of Sorrow
     ],
     searchString: [],
@@ -932,7 +959,7 @@ const D2Sources: {
       483798855, // Source: "The Final Strand" Exotic Quest
       1750523507, // Source: Terminal Overload (Ahimsa Park)
       2697389955, // Source: "Neomuna Sightseeing" Triumph
-      3041847664, // Source: Found by Exploring Neomuna
+      3041847664, // Source: Exploring Neomuna
       3773376290, // Source: Terminal Overload (Zephyr Concourse)
       4006434081, // Source: Terminal Overload
       4110186790, // Source: Terminal Overload (Límíng Harbor)
@@ -944,12 +971,12 @@ const D2Sources: {
     sourceHashes: [
       164571094, // Source: World Quest "Exodus Black" on Nessus.
       817015032, // Source: Complete Nightfall strike "The Inverted Spire."
-      1186140085, // Source: Adventure "Unbreakable" on Nessus.
-      1289998337, // Source: Adventure "Hack the Planet" on Nessus.
+      1186140085, // Source: Adventure "Unbreakable" on Nessus
+      1289998337, // Source: Adventure "Hack the Planet" on Nessus
       1906492169, // Source: Complete activities and earn rank-up packages on Nessus.
-      2040548068, // Source: Adventure "Release" on Nessus.
-      2345202459, // Source: Adventure "Invitation from the Emperor" on Nessus.
-      2553369674, // Source: Adventure "Exodus Siege" on Nessus.
+      2040548068, // Source: Adventure "Release" on Nessus
+      2345202459, // Source: Adventure "Invitation from the Emperor" on Nessus
+      2553369674, // Source: Adventure "Exodus Siege" on Nessus
       3022766747, // Source: Complete Nightfall strike "The Insight Terminus."
       3067146211, // Source: Complete Nightfall strike "Exodus Crash."
     ],
@@ -962,7 +989,7 @@ const D2Sources: {
       277706045, // Source: Season of the Splicer Nightfall Grandmaster
       354493557, // Source: Complete Nightfall strike "Savathûn's Song."
       817015032, // Source: Complete Nightfall strike "The Inverted Spire."
-      827839814, // Source: Flawless chest in the Trials of Osiris Lighthouse, or Grandmaster Nightfall completions.
+      827839814, // Source: Flawless Chest in Trials of Osiris or Grandmaster Nightfalls
       860666126, // Source: Nightfall
       1175566043, // Source: Complete Nightfall strike "A Garden World."
       1283862526, // Source: Season of the Haunted Nightfall Grandmaster
@@ -973,9 +1000,9 @@ const D2Sources: {
       1749037998, // Source: Nightfall
       1850609592, // Source: Nightfall
       1924238751, // Source: Complete Nightfall strike "Will of the Thousands."
-      1992319882, // Source: Complete Grandmaster Nightfalls.
+      1992319882, // Source: Grandmaster Nightfalls
       2347293565, // Source: Complete Nightfall strike "The Arms Dealer."
-      2376909801, // Source: Complete the "Master" Triumph in the Nightfall category by completing a Vanguard Nightfall on the Master difficulty setting.
+      2376909801, // Source: "Master" Triumph in Nightfalls
       2487203690, // Source: Complete Nightfall strike "Tree of Probabilities."
       2717017239, // Source: Complete Nightfall strike "The Pyramidion."
       2805208672, // Source: Complete Nightfall strike "The Hollowed Lair."
@@ -1024,7 +1051,6 @@ const D2Sources: {
       1162859311, // Source: Complete the "Clean Getaway" quest.
       1244908294, // Source: Complete the "Loaded Question" quest from Zavala.
       2317365255, // Source: Complete the "A Loud Racket" quest.
-      2537301256, // Source: Reach a Glory Rank of "Fabled" in the Crucible.
       2883838366, // Source: Complete the "Breakneck" quest from the Drifter.
     ],
     searchString: [],
@@ -1032,7 +1058,7 @@ const D2Sources: {
   pit: {
     itemHashes: [],
     sourceHashes: [
-      1745960977, // Source: Pit of Heresy
+      1745960977, // Source: "Pit of Heresy" Dungeon
     ],
     searchString: [],
   },
@@ -1054,9 +1080,9 @@ const D2Sources: {
   presage: {
     itemHashes: [],
     sourceHashes: [
-      210885364, // Source: Flawless completion of Presage Exotic Quest on Master difficulty.
-      2745272818, // Source: Presage Exotic Quest
-      3597879858, // Source: Presage Exotic Quest
+      210885364, // Source: Flawless "Presage" Exotic Quest on Master Difficulty
+      2745272818, // Source: "Presage" Exotic Quest
+      3597879858, // Source: "Presage" Exotic Quest
     ],
     searchString: [],
   },
@@ -1072,7 +1098,7 @@ const D2Sources: {
   prophecy: {
     itemHashes: [],
     sourceHashes: [
-      506073192, // Source: Season of Arrivals dungeon.
+      506073192, // Source: "Prophecy" Dungeon
     ],
     searchString: [],
   },
@@ -1104,20 +1130,20 @@ const D2Sources: {
       557146120, // Source: Complete a Guided Game as a guide or seeker.
       654652973, // Guide 25 Last Wish encounters
       707740602, // Guide 10 Last Wish encounters
-      866530798, // Source: Not a Scratch.
+      866530798, // Source: "Not a Scratch" Triumph
       1007078046, // Source: "Vow of the Disciple" Raid
-      1405897559, // Source: "Deep Stone Crypt" raid.
+      1405897559, // Source: "Deep Stone Crypt" Raid
       1483048674, // Source: Complete the "Scourge of the Past" raid.
-      1491707941, // Source: "Garden of Salvation" raid.
+      1491707941, // Source: "Garden of Salvation" Raid
       1675483099, // Source: Leviathan, Spire of Stars raid lair.
-      1692165595, // Source: Rock Bottom.
-      1897187034, // Source: Crota's End Raid
-      2065138144, // Source: Venus Raid
+      1692165595, // Source: "Rock Bottom" Triumph
+      1897187034, // Source: "Crota's End" Raid
+      2065138144, // Source: "Vault of Glass" Raid
       2085016678, // Source: Complete the "Scourge of the Past" raid within the first 24 hours after its launch.
       2399751101, // Acquired from the raid "Crown of Sorrow."
       2455011338, // Source: Last Wish raid.
       2653618435, // Source: Leviathan raid.
-      2723305286, // Source: Raid Ring promotional event.
+      2723305286, // Source: Raid Ring Promotional Event
       2765304727, // Source: Leviathan raid on Prestige difficulty.
       2812190367, // Source: Leviathan, Spire of Stars raid lair on Prestige difficulty.
       2882367429, // Source: Eververse\nComplete the "Vault of Glass" raid to unlock this in Eververse.
@@ -1126,7 +1152,7 @@ const D2Sources: {
       3147603678, // Acquired from the raid "Crown of Sorrow."
       3190710249, // Source: "Root of Nightmares" Raid
       3390269646, // Source: Guided Games Final Encounters
-      3807243511, // Source: Open raid chests.
+      3807243511, // Source: Raid Chests
       4009509410, // Source: Complete challenges in the Leviathan raid.
       4066007318, // Source: Leviathan, Eater of Worlds raid lair on Prestige difficulty.
       4246883461, // Source: Found in the "Scourge of the Past" raid.
@@ -1148,38 +1174,35 @@ const D2Sources: {
     sourceHashes: [
       504657809, // Source: Season of the Seraph Activities
       1126234343, // Source: Witness Rasputin's Full Power
-      1497107113, // Source: Seasonal Quest, "Seraph Warsat Network".
+      1497107113, // Source: Seasonal Quest, "Seraph Warsat Network"
       1516560855, // Source: Season of the Seraph Grandmaster Nightfall
-      2230358252, // Source: End-of-Season event.
+      2230358252, // Source: End-of-Season Event
       2422551147, // Source: "Operation Seraph's Shield" Mission
-      3492941398, // Source: Complete quest "The Lie"
+      3492941398, // Source: "The Lie" Quest
       3567813252, // Source: Season of the Seraph Triumph
       3574140916, // Source: Season of the Seraph
-      3937492340, // Source: Complete Seraph bounties.
+      3937492340, // Source: Seraph Bounties
     ],
     searchString: [],
   },
   'ritual-weapon': {
     itemHashes: [
-      213264394, // Buzzard
       805677041, // Buzzard
       838556752, // Python
       847329160, // Edgewise
-      888872889, // Point of the Stag
       1179141605, // Felwinter's Lie
       1644680957, // Null Composure
       2060863616, // Salvager's Salvo
       2697058914, // Komodo-4FR
       3001205424, // Ecliptic Distaff
-      3292795429, // Randy's Throwing Knife
       3434944005, // Point of the Stag
       3535742959, // Randy's Throwing Knife
       4184808992, // Adored
       4227181568, // Exit Strategy
     ],
     sourceHashes: [
-      3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit playlists.
-      3348906688, // Source: Earn ranks in Vanguard strikes, Crucible, or Gambit.
+      3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit Playlists
+      3348906688, // Source: Ranks in Vanguard Strikes, Crucible, or Gambit
     ],
     searchString: [],
   },
@@ -1208,8 +1231,8 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       2607739079, // Source: A Matter of Time
-      3404977524, // Source: Contribute to the Empyrean Restoration effort.
-      4046490681, // Source: Complete the "Global Resonance" Triumph.
+      3404977524, // Source: Contribute to the Empyrean Restoration Effort
+      4046490681, // Source: Complete the "Global Resonance" Triumph
       4267157320, // Source: ???????
     ],
     searchString: [],
@@ -1259,8 +1282,9 @@ const D2Sources: {
       1763998430, // Source: Season Pass
       1838401392, // Source: Earned as a Season Pass reward.
       2257836668, // Source: Season of the Deep Fishing
-      2379344669, // Source: Season Pass.
+      2379344669, // Source: Season Pass
       2676881949, // Source: Season of the Haunted
+      2986594962, // Source: Season of the Wish
       3308438907, // Source: Season of Plunder
       3574140916, // Source: Season of the Seraph
     ],
@@ -1306,28 +1330,28 @@ const D2Sources: {
       4060882456, // Rubicund Wrap (Ornament)
     ],
     sourceHashes: [
-      454115234, // Source: Complete this weapon's associated Crucible quest.
+      454115234, // Source: Associated Crucible Quest
       598662729, // Source: Reach Glory Rank "Legend" in the Crucible.
-      745186842, // Source: Complete this reward's associated Crucible quest.
+      745186842, // Source: Associated Crucible Quest
       897576623, // Source: Complete Crucible matches and earn rank-up packages from Lord Shaxx.
       929025440, // Acquired by competing in the Crucible during the Prismatic Inferno.
-      1217831333, // Source: Complete this reward's associated Crucible quest.
+      1217831333, // Source: Associated Crucible Quest
       1223492644, // Source: Complete the "Reconnaissance by Fire" quest.
-      1494513645, // Source: Complete Glory matches in Crucible.
+      1494513645, // Source: Glory Matches in Crucible
       2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory Rank "Mythic."
-      2537301256, // Source: Reach a Glory Rank of "Fabled" in the Crucible.
-      2558941813, // Source: Place Silver III division or higher in ranked Crucible playlists.
-      2622122683, // Source: Rank up reputation with Lord Shaxx.
-      2641169841, // Source: Purchased from Lord Shaxx.
+      2537301256, // Source: Glory Rank of "Fabled" in Crucible
+      2558941813, // Source: Place Silver III Division or Higher in Ranked Crucible Playlists
+      2622122683, // Source: Lord Shaxx Rank Up Reputation
+      2641169841, // Source: Purchase from Lord Shaxx
       2658055900, // Source: Complete the "Season 8: Battle Drills" quest.
-      2669524419, // Source: Crucible.
+      2669524419, // Source: Crucible
       2821852478, // Source: Complete this weapon's associated Crucible quest.
       2915991372, // Source: Crucible
       3020288414, // Source: Crucible
       3226099405, // Source: Crucible Seasonal Ritual Rank Reward
-      3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit playlists.
-      3348906688, // Source: Earn ranks in Vanguard strikes, Crucible, or Gambit.
-      3466789677, // Source: Place Ascendant III Division or higher in ranked Crucible playlists.
+      3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit Playlists
+      3348906688, // Source: Ranks in Vanguard Strikes, Crucible, or Gambit
+      3466789677, // Source: Place Ascendant III Division or Higher in Ranked Crucible Playlists
       3656787928, // Source: Crucible Salvager's Salvo Armament
     ],
     searchString: [],
@@ -1405,30 +1429,30 @@ const D2Sources: {
       4060882458, // Balistraria Wrap (Ornament)
     ],
     sourceHashes: [
-      288436121, // Source: Complete this weapon's associated Vanguard quest.
+      288436121, // Source: Associated Vanguard Quest
       351235593, // Source: Eliminate Prison of Elders escapees found in strikes.
       412991783, // Source: Strikes
-      539840256, // Source: Complete this reward's associated Vanguard quest.
-      681989555, // Source: Complete 3 Crossplay Beta Vanguard Strikes
+      539840256, // Source: Associated Vanguard Quest
+      681989555, // Source: 3 Crossplay Beta Vanguard Strikes
       1144274899, // Source: Complete this weapon's associated Vanguard quest.
       1216155659, // Source: Complete the "Season 8: First Watch" quest.
       1244908294, // Source: Complete the "Loaded Question" quest from Zavala.
       1433518193, // Source: Vanguard Salvager's Salvo Armament Quest
-      1564061133, // Source: Complete this reward's associated Vanguard quest.
-      2124937714, // Source: Rank up reputation with Zavala.
+      1564061133, // Source: Associated Vanguard Quest
+      2124937714, // Source: Zavala Rank Up Reputation
       2317365255, // Source: Complete the "A Loud Racket" quest.
-      2335095658, // Source: Strikes.
+      2335095658, // Source: Strikes
       2527168932, // Source: Complete strikes and earn rank-up packages from Commander Zavala.
-      3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit playlists.
-      3348906688, // Source: Earn ranks in Vanguard strikes, Crucible, or Gambit.
+      3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit Playlists
+      3348906688, // Source: Ranks in Vanguard Strikes, Crucible, or Gambit
     ],
     searchString: [],
   },
   sundial: {
     itemHashes: [],
     sourceHashes: [
-      1618754228, // Source: Acquired from the Sundial activity on Mercury.
-      2627087475, // Source: Complete obelisk bounties and increase the Resonance Rank of obelisks across the system.
+      1618754228, // Source: Sundial Activity on Mercury
+      2627087475, // Source: Obelisk Bounties and Resonance Rank Increases Across the System
     ],
     searchString: [],
   },
@@ -1450,19 +1474,19 @@ const D2Sources: {
   throneworld: {
     itemHashes: [],
     sourceHashes: [
-      1141831282, // Source: "Of Queens and Worms" Exotic quest
-      1823766625, // Source: "Vox Obscura" Exotic quest
-      3954922099, // Source: Found by exploring the Throne World
+      1141831282, // Source: "Of Queens and Worms" Exotic Quest
+      1823766625, // Source: "Vox Obscura" Exotic Quest
+      3954922099, // Source: Exploring the Throne World
     ],
     searchString: [],
   },
   titan: {
     itemHashes: [],
     sourceHashes: [
-      194661944, // Source: Adventure "Siren Song" on Saturn's moon, Titan.
+      194661944, // Source: Adventure "Siren Song" on Saturn's Moon, Titan
       354493557, // Source: Complete Nightfall strike "Savathûn's Song."
-      482012099, // Source: Adventure "Thief of Thieves" on Saturn's Moon, Titan.
-      636474187, // Source: Adventure "Deathless" on Saturn's Moon, Titan.
+      482012099, // Source: Adventure "Thief of Thieves" on Saturn's Moon, Titan
+      636474187, // Source: Adventure "Deathless" on Saturn's Moon, Titan
       3534706087, // Source: Complete activities and earn rank-up packages on Saturn's Moon, Titan.
     ],
     searchString: [],
@@ -1477,14 +1501,15 @@ const D2Sources: {
     sourceHashes: [
       139599745, // Source: Earn seven wins on a single Trials ticket.
       550270332, // Source: Complete all Nightmare Hunt time trials on Master difficulty.
-      613791463, // Source: Rank up reputation with Saint-14.
-      752988954, // Source: Flawless chest completion in the Trials of Osiris Lighthouse.
-      827839814, // Source: Flawless chest in the Trials of Osiris Lighthouse, or Grandmaster Nightfall completions.
+      613791463, // Source: Saint-14 Rank Up Reputation
+      752988954, // Source: Flawless Chest in Trials of Osiris
+      827839814, // Source: Flawless Chest in Trials of Osiris or Grandmaster Nightfalls
       1607607347, // Source: Complete Trials tickets and earn rank-up packages from the Emissary of the Nine.
       2857787138, // Source: Trials of Osiris
-      3390015730, // Source: Earned by completing challenges in the Trials of Osiris.
-      3471208558, // Source: Win matches in the Trials of Osiris.
+      3390015730, // Source: Trials of Osiris Challenges
+      3471208558, // Source: Trials of Osiris Wins
       3543690049, // Source: Complete a flawless Trials ticket.
+      3564069447, // Source: Flawless Win with a "Flight of the Pigeon" Medal
     ],
     searchString: [],
   },
@@ -1499,7 +1524,7 @@ const D2Sources: {
   vaultofglass: {
     itemHashes: [],
     sourceHashes: [
-      2065138144, // Source: Venus Raid
+      2065138144, // Source: "Vault of Glass" Raid
     ],
     searchString: [],
   },
@@ -1574,7 +1599,7 @@ const D2Sources: {
   vog: {
     itemHashes: [],
     sourceHashes: [
-      2065138144, // Source: Venus Raid
+      2065138144, // Source: "Vault of Glass" Raid
     ],
     searchString: [],
   },
@@ -1599,6 +1624,13 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  warlordsruin: {
+    itemHashes: [],
+    sourceHashes: [
+      613435025, // Source: "Warlord's Ruin" Dungeon
+    ],
+    searchString: [],
+  },
   wartable: {
     itemHashes: [],
     sourceHashes: [
@@ -1618,12 +1650,12 @@ const D2Sources: {
   wellspring: {
     itemHashes: [],
     sourceHashes: [
-      82267399, // Source: Complete the "Warden of the Spring" Triumph
-      502279466, // Source: Wellspring boss Vezuul, Lightflayer
-      2917218318, // Source: Wellspring boss Golmag, Warden of the Spring
-      3359853911, // Source: Wellspring boss Zeerik, Lightflayer
-      3411812408, // Source: Complete the "All the Spring's Riches" Triumph
-      3450213291, // Source: Wellspring boss Bor'gong, Warden of the Spring
+      82267399, // Source: "Warden of the Spring" Triumph
+      502279466, // Source: Wellspring Boss Vezuul, Lightflayer
+      2917218318, // Source: Wellspring Boss Golmag, Warden of the Spring
+      3359853911, // Source: Wellspring Boss Zeerik, Lightflayer
+      3411812408, // Source: "All the Spring's Riches" Triumph
+      3450213291, // Source: Wellspring Boss Bor'gong, Warden of the Spring
     ],
     searchString: [],
   },
@@ -1648,8 +1680,8 @@ const D2Sources: {
       4079117607, // Wild Hunt Mask
     ],
     sourceHashes: [
-      841568343, // Source: "Hunt for the Wrathborn" quest.
-      3107094548, // Source: Coup de Grâce
+      841568343, // Source: "Hunt for the Wrathborn" Quest
+      3107094548, // Source: "Coup de Grâce" Mission
     ],
     searchString: [],
   },
@@ -1667,22 +1699,22 @@ const D2Sources: {
       4060882458, // Balistraria Wrap (Ornament)
     ],
     sourceHashes: [
-      288436121, // Source: Complete this weapon's associated Vanguard quest.
+      288436121, // Source: Associated Vanguard Quest
       351235593, // Source: Eliminate Prison of Elders escapees found in strikes.
       412991783, // Source: Strikes
-      539840256, // Source: Complete this reward's associated Vanguard quest.
-      681989555, // Source: Complete 3 Crossplay Beta Vanguard Strikes
+      539840256, // Source: Associated Vanguard Quest
+      681989555, // Source: 3 Crossplay Beta Vanguard Strikes
       1144274899, // Source: Complete this weapon's associated Vanguard quest.
       1216155659, // Source: Complete the "Season 8: First Watch" quest.
       1244908294, // Source: Complete the "Loaded Question" quest from Zavala.
       1433518193, // Source: Vanguard Salvager's Salvo Armament Quest
-      1564061133, // Source: Complete this reward's associated Vanguard quest.
-      2124937714, // Source: Rank up reputation with Zavala.
+      1564061133, // Source: Associated Vanguard Quest
+      2124937714, // Source: Zavala Rank Up Reputation
       2317365255, // Source: Complete the "A Loud Racket" quest.
-      2335095658, // Source: Strikes.
+      2335095658, // Source: Strikes
       2527168932, // Source: Complete strikes and earn rank-up packages from Commander Zavala.
-      3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit playlists.
-      3348906688, // Source: Earn ranks in Vanguard strikes, Crucible, or Gambit.
+      3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit Playlists
+      3348906688, // Source: Ranks in Vanguard Strikes, Crucible, or Gambit
     ],
     searchString: [],
   },

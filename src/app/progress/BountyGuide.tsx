@@ -148,11 +148,14 @@ export default function BountyGuide({
           }
         }
       }
-      const traitHashes = defs.InventoryItem.get(i.hash)?.traitHashes;
-      if (traitHashes) {
-        for (const traitHash of traitHashes) {
-          if (pursuitCategoryTraitHashes.includes(traitHash)) {
-            (mapped.QuestTrait[traitHash] ??= []).push(i);
+      // Don't look up InventoryItem for "items" that were created from Records.
+      if (!i.pursuit?.recordHash) {
+        const traitHashes = defs.InventoryItem.get(i.hash)?.traitHashes;
+        if (traitHashes) {
+          for (const traitHash of traitHashes) {
+            if (pursuitCategoryTraitHashes.includes(traitHash)) {
+              (mapped.QuestTrait[traitHash] ??= []).push(i);
+            }
           }
         }
       }
@@ -164,7 +167,7 @@ export default function BountyGuide({
       type: type as DefType,
       value: parseInt(value, 10),
       bounties,
-    }))
+    })),
   );
 
   if (flattened.length === 0) {
@@ -234,7 +237,7 @@ function contentFromDisplayProperties(
   }: {
     displayProperties: DestinyDisplayPropertiesDefinition;
   },
-  hideIcon?: boolean
+  hideIcon?: boolean,
 ) {
   return (
     <>
@@ -257,7 +260,6 @@ function PillContent({
 }) {
   switch (type) {
     case 'ActivityMode':
-      return contentFromDisplayProperties(defs[type][value]);
     case 'Destination':
     case 'DamageType':
       return contentFromDisplayProperties(defs[type].get(value));
@@ -283,7 +285,7 @@ function PillContent({
       return contentFromDisplayProperties(
         defs.Trait.get(value),
         // the seasonal quest trait has the Season of the Lost icon?
-        /* hideIcon */ value === TraitHashes.Seasonal_Quests
+        /* hideIcon */ value === TraitHashes.Seasonal_Quests,
       );
   }
 }
@@ -299,7 +301,7 @@ export function matchBountyFilters(
   defs: D2ManifestDefinitions,
   item: DimItem,
   filters: BountyFilter[],
-  pursuitsInfo: { [hash: string]: { [type in DefType]?: number[] } }
+  pursuitsInfo: { [hash: string]: { [type in DefType]?: number[] } },
 ) {
   if (filters.length === 0) {
     return true;

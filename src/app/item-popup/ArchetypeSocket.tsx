@@ -1,10 +1,8 @@
-import { PressTip } from 'app/dim-ui/PressTip';
 import { DimItem, DimSocket } from 'app/inventory/item-types';
 import clsx from 'clsx';
 import React from 'react';
 import styles from './ArchetypeSocket.m.scss';
 import { PlugClickHandler } from './ItemSockets';
-import { DimPlugTooltip } from './PlugTooltip';
 import Socket from './Socket';
 
 /**
@@ -13,11 +11,13 @@ import Socket from './Socket';
 export default function ArchetypeSocket({
   archetypeSocket,
   item,
+  noTooltip,
   children,
   onClick,
 }: {
   archetypeSocket?: DimSocket;
   item: DimItem;
+  noTooltip?: boolean;
   children?: React.ReactNode;
   onClick?: PlugClickHandler;
 }) {
@@ -31,17 +31,15 @@ export default function ArchetypeSocket({
         <Socket
           key={archetypeSocket.socketIndex}
           item={item}
+          noTooltip={noTooltip}
           socket={archetypeSocket}
           onClick={onClick}
         />
       </div>
-      <PressTip
-        className={styles.info}
-        tooltip={<DimPlugTooltip item={item} plug={archetypeSocket.plugged} />}
-      >
+      <div className={styles.info}>
         <div className={styles.name}>{archetypeSocket.plugged.plugDef.displayProperties.name}</div>
         {children}
-      </PressTip>
+      </div>
     </>
   );
 }

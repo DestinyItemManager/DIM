@@ -5,11 +5,12 @@ import { t } from 'app/i18next-t';
 import { loadingEnd, loadingStart } from 'app/shell/actions';
 import { del, get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
+import { convertToError } from 'app/utils/errors';
 import { errorLog, infoLog } from 'app/utils/log';
-import { convertToError, dedupePromise } from 'app/utils/util';
+import { dedupePromise } from 'app/utils/promises';
+import { reportException } from 'app/utils/sentry';
 import { showNotification } from '../notifications/notifications';
 import { settingsReady } from '../settings/settings';
-import { reportException } from '../utils/exceptions';
 
 // This file exports D1ManifestService at the bottom of the
 // file (TS wants us to declare classes before using them)!
@@ -23,7 +24,7 @@ const idbKey = 'd1-manifest';
 let version: string | null = null;
 
 const getManifestAction: ThunkResult<AllD1DestinyManifestComponents> = dedupePromise((dispatch) =>
-  dispatch(doGetManifest())
+  dispatch(doGetManifest()),
 );
 
 export function getManifest(): ThunkResult<AllD1DestinyManifestComponents> {
@@ -94,7 +95,7 @@ function loadManifest(): ThunkResult<AllD1DestinyManifestComponents> {
  */
 function loadManifestRemote(
   version: string,
-  path: string
+  path: string,
 ): ThunkResult<AllD1DestinyManifestComponents> {
   return async (dispatch) => {
     dispatch(loadingStart(t('Manifest.Download')));

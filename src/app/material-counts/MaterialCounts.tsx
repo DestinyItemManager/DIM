@@ -6,7 +6,7 @@ import {
   vendorCurrencyEngramsSelector,
 } from 'app/inventory/selectors';
 import { AccountCurrency } from 'app/inventory/store-types';
-import { addDividers } from 'app/utils/react-utils';
+import { addDividers } from 'app/utils/react';
 import clsx from 'clsx';
 import spiderMats from 'data/d2/spider-mats.json';
 import _ from 'lodash';
@@ -26,7 +26,7 @@ export function MaterialCounts({
   includeCurrencies?: boolean;
 }) {
   const allMats = useSelector(materialsSelector);
-  const materials = _.groupBy(allMats, (m) => m.hash);
+  const materials = Map.groupBy(allMats, (m) => m.hash);
 
   const currencies = useSelector(currenciesSelector);
   const transmogCurrencies = useSelector(transmogCurrenciesSelector);
@@ -37,7 +37,7 @@ export function MaterialCounts({
     ...[seasonal, goodMats, showMats].map((matgroup) => (
       <React.Fragment key={matgroup[0]}>
         {matgroup.map((h) => {
-          const items = materials[h];
+          const items = materials.get(h);
           if (!items) {
             return null;
           }
@@ -70,7 +70,7 @@ export function MaterialCounts({
         _.compact(content),
         <span className={styles.spanGrid}>
           <hr />
-        </span>
+        </span>,
       )}
     </div>
   );

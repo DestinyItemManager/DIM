@@ -1,7 +1,8 @@
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { t } from 'app/i18next-t';
 import SearchBar from 'app/search/SearchBar';
-import { uniqBy } from 'app/utils/util';
+import { uniqBy } from 'app/utils/collections';
+import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useCallback, useDeferredValue, useMemo, useState } from 'react';
@@ -36,7 +37,7 @@ export default function ItemPicker({
       onItemSelected(item);
       onClose();
     },
-    [onItemSelected]
+    [onItemSelected],
   );
 
   const onSheetClosedFn = () => {
@@ -58,7 +59,7 @@ export default function ItemPicker({
   // All items, filtered by the pre-filter configured on the item picker
   const filteredItems = useMemo(
     () => (filterItems ? allItems.filter(filterItems) : allItems),
-    [allItems, filterItems]
+    [allItems, filterItems],
   );
   // Further filtered by the search bar in the item picker
   const items = useMemo(() => {
@@ -82,7 +83,7 @@ export default function ItemPicker({
       freezeInitialHeight={true}
     >
       {({ onClose }) => (
-        <div className="sub-bucket">
+        <div className={clsx('sub-bucket', 'item-picker-grid')}>
           {items.map((item) => (
             <ItemPickerItem
               key={item.index}
@@ -108,7 +109,7 @@ function ItemPickerItem({
 }) {
   const handleClick = useCallback(
     () => onItemSelectedFn(item, onClose),
-    [item, onClose, onItemSelectedFn]
+    [item, onClose, onItemSelectedFn],
   );
 
   return (

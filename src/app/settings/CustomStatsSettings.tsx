@@ -101,7 +101,7 @@ export function CustomStatsSettings() {
           />
         ) : (
           <CustomStatView setEditing={setEditing} statDef={c} key={c.statHash} />
-        )
+        ),
       )}
     </div>
   );
@@ -303,7 +303,7 @@ function CustomStatView({
 // so let's neatly sort them as we commit them to settings.
 const customStatSort = chainComparator(
   compareBy((customStat: CustomStatDef) => customStat.class),
-  compareBy((customStat: CustomStatDef) => customStat.label)
+  compareBy((customStat: CustomStatDef) => customStat.label),
 );
 
 function useSaveStat() {
@@ -317,7 +317,7 @@ function useSaveStat() {
     const weightValues = Object.values(newStat.weights);
 
     const everyValueValid = weightValues.every(
-      (v) => v !== undefined && Number.isInteger(v) && v >= 0
+      (v) => v !== undefined && Number.isInteger(v) && v >= 0,
     );
     if (
       // if there's any invalid values
@@ -335,7 +335,7 @@ function useSaveStat() {
       !newStat.shortLabel ||
       // or there's an existing stat with an overlapping label & class
       allOtherStats.some(
-        (s) => s.shortLabel === newStat.shortLabel && isClassCompatible(s.class, newStat.class)
+        (s) => s.shortLabel === newStat.shortLabel && isClassCompatible(s.class, newStat.class),
       ) ||
       // or this shortLabel conflicts with a real stat.
       // don't name your custom stat discipline!!
@@ -353,7 +353,7 @@ function useSaveStat() {
     // commit this new stat to settings
     setSetting(
       'customStats',
-      [...allOtherStats.filter((s) => s.statHash), newStat].sort(customStatSort)
+      [...allOtherStats.filter((s) => s.statHash), newStat].sort(customStatSort),
     );
 
     return true;
@@ -373,7 +373,7 @@ function useRemoveStat() {
     ) {
       setSetting(
         'customStats',
-        customStatList.filter((s) => s.statHash !== stat.statHash).sort(customStatSort)
+        customStatList.filter((s) => s.statHash !== stat.statHash).sort(customStatSort),
       );
       return true;
     }
@@ -423,10 +423,6 @@ function createNewStatHash(existingCustomStats: CustomStatDef[]) {
     statHash--;
   }
   return statHash;
-}
-
-export function normalizeStatLabel(s: string) {
-  return s.trim().slice(0, 30);
 }
 
 function warnInvalidCustomStat(errorMsg: string) {

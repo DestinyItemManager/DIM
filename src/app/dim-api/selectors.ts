@@ -1,4 +1,4 @@
-import { defaultLoadoutParameters, DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { DestinyVersion, defaultLoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { currentAccountSelector, destinyVersionSelector } from 'app/accounts/selectors';
 import { Settings } from 'app/settings/initial-settings';
@@ -25,7 +25,7 @@ export const settingSelector =
  */
 export const savedLoadoutParametersSelector = createSelector(
   (state: RootState) => settingsSelector(state).loParameters,
-  (loParams) => ({ ...defaultLoadoutParameters, ...loParams })
+  (loParams) => ({ ...defaultLoadoutParameters, ...loParams }),
 );
 
 export const savedLoStatConstraintsByClassSelector = (state: RootState) =>
@@ -37,9 +37,6 @@ export const collapsedSelector =
   (sectionId: string) =>
   (state: RootState): boolean | undefined =>
     settingsSelector(state).collapsedSections[sectionId];
-
-export const oldCustomTotalSelector = (state: RootState) =>
-  settingsSelector(state).customTotalStatsByClass;
 
 export const customStatsSelector = (state: RootState) => settingsSelector(state).customStats;
 
@@ -57,7 +54,7 @@ export const currentProfileSelector = createSelector(
   currentAccountSelector,
   (state: RootState) => state.dimApi.profiles,
   (currentAccount, profiles) =>
-    currentAccount ? profiles[makeProfileKeyFromAccount(currentAccount)] : undefined
+    currentAccount ? profiles[makeProfileKeyFromAccount(currentAccount)] : undefined,
 );
 
 /**
@@ -70,7 +67,7 @@ export const recentSearchesSelector = (state: RootState) =>
 
 export const trackedTriumphsSelector = createSelector(
   currentProfileSelector,
-  (profile) => profile?.triumphs || []
+  (profile) => profile?.triumphs || [],
 );
 
 /** Server control over the issue/campaign banner */

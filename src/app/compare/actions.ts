@@ -20,8 +20,8 @@ export const compareFilteredItems = createAction(
     query: string,
     filteredItems: DimItem[],
     /** The first item added to compare, so we can highlight it. */
-    initialItem: DimItem | undefined
-  ) => ({ query, filteredItems, initialItem })
+    initialItem: DimItem | undefined,
+  ) => ({ query, filteredItems, initialItem }),
 )();
 
 /** Compare a specific set of items. */

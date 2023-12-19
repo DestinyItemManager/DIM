@@ -1,7 +1,7 @@
 import ClickOutsideRoot from 'app/dim-ui/ClickOutsideRoot';
 import Sheet from 'app/dim-ui/Sheet';
 import { DimItem } from 'app/inventory/item-types';
-import { filterMap } from 'app/utils/util';
+import { filterMap } from 'app/utils/collections';
 import focusingItemOutputs from 'data/d2/focusing-item-outputs.json';
 import { useMemo } from 'react';
 import Armory from './Armory';
@@ -20,15 +20,15 @@ export default function ArmorySheet({
       item?.sockets
         ? Object.fromEntries(
             filterMap(item.sockets.allSockets, (s) =>
-              s.plugged ? [s.socketIndex, s.plugged.plugDef.hash] : undefined
-            )
+              s.plugged ? [s.socketIndex, s.plugged.plugDef.hash] : undefined,
+            ),
           )
         : {},
-    [item?.sockets]
+    [item?.sockets],
   );
   const realAvailablePlugHashes = useMemo(
     () => item?.sockets?.allSockets.flatMap((s) => s.plugOptions.map((p) => p.plugDef.hash)) ?? [],
-    [item?.sockets]
+    [item?.sockets],
   );
 
   // If we're opening a dummy weapon from a Vendor (like for item focusing),

@@ -32,7 +32,7 @@
     "OpenInArmory": "im Arsenal ansehen",
     "Season": "Saison {{season}}, Jahr {{year}}",
     "TrashlistedRolls": "Mülllisten-Roll",
-    "TrashlistedRolls_plural": "{{count, number}} Mülllisten Rolls",
+    "TrashlistedRolls_plural": "{{count, number}} Mülllisten-Rolls",
     "Unknown": "Unbekannter Gegenstand",
     "WishlistedRolls": "Wunschlisten-Roll",
     "WishlistedRolls_plural": "{{count, number}} Wunschlisten-Rolls",
@@ -71,7 +71,7 @@
     "DestinyCannotPerformActionAtThisLocation": "Du kannst keine Gegenstände ausrüsten oder Mods wechseln, während du dich in einer Aktivität befindest. Geh dafür in den Orbit oder einen sozialen Bereich. Dies liegt an der Bungie.net-API, nicht an DIM.",
     "DestinyItemUnequippable": "Du kannst diesen Gegenstand nicht ausrüsten. Falls die letzte Aktivität dieses Charakters das Loadout gesperrt hatte, logge dich bitte neu in den Charakter ein.",
     "DestinyLegacyPlatform": "Bungies Dienste haben derzeit einen Bug, der DIM daran hindert Informationen für deinen Destiny 2 Account zu laden, wenn du Destiny 1 auf einer älteren Konsolengeneration gespielt hast. Bungie wird den Fehler bald beheben, aber bis dahin musst du Destiny 1 auf einer neuen Konsole spielen, um die Informationen laden zu können.",
-    "DevVersion": "Sie haben eine Entwicklungsversion von DIM? Sie müssen Ihre Chrome-Erweiterung mit Bungie.net registrieren.",
+    "DevVersion": "Du hast eine Entwicklungsversion von DIM? Du musst deine Chrome-Erweiterung auf Bungie.net registrieren.",
     "Difficulties": "Bungie.net hat derzeit Schwierigkeiten.",
     "ErrorTitle": "Bungie.net-Fehler",
     "ItemUniquenessExplanation": "Du hast versucht '{{name}}' {{type}} zu deinem {{character}} zu verschieben, aber das Ziel hat schon eins davon und es ist nur eins erlaubt.",
@@ -94,7 +94,7 @@
     "VendorNotFound": "Händlerdaten nicht verfügbar."
   },
   "Compare": {
-    "Archetype": "Urtyp",
+    "Archetype": "Archetyp",
     "AssumeMasterworked": "Als Meisterwerk ansehen",
     "Button": "Vergleichen",
     "ButtonHelp": "Gegenstände vergleichen",
@@ -147,29 +147,29 @@
   },
   "FarmingMode": {
     "D2Desc": "DIM verhindert, dass Gegenstände an die Poststelle gehen, indem sichergestellt wird, dass auf {{store}} immer ein freier Platz pro Gegenstandstyp vorhanden ist.",
-    "D2Desc_female": "DIM verhindert, dass Gegenstände an die Poststelle gehen, indem sichergestellt wird, dass auf {{store}} immer ein freier Platz pro Item Typ vorhanden ist.",
-    "D2Desc_female_plural": "DIM verhindert, dass Gegenstände an die Poststelle gehen, indem sichergestellt wird, dass auf {{store}} immer {{count}} freie Plätze pro Item Typ vorhanden sind.",
-    "D2Desc_male": "DIM verhindert, dass Gegenstände an die Poststelle gehen, indem sichergestellt wird, dass auf {{store}} immer ein freier Platz pro Item Typ vorhanden ist.",
-    "D2Desc_male_plural": "DIM verhindert, dass Gegenstände an die Poststelle gehen, indem sichergestellt wird, dass auf {{store}} immer {{count}} freie Plätze pro Item Typ vorhanden sind.",
-    "D2Desc_plural": "DIM verhindert, dass Gegenstände an die Poststelle gehen, indem sichergestellt wird, dass auf {{store}} immer {{count}} freie Plätze pro Item Typ vorhanden sind.",
-    "Desc": "DIM verschiebt Engramme und Glimmer vom {{store}} in den Tresor und lässt einen Platz pro Gegenstands-Typ frei, um zu verhindern, dass etwas zur Poststelle geschickt wird.",
-    "Desc_female": "DIM verschiebt Engramme und Glimmer von der {{store}} in den Tresor und lässt einen Platz pro Gegenstands-Typ frei, um zu verhindern, dass etwas zur Poststelle geschickt wird.",
-    "Desc_female_plural": "DIM verschiebt Engramme und Glimmer von der {{store}} in den Tresor und lässt {{count}} Plätze pro Gegenstands-Typ frei, um zu verhindern, dass etwas zur Poststelle geschickt wird.",
-    "Desc_male": "DIM verschiebt Engramme und Glimmer vom {{store}} in den Tresor und lässt einen Platz pro Gegenstands-Typ frei, um zu verhindern, dass etwas zur Poststelle geschickt wird.",
-    "Desc_male_plural": "DIM verschiebt Engramme und Glimmer vom {{store}} in den Tresor und lässt {{count}} Plätze pro Gegenstands-Typ frei, um zu verhindern, dass etwas zur Poststelle geschickt wird.",
-    "Desc_plural": "DIM verschiebt Engramme und Glimmer vom {{store}} in den Tresor und lässt {{count}} Plätze pro Gegenstands-Typ frei, um zu verhindern, dass etwas zur Poststelle geschickt wird.",
+    "D2Desc_female": "DIM verhindert, dass Gegenstände an die Poststelle gehen, indem sichergestellt wird, dass auf {{store}} immer ein freier Platz pro Gegenstandstyp vorhanden ist.",
+    "D2Desc_female_plural": "DIM verhindert, dass Gegenstände an die Poststelle gehen, indem sichergestellt wird, dass auf {{store}} immer {{count}} freie Plätze pro Gegenstandstyp vorhanden sind.",
+    "D2Desc_male": "DIM verhindert, dass Gegenstände an die Poststelle gehen, indem sichergestellt wird, dass auf {{store}} immer ein freier Platz pro Gegenstandstyp vorhanden ist.",
+    "D2Desc_male_plural": "DIM verhindert, dass Gegenstände an die Poststelle gehen, indem sichergestellt wird, dass auf {{store}} immer {{count}} freie Plätze pro Gegenstandstyp vorhanden sind.",
+    "D2Desc_plural": "DIM verhindert, dass Gegenstände an die Poststelle gehen, indem sichergestellt wird, dass auf {{store}} immer {{count}} freie Plätze pro Gegenstandstyp vorhanden sind.",
+    "Desc": "DIM verschiebt Engramme und Glimmer vom {{store}} in den Tresor und lässt einen Platz pro Gegenstandstyp frei, um zu verhindern, dass etwas zur Poststelle geschickt wird.",
+    "Desc_female": "DIM verschiebt Engramme und Glimmer von der {{store}} in den Tresor und lässt einen Platz pro Gegenstandstyp frei, um zu verhindern, dass etwas zur Poststelle geschickt wird.",
+    "Desc_female_plural": "DIM verschiebt Engramme und Glimmer von der {{store}} in den Tresor und lässt {{count}} Plätze pro Gegenstandstyp frei, um zu verhindern, dass etwas zur Poststelle geschickt wird.",
+    "Desc_male": "DIM verschiebt Engramme und Glimmer vom {{store}} in den Tresor und lässt einen Platz pro Gegenstandstyp frei, um zu verhindern, dass etwas zur Poststelle geschickt wird.",
+    "Desc_male_plural": "DIM verschiebt Engramme und Glimmer vom {{store}} in den Tresor und lässt {{count}} Plätze pro Gegenstandstyp frei, um zu verhindern, dass etwas zur Poststelle geschickt wird.",
+    "Desc_plural": "DIM verschiebt Engramme und Glimmer vom {{store}} in den Tresor und lässt {{count}} Plätze pro Gegenstandstyp frei, um zu verhindern, dass etwas zur Poststelle geschickt wird.",
     "FarmingMode": "Farm-Modus",
     "FarmingModeNote": "(Platz für Loot freimachen)",
     "MakeRoom": {
-      "Desc": "DIM verschiebt Engramme und Glimmer-Gegenstände vom {{store}} zum Tresor oder zu anderen Charakteren, nur um zu verhindern, dass etwas in der Poststelle landet.",
-      "Desc_female": "DIM verschiebt Engramme und Glimmer-Gegenstände von der {{store}} zum Tresor oder zu anderen Charakteren, nur um zu verhindern, dass etwas in der Poststelle landet.",
-      "Desc_male": "DIM verschiebt Engramme und Glimmer-Gegenstände vom {{store}} zum Tresor oder zu anderen Charakteren, nur um zu verhindern, dass etwas in der Poststelle landet.",
+      "Desc": "DIM verschiebt Engramme und Glimmer-Gegenstände vom {{store}} zum Tresor oder zu anderen Charakteren, um zu verhindern, dass etwas in der Poststelle landet.",
+      "Desc_female": "DIM verschiebt Engramme und Glimmer-Gegenstände von der {{store}} zum Tresor oder zu anderen Charakteren, um zu verhindern, dass etwas in der Poststelle landet.",
+      "Desc_male": "DIM verschiebt Engramme und Glimmer-Gegenstände vom {{store}} zum Tresor oder zu anderen Charakteren, um zu verhindern, dass etwas in der Poststelle landet.",
       "MakeRoom": "Schaffe Platz durch Verschieben von Gegenständen, um neue Gegenstände aufnehmen zu können",
       "Tooltip": "Wenn ausgewählt, wird DIM Waffen und Rüstungen verschieben, um im Tresor Platz für Engramme zu schaffen."
     },
-    "OutOfRoom": "Du hast keinen Platz, um Items weg von {{character}} zu verschieben. Es ist Zeit den Müll wegzuschmeißen!",
+    "OutOfRoom": "Du hast keinen Platz mehr, um Gegenstände von {{character}} zu verschieben. Es ist Zeit den Müll wegzuschmeißen!",
     "OutOfRoomTitle": "Kein Platz mehr",
-    "Stop": "Halt",
+    "Stop": "Stopp",
     "Vault": "Es verschiebt Gegenstände in den Tresor, um Platz zu schaffen."
   },
   "FashionDrawer": {
@@ -216,11 +216,11 @@
     "CraftedDupe": "Zeigt doppelte Waffen, bei denen mindestens eines der Duplikate hergestellt wurde.",
     "Curated": "Zeigt Gegenstände die ein kuratierter Roll sind.",
     "CurrentClass": "Zeigt Gegenstände an, die auf dem derzeit eingeloggten Hüter ausrüstbar sind.",
-    "CustomStatLower": "Zeigt Rüstungen an, deren Werte strikt niedriger sind als die anderer Rüstungen desselben Typs, wobei nur die Werte in der benutzerdefinierten Statistik-Gesamtliste dieser Klasse berücksichtigt werden.",
+    "CustomStatLower": "Zeigt Rüstungen an, deren Werte strikt niedriger sind als die anderer Rüstungen desselben Typs, wobei nur die Werte aus der Liste \"individuellen Summe\" dieser Klasse berücksichtigt werden.",
     "DamageType": "Zeigt Gegenstände basierend auf deren Schadenstyp.",
     "Deepsight": "Zeigt Waffen mit Tiefenblick-Aktivierung, deren Bauplan extrahiert oder die Tiefenblick-Aktivierung mit einem Tiefenblick-Harmonisierer verliehen werden kann.",
     "Description": "Beschreibung",
-    "Dupe": "Zeigt doppelte Gegenstände, einschließlich Neuveröffentlichungen",
+    "Dupe": "Zeigt doppelte Gegenstände, einschließlich Neuauflagen",
     "DupeCount": "Gegenstände, die die angegebene Anzahl an Duplikaten haben.",
     "DupeLower": "Doppelte Gegenstände, einschließlich Neuauflagen, die nicht das höchste Powerlevel haben. Nur ein Duplikat wird als das höchste ausgewählt, und der Rest als niedriger betrachtet.",
     "Energy": "Zeigt Gegenstände mit Energiekapazität (Rüstung 2.0).",
@@ -233,7 +233,7 @@
     "Filter": "Filter",
     "FilterWith": "Filtern mit:",
     "Focusable": "Zeigt Gegenstände an, die bei einem Händler fokussiert werden können",
-    "Foundry": "Zeigt an, von welcher Schmiede die Items stammen.",
+    "Foundry": "Zeigt an, von welcher Schmiede die Gegenstände stammen.",
     "Glimmer": "Zeigt Verbrauchsgegenstände, die mit dem Erhalt von Glimmer verbunden sind.",
     "Harrowed": "\\(Gequält\\)",
     "HasNotes": "Zeige Gegenstände mit Notizen an.",
@@ -248,7 +248,7 @@
     "IsAdept": "Zeigt Waffen, die mit Meister-Mods kompatibel sind.",
     "IsCrafted": "Zeigt Waffen, die hergestellt wurden.",
     "IsSunset": "Zeigt Gegenstände die gesunsetted sind und nicht mehr auf das maximale Powerlevel infundiert werden können.",
-    "ItemHash": "Zeigt die Items mit dem angegebenen Inventar-Item Hash. Für fortgeschrittene Benutzer.",
+    "ItemHash": "Zeigt die Gegenstände mit dem angegebenen Inventar-Item Hash an. Für fortgeschrittene Benutzer.",
     "ItemId": "Zeigt das Item mit der angegebenen Inventar-Item-ID. Für fortgeschrittene Benutzer.",
     "Leveling": {
       "Complete": "{{term}} - zeigt Gegenstände, die fertig sind - jedes Upgrade freigeschaltet.",
@@ -279,34 +279,34 @@
     "PartialMatch": "Zeigt Gegenstände, deren Name, Beschreibung, jeglicher Perk, oder Mod eine teilweise Übereinstimmung zum Suchtext haben. Suche nach ganzen Phrasen mittels Anführungszeichen. Der 'perk:' Filter durchsucht nur Perks.",
     "PatternUnlocked": "Zeigt Gegenstände, dessen Bauplan freigeschaltet ist, auch wenn der Gegenstand an sich nicht geformt wurde.",
     "Perk": "Zeigt Gegenstände, bei denen einer der Perks oder Mods den Suchtext im Namen oder in der Beschreibung enthält. Suche nach ganzen Phrasen mit Anführungszeichen.",
-    "PerkName": "Zeigt Gegenstände an, bei denen einer der Perks oder Mods den Suchtext nur im Namen enthält. Suche nach ganzen Phrasen mit Anführungszeichen.",
-    "PinnacleReward": "Zeigt Jagden, welche eine Spitzenbelohnung hervorbringen.",
+    "PerkName": "Zeigt Gegenstände mit einem Perk oder Mod an, deren Name exakt (exactperk:) oder partiell (perkname:) mit dem Filtertext übereinstimmt. Suche nach ganzen Phrasen mit Hilfe von Anführungszeichen.",
+    "PinnacleReward": "Zeigt Aktivitäten, welche eine Spitzenbelohnung hervorbringen.",
     "Postmaster": "Gegenstände, die derzeit bei der Poststelle sind.",
     "PowerKeywords": "Verwende statt einer Zahl die Schlüsselwörter \"pinnaclecap\" oder \"softcap\", um auf das Powerlevel der aktuellen Saison zu verweisen.",
     "PowerLevel": "Zeigt Gegenstände basierend auf ihrem Powerlevel an. $t(Filter.PowerKeywords)",
     "PowerLimit": "Zeigt Gegenstände basierend auf dem maximalen Powerlevel an, auf das sie infundiert werden können. $t(Filter.PowerKeywords)",
-    "PowerfulReward": "Zeigt Jagden welche eine mächtige Belohnung hervorbringen.",
-    "Quality": "Zeigt Items basierend auf ihrer prozentualen Gesamtqualität an. '{{percentage}}' ist ein Synonym für '{{quality}}'.",
-    "RandomRoll": "Zeige Items, die mit Zufalls-Rolls droppen.",
-    "RarityTier": "Zeigt Items basierend auf deren Seltenheits-Rang.",
-    "Reforgeable": "Zeigt Items, die beim Waffenmeister umgeschmiedet werden können.",
+    "PowerfulReward": "Zeigt Aktivitäten, welche eine mächtige Belohnung hervorbringen.",
+    "Quality": "Zeigt Gegenstände basierend auf ihrer prozentualen Gesamtqualität an. '{{percentage}}' ist ein Synonym für '{{quality}}'.",
+    "RandomRoll": "Zeigt Gegenstände an, die mit Zufalls-Rolls droppen.",
+    "RarityTier": "Zeigt Gegenstände basierend auf deren Seltenheits-Rang an.",
+    "Reforgeable": "Zeigt Gegenstände an, die beim Waffenmeister umgeschmiedet werden können.",
     "Release": "Verfügbar seit Veröffentlichung <i>{{release}}</i>",
-    "RequiredLevel": "Zeigt Items basierend auf deren Mindestlevel.",
+    "RequiredLevel": "Zeigt Gegenstände basierend auf deren Mindestlevel an.",
     "RetiredPerk": "Zeigt Waffen mit nicht mehr erhältlichen Perks.",
     "SearchPrompt": "Verfügbare Filterbefehle durchsuchen",
-    "Season": "Zeigt Items nach der Saison in der sie in Destiny 2 erschienen sind an.",
+    "Season": "Zeigt Gegenstände aus der Saison, in der sie in Destiny 2 erschienen sind, an.",
     "StackFull": "Zeigt Gegenstände, deren Stapel voll ist (Verbesserungskerne, Seltsame Münzen, Waffenmeister-Materialien, usw.)",
-    "StackLevel": "Zeigt Items basierend auf der Menge der Items in ihrem Stapel.",
-    "Stackable": "Zeigt Items an, die gestapelt werden können (Munition-Synthesen, Seltsame Münzen, etc.)",
+    "StackLevel": "Zeigt Gegenstände basierend auf der Menge der Gegenstände im Stapel an.",
+    "Stackable": "Zeigt Gegenstände an, die gestapelt werden können (Munition-Synthesen, Seltsame Münzen, etc.)",
     "StatLower": "Zeigt Rüstungen an, deren Werte strikt niedriger sind als die anderer Rüstungen desselben Typs.",
-    "Stats": "Zeigt Items basierend auf einem bestimmten Wert der Statistik. $t(Filter.StatsExtras)",
+    "Stats": "Zeigt Gegenstände basierend auf einem bestimmten Wert der Statistik. $t(Filter.StatsExtras)",
     "StatsBase": "Filtert Rüstungen basierend auf ihrem Basiswert, Mod- oder Meisterwerk-Verbesserungen werden ignoriert. $t(Filter.StatsExtras)",
     "StatsExtras": "Unterstützt das Addieren von Stats durch das Verbinden mehrerer Stat-Namen mit dem + oder & Symbol. Es gibt auch spezielle Schlüsselwörter \"highest\", \"secondhighest\", \"thirdhighest\" usw. die Stats auf der Grundlage ihres Rangs in den Statistiken eines Gegenstands widerspiegeln. Jeder benutzerdefinierte Summe-Name hat auch einen eigenen Suchbegriff, der in den benutzerdefinierte Summe-Einstellungen angezeigt wird.",
     "StatsLoadout": "Findet eine Reihe von Gegenständen, die für den maximalen Gesamtwert eines bestimmten Wertes geeignet sind.",
     "StatsMax": "Findet Rüstung mit dem höchstmöglichen Wert für einen bestimmten Wert. Enthält alle Gegenstände mit den höchsten Werten.",
     "Tags": {
-      "Tag": "Zeigt Items mit einem bestimmten Tag an.",
-      "Tagged": "Zeigt Items mit irgend einem Tag an."
+      "Tag": "Zeigt Gegnstände mit einem bestimmten Tag an.",
+      "Tagged": "Zeigt Gegenstände mit irgend einem Tag an."
     },
     "Timelost": "\\(zeitverirrt\\)",
     "Tracked": "Zeigt Quests/Beutezüge basierend auf ihrem Verfolgungszustand an.",
@@ -317,6 +317,7 @@
     "UnlockAllFailed": "Konnte Gegenstände nicht entsperren",
     "UnlockAllSuccess": "{{num}} Gegenstände entsperrt",
     "Vendor": "Artikel ist bei einem bestimmten Händler erhältlich.",
+    "VendorItem": "Gegenstände von einem Händler, die nicht in deinem Inventar sind. Nützlich, um Händlergegenstände vom Loadout-Optimierer auszuschließen.",
     "Weapon": "Zeigt Gegenstände, die Waffen sind.",
     "WeaponLevel": "Zeigt Waffen basierend auf ihrem Waffen-Level an.",
     "WeaponType": "Zeigt Waffen basierend auf ihrem Waffentyp an.",
@@ -391,6 +392,7 @@
     "ClearDialog": "Dialog schließen",
     "ClearNewItems": "Markierung von neuen Gegenständen entfernen",
     "Enter": "ENTER",
+    "ItemPopupTab": "Tab in Gegenstand-Detailansicht wechseln",
     "LockUnlock": "Sperre oder entsperre einen Gegenstand",
     "MarkItemAs": "Markiere Gegenstand als '{{tag}}'",
     "Menu": "Menü umschalten",
@@ -404,7 +406,6 @@
     "Vault": "Sende Gegenstand zum Tresor"
   },
   "InGameLoadout": {
-    "Applying": "Lege Loadout an...",
     "ClearSlot": "Slot {{index}} löschen",
     "Create": "Erstelle Loadout",
     "CreateTitle": "Erstelle In-Game-Loadout von aktueller Ausrüstung",
@@ -489,13 +490,15 @@
   "LB": {
     "AdvancedOptions": "Erweiterte Optionen",
     "ChooseAMod": "Wähle deine Mods",
-    "ChooseAnExotic": "Wähle dein Exotisches",
+    "ChooseAnExotic": "Wähle deine exotische Rüstung",
     "ClearLocked": "Gesperrte entsperren",
     "ContainsVendorItems": "Dieses Loadout enthält Gegenstände von Händlern",
     "Current": "Aktuelles",
     "Equip": "Anlegen an {{character}}",
     "Exclude": "Ignorierte Gegenstände",
     "ExcludeHelp": "Benutze Shift + Klick bei einem Gegenstand (oder ziehe ihn in dieses Feld), um Sets ohne diesen Gegenstand zu generieren.",
+    "ExistingBuildStats": "Existierende Build-Werte",
+    "ExistingBuildStatsNote": "Nur Builds mit höheren Tier-Werten werden anzeigt.",
     "FilterSets": "Sets filtern",
     "Help": {
       "And": "Rüstung mit all diesen Perks wird benutzt (\"und\")",
@@ -540,8 +543,10 @@
     "Scaled": "Skaliert",
     "SearchAMod": "Suche Mod-Name oder -Beschreibung",
     "SearchAnExotic": "Suche Namen oder Beschreibung von Exotischen",
-    "SelectExotic": "Wähle Exotisches",
+    "SelectExotic": "Wähle Exotik",
     "SelectMods": "Mods auswählen",
+    "SelectModsCount": "{{selected}}/{{maxSelectable}}",
+    "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Aktivitäts-Mods",
     "SelectSubclassOptions": "Fokus anpassen",
     "ShowAllConfigs": "Zeige alle Einstellungen",
     "ShowConfigs": "Zeige Einstellungen",
@@ -555,16 +560,71 @@
     "Profile": "Lade Destiny Profil...",
     "Vendors": "Lade Destiny Händler..."
   },
+  "LoadoutAnalysis": {
+    "Analyzed": "{{numLoadouts}} Loadouts analysiert",
+    "Analyzing": "Analysiere {{numAnalyzed}}/{{numLoadouts}} Loadouts",
+    "BetterStatsAvailable": {
+      "Description": "Das Auswählen anderer Rüstungen oder Mods für dieses Loadout, ermöglichen höhere Tier-Werte zu erreichen. Wähle \"$t(Loadouts.OpenInOptimizer)\", um bessere Builds anzuzeigen.",
+      "Name": "Bessere Werte verfügbar"
+    },
+    "BetterStatsAvailableFontNote": "Hinweis: Dieses Loadout benutzt \"Quelle der ...\"-Mods, welche einen Tier-Wert über T10 erzeugen. DIM kann evtl. bessere Werte identifizieren, indem die überschüssigen Werte verringert werden. Wenn dies unerwünscht ist, deaktiviere \"$t(Loadouts.IncludeRuntimeStatBenefits)\" im Loadout.",
+    "DoesNotRespectExotic": {
+      "Description": "Die Loadout-Optimierer-Einstellungen dieses Loadouts legen eine Exotic-Auswahl fest, aber das Loadout entspricht nicht diesem Exotic.",
+      "Name": "Falsches Exotic"
+    },
+    "DoesNotSatisfyStatConstraints": {
+      "Description": "Loadout-Optimierer-Einstellungen für dieses Loadout geben Tier-Werte vor, aber das Loadout erreicht sie nicht.",
+      "Name": "Falsche Tier-Werte"
+    },
+    "EmptyFragmentSlots": {
+      "Description": "Es gibt leere Fragment-Slots in diesem Fokus.",
+      "Name": "Leere Fragment-Slots"
+    },
+    "InvalidMods": {
+      "Description": "Einige Mods in diesem Loadout sind veraltet oder passen aus anderen Gründen nicht auf deine Rüstungen.",
+      "Name": "Veraltete Mods"
+    },
+    "InvalidSearchQuery": {
+      "Description": "Dieses Loadout wurde mit einer Suchanfrage im Loadout-Optimierer erzeugt, die nicht mehr gültig ist oder die Rüstung in diesem Loadout nicht enthält.",
+      "Name": "Ungültige Suchanfrage"
+    },
+    "MissingItems": {
+      "Description": "Einige der Gegenstände in diesem Loadout befinden sich nicht mehr in deinem Inventar.",
+      "Name": "Fehlende Gegenstände"
+    },
+    "ModsDontFit": {
+      "Description": "Rüstung in diesem Loadout kann nicht alle Loadout-Mods aufnehmen, auch wenn die Rüstung verbessert wurde.",
+      "Name": "Nicht zugewiesene Mods"
+    },
+    "NeedsArmorUpgrades": {
+      "Description": "Rüstung in diesem Loadout muss verbessert werden, um alle Mods unterbringen zu können oder bestimmte Tier-Werte zu erreichen.",
+      "Name": "Benötigt Rüstungsverbesserungen"
+    },
+    "NotAFullArmorSet": {
+      "Description": "Dieses Loadout konnte nicht weiter analysiert werden, da das Rüstungsset unvollständig ist.",
+      "Name": "Unvollständiges Rüstungsset"
+    },
+    "TooManyFragments": {
+      "Description": "Es sind mehr Fragmente für diesen Fokus konfiguriert, als durch Aspekte ermöglicht werden.",
+      "Name": "Zu viele Fragmente"
+    },
+    "UsesSeasonalMods": {
+      "Description": "Dieses Loadout ist auf Mods angewiesen, die nur in bestimmten Saisons verfügbar sind. Wenn die Saison endet, werden einige Mods nicht mehr sein oder die Kapazität der Rüstung übersteigen.",
+      "Name": "Verwendet saisonale Mods"
+    }
+  },
   "LoadoutBuilder": {
     "AddHalfTierMods": "+5 Mods hinzufügen",
     "All": "Alle",
-    "AnyExotic": "Irgendein Exotisches",
+    "AnyExotic": "Irgendein Exotik",
     "AnyExoticDescription": "Sets müssen einen exotischen Gegenstand beinhalten, es ist aber egal welchen.",
     "AssumeMasterwork": "Als Meisterwerk ansehen",
     "AssumeMasterworkOptions": {
-      "All": "Alle Rüstungen verwenden gemeisterwerkte Werte und haben ein Energielevel von 10.",
-      "Legendary": "Legendäre Rüstungen verwenden gemeisterwerkte Werte und haben ein Energielevel von 10.",
-      "None": "Alle Rüstungen verwenden ihre aktuellen Werte und haben mindestens ein Energielevel von 7."
+      "All": "Alle Rüstungen: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "Current": "Aktuelle Werte gehen von einer Energiekapazität von mindestens {{minLoItemEnergy}} aus.",
+      "Legendary": "Legendär: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotisch: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
+      "Masterworked": "+2 für jeden Wert, bei einer Energiekapazität von 10.",
+      "None": "Alle Rüstungen: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "Stat-Mods automatisch hinzufügen",
     "AutomaticallyPicked": "Dieser Mod wurde automatisch hinzugefügt, um Build-Stats zu verbessern.",
@@ -572,18 +632,20 @@
     "CompareLoadout": "Vergleiche Loadout",
     "ConfirmOverwrite": "Bist du sicher, dass du die Gegenstände in deinem Loadout \"{{name}}\" durch dieses neue Rüstungsset ersetzen möchtest?",
     "CreateLoadout": "Loadout speichern",
+    "DecreaseStatPriority": "Verringere Wert-Priorität",
     "DisabledByAutoStatMods": "Werte-Mods werden automatisch vom Loadout-Optimierer gewählt.",
     "DisabledDueToMaintenance": "Der Loadout-Optimierer ist derzeit aufgrund der Bungie API Wartung deaktiviert.",
     "EquipItems": "Ausrüsten",
     "ExcludeItem": "Gegenstand ausschließen",
     "ExistingLoadout": "Bestehendes Loadout",
+    "Exotic": "Exotische Rüstung",
     "ExoticSpecialCategory": "Spezial",
     "Filter": "Filter",
-    "IncludeVendorItems": "Gegenstände von Händlern einbeziehen",
+    "IgnoreStat": "Wenn nicht ausgewählt, wird der Loadout-Optimierer diesen Wert beim Zusammenstellen von Sets nicht beachten",
+    "IncreaseStatPriority": "Erhöhe Wert-Priorität",
     "Legendary": "Legendär",
     "LockEquipped": "ausgerüstete Gegenstände anpinnen",
     "LockItem": "Gegenstand anpinnen",
-    "MaxTier": "Max. {{tier}}",
     "MissingClass": "Build ist für: {{className}}",
     "MissingClassDescription": "Der Build, den du sehen möchtest, ist für eine Charakterklasse gedacht, die du nicht hast.",
     "NoBuildsFoundExplainer": {
@@ -604,23 +666,23 @@
       "RemoveMods": "Diese Mods entfernen",
       "UpperBoundsFailed": "Viele Sets erfüllten nicht die Maximalanforderungen für Tier-Stufen"
     },
-    "NoExotic": "Kein Exotisches",
-    "NoExoticDescription": "Äquivalent zur Suche \"not:exotic\" in der Suchleiste - keine exotische Rüstung wird in Sets verwendet.",
+    "NoExotic": "Kein Exotik",
+    "NoExoticDescription": "Äquivalent zur Suche \"not:exotic\" in der Suchleiste - Sets werden keine exotischen Rüstungen verwenden.",
+    "NoExoticPreference": "Kein Exotik gewählt",
+    "NoExoticPreferenceDescription": "Exotische Rüstung wird verwendet, wenn sie die Werte maximiert.",
     "NoLoadoutsToCompare": "Keine Loadouts für Vergleich",
     "None": "Keine",
     "OptimizerExplanationGuide": "Lies das Benutzerhandbuch für weitere Informationen und ein Video-Tutorial.",
-    "OptimizerExplanationMods": "Wähle einen exotischen Gegenstand und alle Mods, die du verwenden möchtest. Der Loadout-Optimierer berücksichtigt nur Werte-Boni von Mods, die du wählst - alle Mods auf der Rüstung werden ignoriert.",
+    "OptimizerExplanationMods": "Wähle ein Exotik, Mods und einen Fokus. Loadout-Optimierer berücksichtigt nur Werte-Boni von Mods und Fokus-Optionen, die du wählst. Alle Mods, die bereits auf der Rüstung sind, werden ignoriert.",
     "OptimizerExplanationSearch": "Benutze die Suchleiste, um die zu berücksichtigende Rüstung einzugrenzen. Wenn keine der Rüstungen in einem Slot der Suche entspricht, werden alle Rüstungen in diesem Slot berücksichtigt.",
-    "OptimizerExplanationStats": "Ziehe die dir wichtigsten Werte nach oben, und setze andere, die dir nicht wichtig sind, auf ignorieren.",
+    "OptimizerExplanationStats": "Ziehe die wichtigsten Stats nach oben und deaktiviere Stats, die du nicht optimieren möchtest.",
     "OptimizerSet": "Optimierer-Set",
-    "ProcessingSets": "Verarbeite Sets für\n{{character}} ({{remainingTime}}s)",
+    "ProcessingSets": "Höchste Tier-Sets finden...",
     "SaveAs": "Speichern unter",
-    "SelectMax": "- Max -",
-    "SelectMin": "- Min -",
     "SpeedReport": "{{combos, number}} Kombinationen in {{time}} Sekunden erstellt",
-    "StatTierIgnoreOption": "Ignorieren",
-    "StatTierIncludeOption": "Einschließen",
+    "StatConstraints": "Tier-Wert Prioritäten und Bereiche",
     "TierNumber": "T{{tier}}",
+    "TierSelect": "Wähle minimalen Wert-Tier",
     "UnableToAddAllMods": "Nicht in der Lage, alle Mods hinzuzufügen.",
     "UnableToAddAllModsBody": "Es waren nicht genügend Mod-Slots verfügbar für {{mods}}.",
     "UnlockItem": "Abpinnen"
@@ -643,7 +705,7 @@
     "BadLoadoutShareBody": "Das Loadout, das du zu laden versuchst, ist ungültig: {{error}}",
     "Before": "Bevor '{{name}}'",
     "CancelEditing": "Bearbeitung abbrechen",
-    "CannotCustomizeSubclass": "Diese Unterklasse kann nicht konfiguriert werden",
+    "CannotCustomizeSubclass": "Dieser Fokus kann nicht konfiguriert werden",
     "ChooseItem": "{{name}} hinzufügen",
     "ClassTypeMismatch": "Ein {{className}}-Gegenstand kann diesem Loadout nicht hinzugefügt werden",
     "ClassTypeMissing": "Du besitzt keinen {{className}}, für den du ein Loadout erstellen könntest",
@@ -659,11 +721,9 @@
     "CurrentlyEquipped": "Zurzeit ausgerüstet",
     "Deequip": "Lege Gegenstände von anderen Charakteren ab",
     "Delete": "Löschen",
-    "DeprecatedMods": "Veraltete Mods",
     "DimLoadouts": "DIM-Loadouts",
     "Edit": "Loadout bearbeiten",
     "EditBrief": "Bearbeiten",
-    "EmptyFragmentSlots": "Leere Fragment-Slots",
     "EquipInGameLoadout": "Rüste In-Game-Loadout aus",
     "EquipItems": "Rüste Gegenstände aus",
     "EquippableDifferent1": "Mehrere exotische Gegenstände wurden zur Berechnung deines maximalen Powerlevels verwendet, sodass die angezeigte Zahl beim Ausrüsten deiner Gegenstände im Spiel möglicherweise nicht erreichbar ist.",
@@ -685,6 +745,8 @@
     },
     "ImportLoadout": "Importiere Loadout",
     "InGameLoadouts": "In-Game-Loadouts",
+    "IncludeRuntimeStatBenefits": "\"Quelle der\"-Mod-Werte einbeziehen",
+    "IncludeRuntimeStatBenefitsDesc": "\"Quelle der ...\"-Rüstungsmods erhöhen die Charakter-Werte während du Rüstungsladungen hast.\n\nMit dieser Einstellung bezieht DIM diese Mods aktiv ein und fügt deren Nutzen in Berechnungen und Optimierungen zu den Werten dieses Loadouts hinzu.",
     "ItemErrorSummary": "1 Gegenstands-Fehler:",
     "ItemErrorSummary_plural": "{{count}} Gegenstands-Fehler:",
     "ItemLeveling": "Gegenstand aufwerten",
@@ -707,7 +769,6 @@
     "MaximizeLight": "Max Licht",
     "MaximizePower": "Max Power",
     "MaximizeStat": "Maximiere Werte",
-    "MissingItems": "Fehlende Gegenstände",
     "MissingItemsWarning": "Einige der Gegenstände in diesem Loadout befinden sich nicht mehr in deinem Inventar.",
     "ModErrorSummary": "1 Mod-Fehler:",
     "ModErrorSummary_plural": "{{count}} Mod-Fehler:",
@@ -792,7 +853,6 @@
     "SubclassOptionsSearch": "{{subclass}}-Optionen suchen",
     "Succeeded": "Loadout angewendet",
     "SyncFromEquipped": "Von Ausgerüstetem synchronisieren",
-    "TooManyFragments": "Zu viele Fragmente",
     "TooManyRequested": "Du hast {{total}} {{itemname}}, aber dein Loadout verlangt jedoch {{requested}}. Wir haben alles übertragen, was da war.",
     "UnassignedModError": "Mod passt nicht auf deine aktuelle Rüstung",
     "Undo": "Rückgängig",
@@ -821,7 +881,7 @@
     "Weekly": "Wöchentliche Herausforderung"
   },
   "Mods": {
-    "HarmonicModDescription": "Der Effekt dieses Mods hat einen reduzierten Preis und ändert sein Element abhängig von der ausgerüsteten Subklasse."
+    "HarmonicModDescription": "Der Effekt dieses Mods hat einen reduzierten Preis und ändert sein Element abhängig vom ausgerüsteten Fokus."
   },
   "MoveAmount": {
     "Amount": "Menge:"
@@ -873,6 +933,7 @@
       "QuestProgress": "Schritt {{questStepNum}} von {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
+    "TabList": "Tabs in Gegenstand-Detailansicht",
     "ToggleSidecar": "Gegenstand-Aktionen erweitern oder einklappen",
     "TrackUntrack": {
       "Track": "{{itemType}} verfolgen",
@@ -991,7 +1052,8 @@
     "RecordBooks": "Urkundenbücher"
   },
   "Records": {
-    "Title": "Sammlungen"
+    "Title": "Sammlungen",
+    "UniversalOrnamentSetOther": "Andere"
   },
   "SearchHistory": {
     "Date": "Zuletzt verwendet",
@@ -1019,7 +1081,7 @@
     "CommunityDescriptionOnly": "Community-Beschreibung",
     "CsvImport": "Importiere CSV",
     "CustomErrorLabel": "Ein Stat-Name muss alphanumerische Zeichen enthalten und sich von anderen Stat-Namen für diese Hüterklasse unterscheiden.",
-    "CustomErrorValues": "Stat-Wichtungen müssen positive Zahlen sein.\nMindestens 2 Stat-Wichtungen müssen größer als Null sein.",
+    "CustomErrorValues": "Wert-Wichtungen müssen positive Zahlen sein.\nMindestens 2 Wert-Wichtungen müssen größer als Null sein.",
     "CustomStatChooseName": "Wähle einen benutzerdefinierten Stat-Namen",
     "CustomStatCreate": "Erstelle neuen benutzerdefinierten Stat",
     "CustomStatDelete": "Lösche diesen benutzerdefinierten Stat",
@@ -1053,6 +1115,7 @@
     "ResetToDefault": "Zurücksetzen",
     "ReverseSort": "Sortierung umschalten",
     "SetSort": "Sortiere Gegenstände nach:",
+    "SetVaultWeaponGrouping": "Gruppiere Waffen im Tresor nach:",
     "Settings": "Einstellungen",
     "ShowNewItems": "Einen roten Punkt bei neuen Gegenständen anzeigen",
     "SingleCharacter": "Einzel-Charakter-Ansicht",
@@ -1076,7 +1139,8 @@
     "SortName": "Name",
     "SpacesSize": "{{count}} Platz",
     "SpacesSize_plural": "{{count}} Plätze",
-    "Theme": "Aussehen"
+    "Theme": "Aussehen",
+    "VaultGroupingNone": "Keine"
   },
   "Sockets": {
     "ApplyPerks": "Perks anwenden",

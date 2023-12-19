@@ -1,7 +1,7 @@
 import { get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { errorLog } from 'app/utils/log';
-import { dedupePromise } from 'app/utils/util';
+import { dedupePromise } from 'app/utils/promises';
 import _ from 'lodash';
 import * as actions from '../actions';
 import { ClarityCharacterStats, ClarityStatsVersion } from './character-stats';
@@ -65,7 +65,7 @@ const loadClarityDescriptions = dedupePromise(async (loadFromIndexedDB: boolean)
 const fetchRemoteStats = async (version: ClarityStatsVersion) => {
   const descriptions = await fetchClarity<ClarityCharacterStats>(
     'characterStats',
-    version.schemaVersion
+    version.schemaVersion,
   );
   set('clarity-characterStats', descriptions);
   localStorage.setItem('clarityStatsVersion2', JSON.stringify(version));

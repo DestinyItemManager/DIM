@@ -64,7 +64,7 @@ export function toWishList(
 
           if (roll) {
             const rollHash = `${roll.itemHash};${roll.isExpertMode};${sortedSetToString(
-              roll.recommendedPerks
+              roll.recommendedPerks,
             )}`;
 
             if (!seen.has(rollHash)) {

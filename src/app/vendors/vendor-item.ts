@@ -1,5 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { THE_FORBIDDEN_BUCKET, VENDORS } from 'app/search/d2-known-values';
+import { createCollectibleFinder } from 'app/records/collectible-matching';
+import { THE_FORBIDDEN_BUCKET, VendorHashes } from 'app/search/d2-known-values';
 import { emptyArray } from 'app/utils/empty';
 import {
   DestinyCollectibleState,
@@ -12,7 +13,6 @@ import {
   DestinyVendorItemState,
   DestinyVendorSaleItemComponent,
 } from 'bungie-api-ts/destiny2';
-import focusingItemOutputs from 'data/d2/focusing-item-outputs.json';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { DimItem } from '../inventory/item-types';
 import { ItemCreationContext, makeFakeItem } from '../inventory/store/d2-item-factory';
@@ -49,17 +49,10 @@ function getCollectibleState(
   defs: D2ManifestDefinitions,
   inventoryItem: DestinyInventoryItemDefinition,
   profileResponse: DestinyProfileResponse | undefined,
-  characterId: string
+  characterId: string,
 ) {
-  let collectibleHash = inventoryItem.collectibleHash;
-
-  if (!collectibleHash) {
-    // For fake focusing items, what we really care about is state of what the item produces
-    const focusedItem = focusingItemOutputs[inventoryItem.hash];
-    if (focusedItem) {
-      collectibleHash = defs.InventoryItem.get(focusedItem)?.collectibleHash;
-    }
-  }
+  const collectibleFinder = createCollectibleFinder(defs);
+  const collectibleHash = collectibleFinder(inventoryItem)?.hash;
   let collectibleState: DestinyCollectibleState | undefined;
   if (collectibleHash) {
     collectibleState =
@@ -82,7 +75,7 @@ function makeVendorItem(
   // the character to whom this item is being offered
   characterId: string,
   // the index in the vendor's items array
-  vendorItemIndex: number
+  vendorItemIndex: number,
 ): VendorItem {
   const { defs, profileResponse } = context;
 
@@ -96,7 +89,7 @@ function makeVendorItem(
     owned: Boolean(
       (!inventoryItem.inventory ||
         inventoryItem.inventory.bucketTypeHash === THE_FORBIDDEN_BUCKET) &&
-        (saleItem?.augments || 0) & DestinyVendorItemState.Owned
+        (saleItem?.augments || 0) & DestinyVendorItemState.Owned,
     ),
     locked: Boolean((saleItem?.augments || 0) & DestinyVendorItemState.Locked),
     canBeSold: !saleItem || saleItem.failureIndexes.length === 0,
@@ -108,7 +101,7 @@ function makeVendorItem(
       context.defs,
       inventoryItem,
       profileResponse,
-      characterId
+      characterId,
     ),
     item: makeFakeItem(
       context,
@@ -117,7 +110,7 @@ function makeVendorItem(
       vendorItemIndex.toString(),
       vendorItemDef ? vendorItemDef.quantity : 1,
       // vendor items are wish list enabled!
-      true
+      true,
     ),
   };
 
@@ -138,7 +131,7 @@ function makeVendorItem(
   }
 
   // only apply for 2255782930, master rahool
-  if (vendorHash === VENDORS.RAHOOL && saleItem?.overrideStyleItemHash && vendorItem.item) {
+  if (vendorHash === VendorHashes.Rahool && saleItem?.overrideStyleItemHash && vendorItem.item) {
     const itemDef = defs.InventoryItem.get(saleItem.overrideStyleItemHash);
     if (itemDef) {
       const display = itemDef.displayProperties;
@@ -160,7 +153,7 @@ export function vendorItemForSaleItem(
   vendorDef: DestinyVendorDefinition,
   saleItem: DestinyVendorSaleItemComponent,
   /** all DIM vendor calls are character-specific. any sale item should have an associated character. */
-  characterId: string
+  characterId: string,
 ): VendorItem {
   const vendorItemDef = vendorDef.itemList[saleItem.vendorItemIndex];
   const failureStrings =
@@ -176,7 +169,7 @@ export function vendorItemForSaleItem(
     vendorItemDef,
     saleItem,
     characterId,
-    saleItem.vendorItemIndex
+    saleItem.vendorItemIndex,
   );
 }
 
@@ -189,7 +182,7 @@ export function vendorItemForDefinitionItem(
   vendorItemDef: DestinyVendorItemDefinition,
   characterId: string,
   // the index in the vendor's items array
-  vendorItemIndex: number
+  vendorItemIndex: number,
 ): VendorItem {
   const item = makeVendorItem(
     context,
@@ -199,7 +192,7 @@ export function vendorItemForDefinitionItem(
     vendorItemDef,
     undefined,
     characterId,
-    vendorItemIndex
+    vendorItemIndex,
   );
   // items from vendors must have a unique ID, which causes makeItem
   // to think there's gotta be socket info, but there's not for vendors

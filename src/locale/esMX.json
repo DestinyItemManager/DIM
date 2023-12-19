@@ -279,7 +279,7 @@
     "PartialMatch": "Muestra objetos donde su nombre, descripción, cualquier ventaja, o cualquier modificador tiene una coincidencia parcial al texto filtrado. Busca por frases enteras usando comillas. El filtro \"perk:\" sólo buscará ventajas.",
     "PatternUnlocked": "Muestra objetos que tienen un patrón de fabricación desbloqueado, incluso si el objeto no está fabricado.",
     "Perk": "Muestra objetos donde una de sus ventajas o modificadores tiene una coincidencia parcial al texto filtrado en su nombre o descripción. Busca por frases enteras usando comillas.",
-    "PerkName": "Muestra objetos donde una de sus ventajas o modificadores tiene una coincidencia parcial al texto filtrado sólo en su nombre. Busca por frases enteras usando comillas.",
+    "PerkName": "Muestra objetos con un perk o mod cuyo nombre coincida exactamente (exactperk:) o parcialmente (perkname:) con el texto filtrado. Busca frases completas usando comillas.",
     "PinnacleReward": "Muestra aventuras que produzcan una recompensa hito.",
     "Postmaster": "Objetos que están actualmente en la administración.",
     "PowerKeywords": "Usa la palabra clave \"pinnaclecap\" o \"softcap\" en vez de un número para referirte a los límites de poder de la temporada actual.",
@@ -317,6 +317,7 @@
     "UnlockAllFailed": "Error al desbloquear objetos",
     "UnlockAllSuccess": "{{num}} objetos desbloqueados",
     "Vendor": "El objeto está disponible desde un vendedor específico.",
+    "VendorItem": "El objeto es de un comerciante, no está en tu inventario. Útil para excluir los objetos de un comerciante desde el Optimizador de Equipaciones.",
     "Weapon": "Muestra objetos que sean armas.",
     "WeaponLevel": "Muestra armas basadas en su Nivel de Arma.",
     "WeaponType": "Muestra armas basadas en su tipo de arma.",
@@ -391,6 +392,7 @@
     "ClearDialog": "Descartar diálogo",
     "ClearNewItems": "Despejar los objetos nuevos",
     "Enter": "ENTER",
+    "ItemPopupTab": "Cambiar a pestaña de detalles de objeto",
     "LockUnlock": "Bloquear o desbloquear un objeto",
     "MarkItemAs": "Marcar objeto como '{{tag}}'",
     "Menu": "Alternar menú",
@@ -404,7 +406,6 @@
     "Vault": "Enviar objeto al depósito"
   },
   "InGameLoadout": {
-    "Applying": "Equipando equipamiento...",
     "ClearSlot": "Limpiar Ranura {{index}}",
     "Create": "Crear equipamiento",
     "CreateTitle": "Crear Equipamiento en el juego desde el equipo actual",
@@ -496,6 +497,8 @@
     "Equip": "Equipar al {{character}}",
     "Exclude": "Objetos excluidos",
     "ExcludeHelp": "Shift + click en un objeto (o arrástralo y suéltalo en este espacio) para crear un conjunto sin equipo específico.",
+    "ExistingBuildStats": "Estadísticas de Equipación Existentes",
+    "ExistingBuildStatsNote": "Mostrando sólo equipaciones con niveles de estadísticas más altas estrictamente.",
     "FilterSets": "Filtro de conjuntos",
     "Help": {
       "And": "Armadura con todas éstas mejoras será usada (\"y\")",
@@ -542,6 +545,8 @@
     "SearchAnExotic": "Busca un excepcional o descripción",
     "SelectExotic": "Selecciona excepcional",
     "SelectMods": "Selecciona Mods",
+    "SelectModsCount": "{{selected}}/{{maxSelectable}}",
+    "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Mods de Actividad",
     "SelectSubclassOptions": "Personalizar subclase",
     "ShowAllConfigs": "Mostrar todas las configuraciones",
     "ShowConfigs": "Mostrar configuraciones",
@@ -555,6 +560,59 @@
     "Profile": "Cargando perfil de Destiny...",
     "Vendors": "Cargando vendedores de Destiny..."
   },
+  "LoadoutAnalysis": {
+    "Analyzed": "{{numLoadouts}} Equipaciones Analizadas",
+    "Analyzing": "Analizando {{numAnalyzed}}/{{numLoadouts}} Equipaciones",
+    "BetterStatsAvailable": {
+      "Description": "Elegir diferentes armaduras o mods para esta equipación permitirá alcanzar niveles de estadísticas más altos. Elige \"$t(Loadouts.OpenInOptimizer)\" para ver mejores equipaciones.",
+      "Name": "Mejores Estadísticas Disponibles"
+    },
+    "BetterStatsAvailableFontNote": "Nota: Esta Equipación usa mods de \"Fontana de ...\" que causa que un nivel de estadísticas exceda el N10. DIM podría identificar mejores estadísticas reduciendo la cantidad de niveles de exceso. Si no se desea esto, desactiva \"$t(Loadouts.IncludeRuntimeStatBenefits)\" en la Equipación.",
+    "DoesNotRespectExotic": {
+      "Description": "Esta configuración de equipación del Optimizador de Equipaciones especifica una elección de exótico, pero la equipación no coincide con ese exótico.",
+      "Name": "Exótico Incorrecto"
+    },
+    "DoesNotSatisfyStatConstraints": {
+      "Description": "La configuración para esta Equipación del Optimizador de Equipaciones especifica niveles de estadísticas, pero la Equipación no los alcanza.",
+      "Name": "Nivel de Estadísticas Incorrecto"
+    },
+    "EmptyFragmentSlots": {
+      "Description": "Hay ranuras de fragmentos vacías en esta subclase.",
+      "Name": "Ranuras de Fragmentos Vacías"
+    },
+    "InvalidMods": {
+      "Description": "Algunos mods de esta equipación están obsoletos o no encajan de otra manera en cualquiera de tus piezas de armadura.",
+      "Name": "Mods Obsoletos"
+    },
+    "InvalidSearchQuery": {
+      "Description": "Esta equipación fue creada con una consulta de búsqueda en el Optimizador de Equipaciones que ya no es válida, o no incluye la armadura en esta equipación.",
+      "Name": "Consulta Inválida"
+    },
+    "MissingItems": {
+      "Description": "Algunos de los objetos en esta equipación ya no están en tu inventario.",
+      "Name": "Objetos Faltantes"
+    },
+    "ModsDontFit": {
+      "Description": "La armadura en esta equipación no se puede acomodar a todos los mods de la equipación, incluso si la armadura fuera mejorada.",
+      "Name": "Mods Sin Asignar"
+    },
+    "NeedsArmorUpgrades": {
+      "Description": "La armadura en esta equipación necesita ser mejorada para acomodar todos los mods o alcanzar lo niveles de estadísticas especificadas.",
+      "Name": "Necesita Mejoras de Armadura"
+    },
+    "NotAFullArmorSet": {
+      "Description": "Esta equipación no pudo ser analizada a fondo porque no incluía un conjunto completo de armadura.",
+      "Name": "No Es Un Set De Armadura Completo"
+    },
+    "TooManyFragments": {
+      "Description": "Hay más fragmentos configurados en la subclase que los otorgados por los aspectos.",
+      "Name": "Demasiados Fragmentos"
+    },
+    "UsesSeasonalMods": {
+      "Description": "Esta equipación se basa en mods que sólo están disponibles en algunas temporadas. Cuando la temporada termina, algunos mods no estarán disponibles o excederán la capacidad de energía de la armadura.",
+      "Name": "Usa Mods de Temporada"
+    }
+  },
   "LoadoutBuilder": {
     "AddHalfTierMods": "Añadir +5 Mods",
     "All": "Todos/as",
@@ -562,9 +620,11 @@
     "AnyExoticDescription": "Los conjuntos deben contener un excepcional, pero cualquier excepcional sirve.",
     "AssumeMasterwork": "Asumir Obra Maestra",
     "AssumeMasterworkOptions": {
-      "All": "Todas las armaduras usarán las estadísticas de obra maestra completa y tendrán un nivel de energía de 10.",
-      "Legendary": "Las armaduras legendarias usarán estadísticas de obra maestra completa y tendrán un nivel de energía de 10.",
-      "None": "Todas las armaduras usarán sus estadísticas actuales y tendrán un nivel de energía mínimo de 7."
+      "All": "Todas las armaduras: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "Current": "Estadísticas actuales, asumiendo nivel de energía de al menos {{minLoItemEnergy}}.",
+      "Legendary": "Legendarias: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExóticas: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
+      "Masterworked": "+2 en cada estadística, asumiendo nivel de energía 10.",
+      "None": "Todas las armaduras: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "Añadir automáticamente mods de estadísticas",
     "AutomaticallyPicked": "Este mod fue añadido automáticamente para mejorar las estadísticas de la equipación.",
@@ -572,18 +632,20 @@
     "CompareLoadout": "Comparar Equipamiento",
     "ConfirmOverwrite": "¿Estás seguro de que quieres reemplazar la armadura en el equipamiento \"{{name}}\" con este nuevo set de armadura?",
     "CreateLoadout": "Guardar Equipamiento",
+    "DecreaseStatPriority": "Reducir prioridad a la estadística",
     "DisabledByAutoStatMods": "Los modificadores de estadísticas están siendo elegidos automáticamente por el Optimizador de Equipaciones.",
     "DisabledDueToMaintenance": "El Optimizador de Equipamiento está actualmente desactivado debido al mantenimiento de Bungie con la API.",
     "EquipItems": "Equipar",
     "ExcludeItem": "Excluir objeto",
     "ExistingLoadout": "Equipamiento Existente",
+    "Exotic": "Armadura Exótica",
     "ExoticSpecialCategory": "Especial",
     "Filter": "Filtros",
-    "IncludeVendorItems": "Incluir objetos de Vendedores",
+    "IgnoreStat": "Si está desmarcado, el Optimizador de Equipaciones fingirá que esta estadística no exista cuando se creen equipaciones",
+    "IncreaseStatPriority": "Incrementar prioridad a la estadística",
     "Legendary": "Legendarias",
     "LockEquipped": "Equipar anclados",
     "LockItem": "Anclar objeto",
-    "MaxTier": "Máximo {{tier}}",
     "MissingClass": "El equipamiento es para: {{className}}",
     "MissingClassDescription": "El equipamiento que estás intentando visualizar es para una clase de personaje que no tienes.",
     "NoBuildsFoundExplainer": {
@@ -605,22 +667,22 @@
       "UpperBoundsFailed": "Muchas equipaciones no cumplieron los requisitos de nivel máximos de estadística"
     },
     "NoExotic": "Sin Excepcional",
-    "NoExoticDescription": "Equivalente a la búsqueda \"no:exotic\" en la barra de búsqueda - ninguna armadura excepcional será incluida en los conjuntos.",
+    "NoExoticDescription": "Equivalente a buscar \"not:exotic\" en la barra de búsqueda - los conjuntos no usarán ninguna armadura exótica.",
+    "NoExoticPreference": "Sin Exóticos Seleccionados",
+    "NoExoticPreferenceDescription": "La armadura exótica será usada si maximizas las estadísticas.",
     "NoLoadoutsToCompare": "No hay equipamientos para comparar",
     "None": "Ninguna",
     "OptimizerExplanationGuide": "Lea la Guía de Usuario para más información y un vídeo tutorial.",
-    "OptimizerExplanationMods": "Elige un excepcional y cualquier mod que quieras usar. El Optimizador de Equipamientos sólo incluirá los bonus de estadísticas desde los mods que elijas - todos los mods que ya están en la armadura serán ignorados.",
+    "OptimizerExplanationMods": "Elige un exótico, modificadores y una subclase. El Optimizador de Equipaciones sólo incluye bonus de estadísticas de modificadores y las opciones de subclase que elijas (todos los modificadores que ya estén en la armadura serán ignorados).",
     "OptimizerExplanationSearch": "Usa la barra de búsqueda para limitar la armadura a considerar. Si ninguna armadura coincide con la búsqueda en la ranura, toda la armadura en esa ranura será considerada.",
-    "OptimizerExplanationStats": "Arrastra las estadísticas más importantes hacia arriba, y las estadísticas que no te importen selecciona \"Ignorar\".",
+    "OptimizerExplanationStats": "Arrastra las estadísticas más importantes arriba y desactiva las estadísticas que no quieras optimizar.",
     "OptimizerSet": "Set Optimizador",
-    "ProcessingSets": "Procesando sets para {{character}} ({{remainingTime}}segundos)",
+    "ProcessingSets": "Buscando las equipaciones de niveles más altos...",
     "SaveAs": "Guardar como",
-    "SelectMax": "- Máximo -",
-    "SelectMin": "- Mínimo -",
     "SpeedReport": "Se generaron {{combos, number}} combinaciones en {{time}} segundos",
-    "StatTierIgnoreOption": "Ignorar",
-    "StatTierIncludeOption": "Incluir",
+    "StatConstraints": "Prioridad de Nivel de Estadísticas y Rangos",
     "TierNumber": "T{{tier}}",
+    "TierSelect": "Seleccionar nivel mínimo de la estadística",
     "UnableToAddAllMods": "No se pueden agregar todos los mods.",
     "UnableToAddAllModsBody": "No había suficientes espacios disponibles para que cupiera el mod de {{mods}}.",
     "UnlockItem": "Desanclar objeto"
@@ -659,11 +721,9 @@
     "CurrentlyEquipped": "Equipado en estos momentos",
     "Deequip": "Desequipando objetos de otros personajes",
     "Delete": "Eliminar",
-    "DeprecatedMods": "Mods Obsoletos",
     "DimLoadouts": "Equipamientos DIM",
     "Edit": "Editar equipamiento",
     "EditBrief": "Editar",
-    "EmptyFragmentSlots": "Ranuras de Fragmentos Vacías",
     "EquipInGameLoadout": "Equipando equipamiento en el juego",
     "EquipItems": "Equipando objetos",
     "EquippableDifferent1": "Múltiples objetos Excepcionalas fueron usados para calcular tu Poder Máximo, por lo que el número mostrado podría no alcanzarse cuando equipes tus objetos dentro del juego.",
@@ -685,6 +745,8 @@
     },
     "ImportLoadout": "Importar Equipamiento",
     "InGameLoadouts": "Equipamientos En El Juego",
+    "IncludeRuntimeStatBenefits": "Incluir estadísticas de modificador Fontana",
+    "IncludeRuntimeStatBenefitsDesc": "Los mods de armadura de \"Fontana de ...\" proveen una mejora lineal a las estadísticas del personaje mientras tengas Cargas de Armadura.\n\nCon esta configuración, DIM considera estos modificadores activos y añade estos beneficios a las estadísticas de esta Equipación en cálculos y optimizaciones.",
     "ItemErrorSummary": "1 objeto con error:",
     "ItemErrorSummary_plural": "{{count}} objetos con errores:",
     "ItemLeveling": "Nivelación de objeto",
@@ -707,7 +769,6 @@
     "MaximizeLight": "Luz Máxima",
     "MaximizePower": "Poder Máximo",
     "MaximizeStat": "Maximizar Estadística",
-    "MissingItems": "Objetos Faltantes",
     "MissingItemsWarning": "Algunos de los objetos en este equipamiento ya no están en tu inventario.",
     "ModErrorSummary": "1 mod con error:",
     "ModErrorSummary_plural": "{{count}} mods con errores:",
@@ -792,7 +853,6 @@
     "SubclassOptionsSearch": "Buscar opciones de {{subclass}}",
     "Succeeded": "Equipamiento exitoso",
     "SyncFromEquipped": "Sincronizar desde equipados",
-    "TooManyFragments": "Demasiados Fragmentos",
     "TooManyRequested": "Tienes {{total}}{{itemname}} pero tu equipamiento pide por {{requested}}. Transferimos todo lo que tenías.",
     "UnassignedModError": "El mod no encajó en tu armadura actual",
     "Undo": "Deshacer",
@@ -873,6 +933,7 @@
       "QuestProgress": "Paso {{questStepNum}} de {{questStepsTotal}}",
       "Type": "{{classType}} {{typeName}}"
     },
+    "TabList": "Pestañas de detalles de objetos",
     "ToggleSidecar": "Expandir o colapsar acciones de objeto",
     "TrackUntrack": {
       "Track": "Seguir {{itemType}}",
@@ -991,7 +1052,8 @@
     "RecordBooks": "Libros de Hazañas"
   },
   "Records": {
-    "Title": "Hazañas"
+    "Title": "Hazañas",
+    "UniversalOrnamentSetOther": "Otro"
   },
   "SearchHistory": {
     "Date": "Último uso",
@@ -1053,6 +1115,7 @@
     "ResetToDefault": "Reiniciar",
     "ReverseSort": "Alternar orden normal/inverso",
     "SetSort": "Ordenar objetos por:",
+    "SetVaultWeaponGrouping": "Agrupar armas del depósito por:",
     "Settings": "Configuración",
     "ShowNewItems": "Mostrar un punto rojo en objetos nuevos",
     "SingleCharacter": "Vista de Personaje Único",
@@ -1076,7 +1139,8 @@
     "SortName": "Nombre",
     "SpacesSize": "{{count}} espacio",
     "SpacesSize_plural": "{{count}} espacios",
-    "Theme": "Tema"
+    "Theme": "Tema",
+    "VaultGroupingNone": "Ninguna"
   },
   "Sockets": {
     "ApplyPerks": "Aplicar Perks",

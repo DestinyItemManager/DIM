@@ -1,8 +1,10 @@
 import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { t } from 'app/i18next-t';
+import { createCollectibleFinder } from 'app/records/collectible-matching';
 import {
   D2ItemTiers,
+  SOME_OTHER_DUMMY_BUCKET,
   THE_FORBIDDEN_BUCKET,
   d2MissingIcon,
   uniqueEquipBuckets,
@@ -39,13 +41,12 @@ import extendedBreaker from 'data/d2/extended-breaker.json';
 import extendedFoundry from 'data/d2/extended-foundry.json';
 import extendedICH from 'data/d2/extended-ich.json';
 import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
-import extraItemCollectibles from 'data/d2/unreferenced-collections-items.json';
 import { Draft } from 'immer';
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { warnMissingDefinition } from '../../manifest/manifest-service-json';
-import { reportException } from '../../utils/exceptions';
+import { reportException } from '../../utils/sentry';
 import { InventoryBuckets } from '../inventory-buckets';
 import { DimItem } from '../item-types';
 import { DimStore } from '../store-types';
@@ -60,13 +61,9 @@ import { buildPatternInfo } from './patterns';
 import { buildSockets } from './sockets';
 import { buildStats } from './stats';
 
-const extraItemsToCollectibles = _.mapValues(_.invert(extraItemCollectibles), (val) =>
-  parseInt(val, 10)
-);
-
 const collectiblesByItemHash = memoizeOne(
   (Collectible: ReturnType<D2ManifestDefinitions['Collectible']['getAll']>) =>
-    _.keyBy(Collectible, (c) => c.itemHash)
+    _.keyBy(Collectible, (c) => c.itemHash),
 );
 
 /**
@@ -75,7 +72,7 @@ const collectiblesByItemHash = memoizeOne(
 export function processItems(
   context: ItemCreationContext,
   owner: DimStore,
-  items: DestinyItemComponent[]
+  items: DestinyItemComponent[],
 ): DimItem[] {
   const result: DimItem[] = [];
 
@@ -92,7 +89,8 @@ export function processItems(
       // we want to allow makeItem to generate dummy items. they're useful in vendors, as consumables, etc.
       // but processItems is for building stores, and we don't want dummy weapons or armor,
       // which can invisibly interfere with allItems calculations and measurements
-      createdItem.location.hash !== THE_FORBIDDEN_BUCKET
+      createdItem.location.hash !== THE_FORBIDDEN_BUCKET &&
+      createdItem.location.hash !== SOME_OTHER_DUMMY_BUCKET
     ) {
       createdItem.owner = owner.id;
       result.push(createdItem);
@@ -102,7 +100,7 @@ export function processItems(
       // not all of these should cause the store to consider itself hadErrors.
       // dummies and invisible items are not a big deal
       const defs = context.defs;
-      const bucketDef = defs.InventoryBucket[item.bucketHash];
+      const bucketDef = defs.InventoryBucket.get(item.bucketHash);
       // if it's a named, non-invisible bucket, it may be a problem that the item wasn't generated
       if (
         bucketDef &&
@@ -128,13 +126,13 @@ export function processItems(
 
 export const getClassTypeNameLocalized = _.memoize(
   (type: DestinyClass, defs: D2ManifestDefinitions): string => {
-    const klass = Object.values(defs.Class).find((c) => c.classType === type);
+    const klass = Object.values(defs.Class.getAll()).find((c) => c.classType === type);
     if (klass) {
       return klass.displayProperties.name;
     } else {
       return t('Loadouts.Any');
     }
-  }
+  },
 );
 
 /** Make a "fake" item from other information - used for Collectibles, etc. */
@@ -143,7 +141,7 @@ export function makeFakeItem(
   itemHash: number,
   itemInstanceId = '0',
   quantity = 1,
-  allowWishList = false
+  allowWishList = false,
 ): DimItem | undefined {
   const item = makeItem(
     context,
@@ -163,7 +161,7 @@ export function makeFakeItem(
       metricObjective: {} as DestinyObjectiveProgress,
       versionNumber: context.defs.InventoryItem.get(itemHash)?.quality?.currentVersion,
     },
-    undefined
+    undefined,
   );
 
   if (item && !allowWishList) {
@@ -179,7 +177,7 @@ export function makeFakeItem(
 export function makeItemSingle(
   context: ItemCreationContext,
   itemResponse: DestinyItemResponse,
-  stores: DimStore[]
+  stores: DimStore[],
 ): DimItem | undefined {
   if (!itemResponse.item.data) {
     return undefined;
@@ -237,7 +235,7 @@ export function makeItem(
   { defs, buckets, itemComponents, customStats, profileResponse }: ItemCreationContext,
   item: DestinyItemComponent,
   /** the ID of the owning store - can be undefined for fake collections items */
-  owner: DimStore | undefined
+  owner: DimStore | undefined,
 ): DimItem | undefined {
   itemComponents ??= profileResponse.itemComponents;
 
@@ -263,7 +261,7 @@ export function makeItem(
       'd2-stores',
       'Missing Item Definition:\n\n',
       { item, itemDef, itemInstanceData },
-      '\n\nThis item is not in the current manifest and will be added at a later time by Bungie.'
+      '\n\nThis item is not in the current manifest and will be added at a later time by Bungie.',
     );
   }
 
@@ -305,8 +303,8 @@ export function makeItem(
   const normalBucketHash = needsShaderFix
     ? BucketHashes.Consumables
     : needsModsFix
-    ? BucketHashes.Modifications
-    : itemDef.inventory!.bucketTypeHash;
+      ? BucketHashes.Modifications
+      : itemDef.inventory!.bucketTypeHash;
   let normalBucket = buckets.byHash[normalBucketHash];
 
   // this is where the item IS, right now.
@@ -396,11 +394,9 @@ export function makeItem(
     itemDef.iconWatermarkShelved ||
     undefined;
 
-  const collectibleHash = itemDef.collectibleHash ?? extraItemsToCollectibles[itemDef.hash];
+  const collectible = createCollectibleFinder(defs)(itemDef);
   // Do we need this now?
-  const source = collectibleHash
-    ? defs.Collectible.get(collectibleHash, itemDef.hash)?.sourceHash
-    : undefined;
+  const source = collectible?.sourceHash;
 
   // items' appearance can be overridden at bungie's request
   let overrideStyleItem = item.overrideStyleItemHash
@@ -461,7 +457,7 @@ export function makeItem(
     iconOverlay,
     secondaryIcon: overrideStyleItem?.secondaryIcon || itemDef.secondaryIcon || itemDef.screenshot,
     notransfer: Boolean(
-      itemDef.nonTransferrable || item.transferStatus === TransferStatuses.NotTransferrable
+      itemDef.nonTransferrable || item.transferStatus === TransferStatuses.NotTransferrable,
     ),
     canPullFromPostmaster: !itemDef.doesPostmasterPullHaveSideEffects,
     id: item.itemInstanceId || '0', // zero for non-instanced is legacy hack
@@ -499,7 +495,7 @@ export function makeItem(
     previewVendor: itemDef.preview?.previewVendorHash,
     ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None,
     source,
-    collectibleHash,
+    collectibleHash: collectible?.hash,
     missingSockets: false,
     displaySource: itemDef.displaySource,
     plug: itemDef.plug && {
@@ -533,17 +529,17 @@ export function makeItem(
     createdItem.lockable ||
       createdItem.classified ||
       itemDef.itemSubType === DestinyItemSubType.Shader ||
-      createdItem.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Mod)
+      createdItem.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Mod),
   );
   createdItem.comparable = Boolean(
     createdItem.equipment &&
       createdItem.lockable &&
-      createdItem.bucket.hash !== BucketHashes.Emblems
+      createdItem.bucket.hash !== BucketHashes.Emblems,
   );
 
   if (createdItem.primaryStat) {
     createdItem.primaryStatDisplayProperties = defs.Stat.get(
-      createdItem.primaryStat.statHash
+      createdItem.primaryStat.statHash,
     ).displayProperties;
   }
 
@@ -553,7 +549,7 @@ export function makeItem(
     // Special grenade launchers are not heavy grenade launchers
     if (additionalICH === -ItemCategoryHashes.GrenadeLaunchers) {
       createdItem.itemCategoryHashes = createdItem.itemCategoryHashes.filter(
-        (ich) => ich !== ItemCategoryHashes.GrenadeLaunchers
+        (ich) => ich !== ItemCategoryHashes.GrenadeLaunchers,
       );
     }
     // Masks are helmets too
@@ -580,7 +576,7 @@ export function makeItem(
   // https://github.com/Bungie-net/api/issues/1662
   if (createdItem.crafted && createdItem.sockets) {
     const containsEnhancedIntrinsic = createdItem.sockets.allSockets.some(
-      (s) => s.plugged && enhancedIntrinsics.has(s.plugged.plugDef.hash)
+      (s) => s.plugged && enhancedIntrinsics.has(s.plugged.plugDef.hash),
     );
     if (containsEnhancedIntrinsic && countEnhancedPerks(createdItem.sockets) >= 2) {
       createdItem.masterwork = true;
@@ -602,7 +598,7 @@ export function makeItem(
     createdItem.catalystInfo = buildCatalystInfo(
       createdItem.hash,
       profileRecords,
-      profileResponse.characterRecords?.data
+      profileResponse.characterRecords?.data,
     );
   }
 
@@ -624,7 +620,7 @@ export function makeItem(
       itemDef,
       defs,
       itemInstancedObjectives,
-      itemUninstancedObjectives
+      itemUninstancedObjectives,
     );
   } catch (e) {
     errorLog('d2-stores', `Error building objectives for ${createdItem.name}`, item, itemDef, e);
@@ -637,7 +633,7 @@ export function makeItem(
       (p, i) =>
         p.perkVisibility === ItemPerkVisibility.Visible &&
         itemUninstancedPerks?.[i].visible !== false &&
-        defs.SandboxPerk.get(p.perkHash)?.isDisplayable
+        defs.SandboxPerk.get(p.perkHash)?.isDisplayable,
     );
     if (perks.length) {
       createdItem.perks = perks;
@@ -676,7 +672,7 @@ export function makeItem(
     createdItem.breakerType = defs.BreakerType.get(itemDef.breakerTypeHash);
   } else if (createdItem.bucket.inWeapons && createdItem.sockets) {
     const breakerTypeHash = createdItem.sockets.allSockets.find(
-      (s) => s.plugged?.plugDef.breakerTypeHash
+      (s) => s.plugged?.plugDef.breakerTypeHash,
     )?.plugged?.plugDef.breakerTypeHash;
     if (breakerTypeHash) {
       createdItem.breakerType = defs.BreakerType.get(breakerTypeHash);
@@ -701,15 +697,17 @@ export function makeItem(
   // because we don't want to filter FRs and see LFRs
   if (createdItem.itemCategoryHashes.includes(ItemCategoryHashes.LinearFusionRifles)) {
     const fusionRifleLocation = createdItem.itemCategoryHashes.indexOf(
-      ItemCategoryHashes.FusionRifle
+      ItemCategoryHashes.FusionRifle,
     );
     fusionRifleLocation !== -1 && createdItem.itemCategoryHashes.splice(fusionRifleLocation, 1);
   }
 
   // Infusion
-  const tier = itemDef.inventory ? defs.ItemTierType[itemDef.inventory.tierTypeHash] : null;
+  const tier = itemDef.inventory?.tierTypeHash
+    ? defs.ItemTierType.get(itemDef.inventory.tierTypeHash)
+    : null;
   createdItem.infusionFuel = Boolean(
-    tier?.infusionProcess && itemDef.quality?.infusionCategoryHashes?.length
+    tier?.infusionProcess && itemDef.quality?.infusionCategoryHashes?.length,
   );
   createdItem.infusable = createdItem.infusionFuel && isLegendaryOrBetter(createdItem);
   createdItem.infusionQuality = itemDef.quality || null;
@@ -723,7 +721,7 @@ export function makeItem(
       `Error building masterwork info for ${createdItem.name}`,
       item,
       itemDef,
-      e
+      e,
     );
     reportException('MasterworkInfo', e, { itemHash: item.itemHash });
   }
@@ -753,14 +751,14 @@ function isLegendaryOrBetter(item: DimItem) {
 function buildPursuitInfo(
   createdItem: DimItem,
   item: DestinyItemComponent,
-  itemDef: DestinyInventoryItemDefinition
+  itemDef: DestinyInventoryItemDefinition,
 ) {
   if (item.expirationDate) {
     createdItem.pursuit = {
       expirationDate: new Date(item.expirationDate),
       rewards: [],
       suppressExpirationWhenObjectivesComplete: Boolean(
-        itemDef.inventory!.suppressExpirationWhenObjectivesComplete
+        itemDef.inventory!.suppressExpirationWhenObjectivesComplete,
       ),
       expiredInActivityMessage: itemDef.inventory!.expiredInActivityMessage,
       modifierHashes: [],

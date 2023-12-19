@@ -32,16 +32,20 @@ export default function D1VendorItems({
       {!_.isEmpty(allCurrencies) && (
         <div className={styles.currencies}>
           {Object.values(allCurrencies).map((currency) => (
-            <div className={styles.currency} key={currency.itemHash}>
+            <div key={currency.itemHash}>
               {totalCoins?.[currency.itemHash] || 0}{' '}
-              <BungieImage src={currency.icon} title={currency.itemName} />
+              <BungieImage
+                src={currency.icon}
+                className={styles.currencyIcon}
+                title={currency.itemName}
+              />
             </div>
           ))}
         </div>
       )}
       <div className={styles.itemCategories}>
         {vendor.categories.map((category) => (
-          <div className={styles.vendorRow} key={category.index}>
+          <div key={category.index}>
             <h3 className={styles.categoryTitle}>{category.title || 'Unknown'}</h3>
             <div className={styles.vendorItems}>
               {_.sortBy(category.saleItems, (i) => i.item.name).map((item) => (

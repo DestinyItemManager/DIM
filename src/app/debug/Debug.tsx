@@ -15,13 +15,13 @@ import { t } from 'app/i18next-t';
 import { profileErrorSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { TroubleshootingSettings } from 'app/settings/Troubleshooting';
-import { systemInfo } from 'app/shell/About';
 import LocalStorageInfo from 'app/storage/LocalStorageInfo';
 import { set } from 'app/storage/idb-keyval';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { DimError } from 'app/utils/dim-error';
+import { convertToError } from 'app/utils/errors';
 import { usePageTitle } from 'app/utils/hooks';
-import { convertToError } from 'app/utils/util';
+import { systemInfo } from 'app/utils/system-info';
 import { wishListsLastFetchedSelector, wishListsSelector } from 'app/wishlists/selectors';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 import { useEffect, useState } from 'react';
@@ -97,7 +97,7 @@ export default function Debug() {
   );
 
   const weirdWishlistRoll = wishList?.wishListAndInfo?.wishListRolls.find(
-    (r) => r.recommendedPerks && !(r.recommendedPerks instanceof Set)
+    (r) => r.recommendedPerks && !(r.recommendedPerks instanceof Set),
   );
 
   // TODO: If these tiles get too complicated, they could be broken out into components
@@ -322,8 +322,8 @@ function ErrorInfo({ error }: { error: Error | DimError }) {
     error instanceof DimError || error instanceof BungieError
       ? error.code
       : error instanceof HttpStatusError
-      ? `HTTP ${error.status}`
-      : undefined;
+        ? `HTTP ${error.status}`
+        : undefined;
 
   const name = error.name;
   const message = error.message || 'No message';

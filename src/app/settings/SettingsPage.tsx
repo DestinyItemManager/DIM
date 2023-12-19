@@ -8,6 +8,7 @@ import NewItemIndicator from 'app/inventory/NewItemIndicator';
 import TagIcon from 'app/inventory/TagIcon';
 import { clearAllNewItems } from 'app/inventory/actions';
 import { itemTagList } from 'app/inventory/dim-item-info';
+import { allItemsSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import WishListSettings from 'app/settings/WishListSettings';
 import { useIsPhonePortrait } from 'app/shell/selectors';
@@ -18,13 +19,11 @@ import { clearAppBadge } from 'app/utils/app-badge';
 import { usePageTitle } from 'app/utils/hooks';
 import { errorLog } from 'app/utils/log';
 import i18next from 'i18next';
-import exampleWeaponImage from 'images/example-weapon.jpg';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import InventoryItem from '../inventory/InventoryItem';
-import { DimItem } from '../inventory/item-types';
 import { AppIcon, faGrid, faList, lockIcon, refreshIcon, unlockedIcon } from '../shell/icons';
 import CharacterOrderEditor from './CharacterOrderEditor';
 import Checkbox from './Checkbox';
@@ -36,33 +35,9 @@ import Spreadsheets from './Spreadsheets';
 import { TroubleshootingSettings } from './Troubleshooting';
 import { setCharacterOrder } from './actions';
 import { useSetSetting } from './hooks';
-import { Settings } from './initial-settings';
+import { Settings, VaultWeaponGroupingStyle } from './initial-settings';
 import { itemSortSettingsSelector } from './item-sort';
 import './settings.scss';
-
-const fakeWeapon = {
-  icon: `~${exampleWeaponImage}`,
-  element: {
-    displayProperties: {
-      icon: '/img/destiny_content/damage_types/destiny2/thermal.png',
-    },
-  },
-  isNew: true,
-  location: {
-    type: 'energy',
-  },
-  bucket: {
-    type: 'energy',
-  },
-  visible: true,
-  primaryStat: {
-    value: 1600,
-  },
-  itemCategoryHashes: [],
-  destinyVersion: 2,
-};
-
-const fakeWeaponMasterwork = { ...fakeWeapon, masterwork: true };
 
 const languageOptions = mapToOptions({
   de: 'Deutsch',
@@ -103,6 +78,16 @@ export default function SettingsPage() {
   const isPhonePortrait = useIsPhonePortrait();
   useLoadStores(currentAccount);
   const setSetting = useSetSetting();
+  const allItems = useSelector(allItemsSelector);
+
+  const exampleWeapon = allItems.find(
+    (i) => i.bucket.sort === 'Weapons' && !i.isExotic && !i.masterwork && !i.deepsightInfo,
+  );
+  // Include a masterworked item because they look different in some themes
+  const exampleWeaponMasterworked = allItems.find(
+    (i) => i.bucket.sort === 'Weapons' && !i.isExotic && i.masterwork && !i.deepsightInfo,
+  );
+  const exampleArmor = allItems.find((i) => i.bucket.sort === 'Armor' && !i.isExotic);
 
   const onCheckChange = (checked: boolean, name: keyof Settings) => {
     if (name.length === 0) {
@@ -172,14 +157,19 @@ export default function SettingsPage() {
     return false;
   };
 
+  const changeVaultWeaponGrouping = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const vaultWeaponGrouping = e.target.value;
+    setSetting('vaultWeaponGrouping', vaultWeaponGrouping);
+  };
+
   const itemSortOrderChanged = (sortOrder: SortProperty[]) => {
     setSetting(
       'itemSortOrderCustom',
-      sortOrder.filter((o) => o.enabled).map((o) => o.id)
+      sortOrder.filter((o) => o.enabled).map((o) => o.id),
     );
     setSetting(
       'itemSortReversals',
-      sortOrder.filter((o) => o.reversed).map((o) => o.id)
+      sortOrder.filter((o) => o.reversed).map((o) => o.id),
     );
   };
 
@@ -210,6 +200,15 @@ export default function SettingsPage() {
     // archetype: 'Archetype'
   };
 
+  const vaultWeaponGroupingOptions = mapToOptions({
+    '': t('Settings.VaultGroupingNone'),
+    typeName: t('Settings.SortByType'),
+    rarity: t('Settings.SortByRarity'),
+    ammoType: t('Settings.SortByAmmoType'),
+    tag: t('Settings.SortByTag', { taglist: tagListString }),
+    elementWeapon: t('Settings.SortByWeaponElement'),
+  });
+
   const descriptionDisplayOptions = mapToOptions({
     both: t('Settings.BothDescriptions'),
     bungie: t('Settings.BungieDescriptionOnly'),
@@ -239,12 +238,12 @@ export default function SettingsPage() {
         displayName,
         enabled: sortSettings.sortOrder.includes(id),
         reversed: sortSettings.sortReversals.includes(id),
-      })
+      }),
     ),
     (o) => {
       const index = sortSettings.sortOrder.indexOf(o.id);
       return index >= 0 ? index : 999;
-    }
+    },
   );
 
   const menuItems = _.compact([
@@ -310,23 +309,32 @@ export default function SettingsPage() {
 
           <section id="items">
             <h2>{t('Settings.Items')}</h2>
+
             <div className="sub-bucket">
-              <div className="examples">
+              {exampleWeapon && (
                 <InventoryItem
-                  item={fakeWeapon as unknown as DimItem}
-                  isNew={true}
+                  item={exampleWeapon}
+                  isNew={settings.showNewItems}
                   tag="favorite"
                   autoLockTagged={settings.autoLockTagged}
                 />
-              </div>
-              <div className="examples">
+              )}
+              {exampleWeaponMasterworked && (
                 <InventoryItem
-                  item={fakeWeaponMasterwork as unknown as DimItem}
-                  isNew={true}
-                  tag="favorite"
+                  item={exampleWeaponMasterworked}
+                  isNew={settings.showNewItems}
+                  tag="keep"
                   autoLockTagged={settings.autoLockTagged}
                 />
-              </div>
+              )}
+              {exampleArmor && (
+                <InventoryItem
+                  item={exampleArmor}
+                  isNew={settings.showNewItems}
+                  tag="keep"
+                  autoLockTagged={settings.autoLockTagged}
+                />
+              )}
             </div>
 
             {!isPhonePortrait && (
@@ -365,6 +373,29 @@ export default function SettingsPage() {
                   <NewItemIndicator className="new-item" /> <span>{t('Hotkey.ClearNewItems')}</span>
                 </button>
               </div>
+            </div>
+
+            <div className="setting">
+              <Select
+                label={t('Settings.SetVaultWeaponGrouping')}
+                name="vaultWeaponGrouping"
+                value={settings.vaultWeaponGrouping}
+                options={vaultWeaponGroupingOptions}
+                onChange={changeVaultWeaponGrouping}
+              />
+              {settings.vaultWeaponGrouping && (
+                <Checkbox
+                  label={t('Settings.VaultWeaponGroupingStyle')}
+                  name="vaultWeaponGroupingStyle"
+                  value={settings.vaultWeaponGroupingStyle !== VaultWeaponGroupingStyle.Inline}
+                  onChange={(checked, setting) =>
+                    setSetting(
+                      setting,
+                      checked ? VaultWeaponGroupingStyle.Lines : VaultWeaponGroupingStyle.Inline,
+                    )
+                  }
+                />
+              )}
             </div>
 
             <div className="setting">

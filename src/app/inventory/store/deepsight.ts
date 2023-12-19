@@ -1,13 +1,8 @@
 import { THE_FORBIDDEN_BUCKET } from 'app/search/d2-known-values';
 import { socketContainsPlugWithCategory } from 'app/utils/socket-utils';
 import { DestinyRecordState } from 'bungie-api-ts/destiny2';
-import { resonantElementTagsByObjectiveHash } from 'data/d2/crafting-resonant-elements';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { DimItem, DimSocket } from '../item-types';
-
-export const resonantElementObjectiveHashes = Object.keys(resonantElementTagsByObjectiveHash).map(
-  (objectiveHashStr) => parseInt(objectiveHashStr, 10)
-);
 
 export function buildDeepsightInfo(item: DimItem): boolean {
   const resonanceSocket = getResonanceSocket(item);
@@ -30,7 +25,7 @@ function getResonanceSocket(item: DimItem): DimSocket | undefined {
 
 export function isDeepsightResonanceSocket(socket: DimSocket): boolean {
   return Boolean(
-    socketContainsPlugWithCategory(socket, PlugCategoryHashes.CraftingPlugsWeaponsModsMemories)
+    socketContainsPlugWithCategory(socket, PlugCategoryHashes.CraftingPlugsWeaponsModsMemories),
   );
 }
 
@@ -38,7 +33,7 @@ export function isHarmonizable(item: DimItem): boolean | undefined {
   const isItemHarmonizable = item.sockets?.allSockets.some(
     (s) =>
       s.plugged?.plugDef.plug.plugCategoryHash ===
-        PlugCategoryHashes.CraftingPlugsWeaponsModsExtractors && s.visibleInGame
+        PlugCategoryHashes.CraftingPlugsWeaponsModsExtractors && s.visibleInGame,
   );
 
   return isItemHarmonizable;

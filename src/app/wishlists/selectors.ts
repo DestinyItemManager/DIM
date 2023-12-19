@@ -1,7 +1,6 @@
 import { DimItem } from 'app/inventory/item-types';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
-import _ from 'lodash';
 import { createSelector } from 'reselect';
 import { getInventoryWishListRoll, InventoryWishListRoll } from './wishlists';
 
@@ -11,15 +10,15 @@ export const wishListsLastFetchedSelector = (state: RootState) =>
   wishListsSelector(state).lastFetched;
 
 export const wishListsByHashSelector = createSelector(wishListsSelector, (wls) =>
-  _.groupBy(wls.wishListAndInfo.wishListRolls?.filter(Boolean), (r) => r.itemHash)
+  Map.groupBy(wls.wishListAndInfo.wishListRolls?.filter(Boolean), (r) => r.itemHash),
 );
 
 export const wishListRollsForItemHashSelector = (itemHash: number) => (state: RootState) =>
-  wishListsByHashSelector(state)[itemHash] ?? emptyArray();
+  wishListsByHashSelector(state).get(itemHash) ?? emptyArray();
 
 export const hasWishListSelector = createSelector(
   wishListsByHashSelector,
-  (wishlists) => !_.isEmpty(wishlists)
+  (wishlists) => wishlists.size > 0,
 );
 
 /** Returns a memoized function to look up wishlist by item, which is reset when the wishlist changes. Prefer wishListSelector */
@@ -40,7 +39,7 @@ export const wishListFunctionSelector = createSelector(
       cache.set(item.id, roll ?? null);
       return roll;
     };
-  }
+  },
 );
 
 /**

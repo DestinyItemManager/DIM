@@ -96,20 +96,11 @@ export function filterItems({
       .flat()
       .some(
         (item) =>
-          item.isExotic && lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC && searchFilter(item)
+          item.isExotic && lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC && searchFilter(item),
       );
 
-  // Group by bucket (the types for _.groupBy don't work out...)
-  const itemsByBucket: Draft<ItemsByBucket> = {
-    [BucketHashes.Helmet]: [],
-    [BucketHashes.Gauntlets]: [],
-    [BucketHashes.ChestArmor]: [],
-    [BucketHashes.LegArmor]: [],
-    [BucketHashes.ClassArmor]: [],
-  };
-  for (const item of items) {
-    itemsByBucket[item.bucket.hash as LockableBucketHash].push(item);
-  }
+  // Group by bucket
+  const itemsByBucket = Map.groupBy(items, (item) => item.bucket.hash as LockableBucketHash);
 
   for (const bucket of LockableBucketHashes) {
     const lockedModsForPlugCategoryHash = lockedModMap.bucketSpecificMods[bucket] || [];
@@ -117,11 +108,13 @@ export function filterItems({
     // There can only be one pinned item as we hide items from the item picker once
     // a single item is pinned
     const pinnedItem = pinnedItems[bucket];
-    const exotics = itemsByBucket[bucket].filter((item) => item.hash === lockedExoticHash);
+    const exotics = (itemsByBucket.get(bucket) ?? []).filter(
+      (item) => item.hash === lockedExoticHash,
+    );
 
     // We prefer most specific filtering since there can be competing conditions.
     // This means locked item and then exotic
-    let firstPassFilteredItems = itemsByBucket[bucket];
+    let firstPassFilteredItems = itemsByBucket.get(bucket) ?? [];
 
     if (pinnedItem) {
       // If the user pinned an item, that's what they get
@@ -146,13 +139,13 @@ export function filterItems({
         'loadout optimizer',
         'no items for bucket',
         bucket,
-        'does this happen enough to be worth reporting in some way?'
+        'does this happen enough to be worth reporting in some way?',
       );
     }
 
     // Remove manually excluded items
     const withoutExcluded = firstPassFilteredItems.filter(
-      (item) => !excludedItems[bucket]?.some((excluded) => item.id === excluded.id)
+      (item) => !excludedItems[bucket]?.some((excluded) => item.id === excluded.id),
     );
 
     // Remove armor that can't fit all the chosen bucket-specifics mods.
@@ -161,11 +154,11 @@ export function filterItems({
     const itemsThatFitMods = withoutExcluded.filter(
       (item) =>
         assignBucketSpecificMods(armorEnergyRules, item, lockedModsForPlugCategoryHash).unassigned
-          .length === 0
+          .length === 0,
     );
 
     const searchFilteredItems = itemsThatFitMods.filter(
-      (item) => (item.isExotic && excludeExoticsFromFilter) || searchFilter(item)
+      (item) => (item.isExotic && excludeExoticsFromFilter) || searchFilter(item),
     );
 
     // If a search filters out all the possible items for a bucket, we ignore

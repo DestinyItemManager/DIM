@@ -52,7 +52,8 @@ import { itemIncludesCategories } from './filtering-utils';
 import { compareSelectedItems } from 'app/compare/actions';
 
 import { useTableColumnSorts } from 'app/dim-ui/table-columns';
-import { errorMessage, filterMap } from 'app/utils/util';
+import { filterMap } from 'app/utils/collections';
+import { errorMessage } from 'app/utils/errors';
 import { createPortal } from 'react-dom';
 // eslint-disable-next-line css-modules/no-unused-class
 import styles from './ItemTable.m.scss';
@@ -101,7 +102,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
       categoryHashes.push(ItemCategoryHashes.Armor);
     }
     const items = allItems.filter(
-      (i) => i.comparable && itemIncludesCategories(i, categoryHashes) && searchFilter(i)
+      (i) => i.comparable && itemIncludesCategories(i, categoryHashes) && searchFilter(i),
     );
     return items;
   }, [allItems, categories, searchFilter]);
@@ -158,10 +159,10 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     () =>
       defs
         ? originalItems.map((item) =>
-            applySocketOverrides(itemCreationContext, item, socketOverrides[item.id])
+            applySocketOverrides(itemCreationContext, item, socketOverrides[item.id]),
           )
         : originalItems,
-    [itemCreationContext, defs, originalItems, socketOverrides]
+    [itemCreationContext, defs, originalItems, socketOverrides],
   );
 
   // Build a list of all the stats relevant to this set of items
@@ -172,7 +173,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
         : emptyObject<{
             [statHash: number]: StatInfo;
           }>(),
-    [terminal, items]
+    [terminal, items],
   );
 
   const columns: ColumnDefinition[] = useMemo(
@@ -188,7 +189,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
         loadoutsByItem,
         newItems,
         destinyVersion,
-        onPlugClicked
+        onPlugClicked,
       ),
     [
       wishList,
@@ -202,7 +203,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
       newItems,
       destinyVersion,
       onPlugClicked,
-    ]
+    ],
   );
 
   // This needs work for sure
@@ -213,21 +214,21 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
           columns.filter(
             (column) =>
               id === getColumnSelectionId(column) &&
-              (column.limitToClass === undefined || column.limitToClass === classIfAny)
-          )
-        )
+              (column.limitToClass === undefined || column.limitToClass === classIfAny),
+          ),
+        ),
       ),
-    [columns, enabledColumns, classIfAny]
+    [columns, enabledColumns, classIfAny],
   );
 
   // process items into Rows
   const unsortedRows: Row[] = useMemo(
     () => buildRows(items, filteredColumns),
-    [filteredColumns, items]
+    [filteredColumns, items],
   );
   const rows = useMemo(
     () => sortRows(unsortedRows, columnSorts, filteredColumns),
-    [unsortedRows, filteredColumns, columnSorts]
+    [unsortedRows, filteredColumns, columnSorts],
   );
 
   const shiftHeld = useShiftHeld();
@@ -246,13 +247,13 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
                 } else {
                   return enabledColumns.includes(cId) ? cId : undefined;
                 }
-              })
-            )
-          )
-        )
+              }),
+            ),
+          ),
+        ),
       );
     },
-    [dispatch, columns, enabledColumns, itemType]
+    [dispatch, columns, enabledColumns, itemType],
   );
 
   const selectedItems = items.filter((i) => selectedItemIds.includes(i.id));
@@ -272,7 +273,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   const onRowClick = useCallback(
     (
       row: Row,
-      column: ColumnDefinition
+      column: ColumnDefinition,
     ): React.MouseEventHandler<HTMLTableDataCellElement> | undefined =>
       column.filter
         ? (e) => {
@@ -280,7 +281,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
               if ((e.target as Element).hasAttribute('data-perk-name')) {
                 const filter = column.filter!(
                   (e.target as Element).getAttribute('data-perk-name'),
-                  row.item
+                  row.item,
                 );
                 if (filter) {
                   dispatch(toggleSearchQueryComponent(filter));
@@ -297,12 +298,12 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
               setSelectedItemIds(
                 selectedItemIds.findIndex((selectedItemId) => selectedItemId === row.item.id) === -1
                   ? [...selectedItemIds, row.item.id]
-                  : selectedItemIds.filter((id) => id !== row.item.id)
+                  : selectedItemIds.filter((id) => id !== row.item.id),
               );
             }
           }
         : undefined,
-    [dispatch, selectedItemIds]
+    [dispatch, selectedItemIds],
   );
 
   const onMoveSelectedItems = useCallback(
@@ -310,13 +311,13 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
       if (selectedItems.length) {
         const loadout = newLoadout(
           t('Organizer.BulkMoveLoadoutName'),
-          selectedItems.map((i) => convertToLoadoutItem(i, false))
+          selectedItems.map((i) => convertToLoadoutItem(i, false)),
         );
 
         dispatch(applyLoadout(store, loadout, { allowUndo: true }));
       }
     },
-    [dispatch, selectedItems]
+    [dispatch, selectedItems],
   );
 
   const onTagSelectedItems = useCallback(
@@ -326,7 +327,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
         dispatch(bulkTagItems(selectedItems, tagInfo.type, true));
       }
     },
-    [dispatch, items, selectedItemIds]
+    [dispatch, items, selectedItemIds],
   );
 
   const onCompareSelectedItems = useCallback(() => {
@@ -347,7 +348,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
       (_v, n) =>
         `[role="cell"]:nth-of-type(${numColumns * 2}n+${
           n + 2
-        }){background-color:var(--theme-organizer-row-even-bg) !important;}`
+        }){background-color:var(--theme-organizer-row-even-bg) !important;}`,
     )
     .join('\n');
 
@@ -391,7 +392,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   // TODO: drive the CSV export off the same column definitions as this table!
   let downloadAction: ReactNode | null = null;
   const downloadButtonSetting = downloadButtonSettings.find((setting) =>
-    setting.categoryId.includes(categories[1]?.id)
+    setting.categoryId.includes(categories[1]?.id),
   );
   if (downloadButtonSetting) {
     const downloadHandler = (e: React.MouseEvent) => {
@@ -499,7 +500,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
               styles.header,
               {
                 [styles.stats]: isStatsColumn,
-              }
+              },
             )}
             role="columnheader"
             aria-sort="none"
@@ -564,7 +565,7 @@ function buildRows(items: DimItem[], filteredColumns: ColumnDefinition[]) {
 function sortRows(
   unsortedRows: Row[],
   columnSorts: ColumnSort[],
-  filteredColumns: ColumnDefinition[]
+  filteredColumns: ColumnDefinition[],
 ) {
   const comparator = chainComparator<Row>(
     ...columnSorts.map((sorter) => {
@@ -576,11 +577,11 @@ function sortRows(
         // Always sort undefined values to the end
         return chainComparator(
           compareBy((row: Row) => row.values[column.id] === undefined),
-          sorter.sort === SortDirection.ASC ? compare : reverseComparator(compare)
+          sorter.sort === SortDirection.ASC ? compare : reverseComparator(compare),
         );
       }
       return compareBy(() => 0);
-    })
+    }),
   );
 
   return Array.from(unsortedRows).sort(comparator);
@@ -633,7 +634,7 @@ function TableRow({
   filteredColumns: ColumnDefinition[];
   onRowClick: (
     row: Row,
-    column: ColumnDefinition
+    column: ColumnDefinition,
   ) => ((event: React.MouseEvent<HTMLTableCellElement>) => void) | undefined;
 }) {
   return (

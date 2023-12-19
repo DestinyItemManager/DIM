@@ -18,7 +18,8 @@ export function updateLoadoutWithArmorSet(
   loadout: Loadout,
   set: ArmorSet,
   items: DimItem[],
-  lockedMods: PluggableInventoryItemDefinition[]
+  lockedMods: PluggableInventoryItemDefinition[],
+  loadoutParameters = loadout.parameters,
 ): Loadout {
   const data = {
     tier: _.sumBy(Object.values(set.stats), statTier),
@@ -32,9 +33,9 @@ export function updateLoadoutWithArmorSet(
       !(
         li.equip &&
         LockableBucketHashes.includes(
-          defs.InventoryItem.get(li.hash)?.inventory?.bucketTypeHash ?? 0
+          defs.InventoryItem.get(li.hash)?.inventory?.bucketTypeHash ?? 0,
         )
-      )
+      ),
   );
   const loadoutItems = items.map((item) => convertToLoadoutItem(item, true));
 
@@ -47,7 +48,7 @@ export function updateLoadoutWithArmorSet(
   return {
     ...loadout,
     parameters: {
-      ...loadout.parameters,
+      ...loadoutParameters,
       mods: allMods.length ? allMods : undefined,
     },
     items: [...existingItemsWithoutArmor, ...loadoutItems],
@@ -66,23 +67,29 @@ export function mergeLoadout(
   newLoadout: Loadout,
   set: ArmorSet,
   items: DimItem[],
-  lockedMods: PluggableInventoryItemDefinition[]
+  lockedMods: PluggableInventoryItemDefinition[],
 ): Loadout {
   const loadoutWithArmorSet = updateLoadoutWithArmorSet(
     defs,
     originalLoadout,
     set,
     items,
-    lockedMods
+    lockedMods,
+    newLoadout.parameters,
   );
 
+  loadoutWithArmorSet.parameters = {
+    ...newLoadout.parameters,
+    mods: loadoutWithArmorSet.parameters?.mods,
+  };
+
   const newSubclass = newLoadout.items.find(
-    (li) => defs.InventoryItem.get(li.hash)?.inventory?.bucketTypeHash === BucketHashes.Subclass
+    (li) => defs.InventoryItem.get(li.hash)?.inventory?.bucketTypeHash === BucketHashes.Subclass,
   );
 
   if (newSubclass) {
     const itemsWithoutSubclass = loadoutWithArmorSet.items.filter(
-      (li) => defs.InventoryItem.get(li.hash)?.inventory?.bucketTypeHash !== BucketHashes.Subclass
+      (li) => defs.InventoryItem.get(li.hash)?.inventory?.bucketTypeHash !== BucketHashes.Subclass,
     );
     itemsWithoutSubclass.push(newSubclass);
     loadoutWithArmorSet.items = itemsWithoutSubclass;

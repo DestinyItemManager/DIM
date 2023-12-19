@@ -12,8 +12,8 @@ import { refresh } from 'app/shell/refresh-events';
 import { ThunkResult } from 'app/store/types';
 import { CancelToken, withCancel } from 'app/utils/cancel';
 import { infoLog } from 'app/utils/log';
-import { observeStore } from 'app/utils/redux-utils';
-import { dedupePromise } from 'app/utils/util';
+import { dedupePromise } from 'app/utils/promises';
+import { observeStore } from 'app/utils/redux';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { InventoryBucket } from '../inventory/inventory-buckets';
@@ -109,7 +109,7 @@ function makeRoomForItems(store: DimStore, cancelToken: CancelToken): ThunkResul
   return (dispatch, getState) => {
     const buckets = bucketsSelector(getState())!;
     const makeRoomBuckets = Object.values(buckets.byHash).filter(
-      (b) => b.category === BucketCategory.Equippable && b.type
+      (b) => b.category === BucketCategory.Equippable && b.type,
     );
     return dispatch(makeRoomForItemsInBuckets(store, makeRoomBuckets, cancelToken));
   };
@@ -129,8 +129,11 @@ function farmD1(store: D1Store, cancelToken: CancelToken): ThunkResult {
 function farmItems(store: D1Store, cancelToken: CancelToken): ThunkResult {
   const toMove = store.items.filter(
     (i) =>
+      !i.equipped &&
       !i.notransfer &&
-      (i.isEngram || (i.equipment && i.tier === 'Uncommon') || supplies.includes(i.hash))
+      (i.isEngram ||
+        (i.equipment && i.bucket.hash !== BucketHashes.Emblems && i.tier === 'Uncommon') ||
+        supplies.includes(i.hash)),
   );
 
   if (toMove.length === 0) {
@@ -155,7 +158,7 @@ function makeRoomForD1Items(store: D1Store, cancelToken: CancelToken): ThunkResu
 function makeRoomForItemsInBuckets(
   store: DimStore,
   makeRoomBuckets: InventoryBucket[],
-  cancelToken: CancelToken
+  cancelToken: CancelToken,
 ): ThunkResult {
   return async (dispatch, getState) => {
     const stores = storesSelector(getState());
@@ -176,7 +179,7 @@ function makeRoomForItemsInBuckets(
             store,
             getVault(stores)!,
             getTag,
-            isInInGameLoadoutFor
+            isInInGameLoadoutFor,
           );
           // We'll move the first one to the vault
           const itemToMove = prioritizedMoveAsideCandidates[0];
@@ -199,7 +202,7 @@ function moveItemsToVault(
   store: DimStore,
   items: DimItem[],
   makeRoomBuckets: InventoryBucket[],
-  cancelToken: CancelToken
+  cancelToken: CancelToken,
 ): ThunkResult {
   const reservations: MoveReservations = {};
   // reserve one space in the active character

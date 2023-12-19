@@ -2,7 +2,7 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { armorStats } from 'app/search/d2-known-values';
 import { useSetting } from 'app/settings/hooks';
-import { addDividers } from 'app/utils/react-utils';
+import { addDividers } from 'app/utils/react';
 import { DestinyClass, DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import styles from './CustomStatTotal.m.scss';
@@ -57,11 +57,11 @@ export function StatTotalToggle({
                     readOnly={readOnly}
                   />
                 )),
-              <span className={styles.divider} />
+              <span className={styles.divider} />,
             )}
           </span>
         )),
-        <span className={styles.divider} />
+        <span className={styles.divider} />,
       )}
     </div>
   );

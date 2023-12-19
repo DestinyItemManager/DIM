@@ -15,7 +15,7 @@ import store from './store/store';
 import { isNativeDragAndDropSupported } from './utils/browsers';
 
 // Wrap App with Sentry profiling
-const WrappedApp = $featureFlags.sentry ? withProfiler(App) : App;
+const ProfiledApp = withProfiler(App);
 
 function Root() {
   const options: MultiBackendOptions = {
@@ -37,11 +37,11 @@ function Root() {
           ],
   };
   return (
-    <Router future={{ v7_startTransition: true }}>
+    <Router future={{ v7_startTransition: true }} basename={$PUBLIC_PATH}>
       <Provider store={store}>
         <LocationSwitcher />
         <DndProvider options={options}>
-          <WrappedApp />
+          <ProfiledApp />
         </DndProvider>
       </Provider>
     </Router>

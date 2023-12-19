@@ -6,7 +6,8 @@ import { setMockProfileResponse } from 'app/inventory/actions';
 import { loadStores } from 'app/inventory/d2-stores';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { ThunkResult } from 'app/store/types';
-import { download, errorMessage } from 'app/utils/util';
+import { download } from 'app/utils/download';
+import { errorMessage } from 'app/utils/errors';
 import { DestinyProfileResponse, ServerResponse } from 'bungie-api-ts/destiny2';
 import { DropzoneOptions } from 'react-dropzone';
 import { useSelector } from 'react-redux';
@@ -27,7 +28,7 @@ export function TroubleshootingSettings() {
       download(
         JSON.stringify(await getStores(currentAccount), null, '\t'),
         'profile-data.json',
-        'application/json'
+        'application/json',
       );
     }
   };

@@ -9,9 +9,9 @@ import { useD1Definitions } from 'app/manifest/selectors';
 import { D1_StatHashes } from 'app/search/d1-known-values';
 import { getColor } from 'app/shell/formatters';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { uniqBy } from 'app/utils/collections';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { errorLog } from 'app/utils/log';
-import { uniqBy } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { produce } from 'immer';
@@ -123,7 +123,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
     if (storesLoaded) {
       // Exclude felwinters if we have them, but only the first time stores load
       const felwinters = stores.flatMap((store) =>
-        store.items.filter((i) => i.hash === 2672107540)
+        store.items.filter((i) => i.hash === 2672107540),
       );
       if (felwinters.length) {
         setStateFull((state) => ({
@@ -145,6 +145,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
           cancelled: false,
         };
         const result = await getSetBucketsStep(
+          defs,
           loadBucket(selectedCharacter, stores),
           loadVendorsBucket(selectedCharacter, state.vendors),
           state.lockeditems,
@@ -153,7 +154,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
           state.scaleType,
           state.includeVendors,
           state.fullMode,
-          cancelToken.current
+          cancelToken.current,
         );
         setState({ ...result, progress: 1 });
       })();
@@ -186,14 +187,14 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
   useEffect(() => {
     if (vendorsLoaded) {
       const felwinters = Object.values(state.vendors!).flatMap((vendor) =>
-        vendor.allItems.filter((i) => i.item.hash === 2672107540)
+        vendor.allItems.filter((i) => i.item.hash === 2672107540),
       );
       if (felwinters.length) {
         setStateFull((state) => ({
           ...state,
           excludeditems: uniqBy(
             [...state.excludeditems, ...felwinters.map((si) => si.item)],
-            (i) => i.id
+            (i) => i.id,
           ),
         }));
       }
@@ -273,7 +274,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
         (item) =>
           item.primaryStat?.statHash === D1_StatHashes.Defense &&
           item.talentGrid?.nodes &&
-          item.stats
+          item.stats,
       );
     }
 
@@ -305,8 +306,8 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
             .map((i) => i.item)
             .filter(
               (item) =>
-                item.bucket.sort === 'Armor' || item.type === 'Artifact' || item.type === 'Ghost'
-            )
+                item.bucket.sort === 'Armor' || item.type === 'Artifact' || item.type === 'Ghost',
+            ),
         );
         vendorItems = vendorItems.concat(vendItems);
 
@@ -317,13 +318,13 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
             for (const classType of allClassTypes) {
               vendorPerks[classType][itemType] = filterPerks(
                 vendorPerks[classType][itemType],
-                item
+                item,
               );
             }
           } else if (item.classType !== DestinyClass.Classified) {
             vendorPerks[item.classType][itemType] = filterPerks(
               vendorPerks[item.classType][itemType],
-              item
+              item,
             );
           }
         }
@@ -339,7 +340,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
           D1GridNode[],
         ][]) {
           vendorPerks[classType][type] = _.reject(perkArr, (perk) =>
-            perks[classType][type].map((i) => i.hash).includes(perk.hash)
+            perks[classType][type].map((i) => i.hash).includes(perk.hash),
           );
         }
       }
@@ -348,7 +349,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
     return getActiveBuckets<D1GridNode[]>(
       perks[selectedCharacter.classType as ClassTypes],
       vendorPerks[selectedCharacter.classType as ClassTypes],
-      includeVendors
+      includeVendors,
     );
   }, [selectedCharacter?.classType, state.vendors, state.includeVendors, stores]);
 
@@ -366,11 +367,10 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
       errorLog('loadout optimizer', new Error('You need to have a name on the form input'));
     }
 
-    // https://github.com/Microsoft/TypeScript/issues/13948
     setState({
       [e.target.name as 'type' | 'scaleType']: e.target.value,
       progress: 0,
-    } as unknown as Pick<State, keyof State>);
+    });
   };
 
   const onActiveSetsChange: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
@@ -401,8 +401,8 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
         ? 'none'
         : 'and'
       : lockedPerk?.lockType === 'or'
-      ? 'none'
-      : 'or';
+        ? 'none'
+        : 'or';
 
     const newLockedPerks = produce(lockedperks, (lockedperks) => {
       if (activeType === 'none') {
@@ -447,7 +447,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
     setStateFull((state) => ({
       ...state,
       excludeditems: state.excludeditems.filter(
-        (excludeditem) => excludeditem.index !== item.index
+        (excludeditem) => excludeditem.index !== item.index,
       ),
       progress: 0,
     }));
@@ -463,14 +463,14 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
       'artifact',
       'ghost',
     ];
-    const items = _.groupBy(
+    const items = Object.groupBy(
       selectedCharacter!.items.filter(
         (item) =>
           itemCanBeInLoadout(item) &&
           item.equipped &&
-          lockEquippedTypes.includes(item.type.toLowerCase())
+          lockEquippedTypes.includes(item.type.toLowerCase()),
       ),
-      (i) => i.type.toLowerCase()
+      (i) => i.type.toLowerCase(),
     );
 
     function nullWithoutStats(items: DimItem[]) {
@@ -540,7 +540,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
       ItemCategoryHashes.ClassItems,
       38, // D1 Artifact
       ItemCategoryHashes.Ghost,
-    ].map((key) => defs.ItemCategory.get(key).title)
+    ].map((key) => defs.ItemCategory.get(key).title),
   );
 
   // Armor of each type on a particular character
@@ -594,7 +594,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
             <div className="loadout-builder-section">
               {_.sortBy(
                 bucket[type].filter((i) => i.power >= 280),
-                (i) => (i.quality ? -i.quality.min : 0)
+                (i) => (i.quality ? -i.quality.min : 0),
               ).map((item) => (
                 <div key={item.index} className="item-container">
                   <div className="item-stats">
@@ -603,7 +603,7 @@ export default function D1LoadoutBuilder({ account }: { account: DestinyAccount 
                         key={stat.statHash}
                         style={getColor(
                           item.normalStats![stat.statHash].qualityPercentage,
-                          'color'
+                          'color',
                         )}
                       >
                         {item.normalStats![stat.statHash].scaled === 0 && <small>-</small>}
@@ -803,6 +803,6 @@ function filterPerks(perks: D1GridNode[], item: D1Item) {
     return [];
   }
   return uniqBy(perks.concat(item.talentGrid.nodes), (node) => node.hash).filter(
-    (node) => !unwantedPerkHashes.includes(node.hash)
+    (node) => !unwantedPerkHashes.includes(node.hash),
   );
 }

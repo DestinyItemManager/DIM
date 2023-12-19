@@ -35,6 +35,6 @@ export function calculateTotalTier(stats: ArmorStats) {
 
 export function sumEnabledStats(stats: ArmorStats, statConstraints: StatConstraint[]) {
   return _.sumBy(armorStats, (statHash) =>
-    statConstraints.some((s) => s.statHash === statHash) ? statTier(stats[statHash]) : 0
+    statConstraints.some((s) => s.statHash === statHash) ? statTier(stats[statHash]) : 0,
   );
 }

@@ -30,7 +30,7 @@ export default function ExcludeItemsDropTarget({ className, children, onExcluded
       collect: (monitor) => ({ isOver: monitor.isOver(), canDrop: monitor.canDrop() }),
       drop: onExcluded,
     }),
-    [onExcluded]
+    [onExcluded],
   );
   return (
     <div

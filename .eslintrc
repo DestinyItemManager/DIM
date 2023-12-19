@@ -137,6 +137,11 @@
         "object": "_",
         "property": "noop",
         "message": "Import noop directly instead of using it through _.noop, to satisfy the unbound-method lint"
+      },
+      {
+        "object": "_",
+        "property": "groupBy",
+        "message": "Use Object.groupBy or Map.groupBy instead."
       }
     ],
     "no-restricted-imports": [
@@ -155,6 +160,10 @@
       {
         "selector": "CallExpression[callee.property.name='compact'][callee.object.name='_'][arguments.0.callee.property.name='map']",
         "message": "Please use `filterMap` instead"
+      },
+      {
+        "selector": "CallExpression[callee.name='clsx'][arguments.length=1][arguments.0.object.name='styles'],CallExpression[callee.name='clsx'][arguments.length=1][arguments.0.type='Literal']",
+        "message": "Unnecessary clsx"
       },
       {
         "selector": "TSEnumDeclaration:not([const=true])",

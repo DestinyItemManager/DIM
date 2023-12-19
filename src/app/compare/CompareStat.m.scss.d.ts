@@ -5,7 +5,6 @@ interface CssExports {
   'range': string;
   'recoil': string;
   'stat': string;
-  'value': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

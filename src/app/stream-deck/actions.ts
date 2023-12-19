@@ -19,10 +19,8 @@ export const streamDeckUpdatePopupShowed = createAction('stream-deck/UPDATE-POPU
 /**
  * Trigger a notification popup asking the user to select an item/loadout
  */
-export const streamDeckWaitSelection = createAction(
-  'shell/TRIGGER_SELECTION',
-  (selectionType: StreamDeckSelectionType) => selectionType
-)();
+export const streamDeckWaitSelection =
+  createAction('shell/TRIGGER_SELECTION')<StreamDeckSelectionType>();
 
 /**
  * Cancel selection notification and stop related components behavior

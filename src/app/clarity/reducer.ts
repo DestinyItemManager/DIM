@@ -21,8 +21,8 @@ export interface ClarityState {
 const initialState: ClarityState = {};
 export const clarity: Reducer<ClarityState, ClarityAction> = (
   state: ClarityState = initialState,
-  action: ClarityAction
-) => {
+  action: ClarityAction,
+): ClarityState => {
   switch (action.type) {
     case getType(actions.loadDescriptions): {
       const descriptions = action.payload;

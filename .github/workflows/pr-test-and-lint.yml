@@ -14,21 +14,34 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v2
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18.x
-          cache: yarn
+          cache: pnpm
 
       - name: Install
-        run: yarn install --frozen-lockfile --prefer-offline
+        run: pnpm install --frozen-lockfile --prefer-offline
+
+      - name: Cache Manifest
+        id: destiny-manifest
+        uses: actions/cache@v3
+        with:
+          path: manifest-cache
+          key: destiny-manifest-${{ github.run_id }}
+          restore-keys: |
+            destiny-manifest
 
       - name: Jest Test
-        run: yarn jest
+        run: pnpm test
+        env:
+          CLEAN_MANIFEST_CACHE: true
 
-      - uses: actions/upload-artifact@v3  # upload test results
+      - uses: actions/upload-artifact@v4  # upload test results
         if: success() || failure()        # run this step even if previous step failed
         with:
           name: test-results
@@ -37,13 +50,15 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v2
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18.x
-          cache: yarn
+          cache: pnpm
 
       - name: Cache ESLint
         uses: actions/cache@v3
@@ -57,21 +72,21 @@ jobs:
             ${{ runner.os }}-${{ env.cache-name }}-
 
       - name: Install
-        run: yarn install --frozen-lockfile --prefer-offline
+        run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: Prettier
-        run: yarn lint:prettier
+        run: pnpm lint:prettier
 
       - name: StyleLint
-        run: yarn lint:stylelint
+        run: pnpm lint:stylelint
 
       - name: ESLint (Forked)
         if: github.event.pull_request.head.repo.full_name != github.repository
-        run: yarn lintcached
+        run: pnpm lintcached
 
       - name: Save ESLint Report JSON (Non-Forked)
         if: github.event.pull_request.head.repo.full_name == github.repository
-        run: yarn lint-report:cached
+        run: pnpm lint-report:cached
         continue-on-error: true
 
       - name: Annotate ESLint Results

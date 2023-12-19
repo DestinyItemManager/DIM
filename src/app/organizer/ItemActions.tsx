@@ -103,12 +103,12 @@ function ItemActions({
   useHotkey(
     'p',
     t('Hotkey.Pull'),
-    useCallback(() => onMoveSelectedItems(currentStore), [currentStore, onMoveSelectedItems])
+    useCallback(() => onMoveSelectedItems(currentStore), [currentStore, onMoveSelectedItems]),
   );
   useHotkey(
     'v',
     t('Hotkey.Vault'),
-    useCallback(() => onMoveSelectedItems(vault), [vault, onMoveSelectedItems])
+    useCallback(() => onMoveSelectedItems(vault), [vault, onMoveSelectedItems]),
   );
 
   return (

@@ -136,7 +136,7 @@ function Control({
             </div>
             <div className={styles.arrow} />
           </div>,
-          pressTipRoot.current || tempContainer
+          pressTipRoot.current || tempContainer,
         )}
     </Component>
   );
@@ -255,14 +255,18 @@ const pressTime = 300; // ms that the element can be pressed before the presstip
  * </PressTip>
  */
 export function PressTip(props: Props) {
+  // The timer before we show the presstip (different on hover and press)
   const timer = useRef<number>(0);
   const touchStartTime = useRef<number>(0);
+  // The triggering element
   const ref = useRef<HTMLDivElement>(null);
+  // Allow us to distinguish between press and hover gestures
   const startEvent = useRef<'pointerdown' | 'pointerenter'>();
+  // Absolute timestamp within which we will suppress clicks
   const suppressClickUntil = useRef<number>(0);
   const [open, setOpen] = useState<boolean>(false);
 
-  const closeToolTip = useCallback((e: React.PointerEvent) => {
+  const closeToolTip = useCallback((e: React.PointerEvent | React.MouseEvent) => {
     // Ignore events that aren't paired up
     if (
       !startEvent.current ||
@@ -284,7 +288,12 @@ export function PressTip(props: Props) {
     startEvent.current = undefined;
   }, []);
 
+  // Fires on both pointerenter and pointerdown - does double duty for handling both hover tips and press tips
   const hover = useCallback((e: React.PointerEvent) => {
+    if (e.type === 'pointerenter' && e.buttons !== 0) {
+      // Ignore hover events when the mouse is down
+      return;
+    }
     e.preventDefault();
     // If we're already hovering, don't start hovering again
     if (
@@ -321,14 +330,22 @@ export function PressTip(props: Props) {
     }
   }, []);
 
-  const events = {
-    onPointerEnter: hover,
-    onPointerDown: hover,
-    onPointerLeave: closeToolTip,
-    onPointerUp: closeToolTip,
-    onPointerCancel: closeToolTip,
-    onClick: absorbClick,
-  };
-
-  return <Control open={open} triggerRef={ref} {...events} {...props} />;
+  return (
+    <Control
+      open={open}
+      triggerRef={ref}
+      onPointerEnter={hover}
+      onPointerDown={hover}
+      onPointerLeave={closeToolTip}
+      onPointerUp={closeToolTip}
+      onPointerCancel={closeToolTip}
+      /* onLostPointerCapture closes the tooltip when dragging within our
+      SheetHorizontalScrollContainer which handles pointer events itself -
+      without this, tooltips never close after the scroller steals the pointer
+      capture. */
+      onLostPointerCapture={closeToolTip}
+      onClick={absorbClick}
+      {...props}
+    />
+  );
 }

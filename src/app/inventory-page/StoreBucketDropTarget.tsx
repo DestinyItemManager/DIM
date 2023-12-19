@@ -16,6 +16,7 @@ interface Props {
   equip?: boolean;
   children?: React.ReactNode;
   className?: string;
+  grouped: boolean;
 }
 
 const onClick = () => {
@@ -29,6 +30,7 @@ export default function StoreBucketDropTarget({
   className,
   storeClassType,
   bucket,
+  grouped,
 }: Props) {
   const dispatch = useThunkDispatch();
   const [{ isOver, canDrop }, dropRef] = useDrop<
@@ -51,7 +53,7 @@ export default function StoreBucketDropTarget({
         return itemCanBeEquippedByStoreId(item, storeId, storeClassType);
       },
     }),
-    [storeId, bucket, storeClassType, equip]
+    [storeId, bucket, storeClassType, equip],
   );
 
   // TODO: I don't like that we're managing the classes for sub-bucket here
@@ -61,6 +63,7 @@ export default function StoreBucketDropTarget({
       className={clsx('sub-bucket', className, equip ? 'equipped' : 'unequipped', {
         [styles.over]: canDrop && isOver,
         [styles.canDrop]: canDrop,
+        [styles.grouped]: grouped,
       })}
       onClick={onClick}
       aria-label={bucket.name}

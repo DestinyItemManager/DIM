@@ -1,18 +1,23 @@
 import { LoadoutSort } from '@destinyitemmanager/dim-api-types';
-import { AlertIcon } from 'app/dim-ui/AlertIcon';
-import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import FilterPills, { Option } from 'app/dim-ui/FilterPills';
+import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { DimLanguage } from 'app/i18n';
 import { t } from 'app/i18next-t';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
+import { DimStore } from 'app/inventory/store-types';
+import { findingDisplays } from 'app/loadout-analyzer/finding-display';
+import { useSummaryLoadoutsAnalysis } from 'app/loadout-analyzer/hooks';
+import { LoadoutAnalysisSummary, LoadoutFinding } from 'app/loadout-analyzer/types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { loadoutIssuesSelector } from 'app/loadout-drawer/loadouts-selector';
+import { faCheckCircle, refreshIcon } from 'app/shell/icons';
+import AppIcon from 'app/shell/icons/AppIcon';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import { localizedIncludes, localizedSorter } from 'app/utils/intl';
+import clsx from 'clsx';
 import _ from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
+import styles from './menu-hooks.m.scss';
 
 /**
  * Set up the filter pills for loadouts - allowing for filtering by hashtag and some other special properties.
@@ -20,13 +25,13 @@ import { useSelector } from 'react-redux';
  */
 export function useLoadoutFilterPills(
   savedLoadouts: Loadout[],
-  selectedStoreId: string,
+  store: DimStore,
   options: {
     includeWarningPills?: boolean;
     className?: string;
     darkBackground?: boolean;
     extra?: React.ReactNode;
-  } = {}
+  } = {},
 ): [filteredLoadouts: Loadout[], filterPillsElement: React.ReactNode, hasSelectedFilters: boolean] {
   if (!$featureFlags.loadoutFilterPills) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -34,12 +39,19 @@ export function useLoadoutFilterPills(
   }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useLoadoutFilterPillsInternal(savedLoadouts, selectedStoreId, options);
+  return useLoadoutFilterPillsInternal(savedLoadouts, store, options);
 }
+
+type FilterPillType =
+  | {
+      tag: 'hashtag';
+      hashtag: string;
+    }
+  | { tag: 'finding'; finding: LoadoutFinding };
 
 function useLoadoutFilterPillsInternal(
   savedLoadouts: Loadout[],
-  selectedStoreId: string,
+  store: DimStore,
   {
     includeWarningPills,
     className,
@@ -50,15 +62,19 @@ function useLoadoutFilterPillsInternal(
     className?: string;
     darkBackground?: boolean;
     extra?: React.ReactNode;
-  } = {}
+  } = {},
 ): [filteredLoadouts: Loadout[], filterPillsElement: React.ReactNode, hasSelectedFilters: boolean] {
-  const loadoutIssues = useSelector(loadoutIssuesSelector);
-  const [selectedFilters, setSelectedFilters] = useState<Option[]>(emptyArray());
+  const [selectedFilters, setSelectedFilters] = useState<Option<FilterPillType>[]>(emptyArray());
+  const analysisSummary = useSummaryLoadoutsAnalysis(
+    savedLoadouts,
+    store,
+    Boolean(includeWarningPills),
+  );
 
   // Reset filters on character change
   useEffect(() => {
     setSelectedFilters(emptyArray());
-  }, [selectedStoreId]);
+  }, [store.id]);
 
   const loadoutsByHashtag = useMemo(() => {
     const loadoutsByHashtag: { [hashtag: string]: Loadout[] } = {};
@@ -74,71 +90,40 @@ function useLoadoutFilterPillsInternal(
     return loadoutsByHashtag;
   }, [savedLoadouts]);
 
-  const filterOptions = _.sortBy(
-    Object.keys(loadoutsByHashtag).map(
-      (hashtag): Option => ({
-        key: hashtag,
-        content: <ColorDestinySymbols text={hashtag} />,
-      })
-    ),
-    (o) => o.key
+  const filterOptions: Option<FilterPillType>[] = _.sortBy(
+    Object.entries(loadoutsByHashtag).map(([hashtag, loadouts]) => ({
+      key: hashtag,
+      value: { tag: 'hashtag', hashtag },
+      content: (
+        <>
+          <ColorDestinySymbols text={hashtag} />
+          {` (${loadouts.length})`}
+        </>
+      ),
+    })),
+    (o) => o.key,
   );
 
-  const loadoutsWithMissingItems = savedLoadouts.filter(
-    (l) => loadoutIssues[l.id]?.hasMissingItems
-  );
-  const loadoutsWithDeprecatedMods = savedLoadouts.filter(
-    (l) => loadoutIssues[l.id]?.hasDeprecatedMods
-  );
-  const loadoutsWithEmptyFragmentSlots = savedLoadouts.filter(
-    (l) => loadoutIssues[l.id]?.emptyFragmentSlots
-  );
-  const loadoutsWithTooManyFragments = savedLoadouts.filter(
-    (l) => loadoutIssues[l.id]?.tooManyFragments
-  );
-
-  if (includeWarningPills) {
-    if (loadoutsWithMissingItems.length) {
-      filterOptions.push({
-        key: 'missingitems',
-        content: (
-          <>
-            <AlertIcon /> {t('Loadouts.MissingItems')}
-          </>
-        ),
-      });
-    }
-
-    if (loadoutsWithDeprecatedMods.length) {
-      filterOptions.push({
-        key: 'deprecated',
-        content: (
-          <>
-            <AlertIcon /> {t('Loadouts.DeprecatedMods')}
-          </>
-        ),
-      });
-    }
-
-    if (loadoutsWithEmptyFragmentSlots.length) {
-      filterOptions.push({
-        key: 'emptyFragmentSlots',
-        content: (
-          <>
-            <AlertIcon /> {t('Loadouts.EmptyFragmentSlots')}
-          </>
-        ),
-      });
-    }
-    if (loadoutsWithTooManyFragments.length) {
-      filterOptions.push({
-        key: 'tooManyFragments',
-        content: (
-          <>
-            <AlertIcon /> {t('Loadouts.TooManyFragments')}
-          </>
-        ),
-      });
+  if (analysisSummary) {
+    for (const [finding_, affectedLoadouts] of Object.entries(analysisSummary.loadoutsByFindings)) {
+      if (affectedLoadouts.size > 0) {
+        const finding = parseInt(finding_, 10) as LoadoutFinding;
+        const display = findingDisplays[finding];
+        if (!display.icon) {
+          continue;
+        }
+        filterOptions.push({
+          key: `finding-${finding_}`,
+          value: { tag: 'finding', finding },
+          content: (
+            <>
+              <AppIcon icon={display.icon} />
+              {t(display.name)}
+              {` (${affectedLoadouts.size})`}
+            </>
+          ),
+        });
+      }
     }
   }
 
@@ -147,34 +132,24 @@ function useLoadoutFilterPillsInternal(
       selectedFilters.length > 0
         ? _.intersection(
             ...selectedFilters.map((f) => {
-              switch (f.key) {
-                case 'deprecated':
-                  return loadoutsWithDeprecatedMods;
-                case 'missingitems':
-                  return loadoutsWithMissingItems;
-                case 'emptyFragmentSlots':
-                  return loadoutsWithEmptyFragmentSlots;
-                case 'tooManyFragments':
-                  return loadoutsWithTooManyFragments;
-                default:
-                  return loadoutsByHashtag[f.key] ?? [];
+              switch (f.value.tag) {
+                case 'hashtag': {
+                  return loadoutsByHashtag[f.value.hashtag] ?? [];
+                }
+                case 'finding': {
+                  const loadouts = analysisSummary?.loadoutsByFindings[f.value.finding];
+                  return loadouts?.size
+                    ? [...savedLoadouts].filter((loadout) => loadouts?.has(loadout.id))
+                    : savedLoadouts;
+                }
               }
-            })
+            }),
           )
         : savedLoadouts,
-    [
-      selectedFilters,
-      savedLoadouts,
-      loadoutsWithDeprecatedMods,
-      loadoutsWithMissingItems,
-      loadoutsWithEmptyFragmentSlots,
-      loadoutsWithTooManyFragments,
-      loadoutsByHashtag,
-    ]
+    [selectedFilters, savedLoadouts, loadoutsByHashtag, analysisSummary?.loadoutsByFindings],
   );
 
-  return [
-    filteredLoadouts,
+  const pills =
     filterOptions.length > 0 ? (
       <FilterPills
         options={filterOptions}
@@ -184,9 +159,60 @@ function useLoadoutFilterPillsInternal(
         darkBackground={darkBackground}
         extra={_.isEmpty(loadoutsByHashtag) ? extra : undefined}
       />
-    ) : null,
+    ) : null;
+
+  const analysisProgress = (
+    <AnalysisProgress
+      active={includeWarningPills}
+      numLoadouts={savedLoadouts.length}
+      summary={analysisSummary}
+      className={className}
+    />
+  );
+
+  return [
+    filteredLoadouts,
+    // eslint-disable-next-line react/jsx-key
+    <>
+      {pills}
+      {analysisProgress}
+    </>,
     selectedFilters.length > 0,
   ];
+}
+
+function AnalysisProgress({
+  active,
+  numLoadouts,
+  summary,
+  className,
+}: {
+  active: boolean | undefined;
+  numLoadouts: number;
+  summary: LoadoutAnalysisSummary | undefined;
+  className?: string;
+}) {
+  if (!active) {
+    return null;
+  }
+
+  const numAnalyzed = summary?.analyzedLoadouts ?? 0;
+  const busy = numAnalyzed < numLoadouts || summary?.outdated;
+  return (
+    <div className={clsx(className, styles.analyzingText)}>
+      {busy ? (
+        <>
+          <AppIcon icon={refreshIcon} spinning />
+          {t('LoadoutAnalysis.Analyzing', { numAnalyzed, numLoadouts })}
+        </>
+      ) : (
+        <>
+          <AppIcon icon={faCheckCircle} />
+          {t('LoadoutAnalysis.Analyzed', { numLoadouts })}
+        </>
+      )}
+    </div>
+  );
 }
 
 /**
@@ -196,13 +222,13 @@ export function searchAndSortLoadoutsByQuery(
   loadouts: Loadout[],
   query: string,
   language: DimLanguage,
-  loadoutSort: LoadoutSort
+  loadoutSort: LoadoutSort,
 ) {
   let filteredLoadouts: Loadout[];
   if (query.length) {
     const includes = localizedIncludes(language, query);
     filteredLoadouts = loadouts.filter(
-      (loadout) => includes(loadout.name) || (loadout.notes && includes(loadout.notes))
+      (loadout) => includes(loadout.name) || (loadout.notes && includes(loadout.notes)),
     );
   } else {
     filteredLoadouts = [...loadouts];
@@ -211,6 +237,6 @@ export function searchAndSortLoadoutsByQuery(
   return filteredLoadouts.sort(
     loadoutSort === LoadoutSort.ByEditTime
       ? compareBy((l) => -(l.lastUpdatedAt ?? 0))
-      : localizedSorter(language, (l) => l.name)
+      : localizedSorter(language, (l) => l.name),
   );
 }

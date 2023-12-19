@@ -40,7 +40,7 @@ export default function WhatsNewLink({
         <span
           className={clsx(
             styles.badgeNew,
-            `bungie-alert-${GlobalAlertLevelsToToastLevels[alerts[0].AlertLevel]}`
+            `bungie-alert-${GlobalAlertLevelsToToastLevels[alerts[0].AlertLevel]}`,
           )}
         />{' '}
         {t('Header.BungieNetAlert')}

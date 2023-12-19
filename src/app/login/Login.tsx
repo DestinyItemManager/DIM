@@ -29,7 +29,7 @@ export default function Login() {
   // Save the path we were originally on, so we can restore it after login in the DefaultAccount component.
   useEffect(() => {
     if (previousPath) {
-      localStorage.setItem('returnPath', previousPath);
+      localStorage.setItem('returnPath', $PUBLIC_PATH.replace(/\/$/, '') + previousPath);
     }
   }, [previousPath]);
 
@@ -45,7 +45,7 @@ export default function Login() {
 
   // If API permissions had been explicitly disabled before, don't even show the option to enable DIM Sync
   const [apiPermissionPreviouslyDisabled] = useState(
-    localStorage.getItem('dim-api-enabled') === 'false'
+    localStorage.getItem('dim-api-enabled') === 'false',
   );
   const [apiPermissionGranted, setApiPermissionGranted] = useState(() => {
     const enabled = localStorage.getItem('dim-api-enabled') !== 'false';
