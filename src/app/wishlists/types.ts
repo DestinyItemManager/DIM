@@ -48,6 +48,8 @@ export interface WishListAndInfo {
 }
 
 export interface WishListInfo {
+  /** The wish list URL. If undefined, this is a local wish list. */
+  url: string | undefined;
   title?: string;
   description?: string;
   /** The number of rolls from this wish list that actually made it in. */
