@@ -1,3 +1,4 @@
+import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { TileGridTile } from 'app/dim-ui/TileGrid';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
@@ -8,6 +9,7 @@ import { getPlugDefStats, usePlugDescriptions } from 'app/utils/plug-description
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { useCallback, useMemo } from 'react';
 import PlugStackableIcon from './PlugStackableIcon';
+import styles from './SelectablePlug.m.scss';
 
 /**
  * A single selectable plug in the PlugDrawer component. This shows the details of the plug along
@@ -73,7 +75,7 @@ function SelectablePlugDetails({
   const stats = getPlugDefStats(plug, classType);
 
   // We don't show Clarity descriptions here due to layout concerns, see #9318 / #8641
-  const plugDescriptions = usePlugDescriptions(plug, stats, /* forceUseBungieDescriptions */ true);
+  const plugDescriptions = usePlugDescriptions(plug, stats, /* forceUseBungieDescriptions */ false);
 
   return (
     <>
@@ -83,6 +85,12 @@ function SelectablePlugDetails({
           perkDesc.description && (
             <RichDestinyText key={perkDesc.perkHash} text={perkDesc.description} />
           ),
+      )}
+      {plugDescriptions.communityInsight && (
+        <ClarityDescriptions
+          perk={plugDescriptions.communityInsight}
+          className={styles.clarityDescription}
+        />
       )}
       {stats.length > 0 && <PlugStats stats={stats} />}
     </>

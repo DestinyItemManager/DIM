@@ -1,7 +1,11 @@
 @use '../../variables' as *;
 
-.requirement {
-  font-style: italic;
-  font-size: 11px;
+.clarityDescription {
+  margin-top: 2px;
+  border-left: 2px solid $communityBlue;
+  padding-left: 6px;
   color: var(--theme-text-secondary);
+  h3 {
+    color: var(--theme-text);
+  }
 }
