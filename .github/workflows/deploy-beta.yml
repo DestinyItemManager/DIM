@@ -48,7 +48,7 @@ jobs:
         env:
           RUN_NUM: ${{ github.run_number }}
         run: |
-          echo "VERSION=${{ steps.package-version.outputs.current-version }}.$(($RUN_NUM+1000000))" >> $GITHUB_ENV
+          echo "VERSION=${{ steps.package-version.outputs.current-version }}.$(($RUN_NUM))" >> $GITHUB_ENV
 
       - name: Install
         run: pnpm install --frozen-lockfile --prefer-offline
