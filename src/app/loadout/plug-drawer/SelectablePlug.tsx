@@ -5,10 +5,16 @@ import { t } from 'app/i18next-t';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { PlugStats } from 'app/item-popup/PlugTooltip';
-import { getPlugDefStats, usePlugDescriptions } from 'app/utils/plug-descriptions';
+import { banIcon, faCheck, stackIcon } from 'app/shell/icons';
+import AppIcon from 'app/shell/icons/AppIcon';
+import {
+  DimPlugDescriptions,
+  getPlugDefStats,
+  usePlugDescriptions,
+} from 'app/utils/plug-descriptions';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import unstackableModHashes from 'data/d2/unstackable-mods.json';
-import React, { useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import styles from './SelectablePlug.m.scss';
 
 /**
@@ -79,21 +85,44 @@ function SelectablePlugDetails({
 
   return (
     <>
-      {plugDescriptions.perks.map((perkDesc, index) => (
-        <React.Fragment key={perkDesc.perkHash}>
-          {perkDesc.description && <RichDestinyText text={perkDesc.description} />}
-          {perkDesc.requirement && index === plugDescriptions.perks.length - 1 ? (
-            <div className={styles.requirement}>
-              {unstackableModHashes.includes(plug.hash)
-                ? t('Loadouts.ModPlacement.UnstackableMod')
-                : t('Loadouts.ModPlacement.StackableMod')}
-            </div>
-          ) : (
-            <div className={styles.requirement}>{perkDesc.requirement}</div>
-          )}
-        </React.Fragment>
-      ))}
+      <PlugStackableIcon descriptions={plugDescriptions} hash={plug.hash} />
+      {plugDescriptions.perks.map(
+        (perkDesc) =>
+          perkDesc.description && (
+            <RichDestinyText key={perkDesc.perkHash} text={perkDesc.description} />
+          ),
+      )}
       {stats.length > 0 && <PlugStats stats={stats} />}
     </>
+  );
+}
+
+function PlugStackableIcon({
+  hash,
+  descriptions,
+}: {
+  hash: number;
+  descriptions: DimPlugDescriptions;
+}) {
+  const hasRequirements = descriptions.perks.some((perk) => perk.requirement);
+  const unstackable = unstackableModHashes.includes(hash);
+  if (!hasRequirements && !unstackable) {
+    return null;
+  }
+
+  return (
+    <div className={styles.stackable}>
+      {unstackable ? (
+        <>
+          <AppIcon icon={banIcon} ariaHidden /> <AppIcon icon={stackIcon} ariaHidden />{' '}
+          {t('Loadouts.ModPlacement.UnstackableMod')}
+        </>
+      ) : (
+        <>
+          <AppIcon icon={faCheck} ariaHidden /> <AppIcon icon={stackIcon} ariaHidden />{' '}
+          {t('Loadouts.ModPlacement.StackableMod')}
+        </>
+      )}
+    </div>
   );
 }

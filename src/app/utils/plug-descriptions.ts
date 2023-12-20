@@ -18,14 +18,14 @@ import { compareBy } from './comparators';
 import { isPlugStatActive } from './item-utils';
 import { LookupTable } from './util-types';
 
-interface DimPlugPerkDescription {
+export interface DimPlugPerkDescription {
   perkHash: number;
   name?: string;
   description?: string;
   requirement?: string;
 }
 
-interface DimPlugDescriptions {
+export interface DimPlugDescriptions {
   perks: DimPlugPerkDescription[];
   communityInsight: Perk | undefined;
 }
