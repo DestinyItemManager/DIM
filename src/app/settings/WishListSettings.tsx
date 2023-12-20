@@ -94,7 +94,7 @@ export default function WishListSettings() {
   };
 
   const disabledBuiltinLists = builtInWishlists.filter(
-    (list) => !activeWishlistUrls.includes(list.url)
+    (list) => !activeWishlistUrls.includes(list.url),
   );
 
   return (
