@@ -22,6 +22,7 @@
   gap: 8px;
   height: 100%;
   box-sizing: border-box;
+  position: relative;
   &:hover {
     background-color: rgba(255, 255, 255, 0.1);
   }

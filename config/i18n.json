@@ -554,6 +554,8 @@
     "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Activity Mods",
     "SelectExotic": "Select exotic",
     "SelectMods": "Select Mods",
+    "AddStack": "Add another copy of this mod",
+    "RemoveStack": "Remove a copy of this mod",
     "SelectSubclassOptions": "Customize subclass",
     "ShowAllConfigs": "Show all configurations",
     "ShowConfigs": "Show configurations",

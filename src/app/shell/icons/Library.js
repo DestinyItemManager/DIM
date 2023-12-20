@@ -28,6 +28,7 @@ export const faCaretDown = 'fas fa-caret-down';
 export const collapseIcon = faCaretDown;
 export const editIcon = 'fas fa-pencil-alt';
 export const plusIcon = 'fas fa-plus';
+export const minusIcon = 'fas fa-minus';
 export const expandIcon = 'fas fa-caret-right';
 export const faAngleRight = 'fas fa-angle-right';
 export const faAngleLeft = 'fas fa-angle-left';

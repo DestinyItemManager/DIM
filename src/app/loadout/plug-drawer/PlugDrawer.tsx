@@ -46,6 +46,11 @@ interface Props {
   onClose: () => void;
 }
 
+const plugSetSort = (set: PlugSet) =>
+  compareBy((plug: PluggableInventoryItemDefinition) =>
+    set.plugs.findIndex((p) => p.hash === plug.hash),
+  );
+
 /**
  * A sheet that allows picking some number of plugs (mods) from the union of
  * several set of plugs. You can choose more than one plug before accepting the
@@ -69,13 +74,9 @@ export default function PlugDrawer({
   const [query, setQuery] = useState(initialQuery || '');
   const [internalPlugSets, setInternalPlugSets] = useState(() =>
     plugSets
-      .map((plugSet) => ({ ...plugSet, plugs: Array.from(plugSet.plugs) }))
+      .map((plugSet): PlugSet => ({ ...plugSet, plugs: Array.from(plugSet.plugs) }))
       .sort(sortPlugGroups),
   );
-  const plugSetSort = (set: PlugSet) =>
-    compareBy((plug: PluggableInventoryItemDefinition) =>
-      set.plugs.findIndex((p) => p.hash === plug.hash),
-    );
   const isPhonePortrait = useIsPhonePortrait();
 
   const allSelectedPlugs = useMemo(

@@ -1,6 +1,7 @@
 import { TileGrid } from 'app/dim-ui/TileGrid';
 import { t, tl } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
+import { count } from 'app/utils/collections';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { useCallback } from 'react';
 import { groupModsByModType } from '../mod-utils';
@@ -84,11 +85,13 @@ export default function PlugSection({
                   numSelected < maxSelectable &&
                   isPlugSelectable(plug)
                 : !isSelected && isPlugSelectable(plug);
+              const stack = count(plugSet.selected, (p) => p.hash === plug.hash);
               return (
                 <SelectablePlug
                   key={plug.hash}
                   selected={isSelected}
                   plug={plug}
+                  stack={stack}
                   classType={classType}
                   selectable={selectable}
                   selectionType={selectionType}
