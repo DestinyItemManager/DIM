@@ -10,6 +10,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { useCallback, useMemo } from 'react';
 import PlugStackableIcon from './PlugStackableIcon';
 import styles from './SelectablePlug.m.scss';
+import { PlugSelectionType } from './types';
 
 /**
  * A single selectable plug in the PlugDrawer component. This shows the details of the plug along
@@ -29,14 +30,16 @@ export default function SelectablePlug({
   classType: DestinyClass;
   selected: boolean;
   selectable: boolean;
-  selectionType: 'multi' | 'unique' | 'single';
+  selectionType: PlugSelectionType;
   removable: boolean;
   onPlugSelected: (plug: PluggableInventoryItemDefinition) => void;
   onPlugRemoved: (plug: PluggableInventoryItemDefinition) => void;
 }) {
   const handleClick = useCallback(() => {
-    selectable && onPlugSelected(plug);
-  }, [onPlugSelected, plug, selectable]);
+    selectable
+      ? onPlugSelected(plug)
+      : selectionType !== PlugSelectionType.Single && selected && removable && onPlugRemoved(plug);
+  }, [onPlugRemoved, onPlugSelected, plug, selectable, selected, selectionType, removable]);
 
   const onClose = useCallback(() => onPlugRemoved(plug), [onPlugRemoved, plug]);
 
@@ -47,15 +50,28 @@ export default function SelectablePlug({
   );
 
   return (
-    <ClosableContainer onClose={selected && removable ? onClose : undefined}>
+    <ClosableContainer
+      onClose={
+        selectionType !== PlugSelectionType.Unique && selected && removable ? onClose : undefined
+      }
+    >
       <TileGridTile
         selected={selected}
-        disabled={selectionType !== 'single' && !selectable}
+        disabled={
+          !(
+            selectable ||
+            (selectionType !== PlugSelectionType.Single && selected && removable) ||
+            (selectionType === PlugSelectionType.Single && selected)
+          )
+        }
         title={plug.displayProperties.name}
         icon={
-          <div className="item" title={plug.displayProperties.name}>
-            <DefItemIcon itemDef={plug} />
-          </div>
+          <>
+            <div className="item" title={plug.displayProperties.name}>
+              <DefItemIcon itemDef={plug} />
+            </div>
+            2x
+          </>
         }
         onClick={handleClick}
       >

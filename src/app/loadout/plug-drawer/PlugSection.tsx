@@ -6,7 +6,7 @@ import { useCallback } from 'react';
 import { groupModsByModType } from '../mod-utils';
 import styles from './PlugSection.m.scss';
 import SelectablePlug from './SelectablePlug';
-import { PlugSet } from './types';
+import { PlugSelectionType, PlugSet } from './types';
 
 /**
  * A section of plugs in the PlugDrawer component, corresponding to a PlugSet. These will be further
@@ -30,7 +30,7 @@ export default function PlugSection({
   onPlugSelected: (
     plugSetHash: number,
     mod: PluggableInventoryItemDefinition,
-    selectionType: 'multi' | 'unique' | 'single',
+    selectionType: PlugSelectionType,
   ) => void;
   onPlugRemoved: (plugSetHash: number, mod: PluggableInventoryItemDefinition) => void;
 }) {
@@ -50,7 +50,7 @@ export default function PlugSection({
     return null;
   }
 
-  const multiSelect = selectionType !== 'single';
+  const multiSelect = selectionType !== PlugSelectionType.Single;
 
   // Here we split the section into further pieces so that each plug category has has its own title
   // This is important for combat mods, which would otherwise be grouped into one massive category
@@ -80,7 +80,7 @@ export default function PlugSection({
             {plugs.map((plug) => {
               const isSelected = plugSet.selected.some((s) => s.hash === plug.hash);
               const selectable = multiSelect
-                ? (selectionType !== 'unique' || !isSelected) &&
+                ? (selectionType !== PlugSelectionType.Unique || !isSelected) &&
                   numSelected < maxSelectable &&
                   isPlugSelectable(plug)
                 : !isSelected && isPlugSelectable(plug);

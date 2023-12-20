@@ -14,7 +14,7 @@ import Sheet from '../../dim-ui/Sheet';
 import '../../item-picker/ItemPicker.scss';
 import Footer from './Footer';
 import PlugSection from './PlugSection';
-import { PlugSet } from './types';
+import { PlugSelectionType, PlugSet } from './types';
 
 interface Props {
   /**
@@ -103,7 +103,7 @@ export default function PlugDrawer({
     (
       plugSetHash: number,
       plug: PluggableInventoryItemDefinition,
-      selectionType: 'multi' | 'unique' | 'single',
+      selectionType: PlugSelectionType,
     ) => {
       setInternalPlugSets(
         produce((draft) => {
@@ -112,7 +112,7 @@ export default function PlugDrawer({
             return;
           }
 
-          if (selectionType === 'single') {
+          if (selectionType === PlugSelectionType.Single) {
             draftPlugSet.selected = [plug];
           } else {
             draftPlugSet.selected.push(plug);
