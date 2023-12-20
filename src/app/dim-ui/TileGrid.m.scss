@@ -15,12 +15,10 @@
 }
 
 .tile {
-  composes: flexColumn from '../dim-ui/common.m.scss';
-  border: 1px solid #666;
+  composes: flexRow from '../dim-ui/common.m.scss';
+  border: 1px solid transparent;
   cursor: pointer;
   padding: 8px;
-  display: flex;
-  flex-direction: row;
   gap: 8px;
   height: 100%;
   box-sizing: border-box;
@@ -28,8 +26,11 @@
     background-color: rgba(255, 255, 255, 0.1);
   }
   &:focus-visible {
-    border-color: var(--theme-accent-primary);
+    border-color: var(--theme-accent-secondary);
     outline: none;
+  }
+  > *:first-child {
+    float: left;
   }
 }
 
