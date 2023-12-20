@@ -1,21 +1,13 @@
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { TileGridTile } from 'app/dim-ui/TileGrid';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
-import { t } from 'app/i18next-t';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { PlugStats } from 'app/item-popup/PlugTooltip';
-import { banIcon, faCheck, stackIcon } from 'app/shell/icons';
-import AppIcon from 'app/shell/icons/AppIcon';
-import {
-  DimPlugDescriptions,
-  getPlugDefStats,
-  usePlugDescriptions,
-} from 'app/utils/plug-descriptions';
+import { getPlugDefStats, usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import unstackableModHashes from 'data/d2/unstackable-mods.json';
 import { useCallback, useMemo } from 'react';
-import styles from './SelectablePlug.m.scss';
+import PlugStackableIcon from './PlugStackableIcon';
 
 /**
  * A single selectable plug in the PlugDrawer component. This shows the details of the plug along
@@ -94,35 +86,5 @@ function SelectablePlugDetails({
       )}
       {stats.length > 0 && <PlugStats stats={stats} />}
     </>
-  );
-}
-
-function PlugStackableIcon({
-  hash,
-  descriptions,
-}: {
-  hash: number;
-  descriptions: DimPlugDescriptions;
-}) {
-  const hasRequirements = descriptions.perks.some((perk) => perk.requirement);
-  const unstackable = unstackableModHashes.includes(hash);
-  if (!hasRequirements && !unstackable) {
-    return null;
-  }
-
-  return (
-    <div className={styles.stackable}>
-      {unstackable ? (
-        <>
-          <AppIcon icon={banIcon} ariaHidden /> <AppIcon icon={stackIcon} ariaHidden />{' '}
-          {t('Loadouts.ModPlacement.UnstackableMod')}
-        </>
-      ) : (
-        <>
-          <AppIcon icon={faCheck} ariaHidden /> <AppIcon icon={stackIcon} ariaHidden />{' '}
-          {t('Loadouts.ModPlacement.StackableMod')}
-        </>
-      )}
-    </div>
   );
 }
