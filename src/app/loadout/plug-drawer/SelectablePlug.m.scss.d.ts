@@ -3,7 +3,6 @@
 interface CssExports {
   'buttons': string;
   'clarityDescription': string;
-  'icon': string;
   'stack': string;
 }
 export const cssExports: CssExports;

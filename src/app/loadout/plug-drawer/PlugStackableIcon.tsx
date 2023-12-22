@@ -1,5 +1,6 @@
-import { AppIcon, banIcon, faCheck, stackIcon } from 'app/shell/icons';
+import { AppIcon, slashIcon, stackIcon } from 'app/shell/icons';
 import { DimPlugDescriptions } from 'app/utils/plug-descriptions';
+import clsx from 'clsx';
 import unstackableModHashes from 'data/d2/unstackable-mods.json';
 import { t } from 'i18next';
 import styles from './PlugStackableIcon.m.scss';
@@ -8,9 +9,11 @@ import styles from './PlugStackableIcon.m.scss';
 export default function PlugStackableIcon({
   hash,
   descriptions,
+  className,
 }: {
   hash: number;
   descriptions: DimPlugDescriptions;
+  className?: string;
 }) {
   const hasRequirements = descriptions.perks.some((perk) => perk.requirement);
   const unstackable = unstackableModHashes.includes(hash);
@@ -19,16 +22,18 @@ export default function PlugStackableIcon({
   }
 
   return (
-    <div className={styles.stackable}>
+    <div className={clsx(styles.stackable, className)}>
       {unstackable ? (
         <>
-          <AppIcon icon={banIcon} ariaHidden /> <AppIcon icon={stackIcon} ariaHidden />{' '}
+          <span className={styles.stack}>
+            <AppIcon icon={slashIcon} ariaHidden />
+            <AppIcon icon={stackIcon} ariaHidden />
+          </span>
           {t('Loadouts.ModPlacement.UnstackableMod')}
         </>
       ) : (
         <>
-          <AppIcon icon={faCheck} ariaHidden /> <AppIcon icon={stackIcon} ariaHidden />{' '}
-          {t('Loadouts.ModPlacement.StackableMod')}
+          <AppIcon icon={stackIcon} ariaHidden /> {t('Loadouts.ModPlacement.StackableMod')}
         </>
       )}
     </div>

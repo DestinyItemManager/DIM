@@ -208,9 +208,15 @@ function PlugTooltip({
       {bungieDescription ? (
         <>
           <Tooltip.Section>
-            {armorMod && <PlugStackableIcon descriptions={plugDescriptions} hash={def.hash} />}
             {bungieDescription}
             {renderedStats}
+            {armorMod && (
+              <PlugStackableIcon
+                descriptions={plugDescriptions}
+                hash={def.hash}
+                className={styles.stackable}
+              />
+            )}
           </Tooltip.Section>
           {clarityDescriptionSection}
         </>
@@ -219,8 +225,14 @@ function PlugTooltip({
           <>
             {clarityDescriptionSection}
             <Tooltip.Section>
-              {armorMod && <PlugStackableIcon descriptions={plugDescriptions} hash={def.hash} />}
               {renderedStats}
+              {armorMod && (
+                <PlugStackableIcon
+                  descriptions={plugDescriptions}
+                  hash={def.hash}
+                  className={styles.stackable}
+                />
+              )}
             </Tooltip.Section>
           </>
         )

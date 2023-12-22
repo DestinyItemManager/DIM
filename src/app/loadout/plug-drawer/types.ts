@@ -4,7 +4,7 @@ import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 /** The select behavior of the plug set. */
 export const enum PlugSelectionType {
   /** How armor mods are selected in game, you need to manually remove ones that have been added. */
-  Multi,
+  Multi = 1,
   /** How aspects/fragments are selected - similar to 'multi' except no dupes are allowed */
   Unique,
   /** How abilities in subclasses are selected, selecting an option replaces the current one. */

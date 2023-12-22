@@ -83,40 +83,38 @@ export default function SelectablePlug({
       }
       title={plug.displayProperties.name}
       icon={
-        <div className={styles.icon}>
-          <div className="item" title={plug.displayProperties.name}>
-            <DefItemIcon itemDef={plug} />
-          </div>
-          {(handleIncrease || handleDecrease) && (
-            <div className={styles.buttons}>
-              {handleIncrease && (
-                <button
-                  type="button"
-                  className="dim-button"
-                  onClick={handleIncrease}
-                  title={t('LB.AddStack')}
-                >
-                  <AppIcon icon={plusIcon} />
-                </button>
-              )}
-              {handleDecrease && (
-                <button
-                  type="button"
-                  className="dim-button"
-                  onClick={handleDecrease}
-                  title={t('LB.RemoveStack')}
-                >
-                  <AppIcon icon={minusIcon} />
-                </button>
-              )}
-            </div>
-          )}
-          {stackable && <div className={styles.stack}>{stack}x</div>}
+        <div className="item" title={plug.displayProperties.name}>
+          <DefItemIcon itemDef={plug} />
         </div>
       }
       onClick={handleClick}
     >
       {plugDetails}
+      {(handleIncrease || handleDecrease || stackable) && (
+        <div className={styles.buttons}>
+          {stackable && <div className={styles.stack}>{stack}x</div>}
+          {handleIncrease && (
+            <button
+              type="button"
+              className="dim-button"
+              onClick={handleIncrease}
+              title={t('LB.AddStack')}
+            >
+              <AppIcon icon={plusIcon} />
+            </button>
+          )}
+          {handleDecrease && (
+            <button
+              type="button"
+              className="dim-button"
+              onClick={handleDecrease}
+              title={t('LB.RemoveStack')}
+            >
+              <AppIcon icon={minusIcon} />
+            </button>
+          )}
+        </div>
+      )}
     </TileGridTile>
   );
 }
@@ -131,17 +129,17 @@ function SelectablePlugDetails({
   const stats = getPlugDefStats(plug, classType);
 
   // We don't show Clarity descriptions here due to layout concerns, see #9318 / #8641
-  const plugDescriptions = usePlugDescriptions(plug, stats, /* forceUseBungieDescriptions */ false);
+  const plugDescriptions = usePlugDescriptions(plug, stats);
 
   return (
     <>
-      <PlugStackableIcon descriptions={plugDescriptions} hash={plug.hash} />
       {plugDescriptions.perks.map(
         (perkDesc) =>
           perkDesc.description && (
             <RichDestinyText key={perkDesc.perkHash} text={perkDesc.description} />
           ),
       )}
+      <PlugStackableIcon descriptions={plugDescriptions} hash={plug.hash} />
       {plugDescriptions.communityInsight && (
         <ClarityDescriptions
           perk={plugDescriptions.communityInsight}

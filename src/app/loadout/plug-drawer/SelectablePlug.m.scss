@@ -10,19 +10,15 @@
   }
 }
 
-.icon {
-  composes: flexColumn from '../../dim-ui/common.m.scss';
-  align-items: center;
-  gap: 4px;
-}
-
 .stack {
   font-weight: bold;
   font-size: 16px;
+  margin-right: 4px;
 }
 
 .buttons {
   composes: flexRow from '../../dim-ui/common.m.scss';
+  align-items: center;
   gap: 4px;
   position: absolute;
   top: 0;
