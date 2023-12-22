@@ -143,7 +143,7 @@ export const vendorItemFilterSelector = currySelector(
     subVendorsForCharacterSelector.selector,
     querySelector,
     searchFilterSelector,
-    (state: RootState) => settingSelector('vendorsHideSilverItems')(state),
+    settingSelector<'vendorsHideSilverItems'>('vendorsHideSilverItems'),
     (ownedItemHashes, showUnacquiredOnly, subVendors, query, itemFilter, hideSilver) => {
       const filters: VendorFilterFunction[] = [];
       const silverFilter = filterToNoSilver();
