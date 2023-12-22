@@ -128,7 +128,6 @@ function SelectablePlugDetails({
 }) {
   const stats = getPlugDefStats(plug, classType);
 
-  // We don't show Clarity descriptions here due to layout concerns, see #9318 / #8641
   const plugDescriptions = usePlugDescriptions(plug, stats);
 
   return (
