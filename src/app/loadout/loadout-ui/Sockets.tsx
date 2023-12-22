@@ -1,4 +1,5 @@
 import { PressTip } from 'app/dim-ui/PressTip';
+import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -8,7 +9,6 @@ import { isEventArmorRerollSocket } from 'app/utils/socket-utils';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
-import { t } from 'i18next';
 import { pickPlugPositions } from '../mod-assignment-utils';
 import PlugDef from './PlugDef';
 import styles from './Sockets.m.scss';
