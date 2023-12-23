@@ -151,7 +151,9 @@
           {
             "group": ["testing/*"],
             "message": "You cannot use test helpers in regular code."
-          },
+          }
+        ],
+        "paths": [
           {
             "name": "i18next",
             "importNames": ["t"],
