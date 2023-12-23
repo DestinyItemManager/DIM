@@ -1,6 +1,7 @@
 import { settingsSelector } from 'app/dim-api/selectors';
+import { deepEqual } from 'fast-equals';
 import { isPhonePortraitSelector } from './shell/selectors';
-import { observeStore } from './utils/redux';
+import { StoreObserver } from './store/observerMiddleware';
 
 function setCSSVariable(property: string, value: { toString: () => string }) {
   if (value) {
@@ -8,49 +9,50 @@ function setCSSVariable(property: string, value: { toString: () => string }) {
   }
 }
 
+export function createItemSizeObserver(): StoreObserver<number> {
+  return {
+    id: 'item-size-observer',
+    getObserved: (rs) => settingsSelector(rs).itemSize,
+    sideEffect: ({ current }) => {
+      setCSSVariable('--item-size', `${Math.max(48, current)}px`);
+    },
+  };
+}
+
+export function createThemeObserver(): StoreObserver<{ theme: string; isPhonePortrait: boolean }> {
+  return {
+    id: 'theme-observer',
+    equals: deepEqual,
+    getObserved: (rs) => ({
+      theme: settingsSelector(rs).theme,
+      isPhonePortrait: isPhonePortraitSelector(rs),
+    }),
+    sideEffect: ({ current }) => {
+      // Set a class on the body to control the theme. This must be applied on the body for syncThemeColor to work.
+      const themeClass = `theme-${current.theme}`;
+      document.body.className = themeClass;
+      syncThemeColor(current.isPhonePortrait);
+    },
+  };
+}
+
+export function createTilesPerCharColumnObserver(): StoreObserver<number> {
+  return {
+    id: 'tiles-per-char-column-observer',
+    getObserved: (rs) =>
+      isPhonePortraitSelector(rs)
+        ? settingsSelector(rs).charColMobile
+        : settingsSelector(rs).charCol,
+    sideEffect: ({ current }) => {
+      setCSSVariable('--tiles-per-char-column', current);
+    },
+  };
+}
+
 /**
  * Update a set of CSS variables depending on the settings of the app and whether we're in portrait mode.
  */
-// TODO: swap these into hooks
-export default function updateCSSVariables() {
-  observeStore(settingsSelector, (currentState, nextState, state) => {
-    if (!currentState) {
-      return;
-    }
-
-    if (currentState.itemSize !== nextState.itemSize) {
-      setCSSVariable('--item-size', `${Math.max(48, nextState.itemSize)}px`);
-    }
-    if (currentState.charCol !== nextState.charCol && !isPhonePortraitSelector(state)) {
-      setCSSVariable('--tiles-per-char-column', nextState.charCol);
-    }
-    if (
-      currentState.charColMobile !== nextState.charColMobile &&
-      // this check is needed so on start up/load this doesn't override the value set above on "normal" mode.
-      isPhonePortraitSelector(state)
-    ) {
-      setCSSVariable('--tiles-per-char-column', nextState.charColMobile);
-    }
-
-    // Set a class on the body to control the theme. This must be applied on the body for syncThemeColor to work.
-    if ($featureFlags.themePicker && currentState.theme !== nextState.theme) {
-      const themeClass = `theme-${nextState.theme}`;
-      document.body.className = themeClass;
-      syncThemeColor(isPhonePortraitSelector(state));
-    }
-  });
-
-  // a subscribe on isPhonePortrait is needed when the user on mobile changes from portrait to landscape
-  // or a user on desktop shrinks the browser window below isphoneportrait threshold value
-  observeStore(isPhonePortraitSelector, (_prev, isPhonePortrait, state) => {
-    const settings = settingsSelector(state);
-    setCSSVariable(
-      '--tiles-per-char-column',
-      isPhonePortrait ? settings.charColMobile : settings.charCol,
-    );
-    syncThemeColor(isPhonePortrait);
-  });
-
+export function setCssVariableEventListeners() {
   // Set a CSS var for the true viewport height. This changes when the keyboard appears/disappears.
   // https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
 
