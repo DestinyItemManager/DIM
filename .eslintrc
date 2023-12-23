@@ -372,22 +372,6 @@
       "rules": {
         "no-restricted-imports": "off"
       }
-    },
-    {
-      "files": ["src/app/i18next-t.ts"],
-      "rules": {
-        "no-restricted-imports": [
-          "error",
-          {
-            "patterns": [
-              {
-                "group": ["testing/*"],
-                "message": "You cannot use test helpers in regular code."
-              }
-            ]
-          }
-        ]
-      }
     }
   ]
 }
