@@ -1,9 +1,9 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { convertToLoadoutItem } from 'app/loadout-drawer/loadout-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
-import { t } from 'i18next';
 import _ from 'lodash';
 import { ArmorSet, LockableBucketHashes } from './types';
 import { statTier } from './utils';
