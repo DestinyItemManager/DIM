@@ -1,4 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import {
   allItemsSelector,
@@ -25,7 +26,6 @@ import { loadoutsForClassTypeSelector } from 'app/loadout-drawer/loadouts-select
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
-import { t } from 'i18next';
 import { createSelector } from 'reselect';
 import { implementsDimLoadout, itemCouldBeEquipped } from './ingame-loadout-utils';
 
