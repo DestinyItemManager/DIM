@@ -178,7 +178,7 @@ function InGameLoadoutTile({
     ? // eslint-disable-next-line
       useStreamDeckLoadoutSelection({
         type: 'game',
-        equippable: isEquippable,
+        equippable: true,
         loadout: gameLoadout,
       })
     : undefined;
