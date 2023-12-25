@@ -6,10 +6,8 @@ import * as actions from './actions';
 export interface StreamDeckState {
   // WebSocket status
   readonly connected: boolean;
-  // Update popup already showed
-  readonly updatePopupShowed: boolean;
   // Selection type
-  readonly selection?: 'item' | 'loadout' | 'postmaster' | undefined;
+  readonly selection?: actions.SelectionType;
 }
 
 type StreamDeckAction = ActionType<typeof actions>;
@@ -17,7 +15,7 @@ type StreamDeckAction = ActionType<typeof actions>;
 // initial stream deck store state
 const streamDeckInitialState: StreamDeckState = {
   connected: false,
-  updatePopupShowed: false,
+  selection: undefined,
 };
 
 export const streamDeck: Reducer<StreamDeckState, StreamDeckAction> = (
@@ -35,21 +33,12 @@ export const streamDeck: Reducer<StreamDeckState, StreamDeckAction> = (
         ...state,
         connected: false,
       };
-    case getType(actions.streamDeckUpdatePopupShowed):
-      return {
-        ...state,
-        updatePopupShowed: true,
-      };
-    case getType(actions.streamDeckWaitSelection):
+    case getType(actions.streamDeckSelection):
       return {
         ...state,
         selection: action.payload,
       };
-    case getType(actions.streamDeckClearSelection):
-      return {
-        ...state,
-        selection: undefined,
-      };
+
     default:
       return state;
   }

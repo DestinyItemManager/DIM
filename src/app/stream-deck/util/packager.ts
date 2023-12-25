@@ -14,7 +14,7 @@ import { d2ManifestSelector } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
 import { RootState } from 'app/store/types';
 import { MaxPowerArgs, MetricsArgs, PostmasterArgs, VaultArgs } from 'app/stream-deck/interfaces';
-import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
+import { DamageType, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 
 // find and get the quantity of a specif item type
@@ -124,7 +124,37 @@ function streamDeckEquippedItems(store?: DimStore) {
   return store?.items.filter((it) => it.equipment).map((it) => it.id) ?? [];
 }
 
+function streamDeckDragItem(item: DimItem) {
+  return JSON.stringify({
+    type: 'item',
+    label: item.name,
+    subtitle: item.typeName,
+    item: item.index.replace(/-.*/, ''),
+    icon: item.icon,
+    overlay: item.iconOverlay,
+    isExotic: item.isExotic,
+    inventory: item.location.accountWide,
+    element:
+      item.element?.enumValue === DamageType.Kinetic
+        ? undefined
+        : item.element?.displayProperties?.icon,
+  });
+}
+
+function streamDeckDragLoadout(item: DimItem) {
+  return JSON.stringify({
+    type: 'loadout',
+    inventory: item.location.accountWide,
+    element:
+      item.element?.enumValue === DamageType.Kinetic
+        ? undefined
+        : item.element?.displayProperties?.icon,
+  });
+}
+
 export default {
+  item: streamDeckDragItem,
+  loadout: streamDeckDragLoadout,
   metrics: streamDeckMetricsUpdate,
   vault: streamDeckVaultUpdate,
   maxPower: streamDeckMaxPowerUpdate,

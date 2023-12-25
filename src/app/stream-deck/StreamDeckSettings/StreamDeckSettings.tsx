@@ -1,21 +1,38 @@
 import Switch from 'app/dim-ui/Switch';
 import { t } from 'app/i18next-t';
-import { AppIcon, faArrowCircleDown } from 'app/shell/icons';
+import { AppIcon, faArrowCircleDown, lockIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 
 import ExternalLink from 'app/dim-ui/ExternalLink';
 import { streamDeckConnectedSelector } from 'app/stream-deck/selectors';
 import {
   lazyLoadStreamDeck,
-  resetStreamDeckAuthorization,
   startStreamDeckConnection,
   stopStreamDeckConnection,
 } from 'app/stream-deck/stream-deck';
-import { setStreamDeckEnabled, streamDeckEnabled } from 'app/stream-deck/util/local-storage';
+import {
+  setStreamDeckAuth,
+  setStreamDeckEnabled,
+  streamDeckEnabled,
+} from 'app/stream-deck/util/local-storage';
 import clsx from 'clsx';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './StreamDeckSettings.m.scss';
+
+const randomToken = (length: number) => {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  let counter = 0;
+  while (counter < length) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    counter += 1;
+  }
+  return result;
+};
+
+const STREAM_DECK_DEEP_LING = 'streamdeck://plugins/message/com.dim.streamdeck';
 
 export default function StreamDeckSettings() {
   const dispatch = useThunkDispatch();
@@ -34,13 +51,6 @@ export default function StreamDeckSettings() {
     } else {
       dispatch(stopStreamDeckConnection());
     }
-  };
-
-  const onStreamDeckAuthorizationReset = async () => {
-    // regenerate client identifier and remove shared key for Stream Deck
-    await resetStreamDeckAuthorization();
-    await dispatch(stopStreamDeckConnection());
-    await dispatch(startStreamDeckConnection());
   };
 
   return (
@@ -66,9 +76,23 @@ export default function StreamDeckSettings() {
             <span className={styles.notConnected}>{t('StreamDeck.NotConnected')}</span>
           </div>
         )}
-        <div className={styles.resetButton}>
-          <button type="button" className="dim-button" onClick={onStreamDeckAuthorizationReset}>
-            {t('StreamDeck.Authorization.Reset')}
+        <div className={styles.authentication}>
+          <button
+            type="button"
+            className="dim-button"
+            onClick={() => {
+              const auth = {
+                instance: window.crypto.randomUUID(),
+                token: randomToken(16),
+              };
+              setStreamDeckAuth(auth);
+              const query = new URLSearchParams(auth).toString();
+              window.open(`${STREAM_DECK_DEEP_LING}/connect?${query}`);
+              startStreamDeckConnection();
+            }}
+          >
+            <i className={lockIcon} />
+            <span>{t('StreamDeck.Authorize')}</span>
           </button>
         </div>
       </div>

@@ -1260,24 +1260,13 @@
     "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device. This includes the downloaded Destiny item databases from Bungie.net."
   },
   "StreamDeck": {
-    "Authorization": {
-      "No": "No",
-      "Reset": "DE-AUTHORIZE",
-      "Title": "Do you see the same code on your Stream Deck ?",
-      "Update": "If you are seeing this message, you're using an older version of the plugin. Please download the latest update on the Stream Deck store.",
-      "Yes": "Yes"
-    },
+    "Authorize": "Authorize application",
     "Connected": "Connected",
     "Enable": "Stream Deck Plugin",
     "FinePrint": "Enable the connection with the DIM Stream Deck plugin. This plugin is a separate project that is neither written by nor supported by the DIM team.",
     "Install": "Install plugin",
     "NotConnected": "Not Connected",
-    "OldExtension": "Make sure to uninstall the old Stream Deck Chrome extension. It is no longer needed and will cause odd behavior in DIM.",
-    "SelectLoadout": "Send to Stream Deck",
-    "Selection": {
-      "Item": "Choose an item from the inventory",
-      "Loadout": "Choose a loadout"
-    }
+    "OldExtension": "Make sure to uninstall the old Stream Deck Chrome extension. It is no longer needed and will cause odd behavior in DIM."
   },
   "StripSockets": {
     "Action": "Strip Sockets",

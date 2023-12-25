@@ -13,6 +13,12 @@
   margin-top: 8px;
 }
 
-.resetButton {
+.authentication {
   margin-top: 8px;
+}
+
+.authentication button {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
