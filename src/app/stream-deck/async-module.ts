@@ -1,6 +1,4 @@
 // async module
-
-// serialize the data and send it if connected
 import { currentStoreSelector } from 'app/inventory/selectors';
 import { refresh$ } from 'app/shell/refresh-events';
 import store from 'app/store/store';
@@ -12,8 +10,6 @@ import { streamDeckAuth, streamDeckEnabled } from 'app/stream-deck/util/local-st
 import packager from 'app/stream-deck/util/packager';
 import { infoLog } from 'app/utils/log';
 import { observeStore } from 'app/utils/redux';
-// import { DamageType, DestinyClass, DestinyLoadoutItemComponent } from 'bungie-api-ts/destiny2';
-// import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 
 let streamDeckWebSocket: WebSocket;
@@ -29,108 +25,6 @@ export async function sendToStreamDeck(msg: SendToStreamDeckArgs) {
     );
   }
 }
-
-// // on click on InventoryItem send the selected item to the Stream Deck
-// function streamDeckSelectItem(item: DimItem): ThunkResult {
-//   return async (dispatch, getState) => {
-//     const { streamDeck } = getState();
-//     if (streamDeck.selection === 'item' && !item.notransfer) {
-//       // hide the item popup that will be opened on classic item click
-//       hideItemPopup();
-//       // hide the notification
-//       notificationPromise.resolve();
-//       // clear the selection state in the store
-//       dispatch(streamDeckClearSelection());
-//       // send selection to the Stream Deck
-//       return sendToStreamDeck({
-//         action: 'dim:selection',
-//         data: {
-//           selectionType: 'item',
-//           selection: {
-//             label: item.name,
-//             subtitle: item.typeName,
-//             item: item.index.replace(/-.*/, ''),
-//             icon: item.icon,
-//             overlay: item.iconOverlay,
-//             isExotic: item.isExotic,
-//             inventory: item.location.accountWide,
-//             element:
-//               item.element?.enumValue === DamageType.Kinetic
-//                 ? undefined
-//                 : item.element?.displayProperties?.icon,
-//           },
-//         },
-//       });
-//     }
-//   };
-// }
-
-// function findSubClass(items: LoadoutItem[], state: RootState) {
-//   const defs = d2ManifestSelector(state);
-//   for (const item of items) {
-//     const def = defs?.InventoryItem.get(item.hash);
-//     // find subclass item
-//     if (def?.inventory?.bucketTypeHash === BucketHashes.Subclass) {
-//       return def.displayProperties.icon;
-//     }
-//   }
-// }
-
-// function findSubClassInGame(items: DestinyLoadoutItemComponent[], state: RootState) {
-//   const allItems = allItemsSelector(state);
-//   const itemCreationContext = createItemContextSelector(state);
-//   const mappedItems = getItemsFromInGameLoadout(itemCreationContext, items, allItems);
-//   const categories = Map.groupBy(mappedItems, (li) => li.item.bucket.sort);
-//   const subclassItem = categories.get('General')?.[0];
-//   return subclassItem?.item.icon;
-// }
-
-// // on click on LoadoutView send the selected loadout and the related character identifier to the Stream Deck
-// function streamDeckSelectLoadout(
-//   { type, loadout }: LoadoutSelection,
-//   store: DimStore,
-// ): ThunkResult {
-//   return async (dispatch, getState) => {
-//     let selection: NonNullable<SelectionArgs['data']>['selection'];
-//     const state = getState();
-//     if (state.streamDeck.selection === 'loadout') {
-//       notificationPromise.resolve();
-//       dispatch(streamDeckClearSelection());
-//       switch (type) {
-//         case 'game':
-//           selection = {
-//             label: loadout.name.toUpperCase(),
-//             loadout: loadout.id,
-//             subtitle: '-',
-//             character: loadout.characterId,
-//             // future stream deck plugin update
-//             background: loadout.colorIcon,
-//             gameIcon: loadout.icon,
-//             // current plugin version
-//             icon: findSubClassInGame(loadout.items, state) ?? loadout.icon,
-//           };
-//           break;
-//         default: {
-//           const isAnyClass = loadout.classType === DestinyClass.Unknown;
-//           selection = {
-//             label: loadout.name.toUpperCase(),
-//             loadout: loadout.id,
-//             subtitle: (isAnyClass ? '' : store.className) || loadout.notes || '-',
-//             character: isAnyClass ? undefined : store.id,
-//             icon: findSubClass(loadout.items, state),
-//           };
-//         }
-//       }
-//       return sendToStreamDeck({
-//         action: 'dim:selection',
-//         data: {
-//           selectionType: 'loadout',
-//           selection,
-//         },
-//       });
-//     }
-//   };
-// }
 
 const installFarmingObserver = _.once(() => {
   const state = store.getState();
