@@ -12,8 +12,8 @@ export const startStreamDeckConnection = (): ThunkResult =>
 export const stopStreamDeckConnection = (): ThunkResult =>
   lazyStreamDeck.core!.stopStreamDeckConnection();
 
-export const sendEquipmentStatusStreamDeck = (itemId: string, equipped: boolean | DimStore) =>
-  lazyStreamDeck.core!.sendEquipmentStatusStreamDeck(itemId, equipped);
+export const sendEquipmentStatusStreamDeck = (itemId: string, target: DimStore): ThunkResult =>
+  lazyStreamDeck.core!.sendEquipmentStatusStreamDeck(itemId, target);
 
 // run both lazy core and reducer modules
 export const lazyLoadStreamDeck = async () => {

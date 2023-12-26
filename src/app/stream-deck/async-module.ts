@@ -48,12 +48,12 @@ const installFarmingObserver = _.once(() => {
 
 // collect and send data to the stream deck
 function refreshStreamDeck(): ThunkResult {
-  return async (_dispatch, getState) => {
+  return async (dispatch, getState) => {
     const refreshAction = () => {
       const state = getState();
       const store = currentStoreSelector(getState());
       if (!store) {
-        return;
+        return setTimeout(() => dispatch(refreshStreamDeck()), 1000);
       }
       sendToStreamDeck({
         action: 'state',
@@ -87,13 +87,9 @@ const installRefresObserver = _.once(() => {
 });
 
 // send the equipment status to the stream deck when the item is equipped/unequipped
-function sendEquipmentStatusStreamDeck(
-  itemId: string,
-  isEquipped: boolean | DimStore,
-): ThunkResult {
+function sendEquipmentStatusStreamDeck(itemId: string, target: DimStore): ThunkResult {
   return async (_, getState) => {
-    const store = currentStoreSelector(getState());
-    const equipped = typeof isEquipped === 'boolean' ? isEquipped : store === isEquipped;
+    const equipped = currentStoreSelector(getState()) === target;
     sendToStreamDeck({
       action: 'equipmentStatus',
       data: {

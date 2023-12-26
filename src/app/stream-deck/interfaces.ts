@@ -154,7 +154,7 @@ export interface LazyStreamDeck {
   core?: {
     startStreamDeckConnection: () => ThunkResult;
     stopStreamDeckConnection: () => ThunkResult;
-    sendEquipmentStatusStreamDeck: (itemId: string, equipped: boolean | DimStore) => ThunkResult;
+    sendEquipmentStatusStreamDeck: (itemId: string, target: DimStore) => ThunkResult;
   };
 }
 

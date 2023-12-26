@@ -165,9 +165,13 @@ function updateItemModel(
       });
     }
     const stopTimer = timer('itemMovedUpdate');
+
     try {
+      if ($featureFlags.elgatoStreamDeck) {
+        const { streamDeck } = getState();
+        streamDeck.connected && dispatch(sendEquipmentStatusStreamDeck(item.id, target));
+      }
       dispatch(itemMoved({ item, source, target, equip, amount }));
-      dispatch(sendEquipmentStatusStreamDeck(item.id, target));
       const stores = storesSelector(getState());
       return getItemAcrossStores(stores, item) || item;
     } finally {
