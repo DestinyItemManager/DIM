@@ -5,6 +5,7 @@ import { t } from 'app/i18next-t';
 import { isInInGameLoadoutForSelector } from 'app/loadout-drawer/selectors';
 import type { ItemTierName } from 'app/search/d2-known-values';
 import { RootState, ThunkResult } from 'app/store/types';
+import { sendEquipmentStatusStreamDeck } from 'app/stream-deck/stream-deck';
 import { CancelToken } from 'app/utils/cancel';
 import { count, filterMap } from 'app/utils/collections';
 import { DimError } from 'app/utils/dim-error';
@@ -166,6 +167,7 @@ function updateItemModel(
     const stopTimer = timer('itemMovedUpdate');
     try {
       dispatch(itemMoved({ item, source, target, equip, amount }));
+      dispatch(sendEquipmentStatusStreamDeck(item.id, target));
       const stores = storesSelector(getState());
       return getItemAcrossStores(stores, item) || item;
     } finally {

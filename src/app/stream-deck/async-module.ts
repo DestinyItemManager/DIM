@@ -1,5 +1,6 @@
 // async module
 import { currentStoreSelector } from 'app/inventory/selectors';
+import { DimStore } from 'app/inventory/store-types';
 import { refresh$ } from 'app/shell/refresh-events';
 import store from 'app/store/store';
 import { ThunkResult } from 'app/store/types';
@@ -85,6 +86,24 @@ const installRefresObserver = _.once(() => {
   refresh$.subscribe(() => refreshStreamDeck());
 });
 
+// send the equipment status to the stream deck when the item is equipped/unequipped
+function sendEquipmentStatusStreamDeck(
+  itemId: string,
+  isEquipped: boolean | DimStore,
+): ThunkResult {
+  return async (_, getState) => {
+    const store = currentStoreSelector(getState());
+    const equipped = typeof isEquipped === 'boolean' ? isEquipped : store === isEquipped;
+    sendToStreamDeck({
+      action: 'equipmentStatus',
+      data: {
+        itemId,
+        equipped,
+      },
+    });
+  };
+}
+
 // start the websocket's connection with the local stream deck instance
 function startStreamDeckConnection(): ThunkResult {
   return async (dispatch, getState) => {
@@ -165,4 +184,5 @@ infoLog('stream deck', 'feature lazy loaded');
 export default {
   startStreamDeckConnection,
   stopStreamDeckConnection,
+  sendEquipmentStatusStreamDeck,
 };

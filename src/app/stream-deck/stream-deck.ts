@@ -1,3 +1,4 @@
+import { DimStore } from 'app/inventory/store-types';
 import { ThunkResult } from 'app/store/types';
 import { LazyStreamDeck } from 'app/stream-deck/interfaces';
 
@@ -10,6 +11,9 @@ export const startStreamDeckConnection = (): ThunkResult =>
 
 export const stopStreamDeckConnection = (): ThunkResult =>
   lazyStreamDeck.core!.stopStreamDeckConnection();
+
+export const sendEquipmentStatusStreamDeck = (itemId: string, equipped: boolean | DimStore) =>
+  lazyStreamDeck.core!.sendEquipmentStatusStreamDeck(itemId, equipped);
 
 // run both lazy core and reducer modules
 export const lazyLoadStreamDeck = async () => {

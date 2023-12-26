@@ -22,7 +22,6 @@ import { filteredItemsSelector } from 'app/search/search-filter';
 import { setRouterLocation, setSearchQuery } from 'app/shell/actions';
 import { refresh } from 'app/shell/refresh-events';
 import { RootState, ThunkResult } from 'app/store/types';
-import { sendToStreamDeck } from 'app/stream-deck/async-module';
 import {
   CollectPostmasterAction,
   EquipLoadoutAction,
@@ -139,10 +138,6 @@ function pullItemHandler({ msg, state, store }: HandlerArgs<PullItemAction>): Th
       // no matching item found
       return;
     }
-
-    // new state after the move
-    let equipped = false;
-
     // move to vault only if the action is not a long press (EQUIP action)
     // this will equip item even if it is already in the character inventory
     if (!msg.equip && moveToVaultItem) {
@@ -150,16 +145,7 @@ function pullItemHandler({ msg, state, store }: HandlerArgs<PullItemAction>): Th
     } else {
       const item = selected[0];
       await dispatch(moveItemTo(item, store, msg.equip, item.amount));
-      equipped = true;
     }
-
-    await sendToStreamDeck({
-      action: 'equipmentStatus',
-      data: {
-        equipped,
-        itemId: msg.itemId,
-      },
-    });
   };
 }
 
