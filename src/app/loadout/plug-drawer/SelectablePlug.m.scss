@@ -19,9 +19,15 @@
 .buttons {
   composes: flexRow from '../../dim-ui/common.m.scss';
   align-items: center;
+  gap: 6px;
+}
+
+.volumeRocker {
+  composes: flexColumn from '../../dim-ui/common.m.scss';
   gap: 4px;
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 4px;
+  :global(.dim-button) {
+    padding-bottom: 0;
+    padding-top: 0;
+    height: calc(calc(var(--item-size) / 2) - 2px);
+  }
 }

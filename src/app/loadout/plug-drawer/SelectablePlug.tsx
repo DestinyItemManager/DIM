@@ -5,7 +5,7 @@ import { t } from 'app/i18next-t';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { PlugStats } from 'app/item-popup/PlugTooltip';
-import { minusIcon, plusIcon } from 'app/shell/icons';
+import { banIcon, minusIcon, plusIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { getPlugDefStats, usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -71,6 +71,37 @@ export default function SelectablePlug({
       onPlugRemoved(plug);
     });
 
+  const corner =
+    handleIncrease || handleDecrease || stackable ? (
+      <div className={styles.buttons}>
+        {stackable && <div className={styles.stack}>{stack}×</div>}
+        {(handleIncrease || handleDecrease) && (
+          <div className={styles.volumeRocker}>
+            {handleIncrease && (
+              <button
+                type="button"
+                className="dim-button"
+                onClick={handleIncrease}
+                title={t('LB.AddStack')}
+              >
+                <AppIcon icon={plusIcon} />
+              </button>
+            )}
+            {handleDecrease && (
+              <button
+                type="button"
+                className="dim-button"
+                onClick={handleDecrease}
+                title={t('LB.RemoveStack')}
+              >
+                <AppIcon icon={stack === 1 ? banIcon : minusIcon} />
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+    ) : undefined;
+
   return (
     <TileGridTile
       selected={selected}
@@ -88,33 +119,9 @@ export default function SelectablePlug({
         </div>
       }
       onClick={handleClick}
+      corner={corner}
     >
       {plugDetails}
-      {(handleIncrease || handleDecrease || stackable) && (
-        <div className={styles.buttons}>
-          {stackable && <div className={styles.stack}>{stack}x</div>}
-          {handleIncrease && (
-            <button
-              type="button"
-              className="dim-button"
-              onClick={handleIncrease}
-              title={t('LB.AddStack')}
-            >
-              <AppIcon icon={plusIcon} />
-            </button>
-          )}
-          {handleDecrease && (
-            <button
-              type="button"
-              className="dim-button"
-              onClick={handleDecrease}
-              title={t('LB.RemoveStack')}
-            >
-              <AppIcon icon={minusIcon} />
-            </button>
-          )}
-        </div>
-      )}
     </TileGridTile>
   );
 }

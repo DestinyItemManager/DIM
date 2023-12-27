@@ -4,6 +4,7 @@ interface CssExports {
   'buttons': string;
   'clarityDescription': string;
   'stack': string;
+  'volumeRocker': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
