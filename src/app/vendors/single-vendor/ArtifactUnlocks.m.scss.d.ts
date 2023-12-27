@@ -3,9 +3,11 @@
 interface CssExports {
   'item': string;
   'locked': string;
+  'stat': string;
   'tier': string;
   'tiers': string;
   'unlocked': string;
+  'unlockedTier': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

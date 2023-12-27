@@ -1032,6 +1032,8 @@
     "NoEventChallenges": "You have completed all event challenges",
     "NoTrackedTriumph": "You have no tracked triumphs. Track as many as you like in DIM.",
     "PercentPrestige": "{{pct}}% to reset",
+    "PointsUsed_plural": "{{count}} points used",
+    "PointsUsed_plural_plural": "",
     "PowerBonusHeader": "+{{powerBonus}} Power Rewards",
     "PowerBonusHeaderUndefined": "Other Rewards",
     "Progress": "Progress",
@@ -1043,6 +1045,7 @@
     "RecordValue": "{{value}}pts",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
+    "Resets_plural_plural": "",
     "SecretTriumph": "Secret Triumph",
     "StatTrackers": "Stat Trackers",
     "TrackedTriumphs": "Tracked Triumphs"
