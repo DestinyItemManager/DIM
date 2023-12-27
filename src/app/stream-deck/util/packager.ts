@@ -141,20 +141,8 @@ function streamDeckDragItem(item: DimItem) {
   });
 }
 
-function streamDeckDragLoadout(item: DimItem) {
-  return JSON.stringify({
-    type: 'loadout',
-    inventory: item.location.accountWide,
-    element:
-      item.element?.enumValue === DamageType.Kinetic
-        ? undefined
-        : item.element?.displayProperties?.icon,
-  });
-}
-
 export default {
   item: streamDeckDragItem,
-  loadout: streamDeckDragLoadout,
   metrics: streamDeckMetricsUpdate,
   vault: streamDeckVaultUpdate,
   maxPower: streamDeckMaxPowerUpdate,
