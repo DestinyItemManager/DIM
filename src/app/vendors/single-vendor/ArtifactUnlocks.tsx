@@ -35,8 +35,8 @@ export default function ArtifactUnlocks({ characterId }: { characterId: string }
   return (
     <>
       <div className={styles.stat}>
-        <div>{t('Progress.PointsUsed_plural', { count: pointsUsed })}</div>
-        <div>{t('Progress.Resets_plural', { count: resetCount })}</div>
+        <div>{t('Progress.PointsUsed', { count: pointsUsed })}</div>
+        <div>{t('Progress.Resets', { count: resetCount })}</div>
       </div>
       <div className={styles.tiers}>
         {tiers.map((tier) => (
