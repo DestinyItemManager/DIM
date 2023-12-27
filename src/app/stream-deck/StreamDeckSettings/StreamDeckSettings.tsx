@@ -68,7 +68,7 @@ export default function StreamDeckSettings() {
           <div className={styles.connected}>{t('StreamDeck.Connected')}</div>
         ) : (
           <div>
-            <ExternalLink href="https://apps.elgato.com/plugins/com.dim.streamdeck">
+            <ExternalLink href="https://marketplace.elgato.com/product/dim-stream-deck-11883ba5-c8db-4e3a-915f-612c5ba1b2e4">
               <button type="button" className={clsx('dim-button', styles.downloadPlugin)}>
                 <AppIcon icon={faArrowCircleDown} /> {t('StreamDeck.Install')}
               </button>
