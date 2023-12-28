@@ -150,14 +150,6 @@ export type LoadoutSelection =
 
 export type SendToStreamDeckArgs = SendUpdateArgs | SendFarmingModeArgs | SendEquipmentStatusArgs;
 
-export interface LazyStreamDeck {
-  core?: {
-    startStreamDeckConnection: () => ThunkResult;
-    stopStreamDeckConnection: () => ThunkResult;
-    sendEquipmentStatusStreamDeck: (itemId: string, target: DimStore) => ThunkResult;
-  };
-}
-
 export interface HandlerArgs<T> {
   msg: T;
   state: RootState;

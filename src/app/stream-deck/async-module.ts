@@ -182,3 +182,5 @@ export default {
   stopStreamDeckConnection,
   sendEquipmentStatusStreamDeck,
 };
+
+export type SendEquipmentStatusStreamDeckFn = typeof sendEquipmentStatusStreamDeck;

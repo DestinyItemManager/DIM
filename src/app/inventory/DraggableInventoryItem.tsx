@@ -1,10 +1,8 @@
 import { hideItemPopup } from 'app/item-popup/item-popup';
-import { streamDeckSelectionSelector } from 'app/stream-deck/selectors';
-import packager from 'app/stream-deck/util/packager';
+import { useStreamDeckSelection } from 'app/stream-deck/stream-deck';
 import clsx from 'clsx';
 import React from 'react';
 import { useDrag } from 'react-dnd';
-import { useSelector } from 'react-redux';
 import styles from './DraggableInventoryItem.m.scss';
 import { isDragging$ } from './drag-events';
 import { DimItem } from './item-types';
@@ -17,12 +15,14 @@ interface Props {
 let dragTimeout: number | null = null;
 
 export default function DraggableInventoryItem({ children, item }: Props) {
-  const streamDeckSelection = $featureFlags.elgatoStreamDeck
+  const selectionProps = $featureFlags.elgatoStreamDeck
     ? // eslint-disable-next-line
-      useSelector(streamDeckSelectionSelector)
+      useStreamDeckSelection({
+        type: 'item',
+        item,
+        equippable: !item.notransfer,
+      })
     : undefined;
-
-  const isSelectable = streamDeckSelection === 'item' && !item.notransfer;
 
   const canDrag =
     (!item.location.inPostmaster || item.destinyVersion === 2) && item.notransfer
@@ -61,9 +61,7 @@ export default function DraggableInventoryItem({ children, item }: Props) {
   return (
     <div
       ref={dragRef}
-      onDragStart={
-        isSelectable ? (e) => e.dataTransfer.setData('text/plain', packager.item(item)) : undefined
-      }
+      {...selectionProps}
       className={clsx('item-drag-container', {
         [styles.engram]: item.isEngram,
         [styles.cantDrag]: !canDrag,
