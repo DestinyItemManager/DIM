@@ -3,6 +3,7 @@
 // serialize the data and send it if connected
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { startFarming, stopFarming } from 'app/farming/actions';
+import { t } from 'app/i18next-t';
 import { moveItemTo } from 'app/inventory/move-item';
 import {
   allItemsSelector,
@@ -17,6 +18,7 @@ import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
 import { pullFromPostmaster } from 'app/loadout-drawer/postmaster';
 import { applyInGameLoadout } from 'app/loadout/ingame/ingame-loadout-apply';
 import { allInGameLoadoutsSelector } from 'app/loadout/ingame/selectors';
+import { showNotification } from 'app/notifications/notifications';
 import { accountRoute } from 'app/routes';
 import { filteredItemsSelector } from 'app/search/search-filter';
 import { setRouterLocation, setSearchQuery } from 'app/shell/actions';
@@ -173,6 +175,11 @@ export function handleStreamDeckMessage(msg: StreamDeckMessage, token: string): 
     const state = getState();
     const store = currentStoreSelector(state);
     if (!msg.token) {
+      showNotification({
+        type: 'error',
+        title: 'Stream Deck',
+        body: t('StreamDeck.MissingAuthorization'),
+      });
       throw new Error('missing-token');
     } else if (token && msg.token !== token) {
       throw new Error('invalid-token');

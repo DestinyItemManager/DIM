@@ -81,6 +81,7 @@ export default function StreamDeckSettings() {
             type="button"
             className="dim-button"
             onClick={() => {
+              dispatch(stopStreamDeckConnection());
               const auth = {
                 instance: window.crypto.randomUUID(),
                 token: randomToken(16),
@@ -88,7 +89,7 @@ export default function StreamDeckSettings() {
               setStreamDeckAuth(auth);
               const query = new URLSearchParams(auth).toString();
               window.open(`${STREAM_DECK_DEEP_LING}/connect?${query}`);
-              startStreamDeckConnection();
+              dispatch(startStreamDeckConnection());
             }}
           >
             <i className={lockIcon} />

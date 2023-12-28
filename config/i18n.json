@@ -1295,7 +1295,8 @@
     "FinePrint": "Enable the connection with the DIM Stream Deck plugin. This plugin is a separate project that is neither written by nor supported by the DIM team.",
     "OldExtension": "Make sure to uninstall the old Stream Deck Chrome extension. It is no longer needed and will cause odd behavior in DIM.",
     "Install": "Install plugin",
-    "Authorize": "Authorize application"
+    "Authorize": "Authorize application",
+    "MissingAuthorization": "You must authorize the Stream Deck application to connect to DIM. Go to settings and click \"Authorize application\"."
   },
   "Tags": {
     "Archive": "Archive",

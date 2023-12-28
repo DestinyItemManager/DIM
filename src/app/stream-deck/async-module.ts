@@ -123,6 +123,11 @@ function startStreamDeckConnection(): ThunkResult {
 
       const auth = streamDeckAuth();
 
+      // close the existing websocket if connected
+      if (streamDeckWebSocket?.readyState !== WebSocket.CLOSED) {
+        streamDeckWebSocket?.close();
+      }
+
       // if the plugin is enabled but the auth is not set stop
       if (!auth) {
         return;
@@ -130,11 +135,6 @@ function startStreamDeckConnection(): ThunkResult {
 
       // install refresh observer
       installRefresObserver();
-
-      // close the existing websocket if connected
-      if (streamDeckWebSocket && streamDeckWebSocket.readyState !== WebSocket.CLOSED) {
-        streamDeckWebSocket.close();
-      }
 
       // try to connect to the stream deck local instance
       streamDeckWebSocket = new WebSocket(`ws://localhost:9120/${auth.instance}`);
