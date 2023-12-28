@@ -1035,6 +1035,8 @@
     "NoEventChallenges": "You have completed all event challenges",
     "NoTrackedTriumph": "You have no tracked triumphs. Track as many as you like in DIM.",
     "PercentPrestige": "{{pct}}% to reset",
+    "PointsUsed": "1 point used",
+    "PointsUsed_plural": "{{count}} points used",
     "PowerBonusHeader": "+{{powerBonus}} Power Rewards",
     "PowerBonusHeaderUndefined": "Other Rewards",
     "Progress": "Progress",
