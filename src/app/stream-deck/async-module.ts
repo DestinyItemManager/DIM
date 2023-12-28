@@ -8,7 +8,7 @@ import { streamDeckConnected, streamDeckDisconnected } from 'app/stream-deck/act
 import { SendToStreamDeckArgs, StreamDeckMessage } from 'app/stream-deck/interfaces';
 import { handleStreamDeckMessage } from 'app/stream-deck/msg-handlers';
 import { streamDeckAuth, streamDeckEnabled } from 'app/stream-deck/util/local-storage';
-import packager from 'app/stream-deck/util/packager';
+import packager, { streamDeckClearId } from 'app/stream-deck/util/packager';
 import { infoLog } from 'app/utils/log';
 import { observeStore } from 'app/utils/redux';
 import _ from 'lodash';
@@ -73,7 +73,7 @@ function refreshStreamDeck(): ThunkResult {
 }
 
 // stop the websocket's connection with the local stream deck instance
-function stopStreamDeckConnection(): ThunkResult {
+function stop(): ThunkResult {
   return async (dispatch) => {
     streamDeckWebSocket?.close();
     clearInterval(refreshInterval);
@@ -87,13 +87,13 @@ const installRefresObserver = _.once(() => {
 });
 
 // send the equipment status to the stream deck when the item is equipped/unequipped
-function sendEquipmentStatusStreamDeck(itemId: string, target: DimStore): ThunkResult {
+function sendEquipmentStatus(itemId: string, target: DimStore): ThunkResult {
   return async (_, getState) => {
     const equipped = currentStoreSelector(getState()) === target;
     sendToStreamDeck({
       action: 'equipmentStatus',
       data: {
-        itemId,
+        itemId: streamDeckClearId(itemId),
         equipped,
       },
     });
@@ -101,7 +101,7 @@ function sendEquipmentStatusStreamDeck(itemId: string, target: DimStore): ThunkR
 }
 
 // start the websocket's connection with the local stream deck instance
-function startStreamDeckConnection(): ThunkResult {
+function start(): ThunkResult {
   return async (dispatch, getState) => {
     const initWS = () => {
       const state = getState();
@@ -178,9 +178,9 @@ infoLog('stream deck', 'feature lazy loaded');
 
 // async module loaded in ./stream-deck.ts using lazy import
 export default {
-  startStreamDeckConnection,
-  stopStreamDeckConnection,
-  sendEquipmentStatusStreamDeck,
+  start,
+  stop,
+  sendEquipmentStatus,
 };
 
-export type SendEquipmentStatusStreamDeckFn = typeof sendEquipmentStatusStreamDeck;
+export type SendEquipmentStatusStreamDeckFn = typeof sendEquipmentStatus;

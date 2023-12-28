@@ -9,6 +9,7 @@ import { useDrag } from 'react-dnd';
 import { useSelector } from 'react-redux';
 import { streamDeckSelectionSelector } from './selectors';
 import { findSubClassIcon } from './util/icons';
+import { streamDeckClearId } from './util/packager';
 
 export type StreamDeckSelectionOptions =
   | {
@@ -58,7 +59,7 @@ const toSelection = (data: StreamDeckSelectionOptions, state: RootState) => {
         type: 'item',
         label: item.name,
         subtitle: item.typeName,
-        item: item.index.replace(/-.*/, ''),
+        item: streamDeckClearId(item.index),
         icon: item.icon,
         overlay: item.iconOverlay,
         isExotic: item.isExotic,
@@ -88,7 +89,7 @@ interface UseStreamDeckSelectionReturn {
   onDragStart?: React.DragEventHandler<HTMLDivElement>;
 }
 
-const useStreamDeckSelection = ({
+const useSelection = ({
   equippable,
   ...props
 }: UseStreamDeckSelectionArgs): UseStreamDeckSelectionReturn => {
@@ -111,6 +112,6 @@ const useStreamDeckSelection = ({
   };
 };
 
-export type UseStreamDeckSelectionFn = typeof useStreamDeckSelection;
+export type UseStreamDeckSelectionFn = typeof useSelection;
 
-export default { useStreamDeckSelection };
+export default { useSelection };

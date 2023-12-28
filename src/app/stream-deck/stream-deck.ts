@@ -1,40 +1,40 @@
-import { DimStore } from 'app/inventory/store-types';
 import { ThunkResult } from 'app/store/types';
 import { type SendEquipmentStatusStreamDeckFn } from './async-module';
 import { type UseStreamDeckSelectionFn } from './useStreamDeckSelection';
 
 export interface LazyStreamDeck {
-  startStreamDeckConnection?: () => ThunkResult;
-  stopStreamDeckConnection?: () => ThunkResult;
-  sendEquipmentStatusStreamDeck?: SendEquipmentStatusStreamDeckFn;
-  useStreamDeckSelection?: UseStreamDeckSelectionFn;
+  start?: () => ThunkResult;
+  stop?: () => ThunkResult;
+  sendEquipmentStatus?: SendEquipmentStatusStreamDeckFn;
+  useSelection?: UseStreamDeckSelectionFn;
 }
 
-export const lazyStreamDeck: LazyStreamDeck = {};
+const lazyLoaded: LazyStreamDeck = {};
 
-// wrapped lazy loaded functions
-
-export const startStreamDeckConnection = () => lazyStreamDeck.startStreamDeckConnection!();
-
-export const stopStreamDeckConnection = () => lazyStreamDeck.stopStreamDeckConnection!();
-
-export const sendEquipmentStatusStreamDeck = (itemId: string, target: DimStore) =>
-  lazyStreamDeck.sendEquipmentStatusStreamDeck!(itemId, target);
-
-export const useStreamDeckSelection = (...args: Parameters<UseStreamDeckSelectionFn>) =>
-  lazyStreamDeck.useStreamDeckSelection?.(...args) ?? {};
-
-// run both lazy core and reducer modules
+// lazy load the stream deck module when needed
 export const lazyLoadStreamDeck = async () => {
   const core = await import(/* webpackChunkName: "streamdeck" */ './async-module');
   const useStreamDeckSelection = await import(
     /* webpackChunkName: "streamdeck-selection" */ './useStreamDeckSelection'
   );
   // load only once
-  if (!lazyStreamDeck.startStreamDeckConnection) {
-    Object.assign(lazyStreamDeck, {
+  if (!lazyLoaded.start) {
+    Object.assign(lazyLoaded, {
       ...core.default,
       ...useStreamDeckSelection.default,
     });
   }
 };
+
+// wrapped lazy loaded functions
+
+export const startStreamDeckConnection = () => lazyLoaded.start!();
+
+export const stopStreamDeckConnection = () => lazyLoaded.stop!();
+
+export const sendEquipmentStatusStreamDeck = (
+  ...args: Parameters<SendEquipmentStatusStreamDeckFn>
+) => lazyLoaded.sendEquipmentStatus?.(...args);
+
+export const useStreamDeckSelection: UseStreamDeckSelectionFn = (...args) =>
+  lazyLoaded.useSelection?.(...args) ?? {};

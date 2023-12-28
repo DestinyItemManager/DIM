@@ -168,8 +168,8 @@ function updateItemModel(
 
     try {
       if ($featureFlags.elgatoStreamDeck) {
-        const { streamDeck } = getState();
-        streamDeck.connected && dispatch(sendEquipmentStatusStreamDeck(item.id, target));
+        const action = sendEquipmentStatusStreamDeck(item.index, target);
+        action && dispatch(action);
       }
       dispatch(itemMoved({ item, source, target, equip, amount }));
       const stores = storesSelector(getState());
