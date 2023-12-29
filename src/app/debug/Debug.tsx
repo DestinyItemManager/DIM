@@ -19,8 +19,6 @@ import LocalStorageInfo from 'app/storage/LocalStorageInfo';
 import { set } from 'app/storage/idb-keyval';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { streamDeckSelector } from 'app/stream-deck/selectors';
-import { streamDeckAuth } from 'app/stream-deck/util/authorization';
-import { streamDeckEnabled } from 'app/stream-deck/util/local-storage';
 import { DimError } from 'app/utils/dim-error';
 import { convertToError } from 'app/utils/errors';
 import { usePageTitle } from 'app/utils/hooks';
@@ -274,16 +272,16 @@ export default function Debug() {
           <section>
             <h3>Stream Deck</h3>
             <p>
-              <b>Enabled:</b> {JSON.stringify(Boolean(streamDeckEnabled()))}
+              <b>Enabled:</b> {JSON.stringify(Boolean(streamDeck.enabled))}
             </p>
             <p>
               <b>Connected:</b> {JSON.stringify(streamDeck.connected)}
             </p>
             <p>
-              <b>Instance:</b> {JSON.stringify(streamDeckAuth()?.instance) ?? '-'}
+              <b>Instance:</b> {JSON.stringify(streamDeck.auth?.instance) ?? '-'}
             </p>
             <p>
-              <b>Token:</b> {JSON.stringify(streamDeckAuth()?.token) ?? '-'}
+              <b>Token:</b> {JSON.stringify(streamDeck.auth?.token) ?? '-'}
             </p>
           </section>
         )}

@@ -10,7 +10,7 @@ import { accountRoute } from 'app/routes';
 import { SearchFilterRef } from 'app/search/SearchBar';
 import DimApiWarningBanner from 'app/storage/DimApiWarningBanner';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { streamDeckEnabled } from 'app/stream-deck/util/local-storage';
+import { streamDeckEnabledSelector } from 'app/stream-deck/selectors';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { useSetCSSVarToHeight } from 'app/utils/hooks';
 import { infoLog } from 'app/utils/log';
@@ -290,23 +290,10 @@ export default function Header() {
   const headerLinksRef = useRef<HTMLDivElement>(null);
   const clarityDetected = useClarityDetector(headerLinksRef);
 
-  const [streamDeckButtonVisible, setStreamDeckButtonVisible] = $featureFlags.elgatoStreamDeck
+  const streamDeckEnabled = $featureFlags.elgatoStreamDeck
     ? // eslint-disable-next-line react-hooks/rules-of-hooks
-      useState(streamDeckEnabled())
-    : [false, null];
-
-  if ($featureFlags.elgatoStreamDeck) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useEffect(() => {
-      const listener = () => {
-        setStreamDeckButtonVisible?.(streamDeckEnabled());
-      };
-      document.addEventListener('local-storage-update', listener, false);
-      return () => {
-        document.removeEventListener('local-storage-update', listener, false);
-      };
-    }, [setStreamDeckButtonVisible]);
-  }
+      useSelector(streamDeckEnabledSelector)
+    : false;
 
   return (
     <PressTipRoot.Provider value={headerRef}>
@@ -389,7 +376,7 @@ export default function Header() {
                 <SearchFilter onClear={hideSearch} ref={searchFilter} />
               </span>
             )}
-            {streamDeckButtonVisible && (
+            {streamDeckEnabled && (
               <Suspense>
                 <StreamDeckButton />
               </Suspense>

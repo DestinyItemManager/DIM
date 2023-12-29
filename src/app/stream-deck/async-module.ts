@@ -7,12 +7,10 @@ import { ThunkResult } from 'app/store/types';
 import { streamDeckConnected, streamDeckDisconnected } from 'app/stream-deck/actions';
 import { SendToStreamDeckArgs, StreamDeckMessage } from 'app/stream-deck/interfaces';
 import { handleStreamDeckMessage } from 'app/stream-deck/msg-handlers';
-import { streamDeckEnabled } from 'app/stream-deck/util/local-storage';
 import packager, { streamDeckClearId } from 'app/stream-deck/util/packager';
 import { infoLog } from 'app/utils/log';
 import { observeStore } from 'app/utils/redux';
 import _ from 'lodash';
-import { streamDeckAuth } from './util/authorization';
 
 let streamDeckWebSocket: WebSocket;
 
@@ -117,12 +115,12 @@ function start(): ThunkResult {
         return;
       }
 
+      const { enabled, auth } = state.streamDeck;
+
       // if stream deck is disabled stop and don't try to connect
-      if (!streamDeckEnabled()) {
+      if (!enabled) {
         return;
       }
-
-      const auth = streamDeckAuth();
 
       // close the existing websocket if connected
       if (streamDeckWebSocket?.readyState !== WebSocket.CLOSED) {
@@ -154,7 +152,7 @@ function start(): ThunkResult {
         // stop refreshing the Stream Deck State
         clearInterval(refreshInterval);
         // if the plugin is still enabled and the websocket is closed
-        if (streamDeckEnabled() && streamDeckWebSocket.readyState === WebSocket.CLOSED) {
+        if (enabled && streamDeckWebSocket.readyState === WebSocket.CLOSED) {
           // retry to re-connect after 2.5s
           window.setTimeout(initWS, 2500);
         }

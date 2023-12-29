@@ -6,12 +6,12 @@ import { EventBus } from 'app/utils/observable';
 import streamDeckIcon from 'images/streamDeck.svg';
 import { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { streamDeckConnectedSelector } from '../selectors';
-import { streamDeckAuth, streamDeckAuthorizationInit } from '../util/authorization';
+import { streamDeckSelector } from '../selectors';
+import { streamDeckAuthorizationInit } from '../util/authorization';
 import { STREAM_DECK_MINIMUM_VERSION, checkStreamDeckVersion } from '../util/version';
 import styles from './StreamDeckButton.m.scss';
 
-export const version$ = new EventBus<undefined>();
+const version$ = new EventBus<undefined>();
 
 const usePluginVersion = () => {
   const [version, setVersion] = useState<string | undefined>(undefined);
@@ -74,19 +74,11 @@ function StreamDeckTooltip({ version, error, needSetup }: StreamDeckTooltipProps
 }
 
 function StreamDeckButton() {
-  const connected = useSelector(streamDeckConnectedSelector);
+  const { connected, auth } = useSelector(streamDeckSelector);
   const version = usePluginVersion();
   const error = useMemo(() => !checkStreamDeckVersion(version), [version]);
-  const [needSetup, setNeedSetup] = useState(streamDeckAuth() === undefined);
+  const needSetup = auth === undefined;
   const dispatch = useThunkDispatch();
-
-  useEffect(() => {
-    const listener = () => setNeedSetup(false);
-    document.addEventListener('stream-deck-auth-update', listener, false);
-    return () => {
-      document.removeEventListener('stream-deck-auth-update', listener, false);
-    };
-  }, [setNeedSetup]);
 
   return (
     <PressTip tooltip={<StreamDeckTooltip version={version} error={error} needSetup={needSetup} />}>

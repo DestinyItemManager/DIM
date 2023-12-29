@@ -10,7 +10,6 @@ import { loadDimApiData } from 'app/dim-api/actions';
 import { saveItemInfosOnStateChange } from 'app/inventory/observers';
 import store from 'app/store/store';
 import { lazyLoadStreamDeck, startStreamDeckConnection } from 'app/stream-deck/stream-deck';
-import { streamDeckEnabled } from 'app/stream-deck/util/local-storage';
 import { infoLog } from 'app/utils/log';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
@@ -66,7 +65,7 @@ const i18nPromise = initi18n();
 
   store.dispatch(loadDimApiData());
 
-  if ($featureFlags.elgatoStreamDeck && streamDeckEnabled()) {
+  if ($featureFlags.elgatoStreamDeck && store.getState().streamDeck.enabled) {
     await lazyLoadStreamDeck();
     store.dispatch(startStreamDeckConnection());
   }
