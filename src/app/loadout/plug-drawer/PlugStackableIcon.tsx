@@ -1,8 +1,8 @@
+import { t } from 'app/i18next-t';
 import { AppIcon, slashIcon, stackIcon } from 'app/shell/icons';
 import { DimPlugDescriptions } from 'app/utils/plug-descriptions';
 import clsx from 'clsx';
 import unstackableModHashes from 'data/d2/unstackable-mods.json';
-import { t } from 'i18next';
 import styles from './PlugStackableIcon.m.scss';
 
 /** A label that shows whether an armor mod is stackable or not. */
