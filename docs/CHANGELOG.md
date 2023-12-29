@@ -1,11 +1,13 @@
 ## Next
 
 * In the mod picker, we now show just "Stackable" or "Unstackable" instead of the full requirements for the mod (like its exact stackability or what raid it belongs to).
+* Several improvements to how the mod picker and subclass editor look and work, in hopes of making it easier to use.
 * Individual wish lists can be toggled on and off and the Just Another Team wishlist is available as a suggested option.
 * Catalysts can be searched for on the Records page using search terms that would match their associated item.
 * Clicking a catalyst on the Records page shows the item popup for its associated collections item.
 * Loadout Optimizer's "Pin Items" and "Excluded Items" sections have been slightly redesigned, and now both have clear-all buttons.
 * You can choose to show weapon groups in the vault inline instead of row-by-row.
+* The Seasonal Artifact details page now shows how many points used and resets.
 
 ## 7.99.0 <span class="changelog-date">(2023-12-17)</span>
 
