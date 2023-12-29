@@ -61,7 +61,7 @@ export function TileGridTile({
       <>
         {icon}
         <div className={clsx(styles.title, { [styles.withCorner]: corner })}>{title}</div>
-        {corner || null}
+        {corner}
         <div className={styles.details}>{children}</div>
       </>
     </div>
