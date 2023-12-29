@@ -56,20 +56,20 @@ export default function SelectablePlug({
   const stackable = stack > 1 || (stack === 1 && selectable);
 
   const handleIncrease =
-    stackable &&
-    selectable &&
-    ((e: React.MouseEvent) => {
-      e.stopPropagation();
-      onPlugSelected(plug);
-    });
+    stackable && selectable
+      ? (e: React.MouseEvent) => {
+          e.stopPropagation();
+          onPlugSelected(plug);
+        }
+      : undefined;
 
   const handleDecrease =
-    stackable &&
-    removable &&
-    ((e: React.MouseEvent) => {
-      e.stopPropagation();
-      onPlugRemoved(plug);
-    });
+    stackable && removable
+      ? (e: React.MouseEvent) => {
+          e.stopPropagation();
+          onPlugRemoved(plug);
+        }
+      : undefined;
 
   const corner =
     handleIncrease || handleDecrease || stackable ? (
@@ -77,26 +77,24 @@ export default function SelectablePlug({
         {stackable && <div className={styles.stack}>{stack}×</div>}
         {(handleIncrease || handleDecrease) && (
           <div className={styles.volumeRocker}>
-            {handleIncrease && (
-              <button
-                type="button"
-                className="dim-button"
-                onClick={handleIncrease}
-                title={t('LB.AddStack')}
-              >
-                <AppIcon icon={plusIcon} />
-              </button>
-            )}
-            {handleDecrease && (
-              <button
-                type="button"
-                className="dim-button"
-                onClick={handleDecrease}
-                title={t('LB.RemoveStack')}
-              >
-                <AppIcon icon={stack === 1 ? banIcon : minusIcon} />
-              </button>
-            )}
+            <button
+              type="button"
+              className="dim-button"
+              onClick={handleIncrease}
+              disabled={!handleIncrease}
+              title={t('LB.AddStack')}
+            >
+              <AppIcon icon={plusIcon} />
+            </button>
+            <button
+              type="button"
+              className="dim-button"
+              onClick={handleDecrease}
+              disabled={!handleDecrease}
+              title={t('LB.RemoveStack')}
+            >
+              <AppIcon icon={stack === 1 ? banIcon : minusIcon} />
+            </button>
           </div>
         )}
       </div>
@@ -107,6 +105,7 @@ export default function SelectablePlug({
       selected={selected}
       disabled={
         !(
+          (stackable && (selectable || removable)) ||
           selectable ||
           canRemoveOnClick ||
           (selectionType === PlugSelectionType.Single && selected)

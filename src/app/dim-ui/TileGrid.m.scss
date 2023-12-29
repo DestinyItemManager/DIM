@@ -38,6 +38,11 @@
     border-color: var(--theme-accent-secondary);
     outline: none;
   }
+
+  // On mobile, don't scale up items
+  @include phone-portrait {
+    --item-size: 50px;
+  }
 }
 
 .details {
@@ -60,7 +65,7 @@
   align-self: center;
   color: var(--theme-text);
   font-weight: bold;
-  font-size: 18px;
+  font-size: 16px;
   grid-column-end: span 2;
   &.withCorner {
     grid-column-end: span 1;
