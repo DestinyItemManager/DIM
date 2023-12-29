@@ -174,15 +174,13 @@ export function handleStreamDeckMessage(msg: StreamDeckMessage, token: string): 
   return async (dispatch, getState) => {
     const state = getState();
     const store = currentStoreSelector(state);
-    if (!msg.token) {
+    if (!msg.token || msg.token !== token) {
       showNotification({
         type: 'error',
         title: 'Stream Deck',
         body: t('StreamDeck.MissingAuthorization'),
       });
-      throw new Error('missing-token');
-    } else if (token && msg.token !== token) {
-      throw new Error('invalid-token');
+      throw new Error(!msg.token ? 'missing-token' : 'invalid-token');
     }
     if (store) {
       // handle stream deck actions
