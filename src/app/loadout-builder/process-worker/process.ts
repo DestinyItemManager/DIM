@@ -3,12 +3,12 @@ import { infoLog } from '../../utils/log';
 import {
   ArmorStatHashes,
   ArmorStats,
-  artificeStatBoost,
+  DesiredStatRange,
   LockableBucketHashes,
   LockableBuckets,
-  majorStatBoost,
-  ResolvedStatConstraint,
   StatRanges,
+  artificeStatBoost,
+  majorStatBoost,
 } from '../types';
 import {
   pickAndAssignSlotIndependentMods,
@@ -40,8 +40,8 @@ export function process(
   modStatTotals: ArmorStats,
   /** Mods to add onto the sets */
   lockedMods: LockedProcessMods,
-  /** The user's chosen stat constraints, including disabled stats */
-  resolvedStatConstraints: ResolvedStatConstraint[],
+  /** The user's chosen stat ranges, in priority order. */
+  desiredStatRanges: DesiredStatRange[],
   /** Ensure every set includes one exotic */
   anyExotic: boolean,
   /** Which artifice mods, large, and small stat mods are available */
@@ -55,10 +55,8 @@ export function process(
 ): ProcessResult {
   const pstart = performance.now();
 
-  const statOrder = resolvedStatConstraints.map(({ statHash }) => statHash as ArmorStatHashes);
-  const maxTierConstraints = resolvedStatConstraints.map(({ ignored, maxTier }) =>
-    ignored ? 0 : maxTier,
-  );
+  const statOrder = desiredStatRanges.map(({ statHash }) => statHash as ArmorStatHashes);
+  const maxTierConstraints = desiredStatRanges.map(({ maxTier }) => maxTier);
   const modStatsInStatOrder = statOrder.map((h) => modStatTotals[h]);
 
   // This stores the computed min and max value for each stat as we process all sets, so we
@@ -67,8 +65,8 @@ export function process(
     statOrder.map((h) => [
       h,
       {
-        min: 10,
-        max: 0,
+        minTier: 10,
+        maxTier: 0,
       },
     ]),
   ) as StatRanges;
@@ -236,11 +234,11 @@ export function process(
             let totalTier = 0;
             for (let index = 0; index < 6; index++) {
               const tier = tiers[index];
-              const filter = resolvedStatConstraints[index];
-              if (!filter.ignored) {
+              const filter = desiredStatRanges[index];
+              if (filter.maxTier > 0) {
                 const statRange = statRangesFilteredInStatOrder[index];
-                if (tier < statRange.min) {
-                  statRange.min = tier;
+                if (tier < statRange.minTier) {
+                  statRange.minTier = tier;
                 }
                 totalTier += tier;
                 if (filter.minTier > 0) {
@@ -301,7 +299,7 @@ export function process(
               stats,
               tiers,
               numArtifice,
-              resolvedStatConstraints,
+              desiredStatRanges,
               statRangesFilteredInStatOrder,
             );
 
@@ -324,8 +322,8 @@ export function process(
             const statPointsNeededForTiers: { index: number; pointsToNext: number }[] = [];
 
             for (let index = 0; index < 6; index++) {
-              const filter = resolvedStatConstraints[index];
-              if (!filter.ignored && stats[index] < filter.maxTier * 10) {
+              const filter = desiredStatRanges[index];
+              if (stats[index] < filter.maxTier * 10) {
                 statPointsNeededForTiers.push({
                   index,
                   pointsToNext: 10 - (stats[index] % 10),
@@ -368,8 +366,8 @@ export function process(
             for (let index = 0; index < 6; index++) {
               let tier = tiers[index];
               // Make each stat exactly one code unit so the string compares correctly
-              const filter = resolvedStatConstraints[index];
-              if (!filter.ignored) {
+              const filter = desiredStatRanges[index];
+              if (filter.maxTier > 0) {
                 // Predict the tier boost from general mods.
                 const boostAmount = Math.min(filter.maxTier - tier, numGeneralMods);
                 if (boostAmount > 0) {
@@ -409,7 +407,7 @@ export function process(
       precalculatedInfo,
       armor,
       stats,
-      resolvedStatConstraints,
+      desiredStatRanges,
     )!;
 
     const armorOnlyStats: Partial<ArmorStats> = {};
@@ -422,9 +420,9 @@ export function process(
       const value = stats[i] + bonusStats[i];
       fullStats[statHash] = value;
 
-      const statFilter = resolvedStatConstraints[i];
+      const statFilter = desiredStatRanges[i];
       if (
-        !statFilter.ignored &&
+        statFilter.maxTier > 0 &&
         strictUpgrades &&
         statFilter.minTier < statFilter.maxTier &&
         !hasStrictUpgrade

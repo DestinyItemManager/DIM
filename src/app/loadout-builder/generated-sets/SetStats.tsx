@@ -7,7 +7,13 @@ import StatTooltip from 'app/store-stats/StatTooltip';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
-import { ArmorStatHashes, ArmorStats, ModStatChanges, ResolvedStatConstraint } from '../types';
+import {
+  ArmorStatHashes,
+  ArmorStats,
+  DesiredStatRange,
+  ModStatChanges,
+  ResolvedStatConstraint,
+} from '../types';
 import { remEuclid, statTierWithHalf } from '../utils';
 import styles from './SetStats.m.scss';
 import { calculateTotalTier, sumEnabledStats } from './utils';
@@ -20,7 +26,7 @@ export function SetStats({
   stats,
   getStatsBreakdown,
   maxPower,
-  resolvedStatConstraints,
+  desiredStatRanges,
   boostedStats,
   className,
   existingLoadoutName,
@@ -29,7 +35,7 @@ export function SetStats({
   stats: ArmorStats;
   getStatsBreakdown: () => ModStatChanges;
   maxPower: number;
-  resolvedStatConstraints: ResolvedStatConstraint[];
+  desiredStatRanges: DesiredStatRange[];
   boostedStats: Set<ArmorStatHashes>;
   className?: string;
   existingLoadoutName?: string;
@@ -37,14 +43,14 @@ export function SetStats({
 }) {
   const defs = useD2Definitions()!;
   const totalTier = calculateTotalTier(stats);
-  const enabledTier = sumEnabledStats(stats, resolvedStatConstraints);
+  const enabledTier = sumEnabledStats(stats, desiredStatRanges);
 
   return (
     <div className={clsx(styles.container, className)}>
       <div className={styles.tierLightContainer}>
         <TotalTier enabledTier={enabledTier} totalTier={totalTier} />
       </div>
-      {resolvedStatConstraints.map((c) => {
+      {desiredStatRanges.map((c) => {
         const statHash = c.statHash as ArmorStatHashes;
         const statDef = defs.Stat.get(statHash);
         const value = stats[statHash];
@@ -65,7 +71,7 @@ export function SetStats({
             )}
           >
             <Stat
-              isActive={!c.ignored}
+              isActive={c.maxTier > 0}
               isBoosted={boostedStats.has(statHash)}
               stat={statDef}
               value={value}
