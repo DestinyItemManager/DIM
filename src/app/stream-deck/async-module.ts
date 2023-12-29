@@ -82,7 +82,7 @@ function stop(): ThunkResult {
 }
 
 // refresh the stream deck state on refresh events
-const installRefresObserver = _.once(() => {
+const installRefreshObserver = _.once(() => {
   refresh$.subscribe(() => refreshStreamDeck());
 });
 
@@ -134,7 +134,7 @@ function start(): ThunkResult {
       }
 
       // install refresh observer
-      installRefresObserver();
+      installRefreshObserver();
 
       // try to connect to the stream deck local instance
       streamDeckWebSocket = new WebSocket(`ws://localhost:9120/${auth.instance}`);

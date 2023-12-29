@@ -20,19 +20,7 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './StreamDeckSettings.m.scss';
 
-const randomToken = (length: number) => {
-  let result = '';
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const charactersLength = characters.length;
-  let counter = 0;
-  while (counter < length) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    counter += 1;
-  }
-  return result;
-};
-
-const STREAM_DECK_DEEP_LING = 'streamdeck://plugins/message/com.dim.streamdeck';
+const STREAM_DECK_DEEP_LINK = 'streamdeck://plugins/message/com.dim.streamdeck';
 
 export default function StreamDeckSettings() {
   const dispatch = useThunkDispatch();
@@ -84,11 +72,11 @@ export default function StreamDeckSettings() {
               dispatch(stopStreamDeckConnection());
               const auth = {
                 instance: window.crypto.randomUUID(),
-                token: randomToken(16),
+                token: window.crypto.randomUUID(),
               };
               setStreamDeckAuth(auth);
               const query = new URLSearchParams(auth).toString();
-              window.open(`${STREAM_DECK_DEEP_LING}/connect?${query}`);
+              window.open(`${STREAM_DECK_DEEP_LINK}/connect?${query}`);
               dispatch(startStreamDeckConnection());
             }}
           >
