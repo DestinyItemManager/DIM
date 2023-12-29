@@ -488,6 +488,7 @@
     "Super": "Super"
   },
   "LB": {
+    "AddStack": "Add another copy of this mod",
     "AdvancedOptions": "Advanced Options",
     "ChooseAMod": "Choose your mods",
     "ChooseAnExotic": "Choose your exotic",
@@ -540,6 +541,7 @@
       "HelpFull": "Looks at more gear, but takes longer.",
       "ProcessingMode": "Processing mode"
     },
+    "RemoveStack": "Remove a copy of this mod",
     "Scaled": "Scaled",
     "SearchAMod": "Search for mod name or description",
     "SearchAnExotic": "Search for exotic name or description",
@@ -781,7 +783,7 @@
       "UnassignedMods": "Unassigned Mods",
       "UnassignedModsDesc": "1 mod did not fit due to insufficient energy capacity or mod slots. Energy upgrades to the selected armor will not fix the issue.",
       "UnassignedModsDesc_plural": "{{count}} mods did not fit due to insufficient energy capacity or mod slots. Energy upgrades to the selected armor will not fix the issue.",
-      "UnstackableMod": "Unstackable",
+      "UnstackableMod": "Not Stackable",
       "UpgradeCosts": "Upgrade Costs",
       "UpgradeCostsDesc": "Some armor needs energy capacity upgrades to fit the requested mods. In total, these upgrades cost:"
     },
