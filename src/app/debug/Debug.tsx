@@ -19,7 +19,8 @@ import LocalStorageInfo from 'app/storage/LocalStorageInfo';
 import { set } from 'app/storage/idb-keyval';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { streamDeckSelector } from 'app/stream-deck/selectors';
-import { streamDeckAuth, streamDeckEnabled } from 'app/stream-deck/util/local-storage';
+import { streamDeckAuth } from 'app/stream-deck/util/authorization';
+import { streamDeckEnabled } from 'app/stream-deck/util/local-storage';
 import { DimError } from 'app/utils/dim-error';
 import { convertToError } from 'app/utils/errors';
 import { usePageTitle } from 'app/utils/hooks';
@@ -269,21 +270,23 @@ export default function Debug() {
           </p>
         </section>
 
-        <section>
-          <h3>Stream Deck</h3>
-          <p>
-            <b>Enabled:</b> {JSON.stringify(Boolean(streamDeckEnabled()))}
-          </p>
-          <p>
-            <b>Connected:</b> {JSON.stringify(streamDeck.connected)}
-          </p>
-          <p>
-            <b>Instance:</b> {JSON.stringify(streamDeckAuth()?.instance) ?? '-'}
-          </p>
-          <p>
-            <b>Token:</b> {JSON.stringify(streamDeckAuth()?.token) ?? '-'}
-          </p>
-        </section>
+        {$featureFlags.elgatoStreamDeck && (
+          <section>
+            <h3>Stream Deck</h3>
+            <p>
+              <b>Enabled:</b> {JSON.stringify(Boolean(streamDeckEnabled()))}
+            </p>
+            <p>
+              <b>Connected:</b> {JSON.stringify(streamDeck.connected)}
+            </p>
+            <p>
+              <b>Instance:</b> {JSON.stringify(streamDeckAuth()?.instance) ?? '-'}
+            </p>
+            <p>
+              <b>Token:</b> {JSON.stringify(streamDeckAuth()?.token) ?? '-'}
+            </p>
+          </section>
+        )}
 
         {$DIM_FLAVOR !== 'release' && currentAccount?.destinyVersion === 2 && (
           <TroubleshootingSettings />

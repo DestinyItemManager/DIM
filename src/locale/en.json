@@ -1260,14 +1260,22 @@
     "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device. This includes the downloaded Destiny item databases from Bungie.net."
   },
   "StreamDeck": {
-    "Authorize": "Authorize application",
-    "Connected": "Connected",
+    "Authorize": "Connect application",
     "Enable": "Stream Deck Plugin",
     "FinePrint": "Enable the connection with the DIM Stream Deck plugin. This plugin is a separate project that is neither written by nor supported by the DIM team.",
     "Install": "Install plugin",
-    "MissingAuthorization": "You must authorize the Stream Deck application to connect to DIM. Go to settings and click \"Authorize application\".",
-    "NotConnected": "Not Connected",
-    "OldExtension": "Make sure to uninstall the old Stream Deck Chrome extension. It is no longer needed and will cause odd behavior in DIM."
+    "MissingAuthorization": "You must authorize the Stream Deck application to connect to DIM. Go to settings and click \"Connect application\".",
+    "OldExtension": "Make sure to uninstall the old Stream Deck Chrome extension. It is no longer needed and will cause odd behavior in DIM.",
+    "Tooltip": {
+      "Application": "Stream Deck Application",
+      "AuthRequired": "Click this button or go to settings and click \"Connect application\".",
+      "Error": "Your Stream Deck plugin is no more supported. Please update to the latest version. This plugin requires at least:",
+      "ErrorConnection": "if you're already using the latest version, check if some browser extension is blocking the connection.",
+      "ExtensionIssue": "Extensions Issue",
+      "Plugin": "Plugin",
+      "Title": "DIM Stream Deck Plugin",
+      "Version": "Version:"
+    }
   },
   "StripSockets": {
     "Action": "Strip Sockets",

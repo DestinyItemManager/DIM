@@ -1,14 +1,5 @@
 @use '../../variables.scss' as *;
 
-.notConnected {
-  margin-left: 8px;
-  color: #b2b2b2;
-}
-
-.connected {
-  color: $green;
-}
-
 .downloadPlugin {
   margin-top: 8px;
 }

@@ -7,11 +7,12 @@ import { ThunkResult } from 'app/store/types';
 import { streamDeckConnected, streamDeckDisconnected } from 'app/stream-deck/actions';
 import { SendToStreamDeckArgs, StreamDeckMessage } from 'app/stream-deck/interfaces';
 import { handleStreamDeckMessage } from 'app/stream-deck/msg-handlers';
-import { streamDeckAuth, streamDeckEnabled } from 'app/stream-deck/util/local-storage';
+import { streamDeckEnabled } from 'app/stream-deck/util/local-storage';
 import packager, { streamDeckClearId } from 'app/stream-deck/util/packager';
 import { infoLog } from 'app/utils/log';
 import { observeStore } from 'app/utils/redux';
 import _ from 'lodash';
+import { streamDeckAuth } from './util/authorization';
 
 let streamDeckWebSocket: WebSocket;
 

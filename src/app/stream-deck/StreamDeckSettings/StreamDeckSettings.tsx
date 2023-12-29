@@ -1,6 +1,6 @@
 import Switch from 'app/dim-ui/Switch';
 import { t } from 'app/i18next-t';
-import { AppIcon, faArrowCircleDown, lockIcon } from 'app/shell/icons';
+import { AppIcon, faArrowCircleDown, faExternalLinkAlt } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 
 import ExternalLink from 'app/dim-ui/ExternalLink';
@@ -10,17 +10,12 @@ import {
   startStreamDeckConnection,
   stopStreamDeckConnection,
 } from 'app/stream-deck/stream-deck';
-import {
-  setStreamDeckAuth,
-  setStreamDeckEnabled,
-  streamDeckEnabled,
-} from 'app/stream-deck/util/local-storage';
+import { setStreamDeckEnabled, streamDeckEnabled } from 'app/stream-deck/util/local-storage';
 import clsx from 'clsx';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { streamDeckAuthorizationInit } from '../util/authorization';
 import styles from './StreamDeckSettings.m.scss';
-
-const STREAM_DECK_DEEP_LINK = 'streamdeck://plugins/message/com.dim.streamdeck';
 
 export default function StreamDeckSettings() {
   const dispatch = useThunkDispatch();
@@ -52,35 +47,22 @@ export default function StreamDeckSettings() {
         <div className="fineprint">
           {t('StreamDeck.FinePrint')} <b>{t('StreamDeck.OldExtension')}</b>
         </div>
-        {connected ? (
-          <div className={styles.connected}>{t('StreamDeck.Connected')}</div>
-        ) : (
+        {!connected && (
           <div>
             <ExternalLink href="https://marketplace.elgato.com/product/dim-stream-deck-11883ba5-c8db-4e3a-915f-612c5ba1b2e4">
               <button type="button" className={clsx('dim-button', styles.downloadPlugin)}>
                 <AppIcon icon={faArrowCircleDown} /> {t('StreamDeck.Install')}
               </button>
             </ExternalLink>
-            <span className={styles.notConnected}>{t('StreamDeck.NotConnected')}</span>
           </div>
         )}
         <div className={styles.authentication}>
           <button
             type="button"
             className="dim-button"
-            onClick={() => {
-              dispatch(stopStreamDeckConnection());
-              const auth = {
-                instance: window.crypto.randomUUID(),
-                token: window.crypto.randomUUID(),
-              };
-              setStreamDeckAuth(auth);
-              const query = new URLSearchParams(auth).toString();
-              window.open(`${STREAM_DECK_DEEP_LINK}/connect?${query}`);
-              dispatch(startStreamDeckConnection());
-            }}
+            onClick={() => dispatch(streamDeckAuthorizationInit())}
           >
-            <i className={lockIcon} />
+            <i className={faExternalLinkAlt} />
             <span>{t('StreamDeck.Authorize')}</span>
           </button>
         </div>

@@ -1,14 +1,16 @@
+import { LoadoutItem } from '@destinyitemmanager/dim-api-types';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
+import { d2ManifestSelector } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState, ThunkResult } from 'app/store/types';
 import { DamageType, DestinyClass } from 'bungie-api-ts/destiny2';
+import { BucketHashes } from 'data/d2/generated-enums';
 import { useCallback } from 'react';
 import { useDrag } from 'react-dnd';
 import { useSelector } from 'react-redux';
 import { streamDeckSelectionSelector } from './selectors';
-import { findSubClassIcon } from './util/icons';
 import { streamDeckClearId } from './util/packager';
 
 export type StreamDeckSelectionOptions =
@@ -25,6 +27,17 @@ export type StreamDeckSelectionOptions =
       type: 'item';
       item: DimItem;
     };
+
+function findSubClassIcon(items: LoadoutItem[], state: RootState) {
+  const defs = d2ManifestSelector(state);
+  for (const item of items) {
+    const def = defs?.InventoryItem.get(item.hash);
+    // find subclass item
+    if (def?.inventory?.bucketTypeHash === BucketHashes.Subclass) {
+      return def.displayProperties.icon;
+    }
+  }
+}
 
 const toSelection = (data: StreamDeckSelectionOptions, state: RootState) => {
   switch (data.type) {
