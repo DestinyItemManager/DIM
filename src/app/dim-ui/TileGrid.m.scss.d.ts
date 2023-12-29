@@ -8,6 +8,7 @@ interface CssExports {
   'selected': string;
   'tile': string;
   'title': string;
+  'withCorner': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
