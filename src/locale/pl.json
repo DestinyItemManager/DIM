@@ -488,6 +488,7 @@
     "Super": "Super"
   },
   "LB": {
+    "AddStack": "Add another copy of this mod",
     "AdvancedOptions": "Ustawienia Zaawansowane",
     "ChooseAMod": "Wybierz swoje modyfikacje",
     "ChooseAnExotic": "Wybierz swój egzotyk",
@@ -540,6 +541,7 @@
       "HelpFull": "Bierze pod uwagę więcej sprzętu, ale trwa dłużej.",
       "ProcessingMode": "Tryb przetwarzania"
     },
+    "RemoveStack": "Remove a copy of this mod",
     "Scaled": "Skalowany",
     "SearchAMod": "Search for mod name or description",
     "SearchAnExotic": "Search for exotic name or description",
@@ -781,7 +783,7 @@
       "UnassignedMods": "Unassigned Mods",
       "UnassignedModsDesc": "1 mod did not fit due to insufficient energy capacity or mod slots. Energy upgrades to the selected armor will not fix the issue.",
       "UnassignedModsDesc_plural": "{{count}} mods did not fit due to insufficient energy capacity or mod slots. Energy upgrades to the selected armor will not fix the issue.",
-      "UnstackableMod": "Unstackable",
+      "UnstackableMod": "Not Stackable",
       "UpgradeCosts": "Upgrade Costs",
       "UpgradeCostsDesc": "Some armor needs energy capacity upgrades to fit the requested mods. In total, these upgrades cost:"
     },
@@ -1035,6 +1037,8 @@
     "NoEventChallenges": "Ukończyłeś wszystkie wyzwania wydarzenia",
     "NoTrackedTriumph": "You have no tracked triumphs. Track as many as you like in DIM.",
     "PercentPrestige": "{{pct}}% do resetu",
+    "PointsUsed": "1 point used",
+    "PointsUsed_plural": "{{count}} points used",
     "PowerBonusHeader": "Nagrody o Mocy +{{powerBonus}}",
     "PowerBonusHeaderUndefined": "Inne nagrody",
     "Progress": "Postęp",

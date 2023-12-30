@@ -488,6 +488,7 @@
     "Super": "Súper"
   },
   "LB": {
+    "AddStack": "Añadir otra copia de este modificador",
     "AdvancedOptions": "Opciones avanzadas",
     "ChooseAMod": "Elige tus modificadores",
     "ChooseAnExotic": "Elige tu exótico",
@@ -540,6 +541,7 @@
       "HelpFull": "Mira más equipamiento, pero tarda más.",
       "ProcessingMode": "Modo de procesamiento"
     },
+    "RemoveStack": "Eliminar una copia de este modificador",
     "Scaled": "Escalado",
     "SearchAMod": "Buscar por nombre del modificador o descripción",
     "SearchAnExotic": "Buscar por nombre de exótico o descripción",
@@ -1035,6 +1037,8 @@
     "NoEventChallenges": "Has completado todos los desafíos del evento",
     "NoTrackedTriumph": "No tienes triunfos seguidos. Sigue tantos como quieras en DIM.",
     "PercentPrestige": "{{pct}}% hacia el reinicio",
+    "PointsUsed": "1 punto usado",
+    "PointsUsed_plural": "{{count}} puntos usados",
     "PowerBonusHeader": "+{{powerBonus}} Recompensas De Poder",
     "PowerBonusHeaderUndefined": "Otras Recompensas",
     "Progress": "Progreso",

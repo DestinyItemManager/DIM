@@ -488,6 +488,7 @@
     "Super": "Super"
   },
   "LB": {
+    "AddStack": "Ajouter un autre exemplaire de ce mod",
     "AdvancedOptions": "Options avancées",
     "ChooseAMod": "Choisissez vos mods",
     "ChooseAnExotic": "Choisissez votre exotique",
@@ -540,6 +541,7 @@
       "HelpFull": "Se concentre sur plus d'équipements, mais prend plus de temps.",
       "ProcessingMode": "Mode de processing"
     },
+    "RemoveStack": "Retirer un exemplaire de ce mod",
     "Scaled": "Échelonné",
     "SearchAMod": "Rechercher un nom ou une description de mod",
     "SearchAnExotic": "Rechercher un nom ou une description d'exotique",
@@ -636,7 +638,7 @@
     "DisabledDueToMaintenance": "L'optimiseur d'équipement est actuellement désactivé en raison d'une maintenance sur l'API Bungie.",
     "EquipItems": "Équiper",
     "ExcludeItem": "Exclure un objet",
-    "ExcludedItems": "Excluded Items",
+    "ExcludedItems": "Objets exclus",
     "ExistingLoadout": "Équipement existant",
     "Exotic": "Armure exotique",
     "ExoticSpecialCategory": "Spécial",
@@ -676,7 +678,7 @@
     "OptimizerExplanationSearch": "Utilisez la barre de recherche pour choisir quelles armures envisager. Si aucune armure ne correspond à votre recherche dans un emplacement, toutes les armures de cet emplacement seront envisagées.",
     "OptimizerExplanationStats": "Déplacez les stats les plus importantes vers le haut, et désactivez les statistiques pour lesquelles vous ne voulez pas optimiser.",
     "OptimizerSet": "Ensemble de l'optimiseur",
-    "PinnedItems": "Pinned Items",
+    "PinnedItems": "Objets épinglés",
     "ProcessingSets": "Recherche des ensembles aux paliers les plus élevés...",
     "SaveAs": "Enregistrer sous",
     "SpeedReport": "{{combos, number}} combinaisons générées en {{time}} secondes",
@@ -777,11 +779,11 @@
       "InvalidModsDesc": "1 mod ne peut pas être placé dans n'importe quelle pièce d'armure.",
       "InvalidModsDesc_plural": "{{count}} mods ne peuvent pas être placés dans n'importe quelle pièce d'armure.",
       "ModPlacement": "Placement des mods",
-      "StackableMod": "Stackable",
+      "StackableMod": "Cumulable",
       "UnassignedMods": "Mods non assignés",
       "UnassignedModsDesc": "1 mod n'a pas pu être placé en raison d'un manque d'énergie ou d'emplacement de mod. L'amélioration de l'énergie de l'armure sélectionnée ne résoudra pas le problème.",
       "UnassignedModsDesc_plural": "{{count}} mods n'ont pas pu être placés en raison d'un manque d'énergie ou d'emplacement de mod. L'amélioration de l'énergie de l'armure sélectionnée ne résoudra pas le problème.",
-      "UnstackableMod": "Unstackable",
+      "UnstackableMod": "Non cumulable",
       "UpgradeCosts": "Coûts d'amélioration",
       "UpgradeCostsDesc": "Certaines armures ont besoin d'une amélioration d'énergie pour pouvoir accepter les mods demandés. Au total, ces améliorations coûtent :"
     },
@@ -859,7 +861,7 @@
     "UnassignedModError": "Le mot n'a pas pu être équipé sur votre armure actuelle",
     "Undo": "Annuler",
     "Update": "Enregistrer les modifications",
-    "UpdateLoadout": "Update Loadout",
+    "UpdateLoadout": "Mettre à jour l'équipement",
     "VendorsCannotEquip": "Vous n'avez pas ces objets. Appuyez pour sélectionner un remplacement ou cliquez sur X pour retirer:"
   },
   "Manifest": {
@@ -1035,6 +1037,8 @@
     "NoEventChallenges": "Vous avez terminé tous les défis d'événement",
     "NoTrackedTriumph": "Vous n'avez aucun triomphe suivi. Suivez en autant que vous voulez sur DIM.",
     "PercentPrestige": "{{pct}}% du rang maximum",
+    "PointsUsed": "1 point utilisé",
+    "PointsUsed_plural": "{{count}} points utilisés",
     "PowerBonusHeader": "Récompenses +{{powerBonus}} puissance",
     "PowerBonusHeaderUndefined": "Autres récompenses",
     "Progress": "Progression",
@@ -1144,7 +1148,7 @@
     "SpacesSize_plural": "{{count}} espaces",
     "Theme": "Thème",
     "VaultGroupingNone": "Aucun",
-    "VaultWeaponGroupingStyle": "Separate groups on different lines"
+    "VaultWeaponGroupingStyle": "Séparer les groups sur plusieurs lignes"
   },
   "Sockets": {
     "ApplyPerks": "Appliquer les attributs",
@@ -1401,8 +1405,8 @@
     "Clear": "Effacer la liste de souhaits",
     "CopiedLine": "Élément de liste de souhaits copié dans le presse-papier",
     "CopyLine": "Copier les attributs sélectionnés en tant qu'élément de liste de souhaits",
-    "ExternalSource": "Add another wish list",
-    "ExternalSourcePlaceholder": "Paste wish list URL here",
+    "ExternalSource": "Ajouter une autre liste de souhaits",
+    "ExternalSourcePlaceholder": "Coller l'URL de la liste de souhaits ici",
     "Header": "Liste de souhaits",
     "Import": "Charger listes de souhaits",
     "ImportError": "Erreur lors du chargement de la liste de souhaits : {{error}}",
@@ -1412,9 +1416,9 @@
     "JustAnotherTeam": "Just Another Team",
     "LastUpdated": "Dernière mise à jour : {{lastUpdatedDate}} à {{lastUpdatedTime}}",
     "Num": "{{num, number}} objets dans votre liste de souhaits",
-    "NumRolls": "{{num, number}} rolls",
-    "SourceAlreadyAdded": "Wish List already added",
-    "UpdateExternalSource": "Add Wish List",
+    "NumRolls": "{{num, number}} jets",
+    "SourceAlreadyAdded": "Liste de souhaits déjà ajoutée",
+    "UpdateExternalSource": "Ajouter une liste de souhaits",
     "Voltron": "voltron (par défaut)",
     "WishListNotes": "Notes de la liste de souhaits :",
     "WorstRatedTip": "Cet attribut correspond exactement à une arme de votre liste d'indésirables.",

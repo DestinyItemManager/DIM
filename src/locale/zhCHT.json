@@ -488,6 +488,7 @@
     "Super": "超能"
   },
   "LB": {
+    "AddStack": "Add another copy of this mod",
     "AdvancedOptions": "高級選項",
     "ChooseAMod": "選擇你的模組",
     "ChooseAnExotic": "選擇你的異域裝備",
@@ -540,6 +541,7 @@
       "HelpFull": "查看更多裝備，但是需要更長時間。",
       "ProcessingMode": "處理模式"
     },
+    "RemoveStack": "Remove a copy of this mod",
     "Scaled": "縮放",
     "SearchAMod": "搜索模組或描述",
     "SearchAnExotic": "搜索異域裝備或描述",
@@ -781,7 +783,7 @@
       "UnassignedMods": "未分配的模組",
       "UnassignedModsDesc": "由於容量或插槽不足，1 個模組無法安裝。即使為所選護甲升級容量也是如此。",
       "UnassignedModsDesc_plural": "由於容量或插槽不足，{{count}} 個模組無法安裝。即使為所選護甲升級容量也是如此。",
-      "UnstackableMod": "Unstackable",
+      "UnstackableMod": "Not Stackable",
       "UpgradeCosts": "升級消耗",
       "UpgradeCostsDesc": "部分防具需要能量容量升級才能裝下所選模組。升級總共會花費："
     },
@@ -1035,6 +1037,8 @@
     "NoEventChallenges": "你已經完成了所有活動挑戰",
     "NoTrackedTriumph": "You have no tracked triumphs. Track as many as you like in DIM.",
     "PercentPrestige": "重置百分比{{pct}}%",
+    "PointsUsed": "1 point used",
+    "PointsUsed_plural": "{{count}} points used",
     "PowerBonusHeader": "+{{powerBonus}} 光等獎勵",
     "PowerBonusHeaderUndefined": "其他獎勵",
     "Progress": "進度",
