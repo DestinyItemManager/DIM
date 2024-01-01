@@ -1,5 +1,7 @@
 ## Next
 
+## 8.1.0 <span class="changelog-date">(2023-12-31)</span>
+
 * In the mod picker, we now show just "Stackable" or "Unstackable" instead of the full requirements for the mod (like its exact stackability or what raid it belongs to).
 * Several improvements to how the mod picker and subclass editor look and work, in hopes of making it easier to use.
 * Individual wish lists can be toggled on and off and the Just Another Team wishlist is available as a suggested option.
