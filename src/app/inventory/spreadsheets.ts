@@ -1,5 +1,4 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
-import { gaEvent } from 'app/google';
 import { t } from 'app/i18next-t';
 import { LoadoutsByItem, loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
 import { D1_StatHashes } from 'app/search/d1-known-values';
@@ -7,7 +6,7 @@ import { dimArmorStatHashByName } from 'app/search/search-filter-values';
 import { ThunkResult } from 'app/store/types';
 import { filterMap } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
-import { download } from 'app/utils/download';
+import { CsvRow, downloadCsv } from 'app/utils/csv';
 import {
   getItemKillTrackerInfo,
   getItemYear,
@@ -22,7 +21,6 @@ import { D2EventInfo } from 'data/d2/d2-event-info';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import D2MissingSources from 'data/d2/missing-source-info';
 import D2Sources from 'data/d2/source-info';
-import _ from 'lodash';
 import Papa from 'papaparse';
 import { setItemNote, setItemTagsBulk } from './actions';
 import { TagValue, tagConfig } from './dim-item-info';
@@ -30,6 +28,23 @@ import { D1GridNode, DimItem } from './item-types';
 import { getNotesSelector, getTagSelector, storesSelector } from './selectors';
 import { DimStore } from './store-types';
 import { getEvent, getSeason } from './store/season';
+
+/**
+ * We can import a CSV to import tags and notes,
+ * so the export should have them.
+ */
+type InventoryCsvRow = CsvRow & {
+  Notes: string | undefined;
+  Tag: string | undefined;
+  Hash: number;
+  Id: string;
+};
+
+type StringProperties<T> = { [P in keyof T]: string };
+/**
+ * Empty cells in the import will be empty strings, so everything will be a string.
+ */
+type InventoryImportRow = StringProperties<InventoryCsvRow>;
 
 function getClass(type: DestinyClass) {
   switch (type) {
@@ -72,7 +87,7 @@ export function generateCSVExportData(
   getTag: (item: DimItem) => TagValue | undefined,
   getNotes: (item: DimItem) => string | undefined,
   loadoutsByItem: LoadoutsByItem,
-) {
+): InventoryCsvRow[] {
   const nameMap: { [storeId: string]: string } = {};
   let allItems: DimItem[] = [];
   for (const store of stores) {
@@ -127,16 +142,8 @@ export function downloadCsvFiles(type: 'Weapons' | 'Armor' | 'Ghost'): ThunkResu
       return;
     }
     const data = generateCSVExportData(type, stores, getTag, getNotes, loadoutsForItem);
-    downloadCsv(`destiny${type}`, Papa.unparse(data));
+    downloadCsv(`destiny${type}`, data);
   };
-}
-
-interface CSVRow {
-  Loadouts: string;
-  Notes: string;
-  Tag: string;
-  Hash: string;
-  Id: string;
 }
 
 export function importTagsNotesFromCsv(files: File[]): ThunkResult<number | undefined> {
@@ -149,7 +156,7 @@ export function importTagsNotesFromCsv(files: File[]): ThunkResult<number | unde
     let total = 0;
 
     for (const file of files) {
-      const results = await new Promise<Papa.ParseResult<CSVRow>>((resolve, reject) =>
+      const results = await new Promise<Papa.ParseResult<InventoryImportRow>>((resolve, reject) =>
         Papa.parse(file, {
           header: true,
           complete: resolve,
@@ -215,15 +222,6 @@ function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-function downloadCsv(filename: string, csv: string) {
-  const filenameWithExt = `${filename}.csv`;
-  gaEvent('file_download', {
-    file_name: filenameWithExt,
-    file_extension: 'csv',
-  });
-  download(csv, filenameWithExt, 'text/csv');
-}
-
 function buildSocketNames(item: DimItem): string[] {
   if (!item.sockets) {
     return [];
@@ -267,34 +265,12 @@ function buildNodeNames(nodes: D1GridNode[]): string[] {
   });
 }
 
-function getMaxPerks(items: DimItem[]) {
-  // We need to always emit enough columns for all perks
-  return (
-    _.max(
-      items.map(
-        (item) =>
-          (isD1Item(item) && item.talentGrid
-            ? buildNodeNames(item.talentGrid.nodes)
-            : item.sockets
-              ? buildSocketNames(item)
-              : []
-          ).length,
-      ),
-    ) || 0
-  );
-}
-
-function addPerks(row: Record<string, unknown>, item: DimItem, maxPerks: number) {
-  const perks =
-    isD1Item(item) && item.talentGrid
-      ? buildNodeNames(item.talentGrid.nodes)
-      : item.sockets
-        ? buildSocketNames(item)
-        : [];
-
-  _.times(maxPerks, (index) => {
-    row[`Perks ${index}`] = perks[index];
-  });
+function getPerks(item: DimItem) {
+  return isD1Item(item) && item.talentGrid
+    ? buildNodeNames(item.talentGrid.nodes)
+    : item.sockets
+      ? buildSocketNames(item)
+      : [];
 }
 
 function formatLoadouts(item: DimItem, loadouts: LoadoutsByItem) {
@@ -308,11 +284,8 @@ function downloadGhost(
   getNotes: (item: DimItem) => string | undefined,
   loadouts: LoadoutsByItem,
 ) {
-  // We need to always emit enough columns for all perks
-  const maxPerks = getMaxPerks(items);
-
   const data = items.map((item) => {
-    const row = {
+    const row: InventoryCsvRow = {
       Name: item.name,
       Hash: item.hash,
       Id: `"${item.id}"`,
@@ -324,9 +297,8 @@ function downloadGhost(
       Equipped: item.equipped,
       Loadouts: formatLoadouts(item, loadouts),
       Notes: getNotes(item),
+      Perks: getPerks(item),
     };
-
-    addPerks(row, item, maxPerks);
 
     return row;
   });
@@ -358,18 +330,13 @@ function downloadArmor(
   getNotes: (item: DimItem) => string | undefined,
   loadouts: LoadoutsByItem,
 ) {
-  // We need to always emit enough columns for all perks
-  const maxPerks = getMaxPerks(items);
-
-  // In PapaParse, the keys of the first objects are used as columns. So if a
-  // key is omitted from the first object, it won't show up.
-  // TODO: Replace PapaParse with a simpler/smaller CSV generator
   const data = items.map((item) => {
-    const row: Record<string, unknown> = {
+    const row: InventoryCsvRow = {
       Name: item.name,
       Hash: item.hash,
       Id: `"${item.id}"`,
       Tag: getTag(item),
+      Notes: getNotes(item),
       Tier: item.tier,
       Type: item.typeName,
       Source: source(item),
@@ -447,9 +414,7 @@ function downloadArmor(
     }
 
     row.Loadouts = formatLoadouts(item, loadouts);
-    row.Notes = getNotes(item);
-
-    addPerks(row, item, maxPerks);
+    row.Perks = getPerks(item);
 
     return row;
   });
@@ -463,18 +428,13 @@ function downloadWeapons(
   getNotes: (item: DimItem) => string | undefined,
   loadouts: LoadoutsByItem,
 ) {
-  // We need to always emit enough columns for all perks
-  const maxPerks = getMaxPerks(items);
-
-  // In PapaParse, the keys of the first objects are used as columns. So if a
-  // key is omitted from the first object, it won't show up.
-  // TODO: Replace PapaParse with a simpler/smaller CSV generator
   const data = items.map((item) => {
-    const row: Record<string, unknown> = {
+    const row: InventoryCsvRow = {
       Name: item.name,
       Hash: item.hash,
       Id: `"${item.id}"`,
       Tag: getTag(item),
+      Notes: getNotes(item),
       Tier: item.tier,
       Type: item.typeName,
       Source: source(item),
@@ -642,9 +602,8 @@ function downloadWeapons(
     }
 
     row.Loadouts = formatLoadouts(item, loadouts);
-    row.Notes = getNotes(item);
 
-    addPerks(row, item, maxPerks);
+    row.Perks = getPerks(item);
 
     return row;
   });

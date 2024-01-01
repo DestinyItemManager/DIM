@@ -3,6 +3,8 @@ import useConfirm from 'app/dim-ui/useConfirm';
 import { t } from 'app/i18next-t';
 import { storesLoadedSelector } from 'app/inventory/selectors';
 import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
+import { downloadLoadoutsCsv } from 'app/loadout/spreadsheets';
+import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { errorMessage } from 'app/utils/errors';
@@ -13,6 +15,7 @@ import { AppIcon, spreadsheetIcon } from '../shell/icons';
 export default function Spreadsheets() {
   const dispatch = useThunkDispatch();
   const disabled = !useSelector(storesLoadedSelector);
+  const d2Defs = useD2Definitions();
 
   const [confirmDialog, confirm] = useConfirm();
   const importCsv: DropzoneOptions['onDrop'] = async (acceptedFiles) => {
@@ -38,44 +41,65 @@ export default function Spreadsheets() {
     <section id="spreadsheets">
       {confirmDialog}
       <h2>{t('Settings.Data')}</h2>
-      <div className="setting horizontal">
-        <label htmlFor="spreadsheetLinks" title={t('Settings.ExportSSHelp')}>
-          {t('Settings.ExportSS')}
-        </label>
+      <div className="setting">
+        <div className="horizontal">
+          <label htmlFor="spreadsheetLinks" title={t('Settings.ExportSSHelp')}>
+            {t('Settings.ExportSS')}
+          </label>
+          <div>
+            <button
+              type="button"
+              className="dim-button"
+              onClick={() => downloadCsv('Weapons')}
+              disabled={disabled}
+            >
+              <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Weapons')}</span>
+            </button>{' '}
+            <button
+              type="button"
+              className="dim-button"
+              onClick={() => downloadCsv('Armor')}
+              disabled={disabled}
+            >
+              <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Armor')}</span>
+            </button>{' '}
+            <button
+              type="button"
+              className="dim-button"
+              onClick={() => downloadCsv('Ghost')}
+              disabled={disabled}
+            >
+              <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Ghost')}</span>
+            </button>
+          </div>
+        </div>
         <div>
-          <button
-            type="button"
-            className="dim-button"
-            onClick={() => downloadCsv('Weapons')}
-            disabled={disabled}
-          >
-            <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Weapons')}</span>
-          </button>{' '}
-          <button
-            type="button"
-            className="dim-button"
-            onClick={() => downloadCsv('Armor')}
-            disabled={disabled}
-          >
-            <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Armor')}</span>
-          </button>{' '}
-          <button
-            type="button"
-            className="dim-button"
-            onClick={() => downloadCsv('Ghost')}
-            disabled={disabled}
-          >
-            <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Ghost')}</span>
-          </button>
+          <FileUpload
+            title={t('Settings.CsvImport')}
+            accept={{ 'text/csv': ['.csv'] }}
+            onDrop={importCsv}
+          />
         </div>
       </div>
-      <div className="setting">
-        <FileUpload
-          title={t('Settings.CsvImport')}
-          accept={{ 'text/csv': ['.csv'] }}
-          onDrop={importCsv}
-        />
-      </div>
+      {d2Defs && (
+        <div className="setting">
+          <div className="horizontal">
+            <label htmlFor="spreadsheetLinks" title={t('Settings.ExportLoadoutSSHelp')}>
+              {t('Settings.ExportLoadoutSS')}
+            </label>
+            <div>
+              <button
+                type="button"
+                className="dim-button"
+                onClick={() => dispatch(downloadLoadoutsCsv())}
+                disabled={disabled}
+              >
+                <AppIcon icon={spreadsheetIcon} /> <span>{t('Loadouts.Loadouts')}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
