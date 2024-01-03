@@ -41,13 +41,24 @@
 
   // Don't scale up items even if users have item tiles set to large
   --item-size: 50px;
+
+  &.compact {
+    grid-template-areas:
+      'icon title'
+      'icon details';
+    row-gap: 4px;
+  }
+
+  > :global(.item) {
+    grid-area: icon;
+  }
 }
 
 .details {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  grid-column-end: span 3;
+  grid-area: details;
 }
 
 .selected {
@@ -64,8 +75,5 @@
   color: var(--theme-text);
   font-weight: bold;
   font-size: 16px;
-  grid-column-end: span 2;
-  &.withCorner {
-    grid-column-end: span 1;
-  }
+  grid-area: title;
 }
