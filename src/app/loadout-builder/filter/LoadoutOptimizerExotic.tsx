@@ -1,4 +1,3 @@
-import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
@@ -153,13 +152,7 @@ function ChosenExoticOption({
 
   return (
     <div className={styles.infoCard} onClick={onClick}>
-      {lockedExoticHash === undefined ? (
-        icon
-      ) : (
-        <ClosableContainer showCloseIconOnHover onClose={handleRemove}>
-          {icon}
-        </ClosableContainer>
-      )}
+      {icon}
       <div className={styles.details}>
         <div className={styles.title}>{title}</div>
         {description}
