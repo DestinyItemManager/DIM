@@ -2,7 +2,7 @@
 
 .header {
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
   text-transform: uppercase;
   padding-top: 8px;
   padding-bottom: 8px;
@@ -39,10 +39,8 @@
     outline: none;
   }
 
-  // On mobile, don't scale up items
-  @include phone-portrait {
-    --item-size: 50px;
-  }
+  // Don't scale up items even if users have item tiles set to large
+  --item-size: 50px;
 }
 
 .details {
