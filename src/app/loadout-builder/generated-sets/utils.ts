@@ -1,14 +1,14 @@
 import { chainComparator, Comparator, compareBy } from 'app/utils/comparators';
 import _ from 'lodash';
-import { ArmorSet, ArmorStatHashes, ArmorStats, ResolvedStatConstraint } from '../types';
+import { ArmorSet, ArmorStatHashes, ArmorStats, DesiredStatRange } from '../types';
 import { statTier } from '../utils';
 
-function getComparatorsForMatchedSetSorting(statConstraints: ResolvedStatConstraint[]) {
+function getComparatorsForMatchedSetSorting(desiredStatRanges: DesiredStatRange[]) {
   const comparators: Comparator<ArmorSet>[] = [
-    compareBy((s) => -sumEnabledStats(s.stats, statConstraints)),
+    compareBy((s) => -sumEnabledStats(s.stats, desiredStatRanges)),
   ];
 
-  for (const constraint of statConstraints) {
+  for (const constraint of desiredStatRanges) {
     comparators.push(
       compareBy(
         (s) =>
@@ -26,9 +26,9 @@ function getComparatorsForMatchedSetSorting(statConstraints: ResolvedStatConstra
  */
 export function sortGeneratedSets(
   sets: ArmorSet[],
-  statConstraints: ResolvedStatConstraint[],
+  desiredStatRanges: DesiredStatRange[],
 ): ArmorSet[] {
-  return sets.sort(chainComparator(...getComparatorsForMatchedSetSorting(statConstraints)));
+  return sets.sort(chainComparator(...getComparatorsForMatchedSetSorting(desiredStatRanges)));
 }
 
 /**
@@ -39,8 +39,8 @@ export function calculateTotalTier(stats: ArmorStats) {
   return _.sum(Object.values(stats).map(statTier));
 }
 
-export function sumEnabledStats(stats: ArmorStats, statConstraints: ResolvedStatConstraint[]) {
-  return _.sumBy(statConstraints, (constraint) =>
+export function sumEnabledStats(stats: ArmorStats, desiredStatRanges: DesiredStatRange[]) {
+  return _.sumBy(desiredStatRanges, (constraint) =>
     Math.min(statTier(stats[constraint.statHash as ArmorStatHashes]), constraint.maxTier),
   );
 }

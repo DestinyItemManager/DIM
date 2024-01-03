@@ -244,10 +244,12 @@ export default memo(function LoadoutBuilder({
     [classType, defs, includeRuntimeStatBenefits, modsToAssign, subclass],
   );
 
-  const { mergedConstraints, mergedConstraintsImplyStrictUpgrade } = useMemo(
-    () => mergeStrictUpgradeStatConstraints(strictUpgradesStatConstraints, resolvedStatConstraints),
-    [resolvedStatConstraints, strictUpgradesStatConstraints],
-  );
+  const { mergedDesiredStatRanges: desiredStatRanges, mergedConstraintsImplyStrictUpgrade } =
+    useMemo(
+      () =>
+        mergeStrictUpgradeStatConstraints(strictUpgradesStatConstraints, resolvedStatConstraints),
+      [resolvedStatConstraints, strictUpgradesStatConstraints],
+    );
 
   // Run the actual loadout generation process in a web worker
   const { result, processing } = useProcess({
@@ -256,7 +258,7 @@ export default memo(function LoadoutBuilder({
     lockedModMap,
     modStatChanges,
     armorEnergyRules,
-    resolvedStatConstraints: mergedConstraints,
+    desiredStatRanges,
     anyExotic: lockedExoticHash === LOCKED_EXOTIC_ANY_EXOTIC,
     autoStatMods,
     strictUpgrades: Boolean(strictUpgradesStatConstraints && !mergedConstraintsImplyStrictUpgrade),
@@ -265,8 +267,8 @@ export default memo(function LoadoutBuilder({
   const resultSets = result?.sets;
 
   const sortedSets = useMemo(
-    () => resultSets && sortGeneratedSets(resultSets, mergedConstraints),
-    [mergedConstraints, resultSets],
+    () => resultSets && sortGeneratedSets(resultSets, desiredStatRanges),
+    [desiredStatRanges, resultSets],
   );
 
   useEffect(() => hideItemPicker(), [hideItemPicker, selectedStore.classType]);
@@ -454,7 +456,7 @@ export default memo(function LoadoutBuilder({
             pinnedItems={pinnedItems}
             selectedStore={selectedStore}
             lbDispatch={lbDispatch}
-            resolvedStatConstraints={mergedConstraints}
+            desiredStatRanges={desiredStatRanges}
             modStatChanges={result.modStatChanges}
             loadouts={loadouts}
             armorEnergyRules={result.armorEnergyRules}

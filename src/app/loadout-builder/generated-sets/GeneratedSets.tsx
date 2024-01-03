@@ -13,9 +13,9 @@ import {
   ArmorEnergyRules,
   ArmorSet,
   ArmorStatHashes,
+  DesiredStatRange,
   ModStatChanges,
   PinnedItems,
-  ResolvedStatConstraint,
 } from '../types';
 import GeneratedSet, { containerClass } from './GeneratedSet';
 
@@ -28,7 +28,7 @@ export default function GeneratedSets({
   selectedStore,
   sets,
   equippedHashes,
-  resolvedStatConstraints,
+  desiredStatRanges,
   modStatChanges,
   loadouts,
   lbDispatch,
@@ -42,7 +42,7 @@ export default function GeneratedSets({
   equippedHashes: Set<number>;
   lockedMods: PluggableInventoryItemDefinition[];
   pinnedItems: PinnedItems;
-  resolvedStatConstraints: ResolvedStatConstraint[];
+  desiredStatRanges: DesiredStatRange[];
   modStatChanges: ModStatChanges;
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
@@ -72,7 +72,7 @@ export default function GeneratedSets({
           lockedMods={lockedMods}
           pinnedItems={pinnedItems}
           lbDispatch={lbDispatch}
-          resolvedStatConstraints={resolvedStatConstraints}
+          desiredStatRanges={desiredStatRanges}
           modStatChanges={modStatChanges}
           loadouts={loadouts}
           halfTierMods={halfTierMods}

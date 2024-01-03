@@ -9,9 +9,9 @@ import { ProcessStatistics } from '../process-worker/types';
 import {
   ArmorEnergyRules,
   ArmorSet,
+  DesiredStatRange,
   ItemsByBucket,
   ModStatChanges,
-  ResolvedStatConstraint,
   StatRanges,
 } from '../types';
 import { getAutoMods } from './mappers';
@@ -50,7 +50,7 @@ export function useProcess({
   lockedModMap,
   modStatChanges,
   armorEnergyRules,
-  resolvedStatConstraints,
+  desiredStatRanges,
   anyExotic,
   autoStatMods,
   strictUpgrades,
@@ -60,7 +60,7 @@ export function useProcess({
   lockedModMap: ModMap;
   modStatChanges: ModStatChanges;
   armorEnergyRules: ArmorEnergyRules;
-  resolvedStatConstraints: ResolvedStatConstraint[];
+  desiredStatRanges: DesiredStatRange[];
   anyExotic: boolean;
   autoStatMods: boolean;
   strictUpgrades: boolean;
@@ -98,7 +98,7 @@ export function useProcess({
       lockedModMap,
       modStatChanges,
       armorEnergyRules,
-      resolvedStatConstraints,
+      desiredStatRanges,
       anyExotic,
       autoStatMods,
       getUserItemTag,
@@ -139,7 +139,7 @@ export function useProcess({
   }, [
     filteredItems,
     selectedStore.id,
-    resolvedStatConstraints,
+    desiredStatRanges,
     anyExotic,
     armorEnergyRules,
     autoStatMods,

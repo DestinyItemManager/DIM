@@ -8,7 +8,7 @@ interface CssExports {
   'iconStat': string;
   'ignored': string;
   'label': string;
-  'locked': string;
+  'maxRestricted': string;
   'maxed': string;
   'name': string;
   'row': string;
