@@ -43,9 +43,7 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
   // For vendor armor that reports stats (thus often randomized),
   // show the total points as a means to indicate whether it's worth picking up
   const totalArmorStat =
-    item.bucket?.inArmor &&
-    item.vendor &&
-    item.stats?.find((stat) => stat.statHash === TOTAL_STAT_HASH);
+    item.bucket?.inArmor && item.stats?.find((stat) => stat.statHash === TOTAL_STAT_HASH);
 
   const hideBadge = Boolean(
     item.location.hash === BucketHashes.Subclass ||
@@ -62,7 +60,6 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
   const badgeContent =
     (isBounty && `${Math.floor(100 * item.percentComplete)}%`) ||
     (isStackable && item.amount.toString()) ||
-    (totalArmorStat && totalArmorStat.value.toString()) ||
     (isGeneric && item.primaryStat?.value.toString()) ||
     (item.classified && <ClassifiedNotes item={item} />);
 
@@ -95,8 +92,8 @@ export default function BadgeInfo({ item, isCapped, wishlistRoll }: Props) {
         </div>
       )}
       {summaryIcon}
-      {item.energy ? (
-        <span className={styles.energyCapacity}>{item.energy.energyCapacity}</span>
+      {totalArmorStat && totalArmorStat.base > 0 ? (
+        <span className={styles.energyCapacity}>{totalArmorStat.base.toString()}</span>
       ) : (
         item.element &&
         !(item.bucket.inWeapons && item.element.enumValue === DamageType.Kinetic) && (
