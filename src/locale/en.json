@@ -1272,6 +1272,7 @@
     },
     "Connected": "Connected",
     "Enable": "Stream Deck Plugin Enabled",
+    "FinePrint": "Enable the connection with the DIM Stream Deck plugin. This plugin is a separate project that is neither written by nor supported by the DIM team.",
     "Install": "Install plugin",
     "NotConnected": "Not Connected",
     "SelectLoadout": "Send to Stream Deck",
