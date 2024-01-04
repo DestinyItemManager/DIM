@@ -1,5 +1,9 @@
 @use '../variables.scss' as *;
 
+.progress {
+  --item-size: 50px;
+}
+
 .menuLinks {
   // Give some space between the character selector and the links
   margin-top: 16px;
