@@ -303,6 +303,7 @@ export default memo(function LoadoutBuilder({
 
   const menuContent = (
     <>
+      <UndoRedoControls canRedo={canRedo} canUndo={canUndo} lbDispatch={lbDispatch} />
       {isPhonePortrait && (
         <div className={styles.guide}>
           <ol>
@@ -310,7 +311,6 @@ export default memo(function LoadoutBuilder({
           </ol>
         </div>
       )}
-      <UndoRedoControls canRedo={canRedo} canUndo={canUndo} lbDispatch={lbDispatch} />
       <StatConstraintEditor
         resolvedStatConstraints={resolvedStatConstraints}
         statRangesFiltered={result?.statRangesFiltered}
