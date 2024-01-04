@@ -39,6 +39,7 @@ export function createThemeObserver(): StoreObserver<{ theme: string; isPhonePor
 export function createTilesPerCharColumnObserver(): StoreObserver<number> {
   return {
     id: 'tiles-per-char-column-observer',
+    runInitially: true,
     getObserved: (rs) =>
       isPhonePortraitSelector(rs)
         ? settingsSelector(rs).charColMobile

@@ -12,6 +12,10 @@ export interface StoreObserver<T> {
    */
   equals?: (a: unknown, b: unknown) => boolean;
   /**
+   * Whether the side effect should be run initially before any state changes are observed.
+   */
+  runInitially?: boolean;
+  /**
    * Function to create "something" which will be used to determine if the side effect should run.
    * Object.is is used for equality by default, so if creating new objects or arrays, provide a
    * suitable equality function.
@@ -19,8 +23,9 @@ export interface StoreObserver<T> {
   getObserved: (rootState: RootState) => T;
   /**
    * Runs the side effect providing both the previous and current version of the derrived state.
+   * When the `runInitially` flag is true, previous will be undefined on first run.
    */
-  sideEffect: (states: { previous: T; current: T }) => void;
+  sideEffect: (states: { previous: T | undefined; current: T }) => void;
 }
 
 /**
@@ -58,7 +63,16 @@ export function observerMiddleware<D extends Dispatch>(
     }
 
     if (isObserveAction(action)) {
-      observers.set(action.storeObserver.id, action.storeObserver);
+      const { storeObserver } = action;
+      observers.set(storeObserver.id, storeObserver);
+
+      if (storeObserver.runInitially) {
+        storeObserver.sideEffect({
+          previous: undefined,
+          current: storeObserver.getObserved(api.getState()),
+        });
+      }
+
       return;
     }
 
