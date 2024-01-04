@@ -847,7 +847,7 @@
       "Summary": "Share this loadout containing:",
       "Title": "Share \"{{name}}\""
     },
-    "ShareLoadout": "Share Loadout",
+    "ShareLoadout": "Share",
     "ShowModPlacement": "Show Mod Placement",
     "Snapshot": "Save As In-Game Loadout",
     "SocketOverrides": "Changing subclass options",

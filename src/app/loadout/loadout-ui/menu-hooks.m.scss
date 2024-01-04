@@ -1,5 +1,11 @@
+@use '../../variables.scss' as *;
+
 .analyzingText {
   margin-bottom: 8px;
+
+  @include phone-portrait {
+    margin: 0 10px;
+  }
 
   :global(.app-icon) {
     margin: 0 4px 0 4px;
