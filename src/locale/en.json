@@ -1225,7 +1225,6 @@
     "DataIsLocal": "Tag and notes data is local only",
     "DeleteAllData": "Delete ALL Data from DIM Sync Servers",
     "DeleteAllDataConfirm": "Are you sure you want to delete ALL your data, for all accounts, from DIM Sync? You can't undo this.",
-    "DeleteAllDataLabel": "Wipe DIM Sync Data",
     "Details": {
       "IndexedDBStorage": "Local storage will save your information only on this browser. Clearing your browsing data will delete this information."
     },
@@ -1272,11 +1271,9 @@
       "Yes": "Yes"
     },
     "Connected": "Connected",
-    "Enable": "Stream Deck Plugin",
-    "FinePrint": "Enable the connection with the DIM Stream Deck plugin. This plugin is a separate project that is neither written by nor supported by the DIM team.",
+    "Enable": "Stream Deck Plugin Enabled",
     "Install": "Install plugin",
     "NotConnected": "Not Connected",
-    "OldExtension": "Make sure to uninstall the old Stream Deck Chrome extension. It is no longer needed and will cause odd behavior in DIM.",
     "SelectLoadout": "Send to Stream Deck",
     "Selection": {
       "Item": "Choose an item from the inventory",

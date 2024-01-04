@@ -9,6 +9,7 @@ import { errorMessage } from 'app/utils/errors';
 import { DropzoneOptions } from 'react-dropzone';
 import { useSelector } from 'react-redux';
 import { AppIcon, spreadsheetIcon } from '../shell/icons';
+import { settingClass } from './SettingsPage';
 
 export default function Spreadsheets() {
   const dispatch = useThunkDispatch();
@@ -38,7 +39,7 @@ export default function Spreadsheets() {
     <section id="spreadsheets">
       {confirmDialog}
       <h2>{t('Settings.Data')}</h2>
-      <div className="setting horizontal">
+      <div className={settingClass}>
         <label htmlFor="spreadsheetLinks" title={t('Settings.ExportSSHelp')}>
           {t('Settings.ExportSS')}
         </label>
@@ -68,8 +69,6 @@ export default function Spreadsheets() {
             <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Ghost')}</span>
           </button>
         </div>
-      </div>
-      <div className="setting">
         <FileUpload
           title={t('Settings.CsvImport')}
           accept={{ 'text/csv': ['.csv'] }}

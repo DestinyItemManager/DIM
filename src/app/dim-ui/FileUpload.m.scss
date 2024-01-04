@@ -1,9 +1,13 @@
 .fileInput {
+  composes: flexColumn from './common.m.scss';
+  align-items: center;
   text-align: center;
   padding: 8px;
   border: 1px dashed #999;
   width: 100%;
   box-sizing: border-box;
+  gap: 4px;
+  cursor: pointer;
 }
 
 .instructions {

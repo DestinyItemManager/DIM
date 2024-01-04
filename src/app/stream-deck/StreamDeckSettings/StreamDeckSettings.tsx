@@ -1,9 +1,11 @@
-import Switch from 'app/dim-ui/Switch';
 import { t } from 'app/i18next-t';
-import { AppIcon, faArrowCircleDown } from 'app/shell/icons';
+import { AppIcon, banIcon, faArrowCircleDown } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 
 import ExternalLink from 'app/dim-ui/ExternalLink';
+import Checkbox from 'app/settings/Checkbox';
+import { fineprintClass, settingClass } from 'app/settings/SettingsPage';
+import { Settings } from 'app/settings/initial-settings';
 import { streamDeckConnectedSelector } from 'app/stream-deck/selectors';
 import {
   lazyLoadStreamDeck,
@@ -12,7 +14,6 @@ import {
   stopStreamDeckConnection,
 } from 'app/stream-deck/stream-deck';
 import { setStreamDeckEnabled, streamDeckEnabled } from 'app/stream-deck/util/local-storage';
-import clsx from 'clsx';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './StreamDeckSettings.m.scss';
@@ -46,29 +47,29 @@ export default function StreamDeckSettings() {
   return (
     <section id="stream-deck">
       <h2>Elgato Stream Deck</h2>
-      <div className="setting">
-        <div className="setting horizontal">
-          <label htmlFor="streamDeckEnabled">{t('StreamDeck.Enable')}</label>
-          <Switch name="streamDeckEnabled" checked={enabled} onChange={onStreamDeckChange} />
-        </div>
-        <div className="fineprint">
-          {t('StreamDeck.FinePrint')} <b>{t('StreamDeck.OldExtension')}</b>
-        </div>
+      <div className={settingClass}>
+        <Checkbox
+          name={'streamDeckEnabled' as keyof Settings}
+          label={t('StreamDeck.Enable')}
+          value={enabled}
+          onChange={onStreamDeckChange}
+        />
+        <div className={fineprintClass}>{t('StreamDeck.FinePrint')}</div>
         {connected ? (
           <div className={styles.connected}>{t('StreamDeck.Connected')}</div>
         ) : (
           <div>
             <ExternalLink href="https://apps.elgato.com/plugins/com.dim.streamdeck">
-              <button type="button" className={clsx('dim-button', styles.downloadPlugin)}>
+              <button type="button" className="dim-button">
                 <AppIcon icon={faArrowCircleDown} /> {t('StreamDeck.Install')}
               </button>
             </ExternalLink>
             <span className={styles.notConnected}>{t('StreamDeck.NotConnected')}</span>
           </div>
         )}
-        <div className={styles.resetButton}>
+        <div>
           <button type="button" className="dim-button" onClick={onStreamDeckAuthorizationReset}>
-            {t('StreamDeck.Authorization.Reset')}
+            <AppIcon icon={banIcon} /> {t('StreamDeck.Authorization.Reset')}
           </button>
         </div>
       </div>

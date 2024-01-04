@@ -1,4 +1,118 @@
+@use '../variables.scss' as *;
+
+.settings {
+  font-size: 14px;
+  max-width: 500px;
+  padding: 0 10px;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+  }
+
+  h1 {
+    margin: 0 0 16px 0;
+    font-size: 20px;
+  }
+
+  h2 {
+    text-transform: uppercase;
+    font-size: 16px;
+    font-weight: normal;
+    letter-spacing: 1px;
+    margin: 0;
+  }
+
+  section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  label {
+    flex: 1;
+    display: block;
+    text-wrap: balance;
+  }
+
+  input[type='checkbox'] {
+    font-size: 16px;
+  }
+}
+
+.newItem {
+  position: static;
+  display: inline-block;
+  transform: scale(1.5);
+  margin-right: 8px;
+}
+
+.setting {
+  composes: flexColumn from '../dim-ui/common.m.scss';
+  gap: 4px;
+  padding: 8px;
+  background-color: var(--theme-search-bg);
+  > .setting {
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+  }
+
+  > button {
+    align-self: flex-start;
+  }
+}
+
+.fineprint {
+  font-size: 0.85em;
+  color: var(--theme-text-secondary);
+  text-wrap: pretty;
+}
+
+.horizontal {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  justify-content: space-between;
+  gap: 1em;
+}
+
+.itemSize {
+  composes: horizontal;
+  gap: 1em;
+
+  label {
+    flex: 0;
+    white-space: nowrap;
+    margin-right: 0;
+  }
+
+  input {
+    flex: 1;
+  }
+}
+
+.radioOptions {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  label {
+    vertical-align: text-top;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.25em;
+  }
+  input {
+    margin: 0 4px 0 0;
+  }
+}
+
 .autoTagTable {
+  width: min-content;
   td:first-child {
     display: flex;
     gap: 4px;
