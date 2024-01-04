@@ -59,6 +59,7 @@
   flex-direction: column;
   gap: 4px;
   grid-area: details;
+  text-wrap: pretty;
 }
 
 .selected {
@@ -76,4 +77,5 @@
   font-weight: bold;
   font-size: 16px;
   grid-area: title;
+  text-wrap: balance;
 }
