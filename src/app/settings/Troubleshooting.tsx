@@ -11,7 +11,7 @@ import { errorMessage } from 'app/utils/errors';
 import { DestinyProfileResponse, ServerResponse } from 'bungie-api-ts/destiny2';
 import { DropzoneOptions } from 'react-dropzone';
 import { useSelector } from 'react-redux';
-import './settings.scss';
+import './SettingsPage.m.scss';
 
 /**
  * Allow users to export their Destiny profile and send them to a dev for
@@ -50,21 +50,19 @@ export function TroubleshootingSettings() {
   };
 
   return (
-    <section id="troubleshooting">
-      <div className="setting">
-        <button type="button" className="dim-button" onClick={saveProfileResponse}>
-          {t('Settings.ExportProfile')}
-        </button>
+    <>
+      <button type="button" className="dim-button" onClick={saveProfileResponse}>
+        {t('Settings.ExportProfile')}
+      </button>
 
-        {($DIM_FLAVOR === 'dev' || window.enableMockProfile) && (
-          <FileUpload
-            title="Upload Profile Response JSON"
-            accept={{ 'application/json': ['.json'] }}
-            onDrop={importMockProfile}
-          />
-        )}
-      </div>
-    </section>
+      {($DIM_FLAVOR === 'dev' || window.enableMockProfile) && (
+        <FileUpload
+          title="Upload Profile Response JSON"
+          accept={{ 'application/json': ['.json'] }}
+          onDrop={importMockProfile}
+        />
+      )}
+    </>
   );
 }
 

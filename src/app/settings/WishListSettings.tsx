@@ -1,10 +1,9 @@
 import { settingSelector } from 'app/dim-api/selectors';
 import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
 import { PressTip } from 'app/dim-ui/PressTip';
-import Switch from 'app/dim-ui/Switch';
 import { I18nKey, t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
-import { AppIcon, deleteIcon } from 'app/shell/icons';
+import { AppIcon, banIcon, deleteIcon, plusIcon } from 'app/shell/icons';
 import { wishListGuideLink } from 'app/shell/links';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { errorMessage } from 'app/utils/errors';
@@ -18,7 +17,10 @@ import FileUpload from '../dim-ui/FileUpload';
 import HelpLink from '../dim-ui/HelpLink';
 import { clearWishLists } from '../wishlists/actions';
 import { wishListsLastFetchedSelector, wishListsSelector } from '../wishlists/selectors';
+import Checkbox from './Checkbox';
+import { fineprintClass, horizontalClass, settingClass } from './SettingsPage';
 import styles from './WishListSettings.m.scss';
+import { Settings } from './initial-settings';
 
 export default function WishListSettings() {
   const dispatch = useThunkDispatch();
@@ -100,24 +102,23 @@ export default function WishListSettings() {
   return (
     <section id="wishlist">
       <h2>
-        {t('WishListRoll.Header')}
-        <HelpLink helpLink={wishListGuideLink} />
+        {t('WishListRoll.Header')} <HelpLink helpLink={wishListGuideLink} />
       </h2>
 
       {numWishListRolls > 0 && (
-        <div className="setting">
-          <div className="horizontal">
+        <div className={settingClass}>
+          <div className={horizontalClass}>
             <label>
               {t('WishListRoll.Num', {
                 num: numWishListRolls,
               })}
             </label>
             <button type="button" className="dim-button" onClick={clearWishListEvent}>
-              {t('WishListRoll.Clear')}
+              <AppIcon icon={banIcon} /> {t('WishListRoll.Clear')}
             </button>
           </div>
           {wishListLastUpdated && (
-            <div className="fineprint">
+            <div className={fineprintClass}>
               {t('WishListRoll.LastUpdated', {
                 lastUpdatedDate: wishListLastUpdated.toLocaleDateString(),
                 lastUpdatedTime: wishListLastUpdated.toLocaleTimeString(),
@@ -173,7 +174,7 @@ export default function WishListSettings() {
         onAddWishlist={(url) => changeUrl(url, true)}
       />
 
-      <div className="setting">
+      <div className={settingClass}>
         <FileUpload onDrop={loadWishList} title={t('WishListRoll.Import')} />
       </div>
     </section>
@@ -196,14 +197,11 @@ function BuiltinWishlist({
   onChange: (checked: boolean) => void;
 }) {
   return (
-    <div className="setting">
-      <div className="setting horizontal">
-        <label htmlFor={name}>{t(name)}</label>
-        <Switch name={name} checked={checked} onChange={onChange} />
-      </div>
+    <div className={settingClass}>
+      <Checkbox label={t(name)} name={name as keyof Settings} value={checked} onChange={onChange} />
       {rollsCount !== undefined && t('WishListRoll.NumRolls', { num: rollsCount })}
       {(title || description) && (
-        <div className="fineprint">
+        <div className={fineprintClass}>
           <b>{title}</b>
           <br />
           {description}
@@ -227,16 +225,14 @@ function UrlWishlist({
   onRemove: () => void;
 }) {
   return (
-    <div className="setting">
-      <div className="setting horizontal">
-        <label>{title || url}</label>
-        <ConfirmButton key="delete" danger onClick={onRemove}>
-          <AppIcon icon={deleteIcon} title={t('Loadouts.Delete')} />
-        </ConfirmButton>
-      </div>
-      {!title && <div className="fineprint">{url}</div>}
+    <div className={settingClass}>
+      <label>{title || url}</label>
+      <ConfirmButton key="delete" danger onClick={onRemove}>
+        <AppIcon icon={deleteIcon} title={t('Loadouts.Delete')} />
+      </ConfirmButton>
+      {!title && <div className={fineprintClass}>{url}</div>}
       {rollsCount !== undefined && t('WishListRoll.NumRolls', { num: rollsCount })}
-      {description && <div className="fineprint">{description}</div>}
+      {description && <div className={fineprintClass}>{description}</div>}
     </div>
   );
 }
@@ -252,12 +248,12 @@ function NewUrlWishlist({
   const canAddError = addWishlistDisabled(newWishlistSource);
   const disabled = canAddError !== false;
   return (
-    <div className="setting">
+    <div className={settingClass}>
       <div>{t('WishListRoll.ExternalSource')}</div>
       <div>
         <input
           type="text"
-          className="wish-list-text"
+          className={styles.text}
           value={newWishlistSource}
           onChange={(e) => setNewWishlistSource(e.target.value)}
           placeholder={t('WishListRoll.ExternalSourcePlaceholder')}
@@ -265,16 +261,17 @@ function NewUrlWishlist({
       </div>
       <div className={styles.tooltipDiv}>
         <PressTip tooltip={canAddError !== undefined ? canAddError : undefined}>
-          <input
+          <button
             type="button"
             className="dim-button"
             disabled={disabled}
-            value={t('WishListRoll.UpdateExternalSource')}
             onClick={() => {
               onAddWishlist(newWishlistSource);
               setNewWishlistSource('');
             }}
-          />
+          >
+            <AppIcon icon={plusIcon} /> {t('WishListRoll.UpdateExternalSource')}
+          </button>
         </PressTip>
       </div>
     </div>
