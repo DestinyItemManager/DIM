@@ -488,6 +488,7 @@
     "Super": "超能"
   },
   "LB": {
+    "AddStack": "追加此模组",
     "AdvancedOptions": "高级选项",
     "ChooseAMod": "选择你的模组",
     "ChooseAnExotic": "选择你的异域装备",
@@ -540,6 +541,7 @@
       "HelpFull": "查看更多装备，但是需要更长时间。",
       "ProcessingMode": "处理模式"
     },
+    "RemoveStack": "递减此模组",
     "Scaled": "缩放",
     "SearchAMod": "搜索模组名称或描述",
     "SearchAnExotic": "搜索异域装备名称或描述",
@@ -736,7 +738,7 @@
     "FindAnother": "查找另一个 {{name}}",
     "FromEquipped": "当前装备",
     "Generated": "T{{tier}} 配装",
-    "HashtagTip": "提示：在配装名称或备注中使用的#标签会显示在这里。(标签不支持中文)",
+    "HashtagTip": "提示：在配装名称或备注中使用的#标签会显示在这里。",
     "Import": {
       "BadURL": "配装分享链接无效。",
       "Error": "获取配装失败：",
@@ -781,7 +783,7 @@
       "UnassignedMods": "未分配的模组",
       "UnassignedModsDesc": "由于能量容量或模组插槽不足，一个模组无法安装。即便为所选护甲升级能量也无法修正此问题。",
       "UnassignedModsDesc_plural": "由于能量容量或模组插槽不足，{{count}} 个模组无法安装。即便为所选护甲升级能量也是如此。",
-      "UnstackableMod": "不可叠加",
+      "UnstackableMod": "不可堆叠",
       "UpgradeCosts": "升级消耗成本",
       "UpgradeCostsDesc": "有些护甲需要能量容量升级才能装下所选的模组。升级总共会花费："
     },
@@ -790,7 +792,7 @@
     "NoSpace": "你的保险库和其他角色均已满。",
     "NoneMatch": "没有与过滤器匹配的配装。",
     "NotStarted": "正在等待其他操作完成或物品栏刷新完毕",
-    "NotesPlaceholder": "为此配装添加备注，或使用 #标签 进行分类（标签不支持中文）",
+    "NotesPlaceholder": "为此配装添加备注，或使用 #标签 进行分类",
     "NotificationTitle": "配装:{{name}}",
     "OnWrongCharacterAdvice": "点此查找当前角色的最高光等物品。",
     "OnWrongCharacterWarning": "当前角色光等最高的护甲在其他角色上。要使强力装备和巅峰装备掉落时的光等达到最高，这些护甲必须存储在当前角色上或是保险库中。",
@@ -1035,6 +1037,8 @@
     "NoEventChallenges": "你已经完成了所有活动挑战",
     "NoTrackedTriumph": "你还没有追踪称号进度，您可以在 DIM 中追踪任意数量的称号。",
     "PercentPrestige": "重置百分比{{pct}}%",
+    "PointsUsed": "已用 1 点",
+    "PointsUsed_plural": "已用 {{count}} 点",
     "PowerBonusHeader": "+{{powerBonus}} 光等奖励",
     "PowerBonusHeaderUndefined": "其他奖励",
     "Progress": "进度",

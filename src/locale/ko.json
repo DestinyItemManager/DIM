@@ -488,6 +488,7 @@
     "Super": "궁극기"
   },
   "LB": {
+    "AddStack": "동일한 개조 부품 추가",
     "AdvancedOptions": "고급 옵션",
     "ChooseAMod": "개조 부품 선택",
     "ChooseAnExotic": "경이 선택",
@@ -540,6 +541,7 @@
       "HelpFull": "더 많은 장비들을 보지만, 더 오래걸림",
       "ProcessingMode": "처리 모드"
     },
+    "RemoveStack": "동일한 개조 부품 제거",
     "Scaled": "확대 됨",
     "SearchAMod": "개조 부품 이름이나 설명 검색",
     "SearchAnExotic": "경이 이름이나 설명 검색",
@@ -781,7 +783,7 @@
       "UnassignedMods": "할당되지 않은 개조 부품",
       "UnassignedModsDesc": "1개의 개조 부품이 에너지 수용량이 부족하거나 개조 부품 슬롯이 부족하여 장착할 수 없습니다. 선택된 방어구의 에너지를 업그레이드하여도 해결되지 않습니다.",
       "UnassignedModsDesc_plural": "{{count}}개의 개조 부품이 에너지 수용량이 부족하거나 개조 부품 슬롯이 부족하여 장착할 수 없습니다. 선택된 방어구의 에너지를 업그레이드하여도 해결되지 않습니다.",
-      "UnstackableMod": "중첩 불가능",
+      "UnstackableMod": "중첩 불가",
       "UpgradeCosts": "업그레이드 비용",
       "UpgradeCostsDesc": "요청한 개조 부품을 장착하기 위해서 일부 방어구의 에너지 수용량을 업그레이드해야 합니다. 총 업그레이드 비용:"
     },
@@ -1035,6 +1037,8 @@
     "NoEventChallenges": "모든 이벤트 도전 완료",
     "NoTrackedTriumph": "추적 중인 업적이 없습니다. DIM에서 원하는 만큼 추적하세요.",
     "PercentPrestige": "초기화까지 {{pct}}%",
+    "PointsUsed": "1 포인트 사용됨",
+    "PointsUsed_plural": "{{count}} 포인트 사용됨",
     "PowerBonusHeader": "+{{powerBonus}} 전투력 보상",
     "PowerBonusHeaderUndefined": "다른 보상",
     "Progress": "진척도",

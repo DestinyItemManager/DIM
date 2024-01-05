@@ -554,6 +554,8 @@
     "SelectModsCountActivityMods": "{{selected}}/{{maxSelectable}} Activity Mods",
     "SelectExotic": "Select exotic",
     "SelectMods": "Select Mods",
+    "AddStack": "Add another copy of this mod",
+    "RemoveStack": "Remove a copy of this mod",
     "SelectSubclassOptions": "Customize subclass",
     "ShowAllConfigs": "Show all configurations",
     "ShowConfigs": "Show configurations",
@@ -723,7 +725,7 @@
       "UnassignedModsDesc_plural": "{{count}} mods did not fit due to insufficient energy capacity or mod slots. Energy upgrades to the selected armor will not fix the issue.",
       "UpgradeCosts": "Upgrade Costs",
       "UpgradeCostsDesc": "Some armor needs energy capacity upgrades to fit the requested mods. In total, these upgrades cost:",
-      "UnstackableMod": "Unstackable",
+      "UnstackableMod": "Not Stackable",
       "StackableMod": "Stackable"
     },
     "MissingItemsWarning": "Some of the items in this loadout are no longer in your inventory.",
@@ -1043,6 +1045,8 @@
     "Items": "Quest Items",
     "Milestones": "Milestones & Challenges",
     "PercentPrestige": "{{pct}}% to reset",
+    "PointsUsed": "1 point used",
+    "PointsUsed_plural": "{{count}} points used",
     "PowerBonusHeader": "+{{powerBonus}} Power Rewards",
     "PowerBonusHeaderUndefined": "Other Rewards",
     "Progress": "Progress",
@@ -1288,7 +1292,7 @@
     "Subclass": "{{count}}x Subclass Option",
     "Others": "{{count}}x Ghost Projection"
   },
-  "StreamDeck": {
+ "StreamDeck": {
     "Tooltip": {
       "Title": "DIM Stream Deck Plugin",
       "Version": "Version:",
@@ -1301,7 +1305,6 @@
     },
     "Enable": "Stream Deck Plugin",
     "FinePrint": "Enable the connection with the DIM Stream Deck plugin. This plugin is a separate project that is neither written by nor supported by the DIM team.",
-    "OldExtension": "Make sure to uninstall the old Stream Deck Chrome extension. It is no longer needed and will cause odd behavior in DIM.",
     "Install": "Install plugin",
     "Authorize": "Connect application",
     "MissingAuthorization": "You must authorize the Stream Deck application to connect to DIM. Go to settings and click \"Connect application\"."

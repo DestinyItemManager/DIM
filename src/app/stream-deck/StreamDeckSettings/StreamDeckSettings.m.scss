@@ -1,15 +1,10 @@
-@use '../../variables.scss' as *;
-
-.downloadPlugin {
-  margin-top: 8px;
-}
-
-.authentication {
-  margin-top: 8px;
-}
-
-.authentication button {
+.button {
   display: flex;
   gap: 8px;
   align-items: center;
+  text-decoration: none;
+}
+
+.link {
+  text-decoration: none;
 }

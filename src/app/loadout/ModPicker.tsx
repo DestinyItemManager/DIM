@@ -29,7 +29,7 @@ import {
 } from './known-values';
 import { getModExclusionGroup, isInsertableArmor2Mod, sortModGroups } from './mod-utils';
 import PlugDrawer from './plug-drawer/PlugDrawer';
-import { PlugSet } from './plug-drawer/types';
+import { PlugSelectionType, PlugSet } from './plug-drawer/types';
 
 /** Raid, combat and legacy mods can have up to 5 selected. */
 const MAX_SLOT_INDEPENDENT_MODS = 5;
@@ -143,7 +143,7 @@ function useUnlockedPlugSets(
           plugSetsByHash[plugSetHash] = {
             plugSetHash,
             maxSelectable,
-            selectionType: 'multi',
+            selectionType: PlugSelectionType.Multi,
             plugs,
             selected: [],
             overrideSelectedAndMax: isActivityMod

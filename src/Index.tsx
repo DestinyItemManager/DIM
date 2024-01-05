@@ -5,7 +5,12 @@ import './app/main.scss';
 import './app/dim-ui/Sheet.m.scss';
 import './app/utils/sentry';
 import { saveAccountsToIndexedDB } from 'app/accounts/observers';
-import updateCSSVariables from 'app/css-variables';
+import {
+  createItemSizeObserver,
+  createThemeObserver,
+  createTilesPerCharColumnObserver,
+  setCssVariableEventListeners,
+} from 'app/css-variables';
 import { loadDimApiData } from 'app/dim-api/actions';
 import { saveItemInfosOnStateChange } from 'app/inventory/observers';
 import store from 'app/store/store';
@@ -21,8 +26,9 @@ import { initGoogleAnalytics } from './app/google';
 import { initi18n } from './app/i18n';
 import registerServiceWorker from './app/register-service-worker';
 import { safariTouchFix } from './app/safari-touch-fix';
-import { watchLanguageChanges } from './app/settings/observers';
 import { saveWishListToIndexedDB } from './app/wishlists/observers';
+import { observe } from 'app/store/observerMiddleware';
+import { createLanguageObserver } from 'app/settings/observers';
 infoLog(
   'app',
   `DIM v${$DIM_VERSION} (${$DIM_FLAVOR}) - Please report any errors to https://www.github.com/DestinyItemManager/DIM/issues`,
@@ -61,7 +67,12 @@ const i18nPromise = initi18n();
     saveWishListToIndexedDB();
   }
   saveAccountsToIndexedDB();
-  updateCSSVariables();
+  store.dispatch(observe(createItemSizeObserver()));
+  if ($featureFlags.themePicker) {
+    store.dispatch(observe(createThemeObserver()));
+  }
+  store.dispatch(observe(createTilesPerCharColumnObserver()));
+  setCssVariableEventListeners();
 
   store.dispatch(loadDimApiData());
 
@@ -75,8 +86,9 @@ const i18nPromise = initi18n();
   // Make sure localization is loaded
   await i18nPromise;
 
-  // Settings depends on i18n
-  watchLanguageChanges();
+  // Update the language in both i18n and local storage when the user
+  // changes the language setting.
+  store.dispatch(observe(createLanguageObserver()));
 
   root.render(<Root />);
 })();

@@ -488,6 +488,7 @@
     "Super": "Super"
   },
   "LB": {
+    "AddStack": "Aggiungi un'altra copia di questa modifica",
     "AdvancedOptions": "Opzioni Avanzate",
     "ChooseAMod": "Scegli le tue Modifiche",
     "ChooseAnExotic": "Scegli la tua esotica",
@@ -540,6 +541,7 @@
       "HelpFull": "Controlla tra più elementi del tuo equipaggiamento, ma impiega più tempo.",
       "ProcessingMode": "Procedura"
     },
+    "RemoveStack": "Rimuovi una copia di questa modifica",
     "Scaled": "In Scala",
     "SearchAMod": "Cerca una Modifica per nome o descrizione",
     "SearchAnExotic": "Cerca una esotica per nome o descrizione",
@@ -1035,6 +1037,8 @@
     "NoEventChallenges": "Hai completato tutte le sfide dell'evento",
     "NoTrackedTriumph": "Non stai seguendo alcun Trionfo. Segui tutti quelli che vuoi su DIM.",
     "PercentPrestige": "{{pct}}% al reset",
+    "PointsUsed": "1 punto utilizzato",
+    "PointsUsed_plural": "{{count}} punti utilizzati",
     "PowerBonusHeader": "Ricompense +{{powerBonus}} Potere",
     "PowerBonusHeaderUndefined": "Altre Ricompense",
     "Progress": "Avanzamento",

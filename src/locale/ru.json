@@ -488,6 +488,7 @@
     "Super": "Суперспособность"
   },
   "LB": {
+    "AddStack": "Add another copy of this mod",
     "AdvancedOptions": "Расширенные настройки",
     "ChooseAMod": "Выберите свои моды",
     "ChooseAnExotic": "Выберите вашу экзоту",
@@ -540,6 +541,7 @@
       "HelpFull": "Проверяет больше вещей, но занимает больше времени.",
       "ProcessingMode": "Режим обработки"
     },
+    "RemoveStack": "Remove a copy of this mod",
     "Scaled": "Масштабированный",
     "SearchAMod": "Поиск по имени модификатора или описанию",
     "SearchAnExotic": "Поиск по имени экзота или описанию",
@@ -781,7 +783,7 @@
       "UnassignedMods": "Неназначенные модификаторы",
       "UnassignedModsDesc": "1 модификатор не вошел из-за нехватки энергии брони или слотов под модификаторы. Увеличение энергии для выбранной брони не устранит проблему.",
       "UnassignedModsDesc_plural": "{{count}} модификаторов не вошло из-за нехватки энергии брони или слотов под модификаторы. Увеличение энергии для выбранной брони не устранит проблему.",
-      "UnstackableMod": "Unstackable",
+      "UnstackableMod": "Not Stackable",
       "UpgradeCosts": "Стоимость улучшений",
       "UpgradeCostsDesc": "Некоторой броне нужны улучшения энергоёмкости, чтобы вместить запрошенные модификаторы. Итого, эти улучшения стоят:"
     },
@@ -1035,6 +1037,8 @@
     "NoEventChallenges": "Вы выполнили все испытания мероприятия",
     "NoTrackedTriumph": "Нет Отслеживаемых Триумфов. Отслеживайте сколько угодно в DIM.",
     "PercentPrestige": "{{pct}}% обнуления",
+    "PointsUsed": "1 point used",
+    "PointsUsed_plural": "{{count}} points used",
     "PowerBonusHeader": "+{{powerBonus}} Сила Наград",
     "PowerBonusHeaderUndefined": "Другие награды",
     "Progress": "Чек-Лист",

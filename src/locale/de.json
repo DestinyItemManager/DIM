@@ -488,6 +488,7 @@
     "Super": "Super"
   },
   "LB": {
+    "AddStack": "Add another copy of this mod",
     "AdvancedOptions": "Erweiterte Optionen",
     "ChooseAMod": "Wähle deine Mods",
     "ChooseAnExotic": "Wähle deine exotische Rüstung",
@@ -540,6 +541,7 @@
       "HelpFull": "Bezieht mehr Gegenstände ein, braucht dafür länger.",
       "ProcessingMode": "Berechnung"
     },
+    "RemoveStack": "Remove a copy of this mod",
     "Scaled": "Skaliert",
     "SearchAMod": "Suche Mod-Name oder -Beschreibung",
     "SearchAnExotic": "Suche Namen oder Beschreibung von Exotischen",
@@ -781,7 +783,7 @@
       "UnassignedMods": "Nicht zugewiesene Mods",
       "UnassignedModsDesc": "1 Mod passte nicht aufgrund unzureichender Energiekapazität oder Mod-Slots. Energieverbesserungen der ausgewählten Rüstung werden das Problem nicht beheben.",
       "UnassignedModsDesc_plural": "{{count}} Mods passen nicht aufgrund unzureichender Energiekapazität oder Mod-Slots. Energieverbesserungen der ausgewählten Rüstung werden das Problem nicht beheben.",
-      "UnstackableMod": "Unstapelbar",
+      "UnstackableMod": "Not Stackable",
       "UpgradeCosts": "Verbesserungskosten",
       "UpgradeCostsDesc": "Einige Rüstungen benötigen Energiekapazitätsverbesserungen, um die gewählten Mods verwenden zu können. Insgesamt kosten diese Verbesserungen:"
     },
@@ -1035,6 +1037,8 @@
     "NoEventChallenges": "Du hast alle Event-Herausforderungen abgeschlossen",
     "NoTrackedTriumph": "Du verfolgst keine Triumphe. Verfolge so viele wie du möchtest in DIM.",
     "PercentPrestige": "{{pct}}% vom max. Rang",
+    "PointsUsed": "1 point used",
+    "PointsUsed_plural": "{{count}} points used",
     "PowerBonusHeader": "+{{powerBonus}} Power-Belohnungen",
     "PowerBonusHeaderUndefined": "Andere Belohnungen",
     "Progress": "Fortschritt",
