@@ -31,6 +31,7 @@ export function SetStats({
   className,
   existingLoadoutName,
   equippedHashes,
+  autoStatMods,
 }: {
   stats: ArmorStats;
   getStatsBreakdown: () => ModStatChanges;
@@ -40,6 +41,7 @@ export function SetStats({
   className?: string;
   existingLoadoutName?: string;
   equippedHashes: Set<number>;
+  autoStatMods: boolean;
 }) {
   const defs = useD2Definitions()!;
   const totalTier = calculateTotalTier(stats);
@@ -76,6 +78,7 @@ export function SetStats({
               stat={statDef}
               value={value}
               effectiveValue={Math.min(value, c.maxTier * 10)}
+              showHalfStat={!autoStatMods}
             />
           </PressTip>
         );
@@ -100,11 +103,13 @@ function Stat({
   isBoosted,
   value,
   effectiveValue,
+  showHalfStat,
 }: {
   stat: DestinyStatDefinition;
   isActive: boolean;
   isBoosted: boolean;
   value: number;
+  showHalfStat: boolean;
   effectiveValue: number;
 }) {
   let shownValue: number;
@@ -120,7 +125,7 @@ function Stat({
     shownValue = value;
   }
   const showIgnoredExcess = ignoredExcess !== undefined && ignoredExcess >= 5;
-  const isHalfTier = isActive && remEuclid(shownValue, 10) >= 5;
+  const isHalfTier = showHalfStat && isActive && remEuclid(value, 10) >= 5;
   return (
     <span
       className={clsx(styles.statSegment, {

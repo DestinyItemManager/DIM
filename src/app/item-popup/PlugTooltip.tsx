@@ -7,7 +7,9 @@ import { t } from 'app/i18next-t';
 import { getValueStyle } from 'app/inventory/store/objectives';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { getDamageTypeForSubclassPlug } from 'app/inventory/subclass';
+import PlugStackableIcon from 'app/loadout/plug-drawer/PlugStackableIcon';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { isArmor2Mod } from 'app/utils/item-utils';
 import { getDimPlugStats, getPlugDefStats, usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { isEnhancedPerk, isModCostVisible } from 'app/utils/socket-utils';
 import WishListPerkThumb from 'app/wishlists/WishListPerkThumb';
@@ -138,6 +140,9 @@ function PlugTooltip({
       DestinyUnlockValueUIStyle.Hidden,
   );
 
+  const armorMod = isArmor2Mod(def);
+  hideRequirements ||= armorMod;
+
   const bungieDescription =
     plugDescriptions.perks.length > 0 &&
     plugDescriptions.perks.map((perkDesc) => (
@@ -177,7 +182,7 @@ function PlugTooltip({
           )}
         </div>
       ),
-      [def.itemTypeDisplayName, energyCost],
+      [def.itemTypeDisplayName, energyCost?.energyCost],
     ),
     className: clsx(styles.tooltip, {
       [styles.tooltipExotic]: def.inventory?.tierType === TierType.Exotic,
@@ -205,6 +210,13 @@ function PlugTooltip({
           <Tooltip.Section>
             {bungieDescription}
             {renderedStats}
+            {armorMod && (
+              <PlugStackableIcon
+                descriptions={plugDescriptions}
+                hash={def.hash}
+                className={styles.stackable}
+              />
+            )}
           </Tooltip.Section>
           {clarityDescriptionSection}
         </>
@@ -212,7 +224,16 @@ function PlugTooltip({
         (clarityDescriptionSection || renderedStats) && (
           <>
             {clarityDescriptionSection}
-            <Tooltip.Section>{renderedStats}</Tooltip.Section>
+            <Tooltip.Section>
+              {renderedStats}
+              {armorMod && (
+                <PlugStackableIcon
+                  descriptions={plugDescriptions}
+                  hash={def.hash}
+                  className={styles.stackable}
+                />
+              )}
+            </Tooltip.Section>
           </>
         )
       )}

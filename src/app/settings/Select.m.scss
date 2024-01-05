@@ -1,0 +1,7 @@
+.select {
+  composes: horizontal from './SettingsPage.m.scss';
+
+  > select {
+    max-width: 60%;
+  }
+}

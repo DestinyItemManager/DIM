@@ -488,6 +488,7 @@
     "Super": "Super"
   },
   "LB": {
+    "AddStack": "Add another copy of this mod",
     "AdvancedOptions": "Advanced Options",
     "ChooseAMod": "Choose your mods",
     "ChooseAnExotic": "Choose your exotic",
@@ -540,6 +541,7 @@
       "HelpFull": "Looks at more gear, but takes longer.",
       "ProcessingMode": "Processing mode"
     },
+    "RemoveStack": "Remove a copy of this mod",
     "Scaled": "Scaled",
     "SearchAMod": "Search for mod name or description",
     "SearchAnExotic": "Search for exotic name or description",
@@ -631,12 +633,12 @@
     "ChooseAlternateTitle": "Choose another item",
     "CompareLoadout": "Compare Loadout",
     "ConfirmOverwrite": "Are you sure you want to replace the armor in the loadout \"{{name}}\" with this new set of armor?",
-    "CreateLoadout": "Save Loadout",
     "DecreaseStatPriority": "Decrease stat priority",
     "DisabledByAutoStatMods": "Stat mods are being chosen automatically by Loadout Optimizer.",
     "DisabledDueToMaintenance": "The Loadout Optimizer is currently disabled due to Bungie API maintenance.",
     "EquipItems": "Equip",
     "ExcludeItem": "Exclude Item",
+    "ExcludedItems": "Excluded Items",
     "ExistingLoadout": "Existing Loadout",
     "Exotic": "Exotic Armor",
     "ExoticSpecialCategory": "Special",
@@ -644,7 +646,6 @@
     "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
     "IncreaseStatPriority": "Increase stat priority",
     "Legendary": "Legendary",
-    "LockEquipped": "Pin equipped",
     "LockItem": "Pin item",
     "MissingClass": "Build is for: {{className}}",
     "MissingClassDescription": "The build you're trying to view is for a character class you don't have.",
@@ -677,6 +678,7 @@
     "OptimizerExplanationSearch": "Use the search bar to narrow down which armor to consider. If no armor matches the search in a slot, all armor in that slot will be considered.",
     "OptimizerExplanationStats": "Drag the most important stats to the top, and disable stats you don't want to optimize for.",
     "OptimizerSet": "Optimizer Set",
+    "PinnedItems": "Pinned Items",
     "ProcessingSets": "Finding highest tier sets...",
     "SaveAs": "Save as",
     "SpeedReport": "Generated {{combos, number}} combinations in {{time}} seconds",
@@ -778,9 +780,11 @@
       "InvalidModsDesc": "1 mod cannot fit into any armor piece.",
       "InvalidModsDesc_plural": "{{count}} mods cannot fit into any armor piece.",
       "ModPlacement": "Mod Placement",
+      "StackableMod": "Stackable",
       "UnassignedMods": "Unassigned Mods",
       "UnassignedModsDesc": "1 mod did not fit due to insufficient energy capacity or mod slots. Energy upgrades to the selected armor will not fix the issue.",
       "UnassignedModsDesc_plural": "{{count}} mods did not fit due to insufficient energy capacity or mod slots. Energy upgrades to the selected armor will not fix the issue.",
+      "UnstackableMod": "Not Stackable",
       "UpgradeCosts": "Upgrade Costs",
       "UpgradeCostsDesc": "Some armor needs energy capacity upgrades to fit the requested mods. In total, these upgrades cost:"
     },
@@ -858,6 +862,7 @@
     "UnassignedModError": "Mod didn't fit on your current armor",
     "Undo": "Undo",
     "Update": "Save Changes",
+    "UpdateLoadout": "Update Loadout",
     "VendorsCannotEquip": "You don't have these items. Tap to pick a replacement or click the X to remove:"
   },
   "Manifest": {
@@ -1033,6 +1038,8 @@
     "NoEventChallenges": "You have completed all event challenges",
     "NoTrackedTriumph": "You have no tracked triumphs. Track as many as you like in DIM.",
     "PercentPrestige": "{{pct}}% to reset",
+    "PointsUsed": "1 point used",
+    "PointsUsed_plural": "{{count}} points used",
     "PowerBonusHeader": "+{{powerBonus}} Power Rewards",
     "PowerBonusHeaderUndefined": "Other Rewards",
     "Progress": "Progress",
@@ -1141,7 +1148,8 @@
     "SpacesSize": "{{count}} space",
     "SpacesSize_plural": "{{count}} spaces",
     "Theme": "Theme",
-    "VaultGroupingNone": "None"
+    "VaultGroupingNone": "None",
+    "VaultWeaponGroupingStyle": "Separate groups on different lines"
   },
   "Sockets": {
     "ApplyPerks": "Apply Perks",
@@ -1218,7 +1226,6 @@
     "DataIsLocal": "Tag and notes data is local only",
     "DeleteAllData": "Delete ALL Data from DIM Sync Servers",
     "DeleteAllDataConfirm": "Are you sure you want to delete ALL your data, for all accounts, from DIM Sync? You can't undo this.",
-    "DeleteAllDataLabel": "Wipe DIM Sync Data",
     "Details": {
       "IndexedDBStorage": "Local storage will save your information only on this browser. Clearing your browsing data will delete this information."
     },
@@ -1265,11 +1272,10 @@
       "Yes": "Yes"
     },
     "Connected": "Connected",
-    "Enable": "Stream Deck Plugin",
+    "Enable": "Stream Deck Plugin Enabled",
     "FinePrint": "Enable the connection with the DIM Stream Deck plugin. This plugin is a separate project that is neither written by nor supported by the DIM team.",
     "Install": "Install plugin",
     "NotConnected": "Not Connected",
-    "OldExtension": "Make sure to uninstall the old Stream Deck Chrome extension. It is no longer needed and will cause odd behavior in DIM.",
     "SelectLoadout": "Send to Stream Deck",
     "Selection": {
       "Item": "Choose an item from the inventory",
@@ -1395,25 +1401,24 @@
   "WishListRoll": {
     "BestRatedTip": "This perk exactly matches a weapon roll on your wishlist.",
     "BestRatedTip_plural": "These perks exactly match a weapon roll on your wishlist.",
-    "ChoosyVoltron": "choosy_voltron",
-    "ChoosyVoltronDescription": "choosy_voltron is an auto-updated collection of PvE and PvP wish list rolls from Mercules904 and pandapaxxy, along with some trash list rolls.",
     "Clear": "Clear Wish List",
     "CopiedLine": "Wish List roll copied to clipboard",
     "CopyLine": "Copy Selected Perks as Wish List Roll",
-    "ExternalSource": "Optionally, supply the URL(s) for a wish list (pipe | separated)",
+    "ExternalSource": "Add another wish list",
+    "ExternalSourcePlaceholder": "Paste wish list URL here",
     "Header": "Wish List",
     "Import": "Load Wish List Rolls",
     "ImportError": "Error loading wish list: {{error}}",
     "ImportFailed": "No wish list information found.",
     "ImportNoFile": "No file selected.",
     "InvalidExternalSource": "Please enter a valid URL for your external wish list source. The URL must start with one of the following:",
+    "JustAnotherTeam": "Just Another Team",
     "LastUpdated": "Last updated: {{lastUpdatedDate}} at {{lastUpdatedTime}}",
     "Num": "{{num, number}} rolls in your wish list",
-    "PreMadeFiles": "Use A Pre-Made Wish List",
-    "Untitled": "Untitled Wish List",
-    "UpdateExternalSource": "Update Wish List Source",
+    "NumRolls": "{{num, number}} rolls",
+    "SourceAlreadyAdded": "Wish List already added",
+    "UpdateExternalSource": "Add Wish List",
     "Voltron": "voltron (default)",
-    "VoltronDescription": "voltron is an auto-updated collection of PvE and PvP wish list rolls from across the Destiny community. We ship with this by default.",
     "WishListNotes": "Wish List Notes:",
     "WorstRatedTip": "This perk exactly matches a weapon roll on your trashlist.",
     "WorstRatedTip_plural": "These perks exactly match a weapon roll on your trashlist."

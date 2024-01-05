@@ -363,12 +363,14 @@ export default memo(function LoadoutBuilder({
         pinnedItems={pinnedItems}
         searchFilter={searchFilter}
         lbDispatch={lbDispatch}
+        className={styles.subclassSection}
       />
       <LoadoutOptimizerExcludedItems
         chooseItem={chooseItem}
         excludedItems={excludedItems}
         searchFilter={searchFilter}
         lbDispatch={lbDispatch}
+        className={styles.subclassSection}
       />
       {isPhonePortrait && (
         <div className={styles.guide}>

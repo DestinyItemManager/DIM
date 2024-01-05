@@ -2,9 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'connected': string;
-  'downloadPlugin': string;
   'notConnected': string;
-  'resetButton': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

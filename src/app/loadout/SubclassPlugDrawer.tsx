@@ -4,7 +4,7 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import PlugDrawer from 'app/loadout/plug-drawer/PlugDrawer';
-import { PlugSet } from 'app/loadout/plug-drawer/types';
+import { PlugSelectionType, PlugSet } from 'app/loadout/plug-drawer/types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { uniqBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
@@ -158,7 +158,9 @@ function getPlugsForSubclass(
             plugSetHash: firstSocket.plugSet.hash,
             maxSelectable: isFragment ? getFragmentCapacity : socketGroup.length,
             defaultPlug,
-            selectionType: isAbilityLikeSocket ? 'single' : 'unique',
+            selectionType: isAbilityLikeSocket
+              ? PlugSelectionType.Single
+              : PlugSelectionType.Unique,
           };
 
           // In theory, subclass plugs are present in the profile response with
@@ -214,7 +216,7 @@ function getPlugsForSubclass(
 
   // If plug sets are for abilities we populate the default plug as selected.
   for (const plugSet of plugSets) {
-    if (plugSet.selectionType === 'single' && plugSet.selected.length === 0) {
+    if (plugSet.selectionType === PlugSelectionType.Single && plugSet.selected.length === 0) {
       plugSet.selected.push(plugSet.defaultPlug);
     }
   }
