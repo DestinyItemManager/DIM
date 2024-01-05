@@ -1,0 +1,4 @@
+.buttons {
+  composes: flexWrap from '../dim-ui/common.m.scss';
+  gap: 4px;
+}

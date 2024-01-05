@@ -277,7 +277,7 @@ function CustomStatView({
   setEditing: React.Dispatch<React.SetStateAction<number>>;
 }) {
   return (
-    <div className={clsx(styles.customStatView, styles.identifyingInfo)}>
+    <div className={styles.customStatView}>
       <button
         type="button"
         className="dim-button"

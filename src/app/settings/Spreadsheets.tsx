@@ -10,6 +10,7 @@ import { DropzoneOptions } from 'react-dropzone';
 import { useSelector } from 'react-redux';
 import { AppIcon, spreadsheetIcon } from '../shell/icons';
 import { settingClass } from './SettingsPage';
+import styles from './Spreadsheets.m.scss';
 
 export default function Spreadsheets() {
   const dispatch = useThunkDispatch();
@@ -43,7 +44,7 @@ export default function Spreadsheets() {
         <label htmlFor="spreadsheetLinks" title={t('Settings.ExportSSHelp')}>
           {t('Settings.ExportSS')}
         </label>
-        <div>
+        <div className={styles.buttons}>
           <button
             type="button"
             className="dim-button"

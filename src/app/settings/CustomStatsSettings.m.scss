@@ -72,8 +72,9 @@
 }
 
 .identifyingInfo {
-  composes: flexRow from '../dim-ui/common.m.scss';
+  composes: flexWrap from '../dim-ui/common.m.scss';
   align-items: center;
+  justify-content: flex-end;
   gap: 8px;
 
   img {
@@ -86,6 +87,7 @@
 
 .label {
   flex-grow: 1;
+  text-wrap: balance;
 }
 
 .classIcon {
@@ -116,8 +118,9 @@
 
 // all info for a custom stat, without the editing controls
 .customStatView {
-  composes: flexWrap from '../dim-ui/common.m.scss';
+  composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
+  gap: 8px;
 }
 
 @keyframes pulse-border {
