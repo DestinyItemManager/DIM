@@ -4,7 +4,8 @@
   margin-bottom: 8px;
 
   @include phone-portrait {
-    margin: 0 10px;
+    margin-left: 10px;
+    margin-right: 10px;
   }
 
   :global(.app-icon) {
