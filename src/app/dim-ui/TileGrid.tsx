@@ -36,6 +36,7 @@ export function TileGridTile({
   selected,
   disabled,
   onClick,
+  compact,
 }: {
   className?: string;
   children: React.ReactNode;
@@ -45,12 +46,14 @@ export function TileGridTile({
   selected?: boolean;
   disabled?: boolean;
   onClick: React.MouseEventHandler<HTMLElement>;
+  compact?: boolean;
 }) {
   return (
     <div
       className={clsx(className, styles.tile, {
         [styles.selected]: selected,
         [styles.disabled]: disabled,
+        [styles.compact]: compact,
       })}
       onClick={disabled ? undefined : onClick}
       role="button"
@@ -60,7 +63,7 @@ export function TileGridTile({
     >
       <>
         {icon}
-        <div className={clsx(styles.title, { [styles.withCorner]: corner })}>{title}</div>
+        <div className={styles.title}>{title}</div>
         {corner}
         <div className={styles.details}>{children}</div>
       </>

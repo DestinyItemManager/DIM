@@ -2,7 +2,7 @@
 
 .header {
   font-weight: 600;
-  font-size: 14px;
+  font-size: 16px;
   text-transform: uppercase;
   padding-top: 8px;
   padding-bottom: 8px;
@@ -39,9 +39,18 @@
     outline: none;
   }
 
-  // On mobile, don't scale up items
-  @include phone-portrait {
-    --item-size: 50px;
+  // Don't scale up items even if users have item tiles set to large
+  --item-size: 50px;
+
+  &.compact {
+    grid-template-areas:
+      'icon title'
+      'icon details';
+    row-gap: 4px;
+  }
+
+  > :global(.item) {
+    grid-area: icon;
   }
 }
 
@@ -49,7 +58,8 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  grid-column-end: span 3;
+  grid-area: details;
+  text-wrap: pretty;
 }
 
 .selected {
@@ -66,8 +76,6 @@
   color: var(--theme-text);
   font-weight: bold;
   font-size: 16px;
-  grid-column-end: span 2;
-  &.withCorner {
-    grid-column-end: span 1;
-  }
+  grid-area: title;
+  text-wrap: balance;
 }
