@@ -1037,8 +1037,8 @@
     "NoEventChallenges": "Du hast alle Event-Herausforderungen abgeschlossen",
     "NoTrackedTriumph": "Du verfolgst keine Triumphe. Verfolge so viele wie du möchtest in DIM.",
     "PercentPrestige": "{{pct}}% vom max. Rang",
-    "PointsUsed": "1 point used",
-    "PointsUsed_plural": "{{count}} points used",
+    "PointsUsed": "1 Punkt verwendet",
+    "PointsUsed_plural": "{{count}} Punkte verwendet",
     "PowerBonusHeader": "+{{powerBonus}} Power-Belohnungen",
     "PowerBonusHeaderUndefined": "Andere Belohnungen",
     "Progress": "Fortschritt",
@@ -1225,7 +1225,6 @@
     "DataIsLocal": "Markierungen und Notizen sind nur lokal gespeichert",
     "DeleteAllData": "ALLE Daten von DIM Sync-Servern löschen",
     "DeleteAllDataConfirm": "Bist du sicher, dass du ALLE deine Daten für alle Konten von DIM Sync löschen möchtest? Du kannst dies nicht rückgängig machen.",
-    "DeleteAllDataLabel": "DIM Sync-Daten löschen",
     "Details": {
       "IndexedDBStorage": "Lokaler Speicher, speichert deine Daten nur in diesem Browser. Beim Löschen deiner Browserdaten werden diese Informationen gelöscht."
     },
@@ -1272,11 +1271,10 @@
       "Yes": "Ja"
     },
     "Connected": "Verbunden",
-    "Enable": "Stream Deck Plugin",
+    "Enable": "Stream Deck Plugin aktiviert",
     "FinePrint": "Aktiviere die Verbindung mit dem DIM Stream Deck Plugin. Dieses Plugin ist ein separates Projekt, das weder vom DIM-Team geschrieben noch unterstützt wird.",
     "Install": "Plugin installieren",
     "NotConnected": "Nicht verbunden",
-    "OldExtension": "Stelle sicher, dass du die alte Stream Deck Chrome-Erweiterung deinstallierst. Sie wird nicht mehr benötigt und wird merkwürdiges Verhalten in DIM verursachen.",
     "SelectLoadout": "An Stream Deck senden",
     "Selection": {
       "Item": "Wähle einen Gegenstand aus dem Inventar",

@@ -1225,7 +1225,6 @@
     "DataIsLocal": "标签和备注数据仅在本地保存",
     "DeleteAllData": "从 DIM 同步服务器删除所有数据",
     "DeleteAllDataConfirm": "你确定要从 DIM 同步中删除你的所有账号的所有数据吗？这无法撤销。",
-    "DeleteAllDataLabel": "清空 DIM 同步数据",
     "Details": {
       "IndexedDBStorage": "本机存放区仅在此流览器中存储资讯。如果删除流览器资料，也会删除这些资讯。"
     },
@@ -1272,11 +1271,10 @@
       "Yes": "一样"
     },
     "Connected": "已连接",
-    "Enable": "Stream Deck 插件",
+    "Enable": "Stream Deck 插件已启用",
     "FinePrint": "启用与DIM Stream Deck插件的连接。这个插件是一个独立的项目，既不是由DIM团队编写的，也不是由DIM团队支持的。",
     "Install": "安装插件",
     "NotConnected": "未连接",
-    "OldExtension": "请确保已经卸载旧的Stream Deck浏览器扩展。因为这个扩展会让DIM变得奇怪所以不再需要。",
     "SelectLoadout": "发送到 Stream Deck",
     "Selection": {
       "Item": "从库存中选择一个物品",

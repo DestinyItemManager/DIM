@@ -1225,7 +1225,6 @@
     "DataIsLocal": "Dados de etiquetas e anotações são armazenados localmente",
     "DeleteAllData": "Remover TODOS os dados dos Servidores de Sincronização DIM",
     "DeleteAllDataConfirm": "Tem certeza que TODOS os seus dados devem ser removidos, de todas as contas, da Sincronização DIM? Não dá pra voltar atrás.",
-    "DeleteAllDataLabel": "Descartar todos os dados da Sincronização DIM",
     "Details": {
       "IndexedDBStorage": "Armazenamento local salvará suas informações apenas neste navegador. Limpar seus dados de navegação apagará essas informações."
     },
@@ -1272,11 +1271,10 @@
       "Yes": "Sim"
     },
     "Connected": "Conectado",
-    "Enable": "Plugin do Stream Deck",
+    "Enable": "Stream Deck Plugin Enabled",
     "FinePrint": "Permite a conexão com o plugin DIM Stream Deck. Este plugin pertence a um projeto independente que não foi escrito e nem é suportado pela equipe DIM.",
     "Install": "Instalar plugin",
     "NotConnected": "Não Conectado",
-    "OldExtension": "Certifique-se que a extensão antiga do Stream Deck Chrome seja desinstalada. Ela não é mais necessária e causará um comportamento inesperado no DIM.",
     "SelectLoadout": "Enviar para o Stream Deck",
     "Selection": {
       "Item": "Escolha um item do inventário",

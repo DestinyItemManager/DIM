@@ -488,7 +488,7 @@
     "Super": "Súper"
   },
   "LB": {
-    "AddStack": "Añadir otra copia de este modificador",
+    "AddStack": "Añadir otra copia de este mod",
     "AdvancedOptions": "Opciones avanzadas",
     "ChooseAMod": "Elige tus mods",
     "ChooseAnExotic": "Elige tu excepcional",
@@ -541,7 +541,7 @@
       "HelpFull": "Busca más equipamiento, pero tarda más.",
       "ProcessingMode": "Modo de proceso"
     },
-    "RemoveStack": "Eliminar una copia de este modificador",
+    "RemoveStack": "Eliminar una copia de este mod",
     "Scaled": "Escalado",
     "SearchAMod": "Buscar un mod o descripción",
     "SearchAnExotic": "Busca un excepcional o descripción",
@@ -1225,7 +1225,6 @@
     "DataIsLocal": "La información de las notas y las etiquetas es solo local",
     "DeleteAllData": "Borrar TODA la Información de los Servidores de Sincronización DIM",
     "DeleteAllDataConfirm": "¿Estás seguro que quieres borrar TODA tu información, para todas las cuentas, de Sincronización DIM? No puedes deshacer esto.",
-    "DeleteAllDataLabel": "Limpiar Información de Sincronización DIM",
     "Details": {
       "IndexedDBStorage": "El almacenamiento local sólo guardará información en este navegador. El limpiar tus datos de navegación borrará esta información."
     },
@@ -1272,11 +1271,10 @@
       "Yes": "Sí"
     },
     "Connected": "Conectado",
-    "Enable": "Plugin de Stream Deck",
+    "Enable": "Complemento de Stream Deck habilitado",
     "FinePrint": "Activa la conexión con el complemento de DIM Stream Deck. Este complemento es un proyecto separado que no está escrito ni respaldado por el equipo de DIM.",
     "Install": "Instalar plugin",
     "NotConnected": "No Conectado",
-    "OldExtension": "Asegúrate de desinstalar la antigua extensión de Chrome Stream Deck. Ya no se necesita y causará comportamientos irregulares en DIM.",
     "SelectLoadout": "Enviar a Stream Deck",
     "Selection": {
       "Item": "Elige un elemento del inventario",

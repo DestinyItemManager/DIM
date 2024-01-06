@@ -1225,7 +1225,6 @@
     "DataIsLocal": "태그와 메모 데이터가 로컬에서만 사용 가능",
     "DeleteAllData": "DIM 동기화 서버의 모든 데이터 삭제",
     "DeleteAllDataConfirm": "정말로 DIM 동기화에서 모든 계정의 모든 데이터를 삭제하시겠습니까? 되돌릴 수 없습니다.",
-    "DeleteAllDataLabel": "DIM 동기화 데이터 삭제",
     "Details": {
       "IndexedDBStorage": "로컬 저장소는 정보를 이 브라우저에만 저장할 것입니다. 브라우저 데이터를 삭제하면 이 정보도 같이 삭제됩니다."
     },
@@ -1272,11 +1271,10 @@
       "Yes": "예"
     },
     "Connected": "연결됨",
-    "Enable": "스트림덱 플러그인",
+    "Enable": "스트림덱 플러그인 활성화됨",
     "FinePrint": "DIM 스트림덱 플러그인으로 연결을 활성화합니다. 이 플러그인은 DIM 팀에 의해 작성되거나 지원되지 않는 별개의 프로젝트입니다.",
     "Install": "플러그인 설치",
     "NotConnected": "연결되지 않음",
-    "OldExtension": "이전 버전의 스트림덱 크롬 확장 프로그램을 제거해야 합니다. DIM에서 더 이상 필요하지 않으며 비정상적인 동작을 일으킵니다.",
     "SelectLoadout": "스트림덱으로 보내기",
     "Selection": {
       "Item": "소지품에서 아이템 선택",

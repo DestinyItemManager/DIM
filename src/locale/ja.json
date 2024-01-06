@@ -1225,7 +1225,6 @@
     "DataIsLocal": "タグとメモのデータはローカルのみです",
     "DeleteAllData": "DIM Syncサーバーからすべてのデータを削除",
     "DeleteAllDataConfirm": "DIM Sync から、すべてのアカウントのすべてのデータを削除してもよろしいですか？元に戻すことはできません。",
-    "DeleteAllDataLabel": "DIM Syncのデータを消去",
     "Details": {
       "IndexedDBStorage": "ローカルストレージは、このブラウザでのみ情報を保存します。閲覧データを消去すると、この情報が削除されます。"
     },
@@ -1272,11 +1271,10 @@
       "Yes": "はい"
     },
     "Connected": "接続しました",
-    "Enable": "Stream Deck プラグイン",
+    "Enable": "Stream Deck プラグイン起動中",
     "FinePrint": "DIM Stream Deck プラグインとの接続を有効にします。 このプラグインは、DIM開発チームとは別のチームによるプロジェクトでサポート外です。",
     "Install": "プラグインをインストールする",
     "NotConnected": "接続されていません",
-    "OldExtension": "過去に公開されたStream Deck用Chrome拡張機能をアンインストールしてください。この拡張機能は現在必要なく、想定外の挙動の原因となります。",
     "SelectLoadout": "Stream Deckに送る",
     "Selection": {
       "Item": "アイテム一覧からアイテムを選択してください",

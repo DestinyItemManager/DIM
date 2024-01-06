@@ -1225,7 +1225,6 @@
     "DataIsLocal": "La información de las notas y las etiquetas es solo local",
     "DeleteAllData": "Borrar TODA la Información de los Servidores de Sincronización DIM",
     "DeleteAllDataConfirm": "¿Estás seguro de que quieres borrar TODA tu información, para todas las cuentas, de Sincronización DIM? No puedes deshacer esto.",
-    "DeleteAllDataLabel": "Limpiar Información de Sincronización DIM",
     "Details": {
       "IndexedDBStorage": "El almacenamiento local sólo guardará información en este navegador. Limpiando sus datos de navegación borrará esta información."
     },
@@ -1272,11 +1271,10 @@
       "Yes": "Sí"
     },
     "Connected": "Conectado",
-    "Enable": "Complemento del Stream Deck",
+    "Enable": "Complemento Stream Deck habilitado",
     "FinePrint": "Activa la conexión con el complemento de DIM Stream Deck. Este complemento es un proyecto separado que no está escrito ni respaldado por el equipo de DIM.",
     "Install": "Instalar complemento",
     "NotConnected": "No Conectado",
-    "OldExtension": "Asegúrate de desinstalar la antigua extensión de Chrome Stream Deck. Ya no se necesita y causará comportamientos irregulares en DIM.",
     "SelectLoadout": "Enviar a Stream Deck",
     "Selection": {
       "Item": "Elige un objeto del inventario",

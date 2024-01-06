@@ -1225,7 +1225,6 @@
     "DataIsLocal": "Tag and notes data is local only",
     "DeleteAllData": "Usuń WSZYSTKIE dane z serwerów synchronizacji DIM",
     "DeleteAllDataConfirm": "Czy na pewno chcesz usunąć WSZYSTKIE dane, z wszystkich kont, ze synchronizacji DIM? Nie możesz tego cofnąć.",
-    "DeleteAllDataLabel": "Wyczyść dane synchronizacji DIM",
     "Details": {
       "IndexedDBStorage": "Lokalna pamięć zapisze twoje informacje tylko w tej przeglądarce. Wyczyszczenie danych przeglądania spowoduje usunięcie tych informacji."
     },
@@ -1272,11 +1271,10 @@
       "Yes": "Tak"
     },
     "Connected": "Połączony",
-    "Enable": "Wtyczka Stream Deck",
+    "Enable": "Stream Deck Plugin Enabled",
     "FinePrint": "Włącz połączenie ze wtyczką DIM Stream Deck. Ta wtyczka jest osobnym projektem, który nie jest napisany ani nie jest wspierany przez zespół DIM.",
     "Install": "Zainstaluj wtyczkę",
     "NotConnected": "Nie podłączony",
-    "OldExtension": "Upewnij się, że odinstalowałeś stare rozszerzenie Stream Deck na Chrome'a. Nie jest już potrzebne i spowoduje dziwne działanie DIM.",
     "SelectLoadout": "Wyślij do Stream Deck",
     "Selection": {
       "Item": "Wybierz przedmiot z ekwipunku",
