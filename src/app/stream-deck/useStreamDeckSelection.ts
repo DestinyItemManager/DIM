@@ -119,10 +119,14 @@ const useSelection = ({
     [dispatch, props],
   );
 
-  return {
-    ref: canDrag ? dragRef : undefined,
-    onDragStart: canDrag ? onDragStart : undefined,
-  };
+  if (canDrag) {
+    return {
+      ref: dragRef,
+      onDragStart: onDragStart,
+    };
+  }
+
+  return {};
 };
 
 export type UseStreamDeckSelectionFn = typeof useSelection;
