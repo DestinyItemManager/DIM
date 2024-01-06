@@ -59,7 +59,7 @@ function searchHandler({ msg, state, store }: HandlerArgs<SearchAction>): ThunkR
       // delay a bit to trigger the search
       await delay(250);
     }
-    dispatch(setSearchQuery(msg.query));
+    dispatch(setSearchQuery(state.shell.searchQuery === msg.query ? '' : msg.query));
     // if pull items flag is enabled delay a bit to trigger the action
     if (msg.pullItems) {
       await delay(500);
