@@ -3,7 +3,6 @@ import { AppIcon, faArrowCircleDown, faExternalLinkAlt } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 
 import ExternalLink from 'app/dim-ui/ExternalLink';
-import { streamDeckSelector } from 'app/stream-deck/selectors';
 
 import Checkbox from 'app/settings/Checkbox';
 import { fineprintClass, settingClass } from 'app/settings/SettingsPage';
@@ -16,12 +15,13 @@ import {
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 import { streamDeckEnabled } from '../actions';
+import { streamDeckEnabledSelector } from '../selectors';
 import { streamDeckAuthorizationInit } from '../util/authorization';
 import styles from './StreamDeckSettings.m.scss';
 
 export default function StreamDeckSettings() {
   const dispatch = useThunkDispatch();
-  const { connected, enabled } = useSelector(streamDeckSelector);
+  const enabled = useSelector(streamDeckEnabledSelector);
 
   const onStreamDeckChange = async (enabled: boolean) => {
     // on switch toggle set if Stream Deck feature is enabled or no
@@ -48,7 +48,7 @@ export default function StreamDeckSettings() {
         <div className={fineprintClass}>{t('StreamDeck.FinePrint')}</div>
 
         <div>
-          {!connected ? (
+          {!enabled ? (
             <ExternalLink
               className={styles.link}
               href="https://marketplace.elgato.com/product/dim-stream-deck-11883ba5-c8db-4e3a-915f-612c5ba1b2e4"
