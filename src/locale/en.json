@@ -1263,22 +1263,20 @@
     "Usage": "DIM is using {{usage, humanBytes}} out of {{quota, humanBytes}} available to it on this device. This includes the downloaded Destiny item databases from Bungie.net."
   },
   "StreamDeck": {
-    "Authorization": {
-      "No": "No",
-      "Reset": "DE-AUTHORIZE",
-      "Title": "Do you see the same code on your Stream Deck ?",
-      "Update": "If you are seeing this message, you're using an older version of the plugin. Please download the latest update on the Stream Deck store.",
-      "Yes": "Yes"
-    },
-    "Connected": "Connected",
-    "Enable": "Stream Deck Plugin Enabled",
+    "Authorize": "Connect application",
+    "Enable": "Stream Deck Plugin",
     "FinePrint": "Enable the connection with the DIM Stream Deck plugin. This plugin is a separate project that is neither written by nor supported by the DIM team.",
     "Install": "Install plugin",
-    "NotConnected": "Not Connected",
-    "SelectLoadout": "Send to Stream Deck",
-    "Selection": {
-      "Item": "Choose an item from the inventory",
-      "Loadout": "Choose a loadout"
+    "MissingAuthorization": "You must authorize the Stream Deck application to connect to DIM. Go to settings and click \"Connect application\".",
+    "Tooltip": {
+      "Application": "Stream Deck Application",
+      "AuthRequired": "Click this button or go to settings and click \"Connect application\".",
+      "Error": "Your Stream Deck plugin is no longer supported. Please update to the latest version. This plugin requires at least:",
+      "ErrorConnection": "if you're already using the latest version, check if some browser extension is blocking the connection.",
+      "ExtensionIssue": "Extensions Issue",
+      "Plugin": "Plugin",
+      "Title": "DIM Stream Deck Plugin",
+      "Version": "Version:"
     }
   },
   "StripSockets": {

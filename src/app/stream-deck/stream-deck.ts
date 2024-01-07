@@ -1,36 +1,40 @@
-import { DimItem } from 'app/inventory/item-types';
-import { DimStore } from 'app/inventory/store-types';
 import { ThunkResult } from 'app/store/types';
-import { LazyStreamDeck, LoadoutSelection } from 'app/stream-deck/interfaces';
-import { removeClientIdentifier, removeStreamDeckToken } from 'app/stream-deck/util/local-storage';
+import { type SendEquipmentStatusStreamDeckFn } from './async-module';
+import { type UseStreamDeckSelectionFn } from './useStreamDeckSelection';
 
-export const lazyStreamDeck: LazyStreamDeck = {};
+export interface LazyStreamDeck {
+  start?: () => ThunkResult;
+  stop?: () => ThunkResult;
+  sendEquipmentStatus?: SendEquipmentStatusStreamDeckFn;
+  useSelection?: UseStreamDeckSelectionFn;
+}
+
+const lazyLoaded: LazyStreamDeck = {};
+
+// lazy load the stream deck module when needed
+export const lazyLoadStreamDeck = async () => {
+  const core = await import(/* webpackChunkName: "streamdeck" */ './async-module');
+  const useStreamDeckSelection = await import(
+    /* webpackChunkName: "streamdeck-selection" */ './useStreamDeckSelection'
+  );
+  // load only once
+  if (!lazyLoaded.start) {
+    Object.assign(lazyLoaded, {
+      ...core.default,
+      ...useStreamDeckSelection.default,
+    });
+  }
+};
 
 // wrapped lazy loaded functions
 
-export const startStreamDeckConnection = (): ThunkResult =>
-  lazyStreamDeck.core!.startStreamDeckConnection();
+export const startStreamDeckConnection = () => lazyLoaded.start!();
 
-export const stopStreamDeckConnection = (): ThunkResult =>
-  lazyStreamDeck.core!.stopStreamDeckConnection();
+export const stopStreamDeckConnection = () => lazyLoaded.stop!();
 
-export const streamDeckSelectItem = (item: DimItem): ThunkResult =>
-  lazyStreamDeck.core!.streamDeckSelectItem(item);
+export const sendEquipmentStatusStreamDeck = (
+  ...args: Parameters<SendEquipmentStatusStreamDeckFn>
+) => lazyLoaded.sendEquipmentStatus?.(...args);
 
-export const streamDeckSelectLoadout = (loadout: LoadoutSelection, store: DimStore) =>
-  lazyStreamDeck.core!.streamDeckSelectLoadout(loadout, store);
-
-// reset AuthorizationNotification token and regenerate client identifier
-export const resetStreamDeckAuthorization = async () => {
-  lazyStreamDeck.core?.resetIdentifierOnStreamDeck();
-  removeClientIdentifier();
-  removeStreamDeckToken();
-};
-
-// run both lazy core and reducer modules
-export const lazyLoadStreamDeck = async () => {
-  if (!lazyStreamDeck.core) {
-    const core = (await import(/* webpackChunkName: "streamdeck" */ './async-module')).default;
-    lazyStreamDeck.core = core;
-  }
-};
+export const useStreamDeckSelection: UseStreamDeckSelectionFn = (...args) =>
+  lazyLoaded.useSelection?.(...args) ?? {};

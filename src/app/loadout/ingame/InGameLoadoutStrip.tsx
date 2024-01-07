@@ -10,6 +10,7 @@ import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { AppIcon, faCheckCircle, faExclamationCircle, saveIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
+import { useStreamDeckSelection } from 'app/stream-deck/stream-deck';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React from 'react';
@@ -173,32 +174,43 @@ function InGameLoadoutTile({
     );
   }
 
+  const selectionProps = $featureFlags.elgatoStreamDeck
+    ? // eslint-disable-next-line
+      useStreamDeckSelection({
+        type: 'in-game-loadout',
+        equippable: true,
+        loadout: gameLoadout,
+      })
+    : undefined;
+
+  const loadoutIcon = (
+    <div className={styles.inGameTile} onClick={() => onShowDetails(gameLoadout)}>
+      <div {...selectionProps} className={styles.igtIconHolder}>
+        <InGameLoadoutIconWithIndex loadout={gameLoadout} className={styles.igtIcon} size={32} />{' '}
+      </div>
+      <AppIcon
+        icon={isEquipped || isEquippable ? faCheckCircle : faExclamationCircle}
+        className={clsx(
+          styles.statusAppIcon,
+          isEquipped ? styles.equipAlready : isEquippable ? styles.equipOk : styles.equipNok,
+        )}
+      />
+      {matchingLoadouts.length > 0 && <AppIcon icon={saveIcon} className={styles.statusAppIcon} />}
+    </div>
+  );
+
   return (
     <div
       key={gameLoadout.index}
       className={clsx(styles.inGameTileWrapper, { [styles.isEquipped]: isEquipped })}
     >
-      <PressTip tooltip={tooltipContent.length ? tooltipContent : null} placement="bottom">
-        <div className={styles.inGameTile} onClick={() => onShowDetails(gameLoadout)}>
-          <div className={styles.igtIconHolder}>
-            <InGameLoadoutIconWithIndex
-              loadout={gameLoadout}
-              className={styles.igtIcon}
-              size={32}
-            />
-          </div>
-          <AppIcon
-            icon={isEquipped || isEquippable ? faCheckCircle : faExclamationCircle}
-            className={clsx(
-              styles.statusAppIcon,
-              isEquipped ? styles.equipAlready : isEquippable ? styles.equipOk : styles.equipNok,
-            )}
-          />
-          {matchingLoadouts.length > 0 && (
-            <AppIcon icon={saveIcon} className={styles.statusAppIcon} />
-          )}
-        </div>
-      </PressTip>
+      {selectionProps?.ref ? (
+        loadoutIcon
+      ) : (
+        <PressTip tooltip={tooltipContent.length ? tooltipContent : null} placement="bottom">
+          {loadoutIcon}
+        </PressTip>
+      )}
       <Dropdown kebab options={options} placement="bottom-end" className={styles.kebab} />
     </div>
   );

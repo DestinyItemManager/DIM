@@ -1292,24 +1292,22 @@
     "Subclass": "{{count}}x Subclass Option",
     "Others": "{{count}}x Ghost Projection"
   },
-  "StreamDeck": {
-    "Connected": "Connected",
-    "NotConnected": "Not Connected",
-    "Enable": "Stream Deck Plugin Enabled",
+ "StreamDeck": {
+    "Tooltip": {
+      "Title": "DIM Stream Deck Plugin",
+      "Version": "Version:",
+      "Application": "Stream Deck Application",
+      "Plugin": "Plugin",
+      "Error": "Your Stream Deck plugin is no longer supported. Please update to the latest version. This plugin requires at least:",
+      "AuthRequired": "Click this button or go to settings and click \"Connect application\".",
+      "ExtensionIssue": "Extensions Issue",
+      "ErrorConnection": "if you're already using the latest version, check if some browser extension is blocking the connection."
+    },
+    "Enable": "Stream Deck Plugin",
     "FinePrint": "Enable the connection with the DIM Stream Deck plugin. This plugin is a separate project that is neither written by nor supported by the DIM team.",
     "Install": "Install plugin",
-    "SelectLoadout": "Send to Stream Deck",
-    "Selection": {
-      "Item": "Choose an item from the inventory",
-      "Loadout": "Choose a loadout"
-    },
-    "Authorization": {
-      "Title": "Do you see the same code on your Stream Deck ?",
-      "Reset": "DE-AUTHORIZE",
-      "Yes": "Yes",
-      "No": "No",
-      "Update": "If you are seeing this message, you're using an older version of the plugin. Please download the latest update on the Stream Deck store."
-    }
+    "Authorize": "Connect application",
+    "MissingAuthorization": "You must authorize the Stream Deck application to connect to DIM. Go to settings and click \"Connect application\"."
   },
   "Tags": {
     "Archive": "Archive",

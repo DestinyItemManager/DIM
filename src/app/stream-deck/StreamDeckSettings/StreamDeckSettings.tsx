@@ -1,33 +1,31 @@
 import { t } from 'app/i18next-t';
-import { AppIcon, banIcon, faArrowCircleDown } from 'app/shell/icons';
+import { AppIcon, faArrowCircleDown, faExternalLinkAlt } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 
 import ExternalLink from 'app/dim-ui/ExternalLink';
+
 import Checkbox from 'app/settings/Checkbox';
 import { fineprintClass, settingClass } from 'app/settings/SettingsPage';
 import { Settings } from 'app/settings/initial-settings';
-import { streamDeckConnectedSelector } from 'app/stream-deck/selectors';
 import {
   lazyLoadStreamDeck,
-  resetStreamDeckAuthorization,
   startStreamDeckConnection,
   stopStreamDeckConnection,
 } from 'app/stream-deck/stream-deck';
-import { setStreamDeckEnabled, streamDeckEnabled } from 'app/stream-deck/util/local-storage';
-import { useState } from 'react';
+import clsx from 'clsx';
 import { useSelector } from 'react-redux';
+import { streamDeckEnabled } from '../actions';
+import { streamDeckEnabledSelector } from '../selectors';
+import { streamDeckAuthorizationInit } from '../util/authorization';
 import styles from './StreamDeckSettings.m.scss';
 
 export default function StreamDeckSettings() {
   const dispatch = useThunkDispatch();
-  const connected = useSelector(streamDeckConnectedSelector);
-  const [enabled, setEnabled] = useState(streamDeckEnabled());
+  const enabled = useSelector(streamDeckEnabledSelector);
 
   const onStreamDeckChange = async (enabled: boolean) => {
     // on switch toggle set if Stream Deck feature is enabled or no
-    setStreamDeckEnabled(enabled);
-    // update local state (to prevent lag on lazy loading feature)
-    setEnabled(enabled);
+    dispatch(streamDeckEnabled(enabled));
     // start or stop WebSocket connection
     if (enabled) {
       await lazyLoadStreamDeck();
@@ -35,13 +33,6 @@ export default function StreamDeckSettings() {
     } else {
       dispatch(stopStreamDeckConnection());
     }
-  };
-
-  const onStreamDeckAuthorizationReset = async () => {
-    // regenerate client identifier and remove shared key for Stream Deck
-    await resetStreamDeckAuthorization();
-    await dispatch(stopStreamDeckConnection());
-    await dispatch(startStreamDeckConnection());
   };
 
   return (
@@ -55,22 +46,27 @@ export default function StreamDeckSettings() {
           onChange={onStreamDeckChange}
         />
         <div className={fineprintClass}>{t('StreamDeck.FinePrint')}</div>
-        {connected ? (
-          <div className={styles.connected}>{t('StreamDeck.Connected')}</div>
-        ) : (
-          <div>
-            <ExternalLink href="https://apps.elgato.com/plugins/com.dim.streamdeck">
-              <button type="button" className="dim-button">
+
+        <div>
+          {!enabled ? (
+            <ExternalLink
+              className={styles.link}
+              href="https://marketplace.elgato.com/product/dim-stream-deck-11883ba5-c8db-4e3a-915f-612c5ba1b2e4"
+            >
+              <button type="button" className={clsx('dim-button', styles.button)}>
                 <AppIcon icon={faArrowCircleDown} /> {t('StreamDeck.Install')}
               </button>
             </ExternalLink>
-            <span className={styles.notConnected}>{t('StreamDeck.NotConnected')}</span>
-          </div>
-        )}
-        <div>
-          <button type="button" className="dim-button" onClick={onStreamDeckAuthorizationReset}>
-            <AppIcon icon={banIcon} /> {t('StreamDeck.Authorization.Reset')}
-          </button>
+          ) : (
+            <button
+              type="button"
+              className={clsx('dim-button', styles.button)}
+              onClick={() => dispatch(streamDeckAuthorizationInit())}
+            >
+              <i className={faExternalLinkAlt} />
+              <span>{t('StreamDeck.Authorize')}</span>
+            </button>
+          )}
         </div>
       </div>
     </section>

@@ -48,6 +48,7 @@ export default function csp(
       featureFlags.clarityDescriptions && 'https://database-clarity.github.io',
       // Stream Deck Plugin
       featureFlags.elgatoStreamDeck && 'ws://localhost:9120',
+      featureFlags.elgatoStreamDeck && 'http://localhost:9120',
       // Game2Give
       featureFlags.issueBanner && 'https://bungiefoundation.donordrive.com',
     ]),

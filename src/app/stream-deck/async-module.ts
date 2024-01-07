@@ -1,59 +1,20 @@
 // async module
-
-// serialize the data and send it if connected
-import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
-import {
-  allItemsSelector,
-  createItemContextSelector,
-  currentStoreSelector,
-} from 'app/inventory/selectors';
+import { currentStoreSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
-import { hideItemPopup } from 'app/item-popup/item-popup';
-import { LoadoutItem } from 'app/loadout-drawer/loadout-types';
-import { getItemsFromInGameLoadout } from 'app/loadout/ingame/ingame-loadout-utils';
-import { d2ManifestSelector } from 'app/manifest/selectors';
-import { showNotification } from 'app/notifications/notifications';
-import { RootState, ThunkResult } from 'app/store/types';
-import {
-  streamDeckClearSelection,
-  streamDeckConnected,
-  streamDeckDisconnected,
-  streamDeckUpdatePopupShowed,
-} from 'app/stream-deck/actions';
-import { randomStringToken } from 'app/stream-deck/AuthorizationNotification/AuthorizationNotification';
-import {
-  LoadoutSelection,
-  SelectionArgs,
-  SendToStreamDeckArgs,
-  StreamDeckMessage,
-} from 'app/stream-deck/interfaces';
-import { handleStreamDeckMessage, notificationPromise } from 'app/stream-deck/msg-handlers';
-import { streamDeckUpdatePopupSelector } from 'app/stream-deck/selectors';
-import {
-  clientIdentifier,
-  setClientIdentifier,
-  setStreamDeckFlowVersion,
-  streamDeckEnabled,
-  streamDeckFlowVersion,
-} from 'app/stream-deck/util/local-storage';
-import packager from 'app/stream-deck/util/packager';
+import { refresh$ } from 'app/shell/refresh-events';
+import store from 'app/store/store';
+import { ThunkResult } from 'app/store/types';
+import { streamDeckConnected, streamDeckDisconnected } from 'app/stream-deck/actions';
+import { SendToStreamDeckArgs, StreamDeckMessage } from 'app/stream-deck/interfaces';
+import { handleStreamDeckMessage } from 'app/stream-deck/msg-handlers';
+import packager, { streamDeckClearId } from 'app/stream-deck/util/packager';
 import { infoLog } from 'app/utils/log';
 import { observeStore } from 'app/utils/redux';
-import { DamageType, DestinyClass, DestinyLoadoutItemComponent } from 'bungie-api-ts/destiny2';
-import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 
 let streamDeckWebSocket: WebSocket;
 
 let refreshInterval: number;
-
-// generate random client identifier
-function generateIdentifier() {
-  if (!clientIdentifier()) {
-    setClientIdentifier(randomStringToken());
-  }
-}
 
 export async function sendToStreamDeck(msg: SendToStreamDeckArgs) {
   if (streamDeckWebSocket?.readyState === WebSocket.OPEN) {
@@ -65,117 +26,20 @@ export async function sendToStreamDeck(msg: SendToStreamDeckArgs) {
   }
 }
 
-// on click on InventoryItem send the selected item to the Stream Deck
-function streamDeckSelectItem(item: DimItem): ThunkResult {
-  return async (dispatch, getState) => {
-    const { streamDeck } = getState();
-    if (streamDeck.selection === 'item' && !item.notransfer) {
-      // hide the item popup that will be opened on classic item click
-      hideItemPopup();
-      // hide the notification
-      notificationPromise.resolve();
-      // clear the selection state in the store
-      dispatch(streamDeckClearSelection());
-      // send selection to the Stream Deck
-      return sendToStreamDeck({
-        action: 'dim:selection',
-        data: {
-          selectionType: 'item',
-          selection: {
-            label: item.name,
-            subtitle: item.typeName,
-            item: item.index.replace(/-.*/, ''),
-            icon: item.icon,
-            overlay: item.iconOverlay,
-            isExotic: item.isExotic,
-            inventory: item.location.accountWide,
-            element:
-              item.element?.enumValue === DamageType.Kinetic
-                ? undefined
-                : item.element?.displayProperties?.icon,
-          },
-        },
-      });
-    }
-  };
-}
-
-function findSubClass(items: LoadoutItem[], state: RootState) {
-  const defs = d2ManifestSelector(state);
-  for (const item of items) {
-    const def = defs?.InventoryItem.get(item.hash);
-    // find subclass item
-    if (def?.inventory?.bucketTypeHash === BucketHashes.Subclass) {
-      return def.displayProperties.icon;
-    }
-  }
-}
-
-function findSubClassInGame(items: DestinyLoadoutItemComponent[], state: RootState) {
-  const allItems = allItemsSelector(state);
-  const itemCreationContext = createItemContextSelector(state);
-  const mappedItems = getItemsFromInGameLoadout(itemCreationContext, items, allItems);
-  const categories = Map.groupBy(mappedItems, (li) => li.item.bucket.sort);
-  const subclassItem = categories.get('General')?.[0];
-  return subclassItem?.item.icon;
-}
-
-// on click on LoadoutView send the selected loadout and the related character identifier to the Stream Deck
-function streamDeckSelectLoadout(
-  { type, loadout }: LoadoutSelection,
-  store: DimStore,
-): ThunkResult {
-  return async (dispatch, getState) => {
-    let selection: NonNullable<SelectionArgs['data']>['selection'];
-    const state = getState();
-    if (state.streamDeck.selection === 'loadout') {
-      notificationPromise.resolve();
-      dispatch(streamDeckClearSelection());
-      switch (type) {
-        case 'game':
-          selection = {
-            label: loadout.name.toUpperCase(),
-            loadout: loadout.id,
-            subtitle: '-',
-            character: loadout.characterId,
-            // future stream deck plugin update
-            background: loadout.colorIcon,
-            gameIcon: loadout.icon,
-            // current plugin version
-            icon: findSubClassInGame(loadout.items, state) ?? loadout.icon,
-          };
-          break;
-        default: {
-          const isAnyClass = loadout.classType === DestinyClass.Unknown;
-          selection = {
-            label: loadout.name.toUpperCase(),
-            loadout: loadout.id,
-            subtitle: (isAnyClass ? '' : store.className) || loadout.notes || '-',
-            character: isAnyClass ? undefined : store.id,
-            icon: findSubClass(loadout.items, state),
-          };
-        }
-      }
-      return sendToStreamDeck({
-        action: 'dim:selection',
-        data: {
-          selectionType: 'loadout',
-          selection,
-        },
-      });
-    }
-  };
-}
-
 const installFarmingObserver = _.once(() => {
+  const state = store.getState();
+  // send initial state
+  sendToStreamDeck({
+    action: 'farmingMode',
+    data: Boolean(state.farming.storeId),
+  });
+  // observe farming mode state
   observeStore(
     (state) => state.farming.storeId,
     (_, newState) => {
       sendToStreamDeck({
-        action: 'dim:update',
-        data: {
-          farmingMode: Boolean(newState),
-        },
+        action: 'farmingMode',
+        data: Boolean(newState),
       });
     },
   );
@@ -183,15 +47,15 @@ const installFarmingObserver = _.once(() => {
 
 // collect and send data to the stream deck
 function refreshStreamDeck(): ThunkResult {
-  return async (_dispatch, getState) => {
+  return async (dispatch, getState) => {
     const refreshAction = () => {
       const state = getState();
       const store = currentStoreSelector(getState());
       if (!store) {
-        return;
+        return setTimeout(() => dispatch(refreshStreamDeck()), 1000);
       }
       sendToStreamDeck({
-        action: 'dim:update',
+        action: 'state',
         data: {
           postmaster: packager.postmaster(store),
           maxPower: packager.maxPower(store, state),
@@ -208,7 +72,7 @@ function refreshStreamDeck(): ThunkResult {
 }
 
 // stop the websocket's connection with the local stream deck instance
-function stopStreamDeckConnection(): ThunkResult {
+function stop(): ThunkResult {
   return async (dispatch) => {
     streamDeckWebSocket?.close();
     clearInterval(refreshInterval);
@@ -216,29 +80,27 @@ function stopStreamDeckConnection(): ThunkResult {
   };
 }
 
-function checkPluginUpdate(): ThunkResult {
-  return async (dispatch, getState) => {
-    const alreadyShowed = streamDeckUpdatePopupSelector(getState());
-    if (alreadyShowed) {
-      return;
-    }
-    const version = streamDeckFlowVersion();
-    if (version < 2) {
-      showNotification({
-        title: 'Elgato Stream Deck',
-        body: t('StreamDeck.Authorization.Update'),
-        type: 'error',
-        duration: 200,
-        onClick: () => notificationPromise.resolve(),
-        promise: notificationPromise.promise,
-      });
-    }
-    dispatch(streamDeckUpdatePopupShowed());
+// refresh the stream deck state on refresh events
+const installRefreshObserver = _.once(() => {
+  refresh$.subscribe(() => refreshStreamDeck());
+});
+
+// send the equipment status to the stream deck when the item is equipped/unequipped
+function sendEquipmentStatus(itemId: string, target: DimStore): ThunkResult {
+  return async (_, getState) => {
+    const equipped = currentStoreSelector(getState()) === target;
+    sendToStreamDeck({
+      action: 'equipmentStatus',
+      data: {
+        itemId: streamDeckClearId(itemId),
+        equipped,
+      },
+    });
   };
 }
 
 // start the websocket's connection with the local stream deck instance
-function startStreamDeckConnection(): ThunkResult {
+function start(): ThunkResult {
   return async (dispatch, getState) => {
     const initWS = () => {
       const state = getState();
@@ -253,33 +115,36 @@ function startStreamDeckConnection(): ThunkResult {
         return;
       }
 
-      // ensure identifier exists
-      generateIdentifier();
+      const { enabled, auth } = state.streamDeck;
 
       // if stream deck is disabled stop and don't try to connect
-      if (!streamDeckEnabled()) {
+      if (!enabled) {
         return;
       }
 
-      installFarmingObserver();
-
       // close the existing websocket if connected
-      if (streamDeckWebSocket && streamDeckWebSocket.readyState !== WebSocket.CLOSED) {
-        streamDeckWebSocket.close();
+      if (streamDeckWebSocket?.readyState !== WebSocket.CLOSED) {
+        streamDeckWebSocket?.close();
       }
 
+      // if the plugin is enabled but the auth is not set stop
+      if (!auth) {
+        return;
+      }
+
+      // install refresh observer
+      installRefreshObserver();
+
       // try to connect to the stream deck local instance
-      streamDeckWebSocket = new WebSocket(`ws://localhost:9120/${clientIdentifier()}`);
+      streamDeckWebSocket = new WebSocket(`ws://localhost:9120/${auth.instance}`);
 
       streamDeckWebSocket.onopen = function () {
-        // remove any older notification
-        notificationPromise.resolve();
-        // update the connection flow version
-        setStreamDeckFlowVersion(2);
         // update the connection status
         dispatch(streamDeckConnected());
         // start refreshing task with interval
         dispatch(refreshStreamDeck());
+        // install farming mode observer
+        installFarmingObserver();
       };
 
       streamDeckWebSocket.onclose = function () {
@@ -287,18 +152,19 @@ function startStreamDeckConnection(): ThunkResult {
         // stop refreshing the Stream Deck State
         clearInterval(refreshInterval);
         // if the plugin is still enabled and the websocket is closed
-        if (streamDeckEnabled() && streamDeckWebSocket.readyState === WebSocket.CLOSED) {
+        if (enabled && streamDeckWebSocket.readyState === WebSocket.CLOSED) {
           // retry to re-connect after 2.5s
           window.setTimeout(initWS, 2500);
         }
       };
 
       streamDeckWebSocket.onmessage = function ({ data }) {
-        dispatch(handleStreamDeckMessage(JSON.parse(data as string) as StreamDeckMessage));
+        dispatch(
+          handleStreamDeckMessage(JSON.parse(data as string) as StreamDeckMessage, auth.token),
+        );
       };
 
       streamDeckWebSocket.onerror = function () {
-        dispatch(checkPluginUpdate());
         streamDeckWebSocket.close();
       };
     };
@@ -307,19 +173,13 @@ function startStreamDeckConnection(): ThunkResult {
   };
 }
 
-function resetIdentifierOnStreamDeck() {
-  sendToStreamDeck({
-    action: 'authorization:reset',
-  });
-}
-
 infoLog('stream deck', 'feature lazy loaded');
 
 // async module loaded in ./stream-deck.ts using lazy import
 export default {
-  startStreamDeckConnection,
-  stopStreamDeckConnection,
-  streamDeckSelectItem,
-  streamDeckSelectLoadout,
-  resetIdentifierOnStreamDeck,
+  start,
+  stop,
+  sendEquipmentStatus,
 };
+
+export type SendEquipmentStatusStreamDeckFn = typeof sendEquipmentStatus;

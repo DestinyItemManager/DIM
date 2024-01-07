@@ -1,4 +1,5 @@
 import { hideItemPopup } from 'app/item-popup/item-popup';
+import { useStreamDeckSelection } from 'app/stream-deck/stream-deck';
 import clsx from 'clsx';
 import React from 'react';
 import { useDrag } from 'react-dnd';
@@ -14,6 +15,15 @@ interface Props {
 let dragTimeout: number | null = null;
 
 export default function DraggableInventoryItem({ children, item }: Props) {
+  const selectionProps = $featureFlags.elgatoStreamDeck
+    ? // eslint-disable-next-line
+      useStreamDeckSelection({
+        type: 'item',
+        item,
+        equippable: !item.notransfer,
+      })
+    : undefined;
+
   const canDrag =
     (!item.location.inPostmaster || item.destinyVersion === 2) && item.notransfer
       ? item.equipment
@@ -51,6 +61,7 @@ export default function DraggableInventoryItem({ children, item }: Props) {
   return (
     <div
       ref={dragRef}
+      {...selectionProps}
       className={clsx('item-drag-container', {
         [styles.engram]: item.isEngram,
         [styles.cantDrag]: !canDrag,
