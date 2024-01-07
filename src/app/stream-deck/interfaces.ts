@@ -11,6 +11,7 @@ export interface SearchAction {
   query: string;
   page: string;
   pullItems?: boolean;
+  sendToVault?: boolean;
 }
 
 // randomize the current character

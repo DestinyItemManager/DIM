@@ -20,7 +20,7 @@ import { applyInGameLoadout } from 'app/loadout/ingame/ingame-loadout-apply';
 import { allInGameLoadoutsSelector } from 'app/loadout/ingame/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { accountRoute } from 'app/routes';
-import { filteredItemsSelector } from 'app/search/search-filter';
+import { filterFactorySelector } from 'app/search/search-filter';
 import { setRouterLocation, setSearchQuery } from 'app/shell/actions';
 import { refresh } from 'app/shell/refresh-events';
 import { RootState, ThunkResult } from 'app/store/types';
@@ -54,19 +54,33 @@ function refreshHandler(): ThunkResult {
 
 function searchHandler({ msg, state, store }: HandlerArgs<SearchAction>): ThunkResult {
   return async (dispatch, getState) => {
-    if (!window.location.pathname.endsWith(msg.page)) {
-      dispatch(setRouterLocation(routeTo(state, msg.page || 'inventory')));
-      // delay a bit to trigger the search
-      await delay(250);
-    }
-    dispatch(setSearchQuery(state.shell.searchQuery === msg.query ? '' : msg.query));
-    // if pull items flag is enabled delay a bit to trigger the action
-    if (msg.pullItems) {
-      await delay(500);
-      // use getState to obtain the updated state after search
-      const loadout = itemMoveLoadout(filteredItemsSelector(getState()), store);
-      await dispatch(applyLoadout(store, loadout, { allowUndo: true }));
-      dispatch(setSearchQuery('', true));
+    const searchOnly = !msg.pullItems && !msg.sendToVault;
+    const newSearch = state.shell.searchQuery === msg.query ? '' : msg.query;
+
+    if (searchOnly) {
+      // change page if needed
+      if (!window.location.pathname.endsWith(msg.page)) {
+        dispatch(setRouterLocation(routeTo(state, msg.page || 'inventory')));
+        // delay a bit to trigger the search
+        await delay(250);
+      }
+      // update the search query
+      dispatch(setSearchQuery(newSearch));
+    } else if (newSearch) {
+      const state = getState();
+      const allItems = allItemsSelector(state);
+      const filter = filterFactorySelector(state)(newSearch);
+      const searchedItems = allItems.filter((i) => filter(i));
+      // skip action if no items found
+      if (searchedItems.length === 0) {
+        return;
+      }
+      // move items to the vault or current store
+      const targetStore = msg.sendToVault ? vaultSelector(state) : store;
+      if (targetStore) {
+        const loadout = itemMoveLoadout(searchedItems, targetStore);
+        await dispatch(applyLoadout(targetStore, loadout, { allowUndo: true }));
+      }
     }
   };
 }
