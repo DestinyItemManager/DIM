@@ -47,6 +47,7 @@ export interface PullItemAction {
   action: 'pullItem';
   itemId: string;
   equip: boolean;
+  preventVaultTransfer?: boolean;
 }
 
 // equip a selected loadout (for a specific store)

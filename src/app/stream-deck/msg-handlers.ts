@@ -157,7 +157,8 @@ function pullItemHandler({ msg, state, store }: HandlerArgs<PullItemAction>): Th
     // move to vault only if the action is not a long press (EQUIP action)
     // this will equip item even if it is already in the character inventory
     if (!msg.equip && moveToVaultItem) {
-      await dispatch(moveItemTo(moveToVaultItem, vaultStore!, false, moveToVaultItem.amount));
+      !msg.preventVaultTransfer &&
+        (await dispatch(moveItemTo(moveToVaultItem, vaultStore!, false, moveToVaultItem.amount)));
     } else {
       const item = selected[0];
       await dispatch(moveItemTo(item, store, msg.equip, item.amount));
