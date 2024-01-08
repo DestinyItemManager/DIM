@@ -130,7 +130,7 @@ export default function Progress({ account }: { account: DestinyAccount }) {
           )}
         </PageWithMenu.Menu>
 
-        <PageWithMenu.Contents>
+        <PageWithMenu.Contents className={styles.progress}>
           <motion.div className="horizontal-swipable" onPanEnd={handleSwipe}>
             <section id="ranks">
               <CollapsibleTitle title={t('Progress.CrucibleRank')} sectionId="profile-ranks">

@@ -3,6 +3,7 @@
 .subclassContainer {
   --item-icon-size: calc(0.8 * var(--item-size));
   composes: flexRow from '../../dim-ui/common.m.scss';
+  width: 100%;
 }
 
 .subclass {
@@ -29,7 +30,7 @@
 
 .subclassMods {
   --item-icon-size: calc(0.8 * var(--item-size));
-  width: calc(3 * var(--item-icon-size) + 2 * var(--item-margin));
+  width: min(calc(3 * var(--item-icon-size) + 2 * var(--item-margin)), 100%);
   margin-right: calc(-1 * var(--item-margin) + #{$item-border-width});
   display: grid;
   grid-template-columns: repeat(auto-fill, var(--item-icon-size));

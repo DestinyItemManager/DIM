@@ -595,7 +595,7 @@
     "Exotic": "Exotic Armor",
     "ExistingLoadout": "Existing Loadout",
     "ExoticSpecialCategory": "Special",
-    "Filter": "Filters",
+    "Filter": "Settings",
     "Legendary": "Legendary",
     "LockItem": "Pin item",
     "PinnedItems": "Pinned Items",
@@ -798,7 +798,7 @@
       "LoadoutOptimizer": "Loadout Optimizer settings",
       "Notes": "Notes"
     },
-    "ShareLoadout": "Share Loadout",
+    "ShareLoadout": "Share",
     "ShowModPlacement": "Show Mod Placement",
     "SubclassOptions": "{{subclass}} options",
     "SubclassOptionsSearch": "Search {{subclass}} options",
