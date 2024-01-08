@@ -9,6 +9,7 @@
       var(--item-icon-size) + (var(--loadout-edit-subclass-columns, 3) - 1) * 4px
   );
   gap: var(--item-margin);
+  cursor: pointer;
 }
 
 .subclass {

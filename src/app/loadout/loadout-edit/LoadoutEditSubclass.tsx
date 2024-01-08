@@ -1,4 +1,3 @@
-import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
@@ -28,14 +27,14 @@ export default function LoadoutEditSubclass({
   classType,
   storeId,
   power,
-  onRemove,
   onPick,
+  onClick,
 }: {
   subclass?: ResolvedLoadoutItem;
   classType: DestinyClass;
   storeId: string;
   power: number;
-  onRemove: () => void;
+  onClick: () => void;
   onPick: (item: DimItem) => void;
 }) {
   const defs = useD2Definitions()!;
@@ -82,6 +81,7 @@ export default function LoadoutEditSubclass({
         [styles.isOver]: isOverEquipped,
         [styles.canDrop]: canDropEquipped,
       })}
+      onClick={subclass ? onClick : undefined}
     >
       {!subclass && subclassItems.length > 0 && (
         <>
@@ -100,9 +100,7 @@ export default function LoadoutEditSubclass({
       )}
       {subclass && (
         <div className={styles.subclass}>
-          <ClosableContainer
-            onClose={onRemove}
-            showCloseIconOnHover
+          <div
             className={clsx({
               [styles.missingItem]: subclass?.missing,
             })}
@@ -118,7 +116,7 @@ export default function LoadoutEditSubclass({
                 />
               )}
             </ItemPopupTrigger>
-          </ClosableContainer>
+          </div>
           {power !== 0 && (
             <div className={styles.power}>
               <AppIcon icon={powerActionIcon} />
