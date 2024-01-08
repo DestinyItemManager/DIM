@@ -4,7 +4,7 @@ import './app/main.scss';
 // Pull the sheet CSS up so it is at the top of the stylesheet and can be easily overridden.
 import './app/dim-ui/Sheet.m.scss';
 import './app/utils/sentry';
-import { saveAccountsToIndexedDB } from 'app/accounts/observers';
+import { createSaveAccountsObserver } from 'app/accounts/observers';
 import {
   createItemSizeObserver,
   createThemeObserver,
@@ -12,7 +12,7 @@ import {
   setCssVariableEventListeners,
 } from 'app/css-variables';
 import { loadDimApiData } from 'app/dim-api/actions';
-import { saveItemInfosOnStateChange } from 'app/inventory/observers';
+import { createSaveItemInfosObserver } from 'app/inventory/observers';
 import store from 'app/store/store';
 import { lazyLoadStreamDeck, startStreamDeckConnection } from 'app/stream-deck/stream-deck';
 import { infoLog } from 'app/utils/log';
@@ -26,7 +26,7 @@ import { initGoogleAnalytics } from './app/google';
 import { initi18n } from './app/i18n';
 import registerServiceWorker from './app/register-service-worker';
 import { safariTouchFix } from './app/safari-touch-fix';
-import { saveWishListToIndexedDB } from './app/wishlists/observers';
+import { createWishlistObserver } from './app/wishlists/observers';
 import { observe } from 'app/store/observerMiddleware';
 import { createLanguageObserver } from 'app/settings/observers';
 infoLog(
@@ -64,9 +64,9 @@ const i18nPromise = initi18n();
   }
 
   if ($featureFlags.wishLists) {
-    saveWishListToIndexedDB();
+    store.dispatch(observe(createWishlistObserver()));
   }
-  saveAccountsToIndexedDB();
+  store.dispatch(observe(createSaveAccountsObserver()));
   store.dispatch(observe(createItemSizeObserver()));
   if ($featureFlags.themePicker) {
     store.dispatch(observe(createThemeObserver()));
@@ -74,14 +74,14 @@ const i18nPromise = initi18n();
   store.dispatch(observe(createTilesPerCharColumnObserver()));
   setCssVariableEventListeners();
 
+  store.dispatch(observe(createSaveItemInfosObserver()));
+
   store.dispatch(loadDimApiData());
 
   if ($featureFlags.elgatoStreamDeck && store.getState().streamDeck.enabled) {
     await lazyLoadStreamDeck();
     store.dispatch(startStreamDeckConnection());
   }
-
-  saveItemInfosOnStateChange();
 
   // Make sure localization is loaded
   await i18nPromise;
