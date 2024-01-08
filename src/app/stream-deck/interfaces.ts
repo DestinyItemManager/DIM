@@ -46,8 +46,12 @@ export interface MaxPowerAction {
 export interface PullItemAction {
   action: 'pullItem';
   itemId: string;
+  /**
+   * @deprecated to be removed in future plugin update
+   * @see type
+   */
   equip: boolean;
-  preventVaultTransfer?: boolean;
+  type: 'equip' | 'pull' | 'vault';
 }
 
 // equip a selected loadout (for a specific store)

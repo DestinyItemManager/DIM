@@ -147,21 +147,11 @@ function equipLoadoutHandler({ msg, state }: HandlerArgs<EquipLoadoutAction>): T
 function pullItemHandler({ msg, state, store }: HandlerArgs<PullItemAction>): ThunkResult {
   return async (dispatch) => {
     const allItems = allItemsSelector(state);
-    const vaultStore = vaultSelector(state);
-    const selected = allItems.filter((it) => it.index.startsWith(msg.itemId));
-    const moveToVaultItem = selected.find((it) => it.owner === store.id);
-    if (!selected.length) {
-      // no matching item found
-      return;
-    }
-    // move to vault only if the action is not a long press (EQUIP action)
-    // this will equip item even if it is already in the character inventory
-    if (!msg.equip && moveToVaultItem) {
-      !msg.preventVaultTransfer &&
-        (await dispatch(moveItemTo(moveToVaultItem, vaultStore!, false, moveToVaultItem.amount)));
-    } else {
-      const item = selected[0];
-      await dispatch(moveItemTo(item, store, msg.equip, item.amount));
+    const [item] = allItems.filter((it) => it.index.startsWith(msg.itemId));
+    const targetStore = msg.type === 'vault' ? vaultSelector(state) : store;
+    const shouldEquip = msg.type === 'equip' || msg.equip;
+    if (targetStore) {
+      await dispatch(moveItemTo(item, targetStore, shouldEquip, item.amount));
     }
   };
 }
