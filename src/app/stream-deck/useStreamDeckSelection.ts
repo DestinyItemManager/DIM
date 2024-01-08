@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux';
 import { streamDeckSelectionSelector } from './selectors';
 import { streamDeckClearId } from './util/packager';
 
-export type StreamDeckSelectionOptions =
+export type StreamDeckSelectionOptions = (
   | {
       type: 'in-game-loadout';
       loadout: InGameLoadout;
@@ -26,7 +26,8 @@ export type StreamDeckSelectionOptions =
   | {
       type: 'item';
       item: DimItem;
-    };
+    }
+) & { isSubClass?: boolean };
 
 function findSubClassIcon(items: LoadoutItem[], state: RootState) {
   const defs = d2ManifestSelector(state);
@@ -76,6 +77,7 @@ const toSelection = (data: StreamDeckSelectionOptions, state: RootState) => {
         icon: item.icon,
         overlay: item.iconOverlay,
         isExotic: item.isExotic,
+        isSubClass: data.isSubClass,
         inventory: item.location.accountWide,
         element:
           item.element?.enumValue === DamageType.Kinetic
@@ -95,6 +97,7 @@ const setDataTransfer =
 
 export type UseStreamDeckSelectionArgs = StreamDeckSelectionOptions & {
   equippable: boolean;
+  isSubClass?: boolean;
 };
 
 interface UseStreamDeckSelectionReturn {
@@ -109,7 +112,7 @@ const useSelection = ({
   const dispatch = useThunkDispatch();
   const type = props.type === 'item' ? 'item' : 'loadout';
   const selection = useSelector(streamDeckSelectionSelector);
-  const canDrag = equippable && selection === type;
+  const canDrag = (equippable || props.isSubClass) && selection === type;
   const [_coll, dragRef] = useDrag(() => ({
     type,
   }));
