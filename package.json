@@ -193,7 +193,7 @@
     "workbox-webpack-plugin": "7.0.0"
   },
   "dependencies": {
-    "@babel/runtime": "^7.23.7",
+    "@babel/runtime": "^7.23.8",
     "@destinyitemmanager/dim-api-types": "^1.30.0",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
