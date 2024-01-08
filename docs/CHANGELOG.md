@@ -1,5 +1,7 @@
 ## Next
 
+## 8.2.0 <span class="changelog-date">(2024-01-07)</span>
+
 ## 8.1.0 <span class="changelog-date">(2023-12-31)</span>
 
 * In the mod picker, we now show just "Stackable" or "Unstackable" instead of the full requirements for the mod (like its exact stackability or what raid it belongs to).
