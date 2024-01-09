@@ -12,13 +12,13 @@ import { infoLog } from 'app/utils/log';
 import { observeStore } from 'app/utils/redux';
 import _ from 'lodash';
 
-let streamDeckWebSocket: WebSocket;
+let websocket: WebSocket;
 
 let refreshInterval: number;
 
 export async function sendToStreamDeck(msg: SendToStreamDeckArgs) {
-  if (streamDeckWebSocket?.readyState === WebSocket.OPEN) {
-    streamDeckWebSocket.send(
+  if (websocket?.readyState === WebSocket.OPEN) {
+    websocket.send(
       JSON.stringify({
         ...msg,
       }),
@@ -57,6 +57,7 @@ function refreshStreamDeck(): ThunkResult {
       sendToStreamDeck({
         action: 'state',
         data: {
+          character: packager.character(store),
           postmaster: packager.postmaster(store),
           maxPower: packager.maxPower(store, state),
           vault: packager.vault(state),
@@ -74,7 +75,7 @@ function refreshStreamDeck(): ThunkResult {
 // stop the websocket's connection with the local stream deck instance
 function stop(): ThunkResult {
   return async (dispatch) => {
-    streamDeckWebSocket?.close();
+    websocket?.close();
     clearInterval(refreshInterval);
     dispatch(streamDeckDisconnected());
   };
@@ -123,8 +124,8 @@ function start(): ThunkResult {
       }
 
       // close the existing websocket if connected
-      if (streamDeckWebSocket?.readyState !== WebSocket.CLOSED) {
-        streamDeckWebSocket?.close();
+      if (websocket?.readyState !== WebSocket.CLOSED) {
+        websocket?.close();
       }
 
       // if the plugin is enabled but the auth is not set stop
@@ -136,9 +137,9 @@ function start(): ThunkResult {
       installRefreshObserver();
 
       // try to connect to the stream deck local instance
-      streamDeckWebSocket = new WebSocket(`ws://localhost:9120/${auth.instance}`);
+      websocket = new WebSocket(`ws://localhost:9120/${auth.instance}`);
 
-      streamDeckWebSocket.onopen = function () {
+      websocket.onopen = function () {
         // update the connection status
         dispatch(streamDeckConnected());
         // start refreshing task with interval
@@ -147,25 +148,25 @@ function start(): ThunkResult {
         installFarmingObserver();
       };
 
-      streamDeckWebSocket.onclose = function () {
+      websocket.onclose = function () {
         dispatch(streamDeckDisconnected());
         // stop refreshing the Stream Deck State
         clearInterval(refreshInterval);
         // if the plugin is still enabled and the websocket is closed
-        if (enabled && streamDeckWebSocket.readyState === WebSocket.CLOSED) {
+        if (enabled && websocket.readyState === WebSocket.CLOSED) {
           // retry to re-connect after 2.5s
           window.setTimeout(initWS, 2500);
         }
       };
 
-      streamDeckWebSocket.onmessage = function ({ data }) {
+      websocket.onmessage = function ({ data }) {
         dispatch(
           handleStreamDeckMessage(JSON.parse(data as string) as StreamDeckMessage, auth.token),
         );
       };
 
-      streamDeckWebSocket.onerror = function () {
-        streamDeckWebSocket.close();
+      websocket.onerror = function () {
+        websocket.close();
       };
     };
 

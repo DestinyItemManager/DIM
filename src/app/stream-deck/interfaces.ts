@@ -1,6 +1,6 @@
 import { DimStore } from 'app/inventory/store-types';
-import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { RootState, ThunkResult } from 'app/store/types';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { SelectionType } from './actions';
 
 // trigger a pre-written search
@@ -82,14 +82,14 @@ export type StreamDeckMessage = (
 ) & { token?: string };
 
 // Types of messages sent to Stream Deck
-export interface VaultArgs {
+interface VaultArgs {
   vault: number;
   shards?: number;
   glimmer?: number;
   brightDust?: number;
 }
 
-export interface MetricsArgs {
+interface MetricsArgs {
   gambit: number;
   vanguard: number;
   crucible: number;
@@ -102,27 +102,29 @@ export interface MetricsArgs {
   artifactIcon?: string;
 }
 
-export interface PostmasterArgs {
+interface PostmasterArgs {
   total: number;
   ascendantShards: number;
   enhancementPrisms: number;
   spoils: number;
 }
 
-export interface MaxPowerArgs {
+interface MaxPowerArgs {
   artifact: number;
   base: string;
   total: string;
 }
 
-export interface Challenge {
-  label: number;
-  value: string;
+interface Character {
+  icon: string;
+  class: DestinyClass;
+  background: string;
 }
 
-export interface SendUpdateArgs {
+interface SendUpdateArgs {
   action: 'state';
   data?: {
+    character?: Character;
     postmaster?: PostmasterArgs;
     maxPower?: MaxPowerArgs;
     vault?: VaultArgs;
@@ -131,28 +133,18 @@ export interface SendUpdateArgs {
   };
 }
 
-export interface SendFarmingModeArgs {
+interface SendFarmingModeArgs {
   action: 'farmingMode';
   data: boolean;
 }
 
-export interface SendEquipmentStatusArgs {
+interface SendEquipmentStatusArgs {
   action: 'equipmentStatus';
   data: {
     equipped: boolean;
     itemId: string;
   };
 }
-
-export type LoadoutSelection =
-  | {
-      type: 'dim';
-      loadout: Loadout;
-    }
-  | {
-      type: 'game';
-      loadout: InGameLoadout;
-    };
 
 export type SendToStreamDeckArgs = SendUpdateArgs | SendFarmingModeArgs | SendEquipmentStatusArgs;
 
@@ -162,10 +154,8 @@ export interface HandlerArgs<T> {
   store: DimStore;
 }
 
-type ActionName = StreamDeckMessage['action'];
-
-type ActionMatching<key> = Extract<StreamDeckMessage, { action: key }>;
+type ActionMatching<TAction> = Extract<StreamDeckMessage, { action: TAction }>;
 
 export type MessageHandler = {
-  [key in ActionName]: (args: HandlerArgs<ActionMatching<key>>) => ThunkResult;
+  [key in StreamDeckMessage['action']]: (args: HandlerArgs<ActionMatching<key>>) => ThunkResult;
 };
