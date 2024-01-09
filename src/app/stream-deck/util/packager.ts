@@ -1,10 +1,5 @@
 import { DimItem } from 'app/inventory/item-types';
-import {
-  allItemsSelector,
-  currenciesSelector,
-  profileResponseSelector,
-  vaultSelector,
-} from 'app/inventory/selectors';
+import { allItemsSelector, vaultSelector } from 'app/inventory/selectors';
 import { AccountCurrency, DimStore } from 'app/inventory/store-types';
 import { findItemsByBucket, getArtifactBonus } from 'app/inventory/stores-helpers';
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
@@ -56,7 +51,7 @@ function vault(state: RootState) {
   if (!vault) {
     return;
   }
-  const currencies = currenciesSelector(state);
+  const currencies = state.inventory.currencies;
   return {
     vault: vault.items.length,
     shards: getCurrency(currencies, 1022552290),
@@ -91,7 +86,7 @@ function getCurrentSeason(
 
 // create the metrics update data
 function metrics(state: RootState) {
-  const profile = profileResponseSelector(state);
+  const profile = state.inventory.profileResponse;
   const progression = getCharacterProgressions(profile)?.progressions ?? {};
   const { lifetimeScore, activeScore } = profile?.profileRecords?.data || {};
   const [battlePassHash, prestigeLevel, artifactIcon] = getCurrentSeason(state, profile);
@@ -99,10 +94,11 @@ function metrics(state: RootState) {
   // battle pass level calc from src/app/progress/SeasonalRank.tsx
   const seasonProgress = progression[battlePassHash!];
   const prestigeProgress = progression[prestigeLevel!];
+
   const prestigeMode = seasonProgress.level === seasonProgress.levelCap;
 
   const seasonalRank = prestigeMode
-    ? prestigeProgress?.level + seasonProgress.levelCap
+    ? prestigeProgress.level + seasonProgress.levelCap
     : seasonProgress.level;
 
   return {

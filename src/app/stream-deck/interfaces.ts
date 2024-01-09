@@ -121,15 +121,15 @@ interface Character {
   background: string;
 }
 
-interface SendUpdateArgs {
+interface SendStateArgs {
   action: 'state';
   data?: {
     character?: Character;
     postmaster?: PostmasterArgs;
     maxPower?: MaxPowerArgs;
-    vault?: VaultArgs;
-    metrics?: MetricsArgs;
     equippedItems?: string[];
+    metrics?: MetricsArgs;
+    vault?: VaultArgs;
   };
 }
 
@@ -146,7 +146,7 @@ interface SendEquipmentStatusArgs {
   };
 }
 
-export type SendToStreamDeckArgs = SendUpdateArgs | SendFarmingModeArgs | SendEquipmentStatusArgs;
+export type SendToStreamDeckArgs = SendStateArgs | SendFarmingModeArgs | SendEquipmentStatusArgs;
 
 export interface HandlerArgs<T> {
   msg: T;
