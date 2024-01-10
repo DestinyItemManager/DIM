@@ -1,12 +1,11 @@
 // async module
 import { currentStoreSelector } from 'app/inventory/selectors';
-import { DimStore } from 'app/inventory/store-types';
 import store from 'app/store/store';
 import { RootState, ThunkResult } from 'app/store/types';
 import { streamDeckConnected, streamDeckDisconnected } from 'app/stream-deck/actions';
 import { SendToStreamDeckArgs, StreamDeckMessage } from 'app/stream-deck/interfaces';
 import { handleStreamDeckMessage } from 'app/stream-deck/msg-handlers';
-import packager, { streamDeckClearId } from 'app/stream-deck/util/packager';
+import packager from 'app/stream-deck/util/packager';
 import { infoLog } from 'app/utils/log';
 import { observeStore } from 'app/utils/redux';
 import _ from 'lodash';
@@ -77,20 +76,6 @@ function stop(): ThunkResult {
   return async (dispatch) => {
     websocket?.close();
     dispatch(streamDeckDisconnected());
-  };
-}
-
-// send the equipment status to the stream deck when the item is equipped/unequipped
-function sendEquipmentStatus(itemId: string, target: DimStore): ThunkResult {
-  return async (_, getState) => {
-    const equipped = currentStoreSelector(getState()) === target;
-    sendToStreamDeck({
-      action: 'equipmentStatus',
-      data: {
-        itemId: streamDeckClearId(itemId),
-        equipped,
-      },
-    });
   };
 }
 
@@ -167,7 +152,4 @@ infoLog('stream deck', 'feature lazy loaded');
 export default {
   start,
   stop,
-  sendEquipmentStatus,
 };
-
-export type SendEquipmentStatusStreamDeckFn = typeof sendEquipmentStatus;

@@ -138,15 +138,7 @@ interface SendFarmingModeArgs {
   data: boolean;
 }
 
-interface SendEquipmentStatusArgs {
-  action: 'equipmentStatus';
-  data: {
-    equipped: boolean;
-    itemId: string;
-  };
-}
-
-export type SendToStreamDeckArgs = SendStateArgs | SendFarmingModeArgs | SendEquipmentStatusArgs;
+export type SendToStreamDeckArgs = SendStateArgs | SendFarmingModeArgs;
 
 export interface HandlerArgs<T> {
   msg: T;

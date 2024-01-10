@@ -1,11 +1,9 @@
 import { ThunkResult } from 'app/store/types';
-import { type SendEquipmentStatusStreamDeckFn } from './async-module';
 import { type UseStreamDeckSelectionFn } from './useStreamDeckSelection';
 
 export interface LazyStreamDeck {
   start?: () => ThunkResult;
   stop?: () => ThunkResult;
-  sendEquipmentStatus?: SendEquipmentStatusStreamDeckFn;
   useSelection?: UseStreamDeckSelectionFn;
 }
 
@@ -31,10 +29,6 @@ export const lazyLoadStreamDeck = async () => {
 export const startStreamDeckConnection = () => lazyLoaded.start!();
 
 export const stopStreamDeckConnection = () => lazyLoaded.stop!();
-
-export const sendEquipmentStatusStreamDeck = (
-  ...args: Parameters<SendEquipmentStatusStreamDeckFn>
-) => lazyLoaded.sendEquipmentStatus?.(...args);
 
 export const useStreamDeckSelection: UseStreamDeckSelectionFn = (...args) =>
   lazyLoaded.useSelection?.(...args) ?? {};
