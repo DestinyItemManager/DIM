@@ -2,8 +2,12 @@
 
 .modsGrid {
   --item-icon-size: calc(0.8 * var(--item-size));
-  min-width: min(calc(5 * var(--item-icon-size) + 4 * var(--item-margin)), calc(100vw - 20px));
-  max-width: calc(100vw - 20px);
+  min-width: calc(5 * var(--item-icon-size) + 4 * var(--item-margin));
+
+  @include phone-portrait {
+    min-width: min(calc(5 * var(--item-icon-size) + 4 * var(--item-margin)), calc(100vw - 20px));
+    max-width: calc(100vw - 20px);
+  }
   display: grid;
   grid-template-columns: repeat(auto-fill, var(--item-icon-size));
   gap: 4px;

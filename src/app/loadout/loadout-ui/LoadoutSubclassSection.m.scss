@@ -3,7 +3,10 @@
 .subclassContainer {
   --item-icon-size: calc(0.8 * var(--item-size));
   composes: flexRow from '../../dim-ui/common.m.scss';
-  width: 100%;
+
+  @include phone-portrait {
+    width: 100%;
+  }
 }
 
 .subclass {
@@ -30,13 +33,18 @@
 
 .subclassMods {
   --item-icon-size: calc(0.8 * var(--item-size));
-  width: min(calc(3 * var(--item-icon-size) + 2 * var(--item-margin)), 100%);
+  width: calc(3 * var(--item-icon-size) + 2 * var(--item-margin));
   margin-right: calc(-1 * var(--item-margin) + #{$item-border-width});
   display: grid;
   grid-template-columns: repeat(auto-fill, var(--item-icon-size));
   gap: 4px;
   align-content: flex-start;
   align-items: flex-start;
+
+  @include phone-portrait {
+    width: min(calc(3 * var(--item-icon-size) + 2 * var(--item-margin)), 100%);
+  }
+
   :global(.item) {
     --item-size: var(--item-icon-size);
   }
