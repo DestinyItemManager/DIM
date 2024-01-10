@@ -55,7 +55,6 @@ function refreshHandler(): ThunkResult {
 function searchHandler({ msg, state, store }: HandlerArgs<SearchAction>): ThunkResult {
   return async (dispatch, getState) => {
     const searchOnly = !msg.pullItems && !msg.sendToVault;
-    const newSearch = state.shell.searchQuery === msg.query ? '' : msg.query;
 
     if (searchOnly) {
       // change page if needed
@@ -65,11 +64,14 @@ function searchHandler({ msg, state, store }: HandlerArgs<SearchAction>): ThunkR
         await delay(250);
       }
       // update the search query
-      dispatch(setSearchQuery(newSearch));
-    } else if (newSearch) {
+      dispatch(setSearchQuery(state.shell.searchQuery === msg.query ? '' : msg.query));
+    } else if (msg.query) {
+      // reset any previous search
+      dispatch(setSearchQuery(''));
+      // find items
       const state = getState();
       const allItems = allItemsSelector(state);
-      const filter = filterFactorySelector(state)(newSearch);
+      const filter = filterFactorySelector(state)(msg.query);
       const searchedItems = allItems.filter((i) => filter(i));
       // skip action if no items found
       if (searchedItems.length === 0) {
