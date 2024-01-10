@@ -94,14 +94,12 @@ export default function Pursuit({
  * Should this item be displayed as expired (no longer completable)?
  */
 export function showPursuitAsExpired(item: DimItem) {
+  if (!item.pursuit?.expiration) {
+    return false;
+  }
   // Suppress description when expiration is shown
   const suppressExpiration =
-    item.pursuit?.suppressExpirationWhenObjectivesComplete && item.complete;
+    item.pursuit.expiration.suppressExpirationWhenObjectivesComplete && item.complete;
 
-  const expired =
-    !suppressExpiration && item.pursuit?.expirationDate
-      ? item.pursuit.expirationDate.getTime() < Date.now()
-      : false;
-
-  return expired;
+  return !suppressExpiration && item.pursuit.expiration.expirationDate.getTime() < Date.now();
 }
