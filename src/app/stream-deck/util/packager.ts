@@ -39,8 +39,8 @@ function maxPower(store: DimStore, state: RootState) {
   const artifact = getArtifactBonus(store);
 
   return {
-    total: (maxLight + artifact).toFixed(2),
-    base: maxLight.toFixed(2),
+    total: (maxLight + artifact).toFixed(0),
+    base: maxLight.toFixed(0),
     artifact,
   };
 }
