@@ -1,6 +1,11 @@
 ## Next
 
+* Loadout Optimizer once again allows you to set a maximum stat tier, by Shift-clicking on a stat number (this is the only way to do it, for now). Unlike the previous stat max setting, this does not exclude builds that meet all your other requirements but need to put points in a maxed stat, resulting in more optimal builds overall.
+* Show more information about quest lines, even if steps are classified.
+
 ## 8.2.0 <span class="changelog-date">(2024-01-07)</span>
+
+* Support the newest version of the DIM StreamDeck plugin.
 
 ## 8.1.0 <span class="changelog-date">(2023-12-31)</span>
 
