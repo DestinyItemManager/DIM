@@ -18,9 +18,9 @@ import {
   ArmorEnergyRules,
   ArmorSet,
   ArmorStatHashes,
+  DesiredStatRange,
   ModStatChanges,
   PinnedItems,
-  ResolvedStatConstraint,
 } from '../types';
 import { getPower } from '../utils';
 import styles from './GeneratedSet.m.scss';
@@ -38,7 +38,7 @@ export default memo(function GeneratedSet({
   selectedStore,
   lockedMods,
   pinnedItems,
-  resolvedStatConstraints,
+  desiredStatRanges,
   modStatChanges,
   loadouts,
   lbDispatch,
@@ -53,7 +53,7 @@ export default memo(function GeneratedSet({
   selectedStore: DimStore;
   lockedMods: PluggableInventoryItemDefinition[];
   pinnedItems: PinnedItems;
-  resolvedStatConstraints: ResolvedStatConstraint[];
+  desiredStatRanges: DesiredStatRange[];
   modStatChanges: ModStatChanges;
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
@@ -156,7 +156,7 @@ export default memo(function GeneratedSet({
         stats={set.stats}
         getStatsBreakdown={getStatsBreakdownOnce}
         maxPower={getPower(displayedItems)}
-        resolvedStatConstraints={resolvedStatConstraints}
+        desiredStatRanges={desiredStatRanges}
         boostedStats={boostedStats}
         existingLoadoutName={overlappingLoadout?.name}
         equippedHashes={equippedHashes}

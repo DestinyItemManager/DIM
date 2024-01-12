@@ -289,7 +289,7 @@ export async function analyzeLoadout(
             maxTier: 10,
             minTier: statTier(assumedLoadoutStats[c.statHash]!.value),
           }));
-          const { mergedConstraints, mergedConstraintsImplyStrictUpgrade } =
+          const { mergedDesiredStatRanges, mergedConstraintsImplyStrictUpgrade } =
             mergeStrictUpgradeStatConstraints(
               existingLoadoutStatsAsStatConstraints,
               statConstraints,
@@ -304,7 +304,7 @@ export async function analyzeLoadout(
               filteredItems,
               lockedModMap: modMap,
               modStatChanges,
-              resolvedStatConstraints: mergedConstraints,
+              desiredStatRanges: mergedDesiredStatRanges,
               stopOnFirstSet: true,
               strictUpgrades: !mergedConstraintsImplyStrictUpgrade,
             });
