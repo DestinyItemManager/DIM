@@ -642,7 +642,7 @@
     "ExistingLoadout": "Istniejące uzbrojenie",
     "Exotic": "Exotic Armor",
     "ExoticSpecialCategory": "Specjalne",
-    "Filter": "Filtry",
+    "Filter": "Settings",
     "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
     "IncreaseStatPriority": "Increase stat priority",
     "Legendary": "Legendarny",
@@ -683,6 +683,7 @@
     "SaveAs": "Zapisz jako",
     "SpeedReport": "Wygenerowano {{combos, number}} kombinacje w {{time}} sekund",
     "StatConstraints": "Stat Tier Priorities & Ranges",
+    "StatMax": "Max",
     "TierNumber": "T{{tier}}",
     "TierSelect": "Select minimum stat tier",
     "UnableToAddAllMods": "Nie można dodać wszystkich modyfikacji.",
@@ -847,7 +848,7 @@
       "Summary": "Udostępnij to Uzbrojenie zawierające:",
       "Title": "Udostępnij \"{{name}}\""
     },
-    "ShareLoadout": "Udostępnij Uzbrojenie",
+    "ShareLoadout": "Share",
     "ShowModPlacement": "Pokaż Umieszczenie Modyfikacji",
     "Snapshot": "Save As In-Game Loadout",
     "SocketOverrides": "Zmiana opcji podklasy",
@@ -1263,22 +1264,20 @@
     "Usage": "DIM używa {{usage, humanBytes}} z {{quota, humanBytes}} dostępnych dla niego na tym urządzeniu. Obejmuje to pobrane bazy danych przedmiotów Destiny z Bungie.net."
   },
   "StreamDeck": {
-    "Authorization": {
-      "No": "Nie",
-      "Reset": "COFNIJ AUTORYZACJE",
-      "Title": "Czy widzisz ten sam kod na swoim Stream Decku?",
-      "Update": "Jeśli widzisz ten komunikat, używasz starszej wersji wtyczki. Proszę pobierz najnowszą aktualizację w sklepie Stream Deck.",
-      "Yes": "Tak"
-    },
-    "Connected": "Połączony",
-    "Enable": "Stream Deck Plugin Enabled",
+    "Authorize": "Connect application",
+    "Enable": "Stream Deck Plugin",
     "FinePrint": "Włącz połączenie ze wtyczką DIM Stream Deck. Ta wtyczka jest osobnym projektem, który nie jest napisany ani nie jest wspierany przez zespół DIM.",
     "Install": "Zainstaluj wtyczkę",
-    "NotConnected": "Nie podłączony",
-    "SelectLoadout": "Wyślij do Stream Deck",
-    "Selection": {
-      "Item": "Wybierz przedmiot z ekwipunku",
-      "Loadout": "Wybierz Uzbrojenie"
+    "MissingAuthorization": "You must authorize the Stream Deck application to connect to DIM. Go to settings and click \"Connect application\".",
+    "Tooltip": {
+      "Application": "Stream Deck Application",
+      "AuthRequired": "Click this button or go to settings and click \"Connect application\".",
+      "Error": "Your Stream Deck plugin is no longer supported. Please update to the latest version. This plugin requires at least:",
+      "ErrorConnection": "if you're already using the latest version, check if some browser extension is blocking the connection.",
+      "ExtensionIssue": "Extensions Issue",
+      "Plugin": "Plugin",
+      "Title": "DIM Stream Deck Plugin",
+      "Version": "Version:"
     }
   },
   "StripSockets": {

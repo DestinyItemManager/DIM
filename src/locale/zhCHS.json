@@ -642,7 +642,7 @@
     "ExistingLoadout": "已有配装",
     "Exotic": "异域护甲",
     "ExoticSpecialCategory": "特殊",
-    "Filter": "过滤",
+    "Filter": "设置",
     "IgnoreStat": "若未选中，则配装优化器将会在配装组合中无视此属性。",
     "IncreaseStatPriority": "提高属性优先级",
     "Legendary": "传说",
@@ -683,6 +683,7 @@
     "SaveAs": "保存为",
     "SpeedReport": "在 {{time}} 秒内生成了 {{combos, number}} 个组合",
     "StatConstraints": "属性阶级优先级和范围",
+    "StatMax": "Max",
     "TierNumber": "T{{tier}}",
     "TierSelect": "选择最低属性阶级",
     "UnableToAddAllMods": "无法添加所有模组。",
@@ -783,7 +784,7 @@
       "UnassignedMods": "未分配的模组",
       "UnassignedModsDesc": "由于能量容量或模组插槽不足，一个模组无法安装。即便为所选护甲升级能量也无法修正此问题。",
       "UnassignedModsDesc_plural": "由于能量容量或模组插槽不足，{{count}} 个模组无法安装。即便为所选护甲升级能量也是如此。",
-      "UnstackableMod": "不可堆叠",
+      "UnstackableMod": "不可叠加",
       "UpgradeCosts": "升级消耗成本",
       "UpgradeCostsDesc": "有些护甲需要能量容量升级才能装下所选的模组。升级总共会花费："
     },
@@ -847,7 +848,7 @@
       "Summary": "分享包含如下内容的配装：",
       "Title": "分享“{{name}}”"
     },
-    "ShareLoadout": "分享配装",
+    "ShareLoadout": "分享",
     "ShowModPlacement": "显示模组位置",
     "Snapshot": "保存为游戏内配装",
     "SocketOverrides": "正在更改子职业选项",
@@ -1263,22 +1264,20 @@
     "Usage": "DIM 使用了此设备{{quota, humanBytes}}可用空间中的{{usage, humanBytes}}.这包括从 bungie. net 下载的命运2物品资料库。"
   },
   "StreamDeck": {
-    "Authorization": {
-      "No": "不一样",
-      "Reset": "取消授权",
-      "Title": "你的 Stream Deck 显示的验证码是否一样？",
-      "Update": "看到此消息代表你的插件版本过旧。请从 Stream Deck 商店下载更新版。",
-      "Yes": "一样"
-    },
-    "Connected": "已连接",
-    "Enable": "Stream Deck 插件已启用",
+    "Authorize": "连接应用程序",
+    "Enable": "Stream Deck 插件",
     "FinePrint": "启用与DIM Stream Deck插件的连接。这个插件是一个独立的项目，既不是由DIM团队编写的，也不是由DIM团队支持的。",
     "Install": "安装插件",
-    "NotConnected": "未连接",
-    "SelectLoadout": "发送到 Stream Deck",
-    "Selection": {
-      "Item": "从库存中选择一个物品",
-      "Loadout": "选择一个配装"
+    "MissingAuthorization": "您必须授权 Stream Deck 应用程序连接 DIM。请在设置中点击“连接应用程序”。",
+    "Tooltip": {
+      "Application": "Stream Deck 应用程序",
+      "AuthRequired": "点击此按钮或在设置中点击“连接应用程序”",
+      "Error": "您的 Stream Deck 插件已不受支持，请更新到最新版本。此插件的最低版本要求：",
+      "ErrorConnection": "如果您已经在使用最新版本，请检查某些浏览器扩展是否正在阻止连接。",
+      "ExtensionIssue": "扩展问题",
+      "Plugin": "插件",
+      "Title": "DIM Stream Deck 插件",
+      "Version": "版本:"
     }
   },
   "StripSockets": {

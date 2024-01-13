@@ -642,7 +642,7 @@
     "ExistingLoadout": "기존 로드아웃",
     "Exotic": "경이 방어구",
     "ExoticSpecialCategory": "특수",
-    "Filter": "필터",
+    "Filter": "설정",
     "IgnoreStat": "체크가 해제된 경우 로드아웃 최적화가 장비 조합을 구성할 때 이 능력치를 무시합니다.",
     "IncreaseStatPriority": "능력치 우선도 증가",
     "Legendary": "전설",
@@ -683,6 +683,7 @@
     "SaveAs": "다른 이름으로 저장",
     "SpeedReport": "{{time}}초 만에 {{combos, number}}개의 조합 생성됨",
     "StatConstraints": "능력치 등급 우선도 & 범위",
+    "StatMax": "최대",
     "TierNumber": "T{{tier}}",
     "TierSelect": "최소 능력치 등급 선택",
     "UnableToAddAllMods": "모든 개조 부품을 추가할 수 없습니다.",
@@ -847,7 +848,7 @@
       "Summary": "다음을 포함하는 로드아웃 공유:",
       "Title": "\"{{name}}\" 공유"
     },
-    "ShareLoadout": "로드아웃 공유",
+    "ShareLoadout": "공유",
     "ShowModPlacement": "개조 부품 배치 표시",
     "Snapshot": "게임 내 로드아웃으로 저장",
     "SocketOverrides": "하위직업 옵션 변경 중",
@@ -1263,22 +1264,20 @@
     "Usage": "DIM은 이 기기에서 {{quota, humanBytes}} 중 {{usage, humanBytes}}를 사용하고 있습니다. 이는 Bungie.net에서 다운로드한 데스티니 아이템 데이터베이스를 포함하고 있습니다."
   },
   "StreamDeck": {
-    "Authorization": {
-      "No": "아니오",
-      "Reset": "인증 해제",
-      "Title": "스트림덱에서 동일한 코드가 표시되나요?",
-      "Update": "이 메시지가 표시된다면 오래된 버전의 플러그인을 사용하고 있는 것입니다. 스트림덱 스토어에서 최신 업데이트를 다운로드하세요.",
-      "Yes": "예"
-    },
-    "Connected": "연결됨",
-    "Enable": "스트림덱 플러그인 활성화됨",
+    "Authorize": "앱 연결",
+    "Enable": "스트림덱 플러그인",
     "FinePrint": "DIM 스트림덱 플러그인으로 연결을 활성화합니다. 이 플러그인은 DIM 팀에 의해 작성되거나 지원되지 않는 별개의 프로젝트입니다.",
     "Install": "플러그인 설치",
-    "NotConnected": "연결되지 않음",
-    "SelectLoadout": "스트림덱으로 보내기",
-    "Selection": {
-      "Item": "소지품에서 아이템 선택",
-      "Loadout": "로드아웃 선택"
+    "MissingAuthorization": "스트림덱 앱에서 인증해야 DIM에 연결할 수 있습니다. 설정으로 이동해서 \"앱 연결\"을 클릭하세요.",
+    "Tooltip": {
+      "Application": "스트림덱 앱",
+      "AuthRequired": "이 버튼을 누르거나 설정으로 이동하여 \"앱 연결\"을 클릭하세요.",
+      "Error": "스트림덱 플러그인이 더 이상 지원되지 않습니다. 최신 버전으로 업데이트하세요. 플러그인 최소 요구 사항:",
+      "ErrorConnection": "이미 최신 버전을 사용 중이라면, 브라우저 확장 프로그램이 연결을 차단하고 있는지 확인하세요.",
+      "ExtensionIssue": "확장 프로그램 문제",
+      "Plugin": "플러그인",
+      "Title": "DIM 스트림덱 플러그인",
+      "Version": "버전:"
     }
   },
   "StripSockets": {

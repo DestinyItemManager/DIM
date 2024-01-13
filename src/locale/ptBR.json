@@ -642,7 +642,7 @@
     "ExistingLoadout": "Set Existente",
     "Exotic": "Armadura Exótica",
     "ExoticSpecialCategory": "Especial",
-    "Filter": "Filtros",
+    "Filter": "Configurações",
     "IgnoreStat": "Se desmarcado, o Otimizador de Sets vai fingir que este atributo não existe quando construir os sets",
     "IncreaseStatPriority": "Aumenta prioridade de atributo",
     "Legendary": "Lendária",
@@ -683,6 +683,7 @@
     "SaveAs": "Salvar como",
     "SpeedReport": "Gerou {{combos, number}} combinações em {{time}} segundos",
     "StatConstraints": "Níveis de Prioridades e Intervalos de Atributos",
+    "StatMax": "Máximo",
     "TierNumber": "N{{tier}}",
     "TierSelect": "Selecionar nível mínimo de atributo",
     "UnableToAddAllMods": "Não foi possível adicionar todos os mods.",
@@ -847,7 +848,7 @@
       "Summary": "Compartilhar este set contendo:",
       "Title": "Compartilhar \"{{name}}\""
     },
-    "ShareLoadout": "Compartilhar Set",
+    "ShareLoadout": "Compartilhar",
     "ShowModPlacement": "Exibir Localização do Mod",
     "Snapshot": "Salvar como Set no jogo",
     "SocketOverrides": "Alterando opções de subclasse",
@@ -1263,22 +1264,20 @@
     "Usage": "DIM está usando {{usage, humanBytes}} de {{quota, humanBytes}} disponíveis neste dispositivo. Isso inclui as bases de dados de itens do Destiny da Bungie.net."
   },
   "StreamDeck": {
-    "Authorization": {
-      "No": "Não",
-      "Reset": "DESAUTORIZAR",
-      "Title": "Você consegue ver este mesmo código em seu Stream Deck?",
-      "Update": "Caso não esteja vendo esta mensagem, provavelmente você esteja usando uma versão antiga deste plugin. Por favor, atualize para a última versão disponível na loja do Stream Deck.",
-      "Yes": "Sim"
-    },
-    "Connected": "Conectado",
-    "Enable": "Stream Deck Plugin Enabled",
+    "Authorize": "Conectar aplicativo",
+    "Enable": "Plugin do Stream Deck",
     "FinePrint": "Permite a conexão com o plugin DIM Stream Deck. Este plugin pertence a um projeto independente que não foi escrito e nem é suportado pela equipe DIM.",
     "Install": "Instalar plugin",
-    "NotConnected": "Não Conectado",
-    "SelectLoadout": "Enviar para o Stream Deck",
-    "Selection": {
-      "Item": "Escolha um item do inventário",
-      "Loadout": "Escolha um set"
+    "MissingAuthorization": "Você deve autorizar o aplicativo Stream Deck para se conectar ao DIM. Vá para configurações e clique em \"Conectar aplicativo\".",
+    "Tooltip": {
+      "Application": "Aplicativo Stream Deck",
+      "AuthRequired": "Clique neste botão ou vá para configurações e clique em \"Conectar aplicativo\".",
+      "Error": "Seu plugin do Stream Deck não é mais suportado. Favor atualize para a versão mais recente. Este plugin requer pelo menos:",
+      "ErrorConnection": "se você já está usando a versão mais recente, verifique se alguma extensão de navegador está bloqueando a conexão.",
+      "ExtensionIssue": "Problema com Extensões",
+      "Plugin": "Plugin",
+      "Title": "Plugin DIM Stream Deck",
+      "Version": "Versão:"
     }
   },
   "StripSockets": {
