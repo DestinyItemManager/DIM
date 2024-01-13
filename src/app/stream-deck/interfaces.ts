@@ -31,6 +31,13 @@ export interface RefreshAction {
   action: 'refresh';
 }
 
+// trigger refresh DIM
+export interface RequestPickerItemsAction {
+  action: 'requestPickerItems';
+  device: string;
+  query: string;
+}
+
 // enable/disable farming mode
 export interface FarmingModeAction {
   action: 'toggleFarmingMode';
@@ -78,6 +85,7 @@ export type StreamDeckMessage = (
   | MaxPowerAction
   | PullItemAction
   | EquipLoadoutAction
+  | RequestPickerItemsAction
   | SelectionAction
 ) & { token?: string };
 
@@ -138,7 +146,21 @@ interface SendFarmingModeArgs {
   data: boolean;
 }
 
-export type SendToStreamDeckArgs = SendStateArgs | SendFarmingModeArgs;
+interface SendPickerItemsArgs {
+  action: 'pickerItems';
+  data: {
+    device: string;
+    items: {
+      item: string;
+      icon: string;
+      overlay?: string;
+      isExotic?: boolean;
+      element?: string;
+    }[];
+  };
+}
+
+export type SendToStreamDeckArgs = SendStateArgs | SendFarmingModeArgs | SendPickerItemsArgs;
 
 export interface HandlerArgs<T> {
   msg: T;

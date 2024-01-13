@@ -33,12 +33,16 @@ import {
   MessageHandler,
   PullItemAction,
   RandomizeAction,
+  RequestPickerItemsAction,
   SearchAction,
   SelectionAction,
   StreamDeckMessage,
 } from 'app/stream-deck/interfaces';
 import { delay } from 'app/utils/promises';
+import { DamageType } from 'bungie-api-ts/destiny2';
 import { streamDeckSelection } from './actions';
+import { sendToStreamDeck } from './async-module';
+import { streamDeckClearId } from './util/packager';
 
 // Calc location path
 function routeTo(state: RootState, path: string) {
@@ -50,6 +54,39 @@ function refreshHandler(): ThunkResult {
   return async () => {
     refresh();
   };
+}
+
+function requestPickerItemsHandler({
+  msg,
+  state,
+}: HandlerArgs<RequestPickerItemsAction>): ThunkResult {
+  return async () => {
+    const items = searchItems(state, msg.query);
+    items.sort((a, b) => a.name.localeCompare(b.name));
+    sendToStreamDeck({
+      action: 'pickerItems',
+      data: {
+        device: msg.device,
+        items: items.map((item) => ({
+          label: item.name,
+          item: streamDeckClearId(item.index),
+          icon: item.icon,
+          overlay: item.iconOverlay,
+          isExotic: item.isExotic,
+          element:
+            item.element?.enumValue === DamageType.Kinetic
+              ? undefined
+              : item.element?.displayProperties?.icon,
+        })),
+      },
+    });
+  };
+}
+
+function searchItems(state: RootState, query: string) {
+  const allItems = allItemsSelector(state);
+  const filter = filterFactorySelector(state)(query);
+  return allItems.filter((i) => filter(i));
 }
 
 function searchHandler({ msg, state, store }: HandlerArgs<SearchAction>): ThunkResult {
@@ -69,10 +106,7 @@ function searchHandler({ msg, state, store }: HandlerArgs<SearchAction>): ThunkR
       // reset any previous search
       dispatch(setSearchQuery(''));
       // find items
-      const state = getState();
-      const allItems = allItemsSelector(state);
-      const filter = filterFactorySelector(state)(msg.query);
-      const searchedItems = allItems.filter((i) => filter(i));
+      const searchedItems = searchItems(getState(), msg.query);
       // skip action if no items found
       if (searchedItems.length === 0) {
         return;
@@ -173,6 +207,7 @@ const handlers: MessageHandler = {
   toggleFarmingMode: farmingModeHandler,
   equipLoadout: equipLoadoutHandler,
   pullItem: pullItemHandler,
+  requestPickerItems: requestPickerItemsHandler,
   selection: selectionHandler,
 };
 
