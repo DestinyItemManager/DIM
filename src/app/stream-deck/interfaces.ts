@@ -75,6 +75,11 @@ export interface SelectionAction {
   type?: SelectionType;
 }
 
+// request perks definitions
+export interface RequestPerksAction {
+  action: 'requestPerks';
+}
+
 // | FreeBucketSlotAction
 export type StreamDeckMessage = (
   | SearchAction
@@ -86,6 +91,7 @@ export type StreamDeckMessage = (
   | PullItemAction
   | EquipLoadoutAction
   | RequestPickerItemsAction
+  | RequestPerksAction
   | SelectionAction
 ) & { token?: string };
 
@@ -146,6 +152,14 @@ interface SendFarmingModeArgs {
   data: boolean;
 }
 
+interface SendPerksArgs {
+  action: 'perks';
+  data: {
+    title: string;
+    image: string;
+  }[];
+}
+
 interface SendPickerItemsArgs {
   action: 'pickerItems';
   data: {
@@ -160,7 +174,11 @@ interface SendPickerItemsArgs {
   };
 }
 
-export type SendToStreamDeckArgs = SendStateArgs | SendFarmingModeArgs | SendPickerItemsArgs;
+export type SendToStreamDeckArgs =
+  | SendStateArgs
+  | SendFarmingModeArgs
+  | SendPickerItemsArgs
+  | SendPerksArgs;
 
 export interface HandlerArgs<T> {
   msg: T;

@@ -42,7 +42,7 @@ import { delay } from 'app/utils/promises';
 import { DamageType } from 'bungie-api-ts/destiny2';
 import { streamDeckSelection } from './actions';
 import { sendToStreamDeck } from './async-module';
-import { streamDeckClearId } from './util/packager';
+import packager, { streamDeckClearId } from './util/packager';
 
 // Calc location path
 function routeTo(state: RootState, path: string) {
@@ -198,6 +198,15 @@ function selectionHandler({ msg }: HandlerArgs<SelectionAction>): ThunkResult {
   };
 }
 
+function requestPerksHandler(): ThunkResult {
+  return async (_, getState) => {
+    sendToStreamDeck({
+      action: 'perks',
+      data: packager.perks(getState()),
+    });
+  };
+}
+
 const handlers: MessageHandler = {
   refresh: refreshHandler,
   search: searchHandler,
@@ -209,6 +218,7 @@ const handlers: MessageHandler = {
   pullItem: pullItemHandler,
   requestPickerItems: requestPickerItemsHandler,
   selection: selectionHandler,
+  requestPerks: requestPerksHandler,
 };
 
 // handle actions coming from the stream deck instance

@@ -131,8 +131,62 @@ function character(store: DimStore) {
   };
 }
 
+const PerksCategory = [3708671066, 1052191496];
+
+const WeaponsHashes = [
+  BucketHashes.KineticWeapons,
+  BucketHashes.EnergyWeapons,
+  BucketHashes.PowerWeapons,
+];
+
+interface PerkDefinition {
+  title: string;
+  image: string;
+}
+
+function perks(state: RootState) {
+  const perks = new Map<string, PerkDefinition>();
+  const items = allItemsSelector(state);
+  for (const item of items) {
+    if (item.isExotic || WeaponsHashes.every((hash) => item.bucket.hash !== hash)) {
+      continue;
+    }
+
+    const sockets = item.sockets?.allSockets;
+
+    if (!sockets) {
+      continue;
+    }
+
+    for (const socket of Object.values(sockets)) {
+      if (
+        !PerksCategory.some((hash) => socket.plugged?.plugDef?.itemCategoryHashes?.includes(hash))
+      ) {
+        continue;
+      }
+
+      const plug = socket.plugged?.plugDef.displayProperties;
+
+      if (!plug) {
+        continue;
+      }
+
+      const definition = {
+        title: plug.name,
+        image: plug.icon,
+      };
+      if (!perks.has(definition.title)) {
+        perks.set(definition.title, definition);
+      }
+    }
+  }
+
+  return Array.from(perks.values());
+}
+
 export default {
   character,
+  perks,
   metrics,
   vault,
   maxPower,
