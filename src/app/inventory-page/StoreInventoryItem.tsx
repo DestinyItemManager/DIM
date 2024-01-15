@@ -1,8 +1,5 @@
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { streamDeckSelectionSelector } from 'app/stream-deck/selectors';
-import { streamDeckSelectItem } from 'app/stream-deck/stream-deck';
 import React, { memo, useCallback } from 'react';
-import { useSelector } from 'react-redux';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from '../inventory/DraggableInventoryItem';
 import ItemPopupTrigger from '../inventory/ItemPopupTrigger';
@@ -23,11 +20,6 @@ export default memo(function StoreInventoryItem({ item }: Props) {
     [dispatch, item],
   );
 
-  const selection = $featureFlags.elgatoStreamDeck
-    ? // eslint-disable-next-line
-      useSelector(streamDeckSelectionSelector)
-    : undefined;
-
   return (
     <DraggableInventoryItem item={item}>
       <ItemPopupTrigger item={item}>
@@ -37,7 +29,7 @@ export default memo(function StoreInventoryItem({ item }: Props) {
             allowFilter={true}
             innerRef={ref}
             // intercept inventory item click and send it to the stream deck if needed
-            onClick={selection === 'item' ? () => dispatch(streamDeckSelectItem(item)) : onClick}
+            onClick={onClick}
             onDoubleClick={doubleClicked}
             // for only StoreInventoryItems (the main inventory page)
             // we mark these to be dimmed if archived

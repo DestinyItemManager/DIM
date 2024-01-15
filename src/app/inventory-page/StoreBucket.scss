@@ -10,11 +10,6 @@
   padding: 4px 0 calc(var(--item-margin) + 4px) 0;
   position: relative;
 
-  &.grouped {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
   &:empty {
     min-height: 0;
     padding: 0;
@@ -121,5 +116,9 @@
 
   &:last-of-type {
     border-bottom: none;
+  }
+
+  .inlineGroups & {
+    display: contents;
   }
 }

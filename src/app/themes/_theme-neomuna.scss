@@ -6,9 +6,9 @@
 
   // More vibrant P3 colourspace tints for displays that support them
   @supports (color: color(display-p3 1 1 1)) {
-    --theme-accent-primary: oklch(0.61 0.29 336.78);
-    --theme-item-polaroid: oklch(0.74 0.15 213.27);
-    --theme-item-polaroid-masterwork: oklch(0.55 0.26 340.71);
+    --theme-accent-primary: oklch(61% 0.29 336.78);
+    --theme-item-polaroid: oklch(74% 0.15 213.27);
+    --theme-item-polaroid-masterwork: oklch(55% 0.26 340.71);
   }
 
   // Generic fills for modal backgrounds (see below)

@@ -1,10 +1,10 @@
 import Sheet from 'app/dim-ui/Sheet';
+import { t } from 'app/i18next-t';
 import { resolveInGameLoadoutIdentifiers } from 'app/loadout-drawer/loadout-type-converters';
 import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
-import { t } from 'i18next';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './EditInGameLoadout.m.scss';

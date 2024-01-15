@@ -4,10 +4,10 @@ import StaticPage from 'app/dim-ui/StaticPage';
 import { t } from 'app/i18next-t';
 import { isAppStoreVersion } from 'app/utils/browsers';
 import { usePageTitle } from 'app/utils/hooks';
+import { systemInfo } from 'app/utils/system-info';
 import logo from 'images/dimlogo.svg';
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { UAParser } from 'ua-parser-js';
 import ExternalLink from '../dim-ui/ExternalLink';
 import styles from './About.m.scss';
 import { AppIcon, faDiscord, faGithub, faTshirt, heartIcon, helpIcon, mastodonIcon } from './icons';
@@ -25,23 +25,6 @@ const crowdinLink = `<a href='${crowdinLinkDirect}' target='_blank' rel='noopene
 const bungieLink = `<a href='${bungieLinkDirect}' target='_blank' rel='noopener noreferrer'>Bungie.net</a>`;
 const openCollectiveLink = `<a href='${openCollectiveLinkDirect}' target='_blank' rel='noopener noreferrer'>OpenCollective</a>`;
 const storeLink = `<a href='${storeLinkDirect}' target='_blank' rel='noopener noreferrer'>DesignByHumans</a>`;
-
-export const systemInfo = getSystemInfo();
-
-function getSystemInfo() {
-  const parser = new UAParser();
-  const { name: browserName, version: browserVersion } = parser.getBrowser();
-  const { name: osName, version: osVersion } = parser.getOS();
-  const userAgent = parser.getUA();
-  const dimAppStoreIndex = userAgent.indexOf('DIM AppStore');
-  let browserInfo = `${browserName} ${browserVersion}`;
-  if (dimAppStoreIndex >= 0) {
-    browserInfo = userAgent.substring(dimAppStoreIndex);
-  }
-
-  const info = `${browserInfo} - ${osName} ${osVersion}`;
-  return info;
-}
 
 export default function About() {
   usePageTitle(t('Header.About'));

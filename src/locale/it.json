@@ -488,6 +488,7 @@
     "Super": "Super"
   },
   "LB": {
+    "AddStack": "Aggiungi un'altra copia di questa modifica",
     "AdvancedOptions": "Opzioni Avanzate",
     "ChooseAMod": "Scegli le tue Modifiche",
     "ChooseAnExotic": "Scegli la tua esotica",
@@ -540,6 +541,7 @@
       "HelpFull": "Controlla tra più elementi del tuo equipaggiamento, ma impiega più tempo.",
       "ProcessingMode": "Procedura"
     },
+    "RemoveStack": "Rimuovi una copia di questa modifica",
     "Scaled": "In Scala",
     "SearchAMod": "Cerca una Modifica per nome o descrizione",
     "SearchAnExotic": "Cerca una esotica per nome o descrizione",
@@ -631,20 +633,19 @@
     "ChooseAlternateTitle": "Scegli un altro oggetto",
     "CompareLoadout": "Confronta dotazioni",
     "ConfirmOverwrite": "Sei sicuro di voler sostituire l'armatura nella dotazione \"{{name}}\" con questo nuovo set di armature?",
-    "CreateLoadout": "Salva dotazione",
     "DecreaseStatPriority": "Diminuisci la priorità della statistica",
     "DisabledByAutoStatMods": "Le Modifiche alle statistiche vengono scelte automaticamente dall'Ottimizzatore di Dotazioni.",
     "DisabledDueToMaintenance": "L'Ottimizzatore di Dotazioni è al momento disabilitato a causa della manutenzione delle API di Bungie.",
     "EquipItems": "Equipaggia",
     "ExcludeItem": "Escludi Oggetto",
+    "ExcludedItems": "Oggetti esclusi",
     "ExistingLoadout": "Dotazione Esistente",
     "Exotic": "Armatura Esotica",
     "ExoticSpecialCategory": "Speciale",
-    "Filter": "Filtri",
+    "Filter": "Impostazioni",
     "IgnoreStat": "Se non selezionata, L'Ottimizzatore di Dotazioni farà finta che questa statistica non esista quando genererà i set",
     "IncreaseStatPriority": "Aumenta la priorità della statistica",
     "Legendary": "Leggendaria",
-    "LockEquipped": "Blocca equipaggiato",
     "LockItem": "Blocca oggetto",
     "MissingClass": "Build per: {{className}}",
     "MissingClassDescription": "La build che stai cercando di visualizzare è per una classe di personaggio che non hai.",
@@ -677,10 +678,12 @@
     "OptimizerExplanationSearch": "Utilizza la barra di ricerca per restringere il campo delle armature da considerare. Se nessuna armatura corrisponde alla ricerca in un alloggiamento, verranno considerate tutte le armature per quell'alloggiamento.",
     "OptimizerExplanationStats": "Trascina le statistiche più importanti in alto, e disabilita quelle che non vuoi ottimizzare.",
     "OptimizerSet": "Set Ottimizzatore",
+    "PinnedItems": "Oggetti fissati",
     "ProcessingSets": "Ricerca dei set con gradi più alti...",
     "SaveAs": "Salva come",
     "SpeedReport": "Generate {{combos, number}} combinazioni in {{time}} secondi",
     "StatConstraints": "Priorità e limiti gradi statistiche",
+    "StatMax": "Max",
     "TierNumber": "T{{tier}}",
     "TierSelect": "Seleziona il grado minimo della statistica",
     "UnableToAddAllMods": "Impossibile aggiungere tutte le Modifiche.",
@@ -777,9 +780,11 @@
       "InvalidModsDesc": "1 Modifica non può essere alloggiata in nessun pezzo di armatura.",
       "InvalidModsDesc_plural": "{{count}} Modifiche non possono essere alloggiate in nessun pezzo di armatura.",
       "ModPlacement": "Posizionamento Modifiche",
+      "StackableMod": "Cumulabile",
       "UnassignedMods": "Modifiche non assegnate",
       "UnassignedModsDesc": "1 Modifica non può essere alloggiata per insufficienza di capacità energetica o di alloggiamenti Modifiche. Potenziare l'energia dell'armatura selezionata non risolverà il problema.",
       "UnassignedModsDesc_plural": "{{count}} non possono essere alloggiate per insufficienza di capacità energetica o di alloggiamenti Modifiche. Potenziare l'energia dell'armatura selezionata non risolverà il problema.",
+      "UnstackableMod": "Non cumulabile",
       "UpgradeCosts": "Costi potenziamento",
       "UpgradeCostsDesc": "Alcune armature necessitano di potenziamento alla capacità energetica per alloggiare le Modifiche richieste. In totale, questi sono i costi di potenziamento:"
     },
@@ -843,7 +848,7 @@
       "Summary": "Condividi questa dotazione contenente:",
       "Title": "Condividi \"{{name}}\""
     },
-    "ShareLoadout": "Condividi dotazione",
+    "ShareLoadout": "Condividi",
     "ShowModPlacement": "Mostra posizionamento Modifiche",
     "Snapshot": "Salva come Dotazione in gioco",
     "SocketOverrides": "Cambiamento opzioni sottoclasse",
@@ -857,6 +862,7 @@
     "UnassignedModError": "La Modifica non è adatta alla tua armatura attuale",
     "Undo": "Annulla",
     "Update": "Salva Cambiamenti",
+    "UpdateLoadout": "Aggiorna dotazione",
     "VendorsCannotEquip": "Non possiedi questi oggetti. Tocca per trovare un sostituto oppure clicca la X per rimuovere:"
   },
   "Manifest": {
@@ -1032,6 +1038,8 @@
     "NoEventChallenges": "Hai completato tutte le sfide dell'evento",
     "NoTrackedTriumph": "Non stai seguendo alcun Trionfo. Segui tutti quelli che vuoi su DIM.",
     "PercentPrestige": "{{pct}}% al reset",
+    "PointsUsed": "1 punto utilizzato",
+    "PointsUsed_plural": "{{count}} punti utilizzati",
     "PowerBonusHeader": "Ricompense +{{powerBonus}} Potere",
     "PowerBonusHeaderUndefined": "Altre Ricompense",
     "Progress": "Avanzamento",
@@ -1140,7 +1148,8 @@
     "SpacesSize": "{{count}} spazio",
     "SpacesSize_plural": "{{count}} spazi",
     "Theme": "Tema",
-    "VaultGroupingNone": "Non raggruppare"
+    "VaultGroupingNone": "Non raggruppare",
+    "VaultWeaponGroupingStyle": "Separa gruppi su linee diverse"
   },
   "Sockets": {
     "ApplyPerks": "Applica Perk",
@@ -1217,7 +1226,6 @@
     "DataIsLocal": "I dati di etichette e note sono solo in locale",
     "DeleteAllData": "Cancella TUTTI i dati dai server di DIM Sync",
     "DeleteAllDataConfirm": "Sei sicuro di voler eliminare TUTTI i tuoi dati, da tutti gli account, da DIM Sync? Non è possibile annullare questa operazione.",
-    "DeleteAllDataLabel": "Cancella i dati di DIM Sync",
     "Details": {
       "IndexedDBStorage": "Archiviazione in locale salverà le informazioni solo su questo browser. Se cancelli i tuoi dati di navigazione, esse andranno perse."
     },
@@ -1256,23 +1264,20 @@
     "Usage": "DIM sta usando {{usage, humanBytes}} su {{quota, humanBytes}} disponibili su questo dispositivo. Questo comprende i database di Destiny scaricati da Bungie.net."
   },
   "StreamDeck": {
-    "Authorization": {
-      "No": "No",
-      "Reset": "DE-AUTORIZZA",
-      "Title": "Vedi lo stesso codice sul tuo Stream Deck?",
-      "Update": "Se vedi questo messaggio, stai utilizzanto una vecchia versione del plugin. Scarica l'ultimo aggiornamento dal negozio di Stream Deck.",
-      "Yes": "Si"
-    },
-    "Connected": "Connesso",
+    "Authorize": "Connetti applicazione",
     "Enable": "Plugin Stream Deck",
     "FinePrint": "Abilita la connessione con il plugin dello Stream Deck di DIM. Questo plugin è un progetto separato che non è scritto né supportato dal team di DIM.",
     "Install": "Installa plugin",
-    "NotConnected": "Non connesso",
-    "OldExtension": "Assicurati di disinstallare la vecchia estensione di Stream Deck su Chrome. Non è più necessaria e causerà un comportamento anomalo in DIM.",
-    "SelectLoadout": "Invia a Stream Deck",
-    "Selection": {
-      "Item": "Scegli un oggetto dall'inventario",
-      "Loadout": "Scegli una dotazione"
+    "MissingAuthorization": "Devi autorizzare l'applicazione Stream Deck per connettersi a DIM. Vai nelle Impostazioni e clicca \"Connetti applicazione\".",
+    "Tooltip": {
+      "Application": "Applicazione Stream Deck",
+      "AuthRequired": "Clicca questo bottone oppure vai nelle Impostazioni e clicca \"Connetti applicazione\".",
+      "Error": "Il tuo plugin Stream Deck non è più supportato. Aggiornalo all'ultima versione. Questo plugin richiede almeno:",
+      "ErrorConnection": "se stai già utilizzando la versione più recente, controlla che qualche estensione del browser non stia bloccando l'applicazione.",
+      "ExtensionIssue": "Problema con Estensioni",
+      "Plugin": "Plugin",
+      "Title": "Plugin Stream Deck per DIM",
+      "Version": "Versione:"
     }
   },
   "StripSockets": {
@@ -1394,25 +1399,24 @@
   "WishListRoll": {
     "BestRatedTip": "Questo perk corrisponde esattamente ad un roll della tua Lista Desideri.",
     "BestRatedTip_plural": "Questi perk corrispondono esattamente ad un roll della tua Lista Desideri.",
-    "ChoosyVoltron": "choosy_voltron",
-    "ChoosyVoltronDescription": "choosy_voltron è una collezione auto-aggiornata di roll Lista Desideri per PvE e PvP di Mercules904 e pandapaxxy, insieme al alcuni roll da scartare.",
     "Clear": "Cancella Lista Desideri",
     "CopiedLine": "Roll Lista Desideri copiato negli appunti",
     "CopyLine": "Copia i perk selezionati come roll Lista Desideri",
-    "ExternalSource": "Facoltativamente, inserire uno o più URL di una Lista Desideri (separati da \"|\")",
+    "ExternalSource": "Aggiungi un'altra Lista dei desideri",
+    "ExternalSourcePlaceholder": "Incolla qui l'URL della Lista desideri",
     "Header": "Lista Desideri",
     "Import": "Carica i roll della Lista Desideri",
     "ImportError": "Errore nel caricamento della Lista Desideri: {{error}}",
     "ImportFailed": "Nessuna informazione trovata nella Lista Desideri.",
     "ImportNoFile": "Nessun file selezionato.",
     "InvalidExternalSource": "Inserisci un URL valido come origine della Lista Desideri esterna. L'URL deve iniziare con uno dei seguenti:",
+    "JustAnotherTeam": "Just Another Team",
     "LastUpdated": "Ultimo aggiornamento: {{lastUpdatedDate}} alle {{lastUpdatedTime}}",
     "Num": "{{num, number}} roll nella tua Lista Desideri",
-    "PreMadeFiles": "Utilizza una Lista Desideri pre-compilata",
-    "Untitled": "Lista Desideri senza nome",
-    "UpdateExternalSource": "Aggiorna la fonte della Lista Desideri",
+    "NumRolls": "{{num, number}} roll",
+    "SourceAlreadyAdded": "Lista dei desideri già aggiunta",
+    "UpdateExternalSource": "Aggiungi Lista dei desideri",
     "Voltron": "voltron (default)",
-    "VoltronDescription": "voltron è una collezione auto-aggiornata di roll Lista Desideri per PvE e PvP da tutta la comunità di Destiny. La utilizziamo come default.",
     "WishListNotes": "Note della Lista Desideri:",
     "WorstRatedTip": "Questo perk corrisponde esattamente ad un roll della tua lista degli scarti.",
     "WorstRatedTip_plural": "Questi perk corrispondono esattamente ad un roll della tua lista degli scarti."

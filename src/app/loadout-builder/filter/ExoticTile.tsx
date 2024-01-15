@@ -42,6 +42,7 @@ export default function ExoticTile({
       disabled={exotic.isArmor1}
       title={title}
       icon={icon}
+      compact
     >
       {description}
     </TileGridTile>

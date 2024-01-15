@@ -22,6 +22,7 @@
   align-items: flex-start;
   box-sizing: border-box;
   user-select: text;
+  gap: 8px;
 
   @include phone-portrait {
     width: 100%;
@@ -196,11 +197,15 @@
 }
 
 .icon {
+  display: block;
   width: 40px;
   height: auto;
   flex-shrink: 0;
-  margin-right: 8px;
   background: var(--theme-icon-tile);
+}
+
+.clickable {
+  cursor: pointer;
 }
 
 .info {

@@ -1,7 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem, DimPursuitExpiration } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { DimRecord } from 'app/records/presentation-nodes';
 import { d2MissingIcon } from 'app/search/d2-known-values';
@@ -69,6 +69,16 @@ export function milestoneToItems(
   }
 }
 
+function milestoneExpiration(milestone: DestinyMilestone): DimPursuitExpiration | undefined {
+  return milestone.endDate
+    ? {
+        expirationDate: new Date(milestone.endDate),
+        suppressExpirationWhenObjectivesComplete: false,
+        expiredInActivityMessage: undefined,
+      }
+    : undefined;
+}
+
 function availableQuestToItem(
   defs: D2ManifestDefinitions,
   buckets: InventoryBuckets,
@@ -117,8 +127,7 @@ function availableQuestToItem(
   dimItem.secondaryIcon = challengeItem?.secondaryIcon;
 
   dimItem.pursuit = {
-    expirationDate: milestone.endDate ? new Date(milestone.endDate) : undefined,
-    suppressExpirationWhenObjectivesComplete: false,
+    expiration: milestoneExpiration(milestone),
     modifierHashes: availableQuest?.activity?.modifierHashes || [],
     rewards: [],
   };
@@ -169,8 +178,7 @@ function activityMilestoneToItem(
   );
 
   dimItem.pursuit = {
-    expirationDate: milestone.endDate ? new Date(milestone.endDate) : undefined,
-    suppressExpirationWhenObjectivesComplete: false,
+    expiration: milestoneExpiration(milestone),
     modifierHashes: milestone.activities[0].modifierHashes || [],
     rewards: [],
   };
@@ -211,8 +219,7 @@ function weeklyClanMilestoneToItems(
   );
 
   dimItem.pursuit = {
-    suppressExpirationWhenObjectivesComplete: false,
-    expirationDate: milestone.endDate ? new Date(milestone.endDate) : undefined,
+    expiration: milestoneExpiration(milestone),
     modifierHashes: [],
     rewards: reward.items,
   };
@@ -316,8 +323,7 @@ function makeMilestonePursuitItem(
   }
 
   dimItem.pursuit = {
-    expirationDate: milestone.endDate ? new Date(milestone.endDate) : undefined,
-    suppressExpirationWhenObjectivesComplete: false,
+    expiration: milestoneExpiration(milestone),
     modifierHashes: milestone.activities?.[0]?.modifierHashes || [],
     rewards: [],
   };
@@ -371,7 +377,7 @@ export function recordToPursuitItem(
   dimItem.complete = !acquired && !(state & DestinyRecordState.ObjectiveNotCompleted);
 
   dimItem.pursuit = {
-    suppressExpirationWhenObjectivesComplete: false,
+    expiration: undefined,
     modifierHashes: [],
     rewards: [],
     recordHash: record.recordDef.hash,

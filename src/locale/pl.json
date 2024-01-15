@@ -488,6 +488,7 @@
     "Super": "Super"
   },
   "LB": {
+    "AddStack": "Add another copy of this mod",
     "AdvancedOptions": "Ustawienia Zaawansowane",
     "ChooseAMod": "Wybierz swoje modyfikacje",
     "ChooseAnExotic": "Wybierz swój egzotyk",
@@ -540,6 +541,7 @@
       "HelpFull": "Bierze pod uwagę więcej sprzętu, ale trwa dłużej.",
       "ProcessingMode": "Tryb przetwarzania"
     },
+    "RemoveStack": "Remove a copy of this mod",
     "Scaled": "Skalowany",
     "SearchAMod": "Search for mod name or description",
     "SearchAnExotic": "Search for exotic name or description",
@@ -631,20 +633,19 @@
     "ChooseAlternateTitle": "Wybierz inny przedmiot",
     "CompareLoadout": "Porównaj uzbrojenie",
     "ConfirmOverwrite": "Czy na pewno chcesz zastąpić pancerz w uzbrojeniu \"{{name}}\" tym nowym zestawem pancerza?",
-    "CreateLoadout": "Zapisz Uzbrojenie",
     "DecreaseStatPriority": "Decrease stat priority",
     "DisabledByAutoStatMods": "Stat mods are being chosen automatically by Loadout Optimizer.",
     "DisabledDueToMaintenance": "Optymalizator uzbrojenia jest obecnie wyłączony ze względu na prace konserwacyjne Bungie API.",
     "EquipItems": "Załóż",
     "ExcludeItem": "Wyklucz Przedmiot",
+    "ExcludedItems": "Excluded Items",
     "ExistingLoadout": "Istniejące uzbrojenie",
     "Exotic": "Exotic Armor",
     "ExoticSpecialCategory": "Specjalne",
-    "Filter": "Filtry",
+    "Filter": "Settings",
     "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
     "IncreaseStatPriority": "Increase stat priority",
     "Legendary": "Legendarny",
-    "LockEquipped": "Przypnij założone",
     "LockItem": "Przypnij przedmiot",
     "MissingClass": "Zestaw jest dla: {{className}}",
     "MissingClassDescription": "Zestaw który chcesz zobaczyć dotyczy klasy której nie posiadasz.",
@@ -677,10 +678,12 @@
     "OptimizerExplanationSearch": "Use the search bar to narrow down which armor to consider. If no armor matches the search in a slot, all armor in that slot will be considered.",
     "OptimizerExplanationStats": "Drag the most important stats to the top, and disable stats you don't want to optimize for.",
     "OptimizerSet": "Zestaw optymalizatora",
+    "PinnedItems": "Pinned Items",
     "ProcessingSets": "Finding highest tier sets...",
     "SaveAs": "Zapisz jako",
     "SpeedReport": "Wygenerowano {{combos, number}} kombinacje w {{time}} sekund",
     "StatConstraints": "Stat Tier Priorities & Ranges",
+    "StatMax": "Max",
     "TierNumber": "T{{tier}}",
     "TierSelect": "Select minimum stat tier",
     "UnableToAddAllMods": "Nie można dodać wszystkich modyfikacji.",
@@ -777,9 +780,11 @@
       "InvalidModsDesc": "1 mod cannot fit into any armor piece.",
       "InvalidModsDesc_plural": "{{count}} mods cannot fit into any armor piece.",
       "ModPlacement": "Mod Placement",
+      "StackableMod": "Stackable",
       "UnassignedMods": "Unassigned Mods",
       "UnassignedModsDesc": "1 mod did not fit due to insufficient energy capacity or mod slots. Energy upgrades to the selected armor will not fix the issue.",
       "UnassignedModsDesc_plural": "{{count}} mods did not fit due to insufficient energy capacity or mod slots. Energy upgrades to the selected armor will not fix the issue.",
+      "UnstackableMod": "Not Stackable",
       "UpgradeCosts": "Upgrade Costs",
       "UpgradeCostsDesc": "Some armor needs energy capacity upgrades to fit the requested mods. In total, these upgrades cost:"
     },
@@ -843,7 +848,7 @@
       "Summary": "Udostępnij to Uzbrojenie zawierające:",
       "Title": "Udostępnij \"{{name}}\""
     },
-    "ShareLoadout": "Udostępnij Uzbrojenie",
+    "ShareLoadout": "Share",
     "ShowModPlacement": "Pokaż Umieszczenie Modyfikacji",
     "Snapshot": "Save As In-Game Loadout",
     "SocketOverrides": "Zmiana opcji podklasy",
@@ -857,6 +862,7 @@
     "UnassignedModError": "Modyfikacja nie pasuję do twojej bieżącej zbroi",
     "Undo": "Cofnij",
     "Update": "Zapisz zmiany",
+    "UpdateLoadout": "Update Loadout",
     "VendorsCannotEquip": "Nie masz tych przedmiotów. Naciśnij, aby wybrać zamiennik lub kliknij X, aby usunąć:"
   },
   "Manifest": {
@@ -1032,6 +1038,8 @@
     "NoEventChallenges": "Ukończyłeś wszystkie wyzwania wydarzenia",
     "NoTrackedTriumph": "You have no tracked triumphs. Track as many as you like in DIM.",
     "PercentPrestige": "{{pct}}% do resetu",
+    "PointsUsed": "1 point used",
+    "PointsUsed_plural": "{{count}} points used",
     "PowerBonusHeader": "Nagrody o Mocy +{{powerBonus}}",
     "PowerBonusHeaderUndefined": "Inne nagrody",
     "Progress": "Postęp",
@@ -1140,7 +1148,8 @@
     "SpacesSize": "{{count}} miejsce",
     "SpacesSize_plural": "{{count}} miejsc",
     "Theme": "Theme",
-    "VaultGroupingNone": "None"
+    "VaultGroupingNone": "None",
+    "VaultWeaponGroupingStyle": "Separate groups on different lines"
   },
   "Sockets": {
     "ApplyPerks": "Zastosuj perki",
@@ -1217,7 +1226,6 @@
     "DataIsLocal": "Tag and notes data is local only",
     "DeleteAllData": "Usuń WSZYSTKIE dane z serwerów synchronizacji DIM",
     "DeleteAllDataConfirm": "Czy na pewno chcesz usunąć WSZYSTKIE dane, z wszystkich kont, ze synchronizacji DIM? Nie możesz tego cofnąć.",
-    "DeleteAllDataLabel": "Wyczyść dane synchronizacji DIM",
     "Details": {
       "IndexedDBStorage": "Lokalna pamięć zapisze twoje informacje tylko w tej przeglądarce. Wyczyszczenie danych przeglądania spowoduje usunięcie tych informacji."
     },
@@ -1256,23 +1264,20 @@
     "Usage": "DIM używa {{usage, humanBytes}} z {{quota, humanBytes}} dostępnych dla niego na tym urządzeniu. Obejmuje to pobrane bazy danych przedmiotów Destiny z Bungie.net."
   },
   "StreamDeck": {
-    "Authorization": {
-      "No": "Nie",
-      "Reset": "COFNIJ AUTORYZACJE",
-      "Title": "Czy widzisz ten sam kod na swoim Stream Decku?",
-      "Update": "Jeśli widzisz ten komunikat, używasz starszej wersji wtyczki. Proszę pobierz najnowszą aktualizację w sklepie Stream Deck.",
-      "Yes": "Tak"
-    },
-    "Connected": "Połączony",
-    "Enable": "Wtyczka Stream Deck",
+    "Authorize": "Connect application",
+    "Enable": "Stream Deck Plugin",
     "FinePrint": "Włącz połączenie ze wtyczką DIM Stream Deck. Ta wtyczka jest osobnym projektem, który nie jest napisany ani nie jest wspierany przez zespół DIM.",
     "Install": "Zainstaluj wtyczkę",
-    "NotConnected": "Nie podłączony",
-    "OldExtension": "Upewnij się, że odinstalowałeś stare rozszerzenie Stream Deck na Chrome'a. Nie jest już potrzebne i spowoduje dziwne działanie DIM.",
-    "SelectLoadout": "Wyślij do Stream Deck",
-    "Selection": {
-      "Item": "Wybierz przedmiot z ekwipunku",
-      "Loadout": "Wybierz Uzbrojenie"
+    "MissingAuthorization": "You must authorize the Stream Deck application to connect to DIM. Go to settings and click \"Connect application\".",
+    "Tooltip": {
+      "Application": "Stream Deck Application",
+      "AuthRequired": "Click this button or go to settings and click \"Connect application\".",
+      "Error": "Your Stream Deck plugin is no longer supported. Please update to the latest version. This plugin requires at least:",
+      "ErrorConnection": "if you're already using the latest version, check if some browser extension is blocking the connection.",
+      "ExtensionIssue": "Extensions Issue",
+      "Plugin": "Plugin",
+      "Title": "DIM Stream Deck Plugin",
+      "Version": "Version:"
     }
   },
   "StripSockets": {
@@ -1394,25 +1399,24 @@
   "WishListRoll": {
     "BestRatedTip": "Ten atut dokładnie odpowiada rollu broni na twojej liście życzeń.",
     "BestRatedTip_plural": "Te atuty dokładnie odpowiadają rollu broni na twojej liście życzeń.",
-    "ChoosyVoltron": "choosy_voltron",
-    "ChoosyVoltronDescription": "choosy_voltron jest automatycznie aktualizowaną kolekcją rolli z listy życzeń PvE i PvP od Mercules904 i pandapaxxy, wraz z niektórymi rollami z listy śmieci.",
     "Clear": "Wyczyść Listę Życzeń",
     "CopiedLine": "Lista Życzeń rolli skopiowana do schowka",
     "CopyLine": "Skopiuj wybrane cechy jako rolle Listy Życzeń",
-    "ExternalSource": "Opcjonalnie, podaj adresy URL dla list życzeń (oddzielone | \"pipe\")",
+    "ExternalSource": "Add another wish list",
+    "ExternalSourcePlaceholder": "Paste wish list URL here",
     "Header": "Lista Życzeń",
     "Import": "Wczytaj Rolle z Listy Życzeń",
     "ImportError": "Błąd ładowania listy życzeń: {{error}}",
     "ImportFailed": "Nie odnaleziono informacji z listy życzeń.",
     "ImportNoFile": "Nie wybrano pliku.",
     "InvalidExternalSource": "Wprowadź prawidłowy adres URL dla zewnętrznego źródła listy życzeń. Adres URL musi zaczynać się od jednego z następujących:",
+    "JustAnotherTeam": "Just Another Team",
     "LastUpdated": "Ostatnia aktualizacja: {{lastUpdatedDate}} o {{lastUpdatedTime}}",
     "Num": "{{num, number}} rolli w twojej liście życzeń",
-    "PreMadeFiles": "Użyj Gotową Listę Życzeń",
-    "Untitled": "Nienazwana lista życzeń",
-    "UpdateExternalSource": "Aktualizuj źródło listy życzeń",
+    "NumRolls": "{{num, number}} rolls",
+    "SourceAlreadyAdded": "Wish List already added",
+    "UpdateExternalSource": "Add Wish List",
     "Voltron": "voltron (domyślna)",
-    "VoltronDescription": "voltron to automatycznie aktualizowana kolekcja rolli z listy życzeń PvE i PvP od całej społeczności Destiny. Dostarczamy je domyślnie.",
     "WishListNotes": "Wish List Notes:",
     "WorstRatedTip": "This perk exactly matches a weapon roll on your trashlist.",
     "WorstRatedTip_plural": "These perks exactly match a weapon roll on your trashlist."

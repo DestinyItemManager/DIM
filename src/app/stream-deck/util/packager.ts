@@ -120,8 +120,12 @@ function streamDeckMetricsUpdate(state: RootState): MetricsArgs {
   };
 }
 
+export function streamDeckClearId(id: string) {
+  return id.replace(/-.*/, '');
+}
+
 function streamDeckEquippedItems(store?: DimStore) {
-  return store?.items.filter((it) => it.equipment).map((it) => it.id) ?? [];
+  return store?.items.filter((it) => it.equipment).map((it) => streamDeckClearId(it.index)) ?? [];
 }
 
 export default {

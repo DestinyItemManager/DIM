@@ -488,6 +488,7 @@
     "Super": "Суперспособность"
   },
   "LB": {
+    "AddStack": "Add another copy of this mod",
     "AdvancedOptions": "Расширенные настройки",
     "ChooseAMod": "Выберите свои моды",
     "ChooseAnExotic": "Выберите вашу экзоту",
@@ -540,6 +541,7 @@
       "HelpFull": "Проверяет больше вещей, но занимает больше времени.",
       "ProcessingMode": "Режим обработки"
     },
+    "RemoveStack": "Remove a copy of this mod",
     "Scaled": "Масштабированный",
     "SearchAMod": "Поиск по имени модификатора или описанию",
     "SearchAnExotic": "Поиск по имени экзота или описанию",
@@ -631,20 +633,19 @@
     "ChooseAlternateTitle": "Заменить",
     "CompareLoadout": "Сравнить Наборы",
     "ConfirmOverwrite": "Выбранные предметы заменят аналоги в Наборе \"{{name}}\". Продолжаем? ",
-    "CreateLoadout": "Сохранить Набор",
     "DecreaseStatPriority": "Понизить приоритет характеристики",
     "DisabledByAutoStatMods": "Модификаторы характеристик были автоматически выбраны Конструктором Комплектов.",
     "DisabledDueToMaintenance": "Конструктор Наборов сейчас отключён из-за техобслуживания Bungie API.",
     "EquipItems": "Надеть",
     "ExcludeItem": "Исключить",
+    "ExcludedItems": "Excluded Items",
     "ExistingLoadout": "Существующий Набор",
     "Exotic": "Экзотическая Броня",
     "ExoticSpecialCategory": "Специальные",
-    "Filter": "Фильтр",
+    "Filter": "Settings",
     "IgnoreStat": "Если не отмечено, Оптимизатор Комплекта будет притворяться, что этой характеристики не существует при создании наборов",
     "IncreaseStatPriority": "Повысить приоритет характеристики",
     "Legendary": "Легендарный",
-    "LockEquipped": "Закрепить экипированное",
     "LockItem": "Закрепить",
     "MissingClass": "Набор для: {{className}}",
     "MissingClassDescription": "Набор, который вы пытаетесь просмотреть, предназначен для отсутствующего у вас класса персонажа.",
@@ -677,10 +678,12 @@
     "OptimizerExplanationSearch": "Используйте строку поиска, чтобы сузить выбор брони на рассмотрение. Если никакая броня в слоте не подходит под поиск, то вся броня в этом слоте будет рассмотрена.",
     "OptimizerExplanationStats": "Drag the most important stats to the top, and disable stats you don't want to optimize for.",
     "OptimizerSet": "Набор Оптимизатора",
+    "PinnedItems": "Pinned Items",
     "ProcessingSets": "Поиск набора с наивысшим рангом...",
     "SaveAs": "Сохранить как",
     "SpeedReport": "Сгенерировано {{combos, number}} комбинаций за {{time}} секунд",
     "StatConstraints": "Stat Tier Priorities & Ranges",
+    "StatMax": "Max",
     "TierNumber": "Т{{tier}}",
     "TierSelect": "Выберите минимальный ранг характеристики",
     "UnableToAddAllMods": "Не удалось добавить все моды.",
@@ -777,9 +780,11 @@
       "InvalidModsDesc": "1 модификатор не вошел ни в одну из частей брони.",
       "InvalidModsDesc_plural": "{{count}} модификаторов не вошли ни в одну из частей брони.",
       "ModPlacement": "Расположение модификаторов",
+      "StackableMod": "Stackable",
       "UnassignedMods": "Неназначенные модификаторы",
       "UnassignedModsDesc": "1 модификатор не вошел из-за нехватки энергии брони или слотов под модификаторы. Увеличение энергии для выбранной брони не устранит проблему.",
       "UnassignedModsDesc_plural": "{{count}} модификаторов не вошло из-за нехватки энергии брони или слотов под модификаторы. Увеличение энергии для выбранной брони не устранит проблему.",
+      "UnstackableMod": "Not Stackable",
       "UpgradeCosts": "Стоимость улучшений",
       "UpgradeCostsDesc": "Некоторой броне нужны улучшения энергоёмкости, чтобы вместить запрошенные модификаторы. Итого, эти улучшения стоят:"
     },
@@ -843,7 +848,7 @@
       "Summary": "Поделиться этим набором содержащим:",
       "Title": "Поделиться \"{{name}}\""
     },
-    "ShareLoadout": "Поделиться Набором",
+    "ShareLoadout": "Share",
     "ShowModPlacement": "Показать расположение модов",
     "Snapshot": "Сохранить как Набор в игре",
     "SocketOverrides": "Изменение параметров подкласса",
@@ -857,6 +862,7 @@
     "UnassignedModError": "Мод не поместился на вашей текущей броне",
     "Undo": "Отменить",
     "Update": "Сохранить изменения",
+    "UpdateLoadout": "Update Loadout",
     "VendorsCannotEquip": "Предметы не найдены. ЛКМ для выбора предмета на замену или Х для очистки:"
   },
   "Manifest": {
@@ -1032,6 +1038,8 @@
     "NoEventChallenges": "Вы выполнили все испытания мероприятия",
     "NoTrackedTriumph": "Нет Отслеживаемых Триумфов. Отслеживайте сколько угодно в DIM.",
     "PercentPrestige": "{{pct}}% обнуления",
+    "PointsUsed": "1 point used",
+    "PointsUsed_plural": "{{count}} points used",
     "PowerBonusHeader": "+{{powerBonus}} Сила Наград",
     "PowerBonusHeaderUndefined": "Другие награды",
     "Progress": "Чек-Лист",
@@ -1140,7 +1148,8 @@
     "SpacesSize": "{{count}} место",
     "SpacesSize_plural": "{{count}} мест",
     "Theme": "Тема",
-    "VaultGroupingNone": "Ничего"
+    "VaultGroupingNone": "Ничего",
+    "VaultWeaponGroupingStyle": "Separate groups on different lines"
   },
   "Sockets": {
     "ApplyPerks": "Применить перки",
@@ -1217,7 +1226,6 @@
     "DataIsLocal": "Только локальные данные тэгов и заметок",
     "DeleteAllData": "Удалить ВСЕ данные с серверов DIM Sync",
     "DeleteAllDataConfirm": "Удалить ВСЕ данные ваших аккаунтов с серверов DIM Sync? Эта операция Необратима.",
-    "DeleteAllDataLabel": "Очистить DIM Sync",
     "Details": {
       "IndexedDBStorage": "Локальное Хранилище Браузера хранит ваши данные в кэше браузера на данном устройстве. Очистка данных удалит данные."
     },
@@ -1256,23 +1264,20 @@
     "Usage": "DIM использует {{usage, humanBytes}} из {{quota, humanBytes}} доступного ему места на этом устройстве. В это также входят загруженные базы данных предметов Destiny с Bungie.net."
   },
   "StreamDeck": {
-    "Authorization": {
-      "No": "Нет",
-      "Reset": "ДЕАВТОРИЗАЦИЯ",
-      "Title": "Вы видите такой же код на вашем Stream Deck?",
-      "Update": "Если вы видите это сообщение, вы используете старую версию плагина. Пожалуйста, загрузите последнее обновление в магазине Stream Deck.",
-      "Yes": "Да"
-    },
-    "Connected": "Подключено",
-    "Enable": "Плагин Stream Deck",
+    "Authorize": "Connect application",
+    "Enable": "Stream Deck Plugin",
     "FinePrint": "Активировать соединение с плагином Stream Deck для DIM. Этот плагин — отдельный проект, который не был написан командой DIM и не поддерживается ею.",
     "Install": "Установить плагин",
-    "NotConnected": "Не подключено",
-    "OldExtension": "Обязательно удалите старое расширение Stream Deck для Chrome. Оно больше не требуется и может привести к странному поведению в DIM.",
-    "SelectLoadout": "Отправить в Stream Deck",
-    "Selection": {
-      "Item": "Выберите предмет из инвентаря",
-      "Loadout": "Выберите набор"
+    "MissingAuthorization": "You must authorize the Stream Deck application to connect to DIM. Go to settings and click \"Connect application\".",
+    "Tooltip": {
+      "Application": "Stream Deck Application",
+      "AuthRequired": "Click this button or go to settings and click \"Connect application\".",
+      "Error": "Your Stream Deck plugin is no longer supported. Please update to the latest version. This plugin requires at least:",
+      "ErrorConnection": "if you're already using the latest version, check if some browser extension is blocking the connection.",
+      "ExtensionIssue": "Extensions Issue",
+      "Plugin": "Plugin",
+      "Title": "DIM Stream Deck Plugin",
+      "Version": "Version:"
     }
   },
   "StripSockets": {
@@ -1394,25 +1399,24 @@
   "WishListRoll": {
     "BestRatedTip": "Этот перк точно соответствует ролл оружия в вашем Списке Желаний.",
     "BestRatedTip_plural": "Эти перки точно соответствуют ролл оружия в вашем Списке Желаний.",
-    "ChoosyVoltron": "choosy_voltron",
-    "ChoosyVoltronDescription": "choosy_voltron - автоматически обновляемый Список Желаний с коллекцией PvE (ПвЕ) и PvP (ПвП) роллов от Mercules904 и pandapaxxy, а также некоторых Мусорных роллов.",
     "Clear": "Очистить Список Желаний",
     "CopiedLine": "Желанный Ролл скопирован в буфер обмена",
     "CopyLine": "Скопировать выбранные перки как Желанный Ролл",
-    "ExternalSource": "По желанию, укажите ссылки для списка желаний (канал | разделённый)",
+    "ExternalSource": "Add another wish list",
+    "ExternalSourcePlaceholder": "Paste wish list URL here",
     "Header": "Список Желаний",
     "Import": "Загрузить роллы Списка Желаний",
     "ImportError": "Ошибка загрузки Списка Желаний: {{error}}",
     "ImportFailed": "Данные Списка Желаний не найдены.",
     "ImportNoFile": "Не выбран файл.",
     "InvalidExternalSource": "Пожалуйста укажите действительную ссылку на ваш внешний источник Списка Желаний. Ссылка должна начинаться с:",
+    "JustAnotherTeam": "Just Another Team",
     "LastUpdated": "Последнее обновление: {{lastUpdatedDate}} в {{lastUpdatedTime}}",
     "Num": "{{num, number}} роллов в вашем Списке Желаний",
-    "PreMadeFiles": "Использовать готовый Список Желаний",
-    "Untitled": "Список Желаний без названия",
-    "UpdateExternalSource": "Обновить источник Списка Желаний",
+    "NumRolls": "{{num, number}} rolls",
+    "SourceAlreadyAdded": "Wish List already added",
+    "UpdateExternalSource": "Add Wish List",
     "Voltron": "voltron (стандартный)",
-    "VoltronDescription": "voltron - автоматически обновляемый Список Желаний с коллекцией PvE (ПвЕ) и PvP (ПвП) роллов от всего сообщества Destiny. Мы используем это по умолчанию.",
     "WishListNotes": "Заметки к Списку Желаний:",
     "WorstRatedTip": "Этот перк точно соответствует ролл оружия в вашей корзине Списка Желаний.",
     "WorstRatedTip_plural": "Эти перки точно соответствуют ролл оружия в вашей корзине Списка Желаний."

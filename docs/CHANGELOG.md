@@ -1,5 +1,37 @@
 ## Next
 
+## 8.3.0 <span class="changelog-date">(2024-01-14)</span>
+
+* Loadout Optimizer once again allows you to set a maximum stat tier, by Shift-clicking on a stat number (this is the only way to do it, for now). Unlike the previous stat max setting, this does not exclude builds that meet all your other requirements but need to put points in a maxed stat, resulting in more optimal builds overall.
+* Show more information about quest lines, even if steps are classified.
+
+## 8.2.0 <span class="changelog-date">(2024-01-07)</span>
+
+* Support the newest version of the DIM StreamDeck plugin.
+
+## 8.1.0 <span class="changelog-date">(2023-12-31)</span>
+
+* In the mod picker, we now show just "Stackable" or "Unstackable" instead of the full requirements for the mod (like its exact stackability or what raid it belongs to).
+* Several improvements to how the mod picker and subclass editor look and work, in hopes of making it easier to use.
+* Individual wish lists can be toggled on and off and the Just Another Team wishlist is available as a suggested option.
+* Catalysts can be searched for on the Records page using search terms that would match their associated item.
+* Clicking a catalyst on the Records page shows the item popup for its associated collections item.
+* Loadout Optimizer's "Pin Items" and "Excluded Items" sections have been slightly redesigned, and now both have clear-all buttons.
+* You can choose to show weapon groups in the vault inline instead of row-by-row.
+* The Seasonal Artifact details page now shows how many points used and resets.
+
+## 7.99.0 <span class="changelog-date">(2023-12-17)</span>
+
+## 7.98.0 <span class="changelog-date">(2023-12-10)</span>
+
+* You can no longer select multiple copies of mods that are unstackable (they do not provide a benefit when there are multiple copies of them).
+
+## 7.97.1 <span class="changelog-date">(2023-12-04)</span>
+
+* Fixed infinite reload / "Operation is insecure" issue introduced in the last release.
+
+## 7.97.0 <span class="changelog-date">(2023-12-03)</span>
+
 * Fixed error showing titles after Season of the Wish launched.
 * Updated data for new season.
 * Loadout optimizer stat constraints now have a clear button, randomize option, and sync from equipped option.

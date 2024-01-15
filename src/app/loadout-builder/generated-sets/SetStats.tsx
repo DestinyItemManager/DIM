@@ -7,7 +7,13 @@ import StatTooltip from 'app/store-stats/StatTooltip';
 import { DestinyStatDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import _ from 'lodash';
-import { ArmorStatHashes, ArmorStats, ModStatChanges, ResolvedStatConstraint } from '../types';
+import {
+  ArmorStatHashes,
+  ArmorStats,
+  DesiredStatRange,
+  ModStatChanges,
+  ResolvedStatConstraint,
+} from '../types';
 import { remEuclid, statTierWithHalf } from '../utils';
 import styles from './SetStats.m.scss';
 import { calculateTotalTier, sumEnabledStats } from './utils';
@@ -20,34 +26,33 @@ export function SetStats({
   stats,
   getStatsBreakdown,
   maxPower,
-  resolvedStatConstraints,
+  desiredStatRanges,
   boostedStats,
   className,
   existingLoadoutName,
   equippedHashes,
+  autoStatMods,
 }: {
   stats: ArmorStats;
   getStatsBreakdown: () => ModStatChanges;
   maxPower: number;
-  resolvedStatConstraints: ResolvedStatConstraint[];
+  desiredStatRanges: DesiredStatRange[];
   boostedStats: Set<ArmorStatHashes>;
   className?: string;
   existingLoadoutName?: string;
   equippedHashes: Set<number>;
+  autoStatMods: boolean;
 }) {
   const defs = useD2Definitions()!;
   const totalTier = calculateTotalTier(stats);
-  const enabledTier = sumEnabledStats(
-    stats,
-    resolvedStatConstraints.filter((c) => !c.ignored),
-  );
+  const enabledTier = sumEnabledStats(stats, desiredStatRanges);
 
   return (
     <div className={clsx(styles.container, className)}>
       <div className={styles.tierLightContainer}>
         <TotalTier enabledTier={enabledTier} totalTier={totalTier} />
       </div>
-      {resolvedStatConstraints.map((c) => {
+      {desiredStatRanges.map((c) => {
         const statHash = c.statHash as ArmorStatHashes;
         const statDef = defs.Stat.get(statHash);
         const value = stats[statHash];
@@ -68,10 +73,12 @@ export function SetStats({
             )}
           >
             <Stat
-              isActive={!c.ignored}
+              isActive={c.maxTier > 0}
               isBoosted={boostedStats.has(statHash)}
               stat={statDef}
               value={value}
+              effectiveValue={Math.min(value, c.maxTier * 10)}
+              showHalfStat={!autoStatMods}
             />
           </PressTip>
         );
@@ -95,17 +102,34 @@ function Stat({
   isActive,
   isBoosted,
   value,
+  effectiveValue,
+  showHalfStat,
 }: {
   stat: DestinyStatDefinition;
   isActive: boolean;
   isBoosted: boolean;
   value: number;
+  showHalfStat: boolean;
+  effectiveValue: number;
 }) {
-  const isHalfTier = isActive && remEuclid(value, 10) >= 5;
+  let shownValue: number;
+  let ignoredExcess: number | undefined;
+  if (effectiveValue !== value) {
+    if (effectiveValue === 0 || effectiveValue >= 100) {
+      shownValue = value;
+    } else {
+      shownValue = effectiveValue;
+      ignoredExcess = value - effectiveValue;
+    }
+  } else {
+    shownValue = value;
+  }
+  const showIgnoredExcess = ignoredExcess !== undefined && ignoredExcess >= 5;
+  const isHalfTier = showHalfStat && isActive && remEuclid(value, 10) >= 5;
   return (
     <span
       className={clsx(styles.statSegment, {
-        [styles.nonActiveStat]: !isActive,
+        [styles.nonActiveStat]: !showIgnoredExcess && !isActive,
       })}
     >
       <BungieImage className={styles.statIcon} src={stat.displayProperties.icon} />
@@ -116,8 +140,11 @@ function Stat({
         })}
       >
         {t('LoadoutBuilder.TierNumber', {
-          tier: statTierWithHalf(value),
+          tier: statTierWithHalf(shownValue),
         })}
+        {showIgnoredExcess && (
+          <span className={styles.nonActiveStat}>+{statTierWithHalf(ignoredExcess!)}</span>
+        )}
       </span>
     </span>
   );

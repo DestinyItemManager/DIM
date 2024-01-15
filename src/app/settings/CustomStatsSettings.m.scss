@@ -1,5 +1,8 @@
+@use '../variables.scss' as *;
+
 .headerRow {
-  display: flex;
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
 
   label {
     flex-grow: 1;
@@ -7,7 +10,7 @@
 }
 
 .customDesc {
-  margin-top: 12px;
+  composes: fineprint from './SettingsPage.m.scss';
 }
 
 // a style for inputs or input wrappers
@@ -24,14 +27,22 @@
 }
 
 .statOption {
-  align-items: center;
   background: #4443;
   border: 1px solid #0000;
   border-radius: 4px;
   box-sizing: border-box;
   color: var(--theme-text);
-  flex-grow: 1;
+  flex: 0 !important;
   gap: 4px;
+  padding: 3px 0;
+  display: flex !important;
+  align-items: center;
+  margin: 0;
+  flex-direction: row;
+
+  @include phone-portrait {
+    flex-direction: column;
+  }
 }
 
 .classOption {
@@ -52,81 +63,71 @@
 
 // editor for a single stat
 .customStatEditor {
+  composes: flexColumn from '../dim-ui/common.m.scss';
   border: 1px solid;
   margin: 8px 0;
   padding: 6px;
-  animation-name: pulse-border;
-  animation-duration: 2s;
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
+  animation: pulse-border 1s ease-in-out 0s infinite alternate;
+  gap: 4px;
+}
 
-  display: flex;
-  flex-direction: column;
-  gap: 4px 0;
+.identifyingInfo {
+  composes: flexWrap from '../dim-ui/common.m.scss';
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
 
-  .editableStatsRow {
-    justify-content: space-between;
-    gap: 0.5em;
-    label {
-      padding: 3px 0;
-      display: flex;
-      margin: 0;
-    }
+  img {
+    height: 1.5em;
   }
-  .identifyingInfo {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    input {
-      flex-grow: 1;
-    }
-    img {
-      height: 1.5em;
-    }
-    .filter {
-      flex-grow: 1;
-    }
-    code {
-      background-color: #000;
-    }
+  code {
+    background-color: #000;
   }
-  .zero {
-    opacity: 0.4;
+}
+
+.label {
+  flex-grow: 1;
+  text-wrap: balance;
+}
+
+.classIcon {
+  font-size: 20px;
+  width: 1.4em;
+  text-align: center;
+}
+
+.filter {
+  flex-grow: 1;
+  color: var(--theme-text-secondary);
+}
+
+.zero {
+  opacity: 0.4;
+}
+
+.editableStatsRow {
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+
+  img {
+    height: 1.5em;
   }
 }
 
 // all info for a custom stat, without the editing controls
 .customStatView {
-  display: flex;
+  composes: flexRow from '../dim-ui/common.m.scss';
   align-items: center;
-  margin-top: 4px;
-  // name, class icon, a
-  .identifyingInfo {
-    flex-grow: 1;
-    display: flex;
-    align-items: center;
-    & > :nth-child(n + 2) {
-      margin: 0 4px;
-    }
-    .label {
-      flex-grow: 1;
-    }
-    .classIcon {
-      font-size: 20px;
-      width: 1.4em;
-      text-align: center;
-    }
-  }
+  gap: 8px;
 }
 
 @keyframes pulse-border {
   0% {
     border-color: #fff8;
   }
-  50% {
-    border-color: #fff4;
-  }
   100% {
-    border-color: #fff8;
+    border-color: #fff4;
   }
 }

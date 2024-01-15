@@ -203,6 +203,7 @@ export function LoadoutEditSubclassSection({
   const handleSyncSubclassFromEquipped = useDefsStoreUpdater(setLoadoutSubclassFromEquipped);
   const handleRandomizeSubclass = useDefsStoreUpdater(randomizeLoadoutSubclass);
   const handleClearSubclass = useDefsUpdater(clearSubclass);
+  const handleOpenPlugDrawer = () => setPlugDrawerOpen(true);
 
   return (
     <LoadoutEditSection
@@ -217,13 +218,13 @@ export function LoadoutEditSubclassSection({
         classType={loadout.classType}
         storeId={store.id}
         power={power}
-        onRemove={handleClearSubclass}
+        onClick={handleOpenPlugDrawer}
         onPick={handleAddItem}
       />
       {subclass && (
         <div className={styles.buttons}>
           {subclass.item.sockets ? (
-            <button type="button" className="dim-button" onClick={() => setPlugDrawerOpen(true)}>
+            <button type="button" className="dim-button" onClick={handleOpenPlugDrawer}>
               {t('LB.SelectSubclassOptions')}
             </button>
           ) : (

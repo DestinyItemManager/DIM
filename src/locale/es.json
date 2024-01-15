@@ -488,6 +488,7 @@
     "Super": "Súper"
   },
   "LB": {
+    "AddStack": "Añadir otra copia de este modificador",
     "AdvancedOptions": "Opciones avanzadas",
     "ChooseAMod": "Elige tus modificadores",
     "ChooseAnExotic": "Elige tu exótico",
@@ -540,6 +541,7 @@
       "HelpFull": "Mira más equipamiento, pero tarda más.",
       "ProcessingMode": "Modo de procesamiento"
     },
+    "RemoveStack": "Eliminar una copia de este modificador",
     "Scaled": "Escalado",
     "SearchAMod": "Buscar por nombre del modificador o descripción",
     "SearchAnExotic": "Buscar por nombre de exótico o descripción",
@@ -631,20 +633,19 @@
     "ChooseAlternateTitle": "Elige otro objeto",
     "CompareLoadout": "Comparar Equipación",
     "ConfirmOverwrite": "¿Estás seguro de que quieres reemplazar la armadura en la equipación \"{{name}}\" con este nuevo set de armadura?",
-    "CreateLoadout": "Guardar Equipación",
     "DecreaseStatPriority": "Reducir prioridad a las estadísticas",
     "DisabledByAutoStatMods": "Los modificadores de estadísticas están siendo elegidos automáticamente por el Optimizador de Equipaciones.",
     "DisabledDueToMaintenance": "El Optimizador de Equipaciones está actualmente desactivado debido al mantenimiento con la API de Bungie.",
     "EquipItems": "Equipar",
     "ExcludeItem": "Excluir objeto",
+    "ExcludedItems": "Objetos Excluidos",
     "ExistingLoadout": "Equipación Existente",
     "Exotic": "Armadura Exótica",
     "ExoticSpecialCategory": "Especial",
-    "Filter": "Filtros",
+    "Filter": "Configuración",
     "IgnoreStat": "Si está desmarcado, el Optimizador de Equipaciones fingirá que esta estadística no exista cuando se fabriquen equipaciones",
     "IncreaseStatPriority": "Incrementar prioridad a las estadísticas",
     "Legendary": "Legendarias",
-    "LockEquipped": "Equipar anclados",
     "LockItem": "Anclar objeto",
     "MissingClass": "La equipación es para: {{className}}",
     "MissingClassDescription": "La equipación que estás intentando visualizar es para una clase de personaje que no tienes.",
@@ -677,10 +678,12 @@
     "OptimizerExplanationSearch": "Usa la barra de búsqueda para limitar la armadura a considerar. Si ninguna armadura coincide con la búsqueda en la ranura, toda la armadura en esa ranura será considerada.",
     "OptimizerExplanationStats": "Arrastra las estadísticas más importantes arriba y desactiva las estadísticas que no quieras optimizar.",
     "OptimizerSet": "Set Optimizador",
+    "PinnedItems": "Objetos Fijados",
     "ProcessingSets": "Buscando las equipaciones de nivel más altas...",
     "SaveAs": "Guardar como",
     "SpeedReport": "Se generaron {{combos, number}} combinaciones en {{time}} segundos",
     "StatConstraints": "Prioridad de Nivel de Estadísticas y Rangos",
+    "StatMax": "Máx",
     "TierNumber": "N{{tier}}",
     "TierSelect": "Seleccionar nivel mínimo de las estadísticas",
     "UnableToAddAllMods": "No se pudieron añadir todos los modificadores.",
@@ -777,9 +780,11 @@
       "InvalidModsDesc": "1 modificador no puede encajar en ninguna pieza de armadura.",
       "InvalidModsDesc_plural": "{{count}} modificadores no pudieron encajar en ninguna pieza de armadura.",
       "ModPlacement": "Colocación de Modificadores",
+      "StackableMod": "Apilable",
       "UnassignedMods": "Modificadores Sin Asignar",
       "UnassignedModsDesc": "Un modificador no encajó debido a energía insuficiente o ranuras para modificadores. Las mejoras de energía para la armadura seleccionada no arreglarán este problema.",
       "UnassignedModsDesc_plural": "{{count}} modificadores no encajaron debido a energía insuficiente o ranuras para modificadores. Las mejoras de energía para la armadura seleccionada no arreglarán este problema.",
+      "UnstackableMod": "No Apilable",
       "UpgradeCosts": "Costes de Mejoras",
       "UpgradeCostsDesc": "Algunas armaduras necesitan mejoras de capacidad de energía para encajar los modificadores solicitados. En total, estas mejoras cuestan:"
     },
@@ -843,7 +848,7 @@
       "Summary": "Compartir esta equipación que contiene:",
       "Title": "Compartir \"{{name}}\""
     },
-    "ShareLoadout": "Compartir Equipación",
+    "ShareLoadout": "Compartir",
     "ShowModPlacement": "Mostrar Colocación de Modificadores",
     "Snapshot": "Guardar como Equipación En El Juego",
     "SocketOverrides": "Cambiando opciones de subclase",
@@ -857,6 +862,7 @@
     "UnassignedModError": "El modificador no encajó en tu armadura actual",
     "Undo": "Deshacer",
     "Update": "Guardar Cambios",
+    "UpdateLoadout": "Actualizar Equipación",
     "VendorsCannotEquip": "No tienes estos objetos. Pulsa para escoger otro reemplazo o clica la X para quitar:"
   },
   "Manifest": {
@@ -1032,6 +1038,8 @@
     "NoEventChallenges": "Has completado todos los desafíos del evento",
     "NoTrackedTriumph": "No tienes triunfos seguidos. Sigue tantos como quieras en DIM.",
     "PercentPrestige": "{{pct}}% hacia el reinicio",
+    "PointsUsed": "1 punto usado",
+    "PointsUsed_plural": "{{count}} puntos usados",
     "PowerBonusHeader": "+{{powerBonus}} Recompensas De Poder",
     "PowerBonusHeaderUndefined": "Otras Recompensas",
     "Progress": "Progreso",
@@ -1140,7 +1148,8 @@
     "SpacesSize": "{{count}} espacio",
     "SpacesSize_plural": "{{count}} espacios",
     "Theme": "Tema",
-    "VaultGroupingNone": "Ninguna"
+    "VaultGroupingNone": "Ninguna",
+    "VaultWeaponGroupingStyle": "Separar grupos en diferentes líneas"
   },
   "Sockets": {
     "ApplyPerks": "Aplicar Ventajas",
@@ -1217,7 +1226,6 @@
     "DataIsLocal": "La información de las notas y las etiquetas es solo local",
     "DeleteAllData": "Borrar TODA la Información de los Servidores de Sincronización DIM",
     "DeleteAllDataConfirm": "¿Estás seguro de que quieres borrar TODA tu información, para todas las cuentas, de Sincronización DIM? No puedes deshacer esto.",
-    "DeleteAllDataLabel": "Limpiar Información de Sincronización DIM",
     "Details": {
       "IndexedDBStorage": "El almacenamiento local sólo guardará información en este navegador. Limpiando sus datos de navegación borrará esta información."
     },
@@ -1256,23 +1264,20 @@
     "Usage": "DIM está usando {{usage, humanBytes}} de {{quota, humanBytes}} disponibles para ello en este dispositivo. Esto incluye las bases de datos de objetos de Destiny descargados de Bungie.net."
   },
   "StreamDeck": {
-    "Authorization": {
-      "No": "No",
-      "Reset": "DESAUTORIZAR",
-      "Title": "¿Ves el mismo código en tu Stream Deck?",
-      "Update": "Si estás viendo este mensaje, estás usando una versión antigua del plugin. Por favor descarga la última actualización en la tienda de Stream Deck.",
-      "Yes": "Sí"
-    },
-    "Connected": "Conectado",
-    "Enable": "Complemento del Stream Deck",
+    "Authorize": "Conectar aplicación",
+    "Enable": "Complemento Stream Deck",
     "FinePrint": "Activa la conexión con el complemento de DIM Stream Deck. Este complemento es un proyecto separado que no está escrito ni respaldado por el equipo de DIM.",
     "Install": "Instalar complemento",
-    "NotConnected": "No Conectado",
-    "OldExtension": "Asegúrate de desinstalar la antigua extensión de Chrome Stream Deck. Ya no se necesita y causará comportamientos irregulares en DIM.",
-    "SelectLoadout": "Enviar a Stream Deck",
-    "Selection": {
-      "Item": "Elige un objeto del inventario",
-      "Loadout": "Elegir una equipación"
+    "MissingAuthorization": "Debes autorizar la aplicación Stream Deck para conectar con DIM. Ve a configuración y haz clic en \"Conectar aplicación\".",
+    "Tooltip": {
+      "Application": "Aplicación Stream Deck",
+      "AuthRequired": "Haga clic en este botón o ve a configuración y haz clic en \"Conectar aplicación\".",
+      "Error": "Tu complemento Stream Deck ya no tiene soporte. Por favor actualiza a la última versión. Este complemento requiere al menos:",
+      "ErrorConnection": "si ya estás usando la última versión, comprueba si alguna extensión de navegador está bloqueando la conexión.",
+      "ExtensionIssue": "Problema con las Extensiones",
+      "Plugin": "Complemento",
+      "Title": "Complemento DIM para Stream Deck",
+      "Version": "Versión:"
     }
   },
   "StripSockets": {
@@ -1394,25 +1399,24 @@
   "WishListRoll": {
     "BestRatedTip": "Esta ventaja coincide exactamente con una tirada de arma en tu lista de deseos.",
     "BestRatedTip_plural": "Estas ventajas coinciden exactamente con una tirada de arma de tu lista de deseos.",
-    "ChoosyVoltron": "choosy_voltron",
-    "ChoosyVoltronDescription": "choosy_voltron es una colección autoactualizada de JcE y JcJ de tiradas de listas de deseos de Mercules904 y pandapaxxy, junto con algunas listas de tiradas basura.",
     "Clear": "Limpiar Lista de Deseos",
     "CopiedLine": "Tirada de la Lista de Deseos copiada al portapapeles",
     "CopyLine": "Copiar las Ventajas Seleccionadas como Tirada de la Lista de Deseos",
-    "ExternalSource": "Opcionalmente, proporcione la(s) URL(s) para una lista de deseos (tubería | separado)",
+    "ExternalSource": "Añadir otra lista de deseos",
+    "ExternalSourcePlaceholder": "Pega enlace de lista de deseos aquí",
     "Header": "Lista de Deseos",
     "Import": "Cargar Tiradas de la Lista de Deseos",
     "ImportError": "Error cargando la lista de deseos: {{error}}",
     "ImportFailed": "No se encontró información en la lista de deseos.",
     "ImportNoFile": "No hay archivo seleccionado.",
     "InvalidExternalSource": "Por favor, introduzca una URL válida para su lista de deseos externa. La URL debe empezar con algunos de lo siguientes:",
+    "JustAnotherTeam": "Solo Otro Equipo",
     "LastUpdated": "Última actualización: {{lastUpdatedDate}} a las {{lastUpdatedTime}}",
     "Num": "{{num, number}} tiradas en tu lista de deseos",
-    "PreMadeFiles": "Usar Una Lista de Deseos Prehecha",
-    "Untitled": "Lista de Deseos sin nombre",
-    "UpdateExternalSource": "Actualizar Fuente de la Lista de Deseos",
+    "NumRolls": "{{num, number}} tiradas",
+    "SourceAlreadyAdded": "Lista de Deseos ya añadida",
+    "UpdateExternalSource": "Añadir Lista de Deseos",
     "Voltron": "voltron (por defecto)",
-    "VoltronDescription": "voltron es una colección auto-actulizada de tiradas de listas de deseos de JcE y JcJ a través de la comunidad de Destiny. Elegimos esta por defecto.",
     "WishListNotes": "Notas de la Lista de Deseos:",
     "WorstRatedTip": "Esta ventaja coincide exactamente con una tirada de arma en tu lista de basura.",
     "WorstRatedTip_plural": "Estas ventajas coinciden exactamente con una tirada de arma en tu lista de basura."

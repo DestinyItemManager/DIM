@@ -1074,49 +1074,63 @@ const missingSources: { [key: string]: number[] } = {
     420895300, // Deep Explorer Mark
     436695703, // TM-Cogburn Custom Plate
     498918879, // TM-Earp Custom Grips
+    557092665, // Dark Age Cloak
     587312237, // Twisting Echo Grips
+    632989816, // Dark Age Gauntlets
     638836294, // Plate of the Taken King
     708921139, // TM-Cogburn Custom Legguards
     767306222, // Grasps of the Taken King
+    806004493, // Dark Age Gloves
     833653807, // Twisting Echo Strides
     837865641, // Vestment of the Taken King
+    851401651, // Dark Age Overcoat
     956827695, // Mark of the Taken King
     1148597205, // Deep Explorer Grasps
     1349399252, // TM-Earp Custom Cloaked Stetson
+    1476803535, // Dark Age Legbraces
     1664757090, // Gauntlets of the Taken King
     1756483796, // Twisting Echo Mask
     1913823311, // Gloves of the Taken King
+    1933599476, // Dark Age Visor
     1951355667, // Twisting Echo Vest
     2057955626, // Deep Explorer Vestments
     2244604734, // Corrupting Echo Gloves
     2341879253, // TM-Moss Custom Bond
+    2426502022, // Dark Age Strides
     2488323569, // Boots of the Taken King
     2499351855, // Deep Explorer Gauntlets
     2565015142, // TM-Cogburn Custom Mark
     2618168932, // Bond of the Taken King
     2643850526, // Hood of the Taken King
     2649394513, // Deep Explorer Greaves
+    2662590925, // Dark Age Mark
     2663987096, // Corrupting Echo Boots
     2694773307, // Deep Explorer Bond
     2724719415, // Deep Explorer Strides
+    2771011469, // Dark Age Mask
     2797334754, // Deep Explorer Cloak
     2819810688, // Deep Explorer Boots
     2820604007, // Mask of the Taken King
     2850384360, // Strides of the Taken King
     2885497847, // Descending Echo Gauntlets
     2935559305, // Deep Explorer Plate
+    2963224754, // Dark Age Sabatons
     3048458482, // Corrupting Echo Robes
+    3056827626, // Dark Age Bond
     3171090615, // Corrupting Echo Cover
     3260781446, // Deep Explorer Gloves
     3267969345, // Descending Echo Cage
     3270955774, // Deep Explorer Helmet
     3326914239, // Deep Explorer Hood
     3344225390, // TM-Earp Custom Hood
+    3423574140, // Dark Age Grips
     3511740432, // TM-Moss Custom Gloves
     3570749779, // Cloak of the Taken King
+    3683772388, // Dark Age Harness
     3685276035, // Corrupting Echo Bond
     3708902812, // Greaves of the Taken King
     3715136417, // TM-Earp Custom Chaps
+    3735435664, // Dark Age Chestrig
     3870375786, // TM-Moss Custom Pants
     3871537958, // Descending Echo Helm
     3933500353, // TM-Cogburn Custom Gauntlets
@@ -1124,6 +1138,7 @@ const missingSources: { [key: string]: number[] } = {
     4039955353, // TM-Moss Custom Hat
     4047213660, // Deep Explorer Mask
     4050474396, // Descending Echo Mark
+    4090037601, // Dark Age Helm
     4130276947, // Helm of the Taken King
     4177293424, // TM-Cogburn Custom Cover
     4288623897, // TM-Earp Custom Vest
@@ -3182,6 +3197,23 @@ const missingSources: { [key: string]: number[] } = {
     3921970316, // Gauntlets of the Exile
     4100217958, // Focusing Boots
     4177448932, // Focusing Wraps
+  ],
+  warlordsruin: [
+    557092665, // Dark Age Cloak
+    632989816, // Dark Age Gauntlets
+    806004493, // Dark Age Gloves
+    851401651, // Dark Age Overcoat
+    1476803535, // Dark Age Legbraces
+    1933599476, // Dark Age Visor
+    2426502022, // Dark Age Strides
+    2662590925, // Dark Age Mark
+    2771011469, // Dark Age Mask
+    2963224754, // Dark Age Sabatons
+    3056827626, // Dark Age Bond
+    3423574140, // Dark Age Grips
+    3683772388, // Dark Age Harness
+    3735435664, // Dark Age Chestrig
+    4090037601, // Dark Age Helm
   ],
   watcher: [
     436695703, // TM-Cogburn Custom Plate

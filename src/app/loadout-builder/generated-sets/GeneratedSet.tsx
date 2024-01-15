@@ -1,4 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore, statSourceOrder } from 'app/inventory/store-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
@@ -10,7 +11,6 @@ import { compareBy } from 'app/utils/comparators';
 import { errorLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
-import { t } from 'i18next';
 import _ from 'lodash';
 import { Dispatch, memo, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
@@ -18,9 +18,9 @@ import {
   ArmorEnergyRules,
   ArmorSet,
   ArmorStatHashes,
+  DesiredStatRange,
   ModStatChanges,
   PinnedItems,
-  ResolvedStatConstraint,
 } from '../types';
 import { getPower } from '../utils';
 import styles from './GeneratedSet.m.scss';
@@ -38,7 +38,7 @@ export default memo(function GeneratedSet({
   selectedStore,
   lockedMods,
   pinnedItems,
-  resolvedStatConstraints,
+  desiredStatRanges,
   modStatChanges,
   loadouts,
   lbDispatch,
@@ -53,7 +53,7 @@ export default memo(function GeneratedSet({
   selectedStore: DimStore;
   lockedMods: PluggableInventoryItemDefinition[];
   pinnedItems: PinnedItems;
-  resolvedStatConstraints: ResolvedStatConstraint[];
+  desiredStatRanges: DesiredStatRange[];
   modStatChanges: ModStatChanges;
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
@@ -156,10 +156,11 @@ export default memo(function GeneratedSet({
         stats={set.stats}
         getStatsBreakdown={getStatsBreakdownOnce}
         maxPower={getPower(displayedItems)}
-        resolvedStatConstraints={resolvedStatConstraints}
+        desiredStatRanges={desiredStatRanges}
         boostedStats={boostedStats}
         existingLoadoutName={overlappingLoadout?.name}
         equippedHashes={equippedHashes}
+        autoStatMods={autoStatMods}
       />
       <div className={styles.build}>
         <div className={styles.items}>

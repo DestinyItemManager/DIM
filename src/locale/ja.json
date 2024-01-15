@@ -488,6 +488,7 @@
     "Super": "スーパースキル"
   },
   "LB": {
+    "AddStack": "この Mod を1つスタック追加する",
     "AdvancedOptions": "高度なオプション",
     "ChooseAMod": "使用するmodを選ぶ",
     "ChooseAnExotic": "使用するエキゾチックを選ぶ",
@@ -540,6 +541,7 @@
       "HelpFull": "装備が多く見つかりますが、時間がかかります。",
       "ProcessingMode": "処理モード"
     },
+    "RemoveStack": "この Mod をスタックから1つ外す",
     "Scaled": "縮尺",
     "SearchAMod": "Mod名または説明で検索",
     "SearchAnExotic": "エキゾチック名または説明で検索",
@@ -578,7 +580,7 @@
     },
     "EmptyFragmentSlots": {
       "Description": "このサブクラスには未使用のかけらスロットがあります。",
-      "Name": "サブクラスのかけらスロットに空きがあります"
+      "Name": "サブクラスのかけらスロットに空き有り"
     },
     "InvalidMods": {
       "Description": "このロードアウト内にある一部のModが廃止されているか、アーマーに適用できないようです。",
@@ -631,20 +633,19 @@
     "ChooseAlternateTitle": "別アイテムを選択",
     "CompareLoadout": "ロードアウトを比較",
     "ConfirmOverwrite": "ロードアウト「{{name}}」のアーマーをこの新しいアーマーセットに置き換えてもよろしいですか？",
-    "CreateLoadout": "ロードアウトを保存",
     "DecreaseStatPriority": "ステータス優先度を下げる",
     "DisabledByAutoStatMods": "ステータス値に関するModはロードアウト最適化機能によって自動的に選択されています。",
     "DisabledDueToMaintenance": "現在、Bungie API のメンテナンスによりロードアウト最適化が利用出来ません。",
     "EquipItems": "装備",
     "ExcludeItem": "組み合わせから外すアイテムを指定",
+    "ExcludedItems": "除外されたアイテム",
     "ExistingLoadout": "既存のロードアウト",
     "Exotic": "エキゾチックアーマー",
     "ExoticSpecialCategory": "スペシャル",
-    "Filter": "フィルター",
+    "Filter": "設定",
     "IgnoreStat": "チェックを外すと、このステータスを無視してビルドを探索します。",
     "IncreaseStatPriority": "ステータス優先度を上げる",
     "Legendary": "レジェンダリー",
-    "LockEquipped": "ピン留めされたアイテムを装備",
     "LockItem": "アイテムをピン留めする",
     "MissingClass": "ビルド: {{className}}",
     "MissingClassDescription": "表示しようとしているビルドは、あなたが持っていないキャラクタークラス向けです。",
@@ -677,10 +678,12 @@
     "OptimizerExplanationSearch": "検索機能を使って最適な防具を絞り込みます。もし各防具(ヘルメットなど) が絞り込みに一致しない場合、各防具ごとに全てが候補として選出されます。",
     "OptimizerExplanationStats": "ドラッグで上から最も優先したい順にステータスを並び替え、ビルドに不要なステータスは無効にしましょう",
     "OptimizerSet": "最適化セット",
+    "PinnedItems": "ピン留めしたアイテム",
     "ProcessingSets": "最上位Tierのセットを検索しています...",
     "SaveAs": "名前をつけて保存",
     "SpeedReport": "{{time}} 秒で生成された {{combos, number}} の組み合わせ",
     "StatConstraints": "ステータスTierの優先度と範囲",
+    "StatMax": "最大",
     "TierNumber": "T{{tier}}",
     "TierSelect": "ステータスTier最低値を選択",
     "UnableToAddAllMods": "全てのModを追加することはできません。",
@@ -777,9 +780,11 @@
       "InvalidModsDesc": "どのアーマーにも適用できないmodが1つ見つかりました。",
       "InvalidModsDesc_plural": "どのアーマーにも適用できないmodが {{count}} 個見つかりました。",
       "ModPlacement": "Mod を入れ替え",
+      "StackableMod": "スタック可能",
       "UnassignedMods": "割り当てられていない mod",
       "UnassignedModsDesc": "エネルギー容量または mod スロットが不足しているため、1つの mod を適用できませんでした。選択している防具のエネルギーアップグレードでは、この問題は解決しません。",
       "UnassignedModsDesc_plural": "エネルギー容量またはMODスロットが不足しているため、 {{count}} つの mod がフィットしませんでした。選択した防具にエネルギーをアップグレードしても、この問題は解決されません。",
+      "UnstackableMod": "スタック不可",
       "UpgradeCosts": "アップグレードコスト",
       "UpgradeCostsDesc": "一部のアーマーで適用する mod に対してエネルギーが不足しています。アップグレードに必要な合計コスト:"
     },
@@ -843,7 +848,7 @@
       "Summary": "以下を含むこのロードアウトをシェアする：",
       "Title": "\"{{name}}\" をシェアする"
     },
-    "ShareLoadout": "ロードアウトをシェアする",
+    "ShareLoadout": "共有",
     "ShowModPlacement": "装備中のModを表示",
     "Snapshot": "ゲーム内ロードアウトとして保存",
     "SocketOverrides": "サブクラスオプションの変更",
@@ -857,6 +862,7 @@
     "UnassignedModError": "Modが現在のアーマーに適用できませんでした",
     "Undo": "元に戻す",
     "Update": "変更を保存",
+    "UpdateLoadout": "ロードアウトを更新",
     "VendorsCannotEquip": "これらのアイテムはありません。タップして交換を選択するか、Xをクリックして削除します。"
   },
   "Manifest": {
@@ -1032,6 +1038,8 @@
     "NoEventChallenges": "すべてのイベントの挑戦を完了しました。",
     "NoTrackedTriumph": "追跡中の勝利の道のりはありません。DIM で好きなだけ追跡してください。",
     "PercentPrestige": "リセットまで{{pct}}％達成",
+    "PointsUsed": "1ポイント使用中",
+    "PointsUsed_plural": "{{count}} ポイント使用中",
     "PowerBonusHeader": "+{{powerBonus}} パワーボーナス",
     "PowerBonusHeaderUndefined": "その他の報酬",
     "Progress": "進行状況",
@@ -1140,7 +1148,8 @@
     "SpacesSize": "{{count}} スペース",
     "SpacesSize_plural": "{{count}} スペース",
     "Theme": "テーマ",
-    "VaultGroupingNone": "無し"
+    "VaultGroupingNone": "無し",
+    "VaultWeaponGroupingStyle": "水平線でグループ分けをする"
   },
   "Sockets": {
     "ApplyPerks": "パークを適用",
@@ -1217,7 +1226,6 @@
     "DataIsLocal": "タグとメモのデータはローカルのみです",
     "DeleteAllData": "DIM Syncサーバーからすべてのデータを削除",
     "DeleteAllDataConfirm": "DIM Sync から、すべてのアカウントのすべてのデータを削除してもよろしいですか？元に戻すことはできません。",
-    "DeleteAllDataLabel": "DIM Syncのデータを消去",
     "Details": {
       "IndexedDBStorage": "ローカルストレージは、このブラウザでのみ情報を保存します。閲覧データを消去すると、この情報が削除されます。"
     },
@@ -1256,23 +1264,20 @@
     "Usage": "DIMは、このデバイスで利用可能な{{quota, humanBytes}}のうち{{usage, humanBytes}}を使用しています。使用中のデータには、Bungie.netからダウンロードしたDestinyのアイテムデータベースも含まれます。"
   },
   "StreamDeck": {
-    "Authorization": {
-      "No": "いいえ",
-      "Reset": "デバイス認証を解除する",
-      "Title": "Stream Deck に同じコードが表示されますか？",
-      "Update": "このメッセージが表示される場合、古いバージョンのプラグインを使用しています。Stream Deck ストアで最新のアップデートをダウンロードしてください。",
-      "Yes": "はい"
-    },
-    "Connected": "接続しました",
+    "Authorize": "アプリケーションに接続",
     "Enable": "Stream Deck プラグイン",
     "FinePrint": "DIM Stream Deck プラグインとの接続を有効にします。 このプラグインは、DIM開発チームとは別のチームによるプロジェクトでサポート外です。",
     "Install": "プラグインをインストールする",
-    "NotConnected": "接続されていません",
-    "OldExtension": "過去に公開されたStream Deck用Chrome拡張機能をアンインストールしてください。この拡張機能は現在必要なく、想定外の挙動の原因となります。",
-    "SelectLoadout": "Stream Deckに送る",
-    "Selection": {
-      "Item": "アイテム一覧からアイテムを選択してください",
-      "Loadout": "ロードアウトを選択してください"
+    "MissingAuthorization": "DIM に接続するには、Stream Deck アプリケーションを認証する必要があります。設定を開き、\"アプリケーションに接続\"をクリックします。",
+    "Tooltip": {
+      "Application": "Stream Deck アプリケーション",
+      "AuthRequired": "このボタンをクリックするか、設定から\"アプリケーションに接続\"をクリックします。",
+      "Error": "お使いのStream Deck プラグインはサポートが終了したため、最新バージョンにアップデートしてください。利用するには以下のバージョンが必要です：",
+      "ErrorConnection": "最新バージョンでも利用できない場合は、ブラウザの拡張機能や設定などでブロックしていないか確認してください。",
+      "ExtensionIssue": "拡張機能の問題",
+      "Plugin": "プラグイン",
+      "Title": "DIM Stream Deck プラグイン",
+      "Version": "バージョン:"
     }
   },
   "StripSockets": {
@@ -1394,25 +1399,24 @@
   "WishListRoll": {
     "BestRatedTip": "このパークは、正確に希望の武器ロールと一致しています。",
     "BestRatedTip_plural": "ウィッシュリストにある推奨ロールと完全一致しています。",
-    "ChoosyVoltron": "choosy_voltron",
-    "ChoosyVoltronDescription": "choosey_voltronは、Mercules904とpandapaxyによるPvEとPvPウィッシュリストロールの自動更新されたコレクションで、いくつかのゴミリストロールもあります。",
     "Clear": "ウィッシュリストをクリア",
     "CopiedLine": "ウィッシュリストのロールをクリップボードにコピーしました",
     "CopyLine": "選択中のパークをウィッシュリストのロールとしてコピー",
-    "ExternalSource": "必要に応じて、ウィッシュリストのURLを指定できます。(パイプ | 区切り)",
+    "ExternalSource": "別のウィッシュリストに追加しました",
+    "ExternalSourcePlaceholder": "追加したいウィッシュリストのURLをここにペーストします。",
     "Header": "ウィッシュリスト",
     "Import": "ウィッシュリストにあるロールをロードする",
     "ImportError": "欲しい物リストのロード中にエラーが発生しました: {{error}}",
     "ImportFailed": "ウィッシュリストの情報はありません。",
     "ImportNoFile": "ファイルが選択されていません。",
     "InvalidExternalSource": "外部ウィッシュリストソースの有効なURLを入力してください。 URLは次から始まる必要があります:",
+    "JustAnotherTeam": "Just Another Team",
     "LastUpdated": "最終更新: {{lastUpdatedDate}} at {{lastUpdatedTime}}",
     "Num": "{{num, number}} 個のロールが現在のウイッシュリストに入っています",
-    "PreMadeFiles": "既存のウィッシュリストを使用する",
-    "Untitled": "未題のウィッシュリスト",
-    "UpdateExternalSource": "ウィッシュリストのソースをアップデート",
+    "NumRolls": "{{num, number}} 個のロール",
+    "SourceAlreadyAdded": "このウィッシュリストは既に追加されています。",
+    "UpdateExternalSource": "ウィッシュリストに追加しました",
     "Voltron": "voltron (標準)",
-    "VoltronDescription": "voltronとはMercules904とpandapaxyによって作成されたPvEとPvPウィッシュリストロールを自動で更新する機能です。デフォルトで使用しています。",
     "WishListNotes": "ウィッシュリストのメモ:",
     "WorstRatedTip": "ごみリストにある非推奨パークと完全一致しています。",
     "WorstRatedTip_plural": "ごみリストにある非推奨パークと完全一致しています。"

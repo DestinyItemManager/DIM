@@ -20,7 +20,7 @@ jobs:
         run: dimJSON="$(jq -S . src/locale/en.json)" && echo "${dimJSON}" > src/locale/en.json
 
       - name: Upload updated en.json to crowdin
-        uses: crowdin/github-action@v1.15.2
+        uses: crowdin/github-action@v1.16.0
         with:
           upload_sources: true
           upload_translations: false

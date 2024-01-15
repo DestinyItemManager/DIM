@@ -1,13 +1,18 @@
-import ClosableContainer from 'app/dim-ui/ClosableContainer';
+import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import { TileGridTile } from 'app/dim-ui/TileGrid';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
+import { t } from 'app/i18next-t';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { PlugStats } from 'app/item-popup/PlugTooltip';
+import { banIcon, minusIcon, plusIcon } from 'app/shell/icons';
+import AppIcon from 'app/shell/icons/AppIcon';
 import { getPlugDefStats, usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import React, { useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
+import PlugStackableIcon from './PlugStackableIcon';
 import styles from './SelectablePlug.m.scss';
+import { PlugSelectionType } from './types';
 
 /**
  * A single selectable plug in the PlugDrawer component. This shows the details of the plug along
@@ -19,24 +24,28 @@ export default function SelectablePlug({
   selected,
   selectable,
   selectionType,
+  stack,
   removable,
   onPlugSelected,
   onPlugRemoved,
 }: {
   plug: PluggableInventoryItemDefinition;
+  /** How many of this specific mod have been selected? (only for stackable mods) */
+  stack: number;
   classType: DestinyClass;
   selected: boolean;
   selectable: boolean;
-  selectionType: 'multi' | 'unique' | 'single';
+  selectionType: PlugSelectionType;
   removable: boolean;
   onPlugSelected: (plug: PluggableInventoryItemDefinition) => void;
   onPlugRemoved: (plug: PluggableInventoryItemDefinition) => void;
 }) {
-  const handleClick = useCallback(() => {
-    selectable && onPlugSelected(plug);
-  }, [onPlugSelected, plug, selectable]);
+  const canRemoveOnClick =
+    selectionType !== PlugSelectionType.Single && selected && removable && stack <= 1;
 
-  const onClose = useCallback(() => onPlugRemoved(plug), [onPlugRemoved, plug]);
+  const handleClick = useCallback(() => {
+    selectable ? onPlugSelected(plug) : canRemoveOnClick && onPlugRemoved(plug);
+  }, [selectable, onPlugSelected, plug, canRemoveOnClick, onPlugRemoved]);
 
   // Memoize the meat of the component as it doesn't need to re-render every time
   const plugDetails = useMemo(
@@ -44,22 +53,75 @@ export default function SelectablePlug({
     [plug, classType],
   );
 
-  return (
-    <ClosableContainer onClose={selected && removable ? onClose : undefined}>
-      <TileGridTile
-        selected={selected}
-        disabled={selectionType !== 'single' && !selectable}
-        title={plug.displayProperties.name}
-        icon={
-          <div className="item" title={plug.displayProperties.name}>
-            <DefItemIcon itemDef={plug} />
-          </div>
+  const stackable = stack > 1 || (stack === 1 && selectable);
+
+  const handleIncrease =
+    stackable && selectable
+      ? (e: React.MouseEvent) => {
+          e.stopPropagation();
+          onPlugSelected(plug);
         }
-        onClick={handleClick}
-      >
-        {plugDetails}
-      </TileGridTile>
-    </ClosableContainer>
+      : undefined;
+
+  const handleDecrease =
+    stackable && removable
+      ? (e: React.MouseEvent) => {
+          e.stopPropagation();
+          onPlugRemoved(plug);
+        }
+      : undefined;
+
+  const corner =
+    handleIncrease || handleDecrease || stackable ? (
+      <div className={styles.buttons}>
+        {stackable && <div className={styles.stack}>{stack}×</div>}
+        {(handleIncrease || handleDecrease) && (
+          <div className={styles.volumeRocker}>
+            <button
+              type="button"
+              className="dim-button"
+              onClick={handleIncrease}
+              disabled={!handleIncrease}
+              title={t('LB.AddStack')}
+            >
+              <AppIcon icon={plusIcon} />
+            </button>
+            <button
+              type="button"
+              className="dim-button"
+              onClick={handleDecrease}
+              disabled={!handleDecrease}
+              title={t('LB.RemoveStack')}
+            >
+              <AppIcon icon={stack === 1 ? banIcon : minusIcon} />
+            </button>
+          </div>
+        )}
+      </div>
+    ) : undefined;
+
+  return (
+    <TileGridTile
+      selected={selected}
+      disabled={
+        !(
+          (stackable && (selectable || removable)) ||
+          selectable ||
+          canRemoveOnClick ||
+          (selectionType === PlugSelectionType.Single && selected)
+        )
+      }
+      title={plug.displayProperties.name}
+      icon={
+        <div className="item" title={plug.displayProperties.name}>
+          <DefItemIcon itemDef={plug} />
+        </div>
+      }
+      onClick={handleClick}
+      corner={corner}
+    >
+      {plugDetails}
+    </TileGridTile>
   );
 }
 
@@ -72,16 +134,23 @@ function SelectablePlugDetails({
 }) {
   const stats = getPlugDefStats(plug, classType);
 
-  // We don't show Clarity descriptions here due to layout concerns, see #9318 / #8641
-  const plugDescriptions = usePlugDescriptions(plug, stats, /* forceUseBungieDescriptions */ true);
+  const plugDescriptions = usePlugDescriptions(plug, stats);
+
   return (
     <>
-      {plugDescriptions.perks.map((perkDesc) => (
-        <React.Fragment key={perkDesc.perkHash}>
-          {perkDesc.description && <RichDestinyText text={perkDesc.description} />}
-          {perkDesc.requirement && <div className={styles.requirement}>{perkDesc.requirement}</div>}
-        </React.Fragment>
-      ))}
+      {plugDescriptions.perks.map(
+        (perkDesc) =>
+          perkDesc.description && (
+            <RichDestinyText key={perkDesc.perkHash} text={perkDesc.description} />
+          ),
+      )}
+      <PlugStackableIcon descriptions={plugDescriptions} hash={plug.hash} />
+      {plugDescriptions.communityInsight && (
+        <ClarityDescriptions
+          perk={plugDescriptions.communityInsight}
+          className={styles.clarityDescription}
+        />
+      )}
       {stats.length > 0 && <PlugStats stats={stats} />}
     </>
   );
