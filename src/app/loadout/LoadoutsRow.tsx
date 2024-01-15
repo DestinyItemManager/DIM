@@ -21,6 +21,7 @@ export default memo(function LoadoutRow({
   equippable,
   onShare,
   onSnapshotInGameLoadout,
+  onSaveAsInGameLoadout,
 }: {
   loadout: Loadout;
   store: DimStore;
@@ -28,6 +29,7 @@ export default memo(function LoadoutRow({
   equippable: boolean;
   onShare: (loadout: Loadout) => void;
   onSnapshotInGameLoadout: () => void;
+  onSaveAsInGameLoadout: (loadout: Loadout) => void;
 }) {
   const dispatch = useThunkDispatch();
 
@@ -66,6 +68,16 @@ export default memo(function LoadoutRow({
 
     if (saved) {
       actionButtons.push(
+        <button
+          key="SaveInGame"
+          type="button"
+          className="dim-button"
+          onClick={() => onSaveAsInGameLoadout(loadout)}
+        >
+          {t('Loadouts.SaveInGame')}
+        </button>,
+      );
+      actionButtons.push(
         <ConfirmButton key="delete" danger onClick={handleDeleteClick}>
           <AppIcon icon={deleteIcon} title={t('Loadouts.Delete')} />
         </ConfirmButton>,
@@ -84,7 +96,16 @@ export default memo(function LoadoutRow({
     }
 
     return actionButtons;
-  }, [dispatch, equippable, loadout, onShare, onSnapshotInGameLoadout, saved, store]);
+  }, [
+    dispatch,
+    equippable,
+    loadout,
+    onSaveAsInGameLoadout,
+    onShare,
+    onSnapshotInGameLoadout,
+    saved,
+    store,
+  ]);
 
   return (
     <LoadoutView

@@ -1,9 +1,7 @@
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
-import { resolveInGameLoadoutIdentifiers } from 'app/loadout-drawer/loadout-type-converters';
 import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -13,24 +11,31 @@ import { RadioButton } from './RadioButton';
 import SelectInGameLoadoutIdentifiers, {
   useIdentifierValues,
 } from './SelectInGameLoadoutIdentifiers';
-import { editInGameLoadout, snapshotInGameLoadout } from './ingame-loadout-apply';
 import { availableLoadoutSlotsSelector, inGameLoadoutsForCharacterSelector } from './selectors';
+
+export type EditInGameLoadoutSaveHandler = (
+  nameHash: number,
+  colorHash: number,
+  iconHash: number,
+  slot: number,
+) => Promise<void>;
 
 /** An editor sheet for whatever we can edit with ingame loadouts. Name, color, icon. */
 export default function EditInGameLoadout({
   loadout,
   characterId,
   onClose,
+  onSave,
 }: {
   loadout?: InGameLoadout;
   characterId?: string;
+  onSave: EditInGameLoadoutSaveHandler;
   onClose: () => void;
 } & (
   | { loadout: InGameLoadout; characterId?: undefined }
   | { loadout?: undefined; characterId: string }
 )) {
   const defs = useD2Definitions()!;
-  const dispatch = useThunkDispatch();
 
   const [names, colors, icons] = useIdentifierValues(defs);
   const defaultName = names[0].hash;
@@ -87,32 +92,7 @@ export default function EditInGameLoadout({
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const { name, colorIcon, icon } = resolveInGameLoadoutIdentifiers(defs, {
-        nameHash,
-        colorHash,
-        iconHash,
-      });
-
-      if (creating) {
-        await dispatch(
-          snapshotInGameLoadout({
-            nameHash,
-            colorHash,
-            iconHash,
-            name,
-            colorIcon,
-            icon,
-            index: slot,
-            characterId: characterId!,
-            items: [],
-            id: `ingame-${characterId}-${slot}`,
-          }),
-        );
-      } else {
-        await dispatch(
-          editInGameLoadout({ ...loadout, nameHash, name, colorHash, colorIcon, iconHash, icon }),
-        );
-      }
+      await onSave(nameHash, colorHash, iconHash, slot);
     } finally {
       onClose();
     }

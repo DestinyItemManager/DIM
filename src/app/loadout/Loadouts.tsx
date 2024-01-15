@@ -17,6 +17,7 @@ import {
   useUpdateLoadoutAnalysisContext,
 } from 'app/loadout-analyzer/hooks';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
+import { resolveInGameLoadoutIdentifiers } from 'app/loadout-drawer/loadout-type-converters';
 import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout, newLoadoutFromEquipped } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsForClassTypeSelector } from 'app/loadout-drawer/loadouts-selector';
@@ -24,6 +25,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { useSetting } from 'app/settings/hooks';
 import { AppIcon, addIcon, faCalculator, uploadIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
+import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { usePageTitle } from 'app/utils/hooks';
 import { DestinySeasonDefinition } from 'bungie-api-ts/destiny2';
 import { useCallback, useMemo, useRef, useState } from 'react';
@@ -31,9 +33,10 @@ import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import styles from './Loadouts.m.scss';
 import LoadoutRow from './LoadoutsRow';
-import EditInGameLoadout from './ingame/EditInGameLoadout';
+import EditInGameLoadout, { EditInGameLoadoutSaveHandler } from './ingame/EditInGameLoadout';
 import { InGameLoadoutDetails } from './ingame/InGameLoadoutDetailsSheet';
 import { InGameLoadoutStrip } from './ingame/InGameLoadoutStrip';
+import { editInGameLoadout, snapshotInGameLoadout } from './ingame/ingame-loadout-apply';
 import LoadoutImportSheet from './loadout-share/LoadoutImportSheet';
 import LoadoutShareSheet from './loadout-share/LoadoutShareSheet';
 import { searchAndSortLoadoutsByQuery, useLoadoutFilterPills } from './loadout-ui/menu-hooks';
@@ -73,6 +76,7 @@ export default function LoadoutsContainer({ account }: { account: DestinyAccount
 }
 
 function Loadouts({ account }: { account: DestinyAccount }) {
+  const defs = useD2Definitions()!;
   const location = useLocation();
   const locationStoreId = (location.state as { storeId: string } | undefined)?.storeId;
   const stores = useSelector(sortedStoresSelector);
@@ -89,6 +93,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const [loadoutSort, setLoadoutSort] = useSetting('loadoutSort');
   const language = useSelector(languageSelector);
   const apiPermissionGranted = useSelector(apiPermissionGrantedSelector);
+  const dispatch = useThunkDispatch();
 
   const savedLoadouts = useSelector(loadoutsForClassTypeSelector(classType));
   const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
@@ -108,6 +113,8 @@ function Loadouts({ account }: { account: DestinyAccount }) {
 
   const [editingInGameLoadout, setEditingInGameLoadout] = useState<InGameLoadout>();
   const handleEditSheetClose = useCallback(() => setEditingInGameLoadout(undefined), []);
+
+  const [savingAsInGameLoadout, setSavingAsInGameLoadout] = useState<Loadout>();
 
   const [viewingInGameLoadout, setViewingInGameLoadout] = useState<InGameLoadout>();
   const handleViewingSheetClose = useCallback(() => setViewingInGameLoadout(undefined), []);
@@ -146,6 +153,85 @@ function Loadouts({ account }: { account: DestinyAccount }) {
     },
     [loadouts],
   );
+  const handleSaveSnapshot: EditInGameLoadoutSaveHandler = async (
+    nameHash,
+    colorHash,
+    iconHash,
+    slot,
+  ) => {
+    const { name, colorIcon, icon } = resolveInGameLoadoutIdentifiers(defs, {
+      nameHash,
+      colorHash,
+      iconHash,
+    });
+    return dispatch(
+      snapshotInGameLoadout({
+        nameHash,
+        colorHash,
+        iconHash,
+        name,
+        colorIcon,
+        icon,
+        index: slot,
+        characterId: selectedStoreId,
+        items: [],
+        id: `ingame-${selectedStoreId}-${slot}`,
+      }),
+    );
+  };
+
+  const handleUpdateInGameLoadout: EditInGameLoadoutSaveHandler = async (
+    nameHash,
+    colorHash,
+    iconHash,
+  ) => {
+    const { name, colorIcon, icon } = resolveInGameLoadoutIdentifiers(defs, {
+      nameHash,
+      colorHash,
+      iconHash,
+    });
+    return dispatch(
+      editInGameLoadout({
+        ...editingInGameLoadout!,
+        nameHash,
+        name,
+        colorHash,
+        colorIcon,
+        iconHash,
+        icon,
+      }),
+    );
+  };
+
+  const handleSaveAsInGameLoadout: EditInGameLoadoutSaveHandler = async (
+    nameHash,
+    colorHash,
+    iconHash,
+  ) => {
+    // TODO: Actually implement it
+    // Choose identifiers
+    // Choose slot
+    // equip loadout
+    // snapshot loadout
+    // offer to revert?
+    const { name, colorIcon, icon } = resolveInGameLoadoutIdentifiers(defs, {
+      nameHash,
+      colorHash,
+      iconHash,
+    });
+
+    dispatch(
+      editInGameLoadout({
+        ...editingInGameLoadout!,
+        nameHash,
+        name,
+        colorHash,
+        colorIcon,
+        iconHash,
+        icon,
+      }),
+    );
+  };
 
   return (
     <PageWithMenu>
@@ -229,6 +315,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
                   equippable={loadout !== currentLoadout}
                   onShare={setSharedLoadout}
                   onSnapshotInGameLoadout={handleSnapshot}
+                  onSaveAsInGameLoadout={setSavingAsInGameLoadout}
                 />
               );
             } else {
@@ -276,6 +363,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
           key="snapshot"
           characterId={selectedStoreId}
           onClose={handleSnapshotSheetClose}
+          onSave={handleSaveSnapshot}
         />
       )}
       {editingInGameLoadout && (
@@ -283,6 +371,14 @@ function Loadouts({ account }: { account: DestinyAccount }) {
           key="editsheet"
           loadout={editingInGameLoadout}
           onClose={handleEditSheetClose}
+          onSave={handleUpdateInGameLoadout}
+        />
+      )}
+      {savingAsInGameLoadout && (
+        <EditInGameLoadout
+          characterId={selectedStoreId}
+          onClose={handleEditSheetClose}
+          onSave={handleSaveAsInGameLoadout}
         />
       )}
     </PageWithMenu>
