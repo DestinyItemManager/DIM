@@ -311,14 +311,14 @@ devDependencies:
     specifier: ^4.0.0
     version: 4.0.0(webpack@5.89.0)
   compression-webpack-plugin:
-    specifier: ^10.0.0
-    version: 10.0.0(webpack@5.89.0)
+    specifier: ^11.0.0
+    version: 11.0.0(webpack@5.89.0)
   content-security-policy-builder:
     specifier: ^2.1.1
     version: 2.1.1
   copy-webpack-plugin:
-    specifier: ^11.0.0
-    version: 11.0.0(webpack@5.89.0)
+    specifier: ^12.0.1
+    version: 12.0.1(webpack@5.89.0)
   css-loader:
     specifier: ^6.8.1
     version: 6.8.1(webpack@5.89.0)
@@ -458,11 +458,11 @@ devDependencies:
     specifier: ^1.69.7
     version: 1.69.7
   sass-loader:
-    specifier: ^13.3.3
-    version: 13.3.3(sass@1.69.7)(webpack@5.89.0)
+    specifier: ^14.0.0
+    version: 14.0.0(sass@1.69.7)(webpack@5.89.0)
   source-map-loader:
-    specifier: ^4.0.2
-    version: 4.0.2(webpack@5.89.0)
+    specifier: ^5.0.0
+    version: 5.0.0(webpack@5.89.0)
   style-loader:
     specifier: ^3.3.3
     version: 3.3.3(webpack@5.89.0)
@@ -4642,14 +4642,14 @@ packages:
       mime-db: 1.52.0
     dev: true
 
-  /compression-webpack-plugin@10.0.0(webpack@5.89.0):
-    resolution: {integrity: sha512-wLXLIBwpul/ALcm7Aj+69X0pYT3BYt6DdPn3qrgBIh9YejV9Bju9ShhlAsjujLyWMo6SAweFIWaUoFmXZNuNrg==}
-    engines: {node: '>= 14.15.0'}
+  /compression-webpack-plugin@11.0.0(webpack@5.89.0):
+    resolution: {integrity: sha512-Nz9dMiu0sag+mgJ5QTkRx0+vwrDZPU/gps7IdrkFE+oRSkgyoX4wbMol7QnXjI5/TEWx8yEwew9MiMjZgdLtjg==}
+    engines: {node: '>= 18.12.0'}
     peerDependencies:
       webpack: ^5.1.0
     dependencies:
       schema-utils: 4.2.0
-      serialize-javascript: 6.0.1
+      serialize-javascript: 6.0.2
       webpack: 5.89.0(webpack-cli@5.1.4)
     dev: true
 
@@ -4729,18 +4729,18 @@ packages:
     engines: {node: '>= 0.6'}
     dev: true
 
-  /copy-webpack-plugin@11.0.0(webpack@5.89.0):
-    resolution: {integrity: sha512-fX2MWpamkW0hZxMEg0+mYnA40LTosOSa5TqZ9GYIBzyJa9C3QUaMPSE2xAi/buNr8u89SfD9wHSQVBzrRa/SOQ==}
-    engines: {node: '>= 14.15.0'}
+  /copy-webpack-plugin@12.0.1(webpack@5.89.0):
+    resolution: {integrity: sha512-dhMfjJMYKDmmbG6Yn2pRSs1g8FgeQRtbE/JM6VAM9Xouk3KO1UVrwlLHLXxaI5F+o9WgnRfhFZzY9eV34O2gZQ==}
+    engines: {node: '>= 18.12.0'}
     peerDependencies:
       webpack: ^5.1.0
     dependencies:
       fast-glob: 3.3.2
       glob-parent: 6.0.2
-      globby: 13.2.2
+      globby: 14.0.0
       normalize-path: 3.0.0
       schema-utils: 4.2.0
-      serialize-javascript: 6.0.1
+      serialize-javascript: 6.0.2
       webpack: 5.89.0(webpack-cli@5.1.4)
     dev: true
 
@@ -10658,18 +10658,15 @@ packages:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
     dev: true
 
-  /sass-loader@13.3.3(sass@1.69.7)(webpack@5.89.0):
-    resolution: {integrity: sha512-mt5YN2F1MOZr3d/wBRcZxeFgwgkH44wVc2zohO2YF6JiOMkiXe4BYRZpSu2sO1g71mo/j16txzUhsKZlqjVGzA==}
-    engines: {node: '>= 14.15.0'}
+  /sass-loader@14.0.0(sass@1.69.7)(webpack@5.89.0):
+    resolution: {integrity: sha512-oceP9wWbep/yRJ2+sMbCzk0UsXsDzdNis+N8nu9i5GwPXjy6v3DNB6TqfJLSpPO9k4+B8x8p/CEgjA9ZLkoLug==}
+    engines: {node: '>= 18.12.0'}
     peerDependencies:
-      fibers: '>= 3.1.0'
       node-sass: ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0
       sass: ^1.3.0
       sass-embedded: '*'
       webpack: ^5.0.0
     peerDependenciesMeta:
-      fibers:
-        optional: true
       node-sass:
         optional: true
       sass:
@@ -10798,6 +10795,12 @@ packages:
 
   /serialize-javascript@6.0.1:
     resolution: {integrity: sha512-owoXEFjWRllis8/M1Q+Cw5k8ZH40e3zhp/ovX+Xr/vi1qj6QesbyXXViFbpNvWvPNAD62SutwEXavefrLJWj7w==}
+    dependencies:
+      randombytes: 2.1.0
+    dev: true
+
+  /serialize-javascript@6.0.2:
+    resolution: {integrity: sha512-Saa1xPByTTq2gdeFZYLLo+RFE35NHZkAbqZeWNd3BpzppeVisAqpDjcp8dyf6uIvEqJRd46jemmyA4iFIeVk8g==}
     dependencies:
       randombytes: 2.1.0
     dev: true
@@ -10995,9 +10998,9 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /source-map-loader@4.0.2(webpack@5.89.0):
-    resolution: {integrity: sha512-oYwAqCuL0OZhBoSgmdrLa7mv9MjommVMiQIWgcztf+eS4+8BfcUee6nenFnDhKOhzAVnk5gpZdfnz1iiBv+5sg==}
-    engines: {node: '>= 14.15.0'}
+  /source-map-loader@5.0.0(webpack@5.89.0):
+    resolution: {integrity: sha512-k2Dur7CbSLcAH73sBcIkV5xjPV4SzqO1NJ7+XaQl8if3VODDUj3FNchNGpqgJSKbvUfJuhVdv8K2Eu8/TNl2eA==}
+    engines: {node: '>= 18.12.0'}
     peerDependencies:
       webpack: ^5.72.1
     dependencies:
