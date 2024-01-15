@@ -73,6 +73,7 @@ function requestPickerItemsHandler({
           icon: item.icon,
           overlay: item.iconOverlay,
           isExotic: item.isExotic,
+          isCrafted: item.crafted,
           element:
             item.element?.enumValue === DamageType.Kinetic
               ? undefined

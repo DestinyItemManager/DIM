@@ -160,6 +160,7 @@ function perks(state: RootState) {
 
     for (const socket of Object.values(sockets)) {
       if (
+        socket.isMod ||
         !PerksCategory.some((hash) => socket.plugged?.plugDef?.itemCategoryHashes?.includes(hash))
       ) {
         continue;
