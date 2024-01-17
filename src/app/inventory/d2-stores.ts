@@ -265,7 +265,7 @@ function loadStoresData(
         const { readOnly } = getState().inventory;
 
         const [defs, profileResponse] = await Promise.all([
-          dispatch(getDefinitions())!,
+          dispatch(getDefinitions()),
           dispatch(loadProfile(account, firstTime)),
         ]);
 
