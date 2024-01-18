@@ -135,9 +135,8 @@ function getWeaponSocketInfo(
       i++;
     }
 
-    const origin = item.sockets.allSockets.find(
-      (s) =>
-        s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsOriginTraits),
+    const origin = item.sockets.allSockets.find((s) =>
+      s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsOriginTraits),
     );
     const originTrait = origin?.plugged!.plugDef.hash ?? 0;
 
@@ -149,8 +148,8 @@ function getWeaponSocketInfo(
         ? 0
         : masterworkSocket?.plugged?.plugDef.hash ?? 0;
 
-    const weaponModSocket = item.sockets.allSockets.find(
-      (s) => s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsDamage),
+    const weaponModSocket = item.sockets.allSockets.find((s) =>
+      s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsDamage),
     );
     const weaponMod = weaponModSocket?.plugged!.plugDef.hash ?? 0;
 
