@@ -43,7 +43,7 @@ const popperOptions = (
   padding?: Padding,
 ): Partial<Options> => {
   const headerHeight = parseInt(
-    document.querySelector('html')!.style.getPropertyValue('--header-height')!,
+    document.querySelector('html')!.style.getPropertyValue('--header-height'),
     10,
   );
   const boundaryElement = boundarySelector && document.querySelector(boundarySelector);

@@ -65,7 +65,7 @@ jest.mock('react-redux', () => ({
 /** Render some currencies and assert that the right number of icons are rendered */
 function testCurrencies(currencies: AccountCurrency[]) {
   // This is a kind of hacky way to mock out redux
-  (useSelector as jest.Mock<AccountCurrency[]>).mockReturnValue(currencies);
+  (useSelector as unknown as jest.Mock<AccountCurrency[]>).mockReturnValue(currencies);
   const tree = renderer.create(<AccountCurrencies />);
   // We expect one image per currency
   expect(tree.root.findAllByType('img').length).toBe(currencies.length);

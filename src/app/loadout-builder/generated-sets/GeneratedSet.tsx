@@ -125,9 +125,8 @@ export default memo(function GeneratedSet({
   const boostedStats = useMemo(
     () =>
       new Set(
-        armorStats.filter(
-          (hash) =>
-            modStatChanges[hash].breakdown?.some((change) => change.source === 'runtimeEffect'),
+        armorStats.filter((hash) =>
+          modStatChanges[hash].breakdown?.some((change) => change.source === 'runtimeEffect'),
         ),
       ),
     [modStatChanges],

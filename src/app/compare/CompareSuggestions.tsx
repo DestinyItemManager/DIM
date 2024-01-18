@@ -48,8 +48,8 @@ export default memo(function CompareSuggestions({
     // if the next button has [all of, & only] the exact same items in it
     if (
       compareButton.items.length === nextCompareButton?.items.length &&
-      compareButton.items.every(
-        (setItem) => nextCompareButton?.items.some((nextSetItem) => nextSetItem === setItem),
+      compareButton.items.every((setItem) =>
+        nextCompareButton?.items.some((nextSetItem) => nextSetItem === setItem),
       )
     ) {
       // do include this button, if the next button is the "includes sunset items" button.
