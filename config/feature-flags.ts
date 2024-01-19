@@ -22,7 +22,7 @@ export function makeFeatureFlags(env: {
     // Community-curated wish lists
     wishLists: true,
     // Show a banner for supporting a charitable cause
-    issueBanner: false,
+    issueBanner: !env.release,
     // Show the triage tab in the item popup
     triage: true,
     // Advanced Write Actions (inserting mods)
