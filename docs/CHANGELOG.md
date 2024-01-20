@@ -1,6 +1,7 @@
 ## Next
 
-* Updated Game2Give 2023 Metadata
+* Added an `exactname` filter to match items by their exact name, such that `exactname:truth` won't find Truthteller.
+* Updated Game2Give 2023 banner.
 
 ## 8.3.0 <span class="changelog-date">(2024-01-14)</span>
 
