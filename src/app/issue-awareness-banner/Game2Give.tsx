@@ -18,13 +18,13 @@ export default function Game2Give() {
             </p>
             <div className={styles.buttons}>
               <ExternalLink
-                href="https://bungiefoundation.donordrive.com/index.cfm?fuseaction=donate.participant&participantID=19805"
+                href="https://bungiefoundation.donordrive.com/index.cfm?fuseaction=donate.participant&participantID=22881"
                 className="dim-button"
               >
                 Donate
               </ExternalLink>
               <ExternalLink
-                href="https://bungiefoundation.donordrive.com/index.cfm?fuseaction=donorDrive.participant&participantID=19805"
+                href="https://bungiefoundation.donordrive.com/index.cfm?fuseaction=donorDrive.participant&participantID=22881"
                 className="dim-button"
               >
                 Learn More
