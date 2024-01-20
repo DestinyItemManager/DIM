@@ -683,7 +683,7 @@
     "SaveAs": "保存为",
     "SpeedReport": "在 {{time}} 秒内生成了 {{combos, number}} 个组合",
     "StatConstraints": "属性阶级优先级和范围",
-    "StatMax": "Max",
+    "StatMax": "最大值",
     "TierNumber": "T{{tier}}",
     "TierSelect": "选择最低属性阶级",
     "UnableToAddAllMods": "无法添加所有模组。",
