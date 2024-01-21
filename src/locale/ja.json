@@ -580,7 +580,7 @@
     },
     "EmptyFragmentSlots": {
       "Description": "このサブクラスには未使用のかけらスロットがあります。",
-      "Name": "サブクラスのかけらスロットに空きがあります"
+      "Name": "サブクラスのかけらスロットに空き有り"
     },
     "InvalidMods": {
       "Description": "このロードアウト内にある一部のModが廃止されているか、アーマーに適用できないようです。",
@@ -642,7 +642,7 @@
     "ExistingLoadout": "既存のロードアウト",
     "Exotic": "エキゾチックアーマー",
     "ExoticSpecialCategory": "スペシャル",
-    "Filter": "フィルター",
+    "Filter": "設定",
     "IgnoreStat": "チェックを外すと、このステータスを無視してビルドを探索します。",
     "IncreaseStatPriority": "ステータス優先度を上げる",
     "Legendary": "レジェンダリー",
@@ -683,6 +683,7 @@
     "SaveAs": "名前をつけて保存",
     "SpeedReport": "{{time}} 秒で生成された {{combos, number}} の組み合わせ",
     "StatConstraints": "ステータスTierの優先度と範囲",
+    "StatMax": "最大",
     "TierNumber": "T{{tier}}",
     "TierSelect": "ステータスTier最低値を選択",
     "UnableToAddAllMods": "全てのModを追加することはできません。",
@@ -847,7 +848,7 @@
       "Summary": "以下を含むこのロードアウトをシェアする：",
       "Title": "\"{{name}}\" をシェアする"
     },
-    "ShareLoadout": "ロードアウトをシェアする",
+    "ShareLoadout": "共有",
     "ShowModPlacement": "装備中のModを表示",
     "Snapshot": "ゲーム内ロードアウトとして保存",
     "SocketOverrides": "サブクラスオプションの変更",
@@ -1263,22 +1264,20 @@
     "Usage": "DIMは、このデバイスで利用可能な{{quota, humanBytes}}のうち{{usage, humanBytes}}を使用しています。使用中のデータには、Bungie.netからダウンロードしたDestinyのアイテムデータベースも含まれます。"
   },
   "StreamDeck": {
-    "Authorization": {
-      "No": "いいえ",
-      "Reset": "デバイス認証を解除する",
-      "Title": "Stream Deck に同じコードが表示されますか？",
-      "Update": "このメッセージが表示される場合、古いバージョンのプラグインを使用しています。Stream Deck ストアで最新のアップデートをダウンロードしてください。",
-      "Yes": "はい"
-    },
-    "Connected": "接続しました",
-    "Enable": "Stream Deck プラグイン起動中",
+    "Authorize": "アプリケーションに接続",
+    "Enable": "Stream Deck プラグイン",
     "FinePrint": "DIM Stream Deck プラグインとの接続を有効にします。 このプラグインは、DIM開発チームとは別のチームによるプロジェクトでサポート外です。",
     "Install": "プラグインをインストールする",
-    "NotConnected": "接続されていません",
-    "SelectLoadout": "Stream Deckに送る",
-    "Selection": {
-      "Item": "アイテム一覧からアイテムを選択してください",
-      "Loadout": "ロードアウトを選択してください"
+    "MissingAuthorization": "DIM に接続するには、Stream Deck アプリケーションを認証する必要があります。設定を開き、\"アプリケーションに接続\"をクリックします。",
+    "Tooltip": {
+      "Application": "Stream Deck アプリケーション",
+      "AuthRequired": "このボタンをクリックするか、設定から\"アプリケーションに接続\"をクリックします。",
+      "Error": "お使いのStream Deck プラグインはサポートが終了したため、最新バージョンにアップデートしてください。利用するには以下のバージョンが必要です：",
+      "ErrorConnection": "最新バージョンでも利用できない場合は、ブラウザの拡張機能や設定などでブロックしていないか確認してください。",
+      "ExtensionIssue": "拡張機能の問題",
+      "Plugin": "プラグイン",
+      "Title": "DIM Stream Deck プラグイン",
+      "Version": "バージョン:"
     }
   },
   "StripSockets": {

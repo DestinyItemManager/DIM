@@ -1,18 +1,23 @@
-import { ResolvedStatConstraint } from 'app/loadout-builder/types';
+import { DesiredStatRange, ResolvedStatConstraint } from 'app/loadout-builder/types';
 
 /**
- * Loadout Analysis (and the corresponding LO mode) sometimes are interested in strictly better tiers.
- * This takes (assumed) loadout stats and the user-selected stat constraints and merges them so that a
- * set satisfying the merged constraints always satisfies both the input constraint sets.
+ * Loadout Analysis (and the corresponding LO mode) sometimes are interested in
+ * strictly better tiers. This takes (assumed) loadout stats and the
+ * user-selected stat constraints and merges them so that a set satisfying the
+ * merged constraints always satisfies both the input constraint sets.
  *
- * Returns `mergedConstraintsImplyStrictUpgrade` iff every valid set in the merged constraints is also
- * always a strict upgrade, so that we don't have to ask the process worker for strict upgrades on top of that.
+ * Returns `mergedConstraintsImplyStrictUpgrade` iff every valid set in the
+ * merged constraints is also always a strict upgrade, so that we don't have to
+ * ask the process worker for strict upgrades on top of that.
+ *
+ * This also maps the stat constraints into the DesiredStatRange format, which
+ * folds the "ignored" bit into the maxTier by setting it to 0.
  */
 export function mergeStrictUpgradeStatConstraints(
   existingLoadoutStatsAsStatConstraints: ResolvedStatConstraint[] | undefined,
   parameterStatConstraints: ResolvedStatConstraint[],
 ): {
-  mergedConstraints: ResolvedStatConstraint[];
+  mergedDesiredStatRanges: DesiredStatRange[];
   mergedConstraintsImplyStrictUpgrade: boolean;
 } {
   // If a user-selected stat tier ends up higher than the corresponding existing loadout tier,
@@ -20,7 +25,7 @@ export function mergeStrictUpgradeStatConstraints(
   // are always >= existing constraints and there's one constraint that's higher than
   // the existing tier, satisfying the definition of "strict upgrade").
   let mergedConstraintsImplyStrictUpgrade = false;
-  const mergedConstraints = parameterStatConstraints.map((constraint) => {
+  const mergedDesiredStatRanges = parameterStatConstraints.map((constraint) => {
     const existingLoadoutTier = existingLoadoutStatsAsStatConstraints?.find(
       (c) => c.statHash === constraint.statHash,
     );
@@ -29,11 +34,16 @@ export function mergeStrictUpgradeStatConstraints(
       const effectiveLoadoutTier = Math.min(constraint.maxTier, existingTierValue);
       mergedConstraintsImplyStrictUpgrade ||= constraint.minTier > effectiveLoadoutTier;
       return {
-        ...constraint,
+        statHash: constraint.statHash,
         minTier: Math.max(constraint.minTier, effectiveLoadoutTier),
+        maxTier: constraint.ignored ? 0 : constraint.maxTier,
       };
     }
-    return constraint;
+    return {
+      statHash: constraint.statHash,
+      minTier: constraint.minTier,
+      maxTier: constraint.ignored ? 0 : constraint.maxTier,
+    };
   });
-  return { mergedConstraints, mergedConstraintsImplyStrictUpgrade };
+  return { mergedDesiredStatRanges, mergedConstraintsImplyStrictUpgrade };
 }

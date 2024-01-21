@@ -4,6 +4,10 @@
   composes: flexColumn from '../dim-ui/common.m.scss';
   padding: 15px;
   background: rgba(0, 0, 0, 0.25);
+
+  @include phone-portrait {
+    padding: 10px;
+  }
 }
 
 .title {
@@ -21,6 +25,7 @@
   @include phone-portrait {
     flex-direction: column;
     align-items: flex-start;
+    gap: 8px;
   }
 }
 
@@ -31,8 +36,9 @@
   margin-left: auto;
 
   @include phone-portrait {
-    margin-top: 16px;
-    margin-bottom: 16px;
+    margin: 8px 0;
+    width: 100%;
+    justify-content: space-between;
   }
 }
 

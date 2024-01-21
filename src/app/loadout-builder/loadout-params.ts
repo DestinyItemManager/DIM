@@ -15,7 +15,7 @@ export function resolveStatConstraints(
   const statConstraintsByStatHash = _.keyBy(statConstraints, (c) => c.statHash);
   const resolvedStatConstraints: ResolvedStatConstraint[] = armorStats.map((statHash) => {
     const c = statConstraintsByStatHash[statHash];
-    return { statHash, minTier: c?.minTier ?? 0, maxTier: c?.maxTier ?? 10, ignored: !c };
+    return { statHash, minTier: c?.minTier ?? 0, maxTier: c ? c.maxTier ?? 10 : 0, ignored: !c };
   });
 
   return _.sortBy(resolvedStatConstraints, (h) => {

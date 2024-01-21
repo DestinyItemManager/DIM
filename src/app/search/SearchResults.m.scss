@@ -10,4 +10,5 @@
 
 .contents {
   min-height: calc(#{$badge-height} + var(--item-size) + 4px) !important;
+  margin: 10px;
 }

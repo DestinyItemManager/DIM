@@ -138,7 +138,7 @@ export function useHeightFromViewportBottom(
 export function usePageTitle(title: string, active?: boolean) {
   useEffect(() => {
     if (active !== false) {
-      const titleElem = document.getElementsByTagName('title')[0]!;
+      const titleElem = document.getElementsByTagName('title')[0];
       titleElem.textContent = `DIM - ${title}`;
       return () => {
         titleElem.textContent = `DIM`;

@@ -642,7 +642,7 @@
     "ExistingLoadout": "已有配裝",
     "Exotic": "Exotic Armor",
     "ExoticSpecialCategory": "特殊",
-    "Filter": "過濾",
+    "Filter": "Settings",
     "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
     "IncreaseStatPriority": "Increase stat priority",
     "Legendary": "传说",
@@ -683,6 +683,7 @@
     "SaveAs": "保存為",
     "SpeedReport": "在 {{time}} 秒内生成了 {{combos, number}} 個組合。",
     "StatConstraints": "Stat Tier Priorities & Ranges",
+    "StatMax": "Max",
     "TierNumber": "T{{tier}}",
     "TierSelect": "Select minimum stat tier",
     "UnableToAddAllMods": "無法添加所有模組。",
@@ -847,7 +848,7 @@
       "Summary": "分享包含如下内容的配裝：",
       "Title": "分享“{{name}}”"
     },
-    "ShareLoadout": "分享配装",
+    "ShareLoadout": "Share",
     "ShowModPlacement": "顯示模組位置",
     "Snapshot": "保存爲游戲内配裝",
     "SocketOverrides": "正在更改子職業選項",
@@ -1263,22 +1264,20 @@
     "Usage": "DIM 使用了此設備{{quota, humanBytes}}可用空間中的{{usage, humanBytes}}.這包括從 bungie. net 下載的命運2物品資料庫。"
   },
   "StreamDeck": {
-    "Authorization": {
-      "No": "否",
-      "Reset": "撤銷授權",
-      "Title": "你的 Steam Deck 上顯示的驗證碼是否一致？",
-      "Update": "看到此消息代表你的插件版本過舊。請從 Steam Deck 商店下載更新。",
-      "Yes": "是"
-    },
-    "Connected": "已連接",
-    "Enable": "Stream Deck Plugin Enabled",
+    "Authorize": "Connect application",
+    "Enable": "Stream Deck Plugin",
     "FinePrint": "啓用與 DIM Stream Deck 插件的連接。該插件是獨立的項目，既不是由 DIM 團隊編寫，也不是由 DIM 團隊提供支持。",
     "Install": "安裝插件",
-    "NotConnected": "未連接",
-    "SelectLoadout": "發送到 Stream Deck",
-    "Selection": {
-      "Item": "從庫存中選擇一個物品",
-      "Loadout": "選擇一個配裝"
+    "MissingAuthorization": "You must authorize the Stream Deck application to connect to DIM. Go to settings and click \"Connect application\".",
+    "Tooltip": {
+      "Application": "Stream Deck Application",
+      "AuthRequired": "Click this button or go to settings and click \"Connect application\".",
+      "Error": "Your Stream Deck plugin is no longer supported. Please update to the latest version. This plugin requires at least:",
+      "ErrorConnection": "if you're already using the latest version, check if some browser extension is blocking the connection.",
+      "ExtensionIssue": "Extensions Issue",
+      "Plugin": "Plugin",
+      "Title": "DIM Stream Deck Plugin",
+      "Version": "Version:"
     }
   },
   "StripSockets": {

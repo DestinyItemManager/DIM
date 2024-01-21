@@ -99,9 +99,13 @@
 }
 
 // Tiers that can't be reached given the currently selected minimums
-.maxed:not(.locked):not(.selectedStatBar) {
+.maxed:not(.selectedStatBar) {
   color: #666;
   background-color: rgba(255, 255, 255, 0.1);
+}
+.maxRestricted:not(.selectedStatBar) {
+  color: #666;
+  background-color: transparent;
 }
 
 .selectedStatBar {

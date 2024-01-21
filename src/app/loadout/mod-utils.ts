@@ -82,10 +82,10 @@ export function isInsertableArmor2Mod(
  * number to its hash to make it unique.
  */
 export function createGetModRenderKey() {
-  const counts: { [modHash: string]: number | undefined } = {};
+  const counts: { [modHash: string]: number } = {};
   return (mod: PluggableInventoryItemDefinition) => {
     counts[mod.hash] ||= 0;
-    return `${mod.hash}-${counts[mod.hash]!++}`;
+    return `${mod.hash}-${counts[mod.hash]++}`;
   };
 }
 

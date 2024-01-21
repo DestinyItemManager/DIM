@@ -642,7 +642,7 @@
     "ExistingLoadout": "Существующий Набор",
     "Exotic": "Экзотическая Броня",
     "ExoticSpecialCategory": "Специальные",
-    "Filter": "Фильтр",
+    "Filter": "Settings",
     "IgnoreStat": "Если не отмечено, Оптимизатор Комплекта будет притворяться, что этой характеристики не существует при создании наборов",
     "IncreaseStatPriority": "Повысить приоритет характеристики",
     "Legendary": "Легендарный",
@@ -683,6 +683,7 @@
     "SaveAs": "Сохранить как",
     "SpeedReport": "Сгенерировано {{combos, number}} комбинаций за {{time}} секунд",
     "StatConstraints": "Stat Tier Priorities & Ranges",
+    "StatMax": "Max",
     "TierNumber": "Т{{tier}}",
     "TierSelect": "Выберите минимальный ранг характеристики",
     "UnableToAddAllMods": "Не удалось добавить все моды.",
@@ -847,7 +848,7 @@
       "Summary": "Поделиться этим набором содержащим:",
       "Title": "Поделиться \"{{name}}\""
     },
-    "ShareLoadout": "Поделиться Набором",
+    "ShareLoadout": "Share",
     "ShowModPlacement": "Показать расположение модов",
     "Snapshot": "Сохранить как Набор в игре",
     "SocketOverrides": "Изменение параметров подкласса",
@@ -1263,22 +1264,20 @@
     "Usage": "DIM использует {{usage, humanBytes}} из {{quota, humanBytes}} доступного ему места на этом устройстве. В это также входят загруженные базы данных предметов Destiny с Bungie.net."
   },
   "StreamDeck": {
-    "Authorization": {
-      "No": "Нет",
-      "Reset": "ДЕАВТОРИЗАЦИЯ",
-      "Title": "Вы видите такой же код на вашем Stream Deck?",
-      "Update": "Если вы видите это сообщение, вы используете старую версию плагина. Пожалуйста, загрузите последнее обновление в магазине Stream Deck.",
-      "Yes": "Да"
-    },
-    "Connected": "Подключено",
-    "Enable": "Stream Deck Plugin Enabled",
+    "Authorize": "Connect application",
+    "Enable": "Stream Deck Plugin",
     "FinePrint": "Активировать соединение с плагином Stream Deck для DIM. Этот плагин — отдельный проект, который не был написан командой DIM и не поддерживается ею.",
     "Install": "Установить плагин",
-    "NotConnected": "Не подключено",
-    "SelectLoadout": "Отправить в Stream Deck",
-    "Selection": {
-      "Item": "Выберите предмет из инвентаря",
-      "Loadout": "Выберите набор"
+    "MissingAuthorization": "You must authorize the Stream Deck application to connect to DIM. Go to settings and click \"Connect application\".",
+    "Tooltip": {
+      "Application": "Stream Deck Application",
+      "AuthRequired": "Click this button or go to settings and click \"Connect application\".",
+      "Error": "Your Stream Deck plugin is no longer supported. Please update to the latest version. This plugin requires at least:",
+      "ErrorConnection": "if you're already using the latest version, check if some browser extension is blocking the connection.",
+      "ExtensionIssue": "Extensions Issue",
+      "Plugin": "Plugin",
+      "Title": "DIM Stream Deck Plugin",
+      "Version": "Version:"
     }
   },
   "StripSockets": {

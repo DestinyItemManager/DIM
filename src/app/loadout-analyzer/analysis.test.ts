@@ -57,8 +57,8 @@ function noopProcessWorkerMock(..._args: Parameters<typeof runProcess>): {
         armorStats.map((h) => [
           h,
           {
-            min: 10,
-            max: 0,
+            minTier: 10,
+            maxTier: 0,
           },
         ]),
       ) as StatRanges,
@@ -308,9 +308,8 @@ describe('basic loadout analysis finding tests', () => {
       mockProcess,
     );
     expect(mockProcess).toHaveBeenCalled();
-    const args = mockProcess.mock.calls[0][0].resolvedStatConstraints;
+    const args = mockProcess.mock.calls[0][0].desiredStatRanges;
     for (const c of args) {
-      expect(c.ignored).toBe(c.statHash === StatHashes.Mobility);
       if (c.statHash === StatHashes.Recovery) {
         // The loadout has no constraint for recovery, so it gets the existing loadout stats as the minimum
         expect(c.minTier).toBe(

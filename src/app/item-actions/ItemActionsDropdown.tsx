@@ -64,11 +64,10 @@ export default memo(function ItemActionsDropdown({
     isComparable = filteredItems.every((i) => i.typeName === type);
   }
 
-  const canStrip = filteredItems.some(
-    (i) =>
-      i.sockets?.allSockets.some(
-        (s) => s.emptyPlugItemHash && s.plugged?.plugDef.hash !== s.emptyPlugItemHash,
-      ),
+  const canStrip = filteredItems.some((i) =>
+    i.sockets?.allSockets.some(
+      (s) => s.emptyPlugItemHash && s.plugged?.plugDef.hash !== s.emptyPlugItemHash,
+    ),
   );
 
   const bulkTag = loadingTracker.trackPromise(async (selectedTag: TagCommand) => {

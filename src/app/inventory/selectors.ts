@@ -125,11 +125,10 @@ export const vendorCurrencyEngramsSelector = createSelector(
       return emptyArray<AccountCurrency>();
     }
     // silver has no stackUniqueLabel
-    return currencies.filter(
-      (curr) =>
-        defs.InventoryItem.get(curr.itemHash).inventory!.stackUniqueLabel?.match(
-          /virtual_engram|\.virtual$/,
-        ),
+    return currencies.filter((curr) =>
+      defs.InventoryItem.get(curr.itemHash).inventory!.stackUniqueLabel?.match(
+        /virtual_engram|\.virtual$/,
+      ),
     );
   },
 );
