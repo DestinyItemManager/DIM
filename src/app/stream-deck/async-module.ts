@@ -2,15 +2,16 @@
 import { currentStoreSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { refresh$ } from 'app/shell/refresh-events';
-import store from 'app/store/store';
+import { StoreObserver, observe, unobserve } from 'app/store/observerMiddleware';
 import { ThunkResult } from 'app/store/types';
 import { streamDeckConnected, streamDeckDisconnected } from 'app/stream-deck/actions';
 import { SendToStreamDeckArgs, StreamDeckMessage } from 'app/stream-deck/interfaces';
 import { handleStreamDeckMessage } from 'app/stream-deck/msg-handlers';
 import packager, { streamDeckClearId } from 'app/stream-deck/util/packager';
 import { infoLog } from 'app/utils/log';
-import { observeStore } from 'app/utils/redux';
 import _ from 'lodash';
+
+const STREAM_DECK_FARMING_OBSERVER_ID = 'stream-deck-farming-observer';
 
 let streamDeckWebSocket: WebSocket;
 
@@ -26,24 +27,18 @@ export async function sendToStreamDeck(msg: SendToStreamDeckArgs) {
   }
 }
 
-const installFarmingObserver = _.once(() => {
-  const state = store.getState();
-  // send initial state
-  sendToStreamDeck({
-    action: 'farmingMode',
-    data: Boolean(state.farming.storeId),
-  });
-  // observe farming mode state
-  observeStore(
-    (state) => state.farming.storeId,
-    (_, newState) => {
+function createFarmingObserver(): StoreObserver<string | undefined> {
+  return {
+    id: STREAM_DECK_FARMING_OBSERVER_ID,
+    getObserved: (rootState) => rootState.farming.storeId,
+    sideEffect: ({ current }) => {
       sendToStreamDeck({
         action: 'farmingMode',
-        data: Boolean(newState),
+        data: Boolean(current),
       });
     },
-  );
-});
+  };
+}
 
 // collect and send data to the stream deck
 function refreshStreamDeck(): ThunkResult {
@@ -144,11 +139,12 @@ function start(): ThunkResult {
         // start refreshing task with interval
         dispatch(refreshStreamDeck());
         // install farming mode observer
-        installFarmingObserver();
+        dispatch(observe(createFarmingObserver()));
       };
 
       streamDeckWebSocket.onclose = function () {
         dispatch(streamDeckDisconnected());
+        dispatch(unobserve(STREAM_DECK_FARMING_OBSERVER_ID));
         // stop refreshing the Stream Deck State
         clearInterval(refreshInterval);
         // if the plugin is still enabled and the websocket is closed
