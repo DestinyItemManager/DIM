@@ -952,22 +952,16 @@ const missingSources: { [key: string]: number[] } = {
     99549082, // Reverie Dawn Helm
     185695659, // Reverie Dawn Hood
     188778964, // Reverie Dawn Boots
-    250721843, // Abide the Return
     344548395, // Reverie Dawn Strides
-    355922321, // Vouchsafe
-    871900124, // Retold Tale
     934704429, // Reverie Dawn Plate
     998096007, // Reverie Dawn Hood
     1452333832, // Reverie Dawn Boots
     1593474975, // Reverie Dawn Hauberk
     1705856569, // Reverie Dawn Grasps
-    1874424704, // Twilight Oath
     1903023095, // Reverie Dawn Grasps
     1928769139, // Reverie Dawn Bond
     1980768298, // Reverie Dawn Mark
-    2140635451, // Sleepless
     2336820707, // Reverie Dawn Gauntlets
-    2465372924, // Tigerspite
     2467635521, // Reverie Dawn Hauberk
     2503434573, // Reverie Dawn Gauntlets
     2704876322, // Reverie Dawn Tabard
@@ -982,7 +976,6 @@ const missingSources: { [key: string]: number[] } = {
     3343583008, // Reverie Dawn Mark
     3602032567, // Reverie Dawn Bond
     3711557785, // Reverie Dawn Strides
-    3723679465, // Waking Vigil
     4070309619, // Reverie Dawn Plate
     4097166900, // Reverie Dawn Helm
     4257800469, // Reverie Dawn Greaves
