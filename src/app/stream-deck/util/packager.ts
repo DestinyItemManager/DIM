@@ -1,5 +1,5 @@
 import { DimItem } from 'app/inventory/item-types';
-import { allItemsSelector, vaultSelector } from 'app/inventory/selectors';
+import { allItemsSelector, currenciesSelector, vaultSelector } from 'app/inventory/selectors';
 import { AccountCurrency, DimStore } from 'app/inventory/store-types';
 import { findItemsByBucket, getArtifactBonus } from 'app/inventory/stores-helpers';
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
@@ -51,7 +51,7 @@ function vault(state: RootState) {
   if (!vault) {
     return;
   }
-  const currencies = state.inventory.currencies;
+  const currencies = currenciesSelector(state);
   return {
     vault: vault.items.length,
     shards: getCurrency(currencies, 1022552290),
