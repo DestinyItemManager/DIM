@@ -642,7 +642,7 @@
     "ExistingLoadout": "Equipación Existente",
     "Exotic": "Armadura Exótica",
     "ExoticSpecialCategory": "Especial",
-    "Filter": "Filtros",
+    "Filter": "Configuración",
     "IgnoreStat": "Si está desmarcado, el Optimizador de Equipaciones fingirá que esta estadística no exista cuando se fabriquen equipaciones",
     "IncreaseStatPriority": "Incrementar prioridad a las estadísticas",
     "Legendary": "Legendarias",
@@ -683,6 +683,7 @@
     "SaveAs": "Guardar como",
     "SpeedReport": "Se generaron {{combos, number}} combinaciones en {{time}} segundos",
     "StatConstraints": "Prioridad de Nivel de Estadísticas y Rangos",
+    "StatMax": "Máx",
     "TierNumber": "N{{tier}}",
     "TierSelect": "Seleccionar nivel mínimo de las estadísticas",
     "UnableToAddAllMods": "No se pudieron añadir todos los modificadores.",
@@ -847,7 +848,7 @@
       "Summary": "Compartir esta equipación que contiene:",
       "Title": "Compartir \"{{name}}\""
     },
-    "ShareLoadout": "Compartir Equipación",
+    "ShareLoadout": "Compartir",
     "ShowModPlacement": "Mostrar Colocación de Modificadores",
     "Snapshot": "Guardar como Equipación En El Juego",
     "SocketOverrides": "Cambiando opciones de subclase",
@@ -1263,22 +1264,20 @@
     "Usage": "DIM está usando {{usage, humanBytes}} de {{quota, humanBytes}} disponibles para ello en este dispositivo. Esto incluye las bases de datos de objetos de Destiny descargados de Bungie.net."
   },
   "StreamDeck": {
-    "Authorization": {
-      "No": "No",
-      "Reset": "DESAUTORIZAR",
-      "Title": "¿Ves el mismo código en tu Stream Deck?",
-      "Update": "Si estás viendo este mensaje, estás usando una versión antigua del plugin. Por favor descarga la última actualización en la tienda de Stream Deck.",
-      "Yes": "Sí"
-    },
-    "Connected": "Conectado",
-    "Enable": "Complemento Stream Deck habilitado",
+    "Authorize": "Conectar aplicación",
+    "Enable": "Complemento Stream Deck",
     "FinePrint": "Activa la conexión con el complemento de DIM Stream Deck. Este complemento es un proyecto separado que no está escrito ni respaldado por el equipo de DIM.",
     "Install": "Instalar complemento",
-    "NotConnected": "No Conectado",
-    "SelectLoadout": "Enviar a Stream Deck",
-    "Selection": {
-      "Item": "Elige un objeto del inventario",
-      "Loadout": "Elegir una equipación"
+    "MissingAuthorization": "Debes autorizar la aplicación Stream Deck para conectar con DIM. Ve a configuración y haz clic en \"Conectar aplicación\".",
+    "Tooltip": {
+      "Application": "Aplicación Stream Deck",
+      "AuthRequired": "Haga clic en este botón o ve a configuración y haz clic en \"Conectar aplicación\".",
+      "Error": "Tu complemento Stream Deck ya no tiene soporte. Por favor actualiza a la última versión. Este complemento requiere al menos:",
+      "ErrorConnection": "si ya estás usando la última versión, comprueba si alguna extensión de navegador está bloqueando la conexión.",
+      "ExtensionIssue": "Problema con las Extensiones",
+      "Plugin": "Complemento",
+      "Title": "Complemento DIM para Stream Deck",
+      "Version": "Versión:"
     }
   },
   "StripSockets": {

@@ -3,6 +3,10 @@
 .subclassContainer {
   --item-icon-size: calc(0.8 * var(--item-size));
   composes: flexRow from '../../dim-ui/common.m.scss';
+
+  @include phone-portrait {
+    width: 100%;
+  }
 }
 
 .subclass {
@@ -36,6 +40,11 @@
   gap: 4px;
   align-content: flex-start;
   align-items: flex-start;
+
+  @include phone-portrait {
+    width: min(calc(3 * var(--item-icon-size) + 2 * var(--item-margin)), 100%);
+  }
+
   :global(.item) {
     --item-size: var(--item-icon-size);
   }

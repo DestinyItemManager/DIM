@@ -4,6 +4,10 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+
+  @include phone-portrait {
+    margin: 0 10px;
+  }
 }
 .inGameTile {
   padding: 4px;

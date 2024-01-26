@@ -524,16 +524,32 @@ export interface DimSockets {
   categories: DimSocketCategory[];
 }
 
-export interface DimPursuit {
-  expirationDate?: Date;
-  rewards: DestinyItemQuantity[];
+/**
+ * If a pursuit can expire, this contains the relevant info.
+ */
+export interface DimPursuitExpiration {
+  expirationDate: Date;
   suppressExpirationWhenObjectivesComplete: boolean;
-  expiredInActivityMessage?: string;
+  expiredInActivityMessage: string | undefined;
+}
+
+/**
+ * If a pursuit belongs to a quest line, this tells us
+ * at which point in the quest line this particular pursuit
+ * is located.
+ */
+export interface DimQuestLine {
+  questStepNum: number;
+  questStepsTotal: number;
+  description: string | undefined;
+}
+
+export interface DimPursuit {
+  expiration: DimPursuitExpiration | undefined;
+  rewards: DestinyItemQuantity[];
   /** Modifiers active in this quest */
   modifierHashes: number[];
-  questStepNum?: number;
-  questStepsTotal?: number;
-  questLineDescription?: string;
+  questLine?: DimQuestLine;
   /** If this pursuit is really a Record (e.g. a seasonal challenge) */
   recordHash?: number;
   trackedInGame?: boolean;

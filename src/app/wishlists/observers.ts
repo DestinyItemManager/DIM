@@ -1,16 +1,18 @@
 import { set } from 'app/storage/idb-keyval';
-import { observeStore } from 'app/utils/redux';
+import { StoreObserver } from 'app/store/observerMiddleware';
+import { WishListsState } from './reducer';
 
-export function saveWishListToIndexedDB() {
-  return observeStore(
-    (state) => state.wishLists,
-    (_prev, nextState) => {
-      if (nextState.loaded) {
+export function createWishlistObserver(): StoreObserver<WishListsState> {
+  return {
+    id: 'wish-list-observer',
+    getObserved: (rootState) => rootState.wishLists,
+    sideEffect: ({ current }) => {
+      if (current.loaded) {
         set('wishlist', {
-          wishListAndInfo: nextState.wishListAndInfo,
-          lastFetched: nextState.lastFetched,
+          wishListAndInfo: current.wishListAndInfo,
+          lastFetched: current.lastFetched,
         });
       }
     },
-  );
+  };
 }

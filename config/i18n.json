@@ -219,6 +219,7 @@
     "DamageType": "Shows items based on their damage type.",
     "Deepsight": "Shows weapons with Deepsight Resonance, which can have their pattern extracted, or which can have Deepsight Resonance enabled using a Deepsight Harmonizer.",
     "Description": "Description",
+    "DescriptionFilter": "Shows items whose description has a partial match to the filter text. Search for entire phrases using quotes.",
     "RetiredPerk": "Shows weapons with perks that no longer obtainable.",
     "Dupe": "Shows duplicate items, including reissues",
     "DupeCount": "Items that have the specified number of duplicates.",
@@ -271,12 +272,13 @@
     },
     "ModSlot": "Shows armor with a specific Seasonal Mod slot.",
     "HoldsMod": "Shows armor compatible with a specific type of Seasonal Mod.",
+    "Name": "Shows items whose name matches (exactname:) or partially matches (name:) the filter text. Search for entire phrases using quotes.",
     "NamedStat": "Shows armor that has points in the named stat.",
     "Negate": "To negate a search, prefix that search term with a minus sign or the word \"not\", for example \"{{notexample}}\" or \"{{notexample2}}\".",
     "NewItems": "Shows new items.",
     "Notes": "Search for items that you have tagged with custom notes",
     "Ornament": "Shows items with ornaments and filters for their status.",
-    "PartialMatch": "Shows items where their name, description, any perk, or any mod has a partial match to the filter text. Search for entire phrases using quotes. the 'perk:' filter will only search perks.",
+    "PartialMatch": "Shows items where their name, description, any perk, or any mod has a partial match to the filter text. Search for entire phrases using quotes.",
     "PatternUnlocked": "Shows items that have a crafting pattern unlocked, even if the item itself isn't crafted.",
     "Perk": "Shows items where one of their perks or mods has a partial match to the filter text in their name or description. Search for entire phrases using quotes.",
     "PerkName": "Shows items with a perk or mod whose name matches (exactperk:) or partially matches (perkname:) the filter text. Search for entire phrases using quotes.",
@@ -595,7 +597,7 @@
     "Exotic": "Exotic Armor",
     "ExistingLoadout": "Existing Loadout",
     "ExoticSpecialCategory": "Special",
-    "Filter": "Filters",
+    "Filter": "Settings",
     "Legendary": "Legendary",
     "LockItem": "Pin item",
     "PinnedItems": "Pinned Items",
@@ -634,6 +636,7 @@
     "SaveAs": "Save as",
     "SpeedReport": "Generated {{combos, number}} combinations in {{time}} seconds",
     "StatConstraints": "Stat Tier Priorities & Ranges",
+    "StatMax": "Max",
     "TierNumber": "T{{tier}}",
     "UnableToAddAllMods": "Unable to add all mods.",
     "UnableToAddAllModsBody": "There weren't enough mod slots available to fit {{mods}}.",
@@ -798,7 +801,7 @@
       "LoadoutOptimizer": "Loadout Optimizer settings",
       "Notes": "Notes"
     },
-    "ShareLoadout": "Share Loadout",
+    "ShareLoadout": "Share",
     "ShowModPlacement": "Show Mod Placement",
     "SubclassOptions": "{{subclass}} options",
     "SubclassOptionsSearch": "Search {{subclass}} options",
@@ -1292,7 +1295,7 @@
     "Subclass": "{{count}}x Subclass Option",
     "Others": "{{count}}x Ghost Projection"
   },
- "StreamDeck": {
+  "StreamDeck": {
     "Tooltip": {
       "Title": "DIM Stream Deck Plugin",
       "Version": "Version:",

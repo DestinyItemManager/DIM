@@ -5,19 +5,18 @@ import { AppIcon, faClock } from 'app/shell/icons';
 import clsx from 'clsx';
 
 export default function ItemExpiration({ item, compact }: { item: DimItem; compact?: boolean }) {
-  if (!item.pursuit?.expirationDate) {
+  const expiration = item.pursuit?.expiration;
+  if (!expiration) {
     return null;
   }
-  const expired = item.pursuit.expirationDate
-    ? item.pursuit.expirationDate.getTime() < Date.now()
-    : false;
-  const suppressExpiration = item.pursuit.suppressExpirationWhenObjectivesComplete && item.complete;
+  const expired = expiration.expirationDate.getTime() < Date.now();
+  const suppressExpiration = expiration.suppressExpirationWhenObjectivesComplete && item.complete;
 
   if (suppressExpiration) {
     return null;
   }
 
-  const expiresSoon = item.pursuit.expirationDate.getTime() - Date.now() < 1 * 60 * 60 * 1000;
+  const expiresSoon = expiration.expirationDate.getTime() - Date.now() < 1 * 60 * 60 * 1000;
 
   return (
     <div className={clsx('quest-expiration', 'item-details', { 'expires-soon': expiresSoon })}>
@@ -25,12 +24,12 @@ export default function ItemExpiration({ item, compact }: { item: DimItem; compa
         compact ? (
           t('Progress.QuestExpired')
         ) : (
-          item.pursuit.expiredInActivityMessage
+          expiration.expiredInActivityMessage
         )
       ) : (
         <>
           <AppIcon icon={faClock} /> {!compact && t('Progress.QuestExpires')}
-          <Countdown endTime={new Date(item.pursuit.expirationDate)} compact={compact} />
+          <Countdown endTime={expiration.expirationDate} compact={compact} />
         </>
       )}
     </div>

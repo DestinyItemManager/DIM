@@ -6,7 +6,7 @@
 
   // More vibrant P3 colourspace tints for displays that support them
   @supports (color: color(display-p3 1 1 1)) {
-    --theme-accent-primary: oklch(0.72 0.27 140.8);
+    --theme-accent-primary: oklch(72% 0.27 140.8);
   }
 
   // Generic fills for modal backgrounds (see below)

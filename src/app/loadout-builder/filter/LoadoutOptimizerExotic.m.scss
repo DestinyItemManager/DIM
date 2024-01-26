@@ -5,6 +5,7 @@
   composes: flexRow from '../../dim-ui/common.m.scss';
   gap: 8px;
   margin-bottom: 8px;
+  cursor: pointer;
 
   > :first-child {
     flex-shrink: 0;

@@ -125,8 +125,8 @@ export default function BountyGuide({
     QuestTrait: {},
   };
   for (const i of bounties) {
-    const expired = i.pursuit?.expirationDate
-      ? i.pursuit.expirationDate.getTime() < Date.now()
+    const expired = i.pursuit?.expiration
+      ? i.pursuit.expiration.expirationDate.getTime() < Date.now()
       : false;
     if (!i.complete && !expired) {
       const info = pursuitsInfo[i.hash];
