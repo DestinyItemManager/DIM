@@ -10,8 +10,14 @@ import { LoadoutItem, ResolvedLoadoutItem } from './loadout-types';
 import { findItemForLoadout } from './loadout-utils';
 
 let missingLoadoutItemId = 1;
+/*
+ * We don't save consumables in D2 loadouts, but we may omit ids in shared
+ * loadouts (because they'll never match someone else's inventory). So instead,
+ * pick an ID. The ID ought to be numeric, or it will fail when sent to the DIM
+ * API.
+ */
 export function generateMissingLoadoutItemId() {
-  return `loadoutitem-${missingLoadoutItemId++}`;
+  return `${missingLoadoutItemId++}`;
 }
 
 /**

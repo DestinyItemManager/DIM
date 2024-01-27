@@ -96,13 +96,7 @@ function preprocessReceivedLoadout(loadout: Loadout): Loadout {
   loadout.id = uuidv4();
   loadout.items = loadout.items.map((item) => ({
     ...item,
-    id:
-      item.id === '0'
-        ? // We don't save consumables in D2 loadouts, but we may omit ids in shared loadouts
-          // (because they'll never match someone else's inventory). So
-          // instead, pick an ID.
-          generateMissingLoadoutItemId()
-        : item.id,
+    id: item.id === '0' ? generateMissingLoadoutItemId() : item.id,
   }));
 
   return loadout;
