@@ -82,6 +82,7 @@ export function startFarming(storeId: string): ThunkResult {
     dispatch(
       observe({
         id: FARMING_OBSERVER_ID,
+        runInitially: true,
         getObserved: (rootState) => farmingStoreSelector(rootState),
         sideEffect: ({ current: farmingStore }) => {
           const [cancelToken, cancel] = withCancel();
