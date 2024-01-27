@@ -107,3 +107,7 @@
 .artifactMods {
   --item-size: 40px;
 }
+
+.disableEvents > div {
+  pointer-events: none;
+}

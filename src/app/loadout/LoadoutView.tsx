@@ -20,6 +20,7 @@ import { emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { addDividers } from 'app/utils/react';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { ReactNode, useMemo } from 'react';
@@ -129,7 +130,11 @@ export default function LoadoutView({
     : undefined;
 
   return (
-    <div className={styles.loadout} id={loadout.id} {...selectionProps}>
+    <div
+      className={clsx(styles.loadout, selectionProps?.ref && styles.disableEvents)}
+      id={loadout.id}
+      {...selectionProps}
+    >
       <div className={styles.title}>
         <h2>
           {loadout.classType === DestinyClass.Unknown && (
