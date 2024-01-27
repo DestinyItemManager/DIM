@@ -13,6 +13,8 @@ export class DimError extends Error {
   code?: string;
   // The error that caused this error, if there is one. Naming it 'cause' makes it automatically chain in Sentry.
   cause?: Error;
+  // Whether to show social links in the error report dialog
+  showSocials = true;
 
   /** Pass in just a message key to set the message to the localized version of that key, or override with the second parameter. */
   constructor(messageKey: I18nKey, message?: string) {
@@ -23,6 +25,11 @@ export class DimError extends Error {
 
   public withError(error: unknown): DimError {
     this.cause = convertToError(error);
+    return this;
+  }
+
+  public withNoSocials(): DimError {
+    this.showSocials = false;
     return this;
   }
 
