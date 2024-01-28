@@ -177,7 +177,7 @@ export const dimApi = (
     case getType(actions.profileLoadedFromIDB): {
       // When loading from IDB, merge with current state
       const newUpdateQueue = action.payload
-        ? [...action.payload.updateQueue, ...state.updateQueue]
+        ? [...(action.payload.updateQueue ?? []), ...state.updateQueue]
         : [];
       return action.payload
         ? migrateSettings({
