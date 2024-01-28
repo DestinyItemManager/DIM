@@ -1,6 +1,6 @@
 import { DimStore } from 'app/inventory/store-types';
-import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import { RootState, ThunkResult } from 'app/store/types';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { SelectionType } from './actions';
 
 // trigger a pre-written search
@@ -11,6 +11,7 @@ export interface SearchAction {
   query: string;
   page: string;
   pullItems?: boolean;
+  sendToVault?: boolean;
 }
 
 // randomize the current character
@@ -30,6 +31,13 @@ export interface RefreshAction {
   action: 'refresh';
 }
 
+// trigger refresh DIM
+export interface RequestPickerItemsAction {
+  action: 'requestPickerItems';
+  device: string;
+  query: string;
+}
+
 // enable/disable farming mode
 export interface FarmingModeAction {
   action: 'toggleFarmingMode';
@@ -45,7 +53,12 @@ export interface MaxPowerAction {
 export interface PullItemAction {
   action: 'pullItem';
   itemId: string;
+  /**
+   * @deprecated to be removed in future plugin update
+   * @see type
+   */
   equip: boolean;
+  type: 'equip' | 'pull' | 'vault';
 }
 
 // equip a selected loadout (for a specific store)
@@ -62,6 +75,11 @@ export interface SelectionAction {
   type?: SelectionType;
 }
 
+// request perks definitions
+export interface RequestPerksAction {
+  action: 'requestPerks';
+}
+
 // | FreeBucketSlotAction
 export type StreamDeckMessage = (
   | SearchAction
@@ -72,18 +90,20 @@ export type StreamDeckMessage = (
   | MaxPowerAction
   | PullItemAction
   | EquipLoadoutAction
+  | RequestPickerItemsAction
+  | RequestPerksAction
   | SelectionAction
 ) & { token?: string };
 
 // Types of messages sent to Stream Deck
-export interface VaultArgs {
+interface VaultArgs {
   vault: number;
   shards?: number;
   glimmer?: number;
   brightDust?: number;
 }
 
-export interface MetricsArgs {
+interface MetricsArgs {
   gambit: number;
   vanguard: number;
   crucible: number;
@@ -96,59 +116,69 @@ export interface MetricsArgs {
   artifactIcon?: string;
 }
 
-export interface PostmasterArgs {
+interface PostmasterArgs {
   total: number;
   ascendantShards: number;
   enhancementPrisms: number;
   spoils: number;
 }
 
-export interface MaxPowerArgs {
+interface MaxPowerArgs {
   artifact: number;
   base: string;
   total: string;
 }
 
-export interface Challenge {
-  label: number;
-  value: string;
+interface Character {
+  icon: string;
+  class: DestinyClass;
+  background: string;
 }
 
-export interface SendUpdateArgs {
+interface SendStateArgs {
   action: 'state';
   data?: {
+    character?: Character;
     postmaster?: PostmasterArgs;
     maxPower?: MaxPowerArgs;
-    vault?: VaultArgs;
-    metrics?: MetricsArgs;
     equippedItems?: string[];
+    metrics?: MetricsArgs;
+    vault?: VaultArgs;
   };
 }
 
-export interface SendFarmingModeArgs {
+interface SendFarmingModeArgs {
   action: 'farmingMode';
   data: boolean;
 }
 
-export interface SendEquipmentStatusArgs {
-  action: 'equipmentStatus';
+interface SendPerksArgs {
+  action: 'perks';
   data: {
-    equipped: boolean;
-    itemId: string;
+    title: string;
+    image: string;
+  }[];
+}
+
+interface SendPickerItemsArgs {
+  action: 'pickerItems';
+  data: {
+    device: string;
+    items: {
+      item: string;
+      icon: string;
+      overlay?: string;
+      isExotic?: boolean;
+      element?: string;
+    }[];
   };
 }
 
-export type LoadoutSelection =
-  | {
-      type: 'dim';
-      loadout: Loadout;
-    }
-  | {
-      type: 'game';
-      loadout: InGameLoadout;
-    };
-
-export type SendToStreamDeckArgs = SendUpdateArgs | SendFarmingModeArgs | SendEquipmentStatusArgs;
+export type SendToStreamDeckArgs =
+  | SendStateArgs
+  | SendFarmingModeArgs
+  | SendPickerItemsArgs
+  | SendPerksArgs;
 
 export interface HandlerArgs<T> {
   msg: T;
@@ -156,10 +186,8 @@ export interface HandlerArgs<T> {
   store: DimStore;
 }
 
-type ActionName = StreamDeckMessage['action'];
-
-type ActionMatching<key> = Extract<StreamDeckMessage, { action: key }>;
+type ActionMatching<TAction> = Extract<StreamDeckMessage, { action: TAction }>;
 
 export type MessageHandler = {
-  [key in ActionName]: (args: HandlerArgs<ActionMatching<key>>) => ThunkResult;
+  [key in StreamDeckMessage['action']]: (args: HandlerArgs<ActionMatching<key>>) => ThunkResult;
 };

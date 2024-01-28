@@ -123,7 +123,7 @@ function bind(id: string, hotkey: Hotkey) {
 function unbind(id: string, combo: string) {
   const normalizedCombo = normalizeCombo(combo);
   const hotkeysForCombo = keyMap[normalizedCombo];
-  const existingIndex = hotkeysForCombo.findIndex((h) => h.id === id);
+  const existingIndex = hotkeysForCombo?.findIndex((h) => h.id === id) ?? -1;
   if (existingIndex >= 0) {
     hotkeysForCombo.splice(existingIndex, 1);
   }
