@@ -149,9 +149,12 @@ export function importDataBackup(data: ExportResponse, silent = false): ThunkRes
   };
 }
 
+// Each observer that is used to observe the change in dimApi profileLoaded state
+// should be unique, so use a module reference counter.
+let profileLoadObserverCount = 0;
 /** Returns a promise that resolves when the profile is fully loaded. */
 function waitForProfileLoad<D extends Dispatch>(dispatch: D) {
-  const observerId = 'profile-load-observer';
+  const observerId = `profile-load-observer-${profileLoadObserverCount++}`;
   return new Promise((resolve) => {
     dispatch(
       observe({
