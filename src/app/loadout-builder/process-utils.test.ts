@@ -2,6 +2,7 @@ import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { armorStats } from 'app/search/d2-known-values';
 import { emptySet } from 'app/utils/empty';
+import { StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import {
   enhancedOperatorAugmentModHash,
@@ -19,6 +20,7 @@ import {
   pickAndAssignSlotIndependentMods,
   pickOptimalStatMods,
   precalculateStructures,
+  updateMaxTiers,
 } from './process-worker/process-utils';
 import { ModAssignmentStatistics, ProcessItem, ProcessMod } from './process-worker/types';
 import {
@@ -27,7 +29,7 @@ import {
   mapAutoMods,
   mapDimItemToProcessItem,
 } from './process/mappers';
-import { MIN_LO_ITEM_ENERGY, ResolvedStatConstraint } from './types';
+import { ArmorStatHashes, MIN_LO_ITEM_ENERGY, MinMaxTier, ResolvedStatConstraint } from './types';
 import { statTier } from './utils';
 
 // We don't really pay attention to this in the tests but the parameter is needed
@@ -571,4 +573,111 @@ describe('process-utils optimal mods', () => {
       expect(finalStats).toStrictEqual(expectedStats);
     },
   );
+});
+
+// This tests against a bug where an activity mod would accidentally be considered
+// eligible and fitting if it required as much or more energy than was remaining in any item,
+// even if it didn't have the mod slot.
+test('process-utils activity mods', async () => {
+  const defs = await getTestDefinitions();
+
+  const makeItem = (index: number, remainingEnergyCapacity: number) => ({
+    hash: index,
+    id: index.toString(),
+    isArtifice: false,
+    isExotic: index === 2,
+    name: `Item ${index}`,
+    power: 1500,
+    stats: [0, 0, 0, 0, 0, 0],
+    compatibleModSeasons: index === 2 ? [] : ['crotasend'],
+    remainingEnergyCapacity,
+  });
+
+  const statOrder: ArmorStatHashes[] = [
+    StatHashes.Resilience, // expensive
+    StatHashes.Recovery, // expensive
+    StatHashes.Strength, // cheap
+    StatHashes.Discipline, // cheap
+    StatHashes.Intellect,
+    StatHashes.Mobility,
+  ];
+
+  // The setup here is the following: All items
+  // have one or two energy remaining, but the mods cost one energy,
+  // so we have two items with one cost remaining. Under the buggy condition,
+  // the 2-cost mod can be assigned to the arms piece, leaving 2 energy for
+  // an expensive minor mod in an item that actually needs to hold an activity mod.
+  const helmet = makeItem(1, 2);
+  const arms = makeItem(2, 1);
+  const chest = makeItem(3, 1);
+  const legs = makeItem(4, 1);
+  const classItem = makeItem(5, 2);
+
+  const items = [helmet, arms, chest, legs, classItem];
+
+  // Costs 1, 1, 1, 2
+
+  const modHashes = [
+    3682741808, // InventoryItem "Benevolent Overflow"
+    71258198, // InventoryItem "Stoic When Panicked"
+    2631069573, // InventoryItem "Refreshing Thirst"
+    1768489065, // InventoryItem "Violent Pour"
+  ];
+  const activityMods = modHashes.map(
+    (hash) => defs.InventoryItem.get(hash) as PluggableInventoryItemDefinition,
+  );
+
+  const autoModData = mapAutoMods(getAutoMods(defs, emptySet()));
+
+  const loSessionInfo = precalculateStructures(
+    autoModData,
+    [],
+    activityMods.map(mapArmor2ModToProcessMod),
+    true,
+    statOrder,
+  );
+
+  const resolvedStatConstraints = statOrder.map((statHash) => ({
+    statHash,
+    ignored: false,
+    maxTier: 10,
+    minTier: 0,
+  }));
+
+  const setStats = [55, 55, 55, 50, 50, 50];
+
+  // First, verify that our set can fit the mods
+  const result = pickAndAssignSlotIndependentMods(
+    loSessionInfo,
+    modStatistics,
+    items,
+    [0, 0, 0, 0, 0, 0],
+    0,
+  )!;
+  expect(result).not.toBeUndefined();
+
+  // Buggy behavior #1: Optimal stat mods can't actually fit
+  const autoMods = pickOptimalStatMods(loSessionInfo, items, setStats, resolvedStatConstraints);
+  expect(autoMods).not.toBeUndefined();
+  expect(autoMods!.bonusStats).toEqual([5, 0, 0, 0, 0, 0]);
+
+  // Buggy behavior #2: Higher stats are reported as available than actually are
+  const minMaxesInStatOrder: MinMaxTier[] = [
+    { minTier: 0, maxTier: 0 },
+    { minTier: 0, maxTier: 0 },
+    { minTier: 0, maxTier: 0 },
+    { minTier: 0, maxTier: 0 },
+    { minTier: 0, maxTier: 0 },
+    { minTier: 0, maxTier: 0 },
+  ];
+  updateMaxTiers(
+    loSessionInfo,
+    items,
+    setStats,
+    setStats.map(statTier),
+    0,
+    resolvedStatConstraints,
+    minMaxesInStatOrder,
+  )!;
+  expect(minMaxesInStatOrder.map((stat) => stat.maxTier)).toEqual([6, 6, 6, 6, 5, 6]);
 });
