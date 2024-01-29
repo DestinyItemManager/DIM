@@ -656,12 +656,12 @@ test('process-utils activity mods', async () => {
   )!;
   expect(result).not.toBeUndefined();
 
-  // Buggy behavior #1: Optimal stat mods can't actually fit
+  // Then check that optimal and maximally available tiers only report
+  // the cheaper stats where the mods can actually fit
   const autoMods = pickOptimalStatMods(loSessionInfo, items, setStats, resolvedStatConstraints);
   expect(autoMods).not.toBeUndefined();
-  expect(autoMods!.bonusStats).toEqual([5, 0, 0, 0, 0, 0]);
+  expect(autoMods!.bonusStats).toEqual([0, 0, 5, 0, 0, 0]);
 
-  // Buggy behavior #2: Higher stats are reported as available than actually are
   const minMaxesInStatOrder: MinMaxTier[] = [
     { minTier: 0, maxTier: 0 },
     { minTier: 0, maxTier: 0 },
@@ -679,5 +679,5 @@ test('process-utils activity mods', async () => {
     resolvedStatConstraints,
     minMaxesInStatOrder,
   )!;
-  expect(minMaxesInStatOrder.map((stat) => stat.maxTier)).toEqual([6, 6, 6, 6, 5, 6]);
+  expect(minMaxesInStatOrder.map((stat) => stat.maxTier)).toEqual([5, 5, 6, 6, 5, 6]);
 });
