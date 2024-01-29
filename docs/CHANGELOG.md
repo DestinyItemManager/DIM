@@ -1,5 +1,7 @@
 ## Next
 
+## 8.5.0 <span class="changelog-date">(2024-01-28)</span>
+
 ## 8.4.0 <span class="changelog-date">(2024-01-21)</span>
 
 * Added an `exactname` filter to match items by their exact name, such that `exactname:truth` won't find Truthteller.
