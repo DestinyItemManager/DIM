@@ -72,7 +72,7 @@ function getRemainingEnergiesPerAssignment(
       const tag = activityMod.tag!;
       const energyCost = activityMod.energyCost;
 
-      // The activity mods wont fit in the item set so move on to the next set of mods
+      // The activity mods won't fit in the item set so move on to the next set of mods
       if (energyCost > item.remainingEnergyCapacity || !item.compatibleModSeasons?.includes(tag)) {
         continue activityModLoop;
       }
@@ -242,7 +242,7 @@ export function pickAndAssignSlotIndependentMods(
       const tag = activityMod.tag!;
       const energyCost = activityMod.energyCost;
 
-      // The activity mods wont fit in the item set so move on to the next set of mods
+      // The activity mods won't fit in the item set so move on to the next set of mods
       if (energyCost > item.remainingEnergyCapacity || !item.compatibleModSeasons?.includes(tag)) {
         continue activityModLoop;
       }

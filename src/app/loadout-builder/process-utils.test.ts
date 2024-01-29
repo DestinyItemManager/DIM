@@ -598,15 +598,16 @@ test('process-utils activity mods', async () => {
     StatHashes.Recovery, // expensive
     StatHashes.Strength, // cheap
     StatHashes.Discipline, // cheap
-    StatHashes.Intellect,
-    StatHashes.Mobility,
+    StatHashes.Intellect, // expensive
+    StatHashes.Mobility, // cheap
   ];
 
-  // The setup here is the following: All items
-  // have one or two energy remaining, but the mods cost one energy,
-  // so we have two items with one cost remaining. Under the buggy condition,
-  // the 2-cost mod can be assigned to the arms piece, leaving 2 energy for
-  // an expensive minor mod in an item that actually needs to hold an activity mod.
+  // The setup here is the following: All items have one or two energy
+  // remaining, but the mods cost at least one energy, so all items have
+  // at most one energy remaining, which is not enough for an expensive minor mod.
+  // Under the buggy condition, the 2-cost mod can be assigned to the arms piece,
+  // even though it is an exotic without the relevant mod slot, leaving 2 energy for
+  // a +5 resilience mod in an item that actually needs to hold an activity mod.
   const helmet = makeItem(1, 2);
   const arms = makeItem(2, 1);
   const chest = makeItem(3, 1);
