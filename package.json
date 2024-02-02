@@ -39,7 +39,7 @@
     "dead-code": "ts-unused-exports tsconfig.json --allowUnusedTypes --allowUnusedEnums --showLineNumber | grep -v cssExports",
     "bcu": "node src/build-browsercheck-utils.js && prettier --write src/browsercheck-utils.js",
     "fa-subset": "node src/fa-subset.js",
-    "prepare": "husky install",
+    "prepare": "husky",
     "deps:stale": "pnpm outdated --long",
     "deps:update": "pnpm up -i --latest",
     "deps:pnpm": "corepack use 'pnpm@*'"
