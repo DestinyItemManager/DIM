@@ -91,7 +91,7 @@ jobs:
 
       - name: Annotate ESLint Results
         if: github.event.pull_request.head.repo.full_name == github.repository
-        uses: ataylorme/eslint-annotate-action@v2
+        uses: ataylorme/eslint-annotate-action@v3
         continue-on-error: true
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
