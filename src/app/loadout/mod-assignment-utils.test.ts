@@ -4,16 +4,23 @@ import { buildDefinedPlug } from 'app/inventory/store/sockets';
 import { Assignment, PluggingAction } from 'app/loadout-drawer/loadout-types';
 import { getInterestingSocketMetadatas } from 'app/utils/item-utils';
 import { plugFitsIntoSocket } from 'app/utils/socket-utils';
+import { BucketHashes } from 'data/d2/generated-enums';
 import { produce } from 'immer';
 import {
   bulwarkFinishModHash,
   distributionModHash,
+  elementalChargeModHash,
   empoweringFinishModHash,
+  enhancedOperatorAugmentModHash,
   isArmor2ClassItem,
   recoveryModHash,
 } from 'testing/test-item-utils';
 import { getTestDefinitions, getTestStores } from 'testing/test-utils';
-import { createPluggingStrategy, pickPlugPositions } from './mod-assignment-utils';
+import {
+  createPluggingStrategy,
+  getAvailableArmorSlotEnergyCapacities,
+  pickPlugPositions,
+} from './mod-assignment-utils';
 import { getModExclusionGroup } from './mod-utils';
 
 function processAction(defs: D2ManifestDefinitions, originalItem: DimItem, action: PluggingAction) {
@@ -214,4 +221,78 @@ describe('mod-assignment-utils plugging strategy', () => {
   // There's some situations we currently can't test -- e.g. the circular dependency in
   // https://github.com/DestinyItemManager/DIM/issues/7465#issuecomment-1379112834 because
   // currently all mutex mods have the same energy cost -- 1.
+});
+
+describe('filterRedundantStatModCombos', () => {
+  let defs: D2ManifestDefinitions;
+  let recoveryMod: PluggableInventoryItemDefinition; // General Stat Mod
+  let elementalChargeMod: PluggableInventoryItemDefinition; // Helmet Mod
+  let enhancedOperatorAugmentMod: PluggableInventoryItemDefinition; // Raid Mod
+
+  beforeAll(async () => {
+    defs = await getTestDefinitions();
+    recoveryMod = defs.InventoryItem.get(recoveryModHash) as PluggableInventoryItemDefinition;
+    enhancedOperatorAugmentMod = defs.InventoryItem.get(
+      enhancedOperatorAugmentModHash,
+    ) as PluggableInventoryItemDefinition;
+    elementalChargeMod = defs.InventoryItem.get(
+      elementalChargeModHash,
+    ) as PluggableInventoryItemDefinition;
+  });
+
+  it('returns all 10s with no mods', () => {
+    const res = getAvailableArmorSlotEnergyCapacities([]);
+    expect(res).not.toBeNull();
+    expect(Object.values(res!).every((value) => value === 10)).toBe(true);
+  });
+  it('returns all 10s with one recoveryMod', () => {
+    const res = getAvailableArmorSlotEnergyCapacities([recoveryMod], true);
+    expect(res).not.toBeNull();
+    expect(Object.values(res!).every((value) => value === 10)).toBe(true);
+  });
+  it("returns all 6's with 5 recoveryMods", () => {
+    const res = getAvailableArmorSlotEnergyCapacities([
+      recoveryMod,
+      recoveryMod,
+      recoveryMod,
+      recoveryMod,
+      recoveryMod,
+    ]);
+    expect(res).not.toBeNull();
+    expect(Object.values(res!).every((value) => value === 6)).toBe(true);
+  });
+  it('returns null with 5 recoveryMods and 3 elementalChargeMods', () => {
+    const res = getAvailableArmorSlotEnergyCapacities([
+      recoveryMod,
+      recoveryMod,
+      recoveryMod,
+      recoveryMod,
+      recoveryMod,
+      elementalChargeMod,
+      elementalChargeMod,
+      elementalChargeMod,
+    ]);
+    expect(res).toBeNull();
+  });
+  it('returns properly with 5 recoveryMods, 2 elementalChargeMods, and 4 enhancedOperatorAugmentMods', () => {
+    const res = getAvailableArmorSlotEnergyCapacities([
+      recoveryMod,
+      recoveryMod,
+      recoveryMod,
+      recoveryMod,
+      recoveryMod,
+      elementalChargeMod,
+      elementalChargeMod,
+      enhancedOperatorAugmentMod,
+      enhancedOperatorAugmentMod,
+      enhancedOperatorAugmentMod,
+      enhancedOperatorAugmentMod,
+    ]);
+    expect(res).not.toBeNull();
+    expect(res![BucketHashes.Helmet]).toBe(5);
+    expect(res![BucketHashes.Gauntlets]).toBe(5);
+    expect(res![BucketHashes.ChestArmor]).toBe(5);
+    expect(res![BucketHashes.LegArmor]).toBe(0);
+    expect(res![BucketHashes.ClassArmor]).toBe(5);
+  });
 });
