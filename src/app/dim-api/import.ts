@@ -159,6 +159,7 @@ function waitForProfileLoad<D extends Dispatch>(dispatch: D) {
     dispatch(
       observe({
         id: observerId,
+        runInitially: true,
         getObserved: (rootState) => rootState.dimApi.profileLoaded,
         sideEffect: ({ current }) => {
           if (current) {
