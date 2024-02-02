@@ -15,10 +15,11 @@
     "ErrorLoading": "Unable to load Destiny accounts from Bungie.net",
     "MissingAccountWarning": "If you don't see your account here, you may not have logged in to the right Bungie.net account, or Bungie.net may be down for maintenance.",
     "MissingTitle": "Account Not Found",
-    "MissingDescription": "The account you're trying to view is not an account linked to your Bungie.net profile.",
+    "MissingDescription": "The account you're trying to view is not an account linked to your Bungie.net profile. Select one of your accounts below.",
     "ErrorLoadInventory": "Unable to load your Destiny {{version}} characters and inventory",
     "ErrorLoadManifest": "Unable to load Destiny info database from Bungie",
-    "SwitchAccounts": "You can switch accounts later from the menu in the header."
+    "SwitchAccounts": "You can switch accounts later from the menu in the header.",
+    "NoCharactersTitle": "No Characters Found"
   },
   "Activities": {
     "Activities": "Activities",

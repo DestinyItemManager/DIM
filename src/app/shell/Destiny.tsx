@@ -1,4 +1,5 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import SelectAccount from 'app/accounts/SelectAccount';
 import { getPlatforms, setActivePlatform } from 'app/accounts/platforms';
 import {
   accountsLoadedSelector,
@@ -161,6 +162,7 @@ export default function Destiny() {
             title={t('Accounts.MissingTitle')}
             fallbackMessage={t('Accounts.MissingDescription')}
           />
+          <SelectAccount path="/" />
         </div>
       );
     }
@@ -272,8 +274,8 @@ function GlobalEffects() {
   // Badge the app icon with the number of postmaster items
   useEffect(() => {
     if (stores.length > 0 && badgePostmaster) {
-      const activeStore = getCurrentStore(stores)!;
-      setAppBadge(totalPostmasterItems(activeStore));
+      const activeStore = getCurrentStore(stores);
+      activeStore && setAppBadge(totalPostmasterItems(activeStore));
     }
   }, [badgePostmaster, stores]);
 
