@@ -36,16 +36,16 @@ export function importDataBackup(data: ExportResponse, silent = false): ThunkRes
 
     if (dimApiData.globalSettings.dimApiEnabled && dimApiData.apiPermissionGranted) {
       try {
-        infoLog('importLegacyData', 'Attempting to import legacy data into DIM API');
+        infoLog('importData', 'Attempting to import data into DIM API');
         const result = await importData(data);
-        infoLog('importLegacyData', 'Successfully imported legacy data into DIM API', result);
+        infoLog('importData', 'Successfully imported data into DIM API', result);
         showImportSuccessNotification(result, true);
 
         // Reload from the server
         return await dispatch(loadDimApiData(true));
       } catch (e) {
         if (!silent) {
-          errorLog('importLegacyData', 'Error importing legacy data into DIM API', e);
+          errorLog('importData', 'Error importing data into DIM API', e);
           showImportFailedNotification(errorMessage(e));
         }
         return;
@@ -62,8 +62,8 @@ export function importDataBackup(data: ExportResponse, silent = false): ThunkRes
       if (!loadouts.length && !tags.length) {
         if (!silent) {
           errorLog(
-            'importLegacyData',
-            'Error importing legacy data into DIM - no data found in import file. (no settings upgrade/API upload attempted. DIM Sync is turned off)',
+            'importData',
+            'Error importing data into DIM - no data found in import file. (no settings upgrade/API upload attempted. DIM Sync is turned off)',
             data,
           );
           showImportFailedNotification(t('Storage.ImportNotification.NoData'));
