@@ -13,9 +13,10 @@
     "ErrorLoadManifest": "Bungie에서 데스티니 정보 데이터베이스 불러오기 실패",
     "ErrorLoading": "Bungie.net에서 데스티니 계정 불러오기 실패",
     "MissingAccountWarning": "여기에 계정이 보이지 않는다면 잘못된 Bungie.net 계정으로 로그인하였거나 Bungie.net이 점검 중일 수 있습니다.",
-    "MissingDescription": "지금 보려고 하는 계정은 Bungie.net 프로필과 연결된 계정이 아닙니다.",
+    "MissingDescription": "지금 확인하려는 계정은 Bungie.net 프로필과 연결된 계정이 아닙니다. 아래에서 본인의 계정을 선택하세요.",
     "MissingTitle": "계정을 찾을 수 없습니다",
     "NoCharacters": "이 Bungie.net 계정에 연동된 데스티니 캐릭터가 없습니다. 다른 계정으로 접속해보세요.",
+    "NoCharactersTitle": "캐릭터를 찾을 수 없음",
     "SwitchAccounts": "헤더의 메뉴에서 계정을 전환할 수 있습니다.",
     "Title": "계정"
   },

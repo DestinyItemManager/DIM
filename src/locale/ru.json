@@ -13,9 +13,10 @@
     "ErrorLoadManifest": "Не удается загрузить информацию базы данных Destiny c Bungie.net",
     "ErrorLoading": "Не удалось загрузить учётные записи Destiny с Bungie.net",
     "MissingAccountWarning": "Если вы не видите здесь свой аккаунт, возможно, вы не вошли в нужный аккаунт Bungie.net, или Bungie.net находится на обслуживании.",
-    "MissingDescription": "Учетная запись, которую вы пытаетесь просмотреть, не связана с вашим профилем Bungie.net.",
+    "MissingDescription": "The account you're trying to view is not an account linked to your Bungie.net profile. Select one of your accounts below.",
     "MissingTitle": "Аккаунт не найден",
     "NoCharacters": "На данном аккаунте Bungie.net не имеется ни одного персонажа Destiny. Попробуйте авторизовать другой аккаунт.",
+    "NoCharactersTitle": "No Characters Found",
     "SwitchAccounts": "Вы сможете переключать свои аккаунты из меню в заголовке.",
     "Title": "Аккаунты"
   },

@@ -13,9 +13,10 @@
     "ErrorLoadManifest": "Não foi possível carregar as informações de banco de dados de Destiny da Bungie",
     "ErrorLoading": "Não foi possível carregar as contas de Destiny da Bungie.net",
     "MissingAccountWarning": "Caso não encontre sua conta aqui, significa que você ainda não a autorizou através da Bungie.net ou o serviço da Bungie pode estar em manutenção no momento.",
-    "MissingDescription": "A conta que você está tentando visualizar não está vinculada em seu perfil da Bungie.net.",
+    "MissingDescription": "The account you're trying to view is not an account linked to your Bungie.net profile. Select one of your accounts below.",
     "MissingTitle": "Conta não encontrada",
     "NoCharacters": "Você não possui um personagem de Destiny associado a esta conta Bungie.net. Tente conectar com uma conta diferente.",
+    "NoCharactersTitle": "No Characters Found",
     "SwitchAccounts": "Você poderá alternar entre contas posteriormente através do menu superior.",
     "Title": "Contas"
   },
