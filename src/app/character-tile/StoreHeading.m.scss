@@ -38,6 +38,6 @@
 }
 
 .characterHeader {
-  max-width: $emblem-width + 16px;
-  width: calc(6px + var(--character-column-width) - var(--item-margin));
+  max-width: $emblem-width + 16px !important;
+  width: calc(6px + var(--character-column-width) - var(--item-margin)) !important;
 }
