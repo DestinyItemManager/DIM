@@ -335,8 +335,8 @@ devDependencies:
     specifier: ^9.1.0
     version: 9.1.0(eslint@8.56.0)
   eslint-plugin-array-func:
-    specifier: ^4.0.0
-    version: 4.0.0(eslint@8.56.0)
+    specifier: ^5.0.1
+    version: 5.0.1(eslint@8.56.0)
   eslint-plugin-css-modules:
     specifier: ^2.12.0
     version: 2.12.0(eslint@8.56.0)
@@ -416,8 +416,8 @@ devDependencies:
     specifier: ^8.0.0
     version: 8.0.0(webpack@5.90.1)
   marked:
-    specifier: ^11.2.0
-    version: 11.2.0
+    specifier: ^12.0.0
+    version: 12.0.0
   mini-css-extract-plugin:
     specifier: ^2.8.0
     version: 2.8.0(webpack@5.90.1)
@@ -5741,11 +5741,11 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-plugin-array-func@4.0.0(eslint@8.56.0):
-    resolution: {integrity: sha512-p3NY2idNIvgmQLF2/62ZskYt8gOuUgQ51smRc3Lh7FtSozpNc2sg+lniz9VaCagLZHEZTl8qGJKqE7xy8O/D/g==}
+  /eslint-plugin-array-func@5.0.1(eslint@8.56.0):
+    resolution: {integrity: sha512-bRydL/TorX9B6HMMGzggkTzoaY0dM1iCIdA/SGM8VB2P8+38TH+dqYmDdfLCR5LOdDUHq0XBFgkvVnb7DB61cw==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
-      eslint: '>=8.40.0'
+      eslint: '>=8.51.0'
     dependencies:
       eslint: 8.56.0
     dev: true
@@ -8788,8 +8788,8 @@ packages:
       webpack: 5.90.1(webpack-cli@5.1.4)
     dev: true
 
-  /marked@11.2.0:
-    resolution: {integrity: sha512-HR0m3bvu0jAPYiIvLUUQtdg1g6D247//lvcekpHO1WMvbwDlwSkZAX9Lw4F4YHE1T0HaaNve0tuAWuV1UJ6vtw==}
+  /marked@12.0.0:
+    resolution: {integrity: sha512-Vkwtq9rLqXryZnWaQc86+FHLC6tr/fycMfYAhiOIXkrNmeGAyhSxjqu0Rs1i0bBqw5u0S7+lV9fdH2ZSVaoa0w==}
     engines: {node: '>= 18'}
     hasBin: true
     dev: true
