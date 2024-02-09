@@ -243,6 +243,7 @@ export const enum VendorHashes {
   Xur = 2190858386,
   DevrimKay = 396892126,
   Failsafe = 1576276905,
+  RivensWishesExotics = 2388521577,
 }
 
 /** used to snag the icon for display */
