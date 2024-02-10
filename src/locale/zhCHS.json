@@ -13,10 +13,10 @@
     "ErrorLoadManifest": "无法从 Bungie 加载命运信息数据库",
     "ErrorLoading": "无法从 Bungie.net 加载命运账户",
     "MissingAccountWarning": "如果你的账户没有显示，你可能登录了错误的 Bungie.net 账户，或 Bungie.net 可能正在停机维护。",
-    "MissingDescription": "The account you're trying to view is not an account linked to your Bungie.net profile. Select one of your accounts below.",
+    "MissingDescription": "你试图查看的账户并未连接到你的 Bungie.net 账户。请在下方选择你的账户。",
     "MissingTitle": "找不到账户",
     "NoCharacters": "没有找到与此 Bungie.net 账号相关联的《命运》角色，登录其它账号试试看。",
-    "NoCharactersTitle": "No Characters Found",
+    "NoCharactersTitle": "未找到角色",
     "SwitchAccounts": "你可以稍后在标题栏菜单里切换账户。",
     "Title": "账户"
   },
