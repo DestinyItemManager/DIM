@@ -1,5 +1,7 @@
 ## Next
 
+## 8.7.0 <span class="changelog-date">(2024-02-11)</span>
+
 * Loadout Optimizer now considers exotics sold by Mara Sov for Wish Tokens and includes them in suggested builds.
 
 ## 8.6.0 <span class="changelog-date">(2024-02-04)</span>
