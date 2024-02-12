@@ -124,7 +124,8 @@ function VendorItemPlug({ item }: { item: DimItem }) {
     <PressTip
       elementType="span"
       tooltip={() => {
-        const vendorName = defs.Vendor.get(item.vendor!.vendorHash).displayProperties.name;
+        const vendorName =
+          defs.Vendor.get(item.vendor!.vendorHash)?.displayProperties?.name || '--';
         return (
           <>
             {t('Compare.IsVendorItem')}
