@@ -236,7 +236,7 @@ export function filterToUnacquired(ownedItemHashes: Set<number>): VendorFilterFu
 
 export function filterToNoSilver(): VendorFilterFunction {
   return ({ costs, displayCategoryIndex }, vendor) => {
-    if (costs.some((c) => c.itemHash === silverItemHash)) {
+    if (costs.some((c) => c.itemHash === silverItemHash && c.quantity > 0)) {
       return false;
     }
     const categoryIdentifier =
