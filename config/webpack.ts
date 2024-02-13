@@ -114,7 +114,7 @@ export default (env: Env) => {
           host: process.env.DOCKER ? '0.0.0.0' : 'localhost',
           allowedHosts: 'all',
           server: {
-            type: 'https',
+            type: 'spdy',
             options: {
               key: fs.readFileSync('key.pem'), // Private keys in PEM format.
               cert: fs.readFileSync('cert.pem'), // Cert chains in PEM format.
