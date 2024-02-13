@@ -335,8 +335,8 @@ devDependencies:
     specifier: ^9.1.0
     version: 9.1.0(eslint@8.56.0)
   eslint-plugin-array-func:
-    specifier: ^5.0.1
-    version: 5.0.1(eslint@8.56.0)
+    specifier: ^4.0.0
+    version: 4.0.0(eslint@8.56.0)
   eslint-plugin-css-modules:
     specifier: ^2.12.0
     version: 2.12.0(eslint@8.56.0)
@@ -5746,11 +5746,11 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-plugin-array-func@5.0.1(eslint@8.56.0):
-    resolution: {integrity: sha512-bRydL/TorX9B6HMMGzggkTzoaY0dM1iCIdA/SGM8VB2P8+38TH+dqYmDdfLCR5LOdDUHq0XBFgkvVnb7DB61cw==}
+  /eslint-plugin-array-func@4.0.0(eslint@8.56.0):
+    resolution: {integrity: sha512-p3NY2idNIvgmQLF2/62ZskYt8gOuUgQ51smRc3Lh7FtSozpNc2sg+lniz9VaCagLZHEZTl8qGJKqE7xy8O/D/g==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
-      eslint: '>=8.51.0'
+      eslint: '>=8.40.0'
     dependencies:
       eslint: 8.56.0
     dev: true
