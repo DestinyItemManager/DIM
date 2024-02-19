@@ -14,7 +14,7 @@ jobs:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.I18N_PAT }}
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -26,7 +26,7 @@ jobs:
         run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: Download updated i18n files
-        uses: crowdin/github-action@v1.17.0
+        uses: crowdin/github-action@v1.18.0
         with:
           upload_sources: false
           upload_translations: false

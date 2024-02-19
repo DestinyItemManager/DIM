@@ -481,7 +481,6 @@ const missingSources: { [key: string]: number[] } = {
     3164547673, // Atonement Tau
     3174394351, // The Outlander's Grip
     3174771856, // Stasis Scavenger
-    3181984586, // Charged Up
     3183585337, // Legion-Bane
     3184690956, // Absolution
     3188328909, // Stasis Siphon
