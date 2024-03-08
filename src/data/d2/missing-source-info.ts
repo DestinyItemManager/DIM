@@ -648,10 +648,12 @@ const missingSources: { [key: string]: number[] } = {
   crucible: [
     85800627, // Ankaa Seeker IV
     98331691, // Binary Phoenix Mark
+    120859138, // Phoenix Strife Type 0
     185853176, // Wing Discipline
     252414402, // Swordflight 4.1
     283188616, // Wing Contender
     290136582, // Wing Theorem
+    315615761, // Ankaa Seeker IV
     327530279, // Wing Theorem
     328902054, // Swordflight 4.1
     356269375, // Wing Theorem
@@ -662,6 +664,7 @@ const missingSources: { [key: string]: number[] } = {
     468899627, // Binary Phoenix Mark
     530558102, // Phoenix Strife Type 0
     636679949, // Ankaa Seeker IV
+    657400178, // Swordflight 4.1
     670877864, // Binary Phoenix Mark
     727838174, // Swordflight 4.1
     744199039, // Wing Contender
@@ -672,6 +675,8 @@ const missingSources: { [key: string]: number[] } = {
     876608500, // Ankaa Seeker IV
     920187221, // Wing Discipline
     929917162, // Wing Theorem
+    944242985, // Ankaa Seeker IV
+    987343638, // Ankaa Seeker IV
     997903134, // Wing Theorem
     1036467370, // Wing Theorem
     1062166003, // Wing Contender
@@ -681,13 +686,16 @@ const missingSources: { [key: string]: number[] } = {
     1084033161, // Wing Contender
     1127237110, // Wing Contender
     1245115841, // Wing Theorem
+    1294217731, // Binary Phoenix Cloak
     1307478991, // Ankaa Seeker IV
+    1330581478, // Phoenix Strife Type 0
     1333087155, // Ankaa Seeker IV
     1464207979, // Wing Discipline
     1467590642, // Binary Phoenix Bond
     1484937602, // Phoenix Strife Type 0
     1548928853, // Phoenix Strife Type 0
     1571781304, // Swordflight 4.1
+    1648675919, // Binary Phoenix Mark
     1654427223, // Swordflight 4.1
     1658896287, // Binary Phoenix Cloak
     1673285051, // Wing Theorem
@@ -697,6 +705,7 @@ const missingSources: { [key: string]: number[] } = {
     1742940528, // Phoenix Strife Type 0
     1764274932, // Ankaa Seeker IV
     1801625827, // Swordflight 4.1
+    1828358334, // Swordflight 4.1
     1830829330, // Swordflight 4.1
     1838158578, // Binary Phoenix Bond
     1838273186, // Wing Contender
@@ -706,7 +715,10 @@ const missingSources: { [key: string]: number[] } = {
     2070517134, // Wing Contender
     2124666626, // Wing Discipline
     2191401041, // Phoenix Strife Type 0
+    2191437287, // Ankaa Seeker IV
+    2206581692, // Phoenix Strife Type 0
     2231762285, // Phoenix Strife Type 0
+    2247740696, // Swordflight 4.1
     2291226602, // Binary Phoenix Bond
     2293476915, // Swordflight 4.1
     2296560252, // Swordflight 4.1
@@ -718,12 +730,15 @@ const missingSources: { [key: string]: number[] } = {
     2466453881, // Wing Discipline
     2473130418, // Swordflight 4.1
     2496309431, // Wing Discipline
+    2511045676, // Binary Phoenix Bond
     2525395257, // Wing Theorem
     2543903638, // Phoenix Strife Type 0
     2555965565, // Wing Discipline
+    2627852659, // Phoenix Strife Type 0
     2670393359, // Phoenix Strife Type 0
     2718495762, // Swordflight 4.1
     2727890395, // Ankaa Seeker IV
+    2754844215, // Swordflight 4.1
     2775298636, // Ankaa Seeker IV
     2815422368, // Phoenix Strife Type 0
     3089908066, // Wing Discipline
@@ -1252,6 +1267,7 @@ const missingSources: { [key: string]: number[] } = {
     2150778206, // Solstice Gloves (Scorched)
     2155928170, // Solstice Mark (Rekindled)
     2156817213, // Solstice Cloak (Majestic)
+    2223901117, // Allstar Vector
     2261046232, // Jurassic Green
     2287277682, // Solstice Robes (Rekindled)
     2291082292, // Solstice Gauntlets (Majestic)
@@ -2793,10 +2809,12 @@ const missingSources: { [key: string]: number[] } = {
   shaxx: [
     85800627, // Ankaa Seeker IV
     98331691, // Binary Phoenix Mark
+    120859138, // Phoenix Strife Type 0
     185853176, // Wing Discipline
     252414402, // Swordflight 4.1
     283188616, // Wing Contender
     290136582, // Wing Theorem
+    315615761, // Ankaa Seeker IV
     327530279, // Wing Theorem
     328902054, // Swordflight 4.1
     356269375, // Wing Theorem
@@ -2807,6 +2825,7 @@ const missingSources: { [key: string]: number[] } = {
     468899627, // Binary Phoenix Mark
     530558102, // Phoenix Strife Type 0
     636679949, // Ankaa Seeker IV
+    657400178, // Swordflight 4.1
     670877864, // Binary Phoenix Mark
     727838174, // Swordflight 4.1
     744199039, // Wing Contender
@@ -2817,6 +2836,8 @@ const missingSources: { [key: string]: number[] } = {
     876608500, // Ankaa Seeker IV
     920187221, // Wing Discipline
     929917162, // Wing Theorem
+    944242985, // Ankaa Seeker IV
+    987343638, // Ankaa Seeker IV
     997903134, // Wing Theorem
     1036467370, // Wing Theorem
     1062166003, // Wing Contender
@@ -2826,13 +2847,16 @@ const missingSources: { [key: string]: number[] } = {
     1084033161, // Wing Contender
     1127237110, // Wing Contender
     1245115841, // Wing Theorem
+    1294217731, // Binary Phoenix Cloak
     1307478991, // Ankaa Seeker IV
+    1330581478, // Phoenix Strife Type 0
     1333087155, // Ankaa Seeker IV
     1464207979, // Wing Discipline
     1467590642, // Binary Phoenix Bond
     1484937602, // Phoenix Strife Type 0
     1548928853, // Phoenix Strife Type 0
     1571781304, // Swordflight 4.1
+    1648675919, // Binary Phoenix Mark
     1654427223, // Swordflight 4.1
     1658896287, // Binary Phoenix Cloak
     1673285051, // Wing Theorem
@@ -2842,6 +2866,7 @@ const missingSources: { [key: string]: number[] } = {
     1742940528, // Phoenix Strife Type 0
     1764274932, // Ankaa Seeker IV
     1801625827, // Swordflight 4.1
+    1828358334, // Swordflight 4.1
     1830829330, // Swordflight 4.1
     1838158578, // Binary Phoenix Bond
     1838273186, // Wing Contender
@@ -2851,7 +2876,10 @@ const missingSources: { [key: string]: number[] } = {
     2070517134, // Wing Contender
     2124666626, // Wing Discipline
     2191401041, // Phoenix Strife Type 0
+    2191437287, // Ankaa Seeker IV
+    2206581692, // Phoenix Strife Type 0
     2231762285, // Phoenix Strife Type 0
+    2247740696, // Swordflight 4.1
     2291226602, // Binary Phoenix Bond
     2293476915, // Swordflight 4.1
     2296560252, // Swordflight 4.1
@@ -2863,12 +2891,15 @@ const missingSources: { [key: string]: number[] } = {
     2466453881, // Wing Discipline
     2473130418, // Swordflight 4.1
     2496309431, // Wing Discipline
+    2511045676, // Binary Phoenix Bond
     2525395257, // Wing Theorem
     2543903638, // Phoenix Strife Type 0
     2555965565, // Wing Discipline
+    2627852659, // Phoenix Strife Type 0
     2670393359, // Phoenix Strife Type 0
     2718495762, // Swordflight 4.1
     2727890395, // Ankaa Seeker IV
+    2754844215, // Swordflight 4.1
     2775298636, // Ankaa Seeker IV
     2815422368, // Phoenix Strife Type 0
     3089908066, // Wing Discipline

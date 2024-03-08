@@ -359,6 +359,7 @@ export const enum PlugCategoryHashes {
   V300TitanHead1Skins = 1316550386,
   V300TitanLegs0Skins = 2790711640,
   V300TitanLegs2Skins = 112116362,
+  V300VehiclesModControls = 1417830429,
   V300VehiclesModFunction = 3536704835,
   V300VehiclesModSpeed = 231630128,
   V300WarlockArms0Skins = 2751345567,
