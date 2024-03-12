@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
 import { deleteLoadout } from 'app/loadout-drawer/actions';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
-import { editLoadout } from 'app/loadout-drawer/loadout-events';
+import { copyAndEditLoadout, editLoadout } from 'app/loadout-drawer/loadout-events';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -39,6 +39,7 @@ export default memo(function LoadoutRow({
 
     const handleEdit = () => editLoadout(loadout, store.id, { isNew: !saved });
     const handleShare = () => onShare(loadout);
+    const handleCopyAndEdit = () => copyAndEditLoadout(loadout, store.id);
 
     const actionButtons: ReactNode[] = [];
 
@@ -55,6 +56,15 @@ export default memo(function LoadoutRow({
         {saved ? t('Loadouts.EditBrief') : t('Loadouts.SaveLoadout')}
       </button>,
     );
+
+    if (equippable) {
+      // add button here to copy and edit the loadout
+      actionButtons.push(
+        <button key="copyAndEdit" type="button" className="dim-button" onClick={handleCopyAndEdit}>
+          {t('Loadouts.CopyAndEdit')}
+        </button>,
+      );
+    }
 
     if (loadout.parameters && !_.isEmpty(loadout.parameters)) {
       actionButtons.push(
