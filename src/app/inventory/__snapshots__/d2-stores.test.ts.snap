@@ -16341,7 +16341,7 @@ exports[`process stores generates a correct  Weapons CSV export 1`] = `
     "ROF": 90,
     "Range": 59,
     "Recoil": 51,
-    "Reload": 27,
+    "Reload": 62,
     "Season": 15,
     "Shield Duration": 0,
     "Source": "30th",
