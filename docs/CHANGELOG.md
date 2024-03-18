@@ -1,5 +1,7 @@
 ## Next
 
+## 8.12.0 <span class="changelog-date">(2024-03-17)</span>
+
 ## 8.11.1 <span class="changelog-date">(2024-03-13)</span>
 
 * Updates for new game content, including Wild Style detection as a breech-loaded grenade launcher.
