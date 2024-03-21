@@ -10834,7 +10834,7 @@ packages:
     resolution: {integrity: sha512-0ilKFI6QQF5nxDZLFn2dMjvc4hjg/Wkg7rHd3jK6/A4a1Hl9VFdQWvgB1UMGoU94pad1P/8N7fMcEnLnSiju8A==}
     engines: {node: '>= 8.9.0'}
     dependencies:
-      '@types/json-schema': 7.0.13
+      '@types/json-schema': 7.0.15
       ajv: 6.12.6
       ajv-keywords: 3.5.2(ajv@6.12.6)
     dev: true
@@ -12414,8 +12414,8 @@ packages:
       webpack-merge: 5.10.0
     dev: true
 
-  /webpack-dev-middleware@7.0.0(webpack@5.90.3):
-    resolution: {integrity: sha512-tZ5hqsWwww/8DislmrzXE3x+4f+v10H1z57mA2dWFrILb4i3xX+dPhTkcdR0DLyQztrhF2AUmO5nN085UYjd/Q==}
+  /webpack-dev-middleware@7.1.1(webpack@5.90.3):
+    resolution: {integrity: sha512-NmRVq4AvRQs66dFWyDR4GsFDJggtSi2Yn38MXLk0nffgF9n/AIP4TFBg2TQKYaRAN4sHuKOTiz9BnNCENDLEVA==}
     engines: {node: '>= 18.12.0'}
     peerDependencies:
       webpack: ^5.0.0
@@ -12426,6 +12426,7 @@ packages:
       colorette: 2.0.20
       memfs: 4.7.6
       mime-types: 2.1.35
+      on-finished: 2.4.1
       range-parser: 1.2.1
       schema-utils: 4.2.0
       webpack: 5.90.3(webpack-cli@5.1.4)
@@ -12474,7 +12475,7 @@ packages:
       spdy: 4.0.2
       webpack: 5.90.3(webpack-cli@5.1.4)
       webpack-cli: 5.1.4(webpack-dev-server@5.0.2)(webpack@5.90.3)
-      webpack-dev-middleware: 7.0.0(webpack@5.90.3)
+      webpack-dev-middleware: 7.1.1(webpack@5.90.3)
       ws: 8.16.0
     transitivePeerDependencies:
       - bufferutil
