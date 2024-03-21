@@ -1,0 +1,12 @@
+@use '../../variables.scss' as *;
+
+.content {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+  padding: 10px;
+}
+
+.header {
+  margin: 0;
+}

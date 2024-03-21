@@ -1,0 +1,10 @@
+.button {
+  composes: resetButton from '../../dim-ui/common.m.scss';
+  width: 52px;
+  height: 52px;
+  padding: 2px;
+  &:hover,
+  &:focus-visible {
+    background-color: var(--theme-accent-primary);
+  }
+}

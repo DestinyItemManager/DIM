@@ -1,0 +1,30 @@
+@use '../../variables.scss' as *;
+
+.button {
+  composes: dim-button from global;
+  position: relative;
+  > img {
+    margin: 0 !important;
+    height: 48px;
+    width: 48px;
+  }
+  &:hover,
+  &:active,
+  &.checked {
+    background-color: var(--theme-accent-primary);
+    color: var(--theme-text-invert);
+    > img {
+      filter: none !important;
+    }
+  }
+  &.spaced {
+    padding: 2px;
+  }
+  &.hasLoadout {
+    &:hover,
+    &:active,
+    &.checked {
+      color: var(--theme-text) !important;
+    }
+  }
+}
