@@ -126,16 +126,17 @@ export function ItemTypeName({ item, className }: { item: DimItem; className?: s
       item.classTypeNameLocalized[0].toUpperCase() + item.classTypeNameLocalized.slice(1)) ||
     '';
 
-  if (!(item.typeName || classType)) {
+  const title =
+    item.typeName && classType
+      ? t('MovePopup.Subtitle.Type', {
+          classType,
+          typeName: item.typeName,
+        })
+      : item.typeName || classType;
+
+  if (!title) {
     return null;
   }
 
-  return (
-    <div className={className}>
-      {t('MovePopup.Subtitle.Type', {
-        classType,
-        typeName: item.typeName,
-      })}
-    </div>
-  );
+  return <div className={className}>{title}</div>;
 }
