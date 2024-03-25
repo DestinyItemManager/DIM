@@ -11,7 +11,6 @@ export const distributionModHash = 4039026690; // InventoryItem "Distribution"
 export const stacksOnStacksModHash = 3994043492; // InventoryItem "Stacks on Stacks"
 /** legs mod, 3 energy */
 export const elementalChargeModHash = 3712696020; // InventoryItem "Elemental Charge"
-
 /** 1st class item mod with mutual exclusion behavior, 1 energy */
 export const empoweringFinishModHash = 84503918; // InventoryItem "Empowered Finish"
 /** 2nd class item mod with mutual exclusion behavior, 1 energy */

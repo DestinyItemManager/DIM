@@ -23,6 +23,9 @@ export const d2MissingIcon = '/img/misc/missing_icon_d2.png';
 export const MAX_ARMOR_ENERGY_CAPACITY = 10;
 export const MASTERWORK_ARMOR_STAT_BONUS = 2;
 
+/** Raid, combat and legacy mods can have up to 5 selected. */
+export const MAX_SLOT_INDEPENDENT_MODS = 5;
+
 //
 // SOCKETS KNOWN VALUES
 //
