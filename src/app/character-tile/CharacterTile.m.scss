@@ -70,6 +70,8 @@
 .bottom {
   composes: smallText;
   grid-area: bottom;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 // The emblem is only shown for D1 and the vault - D2 bakes it into the
