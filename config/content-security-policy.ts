@@ -14,15 +14,13 @@ export default function csp(
 ) {
   const baseCSP: Record<string, string[] | string | boolean> = {
     defaultSrc: ["'none'"],
-    scriptSrc: _.compact([
+    scriptSrc: [
       SELF,
       'https://*.googletagmanager.com',
       'https://*.google-analytics.com',
       // OpenCollective backers
       'https://opencollective.com',
-      // webpack-dev-server 5.0.0 seems to need this, we should figure out how to remove
-      env === 'dev' && "'unsafe-eval'",
-    ]),
+    ],
     workerSrc: [SELF],
     styleSrc: [
       SELF,
