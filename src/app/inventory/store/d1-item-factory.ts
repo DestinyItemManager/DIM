@@ -466,11 +466,7 @@ function makeItem(
   }
 
   // "The Life Exotic" perk means you can equip other exotics, so clear out the equipping label
-  if (
-    createdItem.isExotic &&
-    createdItem.talentGrid &&
-    createdItem.talentGrid.nodes.some((n) => n.hash === 4044819214)
-  ) {
+  if (createdItem.isExotic && createdItem.talentGrid?.nodes.some((n) => n.hash === 4044819214)) {
     createdItem.equippingLabel = undefined;
   }
 
