@@ -40,9 +40,7 @@ export function ReputationRank({
       className={clsx(factionClass, styles.activityRank, { [styles.gridLayout]: isProgressRanks })}
       title={replacer(progressionDef.displayProperties.description)}
     >
-      <div>
-        <ReputationRankIcon progress={progress} />
-      </div>
+      <ReputationRankIcon progress={progress} />
       <div className={styles.factionInfo}>
         <div className={styles.factionLevel}>
           {t('Progress.Rank', {
