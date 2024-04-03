@@ -105,11 +105,11 @@ const StoreBucketInner = memo(function StoreBucketInner({
           storeId={storeId}
           storeClassType={storeClassType}
         >
-          {equippedItem ? (
+          {equippedItem && (
             <div className="equipped-item">
               <StoreInventoryItem key={equippedItem.index} item={equippedItem} />
             </div>
-          ) : null}
+          )}
           {bucket.hasTransferDestination && (
             <a
               onClick={pickEquipItem}
