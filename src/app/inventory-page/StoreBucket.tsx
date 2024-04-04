@@ -92,9 +92,12 @@ const StoreBucketInner = memo(function StoreBucketInner({
       ? groupWeapons(sortItems(items))
       : sortItems(items.filter((i) => !i.equipped));
 
+  // represents whether there's *supposed* to be an equipped item here, aka armor/weapon/artifact, etc
+  const isEquippable = Boolean(equippedItem || bucket.equippable);
+
   return (
     <>
-      {equippedItem && (
+      {(equippedItem || isEquippable) && !isVault && (
         <StoreBucketDropTarget
           grouped={false}
           equip={true}
@@ -102,9 +105,11 @@ const StoreBucketInner = memo(function StoreBucketInner({
           storeId={storeId}
           storeClassType={storeClassType}
         >
-          <div className="equipped-item">
-            <StoreInventoryItem key={equippedItem.index} item={equippedItem} />
-          </div>
+          {equippedItem && (
+            <div className="equipped-item">
+              <StoreInventoryItem key={equippedItem.index} item={equippedItem} />
+            </div>
+          )}
           {bucket.hasTransferDestination && (
             <a
               onClick={pickEquipItem}
@@ -125,7 +130,8 @@ const StoreBucketInner = memo(function StoreBucketInner({
         bucket={bucket}
         storeId={storeId}
         storeClassType={storeClassType}
-        className={clsx({ 'not-equippable': !isVault && !equippedItem })}
+        // class representing a *character* bucket area that's not equippable
+        className={clsx({ 'not-equippable': !isVault && !isEquippable })}
       >
         {unequippedItems.map((groupOrItem) =>
           'id' in groupOrItem ? (
