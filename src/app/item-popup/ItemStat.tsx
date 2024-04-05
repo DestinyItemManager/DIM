@@ -289,7 +289,7 @@ function getNonReusableModSockets(item: DimItem) {
       !socketContainsIntrinsicPlug(s) &&
       !s.plugged.plugDef.plug.plugCategoryIdentifier.includes('masterwork') &&
       (s.plugged.plugDef.itemCategoryHashes?.some((h) => modItemCategoryHashes.has(h)) ||
-        statfulOrnaments.has(s.plugged.plugDef.hash)),
+        statfulOrnaments.includes(s.plugged.plugDef.hash)),
   );
 }
 

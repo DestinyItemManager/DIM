@@ -41,7 +41,7 @@ export const DEFAULT_ORNAMENTS: number[] = [
 ];
 
 /** a weird set of 3 solstice ornaments that provide a single resilience stat point */
-export const statfulOrnaments = new Set([4245469491, 2978747767, 2287277682]);
+export const statfulOrnaments = [4245469491, 2978747767, 2287277682];
 
 /** if a socket contains these, consider it empty */
 export const emptySocketHashes = [
