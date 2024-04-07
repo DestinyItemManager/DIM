@@ -3,6 +3,7 @@
 interface CssExports {
   'altButton': string;
   'content': string;
+  'fashionIcon': string;
   'filterInput': string;
   'filterPills': string;
   'inGameLoadoutButton': string;
@@ -10,6 +11,7 @@ interface CssExports {
   'list': string;
   'loadoutTypeIcon': string;
   'menuItem': string;
+  'modificationIcon': string;
   'moreLoadouts': string;
   'note': string;
   'warningIcon': string;

@@ -21,7 +21,12 @@ import {
 } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
-import { isMissingItems, newLoadout } from 'app/loadout-drawer/loadout-utils';
+import {
+  isArmorModsOnly,
+  isFashionOnly,
+  isMissingItems,
+  newLoadout,
+} from 'app/loadout-drawer/loadout-utils';
 import { loadoutsForClassTypeSelector } from 'app/loadout-drawer/loadouts-selector';
 import { makeRoomForPostmaster, totalPostmasterItems } from 'app/loadout-drawer/postmaster';
 import { previousLoadoutSelector } from 'app/loadout-drawer/selectors';
@@ -58,7 +63,12 @@ import { Link } from 'react-router-dom';
 import { InGameLoadoutIconWithIndex } from '../ingame/InGameLoadoutIcon';
 import { applyInGameLoadout } from '../ingame/ingame-loadout-apply';
 import { inGameLoadoutsForCharacterSelector } from '../ingame/selectors';
-import { searchAndSortLoadoutsByQuery, useLoadoutFilterPills } from '../loadout-ui/menu-hooks';
+import {
+  FashionIcon,
+  ModificationsIcon,
+  searchAndSortLoadoutsByQuery,
+  useLoadoutFilterPills,
+} from '../loadout-ui/menu-hooks';
 import styles from './LoadoutPopup.m.scss';
 import { RandomLoadoutOptions, useRandomizeLoadout } from './LoadoutPopupRandomize';
 import MaxlightButton from './MaxlightButton';
@@ -304,6 +314,12 @@ export default function LoadoutPopup({
               title={loadout.notes ? loadout.notes : loadout.name}
               onClick={() => applySavedLoadout(loadout)}
             >
+              {defs.isDestiny2() && isFashionOnly(defs, loadout) && (
+                <FashionIcon className={styles.fashionIcon} />
+              )}
+              {defs.isDestiny2() && isArmorModsOnly(defs, loadout) && (
+                <ModificationsIcon className={styles.modificationIcon} />
+              )}
               {(dimStore.isVault || loadout.classType === DestinyClass.Unknown) && (
                 <ClassIcon className={styles.loadoutTypeIcon} classType={loadout.classType} />
               )}
