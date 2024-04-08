@@ -1,8 +1,15 @@
 ## Next
 
+* Loadouts with only armor mods, or only fashion (shaders & ornaments), now display a symbol in the equip dropdown, and can be filtered from among other loadouts.
+
 ## 8.15.0 <span class="changelog-date">(2024-04-07)</span>
 
+* The Item Popup now correctly shows stat contributions from universal ornaments.
+* Item slots on characters now look a bit more normal when no item at all is equipped.
+
 ## 8.14.0 <span class="changelog-date">(2024-03-31)</span>
+
+* Long equipped character Titles no longer push the Power Level out of view.
 
 ## 8.13.0 <span class="changelog-date">(2024-03-24)</span>
 
