@@ -2,6 +2,7 @@ import ClassIcon from 'app/dim-ui/ClassIcon';
 import { PressTip } from 'app/dim-ui/PressTip';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { t } from 'app/i18next-t';
+import type { BucketSortType } from 'app/inventory/inventory-buckets';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, createItemContextSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
@@ -113,11 +114,11 @@ export default function LoadoutView({
 
   const [allMods, modDefinitions] = useLoadoutMods(loadout, store.id);
 
-  const categories = Object.groupBy(
+  const loadoutItemsByCategory: Record<BucketSortType, ResolvedLoadoutItem[]> = Object.groupBy(
     items.concat(warnitems),
     (li) => li.item.bucket.sort ?? 'Unknown',
   );
-  const power = loadoutPower(store, categories);
+  const power = loadoutPower(store, loadoutItemsByCategory);
 
   const selectionProps = $featureFlags.elgatoStreamDeck
     ? // eslint-disable-next-line
@@ -184,7 +185,7 @@ export default function LoadoutView({
                 category={category}
                 subclass={subclass}
                 store={store}
-                items={categories[category]}
+                items={loadoutItemsByCategory[category]}
                 allMods={modDefinitions}
                 modsByBucket={modsByBucket}
                 loadout={loadout}

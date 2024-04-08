@@ -7,7 +7,7 @@ import { DimCharacterStat, DimStore } from 'app/inventory/store-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { findItemsByBucket, getCurrentStore, getStore } from 'app/inventory/stores-helpers';
-import { ArmorEnergyRules } from 'app/loadout-builder/types';
+import { ArmorEnergyRules, LockableBucketHashes } from 'app/loadout-builder/types';
 import { calculateAssumedItemEnergy } from 'app/loadout/armor-upgrade-utils';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { UNSET_PLUG_HASH } from 'app/loadout/known-values';
@@ -44,6 +44,8 @@ import { HashLookup, LookupTable } from 'app/utils/util-types';
 import {
   DestinyClass,
   DestinyInventoryItemDefinition,
+  DestinyItemSubType,
+  DestinyItemType,
   DestinyLoadoutItemComponent,
 } from 'bungie-api-ts/destiny2';
 import deprecatedMods from 'data/d2/deprecated-mods.json';
@@ -712,6 +714,64 @@ export function isMissingItems(
   return false;
 }
 
+export function isFashionOnly(defs: D2ManifestDefinitions, loadout: Loadout): boolean {
+  if (loadout.items.length) {
+    return false;
+  }
+  if (!loadout.parameters?.modsByBucket) {
+    return false;
+  }
+
+  for (const bucketHash in loadout.parameters.modsByBucket) {
+    // if this is mods for a non-armor bucket
+    if (!LockableBucketHashes.includes(Number(bucketHash))) {
+      return false;
+    }
+    const modsForThisArmorSlot = loadout.parameters.modsByBucket[bucketHash];
+    if (modsForThisArmorSlot.some((modHash) => !isFashionPlug(defs, modHash))) {
+      return false;
+    }
+  }
+
+  return true;
+}
+/** not fashion mods, just useful ones */
+export function isArmorModsOnly(defs: D2ManifestDefinitions, loadout: Loadout): boolean {
+  // if it contains armor, it's not a mods-only loadout
+  if (loadout.items.length) {
+    return false;
+  }
+  // if there's no mods at all, this isn't a mods-only loadout
+  if (!loadout.parameters?.mods?.length && !loadout.parameters?.modsByBucket) {
+    return false;
+  }
+  // if there's specific mods, make sure none are fashion
+  if (loadout.parameters?.modsByBucket) {
+    for (const bucketHash in loadout.parameters.modsByBucket) {
+      // if this is mods for a non-armor bucket
+      if (!LockableBucketHashes.includes(Number(bucketHash))) {
+        return false;
+      }
+      const modsForThisArmorSlot = loadout.parameters.modsByBucket[bucketHash];
+      if (modsForThisArmorSlot.some((modHash) => isFashionPlug(defs, modHash))) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
+
+/** given a hash we know is a plug, is this a fashion plug? */
+function isFashionPlug(defs: D2ManifestDefinitions, modHash: number) {
+  const def = defs.InventoryItem.get(modHash);
+  return Boolean(
+    def &&
+      (def.itemSubType === DestinyItemSubType.Shader ||
+        def.itemSubType === DestinyItemSubType.Ornament ||
+        def.itemType === DestinyItemType.Armor),
+  );
+}
 /**
  * Returns a flat list of mods as PluggableInventoryItemDefinitions in the Loadout, by default including auto stat mods.
  * This INCLUDES both locked and unlocked mods; `unlockedPlugs` is used to identify if the expensive or cheap copy of an
