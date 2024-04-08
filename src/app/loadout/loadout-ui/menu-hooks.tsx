@@ -125,21 +125,23 @@ function useLoadoutFilterPillsInternal(
   }, [defs, savedLoadouts]);
   if (loadoutsByType) {
     for (const k of loadoutSpecializations) {
-      filterOptions.push({
-        key: k,
-        value: { tag: 'loadout-type', type: k },
-        content: (
-          <>
-            {k === 'Loadouts.ModsOnly' ? (
-              <ModificationsIcon className="" />
-            ) : (
-              <FashionIcon className="" />
-            )}
-            {t(k)}
-            {` (${loadoutsByType[k].length})`}
-          </>
-        ),
-      });
+      if (loadoutsByType[k].length) {
+        filterOptions.push({
+          key: k,
+          value: { tag: 'loadout-type', type: k },
+          content: (
+            <>
+              {k === 'Loadouts.ModsOnly' ? (
+                <ModificationsIcon className="" />
+              ) : (
+                <FashionIcon className="" />
+              )}
+              {t(k)}
+              {` (${loadoutsByType[k].length})`}
+            </>
+          ),
+        });
+      }
     }
   }
 
