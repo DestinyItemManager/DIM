@@ -1,4 +1,5 @@
 import { useD2Definitions } from 'app/manifest/selectors';
+import { METRICS_ACCOUNT_NODE } from 'app/search/d2-known-values';
 import { DestinyObjectiveProgress } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { TraitHashes } from 'data/d2/generated-enums';
@@ -23,16 +24,20 @@ export default function MetricBanner({ metricHash, objectiveProgress, className 
   const metricScope = metricDef.traitHashes
     .filter((h) => h !== TraitHashes.All)
     .map((h) => defs.Trait.get(h))[0];
-  const parentNode = defs.PresentationNode.get(metricDef.parentNodeHashes[0]);
 
-  const bannerIcon = parentNode.displayProperties.icon;
+  const parentNodeHash = metricDef.parentNodeHashes.length
+    ? metricDef.parentNodeHashes[0]
+    : METRICS_ACCOUNT_NODE;
+  const parentNode = defs.PresentationNode.get(parentNodeHash);
+
+  const bannerIcon = parentNode?.displayProperties.icon;
   const scopeIcon = metricScope.displayProperties.iconSequences[0].frames[2];
 
   const masterwork = objectiveProgress.complete;
 
   return (
     <div className={clsx(className, styles.icon)}>
-      <BungieImage className={styles.bannerIcon} src={bannerIcon} />
+      {bannerIcon && <BungieImage className={styles.bannerIcon} src={bannerIcon} />}
       {masterwork && <img src={masterworkOverlay} className={styles.bannerIcon} loading="lazy" />}
       <BungieImage className={styles.scopeIcon} src={scopeIcon} />
       <BungieImage className={styles.metricIcon} src={metricIcon} />

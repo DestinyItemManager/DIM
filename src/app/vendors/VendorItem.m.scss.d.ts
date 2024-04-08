@@ -8,7 +8,6 @@ interface CssExports {
   'ownershipIcon': string;
   'tile': string;
   'unavailable': string;
-  'vendorCosts': string;
   'vendorItem': string;
 }
 export const cssExports: CssExports;

@@ -72,14 +72,31 @@ const getUniqueItemNamesFromManifest = memoizeOne(
   },
 );
 
+/**
+ * Create a case-/diacritic-insensitive matching predicate for name / perkname filters.
+ * Requires an exact match if `exact`, otherwise partial.
+ */
+function matchText(value: string, language: DimLanguage, exact: boolean) {
+  const normalized = plainString(value, language);
+  if (exact) {
+    return (s: string) => normalized === plainString(s, language);
+  } else {
+    const startWord = startWordRegexp(normalized, language);
+    return (s: string) => startWord.test(plainString(s, language));
+  }
+}
+
 const nameFilter = {
-  keywords: 'name',
-  description: tl('Filter.PartialMatch'),
+  keywords: ['name', 'exactname'],
+  description: tl('Filter.Name'),
   format: 'freeform',
   suggestionsGenerator: ({ d2Manifest, allItems }) => {
     if (d2Manifest && allItems) {
       const myItemNames = allItems
-        .filter((i) => i.bucket.inWeapons || i.bucket.inArmor || i.bucket.inGeneral)
+        .filter(
+          (i) =>
+            i.bucket.inWeapons || i.bucket.inArmor || i.bucket.inGeneral || i.bucket.inInventory,
+        )
         .map((i) => i.name.toLowerCase());
       // favor items we actually own
       const allItemNames = getUniqueItemNamesFromManifest(d2Manifest.InventoryItem.getAll());
@@ -89,11 +106,11 @@ const nameFilter = {
       );
     }
   },
-  filter: ({ filterValue, language }) => {
-    filterValue = plainString(filterValue, language);
-    return (item) => plainString(item.name, language).includes(filterValue);
+  filter: ({ filterValue, language, lhs }) => {
+    const test = matchText(filterValue, language, /* exact */ lhs === 'exactname');
+    return (item) => test(item.name);
   },
-  fromItem: (item) => `name:${quoteFilterString(item.name)}`,
+  fromItem: (item) => `exactname:${quoteFilterString(item.name)}`,
 } satisfies FilterDefinition;
 
 const freeformFilters: FilterDefinition[] = [
@@ -113,7 +130,7 @@ const freeformFilters: FilterDefinition[] = [
   },
   {
     keywords: 'description',
-    description: tl('Filter.PartialMatch'),
+    description: tl('Filter.DescriptionFilter'),
     format: 'freeform',
     filter: ({ filterValue, language }) => {
       filterValue = plainString(filterValue, language);
@@ -135,7 +152,7 @@ const freeformFilters: FilterDefinition[] = [
     },
   },
   {
-    keywords: 'perkname',
+    keywords: ['perkname', 'exactperk'],
     description: tl('Filter.PerkName'),
     format: 'freeform',
     suggestionsGenerator: ({ d2Manifest, allItems }) => {
@@ -150,17 +167,16 @@ const freeformFilters: FilterDefinition[] = [
         // favor items we actually own
         return Array.from(
           new Set([...myPerkNames, ...allPerkNames]),
-          (s) => `perkname:${quoteFilterString(s)}`,
+          (s) => `exactperk:${quoteFilterString(s)}`,
         );
       }
     },
-    filter: ({ filterValue, language, d2Definitions }) => {
-      const startWord = startWordRegexp(plainString(filterValue, language), language);
-      const test = (s: string) => startWord.test(plainString(s, language));
+    filter: ({ lhs, filterValue, language, d2Definitions }) => {
+      const test = matchText(filterValue, language, /* exact */ lhs === 'exactperk');
       return (item) =>
         (isD1Item(item) &&
           testStringsFromDisplayPropertiesMap(test, item.talentGrid?.nodes, false)) ||
-        testStringsFromAllSockets(test, item, d2Definitions, false);
+        testStringsFromAllSockets(test, item, d2Definitions, /* includeDescription */ false);
     },
   },
   {

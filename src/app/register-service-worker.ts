@@ -115,12 +115,10 @@ export default function registerServiceWorker() {
           if (registration.waiting) {
             infoLog('SW', 'New content is available; please refresh. (from update)');
 
-            if ($featureFlags.sentry) {
-              // Disable Sentry error logging if this user is on an older version
-              const sentryOptions = getCurrentHub()?.getClient()?.getOptions();
-              if (sentryOptions) {
-                sentryOptions.enabled = false;
-              }
+            // Disable Sentry error logging if this user is on an older version
+            const sentryOptions = getCurrentHub()?.getClient()?.getOptions();
+            if (sentryOptions) {
+              sentryOptions.enabled = false;
             }
 
             return true;

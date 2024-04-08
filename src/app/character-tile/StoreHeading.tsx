@@ -21,7 +21,7 @@ const CharacterHeader = forwardRef(function CharacterHeader(
     store: DimStore;
     onClick: () => void;
   },
-  ref: React.Ref<HTMLDivElement>,
+  ref: React.Ref<HTMLButtonElement>,
 ) {
   return (
     <CharacterTileButton
@@ -54,7 +54,7 @@ export default function StoreHeading({
   onTapped?: (storeId: string) => void;
 }) {
   const [loadoutMenuOpen, setLoadoutMenuOpen] = useState(false);
-  const menuTrigger = useRef<HTMLDivElement>(null);
+  const menuTrigger = useRef<HTMLButtonElement>(null);
 
   const handleCloseLoadoutMenu = useCallback(() => {
     setLoadoutMenuOpen(false);
@@ -96,7 +96,7 @@ function LoadoutMenuContents({
 }: {
   store: DimStore;
   onClose: () => void;
-  menuTrigger: React.RefObject<HTMLDivElement>;
+  menuTrigger: React.RefObject<HTMLButtonElement>;
 }) {
   const menuRef = useRef<HTMLDivElement>(null);
 

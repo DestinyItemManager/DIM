@@ -73,6 +73,8 @@ export function getBuckets(defs: D2ManifestDefinitions) {
       description: 'Unknown items. DIM needs a manifest update.',
       name: 'Unknown',
       hash: -1,
+      // default to false. an equipped item existing, will override this in inv display
+      equippable: false,
       hasTransferDestination: false,
       capacity: Number.MAX_SAFE_INTEGER,
       sort: 'Unknown',
@@ -91,6 +93,7 @@ export function getBuckets(defs: D2ManifestDefinitions) {
       description: def.displayProperties.description,
       name: def.displayProperties.name,
       hash: def.hash,
+      equippable: def.category === BucketCategory.Equippable,
       hasTransferDestination: def.hasTransferDestination,
       capacity: def.itemCount,
       accountWide: def.scope === 1,

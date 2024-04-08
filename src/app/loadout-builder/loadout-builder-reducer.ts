@@ -1,13 +1,13 @@
 import {
   AssumeArmorMasterwork,
-  defaultLoadoutParameters,
   LoadoutParameters,
   StatConstraint,
+  defaultLoadoutParameters,
 } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import {
-  savedLoadoutParametersSelector,
   savedLoStatConstraintsByClassSelector,
+  savedLoadoutParametersSelector,
 } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
@@ -16,8 +16,8 @@ import { DimStore } from 'app/inventory/store-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
 import {
-  clearSubclass,
   LoadoutUpdateFunction,
+  clearSubclass,
   removeMod,
   setLoadoutParameters,
   updateMods,
@@ -26,7 +26,7 @@ import { Loadout, ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
 import { findItemForLoadout, newLoadout, pickBackingStore } from 'app/loadout-drawer/loadout-utils';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { showNotification } from 'app/notifications/notifications';
-import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
+import { armor2PlugCategoryHashesByName, armorStats } from 'app/search/d2-known-values';
 import { reorder } from 'app/utils/collections';
 import { emptyObject } from 'app/utils/empty';
 import { useHistory } from 'app/utils/undo-redo-history';
@@ -80,6 +80,12 @@ interface LoadoutBuilderConfiguration {
   isEditingExistingLoadout: boolean;
 
   /**
+   * If we are editing an existing loadout via the "better stats available"
+   * feature, this contains the stats we actually need to exceed.
+   */
+  strictUpgradesStatConstraints: ResolvedStatConstraint[] | undefined;
+
+  /**
    * A copy of `loadout.parameters.statConstraints`, but with ignored stats
    * included. This is more convenient to use than the raw `statConstraints` but
    * is kept in sync. Like `statConstraints` this is always in stat preference
@@ -124,6 +130,7 @@ const lbConfigInit = ({
   storeId,
   savedLoadoutBuilderParameters,
   savedStatConstraintsPerClass,
+  strictUpgradesStatConstraints,
 }: {
   stores: DimStore[];
   allItems: DimItem[];
@@ -137,6 +144,7 @@ const lbConfigInit = ({
   storeId: string | undefined;
   savedLoadoutBuilderParameters: LoadoutParameters;
   savedStatConstraintsPerClass: { [classType: number]: StatConstraint[] };
+  strictUpgradesStatConstraints: ResolvedStatConstraint[] | undefined;
 }): LoadoutBuilderConfiguration => {
   // Preloaded loadouts from the "Optimize Armor" button take priority
   const classTypeFromPreloadedLoadout = preloadedLoadout?.classType ?? DestinyClass.Unknown;
@@ -218,6 +226,7 @@ const lbConfigInit = ({
     loadout,
     isEditingExistingLoadout,
     resolvedStatConstraints: resolveStatConstraints(loadoutParameters.statConstraints!),
+    strictUpgradesStatConstraints,
     pinnedItems,
     excludedItems: emptyObject(),
     selectedStoreId,
@@ -248,6 +257,9 @@ type LoadoutBuilderConfigAction =
       savedStatConstraintsByClass: { [classType: number]: StatConstraint[] };
     }
   | { type: 'statConstraintChanged'; constraint: ResolvedStatConstraint }
+  | { type: 'statConstraintReset' }
+  | { type: 'statConstraintRandomize' }
+  | { type: 'setStatConstraints'; constraints: ResolvedStatConstraint[] }
   | { type: 'statOrderChanged'; sourceIndex: number; destinationIndex: number }
   | {
       type: 'assumeArmorMasterworkChanged';
@@ -258,13 +270,15 @@ type LoadoutBuilderConfigAction =
   | { type: 'unpinItem'; item: DimItem }
   | { type: 'excludeItem'; item: DimItem }
   | { type: 'unexcludeItem'; item: DimItem }
+  | { type: 'clearExcludedItems' }
   | { type: 'autoStatModsChanged'; autoStatMods: boolean }
   | { type: 'lockedModsChanged'; lockedMods: number[] }
   | { type: 'removeLockedMod'; mod: ResolvedLoadoutMod }
   /** For adding "half tier mods" */
   | { type: 'addGeneralMods'; mods: PluggableInventoryItemDefinition[] }
-  | { type: 'lockExotic'; lockedExoticHash: number }
+  | { type: 'lockExotic'; lockedExoticHash: number | undefined }
   | { type: 'removeLockedExotic' }
+  | { type: 'dismissComparisonStats' }
   | { type: 'setSearchQuery'; query: string };
 
 type LoadoutBuilderUIAction =
@@ -356,6 +370,29 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
         );
         return updateStatConstraints(state, newStatConstraints);
       }
+      case 'statConstraintReset': {
+        return updateStatConstraints(
+          state,
+          armorStats.map((s) => ({ statHash: s, minTier: 0, maxTier: 10, ignored: false })),
+        );
+      }
+      case 'statConstraintRandomize': {
+        return updateStatConstraints(
+          state,
+          _.shuffle(
+            armorStats.map((s) => ({
+              statHash: s,
+              minTier: Math.floor(Math.random() * 10),
+              maxTier: 10,
+              ignored: false,
+            })),
+          ),
+        );
+      }
+      case 'setStatConstraints': {
+        const { constraints } = action;
+        return updateStatConstraints(state, constraints);
+      }
       case 'statOrderChanged': {
         const { sourceIndex, destinationIndex } = action;
         const newOrder = reorder(state.resolvedStatConstraints, sourceIndex, destinationIndex);
@@ -429,6 +466,11 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
           },
         };
       }
+      case 'clearExcludedItems':
+        return {
+          ...state,
+          excludedItems: {},
+        };
       case 'lockedModsChanged':
         return updateLoadout(state, updateMods(action.lockedMods));
       case 'assumeArmorMasterworkChanged': {
@@ -475,6 +517,8 @@ function lbConfigReducer(defs: D2ManifestDefinitions) {
         return updateLoadout(state, setLoadoutParameters({ exoticArmorHash: undefined }));
       case 'autoStatModsChanged':
         return updateLoadout(state, setLoadoutParameters({ autoStatMods: action.autoStatMods }));
+      case 'dismissComparisonStats':
+        return { ...state, strictUpgradesStatConstraints: undefined };
       case 'setSearchQuery':
         return updateLoadout(state, setLoadoutParameters({ query: action.query || undefined }));
     }
@@ -506,6 +550,7 @@ export function useLbState(
   defs: D2ManifestDefinitions,
   preloadedLoadout: Loadout | undefined,
   storeId: string | undefined,
+  strictUpgradesStatConstraints: ResolvedStatConstraint[] | undefined,
 ) {
   const savedLoadoutBuilderParameters = useSelector(savedLoadoutParametersSelector);
   const savedStatConstraintsPerClass = useSelector(savedLoStatConstraintsByClassSelector);
@@ -527,6 +572,7 @@ export function useLbState(
       storeId,
       savedLoadoutBuilderParameters,
       savedStatConstraintsPerClass,
+      strictUpgradesStatConstraints,
     }),
   );
 

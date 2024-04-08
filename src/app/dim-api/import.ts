@@ -7,11 +7,12 @@ import {
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import { Settings, initialSettingsState } from 'app/settings/initial-settings';
+import { observe, unobserve } from 'app/store/observerMiddleware';
 import { ThunkResult } from 'app/store/types';
 import { errorMessage } from 'app/utils/errors';
 import { errorLog, infoLog } from 'app/utils/log';
-import { observeStore } from 'app/utils/redux';
 import _ from 'lodash';
+import { Dispatch } from 'redux';
 import { loadDimApiData } from './actions';
 import { profileLoadedFromIDB } from './basic-actions';
 import { importData } from './dim-api';
@@ -31,21 +32,21 @@ export function importDataBackup(data: ExportResponse, silent = false): ThunkRes
       dimApiData.apiPermissionGranted &&
       !dimApiData.profileLoaded
     ) {
-      await waitForProfileLoad();
+      await waitForProfileLoad(dispatch);
     }
 
     if (dimApiData.globalSettings.dimApiEnabled && dimApiData.apiPermissionGranted) {
       try {
-        infoLog('importLegacyData', 'Attempting to import legacy data into DIM API');
+        infoLog('importData', 'Attempting to import data into DIM API');
         const result = await importData(data);
-        infoLog('importLegacyData', 'Successfully imported legacy data into DIM API', result);
+        infoLog('importData', 'Successfully imported data into DIM API', result);
         showImportSuccessNotification(result, true);
 
         // Reload from the server
         return await dispatch(loadDimApiData(true));
       } catch (e) {
         if (!silent) {
-          errorLog('importLegacyData', 'Error importing legacy data into DIM API', e);
+          errorLog('importData', 'Error importing data into DIM API', e);
           showImportFailedNotification(errorMessage(e));
         }
         return;
@@ -62,8 +63,8 @@ export function importDataBackup(data: ExportResponse, silent = false): ThunkRes
       if (!loadouts.length && !tags.length) {
         if (!silent) {
           errorLog(
-            'importLegacyData',
-            'Error importing legacy data into DIM - no data found in import file. (no settings upgrade/API upload attempted. DIM Sync is turned off)',
+            'importData',
+            'Error importing data into DIM - no data found in import file. (no settings upgrade/API upload attempted. DIM Sync is turned off)',
             data,
           );
           showImportFailedNotification(t('Storage.ImportNotification.NoData'));
@@ -148,17 +149,25 @@ export function importDataBackup(data: ExportResponse, silent = false): ThunkRes
   };
 }
 
+// Each observer that is used to observe the change in dimApi profileLoaded state
+// should be unique, so use a module reference counter.
+let profileLoadObserverCount = 0;
 /** Returns a promise that resolves when the profile is fully loaded. */
-function waitForProfileLoad() {
+function waitForProfileLoad<D extends Dispatch>(dispatch: D) {
+  const observerId = `profile-load-observer-${profileLoadObserverCount++}`;
   return new Promise((resolve) => {
-    const unsubscribe = observeStore(
-      (state) => state.dimApi.profileLoaded,
-      (_prev, loaded) => {
-        if (loaded) {
-          unsubscribe();
-          resolve(undefined);
-        }
-      },
+    dispatch(
+      observe({
+        id: observerId,
+        runInitially: true,
+        getObserved: (rootState) => rootState.dimApi.profileLoaded,
+        sideEffect: ({ current }) => {
+          if (current) {
+            dispatch(unobserve(observerId));
+            resolve(undefined);
+          }
+        },
+      }),
     );
   });
 }

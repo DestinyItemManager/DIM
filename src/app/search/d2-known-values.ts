@@ -40,6 +40,9 @@ export const DEFAULT_ORNAMENTS: number[] = [
   702981643, // InventoryItem "Default Ornament" Restores your armor to its default appearance.
 ];
 
+/** a weird set of 3 solstice ornaments that provide a single resilience stat point */
+export const statfulOrnaments = [4245469491, 2978747767, 2287277682];
+
 /** if a socket contains these, consider it empty */
 export const emptySocketHashes = [
   2323986101, // InventoryItem "Empty Mod Socket"
@@ -156,7 +159,6 @@ export const D2ItemCategoryHashesByName = {
   tracerifle: ItemCategoryHashes.TraceRifles,
   linearfusionrifle: ItemCategoryHashes.LinearFusionRifles,
   submachine: ItemCategoryHashes.SubmachineGuns,
-  smg: ItemCategoryHashes.SubmachineGuns,
   bow: ItemCategoryHashes.Bows,
   glaive: ItemCategoryHashes.Glaives,
   transmat: ItemCategoryHashes.ShipModsTransmatEffects,
@@ -213,6 +215,9 @@ export const ARMOR_NODE = 1605042242; // PresentationNode "Armor"
 /** Just to grab the string Universal Ornaments */
 export const UNIVERSAL_ORNAMENTS_NODE = 3655910122; // PresentationNode "Universal Ornaments"
 
+/** The emblem metrics Account parent node, used as a fallback for orphaned metrics */
+export const METRICS_ACCOUNT_NODE = 2875839731; // PresentationNode "Account"
+
 //
 // MISC KNOWN HASHES / ENUMS
 //
@@ -241,6 +246,7 @@ export const enum VendorHashes {
   Xur = 2190858386,
   DevrimKay = 396892126,
   Failsafe = 1576276905,
+  RivensWishesExotics = 2388521577,
 }
 
 /** used to snag the icon for display */

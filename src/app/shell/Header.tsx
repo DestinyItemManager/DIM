@@ -10,6 +10,7 @@ import { accountRoute } from 'app/routes';
 import { SearchFilterRef } from 'app/search/SearchBar';
 import DimApiWarningBanner from 'app/storage/DimApiWarningBanner';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { streamDeckEnabledSelector } from 'app/stream-deck/selectors';
 import { isiOSBrowser } from 'app/utils/browsers';
 import { useSetCSSVarToHeight } from 'app/utils/hooks';
 import { infoLog } from 'app/utils/log';
@@ -17,7 +18,7 @@ import clsx from 'clsx';
 import { AnimatePresence, Spring, Variants, motion } from 'framer-motion';
 import logo from 'images/logo-type-right-light.svg';
 import _ from 'lodash';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { Link, NavLink } from 'react-router-dom';
@@ -53,6 +54,13 @@ const menuAnimateVariants: Variants = {
   collapsed: { x: -250 },
 };
 const menuAnimateTransition: Spring = { type: 'spring', duration: 0.3, bounce: 0 };
+
+const StreamDeckButton = lazy(
+  () =>
+    import(
+      /* webpackChunkName: "stream-deck-button" */ 'app/stream-deck/StreamDeckButton/StreamDeckButton'
+    ),
+);
 
 // TODO: finally time to hack apart the header styles!
 
@@ -282,6 +290,11 @@ export default function Header() {
   const headerLinksRef = useRef<HTMLDivElement>(null);
   const clarityDetected = useClarityDetector(headerLinksRef);
 
+  const streamDeckEnabled = $featureFlags.elgatoStreamDeck
+    ? // eslint-disable-next-line react-hooks/rules-of-hooks
+      useSelector(streamDeckEnabledSelector)
+    : false;
+
   return (
     <PressTipRoot.Provider value={headerRef}>
       <header className={styles.container} ref={headerRef}>
@@ -363,7 +376,12 @@ export default function Header() {
                 <SearchFilter onClear={hideSearch} ref={searchFilter} />
               </span>
             )}
-            <RefreshButton className={clsx(styles.menuItem)} />
+            {streamDeckEnabled && (
+              <Suspense>
+                <StreamDeckButton />
+              </Suspense>
+            )}
+            <RefreshButton className={styles.menuItem} />
             {!isPhonePortrait && (
               <Link className={styles.menuItem} to="/settings" title={t('Settings.Settings')}>
                 <AppIcon icon={settingsIcon} />

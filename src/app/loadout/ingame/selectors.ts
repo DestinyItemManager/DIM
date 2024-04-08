@@ -1,4 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import {
   allItemsSelector,
@@ -18,14 +19,13 @@ import {
 } from 'app/loadout-drawer/loadout-types';
 import {
   getModsFromLoadout,
+  itemsByItemId,
   newLoadoutFromEquipped,
-  potentialLoadoutItemsByItemId,
 } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsForClassTypeSelector } from 'app/loadout-drawer/loadouts-selector';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
-import { t } from 'i18next';
 import { createSelector } from 'reselect';
 import { implementsDimLoadout, itemCouldBeEquipped } from './ingame-loadout-utils';
 
@@ -121,7 +121,6 @@ export const inGameLoadoutsWithMetadataSelector = createSelector(
   fullyResolvedLoadoutsSelector,
   allItemsSelector,
   storesSelector,
-  d2ManifestSelector,
   availableLoadoutSlotsSelector,
   (_state: RootState, storeId: string) => storeId,
   (
@@ -129,14 +128,10 @@ export const inGameLoadoutsWithMetadataSelector = createSelector(
     { currentLoadout, loadouts: savedLoadouts },
     allItems,
     stores,
-    defs,
     availableLoadoutSlots,
     storeId,
   ) => {
     const selectedStore = getStore(stores, storeId)!;
-    if (!defs) {
-      return [];
-    }
 
     return (
       inGameLoadouts
@@ -146,26 +141,22 @@ export const inGameLoadoutsWithMetadataSelector = createSelector(
         .filter((gameLoadout) => gameLoadout.index < availableLoadoutSlots)
         .map((gameLoadout) => {
           const isEquippable = gameLoadout.items.every((li) => {
-            const liveItem = potentialLoadoutItemsByItemId(allItems)[li.itemInstanceId];
+            const liveItem = itemsByItemId(allItems)[li.itemInstanceId];
             return !liveItem || itemCouldBeEquipped(selectedStore, liveItem, stores);
           });
 
           const isEquipped = implementsDimLoadout(
-            defs,
             gameLoadout,
             currentLoadout.resolvedLoadoutItems,
             currentLoadout.resolvedMods,
           );
 
-          const matchingLoadouts = savedLoadouts.filter(
-            (dimLoadout) =>
-              dimLoadout.loadout.items.length > 4 &&
-              implementsDimLoadout(
-                defs,
-                gameLoadout,
-                dimLoadout.resolvedLoadoutItems,
-                dimLoadout.resolvedMods,
-              ),
+          const matchingLoadouts = savedLoadouts.filter((dimLoadout) =>
+            implementsDimLoadout(
+              gameLoadout,
+              dimLoadout.resolvedLoadoutItems,
+              dimLoadout.resolvedMods,
+            ),
           );
           return { gameLoadout, isEquippable, isEquipped, matchingLoadouts };
         })

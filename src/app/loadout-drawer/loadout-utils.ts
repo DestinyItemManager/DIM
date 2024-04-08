@@ -284,6 +284,7 @@ export function getLoadoutStats(
   subclass: ResolvedLoadoutItem | undefined,
   armor: DimItem[],
   mods: PluggableInventoryItemDefinition[],
+  includeRuntimeStatBenefits: boolean,
   /** Assume armor is masterworked according to these rules when calculating stats */
   armorEnergyRules?: ArmorEnergyRules,
 ) {
@@ -308,7 +309,7 @@ export function getLoadoutStats(
     for (const hash of armorStats) {
       armorPiecesStats[hash] += itemStats[hash]?.[0].base ?? 0;
       armorPiecesStats[hash] +=
-        itemEnergy === MAX_ARMOR_ENERGY_CAPACITY
+        itemEnergy === MAX_ARMOR_ENERGY_CAPACITY && item.energy
           ? MASTERWORK_ARMOR_STAT_BONUS
           : energySocket?.plugged?.stats?.[hash] ?? 0;
     }
@@ -331,7 +332,7 @@ export function getLoadoutStats(
     mods,
     subclass,
     classType,
-    /* includeRuntimeStatBenefits */ true,
+    includeRuntimeStatBenefits,
   );
 
   for (const [statHash, value] of Object.entries(modStats)) {
@@ -593,10 +594,11 @@ export function findItemForLoadout(
 }
 
 /**
- * Get a mapping from item id to item, for items that could be in loadouts. Used for
- * looking up items from loadouts.
+ * Get a mapping from item id to item. Used for looking up items from loadouts.
+ * This used to be restricted to only items that could be in loadouts, but we
+ * need it to be all items to make search-based loadout transfers work.
  */
-export const potentialLoadoutItemsByItemId = weakMemoize((allItems: DimItem[]) =>
+export const itemsByItemId = weakMemoize((allItems: DimItem[]) =>
   _.keyBy(
     allItems.filter((i) => i.id !== '0' && itemCanBeInLoadout(i)),
     (i) => i.id,
@@ -607,43 +609,40 @@ export const potentialLoadoutItemsByItemId = weakMemoize((allItems: DimItem[]) =
  * Get a mapping from crafted date to item, for items that could be in loadouts. Used for
  * looking up items from loadouts.
  */
-const potentialLoadoutItemsByCraftedDate = weakMemoize((allItems: DimItem[]) =>
+const itemsByCraftedDate = weakMemoize((allItems: DimItem[]) =>
   _.keyBy(
-    allItems.filter((i) => i.id !== '0' && i.craftedInfo?.craftedDate && itemCanBeInLoadout(i)),
+    allItems.filter((i) => i.instanced && i.craftedInfo?.craftedDate),
     (i) => i.craftedInfo!.craftedDate,
   ),
 );
 
 export function getInstancedLoadoutItem(allItems: DimItem[], loadoutItem: LoadoutItem) {
-  const result = potentialLoadoutItemsByItemId(allItems)[loadoutItem.id];
+  const result = itemsByItemId(allItems)[loadoutItem.id];
   if (result) {
     return result;
   }
 
   // Crafted items get new IDs, but keep their crafted date, so we can match on that
   if (loadoutItem.craftedDate) {
-    return potentialLoadoutItemsByCraftedDate(allItems)[loadoutItem.craftedDate];
+    return itemsByCraftedDate(allItems)[loadoutItem.craftedDate];
   }
 }
 
 /**
- * Get a mapping from item hash to item, for uninstanced items that could be in loadouts. Used for
- * looking up items from loadouts.
+ * Get a mapping from item hash to item. Used for looking up items from
+ * loadouts. This used to be restricted to only items that could be in loadouts,
+ * but we need it to be all items to make search-based loadout transfers work.
  */
-const potentialUninstancedLoadoutItemsByHash = weakMemoize((allItems: DimItem[]) =>
-  Map.groupBy(
-    allItems.filter((i) => itemCanBeInLoadout(i)),
-    (i) => i.hash,
-  ),
-);
+const itemsByHash = weakMemoize((allItems: DimItem[]) => Map.groupBy(allItems, (i) => i.hash));
 
 export function getUninstancedLoadoutItem(
   allItems: DimItem[],
   hash: number,
   storeId: string | undefined,
 ) {
-  // This is mostly for subclasses - it finds all matching items by hash and then picks the one that's on the desired character
-  const candidates = potentialUninstancedLoadoutItemsByHash(allItems).get(hash) ?? [];
+  // This is for subclasses and emblems - it finds all matching items by hash and then picks the one that's on the desired character
+  // It's also used for moving consumables in search loadouts
+  const candidates = itemsByHash(allItems).get(hash) ?? [];
   // the copy of this item being held by the specified store
   const heldItem =
     storeId !== undefined ? candidates.find((item) => item.owner === storeId) : undefined;

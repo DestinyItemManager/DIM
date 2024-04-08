@@ -120,11 +120,11 @@ export default function Armory({
             )}
             {item.destinyVersion === 2 && item.ammoType > 0 && <AmmoIcon type={item.ammoType} />}
             <ItemTypeName item={item} />
-            {item.pursuit?.questStepNum !== undefined && (
+            {item.pursuit?.questLine && (
               <div>
                 {t('MovePopup.Subtitle.QuestProgress', {
-                  questStepNum: item.pursuit.questStepNum,
-                  questStepsTotal: item.pursuit.questStepsTotal ?? '?',
+                  questStepNum: item.pursuit.questLine.questStepNum,
+                  questStepsTotal: item.pursuit.questLine.questStepsTotal ?? '?',
                 })}
               </div>
             )}
@@ -204,9 +204,9 @@ export default function Armory({
               ))}
             </div>
           )}
-          {item.pursuit?.questLineDescription && (
+          {item.pursuit?.questLine?.description && (
             <p>
-              <RichDestinyText text={item.pursuit.questLineDescription} ownerId={item.owner} />
+              <RichDestinyText text={item.pursuit.questLine.description} ownerId={item.owner} />
             </p>
           )}
           {itemDef.setData?.itemList && (

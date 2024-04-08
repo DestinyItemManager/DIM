@@ -45,7 +45,7 @@ export default function GeneratedSetButtons({
   const openLoadout = () =>
     editLoadout(loadout(), store.id, {
       showClass: false,
-      isNew: !isEditingExistingLoadout,
+      isNew: !isEditingExistingLoadout || originalLoadout.id === 'equipped',
     });
 
   // Automatically equip items for this generated set to the active store
@@ -71,7 +71,7 @@ export default function GeneratedSetButtons({
   return (
     <div className={styles.buttons}>
       <button type="button" className="dim-button" onClick={openLoadout}>
-        {t('LoadoutBuilder.CreateLoadout')}
+        {isEditingExistingLoadout ? t('Loadouts.UpdateLoadout') : t('Loadouts.SaveLoadout')}
       </button>
       {canCompareLoadouts && (
         <button

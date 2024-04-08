@@ -125,11 +125,10 @@ export const vendorCurrencyEngramsSelector = createSelector(
       return emptyArray<AccountCurrency>();
     }
     // silver has no stackUniqueLabel
-    return currencies.filter(
-      (curr) =>
-        defs.InventoryItem.get(curr.itemHash).inventory!.stackUniqueLabel?.match(
-          /virtual_engram|\.virtual$/,
-        ),
+    return currencies.filter((curr) =>
+      defs.InventoryItem.get(curr.itemHash).inventory!.stackUniqueLabel?.match(
+        /virtual_engram|\.virtual$/,
+      ),
     );
   },
 );
@@ -169,7 +168,7 @@ export const profileErrorSelector = (state: RootState) => state.inventory.profil
 
 /** A variant of profileErrorSelector which returns undefined if we still have a valid profile to use despite the error. */
 export const blockingProfileErrorSelector = (state: RootState) =>
-  state.inventory.profileResponse ? undefined : state.inventory.profileError;
+  currentStoreSelector(state) ? undefined : state.inventory.profileError;
 
 /** Whether DIM will automatically refresh on a schedule */
 export const autoRefreshEnabledSelector = (state: RootState) =>

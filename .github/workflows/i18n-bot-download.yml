@@ -9,15 +9,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout DIM
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.I18N_PAT }}
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18.x
           cache: pnpm
@@ -26,7 +26,7 @@ jobs:
         run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: Download updated i18n files
-        uses: crowdin/github-action@1.4.7
+        uses: crowdin/github-action@v1.20.1
         with:
           upload_sources: false
           upload_translations: false
@@ -51,7 +51,7 @@ jobs:
         run: pnpm bcu
 
       - name: porcelain check
-        uses: dorny/paths-filter@v2
+        uses: dorny/paths-filter@v3
         id: filter
         with:
           base: HEAD
@@ -61,7 +61,7 @@ jobs:
 
       - name: Commit files
         if: steps.filter.outputs.changed
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: i18n
           commit_user_name: DIM i18n Bot

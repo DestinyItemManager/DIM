@@ -1,11 +1,14 @@
-import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import { LoadoutParameters, Settings } from '@destinyitemmanager/dim-api-types';
 import { DimItem } from 'app/inventory/item-types';
 import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
-import { AutoModDefs } from 'app/loadout-builder/types';
+import { AutoModDefs, ResolvedStatConstraint } from 'app/loadout-builder/types';
+import { ItemFilter } from 'app/search/filter-types';
 
 /** The analysis results for a single loadout. */
 export interface LoadoutAnalysisResult {
   findings: LoadoutFinding[];
+  /** A caveat to the "better stats available" note because it might be caused by DIM unintentionally considering font mods active */
+  betterStatsAvailableFontNote: boolean;
   /** We took a closer look at the armor in this loadout and determined these results. */
   armorResults: ArmorAnalysisResult | undefined;
 }
@@ -29,6 +32,8 @@ export type ArmorAnalysisResult =
       betterStatsAvailable: LoadoutFinding.BetterStatsAvailable | undefined;
       /** If one were to start Loadout Optimizer from here, use these settings. */
       loadoutParameters: LoadoutParameters;
+      /** And pass these to the Loadout Builder to show strict upgrades only */
+      strictUpgradeStatConstraints: ResolvedStatConstraint[] | undefined;
     };
 
 export const enum LoadoutFinding {
@@ -57,13 +62,8 @@ export const enum LoadoutFinding {
   ModsDontFit,
   /** The armor set does not match the saved stat constraints. */
   DoesNotSatisfyStatConstraints,
-  /**
-   * The loadout has a search query which complicates analysis.
-   * Maybe we could but it's difficult and probably a niche case.
-   * But whether an item matches a query can change often (tags, or
-   * imagine creating a Loadout from `-is:inloadout` items...)
-   */
-  LoadoutHasSearchQuery,
+  /** The loadout parameters search query is invalid or the items don't match them */
+  InvalidSearchQuery,
 }
 
 /** These aren't problems per se but they do block further analysis */
@@ -71,7 +71,6 @@ export const blockAnalysisFindings: LoadoutFinding[] = [
   LoadoutFinding.NotAFullArmorSet,
   LoadoutFinding.ModsDontFit,
   LoadoutFinding.DoesNotRespectExotic,
-  LoadoutFinding.LoadoutHasSearchQuery,
 ];
 
 /**
@@ -81,7 +80,9 @@ export const blockAnalysisFindings: LoadoutFinding[] = [
 export interface LoadoutAnalysisContext {
   unlockedPlugs: Set<number>;
   itemCreationContext: ItemCreationContext;
+  savedLoStatConstraintsByClass: Settings['loStatConstraintsByClass'];
   allItems: DimItem[];
-  savedLoLoadoutParameters: LoadoutParameters;
   autoModDefs: AutoModDefs;
+  validateQuery: (query: string) => { valid: boolean };
+  filterFactory: (query: string) => ItemFilter;
 }

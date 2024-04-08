@@ -24,7 +24,28 @@
   cursor: pointer;
   font-size: inherit;
   font-family: inherit;
+  user-select: none;
   &:disabled {
     cursor: default;
+  }
+}
+
+// Show visible scrollbars when scrollable, even if the OS (e.g. macOS) prefers hidden scrollbars.
+.visibleScrollbars {
+  &::-webkit-scrollbar-track {
+    background: #555;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #e4e4e4;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar {
+    width: 10px;
+
+    &:horizontal {
+      height: 10px;
+    }
   }
 }

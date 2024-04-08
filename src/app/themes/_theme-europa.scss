@@ -6,7 +6,7 @@
 
   // More vibrant P3 colourspace tints for displays that support them
   @supports (color: color(display-p3 1 1 1)) {
-    --theme-accent-primary: oklch(0.71 0.18 235.97);
+    --theme-accent-primary: oklch(71% 0.18 235.97);
   }
 
   // Generic fills for modal backgrounds (see below)
@@ -54,7 +54,7 @@
   --theme-header-nav-bg: #1d2b5e;
   --theme-header-nav-slideout-menu-bg: var(--theme-fill-modal);
   --theme-header-characters-bg: #2a418f;
-  --theme-header-characters-txt: #aaa;
+  --theme-header-characters-txt: rgba(255, 255, 255, 0.625);
 
   // Dropdown menu
   --theme-dropdown-menu-bg: var(--theme-fill-modal);

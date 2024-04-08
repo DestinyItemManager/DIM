@@ -744,7 +744,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 1250089450,
+      hash: 298568270,
       fromRichText: true,
     },
   },
@@ -775,7 +775,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 19991929,
+      hash: 85535852,
       fromRichText: true,
     },
   },
@@ -866,7 +866,7 @@ export const symbolData: {
   },
 ];
 const translateManually = [57618, 57665, 57495, 57654, 57671] as const;
-export type TranslateManually = typeof translateManually[number];
+export type TranslateManually = (typeof translateManually)[number];
 
 /*
  * Could not find a source for (did the definitions disappear?):

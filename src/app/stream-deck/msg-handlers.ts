@@ -20,15 +20,11 @@ import { applyInGameLoadout } from 'app/loadout/ingame/ingame-loadout-apply';
 import { allInGameLoadoutsSelector } from 'app/loadout/ingame/selectors';
 import { showNotification } from 'app/notifications/notifications';
 import { accountRoute } from 'app/routes';
-import { filteredItemsSelector } from 'app/search/search-filter';
+import { filterFactorySelector } from 'app/search/search-filter';
 import { setRouterLocation, setSearchQuery } from 'app/shell/actions';
 import { refresh } from 'app/shell/refresh-events';
 import { RootState, ThunkResult } from 'app/store/types';
-import { streamDeckClearSelection, streamDeckWaitSelection } from 'app/stream-deck/actions';
-import { sendToStreamDeck } from 'app/stream-deck/async-module';
-import { showStreamDeckAuthorizationNotification } from 'app/stream-deck/AuthorizationNotification/AuthorizationNotification';
 import {
-  AuthorizationInitAction,
   CollectPostmasterAction,
   EquipLoadoutAction,
   FarmingModeAction,
@@ -37,38 +33,21 @@ import {
   MessageHandler,
   PullItemAction,
   RandomizeAction,
+  RequestPickerItemsAction,
   SearchAction,
   SelectionAction,
   StreamDeckMessage,
 } from 'app/stream-deck/interfaces';
-import { DeferredPromise } from 'app/stream-deck/util/deferred';
-import { clientIdentifier, streamDeckToken } from 'app/stream-deck/util/local-storage';
 import { delay } from 'app/utils/promises';
 import { DamageType } from 'bungie-api-ts/destiny2';
-
-// Deferred promise used with selections notifications and actions
-export const notificationPromise = new DeferredPromise();
+import { streamDeckSelection } from './actions';
+import { sendToStreamDeck } from './async-module';
+import packager, { streamDeckClearId } from './util/packager';
 
 // Calc location path
 function routeTo(state: RootState, path: string) {
   const account = currentAccountSelector(state);
   return account ? `${accountRoute(account)}/${path}` : undefined;
-}
-
-// Show notification asking for selection
-function showSelectionNotification(selectionType: 'item' | 'loadout', onCancel?: () => void) {
-  // cancel previous selection notification
-  notificationPromise.resolve();
-  showNotification({
-    title: 'Elgato Stream Deck',
-    body:
-      selectionType === 'item' ? t('StreamDeck.Selection.Item') : t('StreamDeck.Selection.Loadout'),
-    type: 'info',
-    duration: 500,
-    onCancel,
-    onClick: onCancel,
-    promise: notificationPromise.promise,
-  });
 }
 
 function refreshHandler(): ThunkResult {
@@ -77,21 +56,68 @@ function refreshHandler(): ThunkResult {
   };
 }
 
+function requestPickerItemsHandler({
+  msg,
+  state,
+}: HandlerArgs<RequestPickerItemsAction>): ThunkResult {
+  return async () => {
+    const items = searchItems(state, msg.query);
+    items.sort((a, b) => a.name.localeCompare(b.name));
+    sendToStreamDeck({
+      action: 'pickerItems',
+      data: {
+        device: msg.device,
+        items: items.map((item) => ({
+          label: item.name,
+          item: streamDeckClearId(item.index),
+          icon: item.icon,
+          overlay: item.iconOverlay,
+          isExotic: item.isExotic,
+          isCrafted: item.crafted,
+          element:
+            item.element?.enumValue === DamageType.Kinetic
+              ? undefined
+              : item.element?.displayProperties?.icon,
+        })),
+      },
+    });
+  };
+}
+
+function searchItems(state: RootState, query: string) {
+  const allItems = allItemsSelector(state);
+  const filter = filterFactorySelector(state)(query);
+  return allItems.filter((i) => filter(i));
+}
+
 function searchHandler({ msg, state, store }: HandlerArgs<SearchAction>): ThunkResult {
   return async (dispatch, getState) => {
-    if (!window.location.pathname.endsWith(msg.page)) {
-      dispatch(setRouterLocation(routeTo(state, msg.page || 'inventory')));
-      // delay a bit to trigger the search
-      await delay(250);
-    }
-    dispatch(setSearchQuery(msg.search));
-    // if pull items flag is enabled delay a bit to trigger the action
-    if (msg.pullItems) {
-      await delay(500);
-      // use getState to obtain the updated state after search
-      const loadout = itemMoveLoadout(filteredItemsSelector(getState()), store);
-      await dispatch(applyLoadout(store, loadout, { allowUndo: true }));
-      dispatch(setSearchQuery('', true));
+    const searchOnly = !msg.pullItems && !msg.sendToVault;
+
+    if (searchOnly) {
+      // change page if needed
+      if (!window.location.pathname.endsWith(msg.page)) {
+        dispatch(setRouterLocation(routeTo(state, msg.page || 'inventory')));
+        // delay a bit to trigger the search
+        await delay(250);
+      }
+      // update the search query
+      dispatch(setSearchQuery(state.shell.searchQuery === msg.query ? '' : msg.query));
+    } else if (msg.query) {
+      // reset any previous search
+      dispatch(setSearchQuery(''));
+      // find items
+      const searchedItems = searchItems(getState(), msg.query);
+      // skip action if no items found
+      if (searchedItems.length === 0) {
+        return;
+      }
+      // move items to the vault or current store
+      const targetStore = msg.sendToVault ? vaultSelector(state) : store;
+      if (targetStore) {
+        const loadout = itemMoveLoadout(searchedItems, targetStore);
+        await dispatch(applyLoadout(targetStore, loadout, { allowUndo: true }));
+      }
     }
   };
 }
@@ -132,23 +158,6 @@ function farmingModeHandler({ state, store }: HandlerArgs<FarmingModeAction>): T
   };
 }
 
-function selectionHandler({ msg, state }: HandlerArgs<SelectionAction>): ThunkResult {
-  return async (dispatch) => {
-    const selectionType = msg.selection;
-    dispatch(setSearchQuery(''));
-    dispatch(streamDeckWaitSelection(selectionType));
-    // open the related page
-    const path = selectionType === 'loadout' ? 'loadouts' : 'inventory';
-    if (!window.location.pathname.endsWith(path)) {
-      dispatch(setRouterLocation(routeTo(state, path)));
-      // delay a bit the notification show
-      await delay(100);
-    }
-    // show the notification
-    showSelectionNotification(selectionType, () => dispatch(streamDeckClearSelection()));
-  };
-}
-
 function equipLoadoutHandler({ msg, state }: HandlerArgs<EquipLoadoutAction>): ThunkResult {
   return async (dispatch) => {
     const stores = storesSelector(state);
@@ -172,73 +181,30 @@ function equipLoadoutHandler({ msg, state }: HandlerArgs<EquipLoadoutAction>): T
   };
 }
 
-/*
-
-Feature toggled out (to be discussed as possible new feature on DIM)
-
-function freeBucketSlotHandler({
-  msg,
-  state,
-  store,
-}: HandlerArgs<FreeBucketSlotAction>): ThunkResult {
-  return async (dispatch) => {
-    const items = store.items.filter((it) => it.type === msg.bucket);
-    const vaultStore = vaultSelector(state);
-    const pickedItem = items.find((it) => !it.equipped);
-    pickedItem && (await dispatch(moveItemTo(pickedItem, vaultStore!, false)));
-  };
-}
-*/
 function pullItemHandler({ msg, state, store }: HandlerArgs<PullItemAction>): ThunkResult {
   return async (dispatch) => {
     const allItems = allItemsSelector(state);
-    const vaultStore = vaultSelector(state);
-    const selected = allItems.filter((it) => it.index.startsWith(msg.item));
-    const moveToVaultItem = selected.find((it) => it.owner === store.id);
-    if (!selected.length) {
-      // no matching item found
-      return;
+    const [item] = allItems.filter((it) => it.index.startsWith(msg.itemId));
+    const targetStore = msg.type === 'vault' ? vaultSelector(state) : store;
+    const shouldEquip = msg.type === 'equip' || msg.equip;
+    if (targetStore) {
+      await dispatch(moveItemTo(item, targetStore, shouldEquip, item.amount));
     }
-
-    // new state after the move
-    let equipped = false;
-
-    // move to vault only if the action is not a long press (EQUIP action)
-    // this will equip item even if it is already in the character inventory
-    if (!msg.equip && moveToVaultItem) {
-      await dispatch(moveItemTo(moveToVaultItem, vaultStore!, false, moveToVaultItem.amount));
-    } else {
-      const item = selected[0];
-      await dispatch(moveItemTo(item, store, msg.equip, item.amount));
-      equipped = true;
-    }
-
-    const item = moveToVaultItem ?? selected[0];
-
-    await sendToStreamDeck({
-      action: 'dim:item-update',
-      data: {
-        equipped,
-        context: msg.context,
-        element:
-          item.element?.enumValue === DamageType.Kinetic
-            ? undefined
-            : item.element?.displayProperties?.icon,
-      },
-    });
   };
 }
 
-function authorizationInitHandler({ msg }: HandlerArgs<AuthorizationInitAction>): ThunkResult {
-  return async () => {
-    // ignore invalid id
-    if (msg.id !== clientIdentifier()) {
-      return;
-    }
-    // hide previous notification
-    notificationPromise.resolve();
-    // show challenge number
-    showStreamDeckAuthorizationNotification(msg.code);
+function selectionHandler({ msg }: HandlerArgs<SelectionAction>): ThunkResult {
+  return async (dispatch) => {
+    dispatch(streamDeckSelection(msg.type));
+  };
+}
+
+function requestPerksHandler(): ThunkResult {
+  return async (_, getState) => {
+    sendToStreamDeck({
+      action: 'perks',
+      data: packager.perks(getState()),
+    });
   };
 }
 
@@ -247,29 +213,28 @@ const handlers: MessageHandler = {
   search: searchHandler,
   randomize: randomizeHandler,
   collectPostmaster: collectPostmasterHandler,
-  maxPower: maximizePowerHandler,
-  farmingMode: farmingModeHandler,
-  selection: selectionHandler,
-  loadout: equipLoadoutHandler,
+  equipMaxPower: maximizePowerHandler,
+  toggleFarmingMode: farmingModeHandler,
+  equipLoadout: equipLoadoutHandler,
   pullItem: pullItemHandler,
-  authorization: authorizationInitHandler,
-  // freeBucketSlot: freeBucketSlotHandler,
+  requestPickerItems: requestPickerItemsHandler,
+  selection: selectionHandler,
+  requestPerks: requestPerksHandler,
 };
 
 // handle actions coming from the stream deck instance
-export function handleStreamDeckMessage(msg: StreamDeckMessage): ThunkResult {
+export function handleStreamDeckMessage(msg: StreamDeckMessage, token: string): ThunkResult {
   return async (dispatch, getState) => {
     const state = getState();
     const store = currentStoreSelector(state);
-    const token = streamDeckToken();
-    if (!msg.action.startsWith('authorization')) {
-      if (!msg.token) {
-        throw new Error('missing-token');
-      } else if (token && msg.token !== token) {
-        throw new Error('invalid-token');
-      }
+    if (!msg.token || msg.token !== token) {
+      showNotification({
+        type: 'error',
+        title: 'Stream Deck',
+        body: t('StreamDeck.MissingAuthorization'),
+      });
+      throw new Error(!msg.token ? 'missing-token' : 'invalid-token');
     }
-
     if (store) {
       // handle stream deck actions
       const handler = handlers[msg.action] as (args: HandlerArgs<StreamDeckMessage>) => ThunkResult;

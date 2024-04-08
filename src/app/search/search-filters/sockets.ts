@@ -158,8 +158,7 @@ const socketFilters: FilterDefinition[] = [
     destinyVersion: 2,
     filter: () => (item) =>
       Boolean(item.energy) &&
-      item.sockets &&
-      item.sockets.allSockets.some((socket) =>
+      item.sockets?.allSockets.some((socket) =>
         Boolean(
           socket.plugged &&
             !emptySocketHashes.includes(socket.plugged.plugDef.hash) &&

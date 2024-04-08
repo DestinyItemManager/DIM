@@ -13,6 +13,7 @@ interface CssExports {
   'plugStats': string;
   'requirement': string;
   'source': string;
+  'stackable': string;
   'subheader': string;
   'tooltip': string;
   'tooltipElementArc': string;

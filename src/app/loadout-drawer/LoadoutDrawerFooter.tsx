@@ -102,8 +102,8 @@ export default function LoadoutDrawerFooter({
               clashingLoadout
                 ? t('Loadouts.SaveDisabled.AlreadyExists')
                 : saveDisabled
-                ? saveDisabledReasons.join('\n')
-                : undefined
+                  ? saveDisabledReasons.join('\n')
+                  : undefined
             }
           >
             <button

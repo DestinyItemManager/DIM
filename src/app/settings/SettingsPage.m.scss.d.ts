@@ -2,6 +2,13 @@
 // Please do not change this file!
 interface CssExports {
   'autoTagTable': string;
+  'fineprint': string;
+  'horizontal': string;
+  'itemSize': string;
+  'newItem': string;
+  'radioOptions': string;
+  'setting': string;
+  'settings': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

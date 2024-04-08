@@ -14,12 +14,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18.x
           cache: pnpm
@@ -27,10 +27,21 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile --prefer-offline
 
-      - name: Jest Test
-        run: pnpm jest
+      - name: Cache Manifest
+        id: destiny-manifest
+        uses: actions/cache@v4
+        with:
+          path: manifest-cache
+          key: destiny-manifest-${{ github.run_id }}
+          restore-keys: |
+            destiny-manifest
 
-      - uses: actions/upload-artifact@v3  # upload test results
+      - name: Jest Test
+        run: pnpm test
+        env:
+          CLEAN_MANIFEST_CACHE: true
+
+      - uses: actions/upload-artifact@v4  # upload test results
         if: success() || failure()        # run this step even if previous step failed
         with:
           name: test-results
@@ -39,18 +50,18 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18.x
           cache: pnpm
 
       - name: Cache ESLint
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         env:
           cache-name: cache-eslint
         with:

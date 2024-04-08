@@ -10,7 +10,7 @@ const SELF = "'self'";
 export default function csp(
   env: 'release' | 'beta' | 'dev' | 'pr',
   featureFlags: FeatureFlags,
-  version: string | undefined
+  version: string | undefined,
 ) {
   const baseCSP: Record<string, string[] | string | boolean> = {
     defaultSrc: ["'none'"],
@@ -48,6 +48,7 @@ export default function csp(
       featureFlags.clarityDescriptions && 'https://database-clarity.github.io',
       // Stream Deck Plugin
       featureFlags.elgatoStreamDeck && 'ws://localhost:9120',
+      featureFlags.elgatoStreamDeck && 'http://localhost:9120',
       // Game2Give
       featureFlags.issueBanner && 'https://bungiefoundation.donordrive.com',
     ]),

@@ -18,6 +18,7 @@ import {
   addItem,
   applySocketOverrides,
   changeClearMods,
+  changeIncludeRuntimeStats,
   clearArtifactUnlocks,
   clearBucketCategory,
   clearLoadoutOptimizerParameters,
@@ -32,6 +33,7 @@ import {
   removeArtifactUnlock,
   removeItem,
   removeMod,
+  replaceItem,
   setClearSpace,
   setLoadoutSubclassFromEquipped,
   syncArtifactUnlocksFromEquipped,
@@ -55,14 +57,13 @@ import { emptyObject } from 'app/utils/empty';
 import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import SubclassPlugDrawer from '../SubclassPlugDrawer';
-import { pickSubclass } from '../item-utils';
 import { hasVisibleLoadoutParameters } from '../loadout-ui/LoadoutParametersDisplay';
 import { useLoadoutMods } from '../mod-assignment-drawer/selectors';
+import { includesRuntimeStatMods } from '../stats';
 import styles from './LoadoutEdit.m.scss';
 import LoadoutEditBucket, { ArmorExtras } from './LoadoutEditBucket';
 import LoadoutEditSection from './LoadoutEditSection';
@@ -192,34 +193,17 @@ export function LoadoutEditSubclassSection({
   subclass: ResolvedLoadoutItem | undefined;
   className?: string;
 }) {
-  const showItemPicker = useItemPicker();
   const [plugDrawerOpen, setPlugDrawerOpen] = useState(false);
 
   const { useUpdater, useDefsUpdater, useDefsStoreUpdater } = useLoadoutUpdaters(store, setLoadout);
 
   const handleAddItem = useDefsUpdater(addItem);
 
-  const handleClickSubclass = async () => {
-    const loadoutClassType = loadout.classType;
-    const loadoutHasItem = (item: DimItem) => loadout.items.some((i) => i.hash === item.hash);
-
-    const subclassItemFilter = (item: DimItem) =>
-      item.bucket.hash === BucketHashes.Subclass &&
-      item.classType === loadoutClassType &&
-      item.owner === store.id &&
-      itemCanBeInLoadout(item) &&
-      !loadoutHasItem(item);
-
-    const item = await pickSubclass(showItemPicker, subclassItemFilter);
-    if (item) {
-      handleAddItem(item);
-    }
-  };
-
   const handleApplySocketOverrides = useUpdater(applySocketOverrides);
   const handleSyncSubclassFromEquipped = useDefsStoreUpdater(setLoadoutSubclassFromEquipped);
   const handleRandomizeSubclass = useDefsStoreUpdater(randomizeLoadoutSubclass);
   const handleClearSubclass = useDefsUpdater(clearSubclass);
+  const handleOpenPlugDrawer = () => setPlugDrawerOpen(true);
 
   return (
     <LoadoutEditSection
@@ -232,14 +216,15 @@ export function LoadoutEditSubclassSection({
       <LoadoutEditSubclass
         subclass={subclass}
         classType={loadout.classType}
+        storeId={store.id}
         power={power}
-        onRemove={handleClearSubclass}
-        onPick={handleClickSubclass}
+        onClick={handleOpenPlugDrawer}
+        onPick={handleAddItem}
       />
       {subclass && (
         <div className={styles.buttons}>
           {subclass.item.sockets ? (
-            <button type="button" className="dim-button" onClick={() => setPlugDrawerOpen(true)}>
+            <button type="button" className="dim-button" onClick={handleOpenPlugDrawer}>
               {t('LB.SelectSubclassOptions')}
             </button>
           ) : (
@@ -284,6 +269,7 @@ function LoadoutEditCategorySection({
   const { useUpdater, useDefsUpdater, useDefsStoreUpdater } = useLoadoutUpdaters(store, setLoadout);
 
   const handleAddItem = useDefsUpdater(addItem);
+  const handleReplaceItem = useUpdater(replaceItem);
 
   const handleClickPlaceholder = ({
     bucket,
@@ -302,8 +288,6 @@ function LoadoutEditCategorySection({
     );
   };
 
-  const handleRemoveItem = useDefsUpdater(removeItem);
-
   /** Prompt the user to select a replacement for a missing item. */
   const fixWarnItem = async (li: ResolvedLoadoutItem) => {
     const warnItem = li.item;
@@ -321,8 +305,7 @@ function LoadoutEditCategorySection({
     });
 
     if (item) {
-      handleAddItem(item);
-      handleRemoveItem(li);
+      handleReplaceItem(li, item);
     }
   };
 
@@ -429,12 +412,14 @@ export function LoadoutEditModsSection({
 
   const { useUpdater, useDefsStoreUpdater } = useLoadoutUpdaters(store, setLoadout);
   const clearUnsetMods = loadout.parameters?.clearMods;
+  const includeRuntimeStats = loadout.parameters?.includeRuntimeStatBenefits ?? true;
 
   const handleUpdateMods = useUpdater(updateMods);
   const handleRemoveMod = useUpdater(removeMod);
   const handleClearUnsetModsChanged = useUpdater(changeClearMods);
   const handleRandomizeMods = useDefsStoreUpdater(randomizeLoadoutMods);
   const handleClearMods = useUpdater(clearMods);
+  const handleIncludeRuntimeStats = useUpdater(changeIncludeRuntimeStats);
   const handleSyncModsFromEquipped = () => setLoadout(syncModsFromEquipped(store));
 
   return (
@@ -458,6 +443,12 @@ export function LoadoutEditModsSection({
         hideShowModPlacements={!showModPlacementsButton}
         autoStatMods={autoStatMods}
         onAutoStatModsChanged={onAutoStatModsChanged}
+        includeRuntimeStats={includeRuntimeStats}
+        onIncludeRuntimeStatsChanged={
+          loadout.parameters?.mods && includesRuntimeStatMods(loadout.parameters.mods)
+            ? handleIncludeRuntimeStats
+            : undefined
+        }
       />
     </LoadoutEditSection>
   );

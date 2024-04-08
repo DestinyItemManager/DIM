@@ -9,9 +9,9 @@ import { ProcessStatistics } from '../process-worker/types';
 import {
   ArmorEnergyRules,
   ArmorSet,
+  DesiredStatRange,
   ItemsByBucket,
   ModStatChanges,
-  ResolvedStatConstraint,
   StatRanges,
 } from '../types';
 import { getAutoMods } from './mappers';
@@ -50,18 +50,20 @@ export function useProcess({
   lockedModMap,
   modStatChanges,
   armorEnergyRules,
-  resolvedStatConstraints,
+  desiredStatRanges,
   anyExotic,
   autoStatMods,
+  strictUpgrades,
 }: {
   selectedStore: DimStore;
   filteredItems: ItemsByBucket;
   lockedModMap: ModMap;
   modStatChanges: ModStatChanges;
   armorEnergyRules: ArmorEnergyRules;
-  resolvedStatConstraints: ResolvedStatConstraint[];
+  desiredStatRanges: DesiredStatRange[];
   anyExotic: boolean;
   autoStatMods: boolean;
+  strictUpgrades: boolean;
 }) {
   const [{ result, processing }, setState] = useState<ProcessState>({
     processing: false,
@@ -96,12 +98,12 @@ export function useProcess({
       lockedModMap,
       modStatChanges,
       armorEnergyRules,
-      resolvedStatConstraints,
+      desiredStatRanges,
       anyExotic,
       autoStatMods,
       getUserItemTag,
       stopOnFirstSet: false,
-      strictUpgrades: false,
+      strictUpgrades,
     });
 
     cleanupRef.current = cleanup;
@@ -137,7 +139,7 @@ export function useProcess({
   }, [
     filteredItems,
     selectedStore.id,
-    resolvedStatConstraints,
+    desiredStatRanges,
     anyExotic,
     armorEnergyRules,
     autoStatMods,
@@ -145,6 +147,7 @@ export function useProcess({
     getUserItemTag,
     modStatChanges,
     autoModDefs,
+    strictUpgrades,
   ]);
 
   return { result, processing };

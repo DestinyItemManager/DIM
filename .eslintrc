@@ -152,6 +152,13 @@
             "group": ["testing/*"],
             "message": "You cannot use test helpers in regular code."
           }
+        ],
+        "paths": [
+          {
+            "name": "i18next",
+            "importNames": ["t"],
+            "message": "Please import t from app/i18next-t."
+          }
         ]
       }
     ],
@@ -160,6 +167,10 @@
       {
         "selector": "CallExpression[callee.property.name='compact'][callee.object.name='_'][arguments.0.callee.property.name='map']",
         "message": "Please use `filterMap` instead"
+      },
+      {
+        "selector": "CallExpression[callee.name='clsx'][arguments.length=1][arguments.0.object.name='styles'],CallExpression[callee.name='clsx'][arguments.length=1][arguments.0.type='Literal']",
+        "message": "Unnecessary clsx"
       },
       {
         "selector": "TSEnumDeclaration:not([const=true])",

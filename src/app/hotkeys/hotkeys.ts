@@ -51,7 +51,7 @@ export interface Hotkey {
 
 // Each key combo can have many hotkey implementations bound to it, but only the
 // last one in the array gets triggered.
-const keyMap: { [combo: string]: (Hotkey & { id: string })[] } = {};
+const keyMap: { [combo: string]: undefined | (Hotkey & { id: string })[] } = {};
 
 export function clearAllHotkeysForTest() {
   for (const key of Object.keys(keyMap)) {
@@ -91,7 +91,8 @@ export function removeHotkeysById(id: string, combo?: string) {
 
 export function getAllHotkeys() {
   const combos: { [combo: string]: string } = {};
-  for (const hotkeyList of Object.values(keyMap)) {
+  for (const k in keyMap) {
+    const hotkeyList = keyMap[k]!;
     const hotkey = hotkeyList.at(-1)!;
     const combo = symbolize(hotkey.combo);
     combos[combo] = hotkey.description;
@@ -123,11 +124,11 @@ function bind(id: string, hotkey: Hotkey) {
 function unbind(id: string, combo: string) {
   const normalizedCombo = normalizeCombo(combo);
   const hotkeysForCombo = keyMap[normalizedCombo];
-  const existingIndex = hotkeysForCombo.findIndex((h) => h.id === id);
+  const existingIndex = hotkeysForCombo?.findIndex((h) => h.id === id) ?? -1;
   if (existingIndex >= 0) {
-    hotkeysForCombo.splice(existingIndex, 1);
+    hotkeysForCombo!.splice(existingIndex, 1);
   }
-  if (!hotkeysForCombo.length) {
+  if (!hotkeysForCombo?.length) {
     delete keyMap[normalizedCombo];
   }
 }

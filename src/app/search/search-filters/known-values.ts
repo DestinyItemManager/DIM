@@ -4,7 +4,7 @@ import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { getEvent } from 'app/inventory/store/season';
 import { getItemDamageShortName } from 'app/utils/item-utils';
-import { StringLookup } from 'app/utils/util-types';
+import { LookupTable, StringLookup } from 'app/utils/util-types';
 import { DestinyAmmunitionType, DestinyClass, DestinyRecordState } from 'bungie-api-ts/destiny2';
 import { D2EventEnum, D2EventPredicateLookup } from 'data/d2/d2-event-info';
 import focusingOutputs from 'data/d2/focusing-item-outputs.json';
@@ -51,6 +51,13 @@ const itemCategoryHashesByName: { [key: string]: number } = {
   ...D2ItemCategoryHashesByName,
 };
 
+// Some common aliases for item categories
+const itemCategoryAliases: LookupTable<string, string> = {
+  lfr: 'linearfusionrifle',
+  lmg: 'machinegun',
+  smg: 'submachine',
+} as const;
+
 export const damageFilter = {
   keywords: damageTypeNames,
   description: tl('Filter.DamageType'),
@@ -91,7 +98,11 @@ export const itemTypeFilter = {
 } satisfies FilterDefinition;
 
 export const itemCategoryFilter = {
-  keywords: [...Object.keys(itemCategoryHashesByName), 'grenadelauncher'],
+  keywords: [
+    ...Object.keys(itemCategoryHashesByName),
+    ...Object.keys(itemCategoryAliases),
+    'grenadelauncher',
+  ],
   description: tl('Filter.WeaponType'),
   filter: ({ filterValue }) => {
     // Before special GLs and heavy GLs were entirely separated, `is:grenadelauncher` matched both.
@@ -101,7 +112,8 @@ export const itemCategoryFilter = {
         item.itemCategoryHashes.includes(ItemCategoryHashes.GrenadeLaunchers) ||
         item.itemCategoryHashes.includes(-ItemCategoryHashes.GrenadeLaunchers);
     }
-    const categoryHash = itemCategoryHashesByName[filterValue.replace(/\s/g, '')];
+    filterValue = filterValue.replace(/\s/g, '');
+    const categoryHash = itemCategoryHashesByName[itemCategoryAliases[filterValue] ?? filterValue];
     if (!categoryHash) {
       throw new Error(`Unknown weapon type ${filterValue}`);
     }

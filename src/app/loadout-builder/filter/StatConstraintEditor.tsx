@@ -10,6 +10,8 @@ import {
 import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
+import { DimStore } from 'app/inventory/store-types';
+import LoadoutEditSection from 'app/loadout/loadout-edit/LoadoutEditSection';
 import { useD2Definitions } from 'app/manifest/selectors';
 import {
   AppIcon,
@@ -20,31 +22,53 @@ import {
   moveUpIcon,
 } from 'app/shell/icons';
 import StatTooltip from 'app/store-stats/StatTooltip';
+import { useShiftHeld } from 'app/utils/hooks';
 import { delay } from 'app/utils/promises';
 import clsx from 'clsx';
 import _ from 'lodash';
 import React, { Dispatch, useEffect, useRef } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
-import { ArmorStatHashes, MinMax, ResolvedStatConstraint, StatRanges } from '../types';
+import { ArmorStatHashes, MinMaxTier, ResolvedStatConstraint, StatRanges } from '../types';
+import { statTier } from '../utils';
 import styles from './StatConstraintEditor.m.scss';
 
 /**
  * A selector that allows for choosing minimum and maximum stat ranges, plus reordering the stat priority.
  */
 export default function StatConstraintEditor({
+  store,
   resolvedStatConstraints,
   statRangesFiltered,
   equippedHashes,
+  className,
   lbDispatch,
 }: {
+  store: DimStore;
   resolvedStatConstraints: ResolvedStatConstraint[];
   /** The ranges the stats could have gotten to INCLUDING stat filters and mod compatibility */
   statRangesFiltered?: Readonly<StatRanges>;
   equippedHashes: Set<number>;
+  className?: string;
   lbDispatch: Dispatch<LoadoutBuilderAction>;
 }) {
   const handleTierChange = (constraint: ResolvedStatConstraint) =>
     lbDispatch({ type: 'statConstraintChanged', constraint });
+
+  const handleClear = () => lbDispatch({ type: 'statConstraintReset' });
+
+  const handleRandomize = () => lbDispatch({ type: 'statConstraintRandomize' });
+
+  const handleSyncFromEquipped = () => {
+    const constraints = Object.values(store.stats).map(
+      (s): ResolvedStatConstraint => ({
+        statHash: s.hash,
+        ignored: false,
+        maxTier: 10,
+        minTier: statTier(s.value),
+      }),
+    );
+    lbDispatch({ type: 'setStatConstraints', constraints });
+  };
 
   const onDragEnd = (result: DropResult) => {
     // dropped outside the list
@@ -59,30 +83,42 @@ export default function StatConstraintEditor({
     });
   };
 
-  return (
-    <DragDropContext onDragEnd={onDragEnd} sensors={[useButtonSensor]}>
-      <Droppable droppableId="droppable">
-        {(provided) => (
-          <div ref={provided.innerRef}>
-            {resolvedStatConstraints.map((c, index) => {
-              const statHash = c.statHash as ArmorStatHashes;
-              return (
-                <StatRow
-                  key={statHash}
-                  statConstraint={c}
-                  index={index}
-                  statRange={statRangesFiltered?.[statHash]}
-                  onTierChange={handleTierChange}
-                  equippedHashes={equippedHashes}
-                />
-              );
-            })}
+  const shiftHeld = useShiftHeld();
 
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-    </DragDropContext>
+  return (
+    <LoadoutEditSection
+      title={
+        t('LoadoutBuilder.StatConstraints') + (shiftHeld ? ` (${t('LoadoutBuilder.StatMax')})` : '')
+      }
+      className={className}
+      onClear={handleClear}
+      onSyncFromEquipped={handleSyncFromEquipped}
+      onRandomize={handleRandomize}
+    >
+      <DragDropContext onDragEnd={onDragEnd} sensors={[useButtonSensor]}>
+        <Droppable droppableId="droppable">
+          {(provided) => (
+            <div ref={provided.innerRef} className={styles.editor}>
+              {resolvedStatConstraints.map((c, index) => {
+                const statHash = c.statHash as ArmorStatHashes;
+                return (
+                  <StatRow
+                    key={statHash}
+                    statConstraint={c}
+                    index={index}
+                    statRange={statRangesFiltered?.[statHash]}
+                    onTierChange={handleTierChange}
+                    equippedHashes={equippedHashes}
+                  />
+                );
+              })}
+
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+    </LoadoutEditSection>
   );
 }
 
@@ -94,7 +130,7 @@ function StatRow({
   equippedHashes,
 }: {
   statConstraint: ResolvedStatConstraint;
-  statRange?: MinMax;
+  statRange?: MinMaxTier;
   index: number;
   onTierChange: (constraint: ResolvedStatConstraint) => void;
   equippedHashes: Set<number>;
@@ -103,44 +139,51 @@ function StatRow({
   const statHash = statConstraint.statHash as ArmorStatHashes;
   const statDef = defs.Stat.get(statHash);
   const handleIgnore = () => onTierChange({ ...statConstraint, ignored: !statConstraint.ignored });
-  const handleSelectTier = (tierNum: number) =>
-    onTierChange({
-      ...statConstraint,
-      minTier: tierNum,
-    });
+  const handleSelectTier = (tierNum: number, shift: boolean) =>
+    shift
+      ? onTierChange({
+          ...statConstraint,
+          maxTier: tierNum,
+          minTier: Math.min(statConstraint.minTier, tierNum),
+        })
+      : onTierChange({
+          ...statConstraint,
+          minTier: tierNum,
+          maxTier: Math.max(statConstraint.maxTier, tierNum),
+        });
 
   return (
     <Draggable draggableId={statHash.toString()} index={index}>
       {(provided, snapshot) => (
         <div
-          className={clsx(styles.row, { [styles.dragging]: snapshot.isDragging })}
+          className={clsx(styles.row, {
+            [styles.dragging]: snapshot.isDragging,
+            [styles.ignored]: statConstraint.ignored,
+          })}
           data-index={index}
           ref={provided.innerRef}
           {...provided.draggableProps}
         >
+          <span
+            className={styles.grip}
+            {...provided.dragHandleProps}
+            tabIndex={-1}
+            aria-hidden={true}
+          >
+            <AppIcon icon={dragHandleIcon} />
+          </span>
           <div className={styles.name}>
-            <span
-              className={styles.grip}
-              {...provided.dragHandleProps}
-              tabIndex={-1}
-              aria-hidden={true}
-            >
-              <AppIcon icon={dragHandleIcon} />
-            </span>
             <button
               type="button"
               role="checkbox"
               aria-checked={!statConstraint.ignored}
-              className={clsx({ [styles.ignored]: statConstraint.ignored }, styles.rowControl)}
+              className={styles.rowControl}
               onClick={handleIgnore}
               title={t('LoadoutBuilder.IgnoreStat')}
             >
               <AppIcon icon={statConstraint.ignored ? faSquare : faCheckSquare} />
             </button>
-            <div
-              className={clsx({ [styles.ignored]: statConstraint.ignored }, styles.label)}
-              {...provided.dragHandleProps}
-            >
+            <div className={styles.label} {...provided.dragHandleProps}>
               <BungieImage
                 className={styles.iconStat}
                 src={statDef.displayProperties.icon}
@@ -195,8 +238,8 @@ function StatTierBar({
   equippedHashes,
 }: {
   statConstraint: ResolvedStatConstraint;
-  statRange?: MinMax;
-  onSelected: (tierNum: number) => void;
+  statRange?: MinMaxTier;
+  onSelected: (tierNum: number, shift: boolean) => void;
   equippedHashes: Set<number>;
 }) {
   const defs = useD2Definitions()!;
@@ -216,7 +259,7 @@ function StatTierBar({
       case '_':
       case 'ArrowLeft': {
         if (tierNum > 0) {
-          onSelected(tierNum - 1);
+          onSelected(tierNum - 1, event.shiftKey);
         }
         focused.current = tierNum - 1;
         break;
@@ -225,7 +268,7 @@ function StatTierBar({
       case '+':
       case 'ArrowRight': {
         if (tierNum < 10) {
-          onSelected(tierNum + 1);
+          onSelected(tierNum + 1, event.shiftKey);
         }
         focused.current = tierNum + 1;
         break;
@@ -245,7 +288,7 @@ function StatTierBar({
         if (num === 0) {
           num = 10;
         }
-        onSelected(num);
+        onSelected(num, event.shiftKey);
         focused.current = num;
         break;
       }
@@ -281,9 +324,10 @@ function StatTierBar({
           key={tierNum}
           className={clsx(styles.statBarSegment, {
             [styles.selectedStatBar]: statConstraint.minTier >= tierNum,
-            [styles.maxed]: tierNum > (statRange?.max ?? 10),
+            [styles.maxRestricted]: tierNum > statConstraint.maxTier,
+            [styles.maxed]: tierNum > (statRange?.maxTier ?? 10),
           })}
-          onClick={() => onSelected(tierNum)}
+          onClick={(e) => onSelected(tierNum, e.shiftKey)}
           onKeyDown={handleKeyDown}
           data-tier={tierNum}
           aria-label={t('LoadoutBuilder.TierNumber', { tier: tierNum })}

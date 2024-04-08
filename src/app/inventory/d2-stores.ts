@@ -5,12 +5,15 @@ import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { loadClarity } from 'app/clarity/descriptions/loadDescriptions';
 import { customStatsSelector } from 'app/dim-api/selectors';
+import { t } from 'app/i18next-t';
 import { processInGameLoadouts } from 'app/loadout-drawer/loadout-type-converters';
 import { inGameLoadoutLoaded } from 'app/loadout/ingame/actions';
 import { loadCoreSettings } from 'app/manifest/actions';
 import { d2ManifestSelector, manifestSelector } from 'app/manifest/selectors';
+import { loadingTracker } from 'app/shell/loading-tracker';
 import { get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
+import { DimError } from 'app/utils/dim-error';
 import { convertToError, errorMessage } from 'app/utils/errors';
 import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
 import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
@@ -20,7 +23,6 @@ import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions';
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import { showNotification } from '../notifications/notifications';
-import { loadingTracker } from '../shell/loading-tracker';
 import { reportException } from '../utils/sentry';
 import {
   CharacterInfo,
@@ -37,6 +39,7 @@ import { DimStore } from './store-types';
 import { getCharacterStatsData as getD1CharacterStatsData } from './store/character-utils';
 import { buildStores, getCharacterStatsData } from './store/d2-store-factory';
 import { resetItemIndexGenerator } from './store/item-index';
+import { getCurrentStore } from './stores-helpers';
 
 /**
  * Update the high level character information for all the stores
@@ -255,9 +258,7 @@ function loadStoresData(
         return;
       }
 
-      const transaction = $featureFlags.sentry
-        ? startTransaction({ name: 'loadStoresD2' })
-        : undefined;
+      const transaction = startTransaction({ name: 'loadStoresD2' });
       // set the transaction on the scope so it picks up any errors
       getCurrentHub()?.configureScope((scope) => scope.setSpan(transaction));
 
@@ -267,7 +268,7 @@ function loadStoresData(
         const { readOnly } = getState().inventory;
 
         const [defs, profileResponse] = await Promise.all([
-          dispatch(getDefinitions())!,
+          dispatch(getDefinitions()),
           dispatch(loadProfile(account, firstTime)),
         ]);
 
@@ -319,6 +320,19 @@ function loadStoresData(
 
         // If we switched account since starting this, give up before saving
         if (account !== currentAccountSelector(getState())) {
+          return;
+        }
+
+        if (!getCurrentStore(stores)) {
+          errorLog('d2-stores', 'No characters in profile');
+          dispatch(
+            error(
+              new DimError(
+                'Accounts.NoCharactersTitle',
+                t('Accounts.NoCharacters'),
+              ).withNoSocials(),
+            ),
+          );
           return;
         }
 

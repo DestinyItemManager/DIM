@@ -1,0 +1,19 @@
+.stackable {
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  align-items: center;
+  gap: 0.5ch;
+}
+
+.stack {
+  display: grid;
+  grid-template: min-content / min-content;
+  place-content: center;
+  > * {
+    grid-column: 1;
+    grid-row: 1;
+    text-align: center;
+  }
+  > :last-child {
+    opacity: 0.5;
+  }
+}

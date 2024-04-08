@@ -2,6 +2,8 @@ import { trackTriumph } from 'app/dim-api/basic-actions';
 import { trackedTriumphsSelector } from 'app/dim-api/selectors';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
+import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
+import { createItemContextSelector } from 'app/inventory/selectors';
 import { isBooleanObjective } from 'app/inventory/store/objectives';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { Reward } from 'app/progress/Reward';
@@ -27,6 +29,7 @@ import BungieImage from '../dim-ui/BungieImage';
 import ExternalLink from '../dim-ui/ExternalLink';
 import Objective from '../progress/Objective';
 import styles from './Record.m.scss';
+import { makeItemForCatalystRecord } from './catalysts';
 import { DimRecord } from './presentation-nodes';
 
 interface RecordInterval {
@@ -75,10 +78,11 @@ function Record({
     ? recordDef.stateInfo.obscuredString
     : recordDef.displayProperties.description;
 
-  const recordIcon =
-    recordHash in catalystIconsTable
-      ? catalystIconsTable[recordHash]
-      : recordDef.displayProperties.icon;
+  const isCatalyst = recordHash in catalystIconsTable;
+  const recordIcon = isCatalyst ? catalystIconsTable[recordHash] : recordDef.displayProperties.icon;
+
+  const itemCreationContext = useSelector(createItemContextSelector);
+  const catalystTarget = isCatalyst && makeItemForCatalystRecord(recordHash, itemCreationContext);
 
   const intervals = getIntervals(recordDef, recordComponent);
   const intervalBarStyle = {
@@ -173,7 +177,17 @@ function Record({
       })}
     >
       {recordShouldGlow && <div className={styles.glow} />}
-      {recordIcon && <BungieImage className={styles.icon} src={recordIcon} />}
+      {catalystTarget && recordIcon ? (
+        <ItemPopupTrigger item={catalystTarget}>
+          {(ref, onClick) => (
+            <div className={styles.clickable} ref={ref} onClick={onClick}>
+              <BungieImage className={styles.icon} src={recordIcon} />
+            </div>
+          )}
+        </ItemPopupTrigger>
+      ) : (
+        recordIcon && <BungieImage className={styles.icon} src={recordIcon} />
+      )}
       <div className={styles.info}>
         {!obscured && recordDef.completionInfo && <div className={styles.score}>{scoreValue}</div>}
         <h3>{name}</h3>

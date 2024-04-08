@@ -77,11 +77,11 @@ export default function ItemPopupHeader({
           {showElementIcon && <ElementIcon element={item.element} className={styles.elementIcon} />}
           <div className={styles.power}>{item.primaryStat?.value}</div>
           {Boolean(item.powerCap) && <div className={styles.powerCap}>| {item.powerCap} </div>}
-          {item.pursuit?.questStepNum !== undefined && (
+          {item.pursuit?.questLine && (
             <div className={styles.itemType}>
               {t('MovePopup.Subtitle.QuestProgress', {
-                questStepNum: item.pursuit.questStepNum,
-                questStepsTotal: item.pursuit.questStepsTotal ?? '?',
+                questStepNum: item.pursuit.questLine.questStepNum,
+                questStepsTotal: item.pursuit.questLine.questStepsTotal,
               })}
             </div>
           )}
@@ -100,12 +100,16 @@ const ammoIcons: LookupTable<DestinyAmmunitionType, string> = {
   [DestinyAmmunitionType.Heavy]: heavy,
 };
 
-export function AmmoIcon({ type }: { type: DestinyAmmunitionType }) {
+export function AmmoIcon({ type, className }: { type: DestinyAmmunitionType; className?: string }) {
   return (
     <img
-      className={clsx(styles.ammoIcon, {
-        [styles.primary]: type === DestinyAmmunitionType.Primary,
-      })}
+      className={clsx(
+        styles.ammoIcon,
+        {
+          [styles.primary]: type === DestinyAmmunitionType.Primary,
+        },
+        className,
+      )}
       src={ammoIcons[type]}
     />
   );
@@ -122,16 +126,17 @@ export function ItemTypeName({ item, className }: { item: DimItem; className?: s
       item.classTypeNameLocalized[0].toUpperCase() + item.classTypeNameLocalized.slice(1)) ||
     '';
 
-  if (!(item.typeName || classType)) {
+  const title =
+    item.typeName && classType
+      ? t('MovePopup.Subtitle.Type', {
+          classType,
+          typeName: item.typeName,
+        })
+      : item.typeName || classType;
+
+  if (!title) {
     return null;
   }
 
-  return (
-    <div className={className}>
-      {t('MovePopup.Subtitle.Type', {
-        classType,
-        typeName: item.typeName,
-      })}
-    </div>
-  );
+  return <div className={className}>{title}</div>;
 }

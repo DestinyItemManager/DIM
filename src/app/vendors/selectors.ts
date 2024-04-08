@@ -111,12 +111,16 @@ export const showUnacquiredVendorItemsOnlySelector = (state: RootState) =>
 export const characterVendorItemsSelector = createSelector(
   (_state: RootState, vendorCharacterId?: string) => vendorCharacterId,
   vendorGroupsForCharacterSelector.selector,
-  (vendorCharacterId, vendorGroups) => {
+  subVendorsForCharacterSelector.selector,
+  (vendorCharacterId, vendorGroups, subVendors) => {
     if (!vendorCharacterId) {
       return emptyArray<DimItem>();
     }
     return _.compact(
-      vendorGroups.flatMap((vg) => vg.vendors.flatMap((vs) => vs.items.map((vi) => vi.item))),
+      vendorGroups
+        .flatMap((vg) => vg.vendors)
+        .concat(Object.values(subVendors))
+        .flatMap((vs) => vs.items.map((vi) => vi.item)),
     );
   },
 );
@@ -143,7 +147,7 @@ export const vendorItemFilterSelector = currySelector(
     subVendorsForCharacterSelector.selector,
     querySelector,
     searchFilterSelector,
-    (state: RootState) => settingSelector('vendorsHideSilverItems')(state),
+    settingSelector<'vendorsHideSilverItems'>('vendorsHideSilverItems'),
     (ownedItemHashes, showUnacquiredOnly, subVendors, query, itemFilter, hideSilver) => {
       const filters: VendorFilterFunction[] = [];
       const silverFilter = filterToNoSilver();

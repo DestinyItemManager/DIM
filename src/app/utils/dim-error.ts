@@ -13,6 +13,8 @@ export class DimError extends Error {
   code?: string;
   // The error that caused this error, if there is one. Naming it 'cause' makes it automatically chain in Sentry.
   cause?: Error;
+  // Whether to show social links in the error report dialog
+  showSocials = true;
 
   /** Pass in just a message key to set the message to the localized version of that key, or override with the second parameter. */
   constructor(messageKey: I18nKey, message?: string) {
@@ -26,6 +28,11 @@ export class DimError extends Error {
     return this;
   }
 
+  public withNoSocials(): DimError {
+    this.showSocials = false;
+    return this;
+  }
+
   /**
    * If this error is a Bungie API error, return its platform code.
    */
@@ -33,7 +40,7 @@ export class DimError extends Error {
     return this.cause instanceof BungieError
       ? this.cause.code
       : this.cause instanceof DimError
-      ? this.cause.bungieErrorCode()
-      : undefined;
+        ? this.cause.bungieErrorCode()
+        : undefined;
   }
 }

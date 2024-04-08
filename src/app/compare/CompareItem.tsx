@@ -67,7 +67,7 @@ export default memo(function CompareItem({
           )}
           {item.lockable ? <LockActionButton item={item} noHotkey /> : <div />}
           {item.taggable ? <TagActionButton item={item} label={false} hideKeys={true} /> : <div />}
-          <div className={styles.close} onClick={() => remove(item)} role="button" tabIndex={0} />
+          <button type="button" className={styles.close} onClick={() => remove(item)} />
         </div>
         <div
           className={clsx(styles.itemName, {
@@ -120,7 +120,8 @@ function VendorItemWarning({ item }: { item: DimItem }) {
     <PressTip
       elementType="span"
       tooltip={() => {
-        const vendorName = defs.Vendor.get(item.vendor!.vendorHash).displayProperties.name;
+        const vendorName =
+          defs.Vendor.get(item.vendor!.vendorHash)?.displayProperties?.name || '--';
         return (
           <>
             {t('Compare.IsVendorItem')}

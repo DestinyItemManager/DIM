@@ -18,12 +18,12 @@ jobs:
       url: ${{ steps.deploy-url.outputs.url }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v3
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18.x
           cache: pnpm
@@ -55,7 +55,7 @@ jobs:
 
       - name: Check for updates to build pipeline
         id: filter
-        uses: dorny/paths-filter@v2
+        uses: dorny/paths-filter@v3
         with:
           filters: |
             build-pipeline:
@@ -75,19 +75,19 @@ jobs:
       # Deploy a preview version of the server!
 
       - name: Install SSH key
-        if: ${{github.event.pull_request.head.repo.full_name == github.repository}}
-        uses: benoitchantre/setup-ssh-authentication-action@1.0.0
+        if: ${{github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]'}}
+        uses: benoitchantre/setup-ssh-authentication-action@1.0.1
         with:
           private-key: ${{ secrets.SSH_KEY }}
           private-key-name: dim.rsa
           known-hosts: ${{ secrets.REMOTE_HOST }}
 
       - name: Check Syntax
-        if: ${{github.event.pull_request.head.repo.full_name == github.repository}}
+        if: ${{github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]'}}
         run: pnpm syntax
 
       - name: Rsync to Server
-        if: ${{github.event.pull_request.head.repo.full_name == github.repository}}
+        if: ${{github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]'}}
         run: ./build/rsync-deploy.sh
         env:
             SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
@@ -97,7 +97,7 @@ jobs:
             REMOTE_PATH: pr.destinyitemmanager.com/${{ github.event.number }}
 
       - name: Purge CloudFlare cache
-        if: ${{github.event.pull_request.head.repo.full_name == github.repository}}
+        if: ${{github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]'}}
         run: ./build/purge-cloudflare.sh
         env:
           CLOUDFLARE_KEY: ${{ secrets.CLOUDFLARE_KEY }}
@@ -105,7 +105,7 @@ jobs:
           APP_DOMAIN: pr.destinyitemmanager.com/${{ github.event.number }}
 
       - name: Set preview deployment URL
-        if: ${{github.event.pull_request.head.repo.full_name == github.repository}}
+        if: ${{github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]'}}
         id: deploy-url
         run: |
           echo "url=https://pr.dim.gg/${{ github.event.number }}/" >> $GITHUB_OUTPUT

@@ -8,16 +8,19 @@ import { DimStore } from 'app/inventory/store-types';
 import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import { findingDisplays } from 'app/loadout-analyzer/finding-display';
 import { useAnalyzeLoadout } from 'app/loadout-analyzer/hooks';
+import { LoadoutFinding } from 'app/loadout-analyzer/types';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import { Loadout, LoadoutItem, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { useIsPhonePortrait } from 'app/shell/selectors';
+import { useStreamDeckSelection } from 'app/stream-deck/stream-deck';
 import { count, filterMap } from 'app/utils/collections';
 import { emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { addDividers } from 'app/utils/react';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
+import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { ReactNode, useMemo } from 'react';
@@ -116,8 +119,22 @@ export default function LoadoutView({
   );
   const power = loadoutPower(store, categories);
 
+  const selectionProps = $featureFlags.elgatoStreamDeck
+    ? // eslint-disable-next-line
+      useStreamDeckSelection({
+        type: 'loadout',
+        loadout,
+        store,
+        equippable: !hideShowModPlacements,
+      })
+    : undefined;
+
   return (
-    <div className={styles.loadout} id={loadout.id}>
+    <div
+      className={clsx(styles.loadout, selectionProps?.ref && styles.disableEvents)}
+      id={loadout.id}
+      {...selectionProps}
+    >
       <div className={styles.title}>
         <h2>
           {loadout.classType === DestinyClass.Unknown && (
@@ -133,12 +150,15 @@ export default function LoadoutView({
                 if (!display.icon) {
                   return undefined;
                 }
+                let description = t(display.description);
+                if (
+                  finding === LoadoutFinding.BetterStatsAvailable &&
+                  analysis!.result.betterStatsAvailableFontNote
+                ) {
+                  description += `\n\n${t('LoadoutAnalysis.BetterStatsAvailableFontNote')}`;
+                }
                 return (
-                  <PressTip
-                    className={styles.finding}
-                    key={finding}
-                    tooltip={t(display.description)}
-                  >
+                  <PressTip className={styles.finding} key={finding} tooltip={description}>
                     <AppIcon icon={display.icon} /> {t(display.name)}
                   </PressTip>
                 );
@@ -163,7 +183,7 @@ export default function LoadoutView({
                 key={category}
                 category={category}
                 subclass={subclass}
-                storeId={store.id}
+                store={store}
                 items={categories[category]}
                 allMods={modDefinitions}
                 modsByBucket={modsByBucket}

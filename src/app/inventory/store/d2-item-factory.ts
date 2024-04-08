@@ -48,7 +48,7 @@ import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 import { warnMissingDefinition } from '../../manifest/manifest-service-json';
 import { reportException } from '../../utils/sentry';
 import { InventoryBuckets } from '../inventory-buckets';
-import { DimItem } from '../item-types';
+import { DimItem, DimPursuitExpiration, DimQuestLine } from '../item-types';
 import { DimStore } from '../store-types';
 import { getVault } from '../stores-helpers';
 import { buildCatalystInfo } from './catalyst';
@@ -303,8 +303,8 @@ export function makeItem(
   const normalBucketHash = needsShaderFix
     ? BucketHashes.Consumables
     : needsModsFix
-    ? BucketHashes.Modifications
-    : itemDef.inventory!.bucketTypeHash;
+      ? BucketHashes.Modifications
+      : itemDef.inventory!.bucketTypeHash;
   let normalBucket = buckets.byHash[normalBucketHash];
 
   // this is where the item IS, right now.
@@ -748,41 +748,49 @@ function isLegendaryOrBetter(item: DimItem) {
   return item.tier === 'Legendary' || item.tier === 'Exotic';
 }
 
+function getQuestLineInfo(itemDef: DestinyInventoryItemDefinition): DimQuestLine | undefined {
+  if (itemDef.inventory?.bucketTypeHash === BucketHashes.Quests && itemDef.setData?.itemList) {
+    const thisStepIndex = itemDef.setData.itemList.findIndex((i) => i.itemHash === itemDef.hash);
+    if (thisStepIndex !== -1) {
+      return {
+        description: itemDef.setData.questLineDescription,
+        questStepNum: thisStepIndex + 1,
+        questStepsTotal: itemDef.setData.itemList.length,
+      };
+    }
+  }
+}
+
+function getExpirationInfo(
+  item: DestinyItemComponent,
+  itemDef: DestinyInventoryItemDefinition,
+): DimPursuitExpiration | undefined {
+  if (item.expirationDate) {
+    return {
+      expirationDate: new Date(item.expirationDate),
+      suppressExpirationWhenObjectivesComplete: Boolean(
+        itemDef.inventory!.suppressExpirationWhenObjectivesComplete,
+      ),
+      expiredInActivityMessage: itemDef.inventory!.expiredInActivityMessage,
+    };
+  }
+}
+
 function buildPursuitInfo(
   createdItem: DimItem,
   item: DestinyItemComponent,
   itemDef: DestinyInventoryItemDefinition,
 ) {
-  if (item.expirationDate) {
-    createdItem.pursuit = {
-      expirationDate: new Date(item.expirationDate),
-      rewards: [],
-      suppressExpirationWhenObjectivesComplete: Boolean(
-        itemDef.inventory!.suppressExpirationWhenObjectivesComplete,
-      ),
-      expiredInActivityMessage: itemDef.inventory!.expiredInActivityMessage,
-      modifierHashes: [],
-    };
-  }
   const rewards = itemDef.value ? itemDef.value.itemValue.filter((v) => v.itemHash) : [];
-  if (rewards.length) {
+  const questLine = getQuestLineInfo(itemDef);
+  const expiration = getExpirationInfo(item, itemDef);
+
+  if (rewards.length || item.expirationDate || questLine) {
     createdItem.pursuit = {
-      suppressExpirationWhenObjectivesComplete: false,
-      modifierHashes: [],
-      ...createdItem.pursuit,
+      expiration,
+      questLine,
       rewards,
-    };
-  }
-  if (
-    createdItem.pursuit &&
-    createdItem.bucket.hash === BucketHashes.Quests &&
-    itemDef.setData?.itemList
-  ) {
-    createdItem.pursuit = {
-      ...createdItem.pursuit,
-      questLineDescription: itemDef.setData.questLineDescription,
-      questStepNum: itemDef.setData.itemList.findIndex((i) => i.itemHash === itemDef.hash) + 1,
-      questStepsTotal: itemDef.setData.itemList.length,
+      modifierHashes: [],
     };
   }
 }

@@ -387,9 +387,9 @@ function buildDefinedSocket(
       p.cannotCurrentlyRoll
         ? 999
         : // And collections rolls almost as far
-        p.unreliablePerkOption
-        ? 998
-        : 0,
+          p.unreliablePerkOption
+          ? 998
+          : 0,
     ),
   );
   // If the socket category is the intrinsic trait, assume that there is only one option and plug it.
@@ -407,8 +407,8 @@ function buildDefinedSocket(
   const plugSet = socketDef.reusablePlugSetHash
     ? buildCachedDimPlugSet(defs, socketDef.reusablePlugSetHash)
     : socketDef.randomizedPlugSetHash
-    ? buildCachedDimPlugSet(defs, socketDef.randomizedPlugSetHash)
-    : undefined;
+      ? buildCachedDimPlugSet(defs, socketDef.randomizedPlugSetHash)
+      : undefined;
 
   return {
     socketIndex: index,
@@ -664,8 +664,8 @@ function buildSocket(
   const plugSet = socketDef.reusablePlugSetHash
     ? buildCachedDimPlugSet(defs, socketDef.reusablePlugSetHash)
     : socketDef.randomizedPlugSetHash
-    ? buildCachedDimPlugSet(defs, socketDef.randomizedPlugSetHash)
-    : undefined;
+      ? buildCachedDimPlugSet(defs, socketDef.randomizedPlugSetHash)
+      : undefined;
 
   // The currently equipped plug, if any.
   // This will always be one of the plugOptions -- either it's added

@@ -13,9 +13,10 @@
     "ErrorLoadManifest": "無法從 Bungie 加載命運信息數據庫",
     "ErrorLoading": "無法從 Bungie.net 加載命運賬戶",
     "MissingAccountWarning": "如果你的賬戶沒有在此處顯示，你可能登入了錯誤的 Bungie.net 賬戶，或 Bungie.net 可能正在停機維修。",
-    "MissingDescription": "你試圖查看的賬戶並未連接到你的 Bungie.net 賬戶。",
+    "MissingDescription": "The account you're trying to view is not an account linked to your Bungie.net profile. Select one of your accounts below.",
     "MissingTitle": "找不到帳戶",
     "NoCharacters": "沒有找到與此Bungie.net帳號相關聯的Destiny角色，登陸其它帳號試試看。",
+    "NoCharactersTitle": "No Characters Found",
     "SwitchAccounts": "你可以稍後在選單切換賬戶。",
     "Title": "帳戶"
   },
@@ -220,6 +221,7 @@
     "DamageType": "按照傷害類型顯示.",
     "Deepsight": "Shows weapons with Deepsight Resonance, which can have their pattern extracted, or which can have Deepsight Resonance enabled using a Deepsight Harmonizer.",
     "Description": "描述",
+    "DescriptionFilter": "Shows items whose description has a partial match to the filter text. Search for entire phrases using quotes.",
     "Dupe": "顯示重複的物品，包含不同賽季版本",
     "DupeCount": "擁有指定重複數量的物品。",
     "DupeLower": "非最高光等的重複和再版物品。重複物品中只有一件會被視為最高光等，其餘均視為較低光等。",
@@ -271,15 +273,16 @@
       "Y2": "顯示帶有年2模組的物品",
       "Y3": "顯示啟用防具2.0模組的物品"
     },
+    "Name": "Shows items whose name matches (exactname:) or partially matches (name:) the filter text. Search for entire phrases using quotes.",
     "NamedStat": "顯示重要防具.",
     "Negate": "要否定搜索，為搜索添加一個減號或單詞「not」前綴，例如「{{notexample}}」或「{{notexample2}}」。",
     "NewItems": "顯示新獲得的物品.",
     "Notes": "搜索已添加了自訂備註的物品",
     "Ornament": "顯示帶有裝飾物和篩檢程式的物品.",
-    "PartialMatch": "顯示名稱/描述/特性/模組與篩選器部分匹配的物品。使用引號來搜索包含空格的文本。使用 'perk:' 過濾器便可僅搜索特性。",
+    "PartialMatch": "Shows items where their name, description, any perk, or any mod has a partial match to the filter text. Search for entire phrases using quotes.",
     "PatternUnlocked": "顯示製作樣式已解鎖的武器，即使該武器并非製造而來。",
     "Perk": "顯示帶有特性或模組的名稱或描述與篩選器部分匹配的物品。使用引號來搜索帶有空格的文本。",
-    "PerkName": "顯示帶有特性或模組的名稱與篩選器部分匹配的物品。使用引號來搜索帶有空格的文本。",
+    "PerkName": "Shows items with a perk or mod whose name matches (exactperk:) or partially matches (perkname:) the filter text. Search for entire phrases using quotes.",
     "PinnacleReward": "顯示提供巔峰獎勵的追獵目標。",
     "Postmaster": "目前在郵政官處的物品.",
     "PowerKeywords": "使用 pinnaclecap 或 softcap 關鍵字而不是數字來表達當前賽季的光等限制。",
@@ -317,6 +320,7 @@
     "UnlockAllFailed": "鎖定物品失敗",
     "UnlockAllSuccess": "已經解鎖{{num}} 物品",
     "Vendor": "物品可從特定的商販獲得。",
+    "VendorItem": "Item is from a vendor, not in your inventory. Useful for excluding vendor items from Loadout Optimizer.",
     "Weapon": "顯示武器物品。",
     "WeaponLevel": "按武器等級顯示武器。",
     "WeaponType": "按照武器類型顯示.",
@@ -487,6 +491,7 @@
     "Super": "超能"
   },
   "LB": {
+    "AddStack": "Add another copy of this mod",
     "AdvancedOptions": "高級選項",
     "ChooseAMod": "選擇你的模組",
     "ChooseAnExotic": "選擇你的異域裝備",
@@ -496,6 +501,8 @@
     "Equip": "裝備在{{character}}",
     "Exclude": "已排除的物品",
     "ExcludeHelp": "Shift + 按一下一個物品(或直接拖動)用以創建一個不包括特定裝備的套裝組.",
+    "ExistingBuildStats": "Existing Build Stats",
+    "ExistingBuildStatsNote": "Only showing builds with strictly higher stat tiers.",
     "FilterSets": "組合過濾",
     "Help": {
       "And": "裝備了所有這些特性(Perk) 的防具將被使用(\"and\")",
@@ -537,6 +544,7 @@
       "HelpFull": "查看更多裝備，但是需要更長時間。",
       "ProcessingMode": "處理模式"
     },
+    "RemoveStack": "Remove a copy of this mod",
     "Scaled": "縮放",
     "SearchAMod": "搜索模組或描述",
     "SearchAnExotic": "搜索異域裝備或描述",
@@ -561,9 +569,10 @@
     "Analyzed": "Analyzed {{numLoadouts}} Loadouts",
     "Analyzing": "Analyzing {{numAnalyzed}}/{{numLoadouts}} Loadouts",
     "BetterStatsAvailable": {
-      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stat tiers.",
+      "Description": "Choosing different armor or mods for this loadout will allow reaching higher stat tiers. Choose \"$t(Loadouts.OpenInOptimizer)\" to view better builds.",
       "Name": "Better Stats Available"
     },
+    "BetterStatsAvailableFontNote": "Note: This Loadout uses \"Font of ...\" mods that cause a stat tier to exceed T10. DIM may identify better stats by reducing the amount of excess tiers. If this is undesired, disable \"$t(Loadouts.IncludeRuntimeStatBenefits)\" in the Loadout.",
     "DoesNotRespectExotic": {
       "Description": "This loadout's Loadout Optimizer settings specify an exotic choice, but the loadout does not match that exotic.",
       "Name": "Wrong Exotic"
@@ -580,9 +589,9 @@
       "Description": "Some mods in this loadout are deprecated or do not otherwise fit into any of your armor pieces.",
       "Name": "Deprecated Mods"
     },
-    "LoadoutHasSearchQuery": {
-      "Description": "This loadout was created with a search query in Loadout Optimizer.",
-      "Name": "Has Search Query"
+    "InvalidSearchQuery": {
+      "Description": "This loadout was created with a search query in Loadout Optimizer that is no longer valid, or does not include the armor in this loadout.",
+      "Name": "Invalid Search Query"
     },
     "MissingItems": {
       "Description": "Some of the items in this loadout are no longer in your inventory.",
@@ -616,31 +625,31 @@
     "AnyExoticDescription": "組合里必須有任意異域裝備。",
     "AssumeMasterwork": "假定大師傑作",
     "AssumeMasterworkOptions": {
-      "All": "所有護甲會使用大師之作内容和10點能量等級。",
-      "Legendary": "傳說護甲會使用大師杰作内容和10點能量等級。",
-      "None": "所有護甲會使用大師之作內容和10點能量等級。"
+      "All": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "Current": "Current stats, assumed energy level at least {{minLoItemEnergy}}.",
+      "Legendary": "Legendary: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotic: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
+      "Masterworked": "+2 in each stat, assumed energy level 10.",
+      "None": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)"
     },
     "AutoStatMods": "自動添加屬性模組",
     "AutomaticallyPicked": "此模組已被自動添加以優化配裝屬性。",
     "ChooseAlternateTitle": "選擇另一個物品",
     "CompareLoadout": "對比配裝",
     "ConfirmOverwrite": "你確定要用這套新的護甲來替換配裝「{{name}}」里的護甲嗎？",
-    "CreateLoadout": "保存配裝",
     "DecreaseStatPriority": "Decrease stat priority",
     "DisabledByAutoStatMods": "屬性模組由配裝優化器自動選取。",
     "DisabledDueToMaintenance": "由於 Bungie API 維護，配裝優化器目前不可用。",
     "EquipItems": "裝備",
     "ExcludeItem": "排除項目",
+    "ExcludedItems": "Excluded Items",
     "ExistingLoadout": "已有配裝",
+    "Exotic": "Exotic Armor",
     "ExoticSpecialCategory": "特殊",
-    "Filter": "過濾",
+    "Filter": "Settings",
     "IgnoreStat": "If unchecked, Loadout Optimizer will pretend this stat doesn't exist when building sets",
-    "IncludeVendorItems": "包括商販物品",
     "IncreaseStatPriority": "Increase stat priority",
     "Legendary": "传说",
-    "LockEquipped": "固定已裝備",
     "LockItem": "固定物品",
-    "MaxTier": "最大 {{tier}}",
     "MissingClass": "配裝適用於：{{className}}",
     "MissingClassDescription": "你正試圖查看的配裝適用於一個你未擁有的角色職業。",
     "NoBuildsFoundExplainer": {
@@ -662,21 +671,22 @@
       "UpperBoundsFailed": "多個配裝的屬性等級高於屬性等級上限"
     },
     "NoExotic": "非異域",
-    "NoExoticDescription": "等同於搜索「not:exotic」 - 組合不會包含異域護甲。",
+    "NoExoticDescription": "Equivalent to searching \"not:exotic\" in the search bar - sets will not use any exotic armor.",
+    "NoExoticPreference": "No Exotic Selected",
+    "NoExoticPreferenceDescription": "Exotic armor will be used if it maximizes stats.",
     "NoLoadoutsToCompare": "沒有要對比的配裝",
     "None": "無",
     "OptimizerExplanationGuide": "用戶指南里有更多信息和視頻教程。",
-    "OptimizerExplanationMods": "選擇你想使用的異域裝備和模組。配裝優化器只會包括你選定的模組帶來的屬性加成——護甲上其他現存的模組都會被忽略。",
+    "OptimizerExplanationMods": "Choose an exotic, mods, and a subclass. Loadout Optimizer only includes stat bonuses from mods and subclass options you choose - all mods already on the armor are ignored.",
     "OptimizerExplanationSearch": "使用搜索欄來過濾配裝優化器使用的物品。如果對應位置沒有匹配搜索的防具，所有該位置的防具都將包含在考慮範圍之内。",
-    "OptimizerExplanationStats": "將最重要的屬性拖動到頂部，並將你不在乎的屬性設為忽略。",
+    "OptimizerExplanationStats": "Drag the most important stats to the top, and disable stats you don't want to optimize for.",
     "OptimizerSet": "優化器組合",
+    "PinnedItems": "Pinned Items",
     "ProcessingSets": "Finding highest tier sets...",
     "SaveAs": "保存為",
-    "SelectMax": "-最大-",
-    "SelectMin": "-最小-",
     "SpeedReport": "在 {{time}} 秒内生成了 {{combos, number}} 個組合。",
-    "StatTierIgnoreOption": "忽略",
-    "StatTierIncludeOption": "包含",
+    "StatConstraints": "Stat Tier Priorities & Ranges",
+    "StatMax": "Max",
     "TierNumber": "T{{tier}}",
     "TierSelect": "Select minimum stat tier",
     "UnableToAddAllMods": "無法添加所有模組。",
@@ -741,6 +751,8 @@
     },
     "ImportLoadout": "導入配裝",
     "InGameLoadouts": "游戲内配裝",
+    "IncludeRuntimeStatBenefits": "Include Font mod stats",
+    "IncludeRuntimeStatBenefitsDesc": "\"Font of ...\" armor mods provide a flat boost to character stats while you have Armor Charges.\n\nWith this setting, DIM considers these mods active and adds their benefits to this Loadout's stats in calculations and optimizations.",
     "ItemErrorSummary": "1 個物品出錯：",
     "ItemErrorSummary_plural": "{{count}} 個物品出錯：",
     "ItemLeveling": "物品等級",
@@ -771,9 +783,11 @@
       "InvalidModsDesc": "1 個模組不能插入任何防具。",
       "InvalidModsDesc_plural": "{{count}} 個模組不能插入任何防具。",
       "ModPlacement": "模組位置",
+      "StackableMod": "Stackable",
       "UnassignedMods": "未分配的模組",
       "UnassignedModsDesc": "由於容量或插槽不足，1 個模組無法安裝。即使為所選護甲升級容量也是如此。",
       "UnassignedModsDesc_plural": "由於容量或插槽不足，{{count}} 個模組無法安裝。即使為所選護甲升級容量也是如此。",
+      "UnstackableMod": "Not Stackable",
       "UpgradeCosts": "升級消耗",
       "UpgradeCostsDesc": "部分防具需要能量容量升級才能裝下所選模組。升級總共會花費："
     },
@@ -837,7 +851,7 @@
       "Summary": "分享包含如下内容的配裝：",
       "Title": "分享“{{name}}”"
     },
-    "ShareLoadout": "分享配装",
+    "ShareLoadout": "Share",
     "ShowModPlacement": "顯示模組位置",
     "Snapshot": "保存爲游戲内配裝",
     "SocketOverrides": "正在更改子職業選項",
@@ -851,6 +865,7 @@
     "UnassignedModError": "模組不適合你當前的護甲",
     "Undo": "撤銷",
     "Update": "保存更改",
+    "UpdateLoadout": "Update Loadout",
     "VendorsCannotEquip": "您沒有這些項目。點擊來選擇一個替換或點擊 X 來刪除："
   },
   "Manifest": {
@@ -1026,6 +1041,8 @@
     "NoEventChallenges": "你已經完成了所有活動挑戰",
     "NoTrackedTriumph": "You have no tracked triumphs. Track as many as you like in DIM.",
     "PercentPrestige": "重置百分比{{pct}}%",
+    "PointsUsed": "1 point used",
+    "PointsUsed_plural": "{{count}} points used",
     "PowerBonusHeader": "+{{powerBonus}} 光等獎勵",
     "PowerBonusHeaderUndefined": "其他獎勵",
     "Progress": "進度",
@@ -1109,6 +1126,7 @@
     "ResetToDefault": "重置",
     "ReverseSort": "切換正向/反向排序",
     "SetSort": "物品排序方式:",
+    "SetVaultWeaponGrouping": "Group vault weapons by:",
     "Settings": "設置",
     "ShowNewItems": "在新物品上顯示紅點",
     "SingleCharacter": "單角色視圖",
@@ -1132,7 +1150,9 @@
     "SortName": "名稱",
     "SpacesSize": "{{count}} 個空位",
     "SpacesSize_plural": "{{count}} 個空位",
-    "Theme": "主題"
+    "Theme": "主題",
+    "VaultGroupingNone": "None",
+    "VaultWeaponGroupingStyle": "Separate groups on different lines"
   },
   "Sockets": {
     "ApplyPerks": "應用特性",
@@ -1209,7 +1229,6 @@
     "DataIsLocal": "標簽和備注僅保存在本地",
     "DeleteAllData": "從 DIM 同步服務器刪除所有數據",
     "DeleteAllDataConfirm": "你確定要從 DIM 同步中刪除你的所有賬號的所有數據嗎？這無法撤銷。",
-    "DeleteAllDataLabel": "清空 DIM 同步數據",
     "Details": {
       "IndexedDBStorage": "本機存放區僅在此流覽器中存儲資訊。如果刪除流覽器資料，也會刪除這些資訊。"
     },
@@ -1248,23 +1267,20 @@
     "Usage": "DIM 使用了此設備{{quota, humanBytes}}可用空間中的{{usage, humanBytes}}.這包括從 bungie. net 下載的命運2物品資料庫。"
   },
   "StreamDeck": {
-    "Authorization": {
-      "No": "否",
-      "Reset": "撤銷授權",
-      "Title": "你的 Steam Deck 上顯示的驗證碼是否一致？",
-      "Update": "看到此消息代表你的插件版本過舊。請從 Steam Deck 商店下載更新。",
-      "Yes": "是"
-    },
-    "Connected": "已連接",
-    "Enable": "Stream Deck 插件",
+    "Authorize": "Connect application",
+    "Enable": "Stream Deck Plugin",
     "FinePrint": "啓用與 DIM Stream Deck 插件的連接。該插件是獨立的項目，既不是由 DIM 團隊編寫，也不是由 DIM 團隊提供支持。",
     "Install": "安裝插件",
-    "NotConnected": "未連接",
-    "OldExtension": "請確保已經卸載了舊的 Stream Deck 瀏覽器插件。因爲這個插件會導致 DIM 故障因此不再需要。",
-    "SelectLoadout": "發送到 Stream Deck",
-    "Selection": {
-      "Item": "從庫存中選擇一個物品",
-      "Loadout": "選擇一個配裝"
+    "MissingAuthorization": "You must authorize the Stream Deck application to connect to DIM. Go to settings and click \"Connect application\".",
+    "Tooltip": {
+      "Application": "Stream Deck Application",
+      "AuthRequired": "Click this button or go to settings and click \"Connect application\".",
+      "Error": "Your Stream Deck plugin is no longer supported. Please update to the latest version. This plugin requires at least:",
+      "ErrorConnection": "if you're already using the latest version, check if some browser extension is blocking the connection.",
+      "ExtensionIssue": "Extensions Issue",
+      "Plugin": "Plugin",
+      "Title": "DIM Stream Deck Plugin",
+      "Version": "Version:"
     }
   },
   "StripSockets": {
@@ -1386,25 +1402,24 @@
   "WishListRoll": {
     "BestRatedTip": "這個特性與您願望清單上的某個武器完全匹配。",
     "BestRatedTip_plural": "這些特性與您願望清單上的某個武器完全匹配。",
-    "ChoosyVoltron": "choosy_voltron",
-    "ChoosyVoltronDescription": "choosy_voltron 是來自 Mercules904 和 pandapaxxy 的 PvE 和 PvP 願望清單特性表，也包含一些垃圾特性表，並會自動更新。",
     "Clear": "清除愿望清单",
     "CopiedLine": "已複製願望清單特性組合到剪貼板",
     "CopyLine": "複製選定的特性為願望清單特性組合",
-    "ExternalSource": "也可提供願望清單的 URL（使用「|」豎線分隔多個）",
+    "ExternalSource": "Add another wish list",
+    "ExternalSourcePlaceholder": "Paste wish list URL here",
     "Header": "願望清單",
     "Import": "導入願望清單物品",
     "ImportError": "加載願望清單時出錯：{{error}}",
     "ImportFailed": "未找到任何願望清單",
     "ImportNoFile": "未選取任何檔案。",
     "InvalidExternalSource": "請為你的外部願望清單來源輸入一個有效的 URL。URL 的開頭必須為以下之一：",
+    "JustAnotherTeam": "Just Another Team",
     "LastUpdated": "最後更新於 {{lastUpdatedDate}} {{lastUpdatedTime}}",
     "Num": "在您的願望單中有{{num, number}} 個物品",
-    "PreMadeFiles": "使用預製願望清單",
-    "Untitled": "未命名的願望清單",
-    "UpdateExternalSource": "更新願望清單來源",
+    "NumRolls": "{{num, number}} rolls",
+    "SourceAlreadyAdded": "Wish List already added",
+    "UpdateExternalSource": "Add Wish List",
     "Voltron": "voltron（默認）",
-    "VoltronDescription": "voltron 是來自《天命》社區的 PvE 和 PvP 願望清單特性表，并會自動更新。這是我們的默認列表。",
     "WishListNotes": "願望清單備註：",
     "WorstRatedTip": "這個特性與您願望清單上的某個武器完全匹配。",
     "WorstRatedTip_plural": "這些特性與您垃圾清單上的某個武器完全匹配。"

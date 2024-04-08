@@ -3,11 +3,12 @@
 interface CssExports {
   'buttons': string;
   'dragging': string;
+  'editor': string;
   'grip': string;
   'iconStat': string;
   'ignored': string;
   'label': string;
-  'locked': string;
+  'maxRestricted': string;
   'maxed': string;
   'name': string;
   'row': string;

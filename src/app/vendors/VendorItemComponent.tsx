@@ -68,7 +68,7 @@ export default function VendorItemComponent({
       extraData={{ failureStrings: item.failureStrings, characterId, owned, acquired, mod }}
     >
       {item.costs.length > 0 && (
-        <div className={styles.vendorCosts}>
+        <div>
           {item.costs.map((cost) => (
             <Cost key={cost.itemHash} cost={cost} className={styles.cost} />
           ))}

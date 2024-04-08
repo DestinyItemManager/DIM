@@ -146,7 +146,7 @@ export default function ItemPopup({
                 {content}
               </div>
               {itemActionsModel.hasControls && (
-                <div className={clsx(styles.desktopActions)}>
+                <div className={styles.desktopActions}>
                   <DesktopItemActions item={item} actionsModel={itemActionsModel} />
                 </div>
               )}

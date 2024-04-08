@@ -164,6 +164,7 @@ function updateItemModel(
       });
     }
     const stopTimer = timer('itemMovedUpdate');
+
     try {
       dispatch(itemMoved({ item, source, target, equip, amount }));
       const stores = storesSelector(getState());

@@ -17,6 +17,7 @@ $dropdown-menu: 10;
 }
 
 .menu {
+  composes: visibleScrollbars from '../dim-ui/common.m.scss';
   position: absolute;
   z-index: 5;
   left: 0;
@@ -24,15 +25,12 @@ $dropdown-menu: 10;
   overflow: auto;
   margin-top: 2px;
   width: max-content;
+  background: var(--theme-dropdown-menu-bg);
 
   &.right {
     left: initial;
     right: 0;
   }
-
-  background: var(--theme-dropdown-menu-bg);
-
-  @include visible-scrollbars;
 }
 
 .checkButton {

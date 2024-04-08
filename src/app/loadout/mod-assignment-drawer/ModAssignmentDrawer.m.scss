@@ -84,6 +84,10 @@
     margin-right: 8px;
     font-size: 1.2em;
 
+    &:global(.boostedValue) {
+      color: $stat-modded;
+    }
+
     img {
       height: 20px;
       width: 20px;

@@ -32,23 +32,28 @@ export function TileGridTile({
   children,
   icon,
   title,
+  corner,
   selected,
   disabled,
   onClick,
+  compact,
 }: {
   className?: string;
   children: React.ReactNode;
   icon: React.ReactNode;
   title: React.ReactNode;
+  corner?: React.ReactElement;
   selected?: boolean;
   disabled?: boolean;
   onClick: React.MouseEventHandler<HTMLElement>;
+  compact?: boolean;
 }) {
   return (
     <div
       className={clsx(className, styles.tile, {
         [styles.selected]: selected,
         [styles.disabled]: disabled,
+        [styles.compact]: compact,
       })}
       onClick={disabled ? undefined : onClick}
       role="button"
@@ -58,10 +63,9 @@ export function TileGridTile({
     >
       <>
         {icon}
-        <div className={styles.details}>
-          <div className={styles.title}>{title}</div>
-          {children}
-        </div>
+        <div className={styles.title}>{title}</div>
+        {corner}
+        <div className={styles.details}>{children}</div>
       </>
     </div>
   );

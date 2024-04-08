@@ -96,7 +96,7 @@ const getClassTypeNameLocalized = _.memoize(
 /**
  * Convert a D1DamageType to the D2 definition, so we don't have to maintain both codepaths
  */
-const toD2DamageType = _.memoize(
+export const toD2DamageType = _.memoize(
   (damageType: D1DamageTypeDefinition | undefined): DestinyDamageTypeDefinition | undefined =>
     damageType && {
       displayProperties: {
@@ -466,11 +466,7 @@ function makeItem(
   }
 
   // "The Life Exotic" perk means you can equip other exotics, so clear out the equipping label
-  if (
-    createdItem.isExotic &&
-    createdItem.talentGrid &&
-    createdItem.talentGrid.nodes.some((n) => n.hash === 4044819214)
-  ) {
+  if (createdItem.isExotic && createdItem.talentGrid?.nodes.some((n) => n.hash === 4044819214)) {
     createdItem.equippingLabel = undefined;
   }
 

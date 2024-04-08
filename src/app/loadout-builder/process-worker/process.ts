@@ -3,12 +3,12 @@ import { infoLog } from '../../utils/log';
 import {
   ArmorStatHashes,
   ArmorStats,
-  artificeStatBoost,
+  DesiredStatRange,
   LockableBucketHashes,
   LockableBuckets,
-  majorStatBoost,
-  ResolvedStatConstraint,
   StatRanges,
+  artificeStatBoost,
+  majorStatBoost,
 } from '../types';
 import {
   pickAndAssignSlotIndependentMods,
@@ -40,8 +40,8 @@ export function process(
   modStatTotals: ArmorStats,
   /** Mods to add onto the sets */
   lockedMods: LockedProcessMods,
-  /** The user's chosen stat constraints, including disabled stats */
-  resolvedStatConstraints: ResolvedStatConstraint[],
+  /** The user's chosen stat ranges, in priority order. */
+  desiredStatRanges: DesiredStatRange[],
   /** Ensure every set includes one exotic */
   anyExotic: boolean,
   /** Which artifice mods, large, and small stat mods are available */
@@ -55,7 +55,8 @@ export function process(
 ): ProcessResult {
   const pstart = performance.now();
 
-  const statOrder = resolvedStatConstraints.map(({ statHash }) => statHash as ArmorStatHashes);
+  const statOrder = desiredStatRanges.map(({ statHash }) => statHash as ArmorStatHashes);
+  const maxTierConstraints = desiredStatRanges.map(({ maxTier }) => maxTier);
   const modStatsInStatOrder = statOrder.map((h) => modStatTotals[h]);
 
   // This stores the computed min and max value for each stat as we process all sets, so we
@@ -64,8 +65,8 @@ export function process(
     statOrder.map((h) => [
       h,
       {
-        min: 10,
-        max: 0,
+        minTier: 10,
+        maxTier: 0,
       },
     ]),
   ) as StatRanges;
@@ -218,50 +219,35 @@ export function process(
 
             // TODO: avoid min/max?
             const tiers = [
-              Math.min(Math.max(Math.floor(stats[0] / 10), 0), 10),
-              Math.min(Math.max(Math.floor(stats[1] / 10), 0), 10),
-              Math.min(Math.max(Math.floor(stats[2] / 10), 0), 10),
-              Math.min(Math.max(Math.floor(stats[3] / 10), 0), 10),
-              Math.min(Math.max(Math.floor(stats[4] / 10), 0), 10),
-              Math.min(Math.max(Math.floor(stats[5] / 10), 0), 10),
+              Math.min(Math.max(Math.floor(stats[0] / 10), 0), maxTierConstraints[0]),
+              Math.min(Math.max(Math.floor(stats[1] / 10), 0), maxTierConstraints[1]),
+              Math.min(Math.max(Math.floor(stats[2] / 10), 0), maxTierConstraints[2]),
+              Math.min(Math.max(Math.floor(stats[3] / 10), 0), maxTierConstraints[3]),
+              Math.min(Math.max(Math.floor(stats[4] / 10), 0), maxTierConstraints[4]),
+              Math.min(Math.max(Math.floor(stats[5] / 10), 0), maxTierConstraints[5]),
             ];
-
-            // Check whether the set exceeds our stat constraints
-            let totalTier = 0;
-            let statRangeExceeded = false;
-            for (let index = 0; index < 6; index++) {
-              const tier = tiers[index];
-              const filter = resolvedStatConstraints[index];
-              if (!filter.ignored) {
-                const statRange = statRangesFilteredInStatOrder[index];
-                if (tier < statRange.min) {
-                  statRange.min = tier;
-                }
-                if (tier > filter.maxTier) {
-                  statRangeExceeded = true;
-                }
-                totalTier += tier;
-              }
-            }
-
-            setStatistics.upperBoundsExceeded.timesChecked++;
-            if (statRangeExceeded) {
-              setStatistics.upperBoundsExceeded.timesFailed++;
-              continue;
-            }
 
             const neededStats = [0, 0, 0, 0, 0, 0];
             let totalNeededStats = 0;
 
             // Check in which stats we're lacking
+            let totalTier = 0;
             for (let index = 0; index < 6; index++) {
-              const filter = resolvedStatConstraints[index];
-              if (!filter.ignored && filter.minTier > 0) {
-                const value = stats[index];
-                const neededValue = filter.minTier * 10 - value;
-                if (neededValue > 0) {
-                  totalNeededStats += neededValue;
-                  neededStats[index] = neededValue;
+              const tier = tiers[index];
+              const filter = desiredStatRanges[index];
+              if (filter.maxTier > 0) {
+                const statRange = statRangesFilteredInStatOrder[index];
+                if (tier < statRange.minTier) {
+                  statRange.minTier = tier;
+                }
+                totalTier += tier;
+                if (filter.minTier > 0) {
+                  const value = stats[index];
+                  const neededValue = filter.minTier * 10 - value;
+                  if (neededValue > 0) {
+                    totalNeededStats += neededValue;
+                    neededStats[index] = neededValue;
+                  }
                 }
               }
             }
@@ -313,7 +299,7 @@ export function process(
               stats,
               tiers,
               numArtifice,
-              resolvedStatConstraints,
+              desiredStatRanges,
               statRangesFilteredInStatOrder,
             );
 
@@ -333,34 +319,33 @@ export function process(
             // We want to figure out the best tiers for this set. We can't do that for every
             // set because it'd be too expensive, but realistically, artifice mods are
             // where sets can really get some more tiers compared to other sets.
-            const artificeModsNeededForTiers: number[] = [];
+            const statPointsNeededForTiers: { index: number; pointsToNext: number }[] = [];
 
             for (let index = 0; index < 6; index++) {
-              const filter = resolvedStatConstraints[index];
-              if (!filter.ignored) {
-                if (stats[index] < filter.maxTier * 10) {
-                  // E.g. stat is at 83 points, so we'd need ceil((10-3) / 3) = 3
-                  // artifice mods
-                  artificeModsNeededForTiers.push(
-                    Math.ceil((10 - (stats[index] % 10)) / artificeStatBoost),
-                  );
-                } else {
-                  // We really don't want to optimize this stat further...
-                  artificeModsNeededForTiers.push(100);
-                }
+              const filter = desiredStatRanges[index];
+              if (stats[index] < filter.maxTier * 10) {
+                statPointsNeededForTiers.push({
+                  index,
+                  pointsToNext: 10 - (stats[index] % 10),
+                });
               }
             }
+
+            // Starting from here, we end up mutating our tiers array a bit
+            // to make sorting more accurate.
 
             // Then spend artifice mods to boost tiers, from cheapest to most-expensive.
             // TODO: It'd be neat to also spend small (+5) general mods, right now we
             // add `numAvailableGeneralMods` tiers (assume each item can hold a +10)
             // mod but this isn't always true.
             let modsAvailable = numArtifice;
-            artificeModsNeededForTiers.sort((a, b) => a - b);
+            statPointsNeededForTiers.sort((a, b) => a.pointsToNext - b.pointsToNext);
             const predictedExtraTiers =
-              artificeModsNeededForTiers.reduce((numTiers, modsNeeded) => {
-                if (modsNeeded <= modsAvailable) {
-                  modsAvailable -= modsNeeded;
+              statPointsNeededForTiers.reduce((numTiers, stat) => {
+                const numModsUsed = Math.ceil(stat.pointsToNext / artificeStatBoost);
+                if (numModsUsed <= modsAvailable) {
+                  tiers[stat.index] += 1;
+                  modsAvailable -= numModsUsed;
                   return numTiers + 1;
                 }
                 return numTiers;
@@ -377,19 +362,25 @@ export function process(
             // It seems like constructing and comparing tiersString would be expensive but it's less so
             // than comparing stat arrays element by element
             let tiersString = '';
+            let numGeneralMods = precalculatedInfo.numAvailableGeneralMods;
             for (let index = 0; index < 6; index++) {
-              const tier = tiers[index];
+              let tier = tiers[index];
               // Make each stat exactly one code unit so the string compares correctly
-              const filter = resolvedStatConstraints[index];
-              if (!filter.ignored) {
+              const filter = desiredStatRanges[index];
+              if (filter.maxTier > 0) {
+                // Predict the tier boost from general mods.
+                const boostAmount = Math.min(filter.maxTier - tier, numGeneralMods);
+                if (boostAmount > 0) {
+                  tier += boostAmount;
+                  numGeneralMods -= boostAmount;
+                }
                 // using a power of 2 (16) instead of 11 is faster
                 tiersString += tier.toString(16);
               }
             }
 
             processStatistics.numValidSets++;
-            // And now insert our set using the predicted tier. The rest of the stats string still uses the unboosted tiers but the error should be small
-            tiersString = totalTier.toString(16) + tiersString;
+            // And now insert our set using the predicted total tier and boosted stat tiers.
             setTracker.insert(totalTier + predictedExtraTiers, tiersString, armor, stats);
 
             if (stopOnFirstSet) {
@@ -416,7 +407,7 @@ export function process(
       precalculatedInfo,
       armor,
       stats,
-      resolvedStatConstraints,
+      desiredStatRanges,
     )!;
 
     const armorOnlyStats: Partial<ArmorStats> = {};
@@ -429,8 +420,13 @@ export function process(
       const value = stats[i] + bonusStats[i];
       fullStats[statHash] = value;
 
-      if (strictUpgrades && !hasStrictUpgrade) {
-        const statFilter = resolvedStatConstraints[i];
+      const statFilter = desiredStatRanges[i];
+      if (
+        statFilter.maxTier > 0 &&
+        strictUpgrades &&
+        statFilter.minTier < statFilter.maxTier &&
+        !hasStrictUpgrade
+      ) {
         const tier = Math.min(Math.max(Math.floor(value / 10), 0), 10);
         hasStrictUpgrade ||= tier > statFilter.minTier;
       }

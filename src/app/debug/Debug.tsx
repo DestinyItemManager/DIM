@@ -15,13 +15,14 @@ import { t } from 'app/i18next-t';
 import { profileErrorSelector, profileResponseSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { TroubleshootingSettings } from 'app/settings/Troubleshooting';
-import { systemInfo } from 'app/shell/About';
 import LocalStorageInfo from 'app/storage/LocalStorageInfo';
 import { set } from 'app/storage/idb-keyval';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
+import { streamDeckSelector } from 'app/stream-deck/selectors';
 import { DimError } from 'app/utils/dim-error';
 import { convertToError } from 'app/utils/errors';
 import { usePageTitle } from 'app/utils/hooks';
+import { systemInfo } from 'app/utils/system-info';
 import { wishListsLastFetchedSelector, wishListsSelector } from 'app/wishlists/selectors';
 import { fetchWishList } from 'app/wishlists/wishlist-fetch';
 import { useEffect, useState } from 'react';
@@ -51,6 +52,7 @@ export default function Debug() {
   const wishListsLastFetched = useSelector(wishListsLastFetchedSelector);
   const wishlistSource = useSelector(settingSelector('wishListSource'));
   const wishList = useSelector(wishListsSelector);
+  const streamDeck = useSelector(streamDeckSelector);
   const clarityDescriptions = useSelector(clarityDescriptionsSelector);
   const clarityCharacterStats = useSelector(clarityCharacterStatsSelector);
 
@@ -266,6 +268,24 @@ export default function Debug() {
           </p>
         </section>
 
+        {$featureFlags.elgatoStreamDeck && (
+          <section>
+            <h3>Stream Deck</h3>
+            <p>
+              <b>Enabled:</b> {JSON.stringify(Boolean(streamDeck.enabled))}
+            </p>
+            <p>
+              <b>Connected:</b> {JSON.stringify(streamDeck.connected)}
+            </p>
+            <p>
+              <b>Instance:</b> {JSON.stringify(streamDeck.auth?.instance) ?? '-'}
+            </p>
+            <p>
+              <b>Token:</b> {JSON.stringify(streamDeck.auth?.token) ?? '-'}
+            </p>
+          </section>
+        )}
+
         {$DIM_FLAVOR !== 'release' && currentAccount?.destinyVersion === 2 && (
           <TroubleshootingSettings />
         )}
@@ -322,8 +342,8 @@ function ErrorInfo({ error }: { error: Error | DimError }) {
     error instanceof DimError || error instanceof BungieError
       ? error.code
       : error instanceof HttpStatusError
-      ? `HTTP ${error.status}`
-      : undefined;
+        ? `HTTP ${error.status}`
+        : undefined;
 
   const name = error.name;
   const message = error.message || 'No message';

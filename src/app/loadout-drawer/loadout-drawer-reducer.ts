@@ -221,6 +221,27 @@ export function removeItem(
 }
 
 /**
+ * Replace an existing item in the loadout (likely a missing item) with a new
+ * item. It should inherit equipped-ness from the original item.
+ */
+export function replaceItem(
+  { loadoutItem }: ResolvedLoadoutItem,
+  newItem: DimItem,
+): LoadoutUpdateFunction {
+  return produce((draftLoadout) => {
+    const newLoadoutItem = convertToLoadoutItem(newItem, loadoutItem.equip);
+    const loadoutItemIndex = draftLoadout.items.findIndex(
+      (i) => i.hash === loadoutItem.hash && i.id === loadoutItem.id,
+    );
+    if (loadoutItemIndex === -1) {
+      throw new Error('Original item to replace not found');
+    }
+
+    draftLoadout.items[loadoutItemIndex] = newLoadoutItem;
+  });
+}
+
+/**
  * When setting an item to be equipped, this function resets other items to not
  * be equipped to prevent multiple equipped items in the same bucket, and
  * multiple equipped exotics.
@@ -599,6 +620,12 @@ export function clearMods(): LoadoutUpdateFunction {
 export function changeClearMods(enabled: boolean): LoadoutUpdateFunction {
   return setLoadoutParameters({
     clearMods: enabled,
+  });
+}
+
+export function changeIncludeRuntimeStats(enabled: boolean): LoadoutUpdateFunction {
+  return setLoadoutParameters({
+    includeRuntimeStatBenefits: enabled,
   });
 }
 

@@ -9,7 +9,7 @@ export default function Developer(this: never) {
 
   // Load parameters from either local storage or the URL
   function useDevParam(param: string) {
-    return useState(() => localStorage.getItem(param) || urlParams.get(param) || undefined);
+    return useState(() => localStorage.getItem(param) || urlParams.get(param) || '');
   }
 
   const [apiKey, setApiKey] = useDevParam('apiKey');
@@ -47,7 +47,7 @@ export default function Developer(this: never) {
 
   const onChange =
     (
-      setter: React.Dispatch<React.SetStateAction<string | undefined>>,
+      setter: React.Dispatch<React.SetStateAction<string>>,
     ): React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> =>
     (e) => {
       setter(e.target.value);

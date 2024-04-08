@@ -114,7 +114,7 @@ export default (env: Env) => {
           host: process.env.DOCKER ? '0.0.0.0' : 'localhost',
           allowedHosts: 'all',
           server: {
-            type: 'https',
+            type: 'spdy',
             options: {
               key: fs.readFileSync('key.pem'), // Private keys in PEM format.
               cert: fs.readFileSync('cert.pem'), // Cert chains in PEM format.
@@ -140,11 +140,11 @@ export default (env: Env) => {
                   //'Cross-Origin-Opener-Policy': 'same-origin',
                 }
               : req.baseUrl.match(/\.js$/)
-              ? {
-                  // credentialless is only supported by chrome but require-corp blocks Bungie.net messages
-                  //'Cross-Origin-Embedder-Policy': 'require-corp',
-                }
-              : {};
+                ? {
+                    // credentialless is only supported by chrome but require-corp blocks Bungie.net messages
+                    //'Cross-Origin-Embedder-Policy': 'require-corp',
+                  }
+                : {};
 
             return headers;
           },
@@ -497,6 +497,7 @@ export default (env: Env) => {
         { from: `./icons/splash`, to: 'splash/' },
         { from: `./icons/screenshots`, to: 'screenshots/' },
         { from: './src/safari-pinned-tab.svg' },
+        { from: './src/nuke.php' },
         { from: './src/robots.txt' },
       ],
     }),

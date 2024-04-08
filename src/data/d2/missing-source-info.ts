@@ -481,7 +481,6 @@ const missingSources: { [key: string]: number[] } = {
     3164547673, // Atonement Tau
     3174394351, // The Outlander's Grip
     3174771856, // Stasis Scavenger
-    3181984586, // Charged Up
     3183585337, // Legion-Bane
     3184690956, // Absolution
     3188328909, // Stasis Siphon
@@ -649,10 +648,12 @@ const missingSources: { [key: string]: number[] } = {
   crucible: [
     85800627, // Ankaa Seeker IV
     98331691, // Binary Phoenix Mark
+    120859138, // Phoenix Strife Type 0
     185853176, // Wing Discipline
     252414402, // Swordflight 4.1
     283188616, // Wing Contender
     290136582, // Wing Theorem
+    315615761, // Ankaa Seeker IV
     327530279, // Wing Theorem
     328902054, // Swordflight 4.1
     356269375, // Wing Theorem
@@ -663,6 +664,7 @@ const missingSources: { [key: string]: number[] } = {
     468899627, // Binary Phoenix Mark
     530558102, // Phoenix Strife Type 0
     636679949, // Ankaa Seeker IV
+    657400178, // Swordflight 4.1
     670877864, // Binary Phoenix Mark
     727838174, // Swordflight 4.1
     744199039, // Wing Contender
@@ -673,6 +675,8 @@ const missingSources: { [key: string]: number[] } = {
     876608500, // Ankaa Seeker IV
     920187221, // Wing Discipline
     929917162, // Wing Theorem
+    944242985, // Ankaa Seeker IV
+    987343638, // Ankaa Seeker IV
     997903134, // Wing Theorem
     1036467370, // Wing Theorem
     1062166003, // Wing Contender
@@ -682,13 +686,16 @@ const missingSources: { [key: string]: number[] } = {
     1084033161, // Wing Contender
     1127237110, // Wing Contender
     1245115841, // Wing Theorem
+    1294217731, // Binary Phoenix Cloak
     1307478991, // Ankaa Seeker IV
+    1330581478, // Phoenix Strife Type 0
     1333087155, // Ankaa Seeker IV
     1464207979, // Wing Discipline
     1467590642, // Binary Phoenix Bond
     1484937602, // Phoenix Strife Type 0
     1548928853, // Phoenix Strife Type 0
     1571781304, // Swordflight 4.1
+    1648675919, // Binary Phoenix Mark
     1654427223, // Swordflight 4.1
     1658896287, // Binary Phoenix Cloak
     1673285051, // Wing Theorem
@@ -698,6 +705,7 @@ const missingSources: { [key: string]: number[] } = {
     1742940528, // Phoenix Strife Type 0
     1764274932, // Ankaa Seeker IV
     1801625827, // Swordflight 4.1
+    1828358334, // Swordflight 4.1
     1830829330, // Swordflight 4.1
     1838158578, // Binary Phoenix Bond
     1838273186, // Wing Contender
@@ -707,7 +715,10 @@ const missingSources: { [key: string]: number[] } = {
     2070517134, // Wing Contender
     2124666626, // Wing Discipline
     2191401041, // Phoenix Strife Type 0
+    2191437287, // Ankaa Seeker IV
+    2206581692, // Phoenix Strife Type 0
     2231762285, // Phoenix Strife Type 0
+    2247740696, // Swordflight 4.1
     2291226602, // Binary Phoenix Bond
     2293476915, // Swordflight 4.1
     2296560252, // Swordflight 4.1
@@ -719,12 +730,15 @@ const missingSources: { [key: string]: number[] } = {
     2466453881, // Wing Discipline
     2473130418, // Swordflight 4.1
     2496309431, // Wing Discipline
+    2511045676, // Binary Phoenix Bond
     2525395257, // Wing Theorem
     2543903638, // Phoenix Strife Type 0
     2555965565, // Wing Discipline
+    2627852659, // Phoenix Strife Type 0
     2670393359, // Phoenix Strife Type 0
     2718495762, // Swordflight 4.1
     2727890395, // Ankaa Seeker IV
+    2754844215, // Swordflight 4.1
     2775298636, // Ankaa Seeker IV
     2815422368, // Phoenix Strife Type 0
     3089908066, // Wing Discipline
@@ -929,6 +943,7 @@ const missingSources: { [key: string]: number[] } = {
   deluxe: [
     1952218242, // Sequence Flourish
     2683682447, // Traitor's Fate
+    3320175784, // Adventurous Spirit
   ],
   do: [
     66235782, // Anti-Extinction Grasps
@@ -1066,49 +1081,63 @@ const missingSources: { [key: string]: number[] } = {
     420895300, // Deep Explorer Mark
     436695703, // TM-Cogburn Custom Plate
     498918879, // TM-Earp Custom Grips
+    557092665, // Dark Age Cloak
     587312237, // Twisting Echo Grips
+    632989816, // Dark Age Gauntlets
     638836294, // Plate of the Taken King
     708921139, // TM-Cogburn Custom Legguards
     767306222, // Grasps of the Taken King
+    806004493, // Dark Age Gloves
     833653807, // Twisting Echo Strides
     837865641, // Vestment of the Taken King
+    851401651, // Dark Age Overcoat
     956827695, // Mark of the Taken King
     1148597205, // Deep Explorer Grasps
     1349399252, // TM-Earp Custom Cloaked Stetson
+    1476803535, // Dark Age Legbraces
     1664757090, // Gauntlets of the Taken King
     1756483796, // Twisting Echo Mask
     1913823311, // Gloves of the Taken King
+    1933599476, // Dark Age Visor
     1951355667, // Twisting Echo Vest
     2057955626, // Deep Explorer Vestments
     2244604734, // Corrupting Echo Gloves
     2341879253, // TM-Moss Custom Bond
+    2426502022, // Dark Age Strides
     2488323569, // Boots of the Taken King
     2499351855, // Deep Explorer Gauntlets
     2565015142, // TM-Cogburn Custom Mark
     2618168932, // Bond of the Taken King
     2643850526, // Hood of the Taken King
     2649394513, // Deep Explorer Greaves
+    2662590925, // Dark Age Mark
     2663987096, // Corrupting Echo Boots
     2694773307, // Deep Explorer Bond
     2724719415, // Deep Explorer Strides
+    2771011469, // Dark Age Mask
     2797334754, // Deep Explorer Cloak
     2819810688, // Deep Explorer Boots
     2820604007, // Mask of the Taken King
     2850384360, // Strides of the Taken King
     2885497847, // Descending Echo Gauntlets
     2935559305, // Deep Explorer Plate
+    2963224754, // Dark Age Sabatons
     3048458482, // Corrupting Echo Robes
+    3056827626, // Dark Age Bond
     3171090615, // Corrupting Echo Cover
     3260781446, // Deep Explorer Gloves
     3267969345, // Descending Echo Cage
     3270955774, // Deep Explorer Helmet
     3326914239, // Deep Explorer Hood
     3344225390, // TM-Earp Custom Hood
+    3423574140, // Dark Age Grips
     3511740432, // TM-Moss Custom Gloves
     3570749779, // Cloak of the Taken King
+    3683772388, // Dark Age Harness
     3685276035, // Corrupting Echo Bond
     3708902812, // Greaves of the Taken King
     3715136417, // TM-Earp Custom Chaps
+    3735435664, // Dark Age Chestrig
     3870375786, // TM-Moss Custom Pants
     3871537958, // Descending Echo Helm
     3933500353, // TM-Cogburn Custom Gauntlets
@@ -1116,6 +1145,7 @@ const missingSources: { [key: string]: number[] } = {
     4039955353, // TM-Moss Custom Hat
     4047213660, // Deep Explorer Mask
     4050474396, // Descending Echo Mark
+    4090037601, // Dark Age Helm
     4130276947, // Helm of the Taken King
     4177293424, // TM-Cogburn Custom Cover
     4288623897, // TM-Earp Custom Vest
@@ -1182,7 +1212,6 @@ const missingSources: { [key: string]: number[] } = {
     153144587, // Solstice Cloak (Drained)
     226436555, // Solstice Mask (Renewed)
     231432261, // Solstice Bond (Resplendent)
-    233896077, // Compass Rose
     234970842, // Solstice Boots (Resplendent)
     250513201, // Solstice Greaves (Resplendent)
     335763433, // Solstice Plate (Resplendent)
@@ -1191,6 +1220,7 @@ const missingSources: { [key: string]: number[] } = {
     419435523, // Inaugural Revelry Grips
     450844637, // Solstice Robes (Majestic)
     492834021, // Inaugural Revelry Hood
+    495940989, // Avalanche
     518930465, // Solstice Grasps (Rekindled)
     531005896, // Solstice Cloak (Resplendent)
     540653483, // Solstice Vest (Scorched)
@@ -1237,6 +1267,7 @@ const missingSources: { [key: string]: number[] } = {
     2150778206, // Solstice Gloves (Scorched)
     2155928170, // Solstice Mark (Rekindled)
     2156817213, // Solstice Cloak (Majestic)
+    2223901117, // Allstar Vector
     2261046232, // Jurassic Green
     2287277682, // Solstice Robes (Rekindled)
     2291082292, // Solstice Gauntlets (Majestic)
@@ -1257,6 +1288,8 @@ const missingSources: { [key: string]: number[] } = {
     2770157746, // Solstice Mask (Resplendent)
     2777913564, // Warm Winter Cloak
     2805101184, // Solstice Vest (Majestic)
+    2812100428, // Stay Frosty
+    2814093983, // Cold Front
     2824302184, // Solstice Robes (Resplendent)
     2837295684, // Inaugural Revelry Mark
     2877046370, // Solstice Strides (Majestic)
@@ -1272,7 +1305,9 @@ const missingSources: { [key: string]: number[] } = {
     3192336962, // Solstice Cloak (Scorched)
     3236510875, // Solstice Grasps (Resplendent)
     3240434620, // Something New
+    3400256755, // Zephyr
     3559361670, // The Title
+    3573686365, // Glacioclasm
     3611487543, // Solstice Hood (Rekindled)
     3685996623, // Solstice Greaves (Rekindled)
     3748622249, // Solstice Hood (Resplendent)
@@ -2295,6 +2330,7 @@ const missingSources: { [key: string]: number[] } = {
   limited: [
     1952218242, // Sequence Flourish
     2683682447, // Traitor's Fate
+    3320175784, // Adventurous Spirit
   ],
   lw: [
     4968701, // Greaves of the Great Hunt
@@ -2442,8 +2478,10 @@ const missingSources: { [key: string]: number[] } = {
     555148853, // Wendigo GL3 (Adept)
     681067419, // Hung Jury SR4 (Adept)
     772231794, // Hung Jury SR4
+    852228780, // Uzume RR4 (Adept)
     912150785, // Mindbender's Ambition (Adept)
     1094005544, // Mindbender's Ambition
+    2065081837, // Uzume RR4
     2378101424, // The Militia's Birthright (Adept)
     3183283212, // Wendigo GL3
     3836861464, // THE SWARM (Adept)
@@ -2771,10 +2809,12 @@ const missingSources: { [key: string]: number[] } = {
   shaxx: [
     85800627, // Ankaa Seeker IV
     98331691, // Binary Phoenix Mark
+    120859138, // Phoenix Strife Type 0
     185853176, // Wing Discipline
     252414402, // Swordflight 4.1
     283188616, // Wing Contender
     290136582, // Wing Theorem
+    315615761, // Ankaa Seeker IV
     327530279, // Wing Theorem
     328902054, // Swordflight 4.1
     356269375, // Wing Theorem
@@ -2785,6 +2825,7 @@ const missingSources: { [key: string]: number[] } = {
     468899627, // Binary Phoenix Mark
     530558102, // Phoenix Strife Type 0
     636679949, // Ankaa Seeker IV
+    657400178, // Swordflight 4.1
     670877864, // Binary Phoenix Mark
     727838174, // Swordflight 4.1
     744199039, // Wing Contender
@@ -2795,6 +2836,8 @@ const missingSources: { [key: string]: number[] } = {
     876608500, // Ankaa Seeker IV
     920187221, // Wing Discipline
     929917162, // Wing Theorem
+    944242985, // Ankaa Seeker IV
+    987343638, // Ankaa Seeker IV
     997903134, // Wing Theorem
     1036467370, // Wing Theorem
     1062166003, // Wing Contender
@@ -2804,13 +2847,16 @@ const missingSources: { [key: string]: number[] } = {
     1084033161, // Wing Contender
     1127237110, // Wing Contender
     1245115841, // Wing Theorem
+    1294217731, // Binary Phoenix Cloak
     1307478991, // Ankaa Seeker IV
+    1330581478, // Phoenix Strife Type 0
     1333087155, // Ankaa Seeker IV
     1464207979, // Wing Discipline
     1467590642, // Binary Phoenix Bond
     1484937602, // Phoenix Strife Type 0
     1548928853, // Phoenix Strife Type 0
     1571781304, // Swordflight 4.1
+    1648675919, // Binary Phoenix Mark
     1654427223, // Swordflight 4.1
     1658896287, // Binary Phoenix Cloak
     1673285051, // Wing Theorem
@@ -2820,6 +2866,7 @@ const missingSources: { [key: string]: number[] } = {
     1742940528, // Phoenix Strife Type 0
     1764274932, // Ankaa Seeker IV
     1801625827, // Swordflight 4.1
+    1828358334, // Swordflight 4.1
     1830829330, // Swordflight 4.1
     1838158578, // Binary Phoenix Bond
     1838273186, // Wing Contender
@@ -2829,7 +2876,10 @@ const missingSources: { [key: string]: number[] } = {
     2070517134, // Wing Contender
     2124666626, // Wing Discipline
     2191401041, // Phoenix Strife Type 0
+    2191437287, // Ankaa Seeker IV
+    2206581692, // Phoenix Strife Type 0
     2231762285, // Phoenix Strife Type 0
+    2247740696, // Swordflight 4.1
     2291226602, // Binary Phoenix Bond
     2293476915, // Swordflight 4.1
     2296560252, // Swordflight 4.1
@@ -2841,12 +2891,15 @@ const missingSources: { [key: string]: number[] } = {
     2466453881, // Wing Discipline
     2473130418, // Swordflight 4.1
     2496309431, // Wing Discipline
+    2511045676, // Binary Phoenix Bond
     2525395257, // Wing Theorem
     2543903638, // Phoenix Strife Type 0
     2555965565, // Wing Discipline
+    2627852659, // Phoenix Strife Type 0
     2670393359, // Phoenix Strife Type 0
     2718495762, // Swordflight 4.1
     2727890395, // Ankaa Seeker IV
+    2754844215, // Swordflight 4.1
     2775298636, // Ankaa Seeker IV
     2815422368, // Phoenix Strife Type 0
     3089908066, // Wing Discipline
@@ -3167,6 +3220,23 @@ const missingSources: { [key: string]: number[] } = {
     3921970316, // Gauntlets of the Exile
     4100217958, // Focusing Boots
     4177448932, // Focusing Wraps
+  ],
+  warlordsruin: [
+    557092665, // Dark Age Cloak
+    632989816, // Dark Age Gauntlets
+    806004493, // Dark Age Gloves
+    851401651, // Dark Age Overcoat
+    1476803535, // Dark Age Legbraces
+    1933599476, // Dark Age Visor
+    2426502022, // Dark Age Strides
+    2662590925, // Dark Age Mark
+    2771011469, // Dark Age Mask
+    2963224754, // Dark Age Sabatons
+    3056827626, // Dark Age Bond
+    3423574140, // Dark Age Grips
+    3683772388, // Dark Age Harness
+    3735435664, // Dark Age Chestrig
+    4090037601, // Dark Age Helm
   ],
   watcher: [
     436695703, // TM-Cogburn Custom Plate
