@@ -16,6 +16,9 @@ const missingSources: { [key: string]: number[] } = {
     3871537958, // Descending Echo Helm
     4050474396, // Descending Echo Mark
   ],
+  ada: [
+    2533990645, // Blast Furnace
+  ],
   adventure: [
     11686457, // Unethical Experiments Cloak
     11686458, // Orobas Vectura Cloak
@@ -35,6 +38,9 @@ const missingSources: { [key: string]: number[] } = {
     2913284400, // Mindbreaker Boots
     3706457514, // Gearhead Grips
     3706457515, // Songbreaker Grips
+  ],
+  blackarmory: [
+    2533990645, // Blast Furnace
   ],
   calus: [
     17280095, // Shadow's Strides
@@ -742,6 +748,7 @@ const missingSources: { [key: string]: number[] } = {
     2775298636, // Ankaa Seeker IV
     2815422368, // Phoenix Strife Type 0
     3089908066, // Wing Discipline
+    3098328572, // The Recluse
     3098458331, // Ankaa Seeker IV
     3119528729, // Wing Contender
     3140634552, // Swordflight 4.1
@@ -759,6 +766,7 @@ const missingSources: { [key: string]: number[] } = {
     3781722107, // Phoenix Strife Type 0
     3818803676, // Wing Discipline
     3839561204, // Wing Theorem
+    4043921923, // The Mountaintop
     4043980813, // Ankaa Seeker IV
     4123918087, // Wing Contender
     4134090375, // Ankaa Seeker IV
@@ -867,6 +875,7 @@ const missingSources: { [key: string]: number[] } = {
     2486041713, // Songbreaker Gauntlets
     2513313400, // Insigne Shade Gloves
     2530113265, // Bulletsmith's Ire Plate
+    2533990645, // Blast Furnace
     2537874394, // Boots of Sekris
     2552158692, // Equitis Shade Rig
     2589473259, // Bladesmith's Memory Strides
@@ -939,6 +948,9 @@ const missingSources: { [key: string]: number[] } = {
     4247935492, // Equitis Shade Cloak
     4251770244, // Boots of the Ace-Defiant
     4251770245, // Boots of the Emperor's Agent
+  ],
+  deepstonecrypt: [
+    1284643310, // Eyes of Tomorrow
   ],
   deluxe: [
     1952218242, // Sequence Flourish
@@ -1055,6 +1067,9 @@ const missingSources: { [key: string]: number[] } = {
     4115739810, // Ancient Apocalypse Plate
     4188366993, // Ancient Apocalypse Robes
     4255727106, // Ancient Apocalypse Hood
+  ],
+  dsc: [
+    1284643310, // Eyes of Tomorrow
   ],
   duality: [
     145651147, // Deep Explorer Vest
@@ -1332,12 +1347,14 @@ const missingSources: { [key: string]: number[] } = {
     167651268, // Crimson Passion
     269339124, // Dawning Hope
     599687980, // Purple Dawning Lanterns
+    639457414, // Necrosis
     691914261, // Silver Dawning Lanterns
     706111909, // Hood of Optimacy
     710937567, // Legs of Optimacy
     921357268, // Winterhart Plate
     989291706, // Cloak of Optimacy
     1051903593, // Dawning Bauble Shell
+    1126785375, // Great White
     1135293055, // Plate of Optimacy
     1290784012, // Winterhart Gauntlets
     1397284432, // Jasper Dawn Shell
@@ -1365,6 +1382,7 @@ const missingSources: { [key: string]: number[] } = {
     2806805902, // Mark of Optimacy
     2828252061, // Winterhart Helm
     2998296658, // Ice Ball Effects
+    3086696388, // Itsy-Bitsy Spider
     3161524490, // Rupture
     3168164098, // Yellow Dawning Lanterns
     3177119978, // Carmina Commencing
@@ -1938,6 +1956,12 @@ const missingSources: { [key: string]: number[] } = {
     4211068696, // Iron Truage Legs
     4248834293, // Iron Remembrance Vest
   ],
+  kf: [
+    3414225760, // Touch of Malice
+  ],
+  kingsfall: [
+    3414225760, // Touch of Malice
+  ],
   lastwish: [
     4968701, // Greaves of the Great Hunt
     16387641, // Mark of the Great Hunt
@@ -1963,6 +1987,7 @@ const missingSources: { [key: string]: number[] } = {
     1432728945, // Hood of the Great Hunt
     1444894250, // Strides of the Great Hunt
     1477271933, // Bond of the Great Hunt
+    1555775155, // One Thousand Voices
     1646520469, // Cloak of the Great Hunt
     1656835365, // Plate of the Great Hunt
     1851777734, // Apex Predator
@@ -2357,6 +2382,7 @@ const missingSources: { [key: string]: number[] } = {
     1432728945, // Hood of the Great Hunt
     1444894250, // Strides of the Great Hunt
     1477271933, // Bond of the Great Hunt
+    1555775155, // One Thousand Voices
     1646520469, // Cloak of the Great Hunt
     1656835365, // Plate of the Great Hunt
     1851777734, // Apex Predator
@@ -2475,6 +2501,7 @@ const missingSources: { [key: string]: number[] } = {
   nightfall: [
     40394833, // The Militia's Birthright
     47772649, // THE SWARM
+    205225492, // Hung Jury SR4
     555148853, // Wendigo GL3 (Adept)
     681067419, // Hung Jury SR4 (Adept)
     772231794, // Hung Jury SR4
@@ -2487,6 +2514,9 @@ const missingSources: { [key: string]: number[] } = {
     3836861464, // THE SWARM (Adept)
     4074251943, // Hung Jury SR4 (Adept)
     4281371574, // Hung Jury SR4
+  ],
+  nightmare: [
+    1429534243, // Conditional Finality
   ],
   nm: [
     25798127, // Sovereign Grips
@@ -2592,6 +2622,7 @@ const missingSources: { [key: string]: number[] } = {
     1242139836, // Plate of Nohr
     1256688732, // Mask of Feltroc
     1258342944, // Mask of the Great Hunt
+    1284643310, // Eyes of Tomorrow
     1296628624, // Insigne Shade Robes
     1314563129, // Cloak of the Great Hunt
     1339632007, // Turris Shade Helm
@@ -2599,12 +2630,14 @@ const missingSources: { [key: string]: number[] } = {
     1390282760, // Chassis of Rull
     1390282761, // Cuirass of the Emperor's Champion
     1413589586, // Mask of Rull
+    1429534243, // Conditional Finality
     1432728945, // Hood of the Great Hunt
     1434870610, // Shadow's Helm
     1444894250, // Strides of the Great Hunt
     1457195686, // Shadow's Gloves
     1477271933, // Bond of the Great Hunt
     1481751647, // Shadow's Mind
+    1555775155, // One Thousand Voices
     1624906371, // Gunsmith's Devotion Crown
     1646520469, // Cloak of the Great Hunt
     1653741426, // Grips of Exaltation
@@ -2645,6 +2678,7 @@ const missingSources: { [key: string]: number[] } = {
     2329031091, // Robes of Sekris
     2339720736, // Grips of Feltroc
     2369496221, // Plate of Nohr
+    2480074702, // Forbearance
     2513313400, // Insigne Shade Gloves
     2530113265, // Bulletsmith's Ire Plate
     2537874394, // Boots of Sekris
@@ -2698,6 +2732,7 @@ const missingSources: { [key: string]: number[] } = {
     3364682867, // Gauntlets of Nohr
     3388655311, // Tyranny of Heaven
     3395856235, // Insigne Shade Boots
+    3414225760, // Touch of Malice
     3416932282, // Turris Shade Mark
     3440648382, // Equitis Shade Cowl
     3445296383, // Robes of the Great Hunt
@@ -2721,6 +2756,7 @@ const missingSources: { [key: string]: number[] } = {
     3720446265, // Equitis Shade Cloak
     3759659288, // Shadow's Plate
     3763332443, // Shadow's Bond
+    3770478548, // Collective Obligation
     3824429433, // Boots of Ascendancy
     3831484112, // Mark of Nohr
     3838639757, // Mask of the Great Hunt
@@ -2753,6 +2789,15 @@ const missingSources: { [key: string]: number[] } = {
     681067419, // Hung Jury SR4 (Adept)
     1631448645, // Seraph Cipher
     4074251943, // Hung Jury SR4 (Adept)
+  ],
+  ron: [
+    1429534243, // Conditional Finality
+  ],
+  root: [
+    1429534243, // Conditional Finality
+  ],
+  rootofnightmares: [
+    1429534243, // Conditional Finality
   ],
   saint14: [
     3360014173, // The Lantern of Osiris
@@ -2802,6 +2847,7 @@ const missingSources: { [key: string]: number[] } = {
     3358687360, // Synaptic Spear
     3644991365, // Ascendant Scepter
     3864896927, // Nightmare Harvester
+    4012642691, // Riptide
   ],
   servitor: [
     3380377210, // Paradrome Cube
@@ -2903,6 +2949,7 @@ const missingSources: { [key: string]: number[] } = {
     2775298636, // Ankaa Seeker IV
     2815422368, // Phoenix Strife Type 0
     3089908066, // Wing Discipline
+    3098328572, // The Recluse
     3098458331, // Ankaa Seeker IV
     3119528729, // Wing Contender
     3140634552, // Swordflight 4.1
@@ -2920,6 +2967,7 @@ const missingSources: { [key: string]: number[] } = {
     3781722107, // Phoenix Strife Type 0
     3818803676, // Wing Discipline
     3839561204, // Wing Theorem
+    4043921923, // The Mountaintop
     4043980813, // Ankaa Seeker IV
     4123918087, // Wing Contender
     4134090375, // Ankaa Seeker IV
@@ -3220,6 +3268,18 @@ const missingSources: { [key: string]: number[] } = {
     3921970316, // Gauntlets of the Exile
     4100217958, // Focusing Boots
     4177448932, // Focusing Wraps
+  ],
+  votd: [
+    2480074702, // Forbearance
+    3770478548, // Collective Obligation
+  ],
+  vow: [
+    2480074702, // Forbearance
+    3770478548, // Collective Obligation
+  ],
+  vowofthedisciple: [
+    2480074702, // Forbearance
+    3770478548, // Collective Obligation
   ],
   warlordsruin: [
     557092665, // Dark Age Cloak

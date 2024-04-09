@@ -112,6 +112,7 @@ export const enum PlugCategoryHashes {
   Grips = 3962145884,
   Guards = 683359327,
   Hafts = 1697972157,
+  HolofoilSkinsShared = 1756031332,
   Hologram = 2272427828,
   HunterArcAspects = 185594100,
   HunterArcClassAbilities = 3956119552,
