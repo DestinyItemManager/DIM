@@ -45,6 +45,7 @@ export const emptyPlugHashes = new Set<number>([
   2111549310, // Empty Fragment Socket (shared.strand.fragments)
   770211541, // Empty Fragment Socket (shared.void.fragments)
   1372656116, // Empty Fragment Socket (shared.void.fragments)
+  1372656117, // Empty Fragment Socket (shared.void.fragments)
   1219897208, // Empty Frames Socket (crafting.recipes.empty_socket)
   366474809, // Empty Grips Socket (crafting.recipes.empty_socket)
   1779961758, // Empty Guards Socket (crafting.recipes.empty_socket)

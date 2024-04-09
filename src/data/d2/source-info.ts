@@ -1042,8 +1042,10 @@ const D2Sources: {
     itemHashes: [
       578459533, // Wendigo GL3
       654608616, // Revoker
+      1050806815, // The Recluse
       1584643826, // Hush
       1600633250, // 21% Delirium
+      3098328572, // The Recluse
       3354242550, // The Recluse
       3907337522, // Oxygen SR3
     ],
