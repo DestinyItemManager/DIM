@@ -1227,6 +1227,7 @@
     "StrafingSpeed": "Strafing",
     "CrouchingSpeed": "Crouching",
     "TotalHP": "Total HP",
+    "ShieldHP": "Shield HP",
     "DamageResistance": "PvE Damage Resist",
     "FlinchResistance": "Flinch Resist"
   },
