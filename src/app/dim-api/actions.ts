@@ -66,49 +66,56 @@ const installApiPermissionObserver = _.once(<D extends Dispatch>(dispatch: D) =>
  */
 const installObservers = _.once((dispatch: ThunkDispatch<RootState, undefined, AnyAction>) => {
   // Watch the state and write it out to IndexedDB
-  observe({
-    id: 'profile-observer',
-    getObserved: (state) => state.dimApi,
-    sideEffect: _.debounce(
-      ({ previous, current }: { previous: DimApiState | undefined; current: DimApiState }) => {
-        if (
-          // Avoid writing back what we just loaded from IDB
-          previous?.profileLoadedFromIndexedDb &&
-          // Check to make sure one of the fields we care about has changed
-          (current.settings !== previous.settings ||
-            current.profiles !== previous.profiles ||
-            current.updateQueue !== previous.updateQueue ||
-            current.itemHashTags !== previous.itemHashTags ||
-            current.searches !== previous.searches)
-        ) {
-          // Only save the difference between the current and default settings
-          const settingsToSave = subtractObject(current.settings, initialSettingsState) as Settings;
+  dispatch(
+    observe({
+      id: 'profile-observer',
+      getObserved: (state) => state.dimApi,
+      sideEffect: _.debounce(
+        ({ previous, current }: { previous: DimApiState | undefined; current: DimApiState }) => {
+          if (
+            // Avoid writing back what we just loaded from IDB
+            previous?.profileLoadedFromIndexedDb &&
+            // Check to make sure one of the fields we care about has changed
+            (current.settings !== previous.settings ||
+              current.profiles !== previous.profiles ||
+              current.updateQueue !== previous.updateQueue ||
+              current.itemHashTags !== previous.itemHashTags ||
+              current.searches !== previous.searches)
+          ) {
+            // Only save the difference between the current and default settings
+            const settingsToSave = subtractObject(
+              current.settings,
+              initialSettingsState,
+            ) as Settings;
 
-          const savedState: ProfileIndexedDBState = {
-            settings: settingsToSave,
-            profiles: current.profiles,
-            updateQueue: current.updateQueue,
-            itemHashTags: current.itemHashTags,
-            searches: current.searches,
-          };
-          infoLog('dim sync', 'Saving profile data to IDB');
-          set('dim-api-profile', savedState);
-        }
-      },
-      1000,
-    ),
-  });
+            const savedState: ProfileIndexedDBState = {
+              settings: settingsToSave,
+              profiles: current.profiles,
+              updateQueue: current.updateQueue,
+              itemHashTags: current.itemHashTags,
+              searches: current.searches,
+            };
+            infoLog('dim sync', 'Saving profile data to IDB');
+            set('dim-api-profile', savedState);
+          }
+        },
+        1000,
+      ),
+    }),
+  );
 
   // Watch the update queue and flush updates
-  observe({
-    id: 'queue-observer',
-    getObserved: (state) => state.dimApi.updateQueue,
-    sideEffect: _.debounce(({ current }: { current: ProfileUpdateWithRollback[] }) => {
-      if (current.length) {
-        dispatch(flushUpdates());
-      }
-    }, 1000),
-  });
+  dispatch(
+    observe({
+      id: 'queue-observer',
+      getObserved: (state) => state.dimApi.updateQueue,
+      sideEffect: _.debounce(({ current }: { current: ProfileUpdateWithRollback[] }) => {
+        if (current.length) {
+          dispatch(flushUpdates());
+        }
+      }, 1000),
+    }),
+  );
 
   // Every time data is refreshed, maybe load DIM API data too
   refresh$.subscribe(() => dispatch(loadDimApiData()));
