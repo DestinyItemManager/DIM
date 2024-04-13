@@ -736,6 +736,7 @@
     "EquippableDifferent2": "Il Potere massimo non è limitato alla regola del \"una sola esotica\" quando viene determinato il Potere dei tuoi drop/potenti/ricompense di punta.",
     "Failed": "Dotazione non applicata completamente",
     "Fashion": "Scegli lo stile",
+    "FashionOnly": "Solo Stile",
     "FillFromEquipped": "Riempi utilizzando gli equipaggiati",
     "FillFromInventory": "Riempi utilizzando i non equipaggiati",
     "FilteredItems": "Oggetti Filtrati",
@@ -792,6 +793,7 @@
       "UpgradeCostsDesc": "Alcune armature necessitano di potenziamento alla capacità energetica per alloggiare le Modifiche richieste. In totale, questi sono i costi di potenziamento:"
     },
     "Mods": "Modifiche",
+    "ModsOnly": "Solo Modifiche",
     "MoveItems": "Spostando oggetti",
     "NoSpace": "Non hai più spazio nel Deposito e nei personaggi.",
     "NoneMatch": "Nessuna delle tue dotazioni corrisponde ai filtri.",

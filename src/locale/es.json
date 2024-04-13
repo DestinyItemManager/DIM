@@ -736,6 +736,7 @@
     "EquippableDifferent2": "El Poder Máximo no está limitado por la regla del \"Exótico Único\" cuando se determina el Poder de tus recompensas de botines/poderosos/pináculo.",
     "Failed": "La equipación falló por completo al aplicar",
     "Fashion": "Elegir cosméticos",
+    "FashionOnly": "Solo-Moda",
     "FillFromEquipped": "Rellenar usando equipados",
     "FillFromInventory": "Rellenar usando no equipados",
     "FilteredItems": "Objetos filtrados",
@@ -792,6 +793,7 @@
       "UpgradeCostsDesc": "Algunas armaduras necesitan mejoras de capacidad de energía para encajar los modificadores solicitados. En total, estas mejoras cuestan:"
     },
     "Mods": "Modificadores",
+    "ModsOnly": "Solo-Mods",
     "MoveItems": "Moviendo objetos",
     "NoSpace": "Te has quedado sin espacio en tu depósito o cualquiera de tus personajes.",
     "NoneMatch": "Ninguna de tus equipaciones coincidió con los filtros.",

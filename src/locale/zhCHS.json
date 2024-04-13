@@ -736,6 +736,7 @@
     "EquippableDifferent2": "在计算你的掉落、强力、巅峰装备能量等级时，最大能量等级不受“一件异域装备”规则的限制。",
     "Failed": "配装未能完全应用",
     "Fashion": "选择外貌",
+    "FashionOnly": "仅限外观",
     "FillFromEquipped": "填入已装备物品",
     "FillFromInventory": "填入未装备物品",
     "FilteredItems": "已过滤的物品",
@@ -792,6 +793,7 @@
       "UpgradeCostsDesc": "有些护甲需要能量容量升级才能装下所选的模组。升级总共会花费："
     },
     "Mods": "模组",
+    "ModsOnly": "仅限模组",
     "MoveItems": "正在移动物品",
     "NoSpace": "你的保险库和其他角色均已满。",
     "NoneMatch": "没有与过滤器匹配的配装。",

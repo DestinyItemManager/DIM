@@ -736,6 +736,7 @@
     "EquippableDifferent2": "Das maximale Powerlevel ist nicht durch die Regel \"Ein exotischer Gegenstand\" begrenzt, wenn die Höhe deiner Drops, mächtigen und Spitzen-Belohnungen berechnet wird.",
     "Failed": "Loadout konnte nicht komplett angewendet werden",
     "Fashion": "Mode wählen",
+    "FashionOnly": "Nur Mode",
     "FillFromEquipped": "Mit Ausgerüstetem auffüllen",
     "FillFromInventory": "Mit Nicht-Ausgerüstetem auffüllen",
     "FilteredItems": "Gefilterte Gegenstände",
@@ -792,6 +793,7 @@
       "UpgradeCostsDesc": "Einige Rüstungen benötigen Energiekapazitätsverbesserungen, um die gewählten Mods verwenden zu können. Insgesamt kosten diese Verbesserungen:"
     },
     "Mods": "Mods",
+    "ModsOnly": "Nur Mods",
     "MoveItems": "Verschiebe Gegenstände",
     "NoSpace": "Du hast keinen Platz im Tresor und allen anderen Charakteren.",
     "NoneMatch": "Keiner deiner Ausrüstungen entsprach den Filtern.",

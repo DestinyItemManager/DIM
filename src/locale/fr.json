@@ -736,6 +736,7 @@
     "EquippableDifferent2": "La puissance maximale n'est pas limité par la règle de \"Un seul exotique\" lors du calcul de la puissance de vos récompenses puissantes et de prestige.",
     "Failed": "L'équipement n'a pas pu être appliqué complétement",
     "Fashion": "Choisir le style",
+    "FashionOnly": "Fashion-only",
     "FillFromEquipped": "Remplir en utilisant équipés",
     "FillFromInventory": "Remplir en utilisant non-équipés",
     "FilteredItems": "Objets filtrés",
@@ -792,6 +793,7 @@
       "UpgradeCostsDesc": "Certaines armures ont besoin d'une amélioration d'énergie pour pouvoir accepter les mods demandés. Au total, ces améliorations coûtent :"
     },
     "Mods": "Mods",
+    "ModsOnly": "Mods-only",
     "MoveItems": "Déplacement des objets",
     "NoSpace": "Vous n'avez plus d'espace libre dans le coffre et votre autres personnages.",
     "NoneMatch": "Aucun de vos équipements ne correspond aux filtres.",

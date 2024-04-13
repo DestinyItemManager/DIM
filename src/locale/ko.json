@@ -736,6 +736,7 @@
     "EquippableDifferent2": "최대 전투력은 획득하는 아이템, 강력한 장비, 최고조 보상의 전투력을 결정할 때 \"하나의 경이\" 규칙에 의해 제한되지 않습니다.",
     "Failed": "로드아웃이 완전히 적용되지 않음",
     "Fashion": "패션 선택",
+    "FashionOnly": "장식만",
     "FillFromEquipped": "장착한 아이템으로 채우기",
     "FillFromInventory": "장착하지 않은 아이템으로 채우기",
     "FilteredItems": "필터링된 아이템",
@@ -792,6 +793,7 @@
       "UpgradeCostsDesc": "요청한 개조 부품을 장착하기 위해서 일부 방어구의 에너지 수용량을 업그레이드해야 합니다. 총 업그레이드 비용:"
     },
     "Mods": "개조 부품",
+    "ModsOnly": "개조 부품만",
     "MoveItems": "아이템 이동 중",
     "NoSpace": "금고와 다른 캐릭터의 빈 공간이 없습니다.",
     "NoneMatch": "필터와 일치하는 로드아웃이 없습니다.",

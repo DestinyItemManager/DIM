@@ -736,6 +736,7 @@
     "EquippableDifferent2": "Maksymalna moc nie jest ograniczona przez regułę \"Jeden egzotyk\" podczas określania Mocy twoich upuszczonych przedmiotów, potężnych, oraz szczytowych nagród.",
     "Failed": "Wyposażenie nie zostało założone w całości",
     "Fashion": "Wybierz modę",
+    "FashionOnly": "Fashion-only",
     "FillFromEquipped": "Uzupełnij używając wyposażonych przedmiotów",
     "FillFromInventory": "Wypełnij przy użyciu niewyposażonych przedmiotów",
     "FilteredItems": "Filtrowane Przedmioty",
@@ -792,6 +793,7 @@
       "UpgradeCostsDesc": "Some armor needs energy capacity upgrades to fit the requested mods. In total, these upgrades cost:"
     },
     "Mods": "Modyfikacje",
+    "ModsOnly": "Mods-only",
     "MoveItems": "Przenoszenie przedmiotów",
     "NoSpace": "Nie masz miejsca w schowku ani na każdej innej postaci.",
     "NoneMatch": "Żadne z Twoich Uzbrojeń nie pasowało do filtrów.",
