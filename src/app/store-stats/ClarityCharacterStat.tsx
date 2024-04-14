@@ -89,10 +89,6 @@ export default function ClarityCharacterStat({
         if (scalar) {
           cooldowns = cooldowns.map((v) => scalar * v);
         }
-        const flatIncrease = o.FlatIncrease?.[abilityIndex];
-        if (flatIncrease) {
-          cooldowns = cooldowns.map((v) => v + flatIncrease);
-        }
         overrides.push(defs.InventoryItem.get(o.Hash));
       }
     }
@@ -137,12 +133,14 @@ export default function ClarityCharacterStat({
         unit={t('Stats.MetersPerSecond')}
       />,
     );
-  } else if ('TotalHP' in clarityStatData) {
+  } else if ('ShieldHP' in clarityStatData) {
     intrinsicCooldowns.push(
       <StatTableRow
-        key="TotalHP"
-        name={t('Stats.TotalHP')}
-        cooldowns={clarityStatData.TotalHP.Array}
+        key="ShieldHP"
+        // t('Stats.TotalHP')
+        // keep this around maybe?
+        name={t('Stats.ShieldHP')}
+        cooldowns={clarityStatData.ShieldHP.Array}
         tier={tier}
         unit={t('Stats.HP')}
       />,
