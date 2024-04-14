@@ -111,6 +111,7 @@ function makeVendorItem(
       vendorItemDef ? vendorItemDef.quantity : 1,
       // vendor items are wish list enabled!
       true,
+      saleItem?.itemValueVisibility,
     ),
   };
 

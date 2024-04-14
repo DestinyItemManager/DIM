@@ -28,6 +28,7 @@ import {
   DestinyItemTooltipNotification,
   DestinyObjectiveProgress,
   DestinyProfileResponse,
+  DestinyVendorSaleItemComponent,
   DictionaryComponentResponse,
   ItemBindStatus,
   ItemLocation,
@@ -142,6 +143,8 @@ export function makeFakeItem(
   itemInstanceId = '0',
   quantity = 1,
   allowWishList = false,
+  /** if available, this should be passed in from a vendor saleItem (DestinyVendorSaleItemComponent) */
+  itemValueVisibility?: DestinyVendorSaleItemComponent['itemValueVisibility'],
 ): DimItem | undefined {
   const item = makeItem(
     context,
@@ -153,7 +156,7 @@ export function makeFakeItem(
       location: ItemLocation.Vendor,
       bucketHash: 0,
       transferStatus: TransferStatuses.NotTransferrable,
-      itemValueVisibility: [],
+      itemValueVisibility,
       lockable: false,
       state: ItemState.None,
       isWrapper: false,
@@ -781,7 +784,12 @@ function buildPursuitInfo(
   item: DestinyItemComponent,
   itemDef: DestinyInventoryItemDefinition,
 ) {
-  const rewards = itemDef.value ? itemDef.value.itemValue.filter((v) => v.itemHash) : [];
+  const rewards = itemDef.value
+    ? itemDef.value.itemValue.filter(
+        (v, i) => v.itemHash && (item.itemValueVisibility?.[i] ?? true),
+      )
+    : [];
+
   const questLine = getQuestLineInfo(itemDef);
   const expiration = getExpirationInfo(item, itemDef);
 
