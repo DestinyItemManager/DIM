@@ -780,6 +780,13 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  intothelight: {
+    itemHashes: [],
+    sourceHashes: [
+      2952071500, // Source: Into the Light
+    ],
+    searchString: [],
+  },
   io: {
     itemHashes: [],
     sourceHashes: [

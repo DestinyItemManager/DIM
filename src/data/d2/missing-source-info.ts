@@ -1732,6 +1732,15 @@ const missingSources: { [key: string]: number[] } = {
     4225579453, // Noble Constant Type 2
     4285708584, // Ego Talon Bond
   ],
+  intothelight: [
+    211732170, // Hammerhead
+    243425374, // Falling Guillotine
+    570866107, // Succession
+    2228325504, // Edge Transit
+    2499720827, // Midnight Coup
+    3757612024, // Luna's Howl
+    3851176026, // Elsie's Rifle
+  ],
   io: [
     886128573, // Mindbreaker Boots
     2317191363, // Mindbreaker Boots
