@@ -107,7 +107,7 @@ export default function EditInGameLoadout({
             colorIcon,
             icon,
             index: slot,
-            characterId: characterId!,
+            characterId,
             items: [],
             id: `ingame-${characterId}-${slot}`,
           }),
