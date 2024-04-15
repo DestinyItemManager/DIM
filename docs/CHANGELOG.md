@@ -1,5 +1,7 @@
 ## Next
 
+## 8.16.0 <span class="changelog-date">(2024-04-14)</span>
+
 * Loadouts with only armor mods, or only fashion (shaders & ornaments), now display a symbol in the equip dropdown, and can be filtered from among other loadouts.
 * BRAVE bounties now display correct rewards instead of all possible rewards.
 
