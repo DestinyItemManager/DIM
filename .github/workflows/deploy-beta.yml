@@ -1,6 +1,7 @@
 name: Deploy Beta
 
 on:
+  workflow_call:
   workflow_dispatch:
   push:
     branches:
