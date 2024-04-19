@@ -85,12 +85,12 @@ jobs:
         run: pnpm lintcached
 
       - name: Save ESLint Report JSON (Non-Forked)
-        if: github.event.pull_request.head.repo.full_name == github.repository
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository || github.actor != 'dependabot[bot]' }}
         run: pnpm lint-report:cached
         continue-on-error: true
 
       - name: Annotate ESLint Results
-        if: github.event.pull_request.head.repo.full_name == github.repository
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
         uses: ataylorme/eslint-annotate-action@v2
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
