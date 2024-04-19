@@ -225,6 +225,15 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  coil: {
+    itemHashes: [],
+    sourceHashes: [
+      561126969, // Source: "Starcrossed" Mission
+      1664308183, // Source: Season of the Wish Activities
+      4278841194, // Source: Season of the Wish Triumphs
+    ],
+    searchString: [],
+  },
   compass: {
     itemHashes: [],
     sourceHashes: [
@@ -817,6 +826,7 @@ const D2Sources: {
     ],
     sourceHashes: [
       1388323447, // Source: Exotic Mission "The Whisper"
+      1902517582, // Source: Where's Archie?
       2068312112, // Source: Exotic Mission "Zero Hour"
       2952071500, // Source: Into the Light
     ],
@@ -874,6 +884,7 @@ const D2Sources: {
     ],
     sourceHashes: [
       1388323447, // Source: Exotic Mission "The Whisper"
+      1902517582, // Source: Where's Archie?
       2068312112, // Source: Exotic Mission "Zero Hour"
       2952071500, // Source: Into the Light
     ],
@@ -1273,6 +1284,15 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  rivenslair: {
+    itemHashes: [],
+    sourceHashes: [
+      561126969, // Source: "Starcrossed" Mission
+      1664308183, // Source: Season of the Wish Activities
+      4278841194, // Source: Season of the Wish Triumphs
+    ],
+    searchString: [],
+  },
   ron: {
     itemHashes: [],
     sourceHashes: [
@@ -1436,8 +1456,10 @@ const D2Sources: {
       813075729, // Source: Season of the Deep Vendor Reputation Reward
       927967626, // Source: Season of the Deep
       2257836668, // Source: Season of the Deep Fishing
+      2671038131, // Season of the Deep - WEAPONS
       2755511565, // Source: Season of the Deep Triumph
       2811716495, // Source: Season of the Deep Activities
+      2959452483, // Season of the Deep - WEAPONS
     ],
     searchString: [],
   },
