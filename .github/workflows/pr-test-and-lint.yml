@@ -81,11 +81,11 @@ jobs:
         run: pnpm lint:stylelint
 
       - name: ESLint (Forked)
-        if: github.event.pull_request.head.repo.full_name != github.repository
+        if: ${{ github.event.pull_request.head.repo.full_name != github.repository || github.actor == 'dependabot[bot]' }}
         run: pnpm lintcached
 
       - name: Save ESLint Report JSON (Non-Forked)
-        if: ${{ github.event.pull_request.head.repo.full_name == github.repository || github.actor != 'dependabot[bot]' }}
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
         run: pnpm lint-report:cached
         continue-on-error: true
 
