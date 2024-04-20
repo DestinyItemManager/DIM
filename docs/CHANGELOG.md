@@ -1,5 +1,8 @@
 ## Next
 
+* Fixed max stat constraints sometimes being not shown in Loadout parameters.
+* `is:shiny` filter to find limited-edition BRAVE weapons.
+
 ## 8.16.0 <span class="changelog-date">(2024-04-14)</span>
 
 * Loadouts with only armor mods, or only fashion (shaders & ornaments), now display a symbol in the equip dropdown, and can be filtered from among other loadouts.
