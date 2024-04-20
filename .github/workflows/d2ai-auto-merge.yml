@@ -16,4 +16,5 @@ jobs:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
   deploy_beta:
+    needs: dependabot
     uses: DestinyItemManager/DIM/.github/workflows/deploy-beta.yml@master
