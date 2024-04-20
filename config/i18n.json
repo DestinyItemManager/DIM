@@ -294,6 +294,7 @@
     "RarityTier": "Shows items based on their rarity tier.",
     "Reforgeable": "Shows items that can be reforged at the Gunsmith.",
     "Release": "Available from release <i>{{release}}</i>",
+    "Shiny": "Shows BRAVE weapons with a limited-edition ornament.",
     "Weapon": "Shows items that are weapons.",
     "Armor": "Shows items that are armor.",
     "Cosmetic": "Shows items that are flair or cosmetic.",
