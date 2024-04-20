@@ -1207,6 +1207,7 @@
     "PowerModifier": "시즌 경험치 획득으로 주어진 전투력",
     "Prestige": "명성 레벨: {{level}}\n5개의 빛의 티끌까지 {{exp}}xp",
     "Quality": "능력치 품질",
+    "ShieldHP": "보호막 체력",
     "StrafingSpeed": "횡이동",
     "Strength": "힘",
     "Sunset": "만료",

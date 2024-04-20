@@ -1207,6 +1207,7 @@
     "PowerModifier": "Puissance accordée par la progression d'experience saisonnière",
     "Prestige": "Niveau de lumière: {{level}}\n{{exp}}xp jusqu'à avoir 5 particule de lumière.",
     "Quality": "Qualité des stats",
+    "ShieldHP": "Shield HP",
     "StrafingSpeed": "Déplacement latéral",
     "Strength": "Force",
     "Sunset": "Puissance maximale",
