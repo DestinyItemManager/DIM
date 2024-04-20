@@ -83,6 +83,18 @@ const socketFilters: FilterDefinition[] = [
         matchesCuratedRoll(d2Definitions!, item),
   },
   {
+    keywords: 'shiny',
+    description: tl('Filter.Shiny'),
+    destinyVersion: 2,
+    filter: () => (item) =>
+      item.sockets?.allSockets.some(
+        (s) =>
+          s.plugOptions.some(
+            (s) => s.plugDef.plug.plugCategoryIdentifier === 'holofoil_skins_shared',
+          ), //
+      ),
+  },
+  {
     keywords: 'extraperk',
     description: tl('Filter.ExtraPerk'),
     destinyVersion: 2,
