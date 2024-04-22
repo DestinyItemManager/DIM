@@ -41,7 +41,7 @@ jobs:
         env:
           CLEAN_MANIFEST_CACHE: true
 
-      - uses: actions/upload-artifact@v3  # upload test results
+      - uses: actions/upload-artifact@v4  # upload test results
         if: success() || failure()        # run this step even if previous step failed
         with:
           name: test-results
@@ -91,7 +91,7 @@ jobs:
 
       - name: Annotate ESLint Results
         if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
-        uses: ataylorme/eslint-annotate-action@v2
+        uses: ataylorme/eslint-annotate-action@v3
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           report-json: "eslint.results.json"
