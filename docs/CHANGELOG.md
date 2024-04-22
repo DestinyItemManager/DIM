@@ -1,5 +1,7 @@
 ## Next
 
+## 8.17.0 <span class="changelog-date">(2024-04-21)</span>
+
 * Fixed max stat constraints sometimes being not shown in Loadout parameters.
 * `is:shiny` filter to find limited-edition BRAVE weapons.
 
