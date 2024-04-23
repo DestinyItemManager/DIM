@@ -981,6 +981,8 @@
       "Crafted": "Shaped Date",
       "CustomTotal": "Custom Total",
       "Damage": "Damage",
+      "DeepsightHarmonizable": "Deepsight Harmonizable",
+      "DeepsightLevel": "Deepsight Level",
       "Energy": "Energy",
       "Event": "Event",
       "Icon": "Icon",
@@ -1014,6 +1016,7 @@
     },
     "EnabledColumns": "Enabled Columns",
     "Lock": "Lock",
+    "No": "No",
     "NoItems": "No items selected",
     "NoMobile": "Turn your phone sideways to use the Organizer.",
     "Note": "Set Notes",
@@ -1030,7 +1033,8 @@
       "Recoil": "Recoil",
       "Reload": "Reload"
     },
-    "Unlock": "Unlock"
+    "Unlock": "Unlock",
+    "Yes": "Yes"
   },
   "PostmasterWarningBanner": {
     "PostmasterAlmostFull": "The postmaster is almost full! ({{number}}/{{postmasterSize}})",
