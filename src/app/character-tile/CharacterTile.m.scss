@@ -11,11 +11,17 @@
   display: grid;
   grid-template-areas:
     'emblem class power'
-    'emblem bottom maxTotalPower';
+    'emblem bottom bottom';
   grid-template-columns: 36px 1fr min-content;
   grid-template-rows: min-content 1fr;
   gap: 0 6px;
   padding: 0 6px;
+
+  @include phone-portrait {
+    grid-template-areas:
+      'emblem class power'
+      'emblem bottom maxTotalPower';
+  }
 
   // Use the emblem as a background
   background-size: $emblem-width $emblem-height;
@@ -70,8 +76,9 @@
 .bottom {
   composes: smallText;
   grid-area: bottom;
-  text-overflow: ellipsis;
-  overflow: hidden;
+  min-width: 0; // prevents expanding beyond the grid cell with long contents
+  display: flex;
+  align-items: stretch;
 }
 
 // The emblem is only shown for D1 and the vault - D2 bakes it into the
@@ -95,6 +102,7 @@
   text-overflow: ellipsis;
   overflow: hidden;
   color: white;
+  min-width: 0; // prevents expanding beyond the grid cell with long contents
 
   .vault & {
     margin-top: 0;
@@ -140,11 +148,20 @@
 
 // The currently equipped title (from a seal)
 .title {
+  display: flex;
+  flex-direction: row;
   font-style: italic;
   color: $sealtitle;
   text-shadow:
     1px 1px 1px rgba(0, 0, 0, 0.5),
     0 0 10px rgba(0, 0, 0, 0.5);
+  width: 100%;
+
+  > *:first-child {
+    flex-shrink: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .gildedCurrentSeason {
