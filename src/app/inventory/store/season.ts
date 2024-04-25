@@ -14,8 +14,6 @@ import { DimItem } from '../item-types';
 /** The Destiny season (D2) that a specific item belongs to. */
 // TODO: load this lazily with import(). Requires some rework of the filters code.
 
-const SourceToD2Season: Record<number, number> = D2SeasonFromSource.sources;
-
 export function getSeason(
   item: DimItem | DestinyInventoryItemDefinition,
   defs?: D2ManifestDefinitions,
@@ -62,14 +60,17 @@ function getSeasonFromOverlayAndSource(
   source: number | undefined,
   hash: number,
 ) {
-  if (source && SourceToD2Season[source] && !overlay) {
-    return SourceToD2Season[source];
+  if (overlay && D2SeasonFromOverlay[overlay]) {
+    return D2SeasonFromOverlay[overlay]!;
   }
 
-  return overlay
-    ? Number((D2SeasonFromOverlay as Record<string, number>)[overlay]) ||
-        (D2SeasonBackup as Record<number, number>)[hash]
-    : (D2Season as Record<number, number>)[hash] || D2CalculatedSeason;
+  if (source && D2SeasonFromSource[source]) {
+    return D2SeasonFromSource[source]!;
+  }
+
+  // D2Season and D2SeasonBackup have the same structure, but some of the hashes
+  // in D2SeasonBackup are not in D2Season.
+  return D2Season[hash] || D2SeasonBackup[hash] || D2CalculatedSeason;
 }
 
 /** The Destiny event (D2) that a specific item belongs to. */
