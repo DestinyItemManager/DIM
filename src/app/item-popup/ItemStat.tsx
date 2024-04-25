@@ -1,4 +1,4 @@
-import { customStatsSelector } from 'app/dim-api/selectors';
+import { customStatsSelector, settingSelector } from 'app/dim-api/selectors';
 import AnimatedNumber from 'app/dim-ui/AnimatedNumber';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { CustomStatWeightsFromHash } from 'app/dim-ui/CustomStatWeights';
@@ -39,6 +39,7 @@ const statLabels: LookupTable<StatHashes, I18nKey> = {
  * A single stat line.
  */
 export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem }) {
+  const showQuality = useSelector(settingSelector('itemQuality'));
   const customStatsList = useSelector(customStatsSelector);
   const customStatHashes = customStatsList.map((c) => c.statHash);
   const armor2MasterworkSockets =
@@ -122,7 +123,8 @@ export default function ItemStat({ stat, item }: { stat: DimStat; item?: DimItem
         </div>
       )}
 
-      {item &&
+      {showQuality &&
+        item &&
         isD1Stat(item, stat) &&
         stat.qualityPercentage &&
         stat.qualityPercentage.min !== 0 && (

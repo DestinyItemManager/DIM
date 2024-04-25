@@ -71,11 +71,8 @@
 }
 
 .quality {
-  display: none;
+  display: inline;
   margin-left: 4px;
-  :global(.itemQuality) & {
-    display: inline;
-  }
 }
 
 // Colors for the stat bars
