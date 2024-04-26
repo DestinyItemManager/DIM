@@ -107,10 +107,8 @@ export function getEvent(item: DimItem): D2EventIndex {
   // hiddenOverlay has precedence for event
   const overlay = item.hiddenOverlay || item.iconOverlay;
   const D2EventBackup = item.source
-    ? D2SourcesToEvent[item.source] || (D2Events as Record<number, D2EventIndex>)[item.hash]
-    : (D2Events as Record<number, D2EventIndex>)[item.hash];
+    ? D2SourcesToEvent[item.source] || D2Events[item.hash]
+    : D2Events[item.hash];
 
-  return overlay
-    ? (D2EventFromOverlay as Record<string, D2EventIndex>)[overlay] || D2EventBackup
-    : D2EventBackup;
+  return overlay ? D2EventFromOverlay[overlay] || D2EventBackup : D2EventBackup;
 }

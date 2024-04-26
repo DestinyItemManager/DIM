@@ -18,3 +18,8 @@ declare module 'data/d2/watermark-to-season.json' {
   const x: { readonly [watermark: string]: number | undefined };
   export default x;
 }
+
+declare module 'data/d2/events.json' {
+  const x: { readonly [itemHash: number]: number | undefined };
+  export default x;
+}
