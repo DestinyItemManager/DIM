@@ -61,7 +61,7 @@ import {
 import { LookupTable } from 'app/utils/util-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import clsx from 'clsx';
-import { D2EventInfo } from 'data/d2/d2-event-info';
+import { D2EventInfo } from 'data/d2/d2-event-info-v2';
 import { PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import shapedOverlay from 'images/shapedOverlay.png';
 import _ from 'lodash';

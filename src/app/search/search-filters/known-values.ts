@@ -4,9 +4,9 @@ import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { getEvent } from 'app/inventory/store/season';
 import { getItemDamageShortName } from 'app/utils/item-utils';
-import { LookupTable, StringLookup } from 'app/utils/util-types';
+import { LookupTable } from 'app/utils/util-types';
 import { DestinyAmmunitionType, DestinyClass, DestinyRecordState } from 'bungie-api-ts/destiny2';
-import { D2EventEnum, D2EventPredicateLookup } from 'data/d2/d2-event-info';
+import { D2EventInfo } from 'data/d2/d2-event-info-v2';
 import focusingOutputs from 'data/d2/focusing-item-outputs.json';
 import { BreakerTypeHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import missingSources from 'data/d2/missing-source-info';
@@ -22,7 +22,12 @@ import {
 import { FilterDefinition } from '../filter-types';
 import { cosmeticTypes, damageTypeNames } from '../search-filter-values';
 
-const d2EventPredicates: StringLookup<D2EventEnum> = D2EventPredicateLookup;
+const D2EventPredicateLookup = Object.fromEntries(
+  Object.entries(D2EventInfo).map(([index, event]) => [
+    event.shortname,
+    Number(index) as D2EventIndex,
+  ]),
+);
 
 // filters relying on curated known values (class names, rarities, elements)
 
@@ -252,8 +257,8 @@ const knownValuesFilters: FilterDefinition[] = [
           (item.source && sourceInfo.sourceHashes.includes(item.source)) ||
           sourceInfo.itemHashes.includes(item.hash) ||
           missingSource?.includes(item.hash);
-      } else if (d2EventPredicates[filterValue]) {
-        const predicate = d2EventPredicates[filterValue];
+      } else if (D2EventPredicateLookup[filterValue]) {
+        const predicate = D2EventPredicateLookup[filterValue];
         return (item: DimItem) => getEvent(item) === predicate;
       } else {
         throw new Error(`Unknown item source ${filterValue}`);

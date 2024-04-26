@@ -1,6 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import { D2EventIndex, D2SourcesToEvent } from 'data/d2/d2-event-info';
+import { D2EventInfo } from 'data/d2/d2-event-info-v2';
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
 import D2Events from 'data/d2/events.json';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
@@ -13,6 +13,12 @@ import { DimItem } from '../item-types';
 
 /** The Destiny season (D2) that a specific item belongs to. */
 // TODO: load this lazily with import(). Requires some rework of the filters code.
+
+const D2SourcesToEvent = Object.fromEntries(
+  Object.entries(D2EventInfo).flatMap(([index, event]) =>
+    event.sources.map((source) => [source, Number(index) as D2EventIndex]),
+  ),
+);
 
 export function getSeason(
   item: DimItem | DestinyInventoryItemDefinition,
@@ -74,15 +80,16 @@ function getSeasonFromOverlayAndSource(
 }
 
 /** The Destiny event (D2) that a specific item belongs to. */
-export function getEvent(item: DimItem): D2EventIndex {
+export function getEvent(item: DimItem): D2EventIndex | undefined {
   // hiddenOverlay has precedence for event
   const overlay = item.hiddenOverlay || item.iconOverlay;
-  const D2EventBackup = item.source
-    ? (D2SourcesToEvent as Record<number, D2EventIndex>)[item.source] ||
-      (D2Events as Record<number, D2EventIndex>)[item.hash]
-    : (D2Events as Record<number, D2EventIndex>)[item.hash];
+  if (overlay && D2EventFromOverlay[overlay]) {
+    return D2EventFromOverlay[overlay]!;
+  }
 
-  return overlay
-    ? (D2EventFromOverlay as Record<string, D2EventIndex>)[overlay] || D2EventBackup
-    : D2EventBackup;
+  if (item.source && D2SourcesToEvent[item.source]) {
+    return D2SourcesToEvent[item.source];
+  }
+
+  return D2Events[item.hash];
 }
