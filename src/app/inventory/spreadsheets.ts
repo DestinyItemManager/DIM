@@ -18,7 +18,7 @@ import {
 } from 'app/utils/item-utils';
 import { getDisplayedItemSockets, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { D2EventInfo } from 'data/d2/d2-event-info';
+import { D2EventInfo } from 'data/d2/d2-event-info-v2';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import D2MissingSources from 'data/d2/missing-source-info';
 import D2Sources from 'data/d2/source-info';

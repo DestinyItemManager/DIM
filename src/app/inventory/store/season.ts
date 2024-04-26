@@ -1,6 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import { D2EventEnum, D2EventInfo } from 'data/d2/d2-event-info-v2';
+import { D2EventInfo } from 'data/d2/d2-event-info-v2';
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
 import D2Events from 'data/d2/events.json';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
@@ -14,34 +14,11 @@ import { DimItem } from '../item-types';
 /** The Destiny season (D2) that a specific item belongs to. */
 // TODO: load this lazily with import(). Requires some rework of the filters code.
 
-export type D2EventIndex = keyof typeof D2EventInfo;
-
-const D2SourcesToEvent: Record<number, D2EventIndex> = {};
-
-for (const [, eventAttrs] of Object.entries(D2EventInfo)) {
-  for (const source of eventAttrs.sources) {
-    switch (eventAttrs.name.replace('The ', '').toUpperCase().split(' ').join('_')) {
-      case 'DAWNING':
-        D2SourcesToEvent[source] = D2EventEnum.DAWNING;
-        break;
-      case 'CRIMSON_DAYS':
-        D2SourcesToEvent[source] = D2EventEnum.CRIMSON_DAYS;
-        break;
-      case 'SOLSTICE_OF_HEROES':
-        D2SourcesToEvent[source] = D2EventEnum.SOLSTICE_OF_HEROES;
-        break;
-      case 'FESTIVAL_OF_THE_LOST':
-        D2SourcesToEvent[source] = D2EventEnum.FESTIVAL_OF_THE_LOST;
-        break;
-      case 'REVELRY':
-        D2SourcesToEvent[source] = D2EventEnum.REVELRY;
-        break;
-      case 'GUARDIAN_GAMES':
-        D2SourcesToEvent[source] = D2EventEnum.GUARDIAN_GAMES;
-        break;
-    }
-  }
-}
+const D2SourcesToEvent = Object.fromEntries(
+  Object.entries(D2EventInfo).flatMap(([index, event]) =>
+    event.sources.map((source) => [source, Number(index) as D2EventIndex]),
+  ),
+);
 
 export function getSeason(
   item: DimItem | DestinyInventoryItemDefinition,
@@ -103,12 +80,16 @@ function getSeasonFromOverlayAndSource(
 }
 
 /** The Destiny event (D2) that a specific item belongs to. */
-export function getEvent(item: DimItem): D2EventIndex {
+export function getEvent(item: DimItem): D2EventIndex | undefined {
   // hiddenOverlay has precedence for event
   const overlay = item.hiddenOverlay || item.iconOverlay;
-  const D2EventBackup = item.source
-    ? D2SourcesToEvent[item.source] || D2Events[item.hash]
-    : D2Events[item.hash];
+  if (overlay && D2EventFromOverlay[overlay]) {
+    return D2EventFromOverlay[overlay]!;
+  }
 
-  return overlay ? D2EventFromOverlay[overlay] || D2EventBackup : D2EventBackup;
+  if (item.source && D2SourcesToEvent[item.source]) {
+    return D2SourcesToEvent[item.source];
+  }
+
+  return D2Events[item.hash];
 }
