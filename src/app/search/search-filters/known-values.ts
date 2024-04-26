@@ -6,7 +6,7 @@ import { getEvent } from 'app/inventory/store/season';
 import { getItemDamageShortName } from 'app/utils/item-utils';
 import { LookupTable, StringLookup } from 'app/utils/util-types';
 import { DestinyAmmunitionType, DestinyClass, DestinyRecordState } from 'bungie-api-ts/destiny2';
-import { D2EventEnum, D2EventPredicateLookup } from 'data/d2/d2-event-info';
+import { D2EventEnum } from 'data/d2/d2-event-info-v2';
 import focusingOutputs from 'data/d2/focusing-item-outputs.json';
 import { BreakerTypeHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import missingSources from 'data/d2/missing-source-info';
@@ -21,6 +21,15 @@ import {
 } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
 import { cosmeticTypes, damageTypeNames } from '../search-filter-values';
+
+const D2EventPredicateLookup = {
+  dawning: D2EventEnum.DAWNING,
+  crimsondays: D2EventEnum.CRIMSON_DAYS,
+  solstice: D2EventEnum.SOLSTICE_OF_HEROES,
+  fotl: D2EventEnum.FESTIVAL_OF_THE_LOST,
+  revelry: D2EventEnum.REVELRY,
+  games: D2EventEnum.GUARDIAN_GAMES,
+};
 
 const d2EventPredicates: StringLookup<D2EventEnum> = D2EventPredicateLookup;
 
