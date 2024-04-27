@@ -71,7 +71,7 @@ function Title({ titleInfo }: { titleInfo: DimTitle }) {
     <span
       className={clsx(styles.title, { [styles.gildedCurrentSeason]: isGildedForCurrentSeason })}
     >
-      {title}
+      <span>{title}</span>
       {gildedNum > 0 && (
         <>
           <span className={styles.gildedIcon}>{gildedIcon}</span>
