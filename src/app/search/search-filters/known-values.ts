@@ -9,9 +9,9 @@ import { DestinyAmmunitionType, DestinyClass, DestinyRecordState } from 'bungie-
 import { D2EventInfo } from 'data/d2/d2-event-info-v2';
 import focusingOutputs from 'data/d2/focusing-item-outputs.json';
 import { BreakerTypeHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
-import missingSources from 'data/d2/missing-source-info';
+import missingSources from 'data/d2/missing-source-info-v2';
 import powerfulSources from 'data/d2/powerful-rewards.json';
-import D2Sources from 'data/d2/source-info';
+import D2Sources from 'data/d2/source-info-v2';
 import { D1ItemCategoryHashes } from '../d1-known-values';
 import {
   D2ItemCategoryHashesByName,
@@ -28,6 +28,14 @@ const D2EventPredicateLookup = Object.fromEntries(
     Number(index) as D2EventIndex,
   ]),
 );
+
+for (const [, sourceAttrs] of Object.entries(D2Sources)) {
+  if (sourceAttrs.aliases) {
+    for (const alias of sourceAttrs.aliases) {
+      D2Sources[alias] = sourceAttrs;
+    }
+  }
+}
 
 // filters relying on curated known values (class names, rarities, elements)
 
@@ -254,8 +262,8 @@ const knownValuesFilters: FilterDefinition[] = [
         const sourceInfo = D2Sources[filterValue];
         const missingSource = missingSources[filterValue];
         return (item) =>
-          (item.source && sourceInfo.sourceHashes.includes(item.source)) ||
-          sourceInfo.itemHashes.includes(item.hash) ||
+          (item.source && sourceInfo.sourceHashes?.includes(item.source)) ||
+          sourceInfo.itemHashes?.includes(item.hash) ||
           missingSource?.includes(item.hash);
       } else if (D2EventPredicateLookup[filterValue]) {
         const predicate = D2EventPredicateLookup[filterValue];
