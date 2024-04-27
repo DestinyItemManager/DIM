@@ -539,17 +539,18 @@ export function getColumns(
     destinyVersion === 2 &&
       isWeapon &&
       c({
-        id: 'deepsightLevel',
-        header: t('Organizer.Columns.DeepsightLevel'),
+        id: 'level',
+        header: t('Organizer.Columns.Level'),
         value: (item) => item.craftedInfo?.level,
         defaultSort: SortDirection.DESC,
       }),
     destinyVersion === 2 &&
       isWeapon &&
       c({
-        id: 'deepsightHarmonizable',
-        header: t('Organizer.Columns.DeepsightHarmonizable'),
-        value: (item) => (isHarmonizable(item) ? t('Organizer.Yes') : t('Organizer.No')),
+        id: 'harmonizable',
+        header: t('Organizer.Columns.Harmonizable'),
+        value: (item) => isHarmonizable(item),
+        cell: (value) => (value ? <AppIcon icon={faCheck} /> : undefined),
       }),
     destinyVersion === 2 &&
       isWeapon &&

@@ -1029,8 +1029,8 @@
       "CustomTotal": "Custom Total",
       "MasterworkTier": "Masterwork Tier",
       "MasterworkStat": "Masterwork Stat",
-      "DeepsightLevel": "Deepsight Level",
-      "DeepsightHarmonizable": "Deepsight Harmonizable",
+      "Level": "Level",
+      "Harmonizable": "Harmonizable",
       "KillTracker": "Kill Tracker",
       "Loadouts": "Loadouts",
       "Notes": "Notes",
@@ -1046,9 +1046,7 @@
       "Recoil": "Recoil",
       "Power": "Power",
       "Airborne": "Airborne"
-    },
-    "Yes": "Yes",
-    "No": "No"
+    }
   },
   "Progress": {
     "Bounties": "Bounties",
