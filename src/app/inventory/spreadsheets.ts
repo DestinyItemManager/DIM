@@ -46,6 +46,14 @@ function getClass(type: DestinyClass) {
   }
 }
 
+for (const [, sourceAttrs] of Object.entries(D2Sources)) {
+  if (sourceAttrs.aliases) {
+    for (const alias of sourceAttrs.aliases) {
+      D2Sources[alias] = sourceAttrs;
+    }
+  }
+}
+
 const D1_FILTERED_NODE_HASHES = [
   1920788875, // Ascend
   1270552711, // Infuse
