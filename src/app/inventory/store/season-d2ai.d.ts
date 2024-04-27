@@ -1,4 +1,4 @@
-declare module 'data/d2/season-to-source.json' {
+declare module 'data/d2/source-to-season-v2.json' {
   const x: { readonly [season: number]: number | undefined };
   export default x;
 }

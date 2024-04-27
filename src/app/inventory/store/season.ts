@@ -4,9 +4,8 @@ import { D2EventInfo } from 'data/d2/d2-event-info-v2';
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
 import D2Events from 'data/d2/events.json';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
-import D2SeasonFromSource from 'data/d2/season-to-source.json';
 import D2Season from 'data/d2/seasons.json';
-import D2SeasonBackup from 'data/d2/seasons_backup.json';
+import D2SeasonFromSource from 'data/d2/source-to-season-v2.json';
 import D2EventFromOverlay from 'data/d2/watermark-to-event.json';
 import D2SeasonFromOverlay from 'data/d2/watermark-to-season.json';
 import { DimItem } from '../item-types';
@@ -74,9 +73,7 @@ function getSeasonFromOverlayAndSource(
     return D2SeasonFromSource[source]!;
   }
 
-  // D2Season and D2SeasonBackup have the same structure, but some of the hashes
-  // in D2SeasonBackup are not in D2Season.
-  return D2Season[hash] || D2SeasonBackup[hash] || D2CalculatedSeason;
+  return D2Season[hash] || D2CalculatedSeason;
 }
 
 /** The Destiny event (D2) that a specific item belongs to. */
