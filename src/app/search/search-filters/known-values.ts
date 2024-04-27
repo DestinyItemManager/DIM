@@ -29,11 +29,10 @@ const D2EventPredicateLookup = Object.fromEntries(
   ]),
 );
 
-const D2SourcesAliasLookup: Record<string, string> = {};
-for (const [source, sourceAttrs] of Object.entries(D2Sources)) {
+for (const [, sourceAttrs] of Object.entries(D2Sources)) {
   if (sourceAttrs.aliases) {
     for (const alias of sourceAttrs.aliases) {
-      D2SourcesAliasLookup[alias] = source;
+      D2Sources[alias] = sourceAttrs;
     }
   }
 }
@@ -256,17 +255,11 @@ const knownValuesFilters: FilterDefinition[] = [
     keywords: 'source',
     description: tl('Filter.Event'), // or 'Filter.Source'
     format: 'query',
-    suggestions: [
-      ...Object.keys(D2Sources),
-      ...Object.keys(D2SourcesAliasLookup),
-      ...Object.keys(D2EventPredicateLookup),
-    ],
+    suggestions: [...Object.keys(D2Sources), ...Object.keys(D2EventPredicateLookup)],
     destinyVersion: 2,
     filter: ({ filterValue }) => {
-      if (D2Sources[filterValue] || D2SourcesAliasLookup[filterValue]) {
-        const sourceInfo = D2SourcesAliasLookup[filterValue]
-          ? D2Sources[D2SourcesAliasLookup[filterValue]]
-          : D2Sources[filterValue];
+      if (D2Sources[filterValue]) {
+        const sourceInfo = D2Sources[filterValue];
         const missingSource = missingSources[filterValue];
         return (item) =>
           (item.source && sourceInfo.sourceHashes?.includes(item.source)) ||
