@@ -9,9 +9,9 @@ import { DestinyAmmunitionType, DestinyClass, DestinyRecordState } from 'bungie-
 import { D2EventInfo } from 'data/d2/d2-event-info-v2';
 import focusingOutputs from 'data/d2/focusing-item-outputs.json';
 import { BreakerTypeHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
-import missingSources from 'data/d2/missing-source-info';
+import missingSources from 'data/d2/missing-source-info-v2';
 import powerfulSources from 'data/d2/powerful-rewards.json';
-import D2Sources from 'data/d2/source-info';
+import D2Sources from 'data/d2/source-info-v2';
 import { D1ItemCategoryHashes } from '../d1-known-values';
 import {
   D2ItemCategoryHashesByName,
@@ -28,6 +28,15 @@ const D2EventPredicateLookup = Object.fromEntries(
     Number(index) as D2EventIndex,
   ]),
 );
+
+const D2SourcesAliasLookup: Record<string, string> = {};
+for (const [source, sourceAttrs] of Object.entries(D2Sources)) {
+  if (sourceAttrs.aliases) {
+    for (const alias of sourceAttrs.aliases) {
+      D2SourcesAliasLookup[alias] = source;
+    }
+  }
+}
 
 // filters relying on curated known values (class names, rarities, elements)
 
@@ -247,15 +256,21 @@ const knownValuesFilters: FilterDefinition[] = [
     keywords: 'source',
     description: tl('Filter.Event'), // or 'Filter.Source'
     format: 'query',
-    suggestions: [...Object.keys(D2Sources), ...Object.keys(D2EventPredicateLookup)],
+    suggestions: [
+      ...Object.keys(D2Sources),
+      ...Object.keys(D2SourcesAliasLookup),
+      ...Object.keys(D2EventPredicateLookup),
+    ],
     destinyVersion: 2,
     filter: ({ filterValue }) => {
-      if (D2Sources[filterValue]) {
-        const sourceInfo = D2Sources[filterValue];
+      if (D2Sources[filterValue] || D2SourcesAliasLookup[filterValue]) {
+        const sourceInfo = D2SourcesAliasLookup[filterValue]
+          ? D2Sources[D2SourcesAliasLookup[filterValue]]
+          : D2Sources[filterValue];
         const missingSource = missingSources[filterValue];
         return (item) =>
-          (item.source && sourceInfo.sourceHashes.includes(item.source)) ||
-          sourceInfo.itemHashes.includes(item.hash) ||
+          (item.source && sourceInfo.sourceHashes?.includes(item.source)) ||
+          sourceInfo.itemHashes?.includes(item.hash) ||
           missingSource?.includes(item.hash);
       } else if (D2EventPredicateLookup[filterValue]) {
         const predicate = D2EventPredicateLookup[filterValue];

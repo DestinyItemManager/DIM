@@ -20,8 +20,8 @@ import { getDisplayedItemSockets, getSocketsByIndexes } from 'app/utils/socket-u
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { D2EventInfo } from 'data/d2/d2-event-info-v2';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
-import D2MissingSources from 'data/d2/missing-source-info';
-import D2Sources from 'data/d2/source-info';
+import D2MissingSources from 'data/d2/missing-source-info-v2';
+import D2Sources from 'data/d2/source-info-v2';
 import _ from 'lodash';
 import Papa from 'papaparse';
 import { setItemNote, setItemTagsBulk } from './actions';
@@ -343,8 +343,8 @@ export function source(item: DimItem) {
     return (
       sourceKeys.find(
         (src) =>
-          (item.source && D2Sources[src].sourceHashes.includes(item.source)) ||
-          D2Sources[src].itemHashes.includes(item.hash) ||
+          (item.source && D2Sources[src].sourceHashes?.includes(item.source)) ||
+          D2Sources[src].itemHashes?.includes(item.hash) ||
           D2MissingSources[src]?.includes(item.hash),
       ) || ''
     );
