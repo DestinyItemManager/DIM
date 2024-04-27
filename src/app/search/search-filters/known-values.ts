@@ -6,12 +6,11 @@ import { getEvent } from 'app/inventory/store/season';
 import { getItemDamageShortName } from 'app/utils/item-utils';
 import { LookupTable } from 'app/utils/util-types';
 import { DestinyAmmunitionType, DestinyClass, DestinyRecordState } from 'bungie-api-ts/destiny2';
-import { D2EventInfo } from 'data/d2/d2-event-info-v2';
+import { D2EventEnum, D2EventInfo } from 'data/d2/d2-event-info-v2';
 import focusingOutputs from 'data/d2/focusing-item-outputs.json';
 import { BreakerTypeHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import missingSources from 'data/d2/missing-source-info-v2';
 import powerfulSources from 'data/d2/powerful-rewards.json';
-import D2Sources from 'data/d2/source-info-v2';
 import { D1ItemCategoryHashes } from '../d1-known-values';
 import {
   D2ItemCategoryHashesByName,
@@ -21,22 +20,14 @@ import {
 } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
 import { cosmeticTypes, damageTypeNames } from '../search-filter-values';
+import D2Sources from './d2-sources';
 
 const D2EventPredicateLookup = Object.fromEntries(
   Object.entries(D2EventInfo).map(([index, event]) => [
     event.shortname,
-    Number(index) as D2EventIndex,
+    Number(index) as D2EventEnum,
   ]),
 );
-
-for (const [, sourceAttrs] of Object.entries(D2Sources)) {
-  if (sourceAttrs.aliases) {
-    for (const alias of sourceAttrs.aliases) {
-      D2Sources[alias] = sourceAttrs;
-    }
-  }
-}
-
 // filters relying on curated known values (class names, rarities, elements)
 
 const tierMap: NodeJS.Dict<ItemTierName> = {

@@ -1,6 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import { D2EventInfo } from 'data/d2/d2-event-info-v2';
+import { D2EventEnum, D2EventInfo } from 'data/d2/d2-event-info-v2';
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
 import D2Events from 'data/d2/events.json';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
@@ -15,7 +15,7 @@ import { DimItem } from '../item-types';
 
 const D2SourcesToEvent = Object.fromEntries(
   Object.entries(D2EventInfo).flatMap(([index, event]) =>
-    event.sources.map((source) => [source, Number(index) as D2EventIndex]),
+    event.sources.map((source) => [source, Number(index) as D2EventEnum]),
   ),
 );
 
@@ -77,7 +77,7 @@ function getSeasonFromOverlayAndSource(
 }
 
 /** The Destiny event (D2) that a specific item belongs to. */
-export function getEvent(item: DimItem): D2EventIndex | undefined {
+export function getEvent(item: DimItem): D2EventEnum | undefined {
   // hiddenOverlay has precedence for event
   const overlay = item.hiddenOverlay || item.iconOverlay;
   if (overlay && D2EventFromOverlay[overlay]) {
