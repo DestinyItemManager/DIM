@@ -14,6 +14,7 @@ import { TagValue, tagConfig } from 'app/inventory/dim-item-info';
 import { D1Item, DimItem, DimSocket } from 'app/inventory/item-types';
 import { storesSelector } from 'app/inventory/selectors';
 import { source } from 'app/inventory/spreadsheets';
+import { isHarmonizable } from 'app/inventory/store/deepsight';
 import { getEvent, getSeason } from 'app/inventory/store/season';
 import { getStatSortOrder } from 'app/inventory/store/stats';
 import { getStore } from 'app/inventory/stores-helpers';
@@ -534,6 +535,22 @@ export function getColumns(
         id: 'masterworkStat',
         header: t('Organizer.Columns.MasterworkStat'),
         value: (item) => getMasterworkStatNames(item.masterworkInfo),
+      }),
+    destinyVersion === 2 &&
+      isWeapon &&
+      c({
+        id: 'level',
+        header: t('Organizer.Columns.Level'),
+        value: (item) => item.craftedInfo?.level,
+        defaultSort: SortDirection.DESC,
+      }),
+    destinyVersion === 2 &&
+      isWeapon &&
+      c({
+        id: 'harmonizable',
+        header: t('Organizer.Columns.Harmonizable'),
+        value: (item) => isHarmonizable(item),
+        cell: (value) => (value ? <AppIcon icon={faCheck} /> : undefined),
       }),
     destinyVersion === 2 &&
       isWeapon &&
