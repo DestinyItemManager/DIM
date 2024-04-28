@@ -42,7 +42,8 @@
   },
   "Browsercheck": {
     "Unsupported": "The DIM team does not support using this browser. Some or all DIM features may not work.",
-    "Steam": "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it."
+    "Steam": "The Steam overlay browser is very old and some or all DIM features may not work. We cannot provide support for it.",
+    "Samsung": "Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser."
   },
   "Bucket": {
     "Armor": "Armor",
