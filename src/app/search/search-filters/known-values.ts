@@ -9,7 +9,6 @@ import { DestinyAmmunitionType, DestinyClass, DestinyRecordState } from 'bungie-
 import { D2EventEnum, D2EventInfo } from 'data/d2/d2-event-info-v2';
 import focusingOutputs from 'data/d2/focusing-item-outputs.json';
 import { BreakerTypeHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
-import missingSources from 'data/d2/missing-source-info-v2';
 import powerfulSources from 'data/d2/powerful-rewards.json';
 import { D1ItemCategoryHashes } from '../d1-known-values';
 import {
@@ -251,11 +250,9 @@ const knownValuesFilters: FilterDefinition[] = [
     filter: ({ filterValue }) => {
       if (D2Sources[filterValue]) {
         const sourceInfo = D2Sources[filterValue];
-        const missingSource = missingSources[filterValue];
         return (item) =>
           (item.source && sourceInfo.sourceHashes?.includes(item.source)) ||
-          sourceInfo.itemHashes?.includes(item.hash) ||
-          missingSource?.includes(item.hash);
+          sourceInfo.itemHashes?.includes(item.hash);
       } else if (D2EventPredicateLookup[filterValue]) {
         const predicate = D2EventPredicateLookup[filterValue];
         return (item: DimItem) => getEvent(item) === predicate;
