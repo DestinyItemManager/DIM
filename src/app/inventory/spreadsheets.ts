@@ -4,6 +4,7 @@ import { t } from 'app/i18next-t';
 import { LoadoutsByItem, loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
 import { D1_StatHashes } from 'app/search/d1-known-values';
 import { dimArmorStatHashByName } from 'app/search/search-filter-values';
+import D2Sources from 'app/search/search-filters/d2-sources';
 import { ThunkResult } from 'app/store/types';
 import { filterMap } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
@@ -21,7 +22,6 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { D2EventInfo } from 'data/d2/d2-event-info-v2';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import D2MissingSources from 'data/d2/missing-source-info-v2';
-import D2Sources from 'data/d2/source-info-v2';
 import _ from 'lodash';
 import Papa from 'papaparse';
 import { setItemNote, setItemTagsBulk } from './actions';
@@ -43,14 +43,6 @@ function getClass(type: DestinyClass) {
       return 'unknown';
     case DestinyClass.Classified:
       return 'classified';
-  }
-}
-
-for (const [, sourceAttrs] of Object.entries(D2Sources)) {
-  if (sourceAttrs.aliases) {
-    for (const alias of sourceAttrs.aliases) {
-      D2Sources[alias] = sourceAttrs;
-    }
   }
 }
 

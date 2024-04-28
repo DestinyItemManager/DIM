@@ -15,12 +15,15 @@ declare module 'data/d2/watermark-to-season.json' {
   export default x;
 }
 
-declare type D2EventIndex = keyof typeof import('data/d2/d2-event-info-v2').D2EventInfo;
 declare module 'data/d2/watermark-to-event.json' {
-  const x: { readonly [watermark: string]: D2EventIndex | undefined };
+  const x: {
+    readonly [watermark: string]: import('data/d2/d2-event-info-v2').D2EventEnum | undefined;
+  };
   export default x;
 }
 declare module 'data/d2/events.json' {
-  const x: { readonly [itemHash: number]: D2EventIndex | undefined };
+  const x: {
+    readonly [itemHash: number]: import('data/d2/d2-event-info-v2').D2EventEnum | undefined;
+  };
   export default x;
 }
