@@ -144,6 +144,7 @@ const D2Sources: {
       243425374, // Falling Guillotine
       568611923, // Edge Transit
       570866107, // Succession
+      2228325504, // Edge Transit
       2480074702, // Forbearance
       2499720827, // Midnight Coup
       2533990645, // Blast Furnace
@@ -607,7 +608,19 @@ const D2Sources: {
     searchString: [],
   },
   events: {
-    itemHashes: [],
+    itemHashes: [
+      66875353, // Avalanche
+      294129361, // The Title
+      396910433, // Zephyr
+      495940989, // Avalanche
+      655712834, // The Title
+      1911078836, // Zephyr
+      3400256755, // Zephyr
+      3559361670, // The Title
+      3659710187, // The Title
+      4203034886, // Zephyr
+      4220529694, // Avalanche
+    ],
     sourceHashes: [
       32323943, // Source: Moments of Triumph
       151416041, // Source: Solstice
@@ -816,6 +829,7 @@ const D2Sources: {
       243425374, // Falling Guillotine
       568611923, // Edge Transit
       570866107, // Succession
+      2228325504, // Edge Transit
       2480074702, // Forbearance
       2499720827, // Midnight Coup
       2533990645, // Blast Furnace
@@ -874,6 +888,7 @@ const D2Sources: {
       243425374, // Falling Guillotine
       568611923, // Edge Transit
       570866107, // Succession
+      2228325504, // Edge Transit
       2480074702, // Forbearance
       2499720827, // Midnight Coup
       2533990645, // Blast Furnace
@@ -1059,7 +1074,17 @@ const D2Sources: {
     searchString: [],
   },
   nightfall: {
-    itemHashes: [],
+    itemHashes: [
+      555148853, // Wendigo GL3 (Adept)
+      566740455, // THE SWARM (Adept)
+      681067419, // Hung Jury SR4 (Adept)
+      912222548, // Soldier On
+      1987790789, // After the Nightfall
+      2883684343, // Hung Jury SR4 (Adept)
+      3836861464, // THE SWARM (Adept)
+      3915197957, // Wendigo GL3 (Adept)
+      4074251943, // Hung Jury SR4 (Adept)
+    ],
     sourceHashes: [
       110159004, // Source: Complete Nightfall strike "Warden of Nothing."
       277706045, // Source: Season of the Splicer Nightfall Grandmaster
