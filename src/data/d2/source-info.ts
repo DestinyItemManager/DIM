@@ -1347,18 +1347,7 @@ const D2Sources: {
     searchString: [],
   },
   seasonpass: {
-    itemHashes: [
-      599895591, // Sojourner's Tale
-      820890091, // Planck's Stride
-      1298815317, // Brigand's Law
-      1478986057, // Without Remorse
-      2097055732, // Piece of Mind
-      2121785039, // Brass Attacks
-      2434225986, // Shattered Cipher
-      2778013407, // Firefright
-      3075224551, // Threaded Needle
-      4067556514, // Thoughtless
-    ],
+    itemHashes: [],
     sourceHashes: [
       450719423, // Source: Season of the Risen
       794422188, // Source: Season of the Witch
