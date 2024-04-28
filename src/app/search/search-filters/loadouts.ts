@@ -67,6 +67,15 @@ const loadoutFilters: FilterDefinition[] = [
       (item) =>
         Boolean(loadoutsByItem[item.id]?.some((l) => !isInGameLoadout(l.loadout))),
   },
+  {
+    keywords: 'inloadoutcount',
+    description: tl('Filter.InLoadoutCount'),
+    format: 'range',
+    filter:
+      ({ loadoutsByItem, compare }) =>
+      (item) =>
+        compare!(loadoutsByItem[item.id]?.filter((l) => !isInGameLoadout(l.loadout)).length || 0),
+  },
 ];
 
 export default loadoutFilters;
