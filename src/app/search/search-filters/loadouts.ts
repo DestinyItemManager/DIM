@@ -74,7 +74,7 @@ const loadoutFilters: FilterDefinition[] = [
     filter:
       ({ loadoutsByItem, compare }) =>
       (item) =>
-        compare!(loadoutsByItem[item.id]?.filter((l) => !isInGameLoadout(l.loadout)).length || 0),
+        compare!(loadoutsByItem[item.id]?.length || 0),
   },
 ];
 
