@@ -10,6 +10,7 @@ import { Dispatch } from 'react';
 import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-types';
 import LoadoutBuilderItem from '../LoadoutBuilderItem';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
+import ExistingLoadoutsForItem from './ExistingLoadoutsForItem';
 import styles from './GeneratedSetItem.m.scss';
 
 /**
@@ -112,6 +113,7 @@ export default function GeneratedSetItem({
 
   return (
     <div>
+      <ExistingLoadoutsForItem item={item} />
       <div className={styles.item}>
         <div className={styles.swapButtonContainer}>
           <LoadoutBuilderItem item={item} onShiftClick={() => pinItem(item)} />

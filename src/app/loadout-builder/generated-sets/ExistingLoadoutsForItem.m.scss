@@ -1,0 +1,27 @@
+.inGameLoadoutList {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  display: flex;
+  justify-content: start;
+  gap: 3px;
+  margin-right: 3px;
+
+  li {
+    margin: 0;
+  }
+}
+
+.loadoutsBar {
+  display: flex;
+  justify-content: start;
+  width: 100%;
+  line-height: 10px;
+  padding-bottom: 4px;
+  height: 10px;
+}
+
+.loadoutCount {
+  text-align: right;
+  flex-grow: 1;
+}
