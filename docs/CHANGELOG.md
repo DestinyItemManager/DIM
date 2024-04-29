@@ -1,5 +1,7 @@
 ## Next
 
+## 8.18.0 <span class="changelog-date">(2024-04-28)</span>
+
 * Restore per-stat quality ratings to D1 armor popups.
 
 ## 8.17.0 <span class="changelog-date">(2024-04-21)</span>
