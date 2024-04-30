@@ -40,7 +40,7 @@
 // These override .characterTile styles
 .vault {
   // The vault tile is laid out differently
-  grid-template-areas: 'emblem class vaultCapacity';
+  grid-template-areas: 'emblem class vaultCapacity' !important;
   grid-template-columns: 46px 1fr min-content;
   grid-template-rows: 1fr;
   align-items: center;
