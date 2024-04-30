@@ -28,8 +28,10 @@ export const compareCategoryItemsSelector = createSelector(
     if (!itemCategoryHashes) {
       return emptyArray<DimItem>();
     }
-    return [...allItems, ...vendorItems].filter((i) =>
-      itemCategoryHashes.every((h) => i.itemCategoryHashes.includes(h)),
+    return [...allItems, ...vendorItems].filter(
+      (i) =>
+        (!i.vendor || i.vendor.vendorHash) &&
+        itemCategoryHashes.every((h) => i.itemCategoryHashes.includes(h)),
     );
   },
 );
