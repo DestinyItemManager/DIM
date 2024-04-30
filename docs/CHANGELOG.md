@@ -1,5 +1,7 @@
 ## Next
 
+## 8.18.1 <span class="changelog-date">(2024-04-30)</span>
+
 * Fix vault tile display on mobile.
 
 ## 8.18.0 <span class="changelog-date">(2024-04-28)</span>
