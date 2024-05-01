@@ -1,5 +1,10 @@
 import parser from 'ua-parser-js';
-import { steamBrowser, supportedLanguages, unsupported } from './browsercheck-utils.js';
+import {
+  samsungInternet,
+  steamBrowser,
+  supportedLanguages,
+  unsupported,
+} from './browsercheck-utils.js';
 
 // Adapted from 'is-browser-supported' npm package. Separate from index.js so it'll run even if that fails.
 // This is also intentionally written in es5 and not TypeScript because it should not use any new features.
@@ -53,11 +58,6 @@ function getBrowserVersionFromUserAgent(agent) {
 }
 
 export function isSupported(browsersSupported, userAgent) {
-  if (userAgent.includes('Steam')) {
-    // https://github.com/DestinyItemManager/DIM/wiki/Figuring-out-why-DIM-doesn't-work-in-Steam
-    return false;
-  }
-
   if (navigator.standalone) {
     // Assume support if we're installed as an iOS PWA.
     return true;
@@ -110,13 +110,32 @@ export function isSupported(browsersSupported, userAgent) {
 var lang = getUserLocale();
 
 if ($BROWSERS.length && lang) {
-  // t(`Browsercheck.${Unsupported}`, { metadata: { keys: 'unsupported' }})
   var supported = isSupported($BROWSERS, navigator.userAgent);
   if (!supported) {
+    // t(`Browsercheck.Unsupported`)
     document.getElementById('browser-warning').innerText = unsupported[lang];
     document.getElementById('browser-warning').style.display = 'block';
-    if (navigator.userAgent.includes('Steam')) {
-      document.getElementById('browser-warning').innerText = steamBrowser[lang];
-    }
+  }
+
+  // Steam is never supported
+  if (navigator.userAgent.includes('Steam')) {
+    // https://guide.dim.gg/Figuring-out-why-DIM-doesn't-work-in-Steam
+    // t(`Browsercheck.Steam`)
+    document.getElementById('browser-warning').innerText = steamBrowser[lang];
+    document.getElementById('browser-warning').style.display = 'block';
+  }
+
+  // Samsung Internet is not supported because of its weird forced dark mode
+  if (
+    navigator.userAgent.includes('SamsungBrowser') &&
+    // When the "Labs" setting to respect websites' dark mode capabilities is
+    // enabled, Samsung Internet will actually set prefers-color-scheme to dark.
+    // Otherwise, it's always "light". This *could* be a user who actually
+    // prefers a light theme - there's no way to tell.
+    window.matchMedia('(prefers-color-scheme: light)').matches
+  ) {
+    // t(`Browsercheck.Samsung`)
+    document.getElementById('browser-warning').innerText = samsungInternet[lang];
+    document.getElementById('browser-warning').style.display = 'block';
   }
 }
