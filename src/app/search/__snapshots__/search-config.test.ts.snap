@@ -158,6 +158,7 @@ exports[`buildSearchConfig generates a reasonable filter map: key-value filters 
   "holdsmod",
   "id",
   "inloadout",
+  "inloadoutcount",
   "keyword",
   "kills",
   "light",
