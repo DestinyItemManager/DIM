@@ -113,11 +113,11 @@ export default function GeneratedSetItem({
 
   return (
     <div>
-      <ExistingLoadoutsForItem item={item} />
       <div className={styles.item}>
         <div className={styles.swapButtonContainer}>
           <LoadoutBuilderItem item={item} onShiftClick={() => pinItem(item)} />
           <EnergyIncrementsWithPresstip wrapperClass={styles.energyMeter} energy={energy} />
+          <ExistingLoadoutsForItem item={item} />
           {itemOptions.length > 1 ? (
             <button
               type="button"
