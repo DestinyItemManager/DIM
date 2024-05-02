@@ -15,7 +15,6 @@ import {
   getMasterworkStatNames,
   getSpecialtySocketMetadatas,
   isD1Item,
-  isKillTrackerSocket,
 } from 'app/utils/item-utils';
 import { getDisplayedItemSockets, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -224,38 +223,43 @@ function downloadCsv(filename: string, csv: string) {
   download(csv, filenameWithExt, 'text/csv');
 }
 
-function buildSocketNames(item: DimItem): string[] {
+function buildSocketNames(item: DimItem): Record<number, string> {
   if (!item.sockets) {
-    return [];
+    return {};
   }
 
-  const sockets = [];
+  const socketMap: Record<number, string> = {};
   const { intrinsicSocket, modSocketsByCategory, perks } = getDisplayedItemSockets(
     item,
     /* excludeEmptySockets */ true,
   )!;
 
   if (intrinsicSocket) {
-    sockets.push(intrinsicSocket);
+    if (intrinsicSocket.plugged) {
+      socketMap[intrinsicSocket.plugged.plugDef.hash] =
+        intrinsicSocket.plugged.plugDef.displayProperties.name;
+    }
   }
 
   if (perks) {
-    sockets.push(...getSocketsByIndexes(item.sockets, perks.socketIndexes));
+    const perkSockets = getSocketsByIndexes(item.sockets, perks.socketIndexes);
+    for (const socket of perkSockets) {
+      if (socket.plugged) {
+        socketMap[socket.plugged.plugDef.hash] = socket.plugged.plugDef.displayProperties.name;
+      }
+    }
   }
-  // Improve this when we use iterator-helpers
-  sockets.push(...[...modSocketsByCategory.values()].flat());
 
-  const socketItems = sockets.map(
-    (s) =>
-      (isKillTrackerSocket(s) && s.plugged?.plugDef.displayProperties.name) ||
-      s.plugOptions.map((p) =>
-        s.plugged?.plugDef.hash === p.plugDef.hash
-          ? `${p.plugDef.displayProperties.name}*`
-          : p.plugDef.displayProperties.name,
-      ),
-  );
+  // Process mod sockets
+  for (const sockets of modSocketsByCategory.values()) {
+    for (const socket of sockets) {
+      if (socket.plugged) {
+        socketMap[socket.plugged.plugDef.hash] = socket.plugged.plugDef.displayProperties.name;
+      }
+    }
+  }
 
-  return socketItems.flat();
+  return socketMap;
 }
 
 function buildNodeNames(nodes: D1GridNode[]): string[] {
@@ -276,7 +280,7 @@ function getMaxPerks(items: DimItem[]) {
           (isD1Item(item) && item.talentGrid
             ? buildNodeNames(item.talentGrid.nodes)
             : item.sockets
-              ? buildSocketNames(item)
+              ? Object.keys(buildSocketNames(item))
               : []
           ).length,
       ),
@@ -290,10 +294,14 @@ function addPerks(row: Record<string, unknown>, item: DimItem, maxPerks: number)
       ? buildNodeNames(item.talentGrid.nodes)
       : item.sockets
         ? buildSocketNames(item)
-        : [];
+        : {};
 
-  _.times(maxPerks, (index) => {
-    row[`Perks ${index}`] = perks[index];
+  const perkEntries = Object.entries(perks);
+
+  _.times(Math.min(maxPerks, perkEntries.length), (index) => {
+    const [hash, name] = perkEntries[index];
+    row[`Perks ${index}`] = name;
+    row[`Perks ${index} Hash`] = hash;
   });
 }
 
