@@ -1,5 +1,7 @@
 ## Next
 
+* Minimum browser version for DIM has been raised to Chrome 109+ (or equivalent Chromium-based browsers) and iOS 16+.
+
 ## 8.18.1 <span class="changelog-date">(2024-04-30)</span>
 
 * Fix vault tile display on mobile.
