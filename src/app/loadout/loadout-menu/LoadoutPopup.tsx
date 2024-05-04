@@ -33,6 +33,7 @@ import { previousLoadoutSelector } from 'app/loadout-drawer/selectors';
 import { manifestSelector, useDefinitions } from 'app/manifest/selectors';
 import { showMaterialCount } from 'app/material-counts/MaterialCountsWrappers';
 import { showNotification } from 'app/notifications/notifications';
+import SearchBar from 'app/search/SearchBar';
 import { loadoutFilterFactorySelector } from 'app/search/loadouts/loadout-search-filter';
 import { filteredItemsSelector, searchFilterSelector } from 'app/search/search-filter';
 import {
@@ -176,18 +177,15 @@ export default function LoadoutPopup({
   return (
     <div className={styles.content} onClick={onClick} role="menu">
       {totalLoadouts >= 10 && (
-        <form className={styles.filterInput}>
-          <AppIcon icon={searchIcon} className="search-bar-icon" />
-          <input
-            type="text"
-            autoFocus={nativeAutoFocus}
+        <div onClick={blockPropagation}>
+          <SearchBar
+            className={styles.filterInput}
             placeholder={t('Header.FilterHelpLoadouts')}
-            onClick={blockPropagation}
-            value={loadoutQuery}
-            onChange={(e) => setLoadoutQuery(e.target.value)}
-            onKeyDown={handleEscape}
+            onQueryChanged={setLoadoutQuery}
+            loadouts
+            instant
           />
-        </form>
+        </div>
       )}
 
       {filterPills}

@@ -1,3 +1,4 @@
+import { Search } from '@destinyitemmanager/dim-api-types';
 import ArmorySheet from 'app/armory/ArmorySheet';
 import { saveSearch, searchDeleted, searchUsed } from 'app/dim-api/basic-actions';
 import { languageSelector, recentSearchesSelector } from 'app/dim-api/selectors';
@@ -13,6 +14,7 @@ import { toggleSearchResults } from 'app/shell/actions';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isiOSBrowser } from 'app/utils/browsers';
+import { emptyArray } from 'app/utils/empty';
 import clsx from 'clsx';
 import { UseComboboxState, UseComboboxStateChangeOptions, useCombobox } from 'downshift';
 import { AnimatePresence, LayoutGroup, Variants, motion } from 'framer-motion';
@@ -230,7 +232,9 @@ function SearchBar(
 ) {
   const dispatch = useThunkDispatch();
   const isPhonePortrait = useIsPhonePortrait();
-  const recentSearches = useSelector(recentSearchesSelector);
+  const recentSearches = useSelector(
+    loadouts ? () => emptyArray<Search>() : recentSearchesSelector,
+  );
   const autocompleter = useSelector(
     loadouts ? loadoutAutoCompleterSelector : autoCompleterSelector,
   );
@@ -263,7 +267,7 @@ function SearchBar(
 
   const lastBlurQuery = useRef<string>();
   const onBlur = () => {
-    if (valid && liveQuery && liveQuery !== lastBlurQuery.current) {
+    if (!loadouts && valid && liveQuery && liveQuery !== lastBlurQuery.current) {
       // save this to the recent searches only on blur
       // we use the ref to only fire if the query changed since the last blur
       dispatch(searchUsed(liveQuery));
