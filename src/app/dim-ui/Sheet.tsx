@@ -226,9 +226,14 @@ export default function Sheet({
       if (sheetContents.current.clientHeight > 0) {
         setFrozenHeight(sheetContents.current.clientHeight);
       } else {
-        setTimeout(() => {
-          sheetContents.current && setFrozenHeight(sheetContents.current.clientHeight);
-        }, 500);
+        const setHeight = () => {
+          if (!sheetContents.current || sheetContents.current.clientHeight === 0) {
+            return false;
+          }
+          setFrozenHeight(sheetContents.current.clientHeight);
+          return true;
+        };
+        tryWithBackoff(setHeight);
       }
     }
   }, [freezeInitialHeight, frozenHeight]);
@@ -320,4 +325,17 @@ export default function Sheet({
       </SheetDisabledContext.Provider>
     </Portal>
   );
+}
+
+function tryWithBackoff(callback: () => boolean, timeout: number = 500, limit: number = 5_000) {
+  if (timeout > limit) {
+    return;
+  }
+  setTimeout(() => {
+    const res = callback();
+    if (res) {
+      return;
+    }
+    tryWithBackoff(callback, timeout * 1.25);
+  }, timeout);
 }
