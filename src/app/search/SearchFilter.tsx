@@ -73,6 +73,7 @@ export default forwardRef(function SearchFilter(
       searchQuery={searchQuery}
       mainSearchBar={true}
       menu={menu}
+      loadouts={onLoadouts}
     >
       {extras}
     </SearchBar>

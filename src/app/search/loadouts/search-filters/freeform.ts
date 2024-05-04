@@ -1,4 +1,5 @@
 import { tl } from 'app/i18next-t';
+import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { matchText, plainString } from 'app/search/search-filters/freeform';
 import { FilterDefinition } from '../../filter-types';
@@ -12,7 +13,7 @@ const freeformFilters: FilterDefinition<
 >[] = [
   {
     keywords: ['name', 'exactname'],
-    description: tl('Filter.Name'),
+    description: tl('LoadoutFilter.Name'),
     format: 'freeform',
     suggestionsGenerator: ({ loadouts }) =>
       loadouts?.map((loadout) => `exactname:${quoteFilterString(loadout.name.toLowerCase())}`),
@@ -23,7 +24,7 @@ const freeformFilters: FilterDefinition<
   },
   {
     keywords: 'notes',
-    description: tl('Filter.Notes'),
+    description: tl('LoadoutFilter.Notes'),
     format: 'freeform',
     filter: ({ filterValue, language }) => {
       filterValue = plainString(filterValue, language);
@@ -33,8 +34,19 @@ const freeformFilters: FilterDefinition<
   },
   {
     keywords: 'keyword',
-    description: tl('Filter.PartialMatch'),
+    description: tl('LoadoutFilter.PartialMatch'),
     format: 'freeform',
+    suggestionsGenerator: ({ loadouts }) =>
+      loadouts
+        ? Array.from(
+            new Set([
+              ...loadouts.flatMap((loadout) => [
+                ...getHashtagsFromNote(loadout.name),
+                ...getHashtagsFromNote(loadout.notes),
+              ]),
+            ]),
+          )
+        : [],
     filter: ({ filterValue, language }) => {
       filterValue = plainString(filterValue, language);
       const test = (s: string) => plainString(s, language).includes(filterValue);

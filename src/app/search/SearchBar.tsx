@@ -49,6 +49,10 @@ import HighlightedText from './HighlightedText';
 import styles from './SearchBar.m.scss';
 import { buildArmoryIndex } from './armory-search';
 import createAutocompleter, { SearchItem, SearchItemType } from './autocomplete';
+import {
+  loadoutSearchConfigSelector,
+  validateLoadoutQuerySelector,
+} from './loadouts/loadout-search-filter';
 import { canonicalizeQuery, parseQuery } from './query-parser';
 import { searchConfigSelector } from './search-config';
 import { validateQuerySelector } from './search-filter';
@@ -73,6 +77,12 @@ const armoryIndexSelector = createSelector(d2ManifestSelector, languageSelector,
 const autoCompleterSelector = createSelector(
   searchConfigSelector,
   armoryIndexSelector,
+  createAutocompleter,
+);
+
+const loadoutAutoCompleterSelector = createSelector(
+  loadoutSearchConfigSelector,
+  () => undefined,
   createAutocompleter,
 );
 
@@ -194,6 +204,7 @@ function SearchBar(
     onClear,
     className,
     menu,
+    loadouts,
   }: {
     /** Placeholder text when nothing has been typed */
     placeholder: string;
@@ -207,6 +218,7 @@ function SearchBar(
     children?: React.ReactNode;
     /** An optional menu of actions that can be executed on the search. Always shown. */
     menu?: React.ReactNode;
+    loadouts?: boolean;
     instant?: boolean;
     className?: string;
     /** Fired whenever the query changes (already debounced) */
@@ -219,8 +231,12 @@ function SearchBar(
   const dispatch = useThunkDispatch();
   const isPhonePortrait = useIsPhonePortrait();
   const recentSearches = useSelector(recentSearchesSelector);
-  const autocompleter = useSelector(autoCompleterSelector);
-  const validateQuery = useSelector(validateQuerySelector);
+  const autocompleter = useSelector(
+    loadouts ? loadoutAutoCompleterSelector : autoCompleterSelector,
+  );
+  const validateQuery = useSelector(
+    loadouts ? validateLoadoutQuerySelector : validateQuerySelector,
+  );
 
   // On iOS at least, focusing the keyboard pushes the content off the screen
   const autoFocus = !mainSearchBar && !isPhonePortrait && !isiOSBrowser();

@@ -33,6 +33,7 @@ import { previousLoadoutSelector } from 'app/loadout-drawer/selectors';
 import { manifestSelector, useDefinitions } from 'app/manifest/selectors';
 import { showMaterialCount } from 'app/material-counts/MaterialCountsWrappers';
 import { showNotification } from 'app/notifications/notifications';
+import { loadoutFilterFactorySelector } from 'app/search/loadouts/loadout-search-filter';
 import { filteredItemsSelector, searchFilterSelector } from 'app/search/search-filter';
 import {
   AppIcon,
@@ -143,8 +144,11 @@ export default function LoadoutPopup({
     dimStore,
     { className: styles.filterPills, darkBackground: true },
   );
+
+  const loadoutFilterFactory = useSelector(loadoutFilterFactorySelector);
   const filteredLoadouts = searchAndSortLoadoutsByQuery(
     pillFilteredLoadouts,
+    loadoutFilterFactory,
     loadoutQuery,
     language,
     loadoutSort,
