@@ -545,21 +545,25 @@ function SearchBar(
         </LayoutGroup>
 
         {filterHelpOpen && (
-          <Sheet
-            onClose={() => setFilterHelpOpen(false)}
-            header={
-              <>
-                <h1>{t('Header.Filters')}</h1>
-                <UserGuideLink topic="Item-Search" />
-              </>
-            }
-            freezeInitialHeight
-            sheetClassName={styles.filterHelp}
-          >
-            <Suspense fallback={<Loading message={t('Loading.FilterHelp')} />}>
+          <Suspense fallback={<Loading message={t('Loading.FilterHelp')} />}>
+            {/* Because FilterHelp suspends, the entire sheet will suspend while it is loaded.
+             * This stops us having issues with incorrect frozen initial heights as it will
+             * get locked to the fallback height if we don't do this.
+             */}
+            <Sheet
+              onClose={() => setFilterHelpOpen(false)}
+              header={
+                <>
+                  <h1>{t('Header.Filters')}</h1>
+                  <UserGuideLink topic="Item-Search" />
+                </>
+              }
+              freezeInitialHeight
+              sheetClassName={styles.filterHelp}
+            >
               <LazyFilterHelp />
-            </Suspense>
-          </Sheet>
+            </Sheet>
+          </Suspense>
         )}
 
         {autocompleteMenu}
