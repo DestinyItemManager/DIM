@@ -573,7 +573,7 @@ function SearchBar(
             sheetClassName={styles.filterHelp}
           >
             <Suspense fallback={<Loading message={t('Loading.FilterHelp')} />}>
-              <LazyFilterHelp />
+              <LazyFilterHelp loadouts={loadouts} />
             </Suspense>
           </Sheet>
         )}
