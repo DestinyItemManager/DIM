@@ -53,7 +53,6 @@ import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState, ThunkResult } from 'app/store/types';
 import { queueAction } from 'app/utils/action-queue';
-import { isiOSBrowser } from 'app/utils/browsers';
 import { emptyArray } from 'app/utils/empty';
 import { errorMessage } from 'app/utils/errors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -157,22 +156,7 @@ export default function LoadoutPopup({
 
   const blockPropagation = (e: React.MouseEvent) => e.stopPropagation();
 
-  // On iOS at least, focusing the keyboard pushes the content off the screen
-  const nativeAutoFocus = !isPhonePortrait && !isiOSBrowser();
-
   const filteringLoadouts = loadoutQuery.length > 0 || hasSelectedFilters;
-
-  const handleEscape = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      if (loadoutQuery === '') {
-        onClick?.();
-      } else {
-        setLoadoutQuery('');
-      }
-      e.preventDefault();
-      e.stopPropagation();
-    }
-  };
 
   return (
     <div className={styles.content} onClick={onClick} role="menu">

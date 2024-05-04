@@ -4,7 +4,7 @@ import { languageSelector } from 'app/dim-api/selectors';
 import { DimLanguage } from 'app/i18n';
 import memoizeOne from 'memoize-one';
 import { createSelector } from 'reselect';
-import { FilterDefinition, canonicalFilterFormats } from './filter-types';
+import { FilterDefinition, SuggestionsContext, canonicalFilterFormats } from './filter-types';
 import advancedFilters from './search-filters/advanced';
 import d1Filters from './search-filters/d1-filters';
 import dupeFilters from './search-filters/dupes';
@@ -118,6 +118,18 @@ export const buildFiltersMap = memoizeOne(
   destinyVersion: DestinyVersion,
   allFilters: FilterDefinition<I, FilterCtx, SuggestionsCtx>[],
 ) => FiltersMap<I, FilterCtx, SuggestionsCtx>;
+
+export function buildItemFiltersMap(destinyVersion: DestinyVersion) {
+  return buildFiltersMap(destinyVersion, allFilters);
+}
+
+export function buildItemSearchConfig(
+  destinyVersion: DestinyVersion,
+  language: DimLanguage,
+  suggestionsContext: SuggestionsContext = {},
+) {
+  return buildSearchConfig(destinyVersion, language, suggestionsContext, allFilters);
+}
 
 /** Builds an object that describes the available search keywords and filter definitions. */
 export function buildSearchConfig<I, FilterCtx, SuggestionsCtx>(
