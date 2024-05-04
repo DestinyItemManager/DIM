@@ -16,7 +16,7 @@ import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-c
 import { recentSearchComparator } from 'app/search/autocomplete';
 import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { FilterContext } from 'app/search/filter-types';
-import { buildFiltersMap } from 'app/search/search-config';
+import { buildItemFiltersMap } from 'app/search/search-config';
 import { parseAndValidateQuery } from 'app/search/search-utils';
 import { count, uniqBy } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
@@ -1127,7 +1127,7 @@ function trackTriumph(
 function searchUsed(draft: Draft<DimApiState>, account: DestinyAccount, query: string) {
   const destinyVersion = account.destinyVersion;
   // Note: memoized
-  const filtersMap = buildFiltersMap(destinyVersion);
+  const filtersMap = buildItemFiltersMap(destinyVersion);
 
   // Canonicalize the query so we always save it the same way
   const { canonical, saveInHistory } = parseAndValidateQuery(query, filtersMap, {
@@ -1188,7 +1188,7 @@ function saveSearch(
 ) {
   const destinyVersion = account.destinyVersion;
   // Note: memoized
-  const filtersMap = buildFiltersMap(destinyVersion);
+  const filtersMap = buildItemFiltersMap(destinyVersion);
 
   // Canonicalize the query so we always save it the same way
   const { canonical, saveable } = parseAndValidateQuery(query, filtersMap, {
@@ -1260,7 +1260,7 @@ function cleanupInvalidSearches(draft: Draft<DimApiState>, account: DestinyAccou
   }
 
   // Note: memoized
-  const filtersMap = buildFiltersMap(account.destinyVersion);
+  const filtersMap = buildItemFiltersMap(account.destinyVersion);
   for (const search of draft.searches[account.destinyVersion]) {
     if (search.saved || search.usageCount <= 0) {
       continue;
