@@ -5,13 +5,10 @@ import { DimLanguage } from 'app/i18n';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
 import { d2ManifestSelector } from 'app/manifest/selectors';
-import { RootState } from 'app/store/types';
 import { createSelector } from 'reselect';
 import { currentStoreSelector } from '../../inventory/selectors';
 import { DimStore } from '../../inventory/store-types';
 import { LoadoutsByItem, loadoutsByItemSelector } from '../../loadout-drawer/selectors';
-import { querySelector } from '../../shell/selectors';
-import { FilterDefinition } from '../filter-types';
 import { buildSearchConfig } from '../search-config';
 import { makeSearchFilterFactory } from '../search-filter';
 import { parseAndValidateQuery } from '../search-utils';
@@ -81,8 +78,6 @@ const loadoutFilterContextSelector = createSelector(
   makeLoadoutFilterContext,
 );
 
-// TODO: a filter selector generator
-
 /**
  * A selector for the search config for a particular destiny version.
  * Combines the searchConfig (list of filters),
@@ -95,20 +90,6 @@ export const loadoutFilterFactorySelector = createSelector(
   makeSearchFilterFactory,
 );
 
-/** A selector for a function for searching loadouts, given the current search query. */
-export const loadoutSearchFilterSelector = createSelector(
-  querySelector,
-  loadoutFilterFactorySelector,
-  (query, filterFactory) => filterFactory(query),
-);
-
-/** A selector for all loadouts filtered by whatever's currently in the search box. */
-export const filteredLoadoutsSelector = createSelector(
-  loadoutsSelector,
-  loadoutSearchFilterSelector,
-  (loadouts, searchFilter) => loadouts.filter(searchFilter),
-);
-
 /** A selector for a function for validating a query. */
 export const validateLoadoutQuerySelector = createSelector(
   loadoutSearchConfigSelector,
@@ -116,50 +97,3 @@ export const validateLoadoutQuerySelector = createSelector(
   (searchConfig, filterContext) => (query: string) =>
     parseAndValidateQuery(query, searchConfig.filtersMap, filterContext),
 );
-
-/** Whether the current search query is valid. */
-export const queryValidLoadoutSelector = createSelector(
-  querySelector,
-  validateLoadoutQuerySelector,
-  (query, validateQuery) => validateQuery(query).valid,
-);
-
-export function makeSearchSelectors<I, FilterCtx, SuggestionsCtx>(
-  filters: FilterDefinition<I, FilterCtx, SuggestionsCtx>[],
-  filterCtxSelector: (state: RootState) => FilterCtx,
-  suggestionsCtxSelector: (state: RootState) => SuggestionsCtx,
-) {
-  const searchConfigSelector = createSelector(
-    destinyVersionSelector,
-    languageSelector,
-    suggestionsCtxSelector,
-    () => filters,
-    buildSearchConfig,
-  );
-
-  /**
-   * A selector for the search config for a particular destiny version.
-   * Combines the searchConfig (list of filters),
-   * and the filterContext (list of other stat information filters can use)
-   * into a filter factory (for converting parsed strings into filter functions)
-   */
-  const filterFactorySelector = createSelector(
-    searchConfigSelector,
-    filterCtxSelector,
-    makeSearchFilterFactory,
-  );
-
-  /** A selector for a function for validating a query. */
-  const validateQuerySelector = createSelector(
-    searchConfigSelector,
-    filterCtxSelector,
-    (searchConfig, filterContext) => (query: string) =>
-      parseAndValidateQuery(query, searchConfig.filtersMap, filterContext),
-  );
-
-  return {
-    searchConfigSelector,
-    filterFactorySelector,
-    validateQuerySelector,
-  };
-}

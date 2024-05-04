@@ -220,6 +220,7 @@ function SearchBar(
     children?: React.ReactNode;
     /** An optional menu of actions that can be executed on the search. Always shown. */
     menu?: React.ReactNode;
+    /** Whether this search bar applies to loadouts rather than items. */
     loadouts?: boolean;
     instant?: boolean;
     className?: string;
