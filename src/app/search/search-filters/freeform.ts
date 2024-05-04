@@ -75,7 +75,7 @@ const getUniqueItemNamesFromManifest = memoizeOne(
  * Create a case-/diacritic-insensitive matching predicate for name / perkname filters.
  * Requires an exact match if `exact`, otherwise partial.
  */
-function matchText(value: string, language: DimLanguage, exact: boolean) {
+export function matchText(value: string, language: DimLanguage, exact: boolean) {
   const normalized = plainString(value, language);
   if (exact) {
     return (s: string) => normalized === plainString(s, language);
@@ -101,7 +101,7 @@ const nameFilter = {
       const allItemNames = getUniqueItemNamesFromManifest(d2Manifest.InventoryItem.getAll());
       return Array.from(
         new Set([...myItemNames, ...allItemNames]),
-        (s) => `name:${quoteFilterString(s)}`,
+        (s) => `exactname:${quoteFilterString(s)}`,
       );
     }
   },

@@ -13,15 +13,17 @@ import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { isArmorModsOnly, isFashionOnly } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
+import { loadoutFilterFactorySelector } from 'app/search/loadouts/loadout-search-filter';
 import { faCheckCircle, refreshIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
-import { localizedIncludes, localizedSorter } from 'app/utils/intl';
+import { localizedSorter } from 'app/utils/intl';
 import clsx from 'clsx';
 import modificationsIcon from 'destiny-icons/general/modifications.svg';
 import _ from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
 import styles from './menu-hooks.m.scss';
 
 /**
@@ -274,12 +276,14 @@ export function searchAndSortLoadoutsByQuery(
   language: DimLanguage,
   loadoutSort: LoadoutSort,
 ) {
+  const loadoutFilterFactory = useSelector(loadoutFilterFactorySelector);
+  // TODO: use the store query??
+  // const loadoutFilter = useSelector(loadoutSearchFilterSelector);
+
   let filteredLoadouts: Loadout[];
   if (query.length) {
-    const includes = localizedIncludes(language, query);
-    filteredLoadouts = loadouts.filter(
-      (loadout) => includes(loadout.name) || (loadout.notes && includes(loadout.notes)),
-    );
+    const loadoutFilter = loadoutFilterFactory(query);
+    filteredLoadouts = loadouts.filter(loadoutFilter);
   } else {
     filteredLoadouts = [...loadouts];
   }
