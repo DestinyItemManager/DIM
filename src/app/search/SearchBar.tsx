@@ -555,8 +555,7 @@ function SearchBar(
           >
             {/* Because FilterHelp suspends, the entire sheet will suspend while it is loaded.
              * This stops us having issues with incorrect frozen initial heights as it will
-             * get locked to the fallback height if we don't do this.
-             */}
+             * get locked to the fallback height if we don't do this. */}
             <Sheet
               onClose={() => setFilterHelpOpen(false)}
               header={
