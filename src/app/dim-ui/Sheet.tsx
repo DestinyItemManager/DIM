@@ -327,7 +327,7 @@ export default function Sheet({
   );
 }
 
-function tryWithBackoff(callback: () => boolean, timeout: number = 500, limit: number = 5_000) {
+function tryWithBackoff(callback: () => boolean, timeout = 500, limit = 5_000) {
   if (timeout > limit) {
     return;
   }
