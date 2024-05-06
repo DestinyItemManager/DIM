@@ -71,9 +71,6 @@ dependencies:
   core-js:
     specifier: ^3.37.0
     version: 3.37.0
-  dialog-polyfill:
-    specifier: ^0.5.6
-    version: 0.5.6
   dnd-core:
     specifier: ^16.0.1
     version: 16.0.1
@@ -5268,10 +5265,6 @@ packages:
   /detect-node@2.1.0:
     resolution: {integrity: sha512-T0NIuQpnTvFDATNuHN5roPwSBG83rFsuO+MXXH9/3N1eFbn4wcPjttvjMLEPWJ0RGUYgQE7cGgS3tNxbqCGM7g==}
     dev: true
-
-  /dialog-polyfill@0.5.6:
-    resolution: {integrity: sha512-ZbVDJI9uvxPAKze6z146rmfUZjBqNEwcnFTVamQzXH+svluiV7swmVIGr7miwADgfgt1G2JQIytypM9fbyhX4w==}
-    dev: false
 
   /diff-sequences@29.6.3:
     resolution: {integrity: sha512-EjePK1srD3P08o2j4f0ExnylqRs5B9tJjcp9t1krH2qRi8CCdsYfwe9JgSLurFBWwq4uOlipzfk5fHNvwFKr8Q==}

@@ -1,10 +1,8 @@
-import dialogPolyfill from 'dialog-polyfill';
-import 'dialog-polyfill/dist/dialog-polyfill.css';
 import styles from './useDialog.m.scss';
 
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react';
 import ClickOutsideRoot from './ClickOutsideRoot';
 
 // Redecalare forwardRef
@@ -83,14 +81,6 @@ const Dialog = forwardRef(function Dialog<Args = [], Result = void>(
   );
 
   useImperativeHandle(ref, () => ({ showDialog }), [showDialog]);
-
-  // Need to polyfill dialog, which only arrived in Safari 15.4
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (dialog) {
-      dialogPolyfill.registerDialog(dialog);
-    }
-  }, [dialogRef]);
 
   // We block click event propagation or else it'll trigger click handlers of the parent.
   return (
