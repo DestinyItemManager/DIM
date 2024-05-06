@@ -1,5 +1,7 @@
 ## Next
 
+## 8.19.0 <span class="changelog-date">(2024-05-05)</span>
+
 * Minimum browser version for DIM has been raised to Chrome 109+ (or equivalent Chromium-based browsers) and iOS 16+.
 * Add a warning for Samsung Internet users to explain why dark mode is making DIM too dark.
 
