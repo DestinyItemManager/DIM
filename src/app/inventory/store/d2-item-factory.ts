@@ -46,7 +46,6 @@ import { Draft } from 'immer';
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
-import { warnMissingDefinition } from '../../manifest/manifest-service-json';
 import { reportException } from '../../utils/sentry';
 import { InventoryBuckets } from '../inventory-buckets';
 import { DimItem, DimPursuitExpiration, DimQuestLine } from '../item-types';
@@ -253,9 +252,8 @@ export function makeItem(
     ? itemComponents?.instances.data?.[item.itemInstanceId] ?? emptyObject()
     : emptyObject();
 
-  // Missing definition?
+  // Missing definition
   if (!itemDef) {
-    warnMissingDefinition();
     return undefined;
   }
 

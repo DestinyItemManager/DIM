@@ -9,6 +9,7 @@ import { t } from 'app/i18next-t';
 import { processInGameLoadouts } from 'app/loadout-drawer/loadout-type-converters';
 import { inGameLoadoutLoaded } from 'app/loadout/ingame/actions';
 import { loadCoreSettings } from 'app/manifest/actions';
+import { checkForNewManifest } from 'app/manifest/manifest-service-json';
 import { d2ManifestSelector, manifestSelector } from 'app/manifest/selectors';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { get, set } from 'app/storage/idb-keyval';
@@ -247,6 +248,8 @@ function loadProfile(
   };
 }
 
+let lastCheckedManifest = 0;
+
 function loadStoresData(
   account: DestinyAccount,
   firstTime: boolean,
@@ -267,87 +270,106 @@ function loadStoresData(
       try {
         const { readOnly } = getState().inventory;
 
-        const [defs, profileResponse] = await Promise.all([
+        const [originalDefs, profileResponse] = await Promise.all([
           dispatch(getDefinitions()),
           dispatch(loadProfile(account, firstTime)),
         ]);
+
+        let defs = originalDefs;
 
         // If we switched account since starting this, give up
         if (account !== currentAccountSelector(getState())) {
           return;
         }
 
-        if (!defs || !profileResponse) {
-          return;
-        }
+        for (let i = 0; i < 2; i++) {
+          if (!defs || !profileResponse) {
+            return;
+          }
 
-        const stopTimer = timer('Process inventory');
+          const stopTimer = timer('Process inventory');
 
-        const buckets = d2BucketsSelector(getState())!;
-        const customStats = customStatsSelector(getState());
-        const stores = buildStores(
-          {
-            defs,
-            buckets,
-            customStats,
-            profileResponse,
-          },
-          transaction,
-        );
+          const buckets = d2BucketsSelector(getState())!;
+          const customStats = customStatsSelector(getState());
+          const stores = buildStores(
+            {
+              defs,
+              buckets,
+              customStats,
+              profileResponse,
+            },
+            transaction,
+          );
 
-        if (readOnly) {
-          for (const store of stores) {
-            store.hadErrors = true;
-            for (const item of store.items) {
-              item.lockable = false;
-              item.trackable = false;
-              item.notransfer = true;
-              item.taggable = false;
+          // One reason stores could have errors is if the manifest was not up
+          // to date. Check to see if it has updated, and if so, download it and
+          // immediately try again.
+          if (stores.some((s) => s.hadErrors)) {
+            if (lastCheckedManifest - Date.now() < 5 * 60 * 1000) {
+              return;
+            }
+            lastCheckedManifest = Date.now();
+
+            if (await checkForNewManifest()) {
+              defs = await dispatch(getDefinitions(true));
+              continue; // go back to the top of the loop with the new defs
             }
           }
+
+          if (readOnly) {
+            for (const store of stores) {
+              store.hadErrors = true;
+              for (const item of store.items) {
+                item.lockable = false;
+                item.trackable = false;
+                item.notransfer = true;
+                item.taggable = false;
+              }
+            }
+          }
+
+          const currencies = processCurrencies(profileResponse, defs);
+
+          const loadouts = processInGameLoadouts(profileResponse, defs);
+
+          stopTimer();
+
+          const stateSpan = transaction?.startChild({
+            op: 'updateInventoryState',
+          });
+          const stopStateTimer = timer('Inventory state update');
+
+          // If we switched account since starting this, give up before saving
+          if (account !== currentAccountSelector(getState())) {
+            return;
+          }
+
+          if (!getCurrentStore(stores)) {
+            errorLog('d2-stores', 'No characters in profile');
+            dispatch(
+              error(
+                new DimError(
+                  'Accounts.NoCharactersTitle',
+                  t('Accounts.NoCharacters'),
+                ).withNoSocials(),
+              ),
+            );
+            return;
+          }
+
+          // First-time loads can come from IDB, which can be VERY outdated,
+          // so don't remove item tags/notes based on that
+          if (!firstTime) {
+            dispatch(cleanInfos(stores));
+          }
+          dispatch(update({ stores, currencies }));
+          dispatch(inGameLoadoutLoaded(loadouts));
+
+          stopStateTimer();
+          stateSpan?.finish();
+
+          return stores;
         }
-
-        const currencies = processCurrencies(profileResponse, defs);
-
-        const loadouts = processInGameLoadouts(profileResponse, defs);
-
-        stopTimer();
-
-        const stateSpan = transaction?.startChild({
-          op: 'updateInventoryState',
-        });
-        const stopStateTimer = timer('Inventory state update');
-
-        // If we switched account since starting this, give up before saving
-        if (account !== currentAccountSelector(getState())) {
-          return;
-        }
-
-        if (!getCurrentStore(stores)) {
-          errorLog('d2-stores', 'No characters in profile');
-          dispatch(
-            error(
-              new DimError(
-                'Accounts.NoCharactersTitle',
-                t('Accounts.NoCharacters'),
-              ).withNoSocials(),
-            ),
-          );
-          return;
-        }
-
-        // First-time loads can come from IDB, which can be VERY outdated,
-        // so don't remove item tags/notes based on that
-        if (!firstTime) {
-          dispatch(cleanInfos(stores));
-        }
-        dispatch(update({ stores, currencies }));
-        dispatch(inGameLoadoutLoaded(loadouts));
-
-        stopStateTimer();
-        stateSpan?.finish();
-
-        return stores;
       } catch (e) {
         errorLog('d2-stores', 'Error loading stores', e);
         reportException('d2stores', e);
