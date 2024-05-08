@@ -146,6 +146,12 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
         draft.readOnly = true;
       });
 
+    case getType(actions.clearStores):
+      return {
+        ...state,
+        stores: [],
+      };
+
     default:
       return state;
   }

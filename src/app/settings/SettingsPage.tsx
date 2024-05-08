@@ -18,16 +18,16 @@ import StreamDeckSettings from 'app/stream-deck/StreamDeckSettings/StreamDeckSet
 import { clearAppBadge } from 'app/utils/app-badge';
 import { usePageTitle } from 'app/utils/hooks';
 import { errorLog } from 'app/utils/log';
-import i18next from 'i18next';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import InventoryItem from '../inventory/InventoryItem';
-import { AppIcon, faGrid, faList, lockIcon, refreshIcon, unlockedIcon } from '../shell/icons';
+import { AppIcon, faGrid, faList, lockIcon, unlockedIcon } from '../shell/icons';
 import CharacterOrderEditor from './CharacterOrderEditor';
 import Checkbox from './Checkbox';
 import { CustomStatsSettings } from './CustomStatsSettings';
+import LanguageSetting from './LanguageSetting';
 import Select, { mapToOptions } from './Select';
 import styles from './SettingsPage.m.scss';
 import SortOrderEditor, { SortProperty } from './SortOrderEditor';
@@ -41,25 +41,6 @@ import { itemSortSettingsSelector } from './item-sort';
 export const settingClass = styles.setting;
 export const fineprintClass = styles.fineprint;
 export const horizontalClass = styles.horizontal;
-
-const languageOptions = mapToOptions({
-  de: 'Deutsch',
-  en: 'English',
-  es: 'Español (España)',
-  'es-mx': 'Español (México)',
-  fr: 'Français',
-  it: 'Italiano',
-  ko: '한국어',
-  pl: 'Polski',
-  'pt-br': 'Português (Brasil)',
-  ru: 'Русский',
-  ja: '日本語',
-  'zh-cht': '繁體中文', // Chinese (Traditional)
-  'zh-chs': '简体中文', // Chinese (Simplified)
-});
-
-// This state is outside the settings page because the settings loses its
-let languageChanged = false;
 
 const themeOptions = mapToOptions({
   default: 'Default (Beyond Light)',
@@ -130,15 +111,6 @@ export default function SettingsPage() {
     onCheckChange(checked, name);
   };
 
-  const changeLanguage = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    languageChanged = true;
-    const language = e.target.value;
-    localStorage.setItem('dimLanguage', language);
-    i18next.changeLanguage(language, () => {
-      setSetting('language', language);
-    });
-  };
-
   const changeTheme = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const theme = e.target.value;
     setSetting('theme', theme);
@@ -151,12 +123,6 @@ export default function SettingsPage() {
   const resetItemSize = (e: React.MouseEvent) => {
     e.preventDefault();
     setSetting('itemSize', 50);
-    return false;
-  };
-
-  const reloadDim = (e: React.MouseEvent) => {
-    e.preventDefault();
-    window.location.reload();
     return false;
   };
 
@@ -278,20 +244,7 @@ export default function SettingsPage() {
           <section id="general">
             <h2>{t('Settings.Language')}</h2>
             <div className={styles.setting}>
-              <Select
-                label={t('Settings.Language')}
-                name="language"
-                value={settings.language}
-                options={languageOptions}
-                onChange={changeLanguage}
-              />
-              {languageChanged && (
-                <div>
-                  <button type="button" className="dim-button" onClick={reloadDim}>
-                    <AppIcon icon={refreshIcon} /> <span>{t('Settings.ReloadDIM')}</span>
-                  </button>
-                </div>
-              )}
+              <LanguageSetting />
             </div>
           </section>
 
