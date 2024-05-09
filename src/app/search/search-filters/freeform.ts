@@ -4,7 +4,7 @@ import { tl } from 'app/i18next-t';
 import { DimItem, DimPlug } from 'app/inventory/item-types';
 import { filterMap } from 'app/utils/collections';
 import { isD1Item } from 'app/utils/item-utils';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { DestinyInventoryItemDefinition, TierType } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import memoizeOne from 'memoize-one';
 import { FilterDefinition } from '../filter-types';
@@ -51,13 +51,18 @@ const getUniqueItemNamesFromManifest = memoizeOne(
   (allManifestItems: { [hash: number]: DestinyInventoryItemDefinition }) => {
     const itemNames = Object.values(allManifestItems)
       .filter((i) => {
-        if (!i.itemCategoryHashes) {
+        if (!i.itemCategoryHashes || !i.displayProperties.name) {
           return false;
         }
-        const isWeaponOrArmor =
-          i.itemCategoryHashes.includes(ItemCategoryHashes.Weapon) ||
-          i.itemCategoryHashes.includes(ItemCategoryHashes.Armor);
-        if (!i.displayProperties.name || !isWeaponOrArmor) {
+
+        const isArmor = i.itemCategoryHashes.includes(ItemCategoryHashes.Armor);
+
+        // there's annoying white armors named stuff like "Gauntlets" that distract from things like is:gauntlets
+        if (isArmor && i.inventory!.tierType === TierType.Basic) {
+          return false;
+        }
+
+        if (!isArmor && !i.itemCategoryHashes.includes(ItemCategoryHashes.Weapon)) {
           return false;
         }
         const { quality } = i;

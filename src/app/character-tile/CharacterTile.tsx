@@ -17,17 +17,16 @@ const gildedIcon = String.fromCodePoint(FontGlyphs.gilded_title);
  * This is currently being shared between StoreHeading and CharacterTileButton
  */
 export default memo(function CharacterTile({ store }: { store: DimStore }) {
-  const maxTotalPower = useSelector(
-    (state: RootState) => powerLevelSelector(state, store.id)?.maxTotalPower,
-  );
-  const floorTotalPower = Math.floor(maxTotalPower || store.powerLevel);
   const isPhonePortrait = useIsPhonePortrait();
+
+  if (store.isVault) {
+    return <VaultTile store={store} />;
+  }
 
   return (
     <div
       className={clsx(styles.characterTile, {
         [styles.current]: store.current,
-        [styles.vault]: store.isVault,
       })}
       style={{
         backgroundImage: `url("${store.background}")`,
@@ -38,31 +37,45 @@ export default memo(function CharacterTile({ store }: { store: DimStore }) {
           : 'black',
       }}
     >
-      {(store.destinyVersion === 1 || store.isVault) && (
+      {store.destinyVersion === 1 && (
         <img className={styles.emblem} src={store.icon} height={40} width={40} />
       )}
       <div className={styles.class}>{store.className}</div>
-      {store.isVault ? (
-        isPhonePortrait && (
-          <div className={styles.vaultCapacity}>
-            <VaultCapacity />
-          </div>
-        )
-      ) : (
-        <>
-          <div className={styles.bottom}>
-            {store.titleInfo ? <Title titleInfo={store.titleInfo} /> : store.race}
-          </div>
-          <div className={styles.powerLevel}>
-            <AppIcon icon={powerActionIcon} />
-            {store.powerLevel}
-          </div>
-          {isPhonePortrait && <div className={styles.maxTotalPower}>/ {floorTotalPower}</div>}
-        </>
-      )}
+      <div className={styles.bottom}>
+        {store.titleInfo ? <Title titleInfo={store.titleInfo} /> : store.race}
+      </div>
+      <div className={styles.powerLevel}>
+        <AppIcon icon={powerActionIcon} />
+        {store.powerLevel}
+      </div>
+      {isPhonePortrait && <MaxTotalPower store={store} />}
     </div>
   );
 });
+
+function VaultTile({ store }: { store: DimStore }) {
+  const isPhonePortrait = useIsPhonePortrait();
+
+  return (
+    <div className={styles.vaultTile}>
+      <img className={styles.vaultEmblem} src={store.icon} height={40} width={40} />
+      <div className={styles.vaultName}>{store.className}</div>
+      {isPhonePortrait && (
+        <div className={styles.vaultCapacity}>
+          <VaultCapacity />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MaxTotalPower({ store }: { store: DimStore }) {
+  const maxTotalPower = useSelector(
+    (state: RootState) => powerLevelSelector(state, store.id)?.maxTotalPower,
+  );
+  const floorTotalPower = Math.floor(maxTotalPower || store.powerLevel);
+  return <div className={styles.maxTotalPower}>/ {floorTotalPower}</div>;
+}
 
 /** An equipped Title, earned from completing a Seal */
 function Title({ titleInfo }: { titleInfo: DimTitle }) {

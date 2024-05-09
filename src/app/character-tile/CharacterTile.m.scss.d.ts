@@ -13,9 +13,12 @@ interface CssExports {
   'maxTotalPower': string;
   'powerLevel': string;
   'smallText': string;
+  'tileCommon': string;
   'title': string;
-  'vault': string;
   'vaultCapacity': string;
+  'vaultEmblem': string;
+  'vaultName': string;
+  'vaultTile': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

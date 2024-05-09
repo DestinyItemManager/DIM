@@ -1,13 +1,24 @@
 @use '../variables.scss' as *;
 
-.characterTile {
+// Shared styles between vault and character tile
+.tileCommon {
   flex: 1;
   position: relative;
   height: $emblem-height;
   max-width: $emblem-width;
-  overflow: hidden;
   text-align: left;
 
+  // Set the text off from the background
+  text-shadow:
+    1px 1px 1px rgba(0, 0, 0, 0.5),
+    0 0 10px rgba(0, 0, 0, 0.5);
+  :global(.app-icon) {
+    filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+  }
+}
+
+.characterTile {
+  composes: tileCommon;
   display: grid;
   grid-template-areas:
     'emblem class power'
@@ -27,29 +38,27 @@
   background-size: $emblem-width $emblem-height;
   background-position: left center;
   background-repeat: no-repeat;
-
-  // Set the text off from the background
-  text-shadow:
-    1px 1px 1px rgba(0, 0, 0, 0.5),
-    0 0 10px rgba(0, 0, 0, 0.5);
-  :global(.app-icon) {
-    filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
-  }
 }
 
-// These override .characterTile styles
-.vault {
-  // The vault tile is laid out differently
+.vaultTile {
+  composes: tileCommon;
+  display: grid;
   grid-template-areas: 'emblem class vaultCapacity' !important;
   grid-template-columns: 46px 1fr min-content;
   grid-template-rows: 1fr;
   align-items: center;
   box-sizing: border-box;
+  gap: 0 6px;
+  padding: 0 6px;
 
   // The vault needs a little border to stand out against some backgrounds
   border: 1px solid rgba(0, 0, 0, 0.3);
   border-right: none;
   background-size: cover;
+  background-repeat: no-repeat;
+
+  background-color: rgb(49, 50, 51);
+  background-image: url('images/vault-background.svg');
 }
 
 // The "current character" triangle
@@ -88,10 +97,25 @@
   place-self: center;
   width: 32px;
   height: 32px;
+}
 
-  .vault & {
-    height: 40px;
-    width: 40px;
+.vaultEmblem {
+  grid-area: emblem;
+  place-self: center;
+  height: 40px;
+  width: 40px;
+}
+
+.vaultName {
+  font-size: 20px;
+  grid-area: class;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  color: white;
+  min-width: 0; // prevents expanding beyond the grid cell with long contents
+
+  @include phone-portrait {
+    font-size: 16px;
   }
 }
 
@@ -103,15 +127,6 @@
   overflow: hidden;
   color: white;
   min-width: 0; // prevents expanding beyond the grid cell with long contents
-
-  .vault & {
-    margin-top: 0;
-  }
-
-  :global(.lang-ja) &,
-  :global(.lang-ru) .vault & {
-    font-size: 16px;
-  }
 }
 
 // Current power level
@@ -161,6 +176,7 @@
     flex-shrink: 1;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding-right: 3px;
   }
 }
 
