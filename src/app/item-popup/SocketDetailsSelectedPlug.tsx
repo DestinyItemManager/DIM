@@ -245,8 +245,10 @@ export default function SocketDetailsSelectedPlug({
       </div>
       <div className={styles.modDescription}>
         <h3>
-          {plug.displayProperties.name}
-          {plug.hash === socket.emptyPlugItemHash && <> &mdash; {plug.itemTypeDisplayName}</>}
+          <span>{plug.displayProperties.name}</span>
+          {plug.hash === socket.emptyPlugItemHash && (
+            <span> &mdash; {plug.itemTypeDisplayName}</span>
+          )}
         </h3>
         {plugDescriptions.perks.map((perkDesc) => (
           <React.Fragment key={perkDesc.perkHash}>
