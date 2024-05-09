@@ -139,7 +139,7 @@
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-redux": "^4.1.0",
-    "eslint-plugin-sonarjs": "^0.25.1",
+    "eslint-plugin-sonarjs": "^1.0.3",
     "fontawesome-subset": "^4.4.0",
     "fork-ts-checker-notifier-webpack-plugin": "^5.0.0",
     "fork-ts-checker-webpack-plugin": "^6.0.1",
