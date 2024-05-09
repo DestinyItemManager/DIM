@@ -187,19 +187,10 @@ function loadProfile(
       // TODO: need to make sure we still load at the right frequency / for manual cache busts?
       cachedProfileMintedDate = new Date(cachedProfileResponse.responseMintedTimestamp ?? 0);
       const profileAge = Date.now() - cachedProfileMintedDate.getTime();
+      infoLog('d2-stores', `Cached profile is ${profileAge / 1000}s old.`);
       if (!storesLoadedSelector(getState()) && profileAge > 0 && profileAge < BUNGIE_CACHE_TTL) {
-        warnLog(
-          'd2-stores',
-          'Cached profile is within Bungie.net cache time, skipping remote load.',
-          profileAge,
-        );
+        warnLog('d2-stores', 'Cached profile is new enough, skipping remote load.', profileAge);
         return { profile: cachedProfileResponse, live: false };
-      } else {
-        infoLog(
-          'd2-stores',
-          `Cached profile is older (${profileAge / 1000}s) than Bungie.net cache time (${BUNGIE_CACHE_TTL / 1000})s, proceeding.`,
-          profileAge,
-        );
       }
     }
 
@@ -207,22 +198,12 @@ function loadProfile(
       const remoteProfileResponse = await getStores(account);
       const remoteProfileMintedDate = new Date(remoteProfileResponse.responseMintedTimestamp ?? 0);
       const remoteProfileAgeSecs = (Date.now() - remoteProfileMintedDate.getTime()) / 1000;
-      infoLog(
-        'd2-stores',
-        `Profile from Bungie.net is ${remoteProfileAgeSecs}s newer than cached profile, using it.`,
-      );
+      infoLog('d2-stores', `Profile from Bungie.net is ${remoteProfileAgeSecs}s old.`);
 
       // compare new response against cached response, toss if it's not newer!
       if (cachedProfileResponse) {
         if (remoteProfileMintedDate.getTime() <= cachedProfileMintedDate.getTime()) {
-          const ageSecs =
-            (cachedProfileMintedDate.getTime() - remoteProfileMintedDate.getTime()) / 1000;
-          warnLog(
-            'd2-stores',
-            `Profile from Bungie.net was ${ageSecs}s older than cached profile, discarding.`,
-            remoteProfileMintedDate,
-            cachedProfileMintedDate,
-          );
+          warnLog('d2-stores', 'Profile from Bungie.net is older than cached profile, discarding.');
           // Clear the error since we did load correctly
           dispatch(profileError(undefined));
           // undefined means skip processing, in case we already have computed stores
@@ -234,15 +215,7 @@ function loadProfile(
             minimumCacheAge,
             remoteProfileMintedDate.getTime() - cachedProfileMintedDate.getTime(),
           );
-          const ageSecs =
-            (remoteProfileMintedDate.getTime() - cachedProfileMintedDate.getTime()) / 1000;
-          infoLog(
-            'd2-stores',
-            `Profile from Bungie.net was ${ageSecs} newer than cached profile, using it.`,
-            minimumCacheAge,
-            remoteProfileMintedDate,
-            cachedProfileMintedDate,
-          );
+          infoLog('d2-stores', `Profile from Bungie.net is newer than cached profile, using it.`);
         }
       }
 
