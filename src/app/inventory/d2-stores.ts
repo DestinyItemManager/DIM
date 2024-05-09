@@ -197,8 +197,8 @@ function loadProfile(
     try {
       const remoteProfileResponse = await getStores(account);
       const remoteProfileMintedDate = new Date(remoteProfileResponse.responseMintedTimestamp ?? 0);
-      const remoteProfileAgeSecs = (Date.now() - remoteProfileMintedDate.getTime()) / 1000;
-      infoLog('d2-stores', `Profile from Bungie.net is ${remoteProfileAgeSecs}s old.`);
+      const remoteProfileAgeSec = (Date.now() - remoteProfileMintedDate.getTime()) / 1000;
+      infoLog('d2-stores', `Profile from Bungie.net is ${remoteProfileAgeSec}s old.`);
 
       // compare new response against cached response, toss if it's not newer!
       if (cachedProfileResponse) {

@@ -160,8 +160,8 @@ export function cleanInfos(stores: DimStore[]): ThunkResult {
           cleanupIds.delete(item.id);
         } else if (item.craftedInfo?.craftedDate) {
           // Double-check crafted items - we may have them under a different ID.
-          // If so, patch up the data by re-tagging them under the new ID. We'll
-          // delete the old item's info, but the new infos will be saved.
+          // If so, patch up the data by re-tagging them under the new ID.
+          // We'll delete the old item's info, but the new infos will be saved.
           const craftedInfo = infosByCraftedDate[item.craftedInfo.craftedDate];
           if (craftedInfo) {
             if (craftedInfo.tag) {
