@@ -248,7 +248,7 @@
     "InInGameLoadout": "is:iningameloadout shows items that are included in any in-game loadout.",
     "InDimLoadout": "is:indimloadout shows items that are included in any DIM loadout.",
     "Infusable": "Shows items that can be infused.",
-    "InLoadoutCount": "Shows items based on the number of DIM loadouts they are included in.",
+    "InLoadoutCount": "Shows items based on the number of loadouts they are included in.",
     "IsAdept": "Shows weapons compatible with Adept mods.",
     "IsCrafted": "Shows weapons that have been crafted.",
     "IsSunset": "Shows items that have been sunset and can no longer be infused to max power.",
