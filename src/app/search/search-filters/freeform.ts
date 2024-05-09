@@ -72,7 +72,6 @@ const getUniqueItemNamesFromManifest = memoizeOne(
         return !powerCap || !irrelevantPowerCaps.has(powerCap);
       })
       .map((i) => i.displayProperties.name.toLowerCase());
-    console.log([...new Set(itemNames)].length);
     return [...new Set(itemNames)];
   },
 );
