@@ -13,11 +13,12 @@ import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { isArmorModsOnly, isFashionOnly } from 'app/loadout-drawer/loadout-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
+import { ItemFilter } from 'app/search/filter-types';
 import { faCheckCircle, refreshIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
-import { localizedIncludes, localizedSorter } from 'app/utils/intl';
+import { localizedSorter } from 'app/utils/intl';
 import clsx from 'clsx';
 import modificationsIcon from 'destiny-icons/general/modifications.svg';
 import _ from 'lodash';
@@ -270,16 +271,15 @@ function AnalysisProgress({
  */
 export function searchAndSortLoadoutsByQuery(
   loadouts: Loadout[],
+  loadoutFilterFactory: (query: string) => ItemFilter<Loadout>,
   query: string,
   language: DimLanguage,
   loadoutSort: LoadoutSort,
 ) {
   let filteredLoadouts: Loadout[];
   if (query.length) {
-    const includes = localizedIncludes(language, query);
-    filteredLoadouts = loadouts.filter(
-      (loadout) => includes(loadout.name) || (loadout.notes && includes(loadout.notes)),
-    );
+    const loadoutFilter = loadoutFilterFactory(query);
+    filteredLoadouts = loadouts.filter(loadoutFilter);
   } else {
     filteredLoadouts = [...loadouts];
   }

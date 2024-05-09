@@ -1,13 +1,24 @@
 import StaticPage from 'app/dim-ui/StaticPage';
 import { t } from 'app/i18next-t';
+import { DimItem } from 'app/inventory/item-types';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
+import { RootState } from 'app/store/types';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './FilterHelp.m.scss';
 import { SearchInput } from './SearchInput';
-import { FilterDefinition } from './filter-types';
-import { searchConfigSelector } from './search-config';
-import { generateGroupedSuggestionsForFilter } from './suggestions-generation';
+import { FilterContext, FilterDefinition, SuggestionsContext } from './filter-types';
+import { LoadoutFilterContext, LoadoutSuggestionsContext } from './loadouts/loadout-filter-types';
+import {
+  loadoutSearchConfigSelector,
+  loadoutSuggestionsContextSelector,
+} from './loadouts/loadout-search-filter';
+import { SearchConfig, searchConfigSelector } from './search-config';
+import {
+  generateGroupedSuggestionsForFilter,
+  suggestionsContextSelector,
+} from './suggestions-generation';
 
 function keywordsString(keywords: string | string[]) {
   if (Array.isArray(keywords)) {
@@ -16,8 +27,15 @@ function keywordsString(keywords: string | string[]) {
   return keywords;
 }
 
-export default function FilterHelp() {
-  const searchConfig = useSelector(searchConfigSelector).filtersMap;
+export default function FilterHelp({ loadouts }: { loadouts?: boolean }) {
+  const searchConfig = useSelector<
+    RootState,
+    | SearchConfig<DimItem, FilterContext, SuggestionsContext>
+    | SearchConfig<Loadout, LoadoutFilterContext, LoadoutSuggestionsContext>
+  >(loadouts ? loadoutSearchConfigSelector : searchConfigSelector).filtersMap;
+  const suggestionContext = useSelector(
+    loadouts ? loadoutSuggestionsContextSelector : suggestionsContextSelector,
+  );
   const [search, setSearch] = useState('');
 
   const searchLower = search.toLowerCase();
@@ -63,7 +81,11 @@ export default function FilterHelp() {
           </thead>
           <tbody>
             {filters.map((filter) => (
-              <FilterExplanation key={keywordsString(filter.keywords)} filter={filter} />
+              <FilterExplanation
+                key={keywordsString(filter.keywords)}
+                filter={filter}
+                suggestionContext={suggestionContext}
+              />
             ))}
           </tbody>
         </table>
@@ -72,11 +94,23 @@ export default function FilterHelp() {
   );
 }
 
-function FilterExplanation({ filter }: { filter: FilterDefinition }) {
+function FilterExplanation({
+  filter,
+  suggestionContext,
+}: {
+  filter:
+    | FilterDefinition<Loadout, LoadoutFilterContext, LoadoutSuggestionsContext>
+    | FilterDefinition;
+  suggestionContext: LoadoutSuggestionsContext | SuggestionsContext;
+}) {
   const dispatch = useDispatch();
-  const suggestions = Array.from(
-    new Set([...generateGroupedSuggestionsForFilter(filter, true, {})]),
+  let suggestions = Array.from(
+    new Set([...generateGroupedSuggestionsForFilter(filter, suggestionContext, true)]),
   );
+  if (filter.format === 'freeform' || filter.format?.includes('freeform')) {
+    suggestions = suggestions.slice(0, 5);
+  }
+
   const localDesc: string = Array.isArray(filter.description)
     ? t(...filter.description)
     : t(filter.description);

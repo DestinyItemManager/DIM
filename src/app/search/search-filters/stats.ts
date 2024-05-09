@@ -36,11 +36,14 @@ const statFilters: FilterDefinition[] = [
     description: tl('Filter.Stats'),
     format: 'stat',
     suggestionsGenerator: ({ customStats }) =>
-      generateGroupedSuggestionsForFilter({
-        keywords: 'stat',
-        format: 'stat',
-        suggestions: [...allAtomicStats, ...(customStats?.map((c) => c.shortLabel) ?? [])],
-      }),
+      generateGroupedSuggestionsForFilter(
+        {
+          keywords: 'stat',
+          format: 'stat',
+          suggestions: [...allAtomicStats, ...(customStats?.map((c) => c.shortLabel) ?? [])],
+        },
+        {},
+      ),
     validateStat,
     filter: ({ filterValue, compare, customStats }) =>
       statFilterFromString(filterValue, compare!, customStats),
@@ -54,15 +57,18 @@ const statFilters: FilterDefinition[] = [
     // armor really, so the suggestions only list armor stats. But `validateStats` does allow
     // other stats too because there's no good reason to forbid it...
     suggestionsGenerator: ({ customStats }) =>
-      generateGroupedSuggestionsForFilter({
-        keywords: 'basestat',
-        format: 'stat',
-        suggestions: [
-          ...searchableArmorStatNames,
-          ...estStatNames,
-          ...(customStats?.map((c) => c.shortLabel) ?? []),
-        ],
-      }),
+      generateGroupedSuggestionsForFilter(
+        {
+          keywords: 'basestat',
+          format: 'stat',
+          suggestions: [
+            ...searchableArmorStatNames,
+            ...estStatNames,
+            ...(customStats?.map((c) => c.shortLabel) ?? []),
+          ],
+        },
+        {},
+      ),
     validateStat,
     filter: ({ filterValue, compare, customStats }) =>
       statFilterFromString(filterValue, compare!, customStats, true),
