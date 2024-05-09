@@ -27,6 +27,11 @@ export const update = createAction('inventory/UPDATE')<{
   currencies: AccountCurrency[];
 }>();
 
+/**
+ * Remove the loaded stores to force them to be recomputed on the next load (used when changing language).
+ */
+export const clearStores = createAction('inventory/CLEAR_STORES')();
+
 export const profileLoaded = createAction('inventory/PROFILE_LOADED')<{
   profile: DestinyProfileResponse;
   live: boolean;

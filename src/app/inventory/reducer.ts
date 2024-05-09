@@ -137,6 +137,12 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
         draft.mockProfileData = action.payload;
       });
 
+    case getType(actions.clearStores):
+      return {
+        ...state,
+        stores: [],
+      };
+
     default:
       return state;
   }

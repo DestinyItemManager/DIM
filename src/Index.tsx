@@ -23,12 +23,11 @@ import { StorageBroken, storageTest } from './StorageTest';
 import Root from './app/Root';
 import setupRateLimiter from './app/bungie-api/rate-limit-config';
 import { initGoogleAnalytics } from './app/google';
-import { initi18n } from './app/i18n';
+import { createLanguageObserver, initi18n } from './app/i18n';
 import registerServiceWorker from './app/register-service-worker';
 import { safariTouchFix } from './app/safari-touch-fix';
 import { createWishlistObserver } from './app/wishlists/observers';
 import { observe } from 'app/store/observerMiddleware';
-import { createLanguageObserver } from 'app/settings/observers';
 infoLog(
   'app',
   `DIM v${$DIM_VERSION} (${$DIM_FLAVOR}) - Please report any errors to https://www.github.com/DestinyItemManager/DIM/issues`,
