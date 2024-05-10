@@ -1,7 +1,7 @@
 import { fixupConfigRules, fixupPluginRules } from '@eslint/compat';
-import { FlatCompat } from '@eslint/eslintrc';
 import eslint from '@eslint/js';
 import arrayFunc from 'eslint-plugin-array-func';
+import cssModules from 'eslint-plugin-css-modules';
 import github from 'eslint-plugin-github';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import lodash from 'eslint-plugin-lodash';
@@ -9,22 +9,10 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import reactRecommended from 'eslint-plugin-react/configs/recommended.js';
 import sonarjs from 'eslint-plugin-sonarjs';
 import globals from 'globals';
-import path from 'path';
 import tseslint from 'typescript-eslint';
-import { fileURLToPath } from 'url';
 
-// mimic CommonJS variables
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
-
+// TODO: different configs for JS vs TS
 export default tseslint.config(
-  // TODO - migrate these extends individually as they add support
-  // for flat config like "eslint:recommended" -> js.configs.recommended above.
-  // Documented here: https://eslint.org/docs/latest/use/configure/migration-guide#predefined-and-shareable-configs
   { name: 'eslint/recommended', ...eslint.configs.recommended },
   ...tseslint.configs.recommendedTypeChecked,
   {
@@ -39,7 +27,6 @@ export default tseslint.config(
   ...tseslint.configs.stylisticTypeChecked,
   {
     name: 'react',
-    //files: ['**/*.{js,mjs,cjs,jsx,ts,tsx}'],
     ...fixupConfigRules(reactRecommended)[0],
     settings: {
       react: {
@@ -52,25 +39,15 @@ export default tseslint.config(
       },
     },
   },
-  // //...compat.extends("prettier"),
   { name: 'array-func', ...arrayFunc.configs.all },
-  // cssModules.configs.recommended,
-  // ...compat.extends("plugin:@typescript-eslint/recommended-type-checked"),
-  // ...compat.extends("plugin:@typescript-eslint/stylistic-type-checked"),
-  // ...compat.extends("prettier"),
-  // ...compat.extends("plugin:css-modules/recommended"),
+  {
+    name: 'css-modules',
+    plugins: {
+      'css-modules': fixupPluginRules(cssModules),
+    },
+    rules: { 'css-modules/no-unused-class': ['error', { camelCase: true }] },
+  },
   { name: 'sonarjs/recommended', ...sonarjs.configs.recommended },
-  // ...compat.extends("plugin:jsx-a11y/recommended"),
-  // TODO: different configs for JS vs TS
-  // ...compat.plugins(
-  //   'react-hooks',
-  //   'lodash',
-  //   'jsx-a11y',
-  //   // https://github.com/DianaSuvorova/eslint-plugin-react-redux/issues/99
-  //   // "react-redux",
-  //   'css-modules',
-  //   //'jsx-expressions',
-  // ),
   {
     name: 'react-hooks',
     plugins: {
@@ -94,7 +71,7 @@ export default tseslint.config(
   {
     name: 'jsx-a11y',
     plugins: {
-      'jsx-a11y': jsxA11y,
+      'jsx-a11y': fixupPluginRules(jsxA11y),
     },
     rules: {
       'jsx-a11y/aria-props': 'error',
@@ -136,6 +113,17 @@ export default tseslint.config(
       'lodash/preferred-alias': 'error',
     },
   },
+  // {
+  //   // https://github.com/hluisson/eslint-plugin-jsx-expressions/issues/18
+  //   name: 'jsx-expressions',
+  //   plugins: {
+  //     // For these plugins we don't want any presets, only specific rules.
+  //     'jsx-expressions': jsxExpressions,
+  //   },
+  //   rules: {
+  //     'jsx-expressions/strict-logical-expressions': ['error', { allowString: true }],
+  //   },
+  // },
   {
     name: 'dim-custom',
     //files: ['**/*.{js,mjs,cjs,jsx,ts,tsx}'],
@@ -182,10 +170,6 @@ export default tseslint.config(
     },
     linterOptions: {
       reportUnusedDisableDirectives: true,
-    },
-    plugins: {
-      // For these plugins we don't want any presets, only specific rules.
-      // "jsx-expressions": jsxExpressions,
     },
     rules: {
       'no-alert': 'error',
@@ -447,9 +431,6 @@ export default tseslint.config(
       'no-implied-eval': 'off',
       '@typescript-eslint/no-implied-eval': 'error',
       'array-func/prefer-array-from': 'off',
-      // https://github.com/DianaSuvorova/eslint-plugin-react-redux/issues/99
-      // "react-redux/mapStateToProps-prefer-hoisted": "error",
-      // "react-redux/no-unused-prop-types": "error",
       'react/no-unused-prop-types': 'off',
       'css-modules/no-undef-class': 'off',
       'sonarjs/cognitive-complexity': 'off',
@@ -458,7 +439,6 @@ export default tseslint.config(
       'sonarjs/prefer-immediate-return': 'off',
       'sonarjs/no-nested-switch': 'off',
       'sonarjs/no-nested-template-literals': 'off',
-      //'jsx-expressions/strict-logical-expressions': ['error', { allowString: true }],
     },
   },
   {

@@ -211,9 +211,6 @@ devDependencies:
   '@eslint/compat':
     specifier: ^1.0.1
     version: 1.0.1
-  '@eslint/eslintrc':
-    specifier: ^3.0.2
-    version: 3.0.2
   '@pmmmwh/react-refresh-webpack-plugin':
     specifier: ^0.5.13
     version: 0.5.13(@types/webpack@5.28.5)(react-refresh@0.14.2)(webpack-dev-server@5.0.4)(webpack@5.91.0)
@@ -358,9 +355,6 @@ devDependencies:
   eslint-plugin-react-hooks:
     specifier: ^4.6.2
     version: 4.6.2(eslint@9.2.0)
-  eslint-plugin-react-redux:
-    specifier: ^4.1.0
-    version: 4.1.0(eslint-plugin-react@7.34.1)(eslint@9.2.0)
   eslint-plugin-sonarjs:
     specifier: ^1.0.3
     version: 1.0.3(eslint@9.2.0)
@@ -6045,18 +6039,6 @@ packages:
       eslint: 9.2.0
     dev: true
 
-  /eslint-plugin-react-redux@4.1.0(eslint-plugin-react@7.34.1)(eslint@9.2.0):
-    resolution: {integrity: sha512-DBhCj87sdUnlIfjw3HhDzj5nmyuuBIiiokJ1Ybl/gZ3tStAz/uy/ckK7p4rEgXvDGb7R0fupDGa8gSGAYXRrOw==}
-    engines: {node: '>=12.0.0'}
-    peerDependencies:
-      eslint: ^7 || ^8
-      eslint-plugin-react: ^7.28.0
-    dependencies:
-      eslint: 9.2.0
-      eslint-plugin-react: 7.34.1(eslint@9.2.0)
-      eslint-rule-composer: 0.3.0
-    dev: true
-
   /eslint-plugin-react@7.34.1(eslint@9.2.0):
     resolution: {integrity: sha512-N97CxlouPT1AHt8Jn0mhhN2RrADlUAsk1/atcT2KyA/l9Q/E6ll7OIGwNumFmWfZ9skV3XXccYS19h80rHtgkw==}
     engines: {node: '>=4'}
@@ -6091,11 +6073,6 @@ packages:
       eslint: ^8.0.0 || ^9.0.0
     dependencies:
       eslint: 9.2.0
-    dev: true
-
-  /eslint-rule-composer@0.3.0:
-    resolution: {integrity: sha512-bt+Sh8CtDmn2OajxvNO+BX7Wn4CIWMpTRm3MaiKPCQcnnlm0CS2mhui6QaoeQugs+3Kj2ESKEEGJUdVafwhiCg==}
-    engines: {node: '>=4.0.0'}
     dev: true
 
   /eslint-rule-documentation@1.0.23:
