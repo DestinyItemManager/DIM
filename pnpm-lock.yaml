@@ -332,7 +332,7 @@ devDependencies:
     specifier: ^7.0.1
     version: 7.0.1(postcss@8.4.38)
   eslint:
-    specifier: ^9.0.0
+    specifier: ^9.2.0
     version: 9.2.0
   eslint-plugin-array-func:
     specifier: ^5.0.1

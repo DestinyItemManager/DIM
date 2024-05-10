@@ -1,9 +1,11 @@
 import { fixupConfigRules, fixupPluginRules } from '@eslint/compat';
 import { FlatCompat } from '@eslint/eslintrc';
 import eslint from '@eslint/js';
-import tsParser from '@typescript-eslint/parser';
 import arrayFunc from 'eslint-plugin-array-func';
 import github from 'eslint-plugin-github';
+import jsxA11y from 'eslint-plugin-jsx-a11y';
+import lodash from 'eslint-plugin-lodash';
+import reactHooks from 'eslint-plugin-react-hooks';
 import reactRecommended from 'eslint-plugin-react/configs/recommended.js';
 import sonarjs from 'eslint-plugin-sonarjs';
 import globals from 'globals';
@@ -23,32 +25,120 @@ export default tseslint.config(
   // TODO - migrate these extends individually as they add support
   // for flat config like "eslint:recommended" -> js.configs.recommended above.
   // Documented here: https://eslint.org/docs/latest/use/configure/migration-guide#predefined-and-shareable-configs
-  eslint.configs.recommended,
-  ...fixupConfigRules(reactRecommended),
+  { name: 'eslint/recommended', ...eslint.configs.recommended },
   ...tseslint.configs.recommendedTypeChecked,
+  {
+    name: 'typescript-eslint/parser-options',
+    languageOptions: {
+      parserOptions: {
+        project: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
   ...tseslint.configs.stylisticTypeChecked,
+  {
+    name: 'react',
+    //files: ['**/*.{js,mjs,cjs,jsx,ts,tsx}'],
+    ...fixupConfigRules(reactRecommended)[0],
+    settings: {
+      react: {
+        version: 'detect',
+        linkComponents: [
+          // Components used as alternatives to <a> for linking, eg. <Link to={ url } />, from React Router
+          { name: 'Link', linkAttribute: 'to' },
+          { name: 'NavLink', linkAttribute: 'to' },
+        ],
+      },
+    },
+  },
   // //...compat.extends("prettier"),
-  arrayFunc.configs.all,
+  { name: 'array-func', ...arrayFunc.configs.all },
   // cssModules.configs.recommended,
-  // sonar.configs.recommended,
-  // jsxA11y.configs.recommended,
   // ...compat.extends("plugin:@typescript-eslint/recommended-type-checked"),
   // ...compat.extends("plugin:@typescript-eslint/stylistic-type-checked"),
   // ...compat.extends("prettier"),
   // ...compat.extends("plugin:css-modules/recommended"),
-  sonarjs.configs.recommended,
+  { name: 'sonarjs/recommended', ...sonarjs.configs.recommended },
   // ...compat.extends("plugin:jsx-a11y/recommended"),
   // TODO: different configs for JS vs TS
-  ...compat.plugins(
-    'react-hooks',
-    'lodash',
-    'jsx-a11y',
-    // https://github.com/DianaSuvorova/eslint-plugin-react-redux/issues/99
-    // "react-redux",
-    'css-modules',
-    //'jsx-expressions',
-  ),
+  // ...compat.plugins(
+  //   'react-hooks',
+  //   'lodash',
+  //   'jsx-a11y',
+  //   // https://github.com/DianaSuvorova/eslint-plugin-react-redux/issues/99
+  //   // "react-redux",
+  //   'css-modules',
+  //   //'jsx-expressions',
+  // ),
   {
+    name: 'react-hooks',
+    plugins: {
+      'react-hooks': fixupPluginRules(reactHooks),
+    },
+    rules: reactHooks.configs.recommended.rules,
+  },
+  {
+    // We want to choose which rules to enable from the github plugin, not use a preset.
+    name: 'github',
+    plugins: {
+      github: fixupPluginRules(github),
+    },
+    rules: {
+      'github/array-foreach': 'error',
+      'github/async-currenttarget': 'error',
+      'github/async-preventdefault': 'error',
+      'github/no-innerText': 'error',
+    },
+  },
+  {
+    name: 'jsx-a11y',
+    plugins: {
+      'jsx-a11y': jsxA11y,
+    },
+    rules: {
+      'jsx-a11y/aria-props': 'error',
+      'jsx-a11y/aria-proptypes': 'error',
+      'jsx-a11y/aria-role': 'error',
+      'jsx-a11y/aria-unsupported-elements': 'error',
+      'jsx-a11y/autocomplete-valid': 'error',
+      'jsx-a11y/label-has-associated-control': 'error',
+      'jsx-a11y/no-noninteractive-element-interactions': 'error',
+      'jsx-a11y/no-noninteractive-element-to-interactive-role': 'error',
+      'jsx-a11y/no-noninteractive-tabindex': 'error',
+      'jsx-a11y/no-redundant-roles': 'error',
+      'jsx-a11y/role-has-required-aria-props': 'error',
+      'jsx-a11y/role-supports-aria-props': 'error',
+    },
+  },
+  {
+    name: 'lodash',
+    plugins: {
+      lodash,
+    },
+    rules: {
+      'lodash/collection-method-value': 'error',
+      'lodash/collection-return': 'error',
+      'lodash/no-extra-args': 'error',
+      'lodash/chaining': ['error', 'never'],
+      'lodash/identity-shorthand': ['error', 'never'],
+      'lodash/matches-shorthand': ['error', 'never'],
+      'lodash/matches-prop-shorthand': ['error', 'never'],
+      'lodash/prop-shorthand': ['error', 'never'],
+      'lodash/prefer-compact': 'error',
+      'lodash/prefer-filter': 'error',
+      'lodash/prefer-find': 'error',
+      'lodash/prefer-flat-map': 'error',
+      'lodash/prefer-immutable-method': 'error',
+      'lodash/prefer-map': 'error',
+      'lodash/prefer-reject': 'error',
+      'lodash/prefer-times': 'error',
+      'lodash/preferred-alias': 'error',
+    },
+  },
+  {
+    name: 'dim-custom',
+    //files: ['**/*.{js,mjs,cjs,jsx,ts,tsx}'],
     ignores: [
       '*.m.scss.d.ts',
       '*.m.css.d.ts',
@@ -64,20 +154,16 @@ export default tseslint.config(
     ],
     languageOptions: {
       ecmaVersion: 'latest',
-      parser: tsParser,
       parserOptions: {
-        ecmaFeatures: {
-          jsx: true,
-        },
         ecmaVersion: 'latest',
         sourceType: 'module',
-        project: true,
-        tsconfigRootDir: import.meta.dirname,
       },
       sourceType: 'module',
       globals: {
         ...globals.browser,
-        ...globals.es6,
+        // TODO: limit to service worker
+        ...globals.serviceworker,
+        ...globals.es2021,
         $featureFlags: 'readonly',
         ga: 'readonly',
         $DIM_FLAVOR: 'readonly',
@@ -94,25 +180,12 @@ export default tseslint.config(
         module: 'readonly',
       },
     },
-    settings: {
-      react: {
-        version: 'detect',
-        linkComponents: [
-          // Components used as alternatives to <a> for linking, eg. <Link to={ url } />, from React Router
-          { name: 'Link', linkAttribute: 'to' },
-          { name: 'NavLink', linkAttribute: 'to' },
-        ],
-      },
-    },
     linterOptions: {
       reportUnusedDisableDirectives: true,
     },
     plugins: {
       // For these plugins we don't want any presets, only specific rules.
-      github: fixupPluginRules(github),
       // "jsx-expressions": jsxExpressions,
-      // lodash: lodash,
-      // "react-hooks": reactHooks,
     },
     rules: {
       'no-alert': 'error',
@@ -231,6 +304,7 @@ export default tseslint.config(
           message: 'Please only use `const enum`s.',
         },
       ],
+      // TODO: Switch to @stylistic/eslint-plugin-js for this one rule
       'spaced-comment': [
         'error',
         'always',
@@ -263,8 +337,6 @@ export default tseslint.config(
       'react/no-unescaped-entities': 'off',
       'react/jsx-no-target-blank': 'off',
       'react/display-name': 'off',
-      'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
       'react/prefer-stateless-function': 'warn',
       'react/no-access-state-in-setstate': 'error',
       'react/no-this-in-sfc': 'error',
@@ -298,35 +370,6 @@ export default tseslint.config(
           ],
         },
       ],
-      'jsx-a11y/aria-props': 'error',
-      'jsx-a11y/aria-proptypes': 'error',
-      'jsx-a11y/aria-role': 'error',
-      'jsx-a11y/aria-unsupported-elements': 'error',
-      'jsx-a11y/autocomplete-valid': 'error',
-      'jsx-a11y/label-has-associated-control': 'error',
-      'jsx-a11y/no-noninteractive-element-interactions': 'error',
-      'jsx-a11y/no-noninteractive-element-to-interactive-role': 'error',
-      'jsx-a11y/no-noninteractive-tabindex': 'error',
-      'jsx-a11y/no-redundant-roles': 'error',
-      'jsx-a11y/role-has-required-aria-props': 'error',
-      'jsx-a11y/role-supports-aria-props': 'error',
-      'lodash/collection-method-value': 'error',
-      'lodash/collection-return': 'error',
-      'lodash/no-extra-args': 'error',
-      'lodash/chaining': ['error', 'never'],
-      'lodash/identity-shorthand': ['error', 'never'],
-      'lodash/matches-shorthand': ['error', 'never'],
-      'lodash/matches-prop-shorthand': ['error', 'never'],
-      'lodash/prop-shorthand': ['error', 'never'],
-      'lodash/prefer-compact': 'error',
-      'lodash/prefer-filter': 'error',
-      'lodash/prefer-find': 'error',
-      'lodash/prefer-flat-map': 'error',
-      'lodash/prefer-immutable-method': 'error',
-      'lodash/prefer-map': 'error',
-      'lodash/prefer-reject': 'error',
-      'lodash/prefer-times': 'error',
-      'lodash/preferred-alias': 'error',
       '@typescript-eslint/await-thenable': 'error',
       '@typescript-eslint/no-misused-promises': [
         'error',
@@ -368,7 +411,7 @@ export default tseslint.config(
       '@typescript-eslint/consistent-type-definitions': 'error',
       '@typescript-eslint/consistent-generic-constructors': 'error',
       '@typescript-eslint/no-duplicate-enum-values': 'error',
-      '@typescript-eslint/no-throw-literal': 'error',
+      '@typescript-eslint/only-throw-error': 'error',
       '@typescript-eslint/no-unused-vars': [
         'error',
         {
@@ -416,13 +459,10 @@ export default tseslint.config(
       'sonarjs/no-nested-switch': 'off',
       'sonarjs/no-nested-template-literals': 'off',
       //'jsx-expressions/strict-logical-expressions': ['error', { allowString: true }],
-      'github/array-foreach': 'error',
-      'github/async-currenttarget': 'error',
-      'github/async-preventdefault': 'error',
-      'github/no-innerText': 'error',
     },
   },
   {
+    name: 'tests',
     files: ['**/*.test.ts'],
     rules: {
       // We don't want to allow importing test modules in app modules, but of course you can do it in other test modules.

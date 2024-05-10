@@ -40,6 +40,7 @@
     "bcu": "node src/build-browsercheck-utils.js && prettier --write src/browsercheck-utils.js",
     "fa-subset": "node src/fa-subset.js",
     "prepare": "husky",
+    "eslint-inspect": "pnpm dlx pnpm --package=eslint --package=@eslint/config-inspector eslint-config-inspector",
     "deps:stale": "pnpm outdated --long",
     "deps:update": "pnpm up -i --latest",
     "deps:pnpm": "corepack use 'pnpm@*'"
@@ -130,7 +131,7 @@
     "css-loader": "^7.1.1",
     "css-modules-typescript-loader": "^4.0.1",
     "cssnano": "^7.0.1",
-    "eslint": "^9.0.0",
+    "eslint": "^9.2.0",
     "eslint-plugin-array-func": "^5.0.1",
     "eslint-plugin-css-modules": "^2.12.0",
     "eslint-plugin-github": "^4.10.2",
