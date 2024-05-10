@@ -473,6 +473,7 @@ export default (env: Env) => {
         { from: `./icons/screenshots`, to: 'screenshots/' },
         { from: './src/safari-pinned-tab.svg' },
         { from: './src/nuke.php' },
+        { from: './src/backup.html' },
         { from: './src/robots.txt' },
       ],
     }),
