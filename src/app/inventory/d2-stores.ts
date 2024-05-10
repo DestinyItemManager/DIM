@@ -274,12 +274,12 @@ function loadStoresData(
         if (account !== currentAccountSelector(getState())) {
           return;
         }
-        
+
         for (let i = 0; i < 2; i++) {
-          if (!defs || !profileResponse) {
+          if (!defs || !profileInfo) {
             return;
           }
-  
+
           const { profile: profileResponse, live, readOnly } = profileInfo;
 
           const stopTimer = timer('Process inventory');
