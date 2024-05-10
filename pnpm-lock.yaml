@@ -208,6 +208,9 @@ devDependencies:
   '@babel/register':
     specifier: ^7.23.7
     version: 7.23.7(@babel/core@7.24.5)
+  '@eslint/compat':
+    specifier: ^1.0.1
+    version: 1.0.1
   '@eslint/eslintrc':
     specifier: ^3.0.2
     version: 3.0.2
@@ -2037,6 +2040,11 @@ packages:
   /@eslint-community/regexpp@4.10.0:
     resolution: {integrity: sha512-Cu96Sd2By9mCNTx2iyKOmq10v22jUVQv0lQnlGNy16oE9589yE+QADPbrMGCkA51cKZSg3Pu/aTJVTGfL/qjUA==}
     engines: {node: ^12.0.0 || ^14.0.0 || >=16.0.0}
+    dev: true
+
+  /@eslint/compat@1.0.1:
+    resolution: {integrity: sha512-jIstH3YKraEe4HRQ77ux12ZLRxPzehmcdjRSRrSePiwf6s4G9DzdYl3L5CKSXWt4JyzXxy2p7MXFU7630Gz8PA==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     dev: true
 
   /@eslint/eslintrc@3.0.2:

@@ -1,7 +1,11 @@
+import { fixupConfigRules, fixupPluginRules } from '@eslint/compat';
 import { FlatCompat } from '@eslint/eslintrc';
-import js from '@eslint/js';
+import eslint from '@eslint/js';
 import tsParser from '@typescript-eslint/parser';
 import arrayFunc from 'eslint-plugin-array-func';
+import github from 'eslint-plugin-github';
+import reactRecommended from 'eslint-plugin-react/configs/recommended.js';
+import sonarjs from 'eslint-plugin-sonarjs';
 import globals from 'globals';
 import path from 'path';
 import tseslint from 'typescript-eslint';
@@ -19,8 +23,8 @@ export default tseslint.config(
   // TODO - migrate these extends individually as they add support
   // for flat config like "eslint:recommended" -> js.configs.recommended above.
   // Documented here: https://eslint.org/docs/latest/use/configure/migration-guide#predefined-and-shareable-configs
-  js.configs.recommended,
-  ...compat.extends('plugin:react/recommended'),
+  eslint.configs.recommended,
+  ...fixupConfigRules(reactRecommended),
   ...tseslint.configs.recommendedTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
   // //...compat.extends("prettier"),
@@ -32,20 +36,17 @@ export default tseslint.config(
   // ...compat.extends("plugin:@typescript-eslint/stylistic-type-checked"),
   // ...compat.extends("prettier"),
   // ...compat.extends("plugin:css-modules/recommended"),
-  // ...compat.extends("plugin:sonarjs/recommended"),
+  sonarjs.configs.recommended,
   // ...compat.extends("plugin:jsx-a11y/recommended"),
   // TODO: different configs for JS vs TS
   ...compat.plugins(
-    'react',
     'react-hooks',
     'lodash',
     'jsx-a11y',
     // https://github.com/DianaSuvorova/eslint-plugin-react-redux/issues/99
     // "react-redux",
     'css-modules',
-    'sonarjs',
     //'jsx-expressions',
-    'github',
   ),
   {
     ignores: [
@@ -59,7 +60,7 @@ export default tseslint.config(
       '*.test.tsx',
       'src/build-browsercheck-utils.js',
       'src/testing/jest-setup.cjs',
-      'src/fa-subset.js]',
+      'src/fa-subset.js',
     ],
     languageOptions: {
       ecmaVersion: 'latest',
@@ -70,7 +71,7 @@ export default tseslint.config(
         },
         ecmaVersion: 'latest',
         sourceType: 'module',
-        project: './tsconfig.json',
+        project: true,
         tsconfigRootDir: import.meta.dirname,
       },
       sourceType: 'module',
@@ -108,7 +109,7 @@ export default tseslint.config(
     },
     plugins: {
       // For these plugins we don't want any presets, only specific rules.
-      // github: github,
+      github: fixupPluginRules(github),
       // "jsx-expressions": jsxExpressions,
       // lodash: lodash,
       // "react-hooks": reactHooks,
