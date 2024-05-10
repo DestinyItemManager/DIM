@@ -56,6 +56,9 @@ export const unsupported = {
 ${getI18nKey('Browsercheck.Unsupported')}
 
 export const steamBrowser = {
-${getI18nKey('Browsercheck.Steam')}`;
+${getI18nKey('Browsercheck.Steam')}
+
+export const samsungInternet = {
+${getI18nKey('Browsercheck.Samsung')}`;
 
 fs.writeFileSync('src/browsercheck-utils.js', browserCheckUtils);

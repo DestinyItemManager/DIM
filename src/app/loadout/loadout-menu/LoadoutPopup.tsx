@@ -33,6 +33,8 @@ import { previousLoadoutSelector } from 'app/loadout-drawer/selectors';
 import { manifestSelector, useDefinitions } from 'app/manifest/selectors';
 import { showMaterialCount } from 'app/material-counts/MaterialCountsWrappers';
 import { showNotification } from 'app/notifications/notifications';
+import SearchBar from 'app/search/SearchBar';
+import { loadoutFilterFactorySelector } from 'app/search/loadouts/loadout-search-filter';
 import { filteredItemsSelector, searchFilterSelector } from 'app/search/search-filter';
 import {
   AppIcon,
@@ -51,7 +53,6 @@ import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState, ThunkResult } from 'app/store/types';
 import { queueAction } from 'app/utils/action-queue';
-import { isiOSBrowser } from 'app/utils/browsers';
 import { emptyArray } from 'app/utils/empty';
 import { errorMessage } from 'app/utils/errors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -143,8 +144,11 @@ export default function LoadoutPopup({
     dimStore,
     { className: styles.filterPills, darkBackground: true },
   );
+
+  const loadoutFilterFactory = useSelector(loadoutFilterFactorySelector);
   const filteredLoadouts = searchAndSortLoadoutsByQuery(
     pillFilteredLoadouts,
+    loadoutFilterFactory,
     loadoutQuery,
     language,
     loadoutSort,
@@ -152,38 +156,20 @@ export default function LoadoutPopup({
 
   const blockPropagation = (e: React.MouseEvent) => e.stopPropagation();
 
-  // On iOS at least, focusing the keyboard pushes the content off the screen
-  const nativeAutoFocus = !isPhonePortrait && !isiOSBrowser();
-
   const filteringLoadouts = loadoutQuery.length > 0 || hasSelectedFilters;
-
-  const handleEscape = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      if (loadoutQuery === '') {
-        onClick?.();
-      } else {
-        setLoadoutQuery('');
-      }
-      e.preventDefault();
-      e.stopPropagation();
-    }
-  };
 
   return (
     <div className={styles.content} onClick={onClick} role="menu">
       {totalLoadouts >= 10 && (
-        <form className={styles.filterInput}>
-          <AppIcon icon={searchIcon} className="search-bar-icon" />
-          <input
-            type="text"
-            autoFocus={nativeAutoFocus}
+        <div onClick={blockPropagation}>
+          <SearchBar
+            className={styles.filterInput}
             placeholder={t('Header.FilterHelpLoadouts')}
-            onClick={blockPropagation}
-            value={loadoutQuery}
-            onChange={(e) => setLoadoutQuery(e.target.value)}
-            onKeyDown={handleEscape}
+            onQueryChanged={setLoadoutQuery}
+            loadouts
+            instant
           />
-        </form>
+        </div>
       )}
 
       {filterPills}

@@ -137,6 +137,27 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  brave: {
+    itemHashes: [
+      205225492, // Hung Jury SR4
+      211732170, // Hammerhead
+      243425374, // Falling Guillotine
+      568611923, // Edge Transit
+      570866107, // Succession
+      2228325504, // Edge Transit
+      2480074702, // Forbearance
+      2499720827, // Midnight Coup
+      2533990645, // Blast Furnace
+      3098328572, // The Recluse
+      3757612024, // Luna's Howl
+      3851176026, // Elsie's Rifle
+      4043921923, // The Mountaintop
+    ],
+    sourceHashes: [
+      2952071500, // Source: Into the Light
+    ],
+    searchString: [],
+  },
   calus: {
     itemHashes: [
       1661191192, // The Tribute Hall
@@ -202,6 +223,15 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       2206233229, // Source: Follow treasure maps.
+    ],
+    searchString: [],
+  },
+  coil: {
+    itemHashes: [],
+    sourceHashes: [
+      561126969, // Source: "Starcrossed" Mission
+      1664308183, // Source: Season of the Wish Activities
+      4278841194, // Source: Season of the Wish Triumphs
     ],
     searchString: [],
   },
@@ -578,7 +608,19 @@ const D2Sources: {
     searchString: [],
   },
   events: {
-    itemHashes: [],
+    itemHashes: [
+      66875353, // Avalanche
+      294129361, // The Title
+      396910433, // Zephyr
+      495940989, // Avalanche
+      655712834, // The Title
+      1911078836, // Zephyr
+      3400256755, // Zephyr
+      3559361670, // The Title
+      3659710187, // The Title
+      4203034886, // Zephyr
+      4220529694, // Avalanche
+    ],
     sourceHashes: [
       32323943, // Source: Moments of Triumph
       151416041, // Source: Solstice
@@ -781,8 +823,25 @@ const D2Sources: {
     searchString: [],
   },
   intothelight: {
-    itemHashes: [],
+    itemHashes: [
+      205225492, // Hung Jury SR4
+      211732170, // Hammerhead
+      243425374, // Falling Guillotine
+      568611923, // Edge Transit
+      570866107, // Succession
+      2228325504, // Edge Transit
+      2480074702, // Forbearance
+      2499720827, // Midnight Coup
+      2533990645, // Blast Furnace
+      3098328572, // The Recluse
+      3757612024, // Luna's Howl
+      3851176026, // Elsie's Rifle
+      4043921923, // The Mountaintop
+    ],
     sourceHashes: [
+      1388323447, // Source: Exotic Mission "The Whisper"
+      1902517582, // Source: Where's Archie?
+      2068312112, // Source: Exotic Mission "Zero Hour"
       2952071500, // Source: Into the Light
     ],
     searchString: [],
@@ -819,6 +878,30 @@ const D2Sources: {
       2648408612, // Acquired by competing in the Iron Banner when the wolves were loud.
       3072862693, // Source: Complete Iron Banner matches and earn rank-up packages from Lord Saladin.
       3966667255, // Source: Iron Banner's Season 9 Seasonal Quest
+    ],
+    searchString: [],
+  },
+  itl: {
+    itemHashes: [
+      205225492, // Hung Jury SR4
+      211732170, // Hammerhead
+      243425374, // Falling Guillotine
+      568611923, // Edge Transit
+      570866107, // Succession
+      2228325504, // Edge Transit
+      2480074702, // Forbearance
+      2499720827, // Midnight Coup
+      2533990645, // Blast Furnace
+      3098328572, // The Recluse
+      3757612024, // Luna's Howl
+      3851176026, // Elsie's Rifle
+      4043921923, // The Mountaintop
+    ],
+    sourceHashes: [
+      1388323447, // Source: Exotic Mission "The Whisper"
+      1902517582, // Source: Where's Archie?
+      2068312112, // Source: Exotic Mission "Zero Hour"
+      2952071500, // Source: Into the Light
     ],
     searchString: [],
   },
@@ -991,7 +1074,17 @@ const D2Sources: {
     searchString: [],
   },
   nightfall: {
-    itemHashes: [],
+    itemHashes: [
+      555148853, // Wendigo GL3 (Adept)
+      566740455, // THE SWARM (Adept)
+      681067419, // Hung Jury SR4 (Adept)
+      912222548, // Soldier On
+      1987790789, // After the Nightfall
+      2883684343, // Hung Jury SR4 (Adept)
+      3836861464, // THE SWARM (Adept)
+      3915197957, // Wendigo GL3 (Adept)
+      4074251943, // Hung Jury SR4 (Adept)
+    ],
     sourceHashes: [
       110159004, // Source: Complete Nightfall strike "Warden of Nothing."
       277706045, // Source: Season of the Splicer Nightfall Grandmaster
@@ -1216,6 +1309,15 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  rivenslair: {
+    itemHashes: [],
+    sourceHashes: [
+      561126969, // Source: "Starcrossed" Mission
+      1664308183, // Source: Season of the Wish Activities
+      4278841194, // Source: Season of the Wish Triumphs
+    ],
+    searchString: [],
+  },
   ron: {
     itemHashes: [],
     sourceHashes: [
@@ -1270,18 +1372,7 @@ const D2Sources: {
     searchString: [],
   },
   seasonpass: {
-    itemHashes: [
-      599895591, // Sojourner's Tale
-      820890091, // Planck's Stride
-      1298815317, // Brigand's Law
-      1478986057, // Without Remorse
-      2097055732, // Piece of Mind
-      2121785039, // Brass Attacks
-      2434225986, // Shattered Cipher
-      2778013407, // Firefright
-      3075224551, // Threaded Needle
-      4067556514, // Thoughtless
-    ],
+    itemHashes: [],
     sourceHashes: [
       450719423, // Source: Season of the Risen
       794422188, // Source: Season of the Witch
@@ -1379,8 +1470,10 @@ const D2Sources: {
       813075729, // Source: Season of the Deep Vendor Reputation Reward
       927967626, // Source: Season of the Deep
       2257836668, // Source: Season of the Deep Fishing
+      2671038131, // Season of the Deep - WEAPONS
       2755511565, // Source: Season of the Deep Triumph
       2811716495, // Source: Season of the Deep Activities
+      2959452483, // Season of the Deep - WEAPONS
     ],
     searchString: [],
   },

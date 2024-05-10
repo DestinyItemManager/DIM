@@ -1,3 +1,4 @@
+import { Search } from '@destinyitemmanager/dim-api-types';
 import ArmorySheet from 'app/armory/ArmorySheet';
 import { saveSearch, searchDeleted, searchUsed } from 'app/dim-api/basic-actions';
 import { languageSelector, recentSearchesSelector } from 'app/dim-api/selectors';
@@ -13,6 +14,8 @@ import { toggleSearchResults } from 'app/shell/actions';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isiOSBrowser } from 'app/utils/browsers';
+import { emptyArray } from 'app/utils/empty';
+import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import { UseComboboxState, UseComboboxStateChangeOptions, useCombobox } from 'downshift';
 import { AnimatePresence, LayoutGroup, Variants, motion } from 'framer-motion';
@@ -49,6 +52,10 @@ import HighlightedText from './HighlightedText';
 import styles from './SearchBar.m.scss';
 import { buildArmoryIndex } from './armory-search';
 import createAutocompleter, { SearchItem, SearchItemType } from './autocomplete';
+import {
+  loadoutSearchConfigSelector,
+  validateLoadoutQuerySelector,
+} from './loadouts/loadout-search-filter';
 import { canonicalizeQuery, parseQuery } from './query-parser';
 import { searchConfigSelector } from './search-config';
 import { validateQuerySelector } from './search-filter';
@@ -73,6 +80,12 @@ const armoryIndexSelector = createSelector(d2ManifestSelector, languageSelector,
 const autoCompleterSelector = createSelector(
   searchConfigSelector,
   armoryIndexSelector,
+  createAutocompleter,
+);
+
+const loadoutAutoCompleterSelector = createSelector(
+  loadoutSearchConfigSelector,
+  () => undefined,
   createAutocompleter,
 );
 
@@ -194,6 +207,7 @@ function SearchBar(
     onClear,
     className,
     menu,
+    loadouts,
   }: {
     /** Placeholder text when nothing has been typed */
     placeholder: string;
@@ -207,6 +221,8 @@ function SearchBar(
     children?: React.ReactNode;
     /** An optional menu of actions that can be executed on the search. Always shown. */
     menu?: React.ReactNode;
+    /** Whether this search bar applies to loadouts rather than items. */
+    loadouts?: boolean;
     instant?: boolean;
     className?: string;
     /** Fired whenever the query changes (already debounced) */
@@ -218,9 +234,15 @@ function SearchBar(
 ) {
   const dispatch = useThunkDispatch();
   const isPhonePortrait = useIsPhonePortrait();
-  const recentSearches = useSelector(recentSearchesSelector);
-  const autocompleter = useSelector(autoCompleterSelector);
-  const validateQuery = useSelector(validateQuerySelector);
+  const recentSearches = useSelector(
+    loadouts ? () => emptyArray<Search>() : recentSearchesSelector,
+  );
+  const autocompleter = useSelector(
+    loadouts ? loadoutAutoCompleterSelector : autoCompleterSelector,
+  );
+  const validateQuery = useSelector(
+    loadouts ? validateLoadoutQuerySelector : validateQuerySelector,
+  );
 
   // On iOS at least, focusing the keyboard pushes the content off the screen
   const autoFocus = !mainSearchBar && !isPhonePortrait && !isiOSBrowser();
@@ -247,7 +269,7 @@ function SearchBar(
 
   const lastBlurQuery = useRef<string>();
   const onBlur = () => {
-    if (valid && liveQuery && liveQuery !== lastBlurQuery.current) {
+    if (!loadouts && valid && liveQuery && liveQuery !== lastBlurQuery.current) {
       // save this to the recent searches only on blur
       // we use the ref to only fire if the query changed since the last blur
       dispatch(searchUsed(liveQuery));
@@ -545,21 +567,30 @@ function SearchBar(
         </LayoutGroup>
 
         {filterHelpOpen && (
-          <Sheet
-            onClose={() => setFilterHelpOpen(false)}
-            header={
-              <>
-                <h1>{t('Header.Filters')}</h1>
-                <UserGuideLink topic="Item-Search" />
-              </>
+          <Suspense
+            fallback={
+              <Portal>
+                <Loading message={t('Loading.FilterHelp')} />
+              </Portal>
             }
-            freezeInitialHeight
-            sheetClassName={styles.filterHelp}
           >
-            <Suspense fallback={<Loading message={t('Loading.FilterHelp')} />}>
-              <LazyFilterHelp />
-            </Suspense>
-          </Sheet>
+            {/* Because FilterHelp suspends, the entire sheet will suspend while it is loaded.
+             * This stops us having issues with incorrect frozen initial heights as it will
+             * get locked to the fallback height if we don't do this. */}
+            <Sheet
+              onClose={() => setFilterHelpOpen(false)}
+              header={
+                <>
+                  <h1>{t('Header.Filters')}</h1>
+                  <UserGuideLink topic="Item-Search" />
+                </>
+              }
+              freezeInitialHeight
+              sheetClassName={styles.filterHelp}
+            >
+              <LazyFilterHelp loadouts={loadouts} />
+            </Sheet>
+          </Suspense>
         )}
 
         {autocompleteMenu}

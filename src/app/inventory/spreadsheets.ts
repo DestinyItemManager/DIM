@@ -4,6 +4,7 @@ import { t } from 'app/i18next-t';
 import { LoadoutsByItem, loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
 import { D1_StatHashes } from 'app/search/d1-known-values';
 import { dimArmorStatHashByName } from 'app/search/search-filter-values';
+import D2Sources from 'app/search/search-filters/d2-sources';
 import { ThunkResult } from 'app/store/types';
 import { filterMap } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
@@ -18,10 +19,9 @@ import {
 } from 'app/utils/item-utils';
 import { getDisplayedItemSockets, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { D2EventInfo } from 'data/d2/d2-event-info';
+import { D2EventInfo } from 'data/d2/d2-event-info-v2';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
-import D2MissingSources from 'data/d2/missing-source-info';
-import D2Sources from 'data/d2/source-info';
+import D2MissingSources from 'data/d2/missing-source-info-v2';
 import _ from 'lodash';
 import Papa from 'papaparse';
 import { setItemNote, setItemTagsBulk } from './actions';
@@ -343,8 +343,8 @@ export function source(item: DimItem) {
     return (
       sourceKeys.find(
         (src) =>
-          (item.source && D2Sources[src].sourceHashes.includes(item.source)) ||
-          D2Sources[src].itemHashes.includes(item.hash) ||
+          (item.source && D2Sources[src].sourceHashes?.includes(item.source)) ||
+          D2Sources[src].itemHashes?.includes(item.hash) ||
           D2MissingSources[src]?.includes(item.hash),
       ) || ''
     );

@@ -42,6 +42,15 @@ const missingSources: { [key: string]: number[] } = {
   blackarmory: [
     2533990645, // Blast Furnace
   ],
+  brave: [
+    211732170, // Hammerhead
+    243425374, // Falling Guillotine
+    570866107, // Succession
+    2228325504, // Edge Transit
+    2499720827, // Midnight Coup
+    3757612024, // Luna's Howl
+    3851176026, // Elsie's Rifle
+  ],
   calus: [
     17280095, // Shadow's Strides
     30962015, // Boots of the Ace-Defiant
@@ -1964,6 +1973,15 @@ const missingSources: { [key: string]: number[] } = {
     4196689510, // Iron Fellowship Robes
     4211068696, // Iron Truage Legs
     4248834293, // Iron Remembrance Vest
+  ],
+  itl: [
+    211732170, // Hammerhead
+    243425374, // Falling Guillotine
+    570866107, // Succession
+    2228325504, // Edge Transit
+    2499720827, // Midnight Coup
+    3757612024, // Luna's Howl
+    3851176026, // Elsie's Rifle
   ],
   kf: [
     3414225760, // Touch of Malice

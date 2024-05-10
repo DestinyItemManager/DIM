@@ -635,67 +635,59 @@ function chooseMoveAsideItem(
     },
   );
 
-  let moveAsideCandidate:
-    | {
-        item: DimItem;
-        target: DimStore;
-      }
-    | undefined;
-
   const vault = getVault(stores)!;
 
   // Iterate through other stores from least recently played to most recently played.
   // The concept is that we prefer filling up the least-recently-played character before even
   // bothering with the others.
+  let moveAsideCandidate = (() => {
+    const otherCharacters = _.sortBy(
+      otherStores.filter((s) => !s.isVault),
+      (s) => s.lastPlayed.getTime(),
+    );
+    for (const targetStore of otherCharacters) {
+      const sortedCandidates = sortMoveAsideCandidatesForStore(
+        moveAsideCandidates,
+        target,
+        targetStore,
+        getTag,
+        isInInGameLoadoutFor,
+        item,
+      );
+      for (const candidate of sortedCandidates) {
+        const spaceLeft = cachedSpaceLeft(targetStore, candidate);
 
-  _.sortBy(
-    otherStores.filter((s) => !s.isVault),
-    (s) => s.lastPlayed.getTime(),
-  ).find((targetStore) =>
-    sortMoveAsideCandidatesForStore(
-      moveAsideCandidates,
-      target,
-      targetStore,
-      getTag,
-      isInInGameLoadoutFor,
-      item,
-    ).find((candidate) => {
-      const spaceLeft = cachedSpaceLeft(targetStore, candidate);
-
-      if (target.isVault) {
-        // If we're moving from the vault
-        // If the target character has any space, put it there
-        if (candidate.amount <= spaceLeft) {
-          moveAsideCandidate = {
-            item: candidate,
-            target: targetStore,
-          };
-          return true;
-        }
-      } else {
-        // If we're moving from a character
-        // If there's exactly one *slot* left on the vault, and
-        // we're not moving the original item *from* the vault, put
-        // the candidate on another character in order to avoid
-        // gumming up the vault.
-        const openVaultAmount = cachedSpaceLeft(vault, candidate);
-        const openVaultSlotsBeforeMove = Math.floor(openVaultAmount / candidate.maxStackSize);
-        const openVaultSlotsAfterMove = Math.max(
-          0,
-          Math.floor((openVaultAmount - candidate.amount) / candidate.maxStackSize),
-        );
-        if (openVaultSlotsBeforeMove === 1 && openVaultSlotsAfterMove === 0 && spaceLeft) {
-          moveAsideCandidate = {
-            item: candidate,
-            target: targetStore,
-          };
-          return true;
+        if (target.isVault) {
+          // If we're moving from the vault
+          // If the target character has any space, put it there
+          if (candidate.amount <= spaceLeft) {
+            return {
+              item: candidate,
+              target: targetStore,
+            };
+          }
+        } else {
+          // If we're moving from a character
+          // If there's exactly one *slot* left on the vault, and
+          // we're not moving the original item *from* the vault, put
+          // the candidate on another character in order to avoid
+          // gumming up the vault.
+          const openVaultAmount = cachedSpaceLeft(vault, candidate);
+          const openVaultSlotsBeforeMove = Math.floor(openVaultAmount / candidate.maxStackSize);
+          const openVaultSlotsAfterMove = Math.max(
+            0,
+            Math.floor((openVaultAmount - candidate.amount) / candidate.maxStackSize),
+          );
+          if (openVaultSlotsBeforeMove === 1 && openVaultSlotsAfterMove === 0 && spaceLeft) {
+            return {
+              item: candidate,
+              target: targetStore,
+            };
+          }
         }
       }
-
-      return false;
-    }),
-  );
+    }
+  })();
 
   // If we're moving off a character (into the vault) and we couldn't find a better match,
   // just try to shove it in the vault, and we'll recursively squeeze something else out of the vault.

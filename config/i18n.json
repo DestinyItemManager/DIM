@@ -42,7 +42,8 @@
   },
   "Browsercheck": {
     "Unsupported": "The DIM team does not support using this browser. Some or all DIM features may not work.",
-    "Steam": "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it."
+    "Steam": "The Steam overlay browser is very old and some or all DIM features may not work. We cannot provide support for it.",
+    "Samsung": "Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser."
   },
   "Bucket": {
     "Armor": "Armor",
@@ -195,6 +196,12 @@
   "FileUpload": {
     "Instructions": "Click or drag files"
   },
+  "LoadoutFilter": {
+    "Name": "Shows loadouts whose name matches (exactname:) or partially matches (name:) the filter text. Search for entire phrases using quotes.",
+    "Notes": "Search for loadouts by their notes field.",
+    "PartialMatch": "Shows loadouts where their name or notes has a partial match to the filter text. Search for entire phrases using quotes.",
+    "Season": "Shows loadouts by which season of Destiny 2 they were last modified in."
+  },
   "Filter": {
     "Adept": "\\(Adept\\)",
     "AmmoType": "Shows items based on their ammo type.",
@@ -294,6 +301,7 @@
     "RarityTier": "Shows items based on their rarity tier.",
     "Reforgeable": "Shows items that can be reforged at the Gunsmith.",
     "Release": "Available from release <i>{{release}}</i>",
+    "Shiny": "Shows BRAVE weapons with a limited-edition ornament.",
     "Weapon": "Shows items that are weapons.",
     "Armor": "Shows items that are armor.",
     "Cosmetic": "Shows items that are flair or cosmetic.",
@@ -887,9 +895,7 @@
   "Manifest": {
     "Download": "Downloading latest Destiny info database from Bungie...",
     "Error": "Error loading Destiny info database:\n{{error}}\nReload to retry.",
-    "Load": "Loading Destiny info database...",
-    "Outdated": "Outdated Destiny info database",
-    "OutdatedExplanation": "Bungie has updated their Destiny info database. Reload DIM to pick up the new info. Note that some things in DIM may not work for a few hours after Bungie updates Destiny, as the new data propagates through their systems."
+    "Load": "Loading Destiny info database..."
   },
   "Milestone": {
     "Daily": "Daily Challenge",
@@ -1028,6 +1034,8 @@
       "CustomTotal": "Custom Total",
       "MasterworkTier": "Masterwork Tier",
       "MasterworkStat": "Masterwork Stat",
+      "Level": "Level",
+      "Harmonizable": "Harmonizable",
       "KillTracker": "Kill Tracker",
       "Loadouts": "Loadouts",
       "Notes": "Notes",
@@ -1135,7 +1143,6 @@
     "PerkDisplay": "Perk display in item popup",
     "PerkList": "List",
     "PerkGrid": "Grid",
-    "ReloadDIM": "Reload DIM to finish switching language",
     "ResetToDefault": "Reset",
     "ReverseSort": "Toggle forward/reverse sort",
     "SetSort": "Sort items by:",

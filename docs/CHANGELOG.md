@@ -1,5 +1,35 @@
 ## Next
 
+* Loadouts now have their own search language that you can use from the Loadouts page or character emblem dropdown. This works the same as item search, but the search keywords are different and loadout-specific. We'll add more search keywords over time.
+* When you change language, DIM immediately loads the item database for that language - you no longer need to reload.
+* DIM now loads new item database after content updates without requiring a reload, as long as there's an item in your inventory from that new content.
+* Fixed the icon for "Material Counts" in the vault dropdown on mobile.
+* Removed some useless search suggestions like `exactname:gauntlets`.
+* Fixed some crashes when Google Translate is enabled. Please don't use Google Translate on DIM though, use our language settings.
+* Added a grace period before DIM stops auto-refreshing because you're not playing. This should prevent DIM from giving up on auto refresh when you change characters.
+* Added some new protections against losing tags when Bungie.net is misbehaving, though it still may not be able to handle some weirdness.
+* Fixed the filter help not showing up in some circumstances.
+
+## 8.19.0 <span class="changelog-date">(2024-05-05)</span>
+
+* Minimum browser version for DIM has been raised to Chrome 109+ (or equivalent Chromium-based browsers) and iOS 16+.
+* Add a warning for Samsung Internet users to explain why dark mode is making DIM too dark.
+
+## 8.18.1 <span class="changelog-date">(2024-04-30)</span>
+
+* Fix vault tile display on mobile.
+
+## 8.18.0 <span class="changelog-date">(2024-04-28)</span>
+
+* Restore per-stat quality ratings to D1 armor popups.
+
+## 8.17.0 <span class="changelog-date">(2024-04-21)</span>
+
+* Fixed max stat constraints sometimes being not shown in Loadout parameters.
+* `is:shiny` filter to find limited-edition BRAVE weapons.
+
+## 8.16.0 <span class="changelog-date">(2024-04-14)</span>
+
 * Loadouts with only armor mods, or only fashion (shaders & ornaments), now display a symbol in the equip dropdown, and can be filtered from among other loadouts.
 * BRAVE bounties now display correct rewards instead of all possible rewards.
 

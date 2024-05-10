@@ -47,6 +47,7 @@ import {
   DestinyItemSubType,
   DestinyItemType,
   DestinyLoadoutItemComponent,
+  DestinySeasonDefinition,
 } from 'bungie-api-ts/destiny2';
 import deprecatedMods from 'data/d2/deprecated-mods.json';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
@@ -934,4 +935,10 @@ export function filterLoadoutToAllowedItems(
       }
     }
   });
+}
+
+export function getLoadoutSeason(loadout: Loadout, seasons: DestinySeasonDefinition[]) {
+  return seasons.find(
+    (s) => new Date(s.startDate!).getTime() <= (loadout.lastUpdatedAt ?? Date.now()),
+  );
 }

@@ -2,8 +2,9 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DIM_LANG_INFOS, DimLanguage } from 'app/i18n';
 import { tl } from 'app/i18next-t';
 import { DimItem, DimPlug } from 'app/inventory/item-types';
+import { filterMap } from 'app/utils/collections';
 import { isD1Item } from 'app/utils/item-utils';
-import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { DestinyInventoryItemDefinition, TierType } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import memoizeOne from 'memoize-one';
 import { FilterDefinition } from '../filter-types';
@@ -34,15 +35,13 @@ export const plainString = (s: string, language: DimLanguage): string =>
 
 const interestingPlugTypes = new Set([PlugCategoryHashes.Frames, PlugCategoryHashes.Intrinsics]);
 const getPerkNamesFromManifest = memoizeOne(
-  (allItems: { [hash: number]: DestinyInventoryItemDefinition }) => {
-    const perkNames = Object.values(allItems)
-      .filter((i) => {
-        const pch = i.plug?.plugCategoryHash;
-        return i.displayProperties.name && pch && interestingPlugTypes.has(pch);
-      })
-      .map((i) => i.displayProperties.name.toLowerCase());
-    return [...new Set(perkNames)];
-  },
+  (allItems: { [hash: number]: DestinyInventoryItemDefinition }) =>
+    filterMap(Object.values(allItems), (item) => {
+      const pch = item.plug?.plugCategoryHash;
+      return pch && interestingPlugTypes.has(pch)
+        ? item.displayProperties.name.toLowerCase() || undefined
+        : undefined;
+    }),
 );
 
 // things that are sunset            1010        1060        1060        1260
@@ -52,13 +51,18 @@ const getUniqueItemNamesFromManifest = memoizeOne(
   (allManifestItems: { [hash: number]: DestinyInventoryItemDefinition }) => {
     const itemNames = Object.values(allManifestItems)
       .filter((i) => {
-        if (!i.itemCategoryHashes) {
+        if (!i.itemCategoryHashes || !i.displayProperties.name) {
           return false;
         }
-        const isWeaponOrArmor =
-          i.itemCategoryHashes.includes(ItemCategoryHashes.Weapon) ||
-          i.itemCategoryHashes.includes(ItemCategoryHashes.Armor);
-        if (!i.displayProperties.name || !isWeaponOrArmor) {
+
+        const isArmor = i.itemCategoryHashes.includes(ItemCategoryHashes.Armor);
+
+        // there's annoying white armors named stuff like "Gauntlets" that distract from things like is:gauntlets
+        if (isArmor && i.inventory!.tierType === TierType.Basic) {
+          return false;
+        }
+
+        if (!isArmor && !i.itemCategoryHashes.includes(ItemCategoryHashes.Weapon)) {
           return false;
         }
         const { quality } = i;
@@ -76,7 +80,7 @@ const getUniqueItemNamesFromManifest = memoizeOne(
  * Create a case-/diacritic-insensitive matching predicate for name / perkname filters.
  * Requires an exact match if `exact`, otherwise partial.
  */
-function matchText(value: string, language: DimLanguage, exact: boolean) {
+export function matchText(value: string, language: DimLanguage, exact: boolean) {
   const normalized = plainString(value, language);
   if (exact) {
     return (s: string) => normalized === plainString(s, language);
@@ -102,7 +106,7 @@ const nameFilter = {
       const allItemNames = getUniqueItemNamesFromManifest(d2Manifest.InventoryItem.getAll());
       return Array.from(
         new Set([...myItemNames, ...allItemNames]),
-        (s) => `name:${quoteFilterString(s)}`,
+        (s) => `exactname:${quoteFilterString(s)}`,
       );
     }
   },
@@ -157,18 +161,29 @@ const freeformFilters: FilterDefinition[] = [
     format: 'freeform',
     suggestionsGenerator: ({ d2Manifest, allItems }) => {
       if (d2Manifest && allItems) {
-        const myPerks = allItems
-          .filter((i) => i.bucket.inWeapons || i.bucket.inArmor || i.bucket.inGeneral)
-          .flatMap((i) => i.sockets?.allSockets.filter((s) => s.plugged && s.isPerk) ?? []);
-        const myPerkNames = myPerks.map((s) =>
-          s.plugged!.plugDef.displayProperties.name.toLowerCase(),
-        );
-        const allPerkNames = getPerkNamesFromManifest(d2Manifest.InventoryItem.getAll());
-        // favor items we actually own
-        return Array.from(
-          new Set([...myPerkNames, ...allPerkNames]),
-          (s) => `exactperk:${quoteFilterString(s)}`,
-        );
+        const perkNames = new Set<string>();
+        // favor items we actually own by inserting them first
+        for (const item of allItems) {
+          if (
+            item.sockets &&
+            (item.bucket.inWeapons || item.bucket.inArmor || item.bucket.inGeneral)
+          ) {
+            for (const socket of item.sockets.allSockets) {
+              if (socket.isPerk) {
+                for (const plug of socket.plugOptions) {
+                  perkNames.add(plug.plugDef.displayProperties.name.toLowerCase());
+                }
+              }
+            }
+          }
+        }
+
+        // supplement the list with perks from definitions, so people can search things they don't own
+        for (const perkName of getPerkNamesFromManifest(d2Manifest.InventoryItem.getAll())) {
+          perkNames.add(perkName);
+        }
+
+        return Array.from(perkNames, (s) => `exactperk:${quoteFilterString(s)}`);
       }
     },
     filter: ({ lhs, filterValue, language, d2Definitions }) => {

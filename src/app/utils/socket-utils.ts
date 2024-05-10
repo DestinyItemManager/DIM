@@ -232,7 +232,7 @@ export const subclassAbilitySocketCategoryHashes: SocketCategoryHashes[] = [
 export function isModCostVisible(plug: PluggableInventoryItemDefinition): boolean {
   return (
     // hide cost if it's less than 1
-    !((plug.plug.energyCost?.energyCost ?? 0) < 1) &&
+    (plug.plug.energyCost?.energyCost ?? 0) >= 1 &&
     // subclass stuff is always 1
     !plug.plug.plugCategoryIdentifier.endsWith('.fragments') &&
     !plug.plug.plugCategoryIdentifier.endsWith('.trinkets') &&

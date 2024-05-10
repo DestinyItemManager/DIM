@@ -10,7 +10,7 @@ export function loadoutToSearchString(loadout: Loadout | InGameLoadout) {
 
 // related: https://github.com/DestinyItemManager/DIM/issues/9069
 // sanity check: `inloadout:#hashta` should not suggest `inloadout:inloadout:#hashtag` (double prefix)
-function loadoutToSuggestions(loadout: Loadout) {
+export function loadoutToSuggestions(loadout: Loadout) {
   return [
     quoteFilterString(loadout.name.toLowerCase()), // loadout name
     ...getHashtagsFromNote(loadout.name), // #hashtags in the name

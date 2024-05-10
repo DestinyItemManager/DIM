@@ -105,11 +105,12 @@ export function toVendor(
     ),
   );
 
-  const destinationDef =
+  const destinationHash =
     typeof vendor?.vendorLocationIndex === 'number' && vendor.vendorLocationIndex >= 0
-      ? defs.Destination.get(vendorDef.locations[vendor.vendorLocationIndex].destinationHash)
-      : undefined;
-  const placeDef = destinationDef && defs.Place.get(destinationDef.placeHash);
+      ? vendorDef.locations[vendor.vendorLocationIndex].destinationHash
+      : 0;
+  const destinationDef = destinationHash ? defs.Destination.get(destinationHash) : undefined;
+  const placeDef = destinationDef?.placeHash ? defs.Place.get(destinationDef.placeHash) : undefined;
 
   const vendorCurrencyHashes = new Set<number>();
   gatherVendorCurrencies(defs, vendorDef, vendorsResponse, sales, vendorCurrencyHashes);

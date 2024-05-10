@@ -133,7 +133,8 @@ export const queryValidSelector = createSelector(
   (query, validateQuery) => validateQuery(query).valid,
 );
 
-function makeSearchFilterFactory<I, FilterCtx, SuggestionsCtx>(
+/** Build a function that can take query text and return a filter function from it. */
+export function makeSearchFilterFactory<I, FilterCtx, SuggestionsCtx>(
   { filtersMap: { isFilters, kvFilters } }: SearchConfig<I, FilterCtx, SuggestionsCtx>,
   filterContext: FilterCtx,
 ) {

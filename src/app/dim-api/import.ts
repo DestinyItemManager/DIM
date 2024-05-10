@@ -11,6 +11,7 @@ import { observe, unobserve } from 'app/store/observerMiddleware';
 import { ThunkResult } from 'app/store/types';
 import { errorMessage } from 'app/utils/errors';
 import { errorLog, infoLog } from 'app/utils/log';
+import { delay } from 'app/utils/promises';
 import _ from 'lodash';
 import { Dispatch } from 'redux';
 import { loadDimApiData } from './actions';
@@ -39,11 +40,17 @@ export function importDataBackup(data: ExportResponse, silent = false): ThunkRes
       try {
         infoLog('importData', 'Attempting to import data into DIM API');
         const result = await importData(data);
+
+        // Import immediately into local state
+        dispatch(importBackupIntoLocalState(data, true));
+
+        // dim-api can cache the data for up to 60 seconds. Reload from the
+        // server after that so we don't use our faked import data too long. We
+        // won't wait for this.
+        delay(60_000).then(() => dispatch(loadDimApiData(true)));
         infoLog('importData', 'Successfully imported data into DIM API', result);
         showImportSuccessNotification(result, true);
-
-        // Reload from the server
-        return await dispatch(loadDimApiData(true));
+        return;
       } catch (e) {
         if (!silent) {
           errorLog('importData', 'Error importing data into DIM API', e);
@@ -53,91 +60,100 @@ export function importDataBackup(data: ExportResponse, silent = false): ThunkRes
       }
     } else {
       // Import directly into local state, since the user doesn't want to use DIM Sync
-      const settings = data.settings;
-      const loadouts = extractLoadouts(data);
-      const tags = extractItemAnnotations(data);
-      const triumphs: ExportResponse['triumphs'] = data.triumphs || [];
-      const itemHashTags: ExportResponse['itemHashTags'] = data.itemHashTags || [];
-      const importedSearches: ExportResponse['searches'] = data.searches || [];
+      dispatch(importBackupIntoLocalState(data, silent));
+    }
+  };
+}
 
-      if (!loadouts.length && !tags.length) {
-        if (!silent) {
-          errorLog(
-            'importData',
-            'Error importing data into DIM - no data found in import file. (no settings upgrade/API upload attempted. DIM Sync is turned off)',
-            data,
-          );
-          showImportFailedNotification(t('Storage.ImportNotification.NoData'));
+function importBackupIntoLocalState(data: ExportResponse, silent = false): ThunkResult {
+  return async (dispatch) => {
+    const settings = data.settings;
+    const loadouts = extractLoadouts(data);
+    const tags = extractItemAnnotations(data);
+    const triumphs: ExportResponse['triumphs'] = data.triumphs || [];
+    const itemHashTags: ExportResponse['itemHashTags'] = data.itemHashTags || [];
+    const importedSearches: ExportResponse['searches'] = data.searches || [];
+
+    if (!loadouts.length && !tags.length) {
+      if (!silent) {
+        errorLog(
+          'importData',
+          'Error importing data into DIM - no data found in import file. (no settings upgrade/API upload attempted. DIM Sync is turned off)',
+          data,
+        );
+        showImportFailedNotification(t('Storage.ImportNotification.NoData'));
+      }
+      return;
+    }
+
+    const profiles: DimApiState['profiles'] = {};
+
+    for (const platformLoadout of loadouts) {
+      const { platformMembershipId, destinyVersion, ...loadout } = platformLoadout;
+      if (platformMembershipId && destinyVersion) {
+        const key = makeProfileKey(platformMembershipId, destinyVersion);
+        if (!profiles[key]) {
+          profiles[key] = {
+            profileLastLoaded: 0,
+            loadouts: {},
+            tags: {},
+            triumphs: [],
+          };
         }
-        return;
+        profiles[key].loadouts[loadout.id] = loadout;
       }
-
-      const profiles: DimApiState['profiles'] = {};
-
-      for (const platformLoadout of loadouts) {
-        const { platformMembershipId, destinyVersion, ...loadout } = platformLoadout;
-        if (platformMembershipId && destinyVersion) {
-          const key = makeProfileKey(platformMembershipId, destinyVersion);
-          if (!profiles[key]) {
-            profiles[key] = {
-              profileLastLoaded: 0,
-              loadouts: {},
-              tags: {},
-              triumphs: [],
-            };
-          }
-          profiles[key].loadouts[loadout.id] = loadout;
+    }
+    for (const platformTag of tags) {
+      const { platformMembershipId, destinyVersion, ...tag } = platformTag;
+      if (platformMembershipId && destinyVersion) {
+        const key = makeProfileKey(platformMembershipId, destinyVersion);
+        if (!profiles[key]) {
+          profiles[key] = {
+            profileLastLoaded: 0,
+            loadouts: {},
+            tags: {},
+            triumphs: [],
+          };
         }
+        profiles[key].tags[tag.id] = tag;
       }
-      for (const platformTag of tags) {
-        const { platformMembershipId, destinyVersion, ...tag } = platformTag;
-        if (platformMembershipId && destinyVersion) {
-          const key = makeProfileKey(platformMembershipId, destinyVersion);
-          if (!profiles[key]) {
-            profiles[key] = {
-              profileLastLoaded: 0,
-              loadouts: {},
-              tags: {},
-              triumphs: [],
-            };
-          }
-          profiles[key].tags[tag.id] = tag;
+    }
+
+    for (const triumphData of triumphs) {
+      const { platformMembershipId, triumphs } = triumphData;
+      if (platformMembershipId) {
+        const key = makeProfileKey(platformMembershipId, 2);
+        if (!profiles[key]) {
+          profiles[key] = {
+            profileLastLoaded: 0,
+            loadouts: {},
+            tags: {},
+            triumphs: [],
+          };
         }
+        profiles[key].triumphs = triumphs;
       }
+    }
 
-      for (const triumphData of triumphs) {
-        const { platformMembershipId, triumphs } = triumphData;
-        if (platformMembershipId) {
-          const key = makeProfileKey(platformMembershipId, 2);
-          if (!profiles[key]) {
-            profiles[key] = {
-              profileLastLoaded: 0,
-              loadouts: {},
-              tags: {},
-              triumphs: [],
-            };
-          }
-          profiles[key].triumphs = triumphs;
-        }
-      }
+    const searches: DimApiState['searches'] = {
+      1: [],
+      2: [],
+    };
+    for (const search of importedSearches) {
+      searches[search.destinyVersion].push(search.search);
+    }
 
-      const searches: DimApiState['searches'] = {
-        1: [],
-        2: [],
-      };
-      for (const search of importedSearches) {
-        searches[search.destinyVersion].push(search.search);
-      }
+    dispatch(
+      profileLoadedFromIDB({
+        settings: { ...initialSettingsState, ...settings } as Settings,
+        profiles,
+        itemHashTags: _.keyBy(itemHashTags, (t) => t.hash),
+        searches,
+        updateQueue: [],
+      }),
+    );
 
-      dispatch(
-        profileLoadedFromIDB({
-          settings: { ...initialSettingsState, ...settings } as Settings,
-          profiles,
-          itemHashTags: _.keyBy(itemHashTags, (t) => t.hash),
-          searches,
-          updateQueue: [],
-        }),
-      );
+    if (!silent) {
       showImportSuccessNotification(
         {
           loadouts: loadouts.length,

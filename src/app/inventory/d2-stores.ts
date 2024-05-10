@@ -9,6 +9,7 @@ import { t } from 'app/i18next-t';
 import { processInGameLoadouts } from 'app/loadout-drawer/loadout-type-converters';
 import { inGameLoadoutLoaded } from 'app/loadout/ingame/actions';
 import { loadCoreSettings } from 'app/manifest/actions';
+import { checkForNewManifest } from 'app/manifest/manifest-service-json';
 import { d2ManifestSelector, manifestSelector } from 'app/manifest/selectors';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { get, set } from 'app/storage/idb-keyval';
@@ -132,36 +133,47 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
   };
 }
 
-// time in milliseconds after which we could expect Bnet to return an updated response
+/** time in milliseconds after which we could expect Bnet to return an updated response */
 const BUNGIE_CACHE_TTL = 15_000;
+/** How old the profile can be and still trigger cleanup of tags. */
+const FRESH_ENOUGH_TO_CLEAN_INFOS = 90_000; // 90 seconds
 
 let minimumCacheAge = Number.MAX_SAFE_INTEGER;
 
 function loadProfile(
   account: DestinyAccount,
   firstTime: boolean,
-): ThunkResult<DestinyProfileResponse | undefined> {
+): ThunkResult<
+  | {
+      profile: DestinyProfileResponse;
+      /** Whether the data is from a "live", remote Bungie.net response. false if this is cached data. */
+      live: boolean;
+      readOnly?: boolean;
+    }
+  | undefined
+> {
   return async (dispatch, getState) => {
     const mockProfileData = getState().inventory.mockProfileData;
     if (mockProfileData) {
-      // TODO: can/should we replace this with profileResponse plus the readOnly flag?
-      return mockProfileData;
+      return { profile: mockProfileData, live: false, readOnly: true };
     }
 
     // First try loading from IndexedDB
-    let profileResponse = getState().inventory.profileResponse;
-    if (!profileResponse) {
+    let cachedProfileResponse = getState().inventory.profileResponse;
+    if (!cachedProfileResponse) {
       try {
-        profileResponse = await get<DestinyProfileResponse>(`profile-${account.membershipId}`);
+        cachedProfileResponse = await get<DestinyProfileResponse>(
+          `profile-${account.membershipId}`,
+        );
         // Check to make sure the profile hadn't been loaded in the meantime
         if (getState().inventory.profileResponse) {
-          profileResponse = getState().inventory.profileResponse;
+          cachedProfileResponse = getState().inventory.profileResponse;
         } else {
           infoLog('d2-stores', 'Loaded cached profile from IndexedDB');
-          dispatch(profileLoaded({ profile: profileResponse, live: false }));
+          dispatch(profileLoaded({ profile: cachedProfileResponse, live: false }));
           // The first time we load, just use the IDB version if we can, to speed up loading
           if (firstTime) {
-            return profileResponse;
+            return { profile: cachedProfileResponse, live: false };
           }
         }
       } catch (e) {
@@ -172,80 +184,66 @@ function loadProfile(
     let cachedProfileMintedDate = new Date(0);
 
     // If our cached profile is up to date
-    if (profileResponse) {
+    if (cachedProfileResponse) {
       // TODO: need to make sure we still load at the right frequency / for manual cache busts?
-      cachedProfileMintedDate = new Date(profileResponse.responseMintedTimestamp ?? 0);
+      cachedProfileMintedDate = new Date(cachedProfileResponse.responseMintedTimestamp ?? 0);
       const profileAge = Date.now() - cachedProfileMintedDate.getTime();
+      infoLog('d2-stores', `Cached profile is ${profileAge / 1000}s old.`);
       if (!storesLoadedSelector(getState()) && profileAge > 0 && profileAge < BUNGIE_CACHE_TTL) {
-        warnLog(
-          'd2-stores',
-          'Cached profile is within Bungie.net cache time, skipping remote load.',
-          profileAge,
-        );
-        return profileResponse;
-      } else {
-        warnLog(
-          'd2-stores',
-          'Cached profile is older than Bungie.net cache time, proceeding.',
-          profileAge,
-        );
+        warnLog('d2-stores', 'Cached profile is new enough, skipping remote load.', profileAge);
+        return { profile: cachedProfileResponse, live: false };
       }
     }
 
     try {
       const remoteProfileResponse = await getStores(account);
       const remoteProfileMintedDate = new Date(remoteProfileResponse.responseMintedTimestamp ?? 0);
+      const remoteProfileAgeSec = (Date.now() - remoteProfileMintedDate.getTime()) / 1000;
+      infoLog('d2-stores', `Profile from Bungie.net is ${remoteProfileAgeSec}s old.`);
 
       // compare new response against cached response, toss if it's not newer!
-      if (profileResponse) {
+      if (cachedProfileResponse) {
         if (remoteProfileMintedDate.getTime() <= cachedProfileMintedDate.getTime()) {
-          warnLog(
-            'd2-stores',
-            'Profile from Bungie.net was not newer than cached profile, discarding.',
-            remoteProfileMintedDate,
-            cachedProfileMintedDate,
-          );
+          warnLog('d2-stores', 'Profile from Bungie.net is older than cached profile, discarding.');
           // Clear the error since we did load correctly
           dispatch(profileError(undefined));
           // undefined means skip processing, in case we already have computed stores
-          return storesLoadedSelector(getState()) ? undefined : profileResponse;
+          return storesLoadedSelector(getState())
+            ? undefined
+            : { profile: cachedProfileResponse, live: false };
         } else {
           minimumCacheAge = Math.min(
             minimumCacheAge,
             remoteProfileMintedDate.getTime() - cachedProfileMintedDate.getTime(),
           );
-          infoLog(
-            'd2-stores',
-            'Profile from Bungie.net was newer than cached profile, using it.',
-            remoteProfileMintedDate.getTime() - cachedProfileMintedDate.getTime(),
-            minimumCacheAge,
-            remoteProfileMintedDate,
-            cachedProfileMintedDate,
-          );
+          infoLog('d2-stores', `Profile from Bungie.net is newer than cached profile, using it.`);
         }
       }
 
-      profileResponse = remoteProfileResponse;
-      set(`profile-${account.membershipId}`, profileResponse); // don't await
-      dispatch(profileLoaded({ profile: profileResponse, live: true }));
-      return profileResponse;
+      set(`profile-${account.membershipId}`, remoteProfileResponse); // don't await
+      dispatch(profileLoaded({ profile: remoteProfileResponse, live: true }));
+      return { profile: remoteProfileResponse, live: true };
     } catch (e) {
       dispatch(handleAuthErrors(e));
       dispatch(profileError(convertToError(e)));
-      if (profileResponse) {
+      if (cachedProfileResponse) {
         errorLog(
           'd2-stores',
           'Error loading profile from Bungie.net, falling back to cached profile',
           e,
         );
         // undefined means skip processing, in case we already have computed stores
-        return storesLoadedSelector(getState()) ? undefined : profileResponse;
+        return storesLoadedSelector(getState())
+          ? undefined
+          : { profile: cachedProfileResponse, live: false };
       }
       // rethrow
       throw e;
     }
   };
 }
+
+let lastCheckedManifest = 0;
 
 function loadStoresData(
   account: DestinyAccount,
@@ -265,89 +263,113 @@ function loadStoresData(
       resetItemIndexGenerator();
 
       try {
-        const { readOnly } = getState().inventory;
-
-        const [defs, profileResponse] = await Promise.all([
+        const [originalDefs, profileInfo] = await Promise.all([
           dispatch(getDefinitions()),
           dispatch(loadProfile(account, firstTime)),
         ]);
+
+        let defs = originalDefs;
 
         // If we switched account since starting this, give up
         if (account !== currentAccountSelector(getState())) {
           return;
         }
 
-        if (!defs || !profileResponse) {
-          return;
-        }
+        for (let i = 0; i < 2; i++) {
+          if (!defs || !profileInfo) {
+            return;
+          }
 
-        const stopTimer = timer('Process inventory');
+          const { profile: profileResponse, live, readOnly } = profileInfo;
 
-        const buckets = d2BucketsSelector(getState())!;
-        const customStats = customStatsSelector(getState());
-        const stores = buildStores(
-          {
-            defs,
-            buckets,
-            customStats,
-            profileResponse,
-          },
-          transaction,
-        );
+          const stopTimer = timer('Process inventory');
 
-        if (readOnly) {
-          for (const store of stores) {
-            store.hadErrors = true;
-            for (const item of store.items) {
-              item.lockable = false;
-              item.trackable = false;
-              item.notransfer = true;
-              item.taggable = false;
+          const buckets = d2BucketsSelector(getState())!;
+          const customStats = customStatsSelector(getState());
+          const stores = buildStores(
+            {
+              defs,
+              buckets,
+              customStats,
+              profileResponse,
+            },
+            transaction,
+          );
+
+          // One reason stores could have errors is if the manifest was not up
+          // to date. Check to see if it has updated, and if so, download it and
+          // immediately try again.
+          if (stores.some((s) => s.hadErrors)) {
+            if (lastCheckedManifest - Date.now() < 5 * 60 * 1000) {
+              return;
+            }
+            lastCheckedManifest = Date.now();
+
+            if (await checkForNewManifest()) {
+              defs = await dispatch(getDefinitions(true));
+              continue; // go back to the top of the loop with the new defs
             }
           }
+
+          if (readOnly) {
+            for (const store of stores) {
+              store.hadErrors = true;
+              for (const item of store.items) {
+                item.lockable = false;
+                item.trackable = false;
+                item.notransfer = true;
+                item.taggable = false;
+              }
+            }
+          }
+
+          const currencies = processCurrencies(profileResponse, defs);
+
+          const loadouts = processInGameLoadouts(profileResponse, defs);
+
+          stopTimer();
+
+          const stateSpan = transaction?.startChild({
+            op: 'updateInventoryState',
+          });
+          const stopStateTimer = timer('Inventory state update');
+
+          // If we switched account since starting this, give up before saving
+          if (account !== currentAccountSelector(getState())) {
+            return;
+          }
+
+          if (!getCurrentStore(stores)) {
+            errorLog('d2-stores', 'No characters in profile');
+            dispatch(
+              error(
+                new DimError(
+                  'Accounts.NoCharactersTitle',
+                  t('Accounts.NoCharacters'),
+                ).withNoSocials(),
+              ),
+            );
+            return;
+          }
+
+          // Cached loads can come from IDB, which can be VERY outdated, so don't
+          // remove item tags/notes based on that. We also refuse to clean tags if
+          // the profile is too old in wall-clock time. Technically we could do
+          // this *only* based on the minted timestamp, but there's no real point
+          // in cleaning items for cached loads since they presumably were cleaned
+          // already.
+          const profileMintedDate = new Date(profileResponse.responseMintedTimestamp ?? 0);
+          if (live && Date.now() - profileMintedDate.getTime() < FRESH_ENOUGH_TO_CLEAN_INFOS) {
+            dispatch(cleanInfos(stores));
+          }
+          dispatch(update({ stores, currencies }));
+          dispatch(inGameLoadoutLoaded(loadouts));
+
+          stopStateTimer();
+          stateSpan?.finish();
+
+          return stores;
         }
-
-        const currencies = processCurrencies(profileResponse, defs);
-
-        const loadouts = processInGameLoadouts(profileResponse, defs);
-
-        stopTimer();
-
-        const stateSpan = transaction?.startChild({
-          op: 'updateInventoryState',
-        });
-        const stopStateTimer = timer('Inventory state update');
-
-        // If we switched account since starting this, give up before saving
-        if (account !== currentAccountSelector(getState())) {
-          return;
-        }
-
-        if (!getCurrentStore(stores)) {
-          errorLog('d2-stores', 'No characters in profile');
-          dispatch(
-            error(
-              new DimError(
-                'Accounts.NoCharactersTitle',
-                t('Accounts.NoCharacters'),
-              ).withNoSocials(),
-            ),
-          );
-          return;
-        }
-
-        // First-time loads can come from IDB, which can be VERY outdated,
-        // so don't remove item tags/notes based on that
-        if (!firstTime) {
-          dispatch(cleanInfos(stores));
-        }
-        dispatch(update({ stores, currencies }));
-        dispatch(inGameLoadoutLoaded(loadouts));
-
-        stopStateTimer();
-        stateSpan?.finish();
-
-        return stores;
       } catch (e) {
         errorLog('d2-stores', 'Error loading stores', e);
         reportException('d2stores', e);

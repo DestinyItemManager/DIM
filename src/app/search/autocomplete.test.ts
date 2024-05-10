@@ -5,7 +5,7 @@ import {
   makeFilterComplete,
 } from './autocomplete';
 import { quoteFilterString } from './query-parser';
-import { buildSearchConfig } from './search-config';
+import { buildItemSearchConfig } from './search-config';
 
 /**
  * Given a string like "foo ba|r", find where the "|" is and remove it,
@@ -22,7 +22,7 @@ function extractCaret(stringWithCaretPlaceholder: string): [caretIndex: number, 
 }
 
 describe('autocompleteTermSuggestions', () => {
-  const searchConfig = buildSearchConfig(2, 'en');
+  const searchConfig = buildItemSearchConfig(2, 'en');
   const filterComplete = makeFilterComplete(searchConfig);
 
   const cases: [query: string, expected: string][] = [
@@ -212,7 +212,7 @@ describe('filterSortRecentSearches', () => {
 });
 
 describe('filterComplete', () => {
-  const searchConfig = buildSearchConfig(2, 'en');
+  const searchConfig = buildItemSearchConfig(2, 'en');
   const filterComplete = makeFilterComplete(searchConfig);
 
   const terms = [['is:b'], ['jun'], ['sni'], ['stat:mob'], ['stat'], ['stat:'], ['ote']];

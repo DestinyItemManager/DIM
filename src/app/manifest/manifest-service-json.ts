@@ -73,32 +73,11 @@ const localStorageKey = 'd2-manifest-version';
 const idbKey = 'd2-manifest';
 let version: string | null = null;
 
-/**
- * This tells users to reload the app. It fires no more
- * often than every 10 seconds, and only warns if the manifest
- * version has actually changed.
- */
-export const warnMissingDefinition = _.debounce(
-  async () => {
-    if ($DIM_FLAVOR !== 'test') {
-      const data = await d2GetManifest();
-      // If none of the paths (for any language) matches what we downloaded...
-      if (version && !Object.values(data.jsonWorldContentPaths).includes(version)) {
-        // The manifest has updated!
-        showNotification({
-          type: 'warning',
-          title: t('Manifest.Outdated'),
-          body: t('Manifest.OutdatedExplanation'),
-        });
-      }
-    }
-  },
-  10000,
-  {
-    leading: true,
-    trailing: false,
-  },
-);
+export async function checkForNewManifest() {
+  const data = await d2GetManifest();
+  // If none of the paths (for any language) matches what we downloaded...
+  return version && !Object.values(data.jsonWorldContentPaths).includes(version);
+}
 
 const getManifestAction = _.once(
   (tableAllowList: string[]): ThunkResult<AllDestinyManifestComponents> =>

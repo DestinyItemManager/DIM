@@ -59,6 +59,9 @@
           margin-right: 8px;
         }
       }
+      > img {
+        filter: invert(1);
+      }
     }
 
     .fashionIcon {
