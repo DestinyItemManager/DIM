@@ -15,7 +15,7 @@ import { buildItemSearchConfig } from './search-config';
  */
 function extractCaret(stringWithCaretPlaceholder: string): [caretIndex: number, query: string] {
   const caretIndex = stringWithCaretPlaceholder.indexOf('|');
-  if (caretIndex == -1) {
+  if (caretIndex === -1) {
     return [stringWithCaretPlaceholder.length, stringWithCaretPlaceholder];
   }
   return [caretIndex, stringWithCaretPlaceholder.replace('|', '')];
@@ -104,7 +104,6 @@ describe('autocompleteTermSuggestions', () => {
 
   // Mocked out filterComplete function that only knows a few tricks
   const filterCompleteMock = (term: string) => {
-    console.log('TERM', term);
     const parts = term.split(':');
     let filter = 'name';
     if (parts.length > 1) {

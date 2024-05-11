@@ -1,3 +1,4 @@
+/* eslint prefer-template: 0 */
 import parser from 'ua-parser-js';
 import {
   samsungInternet,
@@ -9,6 +10,9 @@ import {
 // Adapted from 'is-browser-supported' npm package. Separate from index.js so it'll run even if that fails.
 // This is also intentionally written in es5 and not TypeScript because it should not use any new features.
 
+/**
+ * @param {parser.IResult} agent
+ */
 function getBrowserName(agent) {
   if (agent.browser.name === 'Chrome' && agent.os.name === 'Android') {
     return 'and_chr';
@@ -24,9 +28,11 @@ function getBrowserName(agent) {
   return agent.browser.name;
 }
 
+/**
+ * @returns {import('app/i18n.js').DimLanguage}
+ */
 function getUserLocale() {
-  var lang = (window.navigator.userLanguage || window.navigator.language).toLowerCase() || 'en';
-  console.info('Language Detected: ' + lang);
+  var lang = window.navigator.language.toLowerCase() || 'en';
   if (lang.startsWith('zh-') && lang.length === 5) {
     lang = lang === 'zh-cn' ? 'zh-chs' : 'zh-cht';
   }
@@ -37,10 +43,12 @@ function getUserLocale() {
     // fallback to 'en' if unsupported language after removing dialect
     lang = 'en';
   }
-  console.info('Language Assigned: ' + lang);
   return lang;
 }
 
+/**
+ * @param {parser.IResult} agent
+ */
 function getBrowserVersionFromUserAgent(agent) {
   var browserName = getBrowserName(agent).toLowerCase();
   var version = (
@@ -57,6 +65,10 @@ function getBrowserVersionFromUserAgent(agent) {
   return 'unknown';
 }
 
+/**
+ * @param {string[]} browsersSupported
+ * @param {string} userAgent
+ */
 export function isSupported(browsersSupported, userAgent) {
   if (navigator.standalone) {
     // Assume support if we're installed as an iOS PWA.
@@ -66,7 +78,9 @@ export function isSupported(browsersSupported, userAgent) {
   var agent = parser(userAgent);
 
   // Build a map from browser version to minimum supported version
+  /** @type {Record<string, number|undefined>} */
   var minBrowserVersions = {};
+  // eslint-disable-next-line @typescript-eslint/prefer-for-of
   for (var i = 0; i < browsersSupported.length; i++) {
     // ios_saf 11.0-11.2 => [ios_saf, 11.0, 11.2]
     var supportedBrowserVersion = browsersSupported[i].split(/[- ]/);
@@ -76,21 +90,19 @@ export function isSupported(browsersSupported, userAgent) {
     );
   }
 
+  /** @param {string} browser  */
   function isBrowserSupported(browser) {
     var nameAndVersion = browser.split(' ');
-    if (
+    return (
       minBrowserVersions[nameAndVersion[0]] &&
       minBrowserVersions[nameAndVersion[0]] <= parseFloat(nameAndVersion[1])
-    ) {
-      return true;
-    }
-    return false;
+    );
   }
 
   var browser = getBrowserVersionFromUserAgent(agent);
   var supported = isBrowserSupported(browser);
 
-  if (!supported /* && agent.os.name !== 'Android'*/) {
+  if (!supported) {
     // Detect anything based on chrome as if it were chrome
     var chromeMatch = /Chrome\/(\d+)/.exec(agent.ua);
     if (chromeMatch) {
@@ -99,6 +111,7 @@ export function isSupported(browsersSupported, userAgent) {
     }
   }
   if (!supported) {
+    // eslint-disable-next-line no-console
     console.warn(
       'Browser ' + browser + ' is not supported by DIM. Supported browsers:',
       browsersSupported,
@@ -113,7 +126,7 @@ if ($BROWSERS.length && lang) {
   var supported = isSupported($BROWSERS, navigator.userAgent);
   if (!supported) {
     // t(`Browsercheck.Unsupported`)
-    document.getElementById('browser-warning').innerText = unsupported[lang];
+    document.getElementById('browser-warning').textContent = unsupported[lang];
     document.getElementById('browser-warning').style.display = 'block';
   }
 
@@ -121,7 +134,7 @@ if ($BROWSERS.length && lang) {
   if (navigator.userAgent.includes('Steam')) {
     // https://guide.dim.gg/Figuring-out-why-DIM-doesn't-work-in-Steam
     // t(`Browsercheck.Steam`)
-    document.getElementById('browser-warning').innerText = steamBrowser[lang];
+    document.getElementById('browser-warning').textContent = steamBrowser[lang];
     document.getElementById('browser-warning').style.display = 'block';
   }
 
@@ -135,7 +148,7 @@ if ($BROWSERS.length && lang) {
     window.matchMedia('(prefers-color-scheme: light)').matches
   ) {
     // t(`Browsercheck.Samsung`)
-    document.getElementById('browser-warning').innerText = samsungInternet[lang];
+    document.getElementById('browser-warning').textContent = samsungInternet[lang];
     document.getElementById('browser-warning').style.display = 'block';
   }
 }

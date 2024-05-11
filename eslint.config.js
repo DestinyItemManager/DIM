@@ -70,6 +70,7 @@ export default tseslint.config(
   },
   {
     name: 'jsx-a11y',
+    files: ['**/*.tsx'],
     plugins: {
       'jsx-a11y': fixupPluginRules(jsxA11y),
     },
@@ -116,6 +117,7 @@ export default tseslint.config(
   // {
   //   // https://github.com/hluisson/eslint-plugin-jsx-expressions/issues/18
   //   name: 'jsx-expressions',
+  //   files: ['**/*.tsx'],
   //   plugins: {
   //     // For these plugins we don't want any presets, only specific rules.
   //     'jsx-expressions': jsxExpressions,
@@ -125,21 +127,17 @@ export default tseslint.config(
   //   },
   // },
   {
-    name: 'dim-custom',
-    //files: ['**/*.{js,mjs,cjs,jsx,ts,tsx}'],
+    name: 'global ignores',
     ignores: [
       '*.m.scss.d.ts',
       '*.m.css.d.ts',
-      '*.config.*js',
-      'config/webpack.ts',
-      'src/app/google.js',
-      'src/browsercheck.js',
-      '*.test.ts',
-      '*.test.tsx',
       'src/build-browsercheck-utils.js',
       'src/testing/jest-setup.cjs',
       'src/fa-subset.js',
     ],
+  },
+  {
+    name: 'dim-custom',
     languageOptions: {
       ecmaVersion: 'latest',
       parserOptions: {
