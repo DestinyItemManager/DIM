@@ -20,7 +20,7 @@ import { armorStats } from 'app/search/d2-known-values';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import { normalToReducedMod } from 'data/d2/reduced-cost-mod-mappings';
 import { produce } from 'immer';
-import _, { stubTrue } from 'lodash';
+import _, { noop, stubTrue } from 'lodash';
 import {
   DestinyClass,
   DestinyProfileResponse,
@@ -40,14 +40,14 @@ const voidScavengerModHash = 802695661; // InventoryItem "Void Scavenger"
 const analyze = async (
   loadout: Loadout,
   worker: typeof noopProcessWorkerMock = noopProcessWorkerMock,
-) => await analyzeLoadout(context, store.id, store.classType, loadout, worker);
+) => analyzeLoadout(context, store.id, store.classType, loadout, worker);
 
 function noopProcessWorkerMock(..._args: Parameters<typeof runProcess>): {
   cleanup: () => void;
   resultPromise: Promise<Omit<ProcessResult, 'sets'> & { sets: ArmorSet[]; processTime: number }>;
 } {
   return {
-    cleanup: _.noop,
+    cleanup: noop,
     resultPromise: Promise.resolve({
       combos: 0,
       processTime: 0,
@@ -106,7 +106,7 @@ describe('basic loadout analysis finding tests', () => {
     expect(results.findings).not.toContain(LoadoutFinding.MissingItems);
     const indexThatWillLikelyFailResolution = equippedLoadout.items.findIndex(
       (i) => !i.socketOverrides && !i.craftedDate,
-    )!;
+    );
     const items = equippedLoadout.items.with(indexThatWillLikelyFailResolution, {
       ...equippedLoadout.items[indexThatWillLikelyFailResolution],
       id: '123',
@@ -136,7 +136,7 @@ describe('basic loadout analysis finding tests', () => {
     // Abusing this because it should fill the subclass exactly
     // it'd be neat to write some code for constructing a config that
     // doesn't exactly rely on running the code under test...
-    let config = randomSubclassConfiguration(defs, subclass)!;
+    const config = randomSubclassConfiguration(defs, subclass)!;
     const emptyLoadout = newLoadout('Subclass Loadout', [], store.classType);
     const results = await analyze(addItem(defs, subclass, true, config)(emptyLoadout));
     expect(results.findings).not.toContain(LoadoutFinding.EmptyFragmentSlots);

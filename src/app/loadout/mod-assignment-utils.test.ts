@@ -179,13 +179,13 @@ describe('mod-assignment-utils plugging strategy', () => {
     const ourItem = applyMods(classItem, [distributionMod, empoweringFinishMod]);
     const empoweringIndex = ourItem.sockets!.allSockets.findIndex(
       (socket) => socket.plugged?.plugDef.hash === empoweringFinishMod.hash,
-    )!;
+    );
     expect(ourItem.energy?.energyUsed).toBe(4);
     // Apply a 1-cost mutex mod, this should replace the other 1-cost mod
     const newItem = applyMods(ourItem, [bulwarkFinishMod], 2);
     const bulwarkIndex = newItem.sockets!.allSockets.findIndex(
       (socket) => socket.plugged?.plugDef.hash === bulwarkFinishMod.hash,
-    )!;
+    );
     expect(empoweringIndex).toBe(bulwarkIndex);
     expect(newItem.energy?.energyUsed).toBe(4);
   });

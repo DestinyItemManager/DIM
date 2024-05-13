@@ -220,7 +220,7 @@ export function consolidateSecondaryPerks(initialRolls: Roll[]) {
   // we iterate through the perk columns, looking for stuff to collapse
   for (const index of rollIndices) {
     // we repeatedly look for things to collapse until there are none
-    // eslint-disable-next-line no-constant-condition
+
     while (true) {
       // find a bundle that matches another bundle, in every column except our current one
       const perkBundleToConsolidate = newClusteredRolls.find((r1) =>

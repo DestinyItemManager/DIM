@@ -1,9 +1,10 @@
+import { noop } from 'lodash';
 import { dedupePromise } from './promises';
 
 describe('dedupePromise', () => {
   test('caches inflight promises', async () => {
-    let outerResolve: (value: string) => void = () => {};
-    let outerReject: (e: Error) => void = () => {};
+    let outerResolve: (value: string) => void = noop;
+    let outerReject: (e: Error) => void = noop;
     let promiseFunctionInvoked = 0;
 
     const deduped = dedupePromise(

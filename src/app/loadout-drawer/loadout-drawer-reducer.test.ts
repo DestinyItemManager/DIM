@@ -32,7 +32,7 @@ let items: DimItem[];
 let allItems: DimItem[];
 const emptyLoadout = newLoadout('Test', [], DestinyClass.Hunter);
 
-let artifactUnlocks = {
+const artifactUnlocks = {
   unlockedItemHashes: [1, 2, 3],
   seasonNumber: 22,
 };
@@ -172,7 +172,7 @@ describe('addItem', () => {
   it('fills in socket overrides when adding a subclass', () => {
     const subclass = items.find((i) => i.bucket.hash === BucketHashes.Subclass)!;
 
-    let loadout = addItem(defs, subclass)(emptyLoadout);
+    const loadout = addItem(defs, subclass)(emptyLoadout);
 
     expect(loadout.items[0].socketOverrides).toBeDefined();
   });
@@ -194,7 +194,7 @@ describe('addItem', () => {
     const invalidItem = store.items.find((i) => !itemCanBeInLoadout(i))!;
     expect(invalidItem).toBeDefined();
 
-    let loadout = addItem(defs, invalidItem)(emptyLoadout);
+    const loadout = addItem(defs, invalidItem)(emptyLoadout);
 
     expect(loadout.items).toEqual([]);
   });
@@ -203,7 +203,7 @@ describe('addItem', () => {
     const invalidItem = allItems.find((i) => !isClassCompatible(i.classType, DestinyClass.Hunter))!;
     expect(invalidItem).toBeDefined();
 
-    let loadout = addItem(defs, invalidItem)(emptyLoadout);
+    const loadout = addItem(defs, invalidItem)(emptyLoadout);
 
     expect(loadout.items).toEqual([]);
   });
@@ -230,7 +230,7 @@ describe('addItem', () => {
   });
 
   it('does nothing if the bucket is already at capacity', () => {
-    const weapons = items.filter((i) => i.bucket.hash === BucketHashes.KineticWeapons)!;
+    const weapons = items.filter((i) => i.bucket.hash === BucketHashes.KineticWeapons);
     expect(weapons.length).toBeGreaterThan(10);
 
     let loadout: Loadout | undefined;
@@ -380,7 +380,7 @@ describe('clearSubclass', () => {
 
 describe('setLoadoutSubclassFromEquipped', () => {
   it('correctly populates the subclass and its overrides', () => {
-    let loadout = setLoadoutSubclassFromEquipped(defs, store)(emptyLoadout);
+    const loadout = setLoadoutSubclassFromEquipped(defs, store)(emptyLoadout);
     expect(loadout.items.length).toBe(1);
     expect(defs.InventoryItem.get(loadout.items[0].hash).inventory!.bucketTypeHash).toBe(
       BucketHashes.Subclass,

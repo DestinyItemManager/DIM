@@ -23,7 +23,7 @@ describe('perkConsolidator', () => {
           secondaryPerksMap: { 1: 106909392, 2: 1467527085 },
           secondarySocketIndices: [1, 2],
         },
-      ] as any),
+      ]),
     ).toMatchInlineSnapshot(`
       [
         [
