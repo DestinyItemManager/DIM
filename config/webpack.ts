@@ -94,6 +94,7 @@ export default (env: Env) => {
       browsercheck: './src/browsercheck.js',
       earlyErrorReport: './src/earlyErrorReport.js',
       authReturn: './src/authReturn.ts',
+      backup: './src/backup.ts',
     },
 
     // https://github.com/webpack/webpack-dev-server/issues/2758
@@ -438,6 +439,13 @@ export default (env: Env) => {
     }),
 
     new HtmlWebpackPlugin({
+      inject: true,
+      filename: 'backup.html',
+      template: 'src/backup.html',
+      chunks: ['backup'],
+    }),
+
+    new HtmlWebpackPlugin({
       inject: false,
       filename: '404.html',
       template: 'src/404.html',
@@ -473,7 +481,6 @@ export default (env: Env) => {
         { from: `./icons/screenshots`, to: 'screenshots/' },
         { from: './src/safari-pinned-tab.svg' },
         { from: './src/nuke.php' },
-        { from: './src/backup.html' },
         { from: './src/robots.txt' },
       ],
     }),
