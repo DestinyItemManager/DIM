@@ -1,5 +1,7 @@
 ## Next
 
+## 8.19.2 <span class="changelog-date">(2024-05-15)</span>
+
 ## 8.19.1 <span class="changelog-date">(2024-05-12)</span>
 
 * Loadouts now have their own search language that you can use from the Loadouts page or character emblem dropdown. This works the same as item search, but the search keywords are different and loadout-specific. We'll add more search keywords over time.
