@@ -1,13 +1,5 @@
-import { BrowserTracing } from '@sentry/browser';
-import {
-  BrowserOptions,
-  addTracingExtensions,
-  captureException,
-  init,
-  setTag,
-  setUser,
-  withScope,
-} from '@sentry/react';
+import { browserTracingIntegration } from '@sentry/browser';
+import { BrowserOptions, captureException, init, setTag, setUser, withScope } from '@sentry/react';
 import { BungieError } from 'app/bungie-api/http-client';
 import { getToken } from 'app/bungie-api/oauth-tokens';
 import { HashLookupFailure } from 'app/destiny2/definitions';
@@ -35,11 +27,11 @@ const options: BrowserOptions = {
   ignoreErrors: [],
   sampleRate: $DIM_VERSION === 'beta' ? 0.5 : 0.01, // Sample Beta at 50%, Prod at 1%
   attachStacktrace: true,
+  // Only send trace headers to our own server
+  tracePropagationTargets: ['https://api.destinyitemmanager.com'],
   integrations: [
-    new BrowserTracing({
-      // Only send trace headers to our own server
-      tracePropagationTargets: ['api.destinyitemmanager.com'],
-      beforeNavigate: (context) => ({
+    browserTracingIntegration({
+      beforeStartSpan: (context) => ({
         ...context,
         // We could use the React-Router integration but it's annoying
         name: window.location.pathname
@@ -106,7 +98,6 @@ const options: BrowserOptions = {
 
 // TODO: There's a redux integration but I'm worried it'd be too much trouble to trim out all the stuff we wouldn't want to report (by default it sends the whole action & state.
 // https://docs.sentry.io/platforms/javascript/guides/react/configuration/integrations/redux/
-addTracingExtensions();
 init(options);
 
 // Set user ID (membership ID) to help debug and to better count affected users

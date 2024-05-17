@@ -1,4 +1,4 @@
-import { getCurrentHub } from '@sentry/browser';
+import { getClient } from '@sentry/browser';
 import { toHttpStatusError } from './bungie-api/http-client';
 import { errorLog, infoLog, warnLog } from './utils/log';
 import { Observable } from './utils/observable';
@@ -116,7 +116,7 @@ export default function registerServiceWorker() {
             infoLog('SW', 'New content is available; please refresh. (from update)');
 
             // Disable Sentry error logging if this user is on an older version
-            const sentryOptions = getCurrentHub()?.getClient()?.getOptions();
+            const sentryOptions = getClient()?.getOptions();
             if (sentryOptions) {
               sentryOptions.enabled = false;
             }
