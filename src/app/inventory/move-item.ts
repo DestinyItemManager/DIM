@@ -1,4 +1,4 @@
-import { getCurrentHub, startTransaction } from '@sentry/browser';
+import { startSpan } from '@sentry/browser';
 import { settingSelector } from 'app/dim-api/selectors';
 import { t } from 'app/i18next-t';
 import { ShowItemPickerFn } from 'app/item-picker/item-picker';
@@ -88,95 +88,91 @@ export function moveItemTo(
   return async (dispatch, getState) => {
     const currentStore = currentStoreSelector(getState())!;
     const singleCharacterSetting = settingSelector('singleCharacter')(getState());
-    const transaction = startTransaction({ name: 'moveItemTo' });
-    // set the transaction on the scope so it picks up any errors
-    getCurrentHub()?.configureScope((scope) => scope.setSpan(transaction));
-
-    hideItemPopup();
-    if (
-      item.location.inPostmaster
-        ? !item.canPullFromPostmaster
-        : item.notransfer && item.owner !== store.id
-    ) {
-      throw new DimError('Help.CannotMove');
-    }
-
-    if (item.owner === store.id && !item.location.inPostmaster && item.equipped === equip) {
-      return item;
-    }
-
-    // In single character mode dropping something from the "vault" back on the "vault" shouldn't move anything
-    if (singleCharacterSetting && store.isVault && item.owner !== currentStore.id) {
-      return item;
-    }
-
-    const moveAmount = amount || 1;
-    const reload = item.equipped || equip;
-    try {
-      const stores = storesSelector(getState());
-
-      if ($featureFlags.debugMoves) {
-        infoLog(
-          'move',
-          'User initiated move:',
-          moveAmount,
-          item.name,
-          item.type,
-          'to',
-          store.name,
-          'from',
-          getStore(stores, item.owner)!.name,
-        );
+    return startSpan({ name: 'moveItemTo' }, async () => {
+      hideItemPopup();
+      if (
+        item.location.inPostmaster
+          ? !item.canPullFromPostmaster
+          : item.notransfer && item.owner !== store.id
+      ) {
+        throw new DimError('Help.CannotMove');
       }
 
-      // We mark this *first*, because otherwise things observing state (like farming) may not see this
-      // in time.
-      updateManualMoveTimestamp(item);
-
-      const [cancelToken, cancel] = withCancel();
-      const moveSession = createMoveSession(cancelToken, [item]);
-
-      const movePromise = queueAction(() =>
-        loadingTracker.addPromise(
-          (async () => {
-            const result = await dispatch(
-              executeMoveItem(item, store, { equip, amount: moveAmount }, moveSession),
-            );
-            return result;
-          })(),
-        ),
-      );
-      showNotification(moveItemNotification(item, store, movePromise, cancel));
-
-      item = await movePromise;
-
-      if (reload) {
-        // TODO: only reload the character that changed?
-        // Refresh light levels and such
-        dispatch(updateCharacters());
-      }
-    } catch (e) {
-      if (e instanceof CanceledError) {
+      if (item.owner === store.id && !item.location.inPostmaster && item.equipped === equip) {
         return item;
       }
 
-      errorLog('move', 'error moving item', item.name, 'to', store.name, e);
-      // Some errors aren't worth reporting
-      if (
-        e instanceof DimError &&
-        (e.code === 'wrong-level' ||
-          e.code === 'no-space' ||
-          e.bungieErrorCode() === PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation)
-      ) {
-        // don't report
-      } else {
-        reportException('moveItem', e);
+      // In single character mode dropping something from the "vault" back on the "vault" shouldn't move anything
+      if (singleCharacterSetting && store.isVault && item.owner !== currentStore.id) {
+        return item;
       }
-    } finally {
-      transaction?.finish();
-    }
 
-    return item;
+      const moveAmount = amount || 1;
+      const reload = item.equipped || equip;
+      try {
+        const stores = storesSelector(getState());
+
+        if ($featureFlags.debugMoves) {
+          infoLog(
+            'move',
+            'User initiated move:',
+            moveAmount,
+            item.name,
+            item.type,
+            'to',
+            store.name,
+            'from',
+            getStore(stores, item.owner)!.name,
+          );
+        }
+
+        // We mark this *first*, because otherwise things observing state (like farming) may not see this
+        // in time.
+        updateManualMoveTimestamp(item);
+
+        const [cancelToken, cancel] = withCancel();
+        const moveSession = createMoveSession(cancelToken, [item]);
+
+        const movePromise = queueAction(() =>
+          loadingTracker.addPromise(
+            (async () => {
+              const result = await dispatch(
+                executeMoveItem(item, store, { equip, amount: moveAmount }, moveSession),
+              );
+              return result;
+            })(),
+          ),
+        );
+        showNotification(moveItemNotification(item, store, movePromise, cancel));
+
+        item = await movePromise;
+
+        if (reload) {
+          // TODO: only reload the character that changed?
+          // Refresh light levels and such
+          dispatch(updateCharacters());
+        }
+      } catch (e) {
+        if (e instanceof CanceledError) {
+          return item;
+        }
+
+        errorLog('move', 'error moving item', item.name, 'to', store.name, e);
+        // Some errors aren't worth reporting
+        if (
+          e instanceof DimError &&
+          (e.code === 'wrong-level' ||
+            e.code === 'no-space' ||
+            e.bungieErrorCode() === PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation)
+        ) {
+          // don't report
+        } else {
+          reportException('moveItem', e);
+        }
+      }
+
+      return item;
+    });
   };
 }
 

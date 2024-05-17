@@ -1,4 +1,4 @@
-import { Span, getCurrentHub } from '@sentry/browser';
+import { startSpan } from '@sentry/browser';
 import { handleAuthErrors } from 'app/accounts/actions';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
@@ -155,25 +155,18 @@ function updateItemModel(
   equip: boolean,
   amount: number = item.amount,
 ): ThunkAction<DimItem, RootState, undefined, AnyAction> {
-  return (dispatch, getState) => {
-    const transaction = getCurrentHub()?.getScope()?.getTransaction();
-    let span: Span | undefined;
-    if (transaction) {
-      span = transaction.startChild({
-        op: 'updateItemModel',
-      });
-    }
-    const stopTimer = timer('itemMovedUpdate');
+  return (dispatch, getState) =>
+    startSpan({ name: 'updateItemModel' }, () => {
+      const stopTimer = timer('itemMovedUpdate');
 
-    try {
-      dispatch(itemMoved({ item, source, target, equip, amount }));
-      const stores = storesSelector(getState());
-      return getItemAcrossStores(stores, item) || item;
-    } finally {
-      stopTimer();
-      span?.finish();
-    }
-  };
+      try {
+        dispatch(itemMoved({ item, source, target, equip, amount }));
+        const stores = storesSelector(getState());
+        return getItemAcrossStores(stores, item) || item;
+      } finally {
+        stopTimer();
+      }
+    });
 }
 
 /**
