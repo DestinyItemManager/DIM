@@ -1155,10 +1155,14 @@ const D2Sources: {
   },
   trials: {
     itemHashes: [
+      906840740, // Unwavering Duty
       1983519830, // Hardened by Trial
       2069797994, // Dazzling Iridescence
       2071635914, // Light for the Lost
       2071635915, // Flawless Empyrean
+      2185327324, // The Inquisitor
+      2653171212, // The Inquisitor
+      3624844116, // Unwavering Duty
     ],
     sourceHashes: [
       139599745, // Source: Earn seven wins on a single Trials ticket.
