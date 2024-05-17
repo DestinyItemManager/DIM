@@ -96,6 +96,7 @@ export default function createAutocompleter<I, FilterCtx, SuggestionsCtx>(
     caretIndex: number,
     recentSearches: Search[],
     includeArmory?: boolean,
+    maxResults = 7,
   ): SearchItem[] => {
     // If there's a query, it's always the first entry
     const queryItem: SearchItem | undefined = query
@@ -140,7 +141,7 @@ export default function createAutocompleter<I, FilterCtx, SuggestionsCtx>(
           _.compact([queryItem, ...filterSuggestions, ...recentSearchItems]),
           (i) => i.query.fullText,
         ),
-        7,
+        maxResults,
       ),
       ...armorySuggestions,
       helpItem,
