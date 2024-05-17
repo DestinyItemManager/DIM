@@ -38,6 +38,8 @@ import { useSetSetting } from './hooks';
 import { Settings, VaultWeaponGroupingStyle } from './initial-settings';
 import { itemSortSettingsSelector } from './item-sort';
 
+const TAG = 'settings';
+
 export const settingClass = styles.setting;
 export const fineprintClass = styles.fineprint;
 export const horizontalClass = styles.horizontal;
@@ -75,14 +77,14 @@ export default function SettingsPage() {
 
   const onCheckChange = (checked: boolean, name: keyof Settings) => {
     if (name.length === 0) {
-      errorLog('settings', new Error('You need to have a name on the form input'));
+      errorLog(TAG, new Error('You need to have a name on the form input'));
     }
 
     setSetting(name, checked);
   };
   const onChange: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (e) => {
     if (e.target.name.length === 0) {
-      errorLog('settings', new Error('You need to have a name on the form input'));
+      errorLog(TAG, new Error('You need to have a name on the form input'));
     }
 
     if (isInputElement(e.target) && e.target.type === 'checkbox') {
@@ -94,7 +96,7 @@ export default function SettingsPage() {
 
   const onChangeNumeric: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (e) => {
     if (e.target.name.length === 0) {
-      errorLog('settings', new Error('You need to have a name on the form input'));
+      errorLog(TAG, new Error('You need to have a name on the form input'));
     }
 
     setSetting(e.target.name as keyof Settings, parseInt(e.target.value, 10));

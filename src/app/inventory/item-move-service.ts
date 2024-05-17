@@ -52,6 +52,8 @@ import {
   spaceLeftForItem,
 } from './stores-helpers';
 
+const TAG = 'move';
+
 /**
  * An object we can use to track state across a "session" of move operations.
  * That might be just the moves involved in a single move request (including
@@ -157,7 +159,7 @@ function updateItemModel(
 ): ThunkAction<DimItem, RootState, undefined, AnyAction> {
   return (dispatch, getState) =>
     startSpan({ name: 'updateItemModel' }, () => {
-      const stopTimer = timer('itemMovedUpdate');
+      const stopTimer = timer(TAG, 'itemMovedUpdate');
 
       try {
         dispatch(itemMoved({ item, source, target, equip, amount }));
@@ -383,7 +385,7 @@ function moveToStore(
 
     if ($featureFlags.debugMoves) {
       item.location.inPostmaster
-        ? infoLog('move', 'Pull', amount, item.name, item.type, 'to', store.name, 'from Postmaster')
+        ? infoLog(TAG, 'Pull', amount, item.name, item.type, 'to', store.name, 'from Postmaster')
         : infoLog(
             'move',
             'Move',
@@ -446,7 +448,7 @@ function moveToStore(
         try {
           await dispatch(setItemLockState(item, overrideLockState));
         } catch (e) {
-          errorLog('move', 'Lock state override failed', e);
+          errorLog(TAG, 'Lock state override failed', e);
         }
       })();
     }
@@ -978,7 +980,7 @@ export function executeMoveItem(
       item.bucket.hash !== BucketHashes.Consumables
     ) {
       try {
-        infoLog('move', 'Try blind move of', item.name, 'to', target.name);
+        infoLog(TAG, 'Try blind move of', item.name, 'to', target.name);
         return await dispatch(moveToStore(item, target, equip, amount, session));
       } catch (e) {
         if (

@@ -26,7 +26,6 @@ function getBrowserName(agent) {
 
 function getUserLocale() {
   var lang = (window.navigator.userLanguage || window.navigator.language).toLowerCase() || 'en';
-  console.info('Language Detected: ' + lang);
   if (lang.startsWith('zh-') && lang.length === 5) {
     lang = lang === 'zh-cn' ? 'zh-chs' : 'zh-cht';
   }
@@ -37,7 +36,6 @@ function getUserLocale() {
     // fallback to 'en' if unsupported language after removing dialect
     lang = 'en';
   }
-  console.info('Language Assigned: ' + lang);
   return lang;
 }
 

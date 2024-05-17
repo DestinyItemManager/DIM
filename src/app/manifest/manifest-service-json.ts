@@ -25,6 +25,8 @@ import { showNotification } from '../notifications/notifications';
 import { settingsReady } from '../settings/settings';
 import { reportException } from '../utils/sentry';
 
+const TAG = 'manifest';
+
 // This file exports D2ManifestService at the bottom of the
 // file (TS wants us to declare classes before using them)!
 
@@ -91,7 +93,7 @@ export function getManifest(tableAllowList: string[]): ThunkResult<AllDestinyMan
 function doGetManifest(tableAllowList: string[]): ThunkResult<AllDestinyManifestComponents> {
   return async (dispatch) => {
     dispatch(loadingStart(t('Manifest.Load')));
-    const stopTimer = timer('Load manifest');
+    const stopTimer = timer(TAG, 'Load manifest');
     try {
       const manifest = await dispatch(loadManifest(tableAllowList));
       if (!manifest.DestinyVendorDefinition) {
@@ -120,7 +122,7 @@ function doGetManifest(tableAllowList: string[]): ThunkResult<AllDestinyManifest
       }
 
       const statusText = t('Manifest.Error', { error: message });
-      errorLog('manifest', 'Manifest loading error', e);
+      errorLog(TAG, 'Manifest loading error', e);
       reportException('manifest load', e);
       const error = new Error(statusText);
       error.name = 'ManifestError';
@@ -252,11 +254,11 @@ async function saveManifestToIndexedDB(
 ) {
   try {
     await set(idbKey, typedArray);
-    infoLog('manifest', `Successfully stored manifest file.`);
+    infoLog(TAG, `Successfully stored manifest file.`);
     localStorage.setItem(localStorageKey, version);
     localStorage.setItem(`${localStorageKey}-whitelist`, JSON.stringify(tableAllowList));
   } catch (e) {
-    errorLog('manifest', 'Error saving manifest file', e);
+    errorLog(TAG, 'Error saving manifest file', e);
     showNotification({
       title: t('Help.NoStorage'),
       body: t('Help.NoStorageMessage'),

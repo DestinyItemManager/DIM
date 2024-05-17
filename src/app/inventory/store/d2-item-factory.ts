@@ -61,6 +61,8 @@ import { buildPatternInfo } from './patterns';
 import { buildSockets } from './sockets';
 import { buildStats } from './stats';
 
+const TAG = 'd2-stores';
+
 const collectiblesByItemHash = memoizeOne(
   (Collectible: ReturnType<D2ManifestDefinitions['Collectible']['getAll']>) =>
     _.keyBy(Collectible, (c) => c.itemHash),
@@ -81,7 +83,7 @@ export function processItems(
     try {
       createdItem = makeItem(context, item, owner);
     } catch (e) {
-      errorLog('d2-stores', 'Error processing item', item, e);
+      errorLog(TAG, 'Error processing item', item, e);
       reportException('Processing Dim item', e);
     }
     if (
@@ -567,7 +569,7 @@ export function makeItem(
     createdItem.sockets = socketInfo.sockets;
     createdItem.missingSockets = socketInfo.missingSockets;
   } catch (e) {
-    errorLog('d2-stores', `Error building sockets for ${createdItem.name}`, item, itemDef, e);
+    errorLog(TAG, `Error building sockets for ${createdItem.name}`, item, itemDef, e);
     reportException('Sockets', e, { itemHash: item.itemHash });
   }
 
@@ -606,7 +608,7 @@ export function makeItem(
   try {
     createdItem.stats = buildStats(defs, createdItem, customStats, itemDef);
   } catch (e) {
-    errorLog('d2-stores', `Error building stats for ${createdItem.name}`, item, itemDef, e);
+    errorLog(TAG, `Error building stats for ${createdItem.name}`, item, itemDef, e);
     reportException('Stats', e, { itemHash: item.itemHash });
   }
 
@@ -624,7 +626,7 @@ export function makeItem(
       itemUninstancedObjectives,
     );
   } catch (e) {
-    errorLog('d2-stores', `Error building objectives for ${createdItem.name}`, item, itemDef, e);
+    errorLog(TAG, `Error building objectives for ${createdItem.name}`, item, itemDef, e);
   }
 
   if (itemDef.perks?.length) {
@@ -730,7 +732,7 @@ export function makeItem(
   try {
     buildPursuitInfo(createdItem, item, itemDef);
   } catch (e) {
-    errorLog('d2-stores', `Error building Quest info for ${createdItem.name}`, item, itemDef, e);
+    errorLog(TAG, `Error building Quest info for ${createdItem.name}`, item, itemDef, e);
     if (e instanceof Error) {
       reportException('Quest', e, { itemHash: item.itemHash });
     }

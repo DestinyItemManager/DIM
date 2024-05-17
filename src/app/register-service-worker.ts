@@ -5,6 +5,8 @@ import { Observable } from './utils/observable';
 import { delay } from './utils/promises';
 import { reportException } from './utils/sentry';
 
+const TAG = 'SW';
+
 /**
  * A function that will attempt to update the service worker in place.
  * It will return a promise for when the update is complete.
@@ -42,7 +44,7 @@ let currentVersion = $DIM_VERSION;
           }
         }
       } catch (e) {
-        errorLog('SW', 'Failed to check version.json', e);
+        errorLog(TAG, 'Failed to check version.json', e);
       }
     },
     15 * 60 * 1000,
@@ -64,7 +66,7 @@ export default function registerServiceWorker() {
         // TODO: save off a handler that can call registration.update() to force update on refresh?
         registration.onupdatefound = () => {
           if ($featureFlags.debugSW) {
-            infoLog('SW', 'A new Service Worker version has been found...');
+            infoLog(TAG, 'A new Service Worker version has been found...');
           }
           const installingWorker = registration.installing!;
           installingWorker.onstatechange = () => {
@@ -74,7 +76,7 @@ export default function registerServiceWorker() {
                 // the fresh content will have been added to the cache.
                 // It's the perfect time to display a "New content is
                 // available; please refresh." message in your web app.
-                infoLog('SW', 'New content is available; please refresh. (from onupdatefound)');
+                infoLog(TAG, 'New content is available; please refresh. (from onupdatefound)');
                 // At this point, is it really cached??
 
                 dimNeedsUpdate$.next(true);
@@ -93,27 +95,27 @@ export default function registerServiceWorker() {
                 // At this point, everything has been precached.
                 // It's the perfect time to display a
                 // "Content is cached for offline use." message.
-                infoLog('SW', 'Content is cached for offline use.');
+                infoLog(TAG, 'Content is cached for offline use.');
               }
             } else if ($featureFlags.debugSW) {
-              infoLog('SW', 'New Service Worker state: ', installingWorker.state);
+              infoLog(TAG, 'New Service Worker state: ', installingWorker.state);
             }
           };
         };
 
         updateServiceWorker = async () => {
-          infoLog('SW', 'Checking for service worker update.');
+          infoLog(TAG, 'Checking for service worker update.');
           try {
             await registration.update();
           } catch (err) {
             if ($featureFlags.debugSW) {
-              errorLog('SW', 'Unable to update service worker.', err);
+              errorLog(TAG, 'Unable to update service worker.', err);
               reportException('service-worker', err);
             }
             return false;
           }
           if (registration.waiting) {
-            infoLog('SW', 'New content is available; please refresh. (from update)');
+            infoLog(TAG, 'New content is available; please refresh. (from update)');
 
             // Disable Sentry error logging if this user is on an older version
             const sentryOptions = getClient()?.getOptions();
@@ -123,13 +125,13 @@ export default function registerServiceWorker() {
 
             return true;
           } else {
-            infoLog('SW', 'Updated, but theres not a new worker waiting');
+            infoLog(TAG, 'Updated, but theres not a new worker waiting');
             return false;
           }
         };
       })
       .catch((err) => {
-        errorLog('SW', 'Unable to register service worker.', err);
+        errorLog(TAG, 'Unable to register service worker.', err);
         reportException('service-worker', err);
       });
   });
@@ -171,9 +173,9 @@ export function isNewVersion(version: string, currentVersion: string) {
   }
 
   if (olderAvailable) {
-    warnLog('SW', 'Server version ', version, ' is older than current version ', currentVersion);
+    warnLog(TAG, 'Server version ', version, ' is older than current version ', currentVersion);
   } else if (newerAvailable) {
-    infoLog('SW', 'Found newer version on server, attempting to update');
+    infoLog(TAG, 'Found newer version on server, attempting to update');
   }
 
   return newerAvailable;
@@ -187,7 +189,7 @@ export async function reloadDIM() {
     const registration = await navigator.serviceWorker.getRegistration();
 
     if (!registration) {
-      errorLog('SW', 'No registration!');
+      errorLog(TAG, 'No registration!');
       window.location.reload();
       return;
     }
@@ -195,14 +197,14 @@ export async function reloadDIM() {
     if (!registration.waiting) {
       // Just to ensure registration.waiting is available before
       // calling postMessage()
-      errorLog('SW', 'registration.waiting is null!');
+      errorLog(TAG, 'registration.waiting is null!');
 
       const installingWorker = registration.installing;
       if (installingWorker) {
-        infoLog('SW', 'found an installing service worker');
+        infoLog(TAG, 'found an installing service worker');
         installingWorker.onstatechange = () => {
           if (installingWorker.state === 'installed') {
-            infoLog('SW', 'installing service worker installed, skip waiting');
+            infoLog(TAG, 'installing service worker installed, skip waiting');
             installingWorker.postMessage('skipWaiting');
           }
         };
@@ -212,7 +214,7 @@ export async function reloadDIM() {
       return;
     }
 
-    infoLog('SW', 'posting skip waiting');
+    infoLog(TAG, 'posting skip waiting');
     registration.waiting.postMessage('skipWaiting');
 
     // insurance!
@@ -220,7 +222,7 @@ export async function reloadDIM() {
       window.location.reload();
     }, 2000);
   } catch (e) {
-    errorLog('SW', 'Error checking registration:', e);
+    errorLog(TAG, 'Error checking registration:', e);
     window.location.reload();
   }
 }

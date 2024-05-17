@@ -20,6 +20,8 @@ import { importData } from './dim-api';
 import type { DimApiState } from './reducer';
 import { makeProfileKey } from './selectors';
 
+const TAG = 'importData';
+
 /**
  * Import data in the DIM Sync export format into DIM Sync or local storage.
  * This is from a user clicking "Import" and will always overwrite the data saved locally or on the server.
@@ -38,7 +40,7 @@ export function importDataBackup(data: ExportResponse, silent = false): ThunkRes
 
     if (dimApiData.globalSettings.dimApiEnabled && dimApiData.apiPermissionGranted) {
       try {
-        infoLog('importData', 'Attempting to import data into DIM API');
+        infoLog(TAG, 'Attempting to import data into DIM API');
         const result = await importData(data);
 
         // Import immediately into local state
@@ -48,12 +50,12 @@ export function importDataBackup(data: ExportResponse, silent = false): ThunkRes
         // server after that so we don't use our faked import data too long. We
         // won't wait for this.
         delay(60_000).then(() => dispatch(loadDimApiData(true)));
-        infoLog('importData', 'Successfully imported data into DIM API', result);
+        infoLog(TAG, 'Successfully imported data into DIM API', result);
         showImportSuccessNotification(result, true);
         return;
       } catch (e) {
         if (!silent) {
-          errorLog('importData', 'Error importing data into DIM API', e);
+          errorLog(TAG, 'Error importing data into DIM API', e);
           showImportFailedNotification(errorMessage(e));
         }
         return;
