@@ -90,7 +90,6 @@ const D2Sources: {
       205225492, // Hung Jury SR4
       211732170, // Hammerhead
       243425374, // Falling Guillotine
-      568611923, // Edge Transit
       570866107, // Succession
       2228325504, // Edge Transit
       2480074702, // Forbearance
@@ -434,17 +433,14 @@ const D2Sources: {
   },
   events: {
     itemHashes: [
-      66875353, // Avalanche
-      294129361, // The Title
-      396910433, // Zephyr
       495940989, // Avalanche
-      655712834, // The Title
-      1911078836, // Zephyr
+      1280894514, // Mechabre
+      2812100428, // Stay Frosty
+      2814093983, // Cold Front
+      3240434620, // Something New
       3400256755, // Zephyr
       3559361670, // The Title
-      3659710187, // The Title
-      4203034886, // Zephyr
-      4220529694, // Avalanche
+      3573686365, // Glacioclasm
     ],
     sourceHashes: [
       32323943, // Source: Moments of Triumph
@@ -513,10 +509,12 @@ const D2Sources: {
       1335424934, // Gambit Chrome
       1335424935, // Gambit Leather
       1661191187, // Mistrust of Gifts
+      2026755633, // Breakneck
       2224920148, // Gambit Blackguard
       2224920149, // Gambit Steel
       2394866220, // Keep on Drifting
       2588647363, // Live for the Hustle
+      3001205424, // Ecliptic Distaff
       3217477988, // Gambit Duds
       4060882457, // Snakeskin Wrap (Ornament)
     ],
@@ -547,7 +545,6 @@ const D2Sources: {
       2868525741, // The Invader
       2868525742, // The Reaper
       2868525743, // The Sentry
-      3735277403, // Prime Palette
       3808901541, // Viper Strike
     ],
     sourceHashes: [
@@ -611,7 +608,6 @@ const D2Sources: {
       205225492, // Hung Jury SR4
       211732170, // Hammerhead
       243425374, // Falling Guillotine
-      568611923, // Edge Transit
       570866107, // Succession
       2228325504, // Edge Transit
       2480074702, // Forbearance
@@ -643,12 +639,17 @@ const D2Sources: {
   ironbanner: {
     itemHashes: [
       231533811, // Iron Strength
+      487361141, // Gunnora's Axe
+      540880995, // Dark Decider
       1162929425, // The Golden Standard
       1448664466, // Iron Bone
       1448664467, // Iron Gold
       1661191199, // Grizzled Wolf
       1987234560, // Iron Ruby
+      1999697514, // The Wizened Rebuke
       2448092902, // Rusted Iron
+      2488587246, // The Hero's Burden
+      4009352833, // Roar of the Bear
     ],
     sourceHashes: [
       561111210, // Source: Iron Banner Salvager's Salvo Armament
@@ -670,7 +671,15 @@ const D2Sources: {
   },
   lastwish: {
     itemHashes: [
+      70083888, // Nation of Beasts
+      424291879, // Age-Old Bond
+      501329015, // Chattering Bone
+      1851777734, // Apex Predator
+      2884596447, // The Supremacy
+      3388655311, // Tyranny of Heaven
+      3591141932, // Techeun Force
       3668669364, // Dreaming Spectrum
+      3885259140, // Transfiguration
     ],
     sourceHashes: [
       2455011338, // Source: Last Wish raid.
@@ -751,6 +760,12 @@ const D2Sources: {
     ],
   },
   neomuna: {
+    itemHashes: [
+      1123421440, // Epochal Integration
+      1311684613, // Dimensional Hypotrochoid
+      3635821806, // Phyllotactic Spiral
+      3920310144, // Volta Bracket
+    ],
     sourceHashes: [
       281362298, // Source: Strider Exotic Quest
       454251931, // Source: "What Remains" Exotic Quest
@@ -779,15 +794,40 @@ const D2Sources: {
   },
   nightfall: {
     itemHashes: [
+      192784503, // Pre Astyanax IV
+      213264394, // Buzzard
+      267089201, // Warden's Law (Adept)
+      496556698, // Pre Astyanax IV (Adept)
       555148853, // Wendigo GL3 (Adept)
       566740455, // THE SWARM (Adept)
-      681067419, // Hung Jury SR4 (Adept)
+      672957262, // Undercurrent (Adept)
+      772231794, // Hung Jury SR4
       912222548, // Soldier On
+      927835311, // Buzzard (Adept)
+      959037361, // Wild Style (Adept)
+      1064132738, // BrayTech Osprey (Adept)
+      1151688091, // Undercurrent
+      1332123064, // Wild Style
+      1354727549, // The Slammer (Adept)
+      1586231351, // Mindbender's Ambition
+      1821529912, // Warden's Law
+      1854753404, // Wendigo GL3
+      1854753405, // The Militia's Birthright
+      1891996599, // Uzume RR4 (Adept)
       1987790789, // After the Nightfall
+      2074041946, // Mindbender's Ambition (Adept)
+      2450917538, // Uzume RR4
+      2759590322, // THE SWARM
       2883684343, // Hung Jury SR4 (Adept)
-      3836861464, // THE SWARM (Adept)
+      2889501828, // The Slammer
+      2914913838, // Loaded Question (Adept)
+      3125454907, // Loaded Question
+      3183283212, // Wendigo GL3
+      3667553455, // BrayTech Osprey
+      3832743906, // Hung Jury SR4
       3915197957, // Wendigo GL3 (Adept)
       4074251943, // Hung Jury SR4 (Adept)
+      4162642204, // The Militia's Birthright (Adept)
     ],
     sourceHashes: [
       110159004, // Source: Complete Nightfall strike "Warden of Nothing."
@@ -984,6 +1024,10 @@ const D2Sources: {
     ],
   },
   rivenslair: {
+    itemHashes: [
+      2563668388, // Scalar Potential
+      4153087276, // Appetence
+    ],
     sourceHashes: [
       561126969, // Source: "Starcrossed" Mission
       1664308183, // Source: Season of the Wish Activities
@@ -1061,6 +1105,13 @@ const D2Sources: {
     ],
   },
   sonar: {
+    itemHashes: [
+      1081724548, // Rapacious Appetite
+      1769847435, // A Distant Pull
+      3016891299, // Different Times
+      3890055324, // Targeted Redaction
+      4066778670, // Thin Precipice
+    ],
     sourceHashes: [
       813075729, // Source: Season of the Deep Vendor Reputation Reward
       927967626, // Source: Season of the Deep
@@ -1086,15 +1137,35 @@ const D2Sources: {
   },
   strikes: {
     itemHashes: [
+      192784503, // Pre Astyanax IV
+      213264394, // Buzzard
       274843196, // Vanguard Unyielding
+      772231794, // Hung Jury SR4
+      781498181, // Persuader
+      1151688091, // Undercurrent
+      1296429091, // Deadpan Delivery
+      1332123064, // Wild Style
       1661191186, // Disdain for Gold
+      1821529912, // Warden's Law
+      1854753404, // Wendigo GL3
+      1854753405, // The Militia's Birthright
+      1974641289, // Nightshade
+      1999754402, // The Showrunner
+      2450917538, // Uzume RR4
       2523776412, // Vanguard Burnished Steel
       2523776413, // Vanguard Steel
       2588647361, // Consequence of Duty
+      2759590322, // THE SWARM
       2788911997, // Vanguard Divide
       2788911998, // Vanguard Metallic
       2788911999, // Vanguard Veteran
+      2889501828, // The Slammer
+      3001205424, // Ecliptic Distaff
+      3125454907, // Loaded Question
+      3183283212, // Wendigo GL3
       3215252549, // Determination
+      3667553455, // BrayTech Osprey
+      3832743906, // Hung Jury SR4
       4060882458, // Balistraria Wrap (Ornament)
     ],
     sourceHashes: [
@@ -1138,6 +1209,9 @@ const D2Sources: {
     ],
   },
   throneworld: {
+    itemHashes: [
+      2721157927, // Tarnation
+    ],
     sourceHashes: [
       1141831282, // Source: "Of Queens and Worms" Exotic Quest
       1823766625, // Source: "Vox Obscura" Exotic Quest
@@ -1155,14 +1229,17 @@ const D2Sources: {
   },
   trials: {
     itemHashes: [
-      906840740, // Unwavering Duty
+      2307365, // The Inquisitor (Adept)
+      711889599, // Whistler's Whim (Adept)
+      1574601402, // Whistler's Whim
       1983519830, // Hardened by Trial
-      2069797994, // Dazzling Iridescence
       2071635914, // Light for the Lost
       2071635915, // Flawless Empyrean
       2185327324, // The Inquisitor
-      2653171212, // The Inquisitor
+      2759251821, // Unwavering Duty (Adept)
+      3102421004, // Exalted Truth
       3624844116, // Unwavering Duty
+      3920882229, // Exalted Truth (Adept)
     ],
     sourceHashes: [
       139599745, // Source: Earn seven wins on a single Trials ticket.
