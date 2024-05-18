@@ -260,7 +260,9 @@ function filterSocketCategories(
       continue;
     }
     const categorySockets = getSocketsByIndexes(sockets, category.socketIndexes).filter(
-      (socketInfo) => socketInfo.plugged?.plugDef.displayProperties.name && allowSocket(socketInfo),
+      (socketInfo) =>
+        (socketInfo.plugged || socketInfo.plugOptions[0])?.plugDef.displayProperties.name &&
+        allowSocket(socketInfo),
     );
     if (categorySockets.length) {
       socketsByCategory.set(category, categorySockets);

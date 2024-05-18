@@ -124,7 +124,7 @@ export default function SingleVendor({
   let refreshTime: Date | undefined;
   if (!isArtifact) {
     d2Vendor = toVendor(
-      { ...itemCreationContext, itemComponents: vendorResponse?.itemComponents[vendorHash] },
+      { ...itemCreationContext, itemComponents: vendorResponse?.itemComponents?.[vendorHash] },
       vendorHash,
       vendor,
       characterId,

@@ -57,7 +57,7 @@ import {
  */
 export function buildSockets(
   item: DestinyItemComponent,
-  itemComponents: DestinyItemComponentSetOfint64 | undefined,
+  itemComponents: Partial<DestinyItemComponentSetOfint64> | undefined,
   defs: D2ManifestDefinitions,
   itemDef: DestinyInventoryItemDefinition,
 ) {
@@ -76,6 +76,7 @@ export function buildSockets(
     (item.itemInstanceId &&
       itemComponents?.plugObjectives?.data?.[item.itemInstanceId]?.objectivesPerPlug) ||
     undefined;
+
   if (socketData) {
     sockets = buildInstancedSockets(
       defs,
@@ -91,7 +92,14 @@ export function buildSockets(
   // get sockets from the item definition.
   if (!sockets && itemDef.sockets) {
     // If this really *should* have live sockets, but didn't...
-    if (item.itemInstanceId && item.itemInstanceId !== '0' && !socketData) {
+    if (
+      item.itemInstanceId &&
+      // a nice long instanceId is a real one and "should" have this data
+      // (short is actually a vendor item index. we'll let that build from defs.)
+      item.itemInstanceId.length > 14 &&
+      item.itemInstanceId !== '0' &&
+      !socketData
+    ) {
       return { sockets: null, missingSockets: true };
     }
     sockets = buildDefinedSockets(defs, itemDef);

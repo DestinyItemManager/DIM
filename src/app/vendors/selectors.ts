@@ -82,7 +82,7 @@ const subVendorsForCharacterSelector = currySelector(
             const vendor = toVendor(
               {
                 ...context,
-                itemComponents: vendorsResponse.itemComponents[vendorHash],
+                itemComponents: vendorsResponse.itemComponents?.[vendorHash],
               },
               item.previewVendorHash,
               vendorsResponse.vendors.data?.[vendorHash],

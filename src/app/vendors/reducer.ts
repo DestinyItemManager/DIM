@@ -1,4 +1,5 @@
-import { DestinyVendorsResponse } from 'bungie-api-ts/destiny2';
+import { LimitedDestinyVendorsResponse } from 'app/bungie-api/destiny2-api';
+import _ from 'lodash';
 import { Reducer } from 'redux';
 import { ActionType, getType } from 'typesafe-actions';
 import { setCurrentAccount } from '../accounts/actions';
@@ -8,13 +9,14 @@ import * as actions from './actions';
 // TODO: This may really belong in InventoryState
 // TODO: Save to IDB?
 export interface VendorsState {
-  vendorsByCharacter: {
+  vendorsByCharacter: Partial<{
     [characterId: string]: {
-      vendorsResponse?: DestinyVendorsResponse;
-      lastLoaded?: Date;
+      vendorsResponse?: LimitedDestinyVendorsResponse;
+      /** ms epoch time */
+      lastLoaded?: number;
       error?: Error;
     };
-  };
+  }>;
   showUnacquiredOnly: boolean;
 }
 
@@ -38,7 +40,37 @@ export const vendors: Reducer<VendorsState, VendorsAction | AccountsAction> = (
           ...state.vendorsByCharacter,
           [characterId]: {
             vendorsResponse: vendorsResponse,
-            lastLoaded: new Date(),
+            lastLoaded: Date.now(),
+            error: undefined,
+          },
+        },
+      };
+    }
+
+    // augments the storedoverall all-vendors response,
+    // by inserting the item components from a single-vendor api response
+    case getType(actions.loadedSingle): {
+      const { characterId, vendorResponse, vendorHash } = action.payload;
+      const { vendorsByCharacter } = state;
+      const oldVendorsResponse = vendorsByCharacter[characterId]?.vendorsResponse;
+
+      // nothing about state needs changing if we didn't get back components
+      // (maybe sockets/etc are disabled at bnet right now?)
+      if (_.isEmpty(vendorResponse.itemComponents) || !oldVendorsResponse) {
+        return state;
+      }
+
+      const newItemComponents = vendorResponse.itemComponents; // big combined set, keyed by vendor hash
+      const existingItemComponents = oldVendorsResponse?.itemComponents; // set for a single vendor
+      const itemComponents = { ...existingItemComponents, [vendorHash]: newItemComponents }; // big set again
+
+      return {
+        ...state,
+        vendorsByCharacter: {
+          ...vendorsByCharacter,
+          [characterId]: {
+            vendorsResponse: { ...oldVendorsResponse, itemComponents },
+            lastLoaded: Date.now(),
             error: undefined,
           },
         },
