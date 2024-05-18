@@ -203,7 +203,8 @@
     "PartialMatch": "Shows loadouts where their name or notes has a partial match to the filter text. Search for entire phrases using quotes.",
     "Season": "Shows loadouts by which season of Destiny 2 they were last modified in.",
     "FashionOnly": "Shows loadouts that contain only fashion (shaders or ornaments).",
-    "ModsOnly": "Shows loadouts that only contain armor mods."
+    "ModsOnly": "Shows loadouts that only contain armor mods.",
+    "Subclass": "Shows loadouts whose name partially matches the filter text."
   },
   "Filter": {
     "Adept": "\\(Adept\\)",
