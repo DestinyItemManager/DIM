@@ -10,9 +10,9 @@ import { LoadoutFilterContext, LoadoutSuggestionsContext } from '../loadout-filt
 
 function subclassFromLoadout(loadout: Loadout, d2Manifest: D2ManifestDefinitions) {
   for (const item of loadout.items) {
-    const manifest = d2Manifest?.InventoryItem.get(item.hash);
-    if (manifest?.itemType === DestinyItemType.Subclass) {
-      return manifest;
+    const itemDef = d2Manifest?.InventoryItem.get(item.hash);
+    if (itemDef?.itemType === DestinyItemType.Subclass) {
+      return itemDef;
     }
   }
 }
@@ -47,19 +47,18 @@ const freeformFilters: FilterDefinition<
   {
     keywords: ['subclass'],
     description: tl('LoadoutFilter.Name'),
-    format: ['simple', 'freeform'],
+    format: 'freeform',
     suggestionsGenerator: ({ loadouts, d2Manifest }) =>
       loadouts && d2Manifest
         ? Array.from(
-            new Set(
-              subclassesFromLoadouts(loadouts, d2Manifest).map(
-                (subclass) =>
-                  // TODO (ryan) subclasses have a none damage type, so to do subclass match
-                  // based on element name (solar/stasis/etc) we need to set up some known data
-                  `subclass:${quoteFilterString(subclass.displayProperties.name.toLowerCase())}`,
-              ),
+            new Set(loadouts.map((l) => subclassFromLoadout(l, d2Manifest).filter((s) => s !== undefined))
             ),
-          )
+          ).map(
+            (subclass) =>
+              // TODO (ryan) subclasses have a none damage type, so to do subclass match
+              // based on element name (solar/stasis/etc) we need to set up some known data
+                         `subclass:${quoteFilterString(subclass.displayProperties.name.toLowerCase())}`,
+          ),
         : [],
     filter: ({ filterValue, language, d2Definitions }) => {
       const test = matchText(filterValue, language, false);
