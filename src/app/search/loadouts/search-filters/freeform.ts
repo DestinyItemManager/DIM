@@ -8,24 +8,13 @@ import { FilterDefinition } from '../../filter-types';
 import { quoteFilterString } from '../../query-parser';
 import { LoadoutFilterContext, LoadoutSuggestionsContext } from '../loadout-filter-types';
 
-function subclassFromLoadout(loadout: Loadout, d2Manifest: D2ManifestDefinitions) {
+function subclassDefFromLoadout(loadout: Loadout, d2Definitions: D2ManifestDefinitions) {
   for (const item of loadout.items) {
-    const itemDef = d2Manifest?.InventoryItem.get(item.hash);
+    const itemDef = d2Definitions?.InventoryItem.get(item.hash);
     if (itemDef?.itemType === DestinyItemType.Subclass) {
       return itemDef;
     }
   }
-}
-
-function subclassesFromLoadouts(loadouts: Loadout[], d2Manifest: D2ManifestDefinitions) {
-  const subclasses: DestinyInventoryItemDefinition[] = [];
-  for (const loadout of loadouts) {
-    const subclass = subclassFromLoadout(loadout, d2Manifest);
-    if (subclass) {
-      subclasses.push(subclass);
-    }
-  }
-  return subclasses;
 }
 
 const freeformFilters: FilterDefinition<
@@ -48,22 +37,23 @@ const freeformFilters: FilterDefinition<
     keywords: ['subclass'],
     description: tl('LoadoutFilter.Name'),
     format: 'freeform',
-    suggestionsGenerator: ({ loadouts, d2Manifest }) =>
-      loadouts && d2Manifest
-        ? Array.from(
-            new Set(loadouts.map((l) => subclassFromLoadout(l, d2Manifest).filter((s) => s !== undefined))
-            ),
-          ).map(
-            (subclass) =>
-              // TODO (ryan) subclasses have a none damage type, so to do subclass match
-              // based on element name (solar/stasis/etc) we need to set up some known data
-                         `subclass:${quoteFilterString(subclass.displayProperties.name.toLowerCase())}`,
-          ),
-        : [],
+    suggestionsGenerator: ({ loadouts, d2Manifest }) => {
+      if (!loadouts || !d2Manifest) {
+        return [];
+      }
+      return Array.from(new Set(loadouts.map((l) => subclassDefFromLoadout(l, d2Manifest))))
+        .filter((s): s is DestinyInventoryItemDefinition => s !== undefined)
+        .map(
+          (subclass) =>
+            // TODO (ryan) subclasses have a none damage type, so to do subclass match
+            // based on element name (solar/stasis/etc) we need to set up some known data
+            `subclass:${quoteFilterString(subclass.displayProperties.name.toLowerCase())}`,
+        );
+    },
     filter: ({ filterValue, language, d2Definitions }) => {
       const test = matchText(filterValue, language, false);
       return (loadout: Loadout) => {
-        const subclass = d2Definitions && subclassFromLoadout(loadout, d2Definitions);
+        const subclass = d2Definitions && subclassDefFromLoadout(loadout, d2Definitions);
         return subclass ? test(subclass.displayProperties.name) : false;
       };
     },
