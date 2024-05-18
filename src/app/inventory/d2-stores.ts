@@ -168,7 +168,7 @@ function loadProfile(
         // Check to make sure the profile hadn't been loaded in the meantime
         if (getState().inventory.profileResponse) {
           cachedProfileResponse = getState().inventory.profileResponse;
-        } else {
+        } else if (cachedProfileResponse) {
           infoLog('d2-stores', 'Loaded cached profile from IndexedDB');
           dispatch(profileLoaded({ profile: cachedProfileResponse, live: false }));
           // The first time we load, just use the IDB version if we can, to speed up loading
