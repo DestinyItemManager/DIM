@@ -8,12 +8,20 @@ import _ from 'lodash';
 import { FilterDefinition } from '../../filter-types';
 import { quoteFilterString } from '../../query-parser';
 import { LoadoutFilterContext, LoadoutSuggestionsContext } from '../loadout-filter-types';
+import { subclassHashToElementNames } from './known-values';
 
-function subclassDefFromLoadout(loadout: Loadout, d2Definitions: D2ManifestDefinitions) {
+function deduplicate<T>(someArray: (T | undefined | null)[]) {
+  return Array.from(new Set(someArray));
+}
+
+function subclassDefAndClassTypeFromLoadout(
+  loadout: Loadout,
+  d2Definitions: D2ManifestDefinitions,
+) {
   for (const item of loadout.items) {
     const itemDef = d2Definitions?.InventoryItem.get(item.hash);
     if (itemDef?.itemType === DestinyItemType.Subclass) {
-      return itemDef;
+      return { itemDef, classType: loadout.classType };
     }
   }
 }
@@ -45,19 +53,35 @@ const freeformFilters: FilterDefinition<
       // TODO (ryan) filter on currently selected loadout. This info is currently localized
       // to the page, so we need to lift that up before it can be done.
       return _.compact(
-        Array.from(new Set(loadouts.map((l) => subclassDefFromLoadout(l, d2Definitions)))),
-      ).map(
-        (subclass) =>
-          // TODO (ryan) subclasses have a none damage type, so to do subclass match
-          // based on element name (solar/stasis/etc) we need to set up some known data
-          `subclass:${quoteFilterString(subclass.displayProperties.name.toLowerCase())}`,
+        deduplicate(
+          loadouts
+            .map((l) => subclassDefAndClassTypeFromLoadout(l, d2Definitions))
+            .flatMap((subclass) => {
+              if (!subclass) {
+                return;
+              }
+              const subclassElementName =
+                subclassHashToElementNames[subclass.classType]?.[subclass.itemDef.hash];
+              return [
+                `subclass:${quoteFilterString(subclass.itemDef.displayProperties.name.toLowerCase())}`,
+                subclassElementName && `subclass:${quoteFilterString(subclassElementName)}`,
+              ];
+            }),
+        ),
       );
     },
     filter: ({ filterValue, language, d2Definitions }) => {
       const test = matchText(filterValue, language, false);
       return (loadout: Loadout) => {
-        const subclass = d2Definitions && subclassDefFromLoadout(loadout, d2Definitions);
-        return subclass ? test(subclass.displayProperties.name) : false;
+        const subclass =
+          d2Definitions && subclassDefAndClassTypeFromLoadout(loadout, d2Definitions);
+        const subclassElementName =
+          subclass && subclassHashToElementNames[subclass.classType]?.[subclass.itemDef.hash];
+        return (
+          (subclass && test(subclass.itemDef.displayProperties.name)) ||
+          (subclassElementName && test(subclassElementName)) ||
+          false
+        );
       };
     },
   },
