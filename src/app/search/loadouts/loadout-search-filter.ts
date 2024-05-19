@@ -35,11 +35,11 @@ export const loadoutSuggestionsContextSelector = createSelector(
 
 function makeLoadoutSuggestionsContext(
   loadouts: Loadout[],
-  d2Manifest: D2ManifestDefinitions | undefined,
+  d2Definitions: D2ManifestDefinitions | undefined,
 ): LoadoutSuggestionsContext {
   return {
     loadouts,
-    d2Manifest,
+    d2Definitions,
   };
 }
 

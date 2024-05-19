@@ -47,7 +47,7 @@ export interface SuggestionsContext {
   loadouts?: Loadout[];
   getTag?: (item: DimItem) => TagValue | undefined;
   getNotes?: (item: DimItem) => string | undefined;
-  d2Manifest?: D2ManifestDefinitions;
+  d2Definitions?: D2ManifestDefinitions;
   allNotesHashtags?: string[];
   customStats?: CustomStatDef[];
 }
