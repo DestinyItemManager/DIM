@@ -3,7 +3,8 @@ import { tl } from 'app/i18next-t';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { matchText, plainString } from 'app/search/search-filters/freeform';
-import { DestinyInventoryItemDefinition, DestinyItemType } from 'bungie-api-ts/destiny2';
+import { DestinyItemType } from 'bungie-api-ts/destiny2';
+import _ from 'lodash';
 import { FilterDefinition } from '../../filter-types';
 import { quoteFilterString } from '../../query-parser';
 import { LoadoutFilterContext, LoadoutSuggestionsContext } from '../loadout-filter-types';
@@ -41,16 +42,16 @@ const freeformFilters: FilterDefinition<
       if (!loadouts || !d2Manifest) {
         return [];
       }
-      // TODO (ryan) filter on currently selected loadout. This info is currenrly localised
+      // TODO (ryan) filter on currently selected loadout. This info is currently localized
       // to the page, so we need to lift that up before it can be done.
-      return Array.from(new Set(loadouts.map((l) => subclassDefFromLoadout(l, d2Manifest))))
-        .filter((s): s is DestinyInventoryItemDefinition => s !== undefined)
-        .map(
-          (subclass) =>
-            // TODO (ryan) subclasses have a none damage type, so to do subclass match
-            // based on element name (solar/stasis/etc) we need to set up some known data
-            `subclass:${quoteFilterString(subclass.displayProperties.name.toLowerCase())}`,
-        );
+      return _.compact(
+        Array.from(new Set(loadouts.map((l) => subclassDefFromLoadout(l, d2Manifest)))),
+      ).map(
+        (subclass) =>
+          // TODO (ryan) subclasses have a none damage type, so to do subclass match
+          // based on element name (solar/stasis/etc) we need to set up some known data
+          `subclass:${quoteFilterString(subclass.displayProperties.name.toLowerCase())}`,
+      );
     },
     filter: ({ filterValue, language, d2Definitions }) => {
       const test = matchText(filterValue, language, false);
