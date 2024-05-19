@@ -3,6 +3,7 @@ import { DimLanguage } from 'app/i18n';
 import { DimStore } from 'app/inventory/store-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { LoadoutsByItem } from 'app/loadout-drawer/selectors';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 
 /**
  * A slice of data that could be used by loadout filter functions to
@@ -22,6 +23,7 @@ export interface LoadoutFilterContext {
  * all properties must be optional, so jest & api stuff can use SearchConfig without any context
  */
 export interface LoadoutSuggestionsContext {
+  selectedClass: DestinyClass | undefined;
   loadouts?: Loadout[];
   d2Manifest?: D2ManifestDefinitions;
 }

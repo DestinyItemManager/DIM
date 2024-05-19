@@ -37,11 +37,17 @@ const freeformFilters: FilterDefinition<
     keywords: ['subclass'],
     description: tl('LoadoutFilter.Name'),
     format: 'freeform',
-    suggestionsGenerator: ({ loadouts, d2Manifest }) => {
+    suggestionsGenerator: ({ loadouts, d2Manifest, selectedClass }) => {
       if (!loadouts || !d2Manifest) {
         return [];
       }
-      return Array.from(new Set(loadouts.map((l) => subclassDefFromLoadout(l, d2Manifest))))
+      return Array.from(
+        new Set(
+          loadouts
+            .filter((loadout) => selectedClass === undefined || loadout.classType === selectedClass)
+            .map((l) => subclassDefFromLoadout(l, d2Manifest)),
+        ),
+      )
         .filter((s): s is DestinyInventoryItemDefinition => s !== undefined)
         .map(
           (subclass) =>

@@ -28,16 +28,19 @@ const allLoadoutFilters = [...freeformFilters, ...overloadedRangeFilters];
  * regenerate filter suggestions whenever any of them changes.
  */
 export const loadoutSuggestionsContextSelector = createSelector(
+  currentStoreSelector,
   loadoutsSelector,
   d2ManifestSelector,
   makeLoadoutSuggestionsContext,
 );
 
 function makeLoadoutSuggestionsContext(
+  currentStore: DimStore | undefined,
   loadouts: Loadout[],
   d2Manifest: D2ManifestDefinitions | undefined,
 ): LoadoutSuggestionsContext {
   return {
+    selectedClass: currentStore?.classType,
     loadouts,
     d2Manifest,
   };
