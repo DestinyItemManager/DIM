@@ -41,6 +41,8 @@ const freeformFilters: FilterDefinition<
       if (!loadouts || !d2Manifest) {
         return [];
       }
+      // TODO (ryan) filter on currently selected loadout. This info is currenrly localised
+      // to the page, so we need to lift that up before it can be done.
       return Array.from(new Set(loadouts.map((l) => subclassDefFromLoadout(l, d2Manifest))))
         .filter((s): s is DestinyInventoryItemDefinition => s !== undefined)
         .map(
