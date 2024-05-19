@@ -35,7 +35,7 @@ const freeformFilters: FilterDefinition<
   },
   {
     keywords: ['subclass'],
-    description: tl('LoadoutFilter.Name'),
+    description: tl('LoadoutFilter.Subclass'),
     format: 'freeform',
     suggestionsGenerator: ({ loadouts, d2Manifest }) => {
       if (!loadouts || !d2Manifest) {
