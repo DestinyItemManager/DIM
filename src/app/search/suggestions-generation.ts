@@ -39,7 +39,7 @@ export const suggestionsContextSelector = createSelector(
 function makeSuggestionsContext(
   allItems: DimItem[],
   loadouts: Loadout[],
-  d2Manifest: D2ManifestDefinitions | undefined,
+  d2Definitions: D2ManifestDefinitions | undefined,
   getTag: (item: DimItem) => TagValue | undefined,
   getNotes: (item: DimItem) => string | undefined,
   allNotesHashtags: string[],
@@ -48,7 +48,7 @@ function makeSuggestionsContext(
   return {
     allItems,
     loadouts,
-    d2Manifest,
+    d2Definitions,
     getTag,
     getNotes,
     allNotesHashtags,

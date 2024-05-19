@@ -23,5 +23,5 @@ export interface LoadoutFilterContext {
  */
 export interface LoadoutSuggestionsContext {
   loadouts?: Loadout[];
-  d2Manifest?: D2ManifestDefinitions;
+  d2Definitions?: D2ManifestDefinitions;
 }
