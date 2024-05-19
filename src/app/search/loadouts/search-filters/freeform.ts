@@ -38,14 +38,14 @@ const freeformFilters: FilterDefinition<
     keywords: ['subclass'],
     description: tl('LoadoutFilter.Subclass'),
     format: 'freeform',
-    suggestionsGenerator: ({ loadouts, d2Manifest }) => {
-      if (!loadouts || !d2Manifest) {
+    suggestionsGenerator: ({ loadouts, d2Definitions }) => {
+      if (!loadouts || !d2Definitions) {
         return [];
       }
       // TODO (ryan) filter on currently selected loadout. This info is currently localized
       // to the page, so we need to lift that up before it can be done.
       return _.compact(
-        Array.from(new Set(loadouts.map((l) => subclassDefFromLoadout(l, d2Manifest)))),
+        Array.from(new Set(loadouts.map((l) => subclassDefFromLoadout(l, d2Definitions)))),
       ).map(
         (subclass) =>
           // TODO (ryan) subclasses have a none damage type, so to do subclass match
