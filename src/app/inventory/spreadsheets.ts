@@ -1,6 +1,5 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { gaEvent } from 'app/google';
-import { t } from 'app/i18next-t';
 import { LoadoutsByItem, loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
 import { D1_StatHashes } from 'app/search/d1-known-values';
 import { dimArmorStatHashByName } from 'app/search/search-filter-values';
@@ -8,6 +7,7 @@ import D2Sources from 'app/search/search-filters/d2-sources';
 import { ThunkResult } from 'app/store/types';
 import { filterMap } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
+import { DimError } from 'app/utils/dim-error';
 import { download } from 'app/utils/download';
 import {
   getItemKillTrackerInfo,
@@ -165,12 +165,12 @@ export function importTagsNotesFromCsv(files: File[]): ThunkResult<number | unde
       const contents = results.data;
 
       if (!contents?.length) {
-        throw new Error(t('Csv.EmptyFile'));
+        throw new DimError('Csv.EmptyFile');
       }
 
       const row = contents[0];
       if (!('Id' in row) || !('Hash' in row) || !('Tag' in row) || !('Notes' in row)) {
-        throw new Error(t('Csv.WrongFields'));
+        throw new DimError('Csv.WrongFields');
       }
 
       dispatch(
