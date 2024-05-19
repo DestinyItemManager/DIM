@@ -8,7 +8,7 @@ import { d2ManifestSelector } from 'app/manifest/selectors';
 import { createSelector } from 'reselect';
 import { currentStoreSelector } from '../../inventory/selectors';
 import { DimStore } from '../../inventory/store-types';
-import { LoadoutsByItem, loadoutsByItemSelector } from '../../loadout-drawer/selectors';
+import { LoadoutsByItem, loadoutsByItemSelector } from '../../loadout/selectors';
 import { buildSearchConfig } from '../search-config';
 import { makeSearchFilterFactory } from '../search-filter';
 import { parseAndValidateQuery } from '../search-utils';

@@ -8,14 +8,14 @@ export interface LoadoutsState {
   /** A stack of previous loadouts by character ID, for undo loadout. */
   readonly previousLoadouts: { [characterId: string]: Loadout[] };
   /** The currently selected store for the loadouts page. */
-  readonly loadoutStoreId: string | undefined;
+  readonly selectedLoadoutStoreId: string | undefined;
 }
 
 export type LoadoutsAction = ActionType<typeof actions>;
 
 const initialState: LoadoutsState = {
   previousLoadouts: {},
-  loadoutStoreId: undefined,
+  selectedLoadoutStoreId: undefined,
 };
 
 export const loadouts: Reducer<LoadoutsState, LoadoutsAction> = (
@@ -41,7 +41,7 @@ export const loadouts: Reducer<LoadoutsState, LoadoutsAction> = (
 
     case getType(actions.updateLoadoutStore): {
       return produce(state, (draft) => {
-        draft.loadoutStoreId = action.payload.storeId;
+        draft.selectedLoadoutStoreId = action.payload.storeId;
       });
     }
 

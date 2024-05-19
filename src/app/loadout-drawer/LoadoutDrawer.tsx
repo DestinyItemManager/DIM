@@ -29,6 +29,7 @@ import {
 import { deleteLoadout, updateLoadout } from '../loadout/actions';
 import LoadoutEdit from '../loadout/loadout-edit/LoadoutEdit';
 import { Loadout } from '../loadout/loadout-types';
+import { loadoutsHashtagsSelector } from '../loadout/selectors';
 import styles from './LoadoutDrawer.m.scss';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerFooter from './LoadoutDrawerFooter';
@@ -45,7 +46,6 @@ import {
 } from './loadout-drawer-reducer';
 import { addItem$ } from './loadout-events';
 import { filterLoadoutToAllowedItems } from './loadout-utils';
-import { loadoutsHashtagsSelector } from './selectors';
 
 /**
  * The Loadout editor that shows up as a sheet on the Inventory screen. You can build and edit

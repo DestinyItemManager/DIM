@@ -9,9 +9,8 @@ import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { VirtualListRef, WindowVirtualList } from 'app/dim-ui/VirtualList';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { t, tl } from 'app/i18next-t';
-import { artifactUnlocksSelector, sortedStoresSelector } from 'app/inventory/selectors';
+import { artifactUnlocksSelector, storesSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
-import { getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import {
   MakeLoadoutAnalysisAvailable,
   useUpdateLoadoutAnalysisContext,
@@ -32,16 +31,18 @@ import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { usePageTitle } from 'app/utils/hooks';
 import { DestinySeasonDefinition } from 'bungie-api-ts/destiny2';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import styles from './Loadouts.m.scss';
 import LoadoutRow from './LoadoutsRow';
+import { updateLoadoutStore } from './actions';
 import EditInGameLoadout from './ingame/EditInGameLoadout';
 import { InGameLoadoutDetails } from './ingame/InGameLoadoutDetailsSheet';
 import { InGameLoadoutStrip } from './ingame/InGameLoadoutStrip';
 import LoadoutImportSheet from './loadout-share/LoadoutImportSheet';
 import LoadoutShareSheet from './loadout-share/LoadoutShareSheet';
 import { searchAndSortLoadoutsByQuery, useLoadoutFilterPills } from './loadout-ui/menu-hooks';
+import { selectedLoadoutStore } from './selectors';
 
 const sortOptions = [
   {
@@ -79,15 +80,32 @@ export default function LoadoutsContainer({ account }: { account: DestinyAccount
 
 function Loadouts({ account }: { account: DestinyAccount }) {
   const location = useLocation();
+  const dispatch = useDispatch();
+
   const locationStoreId = (location.state as { storeId: string } | undefined)?.storeId;
-  const stores = useSelector(sortedStoresSelector);
-  const currentStore = getCurrentStore(stores)!;
-  const [selectedStoreId, setSelectedStoreId] = useState(
-    locationStoreId && locationStoreId !== 'vault' ? locationStoreId : currentStore.id,
+  const stores = useSelector(storesSelector);
+  const selectedStore = useSelector(selectedLoadoutStore);
+
+  const setSelectedStoreId = useCallback(
+    (storeId: string) => {
+      dispatch(updateLoadoutStore({ storeId }));
+    },
+    [dispatch],
   );
+
+  // Id the location store matches some store id, isn't the vault, and isn't the currently
+  // selected store id we need to dispatch an update to update the page.
+  if (
+    locationStoreId &&
+    stores.some((store) => store.id === locationStoreId) &&
+    locationStoreId !== 'vault' &&
+    selectedStore.id !== locationStoreId
+  ) {
+    setSelectedStoreId(locationStoreId);
+  }
+
   const [sharedLoadout, setSharedLoadout] = useState<Loadout>();
   const [loadoutImportOpen, setLoadoutImportOpen] = useState<boolean>(false);
-  const selectedStore = getStore(stores, selectedStoreId)!;
   const classType = selectedStore.classType;
   const isPhonePortrait = useIsPhonePortrait();
   const query = useSelector(querySelector);
@@ -98,14 +116,14 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const savedLoadouts = useSelector(loadoutsForClassTypeSelector(classType));
   const savedLoadoutIds = new Set(savedLoadouts.map((l) => l.id));
 
-  const artifactUnlocks = useSelector(artifactUnlocksSelector(selectedStoreId));
+  const artifactUnlocks = useSelector(artifactUnlocksSelector(selectedStore.id));
 
   const currentLoadout = useMemo(
     () => newLoadoutFromEquipped(t('Loadouts.FromEquipped'), selectedStore, artifactUnlocks),
     [artifactUnlocks, selectedStore],
   );
 
-  useUpdateLoadoutAnalysisContext(selectedStoreId);
+  useUpdateLoadoutAnalysisContext(selectedStore.id);
 
   const [showSnapshot, setShowSnapshot] = useState(false);
   const handleSnapshot = useCallback(() => setShowSnapshot(true), []);
@@ -270,7 +288,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
       )}
       {loadoutImportOpen && (
         <LoadoutImportSheet
-          currentStoreId={selectedStoreId}
+          currentStoreId={selectedStore.id}
           onClose={() => setLoadoutImportOpen(false)}
         />
       )}
@@ -286,7 +304,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
       {showSnapshot && (
         <EditInGameLoadout
           key="snapshot"
-          characterId={selectedStoreId}
+          characterId={selectedStore.id}
           onClose={handleSnapshotSheetClose}
         />
       )}

@@ -1,18 +1,24 @@
 import { DimItem } from 'app/inventory/item-types';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
-import { allItemsSelector, storesSelector } from 'app/inventory/selectors';
+import {
+  allItemsSelector,
+  currentStoreSelector,
+  sortedStoresSelector,
+  storesSelector,
+} from 'app/inventory/selectors';
+import { DimStore } from 'app/inventory/store-types';
 import { allInGameLoadoutsSelector } from 'app/loadout/ingame/selectors';
 import { manifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { isClassCompatible } from 'app/utils/item-utils';
 import { createSelector } from 'reselect';
-import { InGameLoadout, Loadout, LoadoutItem, isInGameLoadout } from '../loadout/loadout-types';
 import {
   getInstancedLoadoutItem,
   getResolutionInfo,
   getUninstancedLoadoutItem,
-} from './loadout-utils';
-import { loadoutsSelector } from './loadouts-selector';
+} from '../loadout-drawer/loadout-utils';
+import { loadoutsSelector } from '../loadout-drawer/loadouts-selector';
+import { InGameLoadout, Loadout, LoadoutItem, isInGameLoadout } from './loadout-types';
 
 export const loadoutsHashtagsSelector = createSelector(loadoutsSelector, (loadouts) => [
   ...new Set(
@@ -122,3 +128,16 @@ export const previousLoadoutSelector =
     }
     return undefined;
   };
+
+export const selectedLoadoutStore = createSelector(
+  sortedStoresSelector,
+  currentStoreSelector,
+  (rootState: RootState) => rootState.loadouts.selectedLoadoutStoreId,
+  (stores, currentStore, selectedLoadoutStoreId): DimStore => {
+    const defaultStore = currentStore || stores[0];
+    if (selectedLoadoutStoreId === undefined) {
+      return defaultStore;
+    }
+    return stores.find((store) => store.id === selectedLoadoutStoreId) ?? defaultStore;
+  },
+);
