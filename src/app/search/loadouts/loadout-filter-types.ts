@@ -1,8 +1,8 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimLanguage } from 'app/i18n';
 import { DimStore } from 'app/inventory/store-types';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { LoadoutsByItem } from 'app/loadout-drawer/selectors';
+import { Loadout } from 'app/loadout/loadout-types';
 
 /**
  * A slice of data that could be used by loadout filter functions to

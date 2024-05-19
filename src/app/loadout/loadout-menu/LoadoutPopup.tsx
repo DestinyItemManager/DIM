@@ -21,7 +21,6 @@ import {
   randomizeLoadoutSubclass,
 } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import {
   isArmorModsOnly,
   isFashionOnly,
@@ -31,6 +30,7 @@ import {
 import { loadoutsForClassTypeSelector } from 'app/loadout-drawer/loadouts-selector';
 import { makeRoomForPostmaster, totalPostmasterItems } from 'app/loadout-drawer/postmaster';
 import { previousLoadoutSelector } from 'app/loadout-drawer/selectors';
+import { InGameLoadout, Loadout } from 'app/loadout/loadout-types';
 import { manifestSelector, useDefinitions } from 'app/manifest/selectors';
 import { showMaterialCount } from 'app/material-counts/MaterialCountsWrappers';
 import { showNotification } from 'app/notifications/notifications';

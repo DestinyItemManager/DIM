@@ -26,12 +26,13 @@ import {
   storesSelector,
   unlockedPlugSetItemsSelector,
 } from '../inventory/selectors';
+import { deleteLoadout, updateLoadout } from '../loadout/actions';
 import LoadoutEdit from '../loadout/loadout-edit/LoadoutEdit';
+import { Loadout } from '../loadout/loadout-types';
 import styles from './LoadoutDrawer.m.scss';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerFooter from './LoadoutDrawerFooter';
 import LoadoutDrawerHeader from './LoadoutDrawerHeader';
-import { deleteLoadout, updateLoadout } from './actions';
 import {
   LoadoutUpdateFunction,
   addItem,
@@ -43,7 +44,6 @@ import {
   setNotes,
 } from './loadout-drawer-reducer';
 import { addItem$ } from './loadout-events';
-import { Loadout } from './loadout-types';
 import { filterLoadoutToAllowedItems } from './loadout-utils';
 import { loadoutsHashtagsSelector } from './selectors';
 

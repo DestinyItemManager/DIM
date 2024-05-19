@@ -6,7 +6,7 @@ import { manifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { isClassCompatible } from 'app/utils/item-utils';
 import { createSelector } from 'reselect';
-import { InGameLoadout, Loadout, LoadoutItem, isInGameLoadout } from './loadout-types';
+import { InGameLoadout, Loadout, LoadoutItem, isInGameLoadout } from '../loadout/loadout-types';
 import {
   getInstancedLoadoutItem,
   getResolutionInfo,

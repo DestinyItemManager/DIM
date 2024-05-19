@@ -2,8 +2,8 @@ import { Loadout as DimApiLoadout, LoadoutParameters } from '@destinyitemmanager
 import { getSharedLoadout } from 'app/dim-api/dim-api';
 import { generateMissingLoadoutItemId } from 'app/loadout-drawer/loadout-item-conversion';
 import { convertDimApiLoadoutToLoadout } from 'app/loadout-drawer/loadout-type-converters';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout } from 'app/loadout-drawer/loadout-utils';
+import { Loadout } from 'app/loadout/loadout-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { v4 as uuidv4 } from 'uuid';
 // A very permissive regex that allows directly pasted URLs, but also various ways in which

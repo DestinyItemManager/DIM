@@ -21,8 +21,13 @@ import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import { Draft, produce } from 'immer';
 import _ from 'lodash';
 import { useCallback } from 'react';
+import {
+  Loadout,
+  LoadoutItem,
+  ResolvedLoadoutItem,
+  ResolvedLoadoutMod,
+} from '../loadout/loadout-types';
 import { randomLoadout, randomSubclassConfiguration } from './auto-loadouts';
-import { Loadout, LoadoutItem, ResolvedLoadoutItem, ResolvedLoadoutMod } from './loadout-types';
 import {
   convertToLoadoutItem,
   createSocketOverridesFromEquipped,

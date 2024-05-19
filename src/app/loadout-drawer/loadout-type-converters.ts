@@ -18,7 +18,7 @@ import {
   Loadout as DimLoadout,
   LoadoutItem as DimLoadoutItem,
   InGameLoadout,
-} from './loadout-types';
+} from '../loadout/loadout-types';
 import { convertToLoadoutItem, itemsByItemId, newLoadout } from './loadout-utils';
 
 /**

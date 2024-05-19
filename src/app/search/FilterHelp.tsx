@@ -2,7 +2,7 @@ import { SearchType } from '@destinyitemmanager/dim-api-types';
 import StaticPage from 'app/dim-ui/StaticPage';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { Loadout } from 'app/loadout/loadout-types';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
 import { RootState } from 'app/store/types';
 import React, { useState } from 'react';
