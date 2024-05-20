@@ -21,7 +21,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22.x
+          node-version-file: '.node-version'
           cache: pnpm
 
       - name: Install
@@ -57,7 +57,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22.x
+          node-version-file: '.node-version'
           cache: pnpm
 
       - name: Cache ESLint
