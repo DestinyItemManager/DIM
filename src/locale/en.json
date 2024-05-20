@@ -245,7 +245,7 @@
     "HoldsMod": "Shows armor compatible with a specific type of Seasonal Mod.",
     "InDimLoadout": "is:indimloadout shows items that are included in any DIM loadout.",
     "InInGameLoadout": "is:iningameloadout shows items that are included in any in-game loadout.",
-    "InLoadout": "is:inloadout shows items that are included in any loadout. Searching with inloadout: shows items that are included in loadouts with matching titles. When used with a hashtag, inloadout: shows items whose loadouts have the hashtag in the title or notes.",
+    "InLoadout": "is:inloadout shows items that are included in any loadout. Searching with inloadout: shows items that are included in loadouts with matching titles. When used with a hashtag, inloadout: shows items whose loadouts have the hashtag in the title or notes. When used with a range, it shows items that are in that many loadouts.",
     "Infusable": "Shows items that can be infused.",
     "InfusionFodder": "Shows items that could be infused into lower-power versions of the same item for only glimmer.",
     "IsAdept": "Shows weapons compatible with Adept mods.",

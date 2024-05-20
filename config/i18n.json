@@ -250,7 +250,7 @@
     "HasShader": "Shows items that have a shader applied.",
     "HasOrnament": "Shows items that have an ornament applied.",
     "Harrowed": "\\(Harrowed\\)",
-    "InLoadout": "is:inloadout shows items that are included in any loadout. Searching with inloadout: shows items that are included in loadouts with matching titles. When used with a hashtag, inloadout: shows items whose loadouts have the hashtag in the title or notes.",
+    "InLoadout": "is:inloadout shows items that are included in any loadout. Searching with inloadout: shows items that are included in loadouts with matching titles. When used with a hashtag, inloadout: shows items whose loadouts have the hashtag in the title or notes. When used with a range, it shows items that are in that many loadouts.",
     "InInGameLoadout": "is:iningameloadout shows items that are included in any in-game loadout.",
     "InDimLoadout": "is:indimloadout shows items that are included in any DIM loadout.",
     "Infusable": "Shows items that can be infused.",
