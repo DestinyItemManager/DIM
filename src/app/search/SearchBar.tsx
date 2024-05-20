@@ -188,6 +188,8 @@ export interface SearchFilterRef {
   clearFilter: () => void;
 }
 
+const resultItemHeight = 32;
+
 /**
  * A reusable, autocompleting item search input. This is an uncontrolled input that
  * announces its query has changed only after some delay. This is the new version of the component
@@ -286,6 +288,13 @@ function SearchBar(
     dispatch(saveSearch({ query: liveQuery, saved: !saved }));
   };
 
+  // Try to fill up the screen with search results
+  const maxResults = isPhonePortrait
+    ? 7 // TODO: do this dynamically on mobile too, but the timing of when the virtual keyboard shows up is a nightmare
+    : menuMaxHeight
+      ? Math.floor((0.7 * menuMaxHeight) / resultItemHeight)
+      : 10;
+
   const caretPosition = inputElement.current?.selectionStart || liveQuery.length;
   const items = useMemo(
     () =>
@@ -294,8 +303,9 @@ function SearchBar(
         caretPosition,
         recentSearches,
         /* includeArmory */ Boolean(mainSearchBar),
+        maxResults,
       ),
-    [autocompleter, caretPosition, liveQuery, mainSearchBar, recentSearches],
+    [autocompleter, caretPosition, liveQuery, mainSearchBar, recentSearches, maxResults],
   );
 
   // useCombobox from Downshift manages the state of the dropdown
@@ -376,8 +386,6 @@ function SearchBar(
       const { height: viewportHeight } = window.visualViewport;
       // pixels remaining in viewport minus offset minus 10px for padding
       const pxAvailable = viewportHeight - y - height - 10;
-      const resultItemHeight = 30;
-
       // constrain to size that would allow only whole items to be seen
       setMenuMaxHeight(Math.floor(pxAvailable / resultItemHeight) * resultItemHeight);
     }
