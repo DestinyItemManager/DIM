@@ -89,7 +89,7 @@ export function initi18n(): Promise<unknown> {
       {
         initImmediate: true,
         compatibilityJSON: 'v3',
-        debug: $DIM_FLAVOR === 'dev',
+        debug: false,
         lng: lang,
         fallbackLng: 'en',
         lowerCaseLng: true,

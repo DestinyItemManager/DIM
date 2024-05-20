@@ -25,6 +25,8 @@ import { currentStoreSelector, storesSelector } from './selectors';
 import { DimStore } from './store-types';
 import { amountOfItem, getCurrentStore, getStore, getVault } from './stores-helpers';
 
+const TAG = 'move';
+
 /**
  * Move the item to the currently active store. Used for double-click action.
  */
@@ -120,7 +122,7 @@ export function moveItemTo(
 
         if ($featureFlags.debugMoves) {
           infoLog(
-            'move',
+            TAG,
             'User initiated move:',
             moveAmount,
             item.name,
@@ -158,7 +160,7 @@ export function moveItemTo(
           return;
         }
 
-        errorLog('move', 'error moving item', item.name, 'to', store.name, e);
+        errorLog(TAG, 'error moving item', item.name, 'to', store.name, e);
         // Some errors aren't worth reporting
         if (
           e instanceof DimError &&
@@ -225,7 +227,7 @@ export function consolidate(actionableItem: DimItem, store: DimStore): ThunkResu
             });
           } catch (e) {
             showNotification({ type: 'error', title: actionableItem.name, body: errorMessage(e) });
-            errorLog('move', 'error consolidating', actionableItem, e);
+            errorLog(TAG, 'error consolidating', actionableItem, e);
           }
         })(),
       ),
@@ -315,7 +317,7 @@ export function distribute(actionableItem: DimItem): ThunkResult {
             });
           } catch (e) {
             showNotification({ type: 'error', title: actionableItem.name, body: errorMessage(e) });
-            errorLog('move', 'error distributing', actionableItem, e);
+            errorLog(TAG, 'error distributing', actionableItem, e);
           }
         })(),
       ),

@@ -20,7 +20,7 @@ import { buildItemFiltersMap } from 'app/search/search-config';
 import { parseAndValidateQuery } from 'app/search/search-utils';
 import { count, uniqBy } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
-import { errorLog, timer } from 'app/utils/log';
+import { errorLog, infoLog } from 'app/utils/log';
 import { clearWishLists } from 'app/wishlists/actions';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { deepEqual } from 'fast-equals';
@@ -528,59 +528,54 @@ function changeSetting<V extends keyof Settings>(state: DimApiState, prop: V, va
  * the update watermark.
  */
 function prepareUpdateQueue(state: DimApiState) {
-  const stopTimer = timer('prepareUpdateQueue');
-  try {
-    return produce(state, (draft) => {
-      // If the user only wants to save data locally, then throw away the update queue.
-      if (state.apiPermissionGranted === false) {
-        draft.updateQueue = emptyArray();
-        draft.updateInProgressWatermark = 0;
-        return;
+  return produce(state, (draft) => {
+    // If the user only wants to save data locally, then throw away the update queue.
+    if (state.apiPermissionGranted === false) {
+      draft.updateQueue = emptyArray();
+      draft.updateInProgressWatermark = 0;
+      return;
+    }
+
+    let platformMembershipId: string | undefined;
+    let destinyVersion: DestinyVersion | undefined;
+
+    // Multiple updates to a particular object can be coalesced into a single update
+    // before being sent. We iterate from beginning (oldest update) to end (newest update).
+    const compacted: {
+      [key: string]: ProfileUpdateWithRollback;
+    } = {};
+    const rest: ProfileUpdateWithRollback[] = [];
+    for (const update of draft.updateQueue) {
+      // The first time we see a profile-specific update, keep track of which
+      // profile it was, and reject updates for the other profiles. This is
+      // because DIM API update can only work one profile at a time.
+      if (!platformMembershipId && !destinyVersion) {
+        platformMembershipId = update.platformMembershipId;
+        destinyVersion = update.destinyVersion;
+      } else if (
+        update.platformMembershipId &&
+        (update.platformMembershipId !== platformMembershipId ||
+          update.destinyVersion !== destinyVersion)
+      ) {
+        // Put it on the list of other updates that won't be flushed, and move on.
+        // Some updates, like settings, aren't profile-specific and can always
+        // be sent.
+        rest.push(update);
+        continue;
       }
 
-      let platformMembershipId: string | undefined;
-      let destinyVersion: DestinyVersion | undefined;
+      compactUpdate(compacted, update);
+    }
 
-      // Multiple updates to a particular object can be coalesced into a single update
-      // before being sent. We iterate from beginning (oldest update) to end (newest update).
-      const compacted: {
-        [key: string]: ProfileUpdateWithRollback;
-      } = {};
-      const rest: ProfileUpdateWithRollback[] = [];
-      for (const update of draft.updateQueue) {
-        // The first time we see a profile-specific update, keep track of which
-        // profile it was, and reject updates for the other profiles. This is
-        // because DIM API update can only work one profile at a time.
-        if (!platformMembershipId && !destinyVersion) {
-          platformMembershipId = update.platformMembershipId;
-          destinyVersion = update.destinyVersion;
-        } else if (
-          update.platformMembershipId &&
-          (update.platformMembershipId !== platformMembershipId ||
-            update.destinyVersion !== destinyVersion)
-        ) {
-          // Put it on the list of other updates that won't be flushed, and move on.
-          // Some updates, like settings, aren't profile-specific and can always
-          // be sent.
-          rest.push(update);
-          continue;
-        }
+    draft.updateQueue = Object.values(compacted);
 
-        compactUpdate(compacted, update);
-      }
+    // Set watermark to what we're going to flush.
+    // TODO: Maybe add a maximum update length?
+    draft.updateInProgressWatermark = draft.updateQueue.length;
 
-      draft.updateQueue = Object.values(compacted);
-
-      // Set watermark to what we're going to flush.
-      // TODO: Maybe add a maximum update length?
-      draft.updateInProgressWatermark = draft.updateQueue.length;
-
-      // Put the other updates we aren't going to send back on the end of the queue.
-      draft.updateQueue.push(...rest);
-    });
-  } finally {
-    stopTimer();
-  }
+    // Put the other updates we aren't going to send back on the end of the queue.
+    draft.updateQueue.push(...rest);
+  });
 }
 
 let unique = 0;
@@ -808,16 +803,44 @@ function applyFinishedUpdatesToQueue(state: DimApiState, results: ProfileUpdateR
     const update = state.updateQueue[i];
     const result = results[i];
 
+    let message = 'unknown';
+    switch (update.action) {
+      case 'search':
+        message = update.payload.query;
+        break;
+      case 'delete_search':
+        message = update.payload.query;
+        break;
+      case 'delete_loadout':
+        message = update.payload;
+        break;
+      case 'tag':
+        message = `${update.payload.id}: ${update.before?.tag}/${update.before?.notes} => ${update.payload.tag}/${update.payload.notes}`;
+        break;
+      case 'item_hash_tag':
+        message = `${update.payload.hash}: ${update.before?.tag}/${update.before?.notes} => ${update.payload.tag}/${update.payload.notes}`;
+        break;
+      case 'tag_cleanup':
+        message = update.payload.length.toString();
+        break;
+      case 'loadout':
+        message = update.payload.name;
+        break;
+      case 'track_triumph':
+        message = update.payload.recordHash.toString();
+        break;
+      case 'save_search':
+        message = update.payload.query;
+        break;
+      case 'setting':
+        break;
+    }
+
     if (!(result.status === 'Success' || result.status === 'NotFound')) {
-      errorLog(
-        'applyFinishedUpdatesToQueue',
-        'failed to update:',
-        result.status,
-        ':',
-        result.message,
-        update,
-      );
+      errorLog('dim sync', update.action, result.status, message, result.message, update);
       // TODO: reverse the effects of the update?
+    } else {
+      infoLog('dim sync', update.action, result.status, message, update);
     }
   }
 

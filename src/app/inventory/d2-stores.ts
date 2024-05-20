@@ -42,6 +42,8 @@ import { buildStores, getCharacterStatsData } from './store/d2-store-factory';
 import { resetItemIndexGenerator } from './store/item-index';
 import { getCurrentStore } from './stores-helpers';
 
+const TAG = 'd2-stores';
+
 /**
  * Update the high level character information for all the stores
  * (level, power, stats, etc.). This does not update the
@@ -138,8 +140,6 @@ const BUNGIE_CACHE_TTL = 15_000;
 /** How old the profile can be and still trigger cleanup of tags. */
 const FRESH_ENOUGH_TO_CLEAN_INFOS = 90_000; // 90 seconds
 
-let minimumCacheAge = Number.MAX_SAFE_INTEGER;
-
 function loadProfile(
   account: DestinyAccount,
   firstTime: boolean,
@@ -158,18 +158,24 @@ function loadProfile(
       return { profile: mockProfileData, live: false, readOnly: true };
     }
 
+    const cachedProfileKey = `profile-${account.membershipId}`;
+
     // First try loading from IndexedDB
     let cachedProfileResponse = getState().inventory.profileResponse;
     if (!cachedProfileResponse) {
       try {
-        cachedProfileResponse = await get<DestinyProfileResponse>(
-          `profile-${account.membershipId}`,
-        );
+        cachedProfileResponse = await get<DestinyProfileResponse>(cachedProfileKey);
         // Check to make sure the profile hadn't been loaded in the meantime
         if (getState().inventory.profileResponse) {
           cachedProfileResponse = getState().inventory.profileResponse;
         } else if (cachedProfileResponse) {
-          infoLog('d2-stores', 'Loaded cached profile from IndexedDB');
+          const profileAgeSecs =
+            (Date.now() - new Date(cachedProfileResponse.responseMintedTimestamp ?? 0).getTime()) /
+            1000;
+          infoLog(
+            TAG,
+            `Loaded cached profile from IndexedDB, using it until new data is available. It is ${profileAgeSecs}s old.`,
+          );
           dispatch(profileLoaded({ profile: cachedProfileResponse, live: false }));
           // The first time we load, just use the IDB version if we can, to speed up loading
           if (firstTime) {
@@ -177,7 +183,7 @@ function loadProfile(
           }
         }
       } catch (e) {
-        errorLog('d2-stores', 'Failed to load profile response from IDB', e);
+        errorLog(TAG, 'Failed to load profile response from IDB', e);
       }
     }
 
@@ -188,23 +194,42 @@ function loadProfile(
       // TODO: need to make sure we still load at the right frequency / for manual cache busts?
       cachedProfileMintedDate = new Date(cachedProfileResponse.responseMintedTimestamp ?? 0);
       const profileAge = Date.now() - cachedProfileMintedDate.getTime();
-      infoLog('d2-stores', `Cached profile is ${profileAge / 1000}s old.`);
       if (!storesLoadedSelector(getState()) && profileAge > 0 && profileAge < BUNGIE_CACHE_TTL) {
-        warnLog('d2-stores', 'Cached profile is new enough, skipping remote load.', profileAge);
+        warnLog(
+          TAG,
+          `Cached profile is only ${profileAge / 1000}s old, skipping remote load.`,
+          profileAge,
+        );
         return { profile: cachedProfileResponse, live: false };
       }
     }
 
     try {
       const remoteProfileResponse = await getStores(account);
+      const now = Date.now();
       const remoteProfileMintedDate = new Date(remoteProfileResponse.responseMintedTimestamp ?? 0);
-      const remoteProfileAgeSec = (Date.now() - remoteProfileMintedDate.getTime()) / 1000;
-      infoLog('d2-stores', `Profile from Bungie.net is ${remoteProfileAgeSec}s old.`);
+      const remoteProfileAgeSec = (now - remoteProfileMintedDate.getTime()) / 1000;
 
       // compare new response against cached response, toss if it's not newer!
       if (cachedProfileResponse) {
+        const cachedProfileAgeSec = (now - cachedProfileMintedDate.getTime()) / 1000;
         if (remoteProfileMintedDate.getTime() <= cachedProfileMintedDate.getTime()) {
-          warnLog('d2-stores', 'Profile from Bungie.net is older than cached profile, discarding.');
+          const eq = remoteProfileMintedDate.getTime() === cachedProfileMintedDate.getTime();
+          const storesLoaded = storesLoadedSelector(getState());
+          const action = storesLoaded ? 'Skipping update.' : 'Using the cached profile.';
+          if (eq) {
+            infoLog(
+              TAG,
+              `Profile from Bungie.net is is ${remoteProfileAgeSec}s old, which is the same age as the cached profile.`,
+              action,
+            );
+          } else {
+            warnLog(
+              TAG,
+              `Profile from Bungie.net is ${remoteProfileAgeSec}s old, while the cached profile is ${cachedProfileAgeSec}s old`,
+              action,
+            );
+          }
           // Clear the error since we did load correctly
           dispatch(profileError(undefined));
           // undefined means skip processing, in case we already have computed stores
@@ -212,26 +237,27 @@ function loadProfile(
             ? undefined
             : { profile: cachedProfileResponse, live: false };
         } else {
-          minimumCacheAge = Math.min(
-            minimumCacheAge,
-            remoteProfileMintedDate.getTime() - cachedProfileMintedDate.getTime(),
+          infoLog(
+            TAG,
+            `Profile from Bungie.net is is ${remoteProfileAgeSec}s old, while the cached profile is ${cachedProfileAgeSec}s old.`,
+            `Using the new profile from Bungie.net.`,
           );
-          infoLog('d2-stores', `Profile from Bungie.net is newer than cached profile, using it.`);
         }
+      } else {
+        infoLog(
+          TAG,
+          `No cached profile, using profile from Bungie.net which is ${remoteProfileAgeSec}s old.`,
+        );
       }
 
-      set(`profile-${account.membershipId}`, remoteProfileResponse); // don't await
+      set(cachedProfileKey, remoteProfileResponse); // don't await
       dispatch(profileLoaded({ profile: remoteProfileResponse, live: true }));
       return { profile: remoteProfileResponse, live: true };
     } catch (e) {
       dispatch(handleAuthErrors(e));
       dispatch(profileError(convertToError(e)));
       if (cachedProfileResponse) {
-        errorLog(
-          'd2-stores',
-          'Error loading profile from Bungie.net, falling back to cached profile',
-          e,
-        );
+        errorLog(TAG, 'Error loading profile from Bungie.net, falling back to cached profile', e);
         // undefined means skip processing, in case we already have computed stores
         return storesLoadedSelector(getState())
           ? undefined
@@ -279,7 +305,7 @@ function loadStoresData(
 
             const { profile: profileResponse, live, readOnly } = profileInfo;
 
-            const stopTimer = timer('Process inventory');
+            const stopTimer = timer(TAG, 'Process inventory');
 
             const buckets = d2BucketsSelector(getState())!;
             const customStats = customStatsSelector(getState());
@@ -324,7 +350,7 @@ function loadStoresData(
             stopTimer();
 
             startSpan({ name: 'updateInventoryState' }, () => {
-              const stopStateTimer = timer('Inventory state update');
+              const stopStateTimer = timer(TAG, 'Inventory state update');
 
               // If we switched account since starting this, give up before saving
               if (account !== currentAccountSelector(getState())) {
@@ -332,7 +358,7 @@ function loadStoresData(
               }
 
               if (!getCurrentStore(stores)) {
-                errorLog('d2-stores', 'No characters in profile');
+                errorLog(TAG, 'No characters in profile');
                 dispatch(
                   error(
                     new DimError(
@@ -363,7 +389,7 @@ function loadStoresData(
             return stores;
           }
         } catch (e) {
-          errorLog('d2-stores', 'Error loading stores', e);
+          errorLog(TAG, 'Error loading stores', e);
           reportException('d2stores', e);
 
           // If we switched account since starting this, give up
