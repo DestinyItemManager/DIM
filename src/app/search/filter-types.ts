@@ -161,7 +161,13 @@ export interface FilterDefinition<
    * A custom function used to generate (additional) suggestions.
    * This should only be necessary for freeform or custom formats.
    *
-   * Suggestions generally have the form of <keyword>:<op>. The
+   * Suggestions generally have the form of <keyword>:<op>. There
+   * are two options here to allow expansion of either side of that
+   * paring.
+   *   - op-expansion will generate suggestions based on the combination
+   *     of the provided keyword with the provided ops
+   *   - keyword-expansion will generation suggestions using the keywords
+   *     defined in the filter itself and the op provided.
    */
   suggestionsGenerator?: (
     args: SuggestionsCtx,
