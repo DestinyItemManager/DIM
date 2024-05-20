@@ -105,7 +105,7 @@ export function generateGroupedSuggestionsForFilter<I, FilterCtx, SuggestionsCtx
     expandStringCombinations(stringGroups)
       .slice(minDepth)
       .flat()
-      .map((s) => ({ keyword: s }));
+      .map((s) => ({ type: 'op-expansion' as const, keyword: s }));
 
   // We delay expanding ops because ops on their own expand the filters list significantly.
   // For autocompletion `generateSuggestionsForFilter` above expands the ops, but the filters
@@ -116,7 +116,11 @@ export function generateGroupedSuggestionsForFilter<I, FilterCtx, SuggestionsCtx
       .slice(0, stringGroups.length - 1)
       .flat()
       .map((s) => ({ keyword: s }));
-    const opSuggestions = combinations[stringGroups.length - 1].map((s) => ({ keyword: s, ops }));
+    const opSuggestions = combinations[stringGroups.length - 1].map((s) => ({
+      type: 'op-expansion' as const,
+      keyword: s,
+      ops,
+    }));
     return partialSuggestions.concat(opSuggestions);
   };
 
@@ -171,6 +175,11 @@ export function generateGroupedSuggestionsForFilter<I, FilterCtx, SuggestionsCtx
   for (const suggestion of filterDefinition.suggestionsGenerator?.(suggestionsContext) ?? []) {
     if (typeof suggestion === 'string') {
       allSuggestions.push({ keyword: suggestion });
+    } else if (suggestion.type === 'keyword-expansion') {
+      const keywordsArr = typeof keywords === 'string' ? [keywords] : keywords;
+      allSuggestions.push(
+        ...keywordsArr.map((keyword) => ({ keyword: `${keyword}:${suggestion.op}` })),
+      );
     } else {
       allSuggestions.push(suggestion);
     }

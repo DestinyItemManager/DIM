@@ -15,7 +15,7 @@ export function loadoutToSuggestions(loadout: Loadout) {
     quoteFilterString(loadout.name.toLowerCase()), // loadout name
     ...getHashtagsFromNote(loadout.name), // #hashtags in the name
     ...getHashtagsFromNote(loadout.notes), // #hashtags in the notes
-  ].map((suggestion) => `inloadout:${suggestion}`);
+  ].map((suggestion) => ({ type: 'keyword-expansion' as const, op: suggestion }));
 }
 
 const loadoutFilters: FilterDefinition[] = [

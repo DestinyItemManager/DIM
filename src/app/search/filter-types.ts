@@ -160,10 +160,16 @@ export interface FilterDefinition<
   /**
    * A custom function used to generate (additional) suggestions.
    * This should only be necessary for freeform or custom formats.
+   *
+   * Suggestions generally have the form of <keyword>:<op>. The
    */
   suggestionsGenerator?: (
     args: SuggestionsCtx,
-  ) => string[] | { keyword: string; ops?: string[] }[] | undefined;
+  ) =>
+    | string[]
+    | { type: 'op-expansion'; keyword: string; ops?: string[] }[]
+    | { type: 'keyword-expansion'; op: string }[]
+    | undefined;
 
   /**
    * given an item, this generates a filter that should match that item

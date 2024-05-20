@@ -16,7 +16,10 @@ const freeformFilters: FilterDefinition<
     description: tl('LoadoutFilter.Name'),
     format: 'freeform',
     suggestionsGenerator: ({ loadouts }) =>
-      loadouts?.map((loadout) => `exactname:${quoteFilterString(loadout.name.toLowerCase())}`),
+      loadouts?.map((loadout) => ({
+        type: 'keyword-expansion' as const,
+        op: quoteFilterString(loadout.name.toLowerCase()),
+      })),
     filter: ({ filterValue, language, lhs }) => {
       const test = matchText(filterValue, language, /* exact */ lhs === 'exactname');
       return (loadout) => test(loadout.name);

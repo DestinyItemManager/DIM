@@ -43,7 +43,7 @@ const statFilters: FilterDefinition[] = [
           suggestions: [...allAtomicStats, ...(customStats?.map((c) => c.shortLabel) ?? [])],
         },
         {},
-      ),
+      ).map((suggestion) => ({ type: 'op-expansion' as const, ...suggestion })),
     validateStat,
     filter: ({ filterValue, compare, customStats }) =>
       statFilterFromString(filterValue, compare!, customStats),
@@ -68,7 +68,7 @@ const statFilters: FilterDefinition[] = [
           ],
         },
         {},
-      ),
+      ).map((suggestion) => ({ type: 'op-expansion' as const, ...suggestion })),
     validateStat,
     filter: ({ filterValue, compare, customStats }) =>
       statFilterFromString(filterValue, compare!, customStats, true),

@@ -104,10 +104,10 @@ const nameFilter = {
         .map((i) => i.name.toLowerCase());
       // favor items we actually own
       const allItemNames = getUniqueItemNamesFromManifest(d2Definitions.InventoryItem.getAll());
-      return Array.from(
-        new Set([...myItemNames, ...allItemNames]),
-        (s) => `exactname:${quoteFilterString(s)}`,
-      );
+      return Array.from(new Set([...myItemNames, ...allItemNames]), (s) => ({
+        type: 'keyword-expansion' as const,
+        op: quoteFilterString(s),
+      }));
     }
   },
   filter: ({ filterValue, language, lhs }) => {
@@ -183,7 +183,10 @@ const freeformFilters: FilterDefinition[] = [
           perkNames.add(perkName);
         }
 
-        return Array.from(perkNames, (s) => `exactperk:${quoteFilterString(s)}`);
+        return Array.from(perkNames, (s) => ({
+          type: 'keyword-expansion' as const,
+          op: quoteFilterString(s),
+        }));
       }
     },
     filter: ({ lhs, filterValue, language, d2Definitions }) => {
