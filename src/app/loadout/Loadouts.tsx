@@ -93,7 +93,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
     [dispatch],
   );
 
-  // Id the location store matches some store id, isn't the vault, and isn't the currently
+  // If the location store matches some store id, isn't the vault, and isn't the currently
   // selected store id we need to dispatch an update to update the page.
   if (
     locationStoreId &&
