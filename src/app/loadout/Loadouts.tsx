@@ -16,13 +16,14 @@ import {
   useUpdateLoadoutAnalysisContext,
 } from 'app/loadout-analyzer/hooks';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
+import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import {
   getLoadoutSeason,
   newLoadout,
   newLoadoutFromEquipped,
 } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsForClassTypeSelector } from 'app/loadout-drawer/loadouts-selector';
-import { InGameLoadout, Loadout } from 'app/loadout/loadout-types';
+import { selectedLoadoutStore } from 'app/loadout-drawer/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { loadoutFilterFactorySelector } from 'app/search/loadouts/loadout-search-filter';
 import { useSetting } from 'app/settings/hooks';
@@ -33,16 +34,15 @@ import { DestinySeasonDefinition } from 'bungie-api-ts/destiny2';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
+import { updateLoadoutStore } from '../loadout-drawer/actions';
 import styles from './Loadouts.m.scss';
 import LoadoutRow from './LoadoutsRow';
-import { updateLoadoutStore } from './actions';
 import EditInGameLoadout from './ingame/EditInGameLoadout';
 import { InGameLoadoutDetails } from './ingame/InGameLoadoutDetailsSheet';
 import { InGameLoadoutStrip } from './ingame/InGameLoadoutStrip';
 import LoadoutImportSheet from './loadout-share/LoadoutImportSheet';
 import LoadoutShareSheet from './loadout-share/LoadoutShareSheet';
 import { searchAndSortLoadoutsByQuery, useLoadoutFilterPills } from './loadout-ui/menu-hooks';
-import { selectedLoadoutStore } from './selectors';
 
 const sortOptions = [
   {

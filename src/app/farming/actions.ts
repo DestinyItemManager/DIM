@@ -6,7 +6,7 @@ import {
   getVault,
   isD1Store,
 } from 'app/inventory/stores-helpers';
-import { isInInGameLoadoutForSelector } from 'app/loadout/selectors';
+import { isInInGameLoadoutForSelector } from 'app/loadout-drawer/selectors';
 import { D1BucketHashes, supplies } from 'app/search/d1-known-values';
 import { refresh } from 'app/shell/refresh-events';
 import { observe, unobserve } from 'app/store/observerMiddleware';

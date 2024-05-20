@@ -1,4 +1,4 @@
-import { InGameLoadout } from 'app/loadout/loadout-types';
+import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { compareBy } from 'app/utils/comparators';
 import { produce } from 'immer';
 import { ActionType, getType, Reducer } from 'typesafe-actions';

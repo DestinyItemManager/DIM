@@ -3,7 +3,7 @@ import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { ShowItemPickerFn } from 'app/item-picker/item-picker';
-import { ResolvedLoadoutItem } from 'app/loadout/loadout-types';
+import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { armorStats } from 'app/search/d2-known-values';
 import { filterMap } from 'app/utils/collections';
 import { isSunset } from 'app/utils/item-utils';

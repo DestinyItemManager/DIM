@@ -1,6 +1,6 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { gaEvent } from 'app/google';
-import { LoadoutsByItem, loadoutsByItemSelector } from 'app/loadout/selectors';
+import { LoadoutsByItem, loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
 import { D1_StatHashes } from 'app/search/d1-known-values';
 import { dimArmorStatHashByName } from 'app/search/search-filter-values';
 import D2Sources from 'app/search/search-filters/d2-sources';

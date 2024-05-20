@@ -10,12 +10,12 @@ import { ArmorSet, LockableBucketHashes, StatRanges } from 'app/loadout-builder/
 import { statTier } from 'app/loadout-builder/utils';
 import { randomSubclassConfiguration } from 'app/loadout-drawer/auto-loadouts';
 import { addItem, setLoadoutParameters } from 'app/loadout-drawer/loadout-drawer-reducer';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
 import {
   convertToLoadoutItem,
   newLoadout,
   newLoadoutFromEquipped,
 } from 'app/loadout-drawer/loadout-utils';
-import { Loadout } from 'app/loadout/loadout-types';
 import { armorStats } from 'app/search/d2-known-values';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import { normalToReducedMod } from 'data/d2/reduced-cost-mod-mappings';

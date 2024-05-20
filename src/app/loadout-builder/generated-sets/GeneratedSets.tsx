@@ -2,7 +2,7 @@ import { StatConstraint } from '@destinyitemmanager/dim-api-types';
 import { WindowVirtualList } from 'app/dim-ui/VirtualList';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
-import { Loadout } from 'app/loadout/loadout-types';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { filterMap } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
 import { identity } from 'lodash';

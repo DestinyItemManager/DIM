@@ -1,10 +1,10 @@
 import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
 import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
+import { deleteLoadout } from 'app/loadout-drawer/actions';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { copyAndEditLoadout, editLoadout } from 'app/loadout-drawer/loadout-events';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { deleteLoadout } from 'app/loadout/actions';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { ReactNode, memo, useMemo } from 'react';

@@ -1,7 +1,7 @@
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
-import { Loadout } from 'app/loadout/loadout-types';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { setSearchQuery } from 'app/shell/actions';

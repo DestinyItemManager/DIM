@@ -1,5 +1,5 @@
 import { t } from 'app/i18next-t';
-import { InGameLoadout } from 'app/loadout/loadout-types';
+import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
 import {

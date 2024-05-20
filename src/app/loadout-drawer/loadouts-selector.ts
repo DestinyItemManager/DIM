@@ -5,8 +5,8 @@ import { isClassCompatible } from 'app/utils/item-utils';
 import { currySelector } from 'app/utils/selectors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { createSelector } from 'reselect';
-import { Loadout } from '../loadout/loadout-types';
 import { convertDimApiLoadoutToLoadout } from './loadout-type-converters';
+import { Loadout } from './loadout-types';
 
 // had to pull this out to another file because things got weird :(
 

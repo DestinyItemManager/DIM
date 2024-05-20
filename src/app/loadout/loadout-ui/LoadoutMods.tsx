@@ -4,7 +4,7 @@ import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { artifactUnlocksSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import { hashesToPluggableItems } from 'app/inventory/store/sockets';
-import { Loadout, ResolvedLoadoutMod } from 'app/loadout/loadout-types';
+import { Loadout, ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { AppIcon, addIcon } from 'app/shell/icons';

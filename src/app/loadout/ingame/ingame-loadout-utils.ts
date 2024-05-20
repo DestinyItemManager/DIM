@@ -5,8 +5,12 @@ import { DimStore } from 'app/inventory/store-types';
 import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import { applySocketOverrides } from 'app/inventory/store/override-sockets';
 import { convertInGameLoadoutPlugItemHashesToSocketOverrides } from 'app/loadout-drawer/loadout-type-converters';
+import {
+  InGameLoadout,
+  ResolvedLoadoutItem,
+  ResolvedLoadoutMod,
+} from 'app/loadout-drawer/loadout-types';
 import { itemsByItemId } from 'app/loadout-drawer/loadout-utils';
-import { InGameLoadout, ResolvedLoadoutItem, ResolvedLoadoutMod } from 'app/loadout/loadout-types';
 import { filterMap } from 'app/utils/collections';
 import { DestinyLoadoutItemComponent } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';

@@ -2,7 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, DimSockets, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { getEnergyUpgradePlugs } from 'app/inventory/store/energy';
 import { ArmorEnergyRules } from 'app/loadout-builder/types';
-import { Assignment, PluggingAction } from 'app/loadout/loadout-types';
+import { Assignment, PluggingAction } from 'app/loadout-drawer/loadout-types';
 import {
   ItemTierName,
   MAX_ARMOR_ENERGY_CAPACITY,

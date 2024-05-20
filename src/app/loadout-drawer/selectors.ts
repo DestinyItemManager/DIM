@@ -12,13 +12,13 @@ import { manifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { isClassCompatible } from 'app/utils/item-utils';
 import { createSelector } from 'reselect';
+import { InGameLoadout, Loadout, LoadoutItem, isInGameLoadout } from './loadout-types';
 import {
   getInstancedLoadoutItem,
   getResolutionInfo,
   getUninstancedLoadoutItem,
-} from '../loadout-drawer/loadout-utils';
-import { loadoutsSelector } from '../loadout-drawer/loadouts-selector';
-import { InGameLoadout, Loadout, LoadoutItem, isInGameLoadout } from './loadout-types';
+} from './loadout-utils';
+import { loadoutsSelector } from './loadouts-selector';
 
 export const loadoutsHashtagsSelector = createSelector(loadoutsSelector, (loadouts) => [
   ...new Set(

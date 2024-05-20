@@ -3,8 +3,8 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { customStatsSelector } from 'app/dim-api/selectors';
 import { TagValue } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
-import { Loadout } from 'app/loadout/loadout-types';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { createSelector } from 'reselect';
 import {

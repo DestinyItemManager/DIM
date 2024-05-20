@@ -9,8 +9,8 @@ import {
 import { getStore } from 'app/inventory/stores-helpers';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
+import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
-import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { filterMap } from 'app/utils/collections';
 import { BucketHashes } from 'data/d2/generated-enums';

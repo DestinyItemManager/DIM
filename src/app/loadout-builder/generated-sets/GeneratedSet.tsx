@@ -2,7 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore, statSourceOrder } from 'app/inventory/store-types';
-import { Loadout } from 'app/loadout/loadout-types';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { fitMostMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
 import { useD2Definitions } from 'app/manifest/selectors';

@@ -6,7 +6,7 @@ import { emptyArray } from 'app/utils/empty';
 import { warnLog } from 'app/utils/log';
 import { plugFitsIntoSocket } from 'app/utils/socket-utils';
 import { DimItem } from '../inventory/item-types';
-import { LoadoutItem, ResolvedLoadoutItem } from '../loadout/loadout-types';
+import { LoadoutItem, ResolvedLoadoutItem } from './loadout-types';
 import { findItemForLoadout } from './loadout-utils';
 
 let missingLoadoutItemId = 1;

@@ -7,7 +7,7 @@ import {
   setName,
   setNotes,
 } from 'app/loadout-drawer/loadout-drawer-reducer';
-import { Loadout } from 'app/loadout/loadout-types';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { uniqBy } from 'app/utils/collections';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';

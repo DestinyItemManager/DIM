@@ -4,7 +4,7 @@ import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimCharacterStatSource } from 'app/inventory/store-types';
 import { hashesToPluggableItems } from 'app/inventory/store/sockets';
 import { ArmorStatHashes, ModStatChanges } from 'app/loadout-builder/types';
-import { ResolvedLoadoutItem } from 'app/loadout/loadout-types';
+import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { mapToOtherModCostVariant } from 'app/loadout/mod-utils';
 import { ModsWithConditionalStats, armorStats } from 'app/search/d2-known-values';
 import { emptyArray } from 'app/utils/empty';
