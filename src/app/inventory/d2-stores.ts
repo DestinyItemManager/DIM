@@ -257,11 +257,7 @@ function loadProfile(
       dispatch(handleAuthErrors(e));
       dispatch(profileError(convertToError(e)));
       if (cachedProfileResponse) {
-        errorLog(
-          TAG,
-          'Error loading profile from Bungie.net, falling back to cached profile',
-          e,
-        );
+        errorLog(TAG, 'Error loading profile from Bungie.net, falling back to cached profile', e);
         // undefined means skip processing, in case we already have computed stores
         return storesLoadedSelector(getState())
           ? undefined
