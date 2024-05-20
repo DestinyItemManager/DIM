@@ -106,12 +106,23 @@ const D2Sources: {
   },
   calus: {
     itemHashes: [
+      947448544, // Shadow of Earth Shell
       1661191192, // The Tribute Hall
+      1661191193, // Crown of Sorrow
+      1661191194, // A Hall of Delights
+      1661191195, // The Imperial Menagerie
+      2027598066, // Imperial Opulence
+      2027598067, // Imperial Dress
       2816212794, // Bad Juju
+      3176509806, // Árma Mákhēs
       3580904580, // Legend of Acrius
+      3841416152, // Golden Empire
+      3841416153, // Goldleaf
+      3841416154, // Shadow Gilt
+      3841416155, // Cinderchar
+      3875444086, // The Emperor's Chosen
     ],
     sourceHashes: [
-      976328308, // Source: The Derelict Leviathan
       1675483099, // Source: Leviathan, Spire of Stars raid lair.
       2399751101, // Acquired from the raid "Crown of Sorrow."
       2511152325, // Acquired from the Menagerie aboard the Leviathan.
@@ -377,23 +388,19 @@ const D2Sources: {
     ],
   },
   dungeon: {
-    itemHashes: [
-      185321778, // The Eternal Return
-      814876684, // Wish-Ender
-      2844014413, // Pallas Galliot
-    ],
     sourceHashes: [
-      210885364, // Source: Flawless "Presage" Exotic Quest on Master Difficulty
       506073192, // Source: "Prophecy" Dungeon
       613435025, // Source: "Warlord's Ruin" Dungeon
       675740011, // Source: "Grasp of Avarice" Dungeon
       1282207663, // Source: Dungeon "Duality"
       1597738585, // Source: "Spire of the Watcher" Dungeon
       1745960977, // Source: "Pit of Heresy" Dungeon
-      2745272818, // Source: "Presage" Exotic Quest
-      2856954949, // Source: "Let Loose Thy Talons" Exotic Quest
       3288974535, // Source: "Ghosts of the Deep" Dungeon
-      3597879858, // Source: "Presage" Exotic Quest
+    ],
+    itemHashes: [
+      185321778, // The Eternal Return
+      814876684, // Wish-Ender
+      2844014413, // Pallas Galliot
     ],
   },
   edz: {
@@ -495,6 +502,27 @@ const D2Sources: {
       2055289873, // Source: "The Evidence Board" Exotic Quest
     ],
     aliases: ['enclave'],
+  },
+  exoticquest: {
+    sourceHashes: [
+      210885364, // Source: Flawless "Presage" Exotic Quest on Master Difficulty
+      281362298, // Source: Strider Exotic Quest
+      454251931, // Source: "What Remains" Exotic Quest
+      483798855, // Source: "The Final Strand" Exotic Quest
+      709680645, // Source: "Truly Satisfactory" Triumph
+      1141831282, // Source: "Of Queens and Worms" Exotic Quest
+      1388323447, // Source: Exotic Mission "The Whisper"
+      1476475066, // Source: "Firmware Update" Triumph
+      1730197643, // Source: //node.ovrd.AVALON// Exotic Quest
+      1823766625, // Source: "Vox Obscura" Exotic Quest
+      1957611613, // Source: An Exotic quest or challenge.
+      2055289873, // Source: "The Evidence Board" Exotic Quest
+      2068312112, // Source: Exotic Mission "Zero Hour"
+      2171520631, // Source: "Lost Lament" Exotic Quest
+      2745272818, // Source: "Presage" Exotic Quest
+      2856954949, // Source: "Let Loose Thy Talons" Exotic Quest
+      3597879858, // Source: "Presage" Exotic Quest
+    ],
   },
   fwc: {
     sourceHashes: [
@@ -947,15 +975,6 @@ const D2Sources: {
     ],
   },
   raid: {
-    itemHashes: [
-      947448544, // Shadow of Earth Shell
-      1661191193, // Crown of Sorrow
-      2027598066, // Imperial Opulence
-      2557722678, // Midnight Smith
-      3580904580, // Legend of Acrius
-      3668669364, // Dreaming Spectrum
-      4103414242, // Divinity
-    ],
     sourceHashes: [
       160129377, // Source: "King's Fall" Raid
       557146120, // Source: Complete a Guided Game as a guide or seeker.
@@ -987,6 +1006,24 @@ const D2Sources: {
       4009509410, // Source: Complete challenges in the Leviathan raid.
       4066007318, // Source: Leviathan, Eater of Worlds raid lair on Prestige difficulty.
       4246883461, // Source: Found in the "Scourge of the Past" raid.
+    ],
+    itemHashes: [
+      70083888, // Nation of Beasts
+      424291879, // Age-Old Bond
+      501329015, // Chattering Bone
+      947448544, // Shadow of Earth Shell
+      1661191193, // Crown of Sorrow
+      1851777734, // Apex Predator
+      2027598066, // Imperial Opulence
+      2027598067, // Imperial Dress
+      2557722678, // Midnight Smith
+      2884596447, // The Supremacy
+      3388655311, // Tyranny of Heaven
+      3580904580, // Legend of Acrius
+      3591141932, // Techeun Force
+      3668669364, // Dreaming Spectrum
+      3885259140, // Transfiguration
+      4103414242, // Divinity
     ],
   },
   rasputin: {
