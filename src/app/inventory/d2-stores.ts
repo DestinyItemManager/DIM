@@ -173,7 +173,7 @@ function loadProfile(
             (Date.now() - new Date(cachedProfileResponse.responseMintedTimestamp ?? 0).getTime()) /
             1000;
           infoLog(
-            'd2-stores',
+            TAG,
             `Loaded cached profile from IndexedDB, using it until new data is available. It is ${profileAgeSecs}s old.`,
           );
           dispatch(profileLoaded({ profile: cachedProfileResponse, live: false }));
@@ -196,7 +196,7 @@ function loadProfile(
       const profileAge = Date.now() - cachedProfileMintedDate.getTime();
       if (!storesLoadedSelector(getState()) && profileAge > 0 && profileAge < BUNGIE_CACHE_TTL) {
         warnLog(
-          'd2-stores',
+          TAG,
           `Cached profile is only ${profileAge / 1000}s old, skipping remote load.`,
           profileAge,
         );
@@ -219,13 +219,13 @@ function loadProfile(
           const action = storesLoaded ? 'Skipping update.' : 'Using the cached profile.';
           if (eq) {
             infoLog(
-              'd2-stores',
+              TAG,
               `Profile from Bungie.net is is ${remoteProfileAgeSec}s old, which is the same age as the cached profile.`,
               action,
             );
           } else {
             warnLog(
-              'd2-stores',
+              TAG,
               `Profile from Bungie.net is ${remoteProfileAgeSec}s old, while the cached profile is ${cachedProfileAgeSec}s old`,
               action,
             );
@@ -238,14 +238,14 @@ function loadProfile(
             : { profile: cachedProfileResponse, live: false };
         } else {
           infoLog(
-            'd2-stores',
+            TAG,
             `Profile from Bungie.net is is ${remoteProfileAgeSec}s old, while the cached profile is ${cachedProfileAgeSec}s old.`,
             `Using the new profile from Bungie.net.`,
           );
         }
       } else {
         infoLog(
-          'd2-stores',
+          TAG,
           `No cached profile, using profile from Bungie.net which is ${remoteProfileAgeSec}s old.`,
         );
       }
@@ -258,7 +258,7 @@ function loadProfile(
       dispatch(profileError(convertToError(e)));
       if (cachedProfileResponse) {
         errorLog(
-          'd2-stores',
+          TAG,
           'Error loading profile from Bungie.net, falling back to cached profile',
           e,
         );
