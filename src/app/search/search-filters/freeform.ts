@@ -94,8 +94,8 @@ const nameFilter = {
   keywords: ['name', 'exactname'],
   description: tl('Filter.Name'),
   format: 'freeform',
-  suggestionsGenerator: ({ d2Manifest, allItems }) => {
-    if (d2Manifest && allItems) {
+  suggestionsGenerator: ({ d2Definitions, allItems }) => {
+    if (d2Definitions && allItems) {
       const myItemNames = allItems
         .filter(
           (i) =>
@@ -103,7 +103,7 @@ const nameFilter = {
         )
         .map((i) => i.name.toLowerCase());
       // favor items we actually own
-      const allItemNames = getUniqueItemNamesFromManifest(d2Manifest.InventoryItem.getAll());
+      const allItemNames = getUniqueItemNamesFromManifest(d2Definitions.InventoryItem.getAll());
       return Array.from(
         new Set([...myItemNames, ...allItemNames]),
         (s) => `exactname:${quoteFilterString(s)}`,
@@ -159,8 +159,8 @@ const freeformFilters: FilterDefinition[] = [
     keywords: ['perkname', 'exactperk'],
     description: tl('Filter.PerkName'),
     format: 'freeform',
-    suggestionsGenerator: ({ d2Manifest, allItems }) => {
-      if (d2Manifest && allItems) {
+    suggestionsGenerator: ({ d2Definitions, allItems }) => {
+      if (d2Definitions && allItems) {
         const perkNames = new Set<string>();
         // favor items we actually own by inserting them first
         for (const item of allItems) {
@@ -179,7 +179,7 @@ const freeformFilters: FilterDefinition[] = [
         }
 
         // supplement the list with perks from definitions, so people can search things they don't own
-        for (const perkName of getPerkNamesFromManifest(d2Manifest.InventoryItem.getAll())) {
+        for (const perkName of getPerkNamesFromManifest(d2Definitions.InventoryItem.getAll())) {
           perkNames.add(perkName);
         }
 

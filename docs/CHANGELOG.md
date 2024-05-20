@@ -1,5 +1,7 @@
 ## Next
 
+## v8.20.0 <span class="changelog-date">(2024-05-19)</span>
+
 ## 8.19.2 <span class="changelog-date">(2024-05-15)</span>
 
 ## 8.19.1 <span class="changelog-date">(2024-05-12)</span>

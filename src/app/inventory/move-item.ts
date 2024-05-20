@@ -10,7 +10,7 @@ import { errorMessage } from 'app/utils/errors';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { errorLog, infoLog } from 'app/utils/log';
 import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
-import _ from 'lodash';
+import _, { noop } from 'lodash';
 import { showNotification } from '../notifications/notifications';
 import { loadingTracker } from '../shell/loading-tracker';
 import { queueAction } from '../utils/action-queue';
@@ -30,7 +30,7 @@ const TAG = 'move';
 /**
  * Move the item to the currently active store. Used for double-click action.
  */
-export function moveItemToCurrentStore(item: DimItem, e?: React.MouseEvent): ThunkResult<DimItem> {
+export function moveItemToCurrentStore(item: DimItem, e?: React.MouseEvent): ThunkResult {
   return async (dispatch, getState) => {
     e?.stopPropagation();
 
@@ -69,9 +69,9 @@ export function pullItem(
 }
 
 /**
- * Drop a dragged item
+ * Drop a dragged item.
  */
-export function dropItem(item: DimItem, storeId: string, equip = false): ThunkResult<DimItem> {
+export function dropItem(item: DimItem, storeId: string, equip = false): ThunkResult {
   return async (dispatch, getState) => {
     const store = getStore(storesSelector(getState()), storeId)!;
     return dispatch(moveItemTo(item, store, equip, item.amount));
@@ -80,13 +80,14 @@ export function dropItem(item: DimItem, storeId: string, equip = false): ThunkRe
 
 /**
  * Move the item to the specified store. Equip it if equip is true.
+ * This function needs to handle displaying any errors itself - it should not reject.
  */
 export function moveItemTo(
   item: DimItem,
   store: DimStore,
   equip = false,
   amount: number = item.amount,
-): ThunkResult<DimItem> {
+): ThunkResult {
   return async (dispatch, getState) => {
     const currentStore = currentStoreSelector(getState())!;
     const singleCharacterSetting = settingSelector('singleCharacter')(getState());
@@ -97,16 +98,21 @@ export function moveItemTo(
           ? !item.canPullFromPostmaster
           : item.notransfer && item.owner !== store.id
       ) {
-        throw new DimError('Help.CannotMove');
+        // Show an error immediately
+        showNotification(
+          moveItemNotification(item, store, Promise.reject(new DimError('Help.CannotMove')), noop),
+        );
+        return;
       }
 
       if (item.owner === store.id && !item.location.inPostmaster && item.equipped === equip) {
-        return item;
+        // Nothing to do!
+        return;
       }
 
       // In single character mode dropping something from the "vault" back on the "vault" shouldn't move anything
       if (singleCharacterSetting && store.isVault && item.owner !== currentStore.id) {
-        return item;
+        return;
       }
 
       const moveAmount = amount || 1;
@@ -137,17 +143,12 @@ export function moveItemTo(
 
         const movePromise = queueAction(() =>
           loadingTracker.addPromise(
-            (async () => {
-              const result = await dispatch(
-                executeMoveItem(item, store, { equip, amount: moveAmount }, moveSession),
-              );
-              return result;
-            })(),
+            dispatch(executeMoveItem(item, store, { equip, amount: moveAmount }, moveSession)),
           ),
         );
         showNotification(moveItemNotification(item, store, movePromise, cancel));
 
-        item = await movePromise;
+        await movePromise;
 
         if (reload) {
           // TODO: only reload the character that changed?
@@ -156,7 +157,7 @@ export function moveItemTo(
         }
       } catch (e) {
         if (e instanceof CanceledError) {
-          return item;
+          return;
         }
 
         errorLog(TAG, 'error moving item', item.name, 'to', store.name, e);
@@ -172,8 +173,6 @@ export function moveItemTo(
           reportException('moveItem', e);
         }
       }
-
-      return item;
     });
   };
 }
