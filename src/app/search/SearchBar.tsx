@@ -271,7 +271,7 @@ function SearchBar(
 
   const lastBlurQuery = useRef<string>();
   const onBlur = () => {
-    if (!loadouts && valid && liveQuery && liveQuery !== lastBlurQuery.current) {
+    if (valid && liveQuery && liveQuery !== lastBlurQuery.current) {
       // save this to the recent searches only on blur
       // we use the ref to only fire if the query changed since the last blur
       dispatch(searchUsed(liveQuery));

@@ -94,6 +94,13 @@ export const loadoutFilterFactorySelector = createSelector(
 export const validateLoadoutQuerySelector = createSelector(
   loadoutSearchConfigSelector,
   loadoutFilterContextSelector,
-  (searchConfig, filterContext) => (query: string) =>
-    parseAndValidateQuery(query, searchConfig.filtersMap, filterContext),
+  (searchConfig, filterContext) => (query: string) => {
+    const result = parseAndValidateQuery(query, searchConfig.filtersMap, filterContext);
+    return {
+      ...result,
+      // For now, loadout searches are not saveable
+      saveable: false,
+      saveInHistory: false,
+    };
+  },
 );
