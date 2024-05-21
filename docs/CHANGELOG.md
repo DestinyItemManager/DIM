@@ -3,7 +3,7 @@
 * The search suggestions dropdown now shows more results, based on the size of your screen.
 * Added an overload to the `inloadout:` search which allows searching items based on how many loadouts they are in, for example `inloadout:>2`.
 
-## v8.20.0 <span class="changelog-date">(2024-05-19)</span>
+## 8.20.0 <span class="changelog-date">(2024-05-19)</span>
 
 ## 8.19.2 <span class="changelog-date">(2024-05-15)</span>
 
