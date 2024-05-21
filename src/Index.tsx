@@ -67,9 +67,7 @@ const i18nPromise = initi18n();
   }
   store.dispatch(observe(createSaveAccountsObserver()));
   store.dispatch(observe(createItemSizeObserver()));
-  if ($featureFlags.themePicker) {
-    store.dispatch(observe(createThemeObserver()));
-  }
+  store.dispatch(observe(createThemeObserver()));
   store.dispatch(observe(createTilesPerCharColumnObserver()));
   setCssVariableEventListeners();
 
