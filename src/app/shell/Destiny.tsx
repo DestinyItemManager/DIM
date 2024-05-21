@@ -239,16 +239,16 @@ export default function Destiny() {
             )}
             <Route path="*" element={<Navigate to="inventory" />} />
           </Routes>
-          <LoadoutDrawerContainer account={account} />
-          <CompareContainer destinyVersion={account.destinyVersion} />
-          {account.destinyVersion === 2 && <StripSockets />}
-          <Farming />
-          <InfusionFinder />
-          <ItemPopupContainer boundarySelector=".store-header" />
-          <GlobalEffects />
-          {Boolean(autoLockTagged) && <SyncTagLock />}
-          <ItemDragPreview />
         </div>
+        <LoadoutDrawerContainer account={account} />
+        <CompareContainer destinyVersion={account.destinyVersion} />
+        {account.destinyVersion === 2 && <StripSockets />}
+        <Farming />
+        <InfusionFinder />
+        <ItemPopupContainer boundarySelector=".store-header" />
+        <GlobalEffects />
+        {Boolean(autoLockTagged) && <SyncTagLock />}
+        <ItemDragPreview />
       </SingleVendorSheetContainer>
     </ItemPickerContainer>
   );
