@@ -2,6 +2,7 @@
 
 * The search suggestions dropdown now shows more results, based on the size of your screen.
 * Added an overload to the `inloadout:` search which allows searching items based on how many loadouts they are in, for example `inloadout:>2`.
+* Pages such as "About" and "Settings" now respect device safe areas when the device is in landscape mode.
 
 ## 8.20.0 <span class="changelog-date">(2024-05-19)</span>
 
