@@ -16,7 +16,7 @@ import { LoadoutFilterContext, LoadoutSuggestionsContext } from './loadout-filte
 import freeformFilters from './search-filters/freeform';
 import overloadedRangeFilters from './search-filters/range-overload';
 
-const allLoadoutFilters = [...freeformFilters, ...overloadedRangeFilters];
+export const allLoadoutFilters = [...freeformFilters, ...overloadedRangeFilters];
 
 //
 // Selectors
