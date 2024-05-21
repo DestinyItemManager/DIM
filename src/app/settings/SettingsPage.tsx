@@ -219,7 +219,7 @@ export default function SettingsPage() {
 
   const menuItems = _.compact([
     { id: 'general', title: t('Settings.Language') },
-    $featureFlags.themePicker ? { id: 'theme', title: t('Settings.Theme') } : undefined,
+    { id: 'theme', title: t('Settings.Theme') },
     { id: 'items', title: t('Settings.Items') },
     { id: 'inventory', title: t('Settings.Inventory') },
     $featureFlags.wishLists ? { id: 'wishlist', title: t('WishListRoll.Header') } : undefined,
@@ -250,20 +250,18 @@ export default function SettingsPage() {
             </div>
           </section>
 
-          {$featureFlags.themePicker && (
-            <section id="theme">
-              <h2>{t('Settings.Theme')}</h2>
-              <div className={styles.setting}>
-                <Select
-                  label={t('Settings.Theme')}
-                  name="theme"
-                  value={settings.theme}
-                  options={themeOptions}
-                  onChange={changeTheme}
-                />
-              </div>
-            </section>
-          )}
+          <section id="theme">
+            <h2>{t('Settings.Theme')}</h2>
+            <div className={styles.setting}>
+              <Select
+                label={t('Settings.Theme')}
+                name="theme"
+                value={settings.theme}
+                options={themeOptions}
+                onChange={changeTheme}
+              />
+            </div>
+          </section>
 
           <section id="items">
             <h2>{t('Settings.Items')}</h2>
