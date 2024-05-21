@@ -15,8 +15,9 @@ import { parseAndValidateQuery } from '../search-utils';
 import { LoadoutFilterContext, LoadoutSuggestionsContext } from './loadout-filter-types';
 import freeformFilters from './search-filters/freeform';
 import overloadedRangeFilters from './search-filters/range-overload';
+import simpleFilters from './search-filters/simple';
 
-const allLoadoutFilters = [...freeformFilters, ...overloadedRangeFilters];
+export const allLoadoutFilters = [...simpleFilters, ...freeformFilters, ...overloadedRangeFilters];
 
 //
 // Selectors
@@ -94,6 +95,13 @@ export const loadoutFilterFactorySelector = createSelector(
 export const validateLoadoutQuerySelector = createSelector(
   loadoutSearchConfigSelector,
   loadoutFilterContextSelector,
-  (searchConfig, filterContext) => (query: string) =>
-    parseAndValidateQuery(query, searchConfig.filtersMap, filterContext),
+  (searchConfig, filterContext) => (query: string) => {
+    const result = parseAndValidateQuery(query, searchConfig.filtersMap, filterContext);
+    return {
+      ...result,
+      // For now, loadout searches are not saveable
+      saveable: false,
+      saveInHistory: false,
+    };
+  },
 );
