@@ -75,7 +75,7 @@ export default forwardRef(function SearchFilter(
       menu={menu}
       loadouts={onLoadouts}
     >
-      {extras}
+      {!onLoadouts && extras}
     </SearchBar>
   );
 });

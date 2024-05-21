@@ -1,5 +1,4 @@
 import { tl } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
 import { isSunset } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { FilterDefinition } from '../filter-types';
@@ -10,7 +9,7 @@ const simpleFilters: FilterDefinition[] = [
     keywords: 'armor2.0',
     description: tl('Filter.Energy'),
     destinyVersion: 2,
-    filter: () => (item: DimItem) => Boolean(item.energy) && item.bucket.inArmor,
+    filter: () => (item) => Boolean(item.energy) && item.bucket.inArmor,
   },
   {
     keywords: 'weapon',
