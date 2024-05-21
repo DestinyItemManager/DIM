@@ -41,8 +41,6 @@ export function makeFeatureFlags(env: {
     simulateBungieMaintenance: false,
     // Pretend that Bungie.net is not returning sockets info
     simulateMissingSockets: false,
-    // Show a "pills" UI for filtering loadouts
-    loadoutFilterPills: true,
     // Request the PresentationNodes component only needed during
     // Solstice to associate each character with a set of triumphs.
     // Solstice 2022 had a set of challenges for each character,
