@@ -114,7 +114,7 @@ export default function Records({ account }: Props) {
   ];
 
   return (
-    <PageWithMenu className="d2-vendors">
+    <PageWithMenu className="liam d2-vendors">
       <PageWithMenu.Menu>
         {menuItems.map((menuItem) => (
           <PageWithMenu.MenuButton key={menuItem.id} anchor={menuItem.id}>

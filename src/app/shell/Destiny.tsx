@@ -35,7 +35,6 @@ import { Hotkey } from '../hotkeys/hotkeys';
 import { itemTagList } from '../inventory/dim-item-info';
 import ItemPickerContainer from '../item-picker/ItemPickerContainer';
 import ItemPopupContainer from '../item-popup/ItemPopupContainer';
-import styles from './Destiny.m.scss';
 import ErrorPanel from './ErrorPanel';
 
 // TODO: Could be slightly better to group these a bit, but for now we break them each into a separate chunk.
@@ -189,57 +188,55 @@ export default function Destiny() {
   return (
     <ItemPickerContainer>
       <SingleVendorSheetContainer>
-        <div className={styles.content}>
-          <Routes>
-            <Route path="inventory" element={<Inventory account={account} />} />
-            {account.destinyVersion === 2 && (
-              <Route path="progress" element={<Progress account={account} />} />
-            )}
-            {account.destinyVersion === 2 && (
-              <Route path="records" element={<Records account={account} />} />
-            )}
-            <Route
-              path="optimizer"
-              element={
-                account.destinyVersion === 2 ? (
-                  <LoadoutBuilderContainer account={account} />
-                ) : (
-                  <D1LoadoutBuilder account={account} />
-                )
-              }
-            />
-            {account.destinyVersion === 2 && (
-              <Route path="loadouts" element={<Loadouts account={account} />} />
-            )}
-            <Route path="organizer" element={<Organizer account={account} />} />
-            {account.destinyVersion === 2 && (
-              <Route path="vendors/:vendorHash" element={<SingleVendorPage account={account} />} />
-            )}
-            <Route
-              path="vendors"
-              element={
-                account.destinyVersion === 2 ? (
-                  <Vendors account={account} />
-                ) : (
-                  <D1Vendors account={account} />
-                )
-              }
-            />
-            {account.destinyVersion === 2 && (
-              <Route path="armory/:itemHash" element={<ArmoryPage account={account} />} />
-            )}
-            {account.destinyVersion === 2 && (
-              <Route path="item-feed" element={<ItemFeedPage account={account} />} />
-            )}
-            {account.destinyVersion === 1 && (
-              <Route path="record-books" element={<RecordBooks account={account} />} />
-            )}
-            {account.destinyVersion === 1 && (
-              <Route path="activities" element={<Activities account={account} />} />
-            )}
-            <Route path="*" element={<Navigate to="inventory" />} />
-          </Routes>
-        </div>
+        <Routes>
+          <Route path="inventory" element={<Inventory account={account} />} />
+          {account.destinyVersion === 2 && (
+            <Route path="progress" element={<Progress account={account} />} />
+          )}
+          {account.destinyVersion === 2 && (
+            <Route path="records" element={<Records account={account} />} />
+          )}
+          <Route
+            path="optimizer"
+            element={
+              account.destinyVersion === 2 ? (
+                <LoadoutBuilderContainer account={account} />
+              ) : (
+                <D1LoadoutBuilder account={account} />
+              )
+            }
+          />
+          {account.destinyVersion === 2 && (
+            <Route path="loadouts" element={<Loadouts account={account} />} />
+          )}
+          <Route path="organizer" element={<Organizer account={account} />} />
+          {account.destinyVersion === 2 && (
+            <Route path="vendors/:vendorHash" element={<SingleVendorPage account={account} />} />
+          )}
+          <Route
+            path="vendors"
+            element={
+              account.destinyVersion === 2 ? (
+                <Vendors account={account} />
+              ) : (
+                <D1Vendors account={account} />
+              )
+            }
+          />
+          {account.destinyVersion === 2 && (
+            <Route path="armory/:itemHash" element={<ArmoryPage account={account} />} />
+          )}
+          {account.destinyVersion === 2 && (
+            <Route path="item-feed" element={<ItemFeedPage account={account} />} />
+          )}
+          {account.destinyVersion === 1 && (
+            <Route path="record-books" element={<RecordBooks account={account} />} />
+          )}
+          {account.destinyVersion === 1 && (
+            <Route path="activities" element={<Activities account={account} />} />
+          )}
+          <Route path="*" element={<Navigate to="inventory" />} />
+        </Routes>
         <LoadoutDrawerContainer account={account} />
         <CompareContainer destinyVersion={account.destinyVersion} />
         {account.destinyVersion === 2 && <StripSockets />}
