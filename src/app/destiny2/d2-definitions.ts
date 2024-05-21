@@ -115,6 +115,7 @@ export interface D2ManifestDefinitions extends ManifestDefinitions {
   Race: DefinitionTable<DestinyRaceDefinition>;
   Faction: DefinitionTable<DestinyFactionDefinition>;
   ItemTierType: DefinitionTable<DestinyItemTierTypeDefinition>;
+  // ActivityMode is used only from destiny-symbols.ts
   ActivityMode: DefinitionTable<DestinyActivityModeDefinition>;
   InventoryItem: DefinitionTable<DestinyInventoryItemDefinition>;
   Objective: DefinitionTable<DestinyObjectiveDefinition>;

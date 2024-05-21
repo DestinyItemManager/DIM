@@ -232,6 +232,10 @@ export interface ItemCreationContext {
   itemComponents?: DestinyItemComponentSetOfint64;
 }
 
+const damageDefsByDamageType = memoizeOne((defs: D2ManifestDefinitions) =>
+  _.keyBy(Object.values(defs.DamageType.getAll()), (d) => d.enumValue),
+);
+
 /**
  * Process a single raw item into a DIM item.
  */
@@ -366,6 +370,10 @@ export function makeItem(
       defs.DamageType.get(itemInstanceData.damageTypeHash)) ||
     (itemDef.defaultDamageTypeHash !== undefined &&
       defs.DamageType.get(itemDef.defaultDamageTypeHash)) ||
+    // Subclasses have their elemental damage type in the talent grid
+    (normalBucket.hash === BucketHashes.Subclass &&
+      itemDef.talentGrid?.hudDamageType !== undefined &&
+      damageDefsByDamageType(defs)[itemDef.talentGrid.hudDamageType]) ||
     null;
 
   const powerCapHash =
