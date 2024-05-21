@@ -49,8 +49,6 @@ export function makeFeatureFlags(env: {
     solsticePresentationNodes: false,
     // not ready to turn these on but the code is there
     customStatWeights: false,
-    // New LO stat picker
-    statConstraintEditor: !env.release,
     // On the Loadouts page, run Loadout Optimizer to find better tiers for loadouts.
     runLoInBackground: true,
   };
