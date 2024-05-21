@@ -14,7 +14,7 @@ const overloadedRangeFilters: FilterDefinition<
 >[] = [
   {
     keywords: 'season',
-    description: tl('Filter.Season'),
+    description: tl('LoadoutFilter.Season'),
     format: 'range',
     destinyVersion: 2,
     overload: Object.fromEntries(Object.entries(seasonTagToNumber).reverse()),

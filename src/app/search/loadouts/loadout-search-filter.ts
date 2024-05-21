@@ -15,8 +15,9 @@ import { parseAndValidateQuery } from '../search-utils';
 import { LoadoutFilterContext, LoadoutSuggestionsContext } from './loadout-filter-types';
 import freeformFilters from './search-filters/freeform';
 import overloadedRangeFilters from './search-filters/range-overload';
+import simpleFilters from './search-filters/simple';
 
-export const allLoadoutFilters = [...freeformFilters, ...overloadedRangeFilters];
+export const allLoadoutFilters = [...simpleFilters, ...freeformFilters, ...overloadedRangeFilters];
 
 //
 // Selectors
