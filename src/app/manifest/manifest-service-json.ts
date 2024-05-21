@@ -17,6 +17,7 @@ import {
   DestinyItemTranslationBlockDefinition,
   DestinyManifestComponentName,
 } from 'bungie-api-ts/destiny2';
+import { BucketHashes } from 'data/d2/generated-enums';
 import { deepEqual } from 'fast-equals';
 import { Draft } from 'immer';
 import _ from 'lodash';
@@ -54,7 +55,10 @@ const tableTrimmers: LookupTable<DestinyManifestComponentName, (table: any) => a
       if (def.preview?.derivedItemCategories?.length) {
         def.preview.derivedItemCategories = emptyArray();
       }
-      def.talentGrid = emptyObject<Draft<DestinyItemTalentGridBlockDefinition>>();
+      if (def.inventory?.bucketTypeHash !== BucketHashes.Subclass) {
+        // The only useful bit about talent grids is for subclass damage types
+        def.talentGrid = emptyObject<Draft<DestinyItemTalentGridBlockDefinition>>();
+      }
 
       if (def.sockets) {
         def.sockets.intrinsicSockets = emptyArray();
@@ -149,7 +153,7 @@ function loadManifest(tableAllowList: string[]): ThunkResult<AllDestinyManifestC
 
       // Use the path as the version, rather than the "version" field, because
       // Bungie can update the manifest file without changing that version.
-      version = path;
+      version = `v2-${path}`; // the prefix is used to bust the cache if we change the table trimmers
     } catch (e) {
       // If we can't get info about the current manifest, try to just use whatever's already saved.
       version = localStorage.getItem(localStorageKey);
