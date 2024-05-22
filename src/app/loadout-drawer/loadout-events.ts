@@ -46,8 +46,6 @@ export function copyAndEditLoadout(
   storeId: string,
   { showClass = true }: { showClass?: boolean } = {},
 ) {
-  const copiedLoadout = structuredClone(loadout);
-  copiedLoadout.name = `${loadout.name} - Copy`;
-
+  const copiedLoadout = { ...loadout, name: `${loadout.name} - Copy` };
   editLoadout(copiedLoadout, storeId, { showClass, isNew: true });
 }

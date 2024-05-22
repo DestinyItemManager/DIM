@@ -1,8 +1,8 @@
 ## Next
 
-## 8.12.0 <span class="changelog-date">(2024-03-10)</span>
-
 * Loadouts can now be copied and edited without having to save a copy of an existing loadout from the Loadouts tab.
+
+## 8.12.0 <span class="changelog-date">(2024-03-10)</span>
 
 ## 8.11.0 <span class="changelog-date">(2024-03-10)</span>
 
