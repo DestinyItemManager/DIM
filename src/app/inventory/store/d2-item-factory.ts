@@ -229,7 +229,7 @@ export interface ItemCreationContext {
    * Sometimes comes from the profile response, but also sometimes from vendors response or mocked out.
    * If not present, the itemComponents from the DestinyProfileResponse should be used.
    */
-  itemComponents?: DestinyItemComponentSetOfint64;
+  itemComponents?: Partial<DestinyItemComponentSetOfint64>;
 }
 
 const damageDefsByDamageType = memoizeOne((defs: D2ManifestDefinitions) =>
@@ -245,7 +245,10 @@ export function makeItem(
   /** the ID of the owning store - can be undefined for fake collections items */
   owner: DimStore | undefined,
 ): DimItem | undefined {
-  itemComponents ??= profileResponse.itemComponents;
+  if (owner) {
+    // only makes sense to use the profile's itemComponents if it's a real item
+    itemComponents ??= profileResponse.itemComponents;
+  }
 
   const itemDef = defs.InventoryItem.get(item.itemHash);
 
@@ -255,7 +258,7 @@ export function makeItem(
     owner && !owner?.isVault ? profileResponse.characterProgressions?.data?.[owner.id] : undefined;
 
   const itemInstanceData: Partial<DestinyItemInstanceComponent> = item.itemInstanceId
-    ? itemComponents?.instances.data?.[item.itemInstanceId] ?? emptyObject()
+    ? itemComponents?.instances?.data?.[item.itemInstanceId] ?? emptyObject()
     : emptyObject();
 
   // Missing definition

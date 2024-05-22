@@ -35,6 +35,7 @@ import {
   SocketCategoryHashes,
 } from 'data/d2/generated-enums';
 import {
+  DimItem,
   DimPlug,
   DimPlugSet,
   DimSocket,
@@ -57,10 +58,10 @@ import {
  */
 export function buildSockets(
   item: DestinyItemComponent,
-  itemComponents: DestinyItemComponentSetOfint64 | undefined,
+  itemComponents: Partial<DestinyItemComponentSetOfint64> | undefined,
   defs: D2ManifestDefinitions,
   itemDef: DestinyInventoryItemDefinition,
-) {
+): { sockets: DimItem['sockets']; missingSockets: DimItem['missingSockets'] } {
   let sockets: DimSockets | null = null;
   if ($featureFlags.simulateMissingSockets) {
     itemComponents = undefined;
@@ -76,6 +77,7 @@ export function buildSockets(
     (item.itemInstanceId &&
       itemComponents?.plugObjectives?.data?.[item.itemInstanceId]?.objectivesPerPlug) ||
     undefined;
+
   if (socketData) {
     sockets = buildInstancedSockets(
       defs,
@@ -90,10 +92,15 @@ export function buildSockets(
   // If we didn't have live data (for example, when viewing vendor items or collections),
   // get sockets from the item definition.
   if (!sockets && itemDef.sockets) {
+    // a nice long instanceId is a real one and "should" have this data
+    // (short is actually a vendor item index. we'll let that build from defs.)
+    const isInstanced = Boolean(item.itemInstanceId && item.itemInstanceId.length > 14);
+
     // If this really *should* have live sockets, but didn't...
-    if (item.itemInstanceId && item.itemInstanceId !== '0' && !socketData) {
-      return { sockets: null, missingSockets: true };
+    if (item.itemInstanceId !== '0' && !socketData) {
+      return { sockets: null, missingSockets: isInstanced ? 'missing' : 'not-loaded' };
     }
+
     sockets = buildDefinedSockets(defs, itemDef);
   }
 

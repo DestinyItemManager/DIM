@@ -64,6 +64,8 @@ export default function Vendor({
         }
         extra={refreshTime && <Countdown endTime={refreshTime} className={styles.countdown} />}
         sectionId={`d2vendor-${vendor.def.hash}`}
+        // hi! this sectionId formatting matters for dispatching vendor detail api requests.
+        // please modify carefully and see how it's used in vendorsNeedingComponents in loadAllVendors
       >
         <VendorItems
           vendor={vendor}

@@ -28,7 +28,7 @@ import { searchFilterSelector } from 'app/search/search-filter';
 import { useSetSetting } from 'app/settings/hooks';
 import { AppIcon, disabledIcon, redoIcon, refreshIcon, undoIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
-import { emptyObject } from 'app/utils/empty';
+import { emptyArray, emptyObject } from 'app/utils/empty';
 import { isClassCompatible, itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -170,8 +170,8 @@ export default memo(function LoadoutBuilder({
     [resolvedMods, autoStatMods],
   );
 
-  const { vendorItems } = useLoVendorItems(selectedStoreId);
-  const armorItems = useArmorItems(classType, vendorItems);
+  const { vendorItems, vendorItemsLoading } = useLoVendorItems(selectedStoreId);
+  const armorItems = useArmorItems(classType, vendorItemsLoading ? emptyArray() : vendorItems);
 
   const { modMap: lockedModMap, unassignedMods } = useMemo(
     () => categorizeArmorMods(modsToAssign, armorItems),

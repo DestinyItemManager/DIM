@@ -1,5 +1,5 @@
 import { PressTip } from 'app/dim-ui/PressTip';
-import { t } from 'app/i18next-t';
+import { t, tl } from 'app/i18next-t';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { moveItemTo } from 'app/inventory/move-item';
 import { currentStoreSelector, notesSelector } from 'app/inventory/selectors';
@@ -93,6 +93,11 @@ export default memo(function CompareItem({
     [isInitialItem, item, itemClick, pullItem, remove, itemNotes, isFindable],
   );
 
+  const missingSocketsMessage =
+    item.missingSockets === 'missing'
+      ? tl('MovePopup.MissingSockets')
+      : tl('MovePopup.LoadingSockets');
+
   return (
     <div className={styles.compareItem}>
       {itemHeader}
@@ -107,7 +112,7 @@ export default memo(function CompareItem({
       ))}
       {isD1Item(item) && item.talentGrid && <ItemTalentGrid item={item} perksOnly={true} />}
       {item.missingSockets && isInitialItem && (
-        <div className="item-details warning">{t('MovePopup.MissingSockets')}</div>
+        <div className="item-details warning">{t(missingSocketsMessage)}</div>
       )}
       {item.sockets && <ItemSockets item={item} minimal onPlugClicked={onPlugClicked} />}
     </div>

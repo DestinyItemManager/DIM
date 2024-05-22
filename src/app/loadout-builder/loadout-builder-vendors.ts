@@ -22,7 +22,12 @@ const allowedVendorHashes = [
 
 export const loVendorItemsSelector = currySelector(
   createSelector(characterVendorItemsSelector, (allVendorItems) =>
-    allVendorItems.filter((item) => allowedVendorHashes.includes(item.vendor?.vendorHash ?? -1)),
+    allVendorItems.filter(
+      (item) =>
+        allowedVendorHashes.includes(item.vendor?.vendorHash ?? -1) &&
+        // filters out some dummy exotics
+        item.type !== 'Unknown',
+    ),
   ),
 );
 
@@ -34,7 +39,9 @@ export function useLoVendorItems(selectedStoreId: string) {
   useLoadVendors(account, selectedStoreId);
 
   return {
-    vendorItemsLoading: !vendors[selectedStoreId]?.vendorsResponse,
+    vendorItemsLoading:
+      !vendors[selectedStoreId]?.vendorsResponse ||
+      vendorItems.some((i) => i.missingSockets === 'not-loaded'),
     vendorItems,
     error: vendors[selectedStoreId]?.error,
   };
