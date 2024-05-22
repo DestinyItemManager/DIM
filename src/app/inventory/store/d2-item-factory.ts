@@ -28,6 +28,7 @@ import {
   DestinyItemTooltipNotification,
   DestinyObjectiveProgress,
   DestinyProfileResponse,
+  DestinyVendorSaleItemComponent,
   DictionaryComponentResponse,
   ItemBindStatus,
   ItemLocation,
@@ -45,7 +46,6 @@ import { Draft } from 'immer';
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
-import { warnMissingDefinition } from '../../manifest/manifest-service-json';
 import { reportException } from '../../utils/sentry';
 import { InventoryBuckets } from '../inventory-buckets';
 import { DimItem, DimPursuitExpiration, DimQuestLine } from '../item-types';
@@ -60,6 +60,8 @@ import { buildObjectives, isTrialsPassage, isWinsObjective } from './objectives'
 import { buildPatternInfo } from './patterns';
 import { buildSockets } from './sockets';
 import { buildStats } from './stats';
+
+const TAG = 'd2-stores';
 
 const collectiblesByItemHash = memoizeOne(
   (Collectible: ReturnType<D2ManifestDefinitions['Collectible']['getAll']>) =>
@@ -81,7 +83,7 @@ export function processItems(
     try {
       createdItem = makeItem(context, item, owner);
     } catch (e) {
-      errorLog('d2-stores', 'Error processing item', item, e);
+      errorLog(TAG, 'Error processing item', item, e);
       reportException('Processing Dim item', e);
     }
     if (
@@ -142,6 +144,8 @@ export function makeFakeItem(
   itemInstanceId = '0',
   quantity = 1,
   allowWishList = false,
+  /** if available, this should be passed in from a vendor saleItem (DestinyVendorSaleItemComponent) */
+  itemValueVisibility?: DestinyVendorSaleItemComponent['itemValueVisibility'],
 ): DimItem | undefined {
   const item = makeItem(
     context,
@@ -153,7 +157,7 @@ export function makeFakeItem(
       location: ItemLocation.Vendor,
       bucketHash: 0,
       transferStatus: TransferStatuses.NotTransferrable,
-      itemValueVisibility: [],
+      itemValueVisibility,
       lockable: false,
       state: ItemState.None,
       isWrapper: false,
@@ -228,6 +232,10 @@ export interface ItemCreationContext {
   itemComponents?: DestinyItemComponentSetOfint64;
 }
 
+const damageDefsByDamageType = memoizeOne((defs: D2ManifestDefinitions) =>
+  _.keyBy(Object.values(defs.DamageType.getAll()), (d) => d.enumValue),
+);
+
 /**
  * Process a single raw item into a DIM item.
  */
@@ -250,9 +258,8 @@ export function makeItem(
     ? itemComponents?.instances.data?.[item.itemInstanceId] ?? emptyObject()
     : emptyObject();
 
-  // Missing definition?
+  // Missing definition
   if (!itemDef) {
-    warnMissingDefinition();
     return undefined;
   }
 
@@ -363,6 +370,10 @@ export function makeItem(
       defs.DamageType.get(itemInstanceData.damageTypeHash)) ||
     (itemDef.defaultDamageTypeHash !== undefined &&
       defs.DamageType.get(itemDef.defaultDamageTypeHash)) ||
+    // Subclasses have their elemental damage type in the talent grid
+    (normalBucket.hash === BucketHashes.Subclass &&
+      itemDef.talentGrid?.hudDamageType !== undefined &&
+      damageDefsByDamageType(defs)[itemDef.talentGrid.hudDamageType]) ||
     null;
 
   const powerCapHash =
@@ -566,7 +577,7 @@ export function makeItem(
     createdItem.sockets = socketInfo.sockets;
     createdItem.missingSockets = socketInfo.missingSockets;
   } catch (e) {
-    errorLog('d2-stores', `Error building sockets for ${createdItem.name}`, item, itemDef, e);
+    errorLog(TAG, `Error building sockets for ${createdItem.name}`, item, itemDef, e);
     reportException('Sockets', e, { itemHash: item.itemHash });
   }
 
@@ -605,7 +616,7 @@ export function makeItem(
   try {
     createdItem.stats = buildStats(defs, createdItem, customStats, itemDef);
   } catch (e) {
-    errorLog('d2-stores', `Error building stats for ${createdItem.name}`, item, itemDef, e);
+    errorLog(TAG, `Error building stats for ${createdItem.name}`, item, itemDef, e);
     reportException('Stats', e, { itemHash: item.itemHash });
   }
 
@@ -623,7 +634,7 @@ export function makeItem(
       itemUninstancedObjectives,
     );
   } catch (e) {
-    errorLog('d2-stores', `Error building objectives for ${createdItem.name}`, item, itemDef, e);
+    errorLog(TAG, `Error building objectives for ${createdItem.name}`, item, itemDef, e);
   }
 
   if (itemDef.perks?.length) {
@@ -729,7 +740,7 @@ export function makeItem(
   try {
     buildPursuitInfo(createdItem, item, itemDef);
   } catch (e) {
-    errorLog('d2-stores', `Error building Quest info for ${createdItem.name}`, item, itemDef, e);
+    errorLog(TAG, `Error building Quest info for ${createdItem.name}`, item, itemDef, e);
     if (e instanceof Error) {
       reportException('Quest', e, { itemHash: item.itemHash });
     }
@@ -781,7 +792,12 @@ function buildPursuitInfo(
   item: DestinyItemComponent,
   itemDef: DestinyInventoryItemDefinition,
 ) {
-  const rewards = itemDef.value ? itemDef.value.itemValue.filter((v) => v.itemHash) : [];
+  const rewards = itemDef.value
+    ? itemDef.value.itemValue.filter(
+        (v, i) => v.itemHash && (item.itemValueVisibility?.[i] ?? true),
+      )
+    : [];
+
   const questLine = getQuestLineInfo(itemDef);
   const expiration = getExpirationInfo(item, itemDef);
 

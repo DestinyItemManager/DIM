@@ -17,6 +17,7 @@ import {
   DestinyItemTranslationBlockDefinition,
   DestinyManifestComponentName,
 } from 'bungie-api-ts/destiny2';
+import { BucketHashes } from 'data/d2/generated-enums';
 import { deepEqual } from 'fast-equals';
 import { Draft } from 'immer';
 import _ from 'lodash';
@@ -24,6 +25,8 @@ import { getManifest as d2GetManifest } from '../bungie-api/destiny2-api';
 import { showNotification } from '../notifications/notifications';
 import { settingsReady } from '../settings/settings';
 import { reportException } from '../utils/sentry';
+
+const TAG = 'manifest';
 
 // This file exports D2ManifestService at the bottom of the
 // file (TS wants us to declare classes before using them)!
@@ -52,7 +55,10 @@ const tableTrimmers: LookupTable<DestinyManifestComponentName, (table: any) => a
       if (def.preview?.derivedItemCategories?.length) {
         def.preview.derivedItemCategories = emptyArray();
       }
-      def.talentGrid = emptyObject<Draft<DestinyItemTalentGridBlockDefinition>>();
+      if (def.inventory?.bucketTypeHash !== BucketHashes.Subclass) {
+        // The only useful bit about talent grids is for subclass damage types
+        def.talentGrid = emptyObject<Draft<DestinyItemTalentGridBlockDefinition>>();
+      }
 
       if (def.sockets) {
         def.sockets.intrinsicSockets = emptyArray();
@@ -73,32 +79,11 @@ const localStorageKey = 'd2-manifest-version';
 const idbKey = 'd2-manifest';
 let version: string | null = null;
 
-/**
- * This tells users to reload the app. It fires no more
- * often than every 10 seconds, and only warns if the manifest
- * version has actually changed.
- */
-export const warnMissingDefinition = _.debounce(
-  async () => {
-    if ($DIM_FLAVOR !== 'test') {
-      const data = await d2GetManifest();
-      // If none of the paths (for any language) matches what we downloaded...
-      if (version && !Object.values(data.jsonWorldContentPaths).includes(version)) {
-        // The manifest has updated!
-        showNotification({
-          type: 'warning',
-          title: t('Manifest.Outdated'),
-          body: t('Manifest.OutdatedExplanation'),
-        });
-      }
-    }
-  },
-  10000,
-  {
-    leading: true,
-    trailing: false,
-  },
-);
+export async function checkForNewManifest() {
+  const data = await d2GetManifest();
+  // If none of the paths (for any language) matches what we downloaded...
+  return version && !Object.values(data.jsonWorldContentPaths).includes(version);
+}
 
 const getManifestAction = _.once(
   (tableAllowList: string[]): ThunkResult<AllDestinyManifestComponents> =>
@@ -112,7 +97,7 @@ export function getManifest(tableAllowList: string[]): ThunkResult<AllDestinyMan
 function doGetManifest(tableAllowList: string[]): ThunkResult<AllDestinyManifestComponents> {
   return async (dispatch) => {
     dispatch(loadingStart(t('Manifest.Load')));
-    const stopTimer = timer('Load manifest');
+    const stopTimer = timer(TAG, 'Load manifest');
     try {
       const manifest = await dispatch(loadManifest(tableAllowList));
       if (!manifest.DestinyVendorDefinition) {
@@ -141,7 +126,7 @@ function doGetManifest(tableAllowList: string[]): ThunkResult<AllDestinyManifest
       }
 
       const statusText = t('Manifest.Error', { error: message });
-      errorLog('manifest', 'Manifest loading error', e);
+      errorLog(TAG, 'Manifest loading error', e);
       reportException('manifest load', e);
       const error = new Error(statusText);
       error.name = 'ManifestError';
@@ -168,7 +153,7 @@ function loadManifest(tableAllowList: string[]): ThunkResult<AllDestinyManifestC
 
       // Use the path as the version, rather than the "version" field, because
       // Bungie can update the manifest file without changing that version.
-      version = path;
+      version = `v2-${path}`; // the prefix is used to bust the cache if we change the table trimmers
     } catch (e) {
       // If we can't get info about the current manifest, try to just use whatever's already saved.
       version = localStorage.getItem(localStorageKey);
@@ -273,11 +258,11 @@ async function saveManifestToIndexedDB(
 ) {
   try {
     await set(idbKey, typedArray);
-    infoLog('manifest', `Successfully stored manifest file.`);
+    infoLog(TAG, `Successfully stored manifest file.`);
     localStorage.setItem(localStorageKey, version);
     localStorage.setItem(`${localStorageKey}-whitelist`, JSON.stringify(tableAllowList));
   } catch (e) {
-    errorLog('manifest', 'Error saving manifest file', e);
+    errorLog(TAG, 'Error saving manifest file', e);
     showNotification({
       title: t('Help.NoStorage'),
       body: t('Help.NoStorageMessage'),

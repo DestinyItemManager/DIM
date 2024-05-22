@@ -1,3 +1,4 @@
+import { setTag } from '@sentry/browser';
 import i18next from 'i18next';
 import HttpApi, { HttpBackendOptions } from 'i18next-http-backend';
 import de from 'locale/de.json';
@@ -13,8 +14,11 @@ import ptBR from 'locale/ptBR.json';
 import ru from 'locale/ru.json';
 import zhCHS from 'locale/zhCHS.json';
 import zhCHT from 'locale/zhCHT.json';
+import _ from 'lodash';
 import enSrc from '../../config/i18n.json';
+import { languageSelector } from './dim-api/selectors';
 import { humanBytes } from './storage/human-bytes';
+import { StoreObserver } from './store/observerMiddleware';
 import { infoLog } from './utils/log';
 
 export const DIM_LANG_INFOS = {
@@ -43,6 +47,10 @@ export const browserLangToDimLang: Record<string, DimLanguage> = {
   'zh-Hant': 'zh-cht',
 };
 
+export const dimLangToBrowserLang = _.invert(browserLangToDimLang) as Partial<
+  Record<DimLanguage, string>
+>;
+
 // Hot-reload translations in dev. You'll still need to get things to re-render when
 // translations change (unless we someday switch to react-i18next)
 if (module.hot) {
@@ -53,12 +61,7 @@ if (module.hot) {
   });
 }
 
-// Try to pick a nice default language
-export function defaultLanguage(): DimLanguage {
-  const storedLanguage = localStorage.getItem('dimLanguage') as DimLanguage;
-  if (storedLanguage && DIM_LANGS.includes(storedLanguage)) {
-    return storedLanguage;
-  }
+function browserLanguage(): DimLanguage {
   const currentBrowserLang = window.navigator.language || 'en';
   const overriddenLang = Object.entries(browserLangToDimLang).find(([browserLang]) =>
     currentBrowserLang.startsWith(browserLang),
@@ -69,6 +72,15 @@ export function defaultLanguage(): DimLanguage {
   return DIM_LANGS.find((lang) => currentBrowserLang.toLowerCase().startsWith(lang)) || 'en';
 }
 
+// Try to pick a nice default language
+export function defaultLanguage(): DimLanguage {
+  const storedLanguage = localStorage.getItem('dimLanguage') as DimLanguage;
+  if (storedLanguage && DIM_LANGS.includes(storedLanguage)) {
+    return storedLanguage;
+  }
+  return browserLanguage();
+}
+
 export function initi18n(): Promise<unknown> {
   const lang = defaultLanguage();
   return new Promise((resolve, reject) => {
@@ -77,7 +89,7 @@ export function initi18n(): Promise<unknown> {
       {
         initImmediate: true,
         compatibilityJSON: 'v3',
-        debug: $DIM_FLAVOR === 'dev',
+        debug: false,
         lng: lang,
         fallbackLng: 'en',
         lowerCaseLng: true,
@@ -145,4 +157,27 @@ export function initi18n(): Promise<unknown> {
       }
     }
   });
+}
+
+// Reflect the setting changes in stored values and in the DOM
+export function createLanguageObserver(): StoreObserver<DimLanguage> {
+  return {
+    id: 'i18n-observer',
+    getObserved: languageSelector,
+    runInitially: true,
+    sideEffect: ({ current }) => {
+      if (current === browserLanguage()) {
+        localStorage.removeItem('dimLanguage');
+      } else {
+        localStorage.setItem('dimLanguage', current);
+      }
+      if (current !== i18next.language) {
+        i18next.changeLanguage(current);
+      }
+      setTag('lang', current);
+      document
+        .querySelector('html')!
+        .setAttribute('lang', dimLangToBrowserLang[current] ?? current);
+    },
+  };
 }

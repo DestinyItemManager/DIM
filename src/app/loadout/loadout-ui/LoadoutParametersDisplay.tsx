@@ -4,7 +4,7 @@ import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import ExoticArmorChoice, { getLockedExotic } from 'app/loadout-builder/filter/ExoticArmorChoice';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { AppIcon, equalsIcon, greaterThanIcon, searchIcon } from 'app/shell/icons';
+import { AppIcon, equalsIcon, greaterThanIcon, lessThanIcon, searchIcon } from 'app/shell/icons';
 import clsx from 'clsx';
 import { includesRuntimeStatMods } from '../stats';
 import styles from './LoadoutParametersDisplay.m.scss';
@@ -77,41 +77,63 @@ export default function LoadoutParametersDisplay({ params }: { params: LoadoutPa
 }
 
 export function StatConstraintRange({
-  statConstraint: s,
+  statConstraint,
   className,
 }: {
   statConstraint: StatConstraint;
   className?: string;
 }) {
   className = clsx(className, styles.constraintRange);
-  return s.minTier !== undefined && s.minTier !== 0 ? (
+
+  return (
     <span className={className}>
-      {(s.maxTier === 10 || s.maxTier === undefined) && s.minTier !== 10 ? (
-        <>
-          <AppIcon icon={greaterThanIcon} />
-          {t('LoadoutBuilder.TierNumber', {
-            tier: s.minTier,
-          })}
-        </>
-      ) : s.maxTier !== undefined && s.maxTier !== s.minTier ? (
-        `${t('LoadoutBuilder.TierNumber', {
-          tier: s.minTier,
-        })}-${s.maxTier}`
-      ) : (
-        <>
-          <AppIcon icon={equalsIcon} />
-          {t('LoadoutBuilder.TierNumber', {
-            tier: s.minTier,
-          })}
-        </>
-      )}
-    </span>
-  ) : (
-    <span className={className}>
-      <AppIcon icon={greaterThanIcon} />
-      {t('LoadoutBuilder.TierNumber', {
-        tier: 0,
-      })}
+      <StatConstraintRangeExpression statConstraint={statConstraint} />
     </span>
   );
+}
+
+function StatConstraintRangeExpression({ statConstraint }: { statConstraint: StatConstraint }) {
+  const min = statConstraint.minTier ?? 0;
+  const max = statConstraint.maxTier ?? 10;
+
+  if (min === max) {
+    // =Tmin
+    return (
+      <>
+        <AppIcon icon={equalsIcon} />
+        {t('LoadoutBuilder.TierNumber', {
+          tier: min,
+        })}
+      </>
+    );
+  } else if (max === 10) {
+    // >= Tmin
+    return (
+      <>
+        <AppIcon icon={greaterThanIcon} />
+        {t('LoadoutBuilder.TierNumber', {
+          tier: min,
+        })}
+      </>
+    );
+  } else if (min === 0) {
+    // <= Tmax
+    return (
+      <>
+        <AppIcon icon={lessThanIcon} />
+        {t('LoadoutBuilder.TierNumber', {
+          tier: max,
+        })}
+      </>
+    );
+  } else {
+    // Tmin-Tmax
+    return (
+      <>
+        {`${t('LoadoutBuilder.TierNumber', {
+          tier: min,
+        })}-${max}`}
+      </>
+    );
+  }
 }

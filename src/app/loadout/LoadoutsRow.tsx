@@ -7,7 +7,6 @@ import { copyAndEditLoadout, editLoadout } from 'app/loadout-drawer/loadout-even
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import _ from 'lodash';
 import { ReactNode, memo, useMemo } from 'react';
 import LoadoutView from './LoadoutView';
 
@@ -66,13 +65,11 @@ export default memo(function LoadoutRow({
       );
     }
 
-    if (loadout.parameters && !_.isEmpty(loadout.parameters)) {
-      actionButtons.push(
-        <button key="share" type="button" className="dim-button" onClick={handleShare}>
-          {t('Loadouts.ShareLoadout')}
-        </button>,
-      );
-    }
+    actionButtons.push(
+      <button key="share" type="button" className="dim-button" onClick={handleShare}>
+        {t('Loadouts.ShareLoadout')}
+      </button>,
+    );
 
     if (saved) {
       actionButtons.push(

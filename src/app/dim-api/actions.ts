@@ -10,13 +10,14 @@ import { Settings, initialSettingsState } from 'app/settings/initial-settings';
 import { readyResolve } from 'app/settings/settings';
 import { refresh$ } from 'app/shell/refresh-events';
 import { get, set } from 'app/storage/idb-keyval';
+import { observe } from 'app/store/observerMiddleware';
 import { RootState, ThunkResult } from 'app/store/types';
 import { convertToError, errorMessage } from 'app/utils/errors';
 import { errorLog, infoLog } from 'app/utils/log';
 import { delay } from 'app/utils/promises';
 import { deepEqual } from 'fast-equals';
 import _ from 'lodash';
-import { AnyAction } from 'redux';
+import { AnyAction, Dispatch } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { getPlatforms } from '../accounts/platforms';
 import {
@@ -25,7 +26,6 @@ import {
   getGlobalSettings,
   postUpdates,
 } from '../dim-api/dim-api';
-import { observeStore } from '../utils/redux';
 import { promptForApiPermission } from './api-permission-prompt';
 import { ProfileUpdateWithRollback } from './api-types';
 import {
@@ -43,17 +43,23 @@ import {
 import { DimApiState } from './reducer';
 import { apiPermissionGrantedSelector, makeProfileKeyFromAccount } from './selectors';
 
-const installApiPermissionObserver = _.once(() => {
+const TAG = 'dim sync';
+
+const installApiPermissionObserver = _.once(<D extends Dispatch>(dispatch: D) => {
   // Observe API permission and reflect it into local storage
   // We could also use a thunk action instead of an observer... either way
-  observeStore(
-    (state) => state.dimApi.apiPermissionGranted,
-    (_prev, apiPermissionGranted) => {
-      if (apiPermissionGranted !== null) {
-        // Save the permission preference to local storage
-        localStorage.setItem('dim-api-enabled', apiPermissionGranted ? 'true' : 'false');
-      }
-    },
+  dispatch(
+    observe({
+      id: 'api-permission-observer',
+      runInitially: true,
+      getObserved: (state) => state.dimApi.apiPermissionGranted,
+      sideEffect: ({ current }) => {
+        if (current !== null) {
+          // Save the permission preference to local storage
+          localStorage.setItem('dim-api-enabled', current ? 'true' : 'false');
+        }
+      },
+    }),
   );
 });
 
@@ -62,43 +68,55 @@ const installApiPermissionObserver = _.once(() => {
  */
 const installObservers = _.once((dispatch: ThunkDispatch<RootState, undefined, AnyAction>) => {
   // Watch the state and write it out to IndexedDB
-  observeStore(
-    (state) => state.dimApi,
-    _.debounce((currentState: DimApiState, nextState: DimApiState) => {
-      if (
-        // Avoid writing back what we just loaded from IDB
-        currentState?.profileLoadedFromIndexedDb &&
-        // Check to make sure one of the fields we care about has changed
-        (nextState.settings !== currentState.settings ||
-          nextState.profiles !== currentState.profiles ||
-          nextState.updateQueue !== currentState.updateQueue ||
-          nextState.itemHashTags !== currentState.itemHashTags ||
-          nextState.searches !== currentState.searches)
-      ) {
-        // Only save the difference between the current and default settings
-        const settingsToSave = subtractObject(nextState.settings, initialSettingsState) as Settings;
+  dispatch(
+    observe({
+      id: 'profile-observer',
+      getObserved: (state) => state.dimApi,
+      sideEffect: _.debounce(
+        ({ previous, current }: { previous: DimApiState | undefined; current: DimApiState }) => {
+          if (
+            // Avoid writing back what we just loaded from IDB
+            previous?.profileLoadedFromIndexedDb &&
+            // Check to make sure one of the fields we care about has changed
+            (current.settings !== previous.settings ||
+              current.profiles !== previous.profiles ||
+              current.updateQueue !== previous.updateQueue ||
+              current.itemHashTags !== previous.itemHashTags ||
+              current.searches !== previous.searches)
+          ) {
+            // Only save the difference between the current and default settings
+            const settingsToSave = subtractObject(
+              current.settings,
+              initialSettingsState,
+            ) as Settings;
 
-        const savedState: ProfileIndexedDBState = {
-          settings: settingsToSave,
-          profiles: nextState.profiles,
-          updateQueue: nextState.updateQueue,
-          itemHashTags: nextState.itemHashTags,
-          searches: nextState.searches,
-        };
-        infoLog('dim sync', 'Saving profile data to IDB');
-        set('dim-api-profile', savedState);
-      }
-    }, 1000),
+            const savedState: ProfileIndexedDBState = {
+              settings: settingsToSave,
+              profiles: current.profiles,
+              updateQueue: current.updateQueue,
+              itemHashTags: current.itemHashTags,
+              searches: current.searches,
+            };
+            infoLog(TAG, 'Saving profile data to IDB');
+            set('dim-api-profile', savedState);
+          }
+        },
+        1000,
+      ),
+    }),
   );
 
   // Watch the update queue and flush updates
-  observeStore(
-    (state) => state.dimApi.updateQueue,
-    _.debounce((_prev, queue: ProfileUpdateWithRollback[]) => {
-      if (queue.length) {
-        dispatch(flushUpdates());
-      }
-    }, 1000),
+  dispatch(
+    observe({
+      id: 'queue-observer',
+      getObserved: (state) => state.dimApi.updateQueue,
+      sideEffect: _.debounce(({ current }: { current: ProfileUpdateWithRollback[] }) => {
+        if (current.length) {
+          dispatch(flushUpdates());
+        }
+      }, 1000),
+    }),
   );
 
   // Every time data is refreshed, maybe load DIM API data too
@@ -114,10 +132,10 @@ function loadGlobalSettings(): ThunkResult {
     if (!getState().dimApi.globalSettingsLoaded) {
       try {
         const globalSettings = await getGlobalSettings();
-        infoLog('dim sync', 'globalSettings', globalSettings);
+        infoLog(TAG, 'globalSettings', globalSettings);
         dispatch(globalSettingsLoaded(globalSettings));
       } catch (e) {
-        errorLog('dim sync', 'Failed to load global settings from DIM API', e);
+        errorLog(TAG, 'Failed to load global settings from DIM API', e);
       }
     }
   };
@@ -154,7 +172,7 @@ let waitingForApiPermission = false;
  */
 export function loadDimApiData(forceLoad = false): ThunkResult {
   return async (dispatch, getState) => {
-    installApiPermissionObserver();
+    installApiPermissionObserver(dispatch);
 
     // Load from indexedDB if needed
     const profileFromIDB = dispatch(loadProfileFromIndexedDB());
@@ -237,13 +255,13 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
 
         dispatch(profileLoadError(e));
 
-        errorLog('loadDimApiData', 'Unable to get profile from DIM API', e);
+        errorLog(TAG, 'Unable to get profile from DIM API', e);
 
         if (e.name !== 'FatalTokenError') {
           // Wait, with exponential backoff
           getProfileBackoff++;
           const waitTime = getBackoffWaitTime(getProfileBackoff);
-          infoLog('loadDimApiData', 'Waiting', waitTime, 'ms before re-attempting profile fetch');
+          infoLog(TAG, 'Waiting', waitTime, 'ms before re-attempting profile fetch');
 
           // Wait, then retry. We don't await this here so we don't stop the finally block from running
           delay(waitTime).then(() => dispatch(loadDimApiData(forceLoad)));
@@ -307,7 +325,7 @@ function flushUpdates(): ThunkResult {
       return;
     }
 
-    infoLog('flushUpdates', 'Flushing queue of', dimApiState.updateInProgressWatermark, 'updates');
+    infoLog(TAG, 'Flushing queue of', dimApiState.updateInProgressWatermark, 'updates');
 
     // Only select the items that were frozen for update. They're guaranteed
     // to not change while we're updating and they'll be for a single profile.
@@ -321,7 +339,6 @@ function flushUpdates(): ThunkResult {
         firstWithAccount.destinyVersion,
         updates,
       );
-      infoLog('flushUpdates', 'got results', updates, results);
 
       // Quickly heal from being failure backoff
       flushUpdatesBackoff = Math.floor(flushUpdatesBackoff / 2);
@@ -340,14 +357,14 @@ function flushUpdates(): ThunkResult {
       if (flushUpdatesBackoff === 0) {
         showUpdateErrorNotification(e);
       }
-      errorLog('flushUpdates', 'Unable to save updates to DIM API', e);
+      errorLog(TAG, 'Unable to save updates to DIM API', e);
 
       // Wait, with exponential backoff
       flushUpdatesBackoff++;
       const waitTime = getBackoffWaitTime(flushUpdatesBackoff);
       // Don't wait for the retry, so we don't block profile loading
       (async () => {
-        infoLog('flushUpdates', 'Waiting', waitTime, 'ms before re-attempting updates');
+        infoLog(TAG, 'Waiting', waitTime, 'ms before re-attempting updates');
         await delay(waitTime);
 
         // Now mark the queue failed so it can be retried. Until

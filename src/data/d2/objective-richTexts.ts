@@ -13,7 +13,7 @@ const richTextManifestSourceData = {
   '[Glaive]': ['Objective', 1089624989],
   '[Grenade Launcher]': ['Objective', 43313268],
   '[Grenade]': ['Objective', 45245118],
-  '[Hand Cannon]': ['Objective', 671993070],
+  '[Hand Cannon]': ['Objective', 419473522],
   '[Headshot]': ['Objective', 116015535],
   '[Heavy Attack]': ['SandboxPerk', 971817906],
   '[Insert Medal Here]': ['Objective', 2254471463],

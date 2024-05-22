@@ -1,55 +1,48 @@
 import { LoadoutSort } from '@destinyitemmanager/dim-api-types';
+import { bungieBackgroundStyleAdvanced } from 'app/dim-ui/BungieImage';
 import FilterPills, { Option } from 'app/dim-ui/FilterPills';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { DimLanguage } from 'app/i18n';
-import { t } from 'app/i18next-t';
+import { t, tl } from 'app/i18next-t';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
 import { DimStore } from 'app/inventory/store-types';
 import { findingDisplays } from 'app/loadout-analyzer/finding-display';
 import { useSummaryLoadoutsAnalysis } from 'app/loadout-analyzer/hooks';
 import { LoadoutAnalysisSummary, LoadoutFinding } from 'app/loadout-analyzer/types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { isArmorModsOnly, isFashionOnly } from 'app/loadout-drawer/loadout-utils';
+import { useD2Definitions } from 'app/manifest/selectors';
+import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
+import { ItemFilter } from 'app/search/filter-types';
 import { faCheckCircle, refreshIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
-import { localizedIncludes, localizedSorter } from 'app/utils/intl';
+import { localizedSorter } from 'app/utils/intl';
 import clsx from 'clsx';
+import modificationsIcon from 'destiny-icons/general/modifications.svg';
 import _ from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
 import styles from './menu-hooks.m.scss';
+
+const loadoutSpecializations = [tl('Loadouts.FashionOnly'), tl('Loadouts.ModsOnly')] as const;
+type LoadoutSpecialization = (typeof loadoutSpecializations)[number];
+type FilterPillType =
+  | {
+      tag: 'hashtag';
+      hashtag: string;
+    }
+  | {
+      tag: 'loadout-type';
+      type: LoadoutSpecialization;
+    }
+  | { tag: 'finding'; finding: LoadoutFinding };
 
 /**
  * Set up the filter pills for loadouts - allowing for filtering by hashtag and some other special properties.
  * This returns a component ready to be used in the React tree as well as the list of filtered loadouts.
  */
 export function useLoadoutFilterPills(
-  savedLoadouts: Loadout[],
-  store: DimStore,
-  options: {
-    includeWarningPills?: boolean;
-    className?: string;
-    darkBackground?: boolean;
-    extra?: React.ReactNode;
-  } = {},
-): [filteredLoadouts: Loadout[], filterPillsElement: React.ReactNode, hasSelectedFilters: boolean] {
-  if (!$featureFlags.loadoutFilterPills) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useMemo(() => [savedLoadouts, null, false], [savedLoadouts]);
-  }
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useLoadoutFilterPillsInternal(savedLoadouts, store, options);
-}
-
-type FilterPillType =
-  | {
-      tag: 'hashtag';
-      hashtag: string;
-    }
-  | { tag: 'finding'; finding: LoadoutFinding };
-
-function useLoadoutFilterPillsInternal(
   savedLoadouts: Loadout[],
   store: DimStore,
   {
@@ -65,6 +58,7 @@ function useLoadoutFilterPillsInternal(
   } = {},
 ): [filteredLoadouts: Loadout[], filterPillsElement: React.ReactNode, hasSelectedFilters: boolean] {
   const [selectedFilters, setSelectedFilters] = useState<Option<FilterPillType>[]>(emptyArray());
+  const defs = useD2Definitions();
   const analysisSummary = useSummaryLoadoutsAnalysis(
     savedLoadouts,
     store,
@@ -104,6 +98,35 @@ function useLoadoutFilterPillsInternal(
     (o) => o.key,
   );
 
+  const loadoutsByType = useMemo(() => {
+    const loadoutsByType: Record<LoadoutSpecialization, Loadout[]> | undefined = defs && {
+      'Loadouts.FashionOnly': savedLoadouts.filter((l) => isFashionOnly(defs, l)),
+      'Loadouts.ModsOnly': savedLoadouts.filter((l) => isArmorModsOnly(defs, l)),
+    };
+    return loadoutsByType;
+  }, [defs, savedLoadouts]);
+  if (loadoutsByType) {
+    for (const k of loadoutSpecializations) {
+      if (loadoutsByType[k].length) {
+        filterOptions.push({
+          key: k,
+          value: { tag: 'loadout-type', type: k },
+          content: (
+            <>
+              {k === 'Loadouts.ModsOnly' ? (
+                <ModificationsIcon className="" />
+              ) : (
+                <FashionIcon className="" />
+              )}
+              {t(k)}
+              {` (${loadoutsByType[k].length})`}
+            </>
+          ),
+        });
+      }
+    }
+  }
+
   if (analysisSummary) {
     for (const [finding_, affectedLoadouts] of Object.entries(analysisSummary.loadoutsByFindings)) {
       if (affectedLoadouts.size > 0) {
@@ -136,6 +159,9 @@ function useLoadoutFilterPillsInternal(
                 case 'hashtag': {
                   return loadoutsByHashtag[f.value.hashtag] ?? [];
                 }
+                case 'loadout-type': {
+                  return loadoutsByType?.[f.value.type] ?? [];
+                }
                 case 'finding': {
                   const loadouts = analysisSummary?.loadoutsByFindings[f.value.finding];
                   return loadouts?.size
@@ -146,7 +172,13 @@ function useLoadoutFilterPillsInternal(
             }),
           )
         : savedLoadouts,
-    [selectedFilters, savedLoadouts, loadoutsByHashtag, analysisSummary?.loadoutsByFindings],
+    [
+      selectedFilters,
+      savedLoadouts,
+      loadoutsByHashtag,
+      analysisSummary?.loadoutsByFindings,
+      loadoutsByType,
+    ],
   );
 
   const pills =
@@ -220,16 +252,15 @@ function AnalysisProgress({
  */
 export function searchAndSortLoadoutsByQuery(
   loadouts: Loadout[],
+  loadoutFilterFactory: (query: string) => ItemFilter<Loadout>,
   query: string,
   language: DimLanguage,
   loadoutSort: LoadoutSort,
 ) {
   let filteredLoadouts: Loadout[];
   if (query.length) {
-    const includes = localizedIncludes(language, query);
-    filteredLoadouts = loadouts.filter(
-      (loadout) => includes(loadout.name) || (loadout.notes && includes(loadout.notes)),
-    );
+    const loadoutFilter = loadoutFilterFactory(query);
+    filteredLoadouts = loadouts.filter(loadoutFilter);
   } else {
     filteredLoadouts = [...loadouts];
   }
@@ -239,4 +270,23 @@ export function searchAndSortLoadoutsByQuery(
       ? compareBy((l) => -(l.lastUpdatedAt ?? 0))
       : localizedSorter(language, (l) => l.name),
   );
+}
+
+export function FashionIcon({ className }: { className: string }) {
+  const defs = useD2Definitions();
+  return (
+    defs && (
+      <div
+        className={clsx(className, styles.fashionIcon)}
+        style={bungieBackgroundStyleAdvanced(
+          defs.InventoryItem.get(DEFAULT_ORNAMENTS[2])?.displayProperties.icon,
+          undefined,
+          2,
+        )}
+      />
+    )
+  );
+}
+export function ModificationsIcon({ className }: { className: string }) {
+  return <img className={clsx(className, styles.modificationIcon)} src={modificationsIcon} />;
 }

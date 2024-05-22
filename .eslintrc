@@ -3,7 +3,7 @@
   "env": {
     "browser": true,
     "es6": true,
-    "serviceworker": true
+    "serviceworker": true,
   },
   "extends": [
     "eslint:recommended",
@@ -13,7 +13,7 @@
     "prettier",
     "plugin:array-func/all",
     "plugin:css-modules/recommended",
-    "plugin:sonarjs/recommended"
+    "plugin:sonarjs/recommended-legacy",
   ],
   "globals": {
     "$featureFlags": "readonly",
@@ -29,15 +29,15 @@
     "workbox": "readonly",
     "React": "readonly",
     "require": "readonly",
-    "module": "readonly"
+    "module": "readonly",
   },
   "parserOptions": {
     "ecmaFeatures": {
-      "jsx": true
+      "jsx": true,
     },
     "ecmaVersion": "latest",
     "sourceType": "module",
-    "project": "./tsconfig.json"
+    "project": "./tsconfig.json",
   },
   "settings": {
     "react": {
@@ -45,9 +45,9 @@
       "linkComponents": [
         // Components used as alternatives to <a> for linking, eg. <Link to={ url } />
         { "name": "Link", "linkAttribute": "to" },
-        { "name": "NavLink", "linkAttribute": "to" }
-      ]
-    }
+        { "name": "NavLink", "linkAttribute": "to" },
+      ],
+    },
   },
   "plugins": [
     "react",
@@ -60,7 +60,7 @@
     "css-modules",
     "sonarjs",
     "jsx-expressions",
-    "github"
+    "github",
   ],
   "reportUnusedDisableDirectives": true,
   "rules": {
@@ -99,50 +99,50 @@
       "stop",
       "chrome",
       "caches",
-      "scheduler"
+      "scheduler",
     ],
     "no-restricted-properties": [
       1,
       {
         "object": "_",
         "property": "forEach",
-        "message": "Please use a for in loop."
+        "message": "Please use a for in loop.",
       },
       {
         "object": "_",
         "property": "filter",
-        "message": "Please use the native js filter."
+        "message": "Please use the native js filter.",
       },
       {
         "object": "_",
         "property": "map",
-        "message": "Please use the native js map."
+        "message": "Please use the native js map.",
       },
       {
         "object": "_",
         "property": "uniq",
-        "message": "Please use Array.from(new Set(foo)) or [...new Set(foo)] instead."
+        "message": "Please use Array.from(new Set(foo)) or [...new Set(foo)] instead.",
       },
       {
         "object": "_",
         "property": "uniqBy",
-        "message": "Please use the uniqBy from app/utils/util instead"
+        "message": "Please use the uniqBy from app/utils/util instead",
       },
       {
         "object": "_",
         "property": "forIn",
-        "message": "Please use Object.values or Object.entries instead"
+        "message": "Please use Object.values or Object.entries instead",
       },
       {
         "object": "_",
         "property": "noop",
-        "message": "Import noop directly instead of using it through _.noop, to satisfy the unbound-method lint"
+        "message": "Import noop directly instead of using it through _.noop, to satisfy the unbound-method lint",
       },
       {
         "object": "_",
         "property": "groupBy",
-        "message": "Use Object.groupBy or Map.groupBy instead."
-      }
+        "message": "Use Object.groupBy or Map.groupBy instead.",
+      },
     ],
     "no-restricted-imports": [
       "error",
@@ -150,37 +150,37 @@
         "patterns": [
           {
             "group": ["testing/*"],
-            "message": "You cannot use test helpers in regular code."
-          }
+            "message": "You cannot use test helpers in regular code.",
+          },
         ],
         "paths": [
           {
             "name": "i18next",
             "importNames": ["t"],
-            "message": "Please import t from app/i18next-t."
-          }
-        ]
-      }
+            "message": "Please import t from app/i18next-t.",
+          },
+        ],
+      },
     ],
     "no-restricted-syntax": [
       "error",
       {
         "selector": "CallExpression[callee.property.name='compact'][callee.object.name='_'][arguments.0.callee.property.name='map']",
-        "message": "Please use `filterMap` instead"
+        "message": "Please use `filterMap` instead",
       },
       {
         "selector": "CallExpression[callee.name='clsx'][arguments.length=1][arguments.0.object.name='styles'],CallExpression[callee.name='clsx'][arguments.length=1][arguments.0.type='Literal']",
-        "message": "Unnecessary clsx"
+        "message": "Unnecessary clsx",
       },
       {
         "selector": "TSEnumDeclaration:not([const=true])",
-        "message": "Please only use `const enum`s."
-      }
+        "message": "Please only use `const enum`s.",
+      },
     ],
     "spaced-comment": [
       "error",
       "always",
-      { "exceptions": ["@__INLINE__"], "block": { "balanced": true } }
+      { "exceptions": ["@__INLINE__"], "block": { "balanced": true } },
     ],
     "arrow-body-style": ["error", "as-needed"],
     "curly": ["error", "all"],
@@ -226,7 +226,7 @@
     "react/jsx-pascal-case": "error",
     "react/jsx-curly-brace-presence": [
       "error",
-      { "props": "never", "children": "never", "propElementValues": "always" }
+      { "props": "never", "children": "never", "propElementValues": "always" },
     ],
     "react/iframe-missing-sandbox": "error",
     "react/jsx-key": ["error", { "checkFragmentShorthand": true, "warnOnDuplicates": true }],
@@ -240,9 +240,9 @@
           "onMouseOut",
           "onTouchStart",
           "onTouchEnd",
-          "onTouchCancel"
-        ]
-      }
+          "onTouchCancel",
+        ],
+      },
     ],
     "jsx-a11y/aria-props": "error",
     "jsx-a11y/aria-proptypes": "error",
@@ -277,8 +277,8 @@
     "@typescript-eslint/no-misused-promises": [
       "error",
       {
-        "checksVoidReturn": false
-      }
+        "checksVoidReturn": false,
+      },
     ],
     "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/explicit-member-accessibility": "off",
@@ -320,8 +320,8 @@
       {
         "varsIgnorePattern": "^_.",
         "argsIgnorePattern": "^_.",
-        "ignoreRestSiblings": true
-      }
+        "ignoreRestSiblings": true,
+      },
     ],
     "@typescript-eslint/no-for-in-array": "error",
     "@typescript-eslint/consistent-indexed-object-style": "off",
@@ -337,9 +337,9 @@
         "ignorePrimitives": {
           "boolean": true,
           "number": false,
-          "string": true
-        }
-      }
+          "string": true,
+        },
+      },
     ],
     "@typescript-eslint/no-unsafe-argument": "error",
     "@typescript-eslint/no-unsafe-assignment": "error",
@@ -364,14 +364,14 @@
     "github/array-foreach": "error",
     "github/async-currenttarget": "error",
     "github/async-preventdefault": "error",
-    "github/no-innerText": "error"
+    "github/no-innerText": "error",
   },
   "overrides": [
     {
       "files": ["*.test.ts"],
       "rules": {
-        "no-restricted-imports": "off"
-      }
-    }
-  ]
+        "no-restricted-imports": "off",
+      },
+    },
+  ],
 }

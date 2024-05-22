@@ -94,6 +94,7 @@ export default (env: Env) => {
       browsercheck: './src/browsercheck.js',
       earlyErrorReport: './src/earlyErrorReport.js',
       authReturn: './src/authReturn.ts',
+      backup: './src/backup.ts',
     },
 
     // https://github.com/webpack/webpack-dev-server/issues/2758
@@ -260,6 +261,11 @@ export default (env: Env) => {
                     ? '[name]_[local]-[contenthash:base64:8]'
                     : '[contenthash:base64:8]',
                   exportLocalsConvention: 'camelCaseOnly',
+                  // TODO: It's possible that setting this to true would allow
+                  // us to eliminate some original CSS names that still get into
+                  // the bundle, but it breaks css-modules-typescript-loader so
+                  // we'd need to fork/replace it.
+                  namedExport: false,
                 },
                 importLoaders: 2,
               },
@@ -430,6 +436,13 @@ export default (env: Env) => {
       filename: 'return.html',
       template: 'src/return.html',
       chunks: ['authReturn'],
+    }),
+
+    new HtmlWebpackPlugin({
+      inject: true,
+      filename: 'backup.html',
+      template: 'src/backup.html',
+      chunks: ['backup'],
     }),
 
     new HtmlWebpackPlugin({

@@ -1,8 +1,65 @@
 ## Next
 
+* The search suggestions dropdown now shows more results, based on the size of your screen.
+* Added an overload to the `inloadout:` search which allows searching items based on how many loadouts they are in, for example `inloadout:>2`.
+* Pages such as "About" and "Settings" now respect device safe areas when the device is in landscape mode.
 * Loadouts can now be copied and edited without having to save a copy of an existing loadout from the Loadouts tab.
 
-## 8.12.0 <span class="changelog-date">(2024-03-10)</span>
+## 8.20.0 <span class="changelog-date">(2024-05-19)</span>
+
+## 8.19.2 <span class="changelog-date">(2024-05-15)</span>
+
+## 8.19.1 <span class="changelog-date">(2024-05-12)</span>
+
+* Loadouts now have their own search language that you can use from the Loadouts page or character emblem dropdown. This works the same as item search, but the search keywords are different and loadout-specific. We'll add more search keywords over time.
+* When you change language, DIM immediately loads the item database for that language - you no longer need to reload.
+* DIM now loads new item database after content updates without requiring a reload, as long as there's an item in your inventory from that new content.
+* Fixed the icon for "Material Counts" in the vault dropdown on mobile.
+* Removed some useless search suggestions like `exactname:gauntlets`.
+* Fixed some crashes when Google Translate is enabled. Please don't use Google Translate on DIM though, use our language settings.
+* Added a grace period before DIM stops auto-refreshing because you're not playing. This should prevent DIM from giving up on auto refresh when you change characters.
+* Added some new protections against losing tags when Bungie.net is misbehaving, though it still may not be able to handle some weirdness.
+* Fixed the filter help not showing up in some circumstances.
+
+## 8.19.0 <span class="changelog-date">(2024-05-05)</span>
+
+* Minimum browser version for DIM has been raised to Chrome 109+ (or equivalent Chromium-based browsers) and iOS 16+.
+* Add a warning for Samsung Internet users to explain why dark mode is making DIM too dark.
+
+## 8.18.1 <span class="changelog-date">(2024-04-30)</span>
+
+* Fix vault tile display on mobile.
+
+## 8.18.0 <span class="changelog-date">(2024-04-28)</span>
+
+* Restore per-stat quality ratings to D1 armor popups.
+
+## 8.17.0 <span class="changelog-date">(2024-04-21)</span>
+
+* Fixed max stat constraints sometimes being not shown in Loadout parameters.
+* `is:shiny` filter to find limited-edition BRAVE weapons.
+
+## 8.16.0 <span class="changelog-date">(2024-04-14)</span>
+
+* Loadouts with only armor mods, or only fashion (shaders & ornaments), now display a symbol in the equip dropdown, and can be filtered from among other loadouts.
+* BRAVE bounties now display correct rewards instead of all possible rewards.
+
+## 8.15.0 <span class="changelog-date">(2024-04-07)</span>
+
+* The Item Popup now correctly shows stat contributions from universal ornaments.
+* Item slots on characters now look a bit more normal when no item at all is equipped.
+
+## 8.14.0 <span class="changelog-date">(2024-03-31)</span>
+
+* Long equipped character Titles no longer push the Power Level out of view.
+
+## 8.13.0 <span class="changelog-date">(2024-03-24)</span>
+
+## 8.12.0 <span class="changelog-date">(2024-03-17)</span>
+
+## 8.11.1 <span class="changelog-date">(2024-03-13)</span>
+
+* Updates for new game content, including Wild Style detection as a breech-loaded grenade launcher.
 
 ## 8.11.0 <span class="changelog-date">(2024-03-10)</span>
 
@@ -775,7 +832,7 @@
 
 ## 7.21.0 <span class="changelog-date">(2022-06-12)</span>
 
-* The [DIM User Guide](https://github.com/DestinyItemManager/DIM/wiki) has moved back to GitHub from Fandom, so you can read about DIM without intrusive ads.
+* The [DIM User Guide](https://guide.dim.gg) has moved back to GitHub from Fandom, so you can read about DIM without intrusive ads.
 * When making automatic moves, DIM will always avoid filling in your last open Consumables slot. An item can still be manually moved into your character's pockets as the 50th consumable.
 * Loadout Optimizer will now suggest class items with an elemental affinity matching the mods even when allowing changes to elemental affinity.
 * Fixed an issue where the item popup could appear partly offscreen.

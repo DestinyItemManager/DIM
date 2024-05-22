@@ -5,7 +5,7 @@ body:
 - type: markdown
   attributes:
     value: |
-      Thank you for taking the time to fill out a feature request and let us know what you'd like to see in DIM! To save both you and us time, please make sure to check the [Frequently Requested Features](https://github.com/DestinyItemManager/DIM/wiki/Frequently-Requested-Features) and [search issues](https://github.com/DestinyItemManager/DIM/issues?q=is%3Aissue) to see if this has already been reported.
+      Thank you for taking the time to fill out a feature request and let us know what you'd like to see in DIM! To save both you and us time, please make sure to check the [Frequently Requested Features](https://guide.dim.gg/Frequently-Requested-Features) and [search issues](https://github.com/DestinyItemManager/DIM/issues?q=is%3Aissue) to see if this has already been reported.
 - type: textarea
   id: ChangeDesc
   attributes:

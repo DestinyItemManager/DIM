@@ -24,8 +24,7 @@ export default function Highlights({ item }: { item: DimItem }) {
     return (
       <div>
         <span className={styles.type}>
-          {archetype}
-          <ItemTypeName item={item} />
+          {archetype} <ItemTypeName item={item} />
         </span>
         <div className={styles.perks}>
           {perkSockets

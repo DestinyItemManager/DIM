@@ -38,6 +38,8 @@ import { getQualityRating } from './armor-quality';
 import { getBonus } from './character-utils';
 import { createItemIndex } from './item-index';
 
+const TAG = 'd1-stores';
+
 // Maps tierType to tierTypeName in English
 const tiers = ['Unknown', 'Unknown', 'Common', 'Uncommon', 'Rare', 'Legendary', 'Exotic'] as const;
 
@@ -59,7 +61,7 @@ export function processItems(
     try {
       createdItem = makeItem(defs, buckets, item, owner);
     } catch (e) {
-      errorLog('d1-stores', 'Error processing item', item, e);
+      errorLog(TAG, 'Error processing item', item, e);
       reportException('Processing D1 item', e);
     }
     if (createdItem !== null) {
@@ -394,7 +396,7 @@ function makeItem(
   try {
     createdItem.talentGrid = buildTalentGrid(item, defs.TalentGrid, defs.Progression);
   } catch (e) {
-    errorLog('d1-stores', `Error building talent grid for ${createdItem.name}`, item, itemDef, e);
+    errorLog(TAG, `Error building talent grid for ${createdItem.name}`, item, itemDef, e);
   }
 
   createdItem.infusable = Boolean(createdItem.talentGrid?.infusable);
@@ -411,7 +413,7 @@ function makeItem(
       createdItem.stats = buildStats(item, item, defs.Stat, createdItem.talentGrid, itemType);
     }
   } catch (e) {
-    errorLog('d1-stores', `Error building stats for ${createdItem.name}`, item, itemDef, e);
+    errorLog(TAG, `Error building stats for ${createdItem.name}`, item, itemDef, e);
   }
 
   createdItem.objectives =
@@ -466,11 +468,7 @@ function makeItem(
   }
 
   // "The Life Exotic" perk means you can equip other exotics, so clear out the equipping label
-  if (
-    createdItem.isExotic &&
-    createdItem.talentGrid &&
-    createdItem.talentGrid.nodes.some((n) => n.hash === 4044819214)
-  ) {
+  if (createdItem.isExotic && createdItem.talentGrid?.nodes.some((n) => n.hash === 4044819214)) {
     createdItem.equippingLabel = undefined;
   }
 

@@ -39,7 +39,7 @@ export const suggestionsContextSelector = createSelector(
 function makeSuggestionsContext(
   allItems: DimItem[],
   loadouts: Loadout[],
-  d2Manifest: D2ManifestDefinitions | undefined,
+  d2Definitions: D2ManifestDefinitions | undefined,
   getTag: (item: DimItem) => TagValue | undefined,
   getNotes: (item: DimItem) => string | undefined,
   allNotesHashtags: string[],
@@ -48,7 +48,7 @@ function makeSuggestionsContext(
   return {
     allItems,
     loadouts,
-    d2Manifest,
+    d2Definitions,
     getTag,
     getNotes,
     allNotesHashtags,
@@ -64,14 +64,14 @@ const operators = ['<', '>', '<=', '>=']; // TODO: add "none"? remove >=, <=?
  * Accepts partial filters with as little as just a "keywords" property,
  * if you want to generate some keywords without a full valid filter
  */
-export function generateSuggestionsForFilter(
+export function generateSuggestionsForFilter<I, FilterCtx, SuggestionsCtx>(
   filterDefinition: Pick<
-    FilterDefinition,
+    FilterDefinition<I, FilterCtx, SuggestionsCtx>,
     'keywords' | 'suggestions' | 'format' | 'overload' | 'deprecated' | 'suggestionsGenerator'
   >,
-  suggestionsContext: SuggestionsContext = {},
+  suggestionsContext: SuggestionsCtx,
 ) {
-  return generateGroupedSuggestionsForFilter(filterDefinition, false, suggestionsContext).flatMap(
+  return generateGroupedSuggestionsForFilter(filterDefinition, suggestionsContext, false).flatMap(
     ({ keyword, ops }) => {
       if (ops) {
         return [keyword].concat(ops.map((op) => `${keyword}${op}`));
@@ -82,13 +82,13 @@ export function generateSuggestionsForFilter(
   );
 }
 
-export function generateGroupedSuggestionsForFilter(
+export function generateGroupedSuggestionsForFilter<I, FilterCtx, SuggestionsCtx>(
   filterDefinition: Pick<
-    FilterDefinition,
+    FilterDefinition<I, FilterCtx, SuggestionsCtx>,
     'keywords' | 'suggestions' | 'format' | 'overload' | 'deprecated' | 'suggestionsGenerator'
   >,
+  suggestionsContext: SuggestionsCtx,
   forHelp?: boolean,
-  suggestionsContext: SuggestionsContext = {},
 ): { keyword: string; ops?: string[] }[] {
   if (filterDefinition.deprecated) {
     return [];

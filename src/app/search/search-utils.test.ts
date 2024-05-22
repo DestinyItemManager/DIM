@@ -30,12 +30,15 @@ describe('generateSuggestionsForFilter', () => {
       suggestions?: string[],
       overload?: { [key: string]: number } | undefined,
     ) => {
-      const candidates = generateSuggestionsForFilter({
-        format,
-        keywords,
-        suggestions,
-        overload,
-      });
+      const candidates = generateSuggestionsForFilter(
+        {
+          format,
+          keywords,
+          suggestions,
+          overload,
+        },
+        {},
+      );
       expect(candidates).toMatchSnapshot();
     },
   );

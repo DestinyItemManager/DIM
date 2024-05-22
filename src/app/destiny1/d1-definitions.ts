@@ -73,15 +73,15 @@ export interface D1ManifestDefinitions extends ManifestDefinitions {
  * objet that has a property named after each of the tables listed
  * above (defs.TalentGrid, etc.).
  */
-export function getDefinitions(): ThunkResult<D1ManifestDefinitions> {
+export function getDefinitions(force = false): ThunkResult<D1ManifestDefinitions> {
   return async (dispatch, getState) => {
     let existingManifest = getState().manifest.d1Manifest;
-    if (existingManifest) {
+    if (existingManifest && !force) {
       return existingManifest;
     }
     const db = await dispatch(getManifest());
     existingManifest = getState().manifest.d1Manifest;
-    if (existingManifest) {
+    if (existingManifest && !force) {
       return existingManifest;
     }
     const defs: ManifestDefinitions & { [table: string]: any } = {

@@ -137,14 +137,45 @@ const D2Sources: {
     ],
     searchString: [],
   },
-  calus: {
+  brave: {
     itemHashes: [
-      1661191192, // The Tribute Hall
-      2816212794, // Bad Juju
-      3580904580, // Legend of Acrius
+      205225492, // Hung Jury SR4
+      211732170, // Hammerhead
+      243425374, // Falling Guillotine
+      570866107, // Succession
+      2228325504, // Edge Transit
+      2480074702, // Forbearance
+      2499720827, // Midnight Coup
+      2533990645, // Blast Furnace
+      3098328572, // The Recluse
+      3757612024, // Luna's Howl
+      3851176026, // Elsie's Rifle
+      4043921923, // The Mountaintop
     ],
     sourceHashes: [
-      976328308, // Source: The Derelict Leviathan
+      2952071500, // Source: Into the Light
+    ],
+    searchString: [],
+  },
+  calus: {
+    itemHashes: [
+      947448544, // Shadow of Earth Shell
+      1661191192, // The Tribute Hall
+      1661191193, // Crown of Sorrow
+      1661191194, // A Hall of Delights
+      1661191195, // The Imperial Menagerie
+      2027598066, // Imperial Opulence
+      2027598067, // Imperial Dress
+      2816212794, // Bad Juju
+      3176509806, // Árma Mákhēs
+      3580904580, // Legend of Acrius
+      3841416152, // Golden Empire
+      3841416153, // Goldleaf
+      3841416154, // Shadow Gilt
+      3841416155, // Cinderchar
+      3875444086, // The Emperor's Chosen
+    ],
+    sourceHashes: [
       1675483099, // Source: Leviathan, Spire of Stars raid lair.
       2399751101, // Acquired from the raid "Crown of Sorrow."
       2511152325, // Acquired from the Menagerie aboard the Leviathan.
@@ -202,6 +233,18 @@ const D2Sources: {
     itemHashes: [],
     sourceHashes: [
       2206233229, // Source: Follow treasure maps.
+    ],
+    searchString: [],
+  },
+  coil: {
+    itemHashes: [
+      2563668388, // Scalar Potential
+      4153087276, // Appetence
+    ],
+    sourceHashes: [
+      561126969, // Source: "Starcrossed" Mission
+      1664308183, // Source: Season of the Wish Activities
+      4278841194, // Source: Season of the Wish Triumphs
     ],
     searchString: [],
   },
@@ -461,10 +504,12 @@ const D2Sources: {
       1335424934, // Gambit Chrome
       1335424935, // Gambit Leather
       1661191187, // Mistrust of Gifts
+      2026755633, // Breakneck
       2224920148, // Gambit Blackguard
       2224920149, // Gambit Steel
       2394866220, // Keep on Drifting
       2588647363, // Live for the Hustle
+      3001205424, // Ecliptic Distaff
       3217477988, // Gambit Duds
       4060882457, // Snakeskin Wrap (Ornament)
     ],
@@ -512,19 +557,15 @@ const D2Sources: {
       2844014413, // Pallas Galliot
     ],
     sourceHashes: [
-      210885364, // Source: Flawless "Presage" Exotic Quest on Master Difficulty
       506073192, // Source: "Prophecy" Dungeon
       613435025, // Source: "Warlord's Ruin" Dungeon
       675740011, // Source: "Grasp of Avarice" Dungeon
       1282207663, // Source: Dungeon "Duality"
       1597738585, // Source: "Spire of the Watcher" Dungeon
       1745960977, // Source: "Pit of Heresy" Dungeon
-      2745272818, // Source: "Presage" Exotic Quest
-      2856954949, // Source: "Let Loose Thy Talons" Exotic Quest
       3288974535, // Source: "Ghosts of the Deep" Dungeon
-      3597879858, // Source: "Presage" Exotic Quest
     ],
-    searchString: ['shatteredthrone', 'pit', 'prophecy', 'presage', 'harbinger'],
+    searchString: [],
   },
   edz: {
     itemHashes: [],
@@ -578,7 +619,16 @@ const D2Sources: {
     searchString: [],
   },
   events: {
-    itemHashes: [],
+    itemHashes: [
+      495940989, // Avalanche
+      1280894514, // Mechabre
+      2812100428, // Stay Frosty
+      2814093983, // Cold Front
+      3240434620, // Something New
+      3400256755, // Zephyr
+      3559361670, // The Title
+      3573686365, // Glacioclasm
+    ],
     sourceHashes: [
       32323943, // Source: Moments of Triumph
       151416041, // Source: Solstice
@@ -637,6 +687,29 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  exoticquest: {
+    itemHashes: [],
+    sourceHashes: [
+      210885364, // Source: Flawless "Presage" Exotic Quest on Master Difficulty
+      281362298, // Source: Strider Exotic Quest
+      454251931, // Source: "What Remains" Exotic Quest
+      483798855, // Source: "The Final Strand" Exotic Quest
+      709680645, // Source: "Truly Satisfactory" Triumph
+      1141831282, // Source: "Of Queens and Worms" Exotic Quest
+      1388323447, // Source: Exotic Mission "The Whisper"
+      1476475066, // Source: "Firmware Update" Triumph
+      1730197643, // Source: //node.ovrd.AVALON// Exotic Quest
+      1823766625, // Source: "Vox Obscura" Exotic Quest
+      1957611613, // Source: An Exotic quest or challenge.
+      2055289873, // Source: "The Evidence Board" Exotic Quest
+      2068312112, // Source: Exotic Mission "Zero Hour"
+      2171520631, // Source: "Lost Lament" Exotic Quest
+      2745272818, // Source: "Presage" Exotic Quest
+      2856954949, // Source: "Let Loose Thy Talons" Exotic Quest
+      3597879858, // Source: "Presage" Exotic Quest
+    ],
+    searchString: [],
+  },
   fwc: {
     itemHashes: [],
     sourceHashes: [
@@ -652,10 +725,12 @@ const D2Sources: {
       1335424934, // Gambit Chrome
       1335424935, // Gambit Leather
       1661191187, // Mistrust of Gifts
+      2026755633, // Breakneck
       2224920148, // Gambit Blackguard
       2224920149, // Gambit Steel
       2394866220, // Keep on Drifting
       2588647363, // Live for the Hustle
+      3001205424, // Ecliptic Distaff
       3217477988, // Gambit Duds
       4060882457, // Snakeskin Wrap (Ornament)
     ],
@@ -686,7 +761,6 @@ const D2Sources: {
       2868525741, // The Invader
       2868525742, // The Reaper
       2868525743, // The Sentry
-      3735277403, // Prime Palette
       3808901541, // Viper Strike
     ],
     sourceHashes: [
@@ -780,6 +854,29 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  intothelight: {
+    itemHashes: [
+      205225492, // Hung Jury SR4
+      211732170, // Hammerhead
+      243425374, // Falling Guillotine
+      570866107, // Succession
+      2228325504, // Edge Transit
+      2480074702, // Forbearance
+      2499720827, // Midnight Coup
+      2533990645, // Blast Furnace
+      3098328572, // The Recluse
+      3757612024, // Luna's Howl
+      3851176026, // Elsie's Rifle
+      4043921923, // The Mountaintop
+    ],
+    sourceHashes: [
+      1388323447, // Source: Exotic Mission "The Whisper"
+      1902517582, // Source: Where's Archie?
+      2068312112, // Source: Exotic Mission "Zero Hour"
+      2952071500, // Source: Into the Light
+    ],
+    searchString: [],
+  },
   io: {
     itemHashes: [],
     sourceHashes: [
@@ -795,12 +892,17 @@ const D2Sources: {
   ironbanner: {
     itemHashes: [
       231533811, // Iron Strength
+      487361141, // Gunnora's Axe
+      540880995, // Dark Decider
       1162929425, // The Golden Standard
       1448664466, // Iron Bone
       1448664467, // Iron Gold
       1661191199, // Grizzled Wolf
       1987234560, // Iron Ruby
+      1999697514, // The Wizened Rebuke
       2448092902, // Rusted Iron
+      2488587246, // The Hero's Burden
+      4009352833, // Roar of the Bear
     ],
     sourceHashes: [
       561111210, // Source: Iron Banner Salvager's Salvo Armament
@@ -812,6 +914,29 @@ const D2Sources: {
       2648408612, // Acquired by competing in the Iron Banner when the wolves were loud.
       3072862693, // Source: Complete Iron Banner matches and earn rank-up packages from Lord Saladin.
       3966667255, // Source: Iron Banner's Season 9 Seasonal Quest
+    ],
+    searchString: [],
+  },
+  itl: {
+    itemHashes: [
+      205225492, // Hung Jury SR4
+      211732170, // Hammerhead
+      243425374, // Falling Guillotine
+      570866107, // Succession
+      2228325504, // Edge Transit
+      2480074702, // Forbearance
+      2499720827, // Midnight Coup
+      2533990645, // Blast Furnace
+      3098328572, // The Recluse
+      3757612024, // Luna's Howl
+      3851176026, // Elsie's Rifle
+      4043921923, // The Mountaintop
+    ],
+    sourceHashes: [
+      1388323447, // Source: Exotic Mission "The Whisper"
+      1902517582, // Source: Where's Archie?
+      2068312112, // Source: Exotic Mission "Zero Hour"
+      2952071500, // Source: Into the Light
     ],
     searchString: [],
   },
@@ -831,7 +956,15 @@ const D2Sources: {
   },
   lastwish: {
     itemHashes: [
+      70083888, // Nation of Beasts
+      424291879, // Age-Old Bond
+      501329015, // Chattering Bone
+      1851777734, // Apex Predator
+      2884596447, // The Supremacy
+      3388655311, // Tyranny of Heaven
+      3591141932, // Techeun Force
       3668669364, // Dreaming Spectrum
+      3885259140, // Transfiguration
     ],
     sourceHashes: [
       2455011338, // Source: Last Wish raid.
@@ -891,7 +1024,15 @@ const D2Sources: {
   },
   lw: {
     itemHashes: [
+      70083888, // Nation of Beasts
+      424291879, // Age-Old Bond
+      501329015, // Chattering Bone
+      1851777734, // Apex Predator
+      2884596447, // The Supremacy
+      3388655311, // Tyranny of Heaven
+      3591141932, // Techeun Force
       3668669364, // Dreaming Spectrum
+      3885259140, // Transfiguration
     ],
     sourceHashes: [
       2455011338, // Source: Last Wish raid.
@@ -953,7 +1094,12 @@ const D2Sources: {
     searchString: [],
   },
   neomuna: {
-    itemHashes: [],
+    itemHashes: [
+      1123421440, // Epochal Integration
+      1311684613, // Dimensional Hypotrochoid
+      3635821806, // Phyllotactic Spiral
+      3920310144, // Volta Bracket
+    ],
     sourceHashes: [
       281362298, // Source: Strider Exotic Quest
       454251931, // Source: "What Remains" Exotic Quest
@@ -984,7 +1130,42 @@ const D2Sources: {
     searchString: [],
   },
   nightfall: {
-    itemHashes: [],
+    itemHashes: [
+      192784503, // Pre Astyanax IV
+      213264394, // Buzzard
+      267089201, // Warden's Law (Adept)
+      496556698, // Pre Astyanax IV (Adept)
+      555148853, // Wendigo GL3 (Adept)
+      566740455, // THE SWARM (Adept)
+      672957262, // Undercurrent (Adept)
+      772231794, // Hung Jury SR4
+      912222548, // Soldier On
+      927835311, // Buzzard (Adept)
+      959037361, // Wild Style (Adept)
+      1064132738, // BrayTech Osprey (Adept)
+      1151688091, // Undercurrent
+      1332123064, // Wild Style
+      1354727549, // The Slammer (Adept)
+      1586231351, // Mindbender's Ambition
+      1821529912, // Warden's Law
+      1854753404, // Wendigo GL3
+      1854753405, // The Militia's Birthright
+      1891996599, // Uzume RR4 (Adept)
+      1987790789, // After the Nightfall
+      2074041946, // Mindbender's Ambition (Adept)
+      2450917538, // Uzume RR4
+      2759590322, // THE SWARM
+      2883684343, // Hung Jury SR4 (Adept)
+      2889501828, // The Slammer
+      2914913838, // Loaded Question (Adept)
+      3125454907, // Loaded Question
+      3183283212, // Wendigo GL3
+      3667553455, // BrayTech Osprey
+      3832743906, // Hung Jury SR4
+      3915197957, // Wendigo GL3 (Adept)
+      4074251943, // Hung Jury SR4 (Adept)
+      4162642204, // The Militia's Birthright (Adept)
+    ],
     sourceHashes: [
       110159004, // Source: Complete Nightfall strike "Warden of Nothing."
       277706045, // Source: Season of the Splicer Nightfall Grandmaster
@@ -1042,8 +1223,10 @@ const D2Sources: {
     itemHashes: [
       578459533, // Wendigo GL3
       654608616, // Revoker
+      1050806815, // The Recluse
       1584643826, // Hush
       1600633250, // 21% Delirium
+      3098328572, // The Recluse
       3354242550, // The Recluse
       3907337522, // Oxygen SR3
     ],
@@ -1118,12 +1301,21 @@ const D2Sources: {
   },
   raid: {
     itemHashes: [
+      70083888, // Nation of Beasts
+      424291879, // Age-Old Bond
+      501329015, // Chattering Bone
       947448544, // Shadow of Earth Shell
       1661191193, // Crown of Sorrow
+      1851777734, // Apex Predator
       2027598066, // Imperial Opulence
+      2027598067, // Imperial Dress
       2557722678, // Midnight Smith
+      2884596447, // The Supremacy
+      3388655311, // Tyranny of Heaven
       3580904580, // Legend of Acrius
+      3591141932, // Techeun Force
       3668669364, // Dreaming Spectrum
+      3885259140, // Transfiguration
       4103414242, // Divinity
     ],
     sourceHashes: [
@@ -1158,17 +1350,7 @@ const D2Sources: {
       4066007318, // Source: Leviathan, Eater of Worlds raid lair on Prestige difficulty.
       4246883461, // Source: Found in the "Scourge of the Past" raid.
     ],
-    searchString: [
-      'crownofsorrow',
-      'deepstonecrypt',
-      'eow',
-      'garden',
-      'lastwish',
-      'leviathan',
-      'scourge',
-      'sos',
-      'vog',
-    ],
+    searchString: [],
   },
   rasputin: {
     itemHashes: [],
@@ -1204,6 +1386,18 @@ const D2Sources: {
     sourceHashes: [
       3299964501, // Source: Earn Ranks in Vanguard, Crucible, or Gambit Playlists
       3348906688, // Source: Ranks in Vanguard Strikes, Crucible, or Gambit
+    ],
+    searchString: [],
+  },
+  rivenslair: {
+    itemHashes: [
+      2563668388, // Scalar Potential
+      4153087276, // Appetence
+    ],
+    sourceHashes: [
+      561126969, // Source: "Starcrossed" Mission
+      1664308183, // Source: Season of the Wish Activities
+      4278841194, // Source: Season of the Wish Triumphs
     ],
     searchString: [],
   },
@@ -1261,18 +1455,7 @@ const D2Sources: {
     searchString: [],
   },
   seasonpass: {
-    itemHashes: [
-      599895591, // Sojourner's Tale
-      820890091, // Planck's Stride
-      1298815317, // Brigand's Law
-      1478986057, // Without Remorse
-      2097055732, // Piece of Mind
-      2121785039, // Brass Attacks
-      2434225986, // Shattered Cipher
-      2778013407, // Firefright
-      3075224551, // Threaded Needle
-      4067556514, // Thoughtless
-    ],
+    itemHashes: [],
     sourceHashes: [
       450719423, // Source: Season of the Risen
       794422188, // Source: Season of the Witch
@@ -1365,13 +1548,21 @@ const D2Sources: {
     searchString: [],
   },
   sonar: {
-    itemHashes: [],
+    itemHashes: [
+      1081724548, // Rapacious Appetite
+      1769847435, // A Distant Pull
+      3016891299, // Different Times
+      3890055324, // Targeted Redaction
+      4066778670, // Thin Precipice
+    ],
     sourceHashes: [
       813075729, // Source: Season of the Deep Vendor Reputation Reward
       927967626, // Source: Season of the Deep
       2257836668, // Source: Season of the Deep Fishing
+      2671038131, // Season of the Deep - WEAPONS
       2755511565, // Source: Season of the Deep Triumph
       2811716495, // Source: Season of the Deep Activities
+      2959452483, // Season of the Deep - WEAPONS
     ],
     searchString: [],
   },
@@ -1418,15 +1609,35 @@ const D2Sources: {
   },
   strikes: {
     itemHashes: [
+      192784503, // Pre Astyanax IV
+      213264394, // Buzzard
       274843196, // Vanguard Unyielding
+      772231794, // Hung Jury SR4
+      781498181, // Persuader
+      1151688091, // Undercurrent
+      1296429091, // Deadpan Delivery
+      1332123064, // Wild Style
       1661191186, // Disdain for Gold
+      1821529912, // Warden's Law
+      1854753404, // Wendigo GL3
+      1854753405, // The Militia's Birthright
+      1974641289, // Nightshade
+      1999754402, // The Showrunner
+      2450917538, // Uzume RR4
       2523776412, // Vanguard Burnished Steel
       2523776413, // Vanguard Steel
       2588647361, // Consequence of Duty
+      2759590322, // THE SWARM
       2788911997, // Vanguard Divide
       2788911998, // Vanguard Metallic
       2788911999, // Vanguard Veteran
+      2889501828, // The Slammer
+      3001205424, // Ecliptic Distaff
+      3125454907, // Loaded Question
+      3183283212, // Wendigo GL3
       3215252549, // Determination
+      3667553455, // BrayTech Osprey
+      3832743906, // Hung Jury SR4
       4060882458, // Balistraria Wrap (Ornament)
     ],
     sourceHashes: [
@@ -1473,7 +1684,9 @@ const D2Sources: {
     searchString: [],
   },
   throneworld: {
-    itemHashes: [],
+    itemHashes: [
+      2721157927, // Tarnation
+    ],
     sourceHashes: [
       1141831282, // Source: "Of Queens and Worms" Exotic Quest
       1823766625, // Source: "Vox Obscura" Exotic Quest
@@ -1494,10 +1707,17 @@ const D2Sources: {
   },
   trials: {
     itemHashes: [
+      2307365, // The Inquisitor (Adept)
+      711889599, // Whistler's Whim (Adept)
+      1574601402, // Whistler's Whim
       1983519830, // Hardened by Trial
-      2069797994, // Dazzling Iridescence
       2071635914, // Light for the Lost
       2071635915, // Flawless Empyrean
+      2185327324, // The Inquisitor
+      2759251821, // Unwavering Duty (Adept)
+      3102421004, // Exalted Truth
+      3624844116, // Unwavering Duty
+      3920882229, // Exalted Truth (Adept)
     ],
     sourceHashes: [
       139599745, // Source: Earn seven wins on a single Trials ticket.
@@ -1688,15 +1908,35 @@ const D2Sources: {
   },
   zavala: {
     itemHashes: [
+      192784503, // Pre Astyanax IV
+      213264394, // Buzzard
       274843196, // Vanguard Unyielding
+      772231794, // Hung Jury SR4
+      781498181, // Persuader
+      1151688091, // Undercurrent
+      1296429091, // Deadpan Delivery
+      1332123064, // Wild Style
       1661191186, // Disdain for Gold
+      1821529912, // Warden's Law
+      1854753404, // Wendigo GL3
+      1854753405, // The Militia's Birthright
+      1974641289, // Nightshade
+      1999754402, // The Showrunner
+      2450917538, // Uzume RR4
       2523776412, // Vanguard Burnished Steel
       2523776413, // Vanguard Steel
       2588647361, // Consequence of Duty
+      2759590322, // THE SWARM
       2788911997, // Vanguard Divide
       2788911998, // Vanguard Metallic
       2788911999, // Vanguard Veteran
+      2889501828, // The Slammer
+      3001205424, // Ecliptic Distaff
+      3125454907, // Loaded Question
+      3183283212, // Wendigo GL3
       3215252549, // Determination
+      3667553455, // BrayTech Osprey
+      3832743906, // Hung Jury SR4
       4060882458, // Balistraria Wrap (Ornament)
     ],
     sourceHashes: [

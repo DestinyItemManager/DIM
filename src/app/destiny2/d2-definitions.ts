@@ -115,6 +115,7 @@ export interface D2ManifestDefinitions extends ManifestDefinitions {
   Race: DefinitionTable<DestinyRaceDefinition>;
   Faction: DefinitionTable<DestinyFactionDefinition>;
   ItemTierType: DefinitionTable<DestinyItemTierTypeDefinition>;
+  // ActivityMode is used only from destiny-symbols.ts
   ActivityMode: DefinitionTable<DestinyActivityModeDefinition>;
   InventoryItem: DefinitionTable<DestinyInventoryItemDefinition>;
   Objective: DefinitionTable<DestinyObjectiveDefinition>;
@@ -156,15 +157,15 @@ export interface D2ManifestDefinitions extends ManifestDefinitions {
  * object that has a property named after each of the tables listed
  * above (defs.TalentGrid, etc.).
  */
-export function getDefinitions(): ThunkResult<D2ManifestDefinitions> {
+export function getDefinitions(force = false): ThunkResult<D2ManifestDefinitions> {
   return async (dispatch, getState) => {
     let existingManifest = d2ManifestSelector(getState());
-    if (existingManifest) {
+    if (existingManifest && !force) {
       return existingManifest;
     }
     const db = await dispatch(getManifest(allTables));
     existingManifest = d2ManifestSelector(getState());
-    if (existingManifest) {
+    if (existingManifest && !force) {
       return existingManifest;
     }
 

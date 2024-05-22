@@ -6,7 +6,7 @@ import { FilterDefinition } from '../filter-types';
 import { powerLevelByKeyword } from '../power-levels';
 import { allStatNames, statHashByName } from '../search-filter-values';
 
-const seasonTagToNumber = {
+export const seasonTagToNumber = {
   ...seasonTags,
   next: D2CalculatedSeason + 1,
   current: D2CalculatedSeason,

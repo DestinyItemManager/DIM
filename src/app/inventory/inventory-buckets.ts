@@ -12,6 +12,7 @@ export type InventoryBucket = {
   readonly description: string;
   readonly name: string;
   readonly hash: number;
+  readonly equippable: boolean;
   readonly hasTransferDestination: boolean;
   readonly capacity: number;
   readonly accountWide: boolean;

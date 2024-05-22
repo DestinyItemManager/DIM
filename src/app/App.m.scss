@@ -1,6 +1,9 @@
 @use 'variables.scss' as *;
 
 .app {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+
   &::before {
     @include below-header;
     background: var(--theme-app-bg);

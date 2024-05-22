@@ -58,8 +58,7 @@ module.exports = {
       cooldowns: { list: ['Grenade', 'Melee', 'Super'] },
       difficulty: { list: ['Normal', 'Hard'] },
       progress: { list: ['Bounties', 'Items', 'Quests'] },
-      sockets: { list: ['Mod', 'Ability', 'Shader', 'Ornament', 'Fragment', 'Aspect', 'Projection', 'Transmat', 'Super'] },
-      unsupported: { list: ['Unsupported', 'Steam'] },
+      sockets: { list: ['Mod', 'Ability', 'Shader', 'Ornament', 'Fragment', 'Aspect', 'Projection', 'Transmat', 'Super'] }
     };
     const dimTransformer = (key, options) => {
       if (options.metadata?.context) {

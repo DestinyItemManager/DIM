@@ -83,6 +83,18 @@ const socketFilters: FilterDefinition[] = [
         matchesCuratedRoll(d2Definitions!, item),
   },
   {
+    keywords: 'shiny',
+    description: tl('Filter.Shiny'),
+    destinyVersion: 2,
+    filter: () => (item) =>
+      item.sockets?.allSockets.some(
+        (s) =>
+          s.plugOptions.some(
+            (s) => s.plugDef.plug.plugCategoryIdentifier === 'holofoil_skins_shared',
+          ), //
+      ),
+  },
+  {
     keywords: 'extraperk',
     description: tl('Filter.ExtraPerk'),
     destinyVersion: 2,
@@ -158,8 +170,7 @@ const socketFilters: FilterDefinition[] = [
     destinyVersion: 2,
     filter: () => (item) =>
       Boolean(item.energy) &&
-      item.sockets &&
-      item.sockets.allSockets.some((socket) =>
+      item.sockets?.allSockets.some((socket) =>
         Boolean(
           socket.plugged &&
             !emptySocketHashes.includes(socket.plugged.plugDef.hash) &&

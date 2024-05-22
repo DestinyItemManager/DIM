@@ -94,6 +94,8 @@ import {
   getModsFromLoadout,
 } from './loadout-utils';
 
+const TAG = 'loadout';
+
 // TODO: move this whole file to "loadouts" folder
 
 const outOfSpaceWarning = _.throttle((store: DimStore) => {
@@ -145,9 +147,9 @@ export function applyLoadout(
     }
 
     if ($featureFlags.debugMoves) {
-      infoLog('loadout', 'Apply loadout', loadout.name, 'to', store.name);
+      infoLog(TAG, 'Apply loadout', loadout.name, 'to', store.name);
     }
-    const stopTimer = timer('Loadout Application');
+    const stopTimer = timer(TAG, 'Loadout Application');
 
     const [cancelToken, cancel] = withCancel();
 
@@ -178,7 +180,7 @@ export function applyLoadout(
     try {
       await loadoutPromise;
     } catch (e) {
-      errorLog('loadout', 'failed loadout', getLoadoutState(), e);
+      errorLog(TAG, 'failed loadout', getLoadoutState(), e);
     } finally {
       stopTimer();
     }
@@ -466,7 +468,7 @@ function doApplyLoadout(
             if (e instanceof CanceledError) {
               throw e;
             }
-            errorLog('loadout dequip', 'Failed to dequip items from', owner, e);
+            errorLog(TAG, 'Failed to dequip items from', owner, e);
             setLoadoutState(
               produce((state) => {
                 for (const item of dequipItems) {
@@ -519,7 +521,7 @@ function doApplyLoadout(
           }
           const updatedItem = getLoadoutItem(loadoutItem);
           if (updatedItem) {
-            errorLog('loadout', 'Failed to apply loadout item', updatedItem.name, e);
+            errorLog(TAG, 'Failed to apply loadout item', updatedItem.name, e);
             setLoadoutState(
               produce((state) => {
                 // If it made it to the right store, the failure was in equipping, not moving
@@ -575,7 +577,7 @@ function doApplyLoadout(
           if (e instanceof CanceledError) {
             throw e;
           }
-          errorLog('loadout equip', 'Failed to equip items', e);
+          errorLog(TAG, 'Failed to equip items', e);
           setLoadoutState(
             produce((state) => {
               for (const item of realItemsToEquip) {
@@ -591,7 +593,7 @@ function doApplyLoadout(
       if (itemsWithOverrides.length) {
         setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.SocketOverrides));
 
-        infoLog('loadout socket overrides', 'Socket overrides to apply', itemsWithOverrides);
+        infoLog(TAG, 'Socket overrides to apply', itemsWithOverrides);
         await dispatch(
           applySocketOverrides(itemsWithOverrides, setLoadoutState, getLoadoutItem, cancelToken),
         );
@@ -614,7 +616,7 @@ function doApplyLoadout(
       // Apply any mods in the loadout. These apply to the current equipped items, not just loadout items!
       if (modsToApply.length || !_.isEmpty(modsByBucketToApply) || clearMods) {
         setLoadoutState(setLoadoutApplyPhase(LoadoutApplyPhase.ApplyMods));
-        infoLog('loadout mods', 'Mods to apply', modsToApply);
+        infoLog(TAG, 'Mods to apply', modsToApply);
         await dispatch(
           applyLoadoutMods(
             applicableLoadoutItems,
@@ -1139,7 +1141,7 @@ function applyLoadoutMods(
       !clearUnassignedSocketsPerItem &&
       allModsAreAlreadyApplied(armor, modHashes, modsByBucket)
     ) {
-      infoLog('loadout mods', 'all mods are already there. loadout already applied');
+      infoLog(TAG, 'all mods are already there. loadout already applied');
       setLoadoutState((state) => ({
         ...state,
         modStates: modHashes
@@ -1217,7 +1219,7 @@ function applyLoadoutMods(
 
       const pluggingSteps = createPluggingStrategy(defs, item, assignments);
       const assignmentSequence = pluggingSteps.filter((assignment) => assignment.required);
-      infoLog('loadout mods', 'Applying', assignmentSequence, 'to', item.name);
+      infoLog(TAG, 'Applying mods', assignmentSequence, 'to', item.name);
       if (assignmentSequence) {
         applyModsPromises.push(
           dispatch(

@@ -40,7 +40,8 @@
     "YourItems": "Your Items"
   },
   "Browsercheck": {
-    "Steam": "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.",
+    "Samsung": "Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.",
+    "Steam": "The Steam overlay browser is very old and some or all DIM features may not work. We cannot provide support for it.",
     "Unsupported": "The DIM team does not support using this browser. Some or all DIM features may not work."
   },
   "Bucket": {
@@ -244,7 +245,7 @@
     "HoldsMod": "Shows armor compatible with a specific type of Seasonal Mod.",
     "InDimLoadout": "is:indimloadout shows items that are included in any DIM loadout.",
     "InInGameLoadout": "is:iningameloadout shows items that are included in any in-game loadout.",
-    "InLoadout": "is:inloadout shows items that are included in any loadout. Searching with inloadout: shows items that are included in loadouts with matching titles. When used with a hashtag, inloadout: shows items whose loadouts have the hashtag in the title or notes.",
+    "InLoadout": "is:inloadout shows items that are included in any loadout. Searching with inloadout: shows items that are included in loadouts with matching titles. When used with a hashtag, inloadout: shows items whose loadouts have the hashtag in the title or notes. When used with a range, it shows items that are in that many loadouts.",
     "Infusable": "Shows items that can be infused.",
     "InfusionFodder": "Shows items that could be infused into lower-power versions of the same item for only glimmer.",
     "IsAdept": "Shows weapons compatible with Adept mods.",
@@ -298,6 +299,7 @@
     "RetiredPerk": "Shows weapons with perks that no longer obtainable.",
     "SearchPrompt": "Search available filter commands",
     "Season": "Shows items from which season of Destiny 2 they appeared in.",
+    "Shiny": "Shows BRAVE weapons with a limited-edition ornament.",
     "StackFull": "Show items which are at-capacity for their stack (Enhancement Cores, Strange Coins, Gunsmith Materials etc)",
     "StackLevel": "Shows items based on the quantity of items in its stack.",
     "Stackable": "Shows items that can stack (ammo synths, strange coin, etc)",
@@ -693,6 +695,14 @@
     "UnableToAddAllModsBody": "There weren't enough mod slots available to fit {{mods}}.",
     "UnlockItem": "Unpin Item"
   },
+  "LoadoutFilter": {
+    "FashionOnly": "Shows loadouts that contain only fashion (shaders or ornaments).",
+    "ModsOnly": "Shows loadouts that only contain armor mods.",
+    "Name": "Shows loadouts whose name matches (exactname:) or partially matches (name:) the filter text. Search for entire phrases using quotes.",
+    "Notes": "Search for loadouts by their notes field.",
+    "PartialMatch": "Shows loadouts where their name or notes has a partial match to the filter text. Search for entire phrases using quotes.",
+    "Season": "Shows loadouts by which season of Destiny 2 they were last modified in."
+  },
   "Loadouts": {
     "Abilities": "Abilities",
     "AddEquippedItems": "Add Equipped",
@@ -737,6 +747,7 @@
     "EquippableDifferent2": "Maximum Power isn't limited by the \"One Exotic\" rule when determining the Power of your drops, powerful, and pinnacle rewards.",
     "Failed": "Loadout failed to apply completely",
     "Fashion": "Choose fashion",
+    "FashionOnly": "Fashion-only",
     "FillFromEquipped": "Fill in using equipped",
     "FillFromInventory": "Fill in using non-equipped",
     "FilteredItems": "Filtered Items",
@@ -793,6 +804,7 @@
       "UpgradeCostsDesc": "Some armor needs energy capacity upgrades to fit the requested mods. In total, these upgrades cost:"
     },
     "Mods": "Mods",
+    "ModsOnly": "Mods-only",
     "MoveItems": "Moving items",
     "NoSpace": "You're out of space in the vault and any other characters.",
     "NoneMatch": "None of your loadouts matched the filters.",
@@ -872,9 +884,7 @@
   "Manifest": {
     "Download": "Downloading latest Destiny info database from Bungie...",
     "Error": "Error loading Destiny info database:\n{{error}}\nReload to retry.",
-    "Load": "Loading Destiny info database...",
-    "Outdated": "Outdated Destiny info database",
-    "OutdatedExplanation": "Bungie has updated their Destiny info database. Reload DIM to pick up the new info. Note that some things in DIM may not work for a few hours after Bungie updates Destiny, as the new data propagates through their systems."
+    "Load": "Loading Destiny info database..."
   },
   "Milestone": {
     "Daily": "Daily Challenge",
@@ -981,8 +991,10 @@
       "Damage": "Damage",
       "Energy": "Energy",
       "Event": "Event",
+      "Harmonizable": "Harmonizable",
       "Icon": "Icon",
       "KillTracker": "Kill Tracker",
+      "Level": "Level",
       "Loadouts": "Loadouts",
       "Location": "Location",
       "Locked": "Locked",
@@ -1123,7 +1135,6 @@
     "PerkDisplay": "Perk display in item popup",
     "PerkGrid": "Grid",
     "PerkList": "List",
-    "ReloadDIM": "Reload DIM to finish switching language",
     "ResetToDefault": "Reset",
     "ReverseSort": "Toggle forward/reverse sort",
     "SetSort": "Sort items by:",
@@ -1206,6 +1217,7 @@
     "PowerModifier": "Power granted by seasonal experience progression",
     "Prestige": "Prestige Level: {{level}}\n{{exp}}xp until 5 motes of light.",
     "Quality": "Stats quality",
+    "ShieldHP": "Shield HP",
     "StrafingSpeed": "Strafing",
     "Strength": "Strength",
     "Sunset": "Sunset",

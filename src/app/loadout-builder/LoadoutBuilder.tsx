@@ -387,9 +387,7 @@ export default memo(function LoadoutBuilder({
 
   return (
     <PageWithMenu className={styles.page}>
-      <PageWithMenu.Menu
-        className={clsx(styles.menuContent, { [styles.wide]: $featureFlags.statConstraintEditor })}
-      >
+      <PageWithMenu.Menu className={clsx(styles.menuContent, styles.wide)}>
         <CharacterSelect
           selectedStore={selectedStore}
           stores={stores}

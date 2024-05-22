@@ -59,6 +59,19 @@
           margin-right: 8px;
         }
       }
+      > img {
+        filter: invert(1);
+      }
+    }
+
+    .fashionIcon {
+      height: 20px !important;
+      width: 20px !important;
+      margin-right: 5px;
+    }
+    .modificationIcon {
+      height: 18px !important;
+      width: 18px !important;
     }
   }
 
@@ -69,8 +82,12 @@
     > span:first-child > :global(.app-icon) {
       color: var(--theme-text-invert) !important;
     }
-    > span:first-child > img:first-child {
+    > span:first-child > img:first-child,
+    .modificationIcon {
       filter: none;
+    }
+    .fashionIcon {
+      filter: invert(1);
     }
 
     .note {

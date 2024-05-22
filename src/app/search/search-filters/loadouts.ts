@@ -10,7 +10,7 @@ export function loadoutToSearchString(loadout: Loadout | InGameLoadout) {
 
 // related: https://github.com/DestinyItemManager/DIM/issues/9069
 // sanity check: `inloadout:#hashta` should not suggest `inloadout:inloadout:#hashtag` (double prefix)
-function loadoutToSuggestions(loadout: Loadout) {
+export function loadoutToSuggestions(loadout: Loadout) {
   return [
     quoteFilterString(loadout.name.toLowerCase()), // loadout name
     ...getHashtagsFromNote(loadout.name), // #hashtags in the name
@@ -21,12 +21,16 @@ function loadoutToSuggestions(loadout: Loadout) {
 const loadoutFilters: FilterDefinition[] = [
   {
     keywords: 'inloadout',
-    format: ['simple', 'freeform'],
-
+    format: ['simple', 'range', 'freeform'],
     suggestionsGenerator: ({ loadouts }) => loadouts?.flatMap(loadoutToSuggestions),
-
     description: tl('Filter.InLoadout'),
-    filter: ({ lhs, filterValue, loadoutsByItem }) => {
+    filter: ({ lhs, filterValue, loadoutsByItem, compare }) => {
+      // the range search for how many loadouts an item is in:
+      // inloadout:>=3
+      if (compare) {
+        return (item) => compare(loadoutsByItem[item.id]?.length ?? 0);
+      }
+
       // the default search:
       // is:inloadout
       if (lhs === 'is') {
