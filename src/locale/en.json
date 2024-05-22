@@ -925,6 +925,7 @@
     },
     "Infuse": "Infuse",
     "InfuseTitle": "Open the infusion fuel finder",
+    "LoadingSockets": "Perk and stat details have not loaded yet for this item.",
     "LockUnlock": {
       "AutoLock": "Lock state is synced to this item's tag",
       "Lock": "Lock {{itemType}}",

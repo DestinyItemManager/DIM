@@ -42,8 +42,8 @@ export function loadAllVendors(
     const timeSinceLastLoad =
       Date.now() - (getState().vendors.vendorsByCharacter[characterId]?.lastLoaded || 0);
 
-    // Only load "all vendors" at most once per 30 seconds
-    if (!force && timeSinceLastLoad < 30 * 1000) {
+    // Only load "all vendors" at most once per minute. it takes a little while to load all data.
+    if (!force && timeSinceLastLoad < 60 * 1000) {
       return;
     }
 
@@ -59,14 +59,8 @@ export function loadAllVendors(
       dispatch(loadedAll({ vendorsResponse, characterId }));
 
       const defs = manifestSelector(getState());
-      if (
-        // we're done if this is d1. or if defs aren't loaded?
-        // can this kick off before defs are loaded?? what if it does???
-        !defs?.isDestiny2() ||
-        // the most important thing that can change quickly in vendors is basic info like purchasableness
-        // itemComponents take so long to load, that it's not worth doing more than every few minutes
-        timeSinceLastLoad < 120 * 1000
-      ) {
+      // we're done if this is d1
+      if (!defs?.isDestiny2()) {
         return;
       }
 
@@ -116,11 +110,17 @@ export function loadAllVendors(
       //          itemComponents en-masse, to cause only one optimizer recalculation?
 
       for (const vendorHash of vendorsNeedingComponents) {
-        start = Date.now();
-        const vendorResponse = await getVendorSaleComponents(account, characterId, vendorHash);
-        timings.componentsTime += Date.now() - start;
-        timings.componentsFetched++;
-        dispatch(loadedSingle({ vendorResponse, characterId, vendorHash }));
+        try {
+          start = Date.now();
+          const vendorResponse = await getVendorSaleComponents(account, characterId, vendorHash);
+          timings.componentsTime += Date.now() - start;
+          timings.componentsFetched++;
+          dispatch(loadedSingle({ vendorResponse, characterId, vendorHash }));
+        } catch {
+          // TO-DO: what to do here if a single vendor component call fails?
+          // not necessarily knock the overall vendors state into error mode.
+          // maybe retry failed single-vendors later? add them to a new list in vendors state?
+        }
       }
     } catch (e) {
       const error = convertToError(e);
@@ -136,7 +136,7 @@ export function loadAllVendors(
             : `${timings.componentsNeeded - timings.componentsFetched} components not loaded?`,
         ]
           .filter(Boolean)
-          .join(),
+          .join(' / '),
       );
     }
   };

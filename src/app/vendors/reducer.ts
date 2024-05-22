@@ -1,4 +1,5 @@
 import { LimitedDestinyVendorsResponse } from 'app/bungie-api/destiny2-api';
+import { produce } from 'immer';
 import _ from 'lodash';
 import { Reducer } from 'redux';
 import { ActionType, getType } from 'typesafe-actions';
@@ -34,47 +35,46 @@ export const vendors: Reducer<VendorsState, VendorsAction | AccountsAction> = (
   switch (action.type) {
     case getType(actions.loadedAll): {
       const { characterId, vendorsResponse } = action.payload;
-      return {
-        ...state,
-        vendorsByCharacter: {
-          ...state.vendorsByCharacter,
-          [characterId]: {
-            vendorsResponse: vendorsResponse,
-            lastLoaded: Date.now(),
-            error: undefined,
-          },
-        },
-      };
+      // retain old components so that items don't go back to claiming "no perks or stats"
+      // loadedAll being kicked off means that fresh component data is on its way and will replace the old stuff.
+      const oldItemComponents =
+        state.vendorsByCharacter[characterId]?.vendorsResponse?.itemComponents;
+
+      return produce(state, (draft) => {
+        draft.vendorsByCharacter[characterId] = {
+          vendorsResponse: vendorsResponse,
+          lastLoaded: Date.now(),
+          error: undefined,
+        };
+        if (oldItemComponents) {
+          draft.vendorsByCharacter[characterId]!.vendorsResponse!.itemComponents =
+            oldItemComponents;
+        }
+      });
     }
 
-    // augments the storedoverall all-vendors response,
+    // augments the stored overall all-vendors response,
     // by inserting the item components from a single-vendor api response
     case getType(actions.loadedSingle): {
       const { characterId, vendorResponse, vendorHash } = action.payload;
       const { vendorsByCharacter } = state;
-      const oldVendorsResponse = vendorsByCharacter[characterId]?.vendorsResponse;
 
-      // nothing about state needs changing if we didn't get back components
-      // (maybe sockets/etc are disabled at bnet right now?)
-      if (_.isEmpty(vendorResponse.itemComponents) || !oldVendorsResponse) {
+      if (
+        // nothing about state needs changing if we didn't get back components
+        // (maybe sockets/etc are disabled at bnet right now?)
+        _.isEmpty(vendorResponse.itemComponents) ||
+        // or if there's no main response to inject these components into
+        !vendorsByCharacter[characterId]?.vendorsResponse
+      ) {
         return state;
       }
 
-      const newItemComponents = vendorResponse.itemComponents; // big combined set, keyed by vendor hash
-      const existingItemComponents = oldVendorsResponse?.itemComponents; // set for a single vendor
-      const itemComponents = { ...existingItemComponents, [vendorHash]: newItemComponents }; // big set again
-
-      return {
-        ...state,
-        vendorsByCharacter: {
-          ...vendorsByCharacter,
-          [characterId]: {
-            vendorsResponse: { ...oldVendorsResponse, itemComponents },
-            lastLoaded: Date.now(),
-            error: undefined,
-          },
-        },
-      };
+      return produce(state, (draft) => {
+        draft.vendorsByCharacter[characterId]!.vendorsResponse!.itemComponents ??= {};
+        draft.vendorsByCharacter[characterId]!.vendorsResponse!.itemComponents![vendorHash] =
+          vendorResponse.itemComponents;
+        draft.vendorsByCharacter[characterId]!.lastLoaded = Date.now();
+      });
     }
 
     case getType(actions.loadedError): {
