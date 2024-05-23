@@ -1,6 +1,7 @@
-import { Search } from '@destinyitemmanager/dim-api-types';
+import { Search, SearchType } from '@destinyitemmanager/dim-api-types';
 import { saveSearch, searchDeleted } from 'app/dim-api/basic-actions';
 import { recentSearchesSelector } from 'app/dim-api/selectors';
+import RadioButtons, { Option } from 'app/dim-ui/RadioButtons';
 import { ColumnSort, SortDirection, useTableColumnSorts } from 'app/dim-ui/table-columns';
 import { t } from 'app/i18next-t';
 import {
@@ -14,7 +15,7 @@ import {
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { Comparator, chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { useShiftHeld } from 'app/utils/hooks';
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './SearchHistory.m.scss';
 
@@ -35,7 +36,8 @@ function comparatorFor(id: string): Comparator<Search> {
 
 export default function SearchHistory() {
   const dispatch = useThunkDispatch();
-  const recentSearches = useSelector(recentSearchesSelector);
+  const [searchType, setSearchType] = useState(SearchType.Item);
+  const recentSearches = useSelector(recentSearchesSelector(searchType));
 
   const [columnSorts, toggleColumnSort] = useTableColumnSorts([
     { columnId: 'starred', sort: SortDirection.DESC },
@@ -77,6 +79,12 @@ export default function SearchHistory() {
     ),
   );
 
+  const radioOptions: Option[] = [
+    { label: t('SearchHistory.Item'), value: SearchType.Item },
+    { label: t('SearchHistory.Loadout'), value: SearchType.Loadout },
+  ];
+
+  // TODO: Tabs
   return (
     <div className={styles.searchHistory}>
       <p className={styles.instructions}>
@@ -84,6 +92,12 @@ export default function SearchHistory() {
         <button type="button" className="dim-button" onClick={onDeleteAll}>
           {t('SearchHistory.DeleteAll')}
         </button>
+        <RadioButtons
+          className={styles.tabs}
+          options={radioOptions}
+          value={searchType}
+          onChange={setSearchType}
+        />
       </p>
       <table>
         <thead>

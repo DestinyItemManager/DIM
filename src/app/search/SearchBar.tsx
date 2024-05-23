@@ -1,4 +1,4 @@
-import { Search, SearchType } from '@destinyitemmanager/dim-api-types';
+import { SearchType } from '@destinyitemmanager/dim-api-types';
 import ArmorySheet from 'app/armory/ArmorySheet';
 import { saveSearch, searchDeleted, searchUsed } from 'app/dim-api/basic-actions';
 import { languageSelector, recentSearchesSelector } from 'app/dim-api/selectors';
@@ -14,7 +14,6 @@ import { toggleSearchResults } from 'app/shell/actions';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isiOSBrowser } from 'app/utils/browsers';
-import { emptyArray } from 'app/utils/empty';
 import { Portal } from 'app/utils/temp-container';
 import clsx from 'clsx';
 import { UseComboboxState, UseComboboxStateChangeOptions, useCombobox } from 'downshift';
@@ -236,9 +235,7 @@ function SearchBar(
 ) {
   const dispatch = useThunkDispatch();
   const isPhonePortrait = useIsPhonePortrait();
-  const recentSearches = useSelector(
-    searchType === SearchType.Loadout ? () => emptyArray<Search>() : recentSearchesSelector,
-  );
+  const recentSearches = useSelector(recentSearchesSelector(searchType));
   const autocompleter = useSelector(
     searchType === SearchType.Loadout ? loadoutAutoCompleterSelector : autoCompleterSelector,
   );
