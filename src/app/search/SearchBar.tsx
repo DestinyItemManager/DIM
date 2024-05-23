@@ -1,4 +1,4 @@
-import { Search } from '@destinyitemmanager/dim-api-types';
+import { Search, SearchType } from '@destinyitemmanager/dim-api-types';
 import ArmorySheet from 'app/armory/ArmorySheet';
 import { saveSearch, searchDeleted, searchUsed } from 'app/dim-api/basic-actions';
 import { languageSelector, recentSearchesSelector } from 'app/dim-api/selectors';
@@ -209,7 +209,7 @@ function SearchBar(
     onClear,
     className,
     menu,
-    loadouts,
+    searchType = SearchType.Item,
   }: {
     /** Placeholder text when nothing has been typed */
     placeholder: string;
@@ -224,7 +224,7 @@ function SearchBar(
     /** An optional menu of actions that can be executed on the search. Always shown. */
     menu?: React.ReactNode;
     /** Whether this search bar applies to loadouts rather than items. */
-    loadouts?: boolean;
+    searchType?: SearchType;
     instant?: boolean;
     className?: string;
     /** Fired whenever the query changes (already debounced) */
@@ -237,13 +237,13 @@ function SearchBar(
   const dispatch = useThunkDispatch();
   const isPhonePortrait = useIsPhonePortrait();
   const recentSearches = useSelector(
-    loadouts ? () => emptyArray<Search>() : recentSearchesSelector,
+    searchType === SearchType.Loadout ? () => emptyArray<Search>() : recentSearchesSelector,
   );
   const autocompleter = useSelector(
-    loadouts ? loadoutAutoCompleterSelector : autoCompleterSelector,
+    searchType === SearchType.Loadout ? loadoutAutoCompleterSelector : autoCompleterSelector,
   );
   const validateQuery = useSelector(
-    loadouts ? validateLoadoutQuerySelector : validateQuerySelector,
+    searchType === SearchType.Loadout ? validateLoadoutQuerySelector : validateQuerySelector,
   );
 
   // On iOS at least, focusing the keyboard pushes the content off the screen
@@ -274,7 +274,7 @@ function SearchBar(
     if (valid && liveQuery && liveQuery !== lastBlurQuery.current) {
       // save this to the recent searches only on blur
       // we use the ref to only fire if the query changed since the last blur
-      dispatch(searchUsed(liveQuery));
+      dispatch(searchUsed({ query: liveQuery, type: searchType }));
       lastBlurQuery.current = liveQuery;
     }
   };
@@ -285,7 +285,7 @@ function SearchBar(
 
   const toggleSaved = () => {
     // TODO: keep track of the last search, if you search for something more narrow immediately after then replace?
-    dispatch(saveSearch({ query: liveQuery, saved: !saved }));
+    dispatch(saveSearch({ query: liveQuery, saved: !saved, type: searchType }));
   };
 
   // Try to fill up the screen with search results
@@ -394,9 +394,9 @@ function SearchBar(
   const deleteSearch = useCallback(
     (e: React.MouseEvent, item: SearchItem) => {
       e.stopPropagation();
-      dispatch(searchDeleted(item.query.fullText));
+      dispatch(searchDeleted({ query: item.query.fullText, type: searchType }));
     },
-    [dispatch],
+    [dispatch, searchType],
   );
 
   // Add some methods for refs to use
@@ -444,7 +444,7 @@ function SearchBar(
       items[highlightedIndex]?.type === SearchItemType.Recent
     ) {
       e.preventDefault();
-      dispatch(searchDeleted(items[highlightedIndex].query.fullText));
+      dispatch(searchDeleted({ query: items[highlightedIndex].query.fullText, type: searchType }));
     } else if (e.key === 'Enter' && !isOpen && liveQuery) {
       // Show search results on "Enter" with a closed menu
       dispatch(toggleSearchResults());
@@ -596,7 +596,7 @@ function SearchBar(
               freezeInitialHeight
               sheetClassName={styles.filterHelp}
             >
-              <LazyFilterHelp loadouts={loadouts} />
+              <LazyFilterHelp searchType={searchType} />
             </Sheet>
           </Suspense>
         )}
