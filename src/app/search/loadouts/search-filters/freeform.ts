@@ -1,16 +1,10 @@
 import { tl } from 'app/i18next-t';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { FilterDefinition } from 'app/search/filter-types';
 import { quoteFilterString } from 'app/search/query-parser';
 import { matchText, plainString } from 'app/search/text-utils';
-import { LoadoutFilterContext, LoadoutSuggestionsContext } from '../loadout-filter-types';
+import { LoadoutFilterDefinition } from '../loadout-filter-types';
 
-const freeformFilters: FilterDefinition<
-  Loadout,
-  LoadoutFilterContext,
-  LoadoutSuggestionsContext
->[] = [
+const freeformFilters: LoadoutFilterDefinition[] = [
   {
     keywords: ['name', 'exactname'],
     description: tl('LoadoutFilter.Name'),

@@ -3,6 +3,7 @@ import { DimLanguage } from 'app/i18n';
 import { DimStore } from 'app/inventory/store-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { LoadoutsByItem } from 'app/loadout-drawer/selectors';
+import { FilterDefinition } from 'app/search/filter-types';
 
 /**
  * A slice of data that could be used by loadout filter functions to
@@ -25,3 +26,9 @@ export interface LoadoutSuggestionsContext {
   loadouts?: Loadout[];
   d2Definitions?: D2ManifestDefinitions;
 }
+
+export type LoadoutFilterDefinition = FilterDefinition<
+  Loadout,
+  LoadoutFilterContext,
+  LoadoutSuggestionsContext
+>;
