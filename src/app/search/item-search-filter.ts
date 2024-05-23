@@ -1,9 +1,11 @@
-import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { CustomStatDef, DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { customStatsSelector, languageSelector } from 'app/dim-api/selectors';
 import { DimLanguage } from 'app/i18n';
 import { TagValue } from 'app/inventory/dim-item-info';
+import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { Settings } from 'app/settings/initial-settings';
 import { WishListRoll } from 'app/wishlists/types';
@@ -12,6 +14,7 @@ import { createSelector } from 'reselect';
 import { DimItem } from '../inventory/item-types';
 import {
   allItemsSelector,
+  allNotesHashtagsSelector,
   currentStoreSelector,
   displayableBucketHashesSelector,
   getNotesSelector,
@@ -41,7 +44,6 @@ import socketFilters from './search-filters/sockets';
 import statFilters from './search-filters/stats';
 import locationFilters from './search-filters/stores';
 import wishlistFilters from './search-filters/wishlist';
-import { suggestionsContextSelector } from './suggestions-generation';
 
 const allFilters = [
   ...dupeFilters,
@@ -76,6 +78,42 @@ export function buildItemSearchConfig(
 //
 // Selectors
 //
+
+/**
+ * A selector for the suggestionsContext for a particular destiny version.
+ * This must depend on every bit of data in suggestionsContext so that we
+ * regenerate filter suggestions whenever any of them changes.
+ */
+export const suggestionsContextSelector = createSelector(
+  allItemsSelector,
+  loadoutsSelector,
+  d2ManifestSelector,
+  getTagSelector,
+  getNotesSelector,
+  allNotesHashtagsSelector,
+  customStatsSelector,
+  makeSuggestionsContext,
+);
+
+function makeSuggestionsContext(
+  allItems: DimItem[],
+  loadouts: Loadout[],
+  d2Definitions: D2ManifestDefinitions | undefined,
+  getTag: (item: DimItem) => TagValue | undefined,
+  getNotes: (item: DimItem) => string | undefined,
+  allNotesHashtags: string[],
+  customStats: CustomStatDef[],
+): SuggestionsContext {
+  return {
+    allItems,
+    loadouts,
+    d2Definitions,
+    getTag,
+    getNotes,
+    allNotesHashtags,
+    customStats,
+  };
+}
 
 export const searchConfigSelector = createSelector(
   destinyVersionSelector,

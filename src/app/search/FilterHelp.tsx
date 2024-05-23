@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import styles from './FilterHelp.m.scss';
 import { SearchInput } from './SearchInput';
 import { ItemFilterDefinition, ItemSearchConfig, SuggestionsContext } from './item-filter-types';
-import { searchConfigSelector } from './item-search-filter';
+import { searchConfigSelector, suggestionsContextSelector } from './item-search-filter';
 import {
   LoadoutFilterDefinition,
   LoadoutSearchConfig,
@@ -17,10 +17,7 @@ import {
   loadoutSearchConfigSelector,
   loadoutSuggestionsContextSelector,
 } from './loadouts/loadout-search-filter';
-import {
-  generateGroupedSuggestionsForFilter,
-  suggestionsContextSelector,
-} from './suggestions-generation';
+import { generateGroupedSuggestionsForFilter } from './suggestions-generation';
 
 function keywordsString(keywords: string | string[]) {
   if (Array.isArray(keywords)) {
