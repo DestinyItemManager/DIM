@@ -14,7 +14,8 @@ import {
   getTagSelector,
 } from '../inventory/selectors';
 
-import { FilterDefinition, SuggestionsContext, canonicalFilterFormats } from './filter-types';
+import { FilterDefinition, canonicalFilterFormats } from './filter-types';
+import { SuggestionsContext } from './item-filter-types';
 
 //
 // Selectors

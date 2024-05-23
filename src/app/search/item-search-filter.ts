@@ -24,7 +24,7 @@ import { LoadoutsByItem, loadoutsByItemSelector } from '../loadout-drawer/select
 import { querySelector } from '../shell/selectors';
 import { wishListFunctionSelector, wishListsByHashSelector } from '../wishlists/selectors';
 import { InventoryWishListRoll } from '../wishlists/wishlists';
-import { FilterContext, SuggestionsContext } from './filter-types';
+import { FilterContext, SuggestionsContext } from './item-filter-types';
 import { buildFiltersMap, buildSearchConfig } from './search-config';
 import { makeSearchFilterFactory, parseAndValidateQuery } from './search-filter';
 import advancedFilters from './search-filters/advanced';

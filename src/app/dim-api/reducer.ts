@@ -15,7 +15,7 @@ import { t } from 'app/i18next-t';
 import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-converters';
 import { recentSearchComparator } from 'app/search/autocomplete';
 import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
-import { FilterContext } from 'app/search/filter-types';
+import { FilterContext } from 'app/search/item-filter-types';
 import { buildItemFiltersMap } from 'app/search/item-search-filter';
 import { parseAndValidateQuery } from 'app/search/search-filter';
 import { count, uniqBy } from 'app/utils/collections';
