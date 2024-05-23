@@ -1,3 +1,4 @@
+import { SearchType } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { setItemHashTag, setItemTag } from 'app/inventory/actions';
 import { setSettingAction } from 'app/settings/actions';
@@ -643,13 +644,13 @@ describe('saveSearch', () => {
     };
     const updatedState = dimApi(
       state,
-      saveSearch({ query: '(is:masterwork) (is:weapon)', saved: true }),
+      saveSearch({ query: '(is:masterwork) (is:weapon)', saved: true, type: SearchType.Item }),
       currentAccount,
     );
 
     expect(updatedState.searches).toMatchObject({
       [1]: [],
-      [2]: [{ query: 'is:masterwork is:weapon', saved: true }],
+      [2]: [{ query: 'is:masterwork is:weapon', saved: true, type: SearchType.Item }],
     });
   });
 
@@ -659,19 +660,19 @@ describe('saveSearch', () => {
     };
     let updatedState = dimApi(
       state,
-      saveSearch({ query: '(is:masterwork) (is:weapon)', saved: true }),
+      saveSearch({ query: '(is:masterwork) (is:weapon)', saved: true, type: SearchType.Item }),
       currentAccount,
     );
 
     updatedState = dimApi(
       updatedState,
-      saveSearch({ query: '(is:masterwork) (is:weapon)', saved: false }),
+      saveSearch({ query: '(is:masterwork) (is:weapon)', saved: false, type: SearchType.Item }),
       currentAccount,
     );
 
     expect(updatedState.searches).toMatchObject({
       [1]: [],
-      [2]: [{ query: 'is:masterwork is:weapon', saved: false }],
+      [2]: [{ query: 'is:masterwork is:weapon', saved: false, type: SearchType.Item }],
     });
   });
 
@@ -681,7 +682,7 @@ describe('saveSearch', () => {
     };
     const updatedState = dimApi(
       state,
-      saveSearch({ query: 'deepsight:incomplete', saved: true }),
+      saveSearch({ query: 'deepsight:incomplete', saved: true, type: SearchType.Item }),
       currentAccount,
     );
     expect(updatedState.searches).toMatchObject({
@@ -695,12 +696,20 @@ describe('saveSearch', () => {
       ...initialState,
       searches: {
         [1]: [],
-        [2]: [{ usageCount: 1, lastUsage: 919191, saved: true, query: 'deepsight:incomplete' }],
+        [2]: [
+          {
+            usageCount: 1,
+            lastUsage: 919191,
+            saved: true,
+            query: 'deepsight:incomplete',
+            type: SearchType.Item,
+          },
+        ],
       },
     };
     const updatedState = dimApi(
       state,
-      saveSearch({ query: 'deepsight:incomplete', saved: false }),
+      saveSearch({ query: 'deepsight:incomplete', saved: false, type: SearchType.Item }),
       currentAccount,
     );
 

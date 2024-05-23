@@ -48,16 +48,16 @@ export default function SearchHistory() {
 
   const deleteSearch = (e: React.MouseEvent, item: Search) => {
     e.stopPropagation();
-    dispatch(searchDeleted(item.query));
+    dispatch(searchDeleted({ query: item.query, type: item.type }));
   };
 
   const toggleSaved = (item: Search) => {
-    dispatch(saveSearch({ query: item.query, saved: !item.saved }));
+    dispatch(saveSearch({ query: item.query, saved: !item.saved, type: item.type }));
   };
 
   const onDeleteAll = () => {
     for (const s of recentSearches.filter((s) => !s.saved)) {
-      dispatch(searchDeleted(s.query));
+      dispatch(searchDeleted({ query: s.query, type: s.type }));
     }
   };
 
@@ -79,7 +79,7 @@ export default function SearchHistory() {
     ),
   );
 
-  const radioOptions: Option[] = [
+  const radioOptions: Option<SearchType>[] = [
     { label: t('SearchHistory.Item'), value: SearchType.Item },
     { label: t('SearchHistory.Loadout'), value: SearchType.Loadout },
   ];
