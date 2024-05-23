@@ -52,8 +52,7 @@ import HighlightedText from './HighlightedText';
 import styles from './SearchBar.m.scss';
 import { buildArmoryIndex } from './armory-search';
 import createAutocompleter, { SearchItem, SearchItemType } from './autocomplete';
-import { searchConfigSelector } from './item-search-config';
-import { validateQuerySelector } from './item-search-filter';
+import { searchConfigSelector, validateQuerySelector } from './item-search-filter';
 import {
   loadoutSearchConfigSelector,
   validateLoadoutQuerySelector,

@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import styles from './FilterHelp.m.scss';
 import { SearchInput } from './SearchInput';
 import { FilterContext, FilterDefinition, SuggestionsContext } from './filter-types';
-import { searchConfigSelector } from './item-search-config';
+import { searchConfigSelector } from './item-search-filter';
 import {
   LoadoutFilterContext,
   LoadoutSuggestionsContext,
