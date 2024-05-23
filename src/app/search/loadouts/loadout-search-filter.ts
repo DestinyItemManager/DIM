@@ -1,3 +1,4 @@
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { languageSelector } from 'app/dim-api/selectors';
@@ -6,9 +7,10 @@ import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
 import { LoadoutsByItem, loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
-import { buildSearchConfig } from 'app/search/search-config';
+import { buildFiltersMap, buildSearchConfig } from 'app/search/search-config';
 import { makeSearchFilterFactory } from 'app/search/search-filter';
 import { parseAndValidateQuery } from 'app/search/search-utils';
+import memoizeOne from 'memoize-one';
 import { createSelector } from 'reselect';
 import { LoadoutFilterContext, LoadoutSuggestionsContext } from './loadout-filter-types';
 import freeformFilters from './search-filters/freeform';
@@ -46,8 +48,7 @@ export const loadoutSearchConfigSelector = createSelector(
   destinyVersionSelector,
   languageSelector,
   loadoutSuggestionsContextSelector,
-  () => allLoadoutFilters,
-  buildSearchConfig,
+  buildLoadoutsSearchConfig,
 );
 
 function makeLoadoutFilterContext(
@@ -100,3 +101,16 @@ export const validateLoadoutQuerySelector = createSelector(
     };
   },
 );
+
+export const buildLoadoutsFiltersMap = memoizeOne((destinyVersion: DestinyVersion) =>
+  buildFiltersMap(destinyVersion, allLoadoutFilters),
+);
+
+export function buildLoadoutsSearchConfig(
+  destinyVersion: DestinyVersion,
+  language: DimLanguage,
+  suggestionsContext: LoadoutSuggestionsContext,
+) {
+  const filtersMap = buildLoadoutsFiltersMap(destinyVersion);
+  return buildSearchConfig(language, suggestionsContext, filtersMap);
+}

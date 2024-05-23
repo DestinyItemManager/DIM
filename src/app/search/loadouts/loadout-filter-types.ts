@@ -3,6 +3,7 @@ import { DimLanguage } from 'app/i18n';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { LoadoutsByItem } from 'app/loadout-drawer/selectors';
 import { FilterDefinition } from 'app/search/filter-types';
+import { FiltersMap, SearchConfig } from 'app/search/search-config';
 
 /**
  * A slice of data that could be used by loadout filter functions to
@@ -26,6 +27,18 @@ export interface LoadoutSuggestionsContext {
 }
 
 export type LoadoutFilterDefinition = FilterDefinition<
+  Loadout,
+  LoadoutFilterContext,
+  LoadoutSuggestionsContext
+>;
+
+export type LoadoutsFilterMap = FiltersMap<
+  Loadout,
+  LoadoutFilterContext,
+  LoadoutSuggestionsContext
+>;
+
+export type LoadoutsSearchConfig = SearchConfig<
   Loadout,
   LoadoutFilterContext,
   LoadoutSuggestionsContext

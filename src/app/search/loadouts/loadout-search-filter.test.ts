@@ -1,9 +1,8 @@
 import { canonicalFilterFormats } from 'app/search/filter-types';
-import { buildFiltersMap } from 'app/search/search-config';
-import { allLoadoutFilters } from './loadout-search-filter';
+import { buildLoadoutsFiltersMap } from './loadout-search-filter';
 
 describe('buildSearchConfig', () => {
-  const searchConfig = buildFiltersMap(2, allLoadoutFilters);
+  const searchConfig = buildLoadoutsFiltersMap(2);
 
   test('generates a reasonable filter map', () => {
     expect(Object.keys(searchConfig.isFilters).sort()).toMatchSnapshot('is filters');

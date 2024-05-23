@@ -1,5 +1,5 @@
 import { canonicalFilterFormats } from './filter-types';
-import { buildItemFiltersMap } from './search-config';
+import { buildItemFiltersMap } from './item-search-config';
 import { parseAndValidateQuery } from './search-utils';
 
 describe('buildSearchConfig', () => {

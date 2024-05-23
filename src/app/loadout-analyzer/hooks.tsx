@@ -10,7 +10,7 @@ import { loVendorItemsSelector } from 'app/loadout-builder/loadout-builder-vendo
 import { getAutoMods } from 'app/loadout-builder/process/mappers';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { d2ManifestSelector } from 'app/manifest/selectors';
-import { filterFactorySelector, validateQuerySelector } from 'app/search/search-filter';
+import { filterFactorySelector, validateQuerySelector } from 'app/search/item-search-filter';
 import { currySelector } from 'app/utils/selectors';
 import { useLoadVendors } from 'app/vendors/hooks';
 import { noop } from 'lodash';

@@ -1,5 +1,5 @@
 import { DimItem } from 'app/inventory/item-types';
-import { filterFactorySelector } from 'app/search/search-filter';
+import { filterFactorySelector } from 'app/search/item-search-filter';
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { defaultComparisons, findSimilarArmors, findSimilarWeapons } from './compare-buttons';

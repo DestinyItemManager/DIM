@@ -52,13 +52,13 @@ import HighlightedText from './HighlightedText';
 import styles from './SearchBar.m.scss';
 import { buildArmoryIndex } from './armory-search';
 import createAutocompleter, { SearchItem, SearchItemType } from './autocomplete';
+import { searchConfigSelector } from './item-search-config';
+import { validateQuerySelector } from './item-search-filter';
 import {
   loadoutSearchConfigSelector,
   validateLoadoutQuerySelector,
 } from './loadouts/loadout-search-filter';
 import { canonicalizeQuery, parseQuery } from './query-parser';
-import { searchConfigSelector } from './search-config';
-import { validateQuerySelector } from './search-filter';
 import './search-filter.scss';
 
 export const searchButtonAnimateVariants: Variants = {

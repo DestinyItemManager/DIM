@@ -9,12 +9,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import styles from './FilterHelp.m.scss';
 import { SearchInput } from './SearchInput';
 import { FilterContext, FilterDefinition, SuggestionsContext } from './filter-types';
-import { LoadoutFilterContext, LoadoutSuggestionsContext } from './loadouts/loadout-filter-types';
+import { searchConfigSelector } from './item-search-config';
+import {
+  LoadoutFilterContext,
+  LoadoutSuggestionsContext,
+  LoadoutsSearchConfig,
+} from './loadouts/loadout-filter-types';
 import {
   loadoutSearchConfigSelector,
   loadoutSuggestionsContextSelector,
 } from './loadouts/loadout-search-filter';
-import { SearchConfig, searchConfigSelector } from './search-config';
+import { SearchConfig } from './search-config';
 import {
   generateGroupedSuggestionsForFilter,
   suggestionsContextSelector,
@@ -30,8 +35,7 @@ function keywordsString(keywords: string | string[]) {
 export default function FilterHelp({ loadouts }: { loadouts?: boolean }) {
   const searchConfig = useSelector<
     RootState,
-    | SearchConfig<DimItem, FilterContext, SuggestionsContext>
-    | SearchConfig<Loadout, LoadoutFilterContext, LoadoutSuggestionsContext>
+    SearchConfig<DimItem, FilterContext, SuggestionsContext> | LoadoutsSearchConfig
   >(loadouts ? loadoutSearchConfigSelector : searchConfigSelector).filtersMap;
   const suggestionContext = useSelector(
     loadouts ? loadoutSuggestionsContextSelector : suggestionsContextSelector,

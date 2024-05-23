@@ -16,7 +16,7 @@ import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import { isInGameLoadout } from 'app/loadout-drawer/loadout-types';
 import { loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
 import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
-import { filterFactorySelector } from 'app/search/search-filter';
+import { filterFactorySelector } from 'app/search/item-search-filter';
 import { loadoutToSearchString } from 'app/search/search-filters/loadouts';
 import { AppIcon, compareIcon, editIcon } from 'app/shell/icons';
 import WishListPerkThumb from 'app/wishlists/WishListPerkThumb';
