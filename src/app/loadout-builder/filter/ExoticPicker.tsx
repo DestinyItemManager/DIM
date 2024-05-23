@@ -9,7 +9,7 @@ import { allItemsSelector } from 'app/inventory/selectors';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { SearchInput } from 'app/search/SearchInput';
-import { startWordRegexp } from 'app/search/search-filters/freeform';
+import { startWordRegexp } from 'app/search/text-utils';
 import { uniqBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import {

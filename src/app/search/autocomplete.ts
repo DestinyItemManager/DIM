@@ -6,7 +6,8 @@ import _ from 'lodash';
 import { ArmoryEntry, getArmorySuggestions } from './armory-search';
 import { QueryLexerOpenQuotesError, lexer, makeCommentString, parseQuery } from './query-parser';
 import { FiltersMap, SearchConfig, Suggestion } from './search-config';
-import freeformFilters, { plainString } from './search-filters/freeform';
+import freeformFilters from './search-filters/freeform';
+import { plainString } from './text-utils';
 
 /** The autocompleter/dropdown will suggest different types of searches */
 export const enum SearchItemType {

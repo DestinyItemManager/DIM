@@ -27,7 +27,7 @@ import {
   emptySocketHashes,
 } from '../d2-known-values';
 import { FilterDefinition } from '../filter-types';
-import { plainString } from './freeform';
+import { plainString } from '../text-utils';
 
 export const modslotFilter = {
   keywords: 'modslot',

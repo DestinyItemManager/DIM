@@ -8,7 +8,7 @@ import { FilterDefinition, SuggestionsContext, canonicalFilterFormats } from './
 import advancedFilters from './search-filters/advanced';
 import d1Filters from './search-filters/d1-filters';
 import dupeFilters from './search-filters/dupes';
-import freeformFilters, { plainString } from './search-filters/freeform';
+import freeformFilters from './search-filters/freeform';
 import itemInfosFilters from './search-filters/item-infos';
 import knownValuesFilters from './search-filters/known-values';
 import loadoutFilters from './search-filters/loadouts';
@@ -20,6 +20,7 @@ import statFilters from './search-filters/stats';
 import locationFilters from './search-filters/stores';
 import wishlistFilters from './search-filters/wishlist';
 import { generateSuggestionsForFilter, suggestionsContextSelector } from './suggestions-generation';
+import { plainString } from './text-utils';
 
 const allFilters = [
   ...dupeFilters,

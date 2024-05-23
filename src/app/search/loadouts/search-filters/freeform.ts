@@ -1,9 +1,9 @@
 import { tl } from 'app/i18next-t';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { matchText, plainString } from 'app/search/search-filters/freeform';
-import { FilterDefinition } from '../../filter-types';
-import { quoteFilterString } from '../../query-parser';
+import { FilterDefinition } from 'app/search/filter-types';
+import { quoteFilterString } from 'app/search/query-parser';
+import { matchText, plainString } from 'app/search/text-utils';
 import { LoadoutFilterContext, LoadoutSuggestionsContext } from '../loadout-filter-types';
 
 const freeformFilters: FilterDefinition<
