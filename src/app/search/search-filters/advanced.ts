@@ -1,6 +1,6 @@
 import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import { FilterDefinition } from '../filter-types';
+import { FilterDefinition } from 'app/search/filter-types';
 
 const advancedFilters: FilterDefinition[] = [
   {

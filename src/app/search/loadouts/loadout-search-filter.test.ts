@@ -1,5 +1,5 @@
-import { canonicalFilterFormats } from '../filter-types';
-import { buildFiltersMap } from '../search-config';
+import { canonicalFilterFormats } from 'app/search/filter-types';
+import { buildFiltersMap } from 'app/search/search-config';
 import { allLoadoutFilters } from './loadout-search-filter';
 
 describe('buildSearchConfig', () => {

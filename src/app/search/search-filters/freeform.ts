@@ -1,20 +1,20 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { tl } from 'app/i18next-t';
 import { DimItem, DimPlug } from 'app/inventory/item-types';
-import { filterMap } from 'app/utils/collections';
-import { isD1Item } from 'app/utils/item-utils';
-import { DestinyInventoryItemDefinition, TierType } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
-import memoizeOne from 'memoize-one';
-import { FilterDefinition } from '../filter-types';
-import { quoteFilterString } from '../query-parser';
+import { FilterDefinition } from 'app/search/filter-types';
+import { quoteFilterString } from 'app/search/query-parser';
 import {
   matchText,
   plainString,
   startWordRegexp,
   testStringsFromDisplayProperties,
   testStringsFromDisplayPropertiesMap,
-} from '../text-utils';
+} from 'app/search/text-utils';
+import { filterMap } from 'app/utils/collections';
+import { isD1Item } from 'app/utils/item-utils';
+import { DestinyInventoryItemDefinition, TierType } from 'bungie-api-ts/destiny2';
+import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
+import memoizeOne from 'memoize-one';
 
 const interestingPlugTypes = new Set([PlugCategoryHashes.Frames, PlugCategoryHashes.Intrinsics]);
 const getPerkNamesFromManifest = memoizeOne(

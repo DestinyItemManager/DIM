@@ -1,7 +1,7 @@
 import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
+import { FilterDefinition } from 'app/search/filter-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
-import { FilterDefinition } from '../filter-types';
 import { checkIfIsDupe, computeDupes, makeDupeID } from './dupes';
 
 const checkIfIsWishlist = (

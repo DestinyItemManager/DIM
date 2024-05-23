@@ -1,14 +1,14 @@
 import { tl } from 'app/i18next-t';
 import { D1Item } from 'app/inventory/item-types';
-import { getItemYear } from 'app/utils/item-utils';
 import {
   boosts,
   D1ActivityHashes,
   sublimeEngrams,
   supplies,
   vendorHashes,
-} from '../d1-known-values';
-import { FilterDefinition } from '../filter-types';
+} from 'app/search/d1-known-values';
+import { FilterDefinition } from 'app/search/filter-types';
+import { getItemYear } from 'app/utils/item-utils';
 
 // these just check an attribute found on DimItem
 const d1Filters: D1FilterDefinition[] = [

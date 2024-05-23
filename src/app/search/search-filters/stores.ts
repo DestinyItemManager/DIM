@@ -1,8 +1,8 @@
 import { tl } from 'app/i18next-t';
 import { getStore } from 'app/inventory/stores-helpers';
+import { FilterDefinition } from 'app/search/filter-types';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { FilterDefinition } from '../filter-types';
 
 // filters that check stores
 const locationFilters: FilterDefinition[] = [

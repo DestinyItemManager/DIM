@@ -1,6 +1,6 @@
 import { tl } from 'app/i18next-t';
+import { FilterDefinition } from 'app/search/filter-types';
 import { getItemKillTrackerInfo, getItemYear } from 'app/utils/item-utils';
-import { FilterDefinition } from '../filter-types';
 
 const simpleRangeFilters: FilterDefinition[] = [
   {

@@ -1,7 +1,7 @@
 import { tl } from 'app/i18next-t';
+import { FilterDefinition } from 'app/search/filter-types';
 import { isSunset } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
-import { FilterDefinition } from '../filter-types';
 
 // simple checks against check an attribute found on DimItem
 const simpleFilters: FilterDefinition[] = [

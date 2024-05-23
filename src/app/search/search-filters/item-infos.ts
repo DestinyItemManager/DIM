@@ -1,6 +1,6 @@
 import { tl } from 'app/i18next-t';
 import { itemTagSelectorList } from 'app/inventory/dim-item-info';
-import { FilterDefinition } from '../filter-types';
+import { FilterDefinition } from 'app/search/filter-types';
 
 // check item tags or presence of notes
 const itemInfosFilters: FilterDefinition[] = [

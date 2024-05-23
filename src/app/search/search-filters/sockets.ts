@@ -1,5 +1,13 @@
 import { tl } from 'app/i18next-t';
 import {
+  DEFAULT_GLOW,
+  DEFAULT_ORNAMENTS,
+  DEFAULT_SHADER,
+  emptySocketHashes,
+} from 'app/search/d2-known-values';
+import { FilterDefinition } from 'app/search/filter-types';
+import { plainString } from 'app/search/text-utils';
+import {
   getInterestingSocketMetadatas,
   getSpecialtySocketMetadatas,
   modSlotTags,
@@ -20,14 +28,6 @@ import {
   PlugCategoryHashes,
   SocketCategoryHashes,
 } from 'data/d2/generated-enums';
-import {
-  DEFAULT_GLOW,
-  DEFAULT_ORNAMENTS,
-  DEFAULT_SHADER,
-  emptySocketHashes,
-} from '../d2-known-values';
-import { FilterDefinition } from '../filter-types';
-import { plainString } from '../text-utils';
 
 export const modslotFilter = {
   keywords: 'modslot',
