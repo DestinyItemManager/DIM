@@ -1,6 +1,5 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimLanguage } from 'app/i18n';
-import { DimStore } from 'app/inventory/store-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { LoadoutsByItem } from 'app/loadout-drawer/selectors';
 import { FilterDefinition } from 'app/search/filter-types';
@@ -12,7 +11,6 @@ import { FilterDefinition } from 'app/search/filter-types';
  * in search-filter.ts.
  */
 export interface LoadoutFilterContext {
-  currentStore: DimStore;
   loadoutsByItem: LoadoutsByItem;
   language: DimLanguage;
   d2Definitions: D2ManifestDefinitions | undefined;

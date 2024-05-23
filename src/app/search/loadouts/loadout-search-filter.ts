@@ -2,8 +2,6 @@ import { destinyVersionSelector } from 'app/accounts/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { languageSelector } from 'app/dim-api/selectors';
 import { DimLanguage } from 'app/i18n';
-import { currentStoreSelector } from 'app/inventory/selectors';
-import { DimStore } from 'app/inventory/store-types';
 import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
 import { LoadoutsByItem, loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
@@ -53,13 +51,11 @@ export const loadoutSearchConfigSelector = createSelector(
 );
 
 function makeLoadoutFilterContext(
-  currentStore: DimStore | undefined,
   loadoutsByItem: LoadoutsByItem,
   language: DimLanguage,
   d2Definitions: D2ManifestDefinitions | undefined,
 ): LoadoutFilterContext {
   return {
-    currentStore: currentStore!,
     loadoutsByItem,
     language,
     d2Definitions,
@@ -72,7 +68,6 @@ function makeLoadoutFilterContext(
  * functions whenever any of them changes.
  */
 const loadoutFilterContextSelector = createSelector(
-  currentStoreSelector,
   loadoutsByItemSelector,
   languageSelector,
   d2ManifestSelector,
