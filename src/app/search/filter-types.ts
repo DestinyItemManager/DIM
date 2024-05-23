@@ -1,6 +1,5 @@
 import { I18nKey, t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import { FilterContext, SuggestionsContext } from './item-filter-types';
 type I18nInput = Parameters<typeof t>;
 
 // a filter can return various bool-ish values
@@ -18,7 +17,9 @@ export type ItemFilter<I = DimItem> = (item: I) => ValidFilterOutput;
  */
 export type FilterFormat = 'simple' | 'query' | 'freeform' | 'range' | 'stat' | 'custom';
 
-export function canonicalFilterFormats(format: FilterDefinition['format']): FilterFormat[] {
+export function canonicalFilterFormats<I, FilterCtx, SuggestionsCtx>(
+  format: FilterDefinition<I, FilterCtx, SuggestionsCtx>['format'],
+): FilterFormat[] {
   if (!format) {
     return ['simple'];
   }
@@ -51,11 +52,7 @@ export interface FilterArgs {
  * filter expression itself. We can also use it to drive filter help and filter
  * editor.
  */
-export interface FilterDefinition<
-  I = DimItem,
-  FilterCtx = FilterContext,
-  SuggestionsCtx = SuggestionsContext,
-> {
+export interface FilterDefinition<I, FilterCtx, SuggestionsCtx> {
   /**
    * One or more keywords which trigger the filter when typed into search bar.
    * What this means depends on what "format" this filter is.

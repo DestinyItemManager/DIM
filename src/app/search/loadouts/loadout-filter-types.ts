@@ -32,13 +32,9 @@ export type LoadoutFilterDefinition = FilterDefinition<
   LoadoutSuggestionsContext
 >;
 
-export type LoadoutsFilterMap = FiltersMap<
-  Loadout,
-  LoadoutFilterContext,
-  LoadoutSuggestionsContext
->;
+export type LoadoutFilterMap = FiltersMap<Loadout, LoadoutFilterContext, LoadoutSuggestionsContext>;
 
-export type LoadoutsSearchConfig = SearchConfig<
+export type LoadoutSearchConfig = SearchConfig<
   Loadout,
   LoadoutFilterContext,
   LoadoutSuggestionsContext

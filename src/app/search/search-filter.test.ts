@@ -1,13 +1,13 @@
-import { FilterDefinition } from './filter-types';
+import { ItemFilterDefinition } from './item-filter-types';
 import { rangeStringToComparator } from './search-filter';
 import { allStatNames, searchableArmorStatNames } from './search-filter-values';
 import { generateSuggestionsForFilter } from './suggestions-generation';
 
 describe('generateSuggestionsForFilter', () => {
   const cases: [
-    format: FilterDefinition['format'],
-    keywords: FilterDefinition['keywords'],
-    suggestions: FilterDefinition['suggestions'],
+    format: ItemFilterDefinition['format'],
+    keywords: ItemFilterDefinition['keywords'],
+    suggestions: ItemFilterDefinition['suggestions'],
     overload: { [key: string]: number } | undefined,
   ][] = [
     [undefined, ['a', 'b', 'c'], undefined, undefined],
@@ -26,7 +26,7 @@ describe('generateSuggestionsForFilter', () => {
   test.each(cases)(
     "full suggestions for filter format '%s', keyword '%s' with suggestions %s, overload %s",
     (
-      format: FilterDefinition['format'],
+      format: ItemFilterDefinition['format'],
       keywords: string | string[],
       suggestions?: string[],
       overload?: { [key: string]: number } | undefined,

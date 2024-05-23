@@ -1,26 +1,22 @@
 import StaticPage from 'app/dim-ui/StaticPage';
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
 import { RootState } from 'app/store/types';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './FilterHelp.m.scss';
 import { SearchInput } from './SearchInput';
-import { FilterDefinition } from './filter-types';
-import { FilterContext, SuggestionsContext } from './item-filter-types';
+import { ItemFilterDefinition, ItemSearchConfig, SuggestionsContext } from './item-filter-types';
 import { searchConfigSelector } from './item-search-filter';
 import {
-  LoadoutFilterContext,
+  LoadoutFilterDefinition,
+  LoadoutSearchConfig,
   LoadoutSuggestionsContext,
-  LoadoutsSearchConfig,
 } from './loadouts/loadout-filter-types';
 import {
   loadoutSearchConfigSelector,
   loadoutSuggestionsContextSelector,
 } from './loadouts/loadout-search-filter';
-import { SearchConfig } from './search-config';
 import {
   generateGroupedSuggestionsForFilter,
   suggestionsContextSelector,
@@ -34,10 +30,9 @@ function keywordsString(keywords: string | string[]) {
 }
 
 export default function FilterHelp({ loadouts }: { loadouts?: boolean }) {
-  const searchConfig = useSelector<
-    RootState,
-    SearchConfig<DimItem, FilterContext, SuggestionsContext> | LoadoutsSearchConfig
-  >(loadouts ? loadoutSearchConfigSelector : searchConfigSelector).filtersMap;
+  const searchConfig = useSelector<RootState, ItemSearchConfig | LoadoutSearchConfig>(
+    loadouts ? loadoutSearchConfigSelector : searchConfigSelector,
+  ).filtersMap;
   const suggestionContext = useSelector(
     loadouts ? loadoutSuggestionsContextSelector : suggestionsContextSelector,
   );
@@ -103,9 +98,7 @@ function FilterExplanation({
   filter,
   suggestionContext,
 }: {
-  filter:
-    | FilterDefinition<Loadout, LoadoutFilterContext, LoadoutSuggestionsContext>
-    | FilterDefinition;
+  filter: LoadoutFilterDefinition | ItemFilterDefinition;
   suggestionContext: LoadoutSuggestionsContext | SuggestionsContext;
 }) {
   const dispatch = useDispatch();

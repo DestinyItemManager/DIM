@@ -9,6 +9,8 @@ import { LoadoutsByItem } from 'app/loadout-drawer/selectors';
 import { Settings } from 'app/settings/initial-settings';
 import { WishListRoll } from 'app/wishlists/types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
+import { FilterDefinition } from './filter-types';
+import { FiltersMap, SearchConfig } from './search-config';
 
 /**
  * A slice of data that could be used by filter functions to
@@ -44,3 +46,9 @@ export interface SuggestionsContext {
   allNotesHashtags?: string[];
   customStats?: CustomStatDef[];
 }
+
+export type ItemFilterDefinition = FilterDefinition<DimItem, FilterContext, SuggestionsContext>;
+
+export type ItemFilterMap = FiltersMap<DimItem, FilterContext, SuggestionsContext>;
+
+export type ItemSearchConfig = SearchConfig<DimItem, FilterContext, SuggestionsContext>;

@@ -1,7 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { tl } from 'app/i18next-t';
 import { DimItem, DimPlug } from 'app/inventory/item-types';
-import { FilterDefinition } from 'app/search/filter-types';
 import { quoteFilterString } from 'app/search/query-parser';
 import {
   matchText,
@@ -15,6 +14,7 @@ import { isD1Item } from 'app/utils/item-utils';
 import { DestinyInventoryItemDefinition, TierType } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import memoizeOne from 'memoize-one';
+import { ItemFilterDefinition } from '../item-filter-types';
 
 const interestingPlugTypes = new Set([PlugCategoryHashes.Frames, PlugCategoryHashes.Intrinsics]);
 const getPerkNamesFromManifest = memoizeOne(
@@ -84,9 +84,9 @@ const nameFilter = {
     return (item) => test(item.name);
   },
   fromItem: (item) => `exactname:${quoteFilterString(item.name)}`,
-} satisfies FilterDefinition;
+} satisfies ItemFilterDefinition;
 
-const freeformFilters: FilterDefinition[] = [
+const freeformFilters: ItemFilterDefinition[] = [
   nameFilter,
   {
     keywords: 'notes',

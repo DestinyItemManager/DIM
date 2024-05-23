@@ -5,7 +5,6 @@ import {
   DEFAULT_SHADER,
   emptySocketHashes,
 } from 'app/search/d2-known-values';
-import { FilterDefinition } from 'app/search/filter-types';
 import { plainString } from 'app/search/text-utils';
 import {
   getInterestingSocketMetadatas,
@@ -28,6 +27,7 @@ import {
   PlugCategoryHashes,
   SocketCategoryHashes,
 } from 'data/d2/generated-enums';
+import { ItemFilterDefinition } from '../item-filter-types';
 
 export const modslotFilter = {
   keywords: 'modslot',
@@ -58,9 +58,9 @@ export const modslotFilter = {
       getInterestingSocketMetadatas(item)?.map((m) => `modslot:${m.slotTag}`) ?? [];
     return modSocketTags.join(' ');
   },
-} satisfies FilterDefinition;
+} satisfies ItemFilterDefinition;
 
-const socketFilters: FilterDefinition[] = [
+const socketFilters: ItemFilterDefinition[] = [
   modslotFilter,
   {
     keywords: 'randomroll',

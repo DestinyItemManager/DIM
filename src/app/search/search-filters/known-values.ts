@@ -10,7 +10,6 @@ import {
   breakerTypes,
   pinnacleSources,
 } from 'app/search/d2-known-values';
-import { FilterDefinition } from 'app/search/filter-types';
 import { cosmeticTypes, damageTypeNames } from 'app/search/search-filter-values';
 import { getItemDamageShortName } from 'app/utils/item-utils';
 import { LookupTable } from 'app/utils/util-types';
@@ -19,6 +18,7 @@ import { D2EventEnum, D2EventInfo } from 'data/d2/d2-event-info-v2';
 import focusingOutputs from 'data/d2/focusing-item-outputs.json';
 import { BreakerTypeHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
 import powerfulSources from 'data/d2/powerful-rewards.json';
+import { ItemFilterDefinition } from '../item-filter-types';
 import D2Sources from './d2-sources';
 
 const D2EventPredicateLookup = Object.fromEntries(
@@ -69,7 +69,7 @@ export const damageFilter = {
     (item) =>
       getItemDamageShortName(item) === filterValue,
   fromItem: (item) => `is:${getItemDamageShortName(item)}`,
-} satisfies FilterDefinition;
+} satisfies ItemFilterDefinition;
 
 export const classFilter = {
   keywords: ['titan', 'hunter', 'warlock'],
@@ -80,7 +80,7 @@ export const classFilter = {
   },
   fromItem: (item) =>
     item.classType === DestinyClass.Unknown ? '' : `is:${classes[item.classType]}`,
-} satisfies FilterDefinition;
+} satisfies ItemFilterDefinition;
 
 export const itemTypeFilter = {
   keywords: Object.values(D2Categories) // stuff like Engrams, Kinetic, Gauntlets, Emblems, Finishers, Modifications
@@ -98,7 +98,7 @@ export const itemTypeFilter = {
     (item) =>
       item.type.toLowerCase() === filterValue,
   fromItem: (item) => `is:${item.type.toLowerCase()}`,
-} satisfies FilterDefinition;
+} satisfies ItemFilterDefinition;
 
 export const itemCategoryFilter = {
   keywords: [
@@ -138,9 +138,9 @@ export const itemCategoryFilter = {
     }
     return '';
   },
-} satisfies FilterDefinition;
+} satisfies ItemFilterDefinition;
 
-const knownValuesFilters: FilterDefinition[] = [
+const knownValuesFilters: ItemFilterDefinition[] = [
   damageFilter,
   classFilter,
   itemCategoryFilter,

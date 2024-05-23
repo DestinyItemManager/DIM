@@ -1,10 +1,10 @@
 import { tl } from 'app/i18next-t';
-import { FilterDefinition } from 'app/search/filter-types';
 import { isSunset } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
+import { ItemFilterDefinition } from '../item-filter-types';
 
 // simple checks against check an attribute found on DimItem
-const simpleFilters: FilterDefinition[] = [
+const simpleFilters: ItemFilterDefinition[] = [
   {
     keywords: 'armor2.0',
     description: tl('Filter.Energy'),

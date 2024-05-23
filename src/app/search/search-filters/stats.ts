@@ -3,7 +3,6 @@ import { tl } from 'app/i18next-t';
 import { DimItem, DimStat } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { maxLightItemSet, maxStatLoadout } from 'app/loadout-drawer/auto-loadouts';
-import { FilterDefinition } from 'app/search/filter-types';
 import {
   allAtomicStats,
   armorAnyStatHashes,
@@ -19,8 +18,9 @@ import { generateGroupedSuggestionsForFilter } from 'app/search/suggestions-gene
 import { getStatValuesByHash, isClassCompatible } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
+import { ItemFilterDefinition } from '../item-filter-types';
 
-const validateStat: FilterDefinition['validateStat'] = (filterContext) => {
+const validateStat: ItemFilterDefinition['validateStat'] = (filterContext) => {
   const customStatLabels = filterContext?.customStats?.map((c) => c.shortLabel) ?? [];
   const possibleStatNames = [...allAtomicStats, ...customStatLabels];
   return (stat) =>
@@ -29,7 +29,7 @@ const validateStat: FilterDefinition['validateStat'] = (filterContext) => {
 };
 
 // filters that operate on stats, several of which calculate values from all items beforehand
-const statFilters: FilterDefinition[] = [
+const statFilters: ItemFilterDefinition[] = [
   {
     keywords: 'stat',
     // t('Filter.StatsExtras')
