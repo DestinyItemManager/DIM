@@ -17,7 +17,7 @@ import { recentSearchComparator } from 'app/search/autocomplete';
 import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { FilterContext } from 'app/search/filter-types';
 import { buildItemFiltersMap } from 'app/search/item-search-config';
-import { parseAndValidateQuery } from 'app/search/search-utils';
+import { parseAndValidateQuery } from 'app/search/search-filter';
 import { count, uniqBy } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
 import { errorLog, infoLog } from 'app/utils/log';

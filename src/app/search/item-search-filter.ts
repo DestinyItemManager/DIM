@@ -23,8 +23,7 @@ import { wishListFunctionSelector, wishListsByHashSelector } from '../wishlists/
 import { InventoryWishListRoll } from '../wishlists/wishlists';
 import { FilterContext, SuggestionsContext } from './filter-types';
 import { searchConfigSelector } from './item-search-config';
-import { makeSearchFilterFactory } from './search-filter';
-import { parseAndValidateQuery } from './search-utils';
+import { makeSearchFilterFactory, parseAndValidateQuery } from './search-filter';
 
 //
 // Selectors
