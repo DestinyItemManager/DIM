@@ -10,6 +10,7 @@ import {
   uniqueEquipBuckets,
 } from 'app/search/d2-known-values';
 import { lightStats } from 'app/search/search-filter-values';
+import { getDamageDefsByDamageType } from 'app/utils/definitions';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { errorLog, warnLog } from 'app/utils/log';
 import { countEnhancedPerks } from 'app/utils/socket-utils';
@@ -232,10 +233,6 @@ export interface ItemCreationContext {
   itemComponents?: Partial<DestinyItemComponentSetOfint64>;
 }
 
-const damageDefsByDamageType = memoizeOne((defs: D2ManifestDefinitions) =>
-  _.keyBy(Object.values(defs.DamageType.getAll()), (d) => d.enumValue),
-);
-
 /**
  * Process a single raw item into a DIM item.
  */
@@ -376,7 +373,7 @@ export function makeItem(
     // Subclasses have their elemental damage type in the talent grid
     (normalBucket.hash === BucketHashes.Subclass &&
       itemDef.talentGrid?.hudDamageType !== undefined &&
-      damageDefsByDamageType(defs)[itemDef.talentGrid.hudDamageType]) ||
+      getDamageDefsByDamageType(defs)[itemDef.talentGrid.hudDamageType]) ||
     null;
 
   const powerCapHash =
