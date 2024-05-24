@@ -195,7 +195,7 @@ export interface DimItem {
   /** D2 items use sockets and plugs to represent everything from perks to mods to ornaments and shaders. */
   sockets: DimSockets | null;
   /** Sometimes the API doesn't return socket info. This tells whether the item *should* have socket info but doesn't. */
-  missingSockets: boolean;
+  missingSockets: false | 'missing' | 'not-loaded';
   /** Detailed stats for the item. */
   stats: DimStat[] | null;
   /** Any objectives associated with the item. */

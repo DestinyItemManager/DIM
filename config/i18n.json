@@ -943,6 +943,7 @@
     },
     "Infuse": "Infuse",
     "InfuseTitle": "Open the infusion fuel finder",
+    "LoadingSockets": "Perk and stat details have not loaded yet for this item.",
     "LockUnlock": {
       "Lock": "Lock {{itemType}}",
       "Unlock": "Unlock {{itemType}}",

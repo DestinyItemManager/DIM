@@ -2,8 +2,14 @@
 
 * The search suggestions dropdown now shows more results, based on the size of your screen.
 * Added an overload to the `inloadout:` search which allows searching items based on how many loadouts they are in, for example `inloadout:>2`.
+* Added `is:fashiononly` and `is:modsonly` search keywords to loadouts search.
 * Pages such as "About" and "Settings" now respect device safe areas when the device is in landscape mode.
-* Loadouts can now be copied and edited without having to save a copy of an existing loadout from the Loadouts tab.
+* You can now edit a copy of a Loadout directly, with no risk of overwriting the existing loadout.
+* Fixed some bounties showing as "Arc" that were not, in fact, Arc.
+* Fixed the too-narrow width of the sidebar on the Loadout Optimizer on app.destinyitemmanager.com.
+* Fixed distorted icons for owned mods in collections.
+* Due to a change in how Bungie.net works, DIM now loads vendor information one at a time, which may mean it takes longer to see accurate vendor items.
+* Minor clarifications to the privacy policy.
 
 ## 8.20.0 <span class="changelog-date">(2024-05-19)</span>
 

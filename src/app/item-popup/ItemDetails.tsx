@@ -1,5 +1,5 @@
 import { DestinyTooltipText } from 'app/dim-ui/DestinyTooltipText';
-import { t } from 'app/i18next-t';
+import { t, tl } from 'app/i18next-t';
 import { createItemContextSelector, storesSelector } from 'app/inventory/selectors';
 import { isTrialsPassage } from 'app/inventory/store/objectives';
 import { applySocketOverrides, useSocketOverrides } from 'app/inventory/store/override-sockets';
@@ -65,6 +65,11 @@ export default function ItemDetails({
 
   const showVendor = useContext(SingleVendorSheetContext);
 
+  const missingSocketsMessage =
+    item.missingSockets === 'missing'
+      ? tl('MovePopup.MissingSockets')
+      : tl('MovePopup.LoadingSockets');
+
   return (
     <div id={id} role="tabpanel" aria-labelledby={`${id}-tab`} className={styles.itemDetailsBody}>
       {item.itemCategoryHashes.includes(ItemCategoryHashes.Shaders) && (
@@ -122,7 +127,7 @@ export default function ItemDetails({
       )}
 
       {item.missingSockets && (
-        <div className="item-details warning">{t('MovePopup.MissingSockets')}</div>
+        <div className="item-details warning">{t(missingSocketsMessage)}</div>
       )}
 
       {defs.isDestiny2() && item.energy && defs && <EnergyMeter item={item} />}
