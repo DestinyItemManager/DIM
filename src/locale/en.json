@@ -102,6 +102,7 @@
     "ButtonHelp": "Compare Items",
     "CompareBaseStats": "Show Base Stats",
     "Error": {
+      "Invalid": "There are no valid items for comparison.",
       "Unmatched": "This item doesn't match the type of items being compared."
     },
     "InitialItem": "This is the item the Compare tool was launched from",
