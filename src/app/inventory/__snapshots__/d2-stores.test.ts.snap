@@ -11952,7 +11952,7 @@ exports[`process stores generates a correct  Weapons CSV export 1`] = `
     "Element": "Arc",
     "Equipped": false,
     "Event": "",
-    "Foundry": undefined,
+    "Foundry": "cassoid",
     "Guard Efficiency": 0,
     "Guard Endurance": 0,
     "Guard Resistance": 0,
