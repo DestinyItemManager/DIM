@@ -75,15 +75,13 @@ const freeformFilters: FilterDefinition<
       const test = matchText(filterValue, language, false);
       const damageDefs = d2Definitions && damageDefsByDamageType(d2Definitions);
       return (loadout: Loadout) => {
-        const subclass = d2Definitions ? subclassDefFromLoadout(loadout, d2Definitions) : undefined;
+        const subclass = d2Definitions && subclassDefFromLoadout(loadout, d2Definitions);
+        if (!subclass) { return false; }
+        if (test(subclass.displayProperties.name)) { return true; }
         // DamageType.None is 0
-        const damageType = subclass ? getDamageTypeForSubclassDef(subclass) : undefined;
-        const damageName =
-          damageType !== undefined ? damageDefs?.[damageType]?.displayProperties.name : undefined;
-        return (
-          (subclass !== undefined && test(subclass.displayProperties.name)) ||
-          (damageName !== undefined && test(damageName))
-        );
+        const damageType = getDamageTypeForSubclassDef(subclass)!;
+        const damageName = damageDefs?.[damageType]?.displayProperties.name;
+        return damageName && test(damageName));
       };
     },
   },
