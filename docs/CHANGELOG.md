@@ -4,6 +4,7 @@
 * Added an overload to the `inloadout:` search which allows searching items based on how many loadouts they are in, for example `inloadout:>2`.
 * Added `is:fashiononly` and `is:modsonly` search keywords to loadouts search.
 * Pages such as "About" and "Settings" now respect device safe areas when the device is in landscape mode.
+* You can now edit a copy of a Loadout directly, with no risk of overwriting the existing loadout.
 * Fixed some bounties showing as "Arc" that were not, in fact, Arc.
 * Fixed the too-narrow width of the sidebar on the Loadout Optimizer on app.destinyitemmanager.com.
 * Fixed distorted icons for owned mods in collections.

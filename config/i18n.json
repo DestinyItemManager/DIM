@@ -683,6 +683,7 @@
     "ClearSpaceWeapons": "Move other weapons away",
     "ClearSpaceArmor": "Move other armor away",
     "ClearUnsetMods": "Remove other mods",
+    "CopyAndEdit": "Edit Copy",
     "Create": "Create Loadout",
     "CurrentlyEquipped": "Currently Equipped",
     "Delete": "Delete",
