@@ -106,7 +106,8 @@
     "IsVendorItem": "This item is not owned. This is in a vendor's inventory and may be for sale.",
     "SoldBy": "Sold by: {{vendorName}}",
     "Error": {
-      "Unmatched": "This item doesn't match the type of items being compared."
+      "Unmatched": "This item doesn't match the type of items being compared.",
+      "Invalid": "There are no valid items for comparison."
     }
   },
   "Cooldown": {

@@ -9,6 +9,7 @@ import {
 } from 'app/inventory/store/override-sockets';
 import { recoilValue } from 'app/item-popup/RecoilStat';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { showNotification } from 'app/notifications/notifications';
 import { statLabels } from 'app/organizer/Columns';
 import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import Checkbox from 'app/settings/Checkbox';
@@ -119,6 +120,11 @@ export default function Compare({ session }: { session: CompareSession }) {
   const hasItems = compareItems.length > 0;
   useEffect(() => {
     if (!hasItems) {
+      showNotification({
+        type: 'warning',
+        title: t('Compare.Error.Invalid'),
+        body: session.query,
+      });
       cancel();
     }
   }, [cancel, hasItems]);
