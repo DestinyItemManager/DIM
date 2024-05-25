@@ -347,18 +347,90 @@ const D2Sources: {
   },
   dcv: {
     itemHashes: [
+      197764097, // Wild Hunt Boots
+      238284968, // Wild Hunt Strides
+      251310542, // Wild Hunt Hood
+      317220729, // Wild Hunt Vestment
+      351285766, // Substitutional Alloy Greaves
+      377757362, // Substitutional Alloy Hood
       417164956, // Jötunn
+      509561140, // Substitutional Alloy Gloves
+      509561142, // Substitutional Alloy Gloves
+      509561143, // Substitutional Alloy Gloves
+      695795213, // Substitutional Alloy Helm
+      820890091, // Planck's Stride
+      844110491, // Substitutional Alloy Gloves
       947448544, // Shadow of Earth Shell
+      1137424312, // Substitutional Alloy Cloak
+      1137424314, // Substitutional Alloy Cloak
+      1137424315, // Substitutional Alloy Cloak
+      1148770067, // Wild Hunt Cloak
+      1226584228, // Tangled Rust
+      1226584229, // Tangled Bronze
+      1276513983, // Wild Hunt Gloves
+      1298815317, // Brigand's Law
+      1348357884, // Substitutional Alloy Gauntlets
+      1458739906, // Wild Hunt Vest
+      1478986057, // Without Remorse
+      1584183805, // Substitutional Alloy Cloak
       1661191192, // The Tribute Hall
       1661191193, // Crown of Sorrow
       1661191194, // A Hall of Delights
       1661191195, // The Imperial Menagerie
+      1721943440, // Substitutional Alloy Boots
+      1721943441, // Substitutional Alloy Boots
+      1721943442, // Substitutional Alloy Boots
+      1855720513, // Substitutional Alloy Vest
+      1855720514, // Substitutional Alloy Vest
+      1855720515, // Substitutional Alloy Vest
+      2025716654, // Wild Hunt Grasps
       2027598066, // Imperial Opulence
       2027598067, // Imperial Dress
+      2055947316, // Wild Hunt Bond
+      2096778461, // Substitutional Alloy Strides
+      2096778462, // Substitutional Alloy Strides
+      2096778463, // Substitutional Alloy Strides
+      2279193565, // Wild Hunt Mark
+      2453357042, // Blast Battue
+      2468603405, // Substitutional Alloy Plate
+      2468603406, // Substitutional Alloy Plate
+      2468603407, // Substitutional Alloy Plate
+      2545401128, // Wild Hunt Gauntlets
       2557722678, // Midnight Smith
+      2657028416, // Substitutional Alloy Vest
+      2687273800, // Substitutional Alloy Grips
+      2690973101, // Substitutional Alloy Hood
+      2690973102, // Substitutional Alloy Hood
+      2690973103, // Substitutional Alloy Hood
+      2742760292, // Substitutional Alloy Plate
+      2761292744, // Substitutional Alloy Bond
+      2776503072, // Royal Chase
+      2778013407, // Firefright
+      2815379657, // Substitutional Alloy Bond
+      2815379658, // Substitutional Alloy Bond
+      2815379659, // Substitutional Alloy Bond
       2816212794, // Bad Juju
+      2868525740, // The Collector
+      2868525741, // The Invader
+      2868525742, // The Reaper
+      2868525743, // The Sentry
+      2903026872, // Substitutional Alloy Helm
+      2903026873, // Substitutional Alloy Helm
+      2903026874, // Substitutional Alloy Helm
+      2942269704, // Substitutional Alloy Gauntlets
+      2942269705, // Substitutional Alloy Gauntlets
+      2942269707, // Substitutional Alloy Gauntlets
+      3166926328, // Substitutional Alloy Robes
+      3166926330, // Substitutional Alloy Robes
+      3166926331, // Substitutional Alloy Robes
       3176509806, // Árma Mákhēs
+      3180809346, // Wild Hunt Greaves
+      3192738009, // Substitutional Alloy Greaves
+      3192738010, // Substitutional Alloy Greaves
+      3192738011, // Substitutional Alloy Greaves
       3211806999, // Izanagi's Burden
+      3351935136, // Wild Hunt Plate
+      3364258850, // Substitutional Alloy Strides
       3580904580, // Legend of Acrius
       3588934839, // Le Monarque
       3650581584, // New Age Black Armory
@@ -367,70 +439,128 @@ const D2Sources: {
       3650581587, // House of Meyrin
       3650581588, // Satou Tribe
       3650581589, // Bergusian Night
+      3680920565, // Substitutional Alloy Robes
+      3757338780, // Substitutional Alloy Mark
+      3757338782, // Substitutional Alloy Mark
+      3757338783, // Substitutional Alloy Mark
+      3808901541, // Viper Strike
       3841416152, // Golden Empire
       3841416153, // Goldleaf
       3841416154, // Shadow Gilt
       3841416155, // Cinderchar
       3875444086, // The Emperor's Chosen
+      3887272785, // Wild Hunt Helm
+      3911047865, // Substitutional Alloy Mark
+      4013678605, // Substitutional Alloy Boots
+      4026120124, // Substitutional Alloy Grips
+      4026120125, // Substitutional Alloy Grips
+      4026120127, // Substitutional Alloy Grips
+      4070722289, // Substitutional Alloy Mask
+      4078925540, // Substitutional Alloy Mask
+      4078925541, // Substitutional Alloy Mask
+      4078925542, // Substitutional Alloy Mask
+      4079117607, // Wild Hunt Mask
+      4085986809, // Secret Treasure
     ],
     sourceHashes: [
+      96303009, // Source: Purchased from Amanda Holliday.
+      110159004, // Source: Complete Nightfall strike "Warden of Nothing."
+      146504277, // Source: Earn rank-up packages from Arach Jalaal.
       148542898, // Source: Equip the full Mercury destination set on a Warlock.
+      164083100, // Source: Display of Supremacy, Weekly Challenge
       194661944, // Source: Adventure "Siren Song" on Saturn's Moon, Titan
       266896577, // Source: Solve the Norse glyph puzzle.
       315474873, // Source: Complete activities and earn rank-up packages on Io.
       354493557, // Source: Complete Nightfall strike "Savathûn's Song."
       439994003, // Source: Complete the "Master Smith" Triumph.
       482012099, // Source: Adventure "Thief of Thieves" on Saturn's Moon, Titan
+      620369433, // Source: Season of the Haunted Triumph
       636474187, // Source: Adventure "Deathless" on Saturn's Moon, Titan
+      783399508, // Source: Adventure "Supply and Demand" in the European Dead Zone
+      790152021, // Source: Season of Plunder Triumph
+      790433146, // Source: Adventure "Dark Alliance" in the European Dead Zone
+      798957490, // Source: Complete wanted escapee bounties for the Spider.
+      841568343, // Source: "Hunt for the Wrathborn" Quest
       925197669, // Source: Complete a Bergusia Forge ignition.
       948753311, // Source: Found by completing Volundr Forge ignitions.
       976328308, // Source: The Derelict Leviathan
       1036506031, // Source: Complete activities and earn rank-up packages on Mars.
       1067250718, // Source: Adventure "Arecibo" on Io
       1175566043, // Source: Complete Nightfall strike "A Garden World."
+      1186140085, // Source: Adventure "Unbreakable" on Nessus
+      1283862526, // Source: Season of the Haunted Nightfall Grandmaster
       1286332045, // Source: Found by completing Izanami Forge ignitions.
+      1289998337, // Source: Adventure "Hack the Planet" on Nessus
       1299614150, // Source: [REDACTED] on Mars.
       1400219831, // Source: Equip the full Mercury destination set on a Hunter.
       1411886787, // Source: Equip the full Mercury destination set on a Titan.
       1457456824, // Source: Complete the "Reunited Siblings" Triumph.
+      1464399708, // Source: Earn rank-up packages from Executor Hideo.
       1465990789, // Source: Solve the Japanese glyph puzzle.
       1483048674, // Source: Complete the "Scourge of the Past" raid.
+      1527887247, // Source: Adventure "Red Legion, Black Oil" in the European Dead Zone
       1581680964, // Source: Complete Nightfall strike "Tree of Probabilities."
       1596507419, // Source: Complete a Gofannon Forge ignition.
       1618754228, // Source: Sundial Activity on Mercury
       1654120320, // Source: Complete activities and earn rank-up packages on Mercury.
       1675483099, // Source: Leviathan, Spire of Stars raid lair.
+      1736997121, // Source: Adventure "Stop and Go" in the European Dead Zone
+      1771326504, // Source: Complete activities and earn rank-up packages on the Tangled Shore.
       1832642406, // Source: World Quest "Dynasty" on Io.
+      1861838843, // Source: Adventure "A Frame Job" in the European Dead Zone
       1924238751, // Source: Complete Nightfall strike "Will of the Thousands."
+      1952675042, // Source: Complete Gambit Prime matches and increase your rank.
+      2039343154, // Source: Contact Public Event
+      2040548068, // Source: Adventure "Release" on Nessus
       2062058385, // Source: Crafted in a Black Armory forge.
       2085016678, // Source: Complete the "Scourge of the Past" raid within the first 24 hours after its launch.
+      2096915131, // Source: Adventure "Poor Reception" in the European Dead Zone
+      2206233229, // Source: Follow treasure maps.
+      2273761598, // Source: Season of the Haunted Activities
       2310754348, // Source: World Quest "Data Recovery" on Mars.
+      2345202459, // Source: Adventure "Invitation from the Emperor" on Nessus
       2384327872, // Source: Solve the French glyph puzzle.
       2392127416, // Source: Adventure "Cliffhanger" on Io
       2399751101, // Acquired from the raid "Crown of Sorrow."
       2487203690, // Source: Complete Nightfall strike "Tree of Probabilities."
       2511152325, // Acquired from the Menagerie aboard the Leviathan.
       2541753910, // Source: Complete the "Master Blaster" Triumph.
+      2553369674, // Source: Adventure "Exodus Siege" on Nessus
+      2627087475, // Source: Obelisk Bounties and Resonance Rank Increases Across the System
       2653618435, // Source: Leviathan raid.
+      2676881949, // Source: Season of the Haunted
       2717017239, // Source: Complete Nightfall strike "The Pyramidion."
       2765304727, // Source: Leviathan raid on Prestige difficulty.
+      2805208672, // Source: Complete Nightfall strike "The Hollowed Lair."
       2812190367, // Source: Leviathan, Spire of Stars raid lair on Prestige difficulty.
       2926805810, // Source: Complete Nightfall strike "Strange Terrain."
       2937902448, // Source: Leviathan, Eater of Worlds raid lair.
       2966694626, // Source: Found by solving the mysteries behind the Black Armory's founding families.
+      2982642634, // Source: Season of Plunder Grandmaster Nightfall
       3047033583, // Source: Returned the Obsidian Accelerator.
       3079246067, // Source: Complete Osiris' Lost Prophecies for Brother Vance on Mercury.
+      3094114967, // Source: Season of the Lost Ritual Playlists
+      3107094548, // Source: "Coup de Grâce" Mission
       3147603678, // Acquired from the raid "Crown of Sorrow."
       3257722699, // Source: Complete the "Clean Up on Aisle Five" Triumph.
+      3265560237, // Source: Cryptic Quatrains III
+      3308438907, // Source: Season of Plunder
       3390164851, // Source: Found by turning in Black Armory bounties.
       3427537854, // Source: Adventure "Road Rage" on Io
       3534706087, // Source: Complete activities and earn rank-up packages on Saturn's Moon, Titan.
+      3569603185, // Source: Earn rank-up packages from Lakshmi-2.
+      3740731576, // Source: "A Rising Tide" Mission
+      3754173885, // Source: Adventure "Getting Your Hands Dirty" in the European Dead Zone
       3764925750, // Source: Complete an Izanami Forge ignition.
       3964663093, // Source: Rare drop from high-scoring Nightfall strikes on Mercury.
       4009509410, // Source: Complete challenges in the Leviathan raid.
       4066007318, // Source: Leviathan, Eater of Worlds raid lair on Prestige difficulty.
       4101102010, // Source: Found by completing Bergusia Forge ignitions.
+      4122810030, // Source: Complete seasonal activities during Season of the Undying.
       4137108180, // Source: Escalation Protocol on Mars.
+      4140654910, // Source: Eliminate all Barons on the Tangled Shore.
+      4199401779, // Source: Season of Plunder Activities
+      4214471686, // Source: Adventure "Unsafe at Any Speed" in the European Dead Zone
       4246883461, // Source: Found in the "Scourge of the Past" raid.
       4247521481, // Source: Complete the "Beautiful but Deadly" Triumph.
       4263201695, // Source: Complete Nightfall strike "A Garden World."
