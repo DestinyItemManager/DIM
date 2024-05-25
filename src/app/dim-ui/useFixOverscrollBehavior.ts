@@ -16,9 +16,10 @@ import useResizeObserver from '@react-hook/resize-observer';
  * https://github.com/w3c/csswg-drafts/issues/3349#issuecomment-492721871 and
  * https://bugs.chromium.org/p/chromium/issues/detail?id=813094
  */
-export function useFixOverscrollBehavior(ref: React.RefObject<HTMLElement>) {
-  useResizeObserver(ref, (entry) => {
-    const elem = entry.target as HTMLElement;
+export function useFixOverscrollBehavior(...refs: React.RefObject<HTMLElement>[]) {
+  const measured = refs.length === 1 ? refs[0] : refs[1];
+  useResizeObserver(measured, () => {
+    const elem = refs[0].current!;
     if (elem.scrollHeight > elem.clientHeight) {
       // Scrollable contents
       elem.style.overflowY = 'auto';
