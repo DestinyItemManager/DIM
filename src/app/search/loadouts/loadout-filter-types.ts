@@ -12,6 +12,10 @@ import { LoadoutsByItem } from 'app/loadout-drawer/selectors';
  */
 export interface LoadoutFilterContext {
   currentStore: DimStore;
+  /**
+   * The selected store on the loadouts page
+   */
+  selectedLoadoutsStore: DimStore;
   loadoutsByItem: LoadoutsByItem;
   language: DimLanguage;
   d2Definitions: D2ManifestDefinitions | undefined;
@@ -23,5 +27,9 @@ export interface LoadoutFilterContext {
  */
 export interface LoadoutSuggestionsContext {
   loadouts?: Loadout[];
+  /**
+   * The selected store on the loadouts page
+   */
+  selectedLoadoutsStore?: DimStore;
   d2Definitions?: D2ManifestDefinitions;
 }

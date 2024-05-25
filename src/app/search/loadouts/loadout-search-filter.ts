@@ -8,7 +8,11 @@ import { d2ManifestSelector } from 'app/manifest/selectors';
 import { createSelector } from 'reselect';
 import { currentStoreSelector } from '../../inventory/selectors';
 import { DimStore } from '../../inventory/store-types';
-import { LoadoutsByItem, loadoutsByItemSelector } from '../../loadout-drawer/selectors';
+import {
+  LoadoutsByItem,
+  loadoutsByItemSelector,
+  selectedLoadoutStoreSelector,
+} from '../../loadout-drawer/selectors';
 import { buildSearchConfig } from '../search-config';
 import { makeSearchFilterFactory } from '../search-filter';
 import { parseAndValidateQuery } from '../search-utils';
@@ -30,16 +34,19 @@ export const allLoadoutFilters = [...simpleFilters, ...freeformFilters, ...overl
  */
 export const loadoutSuggestionsContextSelector = createSelector(
   loadoutsSelector,
+  selectedLoadoutStoreSelector,
   d2ManifestSelector,
   makeLoadoutSuggestionsContext,
 );
 
 function makeLoadoutSuggestionsContext(
   loadouts: Loadout[],
+  selectedLoadoutsStore: DimStore,
   d2Definitions: D2ManifestDefinitions | undefined,
 ): LoadoutSuggestionsContext {
   return {
     loadouts,
+    selectedLoadoutsStore,
     d2Definitions,
   };
 }
@@ -54,12 +61,14 @@ export const loadoutSearchConfigSelector = createSelector(
 
 function makeLoadoutFilterContext(
   currentStore: DimStore | undefined,
+  selectedLoadoutsStore: DimStore,
   loadoutsByItem: LoadoutsByItem,
   language: DimLanguage,
   d2Definitions: D2ManifestDefinitions | undefined,
 ): LoadoutFilterContext {
   return {
     currentStore: currentStore!,
+    selectedLoadoutsStore,
     loadoutsByItem,
     language,
     d2Definitions,
@@ -73,6 +82,7 @@ function makeLoadoutFilterContext(
  */
 const loadoutFilterContextSelector = createSelector(
   currentStoreSelector,
+  selectedLoadoutStoreSelector,
   loadoutsByItemSelector,
   languageSelector,
   d2ManifestSelector,

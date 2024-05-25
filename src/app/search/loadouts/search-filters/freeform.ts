@@ -44,7 +44,7 @@ const freeformFilters: FilterDefinition<
     keywords: ['subclass'],
     description: tl('LoadoutFilter.Subclass'),
     format: 'freeform',
-    suggestionsGenerator: ({ loadouts, d2Definitions }) => {
+    suggestionsGenerator: ({ loadouts, d2Definitions, selectedLoadoutsStore }) => {
       if (!loadouts || !d2Definitions) {
         return [];
       }
@@ -54,7 +54,10 @@ const freeformFilters: FilterDefinition<
       return deduplicate(
         loadouts.flatMap((loadout) => {
           const subclass = subclassDefFromLoadout(loadout, d2Definitions);
-          if (!subclass) {
+          if (
+            !subclass ||
+            (selectedLoadoutsStore && loadout.classType !== selectedLoadoutsStore?.classType)
+          ) {
             return;
           }
           const damageType = getDamageTypeForSubclassDef(subclass)!;
@@ -67,12 +70,12 @@ const freeformFilters: FilterDefinition<
         }),
       );
     },
-    filter: ({ filterValue, language, d2Definitions }) => {
+    filter: ({ filterValue, language, d2Definitions, selectedLoadoutsStore }) => {
       const test = matchText(filterValue, language, false);
       const damageDefs = d2Definitions && getDamageDefsByDamageType(d2Definitions);
       return (loadout: Loadout) => {
         const subclass = d2Definitions && subclassDefFromLoadout(loadout, d2Definitions);
-        if (!subclass) {
+        if (!subclass || subclass.classType !== selectedLoadoutsStore.classType) {
           return false;
         }
         if (test(subclass.displayProperties.name)) {
