@@ -1,3 +1,4 @@
+import { SearchType } from '@destinyitemmanager/dim-api-types';
 import StaticPage from 'app/dim-ui/StaticPage';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
@@ -27,14 +28,18 @@ function keywordsString(keywords: string | string[]) {
   return keywords;
 }
 
-export default function FilterHelp({ loadouts }: { loadouts?: boolean }) {
+export default function FilterHelp({ searchType = SearchType.Item }: { searchType?: SearchType }) {
   const searchConfig = useSelector<
     RootState,
     | SearchConfig<DimItem, FilterContext, SuggestionsContext>
     | SearchConfig<Loadout, LoadoutFilterContext, LoadoutSuggestionsContext>
-  >(loadouts ? loadoutSearchConfigSelector : searchConfigSelector).filtersMap;
+  >(
+    searchType === SearchType.Loadout ? loadoutSearchConfigSelector : searchConfigSelector,
+  ).filtersMap;
   const suggestionContext = useSelector(
-    loadouts ? loadoutSuggestionsContextSelector : suggestionsContextSelector,
+    searchType === SearchType.Loadout
+      ? loadoutSuggestionsContextSelector
+      : suggestionsContextSelector,
   );
   const [search, setSearch] = useState('');
 

@@ -1099,7 +1099,9 @@
     "UsageCount": "# Used",
     "Query": "Search",
     "Link": "View and edit search history",
-    "Title": "Search History"
+    "Title": "Search History",
+    "Item": "Item Searches",
+    "Loadout": "Loadout Searches"
   },
   "Settings": {
     "AutoLockTagged": "Sync item lock state with tag",

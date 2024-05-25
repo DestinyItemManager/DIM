@@ -2,6 +2,7 @@ import {
   GlobalSettings,
   ProfileResponse,
   ProfileUpdateResult,
+  SearchType,
 } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { createAction } from 'typesafe-actions';
@@ -40,16 +41,23 @@ export const trackTriumph = createAction('dim-api/TRACK_TRIUMPH')<{
 }>();
 
 /** Record that a search was used */
-export const searchUsed = createAction('dim-api/SEARCH_USED')<string>();
+export const searchUsed = createAction('dim-api/SEARCH_USED')<{
+  query: string;
+  type: SearchType;
+}>();
 
 /** Save or un-save a search */
 export const saveSearch = createAction('dim-api/SAVE_SEARCH')<{
   query: string;
   saved: boolean;
+  type: SearchType;
 }>();
 
 /** Delete a saved search */
-export const searchDeleted = createAction('dim-api/DELETE_SEARCH')<string>();
+export const searchDeleted = createAction('dim-api/DELETE_SEARCH')<{
+  query: string;
+  type: SearchType;
+}>();
 
 /**
  * This signals that we are about to flush the update queue.

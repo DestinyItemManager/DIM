@@ -1,3 +1,4 @@
+import { SearchType } from '@destinyitemmanager/dim-api-types';
 import { languageSelector, settingSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClassIcon from 'app/dim-ui/ClassIcon';
@@ -166,7 +167,7 @@ export default function LoadoutPopup({
             className={styles.filterInput}
             placeholder={t('Header.FilterHelpLoadouts')}
             onQueryChanged={setLoadoutQuery}
-            loadouts
+            searchType={SearchType.Loadout}
             instant
           />
         </div>
