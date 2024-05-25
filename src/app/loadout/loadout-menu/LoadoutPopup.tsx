@@ -12,6 +12,7 @@ import {
 } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { powerLevelSelector } from 'app/inventory/store/selectors';
+import { updateLoadoutStore } from 'app/loadout-drawer/actions';
 import { itemLevelingLoadout, itemMoveLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import {
@@ -106,6 +107,14 @@ export default function LoadoutPopup({
   );
 
   const [loadoutQuery, setLoadoutQuery] = useState('');
+
+  // This sets the store id for loadouts page, so that when navigating to it the correct
+  // character will be set.
+  const setLoadoutPageStore = () => {
+    if (!dimStore.isVault) {
+      dispatch(updateLoadoutStore({ storeId: dimStore.id }));
+    }
+  };
 
   const makeNewLoadout = () =>
     editLoadout(newLoadout('', [], dimStore.classType), dimStore.id, { isNew: true });
@@ -208,7 +217,7 @@ export default function LoadoutPopup({
 
         {!filteringLoadouts && dimStore.destinyVersion === 2 && (
           <li className={styles.menuItem}>
-            <Link to="../loadouts" state={{ storeId: dimStore.id }}>
+            <Link to="../loadouts" onClick={setLoadoutPageStore}>
               <AppIcon icon={faList} />
               <span>{t('Loadouts.ManageLoadouts')}</span>
             </Link>

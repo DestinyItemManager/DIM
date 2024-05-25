@@ -31,9 +31,9 @@ import { AppIcon, addIcon, faCalculator, uploadIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { usePageTitle } from 'app/utils/hooks';
 import { DestinySeasonDefinition } from 'bungie-api-ts/destiny2';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { updateLoadoutStore } from '../loadout-drawer/actions';
 import styles from './Loadouts.m.scss';
 import LoadoutRow from './LoadoutsRow';
@@ -79,10 +79,8 @@ export default function LoadoutsContainer({ account }: { account: DestinyAccount
 }
 
 function Loadouts({ account }: { account: DestinyAccount }) {
-  const location = useLocation();
   const dispatch = useDispatch();
 
-  const locationStoreId = (location.state as { storeId: string } | undefined)?.storeId;
   const stores = useSelector(storesSelector);
   const selectedStore = useSelector(selectedLoadoutStore);
 
@@ -93,16 +91,14 @@ function Loadouts({ account }: { account: DestinyAccount }) {
     [dispatch],
   );
 
-  // If the location store matches some store id, isn't the vault, and isn't the currently
-  // selected store id we need to dispatch an update to update the page.
-  if (
-    locationStoreId &&
-    stores.some((store) => store.id === locationStoreId) &&
-    locationStoreId !== 'vault' &&
-    selectedStore.id !== locationStoreId
-  ) {
-    setSelectedStoreId(locationStoreId);
-  }
+  useEffect(
+    () => () => {
+      // Unset selected loadout on unmount so that the selection is not
+      // remembered across page navigations.
+      dispatch(updateLoadoutStore({ storeId: undefined }));
+    },
+    [dispatch],
+  );
 
   const [sharedLoadout, setSharedLoadout] = useState<Loadout>();
   const [loadoutImportOpen, setLoadoutImportOpen] = useState<boolean>(false);

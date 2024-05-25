@@ -3,10 +3,6 @@ import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, storesSelector } from 'app/inventory/selectors';
-<<<<<<< HEAD
-=======
-import { getDamageTypeForSubclassPlug } from 'app/inventory/subclass';
->>>>>>> 9b993c1f6 (Revert file move)
 import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
