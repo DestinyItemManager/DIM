@@ -23,7 +23,7 @@ import {
   newLoadoutFromEquipped,
 } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsForClassTypeSelector } from 'app/loadout-drawer/loadouts-selector';
-import { selectedLoadoutStore } from 'app/loadout-drawer/selectors';
+import { selectedLoadoutStoreSelector } from 'app/loadout-drawer/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { loadoutFilterFactorySelector } from 'app/search/loadouts/loadout-search-filter';
 import { useSetting } from 'app/settings/hooks';
@@ -82,7 +82,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const dispatch = useDispatch();
 
   const stores = useSelector(storesSelector);
-  const selectedStore = useSelector(selectedLoadoutStore);
+  const selectedStore = useSelector(selectedLoadoutStoreSelector);
 
   const setSelectedStoreId = useCallback(
     (storeId: string) => {

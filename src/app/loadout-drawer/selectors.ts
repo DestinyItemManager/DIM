@@ -129,7 +129,7 @@ export const previousLoadoutSelector =
     return undefined;
   };
 
-export const selectedLoadoutStore = createSelector(
+export const selectedLoadoutStoreSelector = createSelector(
   sortedStoresSelector,
   currentStoreSelector,
   (rootState: RootState) => rootState.loadouts.selectedLoadoutStoreId,
