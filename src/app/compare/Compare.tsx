@@ -127,7 +127,7 @@ export default function Compare({ session }: { session: CompareSession }) {
       });
       cancel();
     }
-  }, [cancel, hasItems]);
+  }, [cancel, hasItems, session.query]);
 
   // Memoize computing the list of stats
   const allStats = useMemo(
