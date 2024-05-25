@@ -14,15 +14,14 @@ for (const sourceAttrs of Object.values(D2Sources)) {
 // Generate DCV source
 for (const sourceAttrs of Object.values(D2Sources)) {
   if (sourceAttrs.enteredDCV && sourceAttrs.enteredDCV <= currentSeason) {
-    if (D2Sources.dcv) {
-      if (D2Sources.dcv.itemHashes && sourceAttrs.itemHashes) {
-        D2Sources.dcv.itemHashes.push(...sourceAttrs.itemHashes);
-      }
-      if (D2Sources.dcv.sourceHashes && sourceAttrs.sourceHashes) {
-        D2Sources.dcv.sourceHashes.push(...sourceAttrs.sourceHashes);
-      }
-    } else {
-      D2Sources.dcv = sourceAttrs;
+    if (!D2Sources.dcv) {
+      D2Sources.dcv = { itemHashes: [], sourceHashes: [] };
+    }
+    if (sourceAttrs.itemHashes) {
+      D2Sources.dcv.itemHashes!.push(...sourceAttrs.itemHashes);
+    }
+    if (sourceAttrs.sourceHashes) {
+      D2Sources.dcv.sourceHashes!.push(...sourceAttrs.sourceHashes);
     }
   }
 }
