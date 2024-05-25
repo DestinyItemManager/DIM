@@ -20,10 +20,9 @@ export const loadedAll = createAction('vendors/LOADED_ALL')<{
   vendorsResponse: LimitedDestinyVendorsResponse;
 }>();
 
-export const loadedSingle = createAction('vendors/LOADED_COMPONENT')<{
+export const loadedVendorComponents = createAction('vendors/LOADED_COMPONENT')<{
   characterId: string;
-  vendorResponse: DestinyVendorResponse;
-  vendorHash: number;
+  vendorResponses: [vendorHash: number, DestinyVendorResponse][];
 }>();
 
 export const loadedError = createAction('vendors/LOADED_ERROR')<{
@@ -64,13 +63,20 @@ export function loadAllVendors(
         return;
       }
 
+      // we'll trickle in responses if this is initiated from the vendors page.
+      // otherwise, we'll collect all the itemComponents and inject them as one,
+      // preventing optimization recalc spam
+      const isVendorsPage = window.location.pathname.includes('/vendors');
+
       // hashes of vendors bungie explicitly recommends displaying
       const topLevelVendors =
         vendorsResponse.vendorGroups.data?.groups.flatMap((g) => g.vendorHashes) ?? [];
-
+      // vendors bungie recommends, plus their supporting subscreen vendors.
       const displayVendors = getSubvendorHashes(topLevelVendors, defs);
+
       // after getting all items for sale above, we'll do subsequent API fetches to
-      // fill in item details. but only some vendors need this, filtered here.
+      // fill in item details. but only some vendors, filtered here, need this.
+      // many vendors can be built from just their definition and live item list
       const vendorsNeedingComponents = filterMap(
         Object.entries(vendorsResponse.sales.data!),
         ([vendorHashKey, sales]) => {
@@ -99,30 +105,39 @@ export function loadAllVendors(
           compareBy((h) => !defs.Vendor.getOptional(h)?.groups.length),
           // deprioritize vendors whose sections are collapsed on the vendors page
           compareBy((h) => Boolean(collapsedSections[`d2vendor-${h}`])),
-          // sort by their position on the page lol
+          // sort by their position on the page
           compareBy((h) => displayVendors.indexOf(h)),
         ),
       );
 
-      // TO-DO ↑: limit collapsedSections prioritization to when we're on vendors page?
-      // TO-DO ↑: if the current page is optimizer/loadouts:
-      //          prioritize armor? do all single-vendor fetches then submit their
-      //          itemComponents en-masse, to cause only one optimizer recalculation?
-
+      const vendorResponses: [vendorHash: number, DestinyVendorResponse][] = [];
       for (const vendorHash of vendorsNeedingComponents) {
         try {
           start = Date.now();
           const vendorResponse = await getVendorSaleComponents(account, characterId, vendorHash);
           timings.componentsTime += Date.now() - start;
           timings.componentsFetched++;
-          dispatch(loadedSingle({ vendorResponse, characterId, vendorHash }));
+          if (isVendorsPage) {
+            dispatch(
+              loadedVendorComponents({
+                vendorResponses: [[vendorHash, vendorResponse]],
+                characterId,
+              }),
+            );
+          } else {
+            vendorResponses.push([vendorHash, vendorResponse]);
+          }
         } catch {
           // TO-DO: what to do here if a single vendor component call fails?
           // not necessarily knock the overall vendors state into error mode.
           // maybe retry failed single-vendors later? add them to a new list in vendors state?
         }
       }
+      if (!isVendorsPage) {
+        dispatch(loadedVendorComponents({ vendorResponses, characterId }));
+      }
     } catch (e) {
+      // this would catch a failure of getVendors. the single-vendors are caught above
       const error = convertToError(e);
       dispatch(loadedError({ characterId, error }));
     } finally {
@@ -147,13 +162,19 @@ function itemNeedsComponents(defs: D2ManifestDefinitions, itemHash: number) {
   return (
     item &&
     // probably just need this for weapon perks and armor stats?
-    // TO-DO: what about bounties and quests? where's their pre-existing progress stored? do we care?
     (item.itemType === DestinyItemType.Armor ||
       // exotic weapons can be built from defs
       (item.itemType === DestinyItemType.Weapon && item.inventory!.tierType !== TierType.Exotic))
   );
 }
 
+// a subvendor is a secondary screen with its own "sales", including
+// - menus for purchasing subclass abilites/fragments
+// - engram content previews
+// - engram focusing options
+// structurally, a subvendor looks like a saleitem of the main vendor,
+// but the item def refers to a previewVendorHash, a vendor def in its own right
+/** given vendor hashes, recursively accumulates those plus any subvendor hashes */
 function getSubvendorHashes(
   vendorHashes: number[],
   defs: D2ManifestDefinitions,
