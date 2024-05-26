@@ -254,8 +254,6 @@ export default function Sheet({
     };
   }, []);
 
-  const childrenNode = _.isFunction(children) ? children({ onClose: triggerClose }) : children;
-
   const sheetBody = (
     <motion.div
       // motion props
@@ -303,7 +301,9 @@ export default function Sheet({
           style={frozenHeight ? { flexBasis: frozenHeight } : undefined}
           ref={sheetContents}
         >
-          <div ref={childrenContainer}>{childrenNode}</div>
+          <div ref={childrenContainer}>
+            {_.isFunction(children) ? children({ onClose: triggerClose }) : children}
+          </div>
         </div>
 
         {Boolean(footer) && (
