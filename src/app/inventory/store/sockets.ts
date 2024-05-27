@@ -20,11 +20,13 @@ import {
   DestinyItemSocketEntryDefinition,
   DestinyItemSocketEntryPlugItemRandomizedDefinition,
   DestinyItemSocketState,
+  DestinyItemType,
   DestinyObjectiveProgress,
   DestinyPlugItemCraftingRequirements,
   DestinySocketCategoryStyle,
   DestinySocketTypeDefinition,
   SocketPlugSources,
+  TierType,
 } from 'bungie-api-ts/destiny2';
 import deprecatedMods from 'data/d2/deprecated-mods.json';
 import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
@@ -143,13 +145,35 @@ function buildInstancedSockets(
       createdSockets.push(built);
     }
   }
+  if (
+    itemDef.inventory?.tierType === TierType.Exotic &&
+    itemDef.itemType === DestinyItemType.Armor
+  ) {
+    createdSockets.push(
+      buildSocket(
+        defs,
+        { plugHash: 4173924323, isEnabled: true, isVisible: true, enableFailIndexes: [] },
+        defs.InventoryItem.get(1756483796).sockets?.socketEntries.at(-2),
+        sockets.length,
+        undefined,
+        plugObjectivesData,
+        itemDef,
+      )!,
+    );
+  }
 
   const categories: DimSocketCategory[] = [];
 
   for (const category of itemDef.sockets.socketCategories) {
     categories.push({
       category: defs.SocketCategory.get(category.socketCategoryHash, itemDef),
-      socketIndexes: category.socketIndexes,
+      socketIndexes:
+        itemDef.inventory?.tierType === TierType.Exotic &&
+        itemDef.itemType === DestinyItemType.Armor &&
+        defs.SocketCategory.get(category.socketCategoryHash, itemDef).displayProperties.name ===
+          'ARMOR MODS'
+          ? [...category.socketIndexes, sockets.length]
+          : category.socketIndexes,
     });
   }
 

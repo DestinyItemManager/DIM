@@ -372,7 +372,10 @@ export function getStatValuesByHash(item: DimItem, byWhichValue: 'base' | 'value
  */
 export function isArtifice(item: DimItem) {
   return Boolean(
-    item.sockets?.allSockets.some((socket) => socket.plugged?.plugDef.hash === ARTIFICE_PERK_HASH),
+    item.isExotic ||
+      item.sockets?.allSockets.some(
+        (socket) => socket.plugged?.plugDef.hash === ARTIFICE_PERK_HASH,
+      ),
   );
 }
 
