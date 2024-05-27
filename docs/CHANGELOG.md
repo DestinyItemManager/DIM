@@ -1,5 +1,7 @@
 ## Next
 
+## 8.21.0 <span class="changelog-date">(2024-05-26)</span>
+
 * The search suggestions dropdown now shows more results, based on the size of your screen.
 * Added an overload to the `inloadout:` search which allows searching items based on how many loadouts they are in, for example `inloadout:>2`.
 * Loadout searches now save in your search history and can be saved.
