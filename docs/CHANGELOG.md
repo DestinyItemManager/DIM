@@ -1,5 +1,7 @@
 ## Next
 
+* Fixed an issue where DIM clients might not see search history when using only local settings storage.
+
 ## 8.21.0 <span class="changelog-date">(2024-05-26)</span>
 
 * The search suggestions dropdown now shows more results, based on the size of your screen.
