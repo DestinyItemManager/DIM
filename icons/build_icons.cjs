@@ -15,7 +15,7 @@ for (const VERSION of ['release', 'beta', 'dev', 'pr']) {
 
   for (const size of [16, 32, 96, 48]) {
     execSync(
-      `rsvg-convert -w ${size} -h ${size} -o "${VERSION}/favicon-${size}x${size}.png" "favicon-${VERSION}.svg"`
+      `rsvg-convert -w ${size} -h ${size} -o "${VERSION}/favicon-${size}x${size}.png" "favicon-${VERSION}.svg"`,
     );
   }
 
@@ -27,22 +27,22 @@ for (const VERSION of ['release', 'beta', 'dev', 'pr']) {
   }[VERSION];
 
   execSync(
-    `rsvg-convert -w 180 -h 180 -o "${VERSION}/apple-touch-icon.png" "apple-touch-icon-${VERSION}.svg"`
+    `rsvg-convert -w 180 -h 180 -o "${VERSION}/apple-touch-icon.png" "apple-touch-icon-${VERSION}.svg"`,
   );
   execSync(
-    `rsvg-convert -w 180 -h 180 -o "${VERSION}/apple-touch-icon-${CACHEBREAKER}.png" "apple-touch-icon-${VERSION}.svg"`
+    `rsvg-convert -w 180 -h 180 -o "${VERSION}/apple-touch-icon-${CACHEBREAKER}.png" "apple-touch-icon-${VERSION}.svg"`,
   );
   execSync(
-    `rsvg-convert -w 192 -h 192 -o "${VERSION}/android-chrome-192x192-${CACHEBREAKER}.png" "android-icon-${VERSION}.svg"`
+    `rsvg-convert -w 192 -h 192 -o "${VERSION}/android-chrome-192x192-${CACHEBREAKER}.png" "android-icon-${VERSION}.svg"`,
   );
   execSync(
-    `rsvg-convert -w 512 -h 512 -o "${VERSION}/android-chrome-512x512-${CACHEBREAKER}.png" "android-icon-${VERSION}.svg"`
+    `rsvg-convert -w 512 -h 512 -o "${VERSION}/android-chrome-512x512-${CACHEBREAKER}.png" "android-icon-${VERSION}.svg"`,
   );
   execSync(
-    `rsvg-convert -w 512 -h 512 -b "${color}" -o "${VERSION}/android-chrome-mask-512x512-${CACHEBREAKER}.png" "android-icon-${VERSION}.svg"`
+    `rsvg-convert -w 512 -h 512 -b "${color}" -o "${VERSION}/android-chrome-mask-512x512-${CACHEBREAKER}.png" "android-icon-${VERSION}.svg"`,
   );
   execSync(
-    `convert ${VERSION}/favicon-48x48.png -define icon:auto-resize=48,32,16 ${VERSION}/favicon.ico`
+    `convert ${VERSION}/favicon-48x48.png -define icon:auto-resize=48,32,16 ${VERSION}/favicon.ico`,
   );
   rimraf.sync(`${VERSION}/favicon-48x48.png`);
 }
@@ -54,6 +54,6 @@ fs.mkdirSync('splash');
 for (const [_a, _b, _c, _d, w, h] of splash) {
   execSync(`rsvg-convert -w ${w} -h ${h} -a -o "splash/splash-${w}x${h}.png" "splash.svg"`);
   execSync(
-    `convert splash/splash-${w}x${h}.png -background "#313233" -gravity center -extent ${w}x${h} splash/splash-${w}x${h}.png`
+    `convert splash/splash-${w}x${h}.png -background "#313233" -gravity center -extent ${w}x${h} splash/splash-${w}x${h}.png`,
   );
 }
