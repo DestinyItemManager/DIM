@@ -8,7 +8,7 @@ import {
 import { DimStore } from 'app/inventory/store-types';
 import { loVendorItemsSelector } from 'app/loadout-builder/loadout-builder-vendors';
 import { getAutoMods } from 'app/loadout-builder/process/mappers';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { Loadout } from 'app/loadout/loadout-types';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { filterFactorySelector, validateQuerySelector } from 'app/search/search-filter';
 import { currySelector } from 'app/utils/selectors';

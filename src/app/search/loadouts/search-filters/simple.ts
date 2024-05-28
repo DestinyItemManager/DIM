@@ -1,6 +1,6 @@
 import { tl } from 'app/i18next-t';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { isArmorModsOnly, isFashionOnly } from 'app/loadout-drawer/loadout-utils';
+import { Loadout } from 'app/loadout/loadout-types';
 import { FilterDefinition } from 'app/search/filter-types';
 import { LoadoutFilterContext, LoadoutSuggestionsContext } from '../loadout-filter-types';
 

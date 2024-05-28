@@ -1,7 +1,7 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
 import { ResolvedStatConstraint } from 'app/loadout-builder/types';
-import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { AppIcon, faCalculator } from 'app/shell/icons';
 import { count } from 'app/utils/collections';
 import { useSelector } from 'react-redux';

@@ -12,15 +12,15 @@ import { getStore } from 'app/inventory/stores-helpers';
 import { useHideItemPicker, useItemPicker } from 'app/item-picker/item-picker';
 import { mergeStrictUpgradeStatConstraints } from 'app/loadout-analyzer/utils';
 import { LoadoutUpdateFunction } from 'app/loadout-drawer/loadout-drawer-reducer';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadoutFromEquipped, resolveLoadoutModHashes } from 'app/loadout-drawer/loadout-utils';
-import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
 import { getItemsAndSubclassFromLoadout } from 'app/loadout/LoadoutView';
 import {
   LoadoutEditModsSection,
   LoadoutEditSubclassSection,
 } from 'app/loadout/loadout-edit/LoadoutEdit';
+import { Loadout } from 'app/loadout/loadout-types';
 import { autoAssignmentPCHs } from 'app/loadout/loadout-ui/LoadoutMods';
+import { loadoutsSelector } from 'app/loadout/loadouts-selector';
 import { categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
 import { useD2Definitions } from 'app/manifest/selectors';

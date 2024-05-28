@@ -20,7 +20,7 @@ import {
   sortedStoresSelector,
 } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
-import { LoadoutsByItem, loadoutsByItemSelector } from '../loadout-drawer/selectors';
+import { LoadoutsByItem, loadoutsByItemSelector } from '../loadout/selectors';
 import { querySelector } from '../shell/selectors';
 import { wishListFunctionSelector, wishListsByHashSelector } from '../wishlists/selectors';
 import { InventoryWishListRoll } from '../wishlists/wishlists';

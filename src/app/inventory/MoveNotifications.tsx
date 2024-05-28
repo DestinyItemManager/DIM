@@ -7,8 +7,8 @@ import {
   LoadoutModState,
   LoadoutSocketOverrideState,
 } from 'app/loadout-drawer/loadout-apply-state';
-import { InGameLoadout, Loadout, isInGameLoadout } from 'app/loadout-drawer/loadout-types';
 import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
+import { InGameLoadout, Loadout, isInGameLoadout } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { NotificationError, NotifyInput } from 'app/notifications/notifications';
 import { AppIcon, faCheckCircle, faExclamationCircle, refreshIcon } from 'app/shell/icons';

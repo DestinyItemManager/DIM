@@ -14,12 +14,12 @@ import {
 import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
+import { convertToLoadoutItem, itemsByItemId, newLoadout } from '../loadout-drawer/loadout-utils';
 import {
   Loadout as DimLoadout,
   LoadoutItem as DimLoadoutItem,
   InGameLoadout,
 } from './loadout-types';
-import { convertToLoadoutItem, itemsByItemId, newLoadout } from './loadout-utils';
 
 /**
  * DIM API stores loadouts in a new format, but the app still uses the old format everywhere. These functions convert

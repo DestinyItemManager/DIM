@@ -8,7 +8,6 @@ import { allItemsSelector, createItemContextSelector } from 'app/inventory/selec
 import { useItemPicker } from 'app/item-picker/item-picker';
 import LoadoutDrawerDropTarget from 'app/loadout-drawer/LoadoutDrawerDropTarget';
 import LoadoutDrawerFooter from 'app/loadout-drawer/LoadoutDrawerFooter';
-import { deleteLoadout, updateLoadout } from 'app/loadout-drawer/actions';
 import {
   addItem,
   removeItem,
@@ -17,7 +16,8 @@ import {
 } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { addItem$ } from 'app/loadout-drawer/loadout-events';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
-import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { deleteLoadout, updateLoadout } from 'app/loadout/actions';
+import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD1Definitions } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
