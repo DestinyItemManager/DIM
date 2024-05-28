@@ -18,7 +18,6 @@ import {
   inGameArmorEnergyRules,
 } from 'app/loadout-builder/types';
 import { statTier } from 'app/loadout-builder/utils';
-import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import {
   getLoadoutStats,
   getLoadoutSubclassFragmentCapacity,
@@ -26,6 +25,7 @@ import {
 } from 'app/loadout-drawer/loadout-utils';
 import { fullyResolveLoadout } from 'app/loadout/ingame/selectors';
 import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
+import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { ModMap, categorizeArmorMods, fitMostMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
 import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';

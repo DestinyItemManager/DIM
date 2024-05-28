@@ -1,7 +1,7 @@
 import BungieImage, { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
-import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
+import { InGameLoadout } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';

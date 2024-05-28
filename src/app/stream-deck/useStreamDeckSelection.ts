@@ -1,7 +1,7 @@
 import { LoadoutItem } from '@destinyitemmanager/dim-api-types';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
-import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
+import { InGameLoadout, Loadout } from 'app/loadout/loadout-types';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState, ThunkResult } from 'app/store/types';

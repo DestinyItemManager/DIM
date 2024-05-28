@@ -2,7 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { tl } from 'app/i18next-t';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
 import { getDamageTypeForSubclassDef } from 'app/inventory/subclass';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { Loadout } from 'app/loadout/loadout-types';
 import { matchText, plainString } from 'app/search/search-filters/freeform';
 import { getDamageDefsByDamageType } from 'app/utils/definitions';
 import { DestinyItemType } from 'bungie-api-ts/destiny2';

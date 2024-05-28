@@ -5,7 +5,7 @@ import {
   currentStoreSelector,
   profileResponseSelector,
 } from 'app/inventory/selectors';
-import { ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
+import { ResolvedLoadoutMod } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { unlockedItemsForCharacterOrProfilePlugSet } from 'app/records/plugset-helpers';
 import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';

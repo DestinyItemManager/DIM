@@ -72,7 +72,8 @@ import { PlatformErrorCodes } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { Draft, produce } from 'immer';
 import _ from 'lodash';
-import { savePreviousLoadout } from './actions';
+import { savePreviousLoadout } from '../loadout/actions';
+import { Assignment, InGameLoadout, Loadout, LoadoutItem } from '../loadout/loadout-types';
 import {
   LoadoutApplyPhase,
   LoadoutItemState,
@@ -86,7 +87,6 @@ import {
   setModResult,
   setSocketOverrideResult,
 } from './loadout-apply-state';
-import { Assignment, InGameLoadout, Loadout, LoadoutItem } from './loadout-types';
 import {
   backupLoadout,
   findItemForLoadout,

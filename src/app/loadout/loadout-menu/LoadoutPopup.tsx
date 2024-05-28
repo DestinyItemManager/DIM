@@ -12,7 +12,6 @@ import {
 } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { powerLevelSelector } from 'app/inventory/store/selectors';
-import { updateLoadoutStore } from 'app/loadout-drawer/actions';
 import { itemLevelingLoadout, itemMoveLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import {
@@ -22,16 +21,17 @@ import {
   randomizeLoadoutSubclass,
 } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import {
   isArmorModsOnly,
   isFashionOnly,
   isMissingItems,
   newLoadout,
 } from 'app/loadout-drawer/loadout-utils';
-import { loadoutsForClassTypeSelector } from 'app/loadout-drawer/loadouts-selector';
 import { makeRoomForPostmaster, totalPostmasterItems } from 'app/loadout-drawer/postmaster';
-import { previousLoadoutSelector } from 'app/loadout-drawer/selectors';
+import { updateLoadoutStore } from 'app/loadout/actions';
+import { InGameLoadout, Loadout } from 'app/loadout/loadout-types';
+import { loadoutsForClassTypeSelector } from 'app/loadout/loadouts-selector';
+import { previousLoadoutSelector } from 'app/loadout/selectors';
 import { manifestSelector, useDefinitions } from 'app/manifest/selectors';
 import { showMaterialCount } from 'app/material-counts/MaterialCountsWrappers';
 import { showNotification } from 'app/notifications/notifications';

@@ -2,8 +2,8 @@ import { destinyVersionSelector } from 'app/accounts/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { languageSelector } from 'app/dim-api/selectors';
 import { DimLanguage } from 'app/i18n';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
+import { Loadout } from 'app/loadout/loadout-types';
+import { loadoutsSelector } from 'app/loadout/loadouts-selector';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { createSelector } from 'reselect';
 import { currentStoreSelector } from '../../inventory/selectors';
@@ -12,7 +12,7 @@ import {
   LoadoutsByItem,
   loadoutsByItemSelector,
   selectedLoadoutStoreSelector,
-} from '../../loadout-drawer/selectors';
+} from '../../loadout/selectors';
 import { buildSearchConfig } from '../search-config';
 import { makeSearchFilterFactory } from '../search-filter';
 import { parseAndValidateQuery } from '../search-utils';
