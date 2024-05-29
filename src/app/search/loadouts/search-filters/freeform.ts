@@ -2,6 +2,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { tl } from 'app/i18next-t';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
 import { getDamageTypeForSubclassDef } from 'app/inventory/subclass';
+import { getResolutionInfo } from 'app/loadout-drawer/loadout-utils';
 import { Loadout } from 'app/loadout/loadout-types';
 import { matchText, plainString } from 'app/search/text-utils';
 import { getDamageDefsByDamageType } from 'app/utils/definitions';
@@ -17,7 +18,8 @@ function deduplicate<T>(someArray: (T | undefined | null)[]) {
 
 function subclassDefFromLoadout(loadout: Loadout, d2Definitions: D2ManifestDefinitions) {
   for (const item of loadout.items) {
-    const itemDef = d2Definitions?.InventoryItem.get(item.hash);
+    const resolutionInfo = getResolutionInfo(d2Definitions, item.hash);
+    const itemDef = resolutionInfo && d2Definitions?.InventoryItem.getOptional(resolutionInfo.hash);
     if (itemDef?.itemType === DestinyItemType.Subclass) {
       return itemDef;
     }
@@ -105,16 +107,19 @@ const freeformFilters: FilterDefinition<
         }
 
         const itemSuggestions = loadout.items.map((item) => {
-          const definition = d2Definitions.InventoryItem.get(item.hash);
-          return `contains:${quoteFilterString(definition.displayProperties.name.toLowerCase())}`;
+          const resolutionInfo = getResolutionInfo(d2Definitions, item.hash);
+          const definition =
+            resolutionInfo && d2Definitions.InventoryItem.getOptional(resolutionInfo.hash);
+          return (
+            definition &&
+            `contains:${quoteFilterString(definition.displayProperties.name.toLowerCase())}`
+          );
         });
         const modSuggestions =
           loadout.parameters?.mods?.map((modHash) => {
-            const definition = d2Definitions.InventoryItem.get(modHash);
-            // For some reason this definition is undefined when switching characters in the
-            // loadouts page. This suggestion function will be run, as redux is updated, and
-            // the modHash will be defined but d2Definitions.InventoryItem.get(modHash)
-            // returns undefined
+            const resolutionInfo = getResolutionInfo(d2Definitions, modHash);
+            const definition =
+              resolutionInfo && d2Definitions.InventoryItem.getOptional(resolutionInfo.hash);
             return (
               definition &&
               `contains:${quoteFilterString(definition.displayProperties.name.toLowerCase())}`
@@ -133,11 +138,15 @@ const freeformFilters: FilterDefinition<
 
         return (
           loadout.items.some((item) => {
-            const itemDefinition = d2Definitions.InventoryItem.get(item.hash);
+            const resolutionInfo = getResolutionInfo(d2Definitions, item.hash);
+            const itemDefinition =
+              resolutionInfo && d2Definitions.InventoryItem.getOptional(resolutionInfo.hash);
             return itemDefinition && test(itemDefinition.displayProperties.name);
           }) ||
           loadout.parameters?.mods?.some((mod) => {
-            const modDefinition = d2Definitions.InventoryItem.get(mod);
+            const resolutionInfo = getResolutionInfo(d2Definitions, mod);
+            const modDefinition =
+              resolutionInfo && d2Definitions.InventoryItem.getOptional(resolutionInfo.hash);
             return modDefinition && test(modDefinition.displayProperties.name);
           })
         );
