@@ -111,7 +111,14 @@ const freeformFilters: FilterDefinition<
         const modSuggestions =
           loadout.parameters?.mods?.map((modHash) => {
             const definition = d2Definitions.InventoryItem.get(modHash);
-            return `contains:${quoteFilterString(definition.displayProperties.name.toLowerCase())}`;
+            // For some reason this definition is undefined when switching characters in the
+            // loadouts page. This suggestion function will be run, as redux is updated, and
+            // the modHash will be defined but d2Definitions.InventoryItem.get(modHash)
+            // returns undefined
+            return (
+              definition &&
+              `contains:${quoteFilterString(definition.displayProperties.name.toLowerCase())}`
+            );
           }) || [];
 
         return deduplicate([...itemSuggestions, ...modSuggestions]);
