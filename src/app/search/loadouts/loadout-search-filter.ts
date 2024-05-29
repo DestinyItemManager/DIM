@@ -1,21 +1,21 @@
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { languageSelector } from 'app/dim-api/selectors';
 import { DimLanguage } from 'app/i18n';
+import { DimStore } from 'app/inventory/store-types';
 import { Loadout } from 'app/loadout/loadout-types';
 import { loadoutsSelector } from 'app/loadout/loadouts-selector';
-import { d2ManifestSelector } from 'app/manifest/selectors';
-import { createSelector } from 'reselect';
-import { currentStoreSelector } from '../../inventory/selectors';
-import { DimStore } from '../../inventory/store-types';
 import {
   LoadoutsByItem,
   loadoutsByItemSelector,
   selectedLoadoutStoreSelector,
-} from '../../loadout/selectors';
-import { buildSearchConfig } from '../search-config';
-import { makeSearchFilterFactory } from '../search-filter';
-import { parseAndValidateQuery } from '../search-utils';
+} from 'app/loadout/selectors';
+import { d2ManifestSelector } from 'app/manifest/selectors';
+import { buildFiltersMap, buildSearchConfig } from 'app/search/search-config';
+import { makeSearchFilterFactory, parseAndValidateQuery } from 'app/search/search-filter';
+import memoizeOne from 'memoize-one';
+import { createSelector } from 'reselect';
 import { LoadoutFilterContext, LoadoutSuggestionsContext } from './loadout-filter-types';
 import freeformFilters from './search-filters/freeform';
 import overloadedRangeFilters from './search-filters/range-overload';
@@ -55,19 +55,16 @@ export const loadoutSearchConfigSelector = createSelector(
   destinyVersionSelector,
   languageSelector,
   loadoutSuggestionsContextSelector,
-  () => allLoadoutFilters,
-  buildSearchConfig,
+  buildLoadoutsSearchConfig,
 );
 
 function makeLoadoutFilterContext(
-  currentStore: DimStore | undefined,
   selectedLoadoutsStore: DimStore,
   loadoutsByItem: LoadoutsByItem,
   language: DimLanguage,
   d2Definitions: D2ManifestDefinitions | undefined,
 ): LoadoutFilterContext {
   return {
-    currentStore: currentStore!,
     selectedLoadoutsStore,
     loadoutsByItem,
     language,
@@ -81,7 +78,6 @@ function makeLoadoutFilterContext(
  * functions whenever any of them changes.
  */
 const loadoutFilterContextSelector = createSelector(
-  currentStoreSelector,
   selectedLoadoutStoreSelector,
   loadoutsByItemSelector,
   languageSelector,
@@ -108,3 +104,16 @@ export const validateLoadoutQuerySelector = createSelector(
   (searchConfig, filterContext) => (query: string) =>
     parseAndValidateQuery(query, searchConfig.filtersMap, filterContext),
 );
+
+export const buildLoadoutsFiltersMap = memoizeOne((destinyVersion: DestinyVersion) =>
+  buildFiltersMap(destinyVersion, allLoadoutFilters),
+);
+
+export function buildLoadoutsSearchConfig(
+  destinyVersion: DestinyVersion,
+  language: DimLanguage,
+  suggestionsContext: LoadoutSuggestionsContext,
+) {
+  const filtersMap = buildLoadoutsFiltersMap(destinyVersion);
+  return buildSearchConfig(language, suggestionsContext, filtersMap);
+}

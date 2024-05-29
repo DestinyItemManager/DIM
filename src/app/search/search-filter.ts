@@ -1,137 +1,9 @@
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { customStatsSelector, languageSelector } from 'app/dim-api/selectors';
-import { DimLanguage } from 'app/i18n';
-import { TagValue } from 'app/inventory/dim-item-info';
-import { d2ManifestSelector } from 'app/manifest/selectors';
-import { Settings } from 'app/settings/initial-settings';
 import { filterMap } from 'app/utils/collections';
 import { errorLog } from 'app/utils/log';
-import { WishListRoll } from 'app/wishlists/types';
 import { stubTrue } from 'lodash';
-import { createSelector } from 'reselect';
-import { DimItem } from '../inventory/item-types';
-import {
-  allItemsSelector,
-  currentStoreSelector,
-  displayableBucketHashesSelector,
-  getNotesSelector,
-  getTagSelector,
-  newItemsSelector,
-  sortedStoresSelector,
-} from '../inventory/selectors';
-import { DimStore } from '../inventory/store-types';
-import { LoadoutsByItem, loadoutsByItemSelector } from '../loadout/selectors';
-import { querySelector } from '../shell/selectors';
-import { wishListFunctionSelector, wishListsByHashSelector } from '../wishlists/selectors';
-import { InventoryWishListRoll } from '../wishlists/wishlists';
-import {
-  FilterContext,
-  FilterDefinition,
-  ItemFilter,
-  SuggestionsContext,
-  canonicalFilterFormats,
-} from './filter-types';
-import { QueryAST, parseQuery } from './query-parser';
-import { SearchConfig, searchConfigSelector } from './search-config';
-import { parseAndValidateQuery, rangeStringToComparator } from './search-utils';
-
-//
-// Selectors
-//
-
-/**
- * A selector for the filterContext for a particular destiny version. This must
- * depend on every bit of data a filter might need to run, so that we regenerate the filter
- * functions whenever any of them changes.
- */
-const filterContextSelector = createSelector(
-  sortedStoresSelector,
-  allItemsSelector,
-  currentStoreSelector,
-  loadoutsByItemSelector,
-  wishListFunctionSelector,
-  wishListsByHashSelector,
-  newItemsSelector,
-  getTagSelector,
-  getNotesSelector,
-  languageSelector,
-  customStatsSelector,
-  d2ManifestSelector,
-  makeFilterContext,
-);
-
-function makeFilterContext(
-  stores: DimStore[],
-  allItems: DimItem[],
-  currentStore: DimStore | undefined,
-  loadoutsByItem: LoadoutsByItem,
-  wishListFunction: (item: DimItem) => InventoryWishListRoll | undefined,
-  wishListsByHash: Map<number, WishListRoll[]>,
-  newItems: Set<string>,
-  getTag: (item: DimItem) => TagValue | undefined,
-  getNotes: (item: DimItem) => string | undefined,
-  language: DimLanguage,
-  customStats: Settings['customStats'],
-  d2Definitions: D2ManifestDefinitions | undefined,
-): FilterContext {
-  return {
-    stores,
-    allItems,
-    currentStore: currentStore!,
-    loadoutsByItem,
-    wishListFunction,
-    newItems,
-    getTag,
-    getNotes,
-    language,
-    customStats,
-    wishListsByHash,
-    d2Definitions,
-  };
-}
-
-/**
- * A selector for the search config for a particular destiny version.
- * Combines the searchConfig (list of filters),
- * and the filterContext (list of other stat information filters can use)
- * into a filter factory (for converting parsed strings into filter functions)
- */
-export const filterFactorySelector = createSelector(
-  searchConfigSelector,
-  filterContextSelector,
-  makeSearchFilterFactory<DimItem, FilterContext, SuggestionsContext>,
-);
-
-/** A selector for a function for searching items, given the current search query. */
-export const searchFilterSelector = createSelector(
-  querySelector,
-  filterFactorySelector,
-  (query, filterFactory) => filterFactory(query),
-);
-
-/** A selector for all items filtered by whatever's currently in the search box. */
-export const filteredItemsSelector = createSelector(
-  allItemsSelector,
-  searchFilterSelector,
-  displayableBucketHashesSelector,
-  (allItems, searchFilter, displayableBuckets) =>
-    allItems.filter((i) => displayableBuckets.has(i.location.hash) && searchFilter(i)),
-);
-
-/** A selector for a function for validating a query. */
-export const validateQuerySelector = createSelector(
-  searchConfigSelector,
-  filterContextSelector,
-  (searchConfig, filterContext) => (query: string) =>
-    parseAndValidateQuery(query, searchConfig.filtersMap, filterContext),
-);
-
-/** Whether the current search query is valid. */
-export const queryValidSelector = createSelector(
-  querySelector,
-  validateQuerySelector,
-  (query, validateQuery) => validateQuery(query).valid,
-);
+import { FilterDefinition, ItemFilter, canonicalFilterFormats } from './filter-types';
+import { QueryAST, canonicalizeQuery, parseQuery } from './query-parser';
+import { FiltersMap, SearchConfig } from './search-config';
 
 /** Build a function that can take query text and return a filter function from it. */
 export function makeSearchFilterFactory<I, FilterCtx, SuggestionsCtx>(
@@ -237,7 +109,7 @@ export function makeSearchFilterFactory<I, FilterCtx, SuggestionsCtx>(
 }
 
 /** Matches a non-`is` filter syntax and returns a way to actually create the matched filter function. */
-export function matchFilter<I, FilterCtx, SuggestionsCtx>(
+function matchFilter<I, FilterCtx, SuggestionsCtx>(
   filterDef: FilterDefinition<I, FilterCtx, SuggestionsCtx>,
   lhs: string,
   filterValue: string,
@@ -300,5 +172,136 @@ export function matchFilter<I, FilterCtx, SuggestionsCtx>(
       case 'custom':
         break;
     }
+  }
+}
+
+const rangeStringRegex = /^([<=>]{0,2})(\d+(?:\.\d+)?)$/;
+const overloadedRangeStringRegex = /^([<=>]{0,2})(\w+)$/;
+
+/**
+ * This turns a string like "<=2" into a function like (x)=>x <= 2.
+ * The produced function returns false if it was fed undefined.
+ */
+export function rangeStringToComparator(
+  rangeString?: string,
+  overloads?: { [key: string]: number },
+) {
+  if (!rangeString) {
+    throw new Error('Missing range comparison');
+  }
+
+  const [operator, comparisonValue] = extractOpAndValue(rangeString, overloads);
+
+  switch (operator) {
+    case '=':
+    case '':
+      return (compare: number | undefined) => compare !== undefined && compare === comparisonValue;
+    case '<':
+      return (compare: number | undefined) => compare !== undefined && compare < comparisonValue;
+    case '<=':
+      return (compare: number | undefined) => compare !== undefined && compare <= comparisonValue;
+    case '>':
+      return (compare: number | undefined) => compare !== undefined && compare > comparisonValue;
+    case '>=':
+      return (compare: number | undefined) => compare !== undefined && compare >= comparisonValue;
+  }
+  throw new Error(`Unknown range operator ${operator}`);
+}
+
+function extractOpAndValue(rangeString: string, overloads?: { [key: string]: number }) {
+  const matchedOverloadString = rangeString.match(overloadedRangeStringRegex);
+  if (matchedOverloadString && overloads && matchedOverloadString[2] in overloads) {
+    return [matchedOverloadString[1], overloads[matchedOverloadString[2]]] as const;
+  }
+
+  const matchedRangeString = rangeString.match(rangeStringRegex);
+  if (matchedRangeString) {
+    return [matchedRangeString[1], parseFloat(matchedRangeString[2])] as const;
+  }
+
+  throw new Error("Doesn't match our range comparison syntax, or invalid overload");
+}
+
+/**
+ * Given a query and some configuration, parse the query and see if it's valid. This includes checking that the filters actually exist in the filtersMap.
+ */
+export function parseAndValidateQuery<I, FilterCtx, SuggestionsCtx>(
+  query: string,
+  filtersMap: FiltersMap<I, FilterCtx, SuggestionsCtx>,
+  filterContext?: FilterCtx,
+): {
+  /** Is the query valid at all? */
+  valid: boolean;
+  /** Can the user save this query? */
+  saveable: boolean;
+  /** Should we automatically save this in search history? */
+  saveInHistory: boolean;
+  /** The canonicalized version of the query */
+  canonical: string;
+} {
+  let valid = true;
+  let saveable = true;
+  let saveInHistory = true;
+  let canonical = query;
+  try {
+    const ast = parseQuery(query);
+    if (!validateQuery(ast, filtersMap, filterContext)) {
+      valid = false;
+    } else {
+      if (ast.op === 'noop' || (ast.op === 'filter' && ast.type === 'keyword')) {
+        // don't save "trivial" single-keyword filters
+        saveInHistory = false;
+      }
+      // Some sites have people save big lists of item IDs. Even if these aren't too long, don't save them automatically
+      if (ast.op === 'or' && ast.operands.every((op) => op.op === 'filter' && op.type === 'id')) {
+        saveInHistory = false;
+      }
+      canonical = canonicalizeQuery(ast);
+      saveable = canonical.length <= 2048;
+    }
+  } catch (e) {
+    valid = false;
+  }
+  return {
+    valid,
+    saveable: valid && saveable,
+    saveInHistory: valid && saveable && saveInHistory,
+    canonical,
+  };
+}
+
+/**
+ * Return whether the query is completely valid - syntactically, and where every term matches a known filter
+ * and every filter RHS matches the declared format and options for the filter syntax.
+ */
+function validateQuery<I, FilterCtx, SuggestionsCtx>(
+  query: QueryAST,
+  filtersMap: FiltersMap<I, FilterCtx, SuggestionsCtx>,
+  filterContext?: FilterCtx,
+): boolean {
+  if (query.error) {
+    return false;
+  }
+  switch (query.op) {
+    case 'filter': {
+      const filterName = query.type;
+      const filterValue = query.args;
+
+      // "is:" filters are slightly special cased
+      if (filterName === 'is') {
+        return Boolean(filtersMap.isFilters[filterValue]);
+      } else {
+        const filterDef = filtersMap.kvFilters[filterName];
+        return Boolean(filterDef && matchFilter(filterDef, filterName, filterValue, filterContext));
+      }
+    }
+    case 'not':
+      return validateQuery(query.operand, filtersMap, filterContext);
+    case 'and':
+    case 'or': {
+      return query.operands.every((q) => validateQuery(q, filtersMap, filterContext));
+    }
+    case 'noop':
+      return true;
   }
 }

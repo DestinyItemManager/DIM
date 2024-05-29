@@ -1,8 +1,8 @@
 import { tl } from 'app/i18next-t';
 import { getItemKillTrackerInfo, getItemYear } from 'app/utils/item-utils';
-import { FilterDefinition } from '../filter-types';
+import { ItemFilterDefinition } from '../item-filter-types';
 
-const simpleRangeFilters: FilterDefinition[] = [
+const simpleRangeFilters: ItemFilterDefinition[] = [
   {
     keywords: 'stack',
     description: tl('Filter.StackLevel'),

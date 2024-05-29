@@ -20,7 +20,7 @@ import { allInGameLoadoutsSelector } from 'app/loadout/ingame/selectors';
 import { loadoutsSelector } from 'app/loadout/loadouts-selector';
 import { showNotification } from 'app/notifications/notifications';
 import { accountRoute } from 'app/routes';
-import { filterFactorySelector } from 'app/search/search-filter';
+import { filterFactorySelector } from 'app/search/item-search-filter';
 import { setRouterLocation, setSearchQuery } from 'app/shell/actions';
 import { refresh } from 'app/shell/refresh-events';
 import { RootState, ThunkResult } from 'app/store/types';
