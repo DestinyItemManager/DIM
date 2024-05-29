@@ -198,7 +198,6 @@
     "Instructions": "Click or drag files"
   },
   "LoadoutFilter": {
-    "Contains": "Shows loadouts which have an item or a mod matching the filter text. Search for items with spaces in their name using quotes.",
     "Name": "Shows loadouts whose name matches (exactname:) or partially matches (name:) the filter text. Search for entire phrases using quotes.",
     "Notes": "Search for loadouts by their notes field.",
     "PartialMatch": "Shows loadouts where their name or notes has a partial match to the filter text. Search for entire phrases using quotes.",
