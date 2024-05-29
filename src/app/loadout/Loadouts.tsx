@@ -82,7 +82,9 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   const dispatch = useDispatch();
 
   const stores = useSelector(storesSelector);
-  const selectedStore = useSelector(selectedLoadoutStoreSelector);
+  // Technically this can be undefined if the stores haven't been loaded into existence yet
+  // TODO (ryan) fix this so we dont need to have the non-null assertion
+  const selectedStore = useSelector(selectedLoadoutStoreSelector)!;
 
   const setSelectedStoreId = useCallback(
     (storeId: string) => {

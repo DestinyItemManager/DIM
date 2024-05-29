@@ -133,7 +133,8 @@ export const selectedLoadoutStoreSelector = createSelector(
   sortedStoresSelector,
   currentStoreSelector,
   (rootState: RootState) => rootState.loadouts.selectedLoadoutStoreId,
-  (stores, currentStore, selectedLoadoutStoreId): DimStore => {
+  (stores, currentStore, selectedLoadoutStoreId): DimStore | undefined => {
+    // stores[0] can be undefined it seems
     const defaultStore = currentStore || stores[0];
     if (selectedLoadoutStoreId === undefined) {
       return defaultStore;

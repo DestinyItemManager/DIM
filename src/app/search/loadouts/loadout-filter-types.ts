@@ -16,7 +16,7 @@ export interface LoadoutFilterContext {
   /**
    * The selected store on the loadouts page
    */
-  selectedLoadoutsStore: DimStore;
+  selectedLoadoutsStore?: DimStore;
   loadoutsByItem: LoadoutsByItem;
   language: DimLanguage;
   d2Definitions: D2ManifestDefinitions | undefined;

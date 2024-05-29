@@ -45,7 +45,9 @@ function makeLoadoutSuggestionsContext(
   d2Definitions: D2ManifestDefinitions | undefined,
 ): LoadoutSuggestionsContext {
   return {
-    loadouts: loadouts.filter((loadout) => loadout.classType === selectedLoadoutsStore?.classType),
+    loadouts: selectedLoadoutsStore
+      ? loadouts.filter((loadout) => loadout.classType === selectedLoadoutsStore.classType)
+      : loadouts,
     selectedLoadoutsStore,
     d2Definitions,
   };
@@ -59,7 +61,7 @@ export const loadoutSearchConfigSelector = createSelector(
 );
 
 function makeLoadoutFilterContext(
-  selectedLoadoutsStore: DimStore,
+  selectedLoadoutsStore: DimStore | undefined,
   loadoutsByItem: LoadoutsByItem,
   language: DimLanguage,
   d2Definitions: D2ManifestDefinitions | undefined,
