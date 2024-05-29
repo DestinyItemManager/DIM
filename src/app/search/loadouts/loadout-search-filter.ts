@@ -41,11 +41,11 @@ export const loadoutSuggestionsContextSelector = createSelector(
 
 function makeLoadoutSuggestionsContext(
   loadouts: Loadout[],
-  selectedLoadoutsStore: DimStore,
+  selectedLoadoutsStore: DimStore | undefined,
   d2Definitions: D2ManifestDefinitions | undefined,
 ): LoadoutSuggestionsContext {
   return {
-    loadouts,
+    loadouts: loadouts.filter((loadout) => loadout.classType === selectedLoadoutsStore?.classType),
     selectedLoadoutsStore,
     d2Definitions,
   };

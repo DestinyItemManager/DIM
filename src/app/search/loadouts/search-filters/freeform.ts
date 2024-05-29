@@ -33,10 +33,8 @@ const freeformFilters: FilterDefinition<
     keywords: ['name', 'exactname'],
     description: tl('LoadoutFilter.Name'),
     format: 'freeform',
-    suggestionsGenerator: ({ loadouts, selectedLoadoutsStore }) =>
-      loadouts
-        ?.filter((loadout) => loadout.classType === selectedLoadoutsStore?.classType)
-        .map((loadout) => `exactname:${quoteFilterString(loadout.name.toLowerCase())}`),
+    suggestionsGenerator: ({ loadouts }) =>
+      loadouts?.map((loadout) => `exactname:${quoteFilterString(loadout.name.toLowerCase())}`),
     filter: ({ filterValue, language, lhs }) => {
       const test = matchText(filterValue, language, /* exact */ lhs === 'exactname');
       return (loadout) => test(loadout.name);
@@ -46,20 +44,15 @@ const freeformFilters: FilterDefinition<
     keywords: ['subclass'],
     description: tl('LoadoutFilter.Subclass'),
     format: 'freeform',
-    suggestionsGenerator: ({ loadouts, d2Definitions, selectedLoadoutsStore }) => {
+    suggestionsGenerator: ({ loadouts, d2Definitions }) => {
       if (!loadouts || !d2Definitions) {
         return [];
       }
       const damageDefs = getDamageDefsByDamageType(d2Definitions);
-      // TODO (ryan) filter on currently selected character. This info is currently localized
-      // to the page, so we need to lift that up before it can be done.
       return deduplicate(
         loadouts.flatMap((loadout) => {
           const subclass = subclassDefFromLoadout(loadout, d2Definitions);
-          if (
-            !subclass ||
-            (selectedLoadoutsStore && loadout.classType !== selectedLoadoutsStore?.classType)
-          ) {
+          if (!subclass) {
             return;
           }
           const damageType = getDamageTypeForSubclassDef(subclass)!;
@@ -77,7 +70,7 @@ const freeformFilters: FilterDefinition<
       const damageDefs = d2Definitions && getDamageDefsByDamageType(d2Definitions);
       return (loadout: Loadout) => {
         const subclass = d2Definitions && subclassDefFromLoadout(loadout, d2Definitions);
-        if (!subclass || subclass.classType !== selectedLoadoutsStore.classType) {
+        if (!subclass || subclass.classType !== selectedLoadoutsStore?.classType) {
           return false;
         }
         if (test(subclass.displayProperties.name)) {
@@ -91,36 +84,38 @@ const freeformFilters: FilterDefinition<
     },
   },
   {
-    keywords: 'contains',
+    keywords: ['contains', 'exactcontains'],
     description: tl('LoadoutFilter.Contains'),
     format: 'freeform',
-    suggestionsGenerator: ({ d2Definitions, loadouts, selectedLoadoutsStore }) => {
+    suggestionsGenerator: ({ d2Definitions, loadouts }) => {
       if (!d2Definitions || !loadouts) {
         return [];
       }
 
       return loadouts.flatMap((loadout) => {
-        if (loadout.classType !== selectedLoadoutsStore?.classType) {
-          return [];
-        }
-
         const itemSuggestions = loadout.items.map((item) => {
           const definition = d2Definitions.InventoryItem.get(item.hash);
-          return `contains:${quoteFilterString(definition.displayProperties.name.toLowerCase())}`;
+          return `exactcontains:${quoteFilterString(definition.displayProperties.name.toLowerCase())}`;
         });
         const modSuggestions =
           loadout.parameters?.mods?.map((modHash) => {
             const definition = d2Definitions.InventoryItem.get(modHash);
-            return `contains:${quoteFilterString(definition.displayProperties.name.toLowerCase())}`;
+            // I am not sure why, but this definition can sometimes be undefined even though the modHash
+            // looks accurate. It only seems to happen after lifting the loadout filtering on classType
+            // up to the context creation scope.
+            return (
+              definition &&
+              `exactcontains:${quoteFilterString(definition.displayProperties.name.toLowerCase())}`
+            );
           }) || [];
 
         return deduplicate([...itemSuggestions, ...modSuggestions]);
       });
     },
-    filter: ({ filterValue, language, d2Definitions, selectedLoadoutsStore }) => {
-      const test = matchText(filterValue, language, false);
+    filter: ({ filterValue, language, d2Definitions, selectedLoadoutsStore, lhs }) => {
+      const test = matchText(filterValue, language, lhs === 'exactcontains');
       return (loadout) => {
-        if (!d2Definitions || loadout.classType !== selectedLoadoutsStore.classType) {
+        if (!d2Definitions || loadout.classType !== selectedLoadoutsStore?.classType) {
           return false;
         }
 
@@ -151,16 +146,14 @@ const freeformFilters: FilterDefinition<
     keywords: 'keyword',
     description: tl('LoadoutFilter.PartialMatch'),
     format: 'freeform',
-    suggestionsGenerator: ({ loadouts, selectedLoadoutsStore }) =>
+    suggestionsGenerator: ({ loadouts }) =>
       loadouts
         ? Array.from(
             new Set([
-              ...loadouts
-                .filter((loadout) => loadout.classType === selectedLoadoutsStore?.classType)
-                .flatMap((loadout) => [
-                  ...getHashtagsFromNote(loadout.name),
-                  ...getHashtagsFromNote(loadout.notes),
-                ]),
+              ...loadouts.flatMap((loadout) => [
+                ...getHashtagsFromNote(loadout.name),
+                ...getHashtagsFromNote(loadout.notes),
+              ]),
             ]),
           )
         : [],
