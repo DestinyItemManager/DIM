@@ -697,6 +697,7 @@
     "UnlockItem": "Unpin Item"
   },
   "LoadoutFilter": {
+    "Contains": "Shows loadouts which have an item or a mod matching the filter text. Search for items with spaces in their name using quotes.",
     "FashionOnly": "Shows loadouts that contain only fashion (shaders or ornaments).",
     "ModsOnly": "Shows loadouts that only contain armor mods.",
     "Name": "Shows loadouts whose name matches (exactname:) or partially matches (name:) the filter text. Search for entire phrases using quotes.",
