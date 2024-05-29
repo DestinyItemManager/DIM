@@ -14,10 +14,10 @@ import {
 import { getStore } from 'app/inventory/stores-helpers';
 import { itemMoveLoadout, maxLightLoadout, randomLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
-import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
 import { pullFromPostmaster } from 'app/loadout-drawer/postmaster';
 import { applyInGameLoadout } from 'app/loadout/ingame/ingame-loadout-apply';
 import { allInGameLoadoutsSelector } from 'app/loadout/ingame/selectors';
+import { loadoutsSelector } from 'app/loadout/loadouts-selector';
 import { showNotification } from 'app/notifications/notifications';
 import { accountRoute } from 'app/routes';
 import { filterFactorySelector } from 'app/search/item-search-filter';

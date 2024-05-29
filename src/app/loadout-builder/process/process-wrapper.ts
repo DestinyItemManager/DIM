@@ -3,7 +3,6 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { ModMap } from 'app/loadout/mod-assignment-utils';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { getModTypeTagByPlugCategoryHash } from 'app/utils/item-utils';
-import { infoLog } from 'app/utils/log';
 import { releaseProxy, wrap } from 'comlink';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -118,7 +117,6 @@ export function runProcess({
   return {
     cleanup,
     resultPromise: new Promise((resolve) => {
-      const workerStart = performance.now();
       worker
         .process(
           processItems,
@@ -132,13 +130,8 @@ export function runProcess({
           stopOnFirstSet,
         )
         .then((result) => {
-          infoLog(
-            'loadout optimizer',
-            `useProcess: worker time ${performance.now() - workerStart}ms`,
-          );
           const hydratedSets = result.sets.map((set) => hydrateArmorSet(set, itemsById));
           const processTime = performance.now() - processStart;
-          infoLog('loadout optimizer', `useProcess ${processTime}ms`);
           resolve({ ...result, sets: hydratedSets, processTime });
         })
         // Cleanup the worker, we don't need it anymore.

@@ -12,17 +12,17 @@ import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import { getStore } from 'app/inventory/stores-helpers';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
 import {
-  InGameLoadout,
-  Loadout,
-  ResolvedLoadoutItem,
-  ResolvedLoadoutMod,
-} from 'app/loadout-drawer/loadout-types';
-import {
   getModsFromLoadout,
   itemsByItemId,
   newLoadoutFromEquipped,
 } from 'app/loadout-drawer/loadout-utils';
-import { loadoutsForClassTypeSelector } from 'app/loadout-drawer/loadouts-selector';
+import {
+  InGameLoadout,
+  Loadout,
+  ResolvedLoadoutItem,
+  ResolvedLoadoutMod,
+} from 'app/loadout/loadout-types';
+import { loadoutsForClassTypeSelector } from 'app/loadout/loadouts-selector';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';

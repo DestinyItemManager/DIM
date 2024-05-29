@@ -1,3 +1,4 @@
+import { SearchType } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { compareFilteredItems } from 'app/compare/actions';
 import { saveSearch } from 'app/dim-api/basic-actions';
@@ -102,7 +103,7 @@ export default memo(function ItemActionsDropdown({
   bulkItemTags.push({ type: 'clear', label: t('Tags.ClearTag'), icon: clearIcon });
 
   // Is the current search saved?
-  const recentSearches = useSelector(recentSearchesSelector);
+  const recentSearches = useSelector(recentSearchesSelector(SearchType.Item));
   const validateQuery = useSelector(validateQuerySelector);
   const { valid, saveable } = validateQuery(searchQuery);
   const canonical = searchQuery ? canonicalizeQuery(parseQuery(searchQuery)) : '';
@@ -110,7 +111,7 @@ export default memo(function ItemActionsDropdown({
 
   const toggleSaved = () => {
     // TODO: keep track of the last search, if you search for something more narrow immediately after then replace?
-    dispatch(saveSearch({ query: searchQuery, saved: !saved }));
+    dispatch(saveSearch({ query: searchQuery, saved: !saved, type: SearchType.Item }));
   };
 
   const location = useLocation();

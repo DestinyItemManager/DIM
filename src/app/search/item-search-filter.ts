@@ -4,8 +4,9 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { customStatsSelector, languageSelector } from 'app/dim-api/selectors';
 import { DimLanguage } from 'app/i18n';
 import { TagValue } from 'app/inventory/dim-item-info';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
+import { Loadout } from 'app/loadout/loadout-types';
+import { loadoutsSelector } from 'app/loadout/loadouts-selector';
+import { LoadoutsByItem, loadoutsByItemSelector } from 'app/loadout/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { Settings } from 'app/settings/initial-settings';
 import { WishListRoll } from 'app/wishlists/types';
@@ -23,7 +24,6 @@ import {
   sortedStoresSelector,
 } from '../inventory/selectors';
 import { DimStore } from '../inventory/store-types';
-import { LoadoutsByItem, loadoutsByItemSelector } from '../loadout-drawer/selectors';
 import { querySelector } from '../shell/selectors';
 import { wishListFunctionSelector, wishListsByHashSelector } from '../wishlists/selectors';
 import { InventoryWishListRoll } from '../wishlists/wishlists';

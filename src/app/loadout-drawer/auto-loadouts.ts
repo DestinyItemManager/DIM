@@ -15,7 +15,7 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { DimItem, DimSocket } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
-import { Loadout } from './loadout-types';
+import { Loadout } from '../loadout/loadout-types';
 import {
   convertToLoadoutItem,
   getLoadoutSubclassFragmentCapacity,

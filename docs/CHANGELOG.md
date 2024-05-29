@@ -1,9 +1,17 @@
 ## Next
 
+## 8.21.1 <span class="changelog-date">(2024-05-27)</span>
+
+* Fixed an issue where DIM clients might not see search history when using only local settings storage.
+
+## 8.21.0 <span class="changelog-date">(2024-05-26)</span>
+
 * The search suggestions dropdown now shows more results, based on the size of your screen.
 * Added an overload to the `inloadout:` search which allows searching items based on how many loadouts they are in, for example `inloadout:>2`.
+* Loadout searches now save in your search history and can be saved.
 * Added `is:fashiononly` and `is:modsonly` search keywords to loadouts search.
 * Pages such as "About" and "Settings" now respect device safe areas when the device is in landscape mode.
+* You can now edit a copy of a Loadout directly, with no risk of overwriting the existing loadout.
 * Fixed some bounties showing as "Arc" that were not, in fact, Arc.
 * Fixed the too-narrow width of the sidebar on the Loadout Optimizer on app.destinyitemmanager.com.
 * Fixed distorted icons for owned mods in collections.

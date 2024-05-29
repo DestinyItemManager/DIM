@@ -1,6 +1,6 @@
 import { tl } from 'app/i18next-t';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
-import { InGameLoadout, isInGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
+import { InGameLoadout, isInGameLoadout, Loadout } from 'app/loadout/loadout-types';
 import { quoteFilterString } from 'app/search/query-parser';
 import { ItemFilterDefinition } from '../item-filter-types';
 

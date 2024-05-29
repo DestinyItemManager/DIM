@@ -12,15 +12,15 @@ import { getStore } from 'app/inventory/stores-helpers';
 import { useHideItemPicker, useItemPicker } from 'app/item-picker/item-picker';
 import { mergeStrictUpgradeStatConstraints } from 'app/loadout-analyzer/utils';
 import { LoadoutUpdateFunction } from 'app/loadout-drawer/loadout-drawer-reducer';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadoutFromEquipped, resolveLoadoutModHashes } from 'app/loadout-drawer/loadout-utils';
-import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
 import { getItemsAndSubclassFromLoadout } from 'app/loadout/LoadoutView';
 import {
   LoadoutEditModsSection,
   LoadoutEditSubclassSection,
 } from 'app/loadout/loadout-edit/LoadoutEdit';
+import { Loadout } from 'app/loadout/loadout-types';
 import { autoAssignmentPCHs } from 'app/loadout/loadout-ui/LoadoutMods';
+import { loadoutsSelector } from 'app/loadout/loadouts-selector';
 import { categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -28,7 +28,7 @@ import { searchFilterSelector } from 'app/search/item-search-filter';
 import { useSetSetting } from 'app/settings/hooks';
 import { AppIcon, disabledIcon, redoIcon, refreshIcon, undoIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
-import { emptyArray, emptyObject } from 'app/utils/empty';
+import { emptyObject } from 'app/utils/empty';
 import { isClassCompatible, itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
@@ -170,8 +170,8 @@ export default memo(function LoadoutBuilder({
     [resolvedMods, autoStatMods],
   );
 
-  const { vendorItems, vendorItemsLoading } = useLoVendorItems(selectedStoreId);
-  const armorItems = useArmorItems(classType, vendorItemsLoading ? emptyArray() : vendorItems);
+  const { vendorItems } = useLoVendorItems(selectedStoreId);
+  const armorItems = useArmorItems(classType, vendorItems);
 
   const { modMap: lockedModMap, unassignedMods } = useMemo(
     () => categorizeArmorMods(modsToAssign, armorItems),

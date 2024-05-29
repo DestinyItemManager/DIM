@@ -1,6 +1,6 @@
 {
   "name": "dim",
-  "version": "8.20.0",
+  "version": "8.21.1",
   "description": "An item manager for Destiny.",
   "main": "app/index.html",
   "private": true,
@@ -194,7 +194,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.24.5",
-    "@destinyitemmanager/dim-api-types": "^1.30.0",
+    "@destinyitemmanager/dim-api-types": "^1.31.0",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/react-fontawesome": "^0.2.1",

@@ -55,25 +55,28 @@ export const vendors: Reducer<VendorsState, VendorsAction | AccountsAction> = (
 
     // augments the stored overall all-vendors response,
     // by inserting the item components from a single-vendor api response
-    case getType(actions.loadedSingle): {
-      const { characterId, vendorResponse, vendorHash } = action.payload;
-      const { vendorsByCharacter } = state;
-
-      if (
-        // nothing about state needs changing if we didn't get back components
-        // (maybe sockets/etc are disabled at bnet right now?)
-        _.isEmpty(vendorResponse.itemComponents) ||
-        // or if there's no main response to inject these components into
-        !vendorsByCharacter[characterId]?.vendorsResponse
-      ) {
-        return state;
-      }
+    case getType(actions.loadedVendorComponents): {
+      const { characterId, vendorResponses } = action.payload;
 
       return produce(state, (draft) => {
-        draft.vendorsByCharacter[characterId]!.vendorsResponse!.itemComponents ??= {};
-        draft.vendorsByCharacter[characterId]!.vendorsResponse!.itemComponents![vendorHash] =
-          vendorResponse.itemComponents;
-        draft.vendorsByCharacter[characterId]!.lastLoaded = Date.now();
+        for (const [vendorHash, vendorResponse] of vendorResponses) {
+          const thisCharVendorState = draft.vendorsByCharacter[characterId];
+
+          if (
+            // nothing about state needs changing if we didn't get back components
+            // (maybe sockets/etc are disabled at bnet right now?)
+            _.isEmpty(vendorResponse.itemComponents) ||
+            // or if there's no main response to inject these components into
+            !thisCharVendorState?.vendorsResponse
+          ) {
+            continue;
+          }
+
+          thisCharVendorState.vendorsResponse.itemComponents ??= {};
+          thisCharVendorState.vendorsResponse.itemComponents[vendorHash] =
+            vendorResponse.itemComponents;
+          thisCharVendorState.lastLoaded = Date.now();
+        }
       });
     }
 

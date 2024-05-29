@@ -1,9 +1,10 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimLanguage } from 'app/i18n';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { LoadoutsByItem } from 'app/loadout-drawer/selectors';
-import { FilterDefinition } from 'app/search/filter-types';
-import { FiltersMap, SearchConfig } from 'app/search/search-config';
+import { DimStore } from 'app/inventory/store-types';
+import { Loadout } from 'app/loadout/loadout-types';
+import { LoadoutsByItem } from 'app/loadout/selectors';
+import { FilterDefinition } from '../filter-types';
+import { FiltersMap, SearchConfig } from '../search-config';
 
 /**
  * A slice of data that could be used by loadout filter functions to
@@ -12,6 +13,10 @@ import { FiltersMap, SearchConfig } from 'app/search/search-config';
  * in search-filter.ts.
  */
 export interface LoadoutFilterContext {
+  /**
+   * The selected store on the loadouts page
+   */
+  selectedLoadoutsStore: DimStore;
   loadoutsByItem: LoadoutsByItem;
   language: DimLanguage;
   d2Definitions: D2ManifestDefinitions | undefined;
@@ -23,6 +28,10 @@ export interface LoadoutFilterContext {
  */
 export interface LoadoutSuggestionsContext {
   loadouts?: Loadout[];
+  /**
+   * The selected store on the loadouts page
+   */
+  selectedLoadoutsStore?: DimStore;
   d2Definitions?: D2ManifestDefinitions;
 }
 

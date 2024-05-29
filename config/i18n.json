@@ -106,7 +106,8 @@
     "IsVendorItem": "This item is not owned. This is in a vendor's inventory and may be for sale.",
     "SoldBy": "Sold by: {{vendorName}}",
     "Error": {
-      "Unmatched": "This item doesn't match the type of items being compared."
+      "Unmatched": "This item doesn't match the type of items being compared.",
+      "Invalid": "There are no valid items for comparison."
     }
   },
   "Cooldown": {
@@ -202,7 +203,8 @@
     "PartialMatch": "Shows loadouts where their name or notes has a partial match to the filter text. Search for entire phrases using quotes.",
     "Season": "Shows loadouts by which season of Destiny 2 they were last modified in.",
     "FashionOnly": "Shows loadouts that contain only fashion (shaders or ornaments).",
-    "ModsOnly": "Shows loadouts that only contain armor mods."
+    "ModsOnly": "Shows loadouts that only contain armor mods.",
+    "Subclass": "Shows loadouts whose subclass name or damage type partially matches the filter text."
   },
   "Filter": {
     "Adept": "\\(Adept\\)",
@@ -683,6 +685,7 @@
     "ClearSpaceWeapons": "Move other weapons away",
     "ClearSpaceArmor": "Move other armor away",
     "ClearUnsetMods": "Remove other mods",
+    "CopyAndEdit": "Edit Copy",
     "Create": "Create Loadout",
     "CurrentlyEquipped": "Currently Equipped",
     "Delete": "Delete",
@@ -1096,7 +1099,9 @@
     "UsageCount": "# Used",
     "Query": "Search",
     "Link": "View and edit search history",
-    "Title": "Search History"
+    "Title": "Search History",
+    "Item": "Item Searches",
+    "Loadout": "Loadout Searches"
   },
   "Settings": {
     "AutoLockTagged": "Sync item lock state with tag",

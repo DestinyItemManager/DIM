@@ -13,3 +13,8 @@ export const savePreviousLoadout = createAction('loadouts/SAVE_PREVIOUS')<{
   loadoutId: string;
   previousLoadout: Loadout;
 }>();
+
+/** Updates the store in use on the loadout page */
+export const updateLoadoutStore = createAction('loadouts/UPDATE_STORE')<{
+  storeId: string | undefined;
+}>();

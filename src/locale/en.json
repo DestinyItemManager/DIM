@@ -102,6 +102,7 @@
     "ButtonHelp": "Compare Items",
     "CompareBaseStats": "Show Base Stats",
     "Error": {
+      "Invalid": "There are no valid items for comparison.",
       "Unmatched": "This item doesn't match the type of items being compared."
     },
     "InitialItem": "This is the item the Compare tool was launched from",
@@ -701,7 +702,8 @@
     "Name": "Shows loadouts whose name matches (exactname:) or partially matches (name:) the filter text. Search for entire phrases using quotes.",
     "Notes": "Search for loadouts by their notes field.",
     "PartialMatch": "Shows loadouts where their name or notes has a partial match to the filter text. Search for entire phrases using quotes.",
-    "Season": "Shows loadouts by which season of Destiny 2 they were last modified in."
+    "Season": "Shows loadouts by which season of Destiny 2 they were last modified in.",
+    "Subclass": "Shows loadouts whose subclass name or damage type partially matches the filter text."
   },
   "Loadouts": {
     "Abilities": "Abilities",
@@ -733,6 +735,7 @@
     "ClearSpaceWeapons": "Move other weapons away",
     "ClearUnsetMods": "Remove other mods",
     "ClearingSpace": "Moving other items away",
+    "CopyAndEdit": "Edit Copy",
     "Create": "Create Loadout",
     "CurrentlyEquipped": "Currently Equipped",
     "Deequip": "De-equipping items from other characters",
@@ -1083,7 +1086,9 @@
     "Date": "Last Used",
     "DeleteAll": "Delete all non-starred searches",
     "Description": "These are all your past and saved searches. You can delete them from here.",
+    "Item": "Item Searches",
     "Link": "View and edit search history",
+    "Loadout": "Loadout Searches",
     "Query": "Search",
     "Title": "Search History",
     "UsageCount": "# Used"

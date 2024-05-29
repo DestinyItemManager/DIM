@@ -1,6 +1,5 @@
 import {
   CustomStatWeights,
-  defaultGlobalSettings,
   DestinyVersion,
   GlobalSettings,
   ItemAnnotation,
@@ -8,11 +7,13 @@ import {
   Loadout,
   ProfileUpdateResult,
   Search,
+  SearchType,
   TagValue,
+  defaultGlobalSettings,
 } from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { t } from 'app/i18next-t';
-import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-converters';
+import { convertDimLoadoutToApiLoadout } from 'app/loadout/loadout-type-converters';
 import { recentSearchComparator } from 'app/search/autocomplete';
 import { CUSTOM_TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { FilterContext } from 'app/search/item-filter-types';
@@ -28,10 +29,10 @@ import { Draft, produce } from 'immer';
 import _ from 'lodash';
 import { ActionType, getType } from 'typesafe-actions';
 import * as inventoryActions from '../inventory/actions';
-import * as loadoutActions from '../loadout-drawer/actions';
-import { Loadout as DimLoadout } from '../loadout-drawer/loadout-types';
+import * as loadoutActions from '../loadout/actions';
+import { Loadout as DimLoadout } from '../loadout/loadout-types';
 import * as settingsActions from '../settings/actions';
-import { initialSettingsState, Settings } from '../settings/initial-settings';
+import { Settings, initialSettingsState } from '../settings/initial-settings';
 import { DeleteLoadoutUpdateWithRollback, ProfileUpdateWithRollback } from './api-types';
 import * as actions from './basic-actions';
 import { makeProfileKey, makeProfileKeyFromAccount } from './selectors';
@@ -384,17 +385,23 @@ export const dimApi = (
 
     case getType(actions.searchUsed):
       return produce(state, (draft) => {
-        searchUsed(draft, account!, action.payload);
+        searchUsed(draft, account!, action.payload.query, action.payload.type);
       });
 
     case getType(actions.saveSearch):
       return produce(state, (draft) => {
-        saveSearch(account!, draft, action.payload.query, action.payload.saved);
+        saveSearch(
+          account!,
+          draft,
+          action.payload.query,
+          action.payload.saved,
+          action.payload.type,
+        );
       });
 
     case getType(actions.searchDeleted):
       return produce(state, (draft) => {
-        deleteSearch(draft, account!.destinyVersion, action.payload);
+        deleteSearch(draft, account!.destinyVersion, action.payload.query, action.payload.type);
       });
 
     // *** Triumphs ***
@@ -1147,7 +1154,12 @@ function trackTriumph(
   draft.updateQueue.push(updateAction);
 }
 
-function searchUsed(draft: Draft<DimApiState>, account: DestinyAccount, query: string) {
+function searchUsed(
+  draft: Draft<DimApiState>,
+  account: DestinyAccount,
+  query: string,
+  type: SearchType,
+) {
   const destinyVersion = account.destinyVersion;
   // Note: memoized
   const filtersMap = buildItemFiltersMap(destinyVersion);
@@ -1166,6 +1178,7 @@ function searchUsed(draft: Draft<DimApiState>, account: DestinyAccount, query: s
     action: 'search',
     payload: {
       query,
+      type,
     },
     destinyVersion,
   };
@@ -1182,9 +1195,11 @@ function searchUsed(draft: Draft<DimApiState>, account: DestinyAccount, query: s
       usageCount: 1,
       saved: false,
       lastUsage: Date.now(),
+      type,
     });
   }
 
+  // TODO: maybe this should be max per type?
   if (searches.length > MAX_SEARCH_HISTORY) {
     const sortedSearches = searches.toSorted(recentSearchComparator);
 
@@ -1195,7 +1210,7 @@ function searchUsed(draft: Draft<DimApiState>, account: DestinyAccount, query: s
       const lastSearch = sortedSearches.pop()!;
       // Never try to delete the built-in searches or saved searches
       if (!lastSearch.saved && lastSearch.usageCount > 0) {
-        deleteSearch(draft, destinyVersion, lastSearch.query);
+        deleteSearch(draft, destinyVersion, lastSearch.query, lastSearch.type);
       }
     }
   }
@@ -1208,6 +1223,7 @@ function saveSearch(
   draft: Draft<DimApiState>,
   query: string,
   saved: boolean,
+  type: SearchType,
 ) {
   const destinyVersion = account.destinyVersion;
   // Note: memoized
@@ -1228,6 +1244,7 @@ function saveSearch(
     payload: {
       query,
       saved,
+      type,
     },
     destinyVersion,
   };
@@ -1245,11 +1262,13 @@ function saveSearch(
       usageCount: 1,
       saved: true,
       lastUsage: Date.now(),
+      type,
     });
     draft.updateQueue.push({
       action: 'search',
       payload: {
         query,
+        type,
       },
       destinyVersion,
     });
@@ -1258,11 +1277,17 @@ function saveSearch(
   draft.updateQueue.push(updateAction);
 }
 
-function deleteSearch(draft: Draft<DimApiState>, destinyVersion: DestinyVersion, query: string) {
+function deleteSearch(
+  draft: Draft<DimApiState>,
+  destinyVersion: DestinyVersion,
+  query: string,
+  type: SearchType,
+) {
   const updateAction: ProfileUpdateWithRollback = {
     action: 'delete_search',
     payload: {
       query,
+      type,
     },
     destinyVersion,
   };
@@ -1293,7 +1318,7 @@ function cleanupInvalidSearches(draft: Draft<DimApiState>, account: DestinyAccou
       customStats: draft.settings.customStats ?? [],
     } as FilterContext);
     if (!saveInHistory) {
-      deleteSearch(draft, account.destinyVersion, search.query);
+      deleteSearch(draft, account.destinyVersion, search.query, search.type);
     }
   }
 }

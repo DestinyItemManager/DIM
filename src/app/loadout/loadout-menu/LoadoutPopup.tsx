@@ -1,3 +1,4 @@
+import { SearchType } from '@destinyitemmanager/dim-api-types';
 import { languageSelector, settingSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClassIcon from 'app/dim-ui/ClassIcon';
@@ -20,16 +21,17 @@ import {
   randomizeLoadoutSubclass,
 } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
 import {
   isArmorModsOnly,
   isFashionOnly,
   isMissingItems,
   newLoadout,
 } from 'app/loadout-drawer/loadout-utils';
-import { loadoutsForClassTypeSelector } from 'app/loadout-drawer/loadouts-selector';
 import { makeRoomForPostmaster, totalPostmasterItems } from 'app/loadout-drawer/postmaster';
-import { previousLoadoutSelector } from 'app/loadout-drawer/selectors';
+import { updateLoadoutStore } from 'app/loadout/actions';
+import { InGameLoadout, Loadout } from 'app/loadout/loadout-types';
+import { loadoutsForClassTypeSelector } from 'app/loadout/loadouts-selector';
+import { previousLoadoutSelector } from 'app/loadout/selectors';
 import { manifestSelector, useDefinitions } from 'app/manifest/selectors';
 import { showMaterialCount } from 'app/material-counts/MaterialCountsWrappers';
 import { showNotification } from 'app/notifications/notifications';
@@ -106,6 +108,14 @@ export default function LoadoutPopup({
 
   const [loadoutQuery, setLoadoutQuery] = useState('');
 
+  // This sets the store id for loadouts page, so that when navigating to it the correct
+  // character will be set.
+  const setLoadoutPageStore = () => {
+    if (!dimStore.isVault) {
+      dispatch(updateLoadoutStore({ storeId: dimStore.id }));
+    }
+  };
+
   const makeNewLoadout = () =>
     editLoadout(newLoadout('', [], dimStore.classType), dimStore.id, { isNew: true });
 
@@ -166,7 +176,7 @@ export default function LoadoutPopup({
             className={styles.filterInput}
             placeholder={t('Header.FilterHelpLoadouts')}
             onQueryChanged={setLoadoutQuery}
-            loadouts
+            searchType={SearchType.Loadout}
             instant
           />
         </div>
@@ -207,7 +217,7 @@ export default function LoadoutPopup({
 
         {!filteringLoadouts && dimStore.destinyVersion === 2 && (
           <li className={styles.menuItem}>
-            <Link to="../loadouts" state={{ storeId: dimStore.id }}>
+            <Link to="../loadouts" onClick={setLoadoutPageStore}>
               <AppIcon icon={faList} />
               <span>{t('Loadouts.ManageLoadouts')}</span>
             </Link>

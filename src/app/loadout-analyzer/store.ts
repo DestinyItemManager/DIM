@@ -1,5 +1,5 @@
 import { runProcess } from 'app/loadout-builder/process/process-wrapper';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { Loadout } from 'app/loadout/loadout-types';
 import { CancelToken, withCancel } from 'app/utils/cancel';
 import { errorLog } from 'app/utils/log';
 import { reportException } from 'app/utils/sentry';

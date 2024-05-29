@@ -1,4 +1,4 @@
-import { Search } from '@destinyitemmanager/dim-api-types';
+import { Search, SearchType } from '@destinyitemmanager/dim-api-types';
 import {
   autocompleteTermSuggestions,
   filterSortRecentSearches,
@@ -139,36 +139,47 @@ describe('autocompleteTermSuggestions', () => {
 
 describe('filterSortRecentSearches', () => {
   const recentSearches: Search[] = [
-    { query: 'recent saved', usageCount: 1, saved: true, lastUsage: Date.now() },
+    {
+      query: 'recent saved',
+      usageCount: 1,
+      saved: true,
+      lastUsage: Date.now(),
+      type: SearchType.Item,
+    },
     {
       query: 'yearold saved',
       usageCount: 1,
       saved: true,
       lastUsage: Date.now() - 365 * 24 * 60 * 60 * 1000,
+      type: SearchType.Item,
     },
     {
       query: 'yearold unsaved',
       usageCount: 1,
       saved: false,
       lastUsage: Date.now() - 365 * 24 * 60 * 60 * 1000,
+      type: SearchType.Item,
     },
     {
       query: 'yearold highuse',
       usageCount: 100,
       saved: false,
       lastUsage: Date.now() - 365 * 24 * 60 * 60 * 1000,
+      type: SearchType.Item,
     },
     {
       query: 'dayold highuse',
       usageCount: 15,
       saved: false,
       lastUsage: Date.now() - 1 * 24 * 60 * 60 * 1000,
+      type: SearchType.Item,
     },
     {
       query: 'dim api autosuggest',
       usageCount: 0,
       saved: false,
       lastUsage: 0,
+      type: SearchType.Item,
     },
   ];
 
@@ -179,6 +190,7 @@ describe('filterSortRecentSearches', () => {
         lastUsage: Date.now() - day * 24 * 60 * 60 * 1000,
         usageCount,
         saved: false,
+        type: SearchType.Item,
       });
     }
   }
@@ -196,12 +208,14 @@ describe('filterSortRecentSearches', () => {
       usageCount: 1,
       saved: true,
       lastUsage: Date.now(),
+      type: SearchType.Item,
     },
     {
       query: '/* random-roll craftable guns */ is:patternunlocked -is:crafted',
       usageCount: 1,
       saved: true,
       lastUsage: Date.now() - 24 * 60 * 60 * 1000,
+      type: SearchType.Item,
     },
   ];
   const highlightCases: string[] = ['', 'craft', 'craftable', 'crafted'];

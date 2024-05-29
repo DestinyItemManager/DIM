@@ -1,4 +1,8 @@
-import { DestinyVersion, defaultLoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import {
+  DestinyVersion,
+  SearchType,
+  defaultLoadoutParameters,
+} from '@destinyitemmanager/dim-api-types';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { currentAccountSelector, destinyVersionSelector } from 'app/accounts/selectors';
 import { Settings } from 'app/settings/initial-settings';
@@ -57,13 +61,17 @@ export const currentProfileSelector = createSelector(
     currentAccount ? profiles[makeProfileKeyFromAccount(currentAccount)] : undefined,
 );
 
+const recentSearchesSelectorCached = createSelector(
+  (state: RootState) => state.dimApi.searches[destinyVersionSelector(state)],
+  (_state: RootState, searchType: SearchType) => searchType,
+  (searches, searchType) => searches.filter((s) => (s.type ?? SearchType.Item) === searchType),
+);
+
 /**
- * Returns all recent/saved searches.
- *
- * TODO: Sort/trim this list
+ * Returns all recent/saved searches of the given type.
  */
-export const recentSearchesSelector = (state: RootState) =>
-  state.dimApi.searches[destinyVersionSelector(state)];
+export const recentSearchesSelector = (searchType: SearchType) => (state: RootState) =>
+  recentSearchesSelectorCached(state, searchType);
 
 export const trackedTriumphsSelector = createSelector(
   currentProfileSelector,

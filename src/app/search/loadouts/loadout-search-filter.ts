@@ -3,9 +3,14 @@ import { destinyVersionSelector } from 'app/accounts/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { languageSelector } from 'app/dim-api/selectors';
 import { DimLanguage } from 'app/i18n';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
-import { LoadoutsByItem, loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
+import { DimStore } from 'app/inventory/store-types';
+import { Loadout } from 'app/loadout/loadout-types';
+import { loadoutsSelector } from 'app/loadout/loadouts-selector';
+import {
+  LoadoutsByItem,
+  loadoutsByItemSelector,
+  selectedLoadoutStoreSelector,
+} from 'app/loadout/selectors';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { buildFiltersMap, buildSearchConfig } from 'app/search/search-config';
 import { makeSearchFilterFactory, parseAndValidateQuery } from 'app/search/search-filter';
@@ -29,16 +34,19 @@ export const allLoadoutFilters = [...simpleFilters, ...freeformFilters, ...overl
  */
 export const loadoutSuggestionsContextSelector = createSelector(
   loadoutsSelector,
+  selectedLoadoutStoreSelector,
   d2ManifestSelector,
   makeLoadoutSuggestionsContext,
 );
 
 function makeLoadoutSuggestionsContext(
   loadouts: Loadout[],
+  selectedLoadoutsStore: DimStore,
   d2Definitions: D2ManifestDefinitions | undefined,
 ): LoadoutSuggestionsContext {
   return {
     loadouts,
+    selectedLoadoutsStore,
     d2Definitions,
   };
 }
@@ -51,11 +59,13 @@ export const loadoutSearchConfigSelector = createSelector(
 );
 
 function makeLoadoutFilterContext(
+  selectedLoadoutsStore: DimStore,
   loadoutsByItem: LoadoutsByItem,
   language: DimLanguage,
   d2Definitions: D2ManifestDefinitions | undefined,
 ): LoadoutFilterContext {
   return {
+    selectedLoadoutsStore,
     loadoutsByItem,
     language,
     d2Definitions,
@@ -68,6 +78,7 @@ function makeLoadoutFilterContext(
  * functions whenever any of them changes.
  */
 const loadoutFilterContextSelector = createSelector(
+  selectedLoadoutStoreSelector,
   loadoutsByItemSelector,
   languageSelector,
   d2ManifestSelector,
@@ -90,15 +101,8 @@ export const loadoutFilterFactorySelector = createSelector(
 export const validateLoadoutQuerySelector = createSelector(
   loadoutSearchConfigSelector,
   loadoutFilterContextSelector,
-  (searchConfig, filterContext) => (query: string) => {
-    const result = parseAndValidateQuery(query, searchConfig.filtersMap, filterContext);
-    return {
-      ...result,
-      // For now, loadout searches are not saveable
-      saveable: false,
-      saveInHistory: false,
-    };
-  },
+  (searchConfig, filterContext) => (query: string) =>
+    parseAndValidateQuery(query, searchConfig.filtersMap, filterContext),
 );
 
 export const buildLoadoutsFiltersMap = memoizeOne((destinyVersion: DestinyVersion) =>

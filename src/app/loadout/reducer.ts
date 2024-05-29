@@ -6,12 +6,15 @@ import { Loadout } from './loadout-types';
 export interface LoadoutsState {
   /** A stack of previous loadouts by character ID, for undo loadout. */
   readonly previousLoadouts: { [characterId: string]: Loadout[] };
+  /** The currently selected store for the loadouts page. */
+  readonly selectedLoadoutStoreId: string | undefined;
 }
 
 export type LoadoutsAction = ActionType<typeof actions>;
 
 const initialState: LoadoutsState = {
   previousLoadouts: {},
+  selectedLoadoutStoreId: undefined,
 };
 
 export const loadouts: Reducer<LoadoutsState, LoadoutsAction> = (
@@ -36,6 +39,10 @@ export const loadouts: Reducer<LoadoutsState, LoadoutsAction> = (
           [storeId]: previousLoadouts,
         },
       };
+    }
+
+    case getType(actions.updateLoadoutStore): {
+      return { ...state, selectedLoadoutStoreId: action.payload.storeId };
     }
 
     default:
