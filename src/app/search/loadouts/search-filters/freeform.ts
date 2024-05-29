@@ -33,10 +33,8 @@ const freeformFilters: FilterDefinition<
     keywords: ['name', 'exactname'],
     description: tl('LoadoutFilter.Name'),
     format: 'freeform',
-    suggestionsGenerator: ({ loadouts, selectedLoadoutsStore }) =>
-      loadouts
-        ?.filter((loadout) => loadout.classType === selectedLoadoutsStore?.classType)
-        .map((loadout) => `exactname:${quoteFilterString(loadout.name.toLowerCase())}`),
+    suggestionsGenerator: ({ loadouts }) =>
+      loadouts?.map((loadout) => `exactname:${quoteFilterString(loadout.name.toLowerCase())}`),
     filter: ({ filterValue, language, lhs }) => {
       const test = matchText(filterValue, language, /* exact */ lhs === 'exactname');
       return (loadout) => test(loadout.name);
@@ -91,53 +89,6 @@ const freeformFilters: FilterDefinition<
     },
   },
   {
-    keywords: 'contains',
-    description: tl('LoadoutFilter.Contains'),
-    format: 'freeform',
-    suggestionsGenerator: ({ d2Definitions, loadouts, selectedLoadoutsStore }) => {
-      if (!d2Definitions || !loadouts) {
-        return [];
-      }
-
-      return loadouts.flatMap((loadout) => {
-        if (loadout.classType !== selectedLoadoutsStore?.classType) {
-          return [];
-        }
-
-        const itemSuggestions = loadout.items.map((item) => {
-          const definition = d2Definitions.InventoryItem.get(item.hash);
-          return `contains:${quoteFilterString(definition.displayProperties.name.toLowerCase())}`;
-        });
-        const modSuggestions =
-          loadout.parameters?.mods?.map((modHash) => {
-            const definition = d2Definitions.InventoryItem.get(modHash);
-            return `contains:${quoteFilterString(definition.displayProperties.name.toLowerCase())}`;
-          }) || [];
-
-        return deduplicate([...itemSuggestions, ...modSuggestions]);
-      });
-    },
-    filter: ({ filterValue, language, d2Definitions, selectedLoadoutsStore }) => {
-      const test = matchText(filterValue, language, false);
-      return (loadout) => {
-        if (!d2Definitions || loadout.classType !== selectedLoadoutsStore.classType) {
-          return false;
-        }
-
-        return (
-          loadout.items.some((item) => {
-            const itemDefinition = d2Definitions.InventoryItem.get(item.hash);
-            return itemDefinition && test(itemDefinition.displayProperties.name);
-          }) ||
-          loadout.parameters?.mods?.some((mod) => {
-            const modDefinition = d2Definitions.InventoryItem.get(mod);
-            return modDefinition && test(modDefinition.displayProperties.name);
-          })
-        );
-      };
-    },
-  },
-  {
     keywords: 'notes',
     description: tl('LoadoutFilter.Notes'),
     format: 'freeform',
@@ -151,16 +102,14 @@ const freeformFilters: FilterDefinition<
     keywords: 'keyword',
     description: tl('LoadoutFilter.PartialMatch'),
     format: 'freeform',
-    suggestionsGenerator: ({ loadouts, selectedLoadoutsStore }) =>
+    suggestionsGenerator: ({ loadouts }) =>
       loadouts
         ? Array.from(
             new Set([
-              ...loadouts
-                .filter((loadout) => loadout.classType === selectedLoadoutsStore?.classType)
-                .flatMap((loadout) => [
-                  ...getHashtagsFromNote(loadout.name),
-                  ...getHashtagsFromNote(loadout.notes),
-                ]),
+              ...loadouts.flatMap((loadout) => [
+                ...getHashtagsFromNote(loadout.name),
+                ...getHashtagsFromNote(loadout.notes),
+              ]),
             ]),
           )
         : [],
