@@ -1,11 +1,13 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { tl } from 'app/i18next-t';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
+import { DimStore } from 'app/inventory/store-types';
 import { getDamageTypeForSubclassDef } from 'app/inventory/subclass';
 import { getResolutionInfo } from 'app/loadout-drawer/loadout-utils';
 import { Loadout } from 'app/loadout/loadout-types';
 import { matchText, plainString } from 'app/search/text-utils';
 import { getDamageDefsByDamageType } from 'app/utils/definitions';
+import { isClassCompatible } from 'app/utils/item-utils';
 import { DestinyItemType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { FilterDefinition } from '../../filter-types';
@@ -26,6 +28,10 @@ function subclassDefFromLoadout(loadout: Loadout, d2Definitions: D2ManifestDefin
   }
 }
 
+function isLoadoutCompatibleWithStore(loadout: Loadout, store: DimStore | undefined) {
+  return !store || isClassCompatible(loadout.classType, store.classType);
+}
+
 const freeformFilters: FilterDefinition<
   Loadout,
   LoadoutFilterContext,
@@ -37,7 +43,7 @@ const freeformFilters: FilterDefinition<
     format: 'freeform',
     suggestionsGenerator: ({ loadouts, selectedLoadoutsStore }) =>
       loadouts
-        ?.filter((loadout) => loadout.classType === selectedLoadoutsStore?.classType)
+        ?.filter((loadout) => isLoadoutCompatibleWithStore(loadout, selectedLoadoutsStore))
         .map((loadout) => `exactname:${quoteFilterString(loadout.name.toLowerCase())}`),
     filter: ({ filterValue, language, lhs }) => {
       const test = matchText(filterValue, language, /* exact */ lhs === 'exactname');
@@ -58,10 +64,7 @@ const freeformFilters: FilterDefinition<
       return deduplicate(
         loadouts.flatMap((loadout) => {
           const subclass = subclassDefFromLoadout(loadout, d2Definitions);
-          if (
-            !subclass ||
-            (selectedLoadoutsStore && loadout.classType !== selectedLoadoutsStore?.classType)
-          ) {
+          if (!subclass || !isLoadoutCompatibleWithStore(loadout, selectedLoadoutsStore)) {
             return;
           }
           const damageType = getDamageTypeForSubclassDef(subclass)!;
@@ -79,7 +82,7 @@ const freeformFilters: FilterDefinition<
       const damageDefs = d2Definitions && getDamageDefsByDamageType(d2Definitions);
       return (loadout: Loadout) => {
         const subclass = d2Definitions && subclassDefFromLoadout(loadout, d2Definitions);
-        if (!subclass || subclass.classType !== selectedLoadoutsStore.classType) {
+        if (!subclass || !isLoadoutCompatibleWithStore(loadout, selectedLoadoutsStore)) {
           return false;
         }
         if (test(subclass.displayProperties.name)) {
@@ -102,7 +105,7 @@ const freeformFilters: FilterDefinition<
       }
 
       return loadouts.flatMap((loadout) => {
-        if (loadout.classType !== selectedLoadoutsStore?.classType) {
+        if (!isLoadoutCompatibleWithStore(loadout, selectedLoadoutsStore)) {
           return [];
         }
 
@@ -132,7 +135,7 @@ const freeformFilters: FilterDefinition<
     filter: ({ filterValue, language, d2Definitions, selectedLoadoutsStore }) => {
       const test = matchText(filterValue, language, false);
       return (loadout) => {
-        if (!d2Definitions || loadout.classType !== selectedLoadoutsStore.classType) {
+        if (!d2Definitions || !isLoadoutCompatibleWithStore(loadout, selectedLoadoutsStore)) {
           return false;
         }
 
@@ -172,7 +175,7 @@ const freeformFilters: FilterDefinition<
         ? Array.from(
             new Set([
               ...loadouts
-                .filter((loadout) => loadout.classType === selectedLoadoutsStore?.classType)
+                .filter((loadout) => isLoadoutCompatibleWithStore(loadout, selectedLoadoutsStore))
                 .flatMap((loadout) => [
                   ...getHashtagsFromNote(loadout.name),
                   ...getHashtagsFromNote(loadout.notes),
