@@ -13,10 +13,8 @@ function AppIcon({
 }: {
   icon: string | IconDefinition;
   className?: string;
-  title?: string;
   spinning?: boolean;
-  ariaHidden?: boolean;
-}) {
+} & ({ title?: undefined; ariaHidden: true } | { title: string; ariaHidden?: undefined })) {
   if (typeof icon === 'string') {
     return (
       <span
