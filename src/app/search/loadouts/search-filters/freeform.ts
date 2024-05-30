@@ -67,13 +67,16 @@ const freeformFilters: FilterDefinition<
       // to the page, so we need to lift that up before it can be done.
       return deduplicate(
         loadouts.flatMap((loadout) => {
+          if (!isLoadoutCompatibleWithStore(loadout, selectedLoadoutsStore)) {
+            return;
+          }
           const subclass = subclassFromLoadout(
             loadout,
             d2Definitions,
             allItems,
             selectedLoadoutsStore,
           );
-          if (!subclass || !isLoadoutCompatibleWithStore(loadout, selectedLoadoutsStore)) {
+          if (!subclass) {
             return;
           }
           const damageType = subclass.element?.enumValue;
@@ -91,15 +94,20 @@ const freeformFilters: FilterDefinition<
       const test = matchText(filterValue, language, false);
       const damageDefs = d2Definitions && getDamageDefsByDamageType(d2Definitions);
       return (loadout: Loadout) => {
+        if (!isLoadoutCompatibleWithStore(loadout, selectedLoadoutsStore)) {
+          return false;
+        }
+
         const subclass =
           d2Definitions &&
           subclassFromLoadout(loadout, d2Definitions, allItems, selectedLoadoutsStore);
-        if (!subclass || !isLoadoutCompatibleWithStore(loadout, selectedLoadoutsStore)) {
+        if (!subclass) {
           return false;
         }
         if (test(subclass.name)) {
           return true;
         }
+
         // DamageType.None is 0
         const damageType = subclass.element?.enumValue;
         if (!damageDefs || damageType === undefined) {
@@ -119,33 +127,34 @@ const freeformFilters: FilterDefinition<
         return [];
       }
 
-      return loadouts.flatMap((loadout) => {
-        if (!isLoadoutCompatibleWithStore(loadout, selectedLoadoutsStore)) {
-          return [];
-        }
+      return deduplicate(
+        loadouts.flatMap((loadout) => {
+          if (!isLoadoutCompatibleWithStore(loadout, selectedLoadoutsStore)) {
+            return;
+          }
 
-        const itemSuggestions = loadout.items.map((item) => {
-          const resolvedItem = findItemForLoadout(
-            d2Definitions,
-            // Will never actually be undefined, due to types used for FilterHelp we need to make
-            // allItems undefined in the suggestion types.
-            // TODO (ryan) fix this
-            allItems || [],
-            selectedLoadoutsStore?.id,
-            item,
-          );
-          return (
-            resolvedItem && `exactcontains:${quoteFilterString(resolvedItem.name.toLowerCase())}`
-          );
-        });
-        const modSuggestions =
-          getModsFromLoadout(d2Definitions, loadout).map(
+          const itemSuggestions = loadout.items.map((item) => {
+            const resolvedItem = findItemForLoadout(
+              d2Definitions,
+              // Will never actually be undefined, due to types used for FilterHelp we need to make
+              // allItems undefined in the suggestion types.
+              // TODO (ryan) fix this
+              allItems || [],
+              selectedLoadoutsStore?.id,
+              item,
+            );
+            return (
+              resolvedItem && `exactcontains:${quoteFilterString(resolvedItem.name.toLowerCase())}`
+            );
+          });
+          const modSuggestions = getModsFromLoadout(d2Definitions, loadout).map(
             (mod) =>
               `exactcontains:${quoteFilterString(mod.resolvedMod.displayProperties.name.toLowerCase())}`,
-          ) || [];
+          );
 
-        return deduplicate([...itemSuggestions, ...modSuggestions]);
-      });
+          return [...itemSuggestions, ...modSuggestions];
+        }),
+      );
     },
     filter: ({ filterValue, language, allItems, d2Definitions, selectedLoadoutsStore, lhs }) => {
       const test = matchText(filterValue, language, lhs === 'exactcontains');
