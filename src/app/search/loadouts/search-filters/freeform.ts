@@ -100,7 +100,7 @@ const freeformFilters: FilterDefinition<
     },
   },
   {
-    keywords: 'contains',
+    keywords: ['contains', 'exactcontains'],
     description: tl('LoadoutFilter.Contains'),
     format: 'freeform',
     suggestionsGenerator: ({ d2Definitions, allItems, loadouts, selectedLoadoutsStore }) => {
@@ -123,19 +123,21 @@ const freeformFilters: FilterDefinition<
             selectedLoadoutsStore?.id,
             item,
           );
-          return resolvedItem && `contains:${quoteFilterString(resolvedItem.name.toLowerCase())}`;
+          return (
+            resolvedItem && `exactcontains:${quoteFilterString(resolvedItem.name.toLowerCase())}`
+          );
         });
         const modSuggestions =
           getModsFromLoadout(d2Definitions, loadout).map(
             (mod) =>
-              `contains:${quoteFilterString(mod.resolvedMod.displayProperties.name.toLowerCase())}`,
+              `exactcontains:${quoteFilterString(mod.resolvedMod.displayProperties.name.toLowerCase())}`,
           ) || [];
 
         return deduplicate([...itemSuggestions, ...modSuggestions]);
       });
     },
-    filter: ({ filterValue, language, allItems, d2Definitions, selectedLoadoutsStore }) => {
-      const test = matchText(filterValue, language, false);
+    filter: ({ filterValue, language, allItems, d2Definitions, selectedLoadoutsStore, lhs }) => {
+      const test = matchText(filterValue, language, lhs === 'exactcontains');
       return (loadout) => {
         if (!d2Definitions || !isLoadoutCompatibleWithStore(loadout, selectedLoadoutsStore)) {
           return false;
