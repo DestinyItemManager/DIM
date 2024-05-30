@@ -3,7 +3,11 @@ import { tl } from 'app/i18next-t';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
 import { DimStore } from 'app/inventory/store-types';
 import { getDamageTypeForSubclassDef } from 'app/inventory/subclass';
-import { getResolutionInfo } from 'app/loadout-drawer/loadout-utils';
+import {
+  findItemForLoadout,
+  getModsFromLoadout,
+  getResolutionInfo,
+} from 'app/loadout-drawer/loadout-utils';
 import { Loadout } from 'app/loadout/loadout-types';
 import { matchText, plainString } from 'app/search/text-utils';
 import { getDamageDefsByDamageType } from 'app/utils/definitions';
@@ -99,7 +103,7 @@ const freeformFilters: FilterDefinition<
     keywords: 'contains',
     description: tl('LoadoutFilter.Contains'),
     format: 'freeform',
-    suggestionsGenerator: ({ d2Definitions, loadouts, selectedLoadoutsStore }) => {
+    suggestionsGenerator: ({ d2Definitions, allItems, loadouts, selectedLoadoutsStore }) => {
       if (!d2Definitions || !loadouts) {
         return [];
       }
@@ -110,29 +114,27 @@ const freeformFilters: FilterDefinition<
         }
 
         const itemSuggestions = loadout.items.map((item) => {
-          const resolutionInfo = getResolutionInfo(d2Definitions, item.hash);
-          const definition =
-            resolutionInfo && d2Definitions.InventoryItem.getOptional(resolutionInfo.hash);
-          return (
-            definition &&
-            `contains:${quoteFilterString(definition.displayProperties.name.toLowerCase())}`
+          const resolvedItem = findItemForLoadout(
+            d2Definitions,
+            // Will never actually be undefined, due to types used for FilterHelp we need to make
+            // allItems undefined in the suggestion types.
+            // TODO (ryan) fix this
+            allItems || [],
+            selectedLoadoutsStore?.id,
+            item,
           );
+          return resolvedItem && `contains:${quoteFilterString(resolvedItem.name.toLowerCase())}`;
         });
         const modSuggestions =
-          loadout.parameters?.mods?.map((modHash) => {
-            const resolutionInfo = getResolutionInfo(d2Definitions, modHash);
-            const definition =
-              resolutionInfo && d2Definitions.InventoryItem.getOptional(resolutionInfo.hash);
-            return (
-              definition &&
-              `contains:${quoteFilterString(definition.displayProperties.name.toLowerCase())}`
-            );
-          }) || [];
+          getModsFromLoadout(d2Definitions, loadout).map(
+            (mod) =>
+              `contains:${quoteFilterString(mod.resolvedMod.displayProperties.name.toLowerCase())}`,
+          ) || [];
 
         return deduplicate([...itemSuggestions, ...modSuggestions]);
       });
     },
-    filter: ({ filterValue, language, d2Definitions, selectedLoadoutsStore }) => {
+    filter: ({ filterValue, language, allItems, d2Definitions, selectedLoadoutsStore }) => {
       const test = matchText(filterValue, language, false);
       return (loadout) => {
         if (!d2Definitions || !isLoadoutCompatibleWithStore(loadout, selectedLoadoutsStore)) {
@@ -141,17 +143,17 @@ const freeformFilters: FilterDefinition<
 
         return (
           loadout.items.some((item) => {
-            const resolutionInfo = getResolutionInfo(d2Definitions, item.hash);
-            const itemDefinition =
-              resolutionInfo && d2Definitions.InventoryItem.getOptional(resolutionInfo.hash);
-            return itemDefinition && test(itemDefinition.displayProperties.name);
+            const resolvedItem = findItemForLoadout(
+              d2Definitions,
+              allItems,
+              selectedLoadoutsStore?.id,
+              item,
+            );
+            return resolvedItem && test(resolvedItem?.name);
           }) ||
-          loadout.parameters?.mods?.some((mod) => {
-            const resolutionInfo = getResolutionInfo(d2Definitions, mod);
-            const modDefinition =
-              resolutionInfo && d2Definitions.InventoryItem.getOptional(resolutionInfo.hash);
-            return modDefinition && test(modDefinition.displayProperties.name);
-          })
+          getModsFromLoadout(d2Definitions, loadout).some((mod) =>
+            test(mod.resolvedMod.displayProperties.name),
+          )
         );
       };
     },

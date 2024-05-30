@@ -786,11 +786,11 @@ function isFashionPlug(defs: D2ManifestDefinitions, modHash: number) {
 export function getModsFromLoadout(
   defs: D2ManifestDefinitions | undefined,
   loadout: Loadout,
-  unlockedPlugs: Set<number>,
+  unlockedPlugs?: Set<number>,
 ) {
   const internalModHashes = loadout.parameters?.mods ?? [];
 
-  return resolveLoadoutModHashes(defs, internalModHashes, unlockedPlugs);
+  return resolveLoadoutModHashes(defs, internalModHashes, unlockedPlugs || new Set());
 }
 
 const oldToNewMod: HashLookup<number> = {

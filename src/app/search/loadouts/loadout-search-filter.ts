@@ -3,6 +3,8 @@ import { destinyVersionSelector } from 'app/accounts/selectors';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { languageSelector } from 'app/dim-api/selectors';
 import { DimLanguage } from 'app/i18n';
+import { DimItem } from 'app/inventory/item-types';
+import { allItemsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { Loadout } from 'app/loadout/loadout-types';
 import { loadoutsSelector } from 'app/loadout/loadouts-selector';
@@ -35,6 +37,7 @@ export const allLoadoutFilters = [...simpleFilters, ...freeformFilters, ...overl
 export const loadoutSuggestionsContextSelector = createSelector(
   loadoutsSelector,
   selectedLoadoutStoreSelector,
+  allItemsSelector,
   d2ManifestSelector,
   makeLoadoutSuggestionsContext,
 );
@@ -42,11 +45,13 @@ export const loadoutSuggestionsContextSelector = createSelector(
 function makeLoadoutSuggestionsContext(
   loadouts: Loadout[],
   selectedLoadoutsStore: DimStore,
+  allItems: DimItem[],
   d2Definitions: D2ManifestDefinitions | undefined,
 ): LoadoutSuggestionsContext {
   return {
     loadouts,
     selectedLoadoutsStore,
+    allItems,
     d2Definitions,
   };
 }
@@ -62,12 +67,14 @@ function makeLoadoutFilterContext(
   selectedLoadoutsStore: DimStore,
   loadoutsByItem: LoadoutsByItem,
   language: DimLanguage,
+  allItems: DimItem[],
   d2Definitions: D2ManifestDefinitions | undefined,
 ): LoadoutFilterContext {
   return {
     selectedLoadoutsStore,
     loadoutsByItem,
     language,
+    allItems,
     d2Definitions,
   };
 }
@@ -81,6 +88,7 @@ const loadoutFilterContextSelector = createSelector(
   selectedLoadoutStoreSelector,
   loadoutsByItemSelector,
   languageSelector,
+  allItemsSelector,
   d2ManifestSelector,
   makeLoadoutFilterContext,
 );
