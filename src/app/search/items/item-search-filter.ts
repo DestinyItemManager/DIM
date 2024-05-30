@@ -4,15 +4,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { customStatsSelector, languageSelector } from 'app/dim-api/selectors';
 import { DimLanguage } from 'app/i18n';
 import { TagValue } from 'app/inventory/dim-item-info';
-import { Loadout } from 'app/loadout/loadout-types';
-import { loadoutsSelector } from 'app/loadout/loadouts-selector';
-import { LoadoutsByItem, loadoutsByItemSelector } from 'app/loadout/selectors';
-import { d2ManifestSelector } from 'app/manifest/selectors';
-import { Settings } from 'app/settings/initial-settings';
-import { WishListRoll } from 'app/wishlists/types';
-import memoizeOne from 'memoize-one';
-import { createSelector } from 'reselect';
-import { DimItem } from '../inventory/item-types';
+import { DimItem } from 'app/inventory/item-types';
 import {
   allItemsSelector,
   allNotesHashtagsSelector,
@@ -22,14 +14,22 @@ import {
   getTagSelector,
   newItemsSelector,
   sortedStoresSelector,
-} from '../inventory/selectors';
-import { DimStore } from '../inventory/store-types';
-import { querySelector } from '../shell/selectors';
-import { wishListFunctionSelector, wishListsByHashSelector } from '../wishlists/selectors';
-import { InventoryWishListRoll } from '../wishlists/wishlists';
+} from 'app/inventory/selectors';
+import { DimStore } from 'app/inventory/store-types';
+import { Loadout } from 'app/loadout/loadout-types';
+import { loadoutsSelector } from 'app/loadout/loadouts-selector';
+import { LoadoutsByItem, loadoutsByItemSelector } from 'app/loadout/selectors';
+import { d2ManifestSelector } from 'app/manifest/selectors';
+import { buildFiltersMap, buildSearchConfig } from 'app/search/search-config';
+import { makeSearchFilterFactory, parseAndValidateQuery } from 'app/search/search-filter';
+import { Settings } from 'app/settings/initial-settings';
+import { querySelector } from 'app/shell/selectors';
+import { wishListFunctionSelector, wishListsByHashSelector } from 'app/wishlists/selectors';
+import { WishListRoll } from 'app/wishlists/types';
+import { InventoryWishListRoll } from 'app/wishlists/wishlists';
+import memoizeOne from 'memoize-one';
+import { createSelector } from 'reselect';
 import { FilterContext, SuggestionsContext } from './item-filter-types';
-import { buildFiltersMap, buildSearchConfig } from './search-config';
-import { makeSearchFilterFactory, parseAndValidateQuery } from './search-filter';
 import advancedFilters from './search-filters/advanced';
 import d1Filters from './search-filters/d1-filters';
 import dupeFilters from './search-filters/dupes';

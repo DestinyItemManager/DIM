@@ -6,7 +6,7 @@ import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
-import { searchFilterSelector } from 'app/search/item-search-filter';
+import { searchFilterSelector } from 'app/search/items/item-search-filter';
 import { useSetting } from 'app/settings/hooks';
 import { querySelector } from 'app/shell/selectors';
 import { filterMap } from 'app/utils/collections';

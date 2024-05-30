@@ -6,11 +6,11 @@ import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { Loadout } from 'app/loadout/loadout-types';
 import { LoadoutsByItem } from 'app/loadout/selectors';
+import { FilterDefinition } from 'app/search/filter-types';
+import { FiltersMap, SearchConfig } from 'app/search/search-config';
 import { Settings } from 'app/settings/initial-settings';
 import { WishListRoll } from 'app/wishlists/types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
-import { FilterDefinition } from './filter-types';
-import { FiltersMap, SearchConfig } from './search-config';
 
 /**
  * A slice of data that could be used by filter functions to

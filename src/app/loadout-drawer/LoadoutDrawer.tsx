@@ -6,7 +6,7 @@ import { useAutocomplete } from 'app/dim-ui/text-complete/text-complete';
 import { t } from 'app/i18next-t';
 import { getStore } from 'app/inventory/stores-helpers';
 import { useDefinitions } from 'app/manifest/selectors';
-import { searchFilterSelector } from 'app/search/item-search-filter';
+import { searchFilterSelector } from 'app/search/items/item-search-filter';
 import { AppIcon, addIcon, faRandom } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';

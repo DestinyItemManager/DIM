@@ -36,7 +36,7 @@ import { manifestSelector, useDefinitions } from 'app/manifest/selectors';
 import { showMaterialCount } from 'app/material-counts/MaterialCountsWrappers';
 import { showNotification } from 'app/notifications/notifications';
 import SearchBar from 'app/search/SearchBar';
-import { filteredItemsSelector, searchFilterSelector } from 'app/search/item-search-filter';
+import { filteredItemsSelector, searchFilterSelector } from 'app/search/items/item-search-filter';
 import { loadoutFilterFactorySelector } from 'app/search/loadouts/loadout-search-filter';
 import {
   AppIcon,

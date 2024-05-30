@@ -1,6 +1,6 @@
 import { tl } from 'app/i18next-t';
 import { getLoadoutSeason } from 'app/loadout-drawer/loadout-utils';
-import { seasonTagToNumber } from 'app/search/search-filters/range-overload';
+import { seasonTagToNumber } from 'app/search/items/search-filters/range-overload';
 import { LoadoutFilterDefinition } from '../loadout-filter-types';
 
 // overloadedRangeFilters: stuff that may test a range, but also accepts a word

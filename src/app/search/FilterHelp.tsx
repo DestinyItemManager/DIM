@@ -7,8 +7,12 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './FilterHelp.m.scss';
 import { SearchInput } from './SearchInput';
-import { ItemFilterDefinition, ItemSearchConfig, SuggestionsContext } from './item-filter-types';
-import { searchConfigSelector, suggestionsContextSelector } from './item-search-filter';
+import {
+  ItemFilterDefinition,
+  ItemSearchConfig,
+  SuggestionsContext,
+} from './items/item-filter-types';
+import { searchConfigSelector, suggestionsContextSelector } from './items/item-search-filter';
 import {
   LoadoutFilterDefinition,
   LoadoutSearchConfig,

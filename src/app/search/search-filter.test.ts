@@ -1,4 +1,4 @@
-import { ItemFilterDefinition } from './item-filter-types';
+import { ItemFilterDefinition } from './items/item-filter-types';
 import { rangeStringToComparator } from './search-filter';
 import { allStatNames, searchableArmorStatNames } from './search-filter-values';
 import { generateSuggestionsForFilter } from './suggestions-generation';
