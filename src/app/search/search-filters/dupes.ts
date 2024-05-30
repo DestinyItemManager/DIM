@@ -3,12 +3,12 @@ import { tl } from 'app/i18next-t';
 import { TagValue } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
 import { StatsSet } from 'app/loadout-builder/process-worker/stats-set';
+import { DEFAULT_SHADER, armorStats } from 'app/search/d2-known-values';
+import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { isArtifice } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
-import { chainComparator, compareBy, reverseComparator } from '../../utils/comparators';
-import { DEFAULT_SHADER, armorStats } from '../d2-known-values';
-import { FilterDefinition } from '../filter-types';
+import { ItemFilterDefinition } from '../item-filter-types';
 
 const notableTags = ['favorite', 'keep'];
 
@@ -82,7 +82,7 @@ const computeDupesByIdFn = (allItems: DimItem[], makeDupeIdFn: (item: DimItem) =
  */
 export const computeDupes = (allItems: DimItem[]) => computeDupesByIdFn(allItems, makeDupeID);
 
-const dupeFilters: FilterDefinition[] = [
+const dupeFilters: ItemFilterDefinition[] = [
   {
     keywords: 'dupe',
     description: tl('Filter.Dupe'),

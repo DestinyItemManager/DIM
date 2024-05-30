@@ -23,10 +23,10 @@ import {
 } from 'app/inventory/store/override-sockets';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { convertToLoadoutItem, newLoadout } from 'app/loadout-drawer/loadout-utils';
-import { loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
+import { loadoutsByItemSelector } from 'app/loadout/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
-import { searchFilterSelector } from 'app/search/search-filter';
+import { searchFilterSelector } from 'app/search/item-search-filter';
 import { setSettingAction } from 'app/settings/actions';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
 import { AppIcon, faCaretDown, faCaretUp, spreadsheetIcon, uploadIcon } from 'app/shell/icons';

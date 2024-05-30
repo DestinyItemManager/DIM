@@ -1,25 +1,24 @@
 import { SearchType } from '@destinyitemmanager/dim-api-types';
 import StaticPage from 'app/dim-ui/StaticPage';
 import { t } from 'app/i18next-t';
-import { DimItem } from 'app/inventory/item-types';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
 import { RootState } from 'app/store/types';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './FilterHelp.m.scss';
 import { SearchInput } from './SearchInput';
-import { FilterContext, FilterDefinition, SuggestionsContext } from './filter-types';
-import { LoadoutFilterContext, LoadoutSuggestionsContext } from './loadouts/loadout-filter-types';
+import { ItemFilterDefinition, ItemSearchConfig, SuggestionsContext } from './item-filter-types';
+import { searchConfigSelector, suggestionsContextSelector } from './item-search-filter';
+import {
+  LoadoutFilterDefinition,
+  LoadoutSearchConfig,
+  LoadoutSuggestionsContext,
+} from './loadouts/loadout-filter-types';
 import {
   loadoutSearchConfigSelector,
   loadoutSuggestionsContextSelector,
 } from './loadouts/loadout-search-filter';
-import { SearchConfig, searchConfigSelector } from './search-config';
-import {
-  generateGroupedSuggestionsForFilter,
-  suggestionsContextSelector,
-} from './suggestions-generation';
+import { generateGroupedSuggestionsForFilter } from './suggestions-generation';
 
 function keywordsString(keywords: string | string[]) {
   if (Array.isArray(keywords)) {
@@ -29,11 +28,7 @@ function keywordsString(keywords: string | string[]) {
 }
 
 export default function FilterHelp({ searchType = SearchType.Item }: { searchType?: SearchType }) {
-  const searchConfig = useSelector<
-    RootState,
-    | SearchConfig<DimItem, FilterContext, SuggestionsContext>
-    | SearchConfig<Loadout, LoadoutFilterContext, LoadoutSuggestionsContext>
-  >(
+  const searchConfig = useSelector<RootState, ItemSearchConfig | LoadoutSearchConfig>(
     searchType === SearchType.Loadout ? loadoutSearchConfigSelector : searchConfigSelector,
   ).filtersMap;
   const suggestionContext = useSelector(
@@ -103,9 +98,7 @@ function FilterExplanation({
   filter,
   suggestionContext,
 }: {
-  filter:
-    | FilterDefinition<Loadout, LoadoutFilterContext, LoadoutSuggestionsContext>
-    | FilterDefinition;
+  filter: LoadoutFilterDefinition | ItemFilterDefinition;
   suggestionContext: LoadoutSuggestionsContext | SuggestionsContext;
 }) {
   const dispatch = useDispatch();

@@ -6,7 +6,7 @@ import { useAutocomplete } from 'app/dim-ui/text-complete/text-complete';
 import { t } from 'app/i18next-t';
 import { getStore } from 'app/inventory/stores-helpers';
 import { useDefinitions } from 'app/manifest/selectors';
-import { searchFilterSelector } from 'app/search/search-filter';
+import { searchFilterSelector } from 'app/search/item-search-filter';
 import { AppIcon, addIcon, faRandom } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
@@ -26,12 +26,14 @@ import {
   storesSelector,
   unlockedPlugSetItemsSelector,
 } from '../inventory/selectors';
+import { deleteLoadout, updateLoadout } from '../loadout/actions';
 import LoadoutEdit from '../loadout/loadout-edit/LoadoutEdit';
+import { Loadout } from '../loadout/loadout-types';
+import { loadoutsHashtagsSelector } from '../loadout/selectors';
 import styles from './LoadoutDrawer.m.scss';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerFooter from './LoadoutDrawerFooter';
 import LoadoutDrawerHeader from './LoadoutDrawerHeader';
-import { deleteLoadout, updateLoadout } from './actions';
 import {
   LoadoutUpdateFunction,
   addItem,
@@ -43,9 +45,7 @@ import {
   setNotes,
 } from './loadout-drawer-reducer';
 import { addItem$ } from './loadout-events';
-import { Loadout } from './loadout-types';
 import { filterLoadoutToAllowedItems } from './loadout-utils';
-import { loadoutsHashtagsSelector } from './selectors';
 
 /**
  * The Loadout editor that shows up as a sheet on the Inventory screen. You can build and edit

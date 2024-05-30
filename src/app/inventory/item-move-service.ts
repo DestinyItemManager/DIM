@@ -2,7 +2,7 @@ import { startSpan } from '@sentry/browser';
 import { handleAuthErrors } from 'app/accounts/actions';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { t } from 'app/i18next-t';
-import { isInInGameLoadoutForSelector } from 'app/loadout-drawer/selectors';
+import { isInInGameLoadoutForSelector } from 'app/loadout/selectors';
 import type { ItemTierName } from 'app/search/d2-known-values';
 import { RootState, ThunkResult } from 'app/store/types';
 import { CancelToken } from 'app/utils/cancel';

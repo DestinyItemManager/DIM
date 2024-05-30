@@ -4,8 +4,8 @@ import {
   filterSortRecentSearches,
   makeFilterComplete,
 } from './autocomplete';
+import { buildItemSearchConfig } from './item-search-filter';
 import { quoteFilterString } from './query-parser';
-import { buildItemSearchConfig } from './search-config';
 
 /**
  * Given a string like "foo ba|r", find where the "|" is and remove it,

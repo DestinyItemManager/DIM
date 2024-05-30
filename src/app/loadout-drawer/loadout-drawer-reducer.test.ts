@@ -6,6 +6,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { getTestDefinitions, getTestStores } from 'testing/test-utils';
+import { Loadout } from '../loadout/loadout-types';
 import {
   addItem,
   applySocketOverrides,
@@ -21,7 +22,6 @@ import {
   toggleEquipped,
   updateMods,
 } from './loadout-drawer-reducer';
-import { Loadout } from './loadout-types';
 import { filterLoadoutToAllowedItems, newLoadout } from './loadout-utils';
 
 let defs: D2ManifestDefinitions;

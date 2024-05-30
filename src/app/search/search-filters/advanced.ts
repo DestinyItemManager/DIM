@@ -1,8 +1,8 @@
 import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
-import { FilterDefinition } from '../filter-types';
+import { ItemFilterDefinition } from '../item-filter-types';
 
-const advancedFilters: FilterDefinition[] = [
+const advancedFilters: ItemFilterDefinition[] = [
   {
     keywords: 'id',
     description: tl('Filter.ItemId'),

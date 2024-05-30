@@ -12,7 +12,7 @@ import {
   clearBucketCategory,
   setLoadoutParameters,
 } from 'app/loadout-drawer/loadout-drawer-reducer';
-import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { LoadoutCharacterStats } from 'app/store-stats/CharacterStats';

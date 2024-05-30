@@ -1,6 +1,6 @@
 import { DimItem } from 'app/inventory/item-types';
 import { EventBus } from 'app/utils/observable';
-import { Loadout } from './loadout-types';
+import { Loadout } from '../loadout/loadout-types';
 
 export const editLoadout$ = new EventBus<{
   loadout: Loadout;
