@@ -1,18 +1,14 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { tl } from 'app/i18next-t';
+import { DimItem } from 'app/inventory/item-types';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
 import { DimStore } from 'app/inventory/store-types';
-import { getDamageTypeForSubclassDef } from 'app/inventory/subclass';
-import {
-  findItemForLoadout,
-  getModsFromLoadout,
-  getResolutionInfo,
-} from 'app/loadout-drawer/loadout-utils';
+import { findItemForLoadout, getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
 import { Loadout } from 'app/loadout/loadout-types';
 import { matchText, plainString } from 'app/search/text-utils';
 import { getDamageDefsByDamageType } from 'app/utils/definitions';
 import { isClassCompatible } from 'app/utils/item-utils';
-import { DestinyItemType } from 'bungie-api-ts/destiny2';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { FilterDefinition } from '../../filter-types';
 import { quoteFilterString } from '../../query-parser';
@@ -22,12 +18,16 @@ function deduplicate<T>(someArray: (T | undefined | null)[]) {
   return _.compact(Array.from(new Set(someArray)));
 }
 
-function subclassDefFromLoadout(loadout: Loadout, d2Definitions: D2ManifestDefinitions) {
+function subclassFromLoadout(
+  loadout: Loadout,
+  d2Definitions: D2ManifestDefinitions,
+  allItems: DimItem[] | undefined,
+  store: DimStore | undefined,
+) {
   for (const item of loadout.items) {
-    const resolutionInfo = getResolutionInfo(d2Definitions, item.hash);
-    const itemDef = resolutionInfo && d2Definitions?.InventoryItem.getOptional(resolutionInfo.hash);
-    if (itemDef?.itemType === DestinyItemType.Subclass) {
-      return itemDef;
+    const resolvedItem = findItemForLoadout(d2Definitions, allItems || [], store?.id, item);
+    if (resolvedItem?.bucket.hash === BucketHashes.Subclass) {
+      return resolvedItem;
     }
   }
 }
@@ -58,7 +58,7 @@ const freeformFilters: FilterDefinition<
     keywords: ['subclass'],
     description: tl('LoadoutFilter.Subclass'),
     format: 'freeform',
-    suggestionsGenerator: ({ loadouts, d2Definitions, selectedLoadoutsStore }) => {
+    suggestionsGenerator: ({ loadouts, allItems, d2Definitions, selectedLoadoutsStore }) => {
       if (!loadouts || !d2Definitions) {
         return [];
       }
@@ -67,35 +67,46 @@ const freeformFilters: FilterDefinition<
       // to the page, so we need to lift that up before it can be done.
       return deduplicate(
         loadouts.flatMap((loadout) => {
-          const subclass = subclassDefFromLoadout(loadout, d2Definitions);
+          const subclass = subclassFromLoadout(
+            loadout,
+            d2Definitions,
+            allItems,
+            selectedLoadoutsStore,
+          );
           if (!subclass || !isLoadoutCompatibleWithStore(loadout, selectedLoadoutsStore)) {
             return;
           }
-          const damageType = getDamageTypeForSubclassDef(subclass)!;
+          const damageType = subclass.element?.enumValue;
           // DamageType.None is 0
-          const damageName = damageDefs[damageType].displayProperties.name;
+          const damageName =
+            damageType !== undefined ? damageDefs[damageType].displayProperties.name : undefined;
           return [
-            `subclass:${quoteFilterString(subclass.displayProperties.name.toLowerCase())}`,
-            `subclass:${quoteFilterString(damageName.toLowerCase())}`,
+            `subclass:${quoteFilterString(subclass.name.toLowerCase())}`,
+            damageName && `subclass:${quoteFilterString(damageName.toLowerCase())}`,
           ];
         }),
       );
     },
-    filter: ({ filterValue, language, d2Definitions, selectedLoadoutsStore }) => {
+    filter: ({ filterValue, language, allItems, d2Definitions, selectedLoadoutsStore }) => {
       const test = matchText(filterValue, language, false);
       const damageDefs = d2Definitions && getDamageDefsByDamageType(d2Definitions);
       return (loadout: Loadout) => {
-        const subclass = d2Definitions && subclassDefFromLoadout(loadout, d2Definitions);
+        const subclass =
+          d2Definitions &&
+          subclassFromLoadout(loadout, d2Definitions, allItems, selectedLoadoutsStore);
         if (!subclass || !isLoadoutCompatibleWithStore(loadout, selectedLoadoutsStore)) {
           return false;
         }
-        if (test(subclass.displayProperties.name)) {
+        if (test(subclass.name)) {
           return true;
         }
         // DamageType.None is 0
-        const damageType = getDamageTypeForSubclassDef(subclass)!;
-        const damageName = damageDefs?.[damageType]?.displayProperties.name;
-        return damageName !== undefined && test(damageName);
+        const damageType = subclass.element?.enumValue;
+        if (!damageDefs || damageType === undefined) {
+          return false;
+        }
+        const damageName = damageDefs[damageType].displayProperties.name;
+        return test(damageName);
       };
     },
   },
