@@ -7,8 +7,6 @@ import { DimItem } from '../item-types';
 import { allItemsSelector, storesSelector } from '../selectors';
 import { getArtifactBonus } from '../stores-helpers';
 
-const pinnacleCap = powerLevelByKeyword.pinnaclecap;
-
 /**
  * Does this store (character) have any classified items that might affect their power level?
  * Things to consider:
@@ -25,7 +23,7 @@ function hasAffectingClassified(
   return unrestrictedMaxLightGear.some(
     (i) =>
       // isn't pinnacle cap
-      i.power !== pinnacleCap &&
+      i.power !== powerLevelByKeyword.pinnaclecap &&
       // and shares a bucket with a classified item (which might be higher power)
       bucketsWithClassifieds.has(i.bucket.hash),
   );

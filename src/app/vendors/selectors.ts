@@ -7,7 +7,7 @@ import {
   sortedStoresSelector,
 } from 'app/inventory/selectors';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
-import { searchFilterSelector } from 'app/search/search-filter';
+import { searchFilterSelector } from 'app/search/item-search-filter';
 import { querySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';

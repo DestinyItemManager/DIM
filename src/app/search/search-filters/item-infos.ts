@@ -1,9 +1,9 @@
 import { tl } from 'app/i18next-t';
 import { itemTagSelectorList } from 'app/inventory/dim-item-info';
-import { FilterDefinition } from '../filter-types';
+import { ItemFilterDefinition } from '../item-filter-types';
 
 // check item tags or presence of notes
-const itemInfosFilters: FilterDefinition[] = [
+const itemInfosFilters: ItemFilterDefinition[] = [
   {
     keywords: 'tagged',
     description: tl('Filter.Tags.Tagged'),

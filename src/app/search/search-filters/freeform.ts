@@ -1,37 +1,20 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { DIM_LANG_INFOS, DimLanguage } from 'app/i18n';
 import { tl } from 'app/i18next-t';
 import { DimItem, DimPlug } from 'app/inventory/item-types';
+import { quoteFilterString } from 'app/search/query-parser';
+import {
+  matchText,
+  plainString,
+  startWordRegexp,
+  testStringsFromDisplayProperties,
+  testStringsFromDisplayPropertiesMap,
+} from 'app/search/text-utils';
 import { filterMap } from 'app/utils/collections';
 import { isD1Item } from 'app/utils/item-utils';
 import { DestinyInventoryItemDefinition, TierType } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import memoizeOne from 'memoize-one';
-import { FilterDefinition } from '../filter-types';
-import { quoteFilterString } from '../query-parser';
-
-/** global language bool. "latin" character sets are the main driver of string processing changes */
-const isLatinBased = (language: DimLanguage) => DIM_LANG_INFOS[language].latinBased;
-
-/** escape special characters for a regex */
-function escapeRegExp(s: string) {
-  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-/** Remove diacritics from latin-based string */
-function latinize(s: string, language: DimLanguage) {
-  return isLatinBased(language) ? s.normalize('NFD').replace(/\p{Diacritic}/gu, '') : s;
-}
-
-/** Make a Regexp that searches starting at a word boundary */
-export function startWordRegexp(s: string, language: DimLanguage) {
-  // Only some languages effectively use the \b regex word boundary
-  return new RegExp(`${isLatinBased(language) ? '\\b' : ''}${escapeRegExp(s)}`, 'i');
-}
-
-/** returns input string toLower, and stripped of accents if it's a latin language */
-export const plainString = (s: string, language: DimLanguage): string =>
-  latinize(s, language).toLowerCase();
+import { ItemFilterDefinition } from '../item-filter-types';
 
 const interestingPlugTypes = new Set([PlugCategoryHashes.Frames, PlugCategoryHashes.Intrinsics]);
 const getPerkNamesFromManifest = memoizeOne(
@@ -76,20 +59,6 @@ const getUniqueItemNamesFromManifest = memoizeOne(
   },
 );
 
-/**
- * Create a case-/diacritic-insensitive matching predicate for name / perkname filters.
- * Requires an exact match if `exact`, otherwise partial.
- */
-export function matchText(value: string, language: DimLanguage, exact: boolean) {
-  const normalized = plainString(value, language);
-  if (exact) {
-    return (s: string) => normalized === plainString(s, language);
-  } else {
-    const startWord = startWordRegexp(normalized, language);
-    return (s: string) => startWord.test(plainString(s, language));
-  }
-}
-
 const nameFilter = {
   keywords: ['name', 'exactname'],
   description: tl('Filter.Name'),
@@ -115,9 +84,9 @@ const nameFilter = {
     return (item) => test(item.name);
   },
   fromItem: (item) => `exactname:${quoteFilterString(item.name)}`,
-} satisfies FilterDefinition;
+} satisfies ItemFilterDefinition;
 
-const freeformFilters: FilterDefinition[] = [
+const freeformFilters: ItemFilterDefinition[] = [
   nameFilter,
   {
     keywords: 'notes',
@@ -220,44 +189,6 @@ const freeformFilters: FilterDefinition[] = [
 ];
 
 export default freeformFilters;
-
-/**
- * feed in an object with a `name` and a `description` property,
- * to get an array of just those strings
- */
-function testStringsFromDisplayProperties<T extends { name: string; description: string }>(
-  test: (str: string) => boolean,
-  displayProperties?: T,
-  includeDescription = true,
-): boolean {
-  if (!displayProperties) {
-    return false;
-  }
-
-  return Boolean(
-    (displayProperties.name && test(displayProperties.name)) ||
-      (includeDescription && displayProperties.description && test(displayProperties.description)),
-  );
-}
-
-/**
- * feed in an object or objects with a `name` and a `description` property
- */
-function testStringsFromDisplayPropertiesMap<T extends { name: string; description: string }>(
-  test: (str: string) => boolean,
-  displayProperties?: T | T[] | null,
-  includeDescription = true,
-): boolean {
-  if (!displayProperties) {
-    return false;
-  }
-  if (!Array.isArray(displayProperties)) {
-    return testStringsFromDisplayProperties(test, displayProperties, includeDescription);
-  }
-  return displayProperties.some((d) =>
-    testStringsFromDisplayProperties(test, d, includeDescription),
-  );
-}
 
 function testStringsFromObjectives(
   test: (str: string) => boolean,

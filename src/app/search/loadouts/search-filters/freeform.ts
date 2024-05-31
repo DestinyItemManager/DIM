@@ -3,7 +3,7 @@ import { tl } from 'app/i18next-t';
 import { getHashtagsFromNote } from 'app/inventory/note-hashtags';
 import { getDamageTypeForSubclassDef } from 'app/inventory/subclass';
 import { Loadout } from 'app/loadout/loadout-types';
-import { matchText, plainString } from 'app/search/search-filters/freeform';
+import { matchText, plainString } from 'app/search/text-utils';
 import { getDamageDefsByDamageType } from 'app/utils/definitions';
 import { DestinyItemType } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';

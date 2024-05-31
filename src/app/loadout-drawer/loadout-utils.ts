@@ -734,7 +734,11 @@ export function isFashionOnly(defs: D2ManifestDefinitions, loadout: Loadout): bo
       return false;
     }
     const modsForThisArmorSlot = loadout.parameters.modsByBucket[bucketHash];
-    if (modsForThisArmorSlot.some((modHash) => !isFashionPlug(defs, modHash))) {
+    if (
+      modsForThisArmorSlot.some(
+        (modHash) => !isFashionPlug(defs.InventoryItem.getOptional(modHash)),
+      )
+    ) {
       return false;
     }
   }
@@ -759,7 +763,11 @@ export function isArmorModsOnly(defs: D2ManifestDefinitions, loadout: Loadout): 
         return false;
       }
       const modsForThisArmorSlot = loadout.parameters.modsByBucket[bucketHash];
-      if (modsForThisArmorSlot.some((modHash) => isFashionPlug(defs, modHash))) {
+      if (
+        modsForThisArmorSlot.some((modHash) =>
+          isFashionPlug(defs.InventoryItem.getOptional(modHash)),
+        )
+      ) {
         return false;
       }
     }
@@ -769,13 +777,12 @@ export function isArmorModsOnly(defs: D2ManifestDefinitions, loadout: Loadout): 
 }
 
 /** given a hash we know is a plug, is this a fashion plug? */
-function isFashionPlug(defs: D2ManifestDefinitions, modHash: number) {
-  const def = defs.InventoryItem.get(modHash);
+export function isFashionPlug(modDef: DestinyInventoryItemDefinition | undefined): boolean {
   return Boolean(
-    def &&
-      (def.itemSubType === DestinyItemSubType.Shader ||
-        def.itemSubType === DestinyItemSubType.Ornament ||
-        def.itemType === DestinyItemType.Armor),
+    modDef &&
+      (modDef.itemSubType === DestinyItemSubType.Shader ||
+        modDef.itemSubType === DestinyItemSubType.Ornament ||
+        modDef.itemType === DestinyItemType.Armor),
   );
 }
 /**

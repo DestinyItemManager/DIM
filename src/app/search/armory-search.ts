@@ -8,7 +8,7 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import extraItemCollectibles from 'data/d2/unreferenced-collections-items.json';
 import _ from 'lodash';
 import { ArmorySearchItem, SearchItemType } from './autocomplete';
-import { plainString } from './search-filters/freeform';
+import { plainString } from './text-utils';
 
 export interface ArmoryEntry {
   name: string;

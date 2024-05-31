@@ -52,7 +52,7 @@ import { getItemsAndSubclassFromLoadout, loadoutPower } from 'app/loadout/Loadou
 import { Loadout, ResolvedLoadoutItem, ResolvedLoadoutMod } from 'app/loadout/loadout-types';
 import { LoadoutArtifactUnlocks, LoadoutMods } from 'app/loadout/loadout-ui/LoadoutMods';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { searchFilterSelector } from 'app/search/search-filter';
+import { searchFilterSelector } from 'app/search/item-search-filter';
 import { emptyObject } from 'app/utils/empty';
 import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';

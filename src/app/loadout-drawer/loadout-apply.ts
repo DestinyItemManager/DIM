@@ -73,7 +73,13 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import { Draft, produce } from 'immer';
 import _ from 'lodash';
 import { savePreviousLoadout } from '../loadout/actions';
-import { Assignment, InGameLoadout, Loadout, LoadoutItem } from '../loadout/loadout-types';
+import {
+  Assignment,
+  InGameLoadout,
+  Loadout,
+  LoadoutItem,
+  PluggingAction,
+} from '../loadout/loadout-types';
 import {
   LoadoutApplyPhase,
   LoadoutItemState,
@@ -92,6 +98,7 @@ import {
   findItemForLoadout,
   getLoadoutSubclassFragmentCapacity,
   getModsFromLoadout,
+  isFashionPlug,
 } from './loadout-utils';
 
 const TAG = 'loadout';
@@ -1169,8 +1176,6 @@ function applyLoadoutMods(
       );
     }
 
-    const applyModsPromises: Promise<void>[] = [];
-
     const handleSuccess = ({ mod, requested }: Assignment) =>
       requested &&
       setLoadoutState(setModResult({ modHash: mod.hash, state: LoadoutModState.Applied }));
@@ -1190,6 +1195,9 @@ function applyLoadoutMods(
             ...state,
             equipNotPossible: state.equipNotPossible || Boolean(equipNotPossible),
           }));
+
+    const modAssigns: { item: DimItem; actions: PluggingAction[] }[] = [];
+    const fashionAssigns: { item: DimItem; actions: PluggingAction[] }[] = [];
 
     for (const item of armor) {
       const assignments = pickPlugPositions(
@@ -1220,16 +1228,22 @@ function applyLoadoutMods(
       const pluggingSteps = createPluggingStrategy(defs, item, assignments);
       const assignmentSequence = pluggingSteps.filter((assignment) => assignment.required);
       infoLog(TAG, 'Applying mods', assignmentSequence, 'to', item.name);
-      if (assignmentSequence) {
-        applyModsPromises.push(
-          dispatch(
-            equipModsToItem(item, assignmentSequence, handleSuccess, handleFailure, cancelToken),
-          ),
-        );
+
+      if (assignmentSequence.length) {
+        const [f, m] = _.partition(assignmentSequence, (a) => isFashionPlug(a.mod));
+        modAssigns.push({ item, actions: m });
+        fashionAssigns.push({ item, actions: f });
       }
     }
 
-    await Promise.all(applyModsPromises);
+    // given limited time, slow API, impatient teammates, we'll plug all mods into all armor pieces, *then* all fashion
+    for (const assignGroup of [modAssigns, fashionAssigns]) {
+      await Promise.all(
+        assignGroup.map(({ item, actions }) =>
+          dispatch(equipModsToItem(item, actions, handleSuccess, handleFailure, cancelToken)),
+        ),
+      );
+    }
   };
 }
 

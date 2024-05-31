@@ -1,10 +1,10 @@
 import { tl } from 'app/i18next-t';
 import { getSeason } from 'app/inventory/store/season';
+import { powerLevelByKeyword } from 'app/search/power-levels';
+import { allStatNames, statHashByName } from 'app/search/search-filter-values';
 import { D2CalculatedSeason } from 'data/d2/d2-season-info';
 import seasonTags from 'data/d2/season-tags.json';
-import { FilterDefinition } from '../filter-types';
-import { powerLevelByKeyword } from '../power-levels';
-import { allStatNames, statHashByName } from '../search-filter-values';
+import { ItemFilterDefinition } from '../item-filter-types';
 
 export const seasonTagToNumber = {
   ...seasonTags,
@@ -17,7 +17,7 @@ export const seasonTagToNumber = {
 // this word might become a number like arrival ====> 11,
 // then be processed normally in a number check
 
-const overloadedRangeFilters: FilterDefinition[] = [
+const overloadedRangeFilters: ItemFilterDefinition[] = [
   {
     keywords: 'masterwork',
     description: tl('Filter.Masterwork'),

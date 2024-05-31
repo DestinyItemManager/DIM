@@ -1,14 +1,23 @@
 import { tl } from 'app/i18next-t';
 import { D1Item } from 'app/inventory/item-types';
-import { getItemYear } from 'app/utils/item-utils';
 import {
   boosts,
   D1ActivityHashes,
   sublimeEngrams,
   supplies,
   vendorHashes,
-} from '../d1-known-values';
-import { FilterDefinition } from '../filter-types';
+} from 'app/search/d1-known-values';
+import { FilterDefinition } from 'app/search/filter-types';
+import { getItemYear } from 'app/utils/item-utils';
+import { FilterContext, ItemFilterDefinition, SuggestionsContext } from '../item-filter-types';
+
+/**
+ * A filter that's only valid for Destiny 1 and gets to operate on D1Items instead,
+ * to enable a safe cast to FilterDefinition.
+ */
+type D1FilterDefinition = FilterDefinition<D1Item, FilterContext, SuggestionsContext> & {
+  destinyVersion: 1;
+};
 
 // these just check an attribute found on DimItem
 const d1Filters: D1FilterDefinition[] = [
@@ -225,11 +234,4 @@ const d1Filters: D1FilterDefinition[] = [
   },
 ];
 
-/**
- * A filter that's only valid for Destiny 1 and gets to operate on D1Items instead,
- * to enable a safe cast to FilterDefinition.
- */
-type D1FilterDefinition = FilterDefinition<D1Item> & {
-  destinyVersion: 1;
-};
-export default d1Filters as FilterDefinition[];
+export default d1Filters as ItemFilterDefinition[];
