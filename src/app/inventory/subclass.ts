@@ -1,9 +1,9 @@
 import { damageNamesByEnum } from 'app/search/search-filter-values';
 import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
 import { LookupTable } from 'app/utils/util-types';
-import { DamageType, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
+import { DamageType } from 'bungie-api-ts/destiny2';
 import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
-import { BucketHashes, ItemCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import subclassArc from 'images/subclass-arc.png';
 import subclassSolar from 'images/subclass-solar.png';
 import subclassStasis from 'images/subclass-stasis.png';
@@ -61,11 +61,4 @@ export function getDamageTypeForSubclassPlug(item: PluggableInventoryItemDefinit
     }
   }
   return null;
-}
-
-/** Get the DamageType enum value for a subclass item definition. */
-export function getDamageTypeForSubclassDef(subclass: DestinyInventoryItemDefinition) {
-  return subclass.inventory?.bucketTypeHash === BucketHashes.Subclass
-    ? subclass.talentGrid?.hudDamageType
-    : undefined;
 }
