@@ -6,7 +6,6 @@ import { DimStore } from 'app/inventory/store-types';
 import { findItemForLoadout, getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
 import { Loadout } from 'app/loadout/loadout-types';
 import { matchText, plainString } from 'app/search/text-utils';
-import { getDamageDefsByDamageType } from 'app/utils/definitions';
 import { emptyArray } from 'app/utils/empty';
 import { isClassCompatible } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -68,9 +67,7 @@ const freeformFilters: FilterDefinition<
       if (!loadouts || !d2Definitions) {
         return [];
       }
-      const damageDefs = getDamageDefsByDamageType(d2Definitions);
-      // TODO (ryan) filter on currently selected character. This info is currently localized
-      // to the page, so we need to lift that up before it can be done.
+
       return deduplicate(
         loadouts.flatMap((loadout) => {
           if (!isLoadoutCompatibleWithStore(loadout, selectedLoadoutsStore)) {
@@ -85,10 +82,7 @@ const freeformFilters: FilterDefinition<
           if (!subclass) {
             return;
           }
-          const damageType = subclass.element?.displayProperties.name;
-          // DamageType.None is 0
-          const damageName =
-            damageType !== undefined ? damageDefs[damageType].displayProperties.name : undefined;
+          const damageName = subclass.element?.displayProperties.name;
           return [
             `subclass:${quoteFilterString(subclass.name.toLowerCase())}`,
             damageName && `subclass:${quoteFilterString(damageName.toLowerCase())}`,
@@ -98,7 +92,6 @@ const freeformFilters: FilterDefinition<
     },
     filter: ({ filterValue, language, allItems, d2Definitions, selectedLoadoutsStore }) => {
       const test = matchText(filterValue, language, false);
-      const damageDefs = d2Definitions && getDamageDefsByDamageType(d2Definitions);
       return (loadout: Loadout) => {
         if (!isLoadoutCompatibleWithStore(loadout, selectedLoadoutsStore)) {
           return false;
@@ -114,13 +107,8 @@ const freeformFilters: FilterDefinition<
           return true;
         }
 
-        // DamageType.None is 0
-        const damageType = subclass.element?.enumValue;
-        if (!damageDefs || damageType === undefined) {
-          return false;
-        }
-        const damageName = damageDefs[damageType].displayProperties.name;
-        return test(damageName);
+        const damageName = subclass.element?.displayProperties.name;
+        return damageName !== undefined && test(damageName);
       };
     },
   },
@@ -142,10 +130,7 @@ const freeformFilters: FilterDefinition<
           const itemSuggestions = loadout.items.map((item) => {
             const resolvedItem = findItemForLoadout(
               d2Definitions,
-              // Will never actually be undefined, due to types used for FilterHelp we need to make
-              // allItems undefined in the suggestion types.
-              // TODO (ryan) fix this
-              allItems || [],
+              allItems ?? emptyArray(),
               selectedLoadoutsStore?.id,
               item,
             );
