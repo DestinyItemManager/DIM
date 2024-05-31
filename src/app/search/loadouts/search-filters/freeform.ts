@@ -7,6 +7,7 @@ import { findItemForLoadout, getModsFromLoadout } from 'app/loadout-drawer/loado
 import { Loadout } from 'app/loadout/loadout-types';
 import { matchText, plainString } from 'app/search/text-utils';
 import { getDamageDefsByDamageType } from 'app/utils/definitions';
+import { emptyArray } from 'app/utils/empty';
 import { isClassCompatible } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -25,7 +26,12 @@ function subclassFromLoadout(
   store: DimStore | undefined,
 ) {
   for (const item of loadout.items) {
-    const resolvedItem = findItemForLoadout(d2Definitions, allItems ?? emptyList(), store?.id, item);
+    const resolvedItem = findItemForLoadout(
+      d2Definitions,
+      allItems ?? emptyArray(),
+      store?.id,
+      item,
+    );
     if (resolvedItem?.bucket.hash === BucketHashes.Subclass) {
       return resolvedItem;
     }
