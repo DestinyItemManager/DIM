@@ -25,7 +25,7 @@ function subclassFromLoadout(
   store: DimStore | undefined,
 ) {
   for (const item of loadout.items) {
-    const resolvedItem = findItemForLoadout(d2Definitions, allItems || [], store?.id, item);
+    const resolvedItem = findItemForLoadout(d2Definitions, allItems ?? emptyList(), store?.id, item);
     if (resolvedItem?.bucket.hash === BucketHashes.Subclass) {
       return resolvedItem;
     }
@@ -79,7 +79,7 @@ const freeformFilters: FilterDefinition<
           if (!subclass) {
             return;
           }
-          const damageType = subclass.element?.enumValue;
+          const damageType = subclass.element?.displayProperties.name;
           // DamageType.None is 0
           const damageName =
             damageType !== undefined ? damageDefs[damageType].displayProperties.name : undefined;
