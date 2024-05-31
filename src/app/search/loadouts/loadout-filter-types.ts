@@ -1,5 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimLanguage } from 'app/i18n';
+import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { Loadout } from 'app/loadout/loadout-types';
 import { LoadoutsByItem } from 'app/loadout/selectors';
@@ -19,6 +20,7 @@ export interface LoadoutFilterContext {
   selectedLoadoutsStore: DimStore;
   loadoutsByItem: LoadoutsByItem;
   language: DimLanguage;
+  allItems: DimItem[];
   d2Definitions: D2ManifestDefinitions | undefined;
 }
 
@@ -32,6 +34,7 @@ export interface LoadoutSuggestionsContext {
    * The selected store on the loadouts page
    */
   selectedLoadoutsStore?: DimStore;
+  allItems?: DimItem[];
   d2Definitions?: D2ManifestDefinitions;
 }
 
