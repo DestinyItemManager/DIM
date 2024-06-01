@@ -1,5 +1,7 @@
 ## Next
 
+* Pressing "Escape" when an input in a sheet is focused now closes the sheet.
+
 ## 8.21.1 <span class="changelog-date">(2024-05-27)</span>
 
 * Fixed an issue where DIM clients might not see search history when using only local settings storage.

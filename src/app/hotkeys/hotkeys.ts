@@ -173,6 +173,13 @@ const _MAP: { [code: number]: string } = {
   221: ']',
   222: "'",
 };
+
+/**
+ * A list of hotkeys that should not be blocked even when a
+ * form control is focused.
+ */
+const allowedKeysInFormControls = ['Escape'];
+
 // Add in the number keys
 for (let i = 0; i <= 9; ++i) {
   // This needs to use a string cause otherwise since 0 is falsey
@@ -184,14 +191,20 @@ for (let i = 0; i <= 9; ++i) {
 }
 
 function handleKeyEvent(e: KeyboardEvent) {
-  if (
-    e.isComposing ||
-    e.repeat ||
-    (e.target instanceof HTMLElement &&
-      (e.target.isContentEditable ||
-        (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName) &&
-          (e.target as HTMLInputElement).type !== 'checkbox')))
-  ) {
+  /**
+   * By default, we block custom hotkeys to prevent overriding built-in input
+   * hotkeys. However, certain custom hotkeys should be allowed even when a
+   * form control is focused. For example, pressing Escape inside of a sheet
+   * should always close the sheet, even if an input in the sheet is focused.
+   */
+  const blockHotKeyInFormControl =
+    e.target instanceof HTMLElement &&
+    (e.target.isContentEditable ||
+      (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName) &&
+        (e.target as HTMLInputElement).type !== 'checkbox')) &&
+    !allowedKeysInFormControls.includes(e.key);
+
+  if (e.isComposing || e.repeat || blockHotKeyInFormControl) {
     return;
   }
 
