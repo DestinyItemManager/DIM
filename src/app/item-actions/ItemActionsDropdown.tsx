@@ -11,7 +11,7 @@ import { DimStore } from 'app/inventory/store-types';
 import { itemMoveLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { TagCommandInfo } from 'app/organizer/ItemActions';
-import { validateQuerySelector } from 'app/search/item-search-filter';
+import { validateQuerySelector } from 'app/search/items/item-search-filter';
 import { canonicalizeQuery, parseQuery } from 'app/search/query-parser';
 import { toggleSearchResults } from 'app/shell/actions';
 import { useIsPhonePortrait } from 'app/shell/selectors';

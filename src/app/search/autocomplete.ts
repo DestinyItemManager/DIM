@@ -4,9 +4,9 @@ import { uniqBy } from 'app/utils/collections';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import _ from 'lodash';
 import { ArmoryEntry, getArmorySuggestions } from './armory-search';
+import { canonicalFilterFormats } from './filter-types';
 import { QueryLexerOpenQuotesError, lexer, makeCommentString, parseQuery } from './query-parser';
 import { FiltersMap, SearchConfig, Suggestion } from './search-config';
-import freeformFilters from './search-filters/freeform';
 import { plainString } from './text-utils';
 
 /** The autocompleter/dropdown will suggest different types of searches */
@@ -362,10 +362,6 @@ function findFilter<I, FilterCtx, SuggestionsCtx>(
   return filterName === 'is' ? filtersMap.isFilters[filterValue] : filtersMap.kvFilters[filterName];
 }
 
-// these filters might include quotes, so we search for two text segments to ignore quotes & colon
-// i.e. `name:test` can find `name:"test item"`
-const freeformTerms = freeformFilters.flatMap((f) => f.keywords).map((s) => `${s}:`);
-
 /**
  * This builds a filter-complete function that uses the given search config's keywords to
  * offer autocomplete suggestions for a partially typed term.
@@ -373,6 +369,13 @@ const freeformTerms = freeformFilters.flatMap((f) => f.keywords).map((s) => `${s
 export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
   searchConfig: SearchConfig<I, FilterCtx, SuggestionsCtx>,
 ) {
+  // these filters might include quotes, so we search for two text segments to ignore quotes & colon
+  // i.e. `name:test` can find `name:"test item"`
+  const freeformTerms = Object.values(searchConfig.filtersMap.kvFilters)
+    .filter((f) => canonicalFilterFormats(f.format).includes('freeform'))
+    .flatMap((f) => f.keywords)
+    .map((s) => `${s}:`);
+
   // TODO: also search filter descriptions
   return (typed: string): string[] => {
     if (!typed) {

@@ -6,7 +6,7 @@ import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { t } from 'app/i18next-t';
 import { locateItem } from 'app/inventory/locate-item';
 import { powerLevelSelector } from 'app/inventory/store/selectors';
-import { classFilter } from 'app/search/search-filters/known-values';
+import { classFilter } from 'app/search/items/search-filters/known-values';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { LookupTable } from 'app/utils/util-types';

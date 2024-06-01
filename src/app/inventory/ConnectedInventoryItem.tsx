@@ -1,5 +1,5 @@
 import { settingSelector } from 'app/dim-api/selectors';
-import { queryValidSelector, searchFilterSelector } from 'app/search/item-search-filter';
+import { queryValidSelector, searchFilterSelector } from 'app/search/items/item-search-filter';
 import _ from 'lodash';
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';

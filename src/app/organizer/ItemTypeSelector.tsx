@@ -1,7 +1,7 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { useDefinitions } from 'app/manifest/selectors';
-import { filteredItemsSelector } from 'app/search/item-search-filter';
+import { filteredItemsSelector } from 'app/search/items/item-search-filter';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';

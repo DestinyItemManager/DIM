@@ -2,7 +2,7 @@ import { currentAccountSelector } from 'app/accounts/selectors';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { accountRoute } from 'app/routes';
-import { filterFactorySelector } from 'app/search/item-search-filter';
+import { filterFactorySelector } from 'app/search/items/item-search-filter';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { currySelector } from 'app/utils/selectors';

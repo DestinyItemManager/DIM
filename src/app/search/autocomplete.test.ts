@@ -4,7 +4,7 @@ import {
   filterSortRecentSearches,
   makeFilterComplete,
 } from './autocomplete';
-import { buildItemSearchConfig } from './item-search-filter';
+import { buildItemSearchConfig } from './items/item-search-filter';
 import { quoteFilterString } from './query-parser';
 
 /**
