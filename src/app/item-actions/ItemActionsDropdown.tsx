@@ -226,6 +226,7 @@ export default memo(function ItemActionsDropdown({
       className={styles.dropdownButton}
       offset={isPhonePortrait ? 6 : 2}
       fixed={fixed}
+      label={t('Header.SearchActions')}
     />
   );
 });

@@ -169,7 +169,7 @@ export default function StripSockets() {
         ) : state.tag === 'processing' ? (
           <>
             <span>
-              <AppIcon icon={refreshIcon} spinning={true} />
+              <AppIcon icon={refreshIcon} spinning={true} ariaHidden />
             </span>{' '}
             {t('StripSockets.Running')}
           </>
@@ -192,7 +192,7 @@ export default function StripSockets() {
         disabled={selectedSockets.length === 0}
       >
         <span>
-          <AppIcon icon={faCheckCircle} />{' '}
+          <AppIcon icon={faCheckCircle} ariaHidden />{' '}
           {t('StripSockets.Button', { numSockets: selectedSockets.length })}
         </span>
       </button>
