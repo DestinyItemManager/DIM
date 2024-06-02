@@ -44,6 +44,7 @@ exports[`buildSearchConfig generates a reasonable filter map: is filters 1`] = `
   "green",
   "grenadelauncher",
   "handcannon",
+  "hasdisabledmod",
   "haslight",
   "hasmod",
   "hasnotes",
