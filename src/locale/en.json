@@ -224,6 +224,7 @@
     "Deepsight": "Shows weapons with Deepsight Resonance, which can have their pattern extracted, or which can have Deepsight Resonance enabled using a Deepsight Harmonizer.",
     "Description": "Description",
     "DescriptionFilter": "Shows items whose description has a partial match to the filter text. Search for entire phrases using quotes.",
+    "DisabledModSlot": "Shows items with a disabled mod.",
     "Dupe": "Shows duplicate items, including reissues",
     "DupeCount": "Items that have the specified number of duplicates.",
     "DupeLower": "Duplicate items, including reissues, that are not the highest power dupe. Only one duplicate is chosen as the highest, and the rest are considered lower.",

@@ -165,6 +165,16 @@ const socketFilters: ItemFilterDefinition[] = [
       ),
   },
   {
+    keywords: 'hasdisabledmod',
+    description: tl('Filter.DisabledModSlot'),
+    destinyVersion: 2,
+
+    filter: () => (item) =>
+      item.sockets?.allSockets.some((socket) =>
+        Boolean(socket.plugged && socket.visibleInGame && !socket.plugged.enabled),
+      ),
+  },
+  {
     keywords: 'modded',
     description: tl('Filter.Mods.Y3'),
     destinyVersion: 2,
