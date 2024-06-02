@@ -170,6 +170,7 @@ const socketFilters: ItemFilterDefinition[] = [
     destinyVersion: 2,
 
     filter: () => (item) =>
+      !item.itemCategoryHashes.includes(ItemCategoryHashes.Subclasses) &&
       item.sockets?.allSockets.some((socket) =>
         Boolean(socket.plugged && socket.visibleInGame && !socket.plugged.enabled),
       ),
