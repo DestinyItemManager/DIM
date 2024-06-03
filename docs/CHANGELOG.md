@@ -1,5 +1,7 @@
 ## Next
 
+## 8.22.0 <span class="changelog-date">(2024-06-02)</span>
+
 * Pressing "Escape" when an input in a sheet is focused now closes the sheet.
 
 ## 8.21.1 <span class="changelog-date">(2024-05-27)</span>
