@@ -102,7 +102,7 @@ $rgb-masterworked: dim-hex-to-rgb-values($stat-masterworked);
   $fuzz: 0.9; // determines blurriness level of stripe edges
 
   // math
-  $effective-fuzz: math.div($fuzz), 100;
+  $effective-fuzz: math.div($fuzz, 100);
   $occupied-space: $final-offset - $initial-offset;
   $stripe-spacing: math.div($occupied-space - (4 * $stripe-width), 3);
 
