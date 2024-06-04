@@ -9,6 +9,7 @@ import { plainString } from 'app/search/text-utils';
 import {
   getInterestingSocketMetadatas,
   getSpecialtySocketMetadatas,
+  isShiny,
   modSlotTags,
   modTypeTags,
 } from 'app/utils/item-utils';
@@ -86,13 +87,7 @@ const socketFilters: ItemFilterDefinition[] = [
     keywords: 'shiny',
     description: tl('Filter.Shiny'),
     destinyVersion: 2,
-    filter: () => (item) =>
-      item.sockets?.allSockets.some(
-        (s) =>
-          s.plugOptions.some(
-            (s) => s.plugDef.plug.plugCategoryIdentifier === 'holofoil_skins_shared',
-          ), //
-      ),
+    filter: () => isShiny,
   },
   {
     keywords: 'extraperk',
