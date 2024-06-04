@@ -93,24 +93,30 @@ $rgb-masterworked: dim-hex-to-rgb-values($stat-masterworked);
 }
 
 .shinyMasterwork {
-  $shiny-stripe: dim-hex-to-rgb-values(#f3d299);
-  $initial-offset: 0.71;
-  $stripe-width: 0.025;
-  $stripe-spacing: 0.055;
-  $shiny-stripe-alpha: dim-rgb-values-to-rgba($shiny-stripe, $alpha: 0.5);
-  $fuzz: 0.005; // determines blurriness level of stripe edges
+  $shiny-stripe-color: #f3d29970;
 
-  $stripe-1-start: $initial-offset + $stripe-width * 0 + $stripe-spacing * 0;
-  $stripe-1-ended: $initial-offset + $stripe-width * 1 + $stripe-spacing * 0;
+  // look-defining percentages
+  $initial-offset: 71; // left edge of the leftmost stripe
+  $final-offset: 97; // right edge of the rightmost stripe
+  $stripe-width: 2.5; // obvious
 
-  $stripe-2-start: $initial-offset + $stripe-width * 1 + $stripe-spacing * 1;
-  $stripe-2-ended: $initial-offset + $stripe-width * 2 + $stripe-spacing * 1;
+  $fuzz: 0.009; // determines blurriness level of stripe edges
 
-  $stripe-3-start: $initial-offset + $stripe-width * 2 + $stripe-spacing * 2;
-  $stripe-3-ended: $initial-offset + $stripe-width * 3 + $stripe-spacing * 2;
+  // math
+  $occupied-space: $final-offset - $initial-offset;
+  $stripe-spacing: math.div($occupied-space - (4 * $stripe-width), 3);
 
-  $stripe-4-start: $initial-offset + $stripe-width * 3 + $stripe-spacing * 3;
-  $stripe-4-ended: $initial-offset + $stripe-width * 4 + $stripe-spacing * 3;
+  $stripe-1-start: math.div(($initial-offset + ($stripe-width * 0) + ($stripe-spacing * 0)), 100);
+  $stripe-1-ended: math.div(($initial-offset + ($stripe-width * 1) + ($stripe-spacing * 0)), 100);
+
+  $stripe-2-start: math.div(($initial-offset + ($stripe-width * 1) + ($stripe-spacing * 1)), 100);
+  $stripe-2-ended: math.div(($initial-offset + ($stripe-width * 2) + ($stripe-spacing * 1)), 100);
+
+  $stripe-3-start: math.div(($initial-offset + ($stripe-width * 2) + ($stripe-spacing * 2)), 100);
+  $stripe-3-ended: math.div(($initial-offset + ($stripe-width * 3) + ($stripe-spacing * 2)), 100);
+
+  $stripe-4-start: math.div(($initial-offset + ($stripe-width * 3) + ($stripe-spacing * 3)), 100);
+  $stripe-4-ended: math.div(($initial-offset + ($stripe-width * 4) + ($stripe-spacing * 3)), 100);
 
   box-shadow: inset 0 0 1px 0 rgba(0, 0, 0, 0.25);
   background-image: radial-gradient(
@@ -126,27 +132,27 @@ $rgb-masterworked: dim-hex-to-rgb-values($stat-masterworked);
     linear-gradient(
       135deg,
       transparent #{math.percentage($stripe-1-start)},
-      #{$shiny-stripe-alpha} #{math.percentage($stripe-1-start + $fuzz)},
+      #{$shiny-stripe-color} #{math.percentage($stripe-1-start + $fuzz)},
 
-      #{$shiny-stripe-alpha} #{math.percentage($stripe-1-ended)},
+      #{$shiny-stripe-color} #{math.percentage($stripe-1-ended)},
       transparent #{math.percentage($stripe-1-ended + $fuzz)},
 
       transparent #{math.percentage($stripe-2-start)},
-      #{$shiny-stripe-alpha} #{math.percentage($stripe-2-start + $fuzz)},
+      #{$shiny-stripe-color} #{math.percentage($stripe-2-start + $fuzz)},
 
-      #{$shiny-stripe-alpha} #{math.percentage($stripe-2-ended)},
+      #{$shiny-stripe-color} #{math.percentage($stripe-2-ended)},
       transparent #{math.percentage($stripe-2-ended + $fuzz)},
 
       transparent #{math.percentage($stripe-3-start)},
-      #{$shiny-stripe-alpha} #{math.percentage($stripe-3-start + $fuzz)},
+      #{$shiny-stripe-color} #{math.percentage($stripe-3-start + $fuzz)},
 
-      #{$shiny-stripe-alpha} #{math.percentage($stripe-3-ended)},
+      #{$shiny-stripe-color} #{math.percentage($stripe-3-ended)},
       transparent #{math.percentage($stripe-3-ended + $fuzz)},
 
       transparent #{math.percentage($stripe-4-start)},
-      #{$shiny-stripe-alpha} #{math.percentage($stripe-4-start + $fuzz)},
+      #{$shiny-stripe-color} #{math.percentage($stripe-4-start + $fuzz)},
 
-      #{$shiny-stripe-alpha} #{math.percentage($stripe-4-ended)},
+      #{$shiny-stripe-color} #{math.percentage($stripe-4-ended)},
       transparent #{math.percentage($stripe-4-ended + $fuzz)}
     );
   background-size:
