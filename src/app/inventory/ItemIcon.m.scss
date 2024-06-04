@@ -99,10 +99,10 @@ $rgb-masterworked: dim-hex-to-rgb-values($stat-masterworked);
   $initial-offset: 71; // left edge of the leftmost stripe
   $final-offset: 97; // right edge of the rightmost stripe
   $stripe-width: 2.5; // obvious
-
-  $fuzz: 0.009; // determines blurriness level of stripe edges
+  $fuzz: 0.9; // determines blurriness level of stripe edges
 
   // math
+  $effective-fuzz: math.div($fuzz), 100;
   $occupied-space: $final-offset - $initial-offset;
   $stripe-spacing: math.div($occupied-space - (4 * $stripe-width), 3);
 
@@ -132,28 +132,28 @@ $rgb-masterworked: dim-hex-to-rgb-values($stat-masterworked);
     linear-gradient(
       135deg,
       transparent #{math.percentage($stripe-1-start)},
-      #{$shiny-stripe-color} #{math.percentage($stripe-1-start + $fuzz)},
+      #{$shiny-stripe-color} #{math.percentage($stripe-1-start + $effective-fuzz)},
 
       #{$shiny-stripe-color} #{math.percentage($stripe-1-ended)},
-      transparent #{math.percentage($stripe-1-ended + $fuzz)},
+      transparent #{math.percentage($stripe-1-ended + $effective-fuzz)},
 
       transparent #{math.percentage($stripe-2-start)},
-      #{$shiny-stripe-color} #{math.percentage($stripe-2-start + $fuzz)},
+      #{$shiny-stripe-color} #{math.percentage($stripe-2-start + $effective-fuzz)},
 
       #{$shiny-stripe-color} #{math.percentage($stripe-2-ended)},
-      transparent #{math.percentage($stripe-2-ended + $fuzz)},
+      transparent #{math.percentage($stripe-2-ended + $effective-fuzz)},
 
       transparent #{math.percentage($stripe-3-start)},
-      #{$shiny-stripe-color} #{math.percentage($stripe-3-start + $fuzz)},
+      #{$shiny-stripe-color} #{math.percentage($stripe-3-start + $effective-fuzz)},
 
       #{$shiny-stripe-color} #{math.percentage($stripe-3-ended)},
-      transparent #{math.percentage($stripe-3-ended + $fuzz)},
+      transparent #{math.percentage($stripe-3-ended + $effective-fuzz)},
 
       transparent #{math.percentage($stripe-4-start)},
-      #{$shiny-stripe-color} #{math.percentage($stripe-4-start + $fuzz)},
+      #{$shiny-stripe-color} #{math.percentage($stripe-4-start + $effective-fuzz)},
 
       #{$shiny-stripe-color} #{math.percentage($stripe-4-ended)},
-      transparent #{math.percentage($stripe-4-ended + $fuzz)}
+      transparent #{math.percentage($stripe-4-ended + $effective-fuzz)}
     );
   background-size:
     125% 30%,
