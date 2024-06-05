@@ -95,7 +95,7 @@ export function mapDimItemToProcessItem({
     hash,
     name,
     isExotic,
-    isArtifice: isArtifice(dimItem) || spoofArtifice,
+    isArtifice: thisIsArtifice || spoofArtifice,
     power,
     stats: statMap,
     remainingEnergyCapacity: capacity - modsCost,

@@ -20,7 +20,7 @@ const undesirablePlugs = [
   PlugCategoryHashes.V460PlugsArmorMasterworksStatResistance2,
   PlugCategoryHashes.V460PlugsArmorMasterworksStatResistance3,
   PlugCategoryHashes.V460PlugsArmorMasterworksStatResistance4,
-  PlugCategoryHashes.EnhancementsArtificeExotic, // the socket you "plug" into in-game, to pay for artifice upgrade
+  PlugCategoryHashes.EnhancementsArtificeExotic, // the cost socket you pay for by"plug"ging it in-game, to do an artifice upgrade
 ];
 
 /**
@@ -95,8 +95,8 @@ function Sockets({
         modTypeTagByPlugCategoryHash[toSave.plug.plugCategoryHash as PlugCategoryHashes]) &&
       // either it's some other kind of mod-slot, give it a pass, or
       (socket.plugged?.plugDef.plug.plugCategoryHash !== PlugCategoryHashes.EnhancementsArtifice ||
-        // if it IS an artifice slot, we render it if
-        // it's already paid for (visibleInGame)
+        // if it IS an artifice slot, then we render it
+        // if it's already paid for (visibleInGame)
         socket.visibleInGame ||
         // or if LO has placed a mod in it anyway, due to an upgrades assumption
         toSave.hash !== socket.emptyPlugItemHash)
