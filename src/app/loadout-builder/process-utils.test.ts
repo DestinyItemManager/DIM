@@ -589,7 +589,7 @@ test('process-utils activity mods', async () => {
     name: `Item ${index}`,
     power: 1500,
     stats: [0, 0, 0, 0, 0, 0],
-    compatibleModSeasons: index === 2 ? [] : ['crotasend'],
+    compatibleModSeasons: index === 2 ? [] : ['nightmare'],
     remainingEnergyCapacity,
   });
 
@@ -619,10 +619,10 @@ test('process-utils activity mods', async () => {
   // Costs 1, 1, 1, 2
 
   const modHashes = [
-    3682741808, // InventoryItem "Benevolent Overflow"
-    71258198, // InventoryItem "Stoic When Panicked"
-    2631069573, // InventoryItem "Refreshing Thirst"
-    1768489065, // InventoryItem "Violent Pour"
+    1560574695, // InventoryItem "Nightmare Breaker"
+    1560574695, // InventoryItem "Nightmare Breaker"
+    1560574695, // InventoryItem "Nightmare Breaker"
+    1565861116, // InventoryItem "Enhanced Nightmare Crusher"
   ];
   const activityMods = modHashes.map(
     (hash) => defs.InventoryItem.get(hash) as PluggableInventoryItemDefinition,
