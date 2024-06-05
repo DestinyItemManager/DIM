@@ -30,10 +30,11 @@ const enhancedIntrinsics = new Set<number>([
   3272152575, // Lightweight Frame
   3725333007, // Lightweight Frame
   308595185, // Lightweight Frame
-  1817649409, // Aggressive Burst
-  2170254329, // Aggressive Burst
-  749936529, // Aggressive Burst
-  2732540911, // Aggressive Burst
+  40492375, // Vortex Frame
+  1817649409, // Heavy Burst
+  2170254329, // Heavy Burst
+  749936529, // Heavy Burst
+  2732540911, // Heavy Burst
   1472963920, // High-Impact Frame
   4231246084, // High-Impact Frame
   302702765, // High-Impact Frame
@@ -79,19 +80,19 @@ const enhancedIntrinsics = new Set<number>([
   395096174, // Lightweight Frame
   3472640090, // Lightweight Frame
   3728676938, // Lightweight Frame
-  762204274, // Häkke Precision Frame
-  2409208302, // Häkke Precision Frame
-  482158780, // Häkke Precision Frame
-  2986718682, // Häkke Precision Frame
+  762204274, // Precision Frame
+  2409208302, // Precision Frame
+  482158780, // Precision Frame
+  2986718682, // Precision Frame
   2159352803, // Aggressive Frame
   3320257055, // Aggressive Frame
   1749118639, // Aggressive Frame
   2552875793, // Aggressive Frame
-  3049431773, // Aggressive Frame
-  451371216, // Aggressive Frame
-  4269485650, // Aggressive Frame
-  1655963600, // Aggressive Frame
-  1063261332, // Aggressive Frame
+  3049431773, // Adaptive Burst
+  451371216, // Adaptive Burst
+  4269485650, // Adaptive Burst
+  1655963600, // Adaptive Burst
+  1063261332, // Adaptive Burst
   2003022817, // Rapid-Fire Frame
   1787083609, // Rapid-Fire Frame
   2986029425, // Rapid-Fire Frame
@@ -109,6 +110,12 @@ const enhancedIntrinsics = new Set<number>([
   762801111, // Rapid-Fire Frame
   680193725, // Rapid-Fire Frame
   2105054824, // Lightweight Frame
+  687584589, // Rocket-Assisted Frame
+  368110299, // Rocket-Assisted Frame
+  651554065, // Rocket-Assisted Frame
+  2100231191, // Rocket-Assisted Frame
+  3178379945, // Rocket-Assisted Frame
+  1225770249, // Rocket-Assisted Frame
   1886418605, // Rapid-Fire Frame
   137876701, // Rapid-Fire Frame
   802623077, // Rapid-Fire Frame
@@ -117,7 +124,6 @@ const enhancedIntrinsics = new Set<number>([
   738339367, // Aggressive Glaive
   16445399, // Aggressive Glaive
   3228668394, // Aggressive Glaive
-  40492375, // Vortex Frame
   1057935015, // MIDA Synergy
   2670025099, // MIDA Synergy
   1891876363, // MIDA Synergy
@@ -127,22 +133,43 @@ const enhancedIntrinsics = new Set<number>([
   2696719570, // Adaptive Glaive
   1338909520, // Adaptive Glaive
   1447716563, // Adaptive Glaive
-  1576423267, // Rapid-Fire Frame
-  3688301727, // Rapid-Fire Frame
-  1894749743, // Rapid-Fire Frame
-  1707990417, // Rapid-Fire Frame
   1241894699, // Together Forever
   2826720951, // Together Forever
   1300107783, // Together Forever
   3513901081, // Together Forever
+  1576423267, // Rapid-Fire Frame
+  3688301727, // Rapid-Fire Frame
+  1894749743, // Rapid-Fire Frame
+  1707990417, // Rapid-Fire Frame
+  3035281791, // Caster Frame
   118439741, // Lightweight Frame
   132189785, // Lightweight Frame
   885620491, // Lightweight Frame
   1665848857, // Lightweight Frame
+  811588234, // Precision Frame
+  1052350088, // Precision Frame
+  3913106382, // Precision Frame
+  3419227006, // Precision Frame
   3332480988, // Legacy PR-55 Frame
   916649862, // Legacy PR-55 Frame
   2155015844, // Legacy PR-55 Frame
   3766386008, // Legacy PR-55 Frame
+  3573764622, // Precision Frame
+  3774850330, // Precision Frame
+  2927971896, // Precision Frame
+  738967614, // Precision Frame
+  570373697, // Heavy Burst
+  4175870265, // Heavy Burst
+  3099083217, // Heavy Burst
+  3456918063, // Heavy Burst
+  2012023082, // Area Denial Frame
+  1782704870, // Area Denial Frame
+  244760020, // Area Denial Frame
+  1208953762, // Area Denial Frame
+  3161047604, // Support Frame
+  1535085486, // Support Frame
+  840061228, // Support Frame
+  156358224, // Support Frame
   167794220, // Aggressive Frame
   4000302358, // Precision Frame
   3665558569, // Precision Frame
@@ -162,6 +189,10 @@ const enhancedIntrinsics = new Set<number>([
   1220310607, // Wave Frame
   1713394949, // Wave Frame
   3030812579, // Wave Frame
+  3291480605, // Heavy Burst
+  2444870733, // Heavy Burst
+  1370384437, // Heavy Burst
+  2213429699, // Heavy Burst
 ]);
 
 export default enhancedIntrinsics;

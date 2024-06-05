@@ -1,5 +1,9 @@
 ## Next
 
+* `is:enhanceable` and `is:enhanced` filters for non-crafted weapons whose perks can be enhanced.
+* Cleaned up extra upgrade slots showing up in the Item Popup.
+* Shiny BRAVE weapons now have corner stripes.
+
 ## 8.22.0 <span class="changelog-date">(2024-06-02)</span>
 
 * Pressing "Escape" when an input in a sheet is focused now closes the sheet.

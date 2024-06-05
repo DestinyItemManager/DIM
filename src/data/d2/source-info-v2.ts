@@ -9,7 +9,6 @@ const D2Sources: {
   '30th': {
     sourceHashes: [
       443340273, // Source: Xûr's Treasure Hoard in Eternity
-      642326476, // Source: Dares of Eternity in Eternity
       675740011, // Source: "Grasp of Avarice" Dungeon
       1102533392, // Source: Xûr (Eternity)
       1394793197, // Source: "Magnum Opus" Quest
@@ -158,6 +157,7 @@ const D2Sources: {
       901482731, // Source: Lightfall Campaign
       918840100, // Source: Shadowkeep Campaign
       923708784, // Requires Guardian Rank 7: Threats and Surges
+      958460845, // Source: The Final Shape Campaign
       1076222895, // Source: Defeat bosses in Flashpoints.
       1103518848, // Source: Earned over the course of the Warmind campaign.
       1118966764, // Source: Dismantle an item with this shader applied to it.
@@ -224,18 +224,61 @@ const D2Sources: {
   },
   crucible: {
     itemHashes: [
+      2307365, // The Inquisitor (Adept)
+      161675590, // Whistler's Whim (Adept)
+      501345268, // Shayura's Wrath (Adept)
+      548809020, // Exalted Truth
+      627188188, // Eye of Sol
+      711889599, // Whistler's Whim (Adept)
       769099721, // Devil in the Details
+      825554997, // The Inquisitor (Adept)
+      854379020, // Astral Horizon (Adept)
+      874623537, // Cataphract GL3 (Adept)
+      906840740, // Unwavering Duty
+      1141586039, // Unexpected Resurgence (Adept)
       1230660649, // Victory's Wreath
+      1292594730, // The Summoner (Adept)
+      1321626661, // Eye of Sol (Adept)
+      1401300690, // Eye of Sol
+      1574601402, // Whistler's Whim
       1661191197, // Disdain for Glitter
+      1705843397, // Exalted Truth (Adept)
+      1711056134, // Incisor
+      1820994983, // The Summoner
+      1968410628, // The Prophet
+      1973107014, // Igneous Hammer
+      2022294213, // Shayura's Wrath
+      2059255495, // Eye of Sol (Adept)
+      2185327324, // The Inquisitor
+      2314610827, // Igneous Hammer (Adept)
       2414564781, // Punctuation Marks
       2420153991, // Made Shaxx Proud
+      2421180981, // Incisor (Adept)
       2588739576, // Crucible Solemnity
       2588739578, // Crucible Legacy
       2588739579, // Crucible Metallic
       2632846356, // Rain of Ashes
+      2653171212, // The Inquisitor
+      2653171213, // Astral Horizon
+      2738601016, // Cataphract GL3
+      2759251821, // Unwavering Duty (Adept)
+      2839600459, // Incisor (Adept)
+      3001205424, // Ecliptic Distaff
+      3019024381, // The Prophet (Adept)
+      3102421004, // Exalted Truth
+      3165143747, // Whistler's Whim
+      3193598749, // The Immortal (Adept)
+      3332125295, // Aisha's Care (Adept)
+      3444632029, // Unwavering Duty (Adept)
+      3624844116, // Unwavering Duty
+      3920882229, // Exalted Truth (Adept)
       3928440584, // Crucible Carmine
       3928440585, // Crucible Redjack
+      3969379530, // Aisha's Care
+      4005780578, // Unexpected Resurgence
+      4039572196, // The Immortal
       4060882456, // Rubicund Wrap (Ornament)
+      4248997900, // Incisor
     ],
     sourceHashes: [
       454115234, // Source: Associated Crucible Quest
@@ -245,6 +288,7 @@ const D2Sources: {
       929025440, // Acquired by competing in the Crucible during the Prismatic Inferno.
       1217831333, // Source: Associated Crucible Quest
       1223492644, // Source: Complete the "Reconnaissance by Fire" quest.
+      1465057711, // Source: Standard Ritual Playlist. (Vanguard Ops, Crucible, Gambit)
       1494513645, // Source: Glory Matches in Crucible
       2055470113, // Source: Chance to acquire when completing Crucible Survival matches after reaching Glory Rank "Mythic."
       2537301256, // Source: Glory Rank of "Fabled" in Crucible
@@ -366,13 +410,17 @@ const D2Sources: {
   events: {
     itemHashes: [
       495940989, // Avalanche
+      586671776, // Something New
       1280894514, // Mechabre
+      2326578623, //
       2812100428, // Stay Frosty
       2814093983, // Cold Front
       3240434620, // Something New
       3400256755, // Zephyr
       3559361670, // The Title
       3573686365, // Glacioclasm
+      4106757302, // Crowning Duologue
+      4169225313, // Compass Rose
     ],
     sourceHashes: [
       32323943, // Source: Moments of Triumph
@@ -436,6 +484,7 @@ const D2Sources: {
       483798855, // Source: "The Final Strand" Exotic Quest
       709680645, // Source: "Truly Satisfactory" Triumph
       1141831282, // Source: "Of Queens and Worms" Exotic Quest
+      1302157812, // Source: Wild Card Exotic Quest
       1388323447, // Source: Exotic Mission "The Whisper"
       1476475066, // Source: "Firmware Update" Triumph
       1730197643, // Source: //node.ovrd.AVALON// Exotic Quest
@@ -479,6 +528,7 @@ const D2Sources: {
       887452441, // Source: Gambit Salvager's Salvo Armament
       1127923611, // Source: 3 Gambit Rank Resets in a Season
       1162859311, // Source: Complete the "Clean Getaway" quest.
+      1465057711, // Source: Standard Ritual Playlist. (Vanguard Ops, Crucible, Gambit)
       2170269026, // Source: Complete Gambit matches and earn rank-up packages from the Drifter.
       2364933290, // Source: Gambit Seasonal Ritual Rank Reward
       2601524261, // Source: Associated Gambit Quest
@@ -598,12 +648,16 @@ const D2Sources: {
       231533811, // Iron Strength
       487361141, // Gunnora's Axe
       540880995, // Dark Decider
+      888872889, // Point of the Stag
+      1161561386, // The Guiding Sight
       1162929425, // The Golden Standard
       1448664466, // Iron Bone
       1448664467, // Iron Gold
       1661191199, // Grizzled Wolf
+      1764868900, // Riiswalker
       1987234560, // Iron Ruby
       1999697514, // The Wizened Rebuke
+      2189073092, // Lethal Abundance
       2448092902, // Rusted Iron
       2488587246, // The Hero's Burden
       4009352833, // Roar of the Bear
@@ -666,11 +720,7 @@ const D2Sources: {
     ],
     enteredDCV: 20,
   },
-  lostsectors: {
-    sourceHashes: [
-      2203185162, // Source: Solo Legend and Master Lost Sectors
-    ],
-  },
+  lostsectors: {},
   mars: {
     sourceHashes: [
       1036506031, // Source: Complete activities and earn rank-up packages on Mars.
@@ -756,6 +806,7 @@ const D2Sources: {
   },
   nightfall: {
     itemHashes: [
+      42874240, // Uzume RR4
       192784503, // Pre Astyanax IV
       213264394, // Buzzard
       267089201, // Warden's Law (Adept)
@@ -764,28 +815,39 @@ const D2Sources: {
       566740455, // THE SWARM (Adept)
       672957262, // Undercurrent (Adept)
       772231794, // Hung Jury SR4
+      817909300, // Undercurrent (Adept)
       912222548, // Soldier On
       927835311, // Buzzard (Adept)
       959037361, // Wild Style (Adept)
+      1056103557, // Shadow Price (Adept)
       1064132738, // BrayTech Osprey (Adept)
       1151688091, // Undercurrent
       1332123064, // Wild Style
       1354727549, // The Slammer (Adept)
+      1492522228, // Scintillation (Adept)
       1586231351, // Mindbender's Ambition
       1821529912, // Warden's Law
       1854753404, // Wendigo GL3
       1854753405, // The Militia's Birthright
       1891996599, // Uzume RR4 (Adept)
       1987790789, // After the Nightfall
+      2063217087, // Pre Astyanax IV (Adept)
       2074041946, // Mindbender's Ambition (Adept)
+      2152484073, // Warden's Law
+      2322926844, // Shadow Price
       2450917538, // Uzume RR4
+      2591257541, // Scintillation
       2759590322, // THE SWARM
       2883684343, // Hung Jury SR4 (Adept)
       2889501828, // The Slammer
       2914913838, // Loaded Question (Adept)
+      2932922810, // Pre Astyanax IV
       3125454907, // Loaded Question
       3183283212, // Wendigo GL3
+      3250744600, // Warden's Law (Adept)
+      3610521673, // Uzume RR4 (Adept)
       3667553455, // BrayTech Osprey
+      3686538757, // Undercurrent
       3832743906, // Hung Jury SR4
       3915197957, // Wendigo GL3 (Adept)
       4074251943, // Hung Jury SR4 (Adept)
@@ -850,6 +912,7 @@ const D2Sources: {
       3098328572, // The Recluse
       3354242550, // The Recluse
       3907337522, // Oxygen SR3
+      3962575203, // Hush
     ],
     sourceHashes: [
       598662729, // Source: Reach Glory Rank "Legend" in the Crucible.
@@ -1120,6 +1183,7 @@ const D2Sources: {
   },
   strikes: {
     itemHashes: [
+      42874240, // Uzume RR4
       192784503, // Pre Astyanax IV
       213264394, // Buzzard
       274843196, // Vanguard Unyielding
@@ -1134,20 +1198,25 @@ const D2Sources: {
       1854753405, // The Militia's Birthright
       1974641289, // Nightshade
       1999754402, // The Showrunner
+      2152484073, // Warden's Law
+      2322926844, // Shadow Price
       2450917538, // Uzume RR4
       2523776412, // Vanguard Burnished Steel
       2523776413, // Vanguard Steel
       2588647361, // Consequence of Duty
+      2591257541, // Scintillation
       2759590322, // THE SWARM
       2788911997, // Vanguard Divide
       2788911998, // Vanguard Metallic
       2788911999, // Vanguard Veteran
       2889501828, // The Slammer
+      2932922810, // Pre Astyanax IV
       3001205424, // Ecliptic Distaff
       3125454907, // Loaded Question
       3183283212, // Wendigo GL3
       3215252549, // Determination
       3667553455, // BrayTech Osprey
+      3686538757, // Undercurrent
       3832743906, // Hung Jury SR4
       4060882458, // Balistraria Wrap (Ornament)
     ],
@@ -1161,6 +1230,7 @@ const D2Sources: {
       1216155659, // Source: Complete the "Season 8: First Watch" quest.
       1244908294, // Source: Complete the "Loaded Question" quest from Zavala.
       1433518193, // Source: Vanguard Salvager's Salvo Armament Quest
+      1465057711, // Source: Standard Ritual Playlist. (Vanguard Ops, Crucible, Gambit)
       1564061133, // Source: Associated Vanguard Quest
       2124937714, // Source: Zavala Rank Up Reputation
       2317365255, // Source: Complete the "A Loud Racket" quest.
@@ -1217,15 +1287,19 @@ const D2Sources: {
     itemHashes: [
       2307365, // The Inquisitor (Adept)
       711889599, // Whistler's Whim (Adept)
+      1401300690, // Eye of Sol
       1574601402, // Whistler's Whim
       1983519830, // Hardened by Trial
+      2059255495, // Eye of Sol (Adept)
       2071635914, // Light for the Lost
       2071635915, // Flawless Empyrean
       2185327324, // The Inquisitor
+      2421180981, // Incisor (Adept)
       2759251821, // Unwavering Duty (Adept)
       3102421004, // Exalted Truth
       3624844116, // Unwavering Duty
       3920882229, // Exalted Truth (Adept)
+      4248997900, // Incisor
     ],
     sourceHashes: [
       139599745, // Source: Earn seven wins on a single Trials ticket.

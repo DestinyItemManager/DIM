@@ -30,6 +30,8 @@ exports[`buildSearchConfig generates a reasonable filter map: is filters 1`] = `
   "emotes",
   "energy",
   "engrams",
+  "enhanceable",
+  "enhanced",
   "equipment",
   "equippable",
   "equipped",
