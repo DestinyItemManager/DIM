@@ -317,7 +317,7 @@ const socketFilters: ItemFilterDefinition[] = [
     destinyVersion: 2,
     filter: () => (item) =>
       Boolean(
-        item.sockets?.allSockets.find(
+        item.sockets?.allSockets.some(
           (s) =>
             s.plugged?.plugDef.plug.plugCategoryHash ===
             PlugCategoryHashes.CraftingPlugsWeaponsModsEnhancers,
