@@ -578,8 +578,7 @@ describe('process-utils optimal mods', () => {
 // This tests against a bug where an activity mod would accidentally be considered
 // eligible and fitting if it required as much or more energy than was remaining in any item,
 // even if it didn't have the mod slot.
-test.skip('process-utils activity mods', async () => {
-  // TODO Skipped because activity mods became free apparently, investigate and remove
+test('process-utils activity mods', async () => {
   const defs = await getTestDefinitions();
 
   const makeItem = (index: number, remainingEnergyCapacity: number) => ({
@@ -590,7 +589,7 @@ test.skip('process-utils activity mods', async () => {
     name: `Item ${index}`,
     power: 1500,
     stats: [0, 0, 0, 0, 0, 0],
-    compatibleModSeasons: index === 2 ? [] : ['crotasend'],
+    compatibleModSeasons: index === 2 ? [] : ['nightmare'],
     remainingEnergyCapacity,
   });
 
@@ -620,10 +619,10 @@ test.skip('process-utils activity mods', async () => {
   // Costs 1, 1, 1, 2
 
   const modHashes = [
-    3682741808, // InventoryItem "Benevolent Overflow"
-    71258198, // InventoryItem "Stoic When Panicked"
-    2631069573, // InventoryItem "Refreshing Thirst"
-    1768489065, // InventoryItem "Violent Pour"
+    1560574695, // InventoryItem "Nightmare Breaker"
+    1560574695, // InventoryItem "Nightmare Breaker"
+    1560574695, // InventoryItem "Nightmare Breaker"
+    1565861116, // InventoryItem "Enhanced Nightmare Crusher"
   ];
   const activityMods = modHashes.map(
     (hash) => defs.InventoryItem.get(hash) as PluggableInventoryItemDefinition,
