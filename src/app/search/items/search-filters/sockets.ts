@@ -9,7 +9,6 @@ import { plainString } from 'app/search/text-utils';
 import {
   getInterestingSocketMetadatas,
   getSpecialtySocketMetadatas,
-  isArtifice,
   isShiny,
   modSlotTags,
   modTypeTags,
@@ -19,6 +18,7 @@ import {
   getIntrinsicArmorPerkSocket,
   getSocketsByCategoryHash,
   matchesCuratedRoll,
+  modSocketIsEmpty,
 } from 'app/utils/socket-utils';
 import { StringLookup } from 'app/utils/util-types';
 import { DestinyItemSubType, DestinyRecordState } from 'bungie-api-ts/destiny2';
@@ -211,12 +211,6 @@ const socketFilters: ItemFilterDefinition[] = [
     },
   },
   {
-    keywords: 'artifice',
-    description: tl('Filter.ArmorIntrinsic'),
-    destinyVersion: 2,
-    filter: () => isArtifice,
-  },
-  {
     keywords: 'holdsmod',
     description: tl('Filter.HoldsMod'),
     format: 'query',
@@ -339,8 +333,8 @@ const socketFilters: ItemFilterDefinition[] = [
       return Boolean(
         socket?.plugged &&
           // rules out items where enhancing hasn't even started
-          // if "empty" is plugged, there's a socket offering enhancement to the player
-          socket.emptyPlugItemHash !== socket.plugged.plugDef.hash &&
+          // (the "empty" socket is one offering enhancement to the player)
+          !modSocketIsEmpty(socket) &&
           // rules out half-enhanced items
           // the game explicitly warns you that half-enhanced items stop looking masterworked
           item.masterwork,

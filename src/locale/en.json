@@ -629,7 +629,7 @@
     "All": "All",
     "AnyExotic": "Any Exotic",
     "AnyExoticDescription": "Sets must contain an exotic, but any exotic will do.",
-    "ArtificeExotic": "All+",
+    "Artifice": "Artifice",
     "AssumeMasterwork": "Assume Masterwork",
     "AssumeMasterworkOptions": {
       "All": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
@@ -660,6 +660,7 @@
     "LockItem": "Pin item",
     "MissingClass": "Build is for: {{className}}",
     "MissingClassDescription": "The build you're trying to view is for a character class you don't have.",
+    "MwExotic": "Exotic",
     "NoBuildsFoundExplainer": {
       "ActiveSearchQuery": "An active search query is restricting the items DIM can include in builds",
       "AllowAutoStatMods": "Allow DIM to automatically include additional stat mods",

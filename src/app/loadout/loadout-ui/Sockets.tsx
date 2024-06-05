@@ -20,7 +20,7 @@ const undesirablePlugs = [
   PlugCategoryHashes.V460PlugsArmorMasterworksStatResistance2,
   PlugCategoryHashes.V460PlugsArmorMasterworksStatResistance3,
   PlugCategoryHashes.V460PlugsArmorMasterworksStatResistance4,
-  1934732343, // PlugCategoryHashes.EnhancementsArtificeExotic (when d2ai is updated)
+  PlugCategoryHashes.EnhancementsArtificeExotic, // the socket you "plug" into in-game, to pay for artifice upgrade
 ];
 
 /**
@@ -92,7 +92,14 @@ function Sockets({
       // but always include specialty mod slots, Vow mods don't have
       // an itemTypeDisplayName https://github.com/Bungie-net/api/issues/1620
       (toSave.itemTypeDisplayName ||
-        modTypeTagByPlugCategoryHash[toSave.plug.plugCategoryHash as PlugCategoryHashes])
+        modTypeTagByPlugCategoryHash[toSave.plug.plugCategoryHash as PlugCategoryHashes]) &&
+      // either it's some other kind of mod-slot, give it a pass, or
+      (socket.plugged?.plugDef.plug.plugCategoryHash !== PlugCategoryHashes.EnhancementsArtifice ||
+        // if it IS an artifice slot, we render it if
+        // it's already paid for (visibleInGame)
+        socket.visibleInGame ||
+        // or if LO has placed a mod in it anyway, due to an upgrades assumption
+        toSave.hash !== socket.emptyPlugItemHash)
     ) {
       modsAndWhitelist.push({
         plugDef: toSave,

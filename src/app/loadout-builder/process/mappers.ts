@@ -90,10 +90,6 @@ export function mapDimItemToProcessItem({
     dimItem.isExotic &&
     armorEnergyRules.assumeArmorMasterwork === AssumeArmorMasterwork.ArtificeExotic;
 
-  // if spoofArtifice, we "activate" its artifice socket, even if it's not currently paid for.
-  // transform the DimItem?
-  // or return a modified DimSockets?
-
   return {
     id,
     hash,
