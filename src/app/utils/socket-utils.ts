@@ -324,6 +324,7 @@ export function getWeaponSockets(
 
   const excludedPlugCategoryHashes = [
     PlugCategoryHashes.GenericAllVfx,
+    PlugCategoryHashes.CraftingPlugsWeaponsModsEnhancers,
     PlugCategoryHashes.CraftingPlugsWeaponsModsExtractors,
     // The weapon level socket is not interesting
     PlugCategoryHashes.CraftingPlugsWeaponsModsTransfusersLevel,
@@ -341,7 +342,11 @@ export function getWeaponSockets(
       socket.plugged !== null &&
       !excludedPlugCategoryHashes.includes(socket.plugged.plugDef.plug.plugCategoryHash) &&
       socket !== archetypeSocket &&
-      !isDeepsightResonanceSocket(socket),
+      !isDeepsightResonanceSocket(socket) &&
+      // only show memento socket if it isn't empty
+      (socket.plugged.plugDef.plug.plugCategoryHash !==
+        PlugCategoryHashes.CraftingRecipesEmptySocket ||
+        socket.emptyPlugItemHash !== socket.plugged.plugDef.hash),
   );
 
   return {
