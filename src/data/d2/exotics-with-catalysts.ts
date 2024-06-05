@@ -8,6 +8,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   374573733, // Delicate Tomb
   400096939, // Outbreak Perfected
   417164956, // Jötunn
+  427899681, // Red Death Reformed
   603721696, // Cryosthesia 77K
   776191470, // Tommy's Matchbook
   814876685, // Trinity Ghoul
@@ -51,6 +52,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   2910326942, // Wish-Keeper
   3089417789, // Riskrunner
   3118061005, // Vexcalibur
+  3121540812, // Final Warning
   3141979346, // D.A.R.C.I.
   3141979347, // Borealis
   3211806999, // Izanagi's Burden
@@ -64,6 +66,7 @@ const exoticWeaponHashesWithCatalyst = new Set<number>([
   3524313097, // Eriana's Vow
   3549153978, // Fighting Lion
   3549153979, // The Prospector
+  3561203890, // Tessellation
   3580904580, // Legend of Acrius
   3580904581, // Tractor Cannon
   3588934839, // Le Monarque
