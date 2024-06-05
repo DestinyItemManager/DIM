@@ -307,6 +307,40 @@ const socketFilters: ItemFilterDefinition[] = [
         item.sockets && compare!(countEnhancedPerks(item.sockets)),
   },
   {
+    keywords: 'enhanceable',
+    description: tl('Filter.Enhanceable'),
+    destinyVersion: 2,
+    filter: () => (item) =>
+      Boolean(
+        item.sockets?.allSockets.some(
+          (s) =>
+            s.plugged?.plugDef.plug.plugCategoryHash ===
+            PlugCategoryHashes.CraftingPlugsWeaponsModsEnhancers,
+        ),
+      ),
+  },
+  {
+    keywords: 'enhanced',
+    description: tl('Filter.Enhanced'),
+    destinyVersion: 2,
+    filter: () => (item) => {
+      const socket = item.sockets?.allSockets.find(
+        (s) =>
+          s.plugged?.plugDef.plug.plugCategoryHash ===
+          PlugCategoryHashes.CraftingPlugsWeaponsModsEnhancers,
+      );
+      return Boolean(
+        socket?.plugged &&
+          // rules out items where enhancing hasn't even started
+          // if "empty" is plugged, there's a socket offering enhancement to the player
+          socket.emptyPlugItemHash !== socket.plugged.plugDef.hash &&
+          // rules out half-enhanced items
+          // the game explicitly warns you that half-enhanced items stop looking masterworked
+          item.masterwork,
+      );
+    },
+  },
+  {
     keywords: 'retiredperk',
     description: tl('Filter.RetiredPerk'),
     destinyVersion: 2,
