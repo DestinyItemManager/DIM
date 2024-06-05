@@ -1,3 +1,5 @@
+/* TODO: Reenable after vendors comes back online after updating vendors profile
+
 import { getBuckets } from 'app/destiny2/d2-buckets';
 import { getTestDefinitions, getTestProfile, getTestVendors } from 'testing/test-utils';
 import { D2VendorGroup, toVendorGroups } from './d2-vendors';
@@ -30,7 +32,7 @@ function* allSaleItems(vendorGroups: D2VendorGroup[]) {
     }
   }
 }
-/*TODO: Reenable after vendors comes back online after updating vendors profile
+
 describe('process vendors', () => {
   it('can process vendors without errors', async () => {
     const vendorGroups = await getTestVendorGroups();
