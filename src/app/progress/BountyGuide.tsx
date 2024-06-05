@@ -57,7 +57,7 @@ export type DefType =
 
 const pursuitCategoryTraitHashes: TraitHashes[] = [
   TraitHashes.Seasonal_Quests,
-  TraitHashes.Lightfall,
+  TraitHashes.TheFinalShape,
   TraitHashes.Exotics,
   TraitHashes.Playlists,
   TraitHashes.ThePast,

@@ -75,7 +75,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'InventoryItem',
-      hash: 2747500761,
+      hash: 2529942647,
       fromRichText: false,
     },
   },
@@ -183,7 +183,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'InventoryItem',
-      hash: 3574662354,
+      hash: 2529942642,
       fromRichText: false,
     },
   },
@@ -192,7 +192,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'InventoryItem',
-      hash: 2463983862,
+      hash: 2370269384,
       fromRichText: false,
     },
   },
@@ -201,7 +201,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'InventoryItem',
-      hash: 1885339915,
+      hash: 1869939001,
       fromRichText: false,
     },
   },
@@ -219,7 +219,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'InventoryItem',
-      hash: 2625980631,
+      hash: 2370269391,
       fromRichText: false,
     },
   },
@@ -228,7 +228,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'InventoryItem',
-      hash: 3683904166,
+      hash: 1869939006,
       fromRichText: false,
     },
   },
@@ -263,7 +263,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'InventoryItem',
-      hash: 4220332374,
+      hash: 1980796560,
       fromRichText: false,
     },
   },
@@ -281,7 +281,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'InventoryItem',
-      hash: 2708585279,
+      hash: 1980796563,
       fromRichText: false,
     },
   },
@@ -290,7 +290,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'InventoryItem',
-      hash: 2028772231,
+      hash: 1980796561,
       fromRichText: false,
     },
   },
@@ -299,7 +299,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'InventoryItem',
-      hash: 2984351206,
+      hash: 1262901520,
       fromRichText: false,
     },
   },
@@ -321,7 +321,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'InventoryItem',
-      hash: 3066103996,
+      hash: 2835214903,
       fromRichText: false,
     },
   },
@@ -375,7 +375,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'InventoryItem',
-      hash: 1293395730,
+      hash: 790664812,
       fromRichText: false,
     },
   },
@@ -384,7 +384,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'InventoryItem',
-      hash: 2642597904,
+      hash: 790664813,
       fromRichText: false,
     },
   },
@@ -492,7 +492,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'InventoryItem',
-      hash: 2809342386,
+      hash: 1517917190,
       fromRichText: false,
     },
   },
@@ -501,7 +501,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'InventoryItem',
-      hash: 4228170798,
+      hash: 3994381207,
       fromRichText: false,
     },
   },
@@ -510,7 +510,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'InventoryItem',
-      hash: 2470512752,
+      hash: 1225978592,
       fromRichText: false,
     },
   },
@@ -519,7 +519,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'InventoryItem',
-      hash: 4094417246,
+      hash: 1980796564,
       fromRichText: false,
     },
   },
@@ -564,7 +564,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'InventoryItem',
-      hash: 4249729125,
+      hash: 2835214897,
       fromRichText: false,
     },
   },
@@ -600,7 +600,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 791594362,
+      hash: 173702907,
       fromRichText: true,
     },
   },
@@ -609,7 +609,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 60057218,
+      hash: 515179617,
       fromRichText: true,
     },
   },
@@ -627,7 +627,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 75057024,
+      hash: 55710818,
       fromRichText: true,
     },
   },
@@ -636,7 +636,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 419473522,
+      hash: 241081947,
       fromRichText: true,
     },
   },
@@ -654,7 +654,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 102976778,
+      hash: 55461852,
       fromRichText: true,
     },
   },
@@ -663,7 +663,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 212380697,
+      hash: 139526739,
       fromRichText: true,
     },
   },
@@ -681,7 +681,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 579143207,
+      hash: 59256363,
       fromRichText: true,
     },
   },
@@ -744,7 +744,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 298568270,
+      hash: 259564494,
       fromRichText: true,
     },
   },
@@ -753,7 +753,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 1588957719,
+      hash: 675135106,
       fromRichText: true,
     },
   },
@@ -775,7 +775,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 85535852,
+      hash: 76026731,
       fromRichText: true,
     },
   },
@@ -793,7 +793,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 85535853,
+      hash: 76012872,
       fromRichText: true,
     },
   },
@@ -802,7 +802,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 85761957,
+      hash: 20533663,
       fromRichText: true,
     },
   },
@@ -885,8 +885,10 @@ export type TranslateManually = (typeof translateManually)[number];
  * [Air Dodge]
  * [Super]
  * [Sprint]
+ * [afflicted|burdened|cursed]
  * [Block]
  * [Shoot]
  * [Boost]
+ * [Air Move]
  * [Brake]
  */
