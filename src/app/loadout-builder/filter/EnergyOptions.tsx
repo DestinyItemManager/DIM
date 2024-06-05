@@ -42,6 +42,11 @@ export default function EnergyOptions({
         tooltip: t('LoadoutBuilder.AssumeMasterworkOptions.All'),
         value: AssumeArmorMasterwork.All,
       },
+      {
+        label: t('LoadoutBuilder.ArtificeExotic'),
+        tooltip: t('LoadoutBuilder.AssumeMasterworkOptions.AllWithArtificeExotic'),
+        value: AssumeArmorMasterwork.ArtificeExotic,
+      },
     ],
     [],
   );
@@ -59,7 +64,6 @@ export default function EnergyOptions({
   const selected = assumeMasterworkOptions.find(
     (o) => o.value === (assumeArmorMasterwork ?? AssumeArmorMasterwork.None),
   )!;
-
   return (
     <div className={className}>
       <h3 className={styles.title}>{t('LoadoutBuilder.AssumeMasterwork')}</h3>

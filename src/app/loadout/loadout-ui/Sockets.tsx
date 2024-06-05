@@ -20,6 +20,7 @@ const undesirablePlugs = [
   PlugCategoryHashes.V460PlugsArmorMasterworksStatResistance2,
   PlugCategoryHashes.V460PlugsArmorMasterworksStatResistance3,
   PlugCategoryHashes.V460PlugsArmorMasterworksStatResistance4,
+  1934732343, // PlugCategoryHashes.EnhancementsArtificeExotic (when d2ai is updated)
 ];
 
 /**

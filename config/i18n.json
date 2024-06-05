@@ -594,9 +594,12 @@
     "All": "All",
     "AnyExotic": "Any Exotic",
     "AnyExoticDescription": "Sets must contain an exotic, but any exotic will do.",
+    "ArtificeExotic": "All+",
     "AssumeMasterwork": "Assume Masterwork",
     "AssumeMasterworkOptions": {
       "All": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "AllWithArtificeExotic": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotic: $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
+      "ArtificeExotic": "Enhanced to accept artifice stat mods.",
       "Legendary": "Legendary: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotic: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
       "None": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
       "Current": "Current stats, assumed energy level at least {{minLoItemEnergy}}.",

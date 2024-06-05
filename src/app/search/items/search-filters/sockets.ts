@@ -9,6 +9,7 @@ import { plainString } from 'app/search/text-utils';
 import {
   getInterestingSocketMetadatas,
   getSpecialtySocketMetadatas,
+  isArtifice,
   modSlotTags,
   modTypeTags,
 } from 'app/utils/item-utils';
@@ -213,6 +214,12 @@ const socketFilters: ItemFilterDefinition[] = [
         return Boolean(intrinsic && plainString(intrinsic, language).includes(filterValue));
       };
     },
+  },
+  {
+    keywords: 'artifice',
+    description: tl('Filter.ArmorIntrinsic'),
+    destinyVersion: 2,
+    filter: () => isArtifice,
   },
   {
     keywords: 'holdsmod',

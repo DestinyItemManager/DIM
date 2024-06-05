@@ -1,3 +1,4 @@
+import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, DimSockets, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { getEnergyUpgradePlugs } from 'app/inventory/store/energy';
@@ -307,7 +308,12 @@ export function fitMostMods({
   }
 
   // Artifice mods are free and thus can be greedily assigned.
-  const artificeItems = items.filter(isArtifice);
+  const artificeItems = items.filter(
+    (i) =>
+      (i.isExotic &&
+        armorEnergyRules.assumeArmorMasterwork === AssumeArmorMasterwork.ArtificeExotic) ||
+      isArtifice(i),
+  );
   for (const artificeMod of artificeMods) {
     let targetItemIndex = artificeItems.findIndex((item) =>
       item.sockets?.allSockets.some((socket) => socket.plugged?.plugDef.hash === artificeMod.hash),
