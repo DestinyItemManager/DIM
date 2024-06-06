@@ -827,6 +827,12 @@
     "OpenInOptimizer": "Optimize Armor",
     "PickArmor": "Pick Armor",
     "PickMods": "Add armor mods",
+    "Prismatic": {
+      "Aspect": "Prismatic Aspect",
+      "Grenade": "Prismatic Grenade",
+      "Melee": "Prismatic Melee",
+      "Super": "Super Ability"
+    },
     "PullFromPostmaster": "Collect Postmaster",
     "PullFromPostmasterError": "Unable to pull from Postmaster: {{error}}.",
     "PullFromPostmasterGeneralError": "Unable to pull all items from Postmaster.",
