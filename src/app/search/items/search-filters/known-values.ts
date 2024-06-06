@@ -71,6 +71,26 @@ export const damageFilter = {
   fromItem: (item) => `is:${getItemDamageShortName(item)}`,
 } satisfies ItemFilterDefinition;
 
+const prismaticDamageLookupTable: LookupTable<string, string | undefined> = {
+  unknown: undefined,
+  arc: 'light',
+  solar: 'light',
+  void: 'light',
+  stasis: 'dark',
+  strand: 'dark',
+} as const;
+
+export const prismaticDamageFilter = {
+  keywords: ['light', 'dark'],
+  description: tl('Filter.PrismaticDamageType'),
+  filter:
+    ({ filterValue }) =>
+    (item) => {
+      const damageType = getItemDamageShortName(item) ?? 'unknown';
+      return prismaticDamageLookupTable[damageType] === filterValue ?? false;
+    },
+} satisfies ItemFilterDefinition;
+
 export const classFilter = {
   keywords: ['titan', 'hunter', 'warlock'],
   description: tl('Filter.Class'),
@@ -142,6 +162,7 @@ export const itemCategoryFilter = {
 
 const knownValuesFilters: ItemFilterDefinition[] = [
   damageFilter,
+  prismaticDamageFilter,
   classFilter,
   itemCategoryFilter,
   itemTypeFilter,
