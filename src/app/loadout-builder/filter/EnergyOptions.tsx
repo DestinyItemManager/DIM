@@ -44,7 +44,7 @@ export default function EnergyOptions({
       },
       {
         label: `+ ${t('LoadoutBuilder.Artifice')}`,
-        tooltip: t('LoadoutBuilder.AssumeMasterworkOptions.AllWithArtificeExotic'),
+        tooltip: t('LoadoutBuilder.AssumeMasterworkOptions.AllWithArtificeExotic'), // includes t('LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic')
         value: AssumeArmorMasterwork.ArtificeExotic,
       },
     ],
