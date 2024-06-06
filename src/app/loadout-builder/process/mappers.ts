@@ -1,3 +1,4 @@
+import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { calculateAssumedItemEnergy } from 'app/loadout/armor-upgrade-utils';
@@ -82,12 +83,19 @@ export function mapDimItemToProcessItem({
     ? _.sumBy(modsForSlot, (mod) => mod.plug.energyCost?.energyCost || 0)
     : 0;
 
+  const thisIsArtifice = isArtifice(dimItem);
+  // as of TFS, [relevant, modern] exotics can use artifice stat mods, if the user pays to enhance the armor
+  const spoofArtifice =
+    !thisIsArtifice &&
+    dimItem.isExotic &&
+    armorEnergyRules.assumeArmorMasterwork === AssumeArmorMasterwork.ArtificeExotic;
+
   return {
     id,
     hash,
     name,
     isExotic,
-    isArtifice: isArtifice(dimItem),
+    isArtifice: thisIsArtifice || spoofArtifice,
     power,
     stats: statMap,
     remainingEnergyCapacity: capacity - modsCost,

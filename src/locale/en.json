@@ -629,9 +629,12 @@
     "All": "All",
     "AnyExotic": "Any Exotic",
     "AnyExoticDescription": "Sets must contain an exotic, but any exotic will do.",
+    "Artifice": "Artifice",
     "AssumeMasterwork": "Assume Masterwork",
     "AssumeMasterworkOptions": {
       "All": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)",
+      "AllWithArtificeExotic": "All armor: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotic: $t(LoadoutBuilder.AssumeMasterworkOptions.ArtificeExotic)",
+      "ArtificeExotic": "Enhanced to accept Artifice stat mods.",
       "Current": "Current stats, assumed energy level at least {{minLoItemEnergy}}.",
       "Legendary": "Legendary: $t(LoadoutBuilder.AssumeMasterworkOptions.Masterworked)\nExotic: $t(LoadoutBuilder.AssumeMasterworkOptions.Current)",
       "Masterworked": "+2 in each stat, assumed energy level 10.",
@@ -658,6 +661,7 @@
     "LockItem": "Pin item",
     "MissingClass": "Build is for: {{className}}",
     "MissingClassDescription": "The build you're trying to view is for a character class you don't have.",
+    "MwExotic": "Exotic",
     "NoBuildsFoundExplainer": {
       "ActiveSearchQuery": "An active search query is restricting the items DIM can include in builds",
       "AllowAutoStatMods": "Allow DIM to automatically include additional stat mods",

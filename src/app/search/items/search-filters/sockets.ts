@@ -17,6 +17,7 @@ import {
   countEnhancedPerks,
   getIntrinsicArmorPerkSocket,
   getSocketsByCategoryHash,
+  isSocketEmpty,
   matchesCuratedRoll,
 } from 'app/utils/socket-utils';
 import { StringLookup } from 'app/utils/util-types';
@@ -332,8 +333,8 @@ const socketFilters: ItemFilterDefinition[] = [
       return Boolean(
         socket?.plugged &&
           // rules out items where enhancing hasn't even started
-          // if "empty" is plugged, there's a socket offering enhancement to the player
-          socket.emptyPlugItemHash !== socket.plugged.plugDef.hash &&
+          // (the "empty" socket is one offering enhancement to the player)
+          !isSocketEmpty(socket) &&
           // rules out half-enhanced items
           // the game explicitly warns you that half-enhanced items stop looking masterworked
           item.masterwork,

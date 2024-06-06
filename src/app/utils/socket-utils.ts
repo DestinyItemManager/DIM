@@ -277,7 +277,7 @@ function filterSocketCategories(
  * This shows empty catalyst sockets when the weapon has a catalyst
  * because it is useful info...
  */
-function isSocketEmpty(socket: DimSocket) {
+export function isSocketEmpty(socket: DimSocket) {
   return (
     socket.plugged?.plugDef.hash === socket.emptyPlugItemHash &&
     socket.plugged?.plugDef.plug.plugCategoryHash !== PlugCategoryHashes.V400EmptyExoticMasterwork
@@ -346,7 +346,7 @@ export function getWeaponSockets(
       // only show memento socket if it isn't empty
       (socket.plugged.plugDef.plug.plugCategoryHash !==
         PlugCategoryHashes.CraftingRecipesEmptySocket ||
-        socket.emptyPlugItemHash !== socket.plugged.plugDef.hash),
+        !isSocketEmpty(socket)),
   );
 
   return {
