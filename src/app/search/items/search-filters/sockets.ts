@@ -17,8 +17,8 @@ import {
   countEnhancedPerks,
   getIntrinsicArmorPerkSocket,
   getSocketsByCategoryHash,
+  isSocketEmpty,
   matchesCuratedRoll,
-  modSocketIsEmpty,
 } from 'app/utils/socket-utils';
 import { StringLookup } from 'app/utils/util-types';
 import { DestinyItemSubType, DestinyRecordState } from 'bungie-api-ts/destiny2';
@@ -334,7 +334,7 @@ const socketFilters: ItemFilterDefinition[] = [
         socket?.plugged &&
           // rules out items where enhancing hasn't even started
           // (the "empty" socket is one offering enhancement to the player)
-          !modSocketIsEmpty(socket) &&
+          !isSocketEmpty(socket) &&
           // rules out half-enhanced items
           // the game explicitly warns you that half-enhanced items stop looking masterworked
           item.masterwork,

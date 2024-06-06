@@ -277,7 +277,7 @@ function filterSocketCategories(
  * This shows empty catalyst sockets when the weapon has a catalyst
  * because it is useful info...
  */
-function isSocketEmpty(socket: DimSocket) {
+export function isSocketEmpty(socket: DimSocket) {
   return (
     socket.plugged?.plugDef.hash === socket.emptyPlugItemHash &&
     socket.plugged?.plugDef.plug.plugCategoryHash !== PlugCategoryHashes.V400EmptyExoticMasterwork
@@ -346,7 +346,7 @@ export function getWeaponSockets(
       // only show memento socket if it isn't empty
       (socket.plugged.plugDef.plug.plugCategoryHash !==
         PlugCategoryHashes.CraftingRecipesEmptySocket ||
-        !modSocketIsEmpty(socket)),
+        !isSocketEmpty(socket)),
   );
 
   return {
@@ -445,9 +445,4 @@ export function matchesCuratedRoll(defs: D2ManifestDefinitions, item: DimItem) {
     );
 
   return matchesCollectionsRoll;
-}
-
-/** determines whether a mod socket is d2's version of "empty", meaning there's technically an item plugged in, but that item is something like a "this slot is empty" placeholder item */
-export function modSocketIsEmpty(socket: DimSocket) {
-  return socket.emptyPlugItemHash === socket.plugged?.plugDef.hash;
 }
