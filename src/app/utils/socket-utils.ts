@@ -215,12 +215,14 @@ export const aspectSocketCategoryHashes: SocketCategoryHashes[] = [
   SocketCategoryHashes.Aspects_Abilities_Ikora,
   SocketCategoryHashes.Aspects_Abilities_Neomuna,
   SocketCategoryHashes.Aspects_Abilities_Stranger,
+  SocketCategoryHashes.Aspects_Abilities,
 ];
 
 export const fragmentSocketCategoryHashes: SocketCategoryHashes[] = [
   SocketCategoryHashes.Fragments_Abilities_Ikora,
   SocketCategoryHashes.Fragments_Abilities_Stranger,
   SocketCategoryHashes.Fragments_Abilities_Neomuna,
+  SocketCategoryHashes.Fragments_Abilities,
 ];
 
 export const subclassAbilitySocketCategoryHashes: SocketCategoryHashes[] = [

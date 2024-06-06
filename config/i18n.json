@@ -782,6 +782,12 @@
     "PullFromPostmasterGeneralError": "Unable to pull all items from Postmaster.",
     "PullFromPostmasterPopupTitle": "Pull from Postmaster",
     "NoSpace": "You're out of space in the vault and any other characters.",
+    "Prismatic": {
+      "Aspect": "Prismatic Aspect",
+      "Grenade": "Prismatic Grenade",
+      "Melee": "Prismatic Melee",
+      "Super": "Super Ability"
+    },
     "Random": "Random",
     "Randomize": "Randomize Loadout",
     "RandomizeNew": "Create Random",
