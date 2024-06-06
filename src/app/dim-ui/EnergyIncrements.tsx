@@ -6,6 +6,8 @@ import { MAX_ARMOR_ENERGY_CAPACITY } from 'app/search/d2-known-values';
 import clsx from 'clsx';
 import { PressTip } from './PressTip';
 
+// TODO special display for T10 -> T10 + exotic artifice?
+
 /** this accepts either an item, or a partial DimItem.energy */
 function EnergyIncrements({
   item,

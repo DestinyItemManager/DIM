@@ -1,7 +1,6 @@
-import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { calculateAssumedItemEnergy } from 'app/loadout/armor-upgrade-utils';
+import { calculateAssumedItemEnergy, isAssumedArtifice } from 'app/loadout/armor-upgrade-utils';
 import {
   activityModPlugCategoryHashes,
   knownModPlugCategoryHashes,
@@ -18,7 +17,6 @@ import { DimItem, PluggableInventoryItemDefinition } from '../../inventory/item-
 import {
   getModTypeTagByPlugCategoryHash,
   getSpecialtySocketMetadatas,
-  isArtifice,
 } from '../../utils/item-utils';
 import { AutoModData, ProcessArmorSet, ProcessItem, ProcessMod } from '../process-worker/types';
 import {
@@ -83,19 +81,14 @@ export function mapDimItemToProcessItem({
     ? _.sumBy(modsForSlot, (mod) => mod.plug.energyCost?.energyCost || 0)
     : 0;
 
-  const thisIsArtifice = isArtifice(dimItem);
-  // as of TFS, [relevant, modern] exotics can use artifice stat mods, if the user pays to enhance the armor
-  const spoofArtifice =
-    !thisIsArtifice &&
-    dimItem.isExotic &&
-    armorEnergyRules.assumeArmorMasterwork === AssumeArmorMasterwork.ArtificeExotic;
+  const assumeArtifice = isAssumedArtifice(dimItem, armorEnergyRules);
 
   return {
     id,
     hash,
     name,
     isExotic,
-    isArtifice: thisIsArtifice || spoofArtifice,
+    isArtifice: assumeArtifice,
     power,
     stats: statMap,
     remainingEnergyCapacity: capacity - modsCost,

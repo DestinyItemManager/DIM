@@ -174,7 +174,7 @@ export const inGameArmorEnergyRules: ArmorEnergyRules = {
  * Armor energy rules that allow fully masterworking everything.
  */
 export const permissiveArmorEnergyRules: ArmorEnergyRules = {
-  assumeArmorMasterwork: AssumeArmorMasterwork.All,
+  assumeArmorMasterwork: AssumeArmorMasterwork.ArtificeExotic,
   // implied to be 10 by the above
   minItemEnergy: 1,
 };
