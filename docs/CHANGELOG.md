@@ -3,6 +3,9 @@
 * `is:enhanceable` and `is:enhanced` filters for non-crafted weapons whose perks can be enhanced.
 * Cleaned up extra upgrade slots showing up in the Item Popup.
 * Shiny BRAVE weapons now have corner stripes.
+* Preliminary support for Exotic Artifice armor in the Loadout Optimizer
+  * DIM can now assign these mods and automatically suggest them to according to your preferences.
+  * A `+ Artifice` option allows DIM to treat regular Exotic Armor as Artifice, letting us plan out the best stat tiers for you.
 
 ## 8.22.0 <span class="changelog-date">(2024-06-02)</span>
 
