@@ -90,7 +90,6 @@ export const isNewSelector = (item: DimItem) => (state: RootState) =>
 
 const visibleCurrencies = [
   3159615086, // Glimmer
-  1022552290, // Legendary Shards
   2817410917, // Bright Dust
   3147280338, // Silver
   2534352370, // Legendary Marks (D1)

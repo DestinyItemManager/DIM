@@ -135,7 +135,6 @@ const materialsInRarityOrder = [
   4257549985, // InventoryItem "Ascendant Shard"
   4257549984, // InventoryItem "Enhancement Prism"
   3853748946, // InventoryItem "Enhancement Core"
-  1022552290, // InventoryItem "Legendary Shards"
   3159615086, // InventoryItem "Glimmer"
 ];
 

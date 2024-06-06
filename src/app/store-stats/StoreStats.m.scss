@@ -1,7 +1,7 @@
 .vaultStats {
   max-width: 230px;
   display: grid;
-  grid-template-columns: repeat(4, 16px minmax(min-content, 1fr));
+  grid-template-columns: repeat(3, 16px minmax(min-content, 1fr));
   grid-auto-rows: 16px;
   gap: 4px 2px;
   align-items: center;
