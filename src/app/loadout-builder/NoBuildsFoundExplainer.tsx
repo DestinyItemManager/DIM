@@ -210,6 +210,7 @@ export default function NoBuildsFoundExplainer({
 
   const capacityMayCauseProblems =
     armorEnergyRules.assumeArmorMasterwork !== AssumeArmorMasterwork.All &&
+    armorEnergyRules.assumeArmorMasterwork !== AssumeArmorMasterwork.ArtificeExotic &&
     (processInfo?.statistics.modsStatistics.finalAssignment.modsAssignmentFailed ||
       processInfo?.statistics.modsStatistics.finalAssignment.autoModsAssignmentFailed ||
       failedModsInBucket) &&

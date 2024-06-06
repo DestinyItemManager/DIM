@@ -1,4 +1,3 @@
-import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, DimSockets, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { getEnergyUpgradePlugs } from 'app/inventory/store/energy';
@@ -12,11 +11,7 @@ import {
 import { ModSocketMetadata } from 'app/search/specialty-modslots';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
-import {
-  getModTypeTagByPlugCategoryHash,
-  getSpecialtySocketMetadatas,
-  isArtifice,
-} from 'app/utils/item-utils';
+import { getModTypeTagByPlugCategoryHash, getSpecialtySocketMetadatas } from 'app/utils/item-utils';
 import { warnLog } from 'app/utils/log';
 import {
   getSocketByIndex,
@@ -26,7 +21,7 @@ import {
 import { BucketHashes, PlugCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import memoizeOne from 'memoize-one';
-import { calculateAssumedItemEnergy } from './armor-upgrade-utils';
+import { calculateAssumedItemEnergy, isAssumedArtifice } from './armor-upgrade-utils';
 import { activityModPlugCategoryHashes } from './known-values';
 import { generateModPermutations } from './mod-permutations';
 import { getModExclusionGroup, plugCategoryHashToBucketHash } from './mod-utils';
@@ -308,12 +303,7 @@ export function fitMostMods({
   }
 
   // Artifice mods are free and thus can be greedily assigned.
-  const artificeItems = items.filter(
-    (i) =>
-      (i.isExotic &&
-        armorEnergyRules.assumeArmorMasterwork === AssumeArmorMasterwork.ArtificeExotic) ||
-      isArtifice(i),
-  );
+  const artificeItems = items.filter((i) => isAssumedArtifice(i, armorEnergyRules));
   for (const artificeMod of artificeMods) {
     let targetItemIndex = artificeItems.findIndex((item) =>
       item.sockets?.allSockets.some((socket) => socket.plugged?.plugDef.hash === artificeMod.hash),
