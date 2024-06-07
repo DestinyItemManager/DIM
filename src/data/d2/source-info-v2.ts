@@ -370,6 +370,14 @@ const D2Sources: {
       2844014413, // Pallas Galliot
     ],
   },
+  echoes: {
+    sourceHashes: [
+      536806855, // Source: Episode: Echoes
+      2306801178, // Source: Episode: Echoes Activities
+      2514060836, // Source: Episode: Echoes Enigma Protocol Activity
+      2631398023, // Source: Radiolite Bay Deposits
+    ],
+  },
   edz: {
     sourceHashes: [
       783399508, // Source: Adventure "Supply and Demand" in the European Dead Zone
@@ -720,7 +728,6 @@ const D2Sources: {
     ],
     enteredDCV: 20,
   },
-  lostsectors: {},
   mars: {
     sourceHashes: [
       1036506031, // Source: Complete activities and earn rank-up packages on Mars.
@@ -902,6 +909,12 @@ const D2Sources: {
     ],
     enteredDCV: 20,
   },
+  paleheart: {
+    sourceHashes: [
+      2327253880, // Source: Exploring the Pale Heart
+      3614199681, // Source: Pale Heart Triumph
+    ],
+  },
   'pinnacle-weapon': {
     itemHashes: [
       578459533, // Wendigo GL3
@@ -974,6 +987,11 @@ const D2Sources: {
       3563833902, // Source: Season of the Risen Triumphs
     ],
     enteredDCV: 24,
+  },
+  rahool: {
+    sourceHashes: [
+      4011186136, // Exotic Armor Focusing
+    ],
   },
   raid: {
     sourceHashes: [

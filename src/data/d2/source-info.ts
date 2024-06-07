@@ -742,6 +742,16 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  echoes: {
+    itemHashes: [],
+    sourceHashes: [
+      536806855, // Source: Episode: Echoes
+      2306801178, // Source: Episode: Echoes Activities
+      2514060836, // Source: Episode: Echoes Enigma Protocol Activity
+      2631398023, // Source: Radiolite Bay Deposits
+    ],
+    searchString: [],
+  },
   edz: {
     itemHashes: [],
     sourceHashes: [
@@ -1200,11 +1210,6 @@ const D2Sources: {
     ],
     searchString: [],
   },
-  lostsectors: {
-    itemHashes: [],
-    sourceHashes: [],
-    searchString: [],
-  },
   lw: {
     itemHashes: [
       70083888, // Nation of Beasts
@@ -1414,6 +1419,14 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  paleheart: {
+    itemHashes: [],
+    sourceHashes: [
+      2327253880, // Source: Exploring the Pale Heart
+      3614199681, // Source: Pale Heart Triumph
+    ],
+    searchString: [],
+  },
   'pinnacle-weapon': {
     itemHashes: [
       578459533, // Wendigo GL3
@@ -1492,6 +1505,13 @@ const D2Sources: {
       2075569025, // PsiOps
       2363489105, // Source: Season of the Risen Vendor or Triumphs
       3563833902, // Source: Season of the Risen Triumphs
+    ],
+    searchString: [],
+  },
+  rahool: {
+    itemHashes: [],
+    sourceHashes: [
+      4011186136, // Exotic Armor Focusing
     ],
     searchString: [],
   },
