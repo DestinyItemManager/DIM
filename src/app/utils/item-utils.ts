@@ -372,7 +372,16 @@ export function getStatValuesByHash(item: DimItem, byWhichValue: 'base' | 'value
  */
 export function isArtifice(item: DimItem) {
   return Boolean(
-    item.sockets?.allSockets.some((socket) => socket.plugged?.plugDef.hash === ARTIFICE_PERK_HASH),
+    item.sockets?.allSockets.some(
+      (socket) =>
+        // exotic armor has the artifice slot all the time, and it's usable when it's reported as visible
+        socket.visibleInGame &&
+        socket.plugged &&
+        // in a better world, you'd only need to check this, because there's a "empty mod slot" item specifically for artifice slots.
+        (socket.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice ||
+          // but some of those have the *generic* "empty mod slot" item plugged in, so we fall back to keeping an eye out for the intrinsic
+          socket.plugged.plugDef.hash === ARTIFICE_PERK_HASH),
+    ),
   );
 }
 
@@ -396,4 +405,12 @@ export function isClassCompatible(firstClass: DestinyClass, secondClass: Destiny
  */
 export function isItemLoadoutCompatible(itemClass: DestinyClass, loadoutClass: DestinyClass) {
   return itemClass === DestinyClass.Unknown || itemClass === loadoutClass;
+}
+
+/** "shiny" special-edtion items from Into The Light, with a unique ornament and extra perks */
+export function isShiny(item: DimItem) {
+  return item.sockets?.allSockets.some(
+    (s) =>
+      s.plugOptions.some((s) => s.plugDef.plug.plugCategoryIdentifier === 'holofoil_skins_shared'), //
+  );
 }

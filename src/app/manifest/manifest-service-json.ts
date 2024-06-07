@@ -158,7 +158,7 @@ function loadManifest(tableAllowList: string[]): ThunkResult<AllDestinyManifestC
       // If we can't get info about the current manifest, try to just use whatever's already saved.
       version = localStorage.getItem(localStorageKey);
       if (version) {
-        return await loadManifestFromCache(version, tableAllowList);
+        return loadManifestFromCache(version, tableAllowList);
       } else {
         throw e;
       }
@@ -167,7 +167,7 @@ function loadManifest(tableAllowList: string[]): ThunkResult<AllDestinyManifestC
     try {
       return await loadManifestFromCache(version, tableAllowList);
     } catch (e) {
-      return await dispatch(loadManifestRemote(version, components, tableAllowList));
+      return dispatch(loadManifestRemote(version, components, tableAllowList));
     }
   };
 }

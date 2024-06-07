@@ -9,6 +9,7 @@ import { plainString } from 'app/search/text-utils';
 import {
   getInterestingSocketMetadatas,
   getSpecialtySocketMetadatas,
+  isShiny,
   modSlotTags,
   modTypeTags,
 } from 'app/utils/item-utils';
@@ -16,6 +17,7 @@ import {
   countEnhancedPerks,
   getIntrinsicArmorPerkSocket,
   getSocketsByCategoryHash,
+  isSocketEmpty,
   matchesCuratedRoll,
 } from 'app/utils/socket-utils';
 import { StringLookup } from 'app/utils/util-types';
@@ -86,13 +88,7 @@ const socketFilters: ItemFilterDefinition[] = [
     keywords: 'shiny',
     description: tl('Filter.Shiny'),
     destinyVersion: 2,
-    filter: () => (item) =>
-      item.sockets?.allSockets.some(
-        (s) =>
-          s.plugOptions.some(
-            (s) => s.plugDef.plug.plugCategoryIdentifier === 'holofoil_skins_shared',
-          ), //
-      ),
+    filter: () => isShiny,
   },
   {
     keywords: 'extraperk',
@@ -310,6 +306,40 @@ const socketFilters: ItemFilterDefinition[] = [
       ({ compare }) =>
       (item) =>
         item.sockets && compare!(countEnhancedPerks(item.sockets)),
+  },
+  {
+    keywords: 'enhanceable',
+    description: tl('Filter.Enhanceable'),
+    destinyVersion: 2,
+    filter: () => (item) =>
+      Boolean(
+        item.sockets?.allSockets.some(
+          (s) =>
+            s.plugged?.plugDef.plug.plugCategoryHash ===
+            PlugCategoryHashes.CraftingPlugsWeaponsModsEnhancers,
+        ),
+      ),
+  },
+  {
+    keywords: 'enhanced',
+    description: tl('Filter.Enhanced'),
+    destinyVersion: 2,
+    filter: () => (item) => {
+      const socket = item.sockets?.allSockets.find(
+        (s) =>
+          s.plugged?.plugDef.plug.plugCategoryHash ===
+          PlugCategoryHashes.CraftingPlugsWeaponsModsEnhancers,
+      );
+      return Boolean(
+        socket?.plugged &&
+          // rules out items where enhancing hasn't even started
+          // (the "empty" socket is one offering enhancement to the player)
+          !isSocketEmpty(socket) &&
+          // rules out half-enhanced items
+          // the game explicitly warns you that half-enhanced items stop looking masterworked
+          item.masterwork,
+      );
+    },
   },
   {
     keywords: 'retiredperk',

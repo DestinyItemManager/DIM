@@ -215,12 +215,14 @@ export const aspectSocketCategoryHashes: SocketCategoryHashes[] = [
   SocketCategoryHashes.Aspects_Abilities_Ikora,
   SocketCategoryHashes.Aspects_Abilities_Neomuna,
   SocketCategoryHashes.Aspects_Abilities_Stranger,
+  SocketCategoryHashes.Aspects_Abilities,
 ];
 
 export const fragmentSocketCategoryHashes: SocketCategoryHashes[] = [
   SocketCategoryHashes.Fragments_Abilities_Ikora,
   SocketCategoryHashes.Fragments_Abilities_Stranger,
   SocketCategoryHashes.Fragments_Abilities_Neomuna,
+  SocketCategoryHashes.Fragments_Abilities,
 ];
 
 export const subclassAbilitySocketCategoryHashes: SocketCategoryHashes[] = [
@@ -277,7 +279,7 @@ function filterSocketCategories(
  * This shows empty catalyst sockets when the weapon has a catalyst
  * because it is useful info...
  */
-function isSocketEmpty(socket: DimSocket) {
+export function isSocketEmpty(socket: DimSocket) {
   return (
     socket.plugged?.plugDef.hash === socket.emptyPlugItemHash &&
     socket.plugged?.plugDef.plug.plugCategoryHash !== PlugCategoryHashes.V400EmptyExoticMasterwork
@@ -324,6 +326,7 @@ export function getWeaponSockets(
 
   const excludedPlugCategoryHashes = [
     PlugCategoryHashes.GenericAllVfx,
+    PlugCategoryHashes.CraftingPlugsWeaponsModsEnhancers,
     PlugCategoryHashes.CraftingPlugsWeaponsModsExtractors,
     // The weapon level socket is not interesting
     PlugCategoryHashes.CraftingPlugsWeaponsModsTransfusersLevel,
@@ -341,7 +344,11 @@ export function getWeaponSockets(
       socket.plugged !== null &&
       !excludedPlugCategoryHashes.includes(socket.plugged.plugDef.plug.plugCategoryHash) &&
       socket !== archetypeSocket &&
-      !isDeepsightResonanceSocket(socket),
+      !isDeepsightResonanceSocket(socket) &&
+      // only show memento socket if it isn't empty
+      (socket.plugged.plugDef.plug.plugCategoryHash !==
+        PlugCategoryHashes.CraftingRecipesEmptySocket ||
+        !isSocketEmpty(socket)),
   );
 
   return {

@@ -13,7 +13,12 @@ import {
 import { cosmeticTypes, damageTypeNames } from 'app/search/search-filter-values';
 import { getItemDamageShortName } from 'app/utils/item-utils';
 import { LookupTable } from 'app/utils/util-types';
-import { DestinyAmmunitionType, DestinyClass, DestinyRecordState } from 'bungie-api-ts/destiny2';
+import {
+  DamageType,
+  DestinyAmmunitionType,
+  DestinyClass,
+  DestinyRecordState,
+} from 'bungie-api-ts/destiny2';
 import { D2EventEnum, D2EventInfo } from 'data/d2/d2-event-info-v2';
 import focusingOutputs from 'data/d2/focusing-item-outputs.json';
 import { BreakerTypeHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
@@ -69,6 +74,28 @@ export const damageFilter = {
     (item) =>
       getItemDamageShortName(item) === filterValue,
   fromItem: (item) => `is:${getItemDamageShortName(item)}`,
+} satisfies ItemFilterDefinition;
+
+const prismaticDamageLookupTable: { [key in DamageType]: string | undefined } = {
+  [DamageType.None]: undefined,
+  [DamageType.Kinetic]: undefined,
+  [DamageType.Arc]: 'light',
+  [DamageType.Thermal]: 'light',
+  [DamageType.Void]: 'light',
+  [DamageType.Raid]: undefined,
+  [DamageType.Stasis]: 'dark',
+  [DamageType.Strand]: 'dark',
+};
+
+export const prismaticDamageFilter = {
+  keywords: ['light', 'dark'],
+  description: tl('Filter.PrismaticDamageType'),
+  filter:
+    ({ filterValue }) =>
+    (item) => {
+      const damageType = item.element?.enumValue ?? DamageType.None;
+      return prismaticDamageLookupTable[damageType] === filterValue ?? false;
+    },
 } satisfies ItemFilterDefinition;
 
 export const classFilter = {
@@ -142,6 +169,7 @@ export const itemCategoryFilter = {
 
 const knownValuesFilters: ItemFilterDefinition[] = [
   damageFilter,
+  prismaticDamageFilter,
   classFilter,
   itemCategoryFilter,
   itemTypeFilter,
