@@ -103,7 +103,7 @@ export function getStores(platform: DestinyAccount): Promise<DestinyProfileRespo
     // DestinyComponentType.Craftables,
   ];
 
-  if ($featureFlags.solsticePresentationNodes) {
+  if (true) {
     components.push(DestinyComponentType.PresentationNodes);
   }
   return getProfile(platform, ...components);

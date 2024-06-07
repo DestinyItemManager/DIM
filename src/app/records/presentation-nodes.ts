@@ -15,10 +15,12 @@ import {
   DestinyMetricComponent,
   DestinyMetricDefinition,
   DestinyPresentationNodeCollectibleChildEntry,
+  DestinyPresentationNodeComponent,
   DestinyPresentationNodeCraftableChildEntry,
   DestinyPresentationNodeDefinition,
   DestinyPresentationNodeMetricChildEntry,
   DestinyPresentationNodeRecordChildEntry,
+  DestinyPresentationNodeState,
   DestinyProfileResponse,
   DestinyRecordComponent,
   DestinyRecordDefinition,
@@ -43,6 +45,7 @@ export interface DimPresentationNode extends DimPresentationNodeLeaf {
    * or generated with fake info.
    */
   nodeDef: DestinyPresentationNodeDefinition | undefined;
+  nodeComp: DestinyPresentationNodeComponent | undefined;
   /** May or may not be an actual hash */
   hash: number;
   name: string;
@@ -110,6 +113,12 @@ export function toPresentationNodeTree(
   if (presentationNodeDef.redacted) {
     return null;
   }
+  if (
+    (profileResponse.profilePresentationNodes.data?.nodes[presentationNodeDef.hash]?.state ?? 0) &
+    DestinyPresentationNodeState.Invisible
+  ) {
+    return null;
+  }
 
   // For titles, display the title, completion and gilding count
   const titleInfo =
@@ -117,7 +126,7 @@ export function toPresentationNodeTree(
       ? getTitleInfo(
           presentationNodeDef.completionRecordHash,
           defs,
-          itemCreationContext.profileResponse.profileRecords.data,
+          profileResponse.profileRecords.data,
           genderHash,
         )
       : undefined;
@@ -128,7 +137,11 @@ export function toPresentationNodeTree(
     name: titleInfo?.title || presentationNodeDef.displayProperties.name,
     icon: presentationNodeDef.displayProperties.icon,
     titleInfo,
+    nodeComp: profileResponse.profilePresentationNodes.data?.nodes[presentationNodeDef.hash],
   };
+  if (presentationNodeDef.parentNodeHashes[0] === 1062988660) {
+    console.log(presentationNodeDef, commonNodeProperties);
+  }
   if (presentationNodeDef.children.collectibles?.length) {
     const collectibles = toCollectibles(
       itemCreationContext,
@@ -250,6 +263,7 @@ function buildPlugSetPresentationNode(
     visible: plugSetItems.length,
     acquired,
     plugs: plugEntries,
+    nodeComp: undefined,
   };
   return subnode;
 }

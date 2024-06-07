@@ -89,6 +89,9 @@ export default function Progress({ account }: { account: DestinyAccount }) {
     coreSettings?.seasonalChallengesPresentationNodeHash !== undefined &&
     defs.PresentationNode.get(coreSettings.seasonalChallengesPresentationNodeHash);
 
+  const pathfinderPresentationNode = defs.PresentationNode.get(1062988660);
+
+  const pathfinderPresentationNode2 = defs.PresentationNode.get(622609416);
   const menuItems = [
     { id: 'ranks', title: t('Progress.CrucibleRank') },
     { id: 'trackedTriumphs', title: t('Progress.TrackedTriumphs') },
@@ -178,6 +181,23 @@ export default function Progress({ account }: { account: DestinyAccount }) {
               <ErrorBoundary name="SeasonalChallenges">
                 <SeasonalChallenges
                   seasonalChallengesPresentationNode={seasonalChallengesPresentationNode}
+                  store={selectedStore}
+                />
+              </ErrorBoundary>
+            )}
+
+            {pathfinderPresentationNode && (
+              <ErrorBoundary name="SeasonalChallenges">
+                <SeasonalChallenges
+                  seasonalChallengesPresentationNode={pathfinderPresentationNode}
+                  store={selectedStore}
+                />
+              </ErrorBoundary>
+            )}
+            {pathfinderPresentationNode2 && (
+              <ErrorBoundary name="SeasonalChallenges">
+                <SeasonalChallenges
+                  seasonalChallengesPresentationNode={pathfinderPresentationNode2}
                   store={selectedStore}
                 />
               </ErrorBoundary>
