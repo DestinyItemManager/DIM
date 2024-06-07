@@ -7,6 +7,9 @@ interface CssExports {
   'subclass': string;
   'subclassContainer': string;
   'subclassMods': string;
+  'superBase': string;
+  'superIcon': string;
+  'superPlug': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

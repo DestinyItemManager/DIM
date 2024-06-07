@@ -14,7 +14,7 @@ import { canSyncLockState } from './SyncTagLock';
 import TagIcon from './TagIcon';
 import { TagValue } from './dim-item-info';
 import { DimItem } from './item-types';
-import { getSubclassIconInfo } from './subclass';
+import { getSubclassIconInfo, prismaticSubclassHashes } from './subclass';
 
 interface Props {
   item: DimItem;
@@ -64,12 +64,14 @@ export default function InventoryItem({
     };
   }
 
-  const isSubclass = item?.destinyVersion === 2 && item.bucket.hash === BucketHashes.Subclass;
-  const subclassIconInfo = isSubclass && !hideSelectedSuper ? getSubclassIconInfo(item) : null;
+  const isSubclass = item.destinyVersion === 2 && item.bucket.hash === BucketHashes.Subclass;
+  const isPrismatic = prismaticSubclassHashes.includes(item.hash);
+  const subclassIconInfo =
+    isSubclass && !isPrismatic && !hideSelectedSuper ? getSubclassIconInfo(item) : null;
   const hasBadge = shouldShowBadge(item);
   const itemStyles = clsx('item', {
     [styles.searchHidden]: searchHidden,
-    [styles.subclass]: isSubclass,
+    [styles.subclass]: isSubclass && !isPrismatic,
     [styles.hasBadge]: hasBadge,
   });
   // Subtitle for engram powerlevel vs regular item type

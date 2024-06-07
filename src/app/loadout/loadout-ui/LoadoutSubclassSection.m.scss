@@ -61,3 +61,27 @@
 .missingItem {
   opacity: 0.3;
 }
+
+// Subclass items
+.superBase {
+  border-color: transparent !important;
+}
+.superPlug {
+  &::before {
+    background-image: url('../../images/subclass-border.svg');
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    left: 0;
+    top: 0;
+  }
+}
+.superIcon {
+  position: absolute;
+  width: calc(var(--item-size) - 4px);
+  height: calc(var(--item-size) - 4px);
+  left: 2px;
+  top: 2px;
+}

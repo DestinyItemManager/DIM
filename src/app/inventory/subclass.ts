@@ -20,6 +20,12 @@ const baseImagesByDamageType: LookupTable<DamageType, string> = {
   [DamageType.Strand]: subclassStrand,
 };
 
+export const prismaticSubclassHashes = [
+  1616346845, // titan
+  3893112950, // warlock
+  4282591831, // hunter
+];
+
 interface SubclassIconInfo {
   base: string;
   super: string;
