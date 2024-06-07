@@ -87,7 +87,7 @@ function loadManifest(): ThunkResult<AllD1DestinyManifestComponents> {
     try {
       return await loadManifestFromCache(version);
     } catch (e) {
-      return await dispatch(loadManifestRemote(version, path));
+      return dispatch(loadManifestRemote(version, path));
     }
   };
 }
