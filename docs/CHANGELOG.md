@@ -7,6 +7,8 @@
   * DIM can now assign these mods and automatically suggest them to according to your preferences.
   * A `+ Artifice` option allows DIM to treat regular Exotic Armor as Artifice, letting us plan out the best stat tiers for you.
 * Sheets no longer adjust up when the horizontal scrollbar is visible
+* `is:light` and `is:dark` filters for finding light (arc, solar, and void) and dark (stasis and strand)
+ damage weapons.
 
 ## 8.22.0 <span class="changelog-date">(2024-06-02)</span>
 

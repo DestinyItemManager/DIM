@@ -304,6 +304,7 @@
     "PowerKeywords": "Use the pinnaclecap or softcap keyword instead of a number to refer to the current season's power limits.",
     "PowerfulReward": "Shows pursuits which produce a powerful reward.",
     "PinnacleReward": "Shows pursuits which produce a pinnacle reward.",
+    "PrismaticDamageType": "Shows items based on if they are a light or darkness damage type. Light types are arc, solar, and void. Darkness types are stasis and strand.",
     "Quality": "Shows items based on their total stat quality percentage. '{{percentage}}' is an alias for '{{quality}}'.",
     "RandomRoll": "Shows items that drop with random rolls.",
     "RarityTier": "Shows items based on their rarity tier.",
