@@ -6,7 +6,6 @@ import { ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import clsx from 'clsx';
-import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import { useMemo } from 'react';
 import { getSubclassPlugs } from '../item-utils';
 import { createGetModRenderKey } from '../mod-utils';
@@ -43,6 +42,7 @@ export default function LoadoutSubclassSection({
                   // plugs in the loadout and they may be different to the popup
                   onClick={plugs.length ? undefined : onClick}
                   item={subclass.item}
+                  hideSelectedSuper
                 />
               )}
             </ItemPopupTrigger>
@@ -59,16 +59,13 @@ export default function LoadoutSubclassSection({
       </div>
       {plugs.length ? (
         <div className={styles.subclassMods}>
-          {plugs?.map(
-            (plug) =>
-              plug.socketCategoryHash !== SocketCategoryHashes.Super && (
-                <PlugDef
-                  key={getModRenderKey(plug.plug)}
-                  plug={plug.plug}
-                  forClassType={subclass?.item.classType}
-                />
-              ),
-          )}
+          {plugs?.map((plug) => (
+            <PlugDef
+              key={getModRenderKey(plug.plug)}
+              plug={plug.plug}
+              forClassType={subclass?.item.classType}
+            />
+          ))}
         </div>
       ) : (
         <div className={styles.modsPlaceholder}>{t('Loadouts.Abilities')}</div>

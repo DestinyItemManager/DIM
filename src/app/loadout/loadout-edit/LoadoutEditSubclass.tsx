@@ -9,7 +9,7 @@ import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
@@ -101,6 +101,7 @@ export default function LoadoutEditSubclass({
                   // plugs in the loadout and they may be different to the popup
                   onClick={plugs.length ? undefined : onClick}
                   item={subclass.item}
+                  hideSelectedSuper
                 />
               )}
             </ItemPopupTrigger>
@@ -116,16 +117,13 @@ export default function LoadoutEditSubclass({
       {subclass &&
         (plugs.length ? (
           <div className={styles.subclassMods}>
-            {plugs?.map(
-              (plug) =>
-                plug.socketCategoryHash !== SocketCategoryHashes.Super && (
-                  <PlugDef
-                    key={getModRenderKey(plug.plug)}
-                    plug={plug.plug}
-                    forClassType={subclass?.item.classType}
-                  />
-                ),
-            )}
+            {plugs?.map((plug) => (
+              <PlugDef
+                key={getModRenderKey(plug.plug)}
+                plug={plug.plug}
+                forClassType={subclass?.item.classType}
+              />
+            ))}
           </div>
         ) : (
           <div className={styles.modsPlaceholder}>{t('Loadouts.Abilities')}</div>
