@@ -21,7 +21,7 @@ const baseImagesByDamageType: LookupTable<DamageType, string> = {
 };
 
 interface SubclassIconInfo {
-  base: string;
+  base: string | undefined;
   super: string;
 }
 export function getSubclassIconInfo(item: DimItem): SubclassIconInfo | undefined {
@@ -31,8 +31,8 @@ export function getSubclassIconInfo(item: DimItem): SubclassIconInfo | undefined
     const superIcon = superPlug?.displayProperties?.icon;
     if (superIcon) {
       const damageType = item.element?.enumValue;
-      if (damageType && baseImagesByDamageType[damageType]) {
-        const base = baseImagesByDamageType[damageType]!;
+      if (damageType === DamageType.Kinetic || (damageType && baseImagesByDamageType[damageType])) {
+        const base = baseImagesByDamageType[damageType];
         return {
           base: base,
           super: superIcon,
