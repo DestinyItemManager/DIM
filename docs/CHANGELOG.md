@@ -1,5 +1,7 @@
 ## Next
 
+## 8.23.0 <span class="changelog-date">(2024-06-09)</span>
+
 * `is:enhanceable` and `is:enhanced` filters for non-crafted weapons whose perks can be enhanced.
 * Cleaned up extra upgrade slots showing up in the Item Popup.
 * Shiny BRAVE weapons now have corner stripes.
