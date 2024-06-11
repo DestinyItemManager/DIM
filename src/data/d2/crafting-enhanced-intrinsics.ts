@@ -120,6 +120,7 @@ const enhancedIntrinsics = new Set<number>([
   137876701, // Rapid-Fire Frame
   802623077, // Rapid-Fire Frame
   1027896051, // Rapid-Fire Frame
+  1978306813, // Wave Sword Frame
   2040155611, // Aggressive Glaive
   738339367, // Aggressive Glaive
   16445399, // Aggressive Glaive
@@ -137,6 +138,11 @@ const enhancedIntrinsics = new Set<number>([
   2826720951, // Together Forever
   1300107783, // Together Forever
   3513901081, // Together Forever
+  4000302358, // Precision Frame
+  3665558569, // Precision Frame
+  3114731754, // Precision Frame
+  1827389998, // Precision Frame
+  3252839262, // Precision Frame
   1576423267, // Rapid-Fire Frame
   3688301727, // Rapid-Fire Frame
   1894749743, // Rapid-Fire Frame
@@ -150,18 +156,22 @@ const enhancedIntrinsics = new Set<number>([
   1052350088, // Precision Frame
   3913106382, // Precision Frame
   3419227006, // Precision Frame
-  3332480988, // Legacy PR-55 Frame
-  916649862, // Legacy PR-55 Frame
-  2155015844, // Legacy PR-55 Frame
-  3766386008, // Legacy PR-55 Frame
-  3573764622, // Precision Frame
-  3774850330, // Precision Frame
-  2927971896, // Precision Frame
-  738967614, // Precision Frame
   570373697, // Heavy Burst
   4175870265, // Heavy Burst
   3099083217, // Heavy Burst
   3456918063, // Heavy Burst
+  3332480988, // Legacy PR-55 Frame
+  916649862, // Legacy PR-55 Frame
+  2155015844, // Legacy PR-55 Frame
+  3766386008, // Legacy PR-55 Frame
+  217816625, // Rapid-Fire Glaive
+  2593449, // Rapid-Fire Glaive
+  2479787361, // Rapid-Fire Glaive
+  694879972, // Rapid-Fire Glaive
+  3573764622, // Precision Frame
+  3774850330, // Precision Frame
+  2927971896, // Precision Frame
+  738967614, // Precision Frame
   2012023082, // Area Denial Frame
   1782704870, // Area Denial Frame
   244760020, // Area Denial Frame
@@ -171,11 +181,6 @@ const enhancedIntrinsics = new Set<number>([
   840061228, // Support Frame
   156358224, // Support Frame
   167794220, // Aggressive Frame
-  4000302358, // Precision Frame
-  3665558569, // Precision Frame
-  3114731754, // Precision Frame
-  1827389998, // Precision Frame
-  3252839262, // Precision Frame
   667908513, // Compressed Wave Frame
   210578077, // Compressed Wave Frame
   2264456959, // Compressed Wave Frame
