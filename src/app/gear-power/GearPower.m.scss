@@ -15,8 +15,9 @@
   .gearPowerHeader {
     display: flex;
     margin-right: 10px;
+    align-items: center;
 
-    img {
+    > img {
       margin-right: 10px;
       height: 48px;
       width: 48px;
@@ -32,12 +33,52 @@
 
   .powerLevel {
     color: $power;
+    display: flex;
+    gap: 1em;
 
     :global(.app-icon) {
       font-size: 60%;
       vertical-align: 45%;
       margin-right: 2px;
     }
+    > span {
+      display: flex;
+    }
+    img {
+      height: 1.3em;
+      width: auto;
+    }
+  }
+  .powerLevel2 {
+    color: $power;
+    font-size: 1.4em;
+    :global(.app-icon) {
+      font-size: 60%;
+      vertical-align: 45%;
+      margin-right: 2px;
+    }
+    img {
+      height: 1.2em;
+      width: auto;
+      margin: 0;
+      vertical-align: text-bottom;
+      filter: none !important;
+    }
+  }
+  :global(.selected) {
+    .powerLevel2 {
+      color: black;
+    }
+  }
+
+  .toggle {
+    margin: 10px 10px 15px;
+  }
+
+  .powerToggleButton {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .gearGrid {

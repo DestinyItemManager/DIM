@@ -23,7 +23,10 @@ interface CssExports {
   'positive': string;
   'power': string;
   'powerLevel': string;
+  'powerLevel2': string;
+  'powerToggleButton': string;
   'statMeta': string;
+  'toggle': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
