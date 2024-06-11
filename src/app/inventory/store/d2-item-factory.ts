@@ -142,11 +142,18 @@ export const getClassTypeNameLocalized = _.memoize(
 export function makeFakeItem(
   context: ItemCreationContext,
   itemHash: number,
-  itemInstanceId = '0',
-  quantity = 1,
-  allowWishList = false,
-  /** if available, this should be passed in from a vendor saleItem (DestinyVendorSaleItemComponent) */
-  itemValueVisibility?: DestinyVendorSaleItemComponent['itemValueVisibility'],
+  {
+    itemInstanceId = '0',
+    quantity = 1,
+    allowWishList = false,
+    itemValueVisibility,
+  }: {
+    itemInstanceId?: string;
+    quantity?: number;
+    allowWishList?: boolean;
+    /** if available, this should be passed in from a vendor saleItem (DestinyVendorSaleItemComponent) */
+    itemValueVisibility?: DestinyVendorSaleItemComponent['itemValueVisibility'];
+  } = emptyObject(),
 ): DimItem | undefined {
   const item = makeItem(
     context,

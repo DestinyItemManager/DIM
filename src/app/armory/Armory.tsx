@@ -59,7 +59,7 @@ export default function Armory({
 
   const itemDef = defs.InventoryItem.get(itemHash);
 
-  const itemWithoutSockets = makeFakeItem(itemCreationContext, itemHash);
+  const itemWithoutSockets = makeFakeItem(itemCreationContext, itemHash, { allowWishList: true });
 
   if (!itemWithoutSockets) {
     return (
@@ -229,7 +229,7 @@ export default function Armory({
         </>
       )}
 
-      {!isPhonePortrait && <WishListEntry item={item} />}
+      {!isPhonePortrait && item.wishListEnabled && <WishListEntry item={item} />}
 
       {storeItems.length > 0 && (
         <>
