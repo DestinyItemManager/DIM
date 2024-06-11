@@ -206,9 +206,7 @@
     "FashionOnly": "Shows loadouts that contain only fashion (shaders or ornaments).",
     "ModsOnly": "Shows loadouts that only contain armor mods.",
     "Subclass": "Shows loadouts whose subclass name or damage type partially matches the filter text.",
-    "LoadoutLight": "Shows loadouts based on their calculated light level. Use the pinnaclecap or softcap keyword instead of a number to refer to the current season's power limits.",
-    "ArmorLight": "Shows loadouts based on the calculated light level of the armor. Use the pinnaclecap or softcap keyword instead of a number to refer to the current season's power limits.",
-    "WeaponLight": "Shows loadouts based on the calculated light level of the weapons. Use the pinnaclecap or softcap keyword instead of a number to refer to the current season's power limits."
+    "LoadoutLight": "Shows loadouts based on their calculated light level. Use the pinnaclecap or softcap keyword instead of a number to refer to the current season's power limits."
   },
   "Filter": {
     "Adept": "\\(Adept\\)",

@@ -7,6 +7,7 @@ import { findItemForLoadout, getLight, getModsFromLoadout } from 'app/loadout-dr
 import { Loadout } from 'app/loadout/loadout-types';
 import { powerLevelByKeyword } from 'app/search/power-levels';
 import { matchText, plainString } from 'app/search/text-utils';
+import { filterMap } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
 import { isClassCompatible, itemCanBeEquippedByStoreId } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -42,78 +43,34 @@ function isLoadoutCompatibleWithStore(loadout: Loadout, store: DimStore | undefi
   return !store || isClassCompatible(loadout.classType, store.classType);
 }
 
-// Helper object to tell us useful things about all the DIM items we get back from a loadout
-// Primarily we are interested in items that contribute to the power level
-class ResolvedEquipment {
-  // properties
-  readonly kinetic: DimItem[];
-  readonly energy: DimItem[];
-  readonly power: DimItem[];
-  readonly helmet: DimItem[];
-  readonly gauntlet: DimItem[];
-  readonly chest: DimItem[];
-  readonly leg: DimItem[];
-  readonly class: DimItem[];
+// Convenience checks
+type ItemBucket = Record<string, DimItem[]>;
+function hasItemInAllSlots(items: ItemBucket): Boolean {
+  return (
+    (items[BucketHashes.KineticWeapons]?.length > 0 &&
+      items[BucketHashes.EnergyWeapons]?.length > 0 &&
+      items[BucketHashes.PowerWeapons]?.length > 0 &&
+      items[BucketHashes.Helmet]?.length > 0 &&
+      items[BucketHashes.Gauntlets]?.length > 0 &&
+      items[BucketHashes.ChestArmor]?.length > 0 &&
+      items[BucketHashes.LegArmor]?.length > 0 &&
+      items[BucketHashes.ClassArmor]?.length > 0) ??
+    false
+  );
+}
 
-  // Grab total counts
-  weaponCount(): Number {
-    return this.kinetic.length + this.energy.length + this.power.length;
-  }
-  armorCount(): Number {
-    return (
-      this.helmet.length +
-      this.gauntlet.length +
-      this.chest.length +
-      this.leg.length +
-      this.class.length
-    );
-  }
-
-  // Convenience checks
-  hasAllWeapons(): Boolean {
-    return this.kinetic.length > 0 && this.energy.length > 0 && this.power.length > 0;
-  }
-
-  hasAllArmor(): Boolean {
-    return (
-      this.helmet.length > 0 &&
-      this.gauntlet.length > 0 &&
-      this.chest.length > 0 &&
-      this.leg.length > 0 &&
-      this.class.length > 0
-    );
-  }
-
-  // Convenience get specific types
-  allWeapons(): DimItem[] {
-    return [this.kinetic, this.energy, this.power].flat();
-  }
-  allArmor(): DimItem[] {
-    return [this.chest, this.gauntlet, this.chest, this.leg, this.class].flat();
-  }
-  allItems(): DimItem[] {
-    return [
-      this.kinetic,
-      this.energy,
-      this.power,
-      this.chest,
-      this.gauntlet,
-      this.chest,
-      this.leg,
-      this.class,
-    ].flat();
-  }
-
-  constructor(items: DimItem[]) {
-    this.kinetic = items.filter((item) => item.bucket.hash === BucketHashes.KineticWeapons);
-    this.energy = items.filter((item) => item.bucket.hash === BucketHashes.EnergyWeapons);
-    this.power = items.filter((item) => item.bucket.hash === BucketHashes.PowerWeapons);
-    this.helmet = items.filter((item) => item.bucket.hash === BucketHashes.Helmet);
-    this.gauntlet = items.filter((item) => item.bucket.hash === BucketHashes.Gauntlets);
-    this.chest = items.filter((item) => item.bucket.hash === BucketHashes.ChestArmor);
-    this.leg = items.filter((item) => item.bucket.hash === BucketHashes.LegArmor);
-    this.class = items.filter((item) => item.bucket.hash === BucketHashes.ClassArmor);
-  }
+// Convenience get specific types
+function allItemsFromLoadout(items: ItemBucket): DimItem[] {
+  return [
+    items[BucketHashes.KineticWeapons],
+    items[BucketHashes.EnergyWeapons],
+    items[BucketHashes.PowerWeapons],
+    items[BucketHashes.Helmet],
+    items[BucketHashes.Gauntlets],
+    items[BucketHashes.ChestArmor],
+    items[BucketHashes.LegArmor],
+    items[BucketHashes.ClassArmor],
+  ].flat();
 }
 
 function ResolveLoadoutToDimItems(
@@ -121,25 +78,24 @@ function ResolveLoadoutToDimItems(
   d2Definitions: D2ManifestDefinitions,
   allItems: DimItem[],
   store: DimStore,
-): ResolvedEquipment {
-  const dimItems: DimItem[] = [];
-
+): ItemBucket {
   // We have two big requirements here:
   // 1. items must be weapons or armor
   // 2. items must be able to be equipped by the character
   // This may not be sufficient, but for the moment it seems good enough
-  for (const loadoutItem of loadout.items) {
+  const dimItems = filterMap(loadout.items, (loadoutItem) => {
     const newItem = findItemForLoadout(d2Definitions, allItems, store.id, loadoutItem);
     if (
+      loadoutItem.equip &&
       newItem &&
       (newItem.bucket.inWeapons || newItem.bucket.inArmor) &&
       itemCanBeEquippedByStoreId(newItem, store.id, loadout.classType, true)
     ) {
-      dimItems.push(newItem);
+      return newItem;
     }
-  }
+  });
   // Resolve this into an object that tells us what we need to know
-  return new ResolvedEquipment(dimItems);
+  return Object.groupBy(dimItems, (item) => item.bucket.hash);
 }
 
 const freeformFilters: FilterDefinition<
@@ -334,79 +290,13 @@ const freeformFilters: FilterDefinition<
         // Here we mimic these restrictions.
 
         // Enforce restriction #1
-        if (!resolvedLoadout.hasAllArmor() || !resolvedLoadout.hasAllWeapons()) {
+        if (!hasItemInAllSlots(resolvedLoadout)) {
           return false;
         }
 
         // Calculate light level of *all* items
-        const lightLevel = Math.floor(getLight(selectedLoadoutsStore, resolvedLoadout.allItems()));
-        return Boolean(compare!(lightLevel));
-      };
-    },
-  },
-  {
-    keywords: ['armorlight', 'armorpower'],
-    /* t('Filter.PowerKeywords') */
-    description: tl('LoadoutFilter.ArmorLight'),
-    format: 'range',
-    overload: powerLevelByKeyword,
-    filter: ({ compare, allItems, d2Definitions, selectedLoadoutsStore }) => {
-      if (!d2Definitions || !selectedLoadoutsStore || !allItems) {
-        return () => false;
-      }
-      return (loadout: Loadout) => {
-        if (!isLoadoutCompatibleWithStore(loadout, selectedLoadoutsStore)) {
-          return false;
-        }
-        //
-        const resolvedLoadout = ResolveLoadoutToDimItems(
-          loadout,
-          d2Definitions,
-          allItems,
-          selectedLoadoutsStore,
-        );
-
-        // Only show use the light level of the armor
-        if (!resolvedLoadout.hasAllArmor()) {
-          return false;
-        }
-
-        // Calculate light level of *all* weapon
-        const lightLevel = Math.floor(getLight(selectedLoadoutsStore, resolvedLoadout.allArmor()));
-        return Boolean(compare!(lightLevel));
-      };
-    },
-  },
-  {
-    keywords: ['weaponlight', 'weaponpower'],
-    /* t('Filter.PowerKeywords') */
-    description: tl('LoadoutFilter.WeaponLight'),
-    format: 'range',
-    overload: powerLevelByKeyword,
-    filter: ({ compare, allItems, d2Definitions, selectedLoadoutsStore }) => {
-      if (!d2Definitions || !selectedLoadoutsStore || !allItems) {
-        return () => false;
-      }
-      return (loadout: Loadout) => {
-        if (!isLoadoutCompatibleWithStore(loadout, selectedLoadoutsStore)) {
-          return false;
-        }
-        //
-        const resolvedLoadout = ResolveLoadoutToDimItems(
-          loadout,
-          d2Definitions,
-          allItems,
-          selectedLoadoutsStore,
-        );
-
-        // Only show use the light level of the weapons
-        if (!resolvedLoadout.hasAllWeapons()) {
-          return false;
-        }
-
-        // Calculate light level of *all* weapons
         const lightLevel = Math.floor(
-          getLight(selectedLoadoutsStore, resolvedLoadout.allWeapons()),
+          getLight(selectedLoadoutsStore, allItemsFromLoadout(resolvedLoadout)),
         );
         return Boolean(compare!(lightLevel));
       };
