@@ -1649,6 +1649,13 @@ const D2Sources: {
     ],
     searchString: [],
   },
+  salvationsedge: {
+    itemHashes: [],
+    sourceHashes: [
+      2700267533, // Source: "Salvation's Edge" Raid
+    ],
+    searchString: [],
+  },
   scourge: {
     itemHashes: [
       2557722678, // Midnight Smith
