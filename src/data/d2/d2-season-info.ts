@@ -13,6 +13,7 @@ export const D2SeasonInfo: Record<
     releaseDate: string;
     resetTime: string;
     numWeeks: number;
+    episode?: number;
   }
 > = {
   1: {
@@ -350,6 +351,7 @@ export const D2SeasonInfo: Record<
     releaseDate: '2024-06-04',
     resetTime: '17:00:00Z',
     numWeeks: 18,
+    episode: 1,
   },
 };
 
