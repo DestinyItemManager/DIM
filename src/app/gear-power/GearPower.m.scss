@@ -10,6 +10,8 @@
 
   .gearPowerSheetContent {
     margin: 0 20px 20px;
+    width: min-content;
+    white-space: pre-wrap;
   }
 
   .gearPowerHeader {
@@ -33,24 +35,6 @@
 
   .powerLevel {
     color: $power;
-    display: flex;
-    gap: 1em;
-
-    :global(.app-icon) {
-      font-size: 60%;
-      vertical-align: 45%;
-      margin-right: 2px;
-    }
-    > span {
-      display: flex;
-    }
-    img {
-      height: 1.3em;
-      width: auto;
-    }
-  }
-  .powerLevel2 {
-    color: $power;
     font-size: 1.4em;
     :global(.app-icon) {
       font-size: 60%;
@@ -66,7 +50,7 @@
     }
   }
   :global(.selected) {
-    .powerLevel2 {
+    .powerLevel {
       color: black;
     }
   }
@@ -186,9 +170,6 @@
     }
   }
 
-  .notes {
-    max-width: 400px;
-  }
   .footNote {
     margin: 10px auto 0;
     color: #999;

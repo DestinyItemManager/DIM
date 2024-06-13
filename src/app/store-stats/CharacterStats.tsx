@@ -1,4 +1,3 @@
-import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
 import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
 import { PressTip } from 'app/dim-ui/PressTip';
@@ -41,15 +40,7 @@ function CharacterPower({ stats }: { stats: PowerStat[] }) {
               {stat.richTooltipContent && (
                 <>
                   <hr />
-                  <div className="richTooltipWrapper">
-                    {stat.richTooltipContent()}
-                    {(stat.problems?.notEquippable || stat.problems?.notOnStore) && (
-                      <div className="tooltipFootnote">
-                        {stat.problems.notOnStore ? <AlertIcon /> : '*'}{' '}
-                        {t('General.ClickForDetails')}
-                      </div>
-                    )}
-                  </div>
+                  <div className="richTooltipWrapper">{stat.richTooltipContent()}</div>
                 </>
               )}
             </>
@@ -66,13 +57,7 @@ function CharacterPower({ stats }: { stats: PowerStat[] }) {
               <span className="powerStat">
                 <FractionalPowerLevel power={stat.value} />
               </span>
-              {stat.problems?.notOnStore ? (
-                <AlertIcon className="warningIcon" />
-              ) : (
-                (stat.problems?.hasClassified || stat.problems?.notEquippable) && (
-                  <sup className="asterisk">*</sup>
-                )
-              )}
+              {stat.problems?.hasClassified && <sup className="asterisk">*</sup>}
             </div>
           </div>
         </PressTip>
@@ -109,17 +94,27 @@ export function PowerFormula({ storeId }: { storeId: string }) {
   };
 
   const maxGearPower: PowerStat = {
-    value: powerLevel.maxGearPower,
+    value: powerLevel.maxEquippableGearPower,
     icon: helmetIcon,
-    name: t('Stats.MaxGearPowerAll'),
-    // used to be t('Stats.MaxGearPower'), a translation i don't want to lose yet
+    name: t('Stats.MaxGearPowerOneExoticRule'),
+    // used to be t('Stats.MaxGearPowerAll') or t('Stats.MaxGearPower'), a translation i don't want to lose yet
     problems: powerLevel.problems,
     onClick: () => showGearPower(storeId),
     richTooltipContent: () => (
-      <ItemPowerSet
-        items={powerLevel.highestPowerItems}
-        powerFloor={Math.floor(powerLevel.maxGearPower)}
-      />
+      <>
+        <ItemPowerSet
+          items={powerLevel.highestPowerItems}
+          powerFloor={Math.floor(powerLevel.maxGearPower)}
+        />
+        <hr />
+        <div className="dropLevel">
+          <span>{t('Stats.DropLevel')}*</span>
+          <span>
+            <FractionalPowerLevel power={powerLevel.dropPower} />
+          </span>
+        </div>
+        <div className="tooltipFootnote">* {t('General.ClickForDetails')}</div>
+      </>
     ),
   };
 

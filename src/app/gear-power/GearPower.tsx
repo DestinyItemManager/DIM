@@ -2,6 +2,7 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
 import RadioButtons from 'app/dim-ui/RadioButtons';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
+import { t } from 'app/i18next-t';
 import { locateItem } from 'app/inventory/locate-item';
 import { powerLevelSelector } from 'app/inventory/store/selectors';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
@@ -68,25 +69,27 @@ export default function GearPower() {
           {
             label: (
               <div className={styles.powerToggleButton}>
-                <span>Equippable Gear</span>
-                <span className={styles.powerLevel2}>
+                <span>{t('Stats.EquippableGear')}</span>
+                <span className={styles.powerLevel}>
                   <AppIcon icon={powerActionIcon} />
                   <FractionalPowerLevel power={powerLevel.maxEquippableGearPower} />
                 </span>
               </div>
             ),
+            tooltip: t('Stats.MaxGearPowerOneExoticRule'),
             value: 'equip',
           },
           {
             label: (
               <div className={styles.powerToggleButton}>
-                <span>Drop Level</span>
-                <span className={styles.powerLevel2}>
+                <span>{t('Stats.DropLevel')}</span>
+                <span className={styles.powerLevel}>
                   <BungieImage src={rarityIcons.Legendary} />
                   <FractionalPowerLevel power={powerLevel.dropPower} />
                 </span>
               </div>
             ),
+            tooltip: t('Stats.DropLevelExplanation1'),
             value: 'drop',
           },
         ]}
@@ -119,6 +122,16 @@ export default function GearPower() {
               </div>
             );
           })}
+        </div>
+        <div className={styles.footNote}>
+          {whichGear === 'equip' ? (
+            t('Stats.MaxGearPowerOneExoticRule')
+          ) : (
+            <>
+              <p>{t('Stats.DropLevelExplanation1')}</p>
+              <p>{t('Stats.DropLevelExplanation2')}</p>
+            </>
+          )}
         </div>
       </div>
     </Sheet>

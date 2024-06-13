@@ -71,7 +71,7 @@ export interface StorePowerLevel {
   };
 }
 
-const allPowerLevelsSelector = createSelector(
+export const allPowerLevelsSelector = createSelector(
   storesSelector,
   allItemsSelector,
   (stores, allItems) => {

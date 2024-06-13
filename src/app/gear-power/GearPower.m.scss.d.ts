@@ -19,11 +19,9 @@ interface CssExports {
   'leg': string;
   'negative': string;
   'neutral': string;
-  'notes': string;
   'positive': string;
   'power': string;
   'powerLevel': string;
-  'powerLevel2': string;
   'powerToggleButton': string;
   'statMeta': string;
   'toggle': string;
