@@ -73,7 +73,7 @@ export function itemLevelingLoadout(allItems: DimItem[], store: DimStore): Loado
     return value;
   };
 
-  return optimalLoadout(applicableItems, bestItemFn, t('Loadouts.ItemLeveling'));
+  return optimalLoadout(applicableItems, store, bestItemFn, t('Loadouts.ItemLeveling'));
 }
 
 /**
@@ -98,7 +98,7 @@ export function maxLightItemSet(
 ): ReturnType<typeof optimalItemSet> {
   const applicableItems: DimItem[] = [];
   for (const i of allItems) {
-    if (i.power && itemCanBeEquippedBy(i, store, true)) {
+    if ((i.power && i.bucket.inWeapons) || i.bucket.inArmor) {
       applicableItems.push(i);
     }
   }
@@ -124,7 +124,7 @@ export function maxLightItemSet(
     return value;
   };
 
-  return optimalItemSet(applicableItems, bestItemFn);
+  return optimalItemSet(applicableItems, store, bestItemFn);
 }
 
 /**
@@ -159,7 +159,7 @@ export function maxStatLoadout(statHash: number, allItems: DimItem[], store: Dim
     return value;
   };
 
-  return optimalLoadout(applicableItems, bestItemFn, t('Loadouts.MaximizeStat'));
+  return optimalLoadout(applicableItems, store, bestItemFn, t('Loadouts.MaximizeStat'));
 }
 
 /**
@@ -279,7 +279,7 @@ export function randomLoadout(store: DimStore, allItems: DimItem[], filter: Item
   );
 
   // Use "random" as the value function
-  return optimalLoadout(applicableItems, () => Math.random(), t('Loadouts.Random'));
+  return optimalLoadout(applicableItems, store, () => Math.random(), t('Loadouts.Random'));
 }
 
 export function randomSubclassConfiguration(
