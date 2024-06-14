@@ -1,5 +1,7 @@
 ## Next
-* Add `light:` filter to the loadout search, for searching loadouts that equip all weapon and armor slots.
+* Fix issue where light level displayed in the Loadouts views was calculated using all weapons and armor in the loadout, instead of just the weapons and armor to be equipped.
+* Add `light:` filter to the Loadouts search. Only works with loadouts that equip an item for all weapon and armor slots.
+
 
 ## 8.23.0 <span class="changelog-date">(2024-06-09)</span>
 
