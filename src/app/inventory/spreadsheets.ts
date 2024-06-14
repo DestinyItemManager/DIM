@@ -375,9 +375,6 @@ function downloadArmor(
       [item.destinyVersion === 1 ? 'Light' : 'Power']: item.power,
     };
     if (item.destinyVersion === 2) {
-      row['Power Limit'] = item.powerCap;
-    }
-    if (item.destinyVersion === 2) {
       row['Energy Capacity'] = item.energy?.energyCapacity || undefined;
     }
     row.Owner = nameMap[item.owner];
@@ -480,9 +477,6 @@ function downloadWeapons(
       Element: item.element?.displayProperties.name,
       [item.destinyVersion === 1 ? 'Light' : 'Power']: item.power,
     };
-    if (item.destinyVersion === 2) {
-      row['Power Limit'] = item.powerCap;
-    }
     if (item.destinyVersion === 2) {
       row['Masterwork Type'] = getMasterworkStatNames(item.masterworkInfo) || undefined;
       row['Masterwork Tier'] = item.masterworkInfo?.tier || undefined;

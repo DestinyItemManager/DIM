@@ -52,9 +52,9 @@ export default memo(function CompareSuggestions({
         nextCompareButton?.items.some((nextSetItem) => nextSetItem === setItem),
       )
     ) {
-      // do include this button, if the next button is the "includes sunset items" button.
-      // that's a confusing label to users with no sunset items.
-      if (exampleItem.bucket.inArmor && !nextCompareButton?.query.includes('not:sunset')) {
+      // do include this button, if the next button is the "includes armor 2.0 items" button.
+      // that's a confusing label to users with no armor 2.0 items.
+      if (exampleItem.bucket.inArmor && !nextCompareButton?.query.includes('is:armor2.0')) {
         keptPenultimateButton = true;
         return true;
       }

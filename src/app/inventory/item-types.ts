@@ -128,8 +128,6 @@ export interface DimItem {
   loreHash?: number;
   /** Metrics that can be used with this item. */
   availableMetricCategoryNodeHashes?: number[];
-  /** If this exists, it's the limit of an item's PL. If NOT, display no information. Maybe it's unlimited PL. Maybe it's a weird item. */
-  powerCap: number | null;
   /** Information about how this item works with infusion. */
   infusionQuality: DestinyItemQualityBlockDefinition | null;
   /** The DestinyVendorDefinition hash of the vendor that can preview the contents of this item, if there is one. */

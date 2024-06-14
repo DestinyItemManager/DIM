@@ -362,7 +362,6 @@ function makeItem(
     highlightedObjective: false,
     missingSockets: false,
     energy: null,
-    powerCap: null,
     pursuit: null,
   };
 
