@@ -19,7 +19,6 @@ import {
   DestinyInventoryBucketDefinition,
   DestinyInventoryItemDefinition,
   DestinyItemCategoryDefinition,
-  DestinyItemTierTypeDefinition,
   DestinyLoadoutColorDefinition,
   DestinyLoadoutConstantsDefinition,
   DestinyLoadoutIconDefinition,
@@ -91,7 +90,6 @@ export const allTables: ManifestTablesShort[] = [
   'Gender',
   'Race',
   'Faction',
-  'ItemTierType',
   'ActivityMode',
   'LoadoutConstants',
 ];
@@ -114,7 +112,6 @@ export interface D2ManifestDefinitions extends ManifestDefinitions {
   Gender: DefinitionTable<DestinyGenderDefinition>;
   Race: DefinitionTable<DestinyRaceDefinition>;
   Faction: DefinitionTable<DestinyFactionDefinition>;
-  ItemTierType: DefinitionTable<DestinyItemTierTypeDefinition>;
   // ActivityMode is used only from destiny-symbols.ts
   ActivityMode: DefinitionTable<DestinyActivityModeDefinition>;
   InventoryItem: DefinitionTable<DestinyInventoryItemDefinition>;

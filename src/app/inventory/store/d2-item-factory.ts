@@ -538,7 +538,7 @@ export function makeItem(
     infusionFuel: false,
     sockets: null,
     masterworkInfo: null,
-    infusionQuality: null,
+    infusionCategoryHashes: null,
     tooltipNotifications,
   };
 
@@ -721,14 +721,9 @@ export function makeItem(
   }
 
   // Infusion
-  const tier = itemDef.inventory?.tierTypeHash
-    ? defs.ItemTierType.get(itemDef.inventory.tierTypeHash)
-    : null;
-  createdItem.infusionFuel = Boolean(
-    tier?.infusionProcess && itemDef.quality?.infusionCategoryHashes?.length,
-  );
+  createdItem.infusionFuel = Boolean(itemDef.quality?.infusionCategoryHashes?.length);
   createdItem.infusable = createdItem.infusionFuel && isLegendaryOrBetter(createdItem);
-  createdItem.infusionQuality = itemDef.quality || null;
+  createdItem.infusionCategoryHashes = itemDef.quality?.infusionCategoryHashes || null;
 
   // Masterwork
   try {
