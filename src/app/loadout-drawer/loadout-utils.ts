@@ -695,9 +695,9 @@ export function getLoadoutSubclassFragmentCapacity(
   fallbackToCurrent: boolean,
 ): number {
   if (item.item.sockets) {
-    const aspectSocketIndices = item.item.sockets.categories.find((c) =>
-      aspectSocketCategoryHashes.includes(c.category.hash),
-    )!.socketIndexes;
+    const aspectSocketIndices =
+      item.item.sockets.categories.find((c) => aspectSocketCategoryHashes.includes(c.category.hash))
+        ?.socketIndexes ?? [];
     const aspectDefs =
       item.loadoutItem.socketOverrides &&
       filterMap(aspectSocketIndices, (aspectSocketIndex) => {
