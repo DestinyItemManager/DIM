@@ -1,6 +1,5 @@
 ## Next
-* Add light level filters to the loadout search.
-  * `light:` filter finds loadouts whose light level matches the provided range, for loadouts where all weapon and armor slots have items assigned.
+* Add `light:` filter to the loadout search, for searching loadouts that equip all weapon and armor slots.
 
 ## 8.23.0 <span class="changelog-date">(2024-06-09)</span>
 

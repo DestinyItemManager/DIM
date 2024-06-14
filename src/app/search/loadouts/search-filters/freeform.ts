@@ -73,7 +73,12 @@ function allItemsFromLoadout(items: ItemBucket): DimItem[] {
   ].flat();
 }
 
-function ResolveLoadoutToDimItems(
+/**
+ * Simplified version of getItemsFromLoadoutItems that doesn't generate warnItems, and only
+ * converts equipped armor and weapons that can be equipped.
+ */
+
+function getDimItemsFromLoadoutItems(
   loadout: Loadout,
   d2Definitions: D2ManifestDefinitions,
   allItems: DimItem[],
@@ -84,14 +89,15 @@ function ResolveLoadoutToDimItems(
   // 2. items must be able to be equipped by the character
   // This may not be sufficient, but for the moment it seems good enough
   const dimItems = filterMap(loadout.items, (loadoutItem) => {
-    const newItem = findItemForLoadout(d2Definitions, allItems, store.id, loadoutItem);
-    if (
-      loadoutItem.equip &&
-      newItem &&
-      (newItem.bucket.inWeapons || newItem.bucket.inArmor) &&
-      itemCanBeEquippedByStoreId(newItem, store.id, loadout.classType, true)
-    ) {
-      return newItem;
+    if (loadoutItem.equip) {
+      const newItem = findItemForLoadout(d2Definitions, allItems, store.id, loadoutItem);
+      if (
+        newItem &&
+        (newItem.bucket.inWeapons || newItem.bucket.inArmor) &&
+        itemCanBeEquippedByStoreId(newItem, store.id, loadout.classType, true)
+      ) {
+        return newItem;
+      }
     }
   });
   // Resolve this into an object that tells us what we need to know
@@ -276,7 +282,7 @@ const freeformFilters: FilterDefinition<
           return false;
         }
         //
-        const resolvedLoadout = ResolveLoadoutToDimItems(
+        const resolvedLoadout = getDimItemsFromLoadoutItems(
           loadout,
           d2Definitions,
           allItems,
