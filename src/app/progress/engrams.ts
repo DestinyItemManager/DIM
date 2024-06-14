@@ -19,6 +19,11 @@ const engrams: HashLookup<{ cap: PowerCap; bonus: number }> = {
     cap: PowerCap.Pinnacle,
     bonus: 5,
   },
+  // Pinnacle Deepsight Weapon
+  323631491: {
+    cap: PowerCap.Pinnacle,
+    bonus: 5,
+  },
   // Tier 1
   3114385605: {
     cap: PowerCap.Powerful,
