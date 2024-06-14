@@ -650,7 +650,7 @@ export function makeItem(
     const perks = itemDef.perks.filter(
       (p, i) =>
         p.perkVisibility === ItemPerkVisibility.Visible &&
-        itemUninstancedPerks?.[i].visible !== false &&
+        itemUninstancedPerks?.[i]?.visible !== false &&
         defs.SandboxPerk.get(p.perkHash)?.isDisplayable,
     );
     if (perks.length) {

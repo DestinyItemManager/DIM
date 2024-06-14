@@ -61,14 +61,18 @@ const options: BrowserOptions = {
     }
     if (e instanceof DimError) {
       // Replace the (localized) message with our code
-      event.message = e.code;
+      let message = e.code;
+      if (e.bungieErrorCode()) {
+        message = `${message} (${e.bungieErrorCode()})`;
+      }
+      event.message = message;
       // TODO: it might be neat to be able to pass attachments here too - such as the entire profile response!
 
       // Do deeper surgery to overwrite the localized message with the code
       if (event.exception?.values) {
         for (const ex of event.exception.values) {
           if (ex.value === e.message) {
-            ex.value = e.code;
+            ex.value = message;
           }
         }
       }
