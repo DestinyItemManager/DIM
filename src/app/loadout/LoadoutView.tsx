@@ -217,8 +217,8 @@ export default function LoadoutView({
 export function loadoutPower(store: DimStore, categories: _.Dictionary<ResolvedLoadoutItem[]>) {
   const isEquipped = (li: ResolvedLoadoutItem) =>
     Boolean(!li.missing && li.item.power && li.loadoutItem.equip);
-  const equippedWeapons = categories.Weapons.filter(isEquipped);
-  const equippedArmor = categories.Armor.filter(isEquipped);
+  const equippedWeapons = categories.Weapons?.filter(isEquipped) ?? [];
+  const equippedArmor = categories.Armor?.filter(isEquipped) ?? [];
   const showPower = equippedWeapons.length === 3 && equippedArmor.length === 5;
   const power = showPower
     ? Math.floor(
