@@ -1,9 +1,15 @@
 ## Next
+* Fix issue where light level displayed in the Loadouts views was calculated using all weapons and armor in the loadout, instead of just the weapons and armor to be equipped.
+* Add `light:` filter to the Loadouts search. Only works with loadouts that equip an item for all weapon and armor slots.
+* DIM now calculates Account Power level, which uses all items from all characters, and determines their "current power level" for the purposes of new item drops.
+  * This number can be found in the header for Vault
+  * Details can be found by clicking any character's gear Power level, below their header/dropdown.
+* Cleaned up armor upgrade slots and inactive Artifice slots showing up in the Item Popup.
 
 ## 8.23.0 <span class="changelog-date">(2024-06-09)</span>
 
 * `is:enhanceable` and `is:enhanced` filters for non-crafted weapons whose perks can be enhanced.
-* Cleaned up extra upgrade slots showing up in the Item Popup.
+* Cleaned up extra weapon upgrade slots showing up in the Item Popup.
 * Shiny BRAVE weapons now have corner stripes.
 * Preliminary support for Exotic Artifice armor in the Loadout Optimizer
   * DIM can now assign these mods and automatically suggest them to according to your preferences.

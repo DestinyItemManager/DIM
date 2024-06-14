@@ -205,7 +205,8 @@
     "Season": "Shows loadouts by which season of Destiny 2 they were last modified in.",
     "FashionOnly": "Shows loadouts that contain only fashion (shaders or ornaments).",
     "ModsOnly": "Shows loadouts that only contain armor mods.",
-    "Subclass": "Shows loadouts whose subclass name or damage type partially matches the filter text."
+    "Subclass": "Shows loadouts whose subclass name or damage type partially matches the filter text.",
+    "LoadoutLight": "Shows loadouts based on their calculated light level. Use the pinnaclecap or softcap keyword instead of a number to refer to the current season's power limits."
   },
   "Filter": {
     "Adept": "\\(Adept\\)",
