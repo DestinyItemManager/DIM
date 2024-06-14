@@ -76,6 +76,11 @@ export default function ItemPopupHeader({
         <div className={styles.details}>
           {showElementIcon && <ElementIcon element={item.element} className={styles.elementIcon} />}
           <div className={styles.power}>{item.primaryStat?.value}</div>
+          {item.maxStackSize > 1 && (
+            <div className={styles.itemType}>
+              {item.amount} / {item.maxStackSize}
+            </div>
+          )}
           {Boolean(item.powerCap) && <div className={styles.powerCap}>| {item.powerCap} </div>}
           {item.pursuit?.questLine && (
             <div className={styles.itemType}>
