@@ -381,6 +381,14 @@ export function getGeneralSockets(
     (!excludeEmptySockets || !isSocketEmpty(socketInfo)) &&
     // don't include these weird little solstice stat rerolling mechanic sockets
     !isEventArmorRerollSocket(socketInfo) &&
+    // never include the "pay for artifice upgrade" slot on exotic armor
+    socketInfo.plugged?.plugDef.plug.plugCategoryHash !==
+      PlugCategoryHashes.EnhancementsArtificeExotic &&
+    // exclude artifice slots the game has marked as not visible (on un-upgraded exotics)
+    !(
+      socketInfo.plugged?.plugDef.plug.plugCategoryHash ===
+        PlugCategoryHashes.EnhancementsArtifice && !socketInfo.visibleInGame
+    ) &&
     // Ghost shells unlock an activity mod slot when masterworked and hide the dummy locked slot
     (item.bucket.hash !== BucketHashes.Ghost ||
       socketInfo.socketDefinition.socketTypeHash !==

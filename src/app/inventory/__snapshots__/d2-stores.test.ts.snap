@@ -3201,7 +3201,7 @@ exports[`process stores generates a correct  Armor CSV export 1`] = `
     "Perks 2": "Harmonic Loader*",
     "Perks 3": "Impact Induction*",
     "Perks 4": "Grenade Kickstart*",
-    "Perks 5": "Upgrade to Artifice Armor*",
+    "Perks 5": undefined,
     "Perks 6": undefined,
     "Power": 1931,
     "Power Limit": null,
