@@ -707,6 +707,7 @@
   "LoadoutFilter": {
     "Contains": "Shows loadouts which have an item or a mod matching the filter text. Search for items with spaces in their name using quotes.",
     "FashionOnly": "Shows loadouts that contain only fashion (shaders or ornaments).",
+    "LoadoutLight": "Shows loadouts based on their calculated light level. Use the pinnaclecap or softcap keyword instead of a number to refer to the current season's power limits.",
     "ModsOnly": "Shows loadouts that only contain armor mods.",
     "Name": "Shows loadouts whose name matches (exactname:) or partially matches (name:) the filter text. Search for entire phrases using quotes.",
     "Notes": "Search for loadouts by their notes field.",

@@ -1,4 +1,5 @@
 ## Next
+* Add `light:` filter to the loadout search, for searching loadouts that equip all weapon and armor slots.
 
 ## 8.23.0 <span class="changelog-date">(2024-06-09)</span>
 
