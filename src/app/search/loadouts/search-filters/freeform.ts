@@ -43,9 +43,10 @@ function isLoadoutCompatibleWithStore(loadout: Loadout, store: DimStore | undefi
   return !store || isClassCompatible(loadout.classType, store.classType);
 }
 
-// Convenience checks
-type ItemBucket = Record<string, DimItem[]>;
-function hasItemInAllSlots(items: ItemBucket): Boolean {
+type EquippedItemBuckets = Record<string, DimItem[]>;
+
+/**  Convenience check for items that contribute to power level */
+function equipsAllItemsForPowerLevel(items: EquippedItemBuckets): Boolean {
   return (
     (items[BucketHashes.KineticWeapons]?.length > 0 &&
       items[BucketHashes.EnergyWeapons]?.length > 0 &&
@@ -59,8 +60,8 @@ function hasItemInAllSlots(items: ItemBucket): Boolean {
   );
 }
 
-// Convenience get specific types
-function allItemsFromLoadout(items: ItemBucket): DimItem[] {
+/** Convenience function to get all items that contribute to power level */
+function allLoadoutItemsForPowerLevel(items: EquippedItemBuckets): DimItem[] {
   return [
     items[BucketHashes.KineticWeapons],
     items[BucketHashes.EnergyWeapons],
@@ -77,13 +78,12 @@ function allItemsFromLoadout(items: ItemBucket): DimItem[] {
  * Simplified version of getItemsFromLoadoutItems that doesn't generate warnItems, and only
  * converts equipped armor and weapons that can be equipped.
  */
-
-function getDimItemsFromLoadoutItems(
+function getEquippedItemsFromLoadout(
   loadout: Loadout,
   d2Definitions: D2ManifestDefinitions,
   allItems: DimItem[],
   store: DimStore,
-): ItemBucket {
+): EquippedItemBuckets {
   // We have two big requirements here:
   // 1. items must be weapons or armor
   // 2. items must be able to be equipped by the character
@@ -281,28 +281,23 @@ const freeformFilters: FilterDefinition<
         if (!isLoadoutCompatibleWithStore(loadout, selectedLoadoutsStore)) {
           return false;
         }
-        //
-        const resolvedLoadout = getDimItemsFromLoadoutItems(
+
+        // Get the equipped items that contribute to the power level (weapons, armor)
+        const equippedItems = getEquippedItemsFromLoadout(
           loadout,
           d2Definitions,
           allItems,
           selectedLoadoutsStore,
         );
 
-        // The UI, at the time of implementing this, only shows the light level using the following rules:
-        // 1. it only shows the light level if all armor + weapon slots have items assigned
-        // 2. it uses all weapons when calculating it (not just equipped)
-        // 3. it doesn't take the artifact level into account
-        // Here we mimic these restrictions.
-
-        // Enforce restriction #1
-        if (!hasItemInAllSlots(resolvedLoadout)) {
+        // Require that the loadout has an item in all weapon + armor slots
+        if (!equipsAllItemsForPowerLevel(equippedItems)) {
           return false;
         }
 
-        // Calculate light level of *all* items
+        // Calculate light level of items
         const lightLevel = Math.floor(
-          getLight(selectedLoadoutsStore, allItemsFromLoadout(resolvedLoadout)),
+          getLight(selectedLoadoutsStore, allLoadoutItemsForPowerLevel(equippedItems)),
         );
         return Boolean(compare!(lightLevel));
       };
