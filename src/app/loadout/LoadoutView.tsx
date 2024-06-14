@@ -65,6 +65,8 @@ export function getItemsAndSubclassFromLoadout(
   return [items, subclass, warnitems];
 }
 
+export type LoadoutItemsByCategory = Partial<Record<BucketSortType, ResolvedLoadoutItem[]>>;
+
 /**
  * A presentational component for a single loadout.
  *
@@ -114,7 +116,7 @@ export default function LoadoutView({
 
   const [allMods, modDefinitions] = useLoadoutMods(loadout, store.id);
 
-  const loadoutItemsByCategory: Record<BucketSortType, ResolvedLoadoutItem[]> = Object.groupBy(
+  const loadoutItemsByCategory: LoadoutItemsByCategory = Object.groupBy(
     items.concat(warnitems),
     (li) => li.item.bucket.sort ?? 'Unknown',
   );
@@ -214,7 +216,7 @@ export default function LoadoutView({
   );
 }
 
-export function loadoutPower(store: DimStore, categories: _.Dictionary<ResolvedLoadoutItem[]>) {
+export function loadoutPower(store: DimStore, categories: LoadoutItemsByCategory) {
   const isEquipped = (li: ResolvedLoadoutItem) =>
     Boolean(!li.missing && li.item.power && li.loadoutItem.equip);
   const equippedWeapons = categories.Weapons?.filter(isEquipped) ?? [];
