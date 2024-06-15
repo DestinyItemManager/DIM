@@ -87,7 +87,7 @@ const simpleFilters: ItemFilterDefinition[] = [
     keywords: ['crafted', 'shaped'],
     destinyVersion: 2,
     description: tl('Filter.IsCrafted'),
-    filter: () => (item) => item.crafted,
+    filter: () => (item) => item.crafted === 'crafted',
   },
   {
     keywords: ['vendor'],

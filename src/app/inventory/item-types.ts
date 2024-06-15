@@ -186,8 +186,8 @@ export interface DimItem {
   power: number;
   /** Is this a masterwork? (D2 only) */
   masterwork: boolean;
-  /** Is this crafted? (D2 only) */
-  crafted: boolean;
+  /** If truthy, Bungie indicated this item is crafted. This could just mean the item has a level and a crafting date, like enhanced weapons, even partially-enhanced ones. */
+  crafted: 'crafted' | 'enhanced' | false;
   /** Does this have a highlighted (crafting) objective? (D2 Only) */
   highlightedObjective: boolean;
   /** What percent complete is this item (considers XP and objectives). */
