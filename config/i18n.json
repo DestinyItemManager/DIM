@@ -458,6 +458,10 @@
   "Inventory": {
     "ClickToExpand": "(Click to expand)"
   },
+  "Item": {
+    "ThumbsUp": "Thumbs Up",
+    "ThumbsDown": "Thumbs Down"
+  },
   "ItemFeed": {
     "Description": "Item Feed",
     "HideTagged": "Hide Tagged",

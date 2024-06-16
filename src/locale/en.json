@@ -445,6 +445,10 @@
   "Inventory": {
     "ClickToExpand": "(Click to expand)"
   },
+  "Item": {
+    "ThumbsDown": "Thumbs Down",
+    "ThumbsUp": "Thumbs Up"
+  },
   "ItemFeed": {
     "ClearFeed": "Clear Feed",
     "Description": "Item Feed",
