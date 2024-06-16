@@ -421,6 +421,7 @@ export interface DimPlugSet {
 
   /** A precomputed list of plug hashes that can not roll on current versions of the item. */
   readonly plugHashesThatCannotRoll: number[];
+  readonly plugHashesThatCanRoll: number[];
 }
 
 export interface DimSocket {

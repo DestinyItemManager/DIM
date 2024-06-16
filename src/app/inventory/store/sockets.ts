@@ -34,6 +34,8 @@ import {
   PlugCategoryHashes,
   SocketCategoryHashes,
 } from 'data/d2/generated-enums';
+import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
+import _ from 'lodash';
 import {
   DimItem,
   DimPlug,
@@ -50,6 +52,8 @@ import {
 //
 // This is called from within d2-item-factory.service.ts
 //
+
+const enhancedToPerk = _.mapValues(_.invert(perkToEnhanced), (s) => Number(s));
 
 /**
  * Calculate all the sockets we want to display (or make searchable). Sockets represent perks,
@@ -491,13 +495,16 @@ function buildPlug(
     : '';
 
   const enabled = destinyItemPlug ? plug.enabled : plug.isEnabled;
+  const unenhancedVersion = enhancedToPerk[plugDef.hash];
   return {
     plugDef,
     enabled: enabled && (!destinyItemPlug || plug.canInsert),
     enableFailReasons: failReasons,
     plugObjectives: plugObjectivesData?.[plugHash] || emptyArray(),
     stats: null,
-    cannotCurrentlyRoll: plugSet?.plugHashesThatCannotRoll.includes(plugDef.hash),
+    cannotCurrentlyRoll:
+      plugSet?.plugHashesThatCannotRoll.includes(plugDef.hash) &&
+      !plugSet?.plugHashesThatCanRoll.includes(unenhancedVersion),
   };
 }
 
@@ -785,16 +792,15 @@ function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number)
       }
     }
   }
-
+  const [cant, can] = _.partition(plugs, (p) => plugCannotCurrentlyRoll(plugs, p.plugDef.hash));
   const dimPlugSet: DimPlugSet = {
     plugs,
     hash: plugSetHash,
     precomputedEmptyPlugItemHash: defPlugSet.reusablePlugItems.find((p) =>
       isKnownEmptyPlugItemHash(p.plugItemHash),
     )?.plugItemHash,
-    plugHashesThatCannotRoll: plugs
-      .filter((p) => plugCannotCurrentlyRoll(plugs, p.plugDef.hash))
-      .map((p) => p.plugDef.hash),
+    plugHashesThatCannotRoll: cant.map((p) => p.plugDef.hash),
+    plugHashesThatCanRoll: can.map((p) => p.plugDef.hash),
   };
   reusablePlugSetCache[plugSetHash] = dimPlugSet;
 
