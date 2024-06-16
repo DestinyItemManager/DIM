@@ -60,7 +60,7 @@ function VaultTile({ store }: { store: DimStore }) {
 
   return (
     <div className={styles.vaultTile}>
-      <img className={styles.vaultEmblem} src={store.icon} height={40} width={40} />
+      <img className={styles.vaultEmblem} src={store.icon} height={40} width={40} alt="" />
       <div className={styles.vaultName}>{store.className}</div>
       {!isPhonePortrait && (
         <div className={clsx(styles.powerLevel, styles.bigPowerLevel)}>

@@ -385,6 +385,7 @@
     "ReloadApp": "Reload App",
     "ReportBug": "Report a Bug",
     "SaveSearch": "Save Search",
+    "SearchActions": "Open Search Actions",
     "SearchResults": "Show Items",
     "Shop": "Shop",
     "TagAs": "Tag as '{{tag}}'",
@@ -447,6 +448,10 @@
   },
   "Inventory": {
     "ClickToExpand": "(Click to expand)"
+  },
+  "Item": {
+    "ThumbsDown": "Thumbs Down",
+    "ThumbsUp": "Thumbs Up"
   },
   "ItemFeed": {
     "ClearFeed": "Clear Feed",
@@ -717,6 +722,7 @@
   },
   "Loadouts": {
     "Abilities": "Abilities",
+    "Actions": "Actions for {{title}}",
     "AddEquippedItems": "Add Equipped",
     "AddNotes": "Add Notes",
     "AddUnequippedItems": "Add Unequipped",
@@ -774,6 +780,7 @@
       "PasteHere": "Paste a loadout link to open the loadout."
     },
     "ImportLoadout": "Import Loadout",
+    "InGameActions": "In-Game Loadout Actions",
     "InGameLoadouts": "In-Game Loadouts",
     "IncludeRuntimeStatBenefits": "Include Font mod stats",
     "IncludeRuntimeStatBenefitsDesc": "\"Font of ...\" armor mods provide a flat boost to character stats while you have Armor Charges.\n\nWith this setting, DIM considers these mods active and adds their benefits to this Loadout's stats in calculations and optimizations.",
