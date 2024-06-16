@@ -258,6 +258,7 @@ export function makeItem(
 
   // Fish relevant data out of the profile.
   const profileRecords = profileResponse.profileRecords?.data;
+  const characterRecords = profileResponse.characterRecords?.data;
   const characterProgressions =
     owner && !owner?.isVault ? profileResponse.characterProgressions?.data?.[owner.id] : undefined;
 
@@ -505,7 +506,7 @@ export function makeItem(
     tracked: Boolean(item.state & ItemState.Tracked),
     locked: Boolean(item.state & ItemState.Locked),
     masterwork: Boolean(item.state & ItemState.Masterwork) && itemType !== 'Class',
-    crafted: Boolean(item.state & ItemState.Crafted),
+    crafted: item.state & ItemState.Crafted ? 'crafted' : false,
     highlightedObjective: Boolean(item.state & ItemState.HighlightedObjective),
     classified: Boolean(itemDef.redacted),
     isEngram,
@@ -606,7 +607,18 @@ export function makeItem(
   createdItem.craftedInfo = buildCraftedInfo(createdItem, defs);
 
   // Crafting pattern
-  createdItem.patternUnlockRecord = buildPatternInfo(createdItem, itemDef, defs, profileRecords);
+  createdItem.patternUnlockRecord = buildPatternInfo(
+    createdItem,
+    itemDef,
+    defs,
+    profileRecords,
+    characterRecords,
+  );
+
+  // don't worry, craftable weapons can't be enhanced
+  if (createdItem.crafted && !createdItem.patternUnlockRecord) {
+    createdItem.crafted = 'enhanced';
+  }
 
   // Deepsight Resonance
   createdItem.deepsightInfo = buildDeepsightInfo(createdItem);

@@ -17,7 +17,6 @@ import {
   countEnhancedPerks,
   getIntrinsicArmorPerkSocket,
   getSocketsByCategoryHash,
-  isSocketEmpty,
   matchesCuratedRoll,
 } from 'app/utils/socket-utils';
 import { StringLookup } from 'app/utils/util-types';
@@ -321,25 +320,20 @@ const socketFilters: ItemFilterDefinition[] = [
       ),
   },
   {
+    // this currently tests for full enhancedness, returning false for partially-enhanced items
     keywords: 'enhanced',
     description: tl('Filter.Enhanced'),
     destinyVersion: 2,
-    filter: () => (item) => {
-      const socket = item.sockets?.allSockets.find(
-        (s) =>
-          s.plugged?.plugDef.plug.plugCategoryHash ===
-          PlugCategoryHashes.CraftingPlugsWeaponsModsEnhancers,
-      );
-      return Boolean(
-        socket?.plugged &&
-          // rules out items where enhancing hasn't even started
-          // (the "empty" socket is one offering enhancement to the player)
-          !isSocketEmpty(socket) &&
-          // rules out half-enhanced items
-          // the game explicitly warns you that half-enhanced items stop looking masterworked
-          item.masterwork,
-      );
-    },
+    format: ['simple'], // TO-DO: add 'range' here
+    filter:
+      ({ lhs }) =>
+      (item) => {
+        if (lhs === 'is') {
+          // rules out partially-enhanced items
+          // the game explicitly warns you that partially-enhanced items stop looking masterworked
+          return item.crafted === 'enhanced' && item.masterwork;
+        }
+      },
   },
   {
     keywords: 'retiredperk',

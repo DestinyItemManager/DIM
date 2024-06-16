@@ -78,7 +78,7 @@ const toSelection = (data: StreamDeckSelectionOptions, state: RootState) => {
         overlay: item.iconOverlay,
         isExotic: item.isExotic,
         isSubClass: data.isSubClass,
-        isCrafted: item.crafted,
+        isCrafted: Boolean(item.crafted),
         element:
           item.element?.enumValue === DamageType.Kinetic
             ? undefined

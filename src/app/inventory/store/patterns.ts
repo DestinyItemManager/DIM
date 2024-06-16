@@ -3,6 +3,7 @@ import { THE_FORBIDDEN_BUCKET } from 'app/search/d2-known-values';
 import {
   DestinyInventoryItemDefinition,
   DestinyProfileRecordsComponent,
+  DestinyProfileResponse,
   DestinyRecordToastStyle,
 } from 'bungie-api-ts/destiny2';
 import memoizeOne from 'memoize-one';
@@ -31,6 +32,7 @@ export function buildPatternInfo(
   itemDef: DestinyInventoryItemDefinition,
   defs: D2ManifestDefinitions,
   profileRecords: DestinyProfileRecordsComponent | undefined,
+  characterRecords: DestinyProfileResponse['characterRecords']['data'],
 ) {
   // Craftable items will have a reference to their recipe item
   const recipeItemHash = itemDef.inventory?.recipeItemHash;
@@ -41,7 +43,10 @@ export function buildPatternInfo(
   // Best we can do so far is to match up crafting patterns to items by their name: https://github.com/DestinyItemManager/DIM/pull/8420#issuecomment-1139188482
   const patternRecordHash = itemNameToCraftingPatternRecordHash(defs)[item.name];
   if (patternRecordHash) {
-    return profileRecords?.records[patternRecordHash];
+    return (
+      profileRecords?.records[patternRecordHash] ??
+      (characterRecords && Object.values(characterRecords)[0].records[patternRecordHash])
+    );
   }
   return undefined;
 }
