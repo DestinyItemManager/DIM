@@ -97,7 +97,6 @@
   },
   "Compare": {
     "Archetype": "Archetype",
-    "Armor2": "Armor 2.0",
     "AssumeMasterworked": "Assume Masterworked",
     "Button": "Compare",
     "ButtonHelp": "Compare Items",
@@ -108,6 +107,7 @@
     },
     "InitialItem": "This is the item the Compare tool was launched from",
     "IsVendorItem": "This item is not owned. This is in a vendor's inventory and may be for sale.",
+    "NoModArmor": "Pre-mods",
     "SoldBy": "Sold by: {{vendorName}}"
   },
   "Cooldown": {

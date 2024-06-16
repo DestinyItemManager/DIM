@@ -36,7 +36,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
     {
       buttonLabel: [
         <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
-        `+ ${t('Compare.Armor2')}`,
+        `+ ${t('Compare.NoModArmor')}`,
       ],
       query: '', // since we already filter by itemCategoryHash, an empty query gives you all items matching that category
     },
