@@ -1,5 +1,5 @@
 name: Dependabot auto-merge
-on: pull_request
+on: pull_request_target
 
 permissions:
   contents: write
@@ -14,7 +14,7 @@ jobs:
         id: app-token
         with:
           # required
-          app-id: 919630
+          app-id: ${{ secrets.AUTOMERGE_APP_ID }}
           private-key: ${{ secrets.AUTOMERGE_PRIVATE_KEY }}
       - name: Dependabot metadata
         id: metadata
