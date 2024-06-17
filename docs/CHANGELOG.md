@@ -1,4 +1,6 @@
 ## Next
+
+## 8.24.0 <span class="changelog-date">(2024-06-16)</span>
 * Fix issue where light level displayed in the Loadouts views was calculated using all weapons and armor in the loadout, instead of just the weapons and armor to be equipped.
 * Add `light:` filter to the Loadouts search. Only works with loadouts that equip an item for all weapon and armor slots.
 * DIM now calculates Account Power level, which uses all items from all characters, and determines their "current power level" for the purposes of new item drops.
