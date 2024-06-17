@@ -7,6 +7,12 @@
   * This number can be found in the header for Vault
   * Details can be found by clicking any character's gear Power level, below their header/dropdown.
 * Cleaned up armor upgrade slots and inactive Artifice slots showing up in the Item Popup.
+* Loadout Optimizer no longer tries to pair Exotics and Class Item Exotics in the same loadout.
+* Fixed issue where Enhanced BRAVE Mountaintop did not appear to be masterworked.
+* Fixed issue where Enhanced weapons could have perks that showed as not rollable.
+* `is:crafted` matches only crafted weapons, not Enhanced weapons.
+* Max stack size of consumables is now shown in the Item Popup when viewing their details.
+* Add some new materials and remove some old, from material/consumable counts in the Vault header.
 
 ## 8.23.0 <span class="changelog-date">(2024-06-09)</span>
 
