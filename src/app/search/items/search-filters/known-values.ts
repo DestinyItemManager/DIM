@@ -4,8 +4,6 @@ import { tl } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { getEvent } from 'app/inventory/store/season';
 import { D1ItemCategoryHashes } from 'app/search/d1-known-values';
-import artifactBreakerMods from '../../../data/d2/artifact-breaker-weapon-types.json';
-import { BreakerTypeHashes } from 'data/d2/generated-enums';
 import {
   D2ItemCategoryHashesByName,
   ItemTierName,
@@ -21,6 +19,7 @@ import {
   DestinyClass,
   DestinyRecordState,
 } from 'bungie-api-ts/destiny2';
+import artifactBreakerMods from 'data/d2/artifact-breaker-weapon-types.json';
 import { D2EventEnum, D2EventInfo } from 'data/d2/d2-event-info-v2';
 import focusingOutputs from 'data/d2/focusing-item-outputs.json';
 import { BreakerTypeHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
@@ -223,11 +222,11 @@ const knownValuesFilters: ItemFilterDefinition[] = [
     suggestions: Object.keys(breakerTypes),
     destinyVersion: 2,
     filter: ({ filterValue }) => {
-      const breakerType: BreakerTypeHashes[] | undefined = breakerTypes[filterValue];
+      const breakerType = breakerTypes[filterValue as keyof typeof breakerTypes];
       if (!breakerType) {
         throw new Error(`Unknown breaker type ${filterValue}`);
       }
-      return (item) => item.breakerType && breakerType.includes(item.breakerType.hash);
+      return (item) => breakerType.includes(item.breakerType?.hash as BreakerTypeHashes);
     },
   },
   {
@@ -237,14 +236,15 @@ const knownValuesFilters: ItemFilterDefinition[] = [
     suggestions: Object.keys(breakerTypes),
     destinyVersion: 2,
     filter: ({ filterValue }) => {
-      const breakerType: BreakerTypeHashes[] | undefined = breakerTypes[filterValue];
+      const breakerType: BreakerTypeHashes[] | undefined =
+        breakerTypes[filterValue as keyof typeof breakerTypes];
       if (!breakerType) {
-        throw new Error('Unknown breaker type ' + breakerType);
+        throw new Error(`Unknown breaker type ${breakerType as string}`);
       }
       const breakingIchs = breakerType.flatMap((ty) => artifactBreakerMods[ty] || []);
       return (item) =>
         Boolean(
-          !item.breakerType && item.itemCategoryHashes.some((ich) => breakingIchs.includes(ich))
+          !item.breakerType && item.itemCategoryHashes.some((ich) => breakingIchs.includes(ich)),
         );
     },
   },
