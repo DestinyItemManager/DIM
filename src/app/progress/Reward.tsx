@@ -25,10 +25,9 @@ export function Reward({
   const maxGearPower = useSelector(
     (state: RootState) => powerLevelSelector(state, store?.id)?.maxGearPower,
   );
-  const rewardItem = defs.InventoryItem.get(reward.itemHash);
+  const [powerBonus, rewardItemHash] = getEngramPowerBonus(reward.itemHash, maxGearPower, itemHash);
+  const rewardItem = defs.InventoryItem.get(rewardItemHash);
   const rewardDisplay = rewardItem.displayProperties;
-
-  const powerBonus = getEngramPowerBonus(rewardItem.hash, maxGearPower, itemHash);
 
   const xpValue = getXPValue(reward.itemHash);
 

@@ -55,7 +55,7 @@ export default function Milestones({
 
   const milestonesByPower = Map.groupBy(milestoneItems, (m) => {
     for (const reward of m.pursuit?.rewards ?? []) {
-      const powerBonus = getEngramPowerBonus(reward.itemHash, maxGearPower, m.hash);
+      const [powerBonus] = getEngramPowerBonus(reward.itemHash, maxGearPower, m.hash);
       if (powerBonus !== undefined) {
         return powerBonus;
       }
