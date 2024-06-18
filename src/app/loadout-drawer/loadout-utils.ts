@@ -112,7 +112,7 @@ const gearSlotOrder: BucketHashes[] = [...D2Categories.Weapons, ...D2Categories.
  */
 export function newLoadout(name: string, items: LoadoutItem[], classType?: DestinyClass): Loadout {
   return {
-    id: window.crypto.randomUUID(),
+    id: globalThis.crypto.randomUUID(),
     classType:
       classType !== undefined && classType !== DestinyClass.Classified
         ? classType

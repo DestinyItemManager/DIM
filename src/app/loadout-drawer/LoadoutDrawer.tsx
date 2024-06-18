@@ -111,7 +111,7 @@ export default function LoadoutDrawer({
     if (saveAsNew) {
       loadoutToSave = {
         ...loadout,
-        id: window.crypto.randomUUID(), // Let it be a new ID
+        id: globalThis.crypto.randomUUID(), // Let it be a new ID
       };
     }
 

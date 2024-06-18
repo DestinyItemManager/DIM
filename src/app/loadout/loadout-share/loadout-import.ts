@@ -92,7 +92,7 @@ async function getDimSharedLoadout(shareId: string) {
  * Ensure received loadouts and their items have a unique ID.
  */
 function preprocessReceivedLoadout(loadout: Loadout): Loadout {
-  loadout.id = window.crypto.randomUUID();
+  loadout.id = globalThis.crypto.randomUUID();
   loadout.items = loadout.items.map((item) => ({
     ...item,
     id: item.id === '0' ? generateMissingLoadoutItemId() : item.id,

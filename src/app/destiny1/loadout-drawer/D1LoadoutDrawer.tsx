@@ -83,7 +83,7 @@ export default function D1LoadoutDrawer({
     }
     const newLoadout = {
       ...loadout,
-      id: window.crypto.randomUUID(), // Let it be a new ID
+      id: globalThis.crypto.randomUUID(), // Let it be a new ID
     };
     onSaveLoadout(e, newLoadout, close);
   };

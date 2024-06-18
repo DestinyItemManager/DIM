@@ -16,7 +16,7 @@ const loginHelpLink = userGuideUrl('Accounts-and-Login');
 export default function Login() {
   const dispatch = useThunkDispatch();
   const authorizationState = useMemo(
-    () => (isAppStoreVersion() ? 'dimauth-' : '') + window.crypto.randomUUID(),
+    () => (isAppStoreVersion() ? 'dimauth-' : '') + globalThis.crypto.randomUUID(),
     [],
   );
   const clientId = oauthClientId();
