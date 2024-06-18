@@ -28,7 +28,7 @@
       margin: 0;
     }
     :global(.milestone-info) {
-      display: none;
+      display: none !important;
     }
   }
 }
