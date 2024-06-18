@@ -70,7 +70,11 @@ export default function Pathfinder({
                 <Pursuit
                   item={item}
                   key={item.index}
-                  searchHidden={acquiredRecords.has(item.pursuit?.recordHash ?? 0)}
+                  className={
+                    acquiredRecords.has(item.pursuit?.recordHash ?? 0)
+                      ? styles.completed
+                      : undefined
+                  }
                 />
               ))}
             </div>

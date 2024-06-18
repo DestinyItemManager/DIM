@@ -32,6 +32,10 @@
   text-decoration: none;
   margin: 0 !important;
   padding: 0;
+
+  @include phone-portrait {
+    margin: 0 32px 0 0 !important;
+  }
 }
 
 .subtitle {

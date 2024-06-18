@@ -1,12 +1,6 @@
+@use '../variables.scss' as *;
+
 .pathfinderRow {
-  /*
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  grid-auto-rows: min-content;
-  gap: 24px 16px;
-  margin: 16px 0;
-  box-sizing: border-box;
-  */
   composes: flexWrap from '../dim-ui/common.m.scss';
   box-sizing: border-box;
   margin: 16px 0;
@@ -18,10 +12,37 @@
     max-width: 250px;
     min-width: 150px;
   }
+
+  @media (max-width: 1270px) {
+    margin: 8px 10px;
+    gap: 14px;
+    width: auto;
+
+    > * {
+      flex: 0;
+      width: var(--item-size);
+      min-width: var(--item-size);
+    }
+
+    :global(.milestone-icon) {
+      margin: 0;
+    }
+    :global(.milestone-info) {
+      display: none;
+    }
+  }
 }
 
 .divider {
-  opacity: 0.3;
   border: 0;
-  border-bottom: 1px solid white;
+  border-bottom: 1px solid var(--theme-button-bg);
+  margin: 0;
+}
+
+.completed {
+  :global(.milestone-icon) img {
+    border-color: $xp;
+    border-width: 2px;
+    padding: 3px;
+  }
 }

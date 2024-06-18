@@ -20,9 +20,11 @@ import PursuitItem from './PursuitItem';
 export default function Pursuit({
   item,
   searchHidden: alreadySearchHidden,
+  className,
 }: {
   item: DimItem;
   searchHidden?: boolean;
+  className?: string;
 }) {
   const defs = useD2Definitions()!;
   const isNew = useSelector(isNewSelector(item));
@@ -48,7 +50,7 @@ export default function Pursuit({
       {(ref, onClick) => (
         <button
           type="button"
-          className={clsx('milestone-quest', { 'search-hidden': searchHidden })}
+          className={clsx('milestone-quest', className, { 'search-hidden': searchHidden })}
           key={item.index}
           onClick={onClick}
         >
