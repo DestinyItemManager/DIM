@@ -45,7 +45,7 @@ export interface DimPresentationNode extends DimPresentationNodeLeaf {
    * or generated with fake info.
    */
   nodeDef: DestinyPresentationNodeDefinition | undefined;
-  nodeComp: DestinyPresentationNodeComponent | undefined;
+  nodeComponent: DestinyPresentationNodeComponent | undefined;
   /** May or may not be an actual hash */
   hash: number;
   name: string;
@@ -137,11 +137,8 @@ export function toPresentationNodeTree(
     name: titleInfo?.title || presentationNodeDef.displayProperties.name,
     icon: presentationNodeDef.displayProperties.icon,
     titleInfo,
-    nodeComp: profileResponse.profilePresentationNodes.data?.nodes[presentationNodeDef.hash],
+    nodeComponent: profileResponse.profilePresentationNodes.data?.nodes[presentationNodeDef.hash],
   };
-  if (presentationNodeDef.parentNodeHashes[0] === 1062988660) {
-    console.log(presentationNodeDef, commonNodeProperties);
-  }
   if (presentationNodeDef.children.collectibles?.length) {
     const collectibles = toCollectibles(
       itemCreationContext,
@@ -263,7 +260,7 @@ function buildPlugSetPresentationNode(
     visible: plugSetItems.length,
     acquired,
     plugs: plugEntries,
-    nodeComp: undefined,
+    nodeComponent: undefined,
   };
   return subnode;
 }

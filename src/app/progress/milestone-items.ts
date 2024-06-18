@@ -385,7 +385,9 @@ export function recordToPursuitItem(
   };
 
   if (record.recordDef.rewardItems) {
-    dimItem.pursuit.rewards = record.recordDef.rewardItems;
+    dimItem.pursuit.rewards = record.recordDef.rewardItems.filter(
+      (_r, i) => record.recordComponent.rewardVisibilty?.[i] ?? true,
+    );
   }
 
   dimItem.trackable = true;

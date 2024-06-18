@@ -13,22 +13,17 @@ import { useSelector } from 'react-redux';
 import { ObjectiveValue } from './Objective';
 import PursuitItem from './PursuitItem';
 
-// Props provided from parents
-interface Props {
-  item: DimItem;
-  hideDescription?: boolean;
-  searchHidden?: boolean;
-}
-
 /**
  * A Pursuit is an inventory item that represents a bounty or quest. This displays
  * a pursuit tile for the Progress page.
  */
 export default function Pursuit({
   item,
-  hideDescription,
   searchHidden: alreadySearchHidden,
-}: Props) {
+}: {
+  item: DimItem;
+  searchHidden?: boolean;
+}) {
   const defs = useD2Definitions()!;
   const isNew = useSelector(isNewSelector(item));
   const searchHidden = useSelector(
@@ -73,17 +68,16 @@ export default function Pursuit({
               </span>
             )}
           </div>
-          {!hideDescription && (
-            <div className="milestone-info">
-              <span className="milestone-name">
-                <ItemExpiration item={item} compact={true} />
-                {item.name}
-              </span>
-              <div className="milestone-description">
-                <RichDestinyText text={item.description} ownerId={item.owner} />
-              </div>
+
+          <div className="milestone-info">
+            <span className="milestone-name">
+              <ItemExpiration item={item} compact={true} />
+              {item.name}
+            </span>
+            <div className="milestone-description">
+              <RichDestinyText text={item.description} ownerId={item.owner} />
             </div>
-          )}
+          </div>
         </button>
       )}
     </ItemPopupTrigger>

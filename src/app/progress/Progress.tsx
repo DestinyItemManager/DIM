@@ -14,6 +14,7 @@ import { RAID_NODE } from 'app/search/d2-known-values';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { usePageTitle } from 'app/utils/hooks';
 import { PanInfo, motion } from 'framer-motion';
+import _ from 'lodash';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { DestinyAccount } from '../accounts/destiny-account';
@@ -21,6 +22,7 @@ import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import { Event } from './Event';
 import Milestones from './Milestones';
+import Pathfinder from './Pathfinder';
 import styles from './Progress.m.scss';
 import Pursuits from './Pursuits';
 import Raids from './Raids';
@@ -89,27 +91,28 @@ export default function Progress({ account }: { account: DestinyAccount }) {
     coreSettings?.seasonalChallengesPresentationNodeHash !== undefined &&
     defs.PresentationNode.get(coreSettings.seasonalChallengesPresentationNodeHash);
 
-  const pathfinderPresentationNode = defs.PresentationNode.get(1062988660);
+  const paleHeartPathfinderNode = defs.PresentationNode.get(1062988660);
+  const ritualsPathfinderNode = defs.PresentationNode.get(622609416);
 
-  const pathfinderPresentationNode2 = defs.PresentationNode.get(622609416);
-  const menuItems = [
+  const menuItems = _.compact([
     { id: 'ranks', title: t('Progress.CrucibleRank') },
     { id: 'trackedTriumphs', title: t('Progress.TrackedTriumphs') },
-    ...(eventCard ? [{ id: 'event', title: eventCard.displayProperties.name }] : []),
+    eventCard && { id: 'event', title: eventCard.displayProperties.name },
     { id: 'milestones', title: t('Progress.Milestones') },
-    ...(seasonalChallengesPresentationNode
-      ? [
-          {
-            id: 'seasonal-challenges',
-            title: seasonalChallengesPresentationNode.displayProperties.name,
-          },
-        ]
-      : []),
+    paleHeartPathfinderNode && {
+      id: 'paleHeartPathfinder',
+      title: t('Progress.PaleHeartPathfinder'),
+    },
+    ritualsPathfinderNode && { id: 'ritualPathfinder', title: t('Progress.RitualPathfinder') },
+    seasonalChallengesPresentationNode && {
+      id: 'seasonal-challenges',
+      title: seasonalChallengesPresentationNode.displayProperties.name,
+    },
     { id: 'Bounties', title: t('Progress.Bounties') },
     { id: 'Quests', title: t('Progress.Quests') },
     { id: 'Items', title: t('Progress.Items') },
-    ...(raidNode ? [{ id: 'raids', title: raidTitle }] : []),
-  ];
+    raidNode && { id: 'raids', title: raidTitle },
+  ]);
 
   return (
     <ErrorBoundary name="Progress">
@@ -177,27 +180,32 @@ export default function Progress({ account }: { account: DestinyAccount }) {
               </CollapsibleTitle>
             </section>
 
-            {seasonalChallengesPresentationNode && (
-              <ErrorBoundary name="SeasonalChallenges">
-                <SeasonalChallenges
-                  seasonalChallengesPresentationNode={seasonalChallengesPresentationNode}
+            {paleHeartPathfinderNode && (
+              <ErrorBoundary name={t('Progress.PaleHeartPathfinder')}>
+                <Pathfinder
+                  id="paleHeartPathfinder"
+                  name={t('Progress.PaleHeartPathfinder')}
+                  presentationNode={paleHeartPathfinderNode}
                   store={selectedStore}
                 />
               </ErrorBoundary>
             )}
 
-            {pathfinderPresentationNode && (
-              <ErrorBoundary name="SeasonalChallenges">
-                <SeasonalChallenges
-                  seasonalChallengesPresentationNode={pathfinderPresentationNode}
+            {ritualsPathfinderNode && (
+              <ErrorBoundary name={t('Progress.RitualPathfinder')}>
+                <Pathfinder
+                  id="ritualPathfinder"
+                  name={t('Progress.RitualPathfinder')}
+                  presentationNode={ritualsPathfinderNode}
                   store={selectedStore}
                 />
               </ErrorBoundary>
             )}
-            {pathfinderPresentationNode2 && (
+
+            {seasonalChallengesPresentationNode && (
               <ErrorBoundary name="SeasonalChallenges">
                 <SeasonalChallenges
-                  seasonalChallengesPresentationNode={pathfinderPresentationNode2}
+                  seasonalChallengesPresentationNode={seasonalChallengesPresentationNode}
                   store={selectedStore}
                 />
               </ErrorBoundary>

@@ -1,0 +1,27 @@
+.pathfinderRow {
+  /*
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-auto-rows: min-content;
+  gap: 24px 16px;
+  margin: 16px 0;
+  box-sizing: border-box;
+  */
+  composes: flexWrap from '../dim-ui/common.m.scss';
+  box-sizing: border-box;
+  margin: 16px 0;
+  justify-content: center;
+  gap: 24px 16px;
+
+  > * {
+    flex: 1;
+    max-width: 250px;
+    min-width: 150px;
+  }
+}
+
+.divider {
+  opacity: 0.3;
+  border: 0;
+  border-bottom: 1px solid white;
+}

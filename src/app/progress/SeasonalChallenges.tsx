@@ -38,7 +38,7 @@ export default function SeasonalChallenges({
       // Don't show records that have been redeemed
       const state = r.recordComponent.state;
       const acquired = Boolean(state & DestinyRecordState.RecordRedeemed);
-      return !acquired && !(state & DestinyRecordState.RewardUnavailable);
+      return !acquired;
     })
     .map((r) =>
       recordToPursuitItem(
