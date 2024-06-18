@@ -33,6 +33,7 @@
   margin: 0 !important;
   padding: 0;
 
+  // Prevent the title running into the sheet close button
   @include phone-portrait {
     margin: 0 32px 0 0 !important;
   }

@@ -113,10 +113,11 @@ export function toPresentationNodeTree(
   if (presentationNodeDef.redacted) {
     return null;
   }
-  if (
-    (profileResponse.profilePresentationNodes.data?.nodes[presentationNodeDef.hash]?.state ?? 0) &
-    DestinyPresentationNodeState.Invisible
-  ) {
+
+  const nodeComponent =
+    profileResponse.profilePresentationNodes?.data?.nodes[presentationNodeDef.hash];
+
+  if ((nodeComponent?.state ?? 0) & DestinyPresentationNodeState.Invisible) {
     return null;
   }
 
@@ -137,7 +138,7 @@ export function toPresentationNodeTree(
     name: titleInfo?.title || presentationNodeDef.displayProperties.name,
     icon: presentationNodeDef.displayProperties.icon,
     titleInfo,
-    nodeComponent: profileResponse.profilePresentationNodes.data?.nodes[presentationNodeDef.hash],
+    nodeComponent,
   };
   if (presentationNodeDef.children.collectibles?.length) {
     const collectibles = toCollectibles(
