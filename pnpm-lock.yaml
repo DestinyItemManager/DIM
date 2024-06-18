@@ -143,9 +143,6 @@ dependencies:
   reselect:
     specifier: ^5.1.1
     version: 5.1.1
-  safari-14-idb-fix:
-    specifier: ^3.0.0
-    version: 3.0.0
   typesafe-actions:
     specifier: ^5.1.0
     version: 5.1.0
@@ -155,9 +152,6 @@ dependencies:
   use-subscription:
     specifier: ^1.8.2
     version: 1.8.2(react@18.3.1)
-  uuid:
-    specifier: ^10.0.0
-    version: 10.0.0
   workbox-cacheable-response:
     specifier: ^7.1.0
     version: 7.1.0
@@ -262,9 +256,6 @@ devDependencies:
   '@types/use-subscription':
     specifier: ^1.0.2
     version: 1.0.2
-  '@types/uuid':
-    specifier: ^9.0.8
-    version: 9.0.8
   '@types/webpack':
     specifier: ^5.28.5
     version: 5.28.5(webpack-cli@5.1.4)
@@ -3281,10 +3272,6 @@ packages:
   /@types/use-sync-external-store@0.0.3:
     resolution: {integrity: sha512-EwmlvuaxPNej9+T4v5AuBPJa2x2UOJVdjCtDHgcDqitUeOtjnJKJ+apYjVcAoBEMjKW1VVFGZLUb5+qqa09XFA==}
     dev: false
-
-  /@types/uuid@9.0.8:
-    resolution: {integrity: sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==}
-    dev: true
 
   /@types/webpack-env@1.18.5:
     resolution: {integrity: sha512-wz7kjjRRj8/Lty4B+Kr0LN6Ypc/3SymeCCGSbaXp2leH0ZVg/PriNiOwNj4bD4uphI7A8NXS4b6Gl373sfO5mA==}
@@ -10785,10 +10772,6 @@ packages:
       queue-microtask: 1.2.3
     dev: true
 
-  /safari-14-idb-fix@3.0.0:
-    resolution: {integrity: sha512-eBNFLob4PMq8JA1dGyFn6G97q3/WzNtFK4RnzT1fnLq+9RyrGknzYiM/9B12MnKAxuj1IXr7UKYtTNtjyKMBog==}
-    dev: false
-
   /safe-array-concat@1.1.2:
     resolution: {integrity: sha512-vj6RsCsWBCf19jIeHEfkRMw8DPiBb+DMXklQ/1SGDHOMlHdPUkZXFQ2YdplS23zESTijAcurb1aSgJA3AgMu1Q==}
     engines: {node: '>=0.4'}
@@ -12296,11 +12279,6 @@ packages:
     resolution: {integrity: sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==}
     engines: {node: '>= 0.4.0'}
     dev: true
-
-  /uuid@10.0.0:
-    resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
-    hasBin: true
-    dev: false
 
   /uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
