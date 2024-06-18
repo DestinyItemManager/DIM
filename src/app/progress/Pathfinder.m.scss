@@ -1,42 +1,94 @@
 @use '../variables.scss' as *;
 
+.pathfinderTree {
+  & + div {
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-gap: 16px;
+  }
+}
+
 .pathfinderRow {
   composes: flexWrap from '../dim-ui/common.m.scss';
   box-sizing: border-box;
   margin: 16px 0;
-  justify-content: center;
-  gap: 24px 16px;
+  align-content: center;
+  gap: 16px;
+
+  :global(.milestone-quest) {
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px;
+  }
+
+  &:not(:first-child) button::before {
+    position: absolute;
+    display: inline;
+    content: '⧽';
+    font-size: 28px;
+    // transform: translateY(10%);
+    margin-left: -23px;
+  }
+
+  @media (max-width: 1500px) {
+    --item-size: 35px;
+  }
+
+  @media (max-width: 1270px) {
+    :global(.milestone-quest) {
+      align-items: flex-start;
+      flex-direction: column-reverse;
+    }
+    :global(.milestone-icon) {
+      flex-direction: row !important;
+      --item-size: 25px;
+      max-width: fit-content !important;
+      margin-top: 6px;
+
+      & > div {
+        margin-right: 6px;
+      }
+    }
+    :global(.milestone-info) {
+      flex-direction: row !important;
+      width: auto !important;
+    }
+    :global(.milestone-name) {
+      font-size: 12px !important;
+    }
+    :global(.milestone-description) {
+      display: none;
+    }
+    &:not(:first-child) button::before {
+      transform: translateY(-8%);
+    }
+  }
 
   > * {
     flex: 1;
     max-width: 250px;
-    min-width: 150px;
+    min-width: 120px;
   }
 
-  @media (max-width: 1270px) {
-    margin: 8px 10px;
-    gap: 14px;
-    width: auto;
+  // @media (max-width: 1270px) {
+  //   margin: 8px 10px;
+  //   gap: 14px;
+  //   width: auto;
 
-    > * {
-      flex: 0;
-      width: var(--item-size);
-      min-width: var(--item-size);
-    }
+  //   > * {
+  //     flex: 0;
+  //     width: var(--item-size);
+  //     min-width: var(--item-size);
+  //   }
 
-    :global(.milestone-icon) {
-      margin: 0;
-    }
-    :global(.milestone-info) {
-      display: none !important;
-    }
-  }
-}
-
-.divider {
-  border: 0;
-  border-bottom: 1px solid var(--theme-button-bg);
-  margin: 0;
+  //   :global(.milestone-icon) {
+  //     margin: 0;
+  //   }
+  //   :global(.milestone-info) {
+  //     display: none !important;
+  //   }
+  // }
 }
 
 .completed {

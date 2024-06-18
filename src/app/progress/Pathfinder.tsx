@@ -5,7 +5,6 @@ import { createItemContextSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { toPresentationNodeTree } from 'app/records/presentation-nodes';
 import { filterMap } from 'app/utils/collections';
-import { addDividers } from 'app/utils/react';
 import { DestinyPresentationNodeDefinition, DestinyRecordState } from 'bungie-api-ts/destiny2';
 import { useSelector } from 'react-redux';
 import styles from './Pathfinder.m.scss';
@@ -59,25 +58,20 @@ export default function Pathfinder({
 
   return (
     <section id={id} className="pathfinder">
-      <CollapsibleTitle title={name} sectionId={id}>
-        {addDividers(
-          pursuitGroups.map((pursuits) => (
-            <div key={pursuits.length} className={styles.pathfinderRow}>
-              {pursuits.map((item) => (
-                <Pursuit
-                  item={item}
-                  key={item.index}
-                  className={
-                    acquiredRecords.has(item.pursuit?.recordHash ?? 0)
-                      ? styles.completed
-                      : undefined
-                  }
-                />
-              ))}
-            </div>
-          )),
-          <hr className={styles.divider} />,
-        )}
+      <CollapsibleTitle title={name} sectionId={id} className={styles.pathfinderTree}>
+        {pursuitGroups.map((pursuits) => (
+          <div key={pursuits.length} className={styles.pathfinderRow}>
+            {pursuits.map((item) => (
+              <Pursuit
+                item={item}
+                key={item.index}
+                className={
+                  acquiredRecords.has(item.pursuit?.recordHash ?? 0) ? styles.completed : undefined
+                }
+              />
+            ))}
+          </div>
+        ))}
       </CollapsibleTitle>
     </section>
   );
