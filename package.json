@@ -215,7 +215,6 @@
     "core-js": "^3.37.1",
     "dnd-core": "^16.0.1",
     "downshift": "^9.0.6",
-    "fast-copy": "^3.0.2",
     "fast-equals": "^5.0.1",
     "framer-motion": "^11.2.10",
     "i18next": "^23.11.5",

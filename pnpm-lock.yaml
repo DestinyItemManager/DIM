@@ -77,9 +77,6 @@ dependencies:
   downshift:
     specifier: ^9.0.6
     version: 9.0.6(react@18.3.1)
-  fast-copy:
-    specifier: ^3.0.2
-    version: 3.0.2
   fast-equals:
     specifier: ^5.0.1
     version: 5.0.1
@@ -6376,10 +6373,6 @@ packages:
       parse-node-version: 1.0.1
       time-stamp: 1.1.0
     dev: true
-
-  /fast-copy@3.0.2:
-    resolution: {integrity: sha512-dl0O9Vhju8IrcLndv2eU4ldt1ftXMqqfgN4H1cpmGV7P6jeB9FwpN9a2c8DPGE1Ys88rNUJVYDHq73CGAGOPfQ==}
-    dev: false
 
   /fast-deep-equal@3.1.3:
     resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
