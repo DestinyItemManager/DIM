@@ -51,7 +51,7 @@ function modifyMod({
   energyCost?: number;
   tag?: string | null;
 }) {
-  const newMod = structuredClone(mod);
+  const newMod = { ...mod };
 
   if (energyCost !== undefined) {
     newMod.energyCost = energyCost;
@@ -75,7 +75,7 @@ function modifyItem({
   compatibleModSeasons?: string[];
   isArtifice?: boolean;
 }) {
-  const newItem = structuredClone(item);
+  const newItem = { ...item };
 
   if (remainingEnergyCapacity !== undefined) {
     newItem.remainingEnergyCapacity = remainingEnergyCapacity;

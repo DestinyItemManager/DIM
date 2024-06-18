@@ -55,7 +55,7 @@ describe('setItemTag', () => {
     );
 
     expect(updatedState.profiles[currentAccountKey].tags['1234'].tag).toBe('favorite');
-    expect(structuredClone(updatedState.updateQueue)).toEqual([
+    expect(updatedState.updateQueue).toEqual([
       {
         action: 'tag',
         payload: {
@@ -84,7 +84,7 @@ describe('setItemTag', () => {
     );
 
     expect(updatedState.profiles[currentAccountKey].tags['1234']).toBeUndefined();
-    expect(structuredClone(updatedState.updateQueue)).toEqual([
+    expect(updatedState.updateQueue).toEqual([
       {
         action: 'tag',
         payload: {
@@ -122,7 +122,7 @@ describe('setItemHashTag', () => {
     );
 
     expect(updatedState.itemHashTags[1234].tag).toBe('favorite');
-    expect(structuredClone(updatedState.updateQueue)).toEqual([
+    expect(updatedState.updateQueue).toEqual([
       {
         action: 'item_hash_tag',
         payload: {
@@ -151,7 +151,7 @@ describe('setItemHashTag', () => {
     );
 
     expect(updatedState.itemHashTags[1234]).toBeUndefined();
-    expect(structuredClone(updatedState.updateQueue)).toEqual([
+    expect(updatedState.updateQueue).toEqual([
       {
         action: 'item_hash_tag',
         payload: {
@@ -231,7 +231,7 @@ describe('prepareToFlushUpdates', () => {
         },
       },
     ];
-    expect(structuredClone(updatedState.updateQueue)).toEqual(expected);
+    expect(updatedState.updateQueue).toEqual(expected);
   });
 
   it('can handle multiple profile updates', () => {
@@ -345,7 +345,7 @@ describe('prepareToFlushUpdates', () => {
         destinyVersion: 1,
       },
     ];
-    expect(structuredClone(updatedState.updateQueue)).toEqual(expected);
+    expect(updatedState.updateQueue).toEqual(expected);
   });
 
   it('can handle multiple profile updates with settings last', () => {
@@ -433,7 +433,7 @@ describe('prepareToFlushUpdates', () => {
         },
       },
     ];
-    expect(structuredClone(updatedState.updateQueue)).toEqual(expected);
+    expect(updatedState.updateQueue).toEqual(expected);
   });
 
   it('can handle loadouts', () => {
@@ -523,7 +523,7 @@ describe('prepareToFlushUpdates', () => {
         destinyVersion: 2,
       },
     ];
-    expect(structuredClone(updatedState.updateQueue)).toEqual(expected);
+    expect(updatedState.updateQueue).toEqual(expected);
   });
 
   it('can handle tag stuff', () => {
@@ -592,7 +592,7 @@ describe('prepareToFlushUpdates', () => {
         destinyVersion: 2,
       },
     ];
-    expect(structuredClone(updatedState.updateQueue)).toEqual(expected);
+    expect(updatedState.updateQueue).toEqual(expected);
   });
 });
 
