@@ -589,7 +589,9 @@ export function makeItem(
     reportException('Sockets', e, { itemHash: item.itemHash });
   }
 
-  createdItem.wishListEnabled = Boolean(createdItem.bucket.inWeapons && createdItem.sockets);
+  createdItem.wishListEnabled = Boolean(
+    createdItem.sockets?.allSockets.some((s) => s.hasRandomizedPlugItems),
+  );
 
   // Masterwork
   try {
