@@ -21,33 +21,6 @@ const manualTranslations: { [key in TranslateManually]: I18nKey } = {
 
 export type SymbolsMap = { glyph: string; name: string; fullName: string }[];
 
-/*
-const getTableLoc = (defs: D2ManifestDefinitions, tableName: string, hash: number) => {
-  switch (tableName) {
-    case 'Trait':
-      return defs.Trait.get(hash)?.displayProperties?.name;
-    case 'InventoryItem':
-      return defs.InventoryItem.get(hash)?.displayProperties?.name;
-    case 'SandboxPerk':
-      return defs.SandboxPerk.get(hash)?.displayProperties?.name;
-    case 'ActivityMode':
-      return defs.ActivityMode[hash]?.displayProperties?.name;
-    case 'Objective':
-      return defs.Objective.get(hash)?.progressDescription;
-    case 'ItemCategory':
-      return defs.ItemCategory.get(hash)?.displayProperties?.name;
-    case 'InventoryBucket':
-      return defs.InventoryBucket[hash]?.displayProperties?.name;
-    case 'Faction':
-      return defs.Faction[hash]?.displayProperties?.name;
-    case 'Stat':
-      return defs.Stat.get(hash)?.displayProperties?.name;
-    case 'DamageType':
-      return defs.DamageType.get(hash)?.displayProperties?.name;
-  }
-};
-*/
-
 const simplifyName = (name: string) =>
   name
     .toLowerCase()
