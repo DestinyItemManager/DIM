@@ -354,7 +354,8 @@
     "Quickfall": "Quickfall",
     "RespawnRestricted": "Respawn Restricted",
     "ScorchCannon": "Scorch Cannon",
-    "SearchSymbols": "Search Symbols..."
+    "SearchSymbols": "Search Symbols...",
+    "Smoke": "Smoke"
   },
   "Header": {
     "About": "About DIM",

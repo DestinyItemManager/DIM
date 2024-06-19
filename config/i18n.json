@@ -366,7 +366,8 @@
     "HiveSword": "Hive Sword",
     "Harmonic": "Harmonic",
     "RespawnRestricted": "Respawn Restricted",
-    "LightLevel": "Light Level"
+    "LightLevel": "Light Level",
+    "Smoke": "Smoke"
   },
   "Header": {
     "About": "About DIM",

@@ -21,6 +21,7 @@ const manualTranslations: { [key in TranslateManually]: I18nKey } = {
 
 export type SymbolsMap = { glyph: string; name: string; fullName: string }[];
 
+/*
 const getTableLoc = (defs: D2ManifestDefinitions, tableName: string, hash: number) => {
   switch (tableName) {
     case 'Trait':
@@ -45,6 +46,7 @@ const getTableLoc = (defs: D2ManifestDefinitions, tableName: string, hash: numbe
       return defs.DamageType.get(hash)?.displayProperties?.name;
   }
 };
+*/
 
 const simplifyName = (name: string) =>
   name
