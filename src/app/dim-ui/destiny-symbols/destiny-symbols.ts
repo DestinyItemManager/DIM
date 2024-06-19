@@ -14,9 +14,9 @@ const manualTranslations: { [key in TranslateManually]: I18nKey } = {
   [FontGlyphs.void_quickfall]: tl('Glyphs.Quickfall'),
   [FontGlyphs.spear_launcher]: tl('Glyphs.ScorchCannon'),
   [DimCustomSymbols.hive_relic]: tl('Glyphs.HiveSword'),
+  [FontGlyphs.light]: tl('Glyphs.LightLevel'),
   [DimCustomSymbols.harmonic]: tl('Glyphs.Harmonic'),
   [DimCustomSymbols.respawn_restricted]: tl('Glyphs.RespawnRestricted'),
-  [FontGlyphs.light]: tl('Glyphs.LightLevel'),
 };
 
 export type SymbolsMap = { glyph: string; name: string; fullName: string }[];
