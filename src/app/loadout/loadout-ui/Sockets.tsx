@@ -1,3 +1,4 @@
+import BungieImage from 'app/dim-ui/BungieImage';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { useDynamicStringReplacer } from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
@@ -130,23 +131,23 @@ function Sockets({
 function VendorItemPlug({ item }: { item: DimItem }) {
   const defs = useD2Definitions()!;
   const replacer = useDynamicStringReplacer(item.owner);
+  const vendorDef = defs.Vendor.get(item.vendor!.vendorHash);
   return (
     <PressTip
       elementType="span"
+      className={styles.vendorItemContainer}
       tooltip={() => {
-        const vendorName =
-          replacer(defs.Vendor.get(item.vendor!.vendorHash)?.displayProperties?.name) || '--';
-        return (
-          <>
-            {t('Compare.IsVendorItem')}
-            <br />
-            {t('Compare.SoldBy', { vendorName })}
-          </>
-        );
+        const vendorName = replacer(vendorDef?.displayProperties?.name) || '--';
+        return <>{t('Compare.IsVendorItem', { vendorName })}</>;
       }}
     >
       <div className={clsx('item', styles.vendorItem)}>
         <AppIcon icon={shoppingCart} />
+      </div>
+      <div className={clsx('item', styles.vendorItem)}>
+        {vendorDef?.displayProperties.icon && (
+          <BungieImage src={vendorDef.displayProperties.icon} />
+        )}
       </div>
     </PressTip>
   );

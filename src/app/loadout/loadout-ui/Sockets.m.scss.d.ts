@@ -5,6 +5,7 @@ interface CssExports {
   'lockedItems': string;
   'small': string;
   'vendorItem': string;
+  'vendorItemContainer': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
