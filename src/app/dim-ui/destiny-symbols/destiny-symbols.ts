@@ -54,7 +54,11 @@ export const symbolsSelector = createSelector(
         continue;
       }
       if (source) {
-        const defName = defs[source.tableName].get(source.hash)?.displayProperties?.name;
+        const defName =
+          source.tableName === 'Objective'
+            ? defs[source.tableName].get(source.hash)?.progressDescription
+            : defs[source.tableName].get(source.hash)?.displayProperties?.name;
+
         if (defName) {
           list.push({ glyph, fullName: defName, name: simplifyName(defName) });
           continue;
