@@ -4,9 +4,13 @@ import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DimItem, DimStat } from 'app/inventory/item-types';
 import { ItemTypeName } from 'app/item-popup/ItemPopupHeader';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
-import { getWeaponArchetype, socketContainsPlugWithCategory } from 'app/utils/socket-utils';
+import {
+  getWeaponArchetype,
+  socketContainsIntrinsicPlug,
+  socketContainsPlugWithCategory,
+} from 'app/utils/socket-utils';
 import clsx from 'clsx';
-import { PlugCategoryHashes } from 'data/d2/generated-enums';
+import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import '../store-stats/CharacterStats.scss';
 import styles from './Highlights.m.scss';
 
@@ -60,11 +64,40 @@ export default function Highlights({ item }: { item: DimItem }) {
         {stat.value}
       </div>
     );
+    // exotic class armor intrinsics
+    const extraIntrinsicSockets =
+      item.isExotic && item.bucket.hash === BucketHashes.ClassArmor && item.sockets
+        ? item.sockets.allSockets.filter(
+            (s) => s.isPerk && s.visibleInGame && socketContainsIntrinsicPlug(s),
+          )
+        : [];
     return (
-      <div className={clsx(styles.stats, 'stat-bars', 'destiny2')}>
-        <div className="stat-row">{item.stats?.filter((s) => s.statHash > 0).map(renderStat)}</div>
-        <div className="stat-row">{item.stats?.filter((s) => s.statHash < 0).map(renderStat)}</div>
-      </div>
+      <>
+        {item.bucket.hash !== BucketHashes.ClassArmor && (
+          <div className={clsx(styles.stats, 'stat-bars', 'destiny2')}>
+            <div className="stat-row">
+              {item.stats?.filter((s) => s.statHash > 0).map(renderStat)}
+            </div>
+            <div className="stat-row">
+              {item.stats?.filter((s) => s.statHash < 0).map(renderStat)}
+            </div>
+          </div>
+        )}
+        {extraIntrinsicSockets.length > 0 && (
+          <div className={styles.perks}>
+            {extraIntrinsicSockets
+              .flatMap((s) => s.plugOptions)
+              .map((p) => (
+                <div key={p.plugDef.hash}>
+                  <PressTip tooltip={() => <DimPlugTooltip item={item} plug={p} />}>
+                    <DefItemIcon itemDef={p.plugDef} borderless={true} />{' '}
+                    {p.plugDef.displayProperties.name}
+                  </PressTip>
+                </div>
+              ))}
+          </div>
+        )}
+      </>
     );
   }
   return null;
