@@ -54,7 +54,6 @@ import deprecatedMods from 'data/d2/deprecated-mods.json';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import { produce } from 'immer';
 import _ from 'lodash';
-import { v4 as uuidv4 } from 'uuid';
 import { D2Categories } from '../destiny2/d2-bucket-categories';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import {
@@ -113,7 +112,7 @@ const gearSlotOrder: BucketHashes[] = [...D2Categories.Weapons, ...D2Categories.
  */
 export function newLoadout(name: string, items: LoadoutItem[], classType?: DestinyClass): Loadout {
   return {
-    id: uuidv4(),
+    id: globalThis.crypto.randomUUID(),
     classType:
       classType !== undefined && classType !== DestinyClass.Classified
         ? classType
