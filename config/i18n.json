@@ -358,6 +358,10 @@
   "Glyphs": {
     "Missing": "Missing",
     "Gilded": "Gilded",
+    "Harmonic": "Harmonic",
+    "HiveRelic": "Hive Relic",
+    "Light": "Light",
+    "RespawnRestricted": "RespawnRestricted",
     "Smoke": "Smoke",
     "Misadventure": "Misadventure",
     "Quickfall": "Quickfall",
