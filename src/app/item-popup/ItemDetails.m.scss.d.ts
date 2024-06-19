@@ -2,10 +2,12 @@
 // Please do not change this file!
 interface CssExports {
   'acquiredIcon': string;
+  'fullImage': string;
   'itemDescription': string;
   'itemDetailsBody': string;
   'itemShader': string;
   'itemSource': string;
+  'milestoneImage': string;
   'mods': string;
   'ownedIcon': string;
 }
