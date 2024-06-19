@@ -2,16 +2,21 @@ import { I18nKey, t, tl } from 'app/i18next-t';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { StringLookup } from 'app/utils/util-types';
 import { FontGlyphs } from 'data/d2/d2-font-glyphs';
+import { DimCustomSymbols } from 'data/d2/dim-custom-symbols';
 import { TranslateManually, symbolData } from 'data/d2/symbol-name-sources';
 import { createSelector } from 'reselect';
 import { conversionTableSelector } from './rich-destiny-text';
 
 const manualTranslations: { [key in TranslateManually]: I18nKey } = {
+  // t('Glyphs.Smoke') Let's keep this for a bit
   [FontGlyphs.gilded_title]: tl('Glyphs.Gilded'),
-  [FontGlyphs.hunter_smoke]: tl('Glyphs.Smoke'),
   [FontGlyphs.environment_hazard]: tl('Glyphs.Misadventure'),
   [FontGlyphs.void_quickfall]: tl('Glyphs.Quickfall'),
   [FontGlyphs.spear_launcher]: tl('Glyphs.ScorchCannon'),
+  [DimCustomSymbols.hive_relic]: tl('Glyphs.HiveRelic'),
+  [FontGlyphs.light]: tl('Glyphs.Light'),
+  [DimCustomSymbols.harmonic]: tl('Glyphs.Harmonic'),
+  [DimCustomSymbols.respawn_restricted]: tl('Glyphs.RespawnRestricted'),
 };
 
 export type SymbolsMap = { glyph: string; name: string; fullName: string }[];
