@@ -71,11 +71,11 @@ export class RateLimiterQueue {
       if (this.canProcess()) {
         const config = this.queue.shift()!;
         this.count++;
+        this.lastRequestTime = window.performance.now();
         config
           .fetcher(config.request, config.options)
           .finally(() => {
             this.count--;
-            this.lastRequestTime = window.performance.now();
             this.processQueue();
           })
           .then(config.resolver, config.rejecter);
