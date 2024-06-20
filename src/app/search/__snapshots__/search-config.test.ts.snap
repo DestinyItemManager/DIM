@@ -14,6 +14,7 @@ exports[`buildSearchConfig generates a reasonable filter map: is filters 1`] = `
   "chest",
   "class",
   "classitem",
+  "collected",
   "common",
   "consumables",
   "cosmetic",
