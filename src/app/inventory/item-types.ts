@@ -4,6 +4,7 @@ import {
   DestinyAmmunitionType,
   DestinyBreakerTypeDefinition,
   DestinyClass,
+  DestinyCollectibleState,
   DestinyDamageTypeDefinition,
   DestinyDisplayPropertiesDefinition,
   DestinyInventoryItemDefinition,
@@ -136,6 +137,7 @@ export interface DimItem {
   /** Localized string for where this item comes from... or other stuff like it not being recoverable from collections */
   displaySource?: string;
   collectibleHash?: number;
+  collectibleState?: DestinyCollectibleState;
   // TODO: pull search-only fields out
   /** The DestinyCollectibleDefinition sourceHash for a specific item (D2). Derived entirely from collectibleHash */
   source?: number;

@@ -97,7 +97,12 @@ function makeVendorItem(
     originalCategoryIndex: vendorItemDef?.originalCategoryIndex,
     costs: saleItem?.costs || [],
     previewVendorHash: inventoryItem.preview?.previewVendorHash,
-    acquired: getCollectibleState(context.defs, itemHash, profileResponse, characterId),
+    collectibleState: getCollectibleState(
+      context.defs,
+      inventoryItem,
+      profileResponse,
+      characterId,
+    ),
     item: makeFakeItem(context, itemHash, {
       // For sale items the item ID needs to be the vendor item index, since that's how we look up item components for perks
       itemInstanceId: vendorItemIndex.toString(),

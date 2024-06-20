@@ -17,6 +17,7 @@ import {
   DamageType,
   DestinyAmmunitionType,
   DestinyClass,
+  DestinyCollectibleState,
   DestinyRecordState,
 } from 'bungie-api-ts/destiny2';
 import { D2EventEnum, D2EventInfo } from 'data/d2/d2-event-info-v2';
@@ -297,6 +298,14 @@ const knownValuesFilters: ItemFilterDefinition[] = [
       const outputValues = Object.values(focusingOutputs);
       return (item) => outputValues.includes(item.hash);
     },
+  },
+  {
+    keywords: 'collected',
+    description: tl('Filter.Focusable'),
+    destinyVersion: 2,
+    filter: () => (item) =>
+      item.collectibleState !== undefined &&
+      !(item.collectibleState & DestinyCollectibleState.NotAcquired),
   },
 ];
 
