@@ -1,4 +1,4 @@
-import { ownedItemsSelector } from 'app/inventory/selectors';
+import { accountWideOwnedItemHashesSelector } from 'app/inventory/selectors';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import BungieImage from '../../dim-ui/BungieImage';
@@ -19,7 +19,7 @@ export default function D1VendorItems({
   };
 }) {
   const allCurrencies: { [hash: number]: VendorCost['currency'] } = {};
-  const ownedItemHashes = useSelector(ownedItemsSelector);
+  const ownedItemHashes = useSelector(accountWideOwnedItemHashesSelector);
 
   for (const saleItem of vendor.allItems) {
     for (const cost of saleItem.costs) {
@@ -52,7 +52,7 @@ export default function D1VendorItems({
                 <D1VendorItem
                   key={item.index}
                   saleItem={item}
-                  owned={ownedItemHashes.accountWideOwned.has(item.item.hash)}
+                  owned={ownedItemHashes.has(item.item.hash)}
                   totalCoins={totalCoins}
                 />
               ))}

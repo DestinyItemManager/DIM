@@ -413,7 +413,7 @@ export function makeItem(
     itemDef.iconWatermarkShelved ||
     undefined;
 
-  const collectible = createCollectibleFinder(defs)(itemDef);
+  const collectible = createCollectibleFinder(defs)(item.itemHash);
   // Do we need this now?
   const source = collectible?.sourceHash;
 
