@@ -466,7 +466,7 @@ export function makeItem(
     hash: item.itemHash,
     // This is the type of the item (see DimCategory/DimBuckets) regardless of location
     type: itemType,
-    itemCategoryHashes: itemDef.itemCategoryHashes || emptyArray(), // see defs.ItemCategory
+    itemCategoryHashes: getItemCategoryHashes(itemDef),
     tier: D2ItemTiers[itemDef.inventory!.tierType] || 'Common',
     isExotic: D2ItemTiers[itemDef.inventory!.tierType] === 'Exotic',
     name,
@@ -560,24 +560,6 @@ export function makeItem(
     createdItem.primaryStatDisplayProperties = defs.Stat.get(
       createdItem.primaryStat.statHash,
     ).displayProperties;
-  }
-
-  if (createdItem.hash in extendedICH) {
-    const additionalICH = extendedICH[createdItem.hash]!;
-    createdItem.itemCategoryHashes = [...createdItem.itemCategoryHashes, additionalICH];
-    // Special grenade launchers are not heavy grenade launchers
-    if (additionalICH === -ItemCategoryHashes.GrenadeLaunchers) {
-      createdItem.itemCategoryHashes = createdItem.itemCategoryHashes.filter(
-        (ich) => ich !== ItemCategoryHashes.GrenadeLaunchers,
-      );
-    }
-    // Masks are helmets too
-    if (additionalICH === ItemCategoryHashes.Mask) {
-      createdItem.itemCategoryHashes = [
-        ...createdItem.itemCategoryHashes,
-        ItemCategoryHashes.Helmets,
-      ];
-    }
   }
 
   try {
@@ -826,4 +808,37 @@ function buildPursuitInfo(
       modifierHashes: [],
     };
   }
+}
+
+function getItemCategoryHashes(itemDef: DestinyInventoryItemDefinition): number[] {
+  let itemCategoryHashes = itemDef.itemCategoryHashes || emptyArray();
+
+  if (
+    itemCategoryHashes.includes(ItemCategoryHashes.Weapon) &&
+    !itemCategoryHashes.includes(ItemCategoryHashes.Dummies)
+  ) {
+    if (
+      itemCategoryHashes.includes(ItemCategoryHashes.GrenadeLaunchers) &&
+      !itemCategoryHashes.includes(ItemCategoryHashes.PowerWeapon)
+    ) {
+      // Special grenade launchers
+      itemCategoryHashes = [
+        // Special grenade launchers are not heavy grenade launchers
+        ...itemCategoryHashes.filter((ich) => ich !== ItemCategoryHashes.GrenadeLaunchers),
+        -ItemCategoryHashes.GrenadeLaunchers,
+      ];
+    }
+
+    if (itemDef.hash in extendedICH) {
+      const additionalICH = extendedICH[itemDef.hash]!;
+      itemCategoryHashes = [...itemCategoryHashes, additionalICH];
+
+      // Masks are helmets too
+      if (additionalICH === ItemCategoryHashes.Mask) {
+        itemCategoryHashes = [...itemCategoryHashes, ItemCategoryHashes.Helmets];
+      }
+    }
+  }
+
+  return itemCategoryHashes;
 }
