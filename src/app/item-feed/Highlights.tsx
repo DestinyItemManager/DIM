@@ -27,16 +27,23 @@ export default function Highlights({ item }: { item: DimItem }) {
           {archetype} <ItemTypeName item={item} />
         </span>
         <div className={styles.perks}>
-          {perkSockets
-            .flatMap((s) => s.plugOptions)
-            .map((p) => (
-              <div key={p.plugDef.hash}>
-                <PressTip tooltip={() => <DimPlugTooltip item={item} plug={p} />}>
-                  <DefItemIcon itemDef={p.plugDef} borderless={true} />{' '}
-                  {p.plugDef.displayProperties.name}
-                </PressTip>
-              </div>
-            ))}
+          {perkSockets.map((s) => (
+            <div
+              key={s.socketIndex}
+              className={clsx({
+                [styles.multiPerk]: s.isPerk && s.plugOptions.length > 1,
+              })}
+            >
+              {s.plugOptions.map((p) => (
+                <div key={p.plugDef.hash}>
+                  <PressTip tooltip={() => <DimPlugTooltip item={item} plug={p} />}>
+                    <DefItemIcon itemDef={p.plugDef} borderless={true} />{' '}
+                    {p.plugDef.displayProperties.name}
+                  </PressTip>
+                </div>
+              ))}
+            </div>
+          ))}
         </div>
       </div>
     );
