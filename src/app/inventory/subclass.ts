@@ -32,7 +32,7 @@ export function getSubclassIconInfo(item: DimItem): SubclassIconInfo | undefined
     if (superIcon) {
       const damageType = item.element?.enumValue;
       if (damageType && baseImagesByDamageType[damageType]) {
-        const base = baseImagesByDamageType[damageType]!;
+        const base = baseImagesByDamageType[damageType];
         return {
           base: base,
           super: superIcon,

@@ -47,8 +47,7 @@ export const vendors: Reducer<VendorsState, VendorsAction | AccountsAction> = (
           error: undefined,
         };
         if (oldItemComponents) {
-          draft.vendorsByCharacter[characterId]!.vendorsResponse!.itemComponents =
-            oldItemComponents;
+          draft.vendorsByCharacter[characterId].vendorsResponse!.itemComponents = oldItemComponents;
         }
       });
     }
