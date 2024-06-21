@@ -112,6 +112,12 @@ const d2SelectionTree: ItemCategoryTreeNode = {
           terminal: true,
         },
         {
+          id: 'specialsidearm',
+          itemCategoryHash: -ItemCategoryHashes.Sidearm,
+          subCategories: [kinetic, energy],
+          terminal: true,
+        },
+        {
           id: 'bow',
           itemCategoryHash: ItemCategoryHashes.Bows,
           subCategories: [kinetic, energy, power],
