@@ -231,7 +231,7 @@ function enhanceDBWithFakeEntries(db: AllDestinyManifestComponents) {
     ...db.DestinyItemCategoryDefinition[ItemCategoryHashes.Sidearm],
     displayProperties: {
       ...db.DestinyItemCategoryDefinition[ItemCategoryHashes.Sidearm].displayProperties,
-      name: t('Rocket Sidearm'),
+      name: t('Manifest.SpecialSidearm'),
     },
   };
 }

@@ -156,6 +156,7 @@ export const swordStatsByName = {
 export const D2ItemCategoryHashesByName = {
   heavygrenadelauncher: ItemCategoryHashes.GrenadeLaunchers,
   specialgrenadelauncher: -ItemCategoryHashes.GrenadeLaunchers,
+  rocketsidearm: -ItemCategoryHashes.Sidearm,
   tracerifle: ItemCategoryHashes.TraceRifles,
   linearfusionrifle: ItemCategoryHashes.LinearFusionRifles,
   submachine: ItemCategoryHashes.SubmachineGuns,

@@ -104,6 +104,7 @@ exports[`buildSearchConfig generates a reasonable filter map: is filters 1`] = `
   "reptoken",
   "retiredperk",
   "rocketlauncher",
+  "rocketsidearm",
   "scoutrifle",
   "seasonalartifacts",
   "shaded",

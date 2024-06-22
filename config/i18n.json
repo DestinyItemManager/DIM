@@ -927,7 +927,8 @@
   "Manifest": {
     "Download": "Downloading latest Destiny info database from Bungie...",
     "Error": "Error loading Destiny info database:\n{{error}}\nReload to retry.",
-    "Load": "Loading Destiny info database..."
+    "Load": "Loading Destiny info database...",
+    "SpecialSidearm": "Rocket Sidearm"
   },
   "Milestone": {
     "Daily": "Daily Challenge",
