@@ -108,13 +108,15 @@ const d2SelectionTree: ItemCategoryTreeNode = {
         {
           id: 'sidearm',
           itemCategoryHash: ItemCategoryHashes.Sidearm,
-          subCategories: [kinetic, energy],
-          terminal: true,
-        },
-        {
-          id: 'specialsidearm',
-          itemCategoryHash: -ItemCategoryHashes.Sidearm,
-          subCategories: [kinetic, energy],
+          subCategories: [
+            kinetic,
+            energy,
+            {
+              id: 'specialsidearm',
+              itemCategoryHash: -ItemCategoryHashes.Sidearm,
+              terminal: true,
+            },
+          ],
           terminal: true,
         },
         {
@@ -372,7 +374,7 @@ export default function ItemTypeSelector({
                   categoryHashList.push(ItemCategoryHashes.Armor);
                 }
 
-                const itemCategory = defs.ItemCategory.get(Math.abs(subCategory.itemCategoryHash));
+                const itemCategory = defs.ItemCategory.get(subCategory.itemCategoryHash);
                 return (
                   <label
                     key={subCategory.itemCategoryHash}

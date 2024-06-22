@@ -832,11 +832,7 @@ function getItemCategoryHashes(itemDef: DestinyInventoryItemDefinition): number[
       itemCategoryHashes?.includes(ItemCategoryHashes.Sidearm)
     ) {
       // Special sidearms
-      itemCategoryHashes = [
-        // Special sidearms aren't sidearms
-        ...itemCategoryHashes.filter((ich) => ich !== ItemCategoryHashes.Sidearm),
-        -ItemCategoryHashes.Sidearm,
-      ];
+      itemCategoryHashes = [...itemCategoryHashes, -ItemCategoryHashes.Sidearm];
     }
 
     if (itemDef.hash in extendedICH) {

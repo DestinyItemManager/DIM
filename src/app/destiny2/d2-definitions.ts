@@ -1,3 +1,4 @@
+import { t } from 'app/i18next-t';
 import { UNSET_PLUG_HASH } from 'app/loadout/known-values';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { ThunkResult } from 'app/store/types';
@@ -224,5 +225,13 @@ function enhanceDBWithFakeEntries(db: AllDestinyManifestComponents) {
   // of the regular "Grenade Launcher" category but we could patch in localized descriptions if we wanted.
   db.DestinyItemCategoryDefinition[-ItemCategoryHashes.GrenadeLaunchers] = {
     ...db.DestinyItemCategoryDefinition[ItemCategoryHashes.GrenadeLaunchers],
+  };
+  // And one for special sidearms too
+  db.DestinyItemCategoryDefinition[-ItemCategoryHashes.Sidearm] = {
+    ...db.DestinyItemCategoryDefinition[ItemCategoryHashes.Sidearm],
+    displayProperties: {
+      ...db.DestinyItemCategoryDefinition[ItemCategoryHashes.Sidearm].displayProperties,
+      name: t('Rocket Sidearm'),
+    },
   };
 }

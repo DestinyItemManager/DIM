@@ -32,6 +32,7 @@ import smg from 'destiny-icons/weapons/smg.svg';
 import sniperRifle from 'destiny-icons/weapons/sniper_rifle.svg';
 import sword from 'destiny-icons/weapons/sword_heavy.svg';
 import lFusionRifle from 'destiny-icons/weapons/wire_rifle.svg';
+import rocketSidearm from 'images/rocketSidearm.svg';
 import energyWeaponSlot from 'images/weapon-slot-energy.svg';
 import kineticWeaponSlot from 'images/weapon-slot-kinetic.svg';
 
@@ -57,6 +58,7 @@ const weaponTypeSvgByCategoryHash: LookupTable<ItemCategoryHashes, ItemCategoryI
   [ItemCategoryHashes.MachineGun]: monochrome(machinegun),
   [ItemCategoryHashes.RocketLauncher]: monochrome(rLauncher),
   [ItemCategoryHashes.Sidearm]: monochrome(sidearm),
+  [-ItemCategoryHashes.Sidearm]: monochrome(rocketSidearm),
   [ItemCategoryHashes.Sword]: monochrome(sword),
   [ItemCategoryHashes.GrenadeLaunchers]: monochrome(gLauncher),
   [-ItemCategoryHashes.GrenadeLaunchers]: monochrome(gLauncher_special),
