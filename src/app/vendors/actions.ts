@@ -59,7 +59,7 @@ export function loadAllVendors(
 
       const defs = manifestSelector(getState());
       // we're done if this is d1
-      if (!defs?.isDestiny2()) {
+      if (!defs?.isDestiny2) {
         return;
       }
 

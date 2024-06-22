@@ -61,7 +61,7 @@ export function getItemsFromLoadoutItems(
       }
 
       // Apply socket overrides so the item appears as it should be configured in the loadout
-      const overriddenItem = useTheseDefs.isDestiny2()
+      const overriddenItem = useTheseDefs.isDestiny2
         ? applySocketOverrides(itemCreationContext, item, overrides)
         : item;
 
@@ -74,7 +74,7 @@ export function getItemsFromLoadoutItems(
             : { ...loadoutItem, socketOverrides: overrides },
       });
     } else {
-      const fakeItem = useTheseDefs.isDestiny2()
+      const fakeItem = useTheseDefs.isDestiny2
         ? makeFakeItem(itemCreationContext, loadoutItem.hash)
         : makeFakeD1Item(useTheseDefs, buckets, loadoutItem.hash);
       if (fakeItem) {
