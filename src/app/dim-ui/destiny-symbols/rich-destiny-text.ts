@@ -1,5 +1,5 @@
 import { d2ManifestSelector } from 'app/manifest/selectors';
-import { symbolData } from 'data/d2/symbol-name-sources';
+import { symbolData } from 'data/font/symbol-name-sources';
 import { createSelector } from 'reselect';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 

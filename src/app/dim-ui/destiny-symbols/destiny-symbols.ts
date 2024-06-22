@@ -1,9 +1,9 @@
 import { I18nKey, t, tl } from 'app/i18next-t';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { StringLookup } from 'app/utils/util-types';
-import { FontGlyphs } from 'data/d2/d2-font-glyphs';
-import { DimCustomSymbols } from 'data/d2/dim-custom-symbols';
-import { TranslateManually, symbolData } from 'data/d2/symbol-name-sources';
+import { FontGlyphs } from 'data/font/d2-font-glyphs';
+import { DimCustomSymbols } from 'data/font/dim-custom-symbols';
+import { TranslateManually, symbolData } from 'data/font/symbol-name-sources';
 import { createSelector } from 'reselect';
 import { conversionTableSelector } from './rich-destiny-text';
 
