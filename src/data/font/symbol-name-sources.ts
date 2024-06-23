@@ -92,10 +92,20 @@ export const symbolData: {
   {
     codepoint: 57635,
     glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 375052469,
+      fromRichText: false,
+    },
   },
   {
     codepoint: 983041,
     glyph: '󰀁',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 375052468,
+      fromRichText: false,
+    },
   },
   {
     codepoint: 57442,
@@ -3307,8 +3317,6 @@ export type TranslateManually = (typeof translateManually)[number];
 
 /*
  * Could not find a source for (did the definitions disappear?): 
- * Golden Gun - Deadshot
- * Golden Gun - Marksman
 
 
  * Unused rich text replacements (these should only be input actions replaced with the mapped buttons by the game): 
