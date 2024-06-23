@@ -344,9 +344,12 @@
     "UserGuideLink": "User guide"
   },
   "Glyphs": {
+    "Axe": "Axe",
+    "DarkAbility": "Darkness Ability",
     "Gilded": "Gilded",
     "Harmonic": "Harmonic",
     "HiveSword": "Hive Sword",
+    "LightAbility": "Light Ability",
     "LightLevel": "Light Level",
     "Misadventure": "Misadventure",
     "Missing": "Missing",
