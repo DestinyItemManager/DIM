@@ -17,6 +17,9 @@ const manualTranslations: { [key in TranslateManually]: I18nKey } = {
   [FontGlyphs.light]: tl('Glyphs.LightLevel'),
   [DimCustomSymbols.harmonic]: tl('Glyphs.Harmonic'),
   [DimCustomSymbols.respawn_restricted]: tl('Glyphs.RespawnRestricted'),
+  [FontGlyphs.void_titan_axe_throw_relic]: tl('Glyphs.Axe'),
+  [FontGlyphs.light_ability]: tl('Glyphs.LightAbility'),
+  [FontGlyphs.darkness_ability]: tl('Glyphs.DarkAbility'),
 };
 
 export type SymbolsMap = { glyph: string; name: string; fullName: string }[];

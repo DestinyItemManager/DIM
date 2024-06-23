@@ -357,6 +357,9 @@
   },
   "Glyphs": {
     "Missing": "Missing",
+    "Axe": "Axe",
+    "DarkAbility": "Darkness Ability",
+    "LightAbility": "Light Ability",
     "Gilded": "Gilded",
     "Harmonic": "Harmonic",
     "HiveSword": "Hive Sword",
