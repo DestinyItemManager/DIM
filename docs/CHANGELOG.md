@@ -1,5 +1,7 @@
 ## Next
 
+## 8.25.0 <span class="changelog-date">(2024-06-23)</span>
+
 * Greatly expanded the set of symbols available for use in loadout names/notes and item notes.
 * Fixed the calculation of stat effects from enhanced stats.
 * The compare sheet now highlights which of the quick-filter buttons is currently active.
