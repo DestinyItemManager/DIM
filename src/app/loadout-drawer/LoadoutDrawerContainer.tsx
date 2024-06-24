@@ -122,7 +122,7 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
 
   // Load in a full loadout specified in the URL
   useEffect(() => {
-    if (!stores.length || !defs?.isDestiny2()) {
+    if (!stores.length || !defs?.isDestiny2) {
       return;
     }
     try {
