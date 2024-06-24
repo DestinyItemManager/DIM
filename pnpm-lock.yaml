@@ -207,7 +207,7 @@ devDependencies:
     version: 3.3.5
   '@testing-library/react':
     specifier: ^16.0.0
-    version: 16.0.0(@testing-library/dom@10.1.0)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+    version: 16.0.0(@testing-library/dom@10.2.0)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@types/dom-chromium-installation-events':
     specifier: ^101.0.4
     version: 101.0.4
@@ -401,8 +401,8 @@ devDependencies:
     specifier: ^8.0.0
     version: 8.0.0(webpack@5.92.0)
   marked:
-    specifier: ^12.0.2
-    version: 12.0.2
+    specifier: ^13.0.1
+    version: 13.0.1
   mini-css-extract-plugin:
     specifier: ^2.9.0
     version: 2.9.0(webpack@5.92.0)
@@ -2837,8 +2837,8 @@ packages:
     resolution: {integrity: sha512-046+AUSiDru/V9pajE1du8WayvBKeCvJ2NmKPy/mR8/SbKKrqmSbj7LJBfXE+nSq4f5TBXvnCzu0kcYebI9WdQ==}
     dev: false
 
-  /@testing-library/dom@10.1.0:
-    resolution: {integrity: sha512-wdsYKy5zupPyLCW2Je5DLHSxSfbIp6h80WoHOQc+RPtmPGA52O9x5MJEkv92Sjonpq+poOAtUKhh1kBGAXBrNA==}
+  /@testing-library/dom@10.2.0:
+    resolution: {integrity: sha512-CytIvb6tVOADRngTHGWNxH8LPgO/3hi/BdCEHOf7Qd2GvZVClhVP0Wo/QHzWhpki49Bk0b4VT6xpt3fx8HTSIw==}
     engines: {node: '>=18'}
     dependencies:
       '@babel/code-frame': 7.24.7
@@ -2851,7 +2851,7 @@ packages:
       pretty-format: 27.5.1
     dev: true
 
-  /@testing-library/react@16.0.0(@testing-library/dom@10.1.0)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1):
+  /@testing-library/react@16.0.0(@testing-library/dom@10.2.0)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-guuxUKRWQ+FgNX0h0NS0FIq3Q3uLtWVpBzcLOggmfMoUpgBnzBzvLLd4fbm6yS8ydJd94cIfY4yP9qUQjM2KwQ==}
     engines: {node: '>=18'}
     peerDependencies:
@@ -2867,7 +2867,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.24.7
-      '@testing-library/dom': 10.1.0
+      '@testing-library/dom': 10.2.0
       '@types/react': 18.3.3
       '@types/react-dom': 18.3.0
       react: 18.3.1
@@ -8832,8 +8832,8 @@ packages:
       webpack: 5.92.0(webpack-cli@5.1.4)
     dev: true
 
-  /marked@12.0.2:
-    resolution: {integrity: sha512-qXUm7e/YKFoqFPYPa3Ukg9xlI5cyAtGmyEIzMfW//m6kXwCy2Ps9DYf5ioijFKQ8qyuscrHoY04iJGctu2Kg0Q==}
+  /marked@13.0.1:
+    resolution: {integrity: sha512-7kBohS6GrZKvCsNXZyVVXSW7/hGBHe49ng99YPkDCckSUrrG7MSFLCexsRxptzOmyW2eT5dySh4Md1V6my52fA==}
     engines: {node: '>= 18'}
     hasBin: true
     dev: true
