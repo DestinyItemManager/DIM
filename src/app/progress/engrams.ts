@@ -75,6 +75,12 @@ export function getEngramPowerBonus(
   } else if (parentItemHash === 3243997895) {
     // Captain's Log is a powerful level 2 even though it's listed as a pinnacle.
     itemHash = 3114385606;
+  } else if (parentItemHash === 373284212) {
+    // Enterprising Explorer II is powerful level 2
+    itemHash = 3114385606;
+  } else if (parentItemHash === 373284213) {
+    // Enterprising Explorer III is powerful level 3
+    itemHash = 3114385607;
   }
 
   const engramInfo = engrams[itemHash];

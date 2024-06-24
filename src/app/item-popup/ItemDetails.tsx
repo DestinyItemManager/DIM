@@ -78,7 +78,15 @@ export default function ItemDetails({
 
       {(item.type === 'Milestone' ||
         item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Ornament)) &&
-        item.secondaryIcon && <BungieImage src={item.secondaryIcon} width="100%" />}
+        item.secondaryIcon && (
+          <BungieImage
+            src={item.secondaryIcon}
+            width="100%"
+            className={clsx(styles.fullImage, {
+              [styles.milestoneImage]: item.type === 'Milestone',
+            })}
+          />
+        )}
 
       <ItemDescription item={item} />
 
