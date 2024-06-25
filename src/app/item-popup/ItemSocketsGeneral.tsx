@@ -1,13 +1,13 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { uniqBy } from 'app/utils/collections';
+import { filterMap, uniqBy } from 'app/utils/collections';
 import { usePlugDescriptions } from 'app/utils/plug-descriptions';
-import { getGeneralSockets, socketContainsIntrinsicPlug } from 'app/utils/socket-utils';
+import { getExtraIntrinsicPerkSockets, getGeneralSockets } from 'app/utils/socket-utils';
 import clsx from 'clsx';
-import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
-import { DimItem, DimSocket, DimSocketCategory } from '../inventory/item-types';
+import { DimItem, DimSocket } from '../inventory/item-types';
 import { wishListSelector } from '../wishlists/selectors';
 import ArchetypeSocket, { ArchetypeRow } from './ArchetypeSocket';
 import EmoteSockets from './EmoteSockets';
@@ -40,12 +40,7 @@ export default function ItemSocketsGeneral({
   );
 
   // exotic class armor intrinsics
-  const extraIntrinsicSockets =
-    item.isExotic && item.bucket.hash === BucketHashes.ClassArmor && item.sockets
-      ? item.sockets.allSockets
-          .filter((s) => s.isPerk && s.visibleInGame && socketContainsIntrinsicPlug(s))
-          .map((s) => Object.assign({}, s, { isReusable: false }))
-      : [];
+  const extraIntrinsicSockets = getExtraIntrinsicPerkSockets(item);
   const extraIntrinsicSocketIndices = extraIntrinsicSockets.map((s) => s.socketIndex);
 
   // Only show the first of each style of category when minimal
@@ -57,25 +52,26 @@ export default function ItemSocketsGeneral({
   )
     .map(
       ([category, sockets]) =>
-        [category, sockets.filter((s) => !extraIntrinsicSocketIndices.includes(s.socketIndex))] as [
-          DimSocketCategory,
-          DimSocket[],
-        ],
+        [
+          category,
+          sockets.filter((s) => !extraIntrinsicSocketIndices.includes(s.socketIndex)),
+        ] as const,
     )
     .filter(([, sockets]) => sockets.length > 0);
 
-  const intrinsicRows = [intrinsicSocket]
-    .concat(extraIntrinsicSockets)
-    .filter((s) => s)
-    .map((s) => (
-      <IntrinsicArmorPerk
-        key={s!.socketIndex}
-        item={item}
-        socket={s!}
-        minimal={minimal}
-        onPlugClicked={onPlugClicked}
-      />
-    ));
+  const intrinsicRows = filterMap(
+    [intrinsicSocket, ...extraIntrinsicSockets],
+    (s) =>
+      s && (
+        <IntrinsicArmorPerk
+          key={s.socketIndex}
+          item={item}
+          socket={s}
+          minimal={minimal}
+          onPlugClicked={onPlugClicked}
+        />
+      ),
+  );
 
   return (
     <>

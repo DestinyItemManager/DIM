@@ -5,8 +5,8 @@ import { DimItem, DimStat } from 'app/inventory/item-types';
 import { ItemTypeName } from 'app/item-popup/ItemPopupHeader';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import {
+  getExtraIntrinsicPerkSockets,
   getWeaponArchetype,
-  socketContainsIntrinsicPlug,
   socketContainsPlugWithCategory,
 } from 'app/utils/socket-utils';
 import clsx from 'clsx';
@@ -64,13 +64,7 @@ export default function Highlights({ item }: { item: DimItem }) {
         {stat.value}
       </div>
     );
-    // exotic class armor intrinsics
-    const extraIntrinsicSockets =
-      item.isExotic && item.bucket.hash === BucketHashes.ClassArmor && item.sockets
-        ? item.sockets.allSockets.filter(
-            (s) => s.isPerk && s.visibleInGame && socketContainsIntrinsicPlug(s),
-          )
-        : [];
+    const extraIntrinsicSockets = getExtraIntrinsicPerkSockets(item);
     return (
       <>
         {item.bucket.hash !== BucketHashes.ClassArmor && (
@@ -85,16 +79,23 @@ export default function Highlights({ item }: { item: DimItem }) {
         )}
         {extraIntrinsicSockets.length > 0 && (
           <div className={styles.perks}>
-            {extraIntrinsicSockets
-              .flatMap((s) => s.plugOptions)
-              .map((p) => (
-                <div key={p.plugDef.hash}>
-                  <PressTip tooltip={() => <DimPlugTooltip item={item} plug={p} />}>
-                    <DefItemIcon itemDef={p.plugDef} borderless={true} />{' '}
-                    {p.plugDef.displayProperties.name}
-                  </PressTip>
-                </div>
-              ))}
+            {extraIntrinsicSockets.map((s) => (
+              <div
+                key={s.socketIndex}
+                className={clsx({
+                  [styles.multiPerk]: s.isPerk && s.plugOptions.length > 1,
+                })}
+              >
+                {s.plugOptions.map((p) => (
+                  <div key={p.plugDef.hash}>
+                    <PressTip tooltip={() => <DimPlugTooltip item={item} plug={p} />}>
+                      <DefItemIcon itemDef={p.plugDef} borderless={true} />{' '}
+                      {p.plugDef.displayProperties.name}
+                    </PressTip>
+                  </div>
+                ))}
+              </div>
+            ))}
           </div>
         )}
       </>
