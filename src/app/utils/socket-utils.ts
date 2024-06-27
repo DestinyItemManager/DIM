@@ -136,6 +136,16 @@ export function getIntrinsicArmorPerkSocket(item: DimItem): DimSocket | undefine
   }
 }
 
+export function getExtraIntrinsicPerkSockets(item: DimItem): DimSocket[] {
+  // returns sockets that contains intrinsic perks even if those sockets are not the "Intrinsic" socket
+  return item.isExotic && item.bucket.hash === BucketHashes.ClassArmor && item.sockets
+    ? item.sockets.allSockets
+        .filter((s) => s.isPerk && s.visibleInGame && socketContainsIntrinsicPlug(s))
+        // exotic class item intrinsics need to set isReusable false to avoid showing as selectable
+        .map((s) => ({ ...s, isReusable: false }))
+    : [];
+}
+
 export function socketContainsPlugWithCategory(
   socket: DimSocket,
   category: PlugCategoryHashes,
@@ -381,6 +391,14 @@ export function getGeneralSockets(
     (!excludeEmptySockets || !isSocketEmpty(socketInfo)) &&
     // don't include these weird little solstice stat rerolling mechanic sockets
     !isEventArmorRerollSocket(socketInfo) &&
+    // never include the "pay for artifice upgrade" slot on exotic armor
+    socketInfo.plugged?.plugDef.plug.plugCategoryHash !==
+      PlugCategoryHashes.EnhancementsArtificeExotic &&
+    // exclude artifice slots the game has marked as not visible (on un-upgraded exotics)
+    !(
+      socketInfo.plugged?.plugDef.plug.plugCategoryHash ===
+        PlugCategoryHashes.EnhancementsArtifice && !socketInfo.visibleInGame
+    ) &&
     // Ghost shells unlock an activity mod slot when masterworked and hide the dummy locked slot
     (item.bucket.hash !== BucketHashes.Ghost ||
       socketInfo.socketDefinition.socketTypeHash !==

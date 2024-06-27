@@ -8,14 +8,14 @@ import {
 import { AccountCurrency } from 'app/inventory/store-types';
 import { addDividers } from 'app/utils/react';
 import clsx from 'clsx';
-import spiderMats from 'data/d2/spider-mats.json';
+import glimmerMats from 'data/d2/spider-mats.json';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import styles from './MaterialCounts.m.scss';
 
-const showMats = spiderMats;
-const goodMats = [2979281381, 4257549984, 3853748946, 4257549985, 3702027555, 353704689];
+const goodMats = [800069450, 2569113415, 3702027555];
+const upgradeMats = [2979281381, 4257549984, 3853748946, 4257549985, 353704689, 3467984096];
 const seasonal = [1289622079, 1471199156];
 
 export function MaterialCounts({
@@ -34,7 +34,10 @@ export function MaterialCounts({
 
   const content = [
     includeCurrencies && <CurrencyGroup key="currencies" currencies={currencies} />,
-    ...[seasonal, goodMats, showMats].map((matgroup) => (
+    vendorCurrencyEngrams.length > 0 && (
+      <CurrencyGroup key="engrams" currencies={vendorCurrencyEngrams} />
+    ),
+    ...[goodMats, upgradeMats, glimmerMats, seasonal].map((matgroup) => (
       <React.Fragment key={matgroup[0]}>
         {matgroup.map((h) => {
           const items = materials.get(h);
@@ -60,9 +63,6 @@ export function MaterialCounts({
         })}
       </React.Fragment>
     )),
-    vendorCurrencyEngrams.length > 0 && (
-      <CurrencyGroup key="engrams" currencies={vendorCurrencyEngrams} />
-    ),
     transmogCurrencies.length > 0 && (
       <CurrencyGroup key="transmog" currencies={transmogCurrencies} />
     ),

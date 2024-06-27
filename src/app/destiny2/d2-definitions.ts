@@ -19,7 +19,6 @@ import {
   DestinyInventoryBucketDefinition,
   DestinyInventoryItemDefinition,
   DestinyItemCategoryDefinition,
-  DestinyItemTierTypeDefinition,
   DestinyLoadoutColorDefinition,
   DestinyLoadoutConstantsDefinition,
   DestinyLoadoutIconDefinition,
@@ -48,9 +47,9 @@ import {
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { setD2Manifest } from '../manifest/actions';
 import { getManifest } from '../manifest/manifest-service-json';
-import { HashLookupFailure, ManifestDefinitions } from './definitions';
+import { HashLookupFailure } from './definitions';
 
-type ManifestTablesShort = Exclude<keyof D2ManifestDefinitions, 'isDestiny1' | 'isDestiny2'>;
+type ManifestTablesShort = Exclude<keyof D2ManifestDefinitions, 'isDestiny2'>;
 
 export const allTables: ManifestTablesShort[] = [
   'InventoryItem',
@@ -89,7 +88,6 @@ export const allTables: ManifestTablesShort[] = [
   'Gender',
   'Race',
   'Faction',
-  'ItemTierType',
   'ActivityMode',
   'LoadoutConstants',
 ];
@@ -106,13 +104,12 @@ export interface DefinitionTable<T> {
   readonly getAll: () => { [hash: number]: T };
 }
 
-export interface D2ManifestDefinitions extends ManifestDefinitions {
+export interface D2ManifestDefinitions {
   InventoryBucket: DefinitionTable<DestinyInventoryBucketDefinition>;
   Class: DefinitionTable<DestinyClassDefinition>;
   Gender: DefinitionTable<DestinyGenderDefinition>;
   Race: DefinitionTable<DestinyRaceDefinition>;
   Faction: DefinitionTable<DestinyFactionDefinition>;
-  ItemTierType: DefinitionTable<DestinyItemTierTypeDefinition>;
   // ActivityMode is used only from destiny-symbols.ts
   ActivityMode: DefinitionTable<DestinyActivityModeDefinition>;
   InventoryItem: DefinitionTable<DestinyInventoryItemDefinition>;
@@ -147,6 +144,8 @@ export interface D2ManifestDefinitions extends ManifestDefinitions {
   LoadoutName: DefinitionTable<DestinyLoadoutNameDefinition>;
   LoadoutColor: DefinitionTable<DestinyLoadoutColorDefinition>;
   LoadoutIcon: DefinitionTable<DestinyLoadoutIconDefinition>;
+  /** Check if these defs are from D2. Inside an if statement, these defs will be narrowed to type D2ManifestDefinitions. */
+  readonly isDestiny2: true;
 }
 
 /**
@@ -174,9 +173,8 @@ export function getDefinitions(force = false): ThunkResult<D2ManifestDefinitions
 
 export function buildDefinitionsFromManifest(db: AllDestinyManifestComponents) {
   enhanceDBWithFakeEntries(db);
-  const defs: ManifestDefinitions & { [table: string]: any } = {
-    isDestiny1: () => false,
-    isDestiny2: () => true,
+  const defs: { [table: string]: any; isDestiny2: true } = {
+    isDestiny2: true,
   };
 
   for (const tableShort of allTables) {

@@ -3,7 +3,6 @@ import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { armorStats } from 'app/search/d2-known-values';
 import { emptySet } from 'app/utils/empty';
 import { StatHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import {
   enhancedOperatorAugmentModHash,
   isArmor2Arms,
@@ -52,7 +51,7 @@ function modifyMod({
   energyCost?: number;
   tag?: string | null;
 }) {
-  const newMod = _.cloneDeep(mod);
+  const newMod = { ...mod };
 
   if (energyCost !== undefined) {
     newMod.energyCost = energyCost;
@@ -76,7 +75,7 @@ function modifyItem({
   compatibleModSeasons?: string[];
   isArtifice?: boolean;
 }) {
-  const newItem = _.cloneDeep(item);
+  const newItem = { ...item };
 
   if (remainingEnergyCapacity !== undefined) {
     newItem.remainingEnergyCapacity = remainingEnergyCapacity;

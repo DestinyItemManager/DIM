@@ -480,44 +480,48 @@ describe('fillLoadoutFromEquipped', () => {
 
 describe('fillLoadoutFromUnequipped', () => {
   it('fills in unequipped items but does not change an existing item', () => {
+    const bucketHash = BucketHashes.KineticWeapons;
+
     // Add a single item that's not equipped to the loadout
     const item = items.find(
-      (i) => i.bucket.hash === BucketHashes.ClassArmor && !i.equipped && i.owner === store.id,
+      (i) => i.bucket.hash === bucketHash && !i.equipped && i.owner === store.id,
     )!;
     let loadout = addItem(defs, item)(emptyLoadout);
 
     loadout = fillLoadoutFromUnequipped(defs, store)(loadout);
 
-    const classArmorInLoadout = loadout.items.filter(
-      (i) => defs.InventoryItem.get(i.hash).inventory?.bucketTypeHash === BucketHashes.ClassArmor,
+    const itemsInLoadout = loadout.items.filter(
+      (i) => defs.InventoryItem.get(i.hash).inventory?.bucketTypeHash === bucketHash,
     );
 
     // Make sure that previously equipped item is still equipped
-    expect(classArmorInLoadout[0]).toMatchObject({
+    expect(itemsInLoadout[0]).toMatchObject({
       equip: true,
       id: item.id,
     });
     // Only 9 items because one of them was already in the loadout
-    expect(classArmorInLoadout.length).toBe(9);
+    expect(itemsInLoadout.length).toBe(9);
   });
 
   it('fills in unequipped items for a single category', () => {
+    const bucketHash = BucketHashes.KineticWeapons;
+
     // Add a single item that's not equipped to the loadout
-    const item = items.find((i) => i.bucket.hash === BucketHashes.ClassArmor && !i.equipped)!;
+    const item = items.find((i) => i.bucket.hash === bucketHash && !i.equipped)!;
     let loadout = addItem(defs, item)(emptyLoadout);
 
-    loadout = fillLoadoutFromUnequipped(defs, store, 'Armor')(loadout);
+    loadout = fillLoadoutFromUnequipped(defs, store, 'Weapons')(loadout);
 
-    const classArmorInLoadout = loadout.items.filter(
-      (i) => defs.InventoryItem.get(i.hash).inventory?.bucketTypeHash === BucketHashes.ClassArmor,
+    const itemsInLoadout = loadout.items.filter(
+      (i) => defs.InventoryItem.get(i.hash).inventory?.bucketTypeHash === bucketHash,
     );
 
     // Make sure that previously equipped item is still equipped
-    expect(classArmorInLoadout[0]).toMatchObject({
+    expect(itemsInLoadout[0]).toMatchObject({
       equip: true,
       id: item.id,
     });
-    expect(classArmorInLoadout.length).toBe(9);
+    expect(itemsInLoadout.length).toBe(9);
   });
 
   it('fills in unequipped items for a single category without overflow', () => {

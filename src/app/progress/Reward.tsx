@@ -1,8 +1,7 @@
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { DimStore } from 'app/inventory/store-types';
-import { powerLevelSelector } from 'app/inventory/store/selectors';
+import { dropPowerLevelSelector } from 'app/inventory/store/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { RootState } from 'app/store/types';
 import { DestinyItemQuantity } from 'bungie-api-ts/destiny2';
 import { useSelector } from 'react-redux';
 import BungieImage from '../dim-ui/BungieImage';
@@ -22,13 +21,10 @@ export function Reward({
   itemHash?: number;
 }) {
   const defs = useD2Definitions()!;
-  const maxGearPower = useSelector(
-    (state: RootState) => powerLevelSelector(state, store?.id)?.maxGearPower,
-  );
-  const rewardItem = defs.InventoryItem.get(reward.itemHash);
+  const dropPower = useSelector(dropPowerLevelSelector(store?.id));
+  const [powerBonus, rewardItemHash] = getEngramPowerBonus(reward.itemHash, dropPower, itemHash);
+  const rewardItem = defs.InventoryItem.get(rewardItemHash);
   const rewardDisplay = rewardItem.displayProperties;
-
-  const powerBonus = getEngramPowerBonus(rewardItem.hash, maxGearPower, itemHash);
 
   const xpValue = getXPValue(reward.itemHash);
 

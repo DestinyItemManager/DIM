@@ -258,6 +258,7 @@ export function makeItem(
 
   // Fish relevant data out of the profile.
   const profileRecords = profileResponse.profileRecords?.data;
+  const characterRecords = profileResponse.characterRecords?.data;
   const characterProgressions =
     owner && !owner?.isVault ? profileResponse.characterProgressions?.data?.[owner.id] : undefined;
 
@@ -492,7 +493,7 @@ export function makeItem(
     tracked: Boolean(item.state & ItemState.Tracked),
     locked: Boolean(item.state & ItemState.Locked),
     masterwork: Boolean(item.state & ItemState.Masterwork) && itemType !== 'Class',
-    crafted: Boolean(item.state & ItemState.Crafted),
+    crafted: item.state & ItemState.Crafted ? 'crafted' : false,
     highlightedObjective: Boolean(item.state & ItemState.HighlightedObjective),
     classified: Boolean(itemDef.redacted),
     isEngram,
@@ -525,7 +526,7 @@ export function makeItem(
     infusionFuel: false,
     sockets: null,
     masterworkInfo: null,
-    infusionQuality: null,
+    infusionCategoryHashes: null,
     tooltipNotifications,
   };
 
@@ -575,25 +576,27 @@ export function makeItem(
     reportException('Sockets', e, { itemHash: item.itemHash });
   }
 
-  createdItem.wishListEnabled = Boolean(createdItem.bucket.inWeapons && createdItem.sockets);
-
-  // A crafted weapon with an enhanced intrinsic and two enhanced traits is masterworked
-  // https://github.com/Bungie-net/api/issues/1662
-  if (createdItem.crafted && createdItem.sockets) {
-    const containsEnhancedIntrinsic = createdItem.sockets.allSockets.some(
-      (s) => s.plugged && enhancedIntrinsics.has(s.plugged.plugDef.hash),
-    );
-    if (containsEnhancedIntrinsic && countEnhancedPerks(createdItem.sockets) >= 2) {
-      createdItem.masterwork = true;
-    }
-  }
+  createdItem.wishListEnabled = Boolean(
+    createdItem.sockets?.allSockets.some((s) => s.hasRandomizedPlugItems),
+  );
 
   // Extract weapon crafting info from the crafted socket but
   // before building stats because the weapon level affects stats.
   createdItem.craftedInfo = buildCraftedInfo(createdItem, defs);
 
   // Crafting pattern
-  createdItem.patternUnlockRecord = buildPatternInfo(createdItem, itemDef, defs, profileRecords);
+  createdItem.patternUnlockRecord = buildPatternInfo(
+    createdItem,
+    itemDef,
+    defs,
+    profileRecords,
+    characterRecords,
+  );
+
+  // don't worry, craftable weapons can't be enhanced
+  if (createdItem.crafted && !createdItem.patternUnlockRecord) {
+    createdItem.crafted = 'enhanced';
+  }
 
   // Deepsight Resonance
   createdItem.deepsightInfo = buildDeepsightInfo(createdItem);
@@ -637,7 +640,7 @@ export function makeItem(
     const perks = itemDef.perks.filter(
       (p, i) =>
         p.perkVisibility === ItemPerkVisibility.Visible &&
-        itemUninstancedPerks?.[i].visible !== false &&
+        itemUninstancedPerks?.[i]?.visible !== false &&
         defs.SandboxPerk.get(p.perkHash)?.isDisplayable,
     );
     if (perks.length) {
@@ -708,14 +711,9 @@ export function makeItem(
   }
 
   // Infusion
-  const tier = itemDef.inventory?.tierTypeHash
-    ? defs.ItemTierType.get(itemDef.inventory.tierTypeHash)
-    : null;
-  createdItem.infusionFuel = Boolean(
-    tier?.infusionProcess && itemDef.quality?.infusionCategoryHashes?.length,
-  );
+  createdItem.infusionFuel = Boolean(itemDef.quality?.infusionCategoryHashes?.length);
   createdItem.infusable = createdItem.infusionFuel && isLegendaryOrBetter(createdItem);
-  createdItem.infusionQuality = itemDef.quality || null;
+  createdItem.infusionCategoryHashes = itemDef.quality?.infusionCategoryHashes || null;
 
   // Masterwork
   try {
@@ -729,6 +727,20 @@ export function makeItem(
       e,
     );
     reportException('MasterworkInfo', e, { itemHash: item.itemHash });
+  }
+
+  // A crafted weapon with an enhanced intrinsic and two enhanced traits is masterworked
+  // https://github.com/Bungie-net/api/issues/1662
+  if (createdItem.crafted && createdItem.sockets) {
+    const containsEnhancedIntrinsic = createdItem.sockets.allSockets.some(
+      (s) => s.plugged && enhancedIntrinsics.has(s.plugged.plugDef.hash),
+    );
+    if (
+      (containsEnhancedIntrinsic || createdItem.masterworkInfo?.tier === 10) &&
+      countEnhancedPerks(createdItem.sockets) >= 2
+    ) {
+      createdItem.masterwork = true;
+    }
   }
 
   try {

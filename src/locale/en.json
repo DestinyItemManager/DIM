@@ -344,11 +344,18 @@
     "UserGuideLink": "User guide"
   },
   "Glyphs": {
+    "Axe": "Axe",
+    "DarkAbility": "Darkness Ability",
     "Gilded": "Gilded",
+    "Harmonic": "Harmonic",
+    "HiveSword": "Hive Sword",
+    "LightAbility": "Light Ability",
+    "LightLevel": "Light Level",
     "Misadventure": "Misadventure",
     "Missing": "Missing",
     "OpenSymbolsPicker": "Open Symbols Picker",
     "Quickfall": "Quickfall",
+    "RespawnRestricted": "Respawn Restricted",
     "ScorchCannon": "Scorch Cannon",
     "SearchSymbols": "Search Symbols...",
     "Smoke": "Smoke"
@@ -385,6 +392,7 @@
     "ReloadApp": "Reload App",
     "ReportBug": "Report a Bug",
     "SaveSearch": "Save Search",
+    "SearchActions": "Open Search Actions",
     "SearchResults": "Show Items",
     "Shop": "Shop",
     "TagAs": "Tag as '{{tag}}'",
@@ -394,7 +402,7 @@
   "Help": {
     "CannotMove": "Cannot move that item off this character.",
     "NoStorage": "DIM can't store data",
-    "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space. You won't be able to log in to or use DIM."
+    "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space, or a browser bug. Try restarting your computer! You won't be able to log in to or use DIM until you fix this."
   },
   "Hotkey": {
     "Armory": "Show Armory for an item",
@@ -447,6 +455,10 @@
   },
   "Inventory": {
     "ClickToExpand": "(Click to expand)"
+  },
+  "Item": {
+    "ThumbsDown": "Thumbs Down",
+    "ThumbsUp": "Thumbs Up"
   },
   "ItemFeed": {
     "ClearFeed": "Clear Feed",
@@ -707,6 +719,7 @@
   "LoadoutFilter": {
     "Contains": "Shows loadouts which have an item or a mod matching the filter text. Search for items with spaces in their name using quotes.",
     "FashionOnly": "Shows loadouts that contain only fashion (shaders or ornaments).",
+    "LoadoutLight": "Shows loadouts based on their calculated light level. Use the pinnaclecap or softcap keyword instead of a number to refer to the current season's power limits.",
     "ModsOnly": "Shows loadouts that only contain armor mods.",
     "Name": "Shows loadouts whose name matches (exactname:) or partially matches (name:) the filter text. Search for entire phrases using quotes.",
     "Notes": "Search for loadouts by their notes field.",
@@ -716,6 +729,7 @@
   },
   "Loadouts": {
     "Abilities": "Abilities",
+    "Actions": "Actions for {{title}}",
     "AddEquippedItems": "Add Equipped",
     "AddNotes": "Add Notes",
     "AddUnequippedItems": "Add Unequipped",
@@ -773,6 +787,7 @@
       "PasteHere": "Paste a loadout link to open the loadout."
     },
     "ImportLoadout": "Import Loadout",
+    "InGameActions": "In-Game Loadout Actions",
     "InGameLoadouts": "In-Game Loadouts",
     "IncludeRuntimeStatBenefits": "Include Font mod stats",
     "IncludeRuntimeStatBenefitsDesc": "\"Font of ...\" armor mods provide a flat boost to character stats while you have Armor Charges.\n\nWith this setting, DIM considers these mods active and adds their benefits to this Loadout's stats in calculations and optimizations.",

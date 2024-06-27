@@ -166,7 +166,9 @@ export function moveItemTo(
           e instanceof DimError &&
           (e.code === 'wrong-level' ||
             e.code === 'no-space' ||
-            e.bungieErrorCode() === PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation)
+            e.bungieErrorCode() === PlatformErrorCodes.DestinyCannotPerformActionAtThisLocation ||
+            e.bungieErrorCode() === PlatformErrorCodes.DestinyNoRoomInDestination ||
+            e.bungieErrorCode() === PlatformErrorCodes.DestinyItemNotFound)
         ) {
           // don't report
         } else {

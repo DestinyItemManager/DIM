@@ -15,6 +15,8 @@ import { createSelector } from 'reselect';
  */
 export const compareSessionSelector = (state: RootState) => state.compare.session;
 
+export const compareQuerySelector = (state: RootState) => compareSessionSelector(state)?.query;
+
 export const compareOpenSelector = (state: RootState) => Boolean(compareSessionSelector(state));
 
 /**

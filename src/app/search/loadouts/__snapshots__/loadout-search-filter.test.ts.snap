@@ -13,8 +13,10 @@ exports[`buildSearchConfig generates a reasonable filter map: key-value filters 
   "exactcontains",
   "exactname",
   "keyword",
+  "light",
   "name",
   "notes",
+  "power",
   "season",
   "subclass",
 ]

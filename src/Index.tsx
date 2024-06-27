@@ -18,7 +18,6 @@ import { lazyLoadStreamDeck, startStreamDeckConnection } from 'app/stream-deck/s
 import { infoLog } from 'app/utils/log';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
-import idbReady from 'safari-14-idb-fix';
 import { StorageBroken, storageTest } from './StorageTest';
 import Root from './app/Root';
 import setupRateLimiter from './app/bungie-api/rate-limit-config';
@@ -47,8 +46,6 @@ const i18nPromise = initi18n();
 (async () => {
   const root = createRoot(document.getElementById('app')!);
 
-  // idbReady works around a bug in Safari 14 where IndexedDB doesn't initialize sometimes. Fixed in Safari 14.7
-  await idbReady();
   // Block on testing that we can use LocalStorage and IDB, before everything starts trying to use it
   const storageWorks = await storageTest();
   if (!storageWorks) {

@@ -2,7 +2,7 @@ import { t } from 'app/i18next-t';
 import { SearchInput } from 'app/search/SearchInput';
 import { tempContainer } from 'app/utils/temp-container';
 import clsx from 'clsx';
-import { FontGlyphs } from 'data/d2/d2-font-glyphs';
+import { FontGlyphs } from 'data/font/d2-font-glyphs';
 import React, {
   HTMLProps,
   memo,

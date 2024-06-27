@@ -34,6 +34,8 @@ import {
   PlugCategoryHashes,
   SocketCategoryHashes,
 } from 'data/d2/generated-enums';
+import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
+import _ from 'lodash';
 import {
   DimItem,
   DimPlug,
@@ -50,6 +52,8 @@ import {
 //
 // This is called from within d2-item-factory.service.ts
 //
+
+const enhancedToPerk = _.mapValues(_.invert(perkToEnhanced), (s) => Number(s));
 
 /**
  * Calculate all the sockets we want to display (or make searchable). Sockets represent perks,
@@ -491,13 +495,16 @@ function buildPlug(
     : '';
 
   const enabled = destinyItemPlug ? plug.enabled : plug.isEnabled;
+  const unenhancedVersion = enhancedToPerk[plugDef.hash];
   return {
     plugDef,
     enabled: enabled && (!destinyItemPlug || plug.canInsert),
     enableFailReasons: failReasons,
     plugObjectives: plugObjectivesData?.[plugHash] || emptyArray(),
     stats: null,
-    cannotCurrentlyRoll: plugSet?.plugHashesThatCannotRoll.includes(plugDef.hash),
+    cannotCurrentlyRoll:
+      plugSet?.plugHashesThatCannotRoll.includes(plugDef.hash) &&
+      !plugSet?.plugHashesThatCanRoll.includes(unenhancedVersion),
   };
 }
 
@@ -680,6 +687,13 @@ function buildSocket(
   const plugged = buildPlug(defs, socket, plugObjectivesData, plugSet);
   let foundPluggedInOptions = false;
   const plugOptions: DimPlug[] = [];
+  const addPlug = (plug: DimPlug) => {
+    if (!plugOptions.some((p) => p.plugDef.hash === plug.plugDef.hash)) {
+      plugOptions.push(plug);
+      return true;
+    }
+    return false;
+  };
 
   // We only build a larger list of plug options if this is a perk socket, since users would
   // only want to see (and search) the plug options for perks. For other socket types (mods, shaders, etc.)
@@ -689,12 +703,13 @@ function buildSocket(
       // Get options from live info
       for (const reusablePlug of reusablePlugs) {
         if (plugged && reusablePlug.plugItemHash === plugged.plugDef.hash) {
-          plugOptions.push(plugged);
-          foundPluggedInOptions = true;
+          if (addPlug(plugged)) {
+            foundPluggedInOptions = true;
+          }
         } else {
           const built = buildPlug(defs, reusablePlug, plugObjectivesData, plugSet);
           if (built && filterReusablePlug(built)) {
-            plugOptions.push(built);
+            addPlug(built);
           }
         }
       }
@@ -704,8 +719,9 @@ function buildSocket(
       if (plugSet) {
         for (const reusablePlug of plugSet.reusablePlugItems) {
           if (plugged && reusablePlug.plugItemHash === plugged.plugDef.hash) {
-            plugOptions.push(plugged);
-            foundPluggedInOptions = true;
+            if (addPlug(plugged)) {
+              foundPluggedInOptions = true;
+            }
           } else {
             const built = buildDefinedPlug(
               defs,
@@ -713,7 +729,7 @@ function buildSocket(
               reusablePlug.currentlyCanRoll,
             );
             if (built && filterReusablePlug(built)) {
-              plugOptions.push(built);
+              addPlug(built);
             }
           }
         }
@@ -722,12 +738,13 @@ function buildSocket(
       // Get options from definition itself
       for (const reusablePlug of socketDef.reusablePlugItems) {
         if (plugged && reusablePlug.plugItemHash === plugged.plugDef.hash) {
-          plugOptions.push(plugged);
-          foundPluggedInOptions = true;
+          if (addPlug(plugged)) {
+            foundPluggedInOptions = true;
+          }
         } else {
           const built = buildDefinedPlug(defs, reusablePlug.plugItemHash);
           if (built && filterReusablePlug(built)) {
-            plugOptions.push(built);
+            addPlug(built);
           }
         }
       }
@@ -735,7 +752,7 @@ function buildSocket(
   }
 
   if (plugged && !foundPluggedInOptions) {
-    plugOptions.push(plugged);
+    addPlug(plugged);
   }
 
   // TODO: is this still true? also, should this be ?? instead of ||
@@ -785,16 +802,15 @@ function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number)
       }
     }
   }
-
+  const [cant, can] = _.partition(plugs, (p) => plugCannotCurrentlyRoll(plugs, p.plugDef.hash));
   const dimPlugSet: DimPlugSet = {
     plugs,
     hash: plugSetHash,
     precomputedEmptyPlugItemHash: defPlugSet.reusablePlugItems.find((p) =>
       isKnownEmptyPlugItemHash(p.plugItemHash),
     )?.plugItemHash,
-    plugHashesThatCannotRoll: plugs
-      .filter((p) => plugCannotCurrentlyRoll(plugs, p.plugDef.hash))
-      .map((p) => p.plugDef.hash),
+    plugHashesThatCannotRoll: cant.map((p) => p.plugDef.hash),
+    plugHashesThatCanRoll: can.map((p) => p.plugDef.hash),
   };
   reusablePlugSetCache[plugSetHash] = dimPlugSet;
 

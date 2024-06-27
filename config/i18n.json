@@ -206,7 +206,8 @@
     "Season": "Shows loadouts by which season of Destiny 2 they were last modified in.",
     "FashionOnly": "Shows loadouts that contain only fashion (shaders or ornaments).",
     "ModsOnly": "Shows loadouts that only contain armor mods.",
-    "Subclass": "Shows loadouts whose subclass name or damage type partially matches the filter text."
+    "Subclass": "Shows loadouts whose subclass name or damage type partially matches the filter text.",
+    "LoadoutLight": "Shows loadouts based on their calculated light level. Use the pinnaclecap or softcap keyword instead of a number to refer to the current season's power limits."
   },
   "Filter": {
     "Adept": "\\(Adept\\)",
@@ -356,7 +357,14 @@
   },
   "Glyphs": {
     "Missing": "Missing",
+    "Axe": "Axe",
+    "DarkAbility": "Darkness Ability",
+    "LightAbility": "Light Ability",
     "Gilded": "Gilded",
+    "Harmonic": "Harmonic",
+    "HiveSword": "Hive Sword",
+    "LightLevel": "Light Level",
+    "RespawnRestricted": "Respawn Restricted",
     "Smoke": "Smoke",
     "Misadventure": "Misadventure",
     "Quickfall": "Quickfall",
@@ -398,6 +406,7 @@
     "ReportBug": "Report a Bug",
     "SaveSearch": "Save Search",
     "SearchResults": "Show Items",
+    "SearchActions": "Open Search Actions",
     "Shop": "Shop",
     "UpgradeDIM": "Update DIM",
     "WhatsNew": "What's New"
@@ -405,7 +414,7 @@
   "Help": {
     "CannotMove": "Cannot move that item off this character.",
     "NoStorage": "DIM can't store data",
-    "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space. You won't be able to log in to or use DIM."
+    "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space, or a browser bug. Try restarting your computer! You won't be able to log in to or use DIM until you fix this."
   },
   "Hotkey": {
     "Armory": "Show Armory for an item",
@@ -460,6 +469,10 @@
   },
   "Inventory": {
     "ClickToExpand": "(Click to expand)"
+  },
+  "Item": {
+    "ThumbsUp": "Thumbs Up",
+    "ThumbsDown": "Thumbs Down"
   },
   "ItemFeed": {
     "Description": "Item Feed",
@@ -670,6 +683,7 @@
   },
   "Loadouts": {
     "Abilities": "Abilities",
+    "Actions": "Actions for {{title}}",
     "AddEquippedItems": "Add Equipped",
     "AddNotes": "Add Notes",
     "AddUnequippedItems": "Add Unequipped",
@@ -723,6 +737,7 @@
     "IncludeRuntimeStatBenefits": "Include Font mod stats",
     "IncludeRuntimeStatBenefitsDesc": "\"Font of ...\" armor mods provide a flat boost to character stats while you have Armor Charges.\n\nWith this setting, DIM considers these mods active and adds their benefits to this Loadout's stats in calculations and optimizations.",
     "InGameLoadouts": "In-Game Loadouts",
+    "InGameActions": "In-Game Loadout Actions",
     "ItemLeveling": "Item Leveling",
     "LoadoutName": "Loadout name",
     "Loadouts": "Loadouts",

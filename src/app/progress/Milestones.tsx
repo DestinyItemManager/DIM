@@ -2,9 +2,8 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { t } from 'app/i18next-t';
 import { InventoryBuckets } from 'app/inventory/inventory-buckets';
 import { DimStore } from 'app/inventory/store-types';
-import { powerLevelSelector } from 'app/inventory/store/selectors';
+import { dropPowerLevelSelector } from 'app/inventory/store/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { RootState } from 'app/store/types';
 import { uniqBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { DestinyMilestone, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
@@ -38,9 +37,7 @@ export default function Milestones({
   const defs = useD2Definitions()!;
   const profileMilestones = milestonesForProfile(defs, profileInfo, store.id);
   const characterProgressions = getCharacterProgressions(profileInfo, store.id);
-  const maxGearPower = useSelector(
-    (state: RootState) => powerLevelSelector(state, store.id)?.maxGearPower,
-  );
+  const dropPower = useSelector(dropPowerLevelSelector(store.id));
   const season = profileInfo.profile?.data?.currentSeasonHash
     ? defs.Season.get(profileInfo.profile.data.currentSeasonHash)
     : undefined;
@@ -55,7 +52,7 @@ export default function Milestones({
 
   const milestonesByPower = Map.groupBy(milestoneItems, (m) => {
     for (const reward of m.pursuit?.rewards ?? []) {
-      const powerBonus = getEngramPowerBonus(reward.itemHash, maxGearPower, m.hash);
+      const [powerBonus] = getEngramPowerBonus(reward.itemHash, dropPower, m.hash);
       if (powerBonus !== undefined) {
         return powerBonus;
       }
