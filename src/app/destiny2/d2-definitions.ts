@@ -29,7 +29,6 @@ import {
   DestinyObjectiveDefinition,
   DestinyPlaceDefinition,
   DestinyPlugSetDefinition,
-  DestinyPowerCapDefinition,
   DestinyPresentationNodeDefinition,
   DestinyProgressionDefinition,
   DestinyRaceDefinition,
@@ -79,7 +78,6 @@ export const allTables: ManifestTablesShort[] = [
   'Record',
   'Metric',
   'Trait',
-  'PowerCap',
   'BreakerType',
   'EventCard',
   'LoadoutName',
@@ -138,7 +136,6 @@ export interface D2ManifestDefinitions {
   Record: DefinitionTable<DestinyRecordDefinition>;
   Metric: DefinitionTable<DestinyMetricDefinition>;
   Trait: DefinitionTable<DestinyTraitDefinition>;
-  PowerCap: DefinitionTable<DestinyPowerCapDefinition>;
   BreakerType: DefinitionTable<DestinyBreakerTypeDefinition>;
   DamageType: DefinitionTable<DestinyDamageTypeDefinition>;
   Collectible: DefinitionTable<DestinyCollectibleDefinition>;

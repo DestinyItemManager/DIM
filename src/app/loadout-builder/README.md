@@ -20,7 +20,7 @@ To help paint a picture of what is happening this is a high level overview of th
 
 Now lets get a little more in depth and look at the journey we take through specific modules and functions
 
-1. It all starts in `LoadoutBuilder`, before the component is even rendered we reduce the items it has access to. Only non-sunset Armor 2.0 is used (which is the bulk of the armor a player has).
+1. It all starts in `LoadoutBuilder`, before the component is even rendered we reduce the items it has access to. Only Armor 2.0 is used (which is the bulk of the armor a player has).
 
 1. Next those items are sent into `item-filter#filterItems`. Here we reduce items as best we can as it removes items being sent to the web worker. We filter on the following
     - Using the function provided by the filter in the search bar

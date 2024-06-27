@@ -384,18 +384,6 @@ export function makeItem(
       getDamageDefsByDamageType(defs)[itemDef.talentGrid.hudDamageType]) ||
     null;
 
-  const powerCapHash =
-    item.versionNumber !== undefined &&
-    itemDef.quality?.versions?.[item.versionNumber]?.powerCapHash;
-  // ignore falsyness of 0, because powerCap && powerCapHash are never zero and the code gets ugly otherwise
-  let powerCap = (powerCapHash && defs.PowerCap.get(powerCapHash).powerCap) || null;
-
-  // here is where we need to manually adjust unreasonable powerCap values,
-  // which are used for things that aren't currently set to ever cap
-  if (powerCap && powerCap > 50000) {
-    powerCap = null;
-  }
-
   const hiddenOverlay = itemDef.iconWatermark;
 
   const tooltipNotifications = item.tooltipNotificationIndexes?.length
@@ -500,7 +488,6 @@ export function makeItem(
     classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
     element,
     energy: itemInstanceData.energy ?? null,
-    powerCap,
     lockable: itemType !== 'Finishers' ? item.lockable : true,
     trackable: Boolean(item.itemInstanceId && itemDef.objectives?.questlineItemHash),
     tracked: Boolean(item.state & ItemState.Tracked),
