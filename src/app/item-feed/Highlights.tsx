@@ -7,6 +7,7 @@ import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
 import {
   getExtraIntrinsicPerkSockets,
   getWeaponArchetype,
+  socketContainsIntrinsicPlug,
   socketContainsPlugWithCategory,
 } from 'app/utils/socket-utils';
 import clsx from 'clsx';
@@ -21,7 +22,10 @@ export default function Highlights({ item }: { item: DimItem }) {
   if (item.bucket.sort === 'Weapons' && item.sockets) {
     // Don't ask me why Traits are called "Frames" but it does work.
     const perkSockets = item.sockets.allSockets.filter(
-      (s) => s.isPerk && socketContainsPlugWithCategory(s, PlugCategoryHashes.Frames),
+      (s) =>
+        s.isPerk &&
+        (socketContainsPlugWithCategory(s, PlugCategoryHashes.Frames) ||
+          (s.hasRandomizedPlugItems && socketContainsIntrinsicPlug(s))),
     );
     const archetype = !item.isExotic && getWeaponArchetype(item)?.displayProperties.name;
 
