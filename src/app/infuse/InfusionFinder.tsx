@@ -318,11 +318,9 @@ function isInfusable(target: DimItem, source: DimItem) {
   }
 
   return (
-    source.infusionQuality &&
-    target.infusionQuality &&
-    target.infusionQuality.infusionCategoryHashes.some((h) =>
-      source.infusionQuality!.infusionCategoryHashes.includes(h),
-    ) &&
+    source.infusionCategoryHashes &&
+    target.infusionCategoryHashes &&
+    target.infusionCategoryHashes.some((h) => source.infusionCategoryHashes!.includes(h)) &&
     target.power < source.power
   );
 }

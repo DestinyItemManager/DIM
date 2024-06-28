@@ -81,7 +81,7 @@ export function toWishList(
       }
 
       if (dupes > 0) {
-        warnLog(TAG, 'Discarded', dupes, 'duplicate rolls from wish list', wishList.source);
+        warnLog(TAG, 'Discarded', dupes, 'duplicate rolls from wish list', url);
       }
       wishList.infos.push(info);
     }

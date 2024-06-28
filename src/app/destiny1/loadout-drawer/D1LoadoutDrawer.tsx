@@ -25,7 +25,6 @@ import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-util
 import React, { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import TextareaAutosize from 'react-textarea-autosize';
-import { v4 as uuidv4 } from 'uuid';
 import LoadoutDrawerContents from './LoadoutDrawerContents';
 import LoadoutDrawerOptions from './LoadoutDrawerOptions';
 import './loadout-drawer.scss';
@@ -84,7 +83,7 @@ export default function D1LoadoutDrawer({
     }
     const newLoadout = {
       ...loadout,
-      id: uuidv4(), // Let it be a new ID
+      id: globalThis.crypto.randomUUID(), // Let it be a new ID
     };
     onSaveLoadout(e, newLoadout, close);
   };

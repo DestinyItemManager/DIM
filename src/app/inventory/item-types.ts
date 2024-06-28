@@ -10,7 +10,6 @@ import {
   DestinyItemInstanceEnergy,
   DestinyItemPerkEntryDefinition,
   DestinyItemPlugBase,
-  DestinyItemQualityBlockDefinition,
   DestinyItemQuantity,
   DestinyItemSocketEntryDefinition,
   DestinyItemTooltipNotification,
@@ -128,10 +127,8 @@ export interface DimItem {
   loreHash?: number;
   /** Metrics that can be used with this item. */
   availableMetricCategoryNodeHashes?: number[];
-  /** If this exists, it's the limit of an item's PL. If NOT, display no information. Maybe it's unlimited PL. Maybe it's a weird item. */
-  powerCap: number | null;
-  /** Information about how this item works with infusion. */
-  infusionQuality: DestinyItemQualityBlockDefinition | null;
+  /** If any two items share at least one number on this list, they can be infused into each other. */
+  infusionCategoryHashes: number[] | null;
   /** The DestinyVendorDefinition hash of the vendor that can preview the contents of this item, if there is one. */
   previewVendor?: number;
   /** Localized string for where this item comes from... or other stuff like it not being recoverable from collections */
@@ -186,8 +183,8 @@ export interface DimItem {
   power: number;
   /** Is this a masterwork? (D2 only) */
   masterwork: boolean;
-  /** Is this crafted? (D2 only) */
-  crafted: boolean;
+  /** If truthy, Bungie indicated this item is crafted. This could just mean the item has a level and a crafting date, like enhanced weapons, even partially-enhanced ones. */
+  crafted: 'crafted' | 'enhanced' | false;
   /** Does this have a highlighted (crafting) objective? (D2 Only) */
   highlightedObjective: boolean;
   /** What percent complete is this item (considers XP and objectives). */
@@ -422,6 +419,7 @@ export interface DimPlugSet {
 
   /** A precomputed list of plug hashes that can not roll on current versions of the item. */
   readonly plugHashesThatCannotRoll: number[];
+  readonly plugHashesThatCanRoll: number[];
 }
 
 export interface DimSocket {

@@ -107,6 +107,7 @@
     },
     "InitialItem": "This is the item the Compare tool was launched from",
     "IsVendorItem": "This item is not owned. This is in a vendor's inventory and may be for sale.",
+    "NoModArmor": "Pre-mods",
     "SoldBy": "Sold by: {{vendorName}}"
   },
   "Cooldown": {
@@ -222,6 +223,7 @@
     "CustomStatLower": "Shows armor whose stats are strictly lower than another of the same type of armor, only taking into account stats in that class' custom stat total list.",
     "DamageType": "Shows items based on their damage type.",
     "Deepsight": "Shows weapons with Deepsight Resonance, which can have their pattern extracted, or which can have Deepsight Resonance enabled using a Deepsight Harmonizer.",
+    "Deprecated": "This filter is no longer supported.",
     "Description": "Description",
     "DescriptionFilter": "Shows items whose description has a partial match to the filter text. Search for entire phrases using quotes.",
     "DisabledModSlot": "Shows items with a disabled mod.",
@@ -254,7 +256,6 @@
     "InfusionFodder": "Shows items that could be infused into lower-power versions of the same item for only glimmer.",
     "IsAdept": "Shows weapons compatible with Adept mods.",
     "IsCrafted": "Shows weapons that have been crafted.",
-    "IsSunset": "Shows items that have been sunset and can no longer be infused to max power.",
     "ItemHash": "Shows the items with the given inventory item hash. For advanced users.",
     "ItemId": "Shows the item with the given inventory item ID. For advanced users.",
     "Leveling": {
@@ -292,7 +293,6 @@
     "Postmaster": "Items that are currently in the Postmaster.",
     "PowerKeywords": "Use the pinnaclecap or softcap keyword instead of a number to refer to the current season's power limits.",
     "PowerLevel": "Shows items based on their power level. $t(Filter.PowerKeywords)",
-    "PowerLimit": "Shows items based on the maximum power level they can be infused to. $t(Filter.PowerKeywords)",
     "PowerfulReward": "Shows pursuits which produce a powerful reward.",
     "PrismaticDamageType": "Shows items based on if they are a light or darkness damage type. Light types are arc, solar, and void. Darkness types are stasis and strand.",
     "Quality": "Shows items based on their total stat quality percentage. '{{percentage}}' is an alias for '{{quality}}'.",
@@ -333,6 +333,7 @@
     "WeaponType": "Shows weapons based on their weapon type.",
     "Wishlist": "Shows items that match your wish list.",
     "WishlistDupe": "Shows duplicate items where at least one of the duplicates is on your wish list.",
+    "WishlistEnabled": "Shows items that are eligible to have wish list rolls.",
     "WishlistNotes": "Shows wish listed items whose notes match the search.",
     "WishlistUnknown": "Shows items with no roll recommendations in the loaded wish lists.",
     "Year": "Shows items from which year of Destiny they appeared in."
@@ -344,11 +345,18 @@
     "UserGuideLink": "User guide"
   },
   "Glyphs": {
+    "Axe": "Axe",
+    "DarkAbility": "Darkness Ability",
     "Gilded": "Gilded",
+    "Harmonic": "Harmonic",
+    "HiveSword": "Hive Sword",
+    "LightAbility": "Light Ability",
+    "LightLevel": "Light Level",
     "Misadventure": "Misadventure",
     "Missing": "Missing",
     "OpenSymbolsPicker": "Open Symbols Picker",
     "Quickfall": "Quickfall",
+    "RespawnRestricted": "Respawn Restricted",
     "ScorchCannon": "Scorch Cannon",
     "SearchSymbols": "Search Symbols...",
     "Smoke": "Smoke"
@@ -385,6 +393,7 @@
     "ReloadApp": "Reload App",
     "ReportBug": "Report a Bug",
     "SaveSearch": "Save Search",
+    "SearchActions": "Open Search Actions",
     "SearchResults": "Show Items",
     "Shop": "Shop",
     "TagAs": "Tag as '{{tag}}'",
@@ -394,7 +403,7 @@
   "Help": {
     "CannotMove": "Cannot move that item off this character.",
     "NoStorage": "DIM can't store data",
-    "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space. You won't be able to log in to or use DIM."
+    "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space, or a browser bug. Try restarting your computer! You won't be able to log in to or use DIM until you fix this."
   },
   "Hotkey": {
     "Armory": "Show Armory for an item",
@@ -447,6 +456,10 @@
   },
   "Inventory": {
     "ClickToExpand": "(Click to expand)"
+  },
+  "Item": {
+    "ThumbsDown": "Thumbs Down",
+    "ThumbsUp": "Thumbs Up"
   },
   "ItemFeed": {
     "ClearFeed": "Clear Feed",
@@ -707,6 +720,7 @@
   "LoadoutFilter": {
     "Contains": "Shows loadouts which have an item or a mod matching the filter text. Search for items with spaces in their name using quotes.",
     "FashionOnly": "Shows loadouts that contain only fashion (shaders or ornaments).",
+    "LoadoutLight": "Shows loadouts based on their calculated light level. Use the pinnaclecap or softcap keyword instead of a number to refer to the current season's power limits.",
     "ModsOnly": "Shows loadouts that only contain armor mods.",
     "Name": "Shows loadouts whose name matches (exactname:) or partially matches (name:) the filter text. Search for entire phrases using quotes.",
     "Notes": "Search for loadouts by their notes field.",
@@ -716,6 +730,7 @@
   },
   "Loadouts": {
     "Abilities": "Abilities",
+    "Actions": "Actions for {{title}}",
     "AddEquippedItems": "Add Equipped",
     "AddNotes": "Add Notes",
     "AddUnequippedItems": "Add Unequipped",
@@ -773,6 +788,7 @@
       "PasteHere": "Paste a loadout link to open the loadout."
     },
     "ImportLoadout": "Import Loadout",
+    "InGameActions": "In-Game Loadout Actions",
     "InGameLoadouts": "In-Game Loadouts",
     "IncludeRuntimeStatBenefits": "Include Font mod stats",
     "IncludeRuntimeStatBenefitsDesc": "\"Font of ...\" armor mods provide a flat boost to character stats while you have Armor Charges.\n\nWith this setting, DIM considers these mods active and adds their benefits to this Loadout's stats in calculations and optimizations.",
@@ -1071,6 +1087,7 @@
     "Milestones": "Milestones & Challenges",
     "NoEventChallenges": "You have completed all event challenges",
     "NoTrackedTriumph": "You have no tracked triumphs. Track as many as you like in DIM.",
+    "PaleHeartPathfinder": "Pale Heart Pathfinder",
     "PercentPrestige": "{{pct}}% to reset",
     "PointsUsed": "1 point used",
     "PointsUsed_plural": "{{count}} points used",
@@ -1085,6 +1102,7 @@
     "RecordValue": "{{value}}pts",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
+    "RitualPathfinder": "Ritual Pathfinder",
     "SecretTriumph": "Secret Triumph",
     "StatTrackers": "Stat Trackers",
     "TrackedTriumphs": "Tracked Triumphs"
@@ -1174,7 +1192,6 @@
     "SortByRating": "Armor Quality (D1)",
     "SortByRecent": "Recently Acquired (D2)",
     "SortBySeason": "Season (D2)",
-    "SortBySunset": "Has Been Sunset (D2)",
     "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Type",
     "SortByWeaponElement": "Damage Type",
@@ -1221,11 +1238,16 @@
     "CustomDesc": "Custom total of selected base stats, ignoring mods or masterworks. Visit Settings to configure which stats are included.",
     "DamageResistance": "PvE Damage Resist",
     "Discipline": "Discipline",
+    "DropLevel": "Account Power",
+    "DropLevelExplanation1": "Account Power is the base current level when calculating the increased level of Powerful and Pinnacle rewards.",
+    "DropLevelExplanation2": "Account Power uses the highest level item in each slot, regardless of required Class or the \"One Exotic\" rule.",
+    "EquippableGear": "Equippable Gear",
     "FlinchResistance": "Flinch Resist",
     "HP": "HP",
     "Intellect": "Intellect",
     "MaxGearPower": "Maximum Power of equippable gear",
     "MaxGearPowerAll": "Maximum Power of all gear",
+    "MaxGearPowerOneExoticRule": "Maximum Power of equippable gear\n(only one Exotic armor piece equipped)",
     "MaxTotalPower": "Maximum total Power",
     "MetersPerSecond": "m/s",
     "Milliseconds": "ms",
@@ -1240,7 +1262,6 @@
     "ShieldHP": "Shield HP",
     "StrafingSpeed": "Strafing",
     "Strength": "Strength",
-    "Sunset": "Sunset",
     "Tier": "Tier {{tier}}",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 for T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",

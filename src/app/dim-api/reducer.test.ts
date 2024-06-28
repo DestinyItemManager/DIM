@@ -3,7 +3,6 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import { setItemHashTag, setItemTag } from 'app/inventory/actions';
 import { setSettingAction } from 'app/settings/actions';
 import { BungieMembershipType, DestinyClass } from 'bungie-api-ts/destiny2';
-import copy from 'fast-copy';
 import { DeleteLoadoutUpdateWithRollback } from './api-types';
 import { finishedUpdates, prepareToFlushUpdates, saveSearch } from './basic-actions';
 import { DimApiState, initialState as apiInitialState, dimApi } from './reducer';
@@ -56,7 +55,7 @@ describe('setItemTag', () => {
     );
 
     expect(updatedState.profiles[currentAccountKey].tags['1234'].tag).toBe('favorite');
-    expect(copy(updatedState.updateQueue)).toEqual([
+    expect(updatedState.updateQueue).toEqual([
       {
         action: 'tag',
         payload: {
@@ -85,7 +84,7 @@ describe('setItemTag', () => {
     );
 
     expect(updatedState.profiles[currentAccountKey].tags['1234']).toBeUndefined();
-    expect(copy(updatedState.updateQueue)).toEqual([
+    expect(updatedState.updateQueue).toEqual([
       {
         action: 'tag',
         payload: {
@@ -123,7 +122,7 @@ describe('setItemHashTag', () => {
     );
 
     expect(updatedState.itemHashTags[1234].tag).toBe('favorite');
-    expect(copy(updatedState.updateQueue)).toEqual([
+    expect(updatedState.updateQueue).toEqual([
       {
         action: 'item_hash_tag',
         payload: {
@@ -152,7 +151,7 @@ describe('setItemHashTag', () => {
     );
 
     expect(updatedState.itemHashTags[1234]).toBeUndefined();
-    expect(copy(updatedState.updateQueue)).toEqual([
+    expect(updatedState.updateQueue).toEqual([
       {
         action: 'item_hash_tag',
         payload: {
@@ -232,7 +231,7 @@ describe('prepareToFlushUpdates', () => {
         },
       },
     ];
-    expect(copy(updatedState.updateQueue)).toEqual(expected);
+    expect(updatedState.updateQueue).toEqual(expected);
   });
 
   it('can handle multiple profile updates', () => {
@@ -346,7 +345,7 @@ describe('prepareToFlushUpdates', () => {
         destinyVersion: 1,
       },
     ];
-    expect(copy(updatedState.updateQueue)).toEqual(expected);
+    expect(updatedState.updateQueue).toEqual(expected);
   });
 
   it('can handle multiple profile updates with settings last', () => {
@@ -434,7 +433,7 @@ describe('prepareToFlushUpdates', () => {
         },
       },
     ];
-    expect(copy(updatedState.updateQueue)).toEqual(expected);
+    expect(updatedState.updateQueue).toEqual(expected);
   });
 
   it('can handle loadouts', () => {
@@ -524,7 +523,7 @@ describe('prepareToFlushUpdates', () => {
         destinyVersion: 2,
       },
     ];
-    expect(copy(updatedState.updateQueue)).toEqual(expected);
+    expect(updatedState.updateQueue).toEqual(expected);
   });
 
   it('can handle tag stuff', () => {
@@ -593,7 +592,7 @@ describe('prepareToFlushUpdates', () => {
         destinyVersion: 2,
       },
     ];
-    expect(copy(updatedState.updateQueue)).toEqual(expected);
+    expect(updatedState.updateQueue).toEqual(expected);
   });
 });
 

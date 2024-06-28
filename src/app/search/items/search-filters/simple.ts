@@ -1,5 +1,4 @@
 import { tl } from 'app/i18next-t';
-import { isSunset } from 'app/utils/item-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { ItemFilterDefinition } from '../item-filter-types';
 
@@ -80,14 +79,15 @@ const simpleFilters: ItemFilterDefinition[] = [
   {
     keywords: 'sunset',
     destinyVersion: 2,
-    description: tl('Filter.IsSunset'),
-    filter: () => isSunset,
+    description: tl('Filter.Deprecated'),
+    deprecated: true,
+    filter: () => () => false,
   },
   {
     keywords: ['crafted', 'shaped'],
     destinyVersion: 2,
     description: tl('Filter.IsCrafted'),
-    filter: () => (item) => item.crafted,
+    filter: () => (item) => item.crafted === 'crafted',
   },
   {
     keywords: ['vendor'],

@@ -256,12 +256,15 @@ describe('basic loadout analysis finding tests', () => {
             i.classType === store.classType &&
             i.bucket.hash === hash &&
             i.energy &&
-            (i.bucket.hash !== BucketHashes.ClassArmor || i.energy.energyCapacity >= 5) &&
+            (i.bucket.hash !== BucketHashes.ClassArmor || i.energy.energyCapacity >= 2) &&
             i.tier === 'Legendary' &&
             !i.masterwork &&
             i.stats?.every((stat) => stat.statHash !== StatHashes.Recovery || stat.base <= 20),
         )!,
     );
+
+    // Make sure we have an item from each bucket
+    expect(nonMasterworkedArmor.every((i) => i !== undefined)).toBe(true);
 
     let loadout = newLoadout(
       'Non masterworked armor',

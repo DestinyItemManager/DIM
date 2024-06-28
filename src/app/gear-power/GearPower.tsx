@@ -1,17 +1,17 @@
-import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import BungieImage from 'app/dim-ui/BungieImage';
 import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
-import { SetFilterButton } from 'app/dim-ui/SetFilterButton';
+import RadioButtons from 'app/dim-ui/RadioButtons';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { t } from 'app/i18next-t';
 import { locateItem } from 'app/inventory/locate-item';
 import { powerLevelSelector } from 'app/inventory/store/selectors';
-import { classFilter } from 'app/search/items/search-filters/known-values';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { LookupTable } from 'app/utils/util-types';
 import clsx from 'clsx';
+import rarityIcons from 'data/d2/engram-rarity-icons.json';
 import { BucketHashes } from 'data/d2/generated-enums';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useSubscription } from 'use-subscription';
 import Sheet from '../dim-ui/Sheet';
@@ -41,6 +41,8 @@ export default function GearPower() {
 
   const powerLevel = useSelector((state: RootState) => powerLevelSelector(state, selectedStoreId));
 
+  const [whichGear, setWhichGear] = useState<'drop' | 'equip'>('drop');
+
   if (!selectedStore || !powerLevel) {
     return null;
   }
@@ -48,28 +50,53 @@ export default function GearPower() {
   const header = (
     <div className={styles.gearPowerHeader}>
       <img src={selectedStore.icon} />
-      <div>
-        <h1>{selectedStore.name}</h1>
-        <h1 className={styles.powerLevel}>
-          <AppIcon icon={powerActionIcon} />
-          <FractionalPowerLevel power={powerLevel.maxGearPower} />
-        </h1>
-      </div>
+      <h1>{selectedStore.name}</h1>
     </div>
   );
 
-  const exampleItem = powerLevel.highestPowerItems.find(
-    (i) => i.classType === selectedStore.classType,
+  const powerFloor = Math.floor(
+    whichGear === 'drop' ? powerLevel.dropPower : powerLevel.maxEquippableGearPower,
   );
-  const powerFloor = Math.floor(powerLevel.maxGearPower);
-  const classFilterString = exampleItem && classFilter.fromItem(exampleItem);
-  const maxItemsSearchString = classFilterString && `${classFilterString} is:maxpower`;
-
+  const items =
+    whichGear === 'drop' ? powerLevel.dropCalcItems : powerLevel.maxEquippablePowerItems;
   return (
     <Sheet onClose={reset} header={header} sheetClassName={styles.gearPowerSheet}>
+      <RadioButtons
+        className={styles.toggle}
+        value={whichGear}
+        onChange={setWhichGear}
+        options={[
+          {
+            label: (
+              <div className={styles.powerToggleButton}>
+                <span>{t('Stats.EquippableGear')}</span>
+                <span className={styles.powerLevel}>
+                  <AppIcon icon={powerActionIcon} />
+                  <FractionalPowerLevel power={powerLevel.maxEquippableGearPower} />
+                </span>
+              </div>
+            ),
+            tooltip: t('Stats.MaxGearPowerOneExoticRule'),
+            value: 'equip',
+          },
+          {
+            label: (
+              <div className={styles.powerToggleButton}>
+                <span>{t('Stats.DropLevel')}</span>
+                <span className={styles.powerLevel}>
+                  <BungieImage src={rarityIcons.Legendary} />
+                  <FractionalPowerLevel power={powerLevel.dropPower} />
+                </span>
+              </div>
+            ),
+            tooltip: t('Stats.DropLevelExplanation1'),
+            value: 'drop',
+          },
+        ]}
+      />
       <div className={styles.gearPowerSheetContent}>
         <div className={styles.gearGrid}>
-          {powerLevel.highestPowerItems.map((i) => {
+          {items.map((i) => {
             const powerDiff = (powerFloor - i.power) * -1;
             const diffSymbol = powerDiff >= 0 ? '+' : '';
             const diffClass =
@@ -96,23 +123,16 @@ export default function GearPower() {
             );
           })}
         </div>
-        {powerLevel.problems.notOnStore && (
-          <div className={styles.notes}>
-            <AlertIcon /> {t('Loadouts.OnWrongCharacterWarning')}
-            {maxItemsSearchString && (
-              <p>
-                <SetFilterButton filter={maxItemsSearchString} />{' '}
-                {t('Loadouts.OnWrongCharacterAdvice')}
-              </p>
-            )}
-          </div>
-        )}
-        {powerLevel.problems.notEquippable && (
-          <>
-            <div className={styles.footNote}>* {t('Loadouts.EquippableDifferent1')}</div>
-            <div className={styles.footNote}>{t('Loadouts.EquippableDifferent2')}</div>
-          </>
-        )}
+        <div className={styles.footNote}>
+          {whichGear === 'equip' ? (
+            t('Stats.MaxGearPowerOneExoticRule')
+          ) : (
+            <>
+              <p>{t('Stats.DropLevelExplanation1')}</p>
+              <p>{t('Stats.DropLevelExplanation2')}</p>
+            </>
+          )}
+        </div>
       </div>
     </Sheet>
   );
@@ -128,3 +148,6 @@ export default function GearPower() {
 //   </span>
 // )}
 // </ItemPopupTrigger>
+
+// t('Loadouts.OnWrongCharacterWarning') and t('Loadouts.OnWrongCharacterAdvice') and t('Loadouts.EquippableDifferent1') and t('Loadouts.EquippableDifferent2')
+// used to live in this file

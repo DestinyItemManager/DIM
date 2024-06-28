@@ -103,16 +103,14 @@ function makeVendorItem(
       profileResponse,
       characterId,
     ),
-    item: makeFakeItem(
-      context,
-      itemHash,
+    item: makeFakeItem(context, itemHash, {
       // For sale items the item ID needs to be the vendor item index, since that's how we look up item components for perks
-      vendorItemIndex.toString(),
-      vendorItemDef ? vendorItemDef.quantity : 1,
+      itemInstanceId: vendorItemIndex.toString(),
+      quantity: vendorItemDef ? vendorItemDef.quantity : 1,
       // vendor items are wish list enabled!
-      true,
-      saleItem?.itemValueVisibility,
-    ),
+      allowWishList: true,
+      itemValueVisibility: saleItem?.itemValueVisibility,
+    }),
   };
 
   if (vendorItem.item) {

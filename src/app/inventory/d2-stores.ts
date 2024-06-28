@@ -226,16 +226,14 @@ function loadProfile(
           } else {
             warnLog(
               TAG,
-              `Profile from Bungie.net is ${remoteProfileAgeSec}s old, while the cached profile is ${cachedProfileAgeSec}s old`,
+              `Profile from Bungie.net is ${remoteProfileAgeSec}s old, while the cached profile is ${cachedProfileAgeSec}s old.`,
               action,
             );
           }
           // Clear the error since we did load correctly
           dispatch(profileError(undefined));
           // undefined means skip processing, in case we already have computed stores
-          return storesLoadedSelector(getState())
-            ? undefined
-            : { profile: cachedProfileResponse, live: false };
+          return storesLoaded ? undefined : { profile: cachedProfileResponse, live: false };
         } else {
           infoLog(
             TAG,

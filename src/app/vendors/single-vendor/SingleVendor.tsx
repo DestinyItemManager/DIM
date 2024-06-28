@@ -2,6 +2,7 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import Countdown from 'app/dim-ui/Countdown';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { useDynamicStringReplacer } from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import {
   bucketsSelector,
@@ -54,7 +55,11 @@ export default function SingleVendor({
   const returnWithVendorRequest = vendorDef?.returnWithVendorRequest;
   useLoadStores(account);
   useLoadVendors(account, characterId, /* active */ returnWithVendorRequest);
-  usePageTitle(vendorDef?.displayProperties.name ?? t('Vendors.Vendors'), updatePageTitle ?? false);
+  const replacer = useDynamicStringReplacer(characterId);
+  usePageTitle(
+    replacer(vendorDef?.displayProperties.name) ?? t('Vendors.Vendors'),
+    updatePageTitle ?? false,
+  );
 
   const itemFilter = useSelector(vendorItemFilterSelector(characterId));
 

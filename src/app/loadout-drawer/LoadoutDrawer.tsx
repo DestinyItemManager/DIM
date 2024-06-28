@@ -17,7 +17,6 @@ import _ from 'lodash';
 import React, { useCallback, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import TextareaAutosize from 'react-textarea-autosize';
-import { v4 as uuidv4 } from 'uuid';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
 import {
@@ -112,7 +111,7 @@ export default function LoadoutDrawer({
     if (saveAsNew) {
       loadoutToSave = {
         ...loadout,
-        id: uuidv4(), // Let it be a new ID
+        id: globalThis.crypto.randomUUID(), // Let it be a new ID
       };
     }
 

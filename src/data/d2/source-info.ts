@@ -1552,6 +1552,7 @@ const D2Sources: {
       2399751101, // Acquired from the raid "Crown of Sorrow."
       2455011338, // Source: Last Wish raid.
       2653618435, // Source: Leviathan raid.
+      2700267533, // Source: "Salvation's Edge" Raid
       2723305286, // Source: Raid Ring Promotional Event
       2765304727, // Source: Leviathan raid on Prestige difficulty.
       2812190367, // Source: Leviathan, Spire of Stars raid lair on Prestige difficulty.
@@ -1645,6 +1646,13 @@ const D2Sources: {
       3404977524, // Source: Contribute to the Empyrean Restoration Effort
       4046490681, // Source: Complete the "Global Resonance" Triumph
       4267157320, // Source: ???????
+    ],
+    searchString: [],
+  },
+  salvationsedge: {
+    itemHashes: [],
+    sourceHashes: [
+      2700267533, // Source: "Salvation's Edge" Raid
     ],
     searchString: [],
   },

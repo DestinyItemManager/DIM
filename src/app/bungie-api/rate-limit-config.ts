@@ -65,4 +65,10 @@ export default function setupRateLimiter() {
       1000,
     ),
   );
+  addLimiter(
+    new RateLimiterQueue(
+      /www\.bungie\.net\/Platform\/Destiny2\/\d+\/Profile\/\d+\/Character\/\d+\/Vendors\/\d+\//,
+      100,
+    ),
+  );
 }

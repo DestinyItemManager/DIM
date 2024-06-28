@@ -354,7 +354,7 @@ function makeItem(
     infusable: false,
     infusionFuel: false,
     masterworkInfo: null,
-    infusionQuality: null,
+    infusionCategoryHashes: null,
     canPullFromPostmaster: false,
     uniqueStack: false,
     masterwork: false,
@@ -362,7 +362,6 @@ function makeItem(
     highlightedObjective: false,
     missingSockets: false,
     energy: null,
-    powerCap: null,
     pursuit: null,
   };
 

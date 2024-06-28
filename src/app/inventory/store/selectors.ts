@@ -43,6 +43,10 @@ function getBucketsWithClassifiedItems(allItems: DimItem[]) {
 export interface StorePowerLevel {
   /** average of your highest gear, even if not equippable at the same time */
   maxGearPower: number;
+  /** average of your highest simultaneously equippable gear */
+  maxEquippableGearPower: number;
+  /** average of your highest gear in each bucket, even if it's not equippable by this store. destiny's new power algorithm as of The Final Shape */
+  dropPower: number;
   /** currently represents the power level bonus provided by the Seasonal Artifact */
   powerModifier: number;
   /** maxGearPower + powerModifier. the highest PL you can get your inventory screen to show */
@@ -50,6 +54,11 @@ export interface StorePowerLevel {
 
   /** the highest-power items per bucket, even if not equippable at the same time */
   highestPowerItems: DimItem[];
+  /** the highest-power simultaneously equippable gear */
+  maxEquippablePowerItems: DimItem[];
+
+  /** the highest-power items per bucket, even if it's not equippable by this store. destiny's new power algorithm as of The Final Shape */
+  dropCalcItems: DimItem[];
 
   /** maxGearPower and maxTotalPower can come with various caveats */
   problems: {
@@ -62,7 +71,7 @@ export interface StorePowerLevel {
   };
 }
 
-const allPowerLevelsSelector = createSelector(
+export const allPowerLevelsSelector = createSelector(
   storesSelector,
   allItemsSelector,
   (stores, allItems) => {
@@ -77,29 +86,28 @@ const allPowerLevelsSelector = createSelector(
         continue;
       }
 
-      const { equippable, unrestricted } = maxLightItemSet(allItems, store);
+      const { equippable, equipUnrestricted, classUnrestricted } = maxLightItemSet(allItems, store);
 
-      // ALL WEAPONS count toward your drops. armor on another character doesn't count.
-      // (maybe just because it's on a different class? who knows. can't test.)
-      const dropPowerItemSet = maxLightItemSet(
-        allItems.filter((i) => i.bucket.inWeapons || i.owner === 'vault' || i.owner === store.id),
-        store,
-      ).unrestricted;
-      const dropPowerLevel = getLight(store, dropPowerItemSet);
+      const dropPowerLevel = getLight(store, classUnrestricted);
 
-      const unrestrictedMaxGearPower = getLight(store, unrestricted);
+      const unrestrictedMaxGearPower = getLight(store, equipUnrestricted);
       const equippableMaxGearPower = getLight(store, equippable);
+      const dropPower = getLight(store, classUnrestricted);
 
       const notEquippable = unrestrictedMaxGearPower !== equippableMaxGearPower;
       const notOnStore = dropPowerLevel !== unrestrictedMaxGearPower;
-      const hasClassified = hasAffectingClassified(unrestricted, bucketsWithClassifieds);
+      const hasClassified = hasAffectingClassified(equipUnrestricted, bucketsWithClassifieds);
       const artifactPower = getArtifactBonus(store);
 
       levels[store.id] = {
         maxGearPower: unrestrictedMaxGearPower,
+        maxEquippableGearPower: equippableMaxGearPower,
+        maxEquippablePowerItems: equippable,
+        dropPower,
         powerModifier: artifactPower,
         maxTotalPower: unrestrictedMaxGearPower + artifactPower,
-        highestPowerItems: unrestricted,
+        highestPowerItems: equipUnrestricted,
+        dropCalcItems: classUnrestricted,
         problems: {
           hasClassified,
           notEquippable,
@@ -114,3 +122,6 @@ const allPowerLevelsSelector = createSelector(
 
 export const powerLevelSelector = (state: RootState, storeId: string | undefined) =>
   storeId !== undefined ? allPowerLevelsSelector(state)[storeId] : undefined;
+
+export const dropPowerLevelSelector = (storeId: string | undefined) => (state: RootState) =>
+  powerLevelSelector(state, storeId)?.dropPower;

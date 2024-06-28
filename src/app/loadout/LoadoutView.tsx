@@ -16,7 +16,7 @@ import { Loadout, LoadoutItem, ResolvedLoadoutItem } from 'app/loadout/loadout-t
 import AppIcon from 'app/shell/icons/AppIcon';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useStreamDeckSelection } from 'app/stream-deck/stream-deck';
-import { count, filterMap } from 'app/utils/collections';
+import { filterMap } from 'app/utils/collections';
 import { emptyObject } from 'app/utils/empty';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';
 import { addDividers } from 'app/utils/react';
@@ -217,14 +217,14 @@ export default function LoadoutView({
 export function loadoutPower(store: DimStore, categories: _.Dictionary<ResolvedLoadoutItem[]>) {
   const isEquipped = (li: ResolvedLoadoutItem) =>
     Boolean(!li.missing && li.item.power && li.loadoutItem.equip);
-  const showPower =
-    count(categories.Weapons ?? [], isEquipped) === 3 &&
-    count(categories.Armor ?? [], isEquipped) === 5;
+  const equippedWeapons = categories.Weapons?.filter(isEquipped) ?? [];
+  const equippedArmor = categories.Armor?.filter(isEquipped) ?? [];
+  const showPower = equippedWeapons.length === 3 && equippedArmor.length === 5;
   const power = showPower
     ? Math.floor(
         getLight(
           store,
-          [...categories.Weapons, ...categories.Armor].map((li) => li.item),
+          [...equippedWeapons, ...equippedArmor].map((li) => li.item),
         ),
       )
     : 0;

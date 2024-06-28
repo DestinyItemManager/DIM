@@ -310,10 +310,10 @@ export default function LoadoutPopup({
               title={loadout.notes ? loadout.notes : loadout.name}
               onClick={() => applySavedLoadout(loadout)}
             >
-              {defs.isDestiny2() && isFashionOnly(defs, loadout) && (
+              {defs.isDestiny2 && isFashionOnly(defs, loadout) && (
                 <FashionIcon className={styles.fashionIcon} />
               )}
-              {defs.isDestiny2() && isArmorModsOnly(defs, loadout) && (
+              {defs.isDestiny2 && isArmorModsOnly(defs, loadout) && (
                 <ModificationsIcon className={styles.modificationIcon} />
               )}
               {(dimStore.isVault || loadout.classType === DestinyClass.Unknown) && (
@@ -341,7 +341,7 @@ export default function LoadoutPopup({
           <RandomLoadoutButton
             store={dimStore}
             query={query}
-            isD2={defs.isDestiny2()}
+            isD2={defs.isDestiny2}
             onClick={onClick}
           />
         )}

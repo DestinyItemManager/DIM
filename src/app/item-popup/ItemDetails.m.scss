@@ -28,6 +28,14 @@
   background: $acquiredGreen;
 }
 
+.fullImage {
+  aspect-ratio: auto 16/9;
+
+  &.milestoneImage {
+    aspect-ratio: auto 7/2;
+  }
+}
+
 .ownedIcon,
 .acquiredIcon {
   width: calc(var(--item-size) / 4) !important;

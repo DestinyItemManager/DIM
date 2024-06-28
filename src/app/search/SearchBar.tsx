@@ -515,6 +515,7 @@ function SearchBar(
             placeholder,
             type: 'text',
             name: 'filter',
+            'aria-label': placeholder,
           })}
           enterKeyHint="search"
         />

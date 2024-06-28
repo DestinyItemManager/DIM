@@ -1,11 +1,12 @@
+import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
 import type { DimStore, DimTitle } from 'app/inventory/store-types';
-import { powerLevelSelector } from 'app/inventory/store/selectors';
+import { allPowerLevelsSelector, powerLevelSelector } from 'app/inventory/store/selectors';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import VaultCapacity from 'app/store-stats/VaultCapacity';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
-import { FontGlyphs } from 'data/d2/d2-font-glyphs';
+import { FontGlyphs } from 'data/font/d2-font-glyphs';
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './CharacterTile.m.scss';
@@ -44,7 +45,7 @@ export default memo(function CharacterTile({ store }: { store: DimStore }) {
       <div className={styles.bottom}>
         {store.titleInfo ? <Title titleInfo={store.titleInfo} /> : store.race}
       </div>
-      <div className={styles.powerLevel}>
+      <div className={clsx(styles.powerLevel, styles.bigPowerLevel)}>
         <AppIcon icon={powerActionIcon} />
         {store.powerLevel}
       </div>
@@ -55,14 +56,27 @@ export default memo(function CharacterTile({ store }: { store: DimStore }) {
 
 function VaultTile({ store }: { store: DimStore }) {
   const isPhonePortrait = useIsPhonePortrait();
+  const powerLevel = Object.values(useSelector(allPowerLevelsSelector))[0];
 
   return (
     <div className={styles.vaultTile}>
-      <img className={styles.vaultEmblem} src={store.icon} height={40} width={40} />
+      <img className={styles.vaultEmblem} src={store.icon} height={40} width={40} alt="" />
       <div className={styles.vaultName}>{store.className}</div>
+      {!isPhonePortrait && (
+        <div className={clsx(styles.powerLevel, styles.bigPowerLevel)}>
+          <AppIcon icon={powerActionIcon} />
+          <FractionalPowerLevel power={powerLevel.dropPower} />
+        </div>
+      )}
       {isPhonePortrait && (
         <div className={styles.vaultCapacity}>
           <VaultCapacity />
+          <span className={clsx(styles.powerLevel, styles.smallPowerLevel)}>
+            <AppIcon icon={powerActionIcon} />
+          </span>
+          <span className={clsx(styles.powerLevel, styles.smallPowerLevel)}>
+            <FractionalPowerLevel power={powerLevel.dropPower} />
+          </span>
         </div>
       )}
     </div>

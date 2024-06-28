@@ -100,7 +100,7 @@ export function StackAmount({ amount, full }: { amount: number; full?: boolean }
         [styles.fullstack]: full,
       })}
     >
-      {amount}
+      {amount.toLocaleString()}
     </div>
   );
 }

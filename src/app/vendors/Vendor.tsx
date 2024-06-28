@@ -1,3 +1,4 @@
+import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
@@ -57,7 +58,9 @@ export default function Vendor({
               className={styles.icon}
             />
             <div className={styles.titleDetails}>
-              <div>{vendor.def.displayProperties.name}</div>
+              <div>
+                <RichDestinyText text={vendor.def.displayProperties.name} />
+              </div>
               <VendorLocation>{placeString}</VendorLocation>
             </div>
           </>

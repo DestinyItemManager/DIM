@@ -28,6 +28,7 @@ import { filterMap } from 'app/utils/collections';
 import {
   isClassCompatible,
   isItemLoadoutCompatible,
+  itemCanBeEquippedBy,
   itemCanBeInLoadout,
 } from 'app/utils/item-utils';
 import { weakMemoize } from 'app/utils/memoize';
@@ -53,7 +54,6 @@ import deprecatedMods from 'data/d2/deprecated-mods.json';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import { produce } from 'immer';
 import _ from 'lodash';
-import { v4 as uuidv4 } from 'uuid';
 import { D2Categories } from '../destiny2/d2-bucket-categories';
 import { DimItem, DimSocket, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import {
@@ -112,7 +112,7 @@ const gearSlotOrder: BucketHashes[] = [...D2Categories.Weapons, ...D2Categories.
  */
 export function newLoadout(name: string, items: LoadoutItem[], classType?: DestinyClass): Loadout {
   return {
-    id: uuidv4(),
+    id: globalThis.crypto.randomUUID(),
     classType:
       classType !== undefined && classType !== DestinyClass.Classified
         ? classType
@@ -356,19 +356,37 @@ export function getLoadoutStats(
 // Generate an optimized item set (loadout items) based on a filtered set of items and a value function
 export function optimalItemSet(
   applicableItems: DimItem[],
+  store: DimStore,
   bestItemFn: (item: DimItem) => number,
-): Record<'equippable' | 'unrestricted', DimItem[]> {
-  const itemsByType = Object.groupBy(applicableItems, (i) => i.bucket.hash);
+): Record<'equippable' | 'equipUnrestricted' | 'classUnrestricted', DimItem[]> {
+  const anyClassItemsByBucket = Object.groupBy(applicableItems, (i) => i.bucket.hash);
+  const anyClassBestItemByBucket = _.mapValues(
+    anyClassItemsByBucket,
+    (thisSlotItems) => _.maxBy(thisSlotItems, bestItemFn)!,
+  );
+  const classUnrestricted = _.sortBy(Object.values(anyClassBestItemByBucket), (i) =>
+    gearSlotOrder.indexOf(i.bucket.hash),
+  );
 
-  // Pick the best item
-  let items = _.mapValues(itemsByType, (items) => _.maxBy(items, bestItemFn)!);
-  const unrestricted = _.sortBy(Object.values(items), (i) => gearSlotOrder.indexOf(i.bucket.hash));
+  const thisClassItemsByBucket = Object.groupBy(
+    applicableItems.filter((i) => itemCanBeEquippedBy(i, store, true)),
+    (i) => i.bucket.hash,
+  );
+  const thisClassBestItemByBucket = _.mapValues(
+    thisClassItemsByBucket,
+    (thisSlotItems) => _.maxBy(thisSlotItems, bestItemFn)!,
+  );
+  const equipUnrestricted = _.sortBy(Object.values(thisClassBestItemByBucket), (i) =>
+    gearSlotOrder.indexOf(i.bucket.hash),
+  );
+
+  let equippableBestItemByBucket = { ...thisClassBestItemByBucket };
 
   // Solve for the case where our optimizer decided to equip two exotics
   const getLabel = (i: DimItem) => i.equippingLabel;
   // All items that share an equipping label, grouped by label
 
-  const overlaps = Map.groupBy(unrestricted.filter(getLabel), (i) => getLabel(i)!);
+  const overlaps = Map.groupBy(equipUnrestricted.filter(getLabel), (i) => getLabel(i)!);
 
   for (const overlappingItems of overlaps.values()) {
     if (overlappingItems.length <= 1) {
@@ -378,14 +396,16 @@ export function optimalItemSet(
     const options: { [x: string]: DimItem }[] = [];
     // For each item, replace all the others overlapping it with the next best thing
     for (const item of overlappingItems) {
-      const option = { ...items };
+      const option = { ...equippableBestItemByBucket };
       const otherItems = overlappingItems.filter((i) => i !== item);
       let optionValid = true;
 
       for (const otherItem of otherItems) {
         // Note: we could look for items that just don't have the *same* equippingLabel but
         // that may fail if there are ever mutual-exclusion items beyond exotics.
-        const nonExotics = itemsByType[otherItem.bucket.hash].filter((i) => !i.equippingLabel);
+        const nonExotics = thisClassItemsByBucket[otherItem.bucket.hash].filter(
+          (i) => !i.equippingLabel,
+        );
         if (nonExotics.length) {
           option[otherItem.bucket.hash] = _.maxBy(nonExotics, bestItemFn)!;
         } else {
@@ -402,21 +422,24 @@ export function optimalItemSet(
     // Pick the option where the optimizer function adds up to the biggest number, again favoring equipped stuff
     if (options.length > 0) {
       const bestOption = _.maxBy(options, (opt) => _.sumBy(Object.values(opt), bestItemFn))!;
-      items = bestOption;
+      equippableBestItemByBucket = bestOption;
     }
   }
 
-  const equippable = _.sortBy(Object.values(items), (i) => gearSlotOrder.indexOf(i.bucket.hash));
+  const equippable = _.sortBy(Object.values(equippableBestItemByBucket), (i) =>
+    gearSlotOrder.indexOf(i.bucket.hash),
+  );
 
-  return { equippable, unrestricted };
+  return { equippable, equipUnrestricted, classUnrestricted };
 }
 
 export function optimalLoadout(
   applicableItems: DimItem[],
+  store: DimStore,
   bestItemFn: (item: DimItem) => number,
   name: string,
 ): Loadout {
-  const { equippable } = optimalItemSet(applicableItems, bestItemFn);
+  const { equippable } = optimalItemSet(applicableItems, store, bestItemFn);
   return newLoadout(
     name,
     equippable.map((i) => convertToLoadoutItem(i, true)),
@@ -671,9 +694,9 @@ export function getLoadoutSubclassFragmentCapacity(
   fallbackToCurrent: boolean,
 ): number {
   if (item.item.sockets) {
-    const aspectSocketIndices = item.item.sockets.categories.find((c) =>
-      aspectSocketCategoryHashes.includes(c.category.hash),
-    )!.socketIndexes;
+    const aspectSocketIndices =
+      item.item.sockets.categories.find((c) => aspectSocketCategoryHashes.includes(c.category.hash))
+        ?.socketIndexes ?? [];
     const aspectDefs =
       item.loadoutItem.socketOverrides &&
       filterMap(aspectSocketIndices, (aspectSocketIndex) => {

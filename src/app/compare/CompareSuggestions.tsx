@@ -1,9 +1,11 @@
 import { DimItem } from 'app/inventory/item-types';
 import { filterFactorySelector } from 'app/search/items/item-search-filter';
+import { canonicalizeQuery, parseQuery } from 'app/search/query-parser';
+import clsx from 'clsx';
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { defaultComparisons, findSimilarArmors, findSimilarWeapons } from './compare-buttons';
-import { compareCategoryItemsSelector } from './selectors';
+import { compareCategoryItemsSelector, compareQuerySelector } from './selectors';
 
 /**
  * Display a row of buttons that suggest alternate queries based on an example item.
@@ -15,6 +17,7 @@ export default memo(function CompareSuggestions({
   exampleItem: DimItem;
   onQueryChanged: (query: string) => void;
 }) {
+  const currentQuery = useSelector(compareQuerySelector);
   const categoryItems = useSelector(compareCategoryItemsSelector);
   const filterFactory = useSelector(filterFactorySelector);
 
@@ -52,9 +55,9 @@ export default memo(function CompareSuggestions({
         nextCompareButton?.items.some((nextSetItem) => nextSetItem === setItem),
       )
     ) {
-      // do include this button, if the next button is the "includes sunset items" button.
-      // that's a confusing label to users with no sunset items.
-      if (exampleItem.bucket.inArmor && !nextCompareButton?.query.includes('not:sunset')) {
+      // do include this button, if the next button is the "includes armor 2.0 items" button.
+      // that's a confusing label to users with no armor 2.0 items.
+      if (exampleItem.bucket.inArmor && !nextCompareButton?.query.includes('is:armor2.0')) {
         keptPenultimateButton = true;
         return true;
       }
@@ -64,13 +67,18 @@ export default memo(function CompareSuggestions({
     return true;
   });
 
+  const parsedQuery = currentQuery && canonicalizeQuery(parseQuery(currentQuery));
+
   return (
     <>
       {filteredCompareButtons.map(({ query, items, buttonLabel }) => (
         <button
           key={query}
           type="button"
-          className="dim-button"
+          className={clsx('dim-button', {
+            selected:
+              parsedQuery !== undefined && canonicalizeQuery(parseQuery(query)) === parsedQuery,
+          })}
           title={query}
           onClick={() => onQueryChanged(query)}
         >

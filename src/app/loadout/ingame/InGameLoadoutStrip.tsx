@@ -211,7 +211,13 @@ function InGameLoadoutTile({
           {loadoutIcon}
         </PressTip>
       )}
-      <Dropdown kebab options={options} placement="bottom-end" className={styles.kebab} />
+      <Dropdown
+        label={t('Loadouts.InGameActions')}
+        kebab
+        options={options}
+        placement="bottom-end"
+        className={styles.kebab}
+      />
     </div>
   );
 }

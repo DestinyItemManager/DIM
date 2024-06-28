@@ -107,7 +107,7 @@ export function toVendor(
 
   const destinationHash =
     typeof vendor?.vendorLocationIndex === 'number' && vendor.vendorLocationIndex >= 0
-      ? vendorDef.locations[vendor.vendorLocationIndex].destinationHash
+      ? vendorDef.locations[vendor.vendorLocationIndex]?.destinationHash ?? 0
       : 0;
   const destinationDef = destinationHash ? defs.Destination.get(destinationHash) : undefined;
   const placeDef = destinationDef?.placeHash ? defs.Place.get(destinationDef.placeHash) : undefined;

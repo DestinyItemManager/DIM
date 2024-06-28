@@ -1,4 +1,4 @@
-import { FontGlyphs } from 'data/d2/d2-font-glyphs';
+import { FontGlyphs } from 'data/font/d2-font-glyphs';
 import styles from './ColorDestinySymbols.m.scss';
 
 const iconPlaceholder = /([\uE000-\uF8FF])/g;
