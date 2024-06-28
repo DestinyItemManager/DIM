@@ -13,7 +13,6 @@ import GenerateJsonPlugin from 'generate-json-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import _ from 'lodash';
 import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
-import marked from 'marked';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import svgToMiniDataURI from 'mini-svg-data-uri';
 import path from 'path';
@@ -25,7 +24,6 @@ import { InjectManifest } from 'workbox-webpack-plugin';
 import zlib from 'zlib';
 import csp from './content-security-policy';
 import { makeFeatureFlags } from './feature-flags';
-const renderer = new marked.Renderer();
 
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 
@@ -352,9 +350,6 @@ export default (env: Env) => {
             },
             {
               loader: 'markdown-loader',
-              options: {
-                renderer,
-              },
             },
           ],
         },
