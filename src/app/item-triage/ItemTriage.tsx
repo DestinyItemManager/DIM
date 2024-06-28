@@ -82,7 +82,7 @@ export function TriageTabToggle({ tabActive, item }: { tabActive: boolean; item:
 export function ItemTriage({ item, id }: { item: DimItem; id: string }) {
   return (
     <div id={id} role="tabpanel" aria-labelledby={`${id}-tab`} className={styles.itemTriagePane}>
-      {item.bucket.inWeapons && <WishlistTriageSection item={item} />}
+      {item.wishListEnabled && <WishlistTriageSection item={item} />}
       <LoadoutsTriageSection item={item} />
       <SimilarItemsTriageSection item={item} />
       {item.bucket.inArmor && item.bucket.hash !== BucketHashes.ClassArmor && (

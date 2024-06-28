@@ -42,6 +42,7 @@ export const modTypeTagByPlugCategoryHash: LookupTable<PlugCategoryHashes, strin
   [PlugCategoryHashes.EnhancementsArtifice]: 'artifice',
   [PlugCategoryHashes.EnhancementsRaidV700]: 'rootofnightmares',
   [PlugCategoryHashes.EnhancementsRaidV720]: 'crotasend',
+  [PlugCategoryHashes.EnhancementsRaidV800]: 'salvationsedge',
 };
 
 // FIXME(Lightfall) what about legacy?
@@ -120,6 +121,13 @@ const modSocketMetadata: ModSocketMetadata[] = [
     socketTypeHashes: [2804745000],
     compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidV720],
     emptyModSocketHash: 717667840,
+  },
+  {
+    slotTag: 'salvationsedge',
+    compatibleModTags: ['salvationsedge'],
+    socketTypeHashes: [1252302330],
+    compatiblePlugCategoryHashes: [PlugCategoryHashes.EnhancementsRaidV800],
+    emptyModSocketHash: 4059283783,
   },
   {
     slotTag: 'nightmare',

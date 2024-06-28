@@ -6,7 +6,7 @@ import { useIsPhonePortrait } from 'app/shell/selectors';
 import VaultCapacity from 'app/store-stats/VaultCapacity';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
-import { FontGlyphs } from 'data/d2/d2-font-glyphs';
+import { FontGlyphs } from 'data/font/d2-font-glyphs';
 import { memo } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './CharacterTile.m.scss';

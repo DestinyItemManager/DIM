@@ -121,14 +121,6 @@ export function getMasterworkStatNames(mw: DimMasterwork | null) {
   );
 }
 
-/**
- * Items that are sunset are always sunset.
- */
-export function isSunset(item: DimItem): boolean {
-  // 1310 is the last power cap value before sunsetting was sunsetted
-  return item.powerCap !== null && item.powerCap < 1310;
-}
-
 /** Can this item be equipped by the given store? */
 export function itemCanBeEquippedBy(
   item: DimItem,

@@ -17,7 +17,15 @@
 
 @font-face {
   font-family: 'Destiny Symbols';
-  src: url('../data/d2/DestinySymbols.woff2') format('woff2');
+  src: url('../data/font/DestinySymbols.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: 'DIM Symbols';
+  src: url('../data/font/DIMSymbols.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: fallback;
@@ -178,7 +186,7 @@ body {
   margin: 0 auto;
   background-color: var(--theme-pwa-background);
   color: var(--theme-text);
-  font-family: 'Open Sans', sans-serif, 'Destiny Symbols';
+  font-family: 'Open Sans', sans-serif, 'Destiny Symbols', 'DIM Symbols';
   font-size: 12px;
   line-height: calc(16 / 12);
   accent-color: var(--theme-accent-primary);
@@ -208,7 +216,7 @@ h4 {
 input,
 select,
 option {
-  font-family: inherit;
+  font-family: 'Open Sans', sans-serif, 'Destiny Symbols', 'DIM Symbols';
 }
 
 input[type='text'],
@@ -231,7 +239,7 @@ textarea {
   outline: none;
   color: var(--theme-text);
   box-sizing: border-box;
-  font-family: monospace, 'Destiny Symbols';
+  font-family: monospace, 'Destiny Symbols', 'DIM Symbols';
   font-size: inherit;
   // Setting this makes yuku/textcomplete faster because it doesn't need to make a fake element to measure line height (incorrectly, too)
   line-height: calc(16 / 12);

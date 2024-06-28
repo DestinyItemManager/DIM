@@ -384,18 +384,6 @@ export function makeItem(
       getDamageDefsByDamageType(defs)[itemDef.talentGrid.hudDamageType]) ||
     null;
 
-  const powerCapHash =
-    item.versionNumber !== undefined &&
-    itemDef.quality?.versions?.[item.versionNumber]?.powerCapHash;
-  // ignore falsyness of 0, because powerCap && powerCapHash are never zero and the code gets ugly otherwise
-  let powerCap = (powerCapHash && defs.PowerCap.get(powerCapHash).powerCap) || null;
-
-  // here is where we need to manually adjust unreasonable powerCap values,
-  // which are used for things that aren't currently set to ever cap
-  if (powerCap && powerCap > 50000) {
-    powerCap = null;
-  }
-
   const hiddenOverlay = itemDef.iconWatermark;
 
   const tooltipNotifications = item.tooltipNotificationIndexes?.length
@@ -500,7 +488,6 @@ export function makeItem(
     classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
     element,
     energy: itemInstanceData.energy ?? null,
-    powerCap,
     lockable: itemType !== 'Finishers' ? item.lockable : true,
     trackable: Boolean(item.itemInstanceId && itemDef.objectives?.questlineItemHash),
     tracked: Boolean(item.state & ItemState.Tracked),
@@ -571,35 +558,11 @@ export function makeItem(
     reportException('Sockets', e, { itemHash: item.itemHash });
   }
 
-  createdItem.wishListEnabled = Boolean(createdItem.bucket.inWeapons && createdItem.sockets);
-
-  // Masterwork
-  try {
-    createdItem.masterworkInfo = buildMasterwork(createdItem, defs);
-  } catch (e) {
-    errorLog(
-      'd2-stores',
-      `Error building masterwork info for ${createdItem.name}`,
-      item,
-      itemDef,
-      e,
-    );
-    reportException('MasterworkInfo', e, { itemHash: item.itemHash });
-  }
-
-  // A crafted weapon with an enhanced intrinsic and two enhanced traits is masterworked
-  // https://github.com/Bungie-net/api/issues/1662
-  if (createdItem.crafted && createdItem.sockets) {
-    const containsEnhancedIntrinsic = createdItem.sockets.allSockets.some(
-      (s) => s.plugged && enhancedIntrinsics.has(s.plugged.plugDef.hash),
-    );
-    if (
-      (containsEnhancedIntrinsic || createdItem.masterworkInfo?.tier === 10) &&
-      countEnhancedPerks(createdItem.sockets) >= 2
-    ) {
-      createdItem.masterwork = true;
-    }
-  }
+  createdItem.wishListEnabled = Boolean(
+    createdItem.sockets &&
+      (createdItem.bucket.inWeapons ||
+        (createdItem.bucket.hash === BucketHashes.ClassArmor && createdItem.isExotic)),
+  );
 
   // Extract weapon crafting info from the crafted socket but
   // before building stats because the weapon level affects stats.
@@ -735,6 +698,34 @@ export function makeItem(
   createdItem.infusionFuel = Boolean(itemDef.quality?.infusionCategoryHashes?.length);
   createdItem.infusable = createdItem.infusionFuel && isLegendaryOrBetter(createdItem);
   createdItem.infusionCategoryHashes = itemDef.quality?.infusionCategoryHashes || null;
+
+  // Masterwork
+  try {
+    createdItem.masterworkInfo = buildMasterwork(createdItem, defs);
+  } catch (e) {
+    errorLog(
+      'd2-stores',
+      `Error building masterwork info for ${createdItem.name}`,
+      item,
+      itemDef,
+      e,
+    );
+    reportException('MasterworkInfo', e, { itemHash: item.itemHash });
+  }
+
+  // A crafted weapon with an enhanced intrinsic and two enhanced traits is masterworked
+  // https://github.com/Bungie-net/api/issues/1662
+  if (createdItem.crafted && createdItem.sockets) {
+    const containsEnhancedIntrinsic = createdItem.sockets.allSockets.some(
+      (s) => s.plugged && enhancedIntrinsics.has(s.plugged.plugDef.hash),
+    );
+    if (
+      (containsEnhancedIntrinsic || createdItem.masterworkInfo?.tier === 10) &&
+      countEnhancedPerks(createdItem.sockets) >= 2
+    ) {
+      createdItem.masterwork = true;
+    }
+  }
 
   try {
     buildPursuitInfo(createdItem, item, itemDef);

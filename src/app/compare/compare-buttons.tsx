@@ -36,7 +36,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
     {
       buttonLabel: [
         <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
-        `+ ${t('Stats.Sunset')}`,
+        `+ ${t('Compare.NoModArmor')}`,
       ],
       query: '', // since we already filter by itemCategoryHash, an empty query gives you all items matching that category
     },
@@ -44,7 +44,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
     // above but also has to be armor 2.0
     exampleItem.destinyVersion === 2 && {
       buttonLabel: [<ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />],
-      query: 'not:sunset',
+      query: 'is:armor2.0',
     },
 
     // above but also has to be legendary
@@ -54,7 +54,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
           <BungieImage key="rarity" src={rarityIcons.Legendary} />,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
-        query: 'not:sunset is:legendary',
+        query: 'is:armor2.0 is:legendary',
       },
 
     // above but also the same seasonal mod slot, if it has one
@@ -70,7 +70,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
           />,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
-        query: `not:sunset ${exampleItemModSlotMetadatas
+        query: `is:armor2.0 ${exampleItemModSlotMetadatas
           .map((m) => `modslot:${m.slotTag || 'none'}`)
           .join(' ')}`,
       },
@@ -84,7 +84,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
           </PressTip>,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
-        query: `not:sunset perk:${quoteFilterString(exampleItemIntrinsic.name)}`,
+        query: `is:armor2.0 perk:${quoteFilterString(exampleItemIntrinsic.name)}`,
       },
 
     // basically stuff with the same name & categories

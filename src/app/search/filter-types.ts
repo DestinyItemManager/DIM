@@ -77,7 +77,7 @@ export interface FilterDefinition<I, FilterCtx, SuggestionsCtx> {
   destinyVersion?: 1 | 2;
 
   /** methods for retiring a filter */
-  deprecated?: FilterDeprecation;
+  deprecated?: boolean;
 
   /**
    * A function that is given context about the query and the world around it
@@ -120,10 +120,4 @@ export interface FilterDefinition<I, FilterCtx, SuggestionsCtx> {
    * given an item, this generates a filter that should match that item
    */
   fromItem?: (item: I) => string;
-}
-
-export const enum FilterDeprecation {
-  NotDeprecated,
-  Deprecated,
-  Disabled,
 }

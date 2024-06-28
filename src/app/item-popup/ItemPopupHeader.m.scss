@@ -32,6 +32,11 @@
   text-decoration: none;
   margin: 0 !important;
   padding: 0;
+
+  // Prevent the title running into the sheet close button
+  @include phone-portrait {
+    margin: 0 32px 0 0 !important;
+  }
 }
 
 .subtitle {
@@ -84,13 +89,6 @@
   margin: 0 4px 0 2px;
 }
 
-.powerCap {
-  color: #efe59d;
-  font-size: 12px;
-  line-height: 16px;
-  align-self: flex-start;
-}
-
 .primary {
   opacity: 0.9;
 }
@@ -115,9 +113,6 @@
   /* stylelint-disable-next-line no-descending-specificity */
   a {
     color: #222;
-  }
-  .powerCap {
-    color: #0009ff;
   }
 }
 

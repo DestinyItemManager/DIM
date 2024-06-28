@@ -1,5 +1,19 @@
 ## Next
 
+## 8.25.0 <span class="changelog-date">(2024-06-23)</span>
+
+* Greatly expanded the set of symbols available for use in loadout names/notes and item notes.
+* Fixed the calculation of stat effects from enhanced stats.
+* The compare sheet now highlights which of the quick-filter buttons is currently active.
+* Changed the way we rate-limit Bungie.net calls, which may result in snappier item moves and loadout application.
+* Added a "compare" button to item feed tiles, since it's such a common action when evaluating new gear.
+* In the item feed, perks in the same column now have a bar on the left to indicate they are together.
+* Engram bonuses in the Milestones section are now relative to your "drop power", not your "character power".
+* The name of the nightfall and crucible labs playlist is included in their Milestone titles.
+* Manually corrected the engram power level for several Milestones.
+* Worked around a bug in the Bungie data that showed duplicate perks in some weapons.
+* Any item with randomized perks can now be wishlisted, which includes random-perk armor.
+
 ## 8.24.0 <span class="changelog-date">(2024-06-16)</span>
 * Fix issue where light level displayed in the Loadouts views was calculated using all weapons and armor in the loadout, instead of just the weapons and armor to be equipped.
 * Add `light:` filter to the Loadouts search. Only works with loadouts that equip an item for all weapon and armor slots.

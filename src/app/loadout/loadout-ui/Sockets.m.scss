@@ -24,7 +24,7 @@
   align-items: center;
   justify-content: center;
   > span {
-    color: lightgray;
+    color: var(--theme-accent-secondary);
     font-size: calc(var(--item-icon-size) * 2 / 3);
   }
 }

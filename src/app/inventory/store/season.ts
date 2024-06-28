@@ -66,11 +66,11 @@ function getSeasonFromOverlayAndSource(
   hash: number,
 ) {
   if (overlay && D2SeasonFromOverlay[overlay]) {
-    return D2SeasonFromOverlay[overlay]!;
+    return D2SeasonFromOverlay[overlay];
   }
 
   if (source && D2SeasonFromSource[source]) {
-    return D2SeasonFromSource[source]!;
+    return D2SeasonFromSource[source];
   }
 
   return D2Season[hash] || D2CalculatedSeason;
@@ -81,7 +81,7 @@ export function getEvent(item: DimItem): D2EventEnum | undefined {
   // hiddenOverlay has precedence for event
   const overlay = item.hiddenOverlay || item.iconOverlay;
   if (overlay && D2EventFromOverlay[overlay]) {
-    return D2EventFromOverlay[overlay]!;
+    return D2EventFromOverlay[overlay];
   }
 
   if (item.source && D2SourcesToEvent[item.source]) {

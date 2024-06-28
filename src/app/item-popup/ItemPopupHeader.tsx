@@ -82,7 +82,6 @@ export default function ItemPopupHeader({
                 {item.amount.toLocaleString()} / {item.maxStackSize.toLocaleString()}
               </div>
             )}
-          {Boolean(item.powerCap) && <div className={styles.powerCap}>| {item.powerCap} </div>}
           {item.pursuit?.questLine && (
             <div className={styles.itemType}>
               {t('MovePopup.Subtitle.QuestProgress', {

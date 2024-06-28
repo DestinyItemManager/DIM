@@ -50,7 +50,6 @@ import {
   getMasterworkStatNames,
   isD1Item,
   isKillTrackerSocket,
-  isSunset,
 } from 'app/utils/item-utils';
 import {
   getDisplayedItemSockets,
@@ -277,16 +276,6 @@ export function getColumns(
         value: (item) => item.power,
         defaultSort: SortDirection.DESC,
         filter: (value) => `power:>=${value}`,
-      }),
-    !isGhost &&
-      destinyVersion === 2 &&
-      c({
-        id: 'sunset',
-        header: t('Stats.Sunset'),
-        value: isSunset,
-        defaultSort: SortDirection.ASC,
-        cell: (value) => (value ? <AppIcon icon={faCheck} /> : undefined),
-        filter: (value) => `${value ? '' : '-'}is:sunset`,
       }),
     !isGhost &&
       (destinyVersion === 2 || isWeapon) &&

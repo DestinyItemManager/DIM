@@ -136,6 +136,16 @@ export function getIntrinsicArmorPerkSocket(item: DimItem): DimSocket | undefine
   }
 }
 
+export function getExtraIntrinsicPerkSockets(item: DimItem): DimSocket[] {
+  // returns sockets that contains intrinsic perks even if those sockets are not the "Intrinsic" socket
+  return item.isExotic && item.bucket.hash === BucketHashes.ClassArmor && item.sockets
+    ? item.sockets.allSockets
+        .filter((s) => s.isPerk && s.visibleInGame && socketContainsIntrinsicPlug(s))
+        // exotic class item intrinsics need to set isReusable false to avoid showing as selectable
+        .map((s) => ({ ...s, isReusable: false }))
+    : [];
+}
+
 export function socketContainsPlugWithCategory(
   socket: DimSocket,
   category: PlugCategoryHashes,

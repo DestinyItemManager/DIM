@@ -12,11 +12,12 @@
   composes: flexRow from '../dim-ui/common.m.scss';
   align-items: flex-start;
   margin: 8px 0;
+  gap: 8px;
   padding-left: 1px; // to account for the item hover outline
 }
 
 .info {
-  margin-left: 8px;
+  flex: 1;
 }
 
 .title {
