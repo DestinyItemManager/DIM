@@ -8,30 +8,30 @@
 
 .perks {
   display: flex;
-  flex-flow: column;
+  flex-direction: column;
   margin: 4px 0;
-  gap: 3px;
+  gap: 4px;
 
   > div {
     margin-left: -3px;
     padding-left: 4px;
   }
+}
+.perk {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2px;
 
-  .multiPerk {
-    border-left: 2px solid #888;
-    padding-left: 2px;
-  }
-
-  > div > div > div {
-    display: flex;
-    flex-flow: row;
-    align-items: center;
-  }
-
-  img {
+  > img {
     height: 24px;
     width: 24px;
+    margin-left: -1px;
   }
+}
+.multiPerk {
+  border-left: 2px solid #888;
+  padding-left: 2px;
 }
 
 .stats {
