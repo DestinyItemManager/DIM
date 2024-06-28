@@ -1,5 +1,17 @@
 ## Next
 
+* The progress page shows the Ritual Pathfinder and Pale Heart Pathfinder.
+* Prismatic subclasses now show the currently-equipped super overlayed on them.
+* Restored wish-list-ability to all weapons, and actually made exotic class items wishlistable.
+* A new `is:wishlistable` search highlights items that can be added to a wish list.
+* Made the vendor-item icon on Loadout Optimizer items a bit brighter.
+* Fully removed the concept of sunset weapons. The `is:sunset` search no longer does anything.
+* Added `modslot:salvationsedge` search.
+* Exotic class items now show all of their intrinsic perks.
+* Show the intrinsic perk for Ergo Sum and crafted exotics in Item Feed.
+* Removed the stats line from class items in the Item Feed.
+* Fixed missing yellow stat bars from masterworked weapons.
+
 ## 8.25.0 <span class="changelog-date">(2024-06-23)</span>
 
 * Greatly expanded the set of symbols available for use in loadout names/notes and item notes.
