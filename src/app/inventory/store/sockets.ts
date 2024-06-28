@@ -45,6 +45,7 @@ import {
   DimSockets,
   PluggableInventoryItemDefinition,
 } from '../item-types';
+import { exoticClassItemPlugs } from './exotic-class-item';
 
 //
 // These are the utilities that deal with Sockets and Plugs on items. Sockets and Plugs
@@ -357,12 +358,29 @@ function buildDefinedSocket(
           }
         }
       }
-    } else if (socketDef.reusablePlugItems) {
+    } else if (socketDef.reusablePlugItems && socketDef.reusablePlugItems.length > 0) {
       for (const reusablePlug of socketDef.reusablePlugItems) {
         const built = buildDefinedPlug(defs, reusablePlug.plugItemHash);
         if (built) {
           reusablePlugs.push(built);
         }
+      }
+    } else if (
+      forThisItem &&
+      forThisItem.hash in exoticClassItemPlugs &&
+      index in exoticClassItemPlugs[forThisItem.hash]!
+    ) {
+      const plugs = exoticClassItemPlugs[forThisItem.hash]![index]!;
+      for (const plugItemHash of plugs) {
+        const built = buildDefinedPlug(defs, plugItemHash);
+        if (built) {
+          reusablePlugs.push(built);
+        }
+      }
+    } else if (socketDef.singleInitialItemHash) {
+      const built = buildDefinedPlug(defs, socketDef.singleInitialItemHash);
+      if (built) {
+        reusablePlugs.push(built);
       }
     }
   }
