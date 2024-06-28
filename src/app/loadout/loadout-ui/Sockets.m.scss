@@ -19,22 +19,12 @@
   }
 }
 
-.vendorItemContainer {
-  composes: flexRow from '../../dim-ui/common.m.scss';
-  gap: 2px;
-  grid-column: 1 / span 2;
-}
-
 .vendorItem {
   display: flex;
   align-items: center;
   justify-content: center;
   > span {
-    color: var(--theme-text-secondary);
+    color: var(--theme-accent-secondary);
     font-size: calc(var(--item-icon-size) * 2 / 3);
-  }
-  > img {
-    width: 100%;
-    object-fit: contain;
   }
 }

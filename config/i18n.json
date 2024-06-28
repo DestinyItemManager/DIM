@@ -626,6 +626,7 @@
     "ExcludedItems": "Excluded Items",
     "Exotic": "Exotic Armor",
     "MwExotic": "Exotic",
+    "ExcludeVendors": "Search \"-is:vendor\" to exclude vendor items from Loadout Optimizer.",
     "ExistingLoadout": "Existing Loadout",
     "ExoticSpecialCategory": "Special",
     "Filter": "Settings",

@@ -659,6 +659,7 @@
     "DisabledDueToMaintenance": "The Loadout Optimizer is currently disabled due to Bungie API maintenance.",
     "EquipItems": "Equip",
     "ExcludeItem": "Exclude Item",
+    "ExcludeVendors": "Search \"-is:vendor\" to exclude vendor items from Loadout Optimizer.",
     "ExcludedItems": "Excluded Items",
     "ExistingLoadout": "Existing Loadout",
     "Exotic": "Exotic Armor",
