@@ -123,14 +123,12 @@ function availableQuestToItem(
     objectives,
     store,
   );
+  if (dimItem.pursuit === null) {
+    throw null; // can't happen
+  }
 
   dimItem.secondaryIcon = challengeItem?.secondaryIcon;
-
-  dimItem.pursuit = {
-    expiration: milestoneExpiration(milestone),
-    modifierHashes: availableQuest?.activity?.modifierHashes || [],
-    rewards: [],
-  };
+  dimItem.pursuit.modifierHashes = availableQuest?.activity?.modifierHashes || [];
 
   if (questRewards?.length) {
     dimItem.pursuit.rewards = questRewards.map((r) => ({
@@ -149,8 +147,6 @@ function availableQuestToItem(
           hasConditionalVisibility: false,
         }));
     }
-  } else if (milestone.rewards) {
-    dimItem.pursuit.rewards = processRewards(milestone.rewards, milestoneDef);
   }
 
   return dimItem;
@@ -163,13 +159,16 @@ function activityMilestoneToItem(
   defs: D2ManifestDefinitions,
   store: DimStore,
 ): DimItem | null {
-  const activity = milestone.activities[0];
-  const activityDef = defs.Activity.get(activity.activityHash);
-  const objectives = activity.challenges.map((a) => a.objective);
-  if (objectives.every((objective) => objective.complete)) {
+  // Find the first activity that hasn't been completed. TODO: Can we show all of them?
+  const activity = milestone.activities.find((a) =>
+    a.challenges.some((c) => !c.objective.complete),
+  );
+  // Ignore the milestone if all activities are complete or there are no challenges.
+  if (!activity) {
     return null;
   }
-
+  const activityDef = activity && defs.Activity.get(activity.activityHash);
+  const objectives = activity.challenges.map((a) => a.objective);
   const dimItem = makeMilestonePursuitItem(
     buckets,
     milestone,
@@ -178,18 +177,24 @@ function activityMilestoneToItem(
     objectives,
     store,
   );
-
-  dimItem.pursuit = {
-    expiration: milestoneExpiration(milestone),
-    modifierHashes: activity.modifierHashes || [],
-    rewards: [],
-  };
-  if (milestone.rewards) {
-    dimItem.pursuit.rewards = processRewards(milestone.rewards, milestoneDef);
+  if (dimItem.pursuit === null) {
+    throw null; // can't happen
   }
+
+  dimItem.pursuit.modifierHashes = activity.modifierHashes || [];
+
   if (activityDef) {
     if (!milestone.rewards) {
-      dimItem.pursuit.rewards = activityDef.challenges.flatMap((c) => c.dummyRewards);
+      dimItem.pursuit.rewards = activityDef.challenges
+        .filter((c) => objectives.some((o) => o.objectiveHash === c.objectiveHash))
+        .flatMap((c) => c.dummyRewards);
+      console.log(
+        'activityDef rewards',
+        dimItem.name,
+        dimItem.pursuit.rewards,
+        dimItem.hash,
+        milestone,
+      );
     }
     if (milestoneDef.hash === 2029743966 /* Nightfall Weekly Score Challenge */) {
       dimItem.name = `${dimItem.name}: ${activityDef.displayProperties.description}`;
