@@ -1318,15 +1318,6 @@ export const symbolData: {
     },
   },
   {
-    codepoint: 57492,
-    glyph: '',
-    source: {
-      tableName: 'InventoryItem',
-      hash: 1602994568,
-      fromRichText: false,
-    },
-  },
-  {
     codepoint: 983122,
     glyph: '󰁒',
     source: {
@@ -1795,74 +1786,11 @@ export const symbolData: {
     },
   },
   {
-    codepoint: 61186,
-    glyph: '',
-    source: {
-      tableName: 'InventoryItem',
-      hash: 1517917190,
-      fromRichText: false,
-    },
-  },
-  {
-    codepoint: 61187,
-    glyph: '',
-    source: {
-      tableName: 'InventoryItem',
-      hash: 3994381207,
-      fromRichText: false,
-    },
-  },
-  {
-    codepoint: 61188,
-    glyph: '',
-    source: {
-      tableName: 'InventoryItem',
-      hash: 1225978592,
-      fromRichText: false,
-    },
-  },
-  {
-    codepoint: 61191,
-    glyph: '',
-    source: {
-      tableName: 'InventoryItem',
-      hash: 1980796564,
-      fromRichText: false,
-    },
-  },
-  {
-    codepoint: 61194,
-    glyph: '',
-    source: {
-      tableName: 'InventoryItem',
-      hash: 988980152,
-      fromRichText: false,
-    },
-  },
-  {
     codepoint: 61230,
     glyph: '',
     source: {
       tableName: 'InventoryItem',
       hash: 988980155,
-      fromRichText: false,
-    },
-  },
-  {
-    codepoint: 61190,
-    glyph: '',
-    source: {
-      tableName: 'InventoryItem',
-      hash: 1680616210,
-      fromRichText: false,
-    },
-  },
-  {
-    codepoint: 61193,
-    glyph: '',
-    source: {
-      tableName: 'InventoryItem',
-      hash: 4249729126,
       fromRichText: false,
     },
   },
@@ -1885,15 +1813,6 @@ export const symbolData: {
     },
   },
   {
-    codepoint: 61192,
-    glyph: '',
-    source: {
-      tableName: 'InventoryItem',
-      hash: 2307689415,
-      fromRichText: false,
-    },
-  },
-  {
     codepoint: 61228,
     glyph: '',
     source: {
@@ -1903,29 +1822,11 @@ export const symbolData: {
     },
   },
   {
-    codepoint: 61183,
-    glyph: '',
-    source: {
-      tableName: 'Trait',
-      hash: 2724747993,
-      fromRichText: false,
-    },
-  },
-  {
     codepoint: 983371,
     glyph: '󰅋',
     source: {
       tableName: 'Trait',
       hash: 945613349,
-      fromRichText: false,
-    },
-  },
-  {
-    codepoint: 983368,
-    glyph: '󰅈',
-    source: {
-      tableName: 'Trait',
-      hash: 3173573497,
       fromRichText: false,
     },
   },
