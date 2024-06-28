@@ -124,7 +124,7 @@ function availableQuestToItem(
     store,
   );
   if (dimItem.pursuit === null) {
-    throw null; // can't happen
+    throw new Error(''); // can't happen
   }
 
   dimItem.secondaryIcon = challengeItem?.secondaryIcon;
@@ -178,7 +178,7 @@ function activityMilestoneToItem(
     store,
   );
   if (dimItem.pursuit === null) {
-    throw null; // can't happen
+    throw new Error(''); // can't happen
   }
 
   dimItem.pursuit.modifierHashes = activity.modifierHashes || [];
@@ -188,13 +188,6 @@ function activityMilestoneToItem(
       dimItem.pursuit.rewards = activityDef.challenges
         .filter((c) => objectives.some((o) => o.objectiveHash === c.objectiveHash))
         .flatMap((c) => c.dummyRewards);
-      console.log(
-        'activityDef rewards',
-        dimItem.name,
-        dimItem.pursuit.rewards,
-        dimItem.hash,
-        milestone,
-      );
     }
     if (milestoneDef.hash === 2029743966 /* Nightfall Weekly Score Challenge */) {
       dimItem.name = `${dimItem.name}: ${activityDef.displayProperties.description}`;
