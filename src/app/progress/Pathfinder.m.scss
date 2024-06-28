@@ -1,44 +1,51 @@
 @use '../variables.scss' as *;
 
 .pathfinderTree {
-  & + div {
-    display: inline-grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-gap: 16px;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  margin: 16px 0;
+
+  @include phone-portrait {
+    flex-direction: column;
+    margin: 16px 10px;
+    gap: 12px;
   }
 }
 
 .pathfinderRow {
-  composes: flexWrap from '../dim-ui/common.m.scss';
+  composes: flexColumn from '../dim-ui/common.m.scss';
   box-sizing: border-box;
-  margin: 16px 0;
-  align-content: center;
-  gap: 16px;
+  gap: 8px;
+  flex: 1;
+  justify-content: center;
+  max-width: 250px;
+  min-width: 120px;
+  --item-size: 35px;
 
   :global(.milestone-quest) {
     align-items: center;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
     padding: 8px;
+    width: 100%;
   }
 
-  &:not(:first-child) button::before {
-    position: absolute;
-    display: inline;
-    content: '⧽';
-    font-size: 28px;
-    // transform: translateY(10%);
-    margin-left: -23px;
+  @media (min-width: 541px) {
+    &:nth-child(n + 2) button::before {
+      position: absolute;
+      display: inline;
+      content: '⧽';
+      font-size: 28px;
+      margin-left: -23px;
+    }
   }
 
-  @media (max-width: 1500px) {
-    --item-size: 35px;
-  }
+  @media (max-width: 1270px) and (min-width: 541px) {
+    min-width: 60px;
 
-  @media (max-width: 1270px) {
     :global(.milestone-quest) {
       align-items: flex-start;
-      flex-direction: column-reverse;
+      flex-direction: column;
     }
     :global(.milestone-icon) {
       flex-direction: row !important;
@@ -65,30 +72,24 @@
     }
   }
 
-  > * {
-    flex: 1;
-    max-width: 250px;
-    min-width: 120px;
+  @include phone-portrait {
+    flex-direction: row;
+    gap: 14px;
+    width: auto;
+    max-width: unset;
+
+    > * {
+      flex: 0;
+      width: calc(var(--item-size) + 16px) !important;
+      min-width: calc(var(--item-size) + 16px) !important;
+    }
+    :global(.milestone-icon) {
+      margin: 0;
+    }
+    :global(.milestone-info) {
+      display: none !important;
+    }
   }
-
-  // @media (max-width: 1270px) {
-  //   margin: 8px 10px;
-  //   gap: 14px;
-  //   width: auto;
-
-  //   > * {
-  //     flex: 0;
-  //     width: var(--item-size);
-  //     min-width: var(--item-size);
-  //   }
-
-  //   :global(.milestone-icon) {
-  //     margin: 0;
-  //   }
-  //   :global(.milestone-info) {
-  //     display: none !important;
-  //   }
-  // }
 }
 
 .completed {

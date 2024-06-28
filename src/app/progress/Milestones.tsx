@@ -120,9 +120,9 @@ function milestonesForProfile(
 
   const filteredMilestones = allMilestones.filter(
     (milestone) =>
-      !milestone.availableQuests &&
-      !milestone.activities &&
-      (!milestone.vendors || milestone.rewards) &&
+      !milestone.availableQuests?.length &&
+      !milestone.activities?.length &&
+      (!milestone.vendors?.length || Boolean(milestone.rewards?.length)) &&
       defs.Milestone.get(milestone.milestoneHash),
   );
 
@@ -147,8 +147,8 @@ function milestonesForCharacter(
     return (
       def &&
       (def.showInExplorer || def.showInMilestones) &&
-      (milestone.activities ||
-        !milestone.availableQuests ||
+      (Boolean(milestone.activities?.length) ||
+        !milestone.availableQuests?.length ||
         milestone.availableQuests.every(
           (q) =>
             q.status.stepObjectives.length > 0 &&

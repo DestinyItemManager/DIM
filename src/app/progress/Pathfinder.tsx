@@ -58,20 +58,24 @@ export default function Pathfinder({
 
   return (
     <section id={id} className="pathfinder">
-      <CollapsibleTitle title={name} sectionId={id} className={styles.pathfinderTree}>
-        {pursuitGroups.map((pursuits) => (
-          <div key={pursuits.length} className={styles.pathfinderRow}>
-            {pursuits.map((item) => (
-              <Pursuit
-                item={item}
-                key={item.index}
-                className={
-                  acquiredRecords.has(item.pursuit?.recordHash ?? 0) ? styles.completed : undefined
-                }
-              />
-            ))}
-          </div>
-        ))}
+      <CollapsibleTitle title={name} sectionId={id}>
+        <div className={styles.pathfinderTree}>
+          {pursuitGroups.map((pursuits) => (
+            <div key={pursuits.length} className={styles.pathfinderRow}>
+              {pursuits.map((item) => (
+                <Pursuit
+                  item={item}
+                  key={item.index}
+                  className={
+                    acquiredRecords.has(item.pursuit?.recordHash ?? 0)
+                      ? styles.completed
+                      : undefined
+                  }
+                />
+              ))}
+            </div>
+          ))}
+        </div>
       </CollapsibleTitle>
     </section>
   );
