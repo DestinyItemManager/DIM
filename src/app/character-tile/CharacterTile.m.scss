@@ -75,7 +75,7 @@
 }
 
 .bigText {
-  font-size: 20px;
+  font-size: 18px;
   margin-top: 2px;
 }
 
@@ -110,7 +110,7 @@
 }
 
 .vaultName {
-  font-size: 20px;
+  font-size: 16px;
   grid-area: class;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -149,6 +149,10 @@
 .bigPowerLevel {
   composes: bigText;
   grid-area: power;
+
+  .vaultTile & {
+    font-size: 16px;
+  }
 }
 
 .smallPowerLevel {
