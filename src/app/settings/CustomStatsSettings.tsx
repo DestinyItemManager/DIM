@@ -134,7 +134,7 @@ function CustomStatEditor({
     content: (
       <div className={styles.classOption}>
         <ClassIcon classType={c} className={styles.classDropdownIcon} />
-        {getClassTypeNameLocalized(c, defs)}
+        {getClassTypeNameLocalized(defs)(c)}
       </div>
     ),
     value: c,
