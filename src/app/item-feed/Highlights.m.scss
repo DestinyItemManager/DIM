@@ -10,10 +10,10 @@
   display: flex;
   flex-flow: column;
   margin: 4px 0;
+  gap: 3px;
 
   > div {
     margin-left: -3px;
-    margin-bottom: 3px;
     padding-left: 4px;
   }
 
@@ -36,11 +36,20 @@
 
 .stats {
   margin: 4px 0 0 0;
-  :global(.stat-row) {
-    margin-bottom: 8px;
-  }
+  gap: 4px !important;
+
   :global(.stat) {
-    line-height: 8px;
     color: var(--theme-text) !important;
   }
+}
+
+.armorStats {
+  :global(.stat) {
+    line-height: 8px;
+  }
+}
+
+.customTotals {
+  gap: 0 !important;
+  flex-wrap: wrap;
 }
