@@ -226,6 +226,7 @@ $content-cells: 5;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
+  gap: 3px;
 }
 .miniPerkContainer {
   position: relative;
@@ -234,7 +235,6 @@ $content-cells: 5;
   height: 18px;
   width: 18px;
   --item-size: 18px;
-  margin-right: 3px;
   margin-left: -1px;
   flex-shrink: 0;
   > img {

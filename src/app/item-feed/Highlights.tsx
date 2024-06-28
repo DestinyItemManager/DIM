@@ -30,7 +30,7 @@ export default function Highlights({ item }: { item: DimItem }) {
     const archetype = !item.isExotic && getWeaponArchetype(item)?.displayProperties.name;
 
     return (
-      <div>
+      <>
         <span className={styles.type}>
           {archetype} <ItemTypeName item={item} />
         </span>
@@ -43,17 +43,19 @@ export default function Highlights({ item }: { item: DimItem }) {
               })}
             >
               {s.plugOptions.map((p) => (
-                <div key={p.plugDef.hash}>
-                  <PressTip tooltip={() => <DimPlugTooltip item={item} plug={p} />}>
-                    <DefItemIcon itemDef={p.plugDef} borderless={true} />{' '}
-                    {p.plugDef.displayProperties.name}
-                  </PressTip>
-                </div>
+                <PressTip
+                  key={p.plugDef.hash}
+                  tooltip={() => <DimPlugTooltip item={item} plug={p} />}
+                  className={styles.perk}
+                >
+                  <DefItemIcon itemDef={p.plugDef} borderless={true} />
+                  {p.plugDef.displayProperties.name}
+                </PressTip>
               ))}
             </div>
           ))}
         </div>
-      </div>
+      </>
     );
   } else if (item.bucket.sort === 'Armor') {
     const renderStat = (stat: DimStat) => (
@@ -73,10 +75,10 @@ export default function Highlights({ item }: { item: DimItem }) {
       <>
         {item.bucket.hash !== BucketHashes.ClassArmor && (
           <div className={clsx(styles.stats, 'stat-bars', 'destiny2')}>
-            <div className="stat-row">
+            <div className={clsx('stat-row', styles.armorStats)}>
               {item.stats?.filter((s) => s.statHash > 0).map(renderStat)}
             </div>
-            <div className="stat-row">
+            <div className={clsx('stat-row', styles.customTotals)}>
               {item.stats?.filter((s) => s.statHash < 0).map(renderStat)}
             </div>
           </div>

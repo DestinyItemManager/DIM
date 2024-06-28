@@ -127,15 +127,15 @@ export function processItems(
   return result;
 }
 
-export const getClassTypeNameLocalized = _.memoize(
-  (type: DestinyClass, defs: D2ManifestDefinitions): string => {
+export const getClassTypeNameLocalized = memoizeOne((defs: D2ManifestDefinitions) =>
+  _.memoize((type: DestinyClass): string => {
     const klass = Object.values(defs.Class.getAll()).find((c) => c.classType === type);
     if (klass) {
       return klass.displayProperties.name;
     } else {
       return t('Loadouts.Any');
     }
-  },
+  }),
 );
 
 /** Make a "fake" item from other information - used for Collectibles, etc. */
@@ -485,7 +485,7 @@ export function makeItem(
     maxStackSize: Math.max(itemDef.inventory!.maxStackSize, 1),
     uniqueStack: Boolean(itemDef.inventory!.stackUniqueLabel?.length),
     classType,
-    classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
+    classTypeNameLocalized: getClassTypeNameLocalized(defs)(itemDef.classType),
     element,
     energy: itemInstanceData.energy ?? null,
     lockable: itemType !== 'Finishers' ? item.lockable : true,

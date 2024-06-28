@@ -737,7 +737,7 @@ function PerksCell({
               >
                 <div className={styles.miniPerkContainer}>
                   <DefItemIcon itemDef={p.plugDef} borderless={true} />
-                </div>{' '}
+                </div>
                 {p.plugDef.displayProperties.name}
               </div>
             </PressTip>
