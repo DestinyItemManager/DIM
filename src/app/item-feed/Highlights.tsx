@@ -93,12 +93,14 @@ export default function Highlights({ item }: { item: DimItem }) {
                 })}
               >
                 {s.plugOptions.map((p) => (
-                  <div key={p.plugDef.hash}>
-                    <PressTip tooltip={() => <DimPlugTooltip item={item} plug={p} />}>
-                      <DefItemIcon itemDef={p.plugDef} borderless={true} />{' '}
-                      {p.plugDef.displayProperties.name}
-                    </PressTip>
-                  </div>
+                  <PressTip
+                    key={p.plugDef.hash}
+                    tooltip={() => <DimPlugTooltip item={item} plug={p} />}
+                    className={styles.perk}
+                  >
+                    <DefItemIcon itemDef={p.plugDef} borderless={true} />
+                    {p.plugDef.displayProperties.name}
+                  </PressTip>
                 ))}
               </div>
             ))}
