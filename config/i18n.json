@@ -104,8 +104,7 @@
     "CompareBaseStats": "Show Base Stats",
     "AssumeMasterworked": "Assume Masterworked",
     "InitialItem": "This is the item the Compare tool was launched from",
-    "IsVendorItem": "This item is not owned. This is in a vendor's inventory and may be for sale.",
-    "SoldBy": "Sold by: {{vendorName}}",
+    "IsVendorItem": "This item is not in your inventory, but {{vendorName}} sells it.",
     "Error": {
       "Unmatched": "This item doesn't match the type of items being compared.",
       "Invalid": "There are no valid items for comparison."
@@ -631,6 +630,7 @@
     "ExcludedItems": "Excluded Items",
     "Exotic": "Exotic Armor",
     "MwExotic": "Exotic",
+    "ExcludeVendors": "Search \"-is:vendor\" to exclude vendor items from Loadout Optimizer.",
     "ExistingLoadout": "Existing Loadout",
     "ExoticSpecialCategory": "Special",
     "Filter": "Settings",

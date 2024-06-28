@@ -129,13 +129,7 @@ function VendorItemWarning({ item }: { item: DimItem }) {
       tooltip={() => {
         const vendorName =
           replacer(defs.Vendor.get(item.vendor!.vendorHash)?.displayProperties?.name) || '--';
-        return (
-          <>
-            {t('Compare.IsVendorItem')}
-            <br />
-            {t('Compare.SoldBy', { vendorName })}
-          </>
-        );
+        return <>{t('Compare.IsVendorItem', { vendorName })}</>;
       }}
     >
       <ActionButton onClick={noop} disabled>

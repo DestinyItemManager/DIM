@@ -130,17 +130,15 @@ function Sockets({
 function VendorItemPlug({ item }: { item: DimItem }) {
   const defs = useD2Definitions()!;
   const replacer = useDynamicStringReplacer(item.owner);
+  const vendorDef = defs.Vendor.get(item.vendor!.vendorHash);
   return (
     <PressTip
       elementType="span"
       tooltip={() => {
-        const vendorName =
-          replacer(defs.Vendor.get(item.vendor!.vendorHash)?.displayProperties?.name) || '--';
+        const vendorName = replacer(vendorDef?.displayProperties?.name) || '--';
         return (
           <>
-            {t('Compare.IsVendorItem')}
-            <br />
-            {t('Compare.SoldBy', { vendorName })}
+            {t('Compare.IsVendorItem', { vendorName })} {t('LoadoutBuilder.ExcludeVendors')}
           </>
         );
       }}
