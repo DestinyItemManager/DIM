@@ -77,13 +77,11 @@ export function PursuitsGroup({
   defs,
   store,
   pursuits,
-  hideDescriptions,
   pursuitsInfo = pursuitsInfoFile,
 }: {
   defs: D2ManifestDefinitions;
   store: DimStore;
   pursuits: DimItem[];
-  hideDescriptions?: boolean;
   pursuitsInfo?: { [hash: string]: { [type in DefType]?: number[] } };
 }) {
   const [bountyFilters, setBountyFilters] = useState<BountyFilter[]>([]);
@@ -103,7 +101,6 @@ export function PursuitsGroup({
             item={item}
             key={item.index}
             searchHidden={!matchBountyFilters(defs, item, bountyFilters, pursuitsInfo)}
-            hideDescription={hideDescriptions}
           />
         ))}
       </PursuitGrid>

@@ -20,6 +20,8 @@ import { getEngramPowerBonus } from './engrams';
 import { milestoneToItems } from './milestone-items';
 import { getCharacterProgressions } from './selectors';
 
+const sortPowerBonus = compareBy((powerBonus: number | undefined) => -(powerBonus ?? -1));
+
 /**
  * The list of Milestones for a character. Milestones are different from pursuits and
  * represent challenges, story prompts, and other stuff you can do not represented by Pursuits.
@@ -59,8 +61,6 @@ export default function Milestones({
     }
   });
 
-  const sortPowerBonus = compareBy((powerBonus: number | undefined) => -(powerBonus ?? -1));
-
   return (
     <>
       {characterProgressions && (
@@ -81,7 +81,7 @@ export default function Milestones({
         </PursuitGrid>
       )}
       {[...milestonesByPower.keys()].sort(sortPowerBonus).map((powerBonus) => (
-        <div key={powerBonus}>
+        <div key={powerBonus ?? -1}>
           <h2 className={styles.header}>
             {powerBonus === undefined
               ? t('Progress.PowerBonusHeaderUndefined')
@@ -117,9 +117,9 @@ function milestonesForProfile(
 
   const filteredMilestones = allMilestones.filter(
     (milestone) =>
-      !milestone.availableQuests &&
-      !milestone.activities &&
-      (!milestone.vendors || milestone.rewards) &&
+      !milestone.availableQuests?.length &&
+      !milestone.activities?.length &&
+      (!milestone.vendors?.length || Boolean(milestone.rewards?.length)) &&
       defs.Milestone.get(milestone.milestoneHash),
   );
 
@@ -144,8 +144,8 @@ function milestonesForCharacter(
     return (
       def &&
       (def.showInExplorer || def.showInMilestones) &&
-      (milestone.activities ||
-        !milestone.availableQuests ||
+      (Boolean(milestone.activities?.length) ||
+        !milestone.availableQuests?.length ||
         milestone.availableQuests.every(
           (q) =>
             q.status.stepObjectives.length > 0 &&

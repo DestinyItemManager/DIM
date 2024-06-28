@@ -1087,6 +1087,7 @@
     "Milestones": "Milestones & Challenges",
     "NoEventChallenges": "You have completed all event challenges",
     "NoTrackedTriumph": "You have no tracked triumphs. Track as many as you like in DIM.",
+    "PaleHeartPathfinder": "Pale Heart Pathfinder",
     "PercentPrestige": "{{pct}}% to reset",
     "PointsUsed": "1 point used",
     "PointsUsed_plural": "{{count}} points used",
@@ -1101,6 +1102,7 @@
     "RecordValue": "{{value}}pts",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
+    "RitualPathfinder": "Ritual Pathfinder",
     "SecretTriumph": "Secret Triumph",
     "StatTrackers": "Stat Trackers",
     "TrackedTriumphs": "Tracked Triumphs"
