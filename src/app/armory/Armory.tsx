@@ -251,7 +251,9 @@ export default function Armory({
           <ItemGrid items={storeItems} noLink />
         </>
       )}
-      <AllWishlistRolls item={item} realAvailablePlugHashes={realAvailablePlugHashes} />
+      {item.wishListEnabled && (
+        <AllWishlistRolls item={item} realAvailablePlugHashes={realAvailablePlugHashes} />
+      )}
     </div>
   );
 }

@@ -66,6 +66,12 @@ const wishlistFilters: ItemFilterDefinition[] = [
       (item) =>
         !wishListsByHash.has(item.hash),
   },
+  {
+    keywords: 'wishlistable',
+    destinyVersion: 2,
+    description: tl('Filter.WishlistEnabled'),
+    filter: () => (item) => item.wishListEnabled,
+  },
 ];
 
 export default wishlistFilters;
