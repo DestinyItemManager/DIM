@@ -577,7 +577,9 @@ export function makeItem(
   }
 
   createdItem.wishListEnabled = Boolean(
-    createdItem.sockets?.allSockets.some((s) => s.hasRandomizedPlugItems),
+    createdItem.sockets &&
+      (createdItem.bucket.inWeapons ||
+        (createdItem.bucket.hash === BucketHashes.ClassArmor && createdItem.isExotic)),
   );
 
   // Extract weapon crafting info from the crafted socket but
