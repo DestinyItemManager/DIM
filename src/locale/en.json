@@ -106,7 +106,8 @@
       "Unmatched": "This item doesn't match the type of items being compared."
     },
     "InitialItem": "This is the item the Compare tool was launched from",
-    "IsVendorItem": "This item is not in your inventory, but {{vendorName}} sells it."
+    "IsVendorItem": "This item is not in your inventory, but {{vendorName}} sells it.",
+    "NoModArmor": "Pre-mods"
   },
   "Cooldown": {
     "Grenade": "Grenade cooldown: {{cooldown}}",
@@ -221,6 +222,7 @@
     "CustomStatLower": "Shows armor whose stats are strictly lower than another of the same type of armor, only taking into account stats in that class' custom stat total list.",
     "DamageType": "Shows items based on their damage type.",
     "Deepsight": "Shows weapons with Deepsight Resonance, which can have their pattern extracted, or which can have Deepsight Resonance enabled using a Deepsight Harmonizer.",
+    "Deprecated": "This filter is no longer supported.",
     "Description": "Description",
     "DescriptionFilter": "Shows items whose description has a partial match to the filter text. Search for entire phrases using quotes.",
     "DisabledModSlot": "Shows items with a disabled mod.",
@@ -253,7 +255,6 @@
     "InfusionFodder": "Shows items that could be infused into lower-power versions of the same item for only glimmer.",
     "IsAdept": "Shows weapons compatible with Adept mods.",
     "IsCrafted": "Shows weapons that have been crafted.",
-    "IsSunset": "Shows items that have been sunset and can no longer be infused to max power.",
     "ItemHash": "Shows the items with the given inventory item hash. For advanced users.",
     "ItemId": "Shows the item with the given inventory item ID. For advanced users.",
     "Leveling": {
@@ -291,7 +292,6 @@
     "Postmaster": "Items that are currently in the Postmaster.",
     "PowerKeywords": "Use the pinnaclecap or softcap keyword instead of a number to refer to the current season's power limits.",
     "PowerLevel": "Shows items based on their power level. $t(Filter.PowerKeywords)",
-    "PowerLimit": "Shows items based on the maximum power level they can be infused to. $t(Filter.PowerKeywords)",
     "PowerfulReward": "Shows pursuits which produce a powerful reward.",
     "PrismaticDamageType": "Shows items based on if they are a light or darkness damage type. Light types are arc, solar, and void. Darkness types are stasis and strand.",
     "Quality": "Shows items based on their total stat quality percentage. '{{percentage}}' is an alias for '{{quality}}'.",
@@ -332,6 +332,7 @@
     "WeaponType": "Shows weapons based on their weapon type.",
     "Wishlist": "Shows items that match your wish list.",
     "WishlistDupe": "Shows duplicate items where at least one of the duplicates is on your wish list.",
+    "WishlistEnabled": "Shows items that are eligible to have wish list rolls.",
     "WishlistNotes": "Shows wish listed items whose notes match the search.",
     "WishlistUnknown": "Shows items with no roll recommendations in the loaded wish lists.",
     "Year": "Shows items from which year of Destiny they appeared in."
@@ -343,15 +344,18 @@
     "UserGuideLink": "User guide"
   },
   "Glyphs": {
+    "Axe": "Axe",
+    "DarkAbility": "Darkness Ability",
     "Gilded": "Gilded",
     "Harmonic": "Harmonic",
-    "HiveRelic": "Hive Relic",
-    "Light": "Light",
+    "HiveSword": "Hive Sword",
+    "LightAbility": "Light Ability",
+    "LightLevel": "Light Level",
     "Misadventure": "Misadventure",
     "Missing": "Missing",
     "OpenSymbolsPicker": "Open Symbols Picker",
     "Quickfall": "Quickfall",
-    "RespawnRestricted": "RespawnRestricted",
+    "RespawnRestricted": "Respawn Restricted",
     "ScorchCannon": "Scorch Cannon",
     "SearchSymbols": "Search Symbols...",
     "Smoke": "Smoke"
@@ -398,7 +402,7 @@
   "Help": {
     "CannotMove": "Cannot move that item off this character.",
     "NoStorage": "DIM can't store data",
-    "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space. You won't be able to log in to or use DIM."
+    "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space, or a browser bug. Try restarting your computer! You won't be able to log in to or use DIM until you fix this."
   },
   "Hotkey": {
     "Armory": "Show Armory for an item",
@@ -1083,6 +1087,7 @@
     "Milestones": "Milestones & Challenges",
     "NoEventChallenges": "You have completed all event challenges",
     "NoTrackedTriumph": "You have no tracked triumphs. Track as many as you like in DIM.",
+    "PaleHeartPathfinder": "Pale Heart Pathfinder",
     "PercentPrestige": "{{pct}}% to reset",
     "PointsUsed": "1 point used",
     "PointsUsed_plural": "{{count}} points used",
@@ -1097,6 +1102,7 @@
     "RecordValue": "{{value}}pts",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
+    "RitualPathfinder": "Ritual Pathfinder",
     "SecretTriumph": "Secret Triumph",
     "StatTrackers": "Stat Trackers",
     "TrackedTriumphs": "Tracked Triumphs"
@@ -1186,7 +1192,6 @@
     "SortByRating": "Armor Quality (D1)",
     "SortByRecent": "Recently Acquired (D2)",
     "SortBySeason": "Season (D2)",
-    "SortBySunset": "Has Been Sunset (D2)",
     "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Type",
     "SortByWeaponElement": "Damage Type",
@@ -1257,7 +1262,6 @@
     "ShieldHP": "Shield HP",
     "StrafingSpeed": "Strafing",
     "Strength": "Strength",
-    "Sunset": "Sunset",
     "Tier": "Tier {{tier}}",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 for T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",

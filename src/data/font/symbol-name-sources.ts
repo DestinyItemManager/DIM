@@ -90,12 +90,31 @@ export const symbolData: {
     },
   },
   {
+    codepoint: 61235,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 2370269388,
+      fromRichText: false,
+    },
+  },
+  {
     codepoint: 57635,
     glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 375052469,
+      fromRichText: false,
+    },
   },
   {
     codepoint: 983041,
     glyph: '󰀁',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 375052468,
+      fromRichText: false,
+    },
   },
   {
     codepoint: 57442,
@@ -148,6 +167,15 @@ export const symbolData: {
     source: {
       tableName: 'InventoryItem',
       hash: 2274196887,
+      fromRichText: false,
+    },
+  },
+  {
+    codepoint: 61237,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 1869939005,
       fromRichText: false,
     },
   },
@@ -238,6 +266,15 @@ export const symbolData: {
     source: {
       tableName: 'InventoryItem',
       hash: 1656118680,
+      fromRichText: false,
+    },
+  },
+  {
+    codepoint: 61238,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 2529942646,
       fromRichText: false,
     },
   },
@@ -445,6 +482,15 @@ export const symbolData: {
     source: {
       tableName: 'InventoryItem',
       hash: 1470370538,
+      fromRichText: false,
+    },
+  },
+  {
+    codepoint: 61236,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 83039192,
       fromRichText: false,
     },
   },
@@ -809,6 +855,33 @@ export const symbolData: {
     },
   },
   {
+    codepoint: 61242,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 1005476557,
+      fromRichText: false,
+    },
+  },
+  {
+    codepoint: 61241,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 275534325,
+      fromRichText: false,
+    },
+  },
+  {
+    codepoint: 61243,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 1324853482,
+      fromRichText: false,
+    },
+  },
+  {
     codepoint: 983306,
     glyph: '󰄊',
     source: {
@@ -841,6 +914,15 @@ export const symbolData: {
     source: {
       tableName: 'InventoryItem',
       hash: 2711519343,
+      fromRichText: false,
+    },
+  },
+  {
+    codepoint: 61234,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 2835214901,
       fromRichText: false,
     },
   },
@@ -2036,6 +2118,19 @@ export const symbolData: {
     glyph: '󰄿',
   },
   {
+    codepoint: 61239,
+    glyph: '',
+  },
+  {
+    codepoint: 61233,
+    glyph: '',
+    source: {
+      tableName: 'InventoryItem',
+      hash: 3602718766,
+      fromRichText: false,
+    },
+  },
+  {
     codepoint: 57667,
     glyph: '',
     source: {
@@ -2092,6 +2187,14 @@ export const symbolData: {
       hash: 3373582085,
       fromRichText: false,
     },
+  },
+  {
+    codepoint: 61244,
+    glyph: '',
+  },
+  {
+    codepoint: 61245,
+    glyph: '',
   },
   {
     codepoint: 983343,
@@ -2551,13 +2654,14 @@ export const symbolData: {
     },
   },
 ];
-const translateManually = [57495, 57654, 983359, 57665, 57671, 57426, 983376, 983269] as const;
+const translateManually = [
+  57495, 57654, 983359, 61239, 57665, 61244, 61245, 57671, 57426, 983376, 983269,
+] as const;
 export type TranslateManually = (typeof translateManually)[number];
 
 /*
  * Could not find a source for (did the definitions disappear?): 
- * Golden Gun - Deadshot
- * Golden Gun - Marksman
+
 
  * Unused rich text replacements (these should only be input actions replaced with the mapped buttons by the game): 
  * [Stasis: Glyph 0]

@@ -384,18 +384,6 @@ export function makeItem(
       getDamageDefsByDamageType(defs)[itemDef.talentGrid.hudDamageType]) ||
     null;
 
-  const powerCapHash =
-    item.versionNumber !== undefined &&
-    itemDef.quality?.versions?.[item.versionNumber]?.powerCapHash;
-  // ignore falsyness of 0, because powerCap && powerCapHash are never zero and the code gets ugly otherwise
-  let powerCap = (powerCapHash && defs.PowerCap.get(powerCapHash).powerCap) || null;
-
-  // here is where we need to manually adjust unreasonable powerCap values,
-  // which are used for things that aren't currently set to ever cap
-  if (powerCap && powerCap > 50000) {
-    powerCap = null;
-  }
-
   const hiddenOverlay = itemDef.iconWatermark;
 
   const tooltipNotifications = item.tooltipNotificationIndexes?.length
@@ -466,7 +454,7 @@ export function makeItem(
     hash: item.itemHash,
     // This is the type of the item (see DimCategory/DimBuckets) regardless of location
     type: itemType,
-    itemCategoryHashes: itemDef.itemCategoryHashes || emptyArray(), // see defs.ItemCategory
+    itemCategoryHashes: getItemCategoryHashes(itemDef),
     tier: D2ItemTiers[itemDef.inventory!.tierType] || 'Common',
     isExotic: D2ItemTiers[itemDef.inventory!.tierType] === 'Exotic',
     name,
@@ -500,7 +488,6 @@ export function makeItem(
     classTypeNameLocalized: getClassTypeNameLocalized(itemDef.classType, defs),
     element,
     energy: itemInstanceData.energy ?? null,
-    powerCap,
     lockable: itemType !== 'Finishers' ? item.lockable : true,
     trackable: Boolean(item.itemInstanceId && itemDef.objectives?.questlineItemHash),
     tracked: Boolean(item.state & ItemState.Tracked),
@@ -562,24 +549,6 @@ export function makeItem(
     ).displayProperties;
   }
 
-  if (createdItem.hash in extendedICH) {
-    const additionalICH = extendedICH[createdItem.hash]!;
-    createdItem.itemCategoryHashes = [...createdItem.itemCategoryHashes, additionalICH];
-    // Special grenade launchers are not heavy grenade launchers
-    if (additionalICH === -ItemCategoryHashes.GrenadeLaunchers) {
-      createdItem.itemCategoryHashes = createdItem.itemCategoryHashes.filter(
-        (ich) => ich !== ItemCategoryHashes.GrenadeLaunchers,
-      );
-    }
-    // Masks are helmets too
-    if (additionalICH === ItemCategoryHashes.Mask) {
-      createdItem.itemCategoryHashes = [
-        ...createdItem.itemCategoryHashes,
-        ItemCategoryHashes.Helmets,
-      ];
-    }
-  }
-
   try {
     const socketInfo = buildSockets(item, itemComponents, defs, itemDef);
     createdItem.sockets = socketInfo.sockets;
@@ -589,35 +558,11 @@ export function makeItem(
     reportException('Sockets', e, { itemHash: item.itemHash });
   }
 
-  createdItem.wishListEnabled = Boolean(createdItem.bucket.inWeapons && createdItem.sockets);
-
-  // Masterwork
-  try {
-    createdItem.masterworkInfo = buildMasterwork(createdItem, defs);
-  } catch (e) {
-    errorLog(
-      'd2-stores',
-      `Error building masterwork info for ${createdItem.name}`,
-      item,
-      itemDef,
-      e,
-    );
-    reportException('MasterworkInfo', e, { itemHash: item.itemHash });
-  }
-
-  // A crafted weapon with an enhanced intrinsic and two enhanced traits is masterworked
-  // https://github.com/Bungie-net/api/issues/1662
-  if (createdItem.crafted && createdItem.sockets) {
-    const containsEnhancedIntrinsic = createdItem.sockets.allSockets.some(
-      (s) => s.plugged && enhancedIntrinsics.has(s.plugged.plugDef.hash),
-    );
-    if (
-      (containsEnhancedIntrinsic || createdItem.masterworkInfo?.tier === 10) &&
-      countEnhancedPerks(createdItem.sockets) >= 2
-    ) {
-      createdItem.masterwork = true;
-    }
-  }
+  createdItem.wishListEnabled = Boolean(
+    createdItem.sockets &&
+      (createdItem.bucket.inWeapons ||
+        (createdItem.bucket.hash === BucketHashes.ClassArmor && createdItem.isExotic)),
+  );
 
   // Extract weapon crafting info from the crafted socket but
   // before building stats because the weapon level affects stats.
@@ -754,6 +699,34 @@ export function makeItem(
   createdItem.infusable = createdItem.infusionFuel && isLegendaryOrBetter(createdItem);
   createdItem.infusionCategoryHashes = itemDef.quality?.infusionCategoryHashes || null;
 
+  // Masterwork
+  try {
+    createdItem.masterworkInfo = buildMasterwork(createdItem, defs);
+  } catch (e) {
+    errorLog(
+      'd2-stores',
+      `Error building masterwork info for ${createdItem.name}`,
+      item,
+      itemDef,
+      e,
+    );
+    reportException('MasterworkInfo', e, { itemHash: item.itemHash });
+  }
+
+  // A crafted weapon with an enhanced intrinsic and two enhanced traits is masterworked
+  // https://github.com/Bungie-net/api/issues/1662
+  if (createdItem.crafted && createdItem.sockets) {
+    const containsEnhancedIntrinsic = createdItem.sockets.allSockets.some(
+      (s) => s.plugged && enhancedIntrinsics.has(s.plugged.plugDef.hash),
+    );
+    if (
+      (containsEnhancedIntrinsic || createdItem.masterworkInfo?.tier === 10) &&
+      countEnhancedPerks(createdItem.sockets) >= 2
+    ) {
+      createdItem.masterwork = true;
+    }
+  }
+
   try {
     buildPursuitInfo(createdItem, item, itemDef);
   } catch (e) {
@@ -826,4 +799,37 @@ function buildPursuitInfo(
       modifierHashes: [],
     };
   }
+}
+
+function getItemCategoryHashes(itemDef: DestinyInventoryItemDefinition): number[] {
+  let itemCategoryHashes = itemDef.itemCategoryHashes || emptyArray();
+
+  if (
+    itemCategoryHashes.includes(ItemCategoryHashes.Weapon) &&
+    !itemCategoryHashes.includes(ItemCategoryHashes.Dummies)
+  ) {
+    if (
+      itemCategoryHashes.includes(ItemCategoryHashes.GrenadeLaunchers) &&
+      !itemCategoryHashes.includes(ItemCategoryHashes.PowerWeapon)
+    ) {
+      // Special grenade launchers
+      itemCategoryHashes = [
+        // Special grenade launchers are not heavy grenade launchers
+        ...itemCategoryHashes.filter((ich) => ich !== ItemCategoryHashes.GrenadeLaunchers),
+        -ItemCategoryHashes.GrenadeLaunchers,
+      ];
+    }
+
+    if (itemDef.hash in extendedICH) {
+      const additionalICH = extendedICH[itemDef.hash]!;
+      itemCategoryHashes = [...itemCategoryHashes, additionalICH];
+
+      // Masks are helmets too
+      if (additionalICH === ItemCategoryHashes.Mask) {
+        itemCategoryHashes = [...itemCategoryHashes, ItemCategoryHashes.Helmets];
+      }
+    }
+  }
+
+  return itemCategoryHashes;
 }

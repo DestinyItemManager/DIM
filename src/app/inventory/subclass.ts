@@ -5,6 +5,7 @@ import { DamageType } from 'bungie-api-ts/destiny2';
 import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import { ItemCategoryHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import subclassArc from 'images/subclass-arc.png';
+import subclassPrismatic from 'images/subclass-prismatic.png';
 import subclassSolar from 'images/subclass-solar.png';
 import subclassStasis from 'images/subclass-stasis.png';
 import subclassStrand from 'images/subclass-strand.png';
@@ -18,10 +19,11 @@ const baseImagesByDamageType: LookupTable<DamageType, string> = {
   [DamageType.Void]: subclassVoid,
   [DamageType.Stasis]: subclassStasis,
   [DamageType.Strand]: subclassStrand,
+  [DamageType.Kinetic]: subclassPrismatic,
 };
 
 interface SubclassIconInfo {
-  base: string;
+  base: string | undefined;
   super: string;
 }
 export function getSubclassIconInfo(item: DimItem): SubclassIconInfo | undefined {
@@ -32,7 +34,7 @@ export function getSubclassIconInfo(item: DimItem): SubclassIconInfo | undefined
     if (superIcon) {
       const damageType = item.element?.enumValue;
       if (damageType && baseImagesByDamageType[damageType]) {
-        const base = baseImagesByDamageType[damageType]!;
+        const base = baseImagesByDamageType[damageType];
         return {
           base: base,
           super: superIcon,

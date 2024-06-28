@@ -306,7 +306,7 @@ function doApplyLoadout(
 
       // Don't apply mods when moving to the vault
       const modsToApply = (
-        (defs.isDestiny2() &&
+        (defs.isDestiny2 &&
           !store.isVault &&
           getModsFromLoadout(defs, loadout, unlockedPlugSetItems()).map(
             (mod) => mod.resolvedMod.hash,

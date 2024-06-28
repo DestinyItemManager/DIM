@@ -98,14 +98,12 @@ export function getStores(platform: DestinyAccount): Promise<DestinyProfileRespo
     DestinyComponentType.ProfileProgression,
     DestinyComponentType.Transitory,
     DestinyComponentType.CharacterLoadouts,
+    DestinyComponentType.PresentationNodes,
 
     // This is a lot of data and currently not used.
     // DestinyComponentType.Craftables,
   ];
 
-  if ($featureFlags.solsticePresentationNodes) {
-    components.push(DestinyComponentType.PresentationNodes);
-  }
   return getProfile(platform, ...components);
 }
 

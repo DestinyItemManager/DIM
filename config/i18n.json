@@ -97,6 +97,7 @@
     "VendorNotFound": "Vendor data is unavailable."
   },
   "Compare": {
+    "NoModArmor": "Pre-mods",
     "Button": "Compare",
     "Archetype": "Archetype",
     "ButtonHelp": "Compare Items",
@@ -231,6 +232,7 @@
     "CurrentClass": "Shows items that are equippable on the currently logged in guardian.",
     "DamageType": "Shows items based on their damage type.",
     "Deepsight": "Shows weapons with Deepsight Resonance, which can have their pattern extracted, or which can have Deepsight Resonance enabled using a Deepsight Harmonizer.",
+    "Deprecated": "This filter is no longer supported.",
     "Description": "Description",
     "DescriptionFilter": "Shows items whose description has a partial match to the filter text. Search for entire phrases using quotes.",
     "RetiredPerk": "Shows weapons with perks that no longer obtainable.",
@@ -263,7 +265,6 @@
     "Infusable": "Shows items that can be infused.",
     "IsAdept": "Shows weapons compatible with Adept mods.",
     "IsCrafted": "Shows weapons that have been crafted.",
-    "IsSunset": "Shows items that have been sunset and can no longer be infused to max power.",
     "ItemId": "Shows the item with the given inventory item ID. For advanced users.",
     "ItemHash": "Shows the items with the given inventory item hash. For advanced users.",
     "Leveling": {
@@ -300,7 +301,6 @@
     "PerkName": "Shows items with a perk or mod whose name matches (exactperk:) or partially matches (perkname:) the filter text. Search for entire phrases using quotes.",
     "Postmaster": "Items that are currently in the Postmaster.",
     "PowerLevel": "Shows items based on their power level. $t(Filter.PowerKeywords)",
-    "PowerLimit": "Shows items based on the maximum power level they can be infused to. $t(Filter.PowerKeywords)",
     "PowerKeywords": "Use the pinnaclecap or softcap keyword instead of a number to refer to the current season's power limits.",
     "PowerfulReward": "Shows pursuits which produce a powerful reward.",
     "PinnacleReward": "Shows pursuits which produce a pinnacle reward.",
@@ -346,6 +346,7 @@
     "WishlistDupe": "Shows duplicate items where at least one of the duplicates is on your wish list.",
     "WishlistNotes": "Shows wish listed items whose notes match the search.",
     "WishlistUnknown": "Shows items with no roll recommendations in the loaded wish lists.",
+    "WishlistEnabled": "Shows items that are eligible to have wish list rolls.",
     "Year": "Shows items from which year of Destiny they appeared in."
   },
   "General": {
@@ -356,11 +357,14 @@
   },
   "Glyphs": {
     "Missing": "Missing",
+    "Axe": "Axe",
+    "DarkAbility": "Darkness Ability",
+    "LightAbility": "Light Ability",
     "Gilded": "Gilded",
     "Harmonic": "Harmonic",
-    "HiveRelic": "Hive Relic",
-    "Light": "Light",
-    "RespawnRestricted": "RespawnRestricted",
+    "HiveSword": "Hive Sword",
+    "LightLevel": "Light Level",
+    "RespawnRestricted": "Respawn Restricted",
     "Smoke": "Smoke",
     "Misadventure": "Misadventure",
     "Quickfall": "Quickfall",
@@ -410,7 +414,7 @@
   "Help": {
     "CannotMove": "Cannot move that item off this character.",
     "NoStorage": "DIM can't store data",
-    "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space. You won't be able to log in to or use DIM."
+    "NoStorageMessage": "DIM can't store data in your browser. This can be caused by browsing in private or incognito mode, or when you have low disk space, or a browser bug. Try restarting your computer! You won't be able to log in to or use DIM until you fix this."
   },
   "Hotkey": {
     "Armory": "Show Armory for an item",
@@ -1091,6 +1095,7 @@
     "CrucibleRank": "Ranks",
     "Items": "Quest Items",
     "Milestones": "Milestones & Challenges",
+    "PaleHeartPathfinder": "Pale Heart Pathfinder",
     "PercentPrestige": "{{pct}}% to reset",
     "PointsUsed": "1 point used",
     "PointsUsed_plural": "{{count}} points used",
@@ -1104,6 +1109,7 @@
     "RecordValue": "{{value}}pts",
     "Resets": "1 reset",
     "Resets_plural": "{{count}} resets",
+    "RitualPathfinder": "Ritual Pathfinder",
     "SecretTriumph": "Secret Triumph",
     "StatTrackers": "Stat Trackers",
     "TrackedTriumphs": "Tracked Triumphs",
@@ -1201,7 +1207,6 @@
     "SortByTag": "Tag ({{taglist}})",
     "SortByType": "Type",
     "SortBySeason": "Season (D2)",
-    "SortBySunset": "Has Been Sunset (D2)",
     "SortByWeaponElement": "Damage Type",
     "SortCustom": "Custom Sort",
     "SortName": "Name",
@@ -1261,7 +1266,6 @@
     "Prestige": "Prestige Level: {{level}}\n{{exp}}xp until 5 motes of light.",
     "Quality": "Stats quality",
     "Strength": "Strength",
-    "Sunset": "Sunset",
     "Tier": "Tier {{tier}}",
     "TierProgress": "T{{tier}} {{statName}} ({{progress}}/60 for T{{nextTier}})\n",
     "TierProgress_Max": "T{{tier}} {{statName}} ({{progress}}/300)\n",

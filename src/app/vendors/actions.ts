@@ -59,7 +59,7 @@ export function loadAllVendors(
 
       const defs = manifestSelector(getState());
       // we're done if this is d1
-      if (!defs?.isDestiny2()) {
+      if (!defs?.isDestiny2) {
         return;
       }
 
@@ -111,28 +111,38 @@ export function loadAllVendors(
       );
 
       const vendorResponses: [vendorHash: number, DestinyVendorResponse][] = [];
+      const promises: Promise<void>[] = [];
       for (const vendorHash of vendorsNeedingComponents) {
-        try {
-          start = Date.now();
-          const vendorResponse = await getVendorSaleComponents(account, characterId, vendorHash);
-          timings.componentsTime += Date.now() - start;
-          timings.componentsFetched++;
-          if (isVendorsPage) {
-            dispatch(
-              loadedVendorComponents({
-                vendorResponses: [[vendorHash, vendorResponse]],
+        promises.push(
+          (async () => {
+            try {
+              start = Date.now();
+              const vendorResponse = await getVendorSaleComponents(
+                account,
                 characterId,
-              }),
-            );
-          } else {
-            vendorResponses.push([vendorHash, vendorResponse]);
-          }
-        } catch {
-          // TO-DO: what to do here if a single vendor component call fails?
-          // not necessarily knock the overall vendors state into error mode.
-          // maybe retry failed single-vendors later? add them to a new list in vendors state?
-        }
+                vendorHash,
+              );
+              timings.componentsTime += Date.now() - start;
+              timings.componentsFetched++;
+              if (isVendorsPage) {
+                dispatch(
+                  loadedVendorComponents({
+                    vendorResponses: [[vendorHash, vendorResponse]],
+                    characterId,
+                  }),
+                );
+              } else {
+                vendorResponses.push([vendorHash, vendorResponse]);
+              }
+            } catch {
+              // TO-DO: what to do here if a single vendor component call fails?
+              // not necessarily knock the overall vendors state into error mode.
+              // maybe retry failed single-vendors later? add them to a new list in vendors state?
+            }
+          })(),
+        );
       }
+      await Promise.all(promises);
       if (!isVendorsPage) {
         dispatch(loadedVendorComponents({ vendorResponses, characterId }));
       }

@@ -162,13 +162,13 @@ export default function Armory({
         </div>
       )}
 
-      {defs.isDestiny2() && item.itemCategoryHashes.includes(ItemCategoryHashes.Emblems) && (
+      {defs.isDestiny2 && item.itemCategoryHashes.includes(ItemCategoryHashes.Emblems) && (
         <div className="item-details">
           <EmblemPreview item={item} />
         </div>
       )}
 
-      {defs.isDestiny2() && item.availableMetricCategoryNodeHashes && (
+      {defs.isDestiny2 && item.availableMetricCategoryNodeHashes && (
         <div className="item-details">
           <MetricCategories
             availableMetricCategoryNodeHashes={item.availableMetricCategoryNodeHashes}
@@ -196,7 +196,7 @@ export default function Armory({
               ))}
             </div>
           )}
-          {defs.isDestiny2() && item.pursuit.rewards.length !== 0 && (
+          {defs.isDestiny2 && item.pursuit.rewards.length !== 0 && (
             <div className={styles.section}>
               <div>{t('MovePopup.Rewards')}</div>
               {item.pursuit.rewards.map((reward) => (
@@ -251,7 +251,9 @@ export default function Armory({
           <ItemGrid items={storeItems} noLink />
         </>
       )}
-      <AllWishlistRolls item={item} realAvailablePlugHashes={realAvailablePlugHashes} />
+      {item.wishListEnabled && (
+        <AllWishlistRolls item={item} realAvailablePlugHashes={realAvailablePlugHashes} />
+      )}
     </div>
   );
 }

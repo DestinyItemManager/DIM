@@ -52,7 +52,7 @@ export default function ItemDetails({
   const defs = useDefinitions()!;
   const itemCreationContext = useSelector(createItemContextSelector);
   const [socketOverrides, onPlugClicked, resetSocketOverrides] = useSocketOverrides();
-  const item = defs.isDestiny2()
+  const item = defs.isDestiny2
     ? applySocketOverrides(itemCreationContext, originalItem, socketOverrides)
     : originalItem;
   const modTypeIcon = item.itemCategoryHashes.includes(ItemCategoryHashes.ArmorMods)
@@ -78,23 +78,31 @@ export default function ItemDetails({
 
       {(item.type === 'Milestone' ||
         item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Ornament)) &&
-        item.secondaryIcon && <BungieImage src={item.secondaryIcon} width="100%" />}
+        item.secondaryIcon && (
+          <BungieImage
+            src={item.secondaryIcon}
+            width="100%"
+            className={clsx(styles.fullImage, {
+              [styles.milestoneImage]: item.type === 'Milestone',
+            })}
+          />
+        )}
 
       <ItemDescription item={item} />
 
-      {!item.stats && Boolean(item.collectibleHash) && defs.isDestiny2() && (
+      {!item.stats && Boolean(item.collectibleHash) && defs.isDestiny2 && (
         <div className={clsx('item-details', styles.itemSource)}>
           {defs.Collectible.get(item.collectibleHash!).sourceString}
         </div>
       )}
 
-      {defs.isDestiny2() && item.itemCategoryHashes.includes(ItemCategoryHashes.Emblems) && (
+      {defs.isDestiny2 && item.itemCategoryHashes.includes(ItemCategoryHashes.Emblems) && (
         <div className="item-details">
           <EmblemPreview item={item} />
         </div>
       )}
 
-      {defs.isDestiny2() && item.availableMetricCategoryNodeHashes && (
+      {defs.isDestiny2 && item.availableMetricCategoryNodeHashes && (
         <div className="item-details">
           <MetricCategories
             availableMetricCategoryNodeHashes={item.availableMetricCategoryNodeHashes}
@@ -102,13 +110,13 @@ export default function ItemDetails({
         </div>
       )}
 
-      {defs.isDestiny2() && <WeaponCraftedInfo item={item} className="crafted-progress" />}
+      {defs.isDestiny2 && <WeaponCraftedInfo item={item} className="crafted-progress" />}
 
-      {defs.isDestiny2() && <WeaponDeepsightInfo item={item} />}
+      {defs.isDestiny2 && <WeaponDeepsightInfo item={item} />}
 
-      {defs.isDestiny2() && <WeaponCatalystInfo item={item} />}
+      {defs.isDestiny2 && <WeaponCatalystInfo item={item} />}
 
-      {killTrackerInfo && defs.isDestiny2() && (
+      {killTrackerInfo && defs.isDestiny2 && (
         <KillTrackerInfo tracker={killTrackerInfo} showTextLabel className="masterwork-progress" />
       )}
 
@@ -130,7 +138,7 @@ export default function ItemDetails({
         <div className="item-details warning">{t(missingSocketsMessage)}</div>
       )}
 
-      {defs.isDestiny2() && item.energy && defs && <EnergyMeter item={item} />}
+      {defs.isDestiny2 && item.energy && defs && <EnergyMeter item={item} />}
       {item.sockets && <ItemSockets item={item} onPlugClicked={onPlugClicked} />}
 
       <ApplyPerkSelection
@@ -147,7 +155,7 @@ export default function ItemDetails({
             <Objective
               objective={objective}
               key={objective.objectiveHash}
-              isTrialsPassage={defs.isDestiny2() && isTrialsPassage(item.hash)}
+              isTrialsPassage={defs.isDestiny2 && isTrialsPassage(item.hash)}
             />
           ))}
         </div>
@@ -170,7 +178,7 @@ export default function ItemDetails({
           </div>
         )}
 
-      {defs.isDestiny2() && item.pursuit && item.pursuit.rewards.length !== 0 && (
+      {defs.isDestiny2 && item.pursuit && item.pursuit.rewards.length !== 0 && (
         <div className="item-details">
           <div>{t('MovePopup.Rewards')}</div>
           {item.pursuit.rewards.map((reward) => (
@@ -179,7 +187,7 @@ export default function ItemDetails({
         </div>
       )}
 
-      {defs.isDestiny2() && item.pursuit && item.pursuit.modifierHashes.length !== 0 && (
+      {defs.isDestiny2 && item.pursuit && item.pursuit.modifierHashes.length !== 0 && (
         <div className="item-details">
           {item.pursuit.modifierHashes.map((modifierHash) => (
             <ActivityModifier key={modifierHash} modifierHash={modifierHash} />
