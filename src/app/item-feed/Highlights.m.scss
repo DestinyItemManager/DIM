@@ -16,7 +16,13 @@
     margin-left: -3px;
     padding-left: 4px;
   }
+
+  .multiPerk {
+    border-left: 2px solid #888;
+    padding-left: 2px;
+  }
 }
+
 .perk {
   display: flex;
   flex-direction: row;
@@ -28,10 +34,6 @@
     width: 24px;
     margin-left: -1px;
   }
-}
-.multiPerk {
-  border-left: 2px solid #888;
-  padding-left: 2px;
 }
 
 .stats {
