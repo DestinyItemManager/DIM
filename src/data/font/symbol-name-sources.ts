@@ -2090,6 +2090,10 @@ export const symbolData: {
     },
   },
   {
+    codepoint: 983382,
+    glyph: '󰅖',
+  },
+  {
     codepoint: 61244,
     glyph: '',
   },
@@ -2556,7 +2560,7 @@ export const symbolData: {
   },
 ];
 const translateManually = [
-  57495, 57654, 983359, 61239, 57665, 61244, 61245, 57671, 57426, 983376, 983269,
+  57495, 57654, 983359, 61239, 57665, 983382, 61244, 61245, 57671, 57426, 983376, 983269,
 ] as const;
 export type TranslateManually = (typeof translateManually)[number];
 
