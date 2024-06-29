@@ -1374,7 +1374,7 @@ function applyUpdateLocally(draft: Draft<DimApiState>, update: ProfileUpdateWith
       for (const itemId of update.payload) {
         delete profile.tags[itemId];
       }
-      throw new Error('Not implemented yet: "item_hash_tag" case');
+      break;
     }
     case 'loadout': {
       const { platformMembershipId, destinyVersion } = update;
