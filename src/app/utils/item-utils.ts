@@ -68,6 +68,8 @@ const getSpecialtySockets = (item?: DimItem): DimSocket[] | undefined => {
       (socket) =>
         // check plugged -- non-artifice GoA armor still has the socket but nothing in it
         socket.plugged &&
+        // exotic armor 2.0 has this socket hidden if not upgraded to artifice armor yet
+        socket.visibleInGame &&
         specialtySocketTypeHashes.includes(socket.socketDefinition.socketTypeHash),
     );
     if (specialtySockets?.length) {
