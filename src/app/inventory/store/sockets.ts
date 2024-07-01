@@ -570,6 +570,7 @@ const noDefaultSocketCategoryHashes: SocketCategoryHashes[] = [
 // because it's really just a concession to the fact that D2AI can't ever be 100% complete.
 const noDefaultPlugIdentifiers: (string | number)[] = [
   'enhancements.exotic', // Exotic Armor Perk sockets (Aeons, all options are equivalent)
+  'enhancements.artifice.exotic', // This is the dummy "upgrade this armor to artifice" socket
   ...eventArmorRerollSocketIdentifiers, // Weird rerolling sockets
   PlugCategoryHashes.ArmorSkinsSharedHead, // FotL Helmet Ornaments
 ];
