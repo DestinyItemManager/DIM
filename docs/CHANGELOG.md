@@ -1,5 +1,7 @@
 ## Next
 
+## 8.26.0 <span class="changelog-date">(2024-06-30)</span>
+
 * The progress page shows the Ritual Pathfinder and Pale Heart Pathfinder.
 * Improved how we detect which rewards and challenges are available for Milestones on the Progress page.
 * Prismatic subclasses now show the currently-equipped super overlayed on them.
