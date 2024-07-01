@@ -166,7 +166,7 @@
     "postcss-loader": "^8.1.1",
     "postcss-sort-media-queries": "^5.2.0",
     "prettier": "^3.3.2",
-    "prettier-plugin-organize-imports": "^3.2.4",
+    "prettier-plugin-organize-imports": "^4.0.0",
     "react-refresh": "^0.14.2",
     "react-test-renderer": "^18.3.1",
     "sass": "^1.77.6",
