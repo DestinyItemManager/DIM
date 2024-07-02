@@ -1,3 +1,4 @@
 [submodule "destiny-icons"]
 	path = destiny-icons
 	url = https://github.com/justrealmilk/destiny-icons
+	branch = master
