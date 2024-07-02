@@ -5,7 +5,6 @@ import { emptyArray } from 'app/utils/empty';
 import {
   DestinyCollectibleState,
   DestinyDisplayPropertiesDefinition,
-  DestinyInventoryItemDefinition,
   DestinyItemQuantity,
   DestinyProfileResponse,
   DestinyVendorDefinition,
@@ -47,12 +46,12 @@ export interface VendorItem {
  */
 function getCollectibleState(
   defs: D2ManifestDefinitions,
-  inventoryItem: DestinyInventoryItemDefinition,
+  itemHash: number,
   profileResponse: DestinyProfileResponse | undefined,
   characterId: string,
 ) {
   const collectibleFinder = createCollectibleFinder(defs);
-  const collectibleHash = collectibleFinder(inventoryItem)?.hash;
+  const collectibleHash = collectibleFinder(itemHash)?.hash;
   let collectibleState: DestinyCollectibleState | undefined;
   if (collectibleHash) {
     collectibleState =
@@ -97,12 +96,7 @@ function makeVendorItem(
     originalCategoryIndex: vendorItemDef?.originalCategoryIndex,
     costs: saleItem?.costs || [],
     previewVendorHash: inventoryItem.preview?.previewVendorHash,
-    collectibleState: getCollectibleState(
-      context.defs,
-      inventoryItem,
-      profileResponse,
-      characterId,
-    ),
+    collectibleState: getCollectibleState(context.defs, itemHash, profileResponse, characterId),
     item: makeFakeItem(context, itemHash, {
       // For sale items the item ID needs to be the vendor item index, since that's how we look up item components for perks
       itemInstanceId: vendorItemIndex.toString(),

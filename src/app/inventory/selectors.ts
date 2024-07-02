@@ -241,6 +241,11 @@ export const ownedItemsSelector = createSelector(allItemsSelector, (allItems) =>
   return { accountWideOwned, storeSpecificOwned };
 });
 
+export const accountWideOwnedItemHashesSelector = createSelector(
+  ownedItemsSelector,
+  (ownedItems) => ownedItems.accountWideOwned,
+);
+
 /**
  * Sets containing all the hashes of owned uncollectible plug items,
  * e.g. emotes and ghost projections. These plug items do not appear
@@ -263,10 +268,12 @@ export const ownedUncollectiblePlugsSelector = createSelector(
       ) => {
         for (const [plugSetHash_, plugSet] of Object.entries(plugs)) {
           const plugSetHash = parseInt(plugSetHash_, 10);
-          filterUnlockedPlugs(plugSetHash, plugSet, insertInto, (plug) => {
-            const def = defs.InventoryItem.get(plug.plugItemHash);
-            return !def || !collectibleFinder(def);
-          });
+          filterUnlockedPlugs(
+            plugSetHash,
+            plugSet,
+            insertInto,
+            (plug) => !collectibleFinder(plug.plugItemHash),
+          );
         }
       };
 

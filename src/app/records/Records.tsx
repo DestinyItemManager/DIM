@@ -17,8 +17,8 @@ import { useSearchParams } from 'react-router-dom';
 import { DestinyAccount } from '../accounts/destiny-account';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
 import {
+  accountWideOwnedItemHashesSelector,
   bucketsSelector,
-  ownedItemsSelector,
   profileResponseSelector,
 } from '../inventory/selectors';
 import { UNIVERSAL_ORNAMENTS_NODE } from '../search/d2-known-values';
@@ -42,7 +42,7 @@ export default function Records({ account }: Props) {
     ? parseInt(searchParams.get('presentationNodeHash')!, 10)
     : undefined;
   const buckets = useSelector(bucketsSelector);
-  const ownedItemHashes = useSelector(ownedItemsSelector);
+  const ownedItemHashes = useSelector(accountWideOwnedItemHashesSelector);
   const profileResponse = useSelector(profileResponseSelector);
   const searchQuery = useSelector(querySelector);
   const searchFilter = useSelector(searchFilterSelector);
@@ -166,7 +166,7 @@ export default function Records({ account }: Props) {
                   <PresentationNodeRoot
                     presentationNodeHash={nodeDef.hash}
                     profileResponse={profileResponse}
-                    ownedItemHashes={ownedItemHashes.accountWideOwned}
+                    ownedItemHashes={ownedItemHashes}
                     openedPresentationHash={presentationNodeHash}
                     searchQuery={searchQuery}
                     searchFilter={searchFilter}

@@ -3,7 +3,6 @@ import { ARMOR_NODE } from 'app/search/d2-known-values';
 import {
   DestinyClass,
   DestinyCollectibleDefinition,
-  DestinyInventoryItemDefinition,
   DestinyPresentationNodeDefinition,
 } from 'bungie-api-ts/destiny2';
 import focusingItemOutputs from 'data/d2/focusing-item-outputs.json';
@@ -70,17 +69,17 @@ export const createCollectibleFinder = memoizeOne((defs: D2ManifestDefinitions) 
   });
 
   return (
-    itemDef: DestinyInventoryItemDefinition,
+    originalItemHash: number,
     knownClassType?: DestinyClass,
   ): DestinyCollectibleDefinition | undefined => {
-    const cacheEntry = cache[itemDef.hash];
+    const cacheEntry = cache[originalItemHash];
     if (cacheEntry !== undefined) {
       return cacheEntry ?? undefined;
     }
 
     const collectible = (() => {
       // If this is a fake focusing item, the item we're actually interested in is the output
-      const itemHash = focusingItemOutputs[itemDef.hash] ?? itemDef.hash;
+      const itemHash = focusingItemOutputs[originalItemHash] ?? originalItemHash;
       const outputItemDef = defs.InventoryItem.get(itemHash);
       if (!outputItemDef) {
         return undefined;
@@ -112,7 +111,7 @@ export const createCollectibleFinder = memoizeOne((defs: D2ManifestDefinitions) 
       }
     })();
 
-    cache[itemDef.hash] = collectible ?? null;
+    cache[originalItemHash] = collectible ?? null;
     return collectible;
   };
 });
