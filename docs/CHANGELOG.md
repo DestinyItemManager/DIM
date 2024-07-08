@@ -1,5 +1,7 @@
 ## Next
 
+## 8.27.0 <span class="changelog-date">(2024-07-07)</span>
+
 ## 8.26.0 <span class="changelog-date">(2024-06-30)</span>
 
 * The progress page shows the Ritual Pathfinder and Pale Heart Pathfinder.
