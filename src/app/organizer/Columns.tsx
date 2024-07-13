@@ -53,6 +53,7 @@ import {
 } from 'app/utils/item-utils';
 import {
   getDisplayedItemSockets,
+  getIntrinsicArmorPerkSocket,
   getSocketsByIndexes,
   getWeaponArchetype,
   getWeaponArchetypeSocket,
@@ -673,7 +674,6 @@ function PerksCell({
   }
 
   let sockets = [];
-  // Don't extract intrinsic, since there's a separate column
   const { modSocketsByCategory, perks } = getDisplayedItemSockets(
     item,
     /* excludeEmptySockets */ true,
@@ -692,6 +692,12 @@ function PerksCell({
   } else {
     // Improve this when we use iterator-helpers
     sockets.push(...[...modSocketsByCategory.values()].flat());
+  }
+
+  // Intrinsics are perks and are added here for displaying
+  const intrinsicSocket = getIntrinsicArmorPerkSocket(item);
+  if (intrinsicSocket) {
+    sockets.push(intrinsicSocket);
   }
 
   sockets = sockets.filter(
