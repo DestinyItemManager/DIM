@@ -207,7 +207,7 @@ devDependencies:
     version: 3.3.5
   '@testing-library/react':
     specifier: ^16.0.0
-    version: 16.0.0(@testing-library/dom@10.2.0)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+    version: 16.0.0(@testing-library/dom@10.3.1)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@types/dom-chromium-installation-events':
     specifier: ^101.0.4
     version: 101.0.4
@@ -431,8 +431,8 @@ devDependencies:
     specifier: ^3.3.2
     version: 3.3.2
   prettier-plugin-organize-imports:
-    specifier: ^3.2.4
-    version: 3.2.4(prettier@3.3.2)(typescript@5.5.3)
+    specifier: ^4.0.0
+    version: 4.0.0(prettier@3.3.2)(typescript@5.5.3)
   react-refresh:
     specifier: ^0.14.2
     version: 0.14.2
@@ -1915,6 +1915,13 @@ packages:
     dependencies:
       regenerator-runtime: 0.14.1
 
+  /@babel/runtime@7.24.8:
+    resolution: {integrity: sha512-5F7SDGs1T72ZczbRwbGO9lQi0NLjQxzl6i4lJxLxfW9U5UluCSyEJeniWvnhl3/euNiqQVbo8zruhsDfid0esA==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      regenerator-runtime: 0.14.1
+    dev: true
+
   /@babel/template@7.24.7:
     resolution: {integrity: sha512-jYqfPrU9JTF0PmPy1tLYHW4Mp4KlgxJD9l2nP9fD6yT/ICi554DmrWBAEYpIelzjHf1msDP3PxJIRt/nFNfBig==}
     engines: {node: '>=6.9.0'}
@@ -2842,12 +2849,12 @@ packages:
     resolution: {integrity: sha512-uNtAwenT276M9QYCjTBoHZ8X3MUeCRoGK59zPi92hMIxdfS9AyHjkDWJ94WroDxnv48UE+hIeo21BU84jKc8aQ==}
     dev: false
 
-  /@testing-library/dom@10.2.0:
-    resolution: {integrity: sha512-CytIvb6tVOADRngTHGWNxH8LPgO/3hi/BdCEHOf7Qd2GvZVClhVP0Wo/QHzWhpki49Bk0b4VT6xpt3fx8HTSIw==}
+  /@testing-library/dom@10.3.1:
+    resolution: {integrity: sha512-q/WL+vlXMpC0uXDyfsMtc1rmotzLV8Y0gq6q1gfrrDjQeHoeLrqHbxdPvPNAh1i+xuJl7+BezywcXArz7vLqKQ==}
     engines: {node: '>=18'}
     dependencies:
       '@babel/code-frame': 7.24.7
-      '@babel/runtime': 7.24.7
+      '@babel/runtime': 7.24.8
       '@types/aria-query': 5.0.4
       aria-query: 5.3.0
       chalk: 4.1.2
@@ -2856,7 +2863,7 @@ packages:
       pretty-format: 27.5.1
     dev: true
 
-  /@testing-library/react@16.0.0(@testing-library/dom@10.2.0)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1):
+  /@testing-library/react@16.0.0(@testing-library/dom@10.3.1)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-guuxUKRWQ+FgNX0h0NS0FIq3Q3uLtWVpBzcLOggmfMoUpgBnzBzvLLd4fbm6yS8ydJd94cIfY4yP9qUQjM2KwQ==}
     engines: {node: '>=18'}
     peerDependencies:
@@ -2872,7 +2879,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.24.7
-      '@testing-library/dom': 10.2.0
+      '@testing-library/dom': 10.3.1
       '@types/react': 18.3.3
       '@types/react-dom': 18.3.0
       react: 18.3.1
@@ -8595,6 +8602,11 @@ packages:
     requiresBuild: true
     dev: true
 
+  /known-css-properties@0.34.0:
+    resolution: {integrity: sha512-tBECoUqNFbyAY4RrbqsBQqDFpGXAEbdD5QKr8kACx3+rnArmuuR22nKQWKazvp07N9yjTyDZaw/20UIH8tL9DQ==}
+    requiresBuild: true
+    dev: true
+
   /language-subtag-registry@0.3.23:
     resolution: {integrity: sha512-0K65Lea881pHotoGEa5gDlMxt3pctLi2RplBb7Ezh4rRdLEOtgi7n4EwK9lamnUCkKBqaeKRVebTq6BAxSkpXQ==}
     dev: true
@@ -10102,17 +10114,17 @@ packages:
       fast-diff: 1.3.0
     dev: true
 
-  /prettier-plugin-organize-imports@3.2.4(prettier@3.3.2)(typescript@5.5.3):
-    resolution: {integrity: sha512-6m8WBhIp0dfwu0SkgfOxJqh+HpdyfqSSLfKKRZSFbDuEQXDDndb8fTpRWkUrX/uBenkex3MgnVk0J3b3Y5byog==}
+  /prettier-plugin-organize-imports@4.0.0(prettier@3.3.2)(typescript@5.5.3):
+    resolution: {integrity: sha512-vnKSdgv9aOlqKeEFGhf9SCBsTyzDSyScy1k7E0R1Uo4L0cTcOV7c1XQaT7jfXIOc/p08WLBfN2QUQA9zDSZMxA==}
     peerDependencies:
-      '@volar/vue-language-plugin-pug': ^1.0.4
-      '@volar/vue-typescript': ^1.0.4
+      '@vue/language-plugin-pug': ^2.0.24
       prettier: '>=2.0'
       typescript: '>=2.9'
+      vue-tsc: ^2.0.24
     peerDependenciesMeta:
-      '@volar/vue-language-plugin-pug':
+      '@vue/language-plugin-pug':
         optional: true
-      '@volar/vue-typescript':
+      vue-tsc:
         optional: true
     dependencies:
       prettier: 3.3.2
@@ -11443,7 +11455,7 @@ packages:
     dependencies:
       stylelint: 16.6.1(typescript@5.5.3)
     optionalDependencies:
-      stylelint-scss: 6.3.2(stylelint@16.6.1)
+      stylelint-scss: 6.4.1(stylelint@16.6.1)
     dev: true
 
   /stylelint-config-recommended-scss@14.0.0(postcss@8.4.39)(stylelint@16.6.1):
@@ -11460,7 +11472,7 @@ packages:
       postcss-scss: 4.0.9(postcss@8.4.39)
       stylelint: 16.6.1(typescript@5.5.3)
       stylelint-config-recommended: 14.0.0(stylelint@16.6.1)
-      stylelint-scss: 6.3.2(stylelint@16.6.1)
+      stylelint-scss: 6.4.1(stylelint@16.6.1)
     dev: true
 
   /stylelint-config-recommended@14.0.0(stylelint@16.6.1):
@@ -11498,14 +11510,14 @@ packages:
       stylelint-config-recommended: 14.0.0(stylelint@16.6.1)
     dev: true
 
-  /stylelint-scss@6.3.2(stylelint@16.6.1):
-    resolution: {integrity: sha512-pNk9mXOVKkQtd+SROPC9io8ISSgX+tOVPhFdBE+LaKQnJMLdWPbGKAGYv4Wmf/RrnOjkutunNTN9kKMhkdE5qA==}
+  /stylelint-scss@6.4.1(stylelint@16.6.1):
+    resolution: {integrity: sha512-+clI2bQC2FPOt06ZwUlXZZ95IO2C5bKTP0GLN1LNQPVvISfSNcgMKv/VTwym1mK9vnqhHbOk8lO4rj4nY7L9pw==}
     engines: {node: '>=18.12.0'}
     requiresBuild: true
     peerDependencies:
       stylelint: ^16.0.2
     dependencies:
-      known-css-properties: 0.31.0
+      known-css-properties: 0.34.0
       postcss-media-query-parser: 0.2.3
       postcss-resolve-nested-selector: 0.1.1
       postcss-selector-parser: 6.1.0
