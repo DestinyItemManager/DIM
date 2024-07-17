@@ -287,14 +287,24 @@ export type ItemTierName =
 
 export const breakerTypes = {
   any: [BreakerTypeHashes.Stagger, BreakerTypeHashes.Disruption, BreakerTypeHashes.ShieldPiercing],
-  barrier: [BreakerTypeHashes.ShieldPiercing],
   antibarrier: [BreakerTypeHashes.ShieldPiercing],
   shieldpiercing: [BreakerTypeHashes.ShieldPiercing],
-  overload: [BreakerTypeHashes.Disruption],
+  barrier: [BreakerTypeHashes.ShieldPiercing],
   disruption: [BreakerTypeHashes.Disruption],
-  unstoppable: [BreakerTypeHashes.Stagger],
+  overload: [BreakerTypeHashes.Disruption],
   stagger: [BreakerTypeHashes.Stagger],
+  unstoppable: [BreakerTypeHashes.Stagger],
 };
+
+export const breakerTypeNames = Object.entries(breakerTypes)
+  .filter(([, hashes]) => hashes.length === 1)
+  .reduce(
+    (memo, [name, [hash]]) => {
+      memo[hash] = name;
+      return memo;
+    },
+    {} as Record<BreakerTypeHashes, string>,
+  );
 
 export const enum ModsWithConditionalStats {
   ElementalCapacitor = 3511092054, // InventoryItem "Elemental Capacitor"

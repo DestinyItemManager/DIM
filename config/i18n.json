@@ -1050,6 +1050,7 @@
       "Name": "Name",
       "Power": "Power",
       "Damage": "Damage",
+      "Intrinsics": "Intrinsic Perks",
       "Locked": "Locked",
       "Energy": "Energy",
       "Location": "Location",

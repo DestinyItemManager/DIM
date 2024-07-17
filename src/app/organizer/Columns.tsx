@@ -27,7 +27,7 @@ import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
 import { InGameLoadout, Loadout, isInGameLoadout } from 'app/loadout/loadout-types';
 import { LoadoutsByItem } from 'app/loadout/selectors';
-import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
+import { breakerTypeNames, weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import { quoteFilterString } from 'app/search/query-parser';
 import { statHashByName } from 'app/search/search-filter-values';
 import { getColor, percent } from 'app/shell/formatters';
@@ -65,7 +65,7 @@ import { LookupTable } from 'app/utils/util-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info-v2';
-import { PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { BreakerTypeHashes, PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 import shapedOverlay from 'images/shapedOverlay.png';
 import _ from 'lodash';
 import React from 'react';
@@ -279,8 +279,7 @@ export function getColumns(
         defaultSort: SortDirection.DESC,
         filter: (value) => `power:>=${value}`,
       }),
-    !isGhost &&
-      (destinyVersion === 2 || isWeapon) &&
+    isWeapon &&
       c({
         id: 'dmg',
         header: t('Organizer.Columns.Damage'),
@@ -323,6 +322,7 @@ export function getColumns(
       filter: (value) => `${value ? '' : '-'}is:new`,
     }),
     destinyVersion === 2 &&
+      isWeapon &&
       c({
         id: 'crafted',
         header: t('Organizer.Columns.Crafted'),
@@ -454,7 +454,8 @@ export function getColumns(
         },
         filter: (value) => (value ? `exactperk:${quoteFilterString(value)}` : undefined),
       }),
-    (destinyVersion === 2 || isWeapon) &&
+    destinyVersion === 2 &&
+      isWeapon &&
       c({
         id: 'breaker',
         header: t('Organizer.Columns.Breaker'),
@@ -466,7 +467,10 @@ export function getColumns(
               src={item.breakerType!.displayProperties.icon}
             />
           ),
-        filter: (_val, item) => `is:${getItemDamageShortName(item)}`,
+        filter: (_val, item) =>
+          item.breakerType
+            ? `breaker:${breakerTypeNames[item.breakerType.hash as BreakerTypeHashes]}`
+            : undefined,
       }),
     destinyVersion === 2 &&
       isArmor &&
