@@ -33,7 +33,6 @@ import { statHashByName } from 'app/search/search-filter-values';
 import { getColor, percent } from 'app/shell/formatters';
 import {
   AppIcon,
-  faCheck,
   lockIcon,
   powerIndicatorIcon,
   thumbsDownIcon,
@@ -69,8 +68,9 @@ import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { createCustomStatColumns } from './CustomStatColumns';
-// eslint-disable-next-line css-modules/no-unused-class
-import styles from './ItemTable.m.scss';
+
+import { DeepsightHarmonizerIcon } from 'app/item-popup/DeepsightHarmonizerIcon';
+import styles from './ItemTable.m.scss'; // eslint-disable-line css-modules/no-unused-class
 import { ColumnDefinition, ColumnGroup, SortDirection, Value } from './table-types';
 
 /**
@@ -538,7 +538,7 @@ export function getColumns(
         id: 'harmonizable',
         header: t('Organizer.Columns.Harmonizable'),
         value: (item) => isHarmonizable(item),
-        cell: (value) => (value ? <AppIcon icon={faCheck} /> : undefined),
+        cell: (value, item) => (value ? <DeepsightHarmonizerIcon item={item} /> : undefined),
       }),
     destinyVersion === 2 &&
       isWeapon &&
