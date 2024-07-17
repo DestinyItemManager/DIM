@@ -1,6 +1,6 @@
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { StatInfo } from 'app/compare/Compare';
-import { settingSelector } from 'app/dim-api/selectors';
+import { languageSelector, settingSelector } from 'app/dim-api/selectors';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import useBulkNote from 'app/dim-ui/useBulkNote';
 import useConfirm from 'app/dim-ui/useConfirm';
@@ -32,7 +32,7 @@ import { toggleSearchQueryComponent } from 'app/shell/actions';
 import { AppIcon, faCaretDown, faCaretUp, spreadsheetIcon, uploadIcon } from 'app/shell/icons';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
+import { Comparator, chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { useSetCSSVarToHeight, useShiftHeld } from 'app/utils/hooks';
 import { LookupTable, StringLookup } from 'app/utils/util-types';
@@ -55,6 +55,9 @@ import { useTableColumnSorts } from 'app/dim-ui/table-columns';
 import { filterMap } from 'app/utils/collections';
 import { errorMessage } from 'app/utils/errors';
 import { createPortal } from 'react-dom';
+
+import { DimLanguage } from 'app/i18n';
+import { localizedSorter } from 'app/utils/intl';
 // eslint-disable-next-line css-modules/no-unused-class
 import styles from './ItemTable.m.scss';
 import { ItemCategoryTreeNode, armorTopLevelCatHashes } from './ItemTypeSelector';
@@ -226,9 +229,10 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     () => buildRows(items, filteredColumns),
     [filteredColumns, items],
   );
+  const language = useSelector(languageSelector);
   const rows = useMemo(
-    () => sortRows(unsortedRows, columnSorts, filteredColumns),
-    [unsortedRows, filteredColumns, columnSorts],
+    () => sortRows(unsortedRows, columnSorts, filteredColumns, language),
+    [unsortedRows, filteredColumns, columnSorts, language],
   );
 
   const shiftHeld = useShiftHeld();
@@ -566,17 +570,21 @@ function sortRows(
   unsortedRows: Row[],
   columnSorts: ColumnSort[],
   filteredColumns: ColumnDefinition[],
+  language: DimLanguage,
 ) {
   const comparator = chainComparator<Row>(
     ...columnSorts.map((sorter) => {
       const column = filteredColumns.find((c) => c.id === sorter.columnId);
       if (column) {
-        const compare = column.sort
-          ? (row1: Row, row2: Row) => column.sort!(row1.values[column.id], row2.values[column.id])
-          : compareBy((row: Row) => row.values[column.id] ?? 0);
+        const sort = column.sort;
+        const compare: Comparator<Row> = sort
+          ? (row1, row2) => sort(row1.values[column.id], row2.values[column.id])
+          : unsortedRows.some((row) => typeof row.values[column.id] === 'string')
+            ? localizedSorter(language, (row) => (row.values[column.id] ?? '') as string)
+            : compareBy((row) => row.values[column.id] ?? 0);
         // Always sort undefined values to the end
         return chainComparator(
-          compareBy((row: Row) => row.values[column.id] === undefined),
+          compareBy((row) => row.values[column.id] === undefined),
           sorter.sort === SortDirection.ASC ? compare : reverseComparator(compare),
         );
       }
