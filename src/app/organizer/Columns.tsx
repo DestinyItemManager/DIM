@@ -520,7 +520,6 @@ export function getColumns(
           <PerksCell item={item} sockets={getSockets(item, 'all')} onPlugClicked={onPlugClicked} />
         ),
       sort: perkStringSort,
-      gridWidth: 'minmax(324px,max-content)',
       filter: (value) =>
         typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
     }),
@@ -538,7 +537,6 @@ export function getColumns(
           />
         ),
         sort: perkStringSort,
-        gridWidth: 'minmax(180px,max-content)',
         filter: (value) =>
           typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
       }),
@@ -556,7 +554,6 @@ export function getColumns(
           />
         ),
         sort: perkStringSort,
-        gridWidth: 'minmax(180px,max-content)',
         filter: (value) =>
           typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
       }),

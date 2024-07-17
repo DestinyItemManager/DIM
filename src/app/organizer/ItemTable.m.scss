@@ -227,6 +227,7 @@ $content-cells: 5;
   flex-direction: row;
   align-items: flex-start;
   gap: 3px;
+  white-space: nowrap;
 }
 .miniPerkContainer {
   position: relative;
