@@ -365,17 +365,18 @@ export function getStatValuesByHash(item: DimItem, byWhichValue: 'base' | 'value
  * the user to bump a stat by a small amount?
  */
 export function isArtifice(item: DimItem) {
+  return Boolean(item.sockets?.allSockets.some(isArtificeSocket));
+}
+
+export function isArtificeSocket(socket: DimSocket) {
+  // exotic armor has the artifice slot all the time, and it's usable when it's reported as visible
   return Boolean(
-    item.sockets?.allSockets.some(
-      (socket) =>
-        // exotic armor has the artifice slot all the time, and it's usable when it's reported as visible
-        socket.visibleInGame &&
-        socket.plugged &&
-        // in a better world, you'd only need to check this, because there's a "empty mod slot" item specifically for artifice slots.
-        (socket.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice ||
-          // but some of those have the *generic* "empty mod slot" item plugged in, so we fall back to keeping an eye out for the intrinsic
-          socket.plugged.plugDef.hash === ARTIFICE_PERK_HASH),
-    ),
+    socket.visibleInGame &&
+      socket.plugged &&
+      // in a better world, you'd only need to check this, because there's a "empty mod slot" item specifically for artifice slots.
+      (socket.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice ||
+        // but some of those have the *generic* "empty mod slot" item plugged in, so we fall back to keeping an eye out for the intrinsic
+        socket.plugged.plugDef.hash === ARTIFICE_PERK_HASH),
   );
 }
 

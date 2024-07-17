@@ -47,16 +47,19 @@ import {
   getItemKillTrackerInfo,
   getItemYear,
   getMasterworkStatNames,
+  isArtificeSocket,
   isD1Item,
   isKillTrackerSocket,
 } from 'app/utils/item-utils';
 import {
   getDisplayedItemSockets,
+  getExtraIntrinsicPerkSockets,
   getIntrinsicArmorPerkSocket,
   getSocketsByIndexes,
   getWeaponArchetype,
   getWeaponArchetypeSocket,
   isEnhancedPerk,
+  socketContainsIntrinsicPlug,
 } from 'app/utils/socket-utils';
 import { LookupTable } from 'app/utils/util-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
@@ -90,8 +93,6 @@ export const statLabels: LookupTable<StatHashes, I18nKey> = {
   [StatHashes.Defense]: tl('Organizer.Stats.Power'),
   [StatHashes.AirborneEffectiveness]: tl('Organizer.Stats.Airborne'),
 };
-
-// const booleanCell = (value: any) => (value ? <AppIcon icon={faCheck} /> : undefined);
 
 /**
  * This function generates the columns.
@@ -467,16 +468,32 @@ export function getColumns(
           ),
         filter: (_val, item) => `is:${getItemDamageShortName(item)}`,
       }),
+    destinyVersion === 2 &&
+      isArmor &&
+      c({
+        id: 'intrinsics',
+        header: t('Organizer.Columns.Intrinsics'),
+        value: (item) => perkString(getIntrinsicSockets(item)), // TODO: figure out a way to sort perks
+        cell: (_val, item) => (
+          <PerksCell
+            item={item}
+            sockets={getIntrinsicSockets(item)}
+            onPlugClicked={onPlugClicked}
+          />
+        ),
+        filter: (value) =>
+          typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
+      }),
     c({
       id: 'perks',
       header:
         destinyVersion === 2 ? t('Organizer.Columns.PerksMods') : t('Organizer.Columns.Perks'),
-      value: (item) => perkString(item, 'all'),
+      value: (item) => perkString(getSockets(item, false)),
       cell: (_val, item) =>
         isD1Item(item) ? (
           <D1PerksCell item={item} />
         ) : (
-          <PerksCell item={item} onPlugClicked={onPlugClicked} />
+          <PerksCell item={item} sockets={getSockets(item, false)} onPlugClicked={onPlugClicked} />
         ),
       gridWidth: 'minmax(324px,max-content)',
       filter: (value) =>
@@ -487,9 +504,9 @@ export function getColumns(
       c({
         id: 'traits',
         header: t('Organizer.Columns.Traits'),
-        value: (item) => perkString(item, 'trait'), // TODO: figure out a way to sort perks
+        value: (item) => perkString(getSockets(item, true)), // TODO: figure out a way to sort perks
         cell: (_val, item) => (
-          <PerksCell item={item} traitsOnly={true} onPlugClicked={onPlugClicked} />
+          <PerksCell item={item} sockets={getSockets(item, true)} onPlugClicked={onPlugClicked} />
         ),
         gridWidth: 'minmax(180px,max-content)',
         filter: (value) =>
@@ -660,14 +677,13 @@ function LoadoutsCell({
 
 function PerksCell({
   item,
-  traitsOnly,
+  sockets,
   onPlugClicked,
 }: {
   item: DimItem;
-  traitsOnly?: boolean;
+  sockets: DimSocket[];
   onPlugClicked?: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
 }) {
-  const sockets = getSockets(item, traitsOnly);
   if (!sockets.length) {
     return null;
   }
@@ -775,11 +791,9 @@ function StoreLocation({ storeId }: { storeId: string }) {
     </div>
   );
 }
-function perkString(item: DimItem, type: 'trait' | 'all'): string | null {
-  const sockets = getSockets(item, type === 'trait');
-
+function perkString(sockets: DimSocket[]): string | undefined {
   if (!sockets.length) {
-    return null;
+    return undefined;
   }
 
   // TODO: compare on array?
@@ -815,18 +829,24 @@ function getSockets(item: DimItem, traitsOnly?: boolean): DimSocket[] {
     sockets.push(...[...modSocketsByCategory.values()].flat());
   }
 
-  // Intrinsics are perks and are added here for displaying
-  const intrinsicSocket = getIntrinsicArmorPerkSocket(item);
-  if (intrinsicSocket) {
-    sockets.push(intrinsicSocket);
-  }
-
   sockets = sockets.filter(
     (s) =>
       // we have a separate column for the kill tracker
       !isKillTrackerSocket(s) &&
       // and for the regular weapon masterworks
-      s.socketDefinition.socketTypeHash !== weaponMasterworkY2SocketTypeHash,
+      s.socketDefinition.socketTypeHash !== weaponMasterworkY2SocketTypeHash &&
+      // Remove "extra intrinsics" for exotic class items
+      (!item.bucket.inArmor || !(s.isPerk && s.visibleInGame && socketContainsIntrinsicPlug(s))),
   );
   return sockets;
+}
+
+function getIntrinsicSockets(item: DimItem) {
+  const intrinsicSocket = getIntrinsicArmorPerkSocket(item);
+  const extraIntrinsicSockets = getExtraIntrinsicPerkSockets(item);
+  return intrinsicSocket &&
+    // artifice already shows up in the "modslot" column
+    !isArtificeSocket(intrinsicSocket)
+    ? [intrinsicSocket, ...extraIntrinsicSockets]
+    : extraIntrinsicSockets;
 }
