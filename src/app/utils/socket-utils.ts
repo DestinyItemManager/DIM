@@ -13,6 +13,7 @@ import {
   armor2PlugCategoryHashes,
 } from 'app/search/d2-known-values';
 import { DestinySocketCategoryStyle, TierType } from 'bungie-api-ts/destiny2';
+import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import {
   BucketHashes,
   ItemCategoryHashes,
@@ -297,8 +298,10 @@ function filterSocketCategories(
  */
 export function isSocketEmpty(socket: DimSocket) {
   return (
-    socket.plugged?.plugDef.hash === socket.emptyPlugItemHash &&
-    socket.plugged?.plugDef.plug.plugCategoryHash !== PlugCategoryHashes.V400EmptyExoticMasterwork
+    socket.plugged &&
+    (socket.plugged.plugDef.hash === socket.emptyPlugItemHash ||
+      emptyPlugHashes.has(socket.plugged?.plugDef.hash)) &&
+    socket.plugged.plugDef.plug.plugCategoryHash !== PlugCategoryHashes.V400EmptyExoticMasterwork
   );
 }
 
