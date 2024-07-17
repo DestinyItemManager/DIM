@@ -5,7 +5,7 @@ import React from 'react';
 
 export { SortDirection, type ColumnSort } from 'app/dim-ui/table-columns';
 
-export type Value = string | number | boolean | undefined | null;
+export type Value = string | number | boolean | undefined;
 
 /**
  * Columns can optionally belong to a column group - if so, they're shown/hidden as a group.
