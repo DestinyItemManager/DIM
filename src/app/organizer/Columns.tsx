@@ -40,7 +40,7 @@ import {
 } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { filterMap } from 'app/utils/collections';
-import { compareBy } from 'app/utils/comparators';
+import { Comparator, compareBy } from 'app/utils/comparators';
 import {
   getInterestingSocketMetadatas,
   getItemDamageShortName,
@@ -94,6 +94,25 @@ export const statLabels: LookupTable<StatHashes, I18nKey> = {
   [StatHashes.AirborneEffectiveness]: tl('Organizer.Stats.Airborne'),
 };
 
+const perkStringSort: Comparator<string | undefined> = (a, b) => {
+  const aParts = (a ?? '').split(',');
+  const bParts = (b ?? '').split(',');
+  let ai = 0;
+  let bi = 0;
+  while (ai < aParts.length && bi < bParts.length) {
+    const aPart = aParts[ai];
+    const bPart = bParts[bi];
+    if (aPart === bPart) {
+      ai++;
+      bi++;
+      continue;
+    }
+    return aPart.localeCompare(bPart) as 1 | 0 | -1;
+  }
+  return 0;
+};
+
+// TODO: maybe start with driving the CSV from this
 /**
  * This function generates the columns.
  */
@@ -485,6 +504,7 @@ export function getColumns(
             onPlugClicked={onPlugClicked}
           />
         ),
+        sort: perkStringSort,
         filter: (value) =>
           typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
       }),
@@ -492,13 +512,14 @@ export function getColumns(
       id: 'perks',
       header:
         destinyVersion === 2 ? t('Organizer.Columns.PerksMods') : t('Organizer.Columns.Perks'),
-      value: (item) => perkString(getSockets(item, false)),
+      value: (item) => perkString(getSockets(item, 'all')),
       cell: (_val, item) =>
         isD1Item(item) ? (
           <D1PerksCell item={item} />
         ) : (
-          <PerksCell item={item} sockets={getSockets(item, false)} onPlugClicked={onPlugClicked} />
+          <PerksCell item={item} sockets={getSockets(item, 'all')} onPlugClicked={onPlugClicked} />
         ),
+      sort: perkStringSort,
       gridWidth: 'minmax(324px,max-content)',
       filter: (value) =>
         typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
@@ -508,10 +529,33 @@ export function getColumns(
       c({
         id: 'traits',
         header: t('Organizer.Columns.Traits'),
-        value: (item) => perkString(getSockets(item, true)), // TODO: figure out a way to sort perks
+        value: (item) => perkString(getSockets(item, 'traits')), // TODO: figure out a way to sort perks
         cell: (_val, item) => (
-          <PerksCell item={item} sockets={getSockets(item, true)} onPlugClicked={onPlugClicked} />
+          <PerksCell
+            item={item}
+            sockets={getSockets(item, 'traits')}
+            onPlugClicked={onPlugClicked}
+          />
         ),
+        sort: perkStringSort,
+        gridWidth: 'minmax(180px,max-content)',
+        filter: (value) =>
+          typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
+      }),
+    // TODO: customize width of perks/mods column
+    destinyVersion === 2 &&
+      c({
+        id: 'shaders',
+        header: t('Organizer.Columns.Shaders'),
+        value: (item) => perkString(getSockets(item, 'shaders')), // TODO: figure out a way to sort perks
+        cell: (_val, item) => (
+          <PerksCell
+            item={item}
+            sockets={getSockets(item, 'shaders')}
+            onPlugClicked={onPlugClicked}
+          />
+        ),
+        sort: perkStringSort,
         gridWidth: 'minmax(180px,max-content)',
         filter: (value) =>
           typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
@@ -807,7 +851,7 @@ function perkString(sockets: DimSocket[]): string | undefined {
     .join(',');
 }
 
-function getSockets(item: DimItem, traitsOnly?: boolean): DimSocket[] {
+function getSockets(item: DimItem, type?: 'traits' | 'all' | 'shaders'): DimSocket[] {
   if (!item.sockets) {
     return [];
   }
@@ -821,16 +865,34 @@ function getSockets(item: DimItem, traitsOnly?: boolean): DimSocket[] {
   if (perks) {
     sockets.push(...getSocketsByIndexes(item.sockets, perks.socketIndexes));
   }
-  if (traitsOnly) {
+  if (type === 'traits') {
     sockets = sockets.filter(
       (s) =>
         s.plugged &&
         (s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames ||
           s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics),
     );
+  } else if (type === 'shaders') {
+    sockets.push(...[...modSocketsByCategory.values()].flat());
+    sockets = sockets.filter(
+      (s) =>
+        s.plugged &&
+        (s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Shader ||
+          s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Mementos ||
+          s.plugged.plugDef.plug.plugCategoryIdentifier.includes('skin')),
+    );
   } else {
     // Improve this when we use iterator-helpers
     sockets.push(...[...modSocketsByCategory.values()].flat());
+    sockets = sockets.filter(
+      (s) =>
+        !(
+          s.plugged &&
+          (s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Shader ||
+            s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Mementos ||
+            s.plugged.plugDef.plug.plugCategoryIdentifier.includes('skin'))
+        ),
+    );
   }
 
   sockets = sockets.filter(
