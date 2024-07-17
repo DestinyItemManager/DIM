@@ -112,7 +112,7 @@ export const inGameLoadoutsForCharacterSelector = createSelector(
  */
 export const availableLoadoutSlotsSelector = createSelector(
   characterLoadoutsSelector,
-  (loadouts) => (loadouts ? Object.values(loadouts)[0]?.loadouts.length ?? 0 : 0),
+  (loadouts) => (loadouts ? (Object.values(loadouts)[0]?.loadouts.length ?? 0) : 0),
 );
 
 /** Loadouts supported directly by D2 (post-Lightfall), for a specific character */

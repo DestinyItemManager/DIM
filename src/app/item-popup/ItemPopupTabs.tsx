@@ -1,9 +1,9 @@
+import { ItemPopupTab } from '@destinyitemmanager/dim-api-types';
 import { useHotkey } from 'app/hotkeys/useHotkey';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { ItemTriage, TriageTabToggle, doShowTriage } from 'app/item-triage/ItemTriage';
 import { useSetting } from 'app/settings/hooks';
-import { ItemPopupTab } from 'app/settings/initial-settings';
 import clsx from 'clsx';
 import { useCallback, useId, useRef } from 'react';
 import ItemDetails from './ItemDetails';

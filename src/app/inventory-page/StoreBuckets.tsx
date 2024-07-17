@@ -1,3 +1,4 @@
+import { VaultWeaponGroupingStyle } from '@destinyitemmanager/dim-api-types';
 import { settingSelector } from 'app/dim-api/selectors';
 import { PullFromPostmaster } from 'app/inventory/PullFromPostmaster';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
@@ -8,7 +9,6 @@ import {
   postmasterAlmostFull,
   postmasterSpaceUsed,
 } from 'app/loadout-drawer/postmaster';
-import { VaultWeaponGroupingStyle } from 'app/settings/initial-settings';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
