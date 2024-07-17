@@ -284,7 +284,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
             if (e.shiftKey) {
               if ((e.target as Element).hasAttribute('data-perk-name')) {
                 const filter = column.filter!(
-                  (e.target as Element).getAttribute('data-perk-name'),
+                  (e.target as Element).getAttribute('data-perk-name') ?? undefined,
                   row.item,
                 );
                 if (filter) {
