@@ -247,6 +247,7 @@ export const enum VendorHashes {
   DevrimKay = 396892126,
   Failsafe = 1576276905,
   RivensWishesExotics = 2388521577,
+  XurLegendaryItems = 3751514131, // Vendor "Strange Gear Offers"
 }
 
 /** used to snag the icon for display */
