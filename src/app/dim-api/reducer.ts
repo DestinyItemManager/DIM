@@ -881,8 +881,9 @@ function applyFinishedUpdatesToQueue(state: DimApiState, results: ProfileUpdateR
       reportException('dim sync', new Error('invalid dim api update'), {
         action: update.action,
         status: result.status,
-        update: message,
         message: result.message,
+        update,
+        resultMessage: result.message,
       });
       state = produce(state, (draft) => reverseUpdateLocally(draft, update));
     } else {
