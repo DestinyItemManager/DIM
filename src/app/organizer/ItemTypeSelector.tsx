@@ -79,6 +79,7 @@ const d2SelectionTree: ItemCategoryTreeNode = {
     {
       id: 'weapons',
       itemCategoryHash: ItemCategoryHashes.Weapon,
+      terminal: true,
 
       subCategories: [
         {
