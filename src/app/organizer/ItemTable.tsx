@@ -83,6 +83,8 @@ const downloadButtonSettings = [
 
 const MemoRow = memo(TableRow);
 
+const EXPAND_INCREMENT = 20;
+
 export default function ItemTable({ categories }: { categories: ItemCategoryTreeNode[] }) {
   const [columnSorts, toggleColumnSort] = useTableColumnSorts([
     { columnId: 'name', sort: SortDirection.ASC },
@@ -91,6 +93,11 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   // Track the last selection for shift-selecting
   const lastSelectedId = useRef<string | null>(null);
   const [socketOverrides, onPlugClicked] = useSocketOverridesForItems();
+  const [maxItems, setMaxItems] = useState(EXPAND_INCREMENT);
+  useEffect(() => {
+    setMaxItems(EXPAND_INCREMENT);
+  }, [categories]);
+  const expandItems = useCallback(() => setMaxItems((m) => m + EXPAND_INCREMENT), []);
 
   const allItems = useSelector(allItemsSelector);
   const searchFilter = useSelector(searchFilterSelector);
@@ -438,118 +445,122 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   useSetCSSVarToHeight(toolbarRef, '--item-table-toolbar-height');
 
   return (
-    <div
-      className={clsx(styles.table, shiftHeld && styles.shiftHeld)}
-      style={{ gridTemplateColumns: gridSpec }}
-      role="table"
-      ref={tableRef}
-    >
-      {confirmDialog}
-      {bulkNoteDialog}
-      <div className={styles.toolbar} ref={toolbarRef}>
-        <div>
-          <ItemActions
-            itemsAreSelected={Boolean(selectedItems.length)}
-            onLock={onLock}
-            onNote={onNote}
-            stores={stores}
-            onTagSelectedItems={onTagSelectedItems}
-            onMoveSelectedItems={onMoveSelectedItems}
-            onCompareSelectedItems={onCompareSelectedItems}
-          />
-          <UserGuideLink topic="Organizer" />
-          <Dropzone onDrop={importCsv} accept={{ 'text/csv': ['.csv'] }} useFsAccessApi={false}>
-            {({ getRootProps, getInputProps }) => (
-              <div {...getRootProps()} className={styles.importButton}>
-                <input {...getInputProps()} />
-                <div className="dim-button">
-                  <AppIcon icon={uploadIcon} /> {t('Settings.CsvImport')}
+    <>
+      <div
+        className={clsx(styles.table, shiftHeld && styles.shiftHeld)}
+        style={{ gridTemplateColumns: gridSpec }}
+        role="table"
+        ref={tableRef}
+      >
+        {confirmDialog}
+        {bulkNoteDialog}
+        <div className={styles.toolbar} ref={toolbarRef}>
+          <div>
+            <ItemActions
+              itemsAreSelected={Boolean(selectedItems.length)}
+              onLock={onLock}
+              onNote={onNote}
+              stores={stores}
+              onTagSelectedItems={onTagSelectedItems}
+              onMoveSelectedItems={onMoveSelectedItems}
+              onCompareSelectedItems={onCompareSelectedItems}
+            />
+            <UserGuideLink topic="Organizer" />
+            <Dropzone onDrop={importCsv} accept={{ 'text/csv': ['.csv'] }} useFsAccessApi={false}>
+              {({ getRootProps, getInputProps }) => (
+                <div {...getRootProps()} className={styles.importButton}>
+                  <input {...getInputProps()} />
+                  <div className="dim-button">
+                    <AppIcon icon={uploadIcon} /> {t('Settings.CsvImport')}
+                  </div>
                 </div>
-              </div>
-            )}
-          </Dropzone>
-          {downloadAction}
-          <EnabledColumnsSelector
-            columns={columns}
-            enabledColumns={enabledColumns}
-            onChangeEnabledColumn={onChangeEnabledColumn}
-            forClass={classIfAny}
-          />
-        </div>
-        {createPortal(<style>{rowStyle}</style>, document.head)}
-      </div>
-      <div className={clsx(styles.selection, styles.header)} role="columnheader" aria-sort="none">
-        <div>
-          <input
-            name="selectAll"
-            title={t('Organizer.SelectAll')}
-            type="checkbox"
-            checked={selectedItems.length === rows.length}
-            ref={(el) =>
-              el &&
-              (el.indeterminate = selectedItems.length !== rows.length && selectedItems.length > 0)
-            }
-            onChange={selectAllItems}
-          />
-        </div>
-      </div>
-      {filteredColumns.map((column: ColumnDefinition) => {
-        const isStatsColumn = ['stats', 'baseStats'].includes(column.columnGroup?.id ?? '');
-        return (
-          <div
-            key={column.id}
-            className={clsx(
-              possibleStyles[column.id],
-              column.id.startsWith('customstat_') && styles.customstat,
-              styles.header,
-              {
-                [styles.stats]: isStatsColumn,
-              },
-            )}
-            role="columnheader"
-            aria-sort="none"
-          >
-            <div
-              onClick={
-                column.noSort
-                  ? undefined
-                  : toggleColumnSort(column.id, shiftHeld, column.defaultSort)
-              }
-            >
-              {column.header}
-              {!column.noSort && columnSorts.some((c) => c.columnId === column.id) && (
-                <AppIcon
-                  className={styles.sorter}
-                  icon={
-                    columnSorts.find((c) => c.columnId === column.id)!.sort === SortDirection.DESC
-                      ? faCaretDown
-                      : faCaretUp
-                  }
-                />
               )}
-            </div>
-          </div>
-        );
-      })}
-      {rows.length === 0 && (
-        <div className={styles.noItems}>
-          {categories.at(-1)?.terminal ? t('Organizer.NoItemsQuery') : t('Organizer.NoItems')}
-        </div>
-      )}
-      {rows.map((row) => (
-        <React.Fragment key={row.item.id}>
-          <div className={styles.selection} role="cell">
-            <input
-              type="checkbox"
-              title={t('Organizer.SelectItem', { name: row.item.name })}
-              checked={selectedItemIds.includes(row.item.id)}
-              onChange={(e) => selectItem(e, row.item)}
+            </Dropzone>
+            {downloadAction}
+            <EnabledColumnsSelector
+              columns={columns}
+              enabledColumns={enabledColumns}
+              onChangeEnabledColumn={onChangeEnabledColumn}
+              forClass={classIfAny}
             />
           </div>
-          <MemoRow row={row} filteredColumns={filteredColumns} onRowClick={onRowClick} />
-        </React.Fragment>
-      ))}
-    </div>
+          {createPortal(<style>{rowStyle}</style>, document.head)}
+        </div>
+        <div className={clsx(styles.selection, styles.header)} role="columnheader" aria-sort="none">
+          <div>
+            <input
+              name="selectAll"
+              title={t('Organizer.SelectAll')}
+              type="checkbox"
+              checked={selectedItems.length === rows.length}
+              ref={(el) =>
+                el &&
+                (el.indeterminate =
+                  selectedItems.length !== rows.length && selectedItems.length > 0)
+              }
+              onChange={selectAllItems}
+            />
+          </div>
+        </div>
+        {filteredColumns.map((column: ColumnDefinition) => {
+          const isStatsColumn = ['stats', 'baseStats'].includes(column.columnGroup?.id ?? '');
+          return (
+            <div
+              key={column.id}
+              className={clsx(
+                possibleStyles[column.id],
+                column.id.startsWith('customstat_') && styles.customstat,
+                styles.header,
+                {
+                  [styles.stats]: isStatsColumn,
+                },
+              )}
+              role="columnheader"
+              aria-sort="none"
+            >
+              <div
+                onClick={
+                  column.noSort
+                    ? undefined
+                    : toggleColumnSort(column.id, shiftHeld, column.defaultSort)
+                }
+              >
+                {column.header}
+                {!column.noSort && columnSorts.some((c) => c.columnId === column.id) && (
+                  <AppIcon
+                    className={styles.sorter}
+                    icon={
+                      columnSorts.find((c) => c.columnId === column.id)!.sort === SortDirection.DESC
+                        ? faCaretDown
+                        : faCaretUp
+                    }
+                  />
+                )}
+              </div>
+            </div>
+          );
+        })}
+        {rows.length === 0 && (
+          <div className={styles.noItems}>
+            {categories.at(-1)?.terminal ? t('Organizer.NoItemsQuery') : t('Organizer.NoItems')}
+          </div>
+        )}
+        {rows.slice(0, maxItems).map((row) => (
+          <React.Fragment key={row.item.id}>
+            <div className={styles.selection} role="cell">
+              <input
+                type="checkbox"
+                title={t('Organizer.SelectItem', { name: row.item.name })}
+                checked={selectedItemIds.includes(row.item.id)}
+                onChange={(e) => selectItem(e, row.item)}
+              />
+            </div>
+            <MemoRow row={row} filteredColumns={filteredColumns} onRowClick={onRowClick} />
+          </React.Fragment>
+        ))}
+      </div>
+      {rows.length > maxItems && <ItemListExpander onExpand={expandItems} />}
+    </>
   );
 }
 
@@ -678,4 +689,35 @@ function columnSetting(itemType: 'weapon' | 'armor' | 'ghost') {
     case 'ghost':
       return 'organizerColumnsGhost';
   }
+}
+
+function ItemListExpander({ onExpand }: { onExpand: () => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const elem = ref.current;
+    if (!elem) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            onExpand();
+          }
+        }
+      },
+      {
+        root: null,
+        rootMargin: '16px',
+        threshold: 0,
+      },
+    );
+
+    observer.observe(elem);
+    return () => observer.unobserve(elem);
+  }, [onExpand]);
+
+  return <div ref={ref} />;
 }
