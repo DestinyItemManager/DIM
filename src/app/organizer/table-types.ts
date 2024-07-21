@@ -40,7 +40,6 @@ export interface ColumnDefinition<V extends Value = Value> {
   /** Columns can optionally belong to a column group - if so, they're shown/hidden as a group. */
   columnGroup?: ColumnGroup;
   /** The raw value of the column for this item. */
-  // TODO: could pass in a context with info like what columns are enabled...
   value(item: DimItem): V;
   /** Renderer for the cell. Default: value */
   cell?(value: V, item: DimItem): React.ReactNode;

@@ -65,7 +65,12 @@ import { LookupTable } from 'app/utils/util-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info-v2';
-import { BreakerTypeHashes, PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import {
+  BreakerTypeHashes,
+  ItemCategoryHashes,
+  PlugCategoryHashes,
+  StatHashes,
+} from 'data/d2/generated-enums';
 import shapedOverlay from 'images/shapedOverlay.png';
 import _ from 'lodash';
 import React from 'react';
@@ -112,7 +117,6 @@ const perkStringSort: Comparator<string | undefined> = (a, b) => {
   return 0;
 };
 
-// TODO: maybe start with driving the CSV from this
 /**
  * This function generates the columns.
  */
@@ -496,7 +500,7 @@ export function getColumns(
       c({
         id: 'intrinsics',
         header: t('Organizer.Columns.Intrinsics'),
-        value: (item) => perkString(getIntrinsicSockets(item)), // TODO: figure out a way to sort perks
+        value: (item) => perkString(getIntrinsicSockets(item)),
         cell: (_val, item) => (
           <PerksCell
             item={item}
@@ -511,7 +515,11 @@ export function getColumns(
     c({
       id: 'perks',
       header:
-        destinyVersion === 2 ? t('Organizer.Columns.PerksMods') : t('Organizer.Columns.Perks'),
+        destinyVersion === 2
+          ? isWeapon
+            ? t('Organizer.Columns.OtherPerks')
+            : t('Organizer.Columns.PerksMods')
+          : t('Organizer.Columns.Perks'),
       value: (item) => perkString(getSockets(item, 'all')),
       cell: (_val, item) =>
         isD1Item(item) ? (
@@ -528,7 +536,7 @@ export function getColumns(
       c({
         id: 'traits',
         header: t('Organizer.Columns.Traits'),
-        value: (item) => perkString(getSockets(item, 'traits')), // TODO: figure out a way to sort perks
+        value: (item) => perkString(getSockets(item, 'traits')),
         cell: (_val, item) => (
           <PerksCell
             item={item}
@@ -540,12 +548,29 @@ export function getColumns(
         filter: (value) =>
           typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
       }),
-    // TODO: customize width of perks/mods column
+
+    destinyVersion === 2 &&
+      isWeapon &&
+      c({
+        id: 'originTrait',
+        header: t('Organizer.Columns.OriginTraits'),
+        value: (item) => perkString(getSockets(item, 'origin')),
+        cell: (_val, item) => (
+          <PerksCell
+            item={item}
+            sockets={getSockets(item, 'origin')}
+            onPlugClicked={onPlugClicked}
+          />
+        ),
+        sort: perkStringSort,
+        filter: (value) =>
+          typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
+      }),
     destinyVersion === 2 &&
       c({
         id: 'shaders',
         header: t('Organizer.Columns.Shaders'),
-        value: (item) => perkString(getSockets(item, 'shaders')), // TODO: figure out a way to sort perks
+        value: (item) => perkString(getSockets(item, 'shaders')),
         cell: (_val, item) => (
           <PerksCell
             item={item}
@@ -836,19 +861,22 @@ function StoreLocation({ storeId }: { storeId: string }) {
     </div>
   );
 }
+
 function perkString(sockets: DimSocket[]): string | undefined {
   if (!sockets.length) {
     return undefined;
   }
 
-  // TODO: compare on array?
   return sockets
     .flatMap((socket) => socket.plugOptions.map((p) => p.plugDef.displayProperties.name))
     .filter(Boolean)
     .join(',');
 }
 
-function getSockets(item: DimItem, type?: 'traits' | 'all' | 'shaders'): DimSocket[] {
+function getSockets(
+  item: DimItem,
+  type?: 'all' | 'traits' | 'barrel' | 'shaders' | 'origin',
+): DimSocket[] {
   if (!item.sockets) {
     return [];
   }
@@ -862,34 +890,53 @@ function getSockets(item: DimItem, type?: 'traits' | 'all' | 'shaders'): DimSock
   if (perks) {
     sockets.push(...getSocketsByIndexes(item.sockets, perks.socketIndexes));
   }
-  if (type === 'traits') {
-    sockets = sockets.filter(
-      (s) =>
-        s.plugged &&
-        (s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames ||
-          s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics),
-    );
-  } else if (type === 'shaders') {
-    sockets.push(...[...modSocketsByCategory.values()].flat());
-    sockets = sockets.filter(
-      (s) =>
-        s.plugged &&
-        (s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Shader ||
-          s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Mementos ||
-          s.plugged.plugDef.plug.plugCategoryIdentifier.includes('skin')),
-    );
-  } else {
-    // Improve this when we use iterator-helpers
-    sockets.push(...[...modSocketsByCategory.values()].flat());
-    sockets = sockets.filter(
-      (s) =>
-        !(
+  switch (type) {
+    case 'traits':
+      sockets = sockets.filter(
+        (s) =>
+          s.plugged &&
+          (s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames ||
+            s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics),
+      );
+      break;
+
+    case 'origin':
+      sockets = sockets.filter((s) =>
+        s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsOriginTraits),
+      );
+      break;
+
+    case 'shaders': {
+      sockets.push(...[...modSocketsByCategory.values()].flat());
+      sockets = sockets.filter(
+        (s) =>
           s.plugged &&
           (s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Shader ||
             s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Mementos ||
-            s.plugged.plugDef.plug.plugCategoryIdentifier.includes('skin'))
-        ),
-    );
+            s.plugged.plugDef.plug.plugCategoryIdentifier.includes('skin')),
+      );
+      break;
+    }
+
+    default: {
+      // Improve this when we use iterator-helpers
+      sockets.push(...[...modSocketsByCategory.values()].flat());
+      sockets = sockets.filter(
+        (s) =>
+          !(
+            s.plugged &&
+            (s.plugged?.plugDef.itemCategoryHashes?.includes(
+              ItemCategoryHashes.WeaponModsOriginTraits,
+            ) ||
+              s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames ||
+              s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics ||
+              s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Shader ||
+              s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Mementos ||
+              s.plugged.plugDef.plug.plugCategoryIdentifier.includes('skin'))
+          ),
+      );
+      break;
+    }
   }
 
   sockets = sockets.filter(

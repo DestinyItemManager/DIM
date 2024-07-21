@@ -298,13 +298,10 @@ export const breakerTypes = {
 
 export const breakerTypeNames = Object.entries(breakerTypes)
   .filter(([, hashes]) => hashes.length === 1)
-  .reduce(
-    (memo, [name, [hash]]) => {
-      memo[hash] = name;
-      return memo;
-    },
-    {} as Record<BreakerTypeHashes, string>,
-  );
+  .reduce<Partial<Record<BreakerTypeHashes, string>>>((memo, [name, [hash]]) => {
+    memo[hash] = name;
+    return memo;
+  }, {});
 
 export const enum ModsWithConditionalStats {
   ElementalCapacitor = 3511092054, // InventoryItem "Elemental Capacitor"
