@@ -388,36 +388,6 @@ export function getColumns(
       filter: (value) => `is:${value}`,
     }),
     destinyVersion === 2 &&
-      c({
-        id: 'source',
-        header: t('Organizer.Columns.Source'),
-        value: source,
-        filter: (value) => `source:${value}`,
-      }),
-    c({
-      id: 'year',
-      header: t('Organizer.Columns.Year'),
-      value: (item) => getItemYear(item),
-      filter: (value) => `year:${value}`,
-    }),
-    destinyVersion === 2 &&
-      c({
-        id: 'season',
-        header: t('Organizer.Columns.Season'),
-        value: (i) => getSeason(i),
-        filter: (value) => `season:${value}`,
-      }),
-    destinyVersion === 2 &&
-      c({
-        id: 'event',
-        header: t('Organizer.Columns.Event'),
-        value: (item) => {
-          const event = getEvent(item);
-          return event ? D2EventInfo[event].name : undefined;
-        },
-        filter: (value) => `event:${value}`,
-      }),
-    destinyVersion === 2 &&
       isArmor &&
       c({
         id: 'modslot',
@@ -645,6 +615,36 @@ export function getColumns(
           );
         },
         defaultSort: SortDirection.DESC,
+      }),
+    destinyVersion === 2 &&
+      c({
+        id: 'source',
+        header: t('Organizer.Columns.Source'),
+        value: source,
+        filter: (value) => `source:${value}`,
+      }),
+    c({
+      id: 'year',
+      header: t('Organizer.Columns.Year'),
+      value: (item) => getItemYear(item),
+      filter: (value) => `year:${value}`,
+    }),
+    destinyVersion === 2 &&
+      c({
+        id: 'season',
+        header: t('Organizer.Columns.Season'),
+        value: (i) => getSeason(i),
+        filter: (value) => `season:${value}`,
+      }),
+    destinyVersion === 2 &&
+      c({
+        id: 'event',
+        header: t('Organizer.Columns.Event'),
+        value: (item) => {
+          const event = getEvent(item);
+          return event ? D2EventInfo[event].name : undefined;
+        },
+        filter: (value) => `event:${value}`,
       }),
     c({
       id: 'location',
