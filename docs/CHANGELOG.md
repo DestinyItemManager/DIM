@@ -1,8 +1,20 @@
 ## Next
 
+* Fixed a case where invalid loadouts would be repeatedly rejected by DIM Sync. Now they'll be rejected once and be removed.
+* Re-added Xûr vendor armor to Loadout Optimizer.
+* Fix light.gg and D2Foundry links to avoid certain circumstances where perks weren't selected (or, where D2Foundry crashed).
+* Armor intrinsics once again show up in Organizer's perks column.
+
 ## 8.28.0 <span class="changelog-date">(2024-07-14)</span>
 
+* Fixed a case where recently saved tags or loadouts might not appear if DIM Sync is down, even though they were still saved.
+
 ## 8.27.0 <span class="changelog-date">(2024-07-07)</span>
+
+* Fixed the order of pathfinder objectives.
+* Fixed `modslot:artifice` matching every exotic.
+* Fix loadout apply trying to socket the empty artifice plug.
+* Make the prismatic symbol pink.
 
 ## 8.26.0 <span class="changelog-date">(2024-06-30)</span>
 
