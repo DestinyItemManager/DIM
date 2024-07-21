@@ -1377,10 +1377,14 @@ function applyUpdateLocally(draft: Draft<DimApiState>, update: ProfileUpdateWith
       break;
     }
     case 'loadout': {
-      const { platformMembershipId, destinyVersion } = update;
+      const { platformMembershipId, destinyVersion, payload: loadout } = update;
       const profileKey = makeProfileKey(platformMembershipId!, destinyVersion!);
-      const loadout = update.payload;
-      ensureProfile(draft, profileKey).loadouts[loadout.id] = update.payload;
+      if (loadout) {
+        ensureProfile(draft, profileKey).loadouts[loadout.id] = update.payload;
+      } else if (update.before?.id) {
+        // This handles the case where we're reversing a create-loadout action.
+        delete ensureProfile(draft, profileKey).loadouts[update.before.id];
+      }
       break;
     }
     case 'track_triumph': {
