@@ -1,6 +1,8 @@
 @use '../variables.scss' as *;
 
 .organizer {
+  width: min-content;
+
   :global(.issue-banner-shown) & {
     padding-bottom: $issue-banner-height;
 
