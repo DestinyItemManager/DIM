@@ -531,7 +531,11 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
           </div>
         );
       })}
-      {rows.length === 0 && <div className={styles.noItems}>{t('Organizer.NoItems')}</div>}
+      {rows.length === 0 && (
+        <div className={styles.noItems}>
+          {categories.at(-1)?.terminal ? t('Organizer.NoItemsQuery') : t('Organizer.NoItems')}
+        </div>
+      )}
       {rows.map((row) => (
         <React.Fragment key={row.item.id}>
           <div className={styles.selection} role="cell">

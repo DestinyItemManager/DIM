@@ -1040,7 +1040,8 @@
     "Unlock": "Unlock",
     "ShiftTip": "Tip: Hold the Shift key and click on a cell to filter items",
     "NoMobile": "Turn your phone sideways to use the Organizer.",
-    "NoItems": "No items selected",
+    "NoItems": "Select a category above to start digging into your items.",
+    "NoItemsQuery": "No items selected. If you have a search query, try clearing it.",
     "Note": "Set Notes",
     "Columns": {
       "Stats": "Stats",
