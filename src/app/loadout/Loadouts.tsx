@@ -27,13 +27,14 @@ import { selectedLoadoutStoreSelector } from 'app/loadout/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { loadoutFilterFactorySelector } from 'app/search/loadouts/loadout-search-filter';
 import { useSetting } from 'app/settings/hooks';
+import { setSearchQuery } from 'app/shell/actions';
 import { AppIcon, addIcon, faCalculator, uploadIcon } from 'app/shell/icons';
 import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { usePageTitle } from 'app/utils/hooks';
 import { DestinySeasonDefinition } from 'bungie-api-ts/destiny2';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styles from './Loadouts.m.scss';
 import LoadoutRow from './LoadoutsRow';
 import { updateLoadoutStore } from './actions';
@@ -83,7 +84,35 @@ function Loadouts({ account }: { account: DestinyAccount }) {
 
   const stores = useSelector(storesSelector);
   const selectedStore = useSelector(selectedLoadoutStoreSelector);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const searchQuery = useSelector(querySelector);
+  const params = new URLSearchParams(location.search);
+  // TODO: useSearchParams?
 
+  // On the first render, apply the search from the query params if possible. Otherwise,
+  // update the query params with the current search.
+  const firstRender = useRef(true);
+  useEffect(() => {
+    if (!firstRender.current) {
+      searchQuery ? params.set('search', searchQuery) : params.delete('search');
+      navigate(
+        {
+          ...location,
+          search: params.toString(),
+        },
+        { replace: true },
+      );
+    } else if (params.has('search') && searchQuery !== params.get('search')) {
+      dispatch(setSearchQuery(params.get('search')!));
+    }
+    firstRender.current = false;
+
+    // We only want to do this when the search query changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery]);
+
+  // TODO: maybe the store should *only* be in the URL?
   const setSelectedStoreId = useCallback(
     (storeId: string) => {
       dispatch(updateLoadoutStore({ storeId }));
@@ -99,6 +128,13 @@ function Loadouts({ account }: { account: DestinyAccount }) {
     },
     [dispatch],
   );
+
+  useEffect(() => {
+    if (selectedStore) {
+      params.set('store', selectedStore.id);
+      navigate(`?${params.toString()}`, { replace: true });
+    }
+  }, [navigate, params, selectedStore]);
 
   const [sharedLoadout, setSharedLoadout] = useState<Loadout>();
   const [loadoutImportOpen, setLoadoutImportOpen] = useState<boolean>(false);
@@ -137,6 +173,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
     {
       includeWarningPills: true,
       extra: <span className={styles.hashtagTip}>{t('Loadouts.HashtagTip')}</span>,
+      saveToUrl: true,
     },
   );
 

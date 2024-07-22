@@ -22,7 +22,8 @@ import { localizedSorter } from 'app/utils/intl';
 import clsx from 'clsx';
 import modificationsIcon from 'destiny-icons/general/modifications.svg';
 import _ from 'lodash';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router';
 import styles from './menu-hooks.m.scss';
 
 const loadoutSpecializations = [tl('Loadouts.FashionOnly'), tl('Loadouts.ModsOnly')] as const;
@@ -50,14 +51,36 @@ export function useLoadoutFilterPills(
     className,
     darkBackground,
     extra,
+    saveToUrl,
   }: {
     includeWarningPills?: boolean;
     className?: string;
     darkBackground?: boolean;
     extra?: React.ReactNode;
+    saveToUrl?: boolean;
   } = {},
 ): [filteredLoadouts: Loadout[], filterPillsElement: React.ReactNode, hasSelectedFilters: boolean] {
-  const [selectedFilters, setSelectedFilters] = useState<Option<FilterPillType>[]>(emptyArray());
+  const navigate = useNavigate();
+  const [selectedFilterKeys, setSelectedFilterKeysRaw] = useState<string[]>(() =>
+    saveToUrl
+      ? new URLSearchParams(window.location.search).get('filters')?.split(',') ?? emptyArray()
+      : emptyArray(),
+  );
+  const setSelectedFilterKeys = useCallback(
+    (value: string[]) => {
+      if (saveToUrl) {
+        const query = new URLSearchParams(window.location.search);
+        if (value.length === 0) {
+          query.delete('filters');
+        } else {
+          query.set('filters', value.join(','));
+        }
+        navigate(`?${query.toString()}`, { replace: true });
+      }
+      setSelectedFilterKeysRaw(value);
+    },
+    [setSelectedFilterKeysRaw, saveToUrl, navigate],
+  );
   const defs = useD2Definitions();
   const analysisSummary = useSummaryLoadoutsAnalysis(
     savedLoadouts,
@@ -66,9 +89,13 @@ export function useLoadoutFilterPills(
   );
 
   // Reset filters on character change
+  const originalStoreId = useRef(store.id);
   useEffect(() => {
-    setSelectedFilters(emptyArray());
-  }, [store.id]);
+    if (store.id !== originalStoreId.current) {
+      originalStoreId.current = store.id;
+      setSelectedFilterKeys(emptyArray());
+    }
+  }, [store.id, setSelectedFilterKeys]);
 
   const loadoutsByHashtag = useMemo(() => {
     const loadoutsByHashtag: { [hashtag: string]: Loadout[] } = {};
@@ -150,6 +177,8 @@ export function useLoadoutFilterPills(
     }
   }
 
+  const selectedFilters = filterOptions.filter((o) => selectedFilterKeys.includes(o.key));
+
   const filteredLoadouts = useMemo(
     () =>
       selectedFilters.length > 0
@@ -186,7 +215,7 @@ export function useLoadoutFilterPills(
       <FilterPills
         options={filterOptions}
         selectedOptions={selectedFilters}
-        onOptionsSelected={setSelectedFilters}
+        onOptionsSelected={(options) => setSelectedFilterKeys(options.map((o) => o.key))}
         className={className}
         darkBackground={darkBackground}
         extra={_.isEmpty(loadoutsByHashtag) ? extra : undefined}
