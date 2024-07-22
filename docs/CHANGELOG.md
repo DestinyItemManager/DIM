@@ -1,5 +1,7 @@
 ## Next
 
+## 8.29.0 <span class="changelog-date">(2024-07-21)</span>
+
 * Fixed a case where invalid loadouts would be repeatedly rejected by DIM Sync. Now they'll be rejected once and be removed.
 * Re-added Xûr vendor armor to Loadout Optimizer.
 * Fix light.gg and D2Foundry links to avoid certain circumstances where perks weren't selected (or, where D2Foundry crashed).
