@@ -1037,7 +1037,7 @@ export function executeMoveItem(
         // make sure the vault has space before trying to vault the item
         await dispatch(
           ensureValidTransfer(
-            equip,
+            false,
             getVault(getStores())!,
             item,
             amount,
