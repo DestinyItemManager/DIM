@@ -49,7 +49,12 @@ function convertDimLoadoutItemToLoadoutItem(item: DimLoadoutItem): LoadoutItem {
   const result: LoadoutItem = {
     hash: item.hash,
   };
-  if (item.id && item.id !== '0') {
+  if (
+    item.id &&
+    item.id !== '0' &&
+    // Vendor items have an invalid item ID
+    !item.id.includes('-')
+  ) {
     result.id = item.id;
   }
   if (item.amount > 1) {
