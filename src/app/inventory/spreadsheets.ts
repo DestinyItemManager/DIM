@@ -1,6 +1,8 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { gaEvent } from 'app/google';
 import { LoadoutsByItem, loadoutsByItemSelector } from 'app/loadout/selectors';
+import { buildStatInfo, getColumns } from 'app/organizer/Columns';
+import { SpreadsheetContext } from 'app/organizer/table-types';
 import { D1_StatHashes } from 'app/search/d1-known-values';
 import D2Sources from 'app/search/items/search-filters/d2-sources';
 import { dimArmorStatHashByName } from 'app/search/search-filter-values';
@@ -10,9 +12,7 @@ import { compareBy } from 'app/utils/comparators';
 import { DimError } from 'app/utils/dim-error';
 import { download } from 'app/utils/download';
 import {
-  getItemKillTrackerInfo,
   getItemYear,
-  getMasterworkStatNames,
   getSpecialtySocketMetadatas,
   isD1Item,
   isKillTrackerSocket,
@@ -460,183 +460,231 @@ function downloadWeapons(
 ) {
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
+  const statHashes = buildStatInfo(items);
+  const columns = getColumns(
+    'spreadsheet',
+    'weapon',
+    statHashes,
+    getTag,
+    getNotes,
+    () => undefined /* wishList */,
+    false /* hasWishList */,
+    [] /* customStats */,
+    loadouts,
+    new Set<string>() /* newItems */,
+    2 /* destinyVersion */,
+  ).filter((c) => c.csv !== undefined /* || typeof c.header === 'string' */);
+
+  // TODO: error if csv isn't defined for these columns!
+
+  const context: SpreadsheetContext = { nameMap, maxPerks };
 
   // In PapaParse, the keys of the first objects are used as columns. So if a
   // key is omitted from the first object, it won't show up.
   // TODO: Replace PapaParse with a simpler/smaller CSV generator
   const data = items.map((item) => {
-    const row: Record<string, unknown> = {
-      Name: item.name,
-      Hash: item.hash,
-      Id: `"${item.id}"`,
-      Tag: getTag(item),
-      Tier: item.tier,
-      Type: item.typeName,
-      Source: source(item),
-      Category: item.type,
-      Element: item.element?.displayProperties.name,
-      [item.destinyVersion === 1 ? 'Light' : 'Power']: item.power,
-    };
-    if (item.destinyVersion === 2) {
-      row['Masterwork Type'] = getMasterworkStatNames(item.masterworkInfo) || undefined;
-      row['Masterwork Tier'] = item.masterworkInfo?.tier || undefined;
-    }
-    row.Owner = nameMap[item.owner];
-    if (item.destinyVersion === 1) {
-      row['% Leveled'] = (item.percentComplete * 100).toFixed(0);
-    }
-    row.Locked = item.locked;
-    row.Equipped = item.equipped;
-    row.Year = getItemYear(item);
-    if (item.destinyVersion === 2) {
-      row.Season = getSeason(item);
-      const event = getEvent(item);
-      row.Event = event ? D2EventInfo[event].name : '';
-    }
+    let row: Record<string, unknown> = {};
 
-    const stats = {
-      aa: 0,
-      impact: 0,
-      range: 0,
-      zoom: 0,
-      stability: 0,
-      rof: 0,
-      reload: 0,
-      magazine: 0,
-      equipSpeed: 0,
-      drawtime: 0,
-      chargetime: 0,
-      accuracy: 0,
-      recoil: 0,
-      blastRadius: 0,
-      velocity: 0,
-      airborne: 0,
-      shieldduration: 0,
-      chargerate: 0,
-      guardresist: 0,
-      guardefficiency: 0,
-      guardendurance: 0,
-      swingspeed: 0,
-    };
-
-    if (item.stats) {
-      for (const stat of item.stats) {
-        if (stat.value) {
-          switch (stat.statHash) {
-            case StatHashes.RecoilDirection:
-              stats.recoil = stat.value;
-              break;
-            case StatHashes.AimAssistance:
-              stats.aa = stat.value;
-              break;
-            case StatHashes.Impact:
-              stats.impact = stat.value;
-              break;
-            case StatHashes.Range:
-              stats.range = stat.value;
-              break;
-            case StatHashes.Zoom:
-              stats.zoom = stat.value;
-              break;
-            case StatHashes.Stability:
-              stats.stability = stat.value;
-              break;
-            case StatHashes.RoundsPerMinute:
-              stats.rof = stat.value;
-              break;
-            case StatHashes.ReloadSpeed:
-              stats.reload = stat.value;
-              break;
-            case StatHashes.Magazine:
-            case StatHashes.AmmoCapacity:
-              stats.magazine = stat.value;
-              break;
-            case StatHashes.Handling:
-              stats.equipSpeed = stat.value;
-              break;
-            case StatHashes.DrawTime:
-              stats.drawtime = stat.value;
-              break;
-            case StatHashes.ChargeTime:
-              stats.chargetime = stat.value;
-              break;
-            case StatHashes.Accuracy:
-              stats.accuracy = stat.value;
-              break;
-            case StatHashes.BlastRadius:
-              stats.blastRadius = stat.value;
-              break;
-            case StatHashes.Velocity:
-              stats.velocity = stat.value;
-              break;
-            case StatHashes.AirborneEffectiveness:
-              stats.airborne = stat.value;
-              break;
-            case StatHashes.ShieldDuration:
-              stats.shieldduration = stat.value;
-              break;
-            case StatHashes.ChargeRate:
-              stats.chargerate = stat.value;
-              break;
-            case StatHashes.GuardResistance:
-              stats.guardresist = stat.value;
-              break;
-            case StatHashes.GuardEfficiency:
-              stats.guardefficiency = stat.value;
-              break;
-            case StatHashes.GuardEndurance:
-              stats.guardendurance = stat.value;
-              break;
-            case StatHashes.SwingSpeed:
-              stats.swingspeed = stat.value;
-              break;
+    for (const column of columns) {
+      // if (!column.csv && typeof column.header === 'string') {
+      //   const value = column.value(item);
+      //   if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+      //     row[column.header] = value;
+      //   }
+      // } else
+      if (typeof column.csv === 'string') {
+        const value = column.value(item);
+        // if (value !== undefined) {
+        row[column.csv] = value;
+        // }
+      } else {
+        const values = column.csv!(item, context);
+        if (!values || values.length === 0) {
+          continue;
+        }
+        if (Array.isArray(values[0])) {
+          for (const [key, value] of values) {
+            row[key] = value;
           }
+        } else {
+          const [key, value] = values;
+          row[key] = value;
         }
       }
     }
 
-    row.Recoil = stats.recoil;
-    row.AA = stats.aa;
-    row.Impact = stats.impact;
-    row.Range = stats.range;
-    row.Zoom = stats.zoom;
-    row['Blast Radius'] = stats.blastRadius;
-    row.Velocity = stats.velocity;
-    row.Stability = stats.stability;
-    row.ROF = stats.rof;
-    row.Reload = stats.reload;
-    row.Mag = stats.magazine;
-    if (item.destinyVersion === 2) {
-      row.Handling = stats.equipSpeed;
-    } else {
-      row.Equip = stats.equipSpeed;
-    }
-    row['Charge Time'] = stats.chargetime;
-    if (item.destinyVersion === 2) {
-      row['Draw Time'] = stats.drawtime;
-      row.Accuracy = stats.accuracy;
+    // console.log(item.name, row);
 
-      // Sword Stats
-      row['Charge Rate'] = stats.chargerate;
-      row['Guard Resistance'] = stats.guardresist;
-      row['Guard Efficiency'] = stats.guardefficiency;
-      row['Guard Endurance'] = stats.guardendurance;
-      row['Swing Speed'] = stats.swingspeed;
+    row = {
+      ...row,
+      // Hash: item.hash,
+      // Id: `"${item.id}"`,
+      // Tier: item.tier,
+      // Type: item.typeName,
+      // Source: source(item),
+      // Category: item.type,
+      // Element: item.element?.displayProperties.name,
+      // [item.destinyVersion === 1 ? 'Light' : 'Power']: item.power,
+    };
+    // if (item.destinyVersion === 2) {
+    //   row['Masterwork Type'] = getMasterworkStatNames(item.masterworkInfo) || undefined;
+    //   row['Masterwork Tier'] = item.masterworkInfo?.tier || undefined;
+    // }
+    // row.Owner = nameMap[item.owner];
+    // if (item.destinyVersion === 1) {
+    //   row['% Leveled'] = (item.percentComplete * 100).toFixed(0);
+    // }
+    // row.Equipped = item.equipped;
+    // row.Year = getItemYear(item);
+    // if (item.destinyVersion === 2) {
+    //   row.Season = getSeason(item);
+    //   const event = getEvent(item);
+    //   row.Event = event ? D2EventInfo[event].name : '';
+    // }
 
-      row['Shield Duration'] = stats.shieldduration; // Glaive
-      row['Airborne Effectiveness'] = stats.airborne;
+    // const stats = {
+    //   aa: 0,
+    //   impact: 0,
+    //   range: 0,
+    //   zoom: 0,
+    //   stability: 0,
+    //   rof: 0,
+    //   reload: 0,
+    //   magazine: 0,
+    //   equipSpeed: 0,
+    //   drawtime: 0,
+    //   chargetime: 0,
+    //   accuracy: 0,
+    //   recoil: 0,
+    //   blastRadius: 0,
+    //   velocity: 0,
+    //   airborne: 0,
+    //   shieldduration: 0,
+    //   chargerate: 0,
+    //   guardresist: 0,
+    //   guardefficiency: 0,
+    //   guardendurance: 0,
+    //   swingspeed: 0,
+    // };
 
-      row.Crafted = item.crafted;
-      row['Crafted Level'] = item.craftedInfo?.level ?? 0;
+    // if (item.stats) {
+    //   for (const stat of item.stats) {
+    //     if (stat.value) {
+    //       switch (stat.statHash) {
+    //         case StatHashes.RecoilDirection:
+    //           stats.recoil = stat.value;
+    //           break;
+    //         case StatHashes.AimAssistance:
+    //           stats.aa = stat.value;
+    //           break;
+    //         case StatHashes.Impact:
+    //           stats.impact = stat.value;
+    //           break;
+    //         case StatHashes.Range:
+    //           stats.range = stat.value;
+    //           break;
+    //         case StatHashes.Zoom:
+    //           stats.zoom = stat.value;
+    //           break;
+    //         case StatHashes.Stability:
+    //           stats.stability = stat.value;
+    //           break;
+    //         case StatHashes.RoundsPerMinute:
+    //           stats.rof = stat.value;
+    //           break;
+    //         case StatHashes.ReloadSpeed:
+    //           stats.reload = stat.value;
+    //           break;
+    //         case StatHashes.Magazine:
+    //         case StatHashes.AmmoCapacity:
+    //           stats.magazine = stat.value;
+    //           break;
+    //         case StatHashes.Handling:
+    //           stats.equipSpeed = stat.value;
+    //           break;
+    //         case StatHashes.DrawTime:
+    //           stats.drawtime = stat.value;
+    //           break;
+    //         case StatHashes.ChargeTime:
+    //           stats.chargetime = stat.value;
+    //           break;
+    //         case StatHashes.Accuracy:
+    //           stats.accuracy = stat.value;
+    //           break;
+    //         case StatHashes.BlastRadius:
+    //           stats.blastRadius = stat.value;
+    //           break;
+    //         case StatHashes.Velocity:
+    //           stats.velocity = stat.value;
+    //           break;
+    //         case StatHashes.AirborneEffectiveness:
+    //           stats.airborne = stat.value;
+    //           break;
+    //         case StatHashes.ShieldDuration:
+    //           stats.shieldduration = stat.value;
+    //           break;
+    //         case StatHashes.ChargeRate:
+    //           stats.chargerate = stat.value;
+    //           break;
+    //         case StatHashes.GuardResistance:
+    //           stats.guardresist = stat.value;
+    //           break;
+    //         case StatHashes.GuardEfficiency:
+    //           stats.guardefficiency = stat.value;
+    //           break;
+    //         case StatHashes.GuardEndurance:
+    //           stats.guardendurance = stat.value;
+    //           break;
+    //         case StatHashes.SwingSpeed:
+    //           stats.swingspeed = stat.value;
+    //           break;
+    //       }
+    //     }
+    //   }
+    // }
 
-      row['Kill Tracker'] = getItemKillTrackerInfo(item)?.count ?? 0;
-      row.Foundry = item.foundry;
-    }
+    // row.Recoil = stats.recoil;
+    // row.AA = stats.aa;
+    // row.Impact = stats.impact;
+    // row.Range = stats.range;
+    // row.Zoom = stats.zoom;
+    // row['Blast Radius'] = stats.blastRadius;
+    // row.Velocity = stats.velocity;
+    // row.Stability = stats.stability;
+    // row.ROF = stats.rof;
+    // row.Reload = stats.reload;
+    // row.Mag = stats.magazine;
+    // if (item.destinyVersion === 2) {
+    //   row.Handling = stats.equipSpeed;
+    // } else {
+    //   row.Equip = stats.equipSpeed;
+    // }
+    // row['Charge Time'] = stats.chargetime;
+    // if (item.destinyVersion === 2) {
+    //   row['Draw Time'] = stats.drawtime;
+    //   row.Accuracy = stats.accuracy;
 
-    row.Loadouts = formatLoadouts(item, loadouts);
-    row.Notes = getNotes(item);
+    //   // Sword Stats
+    //   row['Charge Rate'] = stats.chargerate;
+    //   row['Guard Resistance'] = stats.guardresist;
+    //   row['Guard Efficiency'] = stats.guardefficiency;
+    //   row['Guard Endurance'] = stats.guardendurance;
+    //   row['Swing Speed'] = stats.swingspeed;
 
-    addPerks(row, item, maxPerks);
+    //   row['Shield Duration'] = stats.shieldduration; // Glaive
+    //   row['Airborne Effectiveness'] = stats.airborne;
+
+    //   row.Crafted = item.crafted;
+    //   row['Crafted Level'] = item.craftedInfo?.level ?? 0;
+
+    //   row['Kill Tracker'] = getItemKillTrackerInfo(item)?.count ?? 0;
+    //   row.Foundry = item.foundry;
+    // }
+
+    // row.Loadouts = formatLoadouts(item, loadouts);
+    // row.Notes = getNotes(item);
+
+    // addPerks(row, item, maxPerks);
 
     return row;
   });

@@ -121,6 +121,7 @@ const perkStringSort: Comparator<string | undefined> = (a, b) => {
  * This function generates the columns.
  */
 export function getColumns(
+  useCase: 'organizer' | 'spreadsheet',
   itemsType: 'weapon' | 'armor' | 'ghost',
   statHashes: {
     [statHash: number]: StatInfo;
@@ -133,7 +134,7 @@ export function getColumns(
   loadoutsByItem: LoadoutsByItem,
   newItems: Set<string>,
   destinyVersion: DestinyVersion,
-  onPlugClicked: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void,
+  onPlugClicked?: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void,
 ): ColumnDefinition[] {
   const customStatHashes = customStatDefs.map((c) => c.statHash);
   const statsGroup: ColumnGroup = {
@@ -177,7 +178,7 @@ export function getColumns(
           if (stat?.statHash === StatHashes.RecoilDirection) {
             return recoilValue(stat.value);
           }
-          return stat?.value || 0;
+          return stat?.value;
         },
         cell: (_val, item: DimItem) => {
           const stat = item.stats?.find((s) => s.statHash === statHash);
@@ -199,6 +200,7 @@ export function getColumns(
   const isGhost = itemsType === 'ghost';
   const isArmor = itemsType === 'armor';
   const isWeapon = itemsType === 'weapon';
+  const isSpreadsheet = useCase === 'spreadsheet';
 
   const baseStatColumns: ColumnWithStat[] =
     destinyVersion === 2
@@ -206,12 +208,12 @@ export function getColumns(
           ...column,
           id: `base${column.statHash}`,
           columnGroup: baseStatsGroup,
-          value: (item: DimItem): number => {
+          value: (item: DimItem): number | undefined => {
             const stat = item.stats?.find((s) => s.statHash === column.statHash);
             if (stat?.statHash === StatHashes.RecoilDirection) {
               return recoilValue(stat.base);
             }
-            return stat?.base || 0;
+            return stat?.base;
           },
           cell: (_val, item: DimItem) => {
             const stat = item.stats?.find((s) => s.statHash === column.statHash);
@@ -270,32 +272,49 @@ export function getColumns(
   const customStats = createCustomStatColumns(customStatDefs);
 
   const columns: ColumnDefinition[] = _.compact([
-    c({
-      id: 'icon',
-      header: t('Organizer.Columns.Icon'),
-      value: (i) => i.icon,
-      cell: (_val, item) => (
-        <ItemPopupTrigger item={item}>
-          {(ref, onClick) => (
-            <div ref={ref} onClick={onClick} className="item">
-              <ItemIcon item={item} />
-              {item.crafted && <img src={shapedOverlay} className={styles.shapedIconOverlay} />}
-            </div>
-          )}
-        </ItemPopupTrigger>
-      ),
-      noSort: true,
-      noHide: true,
-    }),
+    !isSpreadsheet &&
+      c({
+        id: 'icon',
+        header: t('Organizer.Columns.Icon'),
+        value: (i) => i.icon,
+        cell: (_val, item) => (
+          <ItemPopupTrigger item={item}>
+            {(ref, onClick) => (
+              <div ref={ref} onClick={onClick} className="item">
+                <ItemIcon item={item} />
+                {item.crafted && <img src={shapedOverlay} className={styles.shapedIconOverlay} />}
+              </div>
+            )}
+          </ItemPopupTrigger>
+        ),
+        noSort: true,
+        noHide: true,
+      }),
     c({
       id: 'name',
       header: t('Organizer.Columns.Name'),
+      csv: 'Name',
       value: (i) => i.name,
       filter: (name) => `name:${quoteFilterString(name)}`,
     }),
+    isSpreadsheet &&
+      c({
+        id: 'hash',
+        header: 'Hash',
+        csv: 'Hash',
+        value: (i) => i.hash,
+      }),
+    isSpreadsheet &&
+      c({
+        id: 'id',
+        header: 'Id',
+        csv: 'Id',
+        value: (i) => `"${i.id}"`,
+      }),
     !isGhost &&
       c({
         id: 'power',
+        csv: destinyVersion === 2 ? 'Power' : 'Light',
         header: <AppIcon icon={powerIndicatorIcon} />,
         dropdownLabel: t('Organizer.Columns.Power'),
         value: (item) => item.power,
@@ -306,6 +325,7 @@ export function getColumns(
       c({
         id: 'dmg',
         header: t('Organizer.Columns.Damage'),
+        csv: 'Element',
         value: (item) => item.element?.displayProperties.name,
         cell: (_val, item) => <ElementIcon className={styles.inlineIcon} element={item.element} />,
         filter: (_val, item) => `is:${getItemDamageShortName(item)}`,
@@ -315,6 +335,7 @@ export function getColumns(
       c({
         id: 'energy',
         header: t('Organizer.Columns.Energy'),
+        csv: 'Energy',
         value: (item) => item.energy?.energyCapacity,
         defaultSort: SortDirection.DESC,
         filter: (value) => `energycapacity:>=${value}`,
@@ -322,6 +343,7 @@ export function getColumns(
     c({
       id: 'locked',
       header: <AppIcon icon={lockIcon} />,
+      csv: 'Locked',
       dropdownLabel: t('Organizer.Columns.Locked'),
       value: (i) => i.locked,
       cell: (value) => (value ? <AppIcon icon={lockIcon} /> : undefined),
@@ -331,19 +353,21 @@ export function getColumns(
     c({
       id: 'tag',
       header: t('Organizer.Columns.Tag'),
-      value: (item) => getTag(item) ?? '',
+      csv: 'Tag',
+      value: (item) => getTag(item),
       cell: (value) => value && <TagIcon tag={value} />,
       sort: compareBy((tag) => (tag && tag in tagConfig ? tagConfig[tag].sortOrder : 1000)),
       filter: (value) => `tag:${value || 'none'}`,
     }),
-    c({
-      id: 'new',
-      header: t('Organizer.Columns.New'),
-      value: (item) => newItems.has(item.id),
-      cell: (value) => (value ? <NewItemIndicator /> : undefined),
-      defaultSort: SortDirection.DESC,
-      filter: (value) => `${value ? '' : '-'}is:new`,
-    }),
+    !isSpreadsheet &&
+      c({
+        id: 'new',
+        header: t('Organizer.Columns.New'),
+        value: (item) => newItems.has(item.id),
+        cell: (value) => (value ? <NewItemIndicator /> : undefined),
+        defaultSort: SortDirection.DESC,
+        filter: (value) => `${value ? '' : '-'}is:new`,
+      }),
     destinyVersion === 2 &&
       isWeapon &&
       c({
@@ -354,6 +378,8 @@ export function getColumns(
           craftedDate ? <>{new Date(craftedDate * 1000).toLocaleString()}</> : undefined,
         defaultSort: SortDirection.DESC,
         filter: (value) => `${value ? '' : '-'}is:crafted`,
+        // TODO: nicer to put the date in the CSV
+        csv: (item) => ['Crafted', Boolean(item.craftedInfo)],
       }),
     c({
       id: 'recency',
@@ -384,9 +410,31 @@ export function getColumns(
     c({
       id: 'tier',
       header: t('Organizer.Columns.Tier'),
+      csv: 'Tier',
       value: (i) => i.tier,
       filter: (value) => `is:${value}`,
     }),
+    isSpreadsheet &&
+      c({
+        id: 'Type',
+        header: 'Type',
+        csv: 'Type',
+        value: (i) => i.typeName,
+      }),
+    isSpreadsheet &&
+      c({
+        id: 'Category',
+        header: 'Category',
+        csv: 'Category',
+        value: (i) => i.type,
+      }),
+    isSpreadsheet &&
+      c({
+        id: 'Equipped',
+        header: 'Equipped',
+        csv: 'Equipped',
+        value: (i) => i.equipped,
+      }),
     destinyVersion === 2 &&
       isArmor &&
       c({
@@ -573,6 +621,7 @@ export function getColumns(
         value: (item) => item.masterworkInfo?.tier,
         defaultSort: SortDirection.DESC,
         filter: (value) => `masterwork:>=${value}`,
+        csv: 'Masterwork Tier',
       }),
     destinyVersion === 2 &&
       isWeapon &&
@@ -580,6 +629,7 @@ export function getColumns(
         id: 'masterworkStat',
         header: t('Organizer.Columns.MasterworkStat'),
         value: (item) => getMasterworkStatNames(item.masterworkInfo),
+        csv: 'Masterwork Type',
       }),
     destinyVersion === 2 &&
       isWeapon &&
@@ -588,6 +638,7 @@ export function getColumns(
         header: t('Organizer.Columns.Level'),
         value: (item) => item.craftedInfo?.level,
         defaultSort: SortDirection.DESC,
+        csv: (item) => ['Crafted Level', item.craftedInfo?.level ?? 0],
       }),
     destinyVersion === 2 &&
       isWeapon &&
@@ -602,6 +653,7 @@ export function getColumns(
       c({
         id: 'killTracker',
         header: t('Organizer.Columns.KillTracker'),
+        csv: 'Kill Tracker',
         value: (item) => {
           const killTrackerInfo = getItemKillTrackerInfo(item);
           return killTrackerInfo?.count;
@@ -618,16 +670,26 @@ export function getColumns(
       }),
     destinyVersion === 2 &&
       c({
+        id: 'foundry',
+        header: t('Organizer.Columns.Foundry'),
+        csv: 'Foundry',
+        value: (item) => item.foundry,
+        filter: (value) => `foundry:${value}`,
+      }),
+    destinyVersion === 2 &&
+      c({
         id: 'source',
         header: t('Organizer.Columns.Source'),
         value: source,
         filter: (value) => `source:${value}`,
+        csv: 'Source',
       }),
     c({
       id: 'year',
       header: t('Organizer.Columns.Year'),
       value: (item) => getItemYear(item),
       filter: (value) => `year:${value}`,
+      csv: 'Year',
     }),
     destinyVersion === 2 &&
       c({
@@ -635,6 +697,7 @@ export function getColumns(
         header: t('Organizer.Columns.Season'),
         value: (i) => getSeason(i),
         filter: (value) => `season:${value}`,
+        csv: 'Season',
       }),
     destinyVersion === 2 &&
       c({
@@ -645,12 +708,14 @@ export function getColumns(
           return event ? D2EventInfo[event].name : undefined;
         },
         filter: (value) => `event:${value}`,
+        csv: 'Event',
       }),
     c({
       id: 'location',
       header: t('Organizer.Columns.Location'),
       value: (item) => item.owner,
       cell: (_val, item) => <StoreLocation storeId={item.owner} />,
+      csv: (item, context) => ['Owner', context.nameMap[item.owner]],
     }),
     c({
       id: 'loadouts',
@@ -694,19 +759,20 @@ export function getColumns(
     c({
       id: 'notes',
       header: t('Organizer.Columns.Notes'),
-      value: (item) => getNotes(item) ?? '',
+      csv: 'Notes',
+      value: (item) => getNotes(item),
       cell: (_val, item) => <NotesArea item={item} minimal={true} />,
       gridWidth: 'minmax(200px, 1fr)',
-      filter: (value) => `notes:${quoteFilterString(value)}`,
+      filter: (value) => `notes:${quoteFilterString(value ?? '')}`,
     }),
     isWeapon &&
       hasWishList &&
       c({
         id: 'wishListNote',
         header: t('Organizer.Columns.WishListNotes'),
-        value: (item) => wishList(item)?.notes?.trim() ?? '',
+        value: (item) => wishList(item)?.notes?.trim(),
         gridWidth: 'minmax(200px, 1fr)',
-        filter: (value) => `wishlistnotes:${quoteFilterString(value)}`,
+        filter: (value) => `wishlistnotes:${quoteFilterString(value ?? '')}`,
       }),
   ]);
 
@@ -959,4 +1025,42 @@ function getIntrinsicSockets(item: DimItem) {
     !isArtificeSocket(intrinsicSocket)
     ? [intrinsicSocket, ...extraIntrinsicSockets]
     : extraIntrinsicSockets;
+}
+
+/**
+ * This builds stat infos for all the stats that are relevant to a particular category of items.
+ * It will return the same result for the same category, since all items in a category share stats.
+ */
+export function buildStatInfo(items: DimItem[]): {
+  [statHash: number]: StatInfo;
+} {
+  const statHashes: {
+    [statHash: number]: StatInfo;
+  } = {};
+  for (const item of items) {
+    if (item.stats) {
+      for (const stat of item.stats) {
+        if (statHashes[stat.statHash]) {
+          // TODO: we don't yet use the min and max values
+          statHashes[stat.statHash].max = Math.max(statHashes[stat.statHash].max, stat.value);
+          statHashes[stat.statHash].min = Math.min(statHashes[stat.statHash].min, stat.value);
+        } else {
+          statHashes[stat.statHash] = {
+            id: stat.statHash,
+            displayProperties: stat.displayProperties,
+            min: stat.value,
+            max: stat.value,
+            enabled: true,
+            lowerBetter: stat.smallerIsBetter,
+            statMaximumValue: stat.maximumValue,
+            bar: stat.bar,
+            getStat(item) {
+              return item.stats ? item.stats.find((s) => s.statHash === stat.statHash) : undefined;
+            },
+          };
+        }
+      }
+    }
+  }
+  return statHashes;
 }

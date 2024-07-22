@@ -52,6 +52,28 @@ export interface ColumnDefinition<V extends Value = Value> {
    * but sometimes a custom stat should be limited to only displaying for a certain class
    */
   limitToClass?: DestinyClass;
+
+  /**
+   * Output this column as CSV. It can be a single key/value pair, or several,
+   * or nothing which is effectively "N/A". It can also be a single string,
+   * which means to use the value function as-is and use the `csv` value as the
+   * column name. We could reuse the header, but that's localized, while
+   * historically our CSV column names haven't been.
+   */
+  csv?:
+    | string
+    | ((
+        item: DimItem,
+        spreadsheetContext: SpreadsheetContext,
+      ) =>
+        | [name: string, value: string | number | boolean]
+        | [name: string, value: string | number | boolean][]
+        | undefined);
+}
+
+export interface SpreadsheetContext {
+  nameMap: { [key: string]: string };
+  maxPerks: number;
 }
 
 export interface Row {

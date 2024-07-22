@@ -44,7 +44,7 @@ import _ from 'lodash';
 import React, { ReactNode, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Dropzone, { DropzoneOptions } from 'react-dropzone';
 import { useSelector } from 'react-redux';
-import { getColumnSelectionId, getColumns } from './Columns';
+import { buildStatInfo, getColumnSelectionId, getColumns } from './Columns';
 import EnabledColumnsSelector from './EnabledColumnsSelector';
 import ItemActions, { TagCommandInfo } from './ItemActions';
 import { itemIncludesCategories } from './filtering-utils';
@@ -189,6 +189,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   const columns: ColumnDefinition[] = useMemo(
     () =>
       getColumns(
+        'organizer',
         itemType,
         statHashes,
         getTag,
@@ -604,44 +605,6 @@ function sortRows(
   );
 
   return Array.from(unsortedRows).sort(comparator);
-}
-
-/**
- * This builds stat infos for all the stats that are relevant to a particular category of items.
- * It will return the same result for the same category, since all items in a category share stats.
- */
-function buildStatInfo(items: DimItem[]): {
-  [statHash: number]: StatInfo;
-} {
-  const statHashes: {
-    [statHash: number]: StatInfo;
-  } = {};
-  for (const item of items) {
-    if (item.stats) {
-      for (const stat of item.stats) {
-        if (statHashes[stat.statHash]) {
-          // TODO: we don't yet use the min and max values
-          statHashes[stat.statHash].max = Math.max(statHashes[stat.statHash].max, stat.value);
-          statHashes[stat.statHash].min = Math.min(statHashes[stat.statHash].min, stat.value);
-        } else {
-          statHashes[stat.statHash] = {
-            id: stat.statHash,
-            displayProperties: stat.displayProperties,
-            min: stat.value,
-            max: stat.value,
-            enabled: true,
-            lowerBetter: stat.smallerIsBetter,
-            statMaximumValue: stat.maximumValue,
-            bar: stat.bar,
-            getStat(item) {
-              return item.stats ? item.stats.find((s) => s.statHash === stat.statHash) : undefined;
-            },
-          };
-        }
-      }
-    }
-  }
-  return statHashes;
 }
 
 function TableRow({
