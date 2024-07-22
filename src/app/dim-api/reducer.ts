@@ -869,13 +869,11 @@ function applyFinishedUpdatesToQueue(state: DimApiState, results: ProfileUpdateR
       showNotification({
         type: 'error',
         title: t('Storage.UpdateInvalid'),
-        body: Number(
-          `${
-            update.action === 'loadout' && update.payload
-              ? t('Storage.UpdateInvalidBodyLoadout', { name: update.payload.name })
-              : t('Storage.UpdateInvalidBody')
-          }\n\n${result.status}(${message}): ${result.message}`,
-        ),
+        body: `${
+          update.action === 'loadout' && update.payload
+            ? t('Storage.UpdateInvalidBodyLoadout', { name: update.payload.name })
+            : t('Storage.UpdateInvalidBody')
+        }\n\n${result.status}(${message}): ${result.message}`,
       });
       errorLog('dim sync', update.action, result.status, message, result.message, update);
       reportException('dim sync', new Error('invalid dim api update'), {
