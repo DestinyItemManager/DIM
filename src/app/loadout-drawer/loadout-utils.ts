@@ -319,7 +319,7 @@ export function getLoadoutStats(
       armorPiecesStats[hash] +=
         itemEnergy === MAX_ARMOR_ENERGY_CAPACITY && item.energy
           ? MASTERWORK_ARMOR_STAT_BONUS
-          : energySocket?.plugged?.stats?.[hash] ?? 0;
+          : (energySocket?.plugged?.stats?.[hash] ?? 0);
     }
   }
 

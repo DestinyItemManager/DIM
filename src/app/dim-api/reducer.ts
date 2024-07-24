@@ -129,8 +129,6 @@ export const initialState: DimApiState = {
   globalSettingsLoaded: false,
   globalSettings: {
     ...defaultGlobalSettings,
-    // 2019-12-17 we've been asked to disable auto-refresh
-    autoRefresh: false,
     showIssueBanner: false,
   },
 
@@ -252,13 +250,13 @@ export const dimApi = (
                 profileLastLoaded: Date.now(),
                 loadouts: profileResponse.loadouts
                   ? _.keyBy(profileResponse.loadouts, (l) => l.id)
-                  : existingProfile?.loadouts ?? {},
+                  : (existingProfile?.loadouts ?? {}),
                 tags: profileResponse.tags
                   ? _.keyBy(profileResponse.tags, (t) => t.id)
-                  : existingProfile?.tags ?? {},
+                  : (existingProfile?.tags ?? {}),
                 triumphs: profileResponse.triumphs
                   ? profileResponse.triumphs.map((t) => parseInt(t.toString(), 10))
-                  : existingProfile?.triumphs ?? [],
+                  : (existingProfile?.triumphs ?? []),
               },
             }
           : state.profiles,

@@ -1,4 +1,4 @@
-import { LoadoutSort } from '@destinyitemmanager/dim-api-types';
+import { LoadoutSort, VaultWeaponGroupingStyle } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector, hasD1AccountSelector } from 'app/accounts/selectors';
 import { clarityDiscordLink, clarityLink } from 'app/clarity/about';
 import { settingsSelector } from 'app/dim-api/selectors';
@@ -35,7 +35,7 @@ import Spreadsheets from './Spreadsheets';
 import { TroubleshootingSettings } from './Troubleshooting';
 import { setCharacterOrder } from './actions';
 import { useSetSetting } from './hooks';
-import { Settings, VaultWeaponGroupingStyle } from './initial-settings';
+import { Settings } from './initial-settings';
 import { itemSortSettingsSelector } from './item-sort';
 
 const TAG = 'settings';

@@ -327,7 +327,7 @@ function sortCompareItemsComparator(
         if (!stat) {
           return -1;
         }
-        const statValue = compareBaseStats ? stat.base ?? stat.value : stat.value;
+        const statValue = compareBaseStats ? (stat.base ?? stat.value) : stat.value;
         if (stat.statHash === StatHashes.RecoilDirection) {
           return recoilValue(stat.value);
         }
@@ -412,11 +412,11 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
       if (itemStat) {
         stat.min = Math.min(
           stat.min,
-          (compareBaseStats ? itemStat.base ?? itemStat.value : itemStat.value) || 0,
+          (compareBaseStats ? (itemStat.base ?? itemStat.value) : itemStat.value) || 0,
         );
         stat.max = Math.max(
           stat.max,
-          (compareBaseStats ? itemStat.base ?? itemStat.value : itemStat.value) || 0,
+          (compareBaseStats ? (itemStat.base ?? itemStat.value) : itemStat.value) || 0,
         );
         stat.enabled = stat.min !== stat.max;
       }
