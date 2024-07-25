@@ -1,16 +1,14 @@
 @use '../variables.scss' as *;
 
 .organizer {
+  width: min-content;
+
   :global(.issue-banner-shown) & {
     padding-bottom: $issue-banner-height;
 
     @include phone-portrait {
       padding-bottom: 0;
     }
-  }
-
-  > * {
-    margin: 8px;
   }
 
   :global(#spreadsheets) {

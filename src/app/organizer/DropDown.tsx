@@ -18,6 +18,9 @@ export interface DropDownItem {
 function MenuItem({ item, forClass }: { item: DropDownItem; forClass?: DestinyClass }) {
   return (
     <div key={item.id} className={`check-button ${styles.checkButton}`} onClick={item.onItemSelect}>
+      {item.checked !== undefined && (
+        <AppIcon icon={item.checked ? enabledIcon : unselectedCheckIcon} />
+      )}
       <label>
         {item.dropdownLabel ?? item.dropdownLabel}
         {item.id === 'customstat' ? (
@@ -29,9 +32,6 @@ function MenuItem({ item, forClass }: { item: DropDownItem; forClass?: DestinyCl
           item.content
         )}
       </label>
-      {item.checked !== undefined && (
-        <AppIcon icon={item.checked ? enabledIcon : unselectedCheckIcon} />
-      )}
     </div>
   );
 }

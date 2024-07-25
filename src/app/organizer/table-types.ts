@@ -5,7 +5,7 @@ import React from 'react';
 
 export { SortDirection, type ColumnSort } from 'app/dim-ui/table-columns';
 
-export type Value = string | number | boolean | undefined | null;
+export type Value = string | number | boolean | undefined;
 
 /**
  * Columns can optionally belong to a column group - if so, they're shown/hidden as a group.
@@ -46,7 +46,7 @@ export interface ColumnDefinition<V extends Value = Value> {
   /** A generator for search terms matching this item. Default: No filtering. */
   filter?(value: V, item: DimItem): string | undefined;
   /** A custom sort function. Default: Something reasonable. */
-  sort?(firstValue: V, secondValue: V): 0 | 1 | -1;
+  sort?(this: void, firstValue: V, secondValue: V): 0 | 1 | -1;
   /**
    * a column def needs to exist all the time, so enabledness setting is aware of it,
    * but sometimes a custom stat should be limited to only displaying for a certain class

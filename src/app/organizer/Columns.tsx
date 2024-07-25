@@ -27,13 +27,12 @@ import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
 import { InGameLoadout, Loadout, isInGameLoadout } from 'app/loadout/loadout-types';
 import { LoadoutsByItem } from 'app/loadout/selectors';
-import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
+import { breakerTypeNames, weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import { quoteFilterString } from 'app/search/query-parser';
 import { statHashByName } from 'app/search/search-filter-values';
 import { getColor, percent } from 'app/shell/formatters';
 import {
   AppIcon,
-  faCheck,
   lockIcon,
   powerIndicatorIcon,
   thumbsDownIcon,
@@ -41,36 +40,45 @@ import {
 } from 'app/shell/icons';
 import { RootState } from 'app/store/types';
 import { filterMap } from 'app/utils/collections';
-import { compareBy } from 'app/utils/comparators';
+import { Comparator, compareBy } from 'app/utils/comparators';
 import {
   getInterestingSocketMetadatas,
   getItemDamageShortName,
   getItemKillTrackerInfo,
   getItemYear,
   getMasterworkStatNames,
+  isArtificeSocket,
   isD1Item,
   isKillTrackerSocket,
 } from 'app/utils/item-utils';
 import {
   getDisplayedItemSockets,
+  getExtraIntrinsicPerkSockets,
   getIntrinsicArmorPerkSocket,
   getSocketsByIndexes,
   getWeaponArchetype,
   getWeaponArchetypeSocket,
   isEnhancedPerk,
+  socketContainsIntrinsicPlug,
 } from 'app/utils/socket-utils';
 import { LookupTable } from 'app/utils/util-types';
 import { InventoryWishListRoll } from 'app/wishlists/wishlists';
 import clsx from 'clsx';
 import { D2EventInfo } from 'data/d2/d2-event-info-v2';
-import { PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import {
+  BreakerTypeHashes,
+  ItemCategoryHashes,
+  PlugCategoryHashes,
+  StatHashes,
+} from 'data/d2/generated-enums';
 import shapedOverlay from 'images/shapedOverlay.png';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { createCustomStatColumns } from './CustomStatColumns';
-// eslint-disable-next-line css-modules/no-unused-class
-import styles from './ItemTable.m.scss';
+
+import { DeepsightHarmonizerIcon } from 'app/item-popup/DeepsightHarmonizerIcon';
+import styles from './ItemTable.m.scss'; // eslint-disable-line css-modules/no-unused-class
 import { ColumnDefinition, ColumnGroup, SortDirection, Value } from './table-types';
 
 /**
@@ -91,7 +99,23 @@ export const statLabels: LookupTable<StatHashes, I18nKey> = {
   [StatHashes.AirborneEffectiveness]: tl('Organizer.Stats.Airborne'),
 };
 
-// const booleanCell = (value: any) => (value ? <AppIcon icon={faCheck} /> : undefined);
+const perkStringSort: Comparator<string | undefined> = (a, b) => {
+  const aParts = (a ?? '').split(',');
+  const bParts = (b ?? '').split(',');
+  let ai = 0;
+  let bi = 0;
+  while (ai < aParts.length && bi < bParts.length) {
+    const aPart = aParts[ai];
+    const bPart = bParts[bi];
+    if (aPart === bPart) {
+      ai++;
+      bi++;
+      continue;
+    }
+    return aPart.localeCompare(bPart) as 1 | 0 | -1;
+  }
+  return 0;
+};
 
 /**
  * This function generates the columns.
@@ -278,8 +302,7 @@ export function getColumns(
         defaultSort: SortDirection.DESC,
         filter: (value) => `power:>=${value}`,
       }),
-    !isGhost &&
-      (destinyVersion === 2 || isWeapon) &&
+    isWeapon &&
       c({
         id: 'dmg',
         header: t('Organizer.Columns.Damage'),
@@ -310,7 +333,7 @@ export function getColumns(
       header: t('Organizer.Columns.Tag'),
       value: (item) => getTag(item) ?? '',
       cell: (value) => value && <TagIcon tag={value} />,
-      sort: compareBy((tag) => (tag && tagConfig[tag] ? tagConfig[tag].sortOrder : 1000)),
+      sort: compareBy((tag) => (tag && tag in tagConfig ? tagConfig[tag].sortOrder : 1000)),
       filter: (value) => `tag:${value || 'none'}`,
     }),
     c({
@@ -322,6 +345,7 @@ export function getColumns(
       filter: (value) => `${value ? '' : '-'}is:new`,
     }),
     destinyVersion === 2 &&
+      isWeapon &&
       c({
         id: 'crafted',
         header: t('Organizer.Columns.Crafted'),
@@ -363,36 +387,6 @@ export function getColumns(
       value: (i) => i.tier,
       filter: (value) => `is:${value}`,
     }),
-    destinyVersion === 2 &&
-      c({
-        id: 'source',
-        header: t('Organizer.Columns.Source'),
-        value: source,
-        filter: (value) => `source:${value}`,
-      }),
-    c({
-      id: 'year',
-      header: t('Organizer.Columns.Year'),
-      value: (item) => getItemYear(item),
-      filter: (value) => `year:${value}`,
-    }),
-    destinyVersion === 2 &&
-      c({
-        id: 'season',
-        header: t('Organizer.Columns.Season'),
-        value: (i) => getSeason(i),
-        filter: (value) => `season:${value}`,
-      }),
-    destinyVersion === 2 &&
-      c({
-        id: 'event',
-        header: t('Organizer.Columns.Event'),
-        value: (item) => {
-          const event = getEvent(item);
-          return event ? D2EventInfo[event].name : undefined;
-        },
-        filter: (value) => `event:${value}`,
-      }),
     destinyVersion === 2 &&
       isArmor &&
       c({
@@ -453,7 +447,8 @@ export function getColumns(
         },
         filter: (value) => (value ? `exactperk:${quoteFilterString(value)}` : undefined),
       }),
-    (destinyVersion === 2 || isWeapon) &&
+    destinyVersion === 2 &&
+      isWeapon &&
       c({
         id: 'breaker',
         header: t('Organizer.Columns.Breaker'),
@@ -465,21 +460,44 @@ export function getColumns(
               src={item.breakerType!.displayProperties.icon}
             />
           ),
-        filter: (_val, item) => `is:${getItemDamageShortName(item)}`,
+        filter: (_val, item) =>
+          item.breakerType
+            ? `breaker:${breakerTypeNames[item.breakerType.hash as BreakerTypeHashes]}`
+            : undefined,
+      }),
+    destinyVersion === 2 &&
+      isArmor &&
+      c({
+        id: 'intrinsics',
+        header: t('Organizer.Columns.Intrinsics'),
+        value: (item) => perkString(getIntrinsicSockets(item)),
+        cell: (_val, item) => (
+          <PerksCell
+            item={item}
+            sockets={getIntrinsicSockets(item)}
+            onPlugClicked={onPlugClicked}
+          />
+        ),
+        sort: perkStringSort,
+        filter: (value) =>
+          typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
       }),
     c({
       id: 'perks',
       header:
-        destinyVersion === 2 ? t('Organizer.Columns.PerksMods') : t('Organizer.Columns.Perks'),
-      value: () => 0, // TODO: figure out a way to sort perks
+        destinyVersion === 2
+          ? isWeapon
+            ? t('Organizer.Columns.OtherPerks')
+            : t('Organizer.Columns.PerksMods')
+          : t('Organizer.Columns.Perks'),
+      value: (item) => perkString(getSockets(item, 'all')),
       cell: (_val, item) =>
         isD1Item(item) ? (
           <D1PerksCell item={item} />
         ) : (
-          <PerksCell item={item} onPlugClicked={onPlugClicked} />
+          <PerksCell item={item} sockets={getSockets(item, 'all')} onPlugClicked={onPlugClicked} />
         ),
-      noSort: true,
-      gridWidth: 'minmax(324px,max-content)',
+      sort: perkStringSort,
       filter: (value) =>
         typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
     }),
@@ -488,12 +506,49 @@ export function getColumns(
       c({
         id: 'traits',
         header: t('Organizer.Columns.Traits'),
-        value: () => 0, // TODO: figure out a way to sort perks
+        value: (item) => perkString(getSockets(item, 'traits')),
         cell: (_val, item) => (
-          <PerksCell item={item} traitsOnly={true} onPlugClicked={onPlugClicked} />
+          <PerksCell
+            item={item}
+            sockets={getSockets(item, 'traits')}
+            onPlugClicked={onPlugClicked}
+          />
         ),
-        noSort: true,
-        gridWidth: 'minmax(180px,max-content)',
+        sort: perkStringSort,
+        filter: (value) =>
+          typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
+      }),
+
+    destinyVersion === 2 &&
+      isWeapon &&
+      c({
+        id: 'originTrait',
+        header: t('Organizer.Columns.OriginTraits'),
+        value: (item) => perkString(getSockets(item, 'origin')),
+        cell: (_val, item) => (
+          <PerksCell
+            item={item}
+            sockets={getSockets(item, 'origin')}
+            onPlugClicked={onPlugClicked}
+          />
+        ),
+        sort: perkStringSort,
+        filter: (value) =>
+          typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
+      }),
+    destinyVersion === 2 &&
+      c({
+        id: 'shaders',
+        header: t('Organizer.Columns.Shaders'),
+        value: (item) => perkString(getSockets(item, 'shaders')),
+        cell: (_val, item) => (
+          <PerksCell
+            item={item}
+            sockets={getSockets(item, 'shaders')}
+            onPlugClicked={onPlugClicked}
+          />
+        ),
+        sort: perkStringSort,
         filter: (value) =>
           typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
       }),
@@ -540,7 +595,7 @@ export function getColumns(
         id: 'harmonizable',
         header: t('Organizer.Columns.Harmonizable'),
         value: (item) => isHarmonizable(item),
-        cell: (value) => (value ? <AppIcon icon={faCheck} /> : undefined),
+        cell: (value, item) => (value ? <DeepsightHarmonizerIcon item={item} /> : undefined),
       }),
     destinyVersion === 2 &&
       isWeapon &&
@@ -560,6 +615,36 @@ export function getColumns(
           );
         },
         defaultSort: SortDirection.DESC,
+      }),
+    destinyVersion === 2 &&
+      c({
+        id: 'source',
+        header: t('Organizer.Columns.Source'),
+        value: source,
+        filter: (value) => `source:${value}`,
+      }),
+    c({
+      id: 'year',
+      header: t('Organizer.Columns.Year'),
+      value: (item) => getItemYear(item),
+      filter: (value) => `year:${value}`,
+    }),
+    destinyVersion === 2 &&
+      c({
+        id: 'season',
+        header: t('Organizer.Columns.Season'),
+        value: (i) => getSeason(i),
+        filter: (value) => `season:${value}`,
+      }),
+    destinyVersion === 2 &&
+      c({
+        id: 'event',
+        header: t('Organizer.Columns.Event'),
+        value: (item) => {
+          const event = getEvent(item);
+          return event ? D2EventInfo[event].name : undefined;
+        },
+        filter: (value) => `event:${value}`,
       }),
     c({
       id: 'location',
@@ -662,55 +747,17 @@ function LoadoutsCell({
 
 function PerksCell({
   item,
-  traitsOnly,
+  sockets,
   onPlugClicked,
 }: {
   item: DimItem;
-  traitsOnly?: boolean;
+  sockets: DimSocket[];
   onPlugClicked?: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void;
 }) {
-  if (!item.sockets) {
-    return null;
-  }
-
-  let sockets = [];
-  const { modSocketsByCategory, perks } = getDisplayedItemSockets(
-    item,
-    /* excludeEmptySockets */ true,
-  )!;
-
-  if (perks) {
-    sockets.push(...getSocketsByIndexes(item.sockets, perks.socketIndexes));
-  }
-  if (traitsOnly) {
-    sockets = sockets.filter(
-      (s) =>
-        s.plugged &&
-        (s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames ||
-          s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics),
-    );
-  } else {
-    // Improve this when we use iterator-helpers
-    sockets.push(...[...modSocketsByCategory.values()].flat());
-  }
-
-  // Intrinsics are perks and are added here for displaying
-  const intrinsicSocket = getIntrinsicArmorPerkSocket(item);
-  if (intrinsicSocket) {
-    sockets.push(intrinsicSocket);
-  }
-
-  sockets = sockets.filter(
-    (s) =>
-      // we have a separate column for the kill tracker
-      !isKillTrackerSocket(s) &&
-      // and for the regular weapon masterworks
-      s.socketDefinition.socketTypeHash !== weaponMasterworkY2SocketTypeHash,
-  );
-
   if (!sockets.length) {
     return null;
   }
+
   return (
     <>
       {sockets.map((socket) => (
@@ -813,4 +860,103 @@ function StoreLocation({ storeId }: { storeId: string }) {
       <StoreIcon store={store} /> {store.className}
     </div>
   );
+}
+
+function perkString(sockets: DimSocket[]): string | undefined {
+  if (!sockets.length) {
+    return undefined;
+  }
+
+  return sockets
+    .flatMap((socket) => socket.plugOptions.map((p) => p.plugDef.displayProperties.name))
+    .filter(Boolean)
+    .join(',');
+}
+
+function getSockets(
+  item: DimItem,
+  type?: 'all' | 'traits' | 'barrel' | 'shaders' | 'origin',
+): DimSocket[] {
+  if (!item.sockets) {
+    return [];
+  }
+
+  let sockets = [];
+  const { modSocketsByCategory, perks } = getDisplayedItemSockets(
+    item,
+    /* excludeEmptySockets */ true,
+  )!;
+
+  if (perks) {
+    sockets.push(...getSocketsByIndexes(item.sockets, perks.socketIndexes));
+  }
+  switch (type) {
+    case 'traits':
+      sockets = sockets.filter(
+        (s) =>
+          s.plugged &&
+          (s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames ||
+            s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics),
+      );
+      break;
+
+    case 'origin':
+      sockets = sockets.filter((s) =>
+        s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsOriginTraits),
+      );
+      break;
+
+    case 'shaders': {
+      sockets.push(...[...modSocketsByCategory.values()].flat());
+      sockets = sockets.filter(
+        (s) =>
+          s.plugged &&
+          (s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Shader ||
+            s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Mementos ||
+            s.plugged.plugDef.plug.plugCategoryIdentifier.includes('skin')),
+      );
+      break;
+    }
+
+    default: {
+      // Improve this when we use iterator-helpers
+      sockets.push(...[...modSocketsByCategory.values()].flat());
+      sockets = sockets.filter(
+        (s) =>
+          !(
+            s.plugged &&
+            (s.plugged?.plugDef.itemCategoryHashes?.includes(
+              ItemCategoryHashes.WeaponModsOriginTraits,
+            ) ||
+              s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Frames ||
+              s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics ||
+              s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Shader ||
+              s.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Mementos ||
+              s.plugged.plugDef.plug.plugCategoryIdentifier.includes('skin'))
+          ),
+      );
+      break;
+    }
+  }
+
+  sockets = sockets.filter(
+    (s) =>
+      // we have a separate column for the kill tracker
+      !isKillTrackerSocket(s) &&
+      // and for the regular weapon masterworks
+      s.socketDefinition.socketTypeHash !== weaponMasterworkY2SocketTypeHash &&
+      // Remove "extra intrinsics" for exotic class items
+      (!item.bucket.inArmor || !(s.isPerk && s.visibleInGame && socketContainsIntrinsicPlug(s))),
+  );
+  return sockets;
+}
+
+function getIntrinsicSockets(item: DimItem) {
+  const intrinsicSocket = getIntrinsicArmorPerkSocket(item);
+  const extraIntrinsicSockets = getExtraIntrinsicPerkSockets(item);
+  return intrinsicSocket &&
+    // artifice already shows up in the "modslot" column
+    !isArtificeSocket(intrinsicSocket)
+    ? [intrinsicSocket, ...extraIntrinsicSockets]
+    : extraIntrinsicSockets;
 }
