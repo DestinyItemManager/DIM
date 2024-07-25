@@ -131,7 +131,7 @@ function getWeaponSocketInfo(item: DimItem): null | {
       masterworkSocket?.plugged?.plugDef.plug.plugCategoryHash ===
       PlugCategoryHashes.CraftingPlugsFrameIdentifiers
         ? 0
-        : masterworkSocket?.plugged?.plugDef.hash ?? 0;
+        : (masterworkSocket?.plugged?.plugDef.hash ?? 0);
 
     const weaponModSocket = item.sockets.allSockets.find((s) =>
       s.plugged?.plugDef.itemCategoryHashes?.includes(ItemCategoryHashes.WeaponModsDamage),

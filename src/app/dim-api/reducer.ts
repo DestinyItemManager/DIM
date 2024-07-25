@@ -129,8 +129,6 @@ export const initialState: DimApiState = {
   globalSettingsLoaded: false,
   globalSettings: {
     ...defaultGlobalSettings,
-    // 2019-12-17 we've been asked to disable auto-refresh
-    autoRefresh: false,
     showIssueBanner: false,
   },
 
@@ -252,13 +250,13 @@ export const dimApi = (
                 profileLastLoaded: Date.now(),
                 loadouts: profileResponse.loadouts
                   ? _.keyBy(profileResponse.loadouts, (l) => l.id)
-                  : existingProfile?.loadouts ?? {},
+                  : (existingProfile?.loadouts ?? {}),
                 tags: profileResponse.tags
                   ? _.keyBy(profileResponse.tags, (t) => t.id)
-                  : existingProfile?.tags ?? {},
+                  : (existingProfile?.tags ?? {}),
                 triumphs: profileResponse.triumphs
                   ? profileResponse.triumphs.map((t) => parseInt(t.toString(), 10))
-                  : existingProfile?.triumphs ?? [],
+                  : (existingProfile?.triumphs ?? []),
               },
             }
           : state.profiles,
@@ -869,13 +867,11 @@ function applyFinishedUpdatesToQueue(state: DimApiState, results: ProfileUpdateR
       showNotification({
         type: 'error',
         title: t('Storage.UpdateInvalid'),
-        body: Number(
-          `${
-            update.action === 'loadout' && update.payload
-              ? t('Storage.UpdateInvalidBodyLoadout', { name: update.payload.name })
-              : t('Storage.UpdateInvalidBody')
-          }\n\n${result.status}(${message}): ${result.message}`,
-        ),
+        body: `${
+          update.action === 'loadout' && update.payload
+            ? t('Storage.UpdateInvalidBodyLoadout', { name: update.payload.name })
+            : t('Storage.UpdateInvalidBody')
+        }\n\n${result.status}(${message}): ${result.message}`,
       });
       errorLog('dim sync', update.action, result.status, message, result.message, update);
       reportException('dim sync', new Error('invalid dim api update'), {

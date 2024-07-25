@@ -263,7 +263,7 @@ export function makeItem(
     owner && !owner?.isVault ? profileResponse.characterProgressions?.data?.[owner.id] : undefined;
 
   const itemInstanceData: Partial<DestinyItemInstanceComponent> = item.itemInstanceId
-    ? itemComponents?.instances?.data?.[item.itemInstanceId] ?? emptyObject()
+    ? (itemComponents?.instances?.data?.[item.itemInstanceId] ?? emptyObject())
     : emptyObject();
 
   // Missing definition

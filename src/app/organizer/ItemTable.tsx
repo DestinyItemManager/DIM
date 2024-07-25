@@ -141,7 +141,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     .map((n) => n.itemCategoryHash)
     .find((hash) => hash in categoryToClass);
   const classIfAny: DestinyClass = classCategoryHash
-    ? categoryToClass[classCategoryHash] ?? DestinyClass.Unknown
+    ? (categoryToClass[classCategoryHash] ?? DestinyClass.Unknown)
     : DestinyClass.Unknown;
 
   // Calculate the true height of the table header, for sticky-ness

@@ -49,7 +49,7 @@ export function getItemsFromLoadoutItems(
     if (item) {
       // If there are any mods for this item's bucket, and the item is equipped, add them to socket overrides
       const modsForBucket =
-        loadoutItem.equip && modsByBucket ? modsByBucket[item.bucket.hash] ?? [] : [];
+        loadoutItem.equip && modsByBucket ? (modsByBucket[item.bucket.hash] ?? []) : [];
 
       let overrides = loadoutItem.socketOverrides;
 

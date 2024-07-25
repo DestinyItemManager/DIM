@@ -152,7 +152,7 @@ const lbConfigInit = ({
   const storeMatchingClass = pickBackingStore(stores, storeId, classTypeFromPreloadedLoadout);
   const initialLoadoutParameters = preloadedLoadout?.parameters;
 
-  const isEditingExistingLoadout = Boolean(preloadedLoadout);
+  const isEditingExistingLoadout = Boolean(preloadedLoadout && preloadedLoadout.id !== 'equipped');
 
   // If we requested a specific class type but the user doesn't have it, we
   // need to pick some different store, but ensure that class-specific stuff

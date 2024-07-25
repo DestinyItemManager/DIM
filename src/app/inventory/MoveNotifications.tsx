@@ -122,7 +122,7 @@ function ApplyLoadoutProgressBody({
       items.filter(({ error }) => error),
       ({ error }) =>
         (error instanceof DimError
-          ? error.bungieErrorCode()?.toString() ?? error.cause?.message
+          ? (error.bungieErrorCode()?.toString() ?? error.cause?.message)
           : undefined) ??
         error?.message ??
         'Unknown',
@@ -178,7 +178,7 @@ function ApplyLoadoutProgressBody({
               <b>{t('Loadouts.ItemErrorSummary', { count: errorStates.length })}</b>{' '}
               {errorStates[0].error instanceof DimError && errorStates[0].error.cause
                 ? errorStates[0].error.cause.message
-                : errorStates[0].error?.message ?? 'Unknown'}
+                : (errorStates[0].error?.message ?? 'Unknown')}
             </div>
           ))}
         </div>
@@ -228,7 +228,7 @@ function ApplyLoadoutProgressBody({
               <b>{t('Loadouts.ModErrorSummary', { count: errorStates.length })}</b>{' '}
               {errorStates[0].error instanceof DimError && errorStates[0].error.cause
                 ? errorStates[0].error.cause.message
-                : errorStates[0].error?.message ?? 'Unknown'}
+                : (errorStates[0].error?.message ?? 'Unknown')}
             </div>
           ))}
         </div>

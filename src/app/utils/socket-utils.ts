@@ -13,6 +13,7 @@ import {
   armor2PlugCategoryHashes,
 } from 'app/search/d2-known-values';
 import { DestinySocketCategoryStyle, TierType } from 'bungie-api-ts/destiny2';
+import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import {
   BucketHashes,
   ItemCategoryHashes,
@@ -136,8 +137,14 @@ export function getIntrinsicArmorPerkSocket(item: DimItem): DimSocket | undefine
   }
 }
 
+/**
+ * returns sockets that contains intrinsic perks even if those sockets are not
+ * the "Intrinsic" socket. This handles the exotic class items that were added
+ * in The Final Shape. Note that items with a normal intrinsic perk (so far)
+ * won't have anything here, while exotic class items (so far) don't have a
+ * normal intrinsic.
+ */
 export function getExtraIntrinsicPerkSockets(item: DimItem): DimSocket[] {
-  // returns sockets that contains intrinsic perks even if those sockets are not the "Intrinsic" socket
   return item.isExotic && item.bucket.hash === BucketHashes.ClassArmor && item.sockets
     ? item.sockets.allSockets
         .filter((s) => s.isPerk && s.visibleInGame && socketContainsIntrinsicPlug(s))
@@ -291,8 +298,10 @@ function filterSocketCategories(
  */
 export function isSocketEmpty(socket: DimSocket) {
   return (
-    socket.plugged?.plugDef.hash === socket.emptyPlugItemHash &&
-    socket.plugged?.plugDef.plug.plugCategoryHash !== PlugCategoryHashes.V400EmptyExoticMasterwork
+    socket.plugged &&
+    (socket.plugged.plugDef.hash === socket.emptyPlugItemHash ||
+      emptyPlugHashes.has(socket.plugged?.plugDef.hash)) &&
+    socket.plugged.plugDef.plug.plugCategoryHash !== PlugCategoryHashes.V400EmptyExoticMasterwork
   );
 }
 
@@ -342,6 +351,9 @@ export function getWeaponSockets(
     PlugCategoryHashes.CraftingPlugsWeaponsModsTransfusersLevel,
     // Hide catalyst socket for exotics with no known catalyst
     !item.catalystInfo && PlugCategoryHashes.V400EmptyExoticMasterwork,
+    PlugCategoryHashes.V300WeaponDamageTypeEnergy,
+    PlugCategoryHashes.V300WeaponDamageTypeAttack,
+    PlugCategoryHashes.V300WeaponDamageTypeKinetic,
   ];
 
   const modSocketsByCategory = filterSocketCategories(
