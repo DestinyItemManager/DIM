@@ -1,5 +1,7 @@
 ## Next
 
+* Dropdown no longer flickers on Firefox.
+
 ## 8.29.0 <span class="changelog-date">(2024-07-21)</span>
 
 * Fixed a case where invalid loadouts would be repeatedly rejected by DIM Sync. Now they'll be rejected once and be removed.
@@ -10,7 +12,6 @@
 ## 8.28.0 <span class="changelog-date">(2024-07-14)</span>
 
 * Fixed a case where recently saved tags or loadouts might not appear if DIM Sync is down, even though they were still saved.
-* Dropdown no longer flickers on Firefox.
 
 ## 8.27.0 <span class="changelog-date">(2024-07-07)</span>
 
