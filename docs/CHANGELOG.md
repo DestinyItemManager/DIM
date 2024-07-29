@@ -1,5 +1,7 @@
 ## Next
 
+## 8.30.0 <span class="changelog-date">(2024-07-28)</span>
+
 ## 8.29.0 <span class="changelog-date">(2024-07-21)</span>
 
 * Fixed a case where invalid loadouts would be repeatedly rejected by DIM Sync. Now they'll be rejected once and be removed.
