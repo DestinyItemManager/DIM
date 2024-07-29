@@ -107,6 +107,7 @@ export function usePopper({
   offset,
   fixed,
   padding,
+  state,
 }: {
   /** A ref to the rendered contents of a popper-positioned item */
   contents: React.RefObject<HTMLElement>;
@@ -125,6 +126,13 @@ export function usePopper({
   /** Is this placed on a fixed item? Workaround for https://github.com/popperjs/popper-core/issues/1156. TODO: make a "positioning context" context value for this */
   fixed?: boolean;
   padding?: Padding;
+
+  /**
+   * An optional state variable. Use this to have popper recalculate the position of
+   * a popover when conditionally rendering the contents of the popover (thus
+   * causing the dimensions to potentially change).
+   */
+  state?: boolean;
 }) {
   const popper = useRef<Instance | undefined>();
 
@@ -160,5 +168,5 @@ export function usePopper({
     }
 
     return destroy;
-  });
+  }, [reference, contents, state]);
 }

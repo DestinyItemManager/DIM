@@ -121,6 +121,7 @@ function SymbolsPickerButton<T extends HTMLTextAreaElement | HTMLInputElement>({
     reference: controlRef,
     arrowClassName: '',
     placement: 'top',
+    state: open,
   });
 
   // A user should be able to click multiple symbols to insert multiple symbols sequentially,

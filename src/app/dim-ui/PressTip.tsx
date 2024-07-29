@@ -98,6 +98,7 @@ function Control({
     reference: triggerRef,
     arrowClassName: styles.arrow,
     placement,
+    state: open,
   });
 
   if (!tooltip) {

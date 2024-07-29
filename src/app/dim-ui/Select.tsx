@@ -84,6 +84,7 @@ export default function Select<T>({
     reference: buttonRef,
     placement: 'bottom-start',
     offset: 2,
+    state: isOpen,
   });
 
   if (!selectedItem) {
