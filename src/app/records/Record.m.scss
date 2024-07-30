@@ -173,7 +173,8 @@
   transition: transform 300ms ease-in-out;
   transform-origin: center 8px;
   opacity: 0.7;
-  &:hover {
+
+  @include interactive($hover: true) {
     transform: scale(1.5);
   }
   img {

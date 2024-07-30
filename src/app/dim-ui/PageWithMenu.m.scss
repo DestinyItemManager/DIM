@@ -117,8 +117,7 @@
     font-size: 16px;
   }
 
-  &:hover,
-  &:focus-visible {
+  @include interactive($hover: true, $focus: true) {
     color: var(--theme-accent-primary);
 
     :global(.app-icon) {

@@ -67,7 +67,7 @@
   padding: 6px 9px 6px 9px;
   gap: 6px;
 
-  &:hover {
+  @include interactive($hover: true) {
     cursor: pointer;
   }
 
@@ -205,13 +205,11 @@
     margin: 0 !important;
   }
 
-  @media (hover: hover) {
-    &:hover {
-      > span,
-      > :global(.app-icon),
-      button > :global(.app-icon) {
-        color: var(--theme-accent-primary);
-      }
+  @include interactive($hover: true) {
+    > span,
+    > :global(.app-icon),
+    button > :global(.app-icon) {
+      color: var(--theme-accent-primary);
     }
   }
 }

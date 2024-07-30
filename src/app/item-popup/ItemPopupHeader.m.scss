@@ -15,8 +15,7 @@
 }
 
 .armory {
-  &:hover,
-  &:focus-visible {
+  @include interactive($hover: true, $focus: true) {
     outline: none;
     h1 {
       text-decoration: underline;

@@ -28,8 +28,8 @@
     font-size: 1.5em;
     margin-left: 1rem;
     transition: 0.3s background-color;
-    &:hover,
-    &:active {
+
+    @include interactive($hover: true, $active: true) {
       background-color: rgba(232, 165, 52, 0.8);
     }
   }

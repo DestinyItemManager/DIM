@@ -16,7 +16,8 @@
   &.selected {
     border-bottom-color: var(--theme-accent-primary);
   }
-  &:hover {
+
+  @include interactive($hover: true) {
     color: var(--theme-text);
     background-color: #3f3f3f;
   }

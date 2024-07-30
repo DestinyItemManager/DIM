@@ -136,3 +136,41 @@ $tempContainerZindex: 1000;
 @function dim-rgb-values-to-rgba($values, $alpha: 1) {
   @return #{'rgba(' + $values + ', ' + $alpha + ')'};
 }
+
+/**
+ * Declares hover rules only if a device can hover over elements. This avoids issues on mobile
+ * browsers where tapping an element triggers and persists its hover state.
+ */
+@mixin hover {
+  @media (any-hover: hover) {
+    &:hover {
+      @content;
+    }
+  }
+}
+
+@mixin interactive($hover: false, $focus: false, $focusWithin: false, $active: false) {
+  @if $hover == true {
+    @include hover {
+      @content;
+    }
+  }
+
+  @if $focus == true {
+    &:focus-visible {
+      @content;
+    }
+  }
+
+  @if $focusWithin == true {
+    &:focus-within {
+      @content;
+    }
+  }
+
+  @if $active == true {
+    &:active {
+      @content;
+    }
+  }
+}

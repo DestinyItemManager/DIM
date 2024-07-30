@@ -159,7 +159,8 @@ $content-cells: 5;
   > :global(.item) {
     --item-size: var(--icon-item-size) !important;
     height: var(--item-size);
-    &:hover {
+
+    @include interactive($hover: true) {
       outline: 1px solid var(--theme-item-polaroid-hover-border);
       cursor: pointer;
     }
@@ -310,7 +311,7 @@ $modslotSize: 30px;
 // Indicate cells that can be filtered on shift-click
 .shiftHeld {
   .hasFilter {
-    &:hover {
+    @include interactive($hover: true) {
       background-color: var(--theme-accent-primary) !important;
       cursor: pointer;
     }

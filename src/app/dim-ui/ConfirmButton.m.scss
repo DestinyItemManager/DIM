@@ -1,3 +1,5 @@
+@use '../variables.scss' as *;
+
 .confirmButton {
   overflow: hidden;
   max-width: 100%;
@@ -26,12 +28,12 @@
     }
     color: var(--theme-text) !important;
 
-    &:hover {
+    @include interactive($hover: true) {
       background-color: #af7d27 !important;
     }
 
     &[class~='danger'] {
-      &:hover {
+      @include interactive($hover: true) {
         background-color: #a22 !important;
       }
     }

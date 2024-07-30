@@ -63,7 +63,8 @@ $and-color: #814bcf;
     vertical-align: middle;
     width: var(--item-size);
     height: var(--item-size);
-    &:hover {
+
+    @include interactive($hover: true) {
       opacity: 1;
       transition: 1s;
     }
@@ -97,9 +98,11 @@ $and-color: #814bcf;
     margin-bottom: 20px;
   }
 
-  .expand-configs:hover {
-    color: var(--theme-accent-primary);
-    cursor: pointer;
+  .expand-configs {
+    @include interactive($hover: true, $focusWithin: true) {
+      color: var(--theme-accent-primary);
+      cursor: pointer;
+    }
   }
 
   .loadout-builder-item {
@@ -216,7 +219,8 @@ $and-color: #814bcf;
     border: 1px solid rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
     cursor: pointer;
-    &:hover {
+
+    @include interactive($hover: true) {
       background-color: rgba(160, 160, 160, 0.8);
       border: 1px solid rgba(32, 32, 32, 0);
       color: rgba(245, 245, 245, 1);

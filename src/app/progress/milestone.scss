@@ -57,9 +57,11 @@ button.milestone-quest {
   }
 
   // Apply hover style only on clickable milestone buttons
-  &[type='button']:hover {
-    .milestone-name {
-      color: var(--theme-accent-primary);
+  &[type='button'] {
+    @include interactive($hover: true) {
+      .milestone-name {
+        color: var(--theme-accent-primary);
+      }
     }
   }
 

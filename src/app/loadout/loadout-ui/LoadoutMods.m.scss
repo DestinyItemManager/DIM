@@ -41,8 +41,7 @@
   height: var(--item-icon-size);
   width: var(--item-icon-size);
 
-  &:hover,
-  &:focus-visible {
+  @include interactive($hover: true, $focus: true) {
     border-color: var(--theme-accent-primary);
     color: white;
   }

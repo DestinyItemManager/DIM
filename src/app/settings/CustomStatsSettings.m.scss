@@ -19,8 +19,7 @@
   flex-grow: 1;
   border: 0;
 
-  &:hover,
-  &:focus {
+  @include interactive($hover: true, $focus: true) {
     outline: none;
     box-shadow: inset 0 0 0 1px var(--theme-search-dropdown-border);
   }
