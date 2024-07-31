@@ -2,6 +2,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
 import { createSelector } from 'reselect';
+import { WishListRoll } from './types';
 import { getInventoryWishListRoll, InventoryWishListRoll } from './wishlists';
 
 export const wishListsSelector = (state: RootState) => state.wishLists;
@@ -13,8 +14,13 @@ export const wishListsByHashSelector = createSelector(wishListsSelector, (wls) =
   Map.groupBy(wls.wishListAndInfo.wishListRolls?.filter(Boolean), (r) => r.itemHash),
 );
 
-export const wishListRollsForItemHashSelector = (itemHash: number) => (state: RootState) =>
-  wishListsByHashSelector(state).get(itemHash) ?? emptyArray();
+export const wishListRollsForItemHashSelector =
+  ({ hash, itemCategoryHashes }: DimItem) =>
+  (state: RootState) =>
+    [hash, ...itemCategoryHashes].flatMap(
+      (current: number) =>
+        wishListsByHashSelector(state).get(current) ?? emptyArray<WishListRoll>(),
+    );
 
 export const hasWishListSelector = createSelector(
   wishListsByHashSelector,
