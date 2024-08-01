@@ -2559,10 +2559,20 @@ export const symbolData: {
     },
   },
 ];
-const translateManually = [
-  57495, 57654, 983359, 61239, 57665, 983382, 61244, 61245, 57671, 57426, 983376, 983269,
-] as const;
-export type TranslateManually = (typeof translateManually)[number];
+
+export type TranslateManually =
+  | 57495
+  | 57654
+  | 983359
+  | 61239
+  | 57665
+  | 983382
+  | 61244
+  | 61245
+  | 57671
+  | 57426
+  | 983376
+  | 983269;
 
 /*
  * Could not find a source for (did the definitions disappear?): 
