@@ -1,10 +1,24 @@
+import { GlobalSettings, Loadout, LoadoutItem } from '@destinyitemmanager/dim-api-types';
+import { DestinyAccount } from 'app/accounts/destiny-account';
+import { AccountsState } from 'app/accounts/reducer';
 import { getBuckets } from 'app/destiny2/d2-buckets';
 import { allTables, buildDefinitionsFromManifest } from 'app/destiny2/d2-definitions';
+import { DimApiState } from 'app/dim-api/reducer';
+import { FarmingState } from 'app/farming/reducer';
 import { DIM_LANG_INFOS } from 'app/i18n';
 import { buildStores } from 'app/inventory/store/d2-store-factory';
+import { InGameLoadoutState } from 'app/loadout/ingame/reducer';
+import { LoadoutsState } from 'app/loadout/reducer';
 import { downloadManifestComponents } from 'app/manifest/manifest-service-json';
+import { initialSettingsState } from 'app/settings/initial-settings';
+import { ShellState } from 'app/shell/reducer';
 import { humanBytes } from 'app/storage/human-bytes';
+import { RootState } from 'app/store/types';
+import { StreamDeckState } from 'app/stream-deck/reducer';
 import { delay } from 'app/utils/promises';
+import { VendorsState } from 'app/vendors/reducer';
+import { WishListsState } from 'app/wishlists/reducer';
+import { WishListAndInfo, WishListInfo, WishListRoll } from 'app/wishlists/types';
 import {
   AllDestinyManifestComponents,
   DestinyManifest,
@@ -188,3 +202,168 @@ export function setupi18n() {
     }
   }
 }
+
+export const getTestAccountsState = (chance: Chance.Chance): AccountsState => ({
+  accounts: [],
+  currentAccountMembershipId: chance.string({ symbols: false }),
+  currentAccountDestinyVersion: 2,
+  loaded: chance.bool(),
+  loadedFromIDB: chance.bool(),
+  needsLogin: chance.bool(),
+  needsDeveloper: chance.bool(),
+});
+
+export const getTestDestinyAccount = (chance: Chance.Chance): DestinyAccount => ({
+  displayName: chance.name(),
+  originalPlatformType: chance.d6(),
+  platformLabel: chance.string(),
+  membershipId: chance.string(),
+  destinyVersion: 2,
+  platforms: [chance.d6()],
+  lastPlayed: new Date(),
+});
+
+export const getInventoryState = (chance: Chance.Chance) => ({
+  stores: [], //DimStore[];
+  currencies: [], //AccountCurrency[],
+  newItems: new Set(''), //Set<string>
+  newItemsLoaded: chance.bool(),
+});
+
+export const getShellState = (chance: Chance.Chance): ShellState => ({
+  isPhonePortrait: chance.bool(),
+  searchQuery: chance.word(),
+  searchQueryVersion: chance.d10(),
+  searchResultsOpen: chance.bool(),
+  loadingMessages: chance.n(chance.word, chance.d6()),
+  bungieAlerts: [], //GlobalAlert[];
+});
+
+export const getLoadoutsState = (chance: Chance.Chance): LoadoutsState => ({
+  previousLoadouts: { [chance.string()]: [] },
+  selectedLoadoutStoreId: chance.pickone([chance.string(), undefined]),
+});
+
+export const getWishListRoll = (chance: Chance.Chance): WishListRoll => ({
+  itemHash: chance.natural(),
+  recommendedPerks: new Set(chance.n(chance.natural, 4)),
+  isExpertMode: chance.bool(),
+  isUndesirable: chance.bool(),
+  notes: chance.sentence(),
+});
+
+export const getWishListInfo = (chance: Chance.Chance): WishListInfo => ({
+  url: chance.pickone([chance.url(), undefined]),
+  title: chance.sentence(),
+  description: chance.sentence(),
+  numRolls: chance.d10(),
+});
+
+export const getWishListAndInfo = (chance: Chance.Chance): WishListAndInfo => ({
+  wishListRolls: chance.n(() => getWishListRoll(chance), chance.d10()),
+  source: chance.url(),
+  infos: chance.n(() => getWishListInfo(chance), chance.d4()),
+});
+
+export const getWishListsState = (chance: Chance.Chance): WishListsState => ({
+  loaded: chance.bool(),
+  wishListAndInfo: getWishListAndInfo(chance),
+  lastFetched: new Date(),
+});
+
+export const getFarmingState = (chance: Chance.Chance): FarmingState => ({
+  storeId: chance.string(),
+  numInterruptions: chance.d4(),
+});
+
+export const getVendorsState = (chance: Chance.Chance): VendorsState => ({
+  vendorsByCharacter: {
+    [chance.string()]: {},
+  },
+  showUnacquiredOnly: chance.bool(),
+});
+
+export const getStreamDeckState = (chance: Chance.Chance): StreamDeckState => ({
+  enabled: chance.bool(),
+  connected: chance.bool(),
+});
+
+export const getGlobalSettings = (chance: Chance.Chance): GlobalSettings => ({
+  dimApiEnabled: chance.bool(),
+  destinyProfileMinimumRefreshInterval: chance.d30(),
+  destinyProfileRefreshInterval: chance.d30(),
+  autoRefresh: chance.bool(),
+  refreshProfileOnVisible: chance.bool(),
+  dimProfileMinimumRefreshInterval: chance.d30(),
+  showIssueBanner: chance.bool(),
+});
+
+export const getLoadoutItem = (chance: Chance.Chance): LoadoutItem => ({
+  hash: chance.natural(),
+});
+
+export const getLoadout = (chance: Chance.Chance): Loadout => ({
+  id: chance.guid(),
+  name: chance.sentence(),
+  classType: chance.d4(),
+  clearSpace: chance.bool(),
+  equipped: chance.n(() => getLoadoutItem(chance), chance.d10()),
+  unequipped: chance.n(() => getLoadoutItem(chance), chance.d10()),
+});
+
+export const getDimApiState = (chance: Chance.Chance): DimApiState => ({
+  globalSettings: getGlobalSettings(chance),
+  globalSettingsLoaded: chance.bool(),
+  apiPermissionGranted: chance.pickone([chance.bool(), null]),
+  profileLoadedFromIndexedDb: chance.bool(),
+  profileLoaded: chance.bool(),
+  profileLastLoaded: chance.timestamp(),
+  settings: initialSettingsState,
+  itemHashTags: {
+    [chance.natural()]: {
+      hash: chance.natural(),
+    },
+  },
+  profiles: {
+    [chance.string()]: {
+      profileLastLoaded: chance.timestamp(),
+      loadouts: {
+        [chance.string()]: getLoadout(chance),
+      },
+      tags: {
+        [chance.string()]: {
+          id: chance.string(),
+        },
+      },
+      triumphs: chance.n(chance.natural, chance.d6()),
+    },
+  },
+  searches: {
+    1: [],
+    2: [],
+  },
+  updateQueue: [],
+  updateInProgressWatermark: chance.d6() - 1,
+});
+
+export const getInGameLoadoutState = (chance: Chance.Chance): InGameLoadoutState => ({
+  loadouts: { [chance.string()]: [] },
+});
+
+export const getTestRootState = (chance: Chance.Chance): RootState => {
+  return {
+    accounts: getTestAccountsState(chance),
+    inventory: getInventoryState(chance),
+    shell: getShellState(chance),
+    loadouts: getLoadoutsState(chance),
+    wishLists: getWishListsState(chance),
+    farming: getFarmingState(chance),
+    manifest: {},
+    vendors: getVendorsState(chance),
+    compare: {},
+    streamDeck: getStreamDeckState(chance),
+    dimApi: getDimApiState(chance),
+    clarity: {},
+    inGameLoadouts: getInGameLoadoutState(chance),
+  };
+};
