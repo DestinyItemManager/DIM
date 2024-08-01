@@ -101,7 +101,7 @@
     "@types/jest": "^29.5.12",
     "@types/lodash": "^4.17.7",
     "@types/lodash-webpack-plugin": "^0.11.9",
-    "@types/node": "18.18.3",
+    "@types/node": "22.0.2",
     "@types/papaparse": "^5.3.14",
     "@types/prop-types": "^15.7.12",
     "@types/react": "18.3.3",
@@ -142,8 +142,8 @@
     "eslint-plugin-regexp": "^2.6.0",
     "eslint-plugin-sonarjs": "^1.0.4",
     "fontawesome-subset": "^4.4.0",
-    "fork-ts-checker-notifier-webpack-plugin": "^5.0.0",
-    "fork-ts-checker-webpack-plugin": "^6.0.1",
+    "fork-ts-checker-notifier-webpack-plugin": "^9.0.0",
+    "fork-ts-checker-webpack-plugin": "^9.0.2",
     "generate-json-webpack-plugin": "^2.0.0",
     "globals": "^15.8.0",
     "html-loader": "^5.1.0",
@@ -267,9 +267,6 @@
     },
     "updateConfig": {
       "ignoreDependencies": [
-        "@types/node",
-        "fork-ts-checker-notifier-webpack-plugin",
-        "fork-ts-checker-webpack-plugin",
         "@fortawesome/fontawesome-free",
         "@fortawesome/fontawesome-svg-core"
       ]
