@@ -5,7 +5,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { ProcessResult } from 'app/loadout-builder/process-worker/types';
 import { getAutoMods } from 'app/loadout-builder/process/mappers';
-import { runProcess } from 'app/loadout-builder/process/process-wrapper';
+import type { runProcess } from 'app/loadout-builder/process/process-wrapper';
 import { ArmorSet, LockableBucketHashes, StatRanges } from 'app/loadout-builder/types';
 import { statTier } from 'app/loadout-builder/utils';
 import { randomSubclassConfiguration } from 'app/loadout-drawer/auto-loadouts';

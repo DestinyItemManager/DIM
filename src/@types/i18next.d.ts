@@ -1,5 +1,5 @@
 // import the original type declarations
-import en from 'config/i18n.json' assert { type: 'json' };
+import type en from 'config/i18n.json' assert { type: 'json' };
 import 'i18next';
 
 declare module 'i18next' {

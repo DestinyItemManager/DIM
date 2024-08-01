@@ -47,7 +47,7 @@ export function appendedToNote(originalNote: string | undefined, append: string)
 }
 
 const allHashtagsRegex =
-  /^(\s*)((?:^|[\s,])(#[\p{L}\p{N}\p{Private_Use}\p{Other_Symbol}_:-]+)\s*)+$/u;
+  /^\s*(?:(?:^|[\s,])#[\p{L}\p{N}\p{Private_Use}\p{Other_Symbol}_:-]+\s*)+$/u;
 
 /**
  * Add notes to an existing note. This is hashtag-aware, so it will not remove

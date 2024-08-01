@@ -1,12 +1,13 @@
-import { fixupConfigRules, fixupPluginRules } from '@eslint/compat';
+import react from '@eslint-react/eslint-plugin';
+import { fixupPluginRules } from '@eslint/compat';
 import eslint from '@eslint/js';
 import arrayFunc from 'eslint-plugin-array-func';
 import cssModules from 'eslint-plugin-css-modules';
 import github from 'eslint-plugin-github';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import lodash from 'eslint-plugin-lodash';
+import reactPlugin from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
-import reactRecommended from 'eslint-plugin-react/configs/recommended.js';
 import * as regexpPlugin from 'eslint-plugin-regexp';
 import sonarjs from 'eslint-plugin-sonarjs';
 import globals from 'globals';
@@ -29,7 +30,7 @@ export default tseslint.config(
   regexpPlugin.configs['flat/recommended'],
   {
     name: 'react',
-    ...fixupConfigRules(reactRecommended)[0],
+    ...reactPlugin.configs.flat.recommended,
     settings: {
       react: {
         version: 'detect',
@@ -92,6 +93,10 @@ export default tseslint.config(
     },
   },
   {
+    name: 'eslint-react',
+    ...react.configs['recommended-type-checked'],
+  },
+  {
     name: 'lodash',
     plugins: {
       lodash,
@@ -116,18 +121,6 @@ export default tseslint.config(
       'lodash/preferred-alias': 'error',
     },
   },
-  // {
-  //   // https://github.com/hluisson/eslint-plugin-jsx-expressions/issues/18
-  //   name: 'jsx-expressions',
-  //   files: ['**/*.tsx'],
-  //   plugins: {
-  //     // For these plugins we don't want any presets, only specific rules.
-  //     'jsx-expressions': jsxExpressions,
-  //   },
-  //   rules: {
-  //     'jsx-expressions/strict-logical-expressions': ['error', { allowString: true }],
-  //   },
-  // },
   {
     name: 'global ignores',
     ignores: [
@@ -136,6 +129,7 @@ export default tseslint.config(
       'src/build-browsercheck-utils.js',
       'src/testing/jest-setup.cjs',
       'src/fa-subset.js',
+      'src/data/font/symbol-name-sources.ts', // TODO: fix the source!
     ],
   },
   {
@@ -344,7 +338,7 @@ export default tseslint.config(
         { props: 'never', children: 'never', propElementValues: 'always' },
       ],
       'react/iframe-missing-sandbox': 'error',
-      'react/jsx-key': ['error', { checkFragmentShorthand: true, warnOnDuplicates: true }],
+      'react/jsx-key': 'off',
       'react/forbid-component-props': [
         'error',
         {
@@ -391,6 +385,7 @@ export default tseslint.config(
       '@typescript-eslint/prefer-includes': 'error',
       '@typescript-eslint/prefer-string-starts-ends-with': 'error',
       '@typescript-eslint/prefer-ts-expect-error': 'error',
+      '@typescript-eslint/prefer-regexp-exec': 'off',
       '@typescript-eslint/array-type': 'error',
       '@typescript-eslint/no-non-null-asserted-optional-chain': 'error',
       '@typescript-eslint/unified-signatures': 'error',
@@ -408,6 +403,10 @@ export default tseslint.config(
           argsIgnorePattern: '^_.',
           ignoreRestSiblings: true,
         },
+      ],
+      '@typescript-eslint/no-unused-expressions': [
+        'error',
+        { allowShortCircuit: true, allowTernary: true },
       ],
       '@typescript-eslint/no-for-in-array': 'error',
       '@typescript-eslint/consistent-indexed-object-style': 'off',
@@ -444,6 +443,16 @@ export default tseslint.config(
       'sonarjs/prefer-immediate-return': 'off',
       'sonarjs/no-nested-switch': 'off',
       'sonarjs/no-nested-template-literals': 'off',
+      '@eslint-react/no-array-index-key': 'off',
+      '@eslint-react/no-unstable-default-props': 'off',
+      '@eslint-react/naming-convention/component-name': 'warn',
+      '@eslint-react/dom/no-dangerously-set-innerhtml': 'off',
+    },
+  },
+  {
+    files: ['src/**/*.cjs'],
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
     },
   },
   {

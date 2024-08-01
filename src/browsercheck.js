@@ -32,7 +32,7 @@ function getBrowserName(agent) {
  * @returns {import('app/i18n.js').DimLanguage}
  */
 function getUserLocale() {
-  var lang = (window.navigator.userLanguage || window.navigator.language).toLowerCase() || 'en';
+  var lang = window.navigator.language.toLowerCase() || 'en';
   if (lang.startsWith('zh-') && lang.length === 5) {
     lang = lang === 'zh-cn' ? 'zh-chs' : 'zh-cht';
   }
@@ -57,7 +57,7 @@ function getBrowserVersionFromUserAgent(agent) {
   while (version.length > 0) {
     try {
       return browserName + ' ' + version.join('.');
-    } catch (e) {
+    } catch {
       // Ignore unknown browser query error
     }
     version.pop();
