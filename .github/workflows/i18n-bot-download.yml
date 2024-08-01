@@ -14,19 +14,19 @@ jobs:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.I18N_PAT }}
 
-      - uses: pnpm/action-setup@v3
+      - uses: pnpm/action-setup@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version-file: '.nvmrc'
           cache: pnpm
 
       - name: Install
         run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: Download updated i18n files
-        uses: crowdin/github-action@v1.20.2
+        uses: crowdin/github-action@v2.1.1
         with:
           upload_sources: false
           upload_translations: false

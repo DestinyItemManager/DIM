@@ -1,4 +1,4 @@
-import { Transaction } from '@sentry/types';
+import { startSpan } from '@sentry/browser';
 import { t } from 'app/i18next-t';
 import { armorStats } from 'app/search/d2-known-values';
 import { DimError } from 'app/utils/dim-error';
@@ -20,48 +20,42 @@ import { bungieNetPath } from '../../dim-ui/BungieImage';
 import { DimCharacterStat, DimStore, DimTitle } from '../store-types';
 import { ItemCreationContext, processItems } from './d2-item-factory';
 
-export function buildStores(
-  itemCreationContext: ItemCreationContext,
-  transaction?: Transaction,
-): DimStore[] {
+export function buildStores(itemCreationContext: ItemCreationContext): DimStore[] {
   // TODO: components may be hidden (privacy)
 
   const { profileResponse } = itemCreationContext;
 
-  if (
-    !profileResponse.profileInventory.data ||
-    !profileResponse.characterInventories.data ||
-    !profileResponse.characters.data
-  ) {
-    const additionalErrorMessage =
-      $DIM_FLAVOR === 'dev'
-        ? 'Vault or character inventory was missing - you likely forgot to select \
+  return startSpan({ name: 'processItems' }, () => {
+    if (
+      !profileResponse.profileInventory.data ||
+      !profileResponse.characterInventories.data ||
+      !profileResponse.characters.data
+    ) {
+      const additionalErrorMessage =
+        $DIM_FLAVOR === 'dev'
+          ? 'Vault or character inventory was missing - you likely forgot to select \
 the required application scopes when registering the app on Bungie.net. \
 Please carefully read the instructions in docs/CONTRIBUTING.md -> \
 "Get your own API key" and select the required scopes'
-        : undefined;
-    errorLog(
-      'd2-stores',
-      'Vault or character inventory was missing - bailing in order to avoid corruption',
+          : undefined;
+      errorLog(
+        'd2-stores',
+        'Vault or character inventory was missing - bailing in order to avoid corruption',
+      );
+      throw new DimError('BungieService.MissingInventory', additionalErrorMessage);
+    }
+
+    const lastPlayedDate = findLastPlayedDate(profileResponse);
+
+    const vault = processVault(itemCreationContext);
+
+    const characters = Object.keys(profileResponse.characters.data).map((characterId) =>
+      processCharacter(itemCreationContext, characterId, lastPlayedDate),
     );
-    throw new DimError('BungieService.MissingInventory', additionalErrorMessage);
-  }
+    const stores = [...characters, vault];
 
-  const lastPlayedDate = findLastPlayedDate(profileResponse);
-
-  const processSpan = transaction?.startChild({
-    op: 'processItems',
+    return stores;
   });
-  const vault = processVault(itemCreationContext);
-
-  const characters = Object.keys(profileResponse.characters.data).map((characterId) =>
-    processCharacter(itemCreationContext, characterId, lastPlayedDate),
-  );
-  processSpan?.finish();
-
-  const stores = [...characters, vault];
-
-  return stores;
 }
 
 /**

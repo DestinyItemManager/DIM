@@ -1,4 +1,5 @@
 import { PressTip } from 'app/dim-ui/PressTip';
+import { useDynamicStringReplacer } from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
@@ -20,6 +21,7 @@ const undesirablePlugs = [
   PlugCategoryHashes.V460PlugsArmorMasterworksStatResistance2,
   PlugCategoryHashes.V460PlugsArmorMasterworksStatResistance3,
   PlugCategoryHashes.V460PlugsArmorMasterworksStatResistance4,
+  PlugCategoryHashes.EnhancementsArtificeExotic, // the cost socket you pay for by"plug"ging it in-game, to do an artifice upgrade
 ];
 
 /**
@@ -91,7 +93,14 @@ function Sockets({
       // but always include specialty mod slots, Vow mods don't have
       // an itemTypeDisplayName https://github.com/Bungie-net/api/issues/1620
       (toSave.itemTypeDisplayName ||
-        modTypeTagByPlugCategoryHash[toSave.plug.plugCategoryHash as PlugCategoryHashes])
+        modTypeTagByPlugCategoryHash[toSave.plug.plugCategoryHash as PlugCategoryHashes]) &&
+      // either it's some other kind of mod-slot, give it a pass, or
+      (socket.plugged?.plugDef.plug.plugCategoryHash !== PlugCategoryHashes.EnhancementsArtifice ||
+        // if it IS an artifice slot, then we render it
+        // if it's already paid for (visibleInGame)
+        socket.visibleInGame ||
+        // or if LO has placed a mod in it anyway, due to an upgrades assumption
+        toSave.hash !== socket.emptyPlugItemHash)
     ) {
       modsAndWhitelist.push({
         plugDef: toSave,
@@ -120,17 +129,16 @@ function Sockets({
 
 function VendorItemPlug({ item }: { item: DimItem }) {
   const defs = useD2Definitions()!;
+  const replacer = useDynamicStringReplacer(item.owner);
+  const vendorDef = defs.Vendor.get(item.vendor!.vendorHash);
   return (
     <PressTip
       elementType="span"
       tooltip={() => {
-        const vendorName =
-          defs.Vendor.get(item.vendor!.vendorHash)?.displayProperties?.name || '--';
+        const vendorName = replacer(vendorDef?.displayProperties?.name) || '--';
         return (
           <>
-            {t('Compare.IsVendorItem')}
-            <br />
-            {t('Compare.SoldBy', { vendorName })}
+            {t('Compare.IsVendorItem', { vendorName })} {t('LoadoutBuilder.ExcludeVendors')}
           </>
         );
       }}

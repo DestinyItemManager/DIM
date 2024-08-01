@@ -1,0 +1,102 @@
+@use '../variables.scss' as *;
+
+.pathfinderTree {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  margin: 16px 0;
+
+  @include phone-portrait {
+    flex-direction: column;
+    margin: 16px 10px;
+    gap: 12px;
+  }
+}
+
+.pathfinderRow {
+  composes: flexColumn from '../dim-ui/common.m.scss';
+  box-sizing: border-box;
+  gap: 8px;
+  flex: 1;
+  flex-direction: column-reverse;
+  justify-content: center;
+  max-width: 250px;
+  min-width: 120px;
+  --item-size: 35px;
+
+  :global(.milestone-quest) {
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px;
+    width: 100%;
+  }
+
+  @media (min-width: 541px) {
+    &:nth-child(n + 2) button::before {
+      position: absolute;
+      display: inline;
+      content: '⧽';
+      font-size: 28px;
+      margin-left: -23px;
+    }
+  }
+
+  @media (max-width: 1270px) and (min-width: 541px) {
+    min-width: 60px;
+
+    :global(.milestone-quest) {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+    :global(.milestone-icon) {
+      flex-direction: row !important;
+      --item-size: 25px;
+      max-width: fit-content !important;
+      margin-top: 6px;
+
+      & > div {
+        margin-right: 6px;
+      }
+    }
+    :global(.milestone-info) {
+      flex-direction: row !important;
+      width: auto !important;
+    }
+    :global(.milestone-name) {
+      font-size: 12px !important;
+    }
+    :global(.milestone-description) {
+      display: none;
+    }
+    &:not(:first-child) button::before {
+      transform: translateY(-8%);
+    }
+  }
+
+  @include phone-portrait {
+    flex-direction: row;
+    gap: 14px;
+    width: auto;
+    max-width: unset;
+
+    > * {
+      flex: 0;
+      width: calc(var(--item-size) + 16px) !important;
+      min-width: calc(var(--item-size) + 16px) !important;
+    }
+    :global(.milestone-icon) {
+      margin: 0;
+    }
+    :global(.milestone-info) {
+      display: none !important;
+    }
+  }
+}
+
+.completed {
+  :global(.milestone-icon) img {
+    border-color: $xp;
+    border-width: 2px;
+    padding: 3px;
+  }
+}

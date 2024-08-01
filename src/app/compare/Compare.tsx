@@ -9,6 +9,7 @@ import {
 } from 'app/inventory/store/override-sockets';
 import { recoilValue } from 'app/item-popup/RecoilStat';
 import { useD2Definitions } from 'app/manifest/selectors';
+import { showNotification } from 'app/notifications/notifications';
 import { statLabels } from 'app/organizer/Columns';
 import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import Checkbox from 'app/settings/Checkbox';
@@ -119,9 +120,14 @@ export default function Compare({ session }: { session: CompareSession }) {
   const hasItems = compareItems.length > 0;
   useEffect(() => {
     if (!hasItems) {
+      showNotification({
+        type: 'warning',
+        title: t('Compare.Error.Invalid'),
+        body: session.query,
+      });
       cancel();
     }
-  }, [cancel, hasItems]);
+  }, [cancel, hasItems, session.query]);
 
   // Memoize computing the list of stats
   const allStats = useMemo(
@@ -321,7 +327,7 @@ function sortCompareItemsComparator(
         if (!stat) {
           return -1;
         }
-        const statValue = compareBaseStats ? stat.base ?? stat.value : stat.value;
+        const statValue = compareBaseStats ? (stat.base ?? stat.value) : stat.value;
         if (stat.statHash === StatHashes.RecoilDirection) {
           return recoilValue(stat.value);
         }
@@ -406,11 +412,11 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
       if (itemStat) {
         stat.min = Math.min(
           stat.min,
-          (compareBaseStats ? itemStat.base ?? itemStat.value : itemStat.value) || 0,
+          (compareBaseStats ? (itemStat.base ?? itemStat.value) : itemStat.value) || 0,
         );
         stat.max = Math.max(
           stat.max,
-          (compareBaseStats ? itemStat.base ?? itemStat.value : itemStat.value) || 0,
+          (compareBaseStats ? (itemStat.base ?? itemStat.value) : itemStat.value) || 0,
         );
         stat.enabled = stat.min !== stat.max;
       }

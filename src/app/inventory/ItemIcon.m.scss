@@ -75,23 +75,94 @@ $commonBg: #366f42;
 $rgb-masterworked: dim-hex-to-rgb-values($stat-masterworked);
 .legendaryMasterwork {
   box-shadow: inset 0 0 1px 0 rgba(0, 0, 0, 0.25);
-  background:
+  background-image: radial-gradient(
+      ellipse at bottom,
+      dim-rgb-values-to-rgba($rgb-masterworked, $alpha: 0.2),
+      transparent 75%
+    ),
     radial-gradient(
-        ellipse at center bottom,
-        dim-rgb-values-to-rgba($rgb-masterworked, $alpha: 0.2),
-        transparent 75%
-      )
-      center bottom,
-    radial-gradient(
-        ellipse at center bottom,
-        dim-rgb-values-to-rgba($rgb-masterworked, $alpha: 0.1),
-        transparent 75%
-      )
-      center bottom;
+      ellipse at bottom,
+      dim-rgb-values-to-rgba($rgb-masterworked, $alpha: 0.1),
+      transparent 75%
+    );
   background-size:
     125% 30%,
     50% 50%;
-  background-repeat: no-repeat, no-repeat;
+  background-repeat: no-repeat;
+  background-position: bottom;
+}
+
+.shinyMasterwork {
+  $shiny-stripe-color: #d0b343;
+
+  // look-defining percentages
+  $initial-offset: 69; // left edge of the leftmost stripe
+  $final-offset: 98.5; // right edge of the rightmost stripe
+  $stripe-width: 2.6; // obvious
+  $fuzz: 1.2; // determines blurriness level of stripe edges
+
+  // math
+  $effective-fuzz: math.div($fuzz, 100);
+  $occupied-space: $final-offset - $initial-offset;
+  $stripe-spacing: math.div($occupied-space - (4 * $stripe-width), 3);
+
+  $stripe-1-start: math.div(($initial-offset + ($stripe-width * 0) + ($stripe-spacing * 0)), 100);
+  $stripe-1-ended: math.div(($initial-offset + ($stripe-width * 1) + ($stripe-spacing * 0)), 100);
+
+  $stripe-2-start: math.div(($initial-offset + ($stripe-width * 1) + ($stripe-spacing * 1)), 100);
+  $stripe-2-ended: math.div(($initial-offset + ($stripe-width * 2) + ($stripe-spacing * 1)), 100);
+
+  $stripe-3-start: math.div(($initial-offset + ($stripe-width * 2) + ($stripe-spacing * 2)), 100);
+  $stripe-3-ended: math.div(($initial-offset + ($stripe-width * 3) + ($stripe-spacing * 2)), 100);
+
+  $stripe-4-start: math.div(($initial-offset + ($stripe-width * 3) + ($stripe-spacing * 3)), 100);
+  $stripe-4-ended: math.div(($initial-offset + ($stripe-width * 4) + ($stripe-spacing * 3)), 100);
+
+  opacity: 0.4;
+  left: 1.5px;
+  filter: drop-shadow(0 0 2px #e8a534);
+  background-image: radial-gradient(
+      ellipse at bottom,
+      dim-rgb-values-to-rgba($rgb-masterworked, $alpha: 0.2),
+      transparent 75%
+    ),
+    radial-gradient(
+      ellipse at bottom,
+      dim-rgb-values-to-rgba($rgb-masterworked, $alpha: 0.1),
+      transparent 75%
+    ),
+    linear-gradient(
+      135deg,
+      transparent #{math.percentage($stripe-1-start)},
+      #{$shiny-stripe-color} #{math.percentage($stripe-1-start + $effective-fuzz)},
+
+      #{$shiny-stripe-color} #{math.percentage($stripe-1-ended)},
+      transparent #{math.percentage($stripe-1-ended + $effective-fuzz)},
+
+      transparent #{math.percentage($stripe-2-start)},
+      #{$shiny-stripe-color} #{math.percentage($stripe-2-start + $effective-fuzz)},
+
+      #{$shiny-stripe-color} #{math.percentage($stripe-2-ended)},
+      transparent #{math.percentage($stripe-2-ended + $effective-fuzz)},
+
+      transparent #{math.percentage($stripe-3-start)},
+      #{$shiny-stripe-color} #{math.percentage($stripe-3-start + $effective-fuzz)},
+
+      #{$shiny-stripe-color} #{math.percentage($stripe-3-ended)},
+      transparent #{math.percentage($stripe-3-ended + $effective-fuzz)},
+
+      transparent #{math.percentage($stripe-4-start)},
+      #{$shiny-stripe-color} #{math.percentage($stripe-4-start + $effective-fuzz)},
+
+      #{$shiny-stripe-color} #{math.percentage($stripe-4-ended)},
+      transparent #{math.percentage($stripe-4-ended + $effective-fuzz)}
+    );
+  background-size:
+    125% 30%,
+    50% 50%,
+    100% 100%;
+  background-repeat: no-repeat;
+  background-position: bottom;
 }
 
 // Exotic Masterwork pattern emulating .src/images/exotic-masterwork.png

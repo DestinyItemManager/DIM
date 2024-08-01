@@ -1,3 +1,4 @@
+import { SearchType } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { querySelector, searchQueryVersionSelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -73,9 +74,9 @@ export default forwardRef(function SearchFilter(
       searchQuery={searchQuery}
       mainSearchBar={true}
       menu={menu}
-      loadouts={onLoadouts}
+      searchType={onLoadouts ? SearchType.Loadout : SearchType.Item}
     >
-      {extras}
+      {!onLoadouts && extras}
     </SearchBar>
   );
 });

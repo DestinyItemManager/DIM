@@ -1,4 +1,4 @@
-import { LoadoutSort } from '@destinyitemmanager/dim-api-types';
+import { LoadoutSort, VaultWeaponGroupingStyle } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector, hasD1AccountSelector } from 'app/accounts/selectors';
 import { clarityDiscordLink, clarityLink } from 'app/clarity/about';
 import { settingsSelector } from 'app/dim-api/selectors';
@@ -35,8 +35,10 @@ import Spreadsheets from './Spreadsheets';
 import { TroubleshootingSettings } from './Troubleshooting';
 import { setCharacterOrder } from './actions';
 import { useSetSetting } from './hooks';
-import { Settings, VaultWeaponGroupingStyle } from './initial-settings';
+import { Settings } from './initial-settings';
 import { itemSortSettingsSelector } from './item-sort';
+
+const TAG = 'settings';
 
 export const settingClass = styles.setting;
 export const fineprintClass = styles.fineprint;
@@ -75,14 +77,14 @@ export default function SettingsPage() {
 
   const onCheckChange = (checked: boolean, name: keyof Settings) => {
     if (name.length === 0) {
-      errorLog('settings', new Error('You need to have a name on the form input'));
+      errorLog(TAG, new Error('You need to have a name on the form input'));
     }
 
     setSetting(name, checked);
   };
   const onChange: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (e) => {
     if (e.target.name.length === 0) {
-      errorLog('settings', new Error('You need to have a name on the form input'));
+      errorLog(TAG, new Error('You need to have a name on the form input'));
     }
 
     if (isInputElement(e.target) && e.target.type === 'checkbox') {
@@ -94,7 +96,7 @@ export default function SettingsPage() {
 
   const onChangeNumeric: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (e) => {
     if (e.target.name.length === 0) {
-      errorLog('settings', new Error('You need to have a name on the form input'));
+      errorLog(TAG, new Error('You need to have a name on the form input'));
     }
 
     setSetting(e.target.name as keyof Settings, parseInt(e.target.value, 10));
@@ -160,7 +162,6 @@ export default function SettingsPage() {
     name: t('Settings.SortName'),
     tag: t('Settings.SortByTag', { taglist: tagListString }),
     season: t('Settings.SortBySeason'),
-    sunset: t('Settings.SortBySunset'),
     acquisitionRecency: t('Settings.SortByRecent'),
     elementWeapon: t('Settings.SortByWeaponElement'),
     masterworked: t('Settings.Masterworked'),
@@ -217,7 +218,7 @@ export default function SettingsPage() {
 
   const menuItems = _.compact([
     { id: 'general', title: t('Settings.Language') },
-    $featureFlags.themePicker ? { id: 'theme', title: t('Settings.Theme') } : undefined,
+    { id: 'theme', title: t('Settings.Theme') },
     { id: 'items', title: t('Settings.Items') },
     { id: 'inventory', title: t('Settings.Inventory') },
     $featureFlags.wishLists ? { id: 'wishlist', title: t('WishListRoll.Header') } : undefined,
@@ -248,20 +249,18 @@ export default function SettingsPage() {
             </div>
           </section>
 
-          {$featureFlags.themePicker && (
-            <section id="theme">
-              <h2>{t('Settings.Theme')}</h2>
-              <div className={styles.setting}>
-                <Select
-                  label={t('Settings.Theme')}
-                  name="theme"
-                  value={settings.theme}
-                  options={themeOptions}
-                  onChange={changeTheme}
-                />
-              </div>
-            </section>
-          )}
+          <section id="theme">
+            <h2>{t('Settings.Theme')}</h2>
+            <div className={styles.setting}>
+              <Select
+                label={t('Settings.Theme')}
+                name="theme"
+                value={settings.theme}
+                options={themeOptions}
+                onChange={changeTheme}
+              />
+            </div>
+          </section>
 
           <section id="items">
             <h2>{t('Settings.Items')}</h2>

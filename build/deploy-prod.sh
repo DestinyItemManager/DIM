@@ -3,6 +3,12 @@
 git config --global user.email "destinyitemmanager@gmail.com"
 git config --global user.name "DIM Release Bot"
 
+if [ "$PATCH" = 'true' ]; then
+  VERSION=$(npm version patch --no-git-tag-version | sed 's/v//')
+else
+  VERSION=$(npm version minor --no-git-tag-version | sed 's/v//')
+fi
+
 awk '/## Next/{flag=1;next}/##/{flag=0}flag' docs/CHANGELOG.md >release-notes.txt
 
 # update changelog

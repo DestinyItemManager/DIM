@@ -10,12 +10,12 @@ import { ArmorSet, LockableBucketHashes, StatRanges } from 'app/loadout-builder/
 import { statTier } from 'app/loadout-builder/utils';
 import { randomSubclassConfiguration } from 'app/loadout-drawer/auto-loadouts';
 import { addItem, setLoadoutParameters } from 'app/loadout-drawer/loadout-drawer-reducer';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
 import {
   convertToLoadoutItem,
   newLoadout,
   newLoadoutFromEquipped,
 } from 'app/loadout-drawer/loadout-utils';
+import { Loadout } from 'app/loadout/loadout-types';
 import { armorStats } from 'app/search/d2-known-values';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import { normalToReducedMod } from 'data/d2/reduced-cost-mod-mappings';
@@ -256,12 +256,15 @@ describe('basic loadout analysis finding tests', () => {
             i.classType === store.classType &&
             i.bucket.hash === hash &&
             i.energy &&
-            (i.bucket.hash !== BucketHashes.ClassArmor || i.energy.energyCapacity >= 5) &&
+            (i.bucket.hash !== BucketHashes.ClassArmor || i.energy.energyCapacity >= 2) &&
             i.tier === 'Legendary' &&
             !i.masterwork &&
             i.stats?.every((stat) => stat.statHash !== StatHashes.Recovery || stat.base <= 20),
         )!,
     );
+
+    // Make sure we have an item from each bucket
+    expect(nonMasterworkedArmor.every((i) => i !== undefined)).toBe(true);
 
     let loadout = newLoadout(
       'Non masterworked armor',

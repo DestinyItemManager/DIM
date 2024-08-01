@@ -13,6 +13,7 @@ import {
   armor2PlugCategoryHashes,
 } from 'app/search/d2-known-values';
 import { DestinySocketCategoryStyle, TierType } from 'bungie-api-ts/destiny2';
+import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import {
   BucketHashes,
   ItemCategoryHashes,
@@ -136,6 +137,22 @@ export function getIntrinsicArmorPerkSocket(item: DimItem): DimSocket | undefine
   }
 }
 
+/**
+ * returns sockets that contains intrinsic perks even if those sockets are not
+ * the "Intrinsic" socket. This handles the exotic class items that were added
+ * in The Final Shape. Note that items with a normal intrinsic perk (so far)
+ * won't have anything here, while exotic class items (so far) don't have a
+ * normal intrinsic.
+ */
+export function getExtraIntrinsicPerkSockets(item: DimItem): DimSocket[] {
+  return item.isExotic && item.bucket.hash === BucketHashes.ClassArmor && item.sockets
+    ? item.sockets.allSockets
+        .filter((s) => s.isPerk && s.visibleInGame && socketContainsIntrinsicPlug(s))
+        // exotic class item intrinsics need to set isReusable false to avoid showing as selectable
+        .map((s) => ({ ...s, isReusable: false }))
+    : [];
+}
+
 export function socketContainsPlugWithCategory(
   socket: DimSocket,
   category: PlugCategoryHashes,
@@ -215,12 +232,14 @@ export const aspectSocketCategoryHashes: SocketCategoryHashes[] = [
   SocketCategoryHashes.Aspects_Abilities_Ikora,
   SocketCategoryHashes.Aspects_Abilities_Neomuna,
   SocketCategoryHashes.Aspects_Abilities_Stranger,
+  SocketCategoryHashes.Aspects_Abilities,
 ];
 
 export const fragmentSocketCategoryHashes: SocketCategoryHashes[] = [
   SocketCategoryHashes.Fragments_Abilities_Ikora,
   SocketCategoryHashes.Fragments_Abilities_Stranger,
   SocketCategoryHashes.Fragments_Abilities_Neomuna,
+  SocketCategoryHashes.Fragments_Abilities,
 ];
 
 export const subclassAbilitySocketCategoryHashes: SocketCategoryHashes[] = [
@@ -260,7 +279,9 @@ function filterSocketCategories(
       continue;
     }
     const categorySockets = getSocketsByIndexes(sockets, category.socketIndexes).filter(
-      (socketInfo) => socketInfo.plugged?.plugDef.displayProperties.name && allowSocket(socketInfo),
+      (socketInfo) =>
+        (socketInfo.plugged || socketInfo.plugOptions[0])?.plugDef.displayProperties.name &&
+        allowSocket(socketInfo),
     );
     if (categorySockets.length) {
       socketsByCategory.set(category, categorySockets);
@@ -275,10 +296,12 @@ function filterSocketCategories(
  * This shows empty catalyst sockets when the weapon has a catalyst
  * because it is useful info...
  */
-function isSocketEmpty(socket: DimSocket) {
+export function isSocketEmpty(socket: DimSocket) {
   return (
-    socket.plugged?.plugDef.hash === socket.emptyPlugItemHash &&
-    socket.plugged?.plugDef.plug.plugCategoryHash !== PlugCategoryHashes.V400EmptyExoticMasterwork
+    socket.plugged &&
+    (socket.plugged.plugDef.hash === socket.emptyPlugItemHash ||
+      emptyPlugHashes.has(socket.plugged?.plugDef.hash)) &&
+    socket.plugged.plugDef.plug.plugCategoryHash !== PlugCategoryHashes.V400EmptyExoticMasterwork
   );
 }
 
@@ -322,11 +345,15 @@ export function getWeaponSockets(
 
   const excludedPlugCategoryHashes = [
     PlugCategoryHashes.GenericAllVfx,
+    PlugCategoryHashes.CraftingPlugsWeaponsModsEnhancers,
     PlugCategoryHashes.CraftingPlugsWeaponsModsExtractors,
     // The weapon level socket is not interesting
     PlugCategoryHashes.CraftingPlugsWeaponsModsTransfusersLevel,
     // Hide catalyst socket for exotics with no known catalyst
     !item.catalystInfo && PlugCategoryHashes.V400EmptyExoticMasterwork,
+    PlugCategoryHashes.V300WeaponDamageTypeEnergy,
+    PlugCategoryHashes.V300WeaponDamageTypeAttack,
+    PlugCategoryHashes.V300WeaponDamageTypeKinetic,
   ];
 
   const modSocketsByCategory = filterSocketCategories(
@@ -339,7 +366,11 @@ export function getWeaponSockets(
       socket.plugged !== null &&
       !excludedPlugCategoryHashes.includes(socket.plugged.plugDef.plug.plugCategoryHash) &&
       socket !== archetypeSocket &&
-      !isDeepsightResonanceSocket(socket),
+      !isDeepsightResonanceSocket(socket) &&
+      // only show memento socket if it isn't empty
+      (socket.plugged.plugDef.plug.plugCategoryHash !==
+        PlugCategoryHashes.CraftingRecipesEmptySocket ||
+        !isSocketEmpty(socket)),
   );
 
   return {
@@ -372,6 +403,14 @@ export function getGeneralSockets(
     (!excludeEmptySockets || !isSocketEmpty(socketInfo)) &&
     // don't include these weird little solstice stat rerolling mechanic sockets
     !isEventArmorRerollSocket(socketInfo) &&
+    // never include the "pay for artifice upgrade" slot on exotic armor
+    socketInfo.plugged?.plugDef.plug.plugCategoryHash !==
+      PlugCategoryHashes.EnhancementsArtificeExotic &&
+    // exclude artifice slots the game has marked as not visible (on un-upgraded exotics)
+    !(
+      socketInfo.plugged?.plugDef.plug.plugCategoryHash ===
+        PlugCategoryHashes.EnhancementsArtifice && !socketInfo.visibleInGame
+    ) &&
     // Ghost shells unlock an activity mod slot when masterworked and hide the dummy locked slot
     (item.bucket.hash !== BucketHashes.Ghost ||
       socketInfo.socketDefinition.socketTypeHash !==

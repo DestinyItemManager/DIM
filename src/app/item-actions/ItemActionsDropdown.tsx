@@ -1,3 +1,4 @@
+import { SearchType } from '@destinyitemmanager/dim-api-types';
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { compareFilteredItems } from 'app/compare/actions';
 import { saveSearch } from 'app/dim-api/basic-actions';
@@ -10,8 +11,8 @@ import { DimStore } from 'app/inventory/store-types';
 import { itemMoveLoadout } from 'app/loadout-drawer/auto-loadouts';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { TagCommandInfo } from 'app/organizer/ItemActions';
+import { validateQuerySelector } from 'app/search/items/item-search-filter';
 import { canonicalizeQuery, parseQuery } from 'app/search/query-parser';
-import { validateQuerySelector } from 'app/search/search-filter';
 import { toggleSearchResults } from 'app/shell/actions';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -102,7 +103,7 @@ export default memo(function ItemActionsDropdown({
   bulkItemTags.push({ type: 'clear', label: t('Tags.ClearTag'), icon: clearIcon });
 
   // Is the current search saved?
-  const recentSearches = useSelector(recentSearchesSelector);
+  const recentSearches = useSelector(recentSearchesSelector(SearchType.Item));
   const validateQuery = useSelector(validateQuerySelector);
   const { valid, saveable } = validateQuery(searchQuery);
   const canonical = searchQuery ? canonicalizeQuery(parseQuery(searchQuery)) : '';
@@ -110,7 +111,7 @@ export default memo(function ItemActionsDropdown({
 
   const toggleSaved = () => {
     // TODO: keep track of the last search, if you search for something more narrow immediately after then replace?
-    dispatch(saveSearch({ query: searchQuery, saved: !saved }));
+    dispatch(saveSearch({ query: searchQuery, saved: !saved, type: SearchType.Item }));
   };
 
   const location = useLocation();
@@ -225,6 +226,7 @@ export default memo(function ItemActionsDropdown({
       className={styles.dropdownButton}
       offset={isPhonePortrait ? 6 : 2}
       fixed={fixed}
+      label={t('Header.SearchActions')}
     />
   );
 });

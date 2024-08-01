@@ -90,7 +90,6 @@ export const isNewSelector = (item: DimItem) => (state: RootState) =>
 
 const visibleCurrencies = [
   3159615086, // Glimmer
-  1022552290, // Legendary Shards
   2817410917, // Bright Dust
   3147280338, // Silver
   2534352370, // Legendary Marks (D1)
@@ -135,9 +134,8 @@ export const vendorCurrencyEngramsSelector = createSelector(
 
 const materialsWithMissingICH = [
   3702027555, // InventoryItem "Spoils of Conquest"
-  2329379380, // InventoryItem "Salvage Key"
-  2329379381, // InventoryItem "Deep Dive Key",
   1289622079, // InventoryItem "Strand Meditations"
+  3467984096, // InventoryItem "Exotic Cipher"
 ];
 
 /** materials/currencies that aren't top level stuff */

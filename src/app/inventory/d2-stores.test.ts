@@ -49,10 +49,11 @@ describe('process stores', () => {
   // This was a bug once where I forgot to populate plug options for sparrow
   // perks because their reusable plugs list is empty even though they have a
   // plugged plug.
+  // Alpine Dash is broken in-game (https://www.bungie.net/7/en/News/article/destiny_2_update_8_0_0_1 search:"Alpine Dash")
   it('sparrows should have perks', async () => {
     for (const store of stores) {
       for (const item of store.items) {
-        if (item.bucket.hash === BucketHashes.Vehicle && item.sockets) {
+        if (item.hash !== 3981634627 && item.bucket.hash === BucketHashes.Vehicle && item.sockets) {
           for (const socket of item.sockets.allSockets) {
             if (socket.plugOptions.length === 0) {
               throw new Error(`Sparrow "${item.name}" is missing perks`);

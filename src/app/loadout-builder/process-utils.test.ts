@@ -3,7 +3,6 @@ import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { armorStats } from 'app/search/d2-known-values';
 import { emptySet } from 'app/utils/empty';
 import { StatHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import {
   enhancedOperatorAugmentModHash,
   isArmor2Arms,
@@ -52,7 +51,7 @@ function modifyMod({
   energyCost?: number;
   tag?: string | null;
 }) {
-  const newMod = _.cloneDeep(mod);
+  const newMod = { ...mod };
 
   if (energyCost !== undefined) {
     newMod.energyCost = energyCost;
@@ -76,7 +75,7 @@ function modifyItem({
   compatibleModSeasons?: string[];
   isArtifice?: boolean;
 }) {
-  const newItem = _.cloneDeep(item);
+  const newItem = { ...item };
 
   if (remainingEnergyCapacity !== undefined) {
     newItem.remainingEnergyCapacity = remainingEnergyCapacity;
@@ -589,7 +588,7 @@ test('process-utils activity mods', async () => {
     name: `Item ${index}`,
     power: 1500,
     stats: [0, 0, 0, 0, 0, 0],
-    compatibleModSeasons: index === 2 ? [] : ['crotasend'],
+    compatibleModSeasons: index === 2 ? [] : ['nightmare'],
     remainingEnergyCapacity,
   });
 
@@ -619,10 +618,10 @@ test('process-utils activity mods', async () => {
   // Costs 1, 1, 1, 2
 
   const modHashes = [
-    3682741808, // InventoryItem "Benevolent Overflow"
-    71258198, // InventoryItem "Stoic When Panicked"
-    2631069573, // InventoryItem "Refreshing Thirst"
-    1768489065, // InventoryItem "Violent Pour"
+    1560574695, // InventoryItem "Nightmare Breaker"
+    1560574695, // InventoryItem "Nightmare Breaker"
+    1560574695, // InventoryItem "Nightmare Breaker"
+    1565861116, // InventoryItem "Enhanced Nightmare Crusher"
   ];
   const activityMods = modHashes.map(
     (hash) => defs.InventoryItem.get(hash) as PluggableInventoryItemDefinition,

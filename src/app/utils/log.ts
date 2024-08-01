@@ -53,7 +53,8 @@ export function errorLog(tag: string, message: unknown, ...args: unknown[]) {
  *
  * Unlike the real console.time, this returns a function that is used to end the timer.
  */
-export function timer(tag: string) {
-  console.time(tag);
-  return () => console.timeEnd(tag);
+export function timer(tag: string, message: string) {
+  const label = `[${tag}] ${message}`;
+  console.time(label);
+  return () => console.timeEnd(label);
 }

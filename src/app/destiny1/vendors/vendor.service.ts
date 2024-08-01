@@ -7,7 +7,6 @@ import { get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { filterMap } from 'app/utils/collections';
 import { errorLog } from 'app/utils/log';
-import copy from 'fast-copy';
 import _ from 'lodash';
 import { DestinyAccount } from '../../accounts/destiny-account';
 import { getVendorForCharacter } from '../../bungie-api/destiny1-api';
@@ -183,7 +182,7 @@ async function fetchVendor(
 }
 
 function mergeVendors([firstVendor, ...otherVendors]: Vendor[]) {
-  const mergedVendor = copy(firstVendor);
+  const mergedVendor = structuredClone(firstVendor);
 
   for (const vendor of otherVendors) {
     Object.assign(mergedVendor.cacheKeys, vendor.cacheKeys);

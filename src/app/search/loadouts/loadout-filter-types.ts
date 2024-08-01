@@ -1,8 +1,11 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimLanguage } from 'app/i18n';
+import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { LoadoutsByItem } from 'app/loadout-drawer/selectors';
+import { Loadout } from 'app/loadout/loadout-types';
+import { LoadoutsByItem } from 'app/loadout/selectors';
+import { FilterDefinition } from '../filter-types';
+import { FiltersMap, SearchConfig } from '../search-config';
 
 /**
  * A slice of data that could be used by loadout filter functions to
@@ -11,9 +14,13 @@ import { LoadoutsByItem } from 'app/loadout-drawer/selectors';
  * in search-filter.ts.
  */
 export interface LoadoutFilterContext {
-  currentStore: DimStore;
+  /**
+   * The selected store on the loadouts page
+   */
+  selectedLoadoutsStore: DimStore;
   loadoutsByItem: LoadoutsByItem;
   language: DimLanguage;
+  allItems: DimItem[];
   d2Definitions: D2ManifestDefinitions | undefined;
 }
 
@@ -23,5 +30,24 @@ export interface LoadoutFilterContext {
  */
 export interface LoadoutSuggestionsContext {
   loadouts?: Loadout[];
-  d2Manifest?: D2ManifestDefinitions;
+  /**
+   * The selected store on the loadouts page
+   */
+  selectedLoadoutsStore?: DimStore;
+  allItems?: DimItem[];
+  d2Definitions?: D2ManifestDefinitions;
 }
+
+export type LoadoutFilterDefinition = FilterDefinition<
+  Loadout,
+  LoadoutFilterContext,
+  LoadoutSuggestionsContext
+>;
+
+export type LoadoutFilterMap = FiltersMap<Loadout, LoadoutFilterContext, LoadoutSuggestionsContext>;
+
+export type LoadoutSearchConfig = SearchConfig<
+  Loadout,
+  LoadoutFilterContext,
+  LoadoutSuggestionsContext
+>;

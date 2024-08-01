@@ -13,7 +13,6 @@ import GenerateJsonPlugin from 'generate-json-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import _ from 'lodash';
 import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
-import marked from 'marked';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import svgToMiniDataURI from 'mini-svg-data-uri';
 import path from 'path';
@@ -25,7 +24,6 @@ import { InjectManifest } from 'workbox-webpack-plugin';
 import zlib from 'zlib';
 import csp from './content-security-policy';
 import { makeFeatureFlags } from './feature-flags';
-const renderer = new marked.Renderer();
 
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 
@@ -94,6 +92,7 @@ export default (env: Env) => {
       browsercheck: './src/browsercheck.js',
       earlyErrorReport: './src/earlyErrorReport.js',
       authReturn: './src/authReturn.ts',
+      backup: './src/backup.ts',
     },
 
     // https://github.com/webpack/webpack-dev-server/issues/2758
@@ -187,7 +186,17 @@ export default (env: Env) => {
               unsafe_math: true,
               unsafe_proto: true,
               pure_getters: true,
-              pure_funcs: ['JSON.parse', 'Object.values', 'Object.keys'],
+              pure_funcs: [
+                'JSON.parse',
+                'Object.values',
+                'Object.keys',
+                'Object.groupBy',
+                'Object.fromEntries',
+                'Map.groupBy',
+                'Map',
+                'Set',
+                'BigInt',
+              ],
             },
             mangle: { toplevel: true },
           },
@@ -341,9 +350,6 @@ export default (env: Env) => {
             },
             {
               loader: 'markdown-loader',
-              options: {
-                renderer,
-              },
             },
           ],
         },
@@ -435,6 +441,13 @@ export default (env: Env) => {
       filename: 'return.html',
       template: 'src/return.html',
       chunks: ['authReturn'],
+    }),
+
+    new HtmlWebpackPlugin({
+      inject: true,
+      filename: 'backup.html',
+      template: 'src/backup.html',
+      chunks: ['backup'],
     }),
 
     new HtmlWebpackPlugin({

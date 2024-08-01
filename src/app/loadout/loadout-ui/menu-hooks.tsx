@@ -9,8 +9,8 @@ import { DimStore } from 'app/inventory/store-types';
 import { findingDisplays } from 'app/loadout-analyzer/finding-display';
 import { useSummaryLoadoutsAnalysis } from 'app/loadout-analyzer/hooks';
 import { LoadoutAnalysisSummary, LoadoutFinding } from 'app/loadout-analyzer/types';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { isArmorModsOnly, isFashionOnly } from 'app/loadout-drawer/loadout-utils';
+import { Loadout } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS } from 'app/search/d2-known-values';
 import { ItemFilter } from 'app/search/filter-types';
@@ -25,29 +25,6 @@ import _ from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
 import styles from './menu-hooks.m.scss';
 
-/**
- * Set up the filter pills for loadouts - allowing for filtering by hashtag and some other special properties.
- * This returns a component ready to be used in the React tree as well as the list of filtered loadouts.
- */
-export function useLoadoutFilterPills(
-  savedLoadouts: Loadout[],
-  store: DimStore,
-  options: {
-    includeWarningPills?: boolean;
-    className?: string;
-    darkBackground?: boolean;
-    extra?: React.ReactNode;
-  } = {},
-): [filteredLoadouts: Loadout[], filterPillsElement: React.ReactNode, hasSelectedFilters: boolean] {
-  if (!$featureFlags.loadoutFilterPills) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useMemo(() => [savedLoadouts, null, false], [savedLoadouts]);
-  }
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useLoadoutFilterPillsInternal(savedLoadouts, store, options);
-}
-
 const loadoutSpecializations = [tl('Loadouts.FashionOnly'), tl('Loadouts.ModsOnly')] as const;
 type LoadoutSpecialization = (typeof loadoutSpecializations)[number];
 type FilterPillType =
@@ -61,7 +38,11 @@ type FilterPillType =
     }
   | { tag: 'finding'; finding: LoadoutFinding };
 
-function useLoadoutFilterPillsInternal(
+/**
+ * Set up the filter pills for loadouts - allowing for filtering by hashtag and some other special properties.
+ * This returns a component ready to be used in the React tree as well as the list of filtered loadouts.
+ */
+export function useLoadoutFilterPills(
   savedLoadouts: Loadout[],
   store: DimStore,
   {

@@ -7,7 +7,7 @@ import {
   sortedStoresSelector,
 } from 'app/inventory/selectors';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
-import { searchFilterSelector } from 'app/search/search-filter';
+import { searchFilterSelector } from 'app/search/items/item-search-filter';
 import { querySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
@@ -82,7 +82,7 @@ const subVendorsForCharacterSelector = currySelector(
             const vendor = toVendor(
               {
                 ...context,
-                itemComponents: vendorsResponse.itemComponents[vendorHash],
+                itemComponents: vendorsResponse.itemComponents?.[vendorHash],
               },
               item.previewVendorHash,
               vendorsResponse.vendors.data?.[vendorHash],

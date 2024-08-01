@@ -6,7 +6,7 @@ import { emptyArray } from 'app/utils/empty';
 import { warnLog } from 'app/utils/log';
 import { plugFitsIntoSocket } from 'app/utils/socket-utils';
 import { DimItem } from '../inventory/item-types';
-import { LoadoutItem, ResolvedLoadoutItem } from './loadout-types';
+import { LoadoutItem, ResolvedLoadoutItem } from '../loadout/loadout-types';
 import { findItemForLoadout } from './loadout-utils';
 
 let missingLoadoutItemId = 1;
@@ -49,7 +49,7 @@ export function getItemsFromLoadoutItems(
     if (item) {
       // If there are any mods for this item's bucket, and the item is equipped, add them to socket overrides
       const modsForBucket =
-        loadoutItem.equip && modsByBucket ? modsByBucket[item.bucket.hash] ?? [] : [];
+        loadoutItem.equip && modsByBucket ? (modsByBucket[item.bucket.hash] ?? []) : [];
 
       let overrides = loadoutItem.socketOverrides;
 
@@ -61,7 +61,7 @@ export function getItemsFromLoadoutItems(
       }
 
       // Apply socket overrides so the item appears as it should be configured in the loadout
-      const overriddenItem = useTheseDefs.isDestiny2()
+      const overriddenItem = useTheseDefs.isDestiny2
         ? applySocketOverrides(itemCreationContext, item, overrides)
         : item;
 
@@ -74,7 +74,7 @@ export function getItemsFromLoadoutItems(
             : { ...loadoutItem, socketOverrides: overrides },
       });
     } else {
-      const fakeItem = useTheseDefs.isDestiny2()
+      const fakeItem = useTheseDefs.isDestiny2
         ? makeFakeItem(itemCreationContext, loadoutItem.hash)
         : makeFakeD1Item(useTheseDefs, buckets, loadoutItem.hash);
       if (fakeItem) {

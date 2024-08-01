@@ -1,3 +1,4 @@
+import { LimitedDestinyVendorsResponse } from 'app/bungie-api/destiny2-api';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { ItemCreationContext } from 'app/inventory/store/d2-item-factory';
 import { VendorHashes, silverItemHash } from 'app/search/d2-known-values';
@@ -13,7 +14,6 @@ import {
   DestinyVendorDefinition,
   DestinyVendorGroupDefinition,
   DestinyVendorSaleItemComponent,
-  DestinyVendorsResponse,
 } from 'bungie-api-ts/destiny2';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -36,7 +36,7 @@ const vendorOrder = [VendorHashes.AdaTransmog, VendorHashes.Banshee, VendorHashe
 
 export function toVendorGroups(
   context: ItemCreationContext,
-  vendorsResponse: DestinyVendorsResponse,
+  vendorsResponse: LimitedDestinyVendorsResponse,
   characterId: string,
 ): D2VendorGroup[] {
   if (!vendorsResponse.vendorGroups.data) {
@@ -54,7 +54,7 @@ export function toVendorGroups(
           filterMap(group.vendorHashes, (vendorHash) => {
             const vendor = toVendor(
               // Override the item components from the profile with this vendor's item components
-              { ...context, itemComponents: vendorsResponse.itemComponents[vendorHash] },
+              { ...context, itemComponents: vendorsResponse.itemComponents?.[vendorHash] },
               vendorHash,
               vendorsResponse.vendors.data?.[vendorHash],
               characterId,
@@ -84,7 +84,7 @@ export function toVendor(
         [key: string]: DestinyVendorSaleItemComponent;
       }
     | undefined,
-  vendorsResponse: DestinyVendorsResponse | undefined,
+  vendorsResponse: LimitedDestinyVendorsResponse | undefined,
 ): D2Vendor | undefined {
   const { defs } = context;
   const vendorDef = defs.Vendor.get(vendorHash);
@@ -107,7 +107,7 @@ export function toVendor(
 
   const destinationHash =
     typeof vendor?.vendorLocationIndex === 'number' && vendor.vendorLocationIndex >= 0
-      ? vendorDef.locations[vendor.vendorLocationIndex].destinationHash
+      ? (vendorDef.locations[vendor.vendorLocationIndex]?.destinationHash ?? 0)
       : 0;
   const destinationDef = destinationHash ? defs.Destination.get(destinationHash) : undefined;
   const placeDef = destinationDef?.placeHash ? defs.Place.get(destinationDef.placeHash) : undefined;
@@ -140,7 +140,7 @@ export function toVendor(
 function gatherVendorCurrencies(
   defs: D2ManifestDefinitions,
   vendor: DestinyVendorDefinition,
-  vendorsResponse: DestinyVendorsResponse | undefined,
+  vendorsResponse: LimitedDestinyVendorsResponse | undefined,
   sales:
     | {
         [key: string]: DestinyVendorSaleItemComponent;

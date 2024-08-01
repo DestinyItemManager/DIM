@@ -250,6 +250,11 @@ export default tseslint.config(
           property: 'groupBy',
           message: 'Use Object.groupBy or Map.groupBy instead.',
         },
+        {
+          object: '_',
+          property: 'cloneDeep',
+          message: 'Use structuredClone instead.',
+        },
       ],
       'no-restricted-imports': [
         'error',

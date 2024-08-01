@@ -1,6 +1,7 @@
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { t } from 'app/i18next-t';
 import SearchBar from 'app/search/SearchBar';
+import { filterFactorySelector } from 'app/search/items/item-search-filter';
 import { uniqBy } from 'app/utils/collections';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -11,7 +12,6 @@ import Sheet from '../dim-ui/Sheet';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
 import { allItemsSelector } from '../inventory/selectors';
-import { filterFactorySelector } from '../search/search-filter';
 import { itemSorterSelector } from '../settings/item-sort';
 import './ItemPicker.scss';
 import { ItemPickerState } from './item-picker';

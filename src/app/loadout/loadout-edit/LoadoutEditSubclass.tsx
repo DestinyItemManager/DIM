@@ -3,12 +3,10 @@ import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector, storesSelector } from 'app/inventory/selectors';
-import { getDamageTypeForSubclassPlug } from 'app/inventory/subclass';
-import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import { itemCanBeInLoadout } from 'app/utils/item-utils';
-import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
@@ -47,17 +45,7 @@ export default function LoadoutEditSubclass({
     item.owner === storeId &&
     itemCanBeInLoadout(item);
 
-  const subclassItems = _.sortBy(allItems.filter(subclassItemFilter), (i) => {
-    if (i.sockets) {
-      // Sort by super damage hash
-      const superPlug = getFirstSocketByCategoryHash(i.sockets, SocketCategoryHashes.Super)?.plugged
-        ?.plugDef;
-      if (superPlug) {
-        return getDamageTypeForSubclassPlug(superPlug);
-      }
-    }
-    return undefined;
-  });
+  const subclassItems = _.sortBy(allItems.filter(subclassItemFilter), (i) => i.element?.enumValue);
 
   const getModRenderKey = createGetModRenderKey();
   const plugs = useMemo(() => getSubclassPlugs(defs, subclass), [subclass, defs]);

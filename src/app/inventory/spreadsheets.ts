@@ -1,13 +1,13 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { gaEvent } from 'app/google';
-import { t } from 'app/i18next-t';
-import { LoadoutsByItem, loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
+import { LoadoutsByItem, loadoutsByItemSelector } from 'app/loadout/selectors';
 import { D1_StatHashes } from 'app/search/d1-known-values';
+import D2Sources from 'app/search/items/search-filters/d2-sources';
 import { dimArmorStatHashByName } from 'app/search/search-filter-values';
-import D2Sources from 'app/search/search-filters/d2-sources';
 import { ThunkResult } from 'app/store/types';
 import { filterMap } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
+import { DimError } from 'app/utils/dim-error';
 import { download } from 'app/utils/download';
 import {
   getItemKillTrackerInfo,
@@ -21,7 +21,6 @@ import { getDisplayedItemSockets, getSocketsByIndexes } from 'app/utils/socket-u
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { D2EventInfo } from 'data/d2/d2-event-info-v2';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
-import D2MissingSources from 'data/d2/missing-source-info-v2';
 import _ from 'lodash';
 import Papa from 'papaparse';
 import { setItemNote, setItemTagsBulk } from './actions';
@@ -165,12 +164,12 @@ export function importTagsNotesFromCsv(files: File[]): ThunkResult<number | unde
       const contents = results.data;
 
       if (!contents?.length) {
-        throw new Error(t('Csv.EmptyFile'));
+        throw new DimError('Csv.EmptyFile');
       }
 
       const row = contents[0];
       if (!('Id' in row) || !('Hash' in row) || !('Tag' in row) || !('Notes' in row)) {
-        throw new Error(t('Csv.WrongFields'));
+        throw new DimError('Csv.WrongFields');
       }
 
       dispatch(
@@ -344,8 +343,7 @@ export function source(item: DimItem) {
       sourceKeys.find(
         (src) =>
           (item.source && D2Sources[src].sourceHashes?.includes(item.source)) ||
-          D2Sources[src].itemHashes?.includes(item.hash) ||
-          D2MissingSources[src]?.includes(item.hash),
+          D2Sources[src].itemHashes?.includes(item.hash),
       ) || ''
     );
   }
@@ -376,9 +374,6 @@ function downloadArmor(
       Equippable: equippable(item),
       [item.destinyVersion === 1 ? 'Light' : 'Power']: item.power,
     };
-    if (item.destinyVersion === 2) {
-      row['Power Limit'] = item.powerCap;
-    }
     if (item.destinyVersion === 2) {
       row['Energy Capacity'] = item.energy?.energyCapacity || undefined;
     }
@@ -482,9 +477,6 @@ function downloadWeapons(
       Element: item.element?.displayProperties.name,
       [item.destinyVersion === 1 ? 'Light' : 'Power']: item.power,
     };
-    if (item.destinyVersion === 2) {
-      row['Power Limit'] = item.powerCap;
-    }
     if (item.destinyVersion === 2) {
       row['Masterwork Type'] = getMasterworkStatNames(item.masterworkInfo) || undefined;
       row['Masterwork Tier'] = item.masterworkInfo?.tier || undefined;

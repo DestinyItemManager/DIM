@@ -54,7 +54,7 @@ export default function StreamDeckSettings() {
               href="https://marketplace.elgato.com/product/dim-stream-deck-11883ba5-c8db-4e3a-915f-612c5ba1b2e4"
             >
               <button type="button" className={clsx('dim-button', styles.button)}>
-                <AppIcon icon={faArrowCircleDown} /> {t('StreamDeck.Install')}
+                <AppIcon icon={faArrowCircleDown} ariaHidden /> {t('StreamDeck.Install')}
               </button>
             </ExternalLink>
           ) : (

@@ -13,8 +13,8 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { Suspense, lazy, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
+import { Loadout } from '../loadout/loadout-types';
 import { addItem$, editLoadout$ } from './loadout-events';
-import { Loadout } from './loadout-types';
 import { convertToLoadoutItem, newLoadout, pickBackingStore } from './loadout-utils';
 
 const LoadoutDrawer = lazy(
@@ -122,7 +122,7 @@ export default function LoadoutDrawerContainer({ account }: { account: DestinyAc
 
   // Load in a full loadout specified in the URL
   useEffect(() => {
-    if (!stores.length || !defs?.isDestiny2()) {
+    if (!stores.length || !defs?.isDestiny2) {
       return;
     }
     try {

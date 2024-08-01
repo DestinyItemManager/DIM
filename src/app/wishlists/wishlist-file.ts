@@ -2,6 +2,8 @@ import { emptySet } from 'app/utils/empty';
 import { timer, warnLog } from 'app/utils/log';
 import { DimWishList, WishListAndInfo, WishListInfo, WishListRoll } from './types';
 
+const TAG = 'wishlist';
+
 /**
  * The title should follow the following format:
  * title:This Is My Source File Title.
@@ -25,7 +27,7 @@ const notesLabel = '//notes:';
 export function toWishList(
   ...files: [url: string | undefined, contents: string][]
 ): WishListAndInfo {
-  const stopTimer = timer('Parse wish list');
+  const stopTimer = timer(TAG, 'Parse wish list');
   try {
     const wishList: WishListAndInfo = {
       wishListRolls: [],
@@ -79,7 +81,7 @@ export function toWishList(
       }
 
       if (dupes > 0) {
-        warnLog('wishlist', 'Discarded', dupes, 'duplicate rolls from wish list');
+        warnLog(TAG, 'Discarded', dupes, 'duplicate rolls from wish list', url);
       }
       wishList.infos.push(info);
     }

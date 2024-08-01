@@ -162,13 +162,26 @@ export function process(
             setStatistics.skipReasons.doubleExotic += classItems.length;
             continue;
           }
-
-          if (anyExotic && !helm.isExotic && !gaunt.isExotic && !chest.isExotic && !leg.isExotic) {
-            setStatistics.skipReasons.noExotic += classItems.length;
-            continue;
-          }
-
           for (const classItem of classItems) {
+            if (
+              classItem.isExotic &&
+              (leg.isExotic || chest.isExotic || gaunt.isExotic || helm.isExotic)
+            ) {
+              setStatistics.skipReasons.doubleExotic += classItems.length;
+              continue;
+            }
+            if (
+              anyExotic &&
+              !helm.isExotic &&
+              !gaunt.isExotic &&
+              !chest.isExotic &&
+              !leg.isExotic &&
+              !classItem.isExotic
+            ) {
+              setStatistics.skipReasons.noExotic += classItems.length;
+              continue;
+            }
+
             processStatistics.numProcessed++;
 
             const helmStats = statsCacheInStatOrder.get(helm)!;

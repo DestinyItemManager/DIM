@@ -43,6 +43,8 @@ import {
 import { DimApiState } from './reducer';
 import { apiPermissionGrantedSelector, makeProfileKeyFromAccount } from './selectors';
 
+const TAG = 'dim sync';
+
 const installApiPermissionObserver = _.once(<D extends Dispatch>(dispatch: D) => {
   // Observe API permission and reflect it into local storage
   // We could also use a thunk action instead of an observer... either way
@@ -95,7 +97,7 @@ const installObservers = _.once((dispatch: ThunkDispatch<RootState, undefined, A
               itemHashTags: current.itemHashTags,
               searches: current.searches,
             };
-            infoLog('dim sync', 'Saving profile data to IDB');
+            infoLog(TAG, 'Saving profile data to IDB');
             set('dim-api-profile', savedState);
           }
         },
@@ -130,10 +132,10 @@ function loadGlobalSettings(): ThunkResult {
     if (!getState().dimApi.globalSettingsLoaded) {
       try {
         const globalSettings = await getGlobalSettings();
-        infoLog('dim sync', 'globalSettings', globalSettings);
+        infoLog(TAG, 'globalSettings', globalSettings);
         dispatch(globalSettingsLoaded(globalSettings));
       } catch (e) {
-        errorLog('dim sync', 'Failed to load global settings from DIM API', e);
+        errorLog(TAG, 'Failed to load global settings from DIM API', e);
       }
     }
   };
@@ -253,13 +255,13 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
 
         dispatch(profileLoadError(e));
 
-        errorLog('loadDimApiData', 'Unable to get profile from DIM API', e);
+        errorLog(TAG, 'Unable to get profile from DIM API', e);
 
         if (e.name !== 'FatalTokenError') {
           // Wait, with exponential backoff
           getProfileBackoff++;
           const waitTime = getBackoffWaitTime(getProfileBackoff);
-          infoLog('loadDimApiData', 'Waiting', waitTime, 'ms before re-attempting profile fetch');
+          infoLog(TAG, 'Waiting', waitTime, 'ms before re-attempting profile fetch');
 
           // Wait, then retry. We don't await this here so we don't stop the finally block from running
           delay(waitTime).then(() => dispatch(loadDimApiData(forceLoad)));
@@ -290,7 +292,7 @@ function profileLastLoaded(dimApi: DimApiState, account: DestinyAccount | undefi
   return (
     Date.now() -
     (account
-      ? dimApi.profiles[makeProfileKeyFromAccount(account)]?.profileLastLoaded ?? 0
+      ? (dimApi.profiles[makeProfileKeyFromAccount(account)]?.profileLastLoaded ?? 0)
       : dimApi.profileLastLoaded)
   );
 }
@@ -323,7 +325,7 @@ function flushUpdates(): ThunkResult {
       return;
     }
 
-    infoLog('flushUpdates', 'Flushing queue of', dimApiState.updateInProgressWatermark, 'updates');
+    infoLog(TAG, 'Flushing queue of', dimApiState.updateInProgressWatermark, 'updates');
 
     // Only select the items that were frozen for update. They're guaranteed
     // to not change while we're updating and they'll be for a single profile.
@@ -337,7 +339,6 @@ function flushUpdates(): ThunkResult {
         firstWithAccount.destinyVersion,
         updates,
       );
-      infoLog('flushUpdates', 'got results', updates, results);
 
       // Quickly heal from being failure backoff
       flushUpdatesBackoff = Math.floor(flushUpdatesBackoff / 2);
@@ -356,14 +357,14 @@ function flushUpdates(): ThunkResult {
       if (flushUpdatesBackoff === 0) {
         showUpdateErrorNotification(e);
       }
-      errorLog('flushUpdates', 'Unable to save updates to DIM API', e);
+      errorLog(TAG, 'Unable to save updates to DIM API', e);
 
       // Wait, with exponential backoff
       flushUpdatesBackoff++;
       const waitTime = getBackoffWaitTime(flushUpdatesBackoff);
       // Don't wait for the retry, so we don't block profile loading
       (async () => {
-        infoLog('flushUpdates', 'Waiting', waitTime, 'ms before re-attempting updates');
+        infoLog(TAG, 'Waiting', waitTime, 'ms before re-attempting updates');
         await delay(waitTime);
 
         // Now mark the queue failed so it can be retried. Until

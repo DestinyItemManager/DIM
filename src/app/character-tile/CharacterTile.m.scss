@@ -43,7 +43,7 @@
 .vaultTile {
   composes: tileCommon;
   display: grid;
-  grid-template-areas: 'emblem class vaultCapacity' !important;
+  grid-template-areas: 'emblem class power' !important;
   grid-template-columns: 46px 1fr min-content;
   grid-template-rows: 1fr;
   align-items: center;
@@ -51,6 +51,9 @@
   gap: 0 6px;
   padding: 0 6px;
 
+  @include phone-portrait {
+    grid-template-areas: 'emblem class vaultCapacity' !important;
+  }
   // The vault needs a little border to stand out against some backgrounds
   border: 1px solid rgba(0, 0, 0, 0.3);
   border-right: none;
@@ -72,7 +75,7 @@
 }
 
 .bigText {
-  font-size: 20px;
+  font-size: 18px;
   margin-top: 2px;
 }
 
@@ -107,7 +110,7 @@
 }
 
 .vaultName {
-  font-size: 20px;
+  font-size: 16px;
   grid-area: class;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -131,8 +134,6 @@
 
 // Current power level
 .powerLevel {
-  composes: bigText;
-  grid-area: power;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif, 'Destiny Symbols';
   font-weight: 500;
   color: $power;
@@ -142,6 +143,23 @@
     vertical-align: 70%;
     font-size: 40%;
     margin-right: 2px;
+  }
+}
+
+.bigPowerLevel {
+  composes: bigText;
+  grid-area: power;
+
+  .vaultTile & {
+    font-size: 16px;
+  }
+}
+
+.smallPowerLevel {
+  text-align: right;
+
+  :global(.app-icon) {
+    font-size: 80%;
   }
 }
 

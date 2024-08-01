@@ -1,5 +1,7 @@
 import { currentAccountSelector } from 'app/accounts/selectors';
+import { DimItem } from 'app/inventory/item-types';
 import { VendorHashes } from 'app/search/d2-known-values';
+import { emptyArray } from 'app/utils/empty';
 import { currySelector } from 'app/utils/selectors';
 import { useLoadVendors } from 'app/vendors/hooks';
 import { characterVendorItemsSelector, vendorsByCharacterSelector } from 'app/vendors/selectors';
@@ -18,12 +20,22 @@ const allowedVendorHashes = [
   VendorHashes.DevrimKay,
   VendorHashes.Failsafe,
   VendorHashes.RivensWishesExotics,
+  VendorHashes.XurLegendaryItems,
 ];
 
 export const loVendorItemsSelector = currySelector(
-  createSelector(characterVendorItemsSelector, (allVendorItems) =>
-    allVendorItems.filter((item) => allowedVendorHashes.includes(item.vendor?.vendorHash ?? -1)),
-  ),
+  createSelector(characterVendorItemsSelector, (allVendorItems) => {
+    const relevantItems = allVendorItems.filter(
+      (item) =>
+        allowedVendorHashes.includes(item.vendor?.vendorHash ?? -1) &&
+        // filters out some dummy exotics
+        item.type !== 'Unknown',
+    );
+    // some signs that vendor items aren't yet loaded. to prevent recalcs, only add in vendor items once they're all ready
+    return !relevantItems.length || relevantItems.some((i) => i.missingSockets === 'not-loaded')
+      ? emptyArray<DimItem>()
+      : relevantItems;
+  }),
 );
 
 export function useLoVendorItems(selectedStoreId: string) {
@@ -34,7 +46,6 @@ export function useLoVendorItems(selectedStoreId: string) {
   useLoadVendors(account, selectedStoreId);
 
   return {
-    vendorItemsLoading: !vendors[selectedStoreId]?.vendorsResponse,
     vendorItems,
     error: vendors[selectedStoreId]?.error,
   };

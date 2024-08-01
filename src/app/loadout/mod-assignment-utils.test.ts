@@ -1,7 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { buildDefinedPlug } from 'app/inventory/store/sockets';
-import { Assignment, PluggingAction } from 'app/loadout-drawer/loadout-types';
+import { Assignment, PluggingAction } from 'app/loadout/loadout-types';
 import { getInterestingSocketMetadatas } from 'app/utils/item-utils';
 import { plugFitsIntoSocket } from 'app/utils/socket-utils';
 import { produce } from 'immer';

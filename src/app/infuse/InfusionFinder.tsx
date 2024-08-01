@@ -2,8 +2,9 @@ import { InfuseDirection } from '@destinyitemmanager/dim-api-types';
 import { gaPageView } from 'app/google';
 import { t } from 'app/i18next-t';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
-import { LoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { LoadoutItem } from 'app/loadout/loadout-types';
 import SearchBar from 'app/search/SearchBar';
+import { filterFactorySelector } from 'app/search/items/item-search-filter';
 import { useSetting } from 'app/settings/hooks';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { DimThunkDispatch } from 'app/store/types';
@@ -20,7 +21,6 @@ import { allItemsSelector, currentStoreSelector, getTagSelector } from '../inven
 import { DimStore } from '../inventory/store-types';
 import { convertToLoadoutItem, newLoadout } from '../loadout-drawer/loadout-utils';
 import { showNotification } from '../notifications/notifications';
-import { filterFactorySelector } from '../search/search-filter';
 import { AppIcon, faArrowCircleDown, faEquals, faRandom, helpIcon, plusIcon } from '../shell/icons';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 import styles from './InfusionFinder.m.scss';
@@ -318,11 +318,9 @@ function isInfusable(target: DimItem, source: DimItem) {
   }
 
   return (
-    source.infusionQuality &&
-    target.infusionQuality &&
-    target.infusionQuality.infusionCategoryHashes.some((h) =>
-      source.infusionQuality!.infusionCategoryHashes.includes(h),
-    ) &&
+    source.infusionCategoryHashes &&
+    target.infusionCategoryHashes &&
+    target.infusionCategoryHashes.some((h) => source.infusionCategoryHashes!.includes(h)) &&
     target.power < source.power
   );
 }

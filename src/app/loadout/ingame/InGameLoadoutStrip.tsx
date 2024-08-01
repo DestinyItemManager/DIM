@@ -5,8 +5,8 @@ import { t } from 'app/i18next-t';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { DimStore } from 'app/inventory/store-types';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { convertInGameLoadoutToDimLoadout } from 'app/loadout-drawer/loadout-type-converters';
-import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
+import { convertInGameLoadoutToDimLoadout } from 'app/loadout/loadout-type-converters';
+import { InGameLoadout, Loadout } from 'app/loadout/loadout-types';
 import { AppIcon, faCheckCircle, faExclamationCircle, saveIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
@@ -211,7 +211,13 @@ function InGameLoadoutTile({
           {loadoutIcon}
         </PressTip>
       )}
-      <Dropdown kebab options={options} placement="bottom-end" className={styles.kebab} />
+      <Dropdown
+        label={t('Loadouts.InGameActions')}
+        kebab
+        options={options}
+        placement="bottom-end"
+        className={styles.kebab}
+      />
     </div>
   );
 }

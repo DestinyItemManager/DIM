@@ -1,7 +1,7 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { useDefinitions } from 'app/manifest/selectors';
-import { filteredItemsSelector } from 'app/search/search-filter';
+import { filteredItemsSelector } from 'app/search/items/item-search-filter';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -79,6 +79,7 @@ const d2SelectionTree: ItemCategoryTreeNode = {
     {
       id: 'weapons',
       itemCategoryHash: ItemCategoryHashes.Weapon,
+      terminal: true,
 
       subCategories: [
         {
