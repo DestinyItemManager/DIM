@@ -7,6 +7,7 @@ import jsxA11y from 'eslint-plugin-jsx-a11y';
 import lodash from 'eslint-plugin-lodash';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRecommended from 'eslint-plugin-react/configs/recommended.js';
+import * as regexpPlugin from 'eslint-plugin-regexp';
 import sonarjs from 'eslint-plugin-sonarjs';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
@@ -25,6 +26,7 @@ export default tseslint.config(
     },
   },
   ...tseslint.configs.stylisticTypeChecked,
+  regexpPlugin.configs['flat/recommended'],
   {
     name: 'react',
     ...fixupConfigRules(reactRecommended)[0],
