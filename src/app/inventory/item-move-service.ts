@@ -1003,13 +1003,15 @@ export function executeMoveItem(
       }
     }
 
-    await dispatch(
-      ensureValidTransfer(equip, target, item, amount, excludes, reservations, session),
-    );
-
-    // Replace the target store - ensureValidTransfer may have reloaded it
-    target = getStore(getStores(), target.id)!;
-    source = getStore(getStores(), item.owner)!;
+    // for any case that's not char-to-char, we can free up space ahead of time
+    if (source.isVault || target.isVault || source.id === target.id || item.bucket.accountWide) {
+      await dispatch(
+        ensureValidTransfer(equip, target, item, amount, excludes, reservations, session),
+      );
+      // Replace the target store - ensureValidTransfer may have reloaded it
+      target = getStore(getStores(), target.id)!;
+      source = getStore(getStores(), item.owner)!;
+    }
 
     // Get from postmaster first
     if (item.location.inPostmaster) {
@@ -1031,7 +1033,29 @@ export function executeMoveItem(
         if (item.equipped) {
           item = await dispatch(dequipItem(item, session));
         }
+        // for char to char, two moves are required: char to vault then vault to char
+        // make sure the vault has space before trying to vault the item
+        await dispatch(
+          ensureValidTransfer(
+            false,
+            getVault(getStores())!,
+            item,
+            amount,
+            excludes,
+            reservations,
+            session,
+          ),
+        );
+        target = getStore(getStores(), target.id)!;
+        source = getStore(getStores(), item.owner)!;
         item = await dispatch(moveToVault(item, amount, session));
+
+        // now make sure the target char has space before trying to unvault the item
+        await dispatch(
+          ensureValidTransfer(equip, target, item, amount, excludes, reservations, session),
+        );
+        target = getStore(getStores(), target.id)!;
+        source = getStore(getStores(), item.owner)!;
         item = await dispatch(moveToStore(item, target, equip, amount, session));
       }
       if (equip && !item.equipped) {
