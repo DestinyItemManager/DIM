@@ -11,6 +11,7 @@
   "type": "module",
   "scripts": {
     "test": "jest -i src/testing/precache-manifest.test.ts && NODE_ENV=test LOCAL_MANIFEST=true jest --verbose",
+    "test:coverage": "LOCAL_MANIFEST=true jest --coverage",
     "lint": "pnpm run '/^lint:.*/'",
     "lint:eslint": "eslint --version && eslint src --ext .js,.ts,.tsx",
     "lint:prettier": "prettier \"src/**/*.{js,ts,tsx,cjs,mjs,cts,mts,scss}\" --check",
