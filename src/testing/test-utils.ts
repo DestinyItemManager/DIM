@@ -235,7 +235,7 @@ export const getShellState = (chance: Chance.Chance): ShellState => ({
   searchQuery: chance.word(),
   searchQueryVersion: chance.d10(),
   searchResultsOpen: chance.bool(),
-  loadingMessages: chance.n(chance.word, chance.d6()),
+  loadingMessages: chance.n(() => chance.word(), chance.d6()),
   bungieAlerts: [], //GlobalAlert[];
 });
 
@@ -246,7 +246,7 @@ export const getLoadoutsState = (chance: Chance.Chance): LoadoutsState => ({
 
 export const getWishListRoll = (chance: Chance.Chance): WishListRoll => ({
   itemHash: chance.natural(),
-  recommendedPerks: new Set(chance.n(chance.natural, 4)),
+  recommendedPerks: new Set(chance.n(() => chance.natural(), 4)),
   isExpertMode: chance.bool(),
   isUndesirable: chance.bool(),
   notes: chance.sentence(),
@@ -335,7 +335,7 @@ export const getDimApiState = (chance: Chance.Chance): DimApiState => ({
           id: chance.string(),
         },
       },
-      triumphs: chance.n(chance.natural, chance.d6()),
+      triumphs: chance.n(() => chance.natural(), chance.d6()),
     },
   },
   searches: {
@@ -350,20 +350,18 @@ export const getInGameLoadoutState = (chance: Chance.Chance): InGameLoadoutState
   loadouts: { [chance.string()]: [] },
 });
 
-export const getTestRootState = (chance: Chance.Chance): RootState => {
-  return {
-    accounts: getTestAccountsState(chance),
-    inventory: getInventoryState(chance),
-    shell: getShellState(chance),
-    loadouts: getLoadoutsState(chance),
-    wishLists: getWishListsState(chance),
-    farming: getFarmingState(chance),
-    manifest: {},
-    vendors: getVendorsState(chance),
-    compare: {},
-    streamDeck: getStreamDeckState(chance),
-    dimApi: getDimApiState(chance),
-    clarity: {},
-    inGameLoadouts: getInGameLoadoutState(chance),
-  };
-};
+export const getTestRootState = (chance: Chance.Chance): RootState => ({
+  accounts: getTestAccountsState(chance),
+  inventory: getInventoryState(chance),
+  shell: getShellState(chance),
+  loadouts: getLoadoutsState(chance),
+  wishLists: getWishListsState(chance),
+  farming: getFarmingState(chance),
+  manifest: {},
+  vendors: getVendorsState(chance),
+  compare: {},
+  streamDeck: getStreamDeckState(chance),
+  dimApi: getDimApiState(chance),
+  clarity: {},
+  inGameLoadouts: getInGameLoadoutState(chance),
+});
