@@ -223,14 +223,14 @@ export const getTestDestinyAccount = (chance: Chance.Chance): DestinyAccount => 
   lastPlayed: new Date(),
 });
 
-export const getInventoryState = (chance: Chance.Chance) => ({
+export const getTestInventoryState = (chance: Chance.Chance) => ({
   stores: [], //DimStore[];
   currencies: [], //AccountCurrency[],
   newItems: new Set(''), //Set<string>
   newItemsLoaded: chance.bool(),
 });
 
-export const getShellState = (chance: Chance.Chance): ShellState => ({
+export const getTestShellState = (chance: Chance.Chance): ShellState => ({
   isPhonePortrait: chance.bool(),
   searchQuery: chance.word(),
   searchQueryVersion: chance.d10(),
@@ -239,12 +239,12 @@ export const getShellState = (chance: Chance.Chance): ShellState => ({
   bungieAlerts: [], //GlobalAlert[];
 });
 
-export const getLoadoutsState = (chance: Chance.Chance): LoadoutsState => ({
+export const getTestLoadoutsState = (chance: Chance.Chance): LoadoutsState => ({
   previousLoadouts: { [chance.string()]: [] },
   selectedLoadoutStoreId: chance.pickone([chance.string(), undefined]),
 });
 
-export const getWishListRoll = (chance: Chance.Chance): WishListRoll => ({
+export const getTestWishListRoll = (chance: Chance.Chance): WishListRoll => ({
   itemHash: chance.natural(),
   recommendedPerks: new Set(chance.n(() => chance.natural(), 4)),
   isExpertMode: chance.bool(),
@@ -252,43 +252,43 @@ export const getWishListRoll = (chance: Chance.Chance): WishListRoll => ({
   notes: chance.sentence(),
 });
 
-export const getWishListInfo = (chance: Chance.Chance): WishListInfo => ({
+export const getTestWishListInfo = (chance: Chance.Chance): WishListInfo => ({
   url: chance.pickone([chance.url(), undefined]),
   title: chance.sentence(),
   description: chance.sentence(),
   numRolls: chance.d10(),
 });
 
-export const getWishListAndInfo = (chance: Chance.Chance): WishListAndInfo => ({
-  wishListRolls: chance.n(() => getWishListRoll(chance), chance.d10()),
+export const getTestWishListAndInfo = (chance: Chance.Chance): WishListAndInfo => ({
+  wishListRolls: chance.n(() => getTestWishListRoll(chance), chance.d4()),
   source: chance.url(),
-  infos: chance.n(() => getWishListInfo(chance), chance.d4()),
+  infos: chance.n(() => getTestWishListInfo(chance), chance.d4()),
 });
 
-export const getWishListsState = (chance: Chance.Chance): WishListsState => ({
+export const getTestWishListsState = (chance: Chance.Chance): WishListsState => ({
   loaded: chance.bool(),
-  wishListAndInfo: getWishListAndInfo(chance),
+  wishListAndInfo: getTestWishListAndInfo(chance),
   lastFetched: new Date(),
 });
 
-export const getFarmingState = (chance: Chance.Chance): FarmingState => ({
+export const getTestFarmingState = (chance: Chance.Chance): FarmingState => ({
   storeId: chance.string(),
   numInterruptions: chance.d4(),
 });
 
-export const getVendorsState = (chance: Chance.Chance): VendorsState => ({
+export const getTestVendorsState = (chance: Chance.Chance): VendorsState => ({
   vendorsByCharacter: {
     [chance.string()]: {},
   },
   showUnacquiredOnly: chance.bool(),
 });
 
-export const getStreamDeckState = (chance: Chance.Chance): StreamDeckState => ({
+export const getTestStreamDeckState = (chance: Chance.Chance): StreamDeckState => ({
   enabled: chance.bool(),
   connected: chance.bool(),
 });
 
-export const getGlobalSettings = (chance: Chance.Chance): GlobalSettings => ({
+export const getTestGlobalSettings = (chance: Chance.Chance): GlobalSettings => ({
   dimApiEnabled: chance.bool(),
   destinyProfileMinimumRefreshInterval: chance.d30(),
   destinyProfileRefreshInterval: chance.d30(),
@@ -298,21 +298,21 @@ export const getGlobalSettings = (chance: Chance.Chance): GlobalSettings => ({
   showIssueBanner: chance.bool(),
 });
 
-export const getLoadoutItem = (chance: Chance.Chance): LoadoutItem => ({
+export const getTestLoadoutItem = (chance: Chance.Chance): LoadoutItem => ({
   hash: chance.natural(),
 });
 
-export const getLoadout = (chance: Chance.Chance): Loadout => ({
+export const getTestLoadout = (chance: Chance.Chance): Loadout => ({
   id: chance.guid(),
   name: chance.sentence(),
   classType: chance.d4(),
   clearSpace: chance.bool(),
-  equipped: chance.n(() => getLoadoutItem(chance), chance.d10()),
-  unequipped: chance.n(() => getLoadoutItem(chance), chance.d10()),
+  equipped: chance.n(() => getTestLoadoutItem(chance), chance.d10()),
+  unequipped: chance.n(() => getTestLoadoutItem(chance), chance.d10()),
 });
 
-export const getDimApiState = (chance: Chance.Chance): DimApiState => ({
-  globalSettings: getGlobalSettings(chance),
+export const getTestDimApiState = (chance: Chance.Chance): DimApiState => ({
+  globalSettings: getTestGlobalSettings(chance),
   globalSettingsLoaded: chance.bool(),
   apiPermissionGranted: chance.pickone([chance.bool(), null]),
   profileLoadedFromIndexedDb: chance.bool(),
@@ -328,7 +328,7 @@ export const getDimApiState = (chance: Chance.Chance): DimApiState => ({
     [chance.string()]: {
       profileLastLoaded: chance.timestamp(),
       loadouts: {
-        [chance.string()]: getLoadout(chance),
+        [chance.string()]: getTestLoadout(chance),
       },
       tags: {
         [chance.string()]: {
@@ -346,22 +346,22 @@ export const getDimApiState = (chance: Chance.Chance): DimApiState => ({
   updateInProgressWatermark: chance.d6() - 1,
 });
 
-export const getInGameLoadoutState = (chance: Chance.Chance): InGameLoadoutState => ({
+export const getTestInGameLoadoutState = (chance: Chance.Chance): InGameLoadoutState => ({
   loadouts: { [chance.string()]: [] },
 });
 
 export const getTestRootState = (chance: Chance.Chance): RootState => ({
   accounts: getTestAccountsState(chance),
-  inventory: getInventoryState(chance),
-  shell: getShellState(chance),
-  loadouts: getLoadoutsState(chance),
-  wishLists: getWishListsState(chance),
-  farming: getFarmingState(chance),
+  inventory: getTestInventoryState(chance),
+  shell: getTestShellState(chance),
+  loadouts: getTestLoadoutsState(chance),
+  wishLists: getTestWishListsState(chance),
+  farming: getTestFarmingState(chance),
   manifest: {},
-  vendors: getVendorsState(chance),
+  vendors: getTestVendorsState(chance),
   compare: {},
-  streamDeck: getStreamDeckState(chance),
-  dimApi: getDimApiState(chance),
+  streamDeck: getTestStreamDeckState(chance),
+  dimApi: getTestDimApiState(chance),
   clarity: {},
-  inGameLoadouts: getInGameLoadoutState(chance),
+  inGameLoadouts: getTestInGameLoadoutState(chance),
 });
