@@ -64,4 +64,8 @@ describe('wishlists selectors', () => {
       ]);
     });
   });
+
+  describe('wishListRollsForItemHashSelector', () => {
+    it('should return wishlist rolls that match the item hash', () => {});
+  });
 });
