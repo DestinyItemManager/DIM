@@ -16,7 +16,7 @@ export const wishListsByHashSelector = createSelector(wishListsSelector, (wls) =
 
 export const wishListRollsForItemHashSelector =
   ({ hash, itemCategoryHashes }: DimItem) =>
-  (state: RootState) =>
+  (state: RootState): WishListRoll[] =>
     [hash, ...itemCategoryHashes].flatMap(
       (current: number) =>
         wishListsByHashSelector(state).get(current) ?? emptyArray<WishListRoll>(),

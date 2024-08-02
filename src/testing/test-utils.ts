@@ -223,10 +223,10 @@ export const getTestDestinyAccount = (chance: Chance.Chance): DestinyAccount => 
   lastPlayed: new Date(),
 });
 
-export const getTestInventoryState = (chance: Chance.Chance) => ({
-  stores: [], //DimStore[];
-  currencies: [], //AccountCurrency[],
-  newItems: new Set(''), //Set<string>
+export const getTestInventoryState = async (chance: Chance.Chance) => ({
+  stores: await getTestStores(),
+  currencies: [],
+  newItems: new Set(''),
   newItemsLoaded: chance.bool(),
 });
 
@@ -236,7 +236,7 @@ export const getTestShellState = (chance: Chance.Chance): ShellState => ({
   searchQueryVersion: chance.d10(),
   searchResultsOpen: chance.bool(),
   loadingMessages: chance.n(() => chance.word(), chance.d6()),
-  bungieAlerts: [], //GlobalAlert[];
+  bungieAlerts: [],
 });
 
 export const getTestLoadoutsState = (chance: Chance.Chance): LoadoutsState => ({
@@ -350,9 +350,9 @@ export const getTestInGameLoadoutState = (chance: Chance.Chance): InGameLoadoutS
   loadouts: { [chance.string()]: [] },
 });
 
-export const getTestRootState = (chance: Chance.Chance): RootState => ({
+export const getTestRootState = async (chance: Chance.Chance): Promise<RootState> => ({
   accounts: getTestAccountsState(chance),
-  inventory: getTestInventoryState(chance),
+  inventory: await getTestInventoryState(chance),
   shell: getTestShellState(chance),
   loadouts: getTestLoadoutsState(chance),
   wishLists: getTestWishListsState(chance),
