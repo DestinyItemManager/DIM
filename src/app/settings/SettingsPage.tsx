@@ -90,13 +90,16 @@ export default function SettingsPage() {
       !i.deepsightInfo,
   );
   const exampleArmor = allItems.find((i) => i.bucket.sort === 'Armor' && !i.isExotic);
+  const exampleArchivedArmor = allItems.find(
+    (i) => i !== exampleArmor && i.bucket.sort === 'Armor' && !i.isExotic,
+  );
   const godRoll = {
-    wishListPerks: new Set(),
+    wishListPerks: new Set<number>(),
     notes: undefined,
     isUndesirable: false,
   };
   const badRoll = {
-    wishListPerks: new Set(),
+    wishListPerks: new Set<number>(),
     notes: undefined,
     isUndesirable: true,
   };
@@ -332,7 +335,15 @@ export default function SettingsPage() {
                 <InventoryItem
                   item={exampleArmor}
                   isNew={settings.showNewItems}
+                  autoLockTagged={settings.autoLockTagged}
+                />
+              )}
+              {exampleArchivedArmor && (
+                <InventoryItem
+                  item={exampleArchivedArmor}
+                  isNew={settings.showNewItems}
                   tag="archive"
+                  searchHidden={true}
                   autoLockTagged={settings.autoLockTagged}
                 />
               )}
