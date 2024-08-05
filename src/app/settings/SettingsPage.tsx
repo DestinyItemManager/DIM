@@ -69,25 +69,9 @@ export default function SettingsPage() {
   const exampleWeapon = allItems.find(
     (i) => i.bucket.sort === 'Weapons' && !i.isExotic && !i.masterwork && !i.deepsightInfo,
   );
-  const exampleWeaponBad = allItems.find(
-    (i) =>
-      i !== exampleWeapon &&
-      i.bucket.sort === 'Weapons' &&
-      !i.isExotic &&
-      !i.masterwork &&
-      !i.deepsightInfo,
-  );
   // Include a masterworked item because they look different in some themes
   const exampleWeaponMasterworked = allItems.find(
     (i) => i.bucket.sort === 'Weapons' && !i.isExotic && i.masterwork && !i.deepsightInfo,
-  );
-  const exampleWeaponMasterworkedBad = allItems.find(
-    (i) =>
-      i !== exampleWeaponMasterworked &&
-      i.bucket.sort === 'Weapons' &&
-      !i.isExotic &&
-      i.masterwork &&
-      !i.deepsightInfo,
   );
   const exampleArmor = allItems.find((i) => i.bucket.sort === 'Armor' && !i.isExotic);
   const exampleArchivedArmor = allItems.find(
@@ -97,11 +81,6 @@ export default function SettingsPage() {
     wishListPerks: new Set<number>(),
     notes: undefined,
     isUndesirable: false,
-  };
-  const badRoll = {
-    wishListPerks: new Set<number>(),
-    notes: undefined,
-    isUndesirable: true,
   };
 
   const onCheckChange = (checked: boolean, name: keyof Settings) => {
@@ -304,30 +283,12 @@ export default function SettingsPage() {
                   autoLockTagged={settings.autoLockTagged}
                 />
               )}
-              {exampleWeaponBad && (
-                <InventoryItem
-                  item={exampleWeaponBad}
-                  isNew={settings.showNewItems}
-                  tag="infuse"
-                  wishlistRoll={badRoll}
-                  autoLockTagged={settings.autoLockTagged}
-                />
-              )}
               {exampleWeaponMasterworked && (
                 <InventoryItem
                   item={exampleWeaponMasterworked}
                   isNew={settings.showNewItems}
                   tag="favorite"
                   wishlistRoll={godRoll}
-                  autoLockTagged={settings.autoLockTagged}
-                />
-              )}
-              {exampleWeaponMasterworkedBad && (
-                <InventoryItem
-                  item={exampleWeaponMasterworkedBad}
-                  isNew={settings.showNewItems}
-                  tag="junk"
-                  wishlistRoll={badRoll}
                   autoLockTagged={settings.autoLockTagged}
                 />
               )}
