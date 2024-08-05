@@ -40,7 +40,7 @@
     "bcu": "node src/build-browsercheck-utils.js && prettier --write src/browsercheck-utils.js",
     "fa-subset": "node src/fa-subset.js",
     "prepare": "husky",
-    "eslint-inspect": "pnpm dlx pnpm --package=eslint --package=@eslint/config-inspector eslint-config-inspector",
+    "eslint-inspect": "pnpm dlx @eslint/config-inspector",
     "deps:stale": "pnpm outdated --long",
     "deps:update": "pnpm up -i --latest",
     "deps:pnpm": "corepack use 'pnpm@*'"
