@@ -3,6 +3,8 @@
 ## 8.31.0 <span class="changelog-date">(2024-08-04)</span>
 
 * Improved item move logic to do a better job of making room for transfers between characters.
+* Fixed single-character mode hiding cosmetic items (ghosts, etc) that are equipped on other characters. Now they are properly shown as being in the "vault".
+* The Planetary Piston Hammer item now shows the number of charges.
 
 ## 8.30.0 <span class="changelog-date">(2024-07-28)</span>
 
