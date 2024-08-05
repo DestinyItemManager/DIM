@@ -34,7 +34,7 @@ export default function AllWishlistRolls({
    */
   realAvailablePlugHashes?: number[];
 }) {
-  const wishlistRolls = useSelector(wishListRollsForItemHashSelector(item.hash));
+  const wishlistRolls: WishListRoll[] = useSelector(wishListRollsForItemHashSelector(item));
   const [goodRolls, badRolls] = _.partition(wishlistRolls, (r) => !r.isUndesirable);
 
   return (
