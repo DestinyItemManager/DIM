@@ -46,7 +46,7 @@ function isLoadoutCompatibleWithStore(loadout: Loadout, store: DimStore | undefi
 type EquippedItemBuckets = Record<string, DimItem[]>;
 
 /**  Convenience check for items that contribute to power level */
-function equipsAllItemsForPowerLevel(items: EquippedItemBuckets): Boolean {
+function equipsAllItemsForPowerLevel(items: EquippedItemBuckets): boolean {
   return (
     (items[BucketHashes.KineticWeapons]?.length > 0 &&
       items[BucketHashes.EnergyWeapons]?.length > 0 &&

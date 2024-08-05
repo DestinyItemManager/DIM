@@ -1290,7 +1290,7 @@ function allModsAreAlreadyApplied(
       return false;
     } else {
       // the mod was found, but we have consumed this copy of it
-      delete existingMods[foundAt];
+      existingMods.splice(foundAt, 1);
       return true;
     }
   });

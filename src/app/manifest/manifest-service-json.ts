@@ -166,7 +166,7 @@ function loadManifest(tableAllowList: string[]): ThunkResult<AllDestinyManifestC
 
     try {
       return await loadManifestFromCache(version, tableAllowList);
-    } catch (e) {
+    } catch {
       return dispatch(loadManifestRemote(version, components, tableAllowList));
     }
   };

@@ -1,4 +1,4 @@
-import { I18nKey, t } from 'app/i18next-t';
+import { I18nKey, type t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 type I18nInput = Parameters<typeof t>;
 

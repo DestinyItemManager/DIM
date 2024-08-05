@@ -20,7 +20,7 @@ export function safariTouchFix() {
     });
     window.addEventListener('testPassive', noop, opts);
     window.removeEventListener('testPassive', noop, opts);
-  } catch (e) {}
+  } catch {}
 
   supportsPassive
     ? window.addEventListener('touchmove', noop, { passive: false })

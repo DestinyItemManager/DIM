@@ -21,7 +21,7 @@ export default function LoadoutBucketDropTarget({ onItemLocked, children, classN
   const [{ isOver, canDrop }, dropRef] = useDrop<
     DimItem,
     unknown,
-    { isOver: Boolean; canDrop: boolean }
+    { isOver: boolean; canDrop: boolean }
   >(
     () => ({
       accept: bucketTypes,

@@ -523,11 +523,9 @@ export default (env: Env) => {
 
   if (env.dev) {
     // In dev we use babel to compile TS, and fork off a separate typechecker
-    plugins.push(
-      new ForkTsCheckerWebpackPlugin({
-        eslint: { files: './src/**/*.{ts,tsx,cjs,mjs,cts,mts,js,jsx}' },
-      }),
-    );
+    plugins.push(new ForkTsCheckerWebpackPlugin());
+
+    // TODO: maybe reintroduce https://webpack.js.org/plugins/eslint-webpack-plugin/
 
     if (process.env.SNORETOAST_DISABLE) {
       console.log("Disabling build notifications as 'SNORETOAST_DISABLE' was defined");

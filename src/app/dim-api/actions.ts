@@ -222,7 +222,7 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
       try {
         await dispatch(flushUpdates()); // flushUpdates will call loadDimApiData again at the end
         return;
-      } catch (e) {}
+      } catch {}
     }
 
     // get current account

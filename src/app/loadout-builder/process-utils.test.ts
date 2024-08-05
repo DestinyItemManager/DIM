@@ -678,6 +678,6 @@ test('process-utils activity mods', async () => {
     0,
     resolvedStatConstraints,
     minMaxesInStatOrder,
-  )!;
+  );
   expect(minMaxesInStatOrder.map((stat) => stat.maxTier)).toEqual([5, 5, 6, 6, 5, 6]);
 });
