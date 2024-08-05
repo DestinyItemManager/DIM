@@ -5,7 +5,7 @@ import { getCraftedSocket } from 'app/inventory/store/crafted';
 import { KillTrackerInfo } from 'app/item-popup/KillTracker';
 import Objective from 'app/progress/Objective';
 import { percent, percentWithSingleDecimal } from 'app/shell/formatters';
-import { AppIcon, shapedIcon } from 'app/shell/icons';
+import { AppIcon, enhancedIcon, shapedIcon } from 'app/shell/icons';
 import { filterMap } from 'app/utils/collections';
 import { isKillTrackerSocket, plugToKillTracker } from 'app/utils/item-utils';
 import styles from './WeaponCraftedInfo.m.scss';
@@ -67,7 +67,10 @@ function CraftedDataMedallion({ item }: { item: DimItem }) {
         </>
       }
     >
-      <AppIcon className={styles.patternIcon} icon={shapedIcon} />
+      <AppIcon
+        className={styles.patternIcon}
+        icon={item.crafted === 'enhanced' ? enhancedIcon : shapedIcon}
+      />
     </PressTip>
   );
 }
