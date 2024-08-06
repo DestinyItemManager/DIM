@@ -44,7 +44,7 @@ describe('vaultWeaponGroupingSelector', () => {
       },
       {
         ...firstItem,
-        typeName: undefined as any,
+        typeName: undefined as unknown as string,
         itemCategoryHashes: [0],
       },
       {

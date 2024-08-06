@@ -135,7 +135,7 @@ export interface D1InventoryItemDefinition {
   equippable: boolean;
   instanced: boolean;
   rewardItemHash: number;
-  values: {};
+  values: object;
   itemType: DestinyItemType;
   itemSubType: DestinyItemSubType;
   classType: DestinyClass;

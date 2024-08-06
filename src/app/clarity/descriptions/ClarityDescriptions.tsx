@@ -24,7 +24,7 @@ const joinClassNames = (classNames?: (keyof typeof styles)[]) =>
       ?:[%°+] : optionally include %, ° and + suffixes
          \b|$ : stop at a word boundary or the end of the string
 */
-const boldTextRegEx = /(^|\b)([+-]?(\d*\.)?\d+([xs]|ms|HP)?)(?:[%°+]|\b|$)/g;
+const boldTextRegEx = /(?:^|\b)[+-]?(?:\d*\.)?\d+(?:[xs]|ms|HP)?(?:[%°+]|\b|$)/g;
 
 function applyFormatting(text: string | undefined) {
   if (text === undefined) {

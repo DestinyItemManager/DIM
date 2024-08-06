@@ -8,7 +8,7 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { DimCharacterStat } from 'app/inventory/store-types';
 import { filterItems } from 'app/loadout-builder/item-filter';
 import { resolveStatConstraints } from 'app/loadout-builder/loadout-params';
-import { runProcess } from 'app/loadout-builder/process/process-wrapper';
+import type { runProcess } from 'app/loadout-builder/process/process-wrapper';
 import {
   ArmorEnergyRules,
   LOCKED_EXOTIC_ANY_EXOTIC,

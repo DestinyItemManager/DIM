@@ -28,6 +28,7 @@ export default {
     $featureFlags: {
       dimApi: true,
       runLoInBackground: true,
+      sentry: false,
     },
   },
 };
