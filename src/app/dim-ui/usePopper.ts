@@ -97,43 +97,38 @@ const popperOptions = (
   };
 };
 
-export function usePopper({
-  contents,
-  reference,
-  arrowClassName,
-  menuClassName,
-  boundarySelector,
-  placement,
-  offset,
-  fixed,
-  padding,
-  state,
-}: {
-  /** A ref to the rendered contents of a popper-positioned item */
-  contents: React.RefObject<HTMLElement>;
-  /** An ref to the item that triggered the popper, which anchors it */
-  reference: React.RefObject<HTMLElement>;
-  /** A class used to identify the arrow */
-  arrowClassName?: string;
-  /** A class used to identify the sidecar menu */
-  menuClassName?: string;
-  /** An optional additional selector for a "boundary area" */
-  boundarySelector?: string;
-  /** Placement preference of the popper. Defaults to "auto" */
-  placement?: Placement;
-  /** Offset of how far from the element to shift the popper. */
-  offset?: number;
-  /** Is this placed on a fixed item? Workaround for https://github.com/popperjs/popper-core/issues/1156. TODO: make a "positioning context" context value for this */
-  fixed?: boolean;
-  padding?: Padding;
-
-  /**
-   * An optional state variable. Use this to have popper recalculate the position of
-   * a popover when conditionally rendering the contents of the popover (thus
-   * causing the dimensions to potentially change).
-   */
-  state?: boolean;
-}) {
+export function usePopper(
+  {
+    contents,
+    reference,
+    arrowClassName,
+    menuClassName,
+    boundarySelector,
+    placement,
+    offset,
+    fixed,
+    padding,
+  }: {
+    /** A ref to the rendered contents of a popper-positioned item */
+    contents: React.RefObject<HTMLElement>;
+    /** An ref to the item that triggered the popper, which anchors it */
+    reference: React.RefObject<HTMLElement>;
+    /** A class used to identify the arrow */
+    arrowClassName?: string;
+    /** A class used to identify the sidecar menu */
+    menuClassName?: string;
+    /** An optional additional selector for a "boundary area" */
+    boundarySelector?: string;
+    /** Placement preference of the popper. Defaults to "auto" */
+    placement?: Placement;
+    /** Offset of how far from the element to shift the popper. */
+    offset?: number;
+    /** Is this placed on a fixed item? Workaround for https://github.com/popperjs/popper-core/issues/1156. TODO: make a "positioning context" context value for this */
+    fixed?: boolean;
+    padding?: Padding;
+  },
+  deps: React.DependencyList = [],
+) {
   const popper = useRef<Instance | undefined>();
 
   const destroy = () => {
@@ -168,5 +163,16 @@ export function usePopper({
     }
 
     return destroy;
-  }, [reference, contents, state]);
+  }, [
+    contents,
+    reference,
+    arrowClassName,
+    menuClassName,
+    boundarySelector,
+    placement,
+    offset,
+    fixed,
+    padding,
+    deps,
+  ]);
 }
