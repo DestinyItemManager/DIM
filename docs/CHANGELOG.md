@@ -1,5 +1,7 @@
 ## Next
 
+* Fixed character sorting on the Loadouts page.
+
 ## 8.31.0 <span class="changelog-date">(2024-08-04)</span>
 
 * Improved item move logic to do a better job of making room for transfers between characters.
