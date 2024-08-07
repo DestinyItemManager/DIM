@@ -173,6 +173,14 @@ export function usePopper(
     offset,
     fixed,
     padding,
+
+    /**
+     * Doing ...deps allows us to pass dependencies from the components that rely on
+     * usePopper. Certain popovers are only shown when specific conditions are met,
+     * so by making those conditions dependencies we can position the popover
+     * correctly once the popover is actually shown.
+     */
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     ...deps,
   ]);
 }
