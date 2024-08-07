@@ -173,6 +173,6 @@ export function usePopper(
     offset,
     fixed,
     padding,
-    deps,
+    ...deps,
   ]);
 }
