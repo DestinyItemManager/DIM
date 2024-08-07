@@ -11143,7 +11143,7 @@ exports[`process stores generates a correct  Weapons CSV export 1`] = `
     "Kill Tracker": 1431,
     "Loadouts": "",
     "Locked": true,
-    "Mag": 31,
+    "Mag": 30,
     "Masterwork Tier": 10,
     "Masterwork Type": "Range",
     "Name": "Graviton Lance",
