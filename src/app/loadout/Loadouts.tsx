@@ -122,7 +122,7 @@ function Loadouts({ account }: { account: DestinyAccount }) {
   useUpdateLoadoutAnalysisContext(selectedStore.id);
 
   const [showSnapshot, setShowSnapshot] = useState(false);
-  const handleSnapshot = useCallback(() => setShowSnapshot(true), []);
+  const handleSnapshot = useCallback(() => setShowSnapshot(true), [setShowSnapshot]);
   const handleSnapshotSheetClose = useCallback(() => setShowSnapshot(false), []);
 
   const [editingInGameLoadout, setEditingInGameLoadout] = useState<InGameLoadout>();

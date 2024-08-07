@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { getTestManifestJson } from './test-utils';

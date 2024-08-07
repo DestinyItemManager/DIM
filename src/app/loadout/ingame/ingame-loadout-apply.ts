@@ -42,7 +42,7 @@ export function applyInGameLoadout(loadout: InGameLoadout, apply = true): ThunkR
       return await dispatch(
         applyLoadout(targetStore, moveLoadout, apply ? { inGameLoadout: loadout } : {}),
       );
-    } catch (e) {}
+    } catch {}
   };
 }
 

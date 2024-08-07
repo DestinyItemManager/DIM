@@ -1,6 +1,25 @@
 ## Next
 
+## 8.31.0 <span class="changelog-date">(2024-08-04)</span>
+
+* Improved item move logic to do a better job of making room for transfers between characters.
+* Fixed single-character mode hiding cosmetic items (ghosts, etc) that are equipped on other characters. Now they are properly shown as being in the "vault".
+* The Planetary Piston Hammer item now shows the number of charges.
+
 ## 8.30.0 <span class="changelog-date">(2024-07-28)</span>
+
+* Remove damage mods and empty memento sockets from item popups.
+* A bunch of changes to Vault Organizer:
+  * Sorting now uses a local-sensitive comparator by default.
+  * You can sort perk columns - they sort by the name of the first perk, and then the name of the second perk, and so on. This should help with exotic class items.
+  * Broke out armor intrinsics, cosmetics (shaders/ornaments), and weapon origin traits into their own columns.
+  * Now that everything has its own column, the plain "perks" column is now restricted to perks/mods that don't appear in other columns.
+  * For the deepsight harmonizer column, replaced the checkmark with the deepsight harmonizer icon.
+  * Fixed shift-clicking on breaker to fill in a breaker: search.
+  * Widened the "Enabled Columns" menu to multiple columns so it no longer has to scroll.
+  * Perks columns fit their contents instead of having a hardcoded width.
+  * The item type selector no longer scrolls away horizontally.
+  * Selecting "Weapons" now shows all weapons by default. Feel free compare sidearms to rocket launchers if that's your thing.
 
 ## 8.29.0 <span class="changelog-date">(2024-07-21)</span>
 

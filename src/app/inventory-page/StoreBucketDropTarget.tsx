@@ -36,7 +36,7 @@ export default function StoreBucketDropTarget({
   const [{ isOver, canDrop }, dropRef] = useDrop<
     DimItem,
     unknown,
-    { isOver: Boolean; canDrop: boolean }
+    { isOver: boolean; canDrop: boolean }
   >(
     () => ({
       accept: bucket.inPostmaster

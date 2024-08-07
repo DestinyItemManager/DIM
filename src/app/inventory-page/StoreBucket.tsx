@@ -90,7 +90,7 @@ const StoreBucketInner = memo(function StoreBucketInner({
   const unequippedItems =
     isVault && bucket.inWeapons
       ? groupWeapons(sortItems(items))
-      : sortItems(items.filter((i) => !i.equipped));
+      : sortItems(isVault ? items : items.filter((i) => !i.equipped));
 
   // represents whether there's *supposed* to be an equipped item here, aka armor/weapon/artifact, etc
   const isEquippable = Boolean(equippedItem || bucket.equippable);
