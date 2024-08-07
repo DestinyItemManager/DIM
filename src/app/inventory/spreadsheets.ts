@@ -1,9 +1,11 @@
+import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { gaEvent } from 'app/google';
 import { LoadoutsByItem, loadoutsByItemSelector } from 'app/loadout/selectors';
 import { buildStatInfo, getColumns } from 'app/organizer/Columns';
 import { SpreadsheetContext } from 'app/organizer/table-types';
 import { D1_StatHashes } from 'app/search/d1-known-values';
+import { TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { ThunkResult } from 'app/store/types';
 import { filterMap } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
@@ -54,6 +56,40 @@ const D1_FILTERED_NODE_HASHES = [
   4044819214, // The Life Exotic
 ];
 
+/** Stat names are not localized in CSV. We use a map to preserve order. */
+export const csvStatNamesForDestinyVersion = (destinyVersion: DestinyVersion) =>
+  new Map<StatHashes | typeof TOTAL_STAT_HASH, string>([
+    [StatHashes.RecoilDirection, 'Recoil'],
+    [StatHashes.AimAssistance, 'AA'],
+    [StatHashes.Impact, 'Impact'],
+    [StatHashes.Range, 'Range'],
+    [StatHashes.Zoom, 'Zoom'],
+    [StatHashes.BlastRadius, 'Blast Radius'],
+    [StatHashes.Velocity, 'Velocity'],
+    [StatHashes.Stability, 'Stability'],
+    [StatHashes.RoundsPerMinute, 'ROF'],
+    [StatHashes.ReloadSpeed, 'Reload'],
+    [StatHashes.AmmoCapacity, 'Mag'],
+    [StatHashes.Magazine, 'Mag'],
+    [StatHashes.Handling, destinyVersion === 2 ? 'Handling' : 'Equip'],
+    [StatHashes.ChargeTime, 'Charge Time'],
+    [StatHashes.DrawTime, 'Draw Time'],
+    [StatHashes.Accuracy, 'Accuracy'],
+    [StatHashes.ChargeRate, 'Charge Rate'],
+    [StatHashes.GuardResistance, 'Guard Resistance'],
+    [StatHashes.GuardEndurance, 'Guard Endurance'],
+    [StatHashes.SwingSpeed, 'Swing Speed'],
+    [StatHashes.ShieldDuration, 'Shield Duration'],
+    [StatHashes.AirborneEffectiveness, 'Airborne Effectiveness'],
+    [StatHashes.Intellect, destinyVersion === 2 ? 'Intellect' : 'Int'],
+    [StatHashes.Discipline, destinyVersion === 2 ? 'Discipline' : 'Disc'],
+    [StatHashes.Strength, destinyVersion === 2 ? 'Strength' : 'Str'],
+    [StatHashes.Resilience, 'Resilience'],
+    [StatHashes.Recovery, 'Recovery'],
+    [StatHashes.Mobility, 'Mobility'],
+    [TOTAL_STAT_HASH, 'Total'],
+  ]);
+
 export function generateCSVExportData(
   type: 'weapon' | 'armor' | 'ghost',
   stores: DimStore[],
@@ -92,6 +128,7 @@ export function generateCSVExportData(
   // We need to always emit enough columns for all perks
   const maxPerks = getMaxPerks(items);
   const statHashes = buildStatInfo(items);
+  const destinyVersion = items[0]?.destinyVersion ?? 2;
 
   // Use the column definitions from Organizer to drive the CSV output
   const columns = getColumns(
@@ -105,7 +142,62 @@ export function generateCSVExportData(
     [] /* customStats */,
     loadoutsByItem,
     new Set<string>() /* newItems */,
-    items[0]?.destinyVersion ?? 2 /* destinyVersion */,
+    destinyVersion /* destinyVersion */,
+  );
+
+  // The order of the spreadsheet columns differs from the Organizer order.
+  // PapaParse determines column order from the insertion order of data into the
+  // first object that's returned, so we need to iterate the columns in this
+  // order.
+  const order = [
+    'name',
+    'hash',
+    'id',
+    'tag',
+    'tier',
+    'Type',
+    'source',
+    'Category',
+    'dmg',
+    'power',
+    'masterworkStat',
+    'masterworkTier',
+    'location',
+    'locked',
+    'Equipped',
+    'year',
+    'season',
+    'event',
+    ...[...csvStatNamesForDestinyVersion(destinyVersion).keys()].map(
+      (statHash) => `stat${statHash}`,
+    ),
+    'crafted',
+    'level',
+    'killTracker',
+    'foundry',
+    'loadouts',
+    'notes',
+    // unknown columns end up here
+    // then perks
+  ];
+
+  // Damn, this needs to be column ids, not column names
+  columns.sort(
+    compareBy((c) => {
+      if (c.id === 'perks') {
+        // perks are always last
+        return 2000;
+      }
+      const index = order.indexOf(c.id);
+      return index === -1 ? 1000 : index;
+    }),
+  );
+
+  console.log(
+    'columns',
+    columns.map((c) => c.id),
+    order,
+    Object.keys(csvStatNamesForDestinyVersion(destinyVersion)),
   );
 
   const context: SpreadsheetContext = { nameMap, maxPerks };

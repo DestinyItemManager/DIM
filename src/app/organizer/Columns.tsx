@@ -26,11 +26,7 @@ import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
 import { InGameLoadout, Loadout, isInGameLoadout } from 'app/loadout/loadout-types';
 import { LoadoutsByItem } from 'app/loadout/selectors';
-import {
-  TOTAL_STAT_HASH,
-  breakerTypeNames,
-  weaponMasterworkY2SocketTypeHash,
-} from 'app/search/d2-known-values';
+import { breakerTypeNames, weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
 import D2Sources from 'app/search/items/search-filters/d2-sources';
 import { quoteFilterString } from 'app/search/query-parser';
 import { statHashByName } from 'app/search/search-filter-values';
@@ -82,7 +78,11 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { createCustomStatColumns } from './CustomStatColumns';
 
-import { buildNodeNames, buildSocketNames } from 'app/inventory/spreadsheets';
+import {
+  buildNodeNames,
+  buildSocketNames,
+  csvStatNamesForDestinyVersion,
+} from 'app/inventory/spreadsheets';
 import { DeepsightHarmonizerIcon } from 'app/item-popup/DeepsightHarmonizerIcon';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import styles from './ItemTable.m.scss'; // eslint-disable-line css-modules/no-unused-class
@@ -123,41 +123,6 @@ const perkStringSort: Comparator<string | undefined> = (a, b) => {
   }
   return 0;
 };
-
-/** Stat names are not localized in CSV */
-const csvStatNamesForDestinyVersion = (
-  destinyVersion: DestinyVersion,
-): Partial<Record<StatHashes | typeof TOTAL_STAT_HASH, string>> => ({
-  [StatHashes.RecoilDirection]: 'Recoil',
-  [StatHashes.AimAssistance]: 'AA',
-  [StatHashes.Impact]: 'Impact',
-  [StatHashes.Range]: 'Range',
-  [StatHashes.Zoom]: 'Zoom',
-  [StatHashes.BlastRadius]: 'Blast Radius',
-  [StatHashes.Velocity]: 'Velocity',
-  [StatHashes.Stability]: 'Stability',
-  [StatHashes.RoundsPerMinute]: 'ROF',
-  [StatHashes.ReloadSpeed]: 'Reload',
-  [StatHashes.AmmoCapacity]: 'Mag',
-  [StatHashes.Magazine]: 'Mag',
-  [StatHashes.Handling]: destinyVersion === 2 ? 'Handling' : 'Equip',
-  [StatHashes.ChargeTime]: 'Charge Time',
-  [StatHashes.DrawTime]: 'Draw Time',
-  [StatHashes.Accuracy]: 'Accuracy',
-  [StatHashes.ChargeRate]: 'Charge Rate',
-  [StatHashes.GuardResistance]: 'Guard Resistance',
-  [StatHashes.GuardEndurance]: 'Guard Endurance',
-  [StatHashes.SwingSpeed]: 'Swing Speed',
-  [StatHashes.ShieldDuration]: 'Shield Duration',
-  [StatHashes.AirborneEffectiveness]: 'Airborne Effectiveness',
-  [StatHashes.Intellect]: destinyVersion === 2 ? 'Intellect' : 'Int',
-  [StatHashes.Discipline]: destinyVersion === 2 ? 'Discipline' : 'Disc',
-  [StatHashes.Strength]: destinyVersion === 2 ? 'Strength' : 'Str',
-  [StatHashes.Resilience]: 'Resilience',
-  [StatHashes.Recovery]: 'Recovery',
-  [StatHashes.Mobility]: 'Mobility',
-  [TOTAL_STAT_HASH]: 'Total',
-});
 
 /**
  * This function generates the columns.
@@ -238,7 +203,7 @@ export function getColumns(
         },
         csvVal: (_value, item) => {
           const stat = item.stats?.find((s) => s.statHash === statHash);
-          return [csvStatNames[statHash] ?? `UnknownStat ${statHash}`, stat?.value ?? 0];
+          return [csvStatNames.get(statHash) ?? `UnknownStat ${statHash}`, stat?.value ?? 0];
         },
       };
     }),
@@ -274,7 +239,7 @@ export function getColumns(
           csvVal: (_value, item) => {
             const stat = item.stats?.find((s) => s.statHash === column.statHash);
             return [
-              `${csvStatNames[column.statHash] ?? `UnknownStatBase ${column.statHash}`} (Base)`,
+              `${csvStatNames.get(column.statHash) ?? `UnknownStatBase ${column.statHash}`} (Base)`,
               stat?.base ?? 0,
             ];
           },
@@ -313,7 +278,7 @@ export function getColumns(
                 }
                 const stat = item.stats?.find((s) => s.statHash === statHash);
                 return [
-                  `% ${csvStatNames[statHash] ?? `UnknownStat ${statHash}`}Q`,
+                  `% ${csvStatNames.get(statHash) ?? `UnknownStat ${statHash}`}Q`,
                   stat?.scaled?.min ? Math.round((100 * stat.scaled.min) / (stat.split || 1)) : 0,
                 ];
               },
