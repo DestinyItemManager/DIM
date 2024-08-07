@@ -11,9 +11,8 @@ import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
 import TagIcon from 'app/inventory/TagIcon';
 import { TagValue, tagConfig } from 'app/inventory/dim-item-info';
-import { D1GridNode, D1Item, DimItem, DimSocket } from 'app/inventory/item-types';
+import { D1Item, DimItem, DimSocket } from 'app/inventory/item-types';
 import { storesSelector } from 'app/inventory/selectors';
-import { source } from 'app/inventory/spreadsheets';
 import { isHarmonizable } from 'app/inventory/store/deepsight';
 import { getEvent, getSeason } from 'app/inventory/store/season';
 import { getStatSortOrder } from 'app/inventory/store/stats';
@@ -27,7 +26,12 @@ import { editLoadout } from 'app/loadout-drawer/loadout-events';
 import InGameLoadoutIcon from 'app/loadout/ingame/InGameLoadoutIcon';
 import { InGameLoadout, Loadout, isInGameLoadout } from 'app/loadout/loadout-types';
 import { LoadoutsByItem } from 'app/loadout/selectors';
-import { breakerTypeNames, weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
+import {
+  TOTAL_STAT_HASH,
+  breakerTypeNames,
+  weaponMasterworkY2SocketTypeHash,
+} from 'app/search/d2-known-values';
+import D2Sources from 'app/search/items/search-filters/d2-sources';
 import { quoteFilterString } from 'app/search/query-parser';
 import { statHashByName } from 'app/search/search-filter-values';
 import { getColor, percent } from 'app/shell/formatters';
@@ -47,6 +51,7 @@ import {
   getItemKillTrackerInfo,
   getItemYear,
   getMasterworkStatNames,
+  getSpecialtySocketMetadatas,
   isArtificeSocket,
   isD1Item,
   isKillTrackerSocket,
@@ -77,7 +82,9 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { createCustomStatColumns } from './CustomStatColumns';
 
+import { buildNodeNames, buildSocketNames } from 'app/inventory/spreadsheets';
 import { DeepsightHarmonizerIcon } from 'app/item-popup/DeepsightHarmonizerIcon';
+import { DestinyClass } from 'bungie-api-ts/destiny2';
 import styles from './ItemTable.m.scss'; // eslint-disable-line css-modules/no-unused-class
 import { ColumnDefinition, ColumnGroup, SortDirection, Value } from './table-types';
 
@@ -117,9 +124,10 @@ const perkStringSort: Comparator<string | undefined> = (a, b) => {
   return 0;
 };
 
+/** Stat names are not localized in CSV */
 const csvStatNamesForDestinyVersion = (
   destinyVersion: DestinyVersion,
-): Partial<Record<StatHashes, string>> => ({
+): Partial<Record<StatHashes | typeof TOTAL_STAT_HASH, string>> => ({
   [StatHashes.RecoilDirection]: 'Recoil',
   [StatHashes.AimAssistance]: 'AA',
   [StatHashes.Impact]: 'Impact',
@@ -142,12 +150,13 @@ const csvStatNamesForDestinyVersion = (
   [StatHashes.SwingSpeed]: 'Swing Speed',
   [StatHashes.ShieldDuration]: 'Shield Duration',
   [StatHashes.AirborneEffectiveness]: 'Airborne Effectiveness',
-  [StatHashes.Intellect]: 'Intellect',
-  [StatHashes.Discipline]: 'Discipline',
-  [StatHashes.Strength]: 'Strength',
+  [StatHashes.Intellect]: destinyVersion === 2 ? 'Intellect' : 'Int',
+  [StatHashes.Discipline]: destinyVersion === 2 ? 'Discipline' : 'Disc',
+  [StatHashes.Strength]: destinyVersion === 2 ? 'Strength' : 'Str',
   [StatHashes.Resilience]: 'Resilience',
   [StatHashes.Recovery]: 'Recovery',
   [StatHashes.Mobility]: 'Mobility',
+  [TOTAL_STAT_HASH]: 'Total',
 });
 
 /**
@@ -185,7 +194,7 @@ export function getColumns(
 
   const csvStatNames = csvStatNamesForDestinyVersion(destinyVersion);
 
-  type ColumnWithStat = ColumnDefinition & { statHash: number };
+  type ColumnWithStat = ColumnDefinition & { statHash: StatHashes };
   const statColumns: ColumnWithStat[] = _.sortBy(
     filterMap(Object.entries(statHashes), ([statHashStr, statInfo]): ColumnWithStat | undefined => {
       const statHash = parseInt(statHashStr, 10) as StatHashes;
@@ -242,7 +251,7 @@ export function getColumns(
   const isSpreadsheet = useCase === 'spreadsheet';
 
   const baseStatColumns: ColumnWithStat[] =
-    destinyVersion === 2
+    destinyVersion === 2 && (isArmor || !isSpreadsheet)
       ? statColumns.map((column) => ({
           ...column,
           id: `base${column.statHash}`,
@@ -262,6 +271,13 @@ export function getColumns(
             return <ItemStatValue stat={stat} item={item} baseStat />;
           },
           filter: (value) => `basestat:${_.invert(statHashByName)[column.statHash]}:>=${value}`,
+          csvVal: (_value, item) => {
+            const stat = item.stats?.find((s) => s.statHash === column.statHash);
+            return [
+              `${csvStatNames[column.statHash] ?? `UnknownStatBase ${column.statHash}`} (Base)`,
+              stat?.base ?? 0,
+            ];
+          },
         }))
       : [];
 
@@ -269,7 +285,7 @@ export function getColumns(
     destinyVersion === 1 && isArmor
       ? _.sortBy(
           Object.entries(statHashes).map(([statHashStr, statInfo]): ColumnWithStat => {
-            const statHash = parseInt(statHashStr, 10);
+            const statHash = parseInt(statHashStr, 10) as StatHashes;
             return {
               statHash,
               id: `quality_${statHash}`,
@@ -290,6 +306,16 @@ export function getColumns(
                 return (
                   <span style={getColor(stat?.qualityPercentage?.min || 0, 'color')}>{value}%</span>
                 );
+              },
+              csvVal: (_value, item) => {
+                if (!isD1Item(item)) {
+                  throw new Error('Expected D1 item');
+                }
+                const stat = item.stats?.find((s) => s.statHash === statHash);
+                return [
+                  `% ${csvStatNames[statHash] ?? `UnknownStat ${statHash}`}Q`,
+                  stat?.scaled?.min ? Math.round((100 * stat.scaled.min) / (stat.split || 1)) : 0,
+                ];
               },
             };
           }),
@@ -369,12 +395,21 @@ export function getColumns(
         cell: (_val, item) => <ElementIcon className={styles.inlineIcon} element={item.element} />,
         filter: (_val, item) => `is:${getItemDamageShortName(item)}`,
       }),
+    isArmor &&
+      isSpreadsheet &&
+      c({
+        id: 'equippable',
+        header: 'Equippable',
+        csv: 'Equippable',
+        value: (item) =>
+          item.classType === DestinyClass.Unknown ? 'Any' : item.classTypeNameLocalized,
+      }),
     (isArmor || isGhost) &&
       destinyVersion === 2 &&
       c({
         id: 'energy',
         header: t('Organizer.Columns.Energy'),
-        csv: 'Energy',
+        csv: 'Energy Capacity',
         value: (item) => item.energy?.energyCapacity,
         defaultSort: SortDirection.DESC,
         filter: (value) => `energycapacity:>=${value}`,
@@ -420,14 +455,16 @@ export function getColumns(
         // TODO: nicer to put the date in the CSV
         csvVal: (value) => ['Crafted', Boolean(value) ? 'crafted' : false],
       }),
-    c({
-      id: 'recency',
-      header: t('Organizer.Columns.Recency'),
-      value: (item) => item.id,
-      cell: () => '',
-    }),
+    !isSpreadsheet &&
+      c({
+        id: 'recency',
+        header: t('Organizer.Columns.Recency'),
+        value: (item) => item.id,
+        cell: () => '',
+      }),
     destinyVersion === 2 &&
       isWeapon &&
+      !isSpreadsheet &&
       c({
         id: 'wishList',
         header: t('Organizer.Columns.WishList'),
@@ -454,6 +491,7 @@ export function getColumns(
       filter: (value) => `is:${value}`,
     }),
     isSpreadsheet &&
+      !isGhost &&
       c({
         id: 'Type',
         header: 'Type',
@@ -461,6 +499,7 @@ export function getColumns(
         value: (i) => i.typeName,
       }),
     isSpreadsheet &&
+      isWeapon &&
       c({
         id: 'Category',
         header: 'Category',
@@ -499,6 +538,9 @@ export function getColumns(
                 .map((m) => `modslot:${m}`)
                 .join(' ')
             : ``,
+        csvVal: (_val, item) => {
+          return ['Seasonal Mod', getSpecialtySocketMetadatas(item)?.map((m) => m.slotTag) ?? ''];
+        },
       }),
     destinyVersion === 1 &&
       c({
@@ -511,6 +553,7 @@ export function getColumns(
       }),
     destinyVersion === 2 &&
       isWeapon &&
+      !isSpreadsheet &&
       c({
         id: 'archetype',
         header: t('Organizer.Columns.Archetype'),
@@ -537,6 +580,7 @@ export function getColumns(
       }),
     destinyVersion === 2 &&
       isWeapon &&
+      !isSpreadsheet &&
       c({
         id: 'breaker',
         header: t('Organizer.Columns.Breaker'),
@@ -555,6 +599,7 @@ export function getColumns(
       }),
     destinyVersion === 2 &&
       isArmor &&
+      !isSpreadsheet &&
       c({
         id: 'intrinsics',
         header: t('Organizer.Columns.Intrinsics'),
@@ -605,6 +650,7 @@ export function getColumns(
     }),
     destinyVersion === 2 &&
       isWeapon &&
+      !isSpreadsheet &&
       c({
         id: 'traits',
         header: t('Organizer.Columns.Traits'),
@@ -623,6 +669,7 @@ export function getColumns(
 
     destinyVersion === 2 &&
       isWeapon &&
+      !isSpreadsheet &&
       c({
         id: 'originTrait',
         header: t('Organizer.Columns.OriginTraits'),
@@ -639,6 +686,7 @@ export function getColumns(
           typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
       }),
     destinyVersion === 2 &&
+      !isSpreadsheet &&
       c({
         id: 'shaders',
         header: t('Organizer.Columns.Shaders'),
@@ -655,13 +703,14 @@ export function getColumns(
           typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
       }),
     ...statColumns,
-    ...(isSpreadsheet ? [] : baseStatColumns),
+    ...baseStatColumns,
     ...d1ArmorQualityByStat,
     destinyVersion === 1 &&
       isArmor &&
       c({
         id: 'quality',
         header: t('Organizer.Columns.Quality'),
+        csv: '% Quality',
         value: (item) => (isD1Item(item) && item.quality ? item.quality.min : 0),
         cell: (value) => <span style={getColor(value, 'color')}>{value}%</span>,
         filter: (value) => `quality:>=${value}`,
@@ -696,6 +745,7 @@ export function getColumns(
       }),
     destinyVersion === 2 &&
       isWeapon &&
+      !isSpreadsheet &&
       c({
         id: 'harmonizable',
         header: t('Organizer.Columns.Harmonizable'),
@@ -723,6 +773,7 @@ export function getColumns(
         csvVal: (value) => ['Kill Tracker', value ?? 0],
       }),
     destinyVersion === 2 &&
+      isWeapon &&
       c({
         id: 'foundry',
         header: t('Organizer.Columns.Foundry'),
@@ -733,25 +784,25 @@ export function getColumns(
     destinyVersion === 2 &&
       c({
         id: 'source',
+        csv: 'Source',
         header: t('Organizer.Columns.Source'),
         value: source,
         filter: (value) => `source:${value}`,
-        csv: 'Source',
       }),
     c({
       id: 'year',
+      csv: 'Year',
       header: t('Organizer.Columns.Year'),
       value: (item) => getItemYear(item),
       filter: (value) => `year:${value}`,
-      csv: 'Year',
     }),
     destinyVersion === 2 &&
       c({
         id: 'season',
+        csv: 'Season',
         header: t('Organizer.Columns.Season'),
         value: (i) => getSeason(i),
         filter: (value) => `season:${value}`,
-        csv: 'Season',
       }),
     destinyVersion === 2 &&
       c({
@@ -1120,63 +1171,16 @@ export function buildStatInfo(items: DimItem[]): {
   return statHashes;
 }
 
-function buildSocketNames(item: DimItem): string[] {
-  if (!item.sockets) {
-    return [];
+// ignore raid & calus sources in favor of more detailed sources
+const sourceKeys = Object.keys(D2Sources).filter((k) => !['raid', 'calus'].includes(k));
+function source(item: DimItem) {
+  if (item.destinyVersion === 2) {
+    return (
+      sourceKeys.find(
+        (src) =>
+          (item.source && D2Sources[src].sourceHashes?.includes(item.source)) ||
+          D2Sources[src].itemHashes?.includes(item.hash),
+      ) || ''
+    );
   }
-
-  const sockets = [];
-  const { intrinsicSocket, modSocketsByCategory, perks } = getDisplayedItemSockets(
-    item,
-    /* excludeEmptySockets */ true,
-  )!;
-
-  if (intrinsicSocket) {
-    sockets.push(intrinsicSocket);
-  }
-
-  if (perks) {
-    sockets.push(...getSocketsByIndexes(item.sockets, perks.socketIndexes));
-  }
-  // Improve this when we use iterator-helpers
-  sockets.push(...[...modSocketsByCategory.values()].flat());
-
-  const socketItems = sockets.map(
-    (s) =>
-      (isKillTrackerSocket(s) && s.plugged?.plugDef.displayProperties.name) ||
-      s.plugOptions.map((p) =>
-        s.plugged?.plugDef.hash === p.plugDef.hash
-          ? `${p.plugDef.displayProperties.name}*`
-          : p.plugDef.displayProperties.name,
-      ),
-  );
-
-  return socketItems.flat();
-}
-
-const D1_FILTERED_NODE_HASHES = [
-  1920788875, // Ascend
-  1270552711, // Infuse
-  2133116599, // Deactivate Chroma
-  643689081, // Kinetic Damage
-  472357138, // Void Damage
-  1975859941, // Solar Damage
-  2688431654, // Arc Damage
-  1034209669, // Increase Intellect
-  1263323987, // Increase Discipline
-  913963685, // Reforge Shell
-  193091484, // Increase Strength
-  217480046, // Twist Fate
-  191086989, // Reforge Artifact
-  2086308543, // Upgrade Defense
-  4044819214, // The Life Exotic
-];
-
-function buildNodeNames(nodes: D1GridNode[]): string[] {
-  return filterMap(nodes, (node) => {
-    if (D1_FILTERED_NODE_HASHES.includes(node.hash)) {
-      return;
-    }
-    return node.activated ? `${node.name}*` : node.name;
-  });
 }

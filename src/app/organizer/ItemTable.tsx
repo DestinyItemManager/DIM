@@ -72,13 +72,13 @@ const categoryToClass: LookupTable<ItemCategoryHashes, DestinyClass> = {
 };
 
 const downloadButtonSettings = [
-  { categoryId: ['weapons'], csvType: 'Weapons' as const, label: tl('Bucket.Weapons') },
+  { categoryId: ['weapons'], csvType: 'weapon' as const, label: tl('Bucket.Weapons') },
   {
     categoryId: ['hunter', 'titan', 'warlock'],
-    csvType: 'Armor' as const,
+    csvType: 'armor' as const,
     label: tl('Bucket.Armor'),
   },
-  { categoryId: ['ghosts'], csvType: 'Ghost' as const, label: tl('Bucket.Ghost') },
+  { categoryId: ['ghosts'], csvType: 'ghost' as const, label: tl('Bucket.Ghost') },
 ];
 
 const MemoRow = memo(TableRow);

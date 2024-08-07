@@ -16,6 +16,8 @@ export interface ColumnGroup {
   dropdownLabel?: React.ReactNode;
 }
 
+export type CSVColumn = [name: string, value: string | string[] | number | boolean | undefined];
+
 // TODO: column groupings?
 // TODO: custom configs like the total column?
 // prop methods make this invariant over V, so disable the rule here
@@ -67,13 +69,7 @@ export interface ColumnDefinition<V extends Value = Value> {
    * used to output complex data for CSV. For example, perks are output as
    * multiple columns.
    */
-  csvVal?(
-    value: V,
-    item: DimItem,
-    spreadsheetContext: SpreadsheetContext,
-  ):
-    | [name: string, value: string | number | boolean | undefined]
-    | [name: string, value: string | number | boolean | undefined][];
+  csvVal?(value: V, item: DimItem, spreadsheetContext: SpreadsheetContext): CSVColumn | CSVColumn[];
 }
 
 export interface SpreadsheetContext {
