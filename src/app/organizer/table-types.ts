@@ -54,21 +54,26 @@ export interface ColumnDefinition<V extends Value = Value> {
   limitToClass?: DestinyClass;
 
   /**
-   * Output this column as CSV. It can be a single key/value pair, or several,
-   * or nothing which is effectively "N/A". It can also be a single string,
-   * which means to use the value function as-is and use the `csv` value as the
-   * column name. We could reuse the header, but that's localized, while
-   * historically our CSV column names haven't been.
+   * A name for this column when it is output as CSV. This will reuse the value
+   * function as-is. We could reuse the header, but that's localized, while
+   * historically our CSV column names haven't been. I tried to combine this and
+   * `csvVal` but ran into type covariance issues.
    */
-  csv?:
-    | string
-    | ((
-        item: DimItem,
-        spreadsheetContext: SpreadsheetContext,
-      ) =>
-        | [name: string, value: string | number | boolean]
-        | [name: string, value: string | number | boolean][]
-        | undefined);
+  csv?: string;
+
+  /**
+   * Optionally override the value of this column for CSV output. This is mostly
+   * to achieve compatibility with the existing CSV format, but sometimes it's
+   * used to output complex data for CSV. For example, perks are output as
+   * multiple columns.
+   */
+  csvVal?(
+    value: V,
+    item: DimItem,
+    spreadsheetContext: SpreadsheetContext,
+  ):
+    | [name: string, value: string | number | boolean | undefined]
+    | [name: string, value: string | number | boolean | undefined][];
 }
 
 export interface SpreadsheetContext {

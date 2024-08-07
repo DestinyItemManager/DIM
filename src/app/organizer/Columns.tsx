@@ -11,7 +11,7 @@ import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
 import TagIcon from 'app/inventory/TagIcon';
 import { TagValue, tagConfig } from 'app/inventory/dim-item-info';
-import { D1Item, DimItem, DimSocket } from 'app/inventory/item-types';
+import { D1GridNode, D1Item, DimItem, DimSocket } from 'app/inventory/item-types';
 import { storesSelector } from 'app/inventory/selectors';
 import { source } from 'app/inventory/spreadsheets';
 import { isHarmonizable } from 'app/inventory/store/deepsight';
@@ -117,6 +117,39 @@ const perkStringSort: Comparator<string | undefined> = (a, b) => {
   return 0;
 };
 
+const csvStatNamesForDestinyVersion = (
+  destinyVersion: DestinyVersion,
+): Partial<Record<StatHashes, string>> => ({
+  [StatHashes.RecoilDirection]: 'Recoil',
+  [StatHashes.AimAssistance]: 'AA',
+  [StatHashes.Impact]: 'Impact',
+  [StatHashes.Range]: 'Range',
+  [StatHashes.Zoom]: 'Zoom',
+  [StatHashes.BlastRadius]: 'Blast Radius',
+  [StatHashes.Velocity]: 'Velocity',
+  [StatHashes.Stability]: 'Stability',
+  [StatHashes.RoundsPerMinute]: 'ROF',
+  [StatHashes.ReloadSpeed]: 'Reload',
+  [StatHashes.AmmoCapacity]: 'Mag',
+  [StatHashes.Magazine]: 'Mag',
+  [StatHashes.Handling]: destinyVersion === 2 ? 'Handling' : 'Equip',
+  [StatHashes.ChargeTime]: 'Charge Time',
+  [StatHashes.DrawTime]: 'Draw Time',
+  [StatHashes.Accuracy]: 'Accuracy',
+  [StatHashes.ChargeRate]: 'Charge Rate',
+  [StatHashes.GuardResistance]: 'Guard Resistance',
+  [StatHashes.GuardEndurance]: 'Guard Endurance',
+  [StatHashes.SwingSpeed]: 'Swing Speed',
+  [StatHashes.ShieldDuration]: 'Shield Duration',
+  [StatHashes.AirborneEffectiveness]: 'Airborne Effectiveness',
+  [StatHashes.Intellect]: 'Intellect',
+  [StatHashes.Discipline]: 'Discipline',
+  [StatHashes.Strength]: 'Strength',
+  [StatHashes.Resilience]: 'Resilience',
+  [StatHashes.Recovery]: 'Recovery',
+  [StatHashes.Mobility]: 'Mobility',
+});
+
 /**
  * This function generates the columns.
  */
@@ -149,6 +182,8 @@ export function getColumns(
     id: 'statQuality',
     header: t('Organizer.Columns.StatQuality'),
   };
+
+  const csvStatNames = csvStatNamesForDestinyVersion(destinyVersion);
 
   type ColumnWithStat = ColumnDefinition & { statHash: number };
   const statColumns: ColumnWithStat[] = _.sortBy(
@@ -191,6 +226,10 @@ export function getColumns(
         filter: (value) => {
           const statName = _.invert(statHashByName)[statHash];
           return `stat:${statName}:${statName === 'rof' ? '=' : '>='}${value}`;
+        },
+        csvVal: (_value, item) => {
+          const stat = item.stats?.find((s) => s.statHash === statHash);
+          return [csvStatNames[statHash] ?? `UnknownStat ${statHash}`, stat?.value ?? 0];
         },
       };
     }),
@@ -379,7 +418,7 @@ export function getColumns(
         defaultSort: SortDirection.DESC,
         filter: (value) => `${value ? '' : '-'}is:crafted`,
         // TODO: nicer to put the date in the CSV
-        csv: (item) => ['Crafted', Boolean(item.craftedInfo)],
+        csvVal: (value) => ['Crafted', Boolean(value) ? 'crafted' : false],
       }),
     c({
       id: 'recency',
@@ -468,6 +507,7 @@ export function getColumns(
         value: (item) => item.percentComplete,
         cell: (value) => percent(value),
         filter: (value) => `percentage:>=${value}`,
+        csvVal: (value) => ['% Leveled', (value * 100).toFixed(0)],
       }),
     destinyVersion === 2 &&
       isWeapon &&
@@ -548,6 +588,20 @@ export function getColumns(
       sort: perkStringSort,
       filter: (value) =>
         typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
+      csvVal: (_value, item, { maxPerks }) => {
+        // This could go on any of the perks columns, since it computes a very
+        // different view of perks, but I just picked one.
+        const perks =
+          isD1Item(item) && item.talentGrid
+            ? buildNodeNames(item.talentGrid.nodes)
+            : item.sockets
+              ? buildSocketNames(item)
+              : [];
+
+        return _.times(maxPerks, (index) => {
+          return [`Perks ${index}`, perks[index]] as [name: string, value: string | undefined];
+        });
+      },
     }),
     destinyVersion === 2 &&
       isWeapon &&
@@ -601,7 +655,7 @@ export function getColumns(
           typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
       }),
     ...statColumns,
-    ...baseStatColumns,
+    ...(isSpreadsheet ? [] : baseStatColumns),
     ...d1ArmorQualityByStat,
     destinyVersion === 1 &&
       isArmor &&
@@ -638,7 +692,7 @@ export function getColumns(
         header: t('Organizer.Columns.Level'),
         value: (item) => item.craftedInfo?.level,
         defaultSort: SortDirection.DESC,
-        csv: (item) => ['Crafted Level', item.craftedInfo?.level ?? 0],
+        csvVal: (value) => ['Crafted Level', value ?? 0],
       }),
     destinyVersion === 2 &&
       isWeapon &&
@@ -653,7 +707,6 @@ export function getColumns(
       c({
         id: 'killTracker',
         header: t('Organizer.Columns.KillTracker'),
-        csv: 'Kill Tracker',
         value: (item) => {
           const killTrackerInfo = getItemKillTrackerInfo(item);
           return killTrackerInfo?.count;
@@ -667,6 +720,7 @@ export function getColumns(
           );
         },
         defaultSort: SortDirection.DESC,
+        csvVal: (value) => ['Kill Tracker', value ?? 0],
       }),
     destinyVersion === 2 &&
       c({
@@ -708,14 +762,14 @@ export function getColumns(
           return event ? D2EventInfo[event].name : undefined;
         },
         filter: (value) => `event:${value}`,
-        csv: 'Event',
+        csvVal: (value) => ['Event', value ?? ''],
       }),
     c({
       id: 'location',
       header: t('Organizer.Columns.Location'),
       value: (item) => item.owner,
       cell: (_val, item) => <StoreLocation storeId={item.owner} />,
-      csv: (item, context) => ['Owner', context.nameMap[item.owner]],
+      csvVal: (value, _item, { nameMap }) => ['Owner', nameMap[value]],
     }),
     c({
       id: 'loadouts',
@@ -755,6 +809,7 @@ export function getColumns(
           return loadout && `inloadout:${quoteFilterString(loadout.loadout.name)}`;
         }
       },
+      csvVal: (value) => ['Loadouts', value ?? ''],
     }),
     c({
       id: 'notes',
@@ -1063,4 +1118,65 @@ export function buildStatInfo(items: DimItem[]): {
     }
   }
   return statHashes;
+}
+
+function buildSocketNames(item: DimItem): string[] {
+  if (!item.sockets) {
+    return [];
+  }
+
+  const sockets = [];
+  const { intrinsicSocket, modSocketsByCategory, perks } = getDisplayedItemSockets(
+    item,
+    /* excludeEmptySockets */ true,
+  )!;
+
+  if (intrinsicSocket) {
+    sockets.push(intrinsicSocket);
+  }
+
+  if (perks) {
+    sockets.push(...getSocketsByIndexes(item.sockets, perks.socketIndexes));
+  }
+  // Improve this when we use iterator-helpers
+  sockets.push(...[...modSocketsByCategory.values()].flat());
+
+  const socketItems = sockets.map(
+    (s) =>
+      (isKillTrackerSocket(s) && s.plugged?.plugDef.displayProperties.name) ||
+      s.plugOptions.map((p) =>
+        s.plugged?.plugDef.hash === p.plugDef.hash
+          ? `${p.plugDef.displayProperties.name}*`
+          : p.plugDef.displayProperties.name,
+      ),
+  );
+
+  return socketItems.flat();
+}
+
+const D1_FILTERED_NODE_HASHES = [
+  1920788875, // Ascend
+  1270552711, // Infuse
+  2133116599, // Deactivate Chroma
+  643689081, // Kinetic Damage
+  472357138, // Void Damage
+  1975859941, // Solar Damage
+  2688431654, // Arc Damage
+  1034209669, // Increase Intellect
+  1263323987, // Increase Discipline
+  913963685, // Reforge Shell
+  193091484, // Increase Strength
+  217480046, // Twist Fate
+  191086989, // Reforge Artifact
+  2086308543, // Upgrade Defense
+  4044819214, // The Life Exotic
+];
+
+function buildNodeNames(nodes: D1GridNode[]): string[] {
+  return filterMap(nodes, (node) => {
+    if (D1_FILTERED_NODE_HASHES.includes(node.hash)) {
+      return;
+    }
+    return node.activated ? `${node.name}*` : node.name;
+  });
 }
