@@ -1,5 +1,4 @@
 import { DestinyVersion, VaultWeaponGroupingStyle } from '@destinyitemmanager/dim-api-types';
-import { settingSelector } from 'app/dim-api/selectors';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import WeaponGroupingIcon from 'app/dim-ui/WeaponGroupingIcon';
 import { t } from 'app/i18next-t';
@@ -17,8 +16,10 @@ import { useItemPicker } from 'app/item-picker/item-picker';
 import { characterOrderSelector } from 'app/settings/character-sort';
 import { itemSorterSelector } from 'app/settings/item-sort';
 import {
+  vaultArmorGroupingStyleSelector,
   vaultWeaponGroupingEnabledSelector,
   vaultWeaponGroupingSelector,
+  vaultWeaponGroupingStyleSelector,
 } from 'app/settings/vault-grouping';
 import { AppIcon, addIcon } from 'app/shell/icons';
 import { vaultGroupingValueWithType } from 'app/shell/item-comparators';
@@ -81,7 +82,7 @@ const StoreBucketInner = memo(function StoreBucketInner({
   const sortItems = useSelector(itemSorterSelector);
   const groupWeapons = useSelector(vaultWeaponGroupingSelector);
   const vaultWeaponGroupingEnabled = useSelector(vaultWeaponGroupingEnabledSelector);
-  const weaponGroupingStyle = useSelector(settingSelector('vaultWeaponGroupingStyle'));
+  const weaponGroupingStyle = useSelector(vaultWeaponGroupingStyleSelector);
 
   const showItemPicker = useItemPicker();
   const pickEquipItem = useCallback(() => {
@@ -200,7 +201,7 @@ const VaultBucketDividedByClass = memo(function SingleCharacterVaultBucket({
   const storeClassList = useSelector(storeClassListSelector);
   const characterOrder = useSelector(characterOrderSelector);
   const sortItems = useSelector(itemSorterSelector);
-  const armorGroupingStyle = useSelector(settingSelector('vaultArmorGroupingStyle'));
+  const armorGroupingStyle = useSelector(vaultArmorGroupingStyleSelector);
 
   // The vault divides armor by class
   const itemsByClass = Map.groupBy(items, (item) => item.classType);
