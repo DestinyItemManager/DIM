@@ -79,12 +79,15 @@ export default function Select<T>({
   );
   const [dropdownHeight, setDropdownHeight] = useState<number | undefined>();
 
-  usePopper({
-    contents: menuRef,
-    reference: buttonRef,
-    placement: 'bottom-start',
-    offset: 2,
-  });
+  usePopper(
+    {
+      contents: menuRef,
+      reference: buttonRef,
+      placement: 'bottom-start',
+      offset: 2,
+    },
+    [isOpen, items],
+  );
 
   if (!selectedItem) {
     throw new Error('value must correspond to one of the provided options');

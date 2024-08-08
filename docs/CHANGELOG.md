@@ -1,6 +1,7 @@
 ## Next
 
 * Fixed character sorting on the Loadouts page.
+* Dropdown no longer flickers on Firefox.
 
 ## 8.31.0 <span class="changelog-date">(2024-08-04)</span>
 

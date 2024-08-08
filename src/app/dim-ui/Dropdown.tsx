@@ -74,13 +74,16 @@ export default function Dropdown({
   const buttonRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  usePopper({
-    contents: menuRef,
-    reference: buttonRef,
-    placement,
-    offset,
-    fixed,
-  });
+  usePopper(
+    {
+      contents: menuRef,
+      reference: buttonRef,
+      placement,
+      offset,
+      fixed,
+    },
+    [isOpen, items],
+  );
 
   return (
     <div className={className}>
