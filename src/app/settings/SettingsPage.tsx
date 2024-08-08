@@ -368,6 +368,17 @@ export default function SettingsPage() {
                   }
                 />
               )}
+              <Checkbox
+                label={t('Settings.VaultArmorGroupingStyle')}
+                name="vaultArmorGroupingStyle"
+                value={settings.vaultArmorGroupingStyle !== VaultWeaponGroupingStyle.Inline}
+                onChange={(checked, setting) =>
+                  setSetting(
+                    setting,
+                    checked ? VaultWeaponGroupingStyle.Lines : VaultWeaponGroupingStyle.Inline,
+                  )
+                }
+              />
             </div>
 
             <div className={styles.setting}>

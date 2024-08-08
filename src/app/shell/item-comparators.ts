@@ -372,7 +372,7 @@ export function groupItems(
 ): readonly VaultGroup[] {
   const comparatorsAndGetters = GROUP_BY_GETTERS_AND_COMPARATORS[vaultGrouping];
 
-  // If there are no items, or the grouping is not suppored, return all items in a single group
+  // If there are no items, or the grouping is not supported, return all items in a single group
   if (!items.length || !comparatorsAndGetters) {
     return [{ groupingValue: undefined, icon: { type: 'none' }, items: [...items] }];
   }

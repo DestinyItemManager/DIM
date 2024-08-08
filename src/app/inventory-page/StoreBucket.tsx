@@ -1,4 +1,5 @@
-import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { DestinyVersion, VaultWeaponGroupingStyle } from '@destinyitemmanager/dim-api-types';
+import { settingSelector } from 'app/dim-api/selectors';
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import WeaponGroupingIcon from 'app/dim-ui/WeaponGroupingIcon';
 import { t } from 'app/i18next-t';
@@ -28,7 +29,7 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import emptyEngram from 'destiny-icons/general/empty-engram.svg';
 import { shallowEqual } from 'fast-equals';
 import _ from 'lodash';
-import React, { memo, useCallback, useRef } from 'react';
+import { memo, useCallback, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import './StoreBucket.scss';
@@ -80,6 +81,7 @@ const StoreBucketInner = memo(function StoreBucketInner({
   const sortItems = useSelector(itemSorterSelector);
   const groupWeapons = useSelector(vaultWeaponGroupingSelector);
   const vaultWeaponGroupingEnabled = useSelector(vaultWeaponGroupingEnabledSelector);
+  const weaponGroupingStyle = useSelector(settingSelector('vaultWeaponGroupingStyle'));
 
   const showItemPicker = useItemPicker();
   const pickEquipItem = useCallback(() => {
@@ -131,7 +133,10 @@ const StoreBucketInner = memo(function StoreBucketInner({
         storeId={storeId}
         storeClassType={storeClassType}
         // class representing a *character* bucket area that's not equippable
-        className={clsx({ 'not-equippable': !isVault && !isEquippable })}
+        className={clsx({
+          'not-equippable': !isVault && !isEquippable,
+          inlineGroups: weaponGroupingStyle === VaultWeaponGroupingStyle.Inline,
+        })}
       >
         {unequippedItems.map((groupOrItem) =>
           'id' in groupOrItem ? (
@@ -195,6 +200,7 @@ const VaultBucketDividedByClass = memo(function SingleCharacterVaultBucket({
   const storeClassList = useSelector(storeClassListSelector);
   const characterOrder = useSelector(characterOrderSelector);
   const sortItems = useSelector(itemSorterSelector);
+  const armorGroupingStyle = useSelector(settingSelector('vaultArmorGroupingStyle'));
 
   // The vault divides armor by class
   const itemsByClass = Map.groupBy(items, (item) => item.classType);
@@ -205,19 +211,22 @@ const VaultBucketDividedByClass = memo(function SingleCharacterVaultBucket({
 
   return (
     <StoreBucketDropTarget
-      grouped={false}
+      grouped={true}
       equip={false}
       bucket={bucket}
       storeId={storeId}
       storeClassType={storeClassType}
+      className={clsx({
+        inlineGroups: armorGroupingStyle === VaultWeaponGroupingStyle.Inline,
+      })}
     >
       {classTypeOrder.map((classType) => (
-        <React.Fragment key={classType}>
+        <div className="vault-group" key={classType}>
           <ClassIcon classType={classType} className="armor-class-icon" />
           {sortItems(itemsByClass.get(classType)!).map((item) => (
             <StoreInventoryItem key={item.index} item={item} />
           ))}
-        </React.Fragment>
+        </div>
       ))}
     </StoreBucketDropTarget>
   );
