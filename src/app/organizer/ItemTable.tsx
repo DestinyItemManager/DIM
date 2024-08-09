@@ -1,9 +1,7 @@
 import { destinyVersionSelector } from 'app/accounts/selectors';
-import { StatInfo } from 'app/compare/Compare';
 import { customStatsSelector, languageSelector, settingSelector } from 'app/dim-api/selectors';
 import useBulkNote from 'app/dim-ui/useBulkNote';
-import useConfirm from 'app/dim-ui/useConfirm';
-import { t, tl } from 'app/i18next-t';
+import { t } from 'app/i18next-t';
 import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
 import { DimItem, DimSocket } from 'app/inventory/item-types';
 import {
@@ -14,7 +12,6 @@ import {
   newItemsSelector,
   storesSelector,
 } from 'app/inventory/selectors';
-import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
 import { DimStore } from 'app/inventory/store-types';
 import {
   applySocketOverrides,
@@ -24,15 +21,14 @@ import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { convertToLoadoutItem, newLoadout } from 'app/loadout-drawer/loadout-utils';
 import { loadoutsByItemSelector } from 'app/loadout/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { showNotification } from 'app/notifications/notifications';
 import { searchFilterSelector } from 'app/search/items/item-search-filter';
 import { setSettingAction } from 'app/settings/actions';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
-import { AppIcon, faCaretDown, faCaretUp, spreadsheetIcon, uploadIcon } from 'app/shell/icons';
+import { AppIcon, faCaretDown, faCaretUp } from 'app/shell/icons';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { Comparator, chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
-import { emptyArray, emptyObject } from 'app/utils/empty';
+import { emptyArray } from 'app/utils/empty';
 import { useSetCSSVarToHeight, useShiftHeld } from 'app/utils/hooks';
 import { LookupTable, StringLookup } from 'app/utils/util-types';
 import { hasWishListSelector, wishListFunctionSelector } from 'app/wishlists/selectors';
@@ -41,9 +37,8 @@ import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import Dropzone, { DropzoneOptions } from 'react-dropzone';
 import { useSelector } from 'react-redux';
-import { buildStatInfo, getColumnSelectionId, getColumns } from './Columns';
+import { StatInfo, buildStatInfo, getColumnSelectionId, getColumns } from './Columns';
 import ItemActions, { TagCommandInfo } from './ItemActions';
 import { itemIncludesCategories } from './filtering-utils';
 
@@ -51,14 +46,16 @@ import { compareSelectedItems } from 'app/compare/actions';
 
 import { useTableColumnSorts } from 'app/dim-ui/table-columns';
 import { filterMap } from 'app/utils/collections';
-import { errorMessage } from 'app/utils/errors';
 import { createPortal } from 'react-dom';
 
 import { DimLanguage } from 'app/i18n';
 import { localizedSorter } from 'app/utils/intl';
 
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
+import DownloadCSVAction from './DownloadCSVAction';
 import EnabledColumnsSelector from './EnabledColumnsSelector';
+import ImportCSVAction from './ImportCSVAction';
+import ItemListExpander from './ItemListExpander';
 import styles from './ItemTable.m.scss'; // eslint-disable-line css-modules/no-unused-class
 import { ItemCategoryTreeNode, armorTopLevelCatHashes } from './ItemTypeSelector';
 import { ColumnDefinition, ColumnSort, Row, SortDirection } from './table-types';
@@ -106,8 +103,9 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   }, [categories]);
   const expandItems = useCallback(() => setMaxItems((m) => m + EXPAND_INCREMENT), []);
 
+  // Are we at a item category that can show items?
+  const terminal = Boolean(categories.at(-1)?.terminal);
   const originalItems = useMemo(() => {
-    const terminal = Boolean(categories.at(-1)?.terminal);
     if (!terminal) {
       return emptyArray<DimItem>();
     }
@@ -120,7 +118,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
       (i) => i.comparable && itemIncludesCategories(i, categoryHashes) && searchFilter(i),
     );
     return items;
-  }, [allItems, categories, searchFilter]);
+  }, [allItems, categories, searchFilter, terminal]);
 
   const classCategoryHash = categories.find(
     (n) => n.itemCategoryHash in categoryToClass,
@@ -146,8 +144,6 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     }
   });
 
-  // Are we at a item category that can show items?
-  const terminal = Boolean(categories.at(-1)?.terminal);
   const items = useMemo(
     () =>
       defs
@@ -159,15 +155,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   );
 
   // Build a list of all the stats relevant to this set of items
-  const statHashes = useMemo(
-    () =>
-      terminal
-        ? buildStatInfo(items)
-        : emptyObject<{
-            [statHash: number]: StatInfo;
-          }>(),
-    [terminal, items],
-  );
+  const statHashes = useMemo(() => buildStatInfo(items), [items]);
 
   const columns = useColumnDefinitions(itemType, statHashes, onPlugClicked);
   const filteredColumns = useMemo(
@@ -242,9 +230,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
               if (filter !== undefined) {
                 dispatch(toggleSearchQueryComponent(filter));
               }
-            }
-
-            if (e.ctrlKey) {
+            } else if (e.ctrlKey) {
               setSelectedItemIds(
                 selectedItemIds.findIndex((selectedItemId) => selectedItemId === row.item.id) === -1
                   ? [...selectedItemIds, row.item.id]
@@ -318,8 +304,8 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
         {createPortal(<style>{rowStyle}</style>, document.head)}
         <ItemTableToolbar selectedItems={selectedItems}>
           <UserGuideLink topic="Organizer" />
-          <ImportCSVAction />
-          <DownloadSpreadsheetAction firstCategory={firstCategory} />
+          <ImportCSVAction className={styles.importButton} />
+          <DownloadCSVAction firstCategory={firstCategory} className={styles.importButton} />
           <EnabledColumnsSelector
             columns={columns}
             enabledColumns={enabledColumns}
@@ -490,37 +476,6 @@ function columnSetting(itemType: 'weapon' | 'armor' | 'ghost') {
   }
 }
 
-function ItemListExpander({ onExpand }: { onExpand: () => void }) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const elem = ref.current;
-    if (!elem) {
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            onExpand();
-          }
-        }
-      },
-      {
-        root: null,
-        rootMargin: '16px',
-        threshold: 0,
-      },
-    );
-
-    observer.observe(elem);
-    return () => observer.unobserve(elem);
-  }, [onExpand]);
-
-  return <div ref={ref} />;
-}
-
 function useColumnDefinitions(
   itemType: 'weapon' | 'armor' | 'ghost',
   statHashes: {
@@ -633,75 +588,4 @@ function ItemTableToolbar({
       {children}
     </div>
   );
-}
-
-function ImportCSVAction() {
-  const dispatch = useThunkDispatch();
-  const [confirmDialog, confirm] = useConfirm();
-  const importCsv: DropzoneOptions['onDrop'] = async (acceptedFiles) => {
-    if (acceptedFiles.length < 1) {
-      showNotification({ type: 'error', title: t('Csv.ImportWrongFileType') });
-      return;
-    }
-
-    if (!(await confirm(t('Csv.ImportConfirm')))) {
-      return;
-    }
-    try {
-      const result = await dispatch(importTagsNotesFromCsv(acceptedFiles));
-      showNotification({ type: 'success', title: t('Csv.ImportSuccess', { count: result }) });
-    } catch (e) {
-      showNotification({ type: 'error', title: t('Csv.ImportFailed', { error: errorMessage(e) }) });
-    }
-  };
-
-  return (
-    <Dropzone onDrop={importCsv} accept={{ 'text/csv': ['.csv'] }} useFsAccessApi={false}>
-      {({ getRootProps, getInputProps }) => (
-        <div {...getRootProps()} className={styles.importButton}>
-          <input {...getInputProps()} />
-          <div className="dim-button">
-            <AppIcon icon={uploadIcon} /> {t('Settings.CsvImport')}
-          </div>
-          {confirmDialog}
-        </div>
-      )}
-    </Dropzone>
-  );
-}
-
-const downloadButtonSettings = [
-  { categoryId: ['weapons'], csvType: 'weapon' as const, label: tl('Bucket.Weapons') },
-  {
-    categoryId: ['hunter', 'titan', 'warlock'],
-    csvType: 'armor' as const,
-    label: tl('Bucket.Armor'),
-  },
-  { categoryId: ['ghosts'], csvType: 'ghost' as const, label: tl('Bucket.Ghost') },
-];
-
-function DownloadSpreadsheetAction({ firstCategory }: { firstCategory: ItemCategoryTreeNode }) {
-  const dispatch = useThunkDispatch();
-  const downloadButtonSetting = downloadButtonSettings.find((setting) =>
-    setting.categoryId.includes(firstCategory.id),
-  );
-  if (downloadButtonSetting) {
-    const downloadHandler = (e: React.MouseEvent) => {
-      e.preventDefault();
-      dispatch(downloadCsvFiles(downloadButtonSetting.csvType));
-      return false;
-    };
-
-    return (
-      <button
-        type="button"
-        className={clsx(styles.importButton, 'dim-button')}
-        onClick={downloadHandler}
-      >
-        <AppIcon icon={spreadsheetIcon} /> <span>{t(downloadButtonSetting.label)}.csv</span>
-      </button>
-    );
-  }
-
-  return null;
 }

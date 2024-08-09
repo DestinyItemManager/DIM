@@ -1,6 +1,5 @@
 import { CustomStatDef, DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { StoreIcon } from 'app/character-tile/StoreIcon';
-import { StatInfo } from 'app/compare/Compare';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { PressTip, Tooltip } from 'app/dim-ui/PressTip';
@@ -83,7 +82,8 @@ import {
   csvStatNamesForDestinyVersion,
 } from 'app/inventory/spreadsheets';
 import { DeepsightHarmonizerIcon } from 'app/item-popup/DeepsightHarmonizerIcon';
-import { DestinyClass } from 'bungie-api-ts/destiny2';
+import { emptyObject } from 'app/utils/empty';
+import { DestinyClass, DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import styles from './ItemTable.m.scss'; // eslint-disable-line css-modules/no-unused-class
 import { ColumnDefinition, ColumnGroup, SortDirection, Value } from './table-types';
 
@@ -205,7 +205,7 @@ export function getColumns(
           }
           return <ItemStatValue stat={stat} item={item} />;
         },
-        defaultSort: statInfo.lowerBetter ? SortDirection.ASC : SortDirection.DESC,
+        defaultSort: statInfo.defaultSort,
         filter: (value) => {
           const statName = _.invert(statHashByName)[statHash];
           return `stat:${statName}:${statName === 'rof' ? '=' : '>='}${value}`;
@@ -1110,6 +1110,11 @@ function getIntrinsicSockets(item: DimItem) {
     : extraIntrinsicSockets;
 }
 
+export interface StatInfo {
+  displayProperties: DestinyDisplayPropertiesDefinition;
+  defaultSort: SortDirection;
+}
+
 /**
  * This builds stat infos for all the stats that are relevant to a particular category of items.
  * It will return the same result for the same category, since all items in a category share stats.
@@ -1117,31 +1122,19 @@ function getIntrinsicSockets(item: DimItem) {
 export function buildStatInfo(items: DimItem[]): {
   [statHash: number]: StatInfo;
 } {
+  if (items.length === 0) {
+    return emptyObject();
+  }
   const statHashes: {
     [statHash: number]: StatInfo;
   } = {};
   for (const item of items) {
     if (item.stats) {
       for (const stat of item.stats) {
-        if (statHashes[stat.statHash]) {
-          // TODO: we don't yet use the min and max values
-          statHashes[stat.statHash].max = Math.max(statHashes[stat.statHash].max, stat.value);
-          statHashes[stat.statHash].min = Math.min(statHashes[stat.statHash].min, stat.value);
-        } else {
-          statHashes[stat.statHash] = {
-            id: stat.statHash,
-            displayProperties: stat.displayProperties,
-            min: stat.value,
-            max: stat.value,
-            enabled: true,
-            lowerBetter: stat.smallerIsBetter,
-            statMaximumValue: stat.maximumValue,
-            bar: stat.bar,
-            getStat(item) {
-              return item.stats ? item.stats.find((s) => s.statHash === stat.statHash) : undefined;
-            },
-          };
-        }
+        statHashes[stat.statHash] ||= {
+          displayProperties: stat.displayProperties,
+          defaultSort: stat.smallerIsBetter ? SortDirection.ASC : SortDirection.DESC,
+        };
       }
     }
   }
