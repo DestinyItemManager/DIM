@@ -19,6 +19,7 @@ import {
   DestinyClass,
   DestinyRecordState,
 } from 'bungie-api-ts/destiny2';
+import artifactBreakerMods from 'data/d2/artifact-breaker-weapon-types.json';
 import { D2EventEnum, D2EventInfo } from 'data/d2/d2-event-info-v2';
 import focusingOutputs from 'data/d2/focusing-item-outputs.json';
 import { BreakerTypeHashes, ItemCategoryHashes } from 'data/d2/generated-enums';
@@ -226,6 +227,25 @@ const knownValuesFilters: ItemFilterDefinition[] = [
         throw new Error(`Unknown breaker type ${filterValue}`);
       }
       return (item) => breakerType.includes(item.breakerType?.hash as BreakerTypeHashes);
+    },
+  },
+  {
+    keywords: 'breakermod',
+    description: tl('Filter.BreakerMod'),
+    format: 'query',
+    suggestions: Object.keys(breakerTypes),
+    destinyVersion: 2,
+    filter: ({ filterValue }) => {
+      const breakerType: BreakerTypeHashes[] | undefined =
+        breakerTypes[filterValue as keyof typeof breakerTypes];
+      if (!breakerType) {
+        throw new Error(`Unknown breaker type ${breakerType as string}`);
+      }
+      const breakingIchs = breakerType.flatMap((ty) => artifactBreakerMods[ty] || []);
+      return (item) =>
+        Boolean(
+          !item.breakerType && item.itemCategoryHashes.some((ich) => breakingIchs.includes(ich)),
+        );
     },
   },
   {
