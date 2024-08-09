@@ -44,7 +44,7 @@ import {
   unlockedPlugSetItemsSelector,
 } from '../inventory/selectors';
 import ModPicker from '../loadout/ModPicker';
-import { isLoadoutBuilderItem } from '../loadout/item-utils';
+import { isLoadoutBuilderItem } from '../loadout/loadout-item-utils';
 import styles from './LoadoutBuilder.m.scss';
 import NoBuildsFoundExplainer from './NoBuildsFoundExplainer';
 import EnergyOptions from './filter/EnergyOptions';

@@ -13,7 +13,7 @@ import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { getSubclassPlugs } from '../item-utils';
+import { getSubclassPlugs } from '../loadout-item-utils';
 import PlugDef from '../loadout-ui/PlugDef';
 import { createGetModRenderKey } from '../mod-utils';
 import styles from './LoadoutEditSubclass.m.scss';

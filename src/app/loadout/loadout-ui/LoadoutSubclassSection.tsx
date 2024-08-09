@@ -8,7 +8,7 @@ import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import clsx from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import { useMemo } from 'react';
-import { getSubclassPlugs } from '../item-utils';
+import { getSubclassPlugs } from '../loadout-item-utils';
 import { createGetModRenderKey } from '../mod-utils';
 import EmptySubclass from './EmptySubclass';
 import styles from './LoadoutSubclassSection.m.scss';
