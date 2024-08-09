@@ -1,5 +1,3 @@
-import { VaultWeaponGroupingStyle } from '@destinyitemmanager/dim-api-types';
-import { settingSelector } from 'app/dim-api/selectors';
 import { PullFromPostmaster } from 'app/inventory/PullFromPostmaster';
 import { InventoryBucket } from 'app/inventory/inventory-buckets';
 import { DimStore } from 'app/inventory/store-types';
@@ -12,7 +10,6 @@ import {
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
-import { useSelector } from 'react-redux';
 import StoreBucket from '../inventory-page/StoreBucket';
 import styles from './StoreBuckets.m.scss';
 
@@ -32,7 +29,6 @@ export function StoreBuckets({
   labels?: boolean;
   singleCharacter: boolean;
 }) {
-  const vaultWeaponGroupingStyle = useSelector(settingSelector('vaultWeaponGroupingStyle'));
   let content: React.ReactNode;
 
   // Don't show buckets with no items
@@ -87,7 +83,6 @@ export function StoreBuckets({
     <div
       className={clsx('store-row', `bucket-${bucket.hash}`, {
         'account-wide': bucket.accountWide,
-        inlineGroups: vaultWeaponGroupingStyle === VaultWeaponGroupingStyle.Inline,
       })}
     >
       {labels && (
