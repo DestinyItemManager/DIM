@@ -1,12 +1,11 @@
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { StatInfo } from 'app/compare/Compare';
-import { languageSelector, settingSelector } from 'app/dim-api/selectors';
-import UserGuideLink from 'app/dim-ui/UserGuideLink';
+import { customStatsSelector, languageSelector, settingSelector } from 'app/dim-api/selectors';
 import useBulkNote from 'app/dim-ui/useBulkNote';
 import useConfirm from 'app/dim-ui/useConfirm';
 import { t, tl } from 'app/i18next-t';
 import { bulkLockItems, bulkTagItems } from 'app/inventory/bulk-actions';
-import { DimItem } from 'app/inventory/item-types';
+import { DimItem, DimSocket } from 'app/inventory/item-types';
 import {
   allItemsSelector,
   createItemContextSelector,
@@ -41,11 +40,10 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import React, { ReactNode, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Dropzone, { DropzoneOptions } from 'react-dropzone';
 import { useSelector } from 'react-redux';
 import { buildStatInfo, getColumnSelectionId, getColumns } from './Columns';
-import EnabledColumnsSelector from './EnabledColumnsSelector';
 import ItemActions, { TagCommandInfo } from './ItemActions';
 import { itemIncludesCategories } from './filtering-utils';
 
@@ -58,8 +56,10 @@ import { createPortal } from 'react-dom';
 
 import { DimLanguage } from 'app/i18n';
 import { localizedSorter } from 'app/utils/intl';
-// eslint-disable-next-line css-modules/no-unused-class
-import styles from './ItemTable.m.scss';
+
+import UserGuideLink from 'app/dim-ui/UserGuideLink';
+import EnabledColumnsSelector from './EnabledColumnsSelector';
+import styles from './ItemTable.m.scss'; // eslint-disable-line css-modules/no-unused-class
 import { ItemCategoryTreeNode, armorTopLevelCatHashes } from './ItemTypeSelector';
 import { ColumnDefinition, ColumnSort, Row, SortDirection } from './table-types';
 
@@ -71,21 +71,26 @@ const categoryToClass: LookupTable<ItemCategoryHashes, DestinyClass> = {
   [ItemCategoryHashes.Warlock]: DestinyClass.Warlock,
 };
 
-const downloadButtonSettings = [
-  { categoryId: ['weapons'], csvType: 'weapon' as const, label: tl('Bucket.Weapons') },
-  {
-    categoryId: ['hunter', 'titan', 'warlock'],
-    csvType: 'armor' as const,
-    label: tl('Bucket.Armor'),
-  },
-  { categoryId: ['ghosts'], csvType: 'ghost' as const, label: tl('Bucket.Ghost') },
-];
-
 const MemoRow = memo(TableRow);
 
 const EXPAND_INCREMENT = 20;
 
 export default function ItemTable({ categories }: { categories: ItemCategoryTreeNode[] }) {
+  const dispatch = useThunkDispatch();
+  const defs = useD2Definitions();
+
+  const firstCategory = categories[1];
+  const isWeapon = Boolean(firstCategory?.itemCategoryHash === ItemCategoryHashes.Weapon);
+  const isGhost = Boolean(firstCategory?.itemCategoryHash === ItemCategoryHashes.Ghost);
+  const isArmor = !isWeapon && !isGhost;
+  const itemType = isWeapon ? 'weapon' : isArmor ? 'armor' : 'ghost';
+
+  const enabledColumns = useSelector(settingSelector(columnSetting(itemType)));
+  const itemCreationContext = useSelector(createItemContextSelector);
+  const allItems = useSelector(allItemsSelector);
+  const searchFilter = useSelector(searchFilterSelector);
+  const language = useSelector(languageSelector);
+
   const [columnSorts, toggleColumnSort] = useTableColumnSorts([
     { columnId: 'name', sort: SortDirection.ASC },
   ]);
@@ -93,14 +98,14 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   // Track the last selection for shift-selecting
   const lastSelectedId = useRef<string | null>(null);
   const [socketOverrides, onPlugClicked] = useSocketOverridesForItems();
+
+  // virtual paging
   const [maxItems, setMaxItems] = useState(EXPAND_INCREMENT);
   useEffect(() => {
     setMaxItems(EXPAND_INCREMENT);
   }, [categories]);
   const expandItems = useCallback(() => setMaxItems((m) => m + EXPAND_INCREMENT), []);
 
-  const allItems = useSelector(allItemsSelector);
-  const searchFilter = useSelector(searchFilterSelector);
   const originalItems = useMemo(() => {
     const terminal = Boolean(categories.at(-1)?.terminal);
     if (!terminal) {
@@ -117,29 +122,9 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     return items;
   }, [allItems, categories, searchFilter]);
 
-  const firstCategory = categories[1];
-  const isWeapon = Boolean(firstCategory?.itemCategoryHash === ItemCategoryHashes.Weapon);
-  const isGhost = Boolean(firstCategory?.itemCategoryHash === ItemCategoryHashes.Ghost);
-  const isArmor = !isWeapon && !isGhost;
-  const itemType = isWeapon ? 'weapon' : isArmor ? 'armor' : 'ghost';
-
-  const stores = useSelector(storesSelector);
-  const getTag = useSelector(getTagSelector);
-  const getNotes = useSelector(getNotesSelector);
-  const wishList = useSelector(wishListFunctionSelector);
-  const hasWishList = useSelector(hasWishListSelector);
-  const enabledColumns = useSelector(settingSelector(columnSetting(itemType)));
-  const itemCreationContext = useSelector(createItemContextSelector);
-  const loadoutsByItem = useSelector(loadoutsByItemSelector);
-  const newItems = useSelector(newItemsSelector);
-  const destinyVersion = useSelector(destinyVersionSelector);
-  const dispatch = useThunkDispatch();
-
-  const { customStats } = itemCreationContext;
-
-  const classCategoryHash = categories
-    .map((n) => n.itemCategoryHash)
-    .find((hash) => hash in categoryToClass);
+  const classCategoryHash = categories.find(
+    (n) => n.itemCategoryHash in categoryToClass,
+  )?.itemCategoryHash;
   const classIfAny: DestinyClass = classCategoryHash
     ? (categoryToClass[classCategoryHash] ?? DestinyClass.Unknown)
     : DestinyClass.Unknown;
@@ -163,8 +148,6 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
 
   // Are we at a item category that can show items?
   const terminal = Boolean(categories.at(-1)?.terminal);
-
-  const defs = useD2Definitions();
   const items = useMemo(
     () =>
       defs
@@ -186,38 +169,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     [terminal, items],
   );
 
-  const columns: ColumnDefinition[] = useMemo(
-    () =>
-      getColumns(
-        'organizer',
-        itemType,
-        statHashes,
-        getTag,
-        getNotes,
-        wishList,
-        hasWishList,
-        customStats,
-        loadoutsByItem,
-        newItems,
-        destinyVersion,
-        onPlugClicked,
-      ),
-    [
-      wishList,
-      hasWishList,
-      statHashes,
-      itemType,
-      getTag,
-      getNotes,
-      customStats,
-      loadoutsByItem,
-      newItems,
-      destinyVersion,
-      onPlugClicked,
-    ],
-  );
-
-  // This needs work for sure
+  const columns = useColumnDefinitions(itemType, statHashes, onPlugClicked);
   const filteredColumns = useMemo(
     () =>
       _.compact(
@@ -237,7 +189,6 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     () => buildRows(items, filteredColumns),
     [filteredColumns, items],
   );
-  const language = useSelector(languageSelector);
   const rows = useMemo(
     () => sortRows(unsortedRows, columnSorts, filteredColumns, language),
     [unsortedRows, filteredColumns, columnSorts, language],
@@ -270,13 +221,6 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
 
   const selectedItems = items.filter((i) => selectedItemIds.includes(i.id));
 
-  const onLock = loadingTracker.trackPromise(async (lock: boolean) => {
-    dispatch(bulkLockItems(selectedItems, lock));
-  });
-
-  const [bulkNoteDialog, bulkNote] = useBulkNote();
-  const onNote = () => bulkNote(selectedItems);
-
   /**
    * Handles Click Events for Table Rows
    * When shift-clicking a value, if there's a filter function defined, narrow/un-narrow the search
@@ -286,21 +230,15 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     (
       row: Row,
       column: ColumnDefinition,
-    ): React.MouseEventHandler<HTMLTableDataCellElement> | undefined =>
+    ): React.MouseEventHandler<HTMLTableCellElement> | undefined =>
       column.filter
         ? (e) => {
             if (e.shiftKey) {
-              if ((e.target as Element).hasAttribute('data-perk-name')) {
-                const filter = column.filter!(
-                  (e.target as Element).getAttribute('data-perk-name') ?? undefined,
-                  row.item,
-                );
-                if (filter) {
-                  dispatch(toggleSearchQueryComponent(filter));
-                }
-                return;
-              }
-              const filter = column.filter!(row.values[column.id], row.item);
+              const node = e.target as HTMLElement;
+              const filter = column.filter!(
+                node.dataset.filterValue ?? row.values[column.id],
+                row.item,
+              );
               if (filter !== undefined) {
                 dispatch(toggleSearchQueryComponent(filter));
               }
@@ -317,37 +255,6 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
         : undefined,
     [dispatch, selectedItemIds],
   );
-
-  const onMoveSelectedItems = useCallback(
-    (store: DimStore) => {
-      if (selectedItems.length) {
-        const loadout = newLoadout(
-          t('Organizer.BulkMoveLoadoutName'),
-          selectedItems.map((i) => convertToLoadoutItem(i, false)),
-        );
-
-        dispatch(applyLoadout(store, loadout, { allowUndo: true }));
-      }
-    },
-    [dispatch, selectedItems],
-  );
-
-  const onTagSelectedItems = useCallback(
-    (tagInfo: TagCommandInfo) => {
-      if (tagInfo.type && selectedItemIds.length) {
-        const selectedItems = items.filter((i) => selectedItemIds.includes(i.id));
-        dispatch(bulkTagItems(selectedItems, tagInfo.type, true));
-      }
-    },
-    [dispatch, items, selectedItemIds],
-  );
-
-  const onCompareSelectedItems = useCallback(() => {
-    if (selectedItemIds.length) {
-      const selectedItems = items.filter((i) => selectedItemIds.includes(i.id));
-      dispatch(compareSelectedItems(selectedItems));
-    }
-  }, [dispatch, items, selectedItemIds]);
 
   const gridSpec = `min-content ${filteredColumns
     .map((c) => c.gridWidth ?? 'min-content')
@@ -379,7 +286,6 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
    * Select and unselect items. Supports shift-held range selection.
    */
   const selectItem = (e: React.ChangeEvent<HTMLInputElement>, item: DimItem) => {
-    const checked = e.target.checked;
     let changingIds = [item.id];
     if (shiftHeld && lastSelectedId.current) {
       let startIndex = rows.findIndex((r) => r.item.id === lastSelectedId.current);
@@ -392,7 +298,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
       changingIds = rows.slice(startIndex, endIndex + 1).map((r) => r.item.id);
     }
 
-    if (checked) {
+    if (e.target.checked) {
       setSelectedItemIds((selected) => [...new Set([...selected, ...changingIds])]);
     } else {
       setSelectedItemIds((selected) => selected.filter((i) => !changingIds.includes(i)));
@@ -400,49 +306,6 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
 
     lastSelectedId.current = item.id;
   };
-
-  let downloadAction: ReactNode | null = null;
-  const downloadButtonSetting = downloadButtonSettings.find((setting) =>
-    setting.categoryId.includes(categories[1]?.id),
-  );
-  if (downloadButtonSetting) {
-    const downloadHandler = (e: React.MouseEvent) => {
-      e.preventDefault();
-      dispatch(downloadCsvFiles(downloadButtonSetting.csvType));
-      return false;
-    };
-
-    downloadAction = (
-      <button
-        type="button"
-        className={clsx(styles.importButton, 'dim-button')}
-        onClick={downloadHandler}
-      >
-        <AppIcon icon={spreadsheetIcon} /> <span>{t(downloadButtonSetting.label)}.csv</span>
-      </button>
-    );
-  }
-
-  const [confirmDialog, confirm] = useConfirm();
-  const importCsv: DropzoneOptions['onDrop'] = async (acceptedFiles) => {
-    if (acceptedFiles.length < 1) {
-      showNotification({ type: 'error', title: t('Csv.ImportWrongFileType') });
-      return;
-    }
-
-    if (!(await confirm(t('Csv.ImportConfirm')))) {
-      return;
-    }
-    try {
-      const result = await dispatch(importTagsNotesFromCsv(acceptedFiles));
-      showNotification({ type: 'success', title: t('Csv.ImportSuccess', { count: result }) });
-    } catch (e) {
-      showNotification({ type: 'error', title: t('Csv.ImportFailed', { error: errorMessage(e) }) });
-    }
-  };
-
-  const toolbarRef = useRef(null);
-  useSetCSSVarToHeight(toolbarRef, '--item-table-toolbar-height');
 
   return (
     <>
@@ -452,40 +315,18 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
         role="table"
         ref={tableRef}
       >
-        {confirmDialog}
-        {bulkNoteDialog}
-        <div className={styles.toolbar} ref={toolbarRef}>
-          <div>
-            <ItemActions
-              itemsAreSelected={Boolean(selectedItems.length)}
-              onLock={onLock}
-              onNote={onNote}
-              stores={stores}
-              onTagSelectedItems={onTagSelectedItems}
-              onMoveSelectedItems={onMoveSelectedItems}
-              onCompareSelectedItems={onCompareSelectedItems}
-            />
-            <UserGuideLink topic="Organizer" />
-            <Dropzone onDrop={importCsv} accept={{ 'text/csv': ['.csv'] }} useFsAccessApi={false}>
-              {({ getRootProps, getInputProps }) => (
-                <div {...getRootProps()} className={styles.importButton}>
-                  <input {...getInputProps()} />
-                  <div className="dim-button">
-                    <AppIcon icon={uploadIcon} /> {t('Settings.CsvImport')}
-                  </div>
-                </div>
-              )}
-            </Dropzone>
-            {downloadAction}
-            <EnabledColumnsSelector
-              columns={columns}
-              enabledColumns={enabledColumns}
-              onChangeEnabledColumn={onChangeEnabledColumn}
-              forClass={classIfAny}
-            />
-          </div>
-          {createPortal(<style>{rowStyle}</style>, document.head)}
-        </div>
+        {createPortal(<style>{rowStyle}</style>, document.head)}
+        <ItemTableToolbar selectedItems={selectedItems}>
+          <UserGuideLink topic="Organizer" />
+          <ImportCSVAction />
+          <DownloadSpreadsheetAction firstCategory={firstCategory} />
+          <EnabledColumnsSelector
+            columns={columns}
+            enabledColumns={enabledColumns}
+            onChangeEnabledColumn={onChangeEnabledColumn}
+            forClass={classIfAny}
+          />
+        </ItemTableToolbar>
         <div className={clsx(styles.selection, styles.header)} role="columnheader" aria-sort="none">
           <div>
             <input
@@ -603,7 +444,7 @@ function sortRows(
     }),
   );
 
-  return Array.from(unsortedRows).sort(comparator);
+  return unsortedRows.toSorted(comparator);
 }
 
 function TableRow({
@@ -678,4 +519,189 @@ function ItemListExpander({ onExpand }: { onExpand: () => void }) {
   }, [onExpand]);
 
   return <div ref={ref} />;
+}
+
+function useColumnDefinitions(
+  itemType: 'weapon' | 'armor' | 'ghost',
+  statHashes: {
+    [statHash: number]: StatInfo;
+  },
+  onPlugClicked?: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void,
+) {
+  const getTag = useSelector(getTagSelector);
+  const getNotes = useSelector(getNotesSelector);
+  const wishList = useSelector(wishListFunctionSelector);
+  const hasWishList = useSelector(hasWishListSelector);
+  const loadoutsByItem = useSelector(loadoutsByItemSelector);
+  const newItems = useSelector(newItemsSelector);
+  const destinyVersion = useSelector(destinyVersionSelector);
+  const customStats = useSelector(customStatsSelector);
+
+  return useMemo(
+    () =>
+      getColumns(
+        'organizer',
+        itemType,
+        statHashes,
+        getTag,
+        getNotes,
+        wishList,
+        hasWishList,
+        customStats,
+        loadoutsByItem,
+        newItems,
+        destinyVersion,
+        onPlugClicked,
+      ),
+    [
+      wishList,
+      hasWishList,
+      statHashes,
+      itemType,
+      getTag,
+      getNotes,
+      customStats,
+      loadoutsByItem,
+      newItems,
+      destinyVersion,
+      onPlugClicked,
+    ],
+  );
+}
+
+function ItemTableToolbar({
+  selectedItems,
+  children,
+}: {
+  selectedItems: DimItem[];
+  children?: React.ReactNode;
+}) {
+  const dispatch = useThunkDispatch();
+  const stores = useSelector(storesSelector);
+
+  const toolbarRef = useRef(null);
+  useSetCSSVarToHeight(toolbarRef, '--item-table-toolbar-height');
+
+  const onLock = loadingTracker.trackPromise(async (lock: boolean) => {
+    dispatch(bulkLockItems(selectedItems, lock));
+  });
+
+  const [bulkNoteDialog, bulkNote] = useBulkNote();
+  const onNote = () => bulkNote(selectedItems);
+
+  const onMoveSelectedItems = useCallback(
+    (store: DimStore) => {
+      if (selectedItems.length) {
+        const loadout = newLoadout(
+          t('Organizer.BulkMoveLoadoutName'),
+          selectedItems.map((i) => convertToLoadoutItem(i, false)),
+        );
+
+        dispatch(applyLoadout(store, loadout, { allowUndo: true }));
+      }
+    },
+    [dispatch, selectedItems],
+  );
+
+  const onTagSelectedItems = useCallback(
+    (tagInfo: TagCommandInfo) => {
+      if (tagInfo.type && selectedItems.length) {
+        dispatch(bulkTagItems(selectedItems, tagInfo.type, true));
+      }
+    },
+    [dispatch, selectedItems],
+  );
+
+  const onCompareSelectedItems = useCallback(() => {
+    if (selectedItems.length) {
+      dispatch(compareSelectedItems(selectedItems));
+    }
+  }, [dispatch, selectedItems]);
+
+  return (
+    <div className={styles.toolbar} ref={toolbarRef}>
+      {bulkNoteDialog}
+      <ItemActions
+        itemsAreSelected={selectedItems.length > 0}
+        onLock={onLock}
+        onNote={onNote}
+        stores={stores}
+        onTagSelectedItems={onTagSelectedItems}
+        onMoveSelectedItems={onMoveSelectedItems}
+        onCompareSelectedItems={onCompareSelectedItems}
+      />
+      {children}
+    </div>
+  );
+}
+
+function ImportCSVAction() {
+  const dispatch = useThunkDispatch();
+  const [confirmDialog, confirm] = useConfirm();
+  const importCsv: DropzoneOptions['onDrop'] = async (acceptedFiles) => {
+    if (acceptedFiles.length < 1) {
+      showNotification({ type: 'error', title: t('Csv.ImportWrongFileType') });
+      return;
+    }
+
+    if (!(await confirm(t('Csv.ImportConfirm')))) {
+      return;
+    }
+    try {
+      const result = await dispatch(importTagsNotesFromCsv(acceptedFiles));
+      showNotification({ type: 'success', title: t('Csv.ImportSuccess', { count: result }) });
+    } catch (e) {
+      showNotification({ type: 'error', title: t('Csv.ImportFailed', { error: errorMessage(e) }) });
+    }
+  };
+
+  return (
+    <Dropzone onDrop={importCsv} accept={{ 'text/csv': ['.csv'] }} useFsAccessApi={false}>
+      {({ getRootProps, getInputProps }) => (
+        <div {...getRootProps()} className={styles.importButton}>
+          <input {...getInputProps()} />
+          <div className="dim-button">
+            <AppIcon icon={uploadIcon} /> {t('Settings.CsvImport')}
+          </div>
+          {confirmDialog}
+        </div>
+      )}
+    </Dropzone>
+  );
+}
+
+const downloadButtonSettings = [
+  { categoryId: ['weapons'], csvType: 'weapon' as const, label: tl('Bucket.Weapons') },
+  {
+    categoryId: ['hunter', 'titan', 'warlock'],
+    csvType: 'armor' as const,
+    label: tl('Bucket.Armor'),
+  },
+  { categoryId: ['ghosts'], csvType: 'ghost' as const, label: tl('Bucket.Ghost') },
+];
+
+function DownloadSpreadsheetAction({ firstCategory }: { firstCategory: ItemCategoryTreeNode }) {
+  const dispatch = useThunkDispatch();
+  const downloadButtonSetting = downloadButtonSettings.find((setting) =>
+    setting.categoryId.includes(firstCategory.id),
+  );
+  if (downloadButtonSetting) {
+    const downloadHandler = (e: React.MouseEvent) => {
+      e.preventDefault();
+      dispatch(downloadCsvFiles(downloadButtonSetting.csvType));
+      return false;
+    };
+
+    return (
+      <button
+        type="button"
+        className={clsx(styles.importButton, 'dim-button')}
+        onClick={downloadHandler}
+      >
+        <AppIcon icon={spreadsheetIcon} /> <span>{t(downloadButtonSetting.label)}.csv</span>
+      </button>
+    );
+  }
+
+  return null;
 }

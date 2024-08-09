@@ -1,5 +1,6 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { SheetHorizontalScrollContainer } from 'app/dim-ui/SheetHorizontalScrollContainer';
+import { useTableColumnSorts } from 'app/dim-ui/table-columns';
 import { t } from 'app/i18next-t';
 import { locateItem } from 'app/inventory/locate-item';
 import { createItemContextSelector } from 'app/inventory/selectors';
@@ -75,6 +76,9 @@ export default function Compare({ session }: { session: CompareSession }) {
   const [sortedHash, setSortedHash] = useState<string | number>();
   const [sortBetterFirst, setSortBetterFirst] = useState<boolean>(true);
   const [socketOverrides, onPlugClicked] = useSocketOverridesForItems();
+
+  // TODO: move column sorts here, allow shift-click to sort by multiple columns
+  const [columnSorts, toggleColumnSort] = useTableColumnSorts([]);
 
   const comparingArmor = rawCompareItems[0]?.bucket.inArmor;
   const comparingWeapons = rawCompareItems[0]?.bucket.inWeapons;
