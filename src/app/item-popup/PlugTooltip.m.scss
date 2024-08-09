@@ -57,6 +57,12 @@
   }
   .cannotRollSection {
     @include tooltip-section-color($red);
+    p {
+      padding: 4px;
+      margin: -4px;
+      border: 1px dashed white;
+      border-radius: $theme-tooltip-corner-radius;
+    }
   }
   .automaticallyPickedSection {
     @include tooltip-section-color($dim-brand);
