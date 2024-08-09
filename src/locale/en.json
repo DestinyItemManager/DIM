@@ -1205,8 +1205,9 @@
     "SpacesSize": "{{count}} space",
     "SpacesSize_plural": "{{count}} spaces",
     "Theme": "Theme",
+    "VaultArmorGroupingStyle": "Separate armor on different lines by class",
     "VaultGroupingNone": "None",
-    "VaultWeaponGroupingStyle": "Separate groups on different lines"
+    "VaultWeaponGroupingStyle": "Separate weapon groups on different lines"
   },
   "Sockets": {
     "ApplyPerks": "Apply Perks",
