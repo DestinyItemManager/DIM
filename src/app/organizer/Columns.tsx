@@ -123,6 +123,16 @@ const perkStringSort: Comparator<string | undefined> = (a, b) => {
   return 0;
 };
 
+const perkStringFilter = (value: string | undefined) => {
+  if (!value) {
+    return undefined;
+  }
+  return value
+    .split(',')
+    .map((perk) => `exactperk:"${perk}"`)
+    .join(' ');
+};
+
 /**
  * This function generates the columns.
  */
@@ -582,8 +592,7 @@ export function getColumns(
           />
         ),
         sort: perkStringSort,
-        filter: (value) =>
-          typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
+        filter: perkStringFilter,
       }),
     c({
       id: 'perks',
@@ -601,8 +610,7 @@ export function getColumns(
           <PerksCell item={item} sockets={getSockets(item, 'all')} onPlugClicked={onPlugClicked} />
         ),
       sort: perkStringSort,
-      filter: (value) =>
-        typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
+      filter: perkStringFilter,
       csv: (_value, item, { maxPerks }) => {
         // This could go on any of the perks columns, since it computes a very
         // different view of perks, but I just picked one.
@@ -635,8 +643,7 @@ export function getColumns(
           />
         ),
         sort: perkStringSort,
-        filter: (value) =>
-          typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
+        filter: perkStringFilter,
       }),
 
     destinyVersion === 2 &&
@@ -654,8 +661,7 @@ export function getColumns(
           />
         ),
         sort: perkStringSort,
-        filter: (value) =>
-          typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
+        filter: perkStringFilter,
       }),
     destinyVersion === 2 &&
       !isSpreadsheet &&
@@ -671,8 +677,7 @@ export function getColumns(
           />
         ),
         sort: perkStringSort,
-        filter: (value) =>
-          typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
+        filter: perkStringFilter,
       }),
     ...statColumns,
     ...baseStatColumns,
