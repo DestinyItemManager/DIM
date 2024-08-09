@@ -1,5 +1,6 @@
-import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
+import { CustomStatDef, DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector } from 'app/accounts/selectors';
+import { customStatsSelector, languageSelector } from 'app/dim-api/selectors';
 import { gaEvent } from 'app/google';
 import { LoadoutsByItem, loadoutsByItemSelector } from 'app/loadout/selectors';
 import { buildStatInfo, getColumns } from 'app/organizer/Columns';
@@ -11,6 +12,7 @@ import { filterMap } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { DimError } from 'app/utils/dim-error';
 import { download } from 'app/utils/download';
+import { localizedSorter } from 'app/utils/intl';
 import { isD1Item, isKillTrackerSocket } from 'app/utils/item-utils';
 import { getDisplayedItemSockets, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
@@ -81,12 +83,12 @@ export const csvStatNamesForDestinyVersion = (destinyVersion: DestinyVersion) =>
     [StatHashes.SwingSpeed, 'Swing Speed'],
     [StatHashes.ShieldDuration, 'Shield Duration'],
     [StatHashes.AirborneEffectiveness, 'Airborne Effectiveness'],
-    [StatHashes.Intellect, destinyVersion === 2 ? 'Intellect' : 'Int'],
-    [StatHashes.Discipline, destinyVersion === 2 ? 'Discipline' : 'Disc'],
-    [StatHashes.Strength, destinyVersion === 2 ? 'Strength' : 'Str'],
+    [StatHashes.Mobility, 'Mobility'],
     [StatHashes.Resilience, 'Resilience'],
     [StatHashes.Recovery, 'Recovery'],
-    [StatHashes.Mobility, 'Mobility'],
+    [StatHashes.Discipline, destinyVersion === 2 ? 'Discipline' : 'Disc'],
+    [StatHashes.Intellect, destinyVersion === 2 ? 'Intellect' : 'Int'],
+    [StatHashes.Strength, destinyVersion === 2 ? 'Strength' : 'Str'],
     [TOTAL_STAT_HASH, 'Total'],
   ]);
 
@@ -96,6 +98,7 @@ export function generateCSVExportData(
   getTag: (item: DimItem) => TagValue | undefined,
   getNotes: (item: DimItem) => string | undefined,
   loadoutsByItem: LoadoutsByItem,
+  customStats: CustomStatDef[],
 ) {
   const nameMap: { [storeId: string]: string } = {};
   let allItems: DimItem[] = [];
@@ -139,7 +142,7 @@ export function generateCSVExportData(
     getNotes,
     () => undefined /* wishList */,
     false /* hasWishList */,
-    [] /* customStats */,
+    customStats,
     loadoutsByItem,
     new Set<string>() /* newItems */,
     destinyVersion /* destinyVersion */,
@@ -149,6 +152,7 @@ export function generateCSVExportData(
   // PapaParse determines column order from the insertion order of data into the
   // first object that's returned, so we need to iterate the columns in this
   // order.
+  const statNames = csvStatNamesForDestinyVersion(destinyVersion);
   const order = [
     'name',
     'hash',
@@ -157,9 +161,11 @@ export function generateCSVExportData(
     'tier',
     'Type',
     'source',
+    'Equippable',
     'Category',
     'dmg',
     'power',
+    'energy',
     'masterworkStat',
     'masterworkTier',
     'location',
@@ -168,13 +174,13 @@ export function generateCSVExportData(
     'year',
     'season',
     'event',
-    ...[...csvStatNamesForDestinyVersion(destinyVersion).keys()].map(
-      (statHash) => `stat${statHash}`,
-    ),
+    ...[...statNames.keys()].map((statHash) => `stat${statHash}`),
+    ...[...statNames.keys()].map((statHash) => `base${statHash}`),
     'crafted',
     'level',
     'killTracker',
     'foundry',
+    'modslot',
     'loadouts',
     'notes',
     // unknown columns end up here
@@ -189,15 +195,12 @@ export function generateCSVExportData(
         return 2000;
       }
       const index = order.indexOf(c.id);
-      return index === -1 ? 1000 : index;
+      if (index < 0) {
+        // A new column was added and we need to add it to the order above
+        throw new Error('missing-column-order ' + c.id);
+      }
+      return index;
     }),
-  );
-
-  console.log(
-    'columns',
-    columns.map((c) => c.id),
-    order,
-    Object.keys(csvStatNamesForDestinyVersion(destinyVersion)),
   );
 
   const context: SpreadsheetContext = { nameMap, maxPerks };
@@ -237,12 +240,22 @@ export function downloadCsvFiles(type: 'weapon' | 'armor' | 'ghost'): ThunkResul
     const getTag = getTagSelector(getState());
     const getNotes = getNotesSelector(getState());
     const loadoutsForItem = loadoutsByItemSelector(getState());
+    const customStats = customStatsSelector(getState());
+    const language = languageSelector(getState());
 
     // perhaps we're loading
     if (stores.length === 0) {
       return;
     }
-    const data = generateCSVExportData(type, stores, getTag, getNotes, loadoutsForItem);
+    const data = generateCSVExportData(
+      type,
+      stores,
+      getTag,
+      getNotes,
+      loadoutsForItem,
+      customStats,
+    );
+    data.sort(localizedSorter(language, (r: any) => r['Name']));
     downloadCsv(`destiny${type}`, Papa.unparse(data));
   };
 }

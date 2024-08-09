@@ -299,7 +299,7 @@ export function getColumns(
     return columnDef;
   }
 
-  const customStats = createCustomStatColumns(customStatDefs);
+  const customStats = isSpreadsheet ? [] : createCustomStatColumns(customStatDefs);
 
   const columns: ColumnDefinition[] = _.compact([
     !isSpreadsheet &&
@@ -363,7 +363,7 @@ export function getColumns(
     isArmor &&
       isSpreadsheet &&
       c({
-        id: 'equippable',
+        id: 'Equippable',
         header: 'Equippable',
         csv: 'Equippable',
         value: (item) =>

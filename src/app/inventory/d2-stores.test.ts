@@ -101,7 +101,7 @@ describe('process stores', () => {
     const getTag = () => undefined;
     const getNotes = () => undefined;
     const loadoutsByItem = {};
-    const csvExport = generateCSVExportData(type, stores, getTag, getNotes, loadoutsByItem);
+    const csvExport = generateCSVExportData(type, stores, getTag, getNotes, loadoutsByItem, []);
     expect(csvExport).toMatchSnapshot();
   });
 });
