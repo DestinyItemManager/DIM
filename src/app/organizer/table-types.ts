@@ -73,7 +73,7 @@ export interface ColumnDefinition<V extends Value = Value> {
 }
 
 export interface SpreadsheetContext {
-  nameMap: { [key: string]: string };
+  storeNamesById: { [key: string]: string };
   maxPerks: number;
 }
 

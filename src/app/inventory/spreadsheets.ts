@@ -4,7 +4,7 @@ import { customStatsSelector, languageSelector } from 'app/dim-api/selectors';
 import { gaEvent } from 'app/google';
 import { LoadoutsByItem, loadoutsByItemSelector } from 'app/loadout/selectors';
 import { buildStatInfo, getColumns } from 'app/organizer/Columns';
-import { SpreadsheetContext } from 'app/organizer/table-types';
+import { CSVColumn, SpreadsheetContext } from 'app/organizer/table-types';
 import { D1_StatHashes } from 'app/search/d1-known-values';
 import { TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { ThunkResult } from 'app/store/types';
@@ -28,15 +28,15 @@ import { DimStore } from './store-types';
 function getClass(type: DestinyClass) {
   switch (type) {
     case DestinyClass.Titan:
-      return 'titan';
+      return 'Titan';
     case DestinyClass.Hunter:
-      return 'hunter';
+      return 'Hunter';
     case DestinyClass.Warlock:
-      return 'warlock';
+      return 'Warlock';
     case DestinyClass.Unknown:
-      return 'unknown';
+      return 'Unknown';
     case DestinyClass.Classified:
-      return 'classified';
+      return 'Classified';
   }
 }
 
@@ -100,14 +100,12 @@ export function generateCSVExportData(
   loadoutsByItem: LoadoutsByItem,
   customStats: CustomStatDef[],
 ) {
-  const nameMap: { [storeId: string]: string } = {};
+  const storeNamesById: { [storeId: string]: string } = {};
   let allItems: DimItem[] = [];
   for (const store of stores) {
     allItems = allItems.concat(store.items);
-    nameMap[store.id] =
-      store.id === 'vault'
-        ? 'Vault'
-        : `${capitalizeFirstLetter(getClass(store.classType))}(${store.powerLevel})`;
+    storeNamesById[store.id] =
+      store.id === 'vault' ? 'Vault' : `${getClass(store.classType)}(${store.powerLevel})`;
   }
   allItems.sort(compareBy((item) => item.index));
   let items: DimItem[] = [];
@@ -186,8 +184,6 @@ export function generateCSVExportData(
     // unknown columns end up here
     // then perks
   ];
-
-  // Damn, this needs to be column ids, not column names
   columns.sort(
     compareBy((c) => {
       if (c.id === 'perks') {
@@ -197,26 +193,26 @@ export function generateCSVExportData(
       const index = order.indexOf(c.id);
       if (index < 0) {
         // A new column was added and we need to add it to the order above
-        throw new Error('missing-column-order ' + c.id);
+        throw new Error(`missing-column-order ${c.id}`);
       }
       return index;
     }),
   );
 
-  const context: SpreadsheetContext = { nameMap, maxPerks };
+  const context: SpreadsheetContext = { storeNamesById, maxPerks };
   const data = items.map((item) => {
-    let row: Record<string, unknown> = {};
+    const row: Record<string, unknown> = {};
     for (const column of columns) {
       const value = column.value(item);
       if (column.csv) {
         row[column.csv] ||= value;
       } else if (column.csvVal) {
-        const values = column.csvVal!(value, item, context);
+        const values = column.csvVal(value, item, context);
         if (!values || values.length === 0) {
           continue;
         }
         if (Array.isArray(values[0])) {
-          for (const [key, value] of values as [string, string | number | boolean | undefined][]) {
+          for (const [key, value] of values as CSVColumn[]) {
             row[key] ||= value;
           }
         } else {
@@ -255,8 +251,8 @@ export function downloadCsvFiles(type: 'weapon' | 'armor' | 'ghost'): ThunkResul
       loadoutsForItem,
       customStats,
     );
-    data.sort(localizedSorter(language, (r: any) => r['Name']));
-    downloadCsv(`destiny${type}`, Papa.unparse(data));
+    data.sort(localizedSorter(language, (r) => (r as { Name: string }).Name));
+    downloadCsv(`destiny-${type}`, Papa.unparse(data));
   };
 }
 
@@ -335,13 +331,6 @@ export function importTagsNotesFromCsv(files: File[]): ThunkResult<number | unde
 
     return total;
   };
-}
-
-function capitalizeFirstLetter(str: string) {
-  if (!str || str.length === 0) {
-    return '';
-  }
-  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 function downloadCsv(filename: string, csv: string) {

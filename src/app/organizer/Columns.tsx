@@ -47,7 +47,6 @@ import {
   getItemKillTrackerInfo,
   getItemYear,
   getMasterworkStatNames,
-  getSpecialtySocketMetadatas,
   isArtificeSocket,
   isD1Item,
   isKillTrackerSocket,
@@ -202,6 +201,8 @@ export function getColumns(
           return `stat:${statName}:${statName === 'rof' ? '=' : '>='}${value}`;
         },
         csvVal: (_value, item) => {
+          // Re-find the stat instead of using the value passed in, because the
+          // value passed in can be different if it's Recoil.
           const stat = item.stats?.find((s) => s.statHash === statHash);
           return [csvStatNames.get(statHash) ?? `UnknownStat ${statHash}`, stat?.value ?? 0];
         },
@@ -237,6 +238,8 @@ export function getColumns(
           },
           filter: (value) => `basestat:${_.invert(statHashByName)[column.statHash]}:>=${value}`,
           csvVal: (_value, item) => {
+            // Re-find the stat instead of using the value passed in, because the
+            // value passed in can be different if it's Recoil.
             const stat = item.stats?.find((s) => s.statHash === column.statHash);
             return [
               `${csvStatNames.get(column.statHash) ?? `UnknownStatBase ${column.statHash}`} (Base)`,
@@ -418,7 +421,7 @@ export function getColumns(
         defaultSort: SortDirection.DESC,
         filter: (value) => `${value ? '' : '-'}is:crafted`,
         // TODO: nicer to put the date in the CSV
-        csvVal: (value) => ['Crafted', Boolean(value) ? 'crafted' : false],
+        csvVal: (value) => ['Crafted', value ? 'crafted' : false],
       }),
     !isSpreadsheet &&
       c({
@@ -503,18 +506,20 @@ export function getColumns(
                 .map((m) => `modslot:${m}`)
                 .join(' ')
             : ``,
-        csvVal: (_val, item) => {
-          return ['Seasonal Mod', getSpecialtySocketMetadatas(item)?.map((m) => m.slotTag) ?? ''];
-        },
+        csvVal: (value) => [
+          'Seasonal Mod',
+          // Yes, this is an array
+          value?.split(',') ?? [],
+        ],
       }),
     destinyVersion === 1 &&
       c({
         id: 'percentComplete',
         header: t('Organizer.Columns.PercentComplete'),
+        csv: '% Leveled',
         value: (item) => item.percentComplete,
         cell: (value) => percent(value),
         filter: (value) => `percentage:>=${value}`,
-        csvVal: (value) => ['% Leveled', (value * 100).toFixed(0)],
       }),
     destinyVersion === 2 &&
       isWeapon &&
@@ -608,9 +613,11 @@ export function getColumns(
               ? buildSocketNames(item)
               : [];
 
-        return _.times(maxPerks, (index) => {
-          return [`Perks ${index}`, perks[index]] as [name: string, value: string | undefined];
-        });
+        // Return multiple columns
+        return _.times(
+          maxPerks,
+          (index) => [`Perks ${index}`, perks[index]] as [name: string, value: string | undefined],
+        );
       },
     }),
     destinyVersion === 2 &&
@@ -785,7 +792,7 @@ export function getColumns(
       header: t('Organizer.Columns.Location'),
       value: (item) => item.owner,
       cell: (_val, item) => <StoreLocation storeId={item.owner} />,
-      csvVal: (value, _item, { nameMap }) => ['Owner', nameMap[value]],
+      csvVal: (value, _item, { storeNamesById }) => ['Owner', storeNamesById[value]],
     }),
     c({
       id: 'loadouts',
