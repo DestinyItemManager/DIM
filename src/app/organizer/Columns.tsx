@@ -508,8 +508,8 @@ export function getColumns(
             : ``,
         csvVal: (value) => [
           'Seasonal Mod',
-          // Yes, this is an array
-          value?.split(',') ?? [],
+          // Yes, this is an array most of the time, or an empty string
+          value?.split(',') ?? '',
         ],
       }),
     destinyVersion === 1 &&
