@@ -187,7 +187,7 @@ export const buildSets = memoizeOne((defs: D2ManifestDefinitions): OrnamentsData
               data[classType].sets[key].name = item.displayProperties.name;
             }
           } else {
-            const node = findCollectibleArmorParentNode(collectibleFinder(item, classType));
+            const node = findCollectibleArmorParentNode(collectibleFinder(item.hash, classType));
             if (node) {
               // Some sets will be mapped to the same presentation node - find things that are categorically different
               // 1. whether the plug is a proper armor piece too, or just a modification

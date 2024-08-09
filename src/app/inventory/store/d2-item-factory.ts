@@ -2,6 +2,7 @@ import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
 import { t } from 'app/i18next-t';
 import { createCollectibleFinder } from 'app/records/collectible-matching';
+import { getCollectibleState } from 'app/records/presentation-nodes';
 import {
   D2ItemTiers,
   SOME_OTHER_DUMMY_BUCKET,
@@ -401,7 +402,8 @@ export function makeItem(
     itemDef.iconWatermarkShelved ||
     undefined;
 
-  const collectible = createCollectibleFinder(defs)(itemDef);
+  const collectible = createCollectibleFinder(defs)(item.itemHash);
+  const collectibleState = collectible && getCollectibleState(collectible, profileResponse);
   // Do we need this now?
   const source = collectible?.sourceHash;
 
@@ -502,6 +504,7 @@ export function makeItem(
     ammoType: itemDef.equippingBlock ? itemDef.equippingBlock.ammoType : DestinyAmmunitionType.None,
     source,
     collectibleHash: collectible?.hash,
+    collectibleState,
     missingSockets: false,
     displaySource: itemDef.displaySource,
     plug: itemDef.plug && {
