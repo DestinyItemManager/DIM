@@ -401,7 +401,6 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     lastSelectedId.current = item.id;
   };
 
-  // TODO: drive the CSV export off the same column definitions as this table!
   let downloadAction: ReactNode | null = null;
   const downloadButtonSetting = downloadButtonSettings.find((setting) =>
     setting.categoryId.includes(categories[1]?.id),
