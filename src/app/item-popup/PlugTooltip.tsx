@@ -278,18 +278,12 @@ function PlugTooltip({
       )}
       {cannotCurrentlyRoll && (
         <Tooltip.Section className={styles.cannotRollSection}>
-          <p>
-            <span className={styles.cannotRollCircle} />
-            {t('MovePopup.CannotCurrentlyRoll')}
-          </p>
+          <p>{t('MovePopup.CannotCurrentlyRoll')}</p>
         </Tooltip.Section>
       )}
       {unreliablePerkOption && (
         <Tooltip.Section className={styles.cannotRollSection}>
-          <p>
-            <span className={styles.cannotRollCircle} />
-            {t('MovePopup.UnreliablePerkOption')}
-          </p>
+          <p>{t('MovePopup.UnreliablePerkOption')}</p>
         </Tooltip.Section>
       )}
       {automaticallyPicked && (
