@@ -58,8 +58,7 @@ export interface ColumnDefinition<V extends Value = Value> {
   /**
    * A name for this column when it is output as CSV. This will reuse the value
    * function as-is. We could reuse the header, but that's localized, while
-   * historically our CSV column names haven't been. I tried to combine this and
-   * `csvVal` but ran into type covariance issues.
+   * historically our CSV column names haven't been.
    *
    * Alternately, provide a function to override both the column name and the
    * value, or emit multiple columns at once. This is mostly to achieve
