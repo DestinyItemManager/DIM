@@ -57,11 +57,14 @@
   }
   .cannotRollSection {
     @include tooltip-section-color($red);
-    p {
-      padding: 4px;
-      margin: -4px;
+    .cannotRollCircle {
+      display: inline-block;
+      font-size: 12px;
+      padding: 6px;
+      margin-bottom: -3px;
+      margin-right: 3px;
       border: 1px dashed white;
-      border-radius: $theme-tooltip-corner-radius;
+      border-radius: 50%;
     }
   }
   .automaticallyPickedSection {

@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'automaticallyPickedSection': string;
+  'cannotRollCircle': string;
   'cannotRollSection': string;
   'clarityDescription': string;
   'communityInsightSection': string;
