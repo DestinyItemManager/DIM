@@ -200,7 +200,7 @@ export function getColumns(
           const statName = _.invert(statHashByName)[statHash];
           return `stat:${statName}:${statName === 'rof' ? '=' : '>='}${value}`;
         },
-        csvVal: (_value, item) => {
+        csv: (_value, item) => {
           // Re-find the stat instead of using the value passed in, because the
           // value passed in can be different if it's Recoil.
           const stat = item.stats?.find((s) => s.statHash === statHash);
@@ -237,7 +237,7 @@ export function getColumns(
             return <ItemStatValue stat={stat} item={item} baseStat />;
           },
           filter: (value) => `basestat:${_.invert(statHashByName)[column.statHash]}:>=${value}`,
-          csvVal: (_value, item) => {
+          csv: (_value, item) => {
             // Re-find the stat instead of using the value passed in, because the
             // value passed in can be different if it's Recoil.
             const stat = item.stats?.find((s) => s.statHash === column.statHash);
@@ -275,7 +275,7 @@ export function getColumns(
                   <span style={getColor(stat?.qualityPercentage?.min || 0, 'color')}>{value}%</span>
                 );
               },
-              csvVal: (_value, item) => {
+              csv: (_value, item) => {
                 if (!isD1Item(item)) {
                   throw new Error('Expected D1 item');
                 }
@@ -421,7 +421,7 @@ export function getColumns(
         defaultSort: SortDirection.DESC,
         filter: (value) => `${value ? '' : '-'}is:crafted`,
         // TODO: nicer to put the date in the CSV
-        csvVal: (value) => ['Crafted', value ? 'crafted' : false],
+        csv: (value) => ['Crafted', value ? 'crafted' : false],
       }),
     !isSpreadsheet &&
       c({
@@ -506,7 +506,7 @@ export function getColumns(
                 .map((m) => `modslot:${m}`)
                 .join(' ')
             : ``,
-        csvVal: (value) => [
+        csv: (value) => [
           'Seasonal Mod',
           // Yes, this is an array most of the time, or an empty string
           value?.split(',') ?? '',
@@ -603,7 +603,7 @@ export function getColumns(
       sort: perkStringSort,
       filter: (value) =>
         typeof value === 'string' ? `exactperk:${quoteFilterString(value)}` : undefined,
-      csvVal: (_value, item, { maxPerks }) => {
+      csv: (_value, item, { maxPerks }) => {
         // This could go on any of the perks columns, since it computes a very
         // different view of perks, but I just picked one.
         const perks =
@@ -713,7 +713,7 @@ export function getColumns(
         header: t('Organizer.Columns.Level'),
         value: (item) => item.craftedInfo?.level,
         defaultSort: SortDirection.DESC,
-        csvVal: (value) => ['Crafted Level', value ?? 0],
+        csv: (value) => ['Crafted Level', value ?? 0],
       }),
     destinyVersion === 2 &&
       isWeapon &&
@@ -742,7 +742,7 @@ export function getColumns(
           );
         },
         defaultSort: SortDirection.DESC,
-        csvVal: (value) => ['Kill Tracker', value ?? 0],
+        csv: (value) => ['Kill Tracker', value ?? 0],
       }),
     destinyVersion === 2 &&
       isWeapon &&
@@ -785,14 +785,14 @@ export function getColumns(
           return event ? D2EventInfo[event].name : undefined;
         },
         filter: (value) => `event:${value}`,
-        csvVal: (value) => ['Event', value ?? ''],
+        csv: (value) => ['Event', value ?? ''],
       }),
     c({
       id: 'location',
       header: t('Organizer.Columns.Location'),
       value: (item) => item.owner,
       cell: (_val, item) => <StoreLocation storeId={item.owner} />,
-      csvVal: (value, _item, { storeNamesById }) => ['Owner', storeNamesById[value]],
+      csv: (value, _item, { storeNamesById }) => ['Owner', storeNamesById[value]],
     }),
     c({
       id: 'loadouts',
@@ -832,7 +832,7 @@ export function getColumns(
           return loadout && `inloadout:${quoteFilterString(loadout.loadout.name)}`;
         }
       },
-      csvVal: (value) => ['Loadouts', value ?? ''],
+      csv: (value) => ['Loadouts', value ?? ''],
     }),
     c({
       id: 'notes',

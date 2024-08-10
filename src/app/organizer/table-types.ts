@@ -60,16 +60,22 @@ export interface ColumnDefinition<V extends Value = Value> {
    * function as-is. We could reuse the header, but that's localized, while
    * historically our CSV column names haven't been. I tried to combine this and
    * `csvVal` but ran into type covariance issues.
+   *
+   * Alternately, provide a function to override both the column name and the
+   * value, or emit multiple columns at once. This is mostly to achieve
+   * compatibility with the existing CSV format, but sometimes it's used to
+   * output complex data for CSV. For example, perks are output as multiple
+   * columns.
    */
-  csv?: string;
-
-  /**
-   * Optionally override the value of this column for CSV output. This is mostly
-   * to achieve compatibility with the existing CSV format, but sometimes it's
-   * used to output complex data for CSV. For example, perks are output as
-   * multiple columns.
-   */
-  csvVal?(value: V, item: DimItem, spreadsheetContext: SpreadsheetContext): CSVColumn | CSVColumn[];
+  csv?:
+    | string
+    | {
+        bivarianceHack(
+          value: V,
+          item: DimItem,
+          spreadsheetContext: SpreadsheetContext,
+        ): CSVColumn | CSVColumn[];
+      }['bivarianceHack'];
 }
 
 export interface SpreadsheetContext {

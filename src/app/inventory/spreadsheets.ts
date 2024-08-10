@@ -204,10 +204,10 @@ export function generateCSVExportData(
     const row: Record<string, unknown> = {};
     for (const column of columns) {
       const value = column.value(item);
-      if (column.csv) {
+      if (typeof column.csv === 'string') {
         row[column.csv] ||= value;
-      } else if (column.csvVal) {
-        const values = column.csvVal(value, item, context);
+      } else if (column.csv) {
+        const values = column.csv(value, item, context);
         if (!values || values.length === 0) {
           continue;
         }
