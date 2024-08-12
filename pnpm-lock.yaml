@@ -407,8 +407,8 @@ devDependencies:
     specifier: ^8.0.0
     version: 8.0.0(webpack@5.93.0)
   marked:
-    specifier: ^13.0.3
-    version: 13.0.3
+    specifier: ^14.0.0
+    version: 14.0.0
   mini-css-extract-plugin:
     specifier: ^2.9.0
     version: 2.9.0(webpack@5.93.0)
@@ -9148,8 +9148,8 @@ packages:
       webpack: 5.93.0(webpack-cli@5.1.4)
     dev: true
 
-  /marked@13.0.3:
-    resolution: {integrity: sha512-rqRix3/TWzE9rIoFGIn8JmsVfhiuC8VIQ8IdX5TfzmeBucdY05/0UlzKaw0eVtpcN/OdVFpBk7CjKGo9iHJ/zA==}
+  /marked@14.0.0:
+    resolution: {integrity: sha512-uIj4+faQ+MgHgwUW1l2PsPglZLOLOT1uErt06dAPtx2kjteLAkbsd/0FiYg/MGS+i7ZKLb7w2WClxHkzOOuryQ==}
     engines: {node: '>= 18'}
     hasBin: true
     dev: true
