@@ -112,15 +112,13 @@ export const isArmor2Mod = (item: DestinyInventoryItemDefinition): boolean =>
   (armor2PlugCategoryHashes.includes(item.plug.plugCategoryHash) ||
     specialtyModPlugCategoryHashes.includes(item.plug.plugCategoryHash));
 
-/** accepts a DimMasterwork or lack thereof, & always returns a string */
+/** accepts a DimMasterwork or lack thereof */
 export function getMasterworkStatNames(mw: DimMasterwork | null) {
-  return (
-    mw?.stats
-      ?.filter((stat) => stat.isPrimary)
-      .map((stat) => stat.name)
-      .filter(Boolean)
-      .join(', ') ?? ''
-  );
+  return mw?.stats
+    ?.filter((stat) => stat.isPrimary)
+    .map((stat) => stat.name)
+    .filter(Boolean)
+    .join(', ');
 }
 
 /** Can this item be equipped by the given store? */

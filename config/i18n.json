@@ -1050,6 +1050,7 @@
       "Name": "Name",
       "Power": "Power",
       "Damage": "Damage",
+      "Foundry": "Foundry",
       "Intrinsics": "Intrinsic",
       "OriginTraits": "Origin Trait",
       "Shaders": "Cosmetics",

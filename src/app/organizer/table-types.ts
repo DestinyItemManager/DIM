@@ -16,6 +16,8 @@ export interface ColumnGroup {
   dropdownLabel?: React.ReactNode;
 }
 
+export type CSVColumn = [name: string, value: string | string[] | number | boolean | undefined];
+
 // TODO: column groupings?
 // TODO: custom configs like the total column?
 // prop methods make this invariant over V, so disable the rule here
@@ -52,6 +54,32 @@ export interface ColumnDefinition<V extends Value = Value> {
    * but sometimes a custom stat should be limited to only displaying for a certain class
    */
   limitToClass?: DestinyClass;
+
+  /**
+   * A name for this column when it is output as CSV. This will reuse the value
+   * function as-is. We could reuse the header, but that's localized, while
+   * historically our CSV column names haven't been.
+   *
+   * Alternately, provide a function to override both the column name and the
+   * value, or emit multiple columns at once. This is mostly to achieve
+   * compatibility with the existing CSV format, but sometimes it's used to
+   * output complex data for CSV. For example, perks are output as multiple
+   * columns.
+   */
+  csv?:
+    | string
+    | {
+        bivarianceHack(
+          value: V,
+          item: DimItem,
+          spreadsheetContext: SpreadsheetContext,
+        ): CSVColumn | CSVColumn[];
+      }['bivarianceHack'];
+}
+
+export interface SpreadsheetContext {
+  storeNamesById: { [key: string]: string };
+  maxPerks: number;
 }
 
 export interface Row {
