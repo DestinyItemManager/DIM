@@ -23,9 +23,9 @@ export default function DownloadCSVAction({
   className?: string;
 }) {
   const dispatch = useThunkDispatch();
-  const downloadButtonSetting = downloadButtonSettings.find((setting) =>
-    setting.categoryId.includes(firstCategory.id),
-  );
+  const downloadButtonSetting =
+    firstCategory &&
+    downloadButtonSettings.find((setting) => setting.categoryId.includes(firstCategory.id));
   if (downloadButtonSetting) {
     const downloadHandler = (e: React.MouseEvent) => {
       e.preventDefault();

@@ -329,7 +329,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
             />
           </div>
         </div>
-        {filteredColumns.map((column: ColumnDefinition) => {
+        {filteredColumns.map((column) => {
           const isStatsColumn = ['stats', 'baseStats'].includes(column.columnGroup?.id ?? '');
           return (
             <div

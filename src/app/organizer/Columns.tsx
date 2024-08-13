@@ -137,7 +137,7 @@ const perkStringFilter = (value: string | undefined) => {
  * This function generates the columns.
  */
 export function getColumns(
-  useCase: 'organizer' | 'spreadsheet',
+  useCase: 'organizer' | 'spreadsheet' | 'compare',
   itemsType: 'weapon' | 'armor' | 'ghost',
   statHashes: {
     [statHash: number]: StatInfo;
@@ -152,6 +152,13 @@ export function getColumns(
   destinyVersion: DestinyVersion,
   onPlugClicked?: (value: { item: DimItem; socket: DimSocket; plugHash: number }) => void,
 ): ColumnDefinition[] {
+  const isGhost = itemsType === 'ghost';
+  const isArmor = itemsType === 'armor';
+  const isWeapon = itemsType === 'weapon';
+  const isOrganizer = useCase === 'organizer';
+  const isSpreadsheet = useCase === 'spreadsheet';
+  const isCompare = useCase === 'compare';
+
   const customStatHashes = customStatDefs.map((c) => c.statHash);
   const statsGroup: ColumnGroup = {
     id: 'stats',
@@ -220,11 +227,6 @@ export function getColumns(
     }),
     (s) => getStatSortOrder(s.statHash),
   );
-
-  const isGhost = itemsType === 'ghost';
-  const isArmor = itemsType === 'armor';
-  const isWeapon = itemsType === 'weapon';
-  const isSpreadsheet = useCase === 'spreadsheet';
 
   const baseStatColumns: ColumnWithStat[] =
     destinyVersion === 2 && (isArmor || !isSpreadsheet)
@@ -365,6 +367,7 @@ export function getColumns(
         filter: (value) => `power:>=${value}`,
       }),
     isWeapon &&
+      !isCompare &&
       c({
         id: 'dmg',
         header: t('Organizer.Columns.Damage'),
@@ -392,26 +395,28 @@ export function getColumns(
         defaultSort: SortDirection.DESC,
         filter: (value) => `energycapacity:>=${value}`,
       }),
-    c({
-      id: 'locked',
-      header: <AppIcon icon={lockIcon} />,
-      csv: 'Locked',
-      dropdownLabel: t('Organizer.Columns.Locked'),
-      value: (i) => i.locked,
-      cell: (value) => (value ? <AppIcon icon={lockIcon} /> : undefined),
-      defaultSort: SortDirection.DESC,
-      filter: (value) => `${value ? '' : '-'}is:locked`,
-    }),
-    c({
-      id: 'tag',
-      header: t('Organizer.Columns.Tag'),
-      csv: 'Tag',
-      value: (item) => getTag(item),
-      cell: (value) => value && <TagIcon tag={value} />,
-      sort: compareBy((tag) => (tag && tag in tagConfig ? tagConfig[tag].sortOrder : 1000)),
-      filter: (value) => `tag:${value || 'none'}`,
-    }),
-    !isSpreadsheet &&
+    !isCompare &&
+      c({
+        id: 'locked',
+        header: <AppIcon icon={lockIcon} />,
+        csv: 'Locked',
+        dropdownLabel: t('Organizer.Columns.Locked'),
+        value: (i) => i.locked,
+        cell: (value) => (value ? <AppIcon icon={lockIcon} /> : undefined),
+        defaultSort: SortDirection.DESC,
+        filter: (value) => `${value ? '' : '-'}is:locked`,
+      }),
+    !isCompare &&
+      c({
+        id: 'tag',
+        header: t('Organizer.Columns.Tag'),
+        csv: 'Tag',
+        value: (item) => getTag(item),
+        cell: (value) => value && <TagIcon tag={value} />,
+        sort: compareBy((tag) => (tag && tag in tagConfig ? tagConfig[tag].sortOrder : 1000)),
+        filter: (value) => `tag:${value || 'none'}`,
+      }),
+    isOrganizer &&
       c({
         id: 'new',
         header: t('Organizer.Columns.New'),
@@ -422,6 +427,7 @@ export function getColumns(
       }),
     destinyVersion === 2 &&
       isWeapon &&
+      !isCompare &&
       c({
         id: 'crafted',
         header: t('Organizer.Columns.Crafted'),
@@ -433,7 +439,7 @@ export function getColumns(
         // TODO: nicer to put the date in the CSV
         csv: (value) => ['Crafted', value ? 'crafted' : false],
       }),
-    !isSpreadsheet &&
+    isOrganizer &&
       c({
         id: 'recency',
         header: t('Organizer.Columns.Recency'),
@@ -442,7 +448,7 @@ export function getColumns(
       }),
     destinyVersion === 2 &&
       isWeapon &&
-      !isSpreadsheet &&
+      isOrganizer &&
       c({
         id: 'wishList',
         header: t('Organizer.Columns.WishList'),
@@ -461,13 +467,14 @@ export function getColumns(
         filter: (value) =>
           value === true ? 'is:wishlist' : value === false ? 'is:trashlist' : '-is:wishlist',
       }),
-    c({
-      id: 'tier',
-      header: t('Organizer.Columns.Tier'),
-      csv: 'Tier',
-      value: (i) => i.tier,
-      filter: (value) => `is:${value}`,
-    }),
+    !isCompare &&
+      c({
+        id: 'tier',
+        header: t('Organizer.Columns.Tier'),
+        csv: 'Tier',
+        value: (i) => i.tier,
+        filter: (value) => `is:${value}`,
+      }),
     isSpreadsheet &&
       !isGhost &&
       c({
@@ -493,6 +500,7 @@ export function getColumns(
       }),
     destinyVersion === 2 &&
       isArmor &&
+      !isCompare &&
       c({
         id: 'modslot',
         header: t('Organizer.Columns.ModSlot'),
@@ -523,6 +531,7 @@ export function getColumns(
         ],
       }),
     destinyVersion === 1 &&
+      !isCompare &&
       c({
         id: 'percentComplete',
         header: t('Organizer.Columns.PercentComplete'),
@@ -560,7 +569,7 @@ export function getColumns(
       }),
     destinyVersion === 2 &&
       isWeapon &&
-      !isSpreadsheet &&
+      isOrganizer &&
       c({
         id: 'breaker',
         header: t('Organizer.Columns.Breaker'),
@@ -695,6 +704,7 @@ export function getColumns(
     ...(destinyVersion === 2 && isArmor ? customStats : []),
     destinyVersion === 2 &&
       isWeapon &&
+      !isCompare &&
       c({
         id: 'masterworkTier',
         header: t('Organizer.Columns.MasterworkTier'),
@@ -705,6 +715,7 @@ export function getColumns(
       }),
     destinyVersion === 2 &&
       isWeapon &&
+      !isCompare &&
       c({
         id: 'masterworkStat',
         header: t('Organizer.Columns.MasterworkStat'),
@@ -713,6 +724,7 @@ export function getColumns(
       }),
     destinyVersion === 2 &&
       isWeapon &&
+      !isCompare &&
       c({
         id: 'level',
         header: t('Organizer.Columns.Level'),
@@ -722,7 +734,7 @@ export function getColumns(
       }),
     destinyVersion === 2 &&
       isWeapon &&
-      !isSpreadsheet &&
+      isOrganizer &&
       c({
         id: 'harmonizable',
         header: t('Organizer.Columns.Harmonizable'),
@@ -731,6 +743,7 @@ export function getColumns(
       }),
     destinyVersion === 2 &&
       isWeapon &&
+      !isCompare &&
       c({
         id: 'killTracker',
         header: t('Organizer.Columns.KillTracker'),
@@ -751,6 +764,7 @@ export function getColumns(
       }),
     destinyVersion === 2 &&
       isWeapon &&
+      !isCompare &&
       c({
         id: 'foundry',
         header: t('Organizer.Columns.Foundry'),
@@ -759,6 +773,7 @@ export function getColumns(
         filter: (value) => `foundry:${value}`,
       }),
     destinyVersion === 2 &&
+      !isCompare &&
       c({
         id: 'source',
         csv: 'Source',
@@ -766,14 +781,16 @@ export function getColumns(
         value: source,
         filter: (value) => `source:${value}`,
       }),
-    c({
-      id: 'year',
-      csv: 'Year',
-      header: t('Organizer.Columns.Year'),
-      value: (item) => getItemYear(item),
-      filter: (value) => `year:${value}`,
-    }),
+    !isCompare &&
+      c({
+        id: 'year',
+        csv: 'Year',
+        header: t('Organizer.Columns.Year'),
+        value: (item) => getItemYear(item),
+        filter: (value) => `year:${value}`,
+      }),
     destinyVersion === 2 &&
+      !isCompare &&
       c({
         id: 'season',
         csv: 'Season',
@@ -782,6 +799,7 @@ export function getColumns(
         filter: (value) => `season:${value}`,
       }),
     destinyVersion === 2 &&
+      !isCompare &&
       c({
         id: 'event',
         header: t('Organizer.Columns.Event'),
@@ -792,64 +810,68 @@ export function getColumns(
         filter: (value) => `event:${value}`,
         csv: (value) => ['Event', value ?? ''],
       }),
-    c({
-      id: 'location',
-      header: t('Organizer.Columns.Location'),
-      value: (item) => item.owner,
-      cell: (_val, item) => <StoreLocation storeId={item.owner} />,
-      csv: (value, _item, { storeNamesById }) => ['Owner', storeNamesById[value]],
-    }),
-    c({
-      id: 'loadouts',
-      header: t('Organizer.Columns.Loadouts'),
-      value: (item) => {
-        const loadouts = loadoutsByItem[item.id];
-        // The raw comparison value compares by number of loadouts first,
-        // then by first loadout name
-        return (
-          loadouts &&
-          // 99999 loadouts ought to be enough for anyone
-          `${loadouts.length.toString().padStart(5, '0')}:${loadouts
-            .map((l) => l.loadout.name)
-            .sort()
-            .join(',')}`
-        );
-      },
-      cell: (_val, item) => {
-        const inloadouts = loadoutsByItem[item.id];
-        return (
-          inloadouts &&
-          inloadouts.length > 0 && (
-            <LoadoutsCell
-              loadouts={_.sortBy(
-                inloadouts.map((l) => l.loadout),
-                (l) => l.name,
-              )}
-              owner={item.owner}
-            />
-          )
-        );
-      },
-      filter: (value, item) => {
-        if (typeof value === 'string') {
+    !isCompare &&
+      c({
+        id: 'location',
+        header: t('Organizer.Columns.Location'),
+        value: (item) => item.owner,
+        cell: (_val, item) => <StoreLocation storeId={item.owner} />,
+        csv: (value, _item, { storeNamesById }) => ['Owner', storeNamesById[value]],
+      }),
+    !isCompare &&
+      c({
+        id: 'loadouts',
+        header: t('Organizer.Columns.Loadouts'),
+        value: (item) => {
+          const loadouts = loadoutsByItem[item.id];
+          // The raw comparison value compares by number of loadouts first,
+          // then by first loadout name
+          return (
+            loadouts &&
+            // 99999 loadouts ought to be enough for anyone
+            `${loadouts.length.toString().padStart(5, '0')}:${loadouts
+              .map((l) => l.loadout.name)
+              .sort()
+              .join(',')}`
+          );
+        },
+        cell: (_val, item) => {
           const inloadouts = loadoutsByItem[item.id];
-          const loadout = inloadouts?.find(({ loadout }) => loadout.id === value);
-          return loadout && `inloadout:${quoteFilterString(loadout.loadout.name)}`;
-        }
-      },
-      csv: (value) => ['Loadouts', value ?? ''],
-    }),
-    c({
-      id: 'notes',
-      header: t('Organizer.Columns.Notes'),
-      csv: 'Notes',
-      value: (item) => getNotes(item),
-      cell: (_val, item) => <NotesArea item={item} minimal={true} />,
-      gridWidth: 'minmax(200px, 1fr)',
-      filter: (value) => `notes:${quoteFilterString(value ?? '')}`,
-    }),
+          return (
+            inloadouts &&
+            inloadouts.length > 0 && (
+              <LoadoutsCell
+                loadouts={_.sortBy(
+                  inloadouts.map((l) => l.loadout),
+                  (l) => l.name,
+                )}
+                owner={item.owner}
+              />
+            )
+          );
+        },
+        filter: (value, item) => {
+          if (typeof value === 'string') {
+            const inloadouts = loadoutsByItem[item.id];
+            const loadout = inloadouts?.find(({ loadout }) => loadout.id === value);
+            return loadout && `inloadout:${quoteFilterString(loadout.loadout.name)}`;
+          }
+        },
+        csv: (value) => ['Loadouts', value ?? ''],
+      }),
+    !isCompare &&
+      c({
+        id: 'notes',
+        header: t('Organizer.Columns.Notes'),
+        csv: 'Notes',
+        value: (item) => getNotes(item),
+        cell: (_val, item) => <NotesArea item={item} minimal={true} />,
+        gridWidth: 'minmax(200px, 1fr)',
+        filter: (value) => `notes:${quoteFilterString(value ?? '')}`,
+      }),
     isWeapon &&
       hasWishList &&
+      !isCompare &&
       c({
         id: 'wishListNote',
         header: t('Organizer.Columns.WishListNotes'),
