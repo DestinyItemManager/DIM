@@ -4,6 +4,10 @@
 
 * Fixed character sorting on the Loadouts page.
 * Dropdown no longer flickers on Firefox.
+* Thumbs-up icon is no longer near-invisible on the Europa theme.
+* Replaced Crafted icon with Enhanced icon for enhanced weapons.
+* Added setting to separate armor on different lines by class.
+* Replaced red background with dotted circle for perks that no longer roll on weapons.
 
 ## 8.31.0 <span class="changelog-date">(2024-08-04)</span>
 
