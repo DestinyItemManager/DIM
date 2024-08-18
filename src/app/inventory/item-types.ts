@@ -267,6 +267,8 @@ export interface DimCrafted {
   progress: number;
   /** when this weapon was crafted, UTC epoch seconds timestamp */
   craftedDate: number;
+  /** the enhancement tier for this weapon, if enhanced. 0 otherwise. */
+  enhancementTier: number;
 }
 
 export interface DimCatalyst {
