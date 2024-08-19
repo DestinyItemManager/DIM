@@ -1,5 +1,7 @@
 ## Next
 
+## 8.33.0 <span class="changelog-date">(2024-08-18)</span>
+
 ## 8.32.0 <span class="changelog-date">(2024-08-11)</span>
 
 * Fixed character sorting on the Loadouts page.
