@@ -1,6 +1,11 @@
 ## Next
 
+* Fixed the symbol picker displaying in the wrong part of the screen.
+
 ## 8.33.0 <span class="changelog-date">(2024-08-18)</span>
+
+* Fixed the `:solar:` icon not showing up in the symbol picker.
+* Shift-clicking on a cell full of perks in Organizer, but not on a specific perk within that cell, will now add all the perks to the search, instead of adding an invalid search term.
 
 ## 8.32.0 <span class="changelog-date">(2024-08-11)</span>
 
