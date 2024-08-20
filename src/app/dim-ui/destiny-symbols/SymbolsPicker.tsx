@@ -116,12 +116,15 @@ function SymbolsPickerButton<T extends HTMLTextAreaElement | HTMLInputElement>({
   const [open, setOpen] = useState(false);
   const pressTipRoot = useContext(PressTipRoot);
 
-  usePopper({
-    contents: tooltipContents,
-    reference: controlRef,
-    arrowClassName: '',
-    placement: 'top',
-  });
+  usePopper(
+    {
+      contents: tooltipContents,
+      reference: controlRef,
+      arrowClassName: '',
+      placement: 'top',
+    },
+    [open, pressTipRoot],
+  );
 
   // A user should be able to click multiple symbols to insert multiple symbols sequentially,
   // so we need to internally maintain where the cursor is (even when the element isn't actually focused)
