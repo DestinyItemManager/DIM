@@ -6,8 +6,13 @@ import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { quoteFilterString } from 'app/search/query-parser';
+import { filterMap } from 'app/utils/collections';
 import { getInterestingSocketMetadatas, getItemDamageShortName } from 'app/utils/item-utils';
-import { getIntrinsicArmorPerkSocket, getWeaponArchetype } from 'app/utils/socket-utils';
+import {
+  getExtraIntrinsicPerkSockets,
+  getIntrinsicArmorPerkSocket,
+  getWeaponArchetype,
+} from 'app/utils/socket-utils';
 import clsx from 'clsx';
 import rarityIcons from 'data/d2/engram-rarity-icons.json';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
@@ -31,6 +36,26 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
   const exampleItemIntrinsic =
     !exampleItem.isExotic &&
     getIntrinsicArmorPerkSocket(exampleItem)?.plugged?.plugDef.displayProperties;
+
+  // exotic class item perks
+  const extraIntrinsicButtons =
+    (exampleItem.destinyVersion === 2 &&
+      filterMap(
+        getExtraIntrinsicPerkSockets(exampleItem),
+        (s) => s.plugged?.plugDef.displayProperties,
+      )?.map((intrinsic) => ({
+        buttonLabel: [
+          <BungieImage
+            key="1"
+            className={clsx(styles.intrinsicIcon, 'dontInvert')}
+            src={intrinsic.icon}
+          />,
+          intrinsic.name,
+          <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
+        ],
+        query: `is:armor2.0 perk:${quoteFilterString(intrinsic.name)}`,
+      }))) ||
+    [];
 
   let comparisonSets: CompareButton[] = _.compact([
     // same slot on the same class
@@ -91,6 +116,9 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
         ],
         query: `is:armor2.0 perk:${quoteFilterString(exampleItemIntrinsic.name)}`,
       },
+
+    // exotic class items
+    ...extraIntrinsicButtons,
 
     // basically stuff with the same name & categories
     {

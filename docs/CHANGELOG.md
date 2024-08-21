@@ -1,5 +1,7 @@
 ## Next
 
+* Exotic class item perks will now show up in Compare suggestions
+
 ## 8.33.1 <span class="changelog-date">(2024-08-20)</span>
 
 * Fixed the symbol picker displaying in the wrong part of the screen.
