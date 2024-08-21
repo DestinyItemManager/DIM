@@ -43,18 +43,20 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
       filterMap(
         getExtraIntrinsicPerkSockets(exampleItem),
         (s) => s.plugged?.plugDef.displayProperties,
-      )?.map((intrinsic) => ({
-        buttonLabel: [
-          <BungieImage
-            key="1"
-            className={clsx(styles.intrinsicIcon, 'dontInvert')}
-            src={intrinsic.icon}
-          />,
-          intrinsic.name,
-          <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
-        ],
-        query: `is:armor2.0 perk:${quoteFilterString(intrinsic.name)}`,
-      }))) ||
+      )
+        ?.map((intrinsic) => ({
+          buttonLabel: [
+            <BungieImage
+              key="1"
+              className={clsx(styles.intrinsicIcon, 'dontInvert')}
+              src={intrinsic.icon}
+            />,
+            intrinsic.name,
+            <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
+          ],
+          query: `is:armor2.0 perk:${quoteFilterString(intrinsic.name)}`,
+        }))
+        .reverse()) ||
     [];
 
   let comparisonSets: CompareButton[] = _.compact([
