@@ -1,5 +1,7 @@
 ## Next
 
+* Compare view's suggestion buttons will now use the leftmost item's perks instead of an arbitrary item if the initial compare item is removed
+
 ## 8.33.1 <span class="changelog-date">(2024-08-20)</span>
 
 * Fixed the symbol picker displaying in the wrong part of the screen.
