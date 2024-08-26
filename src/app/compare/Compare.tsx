@@ -159,15 +159,7 @@ export default function Compare({ session }: { session: CompareSession }) {
     setSortBetterFirst(sortedHash === newSortedHash ? !sortBetterFirst : true);
   };
 
-  // If the session was started with a specific item, this is it
-  const initialItem = session.initialItemId
-    ? compareItems.find((i) => i.id === session.initialItemId)
-    : undefined;
-  const firstCompareItem = compareItems[0];
-  // The example item is the one we'll use for generating suggestion buttons
-  const exampleItem = initialItem || firstCompareItem;
-
-  const items = useMemo(() => {
+  const sortedComparisonItems = useMemo(() => {
     const comparator = sortCompareItemsComparator(
       sortedHash,
       sortBetterFirst,
@@ -175,8 +167,26 @@ export default function Compare({ session }: { session: CompareSession }) {
       allStats,
       session.initialItemId,
     );
-    const sortedComparisonItems = compareItems.toSorted(comparator);
-    return (
+    return compareItems.toSorted(comparator);
+  }, [
+    sortedHash,
+    sortBetterFirst,
+    doCompareBaseStats,
+    allStats,
+    session.initialItemId,
+    compareItems,
+  ]);
+
+  // If the session was started with a specific item, this is it
+  const initialItem = session.initialItemId
+    ? compareItems.find((i) => i.id === session.initialItemId)
+    : undefined;
+  const firstCompareItem = sortedComparisonItems[0];
+  // The example item is the one we'll use for generating suggestion buttons
+  const exampleItem = initialItem || firstCompareItem;
+
+  const items = useMemo(
+    () => (
       <CompareItems
         items={sortedComparisonItems}
         allStats={allStats}
@@ -186,17 +196,16 @@ export default function Compare({ session }: { session: CompareSession }) {
         doCompareBaseStats={doCompareBaseStats}
         initialItemId={session.initialItemId}
       />
-    );
-  }, [
-    allStats,
-    compareItems,
-    doCompareBaseStats,
-    onPlugClicked,
-    remove,
-    session.initialItemId,
-    sortBetterFirst,
-    sortedHash,
-  ]);
+    ),
+    [
+      sortedComparisonItems,
+      allStats,
+      doCompareBaseStats,
+      onPlugClicked,
+      remove,
+      session.initialItemId,
+    ],
+  );
 
   const header = (
     <div className={styles.options}>
