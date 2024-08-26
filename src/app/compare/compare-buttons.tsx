@@ -6,8 +6,14 @@ import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { quoteFilterString } from 'app/search/query-parser';
+import { filterMap } from 'app/utils/collections';
 import { getInterestingSocketMetadatas, getItemDamageShortName } from 'app/utils/item-utils';
-import { getIntrinsicArmorPerkSocket, getWeaponArchetype } from 'app/utils/socket-utils';
+import {
+  getExtraIntrinsicPerkSockets,
+  getIntrinsicArmorPerkSocket,
+  getWeaponArchetype,
+} from 'app/utils/socket-utils';
+import clsx from 'clsx';
 import rarityIcons from 'data/d2/engram-rarity-icons.json';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -31,6 +37,28 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
     !exampleItem.isExotic &&
     getIntrinsicArmorPerkSocket(exampleItem)?.plugged?.plugDef.displayProperties;
 
+  // exotic class item perks
+  const extraIntrinsicButtons =
+    (exampleItem.destinyVersion === 2 &&
+      filterMap(
+        getExtraIntrinsicPerkSockets(exampleItem),
+        (s) => s.plugged?.plugDef.displayProperties,
+      )
+        ?.map((intrinsic) => ({
+          buttonLabel: [
+            <BungieImage
+              key="1"
+              className={clsx(styles.intrinsicIcon, 'dontInvert')}
+              src={intrinsic.icon}
+            />,
+            intrinsic.name,
+            <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
+          ],
+          query: `is:armor2.0 perk:${quoteFilterString(intrinsic.name)}`,
+        }))
+        .reverse()) ||
+    [];
+
   let comparisonSets: CompareButton[] = _.compact([
     // same slot on the same class
     {
@@ -51,7 +79,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
     exampleItem.destinyVersion === 2 &&
       exampleItem.tier === 'Legendary' && {
         buttonLabel: [
-          <BungieImage key="rarity" src={rarityIcons.Legendary} />,
+          <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
         query: 'is:armor2.0 is:legendary',
@@ -80,12 +108,19 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
       exampleItemIntrinsic && {
         buttonLabel: [
           <PressTip minimal tooltip={exampleItemIntrinsic.name} key="1">
-            <BungieImage key="2" className={styles.intrinsicIcon} src={exampleItemIntrinsic.icon} />
+            <BungieImage
+              key="2"
+              className={clsx(styles.intrinsicIcon, 'dontInvert')}
+              src={exampleItemIntrinsic.icon}
+            />
           </PressTip>,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
         query: `is:armor2.0 perk:${quoteFilterString(exampleItemIntrinsic.name)}`,
       },
+
+    // exotic class items
+    ...extraIntrinsicButtons,
 
     // basically stuff with the same name & categories
     {
@@ -134,7 +169,7 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
     exampleItem.destinyVersion === 2 &&
       exampleItem.tier === 'Legendary' && {
         buttonLabel: [
-          <BungieImage key="rarity" src={rarityIcons.Legendary} />,
+          <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,
           <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />,
         ],
         query: 'is:legendary',
