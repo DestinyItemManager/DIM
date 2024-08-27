@@ -69,7 +69,6 @@
     img {
       margin: 0;
     }
-
     @include interactive($hover: true) {
       img {
         filter: drop-shadow(0 0 1px black);

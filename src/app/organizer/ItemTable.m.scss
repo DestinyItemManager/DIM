@@ -159,7 +159,6 @@ $content-cells: 5;
   > :global(.item) {
     --item-size: var(--icon-item-size) !important;
     height: var(--item-size);
-
     @include interactive($hover: true) {
       outline: 1px solid var(--theme-item-polaroid-hover-border);
       cursor: pointer;

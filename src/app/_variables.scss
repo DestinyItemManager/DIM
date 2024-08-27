@@ -137,22 +137,14 @@ $tempContainerZindex: 1000;
   @return #{'rgba(' + $values + ', ' + $alpha + ')'};
 }
 
-/**
- * Declares hover rules only if a device can hover over elements. This avoids issues on mobile
- * browsers where tapping an element triggers and persists its hover state.
- */
-@mixin hover {
-  @media (any-hover: hover) {
-    &:hover {
-      @content;
-    }
-  }
-}
-
 @mixin interactive($hover: false, $focus: false, $focusWithin: false, $active: false) {
+  // Declares hover rules only if a device can hover over elements. This avoids issues on mobile
+  // browsers where tapping an element triggers and persists its hover state.
   @if $hover == true {
-    @include hover {
-      @content;
+    @media (any-hover: hover) {
+      &:hover {
+        @content;
+      }
     }
   }
 

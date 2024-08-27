@@ -91,7 +91,6 @@ $control-color: rgba(255, 255, 255, 0.5);
     width: 24px;
     font-size: 24px;
   }
-
   @include interactive($hover: true, $active: true, $focus: true) {
     color: var(--theme-accent-primary);
   }

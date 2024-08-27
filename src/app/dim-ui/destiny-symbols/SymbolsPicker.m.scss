@@ -18,7 +18,6 @@
   span {
     font-size: 18px;
   }
-
   @include interactive($hover: true) {
     color: black;
     background-color: var(--theme-accent-primary);
