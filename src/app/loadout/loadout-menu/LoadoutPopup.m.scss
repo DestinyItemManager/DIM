@@ -27,6 +27,25 @@
 
   a {
     text-decoration: none;
+
+    @include interactive($hover: true) {
+      background-color: var(--theme-accent-primary);
+      color: var(--theme-text-invert) !important;
+      > span:first-child > :global(.app-icon) {
+        color: var(--theme-text-invert) !important;
+      }
+      > span:first-child > img:first-child,
+      .modificationIcon {
+        filter: none;
+      }
+      .fashionIcon {
+        filter: invert(1);
+      }
+
+      .note {
+        color: var(--theme-text-invert);
+      }
+    }
   }
 
   form {
@@ -91,27 +110,6 @@
 
     .note {
       color: var(--theme-text-invert);
-    }
-  }
-
-  a {
-    @include interactive($hover: true) {
-      background-color: var(--theme-accent-primary);
-      color: var(--theme-text-invert) !important;
-      > span:first-child > :global(.app-icon) {
-        color: var(--theme-text-invert) !important;
-      }
-      > span:first-child > img:first-child,
-      .modificationIcon {
-        filter: none;
-      }
-      .fashionIcon {
-        filter: invert(1);
-      }
-
-      .note {
-        color: var(--theme-text-invert);
-      }
     }
   }
 

@@ -374,9 +374,7 @@ $and-color: #814bcf;
       padding-left: 3px;
       padding-right: 3px;
       cursor: pointer;
-    }
 
-    & .perk {
       @include interactive($hover: true) {
         background-color: $or-color;
       }
