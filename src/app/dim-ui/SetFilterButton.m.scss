@@ -8,6 +8,7 @@
   padding: 0 6px;
   border-radius: 4px;
   text-align: center;
+
   @include interactive($hover: true) {
     background-color: #68a0b7;
     color: #222;

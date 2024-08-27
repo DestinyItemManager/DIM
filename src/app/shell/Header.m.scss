@@ -55,6 +55,7 @@ $header-height: 44px;
       @include phone-portrait {
         font-size: 24px;
       }
+
       @include interactive($hover: true) {
         color: var(--theme-accent-primary);
         cursor: pointer;

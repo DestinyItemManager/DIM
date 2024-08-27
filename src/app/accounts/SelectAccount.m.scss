@@ -24,6 +24,7 @@
   &:active {
     outline: none;
   }
+
   @include interactive($hover: true, $focus: true) {
     border-color: var(--theme-accent-primary);
     color: var(--theme-accent-primary);

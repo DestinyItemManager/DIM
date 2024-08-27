@@ -120,6 +120,7 @@
       font-size: 15px;
     }
   }
+
   @include interactive($hover: true) {
     background-color: var(--theme-accent-secondary);
     color: #222;
@@ -166,6 +167,7 @@
 
 .inGameLoadoutButton {
   composes: resetButton from '../../dim-ui/common.m.scss';
+
   @include interactive($hover: true, $focus: true) {
     outline: 2px solid var(--theme-accent-primary);
   }

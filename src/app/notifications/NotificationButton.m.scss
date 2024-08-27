@@ -10,6 +10,7 @@
   display: block;
   width: 30%;
   cursor: pointer;
+
   @include interactive($hover: true) {
     background-color: var(--theme-accent-secondary);
     color: #222;

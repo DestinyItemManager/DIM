@@ -63,6 +63,7 @@ $and-color: #814bcf;
     vertical-align: middle;
     width: var(--item-size);
     height: var(--item-size);
+
     @include interactive($hover: true) {
       opacity: 1;
       transition: 1s;
@@ -218,6 +219,7 @@ $and-color: #814bcf;
     border: 1px solid rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
     cursor: pointer;
+
     @include interactive($hover: true) {
       background-color: rgba(160, 160, 160, 0.8);
       border: 1px solid rgba(32, 32, 32, 0);

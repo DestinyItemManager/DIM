@@ -3,6 +3,7 @@
 .textBlockWrapper {
   position: relative;
   overflow: hidden;
+
   @include interactive($hover: true) {
     cursor: pointer;
   }

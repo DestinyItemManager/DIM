@@ -37,6 +37,7 @@
       color: #eee;
       display: block;
       text-decoration: none;
+
       @include interactive($hover: true) {
         text-decoration: underline;
       }

@@ -18,6 +18,7 @@
     &:nth-child(2) {
       border-top: none;
     }
+
     @include interactive($hover: true) {
       background-color: #e8a534;
     }
@@ -28,6 +29,7 @@
   a {
     color: black;
     font-size: 12px;
+
     @include interactive($hover: true) {
       cursor: pointer;
     }

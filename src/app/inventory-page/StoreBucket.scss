@@ -99,6 +99,7 @@
   padding: 4px;
   opacity: 0.3;
   transition: opacity 0.3s ease-in-out;
+
   @include interactive($hover: true) {
     opacity: 1;
   }

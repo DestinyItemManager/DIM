@@ -86,6 +86,7 @@
   background-color: var(--theme-accent-primary);
   color: var(--theme-text-invert);
   text-shadow: none;
+
   @include interactive($hover: true) {
     transform: scale(1.05);
   }
