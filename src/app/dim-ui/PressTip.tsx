@@ -93,12 +93,15 @@ function Control({
   const pressTipRoot = useContext(PressTipRoot);
   const [customization, customizeTooltip] = useState<TooltipCustomization>({ className: null });
 
-  usePopper({
-    contents: tooltipContents,
-    reference: triggerRef,
-    arrowClassName: styles.arrow,
-    placement,
-  });
+  usePopper(
+    {
+      contents: tooltipContents,
+      reference: triggerRef,
+      arrowClassName: styles.arrow,
+      placement,
+    },
+    [open],
+  );
 
   if (!tooltip) {
     const { style } = rest;

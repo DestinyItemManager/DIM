@@ -9,7 +9,7 @@ import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
 import { VirtualListRef, WindowVirtualList } from 'app/dim-ui/VirtualList';
 import ColorDestinySymbols from 'app/dim-ui/destiny-symbols/ColorDestinySymbols';
 import { t, tl } from 'app/i18next-t';
-import { artifactUnlocksSelector, storesSelector } from 'app/inventory/selectors';
+import { artifactUnlocksSelector, sortedStoresSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import {
   MakeLoadoutAnalysisAvailable,
@@ -81,7 +81,7 @@ export default function LoadoutsContainer({ account }: { account: DestinyAccount
 function Loadouts({ account }: { account: DestinyAccount }) {
   const dispatch = useDispatch();
 
-  const stores = useSelector(storesSelector);
+  const stores = useSelector(sortedStoresSelector);
   const selectedStore = useSelector(selectedLoadoutStoreSelector);
 
   const setSelectedStoreId = useCallback(

@@ -52,7 +52,7 @@
     :hover &,
     :active &,
     .selected & {
-      filter: invert(0) !important;
+      filter: invert(0) drop-shadow(0 0 1px black) !important;
     }
   }
 

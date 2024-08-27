@@ -2054,7 +2054,7 @@ export const symbolData: {
     glyph: '',
     source: {
       tableName: 'Objective',
-      hash: 76012872,
+      hash: 85535853,
       fromRichText: true,
     },
   },
@@ -2071,8 +2071,8 @@ export const symbolData: {
     codepoint: 61198,
     glyph: '',
     source: {
-      tableName: 'SandboxPerk',
-      hash: 381243875,
+      tableName: 'Objective',
+      hash: 46977068,
       fromRichText: true,
     },
   },
@@ -2403,7 +2403,7 @@ export const symbolData: {
     glyph: '󰃂',
     source: {
       tableName: 'Objective',
-      hash: 191191048,
+      hash: 502686402,
       fromRichText: false,
     },
   },

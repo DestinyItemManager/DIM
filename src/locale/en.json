@@ -1026,6 +1026,7 @@
       "Damage": "Damage",
       "Energy": "Energy",
       "Event": "Event",
+      "Foundry": "Foundry",
       "Harmonizable": "Harmonizable",
       "Icon": "Icon",
       "Intrinsics": "Intrinsic",
@@ -1205,8 +1206,9 @@
     "SpacesSize": "{{count}} space",
     "SpacesSize_plural": "{{count}} spaces",
     "Theme": "Theme",
+    "VaultArmorGroupingStyle": "Separate armor on different lines by class",
     "VaultGroupingNone": "None",
-    "VaultWeaponGroupingStyle": "Separate groups on different lines"
+    "VaultWeaponGroupingStyle": "Separate weapon groups on different lines"
   },
   "Sockets": {
     "ApplyPerks": "Apply Perks",

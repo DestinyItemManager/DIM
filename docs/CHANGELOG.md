@@ -1,5 +1,28 @@
 ## Next
 
+* Exotic class item perks will now show up in Compare suggestions
+* Compare view's suggestion buttons will now use the leftmost item's perks instead of an arbitrary item if the initial compare item is removed
+
+## 8.34.0 <span class="changelog-date">(2024-08-25)</span>
+
+## 8.33.1 <span class="changelog-date">(2024-08-20)</span>
+
+* Fixed the symbol picker displaying in the wrong part of the screen.
+
+## 8.33.0 <span class="changelog-date">(2024-08-18)</span>
+
+* Fixed the `:solar:` icon not showing up in the symbol picker.
+* Shift-clicking on a cell full of perks in Organizer, but not on a specific perk within that cell, will now add all the perks to the search, instead of adding an invalid search term.
+
+## 8.32.0 <span class="changelog-date">(2024-08-11)</span>
+
+* Fixed character sorting on the Loadouts page.
+* Dropdown no longer flickers on Firefox.
+* Thumbs-up icon is no longer near-invisible on the Europa theme.
+* Replaced Crafted icon with Enhanced icon for enhanced weapons.
+* Added setting to separate armor on different lines by class.
+* Replaced red background with dotted circle for perks that no longer roll on weapons.
+
 ## 8.31.0 <span class="changelog-date">(2024-08-04)</span>
 
 * Improved item move logic to do a better job of making room for transfers between characters.
