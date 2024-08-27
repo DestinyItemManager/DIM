@@ -26,8 +26,14 @@
   > img {
     margin-left: 0 !important;
   }
-  &:hover,
-  &:active,
+
+  @include interactive($hover: true, $active: true) {
+    background-color: var(--theme-accent-primary);
+    color: var(--theme-text-invert);
+    > img {
+      filter: none !important;
+    }
+  }
   &.checked {
     background-color: var(--theme-accent-primary);
     color: var(--theme-text-invert);

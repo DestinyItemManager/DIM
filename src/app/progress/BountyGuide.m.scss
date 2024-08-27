@@ -42,8 +42,8 @@
     transition: transform 150ms ease-in-out;
   }
 
-  @media (hover: hover) {
-    &:hover :global(.app-icon) {
+  @include interactive($hover: true) {
+    :global(.app-icon) {
       transform: scale(1.3);
     }
   }

@@ -376,12 +376,21 @@ $and-color: #814bcf;
       cursor: pointer;
     }
 
-    & .perk:hover,
+    & .perk {
+      @include interactive($hover: true) {
+        background-color: $or-color;
+      }
+    }
+
     & .active-perk-or {
       background-color: $or-color;
     }
 
-    &.shift-held .perk:hover,
+    &.shift-held .perk {
+      @include interactive($hover: true) {
+        background-color: $and-color;
+      }
+    }
     & .active-perk-and {
       background-color: $and-color;
     }
