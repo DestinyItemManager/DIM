@@ -1,5 +1,7 @@
 ## Next
 
+## 8.34.1 <span class="changelog-date">(2024-08-27)</span>
+
 * Exotic class item perks will now show up in Compare suggestions
 * Compare view's suggestion buttons will now use the leftmost item's perks instead of an arbitrary item if the initial compare item is removed
 
