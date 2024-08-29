@@ -1,5 +1,7 @@
 ## Next
 
+* Fix Organizer sorting behavior for notes, tags, and wishlist notes so that empty values sort along with other values.
+
 ## 8.34.1 <span class="changelog-date">(2024-08-27)</span>
 
 * Exotic class item perks will now show up in Compare suggestions

@@ -405,11 +405,11 @@ export function getColumns(
     c({
       id: 'tag',
       header: t('Organizer.Columns.Tag'),
-      csv: 'Tag',
-      value: (item) => getTag(item),
+      value: (item) => getTag(item) ?? '',
       cell: (value) => value && <TagIcon tag={value} />,
       sort: compareBy((tag) => (tag && tag in tagConfig ? tagConfig[tag].sortOrder : 1000)),
       filter: (value) => `tag:${value || 'none'}`,
+      csv: (value) => ['Tag', value || undefined],
     }),
     !isSpreadsheet &&
       c({
@@ -842,20 +842,23 @@ export function getColumns(
     c({
       id: 'notes',
       header: t('Organizer.Columns.Notes'),
-      csv: 'Notes',
-      value: (item) => getNotes(item),
+      // It's important for the value to always be a string, because users
+      // expect to be able to sort empty notes along with items that have notes.
+      // See https://github.com/DestinyItemManager/DIM/issues/10694
+      value: (item) => getNotes(item) ?? '',
       cell: (_val, item) => <NotesArea item={item} minimal={true} />,
       gridWidth: 'minmax(200px, 1fr)',
-      filter: (value) => `notes:${quoteFilterString(value ?? '')}`,
+      filter: (value) => `notes:${quoteFilterString(value)}`,
+      csv: (value) => ['Notes', value || undefined],
     }),
     isWeapon &&
       hasWishList &&
       c({
         id: 'wishListNote',
         header: t('Organizer.Columns.WishListNotes'),
-        value: (item) => wishList(item)?.notes?.trim(),
+        value: (item) => wishList(item)?.notes?.trim() ?? '',
         gridWidth: 'minmax(200px, 1fr)',
-        filter: (value) => `wishlistnotes:${quoteFilterString(value ?? '')}`,
+        filter: (value) => `wishlistnotes:${quoteFilterString(value)}`,
       }),
   ]);
 
