@@ -455,35 +455,33 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
         {confirmDialog}
         {bulkNoteDialog}
         <div className={styles.toolbar} ref={toolbarRef}>
-          <div>
-            <ItemActions
-              itemsAreSelected={Boolean(selectedItems.length)}
-              onLock={onLock}
-              onNote={onNote}
-              stores={stores}
-              onTagSelectedItems={onTagSelectedItems}
-              onMoveSelectedItems={onMoveSelectedItems}
-              onCompareSelectedItems={onCompareSelectedItems}
-            />
-            <UserGuideLink topic="Organizer" />
-            <Dropzone onDrop={importCsv} accept={{ 'text/csv': ['.csv'] }} useFsAccessApi={false}>
-              {({ getRootProps, getInputProps }) => (
-                <div {...getRootProps()} className={styles.importButton}>
-                  <input {...getInputProps()} />
-                  <div className="dim-button">
-                    <AppIcon icon={uploadIcon} /> {t('Settings.CsvImport')}
-                  </div>
+          <ItemActions
+            itemsAreSelected={Boolean(selectedItems.length)}
+            onLock={onLock}
+            onNote={onNote}
+            stores={stores}
+            onTagSelectedItems={onTagSelectedItems}
+            onMoveSelectedItems={onMoveSelectedItems}
+            onCompareSelectedItems={onCompareSelectedItems}
+          />
+          <UserGuideLink topic="Organizer" />
+          <Dropzone onDrop={importCsv} accept={{ 'text/csv': ['.csv'] }} useFsAccessApi={false}>
+            {({ getRootProps, getInputProps }) => (
+              <div {...getRootProps()} className={styles.importButton}>
+                <input {...getInputProps()} />
+                <div className="dim-button">
+                  <AppIcon icon={uploadIcon} /> {t('Settings.CsvImport')}
                 </div>
-              )}
-            </Dropzone>
-            {downloadAction}
-            <EnabledColumnsSelector
-              columns={columns}
-              enabledColumns={enabledColumns}
-              onChangeEnabledColumn={onChangeEnabledColumn}
-              forClass={classIfAny}
-            />
-          </div>
+              </div>
+            )}
+          </Dropzone>
+          {downloadAction}
+          <EnabledColumnsSelector
+            columns={columns}
+            enabledColumns={enabledColumns}
+            onChangeEnabledColumn={onChangeEnabledColumn}
+            forClass={classIfAny}
+          />
           {createPortal(<style>{rowStyle}</style>, document.head)}
         </div>
         <div className={clsx(styles.selection, styles.header)} role="columnheader" aria-sort="none">
