@@ -28,8 +28,7 @@ import _ from 'lodash';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DimItem } from '../inventory/item-types';
-// eslint-disable-next-line css-modules/no-unused-class
-import popupStyles from '../item-popup/ItemDescription.m.scss';
+import popupStyles from '../item-popup/ItemDescription.m.scss'; // eslint-disable-line css-modules/no-unused-class
 import styles from './ItemTriage.m.scss';
 import { Factor } from './triage-factors';
 import {

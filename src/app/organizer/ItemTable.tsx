@@ -58,8 +58,8 @@ import { createPortal } from 'react-dom';
 
 import { DimLanguage } from 'app/i18n';
 import { localizedSorter } from 'app/utils/intl';
-// eslint-disable-next-line css-modules/no-unused-class
-import styles from './ItemTable.m.scss';
+
+import styles from './ItemTable.m.scss'; // eslint-disable-line css-modules/no-unused-class
 import { ItemCategoryTreeNode, armorTopLevelCatHashes } from './ItemTypeSelector';
 import { ColumnDefinition, ColumnSort, Row, SortDirection } from './table-types';
 
