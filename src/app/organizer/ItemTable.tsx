@@ -603,7 +603,7 @@ function sortRows(
     }),
   );
 
-  return Array.from(unsortedRows).sort(comparator);
+  return unsortedRows.toSorted(comparator);
 }
 
 function TableRow({
