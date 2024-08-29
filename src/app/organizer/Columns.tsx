@@ -874,13 +874,13 @@ function LoadoutsCell({
       {loadouts.map((loadout) => (
         <div key={loadout.id} className={styles.loadout}>
           {isInGameLoadout(loadout) ? (
-            <a data-perk-name={loadout.id}>
+            <a data-filter-value={loadout.id}>
               {isInGameLoadout(loadout) && <InGameLoadoutIcon loadout={loadout} />}
               {loadout.name}
             </a>
           ) : (
             <a
-              data-perk-name={loadout.id}
+              data-filter-value={loadout.id}
               onClick={(e: React.MouseEvent) =>
                 !e.shiftKey && editLoadout(loadout, owner, { isNew: false })
               }
@@ -925,7 +925,7 @@ function PerksCell({
                   [styles.perkSelectable]: socket.plugOptions.length > 1,
                   [styles.enhancedArrow]: isEnhancedPerk(p.plugDef),
                 })}
-                data-perk-name={p.plugDef.displayProperties.name}
+                data-filter-value={p.plugDef.displayProperties.name}
                 onClick={
                   onPlugClicked && socket.plugOptions.length > 1
                     ? (e: React.MouseEvent) => {
@@ -985,7 +985,7 @@ function D1PerksCell({ item }: { item: D1Item }) {
                     </>
                   }
                 >
-                  <div className={styles.modPerk} data-perk-name={p.name}>
+                  <div className={styles.modPerk} data-filter-value={p.name}>
                     <div className={styles.miniPerkContainer}>
                       <BungieImage src={p.icon} />
                     </div>{' '}

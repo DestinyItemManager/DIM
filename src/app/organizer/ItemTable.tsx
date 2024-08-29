@@ -286,21 +286,15 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     (
       row: Row,
       column: ColumnDefinition,
-    ): React.MouseEventHandler<HTMLTableDataCellElement> | undefined =>
+    ): React.MouseEventHandler<HTMLTableCellElement> | undefined =>
       column.filter
         ? (e) => {
             if (e.shiftKey) {
-              if ((e.target as Element).hasAttribute('data-perk-name')) {
-                const filter = column.filter!(
-                  (e.target as Element).getAttribute('data-perk-name') ?? undefined,
-                  row.item,
-                );
-                if (filter) {
-                  dispatch(toggleSearchQueryComponent(filter));
-                }
-                return;
-              }
-              const filter = column.filter!(row.values[column.id], row.item);
+              const node = e.target as HTMLElement;
+              const filter = column.filter!(
+                node.dataset.filterValue ?? row.values[column.id],
+                row.item,
+              );
               if (filter !== undefined) {
                 dispatch(toggleSearchQueryComponent(filter));
               }
