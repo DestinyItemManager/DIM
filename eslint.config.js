@@ -447,6 +447,8 @@ export default tseslint.config(
       '@eslint-react/no-unstable-default-props': 'off',
       '@eslint-react/naming-convention/component-name': 'warn',
       '@eslint-react/dom/no-dangerously-set-innerhtml': 'off',
+      '@eslint-react/hooks-extra/no-direct-set-state-in-use-effect': 'off',
+      '@eslint-react/hooks-extra/no-direct-set-state-in-use-layout-effect': 'off',
     },
   },
   {
