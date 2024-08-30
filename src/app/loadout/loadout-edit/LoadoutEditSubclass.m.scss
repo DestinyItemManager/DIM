@@ -64,8 +64,8 @@
   --item-size: 32px;
 
   color: #999;
-  &:hover,
-  &:focus-visible {
+
+  @include interactive($hover: true, $focus: true) {
     color: white;
     opacity: 1;
     rect {

@@ -24,8 +24,10 @@
     font-size: 16px;
   }
 
-  &:hover :global(.app-icon) {
-    color: var(--theme-accent-primary);
+  @include interactive($hover: true) {
+    :global(.app-icon) {
+      color: var(--theme-accent-primary);
+    }
   }
 
   .collapsed & {

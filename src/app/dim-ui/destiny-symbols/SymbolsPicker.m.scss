@@ -18,7 +18,8 @@
   span {
     font-size: 18px;
   }
-  &:hover {
+
+  @include interactive($hover: true) {
     color: black;
     background-color: var(--theme-accent-primary);
   }
@@ -71,7 +72,7 @@
 
   padding: 2px;
 
-  &:hover {
+  @include interactive($hover: true) {
     color: var(--theme-text-invert);
     background-color: var(--theme-accent-primary);
   }

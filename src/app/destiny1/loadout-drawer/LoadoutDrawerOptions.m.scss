@@ -44,8 +44,7 @@
     height: 32px;
   }
 
-  &:hover,
-  &:focus {
+  @include interactive($hover: true, $focus: true) {
     background: black;
     outline: none;
     border-bottom: 1px solid var(--theme-accent-primary);

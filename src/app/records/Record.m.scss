@@ -173,7 +173,8 @@
   transition: transform 300ms ease-in-out;
   transform-origin: center 8px;
   opacity: 0.7;
-  &:hover {
+
+  @include interactive($hover: true) {
     transform: scale(1.5);
   }
   img {
@@ -190,9 +191,11 @@
     opacity: 1;
     top: -10px;
   }
-  .triumphRecord:hover & {
-    display: block;
-    opacity: 0.7;
+  .triumphRecord {
+    @include interactive($hover: true) {
+      display: block;
+      opacity: 0.7;
+    }
   }
 }
 

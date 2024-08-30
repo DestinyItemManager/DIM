@@ -34,8 +34,14 @@
     }
   }
 
-  &:hover,
-  &:active,
+  @include interactive($hover: true, $active: true) {
+    background-color: var(--theme-accent-primary) !important;
+    color: var(--theme-text-invert) !important;
+    img {
+      filter: invert(1) drop-shadow(0 0 1px black);
+    }
+  }
+
   &.selected {
     background-color: var(--theme-accent-primary) !important;
     color: var(--theme-text-invert) !important;
@@ -49,9 +55,11 @@
   .dontInvert {
     filter: invert(0) !important;
 
-    :hover &,
-    :active &,
-    .selected & {
+    @include interactive($hover: true, $active: true) {
+      filter: invert(0) drop-shadow(0 0 1px black) !important;
+    }
+
+    .selected {
       filter: invert(0) drop-shadow(0 0 1px black) !important;
     }
   }
@@ -63,8 +71,14 @@
   &[disabled] {
     opacity: 0.5;
     cursor: not-allowed;
-    &:hover,
-    &:active,
+
+    @include interactive($hover: true, $active: true) {
+      background-color: var(--theme-button-bg) !important;
+      color: var(--theme-text) !important;
+      img {
+        filter: drop-shadow(0 0 1px black);
+      }
+    }
     &.selected {
       background-color: var(--theme-button-bg) !important;
       color: var(--theme-text) !important;
@@ -74,7 +88,7 @@
     }
   }
   &.danger {
-    &:hover {
+    @include interactive($hover: true) {
       background-color: $red !important;
     }
   }

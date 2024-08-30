@@ -36,8 +36,7 @@
     letter-spacing: 2px;
     font-size: 14px;
 
-    &:hover,
-    &:focus-visible {
+    @include interactive($hover: true, $focus: true) {
       color: var(--theme-accent-primary);
 
       @include phone-portrait {
@@ -56,8 +55,7 @@
     }
   }
 
-  &:hover,
-  &:focus-within {
+  @include interactive($hover: true, $focusWithin: true) {
     background-color: rgba(0, 0, 0, 0.4);
   }
 

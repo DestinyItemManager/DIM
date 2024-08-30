@@ -1,6 +1,7 @@
 ## Next
 
 * Fix Organizer sorting behavior for notes, tags, and wishlist notes so that empty values sort along with other values.
+* Hover state only applies on supported devices
 
 ## 8.34.1 <span class="changelog-date">(2024-08-27)</span>
 

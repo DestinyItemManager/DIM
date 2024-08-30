@@ -27,6 +27,25 @@
 
   a {
     text-decoration: none;
+
+    @include interactive($hover: true) {
+      background-color: var(--theme-accent-primary);
+      color: var(--theme-text-invert) !important;
+      > span:first-child > :global(.app-icon) {
+        color: var(--theme-text-invert) !important;
+      }
+      > span:first-child > img:first-child,
+      .modificationIcon {
+        filter: none;
+      }
+      .fashionIcon {
+        filter: invert(1);
+      }
+
+      .note {
+        color: var(--theme-text-invert);
+      }
+    }
   }
 
   form {
@@ -75,8 +94,7 @@
     }
   }
 
-  &:hover,
-  a:hover {
+  @include interactive($hover: true) {
     background-color: var(--theme-accent-primary);
     color: var(--theme-text-invert) !important;
     > span:first-child > :global(.app-icon) {
@@ -120,7 +138,8 @@
       font-size: 15px;
     }
   }
-  &:hover {
+
+  @include interactive($hover: true) {
     background-color: var(--theme-accent-secondary);
     color: #222;
   }
@@ -166,8 +185,8 @@
 
 .inGameLoadoutButton {
   composes: resetButton from '../../dim-ui/common.m.scss';
-  &:hover,
-  &:focus-visible {
+
+  @include interactive($hover: true, $focus: true) {
     outline: 2px solid var(--theme-accent-primary);
   }
   display: block;

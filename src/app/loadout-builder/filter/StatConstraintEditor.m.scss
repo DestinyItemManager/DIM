@@ -93,7 +93,7 @@
     width: 100%;
   }
 
-  &:hover {
+  @include interactive($hover: true) {
     outline: 1px solid var(--theme-accent-primary);
   }
 }
@@ -128,8 +128,7 @@
     color: #555;
   }
 
-  &:hover,
-  &:focus-visible {
+  @include interactive($hover: true, $focus: true) {
     &:not(:disabled) {
       color: var(--theme-accent-primary);
     }

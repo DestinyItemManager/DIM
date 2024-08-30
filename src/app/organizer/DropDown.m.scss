@@ -51,8 +51,7 @@ $dropdown-menu: 10;
   min-width: 15em;
   gap: 8px;
 
-  &:hover,
-  &:active {
+  @include interactive($hover: true, $active: true) {
     color: var(--theme-text-invert);
     box-shadow: none;
     background-color: var(--theme-accent-primary);

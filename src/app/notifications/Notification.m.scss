@@ -18,7 +18,8 @@
   user-select: none;
 
   transition: transform 150ms ease-in-out;
-  &:hover {
+
+  @include interactive($hover: true) {
     transform: scale(1.02);
   }
 }

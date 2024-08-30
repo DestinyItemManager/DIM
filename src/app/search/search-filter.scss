@@ -21,8 +21,7 @@
     height: 34px;
   }
 
-  &:hover,
-  &:focus-within {
+  @include interactive($hover: true, $focusWithin: true) {
     outline: none;
     box-shadow: inset 0 0 0 1px var(--theme-search-dropdown-border);
   }

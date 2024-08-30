@@ -35,7 +35,7 @@
   white-space: nowrap;
   font-size: 16px;
 
-  &:hover {
+  @include interactive($hover: true) {
     color: var(--theme-text-invert);
     background-color: var(--theme-accent-primary);
   }

@@ -19,7 +19,7 @@
   display: flex;
   align-items: center;
 
-  &:hover {
+  @include interactive($hover: true) {
     transform: scale(1.5);
     color: var(--theme-accent-primary);
   }

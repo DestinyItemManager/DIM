@@ -7,9 +7,11 @@
   width: var(--item-size);
   border: none;
 
-  &:hover .perkOutline {
-    stroke: var(--theme-accent-primary);
-    stroke-width: 6px;
+  @include interactive($hover: true) {
+    .perkOutline {
+      stroke: var(--theme-accent-primary);
+      stroke-width: 6px;
+    }
   }
 }
 
@@ -78,8 +80,8 @@
 
 .hasMenu {
   cursor: pointer;
-  &:hover,
-  &:focus-visible {
+
+  @include interactive($hover: true, $focus: true) {
     outline: 1px solid var(--theme-accent-primary);
   }
 

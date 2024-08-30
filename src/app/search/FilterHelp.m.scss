@@ -37,9 +37,10 @@
       color: #eee;
       display: block;
       text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
+
+      @include interactive($hover: true) {
+        text-decoration: underline;
+      }
     }
   }
   tr td:first-child {

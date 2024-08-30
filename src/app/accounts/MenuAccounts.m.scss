@@ -14,8 +14,7 @@
     > div {
       padding: 10px 2rem 10px 1rem;
 
-      &:hover,
-      &:focus {
+      @include interactive($hover: true, $focus: true) {
         color: var(--theme-text-invert);
         background-color: var(--theme-accent-primary);
       }

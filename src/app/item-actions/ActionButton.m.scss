@@ -28,8 +28,7 @@
   }
 
   @media (min-width: 541px) {
-    &:hover,
-    &:focus-visible {
+    @include interactive($hover: true, $focus: true) {
       outline: none;
       background: var(--theme-accent-primary);
       color: var(--theme-text-invert);

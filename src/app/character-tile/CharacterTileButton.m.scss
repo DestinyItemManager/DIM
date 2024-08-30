@@ -23,8 +23,7 @@
 
   // Display an outline when hovering characters
   @media (hover: hover) {
-    &:hover,
-    &:active {
+    @include interactive($hover: true, $active: true) {
       @include selected-highlight;
     }
   }
