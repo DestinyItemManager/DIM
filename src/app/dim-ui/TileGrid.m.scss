@@ -19,6 +19,8 @@
 }
 
 .tile {
+  // Don't scale up items even if users have item tiles set to large
+  --item-size: 50px;
   display: grid;
   grid-template-columns: min-content auto min-content;
   grid-template-rows: max-content auto;
@@ -39,9 +41,6 @@
     border-color: var(--theme-accent-secondary);
     outline: none;
   }
-
-  // Don't scale up items even if users have item tiles set to large
-  --item-size: 50px;
 
   &.compact {
     grid-template-areas:

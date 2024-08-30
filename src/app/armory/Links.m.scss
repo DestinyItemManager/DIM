@@ -9,12 +9,8 @@
   list-style: none;
   gap: 4px;
 
-  li {
-    white-space: nowrap;
-    img {
-      vertical-align: text-bottom;
-      margin-right: 0.2em;
-    }
+  @include phone-portrait {
+    margin-right: 38px;
   }
 
   @media (max-width: 675px) {
@@ -27,7 +23,11 @@
     }
   }
 
-  @include phone-portrait {
-    margin-right: 38px;
+  li {
+    white-space: nowrap;
+    img {
+      vertical-align: text-bottom;
+      margin-right: 0.2em;
+    }
   }
 }

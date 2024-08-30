@@ -23,13 +23,12 @@
 }
 
 .showCloseOnHover {
-  .close {
-    display: none;
-  }
-
   @include interactive($hover: true) {
     .close {
       display: inline-block;
     }
+  }
+  .close {
+    display: none;
   }
 }

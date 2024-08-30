@@ -13,8 +13,8 @@
 }
 
 .selectedPlugs {
-  gap: 4px;
   --item-size: 32px;
+  gap: 4px;
 
   > * {
     flex-shrink: 0;

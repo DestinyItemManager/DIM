@@ -22,14 +22,14 @@
   }
 
   &.confirmMode {
-    // as elements transition into confirm mode, snap confirm message into place quickly
-    & > div {
-      transition: height 0.1s;
-    }
     color: var(--theme-text) !important;
 
     @include interactive($hover: true) {
       background-color: #af7d27 !important;
+    }
+    // as elements transition into confirm mode, snap confirm message into place quickly
+    & > div {
+      transition: height 0.1s;
     }
 
     &[class~='danger'] {

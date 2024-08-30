@@ -25,11 +25,6 @@
 .button {
   composes: dim-button from global;
   position: relative;
-  > img {
-    margin: 0 !important;
-    height: 48px;
-    width: 48px;
-  }
 
   @include interactive($hover: true, $active: true) {
     background-color: var(--theme-accent-primary);
@@ -37,6 +32,11 @@
     > img {
       filter: none !important;
     }
+  }
+  > img {
+    margin: 0 !important;
+    height: 48px;
+    width: 48px;
   }
 
   &.checked {

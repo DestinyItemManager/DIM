@@ -28,16 +28,16 @@
   gap: 0 6px;
   padding: 0 6px;
 
+  // Use the emblem as a background
+  background-size: $emblem-width $emblem-height;
+  background-position: left center;
+  background-repeat: no-repeat;
+
   @include phone-portrait {
     grid-template-areas:
       'emblem class power'
       'emblem bottom maxTotalPower';
   }
-
-  // Use the emblem as a background
-  background-size: $emblem-width $emblem-height;
-  background-position: left center;
-  background-repeat: no-repeat;
 }
 
 .vaultTile {
@@ -50,10 +50,6 @@
   box-sizing: border-box;
   gap: 0 6px;
   padding: 0 6px;
-
-  @include phone-portrait {
-    grid-template-areas: 'emblem class vaultCapacity' !important;
-  }
   // The vault needs a little border to stand out against some backgrounds
   border: 1px solid rgba(0, 0, 0, 0.3);
   border-right: none;
@@ -62,6 +58,10 @@
 
   background-color: rgb(49, 50, 51);
   background-image: url('images/vault-background.svg');
+
+  @include phone-portrait {
+    grid-template-areas: 'emblem class vaultCapacity' !important;
+  }
 }
 
 // The "current character" triangle

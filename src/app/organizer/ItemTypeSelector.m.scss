@@ -23,9 +23,6 @@
 .button {
   composes: dim-button from global;
   margin: 2px;
-  > img {
-    margin-left: 0 !important;
-  }
 
   @include interactive($hover: true, $active: true) {
     background-color: var(--theme-accent-primary);
@@ -33,6 +30,9 @@
     > img {
       filter: none !important;
     }
+  }
+  > img {
+    margin-left: 0 !important;
   }
   &.checked {
     background-color: var(--theme-accent-primary);

@@ -1,6 +1,7 @@
 @use '../variables' as *;
 
 .options {
+  $vpadding: 15px;
   display: flex;
   background-color: var(--theme-mobile-background);
   position: fixed;
@@ -9,7 +10,6 @@
   top: inherit;
   left: 0;
   right: 0;
-  $vpadding: 15px;
   justify-content: space-around;
   // https://css-tricks.com/when-sass-and-new-css-features-collide/
   padding-bottom: Max(#{($vpadding - 1)}, env(safe-area-inset-bottom));

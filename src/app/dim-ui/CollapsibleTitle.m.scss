@@ -12,6 +12,10 @@
   padding-right: 16px;
   gap: 8px;
 
+  @include interactive($hover: true, $focusWithin: true) {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
   // The interactive button within
   > button {
     // Reset button
@@ -53,10 +57,6 @@
     @include phone-portrait {
       color: var(--theme-text);
     }
-  }
-
-  @include interactive($hover: true, $focusWithin: true) {
-    background-color: rgba(0, 0, 0, 0.4);
   }
 
   &.disabled {

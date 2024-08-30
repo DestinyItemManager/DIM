@@ -4,11 +4,6 @@
   --theme-accent-primary: #88cbed; // Interaction styles (hover, active, focus)
   --theme-accent-secondary: #f27b8a; // Secondary interactions
 
-  // More vibrant P3 colourspace tints for displays that support them
-  @supports (color: color(display-p3 1 1 1)) {
-    --theme-accent-primary: oklch(71% 0.18 235.97);
-  }
-
   // Generic fills for modal backgrounds (see below)
   --theme-fill-modal: #1d2b5e; // Base fill for popups, drawers, dropdowns etc
   --theme-fill-modal-actions: #0b2432; // Layered/contextual modals (search, item actions)
@@ -98,4 +93,9 @@
 
   // Records
   --theme-record-redeemed: #17d0d2;
+
+  // More vibrant P3 colourspace tints for displays that support them
+  @supports (color: color(display-p3 1 1 1)) {
+    --theme-accent-primary: oklch(71% 0.18 235.97);
+  }
 }

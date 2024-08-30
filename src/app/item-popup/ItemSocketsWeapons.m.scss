@@ -81,8 +81,8 @@
     padding: calc(2 / 50 * var(--item-size));
 
     @include phone-portrait {
-      padding: 2px;
       --item-size: 32px;
+      padding: 2px;
     }
   }
 }

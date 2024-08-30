@@ -29,13 +29,13 @@
     height: 32px;
   }
 
-  ::placeholder {
-    color: #999;
-  }
-
   @include interactive($hover: true, $focusWithin: true) {
     outline: none;
     box-shadow: inset 0 0 0 1px var(--theme-search-dropdown-border);
+  }
+
+  ::placeholder {
+    color: #999;
   }
 
   > input {

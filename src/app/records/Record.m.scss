@@ -177,14 +177,14 @@
   @include interactive($hover: true) {
     transform: scale(1.5);
   }
-  img {
-    width: calc(var(--item-size) / 3.1) !important;
-    height: auto !important;
-  }
 
   @media (hover: none) {
     display: block;
     opacity: 0.7;
+  }
+  img {
+    width: calc(var(--item-size) / 3.1) !important;
+    height: auto !important;
   }
   .trackedInDim & {
     display: block;

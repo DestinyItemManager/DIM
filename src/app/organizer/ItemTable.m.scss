@@ -105,10 +105,10 @@ $content-cells: 5;
   left: env(safe-area-inset-left);
   position: sticky;
   top: calc(var(--header-height) + var(--table-header-height) + var(--item-table-toolbar-height));
+  z-index: $header-cells;
   &.header {
     top: calc(var(--header-height) + var(--item-table-toolbar-height));
   }
-  z-index: $header-cells;
 }
 
 .rating {
@@ -145,17 +145,17 @@ $content-cells: 5;
 }
 
 .icon {
+  --icon-item-size: calc(var(--item-size) * 0.75);
   padding-top: 4px !important;
   min-width: calc(var(--item-size) * 0.75);
   left: calc(30px + env(safe-area-inset-left));
   position: sticky;
   top: calc(var(--header-height) + var(--table-header-height) + var(--item-table-toolbar-height));
+  z-index: $header-cells;
   &.header {
     top: calc(var(--header-height) + var(--item-table-toolbar-height));
     padding-top: 0;
   }
-  z-index: $header-cells;
-  --icon-item-size: calc(var(--item-size) * 0.75);
   > :global(.item) {
     --item-size: var(--icon-item-size) !important;
     height: var(--item-size);
@@ -234,12 +234,12 @@ $content-cells: 5;
   white-space: nowrap;
 }
 .miniPerkContainer {
+  --item-size: 18px;
   position: relative;
   contain: layout paint style;
   box-sizing: border-box;
   height: 18px;
   width: 18px;
-  --item-size: 18px;
   margin-left: -1px;
   flex-shrink: 0;
   > img {
