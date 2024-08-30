@@ -24,7 +24,7 @@ import {
   resolveLoadoutModHashes,
 } from 'app/loadout-drawer/loadout-utils';
 import { fullyResolveLoadout } from 'app/loadout/ingame/selectors';
-import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
+import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { ModMap, categorizeArmorMods, fitMostMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';

@@ -7,7 +7,6 @@ import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import styles from './ItemTypeSelector.m.scss';
-import { itemIncludesCategories } from './filtering-utils';
 
 /**
  * Each branch of the drilldown options is represented by a SelectionTreeNode
@@ -393,7 +392,9 @@ export default function ItemTypeSelector({
                       (
                       {
                         filteredItems.filter(
-                          (i) => i.comparable && itemIncludesCategories(i, categoryHashList),
+                          (i) =>
+                            i.comparable &&
+                            categoryHashList.every((h) => i.itemCategoryHashes.includes(h)),
                         ).length
                       }
                       )

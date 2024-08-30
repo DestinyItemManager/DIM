@@ -23,7 +23,7 @@ import {
   updateMods,
 } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { findItemForLoadout, newLoadout, pickBackingStore } from 'app/loadout-drawer/loadout-utils';
-import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
+import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { Loadout, ResolvedLoadoutMod } from 'app/loadout/loadout-types';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName, armorStats } from 'app/search/d2-known-values';

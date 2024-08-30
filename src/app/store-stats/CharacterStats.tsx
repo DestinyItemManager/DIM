@@ -11,7 +11,7 @@ import type { DimStore } from 'app/inventory/store-types';
 import { StorePowerLevel, powerLevelSelector } from 'app/inventory/store/selectors';
 import { statTier } from 'app/loadout-builder/utils';
 import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
-import { getSubclassPlugHashes } from 'app/loadout/item-utils';
+import { getSubclassPlugHashes } from 'app/loadout/loadout-item-utils';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';

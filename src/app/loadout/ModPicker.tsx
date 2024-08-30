@@ -21,12 +21,12 @@ import { produce } from 'immer';
 import _ from 'lodash';
 import { useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { isLoadoutBuilderItem } from './item-utils';
 import {
   activityModPlugCategoryHashes,
   knownModPlugCategoryHashes,
   slotSpecificPlugCategoryHashes,
 } from './known-values';
+import { isLoadoutBuilderItem } from './loadout-item-utils';
 import { getModExclusionGroup, isInsertableArmor2Mod, sortModGroups } from './mod-utils';
 import PlugDrawer from './plug-drawer/PlugDrawer';
 import { PlugSelectionType, PlugSet } from './plug-drawer/types';

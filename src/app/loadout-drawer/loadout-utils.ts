@@ -9,8 +9,8 @@ import { isPluggableItem } from 'app/inventory/store/sockets';
 import { findItemsByBucket, getCurrentStore, getStore } from 'app/inventory/stores-helpers';
 import { ArmorEnergyRules, LockableBucketHashes } from 'app/loadout-builder/types';
 import { calculateAssumedItemEnergy } from 'app/loadout/armor-upgrade-utils';
-import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
 import { UNSET_PLUG_HASH } from 'app/loadout/known-values';
+import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import {
   isInsertableArmor2Mod,
   mapToAvailableModCostVariant,

@@ -47,7 +47,6 @@ import { useSelector } from 'react-redux';
 import { buildStatInfo, getColumnSelectionId, getColumns } from './Columns';
 import EnabledColumnsSelector from './EnabledColumnsSelector';
 import ItemActions, { TagCommandInfo } from './ItemActions';
-import { itemIncludesCategories } from './filtering-utils';
 
 import { compareSelectedItems } from 'app/compare/actions';
 
@@ -112,7 +111,10 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
       categoryHashes.push(ItemCategoryHashes.Armor);
     }
     const items = allItems.filter(
-      (i) => i.comparable && itemIncludesCategories(i, categoryHashes) && searchFilter(i),
+      (i) =>
+        i.comparable &&
+        categoryHashes.every((h) => i.itemCategoryHashes.includes(h)) &&
+        searchFilter(i),
     );
     return items;
   }, [allItems, categories, searchFilter]);
