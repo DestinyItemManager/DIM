@@ -2,13 +2,13 @@ import { stripAdept } from 'app/compare/compare-utils';
 import { tl } from 'app/i18next-t';
 import { TagValue } from 'app/inventory/dim-item-info';
 import { DimItem } from 'app/inventory/item-types';
-import { StatsSet } from 'app/loadout-builder/process-worker/stats-set';
 import { DEFAULT_SHADER, armorStats } from 'app/search/d2-known-values';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { isArtifice } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { ItemFilterDefinition } from '../item-filter-types';
+import { StatsSet } from './stats-set';
 
 const notableTags = ['favorite', 'keep'];
 
@@ -221,6 +221,11 @@ export function checkIfIsDupe(
   );
 }
 
+/**
+ * Compute a set of items that are "stat lower" dupes. These are items for which
+ * there exists another item with strictly better stats (i.e. better in at least
+ * one stat and not worse in any stat).
+ */
 function computeStatDupeLower(allItems: DimItem[], relevantStatHashes: number[] = armorStats) {
   // disregard no-class armor
   const armor = allItems.filter((i) => i.bucket.inArmor && i.classType !== DestinyClass.Classified);
