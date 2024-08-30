@@ -23,7 +23,7 @@ git commit -m"$VERSION"
 git tag "v$VERSION"
 
 # build and check
-pnpm build:release
+VERSION=$VERSION pnpm build:release
 pnpm syntax
 
 # rsync the files onto the remote host using SSH keys

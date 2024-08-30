@@ -131,7 +131,7 @@ export function useHeightFromViewportBottom(
 
     updateHeight();
     window.visualViewport.addEventListener('resize', updateHeight);
-    return () => window.visualViewport!.removeEventListener('resize', updateHeight);
+    return () => window.visualViewport?.removeEventListener('resize', updateHeight);
   }, [setHeightFromViewportBottom, elementRef, itemHeight, padding]);
 }
 
