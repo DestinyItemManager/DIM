@@ -8,6 +8,7 @@ import { isArtifice } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { ItemFilterDefinition } from '../item-filter-types';
+import { PerksSet } from './perks-set';
 import { StatsSet } from './stats-set';
 
 const notableTags = ['favorite', 'keep'];
@@ -201,6 +202,24 @@ const dupeFilters: ItemFilterDefinition[] = [
         const itemDupes = duplicates?.[dupeId];
         return itemDupes?.some((d) => d.crafted);
       };
+    },
+  },
+  {
+    keywords: ['perksdupe'],
+    description: tl('Filter.PerksDupe'),
+    filter: ({ allItems }) => {
+      const duplicates = new Map<string, PerksSet>();
+      for (const i of allItems) {
+        if (i.sockets?.allSockets.some((s) => s.isPerk && s.socketDefinition.defaultVisible)) {
+          if (!duplicates.has(i.typeName)) {
+            duplicates.set(i.typeName, new PerksSet());
+          }
+          duplicates.get(i.typeName)!.insert(i);
+        }
+      }
+      return (item) =>
+        item.sockets?.allSockets.some((s) => s.isPerk && s.socketDefinition.defaultVisible) &&
+        Boolean(duplicates.get(item.typeName)?.hasPerkDupes(item));
     },
   },
 ];
