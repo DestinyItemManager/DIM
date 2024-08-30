@@ -55,9 +55,11 @@
   .dontInvert {
     filter: invert(0) !important;
 
-    :hover &,
-    :active &,
-    .selected & {
+    @include interactive($hover: true, $active: true) {
+      filter: invert(0) drop-shadow(0 0 1px black) !important;
+    }
+
+    .selected {
       filter: invert(0) drop-shadow(0 0 1px black) !important;
     }
   }
