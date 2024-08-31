@@ -22,6 +22,14 @@
     line-height: calc(18 / 14);
     padding: 8px 16px;
   }
+
+  @include interactive($hover: true, $active: true) {
+    background-color: var(--theme-accent-primary) !important;
+    color: var(--theme-text-invert) !important;
+    img {
+      filter: invert(1) drop-shadow(0 0 1px black);
+    }
+  }
   img {
     height: 1.3em;
     width: auto;
@@ -31,14 +39,6 @@
     transition: filter 150ms ease-out;
     &:only-child {
       margin: 0;
-    }
-  }
-
-  @include interactive($hover: true, $active: true) {
-    background-color: var(--theme-accent-primary) !important;
-    color: var(--theme-text-invert) !important;
-    img {
-      filter: invert(1) drop-shadow(0 0 1px black);
     }
   }
 

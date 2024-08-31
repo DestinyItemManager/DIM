@@ -21,9 +21,10 @@
 }
 
 .title {
-  @include destiny-header;
   text-decoration: none;
   font-size: 14px;
+
+  @include destiny-header;
 }
 
 .classIcon {

@@ -25,13 +25,13 @@
 
 .frame {
   max-width: 250px;
+  margin: 8px auto;
+  overflow: visible !important;
+  position: relative;
 
   @include phone-portrait {
     max-width: 260px;
   }
-  margin: 8px auto;
-  overflow: visible !important;
-  position: relative;
 }
 
 .track {

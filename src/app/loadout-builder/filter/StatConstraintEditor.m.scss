@@ -84,6 +84,10 @@
   height: 20px;
   box-sizing: border-box;
 
+  @include interactive($hover: true) {
+    outline: 1px solid var(--theme-accent-primary);
+  }
+
   /* stylelint-disable-next-line no-descending-specificity */
   > * {
     display: flex;
@@ -91,10 +95,6 @@
     justify-content: center;
     height: 100%;
     width: 100%;
-  }
-
-  @include interactive($hover: true) {
-    outline: 1px solid var(--theme-accent-primary);
   }
 }
 
@@ -122,16 +122,16 @@
   padding: 0 6px;
   opacity: 0.9;
 
-  .ignored &,
-  &:disabled {
-    opacity: 0.9;
-    color: #555;
-  }
-
   @include interactive($hover: true, $focus: true) {
     &:not(:disabled) {
       color: var(--theme-accent-primary);
     }
+  }
+
+  .ignored &,
+  &:disabled {
+    opacity: 0.9;
+    color: #555;
   }
 }
 

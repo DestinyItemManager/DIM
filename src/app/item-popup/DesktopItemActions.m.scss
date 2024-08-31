@@ -17,17 +17,17 @@
   justify-content: flex-end;
   cursor: pointer;
 
+  @include interactive($hover: true) {
+    :global(.app-icon) {
+      color: var(--theme-accent-primary);
+    }
+  }
+
   :global(.app-icon) {
     margin: 7px 10px 0;
     display: block;
     width: 16px;
     font-size: 16px;
-  }
-
-  @include interactive($hover: true) {
-    :global(.app-icon) {
-      color: var(--theme-accent-primary);
-    }
   }
 
   .collapsed & {

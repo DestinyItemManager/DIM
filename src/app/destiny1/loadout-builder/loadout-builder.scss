@@ -172,16 +172,16 @@ $and-color: #814bcf;
       font-size: 12px;
     }
     .currency {
-      img {
-        vertical-align: text-bottom;
-        height: 16px;
-        width: 16px;
-      }
       position: absolute;
       top: 4px;
       right: 40px;
       font-weight: 200;
       font-size: 14px;
+      img {
+        vertical-align: text-bottom;
+        height: 16px;
+        width: 16px;
+      }
     }
     .legendaryMarks {
       position: absolute;

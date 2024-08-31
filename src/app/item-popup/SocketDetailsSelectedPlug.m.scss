@@ -9,14 +9,6 @@
     'mod desc button'
     'mod clarityDesc button'
     'mod source button';
-  &.hasStats {
-    grid-template-columns: var(--item-size) 1fr 1fr;
-    grid-template-areas:
-      'mod desc stat button'
-      'mod modstat stat button'
-      'mod clarityDesc stat button'
-      'mod source stat button';
-  }
 
   gap: 0 8px;
 
@@ -27,6 +19,7 @@
       'mod clarityDesc'
       'mod source'
       'mod button';
+    gap: 8px 8px;
     &.hasStats {
       grid-template-columns: var(--item-size) 1fr;
       grid-template-areas:
@@ -37,7 +30,14 @@
         'mod source'
         'mod button';
     }
-    gap: 8px 8px;
+  }
+  &.hasStats {
+    grid-template-columns: var(--item-size) 1fr 1fr;
+    grid-template-areas:
+      'mod desc stat button'
+      'mod modstat stat button'
+      'mod clarityDesc stat button'
+      'mod source stat button';
   }
 }
 

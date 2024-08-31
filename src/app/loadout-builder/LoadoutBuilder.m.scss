@@ -11,18 +11,18 @@
 .menuContent {
   box-sizing: border-box;
 
-  > div {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
   @include phone-portrait {
     > div > div {
       display: flex;
       flex-direction: column;
       gap: 8px;
     }
+  }
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
 }
 
@@ -44,11 +44,11 @@
 
 .guide {
   box-sizing: border-box;
+  user-select: text;
 
   @include phone-portrait {
     padding: 0 10px;
   }
-  user-select: text;
   p,
   li {
     font-size: 14px;
@@ -79,19 +79,19 @@
 
 // Style for sections borrowed from LoadoutEdit
 .loadoutEditSection {
+  // Fit 7 mods across, regardless of what the user's item size is
+  --item-size: 50px;
   font-size: 12px; // reset from where PageWithMenu sets it to 14px
   background-color: rgba(0, 0, 0, 0.3);
   padding: 8px;
   gap: 0;
-  // Fit 7 mods across, regardless of what the user's item size is
-  --item-size: 50px;
 }
 
 .subclassSection {
-  composes: loadoutEditSection;
   // Adjust these down a bit
   --item-size: 47px;
   --loadout-edit-subclass-columns: 6;
+  composes: loadoutEditSection;
 }
 
 .referenceTiersInfo {
@@ -113,12 +113,12 @@
   padding: 12px 12px 12px 12px;
   color: rgba(255, 255, 255, 0.5);
   cursor: pointer;
+  position: absolute;
+  right: 0;
+  top: 0;
   > :global(.app-icon) {
     height: 24px;
     width: 24px;
     font-size: 24px;
   }
-  position: absolute;
-  right: 0;
-  top: 0;
 }

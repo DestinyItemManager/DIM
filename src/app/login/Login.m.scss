@@ -17,9 +17,10 @@
   margin: auto;
 
   h1 {
-    @include destiny-header;
     margin: 0;
     text-align: center;
+
+    @include destiny-header;
   }
 }
 

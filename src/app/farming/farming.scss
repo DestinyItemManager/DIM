@@ -19,6 +19,21 @@
   z-index: 6;
   padding-bottom: Max(0.5rem, env(safe-area-inset-bottom));
 
+  @include phone-portrait {
+    width: auto;
+    right: 0;
+    bottom: 50px;
+    left: inherit;
+    transform: none;
+
+    button {
+      margin: 0;
+    }
+    p {
+      display: none;
+    }
+  }
+
   button {
     color: var(--theme-text);
     background-color: rgba(128, 128, 128, 0.4);
@@ -54,20 +69,5 @@
   &.farming-exit.farming-exit-active {
     transform: translateY(250px) translateX(-50%);
     transition: transform 200ms $easeInCubic;
-  }
-
-  @include phone-portrait {
-    width: auto;
-    right: 0;
-    bottom: 50px;
-    left: inherit;
-    transform: none;
-
-    button {
-      margin: 0;
-    }
-    p {
-      display: none;
-    }
   }
 }

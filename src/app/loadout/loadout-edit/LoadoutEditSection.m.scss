@@ -11,13 +11,13 @@
     display: flex;
     flex-direction: row;
     align-items: baseline;
+    flex: 1;
 
     > h3 {
       margin: 0;
       padding: 0;
       margin-right: 4px;
     }
-    flex: 1;
   }
 
   :global(.app-icon) {

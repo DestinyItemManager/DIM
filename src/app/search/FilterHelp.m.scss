@@ -62,11 +62,11 @@
 .entry {
   display: flex;
 
+  margin-bottom: 4px;
+
   div {
     display: flex;
   }
-
-  margin-bottom: 4px;
   &:last-child {
     margin-bottom: 0;
   }

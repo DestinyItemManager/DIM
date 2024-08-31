@@ -28,11 +28,11 @@
   margin-top: 12px; // 8px to match the menu, plus 4px to match the padding
   width: 100%;
   box-sizing: border-box;
-  h2:first-child {
-    margin-top: 0;
-  }
 
   @include phone-portrait {
+    margin-top: 0;
+  }
+  h2:first-child {
     margin-top: 0;
   }
   :global(.issue-banner-shown) & {
@@ -58,21 +58,6 @@
   overscroll-behavior: none;
   max-height: calc(var(--viewport-height) - var(--header-height) - 8px);
 
-  // This inner container div exists to keep the contents from changing widths,
-  // while the outer .menu container may change size as the scrollbars appear
-  // and disappear.
-  > div {
-    width: var(--page-with-menu-menu-width);
-    padding: 4px; // To allow for the outline of the character selector to show
-  }
-
-  // Add in some width when a scrollbar is present!
-  // It'd be cooler if https://developer.mozilla.org/en-US/docs/Web/CSS/scrollbar-gutter existed.
-  &.menuScrollbars {
-    // Windows scrollbars are 17px, then padding p
-    width: calc(var(--page-with-menu-menu-width) + 17px + 8px);
-  }
-
   @include phone-portrait {
     position: static;
     margin: 0;
@@ -86,6 +71,21 @@
       width: 100%;
       padding: 0;
     }
+  }
+
+  // This inner container div exists to keep the contents from changing widths,
+  // while the outer .menu container may change size as the scrollbars appear
+  // and disappear.
+  > div {
+    width: var(--page-with-menu-menu-width);
+    padding: 4px; // To allow for the outline of the character selector to show
+  }
+
+  // Add in some width when a scrollbar is present!
+  // It'd be cooler if https://developer.mozilla.org/en-US/docs/Web/CSS/scrollbar-gutter existed.
+  &.menuScrollbars {
+    // Windows scrollbars are 17px, then padding p
+    width: calc(var(--page-with-menu-menu-width) + 17px + 8px);
   }
 
   ul {

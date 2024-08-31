@@ -18,12 +18,12 @@
     flex-direction: row;
     align-items: center;
 
-    img {
-      margin-right: 8px;
-    }
-
     @media (max-width: 800px) {
       font-size: 20px;
+    }
+
+    img {
+      margin-right: 8px;
     }
   }
   h2 {

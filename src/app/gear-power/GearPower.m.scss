@@ -2,11 +2,11 @@
 .gearPowerSheet {
   width: 100%;
   max-width: fit-content;
+  margin: 0 auto;
 
   @include phone-portrait {
     max-width: unset;
   }
-  margin: 0 auto;
 
   .gearPowerSheetContent {
     margin: 0 20px 20px;

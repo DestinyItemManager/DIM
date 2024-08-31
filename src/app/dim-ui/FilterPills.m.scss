@@ -26,12 +26,12 @@
   gap: 4px;
   user-select: none;
 
-  .darkBackground & {
-    background-color: rgb(255, 255, 255, 0.2);
-  }
-
   @include interactive($hover: true) {
     border-color: rgba(255, 255, 255, 0.3);
+  }
+
+  .darkBackground & {
+    background-color: rgb(255, 255, 255, 0.2);
   }
 
   :global(.app-icon) {

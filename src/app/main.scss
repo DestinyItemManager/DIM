@@ -137,10 +137,10 @@ label {
   background: #900;
   padding: 8px;
   text-align: center;
+  animation: 1s linear 10s forwards browser-warning;
   &.hidden {
     display: none;
   }
-  animation: 1s linear 10s forwards browser-warning;
 }
 
 /**

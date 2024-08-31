@@ -68,8 +68,9 @@
     }
   }
   .automaticallyPickedSection {
-    @include tooltip-section-color($dim-brand);
     border-radius: 0 0 $theme-tooltip-corner-radius $theme-tooltip-corner-radius;
+
+    @include tooltip-section-color($dim-brand);
 
     // Re-define colors using accent if browser supports color-mix
     @supports (background: color-mix(in srgb, black 50%, white)) {
