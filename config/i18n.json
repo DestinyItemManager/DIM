@@ -967,6 +967,7 @@
     "Consolidate": "Consolidate",
     "CommunityData": "Community Insight",
     "DistributeEvenly": "Distribute Evenly",
+    "EnhancementTier": "Tier {{tier}}",
     "Equip": "Equip on:",
     "EquipWithName": "Equip on {{character}}",
     "FavoriteUnFavorite": {
