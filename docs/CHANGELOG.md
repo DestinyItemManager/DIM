@@ -1,5 +1,7 @@
 ## Next
 
+## 8.35.0 <span class="changelog-date">(2024-09-01)</span>
+
 * Fix Organizer sorting behavior for notes, tags, and wishlist notes so that empty values sort along with other values.
 * In Compare, you can now shift-click on stats to sort by multiple stats at once (e.g. sort by recovery, then by resilience).
 * Hover state only applies on supported devices.
