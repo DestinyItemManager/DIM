@@ -1,5 +1,7 @@
 ## Next
 
+* Fix the "track record" button not appearing on hover.
+
 ## 8.35.0 <span class="changelog-date">(2024-09-01)</span>
 
 * Fix Organizer sorting behavior for notes, tags, and wishlist notes so that empty values sort along with other values.
