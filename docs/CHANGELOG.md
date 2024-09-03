@@ -1,5 +1,7 @@
 ## Next
 
+* `breaker:` searches now match items that can have that breaker type granted by this season's artifact (whether or not the correct artifact mods are enabled). The effective breaker type from artifact mods also now shows up on item tiles and in the Armory.
+
 ## 8.35.1 <span class="changelog-date">(2024-09-01)</span>
 
 * Fix the "track record" button not appearing on hover.
