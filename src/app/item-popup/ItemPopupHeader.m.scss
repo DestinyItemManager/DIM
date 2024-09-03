@@ -140,7 +140,8 @@
 
 .legendary {
   background-color: $legendary;
-  .primary {
+  .primary,
+  .breakerIcon {
     opacity: 0.8;
   }
 }

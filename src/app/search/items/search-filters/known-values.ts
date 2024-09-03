@@ -226,26 +226,11 @@ const knownValuesFilters: ItemFilterDefinition[] = [
       if (!breakerType) {
         throw new Error(`Unknown breaker type ${filterValue}`);
       }
-      return (item) => breakerType.includes(item.breakerType?.hash as BreakerTypeHashes);
-    },
-  },
-  {
-    keywords: 'breakermod',
-    description: tl('Filter.BreakerMod'),
-    format: 'query',
-    suggestions: Object.keys(breakerTypes),
-    destinyVersion: 2,
-    filter: ({ filterValue }) => {
-      const breakerType: BreakerTypeHashes[] | undefined =
-        breakerTypes[filterValue as keyof typeof breakerTypes];
-      if (!breakerType) {
-        throw new Error(`Unknown breaker type ${breakerType as string}`);
-      }
       const breakingIchs = breakerType.flatMap((ty) => artifactBreakerMods[ty] || []);
       return (item) =>
-        Boolean(
-          !item.breakerType && item.itemCategoryHashes.some((ich) => breakingIchs.includes(ich)),
-        );
+        item.breakerType
+          ? breakerType.includes(item.breakerType?.hash as BreakerTypeHashes)
+          : item.itemCategoryHashes.some((ich) => breakingIchs.includes(ich));
     },
   },
   {

@@ -1,5 +1,7 @@
 ## Next
 
+* `breaker:` searches now match items that can have that breaker type granted by this season's artifact (whether or not the correct artifact mods are enabled). The effective breaker type from artifact mods also now shows up on item tiles and in the Armory.
+
 ## 8.24.0 <span class="changelog-date">(2024-06-16)</span>
 * Fix issue where light level displayed in the Loadouts views was calculated using all weapons and armor in the loadout, instead of just the weapons and armor to be equipped.
 * Add `light:` filter to the Loadouts search. Only works with loadouts that equip an item for all weapon and armor slots.
