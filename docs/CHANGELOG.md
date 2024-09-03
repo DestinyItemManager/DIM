@@ -2,8 +2,8 @@
 
 * `breaker:` searches now match items that can have that breaker type granted by this season's artifact (whether or not the correct artifact mods are enabled). The effective breaker type from artifact mods also now shows up on item tiles and in the Armory.
 * Add Enhancement tier to weapon level bar.
-* Update 'enhanced' search keyword to allow range of values (0/1/2/3). Old `is:enhanced` behavior is now `enhanced:3`.
-* Update 'enhanceable' search keyword to exclude Tier 3 Enhancement.
+* Update `enhanced` search keyword to allow range of values (0/1/2/3). Old `is:enhanced` behavior is now `enhanced:3`.
+* Update `is:enhanceable` search keyword to exclude Tier 3 Enhancement.
 
 ## 8.35.1 <span class="changelog-date">(2024-09-01)</span>
 
