@@ -3,7 +3,6 @@
 interface CssExports {
   'close': string;
   'container': string;
-  'showCloseOnHover': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

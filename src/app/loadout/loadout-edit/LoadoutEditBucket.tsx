@@ -263,11 +263,7 @@ function DraggableItem({
   onToggleEquipped: () => void;
 }) {
   return (
-    <ClosableContainer
-      key={resolvedLoadoutItem.item.id}
-      onClose={onRemoveItem}
-      showCloseIconOnHover
-    >
+    <ClosableContainer key={resolvedLoadoutItem.item.id} onClose={onRemoveItem}>
       <DraggableInventoryItem item={resolvedLoadoutItem.item}>
         <ItemPopupTrigger
           item={resolvedLoadoutItem.item}

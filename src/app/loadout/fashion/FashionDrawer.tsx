@@ -520,10 +520,7 @@ function FashionSocket({
       ).length > 0);
 
   return (
-    <ClosableContainer
-      onClose={plug ? () => onRemovePlug(bucketHash, plug.hash) : undefined}
-      showCloseIconOnHover
-    >
+    <ClosableContainer onClose={plug ? () => onRemovePlug(bucketHash, plug.hash) : undefined}>
       {plug && canSlotOrnament ? (
         <PlugDef
           onClick={handleOrnamentClick}

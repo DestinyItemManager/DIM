@@ -31,10 +31,7 @@ export default function InGameLoadoutIdentifiersSelectButton({
 
   return (
     <>
-      <ClosableContainer
-        onClose={identifiers ? handleClearIdentifiers : undefined}
-        showCloseIconOnHover
-      >
+      <ClosableContainer onClose={identifiers ? handleClearIdentifiers : undefined}>
         <button
           className={styles.button}
           type="button"
