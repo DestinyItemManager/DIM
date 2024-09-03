@@ -22,7 +22,13 @@ import modSocketMetadata, {
   modTypeTagByPlugCategoryHash,
 } from 'app/search/specialty-modslots';
 import { DamageType, DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
-import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
+import artifactBreakerMods from 'data/d2/artifact-breaker-weapon-types.json';
+import {
+  BreakerTypeHashes,
+  BucketHashes,
+  ItemCategoryHashes,
+  PlugCategoryHashes,
+} from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { filterMap, objectifyArray } from './collections';
 
@@ -333,4 +339,31 @@ export function isShiny(item: DimItem) {
     (s) =>
       s.plugOptions.some((s) => s.plugDef.plug.plugCategoryIdentifier === 'holofoil_skins_shared'), //
   );
+}
+
+const ichToBreakerType = Object.entries(artifactBreakerMods).reduce<
+  Partial<Record<ItemCategoryHashes, BreakerTypeHashes>>
+>((memo, [breakerType, iches]) => {
+  const breakerTypeNum = parseInt(breakerType, 10);
+  for (const ich of iches) {
+    memo[ich] = breakerTypeNum;
+  }
+  return memo;
+}, {});
+
+/**
+ * Get the effective breaker type of a weapon, which is either its intrinsic
+ * breaker type (for some exotics) or one of the breaker types enabled by this
+ * season's artifact mods.
+ */
+export function getBreakerTypeHash(item: DimItem): number | undefined {
+  if (item.breakerType) {
+    return item.breakerType.hash;
+  } else if (item.bucket.inWeapons) {
+    for (const ich of item.itemCategoryHashes) {
+      if (ichToBreakerType[ich as ItemCategoryHashes]) {
+        return ichToBreakerType[ich as ItemCategoryHashes];
+      }
+    }
+  }
 }
