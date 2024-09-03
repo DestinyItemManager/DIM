@@ -29,6 +29,8 @@ export function WeaponCraftedInfo({ item, className }: { item: DimItem; classNam
       <div className="objective-progress">
         <div className="objective-progress-bar" style={progressBarStyle} />
         <div className="objective-description">
+          {item.craftedInfo?.enhancementTier > 0 &&
+            `${t('MovePopup.EnhancementTier', { tier: item.craftedInfo?.enhancementTier })} - `}
           {t('MovePopup.WeaponLevel', { level: item.craftedInfo.level })}
         </div>
         <div className="objective-text">{percentWithSingleDecimal(progress)}</div>
