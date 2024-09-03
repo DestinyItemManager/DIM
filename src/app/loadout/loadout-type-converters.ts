@@ -234,6 +234,11 @@ export function convertInGameLoadoutToDimLoadout(
   loadout.parameters = {
     mods: armorMods,
     modsByBucket,
+    inGameIdentifiers: {
+      nameHash: inGameLoadout.nameHash,
+      iconHash: inGameLoadout.iconHash,
+      colorHash: inGameLoadout.colorHash,
+    },
   };
   return loadout;
 }

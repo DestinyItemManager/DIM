@@ -139,7 +139,7 @@ export default function LoadoutView({
     >
       <div className={styles.title}>
         <h2>
-          {loadout.parameters?.inGameIdentifiers && (
+          {$featureFlags.editInGameLoadoutIdentifiers && loadout.parameters?.inGameIdentifiers && (
             <InGameLoadoutIconFromIdentifiers
               size={24}
               identifiers={loadout.parameters.inGameIdentifiers}

@@ -27,6 +27,7 @@ export function editLoadout(
   {
     showClass = true,
     isNew = true,
+    /** Is this from an external source (e.g. a loadout share)? */
     fromExternal = false,
   }: { showClass?: boolean; isNew?: boolean; fromExternal?: boolean } = {},
 ) {
