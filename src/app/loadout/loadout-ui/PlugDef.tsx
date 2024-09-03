@@ -49,11 +49,5 @@ export default function PlugDef({
     </div>
   );
 
-  return onClose ? (
-    <ClosableContainer onClose={onClose} showCloseIconOnHover={true}>
-      {contents}
-    </ClosableContainer>
-  ) : (
-    contents
-  );
+  return onClose ? <ClosableContainer onClose={onClose}>{contents}</ClosableContainer> : contents;
 }

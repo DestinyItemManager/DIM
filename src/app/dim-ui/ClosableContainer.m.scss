@@ -9,7 +9,7 @@
   width: calc(var(--item-size) / 3);
   height: calc(var(--item-size) / 3);
   background-size: calc(var(--item-size) / 3);
-  display: inline-block;
+  display: none;
   position: absolute;
   top: 2px;
   right: 2px;
@@ -20,15 +20,10 @@
     background-color: var(--theme-accent-primary);
     outline: none;
   }
-}
 
-.showCloseOnHover {
-  @include interactive($hover: true) {
-    .close {
-      display: inline-block;
-    }
-  }
-  .close {
-    display: none;
+  // This intentionally doesn't use the interactive mixin because it relies on
+  // hover emulation to show the button on mobile.
+  .container:hover & {
+    display: inline-block;
   }
 }
