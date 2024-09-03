@@ -11,67 +11,11 @@
   margin: 0;
 }
 
-.preview {
-  display: flex;
-  flex-direction: row;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  font-size: 16px;
-  gap: 8px;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.button {
-  composes: dim-button from global;
-  position: relative;
-
-  @include interactive($hover: true, $active: true) {
-    background-color: var(--theme-accent-primary);
-    color: var(--theme-text-invert);
-    > img {
-      filter: none !important;
-    }
-  }
-  > img {
-    margin: 0 !important;
-    height: 48px;
-    width: 48px;
-  }
-
-  &.checked {
-    background-color: var(--theme-accent-primary);
-    color: var(--theme-text-invert);
-    > img {
-      filter: none !important;
-    }
-  }
-  &.imageButton {
-    padding: 2px;
-  }
-  &.hasLoadout {
-    @include interactive($hover: true, $active: true) {
-      color: var(--theme-text) !important;
-    }
-    &.checked {
-      color: var(--theme-text) !important;
-    }
-  }
-}
-
-.row {
+.slots {
   display: flex;
   flex-flow: row wrap;
   gap: 4px;
-}
-
-.slots {
-  composes: row;
   margin-bottom: 8px;
-
-  > .button {
-    padding: 2px;
-  }
 }
 
 .emptySlot {

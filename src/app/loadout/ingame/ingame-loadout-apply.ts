@@ -24,7 +24,8 @@ import { inGameLoadoutDeleted, inGameLoadoutUpdated } from './actions';
 import { getItemsFromInGameLoadout } from './ingame-loadout-utils';
 
 /**
- * Ask the API to equip an ingame loadout. You can pass false for apply if you only want to prep the loadout for ingame apply.
+ * Ask the API to equip an in-game loadout. You can pass false for apply if you
+ * only want to prep the loadout for in-game apply.
  */
 export function applyInGameLoadout(loadout: InGameLoadout, apply = true): ThunkResult {
   return async (dispatch, getState) => {

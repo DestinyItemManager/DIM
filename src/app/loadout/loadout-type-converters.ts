@@ -1,4 +1,9 @@
-import { Loadout, LoadoutItem, LoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import {
+  InGameLoadoutIdentifiers,
+  Loadout,
+  LoadoutItem,
+  LoadoutParameters,
+} from '@destinyitemmanager/dim-api-types';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem } from 'app/inventory/item-types';
 import { SocketOverrides } from 'app/inventory/store/override-sockets';
@@ -141,9 +146,7 @@ function convertDestinyLoadoutComponentToInGameLoadout(
   characterId: string,
   defs: D2ManifestDefinitions,
 ): InGameLoadout | undefined {
-  const name = defs.LoadoutName.get(loadoutComponent.nameHash)?.name ?? 'Unknown';
-  const colorIcon = defs.LoadoutColor.get(loadoutComponent.colorHash)?.colorImagePath ?? '';
-  const icon = defs.LoadoutIcon.get(loadoutComponent.iconHash)?.iconImagePath ?? '';
+  const resolvedIdentifiers = resolveInGameLoadoutIdentifiers(defs, loadoutComponent);
 
   if (
     loadoutComponent.items === undefined ||
@@ -155,13 +158,21 @@ function convertDestinyLoadoutComponentToInGameLoadout(
 
   return {
     ...loadoutComponent,
+    ...resolvedIdentifiers,
     characterId,
     index,
-    name,
-    colorIcon,
-    icon,
     id: `ingame-${characterId}-${index}`,
   };
+}
+
+export function resolveInGameLoadoutIdentifiers(
+  defs: D2ManifestDefinitions,
+  { nameHash, colorHash, iconHash }: InGameLoadoutIdentifiers,
+) {
+  const name = defs.LoadoutName.get(nameHash)?.name ?? 'Unknown';
+  const colorIcon = defs.LoadoutColor.get(colorHash)?.colorImagePath ?? '';
+  const icon = defs.LoadoutIcon.get(iconHash)?.iconImagePath ?? '';
+  return { name, colorIcon, icon };
 }
 
 export function convertInGameLoadoutToDimLoadout(
@@ -223,6 +234,11 @@ export function convertInGameLoadoutToDimLoadout(
   loadout.parameters = {
     mods: armorMods,
     modsByBucket,
+    inGameIdentifiers: {
+      nameHash: inGameLoadout.nameHash,
+      iconHash: inGameLoadout.iconHash,
+      colorHash: inGameLoadout.colorHash,
+    },
   };
   return loadout;
 }

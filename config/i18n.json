@@ -464,6 +464,7 @@
     "DeletedBody": "Cleared the in-game loadout at slot {{index}}",
     "DeleteFailed": "Failed to delete loadout",
     "Save": "Update Loadout",
+    "SaveIdentifiers": "Update Identifiers",
     "SaveToDimLoadout": "Save as DIM Loadout",
     "Replace": "Replace Loadout {{index}}",
     "SnapshotFailed": "Failed to snapshot equipped loadout"
@@ -702,6 +703,9 @@
     "CannotCustomizeSubclass": "This subclass cannot be configured",
     "ChooseItem": "Add {{name}}",
     "Classified": "Some of your items are classified, and cannot be included in the max power calculation.",
+    "ClassType": "Any class loadout",
+    "ClassType_male": "{{className}} loadout",
+    "ClassType_female": "{{className}} loadout",
     "ClassTypeMismatch": "A {{className}} item cannot be added to this loadout",
     "ClassTypeMissing": "You do not have a {{className}} to create a loadout for",
     "ClearSection": "Remove all",

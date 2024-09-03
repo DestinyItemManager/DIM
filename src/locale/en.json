@@ -442,6 +442,7 @@
     "PrepareEquip": "Prepare Equip",
     "Replace": "Replace Loadout {{index}}",
     "Save": "Update Loadout",
+    "SaveIdentifiers": "Update Identifiers",
     "SnapshotFailed": "Failed to snapshot equipped loadout"
   },
   "Infusion": {
@@ -750,8 +751,11 @@
     "CancelEditing": "Cancel Editing",
     "CannotCustomizeSubclass": "This subclass cannot be configured",
     "ChooseItem": "Add {{name}}",
+    "ClassType": "Any class loadout",
     "ClassTypeMismatch": "A {{className}} item cannot be added to this loadout",
     "ClassTypeMissing": "You do not have a {{className}} to create a loadout for",
+    "ClassType_female": "{{className}} loadout",
+    "ClassType_male": "{{className}} loadout",
     "Classified": "Some of your items are classified, and cannot be included in the max power calculation.",
     "ClearLoadoutParameters": "Remove Loadout Optimizer settings",
     "ClearSection": "Remove all",

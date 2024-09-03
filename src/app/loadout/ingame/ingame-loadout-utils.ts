@@ -16,7 +16,7 @@ import { UNSET_PLUG_HASH } from '../known-values';
 import { getSubclassPlugHashes } from '../loadout-item-utils';
 
 /**
- * Get all the real DimItems from ingame loadout items.
+ * Get all the real DimItems from in-game loadout items.
  */
 export function getItemsFromInGameLoadout(
   itemCreationContext: ItemCreationContext,
