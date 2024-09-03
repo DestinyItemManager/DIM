@@ -1,23 +1,21 @@
 import { CustomStatDef, DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { customStatsSelector, languageSelector } from 'app/dim-api/selectors';
-import { gaEvent } from 'app/google';
 import { LoadoutsByItem, loadoutsByItemSelector } from 'app/loadout/selectors';
 import { buildStatInfo, getColumns } from 'app/organizer/Columns';
-import { CSVColumn, SpreadsheetContext } from 'app/organizer/table-types';
+import { SpreadsheetContext } from 'app/organizer/table-types';
 import { D1_StatHashes } from 'app/search/d1-known-values';
 import { TOTAL_STAT_HASH } from 'app/search/d2-known-values';
 import { ThunkResult } from 'app/store/types';
 import { filterMap } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
+import { CsvRow, downloadCsv } from 'app/utils/csv';
 import { DimError } from 'app/utils/dim-error';
-import { download } from 'app/utils/download';
 import { localizedSorter } from 'app/utils/intl';
-import { isD1Item, isKillTrackerSocket } from 'app/utils/item-utils';
+import { isKillTrackerSocket } from 'app/utils/item-utils';
 import { getDisplayedItemSockets, getSocketsByIndexes } from 'app/utils/socket-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
-import _ from 'lodash';
 import Papa from 'papaparse';
 import { setItemNote, setItemTagsBulk } from './actions';
 import { TagValue, tagConfig } from './dim-item-info';
@@ -126,8 +124,6 @@ export function generateCSVExportData(
     items = allItems.filter((item) => item.bucket.hash === BucketHashes.Ghost);
   }
 
-  // We need to always emit enough columns for all perks
-  const maxPerks = getMaxPerks(items);
   const statHashes = buildStatInfo(items);
   const destinyVersion = items[0]?.destinyVersion ?? 2;
 
@@ -199,26 +195,20 @@ export function generateCSVExportData(
     }),
   );
 
-  const context: SpreadsheetContext = { storeNamesById, maxPerks };
+  const context: SpreadsheetContext = { storeNamesById };
   const data = items.map((item) => {
-    const row: Record<string, unknown> = {};
+    const row: CsvRow = {};
     for (const column of columns) {
       const value = column.value(item);
       if (typeof column.csv === 'string') {
         row[column.csv] ||= value;
       } else if (column.csv) {
         const values = column.csv(value, item, context);
-        if (!values || values.length === 0) {
+        if (!values) {
           continue;
         }
-        if (Array.isArray(values[0])) {
-          for (const [key, value] of values as CSVColumn[]) {
-            row[key] ||= value;
-          }
-        } else {
-          const [key, value] = values;
-          row[key] ||= value;
-        }
+        const [key, csvValue] = values;
+        row[key] ||= csvValue;
       } else {
         // Column has no CSV representation - either remove the column in spreadsheet mode or add a 'csv' or 'csvVal' property
         throw new Error(`missing-csv: ${column.id}`);
@@ -252,7 +242,9 @@ export function downloadCsvFiles(type: 'weapon' | 'armor' | 'ghost'): ThunkResul
       customStats,
     );
     data.sort(localizedSorter(language, (r) => (r as { Name: string }).Name));
-    downloadCsv(`destiny-${type}`, Papa.unparse(data));
+    downloadCsv(`destiny-${type}`, data, {
+      unpackArrays: ['Perks'],
+    });
   };
 }
 
@@ -333,15 +325,6 @@ export function importTagsNotesFromCsv(files: File[]): ThunkResult<number | unde
   };
 }
 
-function downloadCsv(filename: string, csv: string) {
-  const filenameWithExt = `${filename}.csv`;
-  gaEvent('file_download', {
-    file_name: filenameWithExt,
-    file_extension: 'csv',
-  });
-  download(csv, filenameWithExt, 'text/csv');
-}
-
 export function buildSocketNames(item: DimItem): string[] {
   if (!item.sockets) {
     return [];
@@ -383,21 +366,4 @@ export function buildNodeNames(nodes: D1GridNode[]): string[] {
     }
     return node.activated ? `${node.name}*` : node.name;
   });
-}
-
-function getMaxPerks(items: DimItem[]) {
-  // We need to always emit enough columns for all perks
-  return (
-    _.max(
-      items.map(
-        (item) =>
-          (isD1Item(item) && item.talentGrid
-            ? buildNodeNames(item.talentGrid.nodes)
-            : item.sockets
-              ? buildSocketNames(item)
-              : []
-          ).length,
-      ),
-    ) || 0
-  );
 }

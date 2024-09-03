@@ -611,7 +611,7 @@ export function getColumns(
         ),
       sort: perkStringSort,
       filter: perkStringFilter,
-      csv: (_value, item, { maxPerks }) => {
+      csv: (_value, item) => {
         // This could go on any of the perks columns, since it computes a very
         // different view of perks, but I just picked one.
         const perks =
@@ -622,10 +622,7 @@ export function getColumns(
               : [];
 
         // Return multiple columns
-        return _.times(
-          maxPerks,
-          (index) => [`Perks ${index}`, perks[index]] as [name: string, value: string | undefined],
-        );
+        return [`Perks`, perks];
       },
     }),
     destinyVersion === 2 &&
