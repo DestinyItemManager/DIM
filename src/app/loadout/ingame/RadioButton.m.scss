@@ -1,0 +1,37 @@
+@use '../../variables.scss' as *;
+
+.button {
+  composes: dim-button from global;
+  position: relative;
+
+  @include interactive($hover: true, $active: true) {
+    background-color: var(--theme-accent-primary);
+    color: var(--theme-text-invert);
+    > img {
+      filter: none !important;
+    }
+  }
+  > img {
+    margin: 0 !important;
+    height: 48px;
+    width: 48px;
+  }
+  &.checked {
+    background-color: var(--theme-accent-primary);
+    color: var(--theme-text-invert);
+    > img {
+      filter: none !important;
+    }
+  }
+  &.spaced {
+    padding: 2px;
+  }
+  &.hasLoadout {
+    @include interactive($hover: true, $active: true) {
+      color: var(--theme-text) !important;
+    }
+    &.checked {
+      color: var(--theme-text) !important;
+    }
+  }
+}

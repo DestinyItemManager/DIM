@@ -127,8 +127,6 @@ export interface DimItem {
   loreHash?: number;
   /** Metrics that can be used with this item. */
   availableMetricCategoryNodeHashes?: number[];
-  /** If this exists, it's the limit of an item's PL. If NOT, display no information. Maybe it's unlimited PL. Maybe it's a weird item. */
-  powerCap: number | null;
   /** If any two items share at least one number on this list, they can be infused into each other. */
   infusionCategoryHashes: number[] | null;
   /** The DestinyVendorDefinition hash of the vendor that can preview the contents of this item, if there is one. */
@@ -269,6 +267,8 @@ export interface DimCrafted {
   progress: number;
   /** when this weapon was crafted, UTC epoch seconds timestamp */
   craftedDate: number;
+  /** the enhancement tier for this weapon, if enhanced. 0 otherwise. */
+  enhancementTier: number;
 }
 
 export interface DimCatalyst {

@@ -57,12 +57,12 @@
   display: flex;
   box-sizing: border-box;
   margin-right: 16px;
+  flex-direction: column;
+  flex: 0;
 
   @include phone-portrait {
     margin-right: 0;
   }
-  flex-direction: column;
-  flex: 0;
 
   .loadout-bucket-name {
     text-transform: uppercase;

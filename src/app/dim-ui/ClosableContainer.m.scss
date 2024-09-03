@@ -15,19 +15,20 @@
   right: 2px;
   background-image: url('images/close.png');
   background-color: rgba(100, 100, 100, 0.8);
-  &:hover,
-  &:focus-visible {
+
+  @include interactive($hover: true, $focus: true) {
     background-color: var(--theme-accent-primary);
     outline: none;
   }
 }
 
 .showCloseOnHover {
+  @include interactive($hover: true) {
+    .close {
+      display: inline-block;
+    }
+  }
   .close {
     display: none;
-  }
-
-  &:hover .close {
-    display: inline-block;
   }
 }

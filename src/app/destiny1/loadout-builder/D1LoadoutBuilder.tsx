@@ -22,7 +22,7 @@ import CharacterSelect from '../../dim-ui/CharacterSelect';
 import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
 import ErrorBoundary from '../../dim-ui/ErrorBoundary';
 import { D1GridNode, D1Item, DimItem } from '../../inventory/item-types';
-import { bucketsSelector, storesSelector } from '../../inventory/selectors';
+import { bucketsSelector, sortedStoresSelector } from '../../inventory/selectors';
 import { D1Store } from '../../inventory/store-types';
 import { AppIcon, refreshIcon } from '../../shell/icons';
 import { Vendor, loadVendors } from '../vendors/vendor.service';
@@ -106,7 +106,7 @@ const initialState: State = {
 
 export default function D1LoadoutBuilder({ account }: { account: DestinyAccount }) {
   const buckets = useSelector(bucketsSelector);
-  const stores = useSelector(storesSelector) as D1Store[];
+  const stores = useSelector(sortedStoresSelector) as D1Store[];
   const defs = useD1Definitions();
 
   const [state, setStateFull] = useState(initialState);

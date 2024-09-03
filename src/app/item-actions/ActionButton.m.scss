@@ -22,14 +22,8 @@
   composes: resetButton from 'app/dim-ui/common.m.scss';
   composes: entry;
 
-  &:disabled {
-    filter: contrast(0.5) brightness(0.5);
-    cursor: not-allowed;
-  }
-
   @media (min-width: 541px) {
-    &:hover,
-    &:focus-visible {
+    @include interactive($hover: true, $focus: true) {
       outline: none;
       background: var(--theme-accent-primary);
       color: var(--theme-text-invert);
@@ -37,5 +31,10 @@
         color: var(--theme-text-invert);
       }
     }
+  }
+
+  &:disabled {
+    filter: contrast(0.5) brightness(0.5);
+    cursor: not-allowed;
   }
 }

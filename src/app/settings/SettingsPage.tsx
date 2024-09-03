@@ -1,4 +1,4 @@
-import { LoadoutSort } from '@destinyitemmanager/dim-api-types';
+import { LoadoutSort, VaultWeaponGroupingStyle } from '@destinyitemmanager/dim-api-types';
 import { currentAccountSelector, hasD1AccountSelector } from 'app/accounts/selectors';
 import { clarityDiscordLink, clarityLink } from 'app/clarity/about';
 import { settingsSelector } from 'app/dim-api/selectors';
@@ -35,7 +35,7 @@ import Spreadsheets from './Spreadsheets';
 import { TroubleshootingSettings } from './Troubleshooting';
 import { setCharacterOrder } from './actions';
 import { useSetSetting } from './hooks';
-import { Settings, VaultWeaponGroupingStyle } from './initial-settings';
+import { Settings } from './initial-settings';
 import { itemSortSettingsSelector } from './item-sort';
 
 const TAG = 'settings';
@@ -74,6 +74,14 @@ export default function SettingsPage() {
     (i) => i.bucket.sort === 'Weapons' && !i.isExotic && i.masterwork && !i.deepsightInfo,
   );
   const exampleArmor = allItems.find((i) => i.bucket.sort === 'Armor' && !i.isExotic);
+  const exampleArchivedArmor = allItems.find(
+    (i) => i !== exampleArmor && i.bucket.sort === 'Armor' && !i.isExotic,
+  );
+  const godRoll = {
+    wishListPerks: new Set<number>(),
+    notes: undefined,
+    isUndesirable: false,
+  };
 
   const onCheckChange = (checked: boolean, name: keyof Settings) => {
     if (name.length === 0) {
@@ -162,7 +170,6 @@ export default function SettingsPage() {
     name: t('Settings.SortName'),
     tag: t('Settings.SortByTag', { taglist: tagListString }),
     season: t('Settings.SortBySeason'),
-    sunset: t('Settings.SortBySunset'),
     acquisitionRecency: t('Settings.SortByRecent'),
     elementWeapon: t('Settings.SortByWeaponElement'),
     masterworked: t('Settings.Masterworked'),
@@ -271,7 +278,8 @@ export default function SettingsPage() {
                 <InventoryItem
                   item={exampleWeapon}
                   isNew={settings.showNewItems}
-                  tag="favorite"
+                  tag="keep"
+                  wishlistRoll={godRoll}
                   autoLockTagged={settings.autoLockTagged}
                 />
               )}
@@ -279,7 +287,8 @@ export default function SettingsPage() {
                 <InventoryItem
                   item={exampleWeaponMasterworked}
                   isNew={settings.showNewItems}
-                  tag="keep"
+                  tag="favorite"
+                  wishlistRoll={godRoll}
                   autoLockTagged={settings.autoLockTagged}
                 />
               )}
@@ -287,7 +296,15 @@ export default function SettingsPage() {
                 <InventoryItem
                   item={exampleArmor}
                   isNew={settings.showNewItems}
-                  tag="keep"
+                  autoLockTagged={settings.autoLockTagged}
+                />
+              )}
+              {exampleArchivedArmor && (
+                <InventoryItem
+                  item={exampleArchivedArmor}
+                  isNew={settings.showNewItems}
+                  tag="archive"
+                  searchHidden={true}
                   autoLockTagged={settings.autoLockTagged}
                 />
               )}
@@ -351,6 +368,17 @@ export default function SettingsPage() {
                   }
                 />
               )}
+              <Checkbox
+                label={t('Settings.VaultArmorGroupingStyle')}
+                name="vaultArmorGroupingStyle"
+                value={settings.vaultArmorGroupingStyle !== VaultWeaponGroupingStyle.Inline}
+                onChange={(checked, setting) =>
+                  setSetting(
+                    setting,
+                    checked ? VaultWeaponGroupingStyle.Lines : VaultWeaponGroupingStyle.Inline,
+                  )
+                }
+              />
             </div>
 
             <div className={styles.setting}>

@@ -90,18 +90,17 @@ export default function Developer(this: never) {
           <ol>
             <li>
               Visit{' '}
-              <a href={createAppUrl} target="_blank">
+              <a href={createAppUrl} target="_blank" rel="noreferrer noopener">
                 {createAppUrl}
               </a>
             </li>
             <li>
-              Paste{' '}
-              <input name="redirectUrl" type="text" value={URLRet} readOnly={true} size={30} /> into
+              Paste <input name="redirectUrl" type="text" value={URLRet} readOnly size={30} /> into
               the "Redirect URL" section under "App Authentication".
             </li>
             <li>
-              Paste <input name="originHeader" type="text" value={URL} readOnly={true} size={20} />{' '}
-              into the "Origin Header" section under "Browser Based Apps".
+              Paste <input name="originHeader" type="text" value={URL} readOnly size={20} /> into
+              the "Origin Header" section under "Browser Based Apps".
             </li>
             <li>Select "Confidential" OAuth type.</li>
             <li>
@@ -168,13 +167,7 @@ export default function Developer(this: never) {
             <li>
               DIM API key
               <br />
-              <input
-                name="clientSecret"
-                type="dimApiKey"
-                value={dimApiKey}
-                size={36}
-                readOnly={true}
-              />
+              <input name="clientSecret" type="dimApiKey" value={dimApiKey} size={36} readOnly />
             </li>
           </ol>
           <button

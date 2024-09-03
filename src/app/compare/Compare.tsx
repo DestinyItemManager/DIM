@@ -1,5 +1,6 @@
 import BungieImage from 'app/dim-ui/BungieImage';
 import { SheetHorizontalScrollContainer } from 'app/dim-ui/SheetHorizontalScrollContainer';
+import { ColumnSort, SortDirection, useTableColumnSorts } from 'app/dim-ui/table-columns';
 import { t } from 'app/i18next-t';
 import { locateItem } from 'app/inventory/locate-item';
 import { createItemContextSelector } from 'app/inventory/selectors';
@@ -18,6 +19,7 @@ import { AppIcon, faAngleLeft, faAngleRight, faList } from 'app/shell/icons';
 import { acquisitionRecencyComparator } from 'app/shell/item-comparators';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { emptyArray } from 'app/utils/empty';
+import { useShiftHeld } from 'app/utils/hooks';
 import { DestinyDisplayPropertiesDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { StatHashes } from 'data/d2/generated-enums';
@@ -27,7 +29,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem, DimSocket } from '../inventory/item-types';
-import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
+import { chainComparator, Comparator, compareBy, reverseComparator } from '../utils/comparators';
 import styles from './Compare.m.scss';
 import CompareItem from './CompareItem';
 import CompareSuggestions from './CompareSuggestions';
@@ -71,10 +73,8 @@ export default function Compare({ session }: { session: CompareSession }) {
 
   /** The stat row to highlight */
   const [highlight, setHighlight] = useState<string | number>();
-  /** The stat row to sort by */
-  const [sortedHash, setSortedHash] = useState<string | number>();
-  const [sortBetterFirst, setSortBetterFirst] = useState<boolean>(true);
   const [socketOverrides, onPlugClicked] = useSocketOverridesForItems();
+  const [columnSorts, toggleColumnSort] = useTableColumnSorts([]);
 
   const comparingArmor = rawCompareItems[0]?.bucket.inArmor;
   const comparingWeapons = rawCompareItems[0]?.bucket.inWeapons;
@@ -153,30 +153,26 @@ export default function Compare({ session }: { session: CompareSession }) {
     [cancel, compareItems.length, dispatch],
   );
 
-  const changeSort = (newSortedHash?: string | number) => {
-    // TODO: put sorting together?
-    setSortedHash(newSortedHash);
-    setSortBetterFirst(sortedHash === newSortedHash ? !sortBetterFirst : true);
-  };
+  const sortedComparisonItems = useMemo(() => {
+    const comparator = sortCompareItemsComparator(
+      columnSorts,
+      doCompareBaseStats,
+      allStats,
+      session.initialItemId,
+    );
+    return compareItems.toSorted(comparator);
+  }, [columnSorts, doCompareBaseStats, allStats, session.initialItemId, compareItems]);
 
   // If the session was started with a specific item, this is it
   const initialItem = session.initialItemId
     ? compareItems.find((i) => i.id === session.initialItemId)
     : undefined;
-  const firstCompareItem = compareItems[0];
+  const firstCompareItem = sortedComparisonItems[0];
   // The example item is the one we'll use for generating suggestion buttons
   const exampleItem = initialItem || firstCompareItem;
 
-  const items = useMemo(() => {
-    const comparator = sortCompareItemsComparator(
-      sortedHash,
-      sortBetterFirst,
-      doCompareBaseStats,
-      allStats,
-      session.initialItemId,
-    );
-    const sortedComparisonItems = compareItems.toSorted(comparator);
-    return (
+  const items = useMemo(
+    () => (
       <CompareItems
         items={sortedComparisonItems}
         allStats={allStats}
@@ -186,17 +182,16 @@ export default function Compare({ session }: { session: CompareSession }) {
         doCompareBaseStats={doCompareBaseStats}
         initialItemId={session.initialItemId}
       />
-    );
-  }, [
-    allStats,
-    compareItems,
-    doCompareBaseStats,
-    onPlugClicked,
-    remove,
-    session.initialItemId,
-    sortBetterFirst,
-    sortedHash,
-  ]);
+    ),
+    [
+      sortedComparisonItems,
+      allStats,
+      doCompareBaseStats,
+      onPlugClicked,
+      remove,
+      session.initialItemId,
+    ],
+  );
 
   const header = (
     <div className={styles.options}>
@@ -226,35 +221,49 @@ export default function Compare({ session }: { session: CompareSession }) {
     </div>
   );
 
+  const isShiftHeld = useShiftHeld();
   return (
     <Sheet onClose={cancel} header={header} allowClickThrough>
       <div className={styles.bucket} onPointerLeave={() => setHighlight(undefined)}>
         <div className={styles.statList}>
           <div className={styles.spacer} />
-          {allStats.map((stat) => (
-            <div
-              key={stat.id}
-              className={clsx(styles.statLabel, {
-                [styles.sortDesc]: stat.id === sortedHash && sortBetterFirst,
-                [styles.sortAsc]: stat.id === sortedHash && !sortBetterFirst,
-              })}
-              onPointerEnter={() => setHighlight(stat.id)}
-              onClick={() => changeSort(stat.id)}
-            >
-              {stat.displayProperties.hasIcon && (
-                <span title={stat.displayProperties.name}>
-                  <BungieImage src={stat.displayProperties.icon} />
-                </span>
-              )}
-              {stat.id in statLabels
-                ? t(statLabels[stat.id as StatHashes]!)
-                : stat.displayProperties.name}{' '}
-              {stat.id === sortedHash && (
-                <AppIcon icon={sortBetterFirst ? faAngleRight : faAngleLeft} />
-              )}
-              {stat.id === highlight && <div className={styles.highlightBar} />}
-            </div>
-          ))}
+          {allStats.map((stat) => {
+            const columnSort = columnSorts.find((c) => c.columnId === stat.id.toString());
+            return (
+              <div
+                key={stat.id}
+                className={clsx(
+                  styles.statLabel,
+                  columnSort
+                    ? columnSort.sort === SortDirection.ASC
+                      ? styles.sortDesc
+                      : styles.sortAsc
+                    : undefined,
+                )}
+                onPointerEnter={() => setHighlight(stat.id)}
+                onClick={toggleColumnSort(
+                  stat.id.toString(),
+                  isShiftHeld,
+                  stat.lowerBetter ? SortDirection.DESC : SortDirection.ASC,
+                )}
+              >
+                {stat.displayProperties.hasIcon && (
+                  <span title={stat.displayProperties.name}>
+                    <BungieImage src={stat.displayProperties.icon} />
+                  </span>
+                )}
+                {stat.id in statLabels
+                  ? t(statLabels[stat.id as StatHashes]!)
+                  : stat.displayProperties.name}{' '}
+                {columnSort && (
+                  <AppIcon
+                    icon={columnSort.sort === SortDirection.ASC ? faAngleRight : faAngleLeft}
+                  />
+                )}
+                {stat.id === highlight && <div className={styles.highlightBar} />}
+              </div>
+            );
+          })}
         </div>
         {items}
       </div>
@@ -299,39 +308,37 @@ function CompareItems({
 }
 
 function sortCompareItemsComparator(
-  sortedHash: string | number | undefined,
-  sortBetterFirst: boolean,
+  columnSorts: ColumnSort[],
   compareBaseStats: boolean,
   allStats: StatInfo[],
   initialItemId?: string,
 ) {
-  if (!sortedHash) {
+  if (!columnSorts.length) {
     return chainComparator(
       compareBy((item) => item.id !== initialItemId),
       acquisitionRecencyComparator,
     );
   }
 
-  const sortStat = allStats.find((s) => s.id === sortedHash);
-
-  if (!sortStat) {
-    return (_a: DimItem, _b: DimItem) => 0;
-  }
-
-  const shouldReverse = sortStat.lowerBetter ? sortBetterFirst : !sortBetterFirst;
-
   return reverseComparator(
     chainComparator<DimItem>(
-      compareBy((item) => {
-        const stat = sortStat.getStat(item);
-        if (!stat) {
-          return -1;
+      ...columnSorts.map((sorter) => {
+        const sortStat = allStats.find((s) => s.id.toString() === sorter.columnId);
+        if (!sortStat) {
+          return compareBy(() => 0);
         }
-        const statValue = compareBaseStats ? stat.base ?? stat.value : stat.value;
-        if (stat.statHash === StatHashes.RecoilDirection) {
-          return recoilValue(stat.value);
-        }
-        return shouldReverse ? -statValue : statValue;
+        const compare: Comparator<DimItem> = compareBy((item) => {
+          const stat = sortStat.getStat(item);
+          if (!stat) {
+            return -1;
+          }
+          const statValue = compareBaseStats ? (stat.base ?? stat.value) : stat.value;
+          if (stat.statHash === StatHashes.RecoilDirection) {
+            return recoilValue(stat.value);
+          }
+          return statValue;
+        });
+        return sorter.sort === SortDirection.ASC ? compare : reverseComparator(compare);
       }),
       compareBy((i) => i.index),
       compareBy((i) => i.name),
@@ -412,11 +419,11 @@ function getAllStats(comparisonItems: DimItem[], compareBaseStats: boolean): Sta
       if (itemStat) {
         stat.min = Math.min(
           stat.min,
-          (compareBaseStats ? itemStat.base ?? itemStat.value : itemStat.value) || 0,
+          (compareBaseStats ? (itemStat.base ?? itemStat.value) : itemStat.value) || 0,
         );
         stat.max = Math.max(
           stat.max,
-          (compareBaseStats ? itemStat.base ?? itemStat.value : itemStat.value) || 0,
+          (compareBaseStats ? (itemStat.base ?? itemStat.value) : itemStat.value) || 0,
         );
         stat.enabled = stat.min !== stat.max;
       }

@@ -8,28 +8,50 @@
 
 .perks {
   display: flex;
-  flex-flow: column;
+  flex-direction: column;
   margin: 4px 0;
+  gap: 4px;
 
-  > div > div {
-    display: flex;
-    flex-flow: row;
-    align-items: center;
+  > div {
+    margin-left: -3px;
+    padding-left: 4px;
   }
 
-  img {
+  .multiPerk {
+    border-left: 2px solid #888;
+    padding-left: 2px;
+  }
+}
+
+.perk {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2px;
+
+  > img {
     height: 24px;
     width: 24px;
+    margin-left: -1px;
   }
 }
 
 .stats {
   margin: 4px 0 0 0;
-  :global(.stat-row) {
-    margin-bottom: 8px;
-  }
+  gap: 4px !important;
+
   :global(.stat) {
-    line-height: 8px;
     color: var(--theme-text) !important;
   }
+}
+
+.armorStats {
+  :global(.stat) {
+    line-height: 8px;
+  }
+}
+
+.customTotals {
+  gap: 0 !important;
+  flex-wrap: wrap;
 }

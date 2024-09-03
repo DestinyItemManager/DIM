@@ -26,14 +26,16 @@ describe('buildSearchConfig', () => {
       let formats = canonicalFilterFormats(filter.format);
 
       if (formats.length < 1) {
-        throw new Error(`filter ${filter.keywords} has no formats`);
+        throw new Error(`filter ${filter.keywords.toString()} has no formats`);
       }
 
       formats = formats.filter(
         (f) => f === 'query' || f === 'freeform' || (f === 'range' && filter.overload),
       );
       if (formats.length > 1) {
-        throw new Error(`filter ${filter.keywords} specifies ambiguous formats ${formats}`);
+        throw new Error(
+          `filter ${filter.keywords.toString()} specifies ambiguous formats ${formats.toString()}`,
+        );
       }
     }
   });

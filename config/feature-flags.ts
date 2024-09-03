@@ -51,6 +51,8 @@ export function makeFeatureFlags(env: {
     customStatWeights: false,
     // On the Loadouts page, run Loadout Optimizer to find better tiers for loadouts.
     runLoInBackground: true,
+    // Whether to allow setting in-game loadout identifiers on DIM loadouts.
+    editInGameLoadoutIdentifiers: false,
   };
 }
 

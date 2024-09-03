@@ -12,11 +12,11 @@ import { DestinyLoadoutItemComponent } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { getSubclassPlugHashes } from '../item-utils';
 import { UNSET_PLUG_HASH } from '../known-values';
+import { getSubclassPlugHashes } from '../loadout-item-utils';
 
 /**
- * Get all the real DimItems from ingame loadout items.
+ * Get all the real DimItems from in-game loadout items.
  */
 export function getItemsFromInGameLoadout(
   itemCreationContext: ItemCreationContext,

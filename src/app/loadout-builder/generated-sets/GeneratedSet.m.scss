@@ -10,13 +10,13 @@
   padding-bottom: 14px;
   width: fit-content !important;
 
-  &:last-child {
-    border-bottom: 0;
-  }
-
   @include phone-portrait {
     padding-left: 12px;
     padding-right: 12px;
+  }
+
+  &:last-child {
+    border-bottom: 0;
   }
 }
 

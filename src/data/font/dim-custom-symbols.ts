@@ -368,4 +368,5 @@ export const enum DimCustomSymbols {
   supers = 983379,
   movement = 983380,
   shaxx = 983381,
+  prismatic = 983382,
 }

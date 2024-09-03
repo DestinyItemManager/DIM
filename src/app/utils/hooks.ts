@@ -65,7 +65,7 @@ export function useLocalStorage<T>(
       const item = window.localStorage.getItem(key);
       // Parse stored json or if none return initialValue
       return item ? (JSON.parse(item) as T) : initialValue;
-    } catch (error) {
+    } catch {
       return initialValue;
     }
   });
@@ -131,7 +131,7 @@ export function useHeightFromViewportBottom(
 
     updateHeight();
     window.visualViewport.addEventListener('resize', updateHeight);
-    return () => window.visualViewport!.removeEventListener('resize', updateHeight);
+    return () => window.visualViewport?.removeEventListener('resize', updateHeight);
   }, [setHeightFromViewportBottom, elementRef, itemHeight, padding]);
 }
 

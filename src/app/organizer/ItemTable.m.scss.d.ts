@@ -2,6 +2,7 @@
 // Please do not change this file!
 interface CssExports {
   'archetype': string;
+  'barrels': string;
   'base2715839340': string;
   'customstat': string;
   'dmg': string;
@@ -12,6 +13,7 @@ interface CssExports {
   'icon': string;
   'importButton': string;
   'inlineIcon': string;
+  'intrinsics': string;
   'isPerk': string;
   'killTrackerDisplay': string;
   'loadout': string;
@@ -27,6 +29,7 @@ interface CssExports {
   'negative': string;
   'new': string;
   'noItems': string;
+  'originTrait': string;
   'perkSelectable': string;
   'perkSelected': string;
   'perks': string;
@@ -35,6 +38,7 @@ interface CssExports {
   'rating': string;
   'season': string;
   'selection': string;
+  'shaders': string;
   'shapedIcon': string;
   'shapedIconOverlay': string;
   'shiftHeld': string;

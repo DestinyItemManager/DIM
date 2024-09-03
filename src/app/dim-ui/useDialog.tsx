@@ -7,7 +7,7 @@ import ClickOutsideRoot from './ClickOutsideRoot';
 
 // Redecalare forwardRef
 declare module 'react' {
-  function forwardRef<T, P = {}>(
+  function forwardRef<T, P = object>(
     render: (props: P, ref: Ref<T>) => ReactElement | null,
   ): (props: P & RefAttributes<T>) => ReactElement | null;
 }
@@ -112,7 +112,7 @@ export default function useDialog<Args = [], Result = void>(
 ): [element: React.ReactNode, showDialog: (args: Args) => Promise<Result>] {
   const dialogRef = useRef<DialogRef<Args, Result>>(null);
   const showDialog = useCallback((args: Args) => dialogRef.current!.showDialog(args), []);
-  // eslint-disable-next-line react/jsx-key
+  // eslint-disable-next-line @eslint-react/no-missing-key
   return [<Dialog ref={dialogRef}>{children}</Dialog>, showDialog];
 }
 

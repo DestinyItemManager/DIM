@@ -95,7 +95,7 @@ export const prismaticDamageFilter = {
     ({ filterValue }) =>
     (item) => {
       const damageType = item.element?.enumValue ?? DamageType.None;
-      return prismaticDamageLookupTable[damageType] === filterValue ?? false;
+      return prismaticDamageLookupTable[damageType] === filterValue;
     },
 } satisfies ItemFilterDefinition;
 

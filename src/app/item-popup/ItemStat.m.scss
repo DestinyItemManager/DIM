@@ -6,12 +6,12 @@
   text-align: right;
   margin-right: 8px;
   max-width: 130px;
+  text-overflow: ellipsis;
+  overflow-x: clip;
 
   @include phone-portrait {
     max-width: 40vw;
   }
-  text-overflow: ellipsis;
-  overflow-x: clip;
 }
 
 // The numeric value of the stat

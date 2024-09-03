@@ -222,7 +222,7 @@ export function loadDimApiData(forceLoad = false): ThunkResult {
       try {
         await dispatch(flushUpdates()); // flushUpdates will call loadDimApiData again at the end
         return;
-      } catch (e) {}
+      } catch {}
     }
 
     // get current account
@@ -292,7 +292,7 @@ function profileLastLoaded(dimApi: DimApiState, account: DestinyAccount | undefi
   return (
     Date.now() -
     (account
-      ? dimApi.profiles[makeProfileKeyFromAccount(account)]?.profileLastLoaded ?? 0
+      ? (dimApi.profiles[makeProfileKeyFromAccount(account)]?.profileLastLoaded ?? 0)
       : dimApi.profileLastLoaded)
   );
 }

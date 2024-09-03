@@ -1,4 +1,4 @@
-import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
+import { InGameLoadoutIdentifiers, LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { D1Categories } from 'app/destiny1/d1-bucket-categories';
 import { D1ManifestDefinitions } from 'app/destiny1/d1-definitions';
 import { D2Categories } from 'app/destiny2/d2-bucket-categories';
@@ -344,7 +344,7 @@ export function clearSubclass(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
 ): LoadoutUpdateFunction {
   return (loadout) => {
-    if (!defs.isDestiny2()) {
+    if (!defs.isDestiny2) {
       return loadout;
     }
 
@@ -385,7 +385,7 @@ export function setLoadoutSubclassFromEquipped(
         item.equipped && item.bucket.hash === BucketHashes.Subclass && itemCanBeInLoadout(item),
     );
 
-    if (!newSubclass || !defs.isDestiny2()) {
+    if (!newSubclass || !defs.isDestiny2) {
       return loadout;
     }
 
@@ -579,7 +579,7 @@ export function getLoadoutBucketHashesFromCategory(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   category: D2BucketCategory | D1BucketCategory,
 ) {
-  return defs.isDestiny2()
+  return defs.isDestiny2
     ? category === 'General'
       ? [BucketHashes.Ghost, BucketHashes.Emblems, BucketHashes.Ships, BucketHashes.Vehicle]
       : D2Categories[category as D2BucketCategory]
@@ -711,7 +711,7 @@ export function randomizeLoadoutSubclass(
       defs,
       newSubclass,
       true,
-      defs.isDestiny2() ? randomSubclassConfiguration(defs, newSubclass) : undefined,
+      defs.isDestiny2 ? randomSubclassConfiguration(defs, newSubclass) : undefined,
     )(loadout);
   };
 }
@@ -770,10 +770,7 @@ export function randomizeLoadoutItems(
     );
     for (const item of randomizedLoadout.items) {
       let loadoutItem = item;
-      if (
-        defs.isDestiny2() &&
-        getBucketHashFromItemHash(defs, item.hash) === BucketHashes.Subclass
-      ) {
+      if (defs.isDestiny2 && getBucketHashFromItemHash(defs, item.hash) === BucketHashes.Subclass) {
         loadoutItem = {
           ...loadoutItem,
           socketOverrides: randomSubclassConfiguration(
@@ -853,4 +850,11 @@ export function randomizeLoadoutMods(
       mods,
     })(loadout);
   });
+}
+
+/**
+ * Set the name/icon/color of this loadout.
+ */
+export function setInGameLoadoutIdentifiers(identifiers: InGameLoadoutIdentifiers | undefined) {
+  return setLoadoutParameters({ inGameIdentifiers: identifiers });
 }

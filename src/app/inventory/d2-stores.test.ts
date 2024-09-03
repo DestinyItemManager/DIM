@@ -1,6 +1,6 @@
 import { getWeaponArchetypeSocket } from 'app/utils/socket-utils';
 import { BucketHashes } from 'data/d2/generated-enums';
-import { getTestStores } from 'testing/test-utils';
+import { getTestStores, setupi18n } from 'testing/test-utils';
 import { generateCSVExportData } from './spreadsheets';
 import { DimStore } from './store-types';
 
@@ -20,13 +20,14 @@ describe('process stores', () => {
       for (const item of store.items) {
         if (item.sockets) {
           for (const socket of item.sockets.allSockets) {
-            if (socket.plugged) {
+            if (
+              socket.plugged &&
               // the plugged socket must appear in the list of plugOptions
-              if (!socket.plugOptions.includes(socket.plugged)) {
-                throw new Error(
-                  `"${item.name}" - ${socket.plugged.plugDef.displayProperties.name} is not in the list of plugOptions`,
-                );
-              }
+              !socket.plugOptions.includes(socket.plugged)
+            ) {
+              throw new Error(
+                `"${item.name}" - ${socket.plugged.plugDef.displayProperties.name} is not in the list of plugOptions`,
+              );
             }
           }
         }
@@ -71,11 +72,10 @@ describe('process stores', () => {
           item.stats &&
           // These naturally have all-zero stats
           item.bucket.hash !== BucketHashes.ClassArmor &&
-          item.bucket.hash !== BucketHashes.Subclass
+          item.bucket.hash !== BucketHashes.Subclass &&
+          !item.stats.some((s) => s.base > 0)
         ) {
-          if (!item.stats.some((s) => s.base > 0)) {
-            throw new Error(`"${item.name}" has all zero stats`);
-          }
+          throw new Error(`"${item.name}" has all zero stats`);
         }
       }
     }
@@ -86,26 +86,22 @@ describe('process stores', () => {
   it('item perks can be marked as cannotCurrentlyRoll', async () => {
     for (const store of stores) {
       for (const item of store.items) {
-        if (item.sockets) {
-          if (
-            item.sockets.allSockets.some((s) => s.plugOptions.some((p) => p.cannotCurrentlyRoll))
-          ) {
-            return; // All good, we found one!
-          }
+        if (
+          item.sockets?.allSockets.some((s) => s.plugOptions.some((p) => p.cannotCurrentlyRoll))
+        ) {
+          return; // All good, we found one!
         }
       }
     }
     throw new Error('Expected at least one item with a perk that cannot roll');
   });
 
-  test.each(['Weapons', 'Armor', 'Ghost'] as const)(
-    'generates a correct  %s CSV export',
-    (type) => {
-      const getTag = () => undefined;
-      const getNotes = () => undefined;
-      const loadoutsByItem = {};
-      const csvExport = generateCSVExportData(type, stores, getTag, getNotes, loadoutsByItem);
-      expect(csvExport).toMatchSnapshot();
-    },
-  );
+  test.each(['weapon', 'armor', 'ghost'] as const)('generates a correct %s CSV export', (type) => {
+    setupi18n();
+    const getTag = () => undefined;
+    const getNotes = () => undefined;
+    const loadoutsByItem = {};
+    const csvExport = generateCSVExportData(type, stores, getTag, getNotes, loadoutsByItem, []);
+    expect(csvExport).toMatchSnapshot();
+  });
 });

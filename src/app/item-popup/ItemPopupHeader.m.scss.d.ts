@@ -13,7 +13,6 @@ interface CssExports {
   'legendary': string;
   'masterwork': string;
   'power': string;
-  'powerCap': string;
   'primary': string;
   'pursuit': string;
   'rare': string;

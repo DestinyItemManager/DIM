@@ -12,6 +12,6 @@ for (const tag of itemTagList) {
 
 export default function TagIcon({ className, tag }: { className?: string; tag: TagValue }) {
   return tagIcons[tag] ? (
-    <AppIcon className={className} icon={tagIcons[tag]!} title={t(tagConfig[tag].label)} />
+    <AppIcon className={className} icon={tagIcons[tag]} title={t(tagConfig[tag].label)} />
   ) : null;
 }

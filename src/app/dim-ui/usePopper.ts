@@ -97,35 +97,38 @@ const popperOptions = (
   };
 };
 
-export function usePopper({
-  contents,
-  reference,
-  arrowClassName,
-  menuClassName,
-  boundarySelector,
-  placement,
-  offset,
-  fixed,
-  padding,
-}: {
-  /** A ref to the rendered contents of a popper-positioned item */
-  contents: React.RefObject<HTMLElement>;
-  /** An ref to the item that triggered the popper, which anchors it */
-  reference: React.RefObject<HTMLElement>;
-  /** A class used to identify the arrow */
-  arrowClassName?: string;
-  /** A class used to identify the sidecar menu */
-  menuClassName?: string;
-  /** An optional additional selector for a "boundary area" */
-  boundarySelector?: string;
-  /** Placement preference of the popper. Defaults to "auto" */
-  placement?: Placement;
-  /** Offset of how far from the element to shift the popper. */
-  offset?: number;
-  /** Is this placed on a fixed item? Workaround for https://github.com/popperjs/popper-core/issues/1156. TODO: make a "positioning context" context value for this */
-  fixed?: boolean;
-  padding?: Padding;
-}) {
+export function usePopper(
+  {
+    contents,
+    reference,
+    arrowClassName,
+    menuClassName,
+    boundarySelector,
+    placement,
+    offset,
+    fixed,
+    padding,
+  }: {
+    /** A ref to the rendered contents of a popper-positioned item */
+    contents: React.RefObject<HTMLElement>;
+    /** An ref to the item that triggered the popper, which anchors it */
+    reference: React.RefObject<HTMLElement>;
+    /** A class used to identify the arrow */
+    arrowClassName?: string;
+    /** A class used to identify the sidecar menu */
+    menuClassName?: string;
+    /** An optional additional selector for a "boundary area" */
+    boundarySelector?: string;
+    /** Placement preference of the popper. Defaults to "auto" */
+    placement?: Placement;
+    /** Offset of how far from the element to shift the popper. */
+    offset?: number;
+    /** Is this placed on a fixed item? Workaround for https://github.com/popperjs/popper-core/issues/1156. TODO: make a "positioning context" context value for this */
+    fixed?: boolean;
+    padding?: Padding;
+  },
+  deps: React.DependencyList = [],
+) {
   const popper = useRef<Instance | undefined>();
 
   const destroy = () => {
@@ -160,5 +163,24 @@ export function usePopper({
     }
 
     return destroy;
-  });
+  }, [
+    contents,
+    reference,
+    arrowClassName,
+    menuClassName,
+    boundarySelector,
+    placement,
+    offset,
+    fixed,
+    padding,
+
+    /**
+     * Doing ...deps allows us to pass dependencies from the components that rely on
+     * usePopper. Certain popovers are only shown when specific conditions are met,
+     * so by making those conditions dependencies we can position the popover
+     * correctly once the popover is actually shown.
+     */
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    ...deps,
+  ]);
 }

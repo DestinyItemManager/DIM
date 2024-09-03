@@ -96,6 +96,7 @@ function preprocessReceivedLoadout(loadout: Loadout): Loadout {
   loadout.items = loadout.items.map((item) => ({
     ...item,
     id: item.id === '0' ? generateMissingLoadoutItemId() : item.id,
+    hash: Number(item.hash),
   }));
 
   return loadout;

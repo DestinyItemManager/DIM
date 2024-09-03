@@ -23,7 +23,7 @@ import {
   updateMods,
 } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { findItemForLoadout, newLoadout, pickBackingStore } from 'app/loadout-drawer/loadout-utils';
-import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
+import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { Loadout, ResolvedLoadoutMod } from 'app/loadout/loadout-types';
 import { showNotification } from 'app/notifications/notifications';
 import { armor2PlugCategoryHashesByName, armorStats } from 'app/search/d2-known-values';
@@ -152,7 +152,7 @@ const lbConfigInit = ({
   const storeMatchingClass = pickBackingStore(stores, storeId, classTypeFromPreloadedLoadout);
   const initialLoadoutParameters = preloadedLoadout?.parameters;
 
-  const isEditingExistingLoadout = Boolean(preloadedLoadout);
+  const isEditingExistingLoadout = Boolean(preloadedLoadout && preloadedLoadout.id !== 'equipped');
 
   // If we requested a specific class type but the user doesn't have it, we
   // need to pick some different store, but ensure that class-specific stuff

@@ -77,16 +77,18 @@ const overloadedRangeFilters: ItemFilterDefinition[] = [
   },
   {
     keywords: 'powerlimit',
-    /* t('Filter.PowerKeywords') */
-    description: tl('Filter.PowerLimit'),
+    description: tl('Filter.Deprecated'),
     format: 'range',
     overload: powerLevelByKeyword,
     destinyVersion: 2,
+    deprecated: true,
     filter:
       ({ compare }) =>
-      (item) =>
-        // anything with no powerCap has no known limit, so treat it like it's 99999999
-        compare!(item.powerCap ?? 99999999),
+      () =>
+        // no items are sunset, they all have effectively unlimited caps. The
+        // manifest specifies this cap or something similar for almost
+        // everything:
+        compare!(999990),
   },
 ];
 

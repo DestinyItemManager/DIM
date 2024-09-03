@@ -443,7 +443,7 @@ function attachPlugStats(
   if (activePlug) {
     const activePlugStats: DimPlug['stats'] = {};
 
-    for (const plugInvestmentStat of activePlug.plugDef.investmentStats) {
+    for (const plugInvestmentStat of getPlugInvestmentStats(activePlug.plugDef.investmentStats)) {
       let plugStatValue = getPlugStatValue(createdItem, activePlug.plugDef, plugInvestmentStat);
       const itemStat = statsByHash[plugInvestmentStat.statTypeHash];
       const statDisplay = statDisplaysByStatHash[plugInvestmentStat.statTypeHash];
@@ -480,7 +480,7 @@ function attachPlugStats(
 
     const plugStats: DimPlug['stats'] = {};
 
-    for (const plugInvestmentStat of plug.plugDef.investmentStats) {
+    for (const plugInvestmentStat of getPlugInvestmentStats(plug.plugDef.investmentStats)) {
       let plugStatValue = getPlugStatValue(createdItem, plug.plugDef, plugInvestmentStat);
       const itemStat = statsByHash[plugInvestmentStat.statTypeHash];
       const statDisplay = statDisplaysByStatHash[plugInvestmentStat.statTypeHash];
@@ -519,6 +519,35 @@ function attachPlugStats(
     // Yes, we are mutating the stats in place! This relies on the plugs being built fresh every time.
     (plug as Draft<DimPlug>).stats = plugStats;
   }
+}
+
+/**
+ * We can't use the investment stats for plugs directly, because some enhanced
+ * perks have multiple entries for the same stat, which need to be added
+ * together. e.g. https://data.destinysets.com/i/InventoryItem:1167468626 This
+ * function combines those entries so that downstream processing can stay
+ * simple.
+ */
+function getPlugInvestmentStats(
+  investmentStats: DestinyItemInvestmentStatDefinition[],
+): DestinyItemInvestmentStatDefinition[] {
+  const processedStats: DestinyItemInvestmentStatDefinition[] = [];
+  for (const investmentStat of investmentStats) {
+    const existingStatIndex = processedStats.findIndex(
+      (s) => s.statTypeHash === investmentStat.statTypeHash,
+    );
+    if (existingStatIndex >= 0) {
+      const existingStat = processedStats[existingStatIndex];
+      // Add the value into the existing stat
+      processedStats[existingStatIndex] = {
+        ...existingStat,
+        value: existingStat.value + investmentStat.value,
+      };
+    } else {
+      processedStats.push(investmentStat);
+    }
+  }
+  return processedStats;
 }
 
 /**

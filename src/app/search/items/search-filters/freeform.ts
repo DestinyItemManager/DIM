@@ -27,9 +27,6 @@ const getPerkNamesFromManifest = memoizeOne(
     }),
 );
 
-// things that are sunset            1010        1060        1060        1260
-const irrelevantPowerCaps = new Set([2471437758, 1862490583, 1862490584, 1862490585]);
-
 const getUniqueItemNamesFromManifest = memoizeOne(
   (allManifestItems: { [hash: number]: DestinyInventoryItemDefinition }) => {
     const itemNames = Object.values(allManifestItems)
@@ -45,14 +42,7 @@ const getUniqueItemNamesFromManifest = memoizeOne(
           return false;
         }
 
-        if (!isArmor && !i.itemCategoryHashes.includes(ItemCategoryHashes.Weapon)) {
-          return false;
-        }
-        const { quality } = i;
-        const powerCap = quality?.versions[quality.currentVersion].powerCapHash;
-        // don't suggest outdated items from the manifest
-        // (user's owned items will be included regardless)
-        return !powerCap || !irrelevantPowerCaps.has(powerCap);
+        return isArmor || i.itemCategoryHashes.includes(ItemCategoryHashes.Weapon);
       })
       .map((i) => i.displayProperties.name.toLowerCase());
     return [...new Set(itemNames)];

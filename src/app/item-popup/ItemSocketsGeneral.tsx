@@ -1,9 +1,9 @@
 import ClarityDescriptions from 'app/clarity/descriptions/ClarityDescriptions';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { uniqBy } from 'app/utils/collections';
+import { filterMap, uniqBy } from 'app/utils/collections';
 import { usePlugDescriptions } from 'app/utils/plug-descriptions';
-import { getGeneralSockets } from 'app/utils/socket-utils';
+import { getExtraIntrinsicPerkSockets, getGeneralSockets } from 'app/utils/socket-utils';
 import clsx from 'clsx';
 import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import { useSelector } from 'react-redux';
@@ -39,24 +39,43 @@ export default function ItemSocketsGeneral({
     (c) => c.category.hash === SocketCategoryHashes.Emotes,
   );
 
-  // Only show the first of each style of category when minimal
-  const modSocketCategories = minimal
-    ? uniqBy(modSocketsByCategory.entries(), ([category]) => category.category.categoryStyle)
-    : // This might not be necessary with iterator-helpers
-      [...modSocketsByCategory.entries()];
+  // exotic class armor intrinsics
+  const extraIntrinsicSockets = getExtraIntrinsicPerkSockets(item);
+  const extraIntrinsicSocketIndices = extraIntrinsicSockets.map((s) => s.socketIndex);
 
-  const intrinsicRow = intrinsicSocket && (
-    <IntrinsicArmorPerk
-      item={item}
-      socket={intrinsicSocket}
-      minimal={minimal}
-      onPlugClicked={onPlugClicked}
-    />
+  // Only show the first of each style of category when minimal
+  const modSocketCategories = (
+    minimal
+      ? uniqBy(modSocketsByCategory.entries(), ([category]) => category.category.categoryStyle)
+      : // This might not be necessary with iterator-helpers
+        [...modSocketsByCategory.entries()]
+  )
+    .map(
+      ([category, sockets]) =>
+        [
+          category,
+          sockets.filter((s) => !extraIntrinsicSocketIndices.includes(s.socketIndex)),
+        ] as const,
+    )
+    .filter(([, sockets]) => sockets.length > 0);
+
+  const intrinsicRows = filterMap(
+    [intrinsicSocket, ...extraIntrinsicSockets],
+    (s) =>
+      s && (
+        <IntrinsicArmorPerk
+          key={s.socketIndex}
+          item={item}
+          socket={s}
+          minimal={minimal}
+          onPlugClicked={onPlugClicked}
+        />
+      ),
   );
 
   return (
     <>
-      {!minimal && intrinsicRow}
+      {!minimal && intrinsicRows}
       <div className={clsx(styles.generalSockets, { [styles.minimalSockets]: minimal })}>
         {emoteWheelCategory && (
           <EmoteSockets
@@ -87,7 +106,7 @@ export default function ItemSocketsGeneral({
           </div>
         ))}
       </div>
-      {minimal && intrinsicRow}
+      {minimal && intrinsicRows}
     </>
   );
 }

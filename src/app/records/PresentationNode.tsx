@@ -6,7 +6,7 @@ import { useD2Definitions } from 'app/manifest/selectors';
 import { percent } from 'app/shell/formatters';
 import { DestinyPresentationScreenStyle } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { FontGlyphs } from 'data/d2/d2-font-glyphs';
+import { FontGlyphs } from 'data/font/d2-font-glyphs';
 import { deepEqual } from 'fast-equals';
 import { useEffect, useId, useRef } from 'react';
 import { useSelector } from 'react-redux';

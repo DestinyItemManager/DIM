@@ -247,6 +247,7 @@ export const enum VendorHashes {
   DevrimKay = 396892126,
   Failsafe = 1576276905,
   RivensWishesExotics = 2388521577,
+  XurLegendaryItems = 3751514131, // Vendor "Strange Gear Offers"
 }
 
 /** used to snag the icon for display */
@@ -286,14 +287,21 @@ export type ItemTierName =
 
 export const breakerTypes = {
   any: [BreakerTypeHashes.Stagger, BreakerTypeHashes.Disruption, BreakerTypeHashes.ShieldPiercing],
-  barrier: [BreakerTypeHashes.ShieldPiercing],
   antibarrier: [BreakerTypeHashes.ShieldPiercing],
   shieldpiercing: [BreakerTypeHashes.ShieldPiercing],
-  overload: [BreakerTypeHashes.Disruption],
+  barrier: [BreakerTypeHashes.ShieldPiercing],
   disruption: [BreakerTypeHashes.Disruption],
-  unstoppable: [BreakerTypeHashes.Stagger],
+  overload: [BreakerTypeHashes.Disruption],
   stagger: [BreakerTypeHashes.Stagger],
+  unstoppable: [BreakerTypeHashes.Stagger],
 };
+
+export const breakerTypeNames = Object.entries(breakerTypes)
+  .filter(([, hashes]) => hashes.length === 1)
+  .reduce<Partial<Record<BreakerTypeHashes, string>>>((memo, [name, [hash]]) => {
+    memo[hash] = name;
+    return memo;
+  }, {});
 
 export const enum ModsWithConditionalStats {
   ElementalCapacitor = 3511092054, // InventoryItem "Elemental Capacitor"

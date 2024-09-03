@@ -42,6 +42,17 @@
     max-height: 55px;
   }
 
+  @include interactive($hover: true, $focus: true) {
+    outline: none;
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      inset: -2px -2px -2px -2px;
+      border: 1px solid white;
+    }
+  }
+
   img {
     position: absolute;
     top: 0;
@@ -64,18 +75,6 @@
       top: 0;
       left: 0;
       margin: 0;
-    }
-  }
-
-  &:hover,
-  &:focus-visible {
-    outline: none;
-    &::after {
-      content: '';
-      display: block;
-      position: absolute;
-      inset: -2px -2px -2px -2px;
-      border: 1px solid white;
     }
   }
 

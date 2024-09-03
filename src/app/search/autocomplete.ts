@@ -240,7 +240,7 @@ export function filterSortRecentSearches(query: string, recentSearches: Search[]
   });
 }
 
-const caretEndRegex = /([\s)]|$)/;
+const caretEndRegex = /[\s)]|$/;
 
 /**
  * Find the position of the last "incomplete" filter segment of the query before the caretIndex.

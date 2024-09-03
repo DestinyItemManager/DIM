@@ -306,7 +306,7 @@ function doApplyLoadout(
 
       // Don't apply mods when moving to the vault
       const modsToApply = (
-        (defs.isDestiny2() &&
+        (defs.isDestiny2 &&
           !store.isVault &&
           getModsFromLoadout(defs, loadout, unlockedPlugSetItems()).map(
             (mod) => mod.resolvedMod.hash,
@@ -1290,7 +1290,7 @@ function allModsAreAlreadyApplied(
       return false;
     } else {
       // the mod was found, but we have consumed this copy of it
-      delete existingMods[foundAt];
+      existingMods.splice(foundAt, 1);
       return true;
     }
   });

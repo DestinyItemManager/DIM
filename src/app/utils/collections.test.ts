@@ -1,4 +1,4 @@
-import { count, objectifyArray, uniqBy, wrap } from './collections';
+import { count, objectifyArray, reorder, uniqBy, wrap } from './collections';
 
 describe('count', () => {
   test('counts elements that match the predicate', () =>
@@ -56,5 +56,11 @@ describe('uniqBy', () => {
   test('complex func', async () => {
     const result = uniqBy([{ val: 'a' }, { val: 'b' }, { val: 'a' }, { val: 'c' }], (i) => i.val);
     expect(result).toEqual([{ val: 'a' }, { val: 'b' }, { val: 'c' }]);
+  });
+});
+
+describe('reorder', () => {
+  test('reorders', () => {
+    expect(reorder([1, 2, 3, 4], 0, 2)).toEqual([2, 3, 1, 4]);
   });
 });

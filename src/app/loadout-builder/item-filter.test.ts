@@ -3,7 +3,7 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
+import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { ModMap, categorizeArmorMods } from 'app/loadout/mod-assignment-utils';
 import { count } from 'app/utils/collections';
 import { itemCanBeEquippedBy } from 'app/utils/item-utils';

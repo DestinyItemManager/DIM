@@ -21,10 +21,6 @@
 }
 
 .socketKindButton {
-  > * {
-    margin-right: 8px;
-  }
-
   border: 1px solid #666;
   cursor: pointer;
   margin: 1px 2px;
@@ -33,8 +29,12 @@
   flex-direction: row;
   height: 100%;
   box-sizing: border-box;
-  &:hover {
+
+  @include interactive($hover: true) {
     background-color: rgba(255, 255, 255, 0.1);
+  }
+  > * {
+    margin-right: 8px;
   }
   &:focus {
     outline: 1px solid var(--theme-accent-secondary);
@@ -48,12 +48,12 @@
 }
 
 .buttonTitle {
-  &.selectedTitle {
-    color: var(--theme-accent-primary);
-  }
   font-weight: bold;
   font-size: 13px;
   margin-bottom: 4px;
+  &.selectedTitle {
+    color: var(--theme-accent-primary);
+  }
 }
 
 .selectedButton {
@@ -71,13 +71,13 @@
 }
 
 .iconList {
+  --item-size: 32px;
   display: flex;
   flex-flow: row wrap;
   margin: 8px 8px;
   &:last-child {
     margin-bottom: 0;
   }
-  --item-size: 32px;
 
   > * {
     margin: 0 4px 4px 0;

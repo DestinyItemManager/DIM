@@ -140,6 +140,7 @@ export function initi18n(): Promise<unknown> {
       },
       (error) => {
         if (error) {
+          // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
           reject(error);
         } else {
           resolve(undefined);

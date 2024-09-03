@@ -27,6 +27,7 @@ import _ from 'lodash';
 import { ReactNode, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './LoadoutView.m.scss';
+import { InGameLoadoutIconFromIdentifiers } from './ingame/InGameLoadoutIcon';
 import LoadoutItemCategorySection from './loadout-ui/LoadoutItemCategorySection';
 import { LoadoutArtifactUnlocks, LoadoutMods } from './loadout-ui/LoadoutMods';
 import LoadoutSubclassSection from './loadout-ui/LoadoutSubclassSection';
@@ -138,6 +139,12 @@ export default function LoadoutView({
     >
       <div className={styles.title}>
         <h2>
+          {$featureFlags.editInGameLoadoutIdentifiers && loadout.parameters?.inGameIdentifiers && (
+            <InGameLoadoutIconFromIdentifiers
+              size={24}
+              identifiers={loadout.parameters.inGameIdentifiers}
+            />
+          )}
           {loadout.classType === DestinyClass.Unknown && (
             <ClassIcon className={styles.classIcon} classType={loadout.classType} />
           )}

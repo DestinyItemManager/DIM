@@ -1,3 +1,5 @@
+@use '../../variables.scss' as *;
+
 .tiers {
   display: inline-flex;
   flex-flow: row nowrap;
@@ -43,10 +45,10 @@
   background-blend-mode: hard-light;
   border-bottom: 1px solid rgba(0, 0, 0, 0.75);
   cursor: pointer;
-}
 
-.item:hover {
-  border: 1px solid white;
+  @include interactive($hover: true) {
+    border: 1px solid white;
+  }
 }
 
 .unlocked {

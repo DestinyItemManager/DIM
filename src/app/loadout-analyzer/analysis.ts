@@ -8,7 +8,7 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { DimCharacterStat } from 'app/inventory/store-types';
 import { filterItems } from 'app/loadout-builder/item-filter';
 import { resolveStatConstraints } from 'app/loadout-builder/loadout-params';
-import { runProcess } from 'app/loadout-builder/process/process-wrapper';
+import type { runProcess } from 'app/loadout-builder/process/process-wrapper';
 import {
   ArmorEnergyRules,
   LOCKED_EXOTIC_ANY_EXOTIC,
@@ -24,7 +24,7 @@ import {
   resolveLoadoutModHashes,
 } from 'app/loadout-drawer/loadout-utils';
 import { fullyResolveLoadout } from 'app/loadout/ingame/selectors';
-import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
+import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { ModMap, categorizeArmorMods, fitMostMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';

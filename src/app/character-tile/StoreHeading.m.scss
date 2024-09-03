@@ -22,10 +22,6 @@
   background-color: var(--theme-dropdown-menu-bg);
   will-change: transform;
 
-  [role='button'] {
-    outline: none;
-  }
-
   // The phone layout version
   @include phone-portrait {
     position: fixed;
@@ -34,6 +30,10 @@
     max-height: calc(
       var(--viewport-height) - 54px - var(--header-height) - env(safe-area-inset-bottom)
     );
+  }
+
+  [role='button'] {
+    outline: none;
   }
 }
 

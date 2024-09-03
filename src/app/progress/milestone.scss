@@ -32,6 +32,11 @@ button.milestone-quest {
   }
 
   .milestone-icon {
+    margin-right: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: var(--item-size);
     .milestone-img {
       width: var(--item-size);
       height: var(--item-size);
@@ -40,11 +45,6 @@ button.milestone-quest {
       font-size: 10px;
       text-align: center;
     }
-    margin-right: 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    max-width: var(--item-size);
 
     .item {
       margin: 0;
@@ -57,9 +57,11 @@ button.milestone-quest {
   }
 
   // Apply hover style only on clickable milestone buttons
-  &[type='button']:hover {
-    .milestone-name {
-      color: var(--theme-accent-primary);
+  &[type='button'] {
+    @include interactive($hover: true) {
+      .milestone-name {
+        color: var(--theme-accent-primary);
+      }
     }
   }
 

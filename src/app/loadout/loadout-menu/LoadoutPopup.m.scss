@@ -21,12 +21,50 @@
     padding: 2px 0;
   }
 
+  @include interactive($hover: true) {
+    background-color: var(--theme-accent-primary);
+    color: var(--theme-text-invert) !important;
+    > span:first-child > :global(.app-icon) {
+      color: var(--theme-text-invert) !important;
+    }
+    > span:first-child > img:first-child,
+    .modificationIcon {
+      filter: none;
+    }
+    .fashionIcon {
+      filter: invert(1);
+    }
+
+    .note {
+      color: var(--theme-text-invert);
+    }
+  }
+
   &:last-of-type {
     border: 0;
   }
 
   a {
     text-decoration: none;
+
+    @include interactive($hover: true) {
+      background-color: var(--theme-accent-primary);
+      color: var(--theme-text-invert) !important;
+      > span:first-child > :global(.app-icon) {
+        color: var(--theme-text-invert) !important;
+      }
+      > span:first-child > img:first-child,
+      .modificationIcon {
+        filter: none;
+      }
+      .fashionIcon {
+        filter: invert(1);
+      }
+
+      .note {
+        color: var(--theme-text-invert);
+      }
+    }
   }
 
   form {
@@ -51,6 +89,7 @@
       > :global(.app-icon),
       > img {
         width: 12px;
+        height: auto;
         margin-right: 5px;
         text-align: center;
 
@@ -75,26 +114,6 @@
     }
   }
 
-  &:hover,
-  a:hover {
-    background-color: var(--theme-accent-primary);
-    color: var(--theme-text-invert) !important;
-    > span:first-child > :global(.app-icon) {
-      color: var(--theme-text-invert) !important;
-    }
-    > span:first-child > img:first-child,
-    .modificationIcon {
-      filter: none;
-    }
-    .fashionIcon {
-      filter: invert(1);
-    }
-
-    .note {
-      color: var(--theme-text-invert);
-    }
-  }
-
   > span:not(:first-child) {
     margin: 6px 4px 6px 4px;
     padding: 0 6px;
@@ -112,6 +131,11 @@
   border-radius: 4px;
   color: #888;
   background-color: #222;
+
+  @include interactive($hover: true) {
+    background-color: var(--theme-accent-secondary);
+    color: #222;
+  }
   /* stylelint-disable-next-line no-descending-specificity */
   :global(.app-icon) {
     font-size: 13px;
@@ -119,10 +143,6 @@
     @include phone-portrait {
       font-size: 15px;
     }
-  }
-  &:hover {
-    background-color: var(--theme-accent-secondary);
-    color: #222;
   }
 }
 
@@ -166,9 +186,9 @@
 
 .inGameLoadoutButton {
   composes: resetButton from '../../dim-ui/common.m.scss';
-  &:hover,
-  &:focus-visible {
+  display: block;
+
+  @include interactive($hover: true, $focus: true) {
     outline: 2px solid var(--theme-accent-primary);
   }
-  display: block;
 }
