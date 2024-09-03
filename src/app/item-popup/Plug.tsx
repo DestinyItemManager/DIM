@@ -172,7 +172,6 @@ function PerkCircle({
     clsx({
       [styles.plugged]: plugged,
       [styles.selected]: selected,
-      [styles.cannotRoll]: cannotRoll || unreliablePerkOption,
       [styles.notSelected]: notSelected,
     }) || styles.none;
   return (
@@ -217,7 +216,9 @@ function PerkCircle({
         stroke="white"
         fill="transparent"
         strokeWidth="2"
-        className={styles.perkOutline}
+        className={clsx(styles.perkOutline, {
+          [styles.cannotRoll]: cannotRoll || unreliablePerkOption,
+        })}
       />
       {enhanced && <path d="M5,50 l0,-24 l-6,0 l9,-16 l9,16 l-6,0 l0,24 z" fill="#eade8b" />}
     </svg>

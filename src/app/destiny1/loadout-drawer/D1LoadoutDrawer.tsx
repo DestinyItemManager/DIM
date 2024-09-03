@@ -8,7 +8,6 @@ import { allItemsSelector, createItemContextSelector } from 'app/inventory/selec
 import { useItemPicker } from 'app/item-picker/item-picker';
 import LoadoutDrawerDropTarget from 'app/loadout-drawer/LoadoutDrawerDropTarget';
 import LoadoutDrawerFooter from 'app/loadout-drawer/LoadoutDrawerFooter';
-import { deleteLoadout, updateLoadout } from 'app/loadout-drawer/actions';
 import {
   addItem,
   removeItem,
@@ -17,7 +16,8 @@ import {
 } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { addItem$ } from 'app/loadout-drawer/loadout-events';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
-import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { deleteLoadout, updateLoadout } from 'app/loadout/actions';
+import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD1Definitions } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
@@ -25,7 +25,6 @@ import { isItemLoadoutCompatible, itemCanBeInLoadout } from 'app/utils/item-util
 import React, { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import TextareaAutosize from 'react-textarea-autosize';
-import { v4 as uuidv4 } from 'uuid';
 import LoadoutDrawerContents from './LoadoutDrawerContents';
 import LoadoutDrawerOptions from './LoadoutDrawerOptions';
 import './loadout-drawer.scss';
@@ -84,7 +83,7 @@ export default function D1LoadoutDrawer({
     }
     const newLoadout = {
       ...loadout,
-      id: uuidv4(), // Let it be a new ID
+      id: globalThis.crypto.randomUUID(), // Let it be a new ID
     };
     onSaveLoadout(e, newLoadout, close);
   };

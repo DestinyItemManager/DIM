@@ -1,8 +1,19 @@
 @use 'variables.scss' as *;
 
 .app {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+
+  @include phone-portrait {
+    --inventory-column-padding: 12px;
+  }
+
+  @media (min-width: 1440px) {
+    --inventory-column-padding: 24px;
+    --column-padding: calc(2 * var(--inventory-column-padding) - var(--item-margin));
+  }
+
   &::before {
-    @include below-header;
     background: var(--theme-app-bg);
     background-position: center top;
     background-repeat: no-repeat;
@@ -13,14 +24,7 @@
     position: fixed;
     will-change: transform;
     z-index: -1;
-  }
 
-  @media (min-width: 1440px) {
-    --inventory-column-padding: 24px;
-    --column-padding: calc(2 * var(--inventory-column-padding) - var(--item-margin));
-  }
-
-  @include phone-portrait {
-    --inventory-column-padding: 12px;
+    @include below-header;
   }
 }

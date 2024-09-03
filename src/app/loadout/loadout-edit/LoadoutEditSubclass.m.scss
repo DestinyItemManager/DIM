@@ -55,17 +55,17 @@
 }
 
 .classButton {
+  // Smaller items to try and make it clearer that these aren't selected.
+  --item-size: 32px;
   composes: resetButton from '../../dim-ui/common.m.scss';
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0.5;
-  // Smaller items to try and make it clearer that these aren't selected.
-  --item-size: 32px;
 
   color: #999;
-  &:hover,
-  &:focus-visible {
+
+  @include interactive($hover: true, $focus: true) {
     color: white;
     opacity: 1;
     rect {

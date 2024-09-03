@@ -65,7 +65,7 @@ export function useLocalStorage<T>(
       const item = window.localStorage.getItem(key);
       // Parse stored json or if none return initialValue
       return item ? (JSON.parse(item) as T) : initialValue;
-    } catch (error) {
+    } catch {
       return initialValue;
     }
   });
@@ -131,14 +131,14 @@ export function useHeightFromViewportBottom(
 
     updateHeight();
     window.visualViewport.addEventListener('resize', updateHeight);
-    return () => window.visualViewport!.removeEventListener('resize', updateHeight);
+    return () => window.visualViewport?.removeEventListener('resize', updateHeight);
   }, [setHeightFromViewportBottom, elementRef, itemHeight, padding]);
 }
 
 export function usePageTitle(title: string, active?: boolean) {
   useEffect(() => {
     if (active !== false) {
-      const titleElem = document.getElementsByTagName('title')[0]!;
+      const titleElem = document.getElementsByTagName('title')[0];
       titleElem.textContent = `DIM - ${title}`;
       return () => {
         titleElem.textContent = `DIM`;

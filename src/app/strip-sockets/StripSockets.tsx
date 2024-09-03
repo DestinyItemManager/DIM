@@ -3,7 +3,7 @@ import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
 import { locateItem } from 'app/inventory/locate-item';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
-import { filterFactorySelector } from 'app/search/search-filter';
+import { filterFactorySelector } from 'app/search/items/item-search-filter';
 import { AppIcon, faCheckCircle, refreshIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { withCancel } from 'app/utils/cancel';
@@ -169,7 +169,7 @@ export default function StripSockets() {
         ) : state.tag === 'processing' ? (
           <>
             <span>
-              <AppIcon icon={refreshIcon} spinning={true} />
+              <AppIcon icon={refreshIcon} spinning={true} ariaHidden />
             </span>{' '}
             {t('StripSockets.Running')}
           </>
@@ -192,7 +192,7 @@ export default function StripSockets() {
         disabled={selectedSockets.length === 0}
       >
         <span>
-          <AppIcon icon={faCheckCircle} />{' '}
+          <AppIcon icon={faCheckCircle} ariaHidden />{' '}
           {t('StripSockets.Button', { numSockets: selectedSockets.length })}
         </span>
       </button>

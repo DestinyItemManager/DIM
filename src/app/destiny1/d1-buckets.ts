@@ -78,6 +78,8 @@ export function getBuckets(defs: D1ManifestDefinitions) {
       description: 'Unknown items. DIM needs a manifest update.',
       name: 'Unknown',
       hash: -1,
+      // default to false. an equipped item existing, will override this in inv display
+      equippable: false,
       hasTransferDestination: false,
       category: BucketCategory.Item,
       capacity: Number.MAX_SAFE_INTEGER,
@@ -97,6 +99,7 @@ export function getBuckets(defs: D1ManifestDefinitions) {
         description: def.bucketDescription,
         name: def.bucketName,
         hash: def.hash,
+        equippable: def.category === BucketCategory.Equippable,
         hasTransferDestination: def.hasTransferDestination,
         capacity: def.itemCount,
         accountWide: false,

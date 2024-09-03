@@ -21,8 +21,13 @@ import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
 import { Draft, produce } from 'immer';
 import _ from 'lodash';
 import { useCallback } from 'react';
+import {
+  Loadout,
+  LoadoutItem,
+  ResolvedLoadoutItem,
+  ResolvedLoadoutMod,
+} from '../loadout/loadout-types';
 import { randomLoadout, randomSubclassConfiguration } from './auto-loadouts';
-import { Loadout, LoadoutItem, ResolvedLoadoutItem, ResolvedLoadoutMod } from './loadout-types';
 import {
   convertToLoadoutItem,
   createSocketOverridesFromEquipped,
@@ -339,7 +344,7 @@ export function clearSubclass(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
 ): LoadoutUpdateFunction {
   return (loadout) => {
-    if (!defs.isDestiny2()) {
+    if (!defs.isDestiny2) {
       return loadout;
     }
 
@@ -380,7 +385,7 @@ export function setLoadoutSubclassFromEquipped(
         item.equipped && item.bucket.hash === BucketHashes.Subclass && itemCanBeInLoadout(item),
     );
 
-    if (!newSubclass || !defs.isDestiny2()) {
+    if (!newSubclass || !defs.isDestiny2) {
       return loadout;
     }
 
@@ -574,7 +579,7 @@ export function getLoadoutBucketHashesFromCategory(
   defs: D1ManifestDefinitions | D2ManifestDefinitions,
   category: D2BucketCategory | D1BucketCategory,
 ) {
-  return defs.isDestiny2()
+  return defs.isDestiny2
     ? category === 'General'
       ? [BucketHashes.Ghost, BucketHashes.Emblems, BucketHashes.Ships, BucketHashes.Vehicle]
       : D2Categories[category as D2BucketCategory]
@@ -706,7 +711,7 @@ export function randomizeLoadoutSubclass(
       defs,
       newSubclass,
       true,
-      defs.isDestiny2() ? randomSubclassConfiguration(defs, newSubclass) : undefined,
+      defs.isDestiny2 ? randomSubclassConfiguration(defs, newSubclass) : undefined,
     )(loadout);
   };
 }
@@ -765,10 +770,7 @@ export function randomizeLoadoutItems(
     );
     for (const item of randomizedLoadout.items) {
       let loadoutItem = item;
-      if (
-        defs.isDestiny2() &&
-        getBucketHashFromItemHash(defs, item.hash) === BucketHashes.Subclass
-      ) {
+      if (defs.isDestiny2 && getBucketHashFromItemHash(defs, item.hash) === BucketHashes.Subclass) {
         loadoutItem = {
           ...loadoutItem,
           socketOverrides: randomSubclassConfiguration(

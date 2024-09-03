@@ -1,7 +1,7 @@
 import { InGameLoadoutIdentifiers } from '@destinyitemmanager/dim-api-types';
 import BungieImage, { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
-import { resolveInGameLoadoutIdentifiers } from 'app/loadout-drawer/loadout-type-converters';
-import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
+import { resolveInGameLoadoutIdentifiers } from 'app/loadout/loadout-type-converters';
+import { InGameLoadout } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import clsx from 'clsx';
 import styles from './InGameLoadoutIcon.m.scss';

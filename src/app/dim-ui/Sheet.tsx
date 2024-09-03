@@ -155,6 +155,7 @@ export default function Sheet({
   const sheetContents = useRef<HTMLDivElement | null>(null);
 
   const [frozenHeight, setFrozenHeight] = useState<number | undefined>(undefined);
+  const frozenHeightIntervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const [disabled, setParentDisabled] = useDisableParent(forceDisabled);
 
   const reducedMotion = Boolean(useReducedMotion());
@@ -222,13 +223,20 @@ export default function Sheet({
   );
 
   useLayoutEffect(() => {
+    clearInterval(frozenHeightIntervalRef.current);
     if (freezeInitialHeight && sheetContents.current && !frozenHeight) {
       if (sheetContents.current.clientHeight > 0) {
         setFrozenHeight(sheetContents.current.clientHeight);
       } else {
-        setTimeout(() => {
-          sheetContents.current && setFrozenHeight(sheetContents.current.clientHeight);
-        }, 500);
+        const setHeight = () => {
+          if (!sheetContents.current || sheetContents.current.clientHeight === 0) {
+            return false;
+          }
+          setFrozenHeight(sheetContents.current.clientHeight);
+          frozenHeightIntervalRef.current = undefined;
+          return true;
+        };
+        frozenHeightIntervalRef.current = tryRepeatedlyWithLimit(setHeight);
       }
     }
   }, [freezeInitialHeight, frozenHeight]);
@@ -320,4 +328,18 @@ export default function Sheet({
       </SheetDisabledContext.Provider>
     </Portal>
   );
+}
+
+function tryRepeatedlyWithLimit(callback: () => boolean, timeout = 500, limit = 5_000) {
+  let totalTime = 0;
+  return setInterval(() => {
+    if (totalTime > limit) {
+      return;
+    }
+    const res = callback();
+    totalTime += timeout;
+    if (res) {
+      return;
+    }
+  }, timeout);
 }

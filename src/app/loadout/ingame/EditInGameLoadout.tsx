@@ -1,7 +1,7 @@
 import Sheet from 'app/dim-ui/Sheet';
 import { t } from 'app/i18next-t';
-import { resolveInGameLoadoutIdentifiers } from 'app/loadout-drawer/loadout-type-converters';
-import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
+import { resolveInGameLoadoutIdentifiers } from 'app/loadout/loadout-type-converters';
+import { InGameLoadout } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
@@ -103,7 +103,7 @@ export default function EditInGameLoadout({
             colorIcon,
             icon,
             index: slot,
-            characterId: characterId!,
+            characterId,
             items: [],
             id: `ingame-${characterId}-${slot}`,
           }),

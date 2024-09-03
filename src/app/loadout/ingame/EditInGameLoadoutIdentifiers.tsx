@@ -1,7 +1,7 @@
 import { InGameLoadoutIdentifiers } from '@destinyitemmanager/dim-api-types';
 import Sheet, { SheetContent } from 'app/dim-ui/Sheet';
+import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { t } from 'i18next';
 import { useState } from 'react';
 import styles from './EditInGameLoadoutIdentifiers.m.scss';
 import SelectInGameLoadoutIdentifiers, {

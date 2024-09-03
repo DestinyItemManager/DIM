@@ -2,6 +2,8 @@
 // Please do not change this file!
 interface CssExports {
   'analyzingText': string;
+  'fashionIcon': string;
+  'modificationIcon': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

@@ -17,9 +17,10 @@
   margin: auto;
 
   h1 {
-    @include destiny-header;
     margin: 0;
     text-align: center;
+
+    @include destiny-header;
   }
 }
 
@@ -86,7 +87,8 @@
   background-color: var(--theme-accent-primary);
   color: var(--theme-text-invert);
   text-shadow: none;
-  &:hover {
+
+  @include interactive($hover: true) {
     transform: scale(1.05);
   }
 }

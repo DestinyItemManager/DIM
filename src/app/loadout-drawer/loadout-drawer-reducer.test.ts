@@ -6,6 +6,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { getTestDefinitions, getTestStores } from 'testing/test-utils';
+import { Loadout } from '../loadout/loadout-types';
 import {
   addItem,
   applySocketOverrides,
@@ -21,7 +22,6 @@ import {
   toggleEquipped,
   updateMods,
 } from './loadout-drawer-reducer';
-import { Loadout } from './loadout-types';
 import { filterLoadoutToAllowedItems, newLoadout } from './loadout-utils';
 
 let defs: D2ManifestDefinitions;
@@ -32,7 +32,7 @@ let items: DimItem[];
 let allItems: DimItem[];
 const emptyLoadout = newLoadout('Test', [], DestinyClass.Hunter);
 
-let artifactUnlocks = {
+const artifactUnlocks = {
   unlockedItemHashes: [1, 2, 3],
   seasonNumber: 22,
 };
@@ -172,7 +172,7 @@ describe('addItem', () => {
   it('fills in socket overrides when adding a subclass', () => {
     const subclass = items.find((i) => i.bucket.hash === BucketHashes.Subclass)!;
 
-    let loadout = addItem(defs, subclass)(emptyLoadout);
+    const loadout = addItem(defs, subclass)(emptyLoadout);
 
     expect(loadout.items[0].socketOverrides).toBeDefined();
   });
@@ -194,7 +194,7 @@ describe('addItem', () => {
     const invalidItem = store.items.find((i) => !itemCanBeInLoadout(i))!;
     expect(invalidItem).toBeDefined();
 
-    let loadout = addItem(defs, invalidItem)(emptyLoadout);
+    const loadout = addItem(defs, invalidItem)(emptyLoadout);
 
     expect(loadout.items).toEqual([]);
   });
@@ -203,7 +203,7 @@ describe('addItem', () => {
     const invalidItem = allItems.find((i) => !isClassCompatible(i.classType, DestinyClass.Hunter))!;
     expect(invalidItem).toBeDefined();
 
-    let loadout = addItem(defs, invalidItem)(emptyLoadout);
+    const loadout = addItem(defs, invalidItem)(emptyLoadout);
 
     expect(loadout.items).toEqual([]);
   });
@@ -230,7 +230,7 @@ describe('addItem', () => {
   });
 
   it('does nothing if the bucket is already at capacity', () => {
-    const weapons = items.filter((i) => i.bucket.hash === BucketHashes.KineticWeapons)!;
+    const weapons = items.filter((i) => i.bucket.hash === BucketHashes.KineticWeapons);
     expect(weapons.length).toBeGreaterThan(10);
 
     let loadout: Loadout | undefined;
@@ -380,7 +380,7 @@ describe('clearSubclass', () => {
 
 describe('setLoadoutSubclassFromEquipped', () => {
   it('correctly populates the subclass and its overrides', () => {
-    let loadout = setLoadoutSubclassFromEquipped(defs, store)(emptyLoadout);
+    const loadout = setLoadoutSubclassFromEquipped(defs, store)(emptyLoadout);
     expect(loadout.items.length).toBe(1);
     expect(defs.InventoryItem.get(loadout.items[0].hash).inventory!.bucketTypeHash).toBe(
       BucketHashes.Subclass,
@@ -480,44 +480,48 @@ describe('fillLoadoutFromEquipped', () => {
 
 describe('fillLoadoutFromUnequipped', () => {
   it('fills in unequipped items but does not change an existing item', () => {
+    const bucketHash = BucketHashes.KineticWeapons;
+
     // Add a single item that's not equipped to the loadout
     const item = items.find(
-      (i) => i.bucket.hash === BucketHashes.ClassArmor && !i.equipped && i.owner === store.id,
+      (i) => i.bucket.hash === bucketHash && !i.equipped && i.owner === store.id,
     )!;
     let loadout = addItem(defs, item)(emptyLoadout);
 
     loadout = fillLoadoutFromUnequipped(defs, store)(loadout);
 
-    const classArmorInLoadout = loadout.items.filter(
-      (i) => defs.InventoryItem.get(i.hash).inventory?.bucketTypeHash === BucketHashes.ClassArmor,
+    const itemsInLoadout = loadout.items.filter(
+      (i) => defs.InventoryItem.get(i.hash).inventory?.bucketTypeHash === bucketHash,
     );
 
     // Make sure that previously equipped item is still equipped
-    expect(classArmorInLoadout[0]).toMatchObject({
+    expect(itemsInLoadout[0]).toMatchObject({
       equip: true,
       id: item.id,
     });
     // Only 9 items because one of them was already in the loadout
-    expect(classArmorInLoadout.length).toBe(9);
+    expect(itemsInLoadout.length).toBe(9);
   });
 
   it('fills in unequipped items for a single category', () => {
+    const bucketHash = BucketHashes.KineticWeapons;
+
     // Add a single item that's not equipped to the loadout
-    const item = items.find((i) => i.bucket.hash === BucketHashes.ClassArmor && !i.equipped)!;
+    const item = items.find((i) => i.bucket.hash === bucketHash && !i.equipped)!;
     let loadout = addItem(defs, item)(emptyLoadout);
 
-    loadout = fillLoadoutFromUnequipped(defs, store, 'Armor')(loadout);
+    loadout = fillLoadoutFromUnequipped(defs, store, 'Weapons')(loadout);
 
-    const classArmorInLoadout = loadout.items.filter(
-      (i) => defs.InventoryItem.get(i.hash).inventory?.bucketTypeHash === BucketHashes.ClassArmor,
+    const itemsInLoadout = loadout.items.filter(
+      (i) => defs.InventoryItem.get(i.hash).inventory?.bucketTypeHash === bucketHash,
     );
 
     // Make sure that previously equipped item is still equipped
-    expect(classArmorInLoadout[0]).toMatchObject({
+    expect(itemsInLoadout[0]).toMatchObject({
       equip: true,
       id: item.id,
     });
-    expect(classArmorInLoadout.length).toBe(9);
+    expect(itemsInLoadout.length).toBe(9);
   });
 
   it('fills in unequipped items for a single category without overflow', () => {

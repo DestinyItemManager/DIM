@@ -33,18 +33,18 @@
   box-sizing: border-box;
   padding-right: calc(var(--sidebar-size) * var(--expanded-sidebars));
 
+  @include phone-portrait {
+    // Full-width, single column
+    display: block;
+    padding-right: 0;
+  }
+
   // Split evenly between character and vault
   .singleCharacter &.account-wide {
     grid-template-columns: 1fr 1fr;
     .singleCharacter & {
       grid-column: auto;
     }
-  }
-
-  @include phone-portrait {
-    // Full-width, single column
-    display: block;
-    padding-right: 0;
   }
 }
 
@@ -121,23 +121,26 @@
       padding-top: 0;
     }
 
-    .item-drag-container:hover {
-      // don't display the default outline when hovering over a draggable subclass item
-      outline: none;
+    .item-drag-container {
+      @include interactive($hover: true) {
+        // don't display the default outline when hovering over a draggable subclass item
+        outline: none;
 
-      // allow the pseudo-element to render outside the bounds of the item
-      contain: layout style;
+        // allow the pseudo-element to render outside the bounds of the item
+        contain: layout style;
 
-      // render a diamond-shaped pseudo-element to act as the border
-      &::before {
-        @include draggable-hover-border;
-        content: '';
-        position: absolute;
-        width: var(--item-size);
-        height: var(--item-size);
-        transform: rotate(45deg) scale(0.7);
-        outline-width: 2px;
-        box-sizing: border-box;
+        // render a diamond-shaped pseudo-element to act as the border
+        &::before {
+          content: '';
+          position: absolute;
+          width: var(--item-size);
+          height: var(--item-size);
+          transform: rotate(45deg) scale(0.7);
+          outline-width: 2px;
+          box-sizing: border-box;
+
+          @include draggable-hover-border;
+        }
       }
     }
   }
@@ -146,8 +149,6 @@
 .store-header {
   position: fixed;
   backface-visibility: hidden;
-
-  @include below-header;
   left: 0;
   width: 100%;
   z-index: 10;
@@ -159,12 +160,14 @@
   background-repeat: no-repeat;
   background-size: 100% 100vh;
 
-  &:focus {
-    outline: none;
-  }
+  @include below-header;
 
   @supports (position: sticky) {
     position: sticky;
+  }
+
+  &:focus {
+    outline: none;
   }
   &.sticky {
     box-shadow: 0 1px 4px 0 black;

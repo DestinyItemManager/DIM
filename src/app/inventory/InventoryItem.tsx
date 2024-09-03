@@ -81,11 +81,15 @@ export default function InventoryItem({
     if (subclassIconInfo) {
       return (
         <>
-          <img
-            src={subclassIconInfo.base}
-            className={clsx('item-img', styles.subclassBase)}
-            alt=""
-          />
+          {subclassIconInfo.base ? (
+            <img
+              src={subclassIconInfo.base}
+              className={clsx('item-img', styles.subclassBase)}
+              alt=""
+            />
+          ) : (
+            <ItemIcon className={styles.subclassBase} item={item} />
+          )}
           {subclassIconInfo.super && (
             <BungieImage src={subclassIconInfo.super} className={styles.subclassSuperIcon} alt="" />
           )}

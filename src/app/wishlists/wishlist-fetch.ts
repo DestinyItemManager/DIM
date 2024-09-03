@@ -14,6 +14,8 @@ import { WishListAndInfo } from './types';
 import { validateWishListURLs } from './utils';
 import { toWishList } from './wishlist-file';
 
+const TAG = 'wishlist';
+
 function hoursAgo(dateToCheck?: Date): number {
   if (!dateToCheck) {
     return 99999;
@@ -92,7 +94,7 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
         title: t('WishListRoll.Header'),
         body: t('WishListRoll.ImportFailed'),
       });
-      errorLog('wishlist', 'Unable to load wish list', e);
+      errorLog(TAG, 'Unable to load wish list', e);
       return;
     }
 
@@ -112,7 +114,7 @@ export function fetchWishList(newWishlistSource?: string): ThunkResult {
     ) {
       await dispatch(transformAndStoreWishList(wishListAndInfo));
     } else {
-      infoLog('wishlist', 'Refreshed wishlist, but it matched the one we already have');
+      infoLog(TAG, 'Refreshed wishlist, but it matched the one we already have');
       dispatch(touchWishLists());
     }
     await dispatch(transformAndStoreWishList(wishListAndInfo));
@@ -161,7 +163,7 @@ function loadWishListAndInfoFromIndexedDB(): ThunkResult {
         dispatch(loadWishLists(wishListState));
       }
     } catch (e) {
-      errorLog('wishlist', 'unable to load wishlists from IDB', e);
+      errorLog(TAG, 'unable to load wishlists from IDB', e);
     }
   };
 }

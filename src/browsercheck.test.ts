@@ -59,11 +59,12 @@ test.each([
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.78 Safari/537.36',
     false,
   ],
-  [
-    'Steam Overlay',
-    'Mozilla/5.0 (Windows; U; Windows NT 10.0; en-US; Valve Steam GameOverlay/1608507519; ) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36',
-    false,
-  ],
+  // This isn't actually checked in isSupported anymore, but it's nice to have the example user agent here. It's up to Chrome 85 now though...
+  // [
+  //   'Steam Overlay',
+  //   'Mozilla/5.0 (Windows; U; Windows NT 10.0; en-US; Valve Steam GameOverlay/1608507519; ) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36',
+  //   false,
+  // ],
 ])('%s: User agent %s, supported: %s', (_name, userAgent, shouldBeSupported) => {
   expect(isSupported(browsersSupported, userAgent)).toStrictEqual(shouldBeSupported);
 });

@@ -2,6 +2,8 @@ import { emptySet } from 'app/utils/empty';
 import { timer, warnLog } from 'app/utils/log';
 import { DimWishList, WishListAndInfo, WishListInfo, WishListRoll } from './types';
 
+const TAG = 'wishlist';
+
 /**
  * The title should follow the following format:
  * title:This Is My Source File Title.
@@ -25,7 +27,7 @@ const notesLabel = '//notes:';
 export function toWishList(
   ...files: [url: string | undefined, contents: string][]
 ): WishListAndInfo {
-  const stopTimer = timer('Parse wish list');
+  const stopTimer = timer(TAG, 'Parse wish list');
   try {
     const wishList: WishListAndInfo = {
       wishListRolls: [],
@@ -79,7 +81,7 @@ export function toWishList(
       }
 
       if (dupes > 0) {
-        warnLog('wishlist', 'Discarded', dupes, 'duplicate rolls from wish list');
+        warnLog(TAG, 'Discarded', dupes, 'duplicate rolls from wish list', url);
       }
       wishList.infos.push(info);
     }
@@ -134,7 +136,7 @@ function getItemHash(matchResults: RegExpMatchArray): number {
 }
 
 const dtrTextLineRegex =
-  /^https:\/\/destinytracker\.com\/destiny-2\/db\/items\/(?<itemHash>\d+)(?:.*)?perks=(?<itemPerks>[\d,]*)(?:#notes:)?(?<wishListNotes>[^|]*)?/;
+  /^https:\/\/destinytracker\.com\/destiny-2\/db\/items\/(?<itemHash>\d+)\D*perks=(?<itemPerks>[\d,]*)(?:#notes:)?(?<wishListNotes>[^|]*)/;
 function toDtrWishListRoll(dtrTextLine: string, blockNotes?: string): WishListRoll | null {
   const matchResults = dtrTextLineRegex.exec(dtrTextLine);
 
@@ -155,7 +157,7 @@ function toDtrWishListRoll(dtrTextLine: string, blockNotes?: string): WishListRo
 }
 
 const bansheeTextLineRegex =
-  /^https:\/\/banshee-44\.com\/\?weapon=(?<itemHash>\d.+)&socketEntries=(?<itemPerks>[\d,]*)(?:#notes:)?(?<wishListNotes>[^|]*)?/;
+  /^https:\/\/banshee-44\.com\/\?weapon=(?<itemHash>\d.+)&socketEntries=(?<itemPerks>[\d,]*)(?:#notes:)?(?<wishListNotes>[^|]*)/;
 
 /** Translate a single banshee-44.com URL -> WishListRoll. */
 function toBansheeWishListRoll(bansheeTextLine: string, blockNotes?: string): WishListRoll | null {
@@ -178,7 +180,7 @@ function toBansheeWishListRoll(bansheeTextLine: string, blockNotes?: string): Wi
 }
 
 const textLineRegex =
-  /^dimwishlist:item=(?<itemHash>-?\d+)(?:&perks=)?(?<itemPerks>[\d|,]*)?(?:#notes:)?(?<wishListNotes>[^|]*)?/;
+  /^dimwishlist:item=(?<itemHash>-?\d+)(?:&perks=)?(?<itemPerks>[\d|,]*)(?:#notes:)?(?<wishListNotes>[^|]*)/;
 function toDimWishListRoll(textLine: string, blockNotes?: string): WishListRoll | null {
   const matchResults = textLineRegex.exec(textLine);
 

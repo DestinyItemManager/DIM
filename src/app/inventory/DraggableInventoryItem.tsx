@@ -1,6 +1,7 @@
 import { hideItemPopup } from 'app/item-popup/item-popup';
 import { useStreamDeckSelection } from 'app/stream-deck/stream-deck';
 import clsx from 'clsx';
+import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { useDrag } from 'react-dnd';
 import styles from './DraggableInventoryItem.m.scss';
@@ -20,6 +21,7 @@ export default function DraggableInventoryItem({ children, item }: Props) {
       useStreamDeckSelection({
         type: 'item',
         item,
+        isSubClass: item.bucket.hash === BucketHashes.Subclass,
         equippable: !item.notransfer,
       })
     : undefined;

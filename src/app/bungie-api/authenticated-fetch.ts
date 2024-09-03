@@ -128,7 +128,7 @@ function handleRefreshTokenError(error: unknown): Promise<Tokens> {
         error_description?: string;
         ErrorCode?: PlatformErrorCodes;
       };
-    } catch (e) {}
+    } catch {}
   }
 
   if (data) {

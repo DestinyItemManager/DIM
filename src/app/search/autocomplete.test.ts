@@ -1,11 +1,11 @@
-import { Search } from '@destinyitemmanager/dim-api-types';
+import { Search, SearchType } from '@destinyitemmanager/dim-api-types';
 import {
   autocompleteTermSuggestions,
   filterSortRecentSearches,
   makeFilterComplete,
 } from './autocomplete';
+import { buildItemSearchConfig } from './items/item-search-filter';
 import { quoteFilterString } from './query-parser';
-import { buildSearchConfig } from './search-config';
 
 /**
  * Given a string like "foo ba|r", find where the "|" is and remove it,
@@ -15,14 +15,14 @@ import { buildSearchConfig } from './search-config';
  */
 function extractCaret(stringWithCaretPlaceholder: string): [caretIndex: number, query: string] {
   const caretIndex = stringWithCaretPlaceholder.indexOf('|');
-  if (caretIndex == -1) {
+  if (caretIndex === -1) {
     return [stringWithCaretPlaceholder.length, stringWithCaretPlaceholder];
   }
   return [caretIndex, stringWithCaretPlaceholder.replace('|', '')];
 }
 
 describe('autocompleteTermSuggestions', () => {
-  const searchConfig = buildSearchConfig(2, 'en');
+  const searchConfig = buildItemSearchConfig(2, 'en');
   const filterComplete = makeFilterComplete(searchConfig);
 
   const cases: [query: string, expected: string][] = [
@@ -104,7 +104,6 @@ describe('autocompleteTermSuggestions', () => {
 
   // Mocked out filterComplete function that only knows a few tricks
   const filterCompleteMock = (term: string) => {
-    console.log('TERM', term);
     const parts = term.split(':');
     let filter = 'name';
     if (parts.length > 1) {
@@ -139,36 +138,47 @@ describe('autocompleteTermSuggestions', () => {
 
 describe('filterSortRecentSearches', () => {
   const recentSearches: Search[] = [
-    { query: 'recent saved', usageCount: 1, saved: true, lastUsage: Date.now() },
+    {
+      query: 'recent saved',
+      usageCount: 1,
+      saved: true,
+      lastUsage: Date.now(),
+      type: SearchType.Item,
+    },
     {
       query: 'yearold saved',
       usageCount: 1,
       saved: true,
       lastUsage: Date.now() - 365 * 24 * 60 * 60 * 1000,
+      type: SearchType.Item,
     },
     {
       query: 'yearold unsaved',
       usageCount: 1,
       saved: false,
       lastUsage: Date.now() - 365 * 24 * 60 * 60 * 1000,
+      type: SearchType.Item,
     },
     {
       query: 'yearold highuse',
       usageCount: 100,
       saved: false,
       lastUsage: Date.now() - 365 * 24 * 60 * 60 * 1000,
+      type: SearchType.Item,
     },
     {
       query: 'dayold highuse',
       usageCount: 15,
       saved: false,
       lastUsage: Date.now() - 1 * 24 * 60 * 60 * 1000,
+      type: SearchType.Item,
     },
     {
       query: 'dim api autosuggest',
       usageCount: 0,
       saved: false,
       lastUsage: 0,
+      type: SearchType.Item,
     },
   ];
 
@@ -179,6 +189,7 @@ describe('filterSortRecentSearches', () => {
         lastUsage: Date.now() - day * 24 * 60 * 60 * 1000,
         usageCount,
         saved: false,
+        type: SearchType.Item,
       });
     }
   }
@@ -196,12 +207,14 @@ describe('filterSortRecentSearches', () => {
       usageCount: 1,
       saved: true,
       lastUsage: Date.now(),
+      type: SearchType.Item,
     },
     {
       query: '/* random-roll craftable guns */ is:patternunlocked -is:crafted',
       usageCount: 1,
       saved: true,
       lastUsage: Date.now() - 24 * 60 * 60 * 1000,
+      type: SearchType.Item,
     },
   ];
   const highlightCases: string[] = ['', 'craft', 'craftable', 'crafted'];
@@ -212,7 +225,7 @@ describe('filterSortRecentSearches', () => {
 });
 
 describe('filterComplete', () => {
-  const searchConfig = buildSearchConfig(2, 'en');
+  const searchConfig = buildItemSearchConfig(2, 'en');
   const filterComplete = makeFilterComplete(searchConfig);
 
   const terms = [['is:b'], ['jun'], ['sni'], ['stat:mob'], ['stat'], ['stat:'], ['ote']];

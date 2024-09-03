@@ -13,6 +13,12 @@ export const vaultWeaponGroupingEnabledSelector = createSelector(
   (state) => Boolean(state),
 );
 
+export const vaultWeaponGroupingStyleSelector = (state: RootState) =>
+  settingsSelector(state).vaultWeaponGroupingStyle;
+
+export const vaultArmorGroupingStyleSelector = (state: RootState) =>
+  settingsSelector(state).vaultArmorGroupingStyle;
+
 /**
  * Get a function that will group items according to the user's preferences.
  */

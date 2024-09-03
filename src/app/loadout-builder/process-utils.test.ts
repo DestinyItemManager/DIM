@@ -2,7 +2,7 @@ import { AssumeArmorMasterwork } from '@destinyitemmanager/dim-api-types';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { armorStats } from 'app/search/d2-known-values';
 import { emptySet } from 'app/utils/empty';
-import _ from 'lodash';
+import { StatHashes } from 'data/d2/generated-enums';
 import {
   enhancedOperatorAugmentModHash,
   isArmor2Arms,
@@ -19,6 +19,7 @@ import {
   pickAndAssignSlotIndependentMods,
   pickOptimalStatMods,
   precalculateStructures,
+  updateMaxTiers,
 } from './process-worker/process-utils';
 import { ModAssignmentStatistics, ProcessItem, ProcessMod } from './process-worker/types';
 import {
@@ -27,7 +28,7 @@ import {
   mapAutoMods,
   mapDimItemToProcessItem,
 } from './process/mappers';
-import { MIN_LO_ITEM_ENERGY, ResolvedStatConstraint } from './types';
+import { ArmorStatHashes, MIN_LO_ITEM_ENERGY, MinMaxTier, ResolvedStatConstraint } from './types';
 import { statTier } from './utils';
 
 // We don't really pay attention to this in the tests but the parameter is needed
@@ -50,7 +51,7 @@ function modifyMod({
   energyCost?: number;
   tag?: string | null;
 }) {
-  const newMod = _.cloneDeep(mod);
+  const newMod = { ...mod };
 
   if (energyCost !== undefined) {
     newMod.energyCost = energyCost;
@@ -74,7 +75,7 @@ function modifyItem({
   compatibleModSeasons?: string[];
   isArtifice?: boolean;
 }) {
-  const newItem = _.cloneDeep(item);
+  const newItem = { ...item };
 
   if (remainingEnergyCapacity !== undefined) {
     newItem.remainingEnergyCapacity = remainingEnergyCapacity;
@@ -571,4 +572,112 @@ describe('process-utils optimal mods', () => {
       expect(finalStats).toStrictEqual(expectedStats);
     },
   );
+});
+
+// This tests against a bug where an activity mod would accidentally be considered
+// eligible and fitting if it required as much or more energy than was remaining in any item,
+// even if it didn't have the mod slot.
+test('process-utils activity mods', async () => {
+  const defs = await getTestDefinitions();
+
+  const makeItem = (index: number, remainingEnergyCapacity: number) => ({
+    hash: index,
+    id: index.toString(),
+    isArtifice: false,
+    isExotic: index === 2,
+    name: `Item ${index}`,
+    power: 1500,
+    stats: [0, 0, 0, 0, 0, 0],
+    compatibleModSeasons: index === 2 ? [] : ['nightmare'],
+    remainingEnergyCapacity,
+  });
+
+  const statOrder: ArmorStatHashes[] = [
+    StatHashes.Resilience, // expensive
+    StatHashes.Recovery, // expensive
+    StatHashes.Strength, // cheap
+    StatHashes.Discipline, // cheap
+    StatHashes.Intellect, // expensive
+    StatHashes.Mobility, // cheap
+  ];
+
+  // The setup here is the following: All items have one or two energy
+  // remaining, but the mods cost at least one energy, so all items have
+  // at most one energy remaining, which is not enough for an expensive minor mod.
+  // Under the buggy condition, the 2-cost mod can be assigned to the arms piece,
+  // even though it is an exotic without the relevant mod slot, leaving 2 energy for
+  // a +5 resilience mod in an item that actually needs to hold an activity mod.
+  const helmet = makeItem(1, 2);
+  const arms = makeItem(2, 1);
+  const chest = makeItem(3, 1);
+  const legs = makeItem(4, 1);
+  const classItem = makeItem(5, 2);
+
+  const items = [helmet, arms, chest, legs, classItem];
+
+  // Costs 1, 1, 1, 2
+
+  const modHashes = [
+    1560574695, // InventoryItem "Nightmare Breaker"
+    1560574695, // InventoryItem "Nightmare Breaker"
+    1560574695, // InventoryItem "Nightmare Breaker"
+    1565861116, // InventoryItem "Enhanced Nightmare Crusher"
+  ];
+  const activityMods = modHashes.map(
+    (hash) => defs.InventoryItem.get(hash) as PluggableInventoryItemDefinition,
+  );
+
+  const autoModData = mapAutoMods(getAutoMods(defs, emptySet()));
+
+  const loSessionInfo = precalculateStructures(
+    autoModData,
+    [],
+    activityMods.map(mapArmor2ModToProcessMod),
+    true,
+    statOrder,
+  );
+
+  const resolvedStatConstraints = statOrder.map((statHash) => ({
+    statHash,
+    ignored: false,
+    maxTier: 10,
+    minTier: 0,
+  }));
+
+  const setStats = [55, 55, 55, 50, 50, 50];
+
+  // First, verify that our set can fit the mods
+  const result = pickAndAssignSlotIndependentMods(
+    loSessionInfo,
+    modStatistics,
+    items,
+    [0, 0, 0, 0, 0, 0],
+    0,
+  )!;
+  expect(result).not.toBeUndefined();
+
+  // Then check that optimal and maximally available tiers only report
+  // the cheaper stats where the mods can actually fit
+  const autoMods = pickOptimalStatMods(loSessionInfo, items, setStats, resolvedStatConstraints);
+  expect(autoMods).not.toBeUndefined();
+  expect(autoMods!.bonusStats).toEqual([0, 0, 5, 0, 0, 0]);
+
+  const minMaxesInStatOrder: MinMaxTier[] = [
+    { minTier: 0, maxTier: 0 },
+    { minTier: 0, maxTier: 0 },
+    { minTier: 0, maxTier: 0 },
+    { minTier: 0, maxTier: 0 },
+    { minTier: 0, maxTier: 0 },
+    { minTier: 0, maxTier: 0 },
+  ];
+  updateMaxTiers(
+    loSessionInfo,
+    items,
+    setStats,
+    setStats.map(statTier),
+    0,
+    resolvedStatConstraints,
+    minMaxesInStatOrder,
+  );
+  expect(minMaxesInStatOrder.map((stat) => stat.maxTier)).toEqual([5, 5, 6, 6, 5, 6]);
 });

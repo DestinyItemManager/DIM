@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import styles from './RadioButton.m.scss';
 
 /**
- * A radio button for the ingame loadout editor.
+ * A radio button for the in-game loadout editor.
  */
 export function RadioButton({
   option: hash,

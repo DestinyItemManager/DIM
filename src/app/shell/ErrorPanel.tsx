@@ -51,6 +51,7 @@ export default function ErrorPanel({
   frameless?: boolean;
 }) {
   const underlyingError = error instanceof DimError ? error.cause : undefined;
+  showSocials = showSocials ? !(error instanceof DimError) || error.showSocials : false;
 
   let code: string | number | undefined = error instanceof DimError ? error.code : undefined;
   if (underlyingError) {

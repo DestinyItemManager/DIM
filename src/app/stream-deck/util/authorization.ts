@@ -8,8 +8,8 @@ export function streamDeckAuthorizationInit(): ThunkResult {
   return async (dispatch) => {
     dispatch(stopStreamDeckConnection());
     const auth = {
-      instance: window.crypto.randomUUID(),
-      token: window.crypto.randomUUID(),
+      instance: globalThis.crypto.randomUUID(),
+      token: globalThis.crypto.randomUUID(),
     };
     dispatch(streamDeckAuthorization(auth));
     const query = new URLSearchParams(auth).toString();

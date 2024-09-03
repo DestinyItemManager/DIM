@@ -1,7 +1,7 @@
 import { LoadoutItem } from '@destinyitemmanager/dim-api-types';
 import { DimItem } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
-import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
+import { InGameLoadout, Loadout } from 'app/loadout/loadout-types';
 import { d2ManifestSelector } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState, ThunkResult } from 'app/store/types';
@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux';
 import { streamDeckSelectionSelector } from './selectors';
 import { streamDeckClearId } from './util/packager';
 
-export type StreamDeckSelectionOptions =
+export type StreamDeckSelectionOptions = (
   | {
       type: 'in-game-loadout';
       loadout: InGameLoadout;
@@ -26,7 +26,8 @@ export type StreamDeckSelectionOptions =
   | {
       type: 'item';
       item: DimItem;
-    };
+    }
+) & { isSubClass?: boolean };
 
 function findSubClassIcon(items: LoadoutItem[], state: RootState) {
   const defs = d2ManifestSelector(state);
@@ -76,7 +77,8 @@ const toSelection = (data: StreamDeckSelectionOptions, state: RootState) => {
         icon: item.icon,
         overlay: item.iconOverlay,
         isExotic: item.isExotic,
-        inventory: item.location.accountWide,
+        isSubClass: data.isSubClass,
+        isCrafted: Boolean(item.crafted),
         element:
           item.element?.enumValue === DamageType.Kinetic
             ? undefined
@@ -95,6 +97,7 @@ const setDataTransfer =
 
 export type UseStreamDeckSelectionArgs = StreamDeckSelectionOptions & {
   equippable: boolean;
+  isSubClass?: boolean;
 };
 
 interface UseStreamDeckSelectionReturn {
@@ -109,7 +112,7 @@ const useSelection = ({
   const dispatch = useThunkDispatch();
   const type = props.type === 'item' ? 'item' : 'loadout';
   const selection = useSelector(streamDeckSelectionSelector);
-  const canDrag = equippable && selection === type;
+  const canDrag = (equippable || props.isSubClass) && selection === type;
   const [_coll, dragRef] = useDrag(() => ({
     type,
   }));

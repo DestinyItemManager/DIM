@@ -13,7 +13,6 @@ import GenerateJsonPlugin from 'generate-json-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import _ from 'lodash';
 import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
-import marked from 'marked';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import svgToMiniDataURI from 'mini-svg-data-uri';
 import path from 'path';
@@ -25,7 +24,6 @@ import { InjectManifest } from 'workbox-webpack-plugin';
 import zlib from 'zlib';
 import csp from './content-security-policy';
 import { makeFeatureFlags } from './feature-flags';
-const renderer = new marked.Renderer();
 
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 
@@ -94,6 +92,7 @@ export default (env: Env) => {
       browsercheck: './src/browsercheck.js',
       earlyErrorReport: './src/earlyErrorReport.js',
       authReturn: './src/authReturn.ts',
+      backup: './src/backup.ts',
     },
 
     // https://github.com/webpack/webpack-dev-server/issues/2758
@@ -114,7 +113,7 @@ export default (env: Env) => {
           host: process.env.DOCKER ? '0.0.0.0' : 'localhost',
           allowedHosts: 'all',
           server: {
-            type: 'https',
+            type: 'spdy',
             options: {
               key: fs.readFileSync('key.pem'), // Private keys in PEM format.
               cert: fs.readFileSync('cert.pem'), // Cert chains in PEM format.
@@ -187,7 +186,17 @@ export default (env: Env) => {
               unsafe_math: true,
               unsafe_proto: true,
               pure_getters: true,
-              pure_funcs: ['JSON.parse', 'Object.values', 'Object.keys'],
+              pure_funcs: [
+                'JSON.parse',
+                'Object.values',
+                'Object.keys',
+                'Object.groupBy',
+                'Object.fromEntries',
+                'Map.groupBy',
+                'Map',
+                'Set',
+                'BigInt',
+              ],
             },
             mangle: { toplevel: true },
           },
@@ -260,6 +269,11 @@ export default (env: Env) => {
                     ? '[name]_[local]-[contenthash:base64:8]'
                     : '[contenthash:base64:8]',
                   exportLocalsConvention: 'camelCaseOnly',
+                  // TODO: It's possible that setting this to true would allow
+                  // us to eliminate some original CSS names that still get into
+                  // the bundle, but it breaks css-modules-typescript-loader so
+                  // we'd need to fork/replace it.
+                  namedExport: false,
                 },
                 importLoaders: 2,
               },
@@ -336,9 +350,6 @@ export default (env: Env) => {
             },
             {
               loader: 'markdown-loader',
-              options: {
-                renderer,
-              },
             },
           ],
         },
@@ -433,6 +444,13 @@ export default (env: Env) => {
     }),
 
     new HtmlWebpackPlugin({
+      inject: true,
+      filename: 'backup.html',
+      template: 'src/backup.html',
+      chunks: ['backup'],
+    }),
+
+    new HtmlWebpackPlugin({
       inject: false,
       filename: '404.html',
       template: 'src/404.html',
@@ -505,11 +523,9 @@ export default (env: Env) => {
 
   if (env.dev) {
     // In dev we use babel to compile TS, and fork off a separate typechecker
-    plugins.push(
-      new ForkTsCheckerWebpackPlugin({
-        eslint: { files: './src/**/*.{ts,tsx,cjs,mjs,cts,mts,js,jsx}' },
-      }),
-    );
+    plugins.push(new ForkTsCheckerWebpackPlugin());
+
+    // TODO: maybe reintroduce https://webpack.js.org/plugins/eslint-webpack-plugin/
 
     if (process.env.SNORETOAST_DISABLE) {
       console.log("Disabling build notifications as 'SNORETOAST_DISABLE' was defined");

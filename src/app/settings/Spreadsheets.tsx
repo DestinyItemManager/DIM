@@ -34,7 +34,7 @@ export default function Spreadsheets() {
     }
   };
 
-  const downloadCsv = (type: 'Armor' | 'Weapons' | 'Ghost') => dispatch(downloadCsvFiles(type));
+  const downloadCsv = (type: 'armor' | 'weapon' | 'ghost') => dispatch(downloadCsvFiles(type));
 
   return (
     <section id="spreadsheets">
@@ -48,7 +48,7 @@ export default function Spreadsheets() {
           <button
             type="button"
             className="dim-button"
-            onClick={() => downloadCsv('Weapons')}
+            onClick={() => downloadCsv('weapon')}
             disabled={disabled}
           >
             <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Weapons')}</span>
@@ -56,7 +56,7 @@ export default function Spreadsheets() {
           <button
             type="button"
             className="dim-button"
-            onClick={() => downloadCsv('Armor')}
+            onClick={() => downloadCsv('armor')}
             disabled={disabled}
           >
             <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Armor')}</span>
@@ -64,7 +64,7 @@ export default function Spreadsheets() {
           <button
             type="button"
             className="dim-button"
-            onClick={() => downloadCsv('Ghost')}
+            onClick={() => downloadCsv('ghost')}
             disabled={disabled}
           >
             <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Ghost')}</span>

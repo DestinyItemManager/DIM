@@ -51,7 +51,7 @@ export interface Hotkey {
 
 // Each key combo can have many hotkey implementations bound to it, but only the
 // last one in the array gets triggered.
-const keyMap: { [combo: string]: (Hotkey & { id: string })[] } = {};
+const keyMap: { [combo: string]: undefined | (Hotkey & { id: string })[] } = {};
 
 export function clearAllHotkeysForTest() {
   for (const key of Object.keys(keyMap)) {
@@ -91,7 +91,8 @@ export function removeHotkeysById(id: string, combo?: string) {
 
 export function getAllHotkeys() {
   const combos: { [combo: string]: string } = {};
-  for (const hotkeyList of Object.values(keyMap)) {
+  for (const k in keyMap) {
+    const hotkeyList = keyMap[k]!;
     const hotkey = hotkeyList.at(-1)!;
     const combo = symbolize(hotkey.combo);
     combos[combo] = hotkey.description;
@@ -123,11 +124,11 @@ function bind(id: string, hotkey: Hotkey) {
 function unbind(id: string, combo: string) {
   const normalizedCombo = normalizeCombo(combo);
   const hotkeysForCombo = keyMap[normalizedCombo];
-  const existingIndex = hotkeysForCombo.findIndex((h) => h.id === id);
+  const existingIndex = hotkeysForCombo?.findIndex((h) => h.id === id) ?? -1;
   if (existingIndex >= 0) {
-    hotkeysForCombo.splice(existingIndex, 1);
+    hotkeysForCombo!.splice(existingIndex, 1);
   }
-  if (!hotkeysForCombo.length) {
+  if (!hotkeysForCombo?.length) {
     delete keyMap[normalizedCombo];
   }
 }
@@ -172,6 +173,13 @@ const _MAP: { [code: number]: string } = {
   221: ']',
   222: "'",
 };
+
+/**
+ * A list of hotkeys that should not be blocked even when a
+ * form control is focused.
+ */
+const allowedKeysInFormControls = ['Escape'];
+
 // Add in the number keys
 for (let i = 0; i <= 9; ++i) {
   // This needs to use a string cause otherwise since 0 is falsey
@@ -183,14 +191,20 @@ for (let i = 0; i <= 9; ++i) {
 }
 
 function handleKeyEvent(e: KeyboardEvent) {
-  if (
-    e.isComposing ||
-    e.repeat ||
-    (e.target instanceof HTMLElement &&
-      (e.target.isContentEditable ||
-        (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName) &&
-          (e.target as HTMLInputElement).type !== 'checkbox')))
-  ) {
+  /**
+   * By default, we block custom hotkeys to prevent overriding built-in input
+   * hotkeys. However, certain custom hotkeys should be allowed even when a
+   * form control is focused. For example, pressing Escape inside of a sheet
+   * should always close the sheet, even if an input in the sheet is focused.
+   */
+  const blockHotKeyInFormControl =
+    e.target instanceof HTMLElement &&
+    (e.target.isContentEditable ||
+      (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName) &&
+        (e.target as HTMLInputElement).type !== 'checkbox')) &&
+    !allowedKeysInFormControls.includes(e.key);
+
+  if (e.isComposing || e.repeat || blockHotKeyInFormControl) {
     return;
   }
 

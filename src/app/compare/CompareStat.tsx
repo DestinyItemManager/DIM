@@ -24,7 +24,7 @@ export default function CompareStat({
   const color = getColor(statRange(itemStat, stat, compareBaseStats), 'color');
 
   const statValue = itemStat
-    ? (compareBaseStats ? itemStat.base : itemStat.value) ?? itemStat.value
+    ? ((compareBaseStats ? itemStat.base : itemStat.value) ?? itemStat.value)
     : 0;
 
   return (

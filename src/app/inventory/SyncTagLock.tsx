@@ -14,7 +14,7 @@ export function canSyncLockState(item: DimItem) {
     item.lockable &&
     item.taggable &&
     // don't auto-lock crafted items because they must be unlocked to reshape and DIM shouldn't re-lock an item while the user is choosing new perks
-    !item.crafted
+    item.crafted !== 'crafted'
   );
 }
 

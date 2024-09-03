@@ -1,6 +1,6 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import BungieImage, { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
-import { resolveInGameLoadoutIdentifiers } from 'app/loadout-drawer/loadout-type-converters';
+import { resolveInGameLoadoutIdentifiers } from 'app/loadout/loadout-type-converters';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { compareBy } from 'app/utils/comparators';
 import { useMemo } from 'react';

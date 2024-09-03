@@ -43,3 +43,16 @@ it('stacks hotkeys', () => {
   expect(p2).toBe(2);
   expect(p3).toBe(1);
 });
+
+// Fixes https://github.com/DestinyItemManager/DIM/issues/6246
+it('allows Escape hotkey when an input is focused', () => {
+  const cb = jest.fn();
+  registerHotkeys('esc', [{ combo: 'Escape', callback: cb, description: 'p' }]);
+
+  const input = document.createElement('input');
+  document.body.appendChild(input);
+
+  input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+
+  expect(cb).toHaveBeenCalled();
+});

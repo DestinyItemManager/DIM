@@ -4,15 +4,15 @@
 .streamDeckButton {
   composes: resetButton from '../../dim-ui/common.m.scss';
   position: relative;
+
+  @container (max-width: 540px) {
+    display: none;
+  }
   & img {
     max-width: 19px;
     margin: 0 8px;
     margin-top: 2px;
     height: auto;
-  }
-
-  @container (max-width: 540px) {
-    display: none;
   }
 }
 

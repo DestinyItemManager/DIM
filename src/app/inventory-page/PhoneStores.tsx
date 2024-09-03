@@ -69,7 +69,7 @@ export default function PhoneStores({ stores, buckets, singleCharacter }: Props)
   }
 
   const selectedStore = selectedStoreId
-    ? getStore(stores, selectedStoreId) ?? currentStore
+    ? (getStore(stores, selectedStoreId) ?? currentStore)
     : currentStore;
 
   const handleSwipe = (_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {

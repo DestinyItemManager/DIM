@@ -1,3 +1,4 @@
+import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import React from 'react';
 import BungieImage from '../dim-ui/BungieImage';
 import CollapsibleTitle from '../dim-ui/CollapsibleTitle';
@@ -57,13 +58,17 @@ export default function Vendor({
               className={styles.icon}
             />
             <div className={styles.titleDetails}>
-              <div>{vendor.def.displayProperties.name}</div>
+              <div>
+                <RichDestinyText text={vendor.def.displayProperties.name} />
+              </div>
               <VendorLocation>{placeString}</VendorLocation>
             </div>
           </>
         }
         extra={refreshTime && <Countdown endTime={refreshTime} className={styles.countdown} />}
         sectionId={`d2vendor-${vendor.def.hash}`}
+        // hi! this sectionId formatting matters for dispatching vendor detail api requests.
+        // please modify carefully and see how it's used in vendorsNeedingComponents in loadAllVendors
       >
         <VendorItems
           vendor={vendor}

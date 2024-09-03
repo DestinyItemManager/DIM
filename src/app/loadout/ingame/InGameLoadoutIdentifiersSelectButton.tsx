@@ -2,7 +2,7 @@ import { InGameLoadoutIdentifiers } from '@destinyitemmanager/dim-api-types';
 import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import { setInGameLoadoutIdentifiers } from 'app/loadout-drawer/loadout-drawer-reducer';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { Loadout } from 'app/loadout/loadout-types';
 import noInGameLoadoutIdentifiers from 'images/no-loadout-identifiers.svg';
 import { useState } from 'react';
 import EditInGameLoadoutIdentifiers from './EditInGameLoadoutIdentifiers';

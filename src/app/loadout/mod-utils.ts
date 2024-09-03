@@ -1,3 +1,4 @@
+import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
@@ -95,7 +96,22 @@ export function createGetModRenderKey() {
  * e.g. "General Armor Mod", "Helmet Armor Mod", "Nightmare Mod"
  */
 export function groupModsByModType(plugs: PluggableInventoryItemDefinition[]) {
-  return Object.groupBy(plugs, (plugDef) => plugDef.itemTypeDisplayName);
+  const plugHeader = (plug: PluggableInventoryItemDefinition) => {
+    // Annoyingly some Prismatic plugs' itemTypeDisplayNames include the damage type and light/dark,
+    // so map them to a common header here
+    if (plug.plug.plugCategoryIdentifier.endsWith('.prism.aspects')) {
+      return t('Loadouts.Prismatic.Aspect');
+    } else if (plug.plug.plugCategoryIdentifier.endsWith('.prism.supers')) {
+      return t('Loadouts.Prismatic.Super');
+    } else if (plug.plug.plugCategoryIdentifier.endsWith('.prism.grenades')) {
+      return t('Loadouts.Prismatic.Grenade');
+    } else if (plug.plug.plugCategoryIdentifier.endsWith('.prism.melee')) {
+      return t('Loadouts.Prismatic.Melee');
+    } else {
+      return plug.itemTypeDisplayName;
+    }
+  };
+  return Object.groupBy(plugs, plugHeader);
 }
 
 /**

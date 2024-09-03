@@ -37,9 +37,10 @@
       color: #eee;
       display: block;
       text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
+
+      @include interactive($hover: true) {
+        text-decoration: underline;
+      }
     }
   }
   tr td:first-child {
@@ -61,11 +62,11 @@
 .entry {
   display: flex;
 
+  margin-bottom: 4px;
+
   div {
     display: flex;
   }
-
-  margin-bottom: 4px;
   &:last-child {
     margin-bottom: 0;
   }

@@ -1,6 +1,7 @@
 name: Deploy Beta
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
@@ -21,12 +22,12 @@ jobs:
         with:
           fetch-depth: 2 # So sentry can get the previous commit
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version-file: '.nvmrc'
           cache: pnpm
 
       - name: Install SSH key

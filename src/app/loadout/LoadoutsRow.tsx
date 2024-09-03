@@ -1,13 +1,12 @@
 import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
 import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
-import { deleteLoadout } from 'app/loadout-drawer/actions';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
-import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { copyAndEditLoadout, editLoadout } from 'app/loadout-drawer/loadout-events';
+import { deleteLoadout } from 'app/loadout/actions';
+import { Loadout } from 'app/loadout/loadout-types';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import _ from 'lodash';
 import { ReactNode, memo, useMemo } from 'react';
 import LoadoutView from './LoadoutView';
 
@@ -39,6 +38,7 @@ export default memo(function LoadoutRow({
 
     const handleEdit = () => editLoadout(loadout, store.id, { isNew: !saved });
     const handleShare = () => onShare(loadout);
+    const handleCopyAndEdit = () => copyAndEditLoadout(loadout, store.id);
 
     const actionButtons: ReactNode[] = [];
 
@@ -56,13 +56,20 @@ export default memo(function LoadoutRow({
       </button>,
     );
 
-    if (loadout.parameters && !_.isEmpty(loadout.parameters)) {
+    if (equippable) {
+      // add button here to copy and edit the loadout
       actionButtons.push(
-        <button key="share" type="button" className="dim-button" onClick={handleShare}>
-          {t('Loadouts.ShareLoadout')}
+        <button key="copyAndEdit" type="button" className="dim-button" onClick={handleCopyAndEdit}>
+          {t('Loadouts.CopyAndEdit')}
         </button>,
       );
     }
+
+    actionButtons.push(
+      <button key="share" type="button" className="dim-button" onClick={handleShare}>
+        {t('Loadouts.ShareLoadout')}
+      </button>,
+    );
 
     if (saved) {
       actionButtons.push(

@@ -66,9 +66,8 @@
   padding: 4px 8px;
   color: #999;
   transition: all 150ms ease-out;
-  &:active,
-  &:hover,
-  &:focus-visible {
+
+  @include interactive($hover: true, $active: true, $focus: true) {
     color: white;
   }
 }

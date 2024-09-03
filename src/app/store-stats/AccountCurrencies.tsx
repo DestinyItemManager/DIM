@@ -25,8 +25,8 @@ export default memo(function AccountCurrency() {
           </div>
         </React.Fragment>
       ))}
-      {/* add 0-3 blank slots to keep each currencyGroup rounded to a multiple of 4 (for css grid) */}
-      {_.times((4 - (currencies.length % 4)) % 4, (i) => (
+      {/* add 0-2 blank slots to keep each currencyGroup rounded to a multiple of 3 (for css grid) */}
+      {_.times((3 - (currencies.length % 3)) % 3, (i) => (
         <React.Fragment key={i}>
           <div />
           <div />

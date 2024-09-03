@@ -6,7 +6,7 @@ import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
-import { searchFilterSelector } from 'app/search/search-filter';
+import { searchFilterSelector } from 'app/search/items/item-search-filter';
 import { useSetting } from 'app/settings/hooks';
 import { querySelector } from 'app/shell/selectors';
 import { filterMap } from 'app/utils/collections';
@@ -157,7 +157,6 @@ export default function Records({ account }: Props) {
         {nodeHashes
           .map((h) => defs.PresentationNode.get(h))
           .map((nodeDef) => (
-            // console.log(nodeDef)
             <section key={nodeDef.hash} id={`p_${nodeDef.hash}`}>
               <CollapsibleTitle
                 title={overrideTitles[nodeDef.hash] || nodeDef.displayProperties.name}

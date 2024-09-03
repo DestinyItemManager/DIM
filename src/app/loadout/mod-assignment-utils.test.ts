@@ -1,7 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { buildDefinedPlug } from 'app/inventory/store/sockets';
-import { Assignment, PluggingAction } from 'app/loadout-drawer/loadout-types';
+import { Assignment, PluggingAction } from 'app/loadout/loadout-types';
 import { getInterestingSocketMetadatas } from 'app/utils/item-utils';
 import { plugFitsIntoSocket } from 'app/utils/socket-utils';
 import { produce } from 'immer';
@@ -179,13 +179,13 @@ describe('mod-assignment-utils plugging strategy', () => {
     const ourItem = applyMods(classItem, [distributionMod, empoweringFinishMod]);
     const empoweringIndex = ourItem.sockets!.allSockets.findIndex(
       (socket) => socket.plugged?.plugDef.hash === empoweringFinishMod.hash,
-    )!;
+    );
     expect(ourItem.energy?.energyUsed).toBe(4);
     // Apply a 1-cost mutex mod, this should replace the other 1-cost mod
     const newItem = applyMods(ourItem, [bulwarkFinishMod], 2);
     const bulwarkIndex = newItem.sockets!.allSockets.findIndex(
       (socket) => socket.plugged?.plugDef.hash === bulwarkFinishMod.hash,
-    )!;
+    );
     expect(empoweringIndex).toBe(bulwarkIndex);
     expect(newItem.energy?.energyUsed).toBe(4);
   });

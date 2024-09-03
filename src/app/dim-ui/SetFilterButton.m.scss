@@ -1,3 +1,5 @@
+@use '../variables.scss' as *;
+
 .setFilterButton {
   display: inline-block;
   cursor: pointer;
@@ -6,9 +8,10 @@
   padding: 0 6px;
   border-radius: 4px;
   text-align: center;
-  &:hover {
+  text-decoration: none;
+
+  @include interactive($hover: true) {
     background-color: #68a0b7;
     color: #222;
   }
-  text-decoration: none;
 }

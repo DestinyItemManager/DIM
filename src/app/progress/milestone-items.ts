@@ -123,14 +123,12 @@ function availableQuestToItem(
     objectives,
     store,
   );
+  if (dimItem.pursuit === null) {
+    throw new Error(''); // can't happen
+  }
 
   dimItem.secondaryIcon = challengeItem?.secondaryIcon;
-
-  dimItem.pursuit = {
-    expiration: milestoneExpiration(milestone),
-    modifierHashes: availableQuest?.activity?.modifierHashes || [],
-    rewards: [],
-  };
+  dimItem.pursuit.modifierHashes = availableQuest?.activity?.modifierHashes || [];
 
   if (questRewards?.length) {
     dimItem.pursuit.rewards = questRewards.map((r) => ({
@@ -149,8 +147,6 @@ function availableQuestToItem(
           hasConditionalVisibility: false,
         }));
     }
-  } else if (milestone.rewards) {
-    dimItem.pursuit.rewards = processRewards(milestone.rewards, milestoneDef);
   }
 
   return dimItem;
@@ -163,11 +159,16 @@ function activityMilestoneToItem(
   defs: D2ManifestDefinitions,
   store: DimStore,
 ): DimItem | null {
-  const objectives = milestone.activities[0].challenges.map((a) => a.objective);
-  if (objectives.every((objective) => objective.complete)) {
+  // Find the first activity that hasn't been completed. TODO: Can we show all of them?
+  const activity = milestone.activities.find((a) =>
+    a.challenges.some((c) => !c.objective.complete),
+  );
+  // Ignore the milestone if all activities are complete or there are no challenges.
+  if (!activity) {
     return null;
   }
-
+  const activityDef = activity && defs.Activity.get(activity.activityHash);
+  const objectives = activity.challenges.map((a) => a.objective);
   const dimItem = makeMilestonePursuitItem(
     buckets,
     milestone,
@@ -176,18 +177,22 @@ function activityMilestoneToItem(
     objectives,
     store,
   );
+  if (dimItem.pursuit === null) {
+    throw new Error(''); // can't happen
+  }
 
-  dimItem.pursuit = {
-    expiration: milestoneExpiration(milestone),
-    modifierHashes: milestone.activities[0].modifierHashes || [],
-    rewards: [],
-  };
-  if (milestone.rewards) {
-    dimItem.pursuit.rewards = processRewards(milestone.rewards, milestoneDef);
-  } else {
-    const activity = defs.Activity.get(milestone.activities[0].activityHash);
-    if (activity) {
-      dimItem.pursuit.rewards = activity.challenges.flatMap((c) => c.dummyRewards);
+  dimItem.pursuit.modifierHashes = activity.modifierHashes || [];
+
+  if (activityDef) {
+    if (!milestone.rewards) {
+      dimItem.pursuit.rewards = activityDef.challenges
+        .filter((c) => objectives.some((o) => o.objectiveHash === c.objectiveHash))
+        .flatMap((c) => c.dummyRewards);
+    }
+    if (milestoneDef.hash === 2029743966 /* Nightfall Weekly Score Challenge */) {
+      dimItem.name = `${dimItem.name}: ${activityDef.displayProperties.description}`;
+    } else if (milestoneDef.hash === 1506285920 /* Crucible Labs Playlist Challenge */) {
+      dimItem.name = `${dimItem.name}: ${activityDef.displayProperties.name}`;
     }
   }
 
@@ -292,12 +297,11 @@ function makeFakePursuitItem(
     infusionFuel: false,
     sockets: null,
     masterworkInfo: null,
-    infusionQuality: null,
+    infusionCategoryHashes: null,
     owner: store.id,
     uniqueStack: false,
     trackable: false,
     energy: null,
-    powerCap: null,
   };
 }
 
@@ -385,7 +389,9 @@ export function recordToPursuitItem(
   };
 
   if (record.recordDef.rewardItems) {
-    dimItem.pursuit.rewards = record.recordDef.rewardItems;
+    dimItem.pursuit.rewards = record.recordDef.rewardItems.filter(
+      (_r, i) => record.recordComponent.rewardVisibilty?.[i] ?? true,
+    );
   }
 
   dimItem.trackable = true;
@@ -409,9 +415,10 @@ function processRewards(
   rewards: DestinyMilestoneRewardCategory[],
   milestoneDef: DestinyMilestoneDefinition,
 ) {
-  return rewards.flatMap((reward) =>
-    Object.values(milestoneDef.rewards[reward.rewardCategoryHash].rewardEntries).flatMap(
-      (entry) => entry.items,
-    ),
-  );
+  return rewards.flatMap((reward) => {
+    const rewardCategoryDef = milestoneDef.rewards[reward.rewardCategoryHash];
+    return reward.entries.flatMap(
+      (entry) => rewardCategoryDef.rewardEntries[entry.rewardEntryHash]?.items ?? [],
+    );
+  });
 }

@@ -66,7 +66,9 @@ export function useDynamicStringReplacer(ownerId = '') {
     return text.replace(dynamicTextFinder, (segment) => {
       const hash = segment.match(/\d+/)![0];
       const dynamicValue =
-        dynamicStrings?.byCharacter[ownerId]?.[hash] ?? dynamicStrings?.allProfile[hash];
+        dynamicStrings?.byCharacter[ownerId]?.[hash] ??
+        dynamicStrings?.allProfile[hash] ??
+        (dynamicStrings && Object.values(dynamicStrings.byCharacter)[0][hash]);
       return dynamicValue?.toString() ?? segment;
     });
   };

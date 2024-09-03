@@ -36,13 +36,13 @@
 }
 
 .iconList {
+  --item-size: 32px;
   display: flex;
   flex-flow: row wrap;
   margin: 8px 0;
   &:last-child {
     margin-bottom: 0;
   }
-  --item-size: 32px;
 
   > * {
     margin: 0 4px 4px 0;

@@ -28,6 +28,14 @@
   background: $acquiredGreen;
 }
 
+.fullImage {
+  aspect-ratio: auto 16/9;
+
+  &.milestoneImage {
+    aspect-ratio: auto 7/2;
+  }
+}
+
 .ownedIcon,
 .acquiredIcon {
   width: calc(var(--item-size) / 4) !important;
@@ -38,11 +46,11 @@
   box-sizing: border-box;
 
   .mods & {
-    width: calc(var(--item-size) / 2.5) !important;
-    height: calc(var(--item-size) / 2.5) !important;
+    width: calc(var(--item-size) / 3) !important;
     font-size: calc(var(--item-size) / 5) !important;
-    vertical-align: -0.5em;
+    vertical-align: middle;
     padding: 0;
+    border-radius: 0;
     filter: invert(1);
     background: none !important;
   }
