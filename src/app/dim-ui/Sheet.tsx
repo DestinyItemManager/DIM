@@ -41,7 +41,7 @@ const SheetDisabledContext = createContext<(shown: boolean) => void>(() => {
  * takes an "onClose" function that can be used to close the sheet. Using onClose to close
  * the sheet ensures that it will animate away rather than simply disappearing.
  */
-type SheetContent = React.ReactNode | ((args: { onClose: () => void }) => React.ReactNode);
+export type SheetContent = React.ReactNode | ((args: { onClose: () => void }) => React.ReactNode);
 
 // The sheet is dismissed if it's flicked at a velocity above dismissVelocity,
 // or dragged down more than dismissAmount times the height of the sheet.
@@ -65,13 +65,19 @@ const animationVariants = {
 const dragConstraints = { top: 0, bottom: window.innerHeight } as const;
 
 const stopPropagation = (e: React.SyntheticEvent) => e.stopPropagation();
+const handleKeyDown = (e: React.KeyboardEvent) => {
+  // Allow "esc" to propagate which lets you escape focus on inputs.
+  if (e.key !== 'Escape') {
+    e.stopPropagation();
+  }
+};
 
 /**
  * Automatically disable the parent sheet while this sheet is shown. You must
  * pass `setParentDisabled` to SheetDisabledContext.Provider.
  */
 function useDisableParent(
-  forceDisabled?: boolean
+  forceDisabled?: boolean,
 ): [disabled: boolean, setParentDisabled: React.Dispatch<React.SetStateAction<boolean>>] {
   const [disabledByChildSheet, setDisabledByChildSheet] = useState(false);
   const setParentDisabled = useContext(SheetDisabledContext);
@@ -149,6 +155,7 @@ export default function Sheet({
   const sheetContents = useRef<HTMLDivElement | null>(null);
 
   const [frozenHeight, setFrozenHeight] = useState<number | undefined>(undefined);
+  const frozenHeightIntervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const [disabled, setParentDisabled] = useDisableParent(forceDisabled);
 
   const reducedMotion = Boolean(useReducedMotion());
@@ -157,18 +164,15 @@ export default function Sheet({
 
   /**
    * Triggering close starts the animation. The onClose prop is called by the callback
-   * passed to the onAnimationComplete motion prop
+   * passed to the onAnimationComplete motion prop.
    */
   const triggerClose = useCallback(
     (e?: React.MouseEvent | KeyboardEvent) => {
-      if (disabled) {
-        return;
-      }
       e?.preventDefault();
       // Animate offscreen
       animationControls.start('close');
     },
-    [disabled, animationControls]
+    [animationControls],
   );
 
   // Handle global escape key
@@ -183,7 +187,7 @@ export default function Sheet({
         onClose();
       }
     },
-    [onClose]
+    [onClose],
   );
 
   // Determine when to drag. Drags if the touch falls in the header, or if the contents
@@ -197,7 +201,7 @@ export default function Sheet({
         dragControls.start(e);
       }
     },
-    [dragControls]
+    [dragControls],
   );
 
   useFixOverscrollBehavior(sheetContents);
@@ -215,17 +219,24 @@ export default function Sheet({
       }
       animationControls.start('open');
     },
-    [animationControls, triggerClose]
+    [animationControls, triggerClose],
   );
 
   useLayoutEffect(() => {
+    clearInterval(frozenHeightIntervalRef.current);
     if (freezeInitialHeight && sheetContents.current && !frozenHeight) {
       if (sheetContents.current.clientHeight > 0) {
         setFrozenHeight(sheetContents.current.clientHeight);
       } else {
-        setTimeout(() => {
-          sheetContents.current && setFrozenHeight(sheetContents.current.clientHeight);
-        }, 500);
+        const setHeight = () => {
+          if (!sheetContents.current || sheetContents.current.clientHeight === 0) {
+            return false;
+          }
+          setFrozenHeight(sheetContents.current.clientHeight);
+          frozenHeightIntervalRef.current = undefined;
+          return true;
+        };
+        frozenHeightIntervalRef.current = tryRepeatedlyWithLimit(setHeight);
       }
     }
   }, [freezeInitialHeight, frozenHeight]);
@@ -262,7 +273,7 @@ export default function Sheet({
       ref={sheet}
       role="dialog"
       aria-modal="false"
-      onKeyDown={stopPropagation}
+      onKeyDown={handleKeyDown}
       onKeyUp={stopPropagation}
       onKeyPress={stopPropagation}
       onClick={allowClickThrough ? undefined : stopPropagation}
@@ -298,7 +309,11 @@ export default function Sheet({
           </div>
         )}
       </div>
-      <div className={styles.disabledScreen} />
+      <div
+        className={styles.disabledScreen}
+        onClick={stopPropagation}
+        onPointerDown={stopPropagation}
+      />
     </motion.div>
   );
 
@@ -313,4 +328,18 @@ export default function Sheet({
       </SheetDisabledContext.Provider>
     </Portal>
   );
+}
+
+function tryRepeatedlyWithLimit(callback: () => boolean, timeout = 500, limit = 5_000) {
+  let totalTime = 0;
+  return setInterval(() => {
+    if (totalTime > limit) {
+      return;
+    }
+    const res = callback();
+    totalTime += timeout;
+    if (res) {
+      return;
+    }
+  }, timeout);
 }

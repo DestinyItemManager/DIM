@@ -33,7 +33,7 @@ export const unsupported = {
 };
 
 export const steamBrowser = {
-  en: "It looks like this page is loaded in Steam's browser. Due to its limited features and resources, it may unexpectedly or intermittently fail to run DIM. We cannot provide support for it.",
+  en: 'The Steam overlay browser is very old and some or all DIM features may not work. We cannot provide support for it.',
   de: 'Es sieht so aus, als ob diese Seite im Steam-Browser geladen ist. Aufgrund seiner begrenzten Funktionen und Ressourcen, kann DIM eventuell unerwartet oder zeitweilig nicht laufen. Wir können dafür keinen Support bieten.',
   es: 'Parece ser que esta página está cargada en el navegador de Steam. Debido a sus limitadas caracarísticas y recursos, podría fallar inesperadamente o intermitentemente al ejecutar DIM. No podemos proveer soporte para ello.',
   'es-mx':
@@ -50,4 +50,24 @@ export const steamBrowser = {
     '这个页面似乎是在 Steam 的浏览器里打开的。因为 Steam 浏览器的功能和资源限制，DIM 可能会出现问题。我们无法为此提供支持。',
   'zh-cht':
     '這個頁面似乎是在Steam的瀏覽器裏打開的。 因為Steam瀏覽器的功能和資源限制，DIM可能會出現問題。 我們無法為此提供支援。',
+};
+
+export const samsungInternet = {
+  en: 'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
+  de: 'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
+  es: 'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
+  'es-mx':
+    'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
+  fr: 'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
+  it: 'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
+  ja: 'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
+  ko: 'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
+  pl: 'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
+  'pt-br':
+    'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
+  ru: 'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
+  'zh-chs':
+    'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
+  'zh-cht':
+    'Samsung Internet can make sites look too dark when dark mode is on. Enable Settings > Labs > Use website dark theme or switch to another browser.',
 };

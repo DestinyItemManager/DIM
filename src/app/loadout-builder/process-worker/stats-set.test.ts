@@ -13,7 +13,7 @@ test('insertAll 1', () => {
     statsSet.insert(stats, item);
   }
 
-  //expect(statsSet).toMatchSnapshot('internal');
+  // expect(statsSet).toMatchSnapshot('internal');
 
   expect(statsSet.doBetterStatsExist([1, 2, 3])).toBe(false);
   expect(statsSet.doBetterStatsExist([1, 1, 2])).toBe(true);

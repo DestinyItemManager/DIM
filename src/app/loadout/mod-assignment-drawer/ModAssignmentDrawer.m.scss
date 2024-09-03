@@ -38,6 +38,7 @@
 }
 
 .infoSectionHeader {
+  margin-bottom: 10px;
   > h3 {
     margin-bottom: 2px;
   }
@@ -45,7 +46,6 @@
     color: grey;
     font-style: italic;
   }
-  margin-bottom: 10px;
 }
 
 .costs {
@@ -83,6 +83,10 @@
     align-items: center;
     margin-right: 8px;
     font-size: 1.2em;
+
+    &:global(.boostedValue) {
+      color: $stat-modded;
+    }
 
     img {
       height: 20px;

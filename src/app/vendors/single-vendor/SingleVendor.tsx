@@ -2,6 +2,7 @@ import { DestinyAccount } from 'app/accounts/destiny-account';
 import Countdown from 'app/dim-ui/Countdown';
 import ErrorBoundary from 'app/dim-ui/ErrorBoundary';
 import ShowPageLoading from 'app/dim-ui/ShowPageLoading';
+import { useDynamicStringReplacer } from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
 import {
   bucketsSelector,
@@ -54,7 +55,11 @@ export default function SingleVendor({
   const returnWithVendorRequest = vendorDef?.returnWithVendorRequest;
   useLoadStores(account);
   useLoadVendors(account, characterId, /* active */ returnWithVendorRequest);
-  usePageTitle(vendorDef?.displayProperties.name ?? t('Vendors.Vendors'), updatePageTitle ?? false);
+  const replacer = useDynamicStringReplacer(characterId);
+  usePageTitle(
+    replacer(vendorDef?.displayProperties.name) ?? t('Vendors.Vendors'),
+    updatePageTitle ?? false,
+  );
 
   const itemFilter = useSelector(vendorItemFilterSelector(characterId));
 
@@ -107,7 +112,7 @@ export default function SingleVendor({
     const artifactDisplay = Object.values(defs.InventoryItem.getAll()).find(
       (i) =>
         // belongs to the current season,                         and looks like an artifact
-        i.seasonHash === seasonHash && /\.artifacts?\./.test(i.inventory!.stackUniqueLabel ?? '')
+        i.seasonHash === seasonHash && /\.artifacts?\./.test(i.inventory!.stackUniqueLabel ?? ''),
     )?.displayProperties;
     if (artifactDisplay) {
       displayName = artifactDisplay.name;
@@ -124,12 +129,12 @@ export default function SingleVendor({
   let refreshTime: Date | undefined;
   if (!isArtifact) {
     d2Vendor = toVendor(
-      { ...itemCreationContext, itemComponents: vendorResponse?.itemComponents[vendorHash] },
+      { ...itemCreationContext, itemComponents: vendorResponse?.itemComponents?.[vendorHash] },
       vendorHash,
       vendor,
       characterId,
       vendorResponse?.sales.data?.[vendorHash]?.saleItems,
-      vendorResponse
+      vendorResponse,
     );
     if (!d2Vendor) {
       return <ErrorPanel error={new Error(`No known vendor with hash ${vendorHash}`)} />;

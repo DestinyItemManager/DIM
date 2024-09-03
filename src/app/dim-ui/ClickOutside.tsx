@@ -27,7 +27,7 @@ type Props = React.HTMLAttributes<HTMLDivElement> & {
  */
 export default forwardRef<HTMLDivElement, Props>(function ClickOutside(
   { onClickOutside, children, extraRef, onClick, ...other },
-  ref
+  ref,
 ) {
   const localRef = useRef<HTMLDivElement>(null);
   if (ref && !('current' in ref)) {
@@ -46,12 +46,12 @@ export default forwardRef<HTMLDivElement, Props>(function ClickOutside(
       if (
         wrapperRef.current &&
         !wrapperRef.current.contains(target) &&
-        (!extraRef?.current || !extraRef.current.contains(target))
+        !extraRef?.current?.contains(target)
       ) {
         onClickOutside(event);
       }
     },
-    [onClickOutside, wrapperRef, extraRef]
+    [onClickOutside, wrapperRef, extraRef],
   );
 
   useEventBusListener(mouseEvents, handleClickOutside);

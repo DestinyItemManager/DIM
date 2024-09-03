@@ -3,9 +3,14 @@ import { percent } from 'app/shell/formatters';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import styles from './LocalStorageInfo.m.scss';
-import './storage.scss';
 
-export default function LocalStorageInfo({ showDetails }: { showDetails: boolean }) {
+export default function LocalStorageInfo({
+  showDetails,
+  className,
+}: {
+  showDetails: boolean;
+  className?: string;
+}) {
   const [browserMayClearData, setBrowserMayClearData] = useState(true);
   const [quota, setQuota] = useState<{ quota: number; usage: number }>();
 
@@ -30,7 +35,7 @@ export default function LocalStorageInfo({ showDetails }: { showDetails: boolean
   }
 
   return (
-    <div className="storage-adapter">
+    <div className={className}>
       {showDetails && (
         <>
           <h3>{t('Storage.IndexedDBStorage')}</h3>

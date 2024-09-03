@@ -5,15 +5,17 @@ import { exportDimApiData } from 'app/dim-api/dim-api';
 import { importDataBackup } from 'app/dim-api/import';
 import { apiPermissionGrantedSelector, dimSyncErrorSelector } from 'app/dim-api/selectors';
 import HelpLink from 'app/dim-ui/HelpLink';
-import Switch from 'app/dim-ui/Switch';
 import useConfirm from 'app/dim-ui/useConfirm';
 import { t } from 'app/i18next-t';
 import { dimApiHelpLink } from 'app/login/Login';
 import { showNotification } from 'app/notifications/notifications';
+import Checkbox from 'app/settings/Checkbox';
+import { fineprintClass, horizontalClass, settingClass } from 'app/settings/SettingsPage';
+import { Settings } from 'app/settings/initial-settings';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { AppIcon, deleteIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { errorMessage } from 'app/utils/util';
+import { errorMessage } from 'app/utils/errors';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -87,40 +89,41 @@ export default function DimApiSettings() {
       {confirmDialog}
       <h2>{t('Storage.MenuTitle')}</h2>
 
-      <div className="setting">
-        <div className="setting horizontal">
-          <label htmlFor="apiPermissionGranted">
-            {t('Storage.EnableDimApi')} <HelpLink helpLink={dimApiHelpLink} />
-          </label>
-          <Switch
-            name="apiPermissionGranted"
-            checked={apiPermissionGranted}
-            onChange={onApiPermissionChange}
-          />
-        </div>
-        <div className="fineprint">{t('Storage.DimApiFinePrint')}</div>
+      <div className={settingClass}>
+        <Checkbox
+          name={'apiPermissionGranted' as keyof Settings}
+          label={
+            <>
+              {t('Storage.EnableDimApi')} <HelpLink helpLink={dimApiHelpLink} />
+            </>
+          }
+          value={apiPermissionGranted}
+          onChange={onApiPermissionChange}
+        />
+        <div className={fineprintClass}>{t('Storage.DimApiFinePrint')}</div>
+        {apiPermissionGranted && (
+          <button type="button" className="dim-button" onClick={deleteAllData}>
+            <AppIcon icon={deleteIcon} /> {t('Storage.DeleteAllData')}
+          </button>
+        )}
       </div>
       {profileLoadedError && (
         <ErrorPanel title={t('Storage.ProfileErrorTitle')} error={profileLoadedError} />
       )}
       {apiPermissionGranted && (
-        <>
-          <div className="setting horizontal">
+        <div className={settingClass}>
+          <div className={horizontalClass}>
             <label>{t('SearchHistory.Link')}</label>
             <Link to="/search-history" className="dim-button">
               {t('SearchHistory.Title')}
             </Link>
           </div>
-          <div className="setting horizontal">
-            <label>{t('Storage.DeleteAllDataLabel')}</label>
-            <button type="button" className="dim-button" onClick={deleteAllData}>
-              <AppIcon icon={deleteIcon} /> {t('Storage.DeleteAllData')}
-            </button>
-          </div>
-        </>
+        </div>
       )}
-      <LocalStorageInfo showDetails={!apiPermissionGranted} />
-      <ImportExport onExportData={onExportData} onImportData={onImportData} />
+      <LocalStorageInfo showDetails={!apiPermissionGranted} className={settingClass} />
+      <div className={settingClass}>
+        <ImportExport onExportData={onExportData} onImportData={onImportData} />
+      </div>
     </section>
   );
 }

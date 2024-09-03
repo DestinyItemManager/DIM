@@ -1,27 +1,45 @@
 @use '../variables.scss' as *;
 
+.presentationNode {
+  /* indent child nodes more than their parent */
+  > * > .presentationNode {
+    margin-left: 10px;
+  }
+}
+
+/* The smaller headers for things like Armor and Weapons Collections leaf nodes */
+.alwaysExpanded {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 16px 0 0;
+  min-height: 34px;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
 .onlyChild {
   margin-left: 0 !important;
 }
 
-.nodeName {
-  img {
-    height: 24px;
-    vertical-align: middle;
-  }
+.nodeImg {
+  height: 24px;
+  vertical-align: middle;
+}
 
-  :global(.always-expanded) & {
-    color: rgb(255, 255, 255);
-    font-size: 14px;
-    letter-spacing: normal;
-  }
+/* styling for completed triumph categories */
+.completed {
+  color: $gold;
+  opacity: 0.7;
+}
+h3.completed {
+  background-color: rgba(245, 220, 86, 0.1) !important;
 }
 
 /* Styles for PresentationNodeProgress */
 .nodeProgress {
   text-align: right;
-}
-.nodeProgressCount {
   font-size: 12px;
   text-transform: none;
   letter-spacing: 0;
@@ -29,14 +47,33 @@
 .nodeProgressBar {
   background: #666;
   height: 2px;
-  width: 8em;
+  width: 8rem;
   margin-top: 2px;
 }
 .nodeProgressBarAmount {
   background: #ccc;
   height: 100%;
 
-  :global(.title.completed) & {
+  .completed & {
     background: $gold;
+  }
+}
+
+.incompleteTitleIcon {
+  filter: grayscale(1);
+}
+
+.isGilded {
+  color: $sealtitle;
+  &.gildedThisSeason {
+    color: $gildedtitle;
+  }
+
+  .gildedNum {
+    font-size: 10px;
+    font-style: normal;
+    margin-left: 1px;
+    vertical-align: super;
+    line-height: 0;
   }
 }

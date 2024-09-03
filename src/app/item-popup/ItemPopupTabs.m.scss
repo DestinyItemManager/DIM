@@ -5,6 +5,7 @@
   justify-content: space-around;
 }
 .movePopupTab {
+  composes: resetButton from '../dim-ui/common.m.scss';
   color: hsl(0, 0%, 80%);
   padding: 5px 0 3px;
   cursor: pointer;
@@ -12,15 +13,16 @@
   text-align: center;
   border-bottom: 2px solid #222;
   background-color: black;
-  &.selected {
-    border-bottom-color: var(--theme-accent-primary);
-  }
-  &:hover {
+
+  @include interactive($hover: true) {
     color: var(--theme-text);
     background-color: #3f3f3f;
   }
 
   @include phone-portrait {
     font-size: 16px;
+  }
+  &.selected {
+    border-bottom-color: var(--theme-accent-primary);
   }
 }

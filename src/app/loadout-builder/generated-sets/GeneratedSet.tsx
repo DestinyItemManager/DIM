@@ -1,7 +1,8 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
+import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore, statSourceOrder } from 'app/inventory/store-types';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { Loadout } from 'app/loadout/loadout-types';
 import { fitMostMods } from 'app/loadout/mod-assignment-utils';
 import { getTotalModStatChanges } from 'app/loadout/stats';
 import { useD2Definitions } from 'app/manifest/selectors';
@@ -10,7 +11,6 @@ import { compareBy } from 'app/utils/comparators';
 import { errorLog } from 'app/utils/log';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { StatHashes } from 'data/d2/generated-enums';
-import { t } from 'i18next';
 import _ from 'lodash';
 import { Dispatch, memo, useMemo } from 'react';
 import { LoadoutBuilderAction } from '../loadout-builder-reducer';
@@ -18,15 +18,15 @@ import {
   ArmorEnergyRules,
   ArmorSet,
   ArmorStatHashes,
+  DesiredStatRange,
   ModStatChanges,
   PinnedItems,
-  ResolvedStatConstraint,
 } from '../types';
 import { getPower } from '../utils';
 import styles from './GeneratedSet.m.scss';
 import GeneratedSetButtons from './GeneratedSetButtons';
 import GeneratedSetItem from './GeneratedSetItem';
-import SetStats from './SetStats';
+import { SetStats } from './SetStats';
 
 /**
  * A single "stat mix" of builds. Each armor slot contains multiple possibilities,
@@ -38,13 +38,14 @@ export default memo(function GeneratedSet({
   selectedStore,
   lockedMods,
   pinnedItems,
-  resolvedStatConstraints,
+  desiredStatRanges,
   modStatChanges,
   loadouts,
   lbDispatch,
   halfTierMods,
   armorEnergyRules,
   equippedHashes,
+  autoStatMods,
   isEditingExistingLoadout,
 }: {
   originalLoadout: Loadout;
@@ -52,13 +53,14 @@ export default memo(function GeneratedSet({
   selectedStore: DimStore;
   lockedMods: PluggableInventoryItemDefinition[];
   pinnedItems: PinnedItems;
-  resolvedStatConstraints: ResolvedStatConstraint[];
+  desiredStatRanges: DesiredStatRange[];
   modStatChanges: ModStatChanges;
   loadouts: Loadout[];
   lbDispatch: Dispatch<LoadoutBuilderAction>;
   halfTierMods: PluggableInventoryItemDefinition[];
   armorEnergyRules: ArmorEnergyRules;
   equippedHashes: Set<number>;
+  autoStatMods: boolean;
   isEditingExistingLoadout: boolean;
 }) {
   const defs = useD2Definitions()!;
@@ -84,7 +86,7 @@ export default memo(function GeneratedSet({
   // Automatically added stat/artifice mods
   const autoMods = useMemo(
     () => set.statMods.map((d) => defs.InventoryItem.get(d) as PluggableInventoryItemDefinition),
-    [defs.InventoryItem, set.statMods]
+    [defs.InventoryItem, set.statMods],
   );
 
   // Assign the chosen mods to items so we can display them as if they were slotted
@@ -105,7 +107,7 @@ export default memo(function GeneratedSet({
         'loadout optimizer',
         'internal error: set rendering was unable to fit some mods that the worker thought were possible',
         unassignedMods,
-        invalidMods
+        invalidMods,
       );
     }
 
@@ -117,18 +119,17 @@ export default memo(function GeneratedSet({
   // the memoized function since this component itself is memoized and the dependency array would
   // include most props).
   const getStatsBreakdownOnce = _.once(() =>
-    getStatsBreakdown(defs, selectedStore.classType, set, autoMods, modStatChanges)
+    getStatsBreakdown(defs, selectedStore.classType, set, autoMods, modStatChanges),
   );
 
   const boostedStats = useMemo(
     () =>
       new Set(
-        armorStats.filter(
-          (hash) =>
-            modStatChanges[hash].breakdown?.some((change) => change.source === 'runtimeEffect')
-        )
+        armorStats.filter((hash) =>
+          modStatChanges[hash].breakdown?.some((change) => change.source === 'runtimeEffect'),
+        ),
       ),
-    [modStatChanges]
+    [modStatChanges],
   );
 
   // Distribute our automatically picked mods across the items so that item components
@@ -154,10 +155,11 @@ export default memo(function GeneratedSet({
         stats={set.stats}
         getStatsBreakdown={getStatsBreakdownOnce}
         maxPower={getPower(displayedItems)}
-        resolvedStatConstraints={resolvedStatConstraints}
+        desiredStatRanges={desiredStatRanges}
         boostedStats={boostedStats}
         existingLoadoutName={overlappingLoadout?.name}
         equippedHashes={equippedHashes}
+        autoStatMods={autoStatMods}
       />
       <div className={styles.build}>
         <div className={styles.items}>
@@ -169,6 +171,7 @@ export default memo(function GeneratedSet({
               pinned={pinnedItems[item.bucket.hash] === item}
               lbDispatch={lbDispatch}
               assignedMods={itemModAssignments[item.id]}
+              autoStatMods={autoStatMods}
               automaticallyPickedMods={autoModsPerItem[item.id]}
               energy={resultingItemEnergies[item.id]}
             />
@@ -207,7 +210,7 @@ function getStatsBreakdown(
   classType: DestinyClass,
   set: ArmorSet,
   autoMods: PluggableInventoryItemDefinition[],
-  modStatChanges: ModStatChanges
+  modStatChanges: ModStatChanges,
 ) {
   const totals: ModStatChanges = {
     [StatHashes.Mobility]: { value: 0, breakdown: [] },
@@ -223,7 +226,7 @@ function getStatsBreakdown(
     autoMods,
     /* subclass */ undefined,
     classType,
-    /* includeRuntimeStatBenefits */ true
+    /* includeRuntimeStatBenefits */ false, // doesn't matter, auto mods have no runtime stats
   );
 
   // We have a bit of a problem where armor mods can come from both
@@ -232,14 +235,14 @@ function getStatsBreakdown(
   // hashes and adding counts/values
   const mergeContributions = (
     contributions: ModStatChanges[ArmorStatHashes],
-    hash: ArmorStatHashes
+    hash: ArmorStatHashes,
   ) => {
     totals[hash].value += contributions.value;
     if (contributions.breakdown) {
       const existingBreakdown = totals[hash].breakdown!;
       for (const part of contributions.breakdown) {
         const existingIndex = existingBreakdown.findIndex(
-          (change) => change.source === part.source && change.hash === part.hash
+          (change) => change.source === part.source && change.hash === part.hash,
         );
         if (existingIndex === -1) {
           existingBreakdown.push(part);
@@ -279,7 +282,7 @@ function getStatsBreakdown(
         'loadout optimizer',
         'internal error: set rendering came up with different build stats from what the worker said',
         totals,
-        set.stats
+        set.stats,
       );
     }
   }

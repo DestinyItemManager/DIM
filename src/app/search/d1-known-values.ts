@@ -2,14 +2,14 @@
 // this file has non-programatically decided information
 // hashes, names, & enums, hand-crafted and chosen by us
 
-import { BucketHashes } from 'data/d2/generated-enums';
+import { BucketHashes, ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
 
 //
 // STATS KNOWN VALUES
 //
 
 export const enum D1_StatHashes {
-  Defense = 3897883278, // Same as in D2
+  Defense = StatHashes.Defense, // Same as in D2
   Attack = 368428387, // Not the same as in D2
 }
 
@@ -27,17 +27,17 @@ export const enum D1ProgressionHashes {
 
 /** these weapons exist in D1&2 */
 export const D1ItemCategoryHashes = {
-  autorifle: 5,
-  handcannon: 6,
-  pulserifle: 7,
-  scoutrifle: 8,
-  fusionrifle: 9,
-  sniperrifle: 10,
-  shotgun: 11,
-  machinegun: 12,
-  rocketlauncher: 13,
-  sidearm: 14,
-  sword: 54,
+  autorifle: ItemCategoryHashes.AutoRifle,
+  handcannon: ItemCategoryHashes.HandCannon,
+  pulserifle: ItemCategoryHashes.PulseRifle,
+  scoutrifle: ItemCategoryHashes.ScoutRifle,
+  fusionrifle: ItemCategoryHashes.FusionRifle,
+  sniperrifle: ItemCategoryHashes.SniperRifle,
+  shotgun: ItemCategoryHashes.Shotgun,
+  machinegun: ItemCategoryHashes.MachineGun,
+  rocketlauncher: ItemCategoryHashes.RocketLauncher,
+  sidearm: ItemCategoryHashes.Sidearm,
+  sword: ItemCategoryHashes.Sword,
 };
 
 export const enum D1BucketHashes {

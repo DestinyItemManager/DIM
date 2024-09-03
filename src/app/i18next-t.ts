@@ -1,4 +1,5 @@
 import type { ParseKeys } from 'i18next';
+// eslint-disable-next-line no-restricted-imports
 import { t as originalT } from 'i18next';
 
 export type I18nKey = ParseKeys;
@@ -9,7 +10,7 @@ export const t = (
     | { count?: number; context?: string; metadata?: { context?: string[]; keys?: string } }
     | {
         [arg: string]: number | string;
-      }
+      },
 ): string => originalT(key, opts);
 
 /**

@@ -1,5 +1,5 @@
 import { d2ManifestSelector } from 'app/manifest/selectors';
-import { symbolData } from 'data/d2/symbol-name-sources';
+import { symbolData } from 'data/font/symbol-name-sources';
 import { createSelector } from 'reselect';
 import { D2ManifestDefinitions } from '../../destiny2/d2-definitions';
 
@@ -44,8 +44,8 @@ export const conversionTableSelector = createSelector(
         tableName === 'Objective'
           ? defs.Objective.get(hash)?.progressDescription
           : tableName === 'SandboxPerk'
-          ? defs.SandboxPerk.get(hash)?.displayProperties.description
-          : undefined;
+            ? defs.SandboxPerk.get(hash)?.displayProperties.description
+            : undefined;
 
       // find just the text segment that says "[Rocket Launcher]" in current language
       const progressDescriptionMatch = localizedString?.match(iconPlaceholder)?.[0];
@@ -63,5 +63,5 @@ export const conversionTableSelector = createSelector(
     }
 
     return conversionTable;
-  }
+  },
 );

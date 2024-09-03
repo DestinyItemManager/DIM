@@ -1,5 +1,6 @@
-import { applyMiddleware, compose, createStore } from 'redux';
-import thunk from 'redux-thunk';
+import { applyMiddleware, compose, legacy_createStore as createStore } from 'redux';
+import { thunk } from 'redux-thunk';
+import { observerMiddleware } from './observerMiddleware';
 import allReducers from './reducers';
 import { RootState } from './types';
 
@@ -19,9 +20,9 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
     })
   : compose;
 
-const store = createStore<RootState, any, {}, {}>(
+const store = createStore<RootState, any>(
   allReducers,
-  composeEnhancers(applyMiddleware(thunk))
+  composeEnhancers(applyMiddleware(observerMiddleware, thunk)),
 );
 
 // Allow hot-reloading reducers

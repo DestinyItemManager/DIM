@@ -27,9 +27,13 @@ const errors = {
   },
 };
 
-type TroubleshootingResponse = { req: Request; ErrorCode: number };
+interface TroubleshootingResponse {
+  req: Request;
+  ErrorCode: number;
+}
 
 const makePretendFetch = (response?: any) => (req: any) => ({
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   json: () => ({ req: req as Request, ErrorCode: 1, ...response }),
 });
 const pretendHttpClient = (response?: any) =>
@@ -100,6 +104,7 @@ const cases: [(...params: any) => any, object | undefined][] = [
 ];
 
 test.each(cases)('check Request builder for %p', async (apiFunc, apiFuncParams) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const request: TroubleshootingResponse = await apiFunc(pretendHttpClient(), apiFuncParams);
   const { headers, method, url, body } = request.req;
   expect({ headers, method, url, body }).toMatchSnapshot();
@@ -116,7 +121,7 @@ test('should throw an error if there is no room in the destination', async () =>
       stackSize: 7,
     })) as any;
   }).rejects.toMatchInlineSnapshot(
-    `[BungieError: There are no item slots available to transfer this item.]`
+    `[BungieError: There are no item slots available to transfer this item.]`,
   );
 });
 
@@ -131,6 +136,6 @@ test('should throw an error if API is down for maintenance', async () => {
       stackSize: 7,
     })) as any;
   }).rejects.toMatchInlineSnapshot(
-    `[BungieError: This system is temporarily disabled for maintenance.]`
+    `[BungieError: This system is temporarily disabled for maintenance.]`,
   );
 });

@@ -1,0 +1,140 @@
+@use '../../variables' as *;
+
+.editor {
+  composes: flexColumn from '../../dim-ui/common.m.scss';
+  margin: 0 -4px -4px -4px;
+  gap: 2px;
+}
+
+.iconStat {
+  display: inline-block;
+  height: 17px;
+  width: 17px;
+}
+
+.grip {
+  grid-area: grip;
+  opacity: 0.5;
+  font-size: 10px;
+  padding-left: 10px;
+  padding-top: 4px;
+  align-self: stretch;
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  align-items: flex-start;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
+  grid-template-areas:
+    'grip name buttons'
+    'grip bar bar';
+  gap: 0 4px;
+  background-color: rgba(0, 0, 0, 0.6);
+  align-items: center;
+  padding: 4px 4px 4px 0;
+  font-size: 14px;
+
+  > * {
+    white-space: nowrap;
+  }
+
+  &.ignored {
+    grid-template-areas: 'grip name buttons';
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+}
+
+.name {
+  grid-area: name;
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  align-items: center;
+  gap: 2px;
+}
+
+.label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  white-space: nowrap;
+  gap: 2px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  align-self: stretch;
+  width: 100%;
+
+  .ignored & {
+    opacity: 0.4;
+  }
+}
+
+.statBar {
+  grid-area: bar;
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  margin: 4px 0 2px 4px;
+  gap: 2px;
+}
+
+.statBarSegment {
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  flex: 1;
+  background-color: var(--theme-button-bg);
+  color: var(--theme-button-text);
+  font-size: 12px;
+  height: 20px;
+  box-sizing: border-box;
+
+  @include interactive($hover: true) {
+    outline: 1px solid var(--theme-accent-primary);
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  > * {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+  }
+}
+
+// Tiers that can't be reached given the currently selected minimums
+.maxed:not(.selectedStatBar) {
+  color: #666;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.maxRestricted:not(.selectedStatBar) {
+  color: #666;
+  background-color: transparent;
+}
+
+.selectedStatBar {
+  background-color: var(--theme-accent-primary);
+  color: var(--theme-text-invert);
+}
+
+.buttons {
+  composes: flexRow from '../../dim-ui/common.m.scss';
+}
+
+.rowControl {
+  composes: resetButton from '../../dim-ui/common.m.scss';
+  padding: 0 6px;
+  opacity: 0.9;
+
+  @include interactive($hover: true, $focus: true) {
+    &:not(:disabled) {
+      color: var(--theme-accent-primary);
+    }
+  }
+
+  .ignored &,
+  &:disabled {
+    opacity: 0.9;
+    color: #555;
+  }
+}
+
+.dragging {
+  outline: 1px solid var(--theme-accent-primary);
+}

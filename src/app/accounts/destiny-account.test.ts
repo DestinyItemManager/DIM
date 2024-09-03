@@ -22,19 +22,19 @@ beforeEach(() => {
   // One D1 account exists
   fetchMock.mockIf(
     'https://www.bungie.net/D1/Platform/Destiny/2/Account/4611686018433092312/',
-    JSON.stringify(d1Profile)
+    JSON.stringify(d1Profile),
   );
   // One doesn't
   fetchMock.mockIf(
     'https://www.bungie.net/D1/Platform/Destiny/1/Account/4611686018429726245/',
-    '{"ErrorCode":1601,"ThrottleSeconds":0,"ErrorStatus":"DestinyAccountNotFound","Message":"We were unable to find your Destiny account information.  If you have a valid Destiny Account, let us know.","MessageData":{}}'
+    '{"ErrorCode":1601,"ThrottleSeconds":0,"ErrorStatus":"DestinyAccountNotFound","Message":"We were unable to find your Destiny account information.  If you have a valid Destiny Account, let us know.","MessageData":{}}',
   );
 });
 
 describe('generatePlatforms', () => {
   it('gets one D2 account and one D1 account', async () => {
     const platforms = await generatePlatforms(
-      linkedAccounts as unknown as DestinyLinkedProfilesResponse
+      linkedAccounts as unknown as DestinyLinkedProfilesResponse,
     );
 
     expect(platforms.length).toBe(2);

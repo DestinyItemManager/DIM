@@ -9,9 +9,8 @@
 
   // Shrink down the intrinsic perk - it's super large
   :global(.plug) {
-    padding: 4px;
-
     --item-size-mod: calc(24 / 50 * var(--item-size));
+    padding: 4px;
 
     img {
       --item-size: var(--item-size-mod);

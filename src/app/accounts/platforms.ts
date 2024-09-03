@@ -2,8 +2,9 @@ import { loadDimApiData } from 'app/dim-api/actions';
 import { deleteDimApiToken } from 'app/dim-api/dim-api-helper';
 import { del, get } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
+import { convertToError } from 'app/utils/errors';
 import { errorLog } from 'app/utils/log';
-import { convertToError, dedupePromise } from 'app/utils/util';
+import { dedupePromise } from 'app/utils/promises';
 import { removeToken } from '../bungie-api/oauth-tokens';
 import { loadingTracker } from '../shell/loading-tracker';
 import * as actions from './actions';
@@ -20,7 +21,10 @@ const loadAccountsFromIndexedDBAction: ThunkResult = dedupePromise(async (dispat
   dispatch(actions.loadFromIDB(accounts || []));
 });
 
-const getPlatformsAction: ThunkResult = dedupePromise(async (dispatch, getState) => {
+/**
+ * Load data about available accounts.
+ */
+export const getPlatforms: ThunkResult = dedupePromise(async (dispatch, getState) => {
   let realAccountsPromise: Promise<readonly DestinyAccount[]> | null = null;
   if (!getState().accounts.loaded) {
     // Kick off a load from bungie.net in the background
@@ -46,13 +50,6 @@ const getPlatformsAction: ThunkResult = dedupePromise(async (dispatch, getState)
   }
 });
 
-/**
- * Load data about available accounts.
- */
-export function getPlatforms(): ThunkResult {
-  return getPlatformsAction;
-}
-
 const loadAccountsFromBungieNetAction: ThunkResult<readonly DestinyAccount[]> = dedupePromise(
   async (dispatch): Promise<readonly DestinyAccount[]> => {
     const bungieAccount = getBungieAccount();
@@ -64,7 +61,7 @@ const loadAccountsFromBungieNetAction: ThunkResult<readonly DestinyAccount[]> = 
 
     const membershipId = bungieAccount.membershipId;
     return loadingTracker.addPromise(dispatch(loadPlatforms(membershipId)));
-  }
+  },
 );
 
 function loadAccountsFromBungieNet(): ThunkResult<readonly DestinyAccount[]> {
@@ -77,7 +74,7 @@ function loadAccountsFromBungieNet(): ThunkResult<readonly DestinyAccount[]> {
  * it next time. This should be called when switching accounts or navigating to an account-specific page.
  */
 export function setActivePlatform(
-  account: DestinyAccount | undefined
+  account: DestinyAccount | undefined,
 ): ThunkResult<DestinyAccount | undefined> {
   return async (dispatch, getState) => {
     if (account) {

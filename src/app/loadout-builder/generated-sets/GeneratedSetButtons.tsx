@@ -3,7 +3,7 @@ import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-ty
 import { DimStore } from 'app/inventory/store-types';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { Loadout } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { Dispatch } from 'react';
@@ -45,7 +45,7 @@ export default function GeneratedSetButtons({
   const openLoadout = () =>
     editLoadout(loadout(), store.id, {
       showClass: false,
-      isNew: !isEditingExistingLoadout,
+      isNew: !isEditingExistingLoadout || originalLoadout.id === 'equipped',
     });
 
   // Automatically equip items for this generated set to the active store
@@ -62,7 +62,7 @@ export default function GeneratedSetButtons({
   const onQuickAddHalfTierMods = () => {
     // Note that half tier mods are already sorted in our desired stat order so we just keep their ordering.
     const mods = halfTierMods.filter((mod) =>
-      mod.investmentStats.some((stat) => statsWithPlus5.includes(stat.statTypeHash))
+      mod.investmentStats.some((stat) => statsWithPlus5.includes(stat.statTypeHash)),
     );
 
     lbDispatch({ type: 'addGeneralMods', mods });
@@ -71,7 +71,7 @@ export default function GeneratedSetButtons({
   return (
     <div className={styles.buttons}>
       <button type="button" className="dim-button" onClick={openLoadout}>
-        {t('LoadoutBuilder.CreateLoadout')}
+        {isEditingExistingLoadout ? t('Loadouts.UpdateLoadout') : t('Loadouts.SaveLoadout')}
       </button>
       {canCompareLoadouts && (
         <button

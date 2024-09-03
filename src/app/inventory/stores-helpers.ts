@@ -1,10 +1,11 @@
+import { count } from 'app/utils/collections';
 import { emptyArray } from 'app/utils/empty';
-import { count, weakMemoize } from 'app/utils/util';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 /**
  * Generic helpers for working with whole stores (character inventories) or lists of stores.
  */
+import { weakMemoize } from 'app/utils/memoize';
 import { DimItem } from './item-types';
 import { D1Store, DimStore } from './store-types';
 
@@ -37,7 +38,7 @@ export const getVault = (stores: DimStore[]): DimStore | undefined => stores.fin
  * the store changes for any reason.
  */
 const itemsByBucket = weakMemoize((store: DimStore) =>
-  _.groupBy(store.items, (i) => i.location.hash)
+  Object.groupBy(store.items, (i) => i.location.hash),
 );
 
 /**
@@ -58,7 +59,7 @@ export function getArtifactBonus(store: DimStore) {
  */
 export function amountOfItem(store: DimStore, item: { hash: number }) {
   return _.sumBy(store.items, (i) =>
-    i.hash === item.hash && !i.location?.inPostmaster ? i.amount : 0
+    i.hash === item.hash && !i.location?.inPostmaster ? i.amount : 0,
   );
 }
 
@@ -98,7 +99,7 @@ export interface SpaceLeft {
 export function potentialSpaceLeftForItem(
   store: DimStore,
   item: DimItem,
-  stores: DimStore[]
+  stores: DimStore[],
 ): SpaceLeft {
   // Calculate how many full stacks (slots, where multiple items in a stack
   // count as 1) are occupied in the bucket this item would go into.

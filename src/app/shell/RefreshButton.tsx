@@ -29,7 +29,7 @@ export default function RefreshButton({ className }: { className?: string }) {
 
   const handleChanges = useCallback(
     () => setDisabled(!navigator.onLine || document.hidden || isDragging$.getCurrentValue()),
-    []
+    [],
   );
   const active = useSubscription(loadingTracker.active$);
   useEventBusListener(isDragging$, handleChanges);
@@ -94,7 +94,7 @@ function profileOutOfDate(profileMintedDate: Date) {
 /** Like useProfileAge but only sets a boolean to avoid lots of re-renders. */
 function useProfileOutOfDate() {
   const profileMintedDate = useSelector(profileMintedSelector);
-  const [outOfDate, setOutOfDate] = useState(profileOutOfDate(profileMintedDate));
+  const [outOfDate, setOutOfDate] = useState(() => profileOutOfDate(profileMintedDate));
   useEffect(() => {
     setOutOfDate(profileOutOfDate(profileMintedDate));
     const interval = setInterval(() => {

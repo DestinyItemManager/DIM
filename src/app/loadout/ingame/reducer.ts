@@ -1,4 +1,4 @@
-import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
+import { InGameLoadout } from 'app/loadout/loadout-types';
 import { compareBy } from 'app/utils/comparators';
 import { produce } from 'immer';
 import { ActionType, getType, Reducer } from 'typesafe-actions';
@@ -21,8 +21,8 @@ const initialState: InGameLoadoutState = {
 
 export const inGameLoadouts: Reducer<InGameLoadoutState, InGameLoadoutAction> = (
   state: InGameLoadoutState = initialState,
-  action
-) => {
+  action,
+): InGameLoadoutState => {
   switch (action.type) {
     case getType(actions.inGameLoadoutLoaded):
       return {

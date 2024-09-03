@@ -2,12 +2,12 @@ import { ClarityCharacterStats } from 'app/clarity/descriptions/character-stats'
 import { clarityCharacterStatsSelector } from 'app/clarity/selectors';
 import BungieImage from 'app/dim-ui/BungieImage';
 import { Tooltip } from 'app/dim-ui/PressTip';
+import { t } from 'app/i18next-t';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { timerDurationFromMsWithDecimal } from 'app/utils/time';
 import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import { StatHashes } from 'data/d2/generated-enums';
-import { t } from 'i18next';
 import { useSelector } from 'react-redux';
 import styles from './ClarityCharacterStat.m.scss';
 
@@ -89,10 +89,6 @@ export default function ClarityCharacterStat({
         if (scalar) {
           cooldowns = cooldowns.map((v) => scalar * v);
         }
-        const flatIncrease = o.FlatIncrease?.[abilityIndex];
-        if (flatIncrease) {
-          cooldowns = cooldowns.map((v) => v + flatIncrease);
-        }
         overrides.push(defs.InventoryItem.get(o.Hash));
       }
     }
@@ -111,7 +107,7 @@ export default function ClarityCharacterStat({
         cooldowns={clarityStatData.TotalRegenTime.Array}
         tier={tier}
         unit="s"
-      />
+      />,
     );
   } else if ('WalkSpeed' in clarityStatData) {
     intrinsicCooldowns.push(
@@ -135,14 +131,16 @@ export default function ClarityCharacterStat({
         cooldowns={clarityStatData.CrouchSpeed.Array}
         tier={tier}
         unit={t('Stats.MetersPerSecond')}
-      />
+      />,
     );
-  } else if ('TotalHP' in clarityStatData) {
+  } else if ('ShieldHP' in clarityStatData) {
     intrinsicCooldowns.push(
       <StatTableRow
-        key="TotalHP"
-        name={t('Stats.TotalHP')}
-        cooldowns={clarityStatData.TotalHP.Array}
+        key="ShieldHP"
+        // t('Stats.TotalHP')
+        // keep this around maybe?
+        name={t('Stats.ShieldHP')}
+        cooldowns={clarityStatData.ShieldHP.Array}
         tier={tier}
         unit={t('Stats.HP')}
       />,
@@ -159,7 +157,7 @@ export default function ClarityCharacterStat({
         cooldowns={clarityStatData.FlinchResistance.Array}
         tier={tier}
         unit={t('Stats.Percentage')}
-      />
+      />,
     );
   }
 

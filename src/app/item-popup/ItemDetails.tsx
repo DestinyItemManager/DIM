@@ -1,5 +1,5 @@
 import { DestinyTooltipText } from 'app/dim-ui/DestinyTooltipText';
-import { t } from 'app/i18next-t';
+import { t, tl } from 'app/i18next-t';
 import { createItemContextSelector, storesSelector } from 'app/inventory/selectors';
 import { isTrialsPassage } from 'app/inventory/store/objectives';
 import { applySocketOverrides, useSocketOverrides } from 'app/inventory/store/override-sockets';
@@ -42,15 +42,17 @@ import { ItemPopupExtraInfo } from './item-popup';
 // TODO: probably need to load manifest. We can take a lot of properties off the item if we just load the definition here.
 export default function ItemDetails({
   item: originalItem,
+  id,
   extraInfo = {},
 }: {
   item: DimItem;
+  id: string;
   extraInfo?: ItemPopupExtraInfo;
 }) {
   const defs = useDefinitions()!;
   const itemCreationContext = useSelector(createItemContextSelector);
   const [socketOverrides, onPlugClicked, resetSocketOverrides] = useSocketOverrides();
-  const item = defs.isDestiny2()
+  const item = defs.isDestiny2
     ? applySocketOverrides(itemCreationContext, originalItem, socketOverrides)
     : originalItem;
   const modTypeIcon = item.itemCategoryHashes.includes(ItemCategoryHashes.ArmorMods)
@@ -63,31 +65,44 @@ export default function ItemDetails({
 
   const showVendor = useContext(SingleVendorSheetContext);
 
+  const missingSocketsMessage =
+    item.missingSockets === 'missing'
+      ? tl('MovePopup.MissingSockets')
+      : tl('MovePopup.LoadingSockets');
+
   return (
-    <div className={styles.itemDetailsBody}>
+    <div id={id} role="tabpanel" aria-labelledby={`${id}-tab`} className={styles.itemDetailsBody}>
       {item.itemCategoryHashes.includes(ItemCategoryHashes.Shaders) && (
         <BungieImage className={styles.itemShader} src={item.icon} width="96" height="96" />
       )}
 
       {(item.type === 'Milestone' ||
         item.itemCategoryHashes.includes(ItemCategoryHashes.Mods_Ornament)) &&
-        item.secondaryIcon && <BungieImage src={item.secondaryIcon} width="100%" />}
+        item.secondaryIcon && (
+          <BungieImage
+            src={item.secondaryIcon}
+            width="100%"
+            className={clsx(styles.fullImage, {
+              [styles.milestoneImage]: item.type === 'Milestone',
+            })}
+          />
+        )}
 
       <ItemDescription item={item} />
 
-      {!item.stats && Boolean(item.collectibleHash) && defs.isDestiny2() && (
+      {!item.stats && Boolean(item.collectibleHash) && defs.isDestiny2 && (
         <div className={clsx('item-details', styles.itemSource)}>
           {defs.Collectible.get(item.collectibleHash!).sourceString}
         </div>
       )}
 
-      {defs.isDestiny2() && item.itemCategoryHashes.includes(ItemCategoryHashes.Emblems) && (
+      {defs.isDestiny2 && item.itemCategoryHashes.includes(ItemCategoryHashes.Emblems) && (
         <div className="item-details">
           <EmblemPreview item={item} />
         </div>
       )}
 
-      {defs.isDestiny2() && item.availableMetricCategoryNodeHashes && (
+      {defs.isDestiny2 && item.availableMetricCategoryNodeHashes && (
         <div className="item-details">
           <MetricCategories
             availableMetricCategoryNodeHashes={item.availableMetricCategoryNodeHashes}
@@ -95,13 +110,13 @@ export default function ItemDetails({
         </div>
       )}
 
-      {defs.isDestiny2() && <WeaponCraftedInfo item={item} className="crafted-progress" />}
+      {defs.isDestiny2 && <WeaponCraftedInfo item={item} className="crafted-progress" />}
 
-      {defs.isDestiny2() && <WeaponDeepsightInfo item={item} />}
+      {defs.isDestiny2 && <WeaponDeepsightInfo item={item} />}
 
-      {defs.isDestiny2() && <WeaponCatalystInfo item={item} />}
+      {defs.isDestiny2 && <WeaponCatalystInfo item={item} />}
 
-      {killTrackerInfo && defs.isDestiny2() && (
+      {killTrackerInfo && defs.isDestiny2 && (
         <KillTrackerInfo tracker={killTrackerInfo} showTextLabel className="masterwork-progress" />
       )}
 
@@ -120,10 +135,10 @@ export default function ItemDetails({
       )}
 
       {item.missingSockets && (
-        <div className="item-details warning">{t('MovePopup.MissingSockets')}</div>
+        <div className="item-details warning">{t(missingSocketsMessage)}</div>
       )}
 
-      {defs.isDestiny2() && item.energy && defs && <EnergyMeter item={item} />}
+      {defs.isDestiny2 && item.energy && defs && <EnergyMeter item={item} />}
       {item.sockets && <ItemSockets item={item} onPlugClicked={onPlugClicked} />}
 
       <ApplyPerkSelection
@@ -140,7 +155,7 @@ export default function ItemDetails({
             <Objective
               objective={objective}
               key={objective.objectiveHash}
-              isTrialsPassage={defs.isDestiny2() && isTrialsPassage(item.hash)}
+              isTrialsPassage={defs.isDestiny2 && isTrialsPassage(item.hash)}
             />
           ))}
         </div>
@@ -163,7 +178,7 @@ export default function ItemDetails({
           </div>
         )}
 
-      {defs.isDestiny2() && item.pursuit && item.pursuit.rewards.length !== 0 && (
+      {defs.isDestiny2 && item.pursuit && item.pursuit.rewards.length !== 0 && (
         <div className="item-details">
           <div>{t('MovePopup.Rewards')}</div>
           {item.pursuit.rewards.map((reward) => (
@@ -172,7 +187,7 @@ export default function ItemDetails({
         </div>
       )}
 
-      {defs.isDestiny2() && item.pursuit && item.pursuit.modifierHashes.length !== 0 && (
+      {defs.isDestiny2 && item.pursuit && item.pursuit.modifierHashes.length !== 0 && (
         <div className="item-details">
           {item.pursuit.modifierHashes.map((modifierHash) => (
             <ActivityModifier key={modifierHash} modifierHash={modifierHash} />

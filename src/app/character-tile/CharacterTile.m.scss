@@ -1,25 +1,12 @@
 @use '../variables.scss' as *;
 
-.characterTile {
+// Shared styles between vault and character tile
+.tileCommon {
   flex: 1;
   position: relative;
   height: $emblem-height;
   max-width: $emblem-width;
-  overflow: hidden;
-
-  display: grid;
-  grid-template-areas:
-    'emblem class power'
-    'emblem bottom maxTotalPower';
-  grid-template-columns: 36px 1fr min-content;
-  grid-template-rows: min-content 1fr;
-  gap: 0 6px;
-  padding: 0 6px;
-
-  // Use the emblem as a background
-  background-size: $emblem-width $emblem-height;
-  background-position: left center;
-  background-repeat: no-repeat;
+  text-align: left;
 
   // Set the text off from the background
   text-shadow:
@@ -30,19 +17,51 @@
   }
 }
 
-// These override .characterTile styles
-.vault {
-  // The vault tile is laid out differently
-  grid-template-areas: 'emblem class vaultCapacity';
+.characterTile {
+  composes: tileCommon;
+  display: grid;
+  grid-template-areas:
+    'emblem class power'
+    'emblem bottom bottom';
+  grid-template-columns: 36px 1fr min-content;
+  grid-template-rows: min-content 1fr;
+  gap: 0 6px;
+  padding: 0 6px;
+
+  // Use the emblem as a background
+  background-size: $emblem-width $emblem-height;
+  background-position: left center;
+  background-repeat: no-repeat;
+
+  @include phone-portrait {
+    grid-template-areas:
+      'emblem class power'
+      'emblem bottom maxTotalPower';
+  }
+}
+
+.vaultTile {
+  composes: tileCommon;
+  display: grid;
+  grid-template-areas: 'emblem class power' !important;
   grid-template-columns: 46px 1fr min-content;
   grid-template-rows: 1fr;
   align-items: center;
   box-sizing: border-box;
-
+  gap: 0 6px;
+  padding: 0 6px;
   // The vault needs a little border to stand out against some backgrounds
   border: 1px solid rgba(0, 0, 0, 0.3);
   border-right: none;
   background-size: cover;
+  background-repeat: no-repeat;
+
+  background-color: rgb(49, 50, 51);
+  background-image: url('images/vault-background.svg');
+
+  @include phone-portrait {
+    grid-template-areas: 'emblem class vaultCapacity' !important;
+  }
 }
 
 // The "current character" triangle
@@ -56,7 +75,7 @@
 }
 
 .bigText {
-  font-size: 20px;
+  font-size: 18px;
   margin-top: 2px;
 }
 
@@ -69,20 +88,37 @@
 .bottom {
   composes: smallText;
   grid-area: bottom;
+  min-width: 0; // prevents expanding beyond the grid cell with long contents
+  display: flex;
+  align-items: stretch;
 }
 
 // The emblem is only shown for D1 and the vault - D2 bakes it into the
 // background
 .emblem {
   grid-area: emblem;
-  justify-self: center;
+  place-self: center;
   width: 32px;
   height: 32px;
-  align-self: center;
+}
 
-  .vault & {
-    height: 40px;
-    width: 40px;
+.vaultEmblem {
+  grid-area: emblem;
+  place-self: center;
+  height: 40px;
+  width: 40px;
+}
+
+.vaultName {
+  font-size: 16px;
+  grid-area: class;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  color: white;
+  min-width: 0; // prevents expanding beyond the grid cell with long contents
+
+  @include phone-portrait {
+    font-size: 16px;
   }
 }
 
@@ -93,21 +129,11 @@
   text-overflow: ellipsis;
   overflow: hidden;
   color: white;
-
-  .vault & {
-    margin-top: 0;
-  }
-
-  :global(.lang-ja) &,
-  :global(.lang-ru) .vault & {
-    font-size: 16px;
-  }
+  min-width: 0; // prevents expanding beyond the grid cell with long contents
 }
 
 // Current power level
 .powerLevel {
-  composes: bigText;
-  grid-area: power;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif, 'Destiny Symbols';
   font-weight: 500;
   color: $power;
@@ -117,6 +143,23 @@
     vertical-align: 70%;
     font-size: 40%;
     margin-right: 2px;
+  }
+}
+
+.bigPowerLevel {
+  composes: bigText;
+  grid-area: power;
+
+  .vaultTile & {
+    font-size: 16px;
+  }
+}
+
+.smallPowerLevel {
+  text-align: right;
+
+  :global(.app-icon) {
+    font-size: 80%;
   }
 }
 
@@ -138,15 +181,25 @@
 
 // The currently equipped title (from a seal)
 .title {
+  display: flex;
+  flex-direction: row;
   font-style: italic;
-  color: #e1c2ec;
+  color: $sealtitle;
   text-shadow:
     1px 1px 1px rgba(0, 0, 0, 0.5),
     0 0 10px rgba(0, 0, 0, 0.5);
+  width: 100%;
+
+  > *:first-child {
+    flex-shrink: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 3px;
+  }
 }
 
 .gildedCurrentSeason {
-  color: rgb(249, 222, 184);
+  color: $gildedtitle;
   text-shadow:
     1px 1px 1px rgba(0, 0, 0, 0.5),
     0 0 10px rgba(0, 0, 0, 0.5);

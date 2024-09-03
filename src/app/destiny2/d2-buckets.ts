@@ -1,5 +1,5 @@
-import { VENDORS } from 'app/search/d2-known-values';
-import { filterMap } from 'app/utils/util';
+import { VendorHashes } from 'app/search/d2-known-values';
+import { filterMap } from 'app/utils/collections';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
 import type {
@@ -73,6 +73,8 @@ export function getBuckets(defs: D2ManifestDefinitions) {
       description: 'Unknown items. DIM needs a manifest update.',
       name: 'Unknown',
       hash: -1,
+      // default to false. an equipped item existing, will override this in inv display
+      equippable: false,
       hasTransferDestination: false,
       capacity: Number.MAX_SAFE_INTEGER,
       sort: 'Unknown',
@@ -91,6 +93,7 @@ export function getBuckets(defs: D2ManifestDefinitions) {
       description: def.displayProperties.description,
       name: def.displayProperties.name,
       hash: def.hash,
+      equippable: def.category === BucketCategory.Equippable,
       hasTransferDestination: def.hasTransferDestination,
       capacity: def.itemCount,
       accountWide: def.scope === 1,
@@ -105,7 +108,7 @@ export function getBuckets(defs: D2ManifestDefinitions) {
     buckets.byHash[bucket.hash] = bucket;
   }
   const vaultMappings: { [bucketHash: number]: number } = {};
-  for (const items of defs.Vendor.get(VENDORS.VAULT).acceptedItems) {
+  for (const items of defs.Vendor.get(VendorHashes.Vault).acceptedItems) {
     vaultMappings[items.acceptedInventoryBucketHash] = items.destinationInventoryBucketHash;
   }
   for (const bucket of Object.values(buckets.byHash)) {
@@ -116,7 +119,7 @@ export function getBuckets(defs: D2ManifestDefinitions) {
   for (const [category, bucketHashes] of Object.entries(D2Categories)) {
     buckets.byCategory[category] = filterMap(
       bucketHashes,
-      (bucketHash) => buckets.byHash[bucketHash]
+      (bucketHash) => buckets.byHash[bucketHash],
     );
   }
   return buckets;

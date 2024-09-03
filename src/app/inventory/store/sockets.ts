@@ -1,6 +1,10 @@
 import { getCraftingTemplate } from 'app/armory/crafting-utils';
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { weaponMasterworkY2SocketTypeHash } from 'app/search/d2-known-values';
+import {
+  GhostActivitySocketTypeHashes,
+  weaponMasterworkY2SocketTypeHash,
+} from 'app/search/d2-known-values';
+import { filterMap } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
 import { emptyArray } from 'app/utils/empty';
 import {
@@ -8,7 +12,6 @@ import {
   isEnhancedPerk,
   subclassAbilitySocketCategoryHashes,
 } from 'app/utils/socket-utils';
-import { filterMap } from 'app/utils/util';
 import {
   DestinyInventoryItemDefinition,
   DestinyItemComponent,
@@ -31,7 +34,10 @@ import {
   PlugCategoryHashes,
   SocketCategoryHashes,
 } from 'data/d2/generated-enums';
+import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
+import _ from 'lodash';
 import {
+  DimItem,
   DimPlug,
   DimPlugSet,
   DimSocket,
@@ -39,6 +45,7 @@ import {
   DimSockets,
   PluggableInventoryItemDefinition,
 } from '../item-types';
+import { exoticClassItemPlugs } from './exotic-class-item';
 
 //
 // These are the utilities that deal with Sockets and Plugs on items. Sockets and Plugs
@@ -47,6 +54,8 @@ import {
 // This is called from within d2-item-factory.service.ts
 //
 
+const enhancedToPerk = _.mapValues(_.invert(perkToEnhanced), (s) => Number(s));
+
 /**
  * Calculate all the sockets we want to display (or make searchable). Sockets represent perks,
  * mods, and intrinsic properties of the item. They're really the swiss army knife of item
@@ -54,10 +63,10 @@ import {
  */
 export function buildSockets(
   item: DestinyItemComponent,
-  itemComponents: DestinyItemComponentSetOfint64 | undefined,
+  itemComponents: Partial<DestinyItemComponentSetOfint64> | undefined,
   defs: D2ManifestDefinitions,
-  itemDef: DestinyInventoryItemDefinition
-) {
+  itemDef: DestinyInventoryItemDefinition,
+): { sockets: DimItem['sockets']; missingSockets: DimItem['missingSockets'] } {
   let sockets: DimSockets | null = null;
   if ($featureFlags.simulateMissingSockets) {
     itemComponents = undefined;
@@ -73,6 +82,7 @@ export function buildSockets(
     (item.itemInstanceId &&
       itemComponents?.plugObjectives?.data?.[item.itemInstanceId]?.objectivesPerPlug) ||
     undefined;
+
   if (socketData) {
     sockets = buildInstancedSockets(
       defs,
@@ -80,17 +90,22 @@ export function buildSockets(
       item,
       socketData,
       reusablePlugData,
-      plugObjectivesData
+      plugObjectivesData,
     );
   }
 
   // If we didn't have live data (for example, when viewing vendor items or collections),
   // get sockets from the item definition.
   if (!sockets && itemDef.sockets) {
+    // a nice long instanceId is a real one and "should" have this data
+    // (short is actually a vendor item index. we'll let that build from defs.)
+    const isInstanced = Boolean(item.itemInstanceId && item.itemInstanceId.length > 14);
+
     // If this really *should* have live sockets, but didn't...
-    if (item.itemInstanceId && item.itemInstanceId !== '0' && !socketData) {
-      return { sockets: null, missingSockets: true };
+    if (item.itemInstanceId !== '0' && !socketData) {
+      return { sockets: null, missingSockets: isInstanced ? 'missing' : 'not-loaded' };
     }
+
     sockets = buildDefinedSockets(defs, itemDef);
   }
 
@@ -110,7 +125,7 @@ function buildInstancedSockets(
   },
   plugObjectivesData?: {
     [key: number]: DestinyObjectiveProgress[];
-  }
+  },
 ): DimSockets | null {
   if (!item.itemInstanceId || !itemDef.sockets?.socketEntries.length || !sockets?.length) {
     return null;
@@ -125,7 +140,7 @@ function buildInstancedSockets(
       i,
       reusablePlugData?.[i],
       plugObjectivesData,
-      itemDef
+      itemDef,
     );
 
     // There are a bunch of garbage sockets that we ignore
@@ -157,7 +172,7 @@ function buildInstancedSockets(
  */
 function buildDefinedSockets(
   defs: D2ManifestDefinitions,
-  itemDef: DestinyInventoryItemDefinition
+  itemDef: DestinyInventoryItemDefinition,
 ): DimSockets | null {
   // if we made it here, item has sockets
   const socketDefEntries = itemDef.sockets!.socketEntries;
@@ -175,7 +190,7 @@ function buildDefinedSockets(
       socketDef,
       i,
       craftingTemplateSockets?.[i]?.reusablePlugSetHash,
-      itemDef
+      itemDef,
     );
 
     // There are a bunch of garbage sockets that we ignore
@@ -207,7 +222,7 @@ function filterReusablePlug(reusablePlug: DimPlug) {
     !reusablePlug.plugDef.itemCategoryHashes?.some(
       (ich) =>
         ich === ItemCategoryHashes.MasterworksMods ||
-        ich === ItemCategoryHashes.GhostModsProjections
+        ich === ItemCategoryHashes.GhostModsProjections,
     ) && !reusablePlug.plugDef.plug?.plugCategoryIdentifier.includes('masterworks.stat')
   );
 }
@@ -219,7 +234,7 @@ function filterReusablePlug(reusablePlug: DimPlug) {
  */
 function isUncraftableEnhancedPerk(
   built: DimPlug,
-  craftingRequirements: DestinyPlugItemCraftingRequirements | undefined
+  craftingRequirements: DestinyPlugItemCraftingRequirements | undefined,
 ) {
   return (
     isEnhancedPerk(built.plugDef) &&
@@ -237,7 +252,7 @@ function buildDefinedSocket(
   socketDef: DestinyItemSocketEntryDefinition,
   index: number,
   craftingReusablePlugSetHash: number | undefined,
-  forThisItem?: DestinyInventoryItemDefinition
+  forThisItem?: DestinyInventoryItemDefinition,
 ): DimSocket | undefined {
   if (!socketDef) {
     return undefined;
@@ -292,7 +307,7 @@ function buildDefinedSocket(
           const built = buildDefinedPlug(
             defs,
             reusablePlug.plugItemHash,
-            reusablePlug.currentlyCanRoll
+            reusablePlug.currentlyCanRoll,
           );
 
           if (built && !isUncraftableEnhancedPerk(built, reusablePlug.craftingRequirements)) {
@@ -328,7 +343,7 @@ function buildDefinedSocket(
           const built = buildDefinedPlug(
             defs,
             randomPlug.plugItemHash,
-            randomPlug.currentlyCanRoll
+            randomPlug.currentlyCanRoll,
           );
 
           // we don't want "stat roll" plugs to count as reusablePlugs, but they're almost
@@ -343,12 +358,29 @@ function buildDefinedSocket(
           }
         }
       }
-    } else if (socketDef.reusablePlugItems) {
+    } else if (socketDef.reusablePlugItems && socketDef.reusablePlugItems.length > 0) {
       for (const reusablePlug of socketDef.reusablePlugItems) {
         const built = buildDefinedPlug(defs, reusablePlug.plugItemHash);
         if (built) {
           reusablePlugs.push(built);
         }
+      }
+    } else if (
+      forThisItem &&
+      forThisItem.hash in exoticClassItemPlugs &&
+      index in exoticClassItemPlugs[forThisItem.hash]!
+    ) {
+      const plugs = exoticClassItemPlugs[forThisItem.hash]![index]!;
+      for (const plugItemHash of plugs) {
+        const built = buildDefinedPlug(defs, plugItemHash);
+        if (built) {
+          reusablePlugs.push(built);
+        }
+      }
+    } else if (socketDef.singleInitialItemHash) {
+      const built = buildDefinedPlug(defs, socketDef.singleInitialItemHash);
+      if (built) {
+        reusablePlugs.push(built);
       }
     }
   }
@@ -384,10 +416,10 @@ function buildDefinedSocket(
       p.cannotCurrentlyRoll
         ? 999
         : // And collections rolls almost as far
-        p.unreliablePerkOption
-        ? 998
-        : 0
-    )
+          p.unreliablePerkOption
+          ? 998
+          : 0,
+    ),
   );
   // If the socket category is the intrinsic trait, assume that there is only one option and plug it.
   let plugged: DimPlug | null = null;
@@ -404,8 +436,8 @@ function buildDefinedSocket(
   const plugSet = socketDef.reusablePlugSetHash
     ? buildCachedDimPlugSet(defs, socketDef.reusablePlugSetHash)
     : socketDef.randomizedPlugSetHash
-    ? buildCachedDimPlugSet(defs, socketDef.randomizedPlugSetHash)
-    : undefined;
+      ? buildCachedDimPlugSet(defs, socketDef.randomizedPlugSetHash)
+      : undefined;
 
   return {
     socketIndex: index,
@@ -429,7 +461,7 @@ function buildDefinedSocket(
  * and converts it to a PluggableInventoryItemDefinition
  */
 export function isPluggableItem(
-  itemDef?: DestinyInventoryItemDefinition
+  itemDef?: DestinyInventoryItemDefinition,
 ): itemDef is PluggableInventoryItemDefinition {
   return itemDef?.plug !== undefined;
 }
@@ -439,13 +471,13 @@ export function isPluggableItem(
  */
 export function hashesToPluggableItems(
   defs: D2ManifestDefinitions,
-  hashes: number[]
+  hashes: number[],
 ): PluggableInventoryItemDefinition[] {
   return hashes.map((hash) => defs.InventoryItem.get(hash)).filter(isPluggableItem);
 }
 
 function isDestinyItemPlug(
-  plug: DestinyItemPlugBase | DestinyItemSocketState
+  plug: DestinyItemPlugBase | DestinyItemSocketState,
 ): plug is DestinyItemPlugBase {
   return 'plugItemHash' in plug;
 }
@@ -458,7 +490,7 @@ function buildPlug(
         [plugItemHash: number]: DestinyObjectiveProgress[];
       }
     | undefined,
-  plugSet: DimPlugSet | undefined
+  plugSet: DimPlugSet | undefined,
 ): DimPlug | null {
   const destinyItemPlug = isDestinyItemPlug(plug);
   const plugHash = destinyItemPlug ? plug.plugItemHash : plug.plugHash;
@@ -476,25 +508,28 @@ function buildPlug(
   const failReasons = plug.enableFailIndexes
     ? filterMap(
         plug.enableFailIndexes,
-        (index) => plugDef.plug.enabledRules[index]?.failureMessage
+        (index) => plugDef.plug.enabledRules[index]?.failureMessage,
       ).join('\n')
     : '';
 
   const enabled = destinyItemPlug ? plug.enabled : plug.isEnabled;
+  const unenhancedVersion = enhancedToPerk[plugDef.hash];
   return {
     plugDef,
     enabled: enabled && (!destinyItemPlug || plug.canInsert),
     enableFailReasons: failReasons,
     plugObjectives: plugObjectivesData?.[plugHash] || emptyArray(),
     stats: null,
-    cannotCurrentlyRoll: plugSet?.plugHashesThatCannotRoll.includes(plugDef.hash),
+    cannotCurrentlyRoll:
+      plugSet?.plugHashesThatCannotRoll.includes(plugDef.hash) &&
+      !plugSet?.plugHashesThatCanRoll.includes(unenhancedVersion),
   };
 }
 
 export function buildDefinedPlug(
   defs: D2ManifestDefinitions,
   plugHash: number,
-  currentlyCanRoll?: boolean
+  currentlyCanRoll?: boolean,
 ): DimPlug | null {
   const plugDef = plugHash && defs.InventoryItem.get(plugHash);
   if (!plugDef || !isPluggableItem(plugDef)) {
@@ -523,6 +558,7 @@ const noDefaultSocketCategoryHashes: SocketCategoryHashes[] = [
   SocketCategoryHashes.ArmorPerks_LargePerk,
   SocketCategoryHashes.ArmorPerks_Reusable,
   SocketCategoryHashes.ArmorTier,
+  SocketCategoryHashes.GhostTier,
   SocketCategoryHashes.ClanPerks_Unlockable_ClanBanner,
   SocketCategoryHashes.GhostShellPerks,
   SocketCategoryHashes.VehiclePerks,
@@ -534,6 +570,7 @@ const noDefaultSocketCategoryHashes: SocketCategoryHashes[] = [
 // because it's really just a concession to the fact that D2AI can't ever be 100% complete.
 const noDefaultPlugIdentifiers: (string | number)[] = [
   'enhancements.exotic', // Exotic Armor Perk sockets (Aeons, all options are equivalent)
+  'enhancements.artifice.exotic', // This is the dummy "upgrade this armor to artifice" socket
   ...eventArmorRerollSocketIdentifiers, // Weird rerolling sockets
   PlugCategoryHashes.ArmorSkinsSharedHead, // FotL Helmet Ornaments
 ];
@@ -562,7 +599,7 @@ function findEmptyPlug(
   socket: DestinyItemSocketEntryDefinition,
   socketType: DestinySocketTypeDefinition,
   plugSet: DimPlugSet | undefined,
-  reusablePlugs?: DestinyItemPlugBase[]
+  reusablePlugs?: DestinyItemPlugBase[],
 ) {
   // First, perform some filtering, both for efficiency and to explicitly
   // leave emptyPlugItemHash set to undefined for sockets that never have
@@ -570,7 +607,8 @@ function findEmptyPlug(
 
   if (
     // Sockets that ONLY get their items from your inventory necessarily can't be emptied
-    (socket.plugSources & ~SocketPlugSources.InventorySourced) === 0 ||
+    ((socket.plugSources & ~SocketPlugSources.InventorySourced) === 0 &&
+      socket.socketTypeHash !== GhostActivitySocketTypeHashes.Locked) ||
     // Y2+ weapon masterworks don't have an "empty" entry.
     socket.socketTypeHash === weaponMasterworkY2SocketTypeHash ||
     // Socket categories that have no empty plug
@@ -584,8 +622,8 @@ function findEmptyPlug(
       noDefaultPlugIdentifiers.some((id) =>
         typeof id === 'number'
           ? whiteListEntry.categoryHash === id
-          : whiteListEntry.categoryIdentifier.startsWith(id)
-      )
+          : whiteListEntry.categoryIdentifier.startsWith(id),
+      ),
     )
   ) {
     return undefined;
@@ -627,7 +665,7 @@ function buildSocket(
   plugObjectivesData?: {
     [plugItemHash: number]: DestinyObjectiveProgress[];
   },
-  forThisItem?: DestinyInventoryItemDefinition
+  forThisItem?: DestinyInventoryItemDefinition,
 ): DimSocket | undefined {
   if (!socketDef?.socketTypeHash) {
     return undefined;
@@ -659,8 +697,8 @@ function buildSocket(
   const plugSet = socketDef.reusablePlugSetHash
     ? buildCachedDimPlugSet(defs, socketDef.reusablePlugSetHash)
     : socketDef.randomizedPlugSetHash
-    ? buildCachedDimPlugSet(defs, socketDef.randomizedPlugSetHash)
-    : undefined;
+      ? buildCachedDimPlugSet(defs, socketDef.randomizedPlugSetHash)
+      : undefined;
 
   // The currently equipped plug, if any.
   // This will always be one of the plugOptions -- either it's added
@@ -668,6 +706,13 @@ function buildSocket(
   const plugged = buildPlug(defs, socket, plugObjectivesData, plugSet);
   let foundPluggedInOptions = false;
   const plugOptions: DimPlug[] = [];
+  const addPlug = (plug: DimPlug) => {
+    if (!plugOptions.some((p) => p.plugDef.hash === plug.plugDef.hash)) {
+      plugOptions.push(plug);
+      return true;
+    }
+    return false;
+  };
 
   // We only build a larger list of plug options if this is a perk socket, since users would
   // only want to see (and search) the plug options for perks. For other socket types (mods, shaders, etc.)
@@ -677,12 +722,13 @@ function buildSocket(
       // Get options from live info
       for (const reusablePlug of reusablePlugs) {
         if (plugged && reusablePlug.plugItemHash === plugged.plugDef.hash) {
-          plugOptions.push(plugged);
-          foundPluggedInOptions = true;
+          if (addPlug(plugged)) {
+            foundPluggedInOptions = true;
+          }
         } else {
           const built = buildPlug(defs, reusablePlug, plugObjectivesData, plugSet);
           if (built && filterReusablePlug(built)) {
-            plugOptions.push(built);
+            addPlug(built);
           }
         }
       }
@@ -692,16 +738,17 @@ function buildSocket(
       if (plugSet) {
         for (const reusablePlug of plugSet.reusablePlugItems) {
           if (plugged && reusablePlug.plugItemHash === plugged.plugDef.hash) {
-            plugOptions.push(plugged);
-            foundPluggedInOptions = true;
+            if (addPlug(plugged)) {
+              foundPluggedInOptions = true;
+            }
           } else {
             const built = buildDefinedPlug(
               defs,
               reusablePlug.plugItemHash,
-              reusablePlug.currentlyCanRoll
+              reusablePlug.currentlyCanRoll,
             );
             if (built && filterReusablePlug(built)) {
-              plugOptions.push(built);
+              addPlug(built);
             }
           }
         }
@@ -710,12 +757,13 @@ function buildSocket(
       // Get options from definition itself
       for (const reusablePlug of socketDef.reusablePlugItems) {
         if (plugged && reusablePlug.plugItemHash === plugged.plugDef.hash) {
-          plugOptions.push(plugged);
-          foundPluggedInOptions = true;
+          if (addPlug(plugged)) {
+            foundPluggedInOptions = true;
+          }
         } else {
           const built = buildDefinedPlug(defs, reusablePlug.plugItemHash);
           if (built && filterReusablePlug(built)) {
-            plugOptions.push(built);
+            addPlug(built);
           }
         }
       }
@@ -723,7 +771,7 @@ function buildSocket(
   }
 
   if (plugged && !foundPluggedInOptions) {
-    plugOptions.push(plugged);
+    addPlug(plugged);
   }
 
   // TODO: is this still true? also, should this be ?? instead of ||
@@ -773,16 +821,15 @@ function buildCachedDimPlugSet(defs: D2ManifestDefinitions, plugSetHash: number)
       }
     }
   }
-
+  const [cant, can] = _.partition(plugs, (p) => plugCannotCurrentlyRoll(plugs, p.plugDef.hash));
   const dimPlugSet: DimPlugSet = {
     plugs,
     hash: plugSetHash,
     precomputedEmptyPlugItemHash: defPlugSet.reusablePlugItems.find((p) =>
-      isKnownEmptyPlugItemHash(p.plugItemHash)
+      isKnownEmptyPlugItemHash(p.plugItemHash),
     )?.plugItemHash,
-    plugHashesThatCannotRoll: plugs
-      .filter((p) => plugCannotCurrentlyRoll(plugs, p.plugDef.hash))
-      .map((p) => p.plugDef.hash),
+    plugHashesThatCannotRoll: cant.map((p) => p.plugDef.hash),
+    plugHashesThatCanRoll: can.map((p) => p.plugDef.hash),
   };
   reusablePlugSetCache[plugSetHash] = dimPlugSet;
 

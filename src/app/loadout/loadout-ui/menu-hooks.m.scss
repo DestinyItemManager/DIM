@@ -1,0 +1,27 @@
+@use '../../variables.scss' as *;
+
+.analyzingText {
+  margin-bottom: 8px;
+
+  @include phone-portrait {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  :global(.app-icon) {
+    margin: 0 4px 0 4px;
+  }
+}
+
+.fashionIcon {
+  background-position: center;
+  background-size: 150%;
+  border-radius: 50%;
+  height: 15px;
+  width: 15px;
+}
+.modificationIcon {
+  height: 13px;
+  width: 13px;
+  filter: invert(0.8);
+}

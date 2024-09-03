@@ -1,3 +1,4 @@
+import { SearchType } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
 import { querySelector, searchQueryVersionSelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
@@ -8,7 +9,6 @@ import { setSearchQuery } from '../shell/actions';
 import MainSearchBarActions from './MainSearchBarActions';
 import MainSearchBarMenu from './MainSearchBarMenu';
 import SearchBar, { SearchFilterRef } from './SearchBar';
-import { SearchInput } from './SearchInput';
 
 /**
  * The main search filter that's in the header.
@@ -19,7 +19,7 @@ export default forwardRef(function SearchFilter(
   }: {
     onClear?: () => void;
   },
-  ref: React.Ref<SearchFilterRef>
+  ref: React.Ref<SearchFilterRef>,
 ) {
   const searchQuery = useSelector(querySelector);
   const searchQueryVersion = useSelector(searchQueryVersionSelector);
@@ -33,7 +33,7 @@ export default forwardRef(function SearchFilter(
   const dispatch = useThunkDispatch();
   const onQueryChanged = useCallback(
     (query: string) => dispatch(setSearchQuery(query, false)),
-    [dispatch]
+    [dispatch],
   );
 
   // We don't have access to the selected store so we'd match multiple characters' worth.
@@ -48,23 +48,23 @@ export default forwardRef(function SearchFilter(
       onRecords
         ? t('Header.FilterHelpRecords')
         : onProgress
-        ? t('Header.FilterHelpProgress')
-        : onOptimizer
-        ? t('Header.FilterHelpOptimizer', { example: '-is:exotic, perkname:"iron lord\'s pride"' })
-        : onLoadouts
-        ? t('Header.FilterHelpLoadouts')
-        : isPhonePortrait
-        ? t('Header.FilterHelpBrief')
-        : t('Header.FilterHelp', { example: 'is:dupe, is:maxpower, -is:blue' }),
-    [isPhonePortrait, onRecords, onProgress, onOptimizer, onLoadouts]
+          ? t('Header.FilterHelpProgress')
+          : onOptimizer
+            ? t('Header.FilterHelpOptimizer', {
+                example: '-is:exotic, perkname:"iron lord\'s pride"',
+              })
+            : onLoadouts
+              ? t('Header.FilterHelpLoadouts')
+              : isPhonePortrait
+                ? t('Header.FilterHelpBrief')
+                : t('Header.FilterHelp', { example: 'is:dupe, is:maxpower, -is:blue' }),
+    [isPhonePortrait, onRecords, onProgress, onOptimizer, onLoadouts],
   );
 
   const extras = useMemo(() => <MainSearchBarActions key="actions" />, []);
   const menu = useMemo(() => <MainSearchBarMenu key="actions-menu" />, []);
 
-  const itemSearch = !onLoadouts;
-
-  return itemSearch ? (
+  return (
     <SearchBar
       ref={ref}
       onQueryChanged={onQueryChanged}
@@ -74,10 +74,9 @@ export default forwardRef(function SearchFilter(
       searchQuery={searchQuery}
       mainSearchBar={true}
       menu={menu}
+      searchType={onLoadouts ? SearchType.Loadout : SearchType.Item}
     >
-      {extras}
+      {!onLoadouts && extras}
     </SearchBar>
-  ) : (
-    <SearchInput onQueryChanged={onQueryChanged} placeholder={placeholder} query={searchQuery} />
   );
 });

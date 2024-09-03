@@ -31,7 +31,7 @@
   width: var(--item-size);
   cursor: grab;
 
-  &:hover {
+  @include interactive($hover: true) {
     @include draggable-hover-border;
   }
 }
@@ -48,6 +48,8 @@
     width: 100%;
     height: 100%;
     z-index: 1;
+    left: 0;
+    top: 0;
   }
 }
 .subclassSuperIcon {

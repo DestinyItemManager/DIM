@@ -23,7 +23,7 @@ export function buildObjectives(
   itemDef: DestinyInventoryItemDefinition,
   defs: D2ManifestDefinitions,
   itemInstancedObjectives: DestinyObjectiveProgress[] | undefined,
-  itemUninstancedObjectives: DestinyObjectiveProgress[] | undefined
+  itemUninstancedObjectives: DestinyObjectiveProgress[] | undefined,
 ): DestinyObjectiveProgress[] | undefined {
   const objectives = itemInstancedObjectives ?? itemUninstancedObjectives ?? [];
 
@@ -48,20 +48,20 @@ export function buildObjectives(
 export function getValueStyle(
   objectiveDef: DestinyObjectiveDefinition | D1ObjectiveDefinition | undefined,
   progress: number,
-  completionValue = 0
+  completionValue = 0,
 ) {
   return objectiveDef
-    ? (progress < completionValue
+    ? ((progress < completionValue
         ? 'inProgressValueStyle' in objectiveDef && objectiveDef.inProgressValueStyle
         : 'completedValueStyle' in objectiveDef && objectiveDef.completedValueStyle) ??
-        objectiveDef.valueStyle
+        objectiveDef.valueStyle)
     : DestinyUnlockValueUIStyle.Automatic;
 }
 
 export function isBooleanObjective(
   objectiveDef: DestinyObjectiveDefinition | D1ObjectiveDefinition,
   progress: number | undefined,
-  completionValue: number
+  completionValue: number,
 ) {
   const isD2Def = 'allowOvercompletion' in objectiveDef;
   // shaping dates weirdly claim they shouldn't be shown

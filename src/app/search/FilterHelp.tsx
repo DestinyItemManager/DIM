@@ -1,13 +1,27 @@
+import { SearchType } from '@destinyitemmanager/dim-api-types';
 import StaticPage from 'app/dim-ui/StaticPage';
 import { t } from 'app/i18next-t';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
-import clsx from 'clsx';
+import { RootState } from 'app/store/types';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './FilterHelp.m.scss';
 import { SearchInput } from './SearchInput';
-import { FilterDefinition } from './filter-types';
-import { searchConfigSelector } from './search-config';
+import {
+  ItemFilterDefinition,
+  ItemSearchConfig,
+  SuggestionsContext,
+} from './items/item-filter-types';
+import { searchConfigSelector, suggestionsContextSelector } from './items/item-search-filter';
+import {
+  LoadoutFilterDefinition,
+  LoadoutSearchConfig,
+  LoadoutSuggestionsContext,
+} from './loadouts/loadout-filter-types';
+import {
+  loadoutSearchConfigSelector,
+  loadoutSuggestionsContextSelector,
+} from './loadouts/loadout-search-filter';
 import { generateGroupedSuggestionsForFilter } from './suggestions-generation';
 
 function keywordsString(keywords: string | string[]) {
@@ -17,8 +31,15 @@ function keywordsString(keywords: string | string[]) {
   return keywords;
 }
 
-export default function FilterHelp() {
-  const searchConfig = useSelector(searchConfigSelector).filtersMap;
+export default function FilterHelp({ searchType = SearchType.Item }: { searchType?: SearchType }) {
+  const searchConfig = useSelector<RootState, ItemSearchConfig | LoadoutSearchConfig>(
+    searchType === SearchType.Loadout ? loadoutSearchConfigSelector : searchConfigSelector,
+  ).filtersMap;
+  const suggestionContext = useSelector(
+    searchType === SearchType.Loadout
+      ? loadoutSuggestionsContextSelector
+      : suggestionsContextSelector,
+  );
   const [search, setSearch] = useState('');
 
   const searchLower = search.toLowerCase();
@@ -47,7 +68,7 @@ export default function FilterHelp() {
           {t('Filter.Negate', { notexample: '-is:tagged', notexample2: 'not is:tagged' })}{' '}
           <a href="/search-history">{t('SearchHistory.Link')}</a>
         </p>
-        <div className={clsx(styles.search)}>
+        <div className={styles.search}>
           <SearchInput
             query={search}
             onQueryChanged={setSearch}
@@ -64,7 +85,11 @@ export default function FilterHelp() {
           </thead>
           <tbody>
             {filters.map((filter) => (
-              <FilterExplanation key={keywordsString(filter.keywords)} filter={filter} />
+              <FilterExplanation
+                key={keywordsString(filter.keywords)}
+                filter={filter}
+                suggestionContext={suggestionContext}
+              />
             ))}
           </tbody>
         </table>
@@ -73,11 +98,21 @@ export default function FilterHelp() {
   );
 }
 
-function FilterExplanation({ filter }: { filter: FilterDefinition }) {
+function FilterExplanation({
+  filter,
+  suggestionContext,
+}: {
+  filter: LoadoutFilterDefinition | ItemFilterDefinition;
+  suggestionContext: LoadoutSuggestionsContext | SuggestionsContext;
+}) {
   const dispatch = useDispatch();
-  const suggestions = Array.from(
-    new Set([...generateGroupedSuggestionsForFilter(filter, true, {})])
+  let suggestions = Array.from(
+    new Set([...generateGroupedSuggestionsForFilter(filter, suggestionContext, true)]),
   );
+  if (filter.format === 'freeform' || filter.format?.includes('freeform')) {
+    suggestions = suggestions.slice(0, 5);
+  }
+
   const localDesc: string = Array.isArray(filter.description)
     ? t(...filter.description)
     : t(filter.description);
@@ -91,7 +126,7 @@ function FilterExplanation({ filter }: { filter: FilterDefinition }) {
     <tr>
       <td>
         {suggestions.map((k, i) => (
-          <div key={i} className={clsx(styles.entry)}>
+          <div key={i} className={styles.entry}>
             <a href="." onClick={(e) => applySuggestion(e, k.keyword)}>
               {k.ops ? `${k.keyword}` : k.keyword}
             </a>
@@ -99,7 +134,7 @@ function FilterExplanation({ filter }: { filter: FilterDefinition }) {
               const x = `${k.keyword}${op}`;
               return (
                 <div key={j}>
-                  <span className={clsx(styles.separator)}>| </span>
+                  <span className={styles.separator}>| </span>
                   <a href="." onClick={(e) => applySuggestion(e, x)}>
                     {op}
                   </a>

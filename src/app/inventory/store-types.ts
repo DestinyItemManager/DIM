@@ -79,6 +79,7 @@ export interface DimStore<Item = DimItem> {
 
 export interface DimTitle {
   title: string;
+  isCompleted: boolean;
   gildedNum: number;
   isGildedForCurrentSeason: boolean;
 }
@@ -119,7 +120,7 @@ export interface DimCharacterStat {
   /** The localized name of the stat. */
   name: string;
   /** An icon associated with the stat. */
-  icon?: string;
+  icon: string;
   /** The current value of the stat. */
   value: number;
 

@@ -5,7 +5,7 @@ import { isNewSelector } from 'app/inventory/selectors';
 import { isBooleanObjective } from 'app/inventory/store/objectives';
 import ItemExpiration from 'app/item-popup/ItemExpiration';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { searchFilterSelector } from 'app/search/search-filter';
+import { searchFilterSelector } from 'app/search/items/item-search-filter';
 import { percent } from 'app/shell/formatters';
 import { RootState } from 'app/store/types';
 import clsx from 'clsx';
@@ -13,26 +13,23 @@ import { useSelector } from 'react-redux';
 import { ObjectiveValue } from './Objective';
 import PursuitItem from './PursuitItem';
 
-// Props provided from parents
-interface Props {
-  item: DimItem;
-  hideDescription?: boolean;
-  searchHidden?: boolean;
-}
-
 /**
  * A Pursuit is an inventory item that represents a bounty or quest. This displays
  * a pursuit tile for the Progress page.
  */
 export default function Pursuit({
   item,
-  hideDescription,
   searchHidden: alreadySearchHidden,
-}: Props) {
+  className,
+}: {
+  item: DimItem;
+  searchHidden?: boolean;
+  className?: string;
+}) {
   const defs = useD2Definitions()!;
   const isNew = useSelector(isNewSelector(item));
   const searchHidden = useSelector(
-    (state: RootState) => alreadySearchHidden || !searchFilterSelector(state)(item)
+    (state: RootState) => alreadySearchHidden || !searchFilterSelector(state)(item),
   );
   const expired = showPursuitAsExpired(item);
 
@@ -53,7 +50,7 @@ export default function Pursuit({
       {(ref, onClick) => (
         <button
           type="button"
-          className={clsx('milestone-quest', { 'search-hidden': searchHidden })}
+          className={clsx('milestone-quest', className, { 'search-hidden': searchHidden })}
           key={item.index}
           onClick={onClick}
         >
@@ -73,17 +70,16 @@ export default function Pursuit({
               </span>
             )}
           </div>
-          {!hideDescription && (
-            <div className="milestone-info">
-              <span className="milestone-name">
-                <ItemExpiration item={item} compact={true} />
-                {item.name}
-              </span>
-              <div className="milestone-description">
-                <RichDestinyText text={item.description} ownerId={item.owner} />
-              </div>
+
+          <div className="milestone-info">
+            <span className="milestone-name">
+              <ItemExpiration item={item} compact={true} />
+              {item.name}
+            </span>
+            <div className="milestone-description">
+              <RichDestinyText text={item.description} ownerId={item.owner} />
             </div>
-          )}
+          </div>
         </button>
       )}
     </ItemPopupTrigger>
@@ -94,14 +90,12 @@ export default function Pursuit({
  * Should this item be displayed as expired (no longer completable)?
  */
 export function showPursuitAsExpired(item: DimItem) {
+  if (!item.pursuit?.expiration) {
+    return false;
+  }
   // Suppress description when expiration is shown
   const suppressExpiration =
-    item.pursuit?.suppressExpirationWhenObjectivesComplete && item.complete;
+    item.pursuit.expiration.suppressExpirationWhenObjectivesComplete && item.complete;
 
-  const expired =
-    !suppressExpiration && item.pursuit?.expirationDate
-      ? item.pursuit.expirationDate.getTime() < Date.now()
-      : false;
-
-  return expired;
+  return !suppressExpiration && item.pursuit.expiration.expirationDate.getTime() < Date.now();
 }

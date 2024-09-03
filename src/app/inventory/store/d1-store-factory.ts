@@ -28,7 +28,7 @@ const progressionMeta: HashLookup<{ label: string; order: number }> = {
 export function makeCharacter(
   characterComponent: D1CharacterData,
   defs: D1ManifestDefinitions,
-  mostRecentLastPlayed: Date
+  mostRecentLastPlayed: Date,
 ) {
   const character = characterComponent.character;
   const race = defs.Race.get(character.characterBase.raceHash);
@@ -59,11 +59,11 @@ export function makeCharacter(
     Object.assign(
       prog,
       defs.Progression.get(prog.progressionHash),
-      progressionMeta[prog.progressionHash]
+      progressionMeta[prog.progressionHash],
     );
     const faction = _.find(
       defs.Faction.getAll(),
-      (f) => f.progressionHash === prog.progressionHash
+      (f) => f.progressionHash === prog.progressionHash,
     );
     if (faction) {
       prog.faction = faction;

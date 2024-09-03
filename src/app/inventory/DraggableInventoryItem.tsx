@@ -1,5 +1,7 @@
 import { hideItemPopup } from 'app/item-popup/item-popup';
+import { useStreamDeckSelection } from 'app/stream-deck/stream-deck';
 import clsx from 'clsx';
+import { BucketHashes } from 'data/d2/generated-enums';
 import React from 'react';
 import { useDrag } from 'react-dnd';
 import styles from './DraggableInventoryItem.m.scss';
@@ -14,6 +16,16 @@ interface Props {
 let dragTimeout: number | null = null;
 
 export default function DraggableInventoryItem({ children, item }: Props) {
+  const selectionProps = $featureFlags.elgatoStreamDeck
+    ? // eslint-disable-next-line
+      useStreamDeckSelection({
+        type: 'item',
+        item,
+        isSubClass: item.bucket.hash === BucketHashes.Subclass,
+        equippable: !item.notransfer,
+      })
+    : undefined;
+
   const canDrag =
     (!item.location.inPostmaster || item.destinyVersion === 2) && item.notransfer
       ? item.equipment
@@ -24,8 +36,8 @@ export default function DraggableInventoryItem({ children, item }: Props) {
       type: item.location.inPostmaster
         ? 'postmaster'
         : item.notransfer
-        ? `${item.owner}-${item.bucket.hash}`
-        : item.bucket.hash.toString(),
+          ? `${item.owner}-${item.bucket.hash}`
+          : item.bucket.hash.toString(),
       item: () => {
         hideItemPopup();
 
@@ -45,12 +57,13 @@ export default function DraggableInventoryItem({ children, item }: Props) {
       },
       canDrag,
     }),
-    [item]
+    [item],
   );
 
   return (
     <div
       ref={dragRef}
+      {...selectionProps}
       className={clsx('item-drag-container', {
         [styles.engram]: item.isEngram,
         [styles.cantDrag]: !canDrag,

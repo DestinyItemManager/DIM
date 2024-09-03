@@ -49,7 +49,7 @@ export default memo(function HotkeysCheatSheet() {
                   </div>
                   <div className={styles.text}>{description}</div>
                 </React.Fragment>
-              )
+              ),
           )}
         </div>
       </div>

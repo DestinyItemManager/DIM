@@ -4,7 +4,7 @@ import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { permissiveArmorEnergyRules } from 'app/loadout-builder/types';
-import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { LoadoutCharacterStats } from 'app/store-stats/CharacterStats';
 import Cost from 'app/vendors/Cost';
@@ -82,7 +82,7 @@ export default function ModAssignmentDrawer({
           // ensure to use as few materials as possible
           armorEnergyRules: permissiveArmorEnergyRules,
         }),
-      [armor, defs, modDefinitions]
+      [armor, defs, modDefinitions],
     );
 
   const onSocketClick = useCallback(
@@ -95,7 +95,7 @@ export default function ModAssignmentDrawer({
         setPlugCategoryHashWhitelist(plugCategoryHashWhitelist);
       }
     },
-    []
+    [],
   );
 
   const flatAssigned = _.compact(Object.values(itemModAssignments).flat());

@@ -13,6 +13,7 @@ export const D2SeasonInfo: Record<
     releaseDate: string;
     resetTime: string;
     numWeeks: number;
+    episode?: number;
   }
 > = {
   1: {
@@ -45,7 +46,7 @@ export const D2SeasonInfo: Record<
   },
   3: {
     DLCName: 'Warmind',
-    seasonName: 'Warmind',
+    seasonName: 'Resurgence',
     seasonTag: 'warmind',
     season: 3,
     maxLevel: 30,
@@ -69,7 +70,7 @@ export const D2SeasonInfo: Record<
     pinnacleCap: 600,
     releaseDate: '2018-09-04',
     resetTime: '17:00:00Z',
-    numWeeks: 13,
+    numWeeks: 12,
   },
   5: {
     DLCName: 'Black Armory',
@@ -83,7 +84,7 @@ export const D2SeasonInfo: Record<
     pinnacleCap: 650,
     releaseDate: '2018-11-27',
     resetTime: '17:00:00Z',
-    numWeeks: 12,
+    numWeeks: 14,
   },
   6: {
     DLCName: "Joker's Wild",
@@ -97,7 +98,7 @@ export const D2SeasonInfo: Record<
     pinnacleCap: 700,
     releaseDate: '2019-03-05',
     resetTime: '17:00:00Z',
-    numWeeks: 14,
+    numWeeks: 13,
   },
   7: {
     DLCName: 'Penumbra',
@@ -111,7 +112,7 @@ export const D2SeasonInfo: Record<
     pinnacleCap: 750,
     releaseDate: '2019-06-04',
     resetTime: '17:00:00Z',
-    numWeeks: 13,
+    numWeeks: 17,
   },
   8: {
     DLCName: 'Shadowkeep',
@@ -323,6 +324,35 @@ export const D2SeasonInfo: Record<
     resetTime: '17:00:00Z',
     numWeeks: 14,
   },
+  23: {
+    DLCName: '',
+    seasonName: 'Season of the Wish',
+    seasonTag: 'wish',
+    season: 23,
+    maxLevel: 50,
+    powerFloor: 1600,
+    softCap: 1750,
+    powerfulCap: 1800,
+    pinnacleCap: 1810,
+    releaseDate: '2023-11-28',
+    resetTime: '17:00:00Z',
+    numWeeks: 27,
+  },
+  24: {
+    DLCName: 'The Final Shape',
+    seasonName: 'Episode: Echoes',
+    seasonTag: 'echoes',
+    season: 24,
+    maxLevel: 50,
+    powerFloor: 1900,
+    softCap: 1940,
+    powerfulCap: 1990,
+    pinnacleCap: 2000,
+    releaseDate: '2024-06-04',
+    resetTime: '17:00:00Z',
+    numWeeks: 18,
+    episode: 1,
+  },
 };
 
-export const D2CalculatedSeason = 22;
+export const D2CalculatedSeason = 24;

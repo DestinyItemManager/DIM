@@ -8,6 +8,11 @@
   gap: 4px;
   align-content: flex-start;
   align-items: flex-start;
+
+  @include phone-portrait {
+    min-width: min(calc(5 * var(--item-icon-size) + 4 * var(--item-margin)), calc(100vw - 20px));
+    max-width: calc(100vw - 20px);
+  }
   :global(.item) {
     --item-size: var(--item-icon-size);
   }
@@ -36,11 +41,8 @@
   height: var(--item-icon-size);
   width: var(--item-icon-size);
 
-  &:focus {
+  @include interactive($hover: true, $focus: true) {
     border-color: var(--theme-accent-primary);
-  }
-
-  &:hover {
     color: white;
   }
 }

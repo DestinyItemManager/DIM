@@ -1,22 +1,36 @@
 import { AssumeArmorMasterwork, StatConstraint } from '@destinyitemmanager/dim-api-types';
 import { DimCharacterStat } from 'app/inventory/store-types';
-import { armorBuckets } from 'app/search/d2-known-values';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import { DimItem, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import { ProcessItem } from './process-worker/types';
 
-export interface MinMax {
-  min: number;
-  max: number;
+export interface MinMaxTier {
+  minTier: number;
+  maxTier: number;
 }
 
 /**
- * Normally stat constraints are simply missing if ignored - the resolved
- * version still exists but has an ignored flag. Also, values cannot be undefined.
+ * Resolved stat constraints take the compact form of the API stat constraints
+ * and expand them so that each stat has a corresponding constraint, the min and
+ * max are defined, and the ignored flag is set. In the API version, stat
+ * constraints are simply missing if ignored, and min-0/max-10 is omitted as
+ * implied.
  */
 export interface ResolvedStatConstraint extends Required<StatConstraint> {
+  /**
+   * An ignored stat has an effective maximum tier of 0, so that any
+   * stat tiers in excess of T0 are deemed worthless.
+   */
   ignored: boolean;
 }
+
+/**
+ * When a stat is ignored, we treat it as if it were effectively a constraint
+ * with a max desired tier of 0. ResolvedStatContraintRange is the same as
+ * DesiredStatRange, but with the ignored flag removed, and maxTier set to
+ * 0 for ignored sets.
+ */
+export type DesiredStatRange = Required<StatConstraint>;
 
 /** A map from bucketHash to the pinned item if there is one. */
 export interface PinnedItems {
@@ -72,12 +86,12 @@ export type ItemGroup = Readonly<{
 /**
  * Bucket lookup, also used for ordering of the buckets.
  */
-export const LockableBuckets = armorBuckets as {
-  helmet: LockableBucketHash;
-  gauntlets: LockableBucketHash;
-  chest: LockableBucketHash;
-  leg: LockableBucketHash;
-  classitem: LockableBucketHash;
+export const LockableBuckets = {
+  helmet: BucketHashes.Helmet as LockableBucketHash,
+  gauntlets: BucketHashes.Gauntlets as LockableBucketHash,
+  chest: BucketHashes.ChestArmor as LockableBucketHash,
+  leg: BucketHashes.LegArmor as LockableBucketHash,
+  classitem: BucketHashes.ClassArmor as LockableBucketHash,
 };
 
 export type LockableBucketHash =
@@ -101,7 +115,7 @@ export type ArmorStatHashes =
   | StatHashes.Intellect
   | StatHashes.Strength;
 
-export type StatRanges = { [statHash in ArmorStatHashes]: MinMax };
+export type StatRanges = { [statHash in ArmorStatHashes]: MinMaxTier };
 export type ArmorStats = { [statHash in ArmorStatHashes]: number };
 
 /**
@@ -138,7 +152,7 @@ export const LOCKED_EXOTIC_ANY_EXOTIC = -2;
 /**
  * The minimum armour energy value used in the LO Builder
  */
-export const MIN_LO_ITEM_ENERGY = 7;
+export const MIN_LO_ITEM_ENERGY = 9;
 /**
  * The armor energy rules that Loadout Optimizer uses by default.
  * Requires a reasonable and inexpensive amount of upgrade materials.
@@ -160,7 +174,7 @@ export const inGameArmorEnergyRules: ArmorEnergyRules = {
  * Armor energy rules that allow fully masterworking everything.
  */
 export const permissiveArmorEnergyRules: ArmorEnergyRules = {
-  assumeArmorMasterwork: AssumeArmorMasterwork.All,
+  assumeArmorMasterwork: AssumeArmorMasterwork.ArtificeExotic,
   // implied to be 10 by the above
   minItemEnergy: 1,
 };

@@ -7,7 +7,7 @@ import { getInterestingSocketMetadatas, isD1Item } from 'app/utils/item-utils';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import { ActionType, Reducer, getType } from 'typesafe-actions';
 import * as actions from './actions';
-import { compareNameQuery } from './compare-buttons';
+import { compareNameQuery } from './compare-utils';
 
 export interface CompareSession {
   /**
@@ -50,8 +50,8 @@ const initialState: CompareState = {};
 // TODO: how to determine the itemCategory? reverse index of organizer leaves?
 export const compare: Reducer<CompareState, CompareAction> = (
   state: CompareState = initialState,
-  action: CompareAction
-) => {
+  action: CompareAction,
+): CompareState => {
   switch (action.type) {
     case getType(actions.addCompareItem):
       return addCompareItem(state, action.payload);
@@ -83,7 +83,7 @@ export const compare: Reducer<CompareState, CompareAction> = (
         state,
         action.payload.query,
         action.payload.filteredItems,
-        action.payload.initialItem
+        action.payload.initialItem,
       );
 
     case getType(actions.compareSelectedItems):
@@ -166,11 +166,11 @@ function initialCompareQuery(item: DimItem) {
     const intrinsicSocket = item.sockets?.allSockets.find(
       (socket) =>
         socket.plugged?.plugDef.plug.plugCategoryHash === PlugCategoryHashes.Intrinsics &&
-        socket.plugged.plugDef.displayProperties.name
+        socket.plugged.plugDef.displayProperties.name,
     );
     if (intrinsicSocket) {
       const intrinsicName = intrinsicSocket.plugged!.plugDef.displayProperties.name;
-      factors.push(`perkname:${quoteFilterString(intrinsicName)}`);
+      factors.push(`exactperk:${quoteFilterString(intrinsicName)}`);
     }
     const modSlotMetadata = getInterestingSocketMetadatas(item);
     if (modSlotMetadata) {
@@ -212,7 +212,7 @@ function compareFilteredItems(
   query: string,
   filteredItems: DimItem[],
   /** The first item added to compare, so we can highlight it. */
-  initialItem: DimItem | undefined
+  initialItem: DimItem | undefined,
 ): CompareState {
   if (state.session) {
     return state;

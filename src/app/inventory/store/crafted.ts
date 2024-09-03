@@ -1,6 +1,7 @@
 import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { warnLog } from 'app/utils/log';
 import { getFirstSocketByCategoryHash } from 'app/utils/socket-utils';
+import { HashLookup } from 'app/utils/util-types';
 import { DestinyObjectiveProgress, DestinyObjectiveUiStyle } from 'bungie-api-ts/destiny2';
 import { DimCrafted, DimItem, DimSocket } from '../item-types';
 
@@ -10,9 +11,17 @@ export const craftedSocketCategoryHash = 3583996951;
 /** the socket category containing the Mementos */
 export const mementoSocketCategoryHash = 3201856887;
 
+/** the socket containing the enhancement tier plugs */
+export const enhancementSocketHash = 4251072212;
+export const plugHashToEnhancementTier: HashLookup<number> = {
+  2728416798: 1,
+  2728416797: 2,
+  2728416796: 3,
+};
+
 export function buildCraftedInfo(
   item: DimItem,
-  defs: D2ManifestDefinitions
+  defs: D2ManifestDefinitions,
 ): DimCrafted | undefined {
   const craftedSocket = getCraftedSocket(item);
   if (!craftedSocket) {
@@ -23,8 +32,12 @@ export function buildCraftedInfo(
   if (!objectives) {
     return undefined;
   }
-
-  return getCraftingInfo(defs, objectives);
+  const craftingInfo = getCraftingInfo(defs, objectives);
+  if (!craftingInfo) {
+    return undefined;
+  }
+  craftingInfo.enhancementTier = getEnhancementTier(item);
+  return craftingInfo;
 }
 
 /** find the item socket that could contain the "this weapon was crafted" plug with its objectives */
@@ -34,9 +47,19 @@ export function getCraftedSocket(item: DimItem): DimSocket | undefined {
   }
 }
 
+export function getEnhancementTier(item: DimItem): number {
+  if (item.bucket.inWeapons && item.sockets) {
+    const plugHash = item.sockets.allSockets.find(
+      (s) => s.socketDefinition.socketTypeHash === enhancementSocketHash,
+    )?.plugged?.plugDef.hash;
+    return (plugHash && plugHashToEnhancementTier[plugHash]) || 0;
+  }
+  return 0;
+}
+
 function getCraftingInfo(
   defs: D2ManifestDefinitions,
-  objectives: DestinyObjectiveProgress[]
+  objectives: DestinyObjectiveProgress[],
 ): DimCrafted | undefined {
   let level: number | undefined;
   let progress: number | undefined;
@@ -64,5 +87,5 @@ function getCraftingInfo(
     return undefined;
   }
 
-  return { level, progress, craftedDate };
+  return { level, progress, craftedDate, enhancementTier: 0 };
 }

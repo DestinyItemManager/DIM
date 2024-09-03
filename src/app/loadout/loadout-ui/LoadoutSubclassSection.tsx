@@ -2,12 +2,13 @@ import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import DraggableInventoryItem from 'app/inventory/DraggableInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
-import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
 import clsx from 'clsx';
+import { SocketCategoryHashes } from 'data/d2/generated-enums';
 import { useMemo } from 'react';
-import { getSubclassPlugs } from '../item-utils';
+import { getSubclassPlugs } from '../loadout-item-utils';
 import { createGetModRenderKey } from '../mod-utils';
 import EmptySubclass from './EmptySubclass';
 import styles from './LoadoutSubclassSection.m.scss';
@@ -42,9 +43,6 @@ export default function LoadoutSubclassSection({
                   // plugs in the loadout and they may be different to the popup
                   onClick={plugs.length ? undefined : onClick}
                   item={subclass.item}
-                  // don't show the selected Super ability because we are displaying the Super ability plug next
-                  // to the subclass icon
-                  hideSelectedSuper
                 />
               )}
             </ItemPopupTrigger>
@@ -61,13 +59,16 @@ export default function LoadoutSubclassSection({
       </div>
       {plugs.length ? (
         <div className={styles.subclassMods}>
-          {plugs?.map((plug) => (
-            <PlugDef
-              key={getModRenderKey(plug.plug)}
-              plug={plug.plug}
-              forClassType={subclass?.item.classType}
-            />
-          ))}
+          {plugs?.map(
+            (plug) =>
+              plug.socketCategoryHash !== SocketCategoryHashes.Super && (
+                <PlugDef
+                  key={getModRenderKey(plug.plug)}
+                  plug={plug.plug}
+                  forClassType={subclass?.item.classType}
+                />
+              ),
+          )}
         </div>
       ) : (
         <div className={styles.modsPlaceholder}>{t('Loadouts.Abilities')}</div>

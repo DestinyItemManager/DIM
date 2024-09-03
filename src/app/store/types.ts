@@ -1,5 +1,5 @@
 import type { ClarityState } from 'app/clarity/reducer';
-import { StreamDeckState } from 'app/stream-deck/interfaces';
+import type { StreamDeckState } from 'app/stream-deck/reducer';
 import type { VendorsState } from 'app/vendors/reducer';
 import type { AnyAction } from 'redux';
 import type { ThunkAction, ThunkDispatch } from 'redux-thunk';
@@ -8,8 +8,8 @@ import type { CompareState } from '../compare/reducer';
 import type { DimApiState } from '../dim-api/reducer';
 import type { FarmingState } from '../farming/reducer';
 import type { InventoryState } from '../inventory/reducer';
-import type { LoadoutsState } from '../loadout-drawer/reducer';
 import type { InGameLoadoutState } from '../loadout/ingame/reducer';
+import type { LoadoutsState } from '../loadout/reducer';
 import type { ManifestState } from '../manifest/reducer';
 import type { ShellState } from '../shell/reducer';
 import type { WishListsState } from '../wishlists/reducer';

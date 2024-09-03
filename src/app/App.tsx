@@ -26,10 +26,10 @@ import SneakyUpdates from './shell/SneakyUpdates';
 
 const WhatsNew = lazy(() => import(/* webpackChunkName: "whatsNew" */ './whats-new/WhatsNew'));
 const SettingsPage = lazy(
-  () => import(/* webpackChunkName: "settings" */ './settings/SettingsPage')
+  () => import(/* webpackChunkName: "settings" */ './settings/SettingsPage'),
 );
 const SearchHistory = lazy(
-  () => import(/* webpackChunkName: "searchHistory" */ './search/SearchHistory')
+  () => import(/* webpackChunkName: "searchHistory" */ './search/SearchHistory'),
 );
 const Debug = lazy(() => import(/* webpackChunkName: "debug" */ './debug/Debug'));
 

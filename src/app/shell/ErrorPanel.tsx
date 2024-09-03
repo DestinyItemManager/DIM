@@ -24,11 +24,11 @@ function Socials() {
               allowFullScreen
               sandbox="allow-top-navigation allow-scripts allow-popups allow-popups-to-escape-sandbox"
               src={`https://www.mastofeed.com/apiv2/feed?userurl=${encodeURIComponent(
-                account
+                account,
               )}&theme=dark&size=100&header=false&replies=false&boosts=true`}
             />
           </div>
-        )
+        ),
       )}
     </div>
   );
@@ -51,6 +51,7 @@ export default function ErrorPanel({
   frameless?: boolean;
 }) {
   const underlyingError = error instanceof DimError ? error.cause : undefined;
+  showSocials = showSocials ? !(error instanceof DimError) || error.showSocials : false;
 
   let code: string | number | undefined = error instanceof DimError ? error.code : undefined;
   if (underlyingError) {

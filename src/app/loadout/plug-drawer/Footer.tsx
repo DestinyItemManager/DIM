@@ -6,7 +6,7 @@ import React from 'react';
 import PlugDef from '../loadout-ui/PlugDef';
 import { createGetModRenderKey } from '../mod-utils';
 import styles from './Footer.m.scss';
-import { PlugSet } from './types';
+import { PlugSelectionType, PlugSet } from './types';
 
 interface Props {
   isPhonePortrait: boolean;
@@ -41,11 +41,13 @@ export default function Footer({
               key={getModRenderKey(plug)}
               plug={plug}
               onClose={
-                plugSet.selectionType === 'multi' ? () => handlePlugSelected(plug) : undefined
+                plugSet.selectionType !== PlugSelectionType.Single
+                  ? () => handlePlugSelected(plug)
+                  : undefined
               }
               forClassType={classType}
             />
-          ))
+          )),
         )}
       </SheetHorizontalScrollContainer>
     </div>

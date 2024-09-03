@@ -13,7 +13,7 @@ export default function LoadoutBucketDropTarget({ bucketHash, children, onItemLo
   const [{ isOver, canDrop }, dropRef] = useDrop<
     DimItem,
     unknown,
-    { isOver: Boolean; canDrop: boolean }
+    { isOver: boolean; canDrop: boolean }
   >(
     () => ({
       accept: bucketHash.toString(),
@@ -21,7 +21,7 @@ export default function LoadoutBucketDropTarget({ bucketHash, children, onItemLo
       drop: onItemLocked,
       canDrop: (item) => item.bucket.hash === bucketHash,
     }),
-    [bucketHash, onItemLocked]
+    [bucketHash, onItemLocked],
   );
   return (
     <div

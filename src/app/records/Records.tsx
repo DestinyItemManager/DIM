@@ -6,11 +6,11 @@ import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { destiny2CoreSettingsSelector, useD2Definitions } from 'app/manifest/selectors';
 import { TrackedTriumphs } from 'app/progress/TrackedTriumphs';
-import { searchFilterSelector } from 'app/search/search-filter';
+import { searchFilterSelector } from 'app/search/items/item-search-filter';
 import { useSetting } from 'app/settings/hooks';
-import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
+import { querySelector } from 'app/shell/selectors';
+import { filterMap } from 'app/utils/collections';
 import { usePageTitle } from 'app/utils/hooks';
-import { filterMap } from 'app/utils/util';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
@@ -34,7 +34,6 @@ interface Props {
  * The records screen shows account-wide things like Triumphs and Collections.
  */
 export default function Records({ account }: Props) {
-  const isPhonePortrait = useIsPhonePortrait();
   useLoadStores(account);
   const [searchParams] = useSearchParams();
   usePageTitle(t('Records.Title'));
@@ -93,7 +92,7 @@ export default function Records({ account }: Props) {
     ? filterMap(Object.entries(destiny2CoreSettings), ([key, value]) =>
         key.includes('RootNode') && key !== 'craftingRootNodeHash' && typeof value === 'number'
           ? value
-          : undefined
+          : undefined,
       )
     : [];
 
@@ -117,15 +116,11 @@ export default function Records({ account }: Props) {
   return (
     <PageWithMenu className="d2-vendors">
       <PageWithMenu.Menu>
-        {!isPhonePortrait && (
-          <>
-            {menuItems.map((menuItem) => (
-              <PageWithMenu.MenuButton key={menuItem.id} anchor={menuItem.id}>
-                <span>{menuItem.title}</span>
-              </PageWithMenu.MenuButton>
-            ))}
-          </>
-        )}
+        {menuItems.map((menuItem) => (
+          <PageWithMenu.MenuButton key={menuItem.id} anchor={menuItem.id}>
+            <span>{menuItem.title}</span>
+          </PageWithMenu.MenuButton>
+        ))}
         <div className={styles.presentationNodeOptions}>
           <CheckButton
             name="hide-completed"
@@ -162,7 +157,6 @@ export default function Records({ account }: Props) {
         {nodeHashes
           .map((h) => defs.PresentationNode.get(h))
           .map((nodeDef) => (
-            // console.log(nodeDef)
             <section key={nodeDef.hash} id={`p_${nodeDef.hash}`}>
               <CollapsibleTitle
                 title={overrideTitles[nodeDef.hash] || nodeDef.displayProperties.name}

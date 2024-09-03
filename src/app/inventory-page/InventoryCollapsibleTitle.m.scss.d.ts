@@ -3,8 +3,10 @@
 interface CssExports {
   'bucketSize': string;
   'clickToExpand': string;
+  'collapsed': string;
   'postmasterFull': string;
   'spanColumns': string;
+  'title': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

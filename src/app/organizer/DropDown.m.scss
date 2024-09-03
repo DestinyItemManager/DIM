@@ -17,22 +17,23 @@ $dropdown-menu: 10;
 }
 
 .menu {
+  composes: visibleScrollbars from '../dim-ui/common.m.scss';
   position: absolute;
   z-index: 5;
   left: 0;
-  max-height: calc(var(--viewport-height) - 120px - var(--header-height));
+  max-height: calc(var(--viewport-height) - 50px - var(--header-height));
   overflow: auto;
   margin-top: 2px;
   width: max-content;
+  background: var(--theme-dropdown-menu-bg);
+
+  columns: 4;
+  column-gap: 0;
 
   &.right {
     left: initial;
     right: 0;
   }
-
-  background: var(--theme-dropdown-menu-bg);
-
-  @include visible-scrollbars;
 }
 
 .checkButton {
@@ -43,15 +44,14 @@ $dropdown-menu: 10;
   cursor: pointer;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  font-family: 'Open Sans', sans-serif;
   font-size: 12px;
   margin: 0;
-  padding: 8px 12px;
+  padding: 8px;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.25);
+  min-width: 15em;
+  gap: 8px;
 
-  &:hover,
-  &:active {
+  @include interactive($hover: true, $active: true) {
     color: var(--theme-text-invert);
     box-shadow: none;
     background-color: var(--theme-accent-primary);
@@ -72,12 +72,5 @@ $dropdown-menu: 10;
       margin-right: 4px;
       vertical-align: middle;
     }
-  }
-  &:first-child {
-    border-radius: 2px 2px 0 0;
-  }
-
-  &:last-child {
-    border-radius: 0 0 2px 2px;
   }
 }

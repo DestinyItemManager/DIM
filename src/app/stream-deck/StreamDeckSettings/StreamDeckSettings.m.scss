@@ -1,18 +1,10 @@
-@use '../../variables.scss' as *;
-
-.notConnected {
-  margin-left: 8px;
-  color: #b2b2b2;
+.button {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  text-decoration: none;
 }
 
-.connected {
-  color: $green;
-}
-
-.downloadPlugin {
-  margin-top: 8px;
-}
-
-.resetButton {
-  margin-top: 8px;
+.link {
+  text-decoration: none;
 }

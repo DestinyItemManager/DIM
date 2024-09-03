@@ -19,7 +19,7 @@ import { getCharacters } from '../bungie-api/destiny1-api';
 import { getLinkedAccounts } from '../bungie-api/destiny2-api';
 import { removeToken } from '../bungie-api/oauth-tokens';
 import { showNotification } from '../notifications/notifications';
-import { reportException } from '../utils/exceptions';
+import { reportException } from '../utils/sentry';
 import { loggedOut } from './actions';
 
 // See https://github.com/Bungie-net/api/wiki/FAQ:-Cross-Save-pre-launch-testing,-and-how-it-may-affect-you for more info
@@ -79,7 +79,7 @@ export interface DestinyAccount {
  * @param bungieMembershipId Bungie.net membership ID
  */
 export function getDestinyAccountsForBungieAccount(
-  bungieMembershipId: string
+  bungieMembershipId: string,
 ): ThunkResult<DestinyAccount[]> {
   return async (dispatch) => {
     try {
@@ -125,7 +125,7 @@ function formatBungieName(destinyAccount: DestinyProfileUserInfoCard | UserInfoC
  * @param accounts raw Bungie API accounts response
  */
 export async function generatePlatforms(
-  accounts: DestinyLinkedProfilesResponse
+  accounts: DestinyLinkedProfilesResponse,
 ): Promise<DestinyAccount[]> {
   // accounts with errors could have had D1 characters!
   const accountPromises = accounts.profiles
@@ -175,7 +175,7 @@ export async function generatePlatforms(
             ? [account, findD1Characters(account)]
             : [account];
         }
-      })
+      }),
     );
 
   const allPromise = Promise.all(accountPromises);

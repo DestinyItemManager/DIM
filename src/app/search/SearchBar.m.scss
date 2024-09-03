@@ -2,6 +2,7 @@
 
 .searchBar {
   position: relative;
+  font-size: 13px;
 }
 
 .open {
@@ -16,7 +17,7 @@
   border-top: 0;
   background: var(--theme-search-dropdown-bg);
   position: absolute;
-  z-index: 50;
+  z-index: 1;
   list-style: none;
   padding: 0;
   left: 0;
@@ -30,10 +31,6 @@
   overflow: hidden;
   overscroll-behavior: none;
 
-  &:empty {
-    display: none !important;
-  }
-
   @include phone-portrait {
     top: 100%;
     // Fallback to allow either fully or semi-transparent search box borders
@@ -46,6 +43,10 @@
       0 0 0 1px var(--theme-mobile-background),
       0 1px 4px 1px rgba(0, 0, 0, 0.5);
     max-height: calc(var(--viewport-height) - var(--header-height)) !important;
+  }
+
+  &:empty {
+    display: none !important;
   }
 }
 
@@ -66,7 +67,7 @@
   padding: 6px 9px 6px 9px;
   gap: 6px;
 
-  &:hover {
+  @include interactive($hover: true) {
     cursor: pointer;
   }
 
@@ -179,6 +180,14 @@
   border: 0;
   cursor: pointer;
 
+  @include interactive($hover: true) {
+    > span,
+    > :global(.app-icon),
+    button > :global(.app-icon) {
+      color: var(--theme-accent-primary);
+    }
+  }
+
   &:focus-visible {
     outline: 1px solid var(--theme-accent-primary);
   }
@@ -202,15 +211,5 @@
   > span,
   > a {
     margin: 0 !important;
-  }
-
-  @media (hover: hover) {
-    &:hover {
-      > span,
-      > :global(.app-icon),
-      button > :global(.app-icon) {
-        color: var(--theme-accent-primary);
-      }
-    }
   }
 }

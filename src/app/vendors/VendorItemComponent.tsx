@@ -1,3 +1,4 @@
+import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { ItemPopupExtraInfo } from 'app/item-popup/item-popup';
 import { DestinyCollectibleState } from 'bungie-api-ts/destiny2';
@@ -68,7 +69,7 @@ export default function VendorItemComponent({
       extraData={{ failureStrings: item.failureStrings, characterId, owned, acquired, mod }}
     >
       {item.costs.length > 0 && (
-        <div className={styles.vendorCosts}>
+        <div>
           {item.costs.map((cost) => (
             <Cost key={cost.itemHash} cost={cost} className={styles.cost} />
           ))}
@@ -104,13 +105,6 @@ export function VendorItemDisplay({
         [styles.unavailable]: unavailable,
       })}
     >
-      {owned ? (
-        <AppIcon className={styles.ownedIcon} icon={faCheck} />
-      ) : acquired ? (
-        <AppIcon className={styles.acquiredIcon} icon={faCheck} />
-      ) : (
-        locked && <AppIcon className={styles.lockedIcon} icon={lockIcon} />
-      )}
       <ItemPopupTrigger item={item} extraData={extraData}>
         {(ref, onClick) => (
           <ConnectedInventoryItem
@@ -122,6 +116,19 @@ export function VendorItemDisplay({
         )}
       </ItemPopupTrigger>
       {children}
+      {owned ? (
+        <AppIcon className={styles.ownedIcon} icon={faCheck} title={t('MovePopup.Owned')} />
+      ) : acquired ? (
+        <AppIcon className={styles.acquiredIcon} icon={faCheck} title={t('MovePopup.Acquired')} />
+      ) : (
+        locked && (
+          <AppIcon
+            className={styles.lockedIcon}
+            icon={lockIcon}
+            title={t('MovePopup.LockUnlock.Locked')}
+          />
+        )
+      )}
     </div>
   );
 }

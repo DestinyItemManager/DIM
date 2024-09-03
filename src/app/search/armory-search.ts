@@ -8,7 +8,7 @@ import { BucketHashes } from 'data/d2/generated-enums';
 import extraItemCollectibles from 'data/d2/unreferenced-collections-items.json';
 import _ from 'lodash';
 import { ArmorySearchItem, SearchItemType } from './autocomplete';
-import { plainString } from './search-filters/freeform';
+import { plainString } from './text-utils';
 
 export interface ArmoryEntry {
   name: string;
@@ -43,13 +43,6 @@ export function buildArmoryIndex(defs: D2ManifestDefinitions | undefined, langua
         i.inventory?.bucketTypeHash === BucketHashes.EnergyWeapons ||
         i.inventory?.bucketTypeHash === BucketHashes.PowerWeapons)
     ) {
-      // Skip sunset weapons
-      const powerCapHash = i.quality?.versions?.[i.quality.currentVersion]?.powerCapHash;
-      const powerCap = powerCapHash && defs.PowerCap.get(powerCapHash).powerCap;
-      if (powerCap && powerCap < 1310) {
-        continue;
-      }
-
       const season = getSeason(i, defs);
       const seasonName = season
         ? seasons.find((s) => s.seasonNumber === season)?.displayProperties?.name
@@ -69,8 +62,8 @@ export function buildArmoryIndex(defs: D2ManifestDefinitions | undefined, langua
   results.sort(
     chainComparator(
       compareBy((entry) => -entry.season),
-      compareBy((entry) => entry.name)
-    )
+      compareBy((entry) => entry.name),
+    ),
   );
   return results;
 }
@@ -78,7 +71,7 @@ export function buildArmoryIndex(defs: D2ManifestDefinitions | undefined, langua
 export function getArmorySuggestions(
   armoryIndex: ArmoryEntry[] | undefined,
   query: string,
-  language: DimLanguage
+  language: DimLanguage,
 ): ArmorySearchItem[] {
   const plainQuery = plainString(query, language);
   const armoryEntries = query.length

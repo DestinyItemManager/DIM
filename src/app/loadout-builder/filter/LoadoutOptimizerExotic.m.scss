@@ -1,0 +1,24 @@
+@use '../../variables' as *;
+
+// TODO: really need a common version of this
+.infoCard {
+  composes: flexRow from '../../dim-ui/common.m.scss';
+  gap: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+
+  > :first-child {
+    flex-shrink: 0;
+  }
+}
+
+.details {
+  composes: flexColumn from '../../dim-ui/common.m.scss';
+  gap: 4px;
+}
+
+.title {
+  color: var(--theme-text);
+  font-weight: bold;
+  font-size: 14px;
+}

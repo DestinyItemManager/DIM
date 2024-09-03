@@ -1,0 +1,45 @@
+@use '../variables' as *;
+
+.editor {
+  composes: flexColumn from '../dim-ui/common.m.scss';
+  gap: 4px;
+  padding: 4px 0 0 0;
+}
+
+.item {
+  background: black;
+  padding: 4px 8px 4px 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.dragging {
+  outline: 1px solid var(--theme-accent-primary);
+}
+
+.grip {
+  opacity: 0.5;
+  font-size: 10px;
+  padding-left: 10px;
+  align-self: stretch;
+  composes: flexRow from '../dim-ui/common.m.scss';
+  align-items: center;
+}
+
+.name {
+  flex: 1;
+}
+
+:global(.sort-forward) {
+  color: var(--theme-accent-primary);
+}
+:global(.sort-reverse) {
+  color: var(--theme-accent-secondary);
+}
+
+.button {
+  composes: resetButton from '../dim-ui/common.m.scss';
+  opacity: 0.9;
+  padding: 4px 6px;
+}

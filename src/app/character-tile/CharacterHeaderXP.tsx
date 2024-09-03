@@ -8,7 +8,7 @@ import styles from './CharacterHeaderXP.m.scss';
 
 function getLevelBar(store: D1Store) {
   const prestige = store.progressions.find(
-    (p) => p.progressionHash === D1ProgressionHashes.Prestige
+    (p) => p.progressionHash === D1ProgressionHashes.Prestige,
   );
   let levelBar = store?.percentToNextLevel ?? 0;
   let xpTillMote: string | undefined = undefined;

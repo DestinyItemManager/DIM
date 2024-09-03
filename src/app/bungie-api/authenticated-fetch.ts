@@ -23,7 +23,7 @@ export class FatalTokenError extends Error {
 export async function fetchWithBungieOAuth(
   request: RequestInfo | URL,
   options?: RequestInit,
-  triedRefresh = false
+  triedRefresh = false,
 ): Promise<Response> {
   if (!(request instanceof Request)) {
     request = new Request(request);
@@ -45,7 +45,7 @@ export async function fetchWithBungieOAuth(
     if (triedRefresh) {
       // Give up
       throw new FatalTokenError(
-        "Access token expired, and we've already tried to refresh. Failing."
+        "Access token expired, and we've already tried to refresh. Failing.",
       );
     }
     // OK, Bungie has told us our access token is expired or
@@ -73,7 +73,7 @@ async function responseIndicatesBadToken(response: Response) {
           data.ErrorCode === PlatformErrorCodes.AuthorizationRecordRevoked ||
           data.ErrorCode === PlatformErrorCodes.AuthorizationRecordExpired ||
           data.ErrorCode === PlatformErrorCodes.AuthorizationCodeStale ||
-          data.ErrorCode === PlatformErrorCodes.AuthorizationCodeInvalid)
+          data.ErrorCode === PlatformErrorCodes.AuthorizationCodeInvalid),
     );
   } catch {}
   return false;
@@ -108,7 +108,7 @@ function handleRefreshTokenError(error: unknown): Promise<Tokens> {
     warnLog(
       'bungie auth',
       "Error getting auth token from refresh token because there's no internet connection (or a permissions issue). Not clearing token.",
-      error
+      error,
     );
     throw error;
   }
@@ -116,7 +116,7 @@ function handleRefreshTokenError(error: unknown): Promise<Tokens> {
     warnLog(
       'bungie auth',
       'Other error getting auth token from refresh token. Not clearing auth tokens',
-      error
+      error,
     );
     throw error;
   }
@@ -128,7 +128,7 @@ function handleRefreshTokenError(error: unknown): Promise<Tokens> {
         error_description?: string;
         ErrorCode?: PlatformErrorCodes;
       };
-    } catch (e) {}
+    } catch {}
   }
 
   if (data) {
@@ -143,11 +143,11 @@ function handleRefreshTokenError(error: unknown): Promise<Tokens> {
         case 'AuthorizationRecordRevoked':
         case 'AuthorizationCodeStale':
           throw new FatalTokenError(
-            `Refresh token expired or not valid, platform error ${data.error_description}`
+            `Refresh token expired or not valid, platform error ${data.error_description}`,
           );
         default:
           throw new Error(
-            `Unknown error getting response token: ${data.error}, ${data.error_description}`
+            `Unknown error getting response token: ${data.error}, ${data.error_description}`,
           );
       }
     }
@@ -161,7 +161,7 @@ function handleRefreshTokenError(error: unknown): Promise<Tokens> {
         case PlatformErrorCodes.AuthorizationRecordRevoked:
         case PlatformErrorCodes.AuthorizationCodeStale:
           throw new FatalTokenError(
-            `Refresh token expired or not valid, platform error ${data.ErrorCode}`
+            `Refresh token expired or not valid, platform error ${data.ErrorCode}`,
           );
         default:
           break;
@@ -172,7 +172,7 @@ function handleRefreshTokenError(error: unknown): Promise<Tokens> {
   switch (error.status) {
     case -1:
       throw new Error(
-        "Error getting auth token from refresh token because there's no internet connection. Not clearing token."
+        "Error getting auth token from refresh token because there's no internet connection. Not clearing token.",
       );
     case 401:
     case 403: {
@@ -183,6 +183,6 @@ function handleRefreshTokenError(error: unknown): Promise<Tokens> {
   throw new Error(
     `Unknown error getting response token. status: ${error.status}, response: ${
       error.responseBody ?? 'No response body'
-    }`
+    }`,
   );
 }

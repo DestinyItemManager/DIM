@@ -1,19 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-const fs = require('fs');
+import fs from 'node:fs';
 
-const de = require('./locale/de.json');
-const en = require('./locale/en.json');
-const esMX = require('./locale/esMX.json');
-const es = require('./locale/es.json');
-const fr = require('./locale/fr.json');
-const it = require('./locale/it.json');
-const ja = require('./locale/ja.json');
-const ko = require('./locale/ko.json');
-const pl = require('./locale/pl.json');
-const ptBR = require('./locale/ptBR.json');
-const ru = require('./locale/ru.json');
-const zhCHS = require('./locale/zhCHS.json');
-const zhCHT = require('./locale/zhCHT.json');
+import de from './locale/de.json' assert { type: 'json' };
+import en from './locale/en.json' assert { type: 'json' };
+import es from './locale/es.json' assert { type: 'json' };
+import esMX from './locale/esMX.json' assert { type: 'json' };
+import fr from './locale/fr.json' assert { type: 'json' };
+import it from './locale/it.json' assert { type: 'json' };
+import ja from './locale/ja.json' assert { type: 'json' };
+import ko from './locale/ko.json' assert { type: 'json' };
+import pl from './locale/pl.json' assert { type: 'json' };
+import ptBR from './locale/ptBR.json' assert { type: 'json' };
+import ru from './locale/ru.json' assert { type: 'json' };
+import zhCHS from './locale/zhCHS.json' assert { type: 'json' };
+import zhCHT from './locale/zhCHT.json' assert { type: 'json' };
 
 /**
  * @param {string} key
@@ -56,6 +56,9 @@ export const unsupported = {
 ${getI18nKey('Browsercheck.Unsupported')}
 
 export const steamBrowser = {
-${getI18nKey('Browsercheck.Steam')}`;
+${getI18nKey('Browsercheck.Steam')}
+
+export const samsungInternet = {
+${getI18nKey('Browsercheck.Samsung')}`;
 
 fs.writeFileSync('src/browsercheck-utils.js', browserCheckUtils);

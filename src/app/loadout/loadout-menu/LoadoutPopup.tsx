@@ -1,3 +1,4 @@
+import { SearchType } from '@destinyitemmanager/dim-api-types';
 import { languageSelector, settingSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import ClassIcon from 'app/dim-ui/ClassIcon';
@@ -20,15 +21,23 @@ import {
   randomizeLoadoutSubclass,
 } from 'app/loadout-drawer/loadout-drawer-reducer';
 import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { InGameLoadout, Loadout } from 'app/loadout-drawer/loadout-types';
-import { isMissingItems, newLoadout } from 'app/loadout-drawer/loadout-utils';
-import { loadoutsForClassTypeSelector } from 'app/loadout-drawer/loadouts-selector';
+import {
+  isArmorModsOnly,
+  isFashionOnly,
+  isMissingItems,
+  newLoadout,
+} from 'app/loadout-drawer/loadout-utils';
 import { makeRoomForPostmaster, totalPostmasterItems } from 'app/loadout-drawer/postmaster';
-import { previousLoadoutSelector } from 'app/loadout-drawer/selectors';
+import { updateLoadoutStore } from 'app/loadout/actions';
+import { InGameLoadout, Loadout } from 'app/loadout/loadout-types';
+import { loadoutsForClassTypeSelector } from 'app/loadout/loadouts-selector';
+import { previousLoadoutSelector } from 'app/loadout/selectors';
 import { manifestSelector, useDefinitions } from 'app/manifest/selectors';
 import { showMaterialCount } from 'app/material-counts/MaterialCountsWrappers';
 import { showNotification } from 'app/notifications/notifications';
-import { filteredItemsSelector, searchFilterSelector } from 'app/search/search-filter';
+import SearchBar from 'app/search/SearchBar';
+import { filteredItemsSelector, searchFilterSelector } from 'app/search/items/item-search-filter';
+import { loadoutFilterFactorySelector } from 'app/search/loadouts/loadout-search-filter';
 import {
   AppIcon,
   addIcon,
@@ -46,9 +55,8 @@ import { querySelector, useIsPhonePortrait } from 'app/shell/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState, ThunkResult } from 'app/store/types';
 import { queueAction } from 'app/utils/action-queue';
-import { isiOSBrowser } from 'app/utils/browsers';
 import { emptyArray } from 'app/utils/empty';
-import { errorMessage } from 'app/utils/util';
+import { errorMessage } from 'app/utils/errors';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import consumablesIcon from 'destiny-icons/general/consumables.svg';
@@ -58,7 +66,12 @@ import { Link } from 'react-router-dom';
 import { InGameLoadoutIconWithIndex } from '../ingame/InGameLoadoutIcon';
 import { applyInGameLoadout } from '../ingame/ingame-loadout-apply';
 import { inGameLoadoutsForCharacterSelector } from '../ingame/selectors';
-import { searchAndSortLoadoutsByQuery, useLoadoutFilterPills } from '../loadout-ui/menu-hooks';
+import {
+  FashionIcon,
+  ModificationsIcon,
+  searchAndSortLoadoutsByQuery,
+  useLoadoutFilterPills,
+} from '../loadout-ui/menu-hooks';
 import styles from './LoadoutPopup.m.scss';
 import { RandomLoadoutOptions, useRandomizeLoadout } from './LoadoutPopupRandomize';
 import MaxlightButton from './MaxlightButton';
@@ -83,17 +96,25 @@ export default function LoadoutPopup({
   const loadoutSort = useSelector(settingSelector('loadoutSort'));
   const dispatch = useThunkDispatch();
   const hasClassifiedAffectingMaxPower = useSelector(
-    (state: RootState) => powerLevelSelector(state, dimStore.id)?.problems.hasClassified
+    (state: RootState) => powerLevelSelector(state, dimStore.id)?.problems.hasClassified,
   );
 
   const loadouts = useSelector(loadoutsForClassTypeSelector(dimStore.classType));
   const inGameLoadouts = useSelector((state: RootState) =>
     dimStore.isVault
       ? emptyArray<InGameLoadout>()
-      : inGameLoadoutsForCharacterSelector(state, dimStore.id)
+      : inGameLoadoutsForCharacterSelector(state, dimStore.id),
   );
 
   const [loadoutQuery, setLoadoutQuery] = useState('');
+
+  // This sets the store id for loadouts page, so that when navigating to it the correct
+  // character will be set.
+  const setLoadoutPageStore = () => {
+    if (!dimStore.isVault) {
+      dispatch(updateLoadoutStore({ storeId: dimStore.id }));
+    }
+  };
 
   const makeNewLoadout = () =>
     editLoadout(newLoadout('', [], dimStore.classType), dimStore.id, { isNew: true });
@@ -130,50 +151,35 @@ export default function LoadoutPopup({
 
   const [pillFilteredLoadouts, filterPills, hasSelectedFilters] = useLoadoutFilterPills(
     loadouts,
-    dimStore.id,
-    { className: styles.filterPills, darkBackground: true }
+    dimStore,
+    { className: styles.filterPills, darkBackground: true },
   );
+
+  const loadoutFilterFactory = useSelector(loadoutFilterFactorySelector);
   const filteredLoadouts = searchAndSortLoadoutsByQuery(
     pillFilteredLoadouts,
+    loadoutFilterFactory,
     loadoutQuery,
     language,
-    loadoutSort
+    loadoutSort,
   );
 
   const blockPropagation = (e: React.MouseEvent) => e.stopPropagation();
 
-  // On iOS at least, focusing the keyboard pushes the content off the screen
-  const nativeAutoFocus = !isPhonePortrait && !isiOSBrowser();
-
   const filteringLoadouts = loadoutQuery.length > 0 || hasSelectedFilters;
-
-  const handleEscape = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      if (loadoutQuery === '') {
-        onClick?.();
-      } else {
-        setLoadoutQuery('');
-      }
-      e.preventDefault();
-      e.stopPropagation();
-    }
-  };
 
   return (
     <div className={styles.content} onClick={onClick} role="menu">
       {totalLoadouts >= 10 && (
-        <form className={styles.filterInput}>
-          <AppIcon icon={searchIcon} className="search-bar-icon" />
-          <input
-            type="text"
-            autoFocus={nativeAutoFocus}
+        <div onClick={blockPropagation}>
+          <SearchBar
+            className={styles.filterInput}
             placeholder={t('Header.FilterHelpLoadouts')}
-            onClick={blockPropagation}
-            value={loadoutQuery}
-            onChange={(e) => setLoadoutQuery(e.target.value)}
-            onKeyDown={handleEscape}
+            onQueryChanged={setLoadoutQuery}
+            searchType={SearchType.Loadout}
+            instant
           />
-        </form>
+        </div>
       )}
 
       {filterPills}
@@ -211,7 +217,7 @@ export default function LoadoutPopup({
 
         {!filteringLoadouts && dimStore.destinyVersion === 2 && (
           <li className={styles.menuItem}>
-            <Link to="../loadouts" state={{ storeId: dimStore.id }}>
+            <Link to="../loadouts" onClick={setLoadoutPageStore}>
               <AppIcon icon={faList} />
               <span>{t('Loadouts.ManageLoadouts')}</span>
             </Link>
@@ -304,6 +310,12 @@ export default function LoadoutPopup({
               title={loadout.notes ? loadout.notes : loadout.name}
               onClick={() => applySavedLoadout(loadout)}
             >
+              {defs.isDestiny2 && isFashionOnly(defs, loadout) && (
+                <FashionIcon className={styles.fashionIcon} />
+              )}
+              {defs.isDestiny2 && isArmorModsOnly(defs, loadout) && (
+                <ModificationsIcon className={styles.modificationIcon} />
+              )}
               {(dimStore.isVault || loadout.classType === DestinyClass.Unknown) && (
                 <ClassIcon className={styles.loadoutTypeIcon} classType={loadout.classType} />
               )}
@@ -329,7 +341,7 @@ export default function LoadoutPopup({
           <RandomLoadoutButton
             store={dimStore}
             query={query}
-            isD2={defs.isDestiny2()}
+            isD2={defs.isDestiny2}
             onClick={onClick}
           />
         )}

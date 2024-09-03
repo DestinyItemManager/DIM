@@ -5,9 +5,9 @@ import { getCraftedSocket } from 'app/inventory/store/crafted';
 import { KillTrackerInfo } from 'app/item-popup/KillTracker';
 import Objective from 'app/progress/Objective';
 import { percent, percentWithSingleDecimal } from 'app/shell/formatters';
-import { AppIcon, shapedIcon } from 'app/shell/icons';
+import { AppIcon, enhancedIcon, shapedIcon } from 'app/shell/icons';
+import { filterMap } from 'app/utils/collections';
 import { isKillTrackerSocket, plugToKillTracker } from 'app/utils/item-utils';
-import { filterMap } from 'app/utils/util';
 import styles from './WeaponCraftedInfo.m.scss';
 
 /**
@@ -29,6 +29,8 @@ export function WeaponCraftedInfo({ item, className }: { item: DimItem; classNam
       <div className="objective-progress">
         <div className="objective-progress-bar" style={progressBarStyle} />
         <div className="objective-description">
+          {item.craftedInfo?.enhancementTier > 0 &&
+            `${t('MovePopup.EnhancementTier', { tier: item.craftedInfo?.enhancementTier })} - `}
           {t('MovePopup.WeaponLevel', { level: item.craftedInfo.level })}
         </div>
         <div className="objective-text">{percentWithSingleDecimal(progress)}</div>
@@ -37,13 +39,13 @@ export function WeaponCraftedInfo({ item, className }: { item: DimItem; classNam
   );
 }
 
-export function CraftedDataMedallion({ item }: { item: DimItem }) {
+function CraftedDataMedallion({ item }: { item: DimItem }) {
   const killTrackers = filterMap(
     item.sockets?.allSockets.find((s) => isKillTrackerSocket(s))?.plugOptions ?? [],
-    (p) => plugToKillTracker(p)
+    (p) => plugToKillTracker(p),
   );
   const shapedDateObjective = getCraftedSocket(item)?.plugged?.plugObjectives.find(
-    (o) => o.progress === item.craftedInfo?.craftedDate
+    (o) => o.progress === item.craftedInfo?.craftedDate,
   );
 
   return (
@@ -67,7 +69,10 @@ export function CraftedDataMedallion({ item }: { item: DimItem }) {
         </>
       }
     >
-      <AppIcon className={styles.patternIcon} icon={shapedIcon} />
+      <AppIcon
+        className={styles.patternIcon}
+        icon={item.crafted === 'enhanced' ? enhancedIcon : shapedIcon}
+      />
     </PressTip>
   );
 }

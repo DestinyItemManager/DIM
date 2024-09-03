@@ -1,4 +1,4 @@
-import { moveDownIcon, moveUpIcon } from 'app/shell/icons';
+import { expandDownIcon, expandUpIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
 import clsx from 'clsx';
 import { useSelect } from 'downshift';
@@ -75,16 +75,19 @@ export default function Select<T>({
   const buttonRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const [dropdownWidth, setDropdownWidth] = useState<number | undefined>(() =>
-    typeof maxDropdownWidth === 'number' ? maxDropdownWidth : undefined
+    typeof maxDropdownWidth === 'number' ? maxDropdownWidth : undefined,
   );
   const [dropdownHeight, setDropdownHeight] = useState<number | undefined>();
 
-  usePopper({
-    contents: menuRef,
-    reference: buttonRef,
-    placement: 'bottom-start',
-    offset: 2,
-  });
+  usePopper(
+    {
+      contents: menuRef,
+      reference: buttonRef,
+      placement: 'bottom-start',
+      offset: 2,
+    },
+    [isOpen, items],
+  );
 
   if (!selectedItem) {
     throw new Error('value must correspond to one of the provided options');
@@ -131,7 +134,7 @@ export default function Select<T>({
         {children ?? (
           <>
             {selectedItem.content}{' '}
-            <AppIcon icon={isOpen ? moveUpIcon : moveDownIcon} className={styles.arrow} />
+            <AppIcon icon={isOpen ? expandUpIcon : expandDownIcon} className={styles.arrow} />
           </>
         )}
       </button>
@@ -156,7 +159,7 @@ export default function Select<T>({
                   >
                     {item.content}
                   </div>
-                )
+                ),
             )}
         </div>
       </div>

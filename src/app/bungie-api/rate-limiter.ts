@@ -57,7 +57,7 @@ export class RateLimiterQueue {
     if (!this.timer) {
       const nextTryIn = Math.max(
         0,
-        this.timeLimit - (window.performance.now() - this.lastRequestTime)
+        this.timeLimit - (window.performance.now() - this.lastRequestTime),
       );
       this.timer = window.setTimeout(() => {
         this.timer = undefined;
@@ -71,11 +71,11 @@ export class RateLimiterQueue {
       if (this.canProcess()) {
         const config = this.queue.shift()!;
         this.count++;
+        this.lastRequestTime = window.performance.now();
         config
           .fetcher(config.request, config.options)
           .finally(() => {
             this.count--;
-            this.lastRequestTime = window.performance.now();
             this.processQueue();
           })
           .then(config.resolver, config.rejecter);

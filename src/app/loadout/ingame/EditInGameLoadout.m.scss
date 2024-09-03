@@ -11,59 +11,11 @@
   margin: 0;
 }
 
-.preview {
-  display: flex;
-  flex-direction: row;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  font-size: 16px;
-  gap: 8px;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.button {
-  composes: dim-button from global;
-  position: relative;
-  > img {
-    margin: 0 !important;
-    height: 48px;
-    width: 48px;
-  }
-  &:hover,
-  &:active,
-  &.checked {
-    background-color: var(--theme-accent-primary);
-    color: var(--theme-text-invert);
-    > img {
-      filter: none !important;
-    }
-  }
-  &.imageButton {
-    padding: 2px;
-  }
-  &.hasLoadout {
-    &:hover,
-    &:active,
-    &.checked {
-      color: var(--theme-text) !important;
-    }
-  }
-}
-
-.row {
+.slots {
   display: flex;
   flex-flow: row wrap;
   gap: 4px;
-}
-
-.slots {
-  composes: row;
   margin-bottom: 8px;
-
-  > .button {
-    padding: 2px;
-  }
 }
 
 .emptySlot {

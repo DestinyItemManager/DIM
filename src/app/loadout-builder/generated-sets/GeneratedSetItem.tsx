@@ -55,6 +55,7 @@ export default function GeneratedSetItem({
   pinned,
   itemOptions,
   assignedMods,
+  autoStatMods,
   automaticallyPickedMods,
   energy,
   lbDispatch,
@@ -63,6 +64,7 @@ export default function GeneratedSetItem({
   pinned: boolean;
   itemOptions: DimItem[];
   assignedMods?: PluggableInventoryItemDefinition[];
+  autoStatMods: boolean;
   automaticallyPickedMods?: number[];
   energy: { energyCapacity: number; energyUsed: number };
   lbDispatch: Dispatch<LoadoutBuilderAction>;
@@ -86,7 +88,7 @@ export default function GeneratedSetItem({
 
   const onSocketClick = (
     plugDef: PluggableInventoryItemDefinition,
-    plugCategoryHashWhitelist?: number[]
+    plugCategoryHashWhitelist?: number[],
   ) => {
     const { plugCategoryHash } = plugDef.plug;
 
@@ -97,7 +99,10 @@ export default function GeneratedSetItem({
       if (item.isExotic) {
         lbDispatch({ type: 'lockExotic', lockedExoticHash: item.hash });
       }
-    } else if (plugCategoryHash !== PlugCategoryHashes.EnhancementsArtifice) {
+    } else if (
+      plugCategoryHash !== PlugCategoryHashes.EnhancementsArtifice &&
+      (!autoStatMods || plugCategoryHash !== PlugCategoryHashes.EnhancementsV2General)
+    ) {
       lbDispatch({
         type: 'openModPicker',
         plugCategoryHashWhitelist,

@@ -15,13 +15,13 @@ import memoizeOne from 'memoize-one';
 // recent item hash for given collectibles, so the inverted map gives us the collectible
 // for some items.
 const extraItemsToCollectibles = _.mapValues(_.invert(extraItemCollectibles), (val) =>
-  parseInt(val, 10)
+  parseInt(val, 10),
 );
 
 function collectPresentationNodes(
   defs: D2ManifestDefinitions,
   nodeHash: number,
-  list: DestinyPresentationNodeDefinition[]
+  list: DestinyPresentationNodeDefinition[],
 ) {
   const def = defs.PresentationNode.get(nodeHash);
   if (def && !def.redacted) {
@@ -51,7 +51,7 @@ export const createCollectibleFinder = memoizeOne((defs: D2ManifestDefinitions) 
         const relevantPresentationNodes = collectPresentationNodes(
           defs,
           classNode.presentationNodeHash,
-          []
+          [],
         );
         const collectibles = relevantPresentationNodes
           .flatMap((node) => node.children?.collectibles ?? [])
@@ -62,16 +62,16 @@ export const createCollectibleFinder = memoizeOne((defs: D2ManifestDefinitions) 
         // where the icon matches our icon (e.g. Y1 Trials / Prophecy: Bond Judgment vs. Judgement's Wrap)
         const collectiblesByReverseItemIcon = _.keyBy(
           collectibles,
-          (c) => defs.InventoryItem.get(c.itemHash)?.displayProperties.icon
+          (c) => defs.InventoryItem.get(c.itemHash)?.displayProperties.icon,
         );
         return [classType, { collectiblesByName, collectiblesByReverseItemIcon }] as const;
-      })
+      }),
     );
   });
 
   return (
     itemDef: DestinyInventoryItemDefinition,
-    knownClassType?: DestinyClass
+    knownClassType?: DestinyClass,
   ): DestinyCollectibleDefinition | undefined => {
     const cacheEntry = cache[itemDef.hash];
     if (cacheEntry !== undefined) {

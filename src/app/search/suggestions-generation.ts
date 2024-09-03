@@ -1,60 +1,4 @@
-import { CustomStatDef } from '@destinyitemmanager/dim-api-types';
-import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
-import { customStatsSelector } from 'app/dim-api/selectors';
-import { TagValue } from 'app/inventory/dim-item-info';
-import { DimItem } from 'app/inventory/item-types';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { loadoutsSelector } from 'app/loadout-drawer/loadouts-selector';
-import { d2ManifestSelector } from 'app/manifest/selectors';
-import { createSelector } from 'reselect';
-import {
-  allItemsSelector,
-  allNotesHashtagsSelector,
-  getNotesSelector,
-  getTagSelector,
-} from '../inventory/selectors';
-
-import { FilterDefinition, SuggestionsContext, canonicalFilterFormats } from './filter-types';
-
-//
-// Selectors
-//
-
-/**
- * A selector for the suggestionsContext for a particular destiny version.
- * This must depend on every bit of data in suggestionsContext so that we
- * regenerate filter suggestions whenever any of them changes.
- */
-export const suggestionsContextSelector = createSelector(
-  allItemsSelector,
-  loadoutsSelector,
-  d2ManifestSelector,
-  getTagSelector,
-  getNotesSelector,
-  allNotesHashtagsSelector,
-  customStatsSelector,
-  makeSuggestionsContext
-);
-
-function makeSuggestionsContext(
-  allItems: DimItem[],
-  loadouts: Loadout[],
-  d2Manifest: D2ManifestDefinitions | undefined,
-  getTag: (item: DimItem) => TagValue | undefined,
-  getNotes: (item: DimItem) => string | undefined,
-  allNotesHashtags: string[],
-  customStats: CustomStatDef[]
-): SuggestionsContext {
-  return {
-    allItems,
-    loadouts,
-    d2Manifest,
-    getTag,
-    getNotes,
-    allNotesHashtags,
-    customStats,
-  };
-}
+import { FilterDefinition, canonicalFilterFormats } from './filter-types';
 
 const operators = ['<', '>', '<=', '>=']; // TODO: add "none"? remove >=, <=?
 
@@ -64,31 +8,31 @@ const operators = ['<', '>', '<=', '>=']; // TODO: add "none"? remove >=, <=?
  * Accepts partial filters with as little as just a "keywords" property,
  * if you want to generate some keywords without a full valid filter
  */
-export function generateSuggestionsForFilter(
+export function generateSuggestionsForFilter<I, FilterCtx, SuggestionsCtx>(
   filterDefinition: Pick<
-    FilterDefinition,
+    FilterDefinition<I, FilterCtx, SuggestionsCtx>,
     'keywords' | 'suggestions' | 'format' | 'overload' | 'deprecated' | 'suggestionsGenerator'
   >,
-  suggestionsContext: SuggestionsContext = {}
+  suggestionsContext: SuggestionsCtx,
 ) {
-  return generateGroupedSuggestionsForFilter(filterDefinition, false, suggestionsContext).flatMap(
+  return generateGroupedSuggestionsForFilter(filterDefinition, suggestionsContext, false).flatMap(
     ({ keyword, ops }) => {
       if (ops) {
         return [keyword].concat(ops.map((op) => `${keyword}${op}`));
       } else {
         return [keyword];
       }
-    }
+    },
   );
 }
 
-export function generateGroupedSuggestionsForFilter(
+export function generateGroupedSuggestionsForFilter<I, FilterCtx, SuggestionsCtx>(
   filterDefinition: Pick<
-    FilterDefinition,
+    FilterDefinition<I, FilterCtx, SuggestionsCtx>,
     'keywords' | 'suggestions' | 'format' | 'overload' | 'deprecated' | 'suggestionsGenerator'
   >,
+  suggestionsContext: SuggestionsCtx,
   forHelp?: boolean,
-  suggestionsContext: SuggestionsContext = {}
 ): { keyword: string; ops?: string[] }[] {
   if (filterDefinition.deprecated) {
     return [];
@@ -125,13 +69,13 @@ export function generateGroupedSuggestionsForFilter(
       case 'simple':
         // Pass minDepth 1 to not generate "is:" and "not:" suggestions. Only generate `is:` for filters help
         allSuggestions.push(
-          ...expandFlat([forHelp ? ['is'] : ['is', 'not'], thisFilterKeywords], 1)
+          ...expandFlat([forHelp ? ['is'] : ['is', 'not'], thisFilterKeywords], 1),
         );
         break;
       case 'query':
         // `query` is exhaustive, so only include keyword: for autocompletion, not filters help
         allSuggestions.push(
-          ...expandFlat([thisFilterKeywords, filterSuggestions], forHelp ? 1 : 0)
+          ...expandFlat([thisFilterKeywords, filterSuggestions], forHelp ? 1 : 0),
         );
         break;
       case 'freeform':
@@ -150,11 +94,11 @@ export function generateGroupedSuggestionsForFilter(
                 [
                   thisFilterKeywords,
                   operators.flatMap((op) =>
-                    overloadNames.map((overloadName) => `${op}${overloadName}`)
+                    overloadNames.map((overloadName) => `${op}${overloadName}`),
                   ),
                 ],
-                1
-              )
+                1,
+              ),
             );
           }
         }
@@ -198,9 +142,9 @@ function expandStringCombinations(stringGroups: string[][]) {
       stems
         ? stems.map(
             (stem) =>
-              (stem ? `${stem}${suffix}` : suffix) + (i === stringGroups.length - 1 ? '' : ':')
+              (stem ? `${stem}${suffix}` : suffix) + (i === stringGroups.length - 1 ? '' : ':'),
           )
-        : [`${suffix}:`]
+        : [`${suffix}:`],
     );
     results.push(newResults);
   }

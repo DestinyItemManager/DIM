@@ -28,7 +28,7 @@ export default function WhatsNewLink({
   if (dimNeedsUpdate) {
     return (
       <a className={className({ isActive: false })} onClick={reloadDIM}>
-        <AppIcon className={styles.upgrade} icon={updateIcon} />
+        <AppIcon className={styles.upgrade} icon={updateIcon} ariaHidden />
         {t('Header.UpgradeDIM')}
       </a>
     );
@@ -40,7 +40,7 @@ export default function WhatsNewLink({
         <span
           className={clsx(
             styles.badgeNew,
-            `bungie-alert-${GlobalAlertLevelsToToastLevels[alerts[0].AlertLevel]}`
+            `bungie-alert-${GlobalAlertLevelsToToastLevels[alerts[0].AlertLevel]}`,
           )}
         />{' '}
         {t('Header.BungieNetAlert')}

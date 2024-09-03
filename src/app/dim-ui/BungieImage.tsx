@@ -41,7 +41,7 @@ export function bungieBackgroundStyle(src: BungieImagePath) {
 export function bungieBackgroundStyleAdvanced(
   src: BungieImagePath,
   additionalBackground?: string,
-  stacks = 1
+  stacks = 1,
 ) {
   const backgrounds = Array(stacks).fill(`url("${bungieNetPath(src)}")`);
   if (additionalBackground) {

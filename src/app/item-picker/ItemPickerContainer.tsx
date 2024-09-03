@@ -32,7 +32,7 @@ export default function ItemPickerContainer({ children }: { children: React.Reac
       });
       setGeneration((gen) => gen + 1);
     },
-    [parentSetOptions]
+    [parentSetOptions],
   );
 
   const onClose = useCallback(() => {

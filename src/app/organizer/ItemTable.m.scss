@@ -13,9 +13,8 @@ $content-cells: 5;
 }
 
 .table {
-  min-width: 1270px;
   display: grid;
-  margin: 8px 0 16px 0 !important;
+  margin: 8px 0 16px 0;
 
   > div {
     padding: 4px 8px;
@@ -26,23 +25,20 @@ $content-cells: 5;
 
 .toolbar {
   grid-column: 1 / -1;
-  position: sticky;
   z-index: $toolbar;
   box-sizing: border-box;
 
   top: var(--header-height);
   padding: 8px 8px !important;
-
   border-bottom: none !important;
-  > div {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    position: sticky;
-    left: calc(4px + env(safe-area-inset-left));
-    width: calc(98vw - env(safe-area-inset-left) - env(safe-area-inset-right));
-    gap: 4px;
-  }
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: sticky;
+  left: env(safe-area-inset-left);
+  width: calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right));
+  gap: 4px;
 }
 
 .importButton {
@@ -106,10 +102,10 @@ $content-cells: 5;
   left: env(safe-area-inset-left);
   position: sticky;
   top: calc(var(--header-height) + var(--table-header-height) + var(--item-table-toolbar-height));
+  z-index: $header-cells;
   &.header {
     top: calc(var(--header-height) + var(--item-table-toolbar-height));
   }
-  z-index: $header-cells;
 }
 
 .rating {
@@ -146,21 +142,22 @@ $content-cells: 5;
 }
 
 .icon {
+  --icon-item-size: calc(var(--item-size) * 0.75);
   padding-top: 4px !important;
   min-width: calc(var(--item-size) * 0.75);
   left: calc(30px + env(safe-area-inset-left));
   position: sticky;
   top: calc(var(--header-height) + var(--table-header-height) + var(--item-table-toolbar-height));
+  z-index: $header-cells;
   &.header {
     top: calc(var(--header-height) + var(--item-table-toolbar-height));
     padding-top: 0;
   }
-  z-index: $header-cells;
-  --icon-item-size: calc(var(--item-size) * 0.75);
   > :global(.item) {
     --item-size: var(--icon-item-size) !important;
     height: var(--item-size);
-    &:hover {
+
+    @include interactive($hover: true) {
       outline: 1px solid var(--theme-item-polaroid-hover-border);
       cursor: pointer;
     }
@@ -182,7 +179,11 @@ $content-cells: 5;
 }
 
 .perks,
-.traits {
+.traits,
+.barrels,
+.intrinsics,
+.originTrait,
+.shaders {
   padding-top: calc(var(--item-size) * 0.5 * 0.5 - 5px) !important;
 }
 .perks {
@@ -226,17 +227,22 @@ $content-cells: 5;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
+  gap: 3px;
+  white-space: nowrap;
 }
 .miniPerkContainer {
+  --item-size: 18px;
   position: relative;
   contain: layout paint style;
   box-sizing: border-box;
   height: 18px;
   width: 18px;
-  --item-size: 18px;
-  margin-right: 3px;
   margin-left: -1px;
   flex-shrink: 0;
+  > img {
+    height: var(--item-size);
+    width: var(--item-size);
+  }
 }
 .perkSelected {
   font-weight: bold;
@@ -302,7 +308,7 @@ $modslotSize: 30px;
 // Indicate cells that can be filtered on shift-click
 .shiftHeld {
   .hasFilter {
-    &:hover {
+    @include interactive($hover: true) {
       background-color: var(--theme-accent-primary) !important;
       cursor: pointer;
     }

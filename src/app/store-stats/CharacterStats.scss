@@ -1,3 +1,5 @@
+@import '../variables';
+
 /* INT/DIS/STR bars */
 .stat-bars {
   width: 100%;
@@ -66,8 +68,7 @@
     .stat-row {
       display: flex;
       flex-direction: row;
-      justify-items: left;
-      align-items: center;
+      place-items: center left;
       &.powerFormula {
         margin-bottom: 3px;
         img {
@@ -108,8 +109,10 @@
       flex: 0;
       font-size: 11px;
       color: var(--theme-header-characters-txt);
-      &.pointerCursor {
-        cursor: pointer;
+      &.boostedValue {
+        color: $stat-modded;
+        font-weight: bold;
+        text-shadow: rgba(0, 0, 0, 0.5) 0 0 2px;
       }
       .phone-portrait & {
         font-size: 12px;
@@ -133,4 +136,8 @@
 .asterisk {
   vertical-align: top;
   margin-left: 2px;
+}
+.dropLevel {
+  display: flex;
+  justify-content: space-between;
 }

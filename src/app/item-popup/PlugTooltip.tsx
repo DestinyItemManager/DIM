@@ -4,12 +4,12 @@ import { EnergyCostIcon } from 'app/dim-ui/ElementIcon';
 import { Tooltip, useTooltipCustomization } from 'app/dim-ui/PressTip';
 import RichDestinyText from 'app/dim-ui/destiny-symbols/RichDestinyText';
 import { t } from 'app/i18next-t';
-import { resonantElementObjectiveHashes } from 'app/inventory/store/deepsight';
 import { getValueStyle } from 'app/inventory/store/objectives';
 import { isPluggableItem } from 'app/inventory/store/sockets';
 import { getDamageTypeForSubclassPlug } from 'app/inventory/subclass';
+import PlugStackableIcon from 'app/loadout/plug-drawer/PlugStackableIcon';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
+import { isArmor2Mod } from 'app/utils/item-utils';
 import { getDimPlugStats, getPlugDefStats, usePlugDescriptions } from 'app/utils/plug-descriptions';
 import { isEnhancedPerk, isModCostVisible } from 'app/utils/socket-utils';
 import WishListPerkThumb from 'app/wishlists/WishListPerkThumb';
@@ -24,6 +24,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
+import { TraitHashes } from 'data/d2/generated-enums';
 import { useCallback } from 'react';
 import { DimItem, DimPlug, PluggableInventoryItemDefinition } from '../inventory/item-types';
 import Objective from '../progress/Objective';
@@ -52,7 +53,7 @@ export function DimPlugTooltip({
   // Only show Exotic catalyst requirements if the catalyst is incomplete. We assume
   // that an Exotic weapon can only be masterworked if its catalyst is complete.
   const hideRequirements =
-    plug.plugDef.traitHashes?.includes(EXOTIC_CATALYST_TRAIT) && item.masterwork;
+    plug.plugDef.traitHashes?.includes(TraitHashes.ItemExoticCatalyst) && item.masterwork;
 
   // The PlugTooltip does all the rendering and layout, we just process information here.
   return (
@@ -132,13 +133,15 @@ function PlugTooltip({
   const sourceString =
     defs && def.collectibleHash && defs.Collectible.get(def.collectibleHash).sourceString;
 
-  // filter out plug objectives related to Resonant Elements
+  // filter out hidden objectives
   const filteredPlugObjectives = plugObjectives?.filter(
     (o) =>
-      !resonantElementObjectiveHashes.includes(o.objectiveHash) &&
       getValueStyle(defs?.Objective.get(o.objectiveHash), o.progress ?? 0, o.completionValue) !==
-        DestinyUnlockValueUIStyle.Hidden
+      DestinyUnlockValueUIStyle.Hidden,
   );
+
+  const armorMod = isArmor2Mod(def);
+  hideRequirements ||= armorMod;
 
   const bungieDescription =
     plugDescriptions.perks.length > 0 &&
@@ -179,7 +182,7 @@ function PlugTooltip({
           )}
         </div>
       ),
-      [def.itemTypeDisplayName, energyCost]
+      [def.itemTypeDisplayName, energyCost?.energyCost],
     ),
     className: clsx(styles.tooltip, {
       [styles.tooltipExotic]: def.inventory?.tierType === TierType.Exotic,
@@ -207,6 +210,13 @@ function PlugTooltip({
           <Tooltip.Section>
             {bungieDescription}
             {renderedStats}
+            {armorMod && (
+              <PlugStackableIcon
+                descriptions={plugDescriptions}
+                hash={def.hash}
+                className={styles.stackable}
+              />
+            )}
           </Tooltip.Section>
           {clarityDescriptionSection}
         </>
@@ -214,7 +224,16 @@ function PlugTooltip({
         (clarityDescriptionSection || renderedStats) && (
           <>
             {clarityDescriptionSection}
-            <Tooltip.Section>{renderedStats}</Tooltip.Section>
+            <Tooltip.Section>
+              {renderedStats}
+              {armorMod && (
+                <PlugStackableIcon
+                  descriptions={plugDescriptions}
+                  hash={def.hash}
+                  className={styles.stackable}
+                />
+              )}
+            </Tooltip.Section>
           </>
         )
       )}
@@ -296,7 +315,7 @@ export function PlugStats({ stats }: { stats: { statHash: number; value: number 
   );
 }
 
-export function StatValue({ value, statHash }: { value: number; statHash: number }) {
+function StatValue({ value, statHash }: { value: number; statHash: number }) {
   const defs = useD2Definitions()!;
   const statDef = defs.Stat.get(statHash);
   if (!statDef?.displayProperties.name) {

@@ -13,16 +13,19 @@ concurrency:
 
 jobs:
   build:
+    environment:
+      name: pr
+      url: ${{ steps.deploy-url.outputs.url }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v2
+      - uses: pnpm/action-setup@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version-file: '.nvmrc'
           cache: pnpm
 
       - name: Install
@@ -40,15 +43,19 @@ jobs:
         run: |
           echo "VERSION=${{ steps.package-version.outputs.current-version }}.${{ github.run_number }}" >> $GITHUB_ENV
 
-      - name: Build beta
-        run: pnpm build:beta
+      - name: Build PR version
+        run: pnpm build:pr
         env:
           NODE_OPTIONS: "--max_old_space_size=8192"
-          PR_BUILD: true
+          WEB_API_KEY: ${{ secrets.BUNGIE_API_KEY }}
+          WEB_OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
+          WEB_OAUTH_CLIENT_SECRET: ${{ secrets.OAUTH_SECRET }}
+          DIM_API_KEY: ${{ secrets.DIM_API_KEY }}
+          PUBLIC_PATH: /${{ github.event.number }}/
 
       - name: Check for updates to build pipeline
         id: filter
-        uses: dorny/paths-filter@v2
+        uses: dorny/paths-filter@v3
         with:
           filters: |
             build-pipeline:
@@ -64,3 +71,41 @@ jobs:
           webpackStatsFile: ./webpack-stats.json
           key: ${{ secrets.RELATIVE_CI_KEY }}
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Deploy a preview version of the server!
+
+      - name: Install SSH key
+        if: ${{github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]'}}
+        uses: benoitchantre/setup-ssh-authentication-action@1.0.1
+        with:
+          private-key: ${{ secrets.SSH_KEY }}
+          private-key-name: dim.rsa
+          known-hosts: ${{ secrets.REMOTE_HOST }}
+
+      - name: Check Syntax
+        if: ${{github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]'}}
+        run: pnpm syntax
+
+      - name: Rsync to Server
+        if: ${{github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]'}}
+        run: ./build/rsync-deploy.sh
+        env:
+            SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+            SOURCE: "dist/"
+            REMOTE_USER: ${{ secrets.REMOTE_USER }}
+            REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+            REMOTE_PATH: pr.destinyitemmanager.com/${{ github.event.number }}
+
+      - name: Purge CloudFlare cache
+        if: ${{github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]'}}
+        run: ./build/purge-cloudflare.sh
+        env:
+          CLOUDFLARE_KEY: ${{ secrets.CLOUDFLARE_KEY }}
+          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
+          APP_DOMAIN: pr.destinyitemmanager.com/${{ github.event.number }}
+
+      - name: Set preview deployment URL
+        if: ${{github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]'}}
+        id: deploy-url
+        run: |
+          echo "url=https://pr.dim.gg/${{ github.event.number }}/" >> $GITHUB_OUTPUT

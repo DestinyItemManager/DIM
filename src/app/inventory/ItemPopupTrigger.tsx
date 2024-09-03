@@ -19,7 +19,7 @@ interface Props {
   noCompare?: boolean;
   children: (
     ref: React.Ref<HTMLDivElement>,
-    onClick: (e: React.MouseEvent) => void
+    onClick: (e: React.MouseEvent) => void,
   ) => React.ReactNode;
 }
 
@@ -40,7 +40,7 @@ export default function ItemPopupTrigger({
       e.stopPropagation();
       dispatch(itemPopupTriggerClicked(item, ref, extraData, noCompare));
     },
-    [dispatch, extraData, item, noCompare]
+    [dispatch, extraData, item, noCompare],
   );
 
   // Close the popup if this component is unmounted
@@ -50,7 +50,7 @@ export default function ItemPopupTrigger({
         hideItemPopup();
       }
     },
-    [item.index]
+    [item.index],
   );
 
   return children(ref, clicked) as JSX.Element;
@@ -60,7 +60,7 @@ function itemPopupTriggerClicked(
   item: DimItem,
   ref: React.RefObject<HTMLDivElement>,
   extraData?: ItemPopupExtraInfo,
-  noCompare?: boolean
+  noCompare?: boolean,
 ): ThunkResult {
   return async (dispatch, getState) => {
     dispatch(clearNewItem(item.id));

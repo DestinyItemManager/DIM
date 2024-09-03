@@ -3,6 +3,7 @@ import { t } from 'app/i18next-t';
 import { useLoadStores } from 'app/inventory/store/hooks';
 import { useD1Definitions } from 'app/manifest/selectors';
 import { useSetting } from 'app/settings/hooks';
+import { count } from 'app/utils/collections';
 import { usePageTitle } from 'app/utils/hooks';
 import clsx from 'clsx';
 import _ from 'lodash';
@@ -14,7 +15,6 @@ import CollapsibleTitle from '../../dim-ui/CollapsibleTitle';
 import { storesSelector } from '../../inventory/selectors';
 import { D1Store } from '../../inventory/store-types';
 import Objective from '../../progress/Objective';
-import { count } from '../../utils/util';
 import { D1ManifestDefinitions } from '../d1-definitions';
 import { D1ObjectiveProgress, D1RecordBook, D1RecordComponent } from '../d1-manifest-types';
 import './record-books.scss';
@@ -75,7 +75,7 @@ export default function RecordBooks({ account }: Props) {
 
   const processRecordBook = (
     defs: D1ManifestDefinitions,
-    rawRecordBook: D1RecordBook
+    rawRecordBook: D1RecordBook,
   ): RecordBook => {
     // TODO: rewards are in "spotlights"
     // TODO: rank
@@ -152,7 +152,7 @@ export default function RecordBooks({ account }: Props) {
   const rawRecordBooks = stores[0].advisors.recordBooks;
   const recordBooks = _.sortBy(
     Object.values(rawRecordBooks ?? {}).map((rb) => processRecordBook(defs, rb)),
-    (rb) => [rb.complete, new Date(rb.startDate).getTime()]
+    (rb) => [rb.complete, new Date(rb.startDate).getTime()],
   );
 
   return (
@@ -232,7 +232,7 @@ export default function RecordBooks({ account }: Props) {
                       )}
                     </CollapsibleTitle>
                   </div>
-                )
+                ),
             )}
           </div>
         </CollapsibleTitle>

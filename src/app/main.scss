@@ -17,7 +17,15 @@
 
 @font-face {
   font-family: 'Destiny Symbols';
-  src: url('../data/d2/DestinySymbols.woff2') format('woff2');
+  src: url('../data/font/DestinySymbols.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: 'DIM Symbols';
+  src: url('../data/font/DIMSymbols.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: fallback;
@@ -129,10 +137,10 @@ label {
   background: #900;
   padding: 8px;
   text-align: center;
+  animation: 1s linear 10s forwards browser-warning;
   &.hidden {
     display: none;
   }
-  animation: 1s linear 10s forwards browser-warning;
 }
 
 /**
@@ -178,7 +186,7 @@ body {
   margin: 0 auto;
   background-color: var(--theme-pwa-background);
   color: var(--theme-text);
-  font-family: 'Open Sans', sans-serif, 'Destiny Symbols';
+  font-family: 'Open Sans', sans-serif, 'Destiny Symbols', 'DIM Symbols';
   font-size: 12px;
   line-height: calc(16 / 12);
   accent-color: var(--theme-accent-primary);
@@ -208,7 +216,7 @@ h4 {
 input,
 select,
 option {
-  font-family: inherit;
+  font-family: 'Open Sans', sans-serif, 'Destiny Symbols', 'DIM Symbols';
 }
 
 input[type='text'],
@@ -231,14 +239,13 @@ textarea {
   outline: none;
   color: var(--theme-text);
   box-sizing: border-box;
-  font-family: monospace, 'Destiny Symbols';
+  font-family: monospace, 'Destiny Symbols', 'DIM Symbols';
   font-size: inherit;
   // Setting this makes yuku/textcomplete faster because it doesn't need to make a fake element to measure line height (incorrectly, too)
   line-height: calc(16 / 12);
   caret-color: var(--theme-accent-primary);
 
-  &:hover,
-  &:focus {
+  @include interactive($hover: true, $focus: true) {
     box-shadow: inset 0 0 0 1px var(--theme-search-dropdown-border);
   }
 }
@@ -267,8 +274,7 @@ select {
     height: 35px;
   }
 
-  &:hover,
-  &:active {
+  @include interactive($hover: true, $active: true) {
     background-color: var(--theme-accent-primary);
     color: var(--theme-text-invert);
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="black" d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z"></path></svg>');

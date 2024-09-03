@@ -1,4 +1,5 @@
 {
+  "plugins": ["stylelint-order"],
   "extends": ["stylelint-config-standard-scss", "stylelint-config-css-modules"],
   "rules": {
     "alpha-value-notation": "number",
@@ -21,12 +22,13 @@
     "at-rule-no-unknown": null,
     "scss/at-rule-no-unknown": true,
     "media-feature-name-no-unknown": null,
+    "selector-not-notation": null,
     "selector-pseudo-class-no-unknown": [true, { "ignorePseudoClasses": ["horizontal", "global"] }],
     "hue-degree-notation": "number",
     "selector-id-pattern": "(^[a-z][a-zA-Z0-9]+$|^([a-z][a-z0-9]*)(-[a-z0-9]+)*$)",
     "selector-class-pattern": "(^[a-z][a-zA-Z0-9]+$|^([a-z][a-z0-9]*)(-[A-Za-z0-9]+)*$)",
     "scss/dollar-variable-pattern": "(^[a-z][a-zA-Z0-9]+$|^([a-z][a-z0-9]*)(-[a-z0-9]+)*$)",
-    "value-no-vendor-prefix": [true, { "ignoreValues": "box" }],
+    "value-no-vendor-prefix": [true, { "ignoreValues": ["box"] }],
     "color-no-invalid-hex": true,
     "unit-no-unknown": true,
     "no-duplicate-selectors": true,
@@ -44,9 +46,28 @@
     ],
     "scss/at-function-pattern": [
       "^dim-([a-z][a-z0-9]*)(-[a-z0-9]+)*$",
+      { "message": "Expected function name to be kebab-case and prefixed with 'dim-'" }
+    ],
+    "scss/load-partial-extension": null,
+    "order/order": [
+      "custom-properties",
+      "dollar-variables",
+      "declarations",
       {
-        "message": "Expected function name to be kebab-case and prefixed with 'dim-'"
-      }
-    ]
+        "type": "at-rule",
+        "name": "include",
+        "hasBlock": false
+      },
+      {
+        "type": "at-rule",
+        "name": "include",
+        "hasBlock": true
+      },
+      {
+        "type": "at-rule"
+      },
+      "rules"
+    ],
+    "declaration-block-no-shorthand-property-overrides": true
   }
 }

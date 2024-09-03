@@ -7,11 +7,11 @@ import {
   sortedStoresSelector,
 } from 'app/inventory/selectors';
 import { getCurrentStore } from 'app/inventory/stores-helpers';
-import { searchFilterSelector } from 'app/search/search-filter';
+import { searchFilterSelector } from 'app/search/items/item-search-filter';
 import { querySelector } from 'app/shell/selectors';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
-import { currySelector } from 'app/utils/selector-utils';
+import { currySelector } from 'app/utils/selectors';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
 import {
@@ -54,11 +54,11 @@ export const vendorGroupsForCharacterSelector = currySelector(
       return vendorsResponse && vendorData && selectedStoreId
         ? toVendorGroups(context, vendorsResponse, selectedStoreId)
         : emptyArray<D2VendorGroup>();
-    }
-  )
+    },
+  ),
 );
 
-export const subVendorsForCharacterSelector = currySelector(
+const subVendorsForCharacterSelector = currySelector(
   createSelector(
     createItemContextSelector,
     vendorsByCharacterSelector,
@@ -82,13 +82,13 @@ export const subVendorsForCharacterSelector = currySelector(
             const vendor = toVendor(
               {
                 ...context,
-                itemComponents: vendorsResponse.itemComponents[vendorHash],
+                itemComponents: vendorsResponse.itemComponents?.[vendorHash],
               },
               item.previewVendorHash,
               vendorsResponse.vendors.data?.[vendorHash],
               selectedStoreId,
               vendorsResponse.sales.data?.[vendorHash]?.saleItems,
-              vendorsResponse
+              vendorsResponse,
             );
             if (vendor) {
               subvendors[vendorHash] = vendor;
@@ -98,8 +98,8 @@ export const subVendorsForCharacterSelector = currySelector(
         }
       }
       return subvendors;
-    }
-  )
+    },
+  ),
 );
 
 export const showUnacquiredVendorItemsOnlySelector = (state: RootState) =>
@@ -111,14 +111,18 @@ export const showUnacquiredVendorItemsOnlySelector = (state: RootState) =>
 export const characterVendorItemsSelector = createSelector(
   (_state: RootState, vendorCharacterId?: string) => vendorCharacterId,
   vendorGroupsForCharacterSelector.selector,
-  (vendorCharacterId, vendorGroups) => {
+  subVendorsForCharacterSelector.selector,
+  (vendorCharacterId, vendorGroups, subVendors) => {
     if (!vendorCharacterId) {
       return emptyArray<DimItem>();
     }
     return _.compact(
-      vendorGroups.flatMap((vg) => vg.vendors.flatMap((vs) => vs.items.map((vi) => vi.item)))
+      vendorGroups
+        .flatMap((vg) => vg.vendors)
+        .concat(Object.values(subVendors))
+        .flatMap((vs) => vs.items.map((vi) => vi.item)),
     );
-  }
+  },
 );
 
 export const ownedVendorItemsSelector = currySelector(
@@ -132,8 +136,8 @@ export const ownedVendorItemsSelector = currySelector(
         ...ownedPlugs.accountWideOwned,
         ...((storeId && ownedItems.storeSpecificOwned[storeId]) || []),
         ...((storeId && ownedPlugs.storeSpecificOwned[storeId]) || []),
-      ])
-  )
+      ]),
+  ),
 );
 
 export const vendorItemFilterSelector = currySelector(
@@ -143,7 +147,7 @@ export const vendorItemFilterSelector = currySelector(
     subVendorsForCharacterSelector.selector,
     querySelector,
     searchFilterSelector,
-    (state: RootState) => settingSelector('vendorsHideSilverItems')(state),
+    settingSelector<'vendorsHideSilverItems'>('vendorsHideSilverItems'),
     (ownedItemHashes, showUnacquiredOnly, subVendors, query, itemFilter, hideSilver) => {
       const filters: VendorFilterFunction[] = [];
       const silverFilter = filterToNoSilver();
@@ -176,13 +180,13 @@ export const vendorItemFilterSelector = currySelector(
           const subVendorData = subVendors[previewVendorHash];
           if (subVendorData) {
             return subVendorData.items.some((subItem) =>
-              filterItem(subItem, subVendorData, [...seenVendors, previewVendorHash])
+              filterItem(subItem, subVendorData, [...seenVendors, previewVendorHash]),
             );
           }
         }
         return false;
       }
       return (item: VendorItem, vendor: D2Vendor) => filterItem(item, vendor, []);
-    }
-  )
+    },
+  ),
 );

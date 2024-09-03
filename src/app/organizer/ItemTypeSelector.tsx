@@ -1,13 +1,12 @@
 import { DestinyVersion } from '@destinyitemmanager/dim-api-types';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { useDefinitions } from 'app/manifest/selectors';
-import { filteredItemsSelector } from 'app/search/search-filter';
+import { filteredItemsSelector } from 'app/search/items/item-search-filter';
 import clsx from 'clsx';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
 import styles from './ItemTypeSelector.m.scss';
-import { itemIncludesCategories } from './filtering-utils';
 
 /**
  * Each branch of the drilldown options is represented by a SelectionTreeNode
@@ -79,6 +78,7 @@ const d2SelectionTree: ItemCategoryTreeNode = {
     {
       id: 'weapons',
       itemCategoryHash: ItemCategoryHashes.Weapon,
+      terminal: true,
 
       subCategories: [
         {
@@ -295,26 +295,19 @@ const d1SelectionTree: ItemCategoryTreeNode = {
       ],
     },
     {
-      id: 'armor',
-      itemCategoryHash: ItemCategoryHashes.Armor,
-
-      subCategories: [
-        {
-          id: 'hunter',
-          itemCategoryHash: ItemCategoryHashes.Hunter,
-          subCategories: d1ArmorCategories,
-        },
-        {
-          id: 'titan',
-          itemCategoryHash: ItemCategoryHashes.Titan,
-          subCategories: d1ArmorCategories,
-        },
-        {
-          id: 'warlock',
-          itemCategoryHash: ItemCategoryHashes.Warlock,
-          subCategories: d1ArmorCategories,
-        },
-      ],
+      id: 'hunter',
+      itemCategoryHash: ItemCategoryHashes.Hunter,
+      subCategories: d1ArmorCategories,
+    },
+    {
+      id: 'titan',
+      itemCategoryHash: ItemCategoryHashes.Titan,
+      subCategories: d1ArmorCategories,
+    },
+    {
+      id: 'warlock',
+      itemCategoryHash: ItemCategoryHashes.Warlock,
+      subCategories: d1ArmorCategories,
     },
     {
       id: 'ghosts',
@@ -399,7 +392,9 @@ export default function ItemTypeSelector({
                       (
                       {
                         filteredItems.filter(
-                          (i) => i.comparable && itemIncludesCategories(i, categoryHashList)
+                          (i) =>
+                            i.comparable &&
+                            categoryHashList.every((h) => i.itemCategoryHashes.includes(h)),
                         ).length
                       }
                       )

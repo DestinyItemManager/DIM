@@ -15,7 +15,7 @@ export default function ExcludeItemsDropTarget({ className, children, onExcluded
   const [{ isOver, canDrop }, dropRef] = useDrop<
     D1Item,
     unknown,
-    { isOver: Boolean; canDrop: boolean }
+    { isOver: boolean; canDrop: boolean }
   >(
     () => ({
       accept: [
@@ -30,7 +30,7 @@ export default function ExcludeItemsDropTarget({ className, children, onExcluded
       collect: (monitor) => ({ isOver: monitor.isOver(), canDrop: monitor.canDrop() }),
       drop: onExcluded,
     }),
-    [onExcluded]
+    [onExcluded],
   );
   return (
     <div

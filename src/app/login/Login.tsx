@@ -7,7 +7,6 @@ import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { isAppStoreVersion } from 'app/utils/browsers';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
 import { oauthClientId } from '../bungie-api/bungie-api-utils';
 import styles from './Login.m.scss';
 
@@ -16,7 +15,10 @@ const loginHelpLink = userGuideUrl('Accounts-and-Login');
 
 export default function Login() {
   const dispatch = useThunkDispatch();
-  const authorizationState = useMemo(() => (isAppStoreVersion() ? 'dimauth-' : '') + uuidv4(), []);
+  const authorizationState = useMemo(
+    () => (isAppStoreVersion() ? 'dimauth-' : '') + globalThis.crypto.randomUUID(),
+    [],
+  );
   const clientId = oauthClientId();
   const location = useLocation();
   const state = location.state as { path?: string } | undefined;
@@ -29,7 +31,7 @@ export default function Login() {
   // Save the path we were originally on, so we can restore it after login in the DefaultAccount component.
   useEffect(() => {
     if (previousPath) {
-      localStorage.setItem('returnPath', previousPath);
+      localStorage.setItem('returnPath', $PUBLIC_PATH.replace(/\/$/, '') + previousPath);
     }
   }, [previousPath]);
 
@@ -45,7 +47,7 @@ export default function Login() {
 
   // If API permissions had been explicitly disabled before, don't even show the option to enable DIM Sync
   const [apiPermissionPreviouslyDisabled] = useState(
-    localStorage.getItem('dim-api-enabled') === 'false'
+    localStorage.getItem('dim-api-enabled') === 'false',
   );
   const [apiPermissionGranted, setApiPermissionGranted] = useState(() => {
     const enabled = localStorage.getItem('dim-api-enabled') !== 'false';

@@ -66,9 +66,9 @@
 
   h1 {
     grid-area: title;
+    margin: 0 0 4px 0;
 
     @include destiny-header;
-    margin: 0 0 4px 0;
   }
 
   :global(.item) {
@@ -94,10 +94,10 @@
   flex-wrap: wrap;
   align-items: center;
   margin-bottom: 4px;
+  gap: 4px;
   > * {
     margin: 0;
   }
-  gap: 4px;
 }
 
 .element {

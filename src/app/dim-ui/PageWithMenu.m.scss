@@ -28,11 +28,11 @@
   margin-top: 12px; // 8px to match the menu, plus 4px to match the padding
   width: 100%;
   box-sizing: border-box;
-  h2:first-child {
-    margin-top: 0;
-  }
 
   @include phone-portrait {
+    margin-top: 0;
+  }
+  h2:first-child {
     margin-top: 0;
   }
   :global(.issue-banner-shown) & {
@@ -54,25 +54,9 @@
   position: sticky;
   top: calc(var(--header-height) + 8px);
   width: calc(var(--page-with-menu-menu-width) + 8px);
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden auto;
   overscroll-behavior: none;
   max-height: calc(var(--viewport-height) - var(--header-height) - 8px);
-
-  // This inner container div exists to keep the contents from changing widths,
-  // while the outer .menu container may change size as the scrollbars appear
-  // and disappear.
-  > div {
-    width: var(--page-with-menu-menu-width);
-    padding: 4px; // To allow for the outline of the character selector to show
-  }
-
-  // Add in some width when a scrollbar is present!
-  // It'd be cooler if https://developer.mozilla.org/en-US/docs/Web/CSS/scrollbar-gutter existed.
-  &.menuScrollbars {
-    // Windows scrollbars are 17px, then padding p
-    width: calc(var(--page-with-menu-menu-width) + 17px + 8px);
-  }
 
   @include phone-portrait {
     position: static;
@@ -87,6 +71,21 @@
       width: 100%;
       padding: 0;
     }
+  }
+
+  // This inner container div exists to keep the contents from changing widths,
+  // while the outer .menu container may change size as the scrollbars appear
+  // and disappear.
+  > div {
+    width: var(--page-with-menu-menu-width);
+    padding: 4px; // To allow for the outline of the character selector to show
+  }
+
+  // Add in some width when a scrollbar is present!
+  // It'd be cooler if https://developer.mozilla.org/en-US/docs/Web/CSS/scrollbar-gutter existed.
+  &.menuScrollbars {
+    // Windows scrollbars are 17px, then padding p
+    width: calc(var(--page-with-menu-menu-width) + 17px + 8px);
   }
 
   ul {
@@ -111,21 +110,24 @@
   align-items: center;
   margin-bottom: 4px;
   min-height: 24px;
+  gap: 4px;
 
-  @media (hover: hover) {
-    &:hover {
+  @include phone-portrait {
+    padding: 6px 10px;
+    font-size: 16px;
+  }
+
+  @include interactive($hover: true, $focus: true) {
+    color: var(--theme-accent-primary);
+
+    :global(.app-icon) {
       color: var(--theme-accent-primary);
-
-      :global(.app-icon) {
-        color: var(--theme-accent-primary);
-      }
     }
   }
 
   img {
     height: 24px;
     width: 24px;
-    margin-right: 4px;
   }
   > span:not(:global(.app-icon)) {
     flex: 1;

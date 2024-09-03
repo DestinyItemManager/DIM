@@ -1,6 +1,6 @@
 import { destinyVersionSelector } from 'app/accounts/selectors';
 import { StatInfo } from 'app/compare/Compare';
-import { settingSelector } from 'app/dim-api/selectors';
+import { languageSelector, settingSelector } from 'app/dim-api/selectors';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import useBulkNote from 'app/dim-ui/useBulkNote';
 import useConfirm from 'app/dim-ui/useConfirm';
@@ -23,16 +23,16 @@ import {
 } from 'app/inventory/store/override-sockets';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
 import { convertToLoadoutItem, newLoadout } from 'app/loadout-drawer/loadout-utils';
-import { loadoutsByItemSelector } from 'app/loadout-drawer/selectors';
+import { loadoutsByItemSelector } from 'app/loadout/selectors';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { showNotification } from 'app/notifications/notifications';
-import { searchFilterSelector } from 'app/search/search-filter';
+import { searchFilterSelector } from 'app/search/items/item-search-filter';
 import { setSettingAction } from 'app/settings/actions';
 import { toggleSearchQueryComponent } from 'app/shell/actions';
 import { AppIcon, faCaretDown, faCaretUp, spreadsheetIcon, uploadIcon } from 'app/shell/icons';
 import { loadingTracker } from 'app/shell/loading-tracker';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
+import { Comparator, chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
 import { emptyArray, emptyObject } from 'app/utils/empty';
 import { useSetCSSVarToHeight, useShiftHeld } from 'app/utils/hooks';
 import { LookupTable, StringLookup } from 'app/utils/util-types';
@@ -44,18 +44,21 @@ import _ from 'lodash';
 import React, { ReactNode, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Dropzone, { DropzoneOptions } from 'react-dropzone';
 import { useSelector } from 'react-redux';
-import { getColumnSelectionId, getColumns } from './Columns';
+import { buildStatInfo, getColumnSelectionId, getColumns } from './Columns';
 import EnabledColumnsSelector from './EnabledColumnsSelector';
 import ItemActions, { TagCommandInfo } from './ItemActions';
-import { itemIncludesCategories } from './filtering-utils';
 
 import { compareSelectedItems } from 'app/compare/actions';
 
 import { useTableColumnSorts } from 'app/dim-ui/table-columns';
-import { errorMessage, filterMap } from 'app/utils/util';
+import { filterMap } from 'app/utils/collections';
+import { errorMessage } from 'app/utils/errors';
 import { createPortal } from 'react-dom';
-// eslint-disable-next-line css-modules/no-unused-class
-import styles from './ItemTable.m.scss';
+
+import { DimLanguage } from 'app/i18n';
+import { localizedSorter } from 'app/utils/intl';
+
+import styles from './ItemTable.m.scss'; // eslint-disable-line css-modules/no-unused-class
 import { ItemCategoryTreeNode, armorTopLevelCatHashes } from './ItemTypeSelector';
 import { ColumnDefinition, ColumnSort, Row, SortDirection } from './table-types';
 
@@ -68,16 +71,18 @@ const categoryToClass: LookupTable<ItemCategoryHashes, DestinyClass> = {
 };
 
 const downloadButtonSettings = [
-  { categoryId: ['weapons'], csvType: 'Weapons' as const, label: tl('Bucket.Weapons') },
+  { categoryId: ['weapons'], csvType: 'weapon' as const, label: tl('Bucket.Weapons') },
   {
     categoryId: ['hunter', 'titan', 'warlock'],
-    csvType: 'Armor' as const,
+    csvType: 'armor' as const,
     label: tl('Bucket.Armor'),
   },
-  { categoryId: ['ghosts'], csvType: 'Ghost' as const, label: tl('Bucket.Ghost') },
+  { categoryId: ['ghosts'], csvType: 'ghost' as const, label: tl('Bucket.Ghost') },
 ];
 
 const MemoRow = memo(TableRow);
+
+const EXPAND_INCREMENT = 20;
 
 export default function ItemTable({ categories }: { categories: ItemCategoryTreeNode[] }) {
   const [columnSorts, toggleColumnSort] = useTableColumnSorts([
@@ -87,6 +92,11 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   // Track the last selection for shift-selecting
   const lastSelectedId = useRef<string | null>(null);
   const [socketOverrides, onPlugClicked] = useSocketOverridesForItems();
+  const [maxItems, setMaxItems] = useState(EXPAND_INCREMENT);
+  useEffect(() => {
+    setMaxItems(EXPAND_INCREMENT);
+  }, [categories]);
+  const expandItems = useCallback(() => setMaxItems((m) => m + EXPAND_INCREMENT), []);
 
   const allItems = useSelector(allItemsSelector);
   const searchFilter = useSelector(searchFilterSelector);
@@ -101,7 +111,10 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
       categoryHashes.push(ItemCategoryHashes.Armor);
     }
     const items = allItems.filter(
-      (i) => i.comparable && itemIncludesCategories(i, categoryHashes) && searchFilter(i)
+      (i) =>
+        i.comparable &&
+        categoryHashes.every((h) => i.itemCategoryHashes.includes(h)) &&
+        searchFilter(i),
     );
     return items;
   }, [allItems, categories, searchFilter]);
@@ -130,7 +143,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     .map((n) => n.itemCategoryHash)
     .find((hash) => hash in categoryToClass);
   const classIfAny: DestinyClass = classCategoryHash
-    ? categoryToClass[classCategoryHash] ?? DestinyClass.Unknown
+    ? (categoryToClass[classCategoryHash] ?? DestinyClass.Unknown)
     : DestinyClass.Unknown;
 
   // Calculate the true height of the table header, for sticky-ness
@@ -158,10 +171,10 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     () =>
       defs
         ? originalItems.map((item) =>
-            applySocketOverrides(itemCreationContext, item, socketOverrides[item.id])
+            applySocketOverrides(itemCreationContext, item, socketOverrides[item.id]),
           )
         : originalItems,
-    [itemCreationContext, defs, originalItems, socketOverrides]
+    [itemCreationContext, defs, originalItems, socketOverrides],
   );
 
   // Build a list of all the stats relevant to this set of items
@@ -172,12 +185,13 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
         : emptyObject<{
             [statHash: number]: StatInfo;
           }>(),
-    [terminal, items]
+    [terminal, items],
   );
 
   const columns: ColumnDefinition[] = useMemo(
     () =>
       getColumns(
+        'organizer',
         itemType,
         statHashes,
         getTag,
@@ -188,7 +202,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
         loadoutsByItem,
         newItems,
         destinyVersion,
-        onPlugClicked
+        onPlugClicked,
       ),
     [
       wishList,
@@ -202,7 +216,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
       newItems,
       destinyVersion,
       onPlugClicked,
-    ]
+    ],
   );
 
   // This needs work for sure
@@ -213,21 +227,22 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
           columns.filter(
             (column) =>
               id === getColumnSelectionId(column) &&
-              (column.limitToClass === undefined || column.limitToClass === classIfAny)
-          )
-        )
+              (column.limitToClass === undefined || column.limitToClass === classIfAny),
+          ),
+        ),
       ),
-    [columns, enabledColumns, classIfAny]
+    [columns, enabledColumns, classIfAny],
   );
 
   // process items into Rows
   const unsortedRows: Row[] = useMemo(
     () => buildRows(items, filteredColumns),
-    [filteredColumns, items]
+    [filteredColumns, items],
   );
+  const language = useSelector(languageSelector);
   const rows = useMemo(
-    () => sortRows(unsortedRows, columnSorts, filteredColumns),
-    [unsortedRows, filteredColumns, columnSorts]
+    () => sortRows(unsortedRows, columnSorts, filteredColumns, language),
+    [unsortedRows, filteredColumns, columnSorts, language],
   );
 
   const shiftHeld = useShiftHeld();
@@ -246,13 +261,13 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
                 } else {
                   return enabledColumns.includes(cId) ? cId : undefined;
                 }
-              })
-            )
-          )
-        )
+              }),
+            ),
+          ),
+        ),
       );
     },
-    [dispatch, columns, enabledColumns, itemType]
+    [dispatch, columns, enabledColumns, itemType],
   );
 
   const selectedItems = items.filter((i) => selectedItemIds.includes(i.id));
@@ -272,22 +287,16 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   const onRowClick = useCallback(
     (
       row: Row,
-      column: ColumnDefinition
-    ): React.MouseEventHandler<HTMLTableDataCellElement> | undefined =>
+      column: ColumnDefinition,
+    ): React.MouseEventHandler<HTMLTableCellElement> | undefined =>
       column.filter
         ? (e) => {
             if (e.shiftKey) {
-              if ((e.target as Element).hasAttribute('data-perk-name')) {
-                const filter = column.filter!(
-                  (e.target as Element).getAttribute('data-perk-name'),
-                  row.item
-                );
-                if (filter) {
-                  dispatch(toggleSearchQueryComponent(filter));
-                }
-                return;
-              }
-              const filter = column.filter!(row.values[column.id], row.item);
+              const node = e.target as HTMLElement;
+              const filter = column.filter!(
+                node.dataset.filterValue ?? row.values[column.id],
+                row.item,
+              );
               if (filter !== undefined) {
                 dispatch(toggleSearchQueryComponent(filter));
               }
@@ -297,12 +306,12 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
               setSelectedItemIds(
                 selectedItemIds.findIndex((selectedItemId) => selectedItemId === row.item.id) === -1
                   ? [...selectedItemIds, row.item.id]
-                  : selectedItemIds.filter((id) => id !== row.item.id)
+                  : selectedItemIds.filter((id) => id !== row.item.id),
               );
             }
           }
         : undefined,
-    [dispatch, selectedItemIds]
+    [dispatch, selectedItemIds],
   );
 
   const onMoveSelectedItems = useCallback(
@@ -310,13 +319,13 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
       if (selectedItems.length) {
         const loadout = newLoadout(
           t('Organizer.BulkMoveLoadoutName'),
-          selectedItems.map((i) => convertToLoadoutItem(i, false))
+          selectedItems.map((i) => convertToLoadoutItem(i, false)),
         );
 
         dispatch(applyLoadout(store, loadout, { allowUndo: true }));
       }
     },
-    [dispatch, selectedItems]
+    [dispatch, selectedItems],
   );
 
   const onTagSelectedItems = useCallback(
@@ -326,7 +335,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
         dispatch(bulkTagItems(selectedItems, tagInfo.type, true));
       }
     },
-    [dispatch, items, selectedItemIds]
+    [dispatch, items, selectedItemIds],
   );
 
   const onCompareSelectedItems = useCallback(() => {
@@ -347,7 +356,7 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
       (_v, n) =>
         `[role="cell"]:nth-of-type(${numColumns * 2}n+${
           n + 2
-        }){background-color:var(--theme-organizer-row-even-bg) !important;}`
+        }){background-color:var(--theme-organizer-row-even-bg) !important;}`,
     )
     .join('\n');
 
@@ -388,10 +397,9 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
     lastSelectedId.current = item.id;
   };
 
-  // TODO: drive the CSV export off the same column definitions as this table!
   let downloadAction: ReactNode | null = null;
   const downloadButtonSetting = downloadButtonSettings.find((setting) =>
-    setting.categoryId.includes(categories[1]?.id)
+    setting.categoryId.includes(categories[1]?.id),
   );
   if (downloadButtonSetting) {
     const downloadHandler = (e: React.MouseEvent) => {
@@ -433,16 +441,16 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
   useSetCSSVarToHeight(toolbarRef, '--item-table-toolbar-height');
 
   return (
-    <div
-      className={clsx(styles.table, shiftHeld && styles.shiftHeld)}
-      style={{ gridTemplateColumns: gridSpec }}
-      role="table"
-      ref={tableRef}
-    >
-      {confirmDialog}
-      {bulkNoteDialog}
-      <div className={styles.toolbar} ref={toolbarRef}>
-        <div>
+    <>
+      <div
+        className={clsx(styles.table, shiftHeld && styles.shiftHeld)}
+        style={{ gridTemplateColumns: gridSpec }}
+        role="table"
+        ref={tableRef}
+      >
+        {confirmDialog}
+        {bulkNoteDialog}
+        <div className={styles.toolbar} ref={toolbarRef}>
           <ItemActions
             itemsAreSelected={Boolean(selectedItems.length)}
             onLock={onLock}
@@ -470,77 +478,79 @@ export default function ItemTable({ categories }: { categories: ItemCategoryTree
             onChangeEnabledColumn={onChangeEnabledColumn}
             forClass={classIfAny}
           />
+          {createPortal(<style>{rowStyle}</style>, document.head)}
         </div>
-        {createPortal(<style>{rowStyle}</style>, document.head)}
-      </div>
-      <div className={clsx(styles.selection, styles.header)} role="columnheader" aria-sort="none">
-        <div>
-          <input
-            name="selectAll"
-            title={t('Organizer.SelectAll')}
-            type="checkbox"
-            checked={selectedItems.length === rows.length}
-            ref={(el) =>
-              el &&
-              (el.indeterminate = selectedItems.length !== rows.length && selectedItems.length > 0)
-            }
-            onChange={selectAllItems}
-          />
-        </div>
-      </div>
-      {filteredColumns.map((column: ColumnDefinition) => {
-        const isStatsColumn = ['stats', 'baseStats'].includes(column.columnGroup?.id ?? '');
-        return (
-          <div
-            key={column.id}
-            className={clsx(
-              possibleStyles[column.id],
-              column.id.startsWith('customstat_') && styles.customstat,
-              styles.header,
-              {
-                [styles.stats]: isStatsColumn,
-              }
-            )}
-            role="columnheader"
-            aria-sort="none"
-          >
-            <div
-              onClick={
-                column.noSort
-                  ? undefined
-                  : toggleColumnSort(column.id, shiftHeld, column.defaultSort)
-              }
-            >
-              {column.header}
-              {!column.noSort && columnSorts.some((c) => c.columnId === column.id) && (
-                <AppIcon
-                  className={styles.sorter}
-                  icon={
-                    columnSorts.find((c) => c.columnId === column.id)!.sort === SortDirection.DESC
-                      ? faCaretDown
-                      : faCaretUp
-                  }
-                />
-              )}
-            </div>
-          </div>
-        );
-      })}
-      {rows.length === 0 && <div className={styles.noItems}>{t('Organizer.NoItems')}</div>}
-      {rows.map((row) => (
-        <React.Fragment key={row.item.id}>
-          <div className={styles.selection} role="cell">
+        <div className={clsx(styles.selection, styles.header)} role="columnheader" aria-sort="none">
+          <div>
             <input
+              name="selectAll"
+              title={t('Organizer.SelectAll')}
               type="checkbox"
-              title={t('Organizer.SelectItem', { name: row.item.name })}
-              checked={selectedItemIds.includes(row.item.id)}
-              onChange={(e) => selectItem(e, row.item)}
+              checked={selectedItems.length === rows.length}
+              ref={(el) =>
+                el &&
+                (el.indeterminate =
+                  selectedItems.length !== rows.length && selectedItems.length > 0)
+              }
+              onChange={selectAllItems}
             />
           </div>
-          <MemoRow row={row} filteredColumns={filteredColumns} onRowClick={onRowClick} />
-        </React.Fragment>
-      ))}
-    </div>
+        </div>
+        {filteredColumns.map((column: ColumnDefinition) => {
+          const isStatsColumn = ['stats', 'baseStats'].includes(column.columnGroup?.id ?? '');
+          return (
+            <div
+              key={column.id}
+              className={clsx(
+                possibleStyles[column.id],
+                column.id.startsWith('customstat_') && styles.customstat,
+                styles.header,
+                {
+                  [styles.stats]: isStatsColumn,
+                },
+              )}
+              role="columnheader"
+              aria-sort="none"
+            >
+              <div
+                onClick={
+                  column.noSort
+                    ? undefined
+                    : toggleColumnSort(column.id, shiftHeld, column.defaultSort)
+                }
+              >
+                {column.header}
+                {!column.noSort && columnSorts.some((c) => c.columnId === column.id) && (
+                  <AppIcon
+                    className={styles.sorter}
+                    icon={
+                      columnSorts.find((c) => c.columnId === column.id)!.sort === SortDirection.DESC
+                        ? faCaretDown
+                        : faCaretUp
+                    }
+                  />
+                )}
+              </div>
+            </div>
+          );
+        })}
+        {rows.length === 0 && <div className={styles.noItems}>{t('Organizer.NoItems')}</div>}
+        {rows.slice(0, maxItems).map((row) => (
+          <React.Fragment key={row.item.id}>
+            <div className={styles.selection} role="cell">
+              <input
+                type="checkbox"
+                title={t('Organizer.SelectItem', { name: row.item.name })}
+                checked={selectedItemIds.includes(row.item.id)}
+                onChange={(e) => selectItem(e, row.item)}
+              />
+            </div>
+            <MemoRow row={row} filteredColumns={filteredColumns} onRowClick={onRowClick} />
+          </React.Fragment>
+        ))}
+      </div>
+      {rows.length > maxItems && <ItemListExpander onExpand={expandItems} />}
+    </>
   );
 }
 
@@ -564,64 +574,30 @@ function buildRows(items: DimItem[], filteredColumns: ColumnDefinition[]) {
 function sortRows(
   unsortedRows: Row[],
   columnSorts: ColumnSort[],
-  filteredColumns: ColumnDefinition[]
+  filteredColumns: ColumnDefinition[],
+  language: DimLanguage,
 ) {
   const comparator = chainComparator<Row>(
     ...columnSorts.map((sorter) => {
       const column = filteredColumns.find((c) => c.id === sorter.columnId);
       if (column) {
-        const compare = column.sort
-          ? (row1: Row, row2: Row) => column.sort!(row1.values[column.id], row2.values[column.id])
-          : compareBy((row: Row) => row.values[column.id] ?? 0);
+        const sort = column.sort;
+        const compare: Comparator<Row> = sort
+          ? (row1, row2) => sort(row1.values[column.id], row2.values[column.id])
+          : unsortedRows.some((row) => typeof row.values[column.id] === 'string')
+            ? localizedSorter(language, (row) => (row.values[column.id] ?? '') as string)
+            : compareBy((row) => row.values[column.id] ?? 0);
         // Always sort undefined values to the end
         return chainComparator(
-          compareBy((row: Row) => row.values[column.id] === undefined),
-          sorter.sort === SortDirection.ASC ? compare : reverseComparator(compare)
+          compareBy((row) => row.values[column.id] === undefined),
+          sorter.sort === SortDirection.ASC ? compare : reverseComparator(compare),
         );
       }
       return compareBy(() => 0);
-    })
+    }),
   );
 
-  return Array.from(unsortedRows).sort(comparator);
-}
-
-/**
- * This builds stat infos for all the stats that are relevant to a particular category of items.
- * It will return the same result for the same category, since all items in a category share stats.
- */
-function buildStatInfo(items: DimItem[]): {
-  [statHash: number]: StatInfo;
-} {
-  const statHashes: {
-    [statHash: number]: StatInfo;
-  } = {};
-  for (const item of items) {
-    if (item.stats) {
-      for (const stat of item.stats) {
-        if (statHashes[stat.statHash]) {
-          // TODO: we don't yet use the min and max values
-          statHashes[stat.statHash].max = Math.max(statHashes[stat.statHash].max, stat.value);
-          statHashes[stat.statHash].min = Math.min(statHashes[stat.statHash].min, stat.value);
-        } else {
-          statHashes[stat.statHash] = {
-            id: stat.statHash,
-            displayProperties: stat.displayProperties,
-            min: stat.value,
-            max: stat.value,
-            enabled: true,
-            lowerBetter: stat.smallerIsBetter,
-            statMaximumValue: stat.maximumValue,
-            bar: stat.bar,
-            getStat(item) {
-              return item.stats ? item.stats.find((s) => s.statHash === stat.statHash) : undefined;
-            },
-          };
-        }
-      }
-    }
-  }
-  return statHashes;
+  return unsortedRows.toSorted(comparator);
 }
 
 function TableRow({
@@ -633,7 +609,7 @@ function TableRow({
   filteredColumns: ColumnDefinition[];
   onRowClick: (
     row: Row,
-    column: ColumnDefinition
+    column: ColumnDefinition,
   ) => ((event: React.MouseEvent<HTMLTableCellElement>) => void) | undefined;
 }) {
   return (
@@ -665,4 +641,35 @@ function columnSetting(itemType: 'weapon' | 'armor' | 'ghost') {
     case 'ghost':
       return 'organizerColumnsGhost';
   }
+}
+
+function ItemListExpander({ onExpand }: { onExpand: () => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const elem = ref.current;
+    if (!elem) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            onExpand();
+          }
+        }
+      },
+      {
+        root: null,
+        rootMargin: '16px',
+        threshold: 0,
+      },
+    );
+
+    observer.observe(elem);
+    return () => observer.unobserve(elem);
+  }, [onExpand]);
+
+  return <div ref={ref} />;
 }

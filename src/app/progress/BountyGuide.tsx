@@ -57,7 +57,7 @@ export type DefType =
 
 const pursuitCategoryTraitHashes: TraitHashes[] = [
   TraitHashes.Seasonal_Quests,
-  TraitHashes.Lightfall,
+  TraitHashes.TheFinalShape,
   TraitHashes.Exotics,
   TraitHashes.Playlists,
   TraitHashes.ThePast,
@@ -125,8 +125,8 @@ export default function BountyGuide({
     QuestTrait: {},
   };
   for (const i of bounties) {
-    const expired = i.pursuit?.expirationDate
-      ? i.pursuit.expirationDate.getTime() < Date.now()
+    const expired = i.pursuit?.expiration
+      ? i.pursuit.expiration.expirationDate.getTime() < Date.now()
       : false;
     if (!i.complete && !expired) {
       const info = pursuitsInfo[i.hash];
@@ -167,7 +167,7 @@ export default function BountyGuide({
       type: type as DefType,
       value: parseInt(value, 10),
       bounties,
-    }))
+    })),
   );
 
   if (flattened.length === 0) {
@@ -237,7 +237,7 @@ function contentFromDisplayProperties(
   }: {
     displayProperties: DestinyDisplayPropertiesDefinition;
   },
-  hideIcon?: boolean
+  hideIcon?: boolean,
 ) {
   return (
     <>
@@ -285,7 +285,7 @@ function PillContent({
       return contentFromDisplayProperties(
         defs.Trait.get(value),
         // the seasonal quest trait has the Season of the Lost icon?
-        /* hideIcon */ value === TraitHashes.Seasonal_Quests
+        /* hideIcon */ value === TraitHashes.Seasonal_Quests,
       );
   }
 }
@@ -301,7 +301,7 @@ export function matchBountyFilters(
   defs: D2ManifestDefinitions,
   item: DimItem,
   filters: BountyFilter[],
-  pursuitsInfo: { [hash: string]: { [type in DefType]?: number[] } }
+  pursuitsInfo: { [hash: string]: { [type in DefType]?: number[] } },
 ) {
   if (filters.length === 0) {
     return true;

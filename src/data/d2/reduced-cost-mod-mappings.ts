@@ -14,7 +14,6 @@ export const normalToReducedMod: { [normalModHash: number]: number } = {
   '534479613': 2436471653,
   '554409585': 644105,
   '633101315': 2771425787,
-  '638704972': 3456250548,
   '686455429': 3075302157,
   '688956976': 56663992,
   '707237917': 657773637,
@@ -38,6 +37,8 @@ export const normalToReducedMod: { [normalModHash: number]: number } = {
   '1305536863': 1891463783,
   '1388734897': 897335593,
   '1435557120': 3896141096,
+  '1456244346': 810675984,
+  '1456244349': 810675991,
   '1456244351': 846698094,
   '1553790504': 1019574576,
   '1589556860': 2888195476,
@@ -61,7 +62,6 @@ export const normalToReducedMod: { [normalModHash: number]: number } = {
   '2485657760': 965934024,
   '2526773280': 411014648,
   '2532323436': 2113881316,
-  '2577472338': 3181984586,
   '2586562813': 2237975061,
   '2595839237': 3775800797,
   '2657604783': 1702273159,
@@ -86,10 +86,12 @@ export const normalToReducedMod: { [normalModHash: number]: number } = {
   '3437323171': 3887037435,
   '3462414552': 3294892432,
   '3467460423': 3914973263,
+  '3518670115': 2899505723,
   '3573031954': 3276278122,
   '3581696649': 2805854721,
   '3599522901': 2031584061,
   '3685945823': 3657186535,
+  '3712696020': 2996369932,
   '3719981603': 930759851,
   '3726719281': 3245543337,
   '3775916472': 3675553168,
@@ -112,5 +114,5 @@ export const normalToReducedMod: { [normalModHash: number]: number } = {
 };
 
 export const reducedToNormalMod: { [reducedModHash: number]: number } = Object.fromEntries(
-  Object.entries(normalToReducedMod).map(([normal, reduced]) => [reduced, parseInt(normal, 10)])
+  Object.entries(normalToReducedMod).map(([normal, reduced]) => [reduced, parseInt(normal, 10)]),
 );

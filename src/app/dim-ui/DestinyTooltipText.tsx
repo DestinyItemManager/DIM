@@ -2,6 +2,7 @@ import { DimItem } from 'app/inventory/item-types';
 import { AppIcon, faClock, shapedIcon } from 'app/shell/icons';
 import { DestinyItemTooltipNotification } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
+import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import styles from './DestinyTooltipText.m.scss';
 import RichDestinyText from './destiny-symbols/RichDestinyText';
 
@@ -11,8 +12,9 @@ export function DestinyTooltipText({ item }: { item: DimItem }) {
   }
   return (
     <>
-      {!isDeepsightTooltip &&
-        item.tooltipNotifications.map((tip) => (
+      {item.tooltipNotifications
+        .filter((tip) => !isEnhancementTooltip(item, tip))
+        .map((tip) => (
           <div
             key={tip.displayString}
             className={clsx('quest-expiration item-details', {
@@ -36,6 +38,11 @@ function isPatternTooltip(tip: DestinyItemTooltipNotification) {
   return tip.displayStyle === 'ui_display_style_deepsight';
 }
 
-function isDeepsightTooltip(tip: DestinyItemTooltipNotification) {
-  return tip.displayStyle === 'ui_display_style_info';
+function isEnhancementTooltip(item: DimItem, tip: DestinyItemTooltipNotification) {
+  return (
+    tip.displayStyle === 'ui_display_style_crafting' ||
+    // assume weapons with this tooltip style are non-enhanced weapons offering enhancement
+    (tip.displayStyle === 'ui_display_style_info' &&
+      item.itemCategoryHashes?.includes(ItemCategoryHashes.Weapon))
+  );
 }

@@ -5,9 +5,12 @@ interface CssExports {
   'artifactMods': string;
   'classIcon': string;
   'contents': string;
+  'disableEvents': string;
+  'fadeIn': string;
+  'finding': string;
+  'findings': string;
   'loadout': string;
   'loadoutNotes': string;
-  'missingItems': string;
   'modsStack': string;
   'title': string;
 }

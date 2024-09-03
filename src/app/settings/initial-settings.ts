@@ -1,4 +1,8 @@
-import { defaultSettings, Settings as DimApiSettings } from '@destinyitemmanager/dim-api-types';
+import {
+  defaultSettings,
+  Settings as DimApiSettings,
+  VaultWeaponGroupingStyle,
+} from '@destinyitemmanager/dim-api-types';
 import { defaultLanguage, DimLanguage } from 'app/i18n';
 
 /**
@@ -6,17 +10,38 @@ import { defaultLanguage, DimLanguage } from 'app/i18n';
  */
 export interface Settings extends DimApiSettings {
   language: DimLanguage;
-  loIncludeVendorItems: boolean;
-  theme: string;
-  sortRecordProgression: boolean;
-  vendorsHideSilverItems: boolean;
+  vaultArmorGroupingStyle: VaultWeaponGroupingStyle;
 }
 
 export const initialSettingsState: Settings = {
   ...defaultSettings,
-  loIncludeVendorItems: false,
   language: defaultLanguage(),
-  theme: 'default',
-  sortRecordProgression: false,
-  vendorsHideSilverItems: false,
+  vaultArmorGroupingStyle: VaultWeaponGroupingStyle.Inline,
+  organizerColumnsWeapons: [
+    'icon',
+    'name',
+    'dmg',
+    'power',
+    'tag',
+    'wishList',
+    'archetype',
+    'perks',
+    'traits',
+    'originTrait',
+    'notes',
+  ],
+  organizerColumnsArmor: [
+    'icon',
+    'name',
+    'power',
+    'energy',
+    'tag',
+    'modslot',
+    'intrinsics',
+    'perks',
+    'baseStats',
+    'customstat',
+    'notes',
+  ],
+  organizerColumnsGhost: ['icon', 'name', 'tag', 'perks', 'notes'],
 };

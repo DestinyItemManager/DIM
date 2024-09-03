@@ -1,13 +1,22 @@
 import { set } from 'app/storage/idb-keyval';
-import { observeStore } from 'app/utils/redux-utils';
+import { StoreObserver } from 'app/store/observerMiddleware';
+import { shallowEqual } from 'fast-equals';
+import { AccountsState } from './reducer';
 
-export function saveAccountsToIndexedDB() {
-  return observeStore(
-    (state) => state.accounts,
-    (currentState, nextState) => {
-      if (nextState.loaded && nextState.accounts !== currentState.accounts) {
-        set('accounts', nextState.accounts);
+export function createSaveAccountsObserver(): StoreObserver<
+  Pick<AccountsState, 'loaded' | 'accounts'>
+> {
+  return {
+    id: 'save-accounts-observer',
+    equals: shallowEqual,
+    getObserved: (rootState) => ({
+      loaded: rootState.accounts.loaded,
+      accounts: rootState.accounts.accounts,
+    }),
+    sideEffect: ({ current }) => {
+      if (current.loaded) {
+        set('accounts', current.accounts);
       }
-    }
-  );
+    },
+  };
 }

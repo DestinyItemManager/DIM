@@ -1,5 +1,8 @@
+import { InGameLoadoutIdentifiers } from '@destinyitemmanager/dim-api-types';
 import BungieImage, { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
-import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
+import { resolveInGameLoadoutIdentifiers } from 'app/loadout/loadout-type-converters';
+import { InGameLoadout } from 'app/loadout/loadout-types';
+import { useD2Definitions } from 'app/manifest/selectors';
 import clsx from 'clsx';
 import styles from './InGameLoadoutIcon.m.scss';
 
@@ -8,7 +11,7 @@ export default function InGameLoadoutIcon({
   className,
   size = 32,
 }: {
-  loadout: InGameLoadout;
+  loadout: Pick<InGameLoadout, 'colorIcon' | 'icon'>;
   className?: string;
   size?: number;
 }) {
@@ -40,4 +43,18 @@ export function InGameLoadoutIconWithIndex({
       <div className={styles.index}>{loadout.index + 1}</div>
     </div>
   );
+}
+
+export function InGameLoadoutIconFromIdentifiers({
+  identifiers,
+  className,
+  size = 32,
+}: {
+  identifiers: InGameLoadoutIdentifiers;
+  className?: string;
+  size?: number;
+}) {
+  const defs = useD2Definitions()!;
+  const resolvedIdentifiers = resolveInGameLoadoutIdentifiers(defs, identifiers);
+  return <InGameLoadoutIcon loadout={resolvedIdentifiers} className={className} size={size} />;
 }

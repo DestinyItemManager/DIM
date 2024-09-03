@@ -6,17 +6,21 @@ import { DimLanguage } from 'app/i18n';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector } from 'app/inventory/selectors';
-import { isLoadoutBuilderItem } from 'app/loadout/item-utils';
+import { isLoadoutBuilderItem } from 'app/loadout/loadout-item-utils';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { SearchInput } from 'app/search/SearchInput';
-import { startWordRegexp } from 'app/search/search-filters/freeform';
+import { startWordRegexp } from 'app/search/text-utils';
+import { uniqBy } from 'app/utils/collections';
 import { compareBy } from 'app/utils/comparators';
-import { socketContainsPlugWithCategory } from 'app/utils/socket-utils';
-import { uniqBy } from 'app/utils/util';
+import {
+  socketContainsIntrinsicPlug,
+  socketContainsPlugWithCategory,
+} from 'app/utils/socket-utils';
 import { DestinyClass, TierType } from 'bungie-api-ts/destiny2';
 import { PlugCategoryHashes } from 'data/d2/generated-enums';
 import anyExoticIcon from 'images/anyExotic.svg';
 import noExoticIcon from 'images/noExotic.svg';
+import noExoticPreferenceIcon from 'images/noExoticPreference.svg';
 import _ from 'lodash';
 import { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -24,33 +28,27 @@ import { LOCKED_EXOTIC_ANY_EXOTIC, LOCKED_EXOTIC_NO_EXOTIC, LockableBucketHashes
 import styles from './ExoticPicker.m.scss';
 import ExoticTile, { FakeExoticTile, LockedExoticWithPlugs } from './ExoticTile';
 
-interface Props {
-  lockedExoticHash?: number;
-  classType: DestinyClass;
-  onSelected: (lockedExoticHash: number) => void;
-  onClose: () => void;
-}
-
 /**
  * Find all exotic armor in this character's inventory that could be locked in LO.
  */
-function findLockableExotics(
+export function findLockableExotics(
   allItems: DimItem[],
+  vendorItems: DimItem[],
   classType: DestinyClass,
-  defs: D2ManifestDefinitions
+  defs: D2ManifestDefinitions,
 ) {
   // Find all the armor 2 exotics.
-  const exotics = allItems.filter(
-    (item) => item.isExotic && item.classType === classType && isLoadoutBuilderItem(item)
+  const exotics = [...allItems, ...vendorItems].filter(
+    (item) => item.isExotic && item.classType === classType && isLoadoutBuilderItem(item),
   );
   const orderedExotics = _.sortBy(exotics, (item) =>
-    LockableBucketHashes.indexOf(item.bucket.hash)
+    LockableBucketHashes.indexOf(item.bucket.hash),
   );
   const uniqueExotics = uniqBy(orderedExotics, (item) => item.hash);
 
   // Add in armor 1 exotics that don't have an armor 2 version
   const exoticArmorWithoutEnergy = allItems.filter(
-    (item) => item.isExotic && item.bucket.inArmor && item.classType === classType && !item.energy
+    (item) => item.isExotic && item.bucket.inArmor && item.classType === classType && !item.energy,
   );
   for (const unusable of exoticArmorWithoutEnergy) {
     // Armor 1 & 2 items have different hashes but the same name.
@@ -65,19 +63,7 @@ function findLockableExotics(
     const def = defs.InventoryItem.get(item.hash);
 
     if (def?.displayProperties.hasIcon) {
-      const exoticPerk = item.sockets?.allSockets.find(
-        (socket) =>
-          socketContainsPlugWithCategory(socket, PlugCategoryHashes.Intrinsics) &&
-          socket.plugged.plugDef.inventory?.tierType === TierType.Exotic
-      )?.plugged?.plugDef;
-
-      const exoticMods =
-        item.sockets?.allSockets
-          .find((socket) =>
-            socketContainsPlugWithCategory(socket, PlugCategoryHashes.EnhancementsExoticAeonCult)
-          )
-          ?.plugSet?.plugs.map((dimPlug) => dimPlug.plugDef) || [];
-
+      const { exoticPerk, exoticMods } = resolveExoticInfo(item);
       rtn.push({
         def,
         exoticPerk,
@@ -90,6 +76,22 @@ function findLockableExotics(
   return rtn;
 }
 
+export function resolveExoticInfo(item: DimItem) {
+  const exoticPerk = item.sockets?.allSockets.find(
+    (socket) =>
+      socketContainsIntrinsicPlug(socket) &&
+      socket.plugged.plugDef.inventory?.tierType === TierType.Exotic,
+  )?.plugged?.plugDef;
+
+  const exoticMods =
+    item.sockets?.allSockets
+      .find((socket) =>
+        socketContainsPlugWithCategory(socket, PlugCategoryHashes.EnhancementsExoticAeonCult),
+      )
+      ?.plugSet?.plugs.map((dimPlug) => dimPlug.plugDef) || [];
+  return { exoticPerk, exoticMods } as const;
+}
+
 /**
  * Filter exotics by any search query and group them by bucket
  */
@@ -97,7 +99,7 @@ function filterAndGroupExotics(
   defs: D2ManifestDefinitions,
   query: string,
   language: DimLanguage,
-  lockableExotics: LockedExoticWithPlugs[]
+  lockableExotics: LockedExoticWithPlugs[],
 ) {
   const regexp = startWordRegexp(query, language);
 
@@ -112,24 +114,24 @@ function filterAndGroupExotics(
           exotic.exoticMods?.some(
             (exoticMod) =>
               regexp.test(exoticMod.displayProperties.name) ||
-              regexp.test(exoticMod.displayProperties.description)
+              regexp.test(exoticMod.displayProperties.description),
           ) ||
           exotic.exoticPerk?.perks.some(
             (perk) =>
               perk.perkHash &&
-              regexp.test(defs.SandboxPerk.get(perk.perkHash)?.displayProperties.description)
-          )
+              regexp.test(defs.SandboxPerk.get(perk.perkHash)?.displayProperties.description),
+          ),
       )
     : lockableExotics;
 
   // Group by bucketHash then preserve the initial ordering as they were already
   // ordered helmet, arms, chest, and legs
-  const groupedExotics = _.groupBy(
+  const groupedExotics = Map.groupBy(
     filteredExotics,
-    (exotic) => exotic.def.inventory!.bucketTypeHash
+    (exotic) => exotic.def.inventory!.bucketTypeHash,
   );
-  const orderedAndGroupedExotics = Object.values(groupedExotics).sort(
-    compareBy((exotics) => filteredExotics.indexOf(exotics[0]))
+  const orderedAndGroupedExotics = _.sortBy([...groupedExotics.values()], (exotics) =>
+    filteredExotics.indexOf(exotics[0]),
   );
 
   // Sort each of the individual groups by name
@@ -141,7 +143,19 @@ function filterAndGroupExotics(
 }
 
 /** A drawer to select an exotic for your build. */
-export default function ExoticPicker({ lockedExoticHash, classType, onSelected, onClose }: Props) {
+export default function ExoticPicker({
+  lockedExoticHash,
+  classType,
+  vendorItems,
+  onSelected,
+  onClose,
+}: {
+  lockedExoticHash?: number;
+  classType: DestinyClass;
+  vendorItems: DimItem[];
+  onSelected: (lockedExoticHash: number | undefined) => void;
+  onClose: () => void;
+}) {
   const defs = useD2Definitions()!;
   const language = useSelector(languageSelector);
   const [query, setQuery] = useState('');
@@ -149,13 +163,13 @@ export default function ExoticPicker({ lockedExoticHash, classType, onSelected, 
   const allItems = useSelector(allItemsSelector);
 
   const lockableExotics = useMemo(
-    () => findLockableExotics(allItems, classType, defs),
-    [allItems, classType, defs]
+    () => findLockableExotics(allItems, vendorItems, classType, defs),
+    [allItems, vendorItems, classType, defs],
   );
 
   const filteredOrderedAndGroupedExotics = useMemo(
     () => filterAndGroupExotics(defs, query, language, lockableExotics),
-    [defs, query, language, lockableExotics]
+    [defs, query, language, lockableExotics],
   );
 
   return (
@@ -196,6 +210,16 @@ export default function ExoticPicker({ lockedExoticHash, classType, onSelected, 
               icon={anyExoticIcon}
               onSelected={() => {
                 onSelected(LOCKED_EXOTIC_ANY_EXOTIC);
+                onClose();
+              }}
+            />
+            <FakeExoticTile
+              selected={lockedExoticHash === undefined}
+              title={t('LoadoutBuilder.NoExoticPreference')}
+              description={t('LoadoutBuilder.NoExoticPreferenceDescription')}
+              icon={noExoticPreferenceIcon}
+              onSelected={() => {
+                onSelected(undefined);
                 onClose();
               }}
             />

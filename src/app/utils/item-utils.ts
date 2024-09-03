@@ -11,6 +11,7 @@ import {
 import { DimStore } from 'app/inventory/store-types';
 import { getSeason } from 'app/inventory/store/season';
 import {
+  ARTIFICE_PERK_HASH,
   armor2PlugCategoryHashes,
   killTrackerObjectivesByHash,
   killTrackerSocketTypeHash,
@@ -23,7 +24,7 @@ import modSocketMetadata, {
 import { DamageType, DestinyClass, DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { filterMap, objectifyArray } from './util';
+import { filterMap, objectifyArray } from './collections';
 
 // damage is a mess!
 // this function supports turning a destiny DamageType into a known english name
@@ -40,7 +41,7 @@ const modMetadataBySocketTypeHash = objectifyArray(modSocketMetadata, 'socketTyp
 // it can be used to find what mod metadata a plugged item belongs to
 export const modMetadataByPlugCategoryHash = objectifyArray(
   modSocketMetadata,
-  'compatiblePlugCategoryHashes'
+  'compatiblePlugCategoryHashes',
 );
 
 /** i.e. ['outlaw', 'forge', 'opulent', etc] */
@@ -49,15 +50,11 @@ export const modTypeTags = [...new Set(modSocketMetadata.flatMap((m) => m.compat
 
 // kind of silly but we are using a list of known mod hashes to identify specialty mod slots below
 const specialtySocketTypeHashes = modSocketMetadata.flatMap(
-  (modMetadata) => modMetadata.socketTypeHashes
+  (modMetadata) => modMetadata.socketTypeHashes,
 );
 
 const specialtyModPlugCategoryHashes = modSocketMetadata.flatMap(
-  (modMetadata) => modMetadata.compatiblePlugCategoryHashes
-);
-
-export const emptySpecialtySocketHashes = modSocketMetadata.map(
-  (modMetadata) => modMetadata.emptyModSocketHash
+  (modMetadata) => modMetadata.compatiblePlugCategoryHashes,
 );
 
 /** verifies an item is d2 armor and has one or more specialty mod sockets, which are returned */
@@ -66,7 +63,10 @@ const getSpecialtySockets = (item?: DimItem): DimSocket[] | undefined => {
     const specialtySockets = item.sockets?.allSockets.filter(
       (socket) =>
         // check plugged -- non-artifice GoA armor still has the socket but nothing in it
-        socket.plugged && specialtySocketTypeHashes.includes(socket.socketDefinition.socketTypeHash)
+        socket.plugged &&
+        // exotic armor 2.0 has this socket hidden if not upgraded to artifice armor yet
+        socket.visibleInGame &&
+        specialtySocketTypeHashes.includes(socket.socketDefinition.socketTypeHash),
     );
     if (specialtySockets?.length) {
       return specialtySockets;
@@ -78,7 +78,7 @@ const getSpecialtySockets = (item?: DimItem): DimSocket[] | undefined => {
 export const getSpecialtySocketMetadatas = (item?: DimItem): ModSocketMetadata[] | undefined => {
   const metadatas = filterMap(
     getSpecialtySockets(item) ?? [],
-    (s) => modMetadataBySocketTypeHash[s.socketDefinition.socketTypeHash]
+    (s) => modMetadataBySocketTypeHash[s.socketDefinition.socketTypeHash],
   );
   if (metadatas?.length) {
     return metadatas;
@@ -108,30 +108,20 @@ export const isArmor2Mod = (item: DestinyInventoryItemDefinition): boolean =>
   (armor2PlugCategoryHashes.includes(item.plug.plugCategoryHash) ||
     specialtyModPlugCategoryHashes.includes(item.plug.plugCategoryHash));
 
-/** accepts a DimMasterwork or lack thereof, & always returns a string */
+/** accepts a DimMasterwork or lack thereof */
 export function getMasterworkStatNames(mw: DimMasterwork | null) {
-  return (
-    mw?.stats
-      ?.filter((stat) => stat.isPrimary)
-      .map((stat) => stat.name)
-      .filter(Boolean)
-      .join(', ') ?? ''
-  );
-}
-
-/**
- * Items that are sunset are always sunset.
- */
-export function isSunset(item: DimItem): boolean {
-  // 1310 is the last power cap value before sunsetting was sunsetted
-  return item.powerCap !== null && item.powerCap < 1310;
+  return mw?.stats
+    ?.filter((stat) => stat.isPrimary)
+    .map((stat) => stat.name)
+    .filter(Boolean)
+    .join(', ');
 }
 
 /** Can this item be equipped by the given store? */
 export function itemCanBeEquippedBy(
   item: DimItem,
   store: DimStore,
-  allowPostmaster = false
+  allowPostmaster = false,
 ): boolean {
   if (store.isVault) {
     return false;
@@ -148,7 +138,7 @@ export function itemCanBeEquippedByStoreId(
   item: DimItem,
   storeId: string,
   storeClassType: DestinyClass,
-  allowPostmaster = false
+  allowPostmaster = false,
 ): boolean {
   return Boolean(
     item.equipment &&
@@ -162,7 +152,7 @@ export function itemCanBeEquippedByStoreId(
           isClassCompatible(item.classType, storeClassType)) &&
       // can be moved or is already here
       (!item.notransfer || item.owner === storeId) &&
-      (allowPostmaster || !item.location.inPostmaster)
+      (allowPostmaster || !item.location.inPostmaster),
   );
 }
 
@@ -202,7 +192,7 @@ export interface KillTracker {
 
 /** returns a socket's kill tracker info */
 const getSocketKillTrackerInfo = (
-  socket: DimSocket | undefined
+  socket: DimSocket | undefined,
 ): KillTracker | null | undefined => {
   const killTrackerPlug = socket?.plugged;
   return killTrackerPlug && plugToKillTracker(killTrackerPlug);
@@ -236,7 +226,7 @@ const d1YearSourceHashes = {
  */
 export function getItemYear(
   item: DimItem | DestinyInventoryItemDefinition,
-  defs?: D2ManifestDefinitions
+  defs?: D2ManifestDefinitions,
 ) {
   if (('destinyVersion' in item && item.destinyVersion === 2) || 'displayProperties' in item) {
     const season = getSeason(item, defs);
@@ -296,6 +286,26 @@ export function getStatValuesByHash(item: DimItem, byWhichValue: 'base' | 'value
 }
 
 /**
+ * Does this item have access to the Artifice mod slot that allows
+ * the user to bump a stat by a small amount?
+ */
+export function isArtifice(item: DimItem) {
+  return Boolean(item.sockets?.allSockets.some(isArtificeSocket));
+}
+
+export function isArtificeSocket(socket: DimSocket) {
+  // exotic armor has the artifice slot all the time, and it's usable when it's reported as visible
+  return Boolean(
+    socket.visibleInGame &&
+      socket.plugged &&
+      // in a better world, you'd only need to check this, because there's a "empty mod slot" item specifically for artifice slots.
+      (socket.plugged.plugDef.plug.plugCategoryHash === PlugCategoryHashes.EnhancementsArtifice ||
+        // but some of those have the *generic* "empty mod slot" item plugged in, so we fall back to keeping an eye out for the intrinsic
+        socket.plugged.plugDef.hash === ARTIFICE_PERK_HASH),
+  );
+}
+
+/**
  * Are two Destiny classes compatible? e.g. can an item (firstClass) be equipped
  * by a character (secondClass)? True if they're the same class or one is the
  * wildcard class.
@@ -315,4 +325,12 @@ export function isClassCompatible(firstClass: DestinyClass, secondClass: Destiny
  */
 export function isItemLoadoutCompatible(itemClass: DestinyClass, loadoutClass: DestinyClass) {
   return itemClass === DestinyClass.Unknown || itemClass === loadoutClass;
+}
+
+/** "shiny" special-edtion items from Into The Light, with a unique ornament and extra perks */
+export function isShiny(item: DimItem) {
+  return item.sockets?.allSockets.some(
+    (s) =>
+      s.plugOptions.some((s) => s.plugDef.plug.plugCategoryIdentifier === 'holofoil_skins_shared'), //
+  );
 }

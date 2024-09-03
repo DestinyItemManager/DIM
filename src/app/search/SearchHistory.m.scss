@@ -24,6 +24,11 @@
   }
 }
 
+.tabs {
+  max-width: fit-content;
+  margin-top: 8px;
+}
+
 .iconButton {
   composes: resetButton from '../dim-ui/common.m.scss';
   margin-left: 6px;

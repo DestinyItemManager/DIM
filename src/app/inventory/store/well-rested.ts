@@ -16,7 +16,7 @@ export function isWellRested(
   defs: D2ManifestDefinitions,
   season: DestinySeasonDefinition | undefined,
   seasonPass: DestinySeasonPassDefinition | undefined,
-  characterProgression: DestinyCharacterProgressionComponent
+  characterProgression: DestinyCharacterProgressionComponent,
 ): {
   wellRested: boolean;
   progress?: number;
@@ -82,7 +82,7 @@ function xpRequiredForLevel(level: number, progressDef: DestinyProgressionDefini
 function xpTotalRequiredForLevel(
   totalLevel: number,
   seasonProgressDef: DestinyProgressionDefinition,
-  WELL_RESTED_LEVELS: number
+  WELL_RESTED_LEVELS: number,
 ) {
   let totalXP = 0;
   for (let i = 0; i < WELL_RESTED_LEVELS; i++) {

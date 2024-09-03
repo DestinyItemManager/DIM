@@ -2,8 +2,9 @@ import { InfuseDirection } from '@destinyitemmanager/dim-api-types';
 import { gaPageView } from 'app/google';
 import { t } from 'app/i18next-t';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
-import { LoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { LoadoutItem } from 'app/loadout/loadout-types';
 import SearchBar from 'app/search/SearchBar';
+import { filterFactorySelector } from 'app/search/items/item-search-filter';
 import { useSetting } from 'app/settings/hooks';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { DimThunkDispatch } from 'app/store/types';
@@ -20,7 +21,6 @@ import { allItemsSelector, currentStoreSelector, getTagSelector } from '../inven
 import { DimStore } from '../inventory/store-types';
 import { convertToLoadoutItem, newLoadout } from '../loadout-drawer/loadout-utils';
 import { showNotification } from '../notifications/notifications';
-import { filterFactorySelector } from '../search/search-filter';
 import { AppIcon, faArrowCircleDown, faEquals, faRandom, helpIcon, plusIcon } from '../shell/icons';
 import { chainComparator, compareBy, reverseComparator } from '../utils/comparators';
 import styles from './InfusionFinder.m.scss';
@@ -31,8 +31,8 @@ const itemComparator = chainComparator(
   compareBy((item: DimItem) =>
     isD1Item(item) && item.talentGrid
       ? (item.talentGrid.totalXP / item.talentGrid.totalXPRequired) * 0.5
-      : 0
-  )
+      : 0,
+  ),
 );
 
 interface State {
@@ -78,8 +78,8 @@ function stateReducer(state: State, action: Action): State {
             ? InfuseDirection.INFUSE
             : InfuseDirection.FUEL
           : action.hasFuel
-          ? InfuseDirection.FUEL
-          : InfuseDirection.INFUSE;
+            ? InfuseDirection.FUEL
+            : InfuseDirection.INFUSE;
 
       return {
         ...state,
@@ -136,7 +136,7 @@ export default function InfusionFinder() {
     {
       direction: lastInfusionDirection,
       filter: '',
-    }
+    },
   );
   const filter = useDeferredValue(liveFilter);
 
@@ -163,8 +163,8 @@ export default function InfusionFinder() {
         const hasFuel = allItems.some((i) => isInfusable(i, item));
         stateDispatch({ type: 'init', item, hasInfusables: hasInfusables, hasFuel });
       },
-      [allItems]
-    )
+      [allItems],
+    ),
   );
 
   // Close the sheet on navigation
@@ -188,7 +188,7 @@ export default function InfusionFinder() {
     (item) =>
       (direction === InfuseDirection.INFUSE
         ? isInfusable(query, item)
-        : isInfusable(item, query)) && filterFn(item)
+        : isInfusable(item, query)) && filterFn(item),
   );
 
   const dupes = items.filter((item) => item.hash === query.hash);
@@ -318,11 +318,8 @@ function isInfusable(target: DimItem, source: DimItem) {
   }
 
   return (
-    source.infusionQuality &&
-    target.infusionQuality &&
-    target.infusionQuality.infusionCategoryHashes.some((h) =>
-      source.infusionQuality!.infusionCategoryHashes.includes(h)
-    ) &&
+    source.infusionCategoryHashes &&
+    target.infusionCategoryHashes?.some((h) => source.infusionCategoryHashes!.includes(h)) &&
     target.power < source.power
   );
 }
@@ -332,7 +329,7 @@ async function transferItems(
   currentStore: DimStore,
   onClose: () => void,
   source: DimItem,
-  target: DimItem
+  target: DimItem,
 ) {
   if (!source || !target) {
     return;

@@ -11,9 +11,8 @@ import {
 } from 'app/inventory/store/stats-conditional';
 import { activityModPlugCategoryHashes } from 'app/loadout/known-values';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { EXOTIC_CATALYST_TRAIT } from 'app/search/d2-known-values';
 import { DestinyClass, ItemPerkVisibility } from 'bungie-api-ts/destiny2';
-import { ItemCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { ItemCategoryHashes, StatHashes, TraitHashes } from 'data/d2/generated-enums';
 import perkToEnhanced from 'data/d2/trait-to-enhanced-trait.json';
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
@@ -21,14 +20,14 @@ import modsWithoutDescription from '../../data/d2/mods-with-bad-descriptions.jso
 import { compareBy } from './comparators';
 import { LookupTable } from './util-types';
 
-interface DimPlugPerkDescription {
+export interface DimPlugPerkDescription {
   perkHash: number;
   name?: string;
   description?: string;
   requirement?: string;
 }
 
-interface DimPlugDescriptions {
+export interface DimPlugDescriptions {
   perks: DimPlugPerkDescription[];
   communityInsight: Perk | undefined;
 }
@@ -49,18 +48,10 @@ export function usePlugDescriptions(
     value: number;
     statHash: number;
   }[],
-  /**
-   * If set, returns Bungie descriptions even when the descriptions setting is on Community only.
-   * Consumers set this if they can't display community descriptions.
-   */
-  forceUseBungieDescriptions?: boolean
 ): DimPlugDescriptions {
   const defs = useD2Definitions();
   const allClarityDescriptions = useSelector(clarityDescriptionsSelector);
-  let descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
-  if (forceUseBungieDescriptions) {
-    descriptionsToDisplay = 'bungie';
-  }
+  const descriptionsToDisplay = useSelector(settingSelector('descriptionsToDisplay'));
 
   const result: DimPlugDescriptions = {
     perks: [],
@@ -87,7 +78,7 @@ export function usePlugDescriptions(
       const statDef = defs.Stat.get(stat.statHash);
       if (statDef) {
         const statNames = [statDef.displayProperties.name].concat(
-          statNameAliases[stat.statHash as StatHashes] ?? []
+          statNameAliases[stat.statHash as StatHashes] ?? [],
         );
         for (const statName of statNames) {
           if (stat.value < 0) {
@@ -133,7 +124,7 @@ export function usePlugDescriptions(
 function getPerkDescriptions(
   plug: PluggableInventoryItemDefinition,
   defs: D2ManifestDefinitions,
-  usedStrings: Set<string>
+  usedStrings: Set<string>,
 ): DimPlugPerkDescription[] {
   const results: DimPlugPerkDescription[] = [];
 
@@ -229,7 +220,7 @@ function getPerkDescriptions(
 
   Other plugs (e.g. Exotic catalysts) always use the description field to store their requirements.
   */
-  if (plug.traitHashes?.includes(EXOTIC_CATALYST_TRAIT)) {
+  if (plug.traitHashes?.includes(TraitHashes.ItemExoticCatalyst)) {
     addPerkDescriptions();
     addDescriptionAsRequirement();
   } else if (plug.itemCategoryHashes?.includes(ItemCategoryHashes.ArmorMods)) {
@@ -298,20 +289,20 @@ function getPerkDescriptions(
  */
 export function getPlugDefStats(
   plugDef: PluggableInventoryItemDefinition,
-  classType: DestinyClass | undefined
+  classType: DestinyClass | undefined,
 ) {
   return mapAndFilterInvestmentStats(plugDef)
     .filter(
       (stat) =>
         (isAllowedItemStat(stat.statTypeHash) || isAllowedPlugStat(stat.statTypeHash)) &&
-        (classType === undefined || isPlugStatActive(stat.activityRule, undefined, classType))
+        (classType === undefined || isPlugStatActive(stat.activityRule, undefined, classType)),
     )
     .map((stat) => ({
       statHash: stat.statTypeHash,
       // We completely lie here and turn investment stats 1:1 into displayed stats,
       // but that's a necessary consequence of operating without an item. It's mostly
       // correct for the 6 character stats that loadout mods and subclass plugs give,
-      // which is where this function us used most.
+      // which is where this function is used most.
       value: stat.value,
     }))
     .sort(compareBy((stat) => getStatSortOrder(stat.statHash)));
@@ -329,7 +320,7 @@ export function getDimPlugStats(item: DimItem, plug: DimPlug) {
           // Item stats are only shown if the item can actually benefit from them
           (isAllowedItemStat(stat.statHash) &&
             item.stats?.some((itemStat) => itemStat.statHash === stat.statHash)) ||
-          isAllowedPlugStat(stat.statHash)
+          isAllowedPlugStat(stat.statHash),
       )
       .sort(compareBy((stat) => getStatSortOrder(stat.statHash)));
   }

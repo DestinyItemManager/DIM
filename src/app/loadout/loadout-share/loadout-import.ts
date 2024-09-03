@@ -1,11 +1,10 @@
 import { Loadout as DimApiLoadout, LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import { getSharedLoadout } from 'app/dim-api/dim-api';
 import { generateMissingLoadoutItemId } from 'app/loadout-drawer/loadout-item-conversion';
-import { convertDimApiLoadoutToLoadout } from 'app/loadout-drawer/loadout-type-converters';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
 import { newLoadout } from 'app/loadout-drawer/loadout-utils';
+import { convertDimApiLoadoutToLoadout } from 'app/loadout/loadout-type-converters';
+import { Loadout } from 'app/loadout/loadout-types';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
-import { v4 as uuidv4 } from 'uuid';
 // A very permissive regex that allows directly pasted URLs, but also various ways in which
 // people might type it manually (such as a URL-like string with a missing protocol or just the share ID)
 // Hardcoding the lower limit of 7 characters so that a user typing the characters manually doesn't call
@@ -79,7 +78,7 @@ export function decodeUrlLoadout(search: string): Loadout | undefined {
   const loadoutJSON = searchParams.get('loadout');
   if (loadoutJSON) {
     return preprocessReceivedLoadout(
-      convertDimApiLoadoutToLoadout(JSON.parse(loadoutJSON) as DimApiLoadout)
+      convertDimApiLoadoutToLoadout(JSON.parse(loadoutJSON) as DimApiLoadout),
     );
   }
 }
@@ -93,16 +92,11 @@ async function getDimSharedLoadout(shareId: string) {
  * Ensure received loadouts and their items have a unique ID.
  */
 function preprocessReceivedLoadout(loadout: Loadout): Loadout {
-  loadout.id = uuidv4();
+  loadout.id = globalThis.crypto.randomUUID();
   loadout.items = loadout.items.map((item) => ({
     ...item,
-    id:
-      item.id === '0'
-        ? // We don't save consumables in D2 loadouts, but we may omit ids in shared loadouts
-          // (because they'll never match someone else's inventory). So
-          // instead, pick an ID.
-          generateMissingLoadoutItemId()
-        : item.id,
+    id: item.id === '0' ? generateMissingLoadoutItemId() : item.id,
+    hash: Number(item.hash),
   }));
 
   return loadout;

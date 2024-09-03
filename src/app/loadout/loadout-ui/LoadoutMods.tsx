@@ -1,9 +1,10 @@
 import { LoadoutParameters } from '@destinyitemmanager/dim-api-types';
 import CheckButton from 'app/dim-ui/CheckButton';
+import { PressTip } from 'app/dim-ui/PressTip';
 import { t } from 'app/i18next-t';
 import { artifactUnlocksSelector, unlockedPlugSetItemsSelector } from 'app/inventory/selectors';
 import { hashesToPluggableItems } from 'app/inventory/store/sockets';
-import { Loadout, ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
+import { Loadout, ResolvedLoadoutMod } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { DEFAULT_ORNAMENTS, DEFAULT_SHADER } from 'app/search/d2-known-values';
 import { AppIcon, addIcon } from 'app/shell/icons';
@@ -65,10 +66,12 @@ export const LoadoutMods = memo(function LoadoutMods({
   missingSockets,
   hideShowModPlacements,
   autoStatMods,
+  includeRuntimeStats,
   onUpdateMods,
   onRemoveMod,
   onClearUnsetModsChanged,
   onAutoStatModsChanged,
+  onIncludeRuntimeStatsChanged,
 }: {
   loadout: Loadout;
   allMods: ResolvedLoadoutMod[];
@@ -78,11 +81,13 @@ export const LoadoutMods = memo(function LoadoutMods({
   missingSockets?: boolean;
   /** Are stat mods being chosen automatically by LO? */
   autoStatMods?: boolean;
+  includeRuntimeStats?: boolean;
   /** If present, show an "Add Mod" button */
   onUpdateMods?: (newMods: number[]) => void;
   onRemoveMod?: (mod: ResolvedLoadoutMod) => void;
   onClearUnsetModsChanged?: (checked: boolean) => void;
   onAutoStatModsChanged?: (checked: boolean) => void;
+  onIncludeRuntimeStatsChanged?: (checked: boolean) => void;
 }) {
   const isPhonePortrait = useIsPhonePortrait();
   const getModRenderKey = createGetModRenderKey();
@@ -145,7 +150,10 @@ export const LoadoutMods = memo(function LoadoutMods({
           </button>
         )}
       </div>
-      {(!hideShowModPlacements || onClearUnsetModsChanged || onAutoStatModsChanged) &&
+      {(!hideShowModPlacements ||
+        onClearUnsetModsChanged ||
+        onAutoStatModsChanged ||
+        onIncludeRuntimeStatsChanged) &&
         (allMods.length > 0 || onUpdateMods) && (
           <div className={styles.buttons}>
             {!hideShowModPlacements && (
@@ -163,6 +171,18 @@ export const LoadoutMods = memo(function LoadoutMods({
               >
                 {t('Loadouts.ClearUnsetMods')}
               </CheckButton>
+            )}
+
+            {onIncludeRuntimeStatsChanged && (
+              <PressTip tooltip={t('Loadouts.IncludeRuntimeStatBenefitsDesc')}>
+                <CheckButton
+                  name="includeRuntimeStats"
+                  checked={includeRuntimeStats ?? true}
+                  onChange={onIncludeRuntimeStatsChanged}
+                >
+                  {t('Loadouts.IncludeRuntimeStatBenefits')}
+                </CheckButton>
+              </PressTip>
             )}
 
             {$featureFlags.loAutoStatMods && onAutoStatModsChanged && (
@@ -225,12 +245,12 @@ export const LoadoutArtifactUnlocks = memo(function LoadoutArtifactUnlocks({
         originalModHash: def.hash,
         resolvedMod: def,
       })) ?? [],
-    [defs, artifactUnlocks?.unlockedItemHashes]
+    [defs, artifactUnlocks?.unlockedItemHashes],
   );
 
   const handleRemoveMod = useCallback(
     (mod: ResolvedLoadoutMod) => onRemoveMod!(mod.originalModHash),
-    [onRemoveMod]
+    [onRemoveMod],
   );
   const artifactTitle = artifactUnlocks
     ? t('Loadouts.ArtifactUnlocksWithSeason', {
@@ -250,7 +270,7 @@ export const LoadoutArtifactUnlocks = memo(function LoadoutArtifactUnlocks({
           <div className={styles.modsGrid}>
             {loadoutArtifactMods.map((mod) => {
               const unlocked = unlockedArtifactMods?.unlockedItemHashes.includes(
-                mod.resolvedMod.hash
+                mod.resolvedMod.hash,
               );
               return (
                 <LoadoutModMemo

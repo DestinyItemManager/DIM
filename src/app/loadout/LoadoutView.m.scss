@@ -4,6 +4,10 @@
   composes: flexColumn from '../dim-ui/common.m.scss';
   padding: 15px;
   background: rgba(0, 0, 0, 0.25);
+
+  @include phone-portrait {
+    padding: 10px;
+  }
 }
 
 .title {
@@ -12,15 +16,18 @@
   user-select: text;
   gap: 1em;
 
-  h2 {
-    display: block;
-    margin: 0 !important;
-    font-size: 16px;
-  }
-
   @include phone-portrait {
     flex-direction: column;
     align-items: flex-start;
+    gap: 8px;
+  }
+
+  h2 {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    margin: 0 !important;
+    font-size: 16px;
   }
 }
 
@@ -31,19 +38,36 @@
   margin-left: auto;
 
   @include phone-portrait {
-    margin-top: 16px;
-    margin-bottom: 16px;
+    margin: 8px 0;
+    width: 100%;
+    justify-content: space-between;
   }
 }
 
-.missingItems {
+.findings {
+  display: flex;
+  flex-flow: row wrap;
+  column-gap: 8px;
+  > * {
+    opacity: 0;
+    animation: 0.2s linear 0s forwards fade-in;
+  }
+}
+
+@keyframes fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+.finding {
   text-transform: none;
   font-size: 12px;
   letter-spacing: normal;
   color: #ccc;
 
   :global(.app-icon) {
-    margin-right: 0.5em;
+    margin-right: 0.2em;
   }
 }
 
@@ -84,4 +108,8 @@
 
 .artifactMods {
   --item-size: 40px;
+}
+
+.disableEvents > div {
+  pointer-events: none;
 }

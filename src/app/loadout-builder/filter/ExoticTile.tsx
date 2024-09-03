@@ -1,3 +1,4 @@
+import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { TileGridTile } from 'app/dim-ui/TileGrid';
 import { t } from 'app/i18next-t';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
@@ -16,12 +17,6 @@ export interface LockedExoticWithPlugs {
   isArmor1: boolean;
 }
 
-interface Props {
-  exotic: LockedExoticWithPlugs;
-  selected: boolean;
-  onSelected: () => void;
-}
-
 /**
  * A tile containing the exotic name, icon, and perk/mods info.
  *
@@ -29,8 +24,32 @@ interface Props {
  * Mods on the other hand only get a name and icon as multiple descriptions takes up too
  * much room on screen.
  */
-export default function ExoticTile({ exotic, selected, onSelected }: Props) {
+export default function ExoticTile({
+  exotic,
+  selected,
+  onSelected,
+}: {
+  exotic: LockedExoticWithPlugs;
+  selected: boolean;
+  onSelected: () => void;
+}) {
   const defs = useD2Definitions()!;
+  const { title, icon, description } = exoticTileInfo(defs, exotic);
+  return (
+    <TileGridTile
+      selected={selected}
+      onClick={onSelected}
+      disabled={exotic.isArmor1}
+      title={title}
+      icon={icon}
+      compact
+    >
+      {description}
+    </TileGridTile>
+  );
+}
+
+export function exoticTileInfo(defs: D2ManifestDefinitions, exotic: LockedExoticWithPlugs) {
   const { def, exoticPerk, exoticMods } = exotic;
   let perkShortDescription = exoticPerk?.displayProperties.description;
 
@@ -44,18 +63,8 @@ export default function ExoticTile({ exotic, selected, onSelected }: Props) {
     }
   }
 
-  return (
-    <TileGridTile
-      selected={selected}
-      onClick={onSelected}
-      disabled={exotic.isArmor1}
-      title={def.displayProperties.name}
-      icon={
-        <div className="item">
-          <DefItemIcon itemDef={def} />
-        </div>
-      }
-    >
+  const description = (
+    <>
       {exotic.isArmor1 && <div>{t('LB.IncompatibleWithOptimizer')}</div>}
       {exoticPerk && perkShortDescription}
       {exoticMods?.map((mod) => (
@@ -64,8 +73,16 @@ export default function ExoticTile({ exotic, selected, onSelected }: Props) {
           <div>{mod.displayProperties.name}</div>
         </div>
       ))}
-    </TileGridTile>
+    </>
   );
+  const title = def.displayProperties.name;
+  const icon = (
+    <div className="item">
+      <DefItemIcon itemDef={def} />
+    </div>
+  );
+
+  return { icon, title, description } as const;
 }
 
 /**

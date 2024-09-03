@@ -66,19 +66,15 @@ apt-get install nano
 
 
 
-<<<<<<< HEAD
-If you need to install new node dependencies, you should run those commands from inside the container. Once inside, use `pnpm add NameOfTheDependency` as normal.
-=======
 ## Installing new packages
 If you need to install new node dependencies, you should run those commands from inside the container via:
 ```sh
 docker-compose exec webpack bash
 ```
 
-Once inside, use `yarn add NameOfTheDependency` as normal.
+Once inside, use `pnpm add NameOfTheDependency` as normal.
 
 
->>>>>>> origin/master
 
 ## Container terminates unexpectedly
 On Windows, you may see the error:

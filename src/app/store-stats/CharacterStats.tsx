@@ -1,5 +1,4 @@
-import { AlertIcon } from 'app/dim-ui/AlertIcon';
-import { bungieNetPath } from 'app/dim-ui/BungieImage';
+import BungieImage, { bungieNetPath } from 'app/dim-ui/BungieImage';
 import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
 import { PressTip } from 'app/dim-ui/PressTip';
 import { showGearPower } from 'app/gear-power/gear-power';
@@ -11,8 +10,9 @@ import { profileResponseSelector } from 'app/inventory/selectors';
 import type { DimStore } from 'app/inventory/store-types';
 import { StorePowerLevel, powerLevelSelector } from 'app/inventory/store/selectors';
 import { statTier } from 'app/loadout-builder/utils';
-import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getLoadoutStats } from 'app/loadout-drawer/loadout-utils';
+import { getSubclassPlugHashes } from 'app/loadout/loadout-item-utils';
+import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { getCharacterProgressions } from 'app/progress/selectors';
 import { armorStats } from 'app/search/d2-known-values';
@@ -40,22 +40,14 @@ function CharacterPower({ stats }: { stats: PowerStat[] }) {
               {stat.richTooltipContent && (
                 <>
                   <hr />
-                  <div className="richTooltipWrapper">
-                    {stat.richTooltipContent()}
-                    {(stat.problems?.notEquippable || stat.problems?.notOnStore) && (
-                      <div className="tooltipFootnote">
-                        {stat.problems.notOnStore ? <AlertIcon /> : '*'}{' '}
-                        {t('General.ClickForDetails')}
-                      </div>
-                    )}
-                  </div>
+                  <div className="richTooltipWrapper">{stat.richTooltipContent()}</div>
                 </>
               )}
             </>
           )}
         >
           <div
-            className={clsx('stat', { pointerCursor: stat.onClick })}
+            className="stat"
             aria-label={`${stat.name} ${stat.value}`}
             role={stat.onClick ? 'button' : 'group'}
             onClick={stat.onClick}
@@ -65,13 +57,7 @@ function CharacterPower({ stats }: { stats: PowerStat[] }) {
               <span className="powerStat">
                 <FractionalPowerLevel power={stat.value} />
               </span>
-              {stat.problems?.notOnStore ? (
-                <AlertIcon className="warningIcon" />
-              ) : (
-                (stat.problems?.hasClassified || stat.problems?.notEquippable) && (
-                  <sup className="asterisk">*</sup>
-                )
-              )}
+              {stat.problems?.hasClassified && <sup className="asterisk">*</sup>}
             </div>
           </div>
         </PressTip>
@@ -108,17 +94,27 @@ export function PowerFormula({ storeId }: { storeId: string }) {
   };
 
   const maxGearPower: PowerStat = {
-    value: powerLevel.maxGearPower,
+    value: powerLevel.maxEquippableGearPower,
     icon: helmetIcon,
-    name: t('Stats.MaxGearPowerAll'),
-    // used to be t('Stats.MaxGearPower'), a translation i don't want to lose yet
+    name: t('Stats.MaxGearPowerOneExoticRule'),
+    // used to be t('Stats.MaxGearPowerAll') or t('Stats.MaxGearPower'), a translation i don't want to lose yet
     problems: powerLevel.problems,
     onClick: () => showGearPower(storeId),
     richTooltipContent: () => (
-      <ItemPowerSet
-        items={powerLevel.highestPowerItems}
-        powerFloor={Math.floor(powerLevel.maxGearPower)}
-      />
+      <>
+        <ItemPowerSet
+          items={powerLevel.highestPowerItems}
+          powerFloor={Math.floor(powerLevel.maxGearPower)}
+        />
+        <hr />
+        <div className="dropLevel">
+          <span>{t('Stats.DropLevel')}*</span>
+          <span>
+            <FractionalPowerLevel power={powerLevel.dropPower} />
+          </span>
+        </div>
+        <div className="tooltipFootnote">* {t('General.ClickForDetails')}</div>
+      </>
     ),
   };
 
@@ -173,8 +169,14 @@ function CharacterStats({
           key={stat.hash}
           tooltip={<StatTooltip stat={stat} equippedHashes={equippedHashes} />}
         >
-          <div className="stat" aria-label={`${stat.name} ${stat.value}`} role="group">
-            <img src={stat.icon} alt={stat.name} />
+          <div
+            className={clsx('stat', {
+              boostedValue: stat.breakdown?.some((change) => change.source === 'runtimeEffect'),
+            })}
+            aria-label={`${stat.name} ${stat.value}`}
+            role="group"
+          >
+            <BungieImage src={stat.icon} alt={stat.name} />
             <div>{stat.value}</div>
           </div>
         </PressTip>
@@ -228,13 +230,18 @@ export function LoadoutCharacterStats({
   // All equipped items
   const equippedHashes = new Set(equippedItems.map((i) => i.hash));
   // Plus all subclass mods
-  if (subclass?.loadoutItem.socketOverrides) {
-    for (const hash of Object.values(subclass?.loadoutItem.socketOverrides)) {
-      equippedHashes.add(hash);
-    }
+  for (const { plugHash } of getSubclassPlugHashes(subclass)) {
+    equippedHashes.add(plugHash);
   }
 
-  const stats = getLoadoutStats(defs, loadout.classType, subclass, equippedItems, allMods);
+  const stats = getLoadoutStats(
+    defs,
+    loadout.classType,
+    subclass,
+    equippedItems,
+    allMods,
+    loadout.parameters?.includeRuntimeStatBenefits ?? true,
+  );
 
   return <CharacterStats showTier stats={stats} equippedHashes={equippedHashes} />;
 }

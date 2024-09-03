@@ -29,14 +29,14 @@ export interface ItemPopupExtraInfo {
 export function showItemPopup(
   item: DimItem,
   element?: HTMLElement,
-  extraInfo?: ItemPopupExtraInfo
+  extraInfo?: ItemPopupExtraInfo,
 ) {
   if (showItemPopup$.getCurrentValue()?.item === item) {
     hideItemPopup();
   } else {
     // Log the item so it's easy to inspect item structure by clicking on an item
     if ($DIM_FLAVOR !== 'release') {
-      infoLog('clicked item', `https://data.destinysets.com/i/InventoryItem%3A${item.hash}`, item);
+      infoLog('clicked item', item);
     }
     showItemPopup$.next({ item, element, extraInfo });
   }

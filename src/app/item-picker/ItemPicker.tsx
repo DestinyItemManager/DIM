@@ -1,7 +1,8 @@
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { t } from 'app/i18next-t';
 import SearchBar from 'app/search/SearchBar';
-import { uniqBy } from 'app/utils/util';
+import { filterFactorySelector } from 'app/search/items/item-search-filter';
+import { uniqBy } from 'app/utils/collections';
 import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
@@ -11,7 +12,6 @@ import Sheet from '../dim-ui/Sheet';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
 import { allItemsSelector } from '../inventory/selectors';
-import { filterFactorySelector } from '../search/search-filter';
 import { itemSorterSelector } from '../settings/item-sort';
 import './ItemPicker.scss';
 import { ItemPickerState } from './item-picker';
@@ -37,7 +37,7 @@ export default function ItemPicker({
       onItemSelected(item);
       onClose();
     },
-    [onItemSelected]
+    [onItemSelected],
   );
 
   const onSheetClosedFn = () => {
@@ -59,7 +59,7 @@ export default function ItemPicker({
   // All items, filtered by the pre-filter configured on the item picker
   const filteredItems = useMemo(
     () => (filterItems ? allItems.filter(filterItems) : allItems),
-    [allItems, filterItems]
+    [allItems, filterItems],
   );
   // Further filtered by the search bar in the item picker
   const items = useMemo(() => {
@@ -109,7 +109,7 @@ function ItemPickerItem({
 }) {
   const handleClick = useCallback(
     () => onItemSelectedFn(item, onClose),
-    [item, onClose, onItemSelectedFn]
+    [item, onClose, onItemSelectedFn],
   );
 
   return (

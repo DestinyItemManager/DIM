@@ -1,20 +1,22 @@
-import BungieImage, { bungieBackgroundStyle } from 'app/dim-ui/BungieImage';
 import Sheet from 'app/dim-ui/Sheet';
-import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
+import { t } from 'app/i18next-t';
+import { resolveInGameLoadoutIdentifiers } from 'app/loadout/loadout-type-converters';
+import { InGameLoadout } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { RootState } from 'app/store/types';
-import { compareBy } from 'app/utils/comparators';
-import clsx from 'clsx';
-import { t } from 'i18next';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './EditInGameLoadout.m.scss';
 import InGameLoadoutIcon from './InGameLoadoutIcon';
+import { RadioButton } from './RadioButton';
+import SelectInGameLoadoutIdentifiers, {
+  useIdentifierValues,
+} from './SelectInGameLoadoutIdentifiers';
 import { editInGameLoadout, snapshotInGameLoadout } from './ingame-loadout-apply';
 import { availableLoadoutSlotsSelector, inGameLoadoutsForCharacterSelector } from './selectors';
 
-/** An editor sheet for whatever we can edit with ingame loadouts. Name, color, icon. */
+/** An editor sheet for whatever we can edit with in-game loadouts. Name, color, icon. */
 export default function EditInGameLoadout({
   loadout,
   characterId,
@@ -30,21 +32,13 @@ export default function EditInGameLoadout({
   const defs = useD2Definitions()!;
   const dispatch = useThunkDispatch();
 
-  const names = Object.values(defs.LoadoutName.getAll())
-    .filter((i) => !i.redacted)
-    .sort(compareBy((n) => n.index));
-  const colors = Object.values(defs.LoadoutColor.getAll())
-    .filter((i) => !i.redacted)
-    .sort(compareBy((n) => n.index));
-  const icons = Object.values(defs.LoadoutIcon.getAll())
-    .filter((i) => !i.redacted)
-    .sort(compareBy((n) => n.index));
+  const [names, colors, icons] = useIdentifierValues(defs);
   const defaultName = names[0].hash;
   const defaultColor = colors[0].hash;
   const defaultIcon = icons[0].hash;
 
   const loadouts = useSelector((state: RootState) =>
-    inGameLoadoutsForCharacterSelector(state, characterId!)
+    inGameLoadoutsForCharacterSelector(state, characterId!),
   );
   const numSlots = useSelector(availableLoadoutSlotsSelector);
   let firstAvailableSlot = 0;
@@ -60,18 +54,14 @@ export default function EditInGameLoadout({
   const wouldOverwrite = Boolean(overwrittenLoadout);
 
   const [nameHash, setNameHash] = useState(
-    loadout?.nameHash ?? overwrittenLoadout?.nameHash ?? defaultName
+    loadout?.nameHash ?? overwrittenLoadout?.nameHash ?? defaultName,
   );
   const [colorHash, setColorHash] = useState(
-    loadout?.colorHash ?? overwrittenLoadout?.colorHash ?? defaultColor
+    loadout?.colorHash ?? overwrittenLoadout?.colorHash ?? defaultColor,
   );
   const [iconHash, setIconHash] = useState(
-    loadout?.iconHash ?? overwrittenLoadout?.iconHash ?? defaultIcon
+    loadout?.iconHash ?? overwrittenLoadout?.iconHash ?? defaultIcon,
   );
-
-  const name = defs.LoadoutName.get(nameHash)?.name ?? 'Unknown';
-  const colorIcon = defs.LoadoutColor.get(colorHash)?.colorImagePath ?? '';
-  const icon = defs.LoadoutIcon.get(iconHash)?.iconImagePath ?? '';
 
   const handleSetSlot = (newSlotNum: number) => {
     const destSlotLoadout = loadouts.find((l) => l.index === newSlotNum);
@@ -97,6 +87,12 @@ export default function EditInGameLoadout({
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      const { name, colorIcon, icon } = resolveInGameLoadoutIdentifiers(defs, {
+        nameHash,
+        colorHash,
+        iconHash,
+      });
+
       if (creating) {
         await dispatch(
           snapshotInGameLoadout({
@@ -107,14 +103,14 @@ export default function EditInGameLoadout({
             colorIcon,
             icon,
             index: slot,
-            characterId: characterId!,
+            characterId,
             items: [],
             id: `ingame-${characterId}-${slot}`,
-          })
+          }),
         );
       } else {
         await dispatch(
-          editInGameLoadout({ ...loadout, nameHash, name, colorHash, colorIcon, iconHash, icon })
+          editInGameLoadout({ ...loadout, nameHash, name, colorHash, colorIcon, iconHash, icon }),
         );
       }
     } finally {
@@ -156,7 +152,8 @@ export default function EditInGameLoadout({
                   option={i}
                   value={slot}
                   onSelected={handleSetSlot}
-                  className={loadout ? styles.hasLoadout : undefined}
+                  hasLoadout={Boolean(loadout)}
+                  spaced
                 >
                   {loadout ? (
                     <InGameLoadoutIcon loadout={loadout} />
@@ -169,87 +166,15 @@ export default function EditInGameLoadout({
             })}
           </div>
         )}
-        <div className={styles.preview}>
-          <BungieImage style={bungieBackgroundStyle(colorIcon)} src={icon} height={48} width={48} />{' '}
-          {name}
-        </div>
-        <div className={styles.row}>
-          {names.map((name) => (
-            <RadioButton
-              key={name.hash}
-              name="name"
-              option={name.hash}
-              value={nameHash}
-              onSelected={setNameHash}
-            >
-              {name.name}
-            </RadioButton>
-          ))}
-        </div>
-        <div className={styles.row}>
-          {icons.map((icon) => (
-            <RadioButton
-              key={icon.hash}
-              name="icon"
-              option={icon.hash}
-              value={iconHash}
-              onSelected={setIconHash}
-              className={styles.imageButton}
-            >
-              <BungieImage key={icon.hash} src={icon.iconImagePath} height={32} width={32} />
-            </RadioButton>
-          ))}
-        </div>
-        <div className={styles.row}>
-          {colors.map((color) => (
-            <RadioButton
-              key={color.hash}
-              name="color"
-              option={color.hash}
-              value={colorHash}
-              onSelected={setColorHash}
-              className={styles.imageButton}
-            >
-              <BungieImage key={color.hash} src={color.colorImagePath} height={32} width={32} />
-            </RadioButton>
-          ))}
-        </div>
+        <SelectInGameLoadoutIdentifiers
+          nameHash={nameHash}
+          colorHash={colorHash}
+          iconHash={iconHash}
+          onNameHashChanged={setNameHash}
+          onColorHashChanged={setColorHash}
+          onIconHashChanged={setIconHash}
+        />
       </div>
     </Sheet>
-  );
-}
-
-function RadioButton({
-  option: hash,
-  name,
-  value,
-  onSelected,
-  children,
-  className,
-}: {
-  option: number;
-  name: string;
-  value: number;
-  onSelected: (value: number) => void;
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <label
-      key={hash}
-      className={clsx(styles.button, className, {
-        [styles.checked]: value === hash,
-      })}
-    >
-      <input
-        type="radio"
-        name={name}
-        value={hash}
-        checked={value === hash}
-        readOnly={true}
-        onClick={() => onSelected(hash)}
-      />
-      {children}
-    </label>
   );
 }

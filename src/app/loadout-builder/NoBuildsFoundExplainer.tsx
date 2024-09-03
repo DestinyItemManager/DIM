@@ -3,11 +3,11 @@ import { D2ManifestDefinitions } from 'app/destiny2/d2-definitions';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
-import { ResolvedLoadoutMod } from 'app/loadout-drawer/loadout-types';
+import { ResolvedLoadoutMod } from 'app/loadout/loadout-types';
 import PlugDef from 'app/loadout/loadout-ui/PlugDef';
 import { ModMap } from 'app/loadout/mod-assignment-utils';
 import { AppIcon, banIcon } from 'app/shell/icons';
-import { filterMap, uniqBy } from 'app/utils/util';
+import { filterMap, uniqBy } from 'app/utils/collections';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import _ from 'lodash';
 import { Dispatch } from 'react';
@@ -210,6 +210,7 @@ export default function NoBuildsFoundExplainer({
 
   const capacityMayCauseProblems =
     armorEnergyRules.assumeArmorMasterwork !== AssumeArmorMasterwork.All &&
+    armorEnergyRules.assumeArmorMasterwork !== AssumeArmorMasterwork.ArtificeExotic &&
     (processInfo?.statistics.modsStatistics.finalAssignment.modsAssignmentFailed ||
       processInfo?.statistics.modsStatistics.finalAssignment.autoModsAssignmentFailed ||
       failedModsInBucket) &&
@@ -387,7 +388,7 @@ export default function NoBuildsFoundExplainer({
               </>
             ),
           },
-          unpinItemsSuggestion()
+          unpinItemsSuggestion(),
         );
       }
 
@@ -409,7 +410,7 @@ export default function NoBuildsFoundExplainer({
             id: 'decreaseLowerBounds',
             contents: t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeDecreaseLowerBounds'),
           },
-          unpinItemsSuggestion()
+          unpinItemsSuggestion(),
         );
       }
 
@@ -429,7 +430,7 @@ export default function NoBuildsFoundExplainer({
             id: 'decreaseLowerBounds',
             contents: t('LoadoutBuilder.NoBuildsFoundExplainer.MaybeDecreaseLowerBounds'),
           },
-          unpinItemsSuggestion()
+          unpinItemsSuggestion(),
         );
       }
       problems.push({

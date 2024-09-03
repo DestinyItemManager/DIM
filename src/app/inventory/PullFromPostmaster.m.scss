@@ -17,8 +17,10 @@
   align-items: center;
   gap: 4px;
 
-  &:hover .badge {
-    background-color: black;
-    color: var(--theme-accent-primary);
+  @include interactive($hover: true) {
+    .badge {
+      background-color: black;
+      color: var(--theme-accent-primary);
+    }
   }
 }

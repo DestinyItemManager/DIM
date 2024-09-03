@@ -6,7 +6,7 @@ import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
  */
 export const getCharacterProgressions = (
   profileResponse: DestinyProfileResponse | undefined,
-  characterId?: string
+  characterId?: string,
 ) => {
   // try to fill in missing character ID with a valid value
   characterId ??= profileResponse?.characterProgressions?.data

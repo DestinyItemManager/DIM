@@ -1,5 +1,5 @@
 import { D1BucketHashes } from 'app/search/d1-known-values';
-import { filterMap } from 'app/utils/util';
+import { filterMap } from 'app/utils/collections';
 import { HashLookup, StringLookup } from 'app/utils/util-types';
 import { BucketCategory } from 'bungie-api-ts/destiny2';
 import { BucketHashes } from 'data/d2/generated-enums';
@@ -78,6 +78,8 @@ export function getBuckets(defs: D1ManifestDefinitions) {
       description: 'Unknown items. DIM needs a manifest update.',
       name: 'Unknown',
       hash: -1,
+      // default to false. an equipped item existing, will override this in inv display
+      equippable: false,
       hasTransferDestination: false,
       category: BucketCategory.Item,
       capacity: Number.MAX_SAFE_INTEGER,
@@ -97,6 +99,7 @@ export function getBuckets(defs: D1ManifestDefinitions) {
         description: def.bucketDescription,
         name: def.bucketName,
         hash: def.hash,
+        equippable: def.category === BucketCategory.Equippable,
         hasTransferDestination: def.hasTransferDestination,
         capacity: def.itemCount,
         accountWide: false,
@@ -119,7 +122,7 @@ export function getBuckets(defs: D1ManifestDefinitions) {
   for (const [category, bucketHashes] of Object.entries(D1Categories)) {
     buckets.byCategory[category] = filterMap(
       bucketHashes,
-      (bucketHash) => buckets.byHash[bucketHash]
+      (bucketHash) => buckets.byHash[bucketHash],
     );
   }
   return buckets;

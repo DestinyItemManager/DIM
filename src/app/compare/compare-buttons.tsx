@@ -6,13 +6,20 @@ import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { quoteFilterString } from 'app/search/query-parser';
+import { filterMap } from 'app/utils/collections';
 import { getInterestingSocketMetadatas, getItemDamageShortName } from 'app/utils/item-utils';
-import { getIntrinsicArmorPerkSocket, getWeaponArchetype } from 'app/utils/socket-utils';
+import {
+  getExtraIntrinsicPerkSockets,
+  getIntrinsicArmorPerkSocket,
+  getWeaponArchetype,
+} from 'app/utils/socket-utils';
+import clsx from 'clsx';
 import rarityIcons from 'data/d2/engram-rarity-icons.json';
 import { BucketHashes, StatHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import React from 'react';
 import styles from './CompareButtons.m.scss';
+import { compareNameQuery, stripAdept } from './compare-utils';
 
 /** A definition for a button on the top of the compare too, which can be clicked to show the given items. */
 interface CompareButton {
@@ -30,12 +37,34 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
     !exampleItem.isExotic &&
     getIntrinsicArmorPerkSocket(exampleItem)?.plugged?.plugDef.displayProperties;
 
+  // exotic class item perks
+  const extraIntrinsicButtons =
+    (exampleItem.destinyVersion === 2 &&
+      filterMap(
+        getExtraIntrinsicPerkSockets(exampleItem),
+        (s) => s.plugged?.plugDef.displayProperties,
+      )
+        ?.map((intrinsic) => ({
+          buttonLabel: [
+            <BungieImage
+              key="1"
+              className={clsx(styles.intrinsicIcon, 'dontInvert')}
+              src={intrinsic.icon}
+            />,
+            intrinsic.name,
+            <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
+          ],
+          query: `is:armor2.0 perk:${quoteFilterString(intrinsic.name)}`,
+        }))
+        .reverse()) ||
+    [];
+
   let comparisonSets: CompareButton[] = _.compact([
     // same slot on the same class
     {
       buttonLabel: [
         <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
-        `+ ${t('Stats.Sunset')}`,
+        `+ ${t('Compare.NoModArmor')}`,
       ],
       query: '', // since we already filter by itemCategoryHash, an empty query gives you all items matching that category
     },
@@ -43,17 +72,17 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
     // above but also has to be armor 2.0
     exampleItem.destinyVersion === 2 && {
       buttonLabel: [<ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />],
-      query: 'not:sunset',
+      query: 'is:armor2.0',
     },
 
     // above but also has to be legendary
     exampleItem.destinyVersion === 2 &&
       exampleItem.tier === 'Legendary' && {
         buttonLabel: [
-          <BungieImage key="rarity" src={rarityIcons.Legendary} />,
+          <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
-        query: 'not:sunset is:legendary',
+        query: 'is:armor2.0 is:legendary',
       },
 
     // above but also the same seasonal mod slot, if it has one
@@ -69,7 +98,7 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
           />,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
-        query: `not:sunset ${exampleItemModSlotMetadatas
+        query: `is:armor2.0 ${exampleItemModSlotMetadatas
           .map((m) => `modslot:${m.slotTag || 'none'}`)
           .join(' ')}`,
       },
@@ -79,12 +108,19 @@ export function findSimilarArmors(exampleItem: DimItem): CompareButton[] {
       exampleItemIntrinsic && {
         buttonLabel: [
           <PressTip minimal tooltip={exampleItemIntrinsic.name} key="1">
-            <BungieImage key="2" className={styles.intrinsicIcon} src={exampleItemIntrinsic.icon} />
+            <BungieImage
+              key="2"
+              className={clsx(styles.intrinsicIcon, 'dontInvert')}
+              src={exampleItemIntrinsic.icon}
+            />
           </PressTip>,
           <ArmorSlotIcon key="slot" item={exampleItem} className={styles.svgIcon} />,
         ],
-        query: `not:sunset perk:${quoteFilterString(exampleItemIntrinsic.name)}`,
+        query: `is:armor2.0 perk:${quoteFilterString(exampleItemIntrinsic.name)}`,
       },
+
+    // exotic class items
+    ...extraIntrinsicButtons,
 
     // basically stuff with the same name & categories
     {
@@ -108,27 +144,10 @@ const bucketToSearch = {
 const getRpm = (i: DimItem) => {
   const itemRpmStat = i.stats?.find(
     (s) =>
-      s.statHash === (i.destinyVersion === 1 ? i.stats![0].statHash : StatHashes.RoundsPerMinute)
+      s.statHash === (i.destinyVersion === 1 ? i.stats![0].statHash : StatHashes.RoundsPerMinute),
   );
   return itemRpmStat?.value || -99999999;
 };
-
-/**
- * Strips the (Adept) (or (Timelost) or (Harrowed)) suffixes for the user's language
- * in order to include adept items in non-adept comparisons and vice versa.
- */
-export const stripAdept = (name: string) =>
-  name
-    .replace(new RegExp(t('Filter.Adept'), 'gi'), '')
-    .replace(new RegExp(t('Filter.Timelost'), 'gi'), '')
-    .replace(new RegExp(t('Filter.Harrowed'), 'gi'), '')
-    .trim();
-
-export function compareNameQuery(item: DimItem) {
-  return item.bucket.inWeapons
-    ? `name:${quoteFilterString(stripAdept(item.name))}`
-    : `name:${quoteFilterString(item.name)}`;
-}
 
 /**
  * Generate possible comparisons for weapons, given a reference item.
@@ -150,7 +169,7 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
     exampleItem.destinyVersion === 2 &&
       exampleItem.tier === 'Legendary' && {
         buttonLabel: [
-          <BungieImage key="rarity" src={rarityIcons.Legendary} />,
+          <BungieImage key="rarity" src={rarityIcons.Legendary} className="dontInvert" />,
           <WeaponTypeIcon key="type" item={exampleItem} className={styles.svgIcon} />,
         ],
         query: 'is:legendary',
@@ -165,8 +184,7 @@ export function findSimilarWeapons(exampleItem: DimItem): CompareButton[] {
       ],
       query: `(${bucketToSearch[exampleItem.bucket.hash as keyof typeof bucketToSearch]} ${
         exampleItem.destinyVersion === 2 && intrinsic
-          ? // TODO: add a search by perk hash? It'd be slightly different than searching by name
-            `perkname:${quoteFilterString(intrinsic.displayProperties.name)}`
+          ? `exactperk:${quoteFilterString(intrinsic.displayProperties.name)}`
           : `stat:rpm:${getRpm(exampleItem)}`
       })`,
     },

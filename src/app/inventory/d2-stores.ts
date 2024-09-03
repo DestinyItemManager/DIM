@@ -1,30 +1,30 @@
-import { getCurrentHub, startTransaction } from '@sentry/browser';
-import { Transaction } from '@sentry/types';
+import { startSpan } from '@sentry/browser';
 import { handleAuthErrors } from 'app/accounts/actions';
 import { DestinyAccount } from 'app/accounts/destiny-account';
 import { getPlatforms } from 'app/accounts/platforms';
 import { currentAccountSelector } from 'app/accounts/selectors';
 import { loadClarity } from 'app/clarity/descriptions/loadDescriptions';
 import { customStatsSelector } from 'app/dim-api/selectors';
-import { processInGameLoadouts } from 'app/loadout-drawer/loadout-type-converters';
+import { t } from 'app/i18next-t';
 import { inGameLoadoutLoaded } from 'app/loadout/ingame/actions';
+import { processInGameLoadouts } from 'app/loadout/loadout-type-converters';
 import { loadCoreSettings } from 'app/manifest/actions';
+import { checkForNewManifest } from 'app/manifest/manifest-service-json';
 import { d2ManifestSelector, manifestSelector } from 'app/manifest/selectors';
+import { loadingTracker } from 'app/shell/loading-tracker';
 import { get, set } from 'app/storage/idb-keyval';
 import { ThunkResult } from 'app/store/types';
 import { DimError } from 'app/utils/dim-error';
+import { convertToError, errorMessage } from 'app/utils/errors';
 import { errorLog, infoLog, timer, warnLog } from 'app/utils/log';
-import { convertToError, errorMessage } from 'app/utils/util';
-import { DestinyItemComponent, DestinyProfileResponse } from 'bungie-api-ts/destiny2';
-import { BucketHashes } from 'data/d2/generated-enums';
+import { DestinyProfileResponse } from 'bungie-api-ts/destiny2';
 import { getCharacters as d1GetCharacters } from '../bungie-api/destiny1-api';
 import { getCharacters, getStores } from '../bungie-api/destiny2-api';
 import { bungieErrorToaster } from '../bungie-api/error-toaster';
 import { D2ManifestDefinitions, getDefinitions } from '../destiny2/d2-definitions';
 import { bungieNetPath } from '../dim-ui/BungieImage';
 import { showNotification } from '../notifications/notifications';
-import { loadingTracker } from '../shell/loading-tracker';
-import { reportException } from '../utils/exceptions';
+import { reportException } from '../utils/sentry';
 import {
   CharacterInfo,
   charactersUpdated,
@@ -38,9 +38,11 @@ import { cleanInfos } from './dim-item-info';
 import { d2BucketsSelector, storesLoadedSelector, storesSelector } from './selectors';
 import { DimStore } from './store-types';
 import { getCharacterStatsData as getD1CharacterStatsData } from './store/character-utils';
-import { ItemCreationContext, processItems } from './store/d2-item-factory';
-import { getCharacterStatsData, makeCharacter, makeVault } from './store/d2-store-factory';
+import { buildStores, getCharacterStatsData } from './store/d2-store-factory';
 import { resetItemIndexGenerator } from './store/item-index';
+import { getCurrentStore } from './stores-helpers';
+
+const TAG = 'd2-stores';
 
 /**
  * Update the high level character information for all the stores
@@ -112,7 +114,7 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
     let account = currentAccountSelector(getState());
     if (!account) {
       // TODO: throw here?
-      await dispatch(getPlatforms());
+      await dispatch(getPlatforms);
       account = currentAccountSelector(getState());
       if (!account || account.destinyVersion !== 2) {
         return;
@@ -133,114 +135,131 @@ export function loadStores(): ThunkResult<DimStore[] | undefined> {
   };
 }
 
-// time in milliseconds after which we could expect Bnet to return an updated response
+/** time in milliseconds after which we could expect Bnet to return an updated response */
 const BUNGIE_CACHE_TTL = 15_000;
-
-let minimumCacheAge = Number.MAX_SAFE_INTEGER;
+/** How old the profile can be and still trigger cleanup of tags. */
+const FRESH_ENOUGH_TO_CLEAN_INFOS = 90_000; // 90 seconds
 
 function loadProfile(
   account: DestinyAccount,
-  firstTime: boolean
-): ThunkResult<DestinyProfileResponse | undefined> {
+  firstTime: boolean,
+): ThunkResult<
+  | {
+      profile: DestinyProfileResponse;
+      /** Whether the data is from a "live", remote Bungie.net response. false if this is cached data. */
+      live: boolean;
+      readOnly?: boolean;
+    }
+  | undefined
+> {
   return async (dispatch, getState) => {
     const mockProfileData = getState().inventory.mockProfileData;
     if (mockProfileData) {
-      // TODO: can/should we replace this with profileResponse plus the readOnly flag?
-      return mockProfileData;
+      return { profile: mockProfileData, live: false, readOnly: true };
     }
 
+    const cachedProfileKey = `profile-${account.membershipId}`;
+
     // First try loading from IndexedDB
-    let profileResponse = getState().inventory.profileResponse;
-    if (!profileResponse) {
+    let cachedProfileResponse = getState().inventory.profileResponse;
+    if (!cachedProfileResponse) {
       try {
-        profileResponse = await get<DestinyProfileResponse>(`profile-${account.membershipId}`);
+        cachedProfileResponse = await get<DestinyProfileResponse>(cachedProfileKey);
         // Check to make sure the profile hadn't been loaded in the meantime
         if (getState().inventory.profileResponse) {
-          profileResponse = getState().inventory.profileResponse;
-        } else {
-          infoLog('d2-stores', 'Loaded cached profile from IndexedDB');
-          dispatch(profileLoaded({ profile: profileResponse, live: false }));
+          cachedProfileResponse = getState().inventory.profileResponse;
+        } else if (cachedProfileResponse) {
+          const profileAgeSecs =
+            (Date.now() - new Date(cachedProfileResponse.responseMintedTimestamp ?? 0).getTime()) /
+            1000;
+          infoLog(
+            TAG,
+            `Loaded cached profile from IndexedDB, using it until new data is available. It is ${profileAgeSecs}s old.`,
+          );
+          dispatch(profileLoaded({ profile: cachedProfileResponse, live: false }));
           // The first time we load, just use the IDB version if we can, to speed up loading
           if (firstTime) {
-            return profileResponse;
+            return { profile: cachedProfileResponse, live: false };
           }
         }
       } catch (e) {
-        errorLog('d2-stores', 'Failed to load profile response from IDB', e);
+        errorLog(TAG, 'Failed to load profile response from IDB', e);
       }
     }
 
     let cachedProfileMintedDate = new Date(0);
 
     // If our cached profile is up to date
-    if (profileResponse) {
+    if (cachedProfileResponse) {
       // TODO: need to make sure we still load at the right frequency / for manual cache busts?
-      cachedProfileMintedDate = new Date(profileResponse.responseMintedTimestamp ?? 0);
+      cachedProfileMintedDate = new Date(cachedProfileResponse.responseMintedTimestamp ?? 0);
       const profileAge = Date.now() - cachedProfileMintedDate.getTime();
       if (!storesLoadedSelector(getState()) && profileAge > 0 && profileAge < BUNGIE_CACHE_TTL) {
         warnLog(
-          'd2-stores',
-          'Cached profile is within Bungie.net cache time, skipping remote load.',
-          profileAge
+          TAG,
+          `Cached profile is only ${profileAge / 1000}s old, skipping remote load.`,
+          profileAge,
         );
-        return profileResponse;
-      } else {
-        warnLog(
-          'd2-stores',
-          'Cached profile is older than Bungie.net cache time, proceeding.',
-          profileAge
-        );
+        return { profile: cachedProfileResponse, live: false };
       }
     }
 
     try {
       const remoteProfileResponse = await getStores(account);
+      const now = Date.now();
       const remoteProfileMintedDate = new Date(remoteProfileResponse.responseMintedTimestamp ?? 0);
+      const remoteProfileAgeSec = (now - remoteProfileMintedDate.getTime()) / 1000;
 
       // compare new response against cached response, toss if it's not newer!
-      if (profileResponse) {
+      if (cachedProfileResponse) {
+        const cachedProfileAgeSec = (now - cachedProfileMintedDate.getTime()) / 1000;
         if (remoteProfileMintedDate.getTime() <= cachedProfileMintedDate.getTime()) {
-          warnLog(
-            'd2-stores',
-            'Profile from Bungie.net was not newer than cached profile, discarding.',
-            remoteProfileMintedDate,
-            cachedProfileMintedDate
-          );
+          const eq = remoteProfileMintedDate.getTime() === cachedProfileMintedDate.getTime();
+          const storesLoaded = storesLoadedSelector(getState());
+          const action = storesLoaded ? 'Skipping update.' : 'Using the cached profile.';
+          if (eq) {
+            infoLog(
+              TAG,
+              `Profile from Bungie.net is is ${remoteProfileAgeSec}s old, which is the same age as the cached profile.`,
+              action,
+            );
+          } else {
+            warnLog(
+              TAG,
+              `Profile from Bungie.net is ${remoteProfileAgeSec}s old, while the cached profile is ${cachedProfileAgeSec}s old.`,
+              action,
+            );
+          }
           // Clear the error since we did load correctly
           dispatch(profileError(undefined));
           // undefined means skip processing, in case we already have computed stores
-          return storesLoadedSelector(getState()) ? undefined : profileResponse;
+          return storesLoaded ? undefined : { profile: cachedProfileResponse, live: false };
         } else {
-          minimumCacheAge = Math.min(
-            minimumCacheAge,
-            remoteProfileMintedDate.getTime() - cachedProfileMintedDate.getTime()
-          );
           infoLog(
-            'd2-stores',
-            'Profile from Bungie.net was newer than cached profile, using it.',
-            remoteProfileMintedDate.getTime() - cachedProfileMintedDate.getTime(),
-            minimumCacheAge,
-            remoteProfileMintedDate,
-            cachedProfileMintedDate
+            TAG,
+            `Profile from Bungie.net is is ${remoteProfileAgeSec}s old, while the cached profile is ${cachedProfileAgeSec}s old.`,
+            `Using the new profile from Bungie.net.`,
           );
         }
+      } else {
+        infoLog(
+          TAG,
+          `No cached profile, using profile from Bungie.net which is ${remoteProfileAgeSec}s old.`,
+        );
       }
 
-      profileResponse = remoteProfileResponse;
-      set(`profile-${account.membershipId}`, profileResponse); // don't await
-      dispatch(profileLoaded({ profile: profileResponse, live: true }));
-      return profileResponse;
+      set(cachedProfileKey, remoteProfileResponse); // don't await
+      dispatch(profileLoaded({ profile: remoteProfileResponse, live: true }));
+      return { profile: remoteProfileResponse, live: true };
     } catch (e) {
       dispatch(handleAuthErrors(e));
       dispatch(profileError(convertToError(e)));
-      if (profileResponse) {
-        errorLog(
-          'd2-stores',
-          'Error loading profile from Bungie.net, falling back to cached profile',
-          e
-        );
+      if (cachedProfileResponse) {
+        errorLog(TAG, 'Error loading profile from Bungie.net, falling back to cached profile', e);
         // undefined means skip processing, in case we already have computed stores
-        return storesLoadedSelector(getState()) ? undefined : profileResponse;
+        return storesLoadedSelector(getState())
+          ? undefined
+          : { profile: cachedProfileResponse, live: false };
       }
       // rethrow
       throw e;
@@ -248,9 +267,11 @@ function loadProfile(
   };
 }
 
+let lastCheckedManifest = 0;
+
 function loadStoresData(
   account: DestinyAccount,
-  firstTime: boolean
+  firstTime: boolean,
 ): ThunkResult<DimStore[] | undefined> {
   return async (dispatch, getState) => {
     const promise = (async () => {
@@ -259,144 +280,136 @@ function loadStoresData(
         return;
       }
 
-      const transaction = $featureFlags.sentry
-        ? startTransaction({ name: 'loadStoresD2' })
-        : undefined;
-      // set the transaction on the scope so it picks up any errors
-      getCurrentHub()?.configureScope((scope) => scope.setSpan(transaction));
+      return startSpan({ name: 'loadStoresD2' }, async () => {
+        resetItemIndexGenerator();
 
-      resetItemIndexGenerator();
+        try {
+          const [originalDefs, profileInfo] = await Promise.all([
+            dispatch(getDefinitions()),
+            dispatch(loadProfile(account, firstTime)),
+          ]);
 
-      try {
-        const { readOnly } = getState().inventory;
+          let defs = originalDefs;
 
-        const [defs, profileResponse] = await Promise.all([
-          dispatch(getDefinitions())!,
-          dispatch(loadProfile(account, firstTime)),
-        ]);
-
-        // If we switched account since starting this, give up
-        if (account !== currentAccountSelector(getState())) {
-          return;
-        }
-
-        if (!defs || !profileResponse) {
-          return;
-        }
-
-        const stopTimer = timer('Process inventory');
-
-        const buckets = d2BucketsSelector(getState())!;
-        const customStats = customStatsSelector(getState());
-        const stores = buildStores(
-          {
-            defs,
-            buckets,
-            customStats,
-            profileResponse,
-          },
-          transaction
-        );
-
-        if (readOnly) {
-          for (const store of stores) {
-            store.hadErrors = true;
-            for (const item of store.items) {
-              item.lockable = false;
-              item.trackable = false;
-              item.notransfer = true;
-              item.taggable = false;
-            }
+          // If we switched account since starting this, give up
+          if (account !== currentAccountSelector(getState())) {
+            return;
           }
+
+          for (let i = 0; i < 2; i++) {
+            if (!defs || !profileInfo) {
+              return;
+            }
+
+            const { profile: profileResponse, live, readOnly } = profileInfo;
+
+            const stopTimer = timer(TAG, 'Process inventory');
+
+            const buckets = d2BucketsSelector(getState())!;
+            const customStats = customStatsSelector(getState());
+            const stores = buildStores({
+              defs,
+              buckets,
+              customStats,
+              profileResponse,
+            });
+
+            // One reason stores could have errors is if the manifest was not up
+            // to date. Check to see if it has updated, and if so, download it and
+            // immediately try again.
+            if (stores.some((s) => s.hadErrors)) {
+              if (lastCheckedManifest - Date.now() < 5 * 60 * 1000) {
+                return;
+              }
+              lastCheckedManifest = Date.now();
+
+              if (await checkForNewManifest()) {
+                defs = await dispatch(getDefinitions(true));
+                continue; // go back to the top of the loop with the new defs
+              }
+            }
+
+            if (readOnly) {
+              for (const store of stores) {
+                store.hadErrors = true;
+                for (const item of store.items) {
+                  item.lockable = false;
+                  item.trackable = false;
+                  item.notransfer = true;
+                  item.taggable = false;
+                }
+              }
+            }
+
+            const currencies = processCurrencies(profileResponse, defs);
+
+            const loadouts = processInGameLoadouts(profileResponse, defs);
+
+            stopTimer();
+
+            startSpan({ name: 'updateInventoryState' }, () => {
+              const stopStateTimer = timer(TAG, 'Inventory state update');
+
+              // If we switched account since starting this, give up before saving
+              if (account !== currentAccountSelector(getState())) {
+                return;
+              }
+
+              if (!getCurrentStore(stores)) {
+                errorLog(TAG, 'No characters in profile');
+                dispatch(
+                  error(
+                    new DimError(
+                      'Accounts.NoCharactersTitle',
+                      t('Accounts.NoCharacters'),
+                    ).withNoSocials(),
+                  ),
+                );
+                return;
+              }
+
+              // Cached loads can come from IDB, which can be VERY outdated, so don't
+              // remove item tags/notes based on that. We also refuse to clean tags if
+              // the profile is too old in wall-clock time. Technically we could do
+              // this *only* based on the minted timestamp, but there's no real point
+              // in cleaning items for cached loads since they presumably were cleaned
+              // already.
+              const profileMintedDate = new Date(profileResponse.responseMintedTimestamp ?? 0);
+              if (live && Date.now() - profileMintedDate.getTime() < FRESH_ENOUGH_TO_CLEAN_INFOS) {
+                dispatch(cleanInfos(stores));
+              }
+              dispatch(update({ stores, currencies }));
+              dispatch(inGameLoadoutLoaded(loadouts));
+
+              stopStateTimer();
+            });
+
+            return stores;
+          }
+        } catch (e) {
+          errorLog(TAG, 'Error loading stores', e);
+          reportException('d2stores', e);
+
+          // If we switched account since starting this, give up
+          if (account !== currentAccountSelector(getState())) {
+            return;
+          }
+
+          dispatch(handleAuthErrors(e));
+
+          if (storesSelector(getState()).length > 0) {
+            // don't replace their inventory with the error, just notify
+            showNotification(bungieErrorToaster(errorMessage(e)));
+          } else {
+            dispatch(error(convertToError(e)));
+          }
+          return undefined;
         }
-
-        // TODO: we can start moving some of this stuff to selectors? characters too
-        const currencies = processCurrencies(profileResponse, defs);
-
-        const loadouts = processInGameLoadouts(profileResponse, defs);
-
-        stopTimer();
-
-        const stateSpan = transaction?.startChild({
-          op: 'updateInventoryState',
-        });
-        const stopStateTimer = timer('Inventory state update');
-
-        // If we switched account since starting this, give up before saving
-        if (account !== currentAccountSelector(getState())) {
-          return;
-        }
-
-        dispatch(cleanInfos(stores));
-        dispatch(update({ stores, currencies }));
-        dispatch(inGameLoadoutLoaded(loadouts));
-
-        stopStateTimer();
-        stateSpan?.finish();
-
-        return stores;
-      } catch (e) {
-        errorLog('d2-stores', 'Error loading stores', e);
-        reportException('d2stores', e);
-
-        // If we switched account since starting this, give up
-        if (account !== currentAccountSelector(getState())) {
-          return;
-        }
-
-        dispatch(handleAuthErrors(e));
-
-        if (storesSelector(getState()).length > 0) {
-          // don't replace their inventory with the error, just notify
-          showNotification(bungieErrorToaster(errorMessage(e)));
-        } else {
-          dispatch(error(convertToError(e)));
-        }
-        return undefined;
-      } finally {
-        transaction?.finish();
-      }
+      });
     })();
     loadingTracker.addPromise(promise);
     return promise;
   };
-}
-
-export function buildStores(
-  itemCreationContext: ItemCreationContext,
-  transaction?: Transaction
-): DimStore[] {
-  // TODO: components may be hidden (privacy)
-
-  const { profileResponse } = itemCreationContext;
-
-  if (
-    !profileResponse.profileInventory.data ||
-    !profileResponse.characterInventories.data ||
-    !profileResponse.characters.data
-  ) {
-    errorLog(
-      'd2-stores',
-      'Vault or character inventory was missing - bailing in order to avoid corruption'
-    );
-    throw new DimError('BungieService.MissingInventory');
-  }
-
-  const lastPlayedDate = findLastPlayedDate(profileResponse);
-
-  const processSpan = transaction?.startChild({
-    op: 'processItems',
-  });
-  const vault = processVault(itemCreationContext);
-
-  const characters = Object.keys(profileResponse.characters.data).map((characterId) =>
-    processCharacter(itemCreationContext, characterId, lastPlayedDate)
-  );
-  processSpan?.finish();
-
-  const stores = [...characters, vault];
-
-  return stores;
 }
 
 function processCurrencies(profileInfo: DestinyProfileResponse, defs: D2ManifestDefinitions) {
@@ -412,70 +425,4 @@ function processCurrencies(profileInfo: DestinyProfileResponse, defs: D2Manifest
     },
   }));
   return currencies;
-}
-
-/**
- * Process a single character from its raw form to a DIM store, with all the items.
- */
-function processCharacter(
-  itemCreationContext: ItemCreationContext,
-  characterId: string,
-  lastPlayedDate: Date
-): DimStore {
-  const { defs, buckets, profileResponse } = itemCreationContext;
-  const character = profileResponse.characters.data![characterId];
-  const characterInventory = profileResponse.characterInventories.data?.[characterId]?.items || [];
-  const profileInventory = profileResponse.profileInventory.data?.items || [];
-  const characterEquipment = profileResponse.characterEquipment.data?.[characterId]?.items || [];
-  const profileRecords = profileResponse.profileRecords?.data;
-
-  const store = makeCharacter(defs, character, lastPlayedDate, profileRecords);
-
-  // We work around the weird account-wide buckets by assigning them to the current character
-  const items = characterInventory.concat(characterEquipment);
-
-  if (store.current) {
-    for (const i of profileInventory) {
-      const bucket = buckets.byHash[i.bucketHash];
-      // items that can be stored in a vault
-      if (bucket && (bucket.vaultBucket || bucket.hash === BucketHashes.SpecialOrders)) {
-        items.push(i);
-      }
-    }
-  }
-
-  store.items = processItems(itemCreationContext, store, items);
-  return store;
-}
-
-function processVault(itemCreationContext: ItemCreationContext): DimStore {
-  const { buckets, profileResponse } = itemCreationContext;
-  const profileInventory = profileResponse.profileInventory.data
-    ? profileResponse.profileInventory.data.items
-    : [];
-
-  const store = makeVault();
-
-  const items: DestinyItemComponent[] = [];
-  for (const i of profileInventory) {
-    const bucket = buckets.byHash[i.bucketHash];
-    // items that cannot be stored in the vault, and are therefore *in* a vault
-    if (bucket && !bucket.vaultBucket && bucket.hash !== BucketHashes.SpecialOrders) {
-      items.push(i);
-    }
-  }
-
-  store.items = processItems(itemCreationContext, store, items);
-  return store;
-}
-
-/**
- * Find the date of the most recently played character.
- */
-function findLastPlayedDate(profileInfo: DestinyProfileResponse) {
-  const dateLastPlayed = profileInfo.profile.data?.dateLastPlayed;
-  if (dateLastPlayed) {
-    return new Date(dateLastPlayed);
-  }
-  return new Date(0);
 }

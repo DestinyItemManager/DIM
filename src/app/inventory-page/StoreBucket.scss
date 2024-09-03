@@ -62,6 +62,35 @@
     padding: 8px;
     color: #999;
   }
+
+  .weapon-grouping-icon-wrapper {
+    box-sizing: border-box !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--item-size);
+    height: calc((var(--item-size) + ((var(--item-size) / 5) + 4px) - 1px));
+    font-size: calc(var(--item-size) * 0.4);
+    color: #999;
+
+    .ammo-icon {
+      width: 28px;
+      height: 20px;
+    }
+
+    .element-icon {
+      width: 50%;
+      height: 0;
+      padding-bottom: 50%;
+      margin: 0;
+    }
+
+    .weapon-type-icon {
+      width: 100%;
+      height: auto;
+      filter: invert(1) !important;
+    }
+  }
 }
 
 .pull-item-button {
@@ -70,7 +99,27 @@
   padding: 4px;
   opacity: 0.3;
   transition: opacity 0.3s ease-in-out;
-  &:hover {
+
+  @include interactive($hover: true) {
     opacity: 1;
+  }
+}
+
+.vault-group {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: flex-start;
+  align-content: flex-start;
+  gap: var(--item-margin);
+  width: 100%;
+  padding-bottom: var(--item-margin);
+  border-bottom: 1px solid rgba(150, 150, 150, 0.5);
+
+  &:last-of-type {
+    border-bottom: none;
+  }
+
+  .inlineGroups & {
+    display: contents;
   }
 }

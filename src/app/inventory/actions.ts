@@ -27,6 +27,11 @@ export const update = createAction('inventory/UPDATE')<{
   currencies: AccountCurrency[];
 }>();
 
+/**
+ * Remove the loaded stores to force them to be recomputed on the next load (used when changing language).
+ */
+export const clearStores = createAction('inventory/CLEAR_STORES')();
+
 export const profileLoaded = createAction('inventory/PROFILE_LOADED')<{
   profile: DestinyProfileResponse;
   live: boolean;
@@ -171,7 +176,7 @@ export function setTag(item: DimItem, tag: TagCommand | undefined): ThunkResult 
         : setItemHashTag({
             itemHash: item.hash,
             tag: tag === 'clear' ? undefined : tag,
-          })
+          }),
     );
   };
 }
@@ -198,7 +203,7 @@ export function setNote(item: DimItem, note: string | undefined): ThunkResult {
         : setItemHashNote({
             itemHash: item.hash,
             note,
-          })
+          }),
     );
   };
 }

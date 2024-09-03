@@ -1,6 +1,7 @@
-import { EXOTIC_CATALYST_TRAIT, modsWithConditionalStats } from 'app/search/d2-known-values';
+import { ModsWithConditionalStats } from 'app/search/d2-known-values';
+import { filterMap, uniqBy } from 'app/utils/collections';
 import { infoLog, warnLog } from 'app/utils/log';
-import { filterMap, uniqBy, weakMemoize } from 'app/utils/util';
+import { weakMemoize } from 'app/utils/memoize';
 import {
   DestinyClass,
   DestinyInventoryItemDefinition,
@@ -8,7 +9,7 @@ import {
 } from 'bungie-api-ts/destiny2';
 import adeptWeaponHashes from 'data/d2/adept-weapon-hashes.json';
 import enhancedIntrinsics from 'data/d2/crafting-enhanced-intrinsics';
-import { PlugCategoryHashes, StatHashes } from 'data/d2/generated-enums';
+import { PlugCategoryHashes, StatHashes, TraitHashes } from 'data/d2/generated-enums';
 import masterworksWithCondStats from 'data/d2/masterworks-with-cond-stats.json';
 import {
   DimItem,
@@ -24,12 +25,12 @@ import {
  */
 function getPlugInvestmentStatActivityRule(
   itemDef: DestinyInventoryItemDefinition,
-  stat: DestinyItemInvestmentStatDefinition
+  stat: DestinyItemInvestmentStatDefinition,
 ): PlugStatActivityRule | undefined {
   // Some Exotic weapon catalysts can be inserted even though the catalyst objectives are incomplete.
   // In these cases, the catalyst effects are only applied once the objectives are complete.
   // We'll assume that the item can only be masterworked if its associated catalyst has been completed.
-  if (itemDef.traitHashes?.includes(EXOTIC_CATALYST_TRAIT)) {
+  if (itemDef.traitHashes?.includes(TraitHashes.ItemExoticCatalyst)) {
     return { rule: 'masterwork' };
   }
 
@@ -49,25 +50,25 @@ function getPlugInvestmentStatActivityRule(
 
   const defHash = itemDef.hash;
   if (
-    defHash === modsWithConditionalStats.elementalCapacitor ||
-    defHash === modsWithConditionalStats.enhancedElementalCapacitor
+    defHash === ModsWithConditionalStats.ElementalCapacitor ||
+    defHash === ModsWithConditionalStats.EnhancedElementalCapacitor
   ) {
     return { rule: 'never' };
   }
 
   if (
-    defHash === modsWithConditionalStats.echoOfPersistence ||
-    defHash === modsWithConditionalStats.sparkOfFocus
+    defHash === ModsWithConditionalStats.EchoOfPersistence ||
+    defHash === ModsWithConditionalStats.SparkOfFocus
   ) {
     // "-10 to the stat that governs your class ability recharge"
     const classType =
       stat.statTypeHash === StatHashes.Mobility
         ? DestinyClass.Hunter
         : stat.statTypeHash === StatHashes.Resilience
-        ? DestinyClass.Titan
-        : stat.statTypeHash === StatHashes.Recovery
-        ? DestinyClass.Warlock
-        : undefined;
+          ? DestinyClass.Titan
+          : stat.statTypeHash === StatHashes.Recovery
+            ? DestinyClass.Warlock
+            : undefined;
     if (classType === undefined) {
       warnLog('plug stats', 'unknown stat effect in', defHash, itemDef.displayProperties?.name);
       return undefined;
@@ -94,7 +95,7 @@ function getPlugInvestmentStatActivityRule(
 export function isPlugStatActive(
   rule: PlugStatActivityRule,
   item: DimItem | undefined,
-  classType?: DestinyClass
+  classType?: DestinyClass,
 ): boolean {
   if (!rule) {
     return true;
@@ -112,7 +113,7 @@ export function isPlugStatActive(
       if (classType === undefined) {
         warnLog(
           'conditional stats',
-          'stat condition depends on class type but we do not have a class type here'
+          'stat condition depends on class type but we do not have a class type here',
         );
         return true;
       }
@@ -134,6 +135,35 @@ export function isPlugStatActive(
 }
 
 /**
+ * We can't use the investment stats for plugs directly, because some enhanced
+ * perks have multiple entries for the same stat, which need to be added
+ * together. e.g. https://data.destinysets.com/i/InventoryItem:1167468626 This
+ * function combines those entries so that downstream processing can stay
+ * simple.
+ */
+function getPlugInvestmentStats(
+  investmentStats: DestinyItemInvestmentStatDefinition[],
+): DestinyItemInvestmentStatDefinition[] {
+  const processedStats: DestinyItemInvestmentStatDefinition[] = [];
+  for (const investmentStat of investmentStats) {
+    const existingStatIndex = processedStats.findIndex(
+      (s) => s.statTypeHash === investmentStat.statTypeHash,
+    );
+    if (existingStatIndex >= 0) {
+      const existingStat = processedStats[existingStatIndex];
+      // Add the value into the existing stat
+      processedStats[existingStatIndex] = {
+        ...existingStat,
+        value: existingStat.value + investmentStat.value,
+      };
+    } else {
+      processedStats.push(investmentStat);
+    }
+  }
+  return processedStats;
+}
+
+/**
  * Turn the investmentStats from `itemDef` into an elaborated form
  * that more explicitly contains the plug stat activity rules and
  * fixes some data errors/problems.
@@ -146,23 +176,23 @@ export const mapAndFilterInvestmentStats = weakMemoize(
   (itemDef: PluggableInventoryItemDefinition): readonly Readonly<DimPlugInvestmentStat>[] => {
     let hasDupes: boolean | undefined;
 
+    const investmentStats = getPlugInvestmentStats(itemDef.investmentStats);
+
     // Fast path in case all stats are active and we need no postprocessing.
     // This needs some knowledge of how `getPlugInvestmentStatActivityRule` works...
     if (
-      !itemDef.traitHashes?.includes(EXOTIC_CATALYST_TRAIT) &&
-      itemDef.investmentStats.every((s) => !s.isConditionallyActive)
+      !itemDef.traitHashes?.includes(TraitHashes.ItemExoticCatalyst) &&
+      investmentStats.every((s) => !s.isConditionallyActive)
     ) {
-      hasDupes =
-        uniqBy(itemDef.investmentStats, (s) => s.statTypeHash).length !==
-        itemDef.investmentStats.length;
+      hasDupes = uniqBy(investmentStats, (s) => s.statTypeHash).length !== investmentStats.length;
       if (!hasDupes) {
-        return itemDef.investmentStats;
+        return investmentStats;
       }
     }
 
-    const stats = filterMap(itemDef.investmentStats, (stat, index) => {
+    const stats = filterMap(investmentStats, (stat, index) => {
       if (itemDef.hash === 2282937672 /* InventoryItem "Bipod" */) {
-        if (itemDef.investmentStats.length === 4) {
+        if (investmentStats.length === 4) {
           // Enhanced Bipod has [-25 blast radius, -15 reload speed, -30 blast radius, -20 reload speed]
           // investment stats, all conditionally active. Only the lower stats should apply, the others
           // are from the base perk and included in the defs for whatever reason.
@@ -194,7 +224,7 @@ export const mapAndFilterInvestmentStats = weakMemoize(
               warnLog(
                 'plug stats',
                 'item has duplicated stats with different activity rule, subsequent code will not handle this correctly',
-                itemDef
+                itemDef,
               );
             }
           }
@@ -203,5 +233,5 @@ export const mapAndFilterInvestmentStats = weakMemoize(
     }
 
     return stats;
-  }
+  },
 );

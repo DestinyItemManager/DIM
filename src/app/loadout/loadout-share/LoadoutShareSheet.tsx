@@ -3,13 +3,14 @@ import { createLoadoutShare } from 'app/dim-api/dim-api';
 import Sheet from 'app/dim-ui/Sheet';
 import UserGuideLink from 'app/dim-ui/UserGuideLink';
 import { t } from 'app/i18next-t';
-import { convertDimLoadoutToApiLoadout } from 'app/loadout-drawer/loadout-type-converters';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
+import { convertDimLoadoutToApiLoadout } from 'app/loadout/loadout-type-converters';
+import { Loadout } from 'app/loadout/loadout-types';
 import { showNotification } from 'app/notifications/notifications';
 import ErrorPanel from 'app/shell/ErrorPanel';
 import { copyIcon, shareIcon } from 'app/shell/icons';
 import AppIcon from 'app/shell/icons/AppIcon';
-import { convertToError, copyString, count } from 'app/utils/util';
+import { count } from 'app/utils/collections';
+import { convertToError } from 'app/utils/errors';
 import React, { useEffect, useState } from 'react';
 import styles from './LoadoutShareSheet.m.scss';
 
@@ -54,7 +55,7 @@ export default function LoadoutShareSheet({
     if (!shareUrl) {
       return;
     }
-    copyString(shareUrl);
+    navigator.clipboard.writeText(shareUrl);
     showNotification({
       type: 'success',
       title: t('Loadouts.Share.Copied'),
@@ -82,8 +83,8 @@ export default function LoadoutShareSheet({
       (loadout.parameters.query ||
         loadout.parameters.exoticArmorHash ||
         loadout.parameters.statConstraints?.some(
-          (s) => s.maxTier !== undefined || s.minTier !== undefined
-        ))
+          (s) => s.maxTier !== undefined || s.minTier !== undefined,
+        )),
   );
 
   return (

@@ -3,10 +3,9 @@ import FileUpload from 'app/dim-ui/FileUpload';
 import { t } from 'app/i18next-t';
 import { showNotification } from 'app/notifications/notifications';
 import { AppIcon, downloadIcon } from 'app/shell/icons';
-import { errorMessage } from 'app/utils/util';
+import { errorMessage } from 'app/utils/errors';
 import React from 'react';
 import { DropzoneOptions } from 'react-dropzone';
-import './storage.scss';
 
 export default function ImportExport({
   onExportData,
@@ -56,18 +55,16 @@ export default function ImportExport({
   };
 
   return (
-    <div className="storage-adapter">
-      <h3>{t('Storage.ImportExport')}</h3>
-      <p>
-        <button type="button" className="dim-button" onClick={exportData}>
-          <AppIcon icon={downloadIcon} /> {t('Storage.Export')}
-        </button>
-      </p>
+    <>
+      <span>{t('Storage.ImportExport')}</span>
+      <button type="button" className="dim-button" onClick={exportData}>
+        <AppIcon icon={downloadIcon} /> {t('Storage.Export')}
+      </button>
       <FileUpload
         onDrop={importData}
         accept={{ 'application/json': ['.json'] }}
         title={t('Storage.Import')}
       />
-    </div>
+    </>
   );
 }

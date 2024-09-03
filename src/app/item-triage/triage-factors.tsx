@@ -1,4 +1,4 @@
-import { compareNameQuery } from 'app/compare/compare-buttons';
+import { compareNameQuery } from 'app/compare/compare-utils';
 import BungieImage from 'app/dim-ui/BungieImage';
 import ElementIcon from 'app/dim-ui/ElementIcon';
 import { ArmorSlotIcon, WeaponTypeIcon } from 'app/dim-ui/ItemCategoryIcon';
@@ -7,14 +7,14 @@ import { SpecialtyModSlotIcon } from 'app/dim-ui/SpecialtyModSlotIcon';
 import { DefItemIcon } from 'app/inventory/ItemIcon';
 import { DimItem } from 'app/inventory/item-types';
 import { DimPlugTooltip } from 'app/item-popup/PlugTooltip';
-import { quoteFilterString } from 'app/search/query-parser';
 import {
   classFilter,
   damageFilter,
   itemCategoryFilter,
   itemTypeFilter,
-} from 'app/search/search-filters/known-values';
-import { modslotFilter } from 'app/search/search-filters/sockets';
+} from 'app/search/items/search-filters/known-values';
+import { modslotFilter } from 'app/search/items/search-filters/sockets';
+import { quoteFilterString } from 'app/search/query-parser';
 import { getInterestingSocketMetadatas } from 'app/utils/item-utils';
 import {
   getIntrinsicArmorPerkSocket,
@@ -67,7 +67,7 @@ const itemFactors: Record<string, Factor> = {
     runIf: (item) => item.element && item.bucket.inWeapons,
     render: (item) => (
       <PressTip minimal elementType="span" tooltip={item.element?.displayProperties.name}>
-        <ElementIcon className={clsx(styles.factorIcon)} element={item.element} />
+        <ElementIcon className={styles.factorIcon} element={item.element} />
       </PressTip>
     ),
     filter: damageFilter.fromItem,
@@ -97,7 +97,7 @@ const itemFactors: Record<string, Factor> = {
               itemDef={intrinsicArmorPerk.plugDef}
               borderless={true}
             />
-          </PressTip>
+          </PressTip>,
         );
       }
 
@@ -119,7 +119,7 @@ const itemFactors: Record<string, Factor> = {
       const intrinsicPerk = getIntrinsicArmorPerkSocket(item)?.plugged;
       const largePerkFilterString =
         intrinsicPerk &&
-        `perkname:${quoteFilterString(intrinsicPerk.plugDef.displayProperties.name)}`;
+        `exactperk:${quoteFilterString(intrinsicPerk.plugDef.displayProperties.name)}`;
       const modSlotFilterString = modslotFilter.fromItem(item);
       return [largePerkFilterString, modSlotFilterString].filter(Boolean).join(' ');
     },
@@ -150,7 +150,7 @@ const itemFactors: Record<string, Factor> = {
       ) : null;
     },
     filter: (item) =>
-      `perkname:${quoteFilterString(getWeaponArchetype(item)!.displayProperties.name)}`,
+      `exactperk:${quoteFilterString(getWeaponArchetype(item)!.displayProperties.name)}`,
   },
 };
 

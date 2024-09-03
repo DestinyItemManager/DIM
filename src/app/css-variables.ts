@@ -1,6 +1,14 @@
 import { settingsSelector } from 'app/dim-api/selectors';
+import { deepEqual } from 'fast-equals';
 import { isPhonePortraitSelector } from './shell/selectors';
-import { observeStore } from './utils/redux-utils';
+import { StoreObserver } from './store/observerMiddleware';
+
+/**
+ * Visual viewport diffs greater than this value will cause --viewport-bottom-offset
+ * to be set. A threshold of 50px accounts for full size keyboards as well as the
+ * iPad layout that only shows the predictive text bar.
+ */
+const KEYBOARD_THRESHOLD = 50;
 
 function setCSSVariable(property: string, value: { toString: () => string }) {
   if (value) {
@@ -8,49 +16,51 @@ function setCSSVariable(property: string, value: { toString: () => string }) {
   }
 }
 
+export function createItemSizeObserver(): StoreObserver<number> {
+  return {
+    id: 'item-size-observer',
+    getObserved: (rs) => settingsSelector(rs).itemSize,
+    sideEffect: ({ current }) => {
+      setCSSVariable('--item-size', `${Math.max(48, current)}px`);
+    },
+  };
+}
+
+export function createThemeObserver(): StoreObserver<{ theme: string; isPhonePortrait: boolean }> {
+  return {
+    id: 'theme-observer',
+    equals: deepEqual,
+    getObserved: (rs) => ({
+      theme: settingsSelector(rs).theme,
+      isPhonePortrait: isPhonePortraitSelector(rs),
+    }),
+    sideEffect: ({ current }) => {
+      // Set a class on the body to control the theme. This must be applied on the body for syncThemeColor to work.
+      const themeClass = `theme-${current.theme}`;
+      document.body.className = themeClass;
+      syncThemeColor(current.isPhonePortrait);
+    },
+  };
+}
+
+export function createTilesPerCharColumnObserver(): StoreObserver<number> {
+  return {
+    id: 'tiles-per-char-column-observer',
+    runInitially: true,
+    getObserved: (rs) =>
+      isPhonePortraitSelector(rs)
+        ? settingsSelector(rs).charColMobile
+        : settingsSelector(rs).charCol,
+    sideEffect: ({ current }) => {
+      setCSSVariable('--tiles-per-char-column', current);
+    },
+  };
+}
+
 /**
  * Update a set of CSS variables depending on the settings of the app and whether we're in portrait mode.
  */
-// TODO: swap these into hooks
-export default function updateCSSVariables() {
-  observeStore(settingsSelector, (currentState, nextState, state) => {
-    if (!currentState) {
-      return;
-    }
-
-    if (currentState.itemSize !== nextState.itemSize) {
-      setCSSVariable('--item-size', `${Math.max(48, nextState.itemSize)}px`);
-    }
-    if (currentState.charCol !== nextState.charCol && !isPhonePortraitSelector(state)) {
-      setCSSVariable('--tiles-per-char-column', nextState.charCol);
-    }
-    if (
-      currentState.charColMobile !== nextState.charColMobile &&
-      // this check is needed so on start up/load this doesn't override the value set above on "normal" mode.
-      isPhonePortraitSelector(state)
-    ) {
-      setCSSVariable('--tiles-per-char-column', nextState.charColMobile);
-    }
-
-    // Set a class on the body to control the theme. This must be applied on the body for syncThemeColor to work.
-    if ($featureFlags.themePicker && currentState.theme !== nextState.theme) {
-      const themeClass = `theme-${nextState.theme}`;
-      document.body.className = themeClass;
-      syncThemeColor(isPhonePortraitSelector(state));
-    }
-  });
-
-  // a subscribe on isPhonePortrait is needed when the user on mobile changes from portrait to landscape
-  // or a user on desktop shrinks the browser window below isphoneportrait threshold value
-  observeStore(isPhonePortraitSelector, (_prev, isPhonePortrait, state) => {
-    const settings = settingsSelector(state);
-    setCSSVariable(
-      '--tiles-per-char-column',
-      isPhonePortrait ? settings.charColMobile : settings.charCol
-    );
-    syncThemeColor(isPhonePortrait);
-  });
-
+export function setCssVariableEventListeners() {
   // Set a CSS var for the true viewport height. This changes when the keyboard appears/disappears.
   // https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
 
@@ -59,11 +69,19 @@ export default function updateCSSVariables() {
       const viewport = window.visualViewport!;
       const viewportHeight = Math.round(viewport.height);
       setCSSVariable('--viewport-height', `${viewportHeight}px`);
-      // The amount the bottom of the visual viewport is offset from the layout viewport
-      setCSSVariable(
-        '--viewport-bottom-offset',
-        `${window.innerHeight - (viewportHeight + Math.round(viewport.offsetTop))}px`
-      );
+      /**
+       * The amount the bottom of the visual viewport is offset from the layout viewport
+       * This is calculated so elements such as sheets are not hidden by the keyboard.
+       * However, other viewport changes such as a scrollbar appearing can cause the visual
+       * viewport to change. As a result, we only apply the following CSS Variable if the
+       * viewport size change is large enough (such as when the keyboard opens).
+       */
+      const bottomOffset = window.innerHeight - (viewportHeight + Math.round(viewport.offsetTop));
+
+      // bottomOffset === 0 means the visual viewport has been reset to its initial size
+      if (bottomOffset === 0 || bottomOffset >= KEYBOARD_THRESHOLD) {
+        setCSSVariable('--viewport-bottom-offset', `${bottomOffset}px`);
+      }
     };
     defineVH();
     window.visualViewport.addEventListener('resize', () => defineVH());
@@ -80,7 +98,7 @@ export default function updateCSSVariables() {
 /**
  * Read the --theme-pwa-background CSS variable and use it to set the meta theme-color element.
  */
-export function syncThemeColor(isPhonePortrait: boolean) {
+function syncThemeColor(isPhonePortrait: boolean) {
   let background = getComputedStyle(document.body).getPropertyValue('--theme-pwa-background');
 
   // Extract tint from mobile header on mobile devices to match notch/dynamic island fill

@@ -1,29 +1,32 @@
 import { t } from 'app/i18next-t';
-import { InGameLoadout } from 'app/loadout-drawer/loadout-types';
+import { InGameLoadout } from 'app/loadout/loadout-types';
 import { DimError } from 'app/utils/dim-error';
 import { errorLog } from 'app/utils/log';
 import {
   AwaAuthorizationResult,
-  awaGetActionToken,
-  awaInitializeRequest,
   AwaType,
   BungieMembershipType,
-  clearLoadout,
   DestinyComponentType,
+  DestinyItemComponentSetOfint32,
   DestinyLinkedProfilesResponse,
   DestinyManifest,
   DestinyProfileResponse,
+  DestinyVendorResponse,
   DestinyVendorsResponse,
+  PlatformErrorCodes,
+  ServerResponse,
+  awaGetActionToken,
+  awaInitializeRequest,
+  clearLoadout,
   equipItem,
   equipItems as equipItemsApi,
   equipLoadout,
   getDestinyManifest,
   getLinkedProfiles,
   getProfile as getProfileApi,
+  getVendor as getVendorApi,
   getVendors as getVendorsApi,
-  PlatformErrorCodes,
   pullFromPostmaster,
-  ServerResponse,
   setItemLockState,
   setQuestTrackedState,
   snapshotLoadout,
@@ -34,7 +37,7 @@ import _ from 'lodash';
 import { DestinyAccount } from '../accounts/destiny-account';
 import { DimItem } from '../inventory/item-types';
 import { DimStore } from '../inventory/store-types';
-import { reportException } from '../utils/exceptions';
+import { reportException } from '../utils/sentry';
 import {
   authenticatedHttpClient,
   handleUniquenessViolation,
@@ -56,7 +59,7 @@ export async function getManifest(): Promise<DestinyManifest> {
 }
 
 export async function getLinkedAccounts(
-  bungieMembershipId: string
+  bungieMembershipId: string,
 ): Promise<DestinyLinkedProfilesResponse> {
   const response = await getLinkedProfiles(authenticatedHttpClient, {
     membershipId: bungieMembershipId,
@@ -95,14 +98,12 @@ export function getStores(platform: DestinyAccount): Promise<DestinyProfileRespo
     DestinyComponentType.ProfileProgression,
     DestinyComponentType.Transitory,
     DestinyComponentType.CharacterLoadouts,
+    DestinyComponentType.PresentationNodes,
 
     // This is a lot of data and currently not used.
     // DestinyComponentType.Craftables,
   ];
 
-  if ($featureFlags.solsticePresentationNodes) {
-    components.push(DestinyComponentType.PresentationNodes);
-  }
   return getProfile(platform, ...components);
 }
 
@@ -132,16 +133,23 @@ async function getProfile(
       'BungieService.NoAccountForPlatform',
       t('BungieService.NoAccountForPlatform', {
         platform: platform.platformLabel,
-      })
+      }),
     );
   }
   return response.Response;
 }
 
+export type LimitedDestinyVendorsResponse = Omit<DestinyVendorsResponse, 'itemComponents'> &
+  Partial<{
+    itemComponents: {
+      [key: number]: Partial<DestinyItemComponentSetOfint32>;
+    };
+  }>;
+
 export async function getVendors(
   account: DestinyAccount,
-  characterId: string
-): Promise<DestinyVendorsResponse> {
+  characterId: string,
+): Promise<LimitedDestinyVendorsResponse> {
   const response = await getVendorsApi(authenticatedHttpClient, {
     characterId,
     destinyMembershipId: account.membershipId,
@@ -149,16 +157,33 @@ export async function getVendors(
     components: [
       DestinyComponentType.Vendors,
       DestinyComponentType.VendorSales,
+      DestinyComponentType.ItemCommonData,
+      DestinyComponentType.CurrencyLookups,
+    ],
+  });
+  return response.Response;
+}
+
+/** a single-vendor API fetch, focused on getting the sale item details. see loadAllVendors */
+export async function getVendorSaleComponents(
+  account: DestinyAccount,
+  characterId: string,
+  vendorHash: number,
+): Promise<DestinyVendorResponse> {
+  const response = await getVendorApi(authenticatedHttpClient, {
+    characterId,
+    destinyMembershipId: account.membershipId,
+    membershipType: account.originalPlatformType,
+    components: [
       DestinyComponentType.ItemInstances,
       DestinyComponentType.ItemObjectives,
       DestinyComponentType.ItemSockets,
-      DestinyComponentType.ItemCommonData,
-      DestinyComponentType.CurrencyLookups,
       DestinyComponentType.ItemPlugStates,
       DestinyComponentType.ItemReusablePlugs,
       // TODO: We should try to defer this until the popup is open!
       DestinyComponentType.ItemPlugObjectives,
     ],
+    vendorHash,
   });
   return response.Response;
 }
@@ -170,7 +195,7 @@ export async function transfer(
   account: DestinyAccount,
   item: DimItem,
   store: DimStore,
-  amount: number
+  amount: number,
 ): Promise<ServerResponse<number>> {
   const request = {
     characterId: store.isVault || item.location.inPostmaster ? item.owner : store.id,
@@ -212,7 +237,7 @@ export function equip(account: DestinyAccount, item: DimItem): Promise<ServerRes
 export async function equipItems(
   account: DestinyAccount,
   store: DimStore,
-  items: DimItem[]
+  items: DimItem[],
 ): Promise<{ [itemInstanceId: string]: PlatformErrorCodes }> {
   // TODO: test if this is still broken in D2
   // Sort exotics to the end. See https://github.com/DestinyItemManager/DIM/issues/323
@@ -224,7 +249,7 @@ export async function equipItems(
     itemIds: items.map((i) => i.id),
   });
   return Object.fromEntries(
-    response.Response.equipResults.map((r) => [r.itemInstanceId, r.equipStatus])
+    response.Response.equipResults.map((r) => [r.itemInstanceId, r.equipStatus]),
   );
 }
 
@@ -235,7 +260,7 @@ export function setLockState(
   account: DestinyAccount,
   storeId: string,
   item: DimItem,
-  lockState: boolean
+  lockState: boolean,
 ): Promise<ServerResponse<number>> {
   return setItemLockState(authenticatedHttpClient, {
     characterId: storeId,
@@ -252,7 +277,7 @@ export function setTrackedState(
   account: DestinyAccount,
   storeId: string,
   item: DimItem,
-  trackedState: boolean
+  trackedState: boolean,
 ): Promise<ServerResponse<number>> {
   if (!item.trackable) {
     throw new Error("Can't track non-trackable items");
@@ -270,7 +295,7 @@ export async function requestAdvancedWriteActionToken(
   account: DestinyAccount,
   action: AwaType,
   storeId: string,
-  item?: DimItem
+  item?: DimItem,
 ): Promise<AwaAuthorizationResult> {
   const awaInitResult = await awaInitializeRequest(authenticatedHttpClient, {
     type: action,

@@ -27,7 +27,7 @@ export default function usePrompt(): [
         cancelLabel={args.cancelLabel}
         close={close}
       />
-    )
+    ),
   );
 
   const prompt = (message: string, opts?: PromptOpts) => showDialog({ message, ...opts });

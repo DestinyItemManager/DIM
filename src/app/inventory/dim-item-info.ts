@@ -2,6 +2,8 @@ import { ItemAnnotation, ItemHashTag } from '@destinyitemmanager/dim-api-types';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { I18nKey, tl } from 'app/i18next-t';
 import { ThunkResult } from 'app/store/types';
+import { filterMap } from 'app/utils/collections';
+import { infoLog, warnLog } from 'app/utils/log';
 import _ from 'lodash';
 import { archiveIcon, banIcon, boltIcon, heartIcon, tagIcon } from '../shell/icons';
 import { setItemNote, setItemTag, tagCleanup } from './actions';
@@ -115,6 +117,8 @@ export interface TagInfo {
 // populate tag list from tag config info
 export const itemTagList: TagInfo[] = Object.values(tagConfig);
 
+export const vaultGroupTagOrder = filterMap(itemTagList, (tag) => tag.type);
+
 export const itemTagSelectorList: TagInfo[] = [
   { label: tl('Tags.TagItem') },
   ...Object.values(tagConfig),
@@ -139,18 +143,25 @@ export function cleanInfos(stores: DimStore[]): ThunkResult {
     const infosWithCraftedDate = Object.values(infos).filter((i) => i.craftedDate);
     const infosByCraftedDate = _.keyBy(infosWithCraftedDate, (i) => i.craftedDate!);
 
+    let maxItemId = 0n;
+
     // Tags/notes are stored keyed by instance ID. Start with all the keys of the
     // existing tags and notes and remove the ones that are still here, and the rest
     // should be cleaned up because they refer to deleted items.
     const cleanupIds = new Set(Object.keys(infos));
     for (const store of stores) {
       for (const item of store.items) {
+        const itemId = BigInt(item.id);
+        if (itemId > maxItemId) {
+          maxItemId = itemId;
+        }
         const info = infos[item.id];
         if (info && (info.tag !== undefined || info.notes?.length)) {
           cleanupIds.delete(item.id);
         } else if (item.craftedInfo?.craftedDate) {
-          // Double-check crafted items - we may have them under a different ID. If so,
-          // patch up the data by re-tagging them under the new ID.
+          // Double-check crafted items - we may have them under a different ID.
+          // If so, patch up the data by re-tagging them under the new ID.
+          // We'll delete the old item's info, but the new infos will be saved.
           const craftedInfo = infosByCraftedDate[item.craftedInfo.craftedDate];
           if (craftedInfo) {
             if (craftedInfo.tag) {
@@ -159,7 +170,7 @@ export function cleanInfos(stores: DimStore[]): ThunkResult {
                   itemId: item.id,
                   tag: craftedInfo.tag,
                   craftedDate: item.craftedInfo.craftedDate,
-                })
+                }),
               );
             }
             if (craftedInfo.notes) {
@@ -168,7 +179,7 @@ export function cleanInfos(stores: DimStore[]): ThunkResult {
                   itemId: item.id,
                   note: craftedInfo.notes,
                   craftedDate: item.craftedInfo.craftedDate,
-                })
+                }),
               );
             }
           }
@@ -177,7 +188,15 @@ export function cleanInfos(stores: DimStore[]): ThunkResult {
     }
 
     if (cleanupIds.size > 0) {
-      dispatch(tagCleanup(Array.from(cleanupIds)));
+      const eligibleCleanupIds = Array.from(cleanupIds).filter((id) => BigInt(id) < maxItemId);
+      if (cleanupIds.size > eligibleCleanupIds.length) {
+        warnLog(
+          'cleanInfos',
+          `${cleanupIds.size - eligibleCleanupIds.length} infos have IDs newer than the newest ID in inventory`,
+        );
+      }
+      infoLog('cleanInfos', `Purging tag/notes from ${eligibleCleanupIds.length} deleted items`);
+      dispatch(tagCleanup(eligibleCleanupIds));
     }
   };
 }
@@ -187,7 +206,7 @@ export function getTag(
   itemInfos: ItemInfos,
   itemHashTags?: {
     [itemHash: string]: ItemHashTag;
-  }
+  },
 ): TagValue | undefined {
   return item.taggable
     ? (item.instanced ? itemInfos[item.id]?.tag : itemHashTags?.[item.hash]?.tag) || undefined
@@ -199,7 +218,7 @@ export function getNotes(
   itemInfos: ItemInfos,
   itemHashTags?: {
     [itemHash: string]: ItemHashTag;
-  }
+  },
 ): string | undefined {
   return item.taggable
     ? (item.instanced ? itemInfos[item.id]?.notes : itemHashTags?.[item.hash]?.notes) || undefined

@@ -1,7 +1,7 @@
 import ClickOutside from 'app/dim-ui/ClickOutside';
 import { StatTotalToggle } from 'app/dim-ui/CustomStatTotal';
 import { t } from 'app/i18next-t';
-import { AppIcon, enabledIcon, moveDownIcon, unselectedCheckIcon } from 'app/shell/icons';
+import { AppIcon, enabledIcon, expandDownIcon, unselectedCheckIcon } from 'app/shell/icons';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React, { ReactNode, useState } from 'react';
@@ -18,6 +18,9 @@ export interface DropDownItem {
 function MenuItem({ item, forClass }: { item: DropDownItem; forClass?: DestinyClass }) {
   return (
     <div key={item.id} className={`check-button ${styles.checkButton}`} onClick={item.onItemSelect}>
+      {item.checked !== undefined && (
+        <AppIcon icon={item.checked ? enabledIcon : unselectedCheckIcon} />
+      )}
       <label>
         {item.dropdownLabel ?? item.dropdownLabel}
         {item.id === 'customstat' ? (
@@ -29,9 +32,6 @@ function MenuItem({ item, forClass }: { item: DropDownItem; forClass?: DestinyCl
           item.content
         )}
       </label>
-      {item.checked !== undefined && (
-        <AppIcon icon={item.checked ? enabledIcon : unselectedCheckIcon} />
-      )}
     </div>
   );
 }
@@ -60,7 +60,7 @@ function DropDown({
         disabled={buttonDisabled}
         onClick={() => setDropdownOpen(!dropdownOpen)}
       >
-        {buttonText} <AppIcon icon={moveDownIcon} />
+        {buttonText} <AppIcon icon={expandDownIcon} />
       </button>
       <div className={clsx(styles.menu, { [styles.right]: right })}>
         {dropdownOpen &&

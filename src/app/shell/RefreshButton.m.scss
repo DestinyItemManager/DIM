@@ -33,11 +33,11 @@
 }
 
 .errorTooltip {
+  max-width: 800px;
+
   @include tooltip-background-color(scale-color($red, $lightness: -90%));
   @include tooltip-border-color($red);
   @include tooltip-ribbon-color($red);
-
-  max-width: 800px;
 
   @include phone-portrait {
     max-width: 95%;

@@ -9,10 +9,10 @@ import {
 import { getStore } from 'app/inventory/stores-helpers';
 import { LockableBucketHashes } from 'app/loadout-builder/types';
 import { getItemsFromLoadoutItems } from 'app/loadout-drawer/loadout-item-conversion';
-import { Loadout, ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
 import { getModsFromLoadout } from 'app/loadout-drawer/loadout-utils';
+import { Loadout, ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
-import { filterMap } from 'app/utils/util';
+import { filterMap } from 'app/utils/collections';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
 import { useMemo } from 'react';
@@ -30,7 +30,7 @@ import { createSelector } from 'reselect';
 // TODO: Why are these in the same selector? Why isn't it memoized?
 export function useEquippedLoadoutArmorAndSubclass(
   loadout: Loadout,
-  storeId: string | undefined
+  storeId: string | undefined,
 ): { armor: DimItem[]; subclass: ResolvedLoadoutItem | undefined } {
   const loadoutItemSelector = useMemo(
     () =>
@@ -43,13 +43,13 @@ export function useEquippedLoadoutArmorAndSubclass(
           stores,
           currentStore,
           allItems,
-          itemCreationContext
+          itemCreationContext,
         ): { armor: DimItem[]; subclass: ResolvedLoadoutItem | undefined } => {
           const storeToHydrateFrom = storeId
             ? getStore(stores, storeId)
             : currentStore!.classType === loadout.classType
-            ? currentStore
-            : stores.find((store) => store.classType === loadout.classType);
+              ? currentStore
+              : stores.find((store) => store.classType === loadout.classType);
           const currentlyEquippedArmor =
             storeToHydrateFrom?.items.filter((item) => item.equipped && item.bucket.inArmor) ?? [];
           const classType = storeToHydrateFrom?.classType ?? loadout.classType;
@@ -60,12 +60,12 @@ export function useEquippedLoadoutArmorAndSubclass(
             loadout.items.filter((i) => i.equip),
             storeId,
             allItems,
-            modsByBucket
+            modsByBucket,
           );
 
           const loadoutItemsByBucket = _.keyBy(
             loadoutItems.filter((i) => i.item.classType === classType),
-            (i) => i.item.bucket.hash
+            (i) => i.item.bucket.hash,
           );
 
           const subclass = loadoutItemsByBucket[BucketHashes.Subclass];
@@ -73,13 +73,13 @@ export function useEquippedLoadoutArmorAndSubclass(
             LockableBucketHashes,
             (bucketHash) =>
               loadoutItemsByBucket[bucketHash]?.item ??
-              currentlyEquippedArmor.find((item) => item.bucket.hash === bucketHash)
+              currentlyEquippedArmor.find((item) => item.bucket.hash === bucketHash),
           );
 
           return { armor, subclass };
-        }
+        },
       ),
-    [loadout, storeId]
+    [loadout, storeId],
   );
 
   return useSelector(loadoutItemSelector, shallowEqual);

@@ -19,8 +19,7 @@ import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
 import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-// eslint-disable-next-line css-modules/no-unused-class
-import weightsStyles from '../dim-ui/CustomStatWeights.m.scss';
+
 import styles from './CustomStatsSettings.m.scss';
 import { useSetSetting } from './hooks';
 
@@ -65,7 +64,7 @@ export function CustomStatsSettings() {
   };
 
   return (
-    <div className="setting">
+    <>
       <div className={styles.headerRow}>
         <label htmlFor="">{t('Settings.CustomStatTitle')}</label>
         {$featureFlags.customStatWeights && (
@@ -88,7 +87,7 @@ export function CustomStatsSettings() {
           <AppIcon icon={addIcon} />
         </button>
       </div>
-      <div className={clsx(styles.customDesc, 'fineprint')}>
+      <div className={styles.customDesc}>
         {t('Settings.CustomStatDesc1')} {t('Settings.CustomStatDesc3')}
       </div>
       {[...(provisionalStat ? [provisionalStat] : []), ...customStatList].map((c) =>
@@ -101,9 +100,9 @@ export function CustomStatsSettings() {
           />
         ) : (
           <CustomStatView setEditing={setEditing} statDef={c} key={c.statHash} />
-        )
+        ),
       )}
-    </div>
+    </>
   );
 }
 
@@ -135,7 +134,7 @@ function CustomStatEditor({
     content: (
       <div className={styles.classOption}>
         <ClassIcon classType={c} className={styles.classDropdownIcon} />
-        {getClassTypeNameLocalized(c, defs)}
+        {getClassTypeNameLocalized(defs)(c)}
       </div>
     ),
     value: c,
@@ -173,7 +172,7 @@ function CustomStatEditor({
         />
       </div>
 
-      <div className={clsx(styles.editableStatsRow, weightsStyles.statWeightRow)}>
+      <div className={styles.editableStatsRow}>
         {armorStats.map((statHash) => {
           const stat = defs.Stat.get(statHash);
           const weight = weights[statHash] || 0;
@@ -205,7 +204,7 @@ function CustomStatEditor({
         })}
       </div>
       <div className={styles.identifyingInfo}>
-        <span className={clsx('fineprint', styles.filter)}>
+        <span className={styles.filter}>
           {shortLabel.length > 0 && (
             <>
               {t('Filter.Filter')}
@@ -271,28 +270,24 @@ function useStatWeightsEditor(w: CustomStatWeights) {
  */
 function CustomStatView({
   statDef,
-  className,
   setEditing,
 }: {
   statDef: CustomStatDef;
-  className?: string;
   // used to alert upstream that we want to edit this stat
   setEditing: React.Dispatch<React.SetStateAction<number>>;
 }) {
   return (
-    <div className={clsx(className, styles.customStatView)}>
-      <div className={styles.identifyingInfo}>
-        <button
-          type="button"
-          className="dim-button"
-          onClick={() => setEditing(statDef.statHash)}
-          title={t('Loadouts.EditBrief')}
-        >
-          <AppIcon icon={editIcon} />
-        </button>
-        <ClassIcon proportional className={styles.classIcon} classType={statDef.class} />
-        <span className={styles.label}>{statDef.label}</span>
-      </div>
+    <div className={styles.customStatView}>
+      <button
+        type="button"
+        className="dim-button"
+        onClick={() => setEditing(statDef.statHash)}
+        title={t('Loadouts.EditBrief')}
+      >
+        <AppIcon icon={editIcon} />
+      </button>
+      <ClassIcon proportional className={styles.classIcon} classType={statDef.class} />
+      <span className={styles.label}>{statDef.label}</span>
       <CustomStatWeightsDisplay customStat={statDef} />
     </div>
   );
@@ -303,7 +298,7 @@ function CustomStatView({
 // so let's neatly sort them as we commit them to settings.
 const customStatSort = chainComparator(
   compareBy((customStat: CustomStatDef) => customStat.class),
-  compareBy((customStat: CustomStatDef) => customStat.label)
+  compareBy((customStat: CustomStatDef) => customStat.label),
 );
 
 function useSaveStat() {
@@ -317,7 +312,7 @@ function useSaveStat() {
     const weightValues = Object.values(newStat.weights);
 
     const everyValueValid = weightValues.every(
-      (v) => v !== undefined && Number.isInteger(v) && v >= 0
+      (v) => v !== undefined && Number.isInteger(v) && v >= 0,
     );
     if (
       // if there's any invalid values
@@ -335,7 +330,7 @@ function useSaveStat() {
       !newStat.shortLabel ||
       // or there's an existing stat with an overlapping label & class
       allOtherStats.some(
-        (s) => s.shortLabel === newStat.shortLabel && isClassCompatible(s.class, newStat.class)
+        (s) => s.shortLabel === newStat.shortLabel && isClassCompatible(s.class, newStat.class),
       ) ||
       // or this shortLabel conflicts with a real stat.
       // don't name your custom stat discipline!!
@@ -353,7 +348,7 @@ function useSaveStat() {
     // commit this new stat to settings
     setSetting(
       'customStats',
-      [...allOtherStats.filter((s) => s.statHash), newStat].sort(customStatSort)
+      [...allOtherStats.filter((s) => s.statHash), newStat].sort(customStatSort),
     );
 
     return true;
@@ -373,7 +368,7 @@ function useRemoveStat() {
     ) {
       setSetting(
         'customStats',
-        customStatList.filter((s) => s.statHash !== stat.statHash).sort(customStatSort)
+        customStatList.filter((s) => s.statHash !== stat.statHash).sort(customStatSort),
       );
       return true;
     }
@@ -423,10 +418,6 @@ function createNewStatHash(existingCustomStats: CustomStatDef[]) {
     statHash--;
   }
   return statHash;
-}
-
-export function normalizeStatLabel(s: string) {
-  return s.trim().slice(0, 30);
 }
 
 function warnInvalidCustomStat(errorMsg: string) {

@@ -1,6 +1,7 @@
+import { t } from 'app/i18next-t';
 import { PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { isPluggableItem } from 'app/inventory/store/sockets';
-import { armor2PlugCategoryHashesByName, armorBuckets } from 'app/search/d2-known-values';
+import { armor2PlugCategoryHashesByName } from 'app/search/d2-known-values';
 import { chainComparator, compareBy } from 'app/utils/comparators';
 import { isArmor2Mod } from 'app/utils/item-utils';
 import { LookupTable } from 'app/utils/util-types';
@@ -10,15 +11,14 @@ import { emptyPlugHashes } from 'data/d2/empty-plug-hashes';
 import { BucketHashes, PlugCategoryHashes } from 'data/d2/generated-enums';
 import mutuallyExclusiveMods from 'data/d2/mutually-exclusive-mods.json';
 import { normalToReducedMod, reducedToNormalMod } from 'data/d2/reduced-cost-mod-mappings';
-import _ from 'lodash';
 import { knownModPlugCategoryHashes } from './known-values';
 
 export const plugCategoryHashToBucketHash: LookupTable<PlugCategoryHashes, BucketHashes> = {
-  [armor2PlugCategoryHashesByName.helmet]: armorBuckets.helmet,
-  [armor2PlugCategoryHashesByName.gauntlets]: armorBuckets.gauntlets,
-  [armor2PlugCategoryHashesByName.chest]: armorBuckets.chest,
-  [armor2PlugCategoryHashesByName.leg]: armorBuckets.leg,
-  [armor2PlugCategoryHashesByName.classitem]: armorBuckets.classitem,
+  [armor2PlugCategoryHashesByName.helmet]: BucketHashes.Helmet,
+  [armor2PlugCategoryHashesByName.gauntlets]: BucketHashes.Gauntlets,
+  [armor2PlugCategoryHashesByName.chest]: BucketHashes.ChestArmor,
+  [armor2PlugCategoryHashesByName.leg]: BucketHashes.LegArmor,
+  [armor2PlugCategoryHashesByName.classitem]: BucketHashes.ClassArmor,
 };
 
 /**
@@ -35,7 +35,7 @@ export const sortMods = chainComparator<PluggableInventoryItemDefinition>(
   }),
   compareBy((mod) => mod.itemTypeDisplayName),
   compareBy((mod) => mod.plug.energyCost?.energyCost),
-  compareBy((mod) => mod.displayProperties.name)
+  compareBy((mod) => mod.displayProperties.name),
 );
 
 /**
@@ -54,13 +54,13 @@ export const sortModGroups = chainComparator(
     return knownIndex === -1 ? knownModPlugCategoryHashes.length : knownIndex;
   }),
   compareBy((mods: PluggableInventoryItemDefinition[]) =>
-    mods.length ? mods[0].itemTypeDisplayName : ''
-  )
+    mods.length ? mods[0].itemTypeDisplayName : '',
+  ),
 );
 
 /** Figures out if an item definition is an insertable armor 2.0 mod. */
 export function isInsertableArmor2Mod(
-  def: DestinyInventoryItemDefinition
+  def: DestinyInventoryItemDefinition,
 ): def is PluggableInventoryItemDefinition {
   return Boolean(
     // is the def pluggable (def.plug exists)
@@ -73,7 +73,7 @@ export function isInsertableArmor2Mod(
       // Exclude consumable mods
       def.inventory?.bucketTypeHash !== BucketHashes.Modifications &&
       // this rules out classified items
-      def.itemTypeDisplayName !== undefined
+      def.itemTypeDisplayName !== undefined,
   );
 }
 
@@ -83,10 +83,10 @@ export function isInsertableArmor2Mod(
  * number to its hash to make it unique.
  */
 export function createGetModRenderKey() {
-  const counts: { [modHash: string]: number | undefined } = {};
+  const counts: { [modHash: string]: number } = {};
   return (mod: PluggableInventoryItemDefinition) => {
     counts[mod.hash] ||= 0;
-    return `${mod.hash}-${counts[mod.hash]!++}`;
+    return `${mod.hash}-${counts[mod.hash]++}`;
   };
 }
 
@@ -96,27 +96,41 @@ export function createGetModRenderKey() {
  * e.g. "General Armor Mod", "Helmet Armor Mod", "Nightmare Mod"
  */
 export function groupModsByModType(plugs: PluggableInventoryItemDefinition[]) {
-  return _.groupBy(plugs, (plugDef) => plugDef.itemTypeDisplayName);
+  const plugHeader = (plug: PluggableInventoryItemDefinition) => {
+    // Annoyingly some Prismatic plugs' itemTypeDisplayNames include the damage type and light/dark,
+    // so map them to a common header here
+    if (plug.plug.plugCategoryIdentifier.endsWith('.prism.aspects')) {
+      return t('Loadouts.Prismatic.Aspect');
+    } else if (plug.plug.plugCategoryIdentifier.endsWith('.prism.supers')) {
+      return t('Loadouts.Prismatic.Super');
+    } else if (plug.plug.plugCategoryIdentifier.endsWith('.prism.grenades')) {
+      return t('Loadouts.Prismatic.Grenade');
+    } else if (plug.plug.plugCategoryIdentifier.endsWith('.prism.melee')) {
+      return t('Loadouts.Prismatic.Melee');
+    } else {
+      return plug.itemTypeDisplayName;
+    }
+  };
+  return Object.groupBy(plugs, plugHeader);
 }
 
 /**
  * Some mods have two copies, a regular version and a reduced-cost version.
  * Only some of them are seasonally available, depending on artifact mods/unlocks.
- * This maps to whichever version is available, otherwise returns plugHash unmodified.
+ * This maps to whichever version is available, otherwise returning the expensive versions.
  */
 export function mapToAvailableModCostVariant(plugHash: number, unlockedPlugs: Set<number>) {
-  const toReduced = normalToReducedMod[plugHash];
-  if (toReduced !== undefined && unlockedPlugs.has(toReduced)) {
-    return toReduced;
+  const reducedVersion = isReducedModCostVariant(plugHash)
+    ? plugHash
+    : normalToReducedMod[plugHash];
+  if (reducedVersion !== undefined && unlockedPlugs.has(reducedVersion)) {
+    return reducedVersion;
   }
   if (unlockedPlugs.has(plugHash)) {
     return plugHash;
   }
   const toNormal = reducedToNormalMod[plugHash];
-  if (toNormal !== undefined && unlockedPlugs.has(toNormal)) {
-    return toNormal;
-  }
-  return plugHash;
+  return toNormal ?? plugHash;
 }
 
 /**

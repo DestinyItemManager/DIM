@@ -1,12 +1,14 @@
 import { apiPermissionGrantedSelector } from 'app/dim-api/selectors';
 import { AlertIcon } from 'app/dim-ui/AlertIcon';
 import CheckButton from 'app/dim-ui/CheckButton';
+import ClassIcon from 'app/dim-ui/ClassIcon';
 import { WithSymbolsPicker } from 'app/dim-ui/destiny-symbols/SymbolsPicker';
 import { useAutocomplete } from 'app/dim-ui/text-complete/text-complete';
 import { t } from 'app/i18next-t';
 import { getStore } from 'app/inventory/stores-helpers';
+import InGameLoadoutIdentifiersSelectButton from 'app/loadout/ingame/InGameLoadoutIdentifiersSelectButton';
 import { useDefinitions } from 'app/manifest/selectors';
-import { searchFilterSelector } from 'app/search/search-filter';
+import { searchFilterSelector } from 'app/search/items/item-search-filter';
 import { AppIcon, addIcon, faRandom } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import { useEventBusListener } from 'app/utils/hooks';
@@ -17,7 +19,6 @@ import _ from 'lodash';
 import React, { useCallback, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import TextareaAutosize from 'react-textarea-autosize';
-import { v4 as uuidv4 } from 'uuid';
 import Sheet from '../dim-ui/Sheet';
 import { DimItem } from '../inventory/item-types';
 import {
@@ -26,12 +27,14 @@ import {
   storesSelector,
   unlockedPlugSetItemsSelector,
 } from '../inventory/selectors';
+import { deleteLoadout, updateLoadout } from '../loadout/actions';
 import LoadoutEdit from '../loadout/loadout-edit/LoadoutEdit';
+import { Loadout } from '../loadout/loadout-types';
+import { loadoutsHashtagsSelector } from '../loadout/selectors';
 import styles from './LoadoutDrawer.m.scss';
 import LoadoutDrawerDropTarget from './LoadoutDrawerDropTarget';
 import LoadoutDrawerFooter from './LoadoutDrawerFooter';
 import LoadoutDrawerHeader from './LoadoutDrawerHeader';
-import { deleteLoadout, updateLoadout } from './actions';
 import {
   LoadoutUpdateFunction,
   addItem,
@@ -43,9 +46,7 @@ import {
   setNotes,
 } from './loadout-drawer-reducer';
 import { addItem$ } from './loadout-events';
-import { Loadout } from './loadout-types';
 import { filterLoadoutToAllowedItems } from './loadout-utils';
-import { loadoutsHashtagsSelector } from './selectors';
 
 /**
  * The Loadout editor that shows up as a sheet on the Inventory screen. You can build and edit
@@ -57,6 +58,7 @@ export default function LoadoutDrawer({
   initialLoadout,
   storeId,
   isNew,
+  fromExternal,
   onClose,
 }: {
   initialLoadout: Loadout;
@@ -67,6 +69,7 @@ export default function LoadoutDrawer({
    */
   storeId: string;
   isNew: boolean;
+  fromExternal: boolean;
   onClose: () => void;
 }) {
   const dispatch = useThunkDispatch();
@@ -89,11 +92,11 @@ export default function LoadoutDrawer({
     return (...args: T) => setLoadout(fn(...args));
   }
 
-  const store = getStore(stores, storeId)!;
+  const store = getStore(stores, storeId);
 
   const onAddItem = useCallback(
     (item: DimItem, equip?: boolean) => setLoadout(addItem(defs, item, equip)),
-    [defs, setLoadout]
+    [defs, setLoadout],
   );
 
   /**
@@ -112,7 +115,7 @@ export default function LoadoutDrawer({
     if (saveAsNew) {
       loadoutToSave = {
         ...loadout,
-        id: uuidv4(), // Let it be a new ID
+        id: globalThis.crypto.randomUUID(), // Let it be a new ID
       };
     }
 
@@ -171,21 +174,36 @@ export default function LoadoutDrawer({
   const toggleAnyClass = (checked: boolean) =>
     setLoadout(setClassType(checked ? DestinyClass.Unknown : store.classType));
 
+  const showInGameLoadoutIdentifiers =
+    $featureFlags.editInGameLoadoutIdentifiers &&
+    (Boolean(loadout.parameters?.inGameIdentifiers) || loadout.items.length > 0);
+
   const header = (
-    <div>
-      <LoadoutDrawerHeader loadout={loadout} onNameChanged={handleNameChanged} />
-      <details className={styles.notes} open={Boolean(loadout.notes?.length)}>
-        <summary>{t('MovePopup.Notes')}</summary>
-        <WithSymbolsPicker input={ref} setValue={(val) => setLoadout(setNotes(val))}>
-          <TextareaAutosize
-            onChange={handleNotesChanged}
-            ref={ref}
-            value={loadout.notes}
-            maxLength={2048}
-            placeholder={t('Loadouts.NotesPlaceholder')}
-          />
-        </WithSymbolsPicker>
-      </details>
+    <div className={styles.header}>
+      {showInGameLoadoutIdentifiers && (
+        <InGameLoadoutIdentifiersSelectButton loadout={loadout} setLoadout={setLoadout} />
+      )}
+      <div className={styles.headerDetails}>
+        {fromExternal && (
+          <div className={styles.classType}>
+            <ClassIcon classType={loadout.classType} />
+            {t('Loadouts.ClassType', { className: store.className, context: store.genderName })}
+          </div>
+        )}
+        <LoadoutDrawerHeader loadout={loadout} onNameChanged={handleNameChanged} />
+        <details className={styles.notes} open={Boolean(loadout.notes?.length)}>
+          <summary>{t('MovePopup.Notes')}</summary>
+          <WithSymbolsPicker input={ref} setValue={(val) => setLoadout(setNotes(val))}>
+            <TextareaAutosize
+              onChange={handleNotesChanged}
+              ref={ref}
+              value={loadout.notes}
+              maxLength={2048}
+              placeholder={t('Loadouts.NotesPlaceholder')}
+            />
+          </WithSymbolsPicker>
+        </details>
+      </div>
     </div>
   );
 

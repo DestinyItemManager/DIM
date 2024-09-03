@@ -1,45 +1,34 @@
-import { DimItem } from 'app/inventory/item-types';
-import { DimStore } from 'app/inventory/store-types';
 import { ThunkResult } from 'app/store/types';
-import { LazyStreamDeck, LoadoutSelection, StreamDeckState } from 'app/stream-deck/interfaces';
-import { removeClientIdentifier, removeStreamDeckToken } from 'app/stream-deck/util/local-storage';
+import { type UseStreamDeckSelectionFn } from './useStreamDeckSelection';
 
-export const lazyStreamDeck: LazyStreamDeck = {};
+export interface LazyStreamDeck {
+  start?: () => ThunkResult;
+  stop?: () => ThunkResult;
+  useSelection?: UseStreamDeckSelectionFn;
+}
 
-// wrapped lazy loaded functions
+const lazyLoaded: LazyStreamDeck = {};
 
-export const startStreamDeckConnection = (): ThunkResult =>
-  lazyStreamDeck.core!.startStreamDeckConnection();
-
-export const stopStreamDeckConnection = (): ThunkResult =>
-  lazyStreamDeck.core!.stopStreamDeckConnection();
-
-export const streamDeckSelectItem = (item: DimItem): ThunkResult =>
-  lazyStreamDeck.core!.streamDeckSelectItem(item);
-
-export const streamDeckSelectLoadout = (loadout: LoadoutSelection, store: DimStore) =>
-  lazyStreamDeck.core!.streamDeckSelectLoadout(loadout, store);
-
-// reset AuthorizationNotification token and regenerate client identifier
-export const resetStreamDeckAuthorization = async () => {
-  lazyStreamDeck.core?.resetIdentifierOnStreamDeck();
-  removeClientIdentifier();
-  removeStreamDeckToken();
-};
-
-// run both lazy core and reducer modules
+// lazy load the stream deck module when needed
 export const lazyLoadStreamDeck = async () => {
-  if (!lazyStreamDeck.core) {
-    const { reducer, ...core } = (
-      await import(/* webpackChunkName: "streamdeck" */ './async-module')
-    ).default;
-    lazyStreamDeck.core = core;
-    lazyStreamDeck.reducer = reducer;
+  const core = await import(/* webpackChunkName: "streamdeck" */ './async-module');
+  const useStreamDeckSelection = await import(
+    /* webpackChunkName: "streamdeck-selection" */ './useStreamDeckSelection'
+  );
+  // load only once
+  if (!lazyLoaded.start) {
+    Object.assign(lazyLoaded, {
+      ...core.default,
+      ...useStreamDeckSelection.default,
+    });
   }
 };
 
-// initial stream deck store state
-export const streamDeckInitialState: StreamDeckState = {
-  connected: false,
-  updatePopupShowed: false,
-};
+// wrapped lazy loaded functions
+
+export const startStreamDeckConnection = () => lazyLoaded.start!();
+
+export const stopStreamDeckConnection = () => lazyLoaded.stop!();
+
+export const useStreamDeckSelection: UseStreamDeckSelectionFn = (...args) =>
+  lazyLoaded.useSelection?.(...args) ?? {};

@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import PresentationNode from './PresentationNode';
 import styles from './PresentationNodeRoot.m.scss';
 import PresentationNodeSearchResults from './PresentationNodeSearchResults';
+import { makeItemsForCatalystRecords } from './catalysts';
 import {
   filterPresentationNodesToSearch,
   hideCompletedRecords,
@@ -75,9 +76,9 @@ export default function PresentationNodeRoot({
         itemCreationContext,
         presentationNodeHash,
         showPlugSets ? plugSetCollections : [],
-        currentStore?.genderHash
+        currentStore?.genderHash,
       ),
-    [itemCreationContext, presentationNodeHash, showPlugSets, currentStore?.genderHash]
+    [itemCreationContext, presentationNodeHash, showPlugSets, currentStore?.genderHash],
   );
 
   const nodeTree = useMemo(
@@ -85,7 +86,7 @@ export default function PresentationNodeRoot({
       unfilteredNodeTree && completedRecordsHidden
         ? hideCompletedRecords(unfilteredNodeTree)
         : unfilteredNodeTree,
-    [completedRecordsHidden, unfilteredNodeTree]
+    [completedRecordsHidden, unfilteredNodeTree],
   );
 
   if (!nodeTree) {
@@ -93,12 +94,15 @@ export default function PresentationNodeRoot({
   }
 
   if (searchQuery && searchFilter) {
+    const catalystItemsByRecordHash = makeItemsForCatalystRecords(itemCreationContext);
+
     const searchResults = filterPresentationNodesToSearch(
       nodeTree,
       searchQuery.toLowerCase(),
       searchFilter,
       undefined,
-      defs
+      defs,
+      catalystItemsByRecordHash,
     );
 
     return (

@@ -1,18 +1,19 @@
-import ClosableContainer from 'app/dim-ui/ClosableContainer';
 import { t } from 'app/i18next-t';
 import ConnectedInventoryItem from 'app/inventory/ConnectedInventoryItem';
 import ItemPopupTrigger from 'app/inventory/ItemPopupTrigger';
-import { storesSelector } from 'app/inventory/selectors';
-import { ResolvedLoadoutItem } from 'app/loadout-drawer/loadout-types';
+import { DimItem } from 'app/inventory/item-types';
+import { allItemsSelector, storesSelector } from 'app/inventory/selectors';
+import { ResolvedLoadoutItem } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { AppIcon, powerActionIcon } from 'app/shell/icons';
+import { itemCanBeInLoadout } from 'app/utils/item-utils';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import clsx from 'clsx';
-import { BucketHashes } from 'data/d2/generated-enums';
+import { BucketHashes, SocketCategoryHashes } from 'data/d2/generated-enums';
+import _ from 'lodash';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { getSubclassPlugs } from '../item-utils';
-import EmptySubclass from '../loadout-ui/EmptySubclass';
+import { getSubclassPlugs } from '../loadout-item-utils';
 import PlugDef from '../loadout-ui/PlugDef';
 import { createGetModRenderKey } from '../mod-utils';
 import styles from './LoadoutEditSubclass.m.scss';
@@ -22,18 +23,29 @@ import { useEquipDropTargets } from './useEquipDropTargets';
 export default function LoadoutEditSubclass({
   subclass,
   classType,
+  storeId,
   power,
-  onRemove,
   onPick,
+  onClick,
 }: {
   subclass?: ResolvedLoadoutItem;
   classType: DestinyClass;
+  storeId: string;
   power: number;
-  onRemove: () => void;
-  onPick: () => void;
+  onClick: () => void;
+  onPick: (item: DimItem) => void;
 }) {
   const defs = useD2Definitions()!;
   const stores = useSelector(storesSelector);
+  const allItems = useSelector(allItemsSelector);
+
+  const subclassItemFilter = (item: DimItem) =>
+    item.bucket.hash === BucketHashes.Subclass &&
+    item.classType === classType &&
+    item.owner === storeId &&
+    itemCanBeInLoadout(item);
+
+  const subclassItems = _.sortBy(allItems.filter(subclassItemFilter), (i) => i.element?.enumValue);
 
   const getModRenderKey = createGetModRenderKey();
   const plugs = useMemo(() => getSubclassPlugs(defs, subclass), [subclass, defs]);
@@ -43,11 +55,11 @@ export default function LoadoutEditSubclass({
       BucketHashes.Subclass.toString(),
       ...stores.flatMap((store) => `${store.id}-${BucketHashes.Subclass}`),
     ],
-    [stores]
+    [stores],
   );
   const { equippedRef, isOverEquipped, canDropEquipped } = useEquipDropTargets(
     acceptTarget,
-    classType
+    classType,
   );
 
   return (
@@ -57,12 +69,26 @@ export default function LoadoutEditSubclass({
         [styles.isOver]: isOverEquipped,
         [styles.canDrop]: canDropEquipped,
       })}
+      onClick={subclass ? onClick : undefined}
     >
-      <div className={styles.subclass}>
-        {subclass ? (
-          <ClosableContainer
-            onClose={onRemove}
-            showCloseIconOnHover
+      {!subclass && subclassItems.length > 0 && (
+        <>
+          {subclassItems.map((item) => (
+            <button
+              key={item.index}
+              className={styles.classButton}
+              type="button"
+              onClick={() => onPick(item)}
+              title={t('Loadouts.ChooseItem', { name: t('Bucket.Class') })}
+            >
+              <ConnectedInventoryItem item={item} hideSelectedSuper />
+            </button>
+          ))}
+        </>
+      )}
+      {subclass && (
+        <div className={styles.subclass}>
+          <div
             className={clsx({
               [styles.missingItem]: subclass?.missing,
             })}
@@ -75,38 +101,35 @@ export default function LoadoutEditSubclass({
                   // plugs in the loadout and they may be different to the popup
                   onClick={plugs.length ? undefined : onClick}
                   item={subclass.item}
-                  // don't show the selected Super ability because we are displaying the Super ability plug next
-                  // to the subclass icon
-                  hideSelectedSuper
                 />
               )}
             </ItemPopupTrigger>
-          </ClosableContainer>
-        ) : (
-          <button className={styles.classButton} type="button" onClick={onPick}>
-            <EmptySubclass border />
-          </button>
-        )}
-        {power !== 0 && (
-          <div className={styles.power}>
-            <AppIcon icon={powerActionIcon} />
-            <span>{power}</span>
           </div>
-        )}
-      </div>
-      {plugs.length ? (
-        <div className={styles.subclassMods}>
-          {plugs?.map((plug) => (
-            <PlugDef
-              key={getModRenderKey(plug.plug)}
-              plug={plug.plug}
-              forClassType={subclass?.item.classType}
-            />
-          ))}
+          {power !== 0 && (
+            <div className={styles.power}>
+              <AppIcon icon={powerActionIcon} />
+              <span>{power}</span>
+            </div>
+          )}
         </div>
-      ) : (
-        <div className={styles.modsPlaceholder}>{t('Loadouts.Abilities')}</div>
       )}
+      {subclass &&
+        (plugs.length ? (
+          <div className={styles.subclassMods}>
+            {plugs?.map(
+              (plug) =>
+                plug.socketCategoryHash !== SocketCategoryHashes.Super && (
+                  <PlugDef
+                    key={getModRenderKey(plug.plug)}
+                    plug={plug.plug}
+                    forClassType={subclass?.item.classType}
+                  />
+                ),
+            )}
+          </div>
+        ) : (
+          <div className={styles.modsPlaceholder}>{t('Loadouts.Abilities')}</div>
+        ))}
     </div>
   );
 }

@@ -2,10 +2,10 @@ import { currentAccountSelector } from 'app/accounts/selectors';
 import { DimItem } from 'app/inventory/item-types';
 import { allItemsSelector } from 'app/inventory/selectors';
 import { accountRoute } from 'app/routes';
-import { filterFactorySelector } from 'app/search/search-filter';
+import { filterFactorySelector } from 'app/search/items/item-search-filter';
 import { RootState } from 'app/store/types';
 import { emptyArray } from 'app/utils/empty';
-import { currySelector } from 'app/utils/selector-utils';
+import { currySelector } from 'app/utils/selectors';
 import { characterVendorItemsSelector } from 'app/vendors/selectors';
 import { ItemCategoryHashes } from 'data/d2/generated-enums';
 import { createSelector } from 'reselect';
@@ -14,6 +14,8 @@ import { createSelector } from 'reselect';
  * The current compare session settings.
  */
 export const compareSessionSelector = (state: RootState) => state.compare.session;
+
+export const compareQuerySelector = (state: RootState) => compareSessionSelector(state)?.query;
 
 export const compareOpenSelector = (state: RootState) => Boolean(compareSessionSelector(state));
 
@@ -28,10 +30,12 @@ export const compareCategoryItemsSelector = createSelector(
     if (!itemCategoryHashes) {
       return emptyArray<DimItem>();
     }
-    return [...allItems, ...vendorItems].filter((i) =>
-      itemCategoryHashes.every((h) => i.itemCategoryHashes.includes(h))
+    return [...allItems, ...vendorItems].filter(
+      (i) =>
+        (!i.vendor || i.vendor.vendorHash) &&
+        itemCategoryHashes.every((h) => i.itemCategoryHashes.includes(h)),
     );
-  }
+  },
 );
 
 /**
@@ -48,8 +52,8 @@ export const compareItemsSelector = currySelector(
       }
       const filterFunction = filterFactory(session.query);
       return categoryItems.filter(filterFunction);
-    }
-  )
+    },
+  ),
 );
 
 const organizerTypes = [
@@ -72,7 +76,7 @@ export const compareOrganizerLinkSelector = createSelector(
       return undefined;
     }
     return `${accountRoute(account)}/organizer?category=${session.itemCategoryHashes.join(
-      '~'
+      '~',
     )}&search=${encodeURIComponent(session.query)}`;
-  }
+  },
 );

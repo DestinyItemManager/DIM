@@ -19,6 +19,8 @@ import { ItemCreationContext, makeItem } from './store/d2-item-factory';
 import { createItemIndex } from './store/item-index';
 import { findItemsByBucket, getCurrentStore, getStore, getVault } from './stores-helpers';
 
+const TAG = 'move';
+
 // TODO: Should this be by account? Accounts need IDs
 export interface InventoryState {
   // The same stores as before - these are regenerated anew
@@ -44,13 +46,6 @@ export interface InventoryState {
   readonly newItemsLoaded: boolean;
 
   /**
-   * indicates this isn't really "your" inventory,
-   * or should otherwise disallow modifications such as
-   * moving, locking, plugging, etc
-   */
-  readonly readOnly: boolean;
-
-  /**
    * An API profile response. If this is present,
    * we use it instead of talking to the Bungie API.
    */
@@ -64,12 +59,11 @@ const initialState: InventoryState = {
   currencies: [],
   newItems: new Set(),
   newItemsLoaded: false,
-  readOnly: false,
 };
 
 export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction> = (
   state: InventoryState = initialState,
-  action: InventoryAction | AccountsAction
+  action: InventoryAction | AccountsAction,
 ): InventoryState => {
   switch (action.type) {
     case getType(actions.profileLoaded):
@@ -143,8 +137,13 @@ export const inventory: Reducer<InventoryState, InventoryAction | AccountsAction
     case getType(actions.setMockProfileResponse):
       return produce(state, (draft) => {
         draft.mockProfileData = action.payload;
-        draft.readOnly = true;
       });
+
+    case getType(actions.clearStores):
+      return {
+        ...state,
+        stores: [],
+      };
 
     default:
       return state;
@@ -159,7 +158,7 @@ function updateInventory(
   }: {
     stores: DimStore[];
     currencies: AccountCurrency[];
-  }
+  },
 ) {
   // TODO: we really want to decompose these, drive out all deep mutation
   // TODO: mark DimItem, DimStore properties as Readonly
@@ -287,22 +286,22 @@ function itemMoved(
   sourceStoreId: string,
   targetStoreId: string,
   equip: boolean,
-  amount: number
+  amount: number,
 ): void {
   // Refresh all the items - they may have been reloaded!
   const stores = draft.stores;
   const source = getStore(stores, sourceStoreId);
   const target = getStore(stores, targetStoreId);
   if (!source || !target) {
-    warnLog('move', 'Either source or target store not found', source, target);
+    warnLog(TAG, 'Either source or target store not found', source, target);
     return;
   }
 
   item = source.items.find(
-    (i) => i.hash === item.hash && i.id === item.id && i.location.hash === item.location.hash
+    (i) => i.hash === item.hash && i.id === item.id && i.location.hash === item.location.hash,
   )!;
   if (!item) {
-    warnLog('move', 'Moved item not found', item);
+    warnLog(TAG, 'Moved item not found', item);
     return;
   }
 
@@ -315,9 +314,9 @@ function itemMoved(
       ? // For stackables, pull from all the items as a pool
         _.sortBy(
           findItemsByBucket(source, item.location.hash).filter(
-            (i) => i.hash === item.hash && i.id === item.id
+            (i) => i.hash === item.hash && i.id === item.id,
           ),
-          (i) => i.amount
+          (i) => i.amount,
         )
       : // Otherwise we're moving the exact item we passed in
         [item];
@@ -331,9 +330,9 @@ function itemMoved(
               i.hash === item.hash &&
               i.id === item.id &&
               // Don't consider full stacks as targets
-              i.amount !== i.maxStackSize
+              i.amount !== i.maxStackSize,
           ),
-          (i) => i.amount
+          (i) => i.amount,
         )
       : [];
 
@@ -347,7 +346,7 @@ function itemMoved(
     while (removeAmount > 0) {
       const sourceItem = sourceItems.shift();
       if (!sourceItem) {
-        warnLog('move', 'Source item missing', item);
+        warnLog(TAG, 'Source item missing', item);
         return;
       }
 
@@ -402,18 +401,18 @@ function itemLockStateChanged(
   draft: Draft<InventoryState>,
   item: DimItem,
   state: boolean,
-  type: 'lock' | 'track'
+  type: 'lock' | 'track',
 ) {
   const source = getStore(draft.stores, item.owner);
   if (!source) {
-    warnLog('move', 'Store', item.owner, 'not found');
+    warnLog(TAG, 'Store', item.owner, 'not found');
     return;
   }
 
   // Only instanced items can be locked/tracked
   item = source.items.find((i) => i.id === item.id)!;
   if (!item) {
-    warnLog('move', 'Item not found in stores', item);
+    warnLog(TAG, 'Item not found in stores', item);
     return;
   }
 
@@ -432,7 +431,7 @@ function awaItemChanged(
   draft: Draft<InventoryState>,
   changes: DestinyItemChangeResponse,
   item: DimItem | undefined,
-  itemCreationContext: ItemCreationContext
+  itemCreationContext: ItemCreationContext,
 ) {
   const { defs, buckets } = itemCreationContext;
 
@@ -478,7 +477,7 @@ function awaItemChanged(
     } else if (removedItemComponent.itemInstanceId) {
       for (const store of draft.stores) {
         const removedItemIndex = store.items.findIndex(
-          (i) => i.id === removedItemComponent.itemInstanceId
+          (i) => i.id === removedItemComponent.itemInstanceId,
         );
         if (removedItemIndex >= 0) {
           store.items.splice(removedItemIndex, 1);
@@ -490,7 +489,7 @@ function awaItemChanged(
       const source = getSource(removedItemComponent);
       const sourceItems = _.sortBy(
         source.items.filter((i) => i.hash === removedItemComponent.itemHash),
-        (i) => i.amount
+        (i) => i.amount,
       );
 
       // TODO: refactor!
@@ -499,7 +498,7 @@ function awaItemChanged(
       while (removeAmount > 0) {
         const sourceItem = sourceItems.shift();
         if (!sourceItem) {
-          warnLog('move', 'Source item missing', item, removedItemComponent);
+          warnLog(TAG, 'Source item missing', item, removedItemComponent);
           return;
         }
 
@@ -535,7 +534,7 @@ function awaItemChanged(
       const target = getSource(addedItemComponent);
       const targetItems = _.sortBy(
         target.items.filter((i) => i.hash === addedItemComponent.itemHash),
-        (i) => i.amount
+        (i) => i.amount,
       );
       let addAmount = addedItemComponent.quantity;
       const addedItem = makeItem(itemCreationContext, addedItemComponent, target);

@@ -1,12 +1,13 @@
 import { Search } from '@destinyitemmanager/dim-api-types';
 import { t } from 'app/i18next-t';
+import { uniqBy } from 'app/utils/collections';
 import { chainComparator, compareBy, reverseComparator } from 'app/utils/comparators';
-import { uniqBy } from 'app/utils/util';
 import _ from 'lodash';
 import { ArmoryEntry, getArmorySuggestions } from './armory-search';
+import { canonicalFilterFormats } from './filter-types';
 import { QueryLexerOpenQuotesError, lexer, makeCommentString, parseQuery } from './query-parser';
 import { FiltersMap, SearchConfig, Suggestion } from './search-config';
-import freeformFilters, { plainString } from './search-filters/freeform';
+import { plainString } from './text-utils';
 
 /** The autocompleter/dropdown will suggest different types of searches */
 export const enum SearchItemType {
@@ -87,7 +88,7 @@ const filterNames = [
  */
 export default function createAutocompleter<I, FilterCtx, SuggestionsCtx>(
   searchConfig: SearchConfig<I, FilterCtx, SuggestionsCtx>,
-  armoryEntries: ArmoryEntry[] | undefined
+  armoryEntries: ArmoryEntry[] | undefined,
 ) {
   const filterComplete = makeFilterComplete(searchConfig);
 
@@ -95,7 +96,8 @@ export default function createAutocompleter<I, FilterCtx, SuggestionsCtx>(
     query: string,
     caretIndex: number,
     recentSearches: Search[],
-    includeArmory?: boolean
+    includeArmory?: boolean,
+    maxResults = 7,
   ): SearchItem[] => {
     // If there's a query, it's always the first entry
     const queryItem: SearchItem | undefined = query
@@ -112,7 +114,7 @@ export default function createAutocompleter<I, FilterCtx, SuggestionsCtx>(
       query,
       caretIndex,
       filterComplete,
-      searchConfig
+      searchConfig,
     );
 
     // Recent/saved searches
@@ -138,9 +140,9 @@ export default function createAutocompleter<I, FilterCtx, SuggestionsCtx>(
       ..._.take(
         uniqBy(
           _.compact([queryItem, ...filterSuggestions, ...recentSearchItems]),
-          (i) => i.query.fullText
+          (i) => i.query.fullText,
         ),
-        7
+        maxResults,
       ),
       ...armorySuggestions,
       helpItem,
@@ -155,8 +157,8 @@ export const recentSearchComparator = reverseComparator(
   chainComparator<Search>(
     // Saved searches before recents
     compareBy((s) => s.saved),
-    compareBy((s) => frecency(s.usageCount, s.lastUsage))
-  )
+    compareBy((s) => frecency(s.usageCount, s.lastUsage)),
+  ),
 );
 
 /**
@@ -203,8 +205,8 @@ export function filterSortRecentSearches(query: string, recentSearches: Search[]
       type: s.saved
         ? SearchItemType.Saved
         : s.usageCount > 0
-        ? SearchItemType.Recent
-        : SearchItemType.Suggested,
+          ? SearchItemType.Recent
+          : SearchItemType.Suggested,
       query: {
         fullText: s.query,
         header: ast.comment,
@@ -238,7 +240,7 @@ export function filterSortRecentSearches(query: string, recentSearches: Search[]
   });
 }
 
-const caretEndRegex = /([\s)]|$)/;
+const caretEndRegex = /[\s)]|$/;
 
 /**
  * Find the position of the last "incomplete" filter segment of the query before the caretIndex.
@@ -299,7 +301,7 @@ export function autocompleteTermSuggestions<I, FilterCtx, SuggestionsCtx>(
   query: string,
   caretIndex: number,
   filterComplete: (term: string) => string[],
-  searchConfig: SearchConfig<I, FilterCtx, SuggestionsCtx>
+  searchConfig: SearchConfig<I, FilterCtx, SuggestionsCtx>,
 ): SearchItem[] {
   if (!query) {
     return [];
@@ -351,7 +353,7 @@ export function autocompleteTermSuggestions<I, FilterCtx, SuggestionsCtx>(
 
 function findFilter<I, FilterCtx, SuggestionsCtx>(
   term: string,
-  filtersMap: FiltersMap<I, FilterCtx, SuggestionsCtx>
+  filtersMap: FiltersMap<I, FilterCtx, SuggestionsCtx>,
 ) {
   const parts = term.split(':');
   const filterName = parts[0];
@@ -360,17 +362,20 @@ function findFilter<I, FilterCtx, SuggestionsCtx>(
   return filterName === 'is' ? filtersMap.isFilters[filterValue] : filtersMap.kvFilters[filterName];
 }
 
-// these filters might include quotes, so we search for two text segments to ignore quotes & colon
-// i.e. `name:test` can find `name:"test item"`
-const freeformTerms = freeformFilters.flatMap((f) => f.keywords).map((s) => `${s}:`);
-
 /**
  * This builds a filter-complete function that uses the given search config's keywords to
  * offer autocomplete suggestions for a partially typed term.
  */
 export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
-  searchConfig: SearchConfig<I, FilterCtx, SuggestionsCtx>
+  searchConfig: SearchConfig<I, FilterCtx, SuggestionsCtx>,
 ) {
+  // these filters might include quotes, so we search for two text segments to ignore quotes & colon
+  // i.e. `name:test` can find `name:"test item"`
+  const freeformTerms = Object.values(searchConfig.filtersMap.kvFilters)
+    .filter((f) => canonicalFilterFormats(f.format).includes('freeform'))
+    .flatMap((f) => f.keywords)
+    .map((s) => `${s}:`);
+
   // TODO: also search filter descriptions
   return (typed: string): string[] => {
     if (!typed) {
@@ -407,7 +412,7 @@ export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
 
     let suggestions = searchConfig.suggestions
       .filter(
-        (word) => word.plainText.startsWith(mustStartWith) && word.plainText[matchType](typedPlain)
+        (word) => word.plainText.startsWith(mustStartWith) && word.plainText[matchType](typedPlain),
       )
       .filter(filterLowPrioritySuggestions);
 
@@ -429,9 +434,9 @@ export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
             colonCount(word.plainText) > 1
               ? 1 // last if it's a big one like 'stat:rpm:'
               : word.plainText.startsWith(typedPlain) ||
-                word.plainText.indexOf(typedPlain) === word.plainText.indexOf(':') + 1
-              ? -1 // first if it's a term start or segment start
-              : 0 // mid otherwise
+                  word.plainText.indexOf(typedPlain) === word.plainText.indexOf(':') + 1
+                ? -1 // first if it's a term start or segment start
+                : 0, // mid otherwise
         ),
 
         // for is/not, prioritize words with less left to type,
@@ -464,7 +469,7 @@ export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
           (word) =>
             word.plainText.startsWith('not:') ||
             word.plainText.includes(':<=') ||
-            word.plainText.includes(':>=')
+            word.plainText.includes(':>='),
         ),
 
         // sort more-basic incomplete terms (fewer colons) to the front
@@ -473,8 +478,8 @@ export function makeFilterComplete<I, FilterCtx, SuggestionsCtx>(
 
         // (within the math operators that weren't shoved to the far bottom,)
         // push math operators to the front for things like "masterwork:"
-        compareBy((word) => !mathCheck.test(word.plainText))
-      )
+        compareBy((word) => !mathCheck.test(word.plainText)),
+      ),
     );
     if (filterNames.includes(typedPlain.split(':')[0])) {
       return suggestions.map((suggestion) => suggestion.rawText);

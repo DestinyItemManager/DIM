@@ -1,5 +1,5 @@
+import { t } from 'app/i18next-t';
 import { isWindows } from 'app/utils/browsers';
-import { t } from 'i18next';
 import { useCallback } from 'react';
 import useDialog, { Buttons, Title } from './useDialog';
 

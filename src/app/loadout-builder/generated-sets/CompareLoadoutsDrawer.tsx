@@ -4,9 +4,9 @@ import useConfirm from 'app/dim-ui/useConfirm';
 import { t } from 'app/i18next-t';
 import { DimItem, PluggableInventoryItemDefinition } from 'app/inventory/item-types';
 import { DimStore } from 'app/inventory/store-types';
-import { updateLoadout } from 'app/loadout-drawer/actions';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
 import LoadoutView from 'app/loadout/LoadoutView';
+import { updateLoadout } from 'app/loadout/actions';
+import { Loadout } from 'app/loadout/loadout-types';
 import { useD2Definitions } from 'app/manifest/selectors';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
 import clsx from 'clsx';
@@ -20,7 +20,7 @@ import styles from './CompareLoadoutsDrawer.m.scss';
 function chooseInitialLoadout(
   setItems: DimItem[],
   useableLoadouts: Loadout[],
-  initialLoadoutId?: string
+  initialLoadoutId?: string,
 ) {
   // Most of all, try to find the loadout we started with
   const loadoutFromInitialId = useableLoadouts.find((lo) => lo.id === initialLoadoutId);
@@ -62,13 +62,13 @@ export default function CompareLoadoutsDrawer({
   const { set, items } = compareSet;
 
   const [selectedLoadout, setSelectedLoadout] = useState(() =>
-    chooseInitialLoadout(items, loadouts, loadout.id)
+    chooseInitialLoadout(items, loadouts, loadout.id),
   );
 
   // This probably isn't needed but I am being cautious as it iterates over the stores.
   const generatedLoadout = useMemo(
     () => mergeLoadout(defs, selectedLoadout, loadout, set, items, lockedMods),
-    [defs, selectedLoadout, loadout, set, items, lockedMods]
+    [defs, selectedLoadout, loadout, set, items, lockedMods],
   );
 
   const [confirmDialog, confirm] = useConfirm();
@@ -99,7 +99,7 @@ export default function CompareLoadoutsDrawer({
         value: l,
         content: l.name,
       })),
-    [loadouts]
+    [loadouts],
   );
 
   // This is likely never to happen but since it is disconnected to the button its here for safety.

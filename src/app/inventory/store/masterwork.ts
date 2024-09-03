@@ -22,7 +22,7 @@ const maxTier = 10;
  */
 export function buildMasterwork(
   createdItem: DimItem,
-  defs: D2ManifestDefinitions
+  defs: D2ManifestDefinitions,
 ): DimMasterwork | null {
   if (!createdItem.sockets) {
     return null;
@@ -37,7 +37,7 @@ export function buildMasterwork(
 function buildMasterworkInfo(
   createdItem: DimItem,
   sockets: DimSockets,
-  defs: D2ManifestDefinitions
+  defs: D2ManifestDefinitions,
 ): DimMasterwork | null {
   // For crafted weapons, the enhanced intrinsic provides masterwork-like stats
   const masterworkPlug =
@@ -95,7 +95,7 @@ function buildMasterworkInfo(
 export function isValidMasterworkStat(
   defs: D2ManifestDefinitions,
   itemDef: DestinyInventoryItemDefinition,
-  statHash: number
+  statHash: number,
 ) {
   // Bows have a charge time stat that nobody asked for
   if (

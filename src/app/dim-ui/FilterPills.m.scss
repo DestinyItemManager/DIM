@@ -3,7 +3,8 @@
 .guide {
   composes: flexRow from '../dim-ui/common.m.scss';
   flex-wrap: wrap;
-  margin: 8px 0;
+  margin-top: 8px;
+  margin-bottom: 8px;
   gap: 4px;
 
   @include phone-portrait {
@@ -20,20 +21,17 @@
   padding: 2px 8px;
   color: white;
   border: 1px solid transparent;
-  cursor: pointer;
   transition: border-color 150ms;
   white-space: nowrap;
   gap: 4px;
   user-select: none;
 
-  .darkBackground & {
-    background-color: rgb(255, 255, 255, 0.2);
+  @include interactive($hover: true) {
+    border-color: rgba(255, 255, 255, 0.3);
   }
 
-  @media (hover: hover) {
-    &:hover {
-      border-color: rgba(255, 255, 255, 0.3);
-    }
+  .darkBackground & {
+    background-color: rgb(255, 255, 255, 0.2);
   }
 
   :global(.app-icon) {

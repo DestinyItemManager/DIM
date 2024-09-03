@@ -13,7 +13,6 @@ import GenerateJsonPlugin from 'generate-json-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import _ from 'lodash';
 import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
-import marked from 'marked';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import svgToMiniDataURI from 'mini-svg-data-uri';
 import path from 'path';
@@ -25,7 +24,6 @@ import { InjectManifest } from 'workbox-webpack-plugin';
 import zlib from 'zlib';
 import csp from './content-security-policy';
 import { makeFeatureFlags } from './feature-flags';
-const renderer = new marked.Renderer();
 
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 
@@ -35,6 +33,7 @@ import NotifyPlugin from './notify-webpack-plugin';
 const ASSET_NAME_PATTERN = 'static/[name]-[contenthash:6][ext]';
 
 import packageJson from '../package.json';
+import createWebAppManifest from './manifest-webapp';
 
 import splash from '../icons/splash.json';
 
@@ -45,7 +44,8 @@ interface Env extends EnvValues {
   release: boolean;
   beta: boolean;
   dev: boolean;
-  name: 'release' | 'beta' | 'dev';
+  pr: boolean;
+  name: 'release' | 'beta' | 'dev' | 'pr';
 }
 type Argv = Record<string, CLIValues>;
 export interface WebpackConfigurationGenerator {
@@ -53,20 +53,20 @@ export interface WebpackConfigurationGenerator {
 }
 
 export default (env: Env) => {
-  if (env.dev && env.WEBPACK_SERVE && (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem'))) {
-    console.log('Generating certificate');
-    execSync('mkcert create-ca --validity 825');
-    execSync('mkcert create-cert --validity 825 --key key.pem --cert cert.pem');
-  }
-
   env.name = Object.keys(env)[0] as Env['name'];
-  (['release', 'beta', 'dev'] as const).forEach((e) => {
+  (['release', 'beta', 'dev', 'pr'] as const).forEach((e) => {
     // set booleans based on env
     env[e] = Boolean(env[e]);
     if (env[e]) {
       env.name = e;
     }
   });
+
+  if (env.dev && env.WEBPACK_SERVE && (!fs.existsSync('key.pem') || !fs.existsSync('cert.pem'))) {
+    console.log('Generating certificate');
+    execSync('mkcert create-ca --validity 825');
+    execSync('mkcert create-cert --validity 825 --key key.pem --cert cert.pem');
+  }
 
   let version = env.dev ? packageJson.version.toString() : process.env.VERSION;
 
@@ -75,9 +75,10 @@ export default (env: Env) => {
   }
 
   const buildTime = Date.now();
+  const publicPath = process.env.PUBLIC_PATH ?? '/';
 
   const featureFlags = makeFeatureFlags(env);
-  const contentSecurityPolicy = csp(env.name, featureFlags);
+  const contentSecurityPolicy = csp(env.name, featureFlags, version);
 
   const analyticsProperty = env.release ? 'G-1PW23SGMHN' : 'G-MYWW38Z3LR';
   const jsFilenamePattern = env.dev ? '[name]-[fullhash].js' : '[name]-[contenthash:8].js';
@@ -91,6 +92,7 @@ export default (env: Env) => {
       browsercheck: './src/browsercheck.js',
       earlyErrorReport: './src/earlyErrorReport.js',
       authReturn: './src/authReturn.ts',
+      backup: './src/backup.ts',
     },
 
     // https://github.com/webpack/webpack-dev-server/issues/2758
@@ -98,7 +100,7 @@ export default (env: Env) => {
 
     output: {
       path: path.resolve('./dist'),
-      publicPath: '/',
+      publicPath,
       filename: jsFilenamePattern,
       chunkFilename: jsFilenamePattern,
       assetModuleFilename: ASSET_NAME_PATTERN,
@@ -111,7 +113,7 @@ export default (env: Env) => {
           host: process.env.DOCKER ? '0.0.0.0' : 'localhost',
           allowedHosts: 'all',
           server: {
-            type: 'https',
+            type: 'spdy',
             options: {
               key: fs.readFileSync('key.pem'), // Private keys in PEM format.
               cert: fs.readFileSync('cert.pem'), // Cert chains in PEM format.
@@ -137,11 +139,11 @@ export default (env: Env) => {
                   //'Cross-Origin-Opener-Policy': 'same-origin',
                 }
               : req.baseUrl.match(/\.js$/)
-              ? {
-                  // credentialless is only supported by chrome but require-corp blocks Bungie.net messages
-                  //'Cross-Origin-Embedder-Policy': 'require-corp',
-                }
-              : {};
+                ? {
+                    // credentialless is only supported by chrome but require-corp blocks Bungie.net messages
+                    //'Cross-Origin-Embedder-Policy': 'require-corp',
+                  }
+                : {};
 
             return headers;
           },
@@ -184,7 +186,17 @@ export default (env: Env) => {
               unsafe_math: true,
               unsafe_proto: true,
               pure_getters: true,
-              pure_funcs: ['JSON.parse', 'Object.values', 'Object.keys'],
+              pure_funcs: [
+                'JSON.parse',
+                'Object.values',
+                'Object.keys',
+                'Object.groupBy',
+                'Object.fromEntries',
+                'Map.groupBy',
+                'Map',
+                'Set',
+                'BigInt',
+              ],
             },
             mangle: { toplevel: true },
           },
@@ -253,11 +265,15 @@ export default (env: Env) => {
               loader: 'css-loader',
               options: {
                 modules: {
-                  localIdentName:
-                    env.dev || env.beta
-                      ? '[name]_[local]-[contenthash:base64:8]'
-                      : '[contenthash:base64:8]',
+                  localIdentName: !env.release
+                    ? '[name]_[local]-[contenthash:base64:8]'
+                    : '[contenthash:base64:8]',
                   exportLocalsConvention: 'camelCaseOnly',
+                  // TODO: It's possible that setting this to true would allow
+                  // us to eliminate some original CSS names that still get into
+                  // the bundle, but it breaks css-modules-typescript-loader so
+                  // we'd need to fork/replace it.
+                  namedExport: false,
                 },
                 importLoaders: 2,
               },
@@ -334,9 +350,6 @@ export default (env: Env) => {
             },
             {
               loader: 'markdown-loader',
-              options: {
-                renderer,
-              },
             },
           ],
         },
@@ -408,6 +421,7 @@ export default (env: Env) => {
         date: new Date(buildTime).toString(),
         splash,
         analyticsProperty,
+        publicPath,
       },
       minify: env.dev
         ? false
@@ -430,6 +444,13 @@ export default (env: Env) => {
     }),
 
     new HtmlWebpackPlugin({
+      inject: true,
+      filename: 'backup.html',
+      template: 'src/backup.html',
+      chunks: ['backup'],
+    }),
+
+    new HtmlWebpackPlugin({
       inject: false,
       filename: '404.html',
       template: 'src/404.html',
@@ -442,6 +463,7 @@ export default (env: Env) => {
       inject: false,
       minify: false,
       templateParameters: {
+        publicPath: publicPath.replace('/', ''),
         csp: contentSecurityPolicy,
       },
     }),
@@ -452,14 +474,19 @@ export default (env: Env) => {
       buildTime,
     }),
 
+    // The web app manifest controls how our app looks when installed.
+    new GenerateJsonPlugin('./manifest-webapp.json', createWebAppManifest(publicPath)),
+
     new CopyWebpackPlugin({
       patterns: [
-        { from: './src/manifest-webapp.json' },
         // Only copy the manifests out of the data folder. Everything else we import directly into the bundle.
         { from: './src/data/d1/manifests', to: 'data/d1/manifests' },
         { from: `./icons/${env.name}/` },
         { from: `./icons/splash`, to: 'splash/' },
+        { from: `./icons/screenshots`, to: 'screenshots/' },
         { from: './src/safari-pinned-tab.svg' },
+        { from: './src/nuke.php' },
+        { from: './src/robots.txt' },
       ],
     }),
 
@@ -473,6 +500,7 @@ export default (env: Env) => {
       $DIM_WEB_CLIENT_SECRET: JSON.stringify(process.env.WEB_OAUTH_CLIENT_SECRET),
       $DIM_API_KEY: JSON.stringify(process.env.DIM_API_KEY),
       $ANALYTICS_PROPERTY: JSON.stringify(analyticsProperty),
+      $PUBLIC_PATH: JSON.stringify(publicPath),
 
       $BROWSERS: JSON.stringify(browserslist(packageJson.browserslist)),
 
@@ -481,7 +509,7 @@ export default (env: Env) => {
         Object.entries(featureFlags).map(([key, value]) => [
           `$featureFlags.${key}`,
           JSON.stringify(value),
-        ])
+        ]),
       ),
     }),
 
@@ -495,11 +523,9 @@ export default (env: Env) => {
 
   if (env.dev) {
     // In dev we use babel to compile TS, and fork off a separate typechecker
-    plugins.push(
-      new ForkTsCheckerWebpackPlugin({
-        eslint: { files: './src/**/*.{ts,tsx,js,jsx}' },
-      })
-    );
+    plugins.push(new ForkTsCheckerWebpackPlugin());
+
+    // TODO: maybe reintroduce https://webpack.js.org/plugins/eslint-webpack-plugin/
 
     if (process.env.SNORETOAST_DISABLE) {
       console.log("Disabling build notifications as 'SNORETOAST_DISABLE' was defined");
@@ -510,13 +536,13 @@ export default (env: Env) => {
           excludeWarnings: false,
           alwaysNotify: true,
           contentImage: path.join(__dirname, '../icons/release/favicon-96x96.png'),
-        })
+        }),
       );
       plugins.push(
         new ForkTsCheckerNotifierWebpackPlugin({
           title: 'DIM TypeScript',
           excludeWarnings: false,
-        })
+        }),
       );
     }
 
@@ -535,6 +561,7 @@ export default (env: Env) => {
             /data\/d1\/manifests\/d1-manifest-..(-br)?.json(.br|.gz)?/,
             /^(?!en).+.json/,
             /webpack-stats.json/,
+            /screenshots\//,
           ],
         },
       }),
@@ -568,17 +595,16 @@ export default (env: Env) => {
         include: [/\.(html|js|css|woff2|json|wasm)$/, /static\/(?!fa-).*\.(png|gif|jpg|svg)$/],
         exclude: [
           /version\.json/,
-          /extension-dist/,
-          /\.map$/,
           // Ignore both the webapp manifest and the d1-manifest files
           /data\/d1\/manifests/,
           /manifest-webapp/,
           // Android and iOS manifest
           /\.well-known/,
+          /screenshots\//,
         ],
         swSrc: './src/service-worker.ts',
         swDest: 'service-worker.js',
-      })
+      }),
     );
 
     // Skip brotli compression for PR builds
@@ -595,7 +621,7 @@ export default (env: Env) => {
             [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
           },
           minRatio: Infinity,
-        })
+        }),
       );
     }
   }

@@ -1,19 +1,14 @@
 import { ConfirmButton } from 'app/dim-ui/ConfirmButton';
 import { t } from 'app/i18next-t';
 import { DimStore } from 'app/inventory/store-types';
-import { deleteLoadout } from 'app/loadout-drawer/actions';
 import { applyLoadout } from 'app/loadout-drawer/loadout-apply';
-import { editLoadout } from 'app/loadout-drawer/loadout-events';
-import { Loadout } from 'app/loadout-drawer/loadout-types';
-import { AppIcon, deleteIcon, faCheckCircle } from 'app/shell/icons';
+import { copyAndEditLoadout, editLoadout } from 'app/loadout-drawer/loadout-events';
+import { deleteLoadout } from 'app/loadout/actions';
+import { Loadout } from 'app/loadout/loadout-types';
+import { AppIcon, deleteIcon } from 'app/shell/icons';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { streamDeckSelectionSelector } from 'app/stream-deck/selectors';
-import { streamDeckSelectLoadout } from 'app/stream-deck/stream-deck';
-import _ from 'lodash';
 import { ReactNode, memo, useMemo } from 'react';
-import { useSelector } from 'react-redux';
 import LoadoutView from './LoadoutView';
-import styles from './LoadoutsRow.m.scss';
 
 /**
  * A single row in the Loadouts page.
@@ -35,11 +30,6 @@ export default memo(function LoadoutRow({
 }) {
   const dispatch = useThunkDispatch();
 
-  const streamDeckSelection = $featureFlags.elgatoStreamDeck
-    ? // eslint-disable-next-line
-      useSelector(streamDeckSelectionSelector)
-    : null;
-
   const actionButtons = useMemo(() => {
     const handleDeleteClick = () => dispatch(deleteLoadout(loadout.id));
 
@@ -48,52 +38,44 @@ export default memo(function LoadoutRow({
 
     const handleEdit = () => editLoadout(loadout, store.id, { isNew: !saved });
     const handleShare = () => onShare(loadout);
+    const handleCopyAndEdit = () => copyAndEditLoadout(loadout, store.id);
 
     const actionButtons: ReactNode[] = [];
 
     if (equippable) {
-      if (streamDeckSelection === 'loadout') {
-        const handleSelection = () =>
-          dispatch(streamDeckSelectLoadout({ type: 'dim', loadout }, store));
-        return [
-          <button
-            key="select-for-stream-deck"
-            type="button"
-            className="dim-button"
-            onClick={handleSelection}
-          >
-            <span className={styles.iconLabel}>{t('StreamDeck.SelectLoadout')}</span>
-            <AppIcon icon={faCheckCircle} title={t('StreamDeck.SelectLoadout')} />
-          </button>,
-        ];
-      }
-
       actionButtons.push(
         <button key="apply" type="button" className="dim-button" onClick={handleApply}>
           {t('Loadouts.Apply')}
-        </button>
+        </button>,
       );
     }
 
     actionButtons.push(
       <button key="edit" type="button" className="dim-button" onClick={handleEdit}>
         {saved ? t('Loadouts.EditBrief') : t('Loadouts.SaveLoadout')}
-      </button>
+      </button>,
     );
 
-    if (loadout.parameters && !_.isEmpty(loadout.parameters)) {
+    if (equippable) {
+      // add button here to copy and edit the loadout
       actionButtons.push(
-        <button key="share" type="button" className="dim-button" onClick={handleShare}>
-          {t('Loadouts.ShareLoadout')}
-        </button>
+        <button key="copyAndEdit" type="button" className="dim-button" onClick={handleCopyAndEdit}>
+          {t('Loadouts.CopyAndEdit')}
+        </button>,
       );
     }
+
+    actionButtons.push(
+      <button key="share" type="button" className="dim-button" onClick={handleShare}>
+        {t('Loadouts.ShareLoadout')}
+      </button>,
+    );
 
     if (saved) {
       actionButtons.push(
         <ConfirmButton key="delete" danger onClick={handleDeleteClick}>
           <AppIcon icon={deleteIcon} title={t('Loadouts.Delete')} />
-        </ConfirmButton>
+        </ConfirmButton>,
       );
     } else {
       actionButtons.push(
@@ -104,21 +86,12 @@ export default memo(function LoadoutRow({
           onClick={onSnapshotInGameLoadout}
         >
           {t('Loadouts.Snapshot')}
-        </button>
+        </button>,
       );
     }
 
     return actionButtons;
-  }, [
-    dispatch,
-    equippable,
-    loadout,
-    onShare,
-    onSnapshotInGameLoadout,
-    saved,
-    store,
-    streamDeckSelection,
-  ]);
+  }, [dispatch, equippable, loadout, onShare, onSnapshotInGameLoadout, saved, store]);
 
   return (
     <LoadoutView

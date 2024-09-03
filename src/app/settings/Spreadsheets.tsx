@@ -5,10 +5,12 @@ import { storesLoadedSelector } from 'app/inventory/selectors';
 import { downloadCsvFiles, importTagsNotesFromCsv } from 'app/inventory/spreadsheets';
 import { showNotification } from 'app/notifications/notifications';
 import { useThunkDispatch } from 'app/store/thunk-dispatch';
-import { errorMessage } from 'app/utils/util';
+import { errorMessage } from 'app/utils/errors';
 import { DropzoneOptions } from 'react-dropzone';
 import { useSelector } from 'react-redux';
 import { AppIcon, spreadsheetIcon } from '../shell/icons';
+import { settingClass } from './SettingsPage';
+import styles from './Spreadsheets.m.scss';
 
 export default function Spreadsheets() {
   const dispatch = useThunkDispatch();
@@ -32,21 +34,21 @@ export default function Spreadsheets() {
     }
   };
 
-  const downloadCsv = (type: 'Armor' | 'Weapons' | 'Ghost') => dispatch(downloadCsvFiles(type));
+  const downloadCsv = (type: 'armor' | 'weapon' | 'ghost') => dispatch(downloadCsvFiles(type));
 
   return (
     <section id="spreadsheets">
       {confirmDialog}
       <h2>{t('Settings.Data')}</h2>
-      <div className="setting horizontal">
+      <div className={settingClass}>
         <label htmlFor="spreadsheetLinks" title={t('Settings.ExportSSHelp')}>
           {t('Settings.ExportSS')}
         </label>
-        <div>
+        <div className={styles.buttons}>
           <button
             type="button"
             className="dim-button"
-            onClick={() => downloadCsv('Weapons')}
+            onClick={() => downloadCsv('weapon')}
             disabled={disabled}
           >
             <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Weapons')}</span>
@@ -54,7 +56,7 @@ export default function Spreadsheets() {
           <button
             type="button"
             className="dim-button"
-            onClick={() => downloadCsv('Armor')}
+            onClick={() => downloadCsv('armor')}
             disabled={disabled}
           >
             <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Armor')}</span>
@@ -62,14 +64,12 @@ export default function Spreadsheets() {
           <button
             type="button"
             className="dim-button"
-            onClick={() => downloadCsv('Ghost')}
+            onClick={() => downloadCsv('ghost')}
             disabled={disabled}
           >
             <AppIcon icon={spreadsheetIcon} /> <span>{t('Bucket.Ghost')}</span>
           </button>
         </div>
-      </div>
-      <div className="setting">
         <FileUpload
           title={t('Settings.CsvImport')}
           accept={{ 'text/csv': ['.csv'] }}

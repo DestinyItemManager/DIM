@@ -10,7 +10,7 @@ import { useLocation } from 'react-router';
 import styles from './MainSearchBarActions.m.scss';
 import { searchButtonAnimateVariants } from './SearchBar';
 import SearchResults from './SearchResults';
-import { filteredItemsSelector, queryValidSelector } from './search-filter';
+import { filteredItemsSelector, queryValidSelector } from './items/item-search-filter';
 
 /**
  * The extra buttons that appear in the main search bar when there are matched items.
@@ -33,11 +33,11 @@ export default function MainSearchBarActions() {
   // Just suppress the count for now
   const showSearchResults = onInventory && !isPhonePortrait;
   const showSearchCount = Boolean(
-    queryValid && searchQuery && !onProgress && !onRecords && !onVendors
+    queryValid && searchQuery && !onProgress && !onRecords && !onVendors,
   );
   const handleCloseSearchResults = useCallback(
     () => dispatch(toggleSearchResults(false)),
-    [dispatch]
+    [dispatch],
   );
 
   return (

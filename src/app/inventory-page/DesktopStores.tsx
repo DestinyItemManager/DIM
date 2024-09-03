@@ -44,9 +44,9 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
       stores.length > 2 ||
       (currentStore &&
         stores.some((s) =>
-          s.items.some((i) => !isClassCompatible(i.classType, currentStore.classType))
+          s.items.some((i) => !isClassCompatible(i.classType, currentStore.classType)),
         )),
-    [stores, currentStore]
+    [stores, currentStore],
   );
 
   if (!stores.length || !buckets || !vault || !currentStore) {
@@ -86,7 +86,7 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
                   singleCharacter
                     ? t('Settings.ExpandSingleCharacter')
                     : `${t('Settings.SingleCharacter')}: ${t(
-                        'Settings.SingleCharacterExplanation'
+                        'Settings.SingleCharacterExplanation',
                       )}`
                 }
               >
@@ -103,7 +103,6 @@ export default function DesktopStores({ stores, buckets, singleCharacter }: Prop
           currentStore={currentStore}
           buckets={buckets}
           singleCharacter={singleCharacter}
-          hidePostmaster={false}
         />
       </div>
       {$featureFlags.itemFeed && <ItemFeedSidebar />}
@@ -116,11 +115,17 @@ function categoryHasItems(
   allBuckets: InventoryBuckets,
   category: string,
   stores: DimStore[],
-  currentStore: DimStore
+  currentStore: DimStore,
 ): boolean {
   const buckets = allBuckets.byCategory[category];
   return buckets.some((bucket) => {
-    const storesToSearch = bucket.accountWide && !stores[0].isVault ? [currentStore] : stores;
+    const storesToSearch =
+      // Account-wide bucket shows up for every character (on mobile) but is stored on the current store
+      bucket.accountWide &&
+      // On mobile, stores can be just [vault] when you're viewing the vault
+      !stores[0].isVault
+        ? [currentStore]
+        : stores;
     return storesToSearch.some((s) => findItemsByBucket(s, bucket.hash).length > 0);
   });
 }
@@ -169,19 +174,23 @@ function CollapsibleContainer({
   );
 }
 
-function StoresInventory(
-  props: {
-    hidePostmaster: boolean;
-  } & InventoryContainerProps
-) {
-  const { buckets, stores } = props;
-
+function StoresInventory({
+  buckets,
+  stores,
+  currentStore,
+  vault,
+  singleCharacter,
+}: InventoryContainerProps) {
   return (
     <>
       {Object.entries(buckets.byCategory).map(([category, inventoryBucket]) => (
         <CollapsibleContainer
           key={category}
-          {...props}
+          buckets={buckets}
+          stores={stores}
+          currentStore={currentStore}
+          vault={vault}
+          singleCharacter={singleCharacter}
           category={category}
           inventoryBucket={inventoryBucket}
         />

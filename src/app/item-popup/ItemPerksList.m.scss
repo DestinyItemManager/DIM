@@ -12,7 +12,7 @@
   padding: 4px 8px;
   flex-wrap: wrap;
 
-  &:hover {
+  @include interactive($hover: true) {
     background-color: rgba(255, 255, 255, 0.05);
   }
 
@@ -43,6 +43,8 @@
 }
 
 .perkIconWrapper {
+  // Change the size of the perk icons
+  --item-size-adjusted: calc(30 / 50 * var(--item-size));
   grid-area: icon;
   align-self: flex-start;
   position: relative; // to position the thumbs-up correctly
@@ -50,9 +52,6 @@
   display: block;
   padding: 1px;
   flex-shrink: 0;
-
-  // Change the size of the perk icons
-  --item-size-adjusted: calc(30 / 50 * var(--item-size));
   > * {
     --item-size: var(--item-size-adjusted);
   }
