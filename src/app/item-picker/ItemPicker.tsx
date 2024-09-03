@@ -1,19 +1,20 @@
 import ClassIcon from 'app/dim-ui/ClassIcon';
 import { t } from 'app/i18next-t';
+import { hideItemPopup, showItemPopup, showItemPopup$ } from 'app/item-popup/item-popup';
 import SearchBar from 'app/search/SearchBar';
 import { filterFactorySelector } from 'app/search/items/item-search-filter';
 import { uniqBy } from 'app/utils/collections';
-import clsx from 'clsx';
 import { BucketHashes } from 'data/d2/generated-enums';
 import _ from 'lodash';
-import { useCallback, useDeferredValue, useMemo, useState } from 'react';
+import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
+import { mergeProps, useKeyboard, useLongPress, usePress } from 'react-aria';
 import { useSelector } from 'react-redux';
 import Sheet from '../dim-ui/Sheet';
 import ConnectedInventoryItem from '../inventory/ConnectedInventoryItem';
 import { DimItem } from '../inventory/item-types';
 import { allItemsSelector } from '../inventory/selectors';
 import { itemSorterSelector } from '../settings/item-sort';
-import './ItemPicker.scss';
+import styles from './ItemPicker.m.scss';
 import { ItemPickerState } from './item-picker';
 
 export default function ItemPicker({
@@ -79,11 +80,11 @@ export default function ItemPicker({
     <Sheet
       onClose={onSheetClosedFn}
       header={header}
-      sheetClassName="item-picker"
       freezeInitialHeight={true}
+      allowClickThrough={true}
     >
       {({ onClose }) => (
-        <div className={clsx('sub-bucket', 'item-picker-grid')}>
+        <div className={styles.grid}>
           {items.map((item) => (
             <ItemPickerItem
               key={item.index}
@@ -107,23 +108,59 @@ function ItemPickerItem({
   onClose: () => void;
   onItemSelectedFn: (item: DimItem, onClose: () => void) => void;
 }) {
-  const handleClick = useCallback(
-    () => onItemSelectedFn(item, onClose),
-    [item, onClose, onItemSelectedFn],
+  const ref = useRef<HTMLButtonElement>(null);
+  const { longPressProps } = useLongPress({
+    onLongPress: () => {
+      showItemPopup(item, ref.current!);
+    },
+  });
+  const { pressProps } = usePress({
+    onPress: (e) => {
+      if (e.shiftKey) {
+        showItemPopup(item, ref.current!);
+      } else if (showItemPopup$.getCurrentValue()?.item) {
+        hideItemPopup();
+      } else {
+        onItemSelectedFn(item, onClose);
+      }
+    },
+  });
+
+  const { keyboardProps } = useKeyboard({
+    onKeyDown: (e) => {
+      if (e.key === 'i') {
+        showItemPopup(item, ref.current!);
+      }
+    },
+  });
+
+  // Close the popup if this component is unmounted
+  useEffect(
+    () => () => {
+      if (showItemPopup$.getCurrentValue()?.item?.index === item.index) {
+        hideItemPopup();
+      }
+    },
+    [item.index],
   );
 
   return (
-    <div className="item-picker-item">
+    <button
+      type="button"
+      ref={ref}
+      className={styles.itemPickerItem}
+      aria-keyshortcuts="i"
+      {...mergeProps(pressProps, longPressProps, keyboardProps)}
+    >
       <ConnectedInventoryItem
         item={item}
-        onClick={handleClick}
         // don't show the selected Super ability on subclasses in the item picker because the active Super
         // ability is never relevant in the context that item picker is used
         hideSelectedSuper
       />
       {item.bucket.hash === BucketHashes.Subclass && (
-        <ClassIcon classType={item.classType} className="item-picker-item-class-icon" />
+        <ClassIcon classType={item.classType} className={styles.classIcon} />
       )}
-    </div>
+    </button>
   );
 }

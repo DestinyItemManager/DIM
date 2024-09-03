@@ -284,14 +284,12 @@ export default function SocketDetails({
         {requiresEnergy && <EnergyCostIcon className={styles.energyElement} />}
         <div>{socketCategory.displayProperties.name}</div>
       </h1>
-      <div className="item-picker-search">
-        <SearchInput
-          query={query}
-          onQueryChanged={setQuery}
-          placeholder={t('Sockets.Search')}
-          autoFocus
-        />
-      </div>
+      <SearchInput
+        query={query}
+        onQueryChanged={setQuery}
+        placeholder={t('Sockets.Search')}
+        autoFocus
+      />
     </div>
   );
 

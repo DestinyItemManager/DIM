@@ -11,7 +11,6 @@ import { produce } from 'immer';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Sheet from '../../dim-ui/Sheet';
-import '../../item-picker/ItemPicker.scss';
 import Footer from './Footer';
 import PlugSection from './PlugSection';
 import { PlugSelectionType, PlugSet } from './types';
@@ -206,25 +205,17 @@ export default function PlugDrawer({
   const header = (
     <div>
       <h1>{title}</h1>
-      <div className="item-picker-search">
-        <SearchInput
-          query={query}
-          onQueryChanged={setQuery}
-          placeholder={searchPlaceholder}
-          autoFocus={nativeAutoFocus}
-        />
-      </div>
+      <SearchInput
+        query={query}
+        onQueryChanged={setQuery}
+        placeholder={searchPlaceholder}
+        autoFocus={nativeAutoFocus}
+      />
     </div>
   );
 
   return (
-    <Sheet
-      onClose={onClose}
-      header={header}
-      footer={footer}
-      sheetClassName="item-picker"
-      freezeInitialHeight={true}
-    >
+    <Sheet onClose={onClose} header={header} footer={footer} freezeInitialHeight={true}>
       {queryFilteredPlugSets.map((plugSet) => (
         <PlugSection
           key={plugSet.plugSetHash}

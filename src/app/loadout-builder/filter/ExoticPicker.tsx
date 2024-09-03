@@ -177,14 +177,12 @@ export default function ExoticPicker({
       header={
         <div>
           <h1>{t('LB.ChooseAnExotic')}</h1>
-          <div className="item-picker-search">
-            <SearchInput
-              query={query}
-              onQueryChanged={setQuery}
-              placeholder={t('LB.SearchAnExotic')}
-              autoFocus
-            />
-          </div>
+          <SearchInput
+            query={query}
+            onQueryChanged={setQuery}
+            placeholder={t('LB.SearchAnExotic')}
+            autoFocus
+          />
         </div>
       }
       onClose={onClose}
